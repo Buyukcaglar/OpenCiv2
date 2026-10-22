@@ -262,7 +262,7 @@ void __cdecl events_write_actions(iptr param_1,iptr param_2)
           if (iVar1 == -1) {
             return;
           }
-          iVar1 = _fputs(&DAT_0063258c,(FILE *)param_1);
+          iVar1 = _fputs(&events_text_line_newline_str,(FILE *)param_1);
           if (iVar1 == -1) {
             return;
           }
@@ -292,7 +292,7 @@ void __cdecl events_write_actions(iptr param_1,iptr param_2)
           _sprintf(local_54,s__d__d_006325cc,*(undefined4 *)(param_2 + 0x9c + local_58 * 8),
                    *(undefined4 *)(param_2 + 0xa0 + local_58 * 8));
           if (local_58 < 3) {
-            FUN_005f22e0(local_54,&DAT_006325d4);
+            FUN_005f22e0(local_54,&events_moveunit_rect_sep_str);
           }
           iVar1 = _fputs(local_54,(FILE *)param_1);
           if (iVar1 == -1) {
@@ -334,7 +334,7 @@ void __cdecl events_write_actions(iptr param_1,iptr param_2)
           return;
         }
         _sprintf(local_54,s_veteran__s_00632640,
-                 &DAT_00632638 + ((*(int *)(param_2 + 0x138) != 0) - 1 & 4));
+                 &events_veteran_yes_no_strs + ((*(int *)(param_2 + 0x138) != 0) - 1 & 4));
         iVar1 = _fputs(local_54,(FILE *)param_1);
         if (iVar1 == -1) {
           return;
@@ -371,7 +371,7 @@ joined_r0x0054934c:
             if (iVar1 == -1) {
               return;
             }
-            _sprintf(local_54,&DAT_00632710,*(undefined4 *)(param_2 + 0x188));
+            _sprintf(local_54,&events_cd_track_fmt,*(undefined4 *)(param_2 + 0x188));
             iVar1 = _fputs(local_54,(FILE *)param_1);
           }
           else {
@@ -398,14 +398,14 @@ joined_r0x0054934c:
               _sprintf(local_54,s__d__d_00632754,*(undefined4 *)(param_2 + 400 + local_58 * 8),
                        *(undefined4 *)(param_2 + 0x194 + local_58 * 8));
               if (local_58 < 3) {
-                FUN_005f22e0(local_54,&DAT_0063275c);
+                FUN_005f22e0(local_54,&events_terrain_rect_sep_str);
               }
               iVar1 = _fputs(local_54,(FILE *)param_1);
               if (iVar1 == -1) {
                 return;
               }
             }
-            iVar1 = _fputs(&DAT_00632760,(FILE *)param_1);
+            iVar1 = _fputs(&events_terrain_rect_end_str,(FILE *)param_1);
           }
           else {
             if (uVar2 != 0x100) goto LAB_005499f7;
@@ -490,7 +490,7 @@ joined_r0x0054934c:
         if (iVar1 == -1) {
           return;
         }
-        _sprintf(local_54,&DAT_006326bc,*(undefined4 *)(param_2 + 0x184));
+        _sprintf(local_54,&events_wave_file_fmt,*(undefined4 *)(param_2 + 0x184));
         iVar1 = _fputs(local_54,(FILE *)param_1);
         goto joined_r0x0054934c;
       }
@@ -519,7 +519,7 @@ void __cdecl events_write_list(iptr param_1)
   local_108 = (uint *)events_list_head;
   do {
     if (local_108 == (uint *)0x0) {
-      _fputs(&DAT_00632a1c,(FILE *)param_1);
+      _fputs(&events_list_end_str,(FILE *)param_1);
       return;
     }
     iVar2 = _fputs(s__IF_00632854,(FILE *)param_1);
@@ -1312,7 +1312,7 @@ void __cdecl events_editor_update_buttons(undefined4 param_1)
 #define editor_value_clamped (*(int *)((u8 *)&g.d_0062e014))
 #define local_28 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_0054b0ed(void)
+void __cdecl events_editor_on_ok(void)
 
 {
   iptr iVar1;
@@ -1473,7 +1473,7 @@ void __cdecl events_editor_help_action(undefined4 param_1)
 #define local_14 (*(uint * *)(frame_ + FRAME_OFF(12)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-void __cdecl FUN_0054b433(void)
+void __cdecl events_editor_on_help(void)
 
 {
   int iVar1;
@@ -1536,7 +1536,7 @@ void __cdecl FUN_0054b433(void)
 /* 0054b5eb auto */
 #define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
 #define events_editor_backup (*(iptr *)((u8 *)&g.d_00632578))
-void __cdecl FUN_0054b5eb(void)
+void __cdecl events_editor_on_cancel(void)
 
 {
   thunk_events_reset((ScenarioEvents *)&scenario_events,50000);
@@ -1939,7 +1939,7 @@ void __cdecl events_editor_fill_actions(undefined4 param_1)
         }
         else if (uVar2 == 1) {
           if (*(int *)(local_10c + 0x38) == 0) {
-            _sprintf(local_104,&DAT_00632ebc);
+            _sprintf(local_104,&events_editor_text_caption);
           }
           else {
             _sprintf(local_104,s_TEXT___s__00632eb0,*(undefined4 *)(local_10c + 0x38));
@@ -1962,7 +1962,7 @@ void __cdecl events_editor_fill_actions(undefined4 param_1)
           else {
             _sprintf(local_104,s_CREATEUNIT___s_owner__s_veteran__00632ef0,
                      *(undefined4 *)(local_10c + 0xdc),*(undefined4 *)(local_10c + 0xd4),
-                     &DAT_00632ee8 + ((*(int *)(local_10c + 0x138) != 0) - 1 & 4),
+                     &events_editor_yes_no_strs + ((*(int *)(local_10c + 0x138) != 0) - 1 & 4),
                      *(undefined4 *)(local_10c + 0x13c));
           }
         }
@@ -2073,7 +2073,7 @@ void __cdecl events_editor_fill_actions(undefined4 param_1)
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-void __cdecl FUN_0054c36e(void)
+void __cdecl events_editor_on_delete_trigger(void)
 
 {
   int iVar1;
@@ -2245,7 +2245,7 @@ undefined4 __cdecl events_editor_edit_trigger(undefined4 param_1)
     else if (uVar4 == 2) {
       do {
         if (local_120[4] == 0) {
-          local_120[4] = (uint)&DAT_00633168;
+          local_120[4] = (uint)&events_city_default_str;
         }
         if (active_editor_wnd == 0) {
           local_130 = 0;
@@ -2760,7 +2760,7 @@ undefined4 __cdecl events_editor_edit_trigger(undefined4 param_1)
 #undef local_8
 
 /* 0054d4ca auto */
-void __cdecl FUN_0054d4ca(undefined4 param_1)
+void __cdecl events_editor_on_edit_trigger(undefined4 param_1)
 
 {
   thunk_events_editor_edit_trigger(param_1);
@@ -2772,7 +2772,7 @@ void __cdecl FUN_0054d4ca(undefined4 param_1)
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-void __cdecl FUN_0054d4e6(void)
+void __cdecl events_editor_on_add_trigger(void)
 
 {
   int *piVar1;
@@ -2844,7 +2844,7 @@ void __cdecl FUN_0054d4e6(void)
 #define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-void __cdecl FUN_0054d6da(void)
+void __cdecl events_editor_on_delete_action(void)
 
 {
   int iVar1;
@@ -3147,7 +3147,7 @@ uint __cdecl events_editor_edit_action(undefined4 param_1)
                 local_1b8[0x4e] = local_5c;
                 do {
                   if (local_1b8[0x4f] == 0) {
-                    local_1b8[0x4f] = &DAT_00633250;
+                    local_1b8[0x4f] = &events_homecity_default_str;
                   }
                   if (active_editor_wnd == 0) {
                     local_1e4 = 0;
@@ -3254,7 +3254,7 @@ uint __cdecl events_editor_edit_action(undefined4 param_1)
     }
     else if (uVar2 == 0x10) {
       if (local_1b8[0x61] == 0) {
-        local_1b8[0x61] = &DAT_00633280;
+        local_1b8[0x61] = &events_wavfile_default_str;
       }
       if (active_editor_wnd == 0) {
         local_1f0 = 0;
@@ -3274,7 +3274,7 @@ uint __cdecl events_editor_edit_action(undefined4 param_1)
         if (sVar4 != 0) {
           pcVar6 = _strchr(local_1b0,0x2e);
           if (pcVar6 == (char *)0x0) {
-            FUN_005f22e0(local_1b0,&DAT_0063328c);
+            FUN_005f22e0(local_1b0,&events_wav_ext_str);
           }
           __strupr(local_1b0);
           sVar4 = _strlen(local_1b0);
@@ -3438,7 +3438,7 @@ LAB_0054ee13:
 #undef local_8
 
 /* 0054eeb4 auto */
-void __cdecl FUN_0054eeb4(undefined4 param_1)
+void __cdecl events_editor_on_edit_action(undefined4 param_1)
 
 {
   thunk_events_editor_edit_action(param_1);
@@ -3451,7 +3451,7 @@ void __cdecl FUN_0054eeb4(undefined4 param_1)
 #define local_18 (*(int * *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_0054eed0(void)
+void __cdecl events_editor_on_add_action(void)
 
 {
   LPCSTR lpCaption;
@@ -3567,7 +3567,7 @@ void __thiscall events_editor_draw(C_004083b0_430 *this)
   iVar6 = uVar1 + 0x211;
   iVar4 = this->client_y + 0x1a;
   thunk_text_clear();
-  _sprintf(&text_buffer,&DAT_006332cc,(uint)events_pool_bytes_free);
+  _sprintf(&text_buffer,&events_pool_free_fmt,(uint)events_pool_bytes_free);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),uVar1 + 0x216,(iVar4 - this->field_2e8) + -2,0);
   uVar5 = ((uint)events_pool_bytes_free * 0x13b) / (uint)events_pool_size;
   thunk_gfx_fill_rect_xywh((iptr)this,iVar6,iVar4,10,uVar5,0x2a);
@@ -3675,7 +3675,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8dc));
   thunk_button_create
             ((Control *)(this->pad_65c + 0x2d0),(iptr)local_470,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_65c + 0x2d0),ADDR(0x403643, FUN_0054d4e6));
+  thunk_button_set_callback((Control *)(this->pad_65c + 0x2d0),ADDR(0x403643, events_editor_on_add_trigger));
   iVar3 = iVar3 + this->field_2e0 + 3;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3687,7 +3687,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8e0));
   thunk_button_create
             ((Control *)(this->pad_65c + 0x30c),(iptr)local_474,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_65c + 0x30c),ADDR(0x40114a, FUN_0054d4ca));
+  thunk_button_set_callback((Control *)(this->pad_65c + 0x30c),ADDR(0x40114a, events_editor_on_edit_trigger));
   thunk_rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 3,iVar4,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3699,7 +3699,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8e4));
   thunk_button_create
             ((Control *)(this->pad_980 + 0x24),(iptr)local_478,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_980 + 0x24),ADDR(0x40164a, FUN_0054c36e));
+  thunk_button_set_callback((Control *)(this->pad_980 + 0x24),ADDR(0x40164a, events_editor_on_delete_trigger));
   iVar4 = this->client_y + 0x13a;
   iVar3 = this->client_x + 0x32;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
@@ -3712,7 +3712,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8dc));
   thunk_button_create
             ((Control *)(this->pad_980 + 0x60),(iptr)local_47c,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_980 + 0x60),ADDR(0x402c84, FUN_0054eed0));
+  thunk_button_set_callback((Control *)(this->pad_980 + 0x60),ADDR(0x402c84, events_editor_on_add_action));
   iVar3 = iVar3 + this->field_2e0 + 3;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3724,7 +3724,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8e0));
   thunk_button_create
             ((Control *)&this->edit_action_button,(iptr)local_480,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this->edit_action_button,ADDR(0x402919, FUN_0054eeb4));
+  thunk_button_set_callback((Control *)&this->edit_action_button,ADDR(0x402919, events_editor_on_edit_action));
   thunk_rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 3,iVar4,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3736,7 +3736,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8e4));
   thunk_button_create
             ((Control *)&this[1].field_30,(iptr)local_484,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_30,ADDR(0x4027c5, FUN_0054d6da));
+  thunk_button_set_callback((Control *)&this[1].field_30,ADDR(0x4027c5, events_editor_on_delete_action));
   thunk_rect_set_xywh((iptr)local_454,this->client_x + 0x32,this->client_y + 0x1b,0x1cb,0x6e);
   iVar3 = editor_next_ctrl_id;
   editor_next_ctrl_id = editor_next_ctrl_id + 1;
@@ -3750,7 +3750,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
             ((Control *)(this[1].pad_48 + 0x60),(iptr)local_48c,iVar3,(iptr)local_454);
   thunk_listbox_set_font((ListBoxFontView *)(this[1].pad_48 + 0x60),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   thunk_listbox_set_select_callback((ListBoxSelectSetView *)(this[1].pad_48 + 0x60),ADDR(0x4038f0, thunk_events_editor_fill_actions));
-  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)(this[1].pad_48 + 0x60),ADDR(0x40114a, FUN_0054d4ca));
+  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)(this[1].pad_48 + 0x60),ADDR(0x40114a, events_editor_on_edit_trigger));
   thunk_events_editor_fill_triggers();
   thunk_listbox_set_cur_sel((ListBoxSetSelView *)(this[1].pad_48 + 0x60),0);
   thunk_rect_set_xywh((iptr)local_454,this->client_x + 0x32,this->client_y + 0xc5,0x1cb,0x6e);
@@ -3766,7 +3766,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
             ((Control *)(this[1].pad_48 + 0x9c),(iptr)local_494,iVar3,(iptr)local_454);
   thunk_listbox_set_font((ListBoxFontView *)(this[1].pad_48 + 0x9c),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   thunk_listbox_set_select_callback((ListBoxSelectSetView *)(this[1].pad_48 + 0x9c),ADDR(0x401983, thunk_events_editor_update_buttons));
-  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)(this[1].pad_48 + 0x9c),ADDR(0x402919, FUN_0054eeb4));
+  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)(this[1].pad_48 + 0x9c),ADDR(0x402919, events_editor_on_edit_action));
   thunk_events_editor_fill_actions(0);
   thunk_events_editor_update_buttons(0);
   this->field_2e0 = (int)(this->client_width - 8) / 3;
@@ -3782,7 +3782,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create
             ((Control *)(this->pad_65c + 0x78),(iptr)local_498,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_65c + 0x78),ADDR(0x402ced, FUN_0054b0ed));
+  thunk_button_set_callback((Control *)(this->pad_65c + 0x78),ADDR(0x402ced, events_editor_on_ok));
   iVar3 = iVar3 + this->field_2e0 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3794,7 +3794,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8ec));
   thunk_button_create
             ((Control *)(this->pad_65c + 0xb4),(iptr)local_49c,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_65c + 0xb4),ADDR(0x401861, FUN_0054b433));
+  thunk_button_set_callback((Control *)(this->pad_65c + 0xb4),ADDR(0x401861, events_editor_on_help));
   thunk_rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar4,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -3806,7 +3806,7 @@ void __thiscall events_editor_run(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create
             ((Control *)(this->pad_65c + 0xf0),(iptr)local_4a0,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this->pad_65c + 0xf0),ADDR(0x40317a, FUN_0054b5eb));
+  thunk_button_set_callback((Control *)(this->pad_65c + 0xf0),ADDR(0x40317a, events_editor_on_cancel));
   thunk_ctrl_set_cancel_button((Control *)(this->pad_65c + 0xf0));
   thunk_wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   editor_value_clamped = 0;

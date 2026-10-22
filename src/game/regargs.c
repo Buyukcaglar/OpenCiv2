@@ -83,7 +83,7 @@ uint __cdecl regargs_005ea578(uint eax_in, int *surface)
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl FUN_005ea578(int *surface)
+__attribute__((naked)) uint __cdecl ddsurf_iface_can_flip(int *surface)
 {
     __asm__ volatile(
         "pushl 4(%esp)\n\t"
@@ -93,7 +93,7 @@ __attribute__((naked)) uint __cdecl FUN_005ea578(int *surface)
         "ret");
 }
 #else
-uint __cdecl FUN_005ea578(int *surface)
+uint __cdecl ddsurf_iface_can_flip(int *surface)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ea578(0, surface);
@@ -116,7 +116,7 @@ uint __cdecl regargs_005ea677(uint eax_in)
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl FUN_005ea677(void)
+__attribute__((naked)) uint __cdecl ddraw_get_vblank_status(void)
 {
     __asm__ volatile(
         "pushl %eax\n\t"
@@ -125,7 +125,7 @@ __attribute__((naked)) uint __cdecl FUN_005ea677(void)
         "ret");
 }
 #else
-uint __cdecl FUN_005ea677(void)
+uint __cdecl ddraw_get_vblank_status(void)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ea677(0);
@@ -146,7 +146,7 @@ uint __cdecl regargs_005ef58e(uint eax_in)
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl FUN_005ef58e(void)
+__attribute__((naked)) uint __cdecl ddraw_restore_display_mode(void)
 {
     __asm__ volatile(
         "pushl %eax\n\t"
@@ -155,7 +155,7 @@ __attribute__((naked)) uint __cdecl FUN_005ef58e(void)
         "ret");
 }
 #else
-uint __cdecl FUN_005ef58e(void)
+uint __cdecl ddraw_restore_display_mode(void)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ef58e(0);
@@ -293,7 +293,7 @@ short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
 void __cdecl path_default_extension(char *name, char *ext)
 {
     if (crt_strrchr(name, '.') == NULL) {
-        FUN_005f22e0(name, &DAT_0062b970);
+        FUN_005f22e0(name, &path_default_ext_dot_str);
         FUN_005f22e0(name, ext);
     }
     __strupr(name);
@@ -309,7 +309,7 @@ void __cdecl path_set_extension(char *dst, char *src, char *ext)
     dot = crt_strrchr(dst, '.');
     if (dot != NULL)
         *dot = '\0';
-    FUN_005f22e0(dst, &DAT_0062b974);
+    FUN_005f22e0(dst, &path_set_ext_dot_str);
     FUN_005f22e0(dst, ext);
     __strupr(dst);
 }

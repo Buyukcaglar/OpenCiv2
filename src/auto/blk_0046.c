@@ -644,7 +644,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
       if ((iVar18 == 0) && (iVar18 = thunk_civ_has_wonder(param_2,0x18), iVar18 == 0)) {
         iVar18 = thunk_diplo_senate_intervenes(param_1,param_2);
         if (iVar18 == 0) {
-          thunk_FUN_0045fd67(param_1,param_2);
+          thunk_diplo_ai_senate_hawks_notice(param_1,param_2);
         }
         else {
           thunk_popup_game_with_sprite(ADDR(0x6270a8, ((u8 *)&g.d_006270a8)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
@@ -786,7 +786,7 @@ LAB_00462bb9:
           if (iVar18 == 0) {
 LAB_00462c12:
             if ((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + param_1 * 4) & 0x40) == 0) {
-              thunk_FUN_0045fd67(param_1,param_2);
+              thunk_diplo_ai_senate_hawks_notice(param_1,param_2);
             }
           }
           else {
@@ -886,7 +886,7 @@ LAB_00462c12:
         if ((iVar18 == 0) && (iVar18 = thunk_civ_has_wonder(param_2,0x18), iVar18 == 0)) {
           iVar18 = thunk_diplo_senate_intervenes(param_1,param_2);
           if (iVar18 == 0) {
-            thunk_FUN_0045fd67(param_1,param_2);
+            thunk_diplo_ai_senate_hawks_notice(param_1,param_2);
           }
           else {
             iVar17 = thunk_civ_get_adjective(param_2);
@@ -1233,7 +1233,7 @@ void __cdecl text_set_number_arg_v(int param_1,undefined4 param_2)
 }
 
 /* 004675b0 auto */
-void __cdecl FUN_004675b0(void)
+void __cdecl scenario_events_global_init(void)
 
 {
   scenario_events_static_init();
@@ -1253,12 +1253,12 @@ void __cdecl scenario_events_static_init(void)
 void __cdecl scenario_events_reg_atexit(void)
 
 {
-  _atexit(FUN_00467606);
+  _atexit(scenario_events_static_dtor);
   return;
 }
 
 /* 00467606 auto */
-void __cdecl FUN_00467606(void)
+void __cdecl scenario_events_static_dtor(void)
 
 {
   thunk_events_dtor((C_0040bc40_28 *)&scenario_events);
@@ -1274,7 +1274,7 @@ void __cdecl FUN_00467606(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00467620(void)
+void __cdecl main_frame_wnd_global_init(void)
 
 {
   main_frame_wnd_static_init();
@@ -1294,12 +1294,12 @@ void __cdecl main_frame_wnd_static_init(void)
 void __cdecl main_frame_wnd_reg_atexit(void)
 
 {
-  _atexit(FUN_00467671);
+  _atexit(main_frame_wnd_atexit_dtor);
   return;
 }
 
 /* 00467671 auto */
-void __cdecl FUN_00467671(void)
+void __cdecl main_frame_wnd_atexit_dtor(void)
 
 {
   thunk_wnd_dtor((WndBase *)&main_frame_wnd);
@@ -1315,7 +1315,7 @@ void __cdecl FUN_00467671(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0046768b(void)
+void __cdecl menu_handle_654fd4_global_init(void)
 
 {
   menu_handle_654fd4_static_init();
@@ -1335,12 +1335,12 @@ void __cdecl menu_handle_654fd4_static_init(void)
 void __cdecl menu_handle_654fd4_reg_atexit(void)
 
 {
-  _atexit(FUN_004676dc);
+  _atexit(menu_handle_654fd4_atexit_dtor);
   return;
 }
 
 /* 004676dc auto */
-void __cdecl FUN_004676dc(void)
+void __cdecl menu_handle_654fd4_atexit_dtor(void)
 
 {
   menu_handle_dtor((GameMenu *)&DAT_00654fd4);
@@ -1465,7 +1465,7 @@ undefined4 __cdecl civ_attitude_level(iptr param_1,iptr param_2)
 }
 
 /* 00467a86 auto */
-bool __cdecl FUN_00467a86(undefined4 param_1,undefined4 param_2)
+bool __cdecl civ_attitude_is_friendly(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1475,7 +1475,7 @@ bool __cdecl FUN_00467a86(undefined4 param_1,undefined4 param_2)
 }
 
 /* 00467abb auto */
-bool __cdecl FUN_00467abb(undefined4 param_1,undefined4 param_2)
+bool __cdecl civ_attitude_is_unfriendly(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1734,10 +1734,10 @@ parley_create_unit_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
                *(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40) + -1);
     thunk_scrollbar_set_callback
               (*(Control **)(this[3].pad_48 + param_2 * 4 + -0x20),
-               (iptr)(((void *)ADDR(0x004035fd, FUN_00468797)) + ((param_2 == 0) - 1 & 0x276)));
+               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((param_2 == 0) - 1 & 0x276)));
     thunk_scrollbar_set_track_callback
               (*(ScrollbarTrackSetView **)(this[3].pad_48 + param_2 * 4 + -0x20),
-               (iptr)(((void *)ADDR(0x004035fd, FUN_00468797)) + ((param_2 == 0) - 1 & 0x276)));
+               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((param_2 == 0) - 1 & 0x276)));
   }
   pCVar4 = operator_new(0x40);
   local_8 = 1;
@@ -1758,8 +1758,8 @@ parley_create_unit_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
   thunk_hotspot_create
             (*(C_0040f380_40 **)(this[3].pad_48 + param_2 * 4 + -0x18),(iptr)local_40,
              param_2 + 0x3fc,(iptr)(this[3].pad_48 + param_2 * 0x10 + 0x24));
-  thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x401dac, FUN_00468834));
-  thunk_hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x401dac, FUN_00468834));
+  thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x401dac, parley_unit_list_on_click));
+  thunk_hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x401dac, parley_unit_list_on_click));
   thunk_parley_draw_unit_list(param_2);
   return;
 }
@@ -1778,7 +1778,7 @@ parley_create_unit_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
 #undef local_8
 
 /* 00468797 auto */
-void __cdecl FUN_00468797(undefined4 param_1)
+void __cdecl parley_unit_list_scroll_left(undefined4 param_1)
 
 {
   thunk_parley_unit_list_on_scroll(0,param_1);
@@ -1786,7 +1786,7 @@ void __cdecl FUN_00468797(undefined4 param_1)
 }
 
 /* 004687b5 auto */
-void __cdecl FUN_004687b5(undefined4 param_1)
+void __cdecl parley_unit_list_scroll_right(undefined4 param_1)
 
 {
   thunk_parley_unit_list_on_scroll(1,param_1);
@@ -1822,7 +1822,7 @@ void __cdecl parley_unit_list_on_scroll(int param_1,undefined4 param_2)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_00468834(int param_1)
+void __cdecl parley_unit_list_on_click(int param_1)
 
 {
   uint *puVar1;
@@ -2182,7 +2182,7 @@ LAB_004692ba:
 /* 004692ea auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004692ea(void)
+void __cdecl parley_reveal_city_origin_clicked(void)
 
 {
   iptr iVar1;
@@ -2214,7 +2214,7 @@ void __cdecl FUN_004692ea(void)
 /* 004693c5 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(C_004083b0_4 * *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004693c5(void)
+void __cdecl parley_hide_city_origin_clicked(void)
 
 {
   int iVar1;
@@ -2248,7 +2248,7 @@ void __cdecl FUN_004693c5(void)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004694b7(void)
+void __cdecl parley_request_city_origin_clicked(void)
 
 {
   iptr iVar1;
@@ -2274,7 +2274,7 @@ void __cdecl FUN_004694b7(void)
 #undef local_8
 
 /* 00469547 auto */
-void __cdecl FUN_00469547(void)
+void __cdecl parley_sort_by_city_left_clicked(void)
 
 {
   thunk_parley_sort_by_city_clicked(0);
@@ -2282,7 +2282,7 @@ void __cdecl FUN_00469547(void)
 }
 
 /* 00469561 auto */
-void __cdecl FUN_00469561(void)
+void __cdecl parley_sort_by_city_right_clicked(void)
 
 {
   thunk_parley_sort_by_city_clicked(1);
@@ -2312,7 +2312,7 @@ void __cdecl parley_sort_by_city_clicked(iptr param_1)
 #undef local_8
 
 /* 004695e9 auto */
-void __cdecl FUN_004695e9(void)
+void __cdecl parley_sort_by_unit_left_clicked(void)
 
 {
   thunk_parley_sort_by_unit_clicked(0);
@@ -2320,7 +2320,7 @@ void __cdecl FUN_004695e9(void)
 }
 
 /* 00469603 auto */
-void __cdecl FUN_00469603(void)
+void __cdecl parley_sort_by_unit_right_clicked(void)
 
 {
   thunk_parley_sort_by_unit_clicked(1);
@@ -2760,7 +2760,7 @@ void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int param_1)
 /* 0046abed auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_0046abed(ClickMapRemoveView *this,int param_1,int param_2)
+void __thiscall clickmap_remove_by_id_tag(ClickMapRemoveView *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2920,7 +2920,7 @@ bool __thiscall net_session_send_to_all(void *this,iptr param_1)
 #undef net_send_sequence
 
 /* 0046b11d auto */
-void __cdecl FUN_0046b11d(undefined4 param_1,iptr param_2)
+void __cdecl net_send_string_message(undefined4 param_1,iptr param_2)
 
 {
   thunk_net_send_message(param_1,0,0,0,0,0,0,0,param_2,0);
@@ -3711,7 +3711,7 @@ NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *this,u32 param_1
 }
 
 /* 0046d980 auto */
-void __cdecl FUN_0046d980(DibSurface *param_1,int param_2)
+void __cdecl ui_show_label_splash(DibSurface *param_1,int param_2)
 
 {
   iptr iVar1;
@@ -3810,9 +3810,9 @@ void __cdecl intro_play_opening_video(void)
       thunk_wnd_set_bg_color((WndBase *)&local_fbc,0);
       opening_video_player = local_a4c;
       avi_player_create((C_004083b0_61c *)local_a4c,ADDR(0x62af48, ((u8 *)&g.d_0062af48)),0x800,0,0);
-      thunk_wnd_set_lbuttonup_handler((C_00408130 *)(local_a04 + 0x10),ADDR(0x46dea1, FUN_0046dea1));
-      thunk_wnd_set_keydown_handler((C_00408130 *)(local_a04 + 0x10),ADDR(0x46de25, FUN_0046de25));
-      thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)local_a4c,ADDR(0x46dde0, FUN_0046dde0));
+      thunk_wnd_set_lbuttonup_handler((C_00408130 *)(local_a04 + 0x10),ADDR(0x46dea1, intro_video_on_click));
+      thunk_wnd_set_keydown_handler((C_00408130 *)(local_a04 + 0x10),ADDR(0x46de25, intro_video_on_keydown));
+      thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)local_a4c,ADDR(0x46dde0, intro_video_on_end));
       avi_player_set_double_size((C_004083b0_61c *)local_a4c,1);
       local_14 = avi_player_open((AviPlayerOpenView *)local_a4c,(iptr)local_acc);
       if (local_14 == 0) {
@@ -3825,7 +3825,7 @@ void __cdecl intro_play_opening_video(void)
         avi_player_play((AviPlayerPlayView *)local_a4c);
         thunk_wnd_set_capture((WndBase *)local_a04);
         if (2 < game.multiplayer) {
-          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)local_a04,ADDR(0x403585, FUN_0059c301));
+          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)local_a04,ADDR(0x403585, net_modal_idle_poll));
         }
         wnd_run_modal_loop((C_00408010_b8 *)local_a04);
         thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)local_a04,0);
@@ -3881,7 +3881,7 @@ void __cdecl intro_play_opening_video(void)
 /* 0046dde0 auto */
 #define intro_theme_started (*(undefined4 *)((u8 *)&g.d_0062af10))
 #define opening_video_player (*(int *)((u8 *)&g.d_0062af14))
-void __cdecl FUN_0046dde0(void)
+void __cdecl intro_video_on_end(void)
 
 {
   if (opening_video_player != 0) {
@@ -3897,7 +3897,7 @@ void __cdecl FUN_0046dde0(void)
 /* 0046de25 auto */
 #define intro_theme_started (*(undefined4 *)((u8 *)&g.d_0062af10))
 #define opening_video_player (*(int *)((u8 *)&g.d_0062af14))
-void __cdecl FUN_0046de25(int param_1)
+void __cdecl intro_video_on_keydown(int param_1)
 
 {
   if ((0xcf < param_1) && (param_1 < 0xd3)) {
@@ -3914,7 +3914,7 @@ void __cdecl FUN_0046de25(int param_1)
 
 /* 0046dea1 auto */
 #define opening_video_player (*(int *)((u8 *)&g.d_0062af14))
-void __cdecl FUN_0046dea1(void)
+void __cdecl intro_video_on_click(void)
 
 {
   if (opening_video_player != 0) {
@@ -3961,7 +3961,7 @@ void __cdecl snd_play_effect(iptr param_1,iptr param_2,int param_3,iptr param_4)
       iVar1 = thunk_rand_range(0,2);
       thunk_str_append_int((iptr)local_118,iVar1 + 1);
     }
-    FUN_005f22e0(local_118,&DAT_0062b438);
+    FUN_005f22e0(local_118,&snd_wav_ext_str);
     thunk_str_clear((iptr)local_108);
     thunk_str_append((iptr)local_108,ADDR(0x62b440, ((u8 *)&g.d_0062b440)));
     thunk_str_append((iptr)local_108,(iptr)local_118);
@@ -4026,7 +4026,7 @@ void __cdecl ui_delay_ticks(int param_1)
 /* 0046e2f4 auto */
 #define cd_music_available (*(undefined4 *)((u8 *)&g.d_0062b420))
 #define cd_music_continue (*(int *)((u8 *)&g.d_0062b42c))
-void __cdecl FUN_0046e2f4(void)
+void __cdecl snd_cd_on_notify(void)
 
 {
   cd_music_available = 1;
@@ -4115,7 +4115,7 @@ void __cdecl snd_cd_detect_layout(void)
 {
   int iVar1;
   
-  snd_cd_set_notify_callback(ADDR(0x403120, FUN_0046e2f4));
+  snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
   iVar1 = snd_cd_get_track_count();
   if ((iVar1 == -1) || (iVar1 == 1)) {
     cd_music_available = 0;
@@ -4167,7 +4167,7 @@ void __cdecl music_play_track(uint param_1,int param_2)
     else {
       cd_music_continue = 0;
       snd_cd_mci_stop();
-      snd_cd_set_notify_callback(ADDR(0x403120, FUN_0046e2f4));
+      snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
       snd_cd_play_track(param_1);
       cd_music_current_track = param_1;
       cd_music_continue = 1;
@@ -4253,7 +4253,7 @@ int __cdecl str_parse_hex(iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0046e9d0(void)
+void __cdecl grey_palette_global_init(void)
 
 {
   grey_palette_static_init();
@@ -4273,12 +4273,12 @@ void __cdecl grey_palette_static_init(void)
 void __cdecl grey_palette_reg_atexit(void)
 
 {
-  _atexit(FUN_0046ea21);
+  _atexit(grey_palette_atexit_dtor);
   return;
 }
 
 /* 0046ea21 auto */
-void __cdecl FUN_0046ea21(void)
+void __cdecl grey_palette_atexit_dtor(void)
 
 {
   palette_destroy((GamePalette *)&grey_palette);
@@ -4573,9 +4573,9 @@ int __cdecl gfx_load_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param
   undefined4 uVar7;
   undefined1 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_408 = &DAT_0062b674;
+  local_408 = &gfx_load_bmp_no_error_str;
   local_438 = 0;
-  local_43c = __fsopen((char *)param_2,&DAT_0062b678,0x40);
+  local_43c = __fsopen((char *)param_2,&gfx_bmp_read_mode,0x40);
   if (local_43c == (FILE *)0x0) {
     local_438 = 0;
   }
@@ -4766,7 +4766,7 @@ int __cdecl gfx_save_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param
   undefined1 frame_[FRAME_OFF(1120)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_434 = 0;
-  local_408 = &DAT_0062b748;
+  local_408 = &gfx_save_bmp_no_error_str;
   local_41c = 0x4d42;
   local_41a = 0x4b436;
   local_416 = 0;
@@ -4813,7 +4813,7 @@ int __cdecl gfx_save_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param
       local_430 = local_430 + 1;
     }
   }
-  local_438 = __fsopen((char *)param_2,&DAT_0062b74c,0x40);
+  local_438 = __fsopen((char *)param_2,&gfx_bmp_write_mode,0x40);
   if (local_438 == (FILE *)0x0) {
     local_434 = 0;
   }

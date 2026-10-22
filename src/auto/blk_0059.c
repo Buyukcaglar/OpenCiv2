@@ -114,7 +114,7 @@ undefined4 __cdecl unit_move_dir(iptr param_1,uptr param_2,undefined4 param_3)
   thunk_win_flush_pending_msgs();
   while( true ) {
     iVar9 = param_1;
-    DAT_00634c9c = '\0';
+    unit_move_unanimated_state = '\0';
     bVar7 = false;
     local_a4 = 0;
     local_f0 = 0;
@@ -793,9 +793,9 @@ LAB_00592870:
               ((human_civ == uVar12 && (uVar3 == '\x01')))) &&
              ((human_civ != uVar12 || (units[param_1].orders == '\v')))) {
             aiStack_80[human_civ] = 0;
-            DAT_00634c9c = '\x01';
+            unit_move_unanimated_state = '\x01';
             if (human_civ == uVar12) {
-              DAT_00634c9c = '\x02';
+              unit_move_unanimated_state = '\x02';
               map_cursor_x = (undefined2)local_ec;
               map_cursor_y = (undefined2)local_fc;
             }
@@ -1006,7 +1006,7 @@ LAB_00593d80:
   if ((((human_civ != uVar12) && (aiStack_a0[human_civ] != 0)) &&
       (((*(undefined1 *)((char *)&game.game_options + 1)) & 8) == 0)) &&
      (SVar11 = GetAsyncKeyState(0x10), (char)((ushort)SVar11 >> 8) == '\0')) {
-    if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x10) == 0) || (DAT_00634c9c != '\0')) {
+    if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x10) == 0) || (unit_move_unanimated_state != '\0')) {
       thunk_ui_delay_ticks(10);
     }
     else {
@@ -2679,7 +2679,7 @@ void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
         thunk_window_show((C_004083b0_4 *)this);
         thunk_wnd_blit_surface((DibSurface *)&pedia_window);
         thunk_wnd_activate((Wnd *)&pedia_window_wnd);
-        thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, FUN_004f8d04));
+        thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
         wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
         thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
       }
@@ -2758,7 +2758,7 @@ int __cdecl rand_range(int param_1,int param_2)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0059a850(void)
+void __cdecl net_session_global_init(void)
 
 {
   net_session_static_init();
@@ -2778,12 +2778,12 @@ void __cdecl net_session_static_init(void)
 void __cdecl net_session_reg_atexit(void)
 
 {
-  _atexit(FUN_0059a8a1);
+  _atexit(net_session_static_dtor);
   return;
 }
 
 /* 0059a8a1 auto */
-void __cdecl FUN_0059a8a1(void)
+void __cdecl net_session_static_dtor(void)
 
 {
   thunk_net_session_dtor(&net_session);
@@ -2807,12 +2807,12 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
   this[0x94].pad_0[1] = '\0';
   this[0x94].pad_0[2] = '\0';
   this[0x94].pad_0[3] = '\0';
-  XD_SetBroadcastReceive((code *)((void *)ADDR(0x00403c29, FUN_0059bb54)));
-  XD_SetSecureReceive(FUN_0059bc41);
-  XD_SetOnClientConnectionToServer(FUN_0059bfdb);
-  XD_SetNewClientConnection(FUN_0059bfb5);
-  XD_SetOnConnectionLost(FUN_0059c04b);
-  XD_SetOversizedMessageCB(50000,FUN_0059c0a4);
+  XD_SetBroadcastReceive((code *)((void *)ADDR(0x00403c29, net_on_broadcast_receive)));
+  XD_SetSecureReceive(net_on_secure_receive);
+  XD_SetOnClientConnectionToServer(net_on_connected_to_server);
+  XD_SetNewClientConnection(net_on_new_client);
+  XD_SetOnConnectionLost(net_on_connection_lost);
+  XD_SetOversizedMessageCB(50000,net_on_oversized_message);
   return this;
 }
 #undef local_10
@@ -3316,7 +3316,7 @@ void __thiscall net_free_game_list(void *this)
 
 /* 0059bb54 auto */
 #define prefs_net_ip_address (*(undefined *)((u8 *)&g.d_006665b0))
-void __cdecl FUN_0059bb54(int *param_1,ushort param_2)
+void __cdecl net_on_broadcast_receive(int *param_1,ushort param_2)
 
 {
   int iVar1;
@@ -3352,7 +3352,7 @@ void __cdecl FUN_0059bb54(int *param_1,ushort param_2)
 #define local_4c (*(undefined1 (*)[64])(frame_ + FRAME_OFF(44)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(108)))
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(112)))
-void __cdecl FUN_0059bc41(uint param_1,int *param_2,uint param_3)
+void __cdecl net_on_secure_receive(uint param_1,int *param_2,uint param_3)
 
 {
   size_t sVar1;
@@ -3439,7 +3439,7 @@ void __cdecl FUN_0059bc41(uint param_1,int *param_2,uint param_3)
 #undef local_8
 
 /* 0059bfb5 auto */
-void __cdecl FUN_0059bfb5(undefined4 param_1,uint param_2)
+void __cdecl net_on_new_client(undefined4 param_1,uint param_2)
 
 {
   dbg_logf(ADDR(0x635774, ((u8 *)&g.d_00635774)),param_2 & 0xffff);
@@ -3448,7 +3448,7 @@ void __cdecl FUN_0059bfb5(undefined4 param_1,uint param_2)
 
 /* 0059bfdb auto */
 #define net_server_conn_id (*(int *)((u8 *)&g.d_006ad300))
-void __cdecl FUN_0059bfdb(short param_1)
+void __cdecl net_on_connected_to_server(short param_1)
 
 {
   dbg_logf(ADDR(0x6357a8, ((u8 *)&g.d_006357a8)),(int)param_1);
@@ -3463,7 +3463,7 @@ void __cdecl FUN_0059bfdb(short param_1)
 
 /* 0059c04b auto */
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
-void __cdecl FUN_0059c04b(ushort param_1)
+void __cdecl net_on_connection_lost(ushort param_1)
 
 {
   dbg_logf(ADDR(0x6357e0, ((u8 *)&g.d_006357e0)),(uint)param_1);
@@ -3477,7 +3477,7 @@ void __cdecl FUN_0059c04b(ushort param_1)
 
 /* 0059c0a4 auto */
 #define local_104 (*(char (*)[256])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_0059c0a4(undefined4 param_1)
+void __cdecl net_on_oversized_message(undefined4 param_1)
 
 {
   undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3581,7 +3581,7 @@ void __cdecl net_reset_error_counts(void)
 #undef local_8
 
 /* 0059c301 auto */
-void __cdecl FUN_0059c301(void)
+void __cdecl net_modal_idle_poll(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3748,7 +3748,7 @@ NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
 #undef local_8
 
 /* 0059d190 auto */
-void __cdecl FUN_0059d190(void)
+void __cdecl dialog_text_font_global_init(void)
 
 {
   dialog_text_font_static_init();
@@ -3768,12 +3768,12 @@ void __cdecl dialog_text_font_static_init(void)
 void __cdecl dialog_text_font_reg_atexit(void)
 
 {
-  _atexit(FUN_0059d1e7);
+  _atexit(dialog_text_font_atexit_dtor);
   return;
 }
 
 /* 0059d1e7 auto */
-void __cdecl FUN_0059d1e7(void)
+void __cdecl dialog_text_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&dialog_text_font_obj);
@@ -3790,7 +3790,7 @@ void __cdecl FUN_0059d1e7(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0059d201(void)
+void __cdecl dialog_title_font_global_init(void)
 
 {
   dialog_title_font_static_init();
@@ -3810,12 +3810,12 @@ void __cdecl dialog_title_font_static_init(void)
 void __cdecl dialog_title_font_reg_atexit(void)
 
 {
-  _atexit(FUN_0059d256);
+  _atexit(dialog_title_font_atexit_dtor);
   return;
 }
 
 /* 0059d256 auto */
-void __cdecl FUN_0059d256(void)
+void __cdecl dialog_title_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&dialog_title_font_obj);
@@ -3832,7 +3832,7 @@ void __cdecl FUN_0059d256(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0059d270(void)
+void __cdecl dialog_list_font_global_init(void)
 
 {
   dialog_list_font_static_init();
@@ -3852,12 +3852,12 @@ void __cdecl dialog_list_font_static_init(void)
 void __cdecl dialog_list_font_reg_atexit(void)
 
 {
-  _atexit(FUN_0059d2c5);
+  _atexit(dialog_list_font_atexit_dtor);
   return;
 }
 
 /* 0059d2c5 auto */
-void __cdecl FUN_0059d2c5(void)
+void __cdecl dialog_list_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&dialog_list_font_obj);
@@ -3874,7 +3874,7 @@ void __cdecl FUN_0059d2c5(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0059d2df(void)
+void __cdecl dialog_plain_font_global_init(void)
 
 {
   dialog_plain_font_static_init();
@@ -3894,12 +3894,12 @@ void __cdecl dialog_plain_font_static_init(void)
 void __cdecl dialog_plain_font_reg_atexit(void)
 
 {
-  _atexit(FUN_0059d334);
+  _atexit(dialog_plain_font_atexit_dtor);
   return;
 }
 
 /* 0059d334 auto */
-void __cdecl FUN_0059d334(void)
+void __cdecl dialog_plain_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&dialog_plain_font_obj);
@@ -3907,7 +3907,7 @@ void __cdecl FUN_0059d334(void)
 }
 
 /* 0059d34e auto */
-void __cdecl FUN_0059d34e(void)
+void __cdecl active_dialog_global_init(void)
 
 {
   active_dialog_static_init();
@@ -3928,7 +3928,7 @@ void __cdecl active_dialog_static_init(void)
 #define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_0059d37d(void)
+void __cdecl dialog_edit_on_change(void)
 
 {
   _DAT_006cec80 = thunk_timer_ticks();
@@ -3940,7 +3940,7 @@ void __cdecl FUN_0059d37d(void)
 #define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_0059d397(void)
+void __cdecl dialog_radio_on_select(void)
 
 {
   _DAT_006cec80 = thunk_timer_ticks();
@@ -4072,7 +4072,7 @@ dialog_set_list_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,
 #undef list_text_color
 
 /* 0059d527 auto */
-void __cdecl FUN_0059d527(undefined *param_1)
+void __cdecl dialog_set_default_text_font(undefined *param_1)
 
 {
   dialog_default_text_font = param_1;
@@ -4080,7 +4080,7 @@ void __cdecl FUN_0059d527(undefined *param_1)
 }
 
 /* 0059d53f auto */
-void __cdecl FUN_0059d53f(undefined *param_1)
+void __cdecl dialog_set_default_title_font(undefined *param_1)
 
 {
   dialog_default_title_font = param_1;
@@ -4088,7 +4088,7 @@ void __cdecl FUN_0059d53f(undefined *param_1)
 }
 
 /* 0059d557 auto */
-void __cdecl FUN_0059d557(undefined *param_1)
+void __cdecl dialog_set_default_list_font(undefined *param_1)
 
 {
   dialog_default_list_font = param_1;
@@ -4096,7 +4096,7 @@ void __cdecl FUN_0059d557(undefined *param_1)
 }
 
 /* 0059d56f auto */
-void __cdecl FUN_0059d56f(void)
+void __cdecl dialog_reset_default_fonts(void)
 
 {
   dialog_default_text_font = &dialog_text_font_obj;
@@ -4238,8 +4238,8 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->bevel_width = 2;
   this->option_extra_width = 0;
   this->columns = 1;
-  this->field_21c = 0;
-  this->field_218 = this->field_21c;
+  this->list2_left_col = 0;
+  this->list_left_col = this->list2_left_col;
   this->sprite_zoom = 0;
   this->title_text = 0;
   this->radio_group = 0;
@@ -4249,10 +4249,10 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->listbox2 = 0;
   this->listbox = this->listbox2;
   this->sprite_hotspots = 0;
-  this->field_288 = 0;
-  this->list_vscroll = this->field_288;
-  this->field_290 = 0;
-  this->field_28c = this->field_290;
+  this->list2_vscroll = 0;
+  this->list_vscroll = this->list2_vscroll;
+  this->list2_hscroll = 0;
+  this->list_hscroll = this->list2_hscroll;
   this->on_draw_sprite = 0;
   this->on_sprite_click = 0;
   this->on_sprite_dblclick = 0;
@@ -4364,23 +4364,23 @@ void __thiscall dialog_close(Dialog *this)
     }
     this->list_vscroll = 0;
   }
-  if (this->field_288 != 0) {
-    if ((Control *)this->field_288 != (Control *)0x0) {
-      thunk_scrollbar_scalar_dtor((Control *)this->field_288,1);
+  if (this->list2_vscroll != 0) {
+    if ((Control *)this->list2_vscroll != (Control *)0x0) {
+      thunk_scrollbar_scalar_dtor((Control *)this->list2_vscroll,1);
     }
-    this->field_288 = 0;
+    this->list2_vscroll = 0;
   }
-  if (this->field_28c != 0) {
-    if ((Control *)this->field_28c != (Control *)0x0) {
-      thunk_scrollbar_scalar_dtor((Control *)this->field_28c,1);
+  if (this->list_hscroll != 0) {
+    if ((Control *)this->list_hscroll != (Control *)0x0) {
+      thunk_scrollbar_scalar_dtor((Control *)this->list_hscroll,1);
     }
-    this->field_28c = 0;
+    this->list_hscroll = 0;
   }
-  if (this->field_290 != 0) {
-    if ((Control *)this->field_290 != (Control *)0x0) {
-      thunk_scrollbar_scalar_dtor((Control *)this->field_290,1);
+  if (this->list2_hscroll != 0) {
+    if ((Control *)this->list2_hscroll != (Control *)0x0) {
+      thunk_scrollbar_scalar_dtor((Control *)this->list2_hscroll,1);
     }
-    this->field_290 = 0;
+    this->list2_hscroll = 0;
   }
   if (((this->style_flags & 0x10) == 0) && (this->surf_wnd != 0)) {
     if ((SurfaceWindow *)this->surf_wnd != (SurfaceWindow *)0x0) {
@@ -4541,10 +4541,10 @@ LAB_0059e2e4:
 #undef local_8
 
 /* 0059e327 auto */
-bool __thiscall FUN_0059e327(C_0059e327 *this)
+bool __thiscall dialog_help_pressed(C_0059e327 *this)
 
 {
-  return (this->field_3c & 0x80) != 0;
+  return (this->style_flags & 0x80) != 0;
 }
 
 /* 0059e356 auto */
@@ -4673,10 +4673,10 @@ void __thiscall dialog_set_current_pane(C_0059e585 *this,u32 param_1)
 
 {
   if ((param_1 == 0) || (param_1 == 1)) {
-    this->field_48 = param_1;
+    this->cur_pane = param_1;
   }
   else {
-    this->field_48 = 0;
+    this->cur_pane = 0;
   }
   return;
 }
@@ -4700,10 +4700,10 @@ void __thiscall dialog_set_listbox(DialogTextView *this,int param_1,u32 param_2,
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_0059e624(C_0059e624 *this,u32 param_1)
+void __thiscall dialog_set_bevel_width(C_0059e624 *this,u32 param_1)
 
 {
-  this->field_c8 = param_1;
+  this->bevel_width = param_1;
   return;
 }
 
@@ -4800,7 +4800,7 @@ uptr __thiscall dialog_find_option(DialogOptionList *this,int param_1)
 /* 0059e812 auto */
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
-uptr __thiscall FUN_0059e812(C_0059e812 *this,int param_1)
+uptr __thiscall dialog_find_button(C_0059e812 *this,int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4877,7 +4877,7 @@ void __thiscall FUN_0059e927(DialogOptionList *this,undefined4 param_1,int param
 
 /* 0059e973 auto */
 #define local_8 (*(uint * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_0059e973(void *this)
+void __thiscall dialog_enable_all_options(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4975,7 +4975,7 @@ void __thiscall dialog_get_edit_text(DialogEditTextView *this,int param_1,iptr p
 }
 
 /* 0059eb42 auto */
-void __thiscall FUN_0059eb42(DialogEditTextView *this,undefined4 param_1)
+void __thiscall dialog_get_first_edit_text(DialogEditTextView *this,undefined4 param_1)
 
 {
   thunk_dialog_get_edit_text(this,0,param_1);
@@ -4988,10 +4988,10 @@ void __thiscall FUN_0059eb42(DialogEditTextView *this,undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_0059eb68(C_0059eb68 *this,u32 param_1)
+void __thiscall dialog_set_result_id(C_0059eb68 *this,u32 param_1)
 
 {
-  this->field_d8 = param_1;
+  this->result_id = param_1;
   return;
 }
 
@@ -5066,10 +5066,10 @@ void __thiscall dialog_set_select_change_fn(DialogSelChangeSetView *this,iptr pa
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_0059ec40(C_0059ec40 *this,u32 param_1)
+void __thiscall dialog_set_modal_poll_fn(C_0059ec40 *this,u32 param_1)
 
 {
-  this->field_250 = param_1;
+  this->on_modal_poll = param_1;
   return;
 }
 
@@ -5641,7 +5641,7 @@ int __thiscall dialog_column_of_option(DialogOptionList *this,uptr param_1)
 }
 
 /* 0059fcf2 auto */
-void __thiscall FUN_0059fcf2(DialogOptionList *this,int param_1)
+void __thiscall dialog_option_at_column(DialogOptionList *this,int param_1)
 
 {
   thunk_dialog_option_at(this,(&this->list_rows)[this->cur_pane] * param_1);

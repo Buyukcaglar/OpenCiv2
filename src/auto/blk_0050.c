@@ -11,7 +11,7 @@
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00500e00(void)
+void __cdecl city_window_font_global_init(void)
 
 {
   city_window_font_static_init();
@@ -31,12 +31,12 @@ void __cdecl city_window_font_static_init(void)
 void __cdecl city_window_font_reg_atexit(void)
 
 {
-  _atexit(FUN_00500e55);
+  _atexit(city_window_font_atexit_dtor);
   return;
 }
 
 /* 00500e55 auto */
-void __cdecl FUN_00500e55(void)
+void __cdecl city_window_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&city_window_font);
@@ -53,7 +53,7 @@ void __cdecl FUN_00500e55(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00500e6f(void)
+void __cdecl city_window_small_font_global_init(void)
 
 {
   city_window_small_font_static_init();
@@ -73,12 +73,12 @@ void __cdecl city_window_small_font_static_init(void)
 void __cdecl city_window_small_font_reg_atexit(void)
 
 {
-  _atexit(FUN_00500ec4);
+  _atexit(city_window_small_font_atexit_dtor);
   return;
 }
 
 /* 00500ec4 auto */
-void __cdecl FUN_00500ec4(void)
+void __cdecl city_window_small_font_atexit_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&city_window_small_font);
@@ -94,7 +94,7 @@ void __cdecl FUN_00500ec4(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00500ede(void)
+void __cdecl city_window_global_init(void)
 
 {
   city_window_static_init();
@@ -114,12 +114,12 @@ void __cdecl city_window_static_init(void)
 void __cdecl city_window_reg_atexit(void)
 
 {
-  _atexit(FUN_00500f2f);
+  _atexit(city_window_atexit_dtor);
   return;
 }
 
 /* 00500f2f auto */
-void __cdecl FUN_00500f2f(void)
+void __cdecl city_window_atexit_dtor(void)
 
 {
   thunk_city_window_dtor((FrameWindow *)&city_window);
@@ -135,7 +135,7 @@ void __cdecl FUN_00500f2f(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00500f49(void)
+void __cdecl city_window_bg_surface_global_init(void)
 
 {
   city_window_bg_surface_static_init();
@@ -155,12 +155,12 @@ void __cdecl city_window_bg_surface_static_init(void)
 void __cdecl city_window_bg_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_00500f9a);
+  _atexit(city_window_bg_surface_atexit_dtor);
   return;
 }
 
 /* 00500f9a auto */
-void __cdecl FUN_00500f9a(void)
+void __cdecl city_window_bg_surface_atexit_dtor(void)
 
 {
   surface_dtor((DibSurface *)&city_window_bg_surface);
@@ -176,7 +176,7 @@ void __cdecl FUN_00500f9a(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00500fb4(void)
+void __cdecl city_tile_pick_surface_global_init(void)
 
 {
   city_tile_pick_surface_static_init();
@@ -196,12 +196,12 @@ void __cdecl city_tile_pick_surface_static_init(void)
 void __cdecl city_tile_pick_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_00501005);
+  _atexit(city_tile_pick_surface_atexit_dtor);
   return;
 }
 
 /* 00501005 auto */
-void __cdecl FUN_00501005(void)
+void __cdecl city_tile_pick_surface_atexit_dtor(void)
 
 {
   surface_dtor((DibSurface *)&city_tile_pick_surface);
@@ -231,7 +231,7 @@ void __cdecl city_window_load_background(void)
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   palette_init(&local_480);
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  if (city_window_size_level == DAT_00630d34) {
+  if (city_window_size_level == city_window_bg_size_level) {
     (*(undefined1 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
     local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
@@ -240,7 +240,7 @@ void __cdecl city_window_load_background(void)
     /* inlined unwind funclet FUN_00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
   }
   else {
-    DAT_00630d34 = city_window_size_level;
+    city_window_bg_size_level = city_window_size_level;
     thunk_surface_release((DibSurface *)&city_window_bg_surface);
     surface_load_gif_file(&local_4c8,ADDR(0x630d6c, ((u8 *)&g.d_00630d6c)),10,0xc0,(iptr)&local_480);
     sprite_grab_from_surface(&local_4c,(iptr)&local_4c8,7,0,0,0x27c,0x1a5);
@@ -248,7 +248,7 @@ void __cdecl city_window_load_background(void)
     uVar1 = thunk_city_window_scale((C_004083b0_4 *)&city_window,0x1a5);
     uVar2 = thunk_city_window_scale((C_004083b0_4 *)&city_window,0x27c);
     surface_create((DibSurface *)&city_window_bg_surface,uVar2,uVar1);
-    thunk_gfx_set_zoom_scale(DAT_00630d34 * 4 + -8);
+    thunk_gfx_set_zoom_scale(city_window_bg_size_level * 4 + -8);
     sprite_draw(&local_4c,(iptr)local_4d8,ADDR(0x6a9170, ((u8 *)&g.d_006a9170)),0,0);
     thunk_gfx_reset_zoom_scale();
     (*(undefined1 *)((char *)&local_8 + 0)) = 1;
@@ -358,8 +358,8 @@ spritebtn_create_icon_button(iptr param_1,undefined4 param_2,SpriteButton *param
 void __cdecl city_window_modal_notice(void)
 
 {
-  if (DAT_00630d1c == '\0') {
-    DAT_00630d1c = 1;
+  if (city_modal_notice_active == '\0') {
+    city_modal_notice_active = 1;
     thunk_text_clear();
     thunk_text_append(ADDR(0x630d78, ((u8 *)&g.d_00630d78)));
     thunk_text_append_int((city_window_open_mode == 2) + 1);
@@ -367,7 +367,7 @@ void __cdecl city_window_modal_notice(void)
     if (dlg_help_pressed != 0) {
       thunk_city_window_exit_clicked(0);
     }
-    DAT_00630d1c = '\0';
+    city_modal_notice_active = '\0';
   }
   return;
 }
@@ -1129,16 +1129,16 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     local_8c = local_50 * 4 + local_a8;
     for (local_3c = 0; local_3c < 0x15; local_3c = local_3c + 1) {
       local_fc = map_wrap_x((int)cities[*(int *)(this[7].pad_15c + 4)].x +
-                            (int)(char)(&DAT_00630d38)[local_3c]);
-      local_4c = (int)cities[*(int *)(this[7].pad_15c + 4)].y + (int)(char)(&DAT_00630d50)[local_3c]
+                            (int)(char)(&city_resmap_draw_dx_table)[local_3c]);
+      local_4c = (int)cities[*(int *)(this[7].pad_15c + 4)].y + (int)(char)(&city_resmap_draw_dy_table)[local_3c]
       ;
-      local_cc = (char)(&DAT_00630d38)[local_3c] * local_80 + local_b4;
-      local_e4 = (char)(&DAT_00630d50)[local_3c] * local_50 + local_8c;
+      local_cc = (char)(&city_resmap_draw_dx_table)[local_3c] * local_80 + local_b4;
+      local_e4 = (char)(&city_resmap_draw_dy_table)[local_3c] * local_50 + local_8c;
       local_9c = local_e4 - local_50;
       local_94 = 0;
       for (local_5c = 0; local_5c < 0x15; local_5c = local_5c + 1) {
-        if (((&city_tile_dx_table)[local_5c] == (&DAT_00630d38)[local_3c]) &&
-           ((&city_tile_dy_table)[local_5c] == (&DAT_00630d50)[local_3c])) {
+        if (((&city_tile_dx_table)[local_5c] == (&city_resmap_draw_dx_table)[local_3c]) &&
+           ((&city_tile_dy_table)[local_5c] == (&city_resmap_draw_dy_table)[local_3c])) {
           local_94 = local_5c;
           break;
         }
@@ -1187,16 +1187,16 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     }
     for (local_3c = 0; local_3c < 0x15; local_3c = local_3c + 1) {
       local_fc = map_wrap_x((int)cities[*(int *)(this[7].pad_15c + 4)].x +
-                            (int)(char)(&DAT_00630d38)[local_3c]);
-      local_4c = (int)cities[*(int *)(this[7].pad_15c + 4)].y + (int)(char)(&DAT_00630d50)[local_3c]
+                            (int)(char)(&city_resmap_draw_dx_table)[local_3c]);
+      local_4c = (int)cities[*(int *)(this[7].pad_15c + 4)].y + (int)(char)(&city_resmap_draw_dy_table)[local_3c]
       ;
-      local_cc = (char)(&DAT_00630d38)[local_3c] * local_80 + local_b4;
-      local_e4 = (char)(&DAT_00630d50)[local_3c] * local_50 + local_8c;
+      local_cc = (char)(&city_resmap_draw_dx_table)[local_3c] * local_80 + local_b4;
+      local_e4 = (char)(&city_resmap_draw_dy_table)[local_3c] * local_50 + local_8c;
       local_9c = local_e4 - local_50;
       local_94 = 0;
       for (local_5c = 0; local_5c < 0x15; local_5c = local_5c + 1) {
-        if (((&city_tile_dx_table)[local_5c] == (&DAT_00630d38)[local_3c]) &&
-           ((&city_tile_dy_table)[local_5c] == (&DAT_00630d50)[local_3c])) {
+        if (((&city_tile_dx_table)[local_5c] == (&city_resmap_draw_dx_table)[local_3c]) &&
+           ((&city_tile_dy_table)[local_5c] == (&city_resmap_draw_dy_table)[local_3c])) {
           local_94 = local_5c;
           break;
         }
@@ -2878,7 +2878,7 @@ void __cdecl city_window_supported_unit_menu(iptr param_1)
       sprite_create_solid(&local_4c,0x40,0x20,0);
       thunk_text_set_unit_info_args(param_1);
       thunk_dlg_load_game_section(&local_340,ADDR(0x630dbc, ((u8 *)&g.d_00630dbc)),1);
-      thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, FUN_005b6ab5));
+      thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
       thunk_dialog_set_image_zoom((DialogWindowView *)&local_340,8);
       thunk_dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,param_1,0);
       uVar7 = 0;
@@ -3010,7 +3010,7 @@ void __cdecl city_window_present_unit_menu(int param_1)
   thunk_text_set_unit_info_args(iVar7);
   thunk_dlg_load_game_section(&local_340,ADDR(0x630dc8, ((u8 *)&g.d_00630dc8)),1);
   dlg_unit_sprite_zoom = 8;
-  thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, FUN_005b6ab5));
+  thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
   thunk_dialog_set_image_zoom((DialogWindowView *)&local_340,8);
   thunk_dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,iVar7,0);
   uVar11 = 0;
@@ -4131,7 +4131,7 @@ void __thiscall city_window_refresh(FrameWindow *this)
 #undef game_loop_active
 
 /* 0050951f auto */
-void __thiscall FUN_0050951f(SurfaceWindow *this)
+void __thiscall wnd_repaint_and_show(SurfaceWindow *this)
 
 {
   wnd_repaint(this);
@@ -4280,7 +4280,7 @@ void __thiscall city_window_open(C_004083b0_12c *this,iptr param_1)
 #undef unit_stack_unlink_busy
 
 /* 00509935 auto */
-void __cdecl FUN_00509935(void)
+void __cdecl city_window_on_redraw(void)
 
 {
   thunk_city_window_refresh((FrameWindow *)&city_window);
@@ -4348,7 +4348,7 @@ void __cdecl city_window_init_size(void)
 #define _DAT_006aa758 (*(undefined4 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_00509a82(void)
+void __cdecl city_window_on_minimize(void)
 
 {
   _DAT_006aa758 = 1;
@@ -4360,7 +4360,7 @@ void __cdecl FUN_00509a82(void)
 #define _DAT_006aa758 (*(undefined4 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_00509a9c(void)
+void __cdecl city_window_on_restore(void)
 
 {
   _DAT_006aa758 = 0;
@@ -4633,7 +4633,7 @@ void __cdecl city_button_buy(undefined4 param_1)
 #define local_c (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
 undefined4 __cdecl
-FUN_0050a1d6(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+city_change_draw_option_icon(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
@@ -4689,7 +4689,7 @@ FUN_0050a1d6(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 undefined4 __cdecl
-FUN_0050a2f7(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+foreign_minister_draw_civ_city(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
@@ -4892,7 +4892,7 @@ void __cdecl city_button_change(undefined4 param_1)
           iVar11 = thunk_citywnd_get_city((C_004083b0_4 *)&city_window);
           thunk_text_set_string_arg(0,iVar11 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
           thunk_dialog_load_game_text(&local_654,ADDR(0x630f1c, ((u8 *)&g.d_00630f1c)));
-          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_654,ADDR(0x401537, FUN_0050a1d6));
+          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_654,ADDR(0x401537, city_change_draw_option_icon));
           thunk_dialog_set_list_indent((C_0040bc40_28 *)&local_654,0x4b,0);
           local_65c = 0;
           for (local_660 = 0; local_660 < 0x3e; local_660 = local_660 + 1) {
@@ -5002,7 +5002,7 @@ void __cdecl city_button_change(undefined4 param_1)
             thunk_dialog_set_list_rows((DialogTextView *)&local_654,iVar11);
           }
           city_dlg_close_pending = 0;
-          dlg_pending_idle_callback = ((void *)ADDR(0x00402815, FUN_0050b674));
+          dlg_pending_idle_callback = ((void *)ADDR(0x00402815, city_change_idle_autoclose));
           local_958 = thunk_dialog_run_modal(&local_654,0,300);
           city_dlg_close_pending = 0;
           if ((local_958 < 0) ||
@@ -5242,7 +5242,7 @@ LAB_0050b666:
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define mp_turn_seconds_left (*(int *)((u8 *)&g.d_00633a78))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
-void __cdecl FUN_0050b674(void)
+void __cdecl city_change_idle_autoclose(void)
 
 {
   int iVar1;
@@ -5255,11 +5255,11 @@ void __cdecl FUN_0050b674(void)
     }
     else if (city_dlg_close_pending == '\0') {
       city_dlg_close_pending = '\x01';
-      DAT_00630d68 = thunk_timer_ticks();
+      city_dlg_close_start_ticks = thunk_timer_ticks();
     }
     else {
       iVar1 = thunk_timer_ticks();
-      if (DAT_00630d68 + 0x4b0 < iVar1) {
+      if (city_dlg_close_start_ticks + 0x4b0 < iVar1) {
         city_dlg_close_pending = '\0';
         dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
         wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
@@ -5327,7 +5327,7 @@ void __cdecl city_button_rename(undefined4 param_1)
            ((civ_create_busy == 0 && (civ_check_destroyed_busy == 0)))))))) && (unit_gather_cargo_busy == 0)) &&
        (((unit_lift_off_map_busy == 0 && (unit_delete_cargo_busy == 0)) && (unit_destroy_redraw_busy == 0)))) {
       city_dlg_close_pending = 0;
-      dlg_pending_idle_callback = ((void *)ADDR(0x00402815, FUN_0050b674));
+      dlg_pending_idle_callback = ((void *)ADDR(0x00402815, city_change_idle_autoclose));
       puVar4 = local_108;
       iVar3 = thunk_citywnd_get_city((C_004083b0_4 *)&city_window);
       iVar3 = thunk_dlg_game_text_input(ADDR(0x630fb4, ((u8 *)&g.d_00630fb4)),0xf,iVar3 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)),(iptr)puVar4);
@@ -5554,7 +5554,7 @@ void __cdecl city_window_exit_clicked(undefined4 param_1)
 #undef city_window_exit_requested
 
 /* 0050bcda auto */
-void __cdecl FUN_0050bcda(undefined4 param_1)
+void __cdecl city_window_on_improvement_scroll(undefined4 param_1)
 
 {
   iptr iVar1;
@@ -5810,7 +5810,7 @@ void __cdecl city_window_on_mouse(undefined4 param_1,undefined4 param_2,undefine
 #undef local_8
 
 /* 0050c405 auto */
-void __cdecl FUN_0050c405(undefined4 param_1,undefined4 param_2)
+void __cdecl city_window_on_lbuttonup(undefined4 param_1,undefined4 param_2)
 
 {
   thunk_city_window_on_mouse(param_1,param_2,0);
@@ -5818,7 +5818,7 @@ void __cdecl FUN_0050c405(undefined4 param_1,undefined4 param_2)
 }
 
 /* 0050c427 auto */
-void __cdecl FUN_0050c427(undefined4 param_1,undefined4 param_2)
+void __cdecl city_window_on_rbuttonup(undefined4 param_1,undefined4 param_2)
 
 {
   thunk_city_window_on_mouse(param_1,param_2,1);
@@ -6356,8 +6356,8 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   iVar6 = thunk_city_window_scale((C_004083b0_4 *)this,0xc);
   scrollbar_set_page_size
             (*(Control **)(this[0x13].pad_48 + 0x50),(iVar3 - (iVar4 >> 1)) / iVar6);
-  thunk_scrollbar_set_callback(*(Control **)(this[0x13].pad_48 + 0x50),ADDR(0x402f4f, FUN_0050bcda));
-  thunk_scrollbar_set_track_callback(*(ScrollbarTrackSetView **)(this[0x13].pad_48 + 0x50),ADDR(0x402f4f, FUN_0050bcda));
+  thunk_scrollbar_set_callback(*(Control **)(this[0x13].pad_48 + 0x50),ADDR(0x402f4f, city_window_on_improvement_scroll));
+  thunk_scrollbar_set_track_callback(*(ScrollbarTrackSetView **)(this[0x13].pad_48 + 0x50),ADDR(0x402f4f, city_window_on_improvement_scroll));
   iVar3 = *(int *)(this[0x12].pad_48 + 0x74);
   if (iVar3 == 1) {
     this[0x12].pad_48[0x78] = 0xfb;
@@ -6377,8 +6377,8 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     this[0x12].pad_48[0x7a] = '\0';
     this[0x12].pad_48[0x7b] = '\0';
   }
-  if (*(int *)(this[0x12].pad_48 + 0x78) != DAT_00630d28) {
-    DAT_00630d28 = *(int *)(this[0x12].pad_48 + 0x78);
+  if (*(int *)(this[0x12].pad_48 + 0x78) != city_tile_pick_zoom_cached) {
+    city_tile_pick_zoom_cached = *(int *)(this[0x12].pad_48 + 0x78);
     uVar5 = thunk_gfx_zoom_scale(0x20,*(undefined4 *)(this[0x12].pad_48 + 0x78));
     uVar9 = thunk_gfx_zoom_scale(0x40,*(undefined4 *)(this[0x12].pad_48 + 0x78));
     surface_create((DibSurface *)&city_tile_pick_surface,uVar9,uVar5);
@@ -6459,7 +6459,7 @@ void __thiscall city_window_end_notice(C_004083b0_12c *this)
 #undef city_window_exit_btn_pending
 
 /* 0050db92 auto */
-void __cdecl FUN_0050db92(void)
+void __cdecl city_window_on_size(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&city_window_wnd,ADDR(0x655344, ((u8 *)&g.d_00655344)));
@@ -6467,7 +6467,7 @@ void __cdecl FUN_0050db92(void)
 }
 
 /* 0050dbb8 auto */
-void __cdecl FUN_0050dbb8(void)
+void __cdecl city_window_on_move(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&city_window_wnd,ADDR(0x655344, ((u8 *)&g.d_00655344)));
@@ -6476,7 +6476,7 @@ void __cdecl FUN_0050dbb8(void)
 
 /* 0050dbde auto */
 #define city_window_size_level (*(int *)((u8 *)&g.d_006aa78c))
-void __cdecl FUN_0050dbde(int param_1)
+void __cdecl city_window_on_caption_button(int param_1)
 
 {
   if (param_1 == 1) {
@@ -6553,18 +6553,18 @@ void __thiscall city_window_create(FrameWindow *this)
   thunk_frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
   thunk_frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x648820, ((u8 *)&g.d_00648820)),2);
   thunk_frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x647788, ((u8 *)&g.d_00647788)),3);
-  thunk_wnd_set_caption_button_handler(this,ADDR(0x40205e, FUN_0050dbde));
+  thunk_wnd_set_caption_button_handler(this,ADDR(0x40205e, city_window_on_caption_button));
   thunk_city_window_clear_controls((C_004083b0_4 *)this);
   thunk_wnd_set_close_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401bae, thunk_city_window_close));
-  thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402abd, FUN_00509935));
-  thunk_wnd_set_minimize_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4014ec, FUN_00509a82));
-  thunk_wnd_set_restore_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401780, FUN_00509a9c));
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4031ac, FUN_0050c405));
-  thunk_wnd_set_rbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4021c6, FUN_0050c427));
-  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x402cd4, thunk_FUN_004125c6));
-  thunk_wnd_set_char_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401e56, thunk_FUN_00411f91));
-  thunk_wnd_set_size_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401d7a, FUN_0050db92));
-  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403bbb, FUN_0050dbb8));
+  thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402abd, city_window_on_redraw));
+  thunk_wnd_set_minimize_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4014ec, city_window_on_minimize));
+  thunk_wnd_set_restore_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401780, city_window_on_restore));
+  thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4031ac, city_window_on_lbuttonup));
+  thunk_wnd_set_rbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4021c6, city_window_on_rbuttonup));
+  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x402cd4, thunk_map_window_key));
+  thunk_wnd_set_char_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401e56, thunk_map_window_ascii));
+  thunk_wnd_set_size_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401d7a, city_window_on_size));
+  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403bbb, city_window_on_move));
   return;
 }
 #undef saved_layout_valid

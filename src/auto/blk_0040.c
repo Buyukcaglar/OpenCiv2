@@ -10,16 +10,16 @@
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00406a80(void)
+void __cdecl minimap_window_global_init(void)
 
 {
-  FUN_00406a9a();
-  FUN_00406ab4();
+  minimap_window_static_init();
+  minimap_window_reg_atexit();
   return;
 }
 
 /* 00406a9a auto */
-void __cdecl FUN_00406a9a(void)
+void __cdecl minimap_window_static_init(void)
 
 {
   thunk_frame_wnd_ctor((SurfaceWindow *)&minimap_window);
@@ -27,15 +27,15 @@ void __cdecl FUN_00406a9a(void)
 }
 
 /* 00406ab4 auto */
-void __cdecl FUN_00406ab4(void)
+void __cdecl minimap_window_reg_atexit(void)
 
 {
-  _atexit(FUN_00406ad1);
+  _atexit(minimap_window_atexit_dtor);
   return;
 }
 
 /* 00406ad1 auto */
-void __cdecl FUN_00406ad1(void)
+void __cdecl minimap_window_atexit_dtor(void)
 
 {
   thunk_frame_wnd_dtor((DibSurface *)&minimap_window);
@@ -44,7 +44,7 @@ void __cdecl FUN_00406ad1(void)
 
 /* 00406aeb auto */
 #define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
-void __cdecl FUN_00406aeb(void)
+void __cdecl minimap_on_minimize(void)
 
 {
   minimap_hidden = 1;
@@ -54,7 +54,7 @@ void __cdecl FUN_00406aeb(void)
 
 /* 00406b02 auto */
 #define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
-void __cdecl FUN_00406b02(void)
+void __cdecl minimap_on_restore(void)
 
 {
   thunk_city_window_bring_to_top((C_004083b0_4 *)&city_window);
@@ -66,7 +66,7 @@ void __cdecl FUN_00406b02(void)
 
 /* 00406b28 auto */
 #define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
-undefined4 __cdecl FUN_00406b28(void)
+undefined4 __cdecl minimap_on_close(void)
 
 {
   minimap_hidden = 1;
@@ -83,7 +83,7 @@ undefined4 __cdecl FUN_00406b28(void)
 #define _DAT_0063caf0 (*(undefined4 *)((u8 *)&g.d_0063caf0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_00406b4c(void)
+void __cdecl minimap_calc_layout(void)
 
 {
   int iVar1;
@@ -289,7 +289,7 @@ void __cdecl minimap_draw_view_rect(void)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-void __cdecl FUN_004070f1(int param_1,int param_2,int param_3,int param_4)
+void __cdecl minimap_redraw_area(int param_1,int param_2,int param_3,int param_4)
 
 {
   int iVar1;
@@ -389,8 +389,8 @@ void __cdecl minimap_redraw(void)
   if ((minimap_hidden == '\0') && (game_loop_active != '\0')) {
     thunk_frame_wnd_layout((FrameWindow *)&minimap_window);
     thunk_gfx_set_draw_target(ADDR(0x63c818, ((u8 *)&g.d_0063c818)));
-    thunk_FUN_00406b4c();
-    thunk_FUN_00408750(0);
+    thunk_minimap_calc_layout();
+    thunk_gfx_fill_draw_target(0);
     local_10 = minimap_client_y + _DAT_0063caf0;
     for (local_20 = 0; local_20 < minimap_view_rows; local_20 = local_20 + 1) {
       uVar1 = local_20 + minimap_origin_y;
@@ -447,7 +447,7 @@ void __cdecl minimap_redraw(void)
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_004074dc(int param_1,int param_2)
+void __cdecl minimap_on_lbuttonup(int param_1,int param_2)
 
 {
   uint uVar1;
@@ -506,7 +506,7 @@ void __cdecl FUN_004074dc(int param_1,int param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_00407658(int param_1,int param_2)
+void __cdecl minimap_on_rbuttonup(int param_1,int param_2)
 
 {
   uint uVar1;
@@ -606,7 +606,7 @@ void __cdecl minimap_calc_rect(void)
 #undef local_10
 
 /* 0040795a auto */
-void __cdecl FUN_0040795a(void)
+void __cdecl minimap_on_size(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&minimap_wnd,ADDR(0x655324, ((u8 *)&g.d_00655324)));
@@ -614,7 +614,7 @@ void __cdecl FUN_0040795a(void)
 }
 
 /* 00407980 auto */
-void __cdecl FUN_00407980(void)
+void __cdecl minimap_on_move(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&minimap_wnd,ADDR(0x655324, ((u8 *)&g.d_00655324)));
@@ -626,7 +626,7 @@ void __cdecl FUN_00407980(void)
 #define minimap_wnd_rect_top (*(undefined4 *)((u8 *)&g.d_00655328))
 #define saved_layout_valid (*(int *)((u8 *)&g.d_00655280))
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
-void __cdecl FUN_004079a6(void)
+void __cdecl minimap_window_create(void)
 
 {
   int iVar1;
@@ -658,17 +658,17 @@ void __cdecl FUN_004079a6(void)
             ((FrameWindow *)&minimap_window,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   thunk_wnd_set_min_size((C_00408010_b8 *)&minimap_wnd,0x28,0x19);
   thunk_wnd_set_redraw_callback((SurfaceWindow *)&minimap_window,ADDR(0x402581, thunk_minimap_redraw));
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4022de, FUN_004074dc));
-  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401942, FUN_00407658));
-  thunk_wnd_set_keydown_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x402cd4, thunk_FUN_004125c6));
-  thunk_wnd_set_char_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401e56, thunk_FUN_00411f91));
+  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4022de, minimap_on_lbuttonup));
+  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401942, minimap_on_rbuttonup));
+  thunk_wnd_set_keydown_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x402cd4, thunk_map_window_key));
+  thunk_wnd_set_char_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401e56, thunk_map_window_ascii));
   thunk_wnd_set_cursor((WndBase *)&minimap_wnd,0x1ff);
   thunk_wnd_set_icon((WndBase *)&minimap_wnd,1);
-  thunk_wnd_set_minimize_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403d05, FUN_00406aeb));
-  thunk_wnd_set_restore_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401956, FUN_00406b02));
-  thunk_wnd_set_close_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x40322e, FUN_00406b28));
-  thunk_wnd_set_size_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4012a8, FUN_0040795a));
-  thunk_wnd_set_move_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403931, FUN_00407980));
+  thunk_wnd_set_minimize_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403d05, minimap_on_minimize));
+  thunk_wnd_set_restore_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401956, minimap_on_restore));
+  thunk_wnd_set_close_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x40322e, minimap_on_close));
+  thunk_wnd_set_size_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4012a8, minimap_on_size));
+  thunk_wnd_set_move_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403931, minimap_on_move));
   wnd_repaint((SurfaceWindow *)&minimap_window);
   if (game.multiplayer != '\x01') {
     thunk_window_show((C_004083b0_4 *)&minimap_window);
@@ -682,7 +682,7 @@ void __cdecl FUN_004079a6(void)
 
 /* 00407b31 auto */
 #define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
-void __cdecl FUN_00407b31(void)
+void __cdecl minimap_window_destroy(void)
 
 {
   minimap_hidden = 1;
@@ -929,7 +929,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr param_1)
       local_c = this + 1;
     }
     surface_blit_to_wnd(this,(iptr)local_c,(iptr)&this->bounds_rect,(iptr)&this->bounds_rect);
-    thunk_FUN_00408580((WndValidateRectView *)(this + 1),(iptr)&this->bounds_rect);
+    thunk_wnd_view_validate_rect((WndValidateRectView *)(this + 1),(iptr)&this->bounds_rect);
   }
   else {
     if (this == (DibSurface *)0x0) {
@@ -939,7 +939,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr param_1)
       local_8 = this + 1;
     }
     surface_blit_to_wnd(this,(iptr)local_8,param_1,param_1);
-    thunk_FUN_00408580((WndValidateRectView *)(this + 1),param_1);
+    thunk_wnd_view_validate_rect((WndValidateRectView *)(this + 1),param_1);
   }
   return;
 }
@@ -947,7 +947,7 @@ void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr param_1)
 #undef local_8
 
 /* 00408580 auto */
-void __thiscall FUN_00408580(WndValidateRectView *this,iptr param_1)
+void __thiscall wnd_view_validate_rect(WndValidateRectView *this,iptr param_1)
 
 {
   wnd_obj_validate_rect(this->wnd_obj,param_1);
@@ -971,12 +971,12 @@ void __thiscall wnd_set_redraw_callback(SurfaceWindow *this,iptr param_1)
 void __thiscall window_show(C_004083b0_4 *this)
 
 {
-  thunk_FUN_00408620((Wnd *)(this + 0x12));
+  thunk_window_show_focus_first((Wnd *)(this + 0x12));
   return;
 }
 
 /* 00408620 auto */
-void __thiscall FUN_00408620(Wnd *this)
+void __thiscall window_show_focus_first(Wnd *this)
 
 {
   thunk_wnd_handle_show_raise((WndBase *)this);
@@ -1021,7 +1021,7 @@ void __cdecl gfx_target_frame_rect(iptr param_1,undefined4 param_2)
 
 /* 00408750 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
-void __cdecl FUN_00408750(undefined4 param_1)
+void __cdecl gfx_fill_draw_target(undefined4 param_1)
 
 {
   thunk_gfx_fill_surface(gfx_draw_target,param_1);
@@ -1137,7 +1137,7 @@ void __cdecl ui_pump_messages_net(void)
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(120)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(124)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(128)))
-void __cdecl FUN_0040897f(void)
+void __cdecl mapgen_calc_fertility(void)
 
 {
   byte bVar1;
@@ -1360,7 +1360,7 @@ void __cdecl map_generate(int param_1)
     local_20 = ((int)map.height * (int)map.width >> 1) / 400;
     local_14 = (local_20 * ((mapgen_land_mass * 8 + 8 + iVar7 * 8) * 5 + 0x50) * 8) / 10;
     do {
-      FUN_0040a572(0);
+      mapgen_add_landmass(0);
     } while (mapgen_land_placed < local_14);
     thunk_map_assign_landmass_ids();
     local_358 = 0;
@@ -1372,7 +1372,7 @@ void __cdecl map_generate(int param_1)
     local_24 = 0x40 - (local_358 + 1);
     if (0 < local_24) {
       for (local_48 = 0; (int)local_48 < local_24; local_48 = local_48 + 1) {
-        FUN_0040a572(1);
+        mapgen_add_landmass(1);
       }
     }
     for (local_354 = 1; (int)local_354 < map.height + -2; local_354 = local_354 + 1) {
@@ -1682,7 +1682,7 @@ void __cdecl map_generate(int param_1)
           local_50->terrain = '\x05';
           break;
         case '\x05':
-          FUN_0040ab41(local_5c,local_354);
+          mapgen_try_place_lake(local_5c,local_354);
           break;
         case '\x06':
           local_50->terrain = '\x04';
@@ -1791,7 +1791,7 @@ void __cdecl map_generate(int param_1)
       }
     }
     thunk_ui_pump_messages_net();
-    FUN_0040ac5a();
+    mapgen_place_rivers();
     thunk_ui_pump_messages_net();
   }
   if ((game.rules & 0x8000) == 0) {
@@ -1810,7 +1810,7 @@ void __cdecl map_generate(int param_1)
   }
   thunk_map_assign_landmass_ids();
   thunk_map_build_coarse_connectivity();
-  thunk_FUN_0040897f();
+  thunk_mapgen_calc_fertility();
   if ((game.rules & 0x8000) == 0) {
     for (local_5c = 0; (int)local_5c < (int)map.width; local_5c = local_5c + 2) {
       puVar5 = (undefined1 *)tile_at(local_5c,0);
@@ -1944,7 +1944,7 @@ void __cdecl map_generate(int param_1)
 #define local_1c (*(u8 * *)(frame_ + FRAME_OFF(12)))
 #define local_18 (*(u8 * *)(frame_ + FRAME_OFF(16)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-void __cdecl FUN_0040a572(int param_1)
+void __cdecl mapgen_add_landmass(int param_1)
 
 {
   iptr iVar1;
@@ -1983,20 +1983,20 @@ void __cdecl FUN_0040a572(int param_1)
   } while (*(char *)(iVar1 + 1) != '\0');
   if (param_1 == 0) {
     if (mapgen_land_form < 1) {
-      FUN_0040a763(local_20,local_24);
+      mapgen_land_walk(local_20,local_24);
     }
     else {
-      FUN_0040a92f(local_20,local_24);
+      mapgen_land_walk_wide(local_20,local_24);
     }
   }
   else {
     iVar2 = _rand();
-    FUN_0040aaa4(local_20,local_24);
+    mapgen_islet_walk(local_20,local_24);
     if (6 < iVar2 % 10) {
-      FUN_0040aaa4(local_20,local_24);
+      mapgen_islet_walk(local_20,local_24);
     }
     if (8 < iVar2 % 10) {
-      FUN_0040aaa4(local_20,local_24);
+      mapgen_islet_walk(local_20,local_24);
     }
   }
   local_1c = &map_tiles->owner;
@@ -2021,7 +2021,7 @@ void __cdecl FUN_0040a572(int param_1)
 
 /* 0040a763 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0040a763(int param_1,int param_2)
+void __cdecl mapgen_land_walk(int param_1,int param_2)
 
 {
   int iVar1;
@@ -2110,7 +2110,7 @@ void __cdecl mapgen_mark_tile(iptr param_1,iptr param_2)
 
 /* 0040a92f auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0040a92f(int param_1,int param_2)
+void __cdecl mapgen_land_walk_wide(int param_1,int param_2)
 
 {
   int iVar3;
@@ -2166,7 +2166,7 @@ void __cdecl FUN_0040a92f(int param_1,int param_2)
 
 /* 0040aaa4 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0040aaa4(int param_1,int param_2)
+void __cdecl mapgen_islet_walk(int param_1,int param_2)
 
 {
   uint uVar1;
@@ -2196,7 +2196,7 @@ void __cdecl FUN_0040aaa4(int param_1,int param_2)
 #undef local_8
 
 /* 0040ab41 auto */
-undefined4 __cdecl FUN_0040ab41(int param_1,int param_2)
+undefined4 __cdecl mapgen_try_place_lake(int param_1,int param_2)
 
 {
   int iVar1;
@@ -2253,7 +2253,7 @@ undefined4 __cdecl FUN_0040ab41(int param_1,int param_2)
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(40)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(52)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
-void __cdecl FUN_0040ac5a(void)
+void __cdecl mapgen_place_rivers(void)
 
 {
   byte bVar1;
@@ -2519,7 +2519,7 @@ taxrate_balance(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr param_5
 void __cdecl taxrate_dialog_redraw(void)
 
 {
-  thunk_FUN_0040c7d0((C_004083b0_430 *)taxrate_dlg);
+  thunk_taxrate_dialog_paint((C_004083b0_430 *)taxrate_dlg);
   return;
 }
 
@@ -2528,7 +2528,7 @@ void __cdecl taxrate_dialog_redraw(void)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_0040beec(int param_1)
+void __cdecl taxrate_on_tax_scroll(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2572,7 +2572,7 @@ void __cdecl FUN_0040beec(int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_0040c07f(int param_1)
+void __cdecl taxrate_on_science_scroll(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2616,7 +2616,7 @@ void __cdecl FUN_0040c07f(int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_0040c212(int param_1)
+void __cdecl taxrate_on_lux_scroll(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2657,7 +2657,7 @@ void __cdecl FUN_0040c212(int param_1)
 
 /* 0040c3a5 auto */
 #define taxrate_dialog_active (*(undefined4 *)((u8 *)&g.d_0063cbb0))
-void __cdecl FUN_0040c3a5(void)
+void __cdecl taxrate_on_ok_clicked(void)
 
 {
   taxrate_dialog_active = 0;
@@ -2668,7 +2668,7 @@ void __cdecl FUN_0040c3a5(void)
 
 /* 0040c3cd auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0040c3cd(int param_1,int param_2)
+void __cdecl taxrate_on_lock_toggled(int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2745,7 +2745,7 @@ void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
 #define taxrate_bg_surface (*(int *)((u8 *)&g.d_00624f1c))
 #define taxrate_dialog_active (*(int *)((u8 *)&g.d_0063cbb0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_0040c7d0(C_004083b0_430 *this)
+void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2875,7 +2875,7 @@ void __thiscall FUN_0040c7d0(C_004083b0_430 *this)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1176)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
+void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr param_1)
 
 {
   uptr uVar1;
@@ -3006,7 +3006,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
             ((Control *)&this->field_358,(iptr)local_490,0x65,(iptr)local_458,0);
   thunk_scrollbar_set_range((Control *)&this->field_358,0,10);
   thunk_scrollbar_set_pos((C_0040f380_40 *)&this->field_358,this->field_2e0);
-  thunk_scrollbar_set_callback((Control *)&this->field_358,ADDR(0x40385f, FUN_0040beec));
+  thunk_scrollbar_set_callback((Control *)&this->field_358,ADDR(0x40385f, taxrate_on_tax_scroll));
   uVar4 = iVar9 + this->field_318 + this->field_320;
   this->field_338 = uVar4;
   iVar9 = uVar4 + this->field_32c;
@@ -3021,7 +3021,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
             ((Control *)(this->pad_3c0 + 0x18),(iptr)local_494,0x66,(iptr)local_458,0);
   thunk_scrollbar_set_range((Control *)(this->pad_3c0 + 0x18),0,10);
   thunk_scrollbar_set_pos((C_0040f380_40 *)(this->pad_3c0 + 0x18),this->field_2e8);
-  thunk_scrollbar_set_callback((Control *)(this->pad_3c0 + 0x18),ADDR(0x40289c, FUN_0040c07f));
+  thunk_scrollbar_set_callback((Control *)(this->pad_3c0 + 0x18),ADDR(0x40289c, taxrate_on_science_scroll));
   uVar4 = iVar9 + this->field_318 + this->field_320;
   this->field_334 = uVar4;
   thunk_rect_set_xywh((iptr)local_458,uVar8,uVar4 + this->field_32c,this->field_31c,this->field_320);
@@ -3035,7 +3035,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
             ((Control *)(this->pad_364 + 0x34),(iptr)local_498,0x67,(iptr)local_458,0);
   thunk_scrollbar_set_range((Control *)(this->pad_364 + 0x34),0,10);
   thunk_scrollbar_set_pos((C_0040f380_40 *)(this->pad_364 + 0x34),this->field_2e4);
-  thunk_scrollbar_set_callback((Control *)(this->pad_364 + 0x34),ADDR(0x4020f4, FUN_0040c212));
+  thunk_scrollbar_set_callback((Control *)(this->pad_364 + 0x34),ADDR(0x4020f4, taxrate_on_lux_scroll));
   iVar9 = thunk_font_line_spacing((GameFont *)dialog_font_ptr);
   this->field_328 = iVar9 + 8;
   this->field_324 = this->client_width - 4;
@@ -3055,7 +3055,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create
             ((Control *)(this[1].pad_48 + 0x54),(iptr)local_49c,0xc9,(iptr)local_458,iVar5);
-  thunk_button_set_callback((Control *)(this[1].pad_48 + 0x54),ADDR(0x402a18, FUN_0040c3a5));
+  thunk_button_set_callback((Control *)(this[1].pad_48 + 0x54),ADDR(0x402a18, taxrate_on_ok_clicked));
   thunk_ctrl_set_cancel_button((Control *)(this[1].pad_48 + 0x54));
   thunk_ctrl_set_default_button((Control *)(this[1].pad_48 + 0x54));
   if (ui_large_screen < 1) {
@@ -3063,7 +3063,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   }
   for (local_468 = 0; local_468 < 3; local_468 = local_468 + 1) {
     *(undefined4 *)(this->pad_364 + local_468 * 4 + -0x18) =
-         *(undefined4 *)(&DAT_00624f10 + local_468 * 4);
+         *(undefined4 *)(&taxrate_lock_flags + local_468 * 4);
     if (this == (C_004083b0_430 *)0x0) {
       local_4a0 = (u8 *)0x0;
     }
@@ -3076,7 +3076,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
     thunk_checkbox_set_checked
               ((Control *)(this->pad_3c0 + local_468 * 0x3c + 0x58),
                *(undefined4 *)(this->pad_364 + local_468 * 4 + -0x18));
-    thunk_checkbox_set_callback((CheckboxCallbackSetView *)(this->pad_3c0 + local_468 * 0x3c + 0x58),ADDR(0x40375b, FUN_0040c3cd))
+    thunk_checkbox_set_callback((CheckboxCallbackSetView *)(this->pad_3c0 + local_468 * 0x3c + 0x58),ADDR(0x40375b, taxrate_on_lock_toggled))
     ;
     local_45c = local_45c + this->field_318 + this->field_320 + this->field_32c;
   }
@@ -3085,7 +3085,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   wnd_repaint((SurfaceWindow *)this);
   thunk_window_show((C_004083b0_4 *)this);
   if (2 < game.multiplayer) {
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, FUN_0059c301));
+    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
   }
   wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
   thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
@@ -3097,7 +3097,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   }
   taxrate_bg_surface = (DibSurface *)0x0;
   for (local_468 = 0; local_468 < 3; local_468 = local_468 + 1) {
-    *(undefined4 *)(&DAT_00624f10 + local_468 * 4) =
+    *(undefined4 *)(&taxrate_lock_flags + local_468 * 4) =
          *(undefined4 *)(this->pad_364 + local_468 * 4 + -0x18);
   }
   if (((uint)civs[param_1].tax_rate != this->field_2e0) ||
@@ -3166,15 +3166,15 @@ void __cdecl taxrate_dialog_show(iptr param_1)
   undefined1 frame_[FRAME_OFF(1304)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0040f060(&local_518);
+  thunk_taxrate_dialog_ctor(&local_518);
   local_8 = 0;
   if ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0040dea8 */ { thunk_FUN_0040f1e0((TaxRateDialog *)((iptr)&local_518)); }
+    /* inlined unwind funclet FUN_0040dea8 */ { thunk_taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
   }
   else {
     if ((game.multiplayer < 3) || (human_civ == param_1)) {
-      thunk_FUN_0040cd64(&local_518,param_1);
+      thunk_taxrate_dialog_run(&local_518,param_1);
       thunk_city_window_refresh((FrameWindow *)&city_window);
     }
     else {
@@ -3183,7 +3183,7 @@ void __cdecl taxrate_dialog_show(iptr param_1)
                          0,0,0,0,0);
     }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0040dea8 */ { thunk_FUN_0040f1e0((TaxRateDialog *)((iptr)&local_518)); }
+    /* inlined unwind funclet FUN_0040dea8 */ { thunk_taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
   }
   return;
 }
@@ -3195,7 +3195,7 @@ void __cdecl taxrate_dialog_show(iptr param_1)
 
 /* 0040decc auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-void __cdecl FUN_0040decc(iptr param_1)
+void __cdecl taxrate_enforce_max_rate(iptr param_1)
 
 {
   int iVar1;
@@ -3422,7 +3422,7 @@ DibSurface * __thiscall surface_delete(DibSurface *this,uint param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_004083b0_430 * __thiscall FUN_0040f060(C_004083b0_430 *this)
+C_004083b0_430 * __thiscall taxrate_dialog_ctor(C_004083b0_430 *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3436,7 +3436,7 @@ C_004083b0_430 * __thiscall FUN_0040f060(C_004083b0_430 *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   thunk_scrollbar_ctor((Control *)(this->pad_3c0 + 0x18));
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  FUN_005f2620(this->pad_3c0 + 0x58,0x3c,3,thunk_FUN_0040f8b0,
+  FUN_005f2620(this->pad_3c0 + 0x58,0x3c,3,thunk_checkbox_elem_ctor,
                thunk_checkbox_dtor);
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),4);
   thunk_button_ctor((Control *)(this[1].pad_48 + 0x54));
@@ -3451,7 +3451,7 @@ C_004083b0_430 * __thiscall FUN_0040f060(C_004083b0_430 *this)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_0040f1e0(void *this)
+void __thiscall taxrate_dialog_dtor(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3535,7 +3535,7 @@ Control * __thiscall ctrl_base_ctor(Control *this)
   SetRect((LPRECT)&this->rect_left,0,0,0,0);
   this->hwnd = 0;
   this->next_ctrl = 0;
-  this->field_24 = '\0';
+  this->wants_initial_focus = '\0';
   this->hotkey_char = '\0';
   this->hotkey_pos = 0xffffffff;
   return this;
@@ -3624,7 +3624,7 @@ ctrl_init(Control *this,iptr param_1,u32 param_2,u32 param_3,iptr param_4)
   this->rect_bottom = *(u32 *)(param_4 + 0xc);
   this->next_ctrl = 0;
   this->hwnd = 0;
-  this->field_24 = '\0';
+  this->wants_initial_focus = '\0';
   wnd_append_control((WndControlListView *)param_1,(iptr)this);
   return;
 }
@@ -3670,7 +3670,7 @@ void __thiscall button_set_callback(Control *this,iptr param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-Control * __thiscall FUN_0040f8b0(Control *this)
+Control * __thiscall checkbox_elem_ctor(Control *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */

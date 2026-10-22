@@ -30,7 +30,7 @@ undefined4 __cdecl snd_wave_get_position_ms(void)
 }
 
 /* 0x005d5706: position in samples. */
-undefined4 __cdecl FUN_005d5706(void)
+undefined4 __cdecl snd_wave_get_position_samples(void)
 {
     MMTIME t;
 

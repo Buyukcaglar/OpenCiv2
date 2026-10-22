@@ -76,9 +76,9 @@ message by message and clock event by clock event.
 
 ## Known limitations / next steps
 
-* **Names and types.**  About 2,890 of about 4,450 game functions, 1,860 of
-  about 2,480 globals, 268 of 355 classes and 810 class fields are named: 87% of
-  calls and 94% of global references in the generated code read by name.
+* **Names and types.**  About 4,050 of about 4,450 game functions, 2,260 of
+  about 2,480 globals, 268 of 355 classes and 870 class fields are named: 95% of
+  calls and over 99% of global references in the generated code read by name.
   Each name has its evidence in re/function_names.tsv, re/global_names.tsv,
   re/type_names.tsv and re/field_names.tsv; re/notes.md collects the
   structures found.  Names live in re/symbols.tsv (functions: func,

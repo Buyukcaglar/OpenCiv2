@@ -606,7 +606,7 @@ void __cdecl city_notify_dialog(iptr param_1,iptr param_2,iptr param_3)
 
 /* 004f3f60 auto */
 #define dialog_clamp_overflow (*(undefined4 *)((u8 *)&g.d_0062f004))
-void __cdecl FUN_004f3f60(undefined4 param_1)
+void __cdecl dialog_set_clamp_overflow(undefined4 param_1)
 
 {
   dialog_clamp_overflow = param_1;
@@ -623,7 +623,7 @@ void __cdecl FUN_004f3f60(undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004f3f80(void)
+void __cdecl pedia_window_global_init(void)
 
 {
   pedia_window_static_init();
@@ -643,12 +643,12 @@ void __cdecl pedia_window_static_init(void)
 void __cdecl pedia_window_reg_atexit(void)
 
 {
-  _atexit(FUN_004f3fd1);
+  _atexit(pedia_window_static_dtor);
   return;
 }
 
 /* 004f3fd1 auto */
-void __cdecl FUN_004f3fd1(void)
+void __cdecl pedia_window_static_dtor(void)
 
 {
   thunk_pedia_window_dtor((DibSurface *)&pedia_window);
@@ -1013,7 +1013,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   OffsetRect((LPRECT)&this->content_left,panel_padding_x + panel_margin_x,this->field_5e4 + panel_margin_y);
   iVar1 = thunk_wnd_client_width((WndBase *)&main_frame_wnd);
   iVar2 = thunk_wnd_client_height((WndBase *)&main_frame_wnd);
-  FUN_005f22d0(this->pad_608 + 0x10,&DAT_0062f018);
+  FUN_005f22d0(this->pad_608 + 0x10,&pedia_window_empty_title_str);
   wnd_create_with_surface
             ((DibSurface *)this,0,0xe02,iVar1 / 2 - (int)this->panel_width / 2,
              iVar2 / 2 - (int)this->panel_height / 2,this->panel_width,this->panel_height,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)))
@@ -1021,7 +1021,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   thunk_wnd_set_close_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401dcf, thunk_pedia_close));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x40272a, thunk_pedia_redraw_page));
   thunk_wnd_set_caption_height((WndBase *)this->pad_48,this->field_5e4);
-  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4026bc, FUN_004f76ce));
+  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4026bc, pedia_list_on_key));
   thunk_wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   iVar1 = panel_padding_x;
   this[2].field_2bc = (u32)&caption_close_button_sprite;
@@ -1052,7 +1052,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   }
   thunk_hotspot_create
             ((C_0040f380_40 *)this[2].field_2c0,(iptr)local_48,4000,(iptr)&local_24);
-  thunk_hotspot_set_click_callback((HotspotClickSetView *)this[2].field_2c0,ADDR(0x4037fb, FUN_004f5b24));
+  thunk_hotspot_set_click_callback((HotspotClickSetView *)this[2].field_2c0,ADDR(0x4037fb, pedia_on_close));
   iVar1 = panel_bevel_width + panel_margin_x + 2;
   uVar3 = this->panel_height;
   iVar2 = thunk_font_line_spacing((GameFont *)&font_size24);
@@ -1084,7 +1084,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)&this[2].field_300,(iptr)local_50,0xfa2,(iptr)&local_24,iVar5);
   thunk_ctrl_set_default_button((Control *)&this[2].field_300);
   thunk_ctrl_set_cancel_button((Control *)&this[2].field_300);
-  thunk_button_set_callback((Control *)&this[2].field_300,ADDR(0x4037fb, FUN_004f5b24));
+  thunk_button_set_callback((Control *)&this[2].field_300,ADDR(0x4037fb, pedia_on_close));
   SetRect(&local_24,iVar1,yTop,iVar4 / 2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_54 = (u8 *)0x0;
@@ -1095,7 +1095,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd58));
   thunk_button_create
             ((Control *)(this[2].pad_464 + 4),(iptr)local_54,0xfb2,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_464 + 4),ADDR(0x4018ed, FUN_004f5b6f));
+  thunk_button_set_callback((Control *)(this[2].pad_464 + 4),ADDR(0x4018ed, pedia_on_back));
   iVar2 = iVar4 / 3;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -1118,7 +1118,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd80));
   thunk_button_create
             ((Control *)(this[2].pad_4a4 + 0x3c),(iptr)local_5c,0xfac,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0x3c),ADDR(0x401ec4, FUN_004f5ed2));
+  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0x3c),ADDR(0x401ec4, pedia_show_tech_tree));
   SetRect(&local_24,iVar2 * 2 + iVar1,yTop,iVar2 * 3 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_60 = (u8 *)0x0;
@@ -1131,7 +1131,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_4a4 + 0x78),(iptr)local_60,0xfad,(iptr)&local_24,iVar5);
   thunk_ctrl_set_default_button((Control *)(this[2].pad_4a4 + 0x78));
   thunk_ctrl_set_cancel_button((Control *)(this[2].pad_4a4 + 0x78));
-  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0x78),ADDR(0x4037fb, FUN_004f5b24));
+  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0x78),ADDR(0x4037fb, pedia_on_close));
   iVar2 = (int)(iVar4 + (iVar4 >> 0x1f & 3U)) >> 2;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -1143,7 +1143,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd58));
   thunk_button_create
             ((Control *)(this[2].pad_4a4 + 0xb4),(iptr)local_64,0xfae,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0xb4),ADDR(0x4018ed, FUN_004f5b6f));
+  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0xb4),ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_68 = (u8 *)0x0;
@@ -1154,7 +1154,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd80));
   thunk_button_create
             ((Control *)(this[2].pad_4a4 + 0xf0),(iptr)local_68,0xfaf,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0xf0),ADDR(0x401ec4, FUN_004f5ed2));
+  thunk_button_set_callback((Control *)(this[2].pad_4a4 + 0xf0),ADDR(0x401ec4, pedia_show_tech_tree));
   SetRect(&local_24,iVar2 * 2 + iVar1,yTop,iVar2 * 3 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_6c = (u8 *)0x0;
@@ -1178,7 +1178,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_608 + 4),(iptr)local_70,0xfb1,(iptr)&local_24,iVar5);
   thunk_ctrl_set_default_button((Control *)(this[2].pad_608 + 4));
   thunk_ctrl_set_cancel_button((Control *)(this[2].pad_608 + 4));
-  thunk_button_set_callback((Control *)(this[2].pad_608 + 4),ADDR(0x4037fb, FUN_004f5b24));
+  thunk_button_set_callback((Control *)(this[2].pad_608 + 4),ADDR(0x4037fb, pedia_on_close));
   iVar2 = iVar4 / 3;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -1190,7 +1190,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd58));
   thunk_button_create
             ((Control *)&this[2].field_33c,(iptr)local_74,0xfa3,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)&this[2].field_33c,ADDR(0x4018ed, FUN_004f5b6f));
+  thunk_button_set_callback((Control *)&this[2].field_33c,ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_78 = (u8 *)0x0;
@@ -1212,7 +1212,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x51c));
   thunk_button_create
             ((Control *)&this[2].field_3b4,(iptr)local_7c,0xfa5,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)&this[2].field_3b4,ADDR(0x4037fb, FUN_004f5b24));
+  thunk_button_set_callback((Control *)&this[2].field_3b4,ADDR(0x4037fb, pedia_on_close));
   iVar4 = iVar4 / 2;
   SetRect(&local_24,iVar1,yTop,iVar4 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
@@ -1224,7 +1224,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd58));
   thunk_button_create
             ((Control *)(this[2].pad_3c0 + 0x30),(iptr)local_80,0xfa6,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_3c0 + 0x30),ADDR(0x4018ed, FUN_004f5b6f));
+  thunk_button_set_callback((Control *)(this[2].pad_3c0 + 0x30),ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar4 + iVar1,yTop,iVar4 * 2 + iVar1,local_14 + yTop);
   if (this == (C_004083b0_a28 *)0x0) {
     local_84 = (u8 *)0x0;
@@ -1235,7 +1235,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x51c));
   thunk_button_create
             ((Control *)(this[2].pad_3c0 + 0x6c),(iptr)local_84,0xfa7,(iptr)&local_24,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_3c0 + 0x6c),ADDR(0x4037fb, FUN_004f5b24));
+  thunk_button_set_callback((Control *)(this[2].pad_3c0 + 0x6c),ADDR(0x4037fb, pedia_on_close));
   ui_set_button_font(ADDR(0x68abe0, ((u8 *)&g.d_0068abe0)));
   thunk_pedia_clear_links((C_004083b0_4 *)this);
   ui_set_default_font(ADDR(0x67a798, ((u8 *)&g.d_0067a798)));
@@ -1263,8 +1263,8 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   }
   thunk_scrollbar_create
             ((Control *)(this[2].pad_65c + 0x34),(iptr)local_8c,0xfa8,(iptr)&local_24,0);
-  thunk_scrollbar_set_callback((Control *)(this[2].pad_65c + 0x34),ADDR(0x403c51, FUN_004f7313));
-  thunk_scrollbar_set_track_callback((ScrollbarTrackSetView *)(this[2].pad_65c + 0x34),ADDR(0x403c51, FUN_004f7313));
+  thunk_scrollbar_set_callback((Control *)(this[2].pad_65c + 0x34),ADDR(0x403c51, pedia_list_on_scroll));
+  thunk_scrollbar_set_track_callback((ScrollbarTrackSetView *)(this[2].pad_65c + 0x34),ADDR(0x403c51, pedia_list_on_scroll));
   scrollbar_set_page_size((Control *)(this[2].pad_65c + 0x34),2);
   thunk_pedia_load_indexes(this);
   return;
@@ -1297,7 +1297,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
 
 /* 004f5b24 auto */
 #define pedia_history_count (*(undefined4 *)((u8 *)&g.d_006a6790))
-void __cdecl FUN_004f5b24(void)
+void __cdecl pedia_on_close(void)
 
 {
   if (pedia_modal_active == 1) {
@@ -1319,7 +1319,7 @@ void __cdecl FUN_004f5b24(void)
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
-void __cdecl FUN_004f5b6f(void)
+void __cdecl pedia_on_back(void)
 
 {
   if (pedia_history_count != 0) {
@@ -1435,7 +1435,7 @@ void __cdecl pedia_redraw_page(void)
 #define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(undefined4 *)((u8 *)&g.d_006a6788))
-void __cdecl FUN_004f5ed2(void)
+void __cdecl pedia_show_tech_tree(void)
 
 {
   pedia_page_mode = 0;
@@ -2101,7 +2101,7 @@ LAB_004f6d04:
 #undef local_8
 
 /* 004f7313 auto */
-void __cdecl FUN_004f7313(int param_1)
+void __cdecl pedia_list_on_scroll(int param_1)
 
 {
   if (pedia_list_top != param_1 * 9) {
@@ -2267,7 +2267,7 @@ int __cdecl pedia_find_item_by_key(int param_1)
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
-void __cdecl FUN_004f76ce(undefined4 param_1)
+void __cdecl pedia_list_on_key(undefined4 param_1)
 
 {
   int iVar1;
@@ -2364,7 +2364,7 @@ void __cdecl FUN_004f76ce(undefined4 param_1)
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004f7a30(void)
+void __cdecl pedia_list_on_click(void)
 
 {
   int iVar1;
@@ -2745,7 +2745,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         iVar8 = thunk_label_string(terrain_types[local_1c].name);
         thunk_text_append(iVar8);
         if ((0xc < local_1c) &&
-           (iVar3 = _strcmp(terrain_types[local_1c].abbrev,&DAT_0062f104), iVar3 == 0)) {
+           (iVar3 = _strcmp(terrain_types[local_1c].abbrev,&pedia_grassland_shield_abbrev_str), iVar3 == 0)) {
           thunk_text_append_space();
           uVar7 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb00));
           FUN_005f22e0(&text_buffer,uVar7);
@@ -2779,7 +2779,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
     while (bVar2) {
       thunk_text_read_line(1);
       _strncpy(local_10,&text_buffer,2);
-      iVar3 = _strcmp(local_10,&DAT_0062f120);
+      iVar3 = _strcmp(local_10,&pedia_index_marker_str);
       if (iVar3 == 0) {
         *(undefined4 *)(this[1].pad_4a4 + *(int *)(this[1].pad_4a4 + 0xc) * 4 + 0x10) =
              *(undefined4 *)(this[1].pad_4a4 + 0xc);
@@ -2931,7 +2931,7 @@ void __thiscall pedia_history_push(C_004083b0_12c *this)
 
 /* 004f8d04 auto */
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-void __cdecl FUN_004f8d04(void)
+void __cdecl pedia_modal_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3002,7 +3002,7 @@ void __thiscall pedia_link_dtor(void *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004fa1c0(void)
+void __cdecl game_palette_global_init(void)
 
 {
   game_palette_static_init();
@@ -3022,12 +3022,12 @@ void __cdecl game_palette_static_init(void)
 void __cdecl game_palette_reg_atexit(void)
 
 {
-  _atexit(FUN_004fa211);
+  _atexit(game_palette_atexit_dtor);
   return;
 }
 
 /* 004fa211 auto */
-void __cdecl FUN_004fa211(void)
+void __cdecl game_palette_atexit_dtor(void)
 
 {
   palette_destroy((GamePalette *)&game_palette);
@@ -3116,7 +3116,7 @@ undefined4 __cdecl events_parse_unit_type(iptr param_1)
 
 /* 004fa403 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-iptr __cdecl FUN_004fa403(char *param_1)
+iptr __cdecl events_parse_terrain(char *param_1)
 
 {
   int iVar1;
@@ -4252,7 +4252,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr param_1,iptr param_2)
       }
       else if (*local_3c == '@') {
         local_3c = local_3c + 1;
-        iVar1 = __strcmpi(local_3c,&DAT_0062f2c0);
+        iVar1 = __strcmpi(local_3c,&events_kw_if_str);
         if (iVar1 == 0) {
           if (events_parse_verbose != 0) {
             _printf(s__IF_found___creating_new_event_s_0062f2c4);
@@ -4291,7 +4291,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr param_1,iptr param_2)
           local_4c = 2;
         }
         else if (local_4c != 6) {
-          iVar1 = __strcmpi(local_3c,&DAT_0062f338);
+          iVar1 = __strcmpi(local_3c,&events_kw_then_str);
           if (iVar1 == 0) {
             if (events_parse_verbose != 0) {
               _printf(s__THEN_found_0062f340);
@@ -4748,7 +4748,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr param_1,iptr param_2)
               *local_68 = 2;
             }
             else {
-              iVar1 = __strcmpi(local_3c,&DAT_0062fa84);
+              iVar1 = __strcmpi(local_3c,&events_kw_turn_str);
               if (iVar1 == 0) {
                 if (events_parse_verbose != 0) {
                   _printf(s__IF_TURN_found_looking_for_turn__0062fa8c);
@@ -4891,7 +4891,7 @@ int __thiscall events_parse_file(ScenarioEvents *this,iptr param_1,iptr param_2)
         }
       }
       else if (local_4c == 3) {
-        iVar1 = __strcmpi(local_3c,&DAT_0062fd00);
+        iVar1 = __strcmpi(local_3c,&events_kw_text_str);
         if (iVar1 == 0) {
           if (events_parse_verbose != 0) {
             _printf(s__THEN_TEXT_found_looking_for_END_0062fd08);
@@ -5068,13 +5068,13 @@ LAB_004fe0af:
                     iVar1 = __strnicmp(pcVar3,s_veteran__0062ffec,8);
                     if (iVar1 == 0) {
                       pcVar3 = pcVar3 + 8;
-                      iVar1 = __strcmpi(pcVar3,&DAT_0062fff8);
-                      if ((iVar1 == 0) || (iVar1 = __strcmpi(pcVar3,&DAT_0062fffc), iVar1 == 0)) {
+                      iVar1 = __strcmpi(pcVar3,&events_bool_yes_str);
+                      if ((iVar1 == 0) || (iVar1 = __strcmpi(pcVar3,&events_bool_true_str), iVar1 == 0)) {
                         local_68[0x4e] = 1;
                         local_54 = 1;
                       }
                       else {
-                        iVar1 = __strcmpi(pcVar3,&DAT_00630004);
+                        iVar1 = __strcmpi(pcVar3,&events_bool_no_str);
                         if ((iVar1 == 0) || (iVar1 = __strcmpi(pcVar3,s_false_00630008), iVar1 == 0)
                            ) {
                           local_68[0x4e] = 0;
@@ -5240,7 +5240,7 @@ LAB_004fe0af:
                           }
                           goto LAB_004ff6f7;
                         }
-                        iVar1 = __strnicmp(pcVar3,&DAT_006302e4,4);
+                        iVar1 = __strnicmp(pcVar3,&events_who_prefix_str,4);
                         if (iVar1 == 0) {
                           pcVar3 = pcVar3 + 4;
                           local_20 = thunk_events_parse_civ((iptr)pcVar3);
@@ -5513,7 +5513,7 @@ LAB_004fe0af:
                                       if (iVar1 == 0) {
                                         pcVar3 = pcVar3 + 0xd;
                                         if ((*pcVar3 < '0') || ('9' < *pcVar3)) {
-                                          iVar1 = __strcmpi(pcVar3,&DAT_0063073c);
+                                          iVar1 = __strcmpi(pcVar3,&events_numbertomove_all_str);
                                           if (iVar1 == 0) {
                                             local_68[0x26] = -2;
                                             if (events_parse_verbose != 0) {

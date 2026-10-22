@@ -2887,3 +2887,1131 @@ addr	name	confidence	evidence
 005d356e	combo_hwnd_cleanup_stub	high	Empty HWND cleanup stub called from the combo control destructor 00418b50 (like edit/listbox cleanup stubs).
 005dcfca	mem_kb_exceeds_avail	medium	Returns whether param KB *1024 exceeds 1 MB (the mem_avail_bytes_stub figure); gates the low-memory notice window.
 005dd761	avi_player_set_transparent	medium	Toggles AVI player flag field_5a4 and restarts decompress with Indeo transparency flags and a back surface; set for leader videos.
+00406a9a	minimap_window_static_init	high	Static initializer constructing minimap_window via frame_wnd_ctor.
+00406ab4	minimap_window_reg_atexit	high	Registers minimap_window's static destructor (00406ad1) with atexit.
+00406b4c	minimap_calc_layout	high	Computes minimap tile size, visible cols/rows, margins and origin centered on the main map view.
+004079a6	minimap_window_create	high	Creates the minimap frame window (label 6) and installs its redraw, mouse, key, size and move handlers.
+00407b31	minimap_window_destroy	high	Sets minimap_hidden and destroys minimap_window with its surface at session end.
+00408580	wnd_view_validate_rect	medium	Thiscall forwarder from WndValidateRectView to wnd_obj_validate_rect on its wnd_obj.
+00408620	window_show_focus_first	medium	Raises/shows the window then focuses its first control; called by window_show.
+00408750	gfx_fill_draw_target	medium	Fills the current gfx_draw_target surface with the given color index.
+0040897f	mapgen_calc_fertility	medium	Scores grassland/plains tiles by food/shield/trade of the 21-tile city radius, stores into tile byte 5 and counts per landmass.
+0040a572	mapgen_add_landmass	high	Picks a random start tile and grows land via walk helpers (param 1 = small islands), then accumulates mapgen_land_placed.
+0040a763	mapgen_land_walk	medium	Random cardinal walk of up to 64 steps marking tile clusters; used when mapgen_land_form < 1.
+0040a92f	mapgen_land_walk_wide	medium	Random walk of up to 48 steps marking clusters plus random neighbors at distance 2; used for larger land form.
+0040aaa4	mapgen_islet_walk	medium	Short random walk (1-16 steps) marking single tiles; builds the extra small islands of mapgen_add_landmass(1).
+0040ab41	mapgen_try_place_lake	medium	Sets tile terrain to ocean (10) when inland and no ocean at distance 2 in four directions; returns 1 on success.
+0040ac5a	mapgen_place_rivers	medium	Repeatedly walks diagonally from random land tiles setting the river bit 0x80 until ocean/river reached, count scaled by land mass and climate.
+0040c7d0	taxrate_dialog_paint	high	Draws tax-rate dialog background, government/max-rate header, tax/lux/sci percentages, totals and turns-to-discovery.
+0040cd64	taxrate_dialog_run	high	Clamps civ rates to max, builds the three scrollbars, lock checkboxes and OK button, runs modal loop and applies rates.
+0040decc	taxrate_enforce_max_rate	medium	Net handler: reopens taxrate_dialog_show if any rate exceeds civ_max_tax_rate, else sends msg 0x9e to the owning remote player.
+0040f060	taxrate_dialog_ctor	high	Constructs the tax-rate dialog: frame_wnd_ctor, three scrollbars, 3-checkbox array, OK button, vtable 0061c054.
+0040f1e0	taxrate_dialog_dtor	high	Destroys tax-rate dialog members (button, checkboxes, scrollbars) then frame_wnd_dtor; called from taxrate_dialog_show.
+0040f8b0	checkbox_elem_ctor	medium	ctrl_base_ctor wrapper used as element ctor for checkbox arrays paired with checkbox_dtor.
+004106fd	mapview_point_unit_dir	medium	Maps a mouse point over a unit's tile to a direction 0-7 via a direction-mask surface pixel, 8 when outside.
+00410e46	mapviews_set_paradrop_cursor	high	Sets cursor 0x202 on every open map view; called by unit_cmd_paradrop.
+00411705	map_window_double_click	high	Debug string "map_double_click() blocked"; opens pedia terrain page for the clicked unoccupied visible tile.
+00411a13	map_cursor_step_dir	high	Moves the map cursor one tile in the given direction and scrolls the view if near an edge.
+00411a85	map_ascii_view_mode	medium	View-pieces mode char handler: Enter/Space opens city window or info, 'C' centers on cursor.
+00411bd7	cheat_throneroom_upgrade	medium	Calls throneroom_show_upgrade for human_civ; reached via 'Q' only with cheat mode in single-player.
+00411bf5	map_ascii_unit_cmd	high	Moving-units mode char handler dispatching unit commands (B build, F fortify, G goto, S sleep, P pillage...).
+00411f91	map_window_ascii	high	Debug string "map_ascii() blocked"; main map WM_CHAR handler for city-window keys, zoom and unit/view commands.
+004125c6	map_window_key	high	Debug string "map_key() blocked"; main map keydown handler for menu commands, advisors, cheats and unit movement keys.
+00413a90	mapviews_create_all	high	Inits and creates all 8 map views and starts the unit-blink and end-of-turn blink timers.
+00413bd1	mapviews_destroy_all	high	Destroys the blink timers and all open map view windows at session end.
+00414f02	int_pairs_bubble_sort	medium	Bubble sorts an int key array ascending while swapping a parallel value array.
+00415040	file_build_open_path	medium	Copies name to buffer, or joins it with the directory at 006250d8 when flag 00625114 is set; used by file_open_path.
+004151e0	tech_editor_load_items	high	Copies advance names, prereqs, epoch, category, ai value and modifier into editor item records.
+00415307	tech_editor_save_items	high	Writes editor item records back into the advances table (names, prereqs, epoch, category, values).
+00415952	tech_editor_relink_prereqs	medium	Counts enabled advances into game.num_advances and redirects prerequisites past disabled advances.
+0041623d	tech_editor_on_combo	medium	Combo callback: on advance selector (0xc9) stores/validates and switches item, else re-stores and refreshes usage list.
+00416354	tech_editor_create_combo	high	Creates one tech-editor combobox at a table position and fills it with advances or category/epoch labels.
+00416734	tech_editor_create_edit	high	Creates one 4-char tech-editor edit box at the edit position table.
+00416828	tech_editor_paint	high	Draws tech editor background, advance category icon and field captions; called from tech_editor_redraw.
+00416c9e	tech_editor_dialog_run	high	Builds tech editor window, controls and buttons, loads items and runs its modal loop; called by tech_editor_run.
+00419170	setup_hotseat_game	high	Hot-seat setup menu (multiplayer=1): new/load map/custom/scenario/load game, then players, tribes and map generation.
+00419c3a	setup_backdrop_surface_static_init	high	Static initializer constructing setup_backdrop_surface via surface_ctor.
+00419c54	setup_backdrop_surface_reg_atexit	high	Registers setup_backdrop_surface's static destructor (00419c71) with atexit.
+00447170	net_gamelist_view_scalar_dtor	high	MSVC scalar deleting destructor: net_gamelist_view_dtor then operator_delete if flag&1.
+00455f9e	cityview_place_large_empty_lot	medium	Large-slot twin of cityview_place_empty_lot: when no houses remain assigns one of 4 random filler sprites (array +0x733) to a wonder slot.
+0045fd67	diplo_ai_senate_hawks_notice	medium	For a Republic/Democracy AI (gov>4) when the senate does not intervene, shows CONTINUEUN (if the other civ owns United Nations, wonder 24) or CONTINUEHAWKS popup.
+004b08f5	diffeng_static_init_stub	medium	Empty MSVC _$E1 static initializer called from 004b08e0, located just before diffeng_alloc_mirror.
+004bb5b0	ctrl_set_initial_focus	high	Sets control byte field_24 = 1, the flag ctrl_get_initial_focus/wnd_focus_first_control use; parley window sets it on the chat edit box.
+005c8908	font_handle_create_indirect	high	CreateFontIndirectA from a LOGFONT and stores the HFONT in a new 8-byte mem handle (indirect twin of font_handle_create).
+005c8984	font_handle_delete	medium	DeleteObject on the HFONT held in a font mem handle then frees the handle; duplicate of font_handle_destroy.
+005c89ed	font_resource_add	high	AddFontResourceA(file), saves the file name in a mem handle and broadcasts WM_FONTCHANGE (0x1d) to HWND_BROADCAST.
+005c8a85	font_resource_remove	high	RemoveFontResourceA on the file name kept by font_resource_add, broadcasts WM_FONTCHANGE and frees the handle.
+005c8b83	hwnd_move_to	high	Moves a non-null HWND to (x,y) keeping its current window rect width/height via MoveWindow with repaint.
+005c8caf	hotspot_wndproc	high	Subclassed wndproc installed by hotspot_create_hwnd: mouse move/down/up/dblclk fire hotspot enter/leave/press/click/dblclick callbacks.
+005cabf6	button_destroy_hwnd	medium	Only logs "Tried to dispose NULL Button in MSDisposeButton" when passed null (same stub pattern as checkbox_destroy_hwnd).
+005cacd4	button_wndproc	high	Bitmap push-button window procedure installed by button_create_hwnd: paints up/down/disabled bitmaps, focus frame, space/click fire button_fire_callback.
+005cb319	spritebtn_create_pict_hwnd	medium	Loads two PICT resources into the sprite button's up/down surfaces (drop-shadow when same id), then creates its MSControlClass window (type 5, wndproc 005cb6eb).
+005cb6eb	spritebtn_wndproc	high	Sprite button window procedure: blits up/down surfaces on WM_PAINT, fires spritebtn_fire_click on space/left click and spritebtn_fire_rclick on right click.
+005cbed0	default_draw_font_static_init	high	MSVC _$E static initializer calling default_draw_font_ctor and default_draw_font_reg_dtor.
+005cbf21	default_draw_font_static_dtor	high	atexit destructor registered by default_draw_font_reg_dtor: font_destroy on default_draw_font_obj.
+005cc320	checkbox_wndproc	high	Checkbox window procedure installed by checkbox_create_hwnd: paints check bitmap, shadowed caption and hotkey underline, toggles and fires checkbox_fire_callback on click.
+005ccddf	ctrl_set_text_rgb	high	Stores r,g,b into ctrl_text_rgb_r/g/b and sets ctrl_text_rgb_set, used by checkbox_wndproc for enabled caption colour.
+005cce0e	ctrl_set_disabled_rgb	high	Stores r,g,b into ctrl_disabled_rgb_r/g/b and sets ctrl_disabled_rgb_set, the disabled caption colour.
+005cd49f	hwnd_enable	high	EnableWindow(hwnd, flag) when hwnd is non-null.
+005cd4fd	scrollbar_hwnd_set_range_ex	medium	SetScrollRange(SB_CTL) with explicit redraw flag then scrollbar_hwnd_set_pos to the minimum; variant of scrollbar_hwnd_set_range.
+005cd580	wnd_set_scroll_range	high	SetScrollRange on a window's own horizontal/vertical bar (hwnd at +4) then wnd_set_scroll_pos to the minimum.
+005cdfb2	sprite_data_fixup_stub	medium	Empty function taking the sprite RLE data pointer and height, called after copying SPRT resource data (Mac byte-order fixup stub).
+005cdfc2	sprite_load_res	high	Loads an 'SPRT' resource: endian-converts header/rects/key colour, copies RLE data into a new mem handle and locks it (no palette, unlike sprite_load_res_with_pal).
+005ce16e	sprite_load_res_full_pal	medium	Calls sprite_load_res_with_pal with default palette range -1,-1.
+005ce3a8	sprite_load_file	medium	Thin wrapper calling sprite_read_file(this, file).
+005ce3cc	sprite_write_file_with_palette	high	Writes sprite header, rects, key colour, RLE data and param_3 RGB palette entries from a GamePalette to a file; inverse of sprite_read_file_with_palette.
+005ce5bb	sprite_write_file	high	Writes sprite offsets, rects, key colour, data size and RLE data to a file; inverse of sprite_read_file.
+005ce723	sprite_load_file_full_pal	medium	Calls sprite_read_file_with_palette with default palette range -1,-1.
+005cec80	sprite_grab_bounded_region	medium	From a seed pixel scans left/right/up/down to a border colour to form a rect, then encodes that surface region into the sprite and locks it.
+005cee09	sprite_grab_ddsurf_rect	medium	Encodes a RECT of a DirectDraw surface into the sprite with auto key colour (-1) and locks it; ddsurf twin of sprite_grab_surface_rect.
+005cee41	sprite_grab_from_ddsurf	medium	Builds a rect from x,y,w,h and encodes that DirectDraw surface region into the sprite (auto key), then locks it.
+005cee99	sprite_grab_ddsurf_rect_keyed	medium	Encodes a RECT of a DirectDraw surface into the sprite with an explicit key colour and locks it.
+005ceed5	sprite_grab_from_ddsurf_keyed	medium	Builds a rect from x,y,w,h and encodes the DirectDraw surface region with an explicit key colour, then locks it.
+005cef9f	sprite_draw_ddsurf	high	Calls sprite_blit_to_ddsurf with default key -1 and returns the target; ddsurf twin of sprite_draw.
+005cefd4	sprite_draw_ddsurf_keyed	high	Calls sprite_blit_to_ddsurf with an explicit key colour; ddsurf twin of sprite_draw_keyed.
+005cf00d	sprite_draw_scaled	high	Calls sprite_blit_xyscale_to_surface with default key -1 and returns the target surface.
+005cf042	sprite_draw_scaled_keyed	high	Calls sprite_blit_xyscale_to_surface with an explicit key colour.
+005cf07b	sprite_draw_scaled_ddsurf	high	Calls sprite_blit_xyscale_to_ddsurf with default key -1 and returns the target.
+005cf0b0	sprite_draw_scaled_ddsurf_keyed	high	Calls sprite_blit_xyscale_to_ddsurf with an explicit key colour.
+005cf0e9	sprite_draw_silhouette_keyed	medium	Like sprite_draw_silhouette but passes an explicit byte key to sprite_blit_silhouette_to_surface instead of -1.
+005cf15f	sprite_draw_silhouette_dd_keyed	medium	Keyed silhouette draw onto a DirectDraw surface via sprite_blit_silhouette_to_ddsurf with explicit byte key.
+005cf19c	sprite_draw_silhouette_dd	medium	Silhouette draw onto a DirectDraw surface via sprite_blit_silhouette_to_ddsurf with key -1 (sprite's own).
+005cf26d	sprite_merge_onto_at	medium	sprite_merge_at(this,this,dst,0,dx,dy): composites this sprite into dst at an offset (sprite_merge_onto with offset).
+005cf541	sprite_remap_colors	medium	Locks sprite and replaces each RLE pixel p with table[p-base] when p>=base, also remapping key_color.
+005d1bb8	sprite_get_pixel	high	Returns the RLE sprite's pixel at (x,y) by walking rows, or transparent_color when outside bounds or row span.
+005d21f0	dbg_log_file_global_init	high	CRT $E initializer calling dbg_log_file_static_init and dbg_log_file_reg_atexit.
+005d2241	dbg_log_file_atexit_dtor	high	atexit handler calling dbg_log_file_dtor(&dbg_log_file), registered by dbg_log_file_reg_atexit.
+005d23fd	dbg_logf2_noret	medium	sprintf(fmt,a,b) into 1KB buffer then dbg_log_write; void-returning twin of dbg_logf_int2.
+005d243f	dbg_set_log_to_file	high	Stores its byte arg into dbg_log_to_file (0x638304).
+005d2457	dbg_set_log_to_debugger	high	Stores its byte arg into dbg_log_to_debugger (0x638308).
+005d2625	edit_create_at_with_text	high	Like edit_create_at (x,y,width, 30px high rect, default font) but calls edit_create_with_text.
+005d2a01	edit_subclass_wndproc	high	Subclassed edit WNDPROC: select-all on focus, forwards Tab/Enter/Esc to parent, maps keyup/char to edit_fire_key_callback.
+005d2d15	hwnd_enable_safe	medium	EnableWindow(hwnd,flag) only when hwnd is non-null.
+005d2e54	edit_hwnd_get_first_visible	medium	Sends EM_GETFIRSTVISIBLELINE (0xCE) to the edit hwnd.
+005d2ee6	edit_hwnd_line_scroll	high	Sends EM_LINESCROLL (0xB6) with wParam chars and lParam lines.
+005d2fca	edit_hwnd_caret_to_line_end	high	Gets selection end's line, computes line index+length and sets caret there.
+005d305a	edit_hwnd_caret_at_line_end	high	Returns true when selection end equals the end of its line (line index+length).
+005d3310	combo_subclass_wndproc	high	Subclassed combo WNDPROC: forwards Tab/Enter/Esc to parent, on 0x4C8 notify fires combo_fire_selchange/combo_fire_dblclick.
+005d35a3	combo_hwnd_delete_string	high	Sends CB_DELETESTRING (0x144) with item index.
+005d3654	combo_hwnd_get_sel_text	high	CB_GETCURSEL; copies combo_no_sel_text if none else combo_hwnd_get_item_text of the selection.
+005d39e2	listbox_subclass_wndproc	high	Subclassed listbox WNDPROC: forwards Tab/Enter/Esc to parent, on 0x4C8 notify fires listbox_fire_selchange/dblclick.
+005d3c75	listbox_hwnd_delete_string	high	Sends LB_DELETESTRING (0x182) with item index.
+005d3d26	listbox_hwnd_replace_string	high	LB_DELETESTRING then LB_INSERTSTRING (0x181) at the same index with new text.
+005d3e04	listbox_hwnd_get_sel_count	high	Returns SendMessage LB_GETSELCOUNT (0x190).
+005d3e49	listbox_hwnd_get_sel_items	high	Returns SendMessage LB_GETSELITEMS (0x191) with count and buffer.
+005d3eb7	listbox_hwnd_sel_range	high	Sends LB_SELITEMRANGEEX (0x183) with first/last args in order.
+005d3ede	listbox_hwnd_sel_range_rev	medium	Sends LB_SELITEMRANGEEX (0x183) with the two index args swapped.
+005d3f05	listbox_hwnd_set_sel	high	Sends LB_SETSEL (0x185) with select flag and index.
+005d3fb0	radiogrp_has_hwnd	medium	Returns 1 if any radio item (stride 0xA4, first field hwnd) equals the given hwnd.
+005d4087	radiogrp_hide_all	high	hwnd_hide on every radio item's hwnd; counterpart of radiogrp_show_all.
+005d40dd	radiogrp_disable_all	high	Calls radiogrp_disable_item for every item.
+005d4122	radiogrp_enable_all	high	Calls radiogrp_enable_item for every item.
+005d4700	timer_wnd_proc	high	Timer window WNDPROC: on WM_TIMER or 0x52C fires game_timer_fire_slot (and resets timer DLL notification).
+005d4870	snd_wave_play_default	medium	snd_wave_play(src,a,b,0) with 4th (load option) arg fixed to 0.
+005d4899	snd_wave_open_for_active_wnd	medium	Calls snd_wave_open with the active child window's hwnd as notify window.
+005d5706	snd_wave_get_position_samples	high	waveOutGetPosition with TIME_SAMPLES, converting bytes by block align; companion of snd_wave_get_position_ms.
+005d6222	snd_wave_stop_by_id	medium	Sets flag bit 2 at +0x70 on wave sources with id; mixer skips sources with that bit.
+005d7b94	snd_wave_id_active	high	Returns 1 if any wave source in the list has the given id (+0x8a).
+005d7c2c	file_obj_ctor_mode	high	FileObject constructor: opens existing file when mode==1 else creates it.
+005d7c8c	dbg_output_line_wrap	medium	Plain wrapper forwarding to dbg_output_line.
+005d7f72	spritebtn_init_from_sprite_ex	high	Same as spritebtn_init_from_sprite but passes an extra arg to spritebtn_create_hwnd.
+005d8250	file_obj_open_path_wrap	medium	cdecl wrapper forwarding to file_obj_open_path.
+005d83b6	file_obj_create_path_wrap	medium	cdecl wrapper forwarding to file_obj_create_path.
+005d8551	file_obj_seek_to_string	high	Reads the file byte by byte until the given string matches, then _llseek back by its length so the file is positioned at the match.
+005d8675	file_obj_seek_abs	high	SetFilePointer(handle, offset, NULL, FILE_BEGIN) on the file object's handle; returns 0 on failure; absolute-seek twin of file_obj_seek_rel.
+005d86c8	file_obj_rewind	medium	SetFilePointer(handle, 0, NULL, FILE_BEGIN) storing the result (0) in *out; seeks to file start (looks like a buggy tell).
+005d879c	file_obj_write_line	high	Writes the string plus "\r\n" via file_obj_write_bytes; logs "Tried to write to a read only file" when not writable.
+005d8b34	file_dialog_open_simple	medium	file_dialog_unowned with no default extension, no must-exist flag and open mode (save=0).
+005d8b5c	file_dialog_open	medium	file_dialog_unowned(file, filter, defext, mustexist, 0): unowned GetOpenFileName dialog.
+005d8b86	file_dialog_save	medium	file_dialog_unowned(file, filter, defext, flag, 1): unowned GetSaveFileName dialog.
+005d8bb0	file_dialog_save_owned	medium	file_dialog_run with save=1 and an owner window object passed as the last arg.
+005d9b86	radiogrp_item_wndproc	high	Window proc of a radio item: paints bitmap/text with radio_text/shadow colors, handles WM_LBUTTONDOWN capture (radio_lbutton_captured), keys and focus.
+005dacd9	ui_set_radio_text_rgb	high	Stores r,g,b into radio_text_rgb_r/g/b and sets radio_text_rgb_set=1; RGB counterpart of ui_set_radio_text_color.
+005dad08	ui_set_radio_disabled_rgb	high	Stores r,g,b into radio_disabled_rgb_r/g/b and sets radio_disabled_rgb_set=1; used by radio paint for disabled items.
+005dae00	err_report_ctx_global_init	medium	Compiler static-init ($E) that runs err_report_ctx_static_init and err_report_ctx_reg_atexit.
+005dae51	err_report_ctx_atexit_dtor	medium	Calls err_ctx_dtor on the global err_report_ctx; the atexit destructor registered by its static init.
+005daeb1	err_report_warning	high	err_set_code, err_format_message with "WARNING" header then err_log_warning; non-fatal twin of err_report.
+005db016	err_ctx_get_last_code	medium	Returns ErrorContext field 0x704, the last code stored by err_set_code (struct size 0x708).
+005db3ca	res_load_by_name	medium	Like res_load_impl but first replaces spaces, dots and quotes in the resource name with underscores before FindResource in exe/DLLs.
+005db792	wnd_record_create_movie	medium	Same shape as wnd_record_create but creates its window with moviewnd_create (MSMovieClass) and no owner/palette.
+005db80f	wnd_record_create_movie_child	medium	moviewnd_create with the parent window from param_7 stored in movie_wnd; child variant of wnd_record_create_movie.
+005db9b8	wnd_check_lbutton_release	medium	Calls wnd_check_mouse_release for this window (or any if flag 0) with left-button mode 1.
+005dba15	wnd_check_rbutton_release	medium	Calls wnd_check_mouse_release for this window (or any if flag 0) with right-button mode 0.
+005dba72	wnd_poll_syskey_msgs	medium	Method wrapper for input_poll_modifier(0x400) which pumps messages and reports WM_SYSKEY/SYSCHAR; next to wnd_is_shift_down.
+005dbadb	wnd_is_lbutton_down	medium	Method wrapper for input_lbutton_down; sits with wnd_is_shift_down/wnd_is_ctrl_down.
+005dbaf6	wnd_is_rbutton_down	medium	Method wrapper for input_rbutton_is_down; sits with wnd_is_shift_down/wnd_is_ctrl_down.
+005dbdba	app_unregister_wnd_classes	high	UnregisterClassA for MSAppWindow, MSWindowClass, MSMovieClass, MSControlClass, MSMrTimerClass; inverse of app_register_wnd_classes.
+005dcb00	mem_handle_clone_wrap	medium	Thin wrapper around mem_handle_clone in the mem wrapper cluster next to mem_handle_release.
+005dcb1c	mem_handle_lock_wrap	medium	Thin wrapper around mem_handle_lock in the mem wrapper cluster next to mem_handle_release.
+005dcb38	mem_handle_unlock_wrap	medium	Thin wrapper around mem_handle_unlock in the mem wrapper cluster.
+005dcb54	mem_handle_alloc_wrap	medium	Thin wrapper around mem_handle_alloc in the mem wrapper cluster.
+005dcbb0	mem_handle_size_wrap	medium	Thin wrapper around mem_handle_size in the mem wrapper cluster.
+005dcbcc	mem_handle_realloc	medium	Thin wrapper around mem_handle_realloc_impl(handle_ptr, new_size).
+005dcbec	mem_avail_bytes	medium	Thin wrapper around mem_avail_bytes_stub.
+005dcc56	menu_append_to_submenu	medium	Gets the submenu via menu_get_submenu then menu_hmenu_append_to_submenu.
+005dcc95	menu_append_item	medium	Method wrapper calling menu_hmenu_append(hmenu, p3, p2).
+005dccc1	menu_delete_by_id	medium	Method wrapper calling menu_hmenu_delete_by_id.
+005dcce9	menu_append_submenu_separator	medium	Gets the submenu via menu_get_submenu then menu_append_separator on it.
+005dcd1c	menu_add_separator	medium	Method wrapper calling menu_append_separator on the given HMENU.
+005dd487	avi_player_play_from_start	medium	avi_player_rewind, sets is_playing=1 and calls avi_play_start.
+005dd53f	avi_player_stop	medium	Method wrapper for avi_player_rewind (pauses and seeks back to the first frame).
+005dd5a4	avi_player_copy_frame_to	medium	Decodes the current frame, grows the destination surface if smaller than the movie and blits the full frame into it.
+005dd7de	avi_player_save_background	medium	Blits the target surface area at pos_x/pos_y into the player's 0x558 surface, the background buffer used for transparent AVI drawing.
+005dd93f	snd_mci_notify_wndproc	high	Handles MM_MCINOTIFY (0x3b9) success by device id, firing the MIDI or CD notify callback; else DefWindowProc.
+005de00d	snd_cd_eject	high	Opens cdaudio if needed, stops play and sends MCI_SET MCI_SET_DOOR_OPEN, remembering the device in snd_cd_ejected_device.
+005de0b5	snd_cd_close_door	high	MCI_SET MCI_SET_DOOR_CLOSED on the ejected (or newly opened) cdaudio device then MCI_CLOSE.
+005de19d	snd_cd_toggle_pause	high	MCI_STATUS mode: if stopped send MCI_PLAY, otherwise MCI_PAUSE.
+005de250	snd_cd_resume	high	MCI_STATUS mode: if stopped send MCI_PLAY, if paused send MCI_RESUME.
+005de310	snd_cd_play_next_track	high	Reads MCI current track and number of tracks and calls snd_cd_play_track(current+1), wrapping to track 1.
+005de41e	snd_cd_play_prev_track	medium	Opens cdaudio if needed, MCI_STATUS current track (8) and track count (3), then snd_cd_play_track(current-1, or 1 if on track 1).
+005de529	snd_cd_get_position	high	Sets TMSF time format and MCI_STATUS_POSITION, returning minutes/seconds/track bytes of the TMSF position via out-pointers.
+005de620	snd_play_wav_async_wrap	high	Uncalled thin wrapper forwarding to snd_play_wav_async.
+005de63c	snd_play_wav_loop_wrap	high	Uncalled thin wrapper forwarding to snd_play_wav_loop.
+005de674	snd_beep_wrap	high	Uncalled thin wrapper forwarding to snd_beep.
+005de689	snd_midi_play_wrap	high	Uncalled thin wrapper forwarding to snd_midi_play.
+005de6a5	snd_midi_set_notify_callback	high	Stores fn ptr in snd_midi_notify_callback, invoked by snd_midi_fire_notify_callback; sibling of snd_cd_set_notify_callback.
+005de6e0	snd_cd_play_track_wrap	high	Uncalled thin wrapper forwarding to snd_cd_play_track.
+005de737	snd_midi_close_wrap	high	Uncalled thin wrapper forwarding to snd_midi_close.
+005de74c	snd_stop_sndplaysound_wrap	high	Uncalled thin wrapper forwarding to snd_stop_sndplaysound.
+005de761	snd_cd_mci_stop_wrap	high	Uncalled thin wrapper forwarding to snd_cd_mci_stop.
+005ded90	ui_notice_close	high	OK-button callback set in ui_show_text_notice_window: re-enables parent, destroys notice button/window, sets notice_next_allowed_tick, clears notice_showing.
+005df166	ui_notice_timer_tick	medium	Timer callback: if mem_kb_exceeds_avail(threshold) and not showing, shows ui_show_text_notice_window at most 3 times spaced by notice_next_allowed_tick.
+005df1fd	ui_notice_timer_start	medium	Stores KB threshold, TEXT res id, parent and disable flag, resets counters and creates repeating game_timer for ui_notice_timer_tick (period sec*1000).
+005df280	ui_notice_timer_stop	high	Destroys notice_timer if set and clears it.
+005df2b5	gif_convert_to_raw_file	medium	Reads a GIF file, validates signature/global color map/image block, writes a 6-byte header (BE width/height, LZW code size, colors-1), palette and LZW data to a new file.
+005df6ab	gfx_dissolve_transition_nodelay	high	Calls gfx_dissolve_transition with the last argument (per-pass ui_wait_ticks delay) 0.
+005df931	ddsurf_draw_bevel_border	high	DirectDraw-surface twin of surface_draw_bevel_border: nested 1-px outlines with two colours via ddsurf_set_line_color_index/ddsurf_draw_line.
+005e00bb	dlg_radio_choice_button_cb	high	OK (0x65)/Cancel (0x66, sets choice_dlg_selection=-1) button callback of dlg_radio_choice_modal ending its modal loop.
+005e010a	dlg_radio_choice_select_cb	high	Radio-group select callback of dlg_radio_choice_modal storing the item into choice_dlg_selection.
+005e0122	dlg_radio_choice_dblclick_cb	high	Radio-group double-click callback storing choice_dlg_selection and ending the modal loop of choice_dlg_window.
+005e0248	dlg_radio_choice_modal_noparent	high	Calls dlg_radio_choice_modal with a null parent window (param_3 = 0).
+005e0a8f	sys_msgbox_potentially_fatal_wrap	high	Uncalled thin wrapper forwarding to sys_msgbox_potentially_fatal.
+005e0ab3	sys_msgbox_mapped_wrap	high	Uncalled thin wrapper forwarding to sys_msgbox_mapped.
+005e0adb	app_launch_program_wrap	high	Uncalled thin wrapper forwarding to app_launch_program.
+005e0af7	rect_contains_point_incl	high	Returns 1 if (x,y) lies within left..right and top..bottom of an int[4] rect, bounds inclusive.
+005e10a2	menu_hmenu_load_resource	medium	LoadMenuA(app_hinstance, MAKEINTRESOURCE(id)) (result discarded in decompile); sits among menu_hmenu_* helpers.
+005e13b1	menu_hmenu_insert_item_id	high	Like menu_hmenu_insert_item but with a caller-given command id: inserts popup or item at 1-based position, column break every 22.
+005e154a	menu_track_popup_at	high	ClientToScreen on the window HWND then TrackPopupMenu(TPM_RIGHTBUTTON) at that point.
+005e15ce	menu_hmenu_enable_by_id	high	EnableMenuItem MF_BYCOMMAND, MF_GRAYED|MF_DISABLED when flag clear; null-safe.
+005e1619	menu_hmenu_check_by_id	high	CheckMenuItem MF_BYCOMMAND, MF_CHECKED when flag set; null-safe.
+005e1664	menu_hmenu_delete_by_id_dup	high	Byte-identical duplicate of menu_hmenu_delete_by_id (DeleteMenu MF_BYCOMMAND).
+005e168e	menu_hmenu_set_text_by_id	high	ModifyMenuA MF_BYCOMMAND|MF_STRING replacing an item's text by command id; null-safe.
+005e18b7	wnd_set_timer	high	SetTimer on the window object's HWND (+4) with id and interval, no TIMERPROC.
+005e18de	wnd_kill_timer	high	KillTimer on the window object's HWND (+4) for the given id.
+005e18ff	surfwnd_subclass_wndproc	high	Wndproc installed by wnd_install_paint_proc: WM_DESTROY frees surface, WM_SIZE surfwnd_on_resize, WM_PAINT blits surface (StretchBlt thumbnail when iconic).
+005e25fa	avi_play_frame_range	medium	Pauses if playing, seeks to start frame, sets start/end fields 0xa10/0xa14 and avi_play_start (cdecl on player object).
+005e3877	dib_set_row_order	medium	Sets global dib_row_order, which determines the top-down/bottom-up flag tested by dib_is_top_down.
+005e3acb	dib_read_palette_range	high	GetDIBColorTable for a range on the DIB HDC and palette_set_entry for each index into a GamePalette.
+005e3c03	dib_set_colors_from_hpalette	high	GetPaletteEntries of an HPALETTE, swaps to RGBQUAD order and SetDIBColorTable all 256 on the DIB HDC.
+005e5056	gfx_copy_pixels16	medium	16-bit variant of gfx_copy_pixels: rect copy with x*2 offsets and signed pitches, dword then word stores.
+005e593a	gfx_copy_pixels_add_index	medium	Copies a w x h byte block adding a constant byte to every pixel (palette index shift), dest pitch top-down.
+005e59b3	gfx_copy_pixels_add_index_bu	medium	Same as gfx_copy_pixels_add_index but destination starts (h-1) rows back for a bottom-up buffer.
+005e5a39	gfx_rle_decode_add_index	medium	Decodes rows of signed-count RLE packets (negative=literal run, positive=repeat byte), adding a constant byte to each pixel.
+005e5b1e	gfx_rle_decode_add_index_bu	medium	Bottom-up destination variant of gfx_rle_decode_add_index.
+005e5c10	sprite_blit_rle_shifted	medium	Decodes row-count/skip/run-coded 8-bit RLE data into a buffer with pitch, adding a byte offset (param_6 replicated) to every pixel.
+005e5d4f	sprite_blit_rle_shifted_flip	medium	Same RLE decoder as sprite_blit_rle_shifted but starts at the last row (dest - (h-1)*pitch) for bottom-up buffers.
+005e5f78	ddsurf_create_wh	high	SetRect(0,0,w,h) then ddsurf_create_rect with flag 0.
+005e5fda	ddsurf_create_wh_flags	high	SetRect(0,0,w,h) then ddsurf_create_rect with caller-supplied memory flag.
+005e658a	ddsurf_get_pixel	high	Locks the DD surface, reads the byte at ddsurf_pixel_ptr(x,y) and unlocks.
+005e65f1	ddsurf_set_pixel	high	Locks the DD surface, writes a byte at ddsurf_pixel_ptr(x,y) and unlocks.
+005e6651	ddsurf_load_bmp8_res	high	Loads a BMP resource, requires 8bpp uncompressed, optionally sets palette entries from its color table, copies rows bottom-up into a new DD surface.
+005e6893	ddsurf_load_gif_res	high	Loads a "GIFS" resource, checks global color table, sets palette, creates a DD surface of the image size and runs gif_lzw_decode into it.
+005e6bc5	ddsurf_load_cvpc_res	medium	Loads a "CvPc" resource (big-endian w/h header, palette, LZW data), sets palette and gif_lzw_decode into a new DD surface.
+005e6d4c	ddsurf_load_bmp24_res	high	Loads a BMP resource and converts 24bpp rows bottom-up into 5-5-5 pixels on a new DD surface.
+005e6f25	ddsurf_map_rgb	medium	Thiscall forwarding r,g,b to ddsurf_rgb_to_pixel on the object's DD surface iface.
+005e6f57	ddsurf_reset_clip	high	Sets the clip rect (+0x10) back to the bounds rect (+0x20); twin of surface_reset_clip.
+005e6f96	ddsurf_set_clip	high	Sets clip rect (+0x10) from a RECT and intersects it with the bounds rect (+0x20); twin of surface_set_clip.
+005e6ff1	ddsurf_get_clip	high	Copies the clip rect (+0x10..+0x1c) into an output RECT; twin of surface_get_clip.
+005e70d7	ddsurf_fill_clip	high	ddsurf_fill_rect_pixel over the surface clip rect.
+005e7257	ddsurf_fill_clip_rgb	high	ddsurf_fill_rect_rgb over the surface clip rect.
+005e728a	ddsurf_bltfast_from	high	Clips dest/src rects, then ddsurf_iface_bltfast from another DD surface, restoring if lost.
+005e7355	ddsurf_copy_from_surface	high	Clips rects, locks the DD surface and gfx_copy_pixels from a DIB surface (handling bottom-up pitch).
+005e747c	ddsurf_blt_from	high	ddsurf_iface_blt from another DD surface's iface, restoring if lost.
+005e74c8	ddsurf_bltfast_keyed_from	high	Clipped ddsurf_iface_bltfast_keyed (src color key) from another DD surface, restoring if lost.
+005e7593	ddsurf_blt_keyed_from	high	ddsurf_iface_blt_keyed from another DD surface's iface, restoring if lost.
+005e75df	ddsurf_print_at	high	Draws text at x,y in draw_current_font with palette colour (optional 0x10 shadow pass offset by height/8) via ddsurf_draw_text_at_pal.
+005e76dd	ddsurf_print_in_rect	high	Draws text in a rect in draw_current_font with palette colour and optional shadow via ddsurf_draw_text_rect_pal.
+005e77ed	ddsurf_print_at_font	high	ddsurf_print_at with an explicit font handle instead of draw_current_font.
+005e78c6	ddsurf_print_in_rect_font	high	ddsurf_print_in_rect with an explicit font handle.
+005e79b1	ddsurf_print_wrapped	high	Word-wrapped text in draw_current_font via ddsurf_draw_text_wrap_pal.
+005e7a30	ddsurf_print_wrapped_font	high	Word-wrapped text with an explicit font via ddsurf_draw_text_wrap_pal.
+005e7a8e	ddsurf_print_at_rgb	high	Text at x,y in draw_current_font with explicit r,g,b (shadow pass black) via ddsurf_draw_text_at.
+005e7b98	ddsurf_print_in_rect_rgb	high	Text in rect in draw_current_font with explicit r,g,b and optional shadow via ddsurf_draw_text_rect.
+005e7cb4	ddsurf_print_at_font_rgb	high	Text at x,y with explicit font and r,g,b, optional shadow, via ddsurf_draw_text_at.
+005e7d99	ddsurf_print_in_rect_font_rgb	high	Text in rect with explicit font and r,g,b, optional shadow, via ddsurf_draw_text_rect.
+005e7e90	ddsurf_print_wrapped_rgb	high	Word-wrapped text in draw_current_font with explicit r,g,b via ddsurf_draw_text_wrap.
+005e7f1b	ddsurf_print_wrapped_font_rgb	high	Word-wrapped text with explicit font and r,g,b via ddsurf_draw_text_wrap.
+005e806d	ddsurf_frame_rect	high	Four ddsurf_draw_line calls outlining a RECT; twin of surface_frame_rect.
+005e8216	ddsurf_frame_rect_rgb	high	Four ddsurf_draw_line_clipped_rgb calls outlining a RECT; twin of surface_frame_rect_rgb.
+005e82fb	ddpal_ctor	high	Zeroes the DD palette iface and saved-entry handles, returns this.
+005e833b	ddpal_dtor	high	Releases the IDirectDrawPalette and frees the three memory handles including saved_rgb.
+005e83c8	ddpal_release	high	Releases the IDirectDrawPalette iface and clears it.
+005e8401	ddpal_rotate_range	high	Gets a palette range, rotates entries by param_3 (either direction) and sets them back (colour cycling).
+005e86f2	ddpal_fade_begin	high	Stores fade target r,g,b and saves the palette range via ddpal_save_entries.
+005e8739	ddpal_fade_end	high	Restores the saved palette range from saved_rgb and frees the handle.
+005e87a2	ddpal_fade_step	high	Interpolates saved entries toward fade r,g,b by step/fade_steps and sets the palette range.
+005e89d0	ddraw_init	high	Registers the MSDirectWindow class, DirectDrawCreate into ddraw_iface and GetCaps (logs missing caps).
+005e8b04	ddraw_shutdown	high	Releases ddraw_iface and unregisters the MSDirectWindow class.
+005e8b54	ddraw_create_palette	high	Builds a PALETTEENTRY array from RGB triples and calls IDirectDraw::CreatePalette (vtbl 0x14, DDPCAPS_8BIT|ALLOW256).
+005e8e4f	ddsurf_iface_get_palette	high	IDirectDrawSurface::GetPalette (slot 20) returning the palette iface or 0.
+005e92fd	ddsurf_iface_set_colorkey	high	IDirectDrawSurface::SetColorKey (slot 29) with DDCKEY_SRCBLT and range low..low+n.
+005e96fe	ddsurf_iface_flip	high	IDirectDrawSurface::Flip (slot 11) retrying on DDERR_WASSTILLDRAWING, -1 on DDERR_SURFACELOST.
+005ea578	ddsurf_iface_can_flip	high	IDirectDrawSurface::GetFlipStatus (slot 18) with DDGFS_CANFLIP, returns 1 if ready.
+005ea610	ddraw_wait_vblank	high	IDirectDraw::WaitForVerticalBlank (slot 22) with BLOCKBEGIN or BLOCKEND by flag.
+005ea677	ddraw_get_vblank_status	high	Calls IDirectDraw vtable +0x44 (GetVerticalBlankStatus) on ddraw_iface and returns the BOOL byte.
+005ea6c4	ddraw_get_scan_line	high	Calls IDirectDraw vtable +0x40 (GetScanLine) and returns the line or 0 on failure.
+005ea711	ddraw_get_monitor_freq	high	Calls IDirectDraw +0x3c and logs "DD->GetMonitorFrequency failed" on error.
+005eb3ca	wnd_set_object_long4	medium	SetWindowLongA(hwnd, 4, obj), the slot-4 counterpart of wnd_set_owner_ptr (slot 0).
+005ec317	moviewnd_wndproc	high	Registered as lpfnWndProc of class "MSMovieClass" in app_register_wnd_classes; dispatches WM_* to wnd_call_* slots.
+005edd2b	str_copy_line_checked	high	Copies chars until CR/LF with IsBadHugeReadPtr guard, NUL-terminates, returns pointer past the terminator.
+005eddd0	mci_avivideo_open_driver	high	MCI_OPEN with MCI_OPEN_TYPE "avivideo", returns success.
+005ede3b	mci_avivideo_close_driver	high	MCI_CLOSE on the "avivideo" device id and deletes mci_video_palette.
+005ede94	mci_movie_close	high	MCI_CLOSE on the device id stored at movie block +8.
+005edebf	mci_movie_open	high	MCI_OPEN element param_2 as WS_CHILD of parent hwnd, allocates 0x14 block with device id, shows window and stores MCI_DGV_STATUS_HWND.
+005ee002	mci_movie_play_notify	high	MCI_PLAY with MCI_NOTIFY, callback hwnd taken from the window block.
+005ee04c	mci_movie_get_source_rect	high	MCI_WHERE with MCI_DGV_WHERE_SOURCE and copies the rect out.
+005ee088	mci_movie_seek_start	high	MCI_SEEK with MCI_SEEK_TO_START.
+005ee450	mci_movie_free	medium	Unlocks and frees the movie block's self memory handle (block allocated by mci_movie_open).
+005ee49a	mci_movie_set_double_size	high	Queries source rect via MCI_WHERE and MCI_PUT the window at twice the width/height.
+005ee4fd	mci_movie_stop	high	MCI_STOP with MCI_WAIT.
+005ee528	mci_movie_seek_to	high	MCI_SEEK with MCI_TO|MCI_WAIT to param_2.
+005ee559	mci_movie_get_position	high	MCI_STATUS item MCI_STATUS_POSITION with wait, returns the value.
+005ee591	mci_movie_set_palette	medium	Builds a 236-entry PC_NOCOLLAPSE palette from param_2 into mci_video_palette and sends MCI_SETVIDEO plus status calls.
+005ee6b1	mciwnd_close	high	If MciWnd hwnd is set, calls mciwnd_stop then mciwnd_destroy.
+005ee6e3	mciwnd_create_file	high	Closes any old MCIWnd, MCIWndCreateA on a WndBase parent with file param_2, sets time format "frames".
+005ee757	mciwnd_create_empty	high	Closes any old MCIWnd and MCIWndCreateA on a WndBase parent with no file.
+005ee7b1	mciwnd_create_file_ddwin	high	Same as mciwnd_create_file but parent hwnd from ddwin_get_native.
+005ee825	mciwnd_create_empty_ddwin	high	Same as mciwnd_create_empty but parent hwnd from ddwin_get_native.
+005ee87f	mciwnd_open	high	Sends MCIWNDM_OPENA (0x499) with file then sets time format "frames".
+005ee8c6	mciwnd_play	high	Sends MCI_PLAY (0x806) to the MCIWnd.
+005ee91c	mciwnd_seek	high	Sends MCI_SEEK (0x807) with position param_1.
+005ee991	mciwnd_seek_end	high	Sends MCI_SEEK with MCIWND_END (-1).
+005ee9bc	mciwnd_get_position	medium	Sends MCIWNDM_GETPOSITION (WM_USER+102); return value dropped by the decompile.
+005ee9e7	mciwnd_pause	high	Sends MCI_PAUSE (0x809) to the MCIWnd.
+005eea12	mciwnd_get_client_rect	high	GetClientRect on the MCIWnd hwnd.
+005eea3a	mciwnd_center_in_parent	high	Positions the MCIWnd centered in its parent's client rect.
+005eeadd	mciwnd_resize	high	SetWindowPos with size only (SWP_NOMOVE|SWP_NOZORDER).
+005eeb11	mciwnd_move	high	SetWindowPos with position only (SWP_NOSIZE|SWP_NOZORDER).
+005eeb45	mciwnd_show	high	ShowWindow(SW_SHOW) then MCIWNDM_REALIZE (0x476).
+005eeb7e	mciwnd_hide	high	ShowWindow(SW_HIDE) on the MCIWnd.
+005eeba2	mciwnd_set_palette	high	Sends MCIWNDM_SETPALETTE (0x47f) with the game palette's HPALETTE.
+005eebd6	mciwnd_get_palette	high	Gets MCIWNDM_GETPALETTE and copies 256 entries into a GamePalette via palette_set_entry.
+005eecc3	avi_audio_set_stream	medium	Duplicate of avi_audio_attach_stream that returns this: registers stream with snd_wave_add_avi_stream and sets flag 1.
+005ef41e	ddraw_set_coop_level	high	IDirectDraw +0x50 SetCooperativeLevel with mode 0/1/2 mapped to NORMAL/FULLSCREEN|EXCLUSIVE/+MODEX; logs "DD->SetCooperativeLevel failed".
+005ef58e	ddraw_restore_display_mode	high	Calls IDirectDraw vtable +0x4c (RestoreDisplayMode).
+005ef699	wnd_hide_block	medium	ShowWindow(SW_HIDE) on the block's HWND, returns non-null; counterpart of wnd_show_update.
+005ef6cb	ddwin_native_wndproc	high	Window proc registered with class extra longs (GetClassLongA 4 = DDWindow); routes input via ddwin_dispatch_ctrl_msg then wnd_call_*.
+005efca3	ddraw_enum_modes_cb	high	EnumDisplayModes callback invoking user fn(width, height, bitcount) from the DDSURFACEDESC.
+005efcde	ddraw_enum_display_modes	high	Sets exclusive coop level, IDirectDraw +0x20 EnumDisplayModes with ddraw_enum_modes_cb, restores normal level.
+005efdc0	ddwin_ctor	medium	Runs ddsurf_ctor on this, wnd_handlers_ctor at +0x44, ptrlist_ctor for the control list at +0xc0, zeroes native wnd/palette/hover fields.
+005efeb0	ddwin_dtor	medium	Destroys native window +0xb0 via ddwin_destroy_native, removes all controls, then runs member unwind funclets.
+005eff83	ddwin_create_titled	medium	Creates the MSDirectWindow native window with caller title param_1 and size, registers class owner, stores field_b4 and sets the palette.
+005effec	ddwin_create	medium	Same as ddwin_create_titled but passes the default title string at 0x639dc4.
+005f0056	ddwin_show	medium	wnd_show_update on the native window and attaches the palette (+0xac) to the DD surface once, setting palette_attached.
+005f0169	ddwin_set_display_mode	medium	Calls ddwin_native_set_display_mode on the native window then ddwin_reset_after_mode_change, returning the result.
+005f0213	ddwin_attach_back_buffer	medium	Gets the DD back-buffer interface of the window's surface and initializes param_1 as that back buffer with a full-size rect.
+005f07f9	ptrlist_current	high	Returns the data of the cursor node (field_8) or 0 when the cursor is null.
+005f0897	ptrlist_prev_impl	high	Moves the cursor to the previous node and returns its data or 0; mirror of ptrlist_next_impl.
+005f0a04	ptrlist_insert_before	high	Allocates a node and links it before the cursor node (becoming head if the cursor was head), else appends; cursor moves to it.
+005f0bce	ptrlist_find	high	Iterates first/next and returns the element equal to param_1, or 0 if not found.
+005f0c21	ptrlist_count	high	Iterates first/next counting elements and returns the count.
+005f0ef0	ddctrl_get_msg_target	high	Returns global ddctrl_current_target set by ddctrl_set_msg_target.
+005f0f1d	ddctrl_ctor	medium	Constructs a DDControl: child ptrlist at +0x10, vtable 0x61d720, null parent window/control, clears callbacks, active flag and hover child.
+005f0fe9	ddctrl_ctor_in_window	medium	ddctrl_ctor variant that sets parent_wnd (+8) from param_1.
+005f10b6	ddctrl_ctor_in_control	medium	ddctrl_ctor variant that sets parent_control (+0xc) from param_1.
+005f1183	ddctrl_dtor	medium	Restores vtable 0x61d720, ddctrl_remove_all_children, then destroys the child ptrlist.
+005f11f6	ddctrl_set_parent_window	medium	Sets parent_wnd (+8) to param_1 and clears parent_control (+0xc).
+005f1221	ddctrl_set_parent_control	medium	Sets parent_control (+0xc) to param_1 and clears parent_wnd (+8); the CTestCmdUI library match is spurious.
+005f124c	ddctrl_create	medium	Stores control id and rect (+0x38..+0x44), resolves parent window (asserts pParentWin||pParentControl) and adds itself to the parent control or window.
+005f156d	ddctrl_get_window_palette	medium	Resolves/caches the parent window and returns its palette via ddwin_get_palette (return in EAX dropped by decompiler).
+005f15a9	ddctrl_on_paint_default	medium	DDControl vtable slot 10 (paint) base: only asserts GetParentGameWin() is non-null.
+005f16c4	ddctrl_set_click_cb	medium	Stores callback at +0x20, which ddctrl_call_click_cb invokes with the control id.
+005f16e5	ddctrl_set_mousemove_cb	medium	Stores callback at +0x24 invoked by ddctrl_on_mousemove.
+005f1706	ddctrl_set_lbuttonup_cb	medium	Stores callback at +0x28 invoked by ddctrl_on_lbuttonup.
+005f1727	ddctrl_set_rbuttonup_cb	medium	Stores callback at +0x2c invoked by ddctrl_on_rbuttonup.
+005f1748	ddctrl_set_dblclick_cb	medium	Stores callback at +0x30 invoked by ddctrl_on_dblclick.
+005f1769	ddctrl_call_click_cb	medium	Invokes callback +0x20 with the control id (+4) if set.
+005f179c	ddctrl_on_lbuttondown	high	DDControl vtable slot 0, dispatched on WM_LBUTTONDOWN (0x201); activates the control.
+005f17bc	ddctrl_on_rbuttondown_nop	high	DDControl vtable slot 1, dispatched on WM_RBUTTONDOWN (0x204); empty base.
+005f17d4	ddctrl_on_lbuttonup	high	DDControl vtable slot 2 (WM_LBUTTONUP); calls callback +0x28 with id,x,y.
+005f1811	ddctrl_on_rbuttonup	high	DDControl vtable slot 3 (WM_RBUTTONUP); calls callback +0x2c with id,x,y.
+005f184e	ddctrl_on_mousemove	high	DDControl vtable slot 4 (WM_MOUSEMOVE); calls callback +0x24 with id,x,y.
+005f188b	ddctrl_on_dblclick	high	DDControl vtable slot 5 (WM_LBUTTONDBLCLK); calls callback +0x30 with id,x,y.
+005f18c8	ddctrl_on_msg_fff0_nop	medium	DDControl vtable slot 9, dispatched for custom message 0xfff0 regardless of rect; empty base.
+005f18e0	ddctrl_on_keydown_nop	high	DDControl vtable slot 6, dispatched on WM_KEYDOWN when active; empty base.
+005f18f8	ddctrl_on_char_nop	high	DDControl vtable slot 7, dispatched on WM_CHAR when active; empty base.
+005f1910	ddctrl_on_set_active_nop	medium	DDControl vtable slot 8, called with 0 by ddctrl_deactivate (activation-change hook); empty base.
+005f1b50	ddwin_get_palette	medium	Returns DDWindow field +0xac, the palette object stored by ddwin_set_palette.
+004f76ce	pedia_list_on_key	high	Pedia keydown handler: arrows/PgUp/PgDn/Home/End move the list selection by 1 or 9 and letters jump via pedia_find_item_by_key.
+004f7a30	pedia_list_on_click	high	Pedia hotspot click callback: hit-tests the cursor against the item list and selects/redraws the hit item.
+004f8d04	pedia_modal_idle	high	Modal idle callback for pedia windows: pumps net messages and ends the modal loop when pedia is closed or inactive.
+004fa1c0	game_palette_global_init	high	MSVC $E initializer calling game_palette_static_init and game_palette_reg_atexit.
+004fa211	game_palette_atexit_dtor	high	atexit destructor registered by game_palette_reg_atexit: palette_destroy on game_palette.
+004fa403	events_parse_terrain	high	Case-insensitive match of a name against the 11 terrain names (DESERT...), printing "Could not find terraintype" and returning -1 on failure; sibling of events_parse_unit_type.
+00500e00	city_window_font_global_init	high	MSVC $E initializer calling city_window_font_static_init and city_window_font_reg_atexit.
+00500e55	city_window_font_atexit_dtor	high	atexit destructor registered by city_window_font_reg_atexit: font_destroy on city_window_font.
+00500e6f	city_window_small_font_global_init	high	MSVC $E initializer calling city_window_small_font_static_init and city_window_small_font_reg_atexit.
+00500ec4	city_window_small_font_atexit_dtor	high	atexit destructor: font_destroy on city_window_small_font.
+00500ede	city_window_global_init	high	MSVC $E initializer calling city_window_static_init and city_window_reg_atexit.
+00500f2f	city_window_atexit_dtor	high	atexit destructor registered by city_window_reg_atexit: city_window_dtor on city_window.
+00500f49	city_window_bg_surface_global_init	high	MSVC $E initializer calling city_window_bg_surface_static_init and city_window_bg_surface_reg_atexit.
+00500f9a	city_window_bg_surface_atexit_dtor	high	atexit destructor: surface_dtor on city_window_bg_surface.
+00500fb4	city_tile_pick_surface_global_init	high	MSVC $E initializer calling city_tile_pick_surface_static_init and city_tile_pick_surface_reg_atexit.
+00501005	city_tile_pick_surface_atexit_dtor	high	atexit destructor: surface_dtor on city_tile_pick_surface.
+0050951f	wnd_repaint_and_show	medium	thiscall on a SurfaceWindow: wnd_repaint then window_show.
+00509935	city_window_on_redraw	high	Redraw callback installed by city_window_create; calls city_window_refresh.
+00509a82	city_window_on_minimize	high	Minimize handler installed by city_window_create; sets city_window_minimized=1.
+00509a9c	city_window_on_restore	high	Restore handler installed by city_window_create; clears city_window_minimized and refreshes.
+0050a1d6	city_change_draw_option_icon	high	Option draw callback set by city_button_change: draws the unit sprite (id<0x3e) or improvement icon (id-0x3e) beside each production choice.
+0050a2f7	foreign_minister_draw_civ_city	high	Option draw callback set by foreign_minister_show: picks the civ's best city (size, +200 palace, +100 idle) and draws it beside the entry.
+0050b674	city_change_idle_autoclose	medium	Dialog idle callback in city_button_change: ends the modal dialog when the MP turn timer expires or the city window has no city (host waits 0x4b0 ticks).
+0050bcda	city_window_on_improvement_scroll	high	Improvement-list scrollbar callback: sets city_improvement_list_top, recalcs the city and redraws the improvements panel.
+0050c405	city_window_on_lbuttonup	high	Left-button-up handler installed by city_window_create; city_window_on_mouse(x,y,0).
+0050c427	city_window_on_rbuttonup	high	Right-button-up handler installed by city_window_create; city_window_on_mouse(x,y,1).
+0050db92	city_window_on_size	high	Size handler of the city window: stores its rect in city_wnd_rect.
+0050dbb8	city_window_on_move	high	Move handler of the city window: stores its rect in city_wnd_rect.
+0050dbde	city_window_on_caption_button	high	Caption button handler: 1 = exit, 2 = shrink size level, 3 = enlarge (up to 3 if screen >=1000 wide) and move to new rect.
+00511b2d	net_popup_idle_autoclose	medium	Idle callback set by net_popup_queue_show_next: pumps net messages and ends the dialog on host handoff, parley cancel or after 0x4b0 ticks.
+00514e10	destroyed_civs_text_bg_global_init	high	MSVC $E initializer calling destroyed_civs_text_bg_static_init and destroyed_civs_text_bg_reg_atexit.
+00514e61	destroyed_civs_text_bg_atexit_dtor	high	atexit destructor: surface_dtor on destroyed_civs_text_bg.
+00516042	victory_screen_on_click	medium	Left-button-up handler that ends the victory screen's modal loop.
+00516063	victory_screen_on_key	medium	Keydown handler ending the victory screen's modal loop for key codes 0xd0..0xd2.
+005181d8	council_on_advisor_button	medium	High Council button callback: 0xca closes, otherwise loads and plays the chosen advisor's speech video segments.
+00518392	council_advisor_from_letter	medium	Maps an advisor letter (M,S,T,F,A, any case) to index 0..4, else -1.
+00518471	council_on_video_end	medium	AVI end callback: plays the next queued advisor video segment (up to 3) and flushes paint.
+005190d0	notice_dlg_global_init	high	CRT $E wrapper calling notice_dlg_static_init then notice_dlg_reg_atexit.
+00519126	notice_dlg_static_dtor	high	atexit destructor running dialog_dtor on game_section_dialog (the notice dialog).
+00519171	notice_dlg_show_section	medium	Closes the notice dialog, sets notice_dlg_shown, loads a GAME.TXT section into game_section_dialog and shows it modally.
+00519ab0	terrain_editor_write_section	high	Writer callback registered for the @TERRAIN rules section; prints each of 33 terrain rows (name, move, defense, yields, bonuses, transform) to the file.
+00519d67	terrain_editor_on_ok	high	OK button (label 254) callback: validates controls, stores rules, rewrites RULES TERRAIN section, ends editor modal loop.
+00519e74	terrain_editor_on_rename	high	Rename button (label 42) callback: TERRNAME text input renames current terrain and refills all four terrain combos.
+0051a1e5	terrain_editor_on_help	high	Help button (label 571) callback: shows HELP/TERRAIN popup.
+0051a244	terrain_editor_on_cancel	high	Cancel button (label 255) callback: clears editor_running and ends the modal loop without saving.
+0051a26c	terrain_editor_on_edit_icon	high	Edit Icon button (label 499) callback: picks base/forest/hills/mountain/resource sprite and runs the Icon Editor.
+0051a678	terrain_editor_on_edit_river	high	Edit River button (label 573) callback: RIVER picker chooses river or river-mouth sprite and runs the icon editor.
+0051a797	terrain_editor_on_edit_coast	high	Edit Coast button (label 574) callback: COAST picker chooses a coast quarter sprite and runs the icon editor.
+0051a8b7	terrain_editor_on_edit_misc	high	Edit Misc button (label 572) callback: TERRMISC picker chooses improvement/road/pollution/hut sprite and runs the icon editor.
+0051acdc	terrain_editor_on_combo	high	Combo callback: on terrain selector (0xc9) stores controls and switches terrain, else updates visibility and redraws.
+0051d950	text_char_to_upper	medium	Converts ASCII 'a'..'z' to uppercase by subtracting 0x20, returning other bytes unchanged.
+0051ea0c	net_vote_wait_idle_cb	medium	Modal idle callback for the turn-timer vote popup: pumps net messages and ends the dialog when votes are in, rejected, or ~2.4s elapse.
+0051f11a	net_lock_wait_idle_cb	medium	Modal idle callback in setup_choose_tribe/net_choose_civ_dialog: pumps net and ends the dialog on lock-data or server-canceled messages.
+0051f17e	net_pump_idle_cb	medium	Modal idle callback that only pumps network messages (net_process_messages) during setup dialogs.
+0052d4d2	parley_on_treaty_type_select	medium	Radio-group select callback for the treaty-type side dialog (Cease Fire/Peace/Alliance, kind 5): stores the choice at +0x218.
+0052d523	parley_on_demand_kind_select	medium	Radio select callback for kind 0xf ("We agree not to attack you only if you give us"): stores +0x214 and rebuilds the right side.
+0052d588	parley_on_map_choice_select	medium	Radio select callback for the map-sharing side dialog (kind 0xd): stores selection in a per-control-id array.
+0052d5dd	parley_on_gift_kind_select	medium	Radio select callback for the gift dialog (kind 7, Offer Knowledge/Money/...): maps choice 0-4 to modes 7-11 and rebuilds the right side.
+0052d6ff	parley_on_proposal_kind_select	medium	Radio select callback for Make proposal (kind 0xb, declare war / share maps): sets mode 0xc/0xd and rebuilds the right side.
+0052d7dc	parley_on_exchange_kind_select	medium	Radio select callback for Offer/In Exchange For groups (kinds 3/4): enables/disables Money and Treaty items to keep the two sides consistent.
+0052d9a1	parley_on_radio_dblclick	medium	Radio dblclick callback: if Continue or Transmit Offer is enabled, activates the window and calls parley_on_mode_chosen.
+0052da23	parley_on_conceal_info	high	Button callback for "Conceal Unit/City Information" (label 877): clears reveal flags, sends net msgs 0xa6/0xa8, swaps to the Reveal button.
+0052db3d	parley_on_reveal_info	high	Button callback for "Reveal Unit/City Information" (label 878): sets reveal flags, sends net msgs 0xa5/0xa7, swaps to the Conceal button.
+0052dc7e	parley_on_check_intel	high	Check Intelligence button (label 104): shows intel_report_show if embassy/Marco Polo/UN/reveal_map, else NOINTEL popup.
+0052e326	parley_on_never_mind	high	Never Mind button (label 720) callback: returns parley to mode 3 (or 5 from 0xe) and rebuilds both side dialogs.
+0052e4c9	parley_on_accept_offer	high	Accept Offer button (label 721): sends net msg 0x83, shows PARLEYACCEPT2 popup and resets parley sides.
+0052e57c	parley_on_no_thanks	high	No Thanks button (label 722): sends net msg 0x84 and switches parley to mode 2 (Pick an Action).
+0052e685	parley_on_counter_offer	high	Make Counter Offer button (label 723): sends net msg 0x85 and resets parley sides to mode 3.
+0052e71a	chat_on_mute_checkbox	medium	Checkbox callback in the parley chat side dialog (Mute/Send column): copies mute checkbox 0x429-0x42f state into chat_muted_civs.
+0052e7b7	chat_on_send_checkbox	medium	Checkbox callback for Remain Anonymous, Broadcast to All, per-civ Send and Mute Anonymous options in the parley chat side dialog.
+0054b0ed	events_editor_on_ok	high	OK button (label 254): compacts events and writes EVENTS file (error box on failure), ends editor modal loop; NOTICE popup if a value was clamped.
+0054b433	events_editor_on_help	high	Help button (label 571): shows help for the selected action or trigger, else the HELP/EVENTS popup.
+0054b5eb	events_editor_on_cancel	high	Cancel button (label 255): restores the events backup copy and ends the editor modal loop.
+0054c36e	events_editor_on_delete_trigger	high	Delete button (label 569) for triggers: DELETEITEM confirm, unlinks the selected event and refills both lists.
+0054d4ca	events_editor_on_edit_trigger	high	Edit button / trigger list dblclick callback forwarding to events_editor_edit_trigger.
+0054d4e6	events_editor_on_add_trigger	high	Add button (label 567) for triggers: TRIGGERS picker, allocates a new event, edits it and removes it if edit cancelled.
+0054d6da	events_editor_on_delete_action	high	Delete button (label 569) for actions: DELETEITEM confirm, clears the selected action bit from the current event.
+0054eeb4	events_editor_on_edit_action	high	Edit button / action list dblclick callback forwarding to events_editor_edit_action.
+0054eed0	events_editor_on_add_action	high	Add button (label 567) for actions: ACTIONS picker of unused actions, sets bit and edits it, reverting on cancel; "All Items In Use" box otherwise.
+00551ea0	caption_font_global_init	high	CRT $E wrapper calling caption_font_static_init and caption_font_reg_atexit.
+00551ef5	caption_font_static_dtor	high	atexit destructor calling font_destroy on caption_font.
+00551f0f	caption_small_font_global_init	high	CRT $E wrapper calling caption_small_font_static_init and caption_small_font_reg_atexit.
+00551f64	caption_small_font_static_dtor	high	atexit destructor calling font_destroy on caption_small_font.
+00551f7e	ui_text_font_global_init	high	CRT $E wrapper calling ui_text_font_static_init and ui_text_font_reg_atexit.
+00551fd3	ui_text_font_static_dtor	high	atexit destructor calling font_destroy on ui_text_font.
+00552e5b	frame_wnd_on_caption_button_click	medium	Hotspot click callback set in frame_wnd_layout for caption buttons (ids 1000+): calls the vtable handler at +0x2a8 with the button's command value.
+00555d70	dbg_draw_ai_goals_overlay	medium	Debug view: draws the human (or revealed nearest city owner) civ's 48 ai_goals on the map via mapview_draw_tile_number and lists its 64 continent_policy values colored by dbg_continent_policy_color.
+005560c9	dbg_draw_tile_owner_overlay	medium	Debug view: draws tile_owner_or_fertility for every other column of visible map tiles with mapview_draw_tile_number.
+00559c20	setup_picwnd_global_init	high	CRT $E initializer calling setup_picwnd_static_init and setup_picwnd_reg_atexit.
+00559c71	setup_picwnd_static_dtor	high	atexit destructor registered by setup_picwnd_reg_atexit: runs setup_picwnd_dtor on setup_picwnd.
+00559c8b	setup_picwnd_surface_global_init	high	CRT $E initializer calling setup_picwnd_surface_static_init and setup_picwnd_surface_reg_atexit.
+00559cdc	setup_picwnd_surface_static_dtor	high	atexit destructor registered by setup_picwnd_surface_reg_atexit: surface_dtor on setup_picwnd_surface.
+0055a0e1	setup_picwnd_on_close	high	Installed via wnd_set_close_handler on setup_picwnd; hides the window, refocuses main frame and flushes input.
+0055a15e	setup_picwnd_on_redraw	high	Installed via wnd_set_redraw_callback on setup_picwnd; calls setup_picwnd_redraw.
+0055a178	setup_picwnd_on_restore	high	Installed via wnd_set_restore_handler on setup_picwnd; calls setup_picwnd_redraw.
+0055a5a4	setup_picwnd_destroy	medium	Thiscall on setup_picwnd: if created (field_2e4) destroys the window surface, releases setup_picwnd_surface and frees the picture DLL.
+0055b0fb	mp_turn_timer_tick	high	500 ms self-rearming timer: decrements mp_turn_seconds_left, closes modal windows and ends the turn at zero, otherwise draws the blinking timer bar.
+0055b451	mp_window_drag_mouse_hook	high	WH_MOUSE hook proc installed by the drag-begin handler; calls mp_mouse_watchdog_tick while mp_window_drag_active.
+0055b47e	mp_window_drag_begin	high	Drag-begin callback: sets mp_window_drag_active/start ticks/wnd, sends net msg 0x5d when host and installs the WH_MOUSE hook.
+0055b515	mp_window_drag_end	high	Drag-end callback: clears drag state, unhooks the mouse hook and sends net msg 0x5e when host.
+0055b677	mp_window_drag_modal_timeout	medium	If a window drag has lasted over 124 ticks, flags the top dialog (0x400) and ends its modal loop; idle-callback shape.
+0055b6c7	game_player_resign	medium	Player quit/retire: SP stops CD audio and map display; MP announces retirement (text args, kill-civ option), eliminates civ or drops human flag, sets player_has_quit and notifies host or hands off hosting.
+00564549	file_fallback_drive_unset	high	Returns true when fallback_drive_root is empty.
+005680a0	shared_palette_global_init	high	CRT $E initializer calling shared_palette_static_init and shared_palette_reg_atexit.
+005680f1	shared_palette_static_dtor	high	atexit destructor registered by shared_palette_reg_atexit: palette_destroy on the shared palette.
+0056810b	frame_texture_surface_global_init	high	CRT $E initializer calling frame_texture_surface_static_init and frame_texture_surface_reg_atexit.
+0056815c	frame_texture_surface_static_dtor	high	atexit destructor registered by frame_texture_surface_reg_atexit: surface_dtor on frame_texture_surface.
+00568b00	status_window_global_init	high	CRT $E initializer calling status_window_static_init and status_window_reg_atexit.
+00568b51	status_window_static_dtor	high	atexit destructor registered by status_window_reg_atexit: frame_wnd_dtor on status_window.
+00568b6b	status_info_font_global_init	high	CRT $E initializer calling status_info_font_static_init and status_info_font_reg_atexit.
+00568bbc	status_info_font_static_dtor	high	atexit destructor registered by status_info_font_reg_atexit: font_destroy on status_info_font.
+00568bd6	status_font_global_init	high	CRT $E initializer calling status_font_static_init and status_font_reg_atexit.
+00568c27	status_font_static_dtor	high	atexit destructor registered by status_font_reg_atexit: font_destroy on status_font.
+00568c41	status_wnd_on_minimize	high	Installed via wnd_set_minimize_handler on status_wnd_events; sets status_wnd_hidden.
+00568c58	status_wnd_on_restore	high	Installed via wnd_set_restore_handler on status_wnd_events; brings city window to top, clears status_wnd_hidden and repaints.
+00568c7e	status_wnd_on_close	high	Installed via wnd_set_close_handler on status_wnd_events; sets status_wnd_hidden and minimizes the window.
+0056a98b	status_wnd_on_click	high	Installed as both lbutton-up and rbutton-up handler of the status window; ends turn, redraws maps or refocuses active unit (city notice while city turn processing).
+0056aa7f	status_wnd_on_size	high	Installed via wnd_set_size_handler on status_wnd_events; saves the window rect to 00655334.
+0056aaa5	status_wnd_on_move	high	Installed via wnd_set_move_handler on status_wnd_events; saves the window rect to 00655334.
+0056aeed	status_timer_bg_surface_static_dtor	high	atexit destructor registered lazily in status_draw_timer_bar: surface_dtor on status_timer_bg_surface.
+0056b847	str_append_newline	high	Appends '\n' to the end of a NUL-terminated string in place.
+0056b8a0	map_label_font_global_init	high	CRT $E initializer calling map_label_font_static_init and map_label_font_reg_atexit.
+0056b8f1	map_label_font_static_dtor	high	atexit destructor registered by map_label_font_reg_atexit: font_destroy on map_label_font.
+0056ec92	lobby_wait_civs_chosen_idle	medium	Modal idle callback set before the host's connection wait popup: pumps net messages and, once no active slot lacks a civ, sets session phase 2, sends msg 0x28 and ends the modal loop.
+0056ed62	lobby_dialog_idle	medium	Modal idle callback of the lobby player-list dialog; just pumps net_process_messages.
+0056ed80	net_wait_player_info_idle	medium	Idle callback: pumps net messages and ends the top modal loop once a player-info or client-canceled-start message has arrived.
+0056f910	sprite_sheet_surface_global_init	high	CRT $E initializer calling sprite_sheet_surface_static_init and sprite_sheet_surface_reg_atexit.
+0056f961	sprite_sheet_surface_static_dtor	high	atexit destructor registered by sprite_sheet_surface_reg_atexit: surface_dtor on sprite_sheet_surface.
+0056f97b	sprite_editor_orig_sprite_global_init	high	CRT $E initializer calling sprite_editor_orig_sprite_static_init and _reg_atexit.
+0056f9cc	sprite_editor_orig_sprite_static_dtor	high	atexit destructor registered by sprite_editor_orig_sprite_reg_atexit: sprite_destroy.
+0056f9e6	sprite_editor_result_global_init	high	CRT $E initializer calling sprite_editor_result_static_init and sprite_editor_result_reg_atexit.
+0056fa37	sprite_editor_result_static_dtor	high	atexit destructor registered by sprite_editor_result_reg_atexit: sprite_destroy on sprite_editor_result_sprite.
+0056fa51	sprite_picker_sprite_global_init	high	CRT $E initializer calling sprite_picker_sprite_static_init and sprite_picker_sprite_reg_atexit.
+0056faa2	sprite_picker_sprite_static_dtor	high	atexit destructor registered by sprite_picker_sprite_reg_atexit: sprite_destroy on sprite_picker_sprite.
+0056fabc	sprite_editor_surface_global_init	high	CRT $E initializer calling sprite_editor_surface_static_init and sprite_editor_surface_reg_atexit.
+0056fb0d	sprite_editor_surface_static_dtor	high	atexit destructor registered by sprite_editor_surface_reg_atexit: surface_dtor on sprite_editor_surface.
+0056fb27	sprite_editor_window_global_init	high	MSVC $E initializer calling sprite_editor_window_static_init and sprite_editor_window_reg_atexit.
+0056fb78	sprite_editor_window_static_dtor	high	atexit destructor running frame_wnd_dtor on sprite_editor_window, registered by sprite_editor_window_reg_atexit.
+0056fb92	sprite_picker_window_global_init	high	MSVC $E initializer calling sprite_picker_window_static_init and sprite_picker_window_reg_atexit.
+0056fbe3	sprite_picker_window_static_dtor	high	atexit destructor running sprite_picker_dtor on sprite_picker_window.
+0056fce4	sprite_sheet_save_units	medium	Loads UNITS.BMP/GIF into the sheet surface, redraws all 63 unit sprites with shield marks on the backdrop, deletes and rewrites UNITS.BMP in the scenario dir.
+0056ffda	sprite_sheet_save_cities	medium	Loads CITIES.BMP/GIF, redraws city/walled-city, flag, fortify, fortress and airbase sprites, then rewrites CITIES.BMP in the scenario dir.
+00570780	sprite_sheet_save_terrain1	medium	Loads TERRAIN1.BMP/GIF, redraws base terrain, resources, improvements, pollution, shield, hut, road and railroad sprites, rewrites TERRAIN1.BMP.
+00570fc6	sprite_sheet_save_terrain2	medium	Loads TERRAIN2.BMP/GIF, redraws river, forest, mountain, hill, river-mouth and coast-quarter sprites, rewrites TERRAIN2.BMP.
+00571910	sprite_sheet_save_tech_icons	medium	Loads ICONS.BMP/GIF, redraws the 5x4 advance_category_icon_sprites cells and rewrites ICONS.BMP in the scenario dir.
+00571bce	sprite_sheet_save_building_icons	medium	Loads ICONS.BMP/GIF, redraws improvement and wonder icons, map cursor and explosion frames, rewrites ICONS.BMP.
+005722ab	sprite_editor_ok_clicked	high	OK button callback (label 254) in sprite_editor_run: grabs the edited sprite, stores shield flag x/y offsets, calls the OK callback and ends the modal loop.
+00572364	sprite_editor_cancel_clicked	high	Cancel button callback (label 255) in sprite_editor_run: clears sprite_editor_running and ends the modal loop.
+00572fff	sprite_editor_on_mouse_down	high	L/R button-down and dblclick handler in sprite_editor_run: tool-button actions (undo, swap colors, import, brush size, flag) and pick/paint/flag on the zoomed grid.
+00573afd	sprite_editor_on_mouse_up	high	Button-up handler in sprite_editor_run: clears sprite_editor_painting and releases mouse capture.
+00573b1d	sprite_editor_on_mouse_move	high	Mouse-move handler in sprite_editor_run: updates cursor by region/tool and paints interpolated line or brush pixels while dragging.
+00574e98	sprite_picker_ok_clicked	medium	Picker OK button callback: draws the picked sprite into the editor surface, re-grabs sprite_editor_orig_sprite and ends the picker modal loop.
+00574f50	sprite_picker_import_all_clicked	medium	Import All (label 597) callback: after RUSURE confirm, re-grabs every sprite of the current sheet mode from the loaded sheet surface.
+00575dc4	sprite_picker_cancel_clicked	high	Picker Cancel button callback (label 255): clears sprite_picker_running and ends the picker modal loop.
+00578d8a	menu_dispatch_command	medium	Window menu callback: resolves visible menu/item indices to ids on menu_active_object and calls menu_command_callback.
+005791df	menu_set_menu_hidden	medium	Finds a top-level menu by id and sets/clears its flag 2 (hidden), marking the menu bar dirty on change; menu analog of menu_set_item_hidden.
+00586bb6	cosmic_editor_edit_value	medium	Listbox dblclick/Edit button callback: CPEDIT text input for the selected COSMIC value, clamps to min/max, refills the list.
+00586d0a	cosmic_editor_write_section	medium	rules_edit_set_section writer for COSMIC: emits 22 lines of the edited value padded to 8 plus the original ;comment.
+00586da1	cosmic_editor_ok_clicked	medium	OK callback: registers the COSMIC section writer, rewrites RULES (MessageBox on error) and ends the editor modal loop.
+00586e24	cosmic_editor_help_clicked	medium	Help button callback: shows the EFFECTS/HELP popup parented to the editor window and refocuses the list.
+00586e88	cosmic_editor_cancel_clicked	medium	Cancel button callback: clears editor_running and ends the cosmic editor modal loop without saving.
+00587e05	parley_city_list_scroll_local	medium	Scrollbar callback for city list pane 0, forwarding to parley_city_list_scroll(0, pos).
+00587e23	parley_city_list_scroll_remote	medium	Scrollbar callback for city list pane 1, forwarding to parley_city_list_scroll(1, pos).
+00587e41	parley_reveal_city_info	high	Reveal City Info (label 882) button: swaps to the Hide button, sets the revealed flag (+0x3be), sends net msg 0xa5 and redraws the city list.
+00587f00	parley_hide_city_info	high	Hide City Info (label 884) button: swaps to the Reveal button, clears flag +0x3be, sends net msg 0xa6 and redraws the city list.
+00587fbf	parley_request_city_info	medium	Other-side "Request City Info" (label 883) button: sends text msg 0x65 with the human civ's plural name to the parley partner.
+005880b0	parley_city_list_click	medium	City-list hotspot click/dblclick callback: hit-tests the row and toggles selection with shift-range and ctrl-toggle, then redraws the pane.
+005899f0	main_frame_bg_surface_global_init	high	MSVC $E initializer calling main_frame_bg_surface_init and main_frame_bg_surface_atexit.
+00589a41	main_frame_bg_surface_static_dtor	high	atexit destructor running surface_dtor on main_frame_bg_surface.
+0058a5b0	unit_sound_editor_global_init	high	MSVC $E initializer calling unit_sound_editor_static_init and unit_sound_editor_reg_atexit.
+0058a601	unit_sound_editor_static_dtor	high	atexit destructor running frame_wnd_dtor on unit_sound_editor_window.
+0058a905	unit_sound_editor_pick_wav	medium	Slot button callback: file dialog "Sound File to Copy" for a .WAV with PLAYSOUND preview, then copies it over the effect's WAV in the scenario SOUND dir.
+0058abee	unit_sound_editor_ok_clicked	medium	OK button (label 254) callback in unit_sound_editor_run: clears the running flag and ends the modal loop.
+0058ac13	unit_sound_editor_cancel_clicked	medium	Cancel button (label 255) callback in unit_sound_editor_run: clears the running flag and ends the modal loop.
+0058ac38	unit_sound_editor_redraw	high	Redraw callback: caption, background, 6 beveled slot boxes labelled with effect WAV names and the "Double-click on filename to play" header.
+0058ae6c	unit_sound_editor_on_dblclick	high	Dblclick handler: hit-tests the 6 slot rects and plays that slot's sound effect with sound forced on.
+0058f010	popup_game_if_local_mover	medium	Shows GAME.TXT popup param_1 only when unit_move_by_local_human is set.
+0059a850	net_session_global_init	high	MSVC $E initializer calling net_session_static_init and net_session_reg_atexit.
+0059a8a1	net_session_static_dtor	high	atexit destructor running net_session_dtor on net_session.
+0059bb54	net_on_broadcast_receive	high	Registered via XD_SetBroadcastReceive; drops tiny/non-Civ2 (magic 0x66606660) packets and enqueues the rest unless filtered by own IP.
+0059bc41	net_on_secure_receive	high	Registered via XD_SetSecureReceive; enqueues Civ2-magic messages, else logs diagnostics with hex dump and offset search.
+0059bfb5	net_on_new_client	high	Registered via XD_SetNewClientConnection; logs "NewClientReceiveFunc: New client connection".
+0059bfdb	net_on_connected_to_server	high	Registered via XD_SetOnClientConnectionToServer; records server conn id, sets connected flag and sends msg 0x2f.
+0059c04b	net_on_connection_lost	high	Registered via XD_SetOnConnectionLost; logs and bumps total and per-player lost-connection counters.
+0059c0a4	net_on_oversized_message	high	Registered via XD_SetOversizedMessageCB; logs "Oversized XDaemon message".
+0059c301	net_modal_idle_poll	medium	Modal-loop idle callback set by many dialogs: net_process_messages(net_session,1,0).
+0059d190	dialog_text_font_global_init	high	Compiler $E static-init wrapper calling dialog_text_font_static_init and dialog_text_font_reg_atexit.
+0059d1e7	dialog_text_font_atexit_dtor	high	atexit destructor registered by dialog_text_font_reg_atexit: font_destroy on dialog_text_font_obj.
+0059d201	dialog_title_font_global_init	high	Compiler $E static-init wrapper calling dialog_title_font_static_init and dialog_title_font_reg_atexit.
+0059d256	dialog_title_font_atexit_dtor	high	atexit destructor registered by dialog_title_font_reg_atexit: font_destroy on dialog_title_font_obj.
+0059d270	dialog_list_font_global_init	high	Compiler $E static-init wrapper calling dialog_list_font_static_init and dialog_list_font_reg_atexit.
+0059d2c5	dialog_list_font_atexit_dtor	high	atexit destructor registered by dialog_list_font_reg_atexit: font_destroy on dialog_list_font_obj.
+0059d2df	dialog_plain_font_global_init	high	Compiler $E static-init wrapper calling dialog_plain_font_static_init and dialog_plain_font_reg_atexit.
+0059d334	dialog_plain_font_atexit_dtor	high	atexit destructor registered by dialog_plain_font_reg_atexit: font_destroy on dialog_plain_font_obj.
+0059d34e	active_dialog_global_init	medium	Compiler $E static-init wrapper that only calls active_dialog_static_init.
+0059d37d	dialog_edit_on_change	medium	Edit-control change callback set in dialog_create_controls; only resets dialog_timeout_start to timer_ticks().
+0059d397	dialog_radio_on_select	medium	Radio-group select callback set in dialog_create_controls; only resets dialog_timeout_start to timer_ticks().
+0059d527	dialog_set_default_text_font	high	Stores the font pointer in dialog_default_text_font (used by dialog_init for new dialogs).
+0059d53f	dialog_set_default_title_font	high	Stores the font pointer in dialog_default_title_font.
+0059d557	dialog_set_default_list_font	high	Stores the font pointer in dialog_default_list_font.
+0059d56f	dialog_reset_default_fonts	high	Restores dialog_default_text/title/list_font to the built-in dialog_text/title/list_font_obj statics.
+0059e327	dialog_help_pressed	medium	Returns style_flags bit 0x80, which dialog_on_button_click sets when the button of type 1 (Help, per dialog_button_labels OK/Help/Cancel) is clicked.
+0059e624	dialog_set_bevel_width	medium	Stores field_c8, named bevel_width in the Dialog struct.
+0059e812	dialog_find_button	medium	Walks the button_list (field_238, next at +0x18) returning the node whose id (+0xc) matches; mirrors dialog_find_option.
+0059e973	dialog_enable_all_options	medium	Clears the disabled bit 0x1 on every option of the field_228 option list (inverse of dialog_set_option_disabled for all).
+0059eb42	dialog_get_first_edit_text	high	Calls dialog_get_edit_text(this, 0, buf): text of the first edit field.
+0059eb68	dialog_set_result_id	medium	Stores field_d8 (result_id), the value dialog_on_button_click records as the chosen option id or -1.
+0059ec40	dialog_set_modal_poll_fn	medium	Stores callback field_250 (on_modal_poll in the Dialog struct).
+0059fcf2	dialog_option_at_column	medium	Returns dialog_option_at(list_rows[cur_pane] * col): the first option of the given column in a multi-column list.
+005a1da3	dialog_list_on_vscroll	high	Scrollbar/track callback for pane-0 single-column list (created in dialog_create_controls): sets top option to the scroll position and redraws.
+005a20f4	dialog_on_redraw	high	Redraw callback set via wnd_set_redraw_callback in dialog_create_window; re-renders active_dialog.
+005a3bae	dialog_radio_on_dblclick	high	Radio-group double-click callback: stores the Nth option's id as result_id, sets flag 0x2000 and ends the dialog.
+005a3c83	dialog_listbox_on_dblclick	high	Listbox double-click callback: unless flag 0x400 set, sets flag 0x2000 and ends the active dialog.
+005a3df3	dialog_sprite_on_dblclick	high	Sprite hotspot double-click callback: calls the field_240 dblclick fn, ending the dialog on nonzero else re-rendering.
+005a407f	dialog_on_keydown	high	Keydown handler set in dialog_create_controls: arrow/page/home/end keys move the sprite or option selection of the active dialog.
+005a49c1	dialog_on_char	high	Char handler set in dialog_create_controls: jumps to the option/button/list item whose first letter matches the typed key.
+005a4df3	dialog_list_on_lbuttondown	high	Lbutton-down handler for list dialogs: picks pane, selects option under cursor, sets drag flag and captures the mouse.
+005a53b8	dialog_list_on_dblclick	high	Double-click handler for list dialogs: selects the option under the cursor via dialog_list_on_lbuttonup then ends the dialog.
+005a5494	dialog_list_on_hscroll	high	Scrollbar callback for pane-0 multi-column list: sets top option to column*rows and redraws.
+005a552c	dialog_list2_on_vscroll	high	Scrollbar callback for the second pane's single-column list: sets pane 1 top option to the scroll position and redraws.
+005a55b1	dialog_list2_on_hscroll	high	Scrollbar callback for the second pane's multi-column list: sets pane 1 top option to column*rows and redraws.
+005a9811	gfx_draw_hline_len	high	Fills a 1-pixel-high rect at x,y with the given length and color (x/y/length variant of gfx_draw_hline).
+005a989d	gfx_draw_vline_len	high	Fills a 1-pixel-wide rect at x,y with the given length and color (x/y/length variant of gfx_draw_vline).
+005a9ce9	gfx_draw_bevel_inset	high	Draws a RECT's top/left edges in one color and bottom/right in another, then deflates the rect by 1.
+005a9f30	net_host_wait_production_idle	high	Idle callback of the host WAITPRODUCTION popup: pumps net messages and ends it once every live human civ has net_civ_phase_done.
+005aa004	net_host_wait_human_moves_idle	high	Idle callback of the host WAITHUMANMOVES popup: pumps net messages and ends it once every live human civ is done.
+005ab0a3	net_client_wait_production_idle	high	Idle callback of the client WAITPRODUCTION popup in net_client_turn_loop: ends it on AI movement, end sequence, game exit or lost connection.
+005ab120	net_client_wait_ai_moves_idle	high	Idle callback of the client WAITAIMOVES popup: ends it on human movement start, end sequence, game exit or lost connection.
+005ab19d	net_client_wait_human_moves_idle	high	Idle callback of the client WAITHUMANMOVES popup: ends it on production begin, host handoff stage 1, end sequence, quit or lost connection.
+005ab23a	net_client_hotwait_idle	medium	Idle callback of the client CLIENTHOTWAIT popup: ends it on production begin, any handoff stage, end sequence, quit or lost connection.
+005ae17d	map_dx_wrapped_half	high	Returns (map_dx_wrapped(x1,x2)+1)>>1, the wrapped x distance in tiles from doubled coordinates.
+005ae37b	dir_is_adjacent	medium	Returns 1 if direction a equals direction b plus or minus one modulo 8 (neighbouring compass directions).
+005ae580	setup_pbem_game	high	PBEM1 setup menu (multiplayer=2, clears per-civ e-mail addresses): new/load map/custom/scenario/load game, then players, tribes and map generation.
+005aec14	pbem_ask_email_address	high	Shows the EMAILADDRESS prompt and stores the entry in civ_email_addresses[civ] (and prefs_email_address when param_2).
+005af69d	unit_editor_write_units	high	Writes one RULES @UNITS line per unit type (name, obsolete, domain, move, ... flags, prereq) to the FILE; registered as UNITS section writer by the editor OK handler.
+005af9e3	unit_editor_on_ok	high	Unit editor OK: stores controls, renames changed unit names in EVENTS, writes RULES UNITS section via rules_write_sections, ends the modal loop.
+005afbca	unit_editor_on_rename	high	Prompts UNITNAME text input for the selected unit, stores it in editor_item_names and refills the unit combo.
+005afd3b	unit_editor_on_help	medium	Shows the HELP popup from the UNITS text section parented to the editor window.
+005afd9a	unit_editor_on_cancel	medium	Clears editor_running and ends the unit editor modal loop without saving.
+005afdc2	unit_editor_edit_sprite	high	Runs sprite_editor_run on the selected unit's sprite then redraws the unit editor.
+005afe15	unit_editor_edit_sound	high	Builds a title from a label and unit name and runs unit_sound_editor_run for the selected unit.
+005afea8	unit_editor_edit_flags	high	Shows the ABILITIES checkbox popup over the 15 unit flag bits and stores the result in editor_item_flags.
+005b0373	unit_editor_on_combo	high	Combo callback set by unit_editor_create_combo: id 0xc9 switches selected unit (validating/storing controls), 0xcd updates domain controls.
+005b3007	unit_stack_position	medium	Counts prev_in_stack links back from a unit, giving its zero-based index within its stack.
+005b3046	unit_stack_nth_with_role	high	Returns the param_2-th unit in the stack whose unit type role equals param_3, or -1.
+005b30e9	unit_stack_count	high	Counts all units in the stack iterated with unit_stack_first/unit_next_in_stack.
+005b3136	unit_stack_count_type	high	Counts units in the stack whose type equals param_2.
+005b3cd4	unit_stack_first_ships_on_top	medium	Calls unit_stack_ships_to_top then returns unit_stack_first of the stack.
+005b4f3c	tile_nearby_civs_mask	medium	Returns a bitmask of the tile owner civ plus every civ 1..7 for which tile_adjacent_to_civ is true.
+005b4fca	unit_stack_seen_by_adjacent_civs	medium	Marks the unit's stack seen by each civ 1..7 adjacent to the unit's tile.
+005b503b	unit_stack_has_type	high	Returns 1 if any unit in the stack has the given unit type.
+005b620a	unit_stack_ships_load_cargo	medium	Puts ships on top, runs unit_gather_cargo for each sea unit returning the max, and syncs state diff in multiplayer if asked.
+005b62ee	unit_stack_set_orders	high	Sets orders to the given value for every unit in the stack.
+005b6a58	unit_dlg_wake_unit_cb	medium	Sprite-click callback of unit_stack_select_dialog: clears the unit's orders to -1 and its 0x8000 flag.
+005b6aa0	unit_dlg_dblclick_accept_cb	medium	Sprite double-click callback of unit_stack_select_dialog that just returns 1.
+005b6ab5	unit_dlg_draw_sprite_cb	high	Sprite draw callback for unit list dialogs: gfx_draw_unit at given position with dlg_unit_sprite_zoom.
+005baf24	text_set_fake_bold	high	Sets the text_fake_bold global from a boolean argument.
+005bb463	surface_wnd_create_with_menu	high	surface_wnd_create followed by wnd_attach_menu with the extra menu parameter.
+005bb525	wnd_create_with_surface_menu	high	wnd_create_with_surface followed by wnd_attach_menu with the extra menu parameter.
+005bb5be	surfwnd_resize_dib	medium	Reallocates the surface DIB for a rect via surface_alloc_dib_by_bpp and sets the window client size to match.
+005bb7c3	surface_wnd_create_nopal_menu	high	surface_wnd_create_nopal followed by wnd_attach_menu.
+005bb871	surface_wnd_create_child_nopal_menu	high	surface_wnd_create_child_nopal followed by wnd_attach_menu.
+005bba1d	win_discard_all_messages	high	Removes all pending messages with PeekMessageA(PM_REMOVE) without dispatching them.
+005bc032	wnd_obj_is_visible	high	Returns IsWindowVisible of the wnd object's HWND, 0 for null.
+005bc07e	wnd_obj_send_close	high	Sends WM_CLOSE to the wnd object's HWND.
+005bc35e	wnd_obj_set_bg_rgb	high	Replaces the wnd object's background brush at +0x14 with a solid brush from r,g,b and invalidates the window.
+005bc476	wnd_obj_set_text	high	SetWindowTextA on the wnd object's HWND.
+005bc603	wnd_obj_is_maximized	high	Returns IsZoomed of the wnd object's HWND.
+005bc65f	wnd_obj_is_minimized	high	Returns IsIconic of the wnd object's HWND.
+005bc6e6	wnd_obj_invalidate_rect	high	InvalidateRect on the wnd object's HWND with the given rect, no erase.
+005bcad7	wnd_obj_client_to_screen	high	Converts a client point to screen coordinates with ClientToScreen.
+005bcb26	wnd_obj_client_to_parent	high	Maps a point from the window to its parent's client coordinates with MapWindowPoints.
+005bceee	ui_load_app_cursor	high	LoadCursorA from app_hinstance with the given resource id.
+005bcf1c	ui_destroy_hcursor	high	DestroyCursor on a non-null cursor handle.
+005bcf40	ui_set_hcursor	high	Thin wrapper around SetCursor.
+005bcf5a	wnd_obj_set_hcursor_now	medium	Stores an HCURSOR at wnd object +0x1c and calls SetCursor if the flag is set (handle variant of wnd_obj_set_cursor_now).
+005bcfb8	ui_hide_mouse_cursor	high	Calls ShowCursor(0) until the display count goes negative.
+005bd023	wnd_obj_apply_hcursor	medium	Stores an HCURSOR at wnd object +0x1c and always calls SetCursor.
+005bd566	wnd_obj_set_topmost_child	high	Debug strings name it MSSetTopMostChild: records a SWS_ATTACHED child HWND at +0x10 of the parent wnd object.
+005bd987	surface_load_lbm_resource	high	Loads an LBMS resource, parses IFF FORM ILBM/PBM BMHD/CMAP/BODY chunks into the surface and palette.
+005bdf7f	lbm_decode_row	medium	Decodes one IFF row: planar ILBM bitplanes into chunky pixels via lbm_unpack_row, or PBM raw/ByteRun1 data.
+005be2c4	surface_load_tga_resource	high	Loads a TARG resource and decodes an uncompressed 8-bit Targa image with 24-bit colormap into the surface/palette.
+005be595	surface_load_tga_file	high	Same Targa decoder as surface_load_tga_resource but reads a memory-mapped file via file_obj_open.
+005be967	surface_load_pcx_resource	high	Loads "PCXS" resource, validates PCX header (errors "PCX resource not found"/"Not a PCX file"), RLE-decodes 8-bit pixels and palette.
+005bec8c	surface_load_pcx_file	high	Same PCX RLE decode as the resource variant but from a mapped file ("PCX file not found").
+005bfad9	surface_load_bmp_resource	high	Loads bitmap resource ("Bitmap resource not found"), requires 8bpp uncompressed, sets palette entries and copies rows bottom-up.
+005bfcff	surface_load_bmp_file	high	Maps a .BMP file ("Bitmap file not found"), 8bpp uncompressed only, sets palette and copies rows into the 8-bit surface.
+005c0753	surface_copy_to_ddsurf	medium	Locks a DirectDraw surface and copies the clipped rect pixels into it (log "Source Port not locked in CopyToPort"), special column path for 320-wide.
+005c0a55	surface_stretch_to_wnd	high	Applies window palette and stretches a surface rect to a window via dib_stretch_to_wnd_obj.
+005c0b2c	surface_stretch_to_surface	high	Stretches a rect of this surface's DIB onto another surface's DIB via dib_stretch_to_dib.
+005c0e57	surface_draw_text_in_rect_cur_font	high	Current-font variant of surface_draw_text_in_rect: DrawText into rect with optional shadow pass (flag 0x10).
+005c10fb	surface_draw_text_rect_cur_font	high	Current-font variant of surface_draw_text_rect, forwarding to dib_draw_text_wrap; logs "No current font selected".
+005c1513	surface_draw_raised_frame	medium	Frames a rect then draws white top/left and dark bottom/right inner lines (palette 0xff/0xf7 or RGB) for a raised 3D look.
+005c1742	surface_draw_sunken_frame	medium	Mirror of the raised frame: dark top/left and white bottom/right inner lines for a sunken 3D look.
+005c1972	draw_set_current_surface	high	Swaps global draw_current_surface with the argument and returns the previous value.
+005c1998	draw_get_current_surface	high	Returns global draw_current_surface.
+005c1cbd	surface_create_dib24	high	Builds RECT 0,0,w,h and calls surface_alloc_dib24 (sibling of surface_create_dib16).
+005c1e6d	surface_create_dib32	high	Builds RECT 0,0,w,h and calls surface_alloc_dib32.
+005c1ff9	surface_resize_dib32	medium	Thin wrapper over surface_alloc_dib32, sibling of surface_resize_dib24.
+005c2048	surface_load_tga_resource16	high	Loads "TARG" resource, uncompressed Targa (log "Targa Compression Not Implemented Yet") 16/24/32bpp converted to 555 into a 16-bit surface.
+005c2360	surface_load_tga_file16	high	Maps a Targa file ("Targa File not found") and converts 16/24/32bpp pixels to 555 in a 16-bit surface.
+005c27ad	surface_load_bmp_resource16	high	Loads bitmap resource and converts 8bpp (via palette LUT) or 24bpp pixels to 555 in a 16-bit surface.
+005c2a77	surface_load_bmp_file16	high	Maps a BMP file and converts 8bpp/24bpp pixels to 555 into a 16-bit surface.
+005c2e5e	surface_load_gif_resource16	high	Loads "GIFS" resource, LZW-decodes into a temp DIB and maps palette to 555 into a 16-bit surface.
+005c3313	surface_load_gif_file16	high	GIF file variant of the 16-bit GIF loader ("GIF file not found").
+005c3874	surface_load_pict_resource16	high	Loads "CvPc" picture resource, LZW-decodes and converts palette indices to 555 in a 16-bit surface.
+005c3b7a	surface_load_pict_file16	medium	Mapped-file variant of the 16-bit CvPc picture loader (error string reuses "Picture resource not found").
+005c3efc	surface_load_bmp_resource24	high	Loads bitmap resource into a 24-bit surface (surface_resize_dib24), copying 24bpp rows with BGR swap.
+005c40b6	surface_load_bmp_file24	high	Maps a BMP file into a 24-bit surface, copying 24bpp rows with BGR swap.
+005c4375	surface_load_tga_resource24	high	Loads "TARG" resource into a 24-bit surface, copying 24/32bpp uncompressed Targa pixels.
+005c463f	surface_load_tga_file24	high	Maps a Targa file ("Targa File not found") into a 24-bit surface.
+005c4b4c	surface_fill_rgb	high	Fills the whole clip rect with an RGB color via surface_fill_rect_rgb (RGB sibling of surface_fill).
+005c4b7f	surface_blit_rgb	medium	Intersects src/dst rects with clips and blits DIB to DIB via dib_blit_to_dib without palette handling; sits among RGB surface ops.
+005c4c46	surface_blit_to_ddsurf	medium	Intersects rects and blits the surface DIB onto a DirectDraw surface interface via dib_blit_to_ddsurf.
+005c4d0d	surface_stretch_to_ddsurf	high	Stretches a surface rect onto a DirectDraw surface via dib_stretch_blit_to_ddsurf (log "Port not locked in CopyToScreen").
+005c4dd3	surface_draw_text_rgb_cur_font	high	Current-font RGB text at x,y with optional black shadow (flag 0x10) via dib_draw_text_at_rgb.
+005c4eb6	surface_draw_text_in_rect_rgb_cur_font	high	Current-font RGB DrawText in rect with optional shadow pass; logs "No current font selected".
+005c4f9f	surface_draw_text_rgb	high	Explicit-font RGB text at x,y with optional shadow via dib_draw_text_at_rgb.
+005c505d	surface_draw_text_in_rect_rgb	high	Explicit-font RGB DrawText into rect with optional shadow (flag 0x10).
+005c512d	surface_draw_text_rect_rgb_cur_font	high	Current-font RGB variant of surface_draw_text_rect via dib_draw_text_wrap_rgb.
+005c51a5	surface_draw_text_rect_rgb	high	Explicit-font RGB variant of surface_draw_text_rect via dib_draw_text_wrap_rgb.
+005c53c3	surface_rgb_to_native	medium	Calls dib_rgb_to_native_pixel with the surface bit depth and pixel(0,0) pointer to convert an RGB triple to native pixel format.
+005c57b1	wnd_create_framed_menu	high	wnd_create_framed followed by wnd_attach_menu with the extra menu arg.
+005c584e	wnd_create_framed_child_menu	high	wnd_create_framed_child followed by wnd_attach_menu.
+005c58e7	wnd_create_framed_nopal_menu	high	wnd_create_framed_nopal followed by wnd_attach_menu.
+005c597c	wnd_create_framed_child_nopal_menu	high	wnd_create_framed_child_nopal followed by wnd_attach_menu.
+005c5b36	wnd_invalidate_controls	high	Walks the window's control list (next at +0x20) invalidating each control's window (+0x1c).
+005c5c2d	wnd_find_initial_focus_control	high	Walks the control list from +0xb8 returning the first control whose ctrl_get_initial_focus is set.
+005c5f7c	wnd_create_with_cmd_proc_menu	high	wnd_create_with_cmd_proc followed by wnd_attach_menu.
+005c6024	wnd_create_with_handlers_menu	high	wnd_create_with_handlers followed by wnd_attach_menu.
+005c60c8	wnd_create_nopal_cmd_proc_menu	high	wnd_create_nopal_cmd_proc followed by wnd_attach_menu.
+005c6168	wnd_create_child_nopal_cmd_proc_menu	high	wnd_create_child_nopal_cmd_proc followed by wnd_attach_menu.
+005c6329	wnd_set_hscroll_step	medium	Stores param in hscroll_step if it does not exceed the horizontal scroll range span.
+005c636c	wnd_set_vscroll_step	medium	Stores vscroll_step only if it does not exceed the window's SB_VERT range span from wnd_get_vscroll_range.
+005c66b9	palette_load_ctab_res_range	high	Loads a "CTAB" resource by id and applies its RGB triplets (data+8) to an explicit start/count with palette_set_rgb, logging if missing.
+005c6757	palette_load_file	medium	Thiscall wrapper forwarding to palette_load_from_file.
+005c677b	palette_save_full_to_file	high	Calls palette_save_to_file for the whole palette range 0..255.
+005c6b05	palette_animate_hpalette	medium	Calls palette_animate on the object's own hpalette for a start/count range.
+005c6bd5	palette_rotate_range	high	Cycles a palette entry range by N positions (direction by sign) with logpal_set_entry, then animates it.
+005c6edc	palette_tint_begin	high	Stores target colour tint_red/green/blue then calls palette_tint_begin_range.
+005c6f2c	palette_tint_end	high	Restores saved RGB range tint_saved_rgb via palette_set_rgb, refreshes the range and frees the saved handle.
+005c6fc3	palette_tint_get_saved_rgb	medium	Copies count*3 bytes of the saved tint RGB buffer (field 0x430) into a caller buffer.
+005c701c	palette_tint_step	high	Blends saved RGB range toward tint colour 0x424..0x426 at step k of tint steps and animates it; twin of palette_fade_step.
+005c7579	palette_build_remap_table	medium	Builds a colour kd-tree of this palette range and maps each colour of another palette's same range to its nearest index into a byte table.
+005c770a	palette_build_remap_table_ex	medium	Like palette_build_remap_table but the kd-tree uses a separate source range (param 5/6) from the mapped range.
+005c7899	palette_find_nearest_color	high	Builds a kd-tree of all 256 entries and returns the index nearest to the given r,g,b.
+005c8391	font_file_get_font_handle	medium	Returns a new 8-byte handle holding HFONT #n from a loaded font-file block (count at +0x100, HFONTs at +0x108).
+005c861c	font_file_load	medium	AddFontResourceA on a file, allocates a 0x208 block with name and 3-char prefix, and creates HFONTs for matching faces.
+005c86bc	font_enum_matching_faces_cb	high	EnumFontFamilies callback used by font_enum_matching_faces: creates an HFONT for faces matching the 3-char prefix.
+005c8791	font_file_unload	medium	Deletes all HFONTs of a font-file block, RemoveFontResourceA on its name and frees the block.
+005cce80	control_subclass_wndproc	medium	Subclass proc reading the control and old wndproc from window extra bytes; on WM_DESTROY clears the control's hwnd then chains.
+005db035	err_ctx_set_field_708	medium	Stores its argument at ErrorContext offset 0x708; err_ctx_ctor calls it with 0.
+005de658	snd_stub_nop_wrap	medium	Uncalled thin wrapper forwarding to 005dda2b, in the row of snd_*_wrap wrappers.
+005ea779	ddraw_check_iface_nop	medium	Tests ddraw_iface for null with both branches empty (stripped body).
+00428d1b	city_editor_on_ok	high	OK button (label 254) callback in city_editor_open_window: clears editor_running, ends modal loop, updates menus.
+00428d48	city_editor_on_help	high	Help button (label 571) callback: shows the HELP/CITIES popup parented to the editor window.
+00428da7	city_editor_on_cancel	high	Cancel button (label 255, set as cancel button) callback: clears editor_running and ends modal loop without menu update.
+00428dcf	city_editor_on_edit_icon	high	Edit Icon button (label 499) callback: runs sprite_editor_run on the selected city sprite then city_editor_request_redraw.
+00428e50	city_editor_on_edit_misc	high	Edit Misc button (label 572) callback: CITYMISC popup choosing fortify/airbase/flag/fortress sprites to open in the sprite editor.
+0042a380	credits_font_global_init	high	CRT $E initializer calling credits_font_static_init and credits_font_reg_atexit.
+0042a3d7	credits_font_static_dtor	high	atexit destructor: font_destroy on credits_font.
+0042a3f1	advisor_font_global_init	high	CRT $E initializer calling advisor_font_static_init and advisor_font_reg_atexit.
+0042a446	advisor_font_static_dtor	high	atexit destructor: font_destroy on advisor_font.
+0042a460	hall_of_fame_font_global_init	high	CRT $E initializer calling hall_of_fame_font_static_init and hall_of_fame_font_reg_atexit.
+0042a4b7	hall_of_fame_font_static_dtor	high	atexit destructor: font_destroy on hall_of_fame_font.
+0042a4d1	advisor_bold_font_global_init	high	CRT $E initializer calling advisor_bold_font_static_init and advisor_bold_font_reg_atexit.
+0042a528	advisor_bold_font_static_dtor	high	atexit destructor: font_destroy on advisor_bold_font.
+0042a542	civ_rating_title_font_global_init	high	CRT $E initializer calling civ_rating_title_font_static_init and civ_rating_title_font_reg_atexit.
+0042a599	civ_rating_title_font_static_dtor	high	atexit destructor: font_destroy on civ_rating_title_font.
+0042a5b3	advisor_button_font_global_init	high	CRT $E initializer calling advisor_button_font_static_init and advisor_button_font_reg_atexit.
+0042a608	advisor_button_font_static_dtor	high	atexit destructor: font_destroy on advisor_button_font.
+0042a622	advisor_window_global_init	high	CRT $E initializer calling advisor_window_static_init and advisor_window_reg_atexit.
+0042a673	advisor_window_static_dtor	high	atexit destructor: picwnd_dtor on advisor_window.
+0042a68d	casualty_window_global_init	high	CRT $E initializer calling casualty_window_static_init and casualty_window_reg_atexit.
+0042a6de	casualty_window_static_dtor	high	atexit destructor: picwnd_dtor on casualty_window.
+0042a6f8	tiles_dll_global_init	high	CRT $E initializer calling tiles_dll_static_init and tiles_dll_reg_atexit.
+0042a74e	tiles_dll_static_dtor	high	atexit destructor: dll_free on tiles_dll.
+0042ac4e	advisor_on_close_clicked	high	Close button callback (advisor_add_close_button and advisor shows): closes the active advisor picwnd or ends its modal loop.
+0042b540	science_advisor_on_scroll	high	Scrollbar callback set in science_advisor_draw: sets advisor_first_row to page*rows and redraws.
+0042b563	science_advisor_on_click	high	Left-button-up handler set in science_advisor_draw: maps click to the Nth known advance and opens its pedia page.
+0042b65b	science_advisor_on_goal_clicked	medium	Toggle button callback in science_advisor_show: opens civ_research_goal_dialog for the report civ.
+0042ccf4	trade_advisor_on_scroll	high	Scrollbar callback set in trade_advisor_draw: stores advisor_first_row and redraws.
+0042cd11	trade_advisor_on_supply_clicked	medium	Toggle button callback in trade_advisor_show: opens trade_supply_search_dialog for the report civ.
+0042d618	city_status_on_scroll	high	Scrollbar callback set in city_status_draw: stores advisor_first_row and redraws.
+0042d635	city_status_on_click	high	Left-button-up handler set in city_status_draw: opens the city window for the clicked row's city.
+0042e07f	attitude_advisor_on_scroll	high	Scrollbar callback set in attitude_advisor_draw: stores advisor_first_row and redraws.
+0042e09c	attitude_advisor_on_click	high	Left-button-up handler set in attitude_advisor_draw: opens the city window for the clicked row's city.
+0042efe3	defense_minister_on_scroll	high	Scrollbar callback set in defense_minister_draw: stores advisor_first_row and redraws.
+0042f000	defense_minister_on_toggle_view	medium	Toggle button callback: flips advisor_report_param, swaps the two toggle buttons and redraws (statistics vs casualties view).
+00430267	intel_report_on_scroll	high	Scrollbar callback set in intel_report_draw: sets advisor_first_row to page*rows and redraws.
+0043028a	intel_report_on_click	high	Left-button-up handler: opens pedia for the clicked known advance of the target civ, ends modal loop and sets intel_report_reopen.
+0043039d	intel_report_on_cities_clicked	high	Cities button (label 197) callback: INTELLCITY dialog listing the target civ's cities with capital/building info, then reopens report.
+00430822	mp_meeting_wait_idle	medium	Dialog idle callback in diplo_civs_meet/foreign_minister_show: pumps net messages and ends the dialog on timeout, reply or parley cancel.
+00431c56	wonders_report_on_scroll	high	Scrollbar callback set in wonders_report_draw: stores advisor_first_row and redraws.
+00432c1c	top_cities_draw	high	Redraw callback set in top_cities_show: ranks cities by size+happy-unhappy+10/wonder and draws TOP FIVE CITIES (label 341).
+00433434	demographics_draw	high	Redraw callback set in demographics_show: computes per-civ stats and draws Demographics rows (label 342) with demographics_draw_rank.
+00434e39	civ_score_window_draw	high	Redraw callback set in civ_score_window_show: draws CIVILIZATION SCORE (label 343) citizens, wonders and score breakdown.
+00435dc4	civ_rating_window_draw	high	Redraw callback set in civ_rating_window_show: computes rating percent/title and draws MALEFAME/FEMALEFAME titles.
+004362e2	hall_of_fame_draw	high	Redraw callback set in hall_of_fame_show: draws HALL OF FAME (label 442) entries with title, year, score and rating.
+00436b92	hall_of_fame_on_clear_clicked	medium	Clear button (label 446) callback in hall_of_fame_show: sets advisor_report_civ=1 as the clear flag and ends the modal loop.
+004371b3	credits_text_global_init	high	CRT $E initializer (xc table entry) calling credits_text_static_init.
+00437a10	credits_on_redraw	high	Redraw callback set in credits_show: calls credits_draw_scroll(1).
+00437a2a	credits_on_timer	high	Timer callback created in credits_show: increments credits_scroll_pos and calls credits_draw_scroll(0).
+00437c8a	advisor_mp_idle	medium	Modal idle callback for MP advisor reports (intel/wonders/top cities): pumps net messages and every 1200 ticks calls intel_report_end_modal.
+00437ccd	casualty_scrollbar_on_scroll	high	Scrollbar callback set by casualty timeline draw: stores new position in casualty_scroll_pos and redraws the timeline.
+004386b8	casualty_timeline_on_dblclick	high	Dblclick handler on casualty_wnd_events: maps click y to a log row and centers the map view on that casualty's x,y.
+0043d348	city_supplies_commodity	high	Returns 1 if commodity param_2 is one of the city's 3 supplies[] entries (offset 0x3b).
+0043d3a4	city_demands_commodity	high	Returns 1 if commodity param_2 is one of the city's 3 demands[] entries (offset 0x3e).
+00447320	terrain_base_sprites_global_init	high	MSVC $E initializer calling terrain_base_sprites_static_init and terrain_base_sprites_reg_atexit.
+0044737f	terrain_base_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 11 terrain_base_sprites with sprite_destroy.
+004473a2	terrain_dither_sprites_global_init	high	MSVC $E initializer calling terrain_dither_sprites_static_init and terrain_dither_sprites_reg_atexit.
+00447401	terrain_dither_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 0x34 terrain_dither_sprites with sprite_destroy.
+00447424	river_sprites_global_init	high	MSVC $E initializer calling river_sprites_static_init and river_sprites_reg_atexit.
+00447483	river_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 16 river_sprites with sprite_destroy.
+004474a6	forest_sprites_global_init	high	MSVC $E initializer calling forest_sprites_static_init and forest_sprites_reg_atexit.
+00447505	forest_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 16 forest_sprites with sprite_destroy.
+00447528	mountain_sprites_global_init	high	MSVC $E initializer calling mountain_sprites_static_init and mountain_sprites_reg_atexit.
+00447587	mountain_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 16 mountain_sprites with sprite_destroy.
+004475aa	hill_sprites_global_init	high	MSVC $E initializer calling hill_sprites_static_init and hill_sprites_reg_atexit.
+00447609	hill_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 16 hill_sprites with sprite_destroy.
+0044762c	hut_sprite_global_init	high	MSVC $E initializer calling hut_sprite_static_init and hut_sprite_reg_atexit.
+0044767d	hut_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on hut_sprite.
+00447697	unused_sprite_pair_global_init	medium	MSVC $E initializer for the 2-sprite array at 00644e88, which has no references besides its init/dtor.
+004476b1	unused_sprite_pair_static_init	medium	Vector-constructs the 2 sprites at 00644e88 with sprite_init/sprite_destroy; the array is otherwise unreferenced.
+004476d9	unused_sprite_pair_reg_atexit	medium	Registers the 00644e88 sprite pair's static destructor (004476f6) with atexit.
+004476f6	unused_sprite_pair_atexit_dtor	medium	atexit destructor: vector-destroys the 2 sprites at 00644e88 with sprite_destroy.
+00447719	tile_pick_mask_sprite_global_init	high	MSVC $E initializer calling tile_pick_mask_sprite_static_init and tile_pick_mask_sprite_reg_atexit.
+0044776a	tile_pick_mask_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on tile_pick_mask_sprite.
+00447784	tile_direction_mask_sprite_global_init	high	MSVC $E initializer calling tile_direction_mask_sprite_static_init and tile_direction_mask_sprite_reg_atexit.
+004477d5	tile_direction_mask_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on tile_direction_mask_sprite.
+004477ef	unexplored_tile_sprite_global_init	high	MSVC $E initializer calling unexplored_tile_sprite_static_init and unexplored_tile_sprite_reg_atexit.
+00447840	unexplored_tile_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on unexplored_tile_sprite.
+0044785a	coast_quarter_sprites_global_init	high	MSVC $E initializer calling coast_quarter_sprites_static_init and coast_quarter_sprites_reg_atexit.
+004478b9	coast_quarter_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 32 coast_quarter_sprites with sprite_destroy.
+004478dc	river_mouth_sprites_global_init	high	MSVC $E initializer calling river_mouth_sprites_static_init and river_mouth_sprites_reg_atexit.
+0044793b	river_mouth_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 4 river_mouth_sprites with sprite_destroy.
+0044795e	road_sprites_global_init	high	MSVC $E initializer calling road_sprites_static_init and road_sprites_reg_atexit.
+004479bd	road_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 18 road_sprites with sprite_destroy.
+004479e0	land_improvement_sprites_global_init	high	MSVC $E initializer calling land_improvement_sprites_static_init and land_improvement_sprites_reg_atexit.
+00447a3f	land_improvement_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 3 land_improvement_sprites with sprite_destroy.
+00447a62	pollution_sprite_global_init	high	MSVC $E initializer calling pollution_sprite_static_init and pollution_sprite_reg_atexit.
+00447ab3	pollution_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on pollution_sprite.
+00447acd	grassland_shield_sprite_global_init	high	MSVC $E initializer calling grassland_shield_sprite_static_init and grassland_shield_sprite_reg_atexit.
+00447b1e	grassland_shield_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on grassland_shield_sprite.
+00447b38	terrain_resource_sprites_global_init	high	MSVC $E initializer calling terrain_resource_sprites_static_init and terrain_resource_sprites_reg_atexit.
+00447b97	terrain_resource_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 22 terrain_resource_sprites with sprite_destroy.
+00447bba	airbase_sprites_global_init	high	MSVC $E initializer calling airbase_sprites_static_init and airbase_sprites_reg_atexit.
+00447c19	airbase_sprites_atexit_dtor	high	atexit destructor: vector-destroys the 2 airbase_sprites with sprite_destroy.
+00447c3c	caption_close_button_sprite_global_init	high	MSVC $E initializer calling caption_close_button_sprite_static_init and caption_close_button_sprite_reg_atexit.
+00447c8d	caption_close_button_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on caption_close_button_sprite.
+00447ca7	caption_zoom_out_sprite_global_init	high	MSVC $E initializer calling caption_zoom_out_sprite_static_init and caption_zoom_out_sprite_reg_atexit.
+00447cf8	caption_zoom_out_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on caption_zoom_out_sprite.
+00447d12	caption_zoom_out_btn_sprite_global_init	high	MSVC $E initializer calling caption_zoom_out_btn_sprite_static_init and caption_zoom_out_btn_sprite_reg_atexit.
+00447d63	caption_zoom_out_btn_sprite_atexit_dtor	high	atexit destructor: sprite_destroy on caption_zoom_out_button_sprite.
+00447d7d	caption_view_mode_btn_sprite_global_init	high	MSVC $E initializer calling caption_view_mode_btn_sprite_static_init and caption_view_mode_btn_sprite_reg_atexit.
+00447dce	caption_view_mode_button_sprite_static_dtor	high	atexit destructor running sprite_destroy on caption_view_mode_button_sprite.
+00447de8	scroll_up_button_sprite_global_init	high	MSVC $E initializer calling scroll_up_button_sprite_static_init and scroll_up_button_sprite_reg_atexit.
+00447e39	scroll_up_button_sprite_static_dtor	high	atexit destructor running sprite_destroy on scroll_up_button_sprite.
+00447e53	city_down_arrow_sprite_global_init	high	MSVC $E initializer calling city_down_arrow_sprite_static_init and city_down_arrow_sprite_reg_atexit.
+00447ea4	city_down_arrow_sprite_static_dtor	high	atexit destructor running sprite_destroy on city_down_arrow_sprite.
+00447ebe	nuke_anim_sprites_global_init	high	MSVC $E initializer calling nuke_anim_sprites_static_init and nuke_anim_sprites_reg_atexit.
+00447f1d	nuke_anim_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 11 nuke_anim_sprites.
+00447f40	sprite_editor_tool_sprites_global_init	high	MSVC $E initializer calling sprite_editor_tool_sprites_static_init and sprite_editor_tool_sprites_reg_atexit.
+00447f9f	sprite_editor_tool_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 15 sprite_editor_tool_sprites.
+00447fc2	editor_unit_backdrop_sprite_global_init	high	MSVC $E initializer calling editor_unit_backdrop_sprite_static_init and editor_unit_backdrop_sprite_reg_atexit.
+00448013	editor_unit_backdrop_sprite_static_dtor	high	atexit destructor running sprite_destroy on editor_unit_backdrop_sprite.
+0044802d	editor_tile_backdrop_sprite_global_init	high	MSVC $E initializer calling editor_tile_backdrop_sprite_static_init and editor_tile_backdrop_sprite_reg_atexit.
+0044807e	editor_tile_backdrop_sprite_static_dtor	high	atexit destructor running sprite_destroy on editor_tile_backdrop_sprite.
+00448098	map_cursor_sprite_global_init	high	MSVC $E initializer calling map_cursor_sprite_static_init and map_cursor_sprite_reg_atexit.
+004480e9	map_cursor_sprite_static_dtor	high	atexit destructor running sprite_destroy on map_cursor_sprite.
+00448103	unit_shield_sprite_global_init	high	MSVC $E initializer calling unit_shield_sprite_static_init and unit_shield_sprite_reg_atexit.
+00448154	unit_shield_sprite_static_dtor	high	atexit destructor running sprite_destroy on unit_shield_sprite.
+0044816e	city_sprites_global_init	high	MSVC $E initializer calling city_sprites_static_init and city_sprites_reg_atexit.
+004481cd	city_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 48 city_sprites.
+004481f0	civ_flag_sprites_global_init	high	MSVC $E initializer calling civ_flag_sprites_static_init and civ_flag_sprites_reg_atexit.
+0044824f	civ_flag_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 16 civ_flag_sprites.
+00448272	unit_sprites_global_init	high	MSVC $E initializer calling unit_sprites_static_init and unit_sprites_reg_atexit.
+004482d1	unit_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 63 unit_sprites.
+004482f4	fortify_overlay_sprites_global_init	high	MSVC $E initializer calling fortify_overlay_sprites_static_init and fortify_overlay_sprites_reg_atexit.
+00448353	fortify_overlay_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 8 fortify_overlay_sprites.
+00448376	citizen_sprites_global_init	high	MSVC $E initializer calling citizen_sprites_static_init and citizen_sprites_reg_atexit.
+004483d5	citizen_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 44 citizen_sprites.
+004483f8	small_citizen_sprites_global_init	high	MSVC $E initializer calling small_citizen_sprites_static_init and small_citizen_sprites_reg_atexit.
+00448457	small_citizen_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 11 small_citizen_sprites.
+0044847a	resource_shortage_icon_sprites_global_init	high	MSVC $E initializer calling resource_shortage_icon_sprites_static_init and resource_shortage_icon_sprites_reg_atexit.
+004484d9	resource_shortage_icon_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 6 resource_shortage_icon_sprites.
+004484fc	tax_rate_icon_sprites_global_init	high	MSVC $E initializer calling tax_rate_icon_sprites_static_init and tax_rate_icon_sprites_reg_atexit.
+0044855b	tax_rate_icon_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 3 tax_rate_icon_sprites.
+0044857e	small_resource_icon_sprites_global_init	high	MSVC $E initializer calling small_resource_icon_sprites_static_init and small_resource_icon_sprites_reg_atexit.
+004485dd	small_resource_icon_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 3 small_resource_icon_sprites.
+00448600	lux_tax_sci_icon_sprites_global_init	high	MSVC $E initializer calling lux_tax_sci_icon_sprites_static_init and lux_tax_sci_icon_sprites_reg_atexit.
+0044865f	lux_tax_sci_icon_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 3 lux_tax_sci_icon_sprites.
+00448682	small_unhappy_icon_sprite_global_init	high	MSVC $E initializer calling small_unhappy_icon_sprite_static_init and small_unhappy_icon_sprite_reg_atexit.
+004486d3	small_unhappy_icon_sprite_static_dtor	high	atexit destructor running sprite_destroy on small_unhappy_icon_sprite.
+004486ed	unhappy_suppressed_icon_sprite_global_init	high	MSVC $E initializer calling unhappy_suppressed_icon_sprite_static_init and unhappy_suppressed_icon_sprite_reg_atexit.
+0044873e	unhappy_suppressed_icon_sprite_static_dtor	high	atexit destructor running sprite_destroy on unhappy_suppressed_icon_sprite.
+00448758	research_flask_sprites_global_init	high	MSVC $E initializer calling research_flask_sprites_static_init and research_flask_sprites_reg_atexit.
+004487b7	research_flask_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 4 research_flask_sprites.
+004487da	global_warming_sprites_global_init	high	MSVC $E initializer calling global_warming_sprites_static_init and global_warming_sprites_reg_atexit.
+00448839	global_warming_sprites_static_dtor	high	atexit destructor running the eh vector dtor (sprite_destroy) over the 4 global_warming_sprites.
+0044885c	icon_misc_sprites_global_init	medium	MSVC $E initializer for the 6-sprite array 0063f6f0 (ICONS.GIF cells grabbed at y=0x100 and the two 0x1f x 0x60 strips at x=0x137); array purpose unclear.
+00448876	icon_misc_sprites_static_init	medium	Static initializer constructing the 6 Sprites at 0063f6f0 via eh vector ctor 005f2620 with sprite_init.
+0044889e	icon_misc_sprites_reg_atexit	medium	Registers the 0063f6f0 sprite-array static destructor (004488bb) with atexit.
+004488bb	icon_misc_sprites_static_dtor	medium	atexit destructor running the eh vector dtor (sprite_destroy) over the 6 sprites at 0063f6f0.
+004488de	icons_unused_tall_sprite_global_init	medium	CRT $E wrapper calling the static init and atexit registration of the 56x131 ICONS.GIF sprite at 00648098 (grabbed from a blank region).
+004488f8	icons_unused_tall_sprite_static_init	medium	Static initializer running sprite_init on the sprite 00648098 grabbed from ICONS.GIF (0x109,0x121,56x131), a transparent-only area.
+00448912	icons_unused_tall_sprite_reg_atexit	medium	Registers the 00648098 sprite's static destructor (0044892f) with atexit.
+0044892f	icons_unused_tall_sprite_static_dtor	medium	atexit destructor calling sprite_destroy on the 00648098 sprite.
+00448949	improvement_icon_sprites_global_init	high	CRT $E wrapper calling improvement_icon_sprites_static_init and improvement_icon_sprites_reg_atexit.
+004489a8	improvement_icon_sprites_static_dtor	high	atexit destructor destroying the 67-entry improvement_icon_sprites array via the array-dtor helper with sprite_destroy.
+004489cb	advance_cat_icon_sprites_global_init	high	CRT $E wrapper calling advance_category_icon_sprites_static_init and _reg_atexit.
+00448a2a	advance_cat_icon_sprites_static_dtor	high	atexit destructor destroying the 20-entry advance_category_icon_sprites array with sprite_destroy.
+00448a4d	explosion_sprites_global_init	high	CRT $E wrapper calling explosion_sprites_static_init and explosion_sprites_reg_atexit.
+00448aac	explosion_sprites_static_dtor	high	atexit destructor destroying the 8-entry explosion_sprites array with sprite_destroy.
+00448acf	map_grid_sprite_global_init	high	CRT $E wrapper calling map_grid_sprite_static_init and map_grid_sprite_reg_atexit.
+00448b20	map_grid_sprite_static_dtor	high	atexit destructor calling sprite_destroy on map_grid_sprite.
+00448b3a	icons_pair_sprites_global_init	medium	CRT $E wrapper for the 4-entry sprite array 00647b50 (first two grabbed 64x32 from ICONS.GIF at 0x15e,0xff/0x120).
+00448b54	icons_pair_sprites_static_init	medium	Static initializer constructing the 4-entry sprite array 00647b50 via the array-ctor helper with sprite_init.
+00448b7c	icons_pair_sprites_reg_atexit	medium	Registers the 00647b50 sprite array's static destructor (00448b99) with atexit.
+00448b99	icons_pair_sprites_static_dtor	medium	atexit destructor destroying the 4-entry sprite array 00647b50 with sprite_destroy.
+00448bbc	government_sprites_global_init	high	CRT $E wrapper calling government_sprites_static_init and government_sprites_reg_atexit.
+00448c1b	government_sprites_static_dtor	high	atexit destructor destroying the 7-entry government_sprites array with sprite_destroy.
+00448c3e	civ_portrait_sprites_global_init	high	CRT $E wrapper calling civ_portrait_sprites_static_init and civ_portrait_sprites_reg_atexit.
+00448c9d	civ_portrait_sprites_static_dtor	high	atexit destructor destroying the 8-entry civ_portrait_sprites array with sprite_destroy.
+00448cc0	diplo_status_icons_global_init	high	CRT $E wrapper calling diplo_status_icons_static_init and diplo_status_icons_reg_atexit.
+00448d39	diplo_status_icons_static_dtor	high	atexit destructor calling sprite_destroy on the diplo portrait and allied/war/peace/ceasefire icon sprites.
+00448d7b	popup_info_icon_sprite_global_init	high	CRT $E wrapper calling popup_info_icon_sprite_static_init and _reg_atexit.
+00448dcc	popup_info_icon_sprite_static_dtor	high	atexit destructor calling sprite_destroy on popup_info_icon_sprite.
+00448de6	tutorial_icon_sprite_global_init	high	CRT $E wrapper calling tutorial_icon_sprite_static_init and tutorial_icon_sprite_reg_atexit.
+00448e37	tutorial_icon_sprite_static_dtor	high	atexit destructor calling sprite_destroy on tutorial_icon_sprite.
+00448e51	window_border_tile_surface_global_init	high	CRT $E wrapper calling window_border_tile_surface_static_init and _reg_atexit.
+00448ea2	window_border_tile_surface_static_dtor	high	atexit destructor calling surface_dtor on window_border_tile_surface.
+00448ebc	panel_texture_surface_global_init	high	CRT $E wrapper calling panel_texture_surface_static_init and panel_texture_surface_reg_atexit.
+00448f0d	panel_texture_surface_static_dtor	high	atexit destructor calling surface_dtor on panel_texture_surface.
+00448f27	gfx_sheet_surface_global_init	high	CRT $E wrapper calling gfx_sheet_surface_static_init and gfx_sheet_surface_reg_atexit.
+00448f78	gfx_sheet_surface_static_dtor	high	atexit destructor calling surface_dtor on gfx_sheet_surface.
+0044f4c9	throneroom_on_click	high	Lbuttonup handler set in throneroom_create_windows: hit-tests the clickmap, validates the chosen upgradable piece (else plays sound 0x5e) and ends the modal loop.
+0044f717	throneroom_on_key	high	Keydown handler set in throneroom_create_windows: in view mode ends the modal loop on keys 0xd0-0xd2, in choose mode plays the error sound.
+00450ae6	parley_advance_list0_on_scroll	medium	Scrollbar callback for advance list side 0, forwarding to parley_advance_list_on_scroll(0,pos).
+00450b04	parley_advance_list1_on_scroll	medium	Scrollbar callback for advance list side 1, forwarding to parley_advance_list_on_scroll(1,pos).
+00450b83	parley_advance_list_on_click	high	Click/dblclick hotspot callback: hit-tests the advance list and toggles/range-selects rows with plain/ctrl/shift click semantics, then redraws.
+004531b8	pedia_link_on_click_advance	high	Hyperlink callback (pedia_add_link kind 0): finds the clicked link node and opens pedia category 1 (advances) for its item.
+0045323a	pedia_link_on_click_improvement	high	Hyperlink callback (pedia_add_link kind 1): opens pedia category 2 (improvements) for the clicked link's item.
+004532bc	pedia_link_on_click_wonder	high	Hyperlink callback (pedia_add_link kind 2): opens pedia category 3 (wonders) for the clicked link's item.
+0045333e	pedia_link_on_click_unit	high	Hyperlink callback (pedia_add_link kind 3): opens pedia category 4 (units) for the clicked link's item.
+004533c0	pedia_link_on_click_terrain	high	Hyperlink callback (pedia_add_link kind 4): opens pedia category 5 (terrain) for the clicked link's item.
+0045512b	cityview_load_icon_surface	medium	thiscall from cityview_load: creates a 32x32 surface member and loads GIF resource 399 from cv.dll into it with game_palette; returns success.
+004561d9	cityview_on_mousemove	high	Mousemove handler set in cityview_create_windows: scrolls the city view left/right when the cursor is in the outer eighths of the screen.
+00456228	cityview_on_key	high	Keydown handler set in cityview_create_windows: ends the modal loop on key 0xd2.
+0045626d	cityview_on_lbuttonup	high	Lbuttonup handler set in cityview_create_windows: ends the city view modal loop if the window exists.
+0045629b	cityview_on_key_pre	high	Keydown pre-handler: arrow/numpad keys scroll the view on screens narrower than 1280, keys 0xd0-0xd2 end the modal loop.
+004675b0	scenario_events_global_init	high	CRT $E wrapper calling scenario_events_static_init and scenario_events_reg_atexit.
+00467606	scenario_events_static_dtor	high	atexit destructor calling events_dtor on scenario_events.
+00467620	main_frame_wnd_global_init	high	MSVC $E initializer calling main_frame_wnd_static_init and main_frame_wnd_reg_atexit.
+00467671	main_frame_wnd_atexit_dtor	high	atexit destructor: wnd_dtor on main_frame_wnd.
+0046768b	menu_handle_654fd4_global_init	high	MSVC $E initializer calling menu_handle_654fd4_static_init and menu_handle_654fd4_reg_atexit.
+004676dc	menu_handle_654fd4_atexit_dtor	high	atexit destructor: menu_handle_dtor on the GameMenu at 00654fd4.
+00467a86	civ_attitude_is_friendly	medium	Returns civ_attitude_level(a,b) < 4, i.e. better than Neutral (Worshipful..Receptive in @ATTITUDES); unreferenced.
+00467abb	civ_attitude_is_unfriendly	medium	Returns civ_attitude_level(a,b) > 4, i.e. worse than Neutral (Uncooperative..Enraged); unreferenced.
+00468797	parley_unit_list_scroll_left	high	Left-side (side 0) scrollbar callback of the parley unit list, forwarding to parley_unit_list_on_scroll(0,pos); right side uses thunk 00403873.
+004687b5	parley_unit_list_scroll_right	high	Right-side scrollbar callback (thunk 00403873) forwarding to parley_unit_list_on_scroll(1,pos).
+00468834	parley_unit_list_on_click	high	Hotspot click/dblclick callback: hit-tests the side's unit list row and toggles selection with plain/ctrl/shift-range semantics, then redraws.
+004692ea	parley_reveal_city_origin_clicked	high	Button callback for label 879 "Reveal City Origin": sets flag +0x3bd, shows Hide button, enables sort buttons and sends net msg 0xa7.
+004693c5	parley_hide_city_origin_clicked	high	Button callback for label 881 "Hide City Origin": clears flag +0x3bd, disables sort buttons, sends net msg 0xa8 and re-sorts the list.
+004694b7	parley_request_city_origin_clicked	high	Right-side button callback (thunk 00401429, label 880 "Request City Origin"): sends text msg 100 with our civ name to the other civ.
+00469547	parley_sort_by_city_left_clicked	high	Left-side "Sort By City" button callback calling parley_sort_by_city_clicked(0).
+00469561	parley_sort_by_city_right_clicked	high	Right-side "Sort By City" button callback (thunk 00402978) calling parley_sort_by_city_clicked(1).
+004695e9	parley_sort_by_unit_left_clicked	high	Left-side "Sort By Unit" button callback calling parley_sort_by_unit_clicked(0).
+00469603	parley_sort_by_unit_right_clicked	high	Right-side "Sort By Unit" button callback (thunk 0040158c) calling parley_sort_by_unit_clicked(1).
+0046abed	clickmap_remove_by_id_tag	medium	Removes the first clickmap entry whose id (+0x10) and tag (+0x14) both match, via clickmap_remove_at.
+0046b11d	net_send_string_message	medium	Calls net_send_message(type,0,...,str,0) passing only the string argument, which message 0x68 sends with strlen+1 payload.
+0046dde0	intro_video_on_end	high	AVI end callback set by intro_play_opening_video: ends the modal loop, sets intro_theme_started and plays sound 0x6b.
+0046de25	intro_video_on_keydown	high	Keydown handler set by intro_play_opening_video: for keys 0xd0-0xd2 plays sound 0x6b and ends the video modal loop.
+0046dea1	intro_video_on_click	high	Left-button-up handler set by intro_play_opening_video: ends the opening video modal loop.
+0046e2f4	snd_cd_on_notify	high	CD MCI notify callback: sets cd_music_available and calls snd_sync_music_option when cd_music_continue.
+0046e9d0	grey_palette_global_init	high	MSVC $E initializer calling grey_palette_static_init and grey_palette_reg_atexit.
+0046ea21	grey_palette_atexit_dtor	high	atexit destructor: palette_destroy on grey_palette.
+00470c1c	defeat_movie_on_video_end	high	AVI end callback set by defeat_movie_wnd_create: draws the ARCHAEOLOGISTS3 text with a dissolve, waits 0x168 ticks, ends the modal loop.
+00471c2a	arrival_movie_on_frame	high	Frame callback (frame 0x2ab) set by arrival_movie_wnd_create: draws the centered CENTAURI3 text lines with a dissolve.
+00471db7	arrival_movie_on_video_end	high	AVI end callback set by arrival_movie_wnd_create: ends spaceship_arrival_window's modal loop.
+00472a60	debug_popup_danger	high	Sets %STRING0 and %NUMBER0-2 then shows DEBUG.TXT @DANGER ("Danger Will Robinson!") via popup_debug_text.
+00472ab5	debug_popup_danger_hex	high	Sets %STRING0 and three numbers then shows DEBUG.TXT @DANGERHEX (hex variant) via popup_debug_text.
+00472e1d	unit_make_dummy_at	medium	Creates the dummy unit (slot 0x800) via unit_make_dummy then links it into the stack at x,y with unit_stack_link.
+00472e5c	unit_delete_dummy	high	Deletes dummy unit slot 0x800 if dummy_unit_owner >= 0 and resets the owner to -1.
+00472f10	scenario_title_surface_global_init	high	MSVC $E initializer calling scenario_title_surface_static_init and scenario_title_surface_reg_atexit.
+00472f61	scenario_title_surface_atexit_dtor	high	atexit destructor: surface_dtor on scenario_title_surface.
+0047543c	save_load_map_only	medium	Opens a save, checks the CIVILIZE header and version (0x26..0x2c), then reads only the game header (save_load_gpk) and map; returns 0 ok or error code 1-4.
+00479d20	map_views_global_init	high	MSVC $E initializer calling map_views_static_init and map_views_reg_atexit.
+00479d82	map_views_atexit_dtor	high	atexit destructor: vector destructor helper on the 8-entry map_views array with element dtor 0047de10.
+00479da8	scrollbar_66c728_global_init	medium	MSVC $E initializer calling the static init and atexit registration for the scrollbar Control at 0066c728.
+00479dc2	scrollbar_66c728_static_init	medium	Static initializer running scrollbar_ctor on the Control at 0066c728 (just before map_views).
+00479ddc	scrollbar_66c728_reg_atexit	medium	Registers the 0066c728 scrollbar's static destructor (00479df9) with atexit.
+00479df9	scrollbar_66c728_atexit_dtor	medium	atexit destructor: scrollbar_dtor on the Control at 0066c728.
+00479e13	scrollbar_66c768_global_init	medium	MSVC $E initializer calling the static init and atexit registration for the scrollbar Control at 0066c768.
+00479e2d	scrollbar_66c768_static_init	medium	Static initializer running scrollbar_ctor on the Control at 0066c768 (just before map_views).
+00479e47	scrollbar_66c768_reg_atexit	medium	Registers the 0066c768 scrollbar's static destructor (00479e64) with atexit.
+00479e64	scrollbar_66c768_atexit_dtor	medium	atexit destructor: scrollbar_dtor on the Control at 0066c768.
+00479e7e	mapview_scroll_to_x	medium	thiscall on a map view: mapview_center_on(new x, current center y at +0x2e2); scrollbar-style position callback, unreferenced.
+00479eae	mapview_scroll_to_y	medium	thiscall on a map view: mapview_center_on(current center x at +0x2e0, new y); scrollbar-style position callback, unreferenced.
+0047dce0	mapview_ctor	medium	Thiscall ctor building frame_wnd base, two fonts (+0x338/+0x340) and two DIB surfaces (+0x360/+0x3a8) of a 0x3f0-sized object in the mapview code block, matching the map_views stride.
+0047de10	mapview_dtor	medium	Destructor exactly mirroring mapview_ctor: two surfaces, two fonts, then frame_wnd dtor.
+00482337	net_game_xmit_wait_idle	medium	Idle callback of the WAITONGAMEXMIT popup in net_process_messages msg 0x65: pumps net and closes once nm_continue_after_join_count is set.
+0048237d	turn_popup_timeout_idle	medium	Idle callback set before turn-start popups in game_play_loop: pumps net and ends the modal dialog every 0x4b0 ticks (20 s).
+00482470	net_server_quit_wait_idle	medium	Idle callback of the SERVERQUITWAIT popup in net_host_quit_handoff: closes when no players are awaited or only one player remains.
+00482724	net_client_quit_wait_idle	medium	Idle callback of the first CLIENTQUITWAIT popup in net_client_transfer_server: closes when net_host_handoff_stage reaches 2.
+0048276d	net_quit_wait_start_civ_idle	medium	CLIENTQUITWAIT idle callback in net_client_transfer_server: closes when nm_start_civ_count arrives or net_timeout_seconds elapse.
+004827d5	net_quit_wait_player_list_idle	medium	CLIENTQUITWAIT idle callback in net_client_transfer_server: closes when nm_player_list_count arrives or the net timeout elapses.
+0048283d	net_quit_wait_players_idle	medium	CLIENTQUITWAIT idle callback in net_client_transfer_server: closes when net_players_awaited drops to 0 or the net timeout elapses.
+00484d85	main_frame_on_close	medium	Close handler of main_frame_base_wnd: REALLYQUIT confirm, then retires the human civ (MP messages, eliminate or drop from human_players) and sets player_has_quit.
+0048bf51	net_client_hot_wait_idle	medium	Idle callback of the CLIENTHOTWAIT popup in game_mp_client_turn_loop: pumps net/heartbeat and closes on start civ, handoff, end sequence, quit or lost connection.
+00493e50	diplo_greeting_sound_done_cb	medium	Completion callback of diplo_greeting_sound_id: if the leader window is open, starts the looped leader sound diplo_leader_sound_ids[0].
+00496e5d	portrait_dlg_on_dblclick	medium	Double-click handler set by portrait_dlg_create: runs portrait_dlg_on_click then presses button 100 when the click is above the button row.
+00497fa0	memblock_attach	medium	Fills a memblock record (type byte, handle +4, pointer +8, used 0, size +0xe/free +0x10) around existing memory; fields as in memblock_init/alloc.
+00498082	memblock_reset	medium	Sets memblock used offset (+0xc) to 0 and free count (+0x10) back to the size (+0xe).
+004a2552	text_cursor_to_end	medium	Sets text_line_cursor to the terminating NUL of text_buffer.
+004a38a4	tribe_editor_write_governments	high	rules_edit_set_section writer for GOVERNMENTS: emits each of 7 government names with male and female titles padded into columns.
+004a3a21	tribe_editor_write_leaders	high	rules_edit_add_section writer for LEADERS: re-emits 21 tribe lines (names, female flag, color, style, plural, adjective, attack/expand/civilize) keeping trailing text.
+004a41d8	tribe_editor_write_caravan	high	rules_edit_add_section writer for CARAVAN: writes the 16 commodity names one per line.
+004a4249	tribe_editor_on_ok	high	Tribe editor OK: stores controls, updates CITY file, applies tables, rewrites GOVERNMENTS/LEADERS/CARAVAN via rules_write_sections, ends the modal loop.
+004a4304	tribe_editor_rename_commodity	high	Button callback: RENAMECOMMO list of 16 editor_commodity_names, then COMMONAME text input stores the new name.
+004a44c6	tribe_editor_rename_govt	high	Button callback: RENAMEGOVT list of 7 editor_govt_names, then GOVTNAME text input stores the new name.
+004a468b	tribe_editor_rename_title	high	Button callback: RENAMETITLE list of 14 male/female government titles, then TITLENAME text input stores the new title.
+004a496c	tribe_editor_on_help	high	Help button callback: shows HELP/TRIBES popup parented to the editor window.
+004a49cb	tribe_editor_on_cancel	medium	Button callback that clears editor_running and ends the tribe editor modal loop without saving.
+004a49f3	tribe_editor_on_combo	medium	Tribe editor combo callback: id 0xc9 switches the selected tribe (store, reselect, load, redraw); 0xca stores and redraws.
+004a6c85	popup_city_sprite_draw_cb	medium	Sprite draw callback set by popup_text_with_city: draws the city with gfx_draw_city at y+2, zoomed on large screens.
+004a6df7	popup_unit_sprite_draw_cb	medium	Sprite draw callback set by popup_text_with_unit: draws the unit with gfx_draw_unit at y+2, zoomed on large screens.
+004a7070	char_to_upper_ascii	high	Returns c-0x20 for 'a'..'z', else c unchanged.
+004af0bf	str_append_minus	high	Appends append_minus_str to the string, like the other str_append_* helpers.
+004af0e0	str_append_times	high	Appends append_times_str to the string.
+004af101	str_append_dollar	high	Appends append_dollar_str to the string.
+004af194	str_append_braced_label	high	Appends lbrace, the label string, then rbrace.
+004af20a	str_append_binary8	high	Appends the value in base 2 left-padded with zeros to 8 digits.
+004af867	parley_civ_list_scroll_local	high	Scrollbar callback for civ list pane 0 forwarding to parley_civ_list_scroll(0,pos), as parley_city_list_scroll_local.
+004af885	parley_civ_list_scroll_remote	high	Scrollbar callback for civ list pane 1 forwarding to parley_civ_list_scroll(1,pos).
+004af904	parley_civ_list_click	high	Civ-list hotspot click/dblclick callback: hit-tests the row and toggles selection with shift-range and ctrl-toggle, then redraws, like parley_city_list_click.
+004b08e0	diffeng_global_init	medium	MSVC $E2 initializer calling diffeng_static_init_stub.
+004b12b3	diffeng_section_changed	high	Compares a registered section dword-by-dword against its copy in diffeng_mirror_buf; returns 1 on any difference.
+004b3ca0	font_size16_bold_global_init	high	MSVC $E initializer calling font_size16_bold_static_init and _reg_atexit.
+004b3cf7	font_size16_bold_static_dtor	high	atexit destructor running font_destroy on font_size16_bold.
+004b3d11	font_size20_global_init	high	MSVC $E initializer calling font_size20_static_init and _reg_atexit.
+004b3d66	font_size20_static_dtor	high	atexit destructor running font_destroy on font_size20.
+004b3d80	font_size14_global_init	high	MSVC $E initializer calling font_size14_static_init and _reg_atexit.
+004b3dd5	font_size14_static_dtor	high	atexit destructor running font_destroy on font_size14.
+004b3def	font_size16_global_init	high	MSVC $E initializer calling font_size16_static_init and _reg_atexit.
+004b3e44	font_size16_static_dtor	high	atexit destructor running font_destroy on font_size16.
+004b3e5e	font_size24_bold_global_init	high	MSVC $E initializer calling font_size24_bold_static_init and _reg_atexit.
+004b3eb5	font_size24_bold_static_dtor	high	atexit destructor running font_destroy on font_size24_bold.
+004b3ecf	font_size30_global_init	high	MSVC $E initializer calling font_size30_static_init and _reg_atexit.
+004b3f24	font_size30_static_dtor	high	atexit destructor calling font_destroy on font_size30.
+004b3f3e	font_size21_global_init	high	CRT $E wrapper calling font_size21_static_init and font_size21_reg_atexit.
+004b3f93	font_size21_static_dtor	high	atexit destructor calling font_destroy on font_size21.
+004b3fad	font_size24_global_init	high	CRT $E wrapper calling font_size24_static_init and font_size24_reg_atexit.
+004b4002	font_size24_static_dtor	high	atexit destructor calling font_destroy on font_size24.
+004b401c	parley_wnd_global_init	high	CRT $E wrapper calling parley_wnd_static_init and parley_wnd_reg_atexit.
+004b4078	parley_wnd_static_dtor	high	atexit destructor calling parley_wnd_dtor on parley_wnd.
+004b4092	chat_wnd_global_init	high	CRT $E wrapper calling chat_wnd_static_init and chat_wnd_reg_atexit.
+004b40ee	chat_wnd_static_dtor	high	atexit destructor calling parley_wnd_dtor on chat_wnd.
+004b4c09	parley_wnd_on_move	medium	Move handler set in parley window setup: stores the active parley window's new rect origin into +0x11c/+0x120.
+004b74c4	parley_wnd_on_caption_click	medium	Hotspot click callback: 0x3e9 closes the diplo window, 0x3ea/0x3eb shrink/enlarge the layout (+0x154) and re-place the window.
+004b7885	parley_wnd_redraw	medium	Redraw callback of the parley window: recomputes layout/title, draws frame, syncs sides, blits and restores edit carets.
+004b8e5c	parley_gold_edit_on_change	medium	Change callback of parley_gold_edits: strips non-digits, caps at the human civ's gold, sets parley_gold_entered and updates buttons.
+004b957e	parley_wnd_on_key	medium	Keydown handler of the parley window: key 0xd2 calls diplo_wnd_escape_close.
+004b95c2	chat_send_button_on_click	medium	Button callback that sends the chat input by calling chat_input_on_key(0, 0xd0 Enter).
+004b95e1	chat_clear_button_on_click	medium	Button callback that zeroes the chat log buffer, refreshes both chat log edits and focuses the chat input.
+004b9635	parley_edit_escape_filter	medium	Edit key callback on parley/chat edits: Esc (0x1b) or 0xd2 closes the diplo window and swallows the key, else passes it.
+004bc193	wonder_movie_on_video_end	medium	AVI end callback set in wonder movie window: ends the wonder_movie_wnd modal loop.
+004bc1b1	wonder_movie_on_lbuttonup	medium	Left-button-up handler of the wonder movie window: ends its modal loop.
+004bc1cf	wonder_movie_on_key	medium	Keydown handler of the wonder movie window: keys 0xd0-0xd2 end its modal loop.
+004c0b51	research_option_draw_advance	medium	Option draw callback in civ_choose_research_dialog/research goal dialog: draws the advance's category/epoch icon sprite.
+004c0be8	research_option_draw_unit	medium	Option draw callback in the research goal dialog: draws the unit sprite scaled and vertically centred.
+004c0c83	research_option_draw_improvement	medium	Option draw callback in the research goal dialog: draws improvement_icon_sprites entry.
+004cc8f0	editor_text_dlg_wnd_global_init	high	CRT $E wrapper calling editor_text_dlg_wnd_static_init and editor_text_dlg_wnd_reg_atexit.
+004cc941	editor_text_dlg_wnd_static_dtor	high	atexit destructor calling frame_wnd_dtor on editor_text_dlg_wnd.
+004cc95b	editor_text_edit_global_init	high	CRT $E wrapper calling editor_text_edit_static_init and editor_text_edit_reg_atexit.
+004cc9ac	editor_text_edit_static_dtor	high	atexit destructor calling edit_dtor on editor_text_edit.
+004cc9c6	editor_font_global_init	high	CRT $E wrapper calling editor_font_static_init and editor_font_reg_atexit.
+004cca1b	editor_font_static_dtor	high	atexit destructor calling font_destroy on editor_font.
+004cd3d7	editor_city_file_replace_line	medium	Copies CITY.<ext> via CITY.TMP in the scenario dir, replacing the line starting with param_2 inside @param_1 section by param_3; uncalled sibling of tribe_editor_update_city_file.
+004cdcf6	editor_numeric_edit_filter	medium	Edit key callback used by several rules editors: accepts only digits, '-' and 0xd6.
+004ce196	editor_text_dlg_on_ok	medium	OK button of editor_text_edit_dialog: copies up to 20 edit lines into allocated strings, sets result 1 and ends the modal loop.
+004ce2f3	editor_text_dlg_on_cancel	medium	Cancel button of editor_text_edit_dialog: sets result 0 and ends the modal loop.
+004ce322	editor_text_dlg_redraw	medium	Redraw callback of editor_text_dlg_wnd: draws caption, fills background, sets text font/colours and blits.
+004ce83d	editor_wnd_on_move_close_dropdowns	medium	Move handler shared by rules editors: sends CB_SHOWDROPDOWN(FALSE) (0x14f) to each combo box of active_editor_wnd.
+004cf144	events_rename_civ_refs	medium	Walks events list replacing civ-name fields (attacker/defender/receiver etc., 24 chars) equal to old name; sibling of events_rename_unit_refs.
+004cf3ba	events_rename_city_refs	medium	Walks events list replacing city-name fields (+0x10, +0x13c; +0x13c compared to cities[].name at 004f) equal to old name.
+004d0160	spaceship_wnd_net_idle	medium	Multiplayer modal idle callback of the spaceship window: pumps net messages and ends the modal loop on host handoff or ~1200-tick timeout.
+004d61c3	spaceship_video_on_lbuttonup	medium	Left-button-up handler of the spaceship launch video window: ends it or handles close/launch hotspot clicks.
+004d6367	spaceship_wnd_type_tick	medium	anim_timer callback (60ms) calling spaceship_wnd_type_char to type the next character.
+004d6384	spaceship_wnd_blink_launch_btn	medium	500ms timer callback toggling flag +0x8ec and redrawing the launch button pressed/unpressed.
+004d63fb	spaceship_wnd_starfield_tick	medium	flight_timer callback (launch_state 3): moves 80 starfield points, respawning offscreen ones, plots pixels and blits.
+004d6744	spaceship_wnd_on_key	medium	Keydown handler (keys 0xd0-0xd2) of the spaceship window/video: finishes typing text or closes the window.
+004d686b	spaceship_video_on_end	medium	AVI end callback of the spaceship launch video: ends its modal loop.
+004d68a7	spaceship_wnd_on_lbuttondown	medium	Left-button-down handler: marks close/launch button pressed, draws it down and stops the blink timer.
+004d6a30	spaceship_wnd_on_lbuttonup	medium	Left-button-up handler: releases pressed button, closes the window or sets launch_state 2 for launch, restarts blink timer.
+004d6cbc	spaceship_wnd_on_mousemove	medium	Mousemove handler: redraws pressed close/launch button up/down as the cursor leaves/enters it and toggles the blink timer.
+004d90b0	impr_editor_write_section	medium	RULES.TXT section callback set by the improvement editor: writes name, cost, upkeep and prereq for all 0x43 improvements.
+004d91f8	impr_editor_write_endwonder	high	Registered with rules_edit_add_section for ENDWONDER; writes one line per wonder (0x27..0x42) with expiry tech abbrev and name.
+004d929a	impr_editor_on_ok	high	Saves controls, stores rules, rewrites IMPROVE/ENDWONDER sections of RULES and ends the editor modal loop; matches terrain/unit_editor_on_ok.
+004d93b9	impr_editor_on_rename	high	IMPRNAME text input renames the selected item in editor_item_names and refills the combo; matches unit_editor_on_rename.
+004d953f	impr_editor_on_help	high	Shows popup HELP/IMPROVEMENTS with the editor as parent; matches unit_editor_on_help.
+004d959e	impr_editor_on_cancel	high	Clears editor_running and ends the editor modal loop without saving.
+004d95c6	impr_editor_edit_icon	high	Runs sprite_editor_run ("Icon Editor") on the selected improvement icon sprite and saves via sprite_sheet_save_building_icons.
+004d9619	impr_editor_edit_misc_icon	high	DEBUG.TXT @IMPRMISC "Select Icon to Edit" (Cursor, Explosion 1-4) then runs sprite_editor_run on the chosen sprite.
+004db210	text_section_index_global_init	high	Static initializer wrapper calling text_section_index_static_init, same pattern as other *_global_init.
+004e0140	main_menu_global_init	high	Calls main_menu_static_init then main_menu_reg_atexit.
+004e0196	main_menu_static_dtor	high	atexit destructor calling menu_dtor on main_menu.
+004f3f60	dialog_set_clamp_overflow	high	Stores its argument into global dialog_clamp_overflow (0062f004).
+004f3f80	pedia_window_global_init	high	Calls pedia_window_static_init then pedia_window_reg_atexit.
+004f3fd1	pedia_window_static_dtor	high	atexit destructor calling pedia_window_dtor on pedia_window.
+004f5b24	pedia_on_close	high	Button/hotspot callback: ends pedia modal loop if active, clears links and history, calls pedia_close.
+004f5b6f	pedia_on_back	high	Button callback popping pedia history entries to the previous distinct page, or closing the pedia when at the top.
+004f5ed2	pedia_show_tech_tree	medium	Button labelled label 864 "Tree" sets pedia_category 8 (advance-tree view) and redraws.
+004f7313	pedia_list_on_scroll	high	Scrollbar and track callback setting pedia_list_top to position*9 and redrawing the item list.
+005c6b3b	palette_copy_logpal	medium	Thiscall wrapper in the palette method range forwarding (dst,src) to logpal_copy.
+005cf1d5	sprite_draw_key254	medium	Calls sprite_blit_to_surface with key colour -2 (index 0xFE) instead of -1 (sprite own key) and returns the target.
+005cf20a	sprite_draw_ddsurf_key254	medium	DirectDraw twin: sprite_blit_to_ddsurf with key colour -2 (0xFE).
+005dda2b	snd_stub_nop	medium	Empty function taking one arg, only called by snd_stub_nop_wrap among the snd_* functions.
+00406a80	minimap_window_global_init	high	MSVC $E initializer calling minimap_window_static_init and minimap_window_reg_atexit.
+00406ad1	minimap_window_atexit_dtor	high	atexit destructor registered by minimap_window_reg_atexit: frame_wnd_dtor on minimap_window.
+00406aeb	minimap_on_minimize	high	Registered as minimap_wnd minimize handler; sets minimap_hidden.
+00406b02	minimap_on_restore	high	Registered as minimap_wnd restore handler; clears minimap_hidden and redraws the minimap.
+00406b28	minimap_on_close	high	Registered as minimap_wnd close handler; hides by minimizing instead of closing.
+004070f1	minimap_redraw_area	medium	Repaints minimap tiles within a radius of (x,y) using minimap_tile_color and optionally blits the dirty rect plus view rect.
+004074dc	minimap_on_lbuttonup	high	minimap_wnd lbuttonup handler; converts click to map tile and centers the main map view there.
+00407658	minimap_on_rbuttonup	high	minimap_wnd rbuttonup handler; opens a new map view window (first free of 1..7) centered on the clicked tile.
+0040795a	minimap_on_size	high	minimap_wnd size handler; saves window rect to 00655324.
+00407980	minimap_on_move	high	minimap_wnd move handler; saves window rect to 00655324.
+0040beec	taxrate_on_tax_scroll	high	Scrollbar 0x65 callback; sets tax rate (dlg+0x2e0, copied to civ tax_rate) and rebalances lux/science.
+0040c07f	taxrate_on_science_scroll	high	Scrollbar 0x66 callback; sets science rate (dlg+0x2e8, copied to civ science_rate) and rebalances the others.
+0040c212	taxrate_on_lux_scroll	high	Scrollbar 0x67 callback; sets luxury rate (dlg+0x2e4) and rebalances tax/science.
+0040c3a5	taxrate_on_ok_clicked	high	Default/cancel button callback of the tax rate dialog; clears taxrate_dialog_active and ends the modal loop.
+0040c3cd	taxrate_on_lock_toggled	high	Lock checkbox (ids 300-302) callback; sets the rate lock flag and unchecks the other two locks.
+004103ae	mapview_on_redraw	high	Map view redraw callback; brings city window to top and redraws the active map view for human_civ.
+00410835	mapview_on_mousemove	high	Map view mousemove handler; picks cursor (goto arrows, paradrop in/out of range) and sets it.
+00410b23	mapview_drag_hold_expired	medium	Timer callback from lbuttondown after 400ms; switches the dragged view to cursor 0x1fe and captures the mouse.
+00410bc3	mapview_on_lbuttondown	high	Map view lbuttondown handler; starts drag immediately with Shift or arms the 400ms drag-hold timer.
+00410cfa	mapview_on_lbuttonup_any	high	Map view lbuttonup-any handler; cancels pending drag and releases mouse capture.
+004116c1	mapview_on_lbuttonup	high	Map view lbuttonup handler calling map_window_click(x,y,0).
+004116e3	mapview_on_rbuttonup	high	Map view rbuttonup handler calling map_window_click(x,y,1).
+004131c0	unit_blink_timer_tick	high	150ms timer (unit_blink_timer) callback; pumps net messages and toggles unit_blink_phase redrawing the cursor.
+0041325d	eot_blink_timer_tick	high	500ms timer (eot_blink_timer) callback toggling the End of Turn blink phase and redrawing it.
+00413350	mapview_on_close	high	Map view close handler; main view (index 0) minimizes, extra views are marked closed.
+004133c2	mapview_on_size	high	Map view size handler saving its rect into map_view_saved_rects[index].
+0041341c	mapview_on_move	high	Map view move handler saving its rect into map_view_saved_rects[index].
+004135ab	mapview_on_caption_button	high	Map view caption-button handler: 1 close, 2 zoom in, 3 zoom out (range -7..8), 4 cycle view mode.
+00414e30	byte_pairs_bubble_sort	medium	Bubble-sorts byte keys (param_3) ascending, swapping a parallel byte array (param_2); sibling of int_pairs_bubble_sort.
+00415105	file_stream_length	medium	Returns _filelength of the handle obtained from its argument via 006076a0 (fileno-style).
+00415780	tech_editor_write_civilize	high	Section writer for @CIVILIZE; formats each of 100 advances (name, AI value, modifier, prereqs, epoch, category, abbrev) to the file.
+00415a40	tech_editor_on_ok	high	Tech editor OK button; validates, saves items and rewrites RULES @CIVILIZE (error box on failure) then ends modal loop.
+00415e53	tech_editor_on_rename	high	Tech editor rename button; TECHNAME text input then refills the three prerequisite combos.
+0041612e	tech_editor_on_help	high	Tech editor help button showing ADVANCES popup from HELP.
+0041618d	tech_editor_on_cancel	high	Tech editor cancel button; clears editor_running and ends the modal loop without saving.
+004161b5	tech_editor_on_edit_icon	high	Tech editor button running sprite_editor_run on the advance category icon, saving via sprite_sheet_save_tech_icons.
+00418ab0	combo_ctor	medium	Control ctor (ctrl_base_ctor, clears on_click/on_select) used for editor_wnd's 6 combo boxes (stride 0x38).
+00418b50	combo_dtor	medium	Destructor pair of combo_ctor; combo_hwnd_cleanup_stub on hwnd then ctrl_base_dtor.
+00419c20	setup_backdrop_surface_global_init	high	MSVC $E initializer calling setup_backdrop_surface_static_init and setup_backdrop_surface_reg_atexit.
+00419c71	setup_backdrop_surface_atexit_dtor	high	atexit destructor: surface_dtor on setup_backdrop_surface.
+0041b177	app_select_language	high	Reads INTER.DAT @KEY language flags, asks English/Francais/Deutsch (CIV.INI Language Preference) and sets lang_file_ext FRE/GER.
+0041b48f	app_fatal_cleanup	medium	Cleanup fn registered with err_register_cleanup_fn; ends the game session, runs app_shutdown_cleanup, sets app_shutdown_done.
+0042415c	net_gamelist_poll_idle	high	Modal idle callback of the network game list dialog; pumps net messages.
+0042417a	net_join_wait_server_idle	high	WAITINGFORSERVER idle callback; ends the popup on player list, server cancel/reject/full.
+004241f8	net_join_wait_gamestate_idle	high	WAITTOJOIN idle callback; animates the arrow in the text until game state arrives or server cancels.
+0042433c	net_join_wait_player_list_idle	high	WAITINGONJOIN idle callback; ends on player list, server cancel or lost server.
+0042439c	net_join_wait_start_civ_idle	high	WAITINGONJOIN idle callback; ends when start-civ message or server cancel arrives.
+004243ef	net_join_wait_answer_idle	high	WAITINGFORSERVER idle callback after sending msg 0x12; ends on server answer, cancel or reject.
+0042444f	net_join_wait_idle_cb	medium	Idle callback set before the connect-wait popup: pumps net messages and ends the modal once net_server_conn_id is set or ~1240 ticks elapse.
+00425695	net_gamelist_poll_tick	medium	Game-browser timer callback: broadcasts empty net message 1, expires stale found games, and re-arms itself as a 250ms game timer.
+00427211	text_set_arg_from_labels	high	Sets string argument param_1 to LABELS.TXT entry param_2 via label_string_ids table.
+004289e0	strpool_block_global_init	high	CRT $E initializer that only calls strpool_block_static_init (no atexit registration).
+0046d980	ui_show_label_splash	medium	Creates a 256x100 window titled label 2 "Civilization II Multiplayer Gold", fills it and draws LABELS entry param_2, then shows it.
+00531210	civ_set_current_index	medium	Stores civ index 0..8 in 0062803c and civs+n pointer in 00628040 (range-checked); unreferenced.
+005edfcd	mci_movie_set_realize_bkgd	high	Sets movie block +0x10 to MCI_DGV_REALIZE_NORM (0x10000) or _BKGD (0x20000); the MCI wndproc sends MCI_REALIZE with it on palette messages.

@@ -861,7 +861,7 @@ void __thiscall sprite_clear_fields(Sprite *this)
 /* 005d1bb8 auto */
 #define local_14 (*(int * *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-u8 __thiscall FUN_005d1bb8(C_005d1bb8 *this,int param_1,int param_2)
+u8 __thiscall sprite_get_pixel(C_005d1bb8 *this,int param_1,int param_2)
 
 {
   u8 uVar1;
@@ -1114,7 +1114,7 @@ TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *this)
     puVar1[3] = '\0';
   }
   uVar2 = timer_wnd_create((iptr)this);
-  this->field_0 = uVar2;
+  this->timer_wnd = uVar2;
   return this;
 }
 #undef local_8
@@ -1145,7 +1145,7 @@ void __thiscall timer_mgr_dtor(TimerManager *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005d21f0(void)
+void __cdecl dbg_log_file_global_init(void)
 
 {
   dbg_log_file_static_init();
@@ -1165,12 +1165,12 @@ void __cdecl dbg_log_file_static_init(void)
 void __cdecl dbg_log_file_reg_atexit(void)
 
 {
-  _atexit(FUN_005d2241);
+  _atexit(dbg_log_file_atexit_dtor);
   return;
 }
 
 /* 005d2241 auto */
-void __cdecl FUN_005d2241(void)
+void __cdecl dbg_log_file_atexit_dtor(void)
 
 {
   dbg_log_file_dtor(&dbg_log_file);
@@ -1270,7 +1270,7 @@ void __cdecl dbg_logf_str_int(iptr param_1,iptr param_2,iptr param_3)
 
 /* 005d23fd auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005d23fd(char *param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl dbg_logf2_noret(char *param_1,undefined4 param_2,undefined4 param_3)
 
 {
   undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1283,7 +1283,7 @@ void __cdecl FUN_005d23fd(char *param_1,undefined4 param_2,undefined4 param_3)
 
 /* 005d243f auto */
 #define dbg_log_to_file (*(undefined1 *)((u8 *)&g.d_00638304))
-void __cdecl FUN_005d243f(undefined1 param_1)
+void __cdecl dbg_set_log_to_file(undefined1 param_1)
 
 {
   dbg_log_to_file = param_1;
@@ -1293,7 +1293,7 @@ void __cdecl FUN_005d243f(undefined1 param_1)
 
 /* 005d2457 auto */
 #define dbg_log_to_debugger (*(undefined1 *)((u8 *)&g.d_00638308))
-void __cdecl FUN_005d2457(undefined1 param_1)
+void __cdecl dbg_set_log_to_debugger(undefined1 param_1)
 
 {
   dbg_log_to_debugger = param_1;
@@ -1411,7 +1411,7 @@ edit_create_at
 /* 005d2625 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005d2625
+edit_create_at_with_text
           (EditControl *this,undefined4 param_1,undefined4 param_2,int param_3,int param_4,
           int param_5,undefined4 param_6,undefined4 param_7)
 
@@ -1553,7 +1553,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
   SendMessageA(local_c,0x30,*pWVar6,0);
   uVar5 = thunk_font_get_handle(param_5);
   mem_handle_unlock(uVar5);
-  SetWindowLongA(local_c,-4,ADDR(0x5d2a01, FUN_005d2a01));
+  SetWindowLongA(local_c,-4,ADDR(0x5d2a01, edit_subclass_wndproc));
   SetWindowLongA(local_c,edit_base_wnd_extra,(LONG)edit_base_wndproc);
   SetWindowLongA(local_c,edit_base_wnd_extra + 4,param_2);
   return local_c;
@@ -1565,7 +1565,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
 
 /* 005d2a01 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-LRESULT __stdcall FUN_005d2a01(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
+LRESULT __stdcall edit_subclass_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
 
 {
   Control *this;
@@ -1658,7 +1658,7 @@ LAB_005d2c05:
 #undef local_8
 
 /* 005d2d15 auto */
-void __cdecl FUN_005d2d15(HWND param_1,BOOL param_2)
+void __cdecl hwnd_enable_safe(HWND param_1,BOOL param_2)
 
 {
   if (param_1 != (HWND)0x0) {
@@ -1732,7 +1732,7 @@ LRESULT __cdecl edit_hwnd_get_line_count(HWND param_1)
 }
 
 /* 005d2e54 auto */
-void __cdecl FUN_005d2e54(HWND param_1)
+void __cdecl edit_hwnd_get_first_visible(HWND param_1)
 
 {
   SendMessageA(param_1,0xce,0,0);
@@ -1770,7 +1770,7 @@ LRESULT __cdecl edit_line_length(HWND param_1,WPARAM param_2)
 }
 
 /* 005d2ee6 auto */
-void __cdecl FUN_005d2ee6(HWND param_1,LPARAM param_2,WPARAM param_3)
+void __cdecl edit_hwnd_line_scroll(HWND param_1,LPARAM param_2,WPARAM param_3)
 
 {
   SendMessageA(param_1,0xb6,param_3,param_2);
@@ -1810,7 +1810,7 @@ int __cdecl edit_hwnd_get_text_end(undefined4 param_1)
 }
 
 /* 005d2fca auto */
-void __cdecl FUN_005d2fca(undefined4 param_1)
+void __cdecl edit_hwnd_caret_to_line_end(undefined4 param_1)
 
 {
   undefined4 uVar1;
@@ -1834,7 +1834,7 @@ void __cdecl edit_hwnd_replace_sel(HWND param_1,LPARAM param_2)
 }
 
 /* 005d305a auto */
-bool __cdecl FUN_005d305a(undefined4 param_1)
+bool __cdecl edit_hwnd_caret_at_line_end(undefined4 param_1)
 
 {
   int iVar1;
@@ -1928,7 +1928,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
   nWidth = thunk_rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&combo_wnd_title,local_34,*param_1,param_1[1],
                             nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
-  SetWindowLongA(local_8,-4,ADDR(0x5d3310, FUN_005d3310));
+  SetWindowLongA(local_8,-4,ADDR(0x5d3310, combo_subclass_wndproc));
   SetWindowLongA(local_8,combo_base_wnd_extra,(LONG)combo_base_wndproc);
   SetWindowLongA(local_8,combo_base_wnd_extra + 4,param_2);
   return local_8;
@@ -1939,7 +1939,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
 #undef local_8
 
 /* 005d3310 auto */
-LRESULT __stdcall FUN_005d3310(HWND param_1,uint param_2,uint param_3,LPARAM param_4)
+LRESULT __stdcall combo_subclass_wndproc(HWND param_1,uint param_2,uint param_3,LPARAM param_4)
 
 {
   DWORD DVar1;
@@ -2028,7 +2028,7 @@ void __cdecl combo_hwnd_add_string(HWND param_1,LPARAM param_2)
 }
 
 /* 005d35a3 auto */
-void __cdecl FUN_005d35a3(HWND param_1,WPARAM param_2)
+void __cdecl combo_hwnd_delete_string(HWND param_1,WPARAM param_2)
 
 {
   SendMessageA(param_1,0x144,param_2,0);
@@ -2064,7 +2064,7 @@ void __cdecl combo_hwnd_get_item_text(HWND param_1,WPARAM param_2,LPARAM param_3
 }
 
 /* 005d3654 auto */
-void __cdecl FUN_005d3654(HWND param_1,undefined4 param_2)
+void __cdecl combo_hwnd_get_sel_text(HWND param_1,undefined4 param_2)
 
 {
   LRESULT LVar1;
@@ -2200,7 +2200,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
   SendMessageA(local_8,0x30,*pWVar7,0);
   uVar6 = thunk_font_get_handle(param_5);
   mem_handle_unlock(uVar6);
-  SetWindowLongA(local_8,-4,ADDR(0x5d39e2, FUN_005d39e2));
+  SetWindowLongA(local_8,-4,ADDR(0x5d39e2, listbox_subclass_wndproc));
   SetWindowLongA(local_8,listbox_base_wnd_extra,(LONG)listbox_base_wndproc);
   SetWindowLongA(local_8,listbox_base_wnd_extra + 4,param_2);
   return local_8;
@@ -2211,7 +2211,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
 #undef local_8
 
 /* 005d39e2 auto */
-LRESULT __stdcall FUN_005d39e2(HWND param_1,uint param_2,uint param_3,LPARAM param_4)
+LRESULT __stdcall listbox_subclass_wndproc(HWND param_1,uint param_2,uint param_3,LPARAM param_4)
 
 {
   DWORD DVar1;
@@ -2300,7 +2300,7 @@ void __cdecl listbox_hwnd_add_string(HWND param_1,LPARAM param_2)
 }
 
 /* 005d3c75 auto */
-void __cdecl FUN_005d3c75(HWND param_1,WPARAM param_2)
+void __cdecl listbox_hwnd_delete_string(HWND param_1,WPARAM param_2)
 
 {
   SendMessageA(param_1,0x182,param_2,0);
@@ -2336,7 +2336,7 @@ void __cdecl listbox_hwnd_get_text(HWND param_1,WPARAM param_2,LPARAM param_3)
 }
 
 /* 005d3d26 auto */
-void __cdecl FUN_005d3d26(HWND param_1,WPARAM param_2,LPARAM param_3)
+void __cdecl listbox_hwnd_replace_string(HWND param_1,WPARAM param_2,LPARAM param_3)
 
 {
   SendMessageA(param_1,0x182,param_2,0);
@@ -2374,7 +2374,7 @@ LRESULT __cdecl listbox_hwnd_get_cur_sel(HWND param_1)
 }
 
 /* 005d3e04 auto */
-LRESULT __cdecl FUN_005d3e04(HWND param_1)
+LRESULT __cdecl listbox_hwnd_get_sel_count(HWND param_1)
 
 {
   LRESULT LVar1;
@@ -2387,7 +2387,7 @@ LRESULT __cdecl FUN_005d3e04(HWND param_1)
 }
 
 /* 005d3e49 auto */
-LRESULT __cdecl FUN_005d3e49(HWND param_1,LPARAM param_2,WPARAM param_3)
+LRESULT __cdecl listbox_hwnd_get_sel_items(HWND param_1,LPARAM param_2,WPARAM param_3)
 
 {
   LRESULT LVar1;
@@ -2408,7 +2408,7 @@ void __cdecl listbox_hwnd_set_cur_sel(HWND param_1,WPARAM param_2)
 }
 
 /* 005d3eb7 auto */
-void __cdecl FUN_005d3eb7(HWND param_1,WPARAM param_2,LPARAM param_3)
+void __cdecl listbox_hwnd_sel_range(HWND param_1,WPARAM param_2,LPARAM param_3)
 
 {
   SendMessageA(param_1,0x183,param_2,param_3);
@@ -2416,7 +2416,7 @@ void __cdecl FUN_005d3eb7(HWND param_1,WPARAM param_2,LPARAM param_3)
 }
 
 /* 005d3ede auto */
-void __cdecl FUN_005d3ede(HWND param_1,LPARAM param_2,WPARAM param_3)
+void __cdecl listbox_hwnd_sel_range_rev(HWND param_1,LPARAM param_2,WPARAM param_3)
 
 {
   SendMessageA(param_1,0x183,param_3,param_2);
@@ -2424,7 +2424,7 @@ void __cdecl FUN_005d3ede(HWND param_1,LPARAM param_2,WPARAM param_3)
 }
 
 /* 005d3f05 auto */
-void __cdecl FUN_005d3f05(HWND param_1,LPARAM param_2,char param_3)
+void __cdecl listbox_hwnd_set_sel(HWND param_1,LPARAM param_2,char param_3)
 
 {
   SendMessageA(param_1,0x185,(int)param_3,param_2);
@@ -2453,7 +2453,7 @@ void __thiscall listbox_fire_selchange(ListBoxSelChangeView *this)
 
 /* 005d3fb0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall FUN_005d3fb0(C_005d3fb0 *this,int param_1)
+undefined4 __thiscall radiogrp_has_hwnd(C_005d3fb0 *this,int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2487,7 +2487,7 @@ void __thiscall radiogrp_show_all(RadioGroupShowView *this)
 
 /* 005d4087 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005d4087(C_005d4087 *this)
+void __thiscall radiogrp_hide_all(C_005d4087 *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2501,7 +2501,7 @@ void __thiscall FUN_005d4087(C_005d4087 *this)
 
 /* 005d40dd auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005d40dd(RadioGroupDisableView *this)
+void __thiscall radiogrp_disable_all(RadioGroupDisableView *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2515,7 +2515,7 @@ void __thiscall FUN_005d40dd(RadioGroupDisableView *this)
 
 /* 005d4122 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005d4122(RadioGroupEnableView *this)
+void __thiscall radiogrp_enable_all(RadioGroupEnableView *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2780,7 +2780,7 @@ void __cdecl timer_wnd_kill_slot(HWND param_1,iptr param_2)
 
 /* 005d4700 auto */
 #define timerdll_reset_timer_notified (*(code * *)((u8 *)&g.d_006e480c))
-LRESULT __stdcall FUN_005d4700(HWND param_1,UINT param_2,WPARAM param_3,LPARAM param_4)
+LRESULT __stdcall timer_wnd_proc(HWND param_1,UINT param_2,WPARAM param_3,LPARAM param_4)
 
 {
   TimerManager *this;
@@ -2825,7 +2825,7 @@ void __thiscall game_timer_fire_slot(TimerManager *this,iptr param_1)
 }
 
 /* 005d4870 auto */
-undefined2 __cdecl FUN_005d4870(iptr param_1,undefined4 param_2,undefined4 param_3)
+undefined2 __cdecl snd_wave_play_default(iptr param_1,undefined4 param_2,undefined4 param_3)
 
 {
   undefined2 uVar1;
@@ -2835,7 +2835,7 @@ undefined2 __cdecl FUN_005d4870(iptr param_1,undefined4 param_2,undefined4 param
 }
 
 /* 005d4899 auto */
-void __cdecl FUN_005d4899(undefined4 param_1,undefined4 param_2)
+void __cdecl snd_wave_open_for_active_wnd(undefined4 param_1,undefined4 param_2)
 
 {
   WndBase *this;
@@ -3489,7 +3489,7 @@ undefined4 __cdecl snd_wave_get_position_ms(void)
 #define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
 #define local_10 (*(mmtime_tag *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_005d5706(void)
+undefined4 __cdecl snd_wave_get_position_samples(void)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3865,7 +3865,7 @@ void __cdecl snd_wave_free_by_id(undefined4 param_1)
 
 /* 005d6222 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005d6222(short param_1)
+void __cdecl snd_wave_stop_by_id(short param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4817,7 +4817,7 @@ undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
 
 /* 005d7b94 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_005d7b94(short param_1)
+undefined4 __cdecl snd_wave_id_active(short param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4843,7 +4843,7 @@ FileObject * __thiscall file_obj_init(FileObject *this)
 }
 
 /* 005d7c2c auto */
-FileObject * __thiscall FUN_005d7c2c(FileObject *this,iptr param_1,int param_2)
+FileObject * __thiscall file_obj_ctor_mode(FileObject *this,iptr param_1,int param_2)
 
 {
   if (param_2 == 1) {
@@ -4866,7 +4866,7 @@ undefined4 __thiscall file_obj_close(FileObject *this)
 }
 
 /* 005d7c8c auto */
-void __cdecl FUN_005d7c8c(undefined4 param_1)
+void __cdecl dbg_output_line_wrap(undefined4 param_1)
 
 {
   dbg_output_line(param_1);
@@ -4997,7 +4997,7 @@ spritebtn_init_from_sprite
 #define local_c (*(int *)(frame_ + FRAME_OFF(108)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(112)))
 void __thiscall
-FUN_005d7f72
+spritebtn_init_from_sprite_ex
           (SpriteButton *this,WndPaletteView *param_1,undefined4 param_2,int param_3,int param_4,
           int param_5,int param_6,Sprite *param_7,uint param_8,undefined4 param_9)
 
@@ -5090,7 +5090,7 @@ void __cdecl ui_set_button_font(iptr param_1)
 }
 
 /* 005d8250 auto */
-void __cdecl FUN_005d8250(undefined4 param_1,iptr param_2)
+void __cdecl file_obj_open_path_wrap(undefined4 param_1,iptr param_2)
 
 {
   file_obj_open_path(param_1,param_2);
@@ -5144,7 +5144,7 @@ undefined4 __cdecl file_obj_open_path(char *param_1,iptr param_2)
 #undef local_108
 
 /* 005d83b6 auto */
-void __cdecl FUN_005d83b6(undefined4 param_1,iptr param_2)
+void __cdecl file_obj_create_path_wrap(undefined4 param_1,iptr param_2)
 
 {
   file_obj_create_path(param_1,param_2);
@@ -5231,7 +5231,7 @@ undefined4 __cdecl file_obj_read_bytes(iptr param_1,LPVOID param_2,DWORD param_3
 #define local_10 (*(char (*)[4])(frame_ + FRAME_OFF(8)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(size_t *)(frame_ + FRAME_OFF(16)))
-undefined4 __cdecl FUN_005d8551(iptr param_1,char *param_2)
+undefined4 __cdecl file_obj_seek_to_string(iptr param_1,char *param_2)
 
 {
   long lVar1;
@@ -5293,7 +5293,7 @@ undefined4 __cdecl file_obj_seek_rel(iptr param_1,LONG param_2)
 }
 
 /* 005d8675 auto */
-undefined4 __cdecl FUN_005d8675(iptr param_1,LONG param_2)
+undefined4 __cdecl file_obj_seek_abs(iptr param_1,LONG param_2)
 
 {
   undefined4 uVar1;
@@ -5315,7 +5315,7 @@ undefined4 __cdecl FUN_005d8675(iptr param_1,LONG param_2)
 }
 
 /* 005d86c8 auto */
-undefined4 __cdecl FUN_005d86c8(iptr param_1,DWORD *param_2)
+undefined4 __cdecl file_obj_rewind(iptr param_1,DWORD *param_2)
 
 {
   undefined4 uVar1;
@@ -5367,7 +5367,7 @@ undefined4 __cdecl file_obj_write_bytes(iptr param_1,iptr param_2,DWORD param_3)
 #undef local_8
 
 /* 005d879c auto */
-uint __cdecl FUN_005d879c(int *param_1,char *param_2)
+uint __cdecl file_obj_write_line(int *param_1,char *param_2)
 
 {
   uint uVar1;
@@ -5507,7 +5507,7 @@ undefined4 __cdecl file_obj_close_mapping(iptr param_1)
 }
 
 /* 005d8b34 auto */
-void __cdecl FUN_005d8b34(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl file_dialog_open_simple(undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   file_dialog_unowned(param_1,param_2,0,param_3,0);
@@ -5521,7 +5521,7 @@ void __cdecl FUN_005d8b34(undefined4 param_1,undefined4 param_2,undefined4 param
    Library: Visual Studio 1998 Debug */
 
 void __cdecl
-FUN_005d8b5c(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+file_dialog_open(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
 
 {
   file_dialog_unowned(param_1,param_2,param_3,param_4,0);
@@ -5530,7 +5530,7 @@ FUN_005d8b5c(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4
 
 /* 005d8b86 auto */
 void __cdecl
-FUN_005d8b86(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+file_dialog_save(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
 
 {
   file_dialog_unowned(param_1,param_2,param_3,param_4,1);
@@ -5539,7 +5539,7 @@ FUN_005d8b86(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4
 
 /* 005d8bb0 auto */
 void __cdecl
-FUN_005d8bb0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+file_dialog_save_owned(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
             iptr param_5)
 
 {
@@ -5782,7 +5782,7 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
     *(HBITMAP *)(iVar12 + 0x14) = pHVar4;
     *(uint *)(iVar12 + 0x24) = local_28 * 0xa4 + iVar6;
     *(undefined4 *)(iVar12 + 0x2c) = 3;
-    SetWindowLongA(*(HWND *)(iVar6 + local_28 * 0xa4),-4,ADDR(0x5d9b86, FUN_005d9b86));
+    SetWindowLongA(*(HWND *)(iVar6 + local_28 * 0xa4),-4,ADDR(0x5d9b86, radiogrp_item_wndproc));
     SetRect((LPRECT)(local_28 * 0xa4 + iVar6 + 4),local_44,(iVar10 - iVar13) + local_8,
             local_44 + iVar7,(iVar10 - iVar13) + local_8 + nHeight);
     *(uint *)(iVar6 + 0x14 + local_28 * 0xa4) = local_28;
@@ -5941,7 +5941,7 @@ radiogrp_create_items_from_str(iptr param_1,int *param_2,int param_3,iptr param_
     *(HBITMAP *)(iVar13 + 0x14) = pHVar4;
     *(int *)(iVar13 + 0x24) = local_42c * 0xa4 + iVar7;
     *(undefined4 *)(iVar13 + 0x2c) = 3;
-    SetWindowLongA(*(HWND *)(iVar7 + local_42c * 0xa4),-4,ADDR(0x5d9b86, FUN_005d9b86));
+    SetWindowLongA(*(HWND *)(iVar7 + local_42c * 0xa4),-4,ADDR(0x5d9b86, radiogrp_item_wndproc));
     SetRect((LPRECT)(local_42c * 0xa4 + iVar7 + 4),local_44c,(iVar11 - iVar16) + local_8,
             local_44c + iVar8,(iVar11 - iVar16) + iVar9 + local_8);
     *(int *)(iVar7 + 0x14 + local_42c * 0xa4) = local_42c;
@@ -6109,7 +6109,7 @@ void __cdecl radiogrp_item_activate(HWND param_1)
 #define local_98 (*(undefined4 * *)(frame_ + FRAME_OFF(160)))
 #define local_94 (*(tagRECT *)(frame_ + FRAME_OFF(164)))
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(180)))
-undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
+undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
 
 {
   char cVar1;
@@ -6605,7 +6605,7 @@ undefined4 __cdecl radiogrp_hwnds_same_group(int param_1,int param_2)
 
 /* 005dacd9 auto */
 #define radio_text_rgb_set (*(undefined1 *)((u8 *)&g.d_006386f7))
-void __cdecl FUN_005dacd9(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+void __cdecl ui_set_radio_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
   radio_text_rgb_r = param_1;
@@ -6618,7 +6618,7 @@ void __cdecl FUN_005dacd9(undefined1 param_1,undefined1 param_2,undefined1 param
 
 /* 005dad08 auto */
 #define radio_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_006386fb))
-void __cdecl FUN_005dad08(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+void __cdecl ui_set_radio_disabled_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
   radio_disabled_rgb_r = param_1;
@@ -6668,7 +6668,7 @@ void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *this,undefined4 param
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005dae00(void)
+void __cdecl err_report_ctx_global_init(void)
 
 {
   err_report_ctx_static_init();
@@ -6688,12 +6688,12 @@ void __cdecl err_report_ctx_static_init(void)
 void __cdecl err_report_ctx_reg_atexit(void)
 
 {
-  _atexit(FUN_005dae51);
+  _atexit(err_report_ctx_atexit_dtor);
   return;
 }
 
 /* 005dae51 auto */
-void __cdecl FUN_005dae51(void)
+void __cdecl err_report_ctx_atexit_dtor(void)
 
 {
   err_ctx_dtor((ErrorContext *)&err_report_ctx);
@@ -6716,7 +6716,7 @@ err_report
 
 /* 005daeb1 auto */
 void __thiscall
-FUN_005daeb1
+err_report_warning
           (ErrorContext *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -6787,10 +6787,10 @@ void __thiscall err_set_code(ErrorContext *this,u32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_005db016(C_005db016 *this)
+u32 __thiscall err_ctx_get_last_code(C_005db016 *this)
 
 {
-  return this->field_704;
+  return this->last_code;
 }
 
 /* 005db035 auto */
@@ -6799,7 +6799,7 @@ u32 __thiscall FUN_005db016(C_005db016 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005db035(ErrorContext *this,undefined4 param_1)
+void __thiscall err_ctx_set_field_708(ErrorContext *this,undefined4 param_1)
 
 {
   *(undefined4 *)this[1].pad_0 = param_1;
@@ -6819,7 +6819,7 @@ void __thiscall err_ctx_clear_codes(ErrorContext *this)
 ErrorContext * __thiscall err_ctx_ctor(ErrorContext *this)
 
 {
-  FUN_005db035(this,0);
+  err_ctx_set_field_708(this,0);
   err_ctx_clear_codes(this);
   return this;
 }
@@ -7005,7 +7005,7 @@ HGLOBAL __cdecl res_load_bitmap(LPCSTR param_1)
 #define local_a (*(CHAR *)(frame_ + FRAME_OFF(14)))
 #define local_9 (*(CHAR *)(frame_ + FRAME_OFF(15)))
 #define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(16)))
-HGLOBAL __cdecl FUN_005db3ca(CHAR *param_1,char *param_2)
+HGLOBAL __cdecl res_load_by_name(CHAR *param_1,char *param_2)
 
 {
   size_t sVar1;
@@ -7174,14 +7174,14 @@ wnd_record_create_nopal
 
 /* 005db792 auto */
 void __thiscall
-FUN_005db792
+wnd_record_create_movie
           (C_005db792 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
           undefined4 param_5,undefined4 param_6)
 
 {
   u32 uVar1;
   
-  this->field_0 = param_2;
+  this->style = param_2;
   if (this->movie_wnd != 0) {
     uVar1 = wnd_obj_destroy(this->movie_wnd);
     this->movie_wnd = uVar1;
@@ -7194,7 +7194,7 @@ FUN_005db792
 
 /* 005db80f auto */
 void __thiscall
-FUN_005db80f
+wnd_record_create_movie_child
           (C_005db80f *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
           undefined4 param_5,undefined4 param_6,WndBase *param_7)
 
@@ -7202,7 +7202,7 @@ FUN_005db80f
   u32 uVar1;
   iptr iVar2;
   
-  this->field_0 = param_2;
+  this->style = param_2;
   if (this->movie_wnd != 0) {
     uVar1 = wnd_obj_destroy(this->movie_wnd);
     this->movie_wnd = uVar1;
@@ -7262,7 +7262,7 @@ wnd_record_create_child_nopal
 
 /* 005db9b8 auto */
 void __thiscall
-FUN_005db9b8
+wnd_check_lbutton_release
           (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -7282,7 +7282,7 @@ FUN_005db9b8
 
 /* 005dba15 auto */
 void __thiscall
-FUN_005dba15
+wnd_check_rbutton_release
           (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -7301,7 +7301,7 @@ FUN_005dba15
 }
 
 /* 005dba72 auto */
-void __thiscall FUN_005dba72(void *this)
+void __thiscall wnd_poll_syskey_msgs(void *this)
 
 {
   input_poll_modifier(0x400);
@@ -7329,7 +7329,7 @@ undefined4 __thiscall wnd_is_ctrl_down(void *this)
 }
 
 /* 005dbadb auto */
-void __thiscall FUN_005dbadb(void *this)
+void __thiscall wnd_is_lbutton_down(void *this)
 
 {
   input_lbutton_down();
@@ -7337,7 +7337,7 @@ void __thiscall FUN_005dbadb(void *this)
 }
 
 /* 005dbaf6 auto */
-void __thiscall FUN_005dbaf6(void *this)
+void __thiscall wnd_is_rbutton_down(void *this)
 
 {
   input_rbutton_is_down();
@@ -7446,7 +7446,7 @@ void __cdecl app_register_wnd_classes(void)
   local_2c.lpszClassName = s_MSWindowClass_00638810;
   RegisterClassA(&local_2c);
   local_2c.style = 0x28;
-  local_2c.lpfnWndProc = FUN_005ec317;
+  local_2c.lpfnWndProc = moviewnd_wndproc;
   local_2c.cbClsExtra = 0;
   local_2c.cbWndExtra = 0x14;
   local_2c.hInstance = app_hinstance;
@@ -7468,7 +7468,7 @@ void __cdecl app_register_wnd_classes(void)
   local_2c.lpszClassName = s_MSControlClass_00638830;
   RegisterClassA(&local_2c);
   local_2c.style = 0;
-  local_2c.lpfnWndProc = FUN_005d4700;
+  local_2c.lpfnWndProc = timer_wnd_proc;
   local_2c.cbClsExtra = 0;
   local_2c.cbWndExtra = 4;
   local_2c.hInstance = app_hinstance;
@@ -7485,7 +7485,7 @@ void __cdecl app_register_wnd_classes(void)
 
 /* 005dbdba auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-void __cdecl FUN_005dbdba(void)
+void __cdecl app_unregister_wnd_classes(void)
 
 {
   BOOL BVar1;
@@ -7925,7 +7925,7 @@ TimerManager * __thiscall timer_mgr_scalar_dtor(TimerManager *this,uint param_1)
 }
 
 /* 005dcb00 auto */
-void __cdecl FUN_005dcb00(iptr param_1)
+void __cdecl mem_handle_clone_wrap(iptr param_1)
 
 {
   mem_handle_clone(param_1);
@@ -7933,7 +7933,7 @@ void __cdecl FUN_005dcb00(iptr param_1)
 }
 
 /* 005dcb1c auto */
-void __cdecl FUN_005dcb1c(undefined4 param_1)
+void __cdecl mem_handle_lock_wrap(undefined4 param_1)
 
 {
   mem_handle_lock(param_1);
@@ -7941,7 +7941,7 @@ void __cdecl FUN_005dcb1c(undefined4 param_1)
 }
 
 /* 005dcb38 auto */
-void __cdecl FUN_005dcb38(undefined4 param_1)
+void __cdecl mem_handle_unlock_wrap(undefined4 param_1)
 
 {
   mem_handle_unlock(param_1);
@@ -7949,7 +7949,7 @@ void __cdecl FUN_005dcb38(undefined4 param_1)
 }
 
 /* 005dcb54 auto */
-void __cdecl FUN_005dcb54(undefined4 param_1)
+void __cdecl mem_handle_alloc_wrap(undefined4 param_1)
 
 {
   mem_handle_alloc(param_1);
@@ -7973,7 +7973,7 @@ void __cdecl mem_copy_src_dst(iptr param_1,iptr param_2,undefined4 param_3)
 }
 
 /* 005dcbb0 auto */
-void __cdecl FUN_005dcbb0(undefined4 param_1)
+void __cdecl mem_handle_size_wrap(undefined4 param_1)
 
 {
   mem_handle_size(param_1);
@@ -7981,7 +7981,7 @@ void __cdecl FUN_005dcbb0(undefined4 param_1)
 }
 
 /* 005dcbcc auto */
-void __cdecl FUN_005dcbcc(undefined4 param_1,undefined4 param_2)
+void __cdecl mem_handle_realloc(undefined4 param_1,undefined4 param_2)
 
 {
   mem_handle_realloc_impl(param_1,param_2);
@@ -7989,7 +7989,7 @@ void __cdecl FUN_005dcbcc(undefined4 param_1,undefined4 param_2)
 }
 
 /* 005dcbec auto */
-void __cdecl FUN_005dcbec(void)
+void __cdecl mem_avail_bytes(void)
 
 {
   mem_avail_bytes_stub();
@@ -8019,7 +8019,7 @@ void __thiscall menu_handle_dtor(GameMenu *this)
 
 /* 005dcc56 auto */
 void __thiscall
-FUN_005dcc56
+menu_append_to_submenu
           (MenuSubmenuView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8032,7 +8032,7 @@ FUN_005dcc56
 }
 
 /* 005dcc95 auto */
-void __thiscall FUN_005dcc95(void *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+void __thiscall menu_append_item(void *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   menu_hmenu_append(param_1,param_3,param_2);
@@ -8047,7 +8047,7 @@ void __thiscall FUN_005dcc95(void *this,undefined4 param_1,undefined4 param_2,un
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005dccc1(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall menu_delete_by_id(void *this,undefined4 param_1,undefined4 param_2)
 
 {
   menu_hmenu_delete_by_id(param_1,param_2);
@@ -8055,7 +8055,7 @@ void __thiscall FUN_005dccc1(void *this,undefined4 param_1,undefined4 param_2)
 }
 
 /* 005dcce9 auto */
-void __thiscall FUN_005dcce9(MenuSubmenuView *this,undefined4 param_1)
+void __thiscall menu_append_submenu_separator(MenuSubmenuView *this,undefined4 param_1)
 
 {
   undefined4 uVar1;
@@ -8066,7 +8066,7 @@ void __thiscall FUN_005dcce9(MenuSubmenuView *this,undefined4 param_1)
 }
 
 /* 005dcd1c auto */
-void __thiscall FUN_005dcd1c(void *this,undefined4 param_1)
+void __thiscall menu_add_separator(void *this,undefined4 param_1)
 
 {
   menu_append_separator(param_1);
@@ -8387,7 +8387,7 @@ void __thiscall avi_player_show_frame(void *this,undefined4 param_1)
 }
 
 /* 005dd487 auto */
-void __thiscall FUN_005dd487(C_005dd487 *this)
+void __thiscall avi_player_play_from_start(C_005dd487 *this)
 
 {
   avi_player_rewind((iptr)this);
@@ -8417,7 +8417,7 @@ void __thiscall avi_player_pause(AviPlayerPauseView *this)
 }
 
 /* 005dd53f auto */
-void __thiscall FUN_005dd53f(void *this)
+void __thiscall avi_player_stop(void *this)
 
 {
   avi_player_rewind((iptr)this);
@@ -8436,7 +8436,7 @@ void __thiscall avi_player_set_palette(DibSurface *this,iptr param_1)
 
 /* 005dd5a4 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005dd5a4(DibSurface *this,DibSurface *param_1)
+void __thiscall avi_player_copy_frame_to(DibSurface *this,DibSurface *param_1)
 
 {
   int iVar1;
@@ -8518,13 +8518,13 @@ void __thiscall avi_player_set_transparent(C_005dd761 *this,int param_1)
 
 {
   if (param_1 == 0) {
-    if (this->field_5a4 != 0) {
-      this->field_5a4 = 0;
+    if (this->is_transparent != 0) {
+      this->is_transparent = 0;
       avi_restart_decompress((iptr)this,0);
     }
   }
-  else if (this->field_5a4 == 0) {
-    this->field_5a4 = 1;
+  else if (this->is_transparent == 0) {
+    this->is_transparent = 1;
     avi_restart_decompress((iptr)this,1);
   }
   return;
@@ -8533,7 +8533,7 @@ void __thiscall avi_player_set_transparent(C_005dd761 *this,int param_1)
 /* 005dd7de auto */
 #define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-void __thiscall FUN_005dd7de(C_004083b0_61c *this)
+void __thiscall avi_player_save_background(C_004083b0_61c *this)
 
 {
   int yBottom;
@@ -8575,7 +8575,7 @@ void __cdecl snd_system_init(void)
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_2c.style = 0;
-  local_2c.lpfnWndProc = FUN_005dd93f;
+  local_2c.lpfnWndProc = snd_mci_notify_wndproc;
   local_2c.cbClsExtra = 0;
   local_2c.cbWndExtra = 0;
   local_2c.hInstance = app_hinstance;
@@ -8598,7 +8598,7 @@ void __cdecl snd_system_init(void)
 /* 005dd93f auto */
 #define snd_cd_device_id (*(uint *)((u8 *)&g.d_006389d8))
 #define snd_midi_device_id (*(uint *)((u8 *)&g.d_006389d4))
-LRESULT __stdcall FUN_005dd93f(HWND param_1,UINT param_2,WPARAM param_3,uint param_4)
+LRESULT __stdcall snd_mci_notify_wndproc(HWND param_1,UINT param_2,WPARAM param_3,uint param_4)
 
 {
   LRESULT LVar1;
@@ -8647,7 +8647,7 @@ void __cdecl snd_stop_sndplaysound(void)
 }
 
 /* 005dda2b auto */
-void __cdecl FUN_005dda2b(undefined4 param_1)
+void __cdecl snd_stub_nop(undefined4 param_1)
 
 {
   return;
@@ -8980,7 +8980,7 @@ undefined4 __cdecl snd_cd_get_track_count(void)
 #define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(40)))
-void __cdecl FUN_005de00d(void)
+void __cdecl snd_cd_eject(void)
 
 {
   MCIERROR MVar1;
@@ -9021,7 +9021,7 @@ void __cdecl FUN_005de00d(void)
 #define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(40)))
-void __cdecl FUN_005de0b5(void)
+void __cdecl snd_cd_close_door(void)
 
 {
   MCIERROR MVar1;
@@ -9063,7 +9063,7 @@ void __cdecl FUN_005de0b5(void)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-void __cdecl FUN_005de19d(void)
+void __cdecl snd_cd_toggle_pause(void)
 
 {
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
@@ -9096,7 +9096,7 @@ void __cdecl FUN_005de19d(void)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-void __cdecl FUN_005de250(void)
+void __cdecl snd_cd_resume(void)
 
 {
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
@@ -9132,7 +9132,7 @@ void __cdecl FUN_005de250(void)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(36)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-void __cdecl FUN_005de310(void)
+void __cdecl snd_cd_play_next_track(void)
 
 {
   MCIERROR MVar1;
@@ -9190,7 +9190,7 @@ void __cdecl FUN_005de310(void)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(36)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-void __cdecl FUN_005de41e(void)
+void __cdecl snd_cd_play_prev_track(void)
 
 {
   MCIERROR MVar1;
@@ -9247,7 +9247,7 @@ void __cdecl FUN_005de41e(void)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(28)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-undefined4 __cdecl FUN_005de529(uint *param_1,uint *param_2,uint *param_3)
+undefined4 __cdecl snd_cd_get_position(uint *param_1,uint *param_2,uint *param_3)
 
 {
   undefined4 uVar1;
@@ -9299,7 +9299,7 @@ undefined4 __cdecl FUN_005de529(uint *param_1,uint *param_2,uint *param_3)
 #undef local_c
 
 /* 005de620 auto */
-void __cdecl FUN_005de620(undefined4 param_1)
+void __cdecl snd_play_wav_async_wrap(undefined4 param_1)
 
 {
   snd_play_wav_async(param_1);
@@ -9307,7 +9307,7 @@ void __cdecl FUN_005de620(undefined4 param_1)
 }
 
 /* 005de63c auto */
-void __cdecl FUN_005de63c(undefined4 param_1)
+void __cdecl snd_play_wav_loop_wrap(undefined4 param_1)
 
 {
   snd_play_wav_loop(param_1);
@@ -9315,15 +9315,15 @@ void __cdecl FUN_005de63c(undefined4 param_1)
 }
 
 /* 005de658 auto */
-void __cdecl FUN_005de658(undefined4 param_1)
+void __cdecl snd_stub_nop_wrap(undefined4 param_1)
 
 {
-  FUN_005dda2b(param_1);
+  snd_stub_nop(param_1);
   return;
 }
 
 /* 005de674 auto */
-void __cdecl FUN_005de674(void)
+void __cdecl snd_beep_wrap(void)
 
 {
   snd_beep();
@@ -9331,7 +9331,7 @@ void __cdecl FUN_005de674(void)
 }
 
 /* 005de689 auto */
-void __cdecl FUN_005de689(undefined4 param_1)
+void __cdecl snd_midi_play_wrap(undefined4 param_1)
 
 {
   snd_midi_play(param_1);
@@ -9340,7 +9340,7 @@ void __cdecl FUN_005de689(undefined4 param_1)
 
 /* 005de6a5 auto */
 #define snd_midi_notify_callback (*(undefined4 *)((u8 *)&g.d_006e5004))
-void __cdecl FUN_005de6a5(undefined4 param_1)
+void __cdecl snd_midi_set_notify_callback(undefined4 param_1)
 
 {
   snd_midi_notify_callback = param_1;
@@ -9361,7 +9361,7 @@ void __cdecl snd_midi_fire_notify_callback(void)
 #undef snd_midi_notify_callback
 
 /* 005de6e0 auto */
-void __cdecl FUN_005de6e0(uint param_1)
+void __cdecl snd_cd_play_track_wrap(uint param_1)
 
 {
   snd_cd_play_track(param_1);
@@ -9391,7 +9391,7 @@ void __cdecl snd_cd_fire_notify_callback(void)
 #undef snd_cd_notify_callback
 
 /* 005de737 auto */
-void __cdecl FUN_005de737(void)
+void __cdecl snd_midi_close_wrap(void)
 
 {
   snd_midi_close();
@@ -9399,7 +9399,7 @@ void __cdecl FUN_005de737(void)
 }
 
 /* 005de74c auto */
-void __cdecl FUN_005de74c(void)
+void __cdecl snd_stop_sndplaysound_wrap(void)
 
 {
   snd_stop_sndplaysound();
@@ -9407,7 +9407,7 @@ void __cdecl FUN_005de74c(void)
 }
 
 /* 005de761 auto */
-void __cdecl FUN_005de761(void)
+void __cdecl snd_cd_mci_stop_wrap(void)
 
 {
   snd_cd_mci_stop();
@@ -9639,7 +9639,7 @@ void __cdecl palette_copy_rgb_range(iptr param_1,iptr param_2,int param_3,int pa
 #define notice_parent_window (*(WndBase * *)((u8 *)&g.d_00638b90))
 #define notice_showing (*(undefined4 *)((u8 *)&g.d_00638ba4))
 #define notice_window (*(SurfaceWindow * *)((u8 *)&g.d_006e5014))
-void __cdecl FUN_005ded90(void)
+void __cdecl ui_notice_close(void)
 
 {
   int iVar1;
@@ -9758,7 +9758,7 @@ void __cdecl ui_show_text_notice_window(undefined4 param_1,WndBase *param_2,int 
       local_88 = notice_window + 1;
     }
     thunk_button_create(notice_ok_button,(iptr)local_88,0x65,(iptr)&local_54,ADDR(0x638bb4, ((u8 *)&g.d_00638bb4)));
-    thunk_button_set_callback(notice_ok_button,ADDR(0x5ded90, FUN_005ded90));
+    thunk_button_set_callback(notice_ok_button,ADDR(0x5ded90, ui_notice_close));
     SetRect(&local_40,0,0,local_14,local_44);
     surface_draw_bevel_border((iptr)notice_window,(iptr)&local_40,3,0xff,0xf8);
     InflateRect(&local_40,-6,-6);
@@ -9805,12 +9805,12 @@ void __cdecl ui_show_text_notice_window(undefined4 param_1,WndBase *param_2,int 
 #define notice_parent_window (*(undefined4 *)((u8 *)&g.d_00638b90))
 #define notice_show_count (*(int *)((u8 *)&g.d_00638ba8))
 #define notice_showing (*(int *)((u8 *)&g.d_00638ba4))
-void __cdecl FUN_005df166(void)
+void __cdecl ui_notice_timer_tick(void)
 
 {
   int iVar1;
   
-  iVar1 = mem_kb_exceeds_avail(DAT_00638b94);
+  iVar1 = mem_kb_exceeds_avail(notice_mem_threshold_kb);
   if (iVar1 == 0) {
     notice_show_count = 0;
   }
@@ -9832,20 +9832,20 @@ void __cdecl FUN_005df166(void)
 #define notice_show_count (*(undefined4 *)((u8 *)&g.d_00638ba8))
 #define notice_showing (*(undefined4 *)((u8 *)&g.d_00638ba4))
 void __cdecl
-FUN_005df1fd(undefined4 param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5
+ui_notice_timer_start(undefined4 param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5
             )
 
 {
   if (notice_timer != 0) {
     game_timer_destroy(notice_timer);
   }
-  DAT_00638b94 = param_1;
+  notice_mem_threshold_kb = param_1;
   notice_text_res_id = param_3;
   notice_parent_window = param_4;
   notice_disable_parent = param_5;
   notice_show_count = 0;
   notice_showing = 0;
-  notice_timer = game_timer_create(ADDR(0x5df166, FUN_005df166),param_2 * 1000,0xffffffff);
+  notice_timer = game_timer_create(ADDR(0x5df166, ui_notice_timer_tick),param_2 * 1000,0xffffffff);
   return;
 }
 #undef notice_parent_window
@@ -9853,7 +9853,7 @@ FUN_005df1fd(undefined4 param_1,int param_2,undefined4 param_3,undefined4 param_
 #undef notice_showing
 
 /* 005df280 auto */
-void __cdecl FUN_005df280(void)
+void __cdecl ui_notice_timer_stop(void)
 
 {
   if (notice_timer != 0) {
@@ -9885,7 +9885,7 @@ void __cdecl FUN_005df280(void)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1128)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1132)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1136)))
-void __cdecl FUN_005df2b5(iptr param_1,iptr param_2)
+void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
 
 {
   undefined4 uVar1;
@@ -10004,7 +10004,7 @@ void __cdecl FUN_005df2b5(iptr param_1,iptr param_2)
 
 /* 005df6ab auto */
 void __cdecl
-FUN_005df6ab(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+gfx_dissolve_transition_nodelay(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
             undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
@@ -10111,7 +10111,7 @@ gfx_dissolve_transition(DibSurface *param_1,DibSurface *param_2,undefined4 *para
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
 void __cdecl
-FUN_005df931(DDSurface *param_1,LPRECT param_2,int param_3,undefined4 param_4,undefined4 param_5,
+ddsurf_draw_bevel_border(DDSurface *param_1,LPRECT param_2,int param_3,undefined4 param_4,undefined4 param_5,
             undefined4 param_6)
 
 {

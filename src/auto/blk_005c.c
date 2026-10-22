@@ -316,7 +316,7 @@ surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 #define local_c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
-FUN_005c0753(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *param_3)
+surface_copy_to_ddsurf(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *param_3)
 
 {
   int iVar1;
@@ -443,7 +443,7 @@ surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 
 /* 005c0a55 auto */
 void __thiscall
-FUN_005c0a55
+surface_stretch_to_wnd
           (DibSurface *this,WndBase *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
@@ -479,7 +479,7 @@ FUN_005c0a55
 
 /* 005c0b2c auto */
 void __thiscall
-FUN_005c0b2c
+surface_stretch_to_surface
           (DibSurface *this,DibSurface *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
@@ -623,7 +623,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int p
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
-FUN_005c0e57(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3)
+surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3)
 
 {
   undefined1 uVar1;
@@ -725,7 +725,7 @@ surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_
 
 /* 005c10fb auto */
 void __thiscall
-FUN_005c10fb(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+surface_draw_text_rect_cur_font(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   if (draw_current_font == (undefined *)0x0) {
@@ -855,7 +855,7 @@ void __thiscall surface_frame_rect(DibSurface *this,iptr param_1)
 /* 005c1513 auto */
 #define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c1513(DibSurface *this,int *param_1)
+void __thiscall surface_draw_raised_frame(DibSurface *this,int *param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -894,7 +894,7 @@ void __thiscall FUN_005c1513(DibSurface *this,int *param_1)
 #define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
 #define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c1742(DibSurface *this,int *param_1)
+void __thiscall surface_draw_sunken_frame(DibSurface *this,int *param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -932,7 +932,7 @@ void __thiscall FUN_005c1742(DibSurface *this,int *param_1)
 
 /* 005c1972 auto */
 #define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl FUN_005c1972(undefined4 param_1)
+undefined4 __cdecl draw_set_current_surface(undefined4 param_1)
 
 {
   undefined4 uVar1;
@@ -945,7 +945,7 @@ undefined4 __cdecl FUN_005c1972(undefined4 param_1)
 
 /* 005c1998 auto */
 #define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl FUN_005c1998(void)
+undefined4 __cdecl draw_get_current_surface(void)
 
 {
   return draw_current_surface;
@@ -1083,7 +1083,7 @@ undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
 
 /* 005c1cbd auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005c1cbd(DibSurface *this,int param_1,int param_2)
+void __thiscall surface_create_dib24(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1148,7 +1148,7 @@ undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
 
 /* 005c1e6d auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005c1e6d(DibSurface *this,int param_1,int param_2)
+void __thiscall surface_create_dib32(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1202,7 +1202,7 @@ undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
 }
 
 /* 005c1ff9 auto */
-void __thiscall FUN_005c1ff9(DibSurface *this,iptr param_1)
+void __thiscall surface_resize_dib32(DibSurface *this,iptr param_1)
 
 {
   surface_alloc_dib32(this,param_1);
@@ -1232,7 +1232,7 @@ short __cdecl gfx_rgb_to_555(undefined4 param_1,uint param_2,uint param_3)
 #define local_10 (*(undefined2 * *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(56)))
-undefined4 __thiscall FUN_005c2048(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -1351,7 +1351,7 @@ LAB_005c231b:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall FUN_005c2360(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -1477,7 +1477,7 @@ undefined4 __thiscall FUN_005c2360(DibSurface *this,iptr param_1)
 #define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(560)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(564)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(568)))
-undefined4 __thiscall FUN_005c27ad(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
@@ -1579,7 +1579,7 @@ undefined4 __thiscall FUN_005c27ad(DibSurface *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(720)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(724)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(728)))
-undefined4 __thiscall FUN_005c2a77(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
@@ -1702,7 +1702,7 @@ undefined4 __thiscall FUN_005c2a77(DibSurface *this,iptr param_1)
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(1344)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(1348)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1352)))
-undefined4 __thiscall FUN_005c2e5e(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -1853,7 +1853,7 @@ undefined4 __thiscall FUN_005c2e5e(DibSurface *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1508)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1512)))
-undefined4 __thiscall FUN_005c3313(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -2011,7 +2011,7 @@ undefined4 __thiscall FUN_005c3313(DibSurface *this,iptr param_1)
 #define local_10 (*(short * *)(frame_ + FRAME_OFF(1336)))
 #define local_c (*(short * *)(frame_ + FRAME_OFF(1340)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1344)))
-undefined4 __thiscall FUN_005c3874(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -2124,7 +2124,7 @@ undefined4 __thiscall FUN_005c3874(DibSurface *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1496)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1500)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-undefined4 __thiscall FUN_005c3b7a(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -2230,7 +2230,7 @@ undefined4 __thiscall FUN_005c3b7a(DibSurface *this,iptr param_1)
 #define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(undefined1 * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall FUN_005c3efc(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
@@ -2302,7 +2302,7 @@ undefined4 __thiscall FUN_005c3efc(DibSurface *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(204)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-undefined4 __thiscall FUN_005c40b6(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
 
 {
   iptr iVar1;
@@ -2393,7 +2393,7 @@ undefined4 __thiscall FUN_005c40b6(DibSurface *this,iptr param_1)
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(56)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
-undefined4 __thiscall FUN_005c4375(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_tga_resource24(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
@@ -2505,7 +2505,7 @@ undefined4 __thiscall FUN_005c4375(DibSurface *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall FUN_005c463f(DibSurface *this,iptr param_1)
+undefined4 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
 
 {
   int iVar1;
@@ -2654,7 +2654,7 @@ surface_fill_rect_rgb
 
 /* 005c4b4c auto */
 void __thiscall
-FUN_005c4b4c
+surface_fill_rgb
           (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -2668,7 +2668,7 @@ FUN_005c4b4c
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-FUN_005c4b7f(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *param_3)
+surface_blit_rgb(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *param_3)
 
 {
   iptr iVar1;
@@ -2702,7 +2702,7 @@ FUN_005c4b7f(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *p
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-FUN_005c4c46(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3)
+surface_blit_to_ddsurf(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3)
 
 {
   undefined4 uVar1;
@@ -2732,7 +2732,7 @@ FUN_005c4c46(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param
 
 /* 005c4d0d auto */
 void __thiscall
-FUN_005c4d0d
+surface_stretch_to_ddsurf
           (DibSurface *this,DDSurfaceIfaceView *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
@@ -2766,7 +2766,7 @@ FUN_005c4d0d
 
 /* 005c4dd3 auto */
 void __thiscall
-FUN_005c4dd3
+surface_draw_text_rgb_cur_font
           (SurfaceTextRgbCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4,
           undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
@@ -2792,7 +2792,7 @@ FUN_005c4dd3
 /* 005c4eb6 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005c4eb6
+surface_draw_text_in_rect_rgb_cur_font
           (SurfaceTextRectRgbCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4,
           undefined4 param_5,undefined4 param_6)
 
@@ -2823,7 +2823,7 @@ FUN_005c4eb6
 
 /* 005c4f9f auto */
 void __thiscall
-FUN_005c4f9f
+surface_draw_text_rgb
           (SurfaceTextRgbFontView *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4,
           uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 
@@ -2846,7 +2846,7 @@ FUN_005c4f9f
 /* 005c505d auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005c505d
+surface_draw_text_in_rect_rgb
           (SurfaceTextRectFontView *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4,
           undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
@@ -2873,7 +2873,7 @@ FUN_005c505d
 
 /* 005c512d auto */
 void __thiscall
-FUN_005c512d
+surface_draw_text_rect_rgb_cur_font
           (SurfaceTextWrapRgbCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
@@ -2890,7 +2890,7 @@ FUN_005c512d
 
 /* 005c51a5 auto */
 void __thiscall
-FUN_005c51a5
+surface_draw_text_rect_rgb
           (SurfaceTextWrapRgbFontView *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
@@ -2941,7 +2941,7 @@ surface_frame_rect_rgb
 
 /* 005c53c3 auto */
 void __thiscall
-FUN_005c53c3
+surface_rgb_to_native
           (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -3155,7 +3155,7 @@ wnd_create_framed
 
 /* 005c57b1 auto */
 void __thiscall
-FUN_005c57b1
+wnd_create_framed_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
@@ -3183,7 +3183,7 @@ wnd_create_framed_child
 
 /* 005c584e auto */
 void __thiscall
-FUN_005c584e
+wnd_create_framed_child_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,
           undefined4 param_8,iptr param_9)
@@ -3212,7 +3212,7 @@ wnd_create_framed_nopal
 
 /* 005c58e7 auto */
 void __thiscall
-FUN_005c58e7
+wnd_create_framed_nopal_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
 
@@ -3240,7 +3240,7 @@ wnd_create_framed_child_nopal
 
 /* 005c597c auto */
 void __thiscall
-FUN_005c597c
+wnd_create_framed_child_nopal_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
@@ -3330,7 +3330,7 @@ void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
 
 /* 005c5b36 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c5b36(WndControlInvalidateView *this)
+void __thiscall wnd_invalidate_controls(WndControlInvalidateView *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3372,7 +3372,7 @@ void __thiscall wnd_focus_first_control(Wnd *this)
 
 /* 005c5c2d auto */
 #define local_8 (*(ControlInitialFocusView * *)(frame_ + FRAME_OFF(0)))
-ControlInitialFocusView * __thiscall FUN_005c5c2d(void *this)
+ControlInitialFocusView * __thiscall wnd_find_initial_focus_control(void *this)
 
 {
   char cVar1;
@@ -3522,7 +3522,7 @@ wnd_create_with_cmd_proc
 
 /* 005c5f7c auto */
 void __thiscall
-FUN_005c5f7c
+wnd_create_with_cmd_proc_menu
           (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
 
@@ -3551,7 +3551,7 @@ wnd_create_with_handlers
 
 /* 005c6024 auto */
 void __thiscall
-FUN_005c6024
+wnd_create_with_handlers_menu
           (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
 
@@ -3580,7 +3580,7 @@ wnd_create_nopal_cmd_proc
 
 /* 005c60c8 auto */
 void __thiscall
-FUN_005c60c8
+wnd_create_nopal_cmd_proc_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
 
@@ -3609,7 +3609,7 @@ wnd_create_child_nopal_cmd_proc
 
 /* 005c6168 auto */
 void __thiscall
-FUN_005c6168
+wnd_create_child_nopal_cmd_proc_menu
           (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
@@ -3703,7 +3703,7 @@ undefined4 __cdecl wnd_set_active_child(iptr param_1)
 /* 005c6329 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005c6329(C_00408010_b8 *this,u32 param_1)
+void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3720,7 +3720,7 @@ void __thiscall FUN_005c6329(C_00408010_b8 *this,u32 param_1)
 /* 005c636c auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005c636c(C_00408010_b8 *this,u32 param_1)
+void __thiscall wnd_set_vscroll_step(C_00408010_b8 *this,u32 param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3864,7 +3864,7 @@ void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1)
 #define local_6 (*(undefined1 *)(frame_ + FRAME_OFF(2)))
 #define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
 void __thiscall
-FUN_005c66b9
+palette_load_ctab_res_range
           (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -3894,7 +3894,7 @@ FUN_005c66b9
 #undef local_5
 
 /* 005c6757 auto */
-void __thiscall FUN_005c6757(GamePalette *this,undefined4 param_1)
+void __thiscall palette_load_file(GamePalette *this,undefined4 param_1)
 
 {
   palette_load_from_file(this,param_1);
@@ -3902,7 +3902,7 @@ void __thiscall FUN_005c6757(GamePalette *this,undefined4 param_1)
 }
 
 /* 005c677b auto */
-void __thiscall FUN_005c677b(void *this,undefined4 param_1)
+void __thiscall palette_save_full_to_file(void *this,undefined4 param_1)
 
 {
   palette_save_to_file(this,param_1,0,0xff);
@@ -4036,7 +4036,7 @@ palette_refresh_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 }
 
 /* 005c6b05 auto */
-void __thiscall FUN_005c6b05(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall palette_animate_hpalette(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2)
 
 {
   palette_animate((iptr)this,this->hpalette,param_1,param_2);
@@ -4051,7 +4051,7 @@ void __thiscall FUN_005c6b05(PaletteAnimateView *this,undefined4 param_1,undefin
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005c6b3b(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall palette_copy_logpal(void *this,undefined4 param_1,undefined4 param_2)
 
 {
   logpal_copy(param_1,param_2);
@@ -4089,7 +4089,7 @@ palette_set_entry
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-void __thiscall FUN_005c6bd5(PaletteRotateView *this,int param_1,int param_2,int param_3)
+void __thiscall palette_rotate_range(PaletteRotateView *this,int param_1,int param_2,int param_3)
 
 {
   int iVar1;
@@ -4179,7 +4179,7 @@ palette_tint_begin_range(GamePalette *this,u32 param_1,u32 param_2,u32 param_3)
 
 /* 005c6edc auto */
 void __thiscall
-FUN_005c6edc
+palette_tint_begin
           (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
@@ -4192,7 +4192,7 @@ FUN_005c6edc
 }
 
 /* 005c6f2c auto */
-void __thiscall FUN_005c6f2c(GamePalette *this)
+void __thiscall palette_tint_end(GamePalette *this)
 
 {
   iptr iVar1;
@@ -4208,7 +4208,7 @@ void __thiscall FUN_005c6f2c(GamePalette *this)
 }
 
 /* 005c6fc3 auto */
-void __thiscall FUN_005c6fc3(C_005c6fc3 *this,int param_1,iptr param_2)
+void __thiscall palette_tint_get_saved_rgb(C_005c6fc3 *this,int param_1,iptr param_2)
 
 {
   iptr iVar1;
@@ -4224,7 +4224,7 @@ void __thiscall FUN_005c6fc3(C_005c6fc3 *this,int param_1,iptr param_2)
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall FUN_005c701c(C_005c701c *this,int param_1)
+void __thiscall palette_tint_step(C_005c701c *this,int param_1)
 
 {
   byte bVar1;
@@ -4379,7 +4379,7 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
 #define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
-FUN_005c7579
+palette_build_remap_table
           (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4)
 
 {
@@ -4421,7 +4421,7 @@ FUN_005c7579
 #define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
-FUN_005c770a
+palette_build_remap_table_ex
           (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4,
           undefined4 param_5,undefined4 param_6)
 
@@ -4463,7 +4463,7 @@ FUN_005c770a
 #define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2088)))
 undefined4 __thiscall
-FUN_005c7899(GamePalette *this,uint param_1,uint param_2,uint param_3)
+palette_find_nearest_color(GamePalette *this,uint param_1,uint param_2,uint param_3)
 
 {
   undefined4 uVar1;
@@ -4667,7 +4667,7 @@ color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,
   }
   else {
     local_3c = 0x30000;
-    this->field_81c = 0;
+    this->visit_count = 0;
     local_38[0] = (param_2 & 0xff) - param_4;
     local_38[1] = (param_2 & 0xff) + param_4;
     local_38[2] = (param_1 & 0xff) - param_4;
@@ -4693,7 +4693,7 @@ color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,
       this->stack_top = this->stack_top - 1;
       local_8 = *(iptr *)(this->pad_14 + this->stack_top * 4);
       while ((this->nil_node != local_40 && (local_3c != 0))) {
-        this->field_81c = this->field_81c + 1;
+        this->visit_count = this->visit_count + 1;
         if (local_8 == 2) {
           local_8 = 0;
         }
@@ -4837,7 +4837,7 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
 
 /* 005c8391 auto */
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_005c8391(undefined4 param_1,int param_2)
+undefined4 __cdecl font_file_get_font_handle(undefined4 param_1,int param_2)
 
 {
   iptr iVar1;
@@ -4957,7 +4957,7 @@ LONG __cdecl font_measure_width(undefined4 param_1,iptr param_2)
 
 /* 005c861c auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_005c861c(LPCSTR param_1)
+undefined4 __cdecl font_file_load(LPCSTR param_1)
 
 {
   int iVar1;
@@ -4978,7 +4978,7 @@ undefined4 __cdecl FUN_005c861c(LPCSTR param_1)
 #undef local_c
 
 /* 005c86bc auto */
-undefined4 __stdcall FUN_005c86bc(LOGFONTA *param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
+undefined4 __stdcall font_enum_matching_faces_cb(LOGFONTA *param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
 
 {
   char *_Str2;
@@ -5007,7 +5007,7 @@ undefined4 __cdecl font_enum_matching_faces(iptr param_1)
   
   hdc = GetDC((HWND)0x0);
   *(undefined4 *)(param_1 + 0x100) = 0;
-  EnumFontFamiliesA(hdc,(LPCSTR)0x0,FUN_005c86bc,param_1);
+  EnumFontFamiliesA(hdc,(LPCSTR)0x0,font_enum_matching_faces_cb,param_1);
   ReleaseDC((HWND)0x0,hdc);
   return *(undefined4 *)(param_1 + 0x100);
 }
@@ -5015,7 +5015,7 @@ undefined4 __cdecl font_enum_matching_faces(iptr param_1)
 /* 005c8791 game (src/game/fixups.c) */
 #if 0
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005c8791(undefined4 param_1)
+void __cdecl font_file_unload(undefined4 param_1)
 
 {
   LPCSTR pCVar1;
@@ -5078,7 +5078,7 @@ iptr __cdecl font_calc_text_rect(iptr param_1,undefined4 param_2,char *param_3,i
 
 /* 005c8908 auto */
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005c8908(LOGFONTA *param_1)
+int __cdecl font_handle_create_indirect(LOGFONTA *param_1)
 
 {
   HFONT pHVar1;
@@ -5103,7 +5103,7 @@ int __cdecl FUN_005c8908(LOGFONTA *param_1)
 #undef local_10
 
 /* 005c8984 auto */
-undefined4 __cdecl FUN_005c8984(int param_1)
+undefined4 __cdecl font_handle_delete(int param_1)
 
 {
   undefined4 uVar1;
@@ -5125,7 +5125,7 @@ undefined4 __cdecl FUN_005c8984(int param_1)
 
 /* 005c89ed auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005c89ed(LPCSTR param_1)
+int __cdecl font_resource_add(LPCSTR param_1)
 
 {
   int iVar1;
@@ -5152,7 +5152,7 @@ int __cdecl FUN_005c89ed(LPCSTR param_1)
 #undef local_8
 
 /* 005c8a85 auto */
-void __cdecl FUN_005c8a85(int param_1)
+void __cdecl font_resource_remove(int param_1)
 
 {
   LPCSTR lpFileName;
@@ -5202,7 +5202,7 @@ void __cdecl hwnd_hide(HWND param_1)
 
 /* 005c8b83 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005c8b83(HWND param_1,int param_2,int param_3)
+void __cdecl hwnd_move_to(HWND param_1,int param_2,int param_3)
 
 {
   int nHeight;
@@ -5247,7 +5247,7 @@ HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
                            iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
   *(undefined4 *)(iVar3 + 0x2c) = 1;
-  SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, FUN_005c8caf));
+  SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, hotspot_wndproc));
   return pHVar4;
 }
 #undef app_hinstance
@@ -5265,7 +5265,7 @@ void __cdecl region_dispose(int param_1)
 /* 005c8caf game (src/game/fixups.c) */
 #if 0
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4)
+undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4)
 
 {
   HotspotDblClickView *this;
@@ -6129,7 +6129,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         *(HBITMAP *)(iVar3 + 0x10) = h_00;
         *(HBITMAP *)(iVar3 + 0x14) = local_168;
         *(undefined4 *)(iVar3 + 0x2c) = 6;
-        SetWindowLongA(local_154,-4,ADDR(0x5cacd4, FUN_005cacd4));
+        SetWindowLongA(local_154,-4,ADDR(0x5cacd4, button_wndproc));
       }
     }
   }
@@ -6164,7 +6164,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
 #undef local_8
 
 /* 005cabf6 auto */
-void __cdecl FUN_005cabf6(int param_1)
+void __cdecl button_destroy_hwnd(int param_1)
 
 {
   if (param_1 == 0) {
@@ -6217,7 +6217,7 @@ void __cdecl button_press_animated(HWND param_1)
 #define local_1c (*(HBRUSH *)(frame_ + FRAME_OFF(108)))
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(112)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(128)))
-undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
+undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 
 {
   char cVar1;
@@ -6306,7 +6306,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
           if (BVar4 == 0) {
             return 0;
           }
-          FUN_005cacd4(param_1,0xf,0,0);
+          button_wndproc(param_1,0xf,0,0);
           iVar10 = thunk_ctrl_get_parent(local_28);
           wnd_set_active_child(iVar10);
           uVar12 = thunk_ctrl_get_id((ControlIdView *)local_28);
@@ -6391,7 +6391,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
     if (pHVar6 != param_1) {
       return 0;
     }
-    FUN_005cacd4(param_1,7,0,0);
+    button_wndproc(param_1,7,0,0);
     return 0;
   }
   if (param_2 == 7) {
@@ -6447,7 +6447,7 @@ LAB_005cb26a:
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(64)))
 HWND __cdecl
-FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
+spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,int param_5,
             undefined4 param_6,undefined4 param_7,int param_8)
 
 {
@@ -6537,7 +6537,7 @@ FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
                              iVar3,iVar4,hWndParent,hMenu,hInstance,lpParam);
   iVar4 = ctrl_init_block(local_28,(iptr)param_3);
   *(undefined4 *)(iVar4 + 0x2c) = 5;
-  SetWindowLongA(local_28,-4,ADDR(0x5cb6eb, FUN_005cb6eb));
+  SetWindowLongA(local_28,-4,ADDR(0x5cb6eb, spritebtn_wndproc));
   return local_28;
 }
 #undef app_hinstance
@@ -6595,7 +6595,7 @@ HWND __cdecl spritebtn_create_hwnd(int param_1,int param_2,int param_3,int param
                             ,iVar2,hWndParent,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(local_8,param_5);
   *(undefined4 *)(iVar3 + 0x2c) = 5;
-  SetWindowLongA(local_8,-4,ADDR(0x5cb6eb, FUN_005cb6eb));
+  SetWindowLongA(local_8,-4,ADDR(0x5cb6eb, spritebtn_wndproc));
   return local_8;
 }
 #undef app_hinstance
@@ -6619,7 +6619,7 @@ void __cdecl spritebtn_hwnd_cleanup_stub(undefined4 param_1)
 #define local_10 (*(Control * *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
-undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
+undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 
 {
   char cVar1;
@@ -6709,7 +6709,7 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
       if (pHVar4 != param_1) {
         return 0;
       }
-      FUN_005cb6eb(param_1,7,0,0);
+      spritebtn_wndproc(param_1,7,0,0);
       return 0;
     }
     if (param_2 == 7) {
@@ -6805,7 +6805,7 @@ LAB_005cb749:
         BVar15 = PtInRect(&local_20,(POINT)(CONCAT44(param_4 >> 0x10,param_4) & 0xffffffff0000ffff))
         ;
         if (BVar15 != 0) {
-          FUN_005cb6eb(param_1,0xf,0,0);
+          spritebtn_wndproc(param_1,0xf,0,0);
           iVar9 = thunk_ctrl_get_parent(local_10);
           wnd_set_active_child(iVar9);
           uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
@@ -6835,7 +6835,7 @@ LAB_005cb749:
         BVar15 = PtInRect(&local_20,(POINT)(CONCAT44(param_4 >> 0x10,param_4) & 0xffffffff0000ffff))
         ;
         if (BVar15 != 0) {
-          FUN_005cb6eb(param_1,0xf,0,0);
+          spritebtn_wndproc(param_1,0xf,0,0);
           iVar9 = thunk_ctrl_get_parent(local_10);
           wnd_set_active_child(iVar9);
           uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
@@ -6920,7 +6920,7 @@ void __cdecl ui_wait_ticks(undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005cbed0(void)
+void __cdecl default_draw_font_static_init(void)
 
 {
   default_draw_font_ctor();
@@ -6940,12 +6940,12 @@ void __cdecl default_draw_font_ctor(void)
 void __cdecl default_draw_font_reg_dtor(void)
 
 {
-  _atexit(FUN_005cbf21);
+  _atexit(default_draw_font_static_dtor);
   return;
 }
 
 /* 005cbf21 auto */
-void __cdecl FUN_005cbf21(void)
+void __cdecl default_draw_font_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&default_draw_font_obj);
@@ -7079,7 +7079,7 @@ HWND __cdecl checkbox_create_hwnd(iptr param_1,iptr param_2,char *param_3,int pa
   *(HBITMAP *)(iVar5 + 0x14) = pHVar9;
   *(undefined4 *)(iVar5 + 0x2c) = 2;
   *(void **)(iVar5 + 0x24) = pvVar2;
-  SetWindowLongA(pHVar6,-4,ADDR(0x5cc320, FUN_005cc320));
+  SetWindowLongA(pHVar6,-4,ADDR(0x5cc320, checkbox_wndproc));
   return pHVar6;
 }
 #undef app_hinstance
@@ -7158,7 +7158,7 @@ void __cdecl checkbox_toggle_by_hotkey(HWND param_1)
 #define local_118 (*(undefined4 * *)(frame_ + FRAME_OFF(152)))
 #define local_114 (*(char (*)[256])(frame_ + FRAME_OFF(156)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(412)))
-undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
+undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
 
 {
   char cVar1;
@@ -7461,7 +7461,7 @@ LAB_005ccd4b:
 
 /* 005ccddf auto */
 #define ctrl_text_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f03))
-void __cdecl FUN_005ccddf(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+void __cdecl ctrl_set_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
   ctrl_text_rgb_r = param_1;
@@ -7474,7 +7474,7 @@ void __cdecl FUN_005ccddf(undefined1 param_1,undefined1 param_2,undefined1 param
 
 /* 005cce0e auto */
 #define ctrl_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f07))
-void __cdecl FUN_005cce0e(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+void __cdecl ctrl_set_disabled_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
   ctrl_disabled_rgb_r = param_1;
@@ -7496,7 +7496,7 @@ void __thiscall checkbox_fire_callback(CheckboxClickView *this,undefined4 param_
 }
 
 /* 005cce80 auto */
-void __stdcall FUN_005cce80(HWND param_1,int param_2,undefined4 param_3,undefined4 param_4)
+void __stdcall control_subclass_wndproc(HWND param_1,int param_2,undefined4 param_3,undefined4 param_4)
 
 {
   DWORD DVar1;
@@ -7580,7 +7580,7 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
   nWidth = thunk_rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&scrollbar_wnd_title,local_34,*param_1,param_1[1]
                             ,nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
-  SetWindowLongA(local_8,-4,ADDR(0x5cce80, FUN_005cce80));
+  SetWindowLongA(local_8,-4,ADDR(0x5cce80, control_subclass_wndproc));
   SetWindowLongA(local_8,scrollbar_base_wnd_extra,param_2);
   SetWindowLongA(local_8,scrollbar_base_wnd_extra + 4,(LONG)scrollbar_base_wndproc);
   ShowScrollBar(local_8,2,1);
@@ -7696,7 +7696,7 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,in
 }
 
 /* 005cd49f auto */
-void __cdecl FUN_005cd49f(HWND param_1,BOOL param_2)
+void __cdecl hwnd_enable(HWND param_1,BOOL param_2)
 
 {
   if (param_1 != (HWND)0x0) {
@@ -7715,7 +7715,7 @@ void __cdecl scrollbar_hwnd_set_range(HWND param_1,int param_2,int param_3)
 }
 
 /* 005cd4fd auto */
-void __cdecl FUN_005cd4fd(HWND param_1,int param_2,int param_3,BOOL param_4)
+void __cdecl scrollbar_hwnd_set_range_ex(HWND param_1,int param_2,int param_3,BOOL param_4)
 
 {
   SetScrollRange(param_1,2,param_2,param_3,param_4);
@@ -7740,7 +7740,7 @@ void __cdecl scrollbar_hwnd_set_pos(undefined4 param_1,undefined4 param_2)
 }
 
 /* 005cd580 auto */
-void __cdecl FUN_005cd580(iptr param_1,int param_2,int param_3,int param_4)
+void __cdecl wnd_set_scroll_range(iptr param_1,int param_2,int param_3,int param_4)
 
 {
   SetScrollRange(*(HWND *)(param_1 + 4),(uint)(param_4 != 0),param_2,param_3,1);
@@ -8110,7 +8110,7 @@ void __thiscall sprite_free(Sprite *this)
 }
 
 /* 005cdfb2 auto */
-void __cdecl FUN_005cdfb2(undefined4 param_1,undefined4 param_2)
+void __cdecl sprite_data_fixup_stub(undefined4 param_1,undefined4 param_2)
 
 {
   return;
@@ -8122,7 +8122,7 @@ void __cdecl FUN_005cdfb2(undefined4 param_1,undefined4 param_2)
 #define local_a (*(undefined1 *)(frame_ + FRAME_OFF(6)))
 #define local_9 (*(undefined1 *)(frame_ + FRAME_OFF(7)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005cdfc2(Sprite *this,undefined4 param_1)
+void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
 
 {
   int iVar1;
@@ -8162,7 +8162,7 @@ void __thiscall FUN_005cdfc2(Sprite *this,undefined4 param_1)
     iVar4 = mem_handle_lock(this->data_handle);
     mem_move_src_dst((int)puVar2 + 0x2d,iVar4,local_8);
     uVar5 = thunk_rect_height((iptr)&this->bounds_rect);
-    FUN_005cdfb2(iVar4,uVar5);
+    sprite_data_fixup_stub(iVar4,uVar5);
     mem_handle_unlock(this->data_handle);
     res_unlock(iVar1);
     res_free(iVar1);
@@ -8178,7 +8178,7 @@ void __thiscall FUN_005cdfc2(Sprite *this,undefined4 param_1)
 
 /* 005ce16e auto */
 void __thiscall
-FUN_005ce16e(Sprite *this,undefined4 param_1,undefined4 param_2)
+sprite_load_res_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 {
   sprite_load_res_with_pal(this,param_1,0xffffffff,0xffffffff,param_2);
@@ -8255,7 +8255,7 @@ sprite_load_res_with_pal
 #undef local_8
 
 /* 005ce3a8 auto */
-void __thiscall FUN_005ce3a8(Sprite *this,undefined4 param_1)
+void __thiscall sprite_load_file(Sprite *this,undefined4 param_1)
 
 {
   sprite_read_file(this,param_1);
@@ -8269,7 +8269,7 @@ void __thiscall FUN_005ce3a8(Sprite *this,undefined4 param_1)
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
 void __thiscall
-FUN_005ce3cc
+sprite_write_file_with_palette
           (Sprite *this,iptr param_1,undefined4 param_2,int param_3,GamePalette *param_4)
 
 {
@@ -8326,7 +8326,7 @@ FUN_005ce3cc
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall FUN_005ce5bb(Sprite *this,iptr param_1)
+void __thiscall sprite_write_file(Sprite *this,iptr param_1)
 
 {
   int iVar1;
@@ -8365,7 +8365,7 @@ void __thiscall FUN_005ce5bb(Sprite *this,iptr param_1)
 
 /* 005ce723 auto */
 void __thiscall
-FUN_005ce723(Sprite *this,undefined4 param_1,undefined4 param_2)
+sprite_load_file_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 {
   sprite_read_file_with_palette(this,param_1,0xffffffff,0xffffffff,param_2);
@@ -8550,7 +8550,7 @@ sprite_grab_rect(Sprite *this,iptr param_1,uint param_2,iptr param_3)
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(24)))
 void __thiscall
-FUN_005cec80
+sprite_grab_bounded_region
           (Sprite *this,DibSurface *param_1,uint param_2,undefined4 param_3,int param_4,
           int param_5)
 
@@ -8616,7 +8616,7 @@ sprite_grab_from_surface
 #undef local_14
 
 /* 005cee09 auto */
-void __thiscall FUN_005cee09(Sprite *this,undefined4 param_1,iptr param_2)
+void __thiscall sprite_grab_ddsurf_rect(Sprite *this,undefined4 param_1,iptr param_2)
 
 {
   u32 uVar1;
@@ -8630,7 +8630,7 @@ void __thiscall FUN_005cee09(Sprite *this,undefined4 param_1,iptr param_2)
 /* 005cee41 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005cee41
+sprite_grab_from_ddsurf
           (Sprite *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
@@ -8647,7 +8647,7 @@ FUN_005cee41
 
 /* 005cee99 auto */
 void __thiscall
-FUN_005cee99(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
+sprite_grab_ddsurf_rect_keyed(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
 
 {
   u32 uVar1;
@@ -8661,7 +8661,7 @@ FUN_005cee99(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
 /* 005ceed5 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005ceed5
+sprite_grab_from_ddsurf_keyed
           (Sprite *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5,
           int param_6)
 
@@ -8700,7 +8700,7 @@ sprite_draw_keyed
 
 /* 005cef9f auto */
 undefined4 __thiscall
-FUN_005cef9f
+sprite_draw_ddsurf
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8711,7 +8711,7 @@ FUN_005cef9f
 
 /* 005cefd4 auto */
 undefined4 __thiscall
-FUN_005cefd4
+sprite_draw_ddsurf_keyed
           (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
@@ -8722,7 +8722,7 @@ FUN_005cefd4
 
 /* 005cf00d auto */
 undefined4 __thiscall
-FUN_005cf00d
+sprite_draw_scaled
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8733,7 +8733,7 @@ FUN_005cf00d
 
 /* 005cf042 auto */
 undefined4 __thiscall
-FUN_005cf042
+sprite_draw_scaled_keyed
           (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
@@ -8744,7 +8744,7 @@ FUN_005cf042
 
 /* 005cf07b auto */
 undefined4 __thiscall
-FUN_005cf07b
+sprite_draw_scaled_ddsurf
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8755,7 +8755,7 @@ FUN_005cf07b
 
 /* 005cf0b0 auto */
 undefined4 __thiscall
-FUN_005cf0b0
+sprite_draw_scaled_ddsurf_keyed
           (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
@@ -8766,7 +8766,7 @@ FUN_005cf0b0
 
 /* 005cf0e9 auto */
 undefined4 __thiscall
-FUN_005cf0e9
+sprite_draw_silhouette_keyed
           (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6)
 
@@ -8788,7 +8788,7 @@ sprite_draw_silhouette
 
 /* 005cf15f auto */
 undefined4 __thiscall
-FUN_005cf15f
+sprite_draw_silhouette_dd_keyed
           (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6)
 
@@ -8799,7 +8799,7 @@ FUN_005cf15f
 
 /* 005cf19c auto */
 undefined4 __thiscall
-FUN_005cf19c
+sprite_draw_silhouette_dd
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5)
 
@@ -8810,7 +8810,7 @@ FUN_005cf19c
 
 /* 005cf1d5 auto */
 undefined4 __thiscall
-FUN_005cf1d5
+sprite_draw_key254
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8821,7 +8821,7 @@ FUN_005cf1d5
 
 /* 005cf20a auto */
 undefined4 __thiscall
-FUN_005cf20a
+sprite_draw_ddsurf_key254
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
@@ -8840,7 +8840,7 @@ void __thiscall sprite_merge_onto(Sprite *this,iptr param_1)
 
 /* 005cf26d auto */
 void __thiscall
-FUN_005cf26d
+sprite_merge_onto_at
           (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
@@ -8987,7 +8987,7 @@ sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-FUN_005cf541(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
+sprite_remap_colors(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   int iVar1;

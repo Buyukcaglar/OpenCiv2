@@ -31,7 +31,7 @@
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1648)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1652)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1656)))
-void __cdecl FUN_00570780(void)
+void __cdecl sprite_sheet_save_terrain1(void)
 
 {
   byte bVar1;
@@ -237,7 +237,7 @@ LAB_00570f78:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1584)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1588)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1592)))
-void __cdecl FUN_00570fc6(void)
+void __cdecl sprite_sheet_save_terrain2(void)
 
 {
   byte bVar1;
@@ -423,7 +423,7 @@ LAB_005718c2:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1368)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1372)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1376)))
-void __cdecl FUN_00571910(void)
+void __cdecl sprite_sheet_save_tech_icons(void)
 
 {
   byte bVar1;
@@ -511,7 +511,7 @@ LAB_00571b80:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1416)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1420)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1424)))
-void __cdecl FUN_00571bce(void)
+void __cdecl sprite_sheet_save_building_icons(void)
 
 {
   byte bVar1;
@@ -728,7 +728,7 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
 #define sprite_editor_running (*(undefined4 *)((u8 *)&g.d_006ac88c))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005722ab(void)
+void __cdecl sprite_editor_ok_clicked(void)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -756,7 +756,7 @@ void __cdecl FUN_005722ab(void)
 
 /* 00572364 auto */
 #define sprite_editor_running (*(undefined4 *)((u8 *)&g.d_006ac88c))
-void __cdecl FUN_00572364(void)
+void __cdecl sprite_editor_cancel_clicked(void)
 
 {
   sprite_editor_running = 0;
@@ -1152,7 +1152,7 @@ void __cdecl sprite_editor_draw_flag_marker(void)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(112)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(116)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(120)))
-void __cdecl FUN_00572fff(int param_1,int param_2)
+void __cdecl sprite_editor_on_mouse_down(int param_1,int param_2)
 
 {
   iptr iVar1;
@@ -1488,7 +1488,7 @@ void __cdecl FUN_00572fff(int param_1,int param_2)
 
 /* 00573afd auto */
 #define sprite_editor_painting (*(undefined4 *)((u8 *)&g.d_006ac8a4))
-void __cdecl FUN_00573afd(void)
+void __cdecl sprite_editor_on_mouse_up(void)
 
 {
   sprite_editor_painting = 0;
@@ -1507,7 +1507,7 @@ void __cdecl FUN_00573afd(void)
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_00573b1d(int param_1,int param_2)
+void __cdecl sprite_editor_on_mouse_move(int param_1,int param_2)
 
 {
   int iVar1;
@@ -1686,19 +1686,19 @@ void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_
   thunk_rect_set_xywh((iptr)local_5c,local_64,local_a8,local_60,local_68);
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create(&local_4c,ADDR(0x6ac1f8, ((u8 *)&g.d_006ac1f8)),0x65,(iptr)local_5c,iVar3);
-  thunk_button_set_callback(&local_4c,ADDR(0x401f73, FUN_005722ab));
+  thunk_button_set_callback(&local_4c,ADDR(0x401f73, sprite_editor_ok_clicked));
   local_64 = local_64 + local_60 + 2;
   thunk_rect_set_xywh((iptr)local_5c,local_64,local_a8,local_60,local_68);
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create(&local_a4,ADDR(0x6ac1f8, ((u8 *)&g.d_006ac1f8)),0x66,(iptr)local_5c,iVar3);
-  thunk_button_set_callback(&local_a4,ADDR(0x4011ea, FUN_00572364));
+  thunk_button_set_callback(&local_a4,ADDR(0x4011ea, sprite_editor_cancel_clicked));
   thunk_ctrl_set_cancel_button(&local_a4);
-  thunk_wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, FUN_00572fff));
-  thunk_wnd_set_rbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, FUN_00572fff));
-  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, FUN_00572fff));
-  thunk_wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x402013, FUN_00573afd));
-  thunk_wnd_set_rbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x402013, FUN_00573afd));
-  thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x403c0b, FUN_00573b1d));
+  thunk_wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, sprite_editor_on_mouse_down));
+  thunk_wnd_set_rbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, sprite_editor_on_mouse_down));
+  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x401b4f, sprite_editor_on_mouse_down));
+  thunk_wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x402013, sprite_editor_on_mouse_up));
+  thunk_wnd_set_rbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x402013, sprite_editor_on_mouse_up));
+  thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x403c0b, sprite_editor_on_mouse_move));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)&sprite_editor_window,ADDR(0x401bf9, thunk_sprite_editor_redraw));
   wnd_repaint((SurfaceWindow *)&sprite_editor_window);
   thunk_window_show((C_004083b0_4 *)&sprite_editor_window);
@@ -2145,7 +2145,7 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(28)))
-void __cdecl FUN_00574e98(void)
+void __cdecl sprite_picker_ok_clicked(void)
 
 {
   byte bVar1;
@@ -2192,7 +2192,7 @@ void __cdecl FUN_00574e98(void)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
 /* WARNING: Removing unreachable block (ram,0x00574f76) */
 
-void __cdecl FUN_00574f50(void)
+void __cdecl sprite_picker_import_all_clicked(void)
 
 {
   uint uVar1;
@@ -2439,7 +2439,7 @@ sprite_editor_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3
 /* 00575dc4 auto */
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
 #define sprite_picker_running (*(undefined4 *)((u8 *)&g.d_006ac890))
-void __cdecl FUN_00575dc4(void)
+void __cdecl sprite_picker_cancel_clicked(void)
 
 {
   sprite_picker_running = 0;
@@ -2527,7 +2527,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create
             ((Control *)&this->field_338,(iptr)local_2c,0xc9,(iptr)local_18,iVar3);
-  thunk_button_set_callback((Control *)&this->field_338,ADDR(0x4013c5, FUN_00574e98));
+  thunk_button_set_callback((Control *)&this->field_338,ADDR(0x4013c5, sprite_picker_ok_clicked));
   thunk_ctrl_set_default_button((Control *)&this->field_338);
   local_1c = local_1c + this->field_2f0 + 2;
   thunk_rect_set_xywh((iptr)local_18,local_1c,local_20,this->field_2f0,this->field_2f4);
@@ -2540,7 +2540,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x954));
   thunk_button_create
             ((Control *)(this->pad_364 + 0x10),(iptr)local_30,0xc9,(iptr)local_18,iVar3);
-  thunk_button_set_callback((Control *)(this->pad_364 + 0x10),ADDR(0x4029a5, FUN_00574f50));
+  thunk_button_set_callback((Control *)(this->pad_364 + 0x10),ADDR(0x4029a5, sprite_picker_import_all_clicked));
   thunk_ctrl_set_default_button((Control *)(this->pad_364 + 0x10));
   if (sprite_sheet_mode == 5) {
     thunk_ctrl_disable((Control *)(this->pad_364 + 0x10));
@@ -2556,7 +2556,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create
             ((Control *)&this->field_3b0,(iptr)local_34,0xca,(iptr)local_18,iVar3);
-  thunk_button_set_callback((Control *)&this->field_3b0,ADDR(0x402cde, FUN_00575dc4));
+  thunk_button_set_callback((Control *)&this->field_3b0,ADDR(0x402cde, sprite_picker_cancel_clicked));
   thunk_ctrl_set_cancel_button((Control *)&this->field_3b0);
   thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403887, thunk_sprite_picker_redraw_cb));
   wnd_repaint((SurfaceWindow *)this);
@@ -3181,7 +3181,7 @@ menu_add_item
 
 /* 00578d8a auto */
 #define menu_command_callback (*(code * *)((u8 *)&g.d_0063430c))
-void __cdecl FUN_00578d8a(undefined4 param_1,undefined4 param_2)
+void __cdecl menu_dispatch_command(undefined4 param_1,undefined4 param_2)
 
 {
   undefined4 uVar1;
@@ -3204,7 +3204,7 @@ void __thiscall menu_attach_to_window(GameMenu *this,C_00408010_b8 *param_1)
     menu_owner_window = param_1;
     menu_active_object = this;
     thunk_wnd_attach_menu(param_1,(iptr)this);
-    thunk_wnd_set_menu_callback((WndMenuCbSetView *)param_1,ADDR(0x40341d, FUN_00578d8a));
+    thunk_wnd_set_menu_callback((WndMenuCbSetView *)param_1,ADDR(0x40341d, menu_dispatch_command));
   }
   return;
 }
@@ -3280,7 +3280,7 @@ void __thiscall menu_rebuild(GameMenu *this,iptr param_1)
     for (; local_118 != (undefined4 *)0x0; local_118 = (undefined4 *)local_118[4]) {
       if ((*(byte *)(local_118 + 2) & 2) == 0) {
         FUN_005f22e0(local_104,*local_118);
-        FUN_005f22e0(local_104,&DAT_00634310);
+        FUN_005f22e0(local_104,&menu_title_sep_str);
       }
       if (param_1 == 0) {
         for (local_108 = 0x1e; 0 < local_108; local_108 = local_108 + -1) {
@@ -3334,7 +3334,7 @@ void __thiscall menu_rebuild(GameMenu *this,iptr param_1)
 #undef local_104
 
 /* 005791df auto */
-void __thiscall FUN_005791df(GameMenu *this,undefined4 param_1,int param_2)
+void __thiscall menu_set_menu_hidden(GameMenu *this,undefined4 param_1,int param_2)
 
 {
   iptr iVar1;

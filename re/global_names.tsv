@@ -1857,3 +1857,408 @@ addr	name	confidence	evidence
 006ad6a0	chat_unread_count	medium	Number of chat messages received while chat_wnd was closed (chat_receive_message); reset when the chat window opens.
 006e5038	avi_indeo_frame_environment	medium	+0x10 of avi_indeo_frame_opts (Indeo R4 header environment field) set to 2 in avi_open_file.
 006e50a8	avi_indeo_seq_environment	medium	+0x10 of avi_indeo_seq_opts (Indeo R4 header environment field) set to 2 in avi_open_file.
+00625140	tech_editor_epoch_ctrl_x	medium	x of the 3rd tech-editor control (label 0x1eb "Epoch" centred at x+0x32 in paint 00416828); table starts 00625130 with prereq 1/2.
+00625144	tech_editor_epoch_ctrl_y	medium	y paired with tech_editor_epoch_ctrl_x; "Epoch" label drawn just above it in 00416828.
+00625148	tech_editor_category_ctrl_x	medium	x of the 4th tech-editor control (label 0x1ec "Category" centred at x+0x32 in 00416828).
+0062514c	tech_editor_category_ctrl_y	medium	y paired with tech_editor_category_ctrl_x for the "Category" label in 00416828.
+00625158	tech_editor_modifier_edit_x	medium	Entry 1 of tech_editor_edit_x_table: x of the edit labelled 0x1ee "Modifier" in 00416828.
+0062515c	tech_editor_modifier_edit_y	medium	y paired with tech_editor_modifier_edit_x (entry 1 of tech_editor_edit_y_table).
+00625188	tech_editor_field_min_table	medium	Lower bounds passed to int_clamp per edit field (index ctrl id-0xca) in tech_editor_store_controls; -128 for AI value/modifier.
+00625190	tech_editor_field_max_table	medium	Upper bounds (127 for AI value/modifier) passed to int_clamp per edit field in tech_editor_store_controls.
+006251a8	tech_editor_int_fmt	high	%d format used by tech_editor_update_controls to print edit-field values.
+006251ac	civilize_rules_name_sep_str	high	, appended after the advance name when FUN_00415780 writes RULES.TXT @CIVILIZE lines.
+006251b0	civilize_rules_ai_sep_str	high	, appended after ai_value in the @CIVILIZE line writer FUN_00415780.
+006251b4	civilize_rules_mod_sep_str	high	,   appended after civilized_mod in the @CIVILIZE line writer FUN_00415780.
+006251b8	civilize_rules_epoch_sep_str	high	,  appended after epoch in the @CIVILIZE line writer FUN_00415780.
+006251c4	civilize_rules_newline_str	high	\n terminating each @CIVILIZE line before fputs in FUN_00415780.
+00625210	tech_editor_usage_preq1_fmt	medium	%s sprintf format for an advance whose only prereq (preq[0]) is the edited tech, in tech_editor_fill_usage_list.
+00625220	tech_editor_usage_preq2_fmt	medium	%s sprintf format for an advance whose only prereq (preq[1]) is the edited tech, in tech_editor_fill_usage_list.
+00625250	tech_editor_prereq1_suffix_str	high	 1 appended to label 0x7e "Prerequisite" for the first prereq combo caption in paint 00416828.
+00625254	tech_editor_prereq2_suffix_str	high	 2 appended to label 0x7e "Prerequisite" for the second prereq combo caption in paint 00416828.
+006252c8	simul_tutorial_shown	high	Guards the one-time SIMULTUT popup in game_main for MP simultaneous-moves games; set to 1 after showing it.
+006253e0	lang_pref_french_ext_str	high	FRE copied into lang_file_ext when the language dialog FUN_0041b177 picks option 1.
+006253e4	lang_pref_german_ext_str	high	GER copied into lang_file_ext when the language dialog FUN_0041b177 picks option 2.
+006253e8	startup_game_txt_name_str	high	GAME copied into game_txt_path by app_startup_init.
+006253f8	startup_lang_default_ext_str	high	TXT default lang_file_ext set by app_startup_init before the registry language switch.
+006253fc	startup_lang_english_ext_str	high	TXT lang_file_ext for registry_language_id 1 (English) in app_startup_init.
+00625400	startup_lang_french_ext_str	high	FRE lang_file_ext for registry_language_id 2 in app_startup_init.
+00625404	startup_lang_german_ext_str	high	GER lang_file_ext for registry_language_id 3 in app_startup_init.
+00625408	startup_lang_italian_ext_str	high	ITA lang_file_ext for registry_language_id 4 in app_startup_init.
+0062540c	startup_lang_spanish_ext_str	high	SPA lang_file_ext for registry_language_id 5 in app_startup_init.
+00625470	ini_herald_warning_value_str	high	1 written to CIV.INI [Civilization Gold] "Herald Warning Shown" by app_startup_init.
+0062559c	map_load_wildcard_str	high	*.MP initial file pattern for the map_load_dialog file-name dialog.
+006255a4	map_load_default_ext_str	high	MP default extension passed to ui_file_name_dialog in map_load_dialog.
+006255a8	map_load_open_mode_str	high	rb fopen mode for the chosen map file in map_load_dialog.
+0062564c	menu_game_txt_name_str	high	GAME copied into game_txt_path at the top of each game_main_menu_loop iteration.
+00625668	xdaemon_req_ver_dot1_str	medium	. between version components of the required XDaemon version for the WRONGXDAEMONVERSION popup in game_main_menu_loop.
+0062566c	xdaemon_req_ver_dot2_str	medium	Second "." in the required XDaemon version string (text_string_args) for WRONGXDAEMONVERSION.
+00625670	xdaemon_got_ver_dot1_str	medium	. between components of the found XDaemon version (text_string_arg1) for WRONGXDAEMONVERSION.
+00625674	xdaemon_got_ver_dot2_str	medium	Second "." in the found XDaemon version string for WRONGXDAEMONVERSION in game_main_menu_loop.
+00625800	ini_simultaneous_reset_str	high	Empty string written to CIV.INI "Simultaneous" in game_main after reading a positive value (clears the key).
+00625858	ini_max_players_reset_str	high	Empty string written to CIV.INI "MaxPlayers" in game_main after applying it (clears the key).
+00625cb0	mp_scenario_path_sep_str	medium	\\ joining scenario_dir_path and loaded_file_name in the MP game start routine FUN_00421fcd.
+00625d38	gamelist_map_size_sep_str	high	 x  between map width and height in net_gamelist_show_game_info.
+00625d3c	gamelist_double_opts_sep_str	high	 /  between double-production and double-moves labels (0x350/0x352) in net_gamelist_show_game_info.
+00625d40	gamelist_timer_colon_str	high	: between minutes and zero-padded seconds of the turn timer in net_gamelist_show_game_info.
+00625d44	gamelist_open_paren_str	medium	 ( appended after a count before label 0x275 in net_gamelist_show_game_info.
+00625d6c	game_profile_double_opts_sep_str	high	 /  between double-production and double-moves labels in game_profile_popup.
+00625d70	game_profile_timer_colon_str	high	: between minutes and seconds of the turn timer text in game_profile_popup.
+00625e50	text_var_hex_tag_str	high	HEX compared (strncmp 3) by text_expand_vars to select hex number expansion.
+00625e54	text_var_hex_pad_str	high	0 padding hex numbers to 4 digits in text_expand_vars.
+00625e58	text_var_percent_str	high	% emitted for a literal "%%" escape in text_expand_vars.
+00625e64	strpool_initialized	high	strpool_init frees the old memblock 0063e4c0 when set, else sets it to 1 and initialises it first time.
+00625e78	city_editor_combo2_x	medium	city_editor_combo_x_table+8 (stride 8): x offset of the second Cities Editor combo, used to center label 0x868 in city_editor_draw.
+00625e7c	city_editor_combo2_y	medium	city_editor_combo_y_table+8: y offset of the second Cities Editor combo, paired with city_editor_combo2_x for label 0x868.
+00625e80	city_editor_combo3_x	medium	city_editor_combo_x_table+16: x offset of the third Cities Editor combo, used to center label 0x86c in city_editor_draw.
+00625e84	city_editor_combo3_y	medium	city_editor_combo_y_table+16: y offset of the third Cities Editor combo, paired with city_editor_combo3_x.
+00626120	hall_of_fame_read_mode	high	rb fopen mode used by hall_of_fame_load to open HALLFAME.DAT.
+00626134	hall_of_fame_write_mode	high	wb fopen mode used by hall_of_fame_save to open HALLFAME.DAT.
+00626238	pop_thousands_sep_str	high	, appended after population/100 in str_append_population (thousands separator).
+0062623c	pop_zero_pad_str	high	0 appended in str_append_population when the remainder is <10, padding the digits after the comma.
+00626248	city_pop_thousands_sep_str	high	, appended after population/100 in str_append_city_population.
+0062624c	city_pop_zero_pad_str	high	0 pad appended in str_append_city_population when the remainder is <10.
+006265b4	net_title_ip_sep_str	high	:  appended between net_connection_title and prefs_net_ip_address in setup_network_game.
+00626850	hyperlink_class_registered	high	Once-only flag in hyperlink_register_class: set to 1 before registering the MSHyperTextClass window class.
+006268f4	pedia_desc_marker_str	medium	@@ compared with the first two chars of each text line read by pedia_load_description.
+006268f8	pedia_desc_crlf_str	high	\r\n appended to text_buffer between description lines in pedia_load_description.
+0062691c	hyperlink_window_title_str	high	Empty string passed as window name to CreateWindowExA for MSHyperTextClass in hyperlink_create_hwnd.
+006269e4	registry_key_class_str	high	Empty string passed as lpClass to RegCreateKeyExA (HKLM) in registry_write_value.
+00626a28	diplo_ai_meeting_active	medium	Set to 1 on entry to diplo_ai_meet_player and cleared on every exit path; neighbours diplo_opening_eval_active/diplo_session_active.
+00627664	xdaemon_required_major	high	Static 3: compared with XD_GetXDaemonVersion major in game_main_menu_loop, printed in the version-mismatch message.
+00627668	xdaemon_required_minor	high	Static 5: compared with the XDaemon minor version before starting multiplayer setup.
+0062766c	xdaemon_required_build	high	Static 0: third XDaemon version component checked by game_main_menu_loop before multiplayer setup.
+00628338	diag_neighbor_bits	high	Static bytes {1,2,4,8} just before diag_dx_table: bit per diagonal neighbour summed into terrain-blend masks in mapview_draw_tile_terrain.
+0062b438	snd_wav_ext_str	high	.WAV appended to the sound file name in snd_play_effect.
+0062b674	gfx_load_bmp_no_error_str	high	Empty string initial value of the error message in gfx_load_bmp_640x480, replaced by "Error reading ..." texts for MessageBoxA.
+0062b678	gfx_bmp_read_mode	high	rb mode passed to _fsopen in gfx_load_bmp_640x480.
+0062b748	gfx_save_bmp_no_error_str	high	Empty string initial value of the error message in gfx_save_bmp_640x480.
+0062b74c	gfx_bmp_write_mode	high	wb mode passed to _fsopen in gfx_save_bmp_640x480.
+0062b970	path_default_ext_dot_str	high	. appended before the extension in path_default_extension.
+0062b974	path_set_ext_dot_str	high	. appended before the new extension in path_set_extension.
+0062ba38	save_ext_scn_str	high	.SCN copied into save_file_path extension by save_set_file_ext.
+0062ba40	save_ext_sav_str	high	.SAV copied into save_file_path extension by save_set_file_ext.
+0062ba48	save_ext_hot_str	high	.HOT (hotseat) copied into save_file_path extension by save_set_file_ext.
+0062ba50	save_ext_eml_str	high	.EML (play-by-email) copied into save_file_path extension by save_set_file_ext.
+0062ba58	save_ext_net_str	high	.NET (network game) copied into save_file_path extension by save_set_file_ext.
+0062ba7c	save_filter_mp_pattern_str	high	*.mp pattern appended after the " (*.mp)" description in the open-file filter built by save_file_filter.
+0062bad4	save_write_mode	high	wb fopen mode for the saved game in save_write_game.
+0062bad8	save_events_tag_str	high	EVNT tag written with fputs before scenario events in save_write_game.
+0062bae0	save_peek_read_mode	medium	rb fopen mode used by FUN_0047543c to read a string header from a save file.
+0062bae4	save_read_mode	high	rb fopen mode for the saved game in save_read_game.
+0062baf8	game_txt_default_name_str	high	GAME copied into game_txt_path by save_read_game when GAME.<lang ext> does not exist.
+0062bb00	save_events_tag_check_str	high	EVNT compared (strncmp 4) with the bytes read by save_read_game to detect saved scenario events.
+0062bb1c	save_name_date_sep_str	high	  before the month in the network auto-save name built by game_save_dialog from GetLocalTime.
+0062bb20	save_name_month_day_sep_str	high	- between month and day in the timestamped save name in game_save_dialog.
+0062bb24	save_name_day_year_sep_str	high	- between day and year in the timestamped save name in game_save_dialog.
+0062bb28	save_name_time_sep_str	high	  between the date and hour in the timestamped save name in game_save_dialog.
+0062bb2c	save_name_hour_min_sep_str	high	- between hour and minute in the timestamped save name in game_save_dialog.
+0062bb30	save_name_min_sec_sep_str	high	- between minute and second in the timestamped save name in game_save_dialog.
+0062bb34	save_name_ext_dot_str	high	. appended before save_file_ext_bare in the save file name in game_save_dialog.
+0062bb68	load_dialog_wildcard_str	high	*. prefix to which save_file_ext_bare is appended for the open-file pattern in game_load_dialog.
+0062bb6c	game_load_scn_ext_str	high	String ".SCN" searched (strstr) in the upper-cased load path to detect a scenario file before building the .ALT name.
+0062bcb8	coast_quarter_dx_table	high	int[4] {0,1,0,-1}; (v+1)*half tile width gives x of each of the 4 coast_quarter_sprites drawn in mapview_draw_tile_terrain.
+0062bcc8	coast_quarter_dy_table	high	int[4] {0,1,2,1}; v*half tile height gives y of each of the 4 coast quarter sprites.
+0062bcec	net_deferred_input_busy	medium	Reentrancy flag set while net_process_messages replays a queued blocked input event (log 'Unstacking XD_FlushSendBuffer() block'), cleared after the switch.
+0062c490	year_table_start_years	high	Year-step table [4 difficulty][6] x {start year, turns, years/turn}: -4000,1000,1500,1750,1850,1900 start years used by game_turn_to_year.
+0062c494	year_table_turn_counts	high	Number of turns of each year-step period (250,50,50,...) subtracted in game_turn_to_year's loop.
+0062c498	year_table_year_steps	high	Years per turn of each period (20,10,5,2,1,1) multiplied by remaining turns in game_turn_to_year.
+0062c4cc	year_table_last_start_year	high	Start year of the 6th (last) period of the difficulty row, used when turns run past the table.
+0062c4d0	year_table_last_turn_count	high	Turn count of the last period of the difficulty row, multiplied with its step for the overflow case.
+0062c4d4	year_table_last_year_step	high	Years per turn of the last period of the difficulty row, used in the overflow case of game_turn_to_year.
+0062c944	pedia_terrain_move_cost_fmt	high	%ld format for terrain move cost on the Civilopedia terrain page.
+0062c950	pedia_terrain_defense_50_str	high	+50% shown as Unit Defense Bonus when terrain defense is 3 (siblings +200%/+100%/+150%).
+0062c968	pedia_terrain_food_fmt	high	%ld format for terrain food on the Civilopedia terrain page.
+0062c96c	pedia_terrain_shields_fmt	high	%ld format for terrain shields on the Civilopedia terrain page.
+0062c970	pedia_terrain_trade_fmt	high	%ld format for terrain trade on the Civilopedia terrain page.
+0062c974	pedia_terrain_improve_bonus_fmt	high	+%ld format for the irrigation/mining bonus (Effects of Irrigation/Mining) on the terrain page.
+0062c97c	pedia_terrain_improve_turns_fmt	high	%ld format for Turns to Irrigate/Mine on the Civilopedia terrain page.
+0062c990	chat_macro_next_adj_civ	high	Cycling civ index 1..7 for chat macro 0x2b0 that inserts the next contacted civ's adjective.
+0062c994	chat_macro_next_leader_civ	high	Cycling civ index 1..7 for chat macro 0x2b1 that inserts the next contacted civ's leader title and name.
+0062c998	chat_macro1_file_offset	high	File offset of the next line of chatmac1.txt, advanced/wrapped by chat_read_macro_line (macro 0x2b2).
+0062c99c	chat_macro2_file_offset	high	File offset of the next line of chatmac2.txt, advanced/wrapped by chat_read_macro_line (macro 0x2b3).
+0062c9a0	chat_macro3_file_offset	high	File offset of the next line of chatmac3.txt, advanced/wrapped by chat_read_macro_line (macro 0x2b4).
+0062ca50	diplo_leader_reaction_sound_ids	medium	3 ints set to diplo_leader_sound_ids+1..+3 when launching the leader window (reaction sound ids).
+0062cd38	tribe_editor_combo_x_table	high	x offsets (stride 8) of the Tribe Editor combo controls created by tribe_editor_create_combo; continues into tribe_editor_edit_x_table.
+0062cd3c	tribe_editor_combo_y_table	high	y offsets (stride 8) paired with tribe_editor_combo_x_table.
+0062cd40	tribe_editor_city_style_x	high	Entry 1 x of tribe_editor_combo_x_table, used by tribe_editor_paint to place the 'City Style' label.
+0062cd44	tribe_editor_city_style_y	high	Entry 1 y, used to place the 'City Style' label above its combo.
+0062cd48	tribe_editor_attack_x	high	Entry 2 x of the combo table, used to place the 'Attack' label.
+0062cd4c	tribe_editor_attack_y	high	Entry 2 y, used to place the 'Attack' label.
+0062cd50	tribe_editor_expand_x	high	Entry 3 x of the combo table, used to place the 'Expand' label.
+0062cd54	tribe_editor_expand_y	high	Entry 3 y, used to place the 'Expand' label.
+0062cd58	tribe_editor_civilize_x	high	Entry 4 x of the combo table, used to place the 'Civilize' label.
+0062cd5c	tribe_editor_civilize_y	high	Entry 4 y, used to place the 'Civilize' label.
+0062cd90	rules_gov_name_sep_str	high	, after the government name in the @GOVERNMENTS line written by FUN_004a38a4.
+0062cd94	rules_gov_male_title_sep_str	high	, after the male title in the @GOVERNMENTS line.
+0062cd98	rules_gov_line_end_str	high	\n ending each @GOVERNMENTS line before fputs.
+0062cd9c	rules_leader_male_name_sep_str	high	, after the male leader name in the @LEADERS line written by FUN_004a3a21.
+0062cda0	rules_leader_female_name_sep_str	high	, after the female leader name in the @LEADERS line.
+0062cda4	rules_leader_female_flag_sep_str	high	,  after the female-leader flag in the @LEADERS line.
+0062cda8	rules_leader_color_sep_str	high	,  after the color number in the @LEADERS line.
+0062cdac	rules_leader_city_style_sep_str	high	,  after the city style number in the @LEADERS line.
+0062cdb0	rules_leader_plural_sep_str	high	, after the tribe plural in the @LEADERS line.
+0062cdb4	rules_leader_adjective_sep_str	high	, after the tribe adjective in the @LEADERS line.
+0062cdb8	rules_leader_attack_sep_str	high	,  after the attack value in the @LEADERS line.
+0062cdbc	rules_leader_expand_sep_str	high	,  after the expand value in the @LEADERS line.
+0062cdc0	rules_leader_civilize_sep_str	high	, after the civilize value, before the copied rest of the original line.
+0062cdc4	rules_leader_line_end_str	high	\n ending each @LEADERS line before fputs.
+0062cdc8	rules_commodity_line_end_str	high	,\n after each commodity name written by FUN_004a41d8 (@CARAVAN section).
+0062cee4	prefs_defaults_empty_str	high	Empty string copied over the 0064bc34 prefs string by prefs_set_defaults.
+0062cee8	prefs_turn_timer_default_str	high	60 literal copied into prefs_turn_timer_custom by prefs_set_mp_defaults.
+0062ceec	civ2dat_read_mode_str	high	rb fopen mode used by prefs_load_civ2dat to open CIV2.DAT.
+0062cef0	civ2dat_write_mode_str	high	wb fopen mode used by prefs_save_civ2dat to open CIV2.DAT.
+0062d064	append_space_str	high	  literal appended by str_append_space.
+0062d068	append_comma_str	high	,  literal appended by str_append_comma.
+0062d06c	append_colon_str	high	:  literal appended by str_append_colon.
+0062d070	append_period_str	high	.   (period plus two spaces) literal appended by str_append_period.
+0062d074	append_percent_str	high	% literal appended by str_append_percent.
+0062d078	append_lparen_str	high	( literal appended by str_append_lparen.
+0062d07c	append_rparen_str	high	) literal appended by str_append_rparen.
+0062d080	append_lbrace_str	high	{ literal appended by str_append_lbrace.
+0062d084	append_rbrace_str	high	} literal appended by str_append_rbrace.
+0062d088	append_plus_str	high	+ literal appended by str_append_plus.
+0062d08c	append_minus_str	high	- literal appended by FUN_004af0bf (sibling of str_append_plus).
+0062d090	append_times_str	high	x literal appended by FUN_004af0e0 in the str_append_* helper family.
+0062d094	append_dollar_str	high	$ literal appended by FUN_004af101 in the str_append_* helper family.
+0062d098	binary_pad_zero_str	high	0 literal FUN_004af20a appends to left-pad an itoa base-2 string to 8 digits.
+0062d0a4	rules_advance_no_str	high	no literal rules_parse_advance_abbrev strcmp's against (no-advance marker).
+0062d0a8	rules_advance_nil_str	high	nil literal rules_parse_advance_abbrev strcmp's against (nil advance marker).
+0062d0ac	rules_terrain_no_str	high	no literal rules_parse_terrain_abbrev compares case-insensitively.
+0062d0b0	rules_terrain_yes_str	high	yes literal rules_parse_terrain_abbrev compares case-insensitively.
+0062d0c0	diffeng_packet_flush_size	medium	Constant 0x400: net_send_state_diff sends the diff packet (msg 0x5c) once its payload reaches this many bytes and bounds run scanning by it.
+0062d0c4	diffeng_send_count	medium	Counter incremented on every non-trivial call of net_send_state_diff; never read in the known code.
+0062d7e0	parley_mode2_left_kind	high	Entry for parley_mode 2 in parley_mode_left_kinds (0062d7d0+2*8); assigned to parley_left_kind when parley_poll_net_replies switches to mode 2.
+0062d7e4	parley_mode2_right_kind	high	Entry for parley_mode 2 in parley_mode_right_kinds; assigned to parley_right_kind when parley_poll_net_replies switches to mode 2.
+0062d7f8	parley_mode5_left_kind	high	Entry for parley_mode 5 in parley_mode_left_kinds (0062d7d0+5*8); FUN_0052e326 sets mode 5 and this left side dialog kind.
+0062d7fc	parley_mode5_right_kind	high	Entry for parley_mode 5 in parley_mode_right_kinds; FUN_0052e326 sets mode 5 and this right side dialog kind.
+0062d8b4	chat_show_size_default_str	high	8192 literal written as ChatShowSize to CIV.INI by parley_wnd_create when the stored value is missing or too small.
+0062d920	parley_wnd_empty_title_str	high	Empty string literal copied into the parley window's title text (drawn with font_text_width) by parley_wnd_create.
+0062d9e8	chat_recv_newline_str	high	\r\n literal chat_receive_message appends before a new line when the chat log is not empty.
+0062d9ec	chat_recv_private_year_open_str	medium	) ( literal between the sender name and the year in chat_receive_message's private-message (param_3 set) header.
+0062d9f0	chat_recv_private_year_close_str	medium	)  literal after the year in chat_receive_message's private-message header.
+0062d9f4	chat_recv_year_open_str	high	 ( literal between the sender name and the year in chat_receive_message's public-message header.
+0062d9f8	chat_recv_year_close_str	high	):  literal after the year in chat_receive_message's public-message header.
+0062d9fc	chat_send_newline_str	high	\r\n literal chat_input_on_key appends before the echoed line when the chat log is not empty.
+0062da00	chat_send_recipient_sep_str	high	,  literal between recipient names in the echoed outgoing chat line in chat_input_on_key.
+0062da04	chat_send_year_open_str	high	 ( literal before the year in the echoed outgoing chat line in chat_input_on_key.
+0062da08	chat_send_year_close_str	high	):  literal after the year, before chat_input_buffer, in chat_input_on_key.
+0062e020	int_2d_fmt	high	%2d sprintf format used by text_append_int_2d.
+0062e024	advance_abbrev_no_strs	high	Pair "no, " / "no " (8 bytes apart) appended by text_append_advance_abbrev for advance -2, comma variant when param_2 set.
+0062e030	advance_abbrev_nil_strs	high	Pair "nil," / "nil" appended by text_append_advance_abbrev for advance -1, comma variant when param_2 set.
+0062e03c	advance_abbrev_comma_str	high	, literal text_append_advance_abbrev appends after a real advance abbreviation when param_2 is set.
+0062e040	advance_abbrev_err_strs	high	Pair "err," / "err" appended by text_append_advance_abbrev for an out-of-range advance id.
+0062e150	city_file_newline_str	medium	\n literal FUN_004cd3d7 writes after the replacement line when rewriting CITY.TXT through CITY.TMP/CITY.BAK.
+0062e1ac	city_file_stop_str	high	STOP literal tribe_editor_update_city_file compares (strnicmp 4) to an @-section name to stop rewriting.
+0062e1d4	editor_text_dlg_empty_title	high	Empty string literal copied to editor_text_dlg_title when editor_text_dlg_create gets a NULL title.
+0062e250	spaceship_launch_sprite_xs	medium	Base of a 16-byte {x,y,w,h} table indexed by spaceship_wnd_component_count-1: x used to grab and draw the launch sprite in spaceship_wnd_run_modal.
+0062e254	spaceship_launch_sprite_ys	medium	y field of the 16-byte launch-sprite rect table in spaceship_wnd_run_modal (grab and draw position).
+0062e258	spaceship_launch_sprite_widths	medium	Width field of the 16-byte launch-sprite rect table passed to sprite_grab_from_surface in spaceship_wnd_run_modal.
+0062e25c	spaceship_part_sprite_heights	medium	4th dword (height) of 16-byte {x,y,w,h} source rects indexed by spaceship_wnd_component_count-1, passed to sprite_grab_from_surface in spaceship_wnd_run_modal.
+0062e398	impr_editor_combo_x_table	medium	x offsets (stride 8, paired y) of the Improvements editor combo boxes placed by impr_editor_create_combo; like unit_editor_ctrl_positions.
+0062e39c	impr_editor_combo_y_table	medium	y offsets paired with impr_editor_combo_x_table, read at +param*8 by impr_editor_create_combo.
+0062e3a0	impr_editor_combo1_x	medium	Element [1].x of impr_editor_combo_x_table: x of label 0x7e drawn by impr_editor_paint.
+0062e3a4	impr_editor_combo1_y	medium	Element [1].y of impr_editor_combo_y_table: y of labels 0x1e9 and 0x7e in impr_editor_paint.
+0062e3a8	impr_editor_combo2_x	medium	Element [2].x of impr_editor_combo_x_table: x of label 0x1de in impr_editor_paint.
+0062e3ac	impr_editor_combo2_y	medium	Element [2].y of impr_editor_combo_y_table: y of label 0x1de in impr_editor_paint.
+0062e3b8	impr_editor_edit1_x	medium	Element [1].x of impr_editor_edit_x_table: x of label 0x9e in impr_editor_paint.
+0062e3bc	impr_editor_edit1_y	medium	Element [1].y of impr_editor_edit_y_table: y of label 0x9e in impr_editor_paint.
+0062e3e8	impr_editor_field_min_table	high	Per field (ctrl id - 0xca) lower bound (0,0) passed to int_clamp by impr_editor_save_controls; like unit_editor_field_min_table.
+0062e3f0	impr_editor_field_max_table	high	Per field upper bound (255,255) passed to int_clamp by impr_editor_save_controls.
+0062e3f8	impr_editor_value_fmt	high	%d literal sprintf'd into the edit text for each numeric field by impr_editor_load_controls.
+0062e3fc	rules_improve_name_sep_str	high	, literal appended after the improvement name in the @IMPROVE section writer 004d90b0.
+0062e400	rules_improve_cost_sep_str	high	, literal appended after the cost in the @IMPROVE section writer 004d90b0.
+0062e40c	rules_improve_line_end_str	high	\n literal ending each @IMPROVE line after the preq abbreviation in 004d90b0.
+0062e410	rules_endwonder_comment_sep_str	high	;  literal between the expiry advance abbrev and the wonder name in the @ENDWONDER writer 004d91f8.
+0062e414	rules_endwonder_line_end_str	high	\n literal ending each @ENDWONDER line in 004d91f8.
+0062e4b0	impr_editor_help_percent_str	medium	%% literal searched with strstr in each help-text line by impr_editor_paint.
+0062e4b4	impr_editor_help_percent2_str	medium	Second "%%" literal searched to blank the doubled percent sign before drawing the help line in impr_editor_paint.
+0062e614	text_index_path_sep_str	high	\\ literal appended to getcwd() before the file name in text_section_index_build.
+0062e61c	text_lookup_path_sep_str	high	\\ literal appended to getcwd() before the file name in text_section_index_lookup to compare with the indexed path.
+0062e698	parley_item_header_sizes	medium	Per offer item type base payload size (12 for treaty/advances/gold/units/war/maps/cities, else 0) plus 4 per selected item in parley_send_offer.
+0062e854	parley_desc_transmitted_crlf_str	high	\r\n\r\n literal after label 796 "Our offer has been transmitted..." in parley_build_description.
+0062e8ac	parley_desc_maps_offer_crlf_str	high	\r\n\r\n literal after label 801 "We offer the following proposal:" in the map-exchange case (0xd) of parley_build_description.
+0062e8b4	parley_desc_maps_kind_crlf_str	high	\r\n literal after the "Let us exchange ... maps" label in case 0xd of parley_build_description.
+0062e8b8	parley_desc_war_offer_crlf_str	high	\r\n\r\n literal after "We offer the following proposal:" in the mutual-war case (0xc) of parley_build_description.
+0062e8c0	parley_desc_war_head_crlf_str	high	\r\n literal after label 805 "Let us declare mutual war on..." in case 0xc of parley_build_description.
+0062e8c4	parley_desc_gift_adv_crlf_str	high	\r\n\r\n literal after "We offer the following gifts:" in the advances gift case (7) of parley_build_description.
+0062e8cc	parley_desc_gift_adv_head_crlf_str	high	\r\n literal after label 807 "Advances:" in gift case 7 of parley_build_description.
+0062e8d0	parley_desc_gift_units_crlf_str	high	\r\n\r\n literal after "We offer the following gifts:" in the units gift case (9) of parley_build_description.
+0062e8d8	parley_desc_gift_units_head_crlf_str	high	\r\n literal after label 808 "Units:" in gift case 9 of parley_build_description.
+0062e8dc	parley_desc_gift_gold_crlf_str	high	\r\n\r\n literal after "We offer the following gifts:" in the money gift case (8) of parley_build_description.
+0062e8e4	parley_desc_gift_gold_head_crlf_str	high	\r\n literal after label 809 "Money:" in gift case 8 of parley_build_description.
+0062e8f4	parley_desc_gift_cities_crlf_str	high	\r\n\r\n literal after "We offer the following gifts:" in the cities gift case (10) of parley_build_description.
+0062e8fc	parley_desc_gift_cities_head_crlf_str	high	\r\n literal after label 810 "Cities and their resident units:" in gift case 10 of parley_build_description.
+0062e900	parley_desc_gift_maps_crlf_str	high	\r\n\r\n literal after "We offer the following gifts:" in the maps gift case (0xb) of parley_build_description.
+0062e908	parley_desc_threat_crlf_str	high	\r\n\r\n literal after the threat demand label ("We will agree not to crush you...") in case 0xf of parley_build_description.
+0062e910	parley_desc_barter_crlf_str	high	\r\n\r\n literal after label 813 "We offer a fair and reasonable trade." in barter case 0xe of parley_build_description.
+0062e918	parley_desc_give_adv_crlf_str	high	\r\n literal after label 814 "We will give you the following knowledge:" in the barter offer side.
+0062e91c	parley_desc_give_gold_crlf_str	high	\r\n literal after label 815 "We will provide you the following funds:" in the barter offer side.
+0062e92c	parley_desc_give_units_crlf_str	high	\r\n literal after label 816 "We will give you the following units:" in the barter offer side.
+0062e930	parley_desc_give_cities_crlf_str	high	\r\n literal after label 817 "We will give you the following cities..." in the barter offer side.
+0062e934	parley_desc_give_maps_crlf_str	high	\r\n literal after label 818 "We will provide the following information:" in the barter offer side.
+0062e938	parley_desc_give_war_crlf_str	high	\r\n literal after label 819 "We will declare war on the following civilizations:" in the barter offer side.
+0062e93c	parley_desc_give_treaty_crlf_str	high	\r\n literal after label 839 "We will sign the following treaty:" in the barter offer side.
+0062e940	parley_desc_barter_sep_crlf_str	high	\r\n literal separating the offered side from the "But only..." demanded side in barter case 0xe.
+0062e944	parley_desc_want_adv_crlf_str	high	\r\n literal after label 820 "But only if you give us the following knowledge:" in the barter demand side.
+0062e948	parley_desc_want_gold_crlf_str	high	\r\n literal after label 821 "But only in exchange for the following funds:" in the barter demand side.
+0062e958	parley_desc_want_units_crlf_str	high	\r\n literal after label 822 "But only in exchange for the following units:" in the barter demand side.
+0062e95c	parley_exch_for_cities_crlf_str	high	\r\n literal appended after the label for the cities asked in return in an exchange proposal (case 0xe, second half) in parley_build_description.
+0062e960	parley_exch_for_maps_crlf_str	high	\r\n literal appended after the label for the maps asked in return in an exchange proposal in parley_build_description.
+0062e964	parley_exch_for_war_targets_crlf_str	high	\r\n literal appended after the label for the war targets asked in return in an exchange proposal in parley_build_description.
+0062e968	parley_exch_for_treaty_crlf_str	high	\r\n literal appended after the label for the treaty asked in return in an exchange proposal in parley_build_description.
+0062e9bc	parley_advances_comma_str	high	,  literal between listed advance names in parley_describe_advances.
+0062e9c0	parley_advances_period_str	high	. literal after the last advance name in parley_describe_advances.
+0062e9c4	parley_advances_crlf_str	high	\r\n literal ending the advance list in parley_describe_advances.
+0062e9c8	parley_gold_crlf_str	high	\r\n literal ending the gold amount line in parley_describe_gold.
+0062e9cc	parley_units_open_paren_str	high	( literal before the per-type unit count in parley_describe_units.
+0062e9d0	parley_units_close_paren_str	high	) literal after the per-type unit count in parley_describe_units.
+0062e9d4	parley_units_comma_str	high	,  literal between unit-type entries in parley_describe_units.
+0062e9d8	parley_units_period_str	high	. literal after the last unit-type entry in parley_describe_units.
+0062e9dc	parley_units_crlf_str	high	\r\n literal ending the unit list in parley_describe_units.
+0062e9e0	parley_cities_open_paren_str	high	( literal before the number shown after each city name in parley_describe_cities.
+0062e9e4	parley_cities_close_paren_str	high	) literal after the number shown after each city name in parley_describe_cities.
+0062e9e8	parley_cities_comma_str	high	,  literal between city entries in parley_describe_cities.
+0062e9ec	parley_cities_period_str	high	. literal after the last city entry in parley_describe_cities.
+0062e9f0	parley_cities_crlf_str	high	\r\n literal ending the city list in parley_describe_cities.
+0062e9f4	parley_maps_crlf_str	high	\r\n literal ending the map-exchange label in parley_describe_maps.
+0062e9f8	parley_war_targets_comma_str	high	,  literal between war-target names in parley_describe_war_targets.
+0062e9fc	parley_war_targets_period_str	high	. literal after the last war target in parley_describe_war_targets.
+0062ea00	parley_war_targets_crlf_str	high	\r\n literal ending the war-target list in parley_describe_war_targets.
+0062ea5c	parley_treaty_crlf_str	high	\r\n literal ending the treaty label in parley_describe_treaty.
+0062eb34	game_options_version_sep_str	high	  literal between the version string and "Patch 3" in the menu_game_options dialog string args.
+0062eb88	mp_options_vote_sep_str	high	 /  literal between the double-production and double-moves labels in the multiplayer options change vote text.
+0062f018	pedia_window_empty_title_str	medium	Empty string literal copied into the pedia window's title buffer before wnd_create_with_surface in pedia_window_create.
+0062f104	pedia_grassland_shield_abbrev_str	medium	Gls literal compared with the abbrev of special terrain types (>12) in pedia_load_indexes to append label 0xb00 to the grassland-resource entry.
+0062f120	pedia_index_marker_str	medium	@@ literal compared with the first two chars of each text line in pedia_load_indexes to record a new index section.
+0062f2c0	events_kw_if_str	high	IF literal matched (strcmpi) by events_parse_file to start a trigger block.
+0062f338	events_kw_then_str	high	THEN literal matched by events_parse_file to start an action block.
+0062fa84	events_kw_turn_str	high	TURN literal matched after @IF in events_parse_file (verbose '@IF TURN found').
+0062fd00	events_kw_text_str	high	TEXT literal matched after @THEN in events_parse_file (verbose '@THEN TEXT found looking for END').
+0062fff8	events_bool_yes_str	high	yes literal accepted as true for veteran= in events_parse_file.
+0062fffc	events_bool_true_str	high	true literal accepted as true for veteran= in events_parse_file.
+00630004	events_bool_no_str	high	no literal accepted as false for veteran= in events_parse_file (with 'false').
+006302e4	events_who_prefix_str	high	who= literal prefix (strnicmp 4) parsed into a civ by events_parse_civ in events_parse_file.
+0063073c	events_numbertomove_all_str	high	all literal for numbertomove= in events_parse_file; sets the count to -2 (move all units).
+00630d1c	city_modal_notice_active	high	Reentrancy guard set while city_window_modal_notice shows its popup, cleared afterwards; skips the popup when already set.
+00630d28	city_tile_pick_zoom_cached	medium	Last zoom value the city tile-pick surface was built for in city_window_create_controls; the surface and mask sprite are rebuilt when it differs.
+00630d34	city_window_bg_size_level	high	city_window_size_level for which the city background (CITY.GIF) was last loaded; city_window_load_background skips reloading when equal.
+00630d38	city_resmap_draw_dx_table	medium	Signed byte x-offsets of the 21 city radius tiles in top-to-bottom draw order used by city_window_draw_resource_map, mapped back to city_tile_dx_table indices.
+00630d50	city_resmap_draw_dy_table	medium	Signed byte y-offsets (rows -3..3 ascending) paired with city_resmap_draw_dx_table for drawing the city resource map back to front.
+00630d68	city_dlg_close_start_ticks	high	timer_ticks recorded when city_dlg_close_pending is set in FUN_0050b674; the dialog is closed once 0x4b0 ticks have passed.
+00631b80	terrain_editor_combo_pos_x	high	X of 8-byte (x,y) position records indexed by combo id in terrain_editor_create_combo; entry 0 is the terrain-type picker.
+00631b84	terrain_editor_combo_pos_y	high	Y member of the terrain editor combo position records at 00631b80.
+00631b88	terrain_editor_irrig_combo_x	medium	Record 1 x of terrain_editor_combo_pos_x (irrigation-result combo); terrain_editor_draw places labels Irrigation and Produces from it.
+00631b8c	terrain_editor_irrig_combo_y	medium	Record 1 y of the terrain editor combo positions (irrigation-result combo) used for its labels in terrain_editor_draw.
+00631b90	terrain_editor_irrig_ai_combo_x	medium	Record 2 x of the terrain editor combo positions (irrigation AI-government combo); header label 0x1db drawn above it.
+00631b94	terrain_editor_irrig_ai_combo_y	medium	Record 2 y of the terrain editor combo positions (irrigation AI-government combo) used in terrain_editor_draw.
+00631b98	terrain_editor_mine_combo_x	medium	Record 3 x of the terrain editor combo positions (mining-result combo); label Mining drawn left of it in terrain_editor_draw.
+00631b9c	terrain_editor_mine_combo_y	medium	Y of combo-position pair 3 (00631b98/9c, row y=253) in the terrain editor: the mining-result combo, with the Mining label drawn to its left.
+00631ba8	terrain_editor_transform_combo_x	medium	X of combo-position pair 5 (233,315) under the "Engineer's Transform Produces" label in terrain_editor_draw.
+00631bac	terrain_editor_transform_combo_y	medium	Y of combo-position pair 5 (the transform-result combo) in terrain_editor_draw.
+00631bb8	terrain_editor_defense_field_x	medium	X of edit-field pair 1 in the terrain_editor_field_pos table, under the "Defense (x50%)" label.
+00631bbc	terrain_editor_defense_field_y	medium	Y of edit-field pair 1 (defense field) in the terrain editor.
+00631bc0	terrain_editor_food_field_x	medium	X of edit-field pair 2, under the Food label and the Production header row.
+00631bc4	terrain_editor_food_field_y	medium	Y of edit-field pair 2 (food field); Food/Shield/Trade labels and the Production header are drawn above it.
+00631bc8	terrain_editor_shield_field_x	medium	X of edit-field pair 3, under the Shield label.
+00631bcc	terrain_editor_shield_field_y	medium	Y of edit-field pair 3 (shield field) in the terrain editor.
+00631bd0	terrain_editor_trade_field_x	medium	X of edit-field pair 4, under the Trade label.
+00631bd4	terrain_editor_trade_field_y	medium	Y of edit-field pair 4 (trade field) in the terrain editor.
+00631bd8	terrain_editor_irrigate_bonus_x	medium	X of edit-field pair 5 (irrigation row y=198), under the Bonus header with the Food unit label to its right.
+00631bdc	terrain_editor_irrigate_bonus_y	medium	Y of edit-field pair 5 (irrigation bonus field) in the terrain editor.
+00631be0	terrain_editor_irrigate_turns_x	medium	X of edit-field pair 6 (irrigation row), under the "Turns to finish" header.
+00631be4	terrain_editor_irrigate_turns_y	medium	Y of edit-field pair 6 (irrigation turns field) in the terrain editor.
+00631be8	terrain_editor_mine_bonus_x	medium	X of edit-field pair 7 (mining row y=253), with the "Shield(s)" unit label drawn to its right.
+00631bec	terrain_editor_mine_bonus_y	medium	Y of edit-field pair 7 (mining bonus field) in the terrain editor.
+00631c70	terrain_editor_field_min_table	high	Per-field minimum (all 0) indexed by control id-0xca and passed to int_clamp in terrain_editor_store_controls; counterpart of unit_editor_field_min_table.
+00631ca0	terrain_editor_field_max_table	high	Per-field maximum (127 or 999) indexed by control id-0xca and passed to int_clamp in terrain_editor_store_controls.
+00631cd0	terrain_editor_int_fmt	high	%d literal that terrain_editor_load_controls uses to sprintf numeric field values into the edit controls.
+00631cd4	terrain_txt_ref_no_strs	high	no,  / "no" pair 8 bytes apart, picked by the comma flag when terrain_editor_append_rule_ref writes ref -1.
+00631ce0	terrain_txt_ref_yes_strs	high	yes, / "yes" pair picked by the comma flag when terrain_editor_append_rule_ref writes ref -2.
+00631cec	terrain_txt_ref_comma_str	high	, literal appended after a terrain abbreviation by terrain_editor_append_rule_ref when the comma flag is set.
+00631cf0	terrain_txt_ref_err_strs	high	err, / "err" pair that terrain_editor_append_rule_ref writes for an out-of-range terrain ref (>=11).
+00631cfc	terrain_txt_name_sep	high	, literal after the terrain name in the @TERRAIN line writer FUN_00519ab0; same pattern as units_txt_name_sep.
+00631d00	terrain_txt_move_sep	high	, literal after move cost in the @TERRAIN line writer.
+00631d04	terrain_txt_defense_sep	high	, literal after defense in the @TERRAIN line writer.
+00631d08	terrain_txt_yield_sep	high	, literal after each of food/shield/trade in the @TERRAIN line writer.
+00631d0c	terrain_txt_bonus_sep	high	, literal after the irrigate/mine bonus (+16) in the @TERRAIN line writer.
+00631d10	terrain_txt_turns_sep	high	, literal after the irrigate/mine turns (+18) in the @TERRAIN line writer.
+00631d14	terrain_txt_ai_gov_sep	high	, literal after the irrigate/mine AI government (+20) in the @TERRAIN line writer.
+00631d20	terrain_txt_line_end_str	high	\n literal ending each @TERRAIN line before the fputs in the RULES writer FUN_00519ab0.
+00631ef0	setup_side_picture_id	medium	Setup side-picture image id (5/6/7), reset to 5 and cycled 5->7->6->5 on each -1 call before being passed to setup_picwnd_show.
+00631f24	net_ini_timeout_default_str	high	30 written to CIV.INI [Civilization Gold] NetTimeOut when the key is missing (net_timeout_seconds=30).
+00631f74	net_ini_adapter_default_str	high	0 written to CIV.INI Adapter when the key is missing (adapter indexes reset to 0).
+006320b4	setup_timer_minsec_sep_str	high	: literal between the zero-padded minutes and seconds of the turn time limit in setup_choose_game_timer.
+0063223c	setup_input_blank_default	medium	Empty-string default text for the setup_choose_tribe text-input dialog when param_1!=0 (param_1==0 uses prefs_email_address).
+00632268	dialog_title_label_space_str	high	  literal inserted between the label and the existing title by dialog_prepend_title_label.
+00632428	pedia_improvement_cost_fmt	high	%ld literal formatting improvement cost*10 in pedia_draw_improvement (0052630d); distinct from pedia_improve_cost_fmt of the 00599b8d page.
+0063258c	events_text_line_newline_str	high	\n literal fputs after each TEXT action line by events_write_actions.
+006325d4	events_moveunit_rect_sep_str	high	, literal appended after the first three maprect "%d,%d" corners of a MOVEUNIT action in events_write_actions.
+00632638	events_veteran_yes_no_strs	high	yes/"no" pair 4 bytes apart picked by the unit's veteran flag (+0x138) for "veteran=%s" in events_write_actions.
+006326bc	events_wave_file_fmt	high	%s\n literal formatting the PLAYWAVEFILE file name (+0x184) in events_write_actions.
+00632710	events_cd_track_fmt	high	%d\n literal formatting the PLAYCDTRACK track number (+0x188) in events_write_actions.
+0063275c	events_terrain_rect_sep_str	high	, literal appended after the first three maprect corners of a CHANGETERRAIN action in events_write_actions.
+00632760	events_terrain_rect_end_str	high	\n literal written after the CHANGETERRAIN maprect corners in events_write_actions.
+00632a1c	events_list_end_str	high	\n literal that events_write_list writes when it reaches the end of events_list_head.
+00632ebc	events_editor_text_caption	high	TEXT literal used by events_editor_fill_actions as the list caption for a TEXT action with no text yet.
+00632ee8	events_editor_yes_no_strs	high	yes/"no" pair picked by the veteran flag for the CREATEUNIT list caption in events_editor_fill_actions.
+00633168	events_city_default_str	high	Empty string literal used as the default text of the CITYNAME prompt in events_editor_edit_trigger.
+00633250	events_homecity_default_str	high	Empty string literal used as the default text of the HOMECITYNAME prompt in events_editor_edit_action.
+00633280	events_wavfile_default_str	high	Empty string literal used as the default text of the WAVFILE prompt in events_editor_edit_action.
+0063328c	events_wav_ext_str	high	.WAV literal appended to the PlayWaveFile name in events_editor_edit_action when it has no dot.
+006332cc	events_pool_free_fmt	high	%d format used by events_editor_draw to print events_pool_bytes_free.
+00633580	ui_font_height	high	Set to 16 (24 when screen_width > 999) in ui_init_screen_metrics and passed as size to caption_font/ui_text_font (2/3 for caption_small_font).
+006335a8	caption_status_open_paren_str	high	 ( literal opening the turn-status part of the map caption in frame_wnd_draw_caption (pairs with caption_close_paren_str).
+006335ac	caption_ai_fr_str	high	IA literal used instead of caption_ai_str for game_language 1 (French) in frame_wnd_draw_caption.
+00634310	menu_title_sep_str	medium	{}  literal appended after each visible menu title while menu_rebuild concatenates the titles into a 256-byte buffer.
+00634c9c	unit_move_unanimated_state	medium	Set in unit_move_dir when the human's view of a move is not animated (shift held etc.): 1, 2 if the mover is the human's own goto unit; 2 lets game_player_move_loop resume blinking.
+00638590	snd_avi_feed_count	medium	Counter incremented each time snd_avi_stream_feed reads a chunk of AVI audio; never read (debug stat).
+00638598	snd_avi_feed_samples	medium	Sample count of the last AVI audio chunk requested in snd_avi_stream_feed; never read (debug stat).
+006385d4	snd_stop_drained_msg_count	medium	Counts 0x3bd wave-done messages drained by PeekMessage in snd_wave_stop_all; never read (debug stat).
+00638b94	notice_mem_threshold_kb	medium	KB amount stored by the notice timer setup (005df1fd) and tested with mem_kb_exceeds_avail each tick before showing the low-memory notice.
+0063e994	casualty_report_param	medium	casualty_window +0x49c cleared in casualty_timeline_show, analogous to advisor_report_param.
+00646614	fortify_overlay_alt_sprite	medium	fortify_overlay_sprites[1] (0x6465d8+0x3c), grabbed by gfx_grab_fortify_overlay(1,0x20,0xbb) in gfx_load_icon_sprites.
+006ad69c	chat_missed_message_count	medium	Incremented with chat_unread_count when a chat message arrives while chat_wnd is closed; cleared when the chat window opens.
+0061c068	throneroom_piece_rect_x	high	x of 16-byte {x,y,w,h} art rects indexed [piece*4+level-1]; grabbed from the piece GIF and drawn at (x-1,y-1) in throneroom_render.
+0061c06c	throneroom_piece_rect_y	high	y member of the throne-room piece rect table (paired with throneroom_piece_rect_x), also the draw y-1.
+0061c070	throneroom_piece_rect_w	high	Width member of the throne-room piece rect table passed to sprite_grab_from_surface.
+0061c074	throneroom_piece_rect_h	high	Height member of the throne-room piece rect table passed to sprite_grab_from_surface.
+0061c128	throneroom_piece3_rect_x	medium	Entry piece 3 (throne_room[3], GIF 0x78+) of the piece rect table: draw x for that piece.
+0061c12c	throneroom_piece3_rect_y	medium	y paired with throneroom_piece3_rect_x for drawing throne_room[3] piece.
+0061c168	throneroom_piece4_rect_x	medium	Entry piece 4 (throne_room[4], GIF 0x7d+) of the piece rect table: grab/draw x.
+0061c16c	throneroom_piece4_rect_y	medium	y of the throne_room[4] piece rects (stride 16 per level).
+0061c170	throneroom_piece4_rect_w	medium	Width of the throne_room[4] piece rects.
+0061c174	throneroom_piece4_rect_h	medium	Height of the throne_room[4] piece rects.
+0061c228	throneroom_piece7_rect_x	medium	Entry piece 7 (throne_room[7], GIF 0x8c+) of the piece rect table: grab/draw x.
+0061c22c	throneroom_piece7_rect_y	medium	y of the throne_room[7] piece rects.
+0061c230	throneroom_piece7_rect_w	medium	Width of the throne_room[7] piece rects.
+0061c234	throneroom_piece7_rect_h	medium	Height of the throne_room[7] piece rects.
+0061c268	throneroom_bonus_rect_x	high	x of {x,y,w,h} rects per bit of throne_room[8] bonus mask (GIF 0xa0+bit), drawn when the room is complete.
+0061c26c	throneroom_bonus_rect_y	high	y of the throne-room bonus-piece rects indexed by throne_room[8] bit.
+0061c270	throneroom_bonus_rect_w	high	Width of the throne-room bonus-piece rects.
+0061c274	throneroom_bonus_rect_h	high	Height of the throne-room bonus-piece rects.
+0061c298	throneroom_bonus3_rect_x	medium	Bit-3 entry (GIF 0xa3) of the throne-room bonus rect table: grab/draw x.
+0061c29c	throneroom_bonus3_rect_y	medium	Bit-3 entry y of the throne-room bonus rect table.
+0061c2a0	throneroom_bonus3_rect_w	medium	Bit-3 entry width of the throne-room bonus rect table.
+0061c2a4	throneroom_bonus3_rect_h	medium	Bit-3 entry height of the throne-room bonus rect table.
+0061c360	cityview_improvement_art_x	high	x of {x,y,w,h} rects per improvement (index id-1) grabbed from the improvements sheet in cityview_place_improvement.
+0061c364	cityview_improvement_art_y	high	y member of the city-view improvement art rect table.
+0061c368	cityview_improvement_art_w	high	Width member of the city-view improvement art rect table.
+0061c36c	cityview_improvement_art_h	high	Height member of the city-view improvement art rect table.
+0061c580	cityview_wonder_art_x	high	x of {x,y,w,h} rects per wonder grabbed from the wonders sheet in cityview_place_wonder.
+0061c584	cityview_wonder_art_y	high	y member of the city-view wonder art rect table.
+0061c588	cityview_wonder_art_w	high	Width member of the city-view wonder art rect table.
+0061c58c	cityview_wonder_art_h	high	Height member of the city-view wonder art rect table.
+0061c740	cityview_slot_x_table	high	Per terrain kind (0x1e0 bytes = 60 slots) x positions where cityview_draw_buildings draws each slot sprite.
+0061c744	cityview_slot_y_table	high	y positions paired with cityview_slot_x_table for each city-view building slot.
+0061d1e8	tribe_leader_sound_set	medium	Per-tribe byte 0..2; diplo_leader_wnd_launch sets diplo_leader_sound_ids = 0x70 + 4*value.
+0061d200	leader_video_x_table	medium	Per-tribe x (8-byte {x,y} records) where the animated leader AVI child is created in diplo_leader_init_video.
+0061d204	leader_video_y_table	medium	Per-tribe y paired with leader_video_x_table for the leader AVI child window.
+0061d700	rand_range_scale	medium	Double 0.999999 in rand_range: scales the [0,1) RNG value by the range before __ftol.
+00624f10	taxrate_lock_flags	medium	3 ints (tax/lux/sci) copied into the tax-rate dialog's lock checkboxes on open and saved back on close, so locks persist.
+00625128	tech_editor_combo_x_table	medium	Per-combo x offsets (stride 8, paired y) used by tech_editor_create_combo; slot 0 is the advance selector.
+0062512c	tech_editor_combo_y_table	medium	Per-combo y offsets paired with tech_editor_combo_x_table in tech_editor_create_combo.
+00625130	tech_editor_prereq1_ctrl_x	medium	Entry 1 of tech_editor_combo_x_table: x of the prerequisite 1 combo, label drawn centred at x+0x32 in tech_editor_paint.
+00625134	tech_editor_prereq1_ctrl_y	medium	y paired with tech_editor_prereq1_ctrl_x; label drawn just above it.
+00625138	tech_editor_prereq2_ctrl_x	medium	Entry 2 of tech_editor_combo_x_table: x of the prerequisite 2 combo labelled in tech_editor_paint.
+0062513c	tech_editor_prereq2_ctrl_y	medium	y paired with tech_editor_prereq2_ctrl_x.
+00631fc4	net_ini_maxplayers_clear_str	high	Empty string written to CIV.INI [Civilization Gold] MaxPlayers after reading a value >4, clearing the key.

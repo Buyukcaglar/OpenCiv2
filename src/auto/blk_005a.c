@@ -448,7 +448,7 @@ void __thiscall dialog_pick_pane_at(DialogWindowView *this,int param_1,int param
 }
 
 /* 005a1da3 auto */
-void __cdecl FUN_005a1da3(undefined4 param_1)
+void __cdecl dialog_list_on_vscroll(undefined4 param_1)
 
 {
   int iVar1;
@@ -551,7 +551,7 @@ undefined4 __thiscall dialog_create_window(DialogWindowView *this)
       uVar3 = thunk_surface_get_height((DibSurface *)this->surf_wnd);
       this->wnd_height = uVar3;
     }
-    thunk_wnd_set_redraw_callback((SurfaceWindow *)this->surf_wnd,ADDR(0x5a20f4, FUN_005a20f4));
+    thunk_wnd_set_redraw_callback((SurfaceWindow *)this->surf_wnd,ADDR(0x5a20f4, dialog_on_redraw));
     if (dlg_pending_idle_callback == 0) {
       if (dlg_default_idle_callback != 0) {
         thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->surf_wnd + 0x48),dlg_default_idle_callback);
@@ -588,7 +588,7 @@ undefined4 __thiscall dialog_create_window(DialogWindowView *this)
 #undef local_8
 
 /* 005a20f4 auto */
-void __cdecl FUN_005a20f4(void)
+void __cdecl dialog_on_redraw(void)
 
 {
   if (active_dialog != 0) {
@@ -728,8 +728,8 @@ void __thiscall dialog_create_controls(Dialog *this)
             }
             local_104 = local_104 + 1;
           }
-          thunk_radiogrp_set_select_callback((Control *)this->radio_group,ADDR(0x4012ad, FUN_0059d397));
-          thunk_radiogrp_set_dblclick_callback((Control *)this->radio_group,ADDR(0x5a3bae, FUN_005a3bae));
+          thunk_radiogrp_set_select_callback((Control *)this->radio_group,ADDR(0x4012ad, dialog_radio_on_select));
+          thunk_radiogrp_set_dblclick_callback((Control *)this->radio_group,ADDR(0x5a3bae, dialog_radio_on_dblclick));
         }
         else {
           uVar6 = this->option_count;
@@ -740,7 +740,7 @@ void __thiscall dialog_create_controls(Dialog *this)
           }
           else {
             *local_14c = uVar6;
-            FUN_005f2620(local_14c + 1,0x3c,*local_14c,thunk_FUN_0040f8b0,
+            FUN_005f2620(local_14c + 1,0x3c,*local_14c,thunk_checkbox_elem_ctor,
                          thunk_checkbox_dtor);
             local_14c = local_14c + 1;
           }
@@ -808,9 +808,9 @@ void __thiscall dialog_create_controls(Dialog *this)
                         (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),
                          (&this->list_rows)[this->cur_pane] - 1);
               thunk_scrollbar_set_callback
-                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, dialog_list_on_vscroll));
               thunk_scrollbar_set_track_callback
-                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
+                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, dialog_list_on_vscroll));
             }
             else {
               pCVar2 = operator_new(0x40);
@@ -846,15 +846,15 @@ void __thiscall dialog_create_controls(Dialog *this)
                         (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),this->columns
                         );
               thunk_scrollbar_set_callback
-                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, dialog_list_on_hscroll));
               thunk_scrollbar_set_track_callback
-                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
+                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, dialog_list_on_hscroll));
             }
           }
-          thunk_wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a4df3, FUN_005a4df3));
+          thunk_wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a4df3, dialog_list_on_lbuttondown));
           thunk_wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a535e, dialog_list_on_lbuttonup));
           thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a4edf, dialog_list_on_mousemove));
-          thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a53b8, FUN_005a53b8));
+          thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a53b8, dialog_list_on_dblclick));
         }
         else {
           pCVar2 = operator_new(0x3c);
@@ -892,7 +892,7 @@ void __thiscall dialog_create_controls(Dialog *this)
             }
           }
           thunk_listbox_set_dblclick_callback
-                    (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
+                    (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, dialog_listbox_on_dblclick));
         }
         if ((this->style_flags & 0x400000) != 0) {
           this->cur_pane = 1;
@@ -932,10 +932,10 @@ void __thiscall dialog_create_controls(Dialog *this)
                           (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),
                            (&this->list_rows)[this->cur_pane] - 1);
                 thunk_scrollbar_set_callback
-                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c))
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, dialog_list2_on_vscroll))
                 ;
                 thunk_scrollbar_set_track_callback
-                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c));
+                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, dialog_list2_on_vscroll));
               }
               else {
                 pCVar2 = operator_new(0x40);
@@ -971,9 +971,9 @@ void __thiscall dialog_create_controls(Dialog *this)
                           (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),
                            this->columns);
                 thunk_scrollbar_set_callback
-                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, dialog_list2_on_hscroll));
                 thunk_scrollbar_set_track_callback
-                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
+                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, dialog_list2_on_hscroll));
               }
             }
           }
@@ -1013,7 +1013,7 @@ void __thiscall dialog_create_controls(Dialog *this)
               }
             }
             thunk_listbox_set_dblclick_callback
-                      (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
+                      (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, dialog_listbox_on_dblclick));
           }
           this->cur_pane = 0;
         }
@@ -1054,7 +1054,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                   ((C_0040f380_40 *)(this->sprite_hotspots + local_c0 * 0x40),local_190,local_c0 + 300,
                    (iptr)local_e4);
         thunk_hotspot_set_click_callback((HotspotClickSetView *)(this->sprite_hotspots + local_c0 * 0x40),ADDR(0x5a3cca, dialog_on_sprite_click));
-        thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)(this->sprite_hotspots + local_c0 * 0x40),ADDR(0x5a3df3, FUN_005a3df3));
+        thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)(this->sprite_hotspots + local_c0 * 0x40),ADDR(0x5a3df3, dialog_sprite_on_dblclick));
         local_f8 = local_f8 + this->section_gap + iVar4;
         local_c0 = local_c0 + 1;
       }
@@ -1091,7 +1091,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                    this->edit_x + this->edit_label_width,iVar4 * local_c0 + this->edit_y,uVar7,uVar3)
         ;
         if (2 < game.multiplayer) {
-          thunk_edit_set_change_callback((EditChangeSetView *)(this->edit_controls + local_c0 * 0x48),ADDR(0x402793, FUN_0059d37d))
+          thunk_edit_set_change_callback((EditChangeSetView *)(this->edit_controls + local_c0 * 0x48),ADDR(0x402793, dialog_edit_on_change))
           ;
         }
         thunk_edit_set_max_len
@@ -1145,8 +1145,8 @@ void __thiscall dialog_create_controls(Dialog *this)
       thunk_button_set_callback
                 ((Control *)(this->button_controls + local_c0 * 0x3c),ADDR(0x5a3e56, dialog_on_button_click));
     }
-    thunk_wnd_set_keydown_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a407f, FUN_005a407f));
-    thunk_wnd_set_char_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a49c1, FUN_005a49c1));
+    thunk_wnd_set_keydown_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a407f, dialog_on_keydown));
+    thunk_wnd_set_char_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a49c1, dialog_on_char));
     this->style_flags = this->style_flags | 0x200;
   }
   return;
@@ -1198,7 +1198,7 @@ void __thiscall dialog_create_controls(Dialog *this)
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_005a3bae(undefined4 param_1,int param_2)
+void __cdecl dialog_radio_on_dblclick(undefined4 param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1236,7 +1236,7 @@ void __cdecl dialog_end_current(void)
 }
 
 /* 005a3c83 auto */
-void __cdecl FUN_005a3c83(void)
+void __cdecl dialog_listbox_on_dblclick(void)
 
 {
   if ((active_dialog != 0) && ((*(byte *)(active_dialog + 0x3d) & 4) == 0)) {
@@ -1291,7 +1291,7 @@ void __cdecl dialog_on_sprite_click(int param_1)
 #undef local_8
 
 /* 005a3df3 auto */
-void __cdecl FUN_005a3df3(void)
+void __cdecl dialog_sprite_on_dblclick(void)
 
 {
   int iVar1;
@@ -1392,7 +1392,7 @@ void __cdecl dialog_on_button_click(int param_1)
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_005a407f(undefined4 param_1)
+void __cdecl dialog_on_keydown(undefined4 param_1)
 
 {
   int iVar1;
@@ -1649,7 +1649,7 @@ LAB_005a43d9:
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(20)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_005a49c1(byte param_1)
+void __cdecl dialog_on_char(byte param_1)
 
 {
   int iVar1;
@@ -1776,7 +1776,7 @@ void __cdecl FUN_005a49c1(byte param_1)
 #undef local_c
 
 /* 005a4df3 auto */
-void __cdecl FUN_005a4df3(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_lbuttondown(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1916,7 +1916,7 @@ void __cdecl dialog_list_on_lbuttonup(undefined4 param_1,undefined4 param_2)
 }
 
 /* 005a53b8 auto */
-void __cdecl FUN_005a53b8(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_dblclick(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1937,7 +1937,7 @@ void __cdecl FUN_005a53b8(undefined4 param_1,undefined4 param_2)
 }
 
 /* 005a5494 auto */
-void __cdecl FUN_005a5494(int param_1)
+void __cdecl dialog_list_on_hscroll(int param_1)
 
 {
   int iVar1;
@@ -1957,7 +1957,7 @@ void __cdecl FUN_005a5494(int param_1)
 }
 
 /* 005a552c auto */
-void __cdecl FUN_005a552c(undefined4 param_1)
+void __cdecl dialog_list2_on_vscroll(undefined4 param_1)
 
 {
   int iVar1;
@@ -1974,7 +1974,7 @@ void __cdecl FUN_005a552c(undefined4 param_1)
 }
 
 /* 005a55b1 auto */
-void __cdecl FUN_005a55b1(int param_1)
+void __cdecl dialog_list2_on_hscroll(int param_1)
 
 {
   int iVar1;
@@ -2862,7 +2862,7 @@ gfx_draw_hline(iptr param_1,undefined4 param_2,int param_3,int param_4,undefined
 
 /* 005a9811 auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005a9811(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
+void __cdecl gfx_draw_hline_len(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2889,7 +2889,7 @@ gfx_draw_vline(iptr param_1,int param_2,undefined4 param_3,int param_4,undefined
 
 /* 005a989d auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005a989d(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
+void __cdecl gfx_draw_vline_len(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3050,7 +3050,7 @@ gfx_tile_fill(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int 
 #undef local_8
 
 /* 005a9ce9 auto */
-void __cdecl FUN_005a9ce9(iptr param_1,undefined4 *param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl gfx_draw_bevel_inset(iptr param_1,undefined4 *param_2,undefined4 param_3,undefined4 param_4)
 
 {
   thunk_gfx_draw_hline(param_1,*param_2,param_2[2] + -1,param_2[1],param_3);
@@ -3065,7 +3065,7 @@ void __cdecl FUN_005a9ce9(iptr param_1,undefined4 *param_2,undefined4 param_3,un
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_production_complete_count (*(int *)((u8 *)&g.d_006c9210))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005a9f30(void)
+void __cdecl net_host_wait_production_idle(void)
 
 {
   bool bVar1;
@@ -3097,7 +3097,7 @@ void __cdecl FUN_005a9f30(void)
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_human_move_complete_count (*(int *)((u8 *)&g.d_006c921c))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005aa004(void)
+void __cdecl net_host_wait_human_moves_idle(void)
 
 {
   bool bVar1;
@@ -3289,7 +3289,7 @@ LAB_005aa3dc:
     thunk_civ_process_turn(human_civ);
     thunk_net_send_state_diff(0xff,2,0,0,0);
     *(int *)(&net_civ_phase_done + human_civ * 4) = *(int *)(&net_civ_phase_done + human_civ * 4) + 1;
-    dlg_pending_idle_callback = ((void *)ADDR(0x00403233, FUN_005a9f30));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00403233, net_host_wait_production_idle));
     thunk_popup_game_with_sprite(ADDR(0x635c88, ((u8 *)&g.d_00635c88)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     local_2c = 0;
 LAB_005aa732:
@@ -3373,7 +3373,7 @@ LAB_005aa7ee:
     local_14 = *(int *)(&casualty_counts + human_civ * 4) -
                *(int *)(&casualty_reported_counts + human_civ * 4);
     if (autoplay_active == 0) {
-      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
       iVar3 = thunk_civ_leader_title(human_civ);
       thunk_text_set_string_arg(0,iVar3);
       iVar3 = thunk_civ_leader_name(human_civ);
@@ -3443,7 +3443,7 @@ LAB_005aa7ee:
     game.field_06 = game.field_06 & 0xfffe;
     *(int *)(&net_civ_phase_done + human_civ * 4) = *(int *)(&net_civ_phase_done + human_civ * 4) + 1;
     XD_FlushSendBuffer(60000);
-    dlg_pending_idle_callback = ((void *)ADDR(0x004030ee, FUN_005aa004));
+    dlg_pending_idle_callback = ((void *)ADDR(0x004030ee, net_host_wait_human_moves_idle));
     thunk_popup_game_with_sprite(ADDR(0x635cc0, ((u8 *)&g.d_00635cc0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     local_30 = 0;
 LAB_005aae35:
@@ -3543,7 +3543,7 @@ LAB_005aaef1:
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
 #define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
-void __cdecl FUN_005ab0a3(void)
+void __cdecl net_client_wait_production_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3565,7 +3565,7 @@ void __cdecl FUN_005ab0a3(void)
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
 #define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
-void __cdecl FUN_005ab120(void)
+void __cdecl net_client_wait_ai_moves_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3589,7 +3589,7 @@ void __cdecl FUN_005ab120(void)
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
 #define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
-void __cdecl FUN_005ab19d(void)
+void __cdecl net_client_wait_human_moves_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3615,7 +3615,7 @@ void __cdecl FUN_005ab19d(void)
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
 #define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
-void __cdecl FUN_005ab23a(void)
+void __cdecl net_client_hotwait_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3733,7 +3733,7 @@ undefined4 __cdecl net_client_turn_loop(void)
   cVar1 = turn_resume_civ;
   if ((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0) {
     thunk_net_heartbeat_send(net_slot_civs);
-    dlg_pending_idle_callback = ((void *)ADDR(0x00401c35, FUN_005ab23a));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00401c35, net_client_hotwait_idle));
     thunk_popup_game_sprite_flags(ADDR(0x635cf0, ((u8 *)&g.d_00635cf0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     cVar1 = turn_resume_civ;
   }
@@ -3747,7 +3747,7 @@ LAB_005ab60f:
     }
     if (local_14 == 0) {
       thunk_net_heartbeat_send(net_slot_civs);
-      dlg_pending_idle_callback = ((void *)ADDR(0x00402450, FUN_005ab19d));
+      dlg_pending_idle_callback = ((void *)ADDR(0x00402450, net_client_wait_human_moves_idle));
       thunk_popup_game_with_sprite(ADDR(0x635d00, ((u8 *)&g.d_00635d00)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     }
     thunk_net_heartbeat_send(net_slot_civs);
@@ -3811,7 +3811,7 @@ LAB_005ab60f:
         thunk_game_turn_start_popups();
         thunk_net_send_message(0x8c,0,human_civ,0,0,0,0,0,0,0);
         thunk_net_heartbeat_send(net_slot_civs);
-        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
+        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, net_client_wait_production_idle));
         thunk_popup_game_with_sprite(ADDR(0x635d20, ((u8 *)&g.d_00635d20)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3827,7 +3827,7 @@ LAB_005ab60f:
         if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
           nm_ai_movement_count = 0;
           thunk_net_heartbeat_send(net_slot_civs);
-          dlg_pending_idle_callback = ((void *)ADDR(0x00401695, FUN_005ab120));
+          dlg_pending_idle_callback = ((void *)ADDR(0x00401695, net_client_wait_ai_moves_idle));
           thunk_popup_game_with_sprite(ADDR(0x635d30, ((u8 *)&g.d_00635d30)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           while (((nm_human_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
             thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3849,7 +3849,7 @@ LAB_005ab60f:
             local_18 = *(int *)(&casualty_counts + human_civ * 4) -
                        *(int *)(&casualty_reported_counts + human_civ * 4);
             if (autoplay_active == 0) {
-              dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+              dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
               iVar3 = thunk_civ_leader_title(human_civ);
               thunk_text_set_string_arg(0,iVar3);
               iVar3 = thunk_civ_leader_name(human_civ);
@@ -3903,7 +3903,7 @@ LAB_005ab60f:
         }
         thunk_net_send_message(0x8c,0,human_civ,0,0,0,0,0,0,0);
         thunk_net_heartbeat_send(net_slot_civs);
-        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
+        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, net_client_wait_production_idle));
         thunk_popup_game_with_sprite(ADDR(0x635d10, ((u8 *)&g.d_00635d10)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -4455,7 +4455,7 @@ void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1)
       thunk_window_show((C_004083b0_4 *)this);
       thunk_wnd_blit_surface((DibSurface *)&pedia_window);
       thunk_wnd_activate((Wnd *)&pedia_window_wnd);
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, FUN_004f8d04));
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
       wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
       thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
     }
@@ -4563,7 +4563,7 @@ int __cdecl map_dx_wrapped(int param_1,int param_2)
 #undef local_8
 
 /* 005ae17d auto */
-int __cdecl FUN_005ae17d(undefined4 param_1,undefined4 param_2)
+int __cdecl map_dx_wrapped_half(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -4660,7 +4660,7 @@ undefined4 __cdecl map_distance_diag(undefined4 param_1,int param_2,undefined4 p
 
 /* 005ae37b auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_005ae37b(uint param_1,int param_2)
+undefined4 __cdecl dir_is_adjacent(uint param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4720,7 +4720,7 @@ int __cdecl int_shift_signed(int param_1,int param_2)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-undefined4 __cdecl FUN_005ae580(void)
+undefined4 __cdecl setup_pbem_game(void)
 
 {
   int iVar1;
@@ -4924,7 +4924,7 @@ code_r0x005aea27:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1024)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1028)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1032)))
-void __cdecl FUN_005aec14(int param_1,int param_2)
+void __cdecl pbem_ask_email_address(int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5131,7 +5131,7 @@ void __cdecl unit_editor_redraw(void)
 #define local_10 (*(size_t *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl FUN_005af69d(FILE *param_1)
+undefined4 __cdecl unit_editor_write_units(FILE *param_1)
 
 {
   char *pcVar1;
@@ -5200,7 +5200,7 @@ undefined4 __cdecl FUN_005af69d(FILE *param_1)
 #define local_2c (*(char (*)[32])(frame_ + FRAME_OFF(36)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(68)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(72)))
-void __cdecl FUN_005af9e3(void)
+void __cdecl unit_editor_on_ok(void)
 
 {
   iptr iVar1;
@@ -5240,7 +5240,7 @@ void __cdecl FUN_005af9e3(void)
       }
     }
     thunk_unit_editor_store_rules();
-    thunk_rules_edit_set_section(ADDR(0x635f78, ((u8 *)&g.d_00635f78)),ADDR(0x4036de, FUN_005af69d));
+    thunk_rules_edit_set_section(ADDR(0x635f78, ((u8 *)&g.d_00635f78)),ADDR(0x4036de, unit_editor_write_units));
     iVar3 = thunk_rules_write_sections();
     if (iVar3 == 0) {
       _sprintf(local_4c,s_Error_updating_RULES__s_00635f80,&lang_file_ext);
@@ -5286,7 +5286,7 @@ void __cdecl FUN_005af9e3(void)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(288)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(292)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(296)))
-void __cdecl FUN_005afbca(void)
+void __cdecl unit_editor_on_rename(void)
 
 {
   size_t sVar1;
@@ -5331,7 +5331,7 @@ void __cdecl FUN_005afbca(void)
 
 /* 005afd3b auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005afd3b(void)
+void __cdecl unit_editor_on_help(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5351,7 +5351,7 @@ void __cdecl FUN_005afd3b(void)
 
 /* 005afd9a auto */
 #define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
-void __cdecl FUN_005afd9a(void)
+void __cdecl unit_editor_on_cancel(void)
 
 {
   editor_running = 0;
@@ -5361,14 +5361,14 @@ void __cdecl FUN_005afd9a(void)
 #undef editor_running
 
 /* 005afdc2 auto */
-void __cdecl FUN_005afdc2(void)
+void __cdecl unit_editor_edit_sprite(void)
 
 {
   undefined4 uVar1;
   undefined4 uVar2;
   undefined1 *puVar3;
   
-  puVar3 = ((void *)ADDR(0x0040177b, FUN_0056fce4));
+  puVar3 = ((void *)ADDR(0x0040177b, sprite_sheet_save_units));
   uVar2 = 0xb;
   uVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x7d8));
   thunk_sprite_editor_run((iptr)(&unit_sprites + *(int *)(active_editor_wnd + 0x2ec) * 0x3c),uVar1,uVar2,
@@ -5379,7 +5379,7 @@ void __cdecl FUN_005afdc2(void)
 
 /* 005afe15 auto */
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005afe15(void)
+void __cdecl unit_editor_edit_sound(void)
 
 {
   undefined4 uVar1;
@@ -5408,7 +5408,7 @@ void __cdecl unit_editor_set_flag_check(undefined4 param_1,int param_2)
 /* 005afea8 auto */
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_005afea8(void)
+void __cdecl unit_editor_edit_flags(void)
 
 {
   int iVar1;

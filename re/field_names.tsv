@@ -71,7 +71,7 @@ C_004083b0	0x5a0	double_size	high	avi_player_set_double_size sets it after doubl
 C_004083b0	0x5a8	has_audio	high	Set when the AVI audio stream is found and attached; gates audio prepare/start vs timeGetTime timing.
 C_004083b0	0x5ac	paused	medium	Set to 1 by avi_play_pause and ctor; frame pump checks it when syncing to audio position.
 C_004083b0	0x5b0	audio_playing	medium	Set to 1 after avi_audio_start, cleared on pause/open.
-C_004083b0	0x5b4	target_surface	medium	Parent surface passed to avi_player_create_child; FUN_005dd7de blits the frame surface into it.
+C_004083b0	0x5b4	target_surface	medium	Parent surface passed to avi_player_create_child; avi_player_save_background blits the frame surface into it.
 C_004083b0	0x5b8	pos_x	high	avi_player_create stores x; used as OffsetRect x when blitting to target surface.
 C_004083b0	0x5bc	pos_y	high	avi_player_create stores y; used as OffsetRect y when blitting to target surface.
 C_004083b0	0x5dc	panel_width	medium	pedia_window_create sets 640 and builds the frame rect (0,0,w,h) and centers the window horizontally.
@@ -325,9 +325,9 @@ C_0043c740	0x414	tint_count	high	Number of entries in tint range.
 C_0043c740	0x418	fade_steps	high	Total step count of palette fade; bounds and scales palette_fade_step.
 C_0043c740	0x41c	fade_first	high	First palette index of the fade range.
 C_0043c740	0x420	fade_count	high	Number of entries in fade range.
-C_0043c740	0x424	tint_red	medium	Byte tint target colour component set by FUN_005c6edc before tint begin.
-C_0043c740	0x425	tint_green	medium	Byte tint target colour component set by FUN_005c6edc.
-C_0043c740	0x426	tint_blue	medium	Byte tint target colour component set by FUN_005c6edc.
+C_0043c740	0x424	tint_red	medium	Byte tint target colour component set by palette_tint_begin before tint begin.
+C_0043c740	0x425	tint_green	medium	Byte tint target colour component set by palette_tint_begin.
+C_0043c740	0x426	tint_blue	medium	Byte tint target colour component set by palette_tint_begin.
 C_0043c740	0x428	fade_src_rgb	high	Handle of saved original RGB range; restored by palette_fade_end.
 C_0043c740	0x42c	fade_dst_rgb	high	Handle of target palette RGB range copied from the destination palette.
 C_0043c740	0x430	tint_saved_rgb	high	Handle of saved RGB range for tint, allocated in palette_tint_begin_range.
@@ -458,9 +458,9 @@ C_005e866c	0x0	dd_palette	high	IDirectDrawPalette read with ddpal_get_entries_rg
 C_005e866c	0x4	fade_steps	medium	Third argument of ddpal_save_entries; divisor of the later fade.
 C_005e866c	0x8	first_index	high	First saved palette entry (ddpal_save_entries param_1).
 C_005e866c	0xc	entry_count	high	Number of saved palette entries (ddpal_save_entries param_2).
-C_005e866c	0x1c	fade_red	medium	Target red byte set by FUN_005e86f2.
-C_005e866c	0x1d	fade_green	medium	Target green byte set by FUN_005e86f2.
-C_005e866c	0x1e	fade_blue	medium	Target blue byte set by FUN_005e86f2.
+C_005e866c	0x1c	fade_red	medium	Target red byte set by ddpal_fade_begin.
+C_005e866c	0x1d	fade_green	medium	Target green byte set by ddpal_fade_begin.
+C_005e866c	0x1e	fade_blue	medium	Target blue byte set by ddpal_fade_begin.
 C_005e866c	0x28	saved_rgb	high	Memory handle holding the saved RGB entries.
 C_004d08b0	0x62c	type_timer	medium	Timer driving spaceship_wnd_type_char (typing text effect).
 C_004d08b0	0x630	blink_timer	medium	500 ms timer toggling the launch-button blink.
@@ -809,3 +809,64 @@ C_00551d50	0x1c	hwnd	high	Passed to listbox_hwnd_get_cur_sel.
 C_00551d80	0x1c	hwnd	high	Passed to listbox_hwnd_set_cur_sel.
 C_00551dc0	0x30	on_dblclick	high	listbox_set_dblclick_callback; notes list listbox +0x30.
 C_00551df0	0x34	on_select	high	listbox_set_select_callback; notes list listbox +0x34.
+C_004083b0	0x1dc	portrait_civ	medium	portrait_dlg indexes civs[field_1dc] for leader portrait and gender.
+C_004083b0	0x20c	left_exchange_kind	medium	pad_200+side*4+0xc for side 0: exchange-kind radio selection mapped to page ids.
+C_004083b0	0x210	right_exchange_kind	medium	Same as 0x20c for side 1; parley_on_exchange_kind_select radio group.
+C_004083b0	0x218	treaty_type_choice	medium	Radio selection with parley_on_treaty_type_select, skipping disabled items 0..3.
+C_004083b0	0x238	techs_all_known	medium	Cleared if human lacks an offered advance; gates enabling the accept button.
+C_004083b0	0x290	close_button	high	Button id 0x3ed with diplo_wnd_escape_close callback; freed in parley_wnd_destroy_controls.
+C_004083b0	0x294	side_text_edit	medium	Styled edit id 0x426 (max 0x2000) created in parley side dialog.
+C_004083b0	0x298	chat_input_edit	high	Edit 0x3ef on chat_input_buffer with chat_input_on_key; initial focus.
+C_004083b0	0x29c	chat_history_edit	high	Edit 0x3ee on chat_log_buffer, max 0x2000 chars.
+C_00408010	0x6d8	resource_dll	medium	cityview DllHandle init/load (art DLL).
+C_00408010	0x8f0	launched	medium	spaceship_wnd_run_modal sets 1 when launch_state == 3.
+C_00408010	0x19ec	wonder_slots_left	medium	cityview_classify_site sets 0x18; take_wonder_slot checks zero.
+C_00408010	0x19f0	improvement_slots_left	medium	cityview_classify_site sets 0x1b/0x1f; take_improvement_slot checks zero.
+C_00421f40	0x48	sel2_name	medium	Name buffer for second list selection (dialog +0x210), parallel to sel_name.
+C_00421f40	0x68	sel2_detail	medium	Detail buffer for second list selection, parallel to sel_detail.
+C_0040bc40	0x218	list_left_col	medium	Zeroed with 0x21c; follows list_top_option/list2_top_option (horizontal scroll position).
+C_0040bc40	0x21c	list2_left_col	medium	Pair of 0x218 for second list.
+C_0040bc40	0x288	list2_vscroll	high	Scrollbar freed in dialog_close; follows list_vscroll at 0x284.
+C_0040bc40	0x28c	list_hscroll	medium	Scrollbar freed in dialog_close; one of the 0x28c/0x290 pair.
+C_0040bc40	0x290	list2_hscroll	medium	Fourth scrollbar after list_vscroll/0x288/0x28c, destroyed via scrollbar_scalar_dtor in dialog_close; order mirrors list/list2 vscroll/hscroll size fields at 0x1c0-0x1cc.
+C_0040f380	0x24	wants_initial_focus	high	Cleared in ctrl ctor/init; ctrl_set_initial_focus sets it to 1 and wnd_focus_first_control reads it.
+C_005dd761	0x5a4	is_transparent	medium	avi_player_set_transparent toggles it 0/1 and restarts decompression when it changes.
+C_004db690	0x118	civ_id	high	Parley partner civ, sent in the offer header next to human_civ; same offset named civ_id in ParleyTitleView.
+C_004db690	0x1ec	parley_kind	medium	Set from the open-parley mode param (indexes parley_mode_left/right_kinds) and sent in the offer header; title differs when 4.
+C_005e82fb	0x28	saved_rgb	high	Zeroed in ddpal_ctor; saved palette RGB handle used by ddpal_save_entries/fade (saved_rgb in dtor view).
+C_005c7e06	0x81c	visit_count	medium	Reset at start of color_kdtree_find_nearest and incremented per node visited in the search loop.
+C_005db035	0x700	error_mask	high	err_set_code ORs 1<<code into it; err_ctx_clear_codes zeroes it.
+C_005db035	0x704	last_code	high	err_set_code stores the code here; err_ctx_get_last_code returns it.
+C_005f11f6	0x8	parent_wnd	high	ddctrl_set_parent_window stores the window (matches parent_wnd in ddctrl ctor families).
+C_005f11f6	0xc	parent_control	high	Cleared when a parent window is set (parent_control in ddctrl families).
+C_005f1769	0x20	on_click	high	Called with control_id by ddctrl_call_click_cb; set by ddctrl_set_click_cb.
+C_00421f70	0x4	next_game_id	medium	Ctor sets 1; net_gamelist_refresh assigns it to new found-game entries (+0x2c) and increments.
+C_00421f70	0x14c	option_list	medium	Zeroed in ctor; same offset is the browser option linked list (option_list in C_00421f40).
+C_0059e585	0x48	cur_pane	high	dialog_set_current_pane stores the pane; Dialog cur_pane at 0x48.
+C_005ed4e0	0x5c	on_msg_4c8	high	wnd_call_msg4c8 invokes this handler slot for private message 0x4c8.
+C_00472910	0x118	on_frame	medium	avi_player_set_frame_callback stores the callback fired when playback reaches the target frame.
+C_00472910	0xa20	callback_frame	medium	Frame number at which the 0x118 callback fires (compared with current frame +0xa18).
+C_005d211e	0x0	timer_wnd	high	timer_mgr_ctor stores the result of timer_wnd_create.
+C_005db016	0x704	last_code	high	err_ctx_get_last_code returns the code stored by err_set_code.
+C_005db792	0x0	style	medium	wnd_record_create_movie stores param_2 like wnd_record_create's style (Wnd+0 style).
+C_005db80f	0x0	style	medium	wnd_record_create_movie_child stores param_2 like wnd_record_create's style (Wnd+0 style).
+C_0056e270	0x28	entries	medium	Zeroed by lobby_list_ctor; same offset is the lobby entries list (C_004471c0 entries).
+C_004471c0	0x4	next_id	medium	Lobby list next id counter (ctor sets 1); next_id-1 used as default choice in host wait dialog.
+C_005f0f1d	0x20	on_click	high	ddctrl_ctor clears the click callback slot set by ddctrl_set_click_cb.
+C_005f0fe9	0x20	on_click	high	ddctrl_ctor_in_window clears the click callback slot.
+C_005f10b6	0x20	on_click	high	ddctrl_ctor_in_control clears the click callback slot.
+C_005f1221	0x8	parent_wnd	high	ddctrl_set_parent_control clears the parent window (parent_wnd in ddctrl families).
+C_005f16c4	0x20	on_click	high	ddctrl_set_click_cb stores the callback.
+C_005f16e5	0x24	on_mousemove	high	ddctrl_set_mousemove_cb stores the callback.
+C_005f1706	0x28	on_lbuttonup	high	ddctrl_set_lbuttonup_cb stores the callback.
+C_005f1727	0x2c	on_rbuttonup	high	ddctrl_set_rbuttonup_cb stores the callback.
+C_005f1748	0x30	on_dblclick	high	ddctrl_set_dblclick_cb stores the callback.
+C_005f1b50	0xac	palette_obj	medium	ddwin_get_palette returns it; palette object stored by ddwin_set_palette.
+C_004b7d72	0x1ec	parley_kind	medium	Parley mode; title uses a different label when mode 4.
+C_004bb5b0	0x24	wants_initial_focus	high	ctrl_set_initial_focus sets the control's initial-focus byte to 1.
+C_00530fb0	0x34	is_enabled	high	checkbox_enable sets it to 1; checkbox_is_enabled reads it.
+C_0059e327	0x3c	style_flags	high	dialog_help_pressed tests bit 0x80; Dialog style_flags at 0x3c.
+C_0059e624	0xc8	bevel_width	high	dialog_set_bevel_width stores it; Dialog bevel_width at 0xc8.
+C_0059eb68	0xd8	result_id	high	dialog_set_result_id stores it; Dialog result_id at 0xd8.
+C_0059ec40	0x250	on_modal_poll	high	dialog_set_modal_poll_fn stores the callback; Dialog on_modal_poll at 0x250.
+C_0044c8b0	0x5c	on_msg_4c8	high	Handler slot cleared by wnd_clear_handlers; wnd_call_msg4c8 invokes table slot 0x5c.

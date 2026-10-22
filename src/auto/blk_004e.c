@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 004e0140 auto */
-void __cdecl FUN_004e0140(void)
+void __cdecl main_menu_global_init(void)
 
 {
   main_menu_static_init();
@@ -22,12 +22,12 @@ void __cdecl main_menu_static_init(void)
 void __cdecl main_menu_reg_atexit(void)
 
 {
-  _atexit(FUN_004e0196);
+  _atexit(main_menu_static_dtor);
   return;
 }
 
 /* 004e0196 auto */
-void __cdecl FUN_004e0196(void)
+void __cdecl main_menu_static_dtor(void)
 
 {
   thunk_menu_dtor((GameMenu *)&main_menu);
@@ -325,7 +325,7 @@ void __cdecl menu_game_options(void)
   thunk_dlg_check_set_bool(9,game.game_options & 0x80);
   thunk_dlg_check_set_bool(10,game.game_options & 0x40);
   thunk_text_set_string_arg(0,(iptr)PTR_s_5_4_0f_Multiplayer_26_March_99_0062765c);
-  FUN_005f22e0(&text_string_args,&DAT_0062eb34);
+  FUN_005f22e0(&text_string_args,&game_options_version_sep_str);
   FUN_005f22e0(&text_string_args,PTR_s_Patch_3_00627660);
   iVar2 = thunk_popup_game_flags(ADDR(0x62eb38, ((u8 *)&g.d_0062eb38)),1);
   if (iVar2 == 0) {
@@ -497,12 +497,12 @@ void __cdecl menu_multiplayer_options(void)
           FUN_005f22d0(&text_string_args,&net_local_player_name);
           thunk_str_clear(ADDR(0x63cd4c, ((u8 *)&g.d_0063cd4c)));
           thunk_str_append_label(ADDR(0x63cd4c, ((u8 *)&g.d_0063cd4c)),0x350 - (uint)(prefs_mp_double_production == 0));
-          FUN_005f22e0(&text_string_arg1,&DAT_0062eb88);
+          FUN_005f22e0(&text_string_arg1,&mp_options_vote_sep_str);
           thunk_str_append_label(ADDR(0x63cd4c, ((u8 *)&g.d_0063cd4c)),0x352 - (uint)(prefs_mp_double_moves == 0));
           net_vote_replies_pending = net_player_count + -1;
           net_vote_status = 0;
           thunk_net_send_text_args(0x43,0xff,2,0,0,0);
-          dlg_pending_idle_callback = ((void *)ADDR(0x004019b5, FUN_0051ea0c));
+          dlg_pending_idle_callback = ((void *)ADDR(0x004019b5, net_vote_wait_idle_cb));
           _DAT_006cec80 = thunk_timer_ticks();
           iVar1 = thunk_popup_game_sprite_flags(ADDR(0x62eb8c, ((u8 *)&g.d_0062eb8c)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           if (((iVar1 < 0) || (net_vote_status == -1)) || (net_vote_replies_pending != 0)) {

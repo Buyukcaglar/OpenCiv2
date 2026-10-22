@@ -765,7 +765,7 @@ undefined4 __cdecl file_require_cdrom(iptr param_1)
 
 /* 00564549 auto */
 #define fallback_drive_root (*(char *)((u8 *)&g.d_006ab680))
-bool __cdecl FUN_00564549(void)
+bool __cdecl file_fallback_drive_unset(void)
 
 {
   return fallback_drive_root == '\0';
@@ -1524,7 +1524,7 @@ void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
       thunk_window_show((C_004083b0_4 *)this);
       thunk_wnd_blit_surface((DibSurface *)&pedia_window);
       thunk_wnd_activate((Wnd *)&pedia_window_wnd);
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, FUN_004f8d04));
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
       wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
       thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
     }
@@ -1852,7 +1852,7 @@ void __thiscall pedia_draw_tree_stub(C_004083b0_61c *this,undefined4 param_1,int
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005680a0(void)
+void __cdecl shared_palette_global_init(void)
 
 {
   shared_palette_static_init();
@@ -1872,12 +1872,12 @@ void __cdecl shared_palette_static_init(void)
 void __cdecl shared_palette_reg_atexit(void)
 
 {
-  _atexit(FUN_005680f1);
+  _atexit(shared_palette_static_dtor);
   return;
 }
 
 /* 005680f1 auto */
-void __cdecl FUN_005680f1(void)
+void __cdecl shared_palette_static_dtor(void)
 
 {
   palette_destroy((GamePalette *)&art_palette);
@@ -1893,7 +1893,7 @@ void __cdecl FUN_005680f1(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056810b(void)
+void __cdecl frame_texture_surface_global_init(void)
 
 {
   frame_texture_surface_static_init();
@@ -1913,12 +1913,12 @@ void __cdecl frame_texture_surface_static_init(void)
 void __cdecl frame_texture_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_0056815c);
+  _atexit(frame_texture_surface_static_dtor);
   return;
 }
 
 /* 0056815c auto */
-void __cdecl FUN_0056815c(void)
+void __cdecl frame_texture_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&frame_texture_surface);
@@ -2195,7 +2195,7 @@ undefined4 __cdecl civ_city_art_era(iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00568b00(void)
+void __cdecl status_window_global_init(void)
 
 {
   status_window_static_init();
@@ -2215,12 +2215,12 @@ void __cdecl status_window_static_init(void)
 void __cdecl status_window_reg_atexit(void)
 
 {
-  _atexit(FUN_00568b51);
+  _atexit(status_window_static_dtor);
   return;
 }
 
 /* 00568b51 auto */
-void __cdecl FUN_00568b51(void)
+void __cdecl status_window_static_dtor(void)
 
 {
   thunk_frame_wnd_dtor((DibSurface *)&status_window);
@@ -2236,7 +2236,7 @@ void __cdecl FUN_00568b51(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00568b6b(void)
+void __cdecl status_info_font_global_init(void)
 
 {
   status_info_font_static_init();
@@ -2256,12 +2256,12 @@ void __cdecl status_info_font_static_init(void)
 void __cdecl status_info_font_reg_atexit(void)
 
 {
-  _atexit(FUN_00568bbc);
+  _atexit(status_info_font_static_dtor);
   return;
 }
 
 /* 00568bbc auto */
-void __cdecl FUN_00568bbc(void)
+void __cdecl status_info_font_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&status_info_font);
@@ -2277,7 +2277,7 @@ void __cdecl FUN_00568bbc(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00568bd6(void)
+void __cdecl status_font_global_init(void)
 
 {
   status_font_static_init();
@@ -2297,12 +2297,12 @@ void __cdecl status_font_static_init(void)
 void __cdecl status_font_reg_atexit(void)
 
 {
-  _atexit(FUN_00568c27);
+  _atexit(status_font_static_dtor);
   return;
 }
 
 /* 00568c27 auto */
-void __cdecl FUN_00568c27(void)
+void __cdecl status_font_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&status_font);
@@ -2311,7 +2311,7 @@ void __cdecl FUN_00568c27(void)
 
 /* 00568c41 auto */
 #define status_wnd_hidden (*(undefined1 *)((u8 *)&g.d_00633e00))
-void __cdecl FUN_00568c41(void)
+void __cdecl status_wnd_on_minimize(void)
 
 {
   status_wnd_hidden = 1;
@@ -2321,7 +2321,7 @@ void __cdecl FUN_00568c41(void)
 
 /* 00568c58 auto */
 #define status_wnd_hidden (*(undefined1 *)((u8 *)&g.d_00633e00))
-void __cdecl FUN_00568c58(void)
+void __cdecl status_wnd_on_restore(void)
 
 {
   thunk_city_window_bring_to_top((C_004083b0_4 *)&city_window);
@@ -2333,7 +2333,7 @@ void __cdecl FUN_00568c58(void)
 
 /* 00568c7e auto */
 #define status_wnd_hidden (*(undefined1 *)((u8 *)&g.d_00633e00))
-undefined4 __cdecl FUN_00568c7e(void)
+undefined4 __cdecl status_wnd_on_close(void)
 
 {
   status_wnd_hidden = 1;
@@ -3256,7 +3256,7 @@ void __cdecl status_wnd_repaint(void)
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define player_turn_active (*(undefined1 *)((u8 *)&g.d_0064b9bc))
-void __cdecl FUN_0056a98b(void)
+void __cdecl status_wnd_on_click(void)
 
 {
   if (city_turn_processing == 0) {
@@ -3302,7 +3302,7 @@ void __cdecl status_calc_wnd_rect(void)
 #undef minimap_wnd_rect_top
 
 /* 0056aa7f auto */
-void __cdecl FUN_0056aa7f(void)
+void __cdecl status_wnd_on_size(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&status_window_wnd,ADDR(0x655334, ((u8 *)&g.d_00655334)));
@@ -3310,7 +3310,7 @@ void __cdecl FUN_0056aa7f(void)
 }
 
 /* 0056aaa5 auto */
-void __cdecl FUN_0056aaa5(void)
+void __cdecl status_wnd_on_move(void)
 
 {
   thunk_wnd_get_rect_in_parent((WndBase *)&status_window_wnd,ADDR(0x655334, ((u8 *)&g.d_00655334)));
@@ -3352,17 +3352,17 @@ void __cdecl status_wnd_open(void)
   thunk_frame_wnd_create
             ((FrameWindow *)&status_window,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   thunk_wnd_set_min_size((C_00408010_b8 *)&status_window_wnd,0x28,0x4c);
-  thunk_wnd_set_minimize_handler((C_00408130 *)&status_wnd_events,ADDR(0x402914, FUN_00568c41));
-  thunk_wnd_set_restore_handler((C_00408130 *)&status_wnd_events,ADDR(0x403909, FUN_00568c58));
-  thunk_wnd_set_close_handler((C_00408130 *)&status_wnd_events,ADDR(0x402671, FUN_00568c7e));
+  thunk_wnd_set_minimize_handler((C_00408130 *)&status_wnd_events,ADDR(0x402914, status_wnd_on_minimize));
+  thunk_wnd_set_restore_handler((C_00408130 *)&status_wnd_events,ADDR(0x403909, status_wnd_on_restore));
+  thunk_wnd_set_close_handler((C_00408130 *)&status_wnd_events,ADDR(0x402671, status_wnd_on_close));
   thunk_wnd_set_icon((WndBase *)&status_window_wnd,1);
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e06, FUN_0056a98b));
-  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e06, FUN_0056a98b));
-  thunk_wnd_set_keydown_handler((C_00408130 *)&status_wnd_events,ADDR(0x402cd4, thunk_FUN_004125c6));
-  thunk_wnd_set_char_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e56, thunk_FUN_00411f91));
+  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e06, status_wnd_on_click));
+  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e06, status_wnd_on_click));
+  thunk_wnd_set_keydown_handler((C_00408130 *)&status_wnd_events,ADDR(0x402cd4, thunk_map_window_key));
+  thunk_wnd_set_char_handler((C_00408130 *)&status_wnd_events,ADDR(0x401e56, thunk_map_window_ascii));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)&status_window,ADDR(0x401c30, thunk_status_wnd_repaint));
-  thunk_wnd_set_size_handler((C_00408130 *)&status_wnd_events,ADDR(0x403ada, FUN_0056aa7f));
-  thunk_wnd_set_move_handler((C_00408130 *)&status_wnd_events,ADDR(0x402973, FUN_0056aaa5));
+  thunk_wnd_set_size_handler((C_00408130 *)&status_wnd_events,ADDR(0x403ada, status_wnd_on_size));
+  thunk_wnd_set_move_handler((C_00408130 *)&status_wnd_events,ADDR(0x402973, status_wnd_on_move));
   wnd_repaint((SurfaceWindow *)&status_window);
   if (game.multiplayer != '\x01') {
     thunk_window_show((C_004083b0_4 *)&status_window);
@@ -3404,7 +3404,7 @@ void __cdecl status_draw_timer_bar(int param_1,int param_2)
   if ((status_timer_surface_init & 1) == 0) {
     status_timer_surface_init = status_timer_surface_init | 1;
     surface_ctor((DibSurface *)&status_timer_bg_surface);
-    _atexit(FUN_0056aeed);
+    _atexit(status_timer_bg_surface_static_dtor);
   }
   local_14 = 0;
   local_10 = 0;
@@ -3462,7 +3462,7 @@ void __cdecl status_draw_timer_bar(int param_1,int param_2)
 #undef local_8
 
 /* 0056aeed auto */
-void __cdecl FUN_0056aeed(void)
+void __cdecl status_timer_bg_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&status_timer_bg_surface);
@@ -3485,7 +3485,7 @@ char * __cdecl str_strip_newline(iptr param_1)
 #endif
 
 /* 0056b847 auto */
-void __cdecl FUN_0056b847(char *param_1)
+void __cdecl str_append_newline(char *param_1)
 
 {
   uptr sVar1;
@@ -3505,7 +3505,7 @@ void __cdecl FUN_0056b847(char *param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056b8a0(void)
+void __cdecl map_label_font_global_init(void)
 
 {
   map_label_font_static_init();
@@ -3525,12 +3525,12 @@ void __cdecl map_label_font_static_init(void)
 void __cdecl map_label_font_reg_atexit(void)
 
 {
-  _atexit(FUN_0056b8f1);
+  _atexit(map_label_font_static_dtor);
   return;
 }
 
 /* 0056b8f1 auto */
-void __cdecl FUN_0056b8f1(void)
+void __cdecl map_label_font_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&map_label_font);
@@ -4471,7 +4471,7 @@ LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *this)
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->next_id = 1;
-  this->field_28 = 0;
+  this->entries = 0;
   for (local_8 = 0; local_8 < 7; local_8 = local_8 + 1) {
     puVar1 = this->pad_2c + local_8 * 4 + 0x28;
     puVar1[0] = '\0';
@@ -4568,9 +4568,9 @@ undefined4 __thiscall lobby_host_wait_players(LobbyList *this,undefined4 param_1
     thunk_dialog_add_button((C_0040bc40_3c *)this->dialog,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     thunk_lobby_add_waiting_entry(this);
     thunk_dialog_set_listbox((DialogTextView *)this->dialog,7,0x1b7,0);
-    thunk_dialog_set_default_choice((DialogOptionList *)this->dialog,this->field_4 - 1);
+    thunk_dialog_set_default_choice((DialogOptionList *)this->dialog,this->next_id - 1);
     thunk_dialog_render((Dialog *)this->dialog);
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(*(int *)this->dialog + 0x48),ADDR(0x402dba, FUN_0056ed62));
+    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(*(int *)this->dialog + 0x48),ADDR(0x402dba, lobby_dialog_idle));
     if (net_lobby_launch_mode == 2) {
       dbg_log(ADDR(0x633ee0, ((u8 *)&g.d_00633ee0)));
       iVar2 = XD_LobbySendMessage(1);
@@ -4678,7 +4678,7 @@ undefined4 __thiscall lobby_host_wait_players(LobbyList *this,undefined4 param_1
     net_slot_host_flags = 1;
     if (1 < net_player_count) {
       FUN_005f22d0(&text_string_args,net_connection_title);
-      dlg_pending_idle_callback = ((void *)ADDR(0x0040266c, FUN_0056ec92));
+      dlg_pending_idle_callback = ((void *)ADDR(0x0040266c, lobby_wait_civs_chosen_idle));
       _DAT_006ad674 = thunk_timer_ticks();
       iVar2 = thunk_popup_game_sprite_flags(ADDR(0x633fac, ((u8 *)&g.d_00633fac)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       if (iVar2 == -1) {
@@ -4763,7 +4763,7 @@ LAB_0056ec81:
 #define net_slot_civs (*(undefined4 *)((u8 *)&g.d_006ad35c))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0056ec92(void)
+void __cdecl lobby_wait_civs_chosen_idle(void)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4791,7 +4791,7 @@ void __cdecl FUN_0056ec92(void)
 #undef local_8
 
 /* 0056ed62 auto */
-void __cdecl FUN_0056ed62(void)
+void __cdecl lobby_dialog_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -4800,7 +4800,7 @@ void __cdecl FUN_0056ed62(void)
 
 /* 0056ed80 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
-void __cdecl FUN_0056ed80(void)
+void __cdecl net_wait_player_info_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -5065,7 +5065,7 @@ int __thiscall lobby_slot_for_entry_id(LobbyList *this,int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056f910(void)
+void __cdecl sprite_sheet_surface_global_init(void)
 
 {
   sprite_sheet_surface_static_init();
@@ -5085,12 +5085,12 @@ void __cdecl sprite_sheet_surface_static_init(void)
 void __cdecl sprite_sheet_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_0056f961);
+  _atexit(sprite_sheet_surface_static_dtor);
   return;
 }
 
 /* 0056f961 auto */
-void __cdecl FUN_0056f961(void)
+void __cdecl sprite_sheet_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&sprite_sheet_surface);
@@ -5106,7 +5106,7 @@ void __cdecl FUN_0056f961(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056f97b(void)
+void __cdecl sprite_editor_orig_sprite_global_init(void)
 
 {
   sprite_editor_orig_sprite_static_init();
@@ -5126,12 +5126,12 @@ void __cdecl sprite_editor_orig_sprite_static_init(void)
 void __cdecl sprite_editor_orig_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0056f9cc);
+  _atexit(sprite_editor_orig_sprite_static_dtor);
   return;
 }
 
 /* 0056f9cc auto */
-void __cdecl FUN_0056f9cc(void)
+void __cdecl sprite_editor_orig_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&sprite_editor_orig_sprite);
@@ -5147,7 +5147,7 @@ void __cdecl FUN_0056f9cc(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056f9e6(void)
+void __cdecl sprite_editor_result_global_init(void)
 
 {
   sprite_editor_result_static_init();
@@ -5167,12 +5167,12 @@ void __cdecl sprite_editor_result_static_init(void)
 void __cdecl sprite_editor_result_reg_atexit(void)
 
 {
-  _atexit(FUN_0056fa37);
+  _atexit(sprite_editor_result_static_dtor);
   return;
 }
 
 /* 0056fa37 auto */
-void __cdecl FUN_0056fa37(void)
+void __cdecl sprite_editor_result_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&sprite_editor_result_sprite);
@@ -5188,7 +5188,7 @@ void __cdecl FUN_0056fa37(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056fa51(void)
+void __cdecl sprite_picker_sprite_global_init(void)
 
 {
   sprite_picker_sprite_static_init();
@@ -5208,12 +5208,12 @@ void __cdecl sprite_picker_sprite_static_init(void)
 void __cdecl sprite_picker_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0056faa2);
+  _atexit(sprite_picker_sprite_static_dtor);
   return;
 }
 
 /* 0056faa2 auto */
-void __cdecl FUN_0056faa2(void)
+void __cdecl sprite_picker_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&sprite_picker_sprite);
@@ -5229,7 +5229,7 @@ void __cdecl FUN_0056faa2(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056fabc(void)
+void __cdecl sprite_editor_surface_global_init(void)
 
 {
   sprite_editor_surface_static_init();
@@ -5249,12 +5249,12 @@ void __cdecl sprite_editor_surface_static_init(void)
 void __cdecl sprite_editor_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_0056fb0d);
+  _atexit(sprite_editor_surface_static_dtor);
   return;
 }
 
 /* 0056fb0d auto */
-void __cdecl FUN_0056fb0d(void)
+void __cdecl sprite_editor_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&sprite_editor_surface);
@@ -5270,7 +5270,7 @@ void __cdecl FUN_0056fb0d(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056fb27(void)
+void __cdecl sprite_editor_window_global_init(void)
 
 {
   sprite_editor_window_static_init();
@@ -5290,12 +5290,12 @@ void __cdecl sprite_editor_window_static_init(void)
 void __cdecl sprite_editor_window_reg_atexit(void)
 
 {
-  _atexit(FUN_0056fb78);
+  _atexit(sprite_editor_window_static_dtor);
   return;
 }
 
 /* 0056fb78 auto */
-void __cdecl FUN_0056fb78(void)
+void __cdecl sprite_editor_window_static_dtor(void)
 
 {
   thunk_frame_wnd_dtor((DibSurface *)&sprite_editor_window);
@@ -5311,7 +5311,7 @@ void __cdecl FUN_0056fb78(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0056fb92(void)
+void __cdecl sprite_picker_window_global_init(void)
 
 {
   sprite_picker_window_static_init();
@@ -5331,12 +5331,12 @@ void __cdecl sprite_picker_window_static_init(void)
 void __cdecl sprite_picker_window_reg_atexit(void)
 
 {
-  _atexit(FUN_0056fbe3);
+  _atexit(sprite_picker_window_static_dtor);
   return;
 }
 
 /* 0056fbe3 auto */
-void __cdecl FUN_0056fbe3(void)
+void __cdecl sprite_picker_window_static_dtor(void)
 
 {
   thunk_sprite_picker_dtor((C_004083b0_4 *)&sprite_picker_window);
@@ -5386,7 +5386,7 @@ void __cdecl sprite_sheet_draw_shield_marks(int param_1,int param_2,int param_3)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1392)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1396)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1400)))
-void __cdecl FUN_0056fce4(void)
+void __cdecl sprite_sheet_save_units(void)
 
 {
   byte bVar1;
@@ -5499,7 +5499,7 @@ LAB_0056ff8c:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1600)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1604)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1608)))
-void __cdecl FUN_0056ffda(void)
+void __cdecl sprite_sheet_save_cities(void)
 
 {
   byte bVar1;

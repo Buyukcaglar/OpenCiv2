@@ -1322,7 +1322,7 @@ LAB_0044501d:
           err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6265ac, ((u8 *)&g.d_006265ac)),ADDR(0x626588, ((u8 *)&g.d_00626588)),0x1b9);
         }
         FUN_005f22d0(pcVar5,net_connection_title);
-        FUN_005f22e0(pcVar5,&DAT_006265b4);
+        FUN_005f22e0(pcVar5,&net_title_ip_sep_str);
         FUN_005f22e0(pcVar5,&prefs_net_ip_address);
         operator_delete(net_connection_title);
         net_connection_title = pcVar5;
@@ -1381,7 +1381,7 @@ LAB_0044501d:
   net_session = (iptr)local_874;
   local_14 = thunk_FUN_00421fcd(local_874,param_1);
   if (net_session != 0) {
-    thunk_FUN_00447170((void *)net_session,1);
+    thunk_net_gamelist_view_scalar_dtor((void *)net_session,1);
   }
   net_session = 0;
   if (local_14 == 0) {
@@ -1989,7 +1989,7 @@ LAB_00446036:
       local_32c.field_3c = local_32c.field_3c & 0xfffffbff;
       local_32c.field_d8 = 0;
       local_32c.field_dc = 0;
-      dlg_pending_idle_callback = ((void *)ADDR(0x0040126c, FUN_0051f11a));
+      dlg_pending_idle_callback = ((void *)ADDR(0x0040126c, net_lock_wait_idle_cb));
       iVar3 = thunk_dlg_show_modal(&local_32c,0);
       local_330 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_32c.field_268);
       if (iVar3 < 0) {
@@ -2050,7 +2050,7 @@ LAB_00446036:
       thunk_dialog_set_position
                 ((C_0040bc40_28 *)&local_32c,0xfffffc19,
                  -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
-      dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, FUN_0051f17e));
+      dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
       iVar2 = thunk_dlg_show_modal(&local_32c,0);
       _DAT_006ad128 = iVar2;
       thunk_snd_play_effect(0x6a,0,0,0);
@@ -2074,7 +2074,7 @@ LAB_00446036:
                           (&local_32c,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62665c, ((u8 *)&g.d_0062665c)),0x17,iVar4,uVar5,uVar6,uVar7,uVar8);
         if (iVar2 == 0) {
           thunk_dialog_prepend_title_label((iptr)&local_32c,param_1 + 0x25e);
-          dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, FUN_0051f17e));
+          dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
           iVar2 = thunk_dialog_run_modal(&local_32c,(iptr)local_440,0);
           if (iVar2 == 0) {
             FUN_005f22d0(game.player_civ * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2)),local_440);
@@ -2121,7 +2121,7 @@ LAB_00446810:
 #undef local_8
 
 /* 00447170 auto */
-void * __thiscall FUN_00447170(void *this,uint param_1)
+void * __thiscall net_gamelist_view_scalar_dtor(void *this,uint param_1)
 
 {
   thunk_net_gamelist_view_dtor(this);
@@ -2177,7 +2177,7 @@ void __thiscall radiogrp_set_selected(RadioGroupSetSelView *this,u32 param_1)
 }
 
 /* 00447320 auto */
-void __cdecl FUN_00447320(void)
+void __cdecl terrain_base_sprites_global_init(void)
 
 {
   terrain_base_sprites_static_init();
@@ -2197,12 +2197,12 @@ void __cdecl terrain_base_sprites_static_init(void)
 void __cdecl terrain_base_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_0044737f);
+  _atexit(terrain_base_sprites_atexit_dtor);
   return;
 }
 
 /* 0044737f auto */
-void __cdecl FUN_0044737f(void)
+void __cdecl terrain_base_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&terrain_base_sprites,0x3c,0xb,sprite_destroy);
@@ -2210,7 +2210,7 @@ void __cdecl FUN_0044737f(void)
 }
 
 /* 004473a2 auto */
-void __cdecl FUN_004473a2(void)
+void __cdecl terrain_dither_sprites_global_init(void)
 
 {
   terrain_dither_sprites_static_init();
@@ -2230,12 +2230,12 @@ void __cdecl terrain_dither_sprites_static_init(void)
 void __cdecl terrain_dither_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447401);
+  _atexit(terrain_dither_sprites_atexit_dtor);
   return;
 }
 
 /* 00447401 auto */
-void __cdecl FUN_00447401(void)
+void __cdecl terrain_dither_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&terrain_dither_sprites,0x3c,0x34,sprite_destroy);
@@ -2243,7 +2243,7 @@ void __cdecl FUN_00447401(void)
 }
 
 /* 00447424 auto */
-void __cdecl FUN_00447424(void)
+void __cdecl river_sprites_global_init(void)
 
 {
   river_sprites_static_init();
@@ -2263,12 +2263,12 @@ void __cdecl river_sprites_static_init(void)
 void __cdecl river_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447483);
+  _atexit(river_sprites_atexit_dtor);
   return;
 }
 
 /* 00447483 auto */
-void __cdecl FUN_00447483(void)
+void __cdecl river_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&river_sprites,0x3c,0x10,sprite_destroy);
@@ -2276,7 +2276,7 @@ void __cdecl FUN_00447483(void)
 }
 
 /* 004474a6 auto */
-void __cdecl FUN_004474a6(void)
+void __cdecl forest_sprites_global_init(void)
 
 {
   forest_sprites_static_init();
@@ -2296,12 +2296,12 @@ void __cdecl forest_sprites_static_init(void)
 void __cdecl forest_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447505);
+  _atexit(forest_sprites_atexit_dtor);
   return;
 }
 
 /* 00447505 auto */
-void __cdecl FUN_00447505(void)
+void __cdecl forest_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&forest_sprites,0x3c,0x10,sprite_destroy);
@@ -2309,7 +2309,7 @@ void __cdecl FUN_00447505(void)
 }
 
 /* 00447528 auto */
-void __cdecl FUN_00447528(void)
+void __cdecl mountain_sprites_global_init(void)
 
 {
   mountain_sprites_static_init();
@@ -2329,12 +2329,12 @@ void __cdecl mountain_sprites_static_init(void)
 void __cdecl mountain_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447587);
+  _atexit(mountain_sprites_atexit_dtor);
   return;
 }
 
 /* 00447587 auto */
-void __cdecl FUN_00447587(void)
+void __cdecl mountain_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&mountain_sprites,0x3c,0x10,sprite_destroy);
@@ -2342,7 +2342,7 @@ void __cdecl FUN_00447587(void)
 }
 
 /* 004475aa auto */
-void __cdecl FUN_004475aa(void)
+void __cdecl hill_sprites_global_init(void)
 
 {
   hill_sprites_static_init();
@@ -2362,12 +2362,12 @@ void __cdecl hill_sprites_static_init(void)
 void __cdecl hill_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447609);
+  _atexit(hill_sprites_atexit_dtor);
   return;
 }
 
 /* 00447609 auto */
-void __cdecl FUN_00447609(void)
+void __cdecl hill_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&hill_sprites,0x3c,0x10,sprite_destroy);
@@ -2383,7 +2383,7 @@ void __cdecl FUN_00447609(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0044762c(void)
+void __cdecl hut_sprite_global_init(void)
 
 {
   hut_sprite_static_init();
@@ -2403,12 +2403,12 @@ void __cdecl hut_sprite_static_init(void)
 void __cdecl hut_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0044767d);
+  _atexit(hut_sprite_atexit_dtor);
   return;
 }
 
 /* 0044767d auto */
-void __cdecl FUN_0044767d(void)
+void __cdecl hut_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&hut_sprite);
@@ -2416,16 +2416,16 @@ void __cdecl FUN_0044767d(void)
 }
 
 /* 00447697 auto */
-void __cdecl FUN_00447697(void)
+void __cdecl unused_sprite_pair_global_init(void)
 
 {
-  FUN_004476b1();
-  FUN_004476d9();
+  unused_sprite_pair_static_init();
+  unused_sprite_pair_reg_atexit();
   return;
 }
 
 /* 004476b1 auto */
-void __cdecl FUN_004476b1(void)
+void __cdecl unused_sprite_pair_static_init(void)
 
 {
   FUN_005f2620(&DAT_00644e88,0x3c,2,sprite_init,sprite_destroy);
@@ -2433,15 +2433,15 @@ void __cdecl FUN_004476b1(void)
 }
 
 /* 004476d9 auto */
-void __cdecl FUN_004476d9(void)
+void __cdecl unused_sprite_pair_reg_atexit(void)
 
 {
-  _atexit(FUN_004476f6);
+  _atexit(unused_sprite_pair_atexit_dtor);
   return;
 }
 
 /* 004476f6 auto */
-void __cdecl FUN_004476f6(void)
+void __cdecl unused_sprite_pair_atexit_dtor(void)
 
 {
   FUN_005f2490(&DAT_00644e88,0x3c,2,sprite_destroy);
@@ -2457,7 +2457,7 @@ void __cdecl FUN_004476f6(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447719(void)
+void __cdecl tile_pick_mask_sprite_global_init(void)
 
 {
   tile_pick_mask_sprite_static_init();
@@ -2477,12 +2477,12 @@ void __cdecl tile_pick_mask_sprite_static_init(void)
 void __cdecl tile_pick_mask_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0044776a);
+  _atexit(tile_pick_mask_sprite_atexit_dtor);
   return;
 }
 
 /* 0044776a auto */
-void __cdecl FUN_0044776a(void)
+void __cdecl tile_pick_mask_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&tile_pick_mask_sprite);
@@ -2498,7 +2498,7 @@ void __cdecl FUN_0044776a(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447784(void)
+void __cdecl tile_direction_mask_sprite_global_init(void)
 
 {
   tile_direction_mask_sprite_static_init();
@@ -2518,12 +2518,12 @@ void __cdecl tile_direction_mask_sprite_static_init(void)
 void __cdecl tile_direction_mask_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_004477d5);
+  _atexit(tile_direction_mask_sprite_atexit_dtor);
   return;
 }
 
 /* 004477d5 auto */
-void __cdecl FUN_004477d5(void)
+void __cdecl tile_direction_mask_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&tile_direction_mask_sprite);
@@ -2539,7 +2539,7 @@ void __cdecl FUN_004477d5(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004477ef(void)
+void __cdecl unexplored_tile_sprite_global_init(void)
 
 {
   unexplored_tile_sprite_static_init();
@@ -2559,12 +2559,12 @@ void __cdecl unexplored_tile_sprite_static_init(void)
 void __cdecl unexplored_tile_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447840);
+  _atexit(unexplored_tile_sprite_atexit_dtor);
   return;
 }
 
 /* 00447840 auto */
-void __cdecl FUN_00447840(void)
+void __cdecl unexplored_tile_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&unexplored_tile_sprite);
@@ -2572,7 +2572,7 @@ void __cdecl FUN_00447840(void)
 }
 
 /* 0044785a auto */
-void __cdecl FUN_0044785a(void)
+void __cdecl coast_quarter_sprites_global_init(void)
 
 {
   coast_quarter_sprites_static_init();
@@ -2592,12 +2592,12 @@ void __cdecl coast_quarter_sprites_static_init(void)
 void __cdecl coast_quarter_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004478b9);
+  _atexit(coast_quarter_sprites_atexit_dtor);
   return;
 }
 
 /* 004478b9 auto */
-void __cdecl FUN_004478b9(void)
+void __cdecl coast_quarter_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&coast_quarter_sprites,0x3c,0x20,sprite_destroy);
@@ -2605,7 +2605,7 @@ void __cdecl FUN_004478b9(void)
 }
 
 /* 004478dc auto */
-void __cdecl FUN_004478dc(void)
+void __cdecl river_mouth_sprites_global_init(void)
 
 {
   river_mouth_sprites_static_init();
@@ -2625,12 +2625,12 @@ void __cdecl river_mouth_sprites_static_init(void)
 void __cdecl river_mouth_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_0044793b);
+  _atexit(river_mouth_sprites_atexit_dtor);
   return;
 }
 
 /* 0044793b auto */
-void __cdecl FUN_0044793b(void)
+void __cdecl river_mouth_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&river_mouth_sprites,0x3c,4,sprite_destroy);
@@ -2638,7 +2638,7 @@ void __cdecl FUN_0044793b(void)
 }
 
 /* 0044795e auto */
-void __cdecl FUN_0044795e(void)
+void __cdecl road_sprites_global_init(void)
 
 {
   road_sprites_static_init();
@@ -2658,12 +2658,12 @@ void __cdecl road_sprites_static_init(void)
 void __cdecl road_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004479bd);
+  _atexit(road_sprites_atexit_dtor);
   return;
 }
 
 /* 004479bd auto */
-void __cdecl FUN_004479bd(void)
+void __cdecl road_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&road_sprites,0x3c,0x12,sprite_destroy);
@@ -2671,7 +2671,7 @@ void __cdecl FUN_004479bd(void)
 }
 
 /* 004479e0 auto */
-void __cdecl FUN_004479e0(void)
+void __cdecl land_improvement_sprites_global_init(void)
 
 {
   land_improvement_sprites_static_init();
@@ -2691,12 +2691,12 @@ void __cdecl land_improvement_sprites_static_init(void)
 void __cdecl land_improvement_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447a3f);
+  _atexit(land_improvement_sprites_atexit_dtor);
   return;
 }
 
 /* 00447a3f auto */
-void __cdecl FUN_00447a3f(void)
+void __cdecl land_improvement_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&land_improvement_sprites,0x3c,3,sprite_destroy);
@@ -2712,7 +2712,7 @@ void __cdecl FUN_00447a3f(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447a62(void)
+void __cdecl pollution_sprite_global_init(void)
 
 {
   pollution_sprite_static_init();
@@ -2732,12 +2732,12 @@ void __cdecl pollution_sprite_static_init(void)
 void __cdecl pollution_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447ab3);
+  _atexit(pollution_sprite_atexit_dtor);
   return;
 }
 
 /* 00447ab3 auto */
-void __cdecl FUN_00447ab3(void)
+void __cdecl pollution_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&pollution_sprite);
@@ -2753,7 +2753,7 @@ void __cdecl FUN_00447ab3(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447acd(void)
+void __cdecl grassland_shield_sprite_global_init(void)
 
 {
   grassland_shield_sprite_static_init();
@@ -2773,12 +2773,12 @@ void __cdecl grassland_shield_sprite_static_init(void)
 void __cdecl grassland_shield_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447b1e);
+  _atexit(grassland_shield_sprite_atexit_dtor);
   return;
 }
 
 /* 00447b1e auto */
-void __cdecl FUN_00447b1e(void)
+void __cdecl grassland_shield_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&grassland_shield_sprite);
@@ -2786,7 +2786,7 @@ void __cdecl FUN_00447b1e(void)
 }
 
 /* 00447b38 auto */
-void __cdecl FUN_00447b38(void)
+void __cdecl terrain_resource_sprites_global_init(void)
 
 {
   terrain_resource_sprites_static_init();
@@ -2806,12 +2806,12 @@ void __cdecl terrain_resource_sprites_static_init(void)
 void __cdecl terrain_resource_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447b97);
+  _atexit(terrain_resource_sprites_atexit_dtor);
   return;
 }
 
 /* 00447b97 auto */
-void __cdecl FUN_00447b97(void)
+void __cdecl terrain_resource_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&terrain_resource_sprites,0x3c,0x16,sprite_destroy);
@@ -2819,7 +2819,7 @@ void __cdecl FUN_00447b97(void)
 }
 
 /* 00447bba auto */
-void __cdecl FUN_00447bba(void)
+void __cdecl airbase_sprites_global_init(void)
 
 {
   airbase_sprites_static_init();
@@ -2839,12 +2839,12 @@ void __cdecl airbase_sprites_static_init(void)
 void __cdecl airbase_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447c19);
+  _atexit(airbase_sprites_atexit_dtor);
   return;
 }
 
 /* 00447c19 auto */
-void __cdecl FUN_00447c19(void)
+void __cdecl airbase_sprites_atexit_dtor(void)
 
 {
   FUN_005f2490(&airbase_sprites,0x3c,2,sprite_destroy);
@@ -2860,7 +2860,7 @@ void __cdecl FUN_00447c19(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447c3c(void)
+void __cdecl caption_close_button_sprite_global_init(void)
 
 {
   caption_close_button_sprite_static_init();
@@ -2880,12 +2880,12 @@ void __cdecl caption_close_button_sprite_static_init(void)
 void __cdecl caption_close_button_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447c8d);
+  _atexit(caption_close_button_sprite_atexit_dtor);
   return;
 }
 
 /* 00447c8d auto */
-void __cdecl FUN_00447c8d(void)
+void __cdecl caption_close_button_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&caption_close_button_sprite);
@@ -2901,7 +2901,7 @@ void __cdecl FUN_00447c8d(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447ca7(void)
+void __cdecl caption_zoom_out_sprite_global_init(void)
 
 {
   caption_zoom_out_sprite_static_init();
@@ -2921,12 +2921,12 @@ void __cdecl caption_zoom_out_sprite_static_init(void)
 void __cdecl caption_zoom_out_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447cf8);
+  _atexit(caption_zoom_out_sprite_atexit_dtor);
   return;
 }
 
 /* 00447cf8 auto */
-void __cdecl FUN_00447cf8(void)
+void __cdecl caption_zoom_out_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&caption_zoom_out_sprite);
@@ -2942,7 +2942,7 @@ void __cdecl FUN_00447cf8(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447d12(void)
+void __cdecl caption_zoom_out_btn_sprite_global_init(void)
 
 {
   caption_zoom_out_btn_sprite_static_init();
@@ -2962,12 +2962,12 @@ void __cdecl caption_zoom_out_btn_sprite_static_init(void)
 void __cdecl caption_zoom_out_btn_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447d63);
+  _atexit(caption_zoom_out_btn_sprite_atexit_dtor);
   return;
 }
 
 /* 00447d63 auto */
-void __cdecl FUN_00447d63(void)
+void __cdecl caption_zoom_out_btn_sprite_atexit_dtor(void)
 
 {
   sprite_destroy((Sprite *)&caption_zoom_out_button_sprite);
@@ -2983,7 +2983,7 @@ void __cdecl FUN_00447d63(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447d7d(void)
+void __cdecl caption_view_mode_btn_sprite_global_init(void)
 
 {
   caption_view_mode_btn_sprite_static_init();
@@ -3003,12 +3003,12 @@ void __cdecl caption_view_mode_btn_sprite_static_init(void)
 void __cdecl caption_view_mode_btn_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447dce);
+  _atexit(caption_view_mode_button_sprite_static_dtor);
   return;
 }
 
 /* 00447dce auto */
-void __cdecl FUN_00447dce(void)
+void __cdecl caption_view_mode_button_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&caption_view_mode_button_sprite);
@@ -3024,7 +3024,7 @@ void __cdecl FUN_00447dce(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447de8(void)
+void __cdecl scroll_up_button_sprite_global_init(void)
 
 {
   scroll_up_button_sprite_static_init();
@@ -3044,12 +3044,12 @@ void __cdecl scroll_up_button_sprite_static_init(void)
 void __cdecl scroll_up_button_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447e39);
+  _atexit(scroll_up_button_sprite_static_dtor);
   return;
 }
 
 /* 00447e39 auto */
-void __cdecl FUN_00447e39(void)
+void __cdecl scroll_up_button_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&scroll_up_button_sprite);
@@ -3065,7 +3065,7 @@ void __cdecl FUN_00447e39(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447e53(void)
+void __cdecl city_down_arrow_sprite_global_init(void)
 
 {
   city_down_arrow_sprite_static_init();
@@ -3085,12 +3085,12 @@ void __cdecl city_down_arrow_sprite_static_init(void)
 void __cdecl city_down_arrow_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00447ea4);
+  _atexit(city_down_arrow_sprite_static_dtor);
   return;
 }
 
 /* 00447ea4 auto */
-void __cdecl FUN_00447ea4(void)
+void __cdecl city_down_arrow_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&city_down_arrow_sprite);
@@ -3098,7 +3098,7 @@ void __cdecl FUN_00447ea4(void)
 }
 
 /* 00447ebe auto */
-void __cdecl FUN_00447ebe(void)
+void __cdecl nuke_anim_sprites_global_init(void)
 
 {
   nuke_anim_sprites_static_init();
@@ -3118,12 +3118,12 @@ void __cdecl nuke_anim_sprites_static_init(void)
 void __cdecl nuke_anim_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447f1d);
+  _atexit(nuke_anim_sprites_static_dtor);
   return;
 }
 
 /* 00447f1d auto */
-void __cdecl FUN_00447f1d(void)
+void __cdecl nuke_anim_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&nuke_anim_sprites,0x3c,0xb,sprite_destroy);
@@ -3131,7 +3131,7 @@ void __cdecl FUN_00447f1d(void)
 }
 
 /* 00447f40 auto */
-void __cdecl FUN_00447f40(void)
+void __cdecl sprite_editor_tool_sprites_global_init(void)
 
 {
   sprite_editor_tool_sprites_static_init();
@@ -3151,12 +3151,12 @@ void __cdecl sprite_editor_tool_sprites_static_init(void)
 void __cdecl sprite_editor_tool_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00447f9f);
+  _atexit(sprite_editor_tool_sprites_static_dtor);
   return;
 }
 
 /* 00447f9f auto */
-void __cdecl FUN_00447f9f(void)
+void __cdecl sprite_editor_tool_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&sprite_editor_tool_sprites,0x3c,0xf,sprite_destroy);
@@ -3172,7 +3172,7 @@ void __cdecl FUN_00447f9f(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00447fc2(void)
+void __cdecl editor_unit_backdrop_sprite_global_init(void)
 
 {
   editor_unit_backdrop_sprite_static_init();
@@ -3192,12 +3192,12 @@ void __cdecl editor_unit_backdrop_sprite_static_init(void)
 void __cdecl editor_unit_backdrop_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00448013);
+  _atexit(editor_unit_backdrop_sprite_static_dtor);
   return;
 }
 
 /* 00448013 auto */
-void __cdecl FUN_00448013(void)
+void __cdecl editor_unit_backdrop_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&editor_unit_backdrop_sprite);
@@ -3213,7 +3213,7 @@ void __cdecl FUN_00448013(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0044802d(void)
+void __cdecl editor_tile_backdrop_sprite_global_init(void)
 
 {
   editor_tile_backdrop_sprite_static_init();
@@ -3233,12 +3233,12 @@ void __cdecl editor_tile_backdrop_sprite_static_init(void)
 void __cdecl editor_tile_backdrop_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0044807e);
+  _atexit(editor_tile_backdrop_sprite_static_dtor);
   return;
 }
 
 /* 0044807e auto */
-void __cdecl FUN_0044807e(void)
+void __cdecl editor_tile_backdrop_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&editor_tile_backdrop_sprite);
@@ -3254,7 +3254,7 @@ void __cdecl FUN_0044807e(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448098(void)
+void __cdecl map_cursor_sprite_global_init(void)
 
 {
   map_cursor_sprite_static_init();
@@ -3274,12 +3274,12 @@ void __cdecl map_cursor_sprite_static_init(void)
 void __cdecl map_cursor_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_004480e9);
+  _atexit(map_cursor_sprite_static_dtor);
   return;
 }
 
 /* 004480e9 auto */
-void __cdecl FUN_004480e9(void)
+void __cdecl map_cursor_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&map_cursor_sprite);
@@ -3295,7 +3295,7 @@ void __cdecl FUN_004480e9(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448103(void)
+void __cdecl unit_shield_sprite_global_init(void)
 
 {
   unit_shield_sprite_static_init();
@@ -3315,12 +3315,12 @@ void __cdecl unit_shield_sprite_static_init(void)
 void __cdecl unit_shield_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00448154);
+  _atexit(unit_shield_sprite_static_dtor);
   return;
 }
 
 /* 00448154 auto */
-void __cdecl FUN_00448154(void)
+void __cdecl unit_shield_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&unit_shield_sprite);
@@ -3328,7 +3328,7 @@ void __cdecl FUN_00448154(void)
 }
 
 /* 0044816e auto */
-void __cdecl FUN_0044816e(void)
+void __cdecl city_sprites_global_init(void)
 
 {
   city_sprites_static_init();
@@ -3348,12 +3348,12 @@ void __cdecl city_sprites_static_init(void)
 void __cdecl city_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004481cd);
+  _atexit(city_sprites_static_dtor);
   return;
 }
 
 /* 004481cd auto */
-void __cdecl FUN_004481cd(void)
+void __cdecl city_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&city_sprites,0x3c,0x30,sprite_destroy);
@@ -3361,7 +3361,7 @@ void __cdecl FUN_004481cd(void)
 }
 
 /* 004481f0 auto */
-void __cdecl FUN_004481f0(void)
+void __cdecl civ_flag_sprites_global_init(void)
 
 {
   civ_flag_sprites_static_init();
@@ -3381,12 +3381,12 @@ void __cdecl civ_flag_sprites_static_init(void)
 void __cdecl civ_flag_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_0044824f);
+  _atexit(civ_flag_sprites_static_dtor);
   return;
 }
 
 /* 0044824f auto */
-void __cdecl FUN_0044824f(void)
+void __cdecl civ_flag_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&civ_flag_sprites,0x3c,0x10,sprite_destroy);
@@ -3394,7 +3394,7 @@ void __cdecl FUN_0044824f(void)
 }
 
 /* 00448272 auto */
-void __cdecl FUN_00448272(void)
+void __cdecl unit_sprites_global_init(void)
 
 {
   unit_sprites_static_init();
@@ -3414,12 +3414,12 @@ void __cdecl unit_sprites_static_init(void)
 void __cdecl unit_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004482d1);
+  _atexit(unit_sprites_static_dtor);
   return;
 }
 
 /* 004482d1 auto */
-void __cdecl FUN_004482d1(void)
+void __cdecl unit_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&unit_sprites,0x3c,0x3f,sprite_destroy);
@@ -3427,7 +3427,7 @@ void __cdecl FUN_004482d1(void)
 }
 
 /* 004482f4 auto */
-void __cdecl FUN_004482f4(void)
+void __cdecl fortify_overlay_sprites_global_init(void)
 
 {
   fortify_overlay_sprites_static_init();
@@ -3447,12 +3447,12 @@ void __cdecl fortify_overlay_sprites_static_init(void)
 void __cdecl fortify_overlay_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448353);
+  _atexit(fortify_overlay_sprites_static_dtor);
   return;
 }
 
 /* 00448353 auto */
-void __cdecl FUN_00448353(void)
+void __cdecl fortify_overlay_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&fortify_overlay_sprites,0x3c,8,sprite_destroy);
@@ -3460,7 +3460,7 @@ void __cdecl FUN_00448353(void)
 }
 
 /* 00448376 auto */
-void __cdecl FUN_00448376(void)
+void __cdecl citizen_sprites_global_init(void)
 
 {
   citizen_sprites_static_init();
@@ -3480,12 +3480,12 @@ void __cdecl citizen_sprites_static_init(void)
 void __cdecl citizen_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004483d5);
+  _atexit(citizen_sprites_static_dtor);
   return;
 }
 
 /* 004483d5 auto */
-void __cdecl FUN_004483d5(void)
+void __cdecl citizen_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&citizen_sprites,0x3c,0x2c,sprite_destroy);
@@ -3493,7 +3493,7 @@ void __cdecl FUN_004483d5(void)
 }
 
 /* 004483f8 auto */
-void __cdecl FUN_004483f8(void)
+void __cdecl small_citizen_sprites_global_init(void)
 
 {
   small_citizen_sprites_static_init();
@@ -3513,12 +3513,12 @@ void __cdecl small_citizen_sprites_static_init(void)
 void __cdecl small_citizen_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448457);
+  _atexit(small_citizen_sprites_static_dtor);
   return;
 }
 
 /* 00448457 auto */
-void __cdecl FUN_00448457(void)
+void __cdecl small_citizen_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&small_citizen_sprites,0x3c,0xb,sprite_destroy);
@@ -3526,7 +3526,7 @@ void __cdecl FUN_00448457(void)
 }
 
 /* 0044847a auto */
-void __cdecl FUN_0044847a(void)
+void __cdecl resource_shortage_icon_sprites_global_init(void)
 
 {
   resource_shortage_icon_sprites_static_init();
@@ -3546,12 +3546,12 @@ void __cdecl resource_shortage_icon_sprites_static_init(void)
 void __cdecl resource_shortage_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004484d9);
+  _atexit(resource_shortage_icon_sprites_static_dtor);
   return;
 }
 
 /* 004484d9 auto */
-void __cdecl FUN_004484d9(void)
+void __cdecl resource_shortage_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&resource_shortage_icon_sprites,0x3c,6,sprite_destroy);
@@ -3559,7 +3559,7 @@ void __cdecl FUN_004484d9(void)
 }
 
 /* 004484fc auto */
-void __cdecl FUN_004484fc(void)
+void __cdecl tax_rate_icon_sprites_global_init(void)
 
 {
   tax_rate_icon_sprites_static_init();
@@ -3579,12 +3579,12 @@ void __cdecl tax_rate_icon_sprites_static_init(void)
 void __cdecl tax_rate_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_0044855b);
+  _atexit(tax_rate_icon_sprites_static_dtor);
   return;
 }
 
 /* 0044855b auto */
-void __cdecl FUN_0044855b(void)
+void __cdecl tax_rate_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&tax_rate_icon_sprites,0x3c,3,sprite_destroy);
@@ -3592,7 +3592,7 @@ void __cdecl FUN_0044855b(void)
 }
 
 /* 0044857e auto */
-void __cdecl FUN_0044857e(void)
+void __cdecl small_resource_icon_sprites_global_init(void)
 
 {
   small_resource_icon_sprites_static_init();
@@ -3612,12 +3612,12 @@ void __cdecl small_resource_icon_sprites_static_init(void)
 void __cdecl small_resource_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004485dd);
+  _atexit(small_resource_icon_sprites_static_dtor);
   return;
 }
 
 /* 004485dd auto */
-void __cdecl FUN_004485dd(void)
+void __cdecl small_resource_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&small_resource_icon_sprites,0x3c,3,sprite_destroy);
@@ -3625,7 +3625,7 @@ void __cdecl FUN_004485dd(void)
 }
 
 /* 00448600 auto */
-void __cdecl FUN_00448600(void)
+void __cdecl lux_tax_sci_icon_sprites_global_init(void)
 
 {
   lux_tax_sci_icon_sprites_static_init();
@@ -3645,12 +3645,12 @@ void __cdecl lux_tax_sci_icon_sprites_static_init(void)
 void __cdecl lux_tax_sci_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_0044865f);
+  _atexit(lux_tax_sci_icon_sprites_static_dtor);
   return;
 }
 
 /* 0044865f auto */
-void __cdecl FUN_0044865f(void)
+void __cdecl lux_tax_sci_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&lux_tax_sci_icon_sprites,0x3c,3,sprite_destroy);
@@ -3666,7 +3666,7 @@ void __cdecl FUN_0044865f(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448682(void)
+void __cdecl small_unhappy_icon_sprite_global_init(void)
 
 {
   small_unhappy_icon_sprite_static_init();
@@ -3686,12 +3686,12 @@ void __cdecl small_unhappy_icon_sprite_static_init(void)
 void __cdecl small_unhappy_icon_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_004486d3);
+  _atexit(small_unhappy_icon_sprite_static_dtor);
   return;
 }
 
 /* 004486d3 auto */
-void __cdecl FUN_004486d3(void)
+void __cdecl small_unhappy_icon_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&small_unhappy_icon_sprite);
@@ -3707,7 +3707,7 @@ void __cdecl FUN_004486d3(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004486ed(void)
+void __cdecl unhappy_suppressed_icon_sprite_global_init(void)
 
 {
   unhappy_suppressed_icon_sprite_static_init();
@@ -3727,12 +3727,12 @@ void __cdecl unhappy_suppressed_icon_sprite_static_init(void)
 void __cdecl unhappy_suppressed_icon_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0044873e);
+  _atexit(unhappy_suppressed_icon_sprite_static_dtor);
   return;
 }
 
 /* 0044873e auto */
-void __cdecl FUN_0044873e(void)
+void __cdecl unhappy_suppressed_icon_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&unhappy_suppressed_icon_sprite);
@@ -3740,7 +3740,7 @@ void __cdecl FUN_0044873e(void)
 }
 
 /* 00448758 auto */
-void __cdecl FUN_00448758(void)
+void __cdecl research_flask_sprites_global_init(void)
 
 {
   research_flask_sprites_static_init();
@@ -3760,12 +3760,12 @@ void __cdecl research_flask_sprites_static_init(void)
 void __cdecl research_flask_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004487b7);
+  _atexit(research_flask_sprites_static_dtor);
   return;
 }
 
 /* 004487b7 auto */
-void __cdecl FUN_004487b7(void)
+void __cdecl research_flask_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&research_flask_sprites,0x3c,4,sprite_destroy);
@@ -3773,7 +3773,7 @@ void __cdecl FUN_004487b7(void)
 }
 
 /* 004487da auto */
-void __cdecl FUN_004487da(void)
+void __cdecl global_warming_sprites_global_init(void)
 
 {
   global_warming_sprites_static_init();
@@ -3793,12 +3793,12 @@ void __cdecl global_warming_sprites_static_init(void)
 void __cdecl global_warming_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448839);
+  _atexit(global_warming_sprites_static_dtor);
   return;
 }
 
 /* 00448839 auto */
-void __cdecl FUN_00448839(void)
+void __cdecl global_warming_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&global_warming_sprites,0x3c,4,sprite_destroy);
@@ -3806,16 +3806,16 @@ void __cdecl FUN_00448839(void)
 }
 
 /* 0044885c auto */
-void __cdecl FUN_0044885c(void)
+void __cdecl icon_misc_sprites_global_init(void)
 
 {
-  FUN_00448876();
-  FUN_0044889e();
+  icon_misc_sprites_static_init();
+  icon_misc_sprites_reg_atexit();
   return;
 }
 
 /* 00448876 auto */
-void __cdecl FUN_00448876(void)
+void __cdecl icon_misc_sprites_static_init(void)
 
 {
   FUN_005f2620(&DAT_0063f6f0,0x3c,6,sprite_init,sprite_destroy);
@@ -3823,15 +3823,15 @@ void __cdecl FUN_00448876(void)
 }
 
 /* 0044889e auto */
-void __cdecl FUN_0044889e(void)
+void __cdecl icon_misc_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004488bb);
+  _atexit(icon_misc_sprites_static_dtor);
   return;
 }
 
 /* 004488bb auto */
-void __cdecl FUN_004488bb(void)
+void __cdecl icon_misc_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&DAT_0063f6f0,0x3c,6,sprite_destroy);
@@ -3847,16 +3847,16 @@ void __cdecl FUN_004488bb(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004488de(void)
+void __cdecl icons_unused_tall_sprite_global_init(void)
 
 {
-  FUN_004488f8();
-  FUN_00448912();
+  icons_unused_tall_sprite_static_init();
+  icons_unused_tall_sprite_reg_atexit();
   return;
 }
 
 /* 004488f8 auto */
-void __cdecl FUN_004488f8(void)
+void __cdecl icons_unused_tall_sprite_static_init(void)
 
 {
   sprite_init((Sprite *)&DAT_00648098);
@@ -3864,15 +3864,15 @@ void __cdecl FUN_004488f8(void)
 }
 
 /* 00448912 auto */
-void __cdecl FUN_00448912(void)
+void __cdecl icons_unused_tall_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_0044892f);
+  _atexit(icons_unused_tall_sprite_static_dtor);
   return;
 }
 
 /* 0044892f auto */
-void __cdecl FUN_0044892f(void)
+void __cdecl icons_unused_tall_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&DAT_00648098);
@@ -3880,7 +3880,7 @@ void __cdecl FUN_0044892f(void)
 }
 
 /* 00448949 auto */
-void __cdecl FUN_00448949(void)
+void __cdecl improvement_icon_sprites_global_init(void)
 
 {
   improvement_icon_sprites_static_init();
@@ -3900,12 +3900,12 @@ void __cdecl improvement_icon_sprites_static_init(void)
 void __cdecl improvement_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_004489a8);
+  _atexit(improvement_icon_sprites_static_dtor);
   return;
 }
 
 /* 004489a8 auto */
-void __cdecl FUN_004489a8(void)
+void __cdecl improvement_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&improvement_icon_sprites,0x3c,0x43,sprite_destroy);
@@ -3913,7 +3913,7 @@ void __cdecl FUN_004489a8(void)
 }
 
 /* 004489cb auto */
-void __cdecl FUN_004489cb(void)
+void __cdecl advance_cat_icon_sprites_global_init(void)
 
 {
   advance_category_icon_sprites_static_init();
@@ -3933,12 +3933,12 @@ void __cdecl advance_category_icon_sprites_static_init(void)
 void __cdecl advance_category_icon_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448a2a);
+  _atexit(advance_cat_icon_sprites_static_dtor);
   return;
 }
 
 /* 00448a2a auto */
-void __cdecl FUN_00448a2a(void)
+void __cdecl advance_cat_icon_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&advance_category_icon_sprites,0x3c,0x14,sprite_destroy);
@@ -3946,7 +3946,7 @@ void __cdecl FUN_00448a2a(void)
 }
 
 /* 00448a4d auto */
-void __cdecl FUN_00448a4d(void)
+void __cdecl explosion_sprites_global_init(void)
 
 {
   explosion_sprites_static_init();
@@ -3966,12 +3966,12 @@ void __cdecl explosion_sprites_static_init(void)
 void __cdecl explosion_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448aac);
+  _atexit(explosion_sprites_static_dtor);
   return;
 }
 
 /* 00448aac auto */
-void __cdecl FUN_00448aac(void)
+void __cdecl explosion_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&explosion_sprites,0x3c,8,sprite_destroy);
@@ -3987,7 +3987,7 @@ void __cdecl FUN_00448aac(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448acf(void)
+void __cdecl map_grid_sprite_global_init(void)
 
 {
   map_grid_sprite_static_init();
@@ -4007,12 +4007,12 @@ void __cdecl map_grid_sprite_static_init(void)
 void __cdecl map_grid_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00448b20);
+  _atexit(map_grid_sprite_static_dtor);
   return;
 }
 
 /* 00448b20 auto */
-void __cdecl FUN_00448b20(void)
+void __cdecl map_grid_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&map_grid_sprite);
@@ -4020,16 +4020,16 @@ void __cdecl FUN_00448b20(void)
 }
 
 /* 00448b3a auto */
-void __cdecl FUN_00448b3a(void)
+void __cdecl icons_pair_sprites_global_init(void)
 
 {
-  FUN_00448b54();
-  FUN_00448b7c();
+  icons_pair_sprites_static_init();
+  icons_pair_sprites_reg_atexit();
   return;
 }
 
 /* 00448b54 auto */
-void __cdecl FUN_00448b54(void)
+void __cdecl icons_pair_sprites_static_init(void)
 
 {
   FUN_005f2620(&DAT_00647b50,0x3c,4,sprite_init,sprite_destroy);
@@ -4037,15 +4037,15 @@ void __cdecl FUN_00448b54(void)
 }
 
 /* 00448b7c auto */
-void __cdecl FUN_00448b7c(void)
+void __cdecl icons_pair_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448b99);
+  _atexit(icons_pair_sprites_static_dtor);
   return;
 }
 
 /* 00448b99 auto */
-void __cdecl FUN_00448b99(void)
+void __cdecl icons_pair_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&DAT_00647b50,0x3c,4,sprite_destroy);
@@ -4053,7 +4053,7 @@ void __cdecl FUN_00448b99(void)
 }
 
 /* 00448bbc auto */
-void __cdecl FUN_00448bbc(void)
+void __cdecl government_sprites_global_init(void)
 
 {
   government_sprites_static_init();
@@ -4073,12 +4073,12 @@ void __cdecl government_sprites_static_init(void)
 void __cdecl government_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448c1b);
+  _atexit(government_sprites_static_dtor);
   return;
 }
 
 /* 00448c1b auto */
-void __cdecl FUN_00448c1b(void)
+void __cdecl government_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&government_sprites,0x3c,7,sprite_destroy);
@@ -4086,7 +4086,7 @@ void __cdecl FUN_00448c1b(void)
 }
 
 /* 00448c3e auto */
-void __cdecl FUN_00448c3e(void)
+void __cdecl civ_portrait_sprites_global_init(void)
 
 {
   civ_portrait_sprites_static_init();
@@ -4106,12 +4106,12 @@ void __cdecl civ_portrait_sprites_static_init(void)
 void __cdecl civ_portrait_sprites_reg_atexit(void)
 
 {
-  _atexit(FUN_00448c9d);
+  _atexit(civ_portrait_sprites_static_dtor);
   return;
 }
 
 /* 00448c9d auto */
-void __cdecl FUN_00448c9d(void)
+void __cdecl civ_portrait_sprites_static_dtor(void)
 
 {
   FUN_005f2490(&civ_portrait_sprites,0x3c,8,sprite_destroy);
@@ -4119,7 +4119,7 @@ void __cdecl FUN_00448c9d(void)
 }
 
 /* 00448cc0 auto */
-void __cdecl FUN_00448cc0(void)
+void __cdecl diplo_status_icons_global_init(void)
 
 {
   diplo_status_icons_static_init();
@@ -4143,12 +4143,12 @@ void __cdecl diplo_status_icons_static_init(void)
 void __cdecl diplo_status_icons_reg_atexit(void)
 
 {
-  _atexit(FUN_00448d39);
+  _atexit(diplo_status_icons_static_dtor);
   return;
 }
 
 /* 00448d39 auto */
-void __cdecl FUN_00448d39(void)
+void __cdecl diplo_status_icons_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&diplo_popup_portrait_sprite);
@@ -4168,7 +4168,7 @@ void __cdecl FUN_00448d39(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448d7b(void)
+void __cdecl popup_info_icon_sprite_global_init(void)
 
 {
   popup_info_icon_sprite_static_init();
@@ -4188,12 +4188,12 @@ void __cdecl popup_info_icon_sprite_static_init(void)
 void __cdecl popup_info_icon_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00448dcc);
+  _atexit(popup_info_icon_sprite_static_dtor);
   return;
 }
 
 /* 00448dcc auto */
-void __cdecl FUN_00448dcc(void)
+void __cdecl popup_info_icon_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&popup_info_icon_sprite);
@@ -4209,7 +4209,7 @@ void __cdecl FUN_00448dcc(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448de6(void)
+void __cdecl tutorial_icon_sprite_global_init(void)
 
 {
   tutorial_icon_sprite_static_init();
@@ -4229,12 +4229,12 @@ void __cdecl tutorial_icon_sprite_static_init(void)
 void __cdecl tutorial_icon_sprite_reg_atexit(void)
 
 {
-  _atexit(FUN_00448e37);
+  _atexit(tutorial_icon_sprite_static_dtor);
   return;
 }
 
 /* 00448e37 auto */
-void __cdecl FUN_00448e37(void)
+void __cdecl tutorial_icon_sprite_static_dtor(void)
 
 {
   sprite_destroy((Sprite *)&tutorial_icon_sprite);
@@ -4250,7 +4250,7 @@ void __cdecl FUN_00448e37(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448e51(void)
+void __cdecl window_border_tile_surface_global_init(void)
 
 {
   window_border_tile_surface_static_init();
@@ -4270,12 +4270,12 @@ void __cdecl window_border_tile_surface_static_init(void)
 void __cdecl window_border_tile_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_00448ea2);
+  _atexit(window_border_tile_surface_static_dtor);
   return;
 }
 
 /* 00448ea2 auto */
-void __cdecl FUN_00448ea2(void)
+void __cdecl window_border_tile_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&window_border_tile_surface);
@@ -4291,7 +4291,7 @@ void __cdecl FUN_00448ea2(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448ebc(void)
+void __cdecl panel_texture_surface_global_init(void)
 
 {
   panel_texture_surface_static_init();
@@ -4311,12 +4311,12 @@ void __cdecl panel_texture_surface_static_init(void)
 void __cdecl panel_texture_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_00448f0d);
+  _atexit(panel_texture_surface_static_dtor);
   return;
 }
 
 /* 00448f0d auto */
-void __cdecl FUN_00448f0d(void)
+void __cdecl panel_texture_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&panel_texture_surface);
@@ -4332,7 +4332,7 @@ void __cdecl FUN_00448f0d(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00448f27(void)
+void __cdecl gfx_sheet_surface_global_init(void)
 
 {
   gfx_sheet_surface_static_init();
@@ -4352,12 +4352,12 @@ void __cdecl gfx_sheet_surface_static_init(void)
 void __cdecl gfx_sheet_surface_reg_atexit(void)
 
 {
-  _atexit(FUN_00448f78);
+  _atexit(gfx_sheet_surface_static_dtor);
   return;
 }
 
 /* 00448f78 auto */
-void __cdecl FUN_00448f78(void)
+void __cdecl gfx_sheet_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&gfx_sheet_surface);
@@ -4680,7 +4680,7 @@ void __cdecl gfx_load_icon_sprites(void)
   sprite_grab_tile_cell(ADDR(0x640b98, ((u8 *)&g.d_00640b98)),199,0x100);
   sprite_grab_tile_cell(ADDR(0x646198, ((u8 *)&g.d_00646198)),199,0x121);
   sprite_grab_tile_cell(ADDR(0x647bc8, ((u8 *)&g.d_00647bc8)),0xf8,0x1ae);
-  sprite_free((Sprite *)&DAT_00646614);
+  sprite_free((Sprite *)&fortify_overlay_alt_sprite);
   gfx_grab_fortify_overlay(1,0x20,0xbb);
   sprite_free((Sprite *)&DAT_0064668c);
   sprite_grab_icon_cell_keyed(ADDR(0x64668c, ((u8 *)&g.d_0064668c)),0x22,0xdf);
@@ -5342,7 +5342,7 @@ void __thiscall wnd_clear_handlers(WndHandlers *this)
   this->on_hscroll_track = 0;
   this->on_vscroll = 0;
   this->on_vscroll_track = 0;
-  this->field_5c = 0;
+  this->on_msg_4c8 = 0;
   this->on_enter_size_move = 0;
   this->on_exitsizemove = 0;
   return;
@@ -5587,8 +5587,8 @@ uint __thiscall throneroom_create_windows(C_00408010_6f0 *this)
               ((DibSurface *)this->pad_504,ADDR(0x626820, ((u8 *)&g.d_00626820)),0x800,0,0,0x280,0x1e0,(iptr)&this->control_list,
                (iptr)this);
     thunk_wnd_center((WndCenterView *)(this->pad_504 + 0x48));
-    thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_504 + 0x58),ADDR(0x4034bd, FUN_0044f4c9));
-    thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_504 + 0x58),ADDR(0x401fe6, FUN_0044f717));
+    thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_504 + 0x58),ADDR(0x4034bd, throneroom_on_click));
+    thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_504 + 0x58),ADDR(0x401fe6, throneroom_on_key));
   }
   return (uint)(iVar1 != 0);
 }
@@ -5647,7 +5647,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
     thunk_input_flush_events();
     thunk_wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
     if (2 < game.multiplayer) {
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, FUN_0059c301));
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
     }
     wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x48));
     thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),0);
@@ -5686,7 +5686,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
       thunk_input_flush_events();
       thunk_wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
       if (2 < game.multiplayer) {
-        thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, FUN_0059c301));
+        thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
       }
       wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x48));
       thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),0);
@@ -5718,7 +5718,7 @@ void __thiscall throneroom_run_upgrade(ThroneRoomWindow *this)
         this->choosing_item = 0;
         thunk_wnd_set_capture((WndBase *)(this->pad_504 + 0x48));
         if (2 < game.multiplayer) {
-          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, FUN_0059c301));
+          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
         }
         wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x48));
         thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),0);
@@ -5759,7 +5759,7 @@ void __thiscall throneroom_run_view(ThroneRoomWindow *this)
     thunk_window_show((C_004083b0_4 *)this->pad_504);
     thunk_wnd_flush_paint();
     if (2 < game.multiplayer) {
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, FUN_0059c301));
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),ADDR(0x403585, net_modal_idle_poll));
     }
     wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x48));
     thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x48),0);
@@ -5849,15 +5849,15 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       }
       sprite_grab_from_surface
                 (&local_4c,(iptr)&local_9c,9,
-                 *(undefined4 *)(&DAT_0061c068 + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c06c + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c070 + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c074 + local_50 * 0x10 + local_54 * 0x40));
+                 *(undefined4 *)(&throneroom_piece_rect_x + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_y + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_w + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_h + local_50 * 0x10 + local_54 * 0x40));
       sprite_replace_color(&local_4c,7,9);
       sprite_draw
                 (&local_4c,(iptr)local_b0,(iptr)this->pad_504,
-                 *(int *)(&DAT_0061c068 + local_50 * 0x10 + local_54 * 0x40) + -1,
-                 *(int *)(&DAT_0061c06c + local_50 * 0x10 + local_54 * 0x40) + -1);
+                 *(int *)(&throneroom_piece_rect_x + local_50 * 0x10 + local_54 * 0x40) + -1,
+                 *(int *)(&throneroom_piece_rect_y + local_50 * 0x10 + local_54 * 0x40) + -1);
     }
   }
   thunk_win_flush_pending_msgs();
@@ -5873,10 +5873,10 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       goto LAB_0044e781;
     }
     sprite_grab_from_surface
-              (&local_4c,(iptr)&local_9c,9,DAT_0061c268,DAT_0061c26c,DAT_0061c270,DAT_0061c274);
+              (&local_4c,(iptr)&local_9c,9,throneroom_bonus_rect_x,throneroom_bonus_rect_y,throneroom_bonus_rect_w,throneroom_bonus_rect_h);
     sprite_replace_color(&local_4c,7,9);
     sprite_draw
-              (&local_4c,(iptr)local_c4,(iptr)this->pad_504,DAT_0061c268 + -1,DAT_0061c26c + -1);
+              (&local_4c,(iptr)local_c4,(iptr)this->pad_504,throneroom_bonus_rect_x + -1,throneroom_bonus_rect_y + -1);
   }
   thunk_win_flush_pending_msgs();
   if (civs[this->throne_civ].throne_room[3] != '\0') {
@@ -5895,15 +5895,15 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
     }
     sprite_grab_from_surface
               (&local_4c,(iptr)&local_9c,9,
-               *(undefined4 *)(&DAT_0061c068 + local_50 * 0x10 + local_54 * 0x40),
-               *(undefined4 *)(&DAT_0061c06c + local_50 * 0x10 + local_54 * 0x40),
-               *(undefined4 *)(&DAT_0061c070 + local_50 * 0x10 + local_54 * 0x40),
-               *(undefined4 *)(&DAT_0061c074 + local_50 * 0x10 + local_54 * 0x40));
+               *(undefined4 *)(&throneroom_piece_rect_x + local_50 * 0x10 + local_54 * 0x40),
+               *(undefined4 *)(&throneroom_piece_rect_y + local_50 * 0x10 + local_54 * 0x40),
+               *(undefined4 *)(&throneroom_piece_rect_w + local_50 * 0x10 + local_54 * 0x40),
+               *(undefined4 *)(&throneroom_piece_rect_h + local_50 * 0x10 + local_54 * 0x40));
     sprite_replace_color(&local_4c,7,9);
     sprite_draw
               (&local_4c,(iptr)local_d8,(iptr)this->pad_504,
-               *(int *)(&DAT_0061c128 + local_50 * 0x10) + -1,
-               *(int *)(&DAT_0061c12c + local_50 * 0x10) + -1);
+               *(int *)(&throneroom_piece3_rect_x + local_50 * 0x10) + -1,
+               *(int *)(&throneroom_piece3_rect_y + local_50 * 0x10) + -1);
   }
   thunk_win_flush_pending_msgs();
   if (this->throne_complete != 0) {
@@ -5921,13 +5921,13 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
           goto LAB_0044e781;
         }
         sprite_grab_from_surface
-                  (&local_4c,(iptr)&local_9c,9,(&DAT_0061c268)[local_54 * 4],
-                   (&DAT_0061c26c)[local_54 * 4],(&DAT_0061c270)[local_54 * 4],
-                   (&DAT_0061c274)[local_54 * 4]);
+                  (&local_4c,(iptr)&local_9c,9,(&throneroom_bonus_rect_x)[local_54 * 4],
+                   (&throneroom_bonus_rect_y)[local_54 * 4],(&throneroom_bonus_rect_w)[local_54 * 4],
+                   (&throneroom_bonus_rect_h)[local_54 * 4]);
         sprite_replace_color(&local_4c,7,9);
         sprite_draw
-                  (&local_4c,(iptr)local_ec,(iptr)this->pad_504,(&DAT_0061c268)[local_54 * 4] + -1,
-                   (&DAT_0061c26c)[local_54 * 4] + -1);
+                  (&local_4c,(iptr)local_ec,(iptr)this->pad_504,(&throneroom_bonus_rect_x)[local_54 * 4] + -1,
+                   (&throneroom_bonus_rect_y)[local_54 * 4] + -1);
       }
     }
   }
@@ -5947,15 +5947,15 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       goto LAB_0044e781;
     }
     sprite_grab_from_surface
-              (&local_4c,(iptr)&local_9c,9,*(undefined4 *)(&DAT_0061c168 + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c16c + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c170 + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c174 + local_50 * 0x10));
+              (&local_4c,(iptr)&local_9c,9,*(undefined4 *)(&throneroom_piece4_rect_x + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece4_rect_y + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece4_rect_w + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece4_rect_h + local_50 * 0x10));
     sprite_replace_color(&local_4c,7,9);
     sprite_draw
               (&local_4c,(iptr)local_100,(iptr)this->pad_504,
-               *(int *)(&DAT_0061c168 + local_50 * 0x10) + -1,
-               *(int *)(&DAT_0061c16c + local_50 * 0x10) + -1);
+               *(int *)(&throneroom_piece4_rect_x + local_50 * 0x10) + -1,
+               *(int *)(&throneroom_piece4_rect_y + local_50 * 0x10) + -1);
   }
   thunk_win_flush_pending_msgs();
   if ((this->throne_complete != 0) && ((civs[this->throne_civ].throne_room[8] & 8) != 0)) {
@@ -5970,10 +5970,10 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       goto LAB_0044e781;
     }
     sprite_grab_from_surface
-              (&local_4c,(iptr)&local_9c,9,DAT_0061c298,DAT_0061c29c,DAT_0061c2a0,DAT_0061c2a4);
+              (&local_4c,(iptr)&local_9c,9,throneroom_bonus3_rect_x,throneroom_bonus3_rect_y,throneroom_bonus3_rect_w,throneroom_bonus3_rect_h);
     sprite_replace_color(&local_4c,7,9);
     sprite_draw
-              (&local_4c,(iptr)local_114,(iptr)this->pad_504,DAT_0061c298 + -1,DAT_0061c29c + -1);
+              (&local_4c,(iptr)local_114,(iptr)this->pad_504,throneroom_bonus3_rect_x + -1,throneroom_bonus3_rect_y + -1);
   }
   thunk_win_flush_pending_msgs();
   for (local_54 = 5; local_54 < 7; local_54 = local_54 + 1) {
@@ -5992,15 +5992,15 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       }
       sprite_grab_from_surface
                 (&local_4c,(iptr)&local_9c,9,
-                 *(undefined4 *)(&DAT_0061c068 + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c06c + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c070 + local_50 * 0x10 + local_54 * 0x40),
-                 *(undefined4 *)(&DAT_0061c074 + local_50 * 0x10 + local_54 * 0x40));
+                 *(undefined4 *)(&throneroom_piece_rect_x + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_y + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_w + local_50 * 0x10 + local_54 * 0x40),
+                 *(undefined4 *)(&throneroom_piece_rect_h + local_50 * 0x10 + local_54 * 0x40));
       sprite_replace_color(&local_4c,7,9);
       sprite_draw
                 (&local_4c,(iptr)local_128,(iptr)this->pad_504,
-                 *(int *)(&DAT_0061c068 + local_50 * 0x10 + local_54 * 0x40) + -1,
-                 *(int *)(&DAT_0061c06c + local_50 * 0x10 + local_54 * 0x40) + -1);
+                 *(int *)(&throneroom_piece_rect_x + local_50 * 0x10 + local_54 * 0x40) + -1,
+                 *(int *)(&throneroom_piece_rect_y + local_50 * 0x10 + local_54 * 0x40) + -1);
     }
   }
   thunk_win_flush_pending_msgs();
@@ -6019,13 +6019,13 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
           goto LAB_0044e781;
         }
         sprite_grab_from_surface
-                  (&local_4c,(iptr)&local_9c,9,(&DAT_0061c268)[local_54 * 4],
-                   (&DAT_0061c26c)[local_54 * 4],(&DAT_0061c270)[local_54 * 4],
-                   (&DAT_0061c274)[local_54 * 4]);
+                  (&local_4c,(iptr)&local_9c,9,(&throneroom_bonus_rect_x)[local_54 * 4],
+                   (&throneroom_bonus_rect_y)[local_54 * 4],(&throneroom_bonus_rect_w)[local_54 * 4],
+                   (&throneroom_bonus_rect_h)[local_54 * 4]);
         sprite_replace_color(&local_4c,7,9);
         sprite_draw
-                  (&local_4c,(iptr)local_13c,(iptr)this->pad_504,(&DAT_0061c268)[local_54 * 4] + -1,
-                   (&DAT_0061c26c)[local_54 * 4] + -1);
+                  (&local_4c,(iptr)local_13c,(iptr)this->pad_504,(&throneroom_bonus_rect_x)[local_54 * 4] + -1,
+                   (&throneroom_bonus_rect_y)[local_54 * 4] + -1);
       }
     }
   }
@@ -6045,15 +6045,15 @@ undefined4 __thiscall throneroom_render(ThroneRoomWindow *this)
       goto LAB_0044e781;
     }
     sprite_grab_from_surface
-              (&local_4c,(iptr)&local_9c,9,*(undefined4 *)(&DAT_0061c228 + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c22c + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c230 + local_50 * 0x10),
-               *(undefined4 *)(&DAT_0061c234 + local_50 * 0x10));
+              (&local_4c,(iptr)&local_9c,9,*(undefined4 *)(&throneroom_piece7_rect_x + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece7_rect_y + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece7_rect_w + local_50 * 0x10),
+               *(undefined4 *)(&throneroom_piece7_rect_h + local_50 * 0x10));
     sprite_replace_color(&local_4c,7,9);
     sprite_draw
               (&local_4c,(iptr)local_150,(iptr)this->pad_504,
-               *(int *)(&DAT_0061c228 + local_50 * 0x10) + -1,
-               *(int *)(&DAT_0061c22c + local_50 * 0x10) + -1);
+               *(int *)(&throneroom_piece7_rect_x + local_50 * 0x10) + -1,
+               *(int *)(&throneroom_piece7_rect_y + local_50 * 0x10) + -1);
   }
   thunk_win_flush_pending_msgs();
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
@@ -6446,7 +6446,7 @@ LAB_0044f4ba:
 #define local_10 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(0)))
 #define local_c (*(byte *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0044f4c9(undefined4 param_1,undefined4 param_2)
+void __cdecl throneroom_on_click(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar2;
@@ -6513,7 +6513,7 @@ void __cdecl FUN_0044f4c9(undefined4 param_1,undefined4 param_2)
 #undef local_8
 
 /* 0044f717 auto */
-void __cdecl FUN_0044f717(int param_1)
+void __cdecl throneroom_on_key(int param_1)
 
 {
   if (*(int *)(throneroom_wnd + 0x1924) == 0) {

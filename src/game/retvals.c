@@ -76,7 +76,7 @@ void __thiscall pedia_load_description(void *this, int param_1)
         if (local_1110 == 0) goto LAB_0045259e;
         thunk_text_read_line(1);
         _strncpy(local_108,&text_buffer,2);
-        iVar2 = _strcmp(local_108,&DAT_006268f4);
+        iVar2 = _strcmp(local_108,&pedia_desc_marker_str);
         if (iVar2 != 0) break;
         local_1110 = local_1110 + -1;
       }
@@ -98,7 +98,7 @@ LAB_0045259e:
         local_10c = STRRCHR(&text_buffer,10);
         if (local_10c != (char *)0x0) {
           *local_10c = '\0';
-          FUN_005f22e0(&text_buffer,&DAT_006268f8);
+          FUN_005f22e0(&text_buffer,&pedia_desc_crlf_str);
         }
         sVar4 = _strlen(local_110c);
         sVar5 = _strlen(&text_buffer);
@@ -204,7 +204,7 @@ int __cdecl save_read_game(char *param_1)
   if (pcVar2 == (char *)0x0) {
     FUN_005f22e0(local_218,&save_file_path);
   }
-  _File = _fopen(local_218,&DAT_0062bae4);
+  _File = _fopen(local_218,&save_read_mode);
   if ((_File == (FILE *)0x0) || (iVar3 = thunk_save_read_cstr(local_324,_File), iVar3 == 0))
   goto LAB_00477352;
   iVar3 = _strcmp(PTR_s_CIVILIZE_0062b990,local_324);
@@ -232,7 +232,7 @@ int __cdecl save_read_game(char *param_1)
   FUN_005f22e0(local_108,&lang_file_ext);
   iVar3 = thunk_file_exists(local_108);
   if (iVar3 == 0) {
-    FUN_005f22d0(&game_txt_path,&DAT_0062baf8);
+    FUN_005f22d0(&game_txt_path,&game_txt_default_name_str);
   }
   else {
     FUN_005f22d0(&game_txt_path,&scenario_dir_path);
@@ -373,7 +373,7 @@ int __cdecl save_read_game(char *param_1)
   }
   scenario_events_loaded = 0;
   sVar4 = _fread(local_114,4,1,_File);
-  if ((sVar4 != 0) && (iVar3 = _strncmp(local_114,&DAT_0062bb00,4), iVar3 == 0)) {
+  if ((sVar4 != 0) && (iVar3 = _strncmp(local_114,&save_events_tag_check_str,4), iVar3 == 0)) {
     sVar4 = _fread(&local_328,4,1,_File);
     if (sVar4 == 0) goto LAB_00477352;
     thunk_events_reset(&scenario_events,50000);
@@ -691,7 +691,7 @@ LAB_00477352:
 #define WIN_STYLE(w) (*(uint *)(w))
 
 /* 0x005bd566 */
-void __cdecl FUN_005bd566(int param_1,int param_2)
+void __cdecl wnd_obj_set_topmost_child(int param_1,int param_2)
 
 {
   HWND pHVar1;

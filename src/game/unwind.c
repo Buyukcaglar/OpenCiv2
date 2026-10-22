@@ -62,7 +62,7 @@ void __thiscall city_picture_popup_dtor(void *this)
 
 /* 0x005efeb0: destructor - releases the handle at this+0xb0, runs the
    cleanup, destroys the members at this+0xc0 and this+0x44, then the base. */
-void __thiscall FUN_005efeb0(void *this)
+void __thiscall ddwin_dtor(void *this)
 {
     void *member;
 
@@ -188,11 +188,11 @@ undefined4 __cdecl FUN_005e0863(void)
     OffsetRect(&local_20, iVar2 + -0x46, iVar1);
     thunk_button_create(local_630, (undefined4)local_170, 0x65, (undefined4)&local_20,
                        (undefined4)&DAT_00638d90);
-    thunk_button_set_callback(local_630, (undefined4)FUN_005e00bb);
+    thunk_button_set_callback(local_630, (undefined4)dlg_radio_choice_button_cb);
     OffsetRect(&local_20, 0, -0x23);
     thunk_button_create(local_a4, (undefined4)local_170, 0x66, (undefined4)&local_20,
                        (undefined4)s_Cancel_00638d94);
-    thunk_button_set_callback(local_a4, (undefined4)FUN_005e00bb);
+    thunk_button_set_callback(local_a4, (undefined4)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
     thunk_edit_dtor(local_68);
     thunk_ctrl_dtor(local_a4);

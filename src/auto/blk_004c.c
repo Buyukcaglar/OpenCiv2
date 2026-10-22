@@ -150,7 +150,7 @@ iptr __cdecl civ_pick_research_advance(iptr param_1)
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
 undefined4 __cdecl
-FUN_004c0b51(undefined4 param_1,iptr param_2,iptr param_3,byte param_4,int param_5,int param_6,
+research_option_draw_advance(undefined4 param_1,iptr param_2,iptr param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
@@ -182,7 +182,7 @@ FUN_004c0b51(undefined4 param_1,iptr param_2,iptr param_3,byte param_4,int param
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 undefined4 __cdecl
-FUN_004c0be8(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+research_option_draw_unit(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
@@ -217,7 +217,7 @@ FUN_004c0be8(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
 undefined4 __cdecl
-FUN_004c0c83(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+research_option_draw_improvement(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
@@ -276,7 +276,7 @@ void __cdecl civ_research_goal_dialog(iptr param_1,int param_2,int param_3)
         thunk_dialog_set_columns((C_0040bc40_3c *)&local_308,2);
         if (diplo_session_active == 0) {
           thunk_dialog_set_list_indent((C_0040bc40_28 *)&local_308,0x4b,0);
-          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x402f63, FUN_004c0b51));
+          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x402f63, research_option_draw_advance));
         }
         for (local_31c = 0; local_31c < 100; local_31c = local_31c + 1) {
           if (((advances[local_31c].enabled != '\0') &&
@@ -298,7 +298,7 @@ void __cdecl civ_research_goal_dialog(iptr param_1,int param_2,int param_3)
       else if (aiStack_334[1] == 1) {
         if (diplo_session_active == 0) {
           thunk_dialog_set_list_indent((C_0040bc40_28 *)&local_308,0x4b,0);
-          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x401951, FUN_004c0be8));
+          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x401951, research_option_draw_unit));
         }
         for (local_30c = 0; local_30c < 0x3e; local_30c = local_30c + 1) {
           local_31c = (iptr)unit_types[local_30c].prerequisite;
@@ -319,7 +319,7 @@ void __cdecl civ_research_goal_dialog(iptr param_1,int param_2,int param_3)
       else if (aiStack_334[1] == 2) {
         if (diplo_session_active == 0) {
           thunk_dialog_set_list_indent((C_0040bc40_28 *)&local_308,0x4b,0);
-          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x401776, FUN_004c0c83));
+          thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_308,ADDR(0x401776, research_option_draw_improvement));
         }
         for (local_320 = 0; local_320 < 0x43; local_320 = local_320 + 1) {
           local_31c = (iptr)improvements[local_320].preq;
@@ -648,7 +648,7 @@ iptr __cdecl civ_choose_research_dialog(iptr param_1,int param_2)
       if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
         thunk_dialog_set_position((C_0040bc40_28 *)&local_600,5,0xfffffc19);
       }
-      thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_600,ADDR(0x402f63, FUN_004c0b51));
+      thunk_dialog_set_option_draw_fn((DialogOptionList *)&local_600,ADDR(0x402f63, research_option_draw_advance));
       thunk_dialog_set_list_indent((C_0040bc40_28 *)&local_600,0x4b,0);
       local_620 = 0;
       for (local_624 = 0; local_624 < 100; local_624 = local_624 + 1) {
@@ -3277,7 +3277,7 @@ undefined4 __cdecl popup_game_with_unit(iptr param_1,undefined4 param_2,iptr par
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004cc8f0(void)
+void __cdecl editor_text_dlg_wnd_global_init(void)
 
 {
   editor_text_dlg_wnd_static_init();
@@ -3297,12 +3297,12 @@ void __cdecl editor_text_dlg_wnd_static_init(void)
 void __cdecl editor_text_dlg_wnd_reg_atexit(void)
 
 {
-  _atexit(FUN_004cc941);
+  _atexit(editor_text_dlg_wnd_static_dtor);
   return;
 }
 
 /* 004cc941 auto */
-void __cdecl FUN_004cc941(void)
+void __cdecl editor_text_dlg_wnd_static_dtor(void)
 
 {
   thunk_frame_wnd_dtor((DibSurface *)&editor_text_dlg_wnd);
@@ -3318,7 +3318,7 @@ void __cdecl FUN_004cc941(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004cc95b(void)
+void __cdecl editor_text_edit_global_init(void)
 
 {
   editor_text_edit_static_init();
@@ -3338,12 +3338,12 @@ void __cdecl editor_text_edit_static_init(void)
 void __cdecl editor_text_edit_reg_atexit(void)
 
 {
-  _atexit(FUN_004cc9ac);
+  _atexit(editor_text_edit_static_dtor);
   return;
 }
 
 /* 004cc9ac auto */
-void __cdecl FUN_004cc9ac(void)
+void __cdecl editor_text_edit_static_dtor(void)
 
 {
   thunk_edit_dtor((Control *)&editor_text_edit);
@@ -3360,7 +3360,7 @@ void __cdecl FUN_004cc9ac(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004cc9c6(void)
+void __cdecl editor_font_global_init(void)
 
 {
   editor_font_static_init();
@@ -3380,12 +3380,12 @@ void __cdecl editor_font_static_init(void)
 void __cdecl editor_font_reg_atexit(void)
 
 {
-  _atexit(FUN_004cca1b);
+  _atexit(editor_font_static_dtor);
   return;
 }
 
 /* 004cca1b auto */
-void __cdecl FUN_004cca1b(void)
+void __cdecl editor_font_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&editor_font);
@@ -3510,7 +3510,7 @@ void __cdecl text_append_int_2d(undefined4 param_1)
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  _sprintf(local_18,&DAT_0062e020,param_1);
+  _sprintf(local_18,&int_2d_fmt,param_1);
   FUN_005f22e0(&text_buffer,local_18);
   return;
 }
@@ -3527,15 +3527,15 @@ void __cdecl text_append_advance_abbrev(iptr param_1,int param_2)
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == -2) {
-    FUN_005f22e0(&text_buffer,&DAT_0062e024 + ((param_2 != 0) - 1 & 8));
+    FUN_005f22e0(&text_buffer,&advance_abbrev_no_strs + ((param_2 != 0) - 1 & 8));
   }
   else if (param_1 == -1) {
-    FUN_005f22e0(&text_buffer,&DAT_0062e030 + ((param_2 != 0) - 1 & 8));
+    FUN_005f22e0(&text_buffer,&advance_abbrev_nil_strs + ((param_2 != 0) - 1 & 8));
   }
   else if (param_1 < 100) {
     FUN_005f22e0(&text_buffer,advances + param_1);
     if (param_2 != 0) {
-      FUN_005f22e0(&text_buffer,&DAT_0062e03c);
+      FUN_005f22e0(&text_buffer,&advance_abbrev_comma_str);
     }
     sVar1 = _strlen(advances[param_1].abbrev);
     if (sVar1 < 3) {
@@ -3547,7 +3547,7 @@ void __cdecl text_append_advance_abbrev(iptr param_1,int param_2)
     thunk_text_append_spaces(3 - local_8);
   }
   else {
-    FUN_005f22e0(&text_buffer,&DAT_0062e040 + ((param_2 != 0) - 1 & 8));
+    FUN_005f22e0(&text_buffer,&advance_abbrev_err_strs + ((param_2 != 0) - 1 & 8));
   }
   return;
 }
@@ -3673,7 +3673,7 @@ LAB_004cd353:
 #define local_218 (*(char (*)[260])(frame_ + FRAME_OFF(96)))
 #define local_114 (*(char (*)[256])(frame_ + FRAME_OFF(356)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(612)))
-undefined4 __cdecl FUN_004cd3d7(undefined4 param_1,char *param_2,char *param_3)
+undefined4 __cdecl editor_city_file_replace_line(undefined4 param_1,char *param_2,char *param_3)
 
 {
   int iVar1;
@@ -3737,7 +3737,7 @@ undefined4 __cdecl FUN_004cd3d7(undefined4 param_1,char *param_2,char *param_3)
         if (iVar1 == 0) {
           iVar1 = _fputs(param_3,local_220);
           if (iVar1 != -1) {
-            iVar1 = _fputs(&DAT_0062e150,local_220);
+            iVar1 = _fputs(&city_file_newline_str,local_220);
             goto joined_r0x004cd6d4;
           }
           break;
@@ -3823,7 +3823,7 @@ LAB_004cdc50:
             while( true ) {
               pcVar2 = _fgets(&local_118,0x100,local_224);
               if (pcVar2 == (char *)0x0) goto LAB_004cdc50;
-              if ((local_118 != '@') || (iVar1 = __strnicmp(local_117,&DAT_0062e1ac,4), iVar1 == 0))
+              if ((local_118 != '@') || (iVar1 = __strnicmp(local_117,&city_file_stop_str,4), iVar1 == 0))
               break;
               for (local_11c = 0; local_11c < 0x15; local_11c = local_11c + 1) {
                 local_22c = 1;
@@ -3889,7 +3889,7 @@ LAB_004cdc5a:
 #undef local_8
 
 /* 004cdcf6 auto */
-undefined4 __cdecl FUN_004cdcf6(undefined4 param_1,int param_2)
+undefined4 __cdecl editor_numeric_edit_filter(undefined4 param_1,int param_2)
 
 {
   undefined4 uVar1;
@@ -4011,7 +4011,7 @@ editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int para
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&editor_text_dlg_title,&DAT_0062e1d4);
+    FUN_005f22d0(&editor_text_dlg_title,&editor_text_dlg_empty_title);
   }
   else {
     FUN_005f22d0(&editor_text_dlg_title,param_1);
@@ -4083,7 +4083,7 @@ editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int para
 #define editor_text_active (*(undefined4 *)((u8 *)&g.d_006a4f9c))
 #define local_108 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_104 (*(char (*)[256])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004ce196(void)
+void __cdecl editor_text_dlg_on_ok(void)
 
 {
   int iVar1;
@@ -4128,7 +4128,7 @@ LAB_004ce2ca:
 
 /* 004ce2f3 auto */
 #define editor_text_active (*(undefined4 *)((u8 *)&g.d_006a4f9c))
-void __cdecl FUN_004ce2f3(void)
+void __cdecl editor_text_dlg_on_cancel(void)
 
 {
   editor_text_result = 0;
@@ -4139,7 +4139,7 @@ void __cdecl FUN_004ce2f3(void)
 #undef editor_text_active
 
 /* 004ce322 auto */
-void __cdecl FUN_004ce322(void)
+void __cdecl editor_text_dlg_redraw(void)
 
 {
   thunk_frame_wnd_draw_caption((FrameWindow *)&editor_text_dlg_wnd);
@@ -4206,14 +4206,14 @@ undefined4 __cdecl editor_text_edit_dialog(iptr param_1,undefined4 param_2)
   thunk_rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create(&local_4c,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x65,(iptr)local_5c,iVar3);
-  thunk_button_set_callback(&local_4c,ADDR(0x401d84, FUN_004ce196));
+  thunk_button_set_callback(&local_4c,ADDR(0x401d84, editor_text_dlg_on_ok));
   local_64 = local_64 + local_60 + 2;
   thunk_rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create(&local_a4,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x66,(iptr)local_5c,iVar3);
-  thunk_button_set_callback(&local_a4,ADDR(0x4011d1, FUN_004ce2f3));
+  thunk_button_set_callback(&local_a4,ADDR(0x4011d1, editor_text_dlg_on_cancel));
   thunk_ctrl_set_cancel_button(&local_a4);
-  thunk_wnd_set_redraw_callback((SurfaceWindow *)&editor_text_dlg_wnd,ADDR(0x401582, FUN_004ce322));
+  thunk_wnd_set_redraw_callback((SurfaceWindow *)&editor_text_dlg_wnd,ADDR(0x401582, editor_text_dlg_redraw));
   wnd_repaint((SurfaceWindow *)&editor_text_dlg_wnd);
   thunk_window_show((C_004083b0_4 *)&editor_text_dlg_wnd);
   wnd_run_modal_loop((C_00408010_b8 *)&editor_text_dlg_inner);
@@ -4293,7 +4293,7 @@ LAB_004ce7c5:
 
 /* 004ce83d auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004ce83d(void)
+void __cdecl editor_wnd_on_move_close_dropdowns(void)
 
 {
   HWND hWnd;
@@ -4579,7 +4579,7 @@ int __cdecl events_rename_unit_refs(char *param_1,iptr param_2)
 /* 004cf144 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_004cf144(char *param_1,char *param_2)
+int __cdecl events_rename_civ_refs(char *param_1,char *param_2)
 
 {
   int iVar1;
@@ -4652,7 +4652,7 @@ int __cdecl FUN_004cf144(char *param_1,char *param_2)
 /* 004cf3ba auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_004cf3ba(char *param_1,char *param_2)
+int __cdecl events_rename_city_refs(char *param_1,char *param_2)
 
 {
   int iVar1;

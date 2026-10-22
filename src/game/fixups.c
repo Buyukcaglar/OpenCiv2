@@ -9,7 +9,7 @@
 /* 0x005c8791: unload a font resource: delete its cached GDI fonts, remove
  * the font file, then free the resource block. */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005c8791(undefined4 param_1)
+void __cdecl font_file_unload(undefined4 param_1)
 {
     char *font;
     undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -33,7 +33,7 @@ void __cdecl FUN_005c8791(undefined4 param_1)
 
 /* 0x005c8caf: hover-tracking button window procedure. */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4)
+undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4)
 {
     void *this;
     int iVar1;
@@ -143,7 +143,7 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
 #define local_1c (*(HBRUSH *)(frame_ + FRAME_OFF(108)))
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(112)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(128)))
-undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
+undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 {
     char cVar1;
     SHORT SVar2;
@@ -206,7 +206,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
         *(undefined4 *)(local_44 + 0x18) = 0;
         BVar4 = PtInRect(&local_38, pt);
         if (BVar4 != 0) {
-            FUN_005cacd4(param_1, 0xf, 0, 0);
+            button_wndproc(param_1, 0xf, 0, 0);
             uVar9 = thunk_ctrl_get_parent(local_28);
             wnd_set_active_child(uVar9);
             uVar9 = thunk_ctrl_get_id(local_28);
@@ -254,7 +254,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
         DeleteDC(local_24);
         EndPaint(param_1, &local_84);
         if (GetFocus() == param_1)
-            FUN_005cacd4(param_1, 7, 0, 0);
+            button_wndproc(param_1, 7, 0, 0);
         break;
     case 0x100:     /* WM_KEYDOWN */
         if (param_3 == 9) {
@@ -329,7 +329,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
 #define local_10 (*(void * *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
-undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
+undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
 {
     char cVar1;
     int iVar3;
@@ -389,7 +389,7 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
             *(undefined4 *)(iVar3 + 0x18) = 0;
             BVar12 = PtInRect(&local_20, pt);
             if (BVar12 != 0) {
-                FUN_005cb6eb(param_1, 0xf, 0, 0);
+                spritebtn_wndproc(param_1, 0xf, 0, 0);
                 uVar9 = thunk_ctrl_get_parent(local_10);
                 wnd_set_active_child(uVar9);
                 uVar9 = thunk_ctrl_get_id(local_10);
@@ -451,7 +451,7 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
         }
         EndPaint(param_1, &local_64);
         if (GetFocus() == param_1)
-            FUN_005cb6eb(param_1, 7, 0, 0);
+            spritebtn_wndproc(param_1, 7, 0, 0);
         break;
     case 0x100:     /* WM_KEYDOWN */
         if (param_3 == 9) {
@@ -565,13 +565,13 @@ typedef HRESULT (__stdcall *dd_getcaps_fn)(void *dd, void *driver_caps, void *he
 /* 0x005e89d0: register the DirectDraw window class, create DirectDraw and
  * check the hardware capabilities. */
 #define local_2c (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_005e89d0(void)
+undefined4 __cdecl ddraw_init(void)
 {
     HRESULT hr;
     undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
 
     local_2c.style = 0xb;
-    local_2c.lpfnWndProc = (WNDPROC)FUN_005ef6cb;
+    local_2c.lpfnWndProc = (WNDPROC)ddwin_native_wndproc;
     local_2c.cbClsExtra = 8;
     local_2c.cbWndExtra = 0;
     local_2c.hInstance = g_hinstance;

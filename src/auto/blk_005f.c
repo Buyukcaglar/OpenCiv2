@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 005f0056 auto */
-void __thiscall FUN_005f0056(C_005f0056 *this)
+void __thiscall ddwin_show(C_005f0056 *this)
 
 {
   undefined4 uVar1;
@@ -43,7 +43,7 @@ void __thiscall ddwin_reset_after_mode_change(DDSurface *this)
 
 /* 005f0169 auto */
 undefined1 __thiscall
-FUN_005f0169(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+ddwin_set_display_mode(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   undefined1 uVar1;
@@ -73,7 +73,7 @@ void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *
 
 /* 005f0213 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005f0213(C_005f0213 *this,DDSurface *param_1)
+void __thiscall ddwin_attach_back_buffer(C_005f0213 *this,DDSurface *param_1)
 
 {
   undefined4 uVar1;
@@ -369,7 +369,7 @@ undefined4 __thiscall ptrlist_last_impl(PtrListLastView *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall FUN_005f07f9(C_005f07f9 *this)
+undefined4 __thiscall ptrlist_current(C_005f07f9 *this)
 
 {
   undefined4 uVar1;
@@ -407,7 +407,7 @@ undefined4 __thiscall ptrlist_next_impl(PtrList *this)
 }
 
 /* 005f0897 auto */
-undefined4 __thiscall FUN_005f0897(C_005f0897 *this)
+undefined4 __thiscall ptrlist_prev_impl(C_005f0897 *this)
 
 {
   uptr uVar1;
@@ -478,7 +478,7 @@ void __thiscall ptrlist_append_impl(PtrList *this,undefined4 param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __thiscall FUN_005f0a04(PtrList *this,undefined4 param_1)
+void __thiscall ptrlist_insert_before(PtrList *this,undefined4 param_1)
 
 {
   int iVar1;
@@ -540,7 +540,7 @@ void __thiscall FUN_005f0a04(PtrList *this,undefined4 param_1)
 
 /* 005f0bce auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __thiscall FUN_005f0bce(PtrList *this,int param_1)
+int __thiscall ptrlist_find(PtrList *this,int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -560,7 +560,7 @@ int __thiscall FUN_005f0bce(PtrList *this,int param_1)
 /* 005f0c21 auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __thiscall FUN_005f0c21(PtrList *this)
+int __thiscall ptrlist_count(PtrList *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -673,7 +673,7 @@ void * __thiscall ptrlist_node_delete(void *this,uint param_1)
 
 /* 005f0ef0 auto */
 #define ddctrl_current_target (*(undefined4 *)((u8 *)&g.d_00639dc8))
-undefined4 __cdecl FUN_005f0ef0(void)
+undefined4 __cdecl ddctrl_get_msg_target(void)
 
 {
   return ddctrl_current_target;
@@ -694,7 +694,7 @@ void __cdecl ddctrl_set_msg_target(iptr param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_005f0f1d * __thiscall FUN_005f0f1d(C_005f0f1d *this)
+C_005f0f1d * __thiscall ddctrl_ctor(C_005f0f1d *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -705,7 +705,7 @@ C_005f0f1d * __thiscall FUN_005f0f1d(C_005f0f1d *this)
   this->parent_wnd = 0;
   this->parent_control = 0;
   this->on_mousemove = 0;
-  this->field_20 = 0;
+  this->on_click = 0;
   this->on_mousemove = 0;
   this->on_lbuttonup = 0;
   this->on_rbuttonup = 0;
@@ -721,7 +721,7 @@ C_005f0f1d * __thiscall FUN_005f0f1d(C_005f0f1d *this)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_005f0fe9 * __thiscall FUN_005f0fe9(C_005f0fe9 *this,u32 param_1)
+C_005f0fe9 * __thiscall ddctrl_ctor_in_window(C_005f0fe9 *this,u32 param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -732,7 +732,7 @@ C_005f0fe9 * __thiscall FUN_005f0fe9(C_005f0fe9 *this,u32 param_1)
   this->parent_wnd = param_1;
   this->parent_control = 0;
   this->on_mousemove = 0;
-  this->field_20 = 0;
+  this->on_click = 0;
   this->on_mousemove = 0;
   this->on_lbuttonup = 0;
   this->on_rbuttonup = 0;
@@ -748,7 +748,7 @@ C_005f0fe9 * __thiscall FUN_005f0fe9(C_005f0fe9 *this,u32 param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_005f10b6 * __thiscall FUN_005f10b6(C_005f10b6 *this,u32 param_1)
+C_005f10b6 * __thiscall ddctrl_ctor_in_control(C_005f10b6 *this,u32 param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -759,7 +759,7 @@ C_005f10b6 * __thiscall FUN_005f10b6(C_005f10b6 *this,u32 param_1)
   this->parent_wnd = 0;
   this->parent_control = param_1;
   this->on_mousemove = 0;
-  this->field_20 = 0;
+  this->on_click = 0;
   this->on_mousemove = 0;
   this->on_lbuttonup = 0;
   this->on_rbuttonup = 0;
@@ -775,7 +775,7 @@ C_005f10b6 * __thiscall FUN_005f10b6(C_005f10b6 *this,u32 param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005f1183(void *this)
+void __thiscall ddctrl_dtor(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -792,11 +792,11 @@ void __thiscall FUN_005f1183(void *this)
 #undef local_8
 
 /* 005f11f6 auto */
-void __thiscall FUN_005f11f6(C_005f11f6 *this,u32 param_1)
+void __thiscall ddctrl_set_parent_window(C_005f11f6 *this,u32 param_1)
 
 {
-  this->field_c = 0;
-  this->field_8 = param_1;
+  this->parent_control = 0;
+  this->parent_wnd = param_1;
   return;
 }
 
@@ -806,16 +806,16 @@ void __thiscall FUN_005f11f6(C_005f11f6 *this,u32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005f1221(C_005f1221 *this,u32 param_1)
+void __thiscall ddctrl_set_parent_control(C_005f1221 *this,u32 param_1)
 
 {
   this->is_enabled = param_1;
-  this->field_8 = 0;
+  this->parent_wnd = 0;
   return;
 }
 
 /* 005f124c auto */
-void __thiscall FUN_005f124c(DDControlParentView *this,u32 param_1,uptr *param_2)
+void __thiscall ddctrl_create(DDControlParentView *this,u32 param_1,uptr *param_2)
 
 {
   uptr uVar1;
@@ -920,7 +920,7 @@ uptr __thiscall ddctrl_get_parent_window(DDControlParentView *this)
 }
 
 /* 005f156d auto */
-void __thiscall FUN_005f156d(DDControlParentView *this)
+void __thiscall ddctrl_get_window_palette(DDControlParentView *this)
 
 {
   uptr uVar1;
@@ -929,12 +929,12 @@ void __thiscall FUN_005f156d(DDControlParentView *this)
     uVar1 = ddctrl_get_parent_window(this);
     this->parent_wnd = uVar1;
   }
-  FUN_005f1b50((C_005f1b50 *)this->parent_wnd);
+  ddwin_get_palette((C_005f1b50 *)this->parent_wnd);
   return;
 }
 
 /* 005f15a9 auto */
-void __thiscall FUN_005f15a9(DDControlParentView *this,undefined4 param_1)
+void __thiscall ddctrl_on_paint_default(DDControlParentView *this,undefined4 param_1)
 
 {
   int iVar1;
@@ -985,57 +985,57 @@ void __thiscall ddctrl_deactivate(void *this)
 }
 
 /* 005f16c4 auto */
-void __thiscall FUN_005f16c4(C_005f16c4 *this,u32 param_1)
+void __thiscall ddctrl_set_click_cb(C_005f16c4 *this,u32 param_1)
 
 {
-  this->field_20 = param_1;
+  this->on_click = param_1;
   return;
 }
 
 /* 005f16e5 auto */
-void __thiscall FUN_005f16e5(C_005f16e5 *this,u32 param_1)
+void __thiscall ddctrl_set_mousemove_cb(C_005f16e5 *this,u32 param_1)
 
 {
-  this->field_24 = param_1;
+  this->on_mousemove = param_1;
   return;
 }
 
 /* 005f1706 auto */
-void __thiscall FUN_005f1706(C_005f1706 *this,u32 param_1)
+void __thiscall ddctrl_set_lbuttonup_cb(C_005f1706 *this,u32 param_1)
 
 {
-  this->field_28 = param_1;
+  this->on_lbuttonup = param_1;
   return;
 }
 
 /* 005f1727 auto */
-void __thiscall FUN_005f1727(C_005f1727 *this,u32 param_1)
+void __thiscall ddctrl_set_rbuttonup_cb(C_005f1727 *this,u32 param_1)
 
 {
-  this->field_2c = param_1;
+  this->on_rbuttonup = param_1;
   return;
 }
 
 /* 005f1748 auto */
-void __thiscall FUN_005f1748(C_005f1748 *this,u32 param_1)
+void __thiscall ddctrl_set_dblclick_cb(C_005f1748 *this,u32 param_1)
 
 {
-  this->field_30 = param_1;
+  this->on_dblclick = param_1;
   return;
 }
 
 /* 005f1769 auto */
-void __thiscall FUN_005f1769(C_005f1769 *this)
+void __thiscall ddctrl_call_click_cb(C_005f1769 *this)
 
 {
-  if (this->field_20 != 0) {
-    (*(code *)this->field_20)(this->control_id);
+  if (this->on_click != 0) {
+    (*(code *)this->on_click)(this->control_id);
   }
   return;
 }
 
 /* 005f179c auto */
-void __thiscall FUN_005f179c(DDControlActivateView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_lbuttondown(DDControlActivateView *this,undefined4 param_1,undefined4 param_2)
 
 {
   ddctrl_activate(this);
@@ -1043,14 +1043,14 @@ void __thiscall FUN_005f179c(DDControlActivateView *this,undefined4 param_1,unde
 }
 
 /* 005f17bc auto */
-void __thiscall FUN_005f17bc(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_rbuttondown_nop(void *this,undefined4 param_1,undefined4 param_2)
 
 {
   return;
 }
 
 /* 005f17d4 auto */
-void __thiscall FUN_005f17d4(C_005f17d4 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_lbuttonup(C_005f17d4 *this,undefined4 param_1,undefined4 param_2)
 
 {
   if (this->on_lbutton_up != 0) {
@@ -1060,7 +1060,7 @@ void __thiscall FUN_005f17d4(C_005f17d4 *this,undefined4 param_1,undefined4 para
 }
 
 /* 005f1811 auto */
-void __thiscall FUN_005f1811(C_005f1811 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_rbuttonup(C_005f1811 *this,undefined4 param_1,undefined4 param_2)
 
 {
   if (this->on_rbutton_up != 0) {
@@ -1070,7 +1070,7 @@ void __thiscall FUN_005f1811(C_005f1811 *this,undefined4 param_1,undefined4 para
 }
 
 /* 005f184e auto */
-void __thiscall FUN_005f184e(C_005f184e *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_mousemove(C_005f184e *this,undefined4 param_1,undefined4 param_2)
 
 {
   if (this->on_mouse_move != 0) {
@@ -1080,7 +1080,7 @@ void __thiscall FUN_005f184e(C_005f184e *this,undefined4 param_1,undefined4 para
 }
 
 /* 005f188b auto */
-void __thiscall FUN_005f188b(C_005f188b *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_dblclick(C_005f188b *this,undefined4 param_1,undefined4 param_2)
 
 {
   if (this->on_dblclick != 0) {
@@ -1090,28 +1090,28 @@ void __thiscall FUN_005f188b(C_005f188b *this,undefined4 param_1,undefined4 para
 }
 
 /* 005f18c8 auto */
-void __thiscall FUN_005f18c8(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall ddctrl_on_msg_fff0_nop(void *this,undefined4 param_1,undefined4 param_2)
 
 {
   return;
 }
 
 /* 005f18e0 auto */
-void __thiscall FUN_005f18e0(void *this,undefined4 param_1)
+void __thiscall ddctrl_on_keydown_nop(void *this,undefined4 param_1)
 
 {
   return;
 }
 
 /* 005f18f8 auto */
-void __thiscall FUN_005f18f8(void *this,undefined4 param_1)
+void __thiscall ddctrl_on_char_nop(void *this,undefined4 param_1)
 
 {
   return;
 }
 
 /* 005f1910 auto */
-void __thiscall FUN_005f1910(void *this,undefined4 param_1)
+void __thiscall ddctrl_on_set_active_nop(void *this,undefined4 param_1)
 
 {
   return;
@@ -1213,9 +1213,9 @@ undefined1 __thiscall ddctrl_dispatch_to_children(DDControl *this,int param_1,in
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_005f1b50(C_005f1b50 *this)
+u32 __thiscall ddwin_get_palette(C_005f1b50 *this)
 
 {
-  return this->field_ac;
+  return this->palette_obj;
 }
 

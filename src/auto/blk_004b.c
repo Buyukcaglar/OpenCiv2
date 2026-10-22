@@ -83,12 +83,12 @@ undefined1 __cdecl rules_parse_advance_abbrev(char *param_1)
   int iVar2;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = _strcmp(param_1,&DAT_0062d0a4);
+  iVar2 = _strcmp(param_1,&rules_advance_no_str);
   if (iVar2 == 0) {
     uVar1 = 0xfe;
   }
   else {
-    iVar2 = _strcmp(param_1,&DAT_0062d0a8);
+    iVar2 = _strcmp(param_1,&rules_advance_nil_str);
     if (iVar2 == 0) {
       uVar1 = 0xff;
     }
@@ -118,12 +118,12 @@ undefined1 __cdecl rules_parse_terrain_abbrev(char *param_1)
   int iVar2;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = __strcmpi(param_1,&DAT_0062d0ac);
+  iVar2 = __strcmpi(param_1,&rules_terrain_no_str);
   if (iVar2 == 0) {
     uVar1 = 0xff;
   }
   else {
-    iVar2 = __strcmpi(param_1,&DAT_0062d0b0);
+    iVar2 = __strcmpi(param_1,&rules_terrain_yes_str);
     if (iVar2 == 0) {
       uVar1 = 0xfe;
     }
@@ -149,10 +149,10 @@ undefined1 __cdecl rules_parse_terrain_abbrev(char *param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b08e0(void)
+void __cdecl diffeng_global_init(void)
 
 {
-  FUN_004b08f5();
+  diffeng_static_init_stub();
   return;
 }
 
@@ -162,7 +162,7 @@ void __cdecl FUN_004b08e0(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b08f5(void)
+void __cdecl diffeng_static_init_stub(void)
 
 {
   return;
@@ -440,7 +440,7 @@ net_send_state_diff(undefined4 param_1,uint param_2,int param_3,undefined4 param
             local_8 = (int *)(diffeng_section_padded_sizes + diffeng_section_ptrs);
           }
         } while (((local_44 == 0) &&
-                 ((int)diffeng_scan_ptr + (-ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)) - (int)piVar1) + (int)local_18 < DAT_0062d0c0)) &&
+                 ((int)diffeng_scan_ptr + (-ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)) - (int)piVar1) + (int)local_18 < diffeng_packet_flush_size)) &&
                 (*local_40 != *diffeng_scan_ptr));
         if (0x400 < local_44) {
           err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62d13c, ((u8 *)&g.d_0062d13c)),ADDR(0x62d114, ((u8 *)&g.d_0062d114)),0xee);
@@ -476,7 +476,7 @@ net_send_state_diff(undefined4 param_1,uint param_2,int param_3,undefined4 param
         }
         local_14 = local_14 + 1;
         local_4c = local_4c + local_44;
-        if (DAT_0062d0c0 <= (int)(local_18 + -0x19e7fc)) {
+        if (diffeng_packet_flush_size <= (int)(local_18 + -0x19e7fc)) {
           _DAT_00679ff8 = local_18 + -0x19e7fc;
           _DAT_0067a000 = local_14;
           thunk_net_send_message(0x5c,param_1,0,0,0,0,0,0,0,ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)));
@@ -534,7 +534,7 @@ net_send_state_diff(undefined4 param_1,uint param_2,int param_3,undefined4 param
 #define local_14 (*(int * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int * *)(frame_ + FRAME_OFF(12)))
-undefined4 __cdecl FUN_004b12b3(int param_1)
+undefined4 __cdecl diffeng_section_changed(int param_1)
 
 {
   uint uVar1;
@@ -1585,7 +1585,7 @@ uint __cdecl map_assign_landmass_ids(void)
 #undef local_8
 
 /* 004b3ca0 auto */
-void __cdecl FUN_004b3ca0(void)
+void __cdecl font_size16_bold_global_init(void)
 
 {
   font_size16_bold_static_init();
@@ -1605,12 +1605,12 @@ void __cdecl font_size16_bold_static_init(void)
 void __cdecl font_size16_bold_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3cf7);
+  _atexit(font_size16_bold_static_dtor);
   return;
 }
 
 /* 004b3cf7 auto */
-void __cdecl FUN_004b3cf7(void)
+void __cdecl font_size16_bold_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size16_bold);
@@ -1627,7 +1627,7 @@ void __cdecl FUN_004b3cf7(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3d11(void)
+void __cdecl font_size20_global_init(void)
 
 {
   font_size20_static_init();
@@ -1647,12 +1647,12 @@ void __cdecl font_size20_static_init(void)
 void __cdecl font_size20_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3d66);
+  _atexit(font_size20_static_dtor);
   return;
 }
 
 /* 004b3d66 auto */
-void __cdecl FUN_004b3d66(void)
+void __cdecl font_size20_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size20);
@@ -1669,7 +1669,7 @@ void __cdecl FUN_004b3d66(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3d80(void)
+void __cdecl font_size14_global_init(void)
 
 {
   font_size14_static_init();
@@ -1689,12 +1689,12 @@ void __cdecl font_size14_static_init(void)
 void __cdecl font_size14_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3dd5);
+  _atexit(font_size14_static_dtor);
   return;
 }
 
 /* 004b3dd5 auto */
-void __cdecl FUN_004b3dd5(void)
+void __cdecl font_size14_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size14);
@@ -1711,7 +1711,7 @@ void __cdecl FUN_004b3dd5(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3def(void)
+void __cdecl font_size16_global_init(void)
 
 {
   font_size16_static_init();
@@ -1731,12 +1731,12 @@ void __cdecl font_size16_static_init(void)
 void __cdecl font_size16_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3e44);
+  _atexit(font_size16_static_dtor);
   return;
 }
 
 /* 004b3e44 auto */
-void __cdecl FUN_004b3e44(void)
+void __cdecl font_size16_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size16);
@@ -1744,7 +1744,7 @@ void __cdecl FUN_004b3e44(void)
 }
 
 /* 004b3e5e auto */
-void __cdecl FUN_004b3e5e(void)
+void __cdecl font_size24_bold_global_init(void)
 
 {
   font_size24_bold_static_init();
@@ -1764,12 +1764,12 @@ void __cdecl font_size24_bold_static_init(void)
 void __cdecl font_size24_bold_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3eb5);
+  _atexit(font_size24_bold_static_dtor);
   return;
 }
 
 /* 004b3eb5 auto */
-void __cdecl FUN_004b3eb5(void)
+void __cdecl font_size24_bold_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size24_bold);
@@ -1786,7 +1786,7 @@ void __cdecl FUN_004b3eb5(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3ecf(void)
+void __cdecl font_size30_global_init(void)
 
 {
   font_size30_static_init();
@@ -1806,12 +1806,12 @@ void __cdecl font_size30_static_init(void)
 void __cdecl font_size30_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3f24);
+  _atexit(font_size30_static_dtor);
   return;
 }
 
 /* 004b3f24 auto */
-void __cdecl FUN_004b3f24(void)
+void __cdecl font_size30_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size30);
@@ -1828,7 +1828,7 @@ void __cdecl FUN_004b3f24(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3f3e(void)
+void __cdecl font_size21_global_init(void)
 
 {
   font_size21_static_init();
@@ -1848,12 +1848,12 @@ void __cdecl font_size21_static_init(void)
 void __cdecl font_size21_reg_atexit(void)
 
 {
-  _atexit(FUN_004b3f93);
+  _atexit(font_size21_static_dtor);
   return;
 }
 
 /* 004b3f93 auto */
-void __cdecl FUN_004b3f93(void)
+void __cdecl font_size21_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size21);
@@ -1870,7 +1870,7 @@ void __cdecl FUN_004b3f93(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_004b3fad(void)
+void __cdecl font_size24_global_init(void)
 
 {
   font_size24_static_init();
@@ -1890,12 +1890,12 @@ void __cdecl font_size24_static_init(void)
 void __cdecl font_size24_reg_atexit(void)
 
 {
-  _atexit(FUN_004b4002);
+  _atexit(font_size24_static_dtor);
   return;
 }
 
 /* 004b4002 auto */
-void __cdecl FUN_004b4002(void)
+void __cdecl font_size24_static_dtor(void)
 
 {
   thunk_font_destroy((GameFont *)&font_size24);
@@ -1903,7 +1903,7 @@ void __cdecl FUN_004b4002(void)
 }
 
 /* 004b401c auto */
-void __cdecl FUN_004b401c(void)
+void __cdecl parley_wnd_global_init(void)
 
 {
   parley_wnd_static_init();
@@ -1923,12 +1923,12 @@ void __cdecl parley_wnd_static_init(void)
 void __cdecl parley_wnd_reg_atexit(void)
 
 {
-  _atexit(FUN_004b4078);
+  _atexit(parley_wnd_static_dtor);
   return;
 }
 
 /* 004b4078 auto */
-void __cdecl FUN_004b4078(void)
+void __cdecl parley_wnd_static_dtor(void)
 
 {
   thunk_parley_wnd_dtor((C_004083b0_430 *)&parley_wnd);
@@ -1936,7 +1936,7 @@ void __cdecl FUN_004b4078(void)
 }
 
 /* 004b4092 auto */
-void __cdecl FUN_004b4092(void)
+void __cdecl chat_wnd_global_init(void)
 
 {
   chat_wnd_static_init();
@@ -1956,12 +1956,12 @@ void __cdecl chat_wnd_static_init(void)
 void __cdecl chat_wnd_reg_atexit(void)
 
 {
-  _atexit(FUN_004b40ee);
+  _atexit(chat_wnd_static_dtor);
   return;
 }
 
 /* 004b40ee auto */
-void __cdecl FUN_004b40ee(void)
+void __cdecl chat_wnd_static_dtor(void)
 
 {
   thunk_parley_wnd_dtor((C_004083b0_430 *)&chat_wnd);
@@ -2005,7 +2005,7 @@ C_004083b0_430 * __thiscall parley_wnd_ctor(C_004083b0_430 *this,iptr param_1)
       this->large_layout = 1;
     }
   }
-  this->field_290 = 0;
+  this->close_button = 0;
   this->field_2a0 = 0;
   this->field_2a4 = 0;
   this->field_340 = 0;
@@ -2045,11 +2045,11 @@ C_004083b0_430 * __thiscall parley_wnd_ctor(C_004083b0_430 *this,iptr param_1)
   this->field_2f0 = 0;
   this->field_2e8 = 0;
   this->field_2ec = 0;
-  this->field_294 = 0;
+  this->side_text_edit = 0;
   this->caption_height = 0xffffffff;
   this->item_buffer = 0;
-  this->field_20c = 0;
-  this->field_210 = 1;
+  this->left_exchange_kind = 0;
+  this->right_exchange_kind = 1;
   this->field_214 = 0;
   this->field_208 = 0xffffffff;
   this->field_220 = 0;
@@ -2058,14 +2058,14 @@ C_004083b0_430 * __thiscall parley_wnd_ctor(C_004083b0_430 *this,iptr param_1)
   this->field_230 = 0;
   this->field_22c = this->field_230;
   this->field_21c = 0;
-  this->field_218 = 0;
+  this->treaty_type_choice = 0;
   this->timer_last_value = 0;
   this->show_turn_status = this->timer_last_value;
   this->field_254 = 0;
   this->field_270 = 0;
   this->field_28c = 0;
-  this->field_298 = 0;
-  this->field_29c = 0;
+  this->chat_input_edit = 0;
+  this->chat_history_edit = 0;
   chat_input_buffer = 0;
   chat_log_buffer = 0;
   chat_log_capacity = 0;
@@ -2219,7 +2219,7 @@ void __thiscall parley_wnd_create(C_004083b0_430 *this,u32 param_1)
                             s_CIV_INI_0062d880);
   if ((chat_log_capacity == 0xffffffff) || ((int)chat_log_capacity < 0x2000)) {
     WritePrivateProfileStringA
-              (s_Civilization_Gold_0062d8cc,s_ChatShowSize_0062d8bc,&DAT_0062d8b4,s_CIV_INI_0062d8ac
+              (s_Civilization_Gold_0062d8cc,s_ChatShowSize_0062d8bc,&chat_show_size_default_str,s_CIV_INI_0062d8ac
               );
     chat_log_capacity = 0x2000;
   }
@@ -2259,7 +2259,7 @@ LAB_004b4982:
   if ((this->border_width == 0) && (this->resize_border == 0)) {
     thunk_parley_wnd_pick_size_mode((C_004083b0_174 *)this);
   }
-  FUN_005f22d0(this->pad_15c,&DAT_0062d920);
+  FUN_005f22d0(this->pad_15c,&parley_wnd_empty_title_str);
   if (this->session_mode == 4) {
     puVar5 = &main_frame_wnd;
     puVar4 = &game_palette;
@@ -2286,9 +2286,9 @@ LAB_004b4982:
   this->shown_left_civ = 0x15;
   this->caption_button_count = 0x15;
   thunk_wnd_set_close_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4028d8, thunk_diplo_wnd_close_active));
-  thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402680, FUN_004b7885));
-  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403d32, FUN_004b4c09));
-  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401203, FUN_004b957e));
+  thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402680, parley_wnd_redraw));
+  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403d32, parley_wnd_on_move));
+  thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401203, parley_wnd_on_key));
   thunk_parley_wnd_calc_layout((C_004083b0_174 *)this);
   thunk_parley_wnd_sync_sides(this);
   if (((this->session_mode == 3) || (this->session_mode == 2)) || (this->session_mode == 1)) {
@@ -2307,7 +2307,7 @@ LAB_004b4982:
 
 /* 004b4c09 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004b4c09(void)
+void __cdecl parley_wnd_on_move(void)
 
 {
   iptr iVar1;
@@ -2488,11 +2488,11 @@ void __thiscall parley_wnd_destroy_controls(C_004083b0_430 *this)
       puVar1[3] = '\0';
     }
   }
-  if (this->field_290 != 0) {
-    if ((Control *)this->field_290 != (Control *)0x0) {
-      thunk_ctrl_scalar_dtor((Control *)this->field_290,1);
+  if (this->close_button != 0) {
+    if ((Control *)this->close_button != (Control *)0x0) {
+      thunk_ctrl_scalar_dtor((Control *)this->close_button,1);
     }
-    this->field_290 = 0;
+    this->close_button = 0;
   }
   if (this->field_2a0 != 0) {
     if ((Control *)this->field_2a0 != (Control *)0x0) {
@@ -2560,17 +2560,17 @@ void __thiscall parley_wnd_destroy_controls(C_004083b0_430 *this)
     }
     this->field_360 = 0;
   }
-  if (this->field_29c != 0) {
-    if ((Control *)this->field_29c != (Control *)0x0) {
-      thunk_edit_scalar_dtor((Control *)this->field_29c,1);
+  if (this->chat_history_edit != 0) {
+    if ((Control *)this->chat_history_edit != (Control *)0x0) {
+      thunk_edit_scalar_dtor((Control *)this->chat_history_edit,1);
     }
-    this->field_29c = 0;
+    this->chat_history_edit = 0;
   }
-  if (this->field_298 != 0) {
-    if ((Control *)this->field_298 != (Control *)0x0) {
-      thunk_edit_scalar_dtor((Control *)this->field_298,1);
+  if (this->chat_input_edit != 0) {
+    if ((Control *)this->chat_input_edit != (Control *)0x0) {
+      thunk_edit_scalar_dtor((Control *)this->chat_input_edit,1);
     }
-    this->field_298 = 0;
+    this->chat_input_edit = 0;
   }
   if (this->field_2e8 != 0) {
     if ((Checkbox *)this->field_2e8 != (Checkbox *)0x0) {
@@ -2584,11 +2584,11 @@ void __thiscall parley_wnd_destroy_controls(C_004083b0_430 *this)
     }
     this->field_2ec = 0;
   }
-  if (this->field_294 != 0) {
-    if ((Control *)this->field_294 != (Control *)0x0) {
-      thunk_edit_scalar_dtor((Control *)this->field_294,1);
+  if (this->side_text_edit != 0) {
+    if ((Control *)this->side_text_edit != (Control *)0x0) {
+      thunk_edit_scalar_dtor((Control *)this->side_text_edit,1);
     }
-    this->field_294 = 0;
+    this->side_text_edit = 0;
   }
   if (this->field_2f0 != 0) {
     if ((Checkbox *)this->field_2f0 != (Checkbox *)0x0) {
@@ -2841,7 +2841,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     thunk_hotspot_create
               (*(C_0040f380_40 **)(this->pad_258 + local_2c * 0x1c + -4),(iptr)local_c0,
                *(int *)(this->pad_23c + local_2c * 0x1c) + 1000,(iptr)&local_28);
-    thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this->pad_258 + local_2c * 0x1c + -4),ADDR(0x4012da, FUN_004b74c4));
+    thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this->pad_258 + local_2c * 0x1c + -4),ADDR(0x4012da, parley_wnd_on_caption_click));
     local_34 = local_34 + iVar5 + panel_margin_x;
   }
   if (this->large_layout == 0) {
@@ -2860,7 +2860,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_4c = thunk_button_ctor(pCVar7);
   }
   local_8 = 0xffffffff;
-  this->field_290 = local_4c;
+  this->close_button = local_4c;
   iVar5 = panel_bevel_width + panel_margin_x + 2;
   if (this->large_layout == 0) {
     local_c8 = thunk_font_line_spacing((GameFont *)&font_size16);
@@ -2893,8 +2893,8 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_d4 = this->pad_48;
   }
   thunk_button_create
-            ((Control *)this->field_290,(iptr)local_d4,0x3ed,(iptr)&local_28,local_d0);
-  thunk_button_set_callback((Control *)this->field_290,ADDR(0x4028f6, thunk_diplo_wnd_escape_close));
+            ((Control *)this->close_button,(iptr)local_d4,0x3ed,(iptr)&local_28,local_d0);
+  thunk_button_set_callback((Control *)this->close_button,ADDR(0x4028f6, thunk_diplo_wnd_escape_close));
   pCVar8 = operator_new(0x48);
   local_8 = 2;
   if (pCVar8 == (C_0040f380_48 *)0x0) {
@@ -2904,7 +2904,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_54 = thunk_edit_ctor(pCVar8);
   }
   local_8 = 0xffffffff;
-  this->field_29c = local_54;
+  this->chat_history_edit = local_54;
   iVar6 = this->panel_rect + panel_margin_x;
   iVar5 = thunk_rect_width((iptr)&this->panel_rect);
   iVar5 = iVar5 + panel_margin_x * -2;
@@ -2955,11 +2955,11 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_ec = this->pad_48;
   }
   thunk_edit_create_styled
-            ((EditControl *)this->field_29c,(iptr)local_ec,0x3ee,(iptr)&local_28,chat_log_buffer,
+            ((EditControl *)this->chat_history_edit,(iptr)local_ec,0x3ee,(iptr)&local_28,chat_log_buffer,
              0x122,0);
-  thunk_edit_set_max_len((EditMaxLenView *)this->field_29c,0x2000);
-  thunk_edit_set_callback((EditCallbackSetView *)this->field_29c,ADDR(0x402040, FUN_004b9635));
-  thunk_ctrl_show_and_redraw((Control *)this->field_29c);
+  thunk_edit_set_max_len((EditMaxLenView *)this->chat_history_edit,0x2000);
+  thunk_edit_set_callback((EditCallbackSetView *)this->chat_history_edit,ADDR(0x402040, parley_edit_escape_filter));
+  thunk_ctrl_show_and_redraw((Control *)this->chat_history_edit);
   pCVar8 = operator_new(0x48);
   local_8 = 3;
   if (pCVar8 == (C_0040f380_48 *)0x0) {
@@ -2969,7 +2969,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_60 = thunk_edit_ctor(pCVar8);
   }
   local_8 = 0xffffffff;
-  this->field_298 = local_60;
+  this->chat_input_edit = local_60;
   iVar5 = iVar5 - iVar5 / 10;
   if (this->session_mode == 4) {
     if (this->large_layout == 0) {
@@ -3025,12 +3025,12 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     local_104 = this->pad_48;
   }
   thunk_edit_create_styled
-            ((EditControl *)this->field_298,(iptr)local_104,0x3ef,(iptr)&local_28,chat_input_buffer,
+            ((EditControl *)this->chat_input_edit,(iptr)local_104,0x3ef,(iptr)&local_28,chat_input_buffer,
              local_14,0);
-  thunk_edit_set_max_len((EditMaxLenView *)this->field_298,0x100);
-  thunk_edit_set_callback((EditCallbackSetView *)this->field_298,ADDR(0x403562, thunk_chat_input_on_key));
-  thunk_FUN_004bb5b0((C_004bb5b0 *)this->field_298);
-  thunk_ctrl_show_and_redraw((Control *)this->field_298);
+  thunk_edit_set_max_len((EditMaxLenView *)this->chat_input_edit,0x100);
+  thunk_edit_set_callback((EditCallbackSetView *)this->chat_input_edit,ADDR(0x403562, thunk_chat_input_on_key));
+  thunk_ctrl_set_initial_focus((C_004bb5b0 *)this->chat_input_edit);
+  thunk_ctrl_show_and_redraw((Control *)this->chat_input_edit);
   pCVar7 = operator_new(0x3c);
   local_8 = 4;
   if (pCVar7 == (Control *)0x0) {
@@ -3054,7 +3054,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
   iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb34));
   thunk_button_create
             ((Control *)this->field_2a0,(iptr)local_108,0x3f0,(iptr)&local_28,iVar9);
-  thunk_button_set_callback((Control *)this->field_2a0,ADDR(0x40308a, FUN_004b95c2));
+  thunk_button_set_callback((Control *)this->field_2a0,ADDR(0x40308a, chat_send_button_on_click));
   pCVar7 = operator_new(0x3c);
   local_8 = 5;
   if (pCVar7 == (Control *)0x0) {
@@ -3076,7 +3076,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
   iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb38));
   thunk_button_create
             ((Control *)this->field_2a4,(iptr)local_10c,0x41e,(iptr)&local_28,iVar9);
-  thunk_button_set_callback((Control *)this->field_2a4,ADDR(0x403639, FUN_004b95e1));
+  thunk_button_set_callback((Control *)this->field_2a4,ADDR(0x403639, chat_clear_button_on_click));
   local_38 = local_38 - local_18;
   if (this->large_layout == 0) {
     local_110 = thunk_font_line_spacing((GameFont *)&font_size16);
@@ -3111,7 +3111,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xdb4));
     thunk_button_create
               ((Control *)this->field_340,(iptr)local_114,0x431,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_340,ADDR(0x40349a, FUN_0052da23));
+    thunk_button_set_callback((Control *)this->field_340,ADDR(0x40349a, parley_on_conceal_info));
     thunk_control_hide((Control *)this->field_340);
     thunk_ctrl_disable((Control *)this->field_340);
     pCVar7 = operator_new(0x3c);
@@ -3135,7 +3135,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xdb8));
     thunk_button_create
               ((Control *)this->field_344,(iptr)local_118,0x432,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_344,ADDR(0x4016b3, FUN_0052db3d));
+    thunk_button_set_callback((Control *)this->field_344,ADDR(0x4016b3, parley_on_reveal_info));
     thunk_control_hide((Control *)this->field_344);
     thunk_ctrl_disable((Control *)this->field_344);
     pCVar7 = operator_new(0x3c);
@@ -3161,7 +3161,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x1a0));
     thunk_button_create
               ((Control *)this->field_354,(iptr)local_11c,0x428,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_354,ADDR(0x40144c, FUN_0052dc7e));
+    thunk_button_set_callback((Control *)this->field_354,ADDR(0x40144c, parley_on_check_intel));
     thunk_ctrl_enable((Control *)this->field_354);
     pCVar7 = operator_new(0x3c);
     local_8 = 9;
@@ -3227,7 +3227,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb40));
     thunk_button_create
               ((Control *)this->field_350,(iptr)local_128,0x3f2,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_350,ADDR(0x40339b, FUN_0052e326));
+    thunk_button_set_callback((Control *)this->field_350,ADDR(0x40339b, parley_on_never_mind));
     pCVar7 = operator_new(0x3c);
     local_8 = 0xc;
     if (pCVar7 == (Control *)0x0) {
@@ -3251,7 +3251,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb44));
     thunk_button_create
               ((Control *)this->field_358,(iptr)local_12c,0x3f2,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_358,ADDR(0x4030a8, FUN_0052e4c9));
+    thunk_button_set_callback((Control *)this->field_358,ADDR(0x4030a8, parley_on_accept_offer));
     thunk_control_hide((Control *)this->field_358);
     pCVar7 = operator_new(0x3c);
     local_8 = 0xd;
@@ -3273,7 +3273,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb48));
     thunk_button_create
               ((Control *)this->field_35c,(iptr)local_130,0x3f2,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_35c,ADDR(0x4019a1, FUN_0052e57c));
+    thunk_button_set_callback((Control *)this->field_35c,ADDR(0x4019a1, parley_on_no_thanks));
     thunk_control_hide((Control *)this->field_35c);
     pCVar7 = operator_new(0x3c);
     local_8 = 0xe;
@@ -3295,7 +3295,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
     iVar9 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb4c));
     thunk_button_create
               ((Control *)this->field_360,(iptr)local_134,0x3f2,(iptr)&local_28,iVar9);
-    thunk_button_set_callback((Control *)this->field_360,ADDR(0x40334b, FUN_0052e685));
+    thunk_button_set_callback((Control *)this->field_360,ADDR(0x40334b, parley_on_counter_offer));
     thunk_control_hide((Control *)this->field_360);
   }
   return;
@@ -3360,7 +3360,7 @@ void __thiscall parley_wnd_create_controls(C_004083b0_430 *this)
 
 /* 004b74c4 auto */
 #define local_8 (*(C_004083b0_174 * *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004b74c4(int param_1)
+void __cdecl parley_wnd_on_caption_click(int param_1)
 
 {
   iptr iVar1;
@@ -3469,7 +3469,7 @@ undefined4 __cdecl diplo_wnd_close_active(void)
         nm_parley_cancel_count = 0;
         iVar2 = thunk_civ_name_plural(parley_other_civ);
         thunk_text_set_string_arg(0,iVar2);
-        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
         thunk_popup_game_with_sprite(ADDR(0x62d924, ((u8 *)&g.d_0062d924)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       }
     }
@@ -3495,7 +3495,7 @@ undefined4 __cdecl diplo_wnd_close_active(void)
 
 /* 004b7885 auto */
 #define local_8 (*(C_004083b0_430 * *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004b7885(void)
+void __cdecl parley_wnd_redraw(void)
 
 {
   iptr iVar1;
@@ -3658,7 +3658,7 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   thunk_text_clear();
-  if (this->field_1ec == 4) {
+  if (this->parley_kind == 4) {
     iVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb54));
     thunk_text_append(iVar1);
     FUN_005f22d0(this->pad_11c + 0x40,&text_buffer);
@@ -3817,11 +3817,11 @@ void __cdecl parley_poll_net_replies(void)
         if ((nm_parley_counter_offer_count != 0) && (parley_mode == 1)) {
           nm_parley_counter_offer_count = 0;
           parley_mode = 2;
-          parley_left_kind = DAT_0062d7e0;
-          parley_right_kind = DAT_0062d7e4;
+          parley_left_kind = parley_mode2_left_kind;
+          parley_right_kind = parley_mode2_right_kind;
           parley_shown_left_kind = parley_left_kind;
           parley_shown_right_kind = parley_right_kind;
-          thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,DAT_0062d7e0,0);
+          thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,parley_mode2_left_kind,0);
           thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,parley_right_kind,1);
           iVar1 = thunk_civ_name_plural(parley_other_civ);
           thunk_text_set_string_arg(0,iVar1);
@@ -3854,11 +3854,11 @@ void __cdecl parley_poll_net_replies(void)
         parley_received_offer = (void *)0x0;
       }
       parley_mode = 2;
-      parley_left_kind = DAT_0062d7e0;
-      parley_right_kind = DAT_0062d7e4;
+      parley_left_kind = parley_mode2_left_kind;
+      parley_right_kind = parley_mode2_right_kind;
       parley_shown_left_kind = parley_left_kind;
       parley_shown_right_kind = parley_right_kind;
-      thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,DAT_0062d7e0,0);
+      thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,parley_mode2_left_kind,0);
       thunk_parley_add_side_dialog((C_004083b0_430 *)&parley_wnd,parley_right_kind,1);
       dlg_pending_idle_callback = thunk_parley_poll_net_replies;
       thunk_popup_game_with_sprite(ADDR(0x62d96c, ((u8 *)&g.d_0062d96c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -3980,11 +3980,11 @@ void __thiscall parley_clear_side_controls(C_004083b0_430 *this,int param_1)
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62d9c0, ((u8 *)&g.d_0062d9c0)),ADDR(0x62d9a0, ((u8 *)&g.d_0062d9a0)),0x4ea);
   }
   if (param_1 == 1) {
-    if (this->field_294 != 0) {
-      if ((Control *)this->field_294 != (Control *)0x0) {
-        thunk_edit_scalar_dtor((Control *)this->field_294,1);
+    if (this->side_text_edit != 0) {
+      if ((Control *)this->side_text_edit != (Control *)0x0) {
+        thunk_edit_scalar_dtor((Control *)this->side_text_edit,1);
       }
-      this->field_294 = 0;
+      this->side_text_edit = 0;
     }
     if (this->field_2e8 != 0) {
       if ((Checkbox *)this->field_2e8 != (Checkbox *)0x0) {
@@ -4143,7 +4143,7 @@ void __thiscall parley_clear_side_controls(C_004083b0_430 *this,int param_1)
 #define local_2c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
 #define local_28 (*(char (*)[32])(frame_ + FRAME_OFF(48)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(80)))
-void __cdecl FUN_004b8e5c(int param_1)
+void __cdecl parley_gold_edit_on_change(int param_1)
 
 {
   char *pcVar1;
@@ -4228,16 +4228,16 @@ chat_receive_message(C_004083b0_4 *this,iptr param_1,iptr param_2,iptr param_3,i
   thunk_text_clear();
   sVar2 = _strlen(chat_log_buffer);
   if (sVar2 != 0) {
-    FUN_005f22e0(&text_buffer,&DAT_0062d9e8);
+    FUN_005f22e0(&text_buffer,&chat_recv_newline_str);
   }
   if ((char)param_3 == '\0') {
     uVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb60));
     FUN_005f22e0(&text_buffer,uVar3);
     thunk_text_append_space();
     thunk_chat_append_sender_name(param_1);
-    FUN_005f22e0(&text_buffer,&DAT_0062d9f4);
+    FUN_005f22e0(&text_buffer,&chat_recv_year_open_str);
     thunk_text_append_year((int)game.year);
-    FUN_005f22e0(&text_buffer,&DAT_0062d9f8);
+    FUN_005f22e0(&text_buffer,&chat_recv_year_close_str);
   }
   else {
     uVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb58));
@@ -4248,9 +4248,9 @@ chat_receive_message(C_004083b0_4 *this,iptr param_1,iptr param_2,iptr param_3,i
     FUN_005f22e0(&text_buffer,uVar3);
     thunk_text_append_space();
     thunk_chat_append_sender_name(param_2);
-    FUN_005f22e0(&text_buffer,&DAT_0062d9ec);
+    FUN_005f22e0(&text_buffer,&chat_recv_private_year_open_str);
     thunk_text_append_year((int)game.year);
-    FUN_005f22e0(&text_buffer,&DAT_0062d9f0);
+    FUN_005f22e0(&text_buffer,&chat_recv_private_year_close_str);
   }
   FUN_005f22e0(&text_buffer,param_4);
   if ((param_1 == 0) && (chat_mute_anonymous != 0)) {
@@ -4363,7 +4363,7 @@ void __cdecl chat_append_sender_name(int param_1)
 #undef text_buffer
 
 /* 004b957e auto */
-void __cdecl FUN_004b957e(int param_1)
+void __cdecl parley_wnd_on_key(int param_1)
 
 {
   if (param_1 == 0xd2) {
@@ -4373,7 +4373,7 @@ void __cdecl FUN_004b957e(int param_1)
 }
 
 /* 004b95c2 auto */
-void __cdecl FUN_004b95c2(void)
+void __cdecl chat_send_button_on_click(void)
 
 {
   thunk_chat_input_on_key(0,0xd0);
@@ -4383,7 +4383,7 @@ void __cdecl FUN_004b95c2(void)
 /* 004b95e1 auto */
 #define chat_log_buffer (*(void * *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(int *)((u8 *)&g.d_0069b03c))
-void __cdecl FUN_004b95e1(void)
+void __cdecl chat_clear_button_on_click(void)
 
 {
   _memset(chat_log_buffer,0,chat_log_capacity + 1);
@@ -4396,7 +4396,7 @@ void __cdecl FUN_004b95e1(void)
 #undef chat_log_capacity
 
 /* 004b9635 auto */
-undefined4 __cdecl FUN_004b9635(undefined4 param_1,int param_2)
+undefined4 __cdecl parley_edit_escape_filter(undefined4 param_1,int param_2)
 
 {
   undefined4 uVar1;
@@ -4452,7 +4452,7 @@ undefined4 __cdecl chat_input_on_key(undefined4 param_1,int param_2)
       thunk_text_clear();
       sVar1 = _strlen(chat_log_buffer);
       if (sVar1 != 0) {
-        FUN_005f22e0(&text_buffer,&DAT_0062d9fc);
+        FUN_005f22e0(&text_buffer,&chat_send_newline_str);
       }
       uVar2 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb68));
       FUN_005f22e0(&text_buffer,uVar2);
@@ -4462,7 +4462,7 @@ undefined4 __cdecl chat_input_on_key(undefined4 param_1,int param_2)
         for (local_c = 1; local_c < 8; local_c = local_c + 1) {
           if (*(int *)(&chat_send_to_civs + local_c * 4) != 0) {
             if (local_10 != 0) {
-              FUN_005f22e0(&text_buffer,&DAT_0062da00);
+              FUN_005f22e0(&text_buffer,&chat_send_recipient_sep_str);
             }
             thunk_chat_append_sender_name(local_c);
             local_10 = local_10 + 1;
@@ -4476,9 +4476,9 @@ undefined4 __cdecl chat_input_on_key(undefined4 param_1,int param_2)
       if (local_10 == 0) {
         return 0;
       }
-      FUN_005f22e0(&text_buffer,&DAT_0062da04);
+      FUN_005f22e0(&text_buffer,&chat_send_year_open_str);
       thunk_text_append_year((int)game.year);
-      FUN_005f22e0(&text_buffer,&DAT_0062da08);
+      FUN_005f22e0(&text_buffer,&chat_send_year_close_str);
       FUN_005f22e0(&text_buffer,chat_input_buffer);
       thunk_chat_log_append(ADDR(0x679640, ((u8 *)&g.d_00679640)));
       if (*(int *)(local_8 + 0x1ec) == 4) {
@@ -4636,10 +4636,10 @@ void __thiscall wnd_move_to_rect(WndBase *this,iptr param_1)
 }
 
 /* 004bb5b0 auto */
-void __thiscall FUN_004bb5b0(C_004bb5b0 *this)
+void __thiscall ctrl_set_initial_focus(C_004bb5b0 *this)
 
 {
-  this->field_24 = '\x01';
+  this->wants_initial_focus = '\x01';
   return;
 }
 
@@ -4916,7 +4916,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
   thunk_wonder_movie_wnd_draw_caption(this);
   wnd_repaint((SurfaceWindow *)this);
   thunk_wnd_center((WndCenterView *)this->pad_48);
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, FUN_004bc1b1));
+  thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004bbdc9 */ { surface_dtor((DibSurface *)((iptr)&local_120)); }
   local_8 = 0xffffffff;
@@ -4955,15 +4955,15 @@ void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
     thunk_str_concat((iptr)local_88,ADDR(0x62dacc, ((u8 *)&g.d_0062dacc)));
     iVar1 = thunk_file_resolve_path((iptr)local_88);
     if (iVar1 != 0) {
-      thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, FUN_004bc1b1));
-      thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x40392c, FUN_004bc1cf));
+      thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
+      thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x40392c, wonder_movie_on_key));
       avi_player_create_child
                 ((C_004083b0_61c *)&this->field_2d8,ADDR(0x62dad4, ((u8 *)&g.d_0062dad4)),0x200,this->border_width,this->caption_height,
                  (iptr)this);
       local_8 = avi_player_open((AviPlayerOpenView *)&this->field_2d8,(iptr)local_88);
       if (local_8 == 0) {
-        thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)&this->field_2d8,ADDR(0x402e46, FUN_004bc193));
-        thunk_wnd_set_lbuttonup_handler((C_00408130 *)&this->field_330,ADDR(0x4025bd, FUN_004bc1b1));
+        thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)&this->field_2d8,ADDR(0x402e46, wonder_movie_on_video_end));
+        thunk_wnd_set_lbuttonup_handler((C_00408130 *)&this->field_330,ADDR(0x4025bd, wonder_movie_on_lbuttonup));
         avi_player_set_palette((DibSurface *)&this->field_2d8,(iptr)(this[3].pad_48 + 0x74))
         ;
         thunk_wnd_set_palette
@@ -4976,7 +4976,7 @@ void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
         thunk_wnd_flush_paint();
         avi_player_play((AviPlayerPlayView *)&this->field_2d8);
         if (2 < game.multiplayer) {
-          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, FUN_0059c301));
+          thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
         }
         wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
         thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
@@ -5037,7 +5037,7 @@ void __thiscall wonder_movie_wnd_resize(FrameWindow *this)
 
 /* 004bc193 auto */
 #define wonder_movie_wnd (*(int *)((u8 *)&g.d_006a1864))
-void __cdecl FUN_004bc193(void)
+void __cdecl wonder_movie_on_video_end(void)
 
 {
   wnd_end_modal_loop((C_00408010_b8 *)(wonder_movie_wnd + 0x48));
@@ -5047,7 +5047,7 @@ void __cdecl FUN_004bc193(void)
 
 /* 004bc1b1 auto */
 #define wonder_movie_wnd (*(int *)((u8 *)&g.d_006a1864))
-void __cdecl FUN_004bc1b1(void)
+void __cdecl wonder_movie_on_lbuttonup(void)
 
 {
   wnd_end_modal_loop((C_00408010_b8 *)(wonder_movie_wnd + 0x48));
@@ -5057,7 +5057,7 @@ void __cdecl FUN_004bc1b1(void)
 
 /* 004bc1cf auto */
 #define wonder_movie_wnd (*(int *)((u8 *)&g.d_006a1864))
-void __cdecl FUN_004bc1cf(int param_1)
+void __cdecl wonder_movie_on_key(int param_1)
 
 {
   if ((0xcf < param_1) && (param_1 < 0xd3)) {

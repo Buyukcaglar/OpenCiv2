@@ -4,7 +4,7 @@
 /* 00482337 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_continue_after_join_count (*(int *)((u8 *)&g.d_006c9178))
-void __cdecl FUN_00482337(void)
+void __cdecl net_game_xmit_wait_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -22,7 +22,7 @@ void __cdecl FUN_00482337(void)
 #define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_0048237d(void)
+void __cdecl turn_popup_timeout_idle(void)
 
 {
   int iVar1;
@@ -55,7 +55,7 @@ void __cdecl net_msg_get_args(iptr param_1,undefined4 *param_2)
 
 /* 00482470 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
-void __cdecl FUN_00482470(void)
+void __cdecl net_server_quit_wait_idle(void)
 
 {
   int iVar1;
@@ -102,7 +102,7 @@ void __cdecl net_host_quit_handoff(void)
     net_players_awaited = net_player_count + -1;
     thunk_net_send_message(0xe,0xff,0,0,0,0,0,0,0,0);
     thunk_net_drop_flagged_players();
-    dlg_pending_idle_callback = ((void *)ADDR(0x00403cc9, FUN_00482470));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00403cc9, net_server_quit_wait_idle));
     thunk_popup_game_sprite_flags(ADDR(0x62bf34, ((u8 *)&g.d_0062bf34)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     iVar2 = thunk_bits_count8((uint)(game.human_players == '\0'));
     if (iVar2 == 0) {
@@ -144,7 +144,7 @@ void __cdecl net_host_quit_handoff(void)
 /* 00482724 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
-void __cdecl FUN_00482724(void)
+void __cdecl net_client_quit_wait_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -164,7 +164,7 @@ void __cdecl FUN_00482724(void)
 #define _DAT_00670d98 (*(undefined4 *)((u8 *)&g.d_00670d98))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_0048276d(void)
+void __cdecl net_quit_wait_start_civ_idle(void)
 
 {
   int iVar1;
@@ -189,7 +189,7 @@ void __cdecl FUN_0048276d(void)
 #define _DAT_00670d98 (*(undefined4 *)((u8 *)&g.d_00670d98))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_004827d5(void)
+void __cdecl net_quit_wait_player_list_idle(void)
 
 {
   int iVar1;
@@ -213,7 +213,7 @@ void __cdecl FUN_004827d5(void)
 #define _DAT_00670d98 (*(undefined4 *)((u8 *)&g.d_00670d98))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_0048283d(void)
+void __cdecl net_quit_wait_players_idle(void)
 
 {
   int iVar1;
@@ -278,10 +278,10 @@ undefined4 __cdecl net_client_transfer_server(void)
   nm_start_civ_count = 0;
   nm_player_list_count = 0;
   thunk_net_send_message(0x10,0,0,0,0,0,0,0,0,0);
-  dlg_pending_idle_callback = ((void *)ADDR(0x004021fd, FUN_00482724));
+  dlg_pending_idle_callback = ((void *)ADDR(0x004021fd, net_client_quit_wait_idle));
   thunk_popup_game_sprite_flags(ADDR(0x62bf44, ((u8 *)&g.d_0062bf44)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
   net_host_handoff_stage = 0;
-  dlg_pending_idle_callback = ((void *)ADDR(0x00402f22, FUN_0048276d));
+  dlg_pending_idle_callback = ((void *)ADDR(0x00402f22, net_quit_wait_start_civ_idle));
   _DAT_00670d98 = thunk_timer_ticks();
   thunk_popup_game_sprite_flags(ADDR(0x62bf54, ((u8 *)&g.d_0062bf54)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
   if (nm_start_civ_count == 0) {
@@ -294,7 +294,7 @@ undefined4 __cdecl net_client_transfer_server(void)
   }
   else {
     turn_resume_civ = saved_turn_civ;
-    dlg_pending_idle_callback = ((void *)ADDR(0x00402f54, FUN_004827d5));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00402f54, net_quit_wait_player_list_idle));
     _DAT_00670d98 = thunk_timer_ticks();
     thunk_popup_game_sprite_flags(ADDR(0x62bfac, ((u8 *)&g.d_0062bfac)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     if (nm_player_list_count == 0) {
@@ -334,7 +334,7 @@ undefined4 __cdecl net_client_transfer_server(void)
           net_slot_civs = local_228[0];
         }
         else {
-          dlg_pending_idle_callback = ((void *)ADDR(0x00402ff4, FUN_0048283d));
+          dlg_pending_idle_callback = ((void *)ADDR(0x00402ff4, net_quit_wait_players_idle));
           _DAT_00670d98 = thunk_timer_ticks();
           thunk_popup_game_sprite_flags(ADDR(0x62c0a0, ((u8 *)&g.d_0062c0a0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           iVar3 = thunk_timer_ticks();
@@ -409,7 +409,7 @@ undefined4 __cdecl net_client_transfer_server(void)
         dbg_log(ADDR(0x62c204, ((u8 *)&g.d_0062c204)));
         _DAT_006c901c = 0;
         nm_start_civ_count = 0;
-        dlg_pending_idle_callback = ((void *)ADDR(0x00402f54, FUN_004827d5));
+        dlg_pending_idle_callback = ((void *)ADDR(0x00402f54, net_quit_wait_player_list_idle));
         _DAT_00670d98 = thunk_timer_ticks();
         thunk_popup_game_sprite_flags(ADDR(0x62c22c, ((u8 *)&g.d_0062c22c)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         if (nm_player_list_count == 0) {
@@ -811,7 +811,7 @@ void __cdecl ui_flush_input(void)
 #define player_turn_active (*(undefined1 *)((u8 *)&g.d_0064b9bc))
 #define unit_blink_phase (*(undefined1 *)((u8 *)&g.d_00628054))
 #define local_8 (*(u8 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_00484d85(void)
+undefined4 __cdecl main_frame_on_close(void)
 
 {
   int iVar1;
@@ -923,17 +923,17 @@ int __cdecl game_turn_to_year(int param_1)
       param_1 = param_1 + -1;
     }
     for (local_14 = 0;
-        (*(int *)(&DAT_0062c494 + local_14 * 0xc + iVar1 * 0x48) < param_1 && (local_14 < 6));
+        (*(int *)(&year_table_turn_counts + local_14 * 0xc + iVar1 * 0x48) < param_1 && (local_14 < 6));
         local_14 = local_14 + 1) {
-      param_1 = param_1 - *(int *)(&DAT_0062c494 + local_14 * 0xc + iVar1 * 0x48);
+      param_1 = param_1 - *(int *)(&year_table_turn_counts + local_14 * 0xc + iVar1 * 0x48);
     }
     if (local_14 < 6) {
-      local_10 = *(int *)(&DAT_0062c498 + local_14 * 0xc + iVar1 * 0x48) * param_1 +
-                 *(int *)(&DAT_0062c490 + local_14 * 0xc + iVar1 * 0x48);
+      local_10 = *(int *)(&year_table_year_steps + local_14 * 0xc + iVar1 * 0x48) * param_1 +
+                 *(int *)(&year_table_start_years + local_14 * 0xc + iVar1 * 0x48);
     }
     else {
-      local_10 = *(int *)(&DAT_0062c4d4 + iVar1 * 0x48) * *(int *)(&DAT_0062c4d0 + iVar1 * 0x48) +
-                 *(int *)(&DAT_0062c4cc + iVar1 * 0x48) + param_1;
+      local_10 = *(int *)(&year_table_last_year_step + iVar1 * 0x48) * *(int *)(&year_table_last_turn_count + iVar1 * 0x48) +
+                 *(int *)(&year_table_last_start_year + iVar1 * 0x48) + param_1;
     }
     if (local_10 == 0) {
       local_10 = 1;
@@ -2855,16 +2855,16 @@ undefined4 __cdecl game_run_active_unit(void)
   iVar6 = (int)game.active_unit;
   local_1c = 0;
   while (((iVar7 = thunk_unit_is_selectable((int)game.active_unit), iVar7 != 0 &&
-          ((((unit_blink_active != '\0' || (DAT_00634c9c == '\x02')) && (player_turn_active != '\0')) &&
+          ((((unit_blink_active != '\0' || (unit_move_unanimated_state == '\x02')) && (player_turn_active != '\0')) &&
            ((game_loop_active != '\0' && (game.num_units == iVar3)))))) &&
          ((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) != 0))) {
     if (2 < game.multiplayer) {
       thunk_net_send_state_diff(0xff,2,0,0,0);
       thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
-    if (DAT_00634c9c == '\x02') {
+    if (unit_move_unanimated_state == '\x02') {
       unit_blink_active = '\x01';
-      DAT_00634c9c = '\0';
+      unit_move_unanimated_state = '\0';
       bVar1 = true;
     }
     if ((bVar1) && (units[game.active_unit].orders != '\v')) {
@@ -2996,7 +2996,7 @@ void __cdecl game_player_move_loop(void)
         iVar4 = (int)game.active_unit;
         map_cursor_x = units[iVar4].x;
         map_cursor_y = units[iVar4].y;
-        if ((DAT_00634c9c == '\0') || (units[iVar4].orders != '\v')) {
+        if ((unit_move_unanimated_state == '\0') || (units[iVar4].orders != '\v')) {
           thunk_status_redraw(1);
           thunk_mapviews_ensure_visible((int)units[iVar4].x,(int)units[iVar4].y,(int)units[iVar4].owner);
           thunk_menu_update_states();
@@ -3009,7 +3009,7 @@ void __cdecl game_player_move_loop(void)
       thunk_mp_turn_timer_resume(0);
     }
     sVar1 = game.num_units;
-    DAT_00634c9c = '\0';
+    unit_move_unanimated_state = '\0';
     unit_focus_done = '\0';
     if (game.active_unit < 0) {
       game.field_06 = game.field_06 | 1;
@@ -3541,7 +3541,7 @@ void __cdecl game_play_loop(void)
           local_14 = *(int *)(&casualty_counts + human_civ * 4) -
                      *(int *)(&casualty_reported_counts + human_civ * 4);
           if (autoplay_active == 0) {
-            dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+            dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
             iVar5 = thunk_civ_leader_title(human_civ);
             thunk_text_set_string_arg(0,iVar5);
             iVar5 = thunk_civ_leader_name(human_civ);
@@ -3673,7 +3673,7 @@ LAB_0048bf12:
 #define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
 #define nm_start_civ_count (*(int *)((u8 *)&g.d_006c9038))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
-void __cdecl FUN_0048bf51(void)
+void __cdecl net_client_hot_wait_idle(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
@@ -3790,7 +3790,7 @@ undefined4 __cdecl game_mp_client_turn_loop(void)
   bVar1 = turn_resume_civ;
   if ((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0) {
     thunk_net_heartbeat_send(net_slot_civs);
-    dlg_pending_idle_callback = ((void *)ADDR(0x00401a5a, FUN_0048bf51));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00401a5a, net_client_hot_wait_idle));
     thunk_popup_game_sprite_flags(ADDR(0x62c798, ((u8 *)&g.d_0062c798)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     bVar1 = turn_resume_civ;
   }
@@ -3854,7 +3854,7 @@ LAB_0048c326:
       local_18 = *(int *)(&casualty_counts + human_civ * 4) -
                  *(int *)(&casualty_reported_counts + human_civ * 4);
       if (autoplay_active == 0) {
-        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
         iVar3 = thunk_civ_leader_title(human_civ);
         thunk_text_set_string_arg(0,iVar3);
         iVar3 = thunk_civ_leader_name(human_civ);
@@ -4171,7 +4171,7 @@ LAB_0048d957:
           local_14 = *(int *)(&casualty_counts + human_civ * 4) -
                      *(int *)(&casualty_reported_counts + human_civ * 4);
           if (autoplay_active == 0) {
-            dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+            dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
             iVar3 = thunk_civ_leader_title(human_civ);
             thunk_text_set_string_arg(0,iVar3);
             iVar3 = thunk_civ_leader_name(human_civ);

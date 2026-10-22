@@ -184,10 +184,10 @@ void __thiscall parley_create_advance_list_pane(C_004083b0_4 *this,iptr param_1,
               ((Control *)this[param_2 + 0xdf].field_0,this[param_2 + 0x4108].field_0);
     thunk_scrollbar_set_callback
               ((Control *)this[param_2 + 0xdf].field_0,
-               (iptr)(((void *)ADDR(0x0040349f, FUN_00450ae6)) + ((param_2 == 0) - 1 & 0xffffdd37)));
+               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((param_2 == 0) - 1 & 0xffffdd37)));
     thunk_scrollbar_set_track_callback
               ((ScrollbarTrackSetView *)this[param_2 + 0xdf].field_0,
-               (iptr)(((void *)ADDR(0x0040349f, FUN_00450ae6)) + ((param_2 == 0) - 1 & 0xffffdd37)));
+               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((param_2 == 0) - 1 & 0xffffdd37)));
   }
   pCVar3 = operator_new(0x40);
   local_8 = 1;
@@ -208,8 +208,8 @@ void __thiscall parley_create_advance_list_pane(C_004083b0_4 *this,iptr param_1,
   thunk_hotspot_create
             ((C_0040f380_40 *)this[param_2 + 0xe1].field_0,(iptr)local_44,param_2 + 0x413,
              (iptr)(this + param_2 * 4 + 0xf0));
-  thunk_hotspot_set_click_callback((HotspotClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, FUN_00450b83));
-  thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, FUN_00450b83));
+  thunk_hotspot_set_click_callback((HotspotClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
+  thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
   thunk_parley_draw_advance_list(param_2);
   return;
 }
@@ -231,7 +231,7 @@ void __thiscall parley_create_advance_list_pane(C_004083b0_4 *this,iptr param_1,
 #undef local_8
 
 /* 00450ae6 auto */
-void __cdecl FUN_00450ae6(undefined4 param_1)
+void __cdecl parley_advance_list0_on_scroll(undefined4 param_1)
 
 {
   thunk_parley_advance_list_on_scroll(0,param_1);
@@ -239,7 +239,7 @@ void __cdecl FUN_00450ae6(undefined4 param_1)
 }
 
 /* 00450b04 auto */
-void __cdecl FUN_00450b04(undefined4 param_1)
+void __cdecl parley_advance_list1_on_scroll(undefined4 param_1)
 
 {
   thunk_parley_advance_list_on_scroll(1,param_1);
@@ -275,7 +275,7 @@ void __cdecl parley_advance_list_on_scroll(int param_1,undefined4 param_2)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_00450b83(int param_1)
+void __cdecl parley_advance_list_on_click(int param_1)
 
 {
   uint *puVar1;
@@ -820,7 +820,7 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
         }
         thunk_hotspot_create
                   ((C_0040f380_40 *)this[4].field_2b0,(iptr)local_3c,0xfa9,(iptr)&local_20);
-        thunk_hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, FUN_004f7a30));
+        thunk_hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, pedia_list_on_click));
         thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[4].field_2b0,ADDR(0x40196f, thunk_pedia_toggle_describe));
         thunk_ctrl_show_and_redraw((Control *)this[4].field_2b0);
       }
@@ -854,7 +854,7 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
         }
         thunk_hotspot_create
                   ((C_0040f380_40 *)this[4].field_2b0,(iptr)local_40,0xfa9,(iptr)&local_20);
-        thunk_hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, FUN_004f7a30));
+        thunk_hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, pedia_list_on_click));
         thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[4].field_2b0,ADDR(0x40196f, thunk_pedia_toggle_describe));
         thunk_ctrl_show_and_redraw((Control *)this[4].field_2b0);
       }
@@ -1038,7 +1038,7 @@ void __thiscall pedia_load_description(C_004083b0_4 *this,uptr param_1)
         thunk_text_read_line(1);
         uStackY_20 = 0x452550;
         _strncpy(local_108,&text_buffer,2);
-        iVar2 = _strcmp(local_108,&DAT_006268f4);
+        iVar2 = _strcmp(local_108,&pedia_desc_marker_str);
         if (iVar2 != 0) break;
         local_1110 = local_1110 + -1;
       }
@@ -1061,7 +1061,7 @@ LAB_0045259e:
         local_10c = _strrchr(&text_buffer,10);
         if (local_10c != (char *)0x0) {
           *local_10c = '\0';
-          FUN_005f22e0(&text_buffer,&DAT_006268f8);
+          FUN_005f22e0(&text_buffer,&pedia_desc_crlf_str);
         }
         sVar4 = _strlen(local_110c);
         sVar5 = _strlen(&text_buffer);
@@ -1164,8 +1164,8 @@ void __cdecl hyperlink_register_class(void)
 {
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (DAT_00626850 == 0) {
-    DAT_00626850 = 1;
+  if (hyperlink_class_registered == 0) {
+    hyperlink_class_registered = 1;
     local_2c.style = 0x88;
     local_2c.lpfnWndProc = ctrl_default_wndproc;
     local_2c.cbClsExtra = 0;
@@ -1227,11 +1227,11 @@ HWND __cdecl hyperlink_create_hwnd(int *param_1,iptr param_2)
   pHVar4 = *(HWND *)(iVar1 + 4);
   iVar2 = thunk_rect_height((iptr)param_1);
   iVar3 = thunk_rect_width((iptr)param_1);
-  pHVar4 = CreateWindowExA(4,s_MSHyperTextClass_00626920,&DAT_0062691c,0x50000000,*param_1,
+  pHVar4 = CreateWindowExA(4,s_MSHyperTextClass_00626920,&hyperlink_window_title_str,0x50000000,*param_1,
                            param_1[1],iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
   *(undefined4 *)(iVar3 + 0x2c) = 1;
-  SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, FUN_005c8caf));
+  SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, hotspot_wndproc));
   return pHVar4;
 }
 #undef app_hinstance
@@ -1392,24 +1392,24 @@ pedia_add_link
             ((C_0040f380_40 *)(local_2c + 1),(iptr)local_34,local_1c + 0xfb4,(iptr)&param_5);
   switch(param_4) {
   case 0:
-    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
-    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
     break;
   case 1:
-    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
-    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
     break;
   case 2:
-    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
-    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
     break;
   case 3:
-    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
-    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
     break;
   case 4:
-    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
-    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
   }
   thunk_ctrl_show_and_redraw((Control *)(local_2c + 1));
 switchD_00452e28_default:
@@ -1436,7 +1436,7 @@ switchD_00452e28_default:
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004531b8(int param_1)
+void __cdecl pedia_link_on_click_advance(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1466,7 +1466,7 @@ void __cdecl FUN_004531b8(int param_1)
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0045323a(int param_1)
+void __cdecl pedia_link_on_click_improvement(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1496,7 +1496,7 @@ void __cdecl FUN_0045323a(int param_1)
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004532bc(int param_1)
+void __cdecl pedia_link_on_click_wonder(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1526,7 +1526,7 @@ void __cdecl FUN_004532bc(int param_1)
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0045333e(int param_1)
+void __cdecl pedia_link_on_click_unit(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1556,7 +1556,7 @@ void __cdecl FUN_0045333e(int param_1)
 #define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004533c0(int param_1)
+void __cdecl pedia_link_on_click_terrain(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1828,7 +1828,7 @@ bool __cdecl registry_write_value(iptr param_1,iptr param_2,iptr param_3,DWORD p
   bool bVar2;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  LVar1 = RegCreateKeyExA((HKEY)0x80000002,(LPCSTR)param_1,0,&DAT_006269e4,0,0x20006,
+  LVar1 = RegCreateKeyExA((HKEY)0x80000002,(LPCSTR)param_1,0,&registry_key_class_str,0,0x20006,
                           (LPSECURITY_ATTRIBUTES)0x0,&local_10,&local_c);
   if (LVar1 == 0) {
     local_8 = RegSetValueExA(local_10,(LPCSTR)param_2,0,param_5,(BYTE *)param_3,param_4);
@@ -1954,7 +1954,7 @@ C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
   surface_ctor((DibSurface *)(this->pad_638 + 0x58));
   (*(undefined1 *)((char *)&local_8 + 0)) = 5;
-  thunk_dll_handle_init((DllHandle *)&this->field_6d8);
+  thunk_dll_handle_init((DllHandle *)&this->resource_dll);
   (*(undefined1 *)((char *)&local_8 + 0)) = 6;
   FUN_005f2620(this->pad_6dc,0x3c,0x3c,sprite_init,sprite_destroy);
   (*(undefined1 *)((char *)&local_8 + 0)) = 7;
@@ -2075,7 +2075,7 @@ undefined4 __thiscall cityview_load(CityViewWindow *this,uptr param_1)
     uVar3 = 0;
   }
   else {
-    thunk_dll_handle_load((DllHandle *)&this->field_6d8,(iptr)local_90);
+    thunk_dll_handle_load((DllHandle *)&this->resource_dll,(iptr)local_90);
     thunk_cityview_classify_site(this);
     uVar2 = thunk_civ_city_art_era((int)cities[param_1].owner);
     this->art_era = uVar2;
@@ -2158,7 +2158,7 @@ undefined4 __thiscall cityview_load(CityViewWindow *this,uptr param_1)
                       ((Sprite *)(this->pad_1089 + local_98 * 0x3c + 0x643),7,9);
             local_94 = local_94 + 0x7c;
           }
-          iVar1 = thunk_FUN_0045512b((WndBase *)this);
+          iVar1 = thunk_cityview_load_icon_surface((WndBase *)this);
           if (iVar1 == 0) {
             local_8 = 0xffffffff;
             /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
@@ -2212,7 +2212,7 @@ void __thiscall cityview_run_modal(Wnd *this)
   thunk_wnd_flush_paint();
   thunk_wnd_set_capture((WndBase *)(this[1].pad_10 + 0x24));
   if (2 < game.multiplayer) {
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this[1].pad_10 + 0x24),ADDR(0x403585, FUN_0059c301));
+    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this[1].pad_10 + 0x24),ADDR(0x403585, net_modal_idle_poll));
   }
   wnd_run_modal_loop((C_00408010_b8 *)(this[1].pad_10 + 0x24));
   thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this[1].pad_10 + 0x24),0);
@@ -2248,28 +2248,28 @@ void __thiscall cityview_classify_site(CityViewWindow *this)
       if ((iVar5 != 0) && (pbVar6 = (byte *)tile_at(iVar3,iVar4), (*pbVar6 & 0x80) != 0)) {
         this->slot_count = 0x39;
         this->terrain_kind = 1;
-        this->field_19ec = 0x18;
-        this->field_19f0 = 0x1b;
+        this->wonder_slots_left = 0x18;
+        this->improvement_slots_left = 0x1b;
         return;
       }
     }
     this->slot_count = 0x3c;
     this->terrain_kind = 2;
-    this->field_19ec = 0x18;
-    this->field_19f0 = 0x1f;
+    this->wonder_slots_left = 0x18;
+    this->improvement_slots_left = 0x1f;
   }
   else {
     this->slot_count = 0x3c;
     this->terrain_kind = 0;
-    this->field_19ec = 0x18;
-    this->field_19f0 = 0x1b;
+    this->wonder_slots_left = 0x18;
+    this->improvement_slots_left = 0x1b;
   }
   return;
 }
 #undef local_8
 
 /* 0045512b auto */
-uint __thiscall FUN_0045512b(WndBase *this)
+uint __thiscall cityview_load_icon_surface(WndBase *this)
 
 {
   int iVar1;
@@ -2305,10 +2305,10 @@ uint __thiscall cityview_create_windows(CityViewWindow *this)
                     ((DibSurface *)&this->ship_civ,this->terrain_kind * 5 + local_8 + 0x154,10,
                      0xec,(iptr)(this->pad_1e4 + 0x30));
   if (iVar1 != 0) {
-    thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x40271b, FUN_00456228));
-    thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x402a77, FUN_0045626d));
-    thunk_wnd_set_keydown_pre_handler((C_00456ee0 *)(this->pad_c8 + 0x48),ADDR(0x402e05, FUN_0045629b));
-    thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x403189, FUN_004561d9));
+    thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x40271b, cityview_on_key));
+    thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x402a77, cityview_on_lbuttonup));
+    thunk_wnd_set_keydown_pre_handler((C_00456ee0 *)(this->pad_c8 + 0x48),ADDR(0x402e05, cityview_on_key_pre));
+    thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x403189, cityview_on_mousemove));
     thunk_cityview_redraw_scrolled(this);
   }
   return (uint)(iVar1 != 0);
@@ -2424,7 +2424,7 @@ LAB_0045539c: ;
     if (0x1b < local_8) {
       while (iVar2 = thunk_cityview_take_wonder_slot((ThroneRoomWindow *)this), iVar2 != -1) {
         if (this->houses_left == 0) {
-          thunk_FUN_00455f9e(this,iVar2);
+          thunk_cityview_place_large_empty_lot(this,iVar2);
         }
         else {
           thunk_cityview_place_large_house(this,iVar2);
@@ -2512,7 +2512,7 @@ LAB_004559fe:
       thunk_rand_range(0,0);
     }
     else if (this->houses_left == 0) {
-      thunk_FUN_00455f9e(this,local_c);
+      thunk_cityview_place_large_empty_lot(this,local_c);
     }
     else {
       thunk_cityview_place_large_house(this,local_c);
@@ -2537,8 +2537,8 @@ void __thiscall cityview_draw_buildings(CityViewWindow *this)
       sprite_draw
                 (*(Sprite **)(this->pad_1089 + local_8 * 4 + 0x463),(iptr)local_18,
                  (iptr)&this->ship_civ,
-                 *(undefined4 *)(&DAT_0061c740 + local_8 * 8 + this->terrain_kind * 0x1e0),
-                 *(undefined4 *)(&DAT_0061c744 + local_8 * 8 + this->terrain_kind * 0x1e0));
+                 *(undefined4 *)(&cityview_slot_x_table + local_8 * 8 + this->terrain_kind * 0x1e0),
+                 *(undefined4 *)(&cityview_slot_y_table + local_8 * 8 + this->terrain_kind * 0x1e0));
     }
   }
   thunk_cityview_redraw_scrolled(this);
@@ -2554,16 +2554,16 @@ undefined4 __thiscall cityview_take_wonder_slot(ThroneRoomWindow *this)
   undefined4 uVar1;
   int iVar2;
   
-  if (this->field_19ec == 0) {
+  if (this->wonder_slots_left == 0) {
     uVar1 = 0xffffffff;
   }
   else {
-    iVar2 = this->field_19ec * 3 + -3;
-    iVar2 = thunk_rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->field_19ec - 1);
+    iVar2 = this->wonder_slots_left * 3 + -3;
+    iVar2 = thunk_rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->wonder_slots_left - 1);
     uVar1 = *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174);
-    this->field_19ec = this->field_19ec - 1;
+    this->wonder_slots_left = this->wonder_slots_left - 1;
     *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174) =
-         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + this->field_19ec * 4 + 0x174);
+         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + this->wonder_slots_left * 4 + 0x174);
   }
   return uVar1;
 }
@@ -2575,16 +2575,16 @@ undefined4 __thiscall cityview_take_improvement_slot(ThroneRoomWindow *this)
   undefined4 uVar1;
   int iVar2;
   
-  if (this->field_19f0 == 0) {
+  if (this->improvement_slots_left == 0) {
     uVar1 = 0xffffffff;
   }
   else {
-    iVar2 = this->field_19f0 * 3 + -3;
-    iVar2 = thunk_rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->field_19f0 - 1);
+    iVar2 = this->improvement_slots_left * 3 + -3;
+    iVar2 = thunk_rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->improvement_slots_left - 1);
     uVar1 = *(undefined4 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c);
-    this->field_19f0 = this->field_19f0 - 1;
+    this->improvement_slots_left = this->improvement_slots_left - 1;
     *(undefined4 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c) =
-         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x7c + this->field_19f0 * 4);
+         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x7c + this->improvement_slots_left * 4);
   }
   return uVar1;
 }
@@ -2596,10 +2596,10 @@ void __thiscall cityview_place_improvement(WndBase *this,iptr param_1,iptr param
   if (-1 < param_1) {
     sprite_grab_from_surface
               ((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),(iptr)&this[100].field_8,9,
-               *(undefined4 *)(&DAT_0061c360 + (param_2 + -1) * 0x10),
-               *(undefined4 *)(&DAT_0061c364 + (param_2 + -1) * 0x10),
-               *(undefined4 *)(&DAT_0061c368 + (param_2 + -1) * 0x10),
-               *(undefined4 *)(&DAT_0061c36c + (param_2 + -1) * 0x10));
+               *(undefined4 *)(&cityview_improvement_art_x + (param_2 + -1) * 0x10),
+               *(undefined4 *)(&cityview_improvement_art_y + (param_2 + -1) * 0x10),
+               *(undefined4 *)(&cityview_improvement_art_w + (param_2 + -1) * 0x10),
+               *(undefined4 *)(&cityview_improvement_art_h + (param_2 + -1) * 0x10));
     sprite_replace_color((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),7,9);
     (&this[0x14e].field_c)[param_1] = (int)this + param_1 * 0x3c + 0x6dc;
   }
@@ -2613,10 +2613,10 @@ void __thiscall cityview_place_wonder(WndBase *this,iptr param_1,iptr param_2)
   if (-1 < param_1) {
     sprite_grab_from_surface
               ((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),(iptr)(this + 0x69),9,
-               *(undefined4 *)(&DAT_0061c580 + param_2 * 0x10),
-               *(undefined4 *)(&DAT_0061c584 + param_2 * 0x10),
-               *(undefined4 *)(&DAT_0061c588 + param_2 * 0x10),
-               *(undefined4 *)(&DAT_0061c58c + param_2 * 0x10));
+               *(undefined4 *)(&cityview_wonder_art_x + param_2 * 0x10),
+               *(undefined4 *)(&cityview_wonder_art_y + param_2 * 0x10),
+               *(undefined4 *)(&cityview_wonder_art_w + param_2 * 0x10),
+               *(undefined4 *)(&cityview_wonder_art_h + param_2 * 0x10));
     sprite_replace_color((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),7,9);
     (&this[0x14e].field_c)[param_1] = (int)this + param_1 * 0x3c + 0x6dc;
   }
@@ -2650,7 +2650,7 @@ void __thiscall cityview_place_small_house(CityViewWindow *this,iptr param_1)
 }
 
 /* 00455f9e auto */
-void __thiscall FUN_00455f9e(CityViewWindow *this,iptr param_1)
+void __thiscall cityview_place_large_empty_lot(CityViewWindow *this,iptr param_1)
 
 {
   int iVar1;
@@ -2720,7 +2720,7 @@ void __thiscall cityview_draw_title(CityViewWindow *this)
 
 /* 004561d9 auto */
 #define cityview_wnd (*(CityViewWindow * *)((u8 *)&g.d_00626a04))
-void __cdecl FUN_004561d9(int param_1)
+void __cdecl cityview_on_mousemove(int param_1)
 
 {
   if (screen_rect_right * 7 >> 3 < param_1) {
@@ -2735,7 +2735,7 @@ void __cdecl FUN_004561d9(int param_1)
 
 /* 00456228 auto */
 #define cityview_wnd (*(C_00408010_b8 * *)((u8 *)&g.d_00626a04))
-void __cdecl FUN_00456228(int param_1)
+void __cdecl cityview_on_key(int param_1)
 
 {
   if (param_1 == 0xd2) {
@@ -2747,7 +2747,7 @@ void __cdecl FUN_00456228(int param_1)
 
 /* 0045626d auto */
 #define cityview_wnd (*(int *)((u8 *)&g.d_00626a04))
-void __cdecl FUN_0045626d(void)
+void __cdecl cityview_on_lbuttonup(void)
 
 {
   if (cityview_wnd != 0) {
@@ -2759,7 +2759,7 @@ void __cdecl FUN_0045626d(void)
 
 /* 0045629b auto */
 #define cityview_wnd (*(CityViewWindow * *)((u8 *)&g.d_00626a04))
-void __cdecl FUN_0045629b(undefined4 param_1)
+void __cdecl cityview_on_key_pre(undefined4 param_1)
 
 {
   switch(param_1) {
@@ -5777,7 +5777,7 @@ LAB_0045fd59:
 /* 0045fd67 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-void __cdecl FUN_0045fd67(iptr param_1,iptr param_2)
+void __cdecl diplo_ai_senate_hawks_notice(iptr param_1,iptr param_2)
 
 {
   iptr iVar1;

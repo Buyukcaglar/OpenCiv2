@@ -51,7 +51,7 @@ checkbox_create_fixed
 void __thiscall checkbox_enable(C_00530fb0 *this)
 
 {
-  this->field_34 = 1;
+  this->is_enabled = 1;
   return;
 }
 
@@ -133,7 +133,7 @@ void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr param_1)
 #define _DAT_0062803c (*(undefined4 *)((u8 *)&g.d_0062803c))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_00531210(int param_1)
+void __cdecl civ_set_current_index(int param_1)
 
 {
   if ((-1 < param_1) && (param_1 < 9)) {

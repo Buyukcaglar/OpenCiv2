@@ -25,7 +25,7 @@ void __cdecl unit_editor_update_domain_ctrls(void)
 
 /* 005b0373 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005b0373(int param_1)
+void __cdecl unit_editor_on_combo(int param_1)
 
 {
   int iVar1;
@@ -101,7 +101,7 @@ void __thiscall unit_editor_create_combo(C_004083b0_430 *this,int param_1)
             ((Control *)(this->pad_2d4 + param_1 * 0x38 + 0x28),(iptr)local_2c,iVar1,
              (iptr)local_14);
   thunk_combo_set_font((ComboBoxFontView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  thunk_combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x40326f, FUN_005b0373));
+  thunk_combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x40326f, unit_editor_on_combo));
   switch(param_1) {
   case 0:
     for (local_20 = 0; local_20 < 0x3e; local_20 = local_20 + 1) {
@@ -180,7 +180,7 @@ void __thiscall unit_editor_create_edit(C_004083b0_430 *this,int param_1)
             ((EditControl *)(this[1].pad_48 + param_1 * 0x48 + -0x2c),(iptr)local_24,iVar1,
              (iptr)local_14,ADDR(0x635fe0, ((u8 *)&g.d_00635fe0)));
   thunk_edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + param_1 * 0x48 + -0x2c),3);
-  thunk_edit_set_callback((EditCallbackSetView *)(this[1].pad_48 + param_1 * 0x48 + -0x2c),ADDR(0x401019, FUN_004cdcf6));
+  thunk_edit_set_callback((EditCallbackSetView *)(this[1].pad_48 + param_1 * 0x48 + -0x2c),ADDR(0x401019, editor_numeric_edit_filter));
   return;
 }
 #undef editor_next_ctrl_id
@@ -414,7 +414,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create
             ((Control *)&this[1].field_2a4,(iptr)local_474,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_2a4,ADDR(0x401767, FUN_005af9e3));
+  thunk_button_set_callback((Control *)&this[1].field_2a4,ADDR(0x401767, unit_editor_on_ok));
   iVar3 = iVar3 + this->field_2e0 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -426,7 +426,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xa8));
   thunk_button_create
             ((Control *)&this[1].field_358,(iptr)local_478,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_358,ADDR(0x403210, FUN_005afbca));
+  thunk_button_set_callback((Control *)&this[1].field_358,ADDR(0x403210, unit_editor_on_rename));
   iVar3 = iVar3 + this->field_2e0 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -438,7 +438,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8ec));
   thunk_button_create
             ((Control *)&this[1].field_2e0,(iptr)local_47c,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_2e0,ADDR(0x403788, FUN_005afd3b));
+  thunk_button_set_callback((Control *)&this[1].field_2e0,ADDR(0x403788, unit_editor_on_help));
   thunk_rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar4,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -450,7 +450,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create
             ((Control *)&this[1].field_31c,(iptr)local_480,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_31c,ADDR(0x403c88, FUN_005afd9a));
+  thunk_button_set_callback((Control *)&this[1].field_31c,ADDR(0x403c88, unit_editor_on_cancel));
   thunk_ctrl_set_cancel_button((Control *)&this[1].field_31c);
   iVar3 = thunk_sprite_width
                     ((Sprite *)(&terrain_base_sprites + this->field_2ec * 0x3c));
@@ -471,7 +471,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x7cc));
   thunk_button_create
             ((Control *)(this[1].pad_364 + 0x30),(iptr)local_484,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x402202, FUN_005afdc2));
+  thunk_button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x402202, unit_editor_edit_sprite));
   iVar3 = iVar3 + this->field_2e4 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar4,iVar3,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -483,7 +483,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 2000));
   thunk_button_create
             ((Control *)(this[2].pad_48 + 0x48),(iptr)local_488,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_48 + 0x48),ADDR(0x4029b4, FUN_005afe15));
+  thunk_button_set_callback((Control *)(this[2].pad_48 + 0x48),ADDR(0x4029b4, unit_editor_edit_sound));
   thunk_rect_set_xywh((iptr)local_454,iVar4,iVar3 + this->field_2e4 + 2,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -495,7 +495,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x7d4));
   thunk_button_create
             ((Control *)(this[2].pad_48 + 0xc),(iptr)local_48c,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)(this[2].pad_48 + 0xc),ADDR(0x403a85, FUN_005afea8));
+  thunk_button_set_callback((Control *)(this[2].pad_48 + 0xc),ADDR(0x403a85, unit_editor_edit_flags));
   thunk_wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   _DAT_00635ef0 = (undefined4)(0x7f / (ulonglong)(longlong)(int)(uint)cosmic.road_move_mult);
   _DAT_00635f00 = 0xc;
@@ -504,7 +504,7 @@ void __thiscall unit_editor_window_run(C_004083b0_430 *this)
   thunk_unit_editor_load_controls();
   thunk_unit_editor_update_domain_ctrls();
   this->field_2f8 = 5;
-  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4019d8, FUN_004ce83d));
+  thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x401e01, thunk_unit_editor_redraw));
   wnd_repaint((SurfaceWindow *)this);
   thunk_window_show((C_004083b0_4 *)this);
@@ -895,7 +895,7 @@ int __cdecl unit_stack_nth(int param_1,int param_2)
 
 /* 005b3007 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005b3007(iptr param_1)
+int __cdecl unit_stack_position(iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -912,7 +912,7 @@ int __cdecl FUN_005b3007(iptr param_1)
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-iptr __cdecl FUN_005b3046(iptr param_1,int param_2,u8 param_3)
+iptr __cdecl unit_stack_nth_with_role(iptr param_1,int param_2,u8 param_3)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -934,7 +934,7 @@ iptr __cdecl FUN_005b3046(iptr param_1,int param_2,u8 param_3)
 
 /* 005b30e9 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005b30e9(int param_1)
+int __cdecl unit_stack_count(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -949,7 +949,7 @@ int __cdecl FUN_005b30e9(int param_1)
 
 /* 005b3136 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005b3136(iptr param_1,u8 param_2)
+int __cdecl unit_stack_count_type(iptr param_1,u8 param_2)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1275,7 +1275,7 @@ void __cdecl unit_stack_ships_to_top(iptr param_1,undefined4 param_2)
 #undef local_10
 
 /* 005b3cd4 auto */
-undefined4 __cdecl FUN_005b3cd4(iptr param_1,undefined4 param_2)
+undefined4 __cdecl unit_stack_first_ships_on_top(iptr param_1,undefined4 param_2)
 
 {
   undefined4 uVar1;
@@ -1759,7 +1759,7 @@ void __cdecl unit_stack_add_visibility(iptr param_1,undefined4 param_2)
 /* 005b4f3c auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-uint __cdecl FUN_005b4f3c(undefined4 param_1,undefined4 param_2)
+uint __cdecl tile_nearby_civs_mask(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1784,7 +1784,7 @@ uint __cdecl FUN_005b4f3c(undefined4 param_1,undefined4 param_2)
 
 /* 005b4fca auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005b4fca(iptr param_1)
+void __cdecl unit_stack_seen_by_adjacent_civs(iptr param_1)
 
 {
   int iVar1;
@@ -1801,7 +1801,7 @@ void __cdecl FUN_005b4fca(iptr param_1)
 #undef local_8
 
 /* 005b503b auto */
-undefined4 __cdecl FUN_005b503b(iptr param_1,uint param_2)
+undefined4 __cdecl unit_stack_has_type(iptr param_1,uint param_2)
 
 {
   param_1 = thunk_unit_stack_first(param_1);
@@ -2279,7 +2279,7 @@ void __cdecl unit_destroy_redraw(iptr param_1,int param_2)
 /* 005b620a auto */
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_005b620a(iptr param_1,int param_2)
+int __cdecl unit_stack_ships_load_cargo(iptr param_1,int param_2)
 
 {
   int iVar1;
@@ -2306,7 +2306,7 @@ int __cdecl FUN_005b620a(iptr param_1,int param_2)
 #undef local_8
 
 /* 005b62ee auto */
-void __cdecl FUN_005b62ee(iptr param_1,i8 param_2)
+void __cdecl unit_stack_set_orders(iptr param_1,i8 param_2)
 
 {
   for (param_1 = thunk_unit_stack_first(param_1); -1 < param_1; param_1 = thunk_unit_next_in_stack(param_1)) {
@@ -2526,7 +2526,7 @@ undefined4 __cdecl ai_tile_improve_choice(iptr param_1,iptr param_2,undefined4 p
 #undef local_c
 
 /* 005b6a58 auto */
-undefined4 __cdecl FUN_005b6a58(iptr param_1)
+undefined4 __cdecl unit_dlg_wake_unit_cb(iptr param_1)
 
 {
   if (-1 < param_1) {
@@ -2537,7 +2537,7 @@ undefined4 __cdecl FUN_005b6a58(iptr param_1)
 }
 
 /* 005b6aa0 auto */
-undefined4 __cdecl FUN_005b6aa0(void)
+undefined4 __cdecl unit_dlg_dblclick_accept_cb(void)
 
 {
   return 1;
@@ -2545,7 +2545,7 @@ undefined4 __cdecl FUN_005b6aa0(void)
 
 /* 005b6ab5 auto */
 void __cdecl
-FUN_005b6ab5(undefined4 param_1,iptr param_2,iptr param_3,undefined4 param_4,int param_5,
+unit_dlg_draw_sprite_cb(undefined4 param_1,iptr param_2,iptr param_3,undefined4 param_4,int param_5,
             undefined4 param_6)
 
 {
@@ -2578,9 +2578,9 @@ undefined4 __cdecl unit_stack_select_dialog(iptr param_1,iptr param_2,int param_
   thunk_dlg_reset(&local_340,0x20001 - (uint)(param_3 == 0));
   thunk_dialog_set_title((DialogWindowView *)&local_340,param_2);
   thunk_dialog_set_width((DialogWindowView *)&local_340,0x154);
-  thunk_dialog_set_sprite_click_fn((DialogOptionList *)&local_340,ADDR(0x402c11, FUN_005b6a58));
-  thunk_dialog_set_sprite_dblclick_fn((DialogOptionList *)&local_340,ADDR(0x4018c0, FUN_005b6aa0));
-  thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, FUN_005b6ab5));
+  thunk_dialog_set_sprite_click_fn((DialogOptionList *)&local_340,ADDR(0x402c11, unit_dlg_wake_unit_cb));
+  thunk_dialog_set_sprite_dblclick_fn((DialogOptionList *)&local_340,ADDR(0x4018c0, unit_dlg_dblclick_accept_cb));
+  thunk_dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
   thunk_dialog_set_image_zoom((DialogWindowView *)&local_340,0xffffffff);
   local_344 = 0;
   for (param_1 = thunk_unit_stack_first(param_1); -1 < param_1; param_1 = thunk_unit_next_in_stack(param_1)) {
@@ -3957,7 +3957,7 @@ void __cdecl text_set_colors(undefined4 param_1,undefined4 param_2,int param_3,i
 
 /* 005baf24 auto */
 #define text_fake_bold (*(uint *)((u8 *)&g.d_006366c0))
-void __cdecl FUN_005baf24(int param_1)
+void __cdecl text_set_fake_bold(int param_1)
 
 {
   text_fake_bold = (uint)(param_1 != 0);
@@ -4082,7 +4082,7 @@ surface_wnd_create
 
 /* 005bb463 auto */
 void __thiscall
-FUN_005bb463
+surface_wnd_create_with_menu
           (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
 
@@ -4113,7 +4113,7 @@ wnd_create_with_surface
 
 /* 005bb525 auto */
 void __thiscall
-FUN_005bb525
+wnd_create_with_surface_menu
           (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
 
@@ -4141,7 +4141,7 @@ void __thiscall wnd_repaint(SurfaceWindow *this)
 #undef wnd_active_child
 
 /* 005bb5be auto */
-bool __thiscall FUN_005bb5be(DibSurface *this,iptr param_1)
+bool __thiscall surfwnd_resize_dib(DibSurface *this,iptr param_1)
 
 {
   int iVar1;
@@ -4240,7 +4240,7 @@ surface_wnd_create_nopal
 
 /* 005bb7c3 auto */
 void __thiscall
-FUN_005bb7c3
+surface_wnd_create_nopal_menu
           (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
 
@@ -4269,7 +4269,7 @@ surface_wnd_create_child_nopal
 
 /* 005bb871 auto */
 void __thiscall
-FUN_005bb871
+surface_wnd_create_child_nopal_menu
           (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
@@ -4342,7 +4342,7 @@ void __cdecl win_drain_input_msgs(void)
 
 /* 005bba1d auto */
 #define local_20 (*(tagMSG *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005bba1d(void)
+void __cdecl win_discard_all_messages(void)
 
 {
   BOOL BVar1;
@@ -4667,7 +4667,7 @@ void __cdecl wnd_obj_set_kind(iptr param_1,undefined4 param_2)
 }
 
 /* 005bc032 auto */
-undefined4 __cdecl FUN_005bc032(iptr param_1)
+undefined4 __cdecl wnd_obj_is_visible(iptr param_1)
 
 {
   BOOL BVar1;
@@ -4689,7 +4689,7 @@ undefined4 __cdecl FUN_005bc032(iptr param_1)
 }
 
 /* 005bc07e auto */
-void __cdecl FUN_005bc07e(iptr param_1)
+void __cdecl wnd_obj_send_close(iptr param_1)
 
 {
   if (param_1 != 0) {
@@ -4811,7 +4811,7 @@ void __cdecl wnd_obj_set_bg_color(iptr param_1,uint param_2)
 #undef local_8
 
 /* 005bc35e auto */
-void __cdecl FUN_005bc35e(iptr param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4)
+void __cdecl wnd_obj_set_bg_rgb(iptr param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4)
 
 {
   HBRUSH pHVar1;
@@ -4873,7 +4873,7 @@ void __cdecl wnd_obj_hide(iptr param_1)
 }
 
 /* 005bc476 auto */
-void __cdecl FUN_005bc476(iptr param_1,LPCSTR param_2)
+void __cdecl wnd_obj_set_text(iptr param_1,LPCSTR param_2)
 
 {
   if (param_1 != 0) {
@@ -4945,7 +4945,7 @@ void __cdecl wnd_obj_maximize(iptr param_1)
 }
 
 /* 005bc603 auto */
-BOOL __cdecl FUN_005bc603(iptr param_1)
+BOOL __cdecl wnd_obj_is_maximized(iptr param_1)
 
 {
   BOOL BVar1;
@@ -4970,7 +4970,7 @@ void __cdecl wnd_obj_minimize(iptr param_1)
 }
 
 /* 005bc65f auto */
-BOOL __cdecl FUN_005bc65f(iptr param_1)
+BOOL __cdecl wnd_obj_is_minimized(iptr param_1)
 
 {
   BOOL BVar1;
@@ -5005,7 +5005,7 @@ void __cdecl wnd_obj_validate_rect(iptr param_1,RECT *param_2)
 }
 
 /* 005bc6e6 auto */
-void __cdecl FUN_005bc6e6(iptr param_1,RECT *param_2)
+void __cdecl wnd_obj_invalidate_rect(iptr param_1,RECT *param_2)
 
 {
   if (param_1 != 0) {
@@ -5202,7 +5202,7 @@ void __cdecl gfx_get_screen_rect(iptr param_1)
 
 /* 005bcad7 auto */
 #define local_c (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005bcad7(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,LONG *param_5)
+void __cdecl wnd_obj_client_to_screen(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,LONG *param_5)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5220,7 +5220,7 @@ void __cdecl FUN_005bcad7(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,L
 
 /* 005bcb26 auto */
 #define local_c (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005bcb26(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,LONG *param_5)
+void __cdecl wnd_obj_client_to_parent(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,LONG *param_5)
 
 {
   HWND hWndTo;
@@ -5385,7 +5385,7 @@ void __cdecl wnd_obj_set_icon(iptr param_1,uint param_2)
 
 /* 005bceee auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-HCURSOR __cdecl FUN_005bceee(uint param_1)
+HCURSOR __cdecl ui_load_app_cursor(uint param_1)
 
 {
   HCURSOR pHVar1;
@@ -5396,7 +5396,7 @@ HCURSOR __cdecl FUN_005bceee(uint param_1)
 #undef app_hinstance
 
 /* 005bcf1c auto */
-void __cdecl FUN_005bcf1c(HCURSOR param_1)
+void __cdecl ui_destroy_hcursor(HCURSOR param_1)
 
 {
   if (param_1 != (HCURSOR)0x0) {
@@ -5406,7 +5406,7 @@ void __cdecl FUN_005bcf1c(HCURSOR param_1)
 }
 
 /* 005bcf40 auto */
-void __cdecl FUN_005bcf40(HCURSOR param_1)
+void __cdecl ui_set_hcursor(HCURSOR param_1)
 
 {
   SetCursor(param_1);
@@ -5414,7 +5414,7 @@ void __cdecl FUN_005bcf40(HCURSOR param_1)
 }
 
 /* 005bcf5a auto */
-void __cdecl FUN_005bcf5a(iptr param_1,HCURSOR param_2,int param_3)
+void __cdecl wnd_obj_set_hcursor_now(iptr param_1,HCURSOR param_2,int param_3)
 
 {
   if (((param_1 != 0) && (param_2 != (HCURSOR)0x0)) &&
@@ -5433,7 +5433,7 @@ void __cdecl ui_show_mouse_cursor(void)
 }
 
 /* 005bcfb8 auto */
-void __cdecl FUN_005bcfb8(void)
+void __cdecl ui_hide_mouse_cursor(void)
 
 {
   int iVar1;
@@ -5455,7 +5455,7 @@ void __cdecl wnd_obj_set_cursor_now(iptr param_1,undefined4 param_2,int param_3)
 }
 
 /* 005bd023 auto */
-void __cdecl FUN_005bd023(iptr param_1,HCURSOR param_2)
+void __cdecl wnd_obj_apply_hcursor(iptr param_1,HCURSOR param_2)
 
 {
   if ((param_1 != 0) && (param_2 != (HCURSOR)0x0)) {
@@ -5710,7 +5710,7 @@ void __cdecl wnd_obj_release_capture(undefined4 param_1)
 
 /* 005bd566 game (src/game/retvals.c) */
 #if 0
-void __cdecl FUN_005bd566(iptr param_1,iptr param_2)
+void __cdecl wnd_obj_set_topmost_child(iptr param_1,iptr param_2)
 
 {
   ushort uVar1;
@@ -5899,7 +5899,7 @@ DibSurface * __thiscall surface_dtor(DibSurface *this)
 #define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(96)))
 undefined4 __thiscall
-FUN_005bd987
+surface_load_lbm_resource
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
@@ -6094,7 +6094,7 @@ FUN_005bd987
 #define local_14 (*(uptr *)(frame_ + FRAME_OFF(100)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(104)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(108)))
-void __cdecl FUN_005bdf7f(iptr param_1,ushort *param_2,char *param_3,int param_4,int param_5)
+void __cdecl lbm_decode_row(iptr param_1,ushort *param_2,char *param_3,int param_4,int param_5)
 
 {
   char *pcVar1;
@@ -6240,7 +6240,7 @@ void __cdecl lbm_unpack_row(iptr param_1,iptr param_2,iptr param_3,int param_4)
 #define local_c (*(char * *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
 undefined4 __thiscall
-FUN_005be2c4
+surface_load_tga_resource
           (DibSurface *this,undefined4 param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
@@ -6353,7 +6353,7 @@ FUN_005be2c4
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
 undefined4 __thiscall
-FUN_005be595
+surface_load_tga_file
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
@@ -6479,7 +6479,7 @@ FUN_005be595
 #define local_c (*(int *)(frame_ + FRAME_OFF(188)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(192)))
 undefined4 __thiscall
-FUN_005be967
+surface_load_pcx_resource
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
@@ -6615,7 +6615,7 @@ FUN_005be967
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(340)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(344)))
 undefined4 __thiscall
-FUN_005bec8c
+surface_load_pcx_file
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
@@ -7100,7 +7100,7 @@ surface_load_pict_resource
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(48)))
 undefined4 __thiscall
-FUN_005bfad9
+surface_load_bmp_resource
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
@@ -7193,7 +7193,7 @@ FUN_005bfad9
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
 undefined4 __thiscall
-FUN_005bfcff
+surface_load_bmp_file
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {

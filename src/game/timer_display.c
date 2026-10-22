@@ -12,7 +12,7 @@
 #define g_timer_expired     (*(undefined1 *)((u8 *)&g.d_0064b9bc))
 
 /* 0x0055b0fb */
-void __cdecl FUN_0055b0fb(void)
+void __cdecl mp_turn_timer_tick(void)
 {
     int percent, color, elapsed;
     RECT rect;
@@ -57,5 +57,5 @@ void __cdecl FUN_0055b0fb(void)
     thunk_status_draw_timer_bar(percent, color);
     if (g_timer_event != 0)
         game_timer_destroy(g_timer_event);
-    g_timer_event = game_timer_create(((void *)ADDR(0x00402220, FUN_0055b0fb)), 500, 1);
+    g_timer_event = game_timer_create(((void *)ADDR(0x00402220, mp_turn_timer_tick)), 500, 1);
 }

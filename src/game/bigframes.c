@@ -3580,7 +3580,7 @@ LAB_005aa3dc:
     thunk_civ_process_turn(DAT_006d1da0);
     thunk_net_send_state_diff(0xff,2,0,0,0);
     *(int *)(&net_civ_phase_done + DAT_006d1da0 * 4) = *(int *)(&net_civ_phase_done + DAT_006d1da0 * 4) + 1;
-    dlg_pending_idle_callback = ((void *)ADDR(0x00403233, FUN_005a9f30));
+    dlg_pending_idle_callback = ((void *)ADDR(0x00403233, net_host_wait_production_idle));
     thunk_popup_game_with_sprite(s_WAITPRODUCTION_00635c88,&popup_info_icon_sprite,0);
     local_2c = 0;
 LAB_005aa732:
@@ -3664,7 +3664,7 @@ LAB_005aa7ee:
     local_14 = *(int *)(&casualty_counts + DAT_006d1da0 * 4) -
                *(int *)(&casualty_reported_counts + DAT_006d1da0 * 4);
     if (autoplay_active == 0) {
-      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
       uVar3 = thunk_civ_leader_title(DAT_006d1da0);
       thunk_text_set_string_arg(0,uVar3);
       uVar3 = thunk_civ_leader_name(DAT_006d1da0);
@@ -3733,7 +3733,7 @@ LAB_005aa7ee:
     game.field_06 = game.field_06 & 0xfffe;
     *(int *)(&net_civ_phase_done + DAT_006d1da0 * 4) = *(int *)(&net_civ_phase_done + DAT_006d1da0 * 4) + 1;
     XD_FlushSendBuffer(60000);
-    dlg_pending_idle_callback = ((void *)ADDR(0x004030ee, FUN_005aa004));
+    dlg_pending_idle_callback = ((void *)ADDR(0x004030ee, net_host_wait_human_moves_idle));
     thunk_popup_game_with_sprite(s_WAITHUMANMOVES_00635cc0,&popup_info_icon_sprite,0);
     local_30 = 0;
 LAB_005aae35:

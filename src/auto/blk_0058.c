@@ -1483,7 +1483,7 @@ void __cdecl cosmic_editor_fill_list(void)
 #define local_120 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(8)))
 #define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(268)))
-void __cdecl FUN_00586bb6(void)
+void __cdecl cosmic_editor_edit_value(void)
 
 {
   int iVar1;
@@ -1529,7 +1529,7 @@ void __cdecl FUN_00586bb6(void)
 #define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_00586d0a(FILE *param_1,FILE *param_2)
+undefined4 __cdecl cosmic_editor_write_section(FILE *param_1,FILE *param_2)
 
 {
   char *pcVar1;
@@ -1550,7 +1550,7 @@ undefined4 __cdecl FUN_00586d0a(FILE *param_1,FILE *param_2)
 /* 00586da1 auto */
 #define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_00586da1(void)
+void __cdecl cosmic_editor_ok_clicked(void)
 
 {
   iptr iVar1;
@@ -1560,7 +1560,7 @@ void __cdecl FUN_00586da1(void)
   UINT uType;
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_rules_edit_set_section(ADDR(0x634698, ((u8 *)&g.d_00634698)),ADDR(0x40172b, FUN_00586d0a));
+  thunk_rules_edit_set_section(ADDR(0x634698, ((u8 *)&g.d_00634698)),ADDR(0x40172b, cosmic_editor_write_section));
   iVar1 = thunk_rules_write_sections();
   if (iVar1 == 0) {
     _sprintf(local_24,s_Error_updating_RULES__s_006346a0,&lang_file_ext);
@@ -1579,7 +1579,7 @@ void __cdecl FUN_00586da1(void)
 
 /* 00586e24 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_00586e24(void)
+void __cdecl cosmic_editor_help_clicked(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1600,7 +1600,7 @@ void __cdecl FUN_00586e24(void)
 
 /* 00586e88 auto */
 #define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
-void __cdecl FUN_00586e88(void)
+void __cdecl cosmic_editor_cancel_clicked(void)
 
 {
   editor_running = 0;
@@ -1707,7 +1707,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   thunk_listbox_create
             ((Control *)&this[2].field_234,(iptr)local_474,iVar3,(iptr)local_454);
   thunk_listbox_set_font((ListBoxFontView *)&this[2].field_234,ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)&this[2].field_234,ADDR(0x4038a5, FUN_00586bb6));
+  thunk_listbox_set_dblclick_callback((ListBoxDblClickSetView *)&this[2].field_234,ADDR(0x4038a5, cosmic_editor_edit_value));
   thunk_cosmic_editor_capture_defaults();
   thunk_cosmic_editor_fill_list();
   thunk_listbox_set_cur_sel((ListBoxSetSelView *)&this[2].field_234,0);
@@ -1727,7 +1727,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create
             ((Control *)&this[1].field_2a4,(iptr)local_478,0x65,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40342c, FUN_00586da1));
+  thunk_button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40342c, cosmic_editor_ok_clicked));
   iVar3 = iVar3 + this->field_2e0 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -1739,7 +1739,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8e0));
   thunk_button_create
             ((Control *)&this[1].field_358,(iptr)local_47c,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_358,ADDR(0x4038a5, FUN_00586bb6));
+  thunk_button_set_callback((Control *)&this[1].field_358,ADDR(0x4038a5, cosmic_editor_edit_value));
   thunk_ctrl_set_default_button((Control *)&this[1].field_358);
   iVar3 = iVar3 + this->field_2e0 + 2;
   thunk_rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
@@ -1752,7 +1752,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x8ec));
   thunk_button_create
             ((Control *)&this[1].field_2e0,(iptr)local_480,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_2e0,ADDR(0x4010f5, FUN_00586e24));
+  thunk_button_set_callback((Control *)&this[1].field_2e0,ADDR(0x4010f5, cosmic_editor_help_clicked));
   thunk_rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar4,this->field_2e0,
                      this->field_2e4);
   if (this == (C_004083b0_430 *)0x0) {
@@ -1764,7 +1764,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create
             ((Control *)&this[1].field_31c,(iptr)local_484,0x66,(iptr)local_454,iVar5);
-  thunk_button_set_callback((Control *)&this[1].field_31c,ADDR(0x402fae, FUN_00586e88));
+  thunk_button_set_callback((Control *)&this[1].field_31c,ADDR(0x402fae, cosmic_editor_cancel_clicked));
   thunk_ctrl_set_cancel_button((Control *)&this[1].field_31c);
   thunk_wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x401c0d, thunk_cosmic_editor_focus_redraw));
@@ -1910,10 +1910,10 @@ parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
                *(undefined4 *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
     thunk_scrollbar_set_callback
               (*(Control **)(this[3].pad_48 + param_2 * 4 + -0x20),
-               (iptr)(((void *)ADDR(0x0040166d, FUN_00587e05)) + ((param_2 == 0) - 1 & 0xfb9)));
+               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((param_2 == 0) - 1 & 0xfb9)));
     thunk_scrollbar_set_track_callback
               (*(ScrollbarTrackSetView **)(this[3].pad_48 + param_2 * 4 + -0x20),
-               (iptr)(((void *)ADDR(0x0040166d, FUN_00587e05)) + ((param_2 == 0) - 1 & 0xfb9)));
+               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((param_2 == 0) - 1 & 0xfb9)));
   }
   pCVar4 = operator_new(0x40);
   local_8 = 1;
@@ -1934,8 +1934,8 @@ parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
   thunk_hotspot_create
             (*(C_0040f380_40 **)(this[3].pad_48 + param_2 * 4 + -0x18),(iptr)local_38,
              param_2 + 0x422,(iptr)(this[3].pad_48 + param_2 * 0x10 + 0x24));
-  thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x402234, FUN_005880b0));
-  thunk_hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x402234, FUN_005880b0));
+  thunk_hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x402234, parley_city_list_click));
+  thunk_hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 + -0x18),ADDR(0x402234, parley_city_list_click));
   thunk_parley_draw_city_list(param_2);
   return;
 }
@@ -1952,7 +1952,7 @@ parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
 #undef local_8
 
 /* 00587e05 auto */
-void __cdecl FUN_00587e05(undefined4 param_1)
+void __cdecl parley_city_list_scroll_local(undefined4 param_1)
 
 {
   thunk_parley_city_list_scroll(0,param_1);
@@ -1960,7 +1960,7 @@ void __cdecl FUN_00587e05(undefined4 param_1)
 }
 
 /* 00587e23 auto */
-void __cdecl FUN_00587e23(undefined4 param_1)
+void __cdecl parley_city_list_scroll_remote(undefined4 param_1)
 
 {
   thunk_parley_city_list_scroll(1,param_1);
@@ -1970,7 +1970,7 @@ void __cdecl FUN_00587e23(undefined4 param_1)
 /* 00587e41 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_00587e41(void)
+void __cdecl parley_reveal_city_info(void)
 
 {
   iptr iVar1;
@@ -2000,7 +2000,7 @@ void __cdecl FUN_00587e41(void)
 /* 00587f00 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_00587f00(void)
+void __cdecl parley_hide_city_info(void)
 
 {
   iptr iVar1;
@@ -2031,7 +2031,7 @@ void __cdecl FUN_00587f00(void)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_00587fbf(void)
+void __cdecl parley_request_city_info(void)
 
 {
   iptr iVar1;
@@ -2085,7 +2085,7 @@ void __cdecl parley_city_list_scroll(int param_1,undefined4 param_2)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_005880b0(int param_1)
+void __cdecl parley_city_list_click(int param_1)
 
 {
   uint *puVar1;
@@ -2643,7 +2643,7 @@ void __thiscall parley_build_city_list(C_004083b0_11c *this,int param_1,int para
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005899f0(void)
+void __cdecl main_frame_bg_surface_global_init(void)
 
 {
   main_frame_bg_surface_init();
@@ -2663,12 +2663,12 @@ void __cdecl main_frame_bg_surface_init(void)
 void __cdecl main_frame_bg_surface_atexit(void)
 
 {
-  _atexit(FUN_00589a41);
+  _atexit(main_frame_bg_surface_static_dtor);
   return;
 }
 
 /* 00589a41 auto */
-void __cdecl FUN_00589a41(void)
+void __cdecl main_frame_bg_surface_static_dtor(void)
 
 {
   surface_dtor((DibSurface *)&main_frame_bg_surface);
@@ -2722,9 +2722,9 @@ uint __cdecl main_frame_create(void)
     thunk_intro_play_opening_video();
     palette_set_rgb((GamePalette *)&game_palette,10,0xec,(iptr)local_708);
     palette_commit_range((GamePalette *)&game_palette,10,0xec);
-    thunk_wnd_set_close_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x402446, FUN_00484d85));
-    thunk_wnd_set_keydown_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x402cd4, thunk_FUN_004125c6));
-    thunk_wnd_set_char_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x401e56, thunk_FUN_00411f91));
+    thunk_wnd_set_close_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x402446, main_frame_on_close));
+    thunk_wnd_set_keydown_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x402cd4, thunk_map_window_key));
+    thunk_wnd_set_char_handler((C_00408130 *)&main_frame_base_wnd,ADDR(0x401e56, thunk_map_window_ascii));
     thunk_wnd_set_bg_color((WndBase *)&main_frame_wnd,0x9e);
     thunk_wnd_flush_paint();
     main_frame_created = 1;
@@ -2975,7 +2975,7 @@ void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_0058a5b0(void)
+void __cdecl unit_sound_editor_global_init(void)
 
 {
   unit_sound_editor_static_init();
@@ -2995,12 +2995,12 @@ void __cdecl unit_sound_editor_static_init(void)
 void __cdecl unit_sound_editor_reg_atexit(void)
 
 {
-  _atexit(FUN_0058a601);
+  _atexit(unit_sound_editor_static_dtor);
   return;
 }
 
 /* 0058a601 auto */
-void __cdecl FUN_0058a601(void)
+void __cdecl unit_sound_editor_static_dtor(void)
 
 {
   thunk_frame_wnd_dtor((DibSurface *)&unit_sound_editor_window);
@@ -3144,7 +3144,7 @@ void __cdecl file_copy(iptr param_1,iptr param_2)
 /* WARNING: Removing unreachable block (ram,0x0058a97f) */
 /* WARNING: Removing unreachable block (ram,0x0058a9fb) */
 
-void __cdecl FUN_0058a905(int param_1)
+void __cdecl unit_sound_editor_pick_wav(int param_1)
 
 {
   undefined4 uVar1;
@@ -3230,7 +3230,7 @@ LAB_0058abe0:
 
 /* 0058abee auto */
 #define unit_sound_editor_running (*(undefined4 *)((u8 *)&g.d_006acd50))
-void __cdecl FUN_0058abee(void)
+void __cdecl unit_sound_editor_ok_clicked(void)
 
 {
   unit_sound_editor_running = 0;
@@ -3241,7 +3241,7 @@ void __cdecl FUN_0058abee(void)
 
 /* 0058ac13 auto */
 #define unit_sound_editor_running (*(undefined4 *)((u8 *)&g.d_006acd50))
-void __cdecl FUN_0058ac13(void)
+void __cdecl unit_sound_editor_cancel_clicked(void)
 
 {
   unit_sound_editor_running = 0;
@@ -3253,7 +3253,7 @@ void __cdecl FUN_0058ac13(void)
 /* 0058ac38 auto */
 #define local_28 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-void __cdecl FUN_0058ac38(void)
+void __cdecl unit_sound_editor_redraw(void)
 
 {
   int iVar1;
@@ -3319,7 +3319,7 @@ point_in_rect_ltrb(int param_1,int param_2,int param_3,int param_4,int param_5,i
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(40)))
-void __cdecl FUN_0058ae6c(int param_1,int param_2)
+void __cdecl unit_sound_editor_on_dblclick(int param_1,int param_2)
 
 {
   int iVar1;
@@ -3559,7 +3559,7 @@ void __cdecl unit_sound_editor_run(iptr param_1,undefined4 param_2)
                                 (label_string_ids + *(int *)(&unit_sound_button_label_ids + local_214 * 4) * 4));
     thunk_button_create
               (local_1d0 + local_214,ADDR(0x6acda0, ((u8 *)&g.d_006acda0)),local_214 + 0xc9,(iptr)local_5c,iVar2);
-    thunk_button_set_callback(local_1d0 + local_214,ADDR(0x403b4d, FUN_0058a905));
+    thunk_button_set_callback(local_1d0 + local_214,ADDR(0x403b4d, unit_sound_editor_pick_wav));
   }
   thunk_unit_sound_editor_set_slots(param_2,(iptr)local_1d0);
   local_60 = (unit_sound_editor_client_width + -6) / 2;
@@ -3568,15 +3568,15 @@ void __cdecl unit_sound_editor_run(iptr param_1,undefined4 param_2)
   thunk_rect_set_xywh((iptr)local_5c,local_64,local_1d4,local_60,local_68);
   iVar2 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create(&local_4c,ADDR(0x6acda0, ((u8 *)&g.d_006acda0)),0x65,(iptr)local_5c,iVar2);
-  thunk_button_set_callback(&local_4c,ADDR(0x4022c0, FUN_0058abee));
+  thunk_button_set_callback(&local_4c,ADDR(0x4022c0, unit_sound_editor_ok_clicked));
   local_64 = local_64 + local_60 + 2;
   thunk_rect_set_xywh((iptr)local_5c,local_64,local_1d4,local_60,local_68);
   iVar2 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3fc));
   thunk_button_create(&local_210,ADDR(0x6acda0, ((u8 *)&g.d_006acda0)),0x66,(iptr)local_5c,iVar2);
-  thunk_button_set_callback(&local_210,ADDR(0x402da1, FUN_0058ac13));
+  thunk_button_set_callback(&local_210,ADDR(0x402da1, unit_sound_editor_cancel_clicked));
   thunk_ctrl_set_cancel_button(&local_210);
-  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&unit_sound_editor_wnd_handlers,ADDR(0x402559, FUN_0058ae6c));
-  thunk_wnd_set_redraw_callback((SurfaceWindow *)&unit_sound_editor_window,ADDR(0x4017d5, FUN_0058ac38));
+  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&unit_sound_editor_wnd_handlers,ADDR(0x402559, unit_sound_editor_on_dblclick));
+  thunk_wnd_set_redraw_callback((SurfaceWindow *)&unit_sound_editor_window,ADDR(0x4017d5, unit_sound_editor_redraw));
   wnd_repaint((SurfaceWindow *)&unit_sound_editor_window);
   thunk_window_show((C_004083b0_4 *)&unit_sound_editor_window);
   wnd_run_modal_loop((C_00408010_b8 *)&unit_sound_editor_wnd);
@@ -4351,7 +4351,7 @@ void __cdecl unit_cmd_paradrop(void)
       thunk_dlg_game_txt_with_unit(ADDR(0x634b94, ((u8 *)&g.d_00634b94)),iVar1);
     }
     else {
-      thunk_FUN_00410e46();
+      thunk_mapviews_set_paradrop_cursor();
     }
   }
   else {
@@ -4724,7 +4724,7 @@ LAB_0058e34c:
 #undef local_8
 
 /* 0058f010 auto */
-void __cdecl FUN_0058f010(iptr param_1)
+void __cdecl popup_game_if_local_mover(iptr param_1)
 
 {
   if (unit_move_by_local_human != '\0') {

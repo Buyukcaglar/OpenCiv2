@@ -116,7 +116,7 @@ typedef struct C_00408010_6f0 {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
 } C_00408010_6f0;
@@ -169,7 +169,7 @@ typedef struct DestroyedCivsWindow {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
@@ -227,7 +227,7 @@ typedef struct SpaceshipWindow {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
@@ -240,7 +240,7 @@ typedef struct SpaceshipWindow {
     union { u32 field_8c0; u32 type_index; };
     u8 pad_8c4[40];
     u32 field_8ec;
-    u32 field_8f0;
+    union { u32 field_8f0; u32 launched; };
     u8 pad_8f4[492];
     union { u32 field_ae0; u32 launch_state; };
     u8 pad_ae4[1076];
@@ -296,7 +296,7 @@ typedef struct DiploLeaderWindow {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
@@ -309,7 +309,7 @@ typedef struct DiploLeaderWindow {
     union { u32 field_8c0; u32 type_index; };
     u8 pad_8c4[40];
     u32 field_8ec;
-    u32 field_8f0;
+    union { u32 field_8f0; u32 launched; };
     u8 pad_8f4[492];
     union { u32 field_ae0; u32 launch_state; };
     u8 pad_ae4[1076];
@@ -369,7 +369,7 @@ typedef struct ThroneRoomWindow {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
@@ -382,7 +382,7 @@ typedef struct ThroneRoomWindow {
     union { u32 field_8c0; u32 type_index; };
     u8 pad_8c4[40];
     u32 field_8ec;
-    u32 field_8f0;
+    union { u32 field_8f0; u32 launched; };
     u8 pad_8f4[492];
     union { u32 field_ae0; u32 launch_state; };
     u8 pad_ae4[1076];
@@ -398,8 +398,8 @@ typedef struct ThroneRoomWindow {
     u8 pad_1930[180];
     union { u32 field_19e4; u32 terrain_kind; };
     union { u32 field_19e8; u32 slot_count; };
-    u32 field_19ec;
-    u32 field_19f0;
+    union { u32 field_19ec; u32 wonder_slots_left; };
+    union { u32 field_19f0; u32 improvement_slots_left; };
     union { u32 field_19f4; u32 houses_left; };
     u8 pad_19f8[588];
 } ThroneRoomWindow;
@@ -452,7 +452,7 @@ typedef struct CityViewWindow {
     union { u32 field_6cc; u32 slide_rect; };
     union { u32 field_6d0; u32 slide_top; };
     union { u32 field_6d4; u32 slide_right; };
-    u32 field_6d8;
+    union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
     u8 pad_6f0[4];
@@ -465,7 +465,7 @@ typedef struct CityViewWindow {
     union { u32 field_8c0; u32 type_index; };
     u8 pad_8c4[40];
     u32 field_8ec;
-    u32 field_8f0;
+    union { u32 field_8f0; u32 launched; };
     u8 pad_8f4[492];
     union { u32 field_ae0; u32 launch_state; };
     u8 pad_ae4[1076];
@@ -481,8 +481,8 @@ typedef struct CityViewWindow {
     u8 pad_1930[180];
     union { u32 field_19e4; u32 terrain_kind; };
     union { u32 field_19e8; u32 slot_count; };
-    u32 field_19ec;
-    u32 field_19f0;
+    union { u32 field_19ec; u32 wonder_slots_left; };
+    union { u32 field_19f0; u32 improvement_slots_left; };
     union { u32 field_19f4; u32 houses_left; };
     u8 pad_19f8[660];
     u32 field_1c8c;
@@ -744,7 +744,7 @@ typedef struct C_004083b0_208 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -804,7 +804,7 @@ typedef struct FrameWindow {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -815,10 +815,10 @@ typedef struct FrameWindow {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -826,17 +826,17 @@ typedef struct FrameWindow {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -903,7 +903,7 @@ typedef struct C_004083b0_430 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -914,10 +914,10 @@ typedef struct C_004083b0_430 {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -925,17 +925,17 @@ typedef struct C_004083b0_430 {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -1048,7 +1048,7 @@ typedef struct C_004083b0_488 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -1059,10 +1059,10 @@ typedef struct C_004083b0_488 {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -1070,17 +1070,17 @@ typedef struct C_004083b0_488 {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -1202,7 +1202,7 @@ typedef struct C_004083b0_4c4 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -1213,10 +1213,10 @@ typedef struct C_004083b0_4c4 {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -1224,17 +1224,17 @@ typedef struct C_004083b0_4c4 {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -1363,7 +1363,7 @@ typedef struct C_004083b0_61c {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -1374,10 +1374,10 @@ typedef struct C_004083b0_61c {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -1385,17 +1385,17 @@ typedef struct C_004083b0_61c {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -1544,7 +1544,7 @@ typedef struct C_004083b0_798 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -1555,10 +1555,10 @@ typedef struct C_004083b0_798 {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -1566,17 +1566,17 @@ typedef struct C_004083b0_798 {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -1727,7 +1727,7 @@ typedef struct C_004083b0_a28 {
     union { u8 field_1ba; u8 timer_colon; };
     union { u8 field_1bb; u8 timer_seconds_text; };
     u8 pad_1bc[32];
-    u32 field_1dc;
+    union { u32 field_1dc; u32 portrait_civ; };
     union { u32 field_1e0; u32 show_turn_timer; };
     union { u32 field_1e4; u32 show_turn_status; };
     union { u32 field_1e8; u32 timer_last_value; };
@@ -1738,10 +1738,10 @@ typedef struct C_004083b0_a28 {
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
     u32 field_208;
-    u32 field_20c;
-    u32 field_210;
+    union { u32 field_20c; u32 left_exchange_kind; };
+    union { u32 field_210; u32 right_exchange_kind; };
     u32 field_214;
-    u32 field_218;
+    union { u32 field_218; u32 treaty_type_choice; };
     u32 field_21c;
     u32 field_220;
     u32 field_224;
@@ -1749,17 +1749,17 @@ typedef struct C_004083b0_a28 {
     u32 field_22c;
     u32 field_230;
     union { uptr field_234; uptr item_buffer; };
-    u32 field_238;
+    union { u32 field_238; u32 techs_all_known; };
     u8 pad_23c[24];
     u32 field_254;
     u8 pad_258[24];
     u32 field_270;
     u8 pad_274[24];
     u32 field_28c;
-    uptr field_290;
-    uptr field_294;
-    uptr field_298;
-    uptr field_29c;
+    union { uptr field_290; uptr close_button; };
+    union { uptr field_294; uptr side_text_edit; };
+    union { uptr field_298; uptr chat_input_edit; };
+    union { uptr field_29c; uptr chat_history_edit; };
     uptr field_2a0;
     uptr field_2a4;
     union { u32 field_2a8; u32 on_caption_button; };
@@ -2175,8 +2175,8 @@ typedef struct DialogWindowView {
     u8 pad_1f8[24];
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
-    u32 field_218;
-    u32 field_21c;
+    union { u32 field_218; u32 list_left_col; };
+    union { u32 field_21c; u32 list2_left_col; };
     union { uptr field_220; uptr selected_option; };
     union { uptr field_224; uptr selected_sprite; };
 } DialogWindowView;
@@ -2295,8 +2295,8 @@ typedef struct DialogOptionList {
     u8 pad_1f8[24];
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
-    u32 field_218;
-    u32 field_21c;
+    union { u32 field_218; u32 list_left_col; };
+    union { u32 field_21c; u32 list2_left_col; };
     union { uptr field_220; uptr selected_option; };
     union { uptr field_224; uptr selected_sprite; };
     union { uptr field_228; uptr option_list; };
@@ -2434,8 +2434,8 @@ typedef struct Dialog {
     u8 pad_1f8[24];
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
-    u32 field_218;
-    u32 field_21c;
+    union { u32 field_218; u32 list_left_col; };
+    union { u32 field_21c; u32 list2_left_col; };
     union { uptr field_220; uptr selected_option; };
     union { uptr field_224; uptr selected_sprite; };
     union { uptr field_228; uptr option_list; };
@@ -2465,9 +2465,9 @@ typedef struct Dialog {
     union { uptr field_27c; uptr listbox2; };
     union { uptr field_280; uptr sprite_hotspots; };
     union { uptr field_284; uptr list_vscroll; };
-    uptr field_288;
-    uptr field_28c;
-    uptr field_290;
+    union { uptr field_288; uptr list2_vscroll; };
+    union { uptr field_28c; uptr list_hscroll; };
+    union { uptr field_290; uptr list2_hscroll; };
     u8 pad_294[96];
 } Dialog;
 
@@ -2585,8 +2585,8 @@ typedef struct ScenarioEvents {
     u8 pad_1f8[24];
     union { u32 field_210; u32 list_top_option; };
     union { u32 field_214; u32 list2_top_option; };
-    u32 field_218;
-    u32 field_21c;
+    union { u32 field_218; u32 list_left_col; };
+    union { u32 field_21c; u32 list2_left_col; };
     union { uptr field_220; uptr selected_option; };
     union { uptr field_224; uptr selected_sprite; };
     union { uptr field_228; uptr option_list; };
@@ -2616,9 +2616,9 @@ typedef struct ScenarioEvents {
     union { uptr field_27c; uptr listbox2; };
     union { uptr field_280; uptr sprite_hotspots; };
     union { uptr field_284; uptr list_vscroll; };
-    uptr field_288;
-    uptr field_28c;
-    uptr field_290;
+    union { uptr field_288; uptr list2_vscroll; };
+    union { uptr field_28c; uptr list_hscroll; };
+    union { uptr field_290; uptr list2_hscroll; };
     u8 pad_294[97];
     union { u8 field_2f5; u8 events_pool_valid; };
     u8 pad_2f6[18];
@@ -2648,7 +2648,7 @@ typedef struct Control {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2669,7 +2669,7 @@ typedef struct C_0040f380_40 {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2691,7 +2691,7 @@ typedef struct EditControl {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2714,7 +2714,7 @@ typedef struct C_0040f380_48 {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2738,7 +2738,7 @@ typedef struct RadioGroup {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2764,7 +2764,7 @@ typedef struct SpriteButton {
     union { u32 field_18; u32 rect_bottom; };
     union { u32 field_1c; u32 hwnd; };
     union { u32 field_20; u32 next_ctrl; };
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
     union { u8 field_25; u8 hotkey_char; };
     u8 pad_26[2];
     union { u32 field_28; u32 hotkey_pos; };
@@ -2959,9 +2959,9 @@ typedef struct RadioGroupEnableView {
 /* 1 methods, size 0x178 */
 typedef struct C_00421f70 {
     u8 pad_0[4];
-    u32 field_4;
+    union { u32 field_4; u32 next_game_id; };
     u8 pad_8[324];
-    u32 field_14c;
+    union { u32 field_14c; u32 option_list; };
     u8 pad_150[36];
     union { u32 field_174; u32 refresh_timer; };
 } C_00421f70;
@@ -3061,7 +3061,7 @@ typedef struct GamePalette {
 /* 11 methods, size 0x2c */
 typedef struct LobbyList {
     union { uptr field_0; uptr dialog; };
-    u32 field_4;
+    union { u32 field_4; u32 next_id; };
     u8 pad_8[32];
     union { uptr field_28; uptr entries; };
 } LobbyList;
@@ -3113,7 +3113,7 @@ typedef struct WndHandlers {
     union { u32 field_50; u32 on_hscroll_track; };
     union { u32 field_54; u32 on_vscroll; };
     union { u32 field_58; u32 on_vscroll_track; };
-    u32 field_5c;
+    union { u32 field_5c; u32 on_msg_4c8; };
     union { u32 field_60; u32 on_enter_size_move; };
     union { u32 field_64; u32 on_exitsizemove; };
 } WndHandlers;
@@ -3221,9 +3221,9 @@ typedef struct AviPlayerEndCbSetView {
 /* 1 methods, size 0xa24 */
 typedef struct C_00472910 {
     u8 pad_0[280];
-    u32 field_118;
+    union { u32 field_118; u32 on_frame; };
     u8 pad_11c[2308];
-    u32 field_a20;
+    union { u32 field_a20; u32 callback_frame; };
 } C_00472910;
 
 /* 1 methods, size 0x338 */
@@ -3308,7 +3308,7 @@ typedef struct ParleyTitleView {
     u8 pad_0[280];
     union { u32 field_118; u32 civ_id; };
     u8 pad_11c[208];
-    u32 field_1ec;
+    union { u32 field_1ec; u32 parley_kind; };
 } ParleyTitleView;
 
 /* 2 methods, size 0x610 */
@@ -3323,7 +3323,7 @@ typedef struct RadioGroupDtorView {
 /* 1 methods, size 0x25 */
 typedef struct C_004bb5b0 {
     u8 pad_0[36];
-    u8 field_24;
+    union { u8 field_24; u8 wants_initial_focus; };
 } C_004bb5b0;
 
 /* 1 methods, size 0x20 */
@@ -3360,9 +3360,9 @@ typedef struct AviPlayer {
 /* 2 methods, size 0x10430 */
 typedef struct C_004db690 {
     u8 pad_0[280];
-    u32 field_118;
+    union { u32 field_118; u32 civ_id; };
     u8 pad_11c[208];
-    u32 field_1ec;
+    union { u32 field_1ec; u32 parley_kind; };
     u8 pad_1f0[16];
     union { u32 field_200; u32 offer_type_left; };
     union { u32 field_204; u32 offer_type_right; };
@@ -3456,7 +3456,7 @@ typedef struct EditChangeSetView {
 /* 1 methods, size 0x38 */
 typedef struct C_00530fb0 {
     u8 pad_0[52];
-    u32 field_34;
+    union { u32 field_34; u32 is_enabled; };
 } C_00530fb0;
 
 /* 1 methods, size 0x30 */
@@ -3519,7 +3519,7 @@ typedef struct LobbyListCtorView {
     u8 pad_0[4];
     union { u32 field_4; u32 next_id; };
     u8 pad_8[32];
-    u32 field_28;
+    union { u32 field_28; u32 entries; };
     u8 pad_2c[68];
 } LobbyListCtorView;
 
@@ -3560,19 +3560,19 @@ typedef struct DialogAddLineView {
 /* 1 methods, size 0x3d */
 typedef struct C_0059e327 {
     u8 pad_0[60];
-    u8 field_3c;
+    union { u8 field_3c; u8 style_flags; };
 } C_0059e327;
 
 /* 1 methods, size 0x4c */
 typedef struct C_0059e585 {
     u8 pad_0[72];
-    u32 field_48;
+    union { u32 field_48; u32 cur_pane; };
 } C_0059e585;
 
 /* 1 methods, size 0xcc */
 typedef struct C_0059e624 {
     u8 pad_0[200];
-    u32 field_c8;
+    union { u32 field_c8; u32 bevel_width; };
 } C_0059e624;
 
 /* 1 methods, size 0xc8 */
@@ -3596,7 +3596,7 @@ typedef struct DialogEditTextView {
 /* 1 methods, size 0xdc */
 typedef struct C_0059eb68 {
     u8 pad_0[216];
-    u32 field_d8;
+    union { u32 field_d8; u32 result_id; };
 } C_0059eb68;
 
 /* 1 methods, size 0x250 */
@@ -3608,7 +3608,7 @@ typedef struct DialogSelChangeSetView {
 /* 1 methods, size 0x254 */
 typedef struct C_0059ec40 {
     u8 pad_0[592];
-    u32 field_250;
+    union { u32 field_250; u32 on_modal_poll; };
 } C_0059ec40;
 
 /* 2 methods, size 0xa8 */
@@ -3915,7 +3915,7 @@ typedef struct ColorKdTreeSearchView {
     u8 pad_14[2048];
     union { u32 field_814; u32 stack_top; };
     union { u32 field_818; u32 built; };
-    u32 field_81c;
+    union { u32 field_81c; u32 visit_count; };
     u8 pad_820[8];
 } ColorKdTreeSearchView;
 
@@ -4084,7 +4084,7 @@ typedef struct TimerManager {
 
 /* 1 methods, size 0x90 */
 typedef struct TimerManagerCtorView {
-    u32 field_0;
+    union { u32 field_0; u32 timer_wnd; };
     u8 pad_4[140];
 } TimerManagerCtorView;
 
@@ -4183,7 +4183,7 @@ typedef struct ErrorContext {
 /* 1 methods, size 0x708 */
 typedef struct C_005db016 {
     u8 pad_0[1796];
-    u32 field_704;
+    union { u32 field_704; u32 last_code; };
 } C_005db016;
 
 /* 1 methods, size 0xc */
@@ -4194,14 +4194,14 @@ typedef struct WndDestroyView {
 
 /* 1 methods, size 0xc */
 typedef struct C_005db792 {
-    u32 field_0;
+    union { u32 field_0; u32 style; };
     u8 pad_4[4];
     union { u32 field_8; u32 movie_wnd; };
 } C_005db792;
 
 /* 1 methods, size 0xc */
 typedef struct C_005db80f {
-    u32 field_0;
+    union { u32 field_0; u32 style; };
     u8 pad_4[4];
     union { u32 field_8; u32 movie_wnd; };
 } C_005db80f;
@@ -4253,7 +4253,7 @@ typedef struct AviPlayerPauseView {
 /* 1 methods, size 0x5a8 */
 typedef struct C_005dd761 {
     u8 pad_0[1444];
-    u32 field_5a4;
+    union { u32 field_5a4; u32 is_transparent; };
 } C_005dd761;
 
 /* 1 methods, size 0x3c */
@@ -4317,7 +4317,7 @@ typedef struct DDPaletteCtorView {
     u8 pad_4[28];
     u32 field_20;
     u32 field_24;
-    u32 field_28;
+    union { u32 field_28; u32 saved_rgb; };
 } DDPaletteCtorView;
 
 /* 1 methods, size 0x2c */
@@ -4550,7 +4550,7 @@ typedef struct WndOnVScrollTrackView {
 typedef struct C_005ed4e0 {
     u32 field_0;
     u8 pad_4[88];
-    uptr field_5c;
+    union { uptr field_5c; uptr on_msg_4c8; };
 } C_005ed4e0;
 
 /* 1 methods, size 0x64 */
@@ -4854,7 +4854,7 @@ typedef struct C_005f0f1d {
     union { u32 field_c; u32 parent_control; };
     u8 pad_10[12];
     union { u32 field_1c; u32 hover_child; };
-    u32 field_20;
+    union { u32 field_20; u32 on_click; };
     union { u32 field_24; u32 on_mousemove; };
     union { u32 field_28; u32 on_lbuttonup; };
     union { u32 field_2c; u32 on_rbuttonup; };
@@ -4869,7 +4869,7 @@ typedef struct C_005f0fe9 {
     union { u32 field_c; u32 parent_control; };
     u8 pad_10[12];
     union { u32 field_1c; u32 hover_child; };
-    u32 field_20;
+    union { u32 field_20; u32 on_click; };
     union { u32 field_24; u32 on_mousemove; };
     union { u32 field_28; u32 on_lbuttonup; };
     union { u32 field_2c; u32 on_rbuttonup; };
@@ -4884,7 +4884,7 @@ typedef struct C_005f10b6 {
     union { u32 field_c; u32 parent_control; };
     u8 pad_10[12];
     union { u32 field_1c; u32 hover_child; };
-    u32 field_20;
+    union { u32 field_20; u32 on_click; };
     union { u32 field_24; u32 on_mousemove; };
     union { u32 field_28; u32 on_lbuttonup; };
     union { u32 field_2c; u32 on_rbuttonup; };
@@ -4895,14 +4895,14 @@ typedef struct C_005f10b6 {
 /* 1 methods, size 0x10 */
 typedef struct C_005f11f6 {
     u8 pad_0[8];
-    u32 field_8;
-    u32 field_c;
+    union { u32 field_8; u32 parent_wnd; };
+    union { u32 field_c; u32 parent_control; };
 } C_005f11f6;
 
 /* 1 methods, size 0x10 */
 typedef struct C_005f1221 {
     u8 pad_0[8];
-    u32 field_8;
+    union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 is_enabled; };
 } C_005f1221;
 
@@ -4946,31 +4946,31 @@ typedef struct DDControlActivateView {
 /* 1 methods, size 0x24 */
 typedef struct C_005f16c4 {
     u8 pad_0[32];
-    u32 field_20;
+    union { u32 field_20; u32 on_click; };
 } C_005f16c4;
 
 /* 1 methods, size 0x28 */
 typedef struct C_005f16e5 {
     u8 pad_0[36];
-    u32 field_24;
+    union { u32 field_24; u32 on_mousemove; };
 } C_005f16e5;
 
 /* 1 methods, size 0x2c */
 typedef struct C_005f1706 {
     u8 pad_0[40];
-    u32 field_28;
+    union { u32 field_28; u32 on_lbuttonup; };
 } C_005f1706;
 
 /* 1 methods, size 0x30 */
 typedef struct C_005f1727 {
     u8 pad_0[44];
-    u32 field_2c;
+    union { u32 field_2c; u32 on_rbuttonup; };
 } C_005f1727;
 
 /* 1 methods, size 0x34 */
 typedef struct C_005f1748 {
     u8 pad_0[48];
-    u32 field_30;
+    union { u32 field_30; u32 on_dblclick; };
 } C_005f1748;
 
 /* 1 methods, size 0x24 */
@@ -4978,7 +4978,7 @@ typedef struct C_005f1769 {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[24];
-    uptr field_20;
+    union { uptr field_20; uptr on_click; };
 } C_005f1769;
 
 /* 1 methods, size 0x2c */
@@ -5016,7 +5016,7 @@ typedef struct C_005f188b {
 /* 1 methods, size 0xb0 */
 typedef struct C_005f1b50 {
     u8 pad_0[172];
-    u32 field_ac;
+    union { u32 field_ac; u32 palette_obj; };
 } C_005f1b50;
 
 #pragma pack(pop)
