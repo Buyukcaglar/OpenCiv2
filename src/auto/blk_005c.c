@@ -84,14 +84,14 @@ void __thiscall surface_lock(DibSurface *this)
       iVar3 = dib_is_top_down(this->dib);
       if (iVar3 == 0) {
         *(u32 *)this->row_offsets = (this->pixel_height - 1) * this->stride;
-        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
+        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8++) {
           *(u32 *)(this->row_offsets + local_8 * 4) =
                *(int *)((this->row_offsets - 4) + local_8 * 4) - this->stride;
         }
       }
       else {
         *(undefined4 *)this->row_offsets = 0;
-        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
+        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8++) {
           *(u32 *)(this->row_offsets + local_8 * 4) =
                *(int *)((this->row_offsets - 4) + local_8 * 4) + this->stride;
         }
@@ -139,9 +139,9 @@ void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,undefined4 param
     surface_lock(this);
   }
   IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->clip_left);
-  local_c = thunk_rect_width((iptr)&local_20);
-  if ((local_c != 0) && (local_10 = thunk_rect_height((iptr)&local_20), local_10 != 0)) {
-    uVar2 = thunk_surface_height(this);
+  local_c = rect_width((iptr)&local_20);
+  if ((local_c != 0) && (local_10 = rect_height((iptr)&local_20), local_10 != 0)) {
+    uVar2 = surface_height(this);
     iVar3 = surface_get_dib(this);
     iVar4 = dib_is_top_down(iVar3);
     iVar5 = surface_get_pitch(this);
@@ -197,25 +197,25 @@ surface_replace_color(DibSurface *this,iptr param_1,undefined4 param_2,undefined
     surface_lock(this);
   }
   IntersectRect(&local_24,(RECT *)param_1,(RECT *)&this->clip_left);
-  local_c = thunk_rect_width((iptr)&local_24);
+  local_c = rect_width((iptr)&local_24);
   local_28 = (char *)surface_pixel_ptr(this,local_24.left,local_24.top);
   local_14 = 0;
   while( true ) {
-    iVar2 = thunk_rect_height((iptr)&local_24);
+    iVar2 = rect_height((iptr)&local_24);
     if (iVar2 <= local_14) break;
     local_10 = 0;
     while( true ) {
-      iVar3 = thunk_rect_width((iptr)&local_24);
+      iVar3 = rect_width((iptr)&local_24);
       if (iVar3 <= local_10) break;
       if (*local_28 == (char)param_2) {
         *local_28 = (char)param_3;
       }
-      local_28 = local_28 + 1;
-      local_10 = local_10 + 1;
+      local_28++;
+      local_10++;
     }
     iVar4 = surface_next_row(this,(iptr)local_28);
     local_28 = (char *)(iVar4 - local_c);
-    local_14 = local_14 + 1;
+    local_14++;
   }
   if (local_8 == 0) {
     surface_unlock(this);
@@ -283,8 +283,8 @@ surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
     iVar2 = dib_is_top_down(iVar1);
     iVar4 = surface_get_pitch(this);
     iVar4 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar4;
-    uVar5 = thunk_surface_height((DibSurface *)param_1);
-    uVar6 = thunk_surface_height(this);
+    uVar5 = surface_height((DibSurface *)param_1);
+    uVar6 = surface_height(this);
     iVar7 = this->bytes_per_pixel * local_8;
     iVar8 = this->bytes_per_pixel * local_30.left;
     iVar9 = this->bytes_per_pixel * local_20.left;
@@ -304,102 +304,6 @@ surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 }
 #undef local_30
 #undef local_20
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c0753 auto */
-#define local_34 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-void __thiscall
-surface_copy_to_ddsurf(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *param_3)
-
-{
-  int iVar1;
-  iptr iVar2;
-  iptr iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  int iVar7;
-  undefined4 uVar8;
-  int iVar9;
-  int iVar10;
-  undefined4 uVar11;
-  bool bVar12;
-  int iVar13;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_10 = 1;
-  bVar12 = this->bits == 0;
-  if (bVar12) {
-    dbg_log(ADDR(0x637178, ((u8 *)&g.d_00637178)));
-    surface_lock(this);
-  }
-  local_14 = ddsurf_lock(param_1);
-  if (local_14 != 0) {
-    local_10 = 0;
-    IntersectRect(&local_24,param_2,(RECT *)&this->clip_left);
-    IntersectRect(&local_34,param_3,(RECT *)&param_1->field_10);
-    local_8 = local_24.right - local_24.left;
-    if (local_34.right - local_34.left <= local_24.right - local_24.left) {
-      local_8 = local_34.right - local_34.left;
-    }
-    local_c = local_34.bottom - local_34.top;
-    if (local_24.bottom - local_24.top <= local_34.bottom - local_34.top) {
-      local_c = local_24.bottom - local_24.top;
-    }
-    if ((local_8 != 0) && (local_c != 0)) {
-      iVar1 = ddsurf_get_width((DDSurfaceWidthView *)param_1);
-      if (iVar1 == 0x140) {
-        iVar2 = ddsurf_get_pitch(param_1);
-        iVar3 = surface_get_dib(this);
-        iVar1 = dib_is_top_down(iVar3);
-        iVar4 = surface_get_pitch(this);
-        iVar4 = ((-(uint)(iVar1 == 0) & 0xfffffffe) + 1) * iVar4;
-        uVar5 = ddsurf_get_height(param_1);
-        uVar6 = thunk_surface_height(this);
-        iVar1 = local_14;
-        iVar13 = local_8;
-        iVar7 = local_c;
-        iVar3 = surface_get_bits(this);
-        gfx_copy_pixels_by_column(iVar3,iVar1,local_24.left,local_24.top,local_34.left,local_34.top,iVar13,iVar7,
-                     uVar6,uVar5,iVar4,iVar2);
-      }
-      else {
-        uVar5 = ddsurf_get_pitch(param_1);
-        iVar2 = surface_get_dib(this);
-        iVar1 = dib_is_top_down(iVar2);
-        iVar7 = surface_get_pitch(this);
-        iVar7 = ((-(uint)(iVar1 == 0) & 0xfffffffe) + 1) * iVar7;
-        uVar6 = ddsurf_get_height(param_1);
-        uVar8 = thunk_surface_height(this);
-        iVar4 = this->bytes_per_pixel * local_8;
-        iVar9 = this->bytes_per_pixel * local_34.left;
-        iVar10 = this->bytes_per_pixel * local_24.left;
-        iVar1 = local_14;
-        iVar13 = local_c;
-        uVar11 = surface_get_bits(this);
-        gfx_copy_pixels(uVar11,iVar1,iVar10,local_24.top,iVar9,local_34.top,iVar4,iVar13,uVar8,uVar6,
-                     iVar7,uVar5);
-      }
-    }
-  }
-  if (bVar12) {
-    surface_unlock(this);
-  }
-  if (local_10 == 0) {
-    ddsurf_unlock(param_1);
-  }
-  return;
-}
-#undef local_34
-#undef local_24
-#undef local_14
 #undef local_10
 #undef local_c
 #undef local_8
@@ -429,84 +333,14 @@ surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
     surface_apply_palette(this,uVar2);
     uVar2 = *(undefined4 *)(param_3 + 4);
     uVar6 = *(undefined4 *)param_3;
-    iVar3 = thunk_wnd_get_window((WndBase *)param_1);
-    uVar4 = thunk_rect_height(param_2);
-    uVar5 = thunk_rect_width(param_2);
+    iVar3 = wnd_get_window((WndBase *)param_1);
+    uVar4 = rect_height(param_2);
+    uVar5 = rect_width(param_2);
     dib_blit_to_wnd_obj(this->dib,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),uVar5,uVar4,
                  iVar3,uVar6,uVar2);
     if (cVar1 == '\0') {
       surface_unlock(this);
     }
-  }
-  return;
-}
-
-/* 005c0a55 auto */
-void __thiscall
-surface_stretch_to_wnd
-          (DibSurface *this,WndBase *param_1,undefined4 *param_2,undefined4 *param_3)
-
-{
-  char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  
-  cVar1 = surface_is_locked(this);
-  if (cVar1 == '\0') {
-    dbg_log(ADDR(0x6371f8, ((u8 *)&g.d_006371f8)));
-    surface_lock(this);
-  }
-  uVar2 = wnd_get_palette_obj((WndPaletteObjView *)param_1);
-  surface_apply_palette(this,uVar2);
-  uVar3 = thunk_rect_height((iptr)param_3);
-  uVar4 = thunk_rect_width((iptr)param_3);
-  uVar2 = param_3[1];
-  uVar8 = *param_3;
-  iVar5 = thunk_wnd_get_window(param_1);
-  uVar6 = thunk_rect_height((iptr)param_2);
-  uVar7 = thunk_rect_width((iptr)param_2);
-  dib_stretch_to_wnd_obj(this->dib,*param_2,param_2[1],uVar7,uVar6,iVar5,uVar8,uVar2,uVar4,uVar3);
-  if (cVar1 == '\0') {
-    surface_unlock(this);
-  }
-  return;
-}
-
-/* 005c0b2c auto */
-void __thiscall
-surface_stretch_to_surface
-          (DibSurface *this,DibSurface *param_1,undefined4 *param_2,undefined4 *param_3)
-
-{
-  char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  iptr iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  
-  cVar1 = surface_is_locked(this);
-  if (cVar1 == '\0') {
-    dbg_log(ADDR(0x637224, ((u8 *)&g.d_00637224)));
-    surface_lock(this);
-  }
-  uVar2 = thunk_rect_height((iptr)param_3);
-  uVar3 = thunk_rect_width((iptr)param_3);
-  uVar8 = param_3[1];
-  uVar7 = *param_3;
-  iVar4 = surface_get_dib(param_1);
-  uVar5 = thunk_rect_height((iptr)param_2);
-  uVar6 = thunk_rect_width((iptr)param_2);
-  dib_stretch_to_dib(this->dib,*param_2,param_2[1],uVar6,uVar5,iVar4,uVar7,uVar8,uVar3,uVar2);
-  if (cVar1 == '\0') {
-    surface_unlock(this);
   }
   return;
 }
@@ -602,7 +436,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int p
   else if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
       iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
-      iVar2 = iVar2 + (iVar2 >> 0x1f & 7U);
+      iVar2 += (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
@@ -617,44 +451,6 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int p
 }
 #undef gfx_black_color_index
 #undef local_c
-
-/* 005c0e57 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
-void __thiscall
-surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3)
-
-{
-  undefined1 uVar1;
-  int iVar2;
-  BOOL BVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (draw_current_font == (undefined *)0x0) {
-    dbg_log(ADDR(0x6372c0, ((u8 *)&g.d_006372c0)));
-  }
-  else if (this->dib != 0) {
-    if ((param_3 & 0x10) != 0) {
-      iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
-      iVar2 = (int)(iVar2 + (iVar2 >> 0x1f & 7U)) >> 3;
-      local_14.left = *param_2;
-      local_14.top = param_2[1];
-      local_14.right = param_2[2];
-      local_14.bottom = param_2[3];
-      BVar3 = OffsetRect(&local_14,iVar2,iVar2);
-      uVar1 = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
-      local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),uVar1);
-      dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3);
-      gfx_set_text_color_index(local_1c);
-    }
-    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
-  }
-  return;
-}
-#undef gfx_black_color_index
-#undef local_1c
-#undef local_14
 
 /* 005c0f57 auto */
 #define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
@@ -672,7 +468,7 @@ surface_draw_text
   if (this->dib != 0) {
     if ((param_5 & 0x10) != 0) {
       iVar2 = font_measure_height(*(undefined4 *)param_1);
-      iVar2 = iVar2 + (iVar2 >> 0x1f & 7U);
+      iVar2 += (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
@@ -723,20 +519,6 @@ surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_
 #undef local_1c
 #undef local_14
 
-/* 005c10fb auto */
-void __thiscall
-surface_draw_text_rect_cur_font(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  if (draw_current_font == (undefined *)0x0) {
-    dbg_log(ADDR(0x6372e0, ((u8 *)&g.d_006372e0)));
-  }
-  else if (this->dib != 0) {
-    dib_draw_text_wrap(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3);
-  }
-  return;
-}
-
 /* 005c1167 auto */
 void __thiscall
 surface_draw_text_rect
@@ -785,13 +567,13 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
         iVar2 = dib_is_top_down(iVar1);
         iVar3 = surface_get_pitch(this);
         iVar3 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar3;
-        uVar4 = thunk_surface_height(this);
+        uVar4 = surface_height(this);
         uVar6 = param_3;
         if ((int)param_1 <= (int)param_3) {
           uVar6 = param_1;
         }
         iVar2 = FUN_005f7120(param_3 - param_1);
-        iVar2 = iVar2 + 1;
+        iVar2++;
         uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
         iVar1 = surface_get_bits(this);
         dib_hline8(iVar1,uVar5,iVar2,uVar6,param_2,uVar4,iVar3);
@@ -815,13 +597,13 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
         iVar2 = dib_is_top_down(iVar1);
         iVar3 = surface_get_pitch(this);
         iVar3 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar3;
-        uVar4 = thunk_surface_height(this);
+        uVar4 = surface_height(this);
         uVar6 = param_4;
         if ((int)param_2 <= (int)param_4) {
           uVar6 = param_2;
         }
         iVar2 = FUN_005f7120(param_4 - param_2);
-        iVar2 = iVar2 + 1;
+        iVar2++;
         uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
         iVar1 = surface_get_bits(this);
         dib_vline8(iVar1,uVar5,iVar2,param_1,uVar6,uVar4,iVar3);
@@ -834,123 +616,6 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
   return;
 }
 #undef gfx_text_color_index
-
-/* 005c145d auto */
-void __thiscall surface_frame_rect(DibSurface *this,iptr param_1)
-
-{
-  if (this->dib != 0) {
-    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4));
-    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc));
-    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
-                 *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc));
-    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
-                 *(undefined4 *)(param_1 + 4));
-  }
-  return;
-}
-
-/* 005c1513 auto */
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall surface_draw_raised_frame(DibSurface *this,int *param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
-  if (this->dib != 0) {
-    if (this->bytes_per_pixel == 1) {
-      gfx_set_text_color_index(0xef);
-      surface_frame_rect(this,(iptr)param_1);
-      gfx_set_text_color_index(0xff);
-      dib_draw_line(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
-      dib_draw_line(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
-      gfx_set_text_color_index(0xf7);
-      dib_draw_line(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
-      dib_draw_line(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
-      gfx_set_text_color_index(local_8);
-    }
-    else {
-      surface_frame_rect_rgb(this,(iptr)param_1,0,0,0);
-      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0xff,
-                   0xff,0xff);
-      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0xff,0xff
-                   ,0xff);
-      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
-                   0x40,0x40,0x40);
-      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0x40,
-                   0x40,0x40);
-    }
-  }
-  return;
-}
-#undef gfx_text_color_index
-#undef local_8
-
-/* 005c1742 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall surface_draw_sunken_frame(DibSurface *this,int *param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
-  if (this->dib != 0) {
-    if (this->bytes_per_pixel == 1) {
-      gfx_set_text_color_index(CONCAT31((int3)((uint)this >> 8),gfx_black_color_index));
-      surface_frame_rect(this,(iptr)param_1);
-      gfx_set_text_color_index(0xf7);
-      dib_draw_line(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
-      dib_draw_line(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
-      gfx_set_text_color_index(0xff);
-      dib_draw_line(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
-      dib_draw_line(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
-      gfx_set_text_color_index(local_8);
-    }
-    else {
-      surface_frame_rect_rgb(this,(iptr)param_1,0,0,0);
-      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0x40,
-                   0x40,0x40);
-      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0x40,0x40
-                   ,0x40);
-      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
-                   0xff,0xff,0xff);
-      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0xff,
-                   0xff,0xff);
-    }
-  }
-  return;
-}
-#undef gfx_black_color_index
-#undef gfx_text_color_index
-#undef local_8
-
-/* 005c1972 auto */
-#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl draw_set_current_surface(undefined4 param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = draw_current_surface;
-  draw_current_surface = param_1;
-  return uVar1;
-}
-#undef draw_current_surface
-
-/* 005c1998 auto */
-#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl draw_get_current_surface(void)
-
-{
-  return draw_current_surface;
-}
-#undef draw_current_surface
 
 /* 005c19ad auto */
 #define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
@@ -1000,14 +665,14 @@ surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param
   
   if (this->bits != 0) {
     local_10 = (byte *)this->bits;
-    for (local_8 = 0; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
-      for (local_c = 0; local_c < (int)this->pixel_width; local_c = local_c + 1) {
+    for (local_8 = 0; local_8 < (int)this->pixel_height; local_8++) {
+      for (local_c = 0; local_c < (int)this->pixel_width; local_c++) {
         if (-1 < (int)((uint)*local_10 - param_2)) {
           *local_10 = *(byte *)(((uint)*local_10 - param_2) + param_1);
         }
-        local_10 = local_10 + 1;
+        local_10++;
       }
-      local_10 = local_10 + (this->stride - this->pixel_width);
+      local_10 += (this->stride - this->pixel_width);
     }
   }
   return;
@@ -1015,19 +680,6 @@ surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param
 #undef local_10
 #undef local_c
 #undef local_8
-
-/* 005c1b0d auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall surface_create_dib16(DibSurface *this,int param_1,int param_2)
-
-{
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  SetRect(&local_14,0,0,param_1,param_2);
-  surface_alloc_dib16(this,(iptr)&local_14);
-  return;
-}
-#undef local_14
 
 /* 005c1b47 auto */
 undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
@@ -1045,8 +697,8 @@ undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
     uVar2 = dib_destroy(this->dib);
     this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+  if (((param_1 != 0) && (iVar3 = rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = rect_height(param_1), iVar3 != 0)) {
     surface_set_dims(this,param_1);
     uVar2 = dib_create16((iptr)&this->bounds_rect);
     this->dib = uVar2;
@@ -1071,29 +723,6 @@ undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
   return 1;
 }
 
-/* 005c1c99 auto */
-undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = surface_alloc_dib16(this,param_1);
-  return uVar1;
-}
-
-/* 005c1cbd auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall surface_create_dib24(DibSurface *this,int param_1,int param_2)
-
-{
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  SetRect(&local_14,0,0,param_1,param_2);
-  surface_alloc_dib24(this,(iptr)&local_14);
-  return;
-}
-#undef local_14
-
 /* 005c1cf7 auto */
 undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
 
@@ -1110,8 +739,8 @@ undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
     uVar2 = dib_destroy(this->dib);
     this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+  if (((param_1 != 0) && (iVar3 = rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = rect_height(param_1), iVar3 != 0)) {
     surface_set_dims(this,param_1);
     uVar2 = dib_create24((iptr)&this->bounds_rect);
     this->dib = uVar2;
@@ -1136,29 +765,6 @@ undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
   return 1;
 }
 
-/* 005c1e49 auto */
-undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = surface_alloc_dib24(this,param_1);
-  return uVar1;
-}
-
-/* 005c1e6d auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall surface_create_dib32(DibSurface *this,int param_1,int param_2)
-
-{
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  SetRect(&local_14,0,0,param_1,param_2);
-  surface_alloc_dib32(this,(iptr)&local_14);
-  return;
-}
-#undef local_14
-
 /* 005c1ea7 auto */
 undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
 
@@ -1175,8 +781,8 @@ undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
     uVar2 = dib_destroy(this->dib);
     this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+  if (((param_1 != 0) && (iVar3 = rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = rect_height(param_1), iVar3 != 0)) {
     surface_set_dims(this,param_1);
     uVar2 = dib_create32((iptr)&this->bounds_rect);
     this->dib = uVar2;
@@ -1199,1791 +805,6 @@ undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
   }
   surface_set_dims(this,0);
   return 1;
-}
-
-/* 005c1ff9 auto */
-void __thiscall surface_resize_dib32(DibSurface *this,iptr param_1)
-
-{
-  surface_alloc_dib32(this,param_1);
-  return;
-}
-
-/* 005c201d auto */
-short __cdecl gfx_rgb_to_555(undefined4 param_1,uint param_2,uint param_3)
-
-{
-  return CONCAT11(((byte)param_1 & 0xf8) >> 1,(byte)param_3 >> 3) + ((byte)param_2 & 0xf8) * 4;
-}
-
-/* 005c2048 auto */
-#define local_40 (*(u32 *)(frame_ + FRAME_OFF(0)))
-#define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_2c (*(undefined2 * *)(frame_ + FRAME_OFF(20)))
-#define local_28 (*(uint *)(frame_ + FRAME_OFF(24)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(undefined1 *)(frame_ + FRAME_OFF(36)))
-#define local_1b (*(undefined1 *)(frame_ + FRAME_OFF(37)))
-#define local_1a (*(undefined1 *)(frame_ + FRAME_OFF(38)))
-#define local_19 (*(undefined1 *)(frame_ + FRAME_OFF(39)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined2 * *)(frame_ + FRAME_OFF(48)))
-#define local_c (*(char * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(char * *)(frame_ + FRAME_OFF(56)))
-undefined4 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
-
-{
-  char cVar1;
-  undefined2 uVar2;
-  int iVar3;
-  undefined3 uVar4;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_1c = 0x54;
-  local_1b = 0x41;
-  local_1a = 0x52;
-  local_19 = 0x47;
-  local_24 = res_load((iptr)&local_1c,param_1);
-  if (local_24 == 0) {
-    dbg_logf(ADDR(0x637384, ((u8 *)&g.d_00637384)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6373c4, ((u8 *)&g.d_006373c4)),ADDR(0x6373ac, ((u8 *)&g.d_006373ac)),0x905);
-    return 0;
-  }
-  local_c = (char *)res_lock(local_24);
-  local_14 = (uint)*(ushort *)(local_c + 0xc);
-  local_18 = (uint)*(ushort *)(local_c + 0xe);
-  local_8 = local_c;
-  SetRect(&local_3c,0,0,local_14,local_18);
-  iVar3 = surface_resize_for_image(this,(iptr)&local_3c);
-  if (iVar3 == 0) {
-    res_free(local_24);
-    return 0;
-  }
-  if (local_8[2] == '\x02') {
-    local_c = local_c + *local_8 + 0x12;
-    if ((local_8[0x11] & 0x20U) == 0) {
-      local_10 = (undefined2 *)surface_pixel_ptr(this,0,local_18 - 1);
-      local_40 = -this->signed_pitch;
-    }
-    else {
-      local_10 = (undefined2 *)surface_pixel_ptr(this,0,0);
-      local_40 = this->signed_pitch;
-    }
-    cVar1 = local_8[0x10];
-    if (cVar1 == '\x10') {
-      for (local_20 = 0; local_20 < local_18; local_20 = local_20 + 1) {
-        FUN_005f2110(local_10,local_c,local_14 * 2);
-        local_10 = (undefined2 *)((int)local_10 + local_40);
-        local_c = local_c + local_14 * 2;
-      }
-    }
-    else {
-      if (cVar1 == '\x18') {
-        for (local_20 = 0; local_20 < local_18; local_20 = local_20 + 1) {
-          local_2c = local_10;
-          for (local_28 = 0; local_28 < local_14; local_28 = local_28 + 1) {
-            uVar4 = (undefined3)((uint)local_c >> 8);
-            uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
-                                 CONCAT31(uVar4,*local_c));
-            *local_2c = uVar2;
-            local_2c = local_2c + 1;
-            local_c = local_c + 3;
-          }
-          local_10 = (undefined2 *)((int)local_10 + local_40);
-        }
-      }
-      else if (cVar1 != ' ') goto LAB_005c231b;
-      for (local_20 = 0; local_20 < local_18; local_20 = local_20 + 1) {
-        local_2c = local_10;
-        for (local_28 = 0; local_28 < local_14; local_28 = local_28 + 1) {
-          uVar4 = (undefined3)((uint)local_c >> 8);
-          uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
-                               CONCAT31(uVar4,*local_c));
-          *local_2c = uVar2;
-          local_2c = local_2c + 1;
-          local_c = local_c + 4;
-        }
-        local_10 = (undefined2 *)((int)local_10 + local_40);
-      }
-    }
-  }
-  else if (local_8[2] == '\n') {
-    dbg_log(ADDR(0x6373dc, ((u8 *)&g.d_006373dc)));
-  }
-LAB_005c231b:
-  if ((local_8[0x11] & 0x10U) != 0) {
-    dbg_log(ADDR(0x637404, ((u8 *)&g.d_00637404)));
-  }
-  res_unlock(local_24);
-  res_free(local_24);
-  return 1;
-}
-#undef local_40
-#undef local_3c
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_1b
-#undef local_1a
-#undef local_19
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c2360 auto */
-#define local_dc (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define local_d8 (*(tagRECT *)(frame_ + FRAME_OFF(8)))
-#define local_c8 (*(undefined2 * *)(frame_ + FRAME_OFF(24)))
-#define local_c4 (*(uint *)(frame_ + FRAME_OFF(28)))
-#define local_c0 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_bc (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_b8 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_b4 (*(undefined2 * *)(frame_ + FRAME_OFF(44)))
-#define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(48)))
-#define local_18 (*(char * *)(frame_ + FRAME_OFF(200)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
-
-{
-  char cVar1;
-  undefined2 uVar2;
-  int iVar3;
-  undefined3 uVar5;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b0);
-  local_8 = 0;
-  iVar3 = thunk_file_obj_open(&local_b0,param_1);
-  if (iVar3 == 0) {
-    dbg_log(ADDR(0x637440, ((u8 *)&g.d_00637440)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637478, ((u8 *)&g.d_00637478)),ADDR(0x637460, ((u8 *)&g.d_00637460)),0x965);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-    uVar4 = 0;
-  }
-  else {
-    local_18 = (char *)file_obj_map_view(&local_b0);
-    local_b8 = (uint)*(ushort *)(local_18 + 0xc);
-    local_bc = (uint)*(ushort *)(local_18 + 0xe);
-    local_14 = local_18;
-    SetRect(&local_d8,0,0,local_b8,local_bc);
-    iVar3 = surface_resize_for_image(this,(iptr)&local_d8);
-    if (iVar3 == 0) {
-      file_obj_unmap_view(&local_b0);
-      thunk_file_map_close(&local_b0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-      uVar4 = 0;
-    }
-    else {
-      if (local_14[2] == '\x02') {
-        local_18 = local_18 + *local_14 + 0x12;
-        if ((local_14[0x11] & 0x20U) == 0) {
-          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,local_bc - 1);
-          local_dc = -this->signed_pitch;
-        }
-        else {
-          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,0);
-          local_dc = this->signed_pitch;
-        }
-        cVar1 = local_14[0x10];
-        if (cVar1 == '\x10') {
-          for (local_c0 = 0; local_c0 < local_bc; local_c0 = local_c0 + 1) {
-            FUN_005f2110(local_b4,local_18,local_b8 * 2);
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
-            local_18 = local_18 + local_b8 * 2;
-          }
-        }
-        else if (cVar1 == '\x18') {
-          for (local_c0 = 0; local_c0 < local_bc; local_c0 = local_c0 + 1) {
-            local_c8 = local_b4;
-            for (local_c4 = 0; local_c4 < local_b8; local_c4 = local_c4 + 1) {
-              uVar5 = (undefined3)((uint)local_18 >> 8);
-              uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
-                                   CONCAT31(uVar5,*local_18));
-              *local_c8 = uVar2;
-              local_c8 = local_c8 + 1;
-              local_18 = local_18 + 3;
-            }
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
-          }
-        }
-        else if (cVar1 == ' ') {
-          for (local_c0 = 0; local_c0 < local_bc; local_c0 = local_c0 + 1) {
-            local_c8 = local_b4;
-            for (local_c4 = 0; local_c4 < local_b8; local_c4 = local_c4 + 1) {
-              uVar5 = (undefined3)((uint)local_18 >> 8);
-              uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
-                                   CONCAT31(uVar5,*local_18));
-              *local_c8 = uVar2;
-              local_c8 = local_c8 + 1;
-              local_18 = local_18 + 4;
-            }
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
-          }
-        }
-      }
-      else if (local_14[2] == '\n') {
-        dbg_log(ADDR(0x637490, ((u8 *)&g.d_00637490)));
-      }
-      if ((local_14[0x11] & 0x10U) != 0) {
-        dbg_log(ADDR(0x6374b8, ((u8 *)&g.d_006374b8)));
-      }
-      file_obj_unmap_view(&local_b0);
-      thunk_file_map_close(&local_b0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-      uVar4 = 1;
-    }
-  }
-  return uVar4;
-}
-#undef local_dc
-#undef local_d8
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_b0
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c27ad auto */
-#define auStack_23c (*(undefined2 (*)[256])(frame_ + FRAME_OFF(4)))
-#define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(516)))
-#define local_2c (*(undefined2 * *)(frame_ + FRAME_OFF(532)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(536)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(540)))
-#define local_20 (*(iptr *)(frame_ + FRAME_OFF(544)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(548)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(552)))
-#define local_14 (*(undefined2 * *)(frame_ + FRAME_OFF(556)))
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(560)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(564)))
-#define local_8 (*(byte * *)(frame_ + FRAME_OFF(568)))
-undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
-
-{
-  short sVar1;
-  undefined2 uVar2;
-  undefined4 uVar3;
-  int iVar4;
-  undefined3 uVar5;
-  undefined1 frame_[FRAME_OFF(576)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_24 = res_load_bitmap(param_1);
-  if (local_24 == 0) {
-    dbg_logf(ADDR(0x6374f4, ((u8 *)&g.d_006374f4)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637530, ((u8 *)&g.d_00637530)),ADDR(0x637518, ((u8 *)&g.d_00637518)),0x9c7);
-    uVar3 = 0;
-  }
-  else {
-    local_c = res_lock(local_24);
-    local_18 = *(int *)(local_c + 4);
-    local_1c = *(int *)(local_c + 8);
-    SetRect(&local_3c,0,0,local_18,local_1c);
-    iVar4 = surface_resize_for_image(this,(iptr)&local_3c);
-    if (iVar4 == 0) {
-      res_free(local_24);
-      uVar3 = 0;
-    }
-    else {
-      local_18 = dib_row_align4(local_18);
-      local_14 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
-      sVar1 = *(short *)(local_c + 0xe);
-      if (sVar1 == 8) {
-        local_10 = (undefined1 *)(local_c + 0x28);
-        for (local_20 = 0; local_20 < 0x100; local_20 = local_20 + 1) {
-          uVar5 = (undefined3)((uint)local_10 >> 8);
-          uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_10[2]),CONCAT31(uVar5,local_10[1]),
-                               CONCAT31(uVar5,*local_10));
-          auStack_23c[local_20] = uVar2;
-          local_10 = local_10 + 4;
-        }
-        local_8 = (byte *)(local_c + 0x428);
-        for (local_20 = 0; local_20 < local_1c; local_20 = local_20 + 1) {
-          local_2c = local_14;
-          for (local_28 = 0; local_28 < local_18; local_28 = local_28 + 1) {
-            *local_2c = auStack_23c[*local_8];
-            local_8 = local_8 + 1;
-            local_2c = local_2c + 1;
-          }
-          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
-        }
-      }
-      else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
-        local_8 = (byte *)(local_c + 0x28);
-        for (local_20 = 0; local_20 < local_1c; local_20 = local_20 + 1) {
-          local_2c = local_14;
-          for (local_28 = 0; local_28 < local_18; local_28 = local_28 + 1) {
-            uVar5 = (undefined3)((uint)local_8 >> 8);
-            uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_8[2]),CONCAT31(uVar5,local_8[1]),
-                                 CONCAT31(uVar5,*local_8));
-            *local_2c = uVar2;
-            local_2c = local_2c + 1;
-            local_8 = local_8 + 3;
-          }
-          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
-        }
-      }
-      res_unlock(local_24);
-      res_free(local_24);
-      uVar3 = 1;
-    }
-  }
-  return uVar3;
-}
-#undef auStack_23c
-#undef local_3c
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c2a77 auto */
-#define auStack_2e0 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(0)))
-#define local_e0 (*(iptr *)(frame_ + FRAME_OFF(512)))
-#define local_dc (*(tagRECT *)(frame_ + FRAME_OFF(516)))
-#define local_cc (*(undefined2 * *)(frame_ + FRAME_OFF(532)))
-#define local_c8 (*(int *)(frame_ + FRAME_OFF(536)))
-#define local_c4 (*(iptr *)(frame_ + FRAME_OFF(540)))
-#define local_c0 (*(int *)(frame_ + FRAME_OFF(544)))
-#define local_bc (*(int *)(frame_ + FRAME_OFF(548)))
-#define local_b8 (*(undefined2 * *)(frame_ + FRAME_OFF(552)))
-#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(556)))
-#define local_1c (*(undefined1 * *)(frame_ + FRAME_OFF(708)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(712)))
-#define local_14 (*(byte * *)(frame_ + FRAME_OFF(716)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(720)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(724)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(728)))
-undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
-
-{
-  short sVar1;
-  undefined2 uVar2;
-  int iVar3;
-  undefined3 uVar5;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(736)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b4);
-  local_8 = 0;
-  iVar3 = thunk_file_obj_open(&local_b4,param_1);
-  if (iVar3 == 0) {
-    dbg_log(ADDR(0x637548, ((u8 *)&g.d_00637548)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637580, ((u8 *)&g.d_00637580)),ADDR(0x637568, ((u8 *)&g.d_00637568)),0xa16);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-    uVar4 = 0;
-  }
-  else {
-    local_e0 = file_obj_map_view(&local_b4);
-    local_18 = local_e0 + 0xe;
-    local_bc = *(int *)(local_e0 + 0x12);
-    local_c0 = *(int *)(local_e0 + 0x16);
-    SetRect(&local_dc,0,0,local_bc,local_c0);
-    iVar3 = surface_resize_for_image(this,(iptr)&local_dc);
-    if (iVar3 == 0) {
-      file_obj_unmap_view(&local_b4);
-      thunk_file_map_close(&local_b4);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-      uVar4 = 0;
-    }
-    else {
-      local_bc = dib_row_align4(local_bc);
-      local_b8 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
-      sVar1 = *(short *)(local_18 + 0xe);
-      if (sVar1 == 8) {
-        local_1c = (undefined1 *)(local_18 + 0x28);
-        for (local_c4 = 0; local_c4 < 0x100; local_c4 = local_c4 + 1) {
-          uVar5 = (undefined3)((uint)local_1c >> 8);
-          uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_1c[2]),CONCAT31(uVar5,local_1c[1]),
-                               CONCAT31(uVar5,*local_1c));
-          auStack_2e0[local_c4] = uVar2;
-          local_1c = local_1c + 4;
-        }
-        local_14 = (byte *)(local_18 + 0x428);
-        for (local_c4 = 0; local_c4 < local_c0; local_c4 = local_c4 + 1) {
-          local_cc = local_b8;
-          for (local_c8 = 0; local_c8 < local_bc; local_c8 = local_c8 + 1) {
-            *local_cc = auStack_2e0[*local_14];
-            local_14 = local_14 + 1;
-            local_cc = local_cc + 1;
-          }
-          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
-        }
-      }
-      else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
-        local_14 = (byte *)(local_18 + 0x28);
-        for (local_c4 = 0; local_c4 < local_c0; local_c4 = local_c4 + 1) {
-          local_cc = local_b8;
-          for (local_c8 = 0; local_c8 < local_bc; local_c8 = local_c8 + 1) {
-            uVar5 = (undefined3)((uint)local_14 >> 8);
-            uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_14[2]),CONCAT31(uVar5,local_14[1]),
-                                 CONCAT31(uVar5,*local_14));
-            *local_cc = uVar2;
-            local_cc = local_cc + 1;
-            local_14 = local_14 + 3;
-          }
-          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
-        }
-      }
-      file_obj_unmap_view(&local_b4);
-      thunk_file_map_close(&local_b4);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-      uVar4 = 1;
-    }
-  }
-  return uVar4;
-}
-#undef auStack_2e0
-#undef local_e0
-#undef local_dc
-#undef local_cc
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c2e5e auto */
-#define local_550 (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define local_54c (*(undefined1 (*)[2])(frame_ + FRAME_OFF(4)))
-#define auStack_54a (*(uint (*)[191])(frame_ + FRAME_OFF(6)))
-#define local_24c (*(uint *)(frame_ + FRAME_OFF(772)))
-#define local_248 (*(tagRECT *)(frame_ + FRAME_OFF(776)))
-#define local_238 (*(undefined2 * *)(frame_ + FRAME_OFF(792)))
-#define local_234 (*(uptr *)(frame_ + FRAME_OFF(796)))
-#define local_230 (*(int *)(frame_ + FRAME_OFF(800)))
-#define local_22c (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_228 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_28 (*(undefined1 *)(frame_ + FRAME_OFF(1320)))
-#define local_27 (*(undefined1 *)(frame_ + FRAME_OFF(1321)))
-#define local_26 (*(undefined1 *)(frame_ + FRAME_OFF(1322)))
-#define local_25 (*(undefined1 *)(frame_ + FRAME_OFF(1323)))
-#define local_24 (*(uint *)(frame_ + FRAME_OFF(1324)))
-#define local_20 (*(iptr *)(frame_ + FRAME_OFF(1328)))
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(1332)))
-#define local_18 (*(byte *)(frame_ + FRAME_OFF(1336)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(1340)))
-#define local_10 (*(char * *)(frame_ + FRAME_OFF(1344)))
-#define local_c (*(char * *)(frame_ + FRAME_OFF(1348)))
-#define local_8 (*(byte * *)(frame_ + FRAME_OFF(1352)))
-undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
-
-{
-  undefined2 uVar1;
-  undefined4 uVar2;
-  int iVar3;
-  iptr iVar4;
-  uint uVar5;
-  uint uVar6;
-  undefined1 frame_[FRAME_OFF(1360)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_28 = 0x47;
-  local_27 = 0x49;
-  local_26 = 0x46;
-  local_25 = 0x53;
-  local_230 = res_load((iptr)&local_28,param_1);
-  if (local_230 == 0) {
-    dbg_logf(ADDR(0x637598, ((u8 *)&g.d_00637598)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6375d4, ((u8 *)&g.d_006375d4)),ADDR(0x6375bc, ((u8 *)&g.d_006375bc)),0xa6c);
-    uVar2 = 0;
-  }
-  else {
-    local_14 = (char *)res_lock(local_230);
-    iVar3 = _strcmp(local_14,&gif_sig_resource2);
-    if (iVar3 == 0) {
-      dbg_logf(ADDR(0x6375f0, ((u8 *)&g.d_006375f0)),param_1);
-      res_unlock(local_230);
-      res_free(local_230);
-      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637628, ((u8 *)&g.d_00637628)),ADDR(0x637610, ((u8 *)&g.d_00637610)),0xa77);
-      uVar2 = 0;
-    }
-    else if ((local_14[10] & 0x80U) == 0) {
-      dbg_logf(ADDR(0x63763c, ((u8 *)&g.d_0063763c)),param_1);
-      res_unlock(local_230);
-      res_free(local_230);
-      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637680, ((u8 *)&g.d_00637680)),ADDR(0x637668, ((u8 *)&g.d_00637668)),0xa80);
-      uVar2 = 0;
-    }
-    else {
-      local_24c = 1 << (local_14[10] & 7U) + 1;
-      local_10 = local_14 + 0xd;
-      FUN_005f2110(local_54c,local_10,local_24c * 3);
-      local_234 = 0;
-      for (local_22c = 0; local_22c < local_24c; local_22c = local_22c + 1) {
-        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_54c + local_234),
-                             *(uint *)(local_54c + local_234 + 1),
-                             *(uint *)(local_54c + local_234 + 2));
-        auStack_228[local_22c] = uVar1;
-        local_234 = local_234 + 3;
-      }
-      for (local_10 = local_14 + local_24c * 3 + 0xd; *local_10 == '\0'; local_10 = local_10 + 1) {
-      }
-      if ((*local_10 == ',') || (*local_10 == '!')) {
-        local_c = local_10 + 1;
-        local_1c = endian_from_le((uint)*(ushort *)(local_10 + 5));
-        *(short *)(local_c + 4) = (short)local_1c;
-        local_24 = endian_from_le((uint)*(ushort *)(local_c + 6));
-        *(short *)(local_c + 6) = (short)local_24;
-        if ((local_c[8] & 0x80U) != 0) {
-          dbg_log(ADDR(0x6376e4, ((u8 *)&g.d_006376e4)));
-        }
-        SetRect(&local_248,0,0,local_1c,local_24);
-        local_20 = dib_create((iptr)&local_248);
-        local_18 = local_c[9];
-        local_8 = (byte *)(local_c + 10);
-        iVar4 = dib_get_bits(local_20);
-        uVar5 = local_1c;
-        uVar6 = local_24;
-        uVar2 = dib_get_stride(local_20);
-        gif_lzw_decode((iptr)local_8,0,CONCAT22((short)((uint)uVar2 >> 0x10),(ushort)local_18),uVar2,
-                     uVar5,uVar6,iVar4);
-        iVar3 = dib_is_top_down(local_20);
-        if (iVar3 == 0) {
-          dib_flip_vertical(local_20);
-        }
-        surface_resize_for_image(this,(iptr)&local_248);
-        local_10 = (char *)this->bits;
-        local_8 = (byte *)dib_get_bits(local_20);
-        for (local_22c = 0; local_22c < local_24; local_22c = local_22c + 1) {
-          local_238 = (undefined2 *)local_10;
-          local_550 = local_8;
-          for (local_234 = 0; local_234 < local_1c; local_234 = local_234 + 1) {
-            *local_238 = auStack_228[*local_550];
-            local_550 = local_550 + 1;
-            local_238 = local_238 + 1;
-          }
-          local_10 = (char *)((int)local_10 + this->stride);
-          iVar3 = dib_get_stride(local_20);
-          local_8 = local_8 + iVar3;
-        }
-        dib_destroy(local_20);
-        res_unlock(local_230);
-        res_free(local_230);
-        uVar2 = 1;
-      }
-      else {
-        dbg_logf(ADDR(0x637694, ((u8 *)&g.d_00637694)),param_1);
-        res_unlock(local_230);
-        res_free(local_230);
-        err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6376d0, ((u8 *)&g.d_006376d0)),ADDR(0x6376b8, ((u8 *)&g.d_006376b8)),0xa9d);
-        uVar2 = 0;
-      }
-    }
-  }
-  return uVar2;
-}
-#undef local_550
-#undef local_54c
-#undef auStack_54a
-#undef local_24c
-#undef local_248
-#undef local_238
-#undef local_234
-#undef local_230
-#undef local_22c
-#undef auStack_228
-#undef local_28
-#undef local_27
-#undef local_26
-#undef local_25
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c3313 auto */
-#define local_5ec (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_5e8 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(8)))
-#define auStack_5e6 (*(uint (*)[191])(frame_ + FRAME_OFF(10)))
-#define local_2e8 (*(uint *)(frame_ + FRAME_OFF(776)))
-#define local_2e4 (*(tagRECT *)(frame_ + FRAME_OFF(780)))
-#define local_2d4 (*(undefined2 * *)(frame_ + FRAME_OFF(796)))
-#define local_2d0 (*(uptr *)(frame_ + FRAME_OFF(800)))
-#define local_2cc (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_2c8 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_c8 (*(uint *)(frame_ + FRAME_OFF(1320)))
-#define local_c4 (*(iptr *)(frame_ + FRAME_OFF(1324)))
-#define local_c0 (*(uint *)(frame_ + FRAME_OFF(1328)))
-#define local_bc (*(FileObject *)(frame_ + FRAME_OFF(1332)))
-#define local_24 (*(byte *)(frame_ + FRAME_OFF(1484)))
-#define local_20 (*(char * *)(frame_ + FRAME_OFF(1488)))
-#define local_1c (*(char * *)(frame_ + FRAME_OFF(1492)))
-#define local_18 (*(char * *)(frame_ + FRAME_OFF(1496)))
-#define local_14 (*(byte * *)(frame_ + FRAME_OFF(1500)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1508)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1512)))
-undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
-
-{
-  undefined2 uVar1;
-  int iVar2;
-  iptr iVar3;
-  undefined4 uVar4;
-  uint uVar5;
-  uint uVar6;
-  undefined1 frame_[FRAME_OFF(1520)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_bc);
-  local_8 = 0;
-  iVar2 = thunk_file_obj_open(&local_bc,param_1);
-  if (iVar2 == 0) {
-    dbg_log(ADDR(0x637708, ((u8 *)&g.d_00637708)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637740, ((u8 *)&g.d_00637740)),ADDR(0x637728, ((u8 *)&g.d_00637728)),0xae3);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
-    uVar4 = 0;
-  }
-  else {
-    local_20 = (char *)file_obj_map_view(&local_bc);
-    iVar2 = _strcmp(local_20,&gif_sig_mapped_file);
-    if (iVar2 == 0) {
-      dbg_log(ADDR(0x63775c, ((u8 *)&g.d_0063775c)));
-      file_obj_unmap_view(&local_bc);
-      thunk_file_map_close(&local_bc);
-      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637794, ((u8 *)&g.d_00637794)),ADDR(0x63777c, ((u8 *)&g.d_0063777c)),0xaee);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
-      uVar4 = 0;
-    }
-    else if ((local_20[10] & 0x80U) == 0) {
-      dbg_log(ADDR(0x6377a8, ((u8 *)&g.d_006377a8)));
-      file_obj_unmap_view(&local_bc);
-      thunk_file_map_close(&local_bc);
-      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6377ec, ((u8 *)&g.d_006377ec)),ADDR(0x6377d4, ((u8 *)&g.d_006377d4)),0xaf7);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
-      uVar4 = 0;
-    }
-    else {
-      local_2e8 = 1 << (local_20[10] & 7U) + 1;
-      local_1c = local_20 + 0xd;
-      FUN_005f2110(local_5e8,local_1c,local_2e8 * 3);
-      local_2d0 = 0;
-      for (local_2cc = 0; local_2cc < local_2e8; local_2cc = local_2cc + 1) {
-        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e8 + local_2d0),
-                             *(uint *)(local_5e8 + local_2d0 + 1),
-                             *(uint *)(local_5e8 + local_2d0 + 2));
-        auStack_2c8[local_2cc] = uVar1;
-        local_2d0 = local_2d0 + 3;
-      }
-      for (local_1c = local_20 + local_2e8 * 3 + 0xd; *local_1c == '\0'; local_1c = local_1c + 1) {
-      }
-      if ((*local_1c == ',') || (*local_1c == '!')) {
-        local_18 = local_1c + 1;
-        local_c0 = endian_from_le((uint)*(ushort *)(local_1c + 5));
-        *(short *)(local_18 + 4) = (short)local_c0;
-        local_c8 = endian_from_le((uint)*(ushort *)(local_18 + 6));
-        *(short *)(local_18 + 6) = (short)local_c8;
-        if ((local_18[8] & 0x80U) != 0) {
-          dbg_log(ADDR(0x637850, ((u8 *)&g.d_00637850)));
-        }
-        SetRect(&local_2e4,0,0,local_c0,local_c8);
-        local_c4 = dib_create((iptr)&local_2e4);
-        local_24 = local_18[9];
-        local_14 = (byte *)(local_18 + 10);
-        iVar3 = dib_get_bits(local_c4);
-        uVar5 = local_c0;
-        uVar6 = local_c8;
-        uVar4 = dib_get_stride(local_c4);
-        gif_lzw_decode((iptr)local_14,0,CONCAT22((short)((uint)uVar4 >> 0x10),(ushort)local_24),uVar4,
-                     uVar5,uVar6,iVar3);
-        iVar2 = dib_is_top_down(local_c4);
-        if (iVar2 == 0) {
-          dib_flip_vertical(local_c4);
-        }
-        surface_resize_for_image(this,(iptr)&local_2e4);
-        local_1c = (char *)this->bits;
-        local_14 = (byte *)dib_get_bits(local_c4);
-        for (local_2cc = 0; local_2cc < local_c8; local_2cc = local_2cc + 1) {
-          local_2d4 = (undefined2 *)local_1c;
-          local_5ec = local_14;
-          for (local_2d0 = 0; local_2d0 < local_c0; local_2d0 = local_2d0 + 1) {
-            *local_2d4 = auStack_2c8[*local_5ec];
-            local_5ec = local_5ec + 1;
-            local_2d4 = local_2d4 + 1;
-          }
-          local_1c = (char *)((int)local_1c + this->stride);
-          iVar2 = dib_get_stride(local_c4);
-          local_14 = local_14 + iVar2;
-        }
-        dib_destroy(local_c4);
-        file_obj_unmap_view(&local_bc);
-        thunk_file_map_close(&local_bc);
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
-        uVar4 = 1;
-      }
-      else {
-        dbg_log(ADDR(0x637800, ((u8 *)&g.d_00637800)));
-        file_obj_unmap_view(&local_bc);
-        thunk_file_map_close(&local_bc);
-        err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x63783c, ((u8 *)&g.d_0063783c)),ADDR(0x637824, ((u8 *)&g.d_00637824)),0xb14);
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
-        uVar4 = 0;
-      }
-    }
-  }
-  return uVar4;
-}
-#undef local_5ec
-#undef local_5e8
-#undef auStack_5e6
-#undef local_2e8
-#undef local_2e4
-#undef local_2d4
-#undef local_2d0
-#undef local_2cc
-#undef auStack_2c8
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c3874 auto */
-#define local_548 (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define local_544 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(4)))
-#define auStack_542 (*(uint (*)[191])(frame_ + FRAME_OFF(6)))
-#define local_244 (*(uint *)(frame_ + FRAME_OFF(772)))
-#define local_240 (*(tagRECT *)(frame_ + FRAME_OFF(776)))
-#define local_230 (*(undefined2 * *)(frame_ + FRAME_OFF(792)))
-#define local_22c (*(uptr *)(frame_ + FRAME_OFF(796)))
-#define local_228 (*(int *)(frame_ + FRAME_OFF(800)))
-#define local_224 (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_220 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(1320)))
-#define local_1f (*(undefined1 *)(frame_ + FRAME_OFF(1321)))
-#define local_1e (*(undefined1 *)(frame_ + FRAME_OFF(1322)))
-#define local_1d (*(undefined1 *)(frame_ + FRAME_OFF(1323)))
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(1324)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(1328)))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(1332)))
-#define local_10 (*(short * *)(frame_ + FRAME_OFF(1336)))
-#define local_c (*(short * *)(frame_ + FRAME_OFF(1340)))
-#define local_8 (*(byte * *)(frame_ + FRAME_OFF(1344)))
-undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1)
-
-{
-  undefined2 uVar1;
-  undefined4 uVar2;
-  iptr iVar3;
-  int iVar4;
-  uint uVar5;
-  uint uVar6;
-  undefined1 frame_[FRAME_OFF(1352)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_20 = 0x43;
-  local_1f = 0x76;
-  local_1e = 0x50;
-  local_1d = 99;
-  local_228 = res_load((iptr)&local_20,param_1);
-  if (local_228 == 0) {
-    dbg_logf(ADDR(0x637874, ((u8 *)&g.d_00637874)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6378b4, ((u8 *)&g.d_006378b4)),ADDR(0x63789c, ((u8 *)&g.d_0063789c)),0xb59);
-    uVar2 = 0;
-  }
-  else {
-    local_c = (short *)res_lock(local_228);
-    local_14 = endian_swap16((int)*local_c);
-    local_1c = endian_swap16((int)local_c[1]);
-    SetRect(&local_240,0,0,local_14,local_1c);
-    local_244 = *(byte *)((int)local_c + 5) + 1;
-    local_10 = local_c + 3;
-    FUN_005f2110(local_544,local_10,local_244 * 3);
-    local_22c = 0;
-    for (local_224 = 0; local_224 < local_244; local_224 = local_224 + 1) {
-      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_544 + local_22c),
-                           *(uint *)(local_544 + local_22c + 1),*(uint *)(local_544 + local_22c + 2)
-                          );
-      auStack_220[local_224] = uVar1;
-      local_22c = local_22c + 3;
-    }
-    local_8 = (byte *)((int)local_c + local_244 * 3 + 6);
-    local_18 = dib_create((iptr)&local_240);
-    iVar3 = dib_get_bits(local_18);
-    uVar5 = local_14;
-    uVar6 = local_1c;
-    uVar2 = dib_get_stride(local_18);
-    gif_lzw_decode((iptr)local_8,0,
-                 CONCAT22((short)((uint)local_c >> 0x10),(ushort)*(byte *)(local_c + 2)),uVar2,uVar5
-                 ,uVar6,iVar3);
-    iVar4 = dib_is_top_down(local_18);
-    if (iVar4 == 0) {
-      dib_flip_vertical(local_18);
-    }
-    surface_resize_for_image(this,(iptr)&local_240);
-    local_10 = (short *)this->bits;
-    local_8 = (byte *)dib_get_bits(local_18);
-    for (local_224 = 0; local_224 < local_1c; local_224 = local_224 + 1) {
-      local_230 = local_10;
-      local_548 = local_8;
-      for (local_22c = 0; local_22c < local_14; local_22c = local_22c + 1) {
-        *local_230 = auStack_220[*local_548];
-        local_548 = local_548 + 1;
-        local_230 = local_230 + 1;
-      }
-      local_10 = (short *)((int)local_10 + this->stride);
-      iVar4 = dib_get_stride(local_18);
-      local_8 = local_8 + iVar4;
-    }
-    dib_destroy(local_18);
-    res_unlock(local_228);
-    res_free(local_228);
-    uVar2 = 1;
-  }
-  return uVar2;
-}
-#undef local_548
-#undef local_544
-#undef auStack_542
-#undef local_244
-#undef local_240
-#undef local_230
-#undef local_22c
-#undef local_228
-#undef local_224
-#undef auStack_220
-#undef local_20
-#undef local_1f
-#undef local_1e
-#undef local_1d
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c3b7a auto */
-#define local_5e4 (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_5e0 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(8)))
-#define auStack_5de (*(uint (*)[191])(frame_ + FRAME_OFF(10)))
-#define local_2e0 (*(uint *)(frame_ + FRAME_OFF(776)))
-#define local_2dc (*(tagRECT *)(frame_ + FRAME_OFF(780)))
-#define local_2cc (*(undefined2 * *)(frame_ + FRAME_OFF(796)))
-#define local_2c8 (*(uptr *)(frame_ + FRAME_OFF(800)))
-#define local_2c4 (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_2c0 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_c0 (*(uint *)(frame_ + FRAME_OFF(1320)))
-#define local_bc (*(iptr *)(frame_ + FRAME_OFF(1324)))
-#define local_b8 (*(uint *)(frame_ + FRAME_OFF(1328)))
-#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(1332)))
-#define local_1c (*(short * *)(frame_ + FRAME_OFF(1484)))
-#define local_18 (*(short * *)(frame_ + FRAME_OFF(1488)))
-#define local_14 (*(byte * *)(frame_ + FRAME_OFF(1492)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1496)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1500)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-undefined4 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
-
-{
-  undefined2 uVar1;
-  int iVar2;
-  iptr iVar3;
-  undefined4 uVar4;
-  uint uVar5;
-  uint uVar6;
-  undefined1 frame_[FRAME_OFF(1512)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b4);
-  local_8 = 0;
-  iVar2 = thunk_file_obj_open(&local_b4,param_1);
-  if (iVar2 == 0) {
-    dbg_log(ADDR(0x6378cc, ((u8 *)&g.d_006378cc)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x63790c, ((u8 *)&g.d_0063790c)),ADDR(0x6378f4, ((u8 *)&g.d_006378f4)),0xba3);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-    uVar4 = 0;
-  }
-  else {
-    local_18 = (short *)file_obj_map_view(&local_b4);
-    local_b8 = endian_swap16((int)*local_18);
-    local_c0 = endian_swap16((int)local_18[1]);
-    SetRect(&local_2dc,0,0,local_b8,local_c0);
-    local_2e0 = *(byte *)((int)local_18 + 5) + 1;
-    local_1c = local_18 + 3;
-    FUN_005f2110(local_5e0,local_1c,local_2e0 * 3);
-    local_2c8 = 0;
-    for (local_2c4 = 0; local_2c4 < local_2e0; local_2c4 = local_2c4 + 1) {
-      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e0 + local_2c8),
-                           *(uint *)(local_5e0 + local_2c8 + 1),*(uint *)(local_5e0 + local_2c8 + 2)
-                          );
-      auStack_2c0[local_2c4] = uVar1;
-      local_2c8 = local_2c8 + 3;
-    }
-    local_14 = (byte *)((int)local_18 + local_2e0 * 3 + 6);
-    local_bc = dib_create((iptr)&local_2dc);
-    iVar3 = dib_get_bits(local_bc);
-    uVar5 = local_b8;
-    uVar6 = local_c0;
-    uVar4 = dib_get_stride(local_bc);
-    gif_lzw_decode((iptr)local_14,0,
-                 CONCAT22((short)((uint)local_18 >> 0x10),(ushort)*(byte *)(local_18 + 2)),uVar4,
-                 uVar5,uVar6,iVar3);
-    iVar2 = dib_is_top_down(local_bc);
-    if (iVar2 == 0) {
-      dib_flip_vertical(local_bc);
-    }
-    surface_resize_for_image(this,(iptr)&local_2dc);
-    local_1c = (short *)this->bits;
-    local_14 = (byte *)dib_get_bits(local_bc);
-    for (local_2c4 = 0; local_2c4 < local_c0; local_2c4 = local_2c4 + 1) {
-      local_2cc = local_1c;
-      local_5e4 = local_14;
-      for (local_2c8 = 0; local_2c8 < local_b8; local_2c8 = local_2c8 + 1) {
-        *local_2cc = auStack_2c0[*local_5e4];
-        local_5e4 = local_5e4 + 1;
-        local_2cc = local_2cc + 1;
-      }
-      local_1c = (short *)((int)local_1c + this->stride);
-      iVar2 = dib_get_stride(local_bc);
-      local_14 = local_14 + iVar2;
-    }
-    dib_destroy(local_bc);
-    file_obj_unmap_view(&local_b4);
-    thunk_file_map_close(&local_b4);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-    uVar4 = 1;
-  }
-  return uVar4;
-}
-#undef local_5e4
-#undef local_5e0
-#undef auStack_5de
-#undef local_2e0
-#undef local_2dc
-#undef local_2cc
-#undef local_2c8
-#undef local_2c4
-#undef auStack_2c0
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c3efc auto */
-#define local_38 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_28 (*(undefined1 * *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined1 * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
-
-{
-  undefined4 uVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_20 = res_load_bitmap(param_1);
-  if (local_20 == 0) {
-    dbg_logf(ADDR(0x637924, ((u8 *)&g.d_00637924)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637960, ((u8 *)&g.d_00637960)),ADDR(0x637948, ((u8 *)&g.d_00637948)),0xbeb);
-    uVar1 = 0;
-  }
-  else {
-    local_c = res_lock(local_20);
-    local_14 = *(int *)(local_c + 4);
-    local_18 = *(int *)(local_c + 8);
-    SetRect(&local_38,0,0,local_14,local_18);
-    iVar2 = surface_resize_dib24(this,(iptr)&local_38);
-    if (iVar2 == 0) {
-      res_free(local_20);
-      uVar1 = 0;
-    }
-    else {
-      local_14 = dib_row_align4(local_14);
-      local_10 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
-      if (*(short *)(local_c + 0xe) == 0x18) {
-        local_8 = (undefined1 *)(local_c + 0x28);
-        for (local_1c = 0; local_1c < local_18; local_1c = local_1c + 1) {
-          local_28 = local_10;
-          for (local_24 = 0; local_24 < local_14; local_24 = local_24 + 1) {
-            *local_28 = local_8[2];
-            local_28[1] = local_8[1];
-            local_28[2] = *local_8;
-            local_28 = local_28 + 3;
-            local_8 = local_8 + 3;
-          }
-          local_10 = (undefined1 *)surface_prev_row(this,(iptr)local_10);
-        }
-      }
-      res_unlock(local_20);
-      res_free(local_20);
-      uVar1 = 1;
-    }
-  }
-  return uVar1;
-}
-#undef local_38
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c40b6 auto */
-#define local_d8 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_c8 (*(undefined1 * *)(frame_ + FRAME_OFF(16)))
-#define local_c4 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_c0 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_bc (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_b8 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_b4 (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
-#define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(40)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(192)))
-#define local_14 (*(undefined1 * *)(frame_ + FRAME_OFF(196)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(204)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
-
-{
-  iptr iVar1;
-  iptr iVar2;
-  int iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(216)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b0);
-  local_8 = 0;
-  iVar1 = thunk_file_obj_open(&local_b0,param_1);
-  if (iVar1 == 0) {
-    dbg_log(ADDR(0x637978, ((u8 *)&g.d_00637978)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6379b0, ((u8 *)&g.d_006379b0)),ADDR(0x637998, ((u8 *)&g.d_00637998)),0xc24);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-    uVar4 = 0;
-  }
-  else {
-    iVar2 = file_obj_map_view(&local_b0);
-    local_18 = iVar2 + 0xe;
-    local_b8 = *(int *)(iVar2 + 0x12);
-    local_bc = *(int *)(iVar2 + 0x16);
-    SetRect(&local_d8,0,0,local_b8,local_bc);
-    iVar3 = surface_resize_dib24(this,(iptr)&local_d8);
-    if (iVar3 == 0) {
-      file_obj_unmap_view(&local_b0);
-      thunk_file_map_close(&local_b0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-      uVar4 = 0;
-    }
-    else {
-      local_b8 = dib_row_align4(local_b8);
-      local_b4 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
-      if (*(short *)(local_18 + 0xe) == 0x18) {
-        local_14 = (undefined1 *)(local_18 + 0x28);
-        for (local_c0 = 0; local_c0 < local_bc; local_c0 = local_c0 + 1) {
-          local_c8 = local_b4;
-          for (local_c4 = 0; local_c4 < local_b8; local_c4 = local_c4 + 1) {
-            *local_c8 = local_14[2];
-            local_c8[1] = local_14[1];
-            local_c8[2] = *local_14;
-            local_c8 = local_c8 + 3;
-            local_14 = local_14 + 3;
-          }
-          local_b4 = (undefined1 *)surface_prev_row(this,(iptr)local_b4);
-        }
-      }
-      file_obj_unmap_view(&local_b0);
-      thunk_file_map_close(&local_b0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
-      uVar4 = 1;
-    }
-  }
-  return uVar4;
-}
-#undef local_d8
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_b0
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c4375 auto */
-#define local_44 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define local_40 (*(tagRECT *)(frame_ + FRAME_OFF(8)))
-#define local_30 (*(char * *)(frame_ + FRAME_OFF(24)))
-#define local_2c (*(uint *)(frame_ + FRAME_OFF(28)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_24 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(40)))
-#define local_1f (*(undefined1 *)(frame_ + FRAME_OFF(41)))
-#define local_1e (*(undefined1 *)(frame_ + FRAME_OFF(42)))
-#define local_1d (*(undefined1 *)(frame_ + FRAME_OFF(43)))
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(44)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(48)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(52)))
-#define local_10 (*(char * *)(frame_ + FRAME_OFF(56)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
-undefined4 __thiscall surface_load_tga_resource24(DibSurface *this,iptr param_1)
-
-{
-  undefined4 uVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_20 = 0x54;
-  local_1f = 0x41;
-  local_1e = 0x52;
-  local_1d = 0x47;
-  local_28 = res_load((iptr)&local_20,param_1);
-  if (local_28 == 0) {
-    dbg_logf(ADDR(0x6379c8, ((u8 *)&g.d_006379c8)),param_1);
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637a08, ((u8 *)&g.d_00637a08)),ADDR(0x6379f0, ((u8 *)&g.d_006379f0)),0xc60);
-    uVar1 = 0;
-  }
-  else {
-    local_10 = (char *)res_lock(local_28);
-    local_18 = (uint)*(ushort *)(local_10 + 0xc);
-    local_1c = (uint)*(ushort *)(local_10 + 0xe);
-    local_8 = local_10;
-    SetRect(&local_40,0,0,local_18,local_1c);
-    iVar2 = surface_resize_dib24(this,(iptr)&local_40);
-    if (iVar2 == 0) {
-      res_free(local_28);
-      uVar1 = 0;
-    }
-    else {
-      if (local_8[2] == '\x02') {
-        local_10 = local_10 + *local_8 + 0x12;
-        if ((local_8[0x11] & 0x20U) == 0) {
-          local_14 = (char *)surface_pixel_ptr(this,0,local_1c - 1);
-          local_44 = -this->signed_pitch;
-        }
-        else {
-          local_14 = (char *)surface_pixel_ptr(this,0,0);
-          local_44 = this->signed_pitch;
-        }
-        if (local_8[0x10] == '\x18') {
-          for (local_24 = 0; local_24 < local_1c; local_24 = local_24 + 1) {
-            local_30 = local_14;
-            for (local_2c = 0; local_2c < local_18; local_2c = local_2c + 1) {
-              *local_30 = local_10[2];
-              local_30[1] = local_10[1];
-              local_30[2] = *local_10;
-              local_30 = local_30 + 3;
-              local_c = local_c + 3;
-            }
-            local_14 = local_14 + local_44;
-          }
-        }
-        else if (local_8[0x10] == ' ') {
-          for (local_24 = 0; local_24 < local_1c; local_24 = local_24 + 1) {
-            local_30 = local_14;
-            for (local_2c = 0; local_2c < local_18; local_2c = local_2c + 1) {
-              *local_30 = local_10[2];
-              local_30[1] = local_10[1];
-              local_30[2] = *local_10;
-              local_30 = local_30 + 3;
-              local_10 = local_10 + 4;
-            }
-            local_14 = local_14 + local_44;
-          }
-        }
-      }
-      else if (local_8[2] == '\n') {
-        dbg_log(ADDR(0x637a20, ((u8 *)&g.d_00637a20)));
-      }
-      if ((local_8[0x11] & 0x10U) != 0) {
-        dbg_log(ADDR(0x637a48, ((u8 *)&g.d_00637a48)));
-      }
-      res_unlock(local_28);
-      res_free(local_28);
-      uVar1 = 1;
-    }
-  }
-  return uVar1;
-}
-#undef local_44
-#undef local_40
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1f
-#undef local_1e
-#undef local_1d
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c463f auto */
-#define local_e0 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define local_dc (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_cc (*(char * *)(frame_ + FRAME_OFF(20)))
-#define local_c8 (*(uint *)(frame_ + FRAME_OFF(24)))
-#define local_c4 (*(uint *)(frame_ + FRAME_OFF(28)))
-#define local_c0 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_bc (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_b8 (*(char * *)(frame_ + FRAME_OFF(40)))
-#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(44)))
-#define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(200)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
-
-{
-  int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b4);
-  local_8 = 0;
-  iVar1 = thunk_file_obj_open(&local_b4,param_1);
-  if (iVar1 == 0) {
-    dbg_log(ADDR(0x637a84, ((u8 *)&g.d_00637a84)));
-    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637abc, ((u8 *)&g.d_00637abc)),ADDR(0x637aa4, ((u8 *)&g.d_00637aa4)),0xcbd);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-    uVar2 = 0;
-  }
-  else {
-    local_1c = (char *)file_obj_map_view(&local_b4);
-    local_bc = (uint)*(ushort *)(local_1c + 0xc);
-    local_c0 = (uint)*(ushort *)(local_1c + 0xe);
-    local_14 = local_1c;
-    SetRect(&local_dc,0,0,local_bc,local_c0);
-    iVar1 = surface_resize_dib24(this,(iptr)&local_dc);
-    if (iVar1 == 0) {
-      file_obj_unmap_view(&local_b4);
-      thunk_file_map_close(&local_b4);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-      uVar2 = 0;
-    }
-    else {
-      if (local_14[2] == '\x02') {
-        local_1c = local_1c + *local_14 + 0x12;
-        if ((local_14[0x11] & 0x20U) == 0) {
-          local_b8 = (char *)surface_pixel_ptr(this,0,local_c0 - 1);
-          local_e0 = -this->signed_pitch;
-        }
-        else {
-          local_b8 = (char *)surface_pixel_ptr(this,0,0);
-          local_e0 = this->signed_pitch;
-        }
-        if (local_14[0x10] == '\x18') {
-          for (local_c4 = 0; local_c4 < local_c0; local_c4 = local_c4 + 1) {
-            local_cc = local_b8;
-            for (local_c8 = 0; local_c8 < local_bc; local_c8 = local_c8 + 1) {
-              *local_cc = local_1c[2];
-              local_cc[1] = local_1c[1];
-              local_cc[2] = *local_1c;
-              local_cc = local_cc + 3;
-              local_18 = local_18 + 3;
-            }
-            local_b8 = local_b8 + local_e0;
-          }
-        }
-        else if (local_14[0x10] == ' ') {
-          for (local_c4 = 0; local_c4 < local_c0; local_c4 = local_c4 + 1) {
-            local_cc = local_b8;
-            for (local_c8 = 0; local_c8 < local_bc; local_c8 = local_c8 + 1) {
-              *local_cc = local_1c[2];
-              local_cc[1] = local_1c[1];
-              local_cc[2] = *local_1c;
-              local_cc = local_cc + 3;
-              local_1c = local_1c + 4;
-            }
-            local_b8 = local_b8 + local_e0;
-          }
-        }
-      }
-      else if (local_14[2] == '\n') {
-        dbg_log(ADDR(0x637ad4, ((u8 *)&g.d_00637ad4)));
-      }
-      if ((local_14[0x11] & 0x10U) != 0) {
-        dbg_log(ADDR(0x637afc, ((u8 *)&g.d_00637afc)));
-      }
-      file_obj_unmap_view(&local_b4);
-      thunk_file_map_close(&local_b4);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-      uVar2 = 1;
-    }
-  }
-  return uVar2;
-}
-#undef local_e0
-#undef local_dc
-#undef local_cc
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005c4a27 auto */
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall
-surface_fill_rect_rgb
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4)
-
-{
-  char cVar1;
-  undefined4 uVar2;
-  iptr iVar3;
-  int iVar4;
-  int iVar5;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 1;
-  cVar1 = surface_is_locked(this);
-  if (cVar1 == '\0') {
-    dbg_log(ADDR(0x637b38, ((u8 *)&g.d_00637b38)));
-    local_8 = 0;
-    surface_lock(this);
-  }
-  IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->clip_left);
-  local_c = thunk_rect_width((iptr)&local_20);
-  if ((local_c != 0) && (local_10 = thunk_rect_height((iptr)&local_20), local_10 != 0)) {
-    if (this->bytes_per_pixel == 2) {
-      uVar2 = thunk_surface_height(this);
-      iVar3 = surface_get_dib(this);
-      iVar4 = dib_is_top_down(iVar3);
-      iVar5 = surface_get_pitch(this);
-      dib_fill_rect16(this->bits,param_2,param_3,param_4,local_20.left,local_20.top,local_c,
-                   local_10,((-(uint)(iVar4 == 0) & 0xfffffffe) + 1) * iVar5,uVar2);
-    }
-    else {
-      dib_fill_rect_rgb(this->dib,(iptr)&local_20,param_2,param_3,param_4);
-    }
-  }
-  return;
-}
-#undef local_20
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c4b4c auto */
-void __thiscall
-surface_fill_rgb
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  surface_fill_rect_rgb(this,(iptr)&this->clip_left,param_1,param_2,param_3);
-  return;
-}
-
-/* 005c4b7f auto */
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __thiscall
-surface_blit_rgb(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *param_3)
-
-{
-  iptr iVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  IntersectRect(&local_1c,param_2,(RECT *)(this->pad_0 + 0x14));
-  IntersectRect(&local_2c,param_3,(RECT *)&param_1->field_14);
-  local_8 = local_1c.right - local_1c.left;
-  if (local_2c.right - local_2c.left <= local_1c.right - local_1c.left) {
-    local_8 = local_2c.right - local_2c.left;
-  }
-  local_c = local_2c.bottom - local_2c.top;
-  if (local_1c.bottom - local_1c.top <= local_2c.bottom - local_2c.top) {
-    local_c = local_1c.bottom - local_1c.top;
-  }
-  if ((local_8 != 0) && (local_c != 0)) {
-    iVar1 = surface_get_dib(param_1);
-    dib_blit_to_dib(this->dib,local_1c.left,local_1c.top,local_8,local_c,iVar1,local_2c.left,
-                 local_2c.top);
-  }
-  return;
-}
-#undef local_2c
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005c4c46 auto */
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __thiscall
-surface_blit_to_ddsurf(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3)
-
-{
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  IntersectRect(&local_1c,param_2,(RECT *)(this->pad_0 + 0x14));
-  IntersectRect(&local_2c,param_3,(RECT *)(param_1 + 4));
-  local_8 = local_2c.right - local_2c.left;
-  if (local_1c.right - local_1c.left <= local_2c.right - local_2c.left) {
-    local_8 = local_1c.right - local_1c.left;
-  }
-  local_c = local_2c.bottom - local_2c.top;
-  if (local_1c.bottom - local_1c.top <= local_2c.bottom - local_2c.top) {
-    local_c = local_1c.bottom - local_1c.top;
-  }
-  if ((local_8 != 0) && (local_c != 0)) {
-    uVar1 = ddsurf_get_iface(param_1);
-    dib_blit_to_ddsurf(this->dib,local_1c.left,local_1c.top,local_8,local_c,uVar1,local_2c.left,
-                 local_2c.top);
-  }
-  return;
-}
-#undef local_2c
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005c4d0d auto */
-void __thiscall
-surface_stretch_to_ddsurf
-          (DibSurface *this,DDSurfaceIfaceView *param_1,undefined4 *param_2,undefined4 *param_3)
-
-{
-  char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  
-  cVar1 = surface_is_locked(this);
-  if (cVar1 == '\0') {
-    dbg_log(ADDR(0x637b60, ((u8 *)&g.d_00637b60)));
-    surface_lock(this);
-  }
-  uVar2 = thunk_rect_height((iptr)param_3);
-  uVar3 = thunk_rect_width((iptr)param_3);
-  uVar8 = param_3[1];
-  uVar7 = *param_3;
-  uVar4 = ddsurf_get_iface(param_1);
-  uVar5 = thunk_rect_height((iptr)param_2);
-  uVar6 = thunk_rect_width((iptr)param_2);
-  dib_stretch_blit_to_ddsurf(this->dib,*param_2,param_2[1],uVar6,uVar5,uVar4,uVar7,uVar8,uVar3,uVar2);
-  if (cVar1 == '\0') {
-    surface_unlock(this);
-  }
-  return;
-}
-
-/* 005c4dd3 auto */
-void __thiscall
-surface_draw_text_rgb_cur_font
-          (SurfaceTextRgbCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4,
-          undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  int iVar1;
-  
-  if (draw_current_font == (undefined *)0x0) {
-    dbg_log(ADDR(0x637b8c, ((u8 *)&g.d_00637b8c)));
-  }
-  else if (this->dib != 0) {
-    if ((param_4 & 0x10) != 0) {
-      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
-      iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,iVar1 + param_2,
-                   iVar1 + param_3,(iptr)(this->pad_0 + 0x14),param_4,0,0,0);
-    }
-    dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,
-                 (iptr)(this->pad_0 + 0x14),param_4,param_5,param_6,param_7);
-  }
-  return;
-}
-
-/* 005c4eb6 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall
-surface_draw_text_in_rect_rgb_cur_font
-          (SurfaceTextRectRgbCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (draw_current_font == (undefined *)0x0) {
-    dbg_log(ADDR(0x637bac, ((u8 *)&g.d_00637bac)));
-  }
-  else if (this->dib != 0) {
-    if ((param_3 & 0x10) != 0) {
-      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
-      iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      local_14.left = *param_2;
-      local_14.top = param_2[1];
-      local_14.right = param_2[2];
-      local_14.bottom = param_2[3];
-      OffsetRect(&local_14,iVar1,iVar1);
-      dib_draw_text_rect_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3,0,
-                   0,0);
-    }
-    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
-  }
-  return;
-}
-#undef local_14
-
-/* 005c4f9f auto */
-void __thiscall
-surface_draw_text_rgb
-          (SurfaceTextRgbFontView *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4,
-          uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
-
-{
-  int iVar1;
-  
-  if (this->dib != 0) {
-    if ((param_5 & 0x10) != 0) {
-      iVar1 = font_measure_height(*param_1);
-      iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      dib_draw_text_at_rgb(this->dib,*param_1,param_2,param_3 + iVar1,param_4 + iVar1,
-                   (iptr)(this->pad_0 + 0x14),param_5,0,0,0);
-    }
-    dib_draw_text_at_rgb(this->dib,*param_1,param_2,param_3,param_4,(iptr)(this->pad_0 + 0x14),param_5,
-                 param_6,param_7,param_8);
-  }
-  return;
-}
-
-/* 005c505d auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall
-surface_draw_text_in_rect_rgb
-          (SurfaceTextRectFontView *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4,
-          undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (this->dib != 0) {
-    if ((param_4 & 0x10) != 0) {
-      iVar1 = font_measure_height(*param_1);
-      iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      local_14.left = *param_3;
-      local_14.top = param_3[1];
-      local_14.right = param_3[2];
-      local_14.bottom = param_3[3];
-      OffsetRect(&local_14,iVar1,iVar1);
-      dib_draw_text_rect_rgb(this->dib,*param_1,param_2,(iptr)&local_14,param_4,0,0,0);
-    }
-    dib_draw_text_rect_rgb(this->dib,*param_1,param_2,(iptr)param_3,param_4,param_5,param_6,param_7);
-  }
-  return;
-}
-#undef local_14
-
-/* 005c512d auto */
-void __thiscall
-surface_draw_text_rect_rgb_cur_font
-          (SurfaceTextWrapRgbCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
-
-{
-  if (draw_current_font == (undefined *)0x0) {
-    dbg_log(ADDR(0x637bcc, ((u8 *)&g.d_00637bcc)));
-  }
-  else if (this->dib != 0) {
-    dib_draw_text_wrap_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,param_4,
-                 param_5,param_6);
-  }
-  return;
-}
-
-/* 005c51a5 auto */
-void __thiscall
-surface_draw_text_rect_rgb
-          (SurfaceTextWrapRgbFontView *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  if (this->dib != 0) {
-    dib_draw_text_wrap_rgb(this->dib,*param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  }
-  return;
-}
-
-/* 005c51fc auto */
-void __thiscall
-surface_draw_line_rgb
-          (DibSurface *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5,
-          undefined4 param_6,undefined4 param_7)
-
-{
-  if (((((((int)this->clip_left <= param_1) || ((int)this->clip_left <= param_3)) &&
-        ((param_3 < (int)this->clip_right || (param_1 < (int)this->clip_right)))) &&
-       (((int)this->clip_top <= param_2 || ((int)this->clip_top <= param_4)))) &&
-      ((param_2 < (int)this->clip_bottom || (param_4 < (int)this->clip_bottom)))) && (this->dib != 0)
-     ) {
-    dib_draw_line_rgb(this->dib,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  }
-  return;
-}
-
-/* 005c52dd auto */
-void __thiscall
-surface_frame_rect_rgb
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          )
-
-{
-  if (this->dib != 0) {
-    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
-    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4
-                );
-    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
-                 *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4);
-    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
-                 *(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
-  }
-  return;
-}
-
-/* 005c53c3 auto */
-void __thiscall
-surface_rgb_to_native
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  int iVar1;
-  undefined4 uVar2;
-  
-  iVar1 = this->bytes_per_pixel << 3;
-  uVar2 = surface_pixel_ptr(this,0,0);
-  dib_rgb_to_native_pixel(this->dib,uVar2,iVar1,param_1,param_2,param_3);
-  return;
-}
-
-/* 005c5410 auto */
-uint __cdecl endian_swap16(undefined4 param_1)
-
-{
-  return (uint)CONCAT11((undefined1)param_1,(*(undefined1 *)((char *)&param_1 + 1)));
-}
-
-/* 005c5430 auto */
-uint __cdecl endian_swap32(uint param_1)
-
-{
-  return param_1 << 0x18 | (param_1 & 0xff00) << 8 | (param_1 & 0xff0000) >> 8 | param_1 >> 0x18;
-}
-
-/* 005c5470 auto */
-undefined4 __thiscall file_obj_map_view(FileObject *this)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = file_obj_map_view_impl((iptr)this,0,0);
-  return uVar1;
-}
-
-/* 005c54a0 auto */
-void __thiscall file_obj_unmap_view(FileObject *this)
-
-{
-  file_obj_close_mapping((iptr)this);
-  return;
 }
 
 /* 005c54d0 auto */
@@ -3076,42 +897,6 @@ uptr __thiscall surface_get_bits(DibSurface *this)
   return this->bits;
 }
 
-/* 005c5660 auto */
-u32 __thiscall ddsurf_get_height(DDSurface *this)
-
-{
-  return this->surf_height;
-}
-
-/* 005c5680 auto */
-u32 __thiscall ddsurf_get_width(DDSurfaceWidthView *this)
-
-{
-  return this->surf_width;
-}
-
-/* 005c56a0 auto */
-u32 __thiscall ddsurf_get_pitch(DDSurface *this)
-
-{
-  return this->surf_pitch;
-}
-
-/* 005c56c0 auto */
-/* Library Function - Single Match
-    public: __thiscall _Timevec::~_Timevec(void)
-   
-   Library: Visual Studio 1998 Debug */
-
-undefined4 __thiscall ddsurf_unlock(DDSurface *this)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = ddsurf_iface_unlock(this->dd_surface);
-  return uVar1;
-}
-
 /* 005c56f0 auto */
 /* Library Function - Single Match
     public: int __thiscall CSplitterWnd::IsTracking(void)
@@ -3131,13 +916,6 @@ int __thiscall surface_prev_row(DibSurface *this,iptr param_1)
   return param_1 - this->signed_pitch;
 }
 
-/* 005c5740 auto */
-u32 __thiscall ddsurf_get_iface(DDSurfaceIfaceView *this)
-
-{
-  return this->iface;
-}
-
 /* 005c5760 auto */
 void __thiscall
 wnd_create_framed
@@ -3148,21 +926,8 @@ wnd_create_framed
   iptr iVar1;
   
   wnd_create_with_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_wnd_get_window(this);
+  iVar1 = wnd_get_window(this);
   wnd_install_frame_proc((iptr)this,iVar1);
-  return;
-}
-
-/* 005c57b1 auto */
-void __thiscall
-wnd_create_framed_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
-
-{
-  wnd_create_framed
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
@@ -3176,78 +941,8 @@ wnd_create_framed_child
   iptr iVar1;
   
   wnd_create_with_handlers(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  iVar1 = thunk_wnd_get_window(this);
+  iVar1 = wnd_get_window(this);
   wnd_install_frame_proc((iptr)this,iVar1);
-  return;
-}
-
-/* 005c584e auto */
-void __thiscall
-wnd_create_framed_child_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,
-          undefined4 param_8,iptr param_9)
-
-{
-  wnd_create_framed_child
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  thunk_wnd_attach_menu(this,param_9);
-  return;
-}
-
-/* 005c589a auto */
-void __thiscall
-wnd_create_framed_nopal
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
-
-{
-  iptr iVar1;
-  
-  wnd_create_nopal_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6);
-  iVar1 = thunk_wnd_get_window(this);
-  wnd_install_frame_proc((iptr)this,iVar1);
-  return;
-}
-
-/* 005c58e7 auto */
-void __thiscall
-wnd_create_framed_nopal_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
-
-{
-  wnd_create_framed_nopal((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
-  ;
-  thunk_wnd_attach_menu(this,param_7);
-  return;
-}
-
-/* 005c592b auto */
-void __thiscall
-wnd_create_framed_child_nopal
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  iptr iVar1;
-  
-  wnd_create_child_nopal_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_wnd_get_window(this);
-  wnd_install_frame_proc((iptr)this,iVar1);
-  return;
-}
-
-/* 005c597c auto */
-void __thiscall
-wnd_create_framed_child_nopal_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
-
-{
-  wnd_create_framed_child_nopal
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
@@ -3284,7 +979,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1)
   
   if (this->first_control != 0) {
     local_8 = (ControlNextView *)this->first_control;
-    iVar1 = thunk_ctrl_get_id((ControlIdView *)local_8);
+    iVar1 = ctrl_get_id((ControlIdView *)local_8);
     if (iVar1 == param_1) {
       this->first_control = local_8->field_20;
     }
@@ -3298,7 +993,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1)
           return;
         }
         this_00 = (ControlIdView *)control_get_next(local_8);
-        iVar1 = thunk_ctrl_get_id(this_00);
+        iVar1 = ctrl_get_id(this_00);
         if (iVar1 == param_1) break;
         local_8 = (ControlNextView *)control_get_next(local_8);
       }
@@ -3321,22 +1016,8 @@ void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
   
   for (local_8 = (ControlIdView *)this->first_control; local_8 != (ControlIdView *)0x0;
       local_8 = *(ControlIdView **)local_8[4].pad_0) {
-    uVar1 = thunk_ctrl_get_id(local_8);
+    uVar1 = ctrl_get_id(local_8);
     wnd_remove_control(this,uVar1);
-  }
-  return;
-}
-#undef local_8
-
-/* 005c5b36 auto */
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall wnd_invalidate_controls(WndControlInvalidateView *this)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  for (local_8 = this->first_control; local_8 != 0; local_8 = *(uptr *)(local_8 + 0x20)) {
-    wnd_invalidate(*(undefined4 *)(local_8 + 0x1c));
   }
   return;
 }
@@ -3367,27 +1048,6 @@ void __thiscall wnd_focus_first_control(Wnd *this)
   }
   wnd_focus_control((iptr)this,(iptr)local_8);
   return;
-}
-#undef local_8
-
-/* 005c5c2d auto */
-#define local_8 (*(ControlInitialFocusView * *)(frame_ + FRAME_OFF(0)))
-ControlInitialFocusView * __thiscall wnd_find_initial_focus_control(void *this)
-
-{
-  char cVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = *(ControlInitialFocusView **)((int)this + 0xb8);
-  while( true ) {
-    if (local_8 == (ControlInitialFocusView *)0x0) {
-      return (ControlInitialFocusView *)0x0;
-    }
-    cVar1 = ctrl_get_initial_focus(local_8);
-    if (cVar1 != '\0') break;
-    local_8 = (ControlInitialFocusView *)control_get_next((ControlNextView *)local_8);
-  }
-  return local_8;
 }
 #undef local_8
 
@@ -3427,12 +1087,12 @@ undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
       if (iVar4 == 3) {
         iVar4 = radiogrp_get_items(local_10);
         iVar5 = radiogrp_item_count((RadioGroupCountView *)local_10);
-        for (local_20 = 0; local_20 < iVar5; local_20 = local_20 + 1) {
+        for (local_20 = 0; local_20 < iVar5; local_20++) {
           if ((-1 < *(int *)(iVar4 + 0xa0 + local_20 * 0xa4)) &&
              (*(u8 *)(iVar4 + 0x9c + local_20 * 0xa4) == uVar1)) {
             radiogrp_item_activate(*(undefined4 *)(iVar4 + local_20 * 0xa4));
             local_14 = 1;
-            local_8 = '\x01';
+            local_8 = 1;
             break;
           }
         }
@@ -3441,14 +1101,14 @@ undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
     else if (local_10->pad_0[0x25] == uVar1) {
       iVar2 = control_get_type((ControlTypeView *)local_10);
       if ((iVar2 == 6) &&
-         (iVar3 = thunk_ctrl_is_enabled((ControlEnabledView *)local_10), iVar3 != 0)) {
-        uVar2 = thunk_control_get_hwnd((ControlHwndView *)local_10);
+         (iVar3 = ctrl_is_enabled((ControlEnabledView *)local_10), iVar3 != 0)) {
+        uVar2 = control_get_hwnd((ControlHwndView *)local_10);
         button_press_animated(uVar2);
         return 1;
       }
       iVar4 = control_get_type((ControlTypeView *)local_10);
       if ((iVar4 == 2) && (iVar4 = checkbox_is_enabled((CheckboxEnabledView *)local_10), iVar4 != 0)) {
-        uVar2 = thunk_control_get_hwnd((ControlHwndView *)local_10);
+        uVar2 = control_get_hwnd((ControlHwndView *)local_10);
         checkbox_toggle_by_hotkey(uVar2);
         return 1;
       }
@@ -3514,22 +1174,9 @@ wnd_create_with_cmd_proc
   iptr iVar1;
   
   wnd_record_create(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_wnd_get_window(this);
+  iVar1 = wnd_get_window(this);
   wnd_install_command_proc((iptr)this,iVar1);
-  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
-  return;
-}
-
-/* 005c5f7c auto */
-void __thiscall
-wnd_create_with_cmd_proc_menu
-          (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
-
-{
-  wnd_create_with_cmd_proc
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_wnd_attach_menu(this,param_8);
+  wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3543,80 +1190,9 @@ wnd_create_with_handlers
   iptr iVar1;
   
   wnd_record_create_child(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  iVar1 = thunk_wnd_get_window(this);
+  iVar1 = wnd_get_window(this);
   wnd_install_command_proc((iptr)this,iVar1);
-  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
-  return;
-}
-
-/* 005c6024 auto */
-void __thiscall
-wnd_create_with_handlers_menu
-          (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
-
-{
-  wnd_create_with_handlers
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  thunk_wnd_attach_menu(this,param_9);
-  return;
-}
-
-/* 005c6070 auto */
-void __thiscall
-wnd_create_nopal_cmd_proc
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
-
-{
-  iptr iVar1;
-  
-  wnd_record_create_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6);
-  iVar1 = thunk_wnd_get_window(this);
-  wnd_install_command_proc((iptr)this,iVar1);
-  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
-  return;
-}
-
-/* 005c60c8 auto */
-void __thiscall
-wnd_create_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
-
-{
-  wnd_create_nopal_cmd_proc((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
-  ;
-  thunk_wnd_attach_menu(this,param_7);
-  return;
-}
-
-/* 005c610c auto */
-void __thiscall
-wnd_create_child_nopal_cmd_proc
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  iptr iVar1;
-  
-  wnd_record_create_child_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_wnd_get_window(this);
-  wnd_install_command_proc((iptr)this,iVar1);
-  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
-  return;
-}
-
-/* 005c6168 auto */
-void __thiscall
-wnd_create_child_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
-
-{
-  wnd_create_child_nopal_cmd_proc
-            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_wnd_attach_menu(this,param_8);
+  wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3631,18 +1207,18 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
   
   if (wnd_modal_depth != 0xf) {
     this->modal_running = 1;
-    wnd_modal_depth = wnd_modal_depth + 1;
+    wnd_modal_depth++;
     (&wnd_modal_stack)[wnd_modal_depth] = this;
     if (wnd_modal_depth == 0) {
       local_8 = 0;
     }
     else {
-      local_8 = thunk_wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
+      local_8 = wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
     }
-    iVar1 = thunk_wnd_get_window((WndBase *)this);
+    iVar1 = wnd_get_window((WndBase *)this);
     wnd_obj_disable_owner(iVar1,local_8);
     while (this->modal_running != 0) {
-      thunk_win_pump_one_message();
+      win_pump_one_message();
       if (this->on_modal_idle != 0) {
         (*(code *)this->on_modal_idle)();
       }
@@ -3651,11 +1227,11 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
       local_c = 0;
     }
     else {
-      local_c = thunk_wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
+      local_c = wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
     }
-    iVar1 = thunk_wnd_get_window((WndBase *)this);
+    iVar1 = wnd_get_window((WndBase *)this);
     wnd_obj_enable_owner(iVar1,local_c);
-    wnd_modal_depth = wnd_modal_depth + -1;
+    wnd_modal_depth--;
     if (-1 < wnd_modal_depth) {
       this->modal_running = 1;
     }
@@ -3700,40 +1276,6 @@ undefined4 __cdecl wnd_set_active_child(iptr param_1)
 }
 #undef wnd_active_child
 
-/* 005c6329 auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  wnd_get_hscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
-  if ((int)param_1 <= local_8 - local_c) {
-    this->hscroll_step = param_1;
-  }
-  return;
-}
-#undef local_c
-#undef local_8
-
-/* 005c636c auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall wnd_set_vscroll_step(C_00408010_b8 *this,u32 param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  wnd_get_vscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
-  if ((int)param_1 <= local_8 - local_c) {
-    this->vscroll_step = param_1;
-  }
-  return;
-}
-#undef local_c
-#undef local_8
-
 /* 005c63af auto */
 bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,undefined4 param_1)
 
@@ -3745,32 +1287,6 @@ bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,undefined4 param_1)
     (*(code *)this->on_menu_select)(param_1);
   }
   return bVar1;
-}
-
-/* 005c6400 auto */
-void __thiscall wnd_get_hscroll_range(WndBase *this,iptr param_1,iptr param_2)
-
-{
-  iptr iVar1;
-  undefined4 uVar2;
-  
-  uVar2 = 0;
-  iVar1 = thunk_wnd_get_window(this);
-  scrollbar_get_range(iVar1,param_1,param_2,uVar2);
-  return;
-}
-
-/* 005c6440 auto */
-void __thiscall wnd_get_vscroll_range(WndBase *this,iptr param_1,iptr param_2)
-
-{
-  iptr iVar1;
-  undefined4 uVar2;
-  
-  uVar2 = 1;
-  iVar1 = thunk_wnd_get_window(this);
-  scrollbar_get_range(iVar1,param_1,param_2,uVar2);
-  return;
 }
 
 /* 005c6480 auto */
@@ -3858,149 +1374,6 @@ void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1)
 #undef local_6
 #undef local_5
 
-/* 005c66b9 auto */
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(0)))
-#define local_7 (*(undefined1 *)(frame_ + FRAME_OFF(1)))
-#define local_6 (*(undefined1 *)(frame_ + FRAME_OFF(2)))
-#define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
-void __thiscall
-palette_load_ctab_res_range
-          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  int iVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0x43;
-  local_7 = 0x54;
-  local_6 = 0x41;
-  local_5 = 0x42;
-  iVar1 = res_load((iptr)&local_8,param_1);
-  if (iVar1 == 0) {
-    dbg_logf_noret(ADDR(0x637c10, ((u8 *)&g.d_00637c10)),param_1);
-  }
-  else {
-    iVar2 = res_lock(iVar1);
-    palette_set_rgb(this,param_2,param_3,iVar2 + 8);
-    res_unlock(iVar1);
-    res_free(iVar1);
-  }
-  return;
-}
-#undef local_8
-#undef local_7
-#undef local_6
-#undef local_5
-
-/* 005c6757 auto */
-void __thiscall palette_load_file(GamePalette *this,undefined4 param_1)
-
-{
-  palette_load_from_file(this,param_1);
-  return;
-}
-
-/* 005c677b auto */
-void __thiscall palette_save_full_to_file(void *this,undefined4 param_1)
-
-{
-  palette_save_to_file(this,param_1,0,0xff);
-  return;
-}
-
-/* 005c67a6 auto */
-#define local_a8 (*(FileObject *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(152)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(156)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,int param_3)
-
-{
-  undefined4 uVar1;
-  iptr iVar2;
-  int iVar3;
-  undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[2] = {(u32)(uptr)param_2, (u32)(uptr)param_3};  /* the arguments, contiguous as on the original stack */
-#define param_2 (*(undefined4 *)&pargs_[0])
-#define param_3 (*(int *)&pargs_[1])
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_a8);
-  local_8 = 0;
-  uVar1 = mem_handle_alloc(param_3 * 3);
-  iVar2 = mem_handle_lock(uVar1);
-  palette_copy_rgb_range((iptr)this,iVar2,param_2,param_3);
-  iVar3 = thunk_file_obj_create(&local_a8,param_1);
-  if (iVar3 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
-  }
-  else {
-    thunk_file_obj_write(&local_a8,(iptr)&param_2,4);
-    thunk_file_obj_write(&local_a8,(iptr)&param_3,4);
-    thunk_file_obj_write(&local_a8,iVar2,param_3 * 3);
-    thunk_file_map_close(&local_a8);
-    mem_handle_unlock(uVar1);
-    mem_handle_free(uVar1);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
-  }
-  return;
-}
-#undef local_a8
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-#undef param_2
-#undef param_3
-
-/* 005c68f0 auto */
-#define local_b4 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_b0 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(12)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
-void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
-
-{
-  int iVar1;
-  iptr iVar2;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_ac);
-  local_8 = 0;
-  iVar1 = thunk_file_obj_open(&local_ac,param_1);
-  if (iVar1 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  else {
-    thunk_file_obj_read(&local_ac,(iptr)&local_14,4);
-    thunk_file_obj_read(&local_ac,(iptr)&local_b4,4);
-    local_b0 = mem_handle_alloc(local_b4 * 3);
-    iVar2 = mem_handle_lock(local_b0);
-    thunk_file_obj_read(&local_ac,iVar2,local_b4 * 3);
-    thunk_file_map_close(&local_ac);
-    palette_set_rgb(this,local_14,local_b4,iVar2);
-    mem_handle_unlock(local_b0);
-    mem_handle_free(local_b0);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  return;
-}
-#undef local_b4
-#undef local_b0
-#undef local_ac
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
 /* 005c6a42 auto */
 void __thiscall palette_new_version(GamePalette *this)
 
@@ -4022,39 +1395,6 @@ palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 {
   logpal_reserve_range((iptr)this,param_1,param_2);
   palette_commit_range(this,param_1,param_2);
-  return;
-}
-
-/* 005c6ac9 auto */
-void __thiscall
-palette_refresh_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
-
-{
-  palette_reapply_range((iptr)this,param_1,param_2);
-  palette_commit_range(this,param_1,param_2);
-  return;
-}
-
-/* 005c6b05 auto */
-void __thiscall palette_animate_hpalette(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2)
-
-{
-  palette_animate((iptr)this,this->hpalette,param_1,param_2);
-  return;
-}
-
-/* 005c6b3b auto */
-/* Library Function - Multiple Matches With Same Base Name
-    protected: virtual unsigned char * __thiscall CHtmlStream::Realloc(unsigned char *,unsigned
-   long)
-    protected: virtual unsigned char * __thiscall CMemFile::Realloc(unsigned char *,unsigned long)
-   
-   Library: Visual Studio 1998 Debug */
-
-void __thiscall palette_copy_logpal(void *this,undefined4 param_1,undefined4 param_2)
-
-{
-  logpal_copy(param_1,param_2);
   return;
 }
 
@@ -4080,59 +1420,6 @@ palette_set_entry
   return;
 }
 
-/* 005c6bd5 auto */
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-void __thiscall palette_rotate_range(PaletteRotateView *this,int param_1,int param_2,int param_3)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (0x100 < param_2 + param_1) {
-    param_2 = 0x100 - param_1;
-  }
-  if (param_3 < 0) {
-    for (local_24 = 0; -local_24 != param_3 && local_24 <= -param_3; local_24 = local_24 + 1) {
-      palette_get_entry_rgb((iptr)this,param_1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10);
-      for (local_1c = param_1; local_1c < param_2 + param_1 + -1; local_1c = local_1c + 1) {
-        palette_get_entry_rgb((iptr)this,local_1c + 1,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
-        logpal_set_entry((iptr)this,local_1c,local_c,local_18,local_8);
-      }
-      logpal_set_entry((iptr)this,param_2 + param_1 + -1,local_14,local_20,local_10);
-    }
-  }
-  else {
-    for (local_24 = 0; local_24 < param_3; local_24 = local_24 + 1) {
-      palette_get_entry_rgb((iptr)this,param_2 + param_1 + -1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10
-                  );
-      iVar1 = param_2 + param_1;
-      while (local_1c = iVar1 + -1, param_1 < local_1c) {
-        palette_get_entry_rgb((iptr)this,iVar1 + -2,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
-        logpal_set_entry((iptr)this,local_1c,local_c,local_18,local_8);
-        iVar1 = local_1c;
-      }
-      logpal_set_entry((iptr)this,param_1,local_14,local_20,local_10);
-    }
-  }
-  palette_animate((iptr)this,this->hpalette,param_1,param_2);
-  return;
-}
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
 /* 005c6da8 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 void __thiscall
@@ -4145,135 +1432,16 @@ palette_set_rgb(GamePalette *this,int param_1,int param_2,iptr param_3)
   if (0x100 < param_2 + param_1) {
     param_2 = 0x100 - param_1;
   }
-  for (local_8 = param_1; local_8 < param_2 + param_1; local_8 = local_8 + 1) {
+  for (local_8 = param_1; local_8 < param_2 + param_1; local_8++) {
     uVar1 = (undefined3)((uint)param_3 >> 8);
     palette_set_entry_rgb((iptr)this,local_8,CONCAT31(uVar1,*(undefined1 *)param_3),
                  CONCAT31(uVar1,*(undefined1 *)(param_3 + 1)),
                  CONCAT31(uVar1,*(undefined1 *)(param_3 + 2)));
-    param_3 = param_3 + 3;
+    param_3 += 3;
   }
   palette_commit_range(this,param_1,param_2);
   return;
 }
-#undef local_8
-
-/* 005c6e36 auto */
-void __thiscall
-palette_tint_begin_range(GamePalette *this,u32 param_1,u32 param_2,u32 param_3)
-
-{
-  u32 uVar1;
-  iptr iVar2;
-  
-  this->tint_steps = param_3;
-  this->tint_first = param_1;
-  this->tint_count = param_2;
-  uVar1 = mem_handle_alloc(param_2 * 3);
-  this->tint_saved_rgb = uVar1;
-  iVar2 = mem_handle_lock(this->tint_saved_rgb);
-  palette_copy_rgb_range((iptr)this,iVar2,param_1,param_2);
-  mem_handle_unlock(this->tint_saved_rgb);
-  palette_reserve_range(this,param_1,param_2);
-  return;
-}
-
-/* 005c6edc auto */
-void __thiscall
-palette_tint_begin
-          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
-
-{
-  this->tint_red = (u8)param_4;
-  this->tint_green = (u8)param_5;
-  this->tint_blue = (u8)param_6;
-  palette_tint_begin_range(this,param_1,param_2,param_3);
-  return;
-}
-
-/* 005c6f2c auto */
-void __thiscall palette_tint_end(GamePalette *this)
-
-{
-  iptr iVar1;
-  u32 uVar2;
-  
-  iVar1 = mem_handle_lock(this->tint_saved_rgb);
-  palette_set_rgb(this,this->tint_first,this->tint_count,iVar1);
-  mem_handle_unlock(this->tint_saved_rgb);
-  palette_refresh_range(this,this->tint_first,this->tint_count);
-  uVar2 = mem_handle_free(this->tint_saved_rgb);
-  this->tint_saved_rgb = uVar2;
-  return;
-}
-
-/* 005c6fc3 auto */
-void __thiscall palette_tint_get_saved_rgb(C_005c6fc3 *this,int param_1,iptr param_2)
-
-{
-  iptr iVar1;
-  
-  iVar1 = mem_handle_lock(this->palette_handle);
-  mem_move_src_dst(param_2,iVar1,param_1 * 3);
-  mem_handle_unlock(this->palette_handle);
-  return;
-}
-
-/* 005c701c auto */
-#define local_20 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall palette_tint_step(C_005c701c *this,int param_1)
-
-{
-  byte bVar1;
-  byte bVar2;
-  byte bVar3;
-  u32 uVar4;
-  u32 uVar5;
-  u32 uVar6;
-  char cVar7;
-  char cVar8;
-  iptr iVar9;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if ((param_1 < 0) || ((int)this->fade_steps < param_1)) {
-    dbg_logf(ADDR(0x637c34, ((u8 *)&g.d_00637c34)),param_1);
-  }
-  else {
-    bVar1 = this->fade_red;
-    uVar4 = this->fade_steps;
-    bVar2 = this->fade_blue;
-    uVar5 = this->fade_steps;
-    bVar3 = this->fade_green;
-    uVar6 = this->fade_steps;
-    cVar8 = (char)param_1;
-    cVar7 = (char)this->fade_steps - cVar8;
-    iVar9 = mem_handle_lock(this->fade_saved_rgb);
-    for (local_20 = 0; local_20 < (int)(this->fade_count * 3); local_20 = local_20 + 3) {
-      local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),
-                         (char)((longlong)(ulonglong)*(byte *)(local_20 + iVar9) /
-                               (longlong)(int)this->fade_steps) * cVar8 +
-                         cVar7 * (char)((longlong)(ulonglong)bVar1 / (longlong)(int)uVar4));
-      local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),
-                          (char)((longlong)(ulonglong)*(byte *)(local_20 + 1 + iVar9) /
-                                (longlong)(int)this->fade_steps) * cVar8 +
-                          cVar7 * (char)((longlong)(ulonglong)bVar3 / (longlong)(int)uVar6));
-      local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),
-                         (char)((longlong)(ulonglong)*(byte *)(local_20 + 2 + iVar9) /
-                               (longlong)(int)this->fade_steps) * cVar8 +
-                         cVar7 * (char)((longlong)(ulonglong)bVar2 / (longlong)(int)uVar5));
-      logpal_set_entry((iptr)this,this->fade_first_index + local_20 / 3,local_c,local_1c,local_8);
-    }
-    palette_animate((iptr)this,this->hpalette,this->fade_first_index,this->fade_count);
-    mem_handle_unlock(this->fade_saved_rgb);
-  }
-  return;
-}
-#undef local_20
-#undef local_1c
-#undef local_c
 #undef local_8
 
 /* 005c71f3 auto */
@@ -4299,7 +1467,7 @@ palette_fade_begin(GamePalette *this,u32 param_1,u32 param_2,u32 param_3,iptr pa
   iVar2 = mem_handle_lock(this->fade_dst_rgb);
   uVar1 = param_1;
   uVar4 = param_2;
-  iVar3 = thunk_palette_get_logpalette((GamePalette *)param_4);
+  iVar3 = palette_get_logpalette((GamePalette *)param_4);
   palette_copy_rgb_range(iVar3,iVar2,uVar1,uVar4);
   mem_handle_unlock(this->fade_dst_rgb);
   palette_reserve_range(this,param_1,param_2);
@@ -4345,7 +1513,7 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
     cVar1 = (char)this->fade_steps - cVar2;
     iVar3 = mem_handle_lock(this->fade_src_rgb);
     iVar4 = mem_handle_lock(this->fade_dst_rgb);
-    for (local_18 = 0; local_18 < (int)(this->fade_count * 3); local_18 = local_18 + 3) {
+    for (local_18 = 0; local_18 < (int)(this->fade_count * 3); local_18 += 3) {
       local_10 = CONCAT31((*(undefined3 *)((char *)&local_10 + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + iVar4) /
                                 (longlong)(int)this->fade_steps) * cVar1 +
@@ -4374,407 +1542,6 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
 #undef local_10
 #undef local_c
 
-/* 005c7579 auto */
-#define local_834 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
-void __thiscall
-palette_build_remap_table
-          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4)
-
-{
-  undefined4 uVar1;
-  iptr iVar2;
-  undefined3 uVar3;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c76f0;
-  color_kdtree_init((ColorKdTreeInitView *)local_830);
-  local_8 = 0;
-  uVar1 = mem_handle_alloc(param_4 * 3);
-  iVar2 = mem_handle_lock(uVar1);
-  palette_get_rgb(this,iVar2,param_3,param_4);
-  color_kdtree_build((ColorKdTree *)local_830,iVar2,param_3,param_4);
-  palette_get_rgb(param_2,iVar2,param_3,param_4);
-  for (local_834 = 0; local_834 < param_4 * 3; local_834 = local_834 + 3) {
-    uVar3 = (undefined3)((uint)local_834 >> 8);
-    uVar2 = color_kdtree_find_nearest
-                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
-    *(char *)(param_1 + local_834 / 3) = (char)uVar2;
-  }
-  mem_handle_unlock(uVar1);
-  mem_handle_free(uVar1);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c76e4 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
-  return;
-}
-#undef local_834
-#undef local_830
-#undef local_8
-
-/* 005c770a auto */
-#define local_834 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
-void __thiscall
-palette_build_remap_table_ex
-          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4,
-          undefined4 param_5,undefined4 param_6)
-
-{
-  undefined4 uVar1;
-  iptr iVar2;
-  undefined3 uVar3;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c787f;
-  color_kdtree_init((ColorKdTreeInitView *)local_830);
-  local_8 = 0;
-  uVar1 = mem_handle_alloc(0x300);
-  iVar2 = mem_handle_lock(uVar1);
-  palette_get_rgb(this,iVar2,param_5,param_6);
-  color_kdtree_build((ColorKdTree *)local_830,iVar2,param_5,param_6);
-  palette_get_rgb(param_2,iVar2,param_3,param_4);
-  for (local_834 = 0; local_834 < param_4 * 3; local_834 = local_834 + 3) {
-    uVar3 = (undefined3)((uint)local_834 >> 8);
-    uVar2 = color_kdtree_find_nearest
-                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
-    *(char *)(param_1 + local_834 / 3) = (char)uVar2;
-  }
-  mem_handle_unlock(uVar1);
-  mem_handle_free(uVar1);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7873 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
-  return;
-}
-#undef local_834
-#undef local_830
-#undef local_8
-
-/* 005c7899 auto */
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2088)))
-undefined4 __thiscall
-palette_find_nearest_color(GamePalette *this,uint param_1,uint param_2,uint param_3)
-
-{
-  undefined4 uVar1;
-  iptr iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(2096)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c79a4;
-  color_kdtree_init((ColorKdTreeInitView *)local_830);
-  local_8 = 0;
-  uVar1 = mem_handle_alloc(0x300);
-  iVar2 = mem_handle_lock(uVar1);
-  palette_get_rgb(this,iVar2,0,0x100);
-  color_kdtree_build((ColorKdTree *)local_830,iVar2,0,0x100);
-  uVar3 = color_kdtree_find_nearest((ColorKdTreeSearchView *)local_830,param_1,param_2,param_3,0x20);
-  mem_handle_unlock(uVar1);
-  mem_handle_free(uVar1);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7998 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
-  return uVar3;
-}
-#undef local_830
-#undef local_8
-
-/* 005c79bf auto */
-ColorKdTreeInitView * __thiscall color_kdtree_init(ColorKdTreeInitView *this)
-
-{
-  this->is_built = 0;
-  this->visit_count = 0;
-  this->stack_depth = 0;
-  this->nodes = 0;
-  this->nodes_handle = 0;
-  this->color_count = 0;
-  this->index_base = 0;
-  this->sentinel = 0;
-  return this;
-}
-
-/* 005c7a30 auto */
-void __thiscall color_kdtree_free(ColorKdTreeFreeView *this)
-
-{
-  u32 uVar1;
-  
-  if (this->nodes != 0) {
-    uVar1 = mem_handle_unlock(this->nodes_handle);
-    this->nodes = uVar1;
-  }
-  if (this->nodes_handle != 0) {
-    uVar1 = mem_handle_free(this->nodes_handle);
-    this->nodes_handle = uVar1;
-  }
-  return;
-}
-
-/* 005c7a86 auto */
-#define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(undefined1 *)(frame_ + FRAME_OFF(8)))
-#define local_17 (*(undefined1 *)(frame_ + FRAME_OFF(9)))
-#define local_16 (*(undefined1 *)(frame_ + FRAME_OFF(10)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u32 param_3)
-
-{
-  int iVar3;
-  u32 uVar4;
-  iptr iVar2;
-  iptr iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 1;
-  this->index_base = param_2;
-  this->color_count = param_3;
-  uVar4 = mem_handle_alloc((this->color_count + 2) * 0x10);
-  this->nodes_handle = uVar4;
-  uVar4 = mem_handle_lock(this->nodes_handle);
-  this->nodes = uVar4;
-  this->nil_node = this->color_count + 1;
-  *(undefined4 *)(this->nodes + 4) = 0xffffffff;
-  *(u32 *)(this->nodes + 8) = this->nil_node;
-  *(u32 *)(this->nodes + 0xc) = this->nil_node;
-  *(undefined4 *)(this->nil_node * 0x10 + 4 + this->nodes) = 0xffffffff;
-  *(u32 *)(this->nil_node * 0x10 + 0xc + this->nodes) = this->nil_node;
-  *(undefined4 *)(this->nil_node * 0x10 + 8 + this->nodes) =
-       *(undefined4 *)(this->nil_node * 0x10 + 0xc + this->nodes);
-  local_10 = 0;
-  local_c = 0;
-  local_20 = color_find_nearest_grey(this,param_1);
-  for (local_1c = local_20; iVar3 = local_8, -1 < local_1c; local_1c = local_1c + -1) {
-    iVar1 = local_1c * 3;
-    local_17 = *(undefined1 *)(iVar1 + param_1);
-    local_18 = *(undefined1 *)(iVar1 + 1 + param_1);
-    local_16 = *(undefined1 *)(iVar1 + 2 + param_1);
-    local_14 = local_1c;
-    local_8 = local_8 + 1;
-    color_kdtree_insert(this,(iptr)&local_18,iVar3);
-  }
-  while (iVar3 = local_8, local_20 = local_20 + 1, local_20 < (int)this->color_count) {
-    iVar2 = local_20 * 3;
-    local_17 = *(undefined1 *)(iVar2 + param_1);
-    local_18 = *(undefined1 *)(iVar2 + 1 + param_1);
-    local_16 = *(undefined1 *)(iVar2 + 2 + param_1);
-    local_14 = local_20;
-    local_8 = local_8 + 1;
-    color_kdtree_insert(this,(iptr)&local_18,iVar3);
-  }
-  this->built = 1;
-  return;
-}
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_17
-#undef local_16
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c7c7b auto */
-#define local_14 (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall color_kdtree_insert(ColorKdTree *this,iptr param_1,int param_2)
-
-{
-  bool bVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 0;
-  local_14 = *(u32 *)(this->nodes + 0xc);
-  local_8 = -1;
-  bVar1 = true;
-  *(undefined1 *)(this->nodes + 1 + param_2 * 0x10) = *(undefined1 *)(param_1 + 1);
-  *(undefined1 *)(this->nodes + param_2 * 0x10) = *(undefined1 *)param_1;
-  *(undefined1 *)(this->nodes + 2 + param_2 * 0x10) = *(undefined1 *)(param_1 + 2);
-  *(undefined4 *)(this->nodes + 4 + param_2 * 0x10) = *(undefined4 *)(param_1 + 4);
-  *(u32 *)(this->nodes + 0xc + param_2 * 0x10) = this->nil_node;
-  *(undefined4 *)(this->nodes + 8 + param_2 * 0x10) =
-       *(undefined4 *)(this->nodes + 0xc + param_2 * 0x10);
-  while (this->nil_node != local_14) {
-    local_c = local_14;
-    if (local_8 == 2) {
-      local_8 = 0;
-    }
-    else {
-      local_8 = local_8 + 1;
-    }
-    bVar1 = *(byte *)(local_8 + param_1) < *(byte *)(this->nodes + local_14 * 0x10 + local_8);
-    if (bVar1) {
-      local_14 = *(u32 *)(this->nodes + 8 + local_14 * 0x10);
-    }
-    else {
-      local_14 = *(u32 *)(this->nodes + 0xc + local_14 * 0x10);
-    }
-    bVar1 = !bVar1;
-  }
-  if (bVar1) {
-    *(int *)(this->nodes + 0xc + local_c * 0x10) = param_2;
-  }
-  else {
-    *(int *)(this->nodes + 8 + local_c * 0x10) = param_2;
-  }
-  return;
-}
-#undef local_14
-#undef local_c
-#undef local_8
-
-/* 005c7e06 auto */
-#define local_40 (*(u32 *)(frame_ + FRAME_OFF(0)))
-#define local_3c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_38 (*(int (*)[4])(frame_ + FRAME_OFF(8)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_c (*(u32 *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(56)))
-int __thiscall
-color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,uint param_3,int param_4)
-
-{
-  u8 *puVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = this->nil_node;
-  this->stack_top = 0;
-  if (this->built == 0) {
-    iVar2 = -1;
-  }
-  else {
-    local_3c = 0x30000;
-    this->visit_count = 0;
-    local_38[0] = (param_2 & 0xff) - param_4;
-    local_38[1] = (param_2 & 0xff) + param_4;
-    local_38[2] = (param_1 & 0xff) - param_4;
-    local_38[3] = (param_1 & 0xff) + param_4;
-    local_28 = (param_3 & 0xff) - param_4;
-    local_24 = (param_3 & 0xff) + param_4;
-    puVar1 = this->pad_14 + this->stack_top * 4;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
-    this->stack_top = this->stack_top + 1;
-    puVar1 = this->pad_14 + this->stack_top * 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    this->stack_top = this->stack_top + 1;
-    while ((this->stack_top != 0 && (local_3c != 0))) {
-      this->stack_top = this->stack_top - 1;
-      local_40 = *(u32 *)(*(int *)(this->pad_14 + this->stack_top * 4) * 0x10 + 0xc + this->nodes)
-      ;
-      this->stack_top = this->stack_top - 1;
-      local_8 = *(iptr *)(this->pad_14 + this->stack_top * 4);
-      while ((this->nil_node != local_40 && (local_3c != 0))) {
-        this->visit_count = this->visit_count + 1;
-        if (local_8 == 2) {
-          local_8 = 0;
-        }
-        else {
-          local_8 = local_8 + 1;
-        }
-        local_14 = (uint)*(byte *)(this->nodes + local_8 + local_40 * 0x10);
-        if (local_38[local_8 * 2] < (int)local_14) {
-          if ((int)local_14 <= local_38[local_8 * 2 + 1]) {
-            *(iptr *)(this->pad_14 + this->stack_top * 4) = local_8;
-            this->stack_top = this->stack_top + 1;
-            *(u32 *)(this->pad_14 + this->stack_top * 4) = local_40;
-            this->stack_top = this->stack_top + 1;
-            local_1c = (uint)*(byte *)(this->nodes + 1 + local_40 * 0x10);
-            local_20 = (uint)*(byte *)(this->nodes + local_40 * 0x10);
-            local_18 = (uint)*(byte *)(this->nodes + 2 + local_40 * 0x10);
-            local_10 = (local_1c - (param_1 & 0xff)) * (local_1c - (param_1 & 0xff)) +
-                       (local_20 - (param_2 & 0xff)) * (local_20 - (param_2 & 0xff)) +
-                       (local_18 - (param_3 & 0xff)) * (local_18 - (param_3 & 0xff));
-            if (local_10 < local_3c) {
-              local_c = local_40;
-              local_3c = local_10;
-            }
-          }
-          local_40 = *(u32 *)(this->nodes + 8 + local_40 * 0x10);
-        }
-        else {
-          local_40 = *(u32 *)(this->nodes + 0xc + local_40 * 0x10);
-        }
-      }
-    }
-    if (*(int *)(this->nodes + 4 + local_c * 0x10) == -1) {
-      iVar2 = 0;
-    }
-    else {
-      iVar2 = *(int *)(this->nodes + 4 + local_c * 0x10) + this->index_base;
-    }
-  }
-  return iVar2;
-}
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005c80fd auto */
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-int __thiscall color_find_nearest_grey(ColorKdTree *this,iptr param_1)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  local_14 = 100000000;
-  for (local_10 = 0; local_10 < (int)(this->color_count * 3); local_10 = local_10 + 3) {
-    iVar1 = (*(byte *)(local_10 + 2 + param_1) - 0x80) * (*(byte *)(local_10 + 2 + param_1) - 0x80)
-            + (*(byte *)(local_10 + 1 + param_1) - 0x80) *
-              (*(byte *)(local_10 + 1 + param_1) - 0x80) +
-            (*(byte *)(local_10 + param_1) - 0x80) * (*(byte *)(local_10 + param_1) - 0x80);
-    if (iVar1 < local_14) {
-      local_8 = local_10 / 3;
-      local_14 = iVar1;
-    }
-  }
-  return local_8;
-}
-#undef local_14
-#undef local_10
-#undef local_8
-
 /* 005c8200 auto */
 #define local_4c (*(LOGFONTA *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
@@ -4789,9 +1556,9 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
   local_4c.lfWidth = 0;
   local_4c.lfEscapement = 0;
   local_4c.lfOrientation = 0;
-  local_4c.lfCharSet = '\x01';
-  local_4c.lfOutPrecision = '\x04';
-  local_4c.lfClipPrecision = '\x01';
+  local_4c.lfCharSet = 1;
+  local_4c.lfOutPrecision = 4;
+  local_4c.lfClipPrecision = 1;
   local_4c.lfQuality = '\0';
   local_4c.lfPitchAndFamily = '\0';
   if (((byte)param_3 & 1) == 0) {
@@ -4805,7 +1572,7 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
   local_4c.lfStrikeOut = (byte)param_3 & 8;
   switch(param_1) {
   case 0:
-    local_4c.lfPitchAndFamily = '\x10';
+    local_4c.lfPitchAndFamily = 16;
     FUN_005f22d0(local_4c.lfFaceName,s_Times_New_Roman_00637c74);
     break;
   case 1:
@@ -4834,28 +1601,6 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
 #undef local_10
 #undef local_c
 #undef local_8
-
-/* 005c8391 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl font_file_get_font_handle(undefined4 param_1,int param_2)
-
-{
-  iptr iVar1;
-  undefined4 *puVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_10 = 0;
-  iVar1 = mem_handle_lock(param_1);
-  if ((iVar1 != 0) && (param_2 < *(int *)(iVar1 + 0x100))) {
-    local_10 = mem_handle_alloc(8);
-    puVar1 = (undefined4 *)mem_handle_lock(local_10);
-    *puVar1 = *(undefined4 *)(iVar1 + 0x108 + param_2 * 4);
-    puVar1[1] = 0;
-    mem_handle_unlock(local_10);
-  }
-  return local_10;
-}
-#undef local_10
 
 /* 005c841d auto */
 undefined4 __cdecl font_handle_destroy(undefined4 param_1)
@@ -4955,63 +1700,6 @@ LONG __cdecl font_measure_width(undefined4 param_1,iptr param_2)
 #undef local_10
 #undef local_8
 
-/* 005c861c auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl font_file_load(LPCSTR param_1)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 0;
-  iVar1 = AddFontResourceA(param_1);
-  if (iVar1 != 0) {
-    local_c = mem_handle_alloc(0x208);
-    iVar1 = mem_handle_lock(local_c);
-    FUN_005f22d0(iVar1,param_1);
-    _strncpy((char *)(iVar1 + 0x104),param_1,3);
-    font_enum_matching_faces(iVar1);
-    mem_handle_unlock(local_c);
-  }
-  return local_c;
-}
-#undef local_c
-
-/* 005c86bc auto */
-undefined4 __stdcall font_enum_matching_faces_cb(LOGFONTA *param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
-
-{
-  char *_Str2;
-  char *_Str1;
-  int iVar1;
-  HFONT pHVar2;
-  size_t _MaxCount;
-  
-  _MaxCount = 3;
-  _Str2 = __strlwr((char *)(param_4 + 0x104));
-  _Str1 = __strlwr(param_1->lfFaceName);
-  iVar1 = _strncmp(_Str1,_Str2,_MaxCount);
-  if (iVar1 == 0) {
-    pHVar2 = CreateFontIndirectA(param_1);
-    *(HFONT *)(param_4 + 0x108 + *(int *)(param_4 + 0x100) * 4) = pHVar2;
-    *(int *)(param_4 + 0x100) = *(int *)(param_4 + 0x100) + 1;
-  }
-  return 1;
-}
-
-/* 005c8736 auto */
-undefined4 __cdecl font_enum_matching_faces(iptr param_1)
-
-{
-  HDC hdc;
-  
-  hdc = GetDC((HWND)0x0);
-  *(undefined4 *)(param_1 + 0x100) = 0;
-  EnumFontFamiliesA(hdc,(LPCSTR)0x0,font_enum_matching_faces_cb,param_1);
-  ReleaseDC((HWND)0x0,hdc);
-  return *(undefined4 *)(param_1 + 0x100);
-}
-
 /* 005c8791 game (src/game/fixups.c) */
 #if 0
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -5023,7 +1711,7 @@ void __cdecl font_file_unload(undefined4 param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   lpFileName = (LPCSTR)mem_handle_lock(param_1);
-  for (local_c = 0; local_c < *(int *)(lpFileName + 0x100); local_c = local_c + 1) {
+  for (local_c = 0; local_c < *(int *)(lpFileName + 0x100); local_c++) {
     if (*(int *)(lpFileName + local_c * 4 + 0x108) != 0) {
       DeleteObject(*(HGDIOBJ *)(lpFileName + local_c * 4 + 0x108));
       pCVar1 = lpFileName + local_c * 4 + 0x108;
@@ -5040,135 +1728,6 @@ void __cdecl font_file_unload(undefined4 param_1)
 }
 #undef local_c
 #endif
-
-/* 005c8834 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-iptr __cdecl font_calc_text_rect(iptr param_1,undefined4 param_2,char *param_3,int param_4)
-
-{
-  undefined4 *puVar1;
-  HDC hdc;
-  HDC hdc_00;
-  HGDIOBJ h;
-  size_t cchText;
-  tagRECT *lprc;
-  UINT format;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  puVar1 = (undefined4 *)mem_handle_lock(param_2);
-  hdc = GetDC((HWND)0x0);
-  hdc_00 = CreateCompatibleDC(hdc);
-  ReleaseDC((HWND)0x0,hdc);
-  h = SelectObject(hdc_00,(HGDIOBJ)*puVar1);
-  SetRect(&local_14,0,0,param_4,0);
-  format = 0x410;
-  lprc = &local_14;
-  cchText = _strlen(param_3);
-  DrawTextA(hdc_00,param_3,cchText,lprc,format);
-  SelectObject(hdc_00,h);
-  DeleteDC(hdc_00);
-  mem_handle_unlock(param_2);
-  *(LONG *)param_1 = local_14.left;
-  *(LONG *)(param_1 + 4) = local_14.top;
-  *(LONG *)(param_1 + 8) = local_14.right;
-  *(LONG *)(param_1 + 0xc) = local_14.bottom;
-  return param_1;
-}
-#undef local_14
-
-/* 005c8908 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl font_handle_create_indirect(LOGFONTA *param_1)
-
-{
-  HFONT pHVar1;
-  undefined4 *puVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_10 = 0;
-  pHVar1 = CreateFontIndirectA(param_1);
-  if (pHVar1 != (HFONT)0x0) {
-    local_10 = mem_handle_alloc(8);
-    if (local_10 == 0) {
-      local_10 = 0;
-    }
-    else {
-      puVar2 = (undefined4 *)mem_handle_lock(local_10);
-      *puVar2 = pHVar1;
-      mem_handle_unlock(local_10);
-    }
-  }
-  return local_10;
-}
-#undef local_10
-
-/* 005c8984 auto */
-undefined4 __cdecl font_handle_delete(int param_1)
-
-{
-  undefined4 uVar1;
-  int *piVar2;
-  
-  if (param_1 == 0) {
-    uVar1 = 0;
-  }
-  else {
-    piVar2 = (int *)mem_handle_lock(param_1);
-    if (*piVar2 != 0) {
-      DeleteObject((HGDIOBJ)*piVar2);
-    }
-    mem_handle_unlock(param_1);
-    uVar1 = mem_handle_free(param_1);
-  }
-  return uVar1;
-}
-
-/* 005c89ed auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl font_resource_add(LPCSTR param_1)
-
-{
-  int iVar1;
-  LPSTR lpString1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  iVar1 = AddFontResourceA(param_1);
-  if (iVar1 != 0) {
-    iVar1 = lstrlenA(param_1);
-    local_8 = mem_handle_alloc(iVar1 + 1);
-    if (local_8 == 0) {
-      local_8 = 0;
-    }
-    else {
-      lpString1 = (LPSTR)mem_handle_lock(local_8);
-      lstrcpyA(lpString1,param_1);
-      mem_handle_unlock(local_8);
-      SendMessageA((HWND)0xffff,0x1d,0,0);
-    }
-  }
-  return local_8;
-}
-#undef local_8
-
-/* 005c8a85 auto */
-void __cdecl font_resource_remove(int param_1)
-
-{
-  LPCSTR lpFileName;
-  BOOL BVar1;
-  
-  if (param_1 != 0) {
-    lpFileName = (LPCSTR)mem_handle_lock(param_1);
-    BVar1 = RemoveFontResourceA(lpFileName);
-    if (BVar1 != 0) {
-      SendMessageA((HWND)0xffff,0x1d,0,0);
-    }
-    mem_handle_unlock(param_1);
-    mem_handle_free(param_1);
-  }
-  return;
-}
 
 /* 005c8b00 auto */
 void __cdecl wnd_invalidate(HWND param_1)
@@ -5200,27 +1759,6 @@ void __cdecl hwnd_hide(HWND param_1)
   return;
 }
 
-/* 005c8b83 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __cdecl hwnd_move_to(HWND param_1,int param_2,int param_3)
-
-{
-  int nHeight;
-  int nWidth;
-  BOOL bRepaint;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_1 != (HWND)0x0) {
-    GetWindowRect(param_1,&local_14);
-    bRepaint = 1;
-    nHeight = thunk_rect_height((iptr)&local_14);
-    nWidth = thunk_rect_width((iptr)&local_14);
-    MoveWindow(param_1,param_2,param_3,nWidth,nHeight,bRepaint);
-  }
-  return;
-}
-#undef local_14
-
 /* 005c8be1 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
@@ -5238,11 +1776,11 @@ HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = app_hinstance;
-  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar1 = thunk_wnd_get_window(this);
+  this = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar1 = wnd_get_window(this);
   pHVar4 = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_rect_height((iptr)param_1);
-  iVar3 = thunk_rect_width((iptr)param_1);
+  iVar2 = rect_height((iptr)param_1);
+  iVar3 = rect_width((iptr)param_1);
   pHVar4 = CreateWindowExA(4,s_MSControlClass_00637ca8,&hotspot_wnd_title,0x50000000,*param_1,param_1[1],
                            iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
@@ -5285,9 +1823,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
         hotspot_mouse_inside = 1;
         SetCapture(param_1);
         if (this != (HotspotDblClickView *)0x0) {
-          iVar3 = thunk_ctrl_get_parent((Control *)this);
+          iVar3 = ctrl_get_parent((Control *)this);
           wnd_set_active_child(iVar3);
-          uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+          uVar4 = ctrl_get_id((ControlIdView *)this);
           hotspot_fire_enter((HotspotEnterView *)this,uVar4);
         }
       }
@@ -5302,9 +1840,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
       BVar2 = PtInRect(&local_14,(POINT)(CONCAT44(param_4 >> 0x10,param_4) & 0xffffffff0000ffff));
       if (((BVar2 == 0) && (hotspot_mouse_inside = 0, hotspot_mouse_pressed == 0)) &&
          (ReleaseCapture(), this != (HotspotDblClickView *)0x0)) {
-        iVar3 = thunk_ctrl_get_parent((Control *)this);
+        iVar3 = ctrl_get_parent((Control *)this);
         wnd_set_active_child(iVar3);
-        uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+        uVar4 = ctrl_get_id((ControlIdView *)this);
         hotspot_fire_leave((HotspotLeaveView *)this,uVar4);
       }
     }
@@ -5312,9 +1850,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
   case 0x201:
     if (hotspot_mouse_inside != 0) {
       hotspot_mouse_pressed = 1;
-      iVar3 = thunk_ctrl_get_parent((Control *)this);
+      iVar3 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar3);
-      uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+      uVar4 = ctrl_get_id((ControlIdView *)this);
       hotspot_fire_press((HotspotPressView *)this,uVar4);
     }
     break;
@@ -5324,25 +1862,25 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
       if (hotspot_mouse_inside == 0) {
         ReleaseCapture();
         if (this != (HotspotDblClickView *)0x0) {
-          iVar3 = thunk_ctrl_get_parent((Control *)this);
+          iVar3 = ctrl_get_parent((Control *)this);
           wnd_set_active_child(iVar3);
-          uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+          uVar4 = ctrl_get_id((ControlIdView *)this);
           hotspot_fire_leave((HotspotLeaveView *)this,uVar4);
         }
       }
       else if (this != (HotspotDblClickView *)0x0) {
-        iVar3 = thunk_ctrl_get_parent((Control *)this);
+        iVar3 = ctrl_get_parent((Control *)this);
         wnd_set_active_child(iVar3);
-        uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+        uVar4 = ctrl_get_id((ControlIdView *)this);
         hotspot_fire_click((HotspotClickView *)this,uVar4);
       }
     }
     break;
   case 0x203:
     if (hotspot_mouse_inside != 0) {
-      iVar3 = thunk_ctrl_get_parent((Control *)this);
+      iVar3 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar3);
-      uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+      uVar4 = ctrl_get_id((ControlIdView *)this);
       hotspot_fire_dblclick(this,uVar4);
     }
     break;
@@ -5442,7 +1980,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr param_1,HWND param_2)
   LVar1 = GetWindowLongA(local_8,0xc);
   if (LVar1 == 0) {
     pCVar2 = (WndBase *)GetWindowLongA(local_8,0);
-    iVar5 = thunk_wnd_get_window(pCVar2);
+    iVar5 = wnd_get_window(pCVar2);
     if (*(int *)(iVar5 + 0x14) != 0) {
       FillRect(*(HDC *)param_1,(RECT *)(param_1 + 8),*(HBRUSH *)(iVar5 + 0x14));
     }
@@ -5450,7 +1988,7 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr param_1,HWND param_2)
   else {
     this = (DibSurface *)GetWindowLongA(local_8,0xc);
     pCVar2 = (WndBase *)GetWindowLongA(local_8,0);
-    iVar3 = thunk_wnd_get_window(pCVar2);
+    iVar3 = wnd_get_window(pCVar2);
     local_c = surface_get_dib(this);
     local_14.x = *(int *)(param_1 + 8);
     local_14.y = *(int *)(param_1 + 0xc);
@@ -5463,8 +2001,8 @@ void __cdecl ctrl_paint_parent_bkgnd(iptr param_1,HWND param_2)
     hdcSrc = *(HDC *)(local_c + 4);
     LVar1 = local_14.x;
     y1 = local_14.y;
-    iVar4 = thunk_rect_height(param_1 + 8);
-    iVar5 = thunk_rect_width(param_1 + 8);
+    iVar4 = rect_height(param_1 + 8);
+    iVar5 = rect_width(param_1 + 8);
     BitBlt(*(HDC *)param_1,*(int *)(param_1 + 8),*(int *)(param_1 + 0xc),iVar5,iVar4,hdcSrc,LVar1,y1
            ,rop);
   }
@@ -5490,7 +2028,7 @@ void __cdecl ctrl_parse_hotkey(iptr param_1,iptr param_2)
     if (*local_c == '\0') goto LAB_005c92ae;
     if (*local_c == '~') break;
     *(int *)(param_1 + 0x28) = *(int *)(param_1 + 0x28) + 1;
-    local_c = local_c + 1;
+    local_c++;
   }
   for (local_10 = *(uptr *)(param_1 + 0x28); sVar1 = _strlen((char *)param_2), local_10 < sVar1;
       local_10 = local_10 + 1) {
@@ -5565,10 +2103,10 @@ int __cdecl ctrl_destroy_hwnd(iptr param_1)
   
   iVar1 = control_get_type((ControlTypeView *)param_1);
   if (iVar1 != 3) {
-    iVar2 = thunk_control_get_hwnd((ControlHwndView *)param_1);
+    iVar2 = control_get_hwnd((ControlHwndView *)param_1);
     iVar1 = 0;
     if (iVar2 != 0) {
-      hWnd = (HWND)thunk_control_get_hwnd((ControlHwndView *)param_1);
+      hWnd = (HWND)control_get_hwnd((ControlHwndView *)param_1);
       iVar1 = DestroyWindow(hWnd);
     }
   }
@@ -5765,11 +2303,11 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = app_hinstance;
-  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar1 = thunk_wnd_get_window(this);
+  this = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar1 = wnd_get_window(this);
   hWndParent = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_rect_height((iptr)param_1);
-  iVar3 = thunk_rect_width((iptr)param_1);
+  iVar2 = rect_height((iptr)param_1);
+  iVar3 = rect_width((iptr)param_1);
   local_154 = CreateWindowExA(4,s_MSControlClass_00637d70,&button_wnd_title,local_2a0,*param_1,
                               param_1[1],iVar3,iVar2,hWndParent,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey((iptr)local_170,(iptr)local_278);
@@ -5778,11 +2316,11 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
   local_150.right = param_1[2];
   local_150.bottom = param_1[3];
   OffsetRect(&local_150,-local_150.left,-local_150.top);
-  local_150.right = local_150.right + -2;
-  local_150.bottom = local_150.bottom + -2;
+  local_150.right -= 2;
+  local_150.bottom -= 2;
   hdc = GetDC(local_154);
-  iVar3 = thunk_rect_height((iptr)&local_150);
-  iVar4 = thunk_rect_width((iptr)&local_150);
+  iVar3 = rect_height((iptr)&local_150);
+  iVar4 = rect_width((iptr)&local_150);
   h = CreateCompatibleBitmap(hdc,iVar4,iVar3);
   if (h == (HBITMAP)0x0) {
     dbg_log(ADDR(0x637d80, ((u8 *)&g.d_00637d80)));
@@ -5790,8 +2328,8 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
     local_154 = (HWND)0x0;
   }
   else {
-    iVar3 = thunk_rect_height((iptr)&local_150);
-    iVar4 = thunk_rect_width((iptr)&local_150);
+    iVar3 = rect_height((iptr)&local_150);
+    iVar4 = rect_width((iptr)&local_150);
     h_00 = CreateCompatibleBitmap(hdc,iVar4,iVar3);
     if (h_00 == (HBITMAP)0x0) {
       dbg_log(ADDR(0x637da8, ((u8 *)&g.d_00637da8)));
@@ -5799,8 +2337,8 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
       local_154 = (HWND)0x0;
     }
     else {
-      iVar3 = thunk_rect_height((iptr)&local_150);
-      iVar4 = thunk_rect_width((iptr)&local_150);
+      iVar3 = rect_height((iptr)&local_150);
+      iVar4 = rect_width((iptr)&local_150);
       local_168 = CreateCompatibleBitmap(hdc,iVar4,iVar3);
       if (local_168 == (HBITMAP)0x0) {
         dbg_log(ADDR(0x637dd0, ((u8 *)&g.d_00637dd0)));
@@ -5817,8 +2355,8 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         else {
           if (gfx_palettized_display == 1) {
             bForceBkgd = 0;
-            pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_170);
-            this_00 = (PaletteHandleView *)thunk_wnd_get_palette(pCVar5);
+            pCVar5 = (WndPaletteView *)ctrl_get_parent(local_170);
+            this_00 = (PaletteHandleView *)wnd_get_palette(pCVar5);
             hPal = (HPALETTE)palette_get_hpalette(this_00);
             SelectPalette(local_164,hPal,bForceBkgd);
             RealizePalette(local_164);
@@ -5827,19 +2365,19 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
           puVar13 = local_174;
           puVar11 = local_160;
           uVar10 = local_170->field_34;
-          pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_170);
-          this_01 = (GamePalette *)thunk_wnd_get_palette(pCVar5);
-          iVar6 = thunk_palette_get_logpalette(this_01);
+          pCVar5 = (WndPaletteView *)ctrl_get_parent(local_170);
+          this_01 = (GamePalette *)wnd_get_palette(pCVar5);
+          iVar6 = palette_get_logpalette(this_01);
           palette_get_entry_rgb(iVar6,uVar10,(iptr)puVar11,(iptr)puVar13,(iptr)puVar15);
           local_18 = CreatePen(0,1,(uint)CONCAT12(local_15c[0],CONCAT11(local_174[0],local_160[0])))
           ;
         }
         h_01 = CreatePen(0,1,0xffffff);
         h_02 = CreatePen(0,1,0x808080);
-        uVar7 = thunk_font_get_handle(param_5);
+        uVar7 = font_get_handle(param_5);
         puVar8 = (undefined4 *)mem_handle_lock(uVar7);
         h_03 = SelectObject(local_164,(HGDIOBJ)*puVar8);
-        uVar7 = thunk_font_get_handle(param_5);
+        uVar7 = font_get_handle(param_5);
         mem_handle_unlock(uVar7);
         h_04 = SelectObject(local_164,h);
         local_14 = local_150.left;
@@ -5851,7 +2389,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         }
         else {
           local_140 = SelectObject(local_164,local_18);
-          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178 = local_178 + 1) {
+          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178++) {
             MoveToEx(local_164,local_150.left,local_178,(LPPOINT)0x0);
             LineTo(local_164,local_150.right,local_178);
           }
@@ -5861,16 +2399,16 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         MoveToEx(local_164,local_150.left,local_150.bottom,(LPPOINT)0x0);
         LineTo(local_164,local_150.left,local_150.top);
         LineTo(local_164,local_150.right,local_150.top);
-        MoveToEx(local_164,local_150.left + 1,local_150.bottom + -1,(LPPOINT)0x0);
+        MoveToEx(local_164,local_150.left + 1,local_150.bottom - 1,(LPPOINT)0x0);
         LineTo(local_164,local_150.left + 1,local_150.top + 1);
-        LineTo(local_164,local_150.right + -1,local_150.top + 1);
+        LineTo(local_164,local_150.right - 1,local_150.top + 1);
         SelectObject(local_164,h_02);
-        MoveToEx(local_164,local_150.left + 1,local_150.bottom + -1,(LPPOINT)0x0);
-        LineTo(local_164,local_150.right + -1,local_150.bottom + -1);
-        LineTo(local_164,local_150.right + -1,local_150.top);
-        MoveToEx(local_164,local_150.left + 2,local_150.bottom + -2,(LPPOINT)0x0);
-        LineTo(local_164,local_150.right + -2,local_150.bottom + -2);
-        LineTo(local_164,local_150.right + -2,local_150.top + 1);
+        MoveToEx(local_164,local_150.left + 1,local_150.bottom - 1,(LPPOINT)0x0);
+        LineTo(local_164,local_150.right - 1,local_150.bottom - 1);
+        LineTo(local_164,local_150.right - 1,local_150.top);
+        MoveToEx(local_164,local_150.left + 2,local_150.bottom - 2,(LPPOINT)0x0);
+        LineTo(local_164,local_150.right - 2,local_150.bottom - 2);
+        LineTo(local_164,local_150.right - 2,local_150.top + 1);
         SelectObject(local_164,local_140);
         local_28.left = local_150.left;
         local_28.top = local_150.top;
@@ -5880,12 +2418,12 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         ptVar14 = &local_28;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_rect_width((iptr)&local_28);
+        local_16c = rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_rect_width((iptr)&local_150);
+        iVar3 = rect_width((iptr)&local_150);
         iVar4 = ((local_150.left + iVar3 / 2) - local_16c / 2) + local_16c;
         LVar12 = local_150.top;
-        iVar3 = thunk_rect_width((iptr)&local_150);
+        iVar3 = rect_width((iptr)&local_150);
         SetRect(&local_28,(local_150.left + iVar3 / 2) - local_16c / 2,LVar12,iVar4,LVar17);
         UVar16 = 0x24;
         ptVar14 = &local_28;
@@ -5911,7 +2449,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
             ptVar14 = &local_28;
             sVar9 = _strlen(local_13c);
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
-            local_2c = local_28.right + -1;
+            local_2c = local_28.right - 1;
           }
           FUN_005f22d0(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
@@ -5924,13 +2462,13 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
           sVar9 = _strlen(local_13c);
           DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
           local_16c = (local_28.right + 1) - local_2c;
-          local_2c = local_2c + (local_16c >> 1) + -5;
+          local_2c = local_2c + (local_16c >> 1) - 5;
           local_158 = local_2c + 10;
           SelectObject(local_164,h_02);
-          MoveToEx(local_164,local_2c,local_28.bottom + -2,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -2);
-          MoveToEx(local_164,local_2c,local_28.bottom + -1,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -1);
+          MoveToEx(local_164,local_2c,local_28.bottom - 2,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 2);
+          MoveToEx(local_164,local_2c,local_28.bottom - 1,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 1);
           SelectObject(local_164,local_140);
         }
         SelectObject(local_164,h_00);
@@ -5939,7 +2477,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         }
         else {
           local_140 = SelectObject(local_164,local_18);
-          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178 = local_178 + 1) {
+          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178++) {
             MoveToEx(local_164,local_150.left,local_178,(LPPOINT)0x0);
             LineTo(local_164,local_150.right,local_178);
           }
@@ -5949,12 +2487,12 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         MoveToEx(local_164,local_150.left,local_150.bottom,(LPPOINT)0x0);
         LineTo(local_164,local_150.left,local_150.top);
         LineTo(local_164,local_150.right,local_150.top);
-        MoveToEx(local_164,local_150.left + 1,local_150.bottom + -1,(LPPOINT)0x0);
+        MoveToEx(local_164,local_150.left + 1,local_150.bottom - 1,(LPPOINT)0x0);
         LineTo(local_164,local_150.left + 1,local_150.top + 1);
-        LineTo(local_164,local_150.right + -1,local_150.top + 1);
+        LineTo(local_164,local_150.right - 1,local_150.top + 1);
         SelectObject(local_164,local_140);
-        local_150.left = local_150.left + 2;
-        local_150.top = local_150.top + 2;
+        local_150.left += 2;
+        local_150.top += 2;
         local_28.right = local_150.right;
         local_28.bottom = local_150.bottom;
         UVar16 = 0x424;
@@ -5963,12 +2501,12 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         local_28.top = local_150.top;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_rect_width((iptr)&local_28);
+        local_16c = rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_rect_width((iptr)&local_150);
+        iVar3 = rect_width((iptr)&local_150);
         iVar3 = (((iVar3 >> 1) + local_150.left) - (local_16c >> 1)) + local_16c;
         LVar12 = local_150.top;
-        iVar4 = thunk_rect_width((iptr)&local_150);
+        iVar4 = rect_width((iptr)&local_150);
         SetRect(&local_28,((iVar4 >> 1) + local_150.left) - (local_16c >> 1),LVar12,iVar3,LVar17);
         UVar16 = 0x24;
         ptVar14 = &local_28;
@@ -5994,7 +2532,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
             ptVar14 = &local_28;
             sVar9 = _strlen(local_13c);
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
-            local_2c = local_28.right + -1;
+            local_2c = local_28.right - 1;
           }
           FUN_005f22d0(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
@@ -6007,13 +2545,13 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
           sVar9 = _strlen(local_13c);
           DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
           local_16c = (local_28.right + 1) - local_2c;
-          local_2c = local_2c + (local_16c >> 1) + -5;
+          local_2c = local_2c + (local_16c >> 1) - 5;
           local_158 = local_2c + 10;
           SelectObject(local_164,h_02);
-          MoveToEx(local_164,local_2c,local_28.bottom + -2,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -2);
-          MoveToEx(local_164,local_2c,local_28.bottom + -1,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -1);
+          MoveToEx(local_164,local_2c,local_28.bottom - 2,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 2);
+          MoveToEx(local_164,local_2c,local_28.bottom - 1,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 1);
           SelectObject(local_164,local_140);
         }
         SelectObject(local_164,local_168);
@@ -6026,7 +2564,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         }
         else {
           local_140 = SelectObject(local_164,local_18);
-          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178 = local_178 + 1) {
+          for (local_178 = local_150.top; local_178 < local_150.bottom; local_178++) {
             MoveToEx(local_164,local_150.left,local_178,(LPPOINT)0x0);
             LineTo(local_164,local_150.right,local_178);
           }
@@ -6036,16 +2574,16 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         MoveToEx(local_164,local_150.left,local_150.bottom,(LPPOINT)0x0);
         LineTo(local_164,local_150.left,local_150.top);
         LineTo(local_164,local_150.right,local_150.top);
-        MoveToEx(local_164,local_150.left + 1,local_150.bottom + -1,(LPPOINT)0x0);
+        MoveToEx(local_164,local_150.left + 1,local_150.bottom - 1,(LPPOINT)0x0);
         LineTo(local_164,local_150.left + 1,local_150.top + 1);
-        LineTo(local_164,local_150.right + -1,local_150.top + 1);
+        LineTo(local_164,local_150.right - 1,local_150.top + 1);
         SelectObject(local_164,h_02);
-        MoveToEx(local_164,local_150.left + 1,local_150.bottom + -1,(LPPOINT)0x0);
-        LineTo(local_164,local_150.right + -1,local_150.bottom + -1);
-        LineTo(local_164,local_150.right + -1,local_150.top);
-        MoveToEx(local_164,local_150.left + 2,local_150.bottom + -2,(LPPOINT)0x0);
-        LineTo(local_164,local_150.right + -2,local_150.bottom + -2);
-        LineTo(local_164,local_150.right + -2,local_150.top + 1);
+        MoveToEx(local_164,local_150.left + 1,local_150.bottom - 1,(LPPOINT)0x0);
+        LineTo(local_164,local_150.right - 1,local_150.bottom - 1);
+        LineTo(local_164,local_150.right - 1,local_150.top);
+        MoveToEx(local_164,local_150.left + 2,local_150.bottom - 2,(LPPOINT)0x0);
+        LineTo(local_164,local_150.right - 2,local_150.bottom - 2);
+        LineTo(local_164,local_150.right - 2,local_150.top + 1);
         SelectObject(local_164,local_140);
         local_28.left = local_150.left;
         local_28.top = local_150.top;
@@ -6055,12 +2593,12 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
         ptVar14 = &local_28;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_rect_width((iptr)&local_28);
+        local_16c = rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_rect_width((iptr)&local_150);
+        iVar3 = rect_width((iptr)&local_150);
         iVar3 = (((iVar3 >> 1) + local_150.left) - (local_16c >> 1)) + local_16c;
         LVar12 = local_150.top;
-        iVar4 = thunk_rect_width((iptr)&local_150);
+        iVar4 = rect_width((iptr)&local_150);
         SetRect(&local_28,((iVar4 >> 1) + local_150.left) - (local_16c >> 1),LVar12,iVar3,LVar17);
         SetTextColor(local_164,0xffffff);
         UVar16 = 0x24;
@@ -6094,7 +2632,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
             ptVar14 = &local_28;
             sVar9 = _strlen(local_13c);
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
-            local_2c = local_28.right + -1;
+            local_2c = local_28.right - 1;
           }
           FUN_005f22d0(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
@@ -6107,13 +2645,13 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
           sVar9 = _strlen(local_13c);
           DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
           local_16c = (local_28.right + 1) - local_2c;
-          local_2c = local_2c + (local_16c >> 1) + -5;
+          local_2c = local_2c + (local_16c >> 1) - 5;
           local_158 = local_2c + 10;
           SelectObject(local_164,h_02);
-          MoveToEx(local_164,local_2c,local_28.bottom + -2,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -2);
-          MoveToEx(local_164,local_2c,local_28.bottom + -1,(LPPOINT)0x0);
-          LineTo(local_164,local_158,local_28.bottom + -1);
+          MoveToEx(local_164,local_2c,local_28.bottom - 2,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 2);
+          MoveToEx(local_164,local_2c,local_28.bottom - 1,(LPPOINT)0x0);
+          LineTo(local_164,local_158,local_28.bottom - 1);
           SelectObject(local_164,local_140);
         }
         SelectObject(local_164,h_04);
@@ -6163,16 +2701,6 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
 #undef local_c
 #undef local_8
 
-/* 005cabf6 auto */
-void __cdecl button_destroy_hwnd(int param_1)
-
-{
-  if (param_1 == 0) {
-    dbg_log(ADDR(0x637df8, ((u8 *)&g.d_00637df8)));
-  }
-  return;
-}
-
 /* 005cac22 auto */
 #define wnd_active_child (*(undefined4 *)((u8 *)&g.d_00637ea4))
 void __cdecl button_press_animated(HWND param_1)
@@ -6186,17 +2714,17 @@ void __cdecl button_press_animated(HWND param_1)
   iVar1 = wnd_from_hwnd(param_1);
   if (iVar1 != 0) {
     this = *(Control **)(iVar1 + 4);
-    iVar2 = thunk_ctrl_is_enabled((ControlEnabledView *)this);
+    iVar2 = ctrl_is_enabled((ControlEnabledView *)this);
     if (iVar2 != 0) {
       SetFocus(param_1);
       *(undefined4 *)(iVar1 + 0x18) = 1;
       wnd_redraw_client(param_1);
       *(undefined4 *)(iVar1 + 0x18) = 0;
-      thunk_ui_pump_messages();
+      ui_pump_messages();
       ui_wait_ticks(8);
       wnd_redraw_client(param_1);
-      wnd_active_child = thunk_ctrl_get_parent(this);
-      uVar3 = thunk_ctrl_get_id((ControlIdView *)this);
+      wnd_active_child = ctrl_get_parent(this);
+      uVar3 = ctrl_get_id((ControlIdView *)this);
       button_fire_callback((ButtonClickView *)this,uVar3);
     }
   }
@@ -6256,8 +2784,8 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
             return 0;
           }
           if ((param_3 == 0x20) &&
-             (iVar9 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28), iVar9 != 0)) {
-            pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+             (iVar9 = ctrl_is_enabled((ControlEnabledView *)local_28), iVar9 != 0)) {
+            pCVar11 = (WndKeyNavView *)ctrl_get_parent(local_28);
             cVar1 = wnd_keyboard_nav_enabled(pCVar11);
             if (cVar1 != '\0') {
               *(undefined4 *)(local_44 + 0x18) = 1;
@@ -6265,15 +2793,15 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
               *(undefined4 *)(local_44 + 0x18) = 0;
               SVar2 = GetAsyncKeyState(0x20);
               local_8 = (int)SVar2;
-              thunk_ui_pump_messages();
+              ui_pump_messages();
               while ((*(undefined1 *)((char *)&local_8 + 1)) != '\0') {
                 SVar2 = GetAsyncKeyState(0x20);
                 local_8 = (int)SVar2;
               }
               wnd_redraw_client(param_1);
-              iVar10 = thunk_ctrl_get_parent(local_28);
+              iVar10 = ctrl_get_parent(local_28);
               wnd_set_active_child(iVar10);
-              uVar12 = thunk_ctrl_get_id((ControlIdView *)local_28);
+              uVar12 = ctrl_get_id((ControlIdView *)local_28);
               button_fire_callback((ButtonClickView *)local_28,uVar12);
               return 0;
             }
@@ -6307,15 +2835,15 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
             return 0;
           }
           button_wndproc(param_1,0xf,0,0);
-          iVar10 = thunk_ctrl_get_parent(local_28);
+          iVar10 = ctrl_get_parent(local_28);
           wnd_set_active_child(iVar10);
-          uVar12 = thunk_ctrl_get_id((ControlIdView *)local_28);
+          uVar12 = ctrl_get_id((ControlIdView *)local_28);
           button_fire_callback((ButtonClickView *)local_28,uVar12);
           return 0;
         }
         goto LAB_005cb26a;
       }
-      iVar9 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28);
+      iVar9 = ctrl_is_enabled((ControlEnabledView *)local_28);
       if (iVar9 == 0) {
         return 0;
       }
@@ -6349,15 +2877,15 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
     lpRect = &local_38;
     pHVar6 = GetParent(param_1);
     ValidateRect(pHVar6,lpRect);
-    iVar7 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28);
+    iVar7 = ctrl_is_enabled((ControlEnabledView *)local_28);
     if (iVar7 == 0) {
       pHVar6 = GetFocus();
       if (pHVar6 == param_1) {
-        pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+        pCVar11 = (WndKeyNavView *)ctrl_get_parent(local_28);
         cVar1 = wnd_keyboard_nav_enabled(pCVar11);
         if (cVar1 == '\0') {
-          this = (WndBase *)thunk_ctrl_get_parent(local_28);
-          iVar9 = thunk_wnd_get_window(this);
+          this = (WndBase *)ctrl_get_parent(local_28);
+          iVar9 = wnd_get_window(this);
           SetFocus(*(HWND *)(iVar9 + 4));
         }
         else {
@@ -6381,8 +2909,8 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
     y1 = 0;
     x1 = 0;
     hdcSrc = local_24;
-    iVar8 = thunk_rect_height((iptr)&local_38);
-    iVar9 = thunk_rect_width((iptr)&local_38);
+    iVar8 = rect_height((iptr)&local_38);
+    iVar9 = rect_width((iptr)&local_38);
     BitBlt(local_40,0,0,iVar9,iVar8,hdcSrc,x1,y1,rop);
     SelectObject(local_24,h);
     DeleteDC(local_24);
@@ -6395,7 +2923,7 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
     return 0;
   }
   if (param_2 == 7) {
-    pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+    pCVar11 = (WndKeyNavView *)ctrl_get_parent(local_28);
     cVar1 = wnd_keyboard_nav_enabled(pCVar11);
     if (cVar1 != '\0') {
       local_40 = GetDC(param_1);
@@ -6403,7 +2931,7 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
       GetClientRect(param_1,&local_18);
       SelectObject(local_40,local_1c);
       FrameRect(local_40,&local_18,local_1c);
-      SetRect(&local_18,local_18.left + 4,local_18.top + 4,local_18.right + -4,local_18.bottom + -4)
+      SetRect(&local_18,local_18.left + 4,local_18.top + 4,local_18.right - 4,local_18.bottom - 4)
       ;
       FrameRect(local_40,&local_18,local_1c);
       DeleteObject(local_1c);
@@ -6434,130 +2962,6 @@ LAB_005cb26a:
 #undef local_8
 #endif
 
-/* 005cb319 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define gfx_black_color_index (*(byte *)((u8 *)&g.d_00638b40))
-#define local_44 (*(DWORD *)(frame_ + FRAME_OFF(4)))
-#define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(12)))
-#define local_2c (*(Control * *)(frame_ + FRAME_OFF(28)))
-#define local_28 (*(HWND *)(frame_ + FRAME_OFF(32)))
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(36)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(64)))
-HWND __cdecl
-spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,int param_5,
-            undefined4 param_6,undefined4 param_7,int param_8)
-
-{
-  iptr iVar1;
-  iptr iVar2;
-  WndPaletteView *pCVar1;
-  undefined4 uVar2;
-  int iVar3;
-  WndBase *this;
-  int iVar4;
-  HWND hWndParent;
-  HMENU hMenu;
-  HINSTANCE hInstance;
-  LPVOID lpParam;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[6] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
-#define param_3 (*(Control * *)&pargs_[0])
-#define param_4 (*(int *)&pargs_[1])
-#define param_5 (*(int *)&pargs_[2])
-#define param_6 (*(undefined4 *)&pargs_[3])
-#define param_7 (*(undefined4 *)&pargs_[4])
-#define param_8 (*(int *)&pargs_[5])
-  
-  local_2c = param_3;
-  if ((char)param_3[3].field_14 == '\0') {
-    surface_load_pict_resource
-              ((DibSurface *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
-    surface_load_pict_resource
-              ((DibSurface *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
-  }
-  else {
-    surface_reload_pict_resource
-              ((DibSurface *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
-    surface_reload_pict_resource
-              ((DibSurface *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
-  }
-  thunk_ui_pump_messages();
-  iVar1 = thunk_surface_height((DibSurface *)&local_2c[2].field_4);
-  iVar4 = param_2 + iVar1 + -1;
-  iVar2 = thunk_surface_width((DibSurface *)&local_2c[2].field_4);
-  SetRect(&local_3c,param_1,param_2,param_1 + iVar2 + -1,iVar4);
-  OffsetRect(&local_3c,-local_3c.left,-local_3c.top);
-  if (param_4 == param_5) {
-    local_24.left = local_3c.left;
-    local_24.top = local_3c.top;
-    local_24.right = local_3c.right;
-    local_24.bottom = local_3c.bottom;
-    SetRect(&local_24,local_3c.left,local_3c.top,local_3c.right + -2,local_3c.bottom + -2);
-    local_14 = local_24.left;
-    local_10 = local_24.top;
-    local_c = local_24.right;
-    local_8 = local_24.bottom;
-    OffsetRect(&local_24,2,2);
-    surface_fill((DibSurface *)&local_2c[2].field_4,(uint)gfx_black_color_index);
-    surface_blit
-              ((DibSurface *)&local_2c->field_34,(iptr)&local_2c[2].field_4,(iptr)&local_14,
-               (iptr)&local_24);
-  }
-  thunk_ui_pump_messages();
-  pCVar1 = (WndPaletteView *)thunk_ctrl_get_parent(local_2c);
-  uVar2 = thunk_wnd_get_palette(pCVar1);
-  surface_apply_palette((DibSurface *)&local_2c[2].field_4,uVar2);
-  pCVar1 = (WndPaletteView *)thunk_ctrl_get_parent(local_2c);
-  uVar2 = thunk_wnd_get_palette(pCVar1);
-  surface_apply_palette((DibSurface *)&local_2c->field_34,uVar2);
-  gfx_set_text_color_index(0xff);
-  gfx_set_text_color_index(0xf8);
-  gfx_set_text_color_index(0xf8);
-  gfx_set_text_color_index(0xff);
-  iVar4 = thunk_surface_height((DibSurface *)&local_2c[2].field_4);
-  iVar4 = param_2 + iVar4;
-  iVar3 = thunk_surface_width((DibSurface *)&local_2c[2].field_4);
-  SetRect(&local_3c,param_1,param_2,param_1 + iVar3,iVar4);
-  local_44 = 0x40810000;
-  if (param_8 != 0) {
-    local_44 = 0x50810000;
-  }
-  lpParam = (LPVOID)0x0;
-  hMenu = (HMENU)0x0;
-  hInstance = app_hinstance;
-  this = (WndBase *)thunk_ctrl_get_parent(param_3);
-  iVar4 = thunk_wnd_get_window(this);
-  hWndParent = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_rect_height((iptr)&local_3c);
-  iVar3 = thunk_rect_width((iptr)&local_3c);
-  local_28 = CreateWindowExA(4,s_MSControlClass_00637e34,&spritebtn_alt_wnd_title,local_44,param_1,param_2,
-                             iVar3,iVar4,hWndParent,hMenu,hInstance,lpParam);
-  iVar4 = ctrl_init_block(local_28,(iptr)param_3);
-  *(undefined4 *)(iVar4 + 0x2c) = 5;
-  SetWindowLongA(local_28,-4,ADDR(0x5cb6eb, spritebtn_wndproc));
-  return local_28;
-}
-#undef app_hinstance
-#undef gfx_black_color_index
-#undef local_44
-#undef local_3c
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-#undef param_3
-#undef param_4
-#undef param_5
-#undef param_6
-#undef param_7
-#undef param_8
-
 /* 005cb601 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_24 (*(DWORD *)(frame_ + FRAME_OFF(4)))
@@ -6586,11 +2990,11 @@ HWND __cdecl spritebtn_create_hwnd(int param_1,int param_2,int param_3,int param
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = app_hinstance;
-  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_5);
-  iVar1 = thunk_wnd_get_window(this);
+  this = (WndBase *)ctrl_get_parent((Control *)param_5);
+  iVar1 = wnd_get_window(this);
   hWndParent = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_rect_height((iptr)&local_1c);
-  iVar3 = thunk_rect_width((iptr)&local_1c);
+  iVar2 = rect_height((iptr)&local_1c);
+  iVar3 = rect_width((iptr)&local_1c);
   local_8 = CreateWindowExA(4,s_MSControlClass_00637e48,&spritebtn_wnd_title,local_24,param_1,param_2,iVar3
                             ,iVar2,hWndParent,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(local_8,param_5);
@@ -6665,15 +3069,15 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
       ValidateRect(param_1,&local_20);
       if (gfx_palettized_display == 1) {
         BVar15 = 0;
-        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
-        this = (PaletteHandleView *)thunk_wnd_get_palette(pCVar5);
+        pCVar5 = (WndPaletteView *)ctrl_get_parent(local_10);
+        this = (PaletteHandleView *)wnd_get_palette(pCVar5);
         hPal = (HPALETTE)palette_get_hpalette(this);
         SelectPalette(local_24,hPal,BVar15);
       }
       if (*(int *)(iVar3 + 0x18) == 0) {
         surface_lock((DibSurface *)&local_10->field_34);
-        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
-        uVar11 = thunk_wnd_get_palette(pCVar5);
+        pCVar5 = (WndPaletteView *)ctrl_get_parent(local_10);
+        uVar11 = wnd_get_palette(pCVar5);
         surface_apply_palette((DibSurface *)&local_10->field_34,uVar11);
         if (gfx_palettized_display == 1) {
           RealizePalette(local_24);
@@ -6683,15 +3087,15 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
         iVar13 = 0;
         iVar7 = surface_get_dib((DibSurface *)&local_10->field_34);
         pHVar12 = *(HDC *)(iVar7 + 4);
-        iVar6 = thunk_surface_height((DibSurface *)&local_10->field_34);
-        iVar8 = thunk_surface_width((DibSurface *)&local_10->field_34);
+        iVar6 = surface_height((DibSurface *)&local_10->field_34);
+        iVar8 = surface_width((DibSurface *)&local_10->field_34);
         BitBlt(local_24,0,0,iVar8,iVar6,pHVar12,iVar13,iVar14,DVar16);
         surface_unlock((DibSurface *)&local_10->field_34);
       }
       if (*(int *)(iVar3 + 0x18) == 1) {
         surface_lock((DibSurface *)&local_10[2].field_4);
-        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
-        uVar11 = thunk_wnd_get_palette(pCVar5);
+        pCVar5 = (WndPaletteView *)ctrl_get_parent(local_10);
+        uVar11 = wnd_get_palette(pCVar5);
         surface_apply_palette((DibSurface *)&local_10[2].field_4,uVar11);
         RealizePalette(local_24);
         DVar16 = 0xcc0020;
@@ -6699,8 +3103,8 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
         iVar14 = 0;
         iVar8 = surface_get_dib((DibSurface *)&local_10[2].field_4);
         pHVar12 = *(HDC *)(iVar8 + 4);
-        iVar8 = thunk_surface_width((DibSurface *)&local_10[2].field_4);
-        iVar13 = thunk_surface_width((DibSurface *)&local_10[2].field_4);
+        iVar8 = surface_width((DibSurface *)&local_10[2].field_4);
+        iVar13 = surface_width((DibSurface *)&local_10[2].field_4);
         BitBlt(local_24,0,0,iVar13,iVar8,pHVar12,iVar14,y1,DVar16);
         surface_unlock((DibSurface *)&local_10[2].field_4);
       }
@@ -6713,7 +3117,7 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
       return 0;
     }
     if (param_2 == 7) {
-      pCVar10 = (WndKeyNavView *)thunk_ctrl_get_parent(local_10);
+      pCVar10 = (WndKeyNavView *)ctrl_get_parent(local_10);
       cVar1 = wnd_keyboard_nav_enabled(pCVar10);
       if (cVar1 != '\0') {
         uVar11 = ctrl_default_wndproc(param_1,7,param_3,param_4);
@@ -6738,7 +3142,7 @@ switchD_005cbd7f_caseD_203:
           return 0;
         }
         if (param_3 == 0x20) {
-          pCVar10 = (WndKeyNavView *)thunk_ctrl_get_parent(local_10);
+          pCVar10 = (WndKeyNavView *)ctrl_get_parent(local_10);
           cVar1 = wnd_keyboard_nav_enabled(pCVar10);
           if (cVar1 != '\0') {
             *(undefined4 *)(iVar3 + 0x18) = 1;
@@ -6754,9 +3158,9 @@ switchD_005cbd7f_caseD_203:
               sVar2 = GetAsyncKeyState(0x20);
             }
             wnd_redraw_client(param_1);
-            iVar9 = thunk_ctrl_get_parent(local_10);
+            iVar9 = ctrl_get_parent(local_10);
             wnd_set_active_child(iVar9);
-            uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+            uVar11 = ctrl_get_id((ControlIdView *)local_10);
             spritebtn_fire_click((SpriteButtonClickView *)local_10,uVar11);
             return 0;
           }
@@ -6806,9 +3210,9 @@ LAB_005cb749:
         ;
         if (BVar15 != 0) {
           spritebtn_wndproc(param_1,0xf,0,0);
-          iVar9 = thunk_ctrl_get_parent(local_10);
+          iVar9 = ctrl_get_parent(local_10);
           wnd_set_active_child(iVar9);
-          uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+          uVar11 = ctrl_get_id((ControlIdView *)local_10);
           spritebtn_fire_click((SpriteButtonClickView *)local_10,uVar11);
         }
       }
@@ -6836,9 +3240,9 @@ LAB_005cb749:
         ;
         if (BVar15 != 0) {
           spritebtn_wndproc(param_1,0xf,0,0);
-          iVar9 = thunk_ctrl_get_parent(local_10);
+          iVar9 = ctrl_get_parent(local_10);
           wnd_set_active_child(iVar9);
-          uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+          uVar11 = ctrl_get_id((ControlIdView *)local_10);
           spritebtn_fire_rclick((SpriteButtonRClickView *)local_10,uVar11);
         }
       }
@@ -6932,7 +3336,7 @@ void __cdecl default_draw_font_static_init(void)
 void __cdecl default_draw_font_ctor(void)
 
 {
-  thunk_font_init_empty((GameFont *)&default_draw_font_obj);
+  font_init_empty((GameFont *)&default_draw_font_obj);
   return;
 }
 
@@ -6948,7 +3352,7 @@ void __cdecl default_draw_font_reg_dtor(void)
 void __cdecl default_draw_font_static_dtor(void)
 
 {
-  thunk_font_destroy((GameFont *)&default_draw_font_obj);
+  font_destroy((GameFont *)&default_draw_font_obj);
   return;
 }
 
@@ -6972,10 +3376,10 @@ void __cdecl checkbox_calc_rect(char *param_1,int param_2,int param_3,iptr param
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
-  uVar1 = thunk_font_get_handle(param_5);
+  uVar1 = font_get_handle(param_5);
   local_8 = (undefined4 *)mem_handle_lock(uVar1);
   h = SelectObject(hdc_00,(HGDIOBJ)*local_8);
-  uVar1 = thunk_font_get_handle(param_5);
+  uVar1 = font_get_handle(param_5);
   mem_handle_unlock(uVar1);
   GetTextMetricsA(hdc_00,&local_44);
   local_5c = local_44.tmHeight;
@@ -6985,7 +3389,7 @@ void __cdecl checkbox_calc_rect(char *param_1,int param_2,int param_3,iptr param
   local_c = local_4c.cx;
   SelectObject(hdc_00,h);
   DeleteDC(hdc_00);
-  local_c = local_c + 0x25;
+  local_c += 0x25;
   if (local_44.tmHeight < 0x14) {
     local_5c = 0x14;
   }
@@ -7013,10 +3417,10 @@ void __cdecl checkbox_calc_rect_fixed(int param_1,int param_2,int param_3,iptr p
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
-  uVar1 = thunk_font_get_handle(param_5);
+  uVar1 = font_get_handle(param_5);
   local_8 = (undefined4 *)mem_handle_lock(uVar1);
   SelectObject(hdc_00,(HGDIOBJ)*local_8);
-  uVar1 = thunk_font_get_handle(param_5);
+  uVar1 = font_get_handle(param_5);
   mem_handle_unlock(uVar1);
   GetTextMetricsA(hdc_00,&local_40);
   local_4c = local_40.tmHeight;
@@ -7062,11 +3466,11 @@ HWND __cdecl checkbox_create_hwnd(iptr param_1,iptr param_2,char *param_3,int pa
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = app_hinstance;
-  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar3 = thunk_wnd_get_window(this);
+  this = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar3 = wnd_get_window(this);
   pHVar6 = *(HWND *)(iVar3 + 4);
-  iVar4 = thunk_rect_height(param_1);
-  iVar5 = thunk_rect_width(param_1);
+  iVar4 = rect_height(param_1);
+  iVar5 = rect_width(param_1);
   pHVar6 = CreateWindowExA(4,s_MSControlClass_00637f10,&checkbox_wnd_title,local_24,*(int *)param_1,
                            *(int *)(param_1 + 4),iVar5,iVar4,pHVar6,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey(param_2,(iptr)pvVar2);
@@ -7110,18 +3514,18 @@ void __cdecl checkbox_toggle_by_hotkey(HWND param_1)
   if (iVar1 != 0) {
     this = *(Control **)(iVar1 + 4);
     SetFocus(param_1);
-    iVar2 = thunk_checkbox_is_checked(this);
+    iVar2 = checkbox_is_checked(this);
     if (iVar2 == 0) {
-      thunk_checkbox_set_checked(this,1);
+      checkbox_set_checked(this,1);
     }
     else {
-      thunk_checkbox_set_checked(this,0);
+      checkbox_set_checked(this,0);
     }
     SetCapture(param_1);
     InvalidateRect(param_1,(RECT *)0x0,0);
-    wnd_active_child = thunk_ctrl_get_parent(this);
-    uVar3 = thunk_checkbox_is_checked(this);
-    uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+    wnd_active_child = ctrl_get_parent(this);
+    uVar3 = checkbox_is_checked(this);
+    uVar4 = ctrl_get_id((ControlIdView *)this);
     checkbox_fire_callback((CheckboxClickView *)this,uVar4,uVar3);
   }
   return;
@@ -7196,7 +3600,7 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
         local_1a0 = *(HBITMAP *)(local_19c + 0xc);
       }
       else {
-        iVar4 = thunk_checkbox_is_checked(local_198);
+        iVar4 = checkbox_is_checked(local_198);
         if (iVar4 == 0) {
           local_1a0 = *(HBITMAP *)(local_19c + 0x10);
         }
@@ -7216,21 +3620,21 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
       local_128 = local_1b0.bottom;
       if (checkbox_mouse_pressed != 0) {
         local_12c = local_1b0.left + 0x20;
-        iVar5 = thunk_rect_height((iptr)&local_1b0);
-        local_130 = iVar5 + -0x14 + local_1b0.top >> 1;
+        iVar5 = rect_height((iptr)&local_1b0);
+        local_130 = iVar5 - 0x14 + local_1b0.top >> 1;
         local_128 = local_1b0.top + 0x14;
       }
       OffsetRect(&local_1b0,-local_1b0.left,-local_1b0.top);
       local_144 = BeginPaint(param_1,&local_194);
       ctrl_paint_parent_bkgnd((iptr)&local_194,param_1);
-      uVar14 = thunk_font_get_handle((GameFont *)local_198->field_38);
+      uVar14 = font_get_handle((GameFont *)local_198->field_38);
       local_118 = (undefined4 *)mem_handle_lock(uVar14);
       local_154 = SelectObject(local_144,(HGDIOBJ)*local_118);
-      uVar14 = thunk_font_get_handle((GameFont *)local_198->field_38);
+      uVar14 = font_get_handle((GameFont *)local_198->field_38);
       mem_handle_unlock(uVar14);
       SetBkMode(local_144,1);
-      gdi_blit_transparent(local_144,local_1a0,local_1b0.left,local_1b0.bottom + -0x14 >> 1,0x20,0x14,0,7);
-      local_1b0.left = local_1b0.left + 0x25;
+      gdi_blit_transparent(local_144,local_1a0,local_1b0.left,local_1b0.bottom - 0x14 >> 1,0x20,0x14,0,7);
+      local_1b0.left += 0x25;
       local_140 = *(char **)(local_19c + 0x24);
       if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
         OffsetRect(&local_1b0,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
@@ -7238,9 +3642,9 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
         puVar16 = local_148;
         puVar15 = local_124;
         uVar6 = (uint)ctrl_shadow_color_index;
-        pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
-        pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
-        thunk_palette_get_entry(pCVar8,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
+        pCVar7 = (WndPaletteView *)ctrl_get_parent(local_198);
+        pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
+        palette_get_entry(pCVar8,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
         SetTextColor(local_144,(uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])));
         UVar19 = 0x24;
         ptVar17 = &local_1b0;
@@ -7250,8 +3654,8 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
       }
       iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
       if (iVar5 == 1) {
-        pCVar10 = (WndBase *)thunk_ctrl_get_parent(local_198);
-        iVar5 = thunk_wnd_get_window(pCVar10);
+        pCVar10 = (WndBase *)ctrl_get_parent(local_198);
+        iVar5 = wnd_get_window(pCVar10);
         if (*(int *)(iVar5 + 0x40) == 8) {
           if (ctrl_text_color_index == 0) {
             SetTextColor(local_144,0);
@@ -7261,9 +3665,9 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
             puVar16 = local_148;
             puVar15 = local_124;
             uVar6 = (uint)ctrl_text_color_index;
-            pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
-            pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
-            iVar11 = thunk_palette_get_logpalette(pCVar8);
+            pCVar7 = (WndPaletteView *)ctrl_get_parent(local_198);
+            pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
+            iVar11 = palette_get_logpalette(pCVar8);
             palette_get_entry_rgb(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
             SetTextColor(local_144,(uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])))
             ;
@@ -7279,8 +3683,8 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
       else {
         iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
         if (iVar5 == 0) {
-          pCVar10 = (WndBase *)thunk_ctrl_get_parent(local_198);
-          iVar5 = thunk_wnd_get_window(pCVar10);
+          pCVar10 = (WndBase *)ctrl_get_parent(local_198);
+          iVar5 = wnd_get_window(pCVar10);
           if (*(int *)(iVar5 + 0x40) == 8) {
             if (ctrl_disabled_color_index == 0) {
               SetTextColor(local_144,0x404040);
@@ -7290,9 +3694,9 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
               puVar16 = local_148;
               puVar15 = local_124;
               uVar6 = (uint)ctrl_disabled_color_index;
-              pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
-              pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
-              iVar11 = thunk_palette_get_logpalette(pCVar8);
+              pCVar7 = (WndPaletteView *)ctrl_get_parent(local_198);
+              pCVar8 = (GamePalette *)wnd_get_palette(pCVar7);
+              iVar11 = palette_get_logpalette(pCVar8);
               palette_get_entry_rgb(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
               SetTextColor(local_144,
                            (uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])));
@@ -7327,7 +3731,7 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
           ptVar17 = &local_14;
           sVar9 = _strlen(local_114);
           DrawTextA(local_144,local_114,sVar9,ptVar17,UVar19);
-          local_138 = local_14.right + -1;
+          local_138 = local_14.right - 1;
         }
         FUN_005f22d0(local_114,local_140);
         local_114[local_198->field_28 + 1] = '\0';
@@ -7339,14 +3743,14 @@ undefined4 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,L
         ptVar17 = &local_14;
         sVar9 = _strlen(local_114);
         DrawTextA(local_144,local_114,sVar9,ptVar17,UVar19);
-        local_138 = local_138 + ((local_14.right + 1) - local_138 >> 1) + -5;
+        local_138 = local_138 + ((local_14.right + 1) - local_138 >> 1) - 5;
         local_13c = local_138 + 10;
         local_11c = GetStockObject(3);
         SelectObject(local_144,local_11c);
-        MoveToEx(local_144,local_138,local_1b0.bottom + -3,(LPPOINT)0x0);
-        LineTo(local_144,local_13c,local_1b0.bottom + -3);
-        MoveToEx(local_144,local_138,local_1b0.bottom + -2,(LPPOINT)0x0);
-        LineTo(local_144,local_13c,local_1b0.bottom + -2);
+        MoveToEx(local_144,local_138,local_1b0.bottom - 3,(LPPOINT)0x0);
+        LineTo(local_144,local_13c,local_1b0.bottom - 3);
+        MoveToEx(local_144,local_138,local_1b0.bottom - 2,(LPPOINT)0x0);
+        LineTo(local_144,local_13c,local_1b0.bottom - 2);
       }
       SelectObject(local_144,local_154);
       EndPaint(param_1,&local_194);
@@ -7364,7 +3768,7 @@ LAB_005ccd4b:
       uVar14 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
       return uVar14;
     }
-    pCVar13 = (WndKeyNavView *)thunk_ctrl_get_parent(local_198);
+    pCVar13 = (WndKeyNavView *)ctrl_get_parent(local_198);
     cVar1 = wnd_keyboard_nav_enabled(pCVar13);
     if (cVar1 == '\0') {
       uVar14 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
@@ -7374,7 +3778,7 @@ LAB_005ccd4b:
     local_11c = GetStockObject(3);
     GetClientRect(param_1,&local_1b0);
     SelectObject(local_144,local_11c);
-    local_1b0.left = local_1b0.left + 0x20;
+    local_1b0.left += 0x20;
     FrameRect(local_144,&local_1b0,local_11c);
     DeleteObject(local_11c);
     ReleaseDC(param_1,local_144);
@@ -7386,7 +3790,7 @@ LAB_005ccd4b:
     }
     else {
       if (param_3 == 0x20) {
-        pCVar13 = (WndKeyNavView *)thunk_ctrl_get_parent(local_198);
+        pCVar13 = (WndKeyNavView *)ctrl_get_parent(local_198);
         cVar1 = wnd_keyboard_nav_enabled(pCVar13);
         if (cVar1 != '\0') {
           SendMessageA(param_1,0x201,0,0);
@@ -7402,20 +3806,20 @@ LAB_005ccd4b:
     iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
     if ((iVar5 != 0) && (checkbox_mouse_pressed == 0)) {
       SetFocus(param_1);
-      iVar5 = thunk_checkbox_is_checked(local_198);
+      iVar5 = checkbox_is_checked(local_198);
       if (iVar5 == 0) {
-        thunk_checkbox_set_checked(local_198,1);
+        checkbox_set_checked(local_198,1);
       }
       else {
-        thunk_checkbox_set_checked(local_198,0);
+        checkbox_set_checked(local_198,0);
       }
       checkbox_mouse_pressed = 1;
       SetCapture(param_1);
       InvalidateRect(param_1,(RECT *)0x0,0);
-      iVar11 = thunk_ctrl_get_parent(local_198);
+      iVar11 = ctrl_get_parent(local_198);
       wnd_set_active_child(iVar11);
-      uVar14 = thunk_checkbox_is_checked(local_198);
-      uVar2 = thunk_ctrl_get_id((ControlIdView *)local_198);
+      uVar14 = checkbox_is_checked(local_198);
+      uVar2 = ctrl_get_id((ControlIdView *)local_198);
       checkbox_fire_callback((CheckboxClickView *)local_198,uVar2,uVar14);
     }
   }
@@ -7458,32 +3862,6 @@ LAB_005ccd4b:
 #undef local_118
 #undef local_114
 #undef local_14
-
-/* 005ccddf auto */
-#define ctrl_text_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f03))
-void __cdecl ctrl_set_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
-
-{
-  ctrl_text_rgb_r = param_1;
-  ctrl_text_rgb_g = param_2;
-  ctrl_text_rgb_b = param_3;
-  ctrl_text_rgb_set = 1;
-  return;
-}
-#undef ctrl_text_rgb_set
-
-/* 005cce0e auto */
-#define ctrl_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f07))
-void __cdecl ctrl_set_disabled_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
-
-{
-  ctrl_disabled_rgb_r = param_1;
-  ctrl_disabled_rgb_g = param_2;
-  ctrl_disabled_rgb_b = param_3;
-  ctrl_disabled_rgb_set = 1;
-  return;
-}
-#undef ctrl_disabled_rgb_set
 
 /* 005cce40 auto */
 void __thiscall checkbox_fire_callback(CheckboxClickView *this,undefined4 param_1,undefined4 param_2)
@@ -7546,11 +3924,11 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
     pvVar8 = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
     pHVar7 = app_hinstance;
-    pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-    iVar2 = thunk_wnd_get_window(pCVar1);
+    pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+    iVar2 = wnd_get_window(pCVar1);
     pHVar5 = *(HWND *)(iVar2 + 4);
-    iVar3 = thunk_rect_height((iptr)param_1);
-    iVar4 = thunk_rect_width((iptr)param_1);
+    iVar3 = rect_height((iptr)param_1);
+    iVar4 = rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&scrollbar_probe_wnd_title,param_3 | 0x40000000,*param_1,
                               param_1[1],iVar4,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
     scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
@@ -7573,11 +3951,11 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
   pvVar8 = (LPVOID)0x0;
   pHVar6 = (HMENU)0x0;
   pHVar7 = app_hinstance;
-  pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar4 = thunk_wnd_get_window(pCVar1);
+  pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar4 = wnd_get_window(pCVar1);
   pHVar5 = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_rect_height((iptr)param_1);
-  nWidth = thunk_rect_width((iptr)param_1);
+  iVar4 = rect_height((iptr)param_1);
+  nWidth = rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&scrollbar_wnd_title,local_34,*param_1,param_1[1]
                             ,nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5cce80, control_subclass_wndproc));
@@ -7636,9 +4014,9 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,in
         PostMessageA(param_1,0x202,*pWVar5,LVar8);
       }
       else {
-        SetScrollPos(param_1,2,iVar3 + -1,1);
+        SetScrollPos(param_1,2,iVar3 - 1,1);
         uVar7 = GetScrollPos(param_1,2);
-        iVar4 = thunk_ctrl_get_parent((Control *)this);
+        iVar4 = ctrl_get_parent((Control *)this);
         wnd_set_active_child(iVar4);
         this->cur_pos = uVar7;
         scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
@@ -7655,7 +4033,7 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,in
       else {
         SetScrollPos(param_1,2,iVar3 + 1,1);
         uVar7 = GetScrollPos(param_1,2);
-        iVar4 = thunk_ctrl_get_parent((Control *)this);
+        iVar4 = ctrl_get_parent((Control *)this);
         wnd_set_active_child(iVar4);
         this->cur_pos = uVar7;
         scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
@@ -7665,7 +4043,7 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,in
       iVar6 = scrollbar_get_page_size((ScrollbarPageView *)this);
       SetScrollPos(param_1,2,iVar3 - iVar6,1);
       uVar7 = GetScrollPos(param_1,2);
-      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      iVar4 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar4);
       this->cur_pos = uVar7;
       scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
@@ -7674,33 +4052,23 @@ void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,in
       iVar5 = scrollbar_get_page_size((ScrollbarPageView *)this);
       SetScrollPos(param_1,2,iVar3 + iVar5,1);
       uVar7 = GetScrollPos(param_1,2);
-      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      iVar4 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar4);
       this->cur_pos = uVar7;
       scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
       break;
     case 4:
       SetScrollPos(param_1,2,(int)sVar1,1);
-      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      iVar4 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar4);
       this->cur_pos = (int)sVar1;
       scrollbar_fire_change((ScrollbarChangeView *)this,this->cur_pos);
       break;
     case 5:
-      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      iVar4 = ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar4);
       scrollbar_fire_track((ScrollbarTrackView *)this,(int)sVar1);
     }
-  }
-  return;
-}
-
-/* 005cd49f auto */
-void __cdecl hwnd_enable(HWND param_1,BOOL param_2)
-
-{
-  if (param_1 != (HWND)0x0) {
-    EnableWindow(param_1,param_2);
   }
   return;
 }
@@ -7710,15 +4078,6 @@ void __cdecl scrollbar_hwnd_set_range(HWND param_1,int param_2,int param_3)
 
 {
   SetScrollRange(param_1,2,param_2,param_3,1);
-  scrollbar_hwnd_set_pos(param_1,param_2);
-  return;
-}
-
-/* 005cd4fd auto */
-void __cdecl scrollbar_hwnd_set_range_ex(HWND param_1,int param_2,int param_3,BOOL param_4)
-
-{
-  SetScrollRange(param_1,2,param_2,param_3,param_4);
   scrollbar_hwnd_set_pos(param_1,param_2);
   return;
 }
@@ -7736,31 +4095,6 @@ void __cdecl scrollbar_hwnd_set_pos(undefined4 param_1,undefined4 param_2)
 
 {
   scrollbar_hwnd_handle_msg(param_1,0x111,0x7f,param_2);
-  return;
-}
-
-/* 005cd580 auto */
-void __cdecl wnd_set_scroll_range(iptr param_1,int param_2,int param_3,int param_4)
-
-{
-  SetScrollRange(*(HWND *)(param_1 + 4),(uint)(param_4 != 0),param_2,param_3,1);
-  wnd_set_scroll_pos(param_1,param_2,param_4);
-  return;
-}
-
-/* 005cd5c3 auto */
-void __cdecl scrollbar_get_range(iptr param_1,LPINT param_2,LPINT param_3,int param_4)
-
-{
-  GetScrollRange(*(HWND *)(param_1 + 4),(uint)(param_4 != 0),param_2,param_3);
-  return;
-}
-
-/* 005cd5f0 auto */
-void __cdecl wnd_set_scroll_pos(iptr param_1,int param_2,int param_3)
-
-{
-  SetScrollPos(*(HWND *)(param_1 + 4),(uint)(param_3 != 0),param_2,1);
   return;
 }
 
@@ -7805,7 +4139,7 @@ void __cdecl gfx_scale_init(void)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 0x10; local_8++) {
     *(undefined4 *)(&gfx_scale_cache_last_used + local_8 * 0x100c) = 0;
     *(undefined4 *)(&gfx_scale_cache_num + local_8 * 0x100c) = 0;
     *(undefined4 *)(&gfx_scale_cache_den + local_8 * 0x100c) = 0;
@@ -7838,38 +4172,38 @@ void __cdecl gfx_set_scale_ratio(int param_1,int param_2)
   }
   gfx_scale_num = param_1;
   gfx_scale_den = param_2;
-  local_10 = thunk_timer_ticks();
+  local_10 = timer_ticks();
   local_18 = -1;
   local_14 = 0;
   do {
     if (0xf < local_14) {
       *(int *)(&gfx_scale_cache_num + local_18 * 0x100c) = gfx_scale_num;
       *(int *)(&gfx_scale_cache_den + local_18 * 0x100c) = gfx_scale_den;
-      uVar1 = thunk_timer_ticks();
+      uVar1 = timer_ticks();
       *(undefined4 *)(&gfx_scale_cache_last_used + local_18 * 0x100c) = uVar1;
       local_8 = 0;
       if (gfx_scale_num < gfx_scale_den) {
         local_c = 0;
         local_14 = 0;
         while (local_14 < 0x400) {
-          for (; (-1 < local_c && (local_14 < 0x400)); local_14 = local_14 + 1) {
+          for (; (-1 < local_c && (local_14 < 0x400)); local_14++) {
             *(int *)(&gfx_scale_cache_tables + local_14 * 4 + local_18 * 0x100c) = local_8;
-            local_c = local_c - gfx_scale_den;
+            local_c -= gfx_scale_den;
           }
-          local_c = local_c + gfx_scale_num;
-          local_8 = local_8 + 1;
+          local_c += gfx_scale_num;
+          local_8++;
         }
       }
       else {
         local_c = gfx_scale_num;
         local_14 = 0;
         while (local_14 < 0x400) {
-          for (; (gfx_scale_den <= local_c && (local_14 < 0x400)); local_14 = local_14 + 1) {
+          for (; (gfx_scale_den <= local_c && (local_14 < 0x400)); local_14++) {
             *(int *)(&gfx_scale_cache_tables + local_14 * 4 + local_18 * 0x100c) = local_8;
-            local_c = local_c - gfx_scale_den;
+            local_c -= gfx_scale_den;
           }
-          local_c = local_c + gfx_scale_num;
-          local_8 = local_8 + 1;
+          local_c += gfx_scale_num;
+          local_8++;
         }
       }
 LAB_005cda01:
@@ -7878,7 +4212,7 @@ LAB_005cda01:
     }
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_den)) {
-      uVar1 = thunk_timer_ticks();
+      uVar1 = timer_ticks();
       *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_18 = local_14;
       goto LAB_005cda01;
@@ -7887,7 +4221,7 @@ LAB_005cda01:
       local_10 = *(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c);
       local_18 = local_14;
     }
-    local_14 = local_14 + 1;
+    local_14++;
   } while( true );
 }
 #undef gfx_scale_den
@@ -7940,12 +4274,12 @@ void __cdecl gfx_set_scale_tables(int param_1,int param_2,int param_3,int param_
   gfx_scale_x_den = param_2;
   gfx_scale_y_num = param_3;
   gfx_scale_y_den = param_4;
-  local_10 = thunk_timer_ticks();
+  local_10 = timer_ticks();
   local_8 = -1;
-  for (local_14 = 0; local_14 < 0x10; local_14 = local_14 + 1) {
+  for (local_14 = 0; local_14 < 0x10; local_14++) {
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_x_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_x_den)) {
-      uVar1 = thunk_timer_ticks();
+      uVar1 = timer_ticks();
       *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_8 = local_14;
       goto LAB_005cdbab;
@@ -7958,7 +4292,7 @@ void __cdecl gfx_set_scale_tables(int param_1,int param_2,int param_3,int param_
   gfx_scale_build_table(local_8,gfx_scale_x_num,gfx_scale_x_den);
 LAB_005cdbab:
   gfx_scale_x_table = &gfx_scale_cache_tables + local_8 * 0x100c;
-  local_10 = thunk_timer_ticks();
+  local_10 = timer_ticks();
   local_c = -1;
   local_14 = 0;
   do {
@@ -7971,7 +4305,7 @@ LAB_005cdcd6:
     }
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_y_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_y_den)) {
-      uVar1 = thunk_timer_ticks();
+      uVar1 = timer_ticks();
       *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       goto LAB_005cdcd6;
     }
@@ -7979,7 +4313,7 @@ LAB_005cdcd6:
       local_10 = *(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c);
       local_c = local_14;
     }
-    local_14 = local_14 + 1;
+    local_14++;
   } while( true );
 }
 #undef gfx_scale_x_table
@@ -8001,31 +4335,31 @@ void __cdecl gfx_scale_build_table(int param_1,int param_2,int param_3)
   
   *(int *)(&gfx_scale_cache_num + param_1 * 0x100c) = param_2;
   *(int *)(&gfx_scale_cache_den + param_1 * 0x100c) = param_3;
-  uVar1 = thunk_timer_ticks();
+  uVar1 = timer_ticks();
   *(undefined4 *)(&gfx_scale_cache_last_used + param_1 * 0x100c) = uVar1;
   local_8 = 0;
   if (param_2 < param_3) {
     local_c = 0;
     local_10 = 0;
     while (local_10 < 0x400) {
-      for (; (-1 < local_c && (local_10 < 0x400)); local_10 = local_10 + 1) {
+      for (; (-1 < local_c && (local_10 < 0x400)); local_10++) {
         *(int *)(&gfx_scale_cache_tables + local_10 * 4 + param_1 * 0x100c) = local_8;
-        local_c = local_c - param_3;
+        local_c -= param_3;
       }
-      local_c = local_c + param_2;
-      local_8 = local_8 + 1;
+      local_c += param_2;
+      local_8++;
     }
   }
   else {
     local_c = param_2;
     local_10 = 0;
     while (local_10 < 0x400) {
-      for (; (param_3 <= local_c && (local_10 < 0x400)); local_10 = local_10 + 1) {
+      for (; (param_3 <= local_c && (local_10 < 0x400)); local_10++) {
         *(int *)(&gfx_scale_cache_tables + local_10 * 4 + param_1 * 0x100c) = local_8;
-        local_c = local_c - param_3;
+        local_c -= param_3;
       }
-      local_c = local_c + param_2;
-      local_8 = local_8 + 1;
+      local_c += param_2;
+      local_8++;
     }
   }
   return;
@@ -8109,396 +4443,6 @@ void __thiscall sprite_free(Sprite *this)
   return;
 }
 
-/* 005cdfb2 auto */
-void __cdecl sprite_data_fixup_stub(undefined4 param_1,undefined4 param_2)
-
-{
-  return;
-}
-
-/* 005cdfc2 auto */
-#define local_c (*(undefined1 *)(frame_ + FRAME_OFF(4)))
-#define local_b (*(undefined1 *)(frame_ + FRAME_OFF(5)))
-#define local_a (*(undefined1 *)(frame_ + FRAME_OFF(6)))
-#define local_9 (*(undefined1 *)(frame_ + FRAME_OFF(7)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
-
-{
-  int iVar1;
-  undefined4 *puVar2;
-  u32 uVar3;
-  iptr iVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 0x53;
-  local_b = 0x50;
-  local_a = 0x52;
-  local_9 = 0x54;
-  iVar1 = res_load((iptr)&local_c,param_1);
-  if (iVar1 == 0) {
-    dbg_logf_noret(ADDR(0x637fb0, ((u8 *)&g.d_00637fb0)),param_1);
-  }
-  else {
-    puVar2 = (undefined4 *)res_lock(iVar1);
-    uVar3 = endian_from_le(*puVar2);
-    this->offset_x = uVar3;
-    uVar3 = endian_from_le(puVar2[1]);
-    this->full_height = uVar3;
-    rect_copy_from_le((iptr)(puVar2 + 2),(iptr)this);
-    rect_copy_from_le((iptr)(puVar2 + 6),(iptr)&this->bounds_rect);
-    this->key_color = *(u8 *)(puVar2 + 10);
-    local_8 = endian_from_le_u32(*(undefined4 *)((int)puVar2 + 0x29));
-    if (this->data_ptr != 0) {
-      sprite_unlock(this);
-    }
-    if (this->data_handle != 0) {
-      uVar3 = mem_handle_free(this->data_handle);
-      this->data_handle = uVar3;
-    }
-    uVar3 = mem_handle_alloc(local_8);
-    this->data_handle = uVar3;
-    iVar4 = mem_handle_lock(this->data_handle);
-    mem_move_src_dst((int)puVar2 + 0x2d,iVar4,local_8);
-    uVar5 = thunk_rect_height((iptr)&this->bounds_rect);
-    sprite_data_fixup_stub(iVar4,uVar5);
-    mem_handle_unlock(this->data_handle);
-    res_unlock(iVar1);
-    res_free(iVar1);
-    sprite_lock(this);
-  }
-  return;
-}
-#undef local_c
-#undef local_b
-#undef local_a
-#undef local_9
-#undef local_8
-
-/* 005ce16e auto */
-void __thiscall
-sprite_load_res_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
-
-{
-  sprite_load_res_with_pal(this,param_1,0xffffffff,0xffffffff,param_2);
-  return;
-}
-
-/* 005ce19a auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined1 *)(frame_ + FRAME_OFF(8)))
-#define local_f (*(undefined1 *)(frame_ + FRAME_OFF(9)))
-#define local_e (*(undefined1 *)(frame_ + FRAME_OFF(10)))
-#define local_d (*(undefined1 *)(frame_ + FRAME_OFF(11)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-void __thiscall
-sprite_load_res_with_pal
-          (Sprite *this,undefined4 param_1,int param_2,int param_3,GamePalette *param_4)
-
-{
-  int iVar1;
-  int iVar2;
-  u32 uVar3;
-  iptr iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_10 = 0x53;
-  local_f = 0x50;
-  local_e = 0x52;
-  local_d = 0x54;
-  iVar1 = res_load((iptr)&local_10,param_1);
-  if (iVar1 == 0) {
-    dbg_logf_noret(ADDR(0x637fd4, ((u8 *)&g.d_00637fd4)),param_1);
-  }
-  else {
-    iVar2 = res_lock(iVar1);
-    mem_move_src_dst(iVar2,(iptr)&this->offset_x,4);
-    mem_move_src_dst(iVar2 + 4,(iptr)&this->full_height,4);
-    mem_move_src_dst(iVar2 + 8,(iptr)this,0x10);
-    mem_move_src_dst(iVar2 + 0x18,(iptr)&this->bounds_rect,0x10);
-    mem_move_src_dst(iVar2 + 0x28,(iptr)&this->key_color,1);
-    mem_move_src_dst(iVar2 + 0x29,(iptr)&local_c,4);
-    if (this->data_ptr != 0) {
-      sprite_unlock(this);
-    }
-    if (this->data_handle != 0) {
-      uVar3 = mem_handle_free(this->data_handle);
-      this->data_handle = uVar3;
-    }
-    uVar3 = mem_handle_alloc(local_c);
-    this->data_handle = uVar3;
-    iVar4 = mem_handle_lock(this->data_handle);
-    mem_move_src_dst(iVar2 + 0x2d,iVar4,local_c);
-    mem_handle_unlock(this->data_handle);
-    mem_move_src_dst(iVar2 + 0x2d,(iptr)&local_14,4);
-    mem_move_src_dst(iVar2 + 0x31,(iptr)&local_8,4);
-    if ((param_2 == -1) || (param_3 == -1)) {
-      palette_set_rgb(param_4,local_14,local_8,iVar2 + 0x35);
-    }
-    else {
-      palette_set_rgb(param_4,param_2,param_3,iVar2 + 0x35);
-    }
-    res_unlock(iVar1);
-    res_free(iVar1);
-    sprite_lock(this);
-  }
-  return;
-}
-#undef local_14
-#undef local_10
-#undef local_f
-#undef local_e
-#undef local_d
-#undef local_c
-#undef local_8
-
-/* 005ce3a8 auto */
-void __thiscall sprite_load_file(Sprite *this,undefined4 param_1)
-
-{
-  sprite_read_file(this,param_1);
-  return;
-}
-
-/* 005ce3cc auto */
-#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall
-sprite_write_file_with_palette
-          (Sprite *this,iptr param_1,undefined4 param_2,int param_3,GamePalette *param_4)
-
-{
-  int iVar1;
-  undefined4 uVar2;
-  iptr iVar3;
-  iptr iVar4;
-  iptr iVar5;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_ac);
-  local_8 = 0;
-  local_14 = mem_handle_size(this->data_handle);
-  iVar1 = thunk_file_obj_create(&local_ac,param_1);
-  if (iVar1 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  else {
-    thunk_file_obj_write(&local_ac,(iptr)&this->offset_x,4);
-    thunk_file_obj_write(&local_ac,(iptr)&this->full_height,4);
-    thunk_file_obj_write(&local_ac,(iptr)this,0x10);
-    thunk_file_obj_write(&local_ac,(iptr)&this->bounds_rect,0x10);
-    thunk_file_obj_write(&local_ac,(iptr)&this->key_color,1);
-    thunk_file_obj_write(&local_ac,(iptr)&local_14,4);
-    sprite_lock(this);
-    thunk_file_obj_write(&local_ac,this->data_ptr,local_14);
-    sprite_unlock(this);
-    uVar2 = mem_handle_alloc(param_3 * 3);
-    iVar3 = mem_handle_lock(uVar2);
-    iVar5 = iVar3;
-    iVar1 = param_3;
-    iVar4 = thunk_palette_get_logpalette(param_4);
-    palette_copy_rgb_range(iVar4,iVar5,param_2,iVar1);
-    thunk_file_obj_write(&local_ac,iVar3,param_3 * 3);
-    thunk_file_map_close(&local_ac);
-    mem_handle_unlock(uVar2);
-    mem_handle_free(uVar2);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  return;
-}
-#undef local_ac
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005ce5bb auto */
-#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall sprite_write_file(Sprite *this,iptr param_1)
-
-{
-  int iVar1;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_ac);
-  local_8 = 0;
-  local_14 = mem_handle_size(this->data_handle);
-  iVar1 = thunk_file_obj_create(&local_ac,param_1);
-  if (iVar1 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  else {
-    thunk_file_obj_write(&local_ac,(iptr)&this->offset_x,4);
-    thunk_file_obj_write(&local_ac,(iptr)&this->full_height,4);
-    thunk_file_obj_write(&local_ac,(iptr)this,0x10);
-    thunk_file_obj_write(&local_ac,(iptr)&this->bounds_rect,0x10);
-    thunk_file_obj_write(&local_ac,(iptr)&this->key_color,1);
-    thunk_file_obj_write(&local_ac,(iptr)&local_14,4);
-    sprite_lock(this);
-    thunk_file_obj_write(&local_ac,this->data_ptr,local_14);
-    sprite_unlock(this);
-    thunk_file_map_close(&local_ac);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  return;
-}
-#undef local_ac
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005ce723 auto */
-void __thiscall
-sprite_load_file_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
-
-{
-  sprite_read_file_with_palette(this,param_1,0xffffffff,0xffffffff,param_2);
-  return;
-}
-
-/* 005ce74f auto */
-#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
-void __thiscall
-sprite_read_file_with_palette
-          (Sprite *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
-
-{
-  int iVar1;
-  u32 uVar2;
-  iptr iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_b4);
-  local_8 = 0;
-  iVar1 = thunk_file_obj_open(&local_b4,param_1);
-  if (iVar1 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-  }
-  else {
-    thunk_file_obj_read(&local_b4,(iptr)&this->offset_x,4);
-    thunk_file_obj_read(&local_b4,(iptr)&this->full_height,4);
-    thunk_file_obj_read(&local_b4,(iptr)this,0x10);
-    thunk_file_obj_read(&local_b4,(iptr)&this->bounds_rect,0x10);
-    thunk_file_obj_read(&local_b4,(iptr)&this->key_color,1);
-    thunk_file_obj_read(&local_b4,(iptr)&local_18,4);
-    if (this->data_ptr != 0) {
-      sprite_unlock(this);
-    }
-    if (this->data_handle != 0) {
-      uVar2 = mem_handle_free(this->data_handle);
-      this->data_handle = uVar2;
-    }
-    uVar2 = mem_handle_alloc(local_18);
-    this->data_handle = uVar2;
-    iVar3 = mem_handle_lock(this->data_handle);
-    thunk_file_obj_read(&local_b4,iVar3,local_18);
-    mem_handle_unlock(this->data_handle);
-    thunk_file_obj_read(&local_b4,(iptr)&local_1c,4);
-    thunk_file_obj_read(&local_b4,(iptr)&local_14,4);
-    uVar4 = mem_handle_alloc(local_14 * 3);
-    iVar3 = mem_handle_lock(uVar4);
-    thunk_file_obj_read(&local_b4,iVar3,param_3 * 3);
-    if ((param_2 == -1) || (param_3 == -1)) {
-      palette_set_rgb(param_4,local_1c,local_14,iVar3);
-    }
-    else {
-      palette_set_rgb(param_4,param_2,param_3,iVar3);
-    }
-    mem_handle_unlock(uVar4);
-    mem_handle_free(uVar4);
-    thunk_file_map_close(&local_b4);
-    sprite_lock(this);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
-  }
-  return;
-}
-#undef local_b4
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005ce9ef auto */
-#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall sprite_read_file(Sprite *this,iptr param_1)
-
-{
-  int iVar1;
-  u32 uVar2;
-  iptr iVar3;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_ac);
-  local_8 = 0;
-  iVar1 = thunk_file_obj_open(&local_ac,param_1);
-  if (iVar1 == 0) {
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  else {
-    thunk_file_obj_read(&local_ac,(iptr)&this->offset_x,4);
-    thunk_file_obj_read(&local_ac,(iptr)&this->full_height,4);
-    thunk_file_obj_read(&local_ac,(iptr)this,0x10);
-    thunk_file_obj_read(&local_ac,(iptr)&this->bounds_rect,0x10);
-    thunk_file_obj_read(&local_ac,(iptr)&this->key_color,1);
-    thunk_file_obj_read(&local_ac,(iptr)&local_14,4);
-    if (this->data_ptr != 0) {
-      sprite_unlock(this);
-    }
-    if (this->data_handle != 0) {
-      uVar2 = mem_handle_free(this->data_handle);
-      this->data_handle = uVar2;
-    }
-    uVar2 = mem_handle_alloc(local_14);
-    this->data_handle = uVar2;
-    iVar3 = mem_handle_lock(this->data_handle);
-    thunk_file_obj_read(&local_ac,iVar3,local_14);
-    mem_handle_unlock(this->data_handle);
-    sprite_lock(this);
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
-  }
-  return;
-}
-#undef local_ac
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
 /* 005cebb4 auto */
 void __thiscall sprite_grab_surface_rect(Sprite *this,iptr param_1,iptr param_2)
 
@@ -8542,60 +4486,6 @@ sprite_grab_rect(Sprite *this,iptr param_1,uint param_2,iptr param_3)
   return;
 }
 
-/* 005cec80 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(char * *)(frame_ + FRAME_OFF(24)))
-void __thiscall
-sprite_grab_bounded_region
-          (Sprite *this,DibSurface *param_1,uint param_2,undefined4 param_3,int param_4,
-          int param_5)
-
-{
-  char *pcVar1;
-  iptr iVar2;
-  int iVar3;
-  u32 uVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  pcVar1 = (char *)surface_pixel_ptr(param_1,param_4,param_5);
-  local_1c = param_4;
-  for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + 1) {
-    local_1c = local_1c + 1;
-  }
-  local_10 = local_1c + -1;
-  local_1c = param_4;
-  for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + -1) {
-    local_1c = local_1c + -1;
-  }
-  local_18 = local_1c + 1;
-  local_1c = param_5;
-  for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + iVar2) {
-    iVar2 = surface_get_pitch(param_1);
-    local_1c = local_1c + 1;
-  }
-  local_c = local_1c + -1;
-  local_1c = param_5;
-  for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + -iVar3) {
-    iVar3 = surface_get_pitch(param_1);
-    local_1c = local_1c + -1;
-  }
-  local_14 = local_1c + 1;
-  uVar4 = sprite_encode_from_surface(this,(iptr)param_1,param_2 & 0xff,(iptr)&local_18);
-  this->data_handle = uVar4;
-  sprite_lock(this);
-  return;
-}
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
 /* 005cedad auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
@@ -8609,68 +4499,6 @@ sprite_grab_from_surface
   
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
   uVar1 = sprite_encode_from_surface(this,param_1,param_2 & 0xff,(iptr)&local_14);
-  this->data_handle = uVar1;
-  sprite_lock(this);
-  return;
-}
-#undef local_14
-
-/* 005cee09 auto */
-void __thiscall sprite_grab_ddsurf_rect(Sprite *this,undefined4 param_1,iptr param_2)
-
-{
-  u32 uVar1;
-  
-  uVar1 = sprite_encode_from_ddsurf(this,param_1,0xffffffff,param_2);
-  this->data_handle = uVar1;
-  sprite_lock(this);
-  return;
-}
-
-/* 005cee41 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall
-sprite_grab_from_ddsurf
-          (Sprite *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5)
-
-{
-  u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  SetRect(&local_14,param_2,param_3,param_4 + param_2,param_5 + param_3);
-  uVar1 = sprite_encode_from_ddsurf(this,param_1,0xffffffff,(iptr)&local_14);
-  this->data_handle = uVar1;
-  sprite_lock(this);
-  return;
-}
-#undef local_14
-
-/* 005cee99 auto */
-void __thiscall
-sprite_grab_ddsurf_rect_keyed(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
-
-{
-  u32 uVar1;
-  
-  uVar1 = sprite_encode_from_ddsurf(this,param_1,param_2 & 0xff,param_3);
-  this->data_handle = uVar1;
-  sprite_lock(this);
-  return;
-}
-
-/* 005ceed5 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall
-sprite_grab_from_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5,
-          int param_6)
-
-{
-  u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
-  uVar1 = sprite_encode_from_ddsurf(this,param_1,param_2 & 0xff,(iptr)&local_14);
   this->data_handle = uVar1;
   sprite_lock(this);
   return;
@@ -8698,83 +4526,6 @@ sprite_draw_keyed
   return param_1;
 }
 
-/* 005cef9f auto */
-undefined4 __thiscall
-sprite_draw_ddsurf
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  sprite_blit_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
-  return param_1;
-}
-
-/* 005cefd4 auto */
-undefined4 __thiscall
-sprite_draw_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
-
-{
-  sprite_blit_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
-  return param_1;
-}
-
-/* 005cf00d auto */
-undefined4 __thiscall
-sprite_draw_scaled
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  sprite_blit_xyscale_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4);
-  return param_1;
-}
-
-/* 005cf042 auto */
-undefined4 __thiscall
-sprite_draw_scaled_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
-
-{
-  sprite_blit_xyscale_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
-  return param_1;
-}
-
-/* 005cf07b auto */
-undefined4 __thiscall
-sprite_draw_scaled_ddsurf
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
-  return param_1;
-}
-
-/* 005cf0b0 auto */
-undefined4 __thiscall
-sprite_draw_scaled_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
-
-{
-  sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
-  return param_1;
-}
-
-/* 005cf0e9 auto */
-undefined4 __thiscall
-sprite_draw_silhouette_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6)
-
-{
-  sprite_blit_silhouette_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
-  return param_1;
-}
-
 /* 005cf126 auto */
 iptr __thiscall
 sprite_draw_silhouette
@@ -8786,83 +4537,11 @@ sprite_draw_silhouette
   return param_1;
 }
 
-/* 005cf15f auto */
-undefined4 __thiscall
-sprite_draw_silhouette_dd_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6)
-
-{
-  sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
-  return param_1;
-}
-
-/* 005cf19c auto */
-undefined4 __thiscall
-sprite_draw_silhouette_dd
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5)
-
-{
-  sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
-  return param_1;
-}
-
-/* 005cf1d5 auto */
-undefined4 __thiscall
-sprite_draw_key254
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  sprite_blit_to_surface(this,param_1,param_2,0xfffffffe,param_3,param_4);
-  return param_1;
-}
-
-/* 005cf20a auto */
-undefined4 __thiscall
-sprite_draw_ddsurf_key254
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  sprite_blit_to_ddsurf(this,param_1,param_2,0xfffffffe,param_3,param_4);
-  return param_1;
-}
-
 /* 005cf23f auto */
 void __thiscall sprite_merge_onto(Sprite *this,iptr param_1)
 
 {
   sprite_merge_at(this,(iptr)this,param_1,0,0,0);
-  return;
-}
-
-/* 005cf26d auto */
-void __thiscall
-sprite_merge_onto_at
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  sprite_merge_at(this,(iptr)this,param_1,0,param_2,param_3);
-  return;
-}
-
-/* 005cf29f auto */
-void __thiscall FUN_005cf29f(Sprite *this,undefined4 param_1)
-
-{
-  sprite_merge_at(this,(iptr)this,param_1,1,0,0);
-  return;
-}
-
-/* 005cf2cd auto */
-void __thiscall
-FUN_005cf2cd
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  sprite_merge_at(this,(iptr)this,param_1,1,param_2,param_3);
   return;
 }
 
@@ -8917,30 +4596,6 @@ void __thiscall sprite_get_origin(SpriteOriginGetView *this,iptr param_1,iptr pa
   return;
 }
 
-/* 005cf3f3 auto */
-void __thiscall FUN_005cf3f3(C_005cf3f3 *this,u32 param_1,u32 param_2)
-
-{
-  if ((int)param_1 < 2) {
-    param_1 = 1;
-  }
-  this->field_28 = param_1;
-  if ((int)param_2 < 2) {
-    param_2 = 1;
-  }
-  this->field_2c = param_2;
-  return;
-}
-
-/* 005cf439 auto */
-void __thiscall FUN_005cf439(C_005cf439 *this,u32 *param_1,u32 *param_2)
-
-{
-  *param_1 = this->field_28;
-  *param_2 = this->field_2c;
-  return;
-}
-
 /* 005cf467 auto */
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
@@ -8959,63 +4614,19 @@ sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2)
     sprite_lock(this);
     dbg_log(ADDR(0x637ff8, ((u8 *)&g.d_00637ff8)));
   }
-  local_8 = thunk_rect_height((iptr)&this->bounds_rect);
+  local_8 = rect_height((iptr)&this->bounds_rect);
   local_14 = (char *)this->data_ptr;
-  while (iVar1 = local_8 + -1, local_8 != 0) {
+  while (iVar1 = local_8 - 1, local_8 != 0) {
     piVar2 = (int *)(local_14 + 4);
-    local_14 = local_14 + 8;
+    local_14 += 8;
     local_c = *piVar2;
     while (local_8 = iVar1, local_c != 0) {
       if (*local_14 == (char)param_1) {
         *local_14 = (char)param_2;
       }
-      local_14 = local_14 + 1;
-      local_c = local_c + -1;
+      local_14++;
+      local_c--;
     }
-  }
-  if (cVar3 == '\0') {
-    sprite_unlock(this);
-  }
-  return;
-}
-#undef local_14
-#undef local_c
-#undef local_8
-
-/* 005cf541 auto */
-#define local_14 (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __thiscall
-sprite_remap_colors(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
-
-{
-  int iVar1;
-  byte *pbVar2;
-  char cVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  cVar3 = sprite_has_data(this);
-  if (cVar3 == '\0') {
-    sprite_lock(this);
-    dbg_log(ADDR(0x638024, ((u8 *)&g.d_00638024)));
-  }
-  local_8 = thunk_rect_height((iptr)&this->bounds_rect);
-  local_14 = (byte *)this->data_ptr;
-  while (iVar1 = local_8 + -1, local_8 != 0) {
-    pbVar2 = local_14 + 4;
-    local_14 = local_14 + 8;
-    local_c = *(int *)pbVar2;
-    while (local_8 = iVar1, local_c != 0) {
-      if (-1 < (int)((uint)*local_14 - param_2)) {
-        *local_14 = *(byte *)(((uint)*local_14 - param_2) + param_1);
-      }
-      local_14 = local_14 + 1;
-      local_c = local_c + -1;
-    }
-  }
-  if (-1 < (int)((uint)this->key_color - param_2)) {
-    this->key_color = *(u8 *)(((uint)this->key_color - param_2) + param_1);
   }
   if (cVar3 == '\0') {
     sprite_unlock(this);
@@ -9092,37 +4703,37 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
     local_44 = 0;
     while (local_44 < local_50) {
       local_54 = local_2c;
-      for (local_3c = 0; local_3c < local_24; local_3c = local_3c + 1) {
+      for (local_3c = 0; local_3c < local_24; local_3c++) {
         if ((*local_54 != local_40) || (param_2 == -2)) {
           local_18 = local_44;
-          local_54 = local_54 + 1;
+          local_54++;
           local_2c = (u8 *)surface_prev_row((DibSurface *)param_1,(iptr)local_2c);
           local_44 = local_50;
           local_48 = 0;
           break;
         }
-        local_54 = local_54 + 1;
+        local_54++;
       }
-      local_44 = local_44 + 1;
+      local_44++;
       local_2c = (u8 *)surface_next_row((DibSurface *)param_1,(iptr)local_2c);
     }
     if (local_48 == 0) {
       local_28 = (u8 *)surface_pixel_ptr
                                  ((DibSurface *)param_1,local_64.left,
-                                  local_64.top + local_50 + -1);
+                                  local_64.top + local_50 - 1);
       local_44 = 0;
       while (local_44 < local_50) {
         local_54 = local_28;
-        for (local_3c = 0; local_3c < local_24; local_3c = local_3c + 1) {
+        for (local_3c = 0; local_3c < local_24; local_3c++) {
           if ((*local_54 != local_40) || (param_2 == -2)) {
             local_10 = local_50 - local_44;
             local_44 = local_50;
-            local_54 = local_54 + 1;
+            local_54++;
             break;
           }
-          local_54 = local_54 + 1;
+          local_54++;
         }
-        local_44 = local_44 + 1;
+        local_44++;
         local_28 = (u8 *)surface_prev_row((DibSurface *)param_1,(iptr)local_28);
       }
       local_8 = operator_new(0xa00);
@@ -9135,28 +4746,28 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
       else {
         local_44 = 0;
         while (local_44 < local_10 - local_18) {
-          local_c = local_c + 8;
+          local_c += 8;
           *(undefined4 *)((int)local_20 + local_44 * 4) = 0;
           *(undefined4 *)((int)local_38 + local_44 * 4) = 0;
           local_54 = local_2c;
-          for (local_3c = 0; local_3c < local_24; local_3c = local_3c + 1) {
+          for (local_3c = 0; local_3c < local_24; local_3c++) {
             if ((*local_54 != local_40) || (param_2 == -2)) {
               *(u8 **)((int)local_8 + local_44 * 4) = local_54;
               *(int *)((int)local_20 + local_44 * 4) = local_3c;
               break;
             }
-            local_54 = local_54 + 1;
+            local_54++;
           }
           if ((local_24 != local_3c) && (*(int *)((int)local_20 + local_44 * 4) < local_1c)) {
             local_1c = *(int *)((int)local_20 + local_44 * 4);
           }
           local_54 = local_2c + local_24;
-          for (local_3c = 0; local_54 = local_54 + -1, local_3c < local_24; local_3c = local_3c + 1)
+          for (local_3c = 0; local_54 = local_54 - 1, local_3c < local_24; local_3c++)
           {
             if ((*local_54 != local_40) || (param_2 == -2)) {
               *(iptr *)((int)local_38 + local_44 * 4) =
                    (local_24 - local_3c) - *(int *)((int)local_20 + local_44 * 4);
-              local_c = local_c + *(int *)((int)local_38 + local_44 * 4);
+              local_c += *(int *)((int)local_38 + local_44 * 4);
               break;
             }
           }
@@ -9166,7 +4777,7 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
             local_14 = *(int *)((int)local_38 + local_44 * 4) +
                        *(int *)((int)local_20 + local_44 * 4);
           }
-          local_44 = local_44 + 1;
+          local_44++;
           local_2c = (u8 *)surface_next_row((DibSurface *)param_1,(iptr)local_2c);
         }
         if (this->data_ptr != 0) {
@@ -9176,7 +4787,7 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
           uVar4 = mem_handle_free(this->data_handle);
           this->data_handle = uVar4;
         }
-        local_c = local_c + 8;
+        local_c += 8;
         local_30 = mem_handle_alloc(local_c);
         if (local_30 == 0) {
           dbg_logf(ADDR(0x6380ec, ((u8 *)&g.d_006380ec)),local_c);
@@ -9189,8 +4800,8 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
         }
         else {
           SetRect((LPRECT)&this->bounds_rect,local_1c,local_18,local_14,local_10);
-          iVar2 = thunk_rect_height((iptr)&local_64);
-          iVar3 = thunk_rect_width((iptr)&local_64);
+          iVar2 = rect_height((iptr)&local_64);
+          iVar3 = rect_width((iptr)&local_64);
           SetRect((LPRECT)this,0,0,iVar3,iVar2);
           if (param_2 == -2) {
             this->key_color = '\0';
@@ -9201,10 +4812,10 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
           this->offset_x = 0;
           this->full_height = 0;
           local_4c = (undefined4 *)mem_handle_lock(local_30);
-          for (local_44 = 0; local_44 < local_10 - local_18; local_44 = local_44 + 1) {
+          for (local_44 = 0; local_44 < local_10 - local_18; local_44++) {
             *local_4c = *(undefined4 *)((int)local_20 + local_44 * 4);
             local_4c[1] = *(undefined4 *)((int)local_38 + local_44 * 4);
-            local_4c = local_4c + 2;
+            local_4c += 2;
             mem_move_src_dst(*(iptr *)((int)local_8 + local_44 * 4),(iptr)local_4c,
                          *(undefined4 *)((int)local_38 + local_44 * 4));
             local_4c = (undefined4 *)((int)local_4c + *(int *)((int)local_38 + local_44 * 4));
@@ -9222,8 +4833,8 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
     }
     else {
       SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
-      iVar2 = thunk_rect_height((iptr)&local_64);
-      iVar3 = thunk_rect_width((iptr)&local_64);
+      iVar2 = rect_height((iptr)&local_64);
+      iVar3 = rect_width((iptr)&local_64);
       SetRect((LPRECT)this,0,0,iVar3,iVar2);
       if (param_2 == -2) {
         this->key_color = '\0';
@@ -9243,240 +4854,6 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
   return local_30;
 }
 #undef local_64
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005cfdeb auto */
-#define local_68 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_58 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define local_54 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_50 (*(undefined4 * *)(frame_ + FRAME_OFF(24)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_44 (*(u8 *)(frame_ + FRAME_OFF(36)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_3c (*(void * *)(frame_ + FRAME_OFF(44)))
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_30 (*(u8 * *)(frame_ + FRAME_OFF(56)))
-#define local_2c (*(u8 * *)(frame_ + FRAME_OFF(60)))
-#define local_28 (*(iptr *)(frame_ + FRAME_OFF(64)))
-#define local_24 (*(void * *)(frame_ + FRAME_OFF(68)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_c (*(void * *)(frame_ + FRAME_OFF(92)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
-int __thiscall
-sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param_3)
-
-{
-  int iVar1;
-  int iVar2;
-  u32 uVar3;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  local_8 = ddsurf_lock(param_1);
-  if (local_8 == 0) {
-    local_34 = 0;
-  }
-  else {
-    local_38 = 1;
-    local_4c = 1;
-    SetRect(&local_68,*(int *)param_3,*(int *)(param_3 + 4),*(int *)(param_3 + 8),
-            *(int *)(param_3 + 0xc));
-    IntersectRect(&local_68,&local_68,(RECT *)&param_1->field_10);
-    local_20 = 10000;
-    local_18 = 0;
-    local_10 = 0;
-    local_28 = local_68.right - local_68.left;
-    local_54 = local_68.bottom - local_68.top;
-    local_30 = (u8 *)ddsurf_pixel_ptr
-                               ((DDSurfacePixelView *)param_1,local_68.left,local_68.top,local_8);
-    if (local_30 == (u8 *)0x0) {
-      dbg_logf_int2(ADDR(0x638124, ((u8 *)&g.d_00638124)),local_68.left,local_68.top);
-      ddsurf_unlock(param_1);
-      local_34 = 0;
-    }
-    else {
-      if (param_2 == -1) {
-        local_44 = *local_30;
-      }
-      else if (param_2 != -2) {
-        local_44 = (u8)param_2;
-      }
-      local_48 = 0;
-      while (local_48 < local_54) {
-        local_58 = local_30;
-        for (local_40 = 0; local_40 < local_28; local_40 = local_40 + 1) {
-          if ((*local_58 != local_44) || (param_2 == -2)) {
-            local_1c = local_48;
-            local_58 = local_58 + 1;
-            local_30 = (u8 *)ddsurf_row_prev((DDSurfaceRowPrevView *)param_1,(iptr)local_30);
-            local_48 = local_54;
-            local_4c = 0;
-            break;
-          }
-          local_58 = local_58 + 1;
-        }
-        local_48 = local_48 + 1;
-        local_30 = (u8 *)ddsurf_row_next((DDSurfaceRowNextView *)param_1,(iptr)local_30);
-      }
-      if (local_4c == 0) {
-        local_2c = (u8 *)ddsurf_pixel_ptr
-                                   ((DDSurfacePixelView *)param_1,local_68.left,local_68.top + local_54 + -1
-                                    ,local_8);
-        local_48 = 0;
-        while (local_48 < local_54) {
-          local_58 = local_2c;
-          for (local_40 = 0; local_40 < local_28; local_40 = local_40 + 1) {
-            if ((*local_58 != local_44) || (param_2 == -2)) {
-              local_14 = local_54 - local_48;
-              local_48 = local_54;
-              local_58 = local_58 + 1;
-              break;
-            }
-            local_58 = local_58 + 1;
-          }
-          local_48 = local_48 + 1;
-          local_2c = (u8 *)ddsurf_row_prev((DDSurfaceRowPrevView *)param_1,(iptr)local_2c);
-        }
-        local_c = operator_new(0xa00);
-        local_24 = operator_new(0xa00);
-        local_3c = operator_new(0xa00);
-        if (((local_c == (void *)0x0) || (local_24 == (void *)0x0)) || (local_3c == (void *)0x0)) {
-          dbg_log(ADDR(0x638158, ((u8 *)&g.d_00638158)));
-          ddsurf_unlock(param_1);
-          local_34 = 0;
-        }
-        else {
-          local_48 = 0;
-          while (local_48 < local_14 - local_1c) {
-            local_10 = local_10 + 8;
-            *(undefined4 *)((int)local_24 + local_48 * 4) = 0;
-            *(undefined4 *)((int)local_3c + local_48 * 4) = 0;
-            local_58 = local_30;
-            for (local_40 = 0; local_40 < local_28; local_40 = local_40 + 1) {
-              if ((*local_58 != local_44) || (param_2 == -2)) {
-                *(u8 **)((int)local_c + local_48 * 4) = local_58;
-                *(int *)((int)local_24 + local_48 * 4) = local_40;
-                break;
-              }
-              local_58 = local_58 + 1;
-            }
-            if ((local_28 != local_40) && (*(int *)((int)local_24 + local_48 * 4) < local_20)) {
-              local_20 = *(int *)((int)local_24 + local_48 * 4);
-            }
-            local_58 = local_30 + local_28;
-            for (local_40 = 0; local_58 = local_58 + -1, local_40 < local_28;
-                local_40 = local_40 + 1) {
-              if ((*local_58 != local_44) || (param_2 == -2)) {
-                *(iptr *)((int)local_3c + local_48 * 4) =
-                     (local_28 - local_40) - *(int *)((int)local_24 + local_48 * 4);
-                local_10 = local_10 + *(int *)((int)local_3c + local_48 * 4);
-                break;
-              }
-            }
-            if ((local_28 != local_40) &&
-               (local_18 <
-                *(int *)((int)local_3c + local_48 * 4) + *(int *)((int)local_24 + local_48 * 4))) {
-              local_18 = *(int *)((int)local_3c + local_48 * 4) +
-                         *(int *)((int)local_24 + local_48 * 4);
-            }
-            local_48 = local_48 + 1;
-            local_30 = (u8 *)ddsurf_row_next((DDSurfaceRowNextView *)param_1,(iptr)local_30);
-          }
-          if (this->data_ptr != 0) {
-            sprite_unlock(this);
-          }
-          if (this->data_handle != 0) {
-            uVar3 = mem_handle_free(this->data_handle);
-            this->data_handle = uVar3;
-          }
-          local_10 = local_10 + 8;
-          local_34 = mem_handle_alloc(local_10);
-          if (local_34 == 0) {
-            dbg_logf(ADDR(0x638194, ((u8 *)&g.d_00638194)),local_10);
-            ddsurf_unlock(param_1);
-            operator_delete(local_c);
-            operator_delete(local_24);
-            operator_delete(local_3c);
-          }
-          else {
-            SetRect((LPRECT)&this->bounds_rect,local_20,local_1c,local_18,local_14);
-            iVar1 = thunk_rect_height((iptr)&local_68);
-            iVar2 = thunk_rect_width((iptr)&local_68);
-            SetRect((LPRECT)this,0,0,iVar2,iVar1);
-            if (param_2 == -2) {
-              this->key_color = '\0';
-            }
-            else {
-              this->key_color = local_44;
-            }
-            this->offset_x = 0;
-            this->full_height = 0;
-            local_50 = (undefined4 *)mem_handle_lock(local_34);
-            for (local_48 = 0; local_48 < local_14 - local_1c; local_48 = local_48 + 1) {
-              *local_50 = *(undefined4 *)((int)local_24 + local_48 * 4);
-              local_50[1] = *(undefined4 *)((int)local_3c + local_48 * 4);
-              local_50 = local_50 + 2;
-              mem_move_src_dst(*(iptr *)((int)local_c + local_48 * 4),(iptr)local_50,
-                           *(undefined4 *)((int)local_3c + local_48 * 4));
-              local_50 = (undefined4 *)((int)local_50 + *(int *)((int)local_3c + local_48 * 4));
-            }
-            *local_50 = 0;
-            local_50 = (undefined4 *)mem_handle_unlock(local_34);
-            operator_delete(local_c);
-            operator_delete(local_24);
-            operator_delete(local_3c);
-            ddsurf_unlock(param_1);
-          }
-        }
-      }
-      else {
-        SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
-        iVar1 = thunk_rect_height((iptr)&local_68);
-        iVar2 = thunk_rect_width((iptr)&local_68);
-        SetRect((LPRECT)this,0,0,iVar2,iVar1);
-        if (param_2 == -2) {
-          this->key_color = '\0';
-        }
-        else {
-          this->key_color = local_44;
-        }
-        this->offset_x = 0;
-        this->full_height = 0;
-        ddsurf_unlock(param_1);
-        this->data_ptr = 0;
-        local_34 = 0;
-      }
-    }
-  }
-  return local_34;
-}
-#undef local_68
-#undef local_58
 #undef local_54
 #undef local_50
 #undef local_4c

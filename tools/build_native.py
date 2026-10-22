@@ -43,6 +43,13 @@ TARGETS = {
         'ldflags': ['-m32', '-rdynamic', '-no-pie', '--coverage'],
         'libs': ['-lSDL2', '-lm', '-ldl'],
     },
+    'linux32gc': {          # which functions nothing refers to: build/native/linux32gc/unreferenced.txt
+        'cc': 'gcc',
+        'exe': 'civ2-linux32gc',
+        'cflags': ['-m32', '-ffunction-sections'],
+        'ldflags': ['-m32', '-no-pie', '-Wl,--gc-sections', '-Wl,--print-gc-sections'],
+        'libs': ['-lSDL2', '-lm', '-ldl'],
+    },
     'linux32clang': {       # cross-check: the linux32 build compiled by clang (needs clang installed)
         'cc': 'clang',
         'exe': 'civ2-linux32clang',
@@ -244,6 +251,11 @@ def main():
         if not undefined:
             sys.stderr.write(r.stderr[-3000:])
         raise SystemExit(1)
+    gc = re.findall(r"removing unused section '\.text\.([^']+)' in file '([^']+)'", r.stderr)
+    if gc:
+        with open(os.path.join(os.path.dirname(objs[0]), 'unreferenced.txt'), 'w') as f:
+            f.write(''.join('%s\t%s\n' % (n, os.path.basename(o)) for n, o in sorted(gc)))
+        print('%d functions nothing refers to (unreferenced.txt)' % len(gc))
     # wasm: a call whose prototype differs from the callee's definition is
     # linked to a trap -- fatal here rather than when the game gets there.
     mismatch = sorted(set(re.findall(r'function signature mismatch: (\S+)', r.stderr)))

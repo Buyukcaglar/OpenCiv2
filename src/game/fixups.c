@@ -54,9 +54,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
                 g_btn_hover = 1;
                 SetCapture(param_1);
                 if (this != (void *)0x0) {
-                    uVar4 = thunk_ctrl_get_parent(this);
+                    uVar4 = ctrl_get_parent(this);
                     wnd_set_active_child(uVar4);
-                    uVar4 = thunk_ctrl_get_id(this);
+                    uVar4 = ctrl_get_id(this);
                     hotspot_fire_enter(this, uVar4);
                 }
             }
@@ -74,9 +74,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
                 if (g_btn_pressed == 0) {
                     ReleaseCapture();
                     if (this != (void *)0x0) {
-                        uVar4 = thunk_ctrl_get_parent(this);
+                        uVar4 = ctrl_get_parent(this);
                         wnd_set_active_child(uVar4);
-                        uVar4 = thunk_ctrl_get_id(this);
+                        uVar4 = ctrl_get_id(this);
                         hotspot_fire_leave(this, uVar4);
                     }
                 }
@@ -86,9 +86,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
     case 0x201:     /* WM_LBUTTONDOWN */
         if (g_btn_hover != 0) {
             g_btn_pressed = 1;
-            uVar4 = thunk_ctrl_get_parent(this);
+            uVar4 = ctrl_get_parent(this);
             wnd_set_active_child(uVar4);
-            uVar4 = thunk_ctrl_get_id(this);
+            uVar4 = ctrl_get_id(this);
             hotspot_fire_press(this, uVar4);
         }
         break;
@@ -97,18 +97,18 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
             g_btn_pressed = 0;
             if (g_btn_hover != 0) {
                 if (this != (void *)0x0) {
-                    uVar4 = thunk_ctrl_get_parent(this);
+                    uVar4 = ctrl_get_parent(this);
                     wnd_set_active_child(uVar4);
-                    uVar4 = thunk_ctrl_get_id(this);
+                    uVar4 = ctrl_get_id(this);
                     hotspot_fire_click(this, uVar4);
                 }
             }
             else {
                 ReleaseCapture();
                 if (this != (void *)0x0) {
-                    uVar4 = thunk_ctrl_get_parent(this);
+                    uVar4 = ctrl_get_parent(this);
                     wnd_set_active_child(uVar4);
-                    uVar4 = thunk_ctrl_get_id(this);
+                    uVar4 = ctrl_get_id(this);
                     hotspot_fire_leave(this, uVar4);
                 }
             }
@@ -116,9 +116,9 @@ undefined4 __stdcall hotspot_wndproc(HWND param_1,undefined4 param_2,undefined4 
         break;
     case 0x203:     /* WM_LBUTTONDBLCLK */
         if (g_btn_hover != 0) {
-            uVar4 = thunk_ctrl_get_parent(this);
+            uVar4 = ctrl_get_parent(this);
             wnd_set_active_child(uVar4);
-            uVar4 = thunk_ctrl_get_id(this);
+            uVar4 = ctrl_get_id(this);
             hotspot_fire_dblclick(this, uVar4);
         }
         break;
@@ -164,7 +164,7 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
     local_28 = *(void **)(local_44 + 4);
     switch (param_2) {
     case 0x201:     /* WM_LBUTTONDOWN */
-        iVar7 = thunk_ctrl_is_enabled(local_28);
+        iVar7 = ctrl_is_enabled(local_28);
         if (iVar7 == 0)
             break;
         *(undefined4 *)(local_44 + 0x1c) = 1;
@@ -207,9 +207,9 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
         BVar4 = PtInRect(&local_38, pt);
         if (BVar4 != 0) {
             button_wndproc(param_1, 0xf, 0, 0);
-            uVar9 = thunk_ctrl_get_parent(local_28);
+            uVar9 = ctrl_get_parent(local_28);
             wnd_set_active_child(uVar9);
-            uVar9 = thunk_ctrl_get_id(local_28);
+            uVar9 = ctrl_get_id(local_28);
             button_fire_callback(local_28, uVar9);
         }
         break;
@@ -221,15 +221,15 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
         local_38.right = piVar3[2];
         local_38.bottom = piVar3[3];
         ValidateRect(GetParent(param_1), &local_38);
-        iVar7 = thunk_ctrl_is_enabled(local_28);
+        iVar7 = ctrl_is_enabled(local_28);
         if (iVar7 == 0) {
             pHVar6 = GetFocus();
             if (pHVar6 == param_1) {
-                pvVar8 = (void *)thunk_ctrl_get_parent(local_28);
+                pvVar8 = (void *)ctrl_get_parent(local_28);
                 cVar1 = wnd_keyboard_nav_enabled(pvVar8);
                 if (cVar1 == '\0') {
-                    pvVar8 = (void *)thunk_ctrl_get_parent(local_28);
-                    iVar7 = thunk_wnd_get_window(pvVar8);
+                    pvVar8 = (void *)ctrl_get_parent(local_28);
+                    iVar7 = wnd_get_window(pvVar8);
                     SetFocus(*(HWND *)(iVar7 + 4));
                 }
                 else {
@@ -247,8 +247,8 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
         local_24 = CreateCompatibleDC(local_40);
         RealizePalette(local_24);
         h = SelectObject(local_24, local_3c);
-        iVar7 = thunk_rect_height(&local_38);      /* height */
-        cx = thunk_rect_width(&local_38);         /* width */
+        iVar7 = rect_height(&local_38);      /* height */
+        cx = rect_width(&local_38);         /* width */
         BitBlt(local_40, 0, 0, cx, iVar7, local_24, 0, 0, 0xcc0020);
         SelectObject(local_24, h);
         DeleteDC(local_24);
@@ -260,23 +260,23 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
         if (param_3 == 9) {
             SendMessageA(GetParent(param_1), param_2, param_3, param_4);
         }
-        else if (param_3 == 0x20 && (iVar7 = thunk_ctrl_is_enabled(local_28), iVar7 != 0) &&
-                 (pvVar8 = (void *)thunk_ctrl_get_parent(local_28),
+        else if (param_3 == 0x20 && (iVar7 = ctrl_is_enabled(local_28), iVar7 != 0) &&
+                 (pvVar8 = (void *)ctrl_get_parent(local_28),
                   cVar1 = wnd_keyboard_nav_enabled(pvVar8), cVar1 != '\0')) {
             *(undefined4 *)(local_44 + 0x18) = 1;
             wnd_redraw_client(param_1);
             *(undefined4 *)(local_44 + 0x18) = 0;
             SVar2 = GetAsyncKeyState(0x20);
             local_8 = (int)SVar2;
-            thunk_ui_pump_messages();
+            ui_pump_messages();
             while (*(undefined1 *)((char *)&local_8 + 1) != '\0') {
                 SVar2 = GetAsyncKeyState(0x20);
                 local_8 = (int)SVar2;
             }
             wnd_redraw_client(param_1);
-            uVar9 = thunk_ctrl_get_parent(local_28);
+            uVar9 = ctrl_get_parent(local_28);
             wnd_set_active_child(uVar9);
-            uVar9 = thunk_ctrl_get_id(local_28);
+            uVar9 = ctrl_get_id(local_28);
             button_fire_callback(local_28, uVar9);
         }
         else {
@@ -284,7 +284,7 @@ undefined4 __stdcall button_wndproc(HWND param_1,uint param_2,WPARAM param_3,uin
         }
         break;
     case 7:         /* WM_SETFOCUS: draw the focus frame */
-        pvVar8 = (void *)thunk_ctrl_get_parent(local_28);
+        pvVar8 = (void *)ctrl_get_parent(local_28);
         cVar1 = wnd_keyboard_nav_enabled(pvVar8);
         if (cVar1 == '\0')
             return ctrl_default_wndproc(param_1, param_2, param_3, param_4);
@@ -390,9 +390,9 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
             BVar12 = PtInRect(&local_20, pt);
             if (BVar12 != 0) {
                 spritebtn_wndproc(param_1, 0xf, 0, 0);
-                uVar9 = thunk_ctrl_get_parent(local_10);
+                uVar9 = ctrl_get_parent(local_10);
                 wnd_set_active_child(uVar9);
-                uVar9 = thunk_ctrl_get_id(local_10);
+                uVar9 = ctrl_get_id(local_10);
                 if (param_2 == 0x202)
                     spritebtn_fire_click(local_10, uVar9);
                 else
@@ -416,36 +416,36 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
         OffsetRect(&local_20, -local_20.left, -local_20.top);
         ValidateRect(param_1, &local_20);
         if (g_palette_mode == 1) {
-            pvVar8 = (void *)thunk_ctrl_get_parent(local_10);
-            pvVar8 = (void *)thunk_wnd_get_palette(pvVar8);
+            pvVar8 = (void *)ctrl_get_parent(local_10);
+            pvVar8 = (void *)wnd_get_palette(pvVar8);
             hPal = (HPALETTE)palette_get_hpalette(pvVar8);
             SelectPalette(local_24, hPal, 0);
         }
         if (*(int *)(iVar3 + 0x18) == 0) {
             surface_lock((void *)((int)local_10 + 0x34));
-            pvVar8 = (void *)thunk_ctrl_get_parent(local_10);
-            uVar9 = thunk_wnd_get_palette(pvVar8);
+            pvVar8 = (void *)ctrl_get_parent(local_10);
+            uVar9 = wnd_get_palette(pvVar8);
             surface_apply_palette((void *)((int)local_10 + 0x34), (void *)uVar9);
             if (g_palette_mode == 1)
                 RealizePalette(local_24);
             iVar6 = surface_get_dib((void *)((int)local_10 + 0x34));
             hdcSrc = *(HDC *)(iVar6 + 4);
-            iVar6 = thunk_surface_height((void *)((int)local_10 + 0x34));
-            iVar7 = thunk_surface_width((void *)((int)local_10 + 0x34));
+            iVar6 = surface_height((void *)((int)local_10 + 0x34));
+            iVar7 = surface_width((void *)((int)local_10 + 0x34));
             BitBlt(local_24, 0, 0, iVar7, iVar6, hdcSrc, 0, 0, 0xcc0020);
             surface_unlock((void *)((int)local_10 + 0x34));
         }
         if (*(int *)(iVar3 + 0x18) == 1) {
             surface_lock((void *)((int)local_10 + 0x7c));
-            pvVar8 = (void *)thunk_ctrl_get_parent(local_10);
-            uVar9 = thunk_wnd_get_palette(pvVar8);
+            pvVar8 = (void *)ctrl_get_parent(local_10);
+            uVar9 = wnd_get_palette(pvVar8);
             surface_apply_palette((void *)((int)local_10 + 0x7c), (void *)uVar9);
             RealizePalette(local_24);
             iVar6 = surface_get_dib((void *)((int)local_10 + 0x7c));
             hdcSrc = *(HDC *)(iVar6 + 4);
             /* The original uses the same accessor for both dimensions here. */
-            iVar6 = thunk_surface_width((void *)((int)local_10 + 0x7c));
-            iVar7 = thunk_surface_width((void *)((int)local_10 + 0x7c));
+            iVar6 = surface_width((void *)((int)local_10 + 0x7c));
+            iVar7 = surface_width((void *)((int)local_10 + 0x7c));
             BitBlt(local_24, 0, 0, iVar7, iVar6, hdcSrc, 0, 0, 0xcc0020);
             surface_unlock((void *)((int)local_10 + 0x7c));
         }
@@ -457,7 +457,7 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
         if (param_3 == 9) {
             SendMessageA(GetParent(param_1), param_2, param_3, param_4);
         }
-        else if (param_3 == 0x20 && (pvVar8 = (void *)thunk_ctrl_get_parent(local_10),
+        else if (param_3 == 0x20 && (pvVar8 = (void *)ctrl_get_parent(local_10),
                                      cVar1 = wnd_keyboard_nav_enabled(pvVar8), cVar1 != '\0')) {
             *(undefined4 *)(iVar3 + 0x18) = 1;
             wnd_redraw_client(param_1);
@@ -466,9 +466,9 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
             while (*(undefined1 *)((char *)&local_8 + 1) != '\0')
                 local_8 = (int)GetAsyncKeyState(0x20);
             wnd_redraw_client(param_1);
-            uVar9 = thunk_ctrl_get_parent(local_10);
+            uVar9 = ctrl_get_parent(local_10);
             wnd_set_active_child(uVar9);
-            uVar9 = thunk_ctrl_get_id(local_10);
+            uVar9 = ctrl_get_id(local_10);
             spritebtn_fire_click(local_10, uVar9);
         }
         else {
@@ -476,7 +476,7 @@ undefined4 __stdcall spritebtn_wndproc(HWND param_1,uint param_2,WPARAM param_3,
         }
         break;
     case 7:         /* WM_SETFOCUS */
-        pvVar8 = (void *)thunk_ctrl_get_parent(local_10);
+        pvVar8 = (void *)ctrl_get_parent(local_10);
         cVar1 = wnd_keyboard_nav_enabled(pvVar8);
         if (cVar1 == '\0')
             return 0;
@@ -653,8 +653,8 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
     case 0x24: {    /* WM_GETMINMAXINFO */
         int *mmi = (int *)param_4;
         int border_y, border_x;
-        border_y = wnd_obj_frame_height(thunk_wnd_get_window(local_14));
-        border_x = wnd_obj_frame_width(thunk_wnd_get_window(local_14));
+        border_y = wnd_obj_frame_height(wnd_get_window(local_14));
+        border_x = wnd_obj_frame_width(wnd_get_window(local_14));
         wnd_get_min_size(local_14, (undefined4 *)&local_20, (undefined4 *)&local_24);
         wnd_get_max_size(local_14, (undefined4 *)&local_8, (undefined4 *)&local_c);
         mmi[8] = border_x + local_8;        /* ptMaxTrackSize */
@@ -665,7 +665,7 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
     }
 
     case 0x201:     /* WM_LBUTTONDOWN */
-        owner = thunk_wnd_get_window((void *)GetWindowLongA(param_1, 0));
+        owner = wnd_get_window((void *)GetWindowLongA(param_1, 0));
         g_active_child = local_14;
         if ((*(byte *)(owner + 0x49) & 2) != 0) {
             SetFocus(*(HWND *)(owner + 4));
@@ -683,7 +683,7 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
         wnd_call_lbuttonup_raw(view, param_4 & 0xffff, param_4 >> 0x10);
         break;
     case 0x204:     /* WM_RBUTTONDOWN */
-        owner = thunk_wnd_get_window((void *)GetWindowLongA(param_1, 0));
+        owner = wnd_get_window((void *)GetWindowLongA(param_1, 0));
         if ((*(byte *)(owner + 0x49) & 2) != 0) {
             SetFocus(*(HWND *)(owner + 4));
             BringWindowToTop(param_1);
@@ -735,9 +735,9 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
         /* fall through */
     case 0x30f:     /* WM_QUERYNEWPALETTE */
         local_18 = GetDC(param_1);
-        iVar5 = thunk_wnd_get_window(local_14);
+        iVar5 = wnd_get_window(local_14);
         if (*(int *)(iVar5 + 0x18) != 0) {
-            iVar5 = thunk_wnd_get_window(local_14);
+            iVar5 = wnd_get_window(local_14);
             SelectPalette(local_18, *(HPALETTE *)(iVar5 + 0x18), 0);
             local_10 = RealizePalette(local_18);
             InvalidateRect(param_1, (RECT *)0x0, 1);
@@ -878,13 +878,13 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
         return wnd_base_wndproc(param_1, param_2, wp, param_4);
 
     case 0x231:     /* WM_ENTERSIZEMOVE */
-        owner = thunk_wnd_get_window((void *)GetWindowLongA(param_1, 0));
+        owner = wnd_get_window((void *)GetWindowLongA(param_1, 0));
         (void)owner;
         g_active_child = local_14;
         wnd_call_entersizemove(view);
         return wnd_base_wndproc(param_1, param_2, wp, param_4);
     case 0x232:     /* WM_EXITSIZEMOVE */
-        owner = thunk_wnd_get_window((void *)GetWindowLongA(param_1, 0));
+        owner = wnd_get_window((void *)GetWindowLongA(param_1, 0));
         (void)owner;
         g_active_child = local_14;
         wnd_call_exitsizemove(view);

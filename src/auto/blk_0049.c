@@ -5,7 +5,7 @@
 void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,undefined4 param_4)
 
 {
-  thunk_popup_text_with_sprite(param_1,param_2,0,param_3,param_4);
+  popup_text_with_sprite(param_1,param_2,0,param_3,param_4);
   return;
 }
 
@@ -13,7 +13,7 @@ void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,undef
 void __cdecl popup_text_with_city_noflags(iptr param_1,iptr param_2,undefined4 param_3)
 
 {
-  thunk_popup_text_with_city(param_1,param_2,0,param_3);
+  popup_text_with_city(param_1,param_2,0,param_3);
   return;
 }
 
@@ -21,7 +21,7 @@ void __cdecl popup_text_with_city_noflags(iptr param_1,iptr param_2,undefined4 p
 void __cdecl popup_text_with_unit_noflags(iptr param_1,iptr param_2,iptr param_3)
 
 {
-  thunk_popup_text_with_unit(param_1,param_2,0,param_3);
+  popup_text_with_unit(param_1,param_2,0,param_3);
   return;
 }
 
@@ -51,15 +51,15 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
   *(u32 *)(this[5].pad_48 + 100) = this->resize_border;
   *(u32 *)(this[5].pad_48 + 0x68) = this->resize_border;
   while (pedia_list_top % 9 != 0) {
-    *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) + -1;
+    *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
-  for (local_8 = 0; local_8 < *(int *)(this[2].pad_15c + 0x38); local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < *(int *)(this[2].pad_15c + 0x38); local_8++) {
     *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
          *(undefined4 *)(this[2].pad_200 + local_8 * 4 + 0x1c);
   }
-  thunk_scrollbar_set_range
+  scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
-  thunk_scrollbar_set_pos
+  scrollbar_set_pos
             ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
@@ -67,10 +67,10 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
     this[5].pad_48[0x6a] = 0xff;
     this[5].pad_48[0x6b] = 0xff;
   }
-  thunk_pedia_update_controls(this);
-  thunk_wnd_set_focus((WndBase *)&pedia_window_wnd);
-  thunk_wnd_activate((Wnd *)&pedia_window_wnd);
-  thunk_pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_update_controls(this);
+  wnd_set_focus((WndBase *)&pedia_window_wnd);
+  wnd_activate((Wnd *)&pedia_window_wnd);
+  pedia_redraw((C_004083b0_120 *)&pedia_window);
   return;
 }
 #undef local_8
@@ -103,10 +103,10 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 #define local_88 (*(int *)(frame_ + FRAME_OFF(536)))
 #define local_84 (*(int *)(frame_ + FRAME_OFF(540)))
 #define local_80 (*(int *)(frame_ + FRAME_OFF(544)))
-#define local_7c (*(iptr *)(frame_ + FRAME_OFF(548)))
+#define terrain2 (*(iptr *)(frame_ + FRAME_OFF(548)))
 #define local_78 (*(int *)(frame_ + FRAME_OFF(552)))
 #define local_74 (*(int *)(frame_ + FRAME_OFF(556)))
-#define local_70 (*(iptr *)(frame_ + FRAME_OFF(560)))
+#define terrain3 (*(iptr *)(frame_ + FRAME_OFF(560)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(564)))
 #define local_68 (*(iptr *)(frame_ + FRAME_OFF(568)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(572)))
@@ -141,46 +141,46 @@ void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
   
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  thunk_pedia_update_controls((C_004083b0_61c *)this);
-  thunk_pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((C_004083b0_61c *)this);
+  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
   local_8 = (GameFont *)&font_size21;
   local_58 = this->content_left;
   local_44 = 10;
-  local_54 = thunk_rect_width((iptr)&this->content_left);
+  local_54 = rect_width((iptr)&this->content_left);
   local_78 = local_54 / 2;
-  local_1c = thunk_rect_height((iptr)&this->content_left);
+  local_1c = rect_height((iptr)&this->content_left);
   local_1c = local_1c / 0xc;
-  local_80 = thunk_font_cached_height(local_8);
+  local_80 = font_cached_height(local_8);
   local_5c = this->content_top + 8;
-  local_7c = *(iptr *)(this[1].pad_3c0 + this->resize_border * 4 + 0x6c);
+  terrain2 = *(iptr *)(this[1].pad_3c0 + this->resize_border * 4 + 0x6c);
   gfx_get_scale_ratio((iptr)&local_20,(iptr)&local_24);
   gfx_set_scale_ratio(local_20 * 2,local_24);
-  local_64 = thunk_sprite_get_height((Sprite *)&terrain_base_sprites);
-  local_48 = thunk_sprite_get_width((Sprite *)&terrain_base_sprites);
-  local_58 = local_58 + local_44;
-  local_5c = local_5c + (local_1c / 2 - local_64 / 2);
-  local_70 = local_7c % 0xb;
+  local_64 = sprite_get_height((Sprite *)&terrain_base_sprites);
+  local_48 = sprite_get_width((Sprite *)&terrain_base_sprites);
+  local_58 += local_44;
+  local_5c += (local_1c / 2 - local_64 / 2);
+  terrain3 = terrain2 % 0xb;
   local_6c = local_48 * 2 + panel_margin_x * 2;
   sprite_draw
-            ((Sprite *)(&terrain_base_sprites + local_70 * 0x3c),(iptr)local_1d0,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
+            ((Sprite *)(&terrain_base_sprites + terrain3 * 0x3c),(iptr)local_1d0,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
              local_5c);
-  if (local_7c < 0xb) {
-    if (local_7c == 3) {
+  if (terrain2 < 0xb) {
+    if (terrain2 == 3) {
       sprite_draw
                 ((Sprite *)&forest_sprites,(iptr)local_1e0,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,local_5c);
     }
-    else if (local_7c == 4) {
+    else if (terrain2 == 4) {
       sprite_draw
                 ((Sprite *)&hill_sprites,(iptr)local_1f0,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,local_5c);
     }
-    else if (local_7c == 5) {
+    else if (terrain2 == 5) {
       sprite_draw
                 ((Sprite *)&mountain_sprites,(iptr)local_200,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,local_5c);
     }
   }
   else {
-    local_4c = (uint)(0x15 < local_7c);
-    switch(local_7c) {
+    local_4c = (uint)(0x15 < terrain2);
+    switch(terrain2) {
     case 0xd:
     case 0x18:
       sprite_draw
@@ -206,7 +206,7 @@ void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
     case 0x17: ;
     }
     sprite_draw
-              ((Sprite *)(&terrain_resource_sprites + local_70 * 0x78 + local_4c * 0x3c),(iptr)local_240,
+              ((Sprite *)(&terrain_resource_sprites + terrain3 * 0x78 + local_4c * 0x3c),(iptr)local_240,
                ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,local_5c);
   }
 LAB_00490a7d:
@@ -214,351 +214,351 @@ LAB_00490a7d:
   local_3c = list_text_color;
   gfx_set_text_color_index(list_text_color);
   local_58 = this->content_left + local_44;
-  local_40 = thunk_rect_width((iptr)&this->content_left);
+  local_40 = rect_width((iptr)&this->content_left);
   local_40 = local_40 / 2;
-  local_50 = local_40 + -100;
-  if ((local_7c < 0) || (10 < local_7c)) {
+  local_50 = local_40 - 100;
+  if ((terrain2 < 0) || (10 < terrain2)) {
     local_58 = local_58 + local_6c + 0x1e;
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    thunk_text_append_label(0x295);
-    thunk_text_append_colon();
+    local_5c += local_80;
+    text_clear();
+    text_append_label(0x295);
+    text_append_colon();
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     local_58 = local_58 + iVar2 + 10;
-    thunk_text_clear();
-    iVar3 = thunk_pedia_find_terrain_index(local_70);
-    uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+    text_clear();
+    iVar3 = pedia_find_terrain_index(terrain3);
+    uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(&text_buffer,uVar4);
-    local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    local_74 = thunk_font_line_spacing(local_8);
+    local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    local_74 = font_line_spacing(local_8);
     SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
-    thunk_pedia_add_link(this,local_70,local_58,local_5c,4,local_34.left,local_34.top,local_34.right,
+    pedia_add_link(this,terrain3,local_58,local_5c,4,local_34.left,local_34.top,local_34.right,
                        local_34.bottom);
-    local_5c = local_5c + ((local_64 * 2 + 10) - local_80);
+    local_5c += ((local_64 * 2 + 10) - local_80);
   }
   else {
     local_60 = local_5c + local_64 * 2 + 10;
     local_5c = local_60;
-    thunk_text_clear();
-    thunk_text_append_label(0x293);
-    thunk_text_append_colon();
+    text_clear();
+    text_append_label(0x293);
+    text_append_colon();
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    thunk_text_clear();
-    _sprintf(&text_buffer,&pedia_terrain_move_cost_fmt,(int)(char)terrain_types[local_7c].move_cost);
+    text_clear();
+    _sprintf(&text_buffer,&pedia_terrain_move_cost_fmt,(int)(char)terrain_types[terrain2].move_cost);
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
     local_58 = this->content_left + local_44;
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    thunk_text_append_label(0x294);
-    thunk_text_append_colon();
+    local_5c += local_80;
+    text_clear();
+    text_append_label(0x294);
+    text_append_colon();
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    thunk_text_clear();
-    if (terrain_types[local_7c].defense == '\x06') {
+    text_clear();
+    if (terrain_types[terrain2].defense == 6) {
       FUN_005f22d0(&text_buffer,s__200__0062c948);
     }
-    else if (terrain_types[local_7c].defense == '\x03') {
+    else if (terrain_types[terrain2].defense == 3) {
       FUN_005f22d0(&text_buffer,&pedia_terrain_defense_50_str);
     }
-    else if (terrain_types[local_7c].defense == '\x04') {
+    else if (terrain_types[terrain2].defense == 4) {
       FUN_005f22d0(&text_buffer,s__100__0062c958);
     }
-    else if (terrain_types[local_7c].defense == '\x05') {
+    else if (terrain_types[terrain2].defense == 5) {
       FUN_005f22d0(&text_buffer,s__150__0062c960);
     }
     else {
-      iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb08));
-      thunk_text_append(iVar3);
+      iVar3 = label_string(*(undefined4 *)(label_string_ids + 0xb08));
+      text_append(iVar3);
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
   }
   local_58 = this->content_left + local_44;
-  local_5c = local_5c + local_80;
-  thunk_text_clear();
-  thunk_text_append_label(0x40);
-  thunk_text_append_colon();
+  local_5c += local_80;
+  text_clear();
+  text_append_label(0x40);
+  text_append_colon();
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-  thunk_text_clear();
-  _sprintf(&text_buffer,&pedia_terrain_food_fmt,(int)(char)terrain_types[local_7c].food);
+  text_clear();
+  _sprintf(&text_buffer,&pedia_terrain_food_fmt,(int)(char)terrain_types[terrain2].food);
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
-  iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_58 = local_50 + iVar2 + 3;
   iVar5 = local_5c + local_1c / 2;
-  iVar2 = thunk_sprite_get_height((Sprite *)&resource_icon_sprites);
+  iVar2 = sprite_get_height((Sprite *)&resource_icon_sprites);
   sprite_draw
             ((Sprite *)&resource_icon_sprites,(iptr)local_250,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-             (iVar5 + -2) - iVar2 / 2);
+             (iVar5 - 2) - iVar2 / 2);
   local_58 = this->content_left + local_44;
-  local_5c = local_5c + local_80;
-  thunk_text_clear();
-  thunk_text_append_label(0x296);
-  thunk_text_append_colon();
+  local_5c += local_80;
+  text_clear();
+  text_append_label(0x296);
+  text_append_colon();
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-  thunk_text_clear();
-  if (local_7c == 2) {
+  text_clear();
+  if (terrain2 == 2) {
     uVar1 = '\0';
   }
   else {
-    uVar1 = terrain_types[local_7c].shields;
+    uVar1 = terrain_types[terrain2].shields;
   }
   _sprintf(&text_buffer,&pedia_terrain_shields_fmt,(int)(char)uVar1);
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
-  iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_58 = local_50 + iVar2 + 3;
   iVar5 = local_5c + local_1c / 2;
-  iVar2 = thunk_sprite_get_height((Sprite *)&shield_icon_sprite);
+  iVar2 = sprite_get_height((Sprite *)&shield_icon_sprite);
   sprite_draw
             ((Sprite *)&shield_icon_sprite,(iptr)local_260,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-             (iVar5 + -2) - iVar2 / 2);
+             (iVar5 - 2) - iVar2 / 2);
   local_58 = this->content_left + local_44;
-  local_5c = local_5c + local_80;
-  thunk_text_clear();
-  thunk_text_append_label(0x45);
-  thunk_text_append_colon();
+  local_5c += local_80;
+  text_clear();
+  text_append_label(0x45);
+  text_append_colon();
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-  thunk_text_clear();
-  _sprintf(&text_buffer,&pedia_terrain_trade_fmt,(int)(char)terrain_types[local_7c].trade);
+  text_clear();
+  _sprintf(&text_buffer,&pedia_terrain_trade_fmt,(int)(char)terrain_types[terrain2].trade);
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
-  iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_58 = local_50 + iVar2 + 3;
   iVar5 = local_5c + local_1c / 2;
-  iVar2 = thunk_sprite_get_height((Sprite *)&trade_icon_sprite);
+  iVar2 = sprite_get_height((Sprite *)&trade_icon_sprite);
   sprite_draw
             ((Sprite *)&trade_icon_sprite,(iptr)local_270,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-             (iVar5 + -2) - iVar2 / 2);
-  if ((local_7c < 0) || (10 < local_7c)) {
+             (iVar5 - 2) - iVar2 / 2);
+  if ((terrain2 < 0) || (10 < terrain2)) {
     local_58 = this->content_left + local_44;
-    local_5c = local_5c + local_80 * 2;
-    iVar3 = thunk_pedia_find_terrain_index(local_70);
-    uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+    local_5c += local_80 * 2;
+    iVar3 = pedia_find_terrain_index(terrain3);
+    uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(local_bc,uVar4);
-    local_8c = (int)(char)terrain_types[local_70].food;
-    if (local_70 == 2) {
+    local_8c = (int)(char)terrain_types[terrain3].food;
+    if (terrain3 == 2) {
       uVar1 = '\0';
     }
     else {
-      uVar1 = terrain_types[local_70].shields;
+      uVar1 = terrain_types[terrain3].shields;
     }
     local_94 = (int)(char)uVar1;
-    local_c0 = (int)(char)terrain_types[local_70].trade;
-    local_84 = (int)(char)terrain_types[local_7c].food;
-    local_88 = (int)(char)terrain_types[local_7c].shields;
-    local_90 = (int)(char)terrain_types[local_7c].trade;
-    thunk_text_clear();
+    local_c0 = (int)(char)terrain_types[terrain3].trade;
+    local_84 = (int)(char)terrain_types[terrain2].food;
+    local_88 = (int)(char)terrain_types[terrain2].shields;
+    local_90 = (int)(char)terrain_types[terrain2].trade;
+    text_clear();
     if (local_8c < local_84) {
       puVar6 = local_bc;
       iVar2 = local_8c;
       iVar5 = local_84;
-      _Format = (char *)thunk_label_string(*(undefined4 *)(label_string_ids + 0xb10));
+      _Format = (char *)label_string(*(undefined4 *)(label_string_ids + 0xb10));
       _sprintf(&text_buffer,_Format,puVar6,iVar2,iVar5);
     }
     else {
-      uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb14));
+      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb14));
       FUN_005f22d0(&text_buffer,uVar4);
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    thunk_str_clear((iptr)local_1c0);
+    local_5c += local_80;
+    text_clear();
+    str_clear((iptr)local_1c0);
     if (local_94 < local_88) {
-      uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb18));
+      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb18));
       FUN_005f22d0(local_1c0,uVar4);
       _sprintf(&text_buffer,local_1c0,local_94,local_88);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      local_5c = local_5c + local_80;
-      thunk_text_clear();
-      thunk_str_clear((iptr)local_1c0);
+      local_5c += local_80;
+      text_clear();
+      str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
-        uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb1c));
+        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb1c));
         FUN_005f22e0(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
-        uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb20));
+        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb20));
         FUN_005f22e0(&text_buffer,uVar4);
       }
     }
     else {
-      uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb24));
+      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb24));
       FUN_005f22d0(&text_buffer,uVar4);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      local_5c = local_5c + local_80;
-      thunk_text_clear();
-      thunk_str_clear((iptr)local_1c0);
+      local_5c += local_80;
+      text_clear();
+      str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
-        uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb1c));
+        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb1c));
         FUN_005f22e0(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
-        uVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb28));
+        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb28));
         FUN_005f22e0(&text_buffer,uVar4);
       }
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
   }
   else {
-    for (local_68 = 0; local_68 < 2; local_68 = local_68 + 1) {
+    for (local_68 = 0; local_68 < 2; local_68++) {
       local_58 = this->content_left + local_44;
-      local_5c = local_5c + local_80;
-      thunk_text_clear();
+      local_5c += local_80;
+      text_clear();
       if (local_68 == 0) {
-        thunk_text_append_label(0x297);
+        text_append_label(0x297);
       }
       else {
-        thunk_text_append_label(0x299);
+        text_append_label(0x299);
       }
-      thunk_text_append_colon();
+      text_append_colon();
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      thunk_text_clear();
-      if (*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + local_7c * 0x18) < '\0') {
-        if (*(char *)(local_68 + ADDR(0x627cd0, ((u8 *)&terrain_types + 16)) + local_7c * 0x18) < '\x01') {
-          thunk_text_append_label(0x29b);
+      text_clear();
+      if (*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18) < '\0') {
+        if (*(char *)(local_68 + ADDR(0x627cd0, ((u8 *)&terrain_types + 16)) + terrain2 * 0x18) < 1) {
+          text_append_label(0x29b);
           surface_draw_text
                     ((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
         }
         else {
-          _sprintf(&text_buffer,&pedia_terrain_improve_bonus_fmt,(int)*(char *)(local_68 + ADDR(0x627cd0, ((u8 *)&terrain_types + 16)) + local_7c * 0x18)
+          _sprintf(&text_buffer,&pedia_terrain_improve_bonus_fmt,(int)*(char *)(local_68 + ADDR(0x627cd0, ((u8 *)&terrain_types + 16)) + terrain2 * 0x18)
                   );
           surface_draw_text
                     ((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
-          iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+          iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
           local_58 = local_50 + iVar2 + 3;
           if (local_68 == 0) {
             iVar5 = local_5c + local_1c / 2;
-            iVar2 = thunk_sprite_get_height((Sprite *)&resource_icon_sprites);
+            iVar2 = sprite_get_height((Sprite *)&resource_icon_sprites);
             sprite_draw
                       ((Sprite *)&resource_icon_sprites,(iptr)local_280,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-                       (iVar5 + -2) - iVar2 / 2);
+                       (iVar5 - 2) - iVar2 / 2);
           }
           else {
             iVar5 = local_5c + local_1c / 2;
-            iVar2 = thunk_sprite_get_height((Sprite *)&shield_icon_sprite);
+            iVar2 = sprite_get_height((Sprite *)&shield_icon_sprite);
             sprite_draw
                       ((Sprite *)&shield_icon_sprite,(iptr)local_290,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-                       (iVar5 + -2) - iVar2 / 2);
+                       (iVar5 - 2) - iVar2 / 2);
           }
         }
       }
       else {
-        iVar3 = thunk_pedia_find_terrain_index((int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + local_7c * 0x18));
-        uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+        iVar3 = pedia_find_terrain_index((int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18));
+        uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
         FUN_005f22d0(&text_buffer,uVar4);
-        local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        local_74 = thunk_font_line_spacing(local_8);
+        local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        local_74 = font_line_spacing(local_8);
         SetRect(&local_34,local_50,local_5c,local_38 + local_50 + 5,local_5c + local_74);
-        thunk_pedia_add_link(this,(int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + local_7c * 0x18),local_50,
+        pedia_add_link(this,(int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18),local_50,
                            local_5c,4,local_34.left,local_34.top,local_34.right,local_34.bottom);
       }
       local_58 = this->content_left + local_44;
-      local_5c = local_5c + local_80;
-      thunk_text_clear();
+      local_5c += local_80;
+      text_clear();
       if (local_68 == 0) {
-        thunk_text_append_label(0x298);
+        text_append_label(0x298);
       }
       else {
-        thunk_text_append_label(0x29a);
+        text_append_label(0x29a);
       }
-      thunk_text_append_colon();
+      text_append_colon();
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      thunk_text_clear();
-      if (*(char *)(local_68 + ADDR(0x627cd2, ((u8 *)&terrain_types + 18)) + local_7c * 0x18) < '\x01') {
-        thunk_text_append_label(0x29b);
+      text_clear();
+      if (*(char *)(local_68 + ADDR(0x627cd2, ((u8 *)&terrain_types + 18)) + terrain2 * 0x18) < 1) {
+        text_append_label(0x29b);
       }
       else {
-        _sprintf(&text_buffer,&pedia_terrain_improve_turns_fmt,(int)*(char *)(local_68 + ADDR(0x627cd2, ((u8 *)&terrain_types + 18)) + local_7c * 0x18));
+        _sprintf(&text_buffer,&pedia_terrain_improve_turns_fmt,(int)*(char *)(local_68 + ADDR(0x627cd2, ((u8 *)&terrain_types + 18)) + terrain2 * 0x18));
       }
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
     }
     local_58 = local_40;
-    thunk_text_clear();
+    text_clear();
     local_5c = local_60;
-    thunk_text_append_label(0x29c);
-    thunk_text_append_colon();
+    text_append_label(0x29c);
+    text_append_colon();
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    local_58 = local_58 + 0x14;
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    if (terrain_types[local_7c].transform_to < '\0') {
-      thunk_text_append_label(0x29b);
+    local_58 += 0x14;
+    local_5c += local_80;
+    text_clear();
+    if (terrain_types[terrain2].transform_to < '\0') {
+      text_append_label(0x29b);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
     }
     else {
-      iVar3 = thunk_pedia_find_terrain_index((int)terrain_types[local_7c].transform_to);
-      uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+      iVar3 = pedia_find_terrain_index((int)terrain_types[terrain2].transform_to);
+      uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
       FUN_005f22d0(&text_buffer,uVar4);
-      local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      local_74 = thunk_font_line_spacing(local_8);
+      local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      local_74 = font_line_spacing(local_8);
       SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
-      thunk_pedia_add_link(this,(int)terrain_types[local_7c].transform_to,local_58,local_5c,4,
+      pedia_add_link(this,(int)terrain_types[terrain2].transform_to,local_58,local_5c,4,
                          local_34.left,local_34.top,local_34.right,local_34.bottom);
     }
-    if (local_7c != 10) {
+    if (terrain2 != 10) {
       local_58 = local_40;
-      local_5c = local_5c + local_80;
-      thunk_text_clear();
-      thunk_text_append_label(0x29d);
-      thunk_text_append_colon();
+      local_5c += local_80;
+      text_clear();
+      text_append_label(0x29d);
+      text_append_colon();
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      thunk_text_clear();
-      local_58 = local_58 + 0x14;
-      local_5c = local_5c + local_80;
-      thunk_text_append_label(0x293);
-      thunk_text_append_colon();
-      thunk_text_append_space();
-      iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xb0c));
-      thunk_text_append(iVar3);
+      text_clear();
+      local_58 += 0x14;
+      local_5c += local_80;
+      text_append_label(0x293);
+      text_append_colon();
+      text_append_space();
+      iVar3 = label_string(*(undefined4 *)(label_string_ids + 0xb0c));
+      text_append(iVar3);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-      if (((local_7c == 0) || (local_7c == 2)) || (local_7c == 1)) {
-        local_5c = local_5c + local_80;
-        thunk_text_clear();
-        thunk_text_append_label(0x45);
-        thunk_text_append_colon();
-        thunk_text_append(ADDR(0x62c980, ((u8 *)&g.d_0062c980)));
+      if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
+        local_5c += local_80;
+        text_clear();
+        text_append_label(0x45);
+        text_append_colon();
+        text_append(ADDR(0x62c980, ((u8 *)&g.d_0062c980)));
         surface_draw_text
                   ((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-        iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        iVar2 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
         local_58 = local_58 + iVar2 + 3;
         iVar5 = local_5c + local_1c / 2;
-        iVar2 = thunk_sprite_get_height((Sprite *)&trade_icon_sprite);
+        iVar2 = sprite_get_height((Sprite *)&trade_icon_sprite);
         sprite_draw
                   ((Sprite *)&trade_icon_sprite,(iptr)local_2a0,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_58,
-                   (iVar5 + -2) - iVar2 / 2);
+                   (iVar5 - 2) - iVar2 / 2);
       }
     }
     local_58 = local_40;
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    thunk_text_append_label(0x29e);
-    thunk_text_append_colon();
+    local_5c += local_80;
+    text_clear();
+    text_append_label(0x29e);
+    text_append_colon();
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
-    local_58 = local_58 + 0x14;
-    local_5c = local_5c + local_80;
-    thunk_text_clear();
-    iVar3 = thunk_pedia_find_terrain_index(local_7c + 0xb);
-    uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+    local_58 += 0x14;
+    local_5c += local_80;
+    text_clear();
+    iVar3 = pedia_find_terrain_index(terrain2 + 0xb);
+    uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(&text_buffer,uVar4);
-    local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    local_74 = thunk_font_line_spacing(local_8);
+    local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    local_74 = font_line_spacing(local_8);
     SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
-    thunk_pedia_add_link(this,local_7c + 0xb,local_58,local_5c,4,local_34.left,local_34.top,
+    pedia_add_link(this,terrain2 + 0xb,local_58,local_5c,4,local_34.left,local_34.top,
                        local_34.right,local_34.bottom);
-    if (local_7c != 2) {
-      thunk_text_clear();
-      local_5c = local_5c + local_80;
-      iVar3 = thunk_pedia_find_terrain_index(local_7c + 0x16);
-      uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
+    if (terrain2 != 2) {
+      text_clear();
+      local_5c += local_80;
+      iVar3 = pedia_find_terrain_index(terrain2 + 0x16);
+      uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
       FUN_005f22d0(&text_buffer,uVar4);
-      local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      local_74 = thunk_font_line_spacing(local_8);
+      local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      local_74 = font_line_spacing(local_8);
       SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
-      thunk_pedia_add_link(this,local_7c + 0x16,local_58,local_5c,4,local_34.left,local_34.top,
+      pedia_add_link(this,terrain2 + 0x16,local_58,local_5c,4,local_34.left,local_34.top,
                          local_34.right,local_34.bottom);
     }
   }
-  thunk_pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_18);
-  thunk_wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
+  wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
 }
 #undef list_text_color
@@ -588,10 +588,10 @@ LAB_00490a7d:
 #undef local_88
 #undef local_84
 #undef local_80
-#undef local_7c
+#undef terrain2
 #undef local_78
 #undef local_74
-#undef local_70
+#undef terrain3
 #undef local_6c
 #undef local_68
 #undef local_64
@@ -627,25 +627,25 @@ void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
     local_8 = 0;
     while (((int)local_8 < (int)this[1].field_3a4 &&
            (*(int *)(this[1].pad_3c0 + local_8 * 4 + 0x6c) != param_1))) {
-      local_8 = local_8 + 1;
+      local_8++;
     }
     if (this[1].field_3a4 != local_8) {
-      thunk_pedia_open_category((C_004083b0_61c *)this,5,1);
+      pedia_open_category((C_004083b0_61c *)this,5,1);
       this->resize_border = local_8;
       *(uptr *)(this[3].pad_48 + 0x78) = local_8;
       this->client_x = 1;
       this->border_width = 1;
-      thunk_pedia_clear_links((C_004083b0_4 *)this);
-      thunk_pedia_update_controls((C_004083b0_61c *)this);
-      uVar1 = thunk_pedia_lookup_text(pedia_terrain_names,local_8);
+      pedia_clear_links((C_004083b0_4 *)this);
+      pedia_update_controls((C_004083b0_61c *)this);
+      uVar1 = pedia_lookup_text(pedia_terrain_names,local_8);
       FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      thunk_pedia_draw_frame((C_004083b0_61c *)this);
-      thunk_pedia_draw_terrain_page(this);
-      thunk_wnd_blit_surface((DibSurface *)&pedia_window);
-      thunk_wnd_activate((Wnd *)&pedia_window_wnd);
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+      pedia_draw_frame((C_004083b0_61c *)this);
+      pedia_draw_terrain_page(this);
+      wnd_blit_surface((DibSurface *)&pedia_window);
+      wnd_activate((Wnd *)&pedia_window_wnd);
+      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
       wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
     }
   }
   return;
@@ -667,7 +667,7 @@ undefined4 __cdecl pedia_find_terrain_index(iptr param_1)
       return 0xffffffff;
     }
     if (*(int *)(&pedia_terrain_ids + local_8 * 4) == param_1) break;
-    local_8 = local_8 + 1;
+    local_8++;
   }
   return local_8;
 }
@@ -690,14 +690,14 @@ void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
 
 {
   bool bVar1;
-  int iVar2;
+  int civ;
   iptr iVar3;
   size_t sVar4;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_text_clear();
+  text_clear();
   local_14 = 0;
-  if (((game.wonder_city[0x18] == -1) && (iVar2 = thunk_civ_has_wonder(human_civ,9), iVar2 == 0))
+  if (((game.wonder_city[0x18] == -1) && (civ = civ_has_wonder(human_civ,9), civ == 0))
      && (game.reveal_map == '\0')) {
     bVar1 = false;
   }
@@ -706,12 +706,12 @@ void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
   }
   switch(param_2) {
   case 0x2b0:
-    while (((((iVar2 = chat_macro_next_adj_civ, local_14 < 8 && (human_civ != chat_macro_next_adj_civ)) && (!bVar1))
+    while (((((civ = chat_macro_next_adj_civ, local_14 < 8 && (human_civ != chat_macro_next_adj_civ)) && (!bVar1))
             && ((mp_chat_from_start == 0 ||
                 ((1 << ((byte)chat_macro_next_adj_civ & 0x1f) & (uint)game.human_players) == 0)))) &&
-           ((*(byte *)(chat_macro_next_adj_civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + human_civ * 4) & 1) == 0))) {
-      local_14 = local_14 + 1;
-      chat_macro_next_adj_civ = chat_macro_next_adj_civ + 1;
+           ((*(byte *)&civs[chat_macro_next_adj_civ].treaties[human_civ] & 1) == 0))) {
+      local_14++;
+      chat_macro_next_adj_civ++;
       if (chat_macro_next_adj_civ == 8) {
         chat_macro_next_adj_civ = 1;
       }
@@ -719,10 +719,10 @@ void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
     if (local_14 == 8) {
       return;
     }
-    chat_macro_next_adj_civ = chat_macro_next_adj_civ + 1;
-    iVar3 = thunk_civ_adjective(iVar2);
-    thunk_text_append(iVar3);
-    thunk_text_append_space();
+    chat_macro_next_adj_civ++;
+    iVar3 = civ_adjective(civ);
+    text_append(iVar3);
+    text_append_space();
     if (chat_macro_next_adj_civ == 8) {
       chat_macro_next_adj_civ = 1;
     }
@@ -732,9 +732,9 @@ void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
             ((!bVar1 &&
              ((mp_chat_from_start == 0 ||
               ((1 << ((byte)chat_macro_next_leader_civ & 0x1f) & (uint)game.human_players) == 0)))))) &&
-           ((*(byte *)(chat_macro_next_leader_civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + human_civ * 4) & 1) == 0))) {
-      local_14 = local_14 + 1;
-      chat_macro_next_leader_civ = chat_macro_next_leader_civ + 1;
+           ((*(byte *)&civs[chat_macro_next_leader_civ].treaties[human_civ] & 1) == 0))) {
+      local_14++;
+      chat_macro_next_leader_civ++;
       if (chat_macro_next_leader_civ == 8) {
         chat_macro_next_leader_civ = 1;
       }
@@ -742,41 +742,41 @@ void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
     if (local_14 == 8) {
       return;
     }
-    iVar3 = thunk_civ_leader_title(chat_macro_next_leader_civ);
-    thunk_text_append(iVar3);
-    thunk_text_append_space();
-    iVar2 = chat_macro_next_leader_civ;
-    chat_macro_next_leader_civ = chat_macro_next_leader_civ + 1;
-    iVar3 = thunk_civ_leader_name(iVar2);
-    thunk_text_append(iVar3);
-    thunk_text_append_space();
+    iVar3 = civ_leader_title(chat_macro_next_leader_civ);
+    text_append(iVar3);
+    text_append_space();
+    civ = chat_macro_next_leader_civ;
+    chat_macro_next_leader_civ++;
+    iVar3 = civ_leader_name(civ);
+    text_append(iVar3);
+    text_append_space();
     if (chat_macro_next_leader_civ == 8) {
       chat_macro_next_leader_civ = 1;
     }
     goto switchD_004926f8_default;
   case 0x2b2:
-    thunk_chat_read_macro_line(ADDR(0x62c9a4, ((u8 *)&g.d_0062c9a4)),ADDR(0x62c998, ((u8 *)&g.d_0062c998)));
-    iVar2 = chat_macro1_file_offset;
+    chat_read_macro_line(ADDR(0x62c9a4, ((u8 *)&g.d_0062c9a4)),ADDR(0x62c998, ((u8 *)&g.d_0062c998)));
+    civ = chat_macro1_file_offset;
     break;
   case 0x2b3:
-    thunk_chat_read_macro_line(ADDR(0x62c9b4, ((u8 *)&g.d_0062c9b4)),ADDR(0x62c99c, ((u8 *)&g.d_0062c99c)));
-    iVar2 = chat_macro2_file_offset;
+    chat_read_macro_line(ADDR(0x62c9b4, ((u8 *)&g.d_0062c9b4)),ADDR(0x62c99c, ((u8 *)&g.d_0062c99c)));
+    civ = chat_macro2_file_offset;
     break;
   case 0x2b4:
-    thunk_chat_read_macro_line(ADDR(0x62c9c4, ((u8 *)&g.d_0062c9c4)),ADDR(0x62c9a0, ((u8 *)&g.d_0062c9a0)));
-    iVar2 = chat_macro3_file_offset;
+    chat_read_macro_line(ADDR(0x62c9c4, ((u8 *)&g.d_0062c9c4)),ADDR(0x62c9a0, ((u8 *)&g.d_0062c9a0)));
+    civ = chat_macro3_file_offset;
     break;
   default:
     goto switchD_004926f8_default;
   }
-  if (iVar2 == 0) {
+  if (civ == 0) {
     return;
   }
 switchD_004926f8_default:
-  thunk_edit_replace_sel(param_1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  iVar2 = thunk_edit_get_sel_end((EditSelEndView *)param_1);
+  edit_replace_sel(param_1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  civ = edit_get_sel_end((EditSelEndView *)param_1);
   sVar4 = _strlen(&text_buffer);
-  thunk_edit_set_sel((EditSelView *)param_1,iVar2 - sVar4,iVar2);
+  edit_set_sel((EditSelView *)param_1,civ - sVar4,civ);
   return;
 }
 #undef human_civ
@@ -799,27 +799,27 @@ void __cdecl chat_read_macro_line(iptr param_1,iptr param_2)
   (*(undefined4 *)((char *)&local_a8 + 156)) = &LAB_00492874;
   file_obj_init((FileObject *)local_a8);
   local_8 = 0;
-  iVar1 = thunk_file_obj_open((FileObject *)local_a8,param_1);
+  iVar1 = file_obj_open((FileObject *)local_a8,param_1);
   if (iVar1 == 0) {
     *(undefined4 *)param_2 = 0;
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
   }
   else {
-    iVar1 = thunk_file_obj_get_size((FileObject *)local_a8);
+    iVar1 = file_obj_get_size((FileObject *)local_a8);
     if (iVar1 <= *(int *)param_2) {
       *(undefined4 *)param_2 = 0;
     }
-    iVar1 = thunk_file_obj_seek_cur((FileSeekView *)local_a8,*(undefined4 *)param_2);
+    iVar1 = file_obj_seek_cur((FileSeekView *)local_a8,*(undefined4 *)param_2);
     if (iVar1 == 0) {
       *(undefined4 *)param_2 = 0;
-      thunk_file_map_close((FileObject *)local_a8);
+      file_map_close((FileObject *)local_a8);
       local_8 = 0xffffffff;
       /* inlined unwind funclet FUN_00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
     }
     else {
-      thunk_file_obj_read_line((FileReadLineView *)local_a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
-      thunk_file_map_close((FileObject *)local_a8);
+      file_obj_read_line((FileReadLineView *)local_a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
+      file_map_close((FileObject *)local_a8);
       sVar2 = _strlen(&text_buffer);
       *(size_t *)param_2 = *(int *)param_2 + sVar2 + 2;
       local_8 = 0xffffffff;
@@ -911,38 +911,38 @@ void __thiscall edit_set_sel(EditSelView *this,undefined4 param_1,undefined4 par
 }
 
 /* 00492b60 auto */
-void __cdecl civ_ai_goal_negate_priority(int param_1,int param_2)
+void __cdecl civ_ai_goal_negate_priority(int civ,int param_2)
 
 {
   char cVar1;
   
-  if (*(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_2 * 6) < '\x01') {
-    cVar1 = ~*(byte *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_2 * 6) + 1;
+  if (civs[civ].ai_goals[param_2].priority < 1) {
+    cVar1 = ~*(byte *)&civs[civ].ai_goals[param_2].priority + 1;
   }
   else {
-    cVar1 = *(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_2 * 6);
+    cVar1 = civs[civ].ai_goals[param_2].priority;
   }
-  *(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_2 * 6) = -cVar1;
+  civs[civ].ai_goals[param_2].priority = -cVar1;
   return;
 }
 
 /* 00492c15 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl
-civ_clear_standing_goals_near(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5)
+civ_clear_standing_goals_near(iptr civ,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_c = 0; local_c < 0x10; local_c = local_c + 1) {
-    if (*(char *)(local_c * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) == (char)param_2) {
-      iVar1 = thunk_map_distance_diag(param_3,param_4,
-                                 (int)*(short *)(local_c * 6 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + param_1 * 0x594),
-                                 (int)*(short *)(local_c * 6 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + param_1 * 0x594));
+  for (local_c = 0; local_c < 0x10; local_c++) {
+    if (civs[civ].ai_standing_goals[local_c].role == (char)param_2) {
+      iVar1 = map_distance_diag(param_3,param_4,
+                                 (int)civs[civ].ai_standing_goals[local_c].x,
+                                 (int)civs[civ].ai_standing_goals[local_c].y);
       if (iVar1 <= param_5) {
-        *(undefined1 *)(local_c * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) = 0xff;
-        *(undefined1 *)(local_c * 6 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + param_1 * 0x594) = 0;
+        civs[civ].ai_standing_goals[local_c].role = 0xff;
+        civs[civ].ai_standing_goals[local_c].priority = 0;
       }
     }
   }
@@ -951,41 +951,41 @@ civ_clear_standing_goals_near(iptr param_1,undefined4 param_2,undefined4 param_3
 #undef local_c
 
 /* 00492d18 auto */
-void __cdecl civ_ai_goal_insert_gap(iptr param_1,iptr param_2)
+void __cdecl civ_ai_goal_insert_gap(iptr civ,iptr param_2)
 
 {
   i16 iVar1;
   i8 iVar2;
   
-  if ((param_2 < 0x2f) && (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + param_2 * 6) != -1)) {
-    thunk_civ_ai_goal_insert_gap(param_1,param_2 + 1);
-    iVar1 = civs[param_1].ai_goals[param_2].y;
-    civs[param_1].ai_goals[param_2 + 1].x = civs[param_1].ai_goals[param_2].x;
-    civs[param_1].ai_goals[param_2 + 1].y = iVar1;
-    iVar2 = civs[param_1].ai_goals[param_2].priority;
-    civs[param_1].ai_goals[param_2 + 1].role = civs[param_1].ai_goals[param_2].role;
-    civs[param_1].ai_goals[param_2 + 1].priority = iVar2;
+  if ((param_2 < 0x2f) && (civs[civ].ai_goals[param_2].role != -1)) {
+    civ_ai_goal_insert_gap(civ,param_2 + 1);
+    iVar1 = civs[civ].ai_goals[param_2].y;
+    civs[civ].ai_goals[param_2 + 1].x = civs[civ].ai_goals[param_2].x;
+    civs[civ].ai_goals[param_2 + 1].y = iVar1;
+    iVar2 = civs[civ].ai_goals[param_2].priority;
+    civs[civ].ai_goals[param_2 + 1].role = civs[civ].ai_goals[param_2].role;
+    civs[civ].ai_goals[param_2 + 1].priority = iVar2;
   }
   return;
 }
 
 /* 00492dd0 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl civ_standing_goal_insert_gap(iptr param_1,int param_2)
+void __cdecl civ_standing_goal_insert_gap(iptr civ,int param_2)
 
 {
   i16 iVar1;
   i8 iVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0xe; param_2 <= local_8; local_8 = local_8 + -1) {
-    iVar1 = civs[param_1].ai_standing_goals[local_8].y;
-    civs[param_1].ai_standing_goals[local_8 + 1].x = civs[param_1].ai_standing_goals[local_8].x;
-    civs[param_1].ai_standing_goals[local_8 + 1].y = iVar1;
-    iVar2 = civs[param_1].ai_standing_goals[local_8].priority;
-    civs[param_1].ai_standing_goals[local_8 + 1].role =
-         civs[param_1].ai_standing_goals[local_8].role;
-    civs[param_1].ai_standing_goals[local_8 + 1].priority = iVar2;
+  for (local_8 = 0xe; param_2 <= local_8; local_8--) {
+    iVar1 = civs[civ].ai_standing_goals[local_8].y;
+    civs[civ].ai_standing_goals[local_8 + 1].x = civs[civ].ai_standing_goals[local_8].x;
+    civs[civ].ai_standing_goals[local_8 + 1].y = iVar1;
+    iVar2 = civs[civ].ai_standing_goals[local_8].priority;
+    civs[civ].ai_standing_goals[local_8 + 1].role =
+         civs[civ].ai_standing_goals[local_8].role;
+    civs[civ].ai_standing_goals[local_8 + 1].priority = iVar2;
   }
   return;
 }
@@ -995,28 +995,28 @@ void __cdecl civ_standing_goal_insert_gap(iptr param_1,int param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl civ_ai_goal_get_priority(iptr param_1,int param_2,int param_3,undefined4 param_4)
+int __cdecl civ_ai_goal_get_priority(iptr civ,int param_2,int param_3,undefined4 param_4)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
-  for (local_8 = 0; local_8 < 0x30; local_8 = local_8 + 1) {
-    if (((*(short *)(local_8 * 6 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + param_1 * 0x594) == param_2) &&
-        (*(short *)(local_8 * 6 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + param_1 * 0x594) == param_3)) &&
-       (*(char *)(local_8 * 6 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + param_1 * 0x594) == (char)param_4)) {
-      if (*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594) < '\x01') {
-        local_10 = ~(int)*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594) + 1;
+  for (local_8 = 0; local_8 < 0x30; local_8++) {
+    if (((civs[civ].ai_goals[local_8].x == param_2) &&
+        (civs[civ].ai_goals[local_8].y == param_3)) &&
+       (civs[civ].ai_goals[local_8].role == (char)param_4)) {
+      if (civs[civ].ai_goals[local_8].priority < 1) {
+        local_10 = ~(int)civs[civ].ai_goals[local_8].priority + 1;
       }
       else {
-        local_10 = (int)*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594);
+        local_10 = (int)civs[civ].ai_goals[local_8].priority;
       }
       if ((char)local_c <= local_10) {
-        if (*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594) < '\x01') {
-          local_c = ~(int)*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594) + 1;
+        if (civs[civ].ai_goals[local_8].priority < 1) {
+          local_c = ~(int)civs[civ].ai_goals[local_8].priority + 1;
         }
         else {
-          local_c = (int)*(char *)(local_8 * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594);
+          local_c = (int)civs[civ].ai_goals[local_8].priority;
         }
       }
     }
@@ -1028,9 +1028,9 @@ int __cdecl civ_ai_goal_get_priority(iptr param_1,int param_2,int param_3,undefi
 #undef local_8
 
 /* 0049301b auto */
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl civ_add_ai_goal(iptr param_1,int param_2,int param_3,int param_4,int param_5)
+void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int param_4,int param_5)
 
 {
   int iVar1;
@@ -1040,23 +1040,23 @@ void __cdecl civ_add_ai_goal(iptr param_1,int param_2,int param_3,int param_4,in
   local_c = 0;
   while( true ) {
     if (0x2f < local_c) {
-      if (((game.turn_civ == param_1) &&
-          ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0)) &&
+      if (((game.turn_civ == civ) &&
+          ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) &&
          ((param_4 == 2 || (param_4 == 3)))) {
-        for (local_10 = 0; local_10 < game.num_units; local_10 = local_10 + 1) {
-          if ((((units[local_10].id != 0) && (units[local_10].owner == param_1)) &&
-              (iVar1 = thunk_unit_is_awake_with_moves(local_10), iVar1 != 0)) &&
-             ((char)unit_types[units[local_10].type].role == param_4)) {
-            iVar1 = tile_landmass((int)units[local_10].x,(int)units[local_10].y);
-            iVar2 = tile_landmass(param_2,param_3);
+        for (unit = 0; unit < game.num_units; unit++) {
+          if ((((units[unit].id != 0) && (units[unit].owner == civ)) &&
+              (iVar1 = unit_is_awake_with_moves(unit), iVar1 != 0)) &&
+             ((char)unit_types[units[unit].type].role == param_4)) {
+            iVar1 = tile_landmass((int)units[unit].x,(int)units[unit].y);
+            iVar2 = tile_landmass(x,y);
             if (iVar1 == iVar2) {
-              iVar1 = thunk_map_distance_diag(param_2,param_3,(int)units[local_10].x,
-                                         (int)units[local_10].y);
-              iVar2 = thunk_unit_moves_left(local_10);
+              iVar1 = map_distance_diag(x,y,(int)units[unit].x,
+                                         (int)units[unit].y);
+              iVar2 = unit_moves_left(unit);
               if (iVar1 * 2 <= iVar2) {
-                units[local_10].orders = '\v';
-                units[local_10].goto_x = (i16)param_2;
-                units[local_10].goto_y = (i16)param_3;
+                units[unit].orders = 11;
+                units[unit].goto_x = (i16)x;
+                units[unit].goto_y = (i16)y;
               }
             }
           }
@@ -1067,31 +1067,31 @@ void __cdecl civ_add_ai_goal(iptr param_1,int param_2,int param_3,int param_4,in
         if (0x2f < local_c) {
           return;
         }
-        if ((*(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_c * 6) < (char)param_5) ||
-           (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6) == -1)) break;
-        local_c = local_c + 1;
+        if ((civs[civ].ai_goals[local_c].priority < (char)param_5) ||
+           (civs[civ].ai_goals[local_c].role == -1)) break;
+        local_c++;
       }
-      thunk_civ_ai_goal_insert_gap(param_1,local_c);
-      *(i16 *)(param_1 * 0x594 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + local_c * 6) = (i16)param_2;
-      *(i16 *)(param_1 * 0x594 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + local_c * 6) = (i16)param_3;
-      *(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6) = (char)param_4;
-      *(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_c * 6) = (char)param_5;
+      civ_ai_goal_insert_gap(civ,local_c);
+      civs[civ].ai_goals[local_c].x = (i16)x;
+      civs[civ].ai_goals[local_c].y = (i16)y;
+      civs[civ].ai_goals[local_c].role = (char)param_4;
+      civs[civ].ai_goals[local_c].priority = (char)param_5;
       return;
     }
-    if (((*(short *)(param_1 * 0x594 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + local_c * 6) == param_2) &&
-        (*(short *)(param_1 * 0x594 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + local_c * 6) == param_3)) &&
-       ((*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6) == (char)param_4 &&
-        ((char)param_5 <= *(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_c * 6))))) break;
-    local_c = local_c + 1;
+    if (((civs[civ].ai_goals[local_c].x == x) &&
+        (civs[civ].ai_goals[local_c].y == y)) &&
+       ((civs[civ].ai_goals[local_c].role == (char)param_4 &&
+        ((char)param_5 <= civs[civ].ai_goals[local_c].priority)))) break;
+    local_c++;
   }
   return;
 }
-#undef local_10
+#undef unit
 #undef local_c
 
 /* 004933f2 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl civ_add_standing_goal(iptr param_1,int param_2,int param_3,undefined4 param_4,int param_5)
+void __cdecl civ_add_standing_goal(iptr civ,int param_2,int param_3,undefined4 param_4,int param_5)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1104,22 +1104,22 @@ void __cdecl civ_add_standing_goal(iptr param_1,int param_2,int param_3,undefine
         if (0xf < local_8) {
           return;
         }
-        if ((*(char *)(local_8 * 6 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + param_1 * 0x594) < (char)param_5) ||
-           (*(char *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) == -1)) break;
-        local_8 = local_8 + 1;
+        if ((civs[civ].ai_standing_goals[local_8].priority < (char)param_5) ||
+           (civs[civ].ai_standing_goals[local_8].role == -1)) break;
+        local_8++;
       }
-      thunk_civ_standing_goal_insert_gap(param_1,local_8);
-      *(short *)(local_8 * 6 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + param_1 * 0x594) = (short)param_2;
-      *(short *)(local_8 * 6 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + param_1 * 0x594) = (short)param_3;
-      *(char *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) = (char)param_4;
-      *(char *)(local_8 * 6 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + param_1 * 0x594) = (char)param_5;
+      civ_standing_goal_insert_gap(civ,local_8);
+      civs[civ].ai_standing_goals[local_8].x = (short)param_2;
+      civs[civ].ai_standing_goals[local_8].y = (short)param_3;
+      civs[civ].ai_standing_goals[local_8].role = (char)param_4;
+      civs[civ].ai_standing_goals[local_8].priority = (char)param_5;
       return;
     }
-    if ((((*(short *)(local_8 * 6 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + param_1 * 0x594) == param_2) &&
-         (*(short *)(local_8 * 6 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + param_1 * 0x594) == param_3)) &&
-        (*(char *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) == (char)param_4)) &&
-       ((char)param_5 <= *(char *)(local_8 * 6 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + param_1 * 0x594))) break;
-    local_8 = local_8 + 1;
+    if ((((civs[civ].ai_standing_goals[local_8].x == param_2) &&
+         (civs[civ].ai_standing_goals[local_8].y == param_3)) &&
+        (civs[civ].ai_standing_goals[local_8].role == (char)param_4)) &&
+       ((char)param_5 <= civs[civ].ai_standing_goals[local_8].priority)) break;
+    local_8++;
   }
   return;
 }
@@ -1127,23 +1127,23 @@ void __cdecl civ_add_standing_goal(iptr param_1,int param_2,int param_3,undefine
 
 /* 00493602 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl civ_refresh_ai_goals(iptr param_1)
+void __cdecl civ_refresh_ai_goals(iptr civ)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0x30; local_8 = local_8 + 1) {
-    if (*(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_8 * 6) < '\0') {
-      *(undefined1 *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_8 * 6) = 0xff;
+  for (local_8 = 0; local_8 < 0x30; local_8++) {
+    if (civs[civ].ai_goals[local_8].priority < '\0') {
+      civs[civ].ai_goals[local_8].role = 0xff;
     }
-    thunk_civ_ai_goal_negate_priority(param_1,local_8);
+    civ_ai_goal_negate_priority(civ,local_8);
   }
-  for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
-    if (-1 < *(char *)(param_1 * 0x594 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + local_8 * 6)) {
-      thunk_civ_add_ai_goal(param_1,(int)*(short *)(param_1 * 0x594 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + local_8 * 6),
-                         (int)*(short *)(param_1 * 0x594 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + local_8 * 6),
-                         (int)*(char *)(param_1 * 0x594 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + local_8 * 6),
-                         (int)*(char *)(param_1 * 0x594 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + local_8 * 6));
+  for (local_8 = 0; local_8 < 0x10; local_8++) {
+    if (-1 < civs[civ].ai_standing_goals[local_8].role) {
+      civ_add_ai_goal(civ,(int)civs[civ].ai_standing_goals[local_8].x,
+                         (int)civs[civ].ai_standing_goals[local_8].y,
+                         (int)civs[civ].ai_standing_goals[local_8].role,
+                         (int)civs[civ].ai_standing_goals[local_8].priority);
     }
   }
   return;
@@ -1152,92 +1152,90 @@ void __cdecl civ_refresh_ai_goals(iptr param_1)
 
 /* 0049376f auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl civ_reset_standing_goals(iptr param_1)
+void __cdecl civ_reset_standing_goals(iptr civ)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
-    *(undefined1 *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) = 0xff;
-    *(undefined1 *)(local_8 * 6 + ADDR(0x64cbd9, ((u8 *)&civs + 1337)) + param_1 * 0x594) = 0;
+  for (local_8 = 0; local_8 < 0x10; local_8++) {
+    civs[civ].ai_standing_goals[local_8].role = 0xff;
+    civs[civ].ai_standing_goals[local_8].priority = 0;
   }
   return;
 }
 #undef local_8
 
 /* 00493b10 auto */
-int __cdecl civ_leader_name(iptr param_1)
+int __cdecl civ_leader_name(iptr civ)
 
 {
   int iVar1;
   
-  if (param_1 < 1) {
-    iVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x44));
+  if (civ < 1) {
+    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x44));
   }
-  else if (leaders[civs[param_1].tribe].leader_name < 0) {
-    iVar1 = param_1 * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2));
+  else if (leaders[civs[civ].tribe].leader_name < 0) {
+    iVar1 = civ * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2));
   }
   else {
-    iVar1 = thunk_label_string((int)leaders[civs[param_1].tribe].leader_name);
+    iVar1 = label_string((int)leaders[civs[civ].tribe].leader_name);
   }
   return iVar1;
 }
 
 /* 00493ba6 auto */
-int __cdecl civ_leader_title(iptr param_1)
+int __cdecl civ_leader_title(iptr civ)
 
 {
   int iVar1;
   
-  if (param_1 < 1) {
-    iVar1 = thunk_label_string(government_titles[2].male);
+  if (civ < 1) {
+    iVar1 = label_string(government_titles[2].male);
   }
   else {
-    iVar1 = (int)*(short *)((uint)leaders[civs[param_1].tribe].female * 2 +
-                            (uint)civs[param_1].government * 4 + ADDR(0x65550c, ((u8 *)&leaders + 20)) +
-                           civs[param_1].tribe * 0x30);
+    iVar1 = (int)leaders[civs[civ].tribe].titles[((uint)civs[civ].government)][((uint)leaders[civs[civ].tribe].female)];
     if (iVar1 < 0) {
-      iVar1 = param_1 * 0xf2 + ADDR(0x64bd42, ((u8 *)&civ_names + 74)) + (uint)civs[param_1].government * 0x18;
+      iVar1 = civ * 0xf2 + ADDR(0x64bd42, ((u8 *)&civ_names + 74)) + (uint)civs[civ].government * 0x18;
     }
     else {
-      iVar1 = thunk_label_string(iVar1);
+      iVar1 = label_string(iVar1);
     }
   }
   return iVar1;
 }
 
 /* 00493c7d auto */
-int __cdecl civ_name_plural(iptr param_1)
+int __cdecl civ_name_plural(iptr civ)
 
 {
   int iVar1;
   
-  if (param_1 < 1) {
-    iVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3c));
+  if (civ < 1) {
+    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x3c));
   }
-  else if (leaders[civs[param_1].tribe].plural < 0) {
-    iVar1 = param_1 * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26));
+  else if (leaders[civs[civ].tribe].plural < 0) {
+    iVar1 = civ * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26));
   }
   else {
-    iVar1 = thunk_label_string((int)leaders[civs[param_1].tribe].plural);
+    iVar1 = label_string((int)leaders[civs[civ].tribe].plural);
   }
   return iVar1;
 }
 
 /* 00493d13 auto */
-int __cdecl civ_adjective(iptr param_1)
+int __cdecl civ_adjective(iptr civ)
 
 {
   int iVar1;
   
-  if (param_1 < 1) {
-    iVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x40));
+  if (civ < 1) {
+    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x40));
   }
-  else if (leaders[civs[param_1].tribe].adjective < 0) {
-    iVar1 = param_1 * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50));
+  else if (leaders[civs[civ].tribe].adjective < 0) {
+    iVar1 = civ * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50));
   }
   else {
-    iVar1 = thunk_label_string((int)leaders[civs[param_1].tribe].adjective);
+    iVar1 = label_string((int)leaders[civs[civ].tribe].adjective);
   }
   return iVar1;
 }
@@ -1249,7 +1247,7 @@ void __cdecl diplo_greeting_sound_done_cb(void)
 
 {
   if (diplo_leader_wnd_open != '\0') {
-    thunk_snd_play_effect(diplo_leader_sound_ids,1,1,0);
+    snd_play_effect(diplo_leader_sound_ids,1,1,0);
   }
   return;
 }
@@ -1269,12 +1267,12 @@ void __cdecl portrait_dlg_show(u32 param_1)
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_portrait_dlg_ctor((C_004083b0_208 *)&stack0xfffffe08);
+  portrait_dlg_ctor((C_004083b0_208 *)&stack0xfffffe08);
   local_8 = 0;
   local_1c = param_1;
-  iVar1 = thunk_portrait_dlg_create((C_004083b0_208 *)&stack0xfffffe08);
+  iVar1 = portrait_dlg_create((C_004083b0_208 *)&stack0xfffffe08);
   if (iVar1 != 0) {
-    thunk_portrait_dlg_run((C_004083b0_208 *)&stack0xfffffe08);
+    portrait_dlg_run((C_004083b0_208 *)&stack0xfffffe08);
   }
   local_8 = 0xffffffff;
   FUN_00493eeb();
@@ -1297,7 +1295,7 @@ void __cdecl portrait_dlg_show(u32 param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr param_2)
+void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr civ)
 
 {
   DiploLeaderWindow *this;
@@ -1306,21 +1304,21 @@ void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr param_2)
   
   local_8 = 0xffffffff;
   diplo_leader_wnd_open = 0;
-  diplo_greeting_sound_id = ((uint)map.seed + param_2 & 7) + 0x53;
-  if (civs[param_2].tribe < 1) {
-    local_28 = ~(int)civs[param_2].tribe + 1;
+  diplo_greeting_sound_id = ((uint)map.seed + civ & 7) + 0x53;
+  if (civs[civ].tribe < 1) {
+    local_28 = ~(int)civs[civ].tribe + 1;
   }
   else {
-    local_28 = (iptr)civs[param_2].tribe;
+    local_28 = (iptr)civs[civ].tribe;
   }
   diplo_leader_sound_ids = (uint)(byte)(&tribe_leader_sound_set)[local_28] * 4 + 0x70;
-  for (local_14 = 0; local_14 < 3; local_14 = local_14 + 1) {
+  for (local_14 = 0; local_14 < 3; local_14++) {
     *(int *)(&diplo_leader_reaction_sound_ids + local_14 * 4) = diplo_leader_sound_ids + local_14 + 1;
   }
-  thunk_snd_cd_stop();
+  snd_cd_stop();
   if (diplo_leader_window != 0) {
     if (diplo_leader_window != 0) {
-      thunk_diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
+      diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
     }
     diplo_leader_window = 0;
   }
@@ -1330,12 +1328,12 @@ void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr param_2)
     local_24 = (DiploLeaderView *)0x0;
   }
   else {
-    local_24 = (DiploLeaderView *)thunk_diplo_leader_wnd_ctor(this);
+    local_24 = (DiploLeaderView *)diplo_leader_wnd_ctor(this);
   }
   local_8 = 0xffffffff;
   diplo_leader_window = (iptr)local_24;
   if (((local_24 != (DiploLeaderView *)0x0) && (((*(undefined1 *)((char *)&game.game_options + 2)) & 4) != 0)) &&
-     (iVar1 = thunk_diplo_leader_wnd_init(local_24,param_1,param_2), iVar1 != 0)) {
+     (iVar1 = diplo_leader_wnd_init(local_24,param_1,civ), iVar1 != 0)) {
     diplo_leader_wnd_open = 1;
     if (diplo_leader_window == -200) {
       local_2c = 0;
@@ -1343,9 +1341,9 @@ void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr param_2)
     else {
       local_2c = diplo_leader_window + 0x110;
     }
-    thunk_dlg_set_parent_window(local_2c);
-    thunk_dlg_set_palette(diplo_leader_window + 0x224);
-    thunk_diplo_leader_wnd_show((DiploLeaderWindow *)diplo_leader_window);
+    dlg_set_parent_window(local_2c);
+    dlg_set_palette(diplo_leader_window + 0x224);
+    diplo_leader_wnd_show((DiploLeaderWindow *)diplo_leader_window);
   }
   return;
 }
@@ -1370,16 +1368,16 @@ void __cdecl diplo_leader_wnd_close(void)
   if (diplo_leader_wnd_open != '\0') {
     diplo_leader_wnd_open = '\0';
     if (diplo_leader_window != 0) {
-      thunk_diplo_leader_wnd_teardown((WndBase *)diplo_leader_window);
+      diplo_leader_wnd_teardown((WndBase *)diplo_leader_window);
       if (diplo_leader_window != 0) {
-        thunk_diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
+        diplo_leader_wnd_scalar_dtor((void *)diplo_leader_window,1);
       }
       diplo_leader_window = 0;
     }
     diplo_greeting_sound_id = 0;
-    thunk_ui_delay_ticks(0x1e);
-    thunk_snd_play_effect(-diplo_leader_sound_ids,0,0,0);
-    thunk_snd_sync_music_option();
+    ui_delay_ticks(0x1e);
+    snd_play_effect(-diplo_leader_sound_ids,0,0,0);
+    snd_sync_music_option();
   }
   return;
 }
@@ -1399,7 +1397,7 @@ void __cdecl diplo_leader_play_reaction(int param_1)
       (*(int *)(diplo_leader_window + 0x1074) <
        *(int *)(&leader_anim_idle_end + (uint)*(byte *)(diplo_leader_window + 0x1084) * 0x28))))) {
     *(undefined1 *)(diplo_leader_window + 0x1088) = (undefined1)param_1;
-    thunk_diplo_leader_video_end_cb();
+    diplo_leader_video_end_cb();
   }
   return;
 }
@@ -1415,15 +1413,15 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((C_00408010_b8 *)this);
   local_8 = 0;
-  thunk_surfwnd_ctor((SurfaceWindow *)this->pad_c8);
+  surfwnd_ctor((SurfaceWindow *)this->pad_c8);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   surface_ctor((DibSurface *)&this->frame_right);
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   palette_init((GamePalette *)(this->pad_1e4 + 0x40));
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  thunk_dll_handle_init((DllHandle *)(this->pad_638 + 0x20));
+  dll_handle_init((DllHandle *)(this->pad_638 + 0x20));
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
   mmwnd_ctor((C_004083b0_a28 *)(this->pad_638 + 0x24));
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),5);
@@ -1450,15 +1448,15 @@ void __thiscall diplo_leader_wnd_dtor(void *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x65c)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_0049445e */ { thunk_dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x658)); }
+  /* inlined unwind funclet FUN_0049445e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x658)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x224)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1dc)); }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_0049448b */ { thunk_surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
+  /* inlined unwind funclet FUN_0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0049449a */ { thunk_wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_0049449a */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef diplo_leader_video_active
@@ -1483,54 +1481,54 @@ undefined4 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,undefined4 par
   this->field_1086 = (u8)param_1;
   this->field_1085 = (u8)param_2;
   this->field_1084 = (u8)civs[this->field_1085].tribe;
-  thunk_str_clear((iptr)local_84);
-  thunk_str_append((iptr)local_84,ADDR(0x62cab4, ((u8 *)&g.d_0062cab4)));
-  iVar1 = thunk_file_resolve_path((iptr)local_84);
+  str_clear((iptr)local_84);
+  str_append((iptr)local_84,ADDR(0x62cab4, ((u8 *)&g.d_0062cab4)));
+  iVar1 = file_resolve_path((iptr)local_84);
   if (iVar1 == 0) {
     uVar2 = 0;
   }
   else {
-    thunk_dll_handle_load((DllHandle *)(this->pad_1e0 + 0x478),(iptr)local_84);
-    uVar2 = thunk_civ_city_style_era((uint)this->field_1085);
+    dll_handle_load((DllHandle *)(this->pad_1e0 + 0x478),(iptr)local_84);
+    uVar2 = civ_city_style_era((uint)this->field_1085);
     this->field_1087 = (u8)uVar2;
-    iVar1 = thunk_diplo_leader_init_tile(this);
+    iVar1 = diplo_leader_init_tile(this);
     if (iVar1 == 0) {
       MessageBoxA((HWND)0x0,s_init_tile_failed__0062cac8,s_NOTICE_0062cac0,0x40);
       uVar2 = 0;
     }
     else {
-      iVar1 = thunk_diplo_leader_init_background(this);
+      iVar1 = diplo_leader_init_background(this);
       if (iVar1 == 0) {
         MessageBoxA((HWND)0x0,s_init_background_failed__0062cae4,s_NOTICE_0062cadc,0x40);
         uVar2 = 0;
       }
       else {
-        iVar1 = thunk_diplo_leader_init_main_art(this);
+        iVar1 = diplo_leader_init_main_art(this);
         if (iVar1 == 0) {
           MessageBoxA((HWND)0x0,s_init_main_art_failed__0062cb04,s_NOTICE_0062cafc,0x40);
           uVar2 = 0;
         }
         else {
-          iVar1 = thunk_diplo_leader_init_military(this);
+          iVar1 = diplo_leader_init_military(this);
           if (iVar1 == 0) {
             MessageBoxA((HWND)0x0,s_init_military_failed__0062cb24,s_NOTICE_0062cb1c,0x40);
             uVar2 = 0;
           }
           else {
-            iVar1 = thunk_diplo_leader_init_science(this);
+            iVar1 = diplo_leader_init_science(this);
             if (iVar1 == 0) {
               MessageBoxA((HWND)0x0,s_init_science_failed__0062cb44,s_NOTICE_0062cb3c,0x40);
               uVar2 = 0;
             }
             else {
-              iVar1 = thunk_diplo_leader_init_portrait(this);
+              iVar1 = diplo_leader_init_portrait(this);
               if (iVar1 == 0) {
                 MessageBoxA((HWND)0x0,s_init_portrait_failed__0062cb64,s_NOTICE_0062cb5c,0x40);
                 uVar2 = 0;
               }
               else {
                 if (((*(undefined1 *)((char *)&game.game_options + 2)) & 0x20) != 0) {
-                  diplo_leader_video_active = thunk_diplo_leader_init_video(this);
+                  diplo_leader_video_active = diplo_leader_init_video(this);
                 }
                 uVar2 = 1;
               }
@@ -1552,24 +1550,24 @@ undefined4 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,undefined4 par
 void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
 
 {
-  thunk_wnd_handle_show_raise((WndBase *)this);
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_palette((WndBase *)this,(iptr)(this->pad_1e4 + 0x40));
-  thunk_wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)(this->pad_1e4 + 0x40));
+  wnd_handle_show_raise((WndBase *)this);
+  wnd_flush_paint();
+  wnd_set_palette((WndBase *)this,(iptr)(this->pad_1e4 + 0x40));
+  wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)(this->pad_1e4 + 0x40));
   if (diplo_leader_video_active != '\0') {
-    thunk_window_show((C_004083b0_4 *)(this->pad_638 + 0x24));
+    window_show((C_004083b0_4 *)(this->pad_638 + 0x24));
   }
-  thunk_window_show((C_004083b0_4 *)this->pad_c8);
-  thunk_wnd_flush_paint();
+  window_show((C_004083b0_4 *)this->pad_c8);
+  wnd_flush_paint();
   if (diplo_leader_video_active != '\0') {
     avi_player_play_range
               ((AviPlayerRangeView *)(this->pad_638 + 0x24),
                *(undefined4 *)(&leader_anim_frame_starts + (uint)this->leader_tribe * 0x28),
                *(undefined4 *)(&leader_anim_frame_ends + (uint)this->leader_tribe * 0x28));
   }
-  thunk_dll_handle_free((DllHandle *)(this->pad_638 + 0x20));
+  dll_handle_free((DllHandle *)(this->pad_638 + 0x20));
   DAT_0062ca3c = 0;
-  thunk_snd_play_effect(diplo_greeting_sound_id,1,0,ADDR(0x401a91, diplo_greeting_sound_done_cb));
+  snd_play_effect(diplo_greeting_sound_id,1,0,ADDR(0x401a91, diplo_greeting_sound_done_cb));
   return;
 }
 #undef diplo_greeting_sound_id
@@ -1579,19 +1577,19 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
 void __thiscall diplo_leader_wnd_teardown(WndBase *this)
 
 {
-  thunk_wnd_hide(this + 0x11);
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_palette(this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-  thunk_wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-  thunk_wnd_hide(this);
-  thunk_wnd_flush_paint();
-  thunk_wnd_destroy_native(this);
-  thunk_dll_handle_free((DllHandle *)&this[0x65].field_8);
-  thunk_dlg_set_parent_window(0);
-  thunk_dlg_set_palette(0);
-  thunk_wnd_destroy_with_surface((DibSurface *)&this[0xc].field_8);
-  thunk_wnd_destroy_native(this);
-  thunk_dialog_set_default_offset(0,0);
+  wnd_hide(this + 0x11);
+  wnd_flush_paint();
+  wnd_set_palette(this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  wnd_hide(this);
+  wnd_flush_paint();
+  wnd_destroy_native(this);
+  dll_handle_free((DllHandle *)&this[0x65].field_8);
+  dlg_set_parent_window(0);
+  dlg_set_palette(0);
+  wnd_destroy_with_surface((DibSurface *)&this[0xc].field_8);
+  wnd_destroy_native(this);
+  dialog_set_default_offset(0,0);
   return;
 }
 
@@ -1613,7 +1611,7 @@ undefined4 __thiscall diplo_leader_init_background(DiploLeaderView *this)
   wnd_create_with_handlers
             ((WndBase *)this,ADDR(0x62cb7c, ((u8 *)&g.d_0062cb7c)),0x800,0,0,this->field_c0,this->field_c4 + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
              ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-  thunk_wnd_set_bg_tile(this,(iptr)&this->field_1dc);
+  wnd_set_bg_tile(this,(iptr)&this->field_1dc);
   return 1;
 }
 
@@ -1653,8 +1651,8 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
     puVar5 = &local_14;
     puVar4 = &local_450;
     puVar3 = &local_18;
-    iVar2 = thunk_civ_color_primary((uint)this->field_1085);
-    thunk_palette_get_entry
+    iVar2 = civ_color_primary((uint)this->field_1085);
+    palette_get_entry
               ((GamePalette *)&game_palette,iVar2,(iptr)puVar3,(iptr)puVar4,(iptr)puVar5);
     palette_set_entry(&local_44c,0x91,local_18,local_450,local_14);
     palette_get_rgb(&local_44c,(iptr)local_4d0,0x6a,0x28);
@@ -1738,10 +1736,10 @@ undefined4 __thiscall diplo_leader_init_military(DiploLeaderView *this)
       local_4cc = 0x2d;
       local_4d4 = 0x82;
       local_4d8 = 0x1f;
-      for (local_4d0 = 0; local_4d0 < local_4dc; local_4d0 = local_4d0 + 1) {
+      for (local_4d0 = 0; local_4d0 < local_4dc; local_4d0++) {
         sprite_draw
                   (&local_4c8,(iptr)local_4f4,(iptr)this->pad_c8,local_4cc,local_4d4);
-        local_4d4 = local_4d4 + local_4d8;
+        local_4d4 += local_4d8;
       }
       (*(undefined1 *)((char *)&local_8 + 0)) = 1;
       /* inlined unwind funclet FUN_00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
@@ -1771,16 +1769,16 @@ undefined4 __thiscall diplo_leader_init_military(DiploLeaderView *this)
 
 /* 00494dae auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl advance_count_prereq_depth(iptr param_1)
+void __cdecl advance_count_prereq_depth(iptr advance)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (tech_prereq_walk_count < 0x65) {
-    for (local_8 = 0; local_8 < 2; local_8 = local_8 + 1) {
-      if ('\0' < *(char *)(local_8 + ADDR(0x62768e, ((u8 *)&advances + 14)) + param_1 * 0x10)) {
-        tech_prereq_walk_count = tech_prereq_walk_count + 1;
-        thunk_advance_count_prereq_depth((int)*(char *)(local_8 + ADDR(0x62768e, ((u8 *)&advances + 14)) + param_1 * 0x10));
+    for (local_8 = 0; local_8 < 2; local_8++) {
+      if ('\0' < advances[advance].preq[local_8]) {
+        tech_prereq_walk_count++;
+        advance_count_prereq_depth((int)advances[advance].preq[local_8]);
       }
     }
   }
@@ -1797,7 +1795,7 @@ void __cdecl advance_count_prereq_depth(iptr param_1)
 #define local_7b4 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_7b0 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_7ac (*(CHAR (*)[252])(frame_ + FRAME_OFF(36)))
-#define local_6b0 (*(iptr *)(frame_ + FRAME_OFF(288)))
+#define advance (*(iptr *)(frame_ + FRAME_OFF(288)))
 #define local_6ac (*(int *)(frame_ + FRAME_OFF(292)))
 #define local_6a8 (*(int *)(frame_ + FRAME_OFF(296)))
 #define local_6a4 (*(int *)(frame_ + FRAME_OFF(300)))
@@ -1835,7 +1833,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   undefined1 frame_[FRAME_OFF(2000)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_font_init(&local_680,0,0xb);
+  font_init(&local_680,0,0xb);
   local_8 = 0;
   FUN_005f2620(local_604,0x3c,5,sprite_init,sprite_destroy);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
@@ -1860,39 +1858,39 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   local_490[10] = 0xffffffff;
   local_490[0xb] = 0xffffffff;
   local_6ac = 0;
-  if (((((*(byte *)(human_civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + (uint)this->field_1085 * 4) & 0x80) == 0) &&
-       (iVar1 = thunk_civ_has_wonder(human_civ,0x18), iVar1 == 0)) &&
-      (iVar1 = thunk_civ_has_wonder(human_civ,9), iVar1 == 0)) && (game.difficulty != '\0')) {
+  if (((((*(byte *)&civs[human_civ].treaties[((uint)this->field_1085)] & 0x80) == 0) &&
+       (iVar1 = civ_has_wonder(human_civ,0x18), iVar1 == 0)) &&
+      (iVar1 = civ_has_wonder(human_civ,9), iVar1 == 0)) && (game.difficulty != '\0')) {
     local_490[0xc] = 0;
   }
   else {
     local_490[0xc] = 1;
   }
-  for (local_6b0 = 0; local_6b0 < 100; local_6b0 = local_6b0 + 1) {
-    iVar1 = thunk_civ_has_advance((uint)this->field_1085,local_6b0);
+  for (advance = 0; advance < 100; advance++) {
+    iVar1 = civ_has_advance((uint)this->field_1085,advance);
     if (iVar1 != 0) {
-      local_6ac = local_6ac + 1;
-      if (*(int *)(&tech_prereq_depth_cache + local_6b0 * 4) < 1) {
+      local_6ac++;
+      if (*(int *)(&tech_prereq_depth_cache + advance * 4) < 1) {
         tech_prereq_walk_count = 0;
-        thunk_advance_count_prereq_depth(local_6b0);
-        tech_prereq_walk_count = tech_prereq_walk_count + 1;
-        *(int *)(&tech_prereq_depth_cache + local_6b0 * 4) = tech_prereq_walk_count;
+        advance_count_prereq_depth(advance);
+        tech_prereq_walk_count++;
+        *(int *)(&tech_prereq_depth_cache + advance * 4) = tech_prereq_walk_count;
         local_608 = tech_prereq_walk_count;
       }
       else {
-        local_608 = *(int *)(&tech_prereq_depth_cache + local_6b0 * 4);
+        local_608 = *(int *)(&tech_prereq_depth_cache + advance * 4);
       }
       if (local_490[1] < local_608) {
-        local_490[0] = local_6b0;
+        local_490[0] = advance;
         local_490[1] = local_608;
-        for (local_684 = 1; local_684 < 6; local_684 = local_684 + 1) {
+        for (local_684 = 1; local_684 < 6; local_684++) {
           local_7b4 = local_490[local_684 * 2];
           local_7b8 = local_490[local_684 * 2 + 1];
-          local_6a0 = local_684 + -1;
+          local_6a0 = local_684 - 1;
           while ((-1 < local_6a0 && (local_7b8 < local_490[local_6a0 * 2 + 1]))) {
             local_490[local_6a0 * 2 + 2] = local_490[local_6a0 * 2];
             local_490[local_6a0 * 2 + 3] = local_490[local_6a0 * 2 + 1];
-            local_6a0 = local_6a0 + -1;
+            local_6a0--;
           }
           local_490[local_6a0 * 2 + 2] = local_7b4;
           local_490[local_6a0 * 2 + 3] = local_7b8;
@@ -1912,7 +1910,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
     local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00495c10 */ { thunk_font_destroy((GameFont *)((iptr)&local_680)); }
+    /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
   }
   else {
     iVar1 = surface_load_gif_resource(&local_4d8,0xd7,10,0xec,(iptr)&local_45c);
@@ -1925,7 +1923,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
       /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00495c10 */ { thunk_font_destroy((GameFont *)((iptr)&local_680)); }
+      /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
       local_7bc = local_7c0;
     }
     else {
@@ -1933,13 +1931,13 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       local_678 = (uint)this->field_1087 * 0x6d + 1;
       local_69c = 1;
       sprite_grab_from_surface(local_604 + 3,(iptr)&local_4d8,9,local_678,1,0x6c,0x1e);
-      local_69c = local_69c + 0x1f;
+      local_69c += 0x1f;
       sprite_grab_from_surface(local_604,(iptr)&local_4d8,9,local_678,local_69c,0x6c,0x1e);
-      local_69c = local_69c + 0x1f;
+      local_69c += 0x1f;
       sprite_grab_from_surface(local_604 + 1,(iptr)&local_4d8,9,local_678,local_69c,0x6c,0x1e);
-      local_69c = local_69c + 0x1f;
+      local_69c += 0x1f;
       sprite_grab_from_surface(local_604 + 2,(iptr)&local_4d8,9,local_678,local_69c,0x6c,0x1e);
-      local_69c = local_69c + 0x1f;
+      local_69c += 0x1f;
       sprite_grab_from_surface(&local_514,(iptr)&local_4d8,9,local_678,local_69c,0x6c,0x1e);
       local_6a4 = 0x1f;
       local_678 = 0x1e5;
@@ -1947,38 +1945,38 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       SetRect(&local_24,0,0,0x3a,0x14);
       OffsetRect(&local_24,0x213,0x89);
       local_28 = local_24.right - local_24.left;
-      for (local_6a8 = 5; -1 < local_6a8; local_6a8 = local_6a8 + -1) {
-        local_6b0 = local_490[local_6a8 * 2];
-        if (-1 < local_6b0) {
-          local_698 = (int)(char)advances[local_6b0].category;
+      for (local_6a8 = 5; -1 < local_6a8; local_6a8--) {
+        advance = local_490[local_6a8 * 2];
+        if (-1 < advance) {
+          local_698 = (int)(char)advances[advance].category;
           sprite_draw
                     (local_604 + local_698,(iptr)local_7d0,(iptr)this->pad_c8,local_678,local_69c);
-          for (local_684 = 0; local_684 < 5; local_684 = local_684 + 1) {
-            thunk_str_clear((iptr)(local_7ac + local_684 * 0x32));
+          for (local_684 = 0; local_684 < 5; local_684++) {
+            str_clear((iptr)(local_7ac + local_684 * 0x32));
           }
-          iVar2 = thunk_label_string(advances[local_6b0].name);
-          thunk_str_append((iptr)local_7ac,iVar2);
+          iVar2 = label_string(advances[advance].name);
+          str_append((iptr)local_7ac,iVar2);
           CharUpperA(local_7ac);
           local_6a0 = 0;
           do {
             local_60c = '\0';
             while ((local_7ac[(int)local_60c + local_6a0 * 0x32] != '\0' &&
                    (local_7ac[(int)local_60c + local_6a0 * 0x32] != ' '))) {
-              local_60c = local_60c + '\x01';
+              local_60c++;
             }
             if (local_7ac[(int)local_60c + local_6a0 * 0x32] != '\0') {
               local_7ac[(int)local_60c + local_6a0 * 0x32] = '\0';
-              thunk_str_append((iptr)(local_7ac + (local_6a0 * 5 + 5) * 10),
+              str_append((iptr)(local_7ac + (local_6a0 * 5 + 5) * 10),
                                  (iptr)(local_7ac + (int)local_60c + local_6a0 * 0x32 + 1));
             }
-            local_6a0 = local_6a0 + 1;
+            local_6a0++;
           } while (local_60c != '\0');
-          thunk_str_clear((iptr)(aCStack_641 + 1));
+          str_clear((iptr)(aCStack_641 + 1));
           for (local_684 = 0; (local_684 < 5 && (local_7ac[local_684 * 0x32] != '\0'));
               local_684 = local_684 + 1) {
-            thunk_str_append((iptr)(aCStack_641 + 1),(iptr)(local_7ac + local_684 * 0x32));
-            thunk_str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb84, ((u8 *)&g.d_0062cb84)));
-            iVar1 = thunk_font_text_width(&local_680,(iptr)(aCStack_641 + 1));
+            str_append((iptr)(aCStack_641 + 1),(iptr)(local_7ac + local_684 * 0x32));
+            str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb84, ((u8 *)&g.d_0062cb84)));
+            iVar1 = font_text_width(&local_680,(iptr)(aCStack_641 + 1));
             if (local_28 < iVar1) break;
           }
           if ((local_7ac[local_684 * 0x32] == '\0') || (local_6a0 == 2)) {
@@ -1987,15 +1985,15 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
               iVar1 = lstrlenA(aCStack_641 + 1);
               local_60c = (char)iVar1;
               while ((local_60c != '\0' &&
-                     (iVar1 = thunk_font_text_width(&local_680,(iptr)(aCStack_641 + 1)),
+                     (iVar1 = font_text_width(&local_680,(iptr)(aCStack_641 + 1)),
                      local_28 < iVar1))) {
                 aCStack_641[local_60c + 1] = '\0';
-                local_60c = local_60c + -1;
+                local_60c--;
                 local_7b0 = 1;
               }
               if (local_7b0 != 0) {
                 aCStack_641[local_60c] = '\0';
-                thunk_str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb88, ((u8 *)&g.d_0062cb88)));
+                str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb88, ((u8 *)&g.d_0062cb88)));
               }
             }
             CopyRect(&local_694,&local_24);
@@ -2012,34 +2010,34 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
             }
           }
           else {
-            thunk_str_clear((iptr)(aCStack_641 + 1));
+            str_clear((iptr)(aCStack_641 + 1));
             if (local_684 == 0) {
-              thunk_str_append((iptr)(aCStack_641 + 1),(iptr)local_7ac);
+              str_append((iptr)(aCStack_641 + 1),(iptr)local_7ac);
               local_6a0 = 1;
               iVar1 = lstrlenA(local_674);
               local_7b0 = 0;
               local_60c = (char)iVar1;
               while ((local_60c != '\0' &&
-                     (iVar1 = thunk_font_text_width(&local_680,(iptr)(aCStack_641 + 1)),
+                     (iVar1 = font_text_width(&local_680,(iptr)(aCStack_641 + 1)),
                      local_28 < iVar1))) {
                 aCStack_641[local_60c + 1] = '\0';
-                local_60c = local_60c + -1;
+                local_60c--;
                 local_7b0 = 1;
               }
               if (local_7b0 != 0) {
                 aCStack_641[local_60c] = '\0';
-                thunk_str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb8c, ((u8 *)&g.d_0062cb8c)));
+                str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb8c, ((u8 *)&g.d_0062cb8c)));
               }
             }
             else {
-              for (local_6a0 = 0; local_6a0 < local_684; local_6a0 = local_6a0 + 1) {
-                thunk_str_append((iptr)(aCStack_641 + 1),(iptr)(local_7ac + local_6a0 * 0x32));
+              for (local_6a0 = 0; local_6a0 < local_684; local_6a0++) {
+                str_append((iptr)(aCStack_641 + 1),(iptr)(local_7ac + local_6a0 * 0x32));
               }
             }
             if (local_490[0xc] != 0) {
               CopyRect(&local_694,&local_24);
               iVar3 = local_24.bottom - local_24.top;
-              iVar1 = thunk_font_cached_height(&local_680);
+              iVar1 = font_cached_height(&local_680);
               OffsetRect(&local_694,0,((iVar3 >> 1) - iVar1) + 1);
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
@@ -2051,27 +2049,27 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
                         ((DibSurface *)this->pad_c8,(iptr)&local_680,(iptr)(aCStack_641 + 1),
                          (iptr)&local_694,1);
             }
-            thunk_str_clear((iptr)local_674);
-            for (; local_6a0 < 5; local_6a0 = local_6a0 + 1) {
-              thunk_str_append((iptr)local_674,(iptr)(local_7ac + local_6a0 * 0x32));
+            str_clear((iptr)local_674);
+            for (; local_6a0 < 5; local_6a0++) {
+              str_append((iptr)local_674,(iptr)(local_7ac + local_6a0 * 0x32));
             }
             iVar1 = lstrlenA(local_674);
             local_7b0 = 0;
             local_60c = (char)iVar1;
             while ((local_60c != '\0' &&
-                   (iVar1 = thunk_font_text_width(&local_680,(iptr)local_674),
+                   (iVar1 = font_text_width(&local_680,(iptr)local_674),
                    local_28 < iVar1))) {
               local_674[local_60c] = '\0';
-              local_60c = local_60c + -1;
+              local_60c--;
               local_7b0 = 1;
             }
             if (local_7b0 != 0) {
-              local_674[local_60c + -1] = '\0';
-              thunk_str_append((iptr)local_674,ADDR(0x62cb90, ((u8 *)&g.d_0062cb90)));
+              local_674[local_60c - 1] = '\0';
+              str_append((iptr)local_674,ADDR(0x62cb90, ((u8 *)&g.d_0062cb90)));
             }
             if (local_490[0xc] != 0) {
-              iVar1 = thunk_font_cached_height(&local_680);
-              OffsetRect(&local_694,0,iVar1 + -3);
+              iVar1 = font_cached_height(&local_680);
+              OffsetRect(&local_694,0,iVar1 - 3);
               gfx_set_text_color_index(10);
               surface_draw_text_in_rect
                         ((DibSurface *)this->pad_c8,(iptr)&local_680,(iptr)local_674,
@@ -2084,7 +2082,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
             }
           }
           OffsetRect(&local_24,0,local_6a4);
-          local_69c = local_69c + local_6a4;
+          local_69c += local_6a4;
         }
       }
       (*(undefined1 *)((char *)&local_8 + 0)) = 2;
@@ -2094,7 +2092,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
       local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
       /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00495c10 */ { thunk_font_destroy((GameFont *)((iptr)&local_680)); }
+      /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
       local_7bc = 1;
     }
   }
@@ -2108,7 +2106,7 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
 #undef local_7b4
 #undef local_7b0
 #undef local_7ac
-#undef local_6b0
+#undef advance
 #undef local_6ac
 #undef local_6a8
 #undef local_6a4
@@ -2220,15 +2218,15 @@ undefined1 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   palette_init(&local_448);
   local_8 = 0;
   this->field_1084 = (u8)civs[this->field_1085].tribe;
-  thunk_str_clear((iptr)local_4c8);
-  thunk_str_append((iptr)local_4c8,ADDR(0x62cb94, ((u8 *)&g.d_0062cb94)));
-  thunk_str_clear((iptr)local_608);
-  thunk_str_append((iptr)local_608,ADDR(0x62cba0, ((u8 *)&g.d_0062cba0)));
-  thunk_str_append((iptr)local_608,(iptr)(&leader_video_tribe_codes)[civs[this->field_1085].tribe]);
+  str_clear((iptr)local_4c8);
+  str_append((iptr)local_4c8,ADDR(0x62cb94, ((u8 *)&g.d_0062cb94)));
+  str_clear((iptr)local_608);
+  str_append((iptr)local_608,ADDR(0x62cba0, ((u8 *)&g.d_0062cba0)));
+  str_append((iptr)local_608,(iptr)(&leader_video_tribe_codes)[civs[this->field_1085].tribe]);
   local_601 = 0;
-  thunk_str_append((iptr)local_4c8,(iptr)local_608);
-  thunk_str_append((iptr)local_4c8,ADDR(0x62cba8, ((u8 *)&g.d_0062cba8)));
-  iVar2 = thunk_file_resolve_path((iptr)local_4c8);
+  str_append((iptr)local_4c8,(iptr)local_608);
+  str_append((iptr)local_4c8,ADDR(0x62cba8, ((u8 *)&g.d_0062cba8)));
+  iVar2 = file_resolve_path((iptr)local_4c8);
   if (iVar2 == 0) {
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
@@ -2241,7 +2239,7 @@ undefined1 __thiscall diplo_leader_init_video(DiploLeaderView *this)
                *(undefined4 *)(&leader_video_y_table + (uint)this->field_1084 * 8),(iptr)this->pad_c8);
     local_14 = avi_player_open((AviPlayerOpenView *)(this->pad_1e0 + 0x47c),(iptr)local_4c8);
     if (local_14 == 0) {
-      thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e0 + 0x47c),ADDR(0x402441, thunk_diplo_leader_video_end_cb));
+      avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e0 + 0x47c),ADDR(0x402441, diplo_leader_video_end_cb));
       avi_player_set_transparent((C_005dd761 *)(this->pad_1e0 + 0x47c),1);
       palette_load_ctab_res(&local_448,this->field_1084 + 1000);
       palette_get_rgb(&local_448,(iptr)local_5f4,0x92,100);
@@ -2249,7 +2247,7 @@ undefined1 __thiscall diplo_leader_init_video(DiploLeaderView *this)
                 ((GamePalette *)(this->pad_1e0 + 0x44),0x92,100,(iptr)local_5f4);
       avi_player_set_palette
                 ((DibSurface *)(this->pad_1e0 + 0x47c),(iptr)(this->pad_1e0 + 0x44));
-      thunk_wnd_set_palette
+      wnd_set_palette
                 ((WndBase *)(this->pad_1e0 + 0x4c4),(iptr)(this->pad_1e0 + 0x44));
       avi_player_show_frame(this->pad_1e0 + 0x47c,0);
       local_8 = 0xffffffff;
@@ -2258,7 +2256,7 @@ undefined1 __thiscall diplo_leader_init_video(DiploLeaderView *this)
     }
     else {
       if (local_14 == -0x7ffbfeac) {
-        thunk_popup_game(ADDR(0x62cbb4, ((u8 *)&g.d_0062cbb4)));
+        popup_game(ADDR(0x62cbb4, ((u8 *)&g.d_0062cbb4)));
       }
       local_8 = 0xffffffff;
       /* inlined unwind funclet FUN_00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
@@ -2302,7 +2300,7 @@ void __cdecl diplo_leader_video_end_cb(void)
                  *(undefined4 *)(&leader_anim_frame_starts + (uint)*(byte *)(iVar1 + 0x1084) * 0x28 + uVar2 * 8)
                  ,*(undefined4 *)
                    (&leader_anim_frame_ends + (uint)*(byte *)(iVar1 + 0x1084) * 0x28 + uVar2 * 8));
-      thunk_snd_play_effect((&diplo_leader_sound_ids)[uVar2],1,0,0);
+      snd_play_effect((&diplo_leader_sound_ids)[uVar2],1,0,0);
     }
   }
   return;
@@ -2320,15 +2318,15 @@ C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_surfwnd_ctor((SurfaceWindow *)this);
+  surfwnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   surface_ctor((DibSurface *)&this->style_flags);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  thunk_button_ctor((Control *)this->pad_15c);
+  button_ctor((Control *)this->pad_15c);
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  thunk_button_ctor((Control *)(this->pad_15c + 0x3c));
+  button_ctor((Control *)(this->pad_15c + 0x3c));
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),3);
-  thunk_dll_handle_init((DllHandle *)(this->pad_1bc + 0x18));
+  dll_handle_init((DllHandle *)(this->pad_1bc + 0x18));
   this->vtable = (u32)&PTR_FUN_0061d6c0;
   this->portrait_civ = 0;
   this->show_turn_timer = 0;
@@ -2355,15 +2353,15 @@ void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
   *(undefined ***)this->pad_0 = &PTR_FUN_0061d6c0;
   (*(undefined3 *)((char *)&local_8 + 1)) = 0;
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_004963a5 */ { thunk_dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
+  /* inlined unwind funclet FUN_004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_004963b4 */ { thunk_ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
+  /* inlined unwind funclet FUN_004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_004963c3 */ { thunk_ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
+  /* inlined unwind funclet FUN_004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x114)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004963e1 */ { thunk_surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -2379,13 +2377,13 @@ undefined4 __thiscall portrait_dlg_create(C_004083b0_208 *this)
   wnd_create_with_surface
             ((DibSurface *)this,ADDR(0x62cbc8, ((u8 *)&g.d_0062cbc8)),0xc00,0,0,frame_border_width * 8 + 0x276,
              frame_border_width * 4 + frame_caption_height + 0x16e,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-  thunk_portrait_dlg_create_buttons((C_004083b0_4 *)this);
-  thunk_wnd_set_caption_height((WndBase *)this->pad_48,frame_caption_height);
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403ce7, thunk_portrait_dlg_on_click));
-  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x401f14, portrait_dlg_on_dblclick));
-  thunk_portrait_dlg_paint(this);
+  portrait_dlg_create_buttons((C_004083b0_4 *)this);
+  wnd_set_caption_height((WndBase *)this->pad_48,frame_caption_height);
+  wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403ce7, portrait_dlg_on_click));
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x401f14, portrait_dlg_on_dblclick));
+  portrait_dlg_paint(this);
   wnd_repaint((SurfaceWindow *)this);
-  thunk_wnd_center((WndCenterView *)this->pad_48);
+  wnd_center((WndCenterView *)this->pad_48);
   return 1;
 }
 #undef frame_border_width
@@ -2403,7 +2401,7 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
-          (frame_border_width * 8 + 0x276 >> 1) + -2,
+          (frame_border_width * 8 + 0x276 >> 1) - 2,
           frame_border_width * 3 + frame_caption_height + 0x16e + frame_bevel_width);
   if (this == (C_004083b0_4 *)0x0) {
     local_18 = (C_004083b0_4 *)0x0;
@@ -2411,7 +2409,7 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
   else {
     local_18 = this + 0x12;
   }
-  thunk_button_create_with_callback
+  button_create_with_callback
             ((Control *)(this + 0x66),(iptr)local_18,0x65,(iptr)&local_14,0x21,ADDR(0x62cbcc, ((u8 *)&g.d_0062cbcc)));
   OffsetRect(&local_14,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
   if (this == (C_004083b0_4 *)0x0) {
@@ -2420,10 +2418,10 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
   else {
     local_1c = this + 0x12;
   }
-  thunk_button_create_with_callback
+  button_create_with_callback
             ((Control *)(this + 0x57),(iptr)local_1c,100,(iptr)&local_14,0x21,ADDR(0x62cbd0, ((u8 *)&g.d_0062cbd0)));
-  thunk_button_set_callback((Control *)(this + 0x57),ADDR(0x403616, thunk_portrait_dlg_on_button));
-  thunk_button_set_callback((Control *)(this + 0x66),ADDR(0x403616, thunk_portrait_dlg_on_button));
+  button_set_callback((Control *)(this + 0x57),ADDR(0x403616, portrait_dlg_on_button));
+  button_set_callback((Control *)(this + 0x66),ADDR(0x403616, portrait_dlg_on_button));
   return;
 }
 #undef frame_border_width
@@ -2436,18 +2434,18 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
 void __thiscall portrait_dlg_run(C_004083b0_208 *this)
 
 {
-  thunk_ctrl_show_and_redraw((Control *)this->pad_15c);
-  thunk_ctrl_show_and_redraw((Control *)(this->pad_15c + 0x3c));
-  thunk_window_show((C_004083b0_4 *)this);
+  ctrl_show_and_redraw((Control *)this->pad_15c);
+  ctrl_show_and_redraw((Control *)(this->pad_15c + 0x3c));
+  window_show((C_004083b0_4 *)this);
   if (2 < game.multiplayer) {
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
   }
   wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
-  thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
-  thunk_wnd_hide((WndBase *)this->pad_48);
-  thunk_wnd_flush_paint();
-  thunk_control_hide((Control *)this->pad_15c);
-  thunk_control_hide((Control *)(this->pad_15c + 0x3c));
+  wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
+  wnd_hide((WndBase *)this->pad_48);
+  wnd_flush_paint();
+  control_hide((Control *)this->pad_15c);
+  control_hide((Control *)(this->pad_15c + 0x3c));
   civs[this->portrait_civ].leader_portrait = (u8)this->show_turn_status;
   return;
 }
@@ -2475,49 +2473,49 @@ void __thiscall portrait_dlg_paint(C_004083b0_208 *this)
   RECT *lprcSrc;
   undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x4a8));
-  thunk_dll_handle_load((DllHandle *)(this->pad_1bc + 0x18),ADDR(0x62cbd8, ((u8 *)&g.d_0062cbd8)));
+  local_8 = label_string(*(undefined4 *)(label_string_ids + 0x4a8));
+  dll_handle_load((DllHandle *)(this->pad_1bc + 0x18),ADDR(0x62cbd8, ((u8 *)&g.d_0062cbd8)));
   iVar1 = surface_load_gif_resource
                     ((DibSurface *)&this->style_flags,
                      0xd3 - (uint)(leaders[civs[this->portrait_civ].tribe].female == '\0'),10,0xec,
                      ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   if (iVar1 != 0) {
-    thunk_dll_handle_free((DllHandle *)(this->pad_1bc + 0x18));
+    dll_handle_free((DllHandle *)(this->pad_1bc + 0x18));
     iVar1 = frame_caption_height + frame_bevel_width * -2;
-    uVar2 = thunk_surface_get_width((DibSurface *)this);
-    thunk_gfx_tile_fill((iptr)this,frame_border_tile,0,frame_bevel_width,uVar2,iVar1,0,frame_bevel_width);
-    uVar2 = thunk_surface_get_height((DibSurface *)this);
+    uVar2 = surface_get_width((DibSurface *)this);
+    gfx_tile_fill((iptr)this,frame_border_tile,0,frame_bevel_width,uVar2,iVar1,0,frame_bevel_width);
+    uVar2 = surface_get_height((DibSurface *)this);
     iVar1 = frame_border_width + frame_bevel_width * -2;
     local_30 = frame_bevel_width;
     iVar3 = frame_caption_height - frame_bevel_width;
-    for (local_34 = 0; local_34 < 8; local_34 = local_34 + 1) {
-      thunk_gfx_tile_fill((iptr)this,frame_border_tile,local_30,iVar3,iVar1,uVar2,local_30,iVar3);
+    for (local_34 = 0; local_34 < 8; local_34++) {
+      gfx_tile_fill((iptr)this,frame_border_tile,local_30,iVar3,iVar1,uVar2,local_30,iVar3);
       local_30 = local_30 + frame_border_width + 0x5a;
     }
     iVar4 = frame_border_width + frame_bevel_width * -2;
     local_38 = frame_bevel_width + frame_caption_height + 0x6e;
-    iVar5 = thunk_surface_get_width((DibSurface *)this);
+    iVar5 = surface_get_width((DibSurface *)this);
     iVar3 = frame_bevel_width;
     iVar1 = frame_bevel_width * -2;
-    for (local_34 = 0; local_34 < 2; local_34 = local_34 + 1) {
-      thunk_gfx_tile_fill((iptr)this,frame_border_tile,iVar3,local_38,iVar5 + iVar1,iVar4,iVar3,local_38);
+    for (local_34 = 0; local_34 < 2; local_34++) {
+      gfx_tile_fill((iptr)this,frame_border_tile,iVar3,local_38,iVar5 + iVar1,iVar4,iVar3,local_38);
       local_38 = local_38 + frame_border_width + 0x6e;
     }
     iVar1 = frame_border_width * 2;
-    iVar5 = thunk_surface_get_width((DibSurface *)this);
+    iVar5 = surface_get_width((DibSurface *)this);
     iVar4 = frame_bevel_width;
     iVar3 = frame_bevel_width * -2;
-    iVar6 = thunk_surface_get_height((DibSurface *)this);
-    iVar6 = iVar6 + frame_border_width * -2 + -0x24 + frame_bevel_width;
-    thunk_gfx_tile_fill((iptr)this,frame_border_tile,iVar4,iVar6,iVar5 + iVar3,iVar1 + 0x24,iVar4,iVar6);
+    iVar6 = surface_get_height((DibSurface *)this);
+    iVar6 = iVar6 + frame_border_width * -2 - 0x24 + frame_bevel_width;
+    gfx_tile_fill((iptr)this,frame_border_tile,iVar4,iVar6,iVar5 + iVar3,iVar1 + 0x24,iVar4,iVar6);
     SetRect(&local_28,frame_border_width - frame_bevel_width,frame_caption_height - frame_bevel_width,
             frame_bevel_width * 2 + (frame_border_width - frame_bevel_width) + 0x5a,
             frame_bevel_width * 2 + (frame_caption_height - frame_bevel_width) + 0x6e);
     SetRect(&local_18,1,1,0x5b,0x6f);
-    for (local_34 = 0; local_34 < 3; local_34 = local_34 + 1) {
-      for (local_3c = 0; local_3c < 7; local_3c = local_3c + 1) {
-        for (local_2c = 0; local_2c < frame_bevel_width; local_2c = local_2c + 1) {
-          thunk_gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,frame_shadow_color,frame_highlight_color);
+    for (local_34 = 0; local_34 < 3; local_34++) {
+      for (local_3c = 0; local_3c < 7; local_3c++) {
+        for (local_2c = 0; local_2c < frame_bevel_width; local_2c++) {
+          gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,frame_shadow_color,frame_highlight_color);
           InflateRect(&local_28,-1,-1);
         }
         surface_blit
@@ -2529,21 +2527,21 @@ void __thiscall portrait_dlg_paint(C_004083b0_208 *this)
       OffsetRect(&local_18,-0x27d,0x6f);
       OffsetRect(&local_28,(frame_border_width + 0x5a) * -7,frame_border_width + 0x6e);
     }
-    lprcSrc = (RECT *)thunk_surface_get_rect((DibSurface *)this);
+    lprcSrc = (RECT *)surface_get_rect((DibSurface *)this);
     CopyRect(&local_28,lprcSrc);
-    for (local_2c = 0; local_2c < frame_bevel_width; local_2c = local_2c + 1) {
-      thunk_gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,frame_highlight_color,frame_shadow_color);
+    for (local_2c = 0; local_2c < frame_bevel_width; local_2c++) {
+      gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,frame_highlight_color,frame_shadow_color);
       InflateRect(&local_28,-1,-1);
     }
     SetRect(&local_28,frame_border_width - frame_bevel_width,frame_caption_height - frame_bevel_width,
             frame_bevel_width * 2 + (frame_border_width - frame_bevel_width) + 0x5a,
             frame_bevel_width * 2 + (frame_caption_height - frame_bevel_width) + 0x6e);
-    for (local_2c = 0; local_2c < frame_bevel_width; local_2c = local_2c + 1) {
-      thunk_gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,0x5e,0x5e);
+    for (local_2c = 0; local_2c < frame_bevel_width; local_2c++) {
+      gfx_draw_bevel_rect((iptr)this,(iptr)&local_28,0x5e,0x5e);
       InflateRect(&local_28,-1,-1);
     }
-    iVar3 = thunk_surface_get_width((DibSurface *)this);
-    iVar4 = thunk_font_text_width((GameFont *)&caption_font,local_8);
+    iVar3 = surface_get_width((DibSurface *)this);
+    iVar4 = font_text_width((GameFont *)&caption_font,local_8);
     iVar1 = frame_bevel_width;
     iVar4 = (iVar3 >> 1) - (iVar4 + 4 >> 1);
     iVar3 = frame_bevel_width + 1;
@@ -2589,11 +2587,11 @@ void __cdecl portrait_dlg_on_click(int param_1,int param_2)
     local_8 = (DibSurface *)0x0;
   }
   else {
-    local_8 = (DibSurface *)(iVar1 + -0x48);
+    local_8 = (DibSurface *)(iVar1 - 0x48);
   }
   local_14 = local_8[6].field_30;
-  iVar1 = thunk_surface_get_height(local_8);
-  if (param_2 <= iVar1 + -0x24 + frame_border_width * -2) {
+  iVar1 = surface_get_height(local_8);
+  if (param_2 <= iVar1 - 0x24 + frame_border_width * -2) {
     iVar1 = (param_2 - frame_caption_height) / (frame_border_width + 0x6e);
     local_8[6].field_30 =
          ((param_1 - (frame_border_width >> 1)) / (frame_border_width + 0x5a) - iVar1) + iVar1 * 8;
@@ -2607,13 +2605,13 @@ void __cdecl portrait_dlg_on_click(int param_1,int param_2)
             frame_bevel_width * 2 + local_1c + 0x6e);
     SetRect(&local_40,local_18,local_30,frame_bevel_width * 2 + local_18 + 0x5a,
             frame_bevel_width * 2 + local_30 + 0x6e);
-    for (local_c = 0; local_c < frame_bevel_width; local_c = local_c + 1) {
-      thunk_gfx_draw_bevel_rect((iptr)local_8,(iptr)&local_2c,0x5e,0x5e);
+    for (local_c = 0; local_c < frame_bevel_width; local_c++) {
+      gfx_draw_bevel_rect((iptr)local_8,(iptr)&local_2c,0x5e,0x5e);
       InflateRect(&local_2c,-1,-1);
-      thunk_gfx_draw_bevel_rect((iptr)local_8,(iptr)&local_40,frame_shadow_color,frame_highlight_color);
+      gfx_draw_bevel_rect((iptr)local_8,(iptr)&local_40,frame_shadow_color,frame_highlight_color);
       InflateRect(&local_40,-1,-1);
     }
-    thunk_wnd_blit_surface(local_8);
+    wnd_blit_surface(local_8);
   }
   return;
 }
@@ -2643,12 +2641,12 @@ void __cdecl portrait_dlg_on_dblclick(undefined4 param_1,int param_2)
     local_8 = 0;
   }
   else {
-    local_8 = iVar1 + -0x48;
+    local_8 = iVar1 - 0x48;
   }
-  thunk_portrait_dlg_on_click(param_1,param_2);
-  iVar1 = thunk_surface_get_height((DibSurface *)local_8);
-  if (param_2 < iVar1 + -0x24 + frame_border_width * -2) {
-    thunk_portrait_dlg_on_button(100);
+  portrait_dlg_on_click(param_1,param_2);
+  iVar1 = surface_get_height((DibSurface *)local_8);
+  if (param_2 < iVar1 - 0x24 + frame_border_width * -2) {
+    portrait_dlg_on_button(100);
   }
   return;
 }
@@ -2668,7 +2666,7 @@ void __cdecl portrait_dlg_on_button(int param_1)
     local_8 = 0;
   }
   else {
-    local_8 = iVar1 + -0x48;
+    local_8 = iVar1 - 0x48;
   }
   if (((param_1 != 100) && (param_1 == 0x65)) &&
      (*(undefined4 *)(local_8 + 0x1e4) = *(undefined4 *)(local_8 + 0x1e0),
@@ -2684,7 +2682,7 @@ void __cdecl portrait_dlg_on_button(int param_1)
 void * __thiscall diplo_leader_wnd_scalar_dtor(void *this,uint param_1)
 
 {
-  thunk_diplo_leader_wnd_dtor(this);
+  diplo_leader_wnd_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -2733,7 +2731,7 @@ button_create_with_callback
 {
   this->on_select = param_4;
   this->font = (u32)button_default_font;
-  thunk_button_create(this,param_1,param_2,param_3,param_5);
+  button_create(this,param_1,param_2,param_3,param_5);
   return;
 }
 
@@ -2748,10 +2746,10 @@ iptr __cdecl save_read_cstr(iptr param_1,iptr param_2)
   
   local_c = (undefined1 *)param_1;
   local_10 = 1;
-  for (local_8 = 0; (local_10 != 0 && (local_8 < 0x4f)); local_8 = local_8 + 1) {
+  for (local_8 = 0; (local_10 != 0 && (local_8 < 0x4f)); local_8++) {
     local_10 = _fgetc((FILE *)param_2);
     *local_c = (undefined1)local_10;
-    local_c = local_c + 1;
+    local_c++;
   }
   _fgetc((FILE *)param_2);
   return param_1;
@@ -2770,7 +2768,7 @@ void __cdecl save_write_cstr_eof(iptr param_1,iptr param_2)
   local_8 = 1;
   while (local_8 != 0) {
     local_8 = (int)*(char *)param_1;
-    param_1 = param_1 + 1;
+    param_1++;
     _fputc(local_8,(FILE *)param_2);
   }
   _fputc(0x1a,(FILE *)param_2);
@@ -2806,25 +2804,9 @@ bool __cdecl memblock_init(iptr param_1,undefined4 param_2,uint param_3)
   }
   else {
     *(undefined4 *)(param_1 + 4) = 0;
-    thunk_error_report(0xfffffffe,param_2,0,param_3 & 0xffff,0);
+    error_report(0xfffffffe,param_2,0,param_3 & 0xffff,0);
   }
   return !bVar2;
-}
-
-/* 00497fa0 auto */
-void __cdecl
-memblock_attach(undefined1 *param_1,undefined1 param_2,undefined4 param_3,undefined4 param_4,
-            undefined2 param_5)
-
-{
-  param_1[1] = 0;
-  *param_1 = param_2;
-  *(undefined4 *)(param_1 + 4) = param_3;
-  *(undefined4 *)(param_1 + 8) = param_4;
-  *(undefined2 *)(param_1 + 0xc) = 0;
-  *(undefined2 *)(param_1 + 0x10) = param_5;
-  *(undefined2 *)(param_1 + 0xe) = *(undefined2 *)(param_1 + 0x10);
-  return;
 }
 
 /* 00497ff3 auto */
@@ -2837,7 +2819,7 @@ undefined4 __cdecl memblock_ensure_locked(iptr param_1)
     uVar1 = mem_handle_lock(*(undefined4 *)(param_1 + 4));
     *(undefined4 *)(param_1 + 8) = uVar1;
     if (*(int *)(param_1 + 8) == 0) {
-      thunk_error_report(0xfffffff6,(uint)*(byte *)param_1,0,0,0);
+      error_report(0xfffffff6,(uint)*(byte *)param_1,0,0,0);
     }
   }
   return 0;
@@ -2849,15 +2831,6 @@ void __cdecl memblock_detach(iptr param_1)
 {
   *(undefined4 *)(param_1 + 8) = 0;
   *(undefined4 *)(param_1 + 4) = 0;
-  return;
-}
-
-/* 00498082 auto */
-void __cdecl memblock_reset(iptr param_1)
-
-{
-  *(undefined2 *)(param_1 + 0xc) = 0;
-  *(undefined2 *)(param_1 + 0x10) = *(undefined2 *)(param_1 + 0xe);
   return;
 }
 
@@ -2879,7 +2852,7 @@ iptr __cdecl memblock_free(iptr param_1)
 
 {
   if (*(char *)(param_1 + 1) != '\0') {
-    thunk_memblock_unlock(param_1);
+    memblock_unlock(param_1);
     if (*(int *)(param_1 + 4) != 0) {
       mem_handle_free(*(undefined4 *)(param_1 + 4));
       *(undefined4 *)(param_1 + 4) = 0;
@@ -2901,10 +2874,10 @@ int __cdecl memblock_alloc(iptr param_1,uint param_2)
   
   local_8 = 0;
   if ((uint)*(ushort *)(param_1 + 0x10) < (param_2 & 0xffff)) {
-    thunk_error_report(0xfffffffd,(uint)*(byte *)param_1,0,param_2 & 0xffff,
+    error_report(0xfffffffd,(uint)*(byte *)param_1,0,param_2 & 0xffff,
                        (uint)*(ushort *)(param_1 + 0x10));
   }
-  iVar1 = thunk_memblock_ensure_locked(param_1);
+  iVar1 = memblock_ensure_locked(param_1);
   if (iVar1 == 0) {
     local_8 = (uint)*(ushort *)(param_1 + 0xc) + *(int *)(param_1 + 8);
     *(short *)(param_1 + 0xc) = *(short *)(param_1 + 0xc) + (short)param_2;
@@ -2916,17 +2889,17 @@ int __cdecl memblock_alloc(iptr param_1,uint param_2)
 
 /* 00498310 auto */
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
-void __cdecl civ_password_ensure_set(int param_1)
+void __cdecl civ_password_ensure_set(int civ)
 
 {
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_mp_turn_timer_stop(1);
-  thunk_passwords_unscramble();
-  FUN_005f22d0(local_24,&civ_passwords + param_1 * 0x20);
-  thunk_passwords_scramble();
+  mp_turn_timer_stop(1);
+  passwords_unscramble();
+  FUN_005f22d0(local_24,&civ_passwords + civ * 0x20);
+  passwords_scramble();
   if (local_24[0] == '\0') {
-    thunk_civ_change_password_dialog(param_1);
+    civ_change_password_dialog(civ);
   }
   return;
 }
@@ -2940,52 +2913,52 @@ void __cdecl civ_password_ensure_set(int param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(824)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(828)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(832)))
-void __cdecl civ_change_password_dialog(iptr param_1)
+void __cdecl civ_change_password_dialog(iptr civ)
 
 {
   undefined1 frame_[FRAME_OFF(840)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_dialog_ctor(&local_328,0x4000);
+  dialog_ctor(&local_328,0x4000);
   local_8 = 0;
-  thunk_mp_turn_timer_stop(1);
-  thunk_passwords_unscramble();
-  FUN_005f22d0(local_34,&civ_passwords + param_1 * 0x20);
-  thunk_passwords_scramble();
+  mp_turn_timer_stop(1);
+  passwords_unscramble();
+  FUN_005f22d0(local_34,&civ_passwords + civ * 0x20);
+  passwords_scramble();
   if (local_34[0] == '\0') {
-    thunk_dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc78, ((u8 *)&g.d_0062cc78)),0x1f,ADDR(0x62cc74, ((u8 *)&g.d_0062cc74)),0,0,0,1);
-    thunk_password_dialog_set_title((iptr)&local_328,param_1,0x26c);
-    local_14 = thunk_dialog_run_modal(&local_328,(iptr)local_348,0);
+    dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc78, ((u8 *)&g.d_0062cc78)),0x1f,ADDR(0x62cc74, ((u8 *)&g.d_0062cc74)),0,0,0,1);
+    password_dialog_set_title((iptr)&local_328,civ,0x26c);
+    local_14 = dialog_run_modal(&local_328,(iptr)local_348,0);
   }
   else {
-    thunk_dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc4c, ((u8 *)&g.d_0062cc4c)),0x1f,ADDR(0x62cc48, ((u8 *)&g.d_0062cc48)),0,0,0,1);
-    thunk_password_dialog_set_title((iptr)&local_328,param_1,0x26d);
-    local_14 = thunk_dialog_run_modal(&local_328,(iptr)local_348,0);
+    dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc4c, ((u8 *)&g.d_0062cc4c)),0x1f,ADDR(0x62cc48, ((u8 *)&g.d_0062cc48)),0,0,0,1);
+    password_dialog_set_title((iptr)&local_328,civ,0x26d);
+    local_14 = dialog_run_modal(&local_328,(iptr)local_348,0);
     if (local_14 < 0) goto LAB_004985a2;
     local_14 = _strcmp(local_348,local_34);
     if (local_14 != 0) {
-      thunk_popup_game(ADDR(0x62cc58, ((u8 *)&g.d_0062cc58)));
+      popup_game(ADDR(0x62cc58, ((u8 *)&g.d_0062cc58)));
       goto LAB_004985a2;
     }
-    thunk_dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc68, ((u8 *)&g.d_0062cc68)),0x1f,ADDR(0x62cc64, ((u8 *)&g.d_0062cc64)),0,0,0,1);
-    thunk_password_dialog_set_title((iptr)&local_328,param_1,0x26c);
-    local_14 = thunk_dialog_run_modal(&local_328,(iptr)local_348,0);
+    dialog_load_text_section(&local_328,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc68, ((u8 *)&g.d_0062cc68)),0x1f,ADDR(0x62cc64, ((u8 *)&g.d_0062cc64)),0,0,0,1);
+    password_dialog_set_title((iptr)&local_328,civ,0x26c);
+    local_14 = dialog_run_modal(&local_328,(iptr)local_348,0);
   }
   if (-1 < local_14) {
-    thunk_passwords_unscramble();
-    FUN_005f22d0(&civ_passwords + param_1 * 0x20,local_348);
+    passwords_unscramble();
+    FUN_005f22d0(&civ_passwords + civ * 0x20,local_348);
     FUN_005f22d0(local_34,local_348);
-    thunk_passwords_scramble();
+    passwords_scramble();
     if (local_34[0] != '\0') {
-      thunk_popup_game(ADDR(0x62cc84, ((u8 *)&g.d_0062cc84)));
+      popup_game(ADDR(0x62cc84, ((u8 *)&g.d_0062cc84)));
     }
   }
 LAB_004985a2:
-  thunk_passwords_refresh_flags();
-  *(undefined4 *)(&civ_password_prompt_pending + param_1 * 4) = 0;
-  thunk_mp_turn_timer_resume(1);
+  passwords_refresh_flags();
+  *(undefined4 *)(&civ_password_prompt_pending + civ * 4) = 0;
+  mp_turn_timer_resume(1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004985d0 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_328)); }
+  /* inlined unwind funclet FUN_004985d0 */ { dialog_dtor((Dialog *)((iptr)&local_328)); }
   return;
 }
 #undef local_348
@@ -3004,39 +2977,39 @@ LAB_004985a2:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(792)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(796)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(800)))
-undefined4 __cdecl civ_password_prompt(int param_1)
+undefined4 __cdecl civ_password_prompt(int civ)
 
 {
   undefined4 uVar1;
   undefined1 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_dialog_ctor(&local_308,0x4000);
+  dialog_ctor(&local_308,0x4000);
   local_8 = 0;
-  thunk_dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc94, ((u8 *)&g.d_0062cc94)),0x1f,ADDR(0x62cc90, ((u8 *)&g.d_0062cc90)),0,0,0,1);
-  thunk_password_dialog_set_title((iptr)&local_308,param_1,0x26b);
+  dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62cc94, ((u8 *)&g.d_0062cc94)),0x1f,ADDR(0x62cc90, ((u8 *)&g.d_0062cc90)),0,0,0,1);
+  password_dialog_set_title((iptr)&local_308,civ,0x26b);
   local_328[0] = '\0';
   dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
-  local_14 = thunk_dialog_run_modal(&local_308,(iptr)local_328,0);
+  local_14 = dialog_run_modal(&local_308,(iptr)local_328,0);
   if (local_14 < 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0049875f */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
+    /* inlined unwind funclet FUN_0049875f */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
     uVar1 = 2;
   }
   else {
-    thunk_passwords_unscramble();
-    local_14 = _strcmp(local_328,&civ_passwords + param_1 * 0x20);
-    thunk_passwords_scramble();
+    passwords_unscramble();
+    local_14 = _strcmp(local_328,&civ_passwords + civ * 0x20);
+    passwords_scramble();
     if (local_14 == 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0049875f */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
+      /* inlined unwind funclet FUN_0049875f */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
       uVar1 = 0;
     }
     else {
       dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
-      thunk_popup_game(ADDR(0x62cca0, ((u8 *)&g.d_0062cca0)));
+      popup_game(ADDR(0x62cca0, ((u8 *)&g.d_0062cca0)));
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0049875f */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
+      /* inlined unwind funclet FUN_0049875f */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
       uVar1 = 1;
     }
   }
@@ -3060,17 +3033,17 @@ void __cdecl passwords_reset(void)
   int iVar2;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0xff; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 0xff; local_8++) {
     iVar2 = _rand();
     bVar1 = (byte)(iVar2 >> 0x1f);
     (&civ_passwords)[local_8] = (((byte)iVar2 ^ bVar1) - bVar1 ^ bVar1) - bVar1;
   }
-  for (local_10 = 0; local_10 < 8; local_10 = local_10 + 1) {
+  for (local_10 = 0; local_10 < 8; local_10++) {
     (&civ_passwords)[local_10 * 0x20] = 0;
     *(undefined4 *)(&civ_password_prompt_pending + local_10 * 4) = 0;
     *(undefined4 *)(&civ_has_password + local_10 * 4) = 0;
   }
-  thunk_passwords_scramble();
+  passwords_scramble();
   return;
 }
 #undef local_10
@@ -3083,8 +3056,8 @@ void __cdecl passwords_refresh_flags(void)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_passwords_unscramble();
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+  passwords_unscramble();
+  for (local_8 = 0; local_8 < 8; local_8++) {
     if ((&civ_passwords)[local_8 * 0x20] == '\0') {
       *(undefined4 *)(&civ_password_prompt_pending + local_8 * 4) = 0;
       *(undefined4 *)(&civ_has_password + local_8 * 4) = 0;
@@ -3094,7 +3067,7 @@ void __cdecl passwords_refresh_flags(void)
       *(undefined4 *)(&civ_has_password + local_8 * 4) = 1;
     }
   }
-  thunk_passwords_scramble();
+  passwords_scramble();
   return;
 }
 #undef local_8
@@ -3109,7 +3082,7 @@ void __cdecl passwords_scramble(void)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   cVar1 = civ_passwords_last_byte;
-  for (local_10 = 0; local_c = cVar1 << 5, local_10 < 0x100; local_10 = local_10 + 1) {
+  for (local_10 = 0; local_c = cVar1 << 5, local_10 < 0x100; local_10++) {
     cVar1 = (&civ_passwords)[local_10];
     (&civ_passwords)[local_10] =
          ((byte)((uint)(int)(char)(&civ_passwords)[local_10] >> 3) & 0x1f | local_c) ^ (byte)local_10
@@ -3130,7 +3103,7 @@ void __cdecl passwords_unscramble(void)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = civ_passwords;
-  for (local_10 = 0xff; -1 < local_10; local_10 = local_10 + -1) {
+  for (local_10 = 0xff; -1 < local_10; local_10--) {
     uVar1 = (uint)local_8;
     (&civ_passwords)[local_10] = (&civ_passwords)[local_10] ^ (byte)local_10;
     local_8 = (&civ_passwords)[local_10];
@@ -3143,17 +3116,17 @@ void __cdecl passwords_unscramble(void)
 
 /* 004989d3 auto */
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-void __cdecl password_dialog_set_title(iptr param_1,int param_2,undefined4 param_3)
+void __cdecl password_dialog_set_title(iptr param_1,int civ,undefined4 param_3)
 
 {
   size_t sVar1;
   undefined4 uVar2;
   undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005f22d0(local_84,param_2 * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2)));
-  thunk_str_append_label((iptr)local_84,param_3);
+  FUN_005f22d0(local_84,(iptr)&civ_names[civ].leader_name);
+  str_append_label((iptr)local_84,param_3);
   sVar1 = _strlen(local_84);
-  uVar2 = thunk_memblock_alloc(param_1 + 0x254,sVar1 + 1);
+  uVar2 = memblock_alloc(param_1 + 0x254,sVar1 + 1);
   *(undefined4 *)(param_1 + 0x134) = uVar2;
   FUN_005f22d0(*(undefined4 *)(param_1 + 0x134),local_84);
   return;
@@ -3162,14 +3135,14 @@ void __cdecl password_dialog_set_title(iptr param_1,int param_2,undefined4 param
 
 /* 00498a5c auto */
 #define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
-undefined4 __cdecl civ_check_password(iptr param_1)
+undefined4 __cdecl civ_check_password(iptr civ)
 
 {
   int iVar1;
   
-  if (*(int *)(&civ_password_prompt_pending + param_1 * 4) == 0) {
-    if (game.multiplayer == '\x02') {
-      thunk_civ_password_ensure_set(param_1);
+  if (*(int *)(&civ_password_prompt_pending + civ * 4) == 0) {
+    if (game.multiplayer == 2) {
+      civ_password_ensure_set(civ);
     }
     else {
       game_loop_active = 1;
@@ -3178,9 +3151,9 @@ undefined4 __cdecl civ_check_password(iptr param_1)
   else {
     do {
       game_loop_active = 1;
-      iVar1 = thunk_civ_password_prompt(param_1);
+      iVar1 = civ_password_prompt(civ);
       if (iVar1 == 0) {
-        *(undefined4 *)(&civ_password_prompt_pending + param_1 * 4) = 0;
+        *(undefined4 *)(&civ_password_prompt_pending + civ * 4) = 0;
         return 1;
       }
     } while (iVar1 == 1);
@@ -3197,7 +3170,7 @@ undefined4 __cdecl civ_check_password(iptr param_1)
 #define citypref_no_defend (*(undefined4 *)((u8 *)&g.d_0062ccc4))
 #define text_token_buf (*(undefined1 *)((u8 *)&g.d_00673e10))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl city_load_citypref(void)
 
 {
@@ -3207,40 +3180,40 @@ void __cdecl city_load_citypref(void)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   citypref_count = 0;
-  iVar1 = thunk_text_open_section(ADDR(0x62ccd4, ((u8 *)&g.d_0062ccd4)),ADDR(0x62ccc8, ((u8 *)&g.d_0062ccc8)));
+  iVar1 = text_open_section(ADDR(0x62ccd4, ((u8 *)&g.d_0062ccd4)),ADDR(0x62ccc8, ((u8 *)&g.d_0062ccc8)));
   if (iVar1 == 0) {
     citypref_no_defend = 1;
   }
-  thunk_text_close_file();
-  iVar1 = thunk_text_open_section(ADDR(0x62ccf0, ((u8 *)&g.d_0062ccf0)),ADDR(0x62cce4, ((u8 *)&g.d_0062cce4)));
+  text_close_file();
+  iVar1 = text_open_section(ADDR(0x62ccf0, ((u8 *)&g.d_0062ccf0)),ADDR(0x62cce4, ((u8 *)&g.d_0062cce4)));
   if (iVar1 == 0) {
     do {
-      iVar1 = thunk_text_read_line(1);
+      iVar1 = text_read_line(1);
       if (iVar1 == 0) break;
-      thunk_text_next_token();
+      text_next_token();
       local_10 = -1;
-      for (local_c = 1; local_c < 0x27; local_c = local_c + 1) {
+      for (improvement = 1; improvement < 0x27; improvement++) {
         _Str2 = &text_token_buf;
-        _Str1 = (char *)thunk_label_string(improvements[local_c].name);
+        _Str1 = (char *)label_string(improvements[improvement].name);
         iVar1 = __strcmpi(_Str1,_Str2);
         if (iVar1 == 0) {
-          local_10 = local_c;
+          local_10 = improvement;
           break;
         }
       }
       if (0 < local_10) {
         (&citypref_improvements)[citypref_count] = local_10;
-        citypref_count = citypref_count + 1;
+        citypref_count++;
       }
     } while (citypref_count < 0x20 && 0 < local_10);
-    thunk_text_close_file();
+    text_close_file();
   }
   return;
 }
 #undef citypref_no_defend
 #undef text_token_buf
 #undef local_10
-#undef local_c
+#undef improvement
 
 /* 00498e8b auto */
 #define city_aggressive_units (*(uint *)((u8 *)&g.d_006a65e4))
@@ -3265,20 +3238,20 @@ void __cdecl city_load_citypref(void)
 #define local_264 (*(int *)(frame_ + FRAME_OFF(284)))
 #define local_260 (*(int *)(frame_ + FRAME_OFF(288)))
 #define local_25c (*(int *)(frame_ + FRAME_OFF(292)))
-#define local_258 (*(iptr *)(frame_ + FRAME_OFF(296)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(296)))
 #define local_254 (*(iptr *)(frame_ + FRAME_OFF(300)))
 #define local_250 (*(int *)(frame_ + FRAME_OFF(304)))
 #define local_24c (*(int *)(frame_ + FRAME_OFF(308)))
 #define local_248 (*(int *)(frame_ + FRAME_OFF(312)))
-#define local_244 (*(iptr *)(frame_ + FRAME_OFF(316)))
+#define improvement (*(iptr *)(frame_ + FRAME_OFF(316)))
 #define local_240 (*(iptr *)(frame_ + FRAME_OFF(320)))
 #define local_23c (*(int *)(frame_ + FRAME_OFF(324)))
 #define local_238 (*(int *)(frame_ + FRAME_OFF(328)))
 #define local_234 (*(int *)(frame_ + FRAME_OFF(332)))
 #define local_230 (*(int *)(frame_ + FRAME_OFF(336)))
 #define local_22c (*(int *)(frame_ + FRAME_OFF(340)))
-#define local_228 (*(iptr *)(frame_ + FRAME_OFF(344)))
-#define local_224 (*(iptr *)(frame_ + FRAME_OFF(348)))
+#define civ3 (*(iptr *)(frame_ + FRAME_OFF(344)))
+#define city2 (*(iptr *)(frame_ + FRAME_OFF(348)))
 #define local_220 (*(int *)(frame_ + FRAME_OFF(352)))
 #define local_21c (*(int (*)[62])(frame_ + FRAME_OFF(356)))
 #define local_124 (*(int *)(frame_ + FRAME_OFF(604)))
@@ -3293,13 +3266,13 @@ void __cdecl city_load_citypref(void)
 #define local_100 (*(int *)(frame_ + FRAME_OFF(640)))
 #define local_fc (*(iptr *)(frame_ + FRAME_OFF(644)))
 #define local_f8 (*(uint *)(frame_ + FRAME_OFF(648)))
-#define local_f4 (*(iptr *)(frame_ + FRAME_OFF(652)))
+#define unit_type (*(iptr *)(frame_ + FRAME_OFF(652)))
 #define local_f0 (*(int *)(frame_ + FRAME_OFF(656)))
-#define local_ec (*(int *)(frame_ + FRAME_OFF(660)))
+#define y2 (*(int *)(frame_ + FRAME_OFF(660)))
 #define local_e8 (*(uint *)(frame_ + FRAME_OFF(664)))
 #define local_e4 (*(int *)(frame_ + FRAME_OFF(668)))
 #define local_e0 (*(int *)(frame_ + FRAME_OFF(672)))
-#define local_dc (*(iptr *)(frame_ + FRAME_OFF(676)))
+#define x2 (*(iptr *)(frame_ + FRAME_OFF(676)))
 #define local_d8 (*(int *)(frame_ + FRAME_OFF(680)))
 #define local_d4 (*(int *)(frame_ + FRAME_OFF(684)))
 #define local_d0 (*(uint *)(frame_ + FRAME_OFF(688)))
@@ -3315,12 +3288,12 @@ void __cdecl city_load_citypref(void)
 #define local_90 (*(uint *)(frame_ + FRAME_OFF(752)))
 #define local_8c (*(int *)(frame_ + FRAME_OFF(756)))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(760)))
-#define local_84 (*(iptr *)(frame_ + FRAME_OFF(764)))
+#define unit3 (*(iptr *)(frame_ + FRAME_OFF(764)))
 #define local_80 (*(int *)(frame_ + FRAME_OFF(768)))
-#define local_7c (*(uptr *)(frame_ + FRAME_OFF(772)))
+#define terrain2 (*(uptr *)(frame_ + FRAME_OFF(772)))
 #define local_78 (*(int *)(frame_ + FRAME_OFF(776)))
 #define local_74 (*(iptr *)(frame_ + FRAME_OFF(780)))
-#define local_70 (*(uptr *)(frame_ + FRAME_OFF(784)))
+#define civ2 (*(uptr *)(frame_ + FRAME_OFF(784)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(788)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(792)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(796)))
@@ -3328,10 +3301,10 @@ void __cdecl city_load_citypref(void)
 #define local_5c (*(iptr *)(frame_ + FRAME_OFF(804)))
 #define local_58 (*(iptr *)(frame_ + FRAME_OFF(808)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(812)))
-#define local_50 (*(iptr *)(frame_ + FRAME_OFF(816)))
+#define unit_type2 (*(iptr *)(frame_ + FRAME_OFF(816)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(820)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(824)))
-#define local_44 (*(uptr *)(frame_ + FRAME_OFF(828)))
+#define civ4 (*(uptr *)(frame_ + FRAME_OFF(828)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(832)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(836)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(840)))
@@ -3349,14 +3322,14 @@ void __cdecl city_load_citypref(void)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(888)))
 /* WARNING: Type propagation algorithm not settling */
 
-iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
+iptr __cdecl city_choose_production(iptr city,iptr param_2,iptr param_3)
 
 {
-  byte bVar1;
+  byte civ5;
   char cVar2;
   iptr iVar3;
   byte bVar4;
-  uptr uVar4;
+  uptr civ;
   iptr iVar5;
   iptr iVar4;
   int iVar6;
@@ -3364,7 +3337,7 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   uint uVar8;
   byte *pbVar9;
   int iVar10;
-  iptr iVar9;
+  iptr unit2;
   undefined1 frame_[FRAME_OFF(896)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_100 = 0;
@@ -3374,11 +3347,11 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   if (param_3 != 0) {
     *(undefined4 *)param_3 = 999;
   }
-  thunk_city_recalc(param_1,0);
-  bVar1 = cities[param_1].owner;
-  uVar4 = (uptr)(char)bVar1;
-  local_fc = tile_landmass((int)cities[param_1].x,(int)cities[param_1].y);
-  local_f8 = (uint)*(byte *)(local_fc + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar4 * 0x594);
+  city_recalc(city,0);
+  civ5 = cities[city].owner;
+  civ = (uptr)(char)civ5;
+  local_fc = tile_landmass((int)cities[city].x,(int)cities[city].y);
+  local_f8 = (uint)civs[civ].continent_policy[local_fc];
   if ((local_f8 == 0) || (local_f8 == 1)) {
     local_b0 = 1;
   }
@@ -3388,27 +3361,27 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   if (((game.game_flags & 1) != 0) && (local_f8 == 4)) {
     local_b0 = 1;
   }
-  iVar5 = thunk_ai_spaceship_race_behind(uVar4);
-  local_54 = thunk_spaceship_race_active();
+  iVar5 = ai_spaceship_race_behind(civ);
+  local_54 = spaceship_race_active();
   local_54 = iVar5 + local_54;
   local_114 = 0;
-  for (local_224 = 0; local_224 < game.num_cities; local_224 = local_224 + 1) {
-    if ((((cities[local_224].id != 0) && ((int)cities[local_224].founder == uVar4)) &&
-        ((int)cities[local_224].owner != uVar4)) &&
-       ((iVar4 = tile_landmass((int)cities[local_224].x,(int)cities[local_224].y), iVar4 == local_fc
-        && (((uint)game.human_players & 1 << (cities[local_224].owner & 0x1fU)) != 0)))) {
-      local_114 = local_114 + 1;
+  for (city2 = 0; city2 < game.num_cities; city2++) {
+    if ((((cities[city2].id != 0) && ((int)cities[city2].founder == civ)) &&
+        ((int)cities[city2].owner != civ)) &&
+       ((iVar4 = tile_landmass((int)cities[city2].x,(int)cities[city2].y), iVar4 == local_fc
+        && (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0)))) {
+      local_114++;
     }
   }
-  if (leaders[civs[uVar4].tribe].attack + 1 < local_114) {
+  if (leaders[civs[civ].tribe].attack + 1 < local_114) {
     local_b0 = 1;
   }
-  local_220 = (city_yield_totals - (int)cities[param_1].size * (uint)cosmic.food_per_citizen) -
+  local_220 = (city_yield_totals - (int)cities[city].size * (uint)cosmic.food_per_citizen) -
               city_settlers_supported * settler_food_cost;
   local_60 = 0;
   local_48 = city_total_shields * 2 - city_shield_support;
   local_98 = city_total_trade - city_trade_corruption;
-  if ((cities[param_1].building < -0x26) && (0x27 < cities[param_1].shield_box)) {
+  if ((cities[city].building < -0x26) && (0x27 < cities[city].shield_box)) {
     local_78 = 1;
   }
   else {
@@ -3416,18 +3389,18 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   }
   local_8c = 0;
   local_18 = 0;
-  for (local_74 = 0; local_74 < 0x1c; local_74 = local_74 + 1) {
+  for (local_74 = 0; local_74 < 0x1c; local_74++) {
     auStack_cc[local_74] = 0;
-    iVar6 = thunk_wonder_get_city(local_74);
-    if (iVar6 == param_1) {
-      local_8c = local_8c + 1;
+    iVar6 = wonder_get_city(local_74);
+    if (iVar6 == city) {
+      local_8c++;
     }
-    iVar6 = thunk_civ_has_wonder(uVar4,local_74);
+    iVar6 = civ_has_wonder(civ,local_74);
     if (iVar6 != 0) {
-      local_18 = local_18 + 1;
+      local_18++;
     }
   }
-  if (((cities[param_1].flags & 1) == 0) && (((byte)(cities[param_1].flags >> 8) & 0xc0) != 0xc0)) {
+  if (((cities[city].flags & 1) == 0) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0)) {
     if (city_unhappy_count == city_happy_count) {
       local_d8 = 1;
     }
@@ -3438,75 +3411,75 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   else {
     local_d8 = 2;
   }
-  thunk_city_find_nearest((int)cities[param_1].x,(int)cities[param_1].y,uVar4,0xfffffffe,-1);
+  city_find_nearest((int)cities[city].x,(int)cities[city].y,civ,0xfffffffe,-1);
   local_ac = nearest_city_dist;
   local_5c = -1;
   local_24c = 0;
-  if ((((local_220 == 0) && ((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0)) &&
-      ((cities[param_1].flags & 0x40) == 0)) && (city_settlers_supported == 0)) {
+  if ((((local_220 == 0) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
+      ((cities[city].flags & 0x40) == 0)) && (city_settlers_supported == 0)) {
     local_24c = 1;
   }
   local_d4 = 0;
   local_24 = 0;
-  for (local_50 = 0; local_50 < 0x14; local_50 = local_50 + 1) {
-    local_dc = map_wrap_x((int)cities[param_1].x + (int)(char)(&city_tile_dx_table)[local_50]);
-    local_ec = (int)cities[param_1].y + (int)(char)(&city_tile_dy_table)[local_50];
-    iVar6 = map_in_bounds(local_dc,local_ec);
+  for (unit_type2 = 0; unit_type2 < 0x14; unit_type2++) {
+    x2 = map_wrap_x((int)cities[city].x + (int)(char)(&city_tile_dx_table)[unit_type2]);
+    y2 = (int)cities[city].y + (int)(char)(&city_tile_dy_table)[unit_type2];
+    iVar6 = map_in_bounds(x2,y2);
     if (iVar6 != 0) {
-      bVar4 = tile_terrain(local_dc,local_ec);
-      local_7c = (uptr)bVar4;
-      if (local_7c == 10) {
-        local_60 = local_60 + 1;
-        iVar6 = thunk_city_tile_worked(param_1,local_50);
+      bVar4 = tile_terrain(x2,y2);
+      terrain2 = (uptr)bVar4;
+      if (terrain2 == 10) {
+        local_60++;
+        iVar6 = city_tile_worked(city,unit_type2);
         if (iVar6 != 0) {
-          local_60 = local_60 + 3;
+          local_60 += 3;
         }
       }
-      local_70 = tile_unit_owner(local_dc,local_ec);
-      if (((-1 < (int)local_70) && (local_70 != uVar4)) &&
-         ((local_258 = thunk_tile_first_unit(local_dc,local_ec), -1 < local_258 &&
-          ((int)units[local_258].owner != uVar4)))) {
-        iVar6 = thunk_unit_stack_sum(local_258,2);
-        local_d4 = local_d4 + iVar6;
+      civ2 = tile_unit_owner(x2,y2);
+      if (((-1 < (int)civ2) && (civ2 != civ)) &&
+         ((unit = tile_first_unit(x2,y2), -1 < unit &&
+          ((int)units[unit].owner != civ)))) {
+        iVar6 = unit_stack_sum(unit,2);
+        local_d4 += iVar6;
       }
-      uVar7 = tile_improvements(local_dc,local_ec);
+      uVar7 = tile_improvements(x2,y2);
       if (((byte)uVar7 & 0xc) == 0xc) {
-        local_24 = local_24 + 1;
+        local_24++;
       }
-      if (((local_24c != 0) && (iVar6 = thunk_ai_tile_improve_choice(uVar4,local_dc,local_ec), iVar6 == 1)) &&
-         ((uVar8 = tile_improvements(local_dc,local_ec), (uVar8 & 4) == 0 &&
-          (terrain_types[local_7c].irrigate_to < '\0')))) {
-        local_5c = local_50;
-        iVar6 = tile_resource(local_dc,local_ec);
-        if ((iVar6 != 0) && (local_7c == 1)) {
+      if (((local_24c != 0) && (iVar6 = ai_tile_improve_choice(civ,x2,y2), iVar6 == 1)) &&
+         ((uVar8 = tile_improvements(x2,y2), (uVar8 & 4) == 0 &&
+          (terrain_types[terrain2].irrigate_to < '\0')))) {
+        local_5c = unit_type2;
+        iVar6 = tile_resource(x2,y2);
+        if ((iVar6 != 0) && (terrain2 == 1)) {
           local_24c = 0;
         }
       }
     }
   }
   if (-1 < local_5c) {
-    local_dc = map_wrap_x((int)cities[param_1].x + (int)(char)(&city_tile_dx_table)[local_5c]);
-    local_ec = (int)cities[param_1].y + (int)(char)(&city_tile_dy_table)[local_5c];
-    iVar6 = tile_at(local_dc,local_ec);
+    x2 = map_wrap_x((int)cities[city].x + (int)(char)(&city_tile_dx_table)[local_5c]);
+    y2 = (int)cities[city].y + (int)(char)(&city_tile_dy_table)[local_5c];
+    iVar6 = tile_at(x2,y2);
     if ((game.human_players & *(byte *)(iVar6 + 4)) == 0) {
       local_d0 = 4;
-      pbVar9 = (byte *)tile_at(local_dc,local_ec);
+      pbVar9 = (byte *)tile_at(x2,y2);
       if ((*pbVar9 & 0x80) == 0) {
         local_d0 = local_d0 | 0x10;
       }
-      tile_set_improvements(local_dc,local_ec,local_d0,1,1);
-      local_220 = local_220 + 1;
+      tile_set_improvements(x2,y2,local_d0,1,1);
+      local_220++;
     }
   }
-  for (local_f4 = 0; local_f4 < 0x3e; local_f4 = local_f4 + 1) {
-    local_21c[local_f4] = 0;
-    aiStack_364[local_f4] = 0;
+  for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+    local_21c[unit_type] = 0;
+    aiStack_364[unit_type] = 0;
   }
   local_238 = 0;
   local_6c = 0;
   local_e0 = 0;
   local_124 = 0;
-  iVar6 = thunk_civ_has_wonder(uVar4,7);
+  iVar6 = civ_has_wonder(civ,7);
   if (iVar6 == 0) {
     local_268 = 0;
   }
@@ -3520,105 +3493,105 @@ iptr __cdecl city_choose_production(iptr param_1,iptr param_2,iptr param_3)
   local_64 = 0;
   local_234 = 0;
   local_104 = 0;
-  for (local_224 = 0; local_224 < game.num_cities; local_224 = local_224 + 1) {
-    if (cities[local_224].id != 0) {
-      if ((int)cities[local_224].owner == uVar4) {
-        iVar6 = thunk_city_has_improvement(local_224,1);
-        if (((iVar6 != 0) || (cities[local_224].building == -1)) &&
-           (local_234 = local_234 + 1, local_104 < cities[local_224].size)) {
-          local_104 = (int)cities[local_224].size;
+  for (city2 = 0; city2 < game.num_cities; city2++) {
+    if (cities[city2].id != 0) {
+      if ((int)cities[city2].owner == civ) {
+        iVar6 = city_has_improvement(city2,1);
+        if (((iVar6 != 0) || (cities[city2].building == -1)) &&
+           (local_234 = local_234 + 1, local_104 < cities[city2].size)) {
+          local_104 = (int)cities[city2].size;
         }
-        if (local_224 != param_1) {
-          if ((cities[param_1].building == cities[local_224].building) &&
+        if (city2 != city) {
+          if ((cities[city].building == cities[city2].building) &&
              (local_f0 = local_f0 + 1,
-             cities[param_1].total_shields < cities[local_224].total_shields)) {
-            local_260 = local_260 + 1;
+             cities[city].total_shields < cities[city2].total_shields)) {
+            local_260++;
           }
-          if ((-0x26 < cities[local_224].building) && (cities[local_224].building < -0x22)) {
-            local_40 = local_40 + 1;
+          if ((-0x26 < cities[city2].building) && (cities[city2].building < -0x22)) {
+            local_40++;
           }
-          iVar6 = tile_landmass((int)cities[local_224].x,(int)cities[local_224].y);
+          iVar6 = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
           if (iVar6 == local_fc) {
-            iVar6 = thunk_city_has_improvement(local_224,2);
+            iVar6 = city_has_improvement(city2,2);
             if (iVar6 != 0) {
-              local_268 = local_268 + 1;
+              local_268++;
             }
-            iVar6 = thunk_city_has_improvement(local_224,0x20);
+            iVar6 = city_has_improvement(city2,0x20);
             if (iVar6 != 0) {
-              local_6c = local_6c + 1;
+              local_6c++;
             }
-            iVar6 = thunk_city_has_improvement(local_224,0x22);
+            iVar6 = city_has_improvement(city2,0x22);
             if (iVar6 != 0) {
-              local_e0 = local_e0 + 1;
+              local_e0++;
             }
-            if (cities[local_224].building == -2) {
-              local_268 = local_268 + 1;
+            if (cities[city2].building == -2) {
+              local_268++;
             }
-            if (cities[local_224].building < -0x26) {
-              local_238 = local_238 + 1;
-              if (cities[param_1].total_shields < cities[local_224].total_shields) {
-                *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) =
-                     *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) |
-                     (byte)(1 << (bVar1 & 0x1f));
+            if (cities[city2].building < -0x26) {
+              local_238++;
+              if (cities[city].total_shields < cities[city2].total_shields) {
+                *(byte *)((int)&unit_type + (1 - cities[city2].building)) =
+                     *(byte *)((int)&unit_type + (1 - cities[city2].building)) |
+                     (byte)(1 << (civ5 & 0x1f));
               }
-              iVar6 = (uint)improvements[-(int)cities[local_224].building].cost * city_shield_rows;
-              if (iVar6 - cities[local_224].shield_box == 0 || iVar6 < cities[local_224].shield_box)
+              iVar6 = (uint)improvements[-(int)cities[city2].building].cost * city_shield_rows;
+              if (iVar6 - cities[city2].shield_box == 0 || iVar6 < cities[city2].shield_box)
               {
-                *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) =
-                     *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) | 1;
+                *(byte *)((int)&unit_type + (1 - cities[city2].building)) =
+                     *(byte *)((int)&unit_type + (1 - cities[city2].building)) | 1;
               }
             }
-            if (-1 < cities[local_224].building) {
-              local_21c[cities[local_224].building] = local_21c[cities[local_224].building] + 1;
+            if (-1 < cities[city2].building) {
+              local_21c[cities[city2].building] = local_21c[cities[city2].building] + 1;
             }
           }
         }
       }
       else {
-        if (cities[param_1].building == cities[local_224].building) {
-          local_a4 = local_a4 + 1;
+        if (cities[city].building == cities[city2].building) {
+          local_a4++;
         }
-        if (cities[local_224].building < -0x26) {
-          *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) =
-               *(byte *)((int)&local_f4 + (1 - cities[local_224].building)) |
-               (byte)(1 << (cities[local_224].owner & 0x1fU));
+        if (cities[city2].building < -0x26) {
+          *(byte *)((int)&unit_type + (1 - cities[city2].building)) =
+               *(byte *)((int)&unit_type + (1 - cities[city2].building)) |
+               (byte)(1 << (cities[city2].owner & 0x1fU));
         }
-        if (((((uint)game.human_players & 1 << (cities[local_224].owner & 0x1fU)) != 0) &&
-            (-0x26 < cities[local_224].building)) && (cities[local_224].building < -0x22)) {
-          local_64 = local_64 + 1;
+        if (((((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0) &&
+            (-0x26 < cities[city2].building)) && (cities[city2].building < -0x22)) {
+          local_64++;
         }
       }
     }
   }
   local_120 = 0;
   local_4c = 0;
-  for (local_258 = 0; local_258 < game.num_units; local_258 = local_258 + 1) {
-    if ((units[local_258].id != 0) && ((int)units[local_258].owner == uVar4)) {
-      local_124 = local_124 + 1;
-      if (unit_types[local_f4].role == '\x05') {
-        if ((units[local_258].flags & 0x200) != 0) {
-          local_120 = local_120 + 1;
+  for (unit = 0; unit < game.num_units; unit++) {
+    if ((units[unit].id != 0) && ((int)units[unit].owner == civ)) {
+      local_124++;
+      if (unit_types[unit_type].role == 5) {
+        if ((units[unit].flags & 0x200) != 0) {
+          local_120++;
         }
-        if (units[local_258].home_city == -1) {
-          local_4c = local_4c + 1;
+        if (units[unit].home_city == -1) {
+          local_4c++;
           goto LAB_00499ca3;
         }
       }
-      iVar6 = tile_landmass((int)units[local_258].x,(int)units[local_258].y);
+      iVar6 = tile_landmass((int)units[unit].x,(int)units[unit].y);
       if (iVar6 == local_fc) {
-        aiStack_364[units[local_258].type] = aiStack_364[units[local_258].type] + 1;
+        aiStack_364[units[unit].type] = aiStack_364[units[unit].type] + 1;
       }
     }
 LAB_00499ca3: ;
   }
-  if ((((cities[param_1].flags & 0x80040) == 0x80000) && (local_d4 == 0)) &&
-     ((city_settlers_supported == 0 && ((local_f8 != 1 && ('\x02' < cities[param_1].size)))))) {
+  if ((((cities[city].flags & 0x80040) == 0x80000) && (local_d4 == 0)) &&
+     ((city_settlers_supported == 0 && ((local_f8 != 1 && (2 < cities[city].size)))))) {
     local_30 = 9999;
-    for (local_224 = 0; local_224 < game.num_cities; local_224 = local_224 + 1) {
-      if ((((cities[local_224].id != 0) && (local_224 != param_1)) &&
-          ((int)cities[local_224].owner == uVar4)) &&
-         (local_68 = thunk_map_distance((int)cities[param_1].x,(int)cities[param_1].y,
-                                        (int)cities[local_224].x,(int)cities[local_224].y),
+    for (city2 = 0; city2 < game.num_cities; city2++) {
+      if ((((cities[city2].id != 0) && (city2 != city)) &&
+          ((int)cities[city2].owner == civ)) &&
+         (local_68 = map_distance((int)cities[city].x,(int)cities[city].y,
+                                        (int)cities[city2].x,(int)cities[city2].y),
          local_68 < local_30)) {
         local_30 = local_68;
       }
@@ -3626,70 +3599,70 @@ LAB_00499ca3: ;
     if (8 < local_30) {
       local_100 = 1;
     }
-    if ((('\x06' < cities[param_1].size) && (4 < civs[uVar4].government)) &&
+    if (((6 < cities[city].size) && (4 < civs[civ].government)) &&
        ((0 < local_220 && (local_f8 != 0)))) {
-      local_100 = local_100 + 1;
+      local_100++;
     }
   }
   local_3c = 0;
-  for (local_50 = 0; local_50 < 0x10; local_50 = local_50 + 1) {
-    if ((*(char *)(local_50 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + uVar4 * 0x594) == '\x01') &&
-       (iVar6 = tile_landmass((int)*(short *)(local_50 * 6 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + uVar4 * 0x594),
-                              (int)*(short *)(local_50 * 6 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + uVar4 * 0x594)),
+  for (unit_type2 = 0; unit_type2 < 0x10; unit_type2++) {
+    if ((civs[civ].ai_standing_goals[unit_type2].role == 1) &&
+       (iVar6 = tile_landmass((int)civs[civ].ai_standing_goals[unit_type2].x,
+                              (int)civs[civ].ai_standing_goals[unit_type2].y),
        iVar6 == local_fc)) {
-      local_3c = local_3c + 1;
+      local_3c++;
     }
   }
   if (local_b0 != 0) {
-    local_3c = local_3c + (local_3c >> 1);
+    local_3c += (local_3c >> 1);
   }
-  if ((((local_124 == 0) && ((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0)) &&
-      (civs[uVar4].government < 2)) && ((param_2 == 0 && (param_3 == 0)))) {
-    for (local_f4 = 0x3d; -1 < local_f4; local_f4 = local_f4 + -1) {
-      if (((unit_types[local_f4].role == '\x01') && ((unit_types[local_f4].flags & 0x100) == 0)) &&
-         (iVar6 = thunk_civ_can_build_unit(uVar4,param_1,local_f4), iVar6 != 0)) {
-        return local_f4;
+  if ((((local_124 == 0) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
+      (civs[civ].government < 2)) && ((param_2 == 0 && (param_3 == 0)))) {
+    for (unit_type = 0x3d; -1 < unit_type; unit_type--) {
+      if (((unit_types[unit_type].role == 1) && ((unit_types[unit_type].flags & 0x100) == 0)) &&
+         (iVar6 = civ_can_build_unit(civ,city,unit_type), iVar6 != 0)) {
+        return unit_type;
       }
     }
   }
-  if (uVar4 == 0) {
-    if (cities[param_1].building < '\x01') {
+  if (civ == 0) {
+    if (cities[city].building < 1) {
       if (game.advance_known_by[0x1c] != '\0') {
         return 0x13;
       }
       return 5;
     }
-    local_f4 = (iptr)cities[param_1].building;
-    local_118 = (iptr)unit_types[local_f4].obsolete_by;
+    unit_type = (iptr)cities[city].building;
+    local_118 = (iptr)unit_types[unit_type].obsolete_by;
     if (local_118 < 0) {
-      return local_f4;
+      return unit_type;
     }
     if (game.difficulty == '\0') {
-      return local_f4;
+      return unit_type;
     }
-    iVar6 = thunk_bits_count8((int)(char)game.advance_known_by[local_118]);
+    iVar6 = bits_count8((int)(char)game.advance_known_by[local_118]);
     if (iVar6 < 2) {
-      return local_f4;
+      return unit_type;
     }
     if (((game.human_players & game.advance_known_by[local_118]) == 0) && (game.difficulty < 4)) {
-      return local_f4;
+      return unit_type;
     }
-    local_50 = 0;
+    unit_type2 = 0;
     while( true ) {
-      if (0x3d < local_50) {
-        return local_f4;
+      if (0x3d < unit_type2) {
+        return unit_type;
       }
-      if ((unit_types[local_50].prerequisite == local_118) &&
-         (unit_types[local_f4].role == unit_types[local_50].role)) break;
-      local_50 = local_50 + 1;
+      if ((unit_types[unit_type2].prerequisite == local_118) &&
+         (unit_types[unit_type].role == unit_types[unit_type2].role)) break;
+      unit_type2++;
     }
-    return local_50;
+    return unit_type2;
   }
   local_34 = 0;
   if (local_f8 == 4) {
-    for (local_70 = 1; (int)local_70 < 8; local_70 = local_70 + 1) {
-      if (((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + local_70 * 4) & 0x20) != 0) &&
-         (*(char *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + local_70 * 0x594) == '\0')) {
+    for (civ2 = 1; (int)civ2 < 8; civ2++) {
+      if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) &&
+         (*(char *)&civs[civ2].continent_cities[local_fc] == '\0')) {
         local_34 = 1;
       }
     }
@@ -3697,10 +3670,10 @@ LAB_00499ca3: ;
   local_250 = 0;
   local_264 = 0;
   local_80 = 0;
-  local_258 = thunk_tile_first_unit((int)cities[param_1].x,(int)cities[param_1].y);
-  local_a8 = thunk_unit_stack_count_role(local_258,1);
-  iVar6 = thunk_unit_stack_count_role(local_258,4);
-  local_22c = thunk_unit_stack_count_role(local_258,2);
+  unit = tile_first_unit((int)cities[city].x,(int)cities[city].y);
+  local_a8 = unit_stack_count_role(unit,1);
+  iVar6 = unit_stack_count_role(unit,4);
+  local_22c = unit_stack_count_role(unit,2);
   local_22c = (iVar6 >> 1) + local_22c;
   if (local_a8 < 1) {
     local_264 = 2;
@@ -3708,40 +3681,40 @@ LAB_00499ca3: ;
   }
   else {
     if ((local_250 == 0) &&
-       (iVar6 = thunk_tile_zoc_unit_adjacent((int)cities[param_1].x,(int)cities[param_1].y,uVar4), iVar6 == 0)
+       (iVar6 = tile_zoc_unit_adjacent((int)cities[city].x,(int)cities[city].y,civ), iVar6 == 0)
        ) {
       local_14 = 4;
     }
     else {
       local_14 = 3;
     }
-    iVar6 = thunk_city_has_improvement(param_1,1);
+    iVar6 = city_has_improvement(city,1);
     if (iVar6 == 0) {
       if ((local_f8 == 5) && (local_250 == 0)) {
-        local_14 = local_14 + 1;
+        local_14++;
       }
     }
     else {
-      local_14 = local_14 + -1;
+      local_14--;
     }
-    if ((local_b0 == 0) && (*(char *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) == '\0')) {
+    if ((local_b0 == 0) && (*(char *)&civs[civ].continent_flags[local_fc] == '\0')) {
       local_370 = 0;
     }
     else {
       local_370 = 1;
     }
-    local_108 = local_370 + (int)cities[param_1].size / local_14;
-    iVar6 = thunk_city_has_improvement(param_1,1);
+    local_108 = local_370 + (int)cities[city].size / local_14;
+    iVar6 = city_has_improvement(city,1);
     uVar8 = local_108;
     if (iVar6 != 0) {
       local_d0 = 1;
-      if ('\x03' < cities[param_1].size) {
+      if (3 < cities[city].size) {
         local_d0 = 2;
       }
-      if (7 < civs[uVar4].num_cities) {
+      if (7 < civs[civ].num_cities) {
         local_d0 = 3;
       }
-      if (0xb < civs[uVar4].num_cities) {
+      if (0xb < civs[civ].num_cities) {
         local_d0 = 4;
       }
       uVar8 = local_d0;
@@ -3754,96 +3727,96 @@ LAB_00499ca3: ;
       local_264 = 1;
     }
   }
-  if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) {
-    iVar6 = thunk_civ_has_wonder(uVar4,0);
-    if ((iVar6 != 0) && (iVar6 = thunk_city_has_improvement(param_1,3), iVar6 != 0)) {
-      thunk_city_set_improvement(param_1,3,0);
-      civs[uVar4].gold = civs[uVar4].gold + (uint)improvements[3].cost * city_shield_rows;
+  if ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) {
+    iVar6 = civ_has_wonder(civ,0);
+    if ((iVar6 != 0) && (iVar6 = city_has_improvement(city,3), iVar6 != 0)) {
+      city_set_improvement(city,3,0);
+      civs[civ].gold += (uint)improvements[3].cost * city_shield_rows;
     }
-    iVar6 = thunk_civ_has_wonder(uVar4,0x1a);
-    if ((iVar6 != 0) && (iVar6 = thunk_city_has_improvement(param_1,0x1a), iVar6 != 0)) {
-      thunk_city_set_improvement(param_1,0x1a,0);
-      civs[uVar4].gold = civs[uVar4].gold + (uint)improvements[0x1a].cost * city_shield_rows;
+    iVar6 = civ_has_wonder(civ,0x1a);
+    if ((iVar6 != 0) && (iVar6 = city_has_improvement(city,0x1a), iVar6 != 0)) {
+      city_set_improvement(city,0x1a,0);
+      civs[civ].gold += (uint)improvements[0x1a].cost * city_shield_rows;
     }
-    iVar6 = thunk_civ_has_wonder(uVar4,0x15);
-    if ((iVar6 != 0) && (iVar6 = thunk_city_has_improvement(param_1,0x21), iVar6 != 0)) {
-      thunk_city_set_improvement(param_1,0x21,0);
-      civs[uVar4].gold = civs[uVar4].gold + (uint)improvements[0x21].cost * city_shield_rows;
+    iVar6 = civ_has_wonder(civ,0x15);
+    if ((iVar6 != 0) && (iVar6 = city_has_improvement(city,0x21), iVar6 != 0)) {
+      city_set_improvement(city,0x21,0);
+      civs[civ].gold += (uint)improvements[0x21].cost * city_shield_rows;
     }
-    iVar6 = thunk_civ_has_wonder(uVar4,10);
-    if ((iVar6 != 0) && (iVar6 = thunk_city_has_improvement(param_1,0xb), iVar6 != 0)) {
-      thunk_city_set_improvement(param_1,0xb,0);
-      civs[uVar4].gold = civs[uVar4].gold + (uint)improvements[0xb].cost * city_shield_rows;
+    iVar6 = civ_has_wonder(civ,10);
+    if ((iVar6 != 0) && (iVar6 = city_has_improvement(city,0xb), iVar6 != 0)) {
+      city_set_improvement(city,0xb,0);
+      civs[civ].gold += (uint)improvements[0xb].cost * city_shield_rows;
     }
-    iVar6 = thunk_city_has_improvement(param_1,0x20);
-    if ((((iVar6 != 0) && ((int)game.turn_civ == uVar4)) && ((cities[param_1].flags & 0x10000) == 0)
+    iVar6 = city_has_improvement(city,0x20);
+    if ((((iVar6 != 0) && ((int)game.turn_civ == civ)) && ((cities[city].flags & 0x10000) == 0)
         ) && ((local_f8 != 4 && (local_f8 != 5)))) {
-      for (local_224 = 0; local_224 < game.num_cities; local_224 = local_224 + 1) {
-        if (((cities[local_224].id != 0) && ((int)cities[local_224].owner == uVar4)) &&
-           ((local_224 != param_1 &&
-            (((iVar6 = thunk_city_has_improvement(local_224,0x20), iVar6 != 0 &&
-              ((cities[local_224].flags & 0x10000) == 0)) &&
-             (iVar6 = thunk_tile_adjacent_nonallied_unit((int)cities[local_224].x,(int)cities[local_224].y,uVar4),
+      for (city2 = 0; city2 < game.num_cities; city2++) {
+        if (((cities[city2].id != 0) && ((int)cities[city2].owner == civ)) &&
+           ((city2 != city &&
+            (((iVar6 = city_has_improvement(city2,0x20), iVar6 != 0 &&
+              ((cities[city2].flags & 0x10000) == 0)) &&
+             (iVar6 = tile_adjacent_nonallied_unit((int)cities[city2].x,(int)cities[city2].y,civ),
              iVar6 == 0)))))) {
-          iVar6 = tile_landmass((int)cities[local_224].x,(int)cities[local_224].y);
+          iVar6 = tile_landmass((int)cities[city2].x,(int)cities[city2].y);
           if (iVar6 == local_fc) {
             if (1 < local_80) {
 LAB_0049a9d5:
-              local_258 = thunk_tile_first_unit((int)cities[local_224].x,(int)cities[local_224].y);
-              if (((-1 < local_258) &&
-                  ((local_f8 != 1 || (iVar10 = thunk_unit_stack_count_role(local_258,1), 1 < iVar10)))) &&
-                 (cVar2 = *(char *)(iVar6 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar4 * 0x594),
-                 iVar6 = thunk_unit_stack_sum(local_258,2),
-                 (int)(3 - (uint)(cVar2 == '\x04')) <= iVar6)) goto LAB_0049aab5;
+              unit = tile_first_unit((int)cities[city2].x,(int)cities[city2].y);
+              if (((-1 < unit) &&
+                  ((local_f8 != 1 || (iVar10 = unit_stack_count_role(unit,1), 1 < iVar10)))) &&
+                 (cVar2 = *(char *)&civs[civ].continent_policy[iVar6],
+                 iVar6 = unit_stack_sum(unit,2),
+                 (int)(3 - (uint)(cVar2 == 4)) <= iVar6)) goto LAB_0049aab5;
             }
           }
-          else if (*(byte *)(iVar6 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar4 * 0x594) != local_f8) goto LAB_0049a9d5;
+          else if (civs[civ].continent_policy[iVar6] != local_f8) goto LAB_0049a9d5;
         }
       }
     }
   }
   goto LAB_0049ae3e;
 LAB_0049aab5:
-  while ((-1 < local_258 && ((int)(char)unit_types[units[local_258].type].role != local_f8))) {
-    local_258 = thunk_unit_next_in_stack(local_258);
+  while ((-1 < unit && ((int)(char)unit_types[units[unit].type].role != local_f8))) {
+    unit = unit_next_in_stack(unit);
   }
-  if (-1 < local_258) {
-    cities[param_1].flags = cities[param_1].flags | 0x10000;
-    cities[local_224].flags = cities[local_224].flags | 0x10000;
-    thunk_unit_exhaust_moves(local_258);
-    thunk_unit_relocate(local_258,(int)cities[param_1].x,(int)cities[param_1].y,1);
-    local_84 = local_258;
+  if (-1 < unit) {
+    cities[city].flags = cities[city].flags | 0x10000;
+    cities[city2].flags = cities[city2].flags | 0x10000;
+    unit_exhaust_moves(unit);
+    unit_relocate(unit,(int)cities[city].x,(int)cities[city].y,1);
+    unit3 = unit;
     local_230 = 0;
-    for (local_258 = 0; local_258 < game.num_units; local_258 = local_258 + 1) {
-      if ((((units[local_258].id != 0) && (unit_types[units[local_258].type].role == '\x03')) &&
-          (((uint)game.human_players & 1 << (units[local_258].owner & 0x1fU)) != 0)) &&
-         ((*(byte *)(uVar4 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + units[local_258].owner * 0x594) & 0x20) != 0)) {
-        iVar6 = thunk_map_distance((int)cities[param_1].x,(int)cities[param_1].y,
-                                   (int)units[local_258].x,(int)units[local_258].y);
-        iVar10 = thunk_unit_max_moves(local_258);
+    for (unit = 0; unit < game.num_units; unit++) {
+      if ((((units[unit].id != 0) && (unit_types[units[unit].type].role == 3)) &&
+          (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0)) &&
+         ((*(byte *)(civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + units[unit].owner * 0x594) & 0x20) != 0)) {
+        iVar6 = map_distance((int)cities[city].x,(int)cities[city].y,
+                                   (int)units[unit].x,(int)units[unit].y);
+        iVar10 = unit_max_moves(unit);
         if (iVar10 / (int)(uint)cosmic.road_move_mult < iVar6) {
-          iVar6 = thunk_map_distance((int)cities[local_224].x,(int)cities[local_224].y,
-                                     (int)units[local_258].x,(int)units[local_258].y);
-          iVar10 = thunk_unit_max_moves(local_258);
+          iVar6 = map_distance((int)cities[city2].x,(int)cities[city2].y,
+                                     (int)units[unit].x,(int)units[unit].y);
+          iVar10 = unit_max_moves(unit);
           if (iVar10 / (int)(uint)cosmic.road_move_mult < iVar6) goto LAB_0049aba3;
         }
-        iVar6 = thunk_rand_range(0,(-(uint)((units[local_258].flags & 0x2000) == 0) & 2) + 3);
+        iVar6 = rand_range(0,(-(uint)((units[unit].flags & 0x2000) == 0) & 2) + 3);
         if (iVar6 == 0) {
-          thunk_unit_delete(local_84,1);
-          local_84 = -1;
+          unit_delete(unit3,1);
+          unit3 = -1;
           break;
         }
-        local_230 = local_230 + 1;
+        local_230++;
       }
 LAB_0049aba3: ;
     }
-    if (local_84 < 0) {
-      thunk_text_set_string_arg(0,param_1 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-      thunk_popup_game(ADDR(0x62cd00, ((u8 *)&g.d_0062cd00)));
+    if (unit3 < 0) {
+      text_set_string_arg(0,(iptr)&cities[city].name);
+      popup_game(ADDR(0x62cd00, ((u8 *)&g.d_0062cd00)));
     }
     else if (local_230 != 0) {
-      thunk_text_set_string_arg(0,param_1 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-      thunk_popup_game(ADDR(0x62cd08, ((u8 *)&g.d_0062cd08)));
+      text_set_string_arg(0,(iptr)&cities[city].name);
+      popup_game(ADDR(0x62cd08, ((u8 *)&g.d_0062cd08)));
     }
   }
 LAB_0049ae3e:
@@ -3853,25 +3826,25 @@ LAB_0049ae3e:
   local_254 = 999;
   local_240 = 999;
   local_58 = 999;
-  for (local_244 = 1; local_244 < 0x27; local_244 = local_244 + 1) {
-    iVar6 = thunk_city_can_build_improvement(uVar4,param_1,local_244);
+  for (improvement = 1; improvement < 0x27; improvement++) {
+    iVar6 = city_can_build_improvement(civ,city,improvement);
     if (iVar6 != 0) {
       local_1c = 999;
       local_90 = 0;
-      if (local_244 - 1U < 0x23) {
+      if (improvement - 1U < 0x23) {
         iVar6 = local_220 >> 1;
-        switch(local_244) {
+        switch(improvement) {
         case 1:
-          if ((((local_234 == 0) || ((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0)) &&
+          if ((((local_234 == 0) || ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0)) &&
               ((local_234 == 0 ||
-               ((local_234 == 1 && (local_104 * 2 < (int)cities[local_224].size)))))) &&
+               ((local_234 == 1 && (local_104 * 2 < (int)cities[city2].size)))))) &&
              ((local_f8 == 4 || (((local_f8 == 5 || (local_f8 == 0)) || (3 < city_shield_waste)))))) {
             local_1c = 2;
-            if ('\t' < cities[local_224].size) {
+            if ('\t' < cities[city2].size) {
               local_1c = 1;
             }
-            if ('\x0e' < cities[local_224].size) {
-              local_1c = local_1c - 1;
+            if (14 < cities[city2].size) {
+              local_1c--;
             }
             if (3 < city_shield_waste) {
               local_90 = local_b0;
@@ -3879,17 +3852,17 @@ LAB_0049ae3e:
           }
           break;
         case 2:
-          local_1c = (leaders[civs[uVar4].tribe].civilize + local_268 + 4) -
-                     (int)leaders[civs[uVar4].tribe].attack;
-          if (((leaders[civs[uVar4].tribe].attack < '\0') ||
-              ('\0' < leaders[civs[uVar4].tribe].civilize)) &&
-             ((int)leaders[civs[uVar4].tribe].civilize + (int)leaders[civs[uVar4].tribe].attack != 0
+          local_1c = (leaders[civs[civ].tribe].civilize + local_268 + 4) -
+                     (int)leaders[civs[civ].tribe].attack;
+          if (((leaders[civs[civ].tribe].attack < '\0') ||
+              ('\0' < leaders[civs[civ].tribe].civilize)) &&
+             ((int)leaders[civs[civ].tribe].civilize + (int)leaders[civs[civ].tribe].attack != 0
              )) {
-            local_1c = local_1c + local_268;
+            local_1c += local_268;
           }
           local_90 = 1;
-          if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) {
-            if (game.difficulty == '\x03') {
+          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
+            if (game.difficulty == 3) {
               local_1c = (int)(local_1c * 3) / 2;
             }
             if (3 < game.difficulty) {
@@ -3898,7 +3871,7 @@ LAB_0049ae3e:
           }
           break;
         case 3:
-          iVar6 = thunk_civ_has_wonder(uVar4,0);
+          iVar6 = civ_has_wonder(civ,0);
           if (iVar6 == 0) {
             if (city_total_shields < 3) {
               local_1c = 8;
@@ -3907,12 +3880,12 @@ LAB_0049ae3e:
               local_1c = 4;
             }
             if (city_happy_count <= city_unhappy_count) {
-              local_1c = local_1c + 2;
+              local_1c += 2;
             }
-            if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) &&
-               (local_d0 = (game.difficulty + 4) - (int)cities[local_224].size, 0 < (int)local_d0))
+            if (((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) &&
+               (local_d0 = (game.difficulty + 4) - (int)cities[city2].size, 0 < (int)local_d0))
             {
-              local_1c = local_1c + local_d0;
+              local_1c += local_d0;
             }
           }
           break;
@@ -3925,76 +3898,76 @@ LAB_0049ae3e:
           }
           break;
         case 5:
-          local_1c = thunk_int_clamp(10 - (local_98 >> 1),1,10);
+          local_1c = int_clamp(10 - (local_98 >> 1),1,10);
           if (local_d8 == 1) {
-            local_1c = local_1c - 1;
+            local_1c--;
           }
           if (local_d8 == 2) {
             local_1c = 0xfffffffc;
           }
           break;
         case 6:
-          local_1c = thunk_int_clamp(10 - local_98 / 3,1,10);
+          local_1c = int_clamp(10 - local_98 / 3,1,10);
           break;
         case 7:
           local_1c = 0xe - (city_shield_waste * 2 + city_trade_corruption);
-          if (civs[uVar4].government == '\x06') {
+          if (civs[civ].government == 6) {
             if (local_d8 == 2) {
               local_1c = 0xffffffff;
             }
           }
-          else if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) {
-            local_1c = local_1c - (int)civs[game.field_138].field_1c / 2;
+          else if ((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) {
+            local_1c -= (int)civs[game.field_138].field_1c / 2;
           }
           break;
         case 8:
-          iVar6 = thunk_civ_has_wonder(uVar4,6);
+          iVar6 = civ_has_wonder(civ,6);
           if (iVar6 == 0) {
-            local_1c = 10 - ((int)cities[param_1].size >> 1);
-            for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-              if ((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) {
-                if ((*(uint *)(local_228 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + uVar4 * 0x594) & 0x2010) != 0) {
-                  local_1c = local_1c + -2;
+            local_1c = 10 - ((int)cities[city].size >> 1);
+            for (civ3 = 1; civ3 < 8; civ3++) {
+              if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
+                if ((civs[civ].treaties[civ3] & 0x2010) != 0) {
+                  local_1c -= 2;
                 }
-                if (*(char *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + local_228 * 0x594) != '\0') {
-                  local_1c = local_1c + -1;
+                if (*(char *)&civs[civ3].continent_cities[local_fc] != '\0') {
+                  local_1c--;
                 }
               }
             }
             if (game.advance_known_by[0x48] != '\0') {
-              local_1c = local_1c + 2;
+              local_1c += 2;
             }
             if (game.advance_known_by[0] != '\0') {
-              local_1c = local_1c + 2;
+              local_1c += 2;
             }
             if (game.advance_known_by[0x49] != '\0') {
-              local_1c = local_1c + 2;
+              local_1c += 2;
             }
-            local_1c = thunk_int_clamp(local_1c,1,10);
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            local_1c = int_clamp(local_1c,1,10);
+            iVar6 = city_has_improvement(city,1);
             if (iVar6 != 0) {
-              local_1c = local_1c - 4;
+              local_1c -= 4;
             }
             local_90 = 1;
           }
           break;
         case 9:
-          if ((int)((uint)cosmic.aqueduct_size - iVar6) <= (int)cities[param_1].size) {
-            local_1c = ((cosmic.aqueduct_size + 4) - (int)cities[param_1].size) - iVar6;
-            local_1c = thunk_int_clamp(local_1c,1,0x14);
+          if ((int)((uint)cosmic.aqueduct_size - iVar6) <= (int)cities[city].size) {
+            local_1c = ((cosmic.aqueduct_size + 4) - (int)cities[city].size) - iVar6;
+            local_1c = int_clamp(local_1c,1,0x14);
           }
           break;
         case 10:
-          local_1c = thunk_int_clamp(10 - local_98 / 3,1,10);
+          local_1c = int_clamp(10 - local_98 / 3,1,10);
           if (local_d8 == 1) {
-            local_1c = local_1c - 1;
+            local_1c--;
           }
           if (local_d8 == 2) {
             local_1c = 0;
           }
           break;
         case 0xb:
-          iVar6 = thunk_civ_has_wonder(uVar4,10);
+          iVar6 = civ_has_wonder(civ,10);
           if (iVar6 == 0) {
             if (local_d8 == 1) {
               local_1c = 8;
@@ -4005,9 +3978,9 @@ LAB_0049ae3e:
           }
           break;
         case 0xc:
-          if ((civs[uVar4].science_rate != '\0') &&
-             ((local_54 == 0 || (iVar6 = thunk_civ_has_advance(uVar4,0x4c), iVar6 == 0)))) {
-            local_1c = thunk_int_clamp(10 - (local_98 >> 2),2,10);
+          if ((civs[civ].science_rate != '\0') &&
+             ((local_54 == 0 || (iVar6 = civ_has_advance(civ,0x4c), iVar6 == 0)))) {
+            local_1c = int_clamp(10 - (local_98 >> 2),2,10);
           }
           break;
         case 0xd:
@@ -4019,15 +3992,15 @@ LAB_0049ae3e:
           break;
         case 0xf:
         case 0x14:
-          local_1c = thunk_int_clamp(0xe - city_total_shields,1,0xe);
+          local_1c = int_clamp(0xe - city_total_shields,1,0xe);
           break;
         default:
-          local_1c = thunk_int_clamp(0xc - ((int)(city_total_shields + (city_total_shields >> 0x1f & 3U)) >>
+          local_1c = int_clamp(0xc - ((int)(city_total_shields + (city_total_shields >> 0x1f & 3U)) >>
                                               2),2,0xc);
           break;
         case 0x11:
           if (local_d8 < 2) {
-            iVar6 = thunk_int_clamp(0xf - cities[param_1].size,1,0xf);
+            iVar6 = int_clamp(0xf - cities[city].size,1,0xf);
             local_1c = (iVar6 + 1) / 2;
             if (game.wonder_city[0x17] == -1) {
               local_1c = local_1c << 1;
@@ -4035,10 +4008,10 @@ LAB_0049ae3e:
             if (civs[game.field_138].units_active[0x2d] == '\0') {
               local_1c = local_1c << 1;
             }
-            if ('\t' < cities[param_1].size) {
-              local_1c = local_1c - 1;
+            if ('\t' < cities[city].size) {
+              local_1c--;
             }
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            iVar6 = city_has_improvement(city,1);
             if (iVar6 != 0) {
               local_1c = 0;
             }
@@ -4046,13 +4019,13 @@ LAB_0049ae3e:
           local_90 = 1;
           break;
         case 0x13:
-          local_1c = thunk_int_clamp(0xc - city_total_shields / 5,2,0xe);
+          local_1c = int_clamp(0xc - city_total_shields / 5,2,0xe);
           break;
         case 0x16:
           if ((local_d8 != 0) || (local_54 < 2)) {
-            local_1c = thunk_int_clamp(0xb - (local_98 >> 2),2,0xb);
+            local_1c = int_clamp(0xb - (local_98 >> 2),2,0xb);
             if (local_d8 == 1) {
-              local_1c = local_1c - 1;
+              local_1c--;
             }
             if (local_d8 == 2) {
               local_1c = 0;
@@ -4061,24 +4034,24 @@ LAB_0049ae3e:
           break;
         case 0x17:
           if ((local_54 < 2) &&
-             ((int)((uint)cosmic.sewer_size - iVar6) <= (int)cities[param_1].size)) {
-            local_1c = ((cosmic.sewer_size + 4) - (int)cities[param_1].size) - iVar6;
-            local_1c = thunk_int_clamp(local_1c,1,0x14);
+             ((int)((uint)cosmic.sewer_size - iVar6) <= (int)cities[city].size)) {
+            local_1c = ((cosmic.sewer_size + 4) - (int)cities[city].size) - iVar6;
+            local_1c = int_clamp(local_1c,1,0x14);
           }
           break;
         case 0x18:
-          local_1c = (0xe - ((int)cities[param_1].size >> 1)) + local_24 * -2 + local_54 * 2 + iVar6
+          local_1c = (0xe - ((int)cities[city].size >> 1)) + local_24 * -2 + local_54 * 2 + iVar6
           ;
-          local_1c = thunk_int_clamp(local_1c,2,0xe);
+          local_1c = int_clamp(local_1c,2,0xe);
           break;
         case 0x19:
-          local_1c = (0xf - ((int)cities[param_1].size >> 1)) + local_54 * 6;
-          local_1c = thunk_int_clamp(local_1c,2,0xf);
+          local_1c = (0xf - ((int)cities[city].size >> 1)) + local_54 * 6;
+          local_1c = int_clamp(local_1c,2,0xf);
           break;
         case 0x1a:
-          if (((local_54 == 0) || (iVar6 = thunk_civ_has_advance(uVar4,0x4c), iVar6 == 0)) &&
-             (civs[uVar4].science_rate != '\0')) {
-            local_1c = thunk_int_clamp(0xb - (local_98 >> 2),2,10);
+          if (((local_54 == 0) || (iVar6 = civ_has_advance(civ,0x4c), iVar6 == 0)) &&
+             (civs[civ].science_rate != '\0')) {
+            local_1c = int_clamp(0xb - (local_98 >> 2),2,10);
           }
           break;
         case 0x1b:
@@ -4086,69 +4059,69 @@ LAB_0049ae3e:
                       (uint)civs[game.field_138].units_active[0x1c] * 2 +
                       (uint)civs[game.field_138].units_active[0x2c] +
                      (uint)civs[game.field_138].units_active[0x1d]) * 2;
-          if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) {
+          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
             local_10 = 0;
-            for (local_70 = 1; (int)local_70 < 8; local_70 = local_70 + 1) {
-              if (local_70 != uVar4) {
-                local_d0 = (uint)civs[local_70].units_active[0x2c] +
-                           (uint)civs[local_70].units_active[0x1c] +
-                           (uint)civs[local_70].units_active[0x1d] +
-                           (uint)civs[local_70].units_active[0x1f];
-                if (((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + local_70 * 4) & 0x20) == 0) &&
-                   ((*(byte *)(local_70 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + uVar4 * 4) & 0x10) == 0)) {
+            for (civ2 = 1; (int)civ2 < 8; civ2++) {
+              if (civ2 != civ) {
+                local_d0 = (uint)civs[civ2].units_active[0x2c] +
+                           (uint)civs[civ2].units_active[0x1c] +
+                           (uint)civs[civ2].units_active[0x1d] +
+                           (uint)civs[civ2].units_active[0x1f];
+                if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) &&
+                   ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
                   local_d0 = local_d0 / 2;
                 }
-                local_10 = local_10 + local_d0;
+                local_10 += local_d0;
               }
             }
           }
           local_1c = 0xc - local_10;
-          local_1c = thunk_int_clamp(local_1c,1,0xc);
-          if ((cities[param_1].flags & 0x40000) != 0) {
-            local_1c = local_1c - 3;
+          local_1c = int_clamp(local_1c,1,0xc);
+          if ((cities[city].flags & 0x40000) != 0) {
+            local_1c -= 3;
           }
           local_90 = 1;
-          for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-            if (((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) &&
-               ((4 < civs[local_228].reputation ||
-                ((*(byte *)(local_228 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + uVar4 * 0x594) & 0x20) != 0)))) {
+          for (civ3 = 1; civ3 < 8; civ3++) {
+            if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+               ((4 < civs[civ3].reputation ||
+                ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) != 0)))) {
               local_90 = (uint)(local_b0 != 0);
               break;
             }
           }
           break;
         case 0x1c:
-          iVar6 = thunk_city_adjacent_to_body(param_1,1);
+          iVar6 = city_adjacent_to_body(city,1);
           if (iVar6 != 0) {
             local_10 = (uint)civs[game.field_138].units_active[0x26] * 3 +
                        (uint)civs[game.field_138].units_active[0x27] * 3 +
                        (uint)civs[game.field_138].units_active[0x28] * 5 +
                        (uint)civs[game.field_138].units_active[0x24] +
                        (uint)civs[game.field_138].units_active[0x25];
-            if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) {
+            if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
               local_10 = 0;
-              for (local_70 = 1; (int)local_70 < 8; local_70 = local_70 + 1) {
-                if (local_70 != uVar4) {
-                  local_d0 = ((int)(uint)civs[local_70].units_active[0x24] >> 1) +
-                             ((int)(uint)civs[local_70].units_active[0x25] >> 1) +
-                             (uint)civs[local_70].units_active[0x28] * 2 +
-                             (uint)civs[local_70].units_active[0x26] +
-                             (uint)civs[local_70].units_active[0x27];
-                  if (((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + local_70 * 4) & 0x20) == 0) &&
-                     ((*(byte *)(local_70 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + uVar4 * 4) & 0x10) == 0)) {
+              for (civ2 = 1; (int)civ2 < 8; civ2++) {
+                if (civ2 != civ) {
+                  local_d0 = ((int)(uint)civs[civ2].units_active[0x24] >> 1) +
+                             ((int)(uint)civs[civ2].units_active[0x25] >> 1) +
+                             (uint)civs[civ2].units_active[0x28] * 2 +
+                             (uint)civs[civ2].units_active[0x26] +
+                             (uint)civs[civ2].units_active[0x27];
+                  if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) &&
+                     ((*(byte *)&civs[civ2].treaties[civ] & 0x10) == 0)) {
                     local_d0 = local_d0 / 2;
                   }
-                  local_10 = local_10 + local_d0;
+                  local_10 += local_d0;
                 }
               }
             }
             local_1c = 0xc - local_10;
-            local_1c = thunk_int_clamp(local_1c,1,0xc);
+            local_1c = int_clamp(local_1c,1,0xc);
             local_90 = 1;
-            for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-              if (((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) &&
-                 ((4 < civs[local_228].reputation ||
-                  ((*(byte *)(local_228 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + uVar4 * 0x594) & 0x20) != 0)))) {
+            for (civ3 = 1; civ3 < 8; civ3++) {
+              if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+                 ((4 < civs[civ3].reputation ||
+                  ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) != 0)))) {
                 local_90 = (uint)(local_b0 != 0);
                 break;
               }
@@ -4159,104 +4132,104 @@ LAB_0049ae3e:
           break;
         case 0x1e:
           if ((local_d8 < 2) &&
-             (local_1c = thunk_int_clamp(0x10 - local_60,2,0x10), local_220 < 1)) {
+             (local_1c = int_clamp(0x10 - local_60,2,0x10), local_220 < 1)) {
             local_1c = (int)local_1c / 2;
           }
           break;
         case 0x1f:
           if (local_d8 < 2) {
             local_1c = 0x10 - local_60;
-            local_1c = thunk_int_clamp(local_1c,2,0x10);
+            local_1c = int_clamp(local_1c,2,0x10);
             if (0 < (int)local_1c) {
-              iVar6 = thunk_city_has_improvement(param_1,0xf);
+              iVar6 = city_has_improvement(city,0xf);
               if (iVar6 != 0) {
                 local_1c = (int)local_1c / 2;
               }
-              iVar6 = thunk_city_has_improvement(param_1,0x10);
+              iVar6 = city_has_improvement(city,0x10);
               if (iVar6 != 0) {
                 local_1c = (int)local_1c / 2;
               }
             }
             if (((city_total_shields - city_shield_support <= city_total_shields / 3) ||
-                (city_total_shields < (int)cities[local_224].size / 2)) &&
-               ((int)cities[local_224].size / 2 <= (int)(local_60 + (local_60 >> 0x1f & 3U)) >> 2))
+                (city_total_shields < (int)cities[city2].size / 2)) &&
+               ((int)cities[city2].size / 2 <= (int)(local_60 + (local_60 >> 0x1f & 3U)) >> 2))
             {
-              local_1c = local_1c - 2;
+              local_1c -= 2;
             }
           }
           break;
         case 0x20:
-          local_1c = (local_6c * 4 + 4) - (int)leaders[civs[uVar4].tribe].attack;
-          if (*(char *)(local_fc + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar4 * 0x594) == '\x04') {
+          local_1c = (local_6c * 4 + 4) - (int)leaders[civs[civ].tribe].attack;
+          if (*(char *)&civs[civ].continent_policy[local_fc] == 4) {
             local_1c = (int)local_1c / 2;
           }
-          iVar6 = thunk_civ_has_advance(uVar4,0);
+          iVar6 = civ_has_advance(civ,0);
           if (iVar6 == 0) {
             local_1c = local_1c << 1;
           }
-          if (((*(char *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) == '\x01') ||
-              (((*(byte *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) & 0x10) != 0 && (local_6c == 0))))
-             && ((int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) < (int)local_1c)) {
-            local_1c = (uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594);
+          if (((*(char *)&civs[civ].continent_cities[local_fc] == 1) ||
+              (((civs[civ].continent_flags[local_fc] & 0x10) != 0 && (local_6c == 0))))
+             && ((int)(uint)civs[civ].continent_cities[local_fc] < (int)local_1c)) {
+            local_1c = (uint)civs[civ].continent_cities[local_fc];
           }
-          iVar6 = thunk_city_has_improvement(param_1,1);
+          iVar6 = city_has_improvement(city,1);
           if ((iVar6 != 0) && (-1 < (int)local_1c)) {
             local_1c = 0;
           }
           local_90 = local_b0;
           break;
         case 0x21:
-          iVar6 = thunk_civ_has_wonder(uVar4,0x15);
+          iVar6 = civ_has_wonder(civ,0x15);
           if (iVar6 == 0) {
             local_d0 = city_aggressive_units;
-            if (5 < civs[uVar4].government) {
+            if (5 < civs[civ].government) {
               local_d0 = city_aggressive_units << 1;
             }
-            if (((4 < civs[uVar4].government) && (local_d0 != 0)) &&
+            if (((4 < civs[civ].government) && (local_d0 != 0)) &&
                (city_happy_count - city_unhappy_count < 2)) {
-              local_d0 = local_d0 + 2;
+              local_d0 += 2;
             }
             local_1c = 10 - local_d0;
           }
           break;
         case 0x22:
-          iVar6 = thunk_city_adjacent_to_body(param_1,1);
+          iVar6 = city_adjacent_to_body(city,1);
           if (iVar6 != 0) {
             iVar6 = local_ac;
             if (0x27 < local_ac) {
               iVar6 = 0x28;
             }
             local_1c = (0xb - (iVar6 >> 2)) + local_22c * -5 +
-                       (local_e0 * 2 - (int)leaders[civs[uVar4].tribe].attack) +
-                       (int)leaders[civs[uVar4].tribe].civilize;
-            local_1c = thunk_int_clamp(local_1c,2,0xf);
-            if (leaders[civs[uVar4].tribe].attack < '\0') {
-              local_1c = local_1c + local_e0;
+                       (local_e0 * 2 - (int)leaders[civs[civ].tribe].attack) +
+                       (int)leaders[civs[civ].tribe].civilize;
+            local_1c = int_clamp(local_1c,2,0xf);
+            if (leaders[civs[civ].tribe].attack < '\0') {
+              local_1c += local_e0;
             }
           }
           break;
         case 0x23:
-          iVar6 = thunk_civ_spaceship_launched(uVar4);
+          iVar6 = civ_spaceship_launched(civ);
           if (((iVar6 == 0) && ((game.game_flags & 2) == 0)) &&
-             ((iVar6 = thunk_spaceship_choose_part_group(uVar4,0), -1 < iVar6 &&
-              (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0 ||
-               (civs[uVar4].spaceship_parts[0] < 0x26)))))) {
+             ((iVar6 = spaceship_choose_part_group(civ,0), -1 < iVar6 &&
+              (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0 ||
+               (civs[civ].spaceship_parts[0] < 0x26)))))) {
             local_1c = 4;
-            for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-              if (((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) &&
-                 (iVar6 = thunk_civ_spaceship_exists(local_228), iVar6 != 0)) {
+            for (civ3 = 1; civ3 < 8; civ3++) {
+              if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+                 (iVar6 = civ_spaceship_exists(civ3), iVar6 != 0)) {
                 local_1c = 2;
                 break;
               }
             }
-            if ((local_f8 != 0) && ((*(byte *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) & 0x10) == 0)) {
+            if ((local_f8 != 0) && ((civs[civ].continent_flags[local_fc] & 0x10) == 0)) {
               local_90 = local_b0;
             }
             local_248 = 0;
             if ((game.game_flags & 2) == 0) {
-              for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-                if (((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) &&
-                   (iVar6 = thunk_civ_spaceship_launched(local_228), iVar6 != 0)) {
+              for (civ3 = 1; civ3 < 8; civ3++) {
+                if (((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+                   (iVar6 = civ_spaceship_launched(civ3), iVar6 != 0)) {
                   local_248 = 1;
                   break;
                 }
@@ -4274,19 +4247,19 @@ LAB_0049ae3e:
             }
             local_88 = 0;
             local_10c = 0;
-            for (local_94 = 0; local_94 < 6; local_94 = local_94 + 1) {
-              local_110 = thunk_int_clamp((local_94 + 1) / 2,0,2);
+            for (local_94 = 0; local_94 < 6; local_94++) {
+              local_110 = int_clamp((local_94 + 1) / 2,0,2);
               local_10c = local_10c +
-                          (int)*(short *)(local_94 * 2 + ADDR(0x64caa8, ((u8 *)&civs + 1032)) + uVar4 * 0x594) *
+                          (int)civs[civ].spaceship_parts[local_94] *
                           (uint)improvements[local_110 + 0x23].cost;
               local_88 = local_88 +
-                         (int)*(short *)(local_94 * 2 + ADDR(0x64caa8, ((u8 *)&civs + 1032)) + (uint)game.field_138 * 0x594) *
+                         (int)civs[((uint)game.field_138)].spaceship_parts[local_94] *
                          (uint)improvements[local_110 + 0x23].cost;
             }
             if (((local_40 == 0) ||
                 (((local_40 <= local_64 && (local_10c <= local_88)) || (local_248 != 0)))) &&
-               ((((cities[param_1].flags & 1) == 0 && (game.difficulty != '\0')) &&
-                (((int)civs[uVar4].field_3d2 >> 1 <= local_48 || (0x13 < local_48)))))) {
+               ((((cities[city].flags & 1) == 0 && (game.difficulty != '\0')) &&
+                (((int)civs[civ].field_3d2 >> 1 <= local_48 || (0x13 < local_48)))))) {
               local_30 = 999;
             }
           }
@@ -4294,128 +4267,128 @@ LAB_0049ae3e:
       }
       if ((int)local_1c < 400) {
         local_1c = (int)(((-(uint)(local_b0 == local_90) & 0xfffffff6) + 0x14) * local_1c * 3) /
-                   (leaders[civs[uVar4].tribe].civilize + 3);
+                   (leaders[civs[civ].tribe].civilize + 3);
       }
       else {
         local_1c = 0x3fff;
       }
-      iVar6 = thunk_city_has_improvement(param_1,2);
+      iVar6 = city_has_improvement(city,2);
       if (iVar6 != 0) {
-        local_1c = local_1c + (int)local_1c / ((local_268 >> 1) + 3);
+        local_1c += (int)local_1c / ((local_268 >> 1) + 3);
       }
-      iVar6 = thunk_wonder_get_city(0xd);
-      if (iVar6 == param_1) {
-        local_1c = local_1c + (int)local_1c / 3;
+      iVar6 = wonder_get_city(0xd);
+      if (iVar6 == city) {
+        local_1c += (int)local_1c / 3;
       }
       if ((int)local_1c < local_30) {
         local_30 = local_1c;
-        local_58 = -local_244;
+        local_58 = -improvement;
       }
       if ((int)local_1c < local_20) {
         local_20 = local_1c;
-        local_254 = -local_244;
+        local_254 = -improvement;
       }
     }
   }
-  if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) && (citypref_count != 0)) {
-    for (local_50 = 0; local_50 < citypref_count; local_50 = local_50 + 1) {
-      local_244 = (&citypref_improvements)[local_50];
-      iVar6 = thunk_city_has_improvement(param_1,local_244);
-      if ((iVar6 == 0) && (iVar6 = thunk_city_can_build_improvement(uVar4,param_1,local_244), iVar6 != 0)) {
-        local_254 = -local_244;
-        local_58 = -local_244;
+  if (((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) && (citypref_count != 0)) {
+    for (unit_type2 = 0; unit_type2 < citypref_count; unit_type2++) {
+      improvement = (&citypref_improvements)[unit_type2];
+      iVar6 = city_has_improvement(city,improvement);
+      if ((iVar6 == 0) && (iVar6 = city_can_build_improvement(civ,city,improvement), iVar6 != 0)) {
+        local_254 = -improvement;
+        local_58 = -improvement;
         goto LAB_0049ea4a;
       }
     }
   }
   if ((local_78 != 0) ||
-     (((((*(byte *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) & 0x10) == 0 &&
-        ('\x02' < cities[param_1].size)) && (((byte)(cities[param_1].flags >> 8) & 0xc0) != 0xc0))
-      && ((4 - leaders[civs[uVar4].tribe].civilize <=
-           (int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) ||
-          ((*(char *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) == '\0' &&
-           (4 - leaders[civs[uVar4].tribe].civilize <= (int)civs[uVar4].num_cities)))))))) {
-    for (local_74 = 0; local_74 < 0x1c; local_74 = local_74 + 1) {
-      local_244 = local_74 + 0x27;
-      iVar6 = thunk_city_can_build_improvement(uVar4,param_1,local_244);
+     (((((civs[civ].continent_flags[local_fc] & 0x10) == 0 &&
+        (2 < cities[city].size)) && (((byte)(cities[city].flags >> 8) & 0xc0) != 0xc0))
+      && ((4 - leaders[civs[civ].tribe].civilize <=
+           (int)(uint)civs[civ].continent_cities[local_fc] ||
+          ((*(char *)&civs[civ].continent_flags[local_fc] == '\0' &&
+           (4 - leaders[civs[civ].tribe].civilize <= (int)civs[civ].num_cities)))))))) {
+    for (local_74 = 0; local_74 < 0x1c; local_74++) {
+      improvement = local_74 + 0x27;
+      iVar6 = city_can_build_improvement(civ,city,improvement);
       if (iVar6 != 0) {
         local_90 = 0;
         if (local_f8 == 4) {
           local_90 = local_b0;
         }
-        iVar6 = (local_18 + local_8c + 8) - civs[uVar4].gold / 200;
+        iVar6 = (local_18 + local_8c + 8) - civs[civ].gold / 200;
         if (iVar6 < 2) {
           iVar6 = 1;
         }
         local_28 = local_74 / 7;
-        local_1c = iVar6 + (uint)*(byte *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + uVar4 * 0x594);
-        if ((byte)(&human_wonders_by_group_min)[local_28] < *(byte *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + uVar4 * 0x594)) {
-          local_1c = local_1c + 2;
+        local_1c = iVar6 + (uint)civs[civ].wonders_by_group[local_28];
+        if ((byte)(&human_wonders_by_group_min)[local_28] < civs[civ].wonders_by_group[local_28]) {
+          local_1c += 2;
         }
-        if (*(byte *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + uVar4 * 0x594) <
-            *(byte *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + (uint)game.field_139 * 0x594)) {
-          local_1c = local_1c + -1;
+        if (civs[civ].wonders_by_group[local_28] <
+            civs[((uint)game.field_139)].wonders_by_group[local_28]) {
+          local_1c--;
         }
-        if ((((local_78 == 0) || ((int)cities[param_1].building == -local_244)) ||
-            ((((game.human_players & *(byte *)((int)&local_f4 + (1 - cities[param_1].building))) ==
-               0 || ((*(short *)((int)&game + cities[param_1].building * -2 + 0xb0) != -1 ||
-                     ((int)cities[param_1].shield_box <
-                      (int)((uint)improvements[-(int)cities[param_1].building].cost * city_shield_rows)
+        if ((((local_78 == 0) || ((int)cities[city].building == -improvement)) ||
+            ((((game.human_players & *(byte *)((int)&unit_type + (1 - cities[city].building))) ==
+               0 || ((*(short *)((int)&game + cities[city].building * -2 + 0xb0) != -1 ||
+                     ((int)cities[city].shield_box <
+                      (int)((uint)improvements[-(int)cities[city].building].cost * city_shield_rows)
                       / 2)))) &&
-             ((*(byte *)((int)&local_f4 + (1 - cities[param_1].building)) & 1) == 0)))) &&
-           (((1 < game.difficulty || (local_a0 = (iptr)improvements[local_244].preq, local_a0 < 0))
+             ((*(byte *)((int)&unit_type + (1 - cities[city].building)) & 1) == 0)))) &&
+           (((1 < game.difficulty || (local_a0 = (iptr)improvements[improvement].preq, local_a0 < 0))
             || ((game.human_players & game.advance_known_by[local_a0]) != 0)))) {
           if (local_74 != 0x17) {
             if (game.difficulty < 2) {
-              for (local_224 = 0; local_224 < game.num_cities; local_224 = local_224 + 1) {
-                if (((cities[local_224].id != 0) &&
-                    (((uint)game.human_players & 1 << (cities[local_224].owner & 0x1fU)) != 0)) &&
-                   ((int)cities[local_224].building == -local_244)) {
+              for (city2 = 0; city2 < game.num_cities; city2++) {
+                if (((cities[city2].id != 0) &&
+                    (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0)) &&
+                   ((int)cities[city2].building == -improvement)) {
                   local_1c = 999;
                 }
               }
               if (local_1c == 999) goto LAB_0049cadf;
             }
-            iVar6 = thunk_civ_has_advance(uVar4,0x49);
+            iVar6 = civ_has_advance(civ,0x49);
             if ((iVar6 != 0) && ((game.human_players & game.advance_known_by[0x49]) == 0))
             goto LAB_0049cadf;
           }
           uVar8 = local_1c;
           switch(local_74) {
           case 0:
-            uVar8 = local_1c - (leaders[civs[uVar4].tribe].civilize * 3 + 2);
+            uVar8 = local_1c - (leaders[civs[civ].tribe].civilize * 3 + 2);
             break;
           case 1:
-            uVar8 = local_1c - ((int)civs[uVar4].num_cities / 3 + 1);
+            uVar8 = local_1c - ((int)civs[civ].num_cities / 3 + 1);
             break;
           case 2:
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            iVar6 = city_has_improvement(city,1);
             if (iVar6 != 0) {
-              local_1c = local_1c + -1;
+              local_1c--;
             }
-            iVar6 = thunk_city_has_improvement(param_1,5);
+            iVar6 = city_has_improvement(city,5);
             if (iVar6 != 0) {
-              local_1c = local_1c + -1;
+              local_1c--;
             }
-            uVar8 = local_1c - (int)cities[param_1].size / 3;
+            uVar8 = local_1c - (int)cities[city].size / 3;
             break;
           case 3:
             uVar8 = local_1c -
-                    ((int)(civs[uVar4].units_active[0x21] + 2 + (uint)civs[uVar4].units_active[0x20]
+                    ((int)(civs[civ].units_active[0x21] + 2 + (uint)civs[civ].units_active[0x20]
                           ) >> 2);
             break;
           case 4:
-            for (local_44 = 1; uVar8 = local_1c, (int)local_44 < 8; local_44 = local_44 + 1) {
-              if (civs[local_44].num_advances < civs[uVar4].num_advances) {
-                if ((1 << ((byte)local_44 & 0x1f) & (uint)game.human_players) != 0) {
+            for (civ4 = 1; uVar8 = local_1c, (int)civ4 < 8; civ4++) {
+              if (civs[civ4].num_advances < civs[civ].num_advances) {
+                if ((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) {
                   uVar8 = local_1c + 1;
                 }
               }
               else {
-                uVar8 = local_1c + -1;
-                if (((1 << ((byte)local_44 & 0x1f) & (uint)game.human_players) != 0) &&
-                   (civs[uVar4].num_advances + 5 < (uint)civs[local_44].num_advances)) {
-                  uVar8 = local_1c + -3;
+                uVar8 = local_1c - 1;
+                if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0) &&
+                   (civs[civ].num_advances + 5 < (uint)civs[civ4].num_advances)) {
+                  uVar8 = local_1c - 3;
                 }
               }
               local_1c = uVar8;
@@ -4423,205 +4396,205 @@ LAB_0049ae3e:
             break;
           case 5:
             uVar8 = local_1c -
-                    (((int)((int)civs[uVar4].num_cities + ((int)civs[uVar4].num_cities >> 0x1f & 3U)
+                    (((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U)
                            ) >> 2) - (int)game.turn / 0x19);
             break;
           case 6:
-            uVar8 = local_1c + leaders[civs[uVar4].tribe].civilize * -2;
+            uVar8 = local_1c + leaders[civs[civ].tribe].civilize * -2;
             break;
           case 7:
             uVar8 = local_1c -
-                    (leaders[civs[uVar4].tribe].attack * 3 + (int)leaders[civs[uVar4].tribe].expand
-                     + leaders[civs[uVar4].tribe].civilize * -2 + 1);
+                    (leaders[civs[civ].tribe].attack * 3 + (int)leaders[civs[civ].tribe].expand
+                     + leaders[civs[civ].tribe].civilize * -2 + 1);
             break;
           case 8:
-            iVar6 = thunk_int_clamp((city_total_shields * 2) / 3,0,3);
+            iVar6 = int_clamp((city_total_shields * 2) / 3,0,3);
             uVar8 = local_1c - iVar6;
             break;
           case 9:
-            for (local_228 = 1; uVar8 = local_1c, local_228 < 8; local_228 = local_228 + 1) {
-              if ((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) {
-                if ((*(byte *)(local_228 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + uVar4 * 0x594) & 8) != 0) {
-                  local_1c = local_1c + -1;
+            for (civ3 = 1; uVar8 = local_1c, civ3 < 8; civ3++) {
+              if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
+                if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
+                  local_1c--;
                 }
-                if ((*(byte *)(local_228 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + uVar4 * 0x594) & 6) != 0) {
-                  local_1c = local_1c + -1;
+                if ((*(byte *)&civs[civ].treaties[civ3] & 6) != 0) {
+                  local_1c--;
                 }
               }
             }
             break;
           case 10:
             uVar8 = local_1c -
-                    ((int)((int)civs[uVar4].num_cities + ((int)civs[uVar4].num_cities >> 0x1f & 3U))
+                    ((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U))
                     >> 2);
             break;
           case 0xb:
-            local_1c = (local_1c - ((int)(local_98 + (local_98 >> 0x1f & 7U)) >> 3)) + -1;
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            local_1c = (local_1c - ((int)(local_98 + (local_98 >> 0x1f & 7U)) >> 3)) - 1;
+            iVar6 = city_has_improvement(city,1);
             uVar8 = local_1c;
             if (iVar6 != 0) {
-              uVar8 = local_1c + -1;
+              uVar8 = local_1c - 1;
             }
             break;
           case 0xc:
             local_2c = 0;
-            for (local_f4 = 0; local_f4 < 0x3e; local_f4 = local_f4 + 1) {
-              if (unit_types[local_f4].domain == '\x02') {
-                local_2c = local_2c + (uint)*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594);
+            for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+              if (unit_types[unit_type].domain == 2) {
+                local_2c += (uint)civs[civ].units_active[unit_type];
               }
             }
             uVar8 = local_1c - ((int)(local_2c + 3 + (local_2c + 3 >> 0x1f & 3U)) >> 2);
             break;
           case 0xd:
-            uVar8 = local_1c - (int)cities[param_1].size / 5;
+            uVar8 = local_1c - (int)cities[city].size / 5;
             break;
           case 0xe:
             local_90 = local_b0;
-            uVar8 = local_1c + -4;
+            uVar8 = local_1c - 4;
             break;
           case 0xf:
-            local_1c = local_1c - ((int)(uint)*(byte *)(local_fc + ADDR(0x64c972, ((u8 *)&civs + 722)) + uVar4 * 0x594) >> 4);
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            local_1c -= ((int)(uint)civs[civ].continent_city_size[local_fc] >> 4);
+            iVar6 = city_has_improvement(city,1);
             uVar8 = local_1c;
             if (iVar6 != 0) {
-              uVar8 = local_1c + -1;
+              uVar8 = local_1c - 1;
             }
             break;
           case 0x10:
-            local_1c = local_1c - (int)cities[param_1].size / 6;
-            iVar6 = thunk_city_has_improvement(param_1,1);
+            local_1c -= (int)cities[city].size / 6;
+            iVar6 = city_has_improvement(city,1);
             uVar8 = local_1c;
             if (iVar6 != 0) {
-              uVar8 = local_1c + -1;
+              uVar8 = local_1c - 1;
             }
             break;
           case 0x11:
             uVar8 = local_1c -
-                    ((int)((int)civs[uVar4].num_cities + ((int)civs[uVar4].num_cities >> 0x1f & 3U))
+                    ((int)((int)civs[civ].num_cities + ((int)civs[civ].num_cities >> 0x1f & 3U))
                     >> 2);
             break;
           case 0x12:
-            uVar8 = local_1c + -3;
+            uVar8 = local_1c - 3;
             break;
           case 0x13:
-            iVar6 = thunk_civ_has_advance(uVar4,0xf);
+            iVar6 = civ_has_advance(civ,0xf);
             if (iVar6 == 0) {
-              uVar8 = local_1c + -2;
+              uVar8 = local_1c - 2;
             }
             else {
-              uVar8 = local_1c + -1;
+              uVar8 = local_1c - 1;
             }
             break;
           case 0x14:
             if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
-              uVar8 = local_1c + -1;
+              uVar8 = local_1c - 1;
               if (3 < civs[game.civ_by_rank[7]].reputation) {
-                uVar8 = local_1c + -2;
+                uVar8 = local_1c - 2;
               }
               local_1c = uVar8;
               uVar8 = local_1c;
               if ((7 < civs[game.civ_by_rank[7]].num_cities) &&
-                 (uVar8 = local_1c + -1, game.power_rank[uVar4] == '\x06')) {
-                uVar8 = local_1c + -2;
+                 (uVar8 = local_1c - 1, game.power_rank[civ] == 6)) {
+                uVar8 = local_1c - 2;
               }
             }
             break;
           case 0x15:
-            uVar8 = local_1c + -1;
-            if (((-1 < leaders[civs[uVar4].tribe].expand) &&
-                (-1 < leaders[civs[uVar4].tribe].civilize)) &&
-               (-1 < leaders[civs[uVar4].tribe].attack)) {
-              uVar8 = local_1c + -2;
+            uVar8 = local_1c - 1;
+            if (((-1 < leaders[civs[civ].tribe].expand) &&
+                (-1 < leaders[civs[civ].tribe].civilize)) &&
+               (-1 < leaders[civs[civ].tribe].attack)) {
+              uVar8 = local_1c - 2;
             }
             local_1c = uVar8;
-            if (0 < civs[uVar4].government_score[5]) {
-              local_1c = local_1c + -1;
+            if (0 < civs[civ].government_score[5]) {
+              local_1c--;
             }
-            if (4 < civs[uVar4].government) {
-              local_1c = local_1c + -1;
+            if (4 < civs[civ].government) {
+              local_1c--;
             }
             uVar8 = local_1c;
-            if (5 < civs[uVar4].government) {
-              uVar8 = local_1c + -1;
+            if (5 < civs[civ].government) {
+              uVar8 = local_1c - 1;
             }
             break;
           case 0x16:
-            uVar8 = local_1c - *(byte *)(local_fc + ADDR(0x64c972, ((u8 *)&civs + 722)) + uVar4 * 0x594) / 0x14;
+            uVar8 = local_1c - civs[civ].continent_city_size[local_fc] / 0x14;
             break;
           case 0x17:
-            iVar6 = thunk_civ_has_advance(uVar4,0x49);
+            iVar6 = civ_has_advance(civ,0x49);
             if (iVar6 != 0) {
               local_d0 = 0;
-              for (local_228 = 1; local_228 < 8; local_228 = local_228 + 1) {
-                if ((((1 << ((byte)local_228 & 0x1f) & (uint)game.human_players) != 0) &&
-                    (iVar6 = thunk_civ_has_advance(local_228,0x49), iVar6 != 0)) &&
-                   (civs[local_228].military_strength < civs[uVar4].military_strength)) {
+              for (civ3 = 1; civ3 < 8; civ3++) {
+                if ((((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
+                    (iVar6 = civ_has_advance(civ3,0x49), iVar6 != 0)) &&
+                   (civs[civ3].military_strength < civs[civ].military_strength)) {
                   local_d0 = 1;
                   break;
                 }
               }
               if (local_d0 == 0) {
                 if (((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) {
-                  local_1c = local_1c + -1;
-                  iVar6 = thunk_civ_has_advance((uint)game.civ_by_rank[7],0x49);
+                  local_1c--;
+                  iVar6 = civ_has_advance((uint)game.civ_by_rank[7],0x49);
                   if (iVar6 == 0) {
-                    local_1c = local_1c + -1;
+                    local_1c--;
                   }
                 }
                 uVar8 = local_1c +
-                        (leaders[civs[uVar4].tribe].civilize * 2 -
-                        (int)leaders[civs[uVar4].tribe].attack);
+                        (leaders[civs[civ].tribe].civilize * 2 -
+                        (int)leaders[civs[civ].tribe].attack);
                 break;
               }
             }
             goto LAB_0049cadf;
           case 0x18:
             uVar8 = local_1c -
-                    ((int)leaders[civs[uVar4].tribe].civilize +
-                    leaders[civs[uVar4].tribe].attack * -2);
-            if (game.power_rank[uVar4] == '\a') {
-              uVar8 = uVar8 + -1;
+                    ((int)leaders[civs[civ].tribe].civilize +
+                    leaders[civs[civ].tribe].attack * -2);
+            if (game.power_rank[civ] == 7) {
+              uVar8--;
             }
             break;
           case 0x19:
             uVar8 = local_1c -
-                    (leaders[civs[uVar4].tribe].civilize * 3 +
-                    leaders[civs[uVar4].tribe].attack * -2);
+                    (leaders[civs[civ].tribe].civilize * 3 +
+                    leaders[civs[civ].tribe].attack * -2);
             break;
           case 0x1a:
-            uVar8 = local_1c - (leaders[civs[uVar4].tribe].civilize * 2 + 2);
+            uVar8 = local_1c - (leaders[civs[civ].tribe].civilize * 2 + 2);
             break;
           case 0x1b:
-            uVar8 = local_1c - (leaders[civs[uVar4].tribe].attack + 2);
+            uVar8 = local_1c - (leaders[civs[civ].tribe].attack + 2);
           }
           local_1c = uVar8;
-          local_9c = thunk_wonder_is_expired(local_74);
+          local_9c = wonder_is_expired(local_74);
           if (local_9c != 0) {
             local_1c = local_1c * 3 + (uint)game.difficulty * 0x32;
           }
-          local_1c = local_1c + local_238 * 5;
+          local_1c += local_238 * 5;
           if (((local_238 == 0) || (local_78 != 0)) &&
-             (*(char *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + uVar4 * 0x594) == '\0')) {
-            local_1c = local_1c + -2;
+             (*(char *)&civs[civ].wonders_by_group[local_28] == '\0')) {
+            local_1c -= 2;
           }
           if (local_f8 == 1) {
             local_1c = local_1c + local_d4 + 1;
           }
           else {
-            local_1c = local_1c + local_d4 / 2;
+            local_1c += local_d4 / 2;
           }
-          if ((int)cities[param_1].building == -local_244) {
+          if ((int)cities[city].building == -improvement) {
             if (local_a4 != 0) {
               local_1c = (int)local_1c / 2;
             }
             local_1c = (local_260 + 1) * local_1c + local_260;
           }
-          else if ((1 << (bVar1 & 0x1f) &
-                   (uint)*(byte *)((int)&local_f4 + (1 - cities[param_1].building))) != 0) {
+          else if ((1 << (civ5 & 0x1f) &
+                   (uint)*(byte *)((int)&unit_type + (1 - cities[city].building))) != 0) {
             local_1c = local_1c * 2 + 1;
           }
           local_c = local_1c;
-          local_e4 = (uint)improvements[local_244].cost * city_shield_rows + 1;
+          local_e4 = (uint)improvements[improvement].cost * city_shield_rows + 1;
           if (((local_78 != 0) && (local_264 == 0)) && (local_9c == 0)) {
             if (local_238 == 0) {
               if (local_b0 == local_90) {
@@ -4632,18 +4605,18 @@ LAB_0049ae3e:
               }
             }
             if ((int)(local_e4 * 3 + (local_e4 * 3 >> 0x1f & 3U)) >> 2 <=
-                (int)cities[param_1].shield_box) {
+                (int)cities[city].shield_box) {
               local_90 = local_b0;
             }
-            if (((local_b0 != local_90) && (local_e4 / 2 <= (int)cities[param_1].shield_box)) &&
+            if (((local_b0 != local_90) && (local_e4 / 2 <= (int)cities[city].shield_box)) &&
                (local_238 < 3)) {
               local_90 = local_b0;
             }
           }
           if (local_78 == 0) {
-            if ((int)civs[uVar4].field_3d2 >> 1 < local_48) {
-              if ((((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) &&
-                  (civs[uVar4].field_3d2 != local_48)) && (local_48 < 6)) {
+            if ((int)civs[civ].field_3d2 >> 1 < local_48) {
+              if ((((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) &&
+                  (civs[civ].field_3d2 != local_48)) && (local_48 < 6)) {
                 local_1c = local_1c << 1;
               }
             }
@@ -4651,24 +4624,24 @@ LAB_0049ae3e:
               local_1c = local_1c << 1;
             }
           }
-          if (civs[uVar4].field_3d2 == local_48) {
-            local_1c = local_1c - (int)local_1c / 3;
+          if (civs[civ].field_3d2 == local_48) {
+            local_1c -= (int)local_1c / 3;
           }
           local_1c = (int)(((-(uint)(local_b0 == local_90) & 0xfffffff6) + 0x14) * local_1c * 3) /
-                     (leaders[civs[uVar4].tribe].civilize + 3);
-          iVar6 = thunk_city_has_improvement(param_1,2);
+                     (leaders[civs[civ].tribe].civilize + 3);
+          iVar6 = city_has_improvement(city,2);
           if (iVar6 != 0) {
-            local_1c = local_1c + (int)local_1c / ((local_268 >> 1) + 3);
+            local_1c += (int)local_1c / ((local_268 >> 1) + 3);
           }
-          iVar6 = thunk_city_has_improvement(param_1,1);
+          iVar6 = city_has_improvement(city,1);
           if ((iVar6 != 0) &&
              ((local_1c = local_1c - (int)local_1c / 3, local_8c == 0 ||
-              (*(char *)(local_28 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + uVar4 * 0x594) == '\0')))) {
+              (*(char *)&civs[civ].wonders_by_group[local_28] == '\0')))) {
             local_1c = (int)local_1c / 2;
           }
-          if ((cities[param_1].flags & 0x100) == 0) {
+          if ((cities[city].flags & 0x100) == 0) {
             if ((local_78 != 0) && (local_9c == 0)) {
-              local_1c = (((local_e4 - cities[param_1].shield_box) *
+              local_1c = (((local_e4 - cities[city].shield_box) *
                           ((int)(local_1c * 3 + ((int)(local_1c * 3) >> 0x1f & 3U)) >> 2)) /
                           local_e4 + ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2)) / 3;
             }
@@ -4679,8 +4652,8 @@ LAB_0049ae3e:
           if (local_58 < -0x26) {
             if (local_c < local_8) {
               local_8 = local_c;
-              local_58 = -local_244;
-              local_254 = -local_244;
+              local_58 = -improvement;
+              local_254 = -improvement;
               if ((int)local_1c < local_30) {
                 local_30 = local_1c;
               }
@@ -4693,11 +4666,11 @@ LAB_0049ae3e:
             if ((int)local_1c < local_30) {
               local_8 = local_c;
               local_30 = local_1c;
-              local_58 = -local_244;
+              local_58 = -improvement;
             }
             if ((int)local_1c < local_20) {
               local_20 = local_1c;
-              local_254 = -local_244;
+              local_254 = -improvement;
             }
           }
         }
@@ -4705,119 +4678,118 @@ LAB_0049ae3e:
 LAB_0049cadf: ;
     }
   }
-  if (civs[uVar4].num_military_units < 0x200) {
-    for (local_f4 = 0; local_f4 < 0x3e; local_f4 = local_f4 + 1) {
-      if (('\x05' < (char)unit_types[local_f4].role) &&
-         (iVar6 = thunk_civ_can_build_unit(uVar4,param_1,local_f4), iVar6 != 0)) {
+  if (civs[civ].num_military_units < 0x200) {
+    for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+      if ((5 < (char)unit_types[unit_type].role) &&
+         (iVar6 = civ_can_build_unit(civ,city,unit_type), iVar6 != 0)) {
         local_1c = 999;
         local_90 = 0;
-        if (unit_types[local_f4].role == '\x06') {
-          local_23c = thunk_ai_spaceship_race_behind(uVar4);
+        if (unit_types[unit_type].role == 6) {
+          local_23c = ai_spaceship_race_behind(civ);
           if (local_23c != 0) {
-            iVar6 = thunk_civ_has_advance(uVar4,0x4c);
+            iVar6 = civ_has_advance(civ,0x4c);
             if ((((iVar6 != 0) &&
-                 (iVar6 = thunk_civ_has_advance(uVar4,(int)improvements[0x24].preq), iVar6 != 0)) &&
-                (iVar6 = thunk_civ_has_advance(uVar4,(int)improvements[0x25].preq), iVar6 != 0)) &&
-               (iVar6 = thunk_civ_has_advance(uVar4,0x20), iVar6 != 0)) {
+                 (iVar6 = civ_has_advance(civ,(int)improvements[0x24].preq), iVar6 != 0)) &&
+                (iVar6 = civ_has_advance(civ,(int)improvements[0x25].preq), iVar6 != 0)) &&
+               (iVar6 = civ_has_advance(civ,0x20), iVar6 != 0)) {
               local_23c = 0;
             }
-            if ((local_264 != 0) || ((cities[param_1].flags & 1) != 0)) {
+            if ((local_264 != 0) || ((cities[city].flags & 1) != 0)) {
               local_23c = 0;
             }
             if (game.difficulty < 2) {
               local_23c = 0;
             }
           }
-          if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) ||
-             ((cities[param_1].flags & 0x10) == 0)) {
-            if ((local_21c[local_f4] <= local_23c) &&
-               (aiStack_364[local_f4] < (int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594)))
+          if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+             ((cities[city].flags & 0x10) == 0)) {
+            if ((local_21c[unit_type] <= local_23c) &&
+               (aiStack_364[unit_type] < (int)(uint)civs[civ].continent_cities[local_fc]))
             {
               local_1c = 0xb;
-              local_44 = 0xffffffff;
-              for (local_70 = 1; (int)local_70 < 8; local_70 = local_70 + 1) {
-                if (((local_70 != uVar4) &&
-                    (((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_70 * 4) & 6) == 0 ||
-                     (((((1 << ((byte)local_70 & 0x1f) & (uint)game.human_players) != 0 &&
-                        ((game.power_rank[uVar4] <= game.power_rank[local_70] || (local_23c != 0))))
-                       && ((local_f4 == 0x2f ||
-                           (((7 < (int)((uint)civs[local_70].num_advances -
-                                       (uint)civs[uVar4].num_advances) || (local_23c != 0)) ||
-                            (game.power_rank[local_70] == '\a')))))) &&
-                      ((((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_70 * 4) & 8) != 0 ||
+              civ4 = 0xffffffff;
+              for (civ2 = 1; (int)civ2 < 8; civ2++) {
+                if (((civ2 != civ) &&
+                    (((*(byte *)&civs[civ].treaties[civ2] & 6) == 0 ||
+                     (((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0 &&
+                        ((game.power_rank[civ] <= game.power_rank[civ2] || (local_23c != 0))))
+                       && ((unit_type == 0x2f ||
+                           (((7 < (int)((uint)civs[civ2].num_advances -
+                                       (uint)civs[civ].num_advances) || (local_23c != 0)) ||
+                            (game.power_rank[civ2] == 7)))))) &&
+                      ((((*(byte *)&civs[civ].treaties[civ2] & 8) != 0 ||
                         (local_23c != 0)) ||
-                       ((civs[local_70].government < 5 ||
-                        ((*(ushort *)(local_fc * 2 + ADDR(0x64c8b2, ((u8 *)&civs + 530)) + local_70 * 0x594) <=
-                          *(ushort *)(uVar4 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_fc * 2) ||
-                         (*(char *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) == '\0')))))))))))) &&
-                   (*(char *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + local_70 * 0x594) != '\0')) {
-                  local_44 = local_70;
+                       ((civs[civ2].government < 5 ||
+                        ((civs[civ2].continent_attack[local_fc] <=
+                          civs[civ].continent_military[local_fc] ||
+                         (*(char *)&civs[civ].continent_cities[local_fc] == '\0')))))))))))) &&
+                   (*(char *)&civs[civ2].continent_cities[local_fc] != '\0')) {
+                  civ4 = civ2;
                 }
               }
-              if ((int)local_44 < 0) {
-                local_44 = (uint)game.field_138;
+              if ((int)civ4 < 0) {
+                civ4 = (uint)game.field_138;
                 if ((local_f8 == 4) && (game.difficulty != '\0')) {
                   local_90 = local_b0;
                   local_1c = 8;
-                  iVar6 = civs[uVar4].num_cities + 3;
-                  if ((int)((uint)*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) +
-                           (uint)*(byte *)(local_f4 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + uVar4 * 0x594)) <
+                  iVar6 = civs[civ].num_cities + 3;
+                  if ((int)((uint)civs[civ].units_active[unit_type] +
+                           (uint)civs[civ].units_in_production[unit_type]) <
                       (int)(iVar6 + (iVar6 >> 0x1f & 3U)) >> 2) {
-                    if (civs[game.field_138].gold < civs[uVar4].gold) {
+                    if (civs[game.field_138].gold < civs[civ].gold) {
                       local_1c = 7;
                     }
-                    if (civs[game.field_138].gold * 2 < civs[uVar4].gold) {
-                      local_1c = local_1c + -1;
+                    if (civs[game.field_138].gold * 2 < civs[civ].gold) {
+                      local_1c--;
                     }
-                    if (civs[uVar4].num_advances < civs[game.field_138].num_advances) {
-                      if (aiStack_364[local_f4] + local_21c[local_f4] == 0) {
-                        local_1c = local_1c + -3;
+                    if (civs[civ].num_advances < civs[game.field_138].num_advances) {
+                      if (aiStack_364[unit_type] + local_21c[unit_type] == 0) {
+                        local_1c -= 3;
                       }
                       local_1c = local_1c -
                                  ((uint)civs[game.field_138].num_advances -
-                                 (uint)civs[uVar4].num_advances);
+                                 (uint)civs[civ].num_advances);
                     }
-                    local_1c = thunk_int_clamp(local_1c,*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) +
-                                                                    uVar4 * 0x594) + 1,10);
+                    local_1c = int_clamp(local_1c,civs[civ].units_active[unit_type] + 1,10);
                   }
                 }
                 if (local_23c != 0) {
                   local_1c = (int)local_1c / 2;
                 }
-                if (aiStack_364[local_f4] != 0) {
+                if (aiStack_364[unit_type] != 0) {
                   local_1c = 999;
                 }
               }
               else {
-                local_1c = thunk_int_clamp(10 - ((uint)civs[local_44].num_advances -
-                                                   (uint)civs[uVar4].num_advances),2,10);
-                if ((((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_70 * 4) & 6) != 0) &&
-                    (local_1c = local_1c + 1, aiStack_364[local_f4] != 0)) && (local_23c == 0)) {
+                local_1c = int_clamp(10 - ((uint)civs[civ4].num_advances -
+                                                   (uint)civs[civ].num_advances),2,10);
+                if ((((*(byte *)&civs[civ].treaties[civ2] & 6) != 0) &&
+                    (local_1c = local_1c + 1, aiStack_364[unit_type] != 0)) && (local_23c == 0)) {
                   local_1c = 999;
                 }
-                if (civs[local_44].military_strength <= civs[uVar4].military_strength) {
+                if (civs[civ4].military_strength <= civs[civ].military_strength) {
                   local_90 = local_b0;
                 }
               }
-              if (civs[uVar4].government == '\x03') {
-                local_1c = local_1c + -1;
+              if (civs[civ].government == 3) {
+                local_1c--;
               }
               if ((local_23c != 0) && ((int)local_1c < 0x14)) {
-                for (local_244 = 0x23; local_244 < 0x26; local_244 = local_244 + 1) {
-                  iVar6 = thunk_civ_has_advance(uVar4,(int)improvements[local_244].preq);
+                for (improvement = 0x23; improvement < 0x26; improvement++) {
+                  iVar6 = civ_has_advance(civ,(int)improvements[improvement].preq);
                   if ((iVar6 == 0) &&
-                     (iVar6 = thunk_civ_has_advance(local_44,(int)improvements[local_244].preq),
+                     (iVar6 = civ_has_advance(civ4,(int)improvements[improvement].preq),
                      iVar6 != 0)) {
                     local_90 = local_b0;
-                    uVar8 = local_21c[local_f4] * 2 + 1;
+                    uVar8 = local_21c[unit_type] * 2 + 1;
                     if ((int)local_1c <= (int)uVar8) {
                       uVar8 = local_1c;
                     }
                     local_1c = uVar8;
-                    if ((((local_21c[local_f4] == 0) &&
-                         (*(char *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) == '\0')) &&
-                        (local_1c = uVar8 + -1, -0x26 < local_58)) && (local_58 < -0x22)) {
-                      local_58 = local_f4;
+                    if ((((local_21c[unit_type] == 0) &&
+                         (*(char *)&civs[civ].units_active[unit_type] == '\0')) &&
+                        (local_1c = uVar8 - 1, -0x26 < local_58)) && (local_58 < -0x22)) {
+                      local_58 = unit_type;
                     }
                   }
                 }
@@ -4826,120 +4798,120 @@ LAB_0049cadf: ;
             goto LAB_0049e97a;
           }
         }
-        else if (unit_types[local_f4].role == '\a') {
-          if ((cities[param_1].flags & 0x1000) == 0) {
+        else if (unit_types[unit_type].role == 7) {
+          if ((cities[city].flags & 0x1000) == 0) {
             local_1c = 10;
-            if ((char)cities[param_1].trade_routes < '\x03') {
-              local_1c = 10 - ((5 - leaders[civs[uVar4].tribe].expand) * city_total_trade) / 10;
+            if ((char)cities[city].trade_routes < 3) {
+              local_1c = 10 - ((5 - leaders[civs[civ].tribe].expand) * city_total_trade) / 10;
             }
-            iVar6 = local_1c + (char)cities[param_1].trade_routes * 2;
+            iVar6 = local_1c + (char)cities[city].trade_routes * 2;
             if (iVar6 < 3) {
               iVar6 = 2;
             }
-            local_1c = iVar6 + (uint)*(byte *)(local_fc + ADDR(0x64c9b2, ((u8 *)&civs + 786)) + uVar4 * 0x594);
-            if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) ||
-               ((cities[param_1].flags & 0x10) == 0)) goto LAB_0049e97a;
+            local_1c = iVar6 + (uint)civs[civ].continent_trade_units[local_fc];
+            if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+               ((cities[city].flags & 0x10) == 0)) goto LAB_0049e97a;
           }
         }
         else {
 LAB_0049e97a:
           if ((int)local_1c < 400) {
             local_1c = (int)(((-(uint)(local_b0 == local_90) & 0xfffffff6) + 0x14) * local_1c * 3) /
-                       (leaders[civs[uVar4].tribe].civilize + 3);
+                       (leaders[civs[civ].tribe].civilize + 3);
           }
           else {
             local_1c = 0x3fff;
           }
-          iVar6 = thunk_city_has_improvement(param_1,2);
+          iVar6 = city_has_improvement(city,2);
           if (iVar6 != 0) {
-            local_1c = local_1c + ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
+            local_1c += ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
           }
           if ((int)local_1c < local_30) {
             local_30 = local_1c;
-            local_58 = local_f4;
+            local_58 = unit_type;
           }
           if ((int)local_1c < local_20) {
             local_20 = local_1c;
-            local_254 = local_f4;
+            local_254 = unit_type;
           }
         }
       }
     }
 LAB_0049ea4a:
-    if (civs[uVar4].num_military_units < 0x200) {
-      for (local_f4 = 0; local_f4 < 0x3e; local_f4 = local_f4 + 1) {
-        local_e8 = (uint)(char)unit_types[local_f4].role;
+    if (civs[civ].num_military_units < 0x200) {
+      for (unit_type = 0; unit_type < 0x3e; unit_type++) {
+        local_e8 = (uint)(char)unit_types[unit_type].role;
         if (((((((int)local_e8 < 6) &&
-               (iVar6 = thunk_civ_can_build_unit(uVar4,param_1,local_f4), iVar6 != 0)) &&
-              (local_f4 != 0x2a)) &&
+               (iVar6 = civ_can_build_unit(civ,city,unit_type), iVar6 != 0)) &&
+              (unit_type != 0x2a)) &&
              ((local_e8 != 5 ||
               (((settler_food_cost <= local_220 ||
                 (((city_settlers_supported == 0 &&
-                  ((uint)civs[uVar4].units_active[0] + (uint)civs[uVar4].units_active[1] ==
+                  ((uint)civs[civ].units_active[0] + (uint)civs[civ].units_active[1] ==
                    local_120)) && (local_21c[1] + local_21c[0] < 2)))) &&
-               ('\x01' < cities[param_1].size)))))) &&
-            (((local_f4 != 2 || (civs[uVar4].government < 2)) &&
-             (((char)unit_types[local_f4].attack < 'c' ||
-              ((*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) < 4 &&
-               (*(byte *)(local_f4 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + uVar4 * 0x594) < 2)))))))) &&
+               (1 < cities[city].size)))))) &&
+            (((unit_type != 2 || (civs[civ].government < 2)) &&
+             (((char)unit_types[unit_type].attack < 'c' ||
+              ((civs[civ].units_active[unit_type] < 4 &&
+               (civs[civ].units_in_production[unit_type] < 2)))))))) &&
            ((local_e8 != 3 ||
-            (((uint)civs[uVar4].units_active[0x1b] + (uint)civs[uVar4].units_in_production[0x1b] +
-              (uint)civs[uVar4].units_active[0x1e] + (uint)civs[uVar4].units_in_production[0x1e] <
+            (((uint)civs[civ].units_active[0x1b] + (uint)civs[civ].units_in_production[0x1b] +
+              (uint)civs[civ].units_active[0x1e] + (uint)civs[civ].units_in_production[0x1e] <
               (uint)civs[game.field_138].units_active[0x1c] +
               (uint)civs[game.field_138].units_active[0x1d] +
               (uint)civs[game.field_138].units_active[0x1f] + 2 &&
-             (((*(byte *)(uVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + (uint)game.field_138 * 4) & 4) == 0 ||
-              ((uint)*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) +
-               (uint)*(byte *)(local_f4 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + uVar4 * 0x594) == 0)))))))) {
-          if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) {
-            if (local_f4 == 2) {
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[3].prerequisite);
+             (((*(byte *)&civs[civ].treaties[((uint)game.field_138)] & 4) == 0 ||
+              ((uint)civs[civ].units_active[unit_type] +
+               (uint)civs[civ].units_in_production[unit_type] == 0)))))))) {
+          if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
+            if (unit_type == 2) {
+              iVar6 = civ_has_advance(civ,(int)unit_types[3].prerequisite);
             }
-            else if (local_f4 == 4) {
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[5].prerequisite);
+            else if (unit_type == 4) {
+              iVar6 = civ_has_advance(civ,(int)unit_types[5].prerequisite);
             }
             else {
-              if (local_f4 != 0xf) goto LAB_0049eee7;
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x10].prerequisite);
+              if (unit_type != 0xf) goto LAB_0049eee7;
+              iVar6 = civ_has_advance(civ,(int)unit_types[0x10].prerequisite);
               if (iVar6 != 0) goto LAB_0049ea9e;
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x11].prerequisite);
+              iVar6 = civ_has_advance(civ,(int)unit_types[0x11].prerequisite);
             }
             if (iVar6 != 0) goto LAB_0049ea9e;
           }
 LAB_0049eee7:
-          if (local_f4 == 0x10) {
-            iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x13].prerequisite);
+          if (unit_type == 0x10) {
+            iVar6 = civ_has_advance(civ,(int)unit_types[0x13].prerequisite);
             if (iVar6 == 0) {
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x12].prerequisite);
+              iVar6 = civ_has_advance(civ,(int)unit_types[0x12].prerequisite);
               goto joined_r0x0049ef35;
             }
           }
           else {
-            if (local_f4 == 0x11) {
-              iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x13].prerequisite);
+            if (unit_type == 0x11) {
+              iVar6 = civ_has_advance(civ,(int)unit_types[0x13].prerequisite);
 joined_r0x0049ef35:
               if (iVar6 != 0) goto LAB_0049ea9e;
             }
-            if (unit_types[local_f4].domain == '\0') {
-              local_1c = local_21c[local_f4] * 2 + aiStack_364[local_f4];
-              if ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0) {
+            if (unit_types[unit_type].domain == '\0') {
+              local_1c = local_21c[unit_type] * 2 + aiStack_364[unit_type];
+              if ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0) {
                 local_1c = (int)local_1c / 2;
-                if (((local_f4 == 0xc) || (local_f4 == 10)) || (local_f4 == 9)) {
-                  local_1c = local_1c + 2;
+                if (((unit_type == 0xc) || (unit_type == 10)) || (unit_type == 9)) {
+                  local_1c += 2;
                 }
               }
-              if (local_f4 == 4) {
+              if (unit_type == 4) {
                 local_1c = local_1c + local_21c[5] * 2 + aiStack_364[5];
               }
-              if (leaders[civs[uVar4].tribe].attack < '\0') {
-                if (local_f4 == 0x13) {
+              if (leaders[civs[civ].tribe].attack < '\0') {
+                if (unit_type == 0x13) {
                   local_1c = local_1c + local_21c[0x12] * 2 + aiStack_364[0x12];
                 }
               }
-              else if (local_f4 == 0x12) {
+              else if (unit_type == 0x12) {
                 local_1c = local_1c + local_21c[0x13] * 2 + aiStack_364[0x13];
               }
-              if ((unit_types[local_f4].role == '\0') && (unit_types[local_f4].attack == '\0')) {
+              if ((unit_types[unit_type].role == '\0') && (unit_types[unit_type].attack == '\0')) {
                 if ((local_f8 != 0) && (local_f8 != 1)) {
                   if (local_f8 == 4) {
                     local_374 = 1;
@@ -4947,36 +4919,36 @@ joined_r0x0049ef35:
                   else {
                     local_374 = (*(short *)(&landmass_table + local_fc * 0x10) + 199) / 200;
                   }
-                  if ((local_21c[local_f4] * 2 + aiStack_364[local_f4] <= local_374) &&
-                     (*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) < 2)) goto LAB_0049f199;
+                  if ((local_21c[unit_type] * 2 + aiStack_364[unit_type] <= local_374) &&
+                     (civs[civ].units_active[unit_type] < 2)) goto LAB_0049f199;
                 }
               }
               else {
 LAB_0049f199:
                 if (local_f8 == 4) {
-                  local_d0 = 1 - (int)leaders[civs[uVar4].tribe].expand;
-                  if (unit_types[local_f4].role != '\x05') {
+                  local_d0 = 1 - (int)leaders[civs[civ].tribe].expand;
+                  if (unit_types[unit_type].role != 5) {
                     local_d0 = local_d0 * 2;
                   }
                   if (local_34 != 0) {
                     local_d0 = (int)local_d0 / 2;
                   }
-                  local_1c = local_1c + local_d0;
-                  if ((local_34 != 0) && (unit_types[local_f4].role == '\0')) {
-                    local_d0 = (int)leaders[civs[uVar4].tribe].attack + 1;
-                    iVar6 = thunk_civ_has_advance(uVar4,(int)unit_types[0x2b].prerequisite);
+                  local_1c += local_d0;
+                  if ((local_34 != 0) && (unit_types[unit_type].role == '\0')) {
+                    local_d0 = (int)leaders[civs[civ].tribe].attack + 1;
+                    iVar6 = civ_has_advance(civ,(int)unit_types[0x2b].prerequisite);
                     if (iVar6 != 0) {
                       local_d0 = local_d0 << 1;
                     }
-                    local_1c = thunk_int_clamp(local_1c - local_d0,0,99);
+                    local_1c = int_clamp(local_1c - local_d0,0,99);
                   }
                 }
 LAB_0049f3ea:
-                if ((unit_types[local_f4].flags & 0x100) != 0) {
+                if ((unit_types[unit_type].flags & 0x100) != 0) {
                   local_e8 = 0;
                 }
                 if ((local_80 != 0) &&
-                   (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0 || (citypref_no_defend == 0))))
+                   (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0 || (citypref_no_defend == 0))))
                 {
                   if (local_e8 == 1) {
                     local_1c = (uint)(2 / (longlong)local_80);
@@ -4992,13 +4964,13 @@ LAB_0049f3ea:
                   uVar8 = local_1c << 2;
                 }
                 local_1c = uVar8;
-                if (((local_f4 != 9) ||
+                if (((unit_type != 9) ||
                     ((local_80 == 0 &&
-                     ((*(byte *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) & 0x10) != 0)))) &&
-                   ((unit_types[local_f4].domain != '\x02' ||
-                    ((((iVar6 = thunk_city_adjacent_sea_info(param_1,0,0), iVar6 != 0x3f &&
-                       ((cities[param_1].flags & 0x80) != 0)) && (iVar6 != 0)) &&
-                     ((iVar10 = thunk_landmass_count_bordering(iVar6), 1 < iVar10 ||
+                     ((civs[civ].continent_flags[local_fc] & 0x10) != 0)))) &&
+                   ((unit_types[unit_type].domain != 2 ||
+                    ((((iVar6 = city_adjacent_sea_info(city,0,0), iVar6 != 0x3f &&
+                       ((cities[city].flags & 0x80) != 0)) && (iVar6 != 0)) &&
+                     ((iVar10 = landmass_count_bordering(iVar6), 1 < iVar10 ||
                       (((local_e8 != 4 && (0x2f < *(short *)(&water_body_sizes + iVar6 * 0x10))) &&
                        (iVar6 < 0x3f)))))))))) {
                   if (local_e8 == 4) {
@@ -5007,81 +4979,80 @@ LAB_0049f3ea:
                     }
                     else {
                       if ((local_f8 == 1) ||
-                         (*(char *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) != '\0'))
+                         (*(char *)&civs[civ].units_active[unit_type] != '\0'))
                       goto LAB_0049ea9e;
-                      if (local_f4 != 0x2b) {
+                      if (unit_type != 0x2b) {
                         local_1c = local_1c * 2 << ((byte)local_b0 & 0x1f);
                       }
                     }
                   }
                   if (local_e8 == 5) {
-                    iVar6 = thunk_city_has_improvement(param_1,3);
-                    if ((iVar6 == 0) && (iVar6 = thunk_civ_has_wonder(uVar4,0), iVar6 == 0)) {
+                    iVar6 = city_has_improvement(city,3);
+                    if ((iVar6 == 0) && (iVar6 = civ_has_wonder(civ,0), iVar6 == 0)) {
                       local_378 = 6;
                     }
                     else {
                       local_378 = 4;
                     }
-                    iVar3 = local_f4;
-                    if (aiStack_364[local_f4] < (int)((civs[uVar4].government + 1) / 2)) {
-                      cVar2 = leaders[civs[uVar4].tribe].civilize;
+                    iVar3 = unit_type;
+                    if (aiStack_364[unit_type] < (int)((civs[civ].government + 1) / 2)) {
+                      cVar2 = leaders[civs[civ].tribe].civilize;
                     }
                     else {
-                      cVar2 = leaders[civs[uVar4].tribe].expand;
+                      cVar2 = leaders[civs[civ].tribe].expand;
                     }
                     local_1c = ((local_378 - cVar2) - local_100) * local_1c;
                     if (city_settlers_supported != 0) {
                       local_11c = 8;
-                      if (cities[param_1].size < '\x04') {
+                      if (cities[city].size < 4) {
                         local_11c = 0x10;
                       }
-                      for (local_50 = 0; local_50 < city_settlers_supported; local_50 = local_50 + 1) {
-                        local_1c = local_1c + (local_50 + 1) * local_11c;
+                      for (unit_type2 = 0; unit_type2 < city_settlers_supported; unit_type2++) {
+                        local_1c += (unit_type2 + 1) * local_11c;
                       }
                     }
-                    if (cities[param_1].size < '\x02') {
+                    if (cities[city].size < 2) {
                       local_1c = local_1c << 1;
                     }
-                    if ((aiStack_364[local_f4] == 0) && (settler_food_cost == local_220)) {
-                      local_1c = local_1c - (int)local_1c / 2;
+                    if ((aiStack_364[unit_type] == 0) && (settler_food_cost == local_220)) {
+                      local_1c -= (int)local_1c / 2;
                     }
                     if (local_80 < 2) {
-                      if (local_21c[local_f4] == 0) {
-                        if (civs[uVar4].government < 5) {
-                          if (1 < civs[uVar4].government) {
-                            iVar6 = thunk_int_clamp((int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) +
-                                                                           uVar4 * 0x594) >> 1,1,3);
-                            if (aiStack_364[local_f4] < iVar6) {
+                      if (local_21c[unit_type] == 0) {
+                        if (civs[civ].government < 5) {
+                          if (1 < civs[civ].government) {
+                            iVar6 = int_clamp((int)(uint)civs[civ].continent_cities[local_fc] >> 1,1,3);
+                            if (aiStack_364[unit_type] < iVar6) {
                               local_1c = (int)local_1c / 2;
                             }
-                            if (aiStack_364[local_f4] <
-                                (int)(*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) / 5)) {
+                            if (aiStack_364[unit_type] <
+                                (int)(civs[civ].continent_cities[local_fc] / 5)) {
                               local_1c = (int)local_1c / 2;
                             }
                           }
                         }
                         else {
-                          iVar6 = thunk_int_clamp(*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594)
+                          iVar6 = int_clamp(civs[civ].continent_cities[local_fc]
                                                      - 1,1,6);
                           if (aiStack_364[iVar3] < iVar6) {
                             local_1c = (int)local_1c / 2;
                           }
-                          if (aiStack_364[local_f4] <
-                              (int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) >> 2) {
+                          if (aiStack_364[unit_type] <
+                              (int)(uint)civs[civ].continent_cities[local_fc] >> 2) {
                             local_1c = (int)local_1c / 2;
                           }
                         }
                       }
-                      if (((aiStack_364[local_f4] == 0) && (local_21c[local_f4] == 0)) &&
+                      if (((aiStack_364[unit_type] == 0) && (local_21c[unit_type] == 0)) &&
                          (local_1c = (int)local_1c / 2, local_f8 != 4)) {
-                        local_10 = leaders[civs[uVar4].tribe].expand + 3;
+                        local_10 = leaders[civs[civ].tribe].expand + 3;
                         if (local_f8 == 1) {
-                          local_10 = leaders[civs[uVar4].tribe].expand + 2;
+                          local_10 = leaders[civs[civ].tribe].expand + 2;
                         }
                         if (local_f8 == 5) {
-                          local_10 = local_10 + 1;
+                          local_10++;
                         }
-                        if ((int)(uint)*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) < local_10) {
+                        if ((int)(uint)civs[civ].continent_cities[local_fc] < local_10) {
                           local_1c = 0;
                         }
                       }
@@ -5090,9 +5061,9 @@ LAB_0049f3ea:
                   else {
                     local_1c = local_1c << 4;
                   }
-                  local_1c = ((char)unit_types[local_f4].cost + 2) * local_1c;
-                  if ((unit_types[local_f4].attack == '\0') &&
-                     (unit_types[local_f4].defense == '\0')) {
+                  local_1c = ((char)unit_types[unit_type].cost + 2) * local_1c;
+                  if ((unit_types[unit_type].attack == '\0') &&
+                     (unit_types[unit_type].defense == '\0')) {
                     local_1c = 0;
                   }
                   else {
@@ -5100,28 +5071,28 @@ LAB_0049f3ea:
                       local_38 = 2;
                     }
                     else {
-                      local_38 = thunk_int_clamp((int)(char)unit_types[local_f4].hit_points / 10
-                                                    + (int)(char)unit_types[local_f4].firepower,2,4)
+                      local_38 = int_clamp((int)(char)unit_types[unit_type].hit_points / 10
+                                                    + (int)(char)unit_types[unit_type].firepower,2,4)
                       ;
                     }
-                    local_25c = ((int)(char)unit_types[local_f4].attack +
-                                (int)(char)unit_types[local_f4].defense) * local_38;
-                    if ((unit_types[local_f4].flags & 0x400) != 0) {
-                      local_25c = local_25c + 1;
+                    local_25c = ((int)(char)unit_types[unit_type].attack +
+                                (int)(char)unit_types[unit_type].defense) * local_38;
+                    if ((unit_types[unit_type].flags & 0x400) != 0) {
+                      local_25c++;
                     }
-                    if (local_f4 == 9) {
-                      local_25c = local_25c + 1;
+                    if (unit_type == 9) {
+                      local_25c++;
                     }
                     local_1c = (int)local_1c /
-                               ((((int)(char)unit_types[local_f4].move /
+                               ((((int)(char)unit_types[unit_type].move /
                                   (int)(uint)cosmic.road_move_mult + 1) * local_25c) / 2);
                   }
                   if (local_e8 == 2) {
                     if ((game.game_flags & 4) != 0) {
-                      local_1c = local_1c - ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
+                      local_1c -= ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
                     }
                     if ((local_f8 == 4) && (0 < (int)local_1c)) {
-                      local_1c = local_1c - ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
+                      local_1c -= ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
                     }
                     if (local_b0 == 0) {
                       local_1c = local_1c << 1;
@@ -5129,20 +5100,20 @@ LAB_0049f3ea:
                     else {
                       local_1c = local_1c << 2;
                     }
-                    iVar6 = thunk_city_has_improvement(param_1,0x22);
+                    iVar6 = city_has_improvement(city,0x22);
                     if (iVar6 != 0) {
-                      local_1c = local_1c - ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
+                      local_1c -= ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
                     }
                   }
-                  if (unit_types[local_f4].domain == '\x01') {
+                  if (unit_types[unit_type].domain == 1) {
                     local_1c = local_1c << 1;
-                    iVar6 = thunk_city_has_improvement(param_1,0x20);
+                    iVar6 = city_has_improvement(city,0x20);
                     if (iVar6 != 0) {
-                      local_1c = local_1c - ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
+                      local_1c -= ((int)(local_1c + ((int)local_1c >> 0x1f & 3U)) >> 2);
                     }
                   }
                   if (local_e8 == 1) {
-                    local_1c = local_1c - (local_3c + 1 >> 1);
+                    local_1c -= (local_3c + 1 >> 1);
                   }
                   if (0x77 < local_124) {
                     local_1c = local_1c << 2;
@@ -5154,14 +5125,14 @@ LAB_0049f3ea:
                                   city_total_shields;
                     }
                     if (local_e8 == 5) {
-                      if ((((uint)*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) - local_4c) +
-                           local_21c[local_f4] == 0) &&
-                         (3 - leaders[civs[uVar4].tribe].expand < (int)cities[param_1].size)) {
+                      if ((((uint)civs[civ].units_active[unit_type] - local_4c) +
+                           local_21c[unit_type] == 0) &&
+                         (3 - leaders[civs[civ].tribe].expand < (int)cities[city].size)) {
                         local_11c = 0;
                         if (city_total_shields <=
-                            (int)((uint)(-1 < leaders[civs[uVar4].tribe].expand) + city_shield_support * 2)
+                            (int)((uint)(-1 < leaders[civs[civ].tribe].expand) + city_shield_support * 2)
                            ) {
-                          local_1c = local_1c - (int)local_1c / 3;
+                          local_1c -= (int)local_1c / 3;
                         }
                       }
                       else {
@@ -5169,37 +5140,37 @@ LAB_0049f3ea:
                       }
                     }
                     else if (((local_b0 == 0) && (city_total_shields <= city_support_unit_count)) ||
-                            ((civs[uVar4].flags & 2) == 0)) {
+                            ((civs[civ].flags & 2) == 0)) {
                       local_1c = local_1c << 1;
                     }
-                    local_1c = local_1c + local_11c;
+                    local_1c += local_11c;
                   }
-                  if (((local_e8 == 1) && ((1 << (bVar1 & 0x1f) & (uint)game.human_players) != 0))
+                  if (((local_e8 == 1) && ((1 << (civ5 & 0x1f) & (uint)game.human_players) != 0))
                      && (citypref_no_defend != 0)) {
                     local_1c = 999;
                   }
                   if (((int)local_1c < local_30) ||
-                     (((local_58 < 0 && ((cities[param_1].flags & 1) == 0)) &&
+                     (((local_58 < 0 && ((cities[city].flags & 1) == 0)) &&
                       ((1 < local_80 ||
                        (((local_264 != 0 && (local_d8 < 2)) &&
-                        ((*(byte *)(local_fc + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar4 * 0x594) & 0x10) != 0)))))))) {
+                        ((civs[civ].continent_flags[local_fc] & 0x10) != 0)))))))) {
                     local_30 = local_1c;
-                    local_58 = local_f4;
+                    local_58 = unit_type;
                   }
                   if ((int)local_1c < local_26c) {
                     local_26c = local_1c;
-                    local_240 = local_f4;
+                    local_240 = unit_type;
                   }
                 }
               }
             }
-            else if ((ushort)(((*(byte *)(local_fc + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar4 * 0x594) < 2) - 1 & 4) + 4) <=
-                     *(ushort *)(uVar4 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_fc * 2)) {
-              local_1c = (int)(((uint)*(byte *)(local_f4 + ADDR(0x64c778, ((u8 *)&civs + 216)) + uVar4 * 0x594) +
-                               (uint)*(byte *)(local_f4 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + uVar4 * 0x594) * 2) *
-                              (uint)*(ushort *)(uVar4 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_fc * 2)) /
+            else if ((ushort)(((civs[civ].continent_cities[local_fc] < 2) - 1 & 4) + 4) <=
+                     civs[civ].continent_military[local_fc]) {
+              local_1c = (int)(((uint)civs[civ].units_active[unit_type] +
+                               (uint)civs[civ].units_in_production[unit_type] * 2) *
+                              (uint)civs[civ].continent_military[local_fc]) /
                          (local_124 + 1);
-              if (((unit_types[local_f4].flags & 0x4000) != 0) &&
+              if (((unit_types[unit_type].flags & 0x4000) != 0) &&
                  (local_1c = local_1c - civs[game.field_138].units_active[0x29], (int)local_1c < 1))
               {
                 local_1c = 0;
@@ -5224,38 +5195,38 @@ LAB_0049ea9e: ;
   if (param_2 != 0) {
     *(iptr *)param_2 = local_240;
   }
-  if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) ||
-     ((cities[param_1].flags & 0x10) == 0)) {
-    if (((1 << (bVar1 & 0x1f) & (uint)game.human_players) == 0) && (cities[param_1].building == -1))
+  if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) ||
+     ((cities[city].flags & 0x10) == 0)) {
+    if (((1 << (civ5 & 0x1f) & (uint)game.human_players) == 0) && (cities[city].building == -1))
     {
       local_58 = -1;
     }
-    else if ((local_58 < -0x26) && (iVar6 = thunk_city_has_improvement(param_1,4), iVar6 == 0)) {
+    else if ((local_58 < -0x26) && (iVar6 = city_has_improvement(city,4), iVar6 == 0)) {
       local_58 = -4;
     }
-    else if ((cities[param_1].building < -0x26) &&
-            (((local_f0 == 0 && (-0x27 < local_58)) && ((cities[param_1].flags & 0x2000) == 0)))) {
-      if (cities[param_1].building < '\x01') {
-        local_380 = ~(int)cities[param_1].building + 1;
+    else if ((cities[city].building < -0x26) &&
+            (((local_f0 == 0 && (-0x27 < local_58)) && ((cities[city].flags & 0x2000) == 0)))) {
+      if (cities[city].building < 1) {
+        local_380 = ~(int)cities[city].building + 1;
       }
       else {
-        local_380 = (iptr)cities[param_1].building;
+        local_380 = (iptr)cities[city].building;
       }
-      local_74 = local_380 + -0x27;
-      if (((local_80 < 2) && (iVar6 = thunk_wonder_is_expired(local_74), iVar6 == 0)) &&
+      local_74 = local_380 - 0x27;
+      if (((local_80 < 2) && (iVar6 = wonder_is_expired(local_74), iVar6 == 0)) &&
          ((game.wonder_city[local_74] == -1 &&
-          ((local_264 == 0 || ((cities[param_1].flags & 0x20) == 0)))))) {
+          ((local_264 == 0 || ((cities[city].flags & 0x20) == 0)))))) {
         uVar7 = 1;
-        iVar9 = thunk_tile_first_unit((int)cities[param_1].x,(int)cities[param_1].y);
-        iVar6 = thunk_unit_stack_count_role(iVar9,uVar7);
+        unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
+        iVar6 = unit_stack_count_role(unit2,uVar7);
         if (1 < iVar6) {
-          local_58 = (iptr)cities[param_1].building;
+          local_58 = (iptr)cities[city].building;
         }
       }
     }
   }
-  else if ((cities[param_1].flags & 0x1000000) == 0) {
-    if ((cities[param_1].flags & 0x2000000) == 0) {
+  else if ((cities[city].flags & 0x1000000) == 0) {
+    if ((cities[city].flags & 0x2000000) == 0) {
       if (500 < local_30) {
         local_58 = 99;
       }
@@ -5291,20 +5262,20 @@ LAB_0049ea9e: ;
 #undef local_264
 #undef local_260
 #undef local_25c
-#undef local_258
+#undef unit
 #undef local_254
 #undef local_250
 #undef local_24c
 #undef local_248
-#undef local_244
+#undef improvement
 #undef local_240
 #undef local_23c
 #undef local_238
 #undef local_234
 #undef local_230
 #undef local_22c
-#undef local_228
-#undef local_224
+#undef civ3
+#undef city2
 #undef local_220
 #undef local_21c
 #undef local_124
@@ -5319,13 +5290,13 @@ LAB_0049ea9e: ;
 #undef local_100
 #undef local_fc
 #undef local_f8
-#undef local_f4
+#undef unit_type
 #undef local_f0
-#undef local_ec
+#undef y2
 #undef local_e8
 #undef local_e4
 #undef local_e0
-#undef local_dc
+#undef x2
 #undef local_d8
 #undef local_d4
 #undef local_d0
@@ -5341,12 +5312,12 @@ LAB_0049ea9e: ;
 #undef local_90
 #undef local_8c
 #undef local_88
-#undef local_84
+#undef unit3
 #undef local_80
-#undef local_7c
+#undef terrain2
 #undef local_78
 #undef local_74
-#undef local_70
+#undef civ2
 #undef local_6c
 #undef local_68
 #undef local_64
@@ -5354,10 +5325,10 @@ LAB_0049ea9e: ;
 #undef local_5c
 #undef local_58
 #undef local_54
-#undef local_50
+#undef unit_type2
 #undef local_4c
 #undef local_48
-#undef local_44
+#undef civ4
 #undef local_40
 #undef local_3c
 #undef local_38

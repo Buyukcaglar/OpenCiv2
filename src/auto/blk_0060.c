@@ -58,9 +58,9 @@ ___crtGetStringTypeW
           param_6 = DAT_0063a078;
         }
         local_10[param_3] = 0xffff;
-        local_10[param_3 + -1] = local_10[param_3];
+        local_10[param_3 - 1] = local_10[param_3];
         GetStringTypeA(param_6,param_1,lpMultiByteStr,cbMultiByte,local_10);
-        if ((local_10[param_3 + -1] != 0xffff) && (local_10[param_3] == 0xffff)) {
+        if ((local_10[param_3 - 1] != 0xffff) && (local_10[param_3] == 0xffff)) {
           FUN_005f6500(param_4,local_10,param_3 * 2);
         }
       }
@@ -341,7 +341,7 @@ ___crtCompareStringA
             return 3;
           }
           if ((*local_30 <= *(byte *)_DwCmpFlags) && (*(byte *)_DwCmpFlags <= local_30[1])) break;
-          local_30 = local_30 + 2;
+          local_30 += 2;
         }
         return 2;
       }
@@ -355,7 +355,7 @@ ___crtCompareStringA
             return 1;
           }
           if ((*local_30 <= *(byte *)_CchCount1) && (*(byte *)_CchCount1 <= local_30[1])) break;
-          local_30 = local_30 + 2;
+          local_30 += 2;
         }
         return 2;
       }

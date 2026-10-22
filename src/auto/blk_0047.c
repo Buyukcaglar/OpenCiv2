@@ -21,17 +21,17 @@ void __cdecl endgame_defeat_movie(iptr param_1)
     local_18 = (SpaceshipWindow *)0x0;
   }
   else {
-    local_18 = (SpaceshipWindow *)thunk_defeat_movie_wnd_ctor(this);
+    local_18 = (SpaceshipWindow *)defeat_movie_wnd_ctor(this);
   }
   local_8 = 0xffffffff;
   endgame_movie_window = local_18;
   if (local_18 != (SpaceshipWindow *)0x0) {
-    iVar1 = thunk_defeat_movie_wnd_create(local_18,param_1);
+    iVar1 = defeat_movie_wnd_create(local_18,param_1);
     if (iVar1 != 0) {
-      thunk_defeat_movie_wnd_play(endgame_movie_window);
+      defeat_movie_wnd_play(endgame_movie_window);
     }
     if (endgame_movie_window != (SpaceshipWindow *)0x0) {
-      thunk_defeat_movie_wnd_scalar_dtor((WndBase *)endgame_movie_window,1);
+      defeat_movie_wnd_scalar_dtor((WndBase *)endgame_movie_window,1);
     }
     endgame_movie_window = (SpaceshipWindow *)0x0;
   }
@@ -53,15 +53,15 @@ SpaceshipWindow * __thiscall defeat_movie_wnd_ctor(SpaceshipWindow *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((C_00408010_b8 *)this);
   local_8 = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   mmwnd_ctor((C_004083b0_a28 *)(this->pad_1e4 + 0x308));
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  thunk_dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
+  dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  thunk_font_init_empty((GameFont *)this->pad_f1c);
+  font_init_empty((GameFont *)this->pad_f1c);
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),4);
   surface_ctor((DibSurface *)(this[1].pad_1e4 + 0x188));
   this->advance_civ = 0;
@@ -84,15 +84,15 @@ void __thiscall defeat_movie_wnd_dtor(void *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0047056b */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1324)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_0047057a */ { thunk_font_destroy((GameFont *)(*(int *)((iptr)&this) + 0xf1c)); }
+  /* inlined unwind funclet FUN_0047057a */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0xf1c)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_00470589 */ { thunk_dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
+  /* inlined unwind funclet FUN_00470589 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_00470598 */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x4ec)); }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004705a7 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004705b6 */ { thunk_wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_004705b6 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -117,23 +117,23 @@ undefined4 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint param_1
   undefined1 frame_[FRAME_OFF(416)] __attribute__((aligned(8)));  /* original stack frame */
   
   gfx_get_screen_rect((iptr)&local_98);
-  thunk_str_clear((iptr)local_84);
-  thunk_str_append((iptr)local_84,ADDR(0x655020, ((u8 *)&g.d_00655020)));
-  thunk_str_append((iptr)local_84,ADDR(0x62b808, ((u8 *)&g.d_0062b808)));
+  str_clear((iptr)local_84);
+  str_append((iptr)local_84,ADDR(0x655020, ((u8 *)&g.d_00655020)));
+  str_append((iptr)local_84,ADDR(0x62b808, ((u8 *)&g.d_0062b808)));
   HVar1 = OpenFile(local_84,&local_120,0x4000);
   if (HVar1 == -1) {
     uVar2 = 0;
   }
   else {
-    thunk_str_clear((iptr)local_1a0);
-    thunk_str_append((iptr)local_1a0,ADDR(0x655020, ((u8 *)&g.d_00655020)));
-    thunk_str_append((iptr)local_1a0,ADDR(0x62b814, ((u8 *)&g.d_0062b814)));
+    str_clear((iptr)local_1a0);
+    str_append((iptr)local_1a0,ADDR(0x655020, ((u8 *)&g.d_00655020)));
+    str_append((iptr)local_1a0,ADDR(0x62b814, ((u8 *)&g.d_0062b814)));
     HVar1 = OpenFile(local_1a0,&local_120,0x4000);
     if (HVar1 == -1) {
       uVar2 = 0;
     }
     else {
-      thunk_dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)local_1a0);
+      dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)local_1a0);
       if ((int)param_1 < 1) {
         this->advance_civ = ~param_1 + 1;
       }
@@ -143,7 +143,7 @@ undefined4 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint param_1
       wnd_create_with_handlers
                 ((WndBase *)this,ADDR(0x62b824, ((u8 *)&g.d_0062b824)),0x800,local_98,local_94,local_90 - local_98,
                  (local_8c - local_94) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-      thunk_wnd_set_bg_color((WndBase *)this,0);
+      wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
                 ((DibSurface *)(this->pad_1e4 + 0x308),4000,10,0xec,(iptr)&this->control_list);
       avi_player_create((C_004083b0_61c *)(this->pad_1e4 + 0x308),ADDR(0x62b828, ((u8 *)&g.d_0062b828)),0x800,0,0);
@@ -151,21 +151,21 @@ undefined4 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint param_1
       local_88 = avi_player_open((AviPlayerOpenView *)(this->pad_1e4 + 0x308),(iptr)local_84);
       if (local_88 == 0) {
         surface_fill((DibSurface *)(this->pad_1e4 + 0x308),0);
-        thunk_wnd_center((WndCenterView *)(this->pad_504 + 0x30));
-        thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x402630, defeat_movie_on_video_end));
+        wnd_center((WndCenterView *)(this->pad_504 + 0x30));
+        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x402630, defeat_movie_on_video_end));
         SetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),0x28,100,600,0x1e0);
-        uVar2 = thunk_surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
-        uVar3 = thunk_surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
+        uVar2 = surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
+        uVar3 = surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
         surface_create((DibSurface *)(this[1].pad_1e4 + 0x188),uVar3,uVar2);
         avi_player_draw_to
                   ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x188),0,0);
-        thunk_font_set_styled((GameFont *)this->pad_f1c,0,0x12,2);
-        thunk_dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
+        font_set_styled((GameFont *)this->pad_f1c,0,0x12,2);
+        dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
         uVar2 = 1;
       }
       else {
         if (local_88 == -0x7ffbfeac) {
-          thunk_popup_game(ADDR(0x62b82c, ((u8 *)&g.d_0062b82c)));
+          popup_game(ADDR(0x62b82c, ((u8 *)&g.d_0062b82c)));
         }
         uVar2 = 0;
       }
@@ -184,7 +184,7 @@ undefined4 __thiscall defeat_movie_wnd_create(SpaceshipWindow *this,uint param_1
 
 /* 004708db auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
 
@@ -194,36 +194,36 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
   char *pcVar3;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_music_play_track(2,1);
-  thunk_wnd_handle_show_raise((WndBase *)this);
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-  thunk_window_show((C_004083b0_4 *)(this->pad_1e4 + 0x308));
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
+  music_play_track(2,1);
+  wnd_handle_show_raise((WndBase *)this);
+  wnd_flush_paint();
+  wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
+  window_show((C_004083b0_4 *)(this->pad_1e4 + 0x308));
+  wnd_flush_paint();
+  wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
   gfx_set_text_color_index(0xff);
-  local_c = 0;
-  while ((local_c < 100 && (iVar1 = thunk_civ_has_advance(this->advance_civ,local_c), iVar1 == 0))) {
-    local_c = local_c + 1;
+  advance = 0;
+  while ((advance < 100 && (iVar1 = civ_has_advance(this->advance_civ,advance), iVar1 == 0))) {
+    advance++;
   }
-  iVar2 = thunk_label_string(advances[local_c].name);
-  thunk_text_set_string_arg(0,iVar2);
+  iVar2 = label_string(advances[advance].name);
+  text_set_string_arg(0,iVar2);
   CharLowerA(&text_string_args);
-  iVar2 = thunk_civ_leader_name(this->advance_civ);
-  thunk_text_set_string_arg(1,iVar2);
-  for (local_8 = 0; local_8 < 3; local_8 = local_8 + 1) {
-    thunk_str_clear((iptr)(this->pad_f1c + 8));
-    thunk_text_clear();
-    thunk_text_append(ADDR(0x62b840, ((u8 *)&g.d_0062b840)));
-    thunk_text_append_int(local_8);
-    iVar1 = thunk_text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar2 = civ_leader_name(this->advance_civ);
+  text_set_string_arg(1,iVar2);
+  for (local_8 = 0; local_8 < 3; local_8++) {
+    str_clear((iptr)(this->pad_f1c + 8));
+    text_clear();
+    text_append(ADDR(0x62b840, ((u8 *)&g.d_0062b840)));
+    text_append_int(local_8);
+    iVar1 = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
     if (iVar1 == 0) {
-      while (pcVar3 = (char *)thunk_text_read_line(1), *pcVar3 != '@') {
-        thunk_str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
-        thunk_str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b850, ((u8 *)&g.d_0062b850)));
+      while (pcVar3 = (char *)text_read_line(1), *pcVar3 != '@') {
+        str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
+        str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b850, ((u8 *)&g.d_0062b850)));
       }
-      thunk_text_clear();
-      thunk_text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      text_clear();
+      text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
       surface_blit
                 ((DibSurface *)(this[1].pad_1e4 + 0x188),(iptr)(this->pad_1e4 + 0x308),
                  (iptr)(this[1].pad_1e4 + 0x1d0),(iptr)(this[1].pad_1e4 + 0x1d0));
@@ -237,35 +237,28 @@ void __thiscall defeat_movie_wnd_play(SpaceshipWindow *this)
       surface_draw_text_rect
                 ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
                  (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      thunk_gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
-      thunk_text_close_file();
-      thunk_ui_delay_ticks(0x168);
+      gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
+      text_close_file();
+      ui_delay_ticks(0x168);
     }
   }
   avi_player_play((AviPlayerPlayView *)(this->pad_1e4 + 0x308));
   if (2 < game.multiplayer) {
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
   }
   wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x30));
-  thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),0);
-  thunk_wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
-  thunk_wnd_hide((WndBase *)(this->pad_504 + 0x30));
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-  thunk_wnd_hide((WndBase *)this);
-  thunk_wnd_flush_paint();
+  wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),0);
+  wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_hide((WndBase *)(this->pad_504 + 0x30));
+  wnd_flush_paint();
+  wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  wnd_hide((WndBase *)this);
+  wnd_flush_paint();
   return;
 }
 #undef text_line_cursor
-#undef local_c
+#undef advance
 #undef local_8
-
-/* 00470c0c auto */
-void __cdecl FUN_00470c0c(void)
-
-{
-  return;
-}
 
 /* 00470c1c auto */
 #define endgame_movie_window (*(int *)((u8 *)&g.d_0062b804))
@@ -277,27 +270,27 @@ void __cdecl defeat_movie_on_video_end(void)
   int iVar1;
   char *pcVar2;
   
-  thunk_str_clear(endgame_movie_window + 0xf24);
-  thunk_text_clear();
-  iVar1 = thunk_text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x62b854, ((u8 *)&g.d_0062b854)));
+  str_clear(endgame_movie_window + 0xf24);
+  text_clear();
+  iVar1 = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x62b854, ((u8 *)&g.d_0062b854)));
   if (iVar1 == 0) {
     while( true ) {
-      pcVar2 = (char *)thunk_text_read_line(1);
+      pcVar2 = (char *)text_read_line(1);
       if (*pcVar2 == '@') break;
-      thunk_str_append(endgame_movie_window + 0xf24,text_line_cursor);
-      thunk_str_append(endgame_movie_window + 0xf24,ADDR(0x62b864, ((u8 *)&g.d_0062b864)));
+      str_append(endgame_movie_window + 0xf24,text_line_cursor);
+      str_append(endgame_movie_window + 0xf24,ADDR(0x62b864, ((u8 *)&g.d_0062b864)));
     }
-    thunk_text_expand_vars(endgame_movie_window + 0xf24,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    text_expand_vars(endgame_movie_window + 0xf24,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     CharUpperA(&text_buffer);
-    thunk_rect_set_xywh(endgame_movie_window + 0x136c,0xe5,0x4c,200,0x85);
+    rect_set_xywh(endgame_movie_window + 0x136c,0xe5,0x4c,200,0x85);
     gfx_set_text_color_index(0);
     surface_draw_text_rect
               ((DibSurface *)(endgame_movie_window + 0x4ec),endgame_movie_window + 0xf1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
                endgame_movie_window + 0x136c,0);
-    thunk_gfx_dissolve_blit(endgame_movie_window + 0x4ec,endgame_movie_window + 0x136c,4,5);
-    thunk_text_close_file();
+    gfx_dissolve_blit(endgame_movie_window + 0x4ec,endgame_movie_window + 0x136c,4,5);
+    text_close_file();
   }
-  thunk_ui_delay_ticks(0x168);
+  ui_delay_ticks(0x168);
   wnd_end_modal_loop((C_00408010_b8 *)(endgame_movie_window + 0x534));
   return;
 }
@@ -309,7 +302,7 @@ void __cdecl defeat_movie_on_video_end(void)
 WndBase * __thiscall defeat_movie_wnd_scalar_dtor(WndBase *this,uint param_1)
 
 {
-  thunk_defeat_movie_wnd_dtor(this);
+  defeat_movie_wnd_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -327,7 +320,7 @@ undefined4 __thiscall surface_get_width(DibSurface *this)
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_surface_width(this);
+  uVar1 = surface_width(this);
   return uVar1;
 }
 
@@ -342,7 +335,7 @@ undefined4 __thiscall surface_get_height(DibSurface *this)
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_surface_height(this);
+  uVar1 = surface_height(this);
   return uVar1;
 }
 
@@ -352,7 +345,7 @@ undefined4 __thiscall surface_get_height(DibSurface *this)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-void __cdecl endgame_spaceship_arrival(iptr param_1)
+void __cdecl endgame_spaceship_arrival(iptr civ)
 
 {
   SpaceshipWindow *this;
@@ -361,51 +354,51 @@ void __cdecl endgame_spaceship_arrival(iptr param_1)
   undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  if (param_1 < 0) {
-    thunk_endgame_show_centauri_beaten(param_1);
+  if (civ < 0) {
+    endgame_show_centauri_beaten(civ);
   }
   else {
-    thunk_snd_cd_stop();
+    snd_cd_stop();
     this = operator_new(0x137c);
     local_8 = 0;
     if (this == (SpaceshipWindow *)0x0) {
       local_30c = (SpaceshipWindow *)0x0;
     }
     else {
-      local_30c = (SpaceshipWindow *)thunk_arrival_movie_wnd_ctor(this);
+      local_30c = (SpaceshipWindow *)arrival_movie_wnd_ctor(this);
     }
     local_8 = 0xffffffff;
     spaceship_arrival_window = (iptr)local_30c;
     if (local_30c != (SpaceshipWindow *)0x0) {
-      iVar1 = thunk_arrival_movie_wnd_create(local_30c,param_1);
+      iVar1 = arrival_movie_wnd_create(local_30c,civ);
       if (iVar1 == 0) {
-        thunk_text_clear();
-        thunk_text_append_year((int)civs[param_1].spaceship_launch_year);
-        thunk_text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        thunk_text_clear();
-        thunk_text_append_int((int)civs[param_1].spaceship_population);
-        thunk_text_append(ADDR(0x62b880, ((u8 *)&g.d_0062b880)));
-        thunk_text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        iVar2 = thunk_civ_get_adjective(param_1);
-        thunk_text_set_string_arg(2,iVar2);
-        thunk_text_clear();
-        thunk_text_append_year((int)civs[param_1].spaceship_arrival_year);
-        thunk_text_set_number_arg(3,(int)civs[param_1].spaceship_arrival_year);
-        iVar2 = thunk_civ_leader_name(param_1);
-        thunk_text_set_string_arg(4,iVar2);
-        thunk_dialog_ctor(&local_304,0x4000);
+        text_clear();
+        text_append_year((int)civs[civ].spaceship_launch_year);
+        text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        text_clear();
+        text_append_int((int)civs[civ].spaceship_population);
+        text_append(ADDR(0x62b880, ((u8 *)&g.d_0062b880)));
+        text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        iVar2 = civ_get_adjective(civ);
+        text_set_string_arg(2,iVar2);
+        text_clear();
+        text_append_year((int)civs[civ].spaceship_arrival_year);
+        text_set_number_arg(3,(int)civs[civ].spaceship_arrival_year);
+        iVar2 = civ_leader_name(civ);
+        text_set_string_arg(4,iVar2);
+        dialog_ctor(&local_304,0x4000);
         local_8 = 1;
-        thunk_dialog_load_game_text(&local_304,ADDR(0x62b888, ((u8 *)&g.d_0062b888)));
-        thunk_dialog_add_sprite((DialogOptionList *)&local_304,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-        thunk_dlg_show_modal(&local_304,0);
+        dialog_load_game_text(&local_304,ADDR(0x62b888, ((u8 *)&g.d_0062b888)));
+        dialog_add_sprite((DialogOptionList *)&local_304,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+        dlg_show_modal(&local_304,0);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0047132e */ { thunk_dialog_dtor((Dialog *)((iptr)&local_304)); }
+        /* inlined unwind funclet FUN_0047132e */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
       }
       else {
-        thunk_arrival_movie_wnd_play((SpaceshipWindow *)spaceship_arrival_window);
+        arrival_movie_wnd_play((SpaceshipWindow *)spaceship_arrival_window);
       }
       if (spaceship_arrival_window != 0) {
-        thunk_arrival_movie_wnd_scalar_dtor((void *)spaceship_arrival_window,1);
+        arrival_movie_wnd_scalar_dtor((void *)spaceship_arrival_window,1);
       }
       spaceship_arrival_window = 0;
     }
@@ -428,15 +421,15 @@ SpaceshipWindow * __thiscall arrival_movie_wnd_ctor(SpaceshipWindow *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((C_00408010_b8 *)this);
   local_8 = 0;
   palette_init((GamePalette *)&this->control_list);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   mmwnd_ctor((C_004083b0_a28 *)(this->pad_1e4 + 0x308));
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  thunk_dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
+  dll_handle_init((DllHandle *)(this->pad_ae4 + 0x430));
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  thunk_font_init_empty((GameFont *)this->pad_f1c);
+  font_init_empty((GameFont *)this->pad_f1c);
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),4);
   surface_ctor((DibSurface *)(this[1].pad_1e4 + 0x188));
   this->advance_civ = 0;
@@ -459,15 +452,15 @@ void __thiscall arrival_movie_wnd_dtor(void *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_004714f9 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1324)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_00471508 */ { thunk_font_destroy((GameFont *)(*(int *)((iptr)&this) + 0xf1c)); }
+  /* inlined unwind funclet FUN_00471508 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0xf1c)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_00471517 */ { thunk_dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
+  /* inlined unwind funclet FUN_00471517 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0xf14)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_00471526 */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x4ec)); }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_00471535 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00471544 */ { thunk_wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_00471544 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -497,26 +490,26 @@ undefined4 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr param_
     this->advance_civ = param_1;
   }
   gfx_get_screen_rect((iptr)&local_98);
-  thunk_file_require_cdrom(ADDR(0x62b894, ((u8 *)&g.d_0062b894)));
-  thunk_str_clear((iptr)local_84);
-  thunk_str_append((iptr)local_84,ADDR(0x62b8a4, ((u8 *)&g.d_0062b8a4)));
-  iVar1 = thunk_file_resolve_path((iptr)local_84);
+  file_require_cdrom(ADDR(0x62b894, ((u8 *)&g.d_0062b894)));
+  str_clear((iptr)local_84);
+  str_append((iptr)local_84,ADDR(0x62b8a4, ((u8 *)&g.d_0062b8a4)));
+  iVar1 = file_resolve_path((iptr)local_84);
   if (iVar1 == 0) {
     uVar2 = 0;
   }
   else {
-    thunk_str_clear((iptr)local_118);
-    thunk_str_append((iptr)local_118,ADDR(0x62b8bc, ((u8 *)&g.d_0062b8bc)));
-    iVar1 = thunk_file_resolve_path((iptr)local_118);
+    str_clear((iptr)local_118);
+    str_append((iptr)local_118,ADDR(0x62b8bc, ((u8 *)&g.d_0062b8bc)));
+    iVar1 = file_resolve_path((iptr)local_118);
     if (iVar1 == 0) {
       uVar2 = 0;
     }
     else {
-      thunk_dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)local_118);
+      dll_handle_load((DllHandle *)(this->pad_ae4 + 0x430),(iptr)local_118);
       wnd_create_with_handlers
                 ((WndBase *)this,ADDR(0x62b8d0, ((u8 *)&g.d_0062b8d0)),0x800,local_98,local_94,local_90 - local_98,
                  (local_8c - local_94) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-      thunk_wnd_set_bg_color((WndBase *)this,0);
+      wnd_set_bg_color((WndBase *)this,0);
       surface_load_gif_resource
                 ((DibSurface *)(this->pad_1e4 + 0x308),2000,10,0xec,(iptr)&this->control_list);
       avi_player_create((C_004083b0_61c *)(this->pad_1e4 + 0x308),ADDR(0x62b8d4, ((u8 *)&g.d_0062b8d4)),0x800,0,0);
@@ -524,22 +517,22 @@ undefined4 __thiscall arrival_movie_wnd_create(SpaceshipWindow *this,iptr param_
       local_88 = avi_player_open((AviPlayerOpenView *)(this->pad_1e4 + 0x308),(iptr)local_84);
       if (local_88 == 0) {
         surface_fill((DibSurface *)(this->pad_1e4 + 0x308),0);
-        thunk_wnd_center((WndCenterView *)(this->pad_504 + 0x30));
-        thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x4031c0, arrival_movie_on_video_end));
-        thunk_avi_player_set_frame_callback((C_00472910 *)(this->pad_1e4 + 0x308),ADDR(0x401d43, arrival_movie_on_frame),0x2ab);
+        wnd_center((WndCenterView *)(this->pad_504 + 0x30));
+        avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e4 + 0x308),ADDR(0x4031c0, arrival_movie_on_video_end));
+        avi_player_set_frame_callback((C_00472910 *)(this->pad_1e4 + 0x308),ADDR(0x401d43, arrival_movie_on_frame),0x2ab);
         SetRect((LPRECT)(this[1].pad_1e4 + 0x1d0),2,100,0x27e,0x1e0);
-        uVar2 = thunk_surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
-        uVar3 = thunk_surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
+        uVar2 = surface_get_height((DibSurface *)(this->pad_1e4 + 0x308));
+        uVar3 = surface_get_width((DibSurface *)(this->pad_1e4 + 0x308));
         surface_create((DibSurface *)(this[1].pad_1e4 + 0x188),uVar3,uVar2);
         avi_player_draw_to
                   ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x188),0,0);
-        thunk_font_set_styled((GameFont *)this->pad_f1c,0,0x12,3);
-        thunk_dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
+        font_set_styled((GameFont *)this->pad_f1c,0,0x12,3);
+        dll_handle_free((DllHandle *)(this->pad_ae4 + 0x430));
         uVar2 = 1;
       }
       else {
         if (local_88 == -0x7ffbfeac) {
-          thunk_popup_game(ADDR(0x62b8d8, ((u8 *)&g.d_0062b8d8)));
+          popup_game(ADDR(0x62b8d8, ((u8 *)&g.d_0062b8d8)));
         }
         uVar2 = 0;
       }
@@ -566,43 +559,43 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
   char *pcVar3;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_wnd_handle_show_raise((WndBase *)this);
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
-  thunk_window_show((C_004083b0_4 *)(this->pad_1e4 + 0x308));
-  thunk_wnd_flush_paint();
-  thunk_wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_handle_show_raise((WndBase *)this);
+  wnd_flush_paint();
+  wnd_set_palette((WndBase *)this,(iptr)&this->control_list);
+  window_show((C_004083b0_4 *)(this->pad_1e4 + 0x308));
+  wnd_flush_paint();
+  wnd_set_capture((WndBase *)(this->pad_504 + 0x30));
   gfx_set_text_color_index(0xff);
-  thunk_str_clear((iptr)(this->pad_f1c + 8));
-  thunk_text_clear();
-  thunk_text_append_year((int)civs[this->advance_civ].spaceship_launch_year);
-  thunk_text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  thunk_text_clear();
-  thunk_text_append_int((int)civs[this->advance_civ].spaceship_population);
-  thunk_text_append(ADDR(0x62b8ec, ((u8 *)&g.d_0062b8ec)));
-  thunk_text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  iVar1 = thunk_civ_get_adjective(this->advance_civ);
-  thunk_text_set_string_arg(2,iVar1);
-  thunk_text_clear();
-  thunk_text_append_year((int)civs[this->advance_civ].spaceship_arrival_year);
-  thunk_text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  iVar1 = thunk_civ_leader_name(this->advance_civ);
-  thunk_text_set_string_arg(4,iVar1);
-  for (local_8 = 0; local_8 < 3; local_8 = local_8 + 1) {
-    thunk_str_clear((iptr)(this->pad_f1c + 8));
-    thunk_text_clear();
-    thunk_text_append(ADDR(0x62b8f4, ((u8 *)&g.d_0062b8f4)));
-    thunk_text_append_int(local_8);
-    iVar2 = thunk_text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_clear((iptr)(this->pad_f1c + 8));
+  text_clear();
+  text_append_year((int)civs[this->advance_civ].spaceship_launch_year);
+  text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  text_clear();
+  text_append_int((int)civs[this->advance_civ].spaceship_population);
+  text_append(ADDR(0x62b8ec, ((u8 *)&g.d_0062b8ec)));
+  text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar1 = civ_get_adjective(this->advance_civ);
+  text_set_string_arg(2,iVar1);
+  text_clear();
+  text_append_year((int)civs[this->advance_civ].spaceship_arrival_year);
+  text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  iVar1 = civ_leader_name(this->advance_civ);
+  text_set_string_arg(4,iVar1);
+  for (local_8 = 0; local_8 < 3; local_8++) {
+    str_clear((iptr)(this->pad_f1c + 8));
+    text_clear();
+    text_append(ADDR(0x62b8f4, ((u8 *)&g.d_0062b8f4)));
+    text_append_int(local_8);
+    iVar2 = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
     if (iVar2 == 0) {
       while( true ) {
-        pcVar3 = (char *)thunk_text_read_line(1);
+        pcVar3 = (char *)text_read_line(1);
         if (*pcVar3 == '@') break;
-        thunk_str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
-        thunk_str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b900, ((u8 *)&g.d_0062b900)));
+        str_append((iptr)(this->pad_f1c + 8),text_line_cursor);
+        str_append((iptr)(this->pad_f1c + 8),ADDR(0x62b900, ((u8 *)&g.d_0062b900)));
       }
-      thunk_text_clear();
-      thunk_text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      text_clear();
+      text_expand_vars((iptr)(this->pad_f1c + 8),ADDR(0x679640, ((u8 *)&g.d_00679640)));
       surface_blit
                 ((DibSurface *)(this[1].pad_1e4 + 0x188),(iptr)(this->pad_1e4 + 0x308),
                  (iptr)(this[1].pad_1e4 + 0x1d0),(iptr)(this[1].pad_1e4 + 0x1d0));
@@ -616,41 +609,27 @@ void __thiscall arrival_movie_wnd_play(SpaceshipWindow *this)
       surface_draw_text_rect
                 ((DibSurface *)(this->pad_1e4 + 0x308),(iptr)this->pad_f1c,ADDR(0x679640, ((u8 *)&g.d_00679640)),
                  (iptr)(this[1].pad_1e4 + 0x1d0),0);
-      thunk_gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
-      thunk_text_close_file();
-      thunk_ui_delay_ticks(0x168);
+      gfx_dissolve_blit((iptr)(this->pad_1e4 + 0x308),(iptr)(this[1].pad_1e4 + 0x1d0),4,5);
+      text_close_file();
+      ui_delay_ticks(0x168);
     }
   }
   avi_player_play((AviPlayerPlayView *)(this->pad_1e4 + 0x308));
   if (2 < game.multiplayer) {
-    thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),ADDR(0x403585, net_modal_idle_poll));
   }
   wnd_run_modal_loop((C_00408010_b8 *)(this->pad_504 + 0x30));
-  thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),0);
-  thunk_wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
-  thunk_wnd_hide((WndBase *)(this->pad_504 + 0x30));
-  thunk_wnd_flush_paint();
-  thunk_wnd_hide((WndBase *)this);
-  thunk_wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-  thunk_wnd_flush_paint();
+  wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_504 + 0x30),0);
+  wnd_release_capture((WndBase *)(this->pad_504 + 0x30));
+  wnd_hide((WndBase *)(this->pad_504 + 0x30));
+  wnd_flush_paint();
+  wnd_hide((WndBase *)this);
+  wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  wnd_flush_paint();
   return;
 }
 #undef text_line_cursor
 #undef local_8
-
-/* 00471bfe auto */
-void __thiscall FUN_00471bfe(void *this)
-
-{
-  return;
-}
-
-/* 00471c14 auto */
-void __thiscall FUN_00471c14(void *this)
-
-{
-  return;
-}
 
 /* 00471c2a auto */
 #define text_line_cursor (*(iptr *)((u8 *)&g.d_00673f14))
@@ -668,31 +647,31 @@ void __cdecl arrival_movie_on_frame(void)
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(undefined4 *)(spaceship_arrival_window + 0xa98) = 0;
-  thunk_str_clear(spaceship_arrival_window + 0xf24);
-  thunk_text_clear();
-  iVar1 = thunk_text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x62b904, ((u8 *)&g.d_0062b904)));
+  str_clear(spaceship_arrival_window + 0xf24);
+  text_clear();
+  iVar1 = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x62b904, ((u8 *)&g.d_0062b904)));
   if (iVar1 == 0) {
     local_1c = 0xc;
-    thunk_text_set_font(spaceship_arrival_window + 0xf1c);
-    thunk_text_set_surface(spaceship_arrival_window + 0x4ec);
-    thunk_text_set_colors(0xff,0,1,1);
+    text_set_font(spaceship_arrival_window + 0xf1c);
+    text_set_surface(spaceship_arrival_window + 0x4ec);
+    text_set_colors(0xff,0,1,1);
     while( true ) {
-      pcVar2 = (char *)thunk_text_read_line(1);
+      pcVar2 = (char *)text_read_line(1);
       if (*pcVar2 == '@') break;
-      thunk_str_clear(spaceship_arrival_window + 0xf24);
-      thunk_str_append(spaceship_arrival_window + 0xf24,text_line_cursor);
-      thunk_text_expand_vars(spaceship_arrival_window + 0xf24,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      uVar3 = thunk_rect_width(spaceship_arrival_window + 0x136c);
-      thunk_gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(undefined4 *)(spaceship_arrival_window + 0x136c),local_1c,uVar3);
-      iVar1 = thunk_font_line_spacing((GameFont *)(spaceship_arrival_window + 0xf1c));
-      local_1c = local_1c + iVar1;
+      str_clear(spaceship_arrival_window + 0xf24);
+      str_append(spaceship_arrival_window + 0xf24,text_line_cursor);
+      text_expand_vars(spaceship_arrival_window + 0xf24,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      uVar3 = rect_width(spaceship_arrival_window + 0x136c);
+      gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(undefined4 *)(spaceship_arrival_window + 0x136c),local_1c,uVar3);
+      iVar1 = font_line_spacing((GameFont *)(spaceship_arrival_window + 0xf1c));
+      local_1c += iVar1;
     }
     local_14 = *(undefined4 *)(spaceship_arrival_window + 0x136c);
     local_c = *(undefined4 *)(spaceship_arrival_window + 0x1374);
     local_10 = 0xc;
     local_8 = local_1c;
-    thunk_gfx_dissolve_blit(spaceship_arrival_window + 0x4ec,(iptr)&local_14,4,5);
-    thunk_text_close_file();
+    gfx_dissolve_blit(spaceship_arrival_window + 0x4ec,(iptr)&local_14,4,5);
+    text_close_file();
   }
   return;
 }
@@ -731,7 +710,7 @@ void __cdecl arrival_movie_on_video_end(void)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2040)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2044)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(2048)))
-void __cdecl endgame_show_centauri_beaten(uptr param_1)
+void __cdecl endgame_show_centauri_beaten(uptr civ)
 
 {
   int iVar1;
@@ -740,92 +719,92 @@ void __cdecl endgame_show_centauri_beaten(uptr param_1)
   undefined1 frame_[FRAME_OFF(2056)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_surfwnd_ctor((SurfaceWindow *)local_808);
+  surfwnd_ctor((SurfaceWindow *)local_808);
   local_8 = 0;
-  thunk_dll_handle_init(&local_4d8);
+  dll_handle_init(&local_4d8);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  thunk_wnd_ctor(&local_6f4);
+  wnd_ctor(&local_6f4);
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   palette_init(&local_444);
   (*(undefined1 *)((char *)&local_8 + 0)) = 3;
   surface_ctor(&local_628);
   (*(undefined1 *)((char *)&local_8 + 0)) = 4;
-  thunk_font_init_empty(&local_5e0);
+  font_init_empty(&local_5e0);
   (*(undefined1 *)((char *)&local_8 + 0)) = 5;
-  if ((int)param_1 < 1) {
-    param_1 = ~param_1 + 1;
+  if ((int)civ < 1) {
+    civ = ~civ + 1;
   }
-  thunk_font_set_styled(&local_5e0,0,0x12,3);
-  thunk_str_clear((iptr)local_4c4);
-  thunk_str_append((iptr)local_4c4,ADDR(0x62b910, ((u8 *)&g.d_0062b910)));
-  iVar1 = thunk_file_resolve_path((iptr)local_4c4);
+  font_set_styled(&local_5e0,0,0x12,3);
+  str_clear((iptr)local_4c4);
+  str_append((iptr)local_4c4,ADDR(0x62b910, ((u8 *)&g.d_0062b910)));
+  iVar1 = file_resolve_path((iptr)local_4c4);
   if (iVar1 == 0) {
     (*(undefined1 *)((char *)&local_8 + 0)) = 4;
-    /* inlined unwind funclet FUN_00472393 */ { thunk_font_destroy((GameFont *)((iptr)&local_5e0)); }
+    /* inlined unwind funclet FUN_00472393 */ { font_destroy((GameFont *)((iptr)&local_5e0)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 3;
     /* inlined unwind funclet FUN_0047239f */ { surface_dtor((DibSurface *)((iptr)&local_628)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 2;
     /* inlined unwind funclet FUN_004723ab */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_004723b7 */ { thunk_wnd_dtor((WndBase *)((iptr)&local_6f4)); }
+    /* inlined unwind funclet FUN_004723b7 */ { wnd_dtor((WndBase *)((iptr)&local_6f4)); }
     local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_004723c3 */ { thunk_dll_free((DllHandle *)((iptr)&local_4d8)); }
+    /* inlined unwind funclet FUN_004723c3 */ { dll_free((DllHandle *)((iptr)&local_4d8)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_004723cf */ { thunk_surfwnd_dtor((SurfaceWindow *)((iptr)&local_808)); }
+    /* inlined unwind funclet FUN_004723cf */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_808)); }
   }
   else {
-    thunk_dll_handle_load(&local_4d8,(iptr)local_4c4);
+    dll_handle_load(&local_4d8,(iptr)local_4c4);
     gfx_get_screen_rect((iptr)&local_4d4);
     SetRect(&local_63c,0,0,0x280,0xf0);
     InflateRect(&local_63c,-10,0);
     wnd_create_with_handlers
               ((WndBase *)&local_6f4,ADDR(0x62b924, ((u8 *)&g.d_0062b924)),0x800,local_4d4,local_4d0,local_4cc - local_4d4,
                (local_4c8 - local_4d0) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-    thunk_wnd_set_bg_color((WndBase *)&local_6f4,0);
+    wnd_set_bg_color((WndBase *)&local_6f4,0);
     surface_wnd_create
               ((DibSurface *)local_808,ADDR(0x62b928, ((u8 *)&g.d_0062b928)),0x800,0,0,0x280,0xf0,(iptr)&local_444);
     surface_load_gif_resource((DibSurface *)local_808,30000,10,0xec,(iptr)&local_444);
-    thunk_wnd_center((WndCenterView *)(local_808 + 0x48));
+    wnd_center((WndCenterView *)(local_808 + 0x48));
     surface_create(&local_628,0x280,0xf0);
     surface_blit
               ((DibSurface *)local_808,(iptr)&local_628,(iptr)&local_63c,(iptr)&local_63c);
     surface_set_palette(&local_628,(iptr)&local_444);
-    thunk_wnd_handle_show_raise((WndBase *)&local_6f4);
-    thunk_wnd_flush_paint();
-    thunk_wnd_set_palette((WndBase *)&local_6f4,(iptr)&local_444);
-    thunk_window_show((C_004083b0_4 *)local_808);
-    thunk_wnd_flush_paint();
-    thunk_wnd_set_capture((WndBase *)(local_808 + 0x48));
+    wnd_handle_show_raise((WndBase *)&local_6f4);
+    wnd_flush_paint();
+    wnd_set_palette((WndBase *)&local_6f4,(iptr)&local_444);
+    window_show((C_004083b0_4 *)local_808);
+    wnd_flush_paint();
+    wnd_set_capture((WndBase *)(local_808 + 0x48));
     gfx_set_text_color_index(0xff);
-    thunk_text_clear();
-    thunk_text_append_year((int)civs[param_1].spaceship_launch_year);
-    thunk_text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    thunk_text_clear();
-    thunk_text_append_int((int)civs[param_1].spaceship_population);
-    thunk_text_append(ADDR(0x62b92c, ((u8 *)&g.d_0062b92c)));
-    thunk_text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    iVar2 = thunk_civ_get_adjective(param_1);
-    thunk_text_set_string_arg(2,iVar2);
-    thunk_text_clear();
-    thunk_text_append_year((int)civs[param_1].spaceship_arrival_year);
-    thunk_text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    iVar2 = thunk_civ_leader_name(human_civ);
-    thunk_text_set_string_arg(4,iVar2);
-    iVar1 = thunk_font_cached_height(&local_5e0);
+    text_clear();
+    text_append_year((int)civs[civ].spaceship_launch_year);
+    text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    text_clear();
+    text_append_int((int)civs[civ].spaceship_population);
+    text_append(ADDR(0x62b92c, ((u8 *)&g.d_0062b92c)));
+    text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    iVar2 = civ_get_adjective(civ);
+    text_set_string_arg(2,iVar2);
+    text_clear();
+    text_append_year((int)civs[civ].spaceship_arrival_year);
+    text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    iVar2 = civ_leader_name(human_civ);
+    text_set_string_arg(4,iVar2);
+    iVar1 = font_cached_height(&local_5e0);
     local_63c.top = local_63c.bottom + iVar1 * -2 >> 1;
-    for (local_62c = 0; local_62c < 5; local_62c = local_62c + 1) {
-      thunk_str_clear((iptr)local_5d8);
-      thunk_text_clear();
-      thunk_text_append(ADDR(0x62b934, ((u8 *)&g.d_0062b934)));
-      thunk_text_append_int(local_62c);
-      iVar1 = thunk_text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    for (local_62c = 0; local_62c < 5; local_62c++) {
+      str_clear((iptr)local_5d8);
+      text_clear();
+      text_append(ADDR(0x62b934, ((u8 *)&g.d_0062b934)));
+      text_append_int(local_62c);
+      iVar1 = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x679640, ((u8 *)&g.d_00679640)));
       if (iVar1 == 0) {
-        while (pcVar3 = (char *)thunk_text_read_line(1), *pcVar3 != '@') {
-          thunk_str_append((iptr)local_5d8,text_line_cursor);
-          thunk_str_append((iptr)local_5d8,ADDR(0x62b944, ((u8 *)&g.d_0062b944)));
+        while (pcVar3 = (char *)text_read_line(1), *pcVar3 != '@') {
+          str_append((iptr)local_5d8,text_line_cursor);
+          str_append((iptr)local_5d8,ADDR(0x62b944, ((u8 *)&g.d_0062b944)));
         }
-        thunk_text_clear();
-        thunk_text_expand_vars((iptr)local_5d8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        text_clear();
+        text_expand_vars((iptr)local_5d8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
         surface_blit(&local_628,(iptr)local_808,(iptr)&local_63c,(iptr)&local_63c);
         OffsetRect(&local_63c,1,1);
         gfx_set_text_color_index(0);
@@ -835,30 +814,30 @@ void __cdecl endgame_show_centauri_beaten(uptr param_1)
         gfx_set_text_color_index(0xff);
         surface_draw_text_rect
                   ((DibSurface *)local_808,(iptr)&local_5e0,ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&local_63c,0);
-        thunk_gfx_dissolve_blit((iptr)local_808,(iptr)&local_63c,4,5);
-        thunk_text_close_file();
-        thunk_ui_delay_ticks(0x168);
+        gfx_dissolve_blit((iptr)local_808,(iptr)&local_63c,4,5);
+        text_close_file();
+        ui_delay_ticks(0x168);
       }
     }
-    thunk_wnd_release_capture((WndBase *)(local_808 + 0x48));
-    thunk_wnd_hide((WndBase *)(local_808 + 0x48));
-    thunk_wnd_flush_paint();
-    thunk_wnd_set_palette((WndBase *)&local_6f4,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-    thunk_wnd_hide((WndBase *)&local_6f4);
-    thunk_wnd_flush_paint();
-    thunk_dll_handle_free(&local_4d8);
+    wnd_release_capture((WndBase *)(local_808 + 0x48));
+    wnd_hide((WndBase *)(local_808 + 0x48));
+    wnd_flush_paint();
+    wnd_set_palette((WndBase *)&local_6f4,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+    wnd_hide((WndBase *)&local_6f4);
+    wnd_flush_paint();
+    dll_handle_free(&local_4d8);
     (*(undefined1 *)((char *)&local_8 + 0)) = 4;
-    /* inlined unwind funclet FUN_00472393 */ { thunk_font_destroy((GameFont *)((iptr)&local_5e0)); }
+    /* inlined unwind funclet FUN_00472393 */ { font_destroy((GameFont *)((iptr)&local_5e0)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 3;
     /* inlined unwind funclet FUN_0047239f */ { surface_dtor((DibSurface *)((iptr)&local_628)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 2;
     /* inlined unwind funclet FUN_004723ab */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
     (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_004723b7 */ { thunk_wnd_dtor((WndBase *)((iptr)&local_6f4)); }
+    /* inlined unwind funclet FUN_004723b7 */ { wnd_dtor((WndBase *)((iptr)&local_6f4)); }
     local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_004723c3 */ { thunk_dll_free((DllHandle *)((iptr)&local_4d8)); }
+    /* inlined unwind funclet FUN_004723c3 */ { dll_free((DllHandle *)((iptr)&local_4d8)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_004723cf */ { thunk_surfwnd_dtor((SurfaceWindow *)((iptr)&local_808)); }
+    /* inlined unwind funclet FUN_004723cf */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_808)); }
   }
   return;
 }
@@ -886,7 +865,7 @@ void __cdecl endgame_show_centauri_beaten(uptr param_1)
 void * __thiscall arrival_movie_wnd_scalar_dtor(void *this,uint param_1)
 
 {
-  thunk_arrival_movie_wnd_dtor(this);
+  arrival_movie_wnd_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -940,30 +919,6 @@ void __cdecl path_set_extension(iptr param_1,iptr param_2,iptr param_3)
 }
 #endif
 
-/* 00472a60 auto */
-void __cdecl debug_popup_danger(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
-
-{
-  thunk_text_set_string_arg_b(0,param_1);
-  thunk_text_set_number_arg_v(0,param_2);
-  thunk_text_set_number_arg_v(1,param_3);
-  thunk_text_set_number_arg_v(2,param_4);
-  thunk_popup_debug_text(ADDR(0x62b978, ((u8 *)&g.d_0062b978)));
-  return;
-}
-
-/* 00472ab5 auto */
-void __cdecl debug_popup_danger_hex(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
-
-{
-  thunk_text_set_string_arg_b(0,param_1);
-  thunk_text_set_number_arg_v(0,param_2);
-  thunk_text_set_number_arg_v(1,param_3);
-  thunk_text_set_number_arg_v(2,param_4);
-  thunk_popup_debug_text(ADDR(0x62b980, ((u8 *)&g.d_0062b980)));
-  return;
-}
-
 /* 00472b0a auto */
 #define mapview_zoom (*(short *)((u8 *)&g.d_0066ca8c))
 #define local_6c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
@@ -978,26 +933,26 @@ void __cdecl mapview_draw_tile_number(undefined4 param_1,undefined4 param_2,int 
   iptr iVar3;
   undefined1 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = thunk_mapview_tile_in_view((C_004083b0_430 *)&map_views,param_1,param_2);
+  iVar1 = mapview_tile_in_view((C_004083b0_430 *)&map_views,param_1,param_2);
   if (iVar1 != 0) {
-    thunk_mapview_tile_to_screen
+    mapview_tile_to_screen
               ((C_004083b0_430 *)&map_views,(iptr)&local_68,(iptr)&local_6c,param_1,param_2);
-    iVar2 = thunk_gfx_zoom_scale(0x40,(int)mapview_zoom);
-    iVar3 = thunk_gfx_zoom_scale(0x20,(int)mapview_zoom);
-    thunk_rect_set_xywh((iptr)local_14,local_68,local_6c,iVar2,iVar3);
+    iVar2 = gfx_zoom_scale(0x40,(int)mapview_zoom);
+    iVar3 = gfx_zoom_scale(0x20,(int)mapview_zoom);
+    rect_set_xywh((iptr)local_14,local_68,local_6c,iVar2,iVar3);
     __itoa(param_3,local_64,10);
     gfx_set_text_color_index(10);
-    thunk_rect_offset((iptr)local_14,0xffffffff,0xffffffff);
+    rect_offset((iptr)local_14,0xffffffff,0xffffffff);
     surface_draw_text_in_rect
               ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    thunk_rect_offset((iptr)local_14,3,3);
+    rect_offset((iptr)local_14,3,3);
     surface_draw_text_in_rect
               ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    thunk_rect_offset((iptr)local_14,0xfffffffe,0xfffffffe);
+    rect_offset((iptr)local_14,0xfffffffe,0xfffffffe);
     gfx_set_text_color_index(param_4);
     surface_draw_text_in_rect
               ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    thunk_wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)local_14);
+    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)local_14);
   }
   return;
 }
@@ -1038,30 +993,6 @@ undefined4 __cdecl unit_make_dummy(iptr param_1,iptr param_2)
   dummy_unit_goto_x = 0xffff;
   dummy_unit_goto_y = 0xffff;
   return 0x800;
-}
-#undef dummy_unit_owner
-
-/* 00472e1d auto */
-iptr __cdecl unit_make_dummy_at(iptr param_1,iptr param_2,iptr param_3,iptr param_4)
-
-{
-  iptr iVar1;
-  
-  iVar1 = thunk_unit_make_dummy(param_1,param_2);
-  thunk_unit_stack_link(iVar1,param_3,param_4,1);
-  return iVar1;
-}
-
-/* 00472e5c auto */
-#define dummy_unit_owner (*(char *)((u8 *)&units[2048] + 7))
-void __cdecl unit_delete_dummy(void)
-
-{
-  if (-1 < dummy_unit_owner) {
-    thunk_unit_delete(0x800,1);
-    dummy_unit_owner = -1;
-  }
-  return;
 }
 #undef dummy_unit_owner
 
@@ -1116,14 +1047,14 @@ void __cdecl save_pack_layout_rects(void)
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   save_layout_record = (undefined2)saved_layout_valid;
-  thunk_rect_pack_to_short(ADDR(0x655284, ((u8 *)&g.d_00655284)),ADDR(0x66c602, ((u8 *)&g.d_0066c602)));
-  thunk_rect_pack_to_short(ADDR(0x655294, ((u8 *)&g.d_00655294)),ADDR(0x66c60a, ((u8 *)&g.d_0066c60a)));
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
-    thunk_rect_pack_to_short((iptr)(&map_view_saved_rects + local_8 * 0x10),local_8 * 8 + ADDR(0x66c612, ((u8 *)&g.d_0066c60a + 8)));
+  rect_pack_to_short(ADDR(0x655284, ((u8 *)&g.d_00655284)),ADDR(0x66c602, ((u8 *)&g.d_0066c602)));
+  rect_pack_to_short(ADDR(0x655294, ((u8 *)&g.d_00655294)),ADDR(0x66c60a, ((u8 *)&g.d_0066c60a)));
+  for (local_8 = 0; local_8 < 8; local_8++) {
+    rect_pack_to_short((iptr)(&map_view_saved_rects + local_8 * 0x10),local_8 * 8 + ADDR(0x66c612, ((u8 *)&g.d_0066c60a + 8)));
   }
-  thunk_rect_pack_to_short(ADDR(0x655324, ((u8 *)&g.d_00655324)),ADDR(0x66c652, ((u8 *)&g.d_0066c652)));
-  thunk_rect_pack_to_short(ADDR(0x655334, ((u8 *)&g.d_00655334)),ADDR(0x66c65a, ((u8 *)&g.d_0066c65a)));
-  thunk_rect_pack_to_short(ADDR(0x655344, ((u8 *)&g.d_00655344)),ADDR(0x66c662, ((u8 *)&g.d_0066c662)));
+  rect_pack_to_short(ADDR(0x655324, ((u8 *)&g.d_00655324)),ADDR(0x66c652, ((u8 *)&g.d_0066c652)));
+  rect_pack_to_short(ADDR(0x655334, ((u8 *)&g.d_00655334)),ADDR(0x66c65a, ((u8 *)&g.d_0066c65a)));
+  rect_pack_to_short(ADDR(0x655344, ((u8 *)&g.d_00655344)),ADDR(0x66c662, ((u8 *)&g.d_0066c662)));
   return;
 }
 #undef save_layout_record
@@ -1140,14 +1071,14 @@ void __cdecl save_unpack_layout_rects(void)
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   saved_layout_valid = (int)save_layout_record;
-  thunk_rect_unpack_from_short(ADDR(0x66c602, ((u8 *)&g.d_0066c602)),ADDR(0x655284, ((u8 *)&g.d_00655284)));
-  thunk_rect_unpack_from_short(ADDR(0x66c60a, ((u8 *)&g.d_0066c60a)),ADDR(0x655294, ((u8 *)&g.d_00655294)));
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
-    thunk_rect_unpack_from_short(local_8 * 8 + ADDR(0x66c612, ((u8 *)&g.d_0066c60a + 8)),(iptr)(&map_view_saved_rects + local_8 * 0x10));
+  rect_unpack_from_short(ADDR(0x66c602, ((u8 *)&g.d_0066c602)),ADDR(0x655284, ((u8 *)&g.d_00655284)));
+  rect_unpack_from_short(ADDR(0x66c60a, ((u8 *)&g.d_0066c60a)),ADDR(0x655294, ((u8 *)&g.d_00655294)));
+  for (local_8 = 0; local_8 < 8; local_8++) {
+    rect_unpack_from_short(local_8 * 8 + ADDR(0x66c612, ((u8 *)&g.d_0066c60a + 8)),(iptr)(&map_view_saved_rects + local_8 * 0x10));
   }
-  thunk_rect_unpack_from_short(ADDR(0x66c652, ((u8 *)&g.d_0066c652)),ADDR(0x655324, ((u8 *)&g.d_00655324)));
-  thunk_rect_unpack_from_short(ADDR(0x66c65a, ((u8 *)&g.d_0066c65a)),ADDR(0x655334, ((u8 *)&g.d_00655334)));
-  thunk_rect_unpack_from_short(ADDR(0x66c662, ((u8 *)&g.d_0066c662)),ADDR(0x655344, ((u8 *)&g.d_00655344)));
+  rect_unpack_from_short(ADDR(0x66c652, ((u8 *)&g.d_0066c652)),ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  rect_unpack_from_short(ADDR(0x66c65a, ((u8 *)&g.d_0066c65a)),ADDR(0x655334, ((u8 *)&g.d_00655334)));
+  rect_unpack_from_short(ADDR(0x66c662, ((u8 *)&g.d_0066c662)),ADDR(0x655344, ((u8 *)&g.d_00655344)));
   return;
 }
 #undef save_layout_record
@@ -1200,7 +1131,7 @@ ui_file_name_dialog(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr par
   local_54 = 0x4c;
   local_50 = (HWND)0x0;
   if (param_1 != 0) {
-    iVar1 = thunk_wnd_get_window((WndBase *)param_1);
+    iVar1 = wnd_get_window((WndBase *)param_1);
     local_50 = *(HWND *)(iVar1 + 4);
   }
   local_48 = (LPCSTR)param_4;
@@ -1223,10 +1154,10 @@ ui_file_name_dialog(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr par
     BVar1 = GetSaveFileNameA((LPOPENFILENAMEA)&local_54);
     local_58 = (char)BVar1;
   }
-  if (local_58 != '\x01') {
+  if (local_58 != 1) {
     CommDlgExtendedError();
   }
-  return (uint)(local_58 == '\x01');
+  return (uint)(local_58 == 1);
 }
 #undef local_58
 #undef local_54
@@ -1240,7 +1171,7 @@ ui_file_name_dialog(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr par
 #undef local_18
 
 /* 004732a6 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 undefined4 __cdecl save_read_units_cities(int param_1,iptr param_2)
 
 {
@@ -1249,8 +1180,8 @@ undefined4 __cdecl save_read_units_cities(int param_1,iptr param_2)
   
   if (param_1 < 0x2a) {
     if (param_1 == 0x29) {
-      for (local_8 = 0; local_8 < game.num_units; local_8 = local_8 + 1) {
-        sVar1 = _fread(units + local_8,0x1e,1,(FILE *)param_2);
+      for (unit = 0; unit < game.num_units; unit++) {
+        sVar1 = _fread(units + unit,0x1e,1,(FILE *)param_2);
         if (sVar1 == 0) {
           return 0;
         }
@@ -1259,39 +1190,39 @@ undefined4 __cdecl save_read_units_cities(int param_1,iptr param_2)
          (sVar1 = _fread(cities,game.num_cities * 0x58,1,(FILE *)param_2), sVar1 == 0)) {
         return 0;
       }
-      for (local_8 = 0; local_8 < game.num_units; local_8 = local_8 + 1) {
-        if (units[local_8].id != 0) {
-          units[local_8].id = next_unit_id;
-          next_unit_id = next_unit_id + 1;
+      for (unit = 0; unit < game.num_units; unit++) {
+        if (units[unit].id != 0) {
+          units[unit].id = next_unit_id;
+          next_unit_id++;
         }
       }
-      for (local_8 = 0; local_8 < game.num_cities; local_8 = local_8 + 1) {
-        if (cities[local_8].id != 0) {
-          cities[local_8].id = next_city_id;
-          next_city_id = next_city_id + 1;
+      for (unit = 0; unit < game.num_cities; unit++) {
+        if (cities[unit].id != 0) {
+          cities[unit].id = next_city_id;
+          next_city_id++;
         }
       }
     }
     else {
-      for (local_8 = 0; local_8 < game.num_units; local_8 = local_8 + 1) {
-        sVar1 = _fread(units + local_8,0x1a,1,(FILE *)param_2);
+      for (unit = 0; unit < game.num_units; unit++) {
+        sVar1 = _fread(units + unit,0x1a,1,(FILE *)param_2);
         if (sVar1 == 0) {
           return 0;
         }
       }
-      for (local_8 = 0; local_8 < game.num_cities; local_8 = local_8 + 1) {
-        sVar1 = _fread(cities + local_8,0x54,1,(FILE *)param_2);
+      for (unit = 0; unit < game.num_cities; unit++) {
+        sVar1 = _fread(cities + unit,0x54,1,(FILE *)param_2);
         if (sVar1 == 0) {
           return 0;
         }
       }
-      for (local_8 = 0; local_8 < game.num_units; local_8 = local_8 + 1) {
-        units[local_8].id = next_unit_id;
-        next_unit_id = next_unit_id + 1;
+      for (unit = 0; unit < game.num_units; unit++) {
+        units[unit].id = next_unit_id;
+        next_unit_id++;
       }
-      for (local_8 = 0; local_8 < game.num_cities; local_8 = local_8 + 1) {
-        cities[local_8].id = next_city_id;
-        next_city_id = next_city_id + 1;
+      for (unit = 0; unit < game.num_cities; unit++) {
+        cities[unit].id = next_city_id;
+        next_city_id++;
       }
     }
   }
@@ -1304,27 +1235,27 @@ undefined4 __cdecl save_read_units_cities(int param_1,iptr param_2)
        (sVar1 = _fread(cities,game.num_cities * 0x58,1,(FILE *)param_2), sVar1 == 0)) {
       return 0;
     }
-    for (local_8 = 0; local_8 < game.num_units; local_8 = local_8 + 1) {
-      if (units[local_8].id != 0) {
-        units[local_8].id = next_unit_id;
-        next_unit_id = next_unit_id + 1;
+    for (unit = 0; unit < game.num_units; unit++) {
+      if (units[unit].id != 0) {
+        units[unit].id = next_unit_id;
+        next_unit_id++;
       }
     }
-    for (local_8 = 0; local_8 < game.num_cities; local_8 = local_8 + 1) {
-      if (cities[local_8].id != 0) {
-        cities[local_8].id = next_city_id;
-        next_city_id = next_city_id + 1;
+    for (unit = 0; unit < game.num_cities; unit++) {
+      if (cities[unit].id != 0) {
+        cities[unit].id = next_city_id;
+        next_city_id++;
       }
     }
   }
   return 1;
 }
-#undef local_8
+#undef unit
 
 /* 00473660 auto */
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
+#define civ (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define civ2 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(16)))
 undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
 
@@ -1337,23 +1268,23 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
     if ((param_1 != 0x26) && (param_1 != 0x27)) {
       return 0;
     }
-    for (local_c = 0; local_c < 8; local_c = local_c + 1) {
-      for (local_10 = 0; local_10 < 0x3e; local_10 = local_10 + 1) {
-        *(undefined1 *)(local_10 + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_c * 0x594) = 0;
-        *(undefined1 *)(local_10 + ADDR(0x64c7b6, ((u8 *)&civs + 278)) + local_c * 0x594) = 0;
-        *(undefined1 *)(local_10 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + local_c * 0x594) = 0;
+    for (civ2 = 0; civ2 < 8; civ2++) {
+      for (civ = 0; civ < 0x3e; civ++) {
+        *(undefined1 *)&civs[civ2].units_active[civ] = 0;
+        *(undefined1 *)&civs[civ2].units_lost[civ] = 0;
+        *(undefined1 *)&civs[civ2].units_in_production[civ] = 0;
       }
     }
-    for (local_10 = 0; local_10 < 100; local_10 = local_10 + 1) {
-      game.first_discoverer[local_10] = '\0';
-      game.advance_known_by[local_10] = '\0';
-      for (local_c = 0; local_c < 8; local_c = local_c + 1) {
-        *(undefined1 *)(local_10 + ADDR(0x64c714, ((u8 *)&civs + 116)) + local_c * 0x594) = 0;
+    for (civ = 0; civ < 100; civ++) {
+      game.first_discoverer[civ] = '\0';
+      game.advance_known_by[civ] = '\0';
+      for (civ2 = 0; civ2 < 8; civ2++) {
+        *(undefined1 *)&civs[civ2].advance_source[civ] = 0;
       }
     }
-    for (local_c = 0; local_c < 8; local_c = local_c + 1) {
-      for (local_10 = 0; local_10 < 0xd; local_10 = local_10 + 1) {
-        *(undefined1 *)(local_10 + ADDR(0x64c6f8, ((u8 *)&civs + 88)) + local_c * 0x594) = 0;
+    for (civ2 = 0; civ2 < 8; civ2++) {
+      for (civ = 0; civ < 0xd; civ++) {
+        *(undefined1 *)&civs[civ2].advances[civ] = 0;
       }
     }
     sVar1 = _fread(&game,0x36,1,(FILE *)param_2);
@@ -1372,7 +1303,7 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
     if (sVar1 == 0) {
       return 0;
     }
-    iVar2 = thunk_bits_count8((uint)game.civs_alive);
+    iVar2 = bits_count8((uint)game.civs_alive);
     local_14 = iVar2 - 1;
     if ((game.civs_alive & 1) != 0) {
       local_14 = iVar2 - 2;
@@ -1385,32 +1316,32 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
     if (sVar1 == 0) {
       return 0;
     }
-    for (local_10 = 0; local_10 < 8; local_10 = local_10 + 1) {
-      sVar1 = _fread(civs + local_10,0x58,1,(FILE *)param_2);
+    for (civ = 0; civ < 8; civ++) {
+      sVar1 = _fread(civs + civ,0x58,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].advances,0xc,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].advances,0xc,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(&civs[local_10].num_military_units,0xe,1,(FILE *)param_2);
+      sVar1 = _fread(&civs[civ].num_military_units,0xe,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].advance_source,0x5d,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].advance_source,0x5d,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].units_active,0x36,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].units_active,0x36,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].units_lost,0x36,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].units_lost,0x36,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].units_in_production,0x36,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].units_in_production,0x36,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
@@ -1418,7 +1349,7 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
       if (sVar1 == 0) {
         return 0;
       }
-      sVar1 = _fread(civs[local_10].continent_military,0x402,1,(FILE *)param_2);
+      sVar1 = _fread(civs[civ].continent_military,0x402,1,(FILE *)param_2);
       if (sVar1 == 0) {
         return 0;
       }
@@ -1429,7 +1360,7 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
     if (sVar1 == 0) {
       return 0;
     }
-    iVar2 = thunk_bits_count8((uint)game.civs_alive);
+    iVar2 = bits_count8((uint)game.civs_alive);
     local_14 = iVar2 - 1;
     if ((game.civs_alive & 1) != 0) {
       local_14 = iVar2 - 2;
@@ -1450,8 +1381,8 @@ undefined4 __cdecl save_load_gpk(int param_1,iptr param_2)
   return 1;
 }
 #undef local_14
-#undef local_10
-#undef local_c
+#undef civ
+#undef civ2
 #undef local_8
 
 /* 00473c12 auto */
@@ -1509,9 +1440,9 @@ int __cdecl save_read_event_str(iptr param_1)
   } while (*pcVar1 != '\0');
   local_110[local_114] = '\0';
   sVar4 = _strlen(local_110);
-  local_8 = thunk_memblock_alloc(ADDR(0x64b984, ((u8 *)&g.d_0064b984)),sVar4 + 1);
+  local_8 = memblock_alloc(ADDR(0x64b984, ((u8 *)&g.d_0064b984)),sVar4 + 1);
   if (local_8 == 0) {
-    thunk_error_report(0xfffffff7,3,0,0,0);
+    error_report(0xfffffff7,3,0,0,0);
     local_8 = 0;
   }
   else {
@@ -1532,14 +1463,14 @@ void __cdecl save_set_file_ext(int param_1)
     if (game.multiplayer == '\0') {
       FUN_005f22d0(&save_file_path,&save_ext_sav_str);
     }
-    else if (game.multiplayer == '\x01') {
+    else if (game.multiplayer == 1) {
       FUN_005f22d0(&save_file_path,&save_ext_hot_str);
     }
-    else if (game.multiplayer == '\x02') {
+    else if (game.multiplayer == 2) {
       FUN_005f22d0(&save_file_path,&save_ext_eml_str);
     }
-    else if ((((game.multiplayer == '\x03') || (game.multiplayer == '\x04')) ||
-             (game.multiplayer == '\x05')) || (game.multiplayer == '\x06')) {
+    else if ((((game.multiplayer == 3) || (game.multiplayer == 4)) ||
+             (game.multiplayer == 5)) || (game.multiplayer == 6)) {
       FUN_005f22d0(&save_file_path,&save_ext_net_str);
     }
   }
@@ -1560,22 +1491,22 @@ undefined * __cdecl save_file_filter(int param_1,int param_2,int param_3)
   if (param_2 == 0) {
     if (param_3 == 0) {
       _memset(&save_file_filter_buf,0,0x104);
-      local_8 = thunk_save_filter_add_entry((uint)game.multiplayer,ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)));
+      local_8 = save_filter_add_entry((uint)game.multiplayer,ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)));
       if (param_1 == 0) {
         if (game.multiplayer != '\0') {
-          local_8 = thunk_save_filter_add_entry(0,local_8);
+          local_8 = save_filter_add_entry(0,local_8);
         }
         if (game.multiplayer < 3) {
-          local_8 = thunk_save_filter_add_entry(3,local_8);
+          local_8 = save_filter_add_entry(3,local_8);
         }
-        if (game.multiplayer != '\x01') {
-          thunk_save_filter_add_entry(1,local_8);
+        if (game.multiplayer != 1) {
+          save_filter_add_entry(1,local_8);
         }
       }
     }
     else {
       _memset(&save_file_filter_buf,0,0x104);
-      thunk_str_append_label(ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)),0x105);
+      str_append_label(ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)),0x105);
       FUN_005f22e0(&save_file_filter_buf,s____mp__0062ba74);
       sVar1 = _strlen(&save_file_filter_buf);
       FUN_005f22e0(sVar1 + ADDR(0x66c4f9, ((u8 *)&g.d_0066c4f8 + 1)),&save_filter_mp_pattern_str);
@@ -1583,7 +1514,7 @@ undefined * __cdecl save_file_filter(int param_1,int param_2,int param_3)
   }
   else {
     _memset(&save_file_filter_buf,0,0x104);
-    thunk_str_append_label(ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)),0x19f);
+    str_append_label(ADDR(0x66c4f8, ((u8 *)&g.d_0066c4f8)),0x19f);
     FUN_005f22e0(&save_file_filter_buf,s____scn__0062ba60);
     sVar1 = _strlen(&save_file_filter_buf);
     FUN_005f22e0(sVar1 + ADDR(0x66c4f9, ((u8 *)&g.d_0066c4f8 + 1)),s___scn_0062ba6c);
@@ -1601,7 +1532,7 @@ char * __cdecl save_filter_add_entry(undefined4 param_1,iptr param_2)
   
   switch(param_1) {
   case 0:
-    thunk_str_append_label(param_2,0xee);
+    str_append_label(param_2,0xee);
     FUN_005f22e0(param_2,s____sav__0062ba84);
     sVar1 = _strlen((char *)param_2);
     pcVar2 = (char *)(param_2 + sVar1 + 1);
@@ -1610,7 +1541,7 @@ char * __cdecl save_filter_add_entry(undefined4 param_1,iptr param_2)
     pcVar2 = pcVar2 + sVar1 + 1;
     break;
   case 1:
-    thunk_str_append_label(param_2,0x357);
+    str_append_label(param_2,0x357);
     FUN_005f22e0(param_2,s____hot__0062ba98);
     sVar1 = _strlen((char *)param_2);
     pcVar2 = (char *)(param_2 + sVar1 + 1);
@@ -1619,7 +1550,7 @@ char * __cdecl save_filter_add_entry(undefined4 param_1,iptr param_2)
     pcVar2 = pcVar2 + sVar1 + 1;
     break;
   case 2:
-    thunk_str_append_label(param_2,0x35a);
+    str_append_label(param_2,0x35a);
     FUN_005f22e0(param_2,s____eml__0062baac);
     sVar1 = _strlen((char *)param_2);
     pcVar2 = (char *)(param_2 + sVar1 + 1);
@@ -1631,7 +1562,7 @@ char * __cdecl save_filter_add_entry(undefined4 param_1,iptr param_2)
   case 4:
   case 5:
   case 6:
-    thunk_str_append_label(param_2,0x35d);
+    str_append_label(param_2,0x35d);
     FUN_005f22e0(param_2,s____net__0062bac0);
     sVar1 = _strlen((char *)param_2);
     pcVar2 = (char *)(param_2 + sVar1 + 1);
@@ -1661,14 +1592,14 @@ char * __cdecl save_filter_add_entry(undefined4 param_1,iptr param_2)
 #define scenario_flags (*(undefined2 *)((u8 *)&g.d_0064bc60))
 #define local_130 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_12c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_128 (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define civ (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_124 (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define local_120 (*(void * *)(frame_ + FRAME_OFF(16)))
 #define local_11c (*(FILE * *)(frame_ + FRAME_OFF(20)))
 #define local_118 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
 #define local_114 (*(u8 *)(frame_ + FRAME_OFF(28)))
 #define local_110 (*(undefined2 (*)[2])(frame_ + FRAME_OFF(32)))
-#define local_10c (*(int *)(frame_ + FRAME_OFF(36)))
+#define leader (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_108 (*(char (*)[260])(frame_ + FRAME_OFF(40)))
 undefined4 __cdecl save_write_game(iptr param_1,int param_2)
 
@@ -1679,11 +1610,11 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
   undefined1 frame_[FRAME_OFF(304)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_118 = 1;
-  if (game.multiplayer == '\x01') {
+  if (game.multiplayer == 1) {
     local_114 = game.human_players;
     game.human_players = hotseat_human_players;
   }
-  thunk_save_set_file_ext(param_2);
+  save_set_file_ext(param_2);
   FUN_005f22d0(local_108,param_1);
   pcVar1 = _strchr(local_108,0x2e);
   if (pcVar1 == (char *)0x0) {
@@ -1691,7 +1622,7 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
   }
   local_11c = _fopen(local_108,&save_write_mode);
   if (local_11c != (FILE *)0x0) {
-    thunk_save_write_cstr_eof((iptr)PTR_s_CIVILIZE_0062b990,(iptr)local_11c);
+    save_write_cstr_eof((iptr)PTR_s_CIVILIZE_0062b990,(iptr)local_11c);
     game.field_1c = (i8)human_civ;
     local_110[0] = 0x2c;
     sVar2 = _fwrite(local_110,2,1,local_11c);
@@ -1701,50 +1632,50 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
       }
       else {
         game.game_flags = game.game_flags | 0x40;
-        for (local_124 = 0; local_124 < 100; local_124 = local_124 + 1) {
+        for (local_124 = 0; local_124 < 100; local_124++) {
           game.advance_known_by[local_124] = '\0';
-          for (local_128 = 1; local_128 < 8; local_128 = local_128 + 1) {
-            iVar3 = thunk_civ_has_advance(local_128,local_124);
+          for (civ = 1; civ < 8; civ++) {
+            iVar3 = civ_has_advance(civ,local_124);
             if (iVar3 != 0) {
               game.advance_known_by[local_124] =
-                   game.advance_known_by[local_124] | (byte)(1 << ((byte)local_128 & 0x1f));
+                   game.advance_known_by[local_124] | (byte)(1 << ((byte)civ & 0x1f));
             }
           }
           if (game.advance_known_by[local_124] != '\0') {
-            iVar3 = thunk_bits_count8((int)(char)game.advance_known_by[local_124]);
+            iVar3 = bits_count8((int)(char)game.advance_known_by[local_124]);
             if (iVar3 == 1) {
-              for (local_128 = 1; local_128 < 8; local_128 = local_128 + 1) {
-                iVar3 = thunk_civ_has_advance(local_128,local_124);
+              for (civ = 1; civ < 8; civ++) {
+                iVar3 = civ_has_advance(civ,local_124);
                 if (iVar3 != 0) {
-                  game.first_discoverer[local_124] = (byte)local_128;
+                  game.first_discoverer[local_124] = (byte)civ;
                 }
               }
             }
             else {
-              game.first_discoverer[local_124] = '\b';
+              game.first_discoverer[local_124] = 8;
             }
           }
         }
-        for (local_128 = 1; local_128 < 8; local_128 = local_128 + 1) {
-          civs[local_128].flags = civs[local_128].flags & 0xff96;
+        for (civ = 1; civ < 8; civ++) {
+          civs[civ].flags = civs[civ].flags & 0xff96;
         }
       }
       if ((param_2 != 0) || ((game.game_flags & 0x80) != 0)) {
-        for (local_128 = 1; local_128 < 8; local_128 = local_128 + 1) {
-          if (-1 < leaders[civs[local_128].tribe].adjective) {
-            thunk_str_clear(local_128 * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50)));
-            thunk_str_append_string_id(local_128 * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50)),
-                               (int)leaders[civs[local_128].tribe].adjective);
+        for (civ = 1; civ < 8; civ++) {
+          if (-1 < leaders[civs[civ].tribe].adjective) {
+            str_clear(civ * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50)));
+            str_append_string_id((iptr)&civ_names[civ].adjective,
+                               (int)leaders[civs[civ].tribe].adjective);
           }
-          if (-1 < leaders[civs[local_128].tribe].plural) {
-            thunk_str_clear(local_128 * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26)));
-            thunk_str_append_string_id(local_128 * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26)),
-                               (int)leaders[civs[local_128].tribe].plural);
+          if (-1 < leaders[civs[civ].tribe].plural) {
+            str_clear(civ * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26)));
+            str_append_string_id((iptr)&civ_names[civ].tribe_name,
+                               (int)leaders[civs[civ].tribe].plural);
           }
-          if (-1 < leaders[civs[local_128].tribe].leader_name) {
-            thunk_str_clear(local_128 * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2)));
-            thunk_str_append_string_id(local_128 * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2)),
-                               (int)leaders[civs[local_128].tribe].leader_name);
+          if (-1 < leaders[civs[civ].tribe].leader_name) {
+            str_clear(civ * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2)));
+            str_append_string_id((iptr)&civ_names[civ].leader_name,
+                               (int)leaders[civs[civ].tribe].leader_name);
           }
         }
       }
@@ -1761,11 +1692,11 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
             (sVar2 = _fwrite(units,(int)game.num_units << 5,1,local_11c), sVar2 != 0)))))) &&
          ((game.num_cities == 0 ||
           (sVar2 = _fwrite(cities,game.num_cities * 0x58,1,local_11c), sVar2 != 0)))) {
-        for (local_10c = 0; local_10c < 0x15; local_10c = local_10c + 1) {
-          sVar2 = _fwrite(&leaders[local_10c].times_used,1,1,local_11c);
+        for (leader = 0; leader < 0x15; leader++) {
+          sVar2 = _fwrite(&leaders[leader].times_used,1,1,local_11c);
           if (((sVar2 == 0) ||
-              (sVar2 = _fwrite(&leaders[local_10c].city_name_index,1,1,local_11c), sVar2 == 0)) ||
-             (sVar2 = _fwrite(&leaders[local_10c].female,1,1,local_11c), sVar2 == 0))
+              (sVar2 = _fwrite(&leaders[leader].city_name_index,1,1,local_11c), sVar2 == 0)) ||
+             (sVar2 = _fwrite(&leaders[leader].female,1,1,local_11c), sVar2 == 0))
           goto LAB_0047530a;
         }
         sVar2 = _fwrite(&map_cursor_x,2,1,local_11c);
@@ -1775,18 +1706,18 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
             if (sVar2 == 0) goto LAB_0047530a;
           }
           else {
-            local_128 = (iptr)game.player_civ;
-            for (local_10c = 0; local_10c < 8; local_10c = local_10c + 1) {
-              if ((1 << ((byte)local_10c & 0x1f) & (uint)game.human_players) != 0) {
-                game.player_civ = (byte)local_10c;
-                sVar2 = _fwrite(leaders + civs[(char)(byte)local_10c].tribe,0x30,1,local_11c);
+            civ = (iptr)game.player_civ;
+            for (leader = 0; leader < 8; leader++) {
+              if ((1 << ((byte)leader & 0x1f) & (uint)game.human_players) != 0) {
+                game.player_civ = (byte)leader;
+                sVar2 = _fwrite(leaders + civs[(char)(byte)leader].tribe,0x30,1,local_11c);
                 if (sVar2 == 0) {
-                  game.player_civ = (byte)local_128;
+                  game.player_civ = (byte)civ;
                   goto LAB_0047530a;
                 }
               }
             }
-            game.player_civ = (byte)local_128;
+            game.player_civ = (byte)civ;
           }
           sVar2 = _fwrite(&power_graph_history,0x4b0,1,local_11c);
           if (sVar2 != 0) {
@@ -1794,17 +1725,17 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
             saved_screen_rect_top = screen_rect_top;
             saved_screen_rect_right = ui_screen_rect_right;
             saved_screen_rect_bottom = ui_screen_rect_bottom;
-            thunk_save_pack_layout_rects();
+            save_pack_layout_rects();
             sVar2 = _fwrite(&save_layout_record,0x6a,1,local_11c);
             if (sVar2 != 0) {
-              for (local_10c = 0; local_10c < 8; local_10c = local_10c + 1) {
-                sVar2 = _fwrite(&map_view_open_flags + local_10c * 0x3f0,2,1,local_11c);
+              for (leader = 0; leader < 8; leader++) {
+                sVar2 = _fwrite(&map_view_open_flags + leader * 0x3f0,2,1,local_11c);
                 if (((sVar2 == 0) ||
-                    (sVar2 = _fwrite(&mapview_track_moves + local_10c * 0x3f0,2,1,local_11c), sVar2 == 0))
-                   || ((sVar2 = _fwrite(&map_view_center_x + local_10c * 0x1f8,2,1,local_11c), sVar2 == 0
-                       || ((sVar2 = _fwrite(&mapview_center_y + local_10c * 0x1f8,2,1,local_11c),
+                    (sVar2 = _fwrite(&mapview_track_moves + leader * 0x3f0,2,1,local_11c), sVar2 == 0))
+                   || ((sVar2 = _fwrite(&map_view_center_x + leader * 0x1f8,2,1,local_11c), sVar2 == 0
+                       || ((sVar2 = _fwrite(&mapview_center_y + leader * 0x1f8,2,1,local_11c),
                            sVar2 == 0 ||
-                           (sVar2 = _fwrite(&mapview_zoom + local_10c * 0x1f8,2,1,local_11c),
+                           (sVar2 = _fwrite(&mapview_zoom + leader * 0x1f8,2,1,local_11c),
                            sVar2 == 0)))))) goto LAB_0047530a;
               }
               if ((((param_2 == 0) && ((game.game_flags & 0x80) == 0)) ||
@@ -1823,7 +1754,7 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
                   local_130 = 0;
                   for (local_120 = (void *)events_list_head; local_120 != (void *)0x0;
                       local_120 = *(void **)((int)local_120 + 0x1bc)) {
-                    local_130 = local_130 + 1;
+                    local_130++;
                   }
                   sVar2 = _fwrite(&local_130,4,1,local_11c);
                   if (sVar2 == 0) goto LAB_0047530a;
@@ -1835,59 +1766,59 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
                   for (local_120 = (void *)events_list_head; local_120 != (void *)0x0;
                       local_120 = *(void **)((int)local_120 + 0x1bc)) {
                     if (((((*(int *)((int)local_120 + 8) != 0) &&
-                          (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 8),
+                          (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 8),
                                                       (iptr)local_11c), iVar3 == -1)) ||
                          ((*(int *)((int)local_120 + 0x10) != 0 &&
-                          (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x10),
+                          (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x10),
                                                       (iptr)local_11c), iVar3 == -1)))) ||
                         ((*(int *)((int)local_120 + 0x14) != 0 &&
-                         (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x14),
+                         (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x14),
                                                      (iptr)local_11c), iVar3 == -1)))) ||
                        ((*(int *)((int)local_120 + 0x20) != 0 &&
-                        (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x20),
+                        (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x20),
                                                     (iptr)local_11c), iVar3 == -1))))
                     goto LAB_0047530a;
                     local_130 = 0;
                     while ((local_130 < 0x14 &&
                            (*(int *)((int)local_120 + local_130 * 4 + 0x38) != 0))) {
-                      iVar3 = thunk_save_write_str(*(undefined4 *)
+                      iVar3 = save_write_str(*(undefined4 *)
                                                   ((int)local_120 + local_130 * 4 + 0x38),
                                                  (iptr)local_11c);
                       if (iVar3 == -1) goto LAB_0047530a;
-                      local_130 = local_130 + 1;
+                      local_130++;
                     }
                     if ((((((*(int *)((int)local_120 + 0x88) != 0) &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x88),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x88),
                                                        (iptr)local_11c), iVar3 == -1)) ||
                           ((*(int *)((int)local_120 + 0x90) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x90),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x90),
                                                        (iptr)local_11c), iVar3 == -1)))) ||
                          (((*(int *)((int)local_120 + 0xc4) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0xc4),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0xc4),
                                                        (iptr)local_11c), iVar3 == -1)) ||
                           ((*(int *)((int)local_120 + 0xcc) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0xcc),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0xcc),
                                                        (iptr)local_11c), iVar3 == -1)))))) ||
                         ((((*(int *)((int)local_120 + 0xd4) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0xd4),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0xd4),
                                                        (iptr)local_11c), iVar3 == -1)) ||
                           ((*(int *)((int)local_120 + 0xdc) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0xdc),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0xdc),
                                                        (iptr)local_11c), iVar3 == -1)))) ||
                          (((*(int *)((int)local_120 + 0x13c) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x13c),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x13c),
                                                        (iptr)local_11c), iVar3 == -1)) ||
                           ((*(int *)((int)local_120 + 0x140) != 0 &&
-                           (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x140),
+                           (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x140),
                                                        (iptr)local_11c), iVar3 == -1)))))))) ||
                        ((((*(int *)((int)local_120 + 0x148) != 0 &&
-                          (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x148),
+                          (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x148),
                                                       (iptr)local_11c), iVar3 == -1)) ||
                          ((*(int *)((int)local_120 + 0x174) != 0 &&
-                          (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x174),
+                          (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x174),
                                                       (iptr)local_11c), iVar3 == -1)))) ||
                         ((*(int *)((int)local_120 + 0x184) != 0 &&
-                         (iVar3 = thunk_save_write_str(*(undefined4 *)((int)local_120 + 0x184),
+                         (iVar3 = save_write_str(*(undefined4 *)((int)local_120 + 0x184),
                                                      (iptr)local_11c), iVar3 == -1))))))
                     goto LAB_0047530a;
                   }
@@ -1901,7 +1832,7 @@ undefined4 __cdecl save_write_game(iptr param_1,int param_2)
     }
   }
 LAB_0047530a:
-  if (game.multiplayer == '\x01') {
+  if (game.multiplayer == 1) {
     game.human_players = local_114;
   }
   if (local_11c != (FILE *)0x0) {
@@ -1924,74 +1855,14 @@ LAB_0047530a:
 #undef scenario_flags
 #undef local_130
 #undef local_12c
-#undef local_128
+#undef civ
 #undef local_124
 #undef local_120
 #undef local_11c
 #undef local_118
 #undef local_114
 #undef local_110
-#undef local_10c
-#undef local_108
-
-/* 0047543c auto */
-#define local_214 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_210 (*(short (*)[2])(frame_ + FRAME_OFF(8)))
-#define local_20c (*(char (*)[260])(frame_ + FRAME_OFF(12)))
-#define local_108 (*(char (*)[260])(frame_ + FRAME_OFF(272)))
-undefined4 __cdecl save_load_map_only(undefined4 param_1)
-
-{
-  char *pcVar1;
-  FILE *_File;
-  int iVar2;
-  size_t sVar3;
-  undefined1 frame_[FRAME_OFF(536)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_214 = 1;
-  thunk_save_set_file_ext(0);
-  FUN_005f22d0(local_108,param_1);
-  pcVar1 = _strchr(local_108,0x2e);
-  if (pcVar1 == (char *)0x0) {
-    FUN_005f22e0(local_108,&save_file_path);
-  }
-  _File = _fopen(local_108,&save_peek_read_mode);
-  if ((_File != (FILE *)0x0) &&
-     (iVar2 = thunk_save_read_cstr((iptr)local_20c,(iptr)_File), iVar2 != 0)) {
-    iVar2 = _strcmp(PTR_s_CIVILIZE_0062b990,local_20c);
-    if (iVar2 == 0) {
-      sVar3 = _fread(local_210,2,1,_File);
-      if (sVar3 != 0) {
-        if (local_210[0] < 0x2d) {
-          if (local_210[0] < 0x26) {
-            local_214 = 2;
-          }
-          else {
-            local_214 = 3;
-            iVar2 = thunk_save_load_gpk((int)local_210[0],(iptr)_File);
-            if ((iVar2 != 0) && (iVar2 = map_read((iptr)_File,0), iVar2 == 0)) {
-              map.flat = game.rules & 0x8000;
-              local_214 = 0;
-            }
-          }
-        }
-        else {
-          local_214 = 4;
-        }
-      }
-    }
-    else {
-      local_214 = 1;
-    }
-  }
-  if (_File != (FILE *)0x0) {
-    _fclose(_File);
-  }
-  return local_214;
-}
-#undef local_214
-#undef local_210
-#undef local_20c
+#undef leader
 #undef local_108
 
 /* 00475666 game (src/game/retvals.c) */
@@ -2023,9 +1894,9 @@ undefined4 __cdecl save_load_map_only(undefined4 param_1)
 #define scenario_flags (*(undefined2 *)((u8 *)&g.d_0064bc60))
 #define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
 #define local_74c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_748 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_744 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_73c (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define civ (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(12)))
+#define city (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_738 (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define local_734 (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_730 (*(iptr *)(frame_ + FRAME_OFF(32)))
@@ -2039,7 +1910,7 @@ undefined4 __cdecl save_load_map_only(undefined4 param_1)
 #define local_328 (*(int *)(frame_ + FRAME_OFF(1064)))
 #define local_324 (*(char (*)[260])(frame_ + FRAME_OFF(1068)))
 #define local_220 (*(int *)(frame_ + FRAME_OFF(1328)))
-#define local_21c (*(iptr *)(frame_ + FRAME_OFF(1332)))
+#define leader (*(iptr *)(frame_ + FRAME_OFF(1332)))
 #define local_218 (*(char (*)[260])(frame_ + FRAME_OFF(1336)))
 #define local_114 (*(char (*)[4])(frame_ + FRAME_OFF(1596)))
 #define local_110 (*(int *)(frame_ + FRAME_OFF(1600)))
@@ -2062,7 +1933,7 @@ int __cdecl save_read_game(iptr param_1)
   local_338 = 1;
   local_110 = 0;
   local_334 = (uint)game.multiplayer;
-  thunk_save_set_file_ext(0);
+  save_set_file_ext(0);
   FUN_005f22d0(local_218,param_1);
   pcVar2 = _strchr(local_218,0x2e);
   if (pcVar2 == (char *)0x0) {
@@ -2070,7 +1941,7 @@ int __cdecl save_read_game(iptr param_1)
   }
   _File = _fopen(local_218,&save_read_mode);
   if ((_File == (FILE *)0x0) ||
-     (iVar3 = thunk_save_read_cstr((iptr)local_324,(iptr)_File), iVar3 == 0)) goto LAB_00477352;
+     (iVar3 = save_read_cstr((iptr)local_324,(iptr)_File), iVar3 == 0)) goto LAB_00477352;
   iVar3 = _strcmp(PTR_s_CIVILIZE_0062b990,local_324);
   if (iVar3 != 0) {
     local_338 = 1;
@@ -2087,14 +1958,14 @@ int __cdecl save_read_game(iptr param_1)
     local_338 = 2;
     goto LAB_00477352;
   }
-  thunk_ui_flush_input();
+  ui_flush_input();
   FUN_005f22d0(&scenario_dir_path,param_1);
   local_10c = _strrchr(&scenario_dir_path,0x5c);
   *local_10c = '\0';
   __chdir(&scenario_dir_path);
   FUN_005f22d0(local_108,s_GAME__0062bae8);
   FUN_005f22e0(local_108,&lang_file_ext);
-  iVar3 = thunk_file_exists((iptr)local_108);
+  iVar3 = file_exists((iptr)local_108);
   if (iVar3 == 0) {
     FUN_005f22d0(&game_txt_path,&game_txt_default_name_str);
   }
@@ -2103,7 +1974,7 @@ int __cdecl save_read_game(iptr param_1)
     FUN_005f22e0(&game_txt_path,s__GAME_0062baf0);
   }
   local_10c = _strrchr((char *)param_1,0x5c);
-  local_10c = local_10c + 1;
+  local_10c++;
   FUN_005f22d0(&loaded_file_name,local_10c);
   sVar4 = _strlen(&game_home_dir);
   iVar3 = __strnicmp((char *)param_1,&game_home_dir,sVar4);
@@ -2120,11 +1991,11 @@ int __cdecl save_read_game(iptr param_1)
     }
   }
   __chdir(&game_home_dir);
-  thunk_ui_flush_input();
-  thunk_rules_load(1);
+  ui_flush_input();
+  rules_load(1);
   local_338 = 3;
-  thunk_ui_flush_input();
-  iVar3 = thunk_save_load_gpk(local_32c & 0xffff,(iptr)_File);
+  ui_flush_input();
+  iVar3 = save_load_gpk(local_32c & 0xffff,(iptr)_File);
   if (iVar3 == 0) goto LAB_00477352;
   if (game.multiplayer != '\0') {
     game.game_options = game.game_options & 0xffff7fff;
@@ -2149,14 +2020,14 @@ int __cdecl save_read_game(iptr param_1)
       (sVar4 = _fread(map_coarse[0],(int)map.quarter_w * (int)map.quarter_h,1,_File), sVar4 == 0))
      || (sVar4 = _fread(map_coarse[1],(int)map.quarter_w * (int)map.quarter_h,1,_File), sVar4 == 0))
   goto LAB_00477352;
-  thunk_ui_flush_input();
+  ui_flush_input();
   sVar4 = _fread(&landmass_table,0x400,1,_File);
-  if ((sVar4 == 0) || (iVar3 = thunk_save_read_units_cities(local_32c & 0xffff,(iptr)_File), iVar3 == 0))
+  if ((sVar4 == 0) || (iVar3 = save_read_units_cities(local_32c & 0xffff,(iptr)_File), iVar3 == 0))
   goto LAB_00477352;
-  for (local_21c = 0; local_21c < 0x15; local_21c = local_21c + 1) {
-    sVar4 = _fread(&leaders[local_21c].times_used,1,1,_File);
-    if (((sVar4 == 0) || (sVar4 = _fread(&leaders[local_21c].city_name_index,1,1,_File), sVar4 == 0)
-        ) || (sVar4 = _fread(&leaders[local_21c].female,1,1,_File), sVar4 == 0)) goto LAB_00477352;
+  for (leader = 0; leader < 0x15; leader++) {
+    sVar4 = _fread(&leaders[leader].times_used,1,1,_File);
+    if (((sVar4 == 0) || (sVar4 = _fread(&leaders[leader].city_name_index,1,1,_File), sVar4 == 0)
+        ) || (sVar4 = _fread(&leaders[leader].female,1,1,_File), sVar4 == 0)) goto LAB_00477352;
   }
   sVar4 = _fread(&map_cursor_x,2,1,_File);
   if ((sVar4 == 0) ||
@@ -2167,10 +2038,10 @@ int __cdecl save_read_game(iptr param_1)
     if (sVar4 == 0) goto LAB_00477352;
   }
   else {
-    for (local_21c = 0; game.player_civ = iVar1, local_21c < 8; local_21c = local_21c + 1) {
-      if ((1 << ((byte)local_21c & 0x1f) & (uint)game.human_players) != 0) {
-        game.player_civ = (byte)local_21c;
-        sVar4 = _fread(local_728 + civs[(char)(byte)local_21c].tribe * 0x30,0x30,1,_File);
+    for (leader = 0; game.player_civ = iVar1, leader < 8; leader++) {
+      if ((1 << ((byte)leader & 0x1f) & (uint)game.human_players) != 0) {
+        game.player_civ = (byte)leader;
+        sVar4 = _fread(local_728 + civs[(char)(byte)leader].tribe * 0x30,0x30,1,_File);
         game.player_civ = iVar1;
         if (sVar4 == 0) goto LAB_00477352;
       }
@@ -2178,18 +2049,18 @@ int __cdecl save_read_game(iptr param_1)
   }
   sVar4 = _fread(&power_graph_history,0x4b0,1,_File);
   if ((sVar4 == 0) || (sVar4 = _fread(&save_layout_record,0x6a,1,_File), sVar4 == 0)) goto LAB_00477352;
-  thunk_save_unpack_layout_rects();
-  thunk_ui_flush_input();
-  for (local_21c = 0; local_21c < 8; local_21c = local_21c + 1) {
-    sVar4 = _fread(&map_view_open_flags + local_21c * 0x3f0,2,1,_File);
-    if ((((sVar4 == 0) || (sVar4 = _fread(&mapview_track_moves + local_21c * 0x3f0,2,1,_File), sVar4 == 0))
-        || (sVar4 = _fread(&map_view_center_x + local_21c * 0x1f8,2,1,_File), sVar4 == 0)) ||
-       ((sVar4 = _fread(&mapview_center_y + local_21c * 0x1f8,2,1,_File), sVar4 == 0 ||
-        (sVar4 = _fread(&mapview_zoom + local_21c * 0x1f8,2,1,_File), sVar4 == 0))))
+  save_unpack_layout_rects();
+  ui_flush_input();
+  for (leader = 0; leader < 8; leader++) {
+    sVar4 = _fread(&map_view_open_flags + leader * 0x3f0,2,1,_File);
+    if ((((sVar4 == 0) || (sVar4 = _fread(&mapview_track_moves + leader * 0x3f0,2,1,_File), sVar4 == 0))
+        || (sVar4 = _fread(&map_view_center_x + leader * 0x1f8,2,1,_File), sVar4 == 0)) ||
+       ((sVar4 = _fread(&mapview_center_y + leader * 0x1f8,2,1,_File), sVar4 == 0 ||
+        (sVar4 = _fread(&mapview_zoom + leader * 0x1f8,2,1,_File), sVar4 == 0))))
     goto LAB_00477352;
   }
   if ((local_220 == 0) && ((game.game_flags & 0x80) == 0)) {
-    thunk_scenario_reset_params();
+    scenario_reset_params();
   }
   else {
     sVar4 = _fread(&scenario_flags,100,1,_File);
@@ -2200,11 +2071,11 @@ int __cdecl save_read_game(iptr param_1)
     if (sVar4 == 0) goto LAB_00477352;
   }
   else {
-    thunk_destroyed_civs_clear();
+    destroyed_civs_clear();
   }
   human_civ = (iptr)game.field_1c;
   if (((local_32c & 0xffff) < 0x29) || (game.multiplayer == '\0')) {
-    thunk_passwords_reset();
+    passwords_reset();
     mp_open_game = 1;
     mp_kill_civ_on_retire = prefs_mp_kill_on_retire;
     mp_show_human_starts = prefs_mp_show_human_starts;
@@ -2223,7 +2094,7 @@ int __cdecl save_read_game(iptr param_1)
       saved_turn_civ = game.turn_civ;
     }
     if (saved_turn_civ == 0) {
-      for (local_328 = 1; local_328 < 8; local_328 = local_328 + 1) {
+      for (local_328 = 1; local_328 < 8; local_328++) {
         if ((1 << ((byte)local_328 & 0x1f) & (uint)game.civs_alive) != 0) {
           saved_turn_civ = (byte)local_328;
           break;
@@ -2231,110 +2102,110 @@ int __cdecl save_read_game(iptr param_1)
       }
     }
     turn_resume_civ = saved_turn_civ;
-    thunk_passwords_refresh_flags();
+    passwords_refresh_flags();
   }
   scenario_events_loaded = 0;
   sVar4 = _fread(local_114,4,1,_File);
   if ((sVar4 != 0) && (iVar3 = _strncmp(local_114,&save_events_tag_check_str,4), iVar3 == 0)) {
     sVar4 = _fread(&local_328,4,1,_File);
     if (sVar4 == 0) goto LAB_00477352;
-    thunk_events_reset((ScenarioEvents *)&scenario_events,50000);
-    for (local_330 = 0; local_330 < local_328; local_330 = local_330 + 1) {
-      _DstBuf = (void *)thunk_events_alloc((ScenarioEvents *)&scenario_events);
+    events_reset((ScenarioEvents *)&scenario_events,50000);
+    for (local_330 = 0; local_330 < local_328; local_330++) {
+      _DstBuf = (void *)events_alloc((ScenarioEvents *)&scenario_events);
       if (_DstBuf == (void *)0x0) {
-        thunk_error_report(0xfffffff7,3,0,0,0);
+        error_report(0xfffffff7,3,0,0,0);
       }
       sVar4 = _fread(_DstBuf,0x1bc,1,_File);
       if (sVar4 == 0) goto LAB_00477352;
     }
     for (local_734 = events_list_head; local_734 != 0; local_734 = *(iptr *)(local_734 + 0x1bc)) {
       if (*(int *)(local_734 + 8) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 8) = uVar6;
         if (*(int *)(local_734 + 8) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x10) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x10) = uVar6;
         if (*(int *)(local_734 + 0x10) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x14) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x14) = uVar6;
         if (*(int *)(local_734 + 0x14) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x20) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x20) = uVar6;
         if (*(int *)(local_734 + 0x20) == 0) goto LAB_00477352;
       }
       for (local_330 = 0; (local_330 < 0x14 && (*(int *)(local_734 + 0x38 + local_330 * 4) != 0));
           local_330 = local_330 + 1) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x38 + local_330 * 4) = uVar6;
         if (*(int *)(local_734 + 0x38 + local_330 * 4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x88) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x88) = uVar6;
         if (*(int *)(local_734 + 0x88) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x90) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x90) = uVar6;
         if (*(int *)(local_734 + 0x90) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xc4) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0xc4) = uVar6;
         if (*(int *)(local_734 + 0xc4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xcc) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0xcc) = uVar6;
         if (*(int *)(local_734 + 0xcc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xd4) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0xd4) = uVar6;
         if (*(int *)(local_734 + 0xd4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xdc) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0xdc) = uVar6;
         if (*(int *)(local_734 + 0xdc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x13c) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x13c) = uVar6;
         if (*(int *)(local_734 + 0x13c) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x140) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x140) = uVar6;
         if (*(int *)(local_734 + 0x140) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x148) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x148) = uVar6;
         if (*(int *)(local_734 + 0x148) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x174) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x174) = uVar6;
         if (*(int *)(local_734 + 0x174) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x184) != 0) {
-        uVar6 = thunk_save_read_event_str((iptr)_File);
+        uVar6 = save_read_event_str((iptr)_File);
         *(undefined4 *)(local_734 + 0x184) = uVar6;
         if (*(int *)(local_734 + 0x184) == 0) goto LAB_00477352;
       }
     }
-    thunk_events_compact();
+    events_compact();
     scenario_events_loaded = 1;
   }
-  thunk_ui_flush_input();
-  thunk_leaders_fixup_names();
+  ui_flush_input();
+  leaders_fixup_names();
   iVar1 = game.player_civ;
   if ((local_220 == 0) && ((game.game_flags & 0x80) == 0)) {
     if (game.multiplayer == '\0') {
@@ -2347,22 +2218,20 @@ int __cdecl save_read_game(iptr param_1)
         leaders[civs[game.player_civ].tribe].adjective =
              -leaders[civs[game.player_civ].tribe].adjective;
       }
-      for (local_21c = 0; local_21c < 7; local_21c = local_21c + 1) {
-        for (local_738 = 0; local_738 < 2; local_738 = local_738 + 1) {
-          if (local_71c[local_738 + local_21c * 2 + 4] < 0) {
-            *(short *)(civs[game.player_civ].tribe * 0x30 + local_738 * 2 + ADDR(0x65550c, ((u8 *)&leaders + 20)) + local_21c * 4
-                      ) = -*(short *)(civs[game.player_civ].tribe * 0x30 + local_738 * 2 + ADDR(0x65550c, ((u8 *)&leaders + 20))
-                                     + local_21c * 4);
+      for (leader = 0; leader < 7; leader++) {
+        for (local_738 = 0; local_738 < 2; local_738++) {
+          if (local_71c[local_738 + leader * 2 + 4] < 0) {
+            leaders[civs[game.player_civ].tribe].titles[leader][local_738] = -leaders[civs[game.player_civ].tribe].titles[leader][local_738];
           }
         }
       }
     }
     else {
-      for (local_748 = 0; game.player_civ = iVar1, local_748 < 8; local_748 = local_748 + 1) {
-        if ((1 << ((byte)local_748 & 0x1f) & (uint)game.human_players) != 0) {
-          game.player_civ = (byte)local_748;
-          leaders[civs[(char)(byte)local_748].tribe].leader_name =
-               -leaders[civs[(char)(byte)local_748].tribe].leader_name;
+      for (civ = 0; game.player_civ = iVar1, civ < 8; civ++) {
+        if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
+          game.player_civ = (byte)civ;
+          leaders[civs[(char)(byte)civ].tribe].leader_name =
+               -leaders[civs[(char)(byte)civ].tribe].leader_name;
           if (local_71c[civs[game.player_civ].tribe * 0x18] < 0) {
             leaders[civs[game.player_civ].tribe].plural =
                  -leaders[civs[game.player_civ].tribe].plural;
@@ -2371,14 +2240,12 @@ int __cdecl save_read_game(iptr param_1)
             leaders[civs[game.player_civ].tribe].adjective =
                  -leaders[civs[game.player_civ].tribe].adjective;
           }
-          for (local_21c = 0; local_21c < 7; local_21c = local_21c + 1) {
-            for (local_738 = 0; local_738 < 2; local_738 = local_738 + 1) {
-              if (local_71c[local_21c * 2 + local_738 + civs[game.player_civ].tribe * 0x18 + 4] < 0)
+          for (leader = 0; leader < 7; leader++) {
+            for (local_738 = 0; local_738 < 2; local_738++) {
+              if (local_71c[leader * 2 + local_738 + civs[game.player_civ].tribe * 0x18 + 4] < 0)
               {
-                *(short *)(civs[game.player_civ].tribe * 0x30 + local_738 * 2 + ADDR(0x65550c, ((u8 *)&leaders + 20)) +
-                          local_21c * 4) =
-                     -*(short *)(civs[game.player_civ].tribe * 0x30 + local_738 * 2 + ADDR(0x65550c, ((u8 *)&leaders + 20)) +
-                                local_21c * 4);
+                leaders[civs[game.player_civ].tribe].titles[leader][local_738] =
+                     -leaders[civs[game.player_civ].tribe].titles[leader][local_738];
               }
             }
           }
@@ -2387,69 +2254,69 @@ int __cdecl save_read_game(iptr param_1)
     }
   }
   else {
-    for (local_748 = 1; local_748 < 8; local_748 = local_748 + 1) {
-      if ((civs[local_748].flags & 0x200) == 0) {
-        leaders[civs[local_748].tribe].female = '\0';
+    for (civ = 1; civ < 8; civ++) {
+      if ((civs[civ].flags & 0x200) == 0) {
+        leaders[civs[civ].tribe].female = '\0';
       }
       else {
-        leaders[civs[local_748].tribe].female = '\x01';
+        leaders[civs[civ].tribe].female = 1;
       }
-      civs[local_748].leader_portrait = (u8)civs[local_748].tribe;
-      if (leaders[civs[local_748].tribe].female != '\0') {
-        civs[local_748].leader_portrait = civs[local_748].leader_portrait + '\x15';
+      civs[civ].leader_portrait = (u8)civs[civ].tribe;
+      if (leaders[civs[civ].tribe].female != '\0') {
+        civs[civ].leader_portrait += 21;
       }
-      if (leaders[civs[local_748].tribe].plural < 1) {
-        local_74c = ~(int)leaders[civs[local_748].tribe].plural + 1;
+      if (leaders[civs[civ].tribe].plural < 1) {
+        local_74c = ~(int)leaders[civs[civ].tribe].plural + 1;
       }
       else {
-        local_74c = (int)leaders[civs[local_748].tribe].plural;
+        local_74c = (int)leaders[civs[civ].tribe].plural;
       }
-      pcVar2 = (char *)thunk_label_string(local_74c);
-      iVar3 = _strcmp(civ_names[local_748].tribe_name,pcVar2);
+      pcVar2 = (char *)label_string(local_74c);
+      iVar3 = _strcmp(civ_names[civ].tribe_name,pcVar2);
       if (iVar3 == 0) {
-        for (local_21c = 0; local_21c < 7; local_21c = local_21c + 1) {
-          for (local_738 = 0; local_738 < 2; local_738 = local_738 + 1) {
-            *(short *)(civs[local_748].tribe * 0x30 + local_738 * 2 + ADDR(0x65550c, ((u8 *)&leaders + 20)) + local_21c * 4) =
-                 (short)(&government_titles[local_21c].male)[local_738];
+        for (leader = 0; leader < 7; leader++) {
+          for (local_738 = 0; local_738 < 2; local_738++) {
+            leaders[civs[civ].tribe].titles[leader][local_738] =
+                 (short)(&government_titles[leader].male)[local_738];
           }
         }
       }
-      leaders[civs[local_748].tribe].leader_name = -leaders[civs[local_748].tribe].leader_name;
-      leaders[civs[local_748].tribe].plural = -leaders[civs[local_748].tribe].plural;
-      leaders[civs[local_748].tribe].adjective = -leaders[civs[local_748].tribe].adjective;
+      leaders[civs[civ].tribe].leader_name = -leaders[civs[civ].tribe].leader_name;
+      leaders[civs[civ].tribe].plural = -leaders[civs[civ].tribe].plural;
+      leaders[civs[civ].tribe].adjective = -leaders[civs[civ].tribe].adjective;
     }
   }
-  thunk_ui_flush_input();
-  for (local_748 = 0; local_748 < 8; local_748 = local_748 + 1) {
-    for (local_730 = 0; local_730 < 0x3e; local_730 = local_730 + 1) {
-      *(undefined1 *)(local_730 + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + local_748 * 0x594) = 0;
-      *(undefined1 *)(local_730 + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_748 * 0x594) = 0;
+  ui_flush_input();
+  for (civ = 0; civ < 8; civ++) {
+    for (local_730 = 0; local_730 < 0x3e; local_730++) {
+      *(undefined1 *)&civs[civ].units_in_production[local_730] = 0;
+      *(undefined1 *)&civs[civ].units_active[local_730] = 0;
     }
-    for (local_744 = 0; local_744 < game.num_units; local_744 = local_744 + 1) {
-      if ((units[local_744].id != 0) && (units[local_744].owner == local_748)) {
-        pcVar2 = (char *)(units[local_744].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_748 * 0x594);
-        *pcVar2 = *pcVar2 + '\x01';
+    for (unit = 0; unit < game.num_units; unit++) {
+      if ((units[unit].id != 0) && (units[unit].owner == civ)) {
+        pcVar2 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+        *pcVar2 = *pcVar2 + 1;
       }
     }
-    for (local_73c = 0; local_73c < game.num_cities; local_73c = local_73c + 1) {
-      if (((cities[local_73c].id != 0) && (cities[local_73c].owner == local_748)) &&
-         (-1 < cities[local_73c].building)) {
-        pcVar2 = (char *)(cities[local_73c].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + local_748 * 0x594);
-        *pcVar2 = *pcVar2 + '\x01';
+    for (city = 0; city < game.num_cities; city++) {
+      if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
+         (-1 < cities[city].building)) {
+        pcVar2 = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + civ * 0x594);
+        *pcVar2 = *pcVar2 + 1;
       }
     }
   }
   city_calc_cached_id = 0xffffffff;
-  thunk_rules_load_advances(1);
-  thunk_rules_load_improvements(1);
-  thunk_rules_load_units(1);
-  thunk_text_close_file();
+  rules_load_advances(1);
+  rules_load_improvements(1);
+  rules_load_units(1);
+  text_close_file();
   saved_layout_valid = 1;
-  iVar3 = thunk_rect_width(ADDR(0x655284, ((u8 *)&g.d_00655284)));
-  iVar7 = thunk_rect_width(ADDR(0x6ab180, ((u8 *)&g.d_006ab180)));
+  iVar3 = rect_width(ADDR(0x655284, ((u8 *)&g.d_00655284)));
+  iVar7 = rect_width(ADDR(0x6ab180, ((u8 *)&g.d_006ab180)));
   if (iVar3 == iVar7) {
-    iVar3 = thunk_rect_height(ADDR(0x655284, ((u8 *)&g.d_00655284)));
-    iVar7 = thunk_rect_height(ADDR(0x6ab180, ((u8 *)&g.d_006ab180)));
+    iVar3 = rect_height(ADDR(0x655284, ((u8 *)&g.d_00655284)));
+    iVar7 = rect_height(ADDR(0x6ab180, ((u8 *)&g.d_006ab180)));
     if ((iVar3 != iVar7) || (local_220 != 0)) goto LAB_0047733e;
   }
   else {
@@ -2470,7 +2337,7 @@ LAB_00477352:
     prefs_mp_simultaneous_moves = 0;
     if (game.human_players == '\0') {
       if ((turn_resume_civ == 0) || ((1 << (turn_resume_civ & 0x1f) & (uint)game.civs_alive) == 0)) {
-        for (local_330 = 1; local_330 < 8; local_330 = local_330 + 1) {
+        for (local_330 = 1; local_330 < 8; local_330++) {
           if ((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0) {
             game.human_players = (u8)(1 << ((byte)local_330 & 0x1f));
             break;
@@ -2514,9 +2381,9 @@ LAB_00477352:
 #undef scenario_flags
 #undef turn_resume_civ
 #undef local_74c
-#undef local_748
-#undef local_744
-#undef local_73c
+#undef civ
+#undef unit
+#undef city
 #undef local_738
 #undef local_734
 #undef local_730
@@ -2530,7 +2397,7 @@ LAB_00477352:
 #undef local_328
 #undef local_324
 #undef local_220
-#undef local_21c
+#undef leader
 #undef local_218
 #undef local_114
 #undef local_110
@@ -2569,43 +2436,43 @@ void __cdecl game_save_dialog(int param_1)
   undefined1 frame_[FRAME_OFF(600)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (game_setup_complete != 0) {
-    thunk_mp_turn_timer_stop(1);
+    mp_turn_timer_stop(1);
     do {
-      thunk_save_set_file_ext(param_1);
-      thunk_str_clear((iptr)&local_10c);
-      thunk_str_append_label((iptr)&local_10c,(-(uint)(param_1 == 0) & 0xffffff4f) + 0x19f);
-      thunk_str_append_space((iptr)&local_10c);
-      thunk_str_append_lparen((iptr)&local_10c);
-      thunk_str_append((iptr)&local_10c,ADDR(0x62bb08, ((u8 *)&g.d_0062bb08)));
-      thunk_str_append((iptr)&local_10c,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
-      thunk_str_append_rparen((iptr)&local_10c);
+      save_set_file_ext(param_1);
+      str_clear((iptr)&local_10c);
+      str_append_label((iptr)&local_10c,(-(uint)(param_1 == 0) & 0xffffff4f) + 0x19f);
+      str_append_space((iptr)&local_10c);
+      str_append_lparen((iptr)&local_10c);
+      str_append((iptr)&local_10c,ADDR(0x62bb08, ((u8 *)&g.d_0062bb08)));
+      str_append((iptr)&local_10c,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
+      str_append_rparen((iptr)&local_10c);
       sVar1 = _strlen(&local_10c);
       local_8 = acStack_10b + sVar1;
-      thunk_str_clear((iptr)local_8);
-      thunk_str_append((iptr)local_8,ADDR(0x62bb0c, ((u8 *)&g.d_0062bb0c)));
-      thunk_str_append((iptr)local_8,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
+      str_clear((iptr)local_8);
+      str_append((iptr)local_8,ADDR(0x62bb0c, ((u8 *)&g.d_0062bb0c)));
+      str_append((iptr)local_8,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
       sVar2 = _strlen(local_8);
       local_8 = local_8 + sVar2 + 1;
-      thunk_str_clear((iptr)local_8);
-      thunk_str_clear((iptr)(acStack_211 + 1));
-      uVar1 = thunk_civ_leader_name(human_civ);
+      str_clear((iptr)local_8);
+      str_clear((iptr)(acStack_211 + 1));
+      uVar1 = civ_leader_name(human_civ);
       FUN_005f22e0(acStack_211 + 1,uVar1);
       acStack_211[3] = 0;
-      thunk_str_append((iptr)(acStack_211 + 1),ADDR(0x62bb10, ((u8 *)&g.d_0062bb10)));
+      str_append((iptr)(acStack_211 + 1),ADDR(0x62bb10, ((u8 *)&g.d_0062bb10)));
       local_8 = acStack_211;
       while (local_8 = local_8 + 1, *local_8 != '\0') {
-        if (('\x1f' < *local_8) && (*local_8 < 'A')) {
+        if ((31 < *local_8) && (*local_8 < 'A')) {
           *local_8 = '_';
         }
       }
-      thunk_text_clear();
+      text_clear();
       if (game.year < 0) {
-        thunk_text_append(ADDR(0x62bb18, ((u8 *)&g.d_0062bb18)));
+        text_append(ADDR(0x62bb18, ((u8 *)&g.d_0062bb18)));
       }
       else {
-        thunk_text_append(ADDR(0x62bb14, ((u8 *)&g.d_0062bb14)));
+        text_append(ADDR(0x62bb14, ((u8 *)&g.d_0062bb14)));
       }
-      thunk_str_append_space((iptr)(acStack_211 + 1));
+      str_append_space((iptr)(acStack_211 + 1));
       sVar3 = _strlen(acStack_211 + 1);
       acStack_211[sVar3] = text_buffer;
       if (game.year < 1) {
@@ -2614,8 +2481,8 @@ void __cdecl game_save_dialog(int param_1)
       else {
         local_248 = (int)game.year;
       }
-      thunk_str_append_int((iptr)(acStack_211 + 1),local_248);
-      if ((game.multiplayer == '\x02') && (param_1 == 0)) {
+      str_append_int((iptr)(acStack_211 + 1),local_248);
+      if ((game.multiplayer == 2) && (param_1 == 0)) {
         GetLocalTime(&local_240);
         FUN_005f22e0(acStack_211 + 1,&save_name_date_sep_str);
         __itoa((uint)(*(undefined4 *)((char *)&local_240 + 0)) >> 0x10,local_230,10);
@@ -2640,14 +2507,14 @@ void __cdecl game_save_dialog(int param_1)
       FUN_005f22e0(acStack_211 + 1,&save_file_ext_bare);
       __strlwr(acStack_211 + 1);
       if (((param_1 != 0) || ((game.game_flags & 0x80) != 0)) && (scenario_year_increment < 0)) {
-        thunk_str_clear((iptr)(acStack_211 + 1));
+        str_clear((iptr)(acStack_211 + 1));
         if ((int)game.year / 0xc < 1) {
           local_24c = ~((int)game.year / 0xc) + 1;
         }
         else {
           local_24c = (int)game.year / 0xc;
         }
-        thunk_str_append_int((iptr)(acStack_211 + 1),local_24c);
+        str_append_int((iptr)(acStack_211 + 1),local_24c);
         if (game.year < 0) {
           if ((int)game.year % 0xc < 1) {
             local_254 = ~((int)game.year % 0xc) + 1;
@@ -2655,7 +2522,7 @@ void __cdecl game_save_dialog(int param_1)
           else {
             local_254 = (int)game.year % 0xc;
           }
-          thunk_str_append_label((iptr)(acStack_211 + 1),0x1af - local_254);
+          str_append_label((iptr)(acStack_211 + 1),0x1af - local_254);
         }
         else {
           if ((int)game.year % 0xc < 1) {
@@ -2664,59 +2531,59 @@ void __cdecl game_save_dialog(int param_1)
           else {
             local_250 = (int)game.year % 0xc;
           }
-          thunk_str_append_label((iptr)(acStack_211 + 1),local_250 + 0x1a4);
+          str_append_label((iptr)(acStack_211 + 1),local_250 + 0x1a4);
         }
         FUN_005f22e0(acStack_211 + 1,&save_file_path);
         __strlwr(acStack_211 + 1);
       }
       __chdir(&scenario_dir_path);
-      thunk_save_file_filter(1,param_1,0);
+      save_file_filter(1,param_1,0);
       uVar9 = 1;
       uVar1 = 0;
       puVar8 = &save_file_ext_bare;
       puVar7 = &save_file_filter_buf;
       pcVar6 = acStack_211 + 1;
-      iVar4 = thunk_label_string(*(undefined4 *)
+      iVar4 = label_string(*(undefined4 *)
                                   (label_string_ids + 0x680 + (-(uint)(param_1 == 0) & 0xffffff4f) * 4)
                                 );
-      iVar5 = thunk_ui_file_name_dialog(ADDR(0x6553d8, ((u8 *)&g.d_006553d8)),iVar4,(iptr)pcVar6,(iptr)puVar7,(iptr)puVar8,uVar1,uVar9);
+      iVar5 = ui_file_name_dialog(ADDR(0x6553d8, ((u8 *)&g.d_006553d8)),iVar4,(iptr)pcVar6,(iptr)puVar7,(iptr)puVar8,uVar1,uVar9);
       if (iVar5 != 0) {
         __chdir(&game_home_dir);
-        iVar5 = thunk_save_write_game((iptr)(acStack_211 + 1),param_1);
+        iVar5 = save_write_game((iptr)(acStack_211 + 1),param_1);
         if (iVar5 == 0) {
           if (param_1 == 0) {
-            if (game.multiplayer == '\x02') {
-              thunk_text_set_string_arg(0,(iptr)(acStack_211 + 1));
-              thunk_popup_game(ADDR(0x62bb4c, ((u8 *)&g.d_0062bb4c)));
+            if (game.multiplayer == 2) {
+              text_set_string_arg(0,(iptr)(acStack_211 + 1));
+              popup_game(ADDR(0x62bb4c, ((u8 *)&g.d_0062bb4c)));
             }
             else {
-              iVar4 = thunk_civ_leader_title(human_civ);
-              thunk_text_set_string_arg(0,iVar4);
-              iVar4 = thunk_civ_leader_name(human_civ);
-              thunk_text_set_string_arg(1,iVar4);
-              iVar4 = thunk_civ_name_plural(human_civ);
-              thunk_text_set_string_arg(2,iVar4);
-              thunk_text_clear();
-              thunk_text_append_year((int)game.year);
-              thunk_text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-              thunk_text_set_label_arg(4,difficulty_names[game.difficulty]);
-              thunk_popup_game(ADDR(0x62bb58, ((u8 *)&g.d_0062bb58)));
+              iVar4 = civ_leader_title(human_civ);
+              text_set_string_arg(0,iVar4);
+              iVar4 = civ_leader_name(human_civ);
+              text_set_string_arg(1,iVar4);
+              iVar4 = civ_name_plural(human_civ);
+              text_set_string_arg(2,iVar4);
+              text_clear();
+              text_append_year((int)game.year);
+              text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+              text_set_label_arg(4,difficulty_names[game.difficulty]);
+              popup_game(ADDR(0x62bb58, ((u8 *)&g.d_0062bb58)));
             }
           }
           else {
-            thunk_text_set_string_arg(0,ADDR(0x64bc62, ((u8 *)&g.d_0064bc62)));
-            thunk_popup_game(ADDR(0x62bb44, ((u8 *)&g.d_0062bb44)));
+            text_set_string_arg(0,ADDR(0x64bc62, ((u8 *)&g.d_0064bc62)));
+            popup_game(ADDR(0x62bb44, ((u8 *)&g.d_0062bb44)));
           }
         }
         else {
-          thunk_text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
-          thunk_popup_game(ADDR(0x62bb38, ((u8 *)&g.d_0062bb38)));
+          text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
+          popup_game(ADDR(0x62bb38, ((u8 *)&g.d_0062bb38)));
         }
         break;
       }
       __chdir(&game_home_dir);
-    } while (game.multiplayer == '\x02');
-    thunk_mp_turn_timer_resume(1);
+    } while (game.multiplayer == 2);
+    mp_turn_timer_resume(1);
   }
   return;
 }
@@ -2748,7 +2615,7 @@ void __cdecl game_save_dialog(int param_1)
 #define local_974 (*(CHAR (*)[260])(frame_ + FRAME_OFF(340)))
 #define local_870 (*(int *)(frame_ + FRAME_OFF(600)))
 #define local_86c (*(char * *)(frame_ + FRAME_OFF(604)))
-#define local_868 (*(iptr *)(frame_ + FRAME_OFF(608)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(608)))
 #define local_864 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(612)))
 #define local_760 (*(int *)(frame_ + FRAME_OFF(872)))
 #define local_75c (*(char *)(frame_ + FRAME_OFF(876)))
@@ -2783,49 +2650,49 @@ int __cdecl game_load_dialog(int param_1,undefined4 param_2,int param_3)
   palette_init(&local_658);
   local_8 = 0;
   if (param_1 == 0) {
-    thunk_save_set_file_ext(0);
+    save_set_file_ext(0);
     loaded_file_kind = 1;
   }
   else {
-    thunk_save_set_file_ext(1);
+    save_set_file_ext(1);
     loaded_file_kind = 2;
   }
-  thunk_str_clear((iptr)&local_75c);
-  thunk_str_append_label((iptr)&local_75c,(-(uint)(param_1 == 0) & 0xffffff4f) + 0x19f);
-  thunk_str_append_space((iptr)&local_75c);
-  thunk_str_append_lparen((iptr)&local_75c);
-  thunk_str_append((iptr)&local_75c,ADDR(0x62bb60, ((u8 *)&g.d_0062bb60)));
-  thunk_str_append((iptr)&local_75c,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
-  thunk_str_append_rparen((iptr)&local_75c);
+  str_clear((iptr)&local_75c);
+  str_append_label((iptr)&local_75c,(-(uint)(param_1 == 0) & 0xffffff4f) + 0x19f);
+  str_append_space((iptr)&local_75c);
+  str_append_lparen((iptr)&local_75c);
+  str_append((iptr)&local_75c,ADDR(0x62bb60, ((u8 *)&g.d_0062bb60)));
+  str_append((iptr)&local_75c,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
+  str_append_rparen((iptr)&local_75c);
   sVar1 = _strlen(&local_75c);
   local_120 = acStack_75b + sVar1;
-  thunk_str_clear((iptr)local_120);
-  thunk_str_append((iptr)local_120,ADDR(0x62bb64, ((u8 *)&g.d_0062bb64)));
-  thunk_str_append((iptr)local_120,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
+  str_clear((iptr)local_120);
+  str_append((iptr)local_120,ADDR(0x62bb64, ((u8 *)&g.d_0062bb64)));
+  str_append((iptr)local_120,ADDR(0x66c4e9, ((u8 *)&g.d_0066c4e9)));
   sVar1 = _strlen(local_120);
   local_120 = local_120 + sVar1 + 1;
-  thunk_str_clear((iptr)local_120);
+  str_clear((iptr)local_120);
   FUN_005f22d0(local_864,&load_dialog_wildcard_str);
   FUN_005f22e0(local_864,&save_file_ext_bare);
   __chdir(&scenario_dir_path);
-  thunk_save_file_filter(0,param_1,0);
+  save_file_filter(0,param_1,0);
   uVar11 = 0;
   uVar10 = 1;
   puVar9 = &save_file_ext_bare;
   puVar8 = &save_file_filter_buf;
   puVar7 = local_864;
-  iVar2 = thunk_label_string(*(undefined4 *)
+  iVar2 = label_string(*(undefined4 *)
                               (label_string_ids + 0x684 + (-(uint)(param_1 == 0) & 0xffffff4f) * 4));
-  iVar3 = thunk_ui_file_name_dialog(ADDR(0x6553d8, ((u8 *)&g.d_006553d8)),iVar2,(iptr)puVar7,(iptr)puVar8,(iptr)puVar9,uVar10,uVar11);
+  iVar3 = ui_file_name_dialog(ADDR(0x6553d8, ((u8 *)&g.d_006553d8)),iVar2,(iptr)puVar7,(iptr)puVar8,(iptr)puVar9,uVar10,uVar11);
   if (iVar3 == 0) {
     __chdir(&game_home_dir);
   }
   else {
     __chdir(&game_home_dir);
-    for (local_11c = 1; local_11c < 8; local_11c = local_11c + 1) {
+    for (local_11c = 1; local_11c < 8; local_11c++) {
       if (*(short *)(&map_view_open_flags + local_11c * 0x3f0) != 0) {
         *(undefined2 *)(&map_view_open_flags + local_11c * 0x3f0) = 0;
-        thunk_wnd_destroy_with_surface((DibSurface *)(&map_views + local_11c * 0x3f0));
+        wnd_destroy_with_surface((DibSurface *)(&map_views + local_11c * 0x3f0));
       }
     }
     FUN_005f22d0(local_118,local_864);
@@ -2834,7 +2701,7 @@ int __cdecl game_load_dialog(int param_1,undefined4 param_2,int param_3)
     if (pcVar4 != (char *)0x0) {
       FUN_005f22d0(local_118,local_864);
       local_86c = _strrchr(local_118,0x5c);
-      local_86c = local_86c + 1;
+      local_86c++;
       *local_86c = '\0';
       FUN_005f22d0(local_974,local_118);
       FUN_005f22e0(local_974,s___ALT_0062bb74);
@@ -2842,7 +2709,7 @@ int __cdecl game_load_dialog(int param_1,undefined4 param_2,int param_3)
       pvVar5 = FindFirstFileA(local_974,&local_ab4);
       if (pvVar5 != (HANDLE)0xffffffff) {
         do {
-          local_870 = local_870 + 1;
+          local_870++;
           BVar6 = FindNextFileA(pvVar5,&local_ab4);
         } while (BVar6 == 1);
       }
@@ -2859,114 +2726,114 @@ int __cdecl game_load_dialog(int param_1,undefined4 param_2,int param_3)
         }
       }
     }
-    thunk_snd_play_effect(-0x6b,0,0,0);
-    thunk_snd_play_effect(-0x6c,0,0,0);
-    thunk_snd_play_effect(0x6a,0,0,0);
-    local_14 = thunk_save_read_game((iptr)local_864);
+    snd_play_effect(-0x6b,0,0,0);
+    snd_play_effect(-0x6c,0,0,0);
+    snd_play_effect(0x6a,0,0,0);
+    local_14 = save_read_game((iptr)local_864);
     if (local_14 == 0) {
-      thunk_ui_flush_input();
+      ui_flush_input();
       if ((scenario_events_loaded == 0) && ((game.game_flags & 0x80) != 0)) {
         scenario_events_loaded = 0;
         __chdir(&scenario_dir_path);
         FUN_005f22d0(local_224,s_EVENTS__0062bbac);
         FUN_005f22e0(local_224,&lang_file_ext);
-        iVar3 = thunk_file_exists((iptr)local_224);
+        iVar3 = file_exists((iptr)local_224);
         if (iVar3 != 0) {
           FUN_005f22d0(local_224,&text_buffer);
-          thunk_events_reset((ScenarioEvents *)&scenario_events,50000);
-          iVar3 = thunk_events_parse_file
+          events_reset((ScenarioEvents *)&scenario_events,50000);
+          iVar3 = events_parse_file
                             ((ScenarioEvents *)&scenario_events,ADDR(0x62bbc0, ((u8 *)&g.d_0062bbc0)),ADDR(0x62bbb4, ((u8 *)&g.d_0062bbb4)));
           if (iVar3 == 0) {
-            thunk_events_compact();
+            events_compact();
             scenario_events_loaded = 1;
           }
           FUN_005f22d0(&text_buffer,local_224);
         }
       }
       if (scenario_events_loaded == 0) {
-        thunk_events_reset((ScenarioEvents *)&scenario_events,50000);
+        events_reset((ScenarioEvents *)&scenario_events,50000);
       }
       game.game_options = prefs_game_options;
       snd_wave_set_buffer_count(8);
-      thunk_snd_cd_detect_layout();
+      snd_cd_detect_layout();
       if ((game.game_options & 8) != 0) {
         if (scenario_events_loaded == 0) {
-          thunk_snd_sync_music_option();
+          snd_sync_music_option();
         }
         else {
-          thunk_events_check_scenario_loaded((ScenarioEvents *)&scenario_events);
-          thunk_snd_sync_music_option();
+          events_check_scenario_loaded((ScenarioEvents *)&scenario_events);
+          snd_sync_music_option();
         }
       }
       if (param_3 != 0) {
-        thunk_ui_flush_input();
-        iVar3 = thunk_file_exists(ADDR(0x62bbc8, ((u8 *)&g.d_0062bbc8)));
+        ui_flush_input();
+        iVar3 = file_exists(ADDR(0x62bbc8, ((u8 *)&g.d_0062bbc8)));
         if ((iVar3 != 0) &&
            (iVar3 = surface_load_gif_file
                               ((DibSurface *)&scenario_title_surface,ADDR(0x62bbd4, ((u8 *)&g.d_0062bbd4)),10,0xc0,(iptr)&local_658),
            iVar3 != 0)) {
-          thunk_wnd_set_bg_surface((WndBase *)&main_frame_wnd,ADDR(0x66c670, ((u8 *)&g.d_0066c670)));
-          thunk_wnd_set_bg_color((WndBase *)&main_frame_wnd,0x9e);
-          thunk_wnd_maximize((WndBase *)&main_frame_wnd);
-          thunk_wnd_flush_paint();
-          thunk_input_flush_events();
+          wnd_set_bg_surface((WndBase *)&main_frame_wnd,ADDR(0x66c670, ((u8 *)&g.d_0066c670)));
+          wnd_set_bg_color((WndBase *)&main_frame_wnd,0x9e);
+          wnd_maximize((WndBase *)&main_frame_wnd);
+          wnd_flush_paint();
+          input_flush_events();
         }
       }
       __chdir(&game_home_dir);
       local_760 = 0;
-      iVar2 = thunk_civ_leader_title(human_civ);
-      thunk_text_set_string_arg(0,iVar2);
-      iVar2 = thunk_civ_leader_name(human_civ);
-      thunk_text_set_string_arg(1,iVar2);
-      iVar2 = thunk_civ_name_plural(human_civ);
-      thunk_text_set_string_arg(2,iVar2);
-      thunk_text_clear();
-      thunk_text_append_year((int)game.year);
-      thunk_text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      thunk_text_set_label_arg(4,difficulty_names[game.difficulty]);
+      iVar2 = civ_leader_title(human_civ);
+      text_set_string_arg(0,iVar2);
+      iVar2 = civ_leader_name(human_civ);
+      text_set_string_arg(1,iVar2);
+      iVar2 = civ_name_plural(human_civ);
+      text_set_string_arg(2,iVar2);
+      text_clear();
+      text_append_year((int)game.year);
+      text_set_string_arg(3,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      text_set_label_arg(4,difficulty_names[game.difficulty]);
       if (((game.game_options & 0x8000) == 0) || (game.multiplayer != '\0')) {
         local_ac4 = 0;
       }
       else {
         local_ac4 = 1;
       }
-      thunk_menu_set_item_checked((GameMenu *)&main_menu,0x701,local_ac4);
+      menu_set_item_checked((GameMenu *)&main_menu,0x701,local_ac4);
       if ((param_1 == 0) && (game.multiplayer == '\0')) {
-        thunk_popup_game(ADDR(0x62bbe0, ((u8 *)&g.d_0062bbe0)));
+        popup_game(ADDR(0x62bbe0, ((u8 *)&g.d_0062bbe0)));
       }
       net_host_flag = 1;
-      for (local_868 = 0; local_868 < game.num_units; local_868 = local_868 + 1) {
-        if (units[local_868].id == 0) {
-          units[local_868].next_in_stack = -1;
-          units[local_868].prev_in_stack = -1;
+      for (unit = 0; unit < game.num_units; unit++) {
+        if (units[unit].id == 0) {
+          units[unit].next_in_stack = -1;
+          units[unit].prev_in_stack = -1;
         }
         else {
-          thunk_unit_stack_validate(local_868);
-          if ((units[local_868].x < 0) || (units[local_868].y < 0)) {
-            dbg_logf3(ADDR(0x62bbe8, ((u8 *)&g.d_0062bbe8)),local_868,(uint)units[local_868].type,(int)units[local_868].owner)
+          unit_stack_validate(unit);
+          if ((units[unit].x < 0) || (units[unit].y < 0)) {
+            dbg_logf3(ADDR(0x62bbe8, ((u8 *)&g.d_0062bbe8)),unit,(uint)units[unit].type,(int)units[unit].owner)
             ;
-            thunk_unit_delete(local_868,0);
+            unit_delete(unit,0);
           }
         }
       }
-      thunk_text_clear();
-      thunk_text_append((iptr)local_864);
+      text_clear();
+      text_append((iptr)local_864);
     }
     else {
       switch(local_14) {
       case 1:
-        thunk_popup_game(ADDR(0x62bb7c, ((u8 *)&g.d_0062bb7c)));
+        popup_game(ADDR(0x62bb7c, ((u8 *)&g.d_0062bb7c)));
         break;
       case 2:
-        thunk_popup_game(ADDR(0x62bb88, ((u8 *)&g.d_0062bb88)));
+        popup_game(ADDR(0x62bb88, ((u8 *)&g.d_0062bb88)));
         break;
       case 3:
-        thunk_text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
-        thunk_popup_game(ADDR(0x62bb94, ((u8 *)&g.d_0062bb94)));
+        text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
+        popup_game(ADDR(0x62bb94, ((u8 *)&g.d_0062bb94)));
         break;
       case 4:
-        thunk_text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
-        thunk_popup_game(ADDR(0x62bba0, ((u8 *)&g.d_0062bba0)));
+        text_set_string_arg_b(0,(iptr)(&PTR_s_No_error_00639e60)[crt_errno]);
+        popup_game(ADDR(0x62bba0, ((u8 *)&g.d_0062bba0)));
       }
     }
   }
@@ -2990,7 +2857,7 @@ int __cdecl game_load_dialog(int param_1,undefined4 param_2,int param_3)
 #undef local_974
 #undef local_870
 #undef local_86c
-#undef local_868
+#undef unit
 #undef local_864
 #undef local_760
 #undef local_75c
@@ -3059,7 +2926,7 @@ void __cdecl scrollbar_66c728_global_init(void)
 void __cdecl scrollbar_66c728_static_init(void)
 
 {
-  thunk_scrollbar_ctor((Control *)&DAT_0066c728);
+  scrollbar_ctor((Control *)&DAT_0066c728);
   return;
 }
 
@@ -3075,7 +2942,7 @@ void __cdecl scrollbar_66c728_reg_atexit(void)
 void __cdecl scrollbar_66c728_atexit_dtor(void)
 
 {
-  thunk_scrollbar_dtor((Control *)&DAT_0066c728);
+  scrollbar_dtor((Control *)&DAT_0066c728);
   return;
 }
 
@@ -3100,7 +2967,7 @@ void __cdecl scrollbar_66c768_global_init(void)
 void __cdecl scrollbar_66c768_static_init(void)
 
 {
-  thunk_scrollbar_ctor((Control *)&DAT_0066c768);
+  scrollbar_ctor((Control *)&DAT_0066c768);
   return;
 }
 
@@ -3116,23 +2983,7 @@ void __cdecl scrollbar_66c768_reg_atexit(void)
 void __cdecl scrollbar_66c768_atexit_dtor(void)
 
 {
-  thunk_scrollbar_dtor((Control *)&DAT_0066c768);
-  return;
-}
-
-/* 00479e7e auto */
-void __thiscall mapview_scroll_to_x(C_004083b0_430 *this,int param_1)
-
-{
-  thunk_mapview_center_on(this,(int)(short)param_1,(int)*(short *)((int)&this->field_2e0 + 2));
-  return;
-}
-
-/* 00479eae auto */
-void __thiscall mapview_scroll_to_y(C_004083b0_430 *this,int param_1)
-
-{
-  thunk_mapview_center_on(this,(int)(short)this->field_2e0,(int)(short)param_1);
+  scrollbar_dtor((Control *)&DAT_0066c768);
   return;
 }
 
@@ -3154,7 +3005,7 @@ void __thiscall mapview_init_state(C_004083b0_430 *this,u32 param_1)
     *(i16 *)&this->field_2e0 = map.width >> 1;
     *(i16 *)((int)&this->field_2e0 + 2) = map.height >> 1;
     if ((this->field_2e0 & 1) != 0) {
-      *(short *)&this->field_2e0 = (short)this->field_2e0 + -1;
+      *(short *)&this->field_2e0 = (short)this->field_2e0 - 1;
     }
     if ((this->field_2e0 & 0x10000) != 0) {
       *(short *)&this->field_2e0 = (short)this->field_2e0 + 1;
@@ -3180,9 +3031,9 @@ void __thiscall mapview_update_layout(C_004083b0_430 *this)
   
   this->field_328 = this->client_width;
   this->field_32c = this->client_height;
-  uVar1 = thunk_mapview_zoom_scale(this,0x40);
+  uVar1 = mapview_zoom_scale(this,0x40);
   this->total_tax = uVar1;
-  uVar1 = thunk_mapview_zoom_scale(this,0x20);
+  uVar1 = mapview_zoom_scale(this,0x20);
   this->total_science = uVar1;
   this->field_310 = (int)this->total_tax / 2;
   this->field_314 = (int)this->total_science / 2;
@@ -3192,8 +3043,8 @@ void __thiscall mapview_update_layout(C_004083b0_430 *this)
   this->field_324 = this->total_science + this->field_314;
   this->field_2f8 = (int)((this->field_328 - 1) + this->total_tax) / (int)this->total_tax;
   this->field_2fc = (int)((this->field_32c - 1) + this->total_science) / (int)this->total_science;
-  this->field_300 = (int)(this->field_310 * 3 + -1 + this->field_328) / (int)this->total_tax;
-  this->field_304 = (int)(this->field_314 * 3 + -1 + this->field_32c) / (int)this->total_science;
+  this->field_300 = (int)(this->field_310 * 3 - 1 + this->field_328) / (int)this->total_tax;
+  this->field_304 = (int)(this->field_314 * 3 - 1 + this->field_32c) / (int)this->total_science;
   this->field_330 = 0;
   this->field_334 = 0;
   if ((int)map.width / 2 < (int)this->field_2f8) {
@@ -3229,33 +3080,33 @@ void __thiscall mapview_update_layout(C_004083b0_430 *this)
   }
   this->field_2ec = uVar4;
   if ((this->field_2e8 & 1) != 0) {
-    this->field_2e8 = this->field_2e8 - 1;
+    this->field_2e8--;
   }
   if ((this->field_2ec & 1) != 0) {
-    this->field_2e8 = this->field_2e8 + 1;
+    this->field_2e8++;
   }
-  uVar3 = map_wrap_x(this->field_300 * 2 + -2 + this->field_2e8);
+  uVar3 = map_wrap_x(this->field_300 * 2 - 2 + this->field_2e8);
   this->field_2f0 = uVar3;
-  this->field_2f4 = this->field_304 * 2 + -2 + this->field_2ec;
+  this->field_2f4 = this->field_304 * 2 - 2 + this->field_2ec;
   if ((int)(short)this->field_2e4 != this->field_35c) {
     surface_create((DibSurface *)&this->field_360,this->total_tax,this->total_science);
     surface_create((DibSurface *)&this->field_3a8,this->total_tax,this->total_science);
     this->field_35c = (int)(short)this->field_2e4;
-    thunk_mapview_apply_zoom(this);
+    mapview_apply_zoom(this);
     sprite_draw
               ((Sprite *)&tile_pick_mask_sprite,(iptr)local_18,(iptr)&this->field_360,0,0);
     sprite_draw
               ((Sprite *)&tile_direction_mask_sprite,(iptr)local_28,(iptr)&this->field_3a8,0,0);
-    thunk_gfx_reset_zoom_scale();
+    gfx_reset_zoom_scale();
   }
   local_8 = (int)(this->total_science * 3) / 5;
   if (this->field_348 != local_8) {
-    thunk_font_set((GameFont *)&this->field_338,0,local_8);
+    font_set((GameFont *)&this->field_338,0,local_8);
     this->field_348 = local_8;
   }
   local_8 = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
   if (this->field_34c != local_8) {
-    thunk_font_set((GameFont *)&this->field_340,1,local_8);
+    font_set((GameFont *)&this->field_340,1,local_8);
     this->field_34c = local_8;
   }
   return;
@@ -3285,18 +3136,18 @@ mapview_screen_to_tile
     uVar3 = 1;
   }
   else if (((int)sVar1 < (int)this->view_width) && ((int)sVar2 < (int)this->view_height)) {
-    sVar1 = sVar1 - (short)this->scroll_px_x;
-    sVar2 = sVar2 - (short)this->scroll_px_y;
+    sVar1 -= (short)this->scroll_px_x;
+    sVar2 -= (short)this->scroll_px_y;
     local_10 = ((int)sVar1 / (int)this->tile_width) * 2 + this->origin_tile_x + 1;
     local_8 = (short)((int)sVar2 / (int)this->tile_height) * 2 + (short)this->origin_tile_y + 1;
     iVar4 = surface_get_pixel
                       ((DibSurface *)(this[1].pad_0 + 0x28),
                        (int)(short)((int)sVar1 % (int)this->tile_width),
                        (int)(short)((int)sVar2 % (int)this->tile_height));
-    iVar5 = iVar4 + -10 >> 4;
+    iVar5 = iVar4 - 10 >> 4;
     if (iVar5 != 0) {
-      local_10 = local_10 + (char)(&pick_quadrant_dx_table)[iVar5];
-      local_8 = local_8 + (char)(&pick_quadrant_dy_table)[iVar5];
+      local_10 += (char)(&pick_quadrant_dx_table)[iVar5];
+      local_8 += (char)(&pick_quadrant_dy_table)[iVar5];
     }
     uVar3 = map_wrap_x(local_10);
     *(int *)param_1 = (int)(short)uVar3;
@@ -3321,8 +3172,8 @@ mapview_tile_to_screen(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_
   
   iVar2 = map_wrap_x(param_3 - this->field_2e8);
   uVar1 = this->field_2ec;
-  *(u32 *)param_1 = this->field_310 * (iVar2 + -1) + this->field_330;
-  *(u32 *)param_2 = this->field_314 * ((param_4 - uVar1) + -1) + this->field_334;
+  *(u32 *)param_1 = this->field_310 * (iVar2 - 1) + this->field_330;
+  *(u32 *)param_2 = this->field_314 * ((param_4 - uVar1) - 1) + this->field_334;
   *(u32 *)param_1 = *(int *)param_1 + this->client_x;
   *(u32 *)param_2 = *(int *)param_2 + this->client_y;
   return;
@@ -3337,7 +3188,7 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
 {
   char cVar1;
   iptr iVar2;
-  iptr iVar4;
+  iptr x;
   iptr iVar3;
   uptr uVar4;
   int iVar5;
@@ -3345,7 +3196,7 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
-  for (local_c = 0; (int)local_c < 4; local_c = local_c + 1) {
+  for (local_c = 0; (int)local_c < 4; local_c++) {
     (&coast_quarter_land_masks)[local_c] = 0;
   }
   iVar2 = map_in_bounds(param_1,param_2);
@@ -3353,18 +3204,18 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
     local_8 = 0;
   }
   else {
-    for (local_c = 0; (int)local_c < 8; local_c = local_c + 1) {
-      iVar4 = map_wrap_x((char)(&dir_dx_table)[local_c] + param_1);
+    for (local_c = 0; (int)local_c < 8; local_c++) {
+      x = map_wrap_x((char)(&dir_dx_table)[local_c] + param_1);
       cVar1 = (&dir_dy_table)[local_c];
-      iVar3 = map_in_bounds(iVar4,cVar1 + param_2);
+      iVar3 = map_in_bounds(x,cVar1 + param_2);
       if (iVar3 == 0) {
-        local_14 = '\a';
+        local_14 = 7;
       }
       else {
-        local_14 = tile_terrain(iVar4,cVar1 + param_2);
+        local_14 = tile_terrain(x,cVar1 + param_2);
       }
       if (local_14 != '\n') {
-        local_8 = local_8 + 1;
+        local_8++;
         if ((local_c & 1) == 0) {
           iVar5 = (int)local_c >> 1;
           uVar5 = iVar5 + 1U & 3;
@@ -3415,12 +3266,12 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
 #define local_dc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(372)))
 #define local_cc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(388)))
 #define local_bc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(404)))
-#define local_ac (*(iptr *)(frame_ + FRAME_OFF(420)))
+#define x2 (*(iptr *)(frame_ + FRAME_OFF(420)))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(424)))
 #define local_a4 (*(uint *)(frame_ + FRAME_OFF(428)))
 #define local_a0 (*(uint *)(frame_ + FRAME_OFF(432)))
 #define local_9c (*(uint *)(frame_ + FRAME_OFF(436)))
-#define local_98 (*(iptr *)(frame_ + FRAME_OFF(440)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(440)))
 #define local_94 (*(int *)(frame_ + FRAME_OFF(444)))
 #define local_90 (*(int *)(frame_ + FRAME_OFF(448)))
 #define local_8c (*(int *)(frame_ + FRAME_OFF(452)))
@@ -3434,7 +3285,7 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
 #define local_6c (*(uint *)(frame_ + FRAME_OFF(484)))
 #define local_68 (*(uint *)(frame_ + FRAME_OFF(488)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(492)))
-#define local_60 (*(iptr *)(frame_ + FRAME_OFF(496)))
+#define y2 (*(iptr *)(frame_ + FRAME_OFF(496)))
 #define local_5c (*(u32 *)(frame_ + FRAME_OFF(500)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(504)))
 #define local_54 (*(iptr *)(frame_ + FRAME_OFF(508)))
@@ -3453,7 +3304,7 @@ int __cdecl tile_calc_coast_masks(iptr param_1,int param_2)
 #define auStack_14 (*(uint (*)[4])(frame_ + FRAME_OFF(572)))
 void __thiscall
 mapview_draw_tile_terrain
-          (C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr param_4,int param_5,
+          (C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr x,int y,
           int param_6,int param_7,iptr param_8)
 
 {
@@ -3461,7 +3312,7 @@ mapview_draw_tile_terrain
   uint uVar2;
   int iVar3;
   byte *pbVar4;
-  iptr iVar5;
+  iptr civ;
   undefined4 uVar6;
   undefined1 frame_[FRAME_OFF(592)] __attribute__((aligned(8)));  /* original stack frame */
   
@@ -3472,19 +3323,19 @@ mapview_draw_tile_terrain
     local_5c = this->field_314;
   }
   else {
-    local_50 = thunk_gfx_zoom_scale(0x40,param_7);
-    local_18 = thunk_gfx_zoom_scale(0x20,param_7);
+    local_50 = gfx_zoom_scale(0x40,param_7);
+    local_18 = gfx_zoom_scale(0x20,param_7);
     local_70 = (int)local_50 >> 1;
     local_5c = (int)local_18 >> 1;
   }
   if (param_8 < 0) {
-    iVar3 = map_in_bounds(param_4,param_5);
+    iVar3 = map_in_bounds(x,y);
     local_9c = (uint)(iVar3 == 0);
   }
   else {
     local_9c = (uint)(0x14 < param_8);
     if (local_9c == 0) {
-      iVar3 = map_in_bounds(param_4,param_5);
+      iVar3 = map_in_bounds(x,y);
       if (iVar3 == 0) {
         local_9c = 1;
       }
@@ -3493,10 +3344,10 @@ mapview_draw_tile_terrain
       }
     }
   }
-  thunk_gfx_set_zoom_scale(param_7);
+  gfx_set_zoom_scale(param_7);
   if ((-1 < param_6) || (local_9c != 0)) {
     if (local_9c == 0) {
-      iVar3 = tile_visible_to(param_4,param_5,param_6);
+      iVar3 = tile_visible_to(x,y,param_6);
       if (iVar3 == 0) {
         local_9c = 1;
       }
@@ -3510,7 +3361,7 @@ mapview_draw_tile_terrain
       goto LAB_0047ba07;
     }
   }
-  iVar3 = map_in_bounds(param_4,param_5);
+  iVar3 = map_in_bounds(x,y);
   if (iVar3 == 0) {
     local_9c = 1;
     local_a4 = 7;
@@ -3521,7 +3372,7 @@ mapview_draw_tile_terrain
   }
   else {
     local_9c = 0;
-    local_80 = (byte *)tile_at(param_4,param_5);
+    local_80 = (byte *)tile_at(x,y);
     local_a4 = (uint)*local_80;
     local_6c = local_a4 & 0xf;
     local_20 = local_a4 & 0x80;
@@ -3529,11 +3380,11 @@ mapview_draw_tile_terrain
       local_88 = (uint)local_80[1];
     }
     else {
-      pbVar4 = (byte *)known_at(param_4,param_5,param_6);
+      pbVar4 = (byte *)known_at(x,y,param_6);
       local_88 = (uint)*pbVar4;
     }
   }
-  for (local_54 = 0; local_54 < 4; local_54 = local_54 + 1) {
+  for (local_54 = 0; local_54 < 4; local_54++) {
     auStack_14[local_54] = 0xffffffff;
   }
   if (local_6c == 10) {
@@ -3542,8 +3393,8 @@ mapview_draw_tile_terrain
                 ((Sprite *)&terrain_ocean_sprite,(iptr)local_cc,param_1,param_2,param_3);
     }
     else {
-      local_8c = thunk_tile_calc_coast_masks(param_4,param_5);
-      for (local_1c = 0; local_1c < 4; local_1c = local_1c + 1) {
+      local_8c = tile_calc_coast_masks(x,y);
+      for (local_1c = 0; local_1c < 4; local_1c++) {
         local_24 = (*(int *)(&coast_quarter_dx_table + local_1c * 4) + 1) * ((int)local_70 >> 1) + param_2;
         local_44 = *(int *)(&coast_quarter_dy_table + local_1c * 4) * ((int)local_5c >> 1) + param_3;
         sprite_draw
@@ -3551,11 +3402,11 @@ mapview_draw_tile_terrain
                    (&coast_quarter_sprites + local_1c * 0x3c + (uint)(byte)(&coast_quarter_land_masks)[local_1c] * 0xf0),
                    (iptr)local_dc,param_1,local_24,local_44);
       }
-      for (local_54 = 0; local_54 < 4; local_54 = local_54 + 1) {
-        local_ac = map_wrap_x((char)(&diag_dx_table)[local_54] + param_4);
-        local_60 = (char)(&diag_dy_table)[local_54] + param_5;
-        iVar3 = map_in_bounds(local_ac,local_60);
-        if ((iVar3 != 0) && (pbVar4 = (byte *)tile_at(local_ac,local_60), (*pbVar4 & 0x80) != 0)) {
+      for (local_54 = 0; local_54 < 4; local_54++) {
+        x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
+        y2 = (char)(&diag_dy_table)[local_54] + y;
+        iVar3 = map_in_bounds(x2,y2);
+        if ((iVar3 != 0) && (pbVar4 = (byte *)tile_at(x2,y2), (*pbVar4 & 0x80) != 0)) {
           sprite_draw
                     ((Sprite *)(&river_mouth_sprites + local_54 * 0x3c),(iptr)local_ec,param_1,
                      param_2,param_3);
@@ -3570,17 +3421,17 @@ mapview_draw_tile_terrain
       local_78 = 0xf;
     }
     else {
-      for (local_54 = 0; local_54 < 4; local_54 = local_54 + 1) {
-        local_ac = map_wrap_x((char)(&diag_dx_table)[local_54] + param_4);
-        local_60 = (char)(&diag_dy_table)[local_54] + param_5;
-        iVar3 = map_in_bounds(local_ac,local_60);
+      for (local_54 = 0; local_54 < 4; local_54++) {
+        x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
+        y2 = (char)(&diag_dy_table)[local_54] + y;
+        iVar3 = map_in_bounds(x2,y2);
         if (iVar3 != 0) {
-          local_74 = (byte *)tile_at(local_ac,local_60);
+          local_74 = (byte *)tile_at(x2,y2);
           bVar1 = *local_74;
           local_48 = (uint)bVar1;
           local_a0 = local_48 & 0xf;
           if (local_a0 == local_6c) {
-            local_8c = local_8c + (char)(&diag_neighbor_bits)[local_54];
+            local_8c += (char)(&diag_neighbor_bits)[local_54];
           }
           else if (local_a0 == 10) {
             auStack_14[local_54] = 0xc;
@@ -3589,7 +3440,7 @@ mapview_draw_tile_terrain
             auStack_14[local_54] = local_a0;
           }
           if (((bVar1 & 0x80) != 0) || (local_a0 == 10)) {
-            local_78 = local_78 + (char)(&diag_neighbor_bits)[local_54];
+            local_78 += (char)(&diag_neighbor_bits)[local_54];
           }
         }
       }
@@ -3598,7 +3449,7 @@ mapview_draw_tile_terrain
               ((Sprite *)(&terrain_base_sprites + local_6c * 0x3c),(iptr)local_fc,param_1,param_2,
                param_3);
     if (-5 < param_7) {
-      for (local_84 = 0; local_84 < 4; local_84 = local_84 + 1) {
+      for (local_84 = 0; local_84 < 4; local_84++) {
         if (-1 < (int)auStack_14[local_84]) {
           if (local_84 < 2) {
             local_240 = local_70;
@@ -3648,13 +3499,13 @@ mapview_draw_tile_terrain
     if (-4 < param_7) {
       local_3c = 0;
       if (((byte)local_88 & 0x42) == 2) {
-        for (local_54 = 2; local_54 < 5; local_54 = local_54 + 2) {
-          local_ac = map_wrap_x((char)(&dir_dx_table)[local_54] + param_4);
-          local_60 = (char)(&dir_dy_table)[local_54] + param_5;
-          iVar3 = map_in_bounds(local_ac,local_60);
+        for (local_54 = 2; local_54 < 5; local_54 += 2) {
+          x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
+          y2 = (char)(&dir_dy_table)[local_54] + y;
+          iVar3 = map_in_bounds(x2,y2);
           uVar2 = local_3c;
           if (((iVar3 != 0) &&
-              (local_68 = tile_improvements(local_ac,local_60), uVar2 = local_3c,
+              (local_68 = tile_improvements(x2,y2), uVar2 = local_3c,
               (local_68 & 4) != 0)) && (uVar2 = local_3c | 1, (local_68 & 8) != 0)) {
             uVar2 = local_3c | 3;
           }
@@ -3673,37 +3524,37 @@ mapview_draw_tile_terrain
       }
     }
     if (((-4 < param_7) && (local_6c == 2)) &&
-       (iVar3 = thunk_tile_grassland_has_shield(param_4,param_5), iVar3 != 0)) {
+       (iVar3 = tile_grassland_has_shield(x,y), iVar3 != 0)) {
       sprite_draw
                 ((Sprite *)&grassland_shield_sprite,(iptr)local_18c,param_1,param_2,param_3);
     }
   }
   if (((-4 < param_7) && (local_9c == 0)) &&
-     (local_38 = tile_resource(param_4,param_5), local_38 != 0)) {
+     (local_38 = tile_resource(x,y), local_38 != 0)) {
     sprite_draw
-              ((Sprite *)(&terrain_resource_sprites + local_6c * 0x78 + (local_38 * 4 + -4) * 0xf),
+              ((Sprite *)(&terrain_resource_sprites + local_6c * 0x78 + (local_38 * 4 - 4) * 0xf),
                (iptr)local_19c,param_1,param_2,param_3);
   }
   if (((-4 < param_7) && (map_show_hidden_terrain == 0)) &&
-     (((local_88 & 0x10) != 0 || (iVar3 = tile_city_owner(param_4,param_5), -1 < iVar3)))) {
+     (((local_88 & 0x10) != 0 || (iVar3 = tile_city_owner(x,y), -1 < iVar3)))) {
     local_90 = 0;
     local_94 = 0;
-    if (((local_88 & 0x20) == 0) && (iVar3 = tile_city_owner(param_4,param_5), iVar3 < 0)) {
+    if (((local_88 & 0x20) == 0) && (iVar3 = tile_city_owner(x,y), iVar3 < 0)) {
       local_40 = 0;
     }
     else {
       local_40 = 1;
     }
-    for (local_54 = 0; local_54 < 8; local_54 = local_54 + 1) {
-      local_ac = map_wrap_x((char)(&dir_dx_table)[local_54] + param_4);
-      local_60 = (char)(&dir_dy_table)[local_54] + param_5;
-      iVar3 = map_in_bounds(local_ac,local_60);
+    for (local_54 = 0; local_54 < 8; local_54++) {
+      x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
+      y2 = (char)(&dir_dy_table)[local_54] + y;
+      iVar3 = map_in_bounds(x2,y2);
       if (iVar3 != 0) {
         if (param_6 < 1) {
-          local_68 = tile_improvements(local_ac,local_60);
+          local_68 = tile_improvements(x2,y2);
         }
         else {
-          pbVar4 = (byte *)known_at(local_ac,local_60,param_6);
+          pbVar4 = (byte *)known_at(x2,y2,param_6);
           local_68 = (uint)*pbVar4;
         }
         if (((local_68 & 0x12) != 0) &&
@@ -3715,20 +3566,20 @@ mapview_draw_tile_terrain
       }
     }
     if (local_40 != 0) {
-      for (local_54 = 0; local_54 < 8; local_54 = local_54 + 1) {
-        local_ac = map_wrap_x((char)(&dir_dx_table)[local_54] + param_4);
-        local_60 = (char)(&dir_dy_table)[local_54] + param_5;
-        iVar3 = map_in_bounds(local_ac,local_60);
+      for (local_54 = 0; local_54 < 8; local_54++) {
+        x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
+        y2 = (char)(&dir_dy_table)[local_54] + y;
+        iVar3 = map_in_bounds(x2,y2);
         if (iVar3 != 0) {
           if (param_6 < 1) {
-            local_68 = tile_improvements(local_ac,local_60);
+            local_68 = tile_improvements(x2,y2);
           }
           else {
-            pbVar4 = (byte *)known_at(local_ac,local_60,param_6);
+            pbVar4 = (byte *)known_at(x2,y2,param_6);
             local_68 = (uint)*pbVar4;
           }
           if ((local_68 & 0x22) != 0) {
-            local_94 = local_94 + 1;
+            local_94++;
             sprite_draw
                       ((Sprite *)(&railroad_sprites + (local_54 * 4 + 4) * 0xf),(iptr)local_1bc,
                        param_1,param_2,param_3);
@@ -3736,7 +3587,7 @@ mapview_draw_tile_terrain
         }
       }
     }
-    iVar3 = tile_city_owner(param_4,param_5);
+    iVar3 = tile_city_owner(x,y);
     if (iVar3 < 0) {
       if (local_40 == 0) {
         if (local_90 == 0) {
@@ -3759,7 +3610,7 @@ mapview_draw_tile_terrain
       sprite_draw
                 ((Sprite *)&pollution_sprite,(iptr)local_1fc,param_1,param_2,param_3);
     }
-    iVar3 = tile_has_hut(param_4,param_5);
+    iVar3 = tile_has_hut(x,y);
     if ((iVar3 != 0) && (map_show_hidden_terrain == 0)) {
       sprite_draw
                 ((Sprite *)&hut_sprite,(iptr)local_20c,param_1,param_2,param_3);
@@ -3770,9 +3621,9 @@ mapview_draw_tile_terrain
     }
     if ((((byte)local_88 & 0x42) == 0x42) && (map_show_hidden_terrain == 0)) {
       local_8c = 0;
-      for (local_98 = thunk_tile_first_unit(param_4,param_5); -1 < local_98;
-          local_98 = thunk_unit_next_in_stack(local_98)) {
-        if (unit_types[units[local_98].type].domain == '\x01') {
+      for (unit = tile_first_unit(x,y); -1 < unit;
+          unit = unit_next_in_stack(unit)) {
+        if (unit_types[units[unit].type].domain == 1) {
           local_8c = 1;
           break;
         }
@@ -3780,24 +3631,24 @@ mapview_draw_tile_terrain
       sprite_draw
                 ((Sprite *)(&airbase_sprites + local_8c * 0x3c),(iptr)local_22c,param_1,param_2,
                  param_3 - local_5c);
-      thunk_rect_set_xywh((iptr)local_34,param_2,param_3 - local_5c,local_50,local_5c + local_18);
-      iVar5 = tile_owner(param_4,param_5);
-      uVar6 = thunk_civ_color_primary(iVar5);
+      rect_set_xywh((iptr)local_34,param_2,param_3 - local_5c,local_50,local_5c + local_18);
+      civ = tile_owner(x,y);
+      uVar6 = civ_color_primary(civ);
       surface_replace_color((DibSurface *)param_1,(iptr)local_34,0x106,uVar6);
     }
   }
   if ((-4 < param_7) && (-1 < param_6)) {
-    for (local_54 = 0; local_54 < 4; local_54 = local_54 + 1) {
-      local_ac = map_wrap_x((char)(&diag_dx_table)[local_54] + param_4);
-      local_60 = (char)(&diag_dy_table)[local_54] + param_5;
+    for (local_54 = 0; local_54 < 4; local_54++) {
+      x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
+      y2 = (char)(&diag_dy_table)[local_54] + y;
       local_64 = 0;
       if (param_8 < 0) {
-        iVar3 = map_in_bounds(local_ac,local_60);
+        iVar3 = map_in_bounds(x2,y2);
         if (iVar3 != 0) goto LAB_0047b934;
       }
       else {
         if (param_8 < 0x15) {
-          iVar3 = map_in_bounds(local_ac,local_60);
+          iVar3 = map_in_bounds(x2,y2);
           if (iVar3 == 0) {
             local_64 = 1;
           }
@@ -3815,7 +3666,7 @@ mapview_draw_tile_terrain
           else {
             local_a8 = (int)(char)(&diag_dy_table)[local_54] + (int)(char)(&city_tile_dy_table)[param_8];
           }
-          iVar3 = thunk_dist_from_deltas(local_7c,local_a8);
+          iVar3 = dist_from_deltas(local_7c,local_a8);
           if (2 < iVar3) {
             local_64 = 1;
           }
@@ -3825,7 +3676,7 @@ mapview_draw_tile_terrain
         }
 LAB_0047b934:
         if (local_64 == 0) {
-          iVar3 = tile_visible_to(local_ac,local_60,param_6);
+          iVar3 = tile_visible_to(x2,y2,param_6);
           if (iVar3 == 0) {
             local_64 = 1;
           }
@@ -3856,7 +3707,7 @@ LAB_0047b934:
     }
   }
 LAB_0047ba07:
-  thunk_gfx_reset_zoom_scale();
+  gfx_reset_zoom_scale();
   return;
 }
 #undef map_show_hidden_terrain
@@ -3889,12 +3740,12 @@ LAB_0047ba07:
 #undef local_dc
 #undef local_cc
 #undef local_bc
-#undef local_ac
+#undef x2
 #undef local_a8
 #undef local_a4
 #undef local_a0
 #undef local_9c
-#undef local_98
+#undef unit
 #undef local_94
 #undef local_90
 #undef local_8c
@@ -3908,7 +3759,7 @@ LAB_0047ba07:
 #undef local_6c
 #undef local_68
 #undef local_64
-#undef local_60
+#undef y2
 #undef local_5c
 #undef local_58
 #undef local_54
@@ -3932,21 +3783,21 @@ LAB_0047ba07:
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 mapview_draw_tile_city
-          (C_004083b0_430 *this,undefined4 param_1,int param_2,iptr param_3,iptr param_4)
+          (C_004083b0_430 *this,undefined4 param_1,int param_2,iptr x,iptr y)
 
 {
-  iptr iVar1;
+  iptr city;
   int iVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = thunk_city_at(param_3,param_4);
-  if ((-1 < iVar1) && (iVar2 = map_in_bounds(param_3,param_4), iVar2 != 0)) {
-    local_8 = tile_visible_to(param_3,param_4,human_civ);
-    if ((int)cities[iVar1].owner != (human_civ & 0xffU)) {
+  city = city_at(x,y);
+  if ((-1 < city) && (iVar2 = map_in_bounds(x,y), iVar2 != 0)) {
+    local_8 = tile_visible_to(x,y,human_civ);
+    if ((int)cities[city].owner != (human_civ & 0xffU)) {
       if ((local_8 == 0) ||
-         ((((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[iVar1].known_to) == 0 &&
-           ((int)cities[iVar1].owner != (human_civ & 0xffU))) ||
-          (*(char *)(human_civ + ADDR(0x64f34d, ((u8 *)&cities + 13)) + iVar1 * 0x58) == '\0')))) {
+         ((((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[city].known_to) == 0 &&
+           ((int)cities[city].owner != (human_civ & 0xffU))) ||
+          (*(char *)&cities[city].revealed_size[human_civ] == '\0')))) {
         local_8 = 0;
       }
       else {
@@ -3955,7 +3806,7 @@ mapview_draw_tile_city
     }
     if (((local_8 != 0) || (game.reveal_map != '\0')) ||
        (((game.game_flags & 0x80) != 0 && ((scenario_flags & 8) != 0)))) {
-      thunk_gfx_draw_city((iptr)this,iVar1,0,param_1,param_2 - this->field_314,
+      gfx_draw_city((iptr)this,city,0,param_1,param_2 - this->field_314,
                          (int)(short)this->field_2e4);
     }
   }
@@ -3968,10 +3819,10 @@ mapview_draw_tile_city
 /* 0047bba5 auto */
 void __thiscall
 mapview_draw_unit_stacked
-          (C_004083b0_430 *this,iptr param_1,uint param_2,undefined4 param_3,undefined4 param_4)
+          (C_004083b0_430 *this,iptr unit,uint param_2,undefined4 param_3,undefined4 param_4)
 
 {
-  thunk_gfx_draw_unit((iptr)this,param_1,param_2 | 3,param_3,param_4,(int)(short)this->field_2e4,0);
+  gfx_draw_unit((iptr)this,unit,param_2 | 3,param_3,param_4,(int)(short)this->field_2e4,0);
   return;
 }
 
@@ -3981,11 +3832,11 @@ mapview_draw_unit_stacked
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
 void __thiscall
 mapview_draw_unit_blinking
-          (C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+          (C_004083b0_430 *this,iptr unit,undefined4 param_2,undefined4 param_3)
 
 {
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    thunk_gfx_draw_unit((iptr)this,param_1,5,param_2,param_3,(int)(short)this->field_2e4,0);
+    gfx_draw_unit((iptr)this,unit,5,param_2,param_3,(int)(short)this->field_2e4,0);
   }
   return;
 }
@@ -3999,16 +3850,16 @@ mapview_draw_unit_blinking
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall mapview_draw_unit_at(C_004083b0_430 *this,iptr param_1)
+void __thiscall mapview_draw_unit_at(C_004083b0_430 *this,iptr unit)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    thunk_mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,(int)units[param_1].x,
-                       (int)units[param_1].y);
-    local_c = local_c - this->field_314;
-    thunk_gfx_draw_unit((iptr)this,param_1,5,local_8,local_c,(int)(short)this->field_2e4,0);
+    mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,(int)units[unit].x,
+                       (int)units[unit].y);
+    local_c -= this->field_314;
+    gfx_draw_unit((iptr)this,unit,5,local_8,local_c,(int)(short)this->field_2e4,0);
   }
   return;
 }
@@ -4022,28 +3873,28 @@ void __thiscall mapview_draw_unit_at(C_004083b0_430 *this,iptr param_1)
 #define anim_combat_defender (*(int *)((u8 *)&g.d_00633e48))
 void __thiscall
 mapview_draw_stack_unit
-          (C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+          (C_004083b0_430 *this,iptr unit,undefined4 param_2,undefined4 param_3)
 
 {
   int iVar1;
   
-  if ((anim_combat_defender < 0) || (anim_combat_defender != param_1)) {
-    if ((anim_origin_stack_unit < 0) || (param_1 != anim_origin_stack_unit)) {
-      if ((((units[game.active_unit].x == units[param_1].x) &&
-           (units[game.active_unit].y == units[param_1].y)) &&
+  if ((anim_combat_defender < 0) || (anim_combat_defender != unit)) {
+    if ((anim_origin_stack_unit < 0) || (unit != anim_origin_stack_unit)) {
+      if ((((units[game.active_unit].x == units[unit].x) &&
+           (units[game.active_unit].y == units[unit].y)) &&
           (((uint)game.human_players & 1 << (units[game.active_unit].owner & 0x1fU)) != 0)) &&
-         (iVar1 = thunk_unit_is_selectable((int)game.active_unit), iVar1 != 0)) {
-        thunk_mapview_draw_unit_blinking(this,(int)game.active_unit,param_2,param_3);
+         (iVar1 = unit_is_selectable((int)game.active_unit), iVar1 != 0)) {
+        mapview_draw_unit_blinking(this,(int)game.active_unit,param_2,param_3);
         return;
       }
-      thunk_mapview_draw_unit_stacked(this,param_1,4,param_2,param_3);
+      mapview_draw_unit_stacked(this,unit,4,param_2,param_3);
     }
     else {
-      thunk_gfx_draw_unit((iptr)this,param_1,5,param_2,param_3,(int)(short)this->field_2e4,0);
+      gfx_draw_unit((iptr)this,unit,5,param_2,param_3,(int)(short)this->field_2e4,0);
     }
   }
   else {
-    thunk_mapview_draw_unit_blinking(this,param_1,param_2,param_3);
+    mapview_draw_unit_blinking(this,unit,param_2,param_3);
   }
   return;
 }
@@ -4055,11 +3906,11 @@ mapview_draw_stack_unit
 #define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
 mapview_draw_tile_units
-          (C_004083b0_430 *this,undefined4 param_1,int param_2,int param_3,int param_4)
+          (C_004083b0_430 *this,undefined4 param_1,int param_2,int x,int y)
 
 {
   int iVar1;
@@ -4067,12 +3918,12 @@ mapview_draw_tile_units
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = param_2 - this->field_314;
-  iVar2 = map_in_bounds(param_3,param_4);
+  iVar2 = map_in_bounds(x,y);
   if (iVar2 != 0) {
-    local_c = thunk_tile_first_unit(param_3,param_4);
-    if (((anim_combat_defender < 0) || (anim_combat_defender_x != param_3)) || (anim_combat_defender_y != param_4)) {
-      if (((anim_origin_stack_unit < 0) || (param_3 != anim_origin_x)) || (param_4 != anim_origin_y)) {
-        iVar2 = tile_city_owner(param_3,param_4);
+    unit = tile_first_unit(x,y);
+    if (((anim_combat_defender < 0) || (anim_combat_defender_x != x)) || (anim_combat_defender_y != y)) {
+      if (((anim_origin_stack_unit < 0) || (x != anim_origin_x)) || (y != anim_origin_y)) {
+        iVar2 = tile_city_owner(x,y);
         if (-1 < iVar2) {
           if (moving_units_mode != 1) {
             return;
@@ -4080,28 +3931,28 @@ mapview_draw_tile_units
           if (unit_blink_active == '\0') {
             return;
           }
-          for (; (game.active_unit != local_c && (-1 < local_c));
-              local_c = thunk_unit_next_in_stack(local_c)) {
+          for (; (game.active_unit != unit && (-1 < unit));
+              unit = unit_next_in_stack(unit)) {
           }
-          if (local_c < 0) {
+          if (unit < 0) {
             return;
           }
-          iVar2 = thunk_unit_is_selectable(local_c);
+          iVar2 = unit_is_selectable(unit);
           if (iVar2 == 0) {
             return;
           }
-          if (units[local_c].orders == '\x01') {
+          if (units[unit].orders == 1) {
             return;
           }
-          if (units[local_c].orders == '\x02') {
+          if (units[unit].orders == 2) {
             return;
           }
         }
-        local_8 = tile_visible_to(param_3,param_4,human_civ);
-        if ((int)units[local_c].owner != (human_civ & 0xffU)) {
+        local_8 = tile_visible_to(x,y,human_civ);
+        if ((int)units[unit].owner != (human_civ & 0xffU)) {
           if ((local_8 == 0) ||
-             (((1 << ((byte)human_civ & 0x1f) & (uint)units[local_c].visibility) == 0 &&
-              ((int)units[local_c].owner != (human_civ & 0xffU))))) {
+             (((1 << ((byte)human_civ & 0x1f) & (uint)units[unit].visibility) == 0 &&
+              ((int)units[unit].owner != (human_civ & 0xffU))))) {
             local_8 = 0;
           }
           else {
@@ -4109,17 +3960,17 @@ mapview_draw_tile_units
           }
         }
         if ((local_8 != 0) || (game.reveal_map != '\0')) {
-          thunk_mapview_draw_stack_unit(this,local_c,param_1,iVar1);
+          mapview_draw_stack_unit(this,unit,param_1,iVar1);
         }
       }
       else {
-        thunk_mapview_draw_stack_unit(this,anim_origin_stack_unit,param_1,iVar1);
+        mapview_draw_stack_unit(this,anim_origin_stack_unit,param_1,iVar1);
       }
     }
     else {
-      for (; (local_c != anim_combat_defender && (-1 < local_c)); local_c = thunk_unit_next_in_stack(local_c)) {
+      for (; (unit != anim_combat_defender && (-1 < unit)); unit = unit_next_in_stack(unit)) {
       }
-      thunk_mapview_draw_stack_unit(this,local_c,param_1,iVar1);
+      mapview_draw_stack_unit(this,unit,param_1,iVar1);
     }
   }
   return;
@@ -4129,44 +3980,44 @@ mapview_draw_tile_units
 #undef human_civ
 #undef moving_units_mode
 #undef unit_blink_active
-#undef local_c
+#undef unit
 #undef local_8
 
 /* 0047c103 auto */
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
 #define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(36)))
+#define city (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
-mapview_draw_tile(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3)
+mapview_draw_tile(C_004083b0_430 *this,iptr x,iptr y,int civ)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_10,param_1,param_2);
-  thunk_mapview_draw_tile_terrain(this,(iptr)this,local_c,local_10,param_1,param_2,param_3,
+  mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_10,x,y);
+  mapview_draw_tile_terrain(this,(iptr)this,local_c,local_10,x,y,civ,
                      (int)(short)this->field_2e4,-1);
-  thunk_win_flush_pending_msgs();
+  win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    thunk_net_process_messages((NetSession *)&net_session,1,0);
+    net_process_messages((NetSession *)&net_session,1,0);
   }
-  iVar1 = map_in_bounds(param_1,param_2);
+  iVar1 = map_in_bounds(x,y);
   if (iVar1 != 0) {
     if (map_show_hidden_terrain == 0) {
-      thunk_mapview_draw_tile_city(this,local_c,local_10,param_1,param_2);
-      thunk_mapview_draw_tile_units(this,local_c,local_10,param_1,param_2);
+      mapview_draw_tile_city(this,local_c,local_10,x,y);
+      mapview_draw_tile_units(this,local_c,local_10,x,y);
     }
     if (((byte)game.game_options & 0x20) != 0) {
       local_8 = 0;
-      thunk_mapview_apply_zoom(this);
-      for (local_14 = 0; local_14 < game.num_cities; local_14 = local_14 + 1) {
-        if (((cities[local_14].id != 0) && (cities[local_14].owner == param_3)) &&
-           (iVar1 = thunk_map_distance_diag(param_1,param_2,(int)cities[local_14].x,
-                                       (int)cities[local_14].y), iVar1 < 3)) {
+      mapview_apply_zoom(this);
+      for (city = 0; city < game.num_cities; city++) {
+        if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
+           (iVar1 = map_distance_diag(x,y,(int)cities[city].x,
+                                       (int)cities[city].y), iVar1 < 3)) {
           local_8 = 1;
           break;
         }
@@ -4179,7 +4030,7 @@ mapview_draw_tile(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3)
         sprite_draw
                   ((Sprite *)&city_radius_grid_sprite,(iptr)local_24,(iptr)this,local_c,local_10);
       }
-      thunk_gfx_reset_zoom_scale();
+      gfx_reset_zoom_scale();
     }
   }
   return;
@@ -4187,7 +4038,7 @@ mapview_draw_tile(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3)
 #undef map_show_hidden_terrain
 #undef local_34
 #undef local_24
-#undef local_14
+#undef city
 #undef local_10
 #undef local_c
 #undef local_8
@@ -4200,10 +4051,10 @@ undefined4 __cdecl map_x_in_span(int param_1,int param_2,int param_3)
   
   if ((game.rules & 0x8000) == 0) {
     if (param_1 < param_2) {
-      param_1 = param_1 + map.width;
+      param_1 += map.width;
     }
     if (param_2 + param_3 <= param_1) {
-      param_1 = param_1 - map.width;
+      param_1 -= map.width;
     }
   }
   if (param_1 < param_2) {
@@ -4227,7 +4078,7 @@ map_tile_in_box(undefined4 param_1,int param_2,iptr param_3,iptr param_4,undefin
   int iVar1;
   undefined4 uVar2;
   
-  iVar1 = thunk_map_x_in_span(param_1,param_3,param_5);
+  iVar1 = map_x_in_span(param_1,param_3,param_5);
   if (iVar1 == 0) {
     uVar2 = 0;
   }
@@ -4250,7 +4101,7 @@ mapview_tile_in_view(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_map_tile_in_box(param_1,param_2,this->field_2e8,this->field_2ec,
+  uVar1 = map_tile_in_box(param_1,param_2,this->field_2e8,this->field_2ec,
                              this->field_2f8 + this->field_300,this->field_2fc + this->field_304 + 1
                             );
   return uVar1;
@@ -4262,10 +4113,10 @@ mapview_tile_in_view(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 #define local_2c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define city (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
+#define y2 (*(int *)(frame_ + FRAME_OFF(28)))
+#define x2 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
@@ -4282,22 +4133,22 @@ mapview_draw_city_names(C_004083b0_430 *this,undefined4 param_1,undefined4 param
   
   if (map_show_hidden_terrain == 0) {
     if (-1 < param_3) {
-      param_3 = param_3 + 3;
+      param_3 += 3;
     }
-    thunk_text_set_font((iptr)&this->field_338);
-    for (local_1c = 0; local_1c < game.num_cities; local_1c = local_1c + 1) {
-      if (cities[local_1c].id != 0) {
-        local_10 = (int)cities[local_1c].x;
-        local_14 = (int)cities[local_1c].y;
+    text_set_font((iptr)&this->field_338);
+    for (city = 0; city < game.num_cities; city++) {
+      if (cities[city].id != 0) {
+        x2 = (int)cities[city].x;
+        y2 = (int)cities[city].y;
         if (((param_3 < 0) ||
-            (iVar1 = thunk_map_distance(local_10,local_14,param_1,param_2), iVar1 <= param_3)) &&
-           (iVar1 = thunk_mapview_tile_in_view(this,local_10,local_14), iVar1 != 0)) {
-          local_c = tile_visible_to(local_10,local_14,human_civ);
-          if ((int)cities[local_1c].owner != (human_civ & 0xffU)) {
+            (iVar1 = map_distance(x2,y2,param_1,param_2), iVar1 <= param_3)) &&
+           (iVar1 = mapview_tile_in_view(this,x2,y2), iVar1 != 0)) {
+          local_c = tile_visible_to(x2,y2,human_civ);
+          if ((int)cities[city].owner != (human_civ & 0xffU)) {
             if (((local_c == 0) ||
-                (((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[local_1c].known_to) == 0 &&
-                 ((int)cities[local_1c].owner != (human_civ & 0xffU))))) ||
-               (*(char *)(human_civ + ADDR(0x64f34d, ((u8 *)&cities + 13)) + local_1c * 0x58) == '\0')) {
+                (((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[city].known_to) == 0 &&
+                 ((int)cities[city].owner != (human_civ & 0xffU))))) ||
+               (*(char *)&cities[city].revealed_size[human_civ] == '\0')) {
               local_c = 0;
             }
             else {
@@ -4308,36 +4159,36 @@ mapview_draw_city_names(C_004083b0_430 *this,undefined4 param_1,undefined4 param
             local_c = 1;
           }
           if (local_c != 0) {
-            thunk_mapview_tile_to_screen(this,(iptr)&local_18,(iptr)&local_20,local_10,local_14);
+            mapview_tile_to_screen(this,(iptr)&local_18,(iptr)&local_20,x2,y2);
             iVar1 = this->field_310 + local_18;
             local_8 = ((int)(this->total_science * 3) >> 2) + local_20;
-            thunk_text_set_colors(10,0xffffffff,0xffffffff,0xffffffff);
-            iVar2 = thunk_mapview_zoom_scale(this,2);
+            text_set_colors(10,0xffffffff,0xffffffff,0xffffffff);
+            iVar2 = mapview_zoom_scale(this,2);
             if (iVar2 < 3) {
-              local_28 = thunk_mapview_zoom_scale(this,2);
+              local_28 = mapview_zoom_scale(this,2);
             }
             else {
               local_28 = 2;
             }
             local_28 = local_8 + local_28;
-            iVar2 = thunk_font_text_width
-                              ((GameFont *)&this->field_338,local_1c * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-            thunk_text_draw_shadowed((iptr)this,local_1c * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)),iVar1 - (iVar2 >> 1),local_28);
-            iVar2 = thunk_mapview_zoom_scale(this,2);
+            iVar2 = font_text_width
+                              ((GameFont *)&this->field_338,(iptr)&cities[city].name);
+            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,iVar1 - (iVar2 >> 1),local_28);
+            iVar2 = mapview_zoom_scale(this,2);
             if (iVar2 < 3) {
-              local_2c = thunk_mapview_zoom_scale(this,2);
+              local_2c = mapview_zoom_scale(this,2);
             }
             else {
               local_2c = 2;
             }
             uVar6 = 0;
             uVar5 = 10;
-            uVar3 = thunk_civ_color_secondary((int)cities[local_1c].owner);
-            thunk_text_set_colors(uVar3,uVar5,local_2c,uVar6);
+            uVar3 = civ_color_secondary((int)cities[city].owner);
+            text_set_colors(uVar3,uVar5,local_2c,uVar6);
             iVar2 = local_8;
-            iVar4 = thunk_font_text_width
-                              ((GameFont *)&this->field_338,local_1c * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-            thunk_text_draw_shadowed((iptr)this,local_1c * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)),iVar1 - (iVar4 >> 1),iVar2);
+            iVar4 = font_text_width
+                              ((GameFont *)&this->field_338,(iptr)&cities[city].name);
+            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,iVar1 - (iVar4 >> 1),iVar2);
           }
         }
       }
@@ -4350,10 +4201,10 @@ mapview_draw_city_names(C_004083b0_430 *this,undefined4 param_1,undefined4 param
 #undef local_2c
 #undef local_28
 #undef local_20
-#undef local_1c
+#undef city
 #undef local_18
-#undef local_14
-#undef local_10
+#undef y2
+#undef x2
 #undef local_c
 #undef local_8
 
@@ -4369,12 +4220,12 @@ mapview_tile_radius_rect
 {
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,param_1,param_2);
-  local_c = local_c - (param_3 * 2 + 1) * this->field_314;
-  local_8 = local_8 + this->field_310 * param_3 * -2;
+  mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,param_1,param_2);
+  local_c -= (param_3 * 2 + 1) * this->field_314;
+  local_8 += this->field_310 * param_3 * -2;
   local_10 = (param_3 * 2 + 1) * this->total_tax;
-  thunk_rect_set_xywh((iptr)local_20,local_8,local_c,local_10,(param_3 * 4 + 3) * this->field_314);
-  thunk_rect_intersect_into(param_4,(iptr)local_20,(iptr)&this->client_rect);
+  rect_set_xywh((iptr)local_20,local_8,local_c,local_10,(param_3 * 4 + 3) * this->field_314);
+  rect_intersect_into(param_4,(iptr)local_20,(iptr)&this->client_rect);
   return;
 }
 #undef local_20
@@ -4390,19 +4241,19 @@ mapview_tile_radius_rect
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
 void __thiscall
 mapview_draw_tile_radius
-          (C_004083b0_430 *this,int param_1,int param_2,int param_3,undefined4 param_4)
+          (C_004083b0_430 *this,int param_1,int param_2,int param_3,undefined4 civ)
 
 {
   uint uVar1;
   uint uVar2;
-  undefined4 uVar3;
+  undefined4 x;
   int iVar4;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
+  mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
   surface_set_clip((DibSurface *)this,(iptr)local_14);
   uVar1 = param_3 * 2 + 2;
-  for (local_2c = -uVar1; (int)local_2c <= (int)uVar1; local_2c = local_2c + 1) {
+  for (local_2c = -uVar1; (int)local_2c <= (int)uVar1; local_2c++) {
     if ((int)local_2c < 1) {
       uVar2 = ~local_2c + 1;
     }
@@ -4410,7 +4261,7 @@ mapview_draw_tile_radius
       uVar2 = local_2c & 1;
     }
     local_18 = uVar1 - uVar2;
-    for (local_24 = -local_18; (int)local_24 <= local_18; local_24 = local_24 + 2) {
+    for (local_24 = -local_18; (int)local_24 <= local_18; local_24 += 2) {
       if ((int)local_24 < 1) {
         local_34 = ~local_24 + 1;
       }
@@ -4418,15 +4269,15 @@ mapview_draw_tile_radius
         local_34 = local_24;
       }
       if (local_34 != uVar1) {
-        uVar3 = map_wrap_x(local_24 + param_1);
-        iVar4 = thunk_mapview_tile_in_view(this,uVar3,param_2 + local_2c);
+        x = map_wrap_x(local_24 + param_1);
+        iVar4 = mapview_tile_in_view(this,x,param_2 + local_2c);
         if (iVar4 != 0) {
-          thunk_mapview_draw_tile(this,uVar3,param_2 + local_2c,param_4);
+          mapview_draw_tile(this,x,param_2 + local_2c,civ);
         }
       }
     }
   }
-  thunk_mapview_draw_city_names(this,param_1,param_2,param_3);
+  mapview_draw_city_names(this,param_1,param_2,param_3);
   surface_set_clip((DibSurface *)this,(iptr)&this->client_rect);
   return;
 }
@@ -4440,16 +4291,16 @@ mapview_draw_tile_radius
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
-void __thiscall mapview_draw_all_tiles(C_004083b0_430 *this,undefined4 param_1)
+void __thiscall mapview_draw_all_tiles(C_004083b0_430 *this,undefined4 civ)
 
 {
   uptr uVar1;
   uptr uVar2;
-  undefined4 uVar3;
+  undefined4 x;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((this->field_330 != 0) || (this->field_334 != 0)) {
-    thunk_gfx_fill_surface((iptr)this,10);
+    gfx_fill_surface((iptr)this,10);
   }
   for (local_1c = 0; (int)local_1c < (int)(this->field_2fc + this->field_304 + 1);
       local_1c = local_1c + 1) {
@@ -4461,12 +4312,12 @@ void __thiscall mapview_draw_all_tiles(C_004083b0_430 *this,undefined4 param_1)
     else {
       local_14 = this->field_2f8;
     }
-    for (local_18 = 0; local_18 < local_14; local_18 = local_18 + 1) {
-      uVar3 = map_wrap_x(local_18 * 2 + uVar2 + (local_1c & 1));
-      thunk_mapview_draw_tile(this,uVar3,uVar1 + local_1c,param_1);
+    for (local_18 = 0; local_18 < local_14; local_18++) {
+      x = map_wrap_x(local_18 * 2 + uVar2 + (local_1c & 1));
+      mapview_draw_tile(this,x,uVar1 + local_1c,civ);
     }
   }
-  thunk_mapview_draw_city_names(this,0,0,0xffffffff);
+  mapview_draw_city_names(this,0,0,0xffffffff);
   return;
 }
 #undef local_1c
@@ -4482,8 +4333,8 @@ mapview_blit_tile_radius
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
-  thunk_wnd_blit_surface_rect((DibSurface *)this,(iptr)local_14);
+  mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
+  wnd_blit_surface_rect((DibSurface *)this,(iptr)local_14);
   return;
 }
 #undef local_14
@@ -4493,7 +4344,7 @@ void __thiscall
 mapview_blit_tile(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 
 {
-  thunk_mapview_blit_tile_radius(this,param_1,param_2,0);
+  mapview_blit_tile_radius(this,param_1,param_2,0);
   return;
 }
 
@@ -4501,14 +4352,14 @@ mapview_blit_tile(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 void __thiscall mapview_blit_with_net_pump(DibSurface *this)
 
 {
-  thunk_win_flush_pending_msgs();
+  win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    thunk_net_process_messages((NetSession *)&net_session,1,0);
+    net_process_messages((NetSession *)&net_session,1,0);
   }
-  thunk_wnd_blit_surface(this);
-  thunk_win_flush_pending_msgs();
+  wnd_blit_surface(this);
+  win_flush_pending_msgs();
   if (2 < game.multiplayer) {
-    thunk_net_process_messages((NetSession *)&net_session,1,0);
+    net_process_messages((NetSession *)&net_session,1,0);
   }
   return;
 }
@@ -4521,7 +4372,7 @@ void __thiscall mapview_blit_with_net_pump(DibSurface *this)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define local_20 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
@@ -4537,23 +4388,23 @@ mapview_redraw_area
   if (game_loop_active != '\0') {
     map_redraw_busy = 1;
     if (game.reveal_map == '\0') {
-      local_20 = param_4;
+      civ = param_4;
     }
     else {
-      local_20 = -1;
+      civ = -1;
     }
-    thunk_mapview_draw_tile_radius(this,param_1,param_2,param_3,local_20);
+    mapview_draw_tile_radius(this,param_1,param_2,param_3,civ);
     if ((((moving_units_mode == 0) && (unit_blink_phase != '\0')) && (unit_blink_active != '\0')) &&
        ((this->field_2d8 == 0 &&
-        (iVar1 = thunk_mapview_tile_in_view(this,(int)map_cursor_x,(int)map_cursor_y), iVar1 != 0)))) {
-      thunk_mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_8,(int)map_cursor_x,(int)map_cursor_y);
-      thunk_mapview_apply_zoom(this);
+        (iVar1 = mapview_tile_in_view(this,(int)map_cursor_x,(int)map_cursor_y), iVar1 != 0)))) {
+      mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_8,(int)map_cursor_x,(int)map_cursor_y);
+      mapview_apply_zoom(this);
       sprite_draw
                 ((Sprite *)&map_cursor_sprite,(iptr)local_1c,(iptr)this,local_c,local_8);
-      thunk_gfx_reset_zoom_scale();
+      gfx_reset_zoom_scale();
     }
     if (param_5 != 0) {
-      thunk_mapview_blit_tile_radius(this,param_1,param_2,param_3);
+      mapview_blit_tile_radius(this,param_1,param_2,param_3);
     }
     map_redraw_busy = 0;
   }
@@ -4566,7 +4417,7 @@ mapview_redraw_area
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef local_20
+#undef civ
 #undef local_1c
 #undef local_c
 #undef local_8
@@ -4577,7 +4428,7 @@ void __thiscall
 mapview_redraw_tile(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 
 {
-  thunk_mapview_redraw_area(this,param_1,param_2,0,human_civ,1);
+  mapview_redraw_area(this,param_1,param_2,0,human_civ,1);
   return;
 }
 #undef human_civ
@@ -4588,7 +4439,7 @@ void __thiscall
 mapview_redraw_tile_neighbors(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2)
 
 {
-  thunk_mapview_redraw_area(this,param_1,param_2,1,human_civ,1);
+  mapview_redraw_area(this,param_1,param_2,1,human_civ,1);
   return;
 }
 #undef human_civ
@@ -4598,7 +4449,7 @@ mapview_redraw_tile_neighbors(C_004083b0_430 *this,undefined4 param_1,undefined4
 #define map_click_in_progress (*(int *)((u8 *)&g.d_0062bcb0))
 #define map_redraw_busy (*(undefined4 *)((u8 *)&g.d_006ad908))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall mapview_redraw(C_004083b0_430 *this,iptr param_1,int param_2)
 
 {
@@ -4606,22 +4457,22 @@ void __thiscall mapview_redraw(C_004083b0_430 *this,iptr param_1,int param_2)
   
   if (game_loop_active != '\0') {
     map_redraw_busy = 1;
-    thunk_frame_wnd_layout((FrameWindow *)this);
-    thunk_mapview_update_layout(this);
-    thunk_frame_wnd_draw_caption((FrameWindow *)this);
+    frame_wnd_layout((FrameWindow *)this);
+    mapview_update_layout(this);
+    frame_wnd_draw_caption((FrameWindow *)this);
     if (game.reveal_map == '\0') {
-      local_8 = param_1;
+      civ = param_1;
     }
     else {
-      local_8 = -1;
+      civ = -1;
     }
-    thunk_mapview_draw_all_tiles(this,local_8);
+    mapview_draw_all_tiles(this,civ);
     if ((param_2 != 0) &&
-       (thunk_mapview_blit_with_net_pump((DibSurface *)this), this->field_2d8 == 0)) {
-      thunk_minimap_redraw();
+       (mapview_blit_with_net_pump((DibSurface *)this), this->field_2d8 == 0)) {
+      minimap_redraw();
     }
     if ((map_click_in_progress == 0) && (mp_simultaneous_moves == '\0')) {
-      thunk_input_flush_events();
+      input_flush_events();
     }
     map_redraw_busy = 0;
   }
@@ -4631,7 +4482,7 @@ void __thiscall mapview_redraw(C_004083b0_430 *this,iptr param_1,int param_2)
 #undef map_click_in_progress
 #undef map_redraw_busy
 #undef mp_simultaneous_moves
-#undef local_8
+#undef civ
 
 /* 0047ce1e auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
@@ -4642,9 +4493,9 @@ map_redraw_area_all_views(undefined4 param_1,undefined4 param_2,undefined4 param
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      thunk_mapview_redraw_area
+      mapview_redraw_area
                 ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),param_1,param_2,param_3,param_4
                  ,param_5);
     }
@@ -4660,9 +4511,9 @@ void __cdecl map_redraw_tile_all_views(undefined4 param_1,undefined4 param_2)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      thunk_mapview_redraw_tile
+      mapview_redraw_tile
                 ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),param_1,param_2);
     }
   }
@@ -4677,9 +4528,9 @@ void __cdecl map_redraw_neighbors_all_views(undefined4 param_1,iptr param_2)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      thunk_mapview_redraw_tile_neighbors
+      mapview_redraw_tile_neighbors
                 ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),param_1,param_2);
     }
   }
@@ -4694,9 +4545,9 @@ void __cdecl map_redraw_all_views(iptr param_1,undefined4 param_2)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      thunk_mapview_redraw
+      mapview_redraw
                 ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),param_1,param_2);
     }
   }
@@ -4714,11 +4565,11 @@ C_004083b0_430 * __thiscall mapview_ctor(C_004083b0_430 *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_frame_wnd_ctor((SurfaceWindow *)this);
+  frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
-  thunk_font_init_empty((GameFont *)&this->field_338);
+  font_init_empty((GameFont *)&this->field_338);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  thunk_font_init_empty((GameFont *)&this->field_340);
+  font_init_empty((GameFont *)&this->field_340);
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   surface_ctor((DibSurface *)&this->field_360);
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),3);
@@ -4750,11 +4601,11 @@ void __thiscall mapview_dtor(void *this)
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x360)); }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_0047dea0 */ { thunk_font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x340)); }
+  /* inlined unwind funclet FUN_0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x340)); }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_0047deaf */ { thunk_font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x338)); }
+  /* inlined unwind funclet FUN_0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x338)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0047debe */ { thunk_frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -4791,7 +4642,7 @@ undefined4 __thiscall mapview_zoom_scale(C_004083b0_430 *this,undefined4 param_1
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_gfx_zoom_scale(param_1,(int)(short)this->field_2e4);
+  uVar1 = gfx_zoom_scale(param_1,(int)(short)this->field_2e4);
   return uVar1;
 }
 
@@ -4799,25 +4650,25 @@ undefined4 __thiscall mapview_zoom_scale(C_004083b0_430 *this,undefined4 param_1
 void __thiscall mapview_apply_zoom(C_004083b0_430 *this)
 
 {
-  thunk_gfx_set_zoom_scale((int)(short)this->field_2e4);
+  gfx_set_zoom_scale((int)(short)this->field_2e4);
   return;
 }
 
 /* 0047e030 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl mapviews_tile_visible(iptr param_1,iptr param_2)
+undefined4 __cdecl mapviews_tile_visible(iptr x,iptr y)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = tile_visible_to(param_1,param_2,human_civ);
+  iVar1 = tile_visible_to(x,y,human_civ);
   if (iVar1 != 0) {
-    for (local_8 = 0; local_8 < 8; local_8 = local_8 + 1) {
+    for (local_8 = 0; local_8 < 8; local_8++) {
       if (((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) &&
-         (iVar1 = thunk_mapview_tile_in_view
-                            ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),param_1,param_2),
+         (iVar1 = mapview_tile_in_view
+                            ((C_004083b0_430 *)(&map_views + local_8 * 0x3f0),x,y),
          iVar1 != 0)) {
         return 1;
       }
@@ -4848,8 +4699,8 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
       net_stacked_draw_last = 0;
     }
     net_stacked_draw_count = (uint)(DAT_006ad918 != 0);
-    thunk_net_stacked_draw_push(0xa3,(iptr)local_24,0);
-    iVar1 = thunk_net_stacked_draw_push(0x74,(iptr)local_24,0);
+    net_stacked_draw_push(0xa3,(iptr)local_24,0);
+    iVar1 = net_stacked_draw_push(0x74,(iptr)local_24,0);
   }
   else {
     if ((net_stacked_draw_first < 0) || (99 < net_stacked_draw_first)) {
@@ -4859,14 +4710,14 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62bdac, ((u8 *)&g.d_0062bdac)),ADDR(0x62bd88, ((u8 *)&g.d_0062bd88)),0x5b);
     }
     *(int *)(&net_stacked_draw_kinds + net_stacked_draw_last * 0x40) = param_1;
-    for (local_8 = 0; local_8 < 7; local_8 = local_8 + 1) {
+    for (local_8 = 0; local_8 < 7; local_8++) {
       *(undefined4 *)(&net_stacked_draw_args + local_8 * 4 + net_stacked_draw_last * 0x40) =
            *(undefined4 *)(param_2 + local_8 * 4);
     }
     if (param_1 == 0x70) {
       FUN_005f2110(net_stacked_draw_last * 0x40 + ADDR(0x6ad940, ((u8 *)&g.d_006ad934 + 12)),param_3,0x20);
     }
-    net_stacked_draw_count = net_stacked_draw_count + 1;
+    net_stacked_draw_count++;
     if ((int)net_stacked_draw_peak < (int)net_stacked_draw_count) {
       net_stacked_draw_peak = net_stacked_draw_count;
     }
@@ -4890,37 +4741,37 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
 int __cdecl net_stacked_draw_run_next(void)
 
 {
-  int iVar1;
+  int y;
   iptr iVar2;
   iptr iVar3;
-  iptr iVar4;
-  iptr iVar5;
+  iptr unit;
+  iptr unit2;
   int iVar6;
-  int iVar7;
+  int x;
   undefined4 uVar8;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   switch(*(undefined4 *)(&net_stacked_draw_kinds + net_stacked_draw_first * 0x40)) {
   case 0x70:
-    iVar7 = *(int *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40);
-    iVar1 = *(int *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40);
-    iVar5 = *(iptr *)(&net_stacked_draw_arg3 + net_stacked_draw_first * 0x40);
-    thunk_unit_stack_validate(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40));
-    iVar2 = thunk_mapviews_tile_visible(iVar7,iVar1);
+    x = *(int *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40);
+    y = *(int *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40);
+    unit2 = *(iptr *)(&net_stacked_draw_arg3 + net_stacked_draw_first * 0x40);
+    unit_stack_validate(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40));
+    iVar2 = mapviews_tile_visible(x,y);
     if (iVar2 != 0) {
       FUN_005f2110(&stacked_draw_unit_copy,net_stacked_draw_first * 0x40 + ADDR(0x6ad940, ((u8 *)&g.d_006ad934 + 12)),0x20);
       stacked_draw_unit_prev = -1;
       stacked_draw_unit_next = -1;
-      thunk_mapviews_ensure_visible(iVar7,iVar1,(int)stacked_draw_unit_owner);
+      mapviews_ensure_visible(x,y,(int)stacked_draw_unit_owner);
       if (*(int *)(&net_stacked_draw_arg4 + net_stacked_draw_first * 0x40) == -1) {
-        thunk_snd_play_effect(99,1,0,0);
+        snd_play_effect(99,1,0,0);
       }
-      iVar3 = tile_at(iVar7,iVar1);
+      iVar3 = tile_at(x,y);
       uVar8 = 2;
-      iVar4 = thunk_tile_first_unit(iVar7,iVar1);
-      local_8 = thunk_unit_stack_sum(iVar4,uVar8);
-      if ((stacked_draw_unit_copy != iVar7) || (stacked_draw_unit_y != iVar1)) {
-        local_8 = local_8 + 1;
+      unit = tile_first_unit(x,y);
+      local_8 = unit_stack_sum(unit,uVar8);
+      if ((stacked_draw_unit_copy != x) || (stacked_draw_unit_y != y)) {
+        local_8++;
       }
       if (local_8 == 1) {
         *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
@@ -4928,7 +4779,7 @@ int __cdecl net_stacked_draw_run_next(void)
       else if (1 < local_8) {
         anim_origin_x = (int)stacked_draw_unit_copy;
         anim_origin_y = (int)stacked_draw_unit_y;
-        iVar6 = thunk_unit_stack_sum(0x801,5);
+        iVar6 = unit_stack_sum(0x801,5);
         if (iVar6 == 0) {
           if (stacked_draw_unit_next < 0) {
             if (stacked_draw_unit_prev < 0) {
@@ -4943,15 +4794,15 @@ int __cdecl net_stacked_draw_run_next(void)
           }
         }
         else {
-          iVar6 = thunk_unit_stack_sum(0x801,5);
+          iVar6 = unit_stack_sum(0x801,5);
           if (iVar6 < 2) {
             *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
           }
           else {
-            anim_origin_stack_unit = thunk_unit_stack_first(0x801);
+            anim_origin_stack_unit = unit_stack_first(0x801);
             do {
               if ((anim_origin_stack_unit != 0x801) &&
-                 (unit_types[units[anim_origin_stack_unit].type].domain == '\x02')) goto LAB_0047e5c2;
+                 (unit_types[units[anim_origin_stack_unit].type].domain == 2)) goto LAB_0047e5c2;
               anim_origin_stack_unit = (iptr)units[anim_origin_stack_unit].next_in_stack;
             } while (-1 < anim_origin_stack_unit);
             *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
@@ -4960,77 +4811,77 @@ int __cdecl net_stacked_draw_run_next(void)
       }
 LAB_0047e5c2:
       unit_move_anim_active = 1;
-      thunk_map_animate_unit_move(0x801,iVar7,iVar1,iVar5,net_move_anim_sound,net_move_anim_sound_arg);
+      map_animate_unit_move(0x801,x,y,unit2,net_move_anim_sound,net_move_anim_sound_arg);
       unit_move_anim_active = 0;
       uVar8 = 2;
-      iVar5 = thunk_tile_first_unit(iVar7,iVar1);
-      iVar6 = thunk_unit_stack_sum(iVar5,uVar8);
+      unit2 = tile_first_unit(x,y);
+      iVar6 = unit_stack_sum(unit2,uVar8);
       if (iVar6 != 0) {
         if (net_host_flag == '\0') {
           *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) | 1;
         }
         else {
-          tile_set_improvements(iVar7,iVar1,1,1,1);
+          tile_set_improvements(x,y,1,1,1);
         }
       }
     }
     break;
   case 0x71:
-    iVar7 = tile_visible_to(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    x = tile_visible_to(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                             *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40),human_civ);
-    if (iVar7 != 0) {
-      thunk_mapviews_ensure_visible(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    if (x != 0) {
+      mapviews_ensure_visible(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                          *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40),
                          *(iptr *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40));
     }
     break;
   case 0x72:
-    thunk_map_redraw_tile_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    map_redraw_tile_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40));
     break;
   case 0x73:
-    thunk_map_redraw_combat_tiles(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    map_redraw_combat_tiles(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg3 + net_stacked_draw_first * 0x40));
     break;
   case 0x74:
-    thunk_map_redraw_all_views(human_civ,1);
+    map_redraw_all_views(human_civ,1);
     break;
   case 0x75:
-    thunk_map_redraw_neighbors_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    map_redraw_neighbors_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                        *(iptr *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40));
     break;
   case 0x76:
-    thunk_map_redraw_area_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    map_redraw_area_all_views(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40),
                        *(undefined4 *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40),
                        *(iptr *)(&net_stacked_draw_arg3 + net_stacked_draw_first * 0x40),1);
     break;
   case 0x7c:
-    iVar7 = thunk_mapviews_tile_visible(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    x = mapviews_tile_visible(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                                *(iptr *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40));
-    if (iVar7 != 0) {
-      thunk_map_animate_explosion(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    if (x != 0) {
+      map_animate_explosion(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                          *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40),
                          *(undefined4 *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40));
     }
     break;
   case 0x7d:
-    iVar7 = thunk_mapviews_tile_visible(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    x = mapviews_tile_visible(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                                *(iptr *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40));
-    if (iVar7 != 0) {
-      thunk_map_animate_nuke(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
+    if (x != 0) {
+      map_animate_nuke(*(undefined4 *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40),
                          *(undefined4 *)(&net_stacked_draw_arg1 + net_stacked_draw_first * 0x40));
     }
     break;
   case 0xa3:
-    nm_abort_kaboom_count = nm_abort_kaboom_count + 1;
+    nm_abort_kaboom_count++;
   }
-  net_stacked_draw_count = net_stacked_draw_count + -1;
-  iVar7 = net_stacked_draw_first + 1;
-  net_stacked_draw_first = iVar7 % 100;
-  return iVar7 / 100;
+  net_stacked_draw_count--;
+  x = net_stacked_draw_first + 1;
+  net_stacked_draw_first = x % 100;
+  return x / 100;
 }
 #undef human_civ
 #undef net_host_flag
@@ -5118,7 +4969,7 @@ LAB_0047e5c2:
 #define local_6d4 (*(undefined4 *)(frame_ + FRAME_OFF(116)))
 #define local_6d0 (*(uint *)(frame_ + FRAME_OFF(120)))
 #define local_6cc (*(u8 *)(frame_ + FRAME_OFF(124)))
-#define local_6c8 (*(iptr *)(frame_ + FRAME_OFF(128)))
+#define unit2 (*(iptr *)(frame_ + FRAME_OFF(128)))
 #define local_6c4 (*(uint * *)(frame_ + FRAME_OFF(132)))
 #define local_6c0 (*(int *)(frame_ + FRAME_OFF(136)))
 #define local_6bc (*(int *)(frame_ + FRAME_OFF(140)))
@@ -5143,8 +4994,8 @@ LAB_0047e5c2:
 #define local_37c (*(Dialog *)(frame_ + FRAME_OFF(972)))
 #define local_88 (*(u32 *)(frame_ + FRAME_OFF(1728)))
 #define local_84 (*(int * *)(frame_ + FRAME_OFF(1732)))
-#define local_80 (*(int *)(frame_ + FRAME_OFF(1736)))
-#define local_7c (*(int *)(frame_ + FRAME_OFF(1740)))
+#define y4 (*(int *)(frame_ + FRAME_OFF(1736)))
+#define x3 (*(int *)(frame_ + FRAME_OFF(1740)))
 #define local_78 (*(undefined4 *)(frame_ + FRAME_OFF(1744)))
 #define local_74 (*(undefined4 *)(frame_ + FRAME_OFF(1748)))
 #define local_70 (*(undefined4 *)(frame_ + FRAME_OFF(1752)))
@@ -5154,17 +5005,17 @@ LAB_0047e5c2:
 #define local_60 (*(uint *)(frame_ + FRAME_OFF(1768)))
 #define local_5c (*(uint *)(frame_ + FRAME_OFF(1772)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(1776)))
-#define local_54 (*(iptr *)(frame_ + FRAME_OFF(1780)))
+#define unit4 (*(iptr *)(frame_ + FRAME_OFF(1780)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(1784)))
 #define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(1788)))
 #define local_48 (*(uint * *)(frame_ + FRAME_OFF(1792)))
 #define local_44 (*(undefined1 *)(frame_ + FRAME_OFF(1796)))
-#define local_40 (*(uptr *)(frame_ + FRAME_OFF(1800)))
+#define unit (*(uptr *)(frame_ + FRAME_OFF(1800)))
 #define local_3c (*(uptr *)(frame_ + FRAME_OFF(1804)))
-#define local_38 (*(uptr *)(frame_ + FRAME_OFF(1808)))
-#define local_34 (*(iptr *)(frame_ + FRAME_OFF(1812)))
-#define local_30 (*(iptr *)(frame_ + FRAME_OFF(1816)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(1820)))
+#define unit3 (*(uptr *)(frame_ + FRAME_OFF(1808)))
+#define y2 (*(iptr *)(frame_ + FRAME_OFF(1812)))
+#define x2 (*(iptr *)(frame_ + FRAME_OFF(1816)))
+#define y3 (*(int *)(frame_ + FRAME_OFF(1820)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(1824)))
 #define local_24 (*(int * *)(frame_ + FRAME_OFF(1828)))
 #define local_20 (*(int * *)(frame_ + FRAME_OFF(1832)))
@@ -5182,16 +5033,16 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
   int *piVar1;
   u8 *puVar2;
   char *pcVar3;
-  char cVar4;
+  char civ;
   iptr iVar6;
   iptr iVar7;
   u32 uVar6;
-  undefined4 uVar7;
+  undefined4 x;
   iptr iVar8;
-  int iVar9;
+  int city;
   bool bVar10;
-  uptr uVar5;
-  uptr uVar4;
+  uptr civ2;
+  uptr unit5;
   undefined1 frame_[FRAME_OFF(1864)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
@@ -5224,7 +5075,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             local_734 = this[0x2c18].field_4 + 0x48;
           }
           wnd_set_active_child(local_734);
-          thunk_map_window_click(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4,
+          map_window_click(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4,
                              *(undefined4 *)this[0x2c16].pad_0);
         }
         break;
@@ -5237,49 +5088,49 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             local_738 = this[0x2c18].field_4 + 0x48;
           }
           wnd_set_active_child(local_738);
-          thunk_map_window_double_click(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4);
+          map_window_double_click(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4);
         }
         break;
       case 4:
         local_68 = blocked_input_char_pending;
         local_60 = CONCAT31((*(undefined3 *)((char *)&local_60 + 1)),blocked_input_char);
-        thunk_map_window_key(*(undefined4 *)this[0x2c15].pad_0);
+        map_window_key(*(undefined4 *)this[0x2c15].pad_0);
         if (local_68 == 3) {
-          thunk_map_window_ascii(local_60);
+          map_window_ascii(local_60);
         }
         break;
       case 5:
-        thunk_menu_command(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4);
+        menu_command(*(undefined4 *)this[0x2c15].pad_0,this[0x2c15].field_4);
         break;
       case 6:
         if (((city_window_closed == 0) && (cities[*(int *)this[0x2c15].pad_0].id != 0)) &&
            ((int)cities[*(int *)this[0x2c15].pad_0].owner == this[0x2c15].field_4)) {
-          thunk_city_window_on_mouse(*(undefined4 *)this[0x2c16].pad_0,this[0x2c16].field_4,
+          city_window_on_mouse(*(undefined4 *)this[0x2c16].pad_0,this[0x2c16].field_4,
                              *(undefined4 *)this[0x2c17].pad_0);
         }
         break;
       case 7:
         if (((city_window_closed == 0) && (cities[*(int *)this[0x2c15].pad_0].id != 0)) &&
            ((int)cities[*(int *)this[0x2c15].pad_0].owner == this[0x2c15].field_4)) {
-          thunk_city_button_buy(*(undefined4 *)this[0x2c16].pad_0);
+          city_button_buy(*(undefined4 *)this[0x2c16].pad_0);
         }
         break;
       case 8:
         if (((city_window_closed == 0) && (cities[*(int *)this[0x2c15].pad_0].id != 0)) &&
            ((int)cities[*(int *)this[0x2c15].pad_0].owner == this[0x2c15].field_4)) {
-          thunk_city_button_change(*(undefined4 *)this[0x2c16].pad_0);
+          city_button_change(*(undefined4 *)this[0x2c16].pad_0);
         }
         break;
       case 9:
         if (((city_window_closed == 0) && (cities[*(int *)this[0x2c15].pad_0].id != 0)) &&
            ((int)cities[*(int *)this[0x2c15].pad_0].owner == this[0x2c15].field_4)) {
-          thunk_city_button_view(*(undefined4 *)this[0x2c16].pad_0);
+          city_button_view(*(undefined4 *)this[0x2c16].pad_0);
         }
         break;
       case 10:
         if (((city_window_closed == 0) && (cities[*(int *)this[0x2c15].pad_0].id != 0)) &&
            ((int)cities[*(int *)this[0x2c15].pad_0].owner == this[0x2c15].field_4)) {
-          thunk_city_button_rename(*(undefined4 *)this[0x2c16].pad_0);
+          city_button_rename(*(undefined4 *)this[0x2c16].pad_0);
         }
       }
       net_deferred_input_busy = '\0';
@@ -5291,18 +5142,18 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
     while (param_1 != 0) {
       if (((*(int *)this[0x102].pad_0 == 0) && (*(int *)this[0x100].pad_0 == 0)) &&
          (0 < (int)this[0x100].field_4)) {
-        this[0x102].pad_0[0] = '\x01';
+        this[0x102].pad_0[0] = 1;
         this[0x102].pad_0[1] = '\0';
         this[0x102].pad_0[2] = '\0';
         this[0x102].pad_0[3] = '\0';
         if ((int)this[0x100].field_4 < 0x22) {
-          local_54 = 1;
+          unit4 = 1;
         }
         else {
-          local_54 = 2;
+          unit4 = 2;
         }
-        for (; 0 < local_54; local_54 = local_54 + -1) {
-          thunk_net_stacked_draw_run_next();
+        for (; 0 < unit4; unit4--) {
+          net_stacked_draw_run_next();
         }
         this[0x102].pad_0[0] = '\0';
         this[0x102].pad_0[1] = '\0';
@@ -5310,8 +5161,8 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         this[0x102].pad_0[3] = '\0';
       }
       if ((net_msgq_normal_count < 0x12d) && (net_msgq_priority_count < 0x22)) {
-        thunk_ui_pump_messages();
-        param_1 = param_1 + -1;
+        ui_pump_messages();
+        param_1--;
       }
       if (net_msgq_priority_count < 0x22) {
         local_740 = param_2;
@@ -5319,10 +5170,10 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
       else {
         local_740 = 1;
       }
-      cVar4 = thunk_net_msgq_dequeue
+      civ = net_msgq_dequeue
                         ((C_005149d6 *)(this + 0x2c1a),(iptr)&local_58,(iptr)&local_20,
                          (iptr)&local_5c,local_740);
-      if (cVar4 == '\0') break;
+      if (civ == '\0') break;
       if (local_20 == (int *)0x0) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62be4c, ((u8 *)&g.d_0062be4c)),ADDR(0x62be28, ((u8 *)&g.d_0062be28)),0x195);
       }
@@ -5342,12 +5193,12 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           if (local_20[0x1c] == 1) {
             if (((*(char *)((int)&this[0x3d].field_4 + 3) != '\0') && (net_host_handoff_stage == '\0')) &&
                (net_connection_type != 0)) {
-              thunk_net_send_message(2,0,0,0,0,0,0,0,0,0);
+              net_send_message(2,0,0,0,0,0,0,0,0,0);
             }
           }
           else if (local_20[0x1c] == 2) {
-            thunk_net_game_list_add(this,(iptr)local_20);
-            local_1c = '\x01';
+            net_game_list_add(this,(iptr)local_20);
+            local_1c = 1;
           }
           break;
         default:
@@ -5355,16 +5206,16 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           break;
         case 4:
           FUN_005f2110(this + 0x40,local_20 + 4,0x270);
-          for (local_54 = 0; local_54 < 7; local_54 = local_54 + 1) {
-            if ((*(char *)((int)this + local_54 * 0x54 + 0x251) != '\0') &&
-               (*(int *)((int)this + local_54 * 0x54 + 0x204) == *(int *)this[0x3f].pad_0)) {
-              this[0x3f].field_4 = local_54;
+          for (unit4 = 0; unit4 < 7; unit4++) {
+            if ((*(char *)((int)this + unit4 * 0x54 + 0x251) != '\0') &&
+               (*(int *)((int)this + unit4 * 0x54 + 0x204) == *(int *)this[0x3f].pad_0)) {
+              this[0x3f].field_4 = unit4;
               break;
             }
           }
           break;
         case 5:
-          uVar6 = thunk_timer_ticks();
+          uVar6 = timer_ticks();
           this[0xad].field_4 = uVar6;
           break;
         case 6:
@@ -5380,7 +5231,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           local_18 = local_5c - 0x2c;
           FUN_005f6500(local_20,local_20 + 0xb,local_18);
           local_20 = (int *)FUN_005f4900(local_20,local_18);
-          thunk_diffeng_apply_image(&local_20,local_50);
+          diffeng_apply_image(&local_20,local_50);
           break;
         case 10:
           local_4c = 0x2c;
@@ -5388,7 +5239,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           local_18 = local_5c - 0x2c;
           FUN_005f6500(local_20,local_20 + 0xb,local_18);
           local_20 = (int *)FUN_005f4900(local_20,local_18);
-          thunk_diffeng_apply_map_header_image(&local_20,local_50);
+          diffeng_apply_map_header_image(&local_20,local_50);
           break;
         case 0xb:
         case 0xc:
@@ -5397,16 +5248,16 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0xd:
           break;
         case 0xe:
-          this[0xb2].pad_0[0] = this[0xb2].pad_0[0] + '\x01';
+          this[0xb2].pad_0[0]++;
           break;
         case 0xf:
-          this[0xb2].pad_0[0] = this[0xb2].pad_0[0] + '\x01';
+          this[0xb2].pad_0[0]++;
           break;
         case 0x10:
-          net_players_awaited = net_players_awaited + -1;
+          net_players_awaited--;
           break;
         case 0x12:
-          thunk_net_send_message(0x13,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x13,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x13:
           if (net_session != 0) {
@@ -5427,13 +5278,13 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           local_694 = 0;
           local_6a0 = 0;
           local_69c = 0;
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           if (diffeng_mirror_buf != 0) {
-            for (local_6a4 = 0; local_6a4 < (int)local_40; local_6a4 = local_6a4 + 1) {
+            for (local_6a4 = 0; local_6a4 < (int)unit; local_6a4++) {
               local_6d0 = *local_48;
               local_698 = local_48[1];
               local_684 = local_48[2];
-              local_48 = local_48 + 3;
+              local_48 += 3;
               if ((local_6d0 & 0x7fff) == 1) {
                 local_680 = game.active_unit;
                 local_6b0 = game.moving_unit;
@@ -5452,11 +5303,11 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
               }
               else {
                 local_6a0 = 1;
-                for (local_6c8 = 0; local_6c8 < game.num_units; local_6c8 = local_6c8 + 1) {
-                  *(i16 *)(&net_saved_unit_x + local_6c8 * 2) = units[local_6c8].x;
-                  *(i16 *)(&net_saved_unit_y + local_6c8 * 2) = units[local_6c8].y;
-                  *(i16 *)(&net_saved_unit_next + local_6c8 * 2) = units[local_6c8].next_in_stack;
-                  *(i16 *)(&net_saved_unit_prev + local_6c8 * 2) = units[local_6c8].prev_in_stack;
+                for (unit2 = 0; unit2 < game.num_units; unit2++) {
+                  *(i16 *)(&net_saved_unit_x + unit2 * 2) = units[unit2].x;
+                  *(i16 *)(&net_saved_unit_y + unit2 * 2) = units[unit2].y;
+                  *(i16 *)(&net_saved_unit_next + unit2 * 2) = units[unit2].next_in_stack;
+                  *(i16 *)(&net_saved_unit_prev + unit2 * 2) = units[unit2].prev_in_stack;
                 }
               }
               if ((local_6d0 & 0x8000) == 0) {
@@ -5468,10 +5319,10 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
                 local_6d0 = local_6d0 & 0x7fff;
                 local_6c0 = local_684 + (int)local_48;
                 local_6c4 = local_48;
-                local_6a8 = thunk_diffeng_rle_decoded_size((iptr)&local_6c4);
+                local_6a8 = diffeng_rle_decoded_size((iptr)&local_6c4);
                 local_6bc = (&diffeng_section_ptrs)[local_6d0 * 6] + local_698;
                 local_6b8 = local_6bc + local_6a8;
-                thunk_diffeng_rle_decode((iptr)&local_6c4);
+                diffeng_rle_decode((iptr)&local_6c4);
                 FUN_005f2110(*(int *)(&diffeng_section_offsets + local_6d0 * 0x18) + local_698 + diffeng_mirror_buf,
                              (&diffeng_section_ptrs)[local_6d0 * 6] + local_698,local_6a8);
               }
@@ -5491,14 +5342,14 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
               local_48 = (uint *)((int)local_48 + local_684);
             }
             if (local_694 != 0) {
-              thunk_city_window_refresh((FrameWindow *)&city_window);
+              city_window_refresh((FrameWindow *)&city_window);
             }
             if ((net_host_flag != '\0') && (local_6a0 != 0)) {
-              for (local_6c8 = 0; local_6c8 < game.num_units; local_6c8 = local_6c8 + 1) {
-                units[local_6c8].x = *(i16 *)(&net_saved_unit_x + local_6c8 * 2);
-                units[local_6c8].y = *(i16 *)(&net_saved_unit_y + local_6c8 * 2);
-                units[local_6c8].next_in_stack = *(i16 *)(&net_saved_unit_next + local_6c8 * 2);
-                units[local_6c8].prev_in_stack = *(i16 *)(&net_saved_unit_prev + local_6c8 * 2);
+              for (unit2 = 0; unit2 < game.num_units; unit2++) {
+                units[unit2].x = *(i16 *)(&net_saved_unit_x + unit2 * 2);
+                units[unit2].y = *(i16 *)(&net_saved_unit_y + unit2 * 2);
+                units[unit2].next_in_stack = *(i16 *)(&net_saved_unit_next + unit2 * 2);
+                units[unit2].prev_in_stack = *(i16 *)(&net_saved_unit_prev + unit2 * 2);
               }
             }
             if (local_69c != 0) {
@@ -5551,11 +5402,11 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           FUN_005f2110(attitude_names,local_48,0x24);
           break;
         case 0x25:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          scenario_events_loaded = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          scenario_events_loaded = unit;
           scenario_event_count = local_3c;
-          if (local_40 != 0) {
-            thunk_events_relink_pool();
+          if (unit != 0) {
+            events_relink_pool();
           }
           break;
         case 0x26:
@@ -5563,347 +5414,347 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0x27:
           break;
         case 0x28:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_session_phase = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          net_session_phase = unit;
           break;
         case 0x2a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_claimed_civs_mask = (ushort)local_40;
-          game.human_players = game.human_players & (byte)local_40;
-          _DAT_006c90a0 = _DAT_006c90a0 + 1;
+          net_msg_get_args((iptr)local_20,&unit);
+          net_claimed_civs_mask = (ushort)unit;
+          game.human_players = game.human_players & (byte)unit;
+          _DAT_006c90a0++;
           break;
         case 0x2b:
-          thunk_net_send_message(0x2c,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x2c,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x2c:
           break;
         case 0x2d:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(undefined4 *)(&net_civ_drop_requested + local_40 * 4) = 1;
-          thunk_net_drop_flagged_players();
+          net_msg_get_args((iptr)local_20,&unit);
+          *(undefined4 *)(&net_civ_drop_requested + unit * 4) = 1;
+          net_drop_flagged_players();
           break;
         case 0x2e:
           if (net_host_flag == '\0') {
             err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62bec8, ((u8 *)&g.d_0062bec8)),ADDR(0x62bea4, ((u8 *)&g.d_0062bea4)),0x22a);
           }
           if (net_host_handoff_stage == '\0') {
-            iVar9 = thunk_net_host_register_player_civ((iptr)local_24,local_58);
-            if (iVar9 == 0) {
-              thunk_net_send_message(0xc,local_58,0,0,0,0,0,0,0,0);
+            city = net_host_register_player_civ((iptr)local_24,local_58);
+            if (city == 0) {
+              net_send_message(0xc,local_58,0,0,0,0,0,0,0,0);
             }
             else {
-              _DAT_006c90a0 = _DAT_006c90a0 + 1;
+              _DAT_006c90a0++;
               if (2 < (int)net_session_phase) {
-                thunk_dialog_ctor(&local_674,0x4000);
+                dialog_ctor(&local_674,0x4000);
                 local_8 = 1;
-                thunk_net_send_message(0x65,0xff,0,0,0,0,0,0,0,0);
-                thunk_mp_turn_timer_stop(0);
-                thunk_dlg_load_game_section(&local_674,ADDR(0x62bed8, ((u8 *)&g.d_0062bed8)),0x2000000);
-                thunk_dlg_show_modal(&local_674,0);
-                thunk_net_send_message(0x33,local_58,(int)mp_double_production,(int)mp_double_moves,
+                net_send_message(0x65,0xff,0,0,0,0,0,0,0,0);
+                mp_turn_timer_stop(0);
+                dlg_load_game_section(&local_674,ADDR(0x62bed8, ((u8 *)&g.d_0062bed8)),0x2000000);
+                dlg_show_modal(&local_674,0);
+                net_send_message(0x33,local_58,(int)mp_double_production,(int)mp_double_moves,
                                    (int)mp_simultaneous_setting,0,0,0,0,0);
-                thunk_net_send_message(4,0xff,0,0,0,0,0,0,0,0);
+                net_send_message(4,0xff,0,0,0,0,0,0,0,0);
                 XD_FlushSendBuffer(5000);
-                thunk_net_send_state_diff(0xff,2,0,0,0);
+                net_send_state_diff(0xff,2,0,0,0);
                 XD_FlushSendBuffer(5000);
-                thunk_net_send_message(10,local_58,0,0,0,0,0,0,0,0);
-                thunk_net_send_state_diff(local_58,1,0,0,0);
+                net_send_message(10,local_58,0,0,0,0,0,0,0,0);
+                net_send_state_diff(local_58,1,0,0,0);
                 XD_FlushSendBuffer(5000);
-                thunk_net_send_message(0x25,local_58,scenario_events_loaded,scenario_event_count,0,0,0,0,0,0);
-                thunk_net_send_rules_tables(local_58);
+                net_send_message(0x25,local_58,scenario_events_loaded,scenario_event_count,0,0,0,0,0,0);
+                net_send_rules_tables(local_58);
                 XD_FlushSendBuffer(5000);
-                thunk_net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
-                thunk_net_send_message(0x16,local_58,0,0,0,0,0,0,0,0);
-                thunk_net_send_message(0x9c,0xff,0,0,0,0,0,0,0,0);
-                local_380 = thunk_timer_ticks();
+                net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
+                net_send_message(0x16,local_58,0,0,0,0,0,0,0,0);
+                net_send_message(0x9c,0xff,0,0,0,0,0,0,0,0);
+                local_380 = timer_ticks();
                 do {
-                  iVar9 = XD_FlushSendBuffer(5000);
-                  if (iVar9 == 0) break;
-                  thunk_net_process_messages((NetSession *)&net_session,100,0);
-                  iVar9 = thunk_timer_ticks();
-                } while (17999 < iVar9 - local_380);
-                thunk_net_send_message(0x66,0xff,0,0,0,0,0,0,0,0);
-                thunk_dialog_close(&local_674);
-                thunk_mp_turn_timer_resume(0);
+                  city = XD_FlushSendBuffer(5000);
+                  if (city == 0) break;
+                  net_process_messages((NetSession *)&net_session,100,0);
+                  city = timer_ticks();
+                } while (17999 < city - local_380);
+                net_send_message(0x66,0xff,0,0,0,0,0,0,0,0);
+                dialog_close(&local_674);
+                mp_turn_timer_resume(0);
                 for (local_678 = 0;
                     (local_678 < 7 && (*(int *)(&net_player_slots + local_678 * 0x54) != local_58));
                     local_678 = local_678 + 1) {
                 }
                 if (local_678 < 7) {
                   puVar2 = this[0xa7].pad_0 + (&net_slot_civs)[local_678 * 0x15] * 4 + 4;
-                  puVar2[0] = '\x01';
+                  puVar2[0] = 1;
                   puVar2[1] = '\0';
                   puVar2[2] = '\0';
                   puVar2[3] = '\0';
                 }
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_00482305 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_674)); }
+                /* inlined unwind funclet FUN_00482305 */ { dialog_dtor((Dialog *)((iptr)&local_674)); }
               }
             }
           }
           else {
-            thunk_net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x2f:
           if (net_host_handoff_stage == '\0') {
             if (net_player_count < net_max_players) {
-              thunk_net_add_player(this,(iptr)local_20);
+              net_add_player(this,(iptr)local_20);
               if ((net_lobby_list == (int *)0x0) || (*net_lobby_list == 0)) {
                 if (0 < (int)net_session_phase) {
-                  thunk_net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
-                  thunk_net_send_message(4,0xff,0,0,0,0,0,0,0,0);
-                  thunk_net_send_message(6,local_58,0,0,0,0,0,0,0,0);
-                  thunk_net_send_message(9,local_58,0,0,0,0,0,0,0,0);
+                  net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
+                  net_send_message(4,0xff,0,0,0,0,0,0,0,0);
+                  net_send_message(6,local_58,0,0,0,0,0,0,0,0);
+                  net_send_message(9,local_58,0,0,0,0,0,0,0,0);
                 }
               }
               else {
-                thunk_lobby_refresh_player_list();
+                lobby_refresh_player_list();
               }
             }
             else {
-              thunk_net_send_message(0x11,local_58,0,0,0,0,0,0,0,0);
+              net_send_message(0x11,local_58,0,0,0,0,0,0,0,0);
             }
           }
           else {
-            thunk_net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x30:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           if (((int)(short)net_claimed_civs_mask & 1 << ((byte)local_3c & 0x1f)) == 0) {
             net_claimed_civs_mask = (ushort)(1 << ((byte)local_3c & 0x1f)) | net_claimed_civs_mask;
-            thunk_net_send_message(0x26,local_58,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
-            thunk_net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
-            _DAT_006c90a0 = _DAT_006c90a0 + 1;
+            net_send_message(0x26,local_58,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
+            net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
+            _DAT_006c90a0++;
           }
           else {
-            thunk_net_send_message(0x27,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0x27,local_58,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x31:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           game.human_players = game.human_players & (byte)net_claimed_civs_mask;
           if (((int)(short)net_claimed_civs_mask & 1 << ((byte)local_3c & 0x1f)) != 0) {
             net_claimed_civs_mask = ~(ushort)(1 << ((byte)local_3c & 0x1f)) & net_claimed_civs_mask;
             game.human_players = game.human_players & (byte)net_claimed_civs_mask;
-            thunk_net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
-            _DAT_006c90a0 = _DAT_006c90a0 + 1;
+            net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
+            _DAT_006c90a0++;
           }
           break;
         case 0x32:
           *(undefined4 *)(&net_lost_conn_by_player + local_58 * 4) = 0xffffffff;
-          thunk_net_remove_player(this,local_58);
+          net_remove_player(this,local_58);
           if ((this->field_4 != 0) &&
              (piVar1 = (int *)(this->field_4 + 0x54 + local_58 * 4), *piVar1 = *piVar1 + 1,
              *net_lobby_list != 0)) {
-            thunk_lobby_refresh_player_list();
+            lobby_refresh_player_list();
           }
           break;
         case 0x33:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          mp_double_production = (short)local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          mp_double_production = (short)unit;
           mp_double_moves = (short)local_3c;
-          mp_simultaneous_moves = (char)local_38;
-          mp_simultaneous_setting = (short)(char)local_38;
+          mp_simultaneous_moves = (char)unit3;
+          mp_simultaneous_setting = (short)(char)unit3;
           break;
         case 0x34:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_civ_eliminate(local_40,0,0);
-          thunk_net_send_message(0x35,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          civ_eliminate(unit,0,0);
+          net_send_message(0x35,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x35:
           net_kill_or_quit_ack = 1;
           break;
         case 0x37:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if ((-1 < (int)local_40) && (units[local_40].id != 0)) {
-            local_7c = (int)units[local_40].x;
-            local_80 = (int)units[local_40].y;
+          net_msg_get_args((iptr)local_20,&unit);
+          if ((-1 < (int)unit) && (units[unit].id != 0)) {
+            x3 = (int)units[unit].x;
+            y4 = (int)units[unit].y;
           }
-          thunk_unit_delete(local_40,1);
-          thunk_net_send_message(0x38,local_58,local_40,0,0,0,0,0,0,0);
+          unit_delete(unit,1);
+          net_send_message(0x38,local_58,unit,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x38:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           net_unit_deleted_ack = 1;
           break;
         case 0x39:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_city_delete(local_40,0);
-          thunk_net_send_message(0x3a,local_58,local_40,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          city_delete(unit,0);
+          net_send_message(0x3a,local_58,unit,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           net_city_deleted_ack = 1;
-          FUN_005f2110(cities + local_40,local_48,0x58);
+          FUN_005f2110(cities + unit,local_48,0x58);
           break;
         case 0x3b:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          local_14 = thunk_city_create(local_40,local_3c,local_38);
-          thunk_net_send_message(0x3c,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          local_14 = city_create(unit,local_3c,unit3);
+          net_send_message(0x3c,local_58,local_14,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3c:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_city_created_result = local_40;
-          if (local_40 != 0xffffffff) {
-            FUN_005f2110(cities + local_40,local_48,0x58);
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_city_created_result = unit;
+          if (unit != 0xffffffff) {
+            FUN_005f2110(cities + unit,local_48,0x58);
             game.num_cities = (i16)local_3c;
           }
           break;
         case 0x3d:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          local_14 = thunk_unit_create(local_40,local_3c,local_38,local_34);
-          thunk_net_send_message(0x3e,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          local_14 = unit_create(unit,local_3c,unit3,y2);
+          net_send_message(0x3e,local_58,local_14,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3e:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_unit_created_result = local_40;
-          if (local_40 != 0xffffffff) {
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_unit_created_result = unit;
+          if (unit != 0xffffffff) {
             game.num_units = (i16)local_3c;
           }
           break;
         case 0x3f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_stack_unlink(local_40,1);
-          thunk_net_send_message(0x40,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_stack_unlink(unit,1);
+          net_send_message(0x40,local_58,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x40:
           nm_unit_picked_up_count = 1;
           break;
         case 0x41:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_stack_link(local_40,local_3c,local_38,1);
-          thunk_net_send_message(0x42,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_stack_link(unit,local_3c,unit3,1);
+          net_send_message(0x42,local_58,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x42:
           nm_unit_put_down_count = 1;
           break;
         case 0x43:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_move_to_stack_bottom(local_40,1);
-          thunk_net_send_message(0x44,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_move_to_stack_bottom(unit,1);
+          net_send_message(0x44,local_58,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x44:
           nm_bottomed_count = 1;
           break;
         case 0x45:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_relocate(local_40,local_3c,local_38,1);
-          thunk_net_send_message(0x46,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_relocate(unit,local_3c,unit3,1);
+          net_send_message(0x46,local_58,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x46:
           nm_unit_relocated_count = 1;
           break;
         case 0x47:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          local_14 = thunk_city_acquire_wonder(local_40,local_3c,local_38,local_34,local_30);
-          thunk_net_send_message(0x48,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          local_14 = city_acquire_wonder(unit,local_3c,unit3,y2,x2);
+          net_send_message(0x48,local_58,local_14,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x48:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_wonder_acquired_result = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_wonder_acquired_result = unit;
           break;
         case 0x49:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar8 = thunk_unit_gather_cargo(local_40,local_3c,1);
-          thunk_net_send_message(0x4a,local_58,iVar8,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          iVar8 = unit_gather_cargo(unit,local_3c,1);
+          net_send_message(0x4a,local_58,iVar8,0,0,0,0,0,0,0);
           break;
         case 0x4a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_ship_stacked_result = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_ship_stacked_result = unit;
           break;
         case 0x4b:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_lift_off_map(local_40,1);
-          thunk_net_send_message(0x4c,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_lift_off_map(unit,1);
+          net_send_message(0x4c,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x4c:
           nm_unit_stacked_count = 1;
           break;
         case 0x4d:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_delete_with_cargo(local_40,1);
-          thunk_net_send_message(0x4e,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_delete_with_cargo(unit,1);
+          net_send_message(0x4e,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x4e:
           nm_safely_deleted_count = 1;
           break;
         case 0x4f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_destroy_redraw(local_40,1);
-          thunk_net_send_message(0x50,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_destroy_redraw(unit,1);
+          net_send_message(0x50,local_58,0,0,0,0,0,0,0,0);
           break;
         case 0x50:
           nm_visibly_deleted_count = 1;
           break;
         case 0x51:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_net_lock_map(local_40,local_3c,local_38,local_34,local_30,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          net_lock_map(unit,local_3c,unit3,y2,x2,0);
           break;
         case 0x52:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_net_unlock_map(local_40,0);
-          thunk_net_send_message(0x54,local_58,local_40,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          net_unlock_map(unit,0);
+          net_send_message(0x54,local_58,unit,0,0,0,0,0,0,0);
           break;
         case 0x53:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(uptr *)(&net_map_lock_replies + local_40 * 0x18) = local_3c;
+          net_msg_get_args((iptr)local_20,&unit);
+          *(uptr *)(&net_map_lock_replies + unit * 0x18) = local_3c;
           break;
         case 0x54:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(int *)(&net_map_lock_slots + local_40 * 0x18) = *(int *)(&net_map_lock_slots + local_40 * 0x18) + 1;
+          net_msg_get_args((iptr)local_20,&unit);
+          *(int *)(&net_map_lock_slots + unit * 0x18) = *(int *)(&net_map_lock_slots + unit * 0x18) + 1;
           break;
         case 0x55:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(uptr *)(&net_map_lock_src_x + local_40 * 0x18) = local_3c;
-          *(uptr *)(&net_map_lock_src_y + local_40 * 0x18) = local_38;
-          *(iptr *)(&net_map_lock_dst_x + local_40 * 0x18) = local_34;
-          *(iptr *)(&net_map_lock_dst_y + local_40 * 0x18) = local_30;
-          *(undefined4 *)(&net_map_lock_replies + local_40 * 0x18) = 0;
-          *(undefined4 *)(&net_map_lock_slots + local_40 * 0x18) =
-               *(undefined4 *)(&net_map_lock_replies + local_40 * 0x18);
+          net_msg_get_args((iptr)local_20,&unit);
+          *(uptr *)(&net_map_lock_src_x + unit * 0x18) = local_3c;
+          *(uptr *)(&net_map_lock_src_y + unit * 0x18) = unit3;
+          *(iptr *)(&net_map_lock_dst_x + unit * 0x18) = y2;
+          *(iptr *)(&net_map_lock_dst_y + unit * 0x18) = x2;
+          *(undefined4 *)(&net_map_lock_replies + unit * 0x18) = 0;
+          *(undefined4 *)(&net_map_lock_slots + unit * 0x18) =
+               *(undefined4 *)(&net_map_lock_replies + unit * 0x18);
           break;
         case 0x56:
         case 0x57:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_vote_replies_pending = net_vote_replies_pending + -1;
-          if (local_40 == 2) {
+          net_msg_get_args((iptr)local_20,&unit);
+          net_vote_replies_pending--;
+          if (unit == 2) {
             net_vote_status = 0xffffffff;
           }
           break;
         case 0x58:
-          thunk_wonder_apollo_reveal_map();
+          wonder_apollo_reveal_map();
           break;
         case 0x59:
-          thunk_net_apply_tile_updates((iptr)local_48);
+          net_apply_tile_updates((iptr)local_48);
           break;
         case 0x5a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_unit_lift_off_map(local_38,0);
-          thunk_unit_stack_clear_visibility(local_38);
-          if (local_34 == 0) {
-            thunk_unit_stack_set_seen_by(local_38,local_3c);
+          net_msg_get_args((iptr)local_20,&unit);
+          unit_lift_off_map(unit3,0);
+          unit_stack_clear_visibility(unit3);
+          if (y2 == 0) {
+            unit_stack_set_seen_by(unit3,local_3c);
           }
-          thunk_unit_stack_relocate_all(local_38,local_30,local_2c,0);
-          if ((-1 < units[local_38].next_in_stack) &&
-             (unit_types[units[local_38].type].attack == '\0')) {
-            thunk_unit_move_to_stack_bottom(local_38,0);
+          unit_stack_relocate_all(unit3,x2,y3,0);
+          if ((-1 < units[unit3].next_in_stack) &&
+             (unit_types[units[unit3].type].attack == '\0')) {
+            unit_move_to_stack_bottom(unit3,0);
           }
           if (mp_simultaneous_moves != '\0') {
-            thunk_net_unlock_map(local_40,0);
+            net_unlock_map(unit,0);
           }
-          thunk_net_send_state_diff(0xff,2,0,0,1);
-          thunk_net_send_message(0x5b,local_58,0,0,0,0,0,0,0,0);
+          net_send_state_diff(0xff,2,0,0,1);
+          net_send_message(0x5b,local_58,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(60000);
           break;
         case 0x5b:
@@ -5918,75 +5769,75 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           dbg_log(ADDR(0x62bef0, ((u8 *)&g.d_0062bef0)));
           break;
         case 0x5f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          local_14 = thunk_civ_create(local_40);
-          thunk_net_send_message(0x61,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          local_14 = civ_create(unit);
+          net_send_message(0x61,local_58,local_14,0,0,0,0,0,0,0);
           break;
         case 0x60:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          local_14 = thunk_civ_check_destroyed(local_40,local_3c);
-          thunk_net_send_message(0x62,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          local_14 = civ_check_destroyed(unit,local_3c);
+          net_send_message(0x62,local_58,local_14,0,0,0,0,0,0,0);
           break;
         case 0x61:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_new_civ_ack_result = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_new_civ_ack_result = unit;
           break;
         case 0x62:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          nm_kill_civ_ack_result = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          nm_kill_civ_ack_result = unit;
           break;
         case 99:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          uVar5 = local_3c;
-          uVar4 = local_40;
-          cVar4 = units[local_40].owner;
-          civs[local_3c].gold = civs[local_3c].gold - local_38;
-          pcVar3 = (char *)(units[local_40].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + cVar4 * 0x594);
-          *pcVar3 = *pcVar3 + -1;
-          pcVar3 = (char *)(units[local_40].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_3c * 0x594);
-          *pcVar3 = *pcVar3 + '\x01';
-          civs[local_3c].field_1c = civs[local_3c].field_1c + 1;
+          net_msg_get_args((iptr)local_20,&unit);
+          civ2 = local_3c;
+          unit5 = unit;
+          civ = units[unit].owner;
+          civs[local_3c].gold -= unit3;
+          pcVar3 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+          *pcVar3 = *pcVar3 - 1;
+          pcVar3 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_3c * 0x594);
+          *pcVar3 = *pcVar3 + 1;
+          civs[local_3c].field_1c++;
           local_714 = (i8)local_3c;
-          units[local_40].owner = local_714;
-          units[local_40].home_city = -1;
-          units[local_40].moves_used = '\0';
-          units[local_40].orders = -1;
-          iVar9 = thunk_city_find_nearest((int)units[local_40].x,(int)units[local_40].y,-1,0xffffffff,-1)
+          units[unit].owner = local_714;
+          units[unit].home_city = -1;
+          units[unit].moves_used = '\0';
+          units[unit].orders = -1;
+          city = city_find_nearest((int)units[unit].x,(int)units[unit].y,-1,0xffffffff,-1)
           ;
-          if ((-1 < iVar9) && ((int)cities[iVar9].owner == uVar5)) {
-            local_718 = (i8)iVar9;
-            units[uVar4].home_city = local_718;
+          if ((-1 < city) && ((int)cities[city].owner == civ2)) {
+            local_718 = (i8)city;
+            units[unit5].home_city = local_718;
           }
-          thunk_unit_set_seen_by(uVar4,(int)cVar4);
-          tile_set_owner((int)units[uVar4].x,(int)units[uVar4].y,uVar5,1);
-          thunk_net_send_state_diff(0xff,2,0,0,1);
+          unit_set_seen_by(unit5,(int)civ);
+          tile_set_owner((int)units[unit5].x,(int)units[unit5].y,civ2,1);
+          net_send_state_diff(0xff,2,0,0,1);
           break;
         case 100:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_casualty_log_add(local_40,local_3c,local_38,local_34,local_30);
+          net_msg_get_args((iptr)local_20,&unit);
+          casualty_log_add(unit,local_3c,unit3,y2,x2);
           break;
         case 0x65:
-          thunk_dialog_ctor(&local_37c,0x4000);
+          dialog_ctor(&local_37c,0x4000);
           local_8 = 0;
           local_88 = this[0xae].field_4;
           this[0xae].field_4 = 1;
-          thunk_mp_turn_timer_stop(0);
+          mp_turn_timer_stop(0);
           nm_continue_after_join_count = 0;
           dlg_pending_idle_callback = ((void *)ADDR(0x00402c2a, net_game_xmit_wait_idle));
-          thunk_popup_game_sprite_flags(ADDR(0x62be94, ((u8 *)&g.d_0062be94)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-          thunk_dialog_close(&local_37c);
+          popup_game_sprite_flags(ADDR(0x62be94, ((u8 *)&g.d_0062be94)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+          dialog_close(&local_37c);
           this[0xae].field_4 = local_88;
-          thunk_mp_turn_timer_resume(0);
+          mp_turn_timer_resume(0);
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_00482311 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_37c)); }
+          /* inlined unwind funclet FUN_00482311 */ { dialog_dtor((Dialog *)((iptr)&local_37c)); }
           break;
         case 0x66:
           break;
         case 0x68:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           local_4c = 0x2c;
-          thunk_chat_receive_message
-                    ((C_004083b0_4 *)&chat_wnd,local_40,local_3c,local_38,(iptr)(local_20 + 0xb)
+          chat_receive_message
+                    ((C_004083b0_4 *)&chat_wnd,unit,local_3c,unit3,(iptr)(local_20 + 0xb)
                     );
           break;
         case 0x69:
@@ -5999,170 +5850,170 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             net_stacked_draw_last = 0;
           }
           net_stacked_draw_count = (uint)bVar10;
-          thunk_net_stacked_draw_push(0xa3,(iptr)local_6fc,0);
-          thunk_net_stacked_draw_push(0x74,(iptr)local_6fc,0);
+          net_stacked_draw_push(0xa3,(iptr)local_6fc,0);
+          net_stacked_draw_push(0x74,(iptr)local_6fc,0);
           game.turn_civ = (i8)local_24[4];
           _DAT_006ad578 = (int)game.turn_civ;
-          thunk_mp_turn_timer_stop(1);
-          thunk_menu_update_states();
+          mp_turn_timer_stop(1);
+          menu_update_states();
           _DAT_0066c990 = 0xffffffff;
-          thunk_frame_wnd_draw_caption((FrameWindow *)&map_views);
+          frame_wnd_draw_caption((FrameWindow *)&map_views);
           local_6e0 = main_view_frame_left;
           local_6dc = main_view_frame_top;
           local_6d8 = main_view_frame_right;
           local_6d4 = main_view_client_top;
-          thunk_wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_6e0);
+          wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_6e0);
           break;
         case 0x6a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           local_4c = 0x2c;
-          if ((local_40 == 0x3d) &&
+          if ((unit == 0x3d) &&
              (((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0 ||
               (mp_meeting_pending != 0)))) {
-            thunk_net_send_message(0x80,local_58,2,0,0,0,0,0,0,0);
+            net_send_message(0x80,local_58,2,0,0,0,0,0,0,0);
           }
           else {
-            if (local_40 == 0x3d) {
+            if (unit == 0x3d) {
               mp_meeting_pending = 1;
             }
-            if (((local_40 != 100) || (parley_reveal_units_prompt_open != 1)) &&
-               ((local_40 != 0x65 || (parley_reveal_city_prompt_open != 1)))) {
+            if (((unit != 100) || (parley_reveal_units_prompt_open != 1)) &&
+               ((unit != 0x65 || (parley_reveal_city_prompt_open != 1)))) {
               if (local_28 == 0) {
                 local_748 = (int *)0x0;
               }
               else {
                 local_748 = local_20 + 0xb;
               }
-              thunk_net_popup_queue_push(local_40,local_3c,local_38,local_34,local_30,local_748,local_28);
+              net_popup_queue_push(unit,local_3c,unit3,y2,x2,local_748,local_28);
             }
           }
           break;
         case 0x6b:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          game.game_flags = (u16)local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          game.game_flags = (u16)unit;
           game_over_reason = local_3c;
-          spaceship_winner_civ = local_38;
+          spaceship_winner_civ = unit3;
           break;
         case 0x6c:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          mp_turn_time_limit_ms = local_40;
-          if (local_40 == 0) {
+          net_msg_get_args((iptr)local_20,&unit);
+          mp_turn_time_limit_ms = unit;
+          if (unit == 0) {
             main_view_timer_shown = 0;
-            thunk_frame_wnd_draw_caption((FrameWindow *)&map_views);
+            frame_wnd_draw_caption((FrameWindow *)&map_views);
             local_78 = main_view_frame_left;
             local_74 = main_view_frame_top;
             local_70 = main_view_frame_right;
             local_6c = main_view_client_top;
-            thunk_wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_78);
+            wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_78);
           }
           else {
             main_view_timer_shown = 1;
-            thunk_mp_turn_timer_start(1);
+            mp_turn_timer_start(1);
           }
           break;
         case 0x6d:
           if (mp_turn_time_limit_ms != 0) {
             main_view_timer_shown = 1;
           }
-          thunk_mp_turn_timer_start(0);
+          mp_turn_timer_start(0);
           break;
         case 0x6e:
-          thunk_mp_turn_timer_stop(0);
+          mp_turn_timer_stop(0);
           break;
         case 0x6f:
-          thunk_mp_turn_timer_resume(0);
+          mp_turn_timer_resume(0);
           break;
         case 0x70:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if (local_2c != 0) {
-            uVar7 = map_wrap_x((int)(char)(&dir_dx_table)[local_34] + local_3c);
-            iVar9 = thunk_city_at(uVar7,(int)(char)(&dir_dy_table)[local_34] + local_38);
-            if ((iVar9 < 0) && ((game.game_options & 0x1000) == 0)) {
+          net_msg_get_args((iptr)local_20,&unit);
+          if (y3 != 0) {
+            x = map_wrap_x((int)(char)(&dir_dx_table)[y2] + local_3c);
+            city = city_at(x,(int)(char)(&dir_dy_table)[y2] + unit3);
+            if ((city < 0) && ((game.game_options & 0x1000) == 0)) {
               local_24[1] = 0x72;
-              local_40 = local_3c;
-              local_3c = local_38;
+              unit = local_3c;
+              local_3c = unit3;
             }
           }
-          thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,(iptr)local_48);
+          net_stacked_draw_push(local_24[1],(iptr)&unit,(iptr)local_48);
           break;
         case 0x71:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           break;
         case 0x72:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar9 = thunk_mapviews_tile_visible(local_40,local_3c);
-          if (iVar9 != 0) {
-            thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          city = mapviews_tile_visible(unit,local_3c);
+          if (city != 0) {
+            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           }
           break;
         case 0x73:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar9 = thunk_mapviews_tile_visible(local_40,local_3c);
-          if ((iVar9 != 0) || (iVar9 = thunk_mapviews_tile_visible(local_38,local_34), iVar9 != 0)) {
-            thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          city = mapviews_tile_visible(unit,local_3c);
+          if ((city != 0) || (city = mapviews_tile_visible(unit3,y2), city != 0)) {
+            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           }
           break;
         case 0x74:
-          thunk_net_stacked_draw_push(local_20[1],(iptr)&local_40,0);
+          net_stacked_draw_push(local_20[1],(iptr)&unit,0);
           break;
         case 0x75:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar9 = thunk_mapviews_tile_visible(local_40,local_3c);
-          if (iVar9 != 0) {
-            thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          city = mapviews_tile_visible(unit,local_3c);
+          if (city != 0) {
+            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           }
           break;
         case 0x76:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar9 = thunk_mapviews_tile_visible(local_40,local_3c);
-          if (iVar9 != 0) {
-            thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          city = mapviews_tile_visible(unit,local_3c);
+          if (city != 0) {
+            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           }
           break;
         case 0x77:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_can_escape_reply = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          net_can_escape_reply = unit;
           break;
         case 0x78:
-          thunk_status_draw_info(1);
+          status_draw_info(1);
           break;
         case 0x79:
-          thunk_status_redraw(1);
+          status_redraw(1);
           break;
         case 0x7a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_snd_play_effect(local_40,local_3c,0,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          snd_play_effect(unit,local_3c,0,0);
           break;
         case 0x7b:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_bribe_answer = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          net_bribe_answer = unit;
           break;
         case 0x7c:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           break;
         case 0x7d:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_net_stacked_draw_push(local_24[1],(iptr)&local_40,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
           break;
         case 0x7e:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_diplo_ally_demand_help(local_40,local_3c);
+          net_msg_get_args((iptr)local_20,&unit);
+          diplo_ally_demand_help(unit,local_3c);
           break;
         case 0x7f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_advisor_refresh_if_open(local_40);
+          net_msg_get_args((iptr)local_20,&unit);
+          advisor_refresh_if_open(unit);
           break;
         case 0x80:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          mp_meeting_reply = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          mp_meeting_reply = unit;
           break;
         case 0x81:
           if ((((&net_slot_civs)[local_58 * 0x15] == parley_other_civ) || (parley_other_civ == 0xfffffffe))
              || (parley_wnd_closed == 0)) {
             if (parley_wnd_closed == 0) {
-              thunk_parley_wnd_close();
+              parley_wnd_close();
             }
             else if (parley_other_civ == 0xfffffffe) {
               parley_other_civ = 0xffffffff;
@@ -6179,210 +6030,210 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           if (parley_received_offer != (void *)0x0) {
             FUN_005f2110(parley_received_offer,local_20,local_5c);
           }
-          thunk_parley_poll_net_replies();
+          parley_poll_net_replies();
           break;
         case 0x83:
-          thunk_parley_poll_net_replies();
+          parley_poll_net_replies();
           break;
         case 0x84:
-          thunk_parley_poll_net_replies();
+          parley_poll_net_replies();
           break;
         case 0x85:
-          thunk_parley_poll_net_replies();
+          parley_poll_net_replies();
           break;
         case 0x86:
-          thunk_parley_execute_transaction((iptr)local_20);
+          parley_execute_transaction((iptr)local_20);
           break;
         case 0x87:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_city_window_on_unit_change
-                    ((FrameWindow *)&city_window,local_40,local_3c,local_38);
+          net_msg_get_args((iptr)local_20,&unit);
+          city_window_on_unit_change
+                    ((FrameWindow *)&city_window,unit,local_3c,unit3);
           break;
         case 0x88:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_city_window_refresh_if_city((FrameWindow *)&city_window,local_40);
+          net_msg_get_args((iptr)local_20,&unit);
+          city_window_refresh_if_city((FrameWindow *)&city_window,unit);
           break;
         case 0x89:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_city_window_close_if_city((C_004083b0_4 *)&city_window,local_40);
+          net_msg_get_args((iptr)local_20,&unit);
+          city_window_close_if_city((C_004083b0_4 *)&city_window,unit);
           break;
         case 0x8a:
           if (city_window_refresh_locked == 0) {
-            thunk_city_window_refresh((FrameWindow *)&city_window);
+            city_window_refresh((FrameWindow *)&city_window);
           }
           break;
         case 0x8b:
           break;
         case 0x8c:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(int *)(&net_civ_phase_done + local_40 * 4) = *(int *)(&net_civ_phase_done + local_40 * 4) + 1;
+          net_msg_get_args((iptr)local_20,&unit);
+          *(int *)(&net_civ_phase_done + unit * 4) = *(int *)(&net_civ_phase_done + unit * 4) + 1;
           break;
         case 0x8d:
           break;
         case 0x8e:
           break;
         case 0x8f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(int *)(&net_civ_phase_done + local_40 * 4) = *(int *)(&net_civ_phase_done + local_40 * 4) + 1;
-          for (local_54 = 0; local_54 < game.num_units; local_54 = local_54 + 1) {
-            if ((units[local_54].id != 0) && ((int)units[local_54].owner == local_40)) {
-              thunk_unit_exhaust_moves(local_54);
+          net_msg_get_args((iptr)local_20,&unit);
+          *(int *)(&net_civ_phase_done + unit * 4) = *(int *)(&net_civ_phase_done + unit * 4) + 1;
+          for (unit4 = 0; unit4 < game.num_units; unit4++) {
+            if ((units[unit4].id != 0) && ((int)units[unit4].owner == unit)) {
+              unit_exhaust_moves(unit4);
             }
           }
           break;
         case 0x90:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_improvements(local_40,local_3c,local_38,local_34,local_30);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_improvements(unit,local_3c,unit3,y2,x2);
           break;
         case 0x91:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_terrain(local_40,local_3c,local_38,local_34);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_terrain(unit,local_3c,unit3,y2);
           break;
         case 0x92:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_visible(local_40,local_3c,local_38,local_34,local_30);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_visible(unit,local_3c,unit3,y2,x2);
           break;
         case 0x93:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_tile_set_fertility(local_40,local_3c,local_38,local_34);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_fertility(unit,local_3c,unit3,y2);
           break;
         case 0x94:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_owner(local_40,local_3c,local_38,local_34);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_owner(unit,local_3c,unit3,y2);
           break;
         case 0x95:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_landmass(local_40,local_3c,local_38,local_34);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_landmass(unit,local_3c,unit3,y2);
           break;
         case 0x96:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          tile_set_radius_civ(local_40,local_3c,local_38,local_34);
+          net_msg_get_args((iptr)local_20,&unit);
+          tile_set_radius_civ(unit,local_3c,unit3,y2);
           break;
         case 0x97:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          known_set(local_40,local_3c,local_38,local_34,local_30,local_2c);
+          net_msg_get_args((iptr)local_20,&unit);
+          known_set(unit,local_3c,unit3,y2,x2,y3);
           break;
         case 0x98:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(char *)(local_3c + ADDR(0x64c6e0, ((u8 *)&civs + 64)) + local_40 * 0x594) = (char)local_38;
+          net_msg_get_args((iptr)local_20,&unit);
+          *(char *)&civs[unit].attitude[local_3c] = (char)unit3;
           break;
         case 0x99:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
+          net_msg_get_args((iptr)local_20,&unit);
           *(undefined4 *)(&net_meet_pending_flags + local_3c * 4) = 1;
-          *(uptr *)(&net_meet_pending_ai_civ + local_3c * 4) = local_40;
+          *(uptr *)(&net_meet_pending_ai_civ + local_3c * 4) = unit;
           *(uptr *)(&net_meet_pending_civ + local_3c * 4) = local_3c;
-          *(uptr *)(&net_meet_pending_x + local_3c * 4) = local_38;
-          *(iptr *)(&net_meet_pending_y + local_3c * 4) = local_34;
+          *(uptr *)(&net_meet_pending_x + local_3c * 4) = unit3;
+          *(iptr *)(&net_meet_pending_y + local_3c * 4) = y2;
           break;
         case 0x9a:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          net_move_anim_sound = local_40;
+          net_msg_get_args((iptr)local_20,&unit);
+          net_move_anim_sound = unit;
           net_move_anim_sound_arg = local_3c;
           break;
         case 0x9b:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_civ_give_advance(local_40,local_3c,local_38,local_34,0);
+          net_msg_get_args((iptr)local_20,&unit);
+          civ_give_advance(unit,local_3c,unit3,y2,0);
           break;
         case 0x9c:
           break;
         case 0x9d:
-          thunk_taxrate_dialog_show(human_civ);
+          taxrate_dialog_show(human_civ);
           break;
         case 0x9e:
-          thunk_taxrate_enforce_max_rate(human_civ);
+          taxrate_enforce_max_rate(human_civ);
           break;
         case 0x9f:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_civ_select_government_dialog(human_civ,local_40);
+          net_msg_get_args((iptr)local_20,&unit);
+          civ_select_government_dialog(human_civ,unit);
           break;
         case 0xa0:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_diplo_ai_review_relations(local_40,local_3c);
+          net_msg_get_args((iptr)local_20,&unit);
+          diplo_ai_review_relations(unit,local_3c);
           break;
         case 0xa1:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          thunk_diplo_ai_seek_war_ally(local_40,local_3c);
+          net_msg_get_args((iptr)local_20,&unit);
+          diplo_ai_seek_war_ally(unit,local_3c);
           break;
         case 0xa2:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          *(int *)(&net_civ_turn_ended + local_40 * 4) = *(int *)(&net_civ_turn_ended + local_40 * 4) + 1;
+          net_msg_get_args((iptr)local_20,&unit);
+          *(int *)(&net_civ_turn_ended + unit * 4) = *(int *)(&net_civ_turn_ended + unit * 4) + 1;
           break;
         case 0xa3:
-          thunk_net_stacked_draw_push(local_20[1],(iptr)&local_40,0);
+          net_stacked_draw_push(local_20[1],(iptr)&unit,0);
           break;
         case 0xa4:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          iVar8 = thunk_civ_name_plural(local_40);
-          thunk_text_set_string_arg(0,iVar8);
-          iVar8 = thunk_civ_name_plural(local_3c);
-          thunk_text_set_string_arg(1,iVar8);
-          if ((*(byte *)(local_40 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_3c * 0x594) & 8) == 0) {
-            iVar9 = thunk_popup_game_with_sprite(ADDR(0x62bf0c, ((u8 *)&g.d_0062bf0c)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
-            if (iVar9 == 1) {
-              thunk_diplo_set_treaty_flags(local_40,local_3c,0x2000);
-              *(i16 *)(local_40 * 2 + ADDR(0x64ca82, ((u8 *)&civs + 994)) + local_3c * 0x594) = game.turn;
+          net_msg_get_args((iptr)local_20,&unit);
+          iVar8 = civ_name_plural(unit);
+          text_set_string_arg(0,iVar8);
+          iVar8 = civ_name_plural(local_3c);
+          text_set_string_arg(1,iVar8);
+          if ((*(byte *)&civs[local_3c].treaties[unit] & 8) == 0) {
+            city = popup_game_with_sprite(ADDR(0x62bf0c, ((u8 *)&g.d_0062bf0c)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+            if (city == 1) {
+              diplo_set_treaty_flags(unit,local_3c,0x2000);
+              civs[local_3c].last_treaty_turn[unit] = game.turn;
             }
           }
           else {
-            iVar9 = thunk_popup_game_with_sprite(ADDR(0x62befc, ((u8 *)&g.d_0062befc)),(iptr)(&diplo_popup_portrait_sprite +
+            city = popup_game_with_sprite(ADDR(0x62befc, ((u8 *)&g.d_0062befc)),(iptr)(&diplo_popup_portrait_sprite +
                                                       ((game.advance_known_by[0xf] != '\0') - 1 &
                                                       0xffff7c80)),0);
-            if (iVar9 == 1) {
-              thunk_diplo_clear_treaty_flags(local_40,local_3c,8);
-              *(i16 *)(local_40 * 2 + ADDR(0x64ca82, ((u8 *)&civs + 994)) + local_3c * 0x594) = game.turn;
+            if (city == 1) {
+              diplo_clear_treaty_flags(unit,local_3c,8);
+              civs[local_3c].last_treaty_turn[unit] = game.turn;
             }
           }
           break;
         case 0xa5:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if ((parley_wnd_closed == 0) && (parley_other_civ == local_40)) {
+          net_msg_get_args((iptr)local_20,&unit);
+          if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
             parley_remote_cities_revealed = (byte)local_3c;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 3)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 3)))) {
-              thunk_ctrl_disable(parley_request_done_button);
-              thunk_ctrl_disable(parley_request_origin_button);
-              thunk_parley_draw_city_list(1);
+              ctrl_disable(parley_request_done_button);
+              ctrl_disable(parley_request_origin_button);
+              parley_draw_city_list(1);
             }
           }
           break;
         case 0xa6:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if ((parley_wnd_closed == 0) && (parley_other_civ == local_40)) {
+          net_msg_get_args((iptr)local_20,&unit);
+          if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
             parley_remote_cities_revealed = (byte)local_3c;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 3)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 3)))) {
-              thunk_ctrl_enable(parley_request_done_button);
-              thunk_ctrl_enable(parley_request_origin_button);
-              thunk_parley_draw_city_list(1);
+              ctrl_enable(parley_request_done_button);
+              ctrl_enable(parley_request_origin_button);
+              parley_draw_city_list(1);
             }
           }
           break;
         case 0xa7:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if ((parley_wnd_closed == 0) && (parley_other_civ == local_40)) {
+          net_msg_get_args((iptr)local_20,&unit);
+          if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
             parley_remote_units_revealed = (byte)local_3c;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 2)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 2)))) {
-              thunk_ctrl_disable(parley_request_done_button);
-              thunk_ctrl_disable(parley_request_origin_button);
-              thunk_ctrl_enable(parley_sort_by_city_right);
-              thunk_ctrl_enable(parley_sort_by_unit_right);
-              thunk_parley_draw_unit_list(1);
+              ctrl_disable(parley_request_done_button);
+              ctrl_disable(parley_request_origin_button);
+              ctrl_enable(parley_sort_by_city_right);
+              ctrl_enable(parley_sort_by_unit_right);
+              parley_draw_unit_list(1);
             }
           }
           break;
         case 0xa8:
-          thunk_net_msg_get_args((iptr)local_20,&local_40);
-          if ((parley_wnd_closed == 0) && (parley_other_civ == local_40)) {
+          net_msg_get_args((iptr)local_20,&unit);
+          if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
             parley_remote_units_revealed = (byte)local_3c;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 2)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 2)))) {
-              thunk_ctrl_enable(parley_request_done_button);
-              thunk_ctrl_enable(parley_request_origin_button);
-              thunk_ctrl_disable(parley_sort_by_city_right);
-              thunk_ctrl_disable(parley_sort_by_unit_right);
-              thunk_parley_sort_unit_list((C_004083b0_4 *)&parley_wnd,0,parley_list_count_right + -1,1);
-              thunk_parley_draw_unit_list(1);
+              ctrl_enable(parley_request_done_button);
+              ctrl_enable(parley_request_origin_button);
+              ctrl_disable(parley_sort_by_city_right);
+              ctrl_disable(parley_sort_by_unit_right);
+              parley_sort_unit_list((C_004083b0_4 *)&parley_wnd,0,parley_list_count_right - 1,1);
+              parley_draw_unit_list(1);
             }
           }
         }
@@ -6394,12 +6245,12 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
     }
     if (((param_2 == 0) && (*(char *)((int)&this[0x3d].field_4 + 2) != '\0')) && (local_1c != '\0'))
     {
-      thunk_net_gamelist_refresh();
+      net_gamelist_refresh();
     }
     if (((param_2 == 0) && (this[0xae].field_4 == 0)) && (net_popup_queue_head != 0)) {
-      thunk_net_popup_queue_show_next();
+      net_popup_queue_show_next();
     }
-    *(int *)this[0xb0].pad_0 = *(int *)this[0xb0].pad_0 + -1;
+    *(int *)this[0xb0].pad_0 = *(int *)this[0xb0].pad_0 - 1;
   }
   return;
 }
@@ -6480,7 +6331,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
 #undef local_6d4
 #undef local_6d0
 #undef local_6cc
-#undef local_6c8
+#undef unit2
 #undef local_6c4
 #undef local_6c0
 #undef local_6bc
@@ -6505,8 +6356,8 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
 #undef local_37c
 #undef local_88
 #undef local_84
-#undef local_80
-#undef local_7c
+#undef y4
+#undef x3
 #undef local_78
 #undef local_74
 #undef local_70
@@ -6516,17 +6367,17 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
 #undef local_60
 #undef local_5c
 #undef local_58
-#undef local_54
+#undef unit4
 #undef local_50
 #undef local_4c
 #undef local_48
 #undef local_44
-#undef local_40
+#undef unit
 #undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
+#undef unit3
+#undef y2
+#undef x2
+#undef y3
 #undef local_28
 #undef local_24
 #undef local_20

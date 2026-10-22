@@ -41,9 +41,9 @@ sprite_blit_to_surface
   local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
   local_8 = this->bounds_rect - this->frame_rect;
   iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
+  iVar2 = sprite_width(this);
   if (((iVar2 * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
+     (iVar2 = sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
     iVar3 = gfx_scale_length(local_8,0,1);
     iVar4 = gfx_scale_length(iVar1,0,1);
     iVar2 = gfx_scale_length(this->offset_x,0,0);
@@ -52,31 +52,31 @@ sprite_blit_to_surface
     local_2c = iVar4 + iVar2 + param_5;
     uVar14 = 0;
     iVar2 = iVar4;
-    uVar5 = thunk_sprite_get_height(this);
+    uVar5 = sprite_get_height(this);
     iVar6 = gfx_scale_length(uVar5,iVar2,uVar14);
     uVar14 = 0;
     iVar2 = iVar3;
-    uVar5 = thunk_sprite_get_width(this);
+    uVar5 = sprite_get_width(this);
     iVar2 = gfx_scale_length(uVar5,iVar2,uVar14);
     SetRect(&local_1c,0,0,iVar2,iVar6);
     OffsetRect(&local_1c,local_28,local_2c);
     BVar7 = IntersectRect(&local_1c,&local_1c,(RECT *)&param_2->field_14);
     if (BVar7 != 0) {
       local_30 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_1c);
+      uVar5 = rect_width((iptr)&local_1c);
       if (local_28 < local_1c.left) {
         local_30 = local_1c.left - local_28;
         local_28 = local_1c.left;
       }
       local_c = 0;
-      uVar14 = thunk_rect_height((iptr)&local_1c);
+      uVar14 = rect_height((iptr)&local_1c);
       if (local_2c < local_1c.top) {
         local_c = local_1c.top - local_2c;
         local_2c = local_1c.top;
       }
       iVar2 = local_c;
       iVar6 = local_8;
-      uVar8 = thunk_surface_height(param_2);
+      uVar8 = surface_height(param_2);
       iVar9 = surface_get_dib(param_2);
       iVar10 = dib_is_top_down(iVar9);
       iVar11 = surface_get_pitch(param_2);
@@ -107,342 +107,6 @@ sprite_blit_to_surface
 #undef local_28
 #undef local_24
 #undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005d080d auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(28)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-int * __thiscall
-sprite_blit_to_ddsurf
-          (Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5)
-
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  int iVar6;
-  BOOL BVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  int iVar10;
-  undefined4 uVar11;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
-  }
-  else {
-  }
-  local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
-  local_8 = this->bounds_rect - this->frame_rect;
-  iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
-  if (((iVar2 * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
-    iVar3 = gfx_scale_length(local_8,0,1);
-    iVar4 = gfx_scale_length(iVar1,0,1);
-    iVar2 = gfx_scale_length(this->offset_x,0,0);
-    local_28 = param_4 + iVar2 + iVar3;
-    iVar2 = gfx_scale_length(this->full_height,0,0);
-    local_2c = param_5 + iVar2 + iVar4;
-    uVar11 = 0;
-    iVar2 = iVar4;
-    uVar5 = thunk_sprite_get_height(this);
-    iVar6 = gfx_scale_length(uVar5,iVar2,uVar11);
-    uVar11 = 0;
-    iVar2 = iVar3;
-    uVar5 = thunk_sprite_get_width(this);
-    iVar2 = gfx_scale_length(uVar5,iVar2,uVar11);
-    SetRect(&local_1c,0,0,iVar2,iVar6);
-    OffsetRect(&local_1c,local_28,local_2c);
-    BVar7 = IntersectRect(&local_1c,&local_1c,(RECT *)&param_2->field_10);
-    if (BVar7 != 0) {
-      local_34 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_1c);
-      if (local_28 < local_1c.left) {
-        local_34 = local_1c.left - local_28;
-        local_28 = local_1c.left;
-      }
-      local_c = 0;
-      uVar11 = thunk_rect_height((iptr)&local_1c);
-      if (local_2c < local_1c.top) {
-        local_c = local_1c.top - local_2c;
-        local_2c = local_1c.top;
-      }
-      iVar2 = ddsurf_lock(param_2);
-      if (iVar2 != 0) {
-        iVar6 = local_c;
-        iVar10 = local_8;
-        uVar8 = ddsurf_get_height(param_2);
-        uVar9 = ddsurf_get_pitch(param_2);
-        sprite_blit_rows_keyed(this->data_ptr,iVar2,gfx_scale_table,local_24,local_28,local_2c,uVar9,uVar8,uVar5
-                     ,uVar11,local_34,iVar6,iVar10,iVar1,iVar3,iVar4);
-        ddsurf_unlock(param_2);
-      }
-    }
-    *param_1 = local_1c.left;
-    param_1[1] = local_1c.top;
-    param_1[2] = local_1c.right;
-    param_1[3] = local_1c.bottom;
-    return param_1;
-  }
-  dbg_log(ADDR(0x6381f8, ((u8 *)&g.d_006381f8)));
-  SetRect(&local_1c,0,0,0,0);
-  *param_1 = local_1c.left;
-  param_1[1] = local_1c.top;
-  param_1[2] = local_1c.right;
-  param_1[3] = local_1c.bottom;
-  return param_1;
-}
-#undef gfx_scale_den
-#undef gfx_scale_num
-#undef local_34
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005d0aac auto */
-#define gfx_scale_x_table (*(iptr *)((u8 *)&g.d_006e47c0))
-#define gfx_scale_y_table (*(iptr *)((u8 *)&g.d_006e47c4))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-int * __thiscall
-sprite_blit_xyscale_to_surface
-          (Sprite *this,int *param_1,DibSurface *param_2,int param_3,int param_4,
-          int param_5)
-
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  int iVar6;
-  BOOL BVar7;
-  undefined4 uVar8;
-  iptr iVar9;
-  int iVar10;
-  undefined4 uVar11;
-  iptr iVar13;
-  undefined4 uVar14;
-  int iVar15;
-  iptr iVar12;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
-  }
-  else {
-  }
-  local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
-  local_8 = this->bounds_rect - this->frame_rect;
-  iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
-  if (((iVar2 * gfx_scale_x_num) / gfx_scale_x_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_y_num) / gfx_scale_y_den < 0x401)) {
-    iVar3 = gfx_scale_length_tbl(local_8,0,1,gfx_scale_x_num,gfx_scale_x_den,gfx_scale_x_table);
-    iVar4 = gfx_scale_length_tbl(iVar1,0,1,gfx_scale_y_num,gfx_scale_y_den,gfx_scale_y_table);
-    iVar2 = gfx_scale_length_tbl(this->offset_x,0,0,gfx_scale_x_num,gfx_scale_x_den,gfx_scale_x_table);
-    local_28 = param_4 + iVar2 + iVar3;
-    iVar2 = gfx_scale_length_tbl(this->full_height,0,0,gfx_scale_y_num,gfx_scale_y_den,gfx_scale_y_table);
-    local_2c = param_5 + iVar2 + iVar4;
-    uVar14 = 0;
-    iVar2 = iVar4;
-    iVar15 = gfx_scale_y_num;
-    iVar10 = gfx_scale_y_den;
-    iVar13 = gfx_scale_y_table;
-    uVar5 = thunk_sprite_get_height(this);
-    iVar6 = gfx_scale_length_tbl(uVar5,iVar2,uVar14,iVar15,iVar10,iVar13);
-    uVar14 = 0;
-    iVar2 = iVar3;
-    iVar15 = gfx_scale_x_num;
-    iVar10 = gfx_scale_x_den;
-    iVar13 = gfx_scale_x_table;
-    uVar5 = thunk_sprite_get_width(this);
-    iVar2 = gfx_scale_length_tbl(uVar5,iVar2,uVar14,iVar15,iVar10,iVar13);
-    SetRect(&local_1c,0,0,iVar2,iVar6);
-    OffsetRect(&local_1c,local_28,local_2c);
-    BVar7 = IntersectRect(&local_1c,&local_1c,(RECT *)&param_2->field_14);
-    if (BVar7 != 0) {
-      local_30 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_1c);
-      if (local_28 < local_1c.left) {
-        local_30 = local_1c.left - local_28;
-        local_28 = local_1c.left;
-      }
-      local_c = 0;
-      uVar14 = thunk_rect_height((iptr)&local_1c);
-      if (local_2c < local_1c.top) {
-        local_c = local_1c.top - local_2c;
-        local_2c = local_1c.top;
-      }
-      iVar2 = local_c;
-      iVar15 = local_8;
-      uVar8 = thunk_surface_height(param_2);
-      iVar9 = surface_get_dib(param_2);
-      iVar10 = dib_is_top_down(iVar9);
-      iVar6 = surface_get_pitch(param_2);
-      iVar6 = ((-(uint)(iVar10 == 0) & 0xfffffffe) + 1) * iVar6;
-      iVar13 = gfx_scale_x_table;
-      iVar12 = gfx_scale_y_table;
-      uVar11 = surface_get_bits(param_2);
-      FUN_0061a759(this->data_ptr,uVar11,iVar13,iVar12,local_24,local_28,local_2c,iVar6,uVar8,uVar5,
-                   uVar14,local_30,iVar2,iVar15,iVar1,iVar3,iVar4);
-    }
-    *param_1 = local_1c.left;
-    param_1[1] = local_1c.top;
-    param_1[2] = local_1c.right;
-    param_1[3] = local_1c.bottom;
-    return param_1;
-  }
-  dbg_log(ADDR(0x638224, ((u8 *)&g.d_00638224)));
-  SetRect(&local_1c,0,0,0,0);
-  *param_1 = local_1c.left;
-  param_1[1] = local_1c.top;
-  param_1[2] = local_1c.right;
-  param_1[3] = local_1c.bottom;
-  return param_1;
-}
-#undef gfx_scale_x_table
-#undef gfx_scale_y_table
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005d0dbf auto */
-#define gfx_scale_x_table (*(iptr *)((u8 *)&g.d_006e47c0))
-#define gfx_scale_y_table (*(iptr *)((u8 *)&g.d_006e47c4))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(24)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-int * __thiscall
-sprite_blit_xyscale_to_ddsurf
-          (Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5)
-
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  int yBottom;
-  BOOL BVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  int iVar10;
-  int iVar11;
-  iptr iVar13;
-  iptr iVar12;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
-  }
-  else {
-  }
-  local_28 = CONCAT31((*(undefined3 *)((char *)&local_28 + 1)),(u8)param_3);
-  local_8 = this->bounds_rect - this->frame_rect;
-  iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
-  if (((iVar2 * gfx_scale_x_num) / gfx_scale_x_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_y_num) / gfx_scale_y_den < 0x401)) {
-    iVar3 = gfx_scale_length_tbl(local_8,0,1,gfx_scale_x_num,gfx_scale_x_den,gfx_scale_x_table);
-    iVar4 = gfx_scale_length_tbl(iVar1,0,1,gfx_scale_y_num,gfx_scale_y_den,gfx_scale_y_table);
-    iVar2 = gfx_scale_length_tbl(this->offset_x,0,0,gfx_scale_x_num,gfx_scale_x_den,gfx_scale_x_table);
-    local_2c = param_4 + iVar2 + iVar3;
-    iVar2 = gfx_scale_length_tbl(this->full_height,0,0,gfx_scale_y_num,gfx_scale_y_den,gfx_scale_y_table);
-    local_30 = param_5 + iVar2 + iVar4;
-    uVar9 = 0;
-    iVar2 = iVar4;
-    iVar10 = gfx_scale_y_num;
-    iVar11 = gfx_scale_y_den;
-    iVar13 = gfx_scale_y_table;
-    uVar5 = thunk_sprite_get_height(this);
-    yBottom = gfx_scale_length_tbl(uVar5,iVar2,uVar9,iVar10,iVar11,iVar13);
-    uVar9 = 0;
-    iVar2 = iVar3;
-    iVar10 = gfx_scale_x_num;
-    iVar11 = gfx_scale_x_den;
-    iVar12 = gfx_scale_x_table;
-    uVar5 = thunk_sprite_get_width(this);
-    iVar2 = gfx_scale_length_tbl(uVar5,iVar2,uVar9,iVar10,iVar11,iVar12);
-    SetRect(&local_20,0,0,iVar2,yBottom);
-    OffsetRect(&local_20,local_2c,local_30);
-    BVar6 = IntersectRect(&local_20,&local_20,(RECT *)&param_2->field_10);
-    if (BVar6 != 0) {
-      local_34 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_20);
-      if (local_2c < local_20.left) {
-        local_34 = local_20.left - local_2c;
-        local_2c = local_20.left;
-      }
-      local_10 = 0;
-      uVar9 = thunk_rect_height((iptr)&local_20);
-      if (local_30 < local_20.top) {
-        local_10 = local_20.top - local_30;
-        local_30 = local_20.top;
-      }
-      local_c = ddsurf_lock(param_2);
-      if (local_c != 0) {
-        iVar2 = local_10;
-        iVar10 = local_8;
-        uVar7 = ddsurf_get_height(param_2);
-        uVar8 = ddsurf_get_pitch(param_2);
-        FUN_0061a759(this->data_ptr,local_c,gfx_scale_x_table,gfx_scale_y_table,local_28,local_2c,local_30,
-                     uVar8,uVar7,uVar5,uVar9,local_34,iVar2,iVar10,iVar1,iVar3,iVar4);
-        ddsurf_unlock(param_2);
-      }
-    }
-    *param_1 = local_20.left;
-    param_1[1] = local_20.top;
-    param_1[2] = local_20.right;
-    param_1[3] = local_20.bottom;
-    return param_1;
-  }
-  dbg_log(ADDR(0x638250, ((u8 *)&g.d_00638250)));
-  SetRect(&local_20,0,0,0,0);
-  *param_1 = local_20.left;
-  param_1[1] = local_20.top;
-  param_1[2] = local_20.right;
-  param_1[3] = local_20.bottom;
-  return param_1;
-}
-#undef gfx_scale_x_table
-#undef gfx_scale_y_table
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_20
-#undef local_10
 #undef local_c
 #undef local_8
 
@@ -486,9 +150,9 @@ sprite_blit_silhouette_to_surface
   local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
   local_8 = this->bounds_rect - this->frame_rect;
   iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
+  iVar2 = sprite_width(this);
   if (((iVar2 * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
+     (iVar2 = sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
     iVar3 = gfx_scale_length(local_8,0,1);
     iVar4 = gfx_scale_length(iVar1,0,1);
     iVar2 = gfx_scale_length(this->offset_x,0,0);
@@ -497,31 +161,31 @@ sprite_blit_silhouette_to_surface
     local_2c = param_5 + iVar2 + iVar4;
     uVar14 = 0;
     iVar2 = iVar4;
-    uVar5 = thunk_sprite_get_height(this);
+    uVar5 = sprite_get_height(this);
     iVar6 = gfx_scale_length(uVar5,iVar2,uVar14);
     uVar14 = 0;
     iVar2 = iVar3;
-    uVar5 = thunk_sprite_get_width(this);
+    uVar5 = sprite_get_width(this);
     iVar2 = gfx_scale_length(uVar5,iVar2,uVar14);
     SetRect(&local_1c,0,0,iVar2,iVar6);
     OffsetRect(&local_1c,local_28,local_2c);
     BVar7 = IntersectRect(&local_1c,&local_1c,(RECT *)&param_2->field_14);
     if (BVar7 != 0) {
       local_30 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_1c);
+      uVar5 = rect_width((iptr)&local_1c);
       if (local_28 < local_1c.left) {
         local_30 = local_1c.left - local_28;
         local_28 = local_1c.left;
       }
       local_c = 0;
-      uVar14 = thunk_rect_height((iptr)&local_1c);
+      uVar14 = rect_height((iptr)&local_1c);
       if (local_2c < local_1c.top) {
         local_c = local_1c.top - local_2c;
         local_2c = local_1c.top;
       }
       iVar2 = local_c;
       iVar6 = local_8;
-      uVar8 = thunk_surface_height(param_2);
+      uVar8 = surface_height(param_2);
       iVar9 = surface_get_dib(param_2);
       iVar10 = dib_is_top_down(iVar9);
       iVar11 = surface_get_pitch(param_2);
@@ -552,112 +216,6 @@ sprite_blit_silhouette_to_surface
 #undef local_28
 #undef local_24
 #undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005d1372 auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(24)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-int * __thiscall
-sprite_blit_silhouette_to_ddsurf
-          (Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5,
-          undefined4 param_6)
-
-{
-  int iVar1;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  int iVar6;
-  BOOL BVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
-  }
-  else {
-  }
-  local_28 = CONCAT31((*(undefined3 *)((char *)&local_28 + 1)),(u8)param_3);
-  local_8 = this->bounds_rect - this->frame_rect;
-  iVar1 = this->bounds_top - this->frame_top;
-  iVar2 = thunk_sprite_width(this);
-  if (((iVar2 * gfx_scale_num) / gfx_scale_den < 0x401) &&
-     (iVar2 = thunk_sprite_height(this), (iVar2 * gfx_scale_num) / gfx_scale_den < 0x401)) {
-    iVar3 = gfx_scale_length(local_8,0,1);
-    iVar4 = gfx_scale_length(iVar1,0,1);
-    iVar2 = gfx_scale_length(this->offset_x,0,0);
-    local_2c = param_4 + iVar2 + iVar3;
-    iVar2 = gfx_scale_length(this->full_height,0,0);
-    local_30 = param_5 + iVar2 + iVar4;
-    uVar10 = 0;
-    iVar2 = iVar4;
-    uVar5 = thunk_sprite_get_height(this);
-    iVar6 = gfx_scale_length(uVar5,iVar2,uVar10);
-    uVar10 = 0;
-    iVar2 = iVar3;
-    uVar5 = thunk_sprite_get_width(this);
-    iVar2 = gfx_scale_length(uVar5,iVar2,uVar10);
-    SetRect(&local_20,0,0,iVar2,iVar6);
-    OffsetRect(&local_20,local_2c,local_30);
-    BVar7 = IntersectRect(&local_20,&local_20,(RECT *)&param_2->field_10);
-    if (BVar7 != 0) {
-      local_34 = 0;
-      uVar5 = thunk_rect_width((iptr)&local_20);
-      if (local_2c < local_20.left) {
-        local_34 = local_20.left - local_2c;
-        local_2c = local_20.left;
-      }
-      local_10 = 0;
-      uVar10 = thunk_rect_height((iptr)&local_20);
-      if (local_30 < local_20.top) {
-        local_10 = local_20.top - local_30;
-        local_30 = local_20.top;
-      }
-      local_c = ddsurf_lock(param_2);
-      if (local_c != 0) {
-        iVar2 = local_10;
-        iVar6 = local_8;
-        uVar8 = ddsurf_get_height(param_2);
-        uVar9 = ddsurf_get_pitch(param_2);
-        sprite_blit_rows_solid(this->data_ptr,local_c,gfx_scale_table,local_28,local_2c,local_30,uVar9,uVar8,
-                     uVar5,uVar10,local_34,iVar2,iVar6,iVar1,iVar3,iVar4,param_6);
-        ddsurf_unlock(param_2);
-      }
-    }
-    *param_1 = local_20.left;
-    param_1[1] = local_20.top;
-    param_1[2] = local_20.right;
-    param_1[3] = local_20.bottom;
-    return param_1;
-  }
-  dbg_log(ADDR(0x6382a8, ((u8 *)&g.d_006382a8)));
-  SetRect(&local_20,0,0,0,0);
-  *param_1 = local_20.left;
-  param_1[1] = local_20.top;
-  param_1[2] = local_20.right;
-  param_1[3] = local_20.bottom;
-  return param_1;
-}
-#undef gfx_scale_den
-#undef gfx_scale_num
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_20
-#undef local_10
 #undef local_c
 #undef local_8
 
@@ -713,12 +271,12 @@ sprite_merge_at
     }
     else {
       iVar4 = (*(int *)(param_1 + 0x14) + param_5) - param_2->field_14;
-      iVar5 = thunk_rect_width(param_1 + 0x10);
+      iVar5 = rect_width(param_1 + 0x10);
       iVar10 = *(int *)(param_1 + 0x10);
-      iVar6 = thunk_rect_height(param_1 + 0x10);
-      iVar7 = thunk_rect_width((iptr)&param_2->field_10);
+      iVar6 = rect_height(param_1 + 0x10);
+      iVar7 = rect_width((iptr)&param_2->field_10);
       iVar7 = param_2->field_10 + iVar7;
-      iVar8 = thunk_rect_height((iptr)&param_2->field_10);
+      iVar8 = rect_height((iptr)&param_2->field_10);
       iVar9 = iVar6 + iVar4;
       if (iVar6 + iVar4 <= iVar8) {
         iVar9 = iVar8;
@@ -736,7 +294,7 @@ sprite_merge_at
       local_5c = (int *)param_2->field_38;
       uVar11 = mem_handle_alloc(LVar2 * LVar3 + LVar3 * 8);
       local_20 = (int *)mem_handle_lock(uVar11);
-      for (local_40 = 0; local_40 < LVar3; local_40 = local_40 + 1) {
+      for (local_40 = 0; local_40 < LVar3; local_40++) {
         bVar1 = local_40 < iVar8;
         if ((iVar4 <= local_40) && (local_40 < iVar6 + iVar4)) {
           bVar1 = bVar1 | 2;
@@ -745,7 +303,7 @@ sprite_merge_at
         case 0:
           *local_20 = 0;
           local_20[1] = 0;
-          local_20 = local_20 + 2;
+          local_20 += 2;
           break;
         case 1:
           *local_20 = *local_5c;
@@ -766,10 +324,10 @@ sprite_merge_at
         case 3:
           iVar10 = *local_5c;
           iVar12 = local_5c[1] + iVar10;
-          local_5c = local_5c + 2;
+          local_5c += 2;
           iVar13 = *local_54 + param_4;
           iVar14 = local_54[1] + iVar13;
-          local_54 = local_54 + 2;
+          local_54 += 2;
           iVar7 = iVar10;
           if (iVar13 <= iVar10) {
             iVar7 = iVar13;
@@ -780,7 +338,7 @@ sprite_merge_at
             iVar7 = iVar14;
           }
           local_20[1] = iVar7 - *local_20;
-          local_20 = local_20 + 2;
+          local_20 += 2;
           local_24 = LVar2;
           local_34 = 0;
           while (local_24 != 0) {
@@ -800,13 +358,13 @@ sprite_merge_at
                 *(char *)local_20 = (char)*local_54;
               }
               local_54 = (int *)((int)local_54 + 1);
-              local_60 = local_60 + 1;
+              local_60++;
             }
             if (local_60 != 0) {
               local_20 = (int *)((int)local_20 + 1);
             }
-            local_34 = local_34 + 1;
-            local_24 = local_24 + -1;
+            local_34++;
+            local_24--;
           }
         }
       }
@@ -858,61 +416,6 @@ void __thiscall sprite_clear_fields(Sprite *this)
   return;
 }
 
-/* 005d1bb8 auto */
-#define local_14 (*(int * *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-u8 __thiscall sprite_get_pixel(C_005d1bb8 *this,int param_1,int param_2)
-
-{
-  u8 uVar1;
-  iptr iVar3;
-  iptr iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if ((((param_2 < (int)this->bounds_top) || ((int)this->bounds_bottom < param_2)) ||
-      (param_1 < (int)this->bounds_left)) || ((int)this->bounds_right < param_1)) {
-    uVar1 = this->transparent_color;
-  }
-  else {
-    iVar1 = param_1 - this->bounds_left;
-    local_14 = *(int **)(this[1].pad_0 + 7);
-    local_c = param_2 - this->bounds_top;
-    while( true ) {
-      if (local_c == 0) break;
-      local_14 = (int *)((int)local_14 + local_14[1] + 8);
-      local_c = local_c + -1;
-    }
-    iVar3 = *local_14 - this->bounds_left;
-    if ((iVar1 < iVar3) || (iVar3 + local_14[1] <= iVar1)) {
-      uVar1 = this->transparent_color;
-    }
-    else {
-      uVar1 = *(u8 *)((iVar1 - iVar3) + 8 + (int)local_14);
-    }
-  }
-  return uVar1;
-}
-#undef local_14
-#undef local_c
-
-/* 005d1cb0 auto */
-undefined4 __cdecl endian_from_le_u32(undefined4 param_1)
-
-{
-  return param_1;
-}
-
-/* 005d1cd0 auto */
-void __cdecl rect_copy_from_le(iptr param_1,iptr param_2)
-
-{
-  *(undefined4 *)param_2 = *(undefined4 *)param_1;
-  *(undefined4 *)(param_2 + 4) = *(undefined4 *)(param_1 + 4);
-  *(undefined4 *)(param_2 + 8) = *(undefined4 *)(param_1 + 8);
-  *(undefined4 *)(param_2 + 0xc) = *(undefined4 *)(param_1 + 0xc);
-  return;
-}
-
 /* 005d1d00 auto */
 #define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
 #define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
@@ -935,16 +438,16 @@ int __cdecl gfx_scale_length(int param_1,int param_2,int param_3)
     if (gfx_scale_num < gfx_scale_den) {
       local_10 = param_2;
       iVar1 = *(int *)(gfx_scale_table + param_2 * 4) + param_1;
-      for (; *(int *)(gfx_scale_table + local_10 * 4) < iVar1; local_10 = local_10 + 1) {
+      for (; *(int *)(gfx_scale_table + local_10 * 4) < iVar1; local_10++) {
       }
       if ((param_3 == 0) && (*(int *)(gfx_scale_table + local_10 * 4) != iVar1)) {
-        local_10 = local_10 + -1;
+        local_10--;
       }
     }
     else {
       local_10 = param_2;
       for (; *(int *)(gfx_scale_table + local_10 * 4) <
-             *(int *)(gfx_scale_table + param_2 * 4) + param_1; local_10 = local_10 + 1) {
+             *(int *)(gfx_scale_table + param_2 * 4) + param_1; local_10++) {
       }
     }
     iVar1 = ((-(uint)bVar2 & 2) - 1) * (local_10 - param_2);
@@ -954,58 +457,6 @@ int __cdecl gfx_scale_length(int param_1,int param_2,int param_3)
 #undef gfx_scale_den
 #undef gfx_scale_num
 #undef local_10
-
-/* 005d1e00 auto */
-#define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-int __cdecl gfx_scale_length_tbl(int param_1,int param_2,int param_3,int param_4,int param_5,iptr param_6)
-
-{
-  int iVar1;
-  bool bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_1 == 0) {
-    iVar1 = 0;
-  }
-  else {
-    bVar2 = -1 < param_1;
-    if (!bVar2) {
-      param_1 = -param_1;
-    }
-    if (param_4 < param_5) {
-      local_10 = param_2;
-      iVar1 = *(int *)(param_6 + param_2 * 4) + param_1;
-      for (; *(int *)(param_6 + local_10 * 4) < iVar1; local_10 = local_10 + 1) {
-      }
-      if ((param_3 == 0) && (*(int *)(param_6 + local_10 * 4) != iVar1)) {
-        local_10 = local_10 + -1;
-      }
-    }
-    else {
-      local_10 = param_2;
-      for (; *(int *)(param_6 + local_10 * 4) < *(int *)(param_6 + param_2 * 4) + param_1;
-          local_10 = local_10 + 1) {
-      }
-    }
-    iVar1 = ((-(uint)bVar2 & 2) - 1) * (local_10 - param_2);
-  }
-  return iVar1;
-}
-#undef local_10
-
-/* 005d1ef0 auto */
-int __thiscall ddsurf_row_next(DDSurfaceRowNextView *this,iptr param_1)
-
-{
-  return this->row_pitch + param_1;
-}
-
-/* 005d1f20 auto */
-int __thiscall ddsurf_row_prev(DDSurfaceRowPrevView *this,iptr param_1)
-
-{
-  return param_1 - this->row_pitch;
-}
 
 /* 005d1f50 auto */
 #define local_18 (*(TimerManager * *)(frame_ + FRAME_OFF(0)))
@@ -1064,7 +515,7 @@ timer_mgr_add(TimerManager *this,u32 param_1,undefined4 param_2,u32 param_3)
   
   local_8 = 1;
   while ((local_8 < 0x11 && (this[local_8 + 1].field_0 != 0))) {
-    local_8 = local_8 + 1;
+    local_8++;
   }
   if (local_8 < 0x11) {
     iVar1 = timer_wnd_start_slot(this->timer_hwnd,param_2,local_8);
@@ -1101,7 +552,7 @@ TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *this)
   u32 uVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 1; local_8 < 0x11; local_8 = local_8 + 1) {
+  for (local_8 = 1; local_8 < 0x11; local_8++) {
     puVar1 = this->pad_4 + local_8 * 4;
     puVar1[0] = '\0';
     puVar1[1] = '\0';
@@ -1126,7 +577,7 @@ void __thiscall timer_mgr_dtor(TimerManager *this)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < 0x10; local_8++) {
     if (this[local_8 + 1].field_0 != 0) {
       game_timer_kill_slot(this,local_8);
     }
@@ -1268,39 +719,6 @@ void __cdecl dbg_logf_str_int(iptr param_1,iptr param_2,iptr param_3)
 }
 #undef local_404
 
-/* 005d23fd auto */
-#define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-void __cdecl dbg_logf2_noret(char *param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  _sprintf(local_404,param_1,param_2,param_3);
-  dbg_log_write(&dbg_log_file,(iptr)local_404);
-  return;
-}
-#undef local_404
-
-/* 005d243f auto */
-#define dbg_log_to_file (*(undefined1 *)((u8 *)&g.d_00638304))
-void __cdecl dbg_set_log_to_file(undefined1 param_1)
-
-{
-  dbg_log_to_file = param_1;
-  return;
-}
-#undef dbg_log_to_file
-
-/* 005d2457 auto */
-#define dbg_log_to_debugger (*(undefined1 *)((u8 *)&g.d_00638308))
-void __cdecl dbg_set_log_to_debugger(undefined1 param_1)
-
-{
-  dbg_log_to_debugger = param_1;
-  return;
-}
-#undef dbg_log_to_debugger
-
 /* 005d246f auto */
 void * __thiscall dbg_log_file_ctor(void *this)
 
@@ -1403,25 +821,7 @@ edit_create_at
   this->edit_font = (u32)ctrl_default_font;
   this->is_enabled = 0;
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_4 + 0x1e);
-  thunk_edit_create(this,param_1,param_2,(iptr)&local_14,param_6);
-  return;
-}
-#undef local_14
-
-/* 005d2625 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall
-edit_create_at_with_text
-          (EditControl *this,undefined4 param_1,undefined4 param_2,int param_3,int param_4,
-          int param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  this->edit_font = (u32)ctrl_default_font;
-  this->is_enabled = 0;
-  SetRect(&local_14,param_3,param_4,param_5 + param_3,param_4 + 0x1e);
-  edit_create_with_text(this,param_1,param_2,(iptr)&local_14,param_6,param_7);
+  edit_create(this,param_1,param_2,(iptr)&local_14,param_6);
   return;
 }
 #undef local_14
@@ -1431,26 +831,6 @@ void __cdecl ui_set_default_font(iptr param_1)
 
 {
   ctrl_default_font = (undefined *)param_1;
-  return;
-}
-
-/* 005d26b0 auto */
-void __thiscall
-edit_create_with_text
-          (EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,undefined4 param_4,
-          undefined4 param_5)
-
-{
-  u32 uVar1;
-  
-  if (this->hwnd != 0) {
-    thunk_ctrl_destroy((Control *)this);
-  }
-  this->edit_font = (u32)ctrl_default_font;
-  thunk_ctrl_init((Control *)this,param_1,4,param_2,param_3);
-  uVar1 = edit_create_window(param_3,(iptr)this,1,param_5,this->edit_font);
-  this->hwnd = uVar1;
-  hwnd_send_settext(this->hwnd,param_4);
   return;
 }
 
@@ -1515,11 +895,11 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
     pvVar10 = (LPVOID)0x0;
     pHVar8 = (HMENU)0x0;
     pHVar9 = app_hinstance;
-    pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-    iVar2 = thunk_wnd_get_window(pCVar1);
+    pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+    iVar2 = wnd_get_window(pCVar1);
     pHVar7 = *(HWND *)(iVar2 + 4);
-    iVar3 = thunk_rect_height((iptr)param_1);
-    iVar4 = thunk_rect_width((iptr)param_1);
+    iVar3 = rect_height((iptr)param_1);
+    iVar4 = rect_width((iptr)param_1);
     local_c = CreateWindowExA(4,&editbox_native_class_name,&editbox_probe_wnd_title,local_8,*param_1,param_1[1],iVar4,iVar3,
                               pHVar7,pHVar8,pHVar9,pvVar10);
     edit_base_wndproc = (WNDPROC)GetWindowLongA(local_c,-4);
@@ -1541,17 +921,17 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
   pvVar10 = (LPVOID)0x0;
   pHVar8 = (HMENU)0x0;
   pHVar9 = app_hinstance;
-  pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar4 = thunk_wnd_get_window(pCVar1);
+  pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar4 = wnd_get_window(pCVar1);
   pHVar7 = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_rect_height((iptr)param_1);
-  nWidth = thunk_rect_width((iptr)param_1);
+  iVar4 = rect_height((iptr)param_1);
+  nWidth = rect_width((iptr)param_1);
   local_c = CreateWindowExA(4,s_MSEditBoxClass_00638338,&editbox_wnd_title,local_8 | 0x40800000,*param_1,
                             param_1[1],nWidth,iVar4,pHVar7,pHVar8,pHVar9,pvVar10);
-  uVar5 = thunk_font_get_handle(param_5);
+  uVar5 = font_get_handle(param_5);
   pWVar6 = (WPARAM *)mem_handle_lock(uVar5);
   SendMessageA(local_c,0x30,*pWVar6,0);
-  uVar5 = thunk_font_get_handle(param_5);
+  uVar5 = font_get_handle(param_5);
   mem_handle_unlock(uVar5);
   SetWindowLongA(local_c,-4,ADDR(0x5d2a01, edit_subclass_wndproc));
   SetWindowLongA(local_c,edit_base_wnd_extra,(LONG)edit_base_wndproc);
@@ -1585,7 +965,7 @@ LRESULT __stdcall edit_subclass_wndproc(HWND param_1,uint param_2,WPARAM param_3
   lpPrevWndFunc = (WNDPROC)GetWindowLongA(param_1,DVar1 - 8);
   if (param_2 < 8) {
     if (param_2 == 7) {
-      iVar3 = thunk_ctrl_get_parent(this);
+      iVar3 = ctrl_get_parent(this);
       wnd_set_active_child(iVar3);
       if ((char)this->font == '\0') {
         edit_hwnd_set_sel(param_1,0,0xffffffff);
@@ -1607,7 +987,7 @@ LAB_005d2c05:
       iVar5 = 0;
       pHVar2 = GetParent(param_1);
       this_00 = (WndBase *)GetWindowLongA(pHVar2,iVar5);
-      iVar4 = thunk_wnd_get_window(this_00);
+      iVar4 = wnd_get_window(this_00);
       if ((*(byte *)(iVar4 + 0x49) & 2) != 0) {
         pHVar2 = GetParent(param_1);
         SetFocus(pHVar2);
@@ -1627,7 +1007,7 @@ LAB_005d2c05:
       return 1;
     }
     if (param_2 == 0x101) {
-      iVar3 = thunk_ctrl_get_parent(this);
+      iVar3 = ctrl_get_parent(this);
       wnd_set_active_child(iVar3);
       iVar2 = input_map_vkey(param_3);
       if ((0x2af < iVar2) && (iVar2 < 0x2b5)) {
@@ -1637,7 +1017,7 @@ LAB_005d2c05:
       return LVar5;
     }
     if (param_2 == 0x102) {
-      iVar3 = thunk_ctrl_get_parent(this);
+      iVar3 = ctrl_get_parent(this);
       wnd_set_active_child(iVar3);
       local_8 = 0;
       if (param_3 != 9) {
@@ -1656,16 +1036,6 @@ LAB_005d2c05:
   return LVar5;
 }
 #undef local_8
-
-/* 005d2d15 auto */
-void __cdecl hwnd_enable_safe(HWND param_1,BOOL param_2)
-
-{
-  if (param_1 != (HWND)0x0) {
-    EnableWindow(param_1,param_2);
-  }
-  return;
-}
 
 /* 005d2d3d auto */
 void __cdecl edit_hwnd_cleanup_stub(undefined4 param_1)
@@ -1715,7 +1085,7 @@ iptr __cdecl edit_hwnd_get_line(HWND param_1,WPARAM param_2,short *param_3,undef
 {
   iptr LVar1;
   
-  *param_3 = (short)param_4 + -1;
+  *param_3 = (short)param_4 - 1;
   LVar1 = SendMessageA(param_1,0xc4,param_2,(LPARAM)param_3);
   *(undefined1 *)(LVar1 + (int)param_3) = 0;
   return LVar1;
@@ -1728,24 +1098,6 @@ LRESULT __cdecl edit_hwnd_get_line_count(HWND param_1)
   LRESULT LVar1;
   
   LVar1 = SendMessageA(param_1,0xba,0,0);
-  return LVar1;
-}
-
-/* 005d2e54 auto */
-void __cdecl edit_hwnd_get_first_visible(HWND param_1)
-
-{
-  SendMessageA(param_1,0xce,0,0);
-  return;
-}
-
-/* 005d2e77 auto */
-LRESULT __cdecl edit_line_from_char(HWND param_1,WPARAM param_2)
-
-{
-  LRESULT LVar1;
-  
-  LVar1 = SendMessageA(param_1,0xc9,param_2,0);
   return LVar1;
 }
 
@@ -1767,14 +1119,6 @@ LRESULT __cdecl edit_line_length(HWND param_1,WPARAM param_2)
   
   LVar1 = SendMessageA(param_1,0xc1,param_2,0);
   return LVar1;
-}
-
-/* 005d2ee6 auto */
-void __cdecl edit_hwnd_line_scroll(HWND param_1,LPARAM param_2,WPARAM param_3)
-
-{
-  SendMessageA(param_1,0xb6,param_3,param_2);
-  return;
 }
 
 /* 005d2f0d auto */
@@ -1804,25 +1148,9 @@ int __cdecl edit_hwnd_get_text_end(undefined4 param_1)
   int iVar2;
   
   iVar1 = edit_hwnd_get_line_count(param_1);
-  iVar1 = edit_line_index(param_1,iVar1 + -1);
+  iVar1 = edit_line_index(param_1,iVar1 - 1);
   iVar2 = edit_line_length(param_1,iVar1);
   return iVar1 + iVar2;
-}
-
-/* 005d2fca auto */
-void __cdecl edit_hwnd_caret_to_line_end(undefined4 param_1)
-
-{
-  undefined4 uVar1;
-  int iVar2;
-  int iVar3;
-  
-  uVar1 = edit_ctl_get_sel_end(param_1);
-  uVar1 = edit_line_from_char(param_1,uVar1);
-  iVar2 = edit_line_index(param_1,uVar1);
-  iVar3 = edit_line_length(param_1,iVar2);
-  edit_hwnd_set_caret(param_1,iVar2 + iVar3);
-  return;
 }
 
 /* 005d3035 auto */
@@ -1831,22 +1159,6 @@ void __cdecl edit_hwnd_replace_sel(HWND param_1,LPARAM param_2)
 {
   SendMessageA(param_1,0xc2,0,param_2);
   return;
-}
-
-/* 005d305a auto */
-bool __cdecl edit_hwnd_caret_at_line_end(undefined4 param_1)
-
-{
-  int iVar1;
-  undefined4 uVar2;
-  int iVar3;
-  int iVar4;
-  
-  iVar1 = edit_ctl_get_sel_end(param_1);
-  uVar2 = edit_line_from_char(param_1,iVar1);
-  iVar3 = edit_line_index(param_1,uVar2);
-  iVar4 = edit_line_length(param_1,iVar3);
-  return iVar1 == iVar3 + iVar4;
 }
 
 /* 005d30e0 auto */
@@ -1891,11 +1203,11 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
     pvVar8 = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
     pHVar7 = app_hinstance;
-    pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-    iVar2 = thunk_wnd_get_window(pCVar1);
+    pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+    iVar2 = wnd_get_window(pCVar1);
     pHVar5 = *(HWND *)(iVar2 + 4);
-    iVar3 = thunk_rect_height((iptr)param_1);
-    iVar4 = thunk_rect_width((iptr)param_1);
+    iVar3 = rect_height((iptr)param_1);
+    iVar4 = rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_COMBOBOX_00638350,&combo_probe_wnd_title,local_34,*param_1,param_1[1],iVar4
                               ,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
     combo_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
@@ -1921,11 +1233,11 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
   pvVar8 = (LPVOID)0x0;
   pHVar6 = (HMENU)0x0;
   pHVar7 = app_hinstance;
-  pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar4 = thunk_wnd_get_window(pCVar1);
+  pCVar1 = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar4 = wnd_get_window(pCVar1);
   pHVar5 = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_rect_height((iptr)param_1);
-  nWidth = thunk_rect_width((iptr)param_1);
+  iVar4 = rect_height((iptr)param_1);
+  nWidth = rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&combo_wnd_title,local_34,*param_1,param_1[1],
                             nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5d3310, combo_subclass_wndproc));
@@ -1958,7 +1270,7 @@ LRESULT __stdcall combo_subclass_wndproc(HWND param_1,uint param_2,uint param_3,
   if (this == (Control *)0x0) {
     return 1;
   }
-  iVar2 = thunk_ctrl_get_parent(this);
+  iVar2 = ctrl_get_parent(this);
   wnd_set_active_child(iVar2);
   if (param_2 < 0x103) {
     if (0xff < param_2) {
@@ -1983,7 +1295,7 @@ LRESULT __stdcall combo_subclass_wndproc(HWND param_1,uint param_2,uint param_3,
       iVar5 = 0;
       pHVar3 = GetParent(param_1);
       this_00 = (WndBase *)GetWindowLongA(pHVar3,iVar5);
-      iVar4 = thunk_wnd_get_window(this_00);
+      iVar4 = wnd_get_window(this_00);
       if ((*(byte *)(iVar4 + 0x49) & 2) != 0) {
         pHVar3 = GetParent(param_1);
         SetFocus(pHVar3);
@@ -2027,14 +1339,6 @@ void __cdecl combo_hwnd_add_string(HWND param_1,LPARAM param_2)
   return;
 }
 
-/* 005d35a3 auto */
-void __cdecl combo_hwnd_delete_string(HWND param_1,WPARAM param_2)
-
-{
-  SendMessageA(param_1,0x144,param_2,0);
-  return;
-}
-
 /* 005d35c8 auto */
 void __cdecl combo_hwnd_set_font(HWND param_1,undefined4 param_2)
 
@@ -2052,30 +1356,6 @@ void __cdecl combo_hwnd_clear(HWND param_1)
 
 {
   SendMessageA(param_1,0x14b,0,0);
-  return;
-}
-
-/* 005d362d auto */
-void __cdecl combo_hwnd_get_item_text(HWND param_1,WPARAM param_2,LPARAM param_3)
-
-{
-  SendMessageA(param_1,0x148,param_2,param_3);
-  return;
-}
-
-/* 005d3654 auto */
-void __cdecl combo_hwnd_get_sel_text(HWND param_1,undefined4 param_2)
-
-{
-  LRESULT LVar1;
-  
-  LVar1 = SendMessageA(param_1,0x147,0,0);
-  if (LVar1 == -1) {
-    FUN_005f22d0(param_2,&combo_no_sel_text);
-  }
-  else {
-    combo_hwnd_get_item_text(param_1,LVar1,param_2);
-  }
   return;
 }
 
@@ -2155,11 +1435,11 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
     pvVar11 = (LPVOID)0x0;
     pHVar9 = (HMENU)0x0;
     pHVar10 = app_hinstance;
-    pCVar2 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-    iVar3 = thunk_wnd_get_window(pCVar2);
+    pCVar2 = (WndBase *)ctrl_get_parent((Control *)param_2);
+    iVar3 = wnd_get_window(pCVar2);
     pHVar8 = *(HWND *)(iVar3 + 4);
-    iVar4 = thunk_rect_height((iptr)param_1);
-    iVar5 = thunk_rect_width((iptr)param_1);
+    iVar4 = rect_height((iptr)param_1);
+    iVar5 = rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_LISTBOX_0063838c,&listbox_probe_wnd_title,local_38,*param_1,param_1[1],iVar5,
                               iVar4,pHVar8,pHVar9,pHVar10,pvVar11);
     listbox_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
@@ -2188,17 +1468,17 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
   pvVar11 = (LPVOID)0x0;
   pHVar9 = (HMENU)0x0;
   pHVar10 = app_hinstance;
-  pCVar2 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
-  iVar5 = thunk_wnd_get_window(pCVar2);
+  pCVar2 = (WndBase *)ctrl_get_parent((Control *)param_2);
+  iVar5 = wnd_get_window(pCVar2);
   pHVar8 = *(HWND *)(iVar5 + 4);
-  iVar5 = thunk_rect_height((iptr)param_1);
-  nWidth = thunk_rect_width((iptr)param_1);
+  iVar5 = rect_height((iptr)param_1);
+  nWidth = rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSListBoxClass_006383a8,&listbox_wnd_title,local_38,*param_1,param_1[1],
                             nWidth,iVar5,pHVar8,pHVar9,pHVar10,pvVar11);
-  uVar6 = thunk_font_get_handle(param_5);
+  uVar6 = font_get_handle(param_5);
   pWVar7 = (WPARAM *)mem_handle_lock(uVar6);
   SendMessageA(local_8,0x30,*pWVar7,0);
-  uVar6 = thunk_font_get_handle(param_5);
+  uVar6 = font_get_handle(param_5);
   mem_handle_unlock(uVar6);
   SetWindowLongA(local_8,-4,ADDR(0x5d39e2, listbox_subclass_wndproc));
   SetWindowLongA(local_8,listbox_base_wnd_extra,(LONG)listbox_base_wndproc);
@@ -2230,7 +1510,7 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND param_1,uint param_2,uint param_
   if (this == (Control *)0x0) {
     return 1;
   }
-  iVar2 = thunk_ctrl_get_parent(this);
+  iVar2 = ctrl_get_parent(this);
   wnd_set_active_child(iVar2);
   if (param_2 < 0x103) {
     if (0xff < param_2) {
@@ -2255,7 +1535,7 @@ LRESULT __stdcall listbox_subclass_wndproc(HWND param_1,uint param_2,uint param_
       iVar5 = 0;
       pHVar3 = GetParent(param_1);
       this_00 = (WndBase *)GetWindowLongA(pHVar3,iVar5);
-      iVar4 = thunk_wnd_get_window(this_00);
+      iVar4 = wnd_get_window(this_00);
       if ((*(byte *)(iVar4 + 0x49) & 2) != 0) {
         pHVar3 = GetParent(param_1);
         SetFocus(pHVar3);
@@ -2299,14 +1579,6 @@ void __cdecl listbox_hwnd_add_string(HWND param_1,LPARAM param_2)
   return;
 }
 
-/* 005d3c75 auto */
-void __cdecl listbox_hwnd_delete_string(HWND param_1,WPARAM param_2)
-
-{
-  SendMessageA(param_1,0x182,param_2,0);
-  return;
-}
-
 /* 005d3c9a auto */
 void __cdecl listbox_hwnd_set_font(HWND param_1,undefined4 param_2)
 
@@ -2332,15 +1604,6 @@ void __cdecl listbox_hwnd_get_text(HWND param_1,WPARAM param_2,LPARAM param_3)
 
 {
   SendMessageA(param_1,0x189,param_2,param_3);
-  return;
-}
-
-/* 005d3d26 auto */
-void __cdecl listbox_hwnd_replace_string(HWND param_1,WPARAM param_2,LPARAM param_3)
-
-{
-  SendMessageA(param_1,0x182,param_2,0);
-  SendMessageA(param_1,0x181,param_2,param_3);
   return;
 }
 
@@ -2373,61 +1636,11 @@ LRESULT __cdecl listbox_hwnd_get_cur_sel(HWND param_1)
   return LVar1;
 }
 
-/* 005d3e04 auto */
-LRESULT __cdecl listbox_hwnd_get_sel_count(HWND param_1)
-
-{
-  LRESULT LVar1;
-  
-  LVar1 = SendMessageA(param_1,400,0,0);
-  if (LVar1 == -1) {
-    LVar1 = -1;
-  }
-  return LVar1;
-}
-
-/* 005d3e49 auto */
-LRESULT __cdecl listbox_hwnd_get_sel_items(HWND param_1,LPARAM param_2,WPARAM param_3)
-
-{
-  LRESULT LVar1;
-  
-  LVar1 = SendMessageA(param_1,0x191,param_3,param_2);
-  if (LVar1 == -1) {
-    LVar1 = -1;
-  }
-  return LVar1;
-}
-
 /* 005d3e92 auto */
 void __cdecl listbox_hwnd_set_cur_sel(HWND param_1,WPARAM param_2)
 
 {
   SendMessageA(param_1,0x186,param_2,0);
-  return;
-}
-
-/* 005d3eb7 auto */
-void __cdecl listbox_hwnd_sel_range(HWND param_1,WPARAM param_2,LPARAM param_3)
-
-{
-  SendMessageA(param_1,0x183,param_2,param_3);
-  return;
-}
-
-/* 005d3ede auto */
-void __cdecl listbox_hwnd_sel_range_rev(HWND param_1,LPARAM param_2,WPARAM param_3)
-
-{
-  SendMessageA(param_1,0x183,param_3,param_2);
-  return;
-}
-
-/* 005d3f05 auto */
-void __cdecl listbox_hwnd_set_sel(HWND param_1,LPARAM param_2,char param_3)
-
-{
-  SendMessageA(param_1,0x185,(int)param_3,param_2);
   return;
 }
 
@@ -2451,25 +1664,6 @@ void __thiscall listbox_fire_selchange(ListBoxSelChangeView *this)
   return;
 }
 
-/* 005d3fb0 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall radiogrp_has_hwnd(C_005d3fb0 *this,int param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0;
-  while( true ) {
-    if ((int)this->item_count <= local_8) {
-      return 0;
-    }
-    if (*(int *)(this->items + local_8 * 0xa4) == param_1) break;
-    local_8 = local_8 + 1;
-  }
-  return 1;
-}
-#undef local_8
-
 /* 005d4014 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall radiogrp_show_all(RadioGroupShowView *this)
@@ -2477,51 +1671,9 @@ void __thiscall radiogrp_show_all(RadioGroupShowView *this)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < (int)this->item_count; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < (int)this->item_count; local_8++) {
     hwnd_show(*(undefined4 *)(this->items + local_8 * 0xa4));
     wnd_invalidate(*(undefined4 *)(this->items + local_8 * 0xa4));
-  }
-  return;
-}
-#undef local_8
-
-/* 005d4087 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall radiogrp_hide_all(C_005d4087 *this)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  for (local_8 = 0; local_8 < (int)this->item_count; local_8 = local_8 + 1) {
-    hwnd_hide(*(undefined4 *)(this->items + local_8 * 0xa4));
-  }
-  return;
-}
-#undef local_8
-
-/* 005d40dd auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall radiogrp_disable_all(RadioGroupDisableView *this)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  for (local_8 = 0; local_8 < (int)this->item_count; local_8 = local_8 + 1) {
-    thunk_radiogrp_disable_item(this,local_8);
-  }
-  return;
-}
-#undef local_8
-
-/* 005d4122 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall radiogrp_enable_all(RadioGroupEnableView *this)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  for (local_8 = 0; local_8 < (int)this->item_count; local_8 = local_8 + 1) {
-    thunk_radiogrp_enable_item(this,local_8);
   }
   return;
 }
@@ -2592,7 +1744,7 @@ void __cdecl timer_busy_wait_ticks(int param_1)
   while( true ) {
     iVar2 = timer_ticks_60hz();
     if (iVar1 + param_1 <= iVar2) break;
-    thunk_win_flush_pending_msgs();
+    win_flush_pending_msgs();
   }
   return;
 }
@@ -2814,36 +1966,13 @@ void __thiscall game_timer_fire_slot(TimerManager *this,iptr param_1)
 {
   if ((this[param_1 + 1].field_0 != 0) && (this[param_1 + 0x12].field_0 != 0)) {
     if (0 < (int)this[param_1 + 0x12].field_0) {
-      this[param_1 + 0x12].field_0 = this[param_1 + 0x12].field_0 - 1;
+      this[param_1 + 0x12].field_0--;
     }
     (*(code *)this[param_1 + 1].field_0)(param_1,this[param_1 + 0x12].field_0);
     if (this[param_1 + 0x12].field_0 == 0) {
       game_timer_kill_slot(this,param_1);
     }
   }
-  return;
-}
-
-/* 005d4870 auto */
-undefined2 __cdecl snd_wave_play_default(iptr param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  undefined2 uVar1;
-  
-  uVar1 = snd_wave_play(param_1,param_2,param_3,0);
-  return uVar1;
-}
-
-/* 005d4899 auto */
-void __cdecl snd_wave_open_for_active_wnd(undefined4 param_1,undefined4 param_2)
-
-{
-  WndBase *this;
-  iptr iVar1;
-  
-  this = (WndBase *)wnd_get_active_child();
-  iVar1 = thunk_wnd_get_window(this);
-  snd_wave_open(*(undefined4 *)(iVar1 + 4),param_1,param_2);
   return;
 }
 
@@ -2930,7 +2059,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
       snd_wave_block_align = param_2[3];
     }
     UVar2 = waveOutGetNumDevs();
-    for (local_10 = 0; (int)local_10 < (int)UVar2; local_10 = local_10 + 1) {
+    for (local_10 = 0; (int)local_10 < (int)UVar2; local_10++) {
       waveOutGetDevCapsA(local_10,(LPWAVEOUTCAPSA)&snd_wave_dev_caps,0x34);
       if ((snd_wave_dev_formats & 0x20) != 0) {
         bVar1 = false;
@@ -3076,14 +2205,14 @@ undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined
                   *local_34 = (FOURCC)local_8;
                   p_Var5 = &local_84;
                   pDVar7 = local_34 + 6;
-                  for (iVar4 = 0x12; iVar4 != 0; iVar4 = iVar4 + -1) {
+                  for (iVar4 = 0x12; iVar4 != 0; iVar4--) {
                     *pDVar7 = p_Var5->dwFlags;
                     p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
-                    pDVar7 = pDVar7 + 1;
+                    pDVar7++;
                   }
                   p_Var6 = &local_98;
                   pFVar8 = local_34;
-                  for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4 = iVar4 + -1) {
+                  for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4--) {
                     *pFVar8 = p_Var6->ckid;
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
@@ -3228,14 +2357,14 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
                     local_38[0x18] = (FOURCC)local_c;
                     p_Var5 = &local_88;
                     pDVar7 = local_38 + 6;
-                    for (iVar4 = 0x12; iVar4 != 0; iVar4 = iVar4 + -1) {
+                    for (iVar4 = 0x12; iVar4 != 0; iVar4--) {
                       *pDVar7 = p_Var5->dwFlags;
                       p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
-                      pDVar7 = pDVar7 + 1;
+                      pDVar7++;
                     }
                     p_Var6 = &local_9c;
                     pFVar8 = local_38;
-                    for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4 = iVar4 + -1) {
+                    for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4--) {
                       *pFVar8 = p_Var6->ckid;
                       p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                     }
@@ -3398,10 +2527,10 @@ undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
             *local_b4 = local_c;
             p_Var3 = &local_10c;
             pDVar4 = local_b4 + 6;
-            for (iVar2 = 0x12; iVar2 != 0; iVar2 = iVar2 + -1) {
+            for (iVar2 = 0x12; iVar2 != 0; iVar2--) {
               *pDVar4 = p_Var3->dwFlags;
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
-              pDVar4 = pDVar4 + 1;
+              pDVar4++;
             }
             local_b4[1] = local_98[0];
             local_b4[2] = local_a4;
@@ -3410,11 +2539,11 @@ undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
             local_b4[0x27] = local_a8;
             for (local_9c = local_10c.cchBuffer; 1 < local_9c; local_9c = local_9c >> 1) {
               local_b4[0x2a] = local_b4[0x2a] << 1;
-              local_b4[0x2a] = local_b4[0x2a] + 1;
+              local_b4[0x2a]++;
             }
             local_b4[0x2e] = snd_wave_sources;
             snd_wave_sources = (iptr)local_b4;
-            snd_wave_source_count = snd_wave_source_count + 1;
+            snd_wave_source_count++;
             uVar1 = 0;
           }
         }
@@ -3552,7 +2681,7 @@ undefined4 __cdecl snd_avi_stream_feed(uint param_1)
            (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7) & 7) == 0) {
         param_1 = (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) /
                   (uint)*(ushort *)(snd_wave_sources + 0x80);
-        _DAT_00638594 = _DAT_00638594 + 1;
+        _DAT_00638594++;
       }
       local_c = *(int *)(snd_wave_sources + 0x98);
       uVar2 = (*(int *)(snd_wave_sources + 0x3c) - *(int *)(snd_wave_sources + 0x34)) /
@@ -3605,7 +2734,7 @@ undefined4 __cdecl snd_avi_stream_feed(uint param_1)
         *(undefined4 *)(snd_wave_sources + 0x68) = 0;
         *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
       }
-      _DAT_00638590 = _DAT_00638590 + 1;
+      _DAT_00638590++;
       uVar1 = 0;
     }
     else {
@@ -3714,7 +2843,7 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
       local_10 = *(int *)(snd_wave_sources + 8) - iVar2;
     }
     else {
-      local_10 = local_10 - iVar2;
+      local_10 -= iVar2;
     }
     if (local_10 < 0) {
       uVar1 = 0xc;
@@ -3733,7 +2862,7 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
       *(iptr *)(snd_wave_sources + 0x8c) = param_3;
       snd_avi_stream_started = 0;
       local_8 = (undefined4 *)snd_wave_buffer_ring;
-      for (local_c = 0; local_c < snd_wave_max_buffers; local_c = local_c + 1) {
+      for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
         local_8[3] = local_8[3] & 0xffffffdf;
         local_8[3] = local_8[3] & 0xfffffffe;
         local_8[3] = local_8[3] & 0xfffffffd;
@@ -3747,7 +2876,7 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
       }
       snd_avi_stream_refill(snd_wave_sources);
       local_8 = (undefined4 *)snd_wave_buffer_ring;
-      for (local_c = 0; local_c < snd_wave_max_buffers; local_c = local_c + 1) {
+      for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
         *(uint *)((int)local_8 + 0xc) = *(uint *)((int)local_8 + 0xc) | 8;
         local_8 = *(undefined4 **)((int)local_8 + 0x1c);
       }
@@ -3821,7 +2950,7 @@ short __cdecl snd_wave_play(iptr param_1,uint param_2,undefined4 param_3,undefin
       local_8 = (undefined4 *)snd_wave_cur_buffer;
       while ((local_10 < snd_wave_buffer_count && (iVar2 = snd_wave_mix_buffer(*local_8), iVar2 != 1))) {
         local_8 = (undefined4 *)local_8[7];
-        local_10 = local_10 + 1;
+        local_10++;
       }
       snd_wave_write_pending(snd_wave_cur_buffer);
     }
@@ -3863,22 +2992,6 @@ void __cdecl snd_wave_free_by_id(undefined4 param_1)
 #undef local_c
 #undef local_8
 
-/* 005d6222 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl snd_wave_stop_by_id(short param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  for (local_8 = snd_wave_sources; local_8 != 0; local_8 = *(iptr *)(local_8 + 0xb8)) {
-    if (*(short *)(local_8 + 0x8a) == param_1) {
-      *(uint *)(local_8 + 0x70) = *(uint *)(local_8 + 0x70) | 2;
-    }
-  }
-  return;
-}
-#undef local_8
-
 /* 005d6283 auto */
 #define local_5c (*(undefined4 (*)[5])(frame_ + FRAME_OFF(4)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -3901,10 +3014,10 @@ void __cdecl snd_wave_stream_refill(iptr param_1)
   local_14 = 0;
   puVar2 = (undefined4 *)(param_1 + 0x18);
   puVar3 = local_5c;
-  for (iVar1 = 0x12; iVar1 != 0; iVar1 = iVar1 + -1) {
+  for (iVar1 = 0x12; iVar1 != 0; iVar1--) {
     *puVar3 = *puVar2;
-    puVar2 = puVar2 + 1;
-    puVar3 = puVar3 + 1;
+    puVar2++;
+    puVar3++;
   }
   if (local_44 == local_40) {
     local_c = 0;
@@ -3932,7 +3045,7 @@ void __cdecl snd_wave_stream_refill(iptr param_1)
     else {
       mmioRead(*(HMMIO *)(param_1 + 0x60),local_40,local_10);
       *(undefined4 *)(param_1 + 0x68) = 0;
-      local_40 = local_40 + local_10;
+      local_40 += local_10;
       local_8 = local_38 - (int)local_40;
       mmioSeek(*(HMMIO *)(param_1 + 0x60),*(LONG *)(param_1 + 0x10),0);
     }
@@ -4006,7 +3119,7 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint param_1,HWAVEOUT param_2,uint param
     local_10 = 3;
   }
   else {
-    for (local_14 = 0; local_14 < param_3; local_14 = local_14 + 1) {
+    for (local_14 = 0; local_14 < param_3; local_14++) {
       local_18 = local_8;
       local_8 = (int *)snd_global_alloc_lock(0x20,(iptr)&local_1c);
       if (local_8 == (int *)0x0) {
@@ -4078,19 +3191,19 @@ void __cdecl snd_wave_add_buffers(int param_1)
   
   local_8 = snd_wave_spare_buffers;
   *(uint *)(snd_wave_spare_buffers + 0xc) = *(uint *)(snd_wave_spare_buffers + 0xc) & 0xfffffffe;
-  for (local_10 = 0; (int)local_10 < param_1 + -1; local_10 = local_10 + 1) {
+  for (local_10 = 0; (int)local_10 < param_1 - 1; local_10++) {
     local_8 = *(int *)(local_8 + 0x1c);
     *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffe;
   }
   local_c = snd_wave_buffer_ring;
-  for (local_10 = 0; local_10 < snd_wave_buffer_count - 1U; local_10 = local_10 + 1) {
+  for (local_10 = 0; local_10 < snd_wave_buffer_count - 1U; local_10++) {
     local_c = *(iptr *)(local_c + 0x1c);
   }
   iVar1 = *(iptr *)(local_8 + 0x1c);
   *(iptr *)(local_c + 0x1c) = snd_wave_spare_buffers;
   snd_wave_spare_buffers = iVar1;
   *(iptr *)(local_8 + 0x1c) = snd_wave_buffer_ring;
-  snd_wave_buffer_count = snd_wave_buffer_count + param_1;
+  snd_wave_buffer_count += param_1;
   return;
 }
 #undef snd_wave_buffer_count
@@ -4112,13 +3225,13 @@ void __cdecl snd_wave_remove_buffers(int param_1)
   if ((uint)(snd_wave_buffer_count - param_1) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
     snd_wave_cur_buffer = snd_wave_buffer_ring;
   }
-  for (local_14 = 0; local_14 < (int)((snd_wave_buffer_count - param_1) - 1U); local_14 = local_14 + 1) {
+  for (local_14 = 0; local_14 < (int)((snd_wave_buffer_count - param_1) - 1U); local_14++) {
     local_8 = *(iptr *)(local_8 + 0x1c);
   }
   iVar1 = *(iptr *)(local_8 + 0x1c);
   *(iptr *)(local_8 + 0x1c) = snd_wave_buffer_ring;
   local_8 = iVar1;
-  for (local_14 = 0; local_14 < param_1; local_14 = local_14 + 1) {
+  for (local_14 = 0; local_14 < param_1; local_14++) {
     *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffd;
     *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffb;
     *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) | 1;
@@ -4129,12 +3242,12 @@ void __cdecl snd_wave_remove_buffers(int param_1)
     local_8 = *(iptr *)(local_8 + 0x1c);
   }
   local_8 = iVar1;
-  for (local_14 = 0; local_14 < param_1 + -1; local_14 = local_14 + 1) {
+  for (local_14 = 0; local_14 < param_1 - 1; local_14++) {
     local_8 = *(iptr *)(local_8 + 0x1c);
   }
   *(iptr *)(local_8 + 0x1c) = snd_wave_spare_buffers;
   snd_wave_spare_buffers = iVar1;
-  snd_wave_buffer_count = snd_wave_buffer_count - param_1;
+  snd_wave_buffer_count -= param_1;
   return;
 }
 #undef snd_wave_buffer_count
@@ -4184,9 +3297,9 @@ undefined4 __cdecl snd_wave_write_pending(iptr param_1)
   local_10 = local_10 & 0xffff0000;
   while ((*(uint *)(param_1 + 0xc) >> 6 & 1) != 0) {
     local_c = (byte *)**(undefined4 **)param_1;
-    for (local_14 = 0; local_14 < *(uint *)(*(int *)param_1 + 4); local_14 = local_14 + 1) {
+    for (local_14 = 0; local_14 < *(uint *)(*(int *)param_1 + 4); local_14++) {
       *local_c = *local_c ^ 0x80;
-      local_c = local_c + 1;
+      local_c++;
     }
     MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)param_1,0x20);
     local_10 = CONCAT22((*(undefined2 *)((char *)&local_10 + 2)),(short)MVar1);
@@ -4234,7 +3347,7 @@ void __cdecl snd_wave_stop_all(void)
   if (snd_wave_out_handle != (HWAVEOUT)0x0) {
     waveOutReset(snd_wave_out_handle);
     while (BVar1 = PeekMessageA(&local_30,snd_wave_notify_hwnd,0x3bd,0x3bd,1), BVar1 != 0) {
-      _DAT_006385d4 = _DAT_006385d4 + 1;
+      _DAT_006385d4++;
     }
     while (local_14 != 0) {
       if (*(short *)(local_14 + 0x88) == 4) {
@@ -4247,7 +3360,7 @@ void __cdecl snd_wave_stop_all(void)
     }
     local_8 = snd_wave_buffer_ring;
     if (snd_wave_buffer_ring != 0) {
-      for (local_10 = 0; local_10 < snd_wave_buffer_count; local_10 = local_10 + 1) {
+      for (local_10 = 0; local_10 < snd_wave_buffer_count; local_10++) {
         *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffdf;
         *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffbf;
         local_8 = *(iptr *)(local_8 + 0x1c);
@@ -4274,7 +3387,7 @@ void __cdecl snd_fill_silence_u8(iptr param_1,uint param_2)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < param_2; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < param_2; local_8++) {
     *(undefined1 *)(local_8 + param_1) = 0x80;
   }
   return;
@@ -4307,7 +3420,7 @@ undefined4 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
     snd_wave_set_buffer_count(snd_wave_max_buffers);
   }
   if (iVar2 != 0) {
-    for (local_14 = 0; local_14 < snd_wave_max_buffers; local_14 = local_14 + 1) {
+    for (local_14 = 0; local_14 < snd_wave_max_buffers; local_14++) {
       piVar1 = (int *)local_8[7];
       if (*local_8 != 0) {
         waveOutUnprepareHeader(param_1,(LPWAVEHDR)*local_8,0x20);
@@ -4350,7 +3463,7 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
 {
   undefined2 uVar1;
   undefined4 *puVar2;
-  int iVar4;
+  int src;
   MMRESULT MVar5;
   iptr iVar3;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4365,7 +3478,7 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
     while ((local_2c < snd_wave_buffer_count &&
            (snd_wave_cur_buffer = *(int *)(snd_wave_cur_buffer + 0x1c),
            (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0))) {
-      local_2c = local_2c + 1;
+      local_2c++;
     }
     if ((*(byte *)(local_20 + 3) & 1) == 0) {
       local_30 = (undefined4 *)snd_wave_sources;
@@ -4390,14 +3503,14 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
             if (*(short *)((int)local_30 + 0x88) == 4) {
               if (((uint)local_20[3] >> 3 & 1) == 0) {
                 snd_avi_fill_buffer((iptr)local_20,(iptr)local_30);
-                _DAT_00638594 = _DAT_00638594 + 1;
+                _DAT_00638594++;
               }
-              iVar4 = ((uint)local_20[3] >> 7 & 0xff) * *(int *)((int)local_30 + 0x9c) +
+              src = ((uint)local_20[3] >> 7 & 0xff) * *(int *)((int)local_30 + 0x9c) +
                       *(int *)((int)local_30 + 0x30);
-              snd_resample_8bit(local_20[4],iVar4,local_20[6] / (int)(uint)(ushort)snd_wave_block_align,
+              snd_resample_8bit(local_20[4],src,local_20[6] / (int)(uint)(ushort)snd_wave_block_align,
                            CONCAT22((short)((uint)local_30 >> 0x10),
                                     *(undefined2 *)((int)local_30 + 0x80)),
-                           CONCAT22((short)((uint)iVar4 >> 0x10),(ushort)snd_wave_block_align));
+                           CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
               if (((uint)local_20[3] >> 1 & 1) != 0) {
                 local_20[3] = local_20[3] | 0x10;
               }
@@ -4414,9 +3527,9 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
             local_20[3] = local_20[3] | 0x40;
             *(uint *)(*local_20 + 0x10) = *(uint *)(*local_20 + 0x10) & 0xfffffffe;
           }
-          for (local_2c = 0; local_2c < (uint)puVar2[1]; local_2c = local_2c + 1) {
+          for (local_2c = 0; local_2c < (uint)puVar2[1]; local_2c++) {
             *local_28 = *local_28 ^ 0x80;
-            local_28 = local_28 + 1;
+            local_28++;
           }
           MVar5 = waveOutWrite(param_1,(LPWAVEHDR)*local_20,0x20);
           local_10 = CONCAT22((*(undefined2 *)((char *)&local_10 + 2)),(short)MVar5);
@@ -4492,7 +3605,7 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
 {
   bool bVar1;
   undefined4 uVar2;
-  int iVar3;
+  int src;
   iptr iVar1;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
@@ -4513,17 +3626,17 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
     else {
       if ((*(uint *)(iVar1 + 0xc) >> 6 & 1) == 0) {
         if (*(short *)((int)local_20 + 0x88) == 4) {
-          iVar3 = (*(uint *)(iVar1 + 0xc) >> 7 & 0xff) * *(int *)((int)local_20 + 0x9c) +
+          src = (*(uint *)(iVar1 + 0xc) >> 7 & 0xff) * *(int *)((int)local_20 + 0x9c) +
                   *(int *)((int)local_20 + 0x30);
-          snd_resample_8bit(*(undefined4 *)(iVar1 + 0x10),iVar3,
+          snd_resample_8bit(*(undefined4 *)(iVar1 + 0x10),src,
                        *(int *)(iVar1 + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
                        CONCAT22((short)((uint)local_20 >> 0x10),
                                 *(undefined2 *)((int)local_20 + 0x80)),
-                       CONCAT22((short)((uint)iVar3 >> 0x10),(ushort)snd_wave_block_align));
+                       CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
         }
         else {
-          iVar3 = snd_wave_copy_source((iptr)local_20,*param_1,param_1[1]);
-          if (iVar3 == 1) {
+          src = snd_wave_copy_source((iptr)local_20,*param_1,param_1[1]);
+          if (src == 1) {
             bVar1 = true;
           }
         }
@@ -4532,7 +3645,7 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
       }
       for (; local_20 != (undefined4 *)0x0; local_20 = *(undefined4 **)((int)local_20 + 0xb8)) {
         if (((*(uint *)((int)local_20 + 0x70) >> 1 & 1) == 0) &&
-           (iVar3 = snd_wave_mix_source((uptr)local_20,*param_1,param_1[1]), iVar3 == 0)) {
+           (src = snd_wave_mix_source((uptr)local_20,*param_1,param_1[1]), src == 0)) {
           bVar1 = false;
         }
       }
@@ -4606,7 +3719,7 @@ iptr __cdecl snd_wave_free(iptr param_1,iptr param_2)
     }
     GlobalUnlock(*(HGLOBAL *)(param_2 + 0x6c));
     GlobalFree(*(HGLOBAL *)(param_2 + 0x6c));
-    snd_wave_source_count = snd_wave_source_count + -1;
+    snd_wave_source_count--;
   }
   return iVar2;
 }
@@ -4614,11 +3727,11 @@ iptr __cdecl snd_wave_free(iptr param_1,iptr param_2)
 
 /* 005d753e auto */
 #define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
+#define count (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
+undefined4 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
 
 {
   ushort uVar1;
@@ -4629,7 +3742,7 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
   
   uVar2 = param_3 / (ushort)snd_wave_block_align;
   if ((param_1 == 0) || ((*(byte *)(param_1 + 0x70) & 1) != 0)) {
-    local_14 = 0;
+    count = 0;
   }
   else {
     if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
@@ -4639,10 +3752,10 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
       local_c = *(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34);
     }
     uVar3 = local_c / *(ushort *)(param_1 + 0x80);
-    local_14 = uVar2;
+    count = uVar2;
     if (uVar3 < uVar2) {
       *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) | 1;
-      local_14 = uVar3;
+      count = uVar3;
     }
     if ((uint)(*(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34)) /
         (uint)*(ushort *)(param_1 + 0x80) < uVar2 * 2) {
@@ -4651,10 +3764,10 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
     else {
       *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xfffffff7;
     }
-    uVar2 = uVar2 - local_14;
+    uVar2 -= count;
   }
-  if (local_14 != 0) {
-    uVar1 = snd_resample_8bit(param_2,*(undefined4 *)(param_1 + 0x34),local_14,
+  if (count != 0) {
+    uVar1 = snd_resample_8bit(dst,*(undefined4 *)(param_1 + 0x34),count,
                          CONCAT22((short)((uint)param_1 >> 0x10),*(undefined2 *)(param_1 + 0x80)),
                          CONCAT22((short)(uVar2 >> 0x10),(ushort)snd_wave_block_align));
     *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + (uint)uVar1;
@@ -4666,7 +3779,7 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
   }
   if (uVar2 == 0) {
     if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * local_14;
+      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
     }
     else {
       *(undefined4 *)(param_1 + 100) = 0;
@@ -4674,24 +3787,24 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int param_2,uint param_3)
     uVar4 = 0;
   }
   else {
-    _memset((void *)(param_2 + (ushort)snd_wave_block_align * local_14),0,(ushort)snd_wave_block_align * uVar2);
+    _memset((void *)(dst + (ushort)snd_wave_block_align * count),0,(ushort)snd_wave_block_align * uVar2);
     if ((param_1 != 0) && (local_c != 0)) {
-      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * local_14;
+      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
     }
     uVar4 = 1;
   }
   return uVar4;
 }
 #undef snd_wave_block_align
-#undef local_14
+#undef count
 #undef local_c
 
 /* 005d778c auto */
 #define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define count (*(undefined4 *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
-undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 param_2,uint param_3)
+undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 dst,uint param_3)
 
 {
   ushort uVar1;
@@ -4709,10 +3822,10 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 param_2,uint para
   }
   uVar2 = local_c / *(ushort *)(param_1 + 0x80);
   uVar3 = param_3 / (ushort)snd_wave_block_align;
-  local_10 = uVar3;
+  count = uVar3;
   if (uVar2 < uVar3) {
     *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) | 1;
-    local_10 = uVar2;
+    count = uVar2;
   }
   if ((uint)(*(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34)) /
       (uint)*(ushort *)(param_1 + 0x80) < uVar3 * 2) {
@@ -4723,15 +3836,15 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 param_2,uint para
     *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xfffffff7;
     uVar4 = param_1;
   }
-  if (local_10 != 0) {
-    uVar1 = snd_mix_8bit_resample(param_2,*(undefined4 *)(param_1 + 0x34),local_10,
+  if (count != 0) {
+    uVar1 = snd_mix_8bit_resample(dst,*(undefined4 *)(param_1 + 0x34),count,
                          CONCAT22((short)(param_1 >> 0x10),*(undefined2 *)(param_1 + 0x80)),
                          CONCAT22((short)(uVar4 >> 0x10),(ushort)snd_wave_block_align));
     local_14 = (uint)uVar1;
     *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + local_14;
   }
   if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-    *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * local_10;
+    *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
   }
   else {
     *(undefined4 *)(param_1 + 100) = 0;
@@ -4746,7 +3859,7 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 param_2,uint para
 }
 #undef snd_wave_block_align
 #undef local_14
-#undef local_10
+#undef count
 #undef local_c
 
 /* 005d791b auto */
@@ -4793,7 +3906,7 @@ undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
              (*(uint *)(iVar1 + 0x34) < *(uint *)(iVar1 + 0x3c)))) {
         **(undefined1 **)(iVar1 + 0x34) = 0x80;
         *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + 1;
-        local_10 = local_10 + 1;
+        local_10++;
       }
       if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
         *(undefined4 *)(iVar1 + 0x34) = *(undefined4 *)(iVar1 + 0x30);
@@ -4815,43 +3928,11 @@ undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
 #undef local_10
 #undef local_8
 
-/* 005d7b94 auto */
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl snd_wave_id_active(short param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = snd_wave_sources;
-  while( true ) {
-    if (local_c == 0) {
-      return 0;
-    }
-    if (*(short *)(local_c + 0x8a) == param_1) break;
-    local_c = *(iptr *)(local_c + 0xb8);
-  }
-  return 1;
-}
-#undef local_c
-
 /* 005d7c00 auto */
 FileObject * __thiscall file_obj_init(FileObject *this)
 
 {
   _memset(this,0,0x98);
-  return this;
-}
-
-/* 005d7c2c auto */
-FileObject * __thiscall file_obj_ctor_mode(FileObject *this,iptr param_1,int param_2)
-
-{
-  if (param_2 == 1) {
-    thunk_file_obj_open(this,param_1);
-  }
-  else {
-    thunk_file_obj_create(this,param_1);
-  }
   return this;
 }
 
@@ -4861,16 +3942,8 @@ undefined4 __thiscall file_obj_close(FileObject *this)
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_file_map_close(this);
+  uVar1 = file_map_close(this);
   return uVar1;
-}
-
-/* 005d7c8c auto */
-void __cdecl dbg_output_line_wrap(undefined4 param_1)
-
-{
-  dbg_output_line(param_1);
-  return;
 }
 
 /* 005d7cb0 auto */
@@ -4905,10 +3978,10 @@ spritebtn_init_from_sprite
   undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->field_c8 = '\0';
-  uVar1 = thunk_wnd_get_palette(param_1);
+  uVar1 = wnd_get_palette(param_1);
   this->ctrl_palette = uVar1;
   SetRect(&local_3c,param_3,param_4,param_5 + param_3,param_4 + param_6);
-  thunk_ctrl_init((Control *)this,(iptr)param_1,6,param_2,(iptr)&local_3c);
+  ctrl_init((Control *)this,(iptr)param_1,6,param_2,(iptr)&local_3c);
   this->is_enabled = 0;
   this->on_click = 0;
   gfx_get_scale_ratio((iptr)&local_48,(iptr)&local_4c);
@@ -4920,9 +3993,9 @@ spritebtn_init_from_sprite
   local_40 = param_5 >> 1;
   local_44 = param_6 >> 1;
   sprite_get_origin((SpriteOriginGetView *)param_7,(iptr)&local_50,(iptr)&local_54);
-  local_28 = thunk_sprite_get_width((Sprite *)param_7);
+  local_28 = sprite_get_width((Sprite *)param_7);
   local_28 = local_28 >> 1;
-  local_2c = thunk_sprite_get_height((Sprite *)param_7);
+  local_2c = sprite_get_height((Sprite *)param_7);
   local_2c = local_2c >> 1;
   sprite_set_origin((SpriteOriginSetView *)param_7,-local_28,-local_2c);
   sprite_draw
@@ -4931,16 +4004,16 @@ spritebtn_init_from_sprite
             ((Sprite *)param_7,(iptr)local_74,(iptr)&this->on_select,local_40,local_44);
   sprite_set_origin((SpriteOriginSetView *)param_7,local_50,local_54);
   gfx_set_scale_ratio(local_48,local_4c);
-  iVar2 = thunk_surface_height((DibSurface *)(this->pad_50 + 0x2c));
-  yBottom = param_4 + iVar2 + -1;
-  iVar2 = thunk_surface_width((DibSurface *)(this->pad_50 + 0x2c));
-  SetRect(&local_3c,param_3,param_4,param_3 + iVar2 + -1,yBottom);
+  iVar2 = surface_height((DibSurface *)(this->pad_50 + 0x2c));
+  yBottom = param_4 + iVar2 - 1;
+  iVar2 = surface_width((DibSurface *)(this->pad_50 + 0x2c));
+  SetRect(&local_3c,param_3,param_4,param_3 + iVar2 - 1,yBottom);
   OffsetRect(&local_3c,-local_3c.left,-local_3c.top);
   local_24.left = local_3c.left;
   local_24.top = local_3c.top;
   local_24.right = local_3c.right;
   local_24.bottom = local_3c.bottom;
-  SetRect(&local_24,local_3c.left,local_3c.top,local_3c.right + -2,local_3c.bottom + -2);
+  SetRect(&local_24,local_3c.left,local_3c.top,local_3c.right - 2,local_3c.bottom - 2);
   local_14 = local_24.left;
   local_10 = local_24.top;
   local_c = local_24.right;
@@ -4950,116 +4023,13 @@ spritebtn_init_from_sprite
   surface_blit
             ((DibSurface *)&this->on_select,(iptr)(this->pad_50 + 0x2c),(iptr)&local_14,
              (iptr)&local_24);
-  pCVar3 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)this);
-  uVar4 = thunk_wnd_get_palette(pCVar3);
+  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  uVar4 = wnd_get_palette(pCVar3);
   surface_apply_palette((DibSurface *)(this->pad_50 + 0x2c),uVar4);
-  pCVar3 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)this);
-  uVar4 = thunk_wnd_get_palette(pCVar3);
+  pCVar3 = (WndPaletteView *)ctrl_get_parent((Control *)this);
+  uVar4 = wnd_get_palette(pCVar3);
   surface_apply_palette((DibSurface *)&this->on_select,uVar4);
   uVar1 = spritebtn_create_hwnd(param_3,param_4,param_5,param_6,(iptr)this,1);
-  this->hwnd = uVar1;
-  return;
-}
-#undef gfx_black_color_index
-#undef local_74
-#undef local_64
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
-/* 005d7f72 auto */
-#define gfx_black_color_index (*(byte *)((u8 *)&g.d_00638b40))
-#define local_74 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_64 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_54 (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_50 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_48 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(60)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(100)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(104)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(112)))
-void __thiscall
-spritebtn_init_from_sprite_ex
-          (SpriteButton *this,WndPaletteView *param_1,undefined4 param_2,int param_3,int param_4,
-          int param_5,int param_6,Sprite *param_7,uint param_8,undefined4 param_9)
-
-{
-  u32 uVar1;
-  int iVar2;
-  WndPaletteView *pCVar3;
-  undefined4 uVar4;
-  int yBottom;
-  undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  this->field_c8 = '\0';
-  uVar1 = thunk_wnd_get_palette(param_1);
-  this->ctrl_palette = uVar1;
-  SetRect(&local_3c,param_3,param_4,param_5 + param_3,param_6 + param_4);
-  thunk_ctrl_init((Control *)this,(iptr)param_1,6,param_2,(iptr)&local_3c);
-  this->is_enabled = 0;
-  this->on_click = 0;
-  gfx_get_scale_ratio((iptr)&local_48,(iptr)&local_4c);
-  gfx_set_scale_ratio(1,1);
-  surface_create((DibSurface *)(this->pad_50 + 0x2c),param_5,param_6);
-  surface_create((DibSurface *)&this->on_select,param_5,param_6);
-  surface_fill((DibSurface *)(this->pad_50 + 0x2c),param_8 & 0xff);
-  surface_fill((DibSurface *)&this->on_select,param_8 & 0xff);
-  local_40 = param_5 >> 1;
-  local_44 = param_6 >> 1;
-  sprite_get_origin((SpriteOriginGetView *)param_7,(iptr)&local_50,(iptr)&local_54);
-  local_28 = thunk_sprite_get_width(param_7);
-  local_28 = local_28 >> 1;
-  local_2c = thunk_sprite_get_height(param_7);
-  local_2c = local_2c >> 1;
-  sprite_set_origin((SpriteOriginSetView *)param_7,-local_28,-local_2c);
-  sprite_draw(param_7,(iptr)local_64,(iptr)(this->pad_50 + 0x2c),local_40,local_44);
-  sprite_draw(param_7,(iptr)local_74,(iptr)&this->on_select,local_40,local_44);
-  sprite_set_origin((SpriteOriginSetView *)param_7,local_50,local_54);
-  gfx_set_scale_ratio(local_48,local_4c);
-  iVar2 = thunk_surface_height((DibSurface *)(this->pad_50 + 0x2c));
-  yBottom = param_4 + iVar2 + -1;
-  iVar2 = thunk_surface_width((DibSurface *)(this->pad_50 + 0x2c));
-  SetRect(&local_3c,param_3,param_4,param_3 + iVar2 + -1,yBottom);
-  OffsetRect(&local_3c,-local_3c.left,-local_3c.top);
-  local_24.left = local_3c.left;
-  local_24.top = local_3c.top;
-  local_24.right = local_3c.right;
-  local_24.bottom = local_3c.bottom;
-  SetRect(&local_24,local_3c.left,local_3c.top,local_3c.right + -2,local_3c.bottom + -2);
-  local_14 = local_24.left;
-  local_10 = local_24.top;
-  local_c = local_24.right;
-  local_8 = local_24.bottom;
-  OffsetRect(&local_24,2,2);
-  surface_fill((DibSurface *)(this->pad_50 + 0x2c),(uint)gfx_black_color_index);
-  surface_blit
-            ((DibSurface *)&this->on_select,(iptr)(this->pad_50 + 0x2c),(iptr)&local_14,
-             (iptr)&local_24);
-  pCVar3 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)this);
-  uVar4 = thunk_wnd_get_palette(pCVar3);
-  surface_apply_palette((DibSurface *)(this->pad_50 + 0x2c),uVar4);
-  pCVar3 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)this);
-  uVar4 = thunk_wnd_get_palette(pCVar3);
-  surface_apply_palette((DibSurface *)&this->on_select,uVar4);
-  uVar1 = spritebtn_create_hwnd(param_3,param_4,param_5,param_6,(iptr)this,param_9);
   this->hwnd = uVar1;
   return;
 }
@@ -5086,14 +4056,6 @@ void __cdecl ui_set_button_font(iptr param_1)
 
 {
   button_default_font = (undefined *)param_1;
-  return;
-}
-
-/* 005d8250 auto */
-void __cdecl file_obj_open_path_wrap(undefined4 param_1,iptr param_2)
-
-{
-  file_obj_open_path(param_1,param_2);
   return;
 }
 
@@ -5142,14 +4104,6 @@ undefined4 __cdecl file_obj_open_path(char *param_1,iptr param_2)
   return uVar3;
 }
 #undef local_108
-
-/* 005d83b6 auto */
-void __cdecl file_obj_create_path_wrap(undefined4 param_1,iptr param_2)
-
-{
-  file_obj_create_path(param_1,param_2);
-  return;
-}
 
 /* 005d83d6 auto */
 uint __cdecl file_obj_create_path(LPCSTR param_1,iptr param_2)
@@ -5226,50 +4180,6 @@ undefined4 __cdecl file_obj_read_bytes(iptr param_1,LPVOID param_2,DWORD param_3
 }
 #undef local_8
 
-/* 005d8551 auto */
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(char (*)[4])(frame_ + FRAME_OFF(8)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(size_t *)(frame_ + FRAME_OFF(16)))
-undefined4 __cdecl file_obj_seek_to_string(iptr param_1,char *param_2)
-
-{
-  long lVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_14 = 0;
-  local_c = 0;
-  if (*(int *)(param_1 + 4) == 0) {
-    local_c = 0;
-  }
-  else {
-    local_8 = _strlen(param_2);
-    if (local_8 == 0) {
-      local_c = 0;
-    }
-    else {
-      do {
-        while( true ) {
-          lVar1 = _hread(*(HFILE *)(param_1 + 4),local_10,1);
-          if (lVar1 != 1) {
-            return local_c;
-          }
-          if (param_2[local_14] == local_10[0]) break;
-          local_14 = 0;
-        }
-        local_14 = local_14 + 1;
-      } while (param_2[local_14] != '\0');
-      local_c = 1;
-      _llseek(*(HFILE *)(param_1 + 4),-local_8,1);
-    }
-  }
-  return local_c;
-}
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
-
 /* 005d8622 auto */
 undefined4 __cdecl file_obj_seek_rel(iptr param_1,LONG param_2)
 
@@ -5283,51 +4193,6 @@ undefined4 __cdecl file_obj_seek_rel(iptr param_1,LONG param_2)
   else {
     DVar2 = SetFilePointer(*(HANDLE *)(param_1 + 4),param_2,(PLONG)0x0,1);
     if (DVar2 == 0xffffffff) {
-      uVar1 = 0;
-    }
-    else {
-      uVar1 = 1;
-    }
-  }
-  return uVar1;
-}
-
-/* 005d8675 auto */
-undefined4 __cdecl file_obj_seek_abs(iptr param_1,LONG param_2)
-
-{
-  undefined4 uVar1;
-  DWORD DVar2;
-  
-  if (*(int *)(param_1 + 4) == 0) {
-    uVar1 = 0;
-  }
-  else {
-    DVar2 = SetFilePointer(*(HANDLE *)(param_1 + 4),param_2,(PLONG)0x0,0);
-    if (DVar2 == 0xffffffff) {
-      uVar1 = 0;
-    }
-    else {
-      uVar1 = 1;
-    }
-  }
-  return uVar1;
-}
-
-/* 005d86c8 auto */
-undefined4 __cdecl file_obj_rewind(iptr param_1,DWORD *param_2)
-
-{
-  undefined4 uVar1;
-  DWORD DVar2;
-  
-  if (*(int *)(param_1 + 4) == 0) {
-    uVar1 = 0;
-  }
-  else {
-    DVar2 = SetFilePointer(*(HANDLE *)(param_1 + 4),0,(PLONG)0x0,0);
-    *param_2 = DVar2;
-    if (*param_2 == 0xffffffff) {
       uVar1 = 0;
     }
     else {
@@ -5366,30 +4231,6 @@ undefined4 __cdecl file_obj_write_bytes(iptr param_1,iptr param_2,DWORD param_3)
 }
 #undef local_8
 
-/* 005d879c auto */
-uint __cdecl file_obj_write_line(int *param_1,char *param_2)
-
-{
-  uint uVar1;
-  size_t sVar2;
-  uint uVar3;
-  
-  if (param_1[1] == 0) {
-    uVar1 = 0;
-  }
-  else if (*param_1 == 0) {
-    dbg_log(ADDR(0x63866c, ((u8 *)&g.d_0063866c)));
-    uVar1 = 0;
-  }
-  else {
-    sVar2 = _strlen(param_2);
-    uVar1 = file_obj_write_bytes((iptr)param_1,(iptr)param_2,sVar2);
-    uVar3 = file_obj_write_bytes((iptr)param_1,ADDR(0x638698, ((u8 *)&g.d_00638698)),2);
-    uVar1 = uVar1 & uVar3;
-  }
-  return uVar1;
-}
-
 /* 005d881c auto */
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
@@ -5417,8 +4258,8 @@ int __cdecl file_obj_read_line_impl(iptr param_1,char *param_2,int param_3)
               ((local_8[0] != '\r' && (local_8[0] != '\0')))) && (local_14 < param_3))) {
         if (((local_8[0] != '\r') && (local_8[0] != '\n')) && (local_8[0] != '\0')) {
           *local_c = local_8[0];
-          local_c = local_c + 1;
-          local_14 = local_14 + 1;
+          local_c++;
+          local_14++;
         }
         local_18 = ReadFile(*(HANDLE *)(param_1 + 4),local_8,1,&local_10,(LPOVERLAPPED)0x0);
       }
@@ -5459,38 +4300,6 @@ DWORD __cdecl file_obj_get_size_impl(iptr param_1)
   return DVar1;
 }
 
-/* 005d89e8 auto */
-undefined4 __cdecl file_obj_map_view_impl(iptr param_1,DWORD param_2,SIZE_T param_3)
-
-{
-  HANDLE pvVar1;
-  undefined4 uVar2;
-  LPVOID pvVar3;
-  
-  if ((*(int *)(param_1 + 0x94) == 0) && (*(int *)(param_1 + 0x90) == 0)) {
-    pvVar1 = CreateFileMappingA(*(HANDLE *)(param_1 + 4),(LPSECURITY_ATTRIBUTES)0x0,2,0,0,
-                                (LPCSTR)0x0);
-    *(HANDLE *)(param_1 + 0x94) = pvVar1;
-    if (*(int *)(param_1 + 0x94) == 0) {
-      uVar2 = 0;
-    }
-    else {
-      pvVar3 = MapViewOfFile(*(HANDLE *)(param_1 + 0x94),4,0,param_2,param_3);
-      *(LPVOID *)(param_1 + 0x90) = pvVar3;
-      if (*(int *)(param_1 + 0x90) == 0) {
-        uVar2 = file_obj_close_mapping(param_1);
-      }
-      else {
-        uVar2 = *(undefined4 *)(param_1 + 0x90);
-      }
-    }
-  }
-  else {
-    uVar2 = *(undefined4 *)(param_1 + 0x90);
-  }
-  return uVar2;
-}
-
 /* 005d8ab8 auto */
 undefined4 __cdecl file_obj_close_mapping(iptr param_1)
 
@@ -5505,169 +4314,6 @@ undefined4 __cdecl file_obj_close_mapping(iptr param_1)
   }
   return 0;
 }
-
-/* 005d8b34 auto */
-void __cdecl file_dialog_open_simple(undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  file_dialog_unowned(param_1,param_2,0,param_3,0);
-  return;
-}
-
-/* 005d8b5c auto */
-/* Library Function - Single Match
-    _strftime
-   
-   Library: Visual Studio 1998 Debug */
-
-void __cdecl
-file_dialog_open(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
-
-{
-  file_dialog_unowned(param_1,param_2,param_3,param_4,0);
-  return;
-}
-
-/* 005d8b86 auto */
-void __cdecl
-file_dialog_save(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
-
-{
-  file_dialog_unowned(param_1,param_2,param_3,param_4,1);
-  return;
-}
-
-/* 005d8bb0 auto */
-void __cdecl
-file_dialog_save_owned(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            iptr param_5)
-
-{
-  file_dialog_run(param_1,param_2,param_3,param_4,1,param_5);
-  return;
-}
-
-/* 005d8bde auto */
-void __cdecl
-file_dialog_unowned(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5)
-
-{
-  file_dialog_run(param_1,param_2,param_3,param_4,param_5,0);
-  return;
-}
-
-/* 005d8c0c auto */
-#define local_5c (*(char *)(frame_ + FRAME_OFF(4)))
-#define local_58 (*(DWORD *)(frame_ + FRAME_OFF(8)))
-#define local_54 (*(HWND *)(frame_ + FRAME_OFF(12)))
-#define local_4c (*(LPCSTR *)(frame_ + FRAME_OFF(20)))
-#define local_40 (*(DWORD *)(frame_ + FRAME_OFF(32)))
-#define local_3c (*(LPSTR *)(frame_ + FRAME_OFF(36)))
-#define local_38 (*(DWORD *)(frame_ + FRAME_OFF(40)))
-#define local_28 (*(char * *)(frame_ + FRAME_OFF(56)))
-#define local_24 (*(DWORD *)(frame_ + FRAME_OFF(60)))
-#define local_1c (*(LPCSTR *)(frame_ + FRAME_OFF(68)))
-#define local_c (*(LPSTR *)(frame_ + FRAME_OFF(84)))
-#define local_8 (*(DWORD *)(frame_ + FRAME_OFF(88)))
-undefined4 __cdecl
-file_dialog_run(LPSTR param_1,LPCSTR param_2,LPCSTR param_3,undefined4 param_4,undefined4 param_5,
-            iptr param_6)
-
-{
-  BOOL BVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = param_1;
-  _memset(&local_58,0,0x4c);
-  local_58 = 0x4c;
-  if (param_6 == 0) {
-    local_54 = (HWND)0x0;
-  }
-  else {
-    local_54 = *(HWND *)(param_6 + 4);
-  }
-  local_4c = param_2;
-  local_40 = 1;
-  local_3c = local_c;
-  local_38 = 0x100;
-  local_28 = s_Select_a_File_006386bc;
-  local_1c = param_3;
-  if ((char)param_4 == '\0') {
-    local_24 = 0x80e;
-  }
-  else {
-    local_24 = 0x180e;
-  }
-  if ((char)param_5 == '\0') {
-    BVar1 = GetOpenFileNameA((LPOPENFILENAMEA)&local_58);
-    local_5c = (char)BVar1;
-  }
-  else {
-    BVar1 = GetSaveFileNameA((LPOPENFILENAMEA)&local_58);
-    local_5c = (char)BVar1;
-  }
-  if (local_5c == '\x01') {
-    uVar2 = 1;
-  }
-  else {
-    local_8 = CommDlgExtendedError();
-    if (local_8 != 0) {
-      dbg_logf(ADDR(0x6386cc, ((u8 *)&g.d_006386cc)),local_8);
-    }
-    uVar2 = 0;
-  }
-  return uVar2;
-}
-#undef local_5c
-#undef local_58
-#undef local_54
-#undef local_4c
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_28
-#undef local_24
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005d8d06 auto */
-undefined4 __cdecl dbg_output_line(LPCSTR param_1)
-
-{
-  OutputDebugStringA(param_1);
-  OutputDebugStringA(&dbg_newline_str);
-  return 1;
-}
-
-/* 005d8d30 auto */
-undefined4 __cdecl FUN_005d8d30(void)
-
-{
-  return 1;
-}
-
-/* 005d8d50 auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(char * *)(frame_ + FRAME_OFF(8)))
-int __cdecl str_split_underscores(iptr param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 1;
-  for (local_8 = (char *)param_1; *local_8 != '\0'; local_8 = local_8 + 1) {
-    if (*local_8 == '_') {
-      *local_8 = '\0';
-      local_c = local_c + 1;
-    }
-  }
-  return local_c;
-}
-#undef local_c
-#undef local_8
 
 /* 005d8da1 auto */
 #define local_4c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -5684,10 +4330,10 @@ int __cdecl radiogrp_item_height(GameFont *param_1)
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
-  uVar1 = thunk_font_get_handle(param_1);
+  uVar1 = font_get_handle(param_1);
   local_8 = (undefined4 *)mem_handle_lock(uVar1);
   SelectObject(hdc_00,(HGDIOBJ)*local_8);
-  uVar1 = thunk_font_get_handle(param_1);
+  uVar1 = font_get_handle(param_1);
   mem_handle_unlock(uVar1);
   GetTextMetricsA(hdc_00,&local_40);
   local_4c = local_40.tmHeight;
@@ -5741,9 +4387,9 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
   pHVar4 = LoadBitmapA(app_hinstance,(LPCSTR)0x12e);
   uVar5 = mem_handle_alloc(param_5 * 0xa4);
   iVar6 = mem_handle_lock(uVar5);
-  iVar7 = thunk_rect_width((iptr)param_2);
+  iVar7 = rect_width((iptr)param_2);
   iVar7 = iVar7 / param_3;
-  iVar8 = thunk_rect_height((iptr)param_2);
+  iVar8 = rect_height((iptr)param_2);
   iVar8 = (iVar8 * param_3) / param_5;
   nHeight = radiogrp_item_height(param_8);
   local_44 = *param_2;
@@ -5762,8 +4408,8 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
     lpParam = (LPVOID)0x0;
     hMenu = (HMENU)0x0;
     hInstance = app_hinstance;
-    this = (WndBase *)thunk_ctrl_get_parent((Control *)param_4);
-    iVar9 = thunk_wnd_get_window(this);
+    this = (WndBase *)ctrl_get_parent((Control *)param_4);
+    iVar9 = wnd_get_window(this);
     iVar10 = iVar8 >> 1;
     iVar13 = nHeight >> 1;
     pHVar11 = CreateWindowExA(4,s_MSControlClass_00638708,&radiogrp_item_wnd_title,local_40,local_44,
@@ -5789,12 +4435,12 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
     local_10 = *(char **)(param_6 + local_28 * 4);
     if (*local_10 == '!') {
       *(undefined4 *)(iVar6 + 0x18 + local_28 * 0xa4) = 0;
-      local_10 = local_10 + 1;
+      local_10++;
     }
     else if (*local_10 == '^') {
       *(undefined4 *)(iVar6 + 0x18 + local_28 * 0xa4) = 1;
-      thunk_radiogrp_set_selected((RadioGroupSetSelView *)param_4,local_28);
-      local_10 = local_10 + 1;
+      radiogrp_set_selected((RadioGroupSetSelView *)param_4,local_28);
+      local_10++;
     }
     else {
       *(undefined4 *)(iVar6 + 0x18 + local_28 * 0xa4) = 1;
@@ -5807,7 +4453,7 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
       if (*local_18 == '~') break;
       piVar1 = (int *)(iVar6 + 0xa0 + local_28 * 0xa4);
       *piVar1 = *piVar1 + 1;
-      local_18 = local_18 + 1;
+      local_18++;
     }
     for (local_28 = *(uint *)(iVar6 + 0xa0 + local_28 * 0xa4);
         sVar12 = _strlen((char *)(local_28 * 0xa4 + iVar6 + 0x1c)), local_28 < sVar12;
@@ -5827,12 +4473,12 @@ LAB_005d9226:
     else {
       *(undefined4 *)(iVar6 + 0xa0 + local_28 * 0xa4) = 0xffffffff;
     }
-    local_8 = local_8 + iVar8;
+    local_8 += iVar8;
     if (param_2[3] <= local_8) {
-      local_44 = local_44 + iVar7;
+      local_44 += iVar7;
       local_8 = param_2[1];
     }
-    local_28 = local_28 + 1;
+    local_28++;
   } while( true );
 }
 #undef app_hinstance
@@ -5842,169 +4488,6 @@ LAB_005d9226:
 #undef local_18
 #undef local_10
 #undef local_c
-#undef local_8
-
-/* 005d931b auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define local_44c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_448 (*(DWORD *)(frame_ + FRAME_OFF(8)))
-#define local_430 (*(uptr *)(frame_ + FRAME_OFF(32)))
-#define local_42c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_428 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_418 (*(char * *)(frame_ + FRAME_OFF(56)))
-#define local_410 (*(char * *)(frame_ + FRAME_OFF(64)))
-#define local_40c (*(char (*)[4])(frame_ + FRAME_OFF(68)))
-#define local_408 (*(char (*)[1024])(frame_ + FRAME_OFF(72)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(1096)))
-undefined4 __cdecl
-radiogrp_create_items_from_str(iptr param_1,int *param_2,int param_3,iptr param_4,char *param_5,int param_6,
-            undefined4 param_7)
-
-{
-  int *piVar1;
-  HBITMAP pHVar2;
-  HBITMAP pHVar3;
-  HBITMAP pHVar4;
-  uint uVar5;
-  undefined4 uVar6;
-  iptr iVar7;
-  int iVar8;
-  int iVar9;
-  WndBase *this;
-  iptr iVar10;
-  int iVar11;
-  HWND pHVar12;
-  iptr iVar13;
-  uptr sVar13;
-  uptr sVar14;
-  size_t sVar15;
-  int iVar16;
-  uint uVar17;
-  HMENU hMenu;
-  HINSTANCE hInstance;
-  LPVOID lpParam;
-  undefined1 frame_[FRAME_OFF(1104)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  pHVar2 = LoadBitmapA(app_hinstance,(LPCSTR)0x12d);
-  pHVar3 = LoadBitmapA(app_hinstance,(LPCSTR)0x12f);
-  pHVar4 = LoadBitmapA(app_hinstance,(LPCSTR)0x12e);
-  _strncpy(local_408,param_5,0x400);
-  uVar5 = str_split_underscores((iptr)local_408);
-  local_410 = local_408;
-  uVar6 = mem_handle_alloc(uVar5 * 0xa4);
-  iVar7 = mem_handle_lock(uVar6);
-  iVar8 = thunk_rect_width((iptr)param_2);
-  iVar8 = iVar8 / param_3;
-  if ((param_3 == 1) ||
-     (uVar17 = (int)uVar5 >> 0x1f, ((uVar5 ^ uVar17) - uVar17 & 1 ^ uVar17) == uVar17)) {
-    iVar9 = thunk_rect_height((iptr)param_2);
-    local_428 = (iVar9 * param_3) / (int)uVar5;
-  }
-  else {
-    iVar9 = thunk_rect_height((iptr)param_2);
-    local_428 = (iVar9 * param_3) / (int)(uVar5 + 1);
-  }
-  iVar9 = radiogrp_item_height(param_7);
-  local_44c = *param_2;
-  local_8 = param_2[1];
-  local_448 = 0x40010000;
-  if (param_6 != 0) {
-    local_448 = 0x50010000;
-  }
-  local_42c = 0;
-  do {
-    if ((int)uVar5 <= local_42c) {
-      *(uint *)param_1 = uVar5;
-      mem_handle_unlock(uVar6);
-      return uVar6;
-    }
-    lpParam = (LPVOID)0x0;
-    hMenu = (HMENU)0x0;
-    hInstance = app_hinstance;
-    this = (WndBase *)thunk_ctrl_get_parent((Control *)param_4);
-    iVar10 = thunk_wnd_get_window(this);
-    iVar11 = local_428 >> 1;
-    iVar16 = iVar9 >> 1;
-    pHVar12 = CreateWindowExA(4,s_MSControlClass_0063871c,&radiogrp_str_item_wnd_title,local_448,local_44c,
-                              (iVar11 - iVar16) + local_8,iVar8,iVar9,*(HWND *)(iVar10 + 4),hMenu,
-                              hInstance,lpParam);
-    *(HWND *)(iVar7 + local_42c * 0xa4) = pHVar12;
-    iVar13 = ctrl_init_block(*(undefined4 *)(iVar7 + local_42c * 0xa4),param_4);
-    if (local_42c == 0) {
-      *(undefined4 *)(iVar13 + 8) = 0;
-    }
-    else {
-      *(undefined4 *)(iVar13 + 8) = 1;
-    }
-    *(HBITMAP *)(iVar13 + 0xc) = pHVar2;
-    *(HBITMAP *)(iVar13 + 0x10) = pHVar3;
-    *(HBITMAP *)(iVar13 + 0x14) = pHVar4;
-    *(int *)(iVar13 + 0x24) = local_42c * 0xa4 + iVar7;
-    *(undefined4 *)(iVar13 + 0x2c) = 3;
-    SetWindowLongA(*(HWND *)(iVar7 + local_42c * 0xa4),-4,ADDR(0x5d9b86, radiogrp_item_wndproc));
-    SetRect((LPRECT)(local_42c * 0xa4 + iVar7 + 4),local_44c,(iVar11 - iVar16) + local_8,
-            local_44c + iVar8,(iVar11 - iVar16) + iVar9 + local_8);
-    *(int *)(iVar7 + 0x14 + local_42c * 0xa4) = local_42c;
-    if (*local_410 == '!') {
-      *(undefined4 *)(iVar7 + 0x18 + local_42c * 0xa4) = 0;
-      local_410 = local_410 + 1;
-    }
-    else if (*local_410 == '^') {
-      *(undefined4 *)(iVar7 + 0x18 + local_42c * 0xa4) = 1;
-      thunk_radiogrp_set_selected((RadioGroupSetSelView *)param_4,local_42c);
-      local_410 = local_410 + 1;
-    }
-    else {
-      *(undefined4 *)(iVar7 + 0x18 + local_42c * 0xa4) = 1;
-    }
-    FUN_005f22d0(local_42c * 0xa4 + iVar7 + 0x1c,local_410);
-    local_418 = (char *)(local_42c * 0xa4 + iVar7 + 0x1c);
-    *(undefined4 *)(iVar7 + 0xa0 + local_42c * 0xa4) = 0;
-    while( true ) {
-      if (*local_418 == '\0') goto LAB_005d9893;
-      if (*local_418 == '~') break;
-      piVar1 = (int *)(iVar7 + 0xa0 + local_42c * 0xa4);
-      *piVar1 = *piVar1 + 1;
-      local_418 = local_418 + 1;
-    }
-    for (local_430 = *(uptr *)(iVar7 + 0xa0 + local_42c * 0xa4);
-        sVar13 = _strlen((char *)(local_42c * 0xa4 + iVar7 + 0x1c)), local_430 < sVar13;
-        local_430 = local_430 + 1) {
-      *(undefined1 *)(local_42c * 0xa4 + local_430 + 0x1c + iVar7) =
-           *(undefined1 *)(local_430 + local_42c * 0xa4 + 0x1d + iVar7);
-    }
-LAB_005d9893:
-    sVar14 = _strlen((char *)(local_42c * 0xa4 + iVar7 + 0x1c));
-    if (*(uint *)(iVar7 + 0xa0 + local_42c * 0xa4) < sVar14) {
-      local_40c[0] = *(char *)(*(int *)(iVar7 + 0xa0 + local_42c * 0xa4) + local_42c * 0xa4 + 0x1c +
-                              iVar7);
-      local_40c[1] = 0;
-      __strlwr(local_40c);
-      *(char *)(iVar7 + 0x9c + local_42c * 0xa4) = local_40c[0];
-    }
-    else {
-      *(undefined4 *)(iVar7 + 0xa0 + local_42c * 0xa4) = 0xffffffff;
-    }
-    sVar15 = _strlen(local_410);
-    local_410 = local_410 + sVar15 + 1;
-    local_8 = local_8 + local_428;
-    if (param_2[3] <= (iVar11 - iVar16) + local_8) {
-      local_44c = local_44c + iVar8;
-      local_8 = param_2[1];
-    }
-    local_42c = local_42c + 1;
-  } while( true );
-}
-#undef app_hinstance
-#undef local_44c
-#undef local_448
-#undef local_430
-#undef local_42c
-#undef local_428
-#undef local_418
-#undef local_410
-#undef local_40c
-#undef local_408
 #undef local_8
 
 /* 005d99f4 auto */
@@ -6020,7 +4503,7 @@ void __cdecl radiogrp_destroy_items(int param_1,int param_2)
   }
   else {
     iVar1 = mem_handle_lock(param_2);
-    for (local_8 = 0; local_8 < param_1; local_8 = local_8 + 1) {
+    for (local_8 = 0; local_8 < param_1; local_8++) {
       if (*(int *)(iVar1 + local_8 * 0xa4) != 0) {
         DestroyWindow(*(HWND *)(iVar1 + local_8 * 0xa4));
       }
@@ -6054,23 +4537,23 @@ void __cdecl radiogrp_item_activate(HWND param_1)
     this = *(RadioGroupItemsView **)(iVar1 + 4);
     iVar6 = *(int *)(iVar1 + 0x24);
     SetFocus(param_1);
-    iVar2 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)this);
+    iVar2 = radiogrp_get_selected((RadioGroupGetSelView *)this);
     if ((iVar2 != *(int *)(iVar6 + 0x14)) && (*(int *)(iVar6 + 0x18) == 1)) {
       BVar10 = 0;
       pRVar9 = (RECT *)0x0;
-      iVar4 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)this);
+      iVar4 = radiogrp_get_selected((RadioGroupGetSelView *)this);
       iVar3 = radiogrp_get_items(this);
       InvalidateRect(*(HWND *)(iVar3 + iVar4 * 0xa4),pRVar9,BVar10);
-      thunk_radiogrp_set_selected((RadioGroupSetSelView *)this,*(undefined4 *)(iVar6 + 0x14));
+      radiogrp_set_selected((RadioGroupSetSelView *)this,*(undefined4 *)(iVar6 + 0x14));
       BVar10 = 0;
       pRVar9 = (RECT *)0x0;
-      iVar5 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)this);
+      iVar5 = radiogrp_get_selected((RadioGroupGetSelView *)this);
       iVar6 = radiogrp_get_items(this);
       InvalidateRect(*(HWND *)(iVar6 + iVar5 * 0xa4),pRVar9,BVar10);
     }
-    wnd_active_child = thunk_ctrl_get_parent((Control *)this);
-    uVar7 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)this);
-    uVar8 = thunk_ctrl_get_id((ControlIdView *)this);
+    wnd_active_child = ctrl_get_parent((Control *)this);
+    uVar7 = radiogrp_get_selected((RadioGroupGetSelView *)this);
+    uVar8 = ctrl_get_id((ControlIdView *)this);
     radiogrp_fire_callback((RadioGroupClickView *)this,uVar8,uVar7);
   }
   return;
@@ -6144,7 +4627,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
       if (*(int *)(local_bc + 0x18) == 1) {
-        iVar2 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+        iVar2 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
         if (iVar2 == *(int *)(local_bc + 0x14)) {
           local_128 = *(HBITMAP *)(local_124 + 0x14);
         }
@@ -6166,31 +4649,31 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
       local_ac = local_138.bottom;
       if (radio_lbutton_captured != 0) {
         local_b0 = local_138.left + 0x20;
-        iVar3 = thunk_rect_height((iptr)&local_138);
-        local_b4 = iVar3 + -0x14 + local_138.top >> 1;
+        iVar3 = rect_height((iptr)&local_138);
+        local_b4 = iVar3 - 0x14 + local_138.top >> 1;
         local_ac = local_138.top + 0x14;
       }
       InvalidateRect(param_1,(RECT *)0x0,1);
       OffsetRect(&local_138,-local_138.left,-local_138.top);
       local_d0 = BeginPaint(param_1,&local_120);
       ctrl_paint_parent_bkgnd((iptr)&local_120,param_1);
-      uVar16 = thunk_font_get_handle(*(GameFont **)local_9c[1].pad_0);
+      uVar16 = font_get_handle(*(GameFont **)local_9c[1].pad_0);
       local_98 = (undefined4 *)mem_handle_lock(uVar16);
       local_e0 = SelectObject(local_d0,(HGDIOBJ)*local_98);
-      uVar16 = thunk_font_get_handle(*(GameFont **)local_9c[1].pad_0);
+      uVar16 = font_get_handle(*(GameFont **)local_9c[1].pad_0);
       mem_handle_unlock(uVar16);
       SetBkMode(local_d0,1);
-      gdi_blit_transparent(local_d0,local_128,local_138.left,local_138.bottom + -0x14 >> 1,0x20,0x14,0,7);
-      local_138.left = local_138.left + 0x25;
+      gdi_blit_transparent(local_d0,local_128,local_138.left,local_138.bottom - 0x14 >> 1,0x20,0x14,0,7);
+      local_138.left += 0x25;
       if ((radio_shadow_dx != 0) || (radio_shadow_dy != 0)) {
         OffsetRect(&local_138,(uint)radio_shadow_dx,(uint)radio_shadow_dy);
         puVar21 = local_a0;
         puVar18 = local_c4;
         puVar17 = local_a4;
         uVar5 = (uint)radio_shadow_color_index;
-        pCVar6 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)local_9c);
-        pCVar7 = (GamePalette *)thunk_wnd_get_palette(pCVar6);
-        thunk_palette_get_entry(pCVar7,uVar5,(iptr)puVar17,(iptr)puVar18,(iptr)puVar21);
+        pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)local_9c);
+        pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
+        palette_get_entry(pCVar7,uVar5,(iptr)puVar17,(iptr)puVar18,(iptr)puVar21);
         SetTextColor(local_d0,(uint)CONCAT12(local_a0[0],CONCAT11(local_c4[0],local_a4[0])));
         UVar22 = 0x24;
         ptVar19 = &local_138;
@@ -6199,8 +4682,8 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
         OffsetRect(&local_138,-(uint)radio_shadow_dx,-(uint)radio_shadow_dy);
       }
       if (*(int *)(local_bc + 0x18) == 1) {
-        pCVar9 = (WndBase *)thunk_ctrl_get_parent((Control *)local_9c);
-        iVar11 = thunk_wnd_get_window(pCVar9);
+        pCVar9 = (WndBase *)ctrl_get_parent((Control *)local_9c);
+        iVar11 = wnd_get_window(pCVar9);
         if (*(int *)(iVar11 + 0x40) == 8) {
           if (radio_text_color_index == 0) {
             SetTextColor(local_d0,0);
@@ -6210,9 +4693,9 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
             puVar18 = local_c4;
             puVar17 = local_a4;
             uVar5 = (uint)radio_text_color_index;
-            pCVar6 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)local_9c);
-            pCVar7 = (GamePalette *)thunk_wnd_get_palette(pCVar6);
-            iVar12 = thunk_palette_get_logpalette(pCVar7);
+            pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)local_9c);
+            pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
+            iVar12 = palette_get_logpalette(pCVar7);
             palette_get_entry_rgb(iVar12,uVar5,(iptr)puVar17,(iptr)puVar18,(iptr)puVar21);
             SetTextColor(local_d0,(uint)CONCAT12(local_a0[0],CONCAT11(local_c4[0],local_a4[0])));
           }
@@ -6225,8 +4708,8 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
         }
       }
       else if (*(int *)(local_bc + 0x18) == 0) {
-        pCVar9 = (WndBase *)thunk_ctrl_get_parent((Control *)local_9c);
-        iVar11 = thunk_wnd_get_window(pCVar9);
+        pCVar9 = (WndBase *)ctrl_get_parent((Control *)local_9c);
+        iVar11 = wnd_get_window(pCVar9);
         if (*(int *)(iVar11 + 0x40) == 8) {
           if (radio_disabled_color_index == 0) {
             SetTextColor(local_d0,0x404040);
@@ -6236,9 +4719,9 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
             puVar18 = local_c4;
             puVar17 = local_a4;
             uVar5 = (uint)radio_disabled_color_index;
-            pCVar6 = (WndPaletteView *)thunk_ctrl_get_parent((Control *)local_9c);
-            pCVar7 = (GamePalette *)thunk_wnd_get_palette(pCVar6);
-            iVar12 = thunk_palette_get_logpalette(pCVar7);
+            pCVar6 = (WndPaletteView *)ctrl_get_parent((Control *)local_9c);
+            pCVar7 = (GamePalette *)wnd_get_palette(pCVar6);
+            iVar12 = palette_get_logpalette(pCVar7);
             palette_get_entry_rgb(iVar12,uVar5,(iptr)puVar17,(iptr)puVar18,(iptr)puVar21);
             SetTextColor(local_d0,(uint)CONCAT12(local_a0[0],CONCAT11(local_c4[0],local_a4[0])));
           }
@@ -6270,7 +4753,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
           ptVar19 = &local_94;
           sVar8 = _strlen(local_84);
           DrawTextA(local_d0,local_84,sVar8,ptVar19,UVar22);
-          local_c0 = local_94.right + -1;
+          local_c0 = local_94.right - 1;
         }
         FUN_005f22d0(local_84,local_bc + 0x1c);
         local_84[*(int *)(local_bc + 0xa0) + 1] = '\0';
@@ -6282,14 +4765,14 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
         ptVar19 = &local_94;
         sVar8 = _strlen(local_84);
         DrawTextA(local_d0,local_84,sVar8,ptVar19,UVar22);
-        local_c0 = local_c0 + ((local_94.right + 1) - local_c0 >> 1) + -5;
+        local_c0 = local_c0 + ((local_94.right + 1) - local_c0 >> 1) - 5;
         local_cc = local_c0 + 10;
         local_a8 = GetStockObject(3);
         SelectObject(local_d0,local_a8);
-        MoveToEx(local_d0,local_c0,local_138.bottom + -3,(LPPOINT)0x0);
-        LineTo(local_d0,local_cc,local_138.bottom + -3);
-        MoveToEx(local_d0,local_c0,local_138.bottom + -2,(LPPOINT)0x0);
-        LineTo(local_d0,local_cc,local_138.bottom + -2);
+        MoveToEx(local_d0,local_c0,local_138.bottom - 3,(LPPOINT)0x0);
+        LineTo(local_d0,local_cc,local_138.bottom - 3);
+        MoveToEx(local_d0,local_c0,local_138.bottom - 2,(LPPOINT)0x0);
+        LineTo(local_d0,local_cc,local_138.bottom - 2);
       }
       SelectObject(local_d0,local_e0);
       EndPaint(param_1,&local_120);
@@ -6305,7 +4788,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
       }
       goto switchD_005dab35_default;
     }
-    pCVar14 = (WndKeyNavView *)thunk_ctrl_get_parent((Control *)local_9c);
+    pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)local_9c);
     cVar1 = wnd_keyboard_nav_enabled(pCVar14);
     if (cVar1 == '\0') {
       uVar16 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
@@ -6315,7 +4798,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
     local_a8 = GetStockObject(3);
     GetClientRect(param_1,&local_138);
     SelectObject(local_d0,local_a8);
-    local_138.left = local_138.left + 0x20;
+    local_138.left += 0x20;
     FrameRect(local_d0,&local_138,local_a8);
     DeleteObject(local_a8);
     ReleaseDC(param_1,local_d0);
@@ -6323,23 +4806,23 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
   else if (param_2 < 0x202) {
     if (param_2 == 0x201) {
       if (radio_lbutton_captured == 0) {
-        iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+        iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
         if ((iVar11 != *(int *)(local_bc + 0x14)) && (*(int *)(local_bc + 0x18) == 1)) {
-          iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+          iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
           if (iVar11 != -1) {
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
-            iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
             iVar4 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar4 + iVar11 * 0xa4),pRVar20,BVar23);
           }
-          thunk_radiogrp_set_selected((RadioGroupSetSelView *)local_9c,*(undefined4 *)(local_bc + 0x14));
+          radiogrp_set_selected((RadioGroupSetSelView *)local_9c,*(undefined4 *)(local_bc + 0x14));
           SetFocus(param_1);
           InvalidateRect(param_1,(RECT *)0x0,0);
-          iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
+          iVar12 = ctrl_get_parent((Control *)local_9c);
           wnd_set_active_child(iVar12);
-          uVar16 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
-          uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
+          uVar16 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+          uVar15 = ctrl_get_id((ControlIdView *)local_9c);
           radiogrp_fire_callback((RadioGroupClickView *)local_9c,uVar15,uVar16);
         }
         radio_lbutton_captured = 1;
@@ -6354,7 +4837,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
       }
       else {
         if (param_3 == 0x20) {
-          pCVar14 = (WndKeyNavView *)thunk_ctrl_get_parent((Control *)local_9c);
+          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)local_9c);
           cVar1 = wnd_keyboard_nav_enabled(pCVar14);
           if (cVar1 != '\0') {
             SendMessageA(param_1,0x201,0,0);
@@ -6363,7 +4846,7 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
           }
         }
         if ((((param_3 == 0x27) || (param_3 == 0x28)) || (param_3 == 0x66)) || (param_3 == 0x62)) {
-          pCVar14 = (WndKeyNavView *)thunk_ctrl_get_parent((Control *)local_9c);
+          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)local_9c);
           cVar1 = wnd_keyboard_nav_enabled(pCVar14);
           if (cVar1 != '\0') {
             local_d4 = radiogrp_item_count((RadioGroupCountView *)local_9c);
@@ -6375,8 +4858,8 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
             while ((0 < local_d4 &&
                    (iVar11 = radiogrp_get_items(local_9c),
                    *(int *)(iVar11 + 0x18 + local_c8 * 0xa4) == 0))) {
-              local_d4 = local_d4 + -1;
-              local_c8 = local_c8 + 1;
+              local_d4--;
+              local_c8++;
               iVar11 = radiogrp_item_count((RadioGroupCountView *)local_9c);
               if (iVar11 <= local_c8) {
                 local_c8 = 0;
@@ -6389,40 +4872,40 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
             SetFocus(*(HWND *)(iVar11 + local_c8 * 0xa4));
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
-            iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
             iVar10 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar10 + iVar11 * 0xa4),pRVar20,BVar23);
-            thunk_radiogrp_set_selected((RadioGroupSetSelView *)local_9c,local_c8);
+            radiogrp_set_selected((RadioGroupSetSelView *)local_9c,local_c8);
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
             iVar11 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar11 + local_c8 * 0xa4),pRVar20,BVar23);
-            iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
+            iVar12 = ctrl_get_parent((Control *)local_9c);
             wnd_set_active_child(iVar12);
-            uVar16 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
-            uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
+            uVar16 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            uVar15 = ctrl_get_id((ControlIdView *)local_9c);
             radiogrp_fire_callback((RadioGroupClickView *)local_9c,uVar15,uVar16);
             return 0;
           }
         }
         if (((param_3 == 0x26) || (param_3 == 0x25)) || ((param_3 == 0x68 || (param_3 == 100)))) {
-          pCVar14 = (WndKeyNavView *)thunk_ctrl_get_parent((Control *)local_9c);
+          pCVar14 = (WndKeyNavView *)ctrl_get_parent((Control *)local_9c);
           cVar1 = wnd_keyboard_nav_enabled(pCVar14);
           if (cVar1 != '\0') {
             local_d4 = radiogrp_item_count((RadioGroupCountView *)local_9c);
-            local_c8 = *(int *)(local_bc + 0x14) + -1;
+            local_c8 = *(int *)(local_bc + 0x14) - 1;
             if (local_c8 < 0) {
               local_c8 = radiogrp_item_count((RadioGroupCountView *)local_9c);
-              local_c8 = local_c8 + -1;
+              local_c8--;
             }
             while ((0 < local_d4 &&
                    (iVar11 = radiogrp_get_items(local_9c),
                    *(int *)(iVar11 + 0x18 + local_c8 * 0xa4) == 0))) {
-              local_d4 = local_d4 + -1;
-              local_c8 = local_c8 + -1;
+              local_d4--;
+              local_c8--;
               if (local_c8 < 0) {
                 local_c8 = radiogrp_item_count((RadioGroupCountView *)local_9c);
-                local_c8 = local_c8 + -1;
+                local_c8--;
               }
             }
             if (local_d4 < 1) {
@@ -6432,18 +4915,18 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
             SetFocus(*(HWND *)(iVar11 + local_c8 * 0xa4));
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
-            iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
             iVar13 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar13 + iVar11 * 0xa4),pRVar20,BVar23);
-            thunk_radiogrp_set_selected((RadioGroupSetSelView *)local_9c,local_c8);
+            radiogrp_set_selected((RadioGroupSetSelView *)local_9c,local_c8);
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
             iVar11 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar11 + local_c8 * 0xa4),pRVar20,BVar23);
-            iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
+            iVar12 = ctrl_get_parent((Control *)local_9c);
             wnd_set_active_child(iVar12);
-            uVar16 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
-            uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
+            uVar16 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            uVar15 = ctrl_get_id((ControlIdView *)local_9c);
             radiogrp_fire_callback((RadioGroupClickView *)local_9c,uVar15,uVar16);
             return 0;
           }
@@ -6461,22 +4944,22 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
       break;
     case 0x203:
       if (*(int *)(local_bc + 0x18) == 1) {
-        iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
+        iVar12 = ctrl_get_parent((Control *)local_9c);
         wnd_set_active_child(iVar12);
-        iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+        iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
         if (iVar11 != *(int *)(local_bc + 0x14)) {
-          iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+          iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
           if (iVar11 != -1) {
             BVar23 = 0;
             pRVar20 = (RECT *)0x0;
-            iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
+            iVar11 = radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
             iVar4 = radiogrp_get_items(local_9c);
             InvalidateRect(*(HWND *)(iVar4 + iVar11 * 0xa4),pRVar20,BVar23);
           }
-          thunk_radiogrp_set_selected((RadioGroupSetSelView *)local_9c,*(undefined4 *)(local_bc + 0x14));
+          radiogrp_set_selected((RadioGroupSetSelView *)local_9c,*(undefined4 *)(local_bc + 0x14));
         }
         uVar16 = *(undefined4 *)(local_bc + 0x14);
-        uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
+        uVar15 = ctrl_get_id((ControlIdView *)local_9c);
         radiogrp_fire_dblclick((RadioGroupDblClickView *)local_9c,uVar15,uVar16);
       }
       break;
@@ -6484,10 +4967,10 @@ undefined4 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM para
       if (radio_rbutton_captured == 0) {
         radio_rbutton_captured = 1;
         SetCapture(param_1);
-        iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
+        iVar12 = ctrl_get_parent((Control *)local_9c);
         wnd_set_active_child(iVar12);
         uVar16 = *(undefined4 *)(local_bc + 0x14);
-        uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
+        uVar15 = ctrl_get_id((ControlIdView *)local_9c);
         radiogrp_fire_rclick((RadioGroupRClickView *)local_9c,uVar15,uVar16);
       }
       break;
@@ -6575,7 +5058,7 @@ uint __cdecl radiogrp_hwnd_is_selected(undefined4 param_1)
   
   iVar2 = wnd_from_hwnd(param_1);
   iVar1 = *(iptr *)(iVar2 + 0x24);
-  iVar3 = thunk_radiogrp_get_selected(*(RadioGroupGetSelView **)(iVar2 + 4));
+  iVar3 = radiogrp_get_selected(*(RadioGroupGetSelView **)(iVar2 + 4));
   return (uint)(iVar3 == *(int *)(iVar1 + 0x14));
 }
 
@@ -6602,32 +5085,6 @@ undefined4 __cdecl radiogrp_hwnds_same_group(int param_1,int param_2)
   }
   return 0;
 }
-
-/* 005dacd9 auto */
-#define radio_text_rgb_set (*(undefined1 *)((u8 *)&g.d_006386f7))
-void __cdecl ui_set_radio_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
-
-{
-  radio_text_rgb_r = param_1;
-  radio_text_rgb_g = param_2;
-  radio_text_rgb_b = param_3;
-  radio_text_rgb_set = 1;
-  return;
-}
-#undef radio_text_rgb_set
-
-/* 005dad08 auto */
-#define radio_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_006386fb))
-void __cdecl ui_set_radio_disabled_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
-
-{
-  radio_disabled_rgb_r = param_1;
-  radio_disabled_rgb_g = param_2;
-  radio_disabled_rgb_b = param_3;
-  radio_disabled_rgb_set = 1;
-  return;
-}
-#undef radio_disabled_rgb_set
 
 /* 005dad40 auto */
 void __thiscall radiogrp_fire_callback(RadioGroupClickView *this,undefined4 param_1,undefined4 param_2)
@@ -6714,21 +5171,6 @@ err_report
   return;
 }
 
-/* 005daeb1 auto */
-void __thiscall
-err_report_warning
-          (ErrorContext *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  undefined4 uVar1;
-  
-  err_set_code(this,param_1);
-  uVar1 = err_format_message(this,ADDR(0x638784, ((u8 *)&g.d_00638784)),param_2,param_3,param_4);
-  err_log_warning(this,uVar1);
-  return;
-}
-
 /* 005daef7 auto */
 ErrorContext * __thiscall
 err_format_message
@@ -6764,14 +5206,6 @@ void __thiscall err_show_fatal_box(ErrorContext *this,undefined4 param_1)
   return;
 }
 
-/* 005dafbb auto */
-void __thiscall err_log_warning(ErrorContext *this,iptr param_1)
-
-{
-  dbg_log(param_1);
-  return;
-}
-
 /* 005dafdf auto */
 void __thiscall err_set_code(ErrorContext *this,u32 param_1)
 
@@ -6779,18 +5213,6 @@ void __thiscall err_set_code(ErrorContext *this,u32 param_1)
   this->field_704 = param_1;
   this->field_700 = this->field_700 | 1 << ((byte)param_1 & 0x1f);
   return;
-}
-
-/* 005db016 auto */
-/* Library Function - Single Match
-    public: int __thiscall CSplitterWnd::IsTracking(void)
-   
-   Library: Visual Studio 1998 Debug */
-
-u32 __thiscall err_ctx_get_last_code(C_005db016 *this)
-
-{
-  return this->last_code;
 }
 
 /* 005db035 auto */
@@ -6880,7 +5302,7 @@ HMODULE __cdecl res_dll_load_library(LPCSTR param_1)
   }
   else {
     *(HMODULE *)(&res_dll_modules + res_dll_module_count * 4) = pHVar1;
-    res_dll_module_count = res_dll_module_count + 1;
+    res_dll_module_count++;
   }
   return pHVar1;
 }
@@ -6924,7 +5346,7 @@ HGLOBAL __cdecl res_load_impl(CHAR *param_1,LPCSTR param_2)
     while ((local_14 < res_dll_module_count &&
            (local_10 = FindResourceA(*(HMODULE *)(&res_dll_modules + local_14 * 4),param_2,&local_c),
            local_10 == (HRSRC)0x0))) {
-      local_14 = local_14 + 1;
+      local_14++;
     }
   }
   if (local_10 == (HRSRC)0x0) {
@@ -6944,111 +5366,6 @@ HGLOBAL __cdecl res_load_impl(CHAR *param_1,LPCSTR param_2)
 #undef app_hinstance
 #undef res_dll_module_count
 #undef local_1c
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_b
-#undef local_a
-#undef local_9
-#undef local_8
-
-/* 005db2f8 auto */
-#define app_hinstance (*(HMODULE *)((u8 *)&g.d_006e4ff0))
-#define res_dll_module_count (*(uint *)((u8 *)&g.d_006387cc))
-#define local_14 (*(HMODULE *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(HRSRC *)(frame_ + FRAME_OFF(16)))
-HGLOBAL __cdecl res_load_bitmap(LPCSTR param_1)
-
-{
-  HGLOBAL pvVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 0xffffffff;
-  local_8 = FindResourceA(app_hinstance,param_1,(LPCSTR)0x2);
-  if (local_8 == (HRSRC)0x0) {
-    local_c = 0;
-    while ((local_c < res_dll_module_count &&
-           (local_8 = FindResourceA(*(HMODULE *)(&res_dll_modules + local_c * 4),param_1,(LPCSTR)0x2),
-           local_8 == (HRSRC)0x0))) {
-      local_c = local_c + 1;
-    }
-  }
-  if (local_8 == (HRSRC)0x0) {
-    pvVar1 = (HGLOBAL)0x0;
-  }
-  else {
-    if (local_c == 0xffffffff) {
-      local_14 = app_hinstance;
-    }
-    else {
-      local_14 = *(HMODULE *)(&res_dll_modules + local_c * 4);
-    }
-    pvVar1 = LoadResource(local_14,local_8);
-  }
-  return pvVar1;
-}
-#undef app_hinstance
-#undef res_dll_module_count
-#undef local_14
-#undef local_c
-#undef local_8
-
-/* 005db3ca auto */
-#define app_hinstance (*(HMODULE *)((u8 *)&g.d_006e4ff0))
-#define res_dll_module_count (*(uint *)((u8 *)&g.d_006387cc))
-#define local_18 (*(HMODULE *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(HRSRC *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(CHAR *)(frame_ + FRAME_OFF(12)))
-#define local_b (*(CHAR *)(frame_ + FRAME_OFF(13)))
-#define local_a (*(CHAR *)(frame_ + FRAME_OFF(14)))
-#define local_9 (*(CHAR *)(frame_ + FRAME_OFF(15)))
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(16)))
-HGLOBAL __cdecl res_load_by_name(CHAR *param_1,char *param_2)
-
-{
-  size_t sVar1;
-  HGLOBAL pvVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = *param_1;
-  local_b = param_1[1];
-  local_a = param_1[2];
-  local_9 = param_1[3];
-  local_8 = 0;
-  for (local_14 = 0; sVar1 = _strlen(param_2), local_14 < sVar1; local_14 = local_14 + 1) {
-    if (((param_2[local_14] == ' ') || (param_2[local_14] == '.')) || (param_2[local_14] == '\'')) {
-      param_2[local_14] = '_';
-    }
-  }
-  local_14 = 0xffffffff;
-  local_10 = FindResourceA(app_hinstance,param_2,&local_c);
-  if (local_10 == (HRSRC)0x0) {
-    local_14 = 0;
-    while ((local_14 < res_dll_module_count &&
-           (local_10 = FindResourceA(*(HMODULE *)(&res_dll_modules + local_14 * 4),param_2,&local_c),
-           local_10 == (HRSRC)0x0))) {
-      local_14 = local_14 + 1;
-    }
-  }
-  if (local_10 == (HRSRC)0x0) {
-    pvVar2 = (HGLOBAL)0x0;
-  }
-  else {
-    if (local_14 == 0xffffffff) {
-      local_18 = app_hinstance;
-    }
-    else {
-      local_18 = *(HMODULE *)(&res_dll_modules + local_14 * 4);
-    }
-    pvVar2 = LoadResource(local_18,local_10);
-  }
-  return pvVar2;
-}
-#undef app_hinstance
-#undef res_dll_module_count
-#undef local_18
 #undef local_14
 #undef local_10
 #undef local_c
@@ -7087,26 +5404,16 @@ void __cdecl dll_unload(HMODULE param_1)
       local_8 = local_8 + 1) {
   }
   if (local_8 < res_dll_module_count) {
-    for (; local_8 < res_dll_module_count; local_8 = local_8 + 1) {
+    for (; local_8 < res_dll_module_count; local_8++) {
       *(undefined4 *)(&res_dll_modules + local_8 * 4) = *(undefined4 *)(&res_dll_modules_elem1 + local_8 * 4);
     }
-    res_dll_module_count = res_dll_module_count - 1;
+    res_dll_module_count--;
     FreeLibrary(param_1);
   }
   return;
 }
 #undef res_dll_module_count
 #undef local_8
-
-/* 005db5e9 auto */
-undefined4 __cdecl res_get_size(undefined4 param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = mem_handle_size(param_1);
-  return uVar1;
-}
 
 /* 005db610 auto */
 WndBase * __thiscall wnd_record_init(WndBase *this)
@@ -7147,70 +5454,7 @@ wnd_record_create
   uVar1 = wnd_obj_create(param_1,param_2,param_3,param_4,param_5,param_6,0);
   this->native_wnd = uVar1;
   wnd_set_owner_ptr((iptr)this,this->native_wnd);
-  thunk_wnd_set_palette(this,param_7);
-  return;
-}
-
-/* 005db704 auto */
-void __thiscall
-wnd_record_create_nopal
-          (WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6)
-
-{
-  u32 uVar1;
-  
-  this->style = param_2;
-  if (this->native_wnd != 0) {
-    uVar1 = wnd_obj_destroy(this->native_wnd);
-    this->native_wnd = uVar1;
-  }
-  uVar1 = wnd_obj_create(param_1,param_2,param_3,param_4,param_5,param_6,0);
-  this->native_wnd = uVar1;
-  wnd_set_owner_ptr((iptr)this,this->native_wnd);
-  wnd_obj_set_kind(this->native_wnd,0x10);
-  return;
-}
-
-/* 005db792 auto */
-void __thiscall
-wnd_record_create_movie
-          (C_005db792 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6)
-
-{
-  u32 uVar1;
-  
-  this->style = param_2;
-  if (this->movie_wnd != 0) {
-    uVar1 = wnd_obj_destroy(this->movie_wnd);
-    this->movie_wnd = uVar1;
-  }
-  uVar1 = moviewnd_create(param_1,param_2,param_3,param_4,param_5,param_6,0);
-  this->movie_wnd = uVar1;
-  wnd_set_owner_ptr((iptr)this,this->movie_wnd);
-  return;
-}
-
-/* 005db80f auto */
-void __thiscall
-wnd_record_create_movie_child
-          (C_005db80f *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6,WndBase *param_7)
-
-{
-  u32 uVar1;
-  iptr iVar2;
-  
-  this->style = param_2;
-  if (this->movie_wnd != 0) {
-    uVar1 = wnd_obj_destroy(this->movie_wnd);
-    this->movie_wnd = uVar1;
-  }
-  iVar2 = thunk_wnd_get_window(param_7);
-  uVar1 = moviewnd_create(param_1,param_2,param_3,param_4,param_5,param_6,iVar2);
-  this->movie_wnd = uVar1;
-  wnd_set_owner_ptr((iptr)this,this->movie_wnd);
+  wnd_set_palette(this,param_7);
   return;
 }
 
@@ -7229,82 +5473,11 @@ wnd_record_create_child
     uVar1 = wnd_obj_destroy(this->native_wnd);
     this->native_wnd = uVar1;
   }
-  iVar2 = thunk_wnd_get_window(param_8);
+  iVar2 = wnd_get_window(param_8);
   uVar1 = wnd_obj_create(param_1,param_2,param_3,param_4,param_5,param_6,iVar2);
   this->native_wnd = uVar1;
   wnd_set_owner_ptr((iptr)this,this->native_wnd);
-  thunk_wnd_set_palette(this,param_7);
-  return;
-}
-
-/* 005db923 auto */
-void __thiscall
-wnd_record_create_child_nopal
-          (WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6,WndBase *param_7)
-
-{
-  u32 uVar1;
-  iptr iVar2;
-  
-  this->style = param_2;
-  if (this->native_wnd != 0) {
-    uVar1 = wnd_obj_destroy(this->native_wnd);
-    this->native_wnd = uVar1;
-  }
-  iVar2 = thunk_wnd_get_window(param_7);
-  uVar1 = wnd_obj_create(param_1,param_2,param_3,param_4,param_5,param_6,iVar2);
-  this->native_wnd = uVar1;
-  wnd_set_owner_ptr((iptr)this,this->native_wnd);
-  wnd_obj_set_kind(this->native_wnd,0x10);
-  return;
-}
-
-/* 005db9b8 auto */
-void __thiscall
-wnd_check_lbutton_release
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  iptr iVar1;
-  undefined4 uVar2;
-  
-  if ((char)param_1 == '\0') {
-    wnd_check_mouse_release(0,1,param_2,param_3);
-  }
-  else {
-    uVar2 = 1;
-    iVar1 = thunk_wnd_get_window(this);
-    wnd_check_mouse_release(iVar1,uVar2,param_2,param_3);
-  }
-  return;
-}
-
-/* 005dba15 auto */
-void __thiscall
-wnd_check_rbutton_release
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  iptr iVar1;
-  undefined4 uVar2;
-  
-  if ((char)param_1 == '\0') {
-    wnd_check_mouse_release(0,0,param_2,param_3);
-  }
-  else {
-    uVar2 = 0;
-    iVar1 = thunk_wnd_get_window(this);
-    wnd_check_mouse_release(iVar1,uVar2,param_2,param_3);
-  }
-  return;
-}
-
-/* 005dba72 auto */
-void __thiscall wnd_poll_syskey_msgs(void *this)
-
-{
-  input_poll_modifier(0x400);
+  wnd_set_palette(this,param_7);
   return;
 }
 
@@ -7326,22 +5499,6 @@ undefined4 __thiscall wnd_is_ctrl_down(void *this)
   
   uVar1 = input_poll_modifier(0x200);
   return uVar1;
-}
-
-/* 005dbadb auto */
-void __thiscall wnd_is_lbutton_down(void *this)
-
-{
-  input_lbutton_down();
-  return;
-}
-
-/* 005dbaf6 auto */
-void __thiscall wnd_is_rbutton_down(void *this)
-
-{
-  input_rbutton_is_down();
-  return;
 }
 
 /* 005dbb20 auto */
@@ -7378,7 +5535,7 @@ undefined4 __cdecl app_shutdown(void)
 void __cdecl app_init_graphics(void)
 
 {
-  thunk_font_set((GameFont *)&default_draw_font_obj,2,0xe);
+  font_set((GameFont *)&default_draw_font_obj,2,0xe);
   gfx_scale_init();
   return;
 }
@@ -7483,37 +5640,6 @@ void __cdecl app_register_wnd_classes(void)
 #undef app_hinstance
 #undef local_2c
 
-/* 005dbdba auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-void __cdecl app_unregister_wnd_classes(void)
-
-{
-  BOOL BVar1;
-  
-  BVar1 = UnregisterClassA(s_MSAppWindow_00638850,app_hinstance);
-  if (BVar1 == 0) {
-    dbg_log(ADDR(0x63885c, ((u8 *)&g.d_0063885c)));
-  }
-  BVar1 = UnregisterClassA(s_MSWindowClass_00638888,app_hinstance);
-  if (BVar1 == 0) {
-    dbg_log(ADDR(0x638898, ((u8 *)&g.d_00638898)));
-  }
-  BVar1 = UnregisterClassA(s_MSMovieClass_006388c0,app_hinstance);
-  if (BVar1 == 0) {
-    dbg_log(ADDR(0x6388d0, ((u8 *)&g.d_006388d0)));
-  }
-  BVar1 = UnregisterClassA(s_MSControlClass_006388f8,app_hinstance);
-  if (BVar1 == 0) {
-    dbg_log(ADDR(0x638908, ((u8 *)&g.d_00638908)));
-  }
-  BVar1 = UnregisterClassA(s_MSMrTimerClass_00638930,app_hinstance);
-  if (BVar1 == 0) {
-    dbg_log(ADDR(0x638940, ((u8 *)&g.d_00638940)));
-  }
-  return;
-}
-#undef app_hinstance
-
 /* 005dbe88 game (src/game/retvals.c) */
 #if 0
 #define local_a0 (*(int *)(frame_ + FRAME_OFF(0)))
@@ -7557,35 +5683,35 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
       BVar4 = IsIconic(param_1);
       if (BVar4 != 0) {
         GetWindowRect(param_1,&local_14);
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         if (*(int *)(iVar10 + 0x20) == 0) {
           hIcon = LoadIconA((HINSTANCE)0x0,(LPCSTR)0x7f00);
           DrawIcon(local_50,0,0,hIcon);
         }
         else {
-          iVar10 = thunk_wnd_get_window(local_54);
+          iVar10 = wnd_get_window(local_54);
           if ((*(int *)(iVar10 + 0x18) != 0) && (gfx_palettized_display == 1)) {
-            iVar10 = thunk_wnd_get_window(local_54);
+            iVar10 = wnd_get_window(local_54);
             RealizePalette(*(HDC *)(iVar10 + 8));
           }
-          iVar10 = thunk_wnd_get_window(local_54);
+          iVar10 = wnd_get_window(local_54);
           DrawIcon(local_50,0,0,*(HICON *)(iVar10 + 0x20));
         }
         return 0;
       }
-      iVar10 = thunk_wnd_get_window(local_54);
+      iVar10 = wnd_get_window(local_54);
       if (*(int *)(iVar10 + 0x24) == 0) {
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         if (*(int *)(iVar10 + 0x14) != 0) {
-          iVar10 = thunk_wnd_get_window(local_54);
+          iVar10 = wnd_get_window(local_54);
           FillRect(local_50,&local_98.rcPaint,*(HBRUSH *)(iVar10 + 0x14));
         }
       }
       else {
-        iVar10 = thunk_wnd_get_window(local_54);
-        local_3c = thunk_surface_width(*(DibSurface **)(iVar10 + 0x24));
-        iVar10 = thunk_wnd_get_window(local_54);
-        local_44 = thunk_surface_height(*(DibSurface **)(iVar10 + 0x24));
+        iVar10 = wnd_get_window(local_54);
+        local_3c = surface_width(*(DibSurface **)(iVar10 + 0x24));
+        iVar10 = wnd_get_window(local_54);
+        local_44 = surface_height(*(DibSurface **)(iVar10 + 0x24));
         if ((local_3c != 0) && (local_44 != 0)) {
           local_38.left = local_98.rcPaint.left;
           local_38.top = local_98.rcPaint.top;
@@ -7601,7 +5727,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
               ptVar12 = &local_28;
               ptVar11 = &local_14;
               pCVar8 = local_54;
-              iVar10 = thunk_wnd_get_window(local_54);
+              iVar10 = wnd_get_window(local_54);
               surface_blit_to_wnd
                         (*(DibSurface **)(iVar10 + 0x24),(iptr)pCVar8,(iptr)ptVar11,(iptr)ptVar12
                         );
@@ -7609,20 +5735,20 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
           }
         }
       }
-      iVar10 = thunk_wnd_get_window(local_54);
+      iVar10 = wnd_get_window(local_54);
       if (*(int *)(iVar10 + 0x2c) != 0) {
-        iVar10 = thunk_wnd_get_window(local_54);
-        local_3c = thunk_surface_width(*(DibSurface **)(iVar10 + 0x2c));
-        iVar10 = thunk_wnd_get_window(local_54);
-        local_44 = thunk_surface_height(*(DibSurface **)(iVar10 + 0x2c));
+        iVar10 = wnd_get_window(local_54);
+        local_3c = surface_width(*(DibSurface **)(iVar10 + 0x2c));
+        iVar10 = wnd_get_window(local_54);
+        local_44 = surface_height(*(DibSurface **)(iVar10 + 0x2c));
         local_38.left = local_98.rcPaint.left;
         local_38.top = local_98.rcPaint.top;
         local_38.right = local_98.rcPaint.right;
         local_38.bottom = local_98.rcPaint.bottom;
         SetRect(&local_14,0,0,local_3c,local_44);
-        iVar10 = thunk_wnd_client_height(local_54);
+        iVar10 = wnd_client_height(local_54);
         iVar10 = iVar10 - local_44 >> 1;
-        iVar5 = thunk_wnd_client_width(local_54);
+        iVar5 = wnd_client_width(local_54);
         OffsetRect(&local_14,iVar5 - local_3c >> 1,iVar10);
         BVar4 = IntersectRect(&local_28,&local_14,&local_38);
         if (BVar4 != 0) {
@@ -7630,14 +5756,14 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
           local_14.top = local_28.top;
           local_14.right = local_28.right;
           local_14.bottom = local_28.bottom;
-          iVar10 = thunk_wnd_client_height(local_54);
+          iVar10 = wnd_client_height(local_54);
           iVar10 = -(iVar10 - local_44 >> 1);
-          iVar6 = thunk_wnd_client_width(local_54);
+          iVar6 = wnd_client_width(local_54);
           OffsetRect(&local_14,-(iVar6 - local_3c >> 1),iVar10);
           ptVar12 = &local_28;
           ptVar11 = &local_14;
           pCVar8 = local_54;
-          iVar10 = thunk_wnd_get_window(local_54);
+          iVar10 = wnd_get_window(local_54);
           surface_blit_to_wnd
                     (*(DibSurface **)(iVar10 + 0x2c),(iptr)pCVar8,(iptr)ptVar11,(iptr)ptVar12);
         }
@@ -7649,13 +5775,13 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
     case 2:
       SetMenu(param_1,(HMENU)0x0);
       pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-      iVar10 = thunk_wnd_get_window(pCVar8);
+      iVar10 = wnd_get_window(pCVar8);
       *(undefined4 *)(iVar10 + 0x44) = 1;
       if ((*(byte *)(iVar10 + 0x49) & 2) != 0) {
         iVar10 = 0;
         pHVar2 = GetParent(param_1);
         pCVar8 = (WndBase *)GetWindowLongA(pHVar2,iVar10);
-        local_18 = thunk_wnd_get_window(pCVar8);
+        local_18 = wnd_get_window(pCVar8);
         if (*(HWND *)(local_18 + 0xc) == param_1) {
           *(undefined4 *)(local_18 + 0xc) = 0;
         }
@@ -7665,12 +5791,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
     case 3:
       local_54 = (WndBase *)GetWindowLongA(param_1,0);
       if (local_54 != (WndBase *)0x0) {
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         pHVar3 = *(HDC *)(iVar10 + 8);
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         ReleaseDC(*(HWND *)(iVar10 + 4),pHVar3);
-        iVar10 = thunk_wnd_get_window(local_54);
-        iVar6 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
+        iVar6 = wnd_get_window(local_54);
         pHVar3 = GetDC(*(HWND *)(iVar6 + 4));
         *(HDC *)(iVar10 + 8) = pHVar3;
       }
@@ -7678,30 +5804,30 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
     case 5:
       local_54 = (WndBase *)GetWindowLongA(param_1,0);
       if ((local_54 != (WndBase *)0x0) &&
-         (iVar10 = thunk_wnd_get_window(local_54), *(int *)(iVar10 + 0x2c) != 0)) {
+         (iVar10 = wnd_get_window(local_54), *(int *)(iVar10 + 0x2c) != 0)) {
         InvalidateRect(param_1,(RECT *)0x0,1);
       }
       if (local_54 != (WndBase *)0x0) {
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         pHVar3 = *(HDC *)(iVar10 + 8);
-        iVar10 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
         ReleaseDC(*(HWND *)(iVar10 + 4),pHVar3);
-        iVar10 = thunk_wnd_get_window(local_54);
-        iVar6 = thunk_wnd_get_window(local_54);
+        iVar10 = wnd_get_window(local_54);
+        iVar6 = wnd_get_window(local_54);
         pHVar3 = GetDC(*(HWND *)(iVar6 + 4));
         *(HDC *)(iVar10 + 8) = pHVar3;
       }
       break;
     case 7:
       pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-      iVar10 = thunk_wnd_get_window(pCVar8);
+      iVar10 = wnd_get_window(pCVar8);
       if (*(int *)(iVar10 + 0xc) != 0) {
         SendMessageA(*(HWND *)(iVar10 + 0xc),0x86,1,0);
       }
       break;
     case 8:
       pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-      iVar10 = thunk_wnd_get_window(pCVar8);
+      iVar10 = wnd_get_window(pCVar8);
       if (*(int *)(iVar10 + 0xc) != 0) {
         SendMessageA(*(HWND *)(iVar10 + 0xc),0x86,0,0);
       }
@@ -7711,13 +5837,13 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
     if (param_2 == 0x46) {
       if ((*(byte *)(param_4 + 0x18) & 4) == 0) {
         local_54 = (WndBase *)GetWindowLongA(param_1,0);
-        thunk_wnd_get_window(local_54);
+        wnd_get_window(local_54);
         uVar1 = wnd_get_style_flags((WndStyleView *)local_54);
         if ((uVar1 & 0x200) != 0) {
           iVar10 = 0;
           pHVar2 = GetParent(param_1);
           pCVar8 = (WndBase *)GetWindowLongA(pHVar2,iVar10);
-          local_18 = thunk_wnd_get_window(pCVar8);
+          local_18 = wnd_get_window(pCVar8);
           if (((*(int *)(local_18 + 0x10) != 0) && (*(HWND *)(local_18 + 0x10) != param_1)) &&
              (BVar4 = IsWindowVisible(*(HWND *)(local_18 + 0x10)), BVar4 != 0)) {
             *(undefined4 *)(param_4 + 4) = *(undefined4 *)(local_18 + 0x10);
@@ -7727,12 +5853,12 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
     }
     else if (param_2 == 0x22) {
       pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-      iVar10 = thunk_wnd_get_window(pCVar8);
+      iVar10 = wnd_get_window(pCVar8);
       if ((*(byte *)(iVar10 + 0x49) & 2) != 0) {
         iVar10 = 0;
         pHVar2 = GetParent(param_1);
         pCVar8 = (WndBase *)GetWindowLongA(pHVar2,iVar10);
-        local_18 = thunk_wnd_get_window(pCVar8);
+        local_18 = wnd_get_window(pCVar8);
         if (*(int *)(local_18 + 0xc) != 0) {
           SendMessageA(*(HWND *)(local_18 + 0xc),0x86,0,0);
         }
@@ -7749,7 +5875,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
       if (param_2 == 0x112) {
         if ((param_3 == 0xf100) || (param_3 == 0xf090)) {
           pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-          iVar10 = thunk_wnd_get_window(pCVar8);
+          iVar10 = wnd_get_window(pCVar8);
           if ((*(byte *)(iVar10 + 0x48) & 0x20) == 0) {
             return 0;
           }
@@ -7759,7 +5885,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uptr
       if ((param_2 != 0x201) && (param_2 != 0x204)) goto switchD_005dc5f2_caseD_4;
     }
     pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-    iVar10 = thunk_wnd_get_window(pCVar8);
+    iVar10 = wnd_get_window(pCVar8);
     if ((*(byte *)(iVar10 + 0x49) & 2) != 0) {
       SetFocus(*(HWND *)(iVar10 + 4));
       BringWindowToTop(param_1);
@@ -7769,7 +5895,7 @@ switchD_005dc5f2_caseD_4:
   local_a0 = DefWindowProcA(param_1,param_2,param_3,param_4);
   if (param_2 == 0x84) {
     pCVar8 = (WndBase *)GetWindowLongA(param_1,0);
-    iVar7 = thunk_wnd_get_window(pCVar8);
+    iVar7 = wnd_get_window(pCVar8);
     if ((*(int *)(iVar7 + 0x34) != 0) && (local_a0 == 1)) {
       GetWindowRect(param_1,&local_14);
       local_40 = (param_4 & 0xffff) - local_14.left;
@@ -7787,7 +5913,7 @@ switchD_005dc5f2_caseD_4:
         local_58 = -1;
       }
       else {
-        iVar10 = thunk_rect_height((iptr)&local_28);
+        iVar10 = rect_height((iptr)&local_28);
         if (iVar10 - local_3c < local_48) {
           local_58 = 1;
         }
@@ -7796,7 +5922,7 @@ switchD_005dc5f2_caseD_4:
         local_4c = -1;
       }
       else {
-        iVar10 = thunk_rect_width((iptr)&local_28);
+        iVar10 = rect_width((iptr)&local_28);
         if (iVar10 - local_3c < local_40) {
           local_4c = 1;
         }
@@ -7806,7 +5932,7 @@ switchD_005dc5f2_caseD_4:
           local_4c = -1;
         }
         else {
-          iVar8 = thunk_rect_width((iptr)&local_28);
+          iVar8 = rect_width((iptr)&local_28);
           if (iVar8 + local_3c * -4 < local_40) {
             local_4c = 1;
           }
@@ -7827,7 +5953,7 @@ switchD_005dc5f2_caseD_4:
             local_58 = -1;
           }
           else {
-            iVar10 = thunk_rect_height((iptr)&local_28);
+            iVar10 = rect_height((iptr)&local_28);
             if (iVar10 + local_3c * -4 < local_48) {
               local_58 = 1;
             }
@@ -7847,7 +5973,7 @@ switchD_005dc5f2_caseD_4:
             local_58 = -1;
           }
           else {
-            iVar10 = thunk_rect_height((iptr)&local_28);
+            iVar10 = rect_height((iptr)&local_28);
             if (iVar10 + local_3c * -4 < local_48) {
               local_58 = 1;
             }
@@ -7868,7 +5994,7 @@ switchD_005dc5f2_caseD_4:
           local_4c = -1;
         }
         else {
-          iVar9 = thunk_rect_width((iptr)&local_28);
+          iVar9 = rect_width((iptr)&local_28);
           if (iVar9 + local_3c * -4 < local_40) {
             local_4c = 1;
           }
@@ -7924,75 +6050,11 @@ TimerManager * __thiscall timer_mgr_scalar_dtor(TimerManager *this,uint param_1)
   return this;
 }
 
-/* 005dcb00 auto */
-void __cdecl mem_handle_clone_wrap(iptr param_1)
-
-{
-  mem_handle_clone(param_1);
-  return;
-}
-
-/* 005dcb1c auto */
-void __cdecl mem_handle_lock_wrap(undefined4 param_1)
-
-{
-  mem_handle_lock(param_1);
-  return;
-}
-
-/* 005dcb38 auto */
-void __cdecl mem_handle_unlock_wrap(undefined4 param_1)
-
-{
-  mem_handle_unlock(param_1);
-  return;
-}
-
-/* 005dcb54 auto */
-void __cdecl mem_handle_alloc_wrap(undefined4 param_1)
-
-{
-  mem_handle_alloc(param_1);
-  return;
-}
-
-/* 005dcb70 auto */
-void __cdecl mem_handle_release(undefined4 param_1)
-
-{
-  mem_handle_free(param_1);
-  return;
-}
-
 /* 005dcb8c auto */
 void __cdecl mem_copy_src_dst(iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   mem_move_src_dst(param_1,param_2,param_3);
-  return;
-}
-
-/* 005dcbb0 auto */
-void __cdecl mem_handle_size_wrap(undefined4 param_1)
-
-{
-  mem_handle_size(param_1);
-  return;
-}
-
-/* 005dcbcc auto */
-void __cdecl mem_handle_realloc(undefined4 param_1,undefined4 param_2)
-
-{
-  mem_handle_realloc_impl(param_1,param_2);
-  return;
-}
-
-/* 005dcbec auto */
-void __cdecl mem_avail_bytes(void)
-
-{
-  mem_avail_bytes_stub();
   return;
 }
 
@@ -8015,72 +6077,6 @@ void __thiscall menu_handle_dtor(GameMenu *this)
 {
   menu_hmenu_destroy(this->hmenu);
   return;
-}
-
-/* 005dcc56 auto */
-void __thiscall
-menu_append_to_submenu
-          (MenuSubmenuView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = menu_get_submenu(this,param_1);
-  menu_hmenu_append_to_submenu(uVar1,param_2,param_3,param_4);
-  return;
-}
-
-/* 005dcc95 auto */
-void __thiscall menu_append_item(void *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
-
-{
-  menu_hmenu_append(param_1,param_3,param_2);
-  return;
-}
-
-/* 005dccc1 auto */
-/* Library Function - Multiple Matches With Same Base Name
-    protected: virtual unsigned char * __thiscall CHtmlStream::Realloc(unsigned char *,unsigned
-   long)
-    protected: virtual unsigned char * __thiscall CMemFile::Realloc(unsigned char *,unsigned long)
-   
-   Library: Visual Studio 1998 Debug */
-
-void __thiscall menu_delete_by_id(void *this,undefined4 param_1,undefined4 param_2)
-
-{
-  menu_hmenu_delete_by_id(param_1,param_2);
-  return;
-}
-
-/* 005dcce9 auto */
-void __thiscall menu_append_submenu_separator(MenuSubmenuView *this,undefined4 param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = menu_get_submenu(this,param_1);
-  menu_append_separator(uVar1);
-  return;
-}
-
-/* 005dcd1c auto */
-void __thiscall menu_add_separator(void *this,undefined4 param_1)
-
-{
-  menu_append_separator(param_1);
-  return;
-}
-
-/* 005dcd40 auto */
-undefined4 __thiscall menu_get_submenu(MenuSubmenuView *this,undefined4 param_1)
-
-{
-  undefined4 uVar1;
-  
-  uVar1 = menu_hmenu_get_submenu(this->hmenu,param_1);
-  return uVar1;
 }
 
 /* 005dcd70 auto */
@@ -8177,49 +6173,6 @@ SIZE_T __cdecl mem_handle_size(HGLOBAL param_1)
   return SVar1;
 }
 
-/* 005dcf11 auto */
-void __cdecl mem_handle_realloc_impl(undefined4 *param_1,int param_2)
-
-{
-  undefined4 uVar1;
-  iptr iVar2;
-  iptr iVar3;
-  int iVar4;
-  
-  uVar1 = mem_handle_alloc(param_2);
-  iVar2 = mem_handle_lock(*param_1);
-  iVar3 = mem_handle_lock(uVar1);
-  iVar4 = mem_handle_size(*param_1);
-  if (param_2 <= iVar4) {
-    iVar4 = param_2;
-  }
-  mem_move_src_dst(iVar2,iVar3,iVar4);
-  mem_handle_unlock(uVar1);
-  mem_handle_unlock(*param_1);
-  mem_handle_free(*param_1);
-  *param_1 = uVar1;
-  return;
-}
-
-/* 005dcfb5 auto */
-undefined4 __cdecl mem_avail_bytes_stub(void)
-
-{
-  return 0x100000;
-}
-
-/* 005dcfca auto */
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
-uint __cdecl mem_kb_exceeds_avail(int param_1)
-
-{
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = (uint)(0x100000 < param_1 << 10);
-  return local_8;
-}
-#undef local_8
-
 /* 005dd010 auto */
 #define _DAT_006389d0 (*(undefined4 *)((u8 *)&g.d_006389d0))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
@@ -8233,7 +6186,7 @@ C_004083b0_a28 * __thiscall mmwnd_ctor(C_004083b0_a28 *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_surfwnd_ctor((SurfaceWindow *)this);
+  surfwnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   avi_audio_ctor((AviAudio *)&this->border_width);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
@@ -8288,7 +6241,7 @@ undefined4 __thiscall avi_player_dtor(AviPlayer *this)
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)((iptr)&this) + 0x11c)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005dd25d */ { thunk_surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return uStack_10;
 }
 #undef _DAT_006389d0
@@ -8386,16 +6339,6 @@ void __thiscall avi_player_show_frame(void *this,undefined4 param_1)
   return;
 }
 
-/* 005dd487 auto */
-void __thiscall avi_player_play_from_start(C_005dd487 *this)
-
-{
-  avi_player_rewind((iptr)this);
-  this->is_playing = 1;
-  avi_play_start((iptr)this);
-  return;
-}
-
 /* 005dd4c2 auto */
 void __thiscall avi_player_loop_range(AviPlayerLoopView *this,u32 param_1,u32 param_2)
 
@@ -8416,54 +6359,15 @@ void __thiscall avi_player_pause(AviPlayerPauseView *this)
   return;
 }
 
-/* 005dd53f auto */
-void __thiscall avi_player_stop(void *this)
-
-{
-  avi_player_rewind((iptr)this);
-  return;
-}
-
 /* 005dd561 auto */
 void __thiscall avi_player_set_palette(DibSurface *this,iptr param_1)
 
 {
   avi_apply_palette((iptr)this,param_1);
   surface_set_palette(this,param_1);
-  thunk_wnd_set_palette((WndBase *)(this + 1),param_1);
+  wnd_set_palette((WndBase *)(this + 1),param_1);
   return;
 }
-
-/* 005dd5a4 auto */
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall avi_player_copy_frame_to(DibSurface *this,DibSurface *param_1)
-
-{
-  int iVar1;
-  int iVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  avi_decode_frame((iptr)this,0);
-  iVar1 = thunk_surface_get_width(this);
-  iVar2 = thunk_surface_width(param_1);
-  if (iVar1 <= iVar2) {
-    iVar1 = thunk_surface_get_height(this);
-    iVar2 = thunk_surface_height(param_1);
-    if (iVar1 <= iVar2) goto LAB_005dd60c;
-  }
-  uVar3 = thunk_surface_get_height(this);
-  uVar4 = thunk_surface_get_width(this);
-  surface_create(param_1,uVar4,uVar3);
-LAB_005dd60c:
-  iVar1 = thunk_surface_get_height(this);
-  iVar2 = thunk_surface_get_width(this);
-  SetRect(&local_14,0,0,iVar2,iVar1);
-  surface_blit(this,(iptr)param_1,(iptr)&local_14,(iptr)&local_14);
-  return;
-}
-#undef local_14
 
 /* 005dd64c auto */
 #define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
@@ -8477,15 +6381,15 @@ avi_player_draw_to(DibSurface *this,iptr param_1,int param_2,int param_3)
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((-1 < param_2) && (-1 < param_3)) {
-    iVar1 = thunk_surface_width((DibSurface *)param_1);
-    iVar2 = thunk_surface_get_width(this);
+    iVar1 = surface_width((DibSurface *)param_1);
+    iVar2 = surface_get_width(this);
     if (iVar2 <= iVar1 - param_2) {
-      iVar1 = thunk_surface_height((DibSurface *)param_1);
-      iVar2 = thunk_surface_get_height(this);
+      iVar1 = surface_height((DibSurface *)param_1);
+      iVar2 = surface_get_height(this);
       if (iVar2 <= iVar1 - param_3) {
         avi_decode_frame((iptr)this,0);
-        iVar1 = thunk_surface_get_height(this);
-        iVar2 = thunk_surface_get_width(this);
+        iVar1 = surface_get_height(this);
+        iVar2 = surface_get_width(this);
         SetRect(&local_24,0,0,iVar2,iVar1);
         CopyRect(&local_14,&local_24);
         OffsetRect(&local_14,param_2,param_3);
@@ -8505,9 +6409,9 @@ void __thiscall avi_player_set_double_size(C_004083b0_61c *this,undefined4 param
   int iVar1;
   int iVar2;
   
-  iVar1 = thunk_surface_get_height((DibSurface *)this);
+  iVar1 = surface_get_height((DibSurface *)this);
   iVar1 = iVar1 * 2;
-  iVar2 = thunk_surface_get_width((DibSurface *)this);
+  iVar2 = surface_get_width((DibSurface *)this);
   wnd_resize_clamped((C_004083b0_4 *)this,iVar2 * 2,iVar1);
   this->double_size = 1;
   return;
@@ -8527,41 +6431,6 @@ void __thiscall avi_player_set_transparent(C_005dd761 *this,int param_1)
     this->is_transparent = 1;
     avi_restart_decompress((iptr)this,1);
   }
-  return;
-}
-
-/* 005dd7de auto */
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-void __thiscall avi_player_save_background(C_004083b0_61c *this)
-
-{
-  int yBottom;
-  int xRight;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  yBottom = thunk_surface_get_height((DibSurface *)this);
-  xRight = thunk_surface_get_width((DibSurface *)this);
-  SetRect(&local_14,0,0,xRight,yBottom);
-  local_24.left = local_14.left;
-  local_24.top = local_14.top;
-  local_24.right = local_14.right;
-  local_24.bottom = local_14.bottom;
-  OffsetRect(&local_24,this->pos_x,this->pos_y);
-  if (this->target_surface != 0) {
-    surface_blit
-              ((DibSurface *)this->target_surface,(iptr)(this->pad_4a4 + 0xb4),(iptr)&local_24,
-               (iptr)&local_14);
-  }
-  return;
-}
-#undef local_24
-#undef local_14
-
-/* 005dd87d auto */
-void __cdecl FUN_005dd87d(void)
-
-{
   return;
 }
 
@@ -8622,22 +6491,6 @@ LRESULT __stdcall snd_mci_notify_wndproc(HWND param_1,UINT param_2,WPARAM param_
 #undef snd_cd_device_id
 #undef snd_midi_device_id
 
-/* 005dd9d9 auto */
-void __cdecl snd_play_wav_async(LPCSTR param_1)
-
-{
-  sndPlaySoundA(param_1,1);
-  return;
-}
-
-/* 005dd9f5 auto */
-void __cdecl snd_play_wav_loop(LPCSTR param_1)
-
-{
-  sndPlaySoundA(param_1,9);
-  return;
-}
-
 /* 005dda11 auto */
 void __cdecl snd_stop_sndplaysound(void)
 
@@ -8645,90 +6498,6 @@ void __cdecl snd_stop_sndplaysound(void)
   sndPlaySoundA((LPCSTR)0x0,1);
   return;
 }
-
-/* 005dda2b auto */
-void __cdecl snd_stub_nop(undefined4 param_1)
-
-{
-  return;
-}
-
-/* 005dda3b auto */
-void __cdecl snd_beep(void)
-
-{
-  MessageBeep(0xffffffff);
-  return;
-}
-
-/* 005dda53 auto */
-#define snd_mci_notify_hwnd (*(undefined4 *)((u8 *)&g.d_006e4ff8))
-#define snd_midi_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d4))
-#define local_38 (*(undefined4 (*)[3])(frame_ + FRAME_OFF(0)))
-#define local_2c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(12)))
-#define local_28 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(char * *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(36)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-MCIERROR __cdecl snd_midi_play(undefined4 param_1)
-
-{
-  MCIERROR MVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (snd_midi_device_id != 0) {
-    snd_midi_close();
-  }
-  local_24 = s_sequencer_006389fc;
-  local_20 = param_1;
-  MVar1 = mciSendCommandA(0,0x803,0x2200,(DWORD_PTR)local_2c);
-  if (MVar1 == 0) {
-    local_18 = local_28;
-    snd_midi_device_id = local_28;
-    local_c = 0x4003;
-    MVar1 = mciSendCommandA(local_28,0x814,0x100,(DWORD_PTR)local_14);
-    if (MVar1 == 0) {
-      if (((local_10 & 0xffff) != 0xffffffff) &&
-         (iVar2 = MessageBoxA((HWND)0x0,s_The_MIDI_Mapper_is_not_available_00638a48,&midi_error_caption,4)
-         , iVar2 == 7)) {
-        mciSendCommandA(local_18,0x804,0,0);
-        return 0;
-      }
-      local_38[0] = snd_mci_notify_hwnd;
-      MVar1 = mciSendCommandA(local_18,0x806,1,(DWORD_PTR)local_38);
-      if (MVar1 == 0) {
-        MVar1 = 0;
-      }
-      else {
-        mciSendCommandA(local_18,0x804,0,0);
-        dbg_logf(ADDR(0x638a74, ((u8 *)&g.d_00638a74)),MVar1);
-      }
-    }
-    else {
-      mciSendCommandA(local_18,0x804,0,0);
-      dbg_logf(ADDR(0x638a24, ((u8 *)&g.d_00638a24)),MVar1);
-    }
-  }
-  else {
-    dbg_logf(ADDR(0x638a08, ((u8 *)&g.d_00638a08)),MVar1);
-  }
-  return MVar1;
-}
-#undef snd_mci_notify_hwnd
-#undef snd_midi_device_id
-#undef local_38
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
 
 /* 005ddbc7 auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
@@ -8972,382 +6741,6 @@ undefined4 __cdecl snd_cd_get_track_count(void)
 #undef local_10
 #undef local_c
 
-/* 005de00d auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_2c (*(undefined1 (*)[12])(frame_ + FRAME_OFF(4)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(40)))
-void __cdecl snd_cd_eject(void)
-
-{
-  MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (snd_cd_device_id == 0) {
-    local_14 = s_cdaudio_00638b20;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_1c);
-    if (MVar1 != 0) {
-      return;
-    }
-    local_8 = local_18;
-    local_20 = 0x100;
-    mciSendCommandA(local_18,0x80d,0x100,(DWORD_PTR)local_2c);
-  }
-  else {
-    local_8 = snd_cd_device_id;
-    snd_cd_mci_stop();
-    local_20 = 0x100;
-    mciSendCommandA(snd_cd_device_id,0x80d,0x100,(DWORD_PTR)local_2c);
-  }
-  snd_cd_ejected_device = local_8;
-  return;
-}
-#undef snd_cd_device_id
-#undef local_2c
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_8
-
-/* 005de0b5 auto */
-#define snd_cd_device_id (*(int *)((u8 *)&g.d_006389d8))
-#define local_2c (*(undefined1 (*)[12])(frame_ + FRAME_OFF(4)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(40)))
-void __cdecl snd_cd_close_door(void)
-
-{
-  MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if ((snd_cd_device_id == 0) && (snd_cd_ejected_device == 0)) {
-    local_14 = s_cdaudio_00638b28;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_1c);
-    if (MVar1 == 0) {
-      local_8 = local_18;
-      local_20 = 0x100;
-      mciSendCommandA(local_18,0x80d,0x100,(DWORD_PTR)local_2c);
-      mciSendCommandA(local_8,0x804,0,0);
-    }
-  }
-  else if (snd_cd_ejected_device != 0) {
-    local_8 = snd_cd_ejected_device;
-    snd_cd_ejected_device = 0;
-    snd_cd_mci_stop();
-    local_20 = 0x200;
-    mciSendCommandA(local_8,0x80d,0x200,(DWORD_PTR)local_2c);
-    mciSendCommandA(local_8,0x804,0,0);
-  }
-  return;
-}
-#undef snd_cd_device_id
-#undef local_2c
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_8
-
-/* 005de19d auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_28 (*(undefined1 (*)[12])(frame_ + FRAME_OFF(0)))
-#define local_1c (*(MCIERROR *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-void __cdecl snd_cd_toggle_pause(void)
-
-{
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 4;
-  local_1c = mciSendCommandA(snd_cd_device_id,0x814,0x100,(DWORD_PTR)local_14);
-  if (local_1c == 0) {
-    if (local_10 == 0x20d) {
-      mciSendCommandA(snd_cd_device_id,0x806,0,(DWORD_PTR)local_28);
-    }
-    else {
-      mciSendCommandA(snd_cd_device_id,0x809,0,(DWORD_PTR)local_18);
-    }
-  }
-  return;
-}
-#undef snd_cd_device_id
-#undef local_28
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-
-/* 005de250 auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_28 (*(undefined1 (*)[12])(frame_ + FRAME_OFF(0)))
-#define local_1c (*(MCIERROR *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-void __cdecl snd_cd_resume(void)
-
-{
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_c = 4;
-  local_1c = mciSendCommandA(snd_cd_device_id,0x814,0x100,(DWORD_PTR)local_14);
-  if (local_1c == 0) {
-    if (local_10 == 0x20d) {
-      mciSendCommandA(snd_cd_device_id,0x806,0,(DWORD_PTR)local_28);
-    }
-    else if (local_10 == 0x211) {
-      mciSendCommandA(snd_cd_device_id,0x855,0,(DWORD_PTR)local_18);
-    }
-  }
-  return;
-}
-#undef snd_cd_device_id
-#undef local_28
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-
-/* 005de310 auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_34 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_30 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(MCIERROR *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(36)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-void __cdecl snd_cd_play_next_track(void)
-
-{
-  MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (snd_cd_device_id == 0) {
-    local_2c = s_cdaudio_00638b30;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_34);
-    if (MVar1 != 0) {
-      return;
-    }
-    local_18 = local_30;
-    local_1c = 0;
-  }
-  else {
-    local_18 = snd_cd_device_id;
-  }
-  local_c = 8;
-  snd_cd_device_id = local_18;
-  local_1c = mciSendCommandA(local_18,0x814,0x100,(DWORD_PTR)local_14);
-  if (local_1c == 0) {
-    local_20 = local_10;
-    local_c = 3;
-    local_1c = mciSendCommandA(local_18,0x814,0x100,(DWORD_PTR)local_14);
-    if (local_1c == 0) {
-      if (local_10 < local_20 + 1) {
-        snd_cd_play_track(1);
-      }
-      else {
-        snd_cd_play_track(local_20 + 1);
-      }
-    }
-  }
-  return;
-}
-#undef snd_cd_device_id
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-
-/* 005de41e auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_34 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_30 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(MCIERROR *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(36)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-void __cdecl snd_cd_play_prev_track(void)
-
-{
-  MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (snd_cd_device_id == 0) {
-    local_2c = s_cdaudio_00638b38;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_34);
-    if (MVar1 != 0) {
-      return;
-    }
-    local_18 = local_30;
-    local_1c = 0;
-  }
-  else {
-    local_18 = snd_cd_device_id;
-  }
-  local_c = 8;
-  snd_cd_device_id = local_18;
-  local_1c = mciSendCommandA(local_18,0x814,0x100,(DWORD_PTR)local_14);
-  if (local_1c == 0) {
-    local_20 = local_10;
-    local_c = 3;
-    local_1c = mciSendCommandA(local_18,0x814,0x100,(DWORD_PTR)local_14);
-    if (local_1c == 0) {
-      if (local_20 == 1) {
-        snd_cd_play_track(1);
-      }
-      else {
-        snd_cd_play_track(local_20 - 1);
-      }
-    }
-  }
-  return;
-}
-#undef snd_cd_device_id
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-
-/* 005de529 auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define local_2c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(MCIERROR *)(frame_ + FRAME_OFF(20)))
-#define local_18 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(28)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-undefined4 __cdecl snd_cd_get_position(uint *param_1,uint *param_2,uint *param_3)
-
-{
-  undefined4 uVar1;
-  MCIERROR MVar2;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (snd_cd_device_id == 0) {
-    uVar1 = 0;
-  }
-  else {
-    local_18 = snd_cd_device_id;
-    local_28 = 10;
-    local_20 = 0x400;
-    local_1c = mciSendCommandA(snd_cd_device_id,0x80d,0x400,(DWORD_PTR)local_2c);
-    if (local_1c == 0) {
-      local_20 = 0x100;
-      local_c = 2;
-      MVar2 = mciSendCommandA(local_18,0x814,0x100,(DWORD_PTR)local_14);
-      if (MVar2 == 0) {
-        if (param_1 != (uint *)0x0) {
-          *param_1 = local_10 >> 8 & 0xff;
-        }
-        if (param_2 != (uint *)0x0) {
-          *param_2 = local_10 >> 0x10 & 0xff;
-        }
-        if (param_3 != (uint *)0x0) {
-          *param_3 = local_10 & 0xff;
-        }
-        uVar1 = 1;
-      }
-      else {
-        uVar1 = 0;
-      }
-    }
-    else {
-      uVar1 = 0;
-    }
-  }
-  return uVar1;
-}
-#undef snd_cd_device_id
-#undef local_2c
-#undef local_28
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-
-/* 005de620 auto */
-void __cdecl snd_play_wav_async_wrap(undefined4 param_1)
-
-{
-  snd_play_wav_async(param_1);
-  return;
-}
-
-/* 005de63c auto */
-void __cdecl snd_play_wav_loop_wrap(undefined4 param_1)
-
-{
-  snd_play_wav_loop(param_1);
-  return;
-}
-
-/* 005de658 auto */
-void __cdecl snd_stub_nop_wrap(undefined4 param_1)
-
-{
-  snd_stub_nop(param_1);
-  return;
-}
-
-/* 005de674 auto */
-void __cdecl snd_beep_wrap(void)
-
-{
-  snd_beep();
-  return;
-}
-
-/* 005de689 auto */
-void __cdecl snd_midi_play_wrap(undefined4 param_1)
-
-{
-  snd_midi_play(param_1);
-  return;
-}
-
-/* 005de6a5 auto */
-#define snd_midi_notify_callback (*(undefined4 *)((u8 *)&g.d_006e5004))
-void __cdecl snd_midi_set_notify_callback(undefined4 param_1)
-
-{
-  snd_midi_notify_callback = param_1;
-  return;
-}
-#undef snd_midi_notify_callback
-
 /* 005de6bd auto */
 #define snd_midi_notify_callback (*(code * *)((u8 *)&g.d_006e5004))
 void __cdecl snd_midi_fire_notify_callback(void)
@@ -9359,14 +6752,6 @@ void __cdecl snd_midi_fire_notify_callback(void)
   return;
 }
 #undef snd_midi_notify_callback
-
-/* 005de6e0 auto */
-void __cdecl snd_cd_play_track_wrap(uint param_1)
-
-{
-  snd_cd_play_track(param_1);
-  return;
-}
 
 /* 005de6fc auto */
 #define snd_cd_notify_callback (*(iptr *)((u8 *)&g.d_006e5000))
@@ -9389,30 +6774,6 @@ void __cdecl snd_cd_fire_notify_callback(void)
   return;
 }
 #undef snd_cd_notify_callback
-
-/* 005de737 auto */
-void __cdecl snd_midi_close_wrap(void)
-
-{
-  snd_midi_close();
-  return;
-}
-
-/* 005de74c auto */
-void __cdecl snd_stop_sndplaysound_wrap(void)
-
-{
-  snd_stop_sndplaysound();
-  return;
-}
-
-/* 005de761 auto */
-void __cdecl snd_cd_mci_stop_wrap(void)
-
-{
-  snd_cd_mci_stop();
-  return;
-}
 
 /* 005de780 auto */
 #define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(0)))
@@ -9438,31 +6799,31 @@ void __cdecl logpal_init_from_system(iptr param_1)
     palette_static_half_count = iVar2 / 2;
     GetSystemPaletteEntries(hdc,0,0x100,(LPPALETTEENTRY)(param_1 + 4));
   }
-  for (local_c = 0; local_c < palette_static_half_count; local_c = local_c + 1) {
+  for (local_c = 0; local_c < palette_static_half_count; local_c++) {
     *(undefined1 *)(param_1 + 7 + local_c * 4) = 0;
   }
-  for (; local_c < 0x100 - palette_static_half_count; local_c = local_c + 1) {
+  for (; local_c < 0x100 - palette_static_half_count; local_c++) {
     *(undefined1 *)(param_1 + 4 + local_c * 4) = 0;
     *(undefined1 *)(param_1 + 5 + local_c * 4) = 0;
     *(undefined1 *)(param_1 + 6 + local_c * 4) = 0;
     *(undefined1 *)(param_1 + 7 + local_c * 4) = 4;
   }
-  for (; local_c < 0x100; local_c = local_c + 1) {
+  for (; local_c < 0x100; local_c++) {
     *(undefined1 *)(param_1 + 7 + local_c * 4) = 0;
   }
   if (gfx_palettized_display == 0) {
     local_10 = &logpal_static_system_colors;
-    for (local_c = 0; local_c < 10; local_c = local_c + 1) {
+    for (local_c = 0; local_c < 10; local_c++) {
       *(undefined1 *)(param_1 + 4 + local_c * 4) = *local_10;
       *(undefined1 *)(param_1 + 5 + local_c * 4) = local_10[1];
       *(undefined1 *)(param_1 + 6 + local_c * 4) = local_10[2];
-      local_10 = local_10 + 3;
+      local_10 += 3;
     }
-    for (local_c = 0xf6; local_c < 0x100; local_c = local_c + 1) {
+    for (local_c = 0xf6; local_c < 0x100; local_c++) {
       *(undefined1 *)(param_1 + 4 + local_c * 4) = *local_10;
       *(undefined1 *)(param_1 + 5 + local_c * 4) = local_10[1];
       *(undefined1 *)(param_1 + 6 + local_c * 4) = local_10[2];
-      local_10 = local_10 + 3;
+      local_10 += 3;
     }
   }
   ReleaseDC((HWND)0x0,hdc);
@@ -9481,29 +6842,8 @@ void __cdecl logpal_reserve_range(iptr param_1,int param_2,int param_3)
   if (0x100 < param_3 + param_2) {
     param_3 = 0x100 - param_2;
   }
-  for (local_8 = param_2; local_8 < param_3 + param_2; local_8 = local_8 + 1) {
+  for (local_8 = param_2; local_8 < param_3 + param_2; local_8++) {
     *(undefined1 *)(param_1 + 7 + local_8 * 4) = 1;
-  }
-  return;
-}
-#undef local_8
-
-/* 005de9e0 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl palette_reapply_range(iptr param_1,int param_2,int param_3)
-
-{
-  undefined3 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (0x100 < param_3 + param_2) {
-    param_3 = 0x100 - param_2;
-  }
-  for (local_8 = param_2; local_8 < param_3 + param_2; local_8 = local_8 + 1) {
-    uVar1 = (undefined3)((uint)param_3 >> 8);
-    palette_set_entry_rgb(param_1,local_8,CONCAT31(uVar1,*(undefined1 *)(param_1 + 4 + param_3 * 4)),
-                 CONCAT31(uVar1,*(undefined1 *)(param_1 + 5 + param_3 * 4)),
-                 CONCAT31(uVar1,*(undefined1 *)(param_1 + 6 + param_3 * 4)));
   }
   return;
 }
@@ -9552,14 +6892,14 @@ palette_set_entry_rgb(iptr param_1,int param_2,undefined4 param_3,undefined4 par
   *(char *)(param_1 + 5 + param_2 * 4) = (char)param_4;
   *(char *)(param_1 + 6 + param_2 * 4) = (char)param_5;
   *(undefined1 *)(param_1 + 7 + param_2 * 4) = 4;
-  for (local_8 = 0; local_8 < palette_static_half_count; local_8 = local_8 + 1) {
+  for (local_8 = 0; local_8 < palette_static_half_count; local_8++) {
     if (((*(char *)(param_1 + 4 + local_8 * 4) == (char)param_3) &&
         (*(char *)(param_1 + 5 + local_8 * 4) == (char)param_4)) &&
        (*(char *)(param_1 + 6 + local_8 * 4) == (char)param_5)) {
       *(undefined1 *)(param_1 + 7 + param_2 * 4) = 1;
     }
   }
-  for (local_8 = 0x100 - palette_static_half_count; local_8 < 0x100; local_8 = local_8 + 1) {
+  for (local_8 = 0x100 - palette_static_half_count; local_8 < 0x100; local_8++) {
     if (((*(char *)(param_1 + 4 + local_8 * 4) == (char)param_3) &&
         (*(char *)(param_1 + 5 + local_8 * 4) == (char)param_4)) &&
        (*(char *)(param_1 + 6 + local_8 * 4) == (char)param_5)) {
@@ -9607,14 +6947,6 @@ void __cdecl logpal_apply_range(iptr param_1,HPALETTE param_2,UINT param_3,UINT 
   return;
 }
 
-/* 005deced auto */
-void __cdecl logpal_copy(undefined4 param_1,undefined4 param_2)
-
-{
-  FUN_005f6500(param_2,param_1,0x404);
-  return;
-}
-
 /* 005ded12 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
@@ -9624,562 +6956,11 @@ void __cdecl palette_copy_rgb_range(iptr param_1,iptr param_2,int param_3,int pa
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
-  for (local_c = param_3; local_c < param_4 + param_3; local_c = local_c + 1) {
+  for (local_c = param_3; local_c < param_4 + param_3; local_c++) {
     *(undefined1 *)(local_8 + param_2) = *(undefined1 *)(param_1 + 4 + local_c * 4);
     *(undefined1 *)(local_8 + 1 + param_2) = *(undefined1 *)(param_1 + 5 + local_c * 4);
     *(undefined1 *)(local_8 + 2 + param_2) = *(undefined1 *)(param_1 + 6 + local_c * 4);
-    local_8 = local_8 + 3;
-  }
-  return;
-}
-#undef local_c
-#undef local_8
-
-/* 005ded90 auto */
-#define notice_parent_window (*(WndBase * *)((u8 *)&g.d_00638b90))
-#define notice_showing (*(undefined4 *)((u8 *)&g.d_00638ba4))
-#define notice_window (*(SurfaceWindow * *)((u8 *)&g.d_006e5014))
-void __cdecl ui_notice_close(void)
-
-{
-  int iVar1;
-  
-  thunk_wnd_enable(notice_parent_window);
-  thunk_wnd_hide((WndBase *)notice_window->pad_48);
-  thunk_ui_pump_messages();
-  if (notice_ok_button != (Control *)0x0) {
-    thunk_ctrl_scalar_dtor(notice_ok_button,1);
-  }
-  if (notice_window != (SurfaceWindow *)0x0) {
-    thunk_surfwnd_scalar_dtor(notice_window,1);
-  }
-  iVar1 = thunk_timer_ticks();
-  notice_next_allowed_tick = iVar1 + 0xe10;
-  notice_showing = 0;
-  return;
-}
-#undef notice_parent_window
-#undef notice_showing
-#undef notice_window
-
-/* 005dee28 auto */
-#define notice_window (*(DibSurface * *)((u8 *)&g.d_006e5014))
-#define local_88 (*(DibSurface * *)(frame_ + FRAME_OFF(0)))
-#define local_84 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_74 (*(Control * *)(frame_ + FRAME_OFF(20)))
-#define local_70 (*(Control * *)(frame_ + FRAME_OFF(24)))
-#define local_6c (*(DibSurface * *)(frame_ + FRAME_OFF(28)))
-#define local_68 (*(SurfaceWindow * *)(frame_ + FRAME_OFF(32)))
-#define local_64 (*(LONG *)(frame_ + FRAME_OFF(36)))
-#define local_60 (*(LONG *)(frame_ + FRAME_OFF(40)))
-#define local_5c (*(LONG *)(frame_ + FRAME_OFF(44)))
-#define local_58 (*(LONG *)(frame_ + FRAME_OFF(48)))
-#define local_54 (*(tagRECT *)(frame_ + FRAME_OFF(52)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_40 (*(tagRECT *)(frame_ + FRAME_OFF(72)))
-#define local_30 (*(iptr *)(frame_ + FRAME_OFF(88)))
-#define local_2c (*(undefined1 *)(frame_ + FRAME_OFF(92)))
-#define local_2b (*(undefined1 *)(frame_ + FRAME_OFF(93)))
-#define local_2a (*(undefined1 *)(frame_ + FRAME_OFF(94)))
-#define local_29 (*(undefined1 *)(frame_ + FRAME_OFF(95)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(100)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(116)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(120)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(124)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(128)))
-void __cdecl ui_show_text_notice_window(undefined4 param_1,WndBase *param_2,int param_3)
-
-{
-  iptr iVar1;
-  undefined4 uVar2;
-  LONG *pLVar3;
-  undefined4 uVar4;
-  WndBase *pCVar5;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  local_2c = 0x54;
-  local_2b = 0x45;
-  local_2a = 0x58;
-  local_29 = 0x54;
-  local_28 = res_load((iptr)&local_2c,param_1);
-  if (local_28 != 0) {
-    iVar1 = res_lock(local_28);
-    uVar4 = 0x1a4;
-    local_30 = iVar1;
-    uVar2 = thunk_font_get_hfont((GameFont *)&default_draw_font_obj);
-    pLVar3 = (LONG *)font_calc_text_rect((iptr)local_84,uVar2,iVar1,uVar4);
-    local_64 = *pLVar3;
-    local_60 = pLVar3[1];
-    local_5c = pLVar3[2];
-    local_58 = pLVar3[3];
-    local_24.left = local_64;
-    local_24.top = local_60;
-    local_24.right = local_5c;
-    local_24.bottom = local_58;
-    local_14 = thunk_rect_width((iptr)&local_24);
-    local_14 = local_14 + 0x20;
-    local_44 = thunk_rect_height((iptr)&local_24);
-    local_44 = local_44 + 0x48;
-    OffsetRect(&local_24,0x10,0x10);
-    SetRect(&local_54,0,0,0x48,0x20);
-    OffsetRect(&local_54,local_14 + -0x40 >> 1,local_44 + -0x30);
-    local_68 = operator_new(0x114);
-    local_8 = 0;
-    if (local_68 == (SurfaceWindow *)0x0) {
-      local_6c = (DibSurface *)0x0;
-    }
-    else {
-      local_6c = (DibSurface *)thunk_surfwnd_ctor(local_68);
-    }
-    local_8 = 0xffffffff;
-    notice_window = local_6c;
-    local_70 = operator_new(0x3c);
-    local_8 = 1;
-    if (local_70 == (Control *)0x0) {
-      local_74 = (Control *)0x0;
-    }
-    else {
-      local_74 = (Control *)thunk_button_ctor(local_70);
-    }
-    local_8 = 0xffffffff;
-    notice_ok_button = local_74;
-    pCVar5 = param_2;
-    iVar1 = wnd_get_palette_obj((WndPaletteObjView *)param_2);
-    wnd_create_with_surface
-              (notice_window,ADDR(0x638bb0, ((u8 *)&g.d_00638bb0)),0xc01,0,0,local_14,local_44,iVar1,(iptr)pCVar5);
-    surface_fill(notice_window,7);
-    thunk_wnd_center((WndCenterView *)(notice_window + 1));
-    if (notice_window == (DibSurface *)0x0) {
-      local_88 = (DibSurface *)0x0;
-    }
-    else {
-      local_88 = notice_window + 1;
-    }
-    thunk_button_create(notice_ok_button,(iptr)local_88,0x65,(iptr)&local_54,ADDR(0x638bb4, ((u8 *)&g.d_00638bb4)));
-    thunk_button_set_callback(notice_ok_button,ADDR(0x5ded90, ui_notice_close));
-    SetRect(&local_40,0,0,local_14,local_44);
-    surface_draw_bevel_border((iptr)notice_window,(iptr)&local_40,3,0xff,0xf8);
-    InflateRect(&local_40,-6,-6);
-    surface_draw_bevel_border((iptr)notice_window,(iptr)&local_40,0xffffffff,0xff,0xf8);
-    surface_draw_bevel_border((iptr)notice_window,(iptr)&local_40,1,0xff,0xf8);
-    gfx_set_text_color_index(0);
-    surface_draw_text_rect(notice_window,ADDR(0x6d1ec8, ((u8 *)&g.d_006d1ec8)),local_30,(iptr)&local_24,0);
-    thunk_window_show((C_004083b0_4 *)notice_window);
-    ui_show_mouse_cursor();
-    thunk_ui_pump_messages();
-    if (param_3 != 0) {
-      thunk_wnd_disable(param_2);
-    }
-  }
-  return;
-}
-#undef notice_window
-#undef local_88
-#undef local_84
-#undef local_74
-#undef local_70
-#undef local_6c
-#undef local_68
-#undef local_64
-#undef local_60
-#undef local_5c
-#undef local_58
-#undef local_54
-#undef local_44
-#undef local_40
-#undef local_30
-#undef local_2c
-#undef local_2b
-#undef local_2a
-#undef local_29
-#undef local_28
-#undef local_24
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
-
-/* 005df166 auto */
-#define notice_parent_window (*(undefined4 *)((u8 *)&g.d_00638b90))
-#define notice_show_count (*(int *)((u8 *)&g.d_00638ba8))
-#define notice_showing (*(int *)((u8 *)&g.d_00638ba4))
-void __cdecl ui_notice_timer_tick(void)
-
-{
-  int iVar1;
-  
-  iVar1 = mem_kb_exceeds_avail(notice_mem_threshold_kb);
-  if (iVar1 == 0) {
-    notice_show_count = 0;
-  }
-  else if ((notice_showing == 0) &&
-          ((notice_show_count == 0 ||
-           ((notice_show_count < 3 && (iVar1 = thunk_timer_ticks(), notice_next_allowed_tick < iVar1)))))) {
-    notice_showing = 1;
-    notice_show_count = notice_show_count + 1;
-    ui_show_text_notice_window(notice_text_res_id,notice_parent_window,notice_disable_parent);
-  }
-  return;
-}
-#undef notice_parent_window
-#undef notice_show_count
-#undef notice_showing
-
-/* 005df1fd auto */
-#define notice_parent_window (*(undefined4 *)((u8 *)&g.d_00638b90))
-#define notice_show_count (*(undefined4 *)((u8 *)&g.d_00638ba8))
-#define notice_showing (*(undefined4 *)((u8 *)&g.d_00638ba4))
-void __cdecl
-ui_notice_timer_start(undefined4 param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5
-            )
-
-{
-  if (notice_timer != 0) {
-    game_timer_destroy(notice_timer);
-  }
-  notice_mem_threshold_kb = param_1;
-  notice_text_res_id = param_3;
-  notice_parent_window = param_4;
-  notice_disable_parent = param_5;
-  notice_show_count = 0;
-  notice_showing = 0;
-  notice_timer = game_timer_create(ADDR(0x5df166, ui_notice_timer_tick),param_2 * 1000,0xffffffff);
-  return;
-}
-#undef notice_parent_window
-#undef notice_show_count
-#undef notice_showing
-
-/* 005df280 auto */
-void __cdecl ui_notice_timer_stop(void)
-
-{
-  if (notice_timer != 0) {
-    game_timer_destroy(notice_timer);
-  }
-  notice_timer = 0;
-  return;
-}
-
-/* 005df2b5 auto */
-#define local_474 (*(undefined1 (*)[768])(frame_ + FRAME_OFF(4)))
-#define local_174 (*(undefined2 *)(frame_ + FRAME_OFF(772)))
-#define local_172 (*(undefined2 *)(frame_ + FRAME_OFF(774)))
-#define local_170 (*(char *)(frame_ + FRAME_OFF(776)))
-#define local_16f (*(char *)(frame_ + FRAME_OFF(777)))
-#define local_16c (*(int *)(frame_ + FRAME_OFF(780)))
-#define local_168 (*(int *)(frame_ + FRAME_OFF(784)))
-#define local_164 (*(iptr *)(frame_ + FRAME_OFF(788)))
-#define local_160 (*(FileObject *)(frame_ + FRAME_OFF(792)))
-#define local_c8 (*(uint *)(frame_ + FRAME_OFF(944)))
-#define local_c4 (*(FileObject *)(frame_ + FRAME_OFF(948)))
-#define local_2c (*(uint *)(frame_ + FRAME_OFF(1100)))
-#define local_28 (*(char *)(frame_ + FRAME_OFF(1104)))
-#define local_24 (*(char * *)(frame_ + FRAME_OFF(1108)))
-#define local_20 (*(char * *)(frame_ + FRAME_OFF(1112)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(1116)))
-#define local_18 (*(char * *)(frame_ + FRAME_OFF(1120)))
-#define local_14 (*(char * *)(frame_ + FRAME_OFF(1124)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1128)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1132)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(1136)))
-void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
-
-{
-  undefined4 uVar1;
-  int iVar2;
-  undefined1 frame_[FRAME_OFF(1144)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  local_8 = 0xffffffff;
-  file_obj_init(&local_c4);
-  local_8 = 0;
-  file_obj_init(&local_160);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
-  thunk_file_obj_open(&local_c4,param_1);
-  uVar1 = thunk_file_obj_get_size(&local_c4);
-  local_168 = mem_handle_alloc(uVar1);
-  local_164 = mem_handle_lock(local_168);
-  uVar1 = thunk_file_obj_get_size(&local_c4);
-  thunk_file_obj_read(&local_c4,local_164,uVar1);
-  local_1c = thunk_file_obj_get_size(&local_c4);
-  local_1c = local_164 + local_1c;
-  local_164 = mem_handle_unlock(local_168);
-  if (local_168 == 0) {
-    dbg_logf_str(ADDR(0x638bbc, ((u8 *)&g.d_00638bbc)),param_1);
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
-  }
-  else {
-    local_24 = (char *)mem_handle_lock(local_168);
-    iVar2 = _strncmp(local_24,&gif_file_signature,3);
-    if (iVar2 == 0) {
-      if ((local_24[10] & 0x80U) == 0) {
-        dbg_logf_str(ADDR(0x638c04, ((u8 *)&g.d_00638c04)),param_1);
-        mem_handle_unlock(local_168);
-        mem_handle_release(local_168);
-        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-        /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
-      }
-      else {
-        local_16c = 1 << (local_24[10] & 7U) + 1;
-        local_20 = local_24 + 0xd;
-        FUN_005f2110(local_474,local_20,local_16c * 3);
-        for (local_20 = local_24 + local_16c * 3 + 0xd; *local_20 == '\0'; local_20 = local_20 + 1)
-        {
-        }
-        if ((*local_20 == ',') || (*local_20 == '!')) {
-          local_18 = local_20 + 1;
-          local_2c = (uint)*(ushort *)(local_20 + 5);
-          local_c8 = (uint)*(ushort *)(local_20 + 7);
-          if ((local_20[9] & 0x80U) != 0) {
-            dbg_log(ADDR(0x638c54, ((u8 *)&g.d_00638c54)));
-          }
-          local_28 = local_18[9];
-          local_14 = local_18 + 10;
-          local_174 = endian_swap16_alt(local_2c);
-          local_172 = endian_swap16_alt(local_c8);
-          local_170 = local_28;
-          local_16f = (char)local_16c + -1;
-          thunk_file_obj_create(&local_160,param_2);
-          thunk_file_obj_write(&local_160,(iptr)&local_174,6);
-          thunk_file_obj_write(&local_160,(iptr)local_474,local_16c * 3);
-          thunk_file_obj_write(&local_160,(iptr)local_14,local_1c - (int)local_14);
-          local_168 = mem_handle_free(local_168);
-          thunk_file_map_close(&local_c4);
-          local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-          /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
-          local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
-        }
-        else {
-          dbg_logf_str(ADDR(0x638c30, ((u8 *)&g.d_00638c30)),param_1);
-          mem_handle_unlock(local_168);
-          mem_handle_release(local_168);
-          local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-          /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
-          local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
-        }
-      }
-    }
-    else {
-      dbg_logf_str(ADDR(0x638be4, ((u8 *)&g.d_00638be4)),param_1);
-      mem_handle_unlock(local_168);
-      mem_handle_release(local_168);
-      local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
-    }
-  }
-  return;
-}
-#undef local_474
-#undef local_174
-#undef local_172
-#undef local_170
-#undef local_16f
-#undef local_16c
-#undef local_168
-#undef local_164
-#undef local_160
-#undef local_c8
-#undef local_c4
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
-
-/* 005df6ab auto */
-void __cdecl
-gfx_dissolve_transition_nodelay(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7)
-
-{
-  gfx_dissolve_transition(param_1,param_2,param_3,param_4,param_5,param_6,param_7,0);
-  return;
-}
-
-/* 005df6e1 auto */
-#define local_48 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(44)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(64)))
-void __cdecl
-gfx_dissolve_transition(DibSurface *param_1,DibSurface *param_2,undefined4 *param_3,int param_4,
-            int param_5,undefined4 param_6,int param_7,int param_8)
-
-{
-  undefined4 uVar1;
-  undefined4 uVar2;
-  int iVar3;
-  int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  void *pvVar7;
-  void *pvVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
-  void *pvVar12;
-  void *pvVar13;
-  undefined4 uVar14;
-  int iVar15;
-  int iVar16;
-  int iVar17;
-  int iVar18;
-  undefined4 uVar19;
-  undefined4 uVar20;
-  int iVar21;
-  int iVar22;
-  undefined4 uVar23;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  uVar1 = *param_3;
-  uVar2 = param_3[1];
-  iVar3 = thunk_rect_width((iptr)param_3);
-  iVar4 = thunk_rect_height((iptr)param_3);
-  SetRect(&local_1c,param_4,param_5,param_4 + iVar3,param_5 + iVar4);
-  uVar5 = surface_get_row_offsets((SurfaceRowOffsetsView *)param_1);
-  uVar6 = surface_get_row_offsets((SurfaceRowOffsetsView *)param_2);
-  pvVar7 = operator_new((iVar4 + iVar3) * 4);
-  pvVar8 = (void *)(iVar4 * 4 + (int)pvVar7);
-  for (local_44 = 0; local_44 < iVar3; local_44 = local_44 + 1) {
-    *(int *)((int)pvVar8 + local_44 * 4) = local_44;
-  }
-  for (local_48 = 0; local_48 < iVar4; local_48 = local_48 + 1) {
-    *(int *)((int)pvVar7 + local_48 * 4) = local_48;
-  }
-  for (local_44 = 0; local_44 < iVar3; local_44 = local_44 + 1) {
-    uVar9 = rand_below(iVar4);
-    *(undefined4 *)((int)pvVar8 + local_44 * 4) = uVar9;
-  }
-  for (local_48 = 0; local_48 < iVar4; local_48 = local_48 + 1) {
-    local_8 = rand_below(iVar4);
-    local_c = rand_below(iVar4);
-    uVar9 = *(undefined4 *)((int)pvVar7 + local_8 * 4);
-    *(undefined4 *)((int)pvVar7 + local_8 * 4) = *(undefined4 *)((int)pvVar7 + local_c * 4);
-    *(undefined4 *)((int)pvVar7 + local_c * 4) = uVar9;
-  }
-  for (local_48 = 0; local_48 < iVar4; local_48 = local_48 + param_7) {
-    pvVar12 = pvVar8;
-    pvVar13 = pvVar7;
-    uVar9 = uVar5;
-    uVar14 = uVar6;
-    iVar15 = local_48;
-    iVar16 = iVar3;
-    iVar17 = iVar4;
-    iVar18 = param_7;
-    uVar19 = uVar1;
-    uVar20 = uVar2;
-    iVar21 = param_4;
-    iVar22 = param_5;
-    uVar23 = param_6;
-    uVar10 = surface_get_bits(param_2);
-    uVar11 = surface_get_bits(param_1);
-    FUN_0061a000(uVar11,uVar10,pvVar12,pvVar13,uVar9,uVar14,iVar15,iVar16,iVar17,iVar18,uVar19,
-                 uVar20,iVar21,iVar22,uVar23);
-    thunk_wnd_blit_surface_rect(param_2,(iptr)&local_1c);
-    if (param_8 != 0) {
-      ui_wait_ticks(param_8);
-    }
-  }
-  thunk_wnd_blit_surface_rect(param_2,(iptr)&local_1c);
-  operator_delete(pvVar7);
-  return;
-}
-#undef local_48
-#undef local_44
-#undef local_1c
-#undef local_c
-#undef local_8
-
-/* 005df931 auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __cdecl
-ddsurf_draw_bevel_border(DDSurface *param_1,LPRECT param_2,int param_3,undefined4 param_4,undefined4 param_5,
-            undefined4 param_6)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 < 1) {
-    local_8 = param_4;
-    local_c = param_5;
-    param_3 = -param_3;
-  }
-  else {
-    local_8 = param_5;
-    local_c = param_4;
-  }
-  while( true ) {
-    if (param_3 == 0) break;
-    ddsurf_set_line_color_index(local_8,param_6);
-    ddsurf_draw_line
-              (param_1,param_2->right + -1,param_2->top,param_2->right + -1,param_2->bottom + -1);
-    ddsurf_draw_line
-              (param_1,param_2->right + -1,param_2->bottom + -1,param_2->left,param_2->bottom + -1);
-    ddsurf_set_line_color_index(local_c,param_6);
-    ddsurf_draw_line(param_1,param_2->left,param_2->bottom + -1,param_2->left,param_2->top);
-    ddsurf_draw_line(param_1,param_2->left,param_2->top,param_2->right + -1,param_2->top);
-    InflateRect(param_2,-1,-1);
-    param_3 = param_3 + -1;
-  }
-  return;
-}
-#undef local_c
-#undef local_8
-
-/* 005dfa4d auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __cdecl
-surface_draw_bevel_border(iptr param_1,iptr param_2,int param_3,undefined4 param_4,undefined4 param_5)
-
-{
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
-  
-  if (param_3 < 1) {
-    local_8 = param_4;
-    local_c = param_5;
-    param_3 = -param_3;
-  }
-  else {
-    local_8 = param_5;
-    local_c = param_4;
-  }
-  while( true ) {
-    if (param_3 == 0) break;
-    gfx_set_text_color_index(local_8);
-    surface_draw_line
-              ((DibSurface *)param_1,*(int *)(param_2 + 8) + -1,*(undefined4 *)(param_2 + 4),
-               *(int *)(param_2 + 8) + -1,*(int *)(param_2 + 0xc) + -1);
-    surface_draw_line
-              ((DibSurface *)param_1,*(int *)(param_2 + 8) + -1,*(int *)(param_2 + 0xc) + -1,
-               *(undefined4 *)param_2,*(int *)(param_2 + 0xc) + -1);
-    gfx_set_text_color_index(local_c);
-    surface_draw_line
-              ((DibSurface *)param_1,*(undefined4 *)param_2,*(int *)(param_2 + 0xc) + -1,
-               *(undefined4 *)param_2,*(undefined4 *)(param_2 + 4));
-    surface_draw_line
-              ((DibSurface *)param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),
-               *(int *)(param_2 + 8) + -1,*(undefined4 *)(param_2 + 4));
-    InflateRect((LPRECT)param_2,-1,-1);
-    param_3 = param_3 + -1;
+    local_8 += 3;
   }
   return;
 }
@@ -10225,7 +7006,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
       while (local_1c < pbVar3 + (sVar2 - 1)) {
         local_2c = (uint)*local_1c;
         if (local_30 < local_18 + (local_2c & 0x7f) + 1) {
-          local_14 = local_14 + 1000;
+          local_14 += 1000;
           iVar4 = FUN_005f4900(*(undefined4 *)param_1,local_14);
           if (iVar4 == 0) {
             dbg_log(ADDR(0x638ce0, ((u8 *)&g.d_00638ce0)));
@@ -10237,23 +7018,23 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
         }
         if (local_2c < 0x80) {
           bVar1 = local_1c[1];
-          local_1c = local_1c + 2;
+          local_1c += 2;
           while (local_2c != 0) {
             *local_18 = bVar1;
-            local_18 = local_18 + 1;
-            local_8 = local_8 + 1;
-            local_2c = local_2c - 1;
+            local_18++;
+            local_8++;
+            local_2c--;
           }
         }
         else {
-          local_2c = local_2c - 0x80;
-          local_1c = local_1c + 1;
+          local_2c -= 0x80;
+          local_1c++;
           while (local_2c != 0) {
             *local_18 = *local_1c;
-            local_1c = local_1c + 1;
-            local_18 = local_18 + 1;
-            local_8 = local_8 + 1;
-            local_2c = local_2c + -1;
+            local_1c++;
+            local_18++;
+            local_8++;
+            local_2c--;
           }
         }
       }
@@ -10306,7 +7087,7 @@ uint __cdecl mem_rle_compress(iptr param_1,int param_2)
     local_8 = 0;
     local_14 = pcVar2;
     while (local_1c < pcVar4) {
-      for (; (local_24 < pcVar4 && (*local_24 == *local_1c)); local_24 = local_24 + 1) {
+      for (; (local_24 < pcVar4 && (*local_24 == *local_1c)); local_24++) {
       }
       local_c = (int)local_24 - (int)local_1c;
       if (2 < local_c) {
@@ -10317,44 +7098,44 @@ uint __cdecl mem_rle_compress(iptr param_1,int param_2)
             local_c = 0;
           }
           else {
-            *local_14 = '\x7f';
+            *local_14 = 127;
             if (param_2 <= local_8 + 1) goto LAB_005e0071;
-            local_c = local_c + -0x7f;
+            local_c -= 0x7f;
           }
-          local_14 = local_14 + 1;
+          local_14++;
           *local_14 = *local_1c;
           local_14 = pcVar1 + 2;
-          local_8 = local_8 + 2;
+          local_8 += 2;
           if (param_2 <= local_8) goto LAB_005e0071;
         }
         local_1c = local_24;
       }
-      for (; (local_24 < pcVar4 && (local_24[1] != *local_24)); local_24 = local_24 + 1) {
+      for (; (local_24 < pcVar4 && (local_24[1] != *local_24)); local_24++) {
       }
       local_c = (int)local_24 - (int)local_1c;
       while (local_c != 0) {
         if (local_c < 0x80) {
-          *local_14 = (char)local_c + -0x80;
-          local_14 = local_14 + 1;
-          local_8 = local_8 + 1;
+          *local_14 = (char)local_c - 0x80;
+          local_14++;
+          local_8++;
           if (param_2 <= local_8) goto LAB_005e0071;
           local_10 = local_c;
           local_c = 0;
         }
         else {
           *local_14 = -1;
-          local_14 = local_14 + 1;
-          local_8 = local_8 + 1;
+          local_14++;
+          local_8++;
           if (param_2 <= local_8) goto LAB_005e0071;
-          local_c = local_c + -0x7f;
+          local_c -= 0x7f;
           local_10 = 0x7f;
         }
         while (local_10 != 0) {
           *local_14 = *local_1c;
-          local_1c = local_1c + 1;
-          local_14 = local_14 + 1;
-          local_8 = local_8 + 1;
-          local_10 = local_10 + -1;
+          local_1c++;
+          local_14++;
+          local_8++;
+          local_10--;
           if (param_2 <= local_8) goto LAB_005e0071;
         }
       }

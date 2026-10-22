@@ -39,7 +39,7 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
 
     if (impr <= 0 || impr >= 0x23)
         return eax_in;
-    thunk_bit_index_split(impr, &index, &mask);
+    bit_index_split(impr, &index, &mask);
     if (on != 0)
         (&g_city_improvements(city))[index] |= (byte)mask;
     else

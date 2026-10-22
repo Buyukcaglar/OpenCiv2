@@ -20,7 +20,7 @@ int __cdecl rand_range(int lo, int hi)
     int t;
 
     if (hi == lo) {
-        thunk_rng_next_unit();     /* still advances the generator */
+        rng_next_unit();     /* still advances the generator */
         return lo;
     }
     if (hi < lo) {
@@ -29,5 +29,5 @@ int __cdecl rand_range(int lo, int hi)
         hi = t;
     }
     span = (double)(hi - lo) + 0.999999;
-    return (int)(thunk_rng_next_unit() * span) + lo;
+    return (int)(rng_next_unit() * span) + lo;
 }
