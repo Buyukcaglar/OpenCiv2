@@ -186,6 +186,7 @@ void wnd_invalidate_desktop(const RECT *r);     /* InvalidateRect(NULL) */
 void wnd_expose(Window *top, const RECT *r);    /* repaint an area of a top-level window's surface */
 Window *wnd_top(Window *w);
 int wnd_nc_button(Window *w, POINT screen);      /* HTCLOSE/HTMAXBUTTON/HTMINBUTTON at a point, or 0 */
+void scroll_track_nc(Window *w, int hit);
 void wnd_nc_track(Window *w, int hit);           /* DefWindowProc: drag the caption, a border or a button */
 Bitmap *wnd_surface(Window *top);
 void plat_compose(void);                /* the desktop: background and windows -> screen */
@@ -262,6 +263,7 @@ void timers_fire(void);
 void timers_window_destroyed(HWND h);
 void msg_window_destroyed(HWND h);
 void msg_trace_window_created(HWND h, const char *cls);
+extern int msg_trace_internal;
 Window *wnd_next_dirty(Window *root);
 void scroll_paint_nc(Window *w);
 void wnd_init(void);

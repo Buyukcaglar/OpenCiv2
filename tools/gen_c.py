@@ -477,6 +477,12 @@ FRAME_PRESETS = {
     # it never zeroes; the original's stack held 0 there (in 687 of 713 calls
     # over 50 turns; the rest saw a stack address left by an earlier call).
     'city_calc_commodity_demand': 'local_12c = 0;',
+    # The AI's review of a neighbour starts its attitude change from the
+    # count of border intruders, set only when there are some: otherwise it
+    # adds to what the stack held, a stale pointer in the original
+    # (0x6715d7a0 in the WWII scenario under Wine; the attitude clamps, so
+    # what matters is that it is large and positive).
+    'diplo_ai_review_relations': 'local_34 = 0x6715d7a0;',
 }
 
 

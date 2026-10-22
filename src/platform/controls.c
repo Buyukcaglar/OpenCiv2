@@ -253,8 +253,10 @@ LRESULT ctl_edit_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         if (w->exstyle & WS_EX_CLIENTEDGE)
             e->border = 0;
         else if (w->style & WS_BORDER) {
+            /* the style it was created with: WS_VISIBLE too, so the
+               creation's ShowWindow finds it shown */
             e->border = 1;
-            SetWindowLongA(h, GWL_STYLE, (LONG_PTR)(w->style & ~WS_BORDER));
+            SetWindowLongA(h, GWL_STYLE, (LONG_PTR)(((const CREATESTRUCTA *)lp)->style & ~WS_BORDER));
         }
         e->readonly = (w->style & ES_READONLY) != 0;
         edit_set_text(e, w->text);
@@ -471,6 +473,7 @@ typedef struct {
     int n, cap, cur, top, item_h;
     HFONT font;
     int focused;
+    int vscroll;                /* created with WS_VSCROLL: shown when the items do not fit */
 } ListBox;
 
 static ListBox *lb_of(Window *w) { return w ? (ListBox *)w->control : NULL; }
@@ -498,6 +501,17 @@ static int lb_insert(Window *w, int pos, const char *s, ULONG_PTR data)
     if (lb->cur >= pos)
         lb->cur++;
     return pos;
+}
+
+/* DrawFocusRect: every other pixel of the outline inverted. */
+static void focus_rect(HDC hdc, const RECT *r)
+{
+    int x, y;
+    for (x = r->left; x < r->right; x++)
+        for (y = r->top; y < r->bottom; y++)
+            if ((y == r->top || y == r->bottom - 1 || x == r->left || x == r->right - 1) &&
+                !((x - r->left + y - r->top) & 1))
+                PatBlt(hdc, x, y, 1, 1, DSTINVERT);
 }
 
 static void lb_paint(Window *w, HDC hdc)
@@ -533,9 +547,20 @@ static void lb_paint(Window *w, HDC hdc)
         FillRect(hdc, &it, sel ? GetSysColorBrush(COLOR_HIGHLIGHT) : br);
         SetBkMode(hdc, TRANSPARENT);
         SetTextColor(hdc, sel ? GetSysColor(COLOR_HIGHLIGHTTEXT) : GetSysColor(COLOR_WINDOWTEXT));
-        it.left += 2;
-        if (lb->items[i].text)
-            DrawTextA(hdc, lb->items[i].text, -1, &it, DT_SINGLELINE | DT_NOPREFIX | DT_LEFT | DT_VCENTER);
+        if (lb->items[i].text) {
+            RECT t = it;
+            t.left++;
+            DrawTextA(hdc, lb->items[i].text, -1, &t, DT_SINGLELINE | DT_NOPREFIX | DT_LEFT | DT_VCENTER);
+        }
+        if (lb->focused && i == (lb->cur >= 0 ? lb->cur : 0))
+            focus_rect(hdc, &it);
+    }
+    if (!lb->n && lb->focused && !(w->style & (LBS_OWNERDRAWFIXED | LBS_OWNERDRAWVARIABLE))) {
+        /* an empty list shows where the caret is */
+        it.left = 0; it.right = r.right; it.top = 0; it.bottom = lb->item_h;
+        FillRect(hdc, &it, br);
+        focus_rect(hdc, &it);
+        y = it.bottom;
     }
     if (y < r.bottom) {
         it.left = 0; it.right = r.right; it.top = y; it.bottom = r.bottom;
@@ -543,28 +568,42 @@ static void lb_paint(Window *w, HDC hdc)
     }
 }
 
-static int lb_visible(Window *w)
+/* LISTBOX_UpdatePage: the items wholly shown, at least 1. */
+static int lb_page(Window *w)
 {
     ListBox *lb = lb_of(w);
     RECT r;
+    int n;
     GetClientRect(w->hwnd, &r);
-    return lb->item_h ? (r.bottom + lb->item_h - 1) / lb->item_h : 1;
+    n = lb->item_h > 0 ? r.bottom / lb->item_h : 1;
+    return n < 1 ? 1 : n;
 }
 
+/* LISTBOX_UpdateScroll: range all items, page the items shown; the bar is
+ * hidden (disabled with LBS_DISABLENOSCROLL) while they all fit. */
 static void lb_update_scroll(Window *w)
 {
     ListBox *lb = lb_of(w);
-    int vis = lb_visible(w) - 1;
-    if (!(w->style & WS_VSCROLL))
+    int page = lb_page(w);
+    if (!lb->vscroll)
         return;
-    SetScrollRange(w->hwnd, SB_VERT, 0, lb->n > vis ? lb->n - vis : 0, FALSE);
+    w->vscroll.min = 0;
+    w->vscroll.max = lb->n - 1;
+    w->vscroll.page = page;
+    if (lb->n <= page && !(w->style & LBS_DISABLENOSCROLL)) {
+        if (w->style & WS_VSCROLL)
+            ShowScrollBar(w->hwnd, SB_VERT, FALSE);
+        return;
+    }
+    if (!(w->style & WS_VSCROLL))
+        ShowScrollBar(w->hwnd, SB_VERT, TRUE);
     SetScrollPos(w->hwnd, SB_VERT, lb->top, TRUE);
 }
 
 static void lb_set_cur(Window *w, int i, int scroll)
 {
     ListBox *lb = lb_of(w);
-    int vis = lb_visible(w) - 1;
+    int vis = lb_page(w);
     lb->cur = i;
     if (scroll && i >= 0) {
         if (i < lb->top)
@@ -591,6 +630,7 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         lb = calloc(1, sizeof *lb);
         w->control = lb;
         lb->cur = -1;
+        lb->vscroll = (w->style & WS_VSCROLL) != 0;
         lb->font = default_font();
         text_metrics(font_face_of(lb->font), &tm);
         lb->item_h = tm.tmHeight;
@@ -637,7 +677,26 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
     }
     case WM_ERASEBKGND:
         return 1;
+    case WM_MOUSEACTIVATE:      /* a combo box's dropped list leaves the focus where it is */
+        if (w->style & LBS_COMBOBOX)
+            return MA_NOACTIVATE;
+        break;
     case WM_SIZE:
+        /* LISTBOX_UpdateSize: a whole number of items high */
+        if (!(w->style & (LBS_NOINTEGRALHEIGHT | LBS_OWNERDRAWVARIABLE)) && lb->item_h > 0) {
+            RECT c, r;
+            int rem;
+            GetClientRect(h, &c);
+            rem = c.bottom % lb->item_h;
+            if (c.bottom > lb->item_h && rem) {
+                GetWindowRect(h, &r);
+                SetWindowPos(h, NULL, 0, 0, r.right - r.left, r.bottom - r.top - rem,
+                             SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE);
+                return 0;
+            }
+        }
+        if (lb->top > lb->n - lb_page(w))
+            lb->top = lb->n - lb_page(w) > 0 ? lb->n - lb_page(w) : 0;
         lb_update_scroll(w);
         return 0;
     case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
@@ -656,8 +715,8 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         switch (wp) {
         case VK_UP: n--; break;
         case VK_DOWN: n++; break;
-        case VK_PRIOR: n -= lb_visible(w) - 1; break;
-        case VK_NEXT: n += lb_visible(w) - 1; break;
+        case VK_PRIOR: n -= lb_page(w) - 1; break;
+        case VK_NEXT: n += lb_page(w) - 1; break;
         case VK_HOME: n = 0; break;
         case VK_END: n = lb->n - 1; break;
         default: return 0;
@@ -672,7 +731,7 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         return 0;
     }
     case WM_VSCROLL: {
-        int vis = lb_visible(w) - 1, top = lb->top;
+        int vis = lb_page(w), top = lb->top;
         switch (LOWORD(wp)) {
         case SB_LINEUP: top--; break;
         case SB_LINEDOWN: top++; break;
@@ -815,12 +874,220 @@ LRESULT ctl_listbox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
 }
 
 /* ======================================================================
- * COMBOBOX: a selection field with a list shown on demand.
+ * COMBOBOX: a selection field with a list dropped down on demand, laid
+ * out and drawn as Wine's combo.c does (the recordings were made with
+ * it).  Every type is handled as CBS_DROPDOWNLIST: the field is as tall as
+ * the font allows, the height asked for is the dropped list's.
  */
 
-typedef struct { HWND list; int shown; HFONT font; } Combo;
+typedef struct {
+    HWND list;                  /* a popup LISTBOX (LBS_COMBOBOX) */
+    HFONT font;
+    int drop_h;                 /* height of the dropped list at most */
+    int dropped, pushed, focused;
+    int noresize;               /* resizing to the field height: drop_h stays */
+} Combo;
 
 static Combo *combo_of(Window *w) { return w ? (Combo *)w->control : NULL; }
+
+/* CBGetTextAreaHeight: the font height and 4; the window has a 2-pixel
+ * edge around it. */
+static int combo_text_h(Combo *c)
+{
+    TEXTMETRICA tm;
+    text_metrics(font_face_of(c->font), &tm);
+    return tm.tmHeight + 4;
+}
+
+static int combo_height(Combo *c) { return combo_text_h(c) + 4; }
+
+/* CBCalcPlacement: the button at the right of the area inside the edge, the
+ * text left of it, one pixel in. */
+static void combo_rects(Window *w, Combo *c, RECT *text, RECT *button)
+{
+    RECT e;
+    GetClientRect(w->hwnd, &e);
+    InflateRect(&e, -2, -2);
+    e.bottom = e.top + combo_text_h(c);
+    *button = e;
+    button->left = button->right - GetSystemMetrics(SM_CXVSCROLL);
+    *text = e;
+    text->right = button->left;
+    InflateRect(text, -1, -1);
+}
+
+static void combo_resize(Window *w, Combo *c)
+{
+    c->noresize = 1;
+    SetWindowPos(w->hwnd, NULL, 0, 0, w->rect.right - w->rect.left, combo_height(c),
+                 SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+    c->noresize = 0;
+}
+
+/* DrawFrameControl(DFC_SCROLL, DFCS_SCROLLCOMBOBOX): a raised button with a
+ * 7-pixel triangle pointing down. */
+static void combo_paint_button(HDC hdc, const RECT *b, int pushed)
+{
+    DC *dc = dc_get(hdc);
+    RECT r = *b;
+    int i, x, y;
+    FillRect(hdc, &r, GetSysColorBrush(COLOR_BTNFACE));
+    if (pushed) {
+        HBRUSH sh = GetSysColorBrush(COLOR_BTNSHADOW);
+        FrameRect(hdc, &r, sh);
+    } else {
+        draw_edge(hdc, &r, 0);
+    }
+    x = (b->left + b->right) / 2 - 3 + pushed;
+    y = (b->top + b->bottom) / 2 - 1 + pushed;
+    for (i = 0; i < 4; i++) {
+        RECT l;
+        l.left = x + i; l.right = x + 7 - i; l.top = y + i; l.bottom = l.top + 1;
+        dc_fill_rect(dc, &l, GetSysColor(COLOR_BTNTEXT));
+    }
+}
+
+static void combo_paint(Window *w, Combo *c, HDC hdc)
+{
+    RECT cr, text, button, in;
+    char s[256] = "";
+    int cur = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0);
+    int hilite = c->focused && !c->dropped;
+    GetClientRect(w->hwnd, &cr);
+    combo_rects(w, c, &text, &button);
+    in = cr;
+    InflateRect(&in, -2, -2);
+    in.right = button.left;
+    FillRect(hdc, &in, GetSysColorBrush(COLOR_WINDOW));
+    draw_edge(hdc, &cr, 1);
+    combo_paint_button(hdc, &button, c->pushed);
+    if (cur >= 0)
+        SendMessageA(c->list, LB_GETTEXT, (WPARAM)cur, (LPARAM)s);
+    if (hilite)
+        FillRect(hdc, &text, GetSysColorBrush(COLOR_HIGHLIGHT));
+    SelectObject(hdc, c->font);
+    SetBkMode(hdc, TRANSPARENT);
+    SetTextColor(hdc, GetSysColor(!IsWindowEnabled(w->hwnd) ? COLOR_GRAYTEXT :
+                                  hilite ? COLOR_HIGHLIGHTTEXT : COLOR_WINDOWTEXT));
+    in = text;
+    in.left++;
+    in.top++;
+    DrawTextA(hdc, s, -1, &in, DT_SINGLELINE | DT_NOPREFIX);
+}
+
+static void combo_close(Window *w, Combo *c, int ok, int old)
+{
+    int cur;
+    if (!c->dropped)
+        return;
+    c->dropped = c->pushed = 0;
+    ShowWindow(c->list, SW_HIDE);
+    InvalidateRect(w->hwnd, NULL, TRUE);
+    if (!ok)
+        SendMessageA(c->list, LB_SETCURSEL, (WPARAM)old, 0);
+    notify(w->hwnd, CBN_CLOSEUP);
+    cur = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0);
+    if (ok && wnd_get(w->hwnd)) {
+        notify(w->hwnd, CBN_SELENDOK);
+        if (cur != old && wnd_get(w->hwnd))
+            notify(w->hwnd, CBN_SELCHANGE);
+    }
+}
+
+/* Drop the list down under the field and track it until an item is chosen
+ * or the list is dismissed, as the list's capture does on Windows. */
+static void combo_drop(HWND h)
+{
+    Window *w = wnd_get(h);
+    Combo *c = combo_of(w);
+    RECT wr;
+    MSG msg;
+    int n, ih, ht, old;
+    if (!c || c->dropped)
+        return;
+    notify(h, CBN_DROPDOWN);
+    if (!(w = wnd_get(h)) || !(c = combo_of(w)))
+        return;
+    old = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0);
+    n = (int)SendMessageA(c->list, LB_GETCOUNT, 0, 0);
+    ih = (int)SendMessageA(c->list, LB_GETITEMHEIGHT, 0, 0);
+    ht = c->drop_h;
+    if (n > 0 && n * ih + 2 < ht)
+        ht = n * ih + 2;
+    if (ht < ih + 2)
+        ht = ih + 2;
+    GetWindowRect(h, &wr);
+    if (wr.bottom + ht > GetSystemMetrics(SM_CYSCREEN) && wr.top - ht >= 0)
+        wr.bottom = wr.top - ht;
+    c->dropped = c->pushed = 1;
+    SetWindowPos(c->list, HWND_TOPMOST, wr.left, wr.bottom, wr.right - wr.left, ht,
+                 SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    if (old >= 0)
+        SendMessageA(c->list, LB_SETCURSEL, (WPARAM)old, 0);
+    InvalidateRect(h, NULL, TRUE);
+    UpdateWindow(h);
+    while ((w = wnd_get(h)) && (c = combo_of(w)) && c->dropped) {
+        UINT m;
+        if (!GetMessageA(&msg, NULL, 0, 0)) {
+            combo_close(w, c, 0, old);
+            PostQuitMessage((int)msg.wParam);
+            return;
+        }
+        if (!(w = wnd_get(h)) || !(c = combo_of(w)))
+            return;
+        m = msg.message;
+        if (m >= WM_MOUSEFIRST && m <= WM_MOUSELAST) {
+            if (m == WM_MOUSEWHEEL) {
+                SendMessageA(c->list, m, msg.wParam, msg.lParam);
+            } else if (msg.hwnd == c->list) {
+                int top = (int)SendMessageA(c->list, LB_GETTOPINDEX, 0, 0);
+                int i = top + (short)HIWORD(msg.lParam) / (ih > 0 ? ih : 1);
+                if (i >= 0 && i < n && i != (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0))
+                    SendMessageA(c->list, LB_SETCURSEL, (WPARAM)i, 0);
+                if (m == WM_LBUTTONUP)
+                    combo_close(w, c, i >= 0 && i < n, old);
+            } else if (m == WM_LBUTTONDOWN || m == WM_LBUTTONDBLCLK || m == WM_RBUTTONDOWN ||
+                       m == WM_RBUTTONDBLCLK || m == WM_MBUTTONDOWN || m == WM_MBUTTONDBLCLK) {
+                combo_close(w, c, 0, old);
+            } else if (m == WM_LBUTTONUP && c->pushed) {
+                c->pushed = 0;
+                InvalidateRect(h, NULL, FALSE);
+            }
+            continue;
+        }
+        if (m >= WM_NCMOUSEMOVE && m <= WM_NCMBUTTONDBLCLK) {
+            if (msg.hwnd == c->list)
+                DispatchMessageA(&msg);         /* its scroll bar */
+            else if (m != WM_NCMOUSEMOVE)
+                combo_close(w, c, 0, old);
+            continue;
+        }
+        if (m == WM_KEYDOWN || m == WM_SYSKEYDOWN) {
+            switch (msg.wParam) {
+            case VK_ESCAPE:
+                combo_close(w, c, 0, old);
+                break;
+            case VK_RETURN: case VK_F4: case VK_TAB:
+                combo_close(w, c, 1, old);
+                break;
+            case VK_UP: case VK_DOWN:
+                if (m == WM_SYSKEYDOWN) {
+                    combo_close(w, c, 1, old);
+                    break;
+                }
+                /* fall through */
+            case VK_PRIOR: case VK_NEXT: case VK_HOME: case VK_END:
+                SendMessageA(c->list, WM_KEYDOWN, msg.wParam, msg.lParam);
+                break;
+            }
+            continue;
+        }
+        if (m == WM_KEYUP || m == WM_SYSKEYUP || m == WM_CHAR || m == WM_SYSCHAR)
+            continue;
+        TranslateMessage(&msg);
+        DispatchMessageA(&msg);
+    }
+}
 
 LRESULT ctl_combobox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
 {
@@ -846,15 +1113,45 @@ LRESULT ctl_combobox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         }
     switch (m) {
     case WM_NCCREATE:
+        /* COMBO_NCCreate: "some braindead apps do try to use scrollbar/border
+           flags"; the style set is the one created with, WS_VISIBLE too */
         c = calloc(1, sizeof *c);
         w->control = c;
         c->font = default_font();
-        c->list = CreateWindowExA(0, "LISTBOX", "", WS_CHILD | LBS_NOTIFY | WS_VSCROLL | (w->style & CBS_SORT ? LBS_SORT : 0) |
+        SetWindowLongA(h, GWL_STYLE, (LONG_PTR)(((const CREATESTRUCTA *)lp)->style &
+                                                ~(WS_BORDER | WS_HSCROLL | WS_VSCROLL)));
+        SetWindowLongA(h, GWL_EXSTYLE, (LONG_PTR)(w->exstyle & ~WS_EX_CLIENTEDGE));
+        return TRUE;
+    case WM_CREATE: {
+        /* COMBO_Create: the list (made a child, so the combo box hears of it,
+           then shown on the desktop), the field cut down to the text */
+        const CREATESTRUCTA *cs = (const CREATESTRUCTA *)lp;
+        msg_trace_internal++;
+        c->list = CreateWindowExA(WS_EX_TOPMOST | WS_EX_TOOLWINDOW, "LISTBOX", "",
+                                  WS_POPUP | WS_BORDER | WS_VSCROLL | LBS_NOTIFY | LBS_COMBOBOX |
+                                  (w->style & CBS_SORT ? LBS_SORT : 0) |
                                   (w->style & CBS_OWNERDRAWFIXED ? LBS_OWNERDRAWFIXED : 0) |
                                   (w->style & CBS_HASSTRINGS ? LBS_HASSTRINGS : 0),
-                                  0, 0, 10, 10, h, (HMENU)1000, 0, NULL);
-        return TRUE;
+                                  0, 0, 10, 10, h, NULL, 0, NULL);
+        msg_trace_internal--;
+        wnd_send(w, WM_PARENTNOTIFY, MAKEWPARAM(WM_CREATE, 1000), (LPARAM)c->list);
+        c->drop_h = cs->cy - combo_height(c);
+        combo_resize(w, c);
+        return 0;
+    }
+    case WM_WINDOWPOSCHANGING: {
+        WINDOWPOS *p = (WINDOWPOS *)lp;
+        if (!(p->flags & SWP_NOSIZE)) {
+            int ch = combo_height(c);
+            if (p->cy != ch && !c->noresize)
+                c->drop_h = p->cy - ch;
+            p->cy = ch;
+        }
+        return 0;
+    }
     case WM_DESTROY:
+        if (wnd_get(c->list))
+            DestroyWindow(c->list);
         free(c);
         w->control = NULL;
         return 0;
@@ -869,22 +1166,41 @@ LRESULT ctl_combobox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
         return r;
     }
     case CB_SHOWDROPDOWN:
+        if (wp)
+            combo_drop(h);
+        else
+            combo_close(w, c, 1, (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0));
+        return TRUE;
     case CB_GETDROPPEDSTATE:
-        return 0;
+        return c->dropped;
     case WM_SETFONT:
         c->font = wp ? (HFONT)wp : default_font();
-        SendMessageA(c->list, WM_SETFONT, wp, lp);
+        SendMessageA(c->list, WM_SETFONT, wp, 0);
+        combo_resize(w, c);
+        if (LOWORD(lp))
+            InvalidateRect(h, NULL, TRUE);
         return 0;
     case WM_GETFONT:
         return (LRESULT)c->font;
-    case WM_COMMAND:
-        if ((HWND)lp == c->list && HIWORD(wp) == LBN_SELCHANGE) {
-            InvalidateRect(h, NULL, TRUE);
-            notify(h, CBN_SELCHANGE);
-        }
+    case WM_SETFOCUS:
+        c->focused = 1;
+        InvalidateRect(h, NULL, FALSE);
+        notify(h, CBN_SETFOCUS);
         return 0;
-    case WM_KEYDOWN:
-        if (wp == VK_UP || wp == VK_DOWN) {
+    case WM_KILLFOCUS:
+        c->focused = 0;
+        InvalidateRect(h, NULL, FALSE);
+        notify(h, CBN_KILLFOCUS);
+        return 0;
+    case WM_ENABLE:
+        InvalidateRect(h, NULL, TRUE);
+        return 0;
+    case WM_GETDLGCODE:
+        return DLGC_WANTARROWS | DLGC_WANTCHARS;
+    case WM_KEYDOWN: case WM_SYSKEYDOWN:
+        if (wp == VK_F4 || (m == WM_SYSKEYDOWN && (wp == VK_UP || wp == VK_DOWN))) {
+            combo_drop(h);
+        } else if (m == WM_KEYDOWN && (wp == VK_UP || wp == VK_DOWN)) {
             int cur = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0), n = (int)SendMessageA(c->list, LB_GETCOUNT, 0, 0);
             cur += wp == VK_UP ? -1 : 1;
             if (cur >= 0 && cur < n) {
@@ -892,35 +1208,21 @@ LRESULT ctl_combobox_proc(HWND h, UINT m, WPARAM wp, LPARAM lp)
                 InvalidateRect(h, NULL, TRUE);
                 notify(h, CBN_SELCHANGE);
             }
+        } else if (m == WM_SYSKEYDOWN) {
+            return DefWindowProcA(h, m, wp, lp);
         }
         return 0;
-    case WM_LBUTTONDOWN: {
-        /* Cycle through the entries (no drop-down list window). */
-        int cur = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0), n = (int)SendMessageA(c->list, LB_GETCOUNT, 0, 0);
+    case WM_LBUTTONDOWN: case WM_LBUTTONDBLCLK:
         SetFocus(h);
-        if (n) {
-            SendMessageA(c->list, LB_SETCURSEL, (WPARAM)((cur + 1) % n), 0);
-            InvalidateRect(h, NULL, TRUE);
-            notify(h, CBN_SELCHANGE);
-        }
+        if (wnd_get(h))
+            combo_drop(h);
         return 0;
-    }
+    case WM_ERASEBKGND:
+        return 1;
     case WM_PAINT: {
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(h, &ps);
-        RECT r;
-        char text[256] = "";
-        int cur = (int)SendMessageA(c->list, LB_GETCURSEL, 0, 0);
-        GetClientRect(h, &r);
-        FillRect(hdc, &r, GetSysColorBrush(COLOR_WINDOW));
-        draw_edge(hdc, &r, 1);
-        if (cur >= 0)
-            SendMessageA(c->list, LB_GETTEXT, (WPARAM)cur, (LPARAM)text);
-        SelectObject(hdc, c->font);
-        SetBkMode(hdc, TRANSPARENT);
-        SetTextColor(hdc, GetSysColor(COLOR_WINDOWTEXT));
-        r.left += 4;
-        DrawTextA(hdc, text, -1, &r, DT_SINGLELINE | DT_VCENTER | DT_NOPREFIX);
+        combo_paint(w, c, hdc);
         EndPaint(h, &ps);
         return 0;
     }
@@ -984,24 +1286,60 @@ static void scroll_track(DC *dc, const RECT *t, int ctl, POINT org)
         }
 }
 
+/* SCROLL_GetScrollBarRect: the size of the arrows and the thumb (0: none)
+ * and the thumb's position along a bar of length len; with a page the
+ * thumb is that part of the track. */
+static void scroll_geom(const Scroll *s, int len, int disabled, int *arrow, int *thumb, int *thumb_pos)
+{
+    int px, th = 17, max;
+    *thumb = *thumb_pos = 0;
+    if (len <= 2 * 17 + 4) {
+        *arrow = len > 4 ? (len - 4) / 2 : 0;
+        return;
+    }
+    *arrow = 17;
+    px = len - 2 * 17;
+    if (s->page && s->max >= s->min) {
+        th = MulDiv(px, s->page, s->max - s->min + 1);
+        if (th < 8)
+            th = 8;
+    }
+    if ((px -= th) < 0 || disabled)
+        return;
+    max = s->max - (s->page > 1 ? s->page - 1 : 0);
+    *thumb = th;
+    *thumb_pos = s->min >= max ? 17 : 17 + MulDiv(px, s->pos - s->min, max - s->min);
+}
+
+/* SCROLL_GetThumbVal: the position for the thumb's top at pixel at. */
+static int scroll_thumb_val(const Scroll *s, int len, int at)
+{
+    int px = len - 2 * 17, th = 17, range;
+    if (px <= 0)
+        return s->min;
+    if (s->page && s->max >= s->min) {
+        th = MulDiv(px, s->page, s->max - s->min + 1);
+        if (th < 8)
+            th = 8;
+    }
+    if ((px -= th) <= 0)
+        return s->min;
+    at -= 17;
+    if (at < 0) at = 0;
+    if (at > px) at = px;
+    range = s->page ? s->max - s->min - s->page + 1 : s->max - s->min;
+    return s->min + MulDiv(at, range, px);
+}
+
 /* Draw a scroll bar in rect r (logical coordinates of hdc), as Wine with its
  * default theme does (SCROLL_GetScrollBarRect geometry). */
 static void scroll_draw(HDC hdc, const RECT *r, int vert, const Scroll *s, int ctl, int disabled, POINT org)
 {
     DC *dc = dc_get(hdc);
     int len = vert ? r->bottom - r->top : r->right - r->left;
-    int arrow, thumb = 0, thumb_pos = 0;
+    int arrow, thumb, thumb_pos;
     RECT a, b, t;
-    if (len <= 2 * 17 + 4)
-        arrow = len > 4 ? (len - 4) / 2 : 0;
-    else {
-        int px = len - 2 * 17 - 17;
-        arrow = 17;
-        if (px >= 0 && !disabled) {
-            thumb = 17;
-            thumb_pos = s->min >= s->max ? arrow : arrow + MulDiv(px, s->pos - s->min, s->max - s->min);
-        }
-    }
+    scroll_geom(s, len, disabled, &arrow, &thumb, &thumb_pos);
     a = b = t = *r;
     if (vert) {
         a.bottom = a.top + arrow;
@@ -1026,9 +1364,9 @@ static void scroll_draw(HDC hdc, const RECT *r, int vert, const Scroll *s, int c
         scroll_track(dc, &t1, ctl, org);
         scroll_track(dc, &t2, ctl, org);
         if (vert)
-            scroll_part(dc, sb_vthumb, r->left, r->top + thumb_pos, r->right - r->left, 17, r);
+            scroll_part(dc, sb_vthumb, r->left, r->top + thumb_pos, r->right - r->left, thumb, r);
         else
-            scroll_part(dc, sb_hthumb, r->left + thumb_pos, r->top, 17, r->bottom - r->top, r);
+            scroll_part(dc, sb_hthumb, r->left + thumb_pos, r->top, thumb, r->bottom - r->top, r);
     } else {
         scroll_track(dc, &t, ctl, org);
     }
@@ -1068,6 +1406,87 @@ void scroll_paint_nc(Window *w)
         dc_fill_rect(dc, &r, RGB(245, 245, 245));
     }
     ReleaseDC(w->hwnd, hdc);
+}
+
+/* A window's scroll bar (HTVSCROLL, HTHSCROLL) clicked: scroll, repeating
+ * while the button is held on an arrow or the track, or drag the thumb --
+ * Wine's SCROLL_TrackScrollBar. */
+#define SCROLL_TIMER 0xfffa
+
+void scroll_track_nc(Window *w, int hit)
+{
+    HWND h = w->hwnd;
+    int vert = hit == HTVSCROLL, msgid = vert ? WM_VSCROLL : WM_HSCROLL;
+    Scroll *s = vert ? &w->vscroll : &w->hscroll;
+    int len = vert ? w->client.bottom - w->client.top : w->client.right - w->client.left;
+    int arrow, thumb, thumb_pos, at, part, grab = 0, val = 0, done = 0;
+    POINT o, pt;
+    MSG msg;
+    wnd_client_screen(w, &o);
+    GetCursorPos(&pt);
+#define AT(p) (vert ? (p).y - o.y : (p).x - o.x)
+#define PART(a) ((a) < arrow ? SB_LINEUP : (a) >= len - arrow ? SB_LINEDOWN : !thumb ? SB_ENDSCROLL : \
+                 (a) < thumb_pos ? SB_PAGEUP : (a) >= thumb_pos + thumb ? SB_PAGEDOWN : SB_THUMBTRACK)
+    at = AT(pt);
+    scroll_geom(s, len, (w->style & WS_DISABLED) != 0, &arrow, &thumb, &thumb_pos);
+    part = PART(at);
+    if (part == SB_ENDSCROLL)
+        return;
+    SetCapture(h);
+    if (part == SB_THUMBTRACK) {
+        grab = at - thumb_pos;
+        val = s->pos;
+    } else {
+        SendMessageA(h, msgid, (WPARAM)part, 0);
+        SetTimer(h, SCROLL_TIMER, 200, NULL);
+    }
+    while (!done && wnd_get(h)) {
+        if (!GetMessageA(&msg, NULL, 0, 0)) {
+            PostQuitMessage((int)msg.wParam);
+            break;
+        }
+        switch (msg.message) {
+        case WM_TIMER:
+            if (msg.hwnd != h || msg.wParam != SCROLL_TIMER)
+                goto dispatch;
+            GetCursorPos(&pt);
+            scroll_geom(s, len, (w->style & WS_DISABLED) != 0, &arrow, &thumb, &thumb_pos);
+            if (PART(AT(pt)) == part)
+                SendMessageA(h, msgid, (WPARAM)part, 0);
+            SetTimer(h, SCROLL_TIMER, 50, NULL);
+            break;
+        case WM_MOUSEMOVE: case WM_NCMOUSEMOVE:
+            if (part == SB_THUMBTRACK) {
+                int v;
+                GetCursorPos(&pt);
+                v = scroll_thumb_val(s, len, AT(pt) - grab);
+                if (v != val) {
+                    val = v;
+                    SendMessageA(h, msgid, MAKEWPARAM(SB_THUMBTRACK, val), 0);
+                }
+            }
+            break;
+        case WM_LBUTTONUP: case WM_NCLBUTTONUP:
+            done = 1;
+            break;
+        default:
+        dispatch:
+            TranslateMessage(&msg);
+            DispatchMessageA(&msg);
+        }
+        if (GetCapture() != h)
+            break;
+    }
+#undef AT
+#undef PART
+    if (!wnd_get(h))
+        return;
+    KillTimer(h, SCROLL_TIMER);
+    if (GetCapture() == h)
+        ReleaseCapture();
+    if (part == SB_THUMBTRACK)
+        SendMessageA(h, msgid, MAKEWPARAM(SB_THUMBPOSITION, val), 0);
+    SendMessageA(h, msgid, SB_ENDSCROLL, 0);
 }
 
 /* Which part of a bar of length len (with button size btn) a point hits. */

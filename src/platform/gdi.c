@@ -170,7 +170,7 @@ void gdi_init(void)
     for (i = 0; i < 31; i++)
         obj_set_stock(sys_brush[i] = new_brush(BS_SOLID, sys_colors[i]));
     memset(&lf, 0, sizeof lf);
-    lf.lfHeight = -16;
+    lf.lfHeight = 16;           /* Wine's: a 16-pixel cell */
     lf.lfWeight = 700;
     strcpy(lf.lfFaceName, "System");
     for (i = 0; i < 18; i++) {

@@ -309,7 +309,9 @@ void wnd_host_events(void)
 
 /* What of w (client area, or whole window) is drawn, in screen
  * coordinates: clipped by its ancestors' client areas, minus siblings above
- * it (and above each ancestor), minus its children when it clips them.
+ * it (and above each ancestor) for those with WS_CLIPSIBLINGS -- without it a
+ * child draws over its siblings, as in Wine's get_visible_region -- minus
+ * its children when it clips them.
  * Other top-level windows do not clip it: each top-level window draws into
  * a surface of its own, as Wine's do, and the desktop shows them composed. */
 void wnd_visible_region(Window *w, int client, Region *out)
@@ -343,7 +345,7 @@ void wnd_visible_region(Window *w, int client, Region *out)
             c.bottom = o.y + (p->client.bottom - p->client.top);
             rgn_intersect_rect(out, &c);
         }
-        for (s = p->children; s && s != a; s = s->next)
+        for (s = (a->style & WS_CLIPSIBLINGS) ? p->children : NULL; s && s != a; s = s->next)
             if ((s->style & WS_VISIBLE) && !s->minimized) {
                 RECT sr;
                 wnd_screen_rect(s, &sr);

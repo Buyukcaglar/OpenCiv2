@@ -244,6 +244,7 @@ void __cdecl diplo_ai_review_relations(iptr param_1,uptr param_2)
   uint uVar8;
   iptr iVar1;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  local_34 = 0x6715d7a0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   thunk_diplo_count_border_intruders(param_1,param_2);
   iVar1 = border_intruder_city;

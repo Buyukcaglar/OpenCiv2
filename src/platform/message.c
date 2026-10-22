@@ -214,9 +214,14 @@ static int hwnd_index(HWND h)
     return -1;
 }
 
-/* Windows are numbered in creation order (CreateWindowExA calls this). */
+int msg_trace_internal;        /* windows our controls make for themselves: not numbered */
+
+/* Windows are numbered in creation order (CreateWindowExA calls this), as
+ * the hook numbers those the game creates. */
 void msg_trace_window_created(HWND h, const char *cls)
 {
+    if (msg_trace_internal)
+        return;
     if (trace_msg < 0)
         trace_msg = getenv("CIV2_TRACE_MSG") != NULL;
     if (trace_msg > 0)
@@ -495,12 +500,20 @@ LRESULT WINAPI DefWindowProcA(HWND h, UINT m, WPARAM wp, LPARAM lp)
         wnd_nc_paint(w);
         return 0;
     case WM_NCLBUTTONDBLCLK:
+        if (wp == HTVSCROLL || wp == HTHSCROLL) {
+            scroll_track_nc(w, (int)wp);
+            return 0;
+        }
         if (plat_normal_desktop && wp == HTCAPTION && (w->style & WS_MAXIMIZEBOX))
             SendMessageA(h, WM_SYSCOMMAND, w->maximized ? SC_RESTORE : SC_MAXIMIZE, 0);
         else if (plat_normal_desktop)
             return DefWindowProcA(h, WM_NCLBUTTONDOWN, wp, lp);
         return 0;
     case WM_NCLBUTTONDOWN:
+        if (wp == HTVSCROLL || wp == HTHSCROLL) {
+            scroll_track_nc(w, (int)wp);
+            return 0;
+        }
         if (plat_normal_desktop) {
             /* drag the caption or a border, press a caption button;
                a double click on the caption maximizes or restores */
