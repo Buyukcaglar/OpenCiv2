@@ -1,0 +1,68 @@
+# Builds the Windows executable on every push to main and publishes it as the
+# "latest" release (a zip to unpack into the Civilization II folder).
+name: Windows build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-build
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Toolchain (wasi-sdk, wabt, MinGW, SDL2 for MinGW)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends gcc-mingw-w64-x86-64-posix
+          sh tools/fetch-toolchain.sh windows
+
+      - name: Build
+        env:
+          CC: x86_64-w64-mingw32-gcc-posix
+        run: python3 tools/build_port.py module c exe-windows
+
+      - name: Package
+        run: |
+          mkdir -p pkg/Civ2Reconstructed/data
+          cp build/civ2-port.exe pkg/Civ2Reconstructed/civ2-reconstructed.exe
+          cp build/SDL2.dll pkg/Civ2Reconstructed/
+          cp data/native/* pkg/Civ2Reconstructed/data/
+          cp LICENSE pkg/Civ2Reconstructed/LICENSE.txt
+          cat > pkg/Civ2Reconstructed/README.txt <<'TXT'
+          Civilization II (Multiplayer Gold) - reconstructed
+          https://github.com/${{ github.repository }}
+
+          You need your own copy of Civilization II Multiplayer Gold Edition.
+
+          1. Copy everything in this folder into your Civilization II folder
+             (the folder that contains civ2.exe).
+          2. Double-click civ2-reconstructed.exe.
+
+          Build ${{ github.sha }}
+          TXT
+          sed -i 's/^          //' pkg/Civ2Reconstructed/README.txt
+          (cd pkg && zip -qr ../civ2-reconstructed-windows.zip Civ2Reconstructed)
+
+      - name: Publish as the "latest" release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git tag -f latest
+          git push -f origin latest
+          notes="Windows build of ${GITHUB_SHA::7}: unpack into your Civilization II folder and run civ2-reconstructed.exe (see README.txt)."
+          if gh release view latest >/dev/null 2>&1; then
+            gh release edit latest --notes "$notes" --prerelease
+          else
+            gh release create latest --title "Latest Windows build" --notes "$notes" --prerelease
+          fi
+          gh release upload latest civ2-reconstructed-windows.zip --clobber

@@ -10,6 +10,8 @@ key Return
 wait 8000
 key ctrl+k
 wait 4000
+key Down                      # Yes: enable cheat mode
+wait 500
 shot 00-cheatmode
 key Return
 wait 4000

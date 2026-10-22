@@ -31,7 +31,9 @@ point `CIV2_GAME` at it.
 | `hook/` | `XDaemon.dll` proxy that makes the original deterministic under Wine (seed, virtual clock, input replay) |
 | `docs/`, `STATUS.md` | notes on the reconstruction and its verification |
 
-## Build and run on macOS
+## Build and run
+
+### macOS
 
 ```sh
 xcode-select --install          # C compiler
@@ -58,13 +60,17 @@ to C with wasm2c and compiles the result natively with the SDL2 host
 (`src/host`).  Steps: `module` → `c` → `exe`; the `c` step's output is plain C
 (`pack` bundles it with the data for a machine without wasi-sdk/wabt).
 
-## Build and run on Linux
+### Linux
 
 Same as macOS with `libsdl2-dev` and `python3-pefile` from the package manager.
 
-## Build and run on Windows
+### Windows
 
-In an [MSYS2](https://www.msys2.org) **MINGW64** shell:
+**Download:** [civ2-reconstructed-windows.zip](https://github.com/richardpenman/civ2/releases/download/latest/civ2-reconstructed-windows.zip),
+built from the latest commit. Unpack it into your Civilization II folder (the
+one with `civ2.exe`) and double-click `civ2-reconstructed.exe`.
+
+To build it yourself, in an [MSYS2](https://www.msys2.org) **MINGW64** shell:
 
 ```sh
 pacman -S git mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-python mingw-w64-x86_64-python-pefile
@@ -102,3 +108,8 @@ make analysis        # re-run the analysis: machine code -> Ghidra -> src/auto
 `harness/scripts/*.txt` are the scenarios (menu, new game, load game, turns,
 advisors, 50 turns of play).  `make ref SCRIPT=...` records the original on a
 script, `make compare` checks the reconstruction against it.
+
+## License
+
+MIT (see `LICENSE`). Civilization II itself and its game files are not part of
+this repository and are not covered by this license.

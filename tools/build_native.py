@@ -36,6 +36,13 @@ TARGETS = {
         'ldflags': ['-m32', '-rdynamic', '-no-pie'],
         'libs': ['-lSDL2', '-lm', '-ldl'],
     },
+    'linux32cov': {         # coverage of the test runs: gcov data in build/native/linux32cov
+        'cc': 'gcc',
+        'exe': 'civ2-linux32cov',
+        'cflags': ['-m32', '--coverage'],
+        'ldflags': ['-m32', '-rdynamic', '-no-pie', '--coverage'],
+        'libs': ['-lSDL2', '-lm', '-ldl'],
+    },
     'linux32clang': {       # cross-check: the linux32 build compiled by clang (needs clang installed)
         'cc': 'clang',
         'exe': 'civ2-linux32clang',
@@ -115,8 +122,17 @@ def gen_thunks(rows):
 def gen_inits(rows):
     """The runtime's initializer tables: C at 0x6246ac..0x6248bc, C++ at
     0x624000..0x6245a8 (function addresses in .data, run in order)."""
-    import pefile
-    img = pefile.PE(paths.game_file('civ2.exe')).get_memory_mapped_image()
+    import json
+    # The original's sections as extracted into data/image (no civ2.exe needed).
+    layout = json.load(open(os.path.join(ROOT, 'data', 'image', 'layout.json')))
+    base = layout['image_base']
+    sections = [(base + sec['va'], open(os.path.join(ROOT, sec['file']), 'rb').read()) for sec in layout['sections']]
+
+    def dword(a):
+        for va, data in sections:
+            if va <= a < va + len(data):
+                return int.from_bytes(data[a - va:a - va + 4], 'little')
+        return 0
     by_addr = {int(r['entry'], 16): r['name'] for r in rows}
     thunk_target = {int(r['entry'], 16): int(r['thunk_target'], 16) for r in rows
                     if r['thunk_target'] and not r['thunk_target'].startswith('EXT')}
@@ -125,7 +141,7 @@ def gen_inits(rows):
     for label, lo, hi in (('civ2_c_inits', 0x6246ac, 0x6248bc), ('civ2_cpp_inits', 0x624000, 0x6245a8)):
         fns = []
         for a in range(lo, hi, 4):
-            v = int.from_bytes(img[a - 0x400000:a - 0x400000 + 4], 'little')
+            v = dword(a)
             if not v:
                 continue
             v = thunk_target.get(v, v)
