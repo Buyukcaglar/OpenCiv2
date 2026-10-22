@@ -122,7 +122,7 @@ void __cdecl FUN_00406b4c(void)
   _DAT_0063caf0 = _DAT_0063caf0 >> 1;
   if (minimap_view_rows < map.height) {
     minimap_origin_y = (int)mapview_center_y - (minimap_view_rows >> 1);
-    minimap_origin_y = thunk_int_clamp(minimap_origin_y,0,DAT_0066cad4 - minimap_view_rows);
+    minimap_origin_y = thunk_int_clamp(minimap_origin_y,0,mapview_layout_height - minimap_view_rows);
   }
   else {
     minimap_origin_y = 0;
@@ -130,7 +130,7 @@ void __cdecl FUN_00406b4c(void)
   minimap_origin_x = map_wrap_x(map_view_center_x - minimap_view_cols);
   if ((game.rules & 0x8000) != 0) {
     if (minimap_view_cols < map.width) {
-      minimap_origin_x = thunk_int_clamp(minimap_origin_x,0,DAT_0066cad0 - minimap_view_cols);
+      minimap_origin_x = thunk_int_clamp(minimap_origin_x,0,mapview_layout_width - minimap_view_cols);
     }
     else {
       minimap_origin_x = 0;
@@ -253,9 +253,9 @@ void __cdecl minimap_draw_view_rect(void)
 {
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((DAT_0066cad8 == 0) && (DAT_0066cadc == 0)) {
+  if ((mapview_margin_x == 0) && (mapview_margin_y == 0)) {
     thunk_minimap_tile_to_screen(mapview_origin_x,mapview_origin_y,(iptr)&local_18,(iptr)&local_20);
-    thunk_minimap_tile_to_screen(DAT_0066ca98,DAT_0066ca9c,(iptr)&local_1c,(iptr)&local_24);
+    thunk_minimap_tile_to_screen(mapview_end_x,mapview_end_y,(iptr)&local_1c,(iptr)&local_24);
     if (local_18 < local_1c) {
       thunk_rect_set((iptr)local_14,local_18,local_20,local_1c + 1,local_24 + 1);
       thunk_gfx_target_frame_rect((iptr)local_14,0x29);
@@ -658,17 +658,17 @@ void __cdecl FUN_004079a6(void)
             ((FrameWindow *)&minimap_window,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   thunk_wnd_set_min_size((C_00408010_b8 *)&minimap_wnd,0x28,0x19);
   thunk_wnd_set_redraw_callback((SurfaceWindow *)&minimap_window,ADDR(0x402581, thunk_minimap_redraw));
-  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&DAT_0063c870,ADDR(0x4022de, FUN_004074dc));
-  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&DAT_0063c870,ADDR(0x401942, FUN_00407658));
-  thunk_wnd_set_keydown_handler((C_00408130 *)&DAT_0063c870,ADDR(0x402cd4, thunk_FUN_004125c6));
-  thunk_wnd_set_char_handler((C_00408130 *)&DAT_0063c870,ADDR(0x401e56, thunk_FUN_00411f91));
+  thunk_wnd_set_lbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4022de, FUN_004074dc));
+  thunk_wnd_set_rbuttonup_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401942, FUN_00407658));
+  thunk_wnd_set_keydown_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x402cd4, thunk_FUN_004125c6));
+  thunk_wnd_set_char_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401e56, thunk_FUN_00411f91));
   thunk_wnd_set_cursor((WndBase *)&minimap_wnd,0x1ff);
   thunk_wnd_set_icon((WndBase *)&minimap_wnd,1);
-  thunk_wnd_set_minimize_handler((C_00408130 *)&DAT_0063c870,ADDR(0x403d05, FUN_00406aeb));
-  thunk_wnd_set_restore_handler((C_00408130 *)&DAT_0063c870,ADDR(0x401956, FUN_00406b02));
-  thunk_wnd_set_close_handler((C_00408130 *)&DAT_0063c870,ADDR(0x40322e, FUN_00406b28));
-  thunk_wnd_set_size_handler((C_00408130 *)&DAT_0063c870,ADDR(0x4012a8, FUN_0040795a));
-  thunk_wnd_set_move_handler((C_00408130 *)&DAT_0063c870,ADDR(0x403931, FUN_00407980));
+  thunk_wnd_set_minimize_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403d05, FUN_00406aeb));
+  thunk_wnd_set_restore_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x401956, FUN_00406b02));
+  thunk_wnd_set_close_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x40322e, FUN_00406b28));
+  thunk_wnd_set_size_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x4012a8, FUN_0040795a));
+  thunk_wnd_set_move_handler((C_00408130 *)&minimap_wnd_handlers,ADDR(0x403931, FUN_00407980));
   wnd_repaint((SurfaceWindow *)&minimap_window);
   if (game.multiplayer != '\x01') {
     thunk_window_show((C_004083b0_4 *)&minimap_window);

@@ -182,7 +182,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
     diplo_war_target_civ = -1;
   }
   if ((0 < diplo_war_target_civ) &&
-     (((DAT_0064b148 != 0 || ((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 8) != 0)) &&
+     (((diplo_ai_request_mode != 0 || ((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 8) != 0)) &&
       (iVar18 = thunk_diplo_ask_receive_emissary(param_1,param_2,param_3,param_4), iVar18 != 0)))) {
     local_38 = 2;
     if ((*(byte *)(diplo_war_target_civ * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 0x594) & 4) != 0) {
@@ -212,7 +212,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
         thunk_civ_adjust_attitude(param_2,param_1,5);
       }
       else {
-        if (DAT_0064b148 != 0) {
+        if (diplo_ai_request_mode != 0) {
           thunk_civ_adjust_attitude(param_2,param_1,0x14);
         }
         bVar6 = true;
@@ -295,7 +295,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
     bVar7 = false;
   }
   if (((0 < diplo_tribute_demand) &&
-      (((DAT_0064b148 == 2 || (bVar6)) && (diplo_tribute_demand <= civs[param_1].gold)))) &&
+      (((diplo_ai_request_mode == 2 || (bVar6)) && (diplo_tribute_demand <= civs[param_1].gold)))) &&
      (iVar18 = thunk_diplo_ask_receive_emissary(param_1,param_2,param_3,param_4), iVar18 != 0)) {
     if ((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 8) != 0) {
       iVar18 = civs[param_1].gold / 2;
@@ -363,7 +363,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
      (iVar18 = thunk_diplo_attitude_level(diplo_cur_attitude), 3 < iVar18)) {
     bVar6 = true;
   }
-  if ((((DAT_0064b148 != 0) || (bVar6)) && (-1 < diplo_offer_tech_best)) &&
+  if ((((diplo_ai_request_mode != 0) || (bVar6)) && (-1 < diplo_offer_tech_best)) &&
      ((diplo_tribute_demand != 999 &&
       (iVar18 = thunk_diplo_ask_receive_emissary(param_1,param_2,param_3,param_4), iVar18 != 0)))) {
     thunk_text_set_label_arg(1,advances[diplo_offer_tech_best].name);
@@ -744,7 +744,7 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
       goto LAB_00463d3b;
     }
     bVar11 = true;
-    thunk_FUN_0045a7a8(param_1,param_2);
+    thunk_diplo_agree_ceasefire(param_1,param_2);
     thunk_diplo_set_attitude_arg(param_1,param_2);
     if (6 < (int)((uint)civs[param_1].reputation -
                  (int)*(char *)(param_1 + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + param_2 * 0x594))) {
@@ -1110,19 +1110,19 @@ LAB_00462c12:
         if (civs[param_2].field_1f < '\0') {
           civs[param_2].field_1f = '\0';
         }
-        iVar18 = thunk_FUN_0045fe19(param_1,param_2);
+        iVar18 = thunk_diplo_proposal_menu(param_1,param_2);
         if (iVar18 == 0) {
           bVar12 = true;
           goto LAB_00463d3b;
         }
         if (iVar18 == 7) {
-          thunk_FUN_0045dd7f(param_1,param_2);
+          thunk_diplo_favor_menu(param_1,param_2);
         }
         else if (iVar18 == 8) {
-          thunk_FUN_0045f0b1(param_1,param_2);
+          thunk_diplo_gift_menu(param_1,param_2);
         }
         else {
-          iVar18 = thunk_FUN_0045b4da(param_1,param_2,iVar18);
+          iVar18 = thunk_diplo_ai_answer_proposal(param_1,param_2,iVar18);
           if (iVar18 != 0) goto LAB_00463d3b;
         }
         civs[param_2].field_1f = civs[param_2].field_1f + '\x01';
@@ -1236,13 +1236,13 @@ void __cdecl text_set_number_arg_v(int param_1,undefined4 param_2)
 void __cdecl FUN_004675b0(void)
 
 {
-  FUN_004675ca();
-  FUN_004675e9();
+  scenario_events_static_init();
+  scenario_events_reg_atexit();
   return;
 }
 
 /* 004675ca auto */
-void __cdecl FUN_004675ca(void)
+void __cdecl scenario_events_static_init(void)
 
 {
   thunk_events_ctor((ScenarioEvents *)&scenario_events,50000);
@@ -1250,7 +1250,7 @@ void __cdecl FUN_004675ca(void)
 }
 
 /* 004675e9 auto */
-void __cdecl FUN_004675e9(void)
+void __cdecl scenario_events_reg_atexit(void)
 
 {
   _atexit(FUN_00467606);
@@ -1277,13 +1277,13 @@ void __cdecl FUN_00467606(void)
 void __cdecl FUN_00467620(void)
 
 {
-  FUN_0046763a();
-  FUN_00467654();
+  main_frame_wnd_static_init();
+  main_frame_wnd_reg_atexit();
   return;
 }
 
 /* 0046763a auto */
-void __cdecl FUN_0046763a(void)
+void __cdecl main_frame_wnd_static_init(void)
 
 {
   thunk_wnd_ctor((C_00408010_b8 *)&main_frame_wnd);
@@ -1291,7 +1291,7 @@ void __cdecl FUN_0046763a(void)
 }
 
 /* 00467654 auto */
-void __cdecl FUN_00467654(void)
+void __cdecl main_frame_wnd_reg_atexit(void)
 
 {
   _atexit(FUN_00467671);
@@ -1318,13 +1318,13 @@ void __cdecl FUN_00467671(void)
 void __cdecl FUN_0046768b(void)
 
 {
-  FUN_004676a5();
-  FUN_004676bf();
+  menu_handle_654fd4_static_init();
+  menu_handle_654fd4_reg_atexit();
   return;
 }
 
 /* 004676a5 auto */
-void __cdecl FUN_004676a5(void)
+void __cdecl menu_handle_654fd4_static_init(void)
 
 {
   menu_handle_ctor((GameMenu *)&DAT_00654fd4);
@@ -1332,7 +1332,7 @@ void __cdecl FUN_004676a5(void)
 }
 
 /* 004676bf auto */
-void __cdecl FUN_004676bf(void)
+void __cdecl menu_handle_654fd4_reg_atexit(void)
 
 {
   _atexit(FUN_004676dc);
@@ -1519,7 +1519,7 @@ uint __cdecl diplo_is_hostile(iptr param_1,iptr param_2)
 #define local_24 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-void __cdecl FUN_00467baf(int param_1,int param_2)
+void __cdecl diplo_expel_units(int param_1,int param_2)
 
 {
   int iVar1;
@@ -1589,8 +1589,8 @@ void __cdecl diplo_cancel_alliance(iptr param_1,iptr param_2)
   int iVar2;
   
   thunk_diplo_clear_treaty_flags(param_1,param_2,8);
-  thunk_FUN_00467baf(param_1,param_2);
-  thunk_FUN_00467baf(param_2,param_1);
+  thunk_diplo_expel_units(param_1,param_2);
+  thunk_diplo_expel_units(param_2,param_1);
   thunk_map_redraw_all_views(human_civ,1);
   thunk_text_clear();
   thunk_text_append(ADDR(0x62831c, ((u8 *)&g.d_0062831c)));
@@ -1650,7 +1650,7 @@ void __cdecl diplo_cancel_alliance(iptr param_1,iptr param_2)
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
 void __thiscall
-FUN_004683f0(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3)
+parley_create_unit_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3)
 
 {
   u8 *puVar1;
@@ -1842,7 +1842,7 @@ void __cdecl FUN_00468834(int param_1)
   thunk_wnd_get_cursor_pos
             ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
   if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = thunk_FUN_00468aa7(local_10,local_14,local_c), -1 < iVar2)) &&
+      (iVar2 = thunk_parley_unit_list_hit_test(local_10,local_14,local_c), -1 < iVar2)) &&
      (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
     iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
     if (iVar3 == 0) {
@@ -1894,7 +1894,7 @@ void __cdecl FUN_00468834(int param_1)
 
 /* 00468aa7 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_00468aa7(int param_1,int param_2,int param_3)
+int __cdecl parley_unit_list_hit_test(int param_1,int param_2,int param_3)
 
 {
   iptr iVar1;
@@ -2868,7 +2868,7 @@ LAB_0046ae34:
 
 /* 0046af70 auto */
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-undefined1 __thiscall FUN_0046af70(void *this,int param_1,iptr param_2)
+undefined1 __thiscall net_session_send_to(void *this,int param_1,iptr param_2)
 
 {
   undefined1 uVar1;
@@ -2901,7 +2901,7 @@ undefined1 __thiscall FUN_0046af70(void *this,int param_1,iptr param_2)
 
 /* 0046b0a1 auto */
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-bool __thiscall FUN_0046b0a1(void *this,iptr param_1)
+bool __thiscall net_session_send_to_all(void *this,iptr param_1)
 
 {
   bool bVar1;
@@ -2998,30 +2998,30 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   switch(param_1) {
   case 1:
     thunk_net_msg_init_header(local_84,param_1,ADDR(0x62a78c, ((u8 *)&g.d_0062a78c)));
-    cVar1 = thunk_FUN_0046b0a1(&net_session,(iptr)local_84);
+    cVar1 = thunk_net_session_send_to_all(&net_session,(iptr)local_84);
     return (int)cVar1;
   case 2:
-    thunk_FUN_0046d720(local_21c);
+    thunk_net_msg_server_info_init(local_21c);
     local_88 = (undefined2)net_session_phase;
-    cVar1 = thunk_FUN_0046b0a1(&net_session,(iptr)local_21c);
+    cVar1 = thunk_net_session_send_to_all(&net_session,(iptr)local_21c);
     return (int)cVar1;
   default:
     return 0;
   case 4:
-    thunk_FUN_0046d860(local_6c8);
+    thunk_net_msg_player_list_init(local_6c8);
     FUN_005f2110(local_6b8,&net_player_count,0x270);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_6c8);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_6c8);
     return (int)cVar1;
   case 5:
     thunk_net_msg_header_init(local_22c,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_22c);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_22c);
     return (int)cVar1;
   case 6:
-    thunk_FUN_0046d8a0(local_448);
+    thunk_net_msg_server_path_init(local_448);
     local_438 = loaded_file_kind;
     FUN_005f22d0(local_436,&loaded_file_name);
     FUN_005f22d0(local_332,&loaded_file_subdir);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_448);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_448);
     return (int)cVar1;
   case 7:
   case 8:
@@ -3045,7 +3045,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62a7b4, ((u8 *)&g.d_0062a7b4)),ADDR(0x62a790, ((u8 *)&g.d_0062a790)),0x22c);
     }
     local_730 = (void *)thunk_net_msg_build_packet(param_1,(iptr)local_730,local_734,0,0,0,0,0,0);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_730);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_730);
     local_734 = (uint)cVar1;
     operator_delete(local_730);
     return local_734;
@@ -3058,30 +3058,30 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x11:
   case 0x32:
     thunk_net_msg_header_init(local_744,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_744);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_744);
     return (int)cVar1;
   case 0x12:
     thunk_net_msg_header_init(local_784,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_784);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_784);
     return (int)cVar1;
   case 0x13:
-    thunk_FUN_0046d8e0(local_8b8);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_8b8);
+    thunk_net_msg_server_answer_init(local_8b8);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_8b8);
     return (int)cVar1;
   case 0x14:
     thunk_net_msg_header_init(local_8c8,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_8c8);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_8c8);
     return (int)cVar1;
   case 0x15:
   case 0x5c:
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,param_10);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,param_10);
     if (cVar1 == '\0') {
       return 0;
     }
     return *(undefined4 *)(param_10 + 8);
   case 0x16:
     thunk_net_msg_header_init(local_8ec,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_8ec);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_8ec);
     return (int)cVar1;
   case 0x17:
     local_c = (void *)thunk_net_msg_build_packet(param_1,ADDR(0x64bcc8, ((u8 *)&cosmic)),0,0,0,0,0,0,0x29);
@@ -3131,7 +3131,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x26:
   case 0x27:
     thunk_net_msg_header_init(local_9c4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9c4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9c4);
     return (int)cVar1;
   case 0x28:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3143,17 +3143,17 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x2b:
   case 0x2c:
     thunk_net_msg_header_init(local_a14,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_a14);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_a14);
     return (int)cVar1;
   case 0x2d:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
     break;
   case 0x2e:
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,ADDR(0x6ad110, ((u8 *)&g.d_006ad110)));
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,ADDR(0x6ad110, ((u8 *)&g.d_006ad110)));
     return (int)cVar1;
   case 0x2f:
-    thunk_FUN_0046d780(local_72c,param_3);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_72c);
+    thunk_net_msg_player_list_node_init(local_72c,param_3);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_72c);
     return (int)cVar1;
   case 0x30:
     if (net_host_flag == '\0') {
@@ -3189,7 +3189,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x35:
   case 0x81:
     thunk_net_msg_header_init(local_950,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_950);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_950);
     return (int)cVar1;
   case 0x37:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3242,28 +3242,28 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x4e:
   case 0x50:
     thunk_net_msg_header_init(local_984,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_984);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_984);
     return (int)cVar1;
   case 0x41:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
     break;
   case 0x42:
     thunk_net_msg_header_init(local_994,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_994);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_994);
     return (int)cVar1;
   case 0x43:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
     break;
   case 0x44:
     thunk_net_msg_header_init(local_9a4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9a4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9a4);
     return (int)cVar1;
   case 0x45:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
     break;
   case 0x46:
     thunk_net_msg_header_init(local_9b4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9b4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9b4);
     return (int)cVar1;
   case 0x47:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
@@ -3298,7 +3298,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     break;
   case 0x58:
     thunk_net_msg_header_init(local_9f4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9f4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9f4);
     return (int)cVar1;
   case 0x59:
     local_c = (void *)thunk_net_msg_build_packet(param_1,ADDR(0x6d1190, ((u8 *)&g.d_006d1190)),0,0,0,0,0,0,net_batch_used_dwords << 2);
@@ -3312,12 +3312,12 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x66:
   case 0xa3:
     thunk_net_msg_header_init(local_a24,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_a24);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_a24);
     return (int)cVar1;
   case 0x5d:
   case 0x5e:
     thunk_net_msg_header_init(local_8d8,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_8d8);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_8d8);
     return (int)cVar1;
   case 0x5f:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3340,7 +3340,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     local_c = (void *)thunk_net_msg_build_packet(param_1,param_9,param_3,param_4,param_5,0,0,0,sVar2 + 1);
     break;
   case 0x69:
-    thunk_FUN_0046d930(local_910,param_3);
+    thunk_net_msg_whose_turn_init(local_910,param_3);
     _DAT_0066c990 = 0xffffffff;
     thunk_frame_wnd_draw_caption((FrameWindow *)&map_views);
     local_8fc = main_view_frame_left;
@@ -3348,7 +3348,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     local_8f4 = main_view_frame_right;
     local_8f0 = main_view_client_top;
     thunk_wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_8fc);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_910);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_910);
     return (int)cVar1;
   case 0x6a:
     local_c = (void *)thunk_net_msg_build_packet(param_1,param_10,param_3,param_4,param_5,param_6,param_7,0,
@@ -3362,15 +3362,15 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     break;
   case 0x6d:
     thunk_net_msg_header_init(local_754,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_754);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_754);
     return (int)cVar1;
   case 0x6e:
     thunk_net_msg_header_init(local_764,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_764);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_764);
     return (int)cVar1;
   case 0x6f:
     thunk_net_msg_header_init(local_774,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_774);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_774);
     return (int)cVar1;
   case 0x70:
     local_c = (void *)thunk_net_msg_build_packet(param_1,(iptr)(units + param_3),param_3,param_4,param_5,
@@ -3387,7 +3387,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     break;
   case 0x74:
     thunk_net_msg_header_init(local_920,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_920);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_920);
     return (int)cVar1;
   case 0x75:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
@@ -3400,11 +3400,11 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     break;
   case 0x78:
     thunk_net_msg_header_init(local_930,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_930);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_930);
     return (int)cVar1;
   case 0x79:
     thunk_net_msg_header_init(local_940,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_940);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_940);
     return (int)cVar1;
   case 0x7a:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
@@ -3428,7 +3428,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
     break;
   case 0x82:
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,param_10);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,param_10);
     if (cVar1 == '\0') {
       return 0;
     }
@@ -3437,10 +3437,10 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x84:
   case 0x85:
     thunk_net_msg_header_init(local_964,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_964);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_964);
     return (int)cVar1;
   case 0x86:
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,param_10);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,param_10);
     if (cVar1 == '\0') {
       return 0;
     }
@@ -3456,11 +3456,11 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     break;
   case 0x8a:
     thunk_net_msg_header_init(local_974,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_974);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_974);
     return (int)cVar1;
   case 0x8b:
     thunk_net_msg_header_init(local_9d4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9d4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9d4);
     return (int)cVar1;
   case 0x8c:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3468,7 +3468,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x8d:
   case 0x8e:
     thunk_net_msg_header_init(local_9e4,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_9e4);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_9e4);
     return (int)cVar1;
   case 0x8f:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3516,7 +3516,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 0x9d:
   case 0x9e:
     thunk_net_msg_header_init(local_a04,param_1);
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_a04);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_a04);
     return (int)cVar1;
   case 0x9f:
     local_c = (void *)thunk_net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
@@ -3540,7 +3540,7 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
     local_8 = 0;
   }
   else {
-    cVar1 = thunk_FUN_0046af70(&net_session,param_2,(iptr)local_c);
+    cVar1 = thunk_net_session_send_to(&net_session,param_2,(iptr)local_c);
     local_8 = (int)cVar1;
     operator_delete(local_c);
   }
@@ -3616,7 +3616,7 @@ NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *this,u32 param_1)
 NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 param_1,iptr param_2)
 
 {
-  thunk_FUN_0046d6a0(this,0);
+  thunk_net_msg_addr_header_init(this,0);
   this[0xe].field_0 = param_1;
   _memset(this + 6,0,0x20);
   _strncpy((char *)(this + 6),(char *)param_2,0x20);
@@ -3629,7 +3629,7 @@ NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 param_1,ipt
 
 /* 0046d6a0 auto */
 #define prefs_net_ip_address (*(undefined *)((u8 *)&g.d_006665b0))
-NetMsgHeader * __thiscall FUN_0046d6a0(NetMsgHeader *this,undefined4 param_1)
+NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *this,undefined4 param_1)
 
 {
   thunk_net_msg_header_init(this,param_1);
@@ -3641,7 +3641,7 @@ NetMsgHeader * __thiscall FUN_0046d6a0(NetMsgHeader *this,undefined4 param_1)
 #undef prefs_net_ip_address
 
 /* 0046d720 auto */
-NetMsgHeader * __thiscall FUN_0046d720(NetMsgHeader *this)
+NetMsgHeader * __thiscall net_msg_server_info_init(NetMsgHeader *this)
 
 {
   thunk_net_msg_init_header(this,2,ADDR(0x62af0c, ((u8 *)&g.d_0062af0c)));
@@ -3653,7 +3653,7 @@ NetMsgHeader * __thiscall FUN_0046d720(NetMsgHeader *this)
 /* 0046d780 auto */
 #define prefs_net_ip_address (*(undefined *)((u8 *)&g.d_006665b0))
 #define prefs_net_player_name (*(undefined *)((u8 *)&g.d_00666570))
-NetMsgHeader * __thiscall FUN_0046d780(NetMsgHeader *this,u32 param_1)
+NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *this,u32 param_1)
 
 {
   thunk_net_msg_header_init(this,0x2f);
@@ -3673,7 +3673,7 @@ NetMsgHeader * __thiscall FUN_0046d780(NetMsgHeader *this,u32 param_1)
 #undef prefs_net_player_name
 
 /* 0046d860 auto */
-NetMsgHeader * __thiscall FUN_0046d860(NetMsgHeader *this)
+NetMsgHeader * __thiscall net_msg_player_list_init(NetMsgHeader *this)
 
 {
   thunk_net_msg_header_init(this,4);
@@ -3682,7 +3682,7 @@ NetMsgHeader * __thiscall FUN_0046d860(NetMsgHeader *this)
 }
 
 /* 0046d8a0 auto */
-NetMsgHeader * __thiscall FUN_0046d8a0(NetMsgHeader *this)
+NetMsgHeader * __thiscall net_msg_server_path_init(NetMsgHeader *this)
 
 {
   thunk_net_msg_header_init(this,6);
@@ -3691,7 +3691,7 @@ NetMsgHeader * __thiscall FUN_0046d8a0(NetMsgHeader *this)
 }
 
 /* 0046d8e0 auto */
-NetMsgHeader * __thiscall FUN_0046d8e0(NetMsgHeader *this)
+NetMsgHeader * __thiscall net_msg_server_answer_init(NetMsgHeader *this)
 
 {
   thunk_net_msg_header_init(this,0x13);
@@ -3701,7 +3701,7 @@ NetMsgHeader * __thiscall FUN_0046d8e0(NetMsgHeader *this)
 }
 
 /* 0046d930 auto */
-NetMsgHeader * __thiscall FUN_0046d930(NetMsgHeader *this,u32 param_1)
+NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *this,u32 param_1)
 
 {
   thunk_net_msg_header_init(this,0x69);
@@ -3759,7 +3759,7 @@ void __cdecl FUN_0046d980(DibSurface *param_1,int param_2)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(4016)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4020)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(4024)))
-void __cdecl FUN_0046da40(void)
+void __cdecl intro_play_opening_video(void)
 
 {
   int iVar1;
@@ -4048,7 +4048,7 @@ void __cdecl FUN_0046e2f4(void)
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_0046e320(void)
+void __cdecl snd_cd_play_random_track(void)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4205,7 +4205,7 @@ void __cdecl snd_sync_music_option(void)
     }
   }
   else if (cd_music_available != 0) {
-    thunk_FUN_0046e320();
+    thunk_snd_cd_play_random_track();
   }
   return;
 }
@@ -4213,7 +4213,7 @@ void __cdecl snd_sync_music_option(void)
 
 /* 0046e8f0 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_0046e8f0(iptr param_1)
+int __cdecl str_parse_hex(iptr param_1)
 
 {
   char cVar1;
@@ -4256,13 +4256,13 @@ int __cdecl FUN_0046e8f0(iptr param_1)
 void __cdecl FUN_0046e9d0(void)
 
 {
-  FUN_0046e9ea();
-  FUN_0046ea04();
+  grey_palette_static_init();
+  grey_palette_reg_atexit();
   return;
 }
 
 /* 0046e9ea auto */
-void __cdecl FUN_0046e9ea(void)
+void __cdecl grey_palette_static_init(void)
 
 {
   palette_init((GamePalette *)&grey_palette);
@@ -4270,7 +4270,7 @@ void __cdecl FUN_0046e9ea(void)
 }
 
 /* 0046ea04 auto */
-void __cdecl FUN_0046ea04(void)
+void __cdecl grey_palette_reg_atexit(void)
 
 {
   _atexit(FUN_0046ea21);
@@ -4288,7 +4288,7 @@ void __cdecl FUN_0046ea21(void)
 /* 0046ea3b auto */
 #define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
 #define local_24 (*(iptr *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_0046ea3b(void)
+void __cdecl gfx_build_grey_remap(void)
 
 {
   int iVar1;
@@ -4382,7 +4382,7 @@ void __cdecl FUN_0046ea3b(void)
 
 /* 0046ee1e auto */
 #define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
-void __cdecl FUN_0046ee1e(void)
+void __cdecl gfx_free_grey_remap(void)
 
 {
   if (grey_remap_handle != 0) {
@@ -4395,7 +4395,7 @@ void __cdecl FUN_0046ee1e(void)
 /* 0046ee4e auto */
 #define grey_remap_handle (*(undefined4 *)((u8 *)&g.d_0066c408))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_0046ee4e(void)
+void __cdecl gfx_grey_out_windows(void)
 
 {
   int iVar1;
@@ -4422,7 +4422,7 @@ void __cdecl FUN_0046ee4e(void)
 
 /* 0046ef3f auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0046ef3f(void)
+void __cdecl gfx_repaint_main_windows(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4459,7 +4459,7 @@ void __cdecl screen_fade_out(void)
       local_8 = local_8 + -1;
     }
     thunk_palette_set_nocollapse_all();
-    thunk_FUN_0046ee4e();
+    thunk_gfx_grey_out_windows();
     palette_fade_end((GamePalette *)&game_palette);
     thunk_palette_set_nocollapse_all();
   }
@@ -4478,7 +4478,7 @@ void __cdecl screen_fade_in(void)
   if (gfx_palettized_display != 0) {
     palette_fade_begin((GamePalette *)&game_palette,10,0xec,10,ADDR(0x66bfd0, ((u8 *)&g.d_0066bfd0)));
     palette_fade_step((GamePalette *)&game_palette,0);
-    thunk_FUN_0046ef3f();
+    thunk_gfx_repaint_main_windows();
     thunk_ui_blit_all_windows();
     local_8 = 0;
     while (local_8 < 0xb) {

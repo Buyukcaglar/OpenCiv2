@@ -2520,3 +2520,370 @@ addr	name	confidence	evidence
 005dbc4a	app_shutdown_hook_nop	medium	Empty stub called by app_shutdown_system before snd_system_shutdown.
 005e3aa8	dib_unlock_bits	medium	Returns 0 for a DIB; surface_unlock stores the result into surface bits.
 005ed4e0	wnd_call_msg4c8	medium	Invokes handler slot field_5c on private message 0x4c8 with lParam 0x20d (sibling of wnd_call_msg44).
+00419cbb	rules_next_line_byte_clamped	high	Reads next RULES line, parses an int, clamps to [min,max] and returns it as a byte (used by rules_load_cosmic).
+00419cf4	rules_next_byte_clamped	high	Parses the next int on the current RULES line, clamps to [min,max], returns a byte (used by rules_load_units).
+0041a95f	rules_load_terrain	high	Opens @TERRAIN and fills terrain_types[33] name/move/defense/yields, mine/irrigate results and transform_to.
+0041ab18	rules_load_govts_leaders	high	Parses @GOVERNMENTS names/titles and @LEADERS tribe data; param 0 keeps existing leader fields.
+0041b4c0	app_startup_init	high	One-time startup from game_main: paths, timer/rng, dialog colors, sprites, language, STRINGHEAP/labels, herald warning, main frame, rules.
+0041ba52	setup_new_game_dialogs	high	New-game setup sequence: DIFFICULTY, ENEMIES, BARBARITY, RULES/ADVANCED, ACCELERATED, GENDER etc. via setup_picwnd dialogs.
+0041dcc3	setup_clear_start_positions	high	Sets start_x/start_y of all 21 tribes to -1.
+0041dfe1	setup_start_scenario	high	Main menu "Begin Scenario": loads a scenario, shows SCENARIO text, then picks civ, DIFFICULTY, GENDER and NAME.
+0041e7e3	labels_reload	high	Re-reads STRINGHEAP size, reinitializes strpool, frees and reloads labels and dialog button labels.
+0041eeeb	game_main_menu_loop	high	Shows MAINMENU dialog in a loop and dispatches new game, load map, custom world, scenario, load game, multiplayer, hall of fame, credits.
+0041f69f	game_session_begin	medium	Marks session active; in multiplayer reveals human civs' start tiles, sets mutual treaty flags between humans, sets human_civ from net slot.
+00421e40	dlg_set_scale	high	Stores dlg_scale_num/dlg_scale_den (dialog coordinate scaling ratio).
+00421f70	net_gamelist_view_ctor	medium	Constructor of the network game browser object: sets field_4=1, clears field_14c and refresh_timer.
+00421fad	net_gamelist_view_dtor	medium	Destructor body (called by scalar deleting dtor 00447170) that frees the found-games list via net_free_game_list.
+004244e0	net_gamelist_restore_selection	medium	After refresh, resets scrollbar range and re-selects/scrolls to options matching previously selected game name/description.
+00424688	net_gamelist_find_option	medium	Walks net_found_games in parallel with option nodes, returning the option whose game name (+0x70) and desc (+0x90) match.
+004247b2	net_gamelist_get_entry_names	medium	Finds the found-game for a dialog option (by id or index) and copies its name and description strings out.
+0042486f	net_gamelist_add_info_lines	medium	Adds nine blank text lines (line_0..line_8) below the game list for the game-details panel.
+00424ae9	net_gamelist_show_game_info	high	Fills the nine detail lines for the selected found game: name, host, year, difficulty, map size, rules, timer, players.
+00425607	net_gamelist_start_timer	high	Kills any existing refresh_timer and creates a new 50ms game timer with the given callback.
+0042570c	net_gamelist_expire_stale	high	Unlinks and frees found-game entries not heard from within net_timeout_seconds, refreshing the list if any removed.
+004272d0	tile_reveal_to_civ	high	Makes a tile visible/known to one civ and marks the city or unit stack there as seen by it, in a net batch.
+0042738c	unit_cancel_goto_on_contact	medium	Clears orders of a unit on goto (0xb) unless it is a trade-role unit; called when enemy units come into view.
+004273e6	unit_stack_wake_sentries	medium	Clears sentry orders (3) of units in a stack, except land units at sea; called on enemy contact.
+004289f5	strpool_block_static_init	high	Static initializer constructing the string pool's MemBlock 0063e4c0 (used by strpool_init).
+00428a78	strpool_free	high	Frees the string pool's MemBlock 0063e4c0; called from app_shutdown_cleanup.
+00428fd2	city_editor_on_combo_change	high	Combo callback: reads the three city editor combo selections into fields 2ec/2f0/2f4 and requests a redraw.
+0042903e	city_editor_create_combo	high	Creates city editor combo box n at table position and fills it with the labels for style, era or size options.
+004293a8	city_editor_draw	high	Redraw callback: draws EDITORSQ background, the selected city sprite preview and the three combo captions.
+00429671	city_editor_open_window	high	Creates the city editor frame window (EDITORSQ.GIF, combos, buttons), runs it modally and frees the background surface.
+0042a39a	credits_font_static_init	high	Static initializer constructing credits_font via font_init_styled(0,24,1).
+0042a3ba	credits_font_reg_atexit	high	Registers credits_font's static destructor 0042a3d7 with atexit.
+0042a40b	advisor_font_static_init	high	Static initializer constructing advisor_font via font_init(0,18).
+0042a429	advisor_font_reg_atexit	high	Registers advisor_font's static destructor 0042a446 with atexit.
+0042a47a	hall_of_fame_font_static_init	high	Static initializer constructing hall_of_fame_font via font_init_styled(0,16,1).
+0042a49a	hall_of_fame_font_reg_atexit	high	Registers hall_of_fame_font's static destructor 0042a4b7 with atexit.
+0042a4eb	advisor_bold_font_static_init	high	Static initializer constructing advisor_bold_font via font_init_styled(0,14,1).
+0042a50b	advisor_bold_font_reg_atexit	high	Registers advisor_bold_font's static destructor 0042a528 with atexit.
+0042a55c	civ_rating_title_font_static_init	high	Static initializer constructing civ_rating_title_font via font_init_styled(0,12,1).
+0042a57c	civ_rating_title_font_reg_atexit	high	Registers civ_rating_title_font's static destructor 0042a599 with atexit.
+0042a5cd	advisor_button_font_static_init	high	Static initializer constructing advisor_button_font via font_init(0,16).
+0042a5eb	advisor_button_font_reg_atexit	high	Registers advisor_button_font's static destructor 0042a608 with atexit.
+0042a63c	advisor_window_static_init	high	Static initializer constructing advisor_window via picwnd_ctor.
+0042a656	advisor_window_reg_atexit	high	Registers advisor_window's static destructor 0042a673 with atexit.
+0042a6a7	casualty_window_static_init	high	Static initializer constructing casualty_window via picwnd_ctor.
+0042a6c1	casualty_window_reg_atexit	high	Registers casualty_window's static destructor 0042a6de with atexit.
+0042a712	tiles_dll_static_init	high	Static initializer loading TILES.DLL into tiles_dll via resource_dll_load.
+0042a731	tiles_dll_reg_atexit	high	Registers tiles_dll's static destructor 0042a74e with atexit.
+0042ad8f	science_advisor_draw	high	Draws the science advisor: government/leader header, current research progress bar, turns per advance and paged list of known advances.
+0042bc47	trade_supply_search_dialog	high	SUPPLYSEARCH dialog (needs advance 0x54) listing 16 commodities, then trade_commodity_cities_dialog for the choice.
+0042bd8f	trade_advisor_draw	high	Redraw of advisor window titled label 338 TRADE ADVISOR with City Trade/Maintenance Costs columns, income totals and scrollbar.
+0042ced6	city_status_draw	high	Redraw of advisor window titled label 334 CITY STATUS listing each city's food/shields/trade and current production with shield box.
+0042da1d	attitude_advisor_draw	high	Redraw of advisor window titled label 337 ATTITUDE ADVISOR drawing each city name and citizens via advisor_draw_city_citizens.
+0042e1e8	defense_append_ability_label	medium	Appends a comma (unless first) then a label to the text buffer, tracking unit_ability_list_nonempty; used by defense_minister_draw for unit abilities.
+0042f293	intel_report_draw	high	Redraw of label 336 FOREIGN MINISTER - Intelligence Report: target civ attitude, leader traits, government, capital, gold, research, treaties.
+00431573	wonders_report_draw	high	Redraw of label 340 WONDERS OF THE WORLD listing built wonders by era with icon, city, owner color frame, and scrollbar.
+004331d1	demographics_draw_rank	medium	Demographics row helper: computes the civ's rank (labels 394+ 1st..7th) and draws the leading civ and value in parentheses when visible.
+00436ed2	hall_of_fame_save	high	fopen(HALLFAME.DAT) and fwrite of the 6 x 0x48-byte hall_of_fame_entries; counterpart of hall_of_fame_load.
+004371c8	credits_text_static_init	medium	Static initializer running memblock_ctor on the credits text memblock 0063f038.
+004371e2	credits_text_init	medium	memblock_init on the credits text block and resets credits_line_count; called by credits_show.
+0043720f	credits_text_free	medium	memblock_free on the credits text block; called by credits_show at exit.
+0043722c	credits_add_line	medium	Allocates strlen+1 in the credits memblock, copies the line and returns its index (credits_line_count++).
+00437284	credits_get_line	medium	Walks the NUL-separated credits buffer to the Nth string; used by credits_draw_scroll.
+004372cd	credits_load_section	medium	Opens one of four credits text sections by kind and adds each line until '@' via credits_add_line; returns 0 on success.
+00437cea	casualty_timeline_draw	high	Redraw of casualty_window titled DEFENSE MINISTER: Casualty Timeline (labels 335, 872), listing logged unit losses with year, location, killer.
+0043c740	palette_scalar_dtor	high	MSVC scalar deleting destructor: palette_destroy then operator_delete if flag&1.
+0043ce5a	str_append_city_population	medium	Appends a city's population (city_population_units) to a string formatted with thousands separators and trailing ",000".
+0043f444	str_append_city_name	high	Appends city name to a string, or label 14 when index <0; string-buffer twin of text_append_city_name.
+0043f493	city_assign_default_name	medium	Names a new city with the next entry from the tribe's section of the city-name text file (scenario then home dir), stopping at @STOP.
+004403ec	city_set_trade_route_slot	medium	Stores partner city and commodity (clamped -1..15) into city trade route slot N and sets city flag 0x20000.
+00440453	city_add_trade_route	medium	Adds a trade route to a partner city if absent; with 3 routes replaces the weakest if the new one is better, then recalcs commodity demand.
+00440750	unit_caravan_establish_trade	medium	Caravan/freight arrival: computes one-time trade revenue, shows/sends messages, adds gold and research, and creates trade routes both ways.
+00442885	ai_city_touches_landmass	medium	Returns 1 if the city is on landmass param_2 or adjacent to an ocean body that borders it (landmass_borders_body).
+00444310	setup_network_game	medium	Multiplayer setup flow per connection type: protocol choice, new/load/scenario menu, player/game name prompts, net_init_transport and host/join.
+0044528e	net_prompt_ip_address	medium	Gets local address from XD_GetCurrentProtoAddr or prompts the user for it (else lobby info) into prefs_net_ip_address.
+0044542c	net_prompt_player_name	medium	Prompts for the network player name into prefs_net_player_name (or copies the lobby short name) and saves CIV2.DAT.
+00445592	net_prompt_game_name	medium	Prompts for the network game name into prefs_net_game_name/net_game_name (or copies the lobby session name) and saves CIV2.DAT.
+00445712	setup_mp_load_scenario	medium	Network scenario start: load-scenario dialog, intro text, difficulty, multiplayer option checkboxes and game timer; returns 1 on cancel.
+004471c0	lobby_list_scalar_dtor	high	MSVC scalar deleting destructor: lobby_list_dtor then operator_delete if flag&1.
+0044733a	terrain_base_sprites_static_init	high	Static initializer constructing the 11 terrain_base_sprites via the eh vector ctor with sprite_init.
+00447362	terrain_base_sprites_reg_atexit	high	Registers the terrain_base_sprites static destructor (0044737f) with atexit.
+004473bc	terrain_dither_sprites_static_init	high	Static initializer constructing the 52 terrain_dither_sprites with sprite_init.
+004473e4	terrain_dither_sprites_reg_atexit	high	Registers the terrain_dither_sprites static destructor (00447401) with atexit.
+0044743e	river_sprites_static_init	high	Static initializer constructing the 16 river_sprites with sprite_init.
+00447466	river_sprites_reg_atexit	high	Registers the river_sprites static destructor (00447483) with atexit.
+004474c0	forest_sprites_static_init	high	Static initializer constructing the 16 forest_sprites with sprite_init.
+004474e8	forest_sprites_reg_atexit	high	Registers the forest_sprites static destructor (00447505) with atexit.
+00447542	mountain_sprites_static_init	high	Static initializer constructing the 16 mountain_sprites with sprite_init.
+0044756a	mountain_sprites_reg_atexit	high	Registers the mountain_sprites static destructor (00447587) with atexit.
+004475c4	hill_sprites_static_init	high	Static initializer constructing the 16 hill_sprites with sprite_init.
+004475ec	hill_sprites_reg_atexit	high	Registers the hill_sprites static destructor (00447609) with atexit.
+00447646	hut_sprite_static_init	high	Static initializer running sprite_init on hut_sprite.
+00447660	hut_sprite_reg_atexit	high	Registers the hut_sprite static destructor (0044767d) with atexit.
+00447733	tile_pick_mask_sprite_static_init	high	Static initializer running sprite_init on tile_pick_mask_sprite.
+0044774d	tile_pick_mask_sprite_reg_atexit	high	Registers the tile_pick_mask_sprite static destructor (0044776a) with atexit.
+0044779e	tile_direction_mask_sprite_static_init	high	Static initializer running sprite_init on tile_direction_mask_sprite.
+004477b8	tile_direction_mask_sprite_reg_atexit	high	Registers the tile_direction_mask_sprite static destructor (004477d5) with atexit.
+00447809	unexplored_tile_sprite_static_init	high	Static initializer constructing the global Sprite unexplored_tile_sprite via sprite_init.
+00447823	unexplored_tile_sprite_reg_atexit	high	Registers unexplored_tile_sprite's static destructor (00447840) with atexit; paired with unexplored_tile_sprite_static_init.
+00447874	coast_quarter_sprites_static_init	high	Static initializer constructing the 0x20-element Sprite array coast_quarter_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+0044789c	coast_quarter_sprites_reg_atexit	high	Registers coast_quarter_sprites's static destructor (004478b9) with atexit; paired with coast_quarter_sprites_static_init.
+004478f6	river_mouth_sprites_static_init	high	Static initializer constructing the 4-element Sprite array river_mouth_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+0044791e	river_mouth_sprites_reg_atexit	high	Registers river_mouth_sprites's static destructor (0044793b) with atexit; paired with river_mouth_sprites_static_init.
+00447978	road_sprites_static_init	high	Static initializer constructing the 0x12-element Sprite array road_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+004479a0	road_sprites_reg_atexit	high	Registers road_sprites's static destructor (004479bd) with atexit; paired with road_sprites_static_init.
+004479fa	land_improvement_sprites_static_init	high	Static initializer constructing the 3-element Sprite array land_improvement_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00447a22	land_improvement_sprites_reg_atexit	high	Registers land_improvement_sprites's static destructor (00447a3f) with atexit; paired with land_improvement_sprites_static_init.
+00447a7c	pollution_sprite_static_init	high	Static initializer constructing the global Sprite pollution_sprite via sprite_init.
+00447a96	pollution_sprite_reg_atexit	high	Registers pollution_sprite's static destructor (00447ab3) with atexit; paired with pollution_sprite_static_init.
+00447ae7	grassland_shield_sprite_static_init	high	Static initializer constructing the global Sprite grassland_shield_sprite via sprite_init.
+00447b01	grassland_shield_sprite_reg_atexit	high	Registers grassland_shield_sprite's static destructor (00447b1e) with atexit; paired with grassland_shield_sprite_static_init.
+00447b52	terrain_resource_sprites_static_init	high	Static initializer constructing the 0x16-element Sprite array terrain_resource_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00447b7a	terrain_resource_sprites_reg_atexit	high	Registers terrain_resource_sprites's static destructor (00447b97) with atexit; paired with terrain_resource_sprites_static_init.
+00447bd4	airbase_sprites_static_init	high	Static initializer constructing the 2-element Sprite array airbase_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00447bfc	airbase_sprites_reg_atexit	high	Registers airbase_sprites's static destructor (00447c19) with atexit; paired with airbase_sprites_static_init.
+00447c56	caption_close_button_sprite_static_init	high	Static initializer constructing the global Sprite caption_close_button_sprite via sprite_init.
+00447c70	caption_close_button_sprite_reg_atexit	high	Registers caption_close_button_sprite's static destructor (00447c8d) with atexit; paired with caption_close_button_sprite_static_init.
+00447cc1	caption_zoom_out_sprite_static_init	high	Static initializer constructing the global Sprite caption_zoom_out_sprite via sprite_init.
+00447cdb	caption_zoom_out_sprite_reg_atexit	high	Registers caption_zoom_out_sprite's static destructor (00447cf8) with atexit; paired with caption_zoom_out_sprite_static_init.
+00447d2c	caption_zoom_out_btn_sprite_static_init	high	Static initializer constructing the global Sprite caption_zoom_out_button_sprite via sprite_init.
+00447d46	caption_zoom_out_btn_sprite_reg_atexit	high	Registers caption_zoom_out_button_sprite's static destructor (00447d63) with atexit; paired with caption_zoom_out_btn_sprite_static_init.
+00447d97	caption_view_mode_btn_sprite_static_init	high	Static initializer constructing the global Sprite caption_view_mode_button_sprite via sprite_init.
+00447db1	caption_view_mode_btn_sprite_reg_atexit	high	Registers caption_view_mode_button_sprite's static destructor (00447dce) with atexit; paired with caption_view_mode_btn_sprite_static_init.
+00447e02	scroll_up_button_sprite_static_init	high	Static initializer constructing the global Sprite scroll_up_button_sprite via sprite_init.
+00447e1c	scroll_up_button_sprite_reg_atexit	high	Registers scroll_up_button_sprite's static destructor (00447e39) with atexit; paired with scroll_up_button_sprite_static_init.
+00447e6d	city_down_arrow_sprite_static_init	high	Static initializer constructing the global Sprite city_down_arrow_sprite via sprite_init.
+00447e87	city_down_arrow_sprite_reg_atexit	high	Registers city_down_arrow_sprite's static destructor (00447ea4) with atexit; paired with city_down_arrow_sprite_static_init.
+00447ed8	nuke_anim_sprites_static_init	high	Static initializer constructing the 0xb-element Sprite array nuke_anim_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00447f00	nuke_anim_sprites_reg_atexit	high	Registers nuke_anim_sprites's static destructor (00447f1d) with atexit; paired with nuke_anim_sprites_static_init.
+00447f5a	sprite_editor_tool_sprites_static_init	high	Static initializer constructing the 0xf-element Sprite array sprite_editor_tool_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00447f82	sprite_editor_tool_sprites_reg_atexit	high	Registers sprite_editor_tool_sprites's static destructor (00447f9f) with atexit; paired with sprite_editor_tool_sprites_static_init.
+00447fdc	editor_unit_backdrop_sprite_static_init	high	Static initializer constructing the global Sprite editor_unit_backdrop_sprite via sprite_init.
+00447ff6	editor_unit_backdrop_sprite_reg_atexit	high	Registers editor_unit_backdrop_sprite's static destructor (00448013) with atexit; paired with editor_unit_backdrop_sprite_static_init.
+00448047	editor_tile_backdrop_sprite_static_init	high	Static initializer constructing the global Sprite editor_tile_backdrop_sprite via sprite_init.
+00448061	editor_tile_backdrop_sprite_reg_atexit	high	Registers editor_tile_backdrop_sprite's static destructor (0044807e) with atexit; paired with editor_tile_backdrop_sprite_static_init.
+004480b2	map_cursor_sprite_static_init	high	Static initializer constructing the global Sprite map_cursor_sprite via sprite_init.
+004480cc	map_cursor_sprite_reg_atexit	high	Registers map_cursor_sprite's static destructor (004480e9) with atexit; paired with map_cursor_sprite_static_init.
+0044811d	unit_shield_sprite_static_init	high	Static initializer constructing the global Sprite unit_shield_sprite via sprite_init.
+00448137	unit_shield_sprite_reg_atexit	high	Registers unit_shield_sprite's static destructor (00448154) with atexit; paired with unit_shield_sprite_static_init.
+00448188	city_sprites_static_init	high	Static initializer constructing the 0x30-element Sprite array city_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+004481b0	city_sprites_reg_atexit	high	Registers city_sprites's static destructor (004481cd) with atexit; paired with city_sprites_static_init.
+0044820a	civ_flag_sprites_static_init	high	Static initializer constructing the 0x10-element Sprite array civ_flag_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00448232	civ_flag_sprites_reg_atexit	high	Registers civ_flag_sprites's static destructor (0044824f) with atexit; paired with civ_flag_sprites_static_init.
+0044828c	unit_sprites_static_init	high	Static initializer constructing the 0x3f-element Sprite array unit_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+004482b4	unit_sprites_reg_atexit	high	Registers unit_sprites's static destructor (004482d1) with atexit; paired with unit_sprites_static_init.
+0044830e	fortify_overlay_sprites_static_init	high	Static initializer constructing the 8-element Sprite array fortify_overlay_sprites via array ctor 005f2620(sprite_init, sprite_destroy).
+00448336	fortify_overlay_sprites_reg_atexit	high	Registers fortify_overlay_sprites's static destructor (00448353) with atexit; paired with fortify_overlay_sprites_static_init.
+00448390	citizen_sprites_static_init	high	Static initializer constructing the citizen_sprites array (60 entries) via the array-ctor helper with sprite_init.
+004483b8	citizen_sprites_reg_atexit	high	Registers the static destructor of citizen_sprites with atexit (paired with citizen_sprites_static_init).
+00448412	small_citizen_sprites_static_init	high	Static initializer constructing the small_citizen_sprites array (11 entries) via the array-ctor helper with sprite_init.
+0044843a	small_citizen_sprites_reg_atexit	high	Registers the static destructor of small_citizen_sprites with atexit (paired with small_citizen_sprites_static_init).
+00448494	resource_shortage_icon_sprites_static_init	high	Static initializer constructing the resource_shortage_icon_sprites array (6 entries) via the array-ctor helper with sprite_init.
+004484bc	resource_shortage_icon_sprites_reg_atexit	high	Registers the static destructor of resource_shortage_icon_sprites with atexit (paired with resource_shortage_icon_sprites_static_init).
+00448516	tax_rate_icon_sprites_static_init	high	Static initializer constructing the tax_rate_icon_sprites array (3 entries) via the array-ctor helper with sprite_init.
+0044853e	tax_rate_icon_sprites_reg_atexit	high	Registers the static destructor of tax_rate_icon_sprites with atexit (paired with tax_rate_icon_sprites_static_init).
+00448598	small_resource_icon_sprites_static_init	high	Static initializer constructing the small_resource_icon_sprites array (3 entries) via the array-ctor helper with sprite_init.
+004485c0	small_resource_icon_sprites_reg_atexit	high	Registers the static destructor of small_resource_icon_sprites with atexit (paired with small_resource_icon_sprites_static_init).
+0044861a	lux_tax_sci_icon_sprites_static_init	high	Static initializer constructing the lux_tax_sci_icon_sprites array (3 entries) via the array-ctor helper with sprite_init.
+00448642	lux_tax_sci_icon_sprites_reg_atexit	high	Registers the static destructor of lux_tax_sci_icon_sprites with atexit (paired with lux_tax_sci_icon_sprites_static_init).
+0044869c	small_unhappy_icon_sprite_static_init	high	Static initializer constructing the small_unhappy_icon_sprite sprite via sprite_init.
+004486b6	small_unhappy_icon_sprite_reg_atexit	high	Registers the static destructor of small_unhappy_icon_sprite with atexit (paired with small_unhappy_icon_sprite_static_init).
+00448707	unhappy_suppressed_icon_sprite_static_init	high	Static initializer constructing the unhappy_suppressed_icon_sprite sprite via sprite_init.
+00448721	unhappy_suppressed_icon_sprite_reg_atexit	high	Registers the static destructor of unhappy_suppressed_icon_sprite with atexit (paired with unhappy_suppressed_icon_sprite_static_init).
+00448772	research_flask_sprites_static_init	high	Static initializer constructing the research_flask_sprites array (4 entries) via the array-ctor helper with sprite_init.
+0044879a	research_flask_sprites_reg_atexit	high	Registers the static destructor of research_flask_sprites with atexit (paired with research_flask_sprites_static_init).
+004487f4	global_warming_sprites_static_init	high	Static initializer constructing the global_warming_sprites array (4 entries) via the array-ctor helper with sprite_init.
+0044881c	global_warming_sprites_reg_atexit	high	Registers the static destructor of global_warming_sprites with atexit (paired with global_warming_sprites_static_init).
+00448963	improvement_icon_sprites_static_init	high	Static initializer constructing the improvement_icon_sprites array (67 entries) via the array-ctor helper with sprite_init.
+0044898b	improvement_icon_sprites_reg_atexit	high	Registers the static destructor of improvement_icon_sprites with atexit (paired with improvement_icon_sprites_static_init).
+004489e5	advance_category_icon_sprites_static_init	high	Static initializer constructing the advance_category_icon_sprites array (20 entries) via the array-ctor helper with sprite_init.
+00448a0d	advance_category_icon_sprites_reg_atexit	high	Registers the static destructor of advance_category_icon_sprites with atexit (paired with advance_category_icon_sprites_static_init).
+00448a67	explosion_sprites_static_init	high	Static initializer constructing the explosion_sprites array (8 entries) via the array-ctor helper with sprite_init.
+00448a8f	explosion_sprites_reg_atexit	high	Registers the static destructor of explosion_sprites with atexit (paired with explosion_sprites_static_init).
+00448ae9	map_grid_sprite_static_init	high	Static initializer constructing the map_grid_sprite sprite via sprite_init.
+00448b03	map_grid_sprite_reg_atexit	high	Registers the static destructor of map_grid_sprite with atexit (paired with map_grid_sprite_static_init).
+00448bd6	government_sprites_static_init	high	Static initializer constructing the government_sprites array (7 entries) via the array-ctor helper with sprite_init.
+00448bfe	government_sprites_reg_atexit	high	Registers the static destructor of government_sprites with atexit (paired with government_sprites_static_init).
+00448c58	civ_portrait_sprites_static_init	high	Static initializer constructing the civ_portrait_sprites array (8 entries) via the array-ctor helper with sprite_init.
+00448c80	civ_portrait_sprites_reg_atexit	high	Registers the static destructor of civ_portrait_sprites with atexit (paired with civ_portrait_sprites_static_init).
+00448cda	diplo_status_icons_static_init	medium	Static initializer constructing the ceasefire/peace/war/allied status icons and diplo_popup_portrait_sprite via sprite_init.
+00448d1c	diplo_status_icons_reg_atexit	medium	Registers the static destructor of diplo_status_icons with atexit (paired with diplo_status_icons_static_init).
+00448d95	popup_info_icon_sprite_static_init	high	Static initializer constructing the popup_info_icon_sprite sprite via sprite_init.
+00448daf	popup_info_icon_sprite_reg_atexit	high	Registers the static destructor of popup_info_icon_sprite with atexit (paired with popup_info_icon_sprite_static_init).
+00448e00	tutorial_icon_sprite_static_init	high	Static initializer constructing the tutorial_icon_sprite sprite via sprite_init.
+00448e1a	tutorial_icon_sprite_reg_atexit	high	Registers the static destructor of tutorial_icon_sprite with atexit (paired with tutorial_icon_sprite_static_init).
+00448e6b	window_border_tile_surface_static_init	high	Static initializer constructing window_border_tile_surface via surface_ctor.
+00448e85	window_border_tile_surface_reg_atexit	high	Registers the static destructor of window_border_tile_surface with atexit (paired with window_border_tile_surface_static_init).
+00448ed6	panel_texture_surface_static_init	high	Static initializer constructing panel_texture_surface via surface_ctor.
+00448ef0	panel_texture_surface_reg_atexit	high	Registers the static destructor of panel_texture_surface with atexit (paired with panel_texture_surface_static_init).
+00448f41	gfx_sheet_surface_static_init	high	Static initializer constructing gfx_sheet_surface via surface_ctor.
+00448f5b	gfx_sheet_surface_reg_atexit	high	Registers the static destructor of gfx_sheet_surface with atexit (paired with gfx_sheet_surface_static_init).
+00449030	gfx_load_terrain_sprites	high	Loads TERRAIN1.BMP/TERRAIN2.BMP and grabs terrain, resource, road/railroad, river, forest, coast and dither sprites.
+00449a0e	gfx_load_icon_sprites	high	Loads ICONS.BMP, PEOPLE.BMP, EDITORPT.GIF and GIF resources 0x55/0x56 into icon, citizen, nuke, explosion and diplomacy sprites.
+0044ab72	sprite_grab_icon_cell_keyed	medium	Grabs a 32x32 cell from the sheet surface and replaces color 9 with 7 (transparency key).
+0044aba9	sprite_grab_square	medium	Wrapper that grabs a square size x size sprite from the sheet via sprite_grab_from_sheet.
+0044abd5	gfx_grab_fortify_overlay	medium	Grabs fortify_overlay_sprites[index] from the sheet via sprite_grab_city_cell.
+0044ac3e	city_sprite_scan_flag_offset	high	Scans CITIES.BMP cell border for color-4 marker pixels to set city_flag_x/y_offsets per style/size/walled.
+0044ad47	city_sprite_scan_size_box_offset	high	Scans CITIES.BMP cell border for color-3 marker pixels to set city_size_box_x_offsets and city_label_y_offsets.
+0044ae4c	gfx_load_city_sprites	high	Loads CITIES.BMP: city/walled city sprites, civ flags and colors, fortify, fortress and airbase sprites.
+0044b239	unit_sprite_scan_shield_offset	high	Scans UNITS.BMP cell border for color-4 marker pixels to set unit_shield_x/y_offsets for a unit type.
+0044b30e	gfx_load_unit_sprites	high	Loads UNITS.BMP, grabs 63 unit sprites (9 per row) plus the unit shield sprite.
+0044c670	surfwnd_wnd_ctor	medium	Constructs the Wnd member at SurfaceWindow+0x48: base wnd_ctor then clears control_list and sets keyboard_nav.
+0044cb20	surfwnd_wnd_dtor	medium	Destroys the Wnd member at SurfaceWindow+0x48 (unwind from surfwnd_dtor) via wnd_dtor.
+0044d296	throneroom_run_upgrade	high	Shows THRONE text then ADDTOTHRONE choice, runs modal loops and increments the chosen civ throne_room item.
+0044d9c1	throneroom_run_view	high	Creates and renders the throne room and runs a view-only modal loop (caller throneroom_show).
+0044e790	throneroom_render_choices	medium	Builds 34 clickmap hotspots and draws next-level pieces for upgradable throne items from GIF resources 0xaa/0xb2.
+00450440	wnd_apply_palette_handle	medium	Calls wnd_obj_select_palette with the HPALETTE at palette+0x404 for the window's native wnd.
+00450480	parley_create_advance_list_pane	high	Builds a side's tradable advance list (comparing civ_has_advance) and creates its scrollbar and hotspot, mirroring parley_create_city_list_pane.
+00450df6	parley_advance_list_hit_test	high	Maps a point to an advance-list row index or negative out-of-area codes, like parley_city_list_hit_test.
+00451af0	pedia_draw_category_body	medium	Computes the content rect and dispatches category drawing via 00452188, then blits; called from pedia_redraw_page.
+00452188	pedia_dispatch_category_draw	high	Switches on pedia category 1-8 calling the list-init or page-draw function for advances, improvements, wonders, units, terrain, governments, concepts, tree.
+00452315	pedia_load_description	high	Reads the selected item's paragraph from the Describe text section (@@ separators) and sets it into the describe text control.
+004529df	hyperlink_register_class	high	Registers window class MSHyperTextClass once with ctrl_default_wndproc and a hand cursor.
+00452a67	hyperlink_dtor	medium	Disposes the control's region handle then runs ctrl_base_dtor; called from the pedia_link_dtor unwind.
+00452ae2	hyperlink_create_hwnd	high	Creates an MSHyperTextClass child window and subclasses it, like hotspot_create_hwnd.
+00452b89	hyperlink_create	high	Re-inits the control, clears callbacks/font and creates its MSHyperTextClass hwnd; used by pedia_add_link.
+00453b10	pedia_link_ctor	medium	Constructor of the pedia link object (control at +4); pairs with pedia_link_dtor and is allocated in pedia_add_link.
+00453cc0	hyperlink_ctor	medium	Constructs the hyperlink control by calling ctrl_base_ctor; used by pedia_link_ctor.
+00453d40	hyperlink_set_click_callback	high	Stores the click callback; pedia_add_link sets per-category link handlers.
+00453d70	hyperlink_set_dblclick_callback	high	Stores the double-click callback; pedia_add_link passes the same handler as for click.
+00453edf	wonder_get_owner	high	Returns owner civ of the city holding the wonder (wonder_get_city), or -1.
+00453f90	registry_load_default_language	high	Reads/writes HKLM Software\MicroProse...\DefaultLanguage and stores it in registry_language_id.
+0045406c	registry_write_value	high	RegCreateKeyExA under HKLM then RegSetValueExA; returns success.
+00454103	registry_read_value	high	RegOpenKeyExA under HKLM, RegQueryValueExA into a static 0x800 buffer, returns size/type.
+00454260	cityview_open	high	Allocates the city view window, loads it for a city and runs its modal loop; caller city_button_view.
+00454354	cityview_ctor	high	Constructor for the city view window: surfaces, palette, cv.dll handle, sprite arrays; sets cityview_wnd.
+00454699	cityview_dtor	high	Destructor mirroring cityview_ctor: clears cityview_wnd, frees cv.dll and sprite arrays/surfaces.
+004548a9	cityview_load	high	Loads cv.dll and city view GIF art, grabs house/lot sprites by era, then creates windows and lays out buildings.
+00454eb2	cityview_run_modal	high	Shows the city view window and runs its modal loop, restoring palette and hiding afterwards.
+00454f83	cityview_classify_site	medium	Sets terrain_kind and slot counts: coastal (city flag 0x80), river (adjacent river tile) or inland.
+00455183	cityview_create_windows	high	Creates the city view frame and surface windows, loads background GIF by terrain_kind and era, installs input handlers.
+00455314	cityview_layout_buildings	high	Seeds RNG from city position and assigns improvement and wonder sprites or houses/lots to random slots.
+00455add	cityview_draw_buildings	high	Draws each assigned slot sprite onto the city view surface at per-terrain slot positions, then redraws.
+00455b8e	cityview_take_wonder_slot	medium	Randomly removes and returns a slot from the large (wonder) slot pool, -1 when empty.
+00455c5d	cityview_take_improvement_slot	medium	Randomly removes and returns a slot from the small (improvement) slot pool, -1 when empty.
+00455d38	cityview_place_improvement	high	Grabs the improvement's art rect from the improvements sheet into a slot sprite and assigns it.
+00455dfd	cityview_place_wonder	high	Grabs the wonder's art rect from the wonders sheet into a slot sprite and assigns it.
+00455ebe	cityview_place_large_house	medium	Assigns a random large house sprite to a slot and decrements houses_left.
+00455f2e	cityview_place_small_house	medium	Assigns a random small house sprite to a slot and decrements houses_left.
+00456005	cityview_place_empty_lot	medium	City view layout: when no houses remain, assigns an empty improvement slot one of 4 random filler sprites (sibling of the house-placing 00455f2e).
+00456e90	cityview_scalar_dtor	high	MSVC scalar deleting destructor: city view dtor 00454699 (clears cityview_wnd) then operator delete if flag&1.
+00456ee0	wnd_set_keydown_pre_handler	high	Swaps window handler slot +0x20, which wnd_call_keydown_pre invokes on WM_KEYDOWN; returns the old handler.
+00458ab1	diplo_greet_emissary	medium	Shows the GAME.TXT GREETINGS<n> dialog (plus NUCLEARWEAPONS section) when an emissary is received, then the YOURNUKES warning once.
+004591cb	diplo_offer_sell_tech	high	Prices the wanted advance and shows SELLTECH/SELLTECH2; on accept deducts gold and gives the advance.
+0045a7a8	diplo_agree_ceasefire	high	Sets treaty flags 0x4002, clamps attitude, re-evaluates stance, records the treaty turn and shows the CEASEFIRE popup.
+0045b4da	diplo_ai_answer_proposal	medium	AI response to the player's diplomacy menu choice 1-6 (alliance, peace, ceasefire...): weighs power/attitude and shows PERHAPS*/refusal popups.
+0045dd7f	diplo_favor_menu	high	FAVORMENU loop: tech exchange or MUSTATTACK (pay the AI to declare war on a chosen civ), with gold price computation.
+0045f0b1	diplo_gift_menu	high	GIFTMENU: give an advance, a MONEYGIFT amount or a MILITARYSOURCE unit to the AI, lowering its hostility.
+0045fe19	diplo_proposal_menu	high	Builds the DIPLOMACYMENU option list filtered by treaty state and returns the chosen proposal (7 favor, 8 gift).
+004675ca	scenario_events_static_init	high	Static initializer constructing scenario_events via events_ctor(50000).
+004675e9	scenario_events_reg_atexit	high	Registers the scenario_events static destructor (00467606) with atexit.
+0046763a	main_frame_wnd_static_init	high	Static initializer constructing main_frame_wnd via wnd_ctor.
+00467654	main_frame_wnd_reg_atexit	high	Registers the main_frame_wnd static destructor (00467671) with atexit.
+004676a5	menu_handle_654fd4_static_init	medium	Static initializer running menu_handle_ctor on the otherwise unused global menu object 0x654fd4.
+004676bf	menu_handle_654fd4_reg_atexit	medium	Registers the 0x654fd4 menu object's destructor (004676dc, menu_handle_dtor) with atexit.
+00467baf	diplo_expel_units	medium	On alliance cancel, moves every non-caravan unit of civ1 near civ2's cities (or at sea) to civ1's nearest own city and clears its orders.
+004683f0	parley_create_unit_list_pane	medium	Parley side setup: builds the unit list, adds a scrollbar if rows overflow and a click hotspot (00468834), then draws the unit list.
+00468aa7	parley_unit_list_hit_test	medium	Maps a click point to a unit-list row for a side; returns -1/-2/-3/-4 when above/below/left/right of the list rect.
+0046af70	net_session_send_to	high	Stamps the send sequence number and calls XD_SendSecureData to one connection; logs 'SendToConnections: FAILED' on error.
+0046b0a1	net_session_send_to_all	high	Stamps the send sequence number and calls XD_SendBroadcastData; logs 'SendToEveryone: FAILED'.
+0046d6a0	net_msg_addr_header_init	medium	Net message base ctor: header init with type, copies prefs_net_ip_address into +0x10 (0x20 bytes), size 0x30.
+0046d720	net_msg_server_info_init	high	Builds an NM_SERVER_INFO (type 2) message with net_fill_game_info payload, size 0x198.
+0046d780	net_msg_player_list_node_init	high	Builds an NM_PLAYER_LIST_NODE (0x2f) message: id, ip address, player name, cleared fields, size 100.
+0046d860	net_msg_player_list_init	high	Initializes an NM_PLAYER_LIST (type 4) message header with size 0x280.
+0046d8a0	net_msg_server_path_init	high	Initializes an NM_SERVER_PATH (type 6) message header with size 0x21c (file kind/name/subdir follow).
+0046d8e0	net_msg_server_answer_init	high	Builds an NM_SERVER_ANSWER (0x13) message with net_fill_game_info payload, size 0x134.
+0046d930	net_msg_whose_turn_init	high	Builds an NM_START_WHOSE_TURN (0x69) message carrying one int, size 0x14.
+0046da40	intro_play_opening_video	high	Loads civ2art.dll and plays civ2\video\opening.avi double-size in a modal window until click/key/end.
+0046e320	snd_cd_play_random_track	high	Picks a random music track (avoiding the current one) for the detected CD layout and plays it via snd_cd_play_track.
+0046e8f0	str_parse_hex	high	Parses hex digits 0-9/A-F (uppercased) into an integer, stopping at the first other character.
+0046e9ea	grey_palette_static_init	high	Static initializer running palette_init on grey_palette.
+0046ea04	grey_palette_reg_atexit	high	Registers grey_palette's static destructor (0046ea21) with atexit.
+0046ea3b	gfx_build_grey_remap	high	Builds grey_palette and the 236-entry grey_remap_handle table mapping each game colour to the nearest of 32 base colours ('handle_fullcolors').
+0046ee1e	gfx_free_grey_remap	high	Frees grey_remap_handle if allocated; called by frame_texture_free.
+0046ee4e	gfx_grey_out_windows	high	Remaps map views, status, minimap and city windows through the grey remap table then blits them; used by screen_fade_out.
+0046ef3f	gfx_repaint_main_windows	medium	Repaints all open map views, minimap, status and city windows (undoing the grey-out) then flushes; used by screen_fade_in.
+004703d4	defeat_movie_wnd_ctor	high	Constructor of the 0x137c defeat movie window: window, palette, AVI player, DLL handle, font, surface.
+004704ec	defeat_movie_wnd_dtor	high	Destructor tearing down the defeat movie window members in reverse construction order.
+004705d7	defeat_movie_wnd_create	high	Opens loser.avi and civ2art.dll, creates the full-screen window, AVI player and backing surface for the defeat movie.
+004708db	defeat_movie_wnd_play	high	Shows the ARCHAEOLOGISTS0-2 texts over the frame with dissolves, then plays loser.avi in a modal loop.
+00471020	defeat_movie_wnd_scalar_dtor	high	MSVC scalar deleting destructor of the defeat movie window (dtor 004704ec).
+00471362	arrival_movie_wnd_ctor	high	Constructor of the 0x137c spaceship-arrival movie window used by endgame_spaceship_arrival.
+0047147a	arrival_movie_wnd_dtor	high	Destructor of the spaceship-arrival movie window (surface, font, DLL, AVI player, palette, window).
+00471565	arrival_movie_wnd_create	high	Requires the CD, opens civ2\video\winwin.avi and civ2art.dll, creates window, AVI player and frame callback 00471c2a at frame 0x2ab.
+00471856	arrival_movie_wnd_play	high	Shows the CENTAURI0-2 texts (launch/arrival years, colonists) with dissolves, then plays winwin.avi modally.
+00471dd8	endgame_show_centauri_beaten	high	For a rival's arrival (negative civ): shows CENTAURI_BEATEN0-4 texts over civ2art image 30000 with dissolves.
+004728c0	arrival_movie_wnd_scalar_dtor	high	MSVC scalar deleting destructor of the spaceship-arrival movie window (dtor 0047147a).
+00472910	avi_player_set_frame_callback	medium	Stores a callback (+0x118) and frame number (+0xa20); the player fires it when the current frame (+0xa18) reaches that number.
+00472f2a	scenario_title_surface_static_init	high	Static initializer constructing scenario_title_surface via surface_ctor.
+00472f44	scenario_title_surface_reg_atexit	high	Registers scenario_title_surface's static destructor (00472f61) with atexit.
+00472f7b	save_pack_layout_rects	high	Before saving, packs saved_layout_valid and the int window rects (map views etc.) into the 16-bit save_layout_record via 0047314e.
+00473064	save_unpack_layout_rects	high	After loading, unpacks save_layout_record's 16-bit rects back into the int window rects via 00473190; inverse of 00472f7b.
+0047314e	rect_pack_to_short	high	Copies a 4-int RECT into 4 shorts (left,top,right,bottom).
+00473190	rect_unpack_from_short	high	Expands 4 shorts into a 4-int RECT; inverse of 0047314e.
+004732a6	save_read_units_cities	high	Freads units and cities arrays with version-dependent record sizes (0x1a/0x1e/0x20, 0x54/0x58) and reassigns unit/city ids.
+00473c12	save_write_str	high	fputs a string plus its NUL terminator; returns -1 on error; used by save_write_game for event strings.
+00473c68	save_read_event_str	medium	Reads a NUL-terminated string (max 255) with fgetc and copies it into a block allocated from the events memblock 0x64b984; used for event string fields on load.
+00473ff2	save_filter_add_entry	high	Appends one description label plus "*.sav"/"*.hot"/"*.eml"/"*.net" pattern pair to the filter buffer by mode; returns end pointer.
+00475666	save_read_game	high	Opens a save, checks "CIVILIZE" header and version, sets scenario/GAME.TXT paths, loads rules, game, map, units, cities, views and EVNT events; counterpart of save_write_game.
+00479d3a	map_views_static_init	high	Static initializer constructing the 8-entry map_views array (stride 0x3f0) via the vector ctor helper with ctor 0047dce0 / dtor 0047de10.
+00479d65	map_views_reg_atexit	high	Registers map_views' static array destructor (00479d82) with atexit.
+00479fbe	mapview_update_layout	high	Computes zoomed tile sizes, visible tile columns/rows, centering margins and wrapped scroll origin from the client size; rebuilds pick-mask surfaces and fonts on zoom change.
+0047a747	tile_calc_coast_masks	high	Counts non-ocean neighbours of a tile and sets the 4 coast_quarter_land_masks bits used by mapview_draw_tile_terrain.
+0047ba1d	mapview_draw_tile_city	high	Draws the city on a tile via gfx_draw_city if it is visible/known to human_civ, reveal_map or scenario flag 8.
+0047bba5	mapview_draw_unit_stacked	medium	Draws a unit via gfx_draw_unit with the given flags OR 3 at the view's zoom; used for the top unit of a tile.
+0047bbea	mapview_draw_unit_blinking	medium	Draws a unit with flags 5 unless it is in the blink-off phase (unit_blink_active/phase with moving_units_mode 1).
+0047bc59	mapview_draw_unit_at	medium	Draws a unit at its own map position in the view (tile_to_screen) unless blinking off; called from unit_resolve_attack.
+0047bd04	mapview_draw_stack_unit	medium	Picks how to draw a tile's displayed unit: combat defender or active unit blinking, anim origin unit plain, else stacked top unit.
+0047be63	mapview_draw_tile_units	high	Chooses the unit to show on a tile (combat defender, animation origin, active unit in city) and draws it if visible to human_civ.
+0047c2f2	map_x_in_span	high	True if x lies in [start,start+len) with horizontal map wrap unless flat-world rule 0x8000.
+0047c37f	map_tile_in_box	high	True if (x,y) is inside a tile box (x span via 0047c2f2 with wrap, y in [y0,y0+h)); used by mapview_tile_in_view.
+0047c869	mapview_draw_tile_radius	high	Clips to mapview_tile_radius_rect then draws every visible tile within the given radius and the city names in that area.
+0047c9d4	mapview_draw_all_tiles	high	Clears margins and draws every visible tile row by row then all city names; called by mapview_redraw.
+0047cb26	mapview_blit_tile	high	mapview_blit_tile_radius with radius 0.
+0047cb50	mapview_blit_with_net_pump	medium	Flushes pending window messages and polls net messages (multiplayer>2) before and after blitting the surface to the window.
+0047cced	mapview_redraw_tile	high	mapview_redraw_area for one tile (radius 0) for human_civ; per-view helper of map_redraw_tile_all_views.
+0047cd1f	mapview_redraw_tile_neighbors	high	mapview_redraw_area with radius 1 for human_civ; per-view helper of map_redraw_neighbors_all_views.
+0047df80	rect_intersect_into	high	Wraps IntersectRect(dst,a,b).
+0047e0e5	net_stacked_draw_push	high	Queues a drawing command (kind + 7 args) into the 100-entry stacked-draw ring; assert strings name gNetMgr.firstStackedDraw/MAX_STACKED_DRAWS, logs "STACKED DRAW stack full".
+0047e2b3	net_stacked_draw_run_next	high	Pops the oldest stacked-draw entry and executes it (unit move anim, ensure visible, tile/area/all redraws, explosion, nuke).
+004823d6	net_msg_get_args	medium	Copies the 7 dword arguments at message offset 0x10..0x28 into an output array; used per message type in net_process_messages.
+0048308f	events_relink_pool	medium	After events arrive over the network, rebuilds the next/prev links of the 0x1c4-byte event records and repoints their string fields into the trailing string area.
+004853e7	civ_update_power_ranks	high	Computes per-civ power scores (or scenario objective values), records power_graph_history, sets power_rank/civ_by_rank and makes AIs gang up on a dominant human.
+00485c15	game_spawn_barbarians	high	Per-turn barbarian spawning: sea landings at random coast tiles and uprisings near human cities, scaled by barbarian_activity and difficulty, with BARBARIANS popup.
+004868fb	map_apply_global_warming	high	Shows GLOBALWARMING and converts terrain map-wide: coastal tiles to swamp/jungle, inland ones to desert/plains etc. by a stage pattern.
+00486c2e	game_update_global_warming	high	Updates warming_counter from polluted tiles and Mass Transit count, shows FEARWARMING, and triggers map_apply_global_warming past 16.
+00486e15	civ_throne_upgrade_threshold	medium	Returns the difficulty-scaled score threshold for the n-th throne room upgrade (triangular sum /2 + 1).
+00487a41	civ_process_cities_turn	medium	Runs city_process_turn on each city of a civ inside city-window notice bracketing, then sets AI tax/science rates and adjusts government scores.
+00488937	game_autosave	medium	For the human civ builds "<leader>_<label 0x5c>[2].<ext>" in text_buffer and writes it via save_write_game, alternating names every 4 turns.
+00488cef	civ_heal_units	high	Per-turn unit healing of a civ by city/fortress/barracks-type improvements and airbases; slowly damages air units out of range.
+00489292	civ_check_pop_and_funds	high	Shows FERTILE when civ population crosses a milestone and TAXES (then the tax dialog) when gold is running low.
+00489b9b	mapview_center_if_moved	high	Recenters the main map view on (x,y) only if its center differs.
+00489be2	tutorial_settler_hints	high	Shows TUTORIAL.TXT hints BUILDCITY/EXPAND1/MINING/IRRIGATE/ROAD for a settler unit, once per turn.
+0048a004	game_run_active_unit	medium	Shows settler/DAMAGE tutorial hints then repeatedly executes the active unit's orders while it stays selectable on the human's turn.
+0048a374	game_wait_for_player_input	medium	When no active unit, sets unit_blink_active and pumps messages/net until blink cleared, turn ends or unit count changes.
+0048bfec	game_mp_client_turn_loop	high	game_main's sequential-MP non-host loop: waits on net (CLIENTHOTWAIT), plays own turn, returns 1 if it became host via handoff.
+0048c9f3	game_mp_host_turn_loop	high	game_main's sequential-MP host loop: advances turns, runs events, iterates civs and syncs state diffs; also entered after client handoff.
+00490500	popup_text_with_city_noflags	medium	Forwards to popup_text_with_city with flags 0 (used for TUTORIAL ONECITY).
+00490590	pedia_init_terrain_list	high	Pedia category 5 list setup (sibling of pedia_init_government_list): clamps selection, copies terrain ids, 9-per-page scrollbar.
+00491c20	pedia_show_terrain_modal	high	Finds terrain id in pedia list, opens category 5, draws terrain page and runs the pedia modal loop (like pedia_show_unit_modal).
+00491d61	pedia_find_terrain_index	high	Returns the index of an id in pedia_terrain_ids or -1; used by pedia_draw_terrain_page for links.
+004923f0	chat_insert_macro_text	medium	Chat input hotkeys 0x2b0-0x2b4 insert next civ adjective, leader title/name or a line from chatmac1-3.txt and select it.
+0049275a	chat_read_macro_line	high	Opens chatmacN.txt, seeks to stored offset, reads one line into text buffer and advances/wraps the offset.
+00492a40	file_obj_read_line	high	Thiscall wrapper forwarding to file_obj_read_line_impl.
+00492b20	edit_set_sel	high	Thiscall wrapper calling edit_hwnd_set_sel on the control HWND.
+00492b60	civ_ai_goal_negate_priority	medium	Sets ai_goals[n].priority to -abs(priority); used by civ_refresh_ai_goals to mark goals stale.
+00492d18	civ_ai_goal_insert_gap	medium	Recursively shifts ai_goals entries from index n up by one (until empty slot) to make room in civ_add_ai_goal.
+00492dd0	civ_standing_goal_insert_gap	medium	Shifts ai_standing_goals[n..14] up by one slot to make room in civ_add_standing_goal.
+00492e60	civ_ai_goal_get_priority	medium	Returns the highest abs priority among the civ's ai_goals matching x, y and role.
+00493e83	portrait_dlg_show	high	Constructs the leader-portrait picker on the stack, creates and runs it for the civ, then destroys it.
+00493f0f	diplo_leader_wnd_launch	high	Picks greeting/leader sounds, recreates the 0x108c leader window, inits it for the civ and shows it if the option bit is set.
+00497cc0	wnd_set_bg_tile	high	Window wrapper method forwarding to wnd_obj_set_bg_tile on its record field_8; diplo leader passes its 64x64 tile surface.
+0049805e	memblock_detach	medium	Zeroes memblock handle (+4) and lock pointer (+8) without freeing; called first in menu_reset.
+004a69b0	pedia_init_concept_list	high	Pedia category 7 (Game Concepts) list setup: clamps selection, copies concept ids, 9-per-page scrollbar, redraws.
+004cc8b0	popup_game_with_unit	high	popup_text_with_unit with file GAME (e.g. SABOTAGEOPTIONS), the unit counterpart of popup_game_with_city.
+0055cbd5	diplo_ai_feels_secure	medium	Returns 0 if civ a is threatened by b (stronger hostile humans, fewer nukes, weaker continent forces), 1 if allied/secure.
+005683a5	frame_texture_load_hook_nop	medium	Empty stub called at the end of frame_texture_load.
+005683b5	frame_texture_free_hook_nop	medium	Empty stub called at the end of frame_texture_free.
+00596e92	spaceship_component_thrust	medium	Weighted count of spaceship components (1 each, +1 past 4th, +1 past 6th) used for fuel/propulsion in spaceship_calc_stats.
+0059b55b	net_session_close_hook_nop	medium	Empty thiscall called by net_session_shutdown right after XD_CloseConnection.
+0059f5f7	dialog_has_text_lines	medium	Returns 1 if any dialog line node has negative option index (+0x10, -1 for plain text lines added by dialog_add_line).
+005a96f0	dialog_uses_alt_text_color	medium	Returns style_flags bit 0x100, passed to dialog_set_text_color to pick frame_color instead of text_color.
+005bc3bf	wnd_obj_set_bg_tile	high	Stores a surface at window record +0x24, which the wndproc tiles over WM_PAINT when set (else brush fill).
+005cb6db	spritebtn_hwnd_cleanup_stub	high	Empty HWND cleanup stub called from spritebtn_dtor (same pattern as edit_hwnd_cleanup_stub).
+005d356e	combo_hwnd_cleanup_stub	high	Empty HWND cleanup stub called from the combo control destructor 00418b50 (like edit/listbox cleanup stubs).
+005dcfca	mem_kb_exceeds_avail	medium	Returns whether param KB *1024 exceeds 1 MB (the mem_avail_bytes_stub figure); gates the low-memory notice window.
+005dd761	avi_player_set_transparent	medium	Toggles AVI player flag field_5a4 and restarts decompress with Indeo transparency flags and a back surface; set for leader videos.

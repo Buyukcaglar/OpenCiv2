@@ -3617,7 +3617,7 @@ LAB_0053cdd1: ;
                               local_70 = local_70 / 2;
                             }
                             else {
-                              iVar15 = thunk_FUN_00492e60(uVar9,(int)cities[local_134].x,
+                              iVar15 = thunk_civ_ai_goal_get_priority(uVar9,(int)cities[local_134].x,
                                                           (int)cities[local_134].y,1);
                               if (iVar15 != 0) {
                                 local_70 = local_70 - local_70 / 3;
@@ -3698,7 +3698,7 @@ LAB_0053cdd1: ;
                                                      (int)cities[local_134].y), local_1c != iVar15))
                           {
                             if (local_3c == 0) {
-                              iVar15 = thunk_FUN_00442885(local_40,iVar15);
+                              iVar15 = thunk_ai_city_touches_landmass(local_40,iVar15);
                             }
                             else {
                               iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
@@ -3763,7 +3763,7 @@ LAB_0053cdd1: ;
                               iVar15 = thunk_cities_share_ocean(local_40,local_134);
                             }
                             else {
-                              iVar15 = thunk_FUN_00442885(local_40,iVar15);
+                              iVar15 = thunk_ai_city_touches_landmass(local_40,iVar15);
                             }
                           }
                           else if ((int)cities[local_134].owner == uVar9) {
@@ -3864,7 +3864,7 @@ LAB_0053cdd1: ;
                           (*(char *)(iVar15 + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar9 * 0x594) == '\0')))) {
                         local_c4 = 1;
                         if (local_3c == 0) {
-                          iVar15 = thunk_FUN_00442885(local_40,iVar15);
+                          iVar15 = thunk_ai_city_touches_landmass(local_40,iVar15);
                           if (iVar15 == 0) {
                             local_c4 = 0;
                           }
@@ -3893,7 +3893,7 @@ LAB_0053cdd1: ;
                              (iVar15 = tile_landmass(iVar21,local_74),
                              *(char *)(iVar15 + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar9 * 0x594) == '\0')))))) {
                           if (local_3c == 0) {
-                            iVar15 = thunk_FUN_00442885(local_40,iVar15);
+                            iVar15 = thunk_ai_city_touches_landmass(local_40,iVar15);
                           }
                           else {
                             iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
@@ -4028,7 +4028,7 @@ LAB_0053cdd1: ;
                             local_4c = 1;
                           }
                         }
-                        iVar15 = thunk_FUN_00492e60(uVar9,iVar21,local_74,1);
+                        iVar15 = thunk_civ_ai_goal_get_priority(uVar9,iVar21,local_74,1);
                         if (iVar15 != 0) goto LAB_0053fc8d;
                       }
                     }
@@ -4143,7 +4143,7 @@ LAB_0053fc8d:
                       local_170 = 1;
                     }
                     else {
-                      iVar15 = thunk_FUN_00492e60(uVar9,local_d4,local_e8,0x15);
+                      iVar15 = thunk_civ_ai_goal_get_priority(uVar9,local_d4,local_e8,0x15);
                       if (iVar15 != 0) {
                         local_170 = 1;
                       }
@@ -4775,7 +4775,7 @@ LAB_005429fe:
                                 local_10 = local_10 << 1;
                                 local_ac = 1;
                               }
-                              iVar15 = thunk_FUN_00492e60(uVar9,local_d4,local_e8,0);
+                              iVar15 = thunk_civ_ai_goal_get_priority(uVar9,local_d4,local_e8,0);
                               if (iVar15 != 0) {
                                 local_10 = local_10 << 1;
                               }

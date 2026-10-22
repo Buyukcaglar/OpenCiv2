@@ -2927,7 +2927,7 @@ undefined4 __cdecl spy_unit_mission(iptr param_1,iptr param_2,iptr param_3)
       uVar2 = 0;
     }
     else {
-      iVar1 = thunk_FUN_004cc8b0(ADDR(0x62df24, ((u8 *)&g.d_0062df24)),1,param_1);
+      iVar1 = thunk_popup_game_with_unit(ADDR(0x62df24, ((u8 *)&g.d_0062df24)),1,param_1);
       if (iVar1 < 0) {
         uVar2 = 0;
       }
@@ -3259,7 +3259,7 @@ undefined4 __cdecl popup_game_with_improvement(iptr param_1,iptr param_2,undefin
 }
 
 /* 004cc8b0 auto */
-undefined4 __cdecl FUN_004cc8b0(iptr param_1,undefined4 param_2,iptr param_3)
+undefined4 __cdecl popup_game_with_unit(iptr param_1,undefined4 param_2,iptr param_3)
 
 {
   undefined4 uVar1;

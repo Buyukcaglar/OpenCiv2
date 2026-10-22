@@ -297,41 +297,41 @@ addr	name	status	reason
 00419c54	FUN_00419c54	auto	
 00419c71	FUN_00419c71	auto	
 00419c8b	snd_menu_end	auto	
-00419cbb	FUN_00419cbb	auto	
-00419cf4	FUN_00419cf4	auto	
+00419cbb	rules_next_line_byte_clamped	auto	
+00419cf4	rules_next_byte_clamped	auto	
 00419d23	rules_load_cosmic	auto	
 00419ed3	leaders_fixup_names	auto	
 0041a046	rules_load_advances	auto	
 0041a422	rules_load_improvements	auto	
 0041a5c4	rules_load_units	auto	
-0041a95f	FUN_0041a95f	auto	
-0041ab18	FUN_0041ab18	auto	
+0041a95f	rules_load_terrain	auto	
+0041ab18	rules_load_govts_leaders	auto	
 0041b00e	rules_parse_sections	auto	
 0041b177	FUN_0041b177	auto	
 0041b46a	FUN_0041b46a	ehfunclet	unaff_EBP
 0041b48f	FUN_0041b48f	auto	
-0041b4c0	FUN_0041b4c0	auto	
+0041b4c0	app_startup_init	auto	
 0041b8b0	app_shutdown_cleanup	auto	
 0041b8ff	civ_intro_popup	auto	
-0041ba52	FUN_0041ba52	game	src/game/bigframes.c
+0041ba52	setup_new_game_dialogs	game	src/game/bigframes.c
 0041d3f2	FUN_0041d3f2	ehfunclet	unaff_EBP
 0041d417	setup_choose_map_size	auto	
 0041d7c5	FUN_0041d7c5	ehfunclet	unaff_EBP
 0041d7ea	setup_custom_world	auto	
 0041dc9e	FUN_0041dc9e	ehfunclet	unaff_EBP
-0041dcc3	FUN_0041dcc3	auto	
+0041dcc3	setup_clear_start_positions	auto	
 0041dd0e	map_load_dialog	auto	
-0041dfe1	FUN_0041dfe1	auto	
+0041dfe1	setup_start_scenario	auto	
 0041e7b2	FUN_0041e7b2	ehfunclet	unaff_EBP
 0041e7be	FUN_0041e7be	ehfunclet	unaff_EBP
-0041e7e3	FUN_0041e7e3	auto	
+0041e7e3	labels_reload	auto	
 0041e864	rules_load	auto	
 0041e8fb	load_game_pick_civ	auto	
 0041eec6	FUN_0041eec6	ehfunclet	unaff_EBP
-0041eeeb	FUN_0041eeeb	auto	
+0041eeeb	game_main_menu_loop	auto	
 0041f66e	FUN_0041f66e	ehfunclet	unaff_EBP
 0041f67a	FUN_0041f67a	ehfunclet	unaff_EBP
-0041f69f	FUN_0041f69f	auto	
+0041f69f	game_session_begin	auto	
 0041f878	game_session_end	auto	
 0041f8d9	game_main	auto	
 004201ef	FUN_004201ef	ehfunclet	unaff_EBP
@@ -348,14 +348,14 @@ addr	name	status	reason
 00421da0	text_set_number_arg	auto	
 00421dd0	dialog_init_default	auto	
 00421e00	dialog_load_text	auto	
-00421e40	FUN_00421e40	auto	
+00421e40	dlg_set_scale	auto	
 00421e70	popup_game_flags	auto	
 00421ea0	popup_game	auto	
 00421ed0	dlg_game_text_input	auto	
 00421f10	text_append_year	auto	
 00421f40	net_is_host	auto	
-00421f70	FUN_00421f70	auto	
-00421fad	FUN_00421fad	auto	
+00421f70	net_gamelist_view_ctor	auto	
+00421fad	net_gamelist_view_dtor	auto	
 00421fcd	FUN_00421fcd	manual	unnamed stack object stack0xfffffce4
 00424101	FUN_00424101	ehfunclet	unaff_EBP
 0042410d	FUN_0042410d	ehfunclet	unaff_EBP
@@ -368,18 +368,18 @@ addr	name	status	reason
 0042439c	FUN_0042439c	auto	
 004243ef	FUN_004243ef	auto	
 0042444f	FUN_0042444f	auto	
-004244e0	FUN_004244e0	auto	
-00424688	FUN_00424688	auto	
+004244e0	net_gamelist_restore_selection	auto	
+00424688	net_gamelist_find_option	auto	
 0042472a	net_gamelist_update_details	auto	
-004247b2	FUN_004247b2	auto	
-0042486f	FUN_0042486f	auto	
-00424ae9	FUN_00424ae9	auto	
+004247b2	net_gamelist_get_entry_names	auto	
+0042486f	net_gamelist_add_info_lines	auto	
+00424ae9	net_gamelist_show_game_info	auto	
 004253ef	net_gamelist_clear	auto	
 004254a8	net_gamelist_add_entry	auto	
-00425607	FUN_00425607	auto	
+00425607	net_gamelist_start_timer	auto	
 00425650	net_gamelist_kill_timer	auto	
 00425695	FUN_00425695	auto	
-0042570c	FUN_0042570c	auto	
+0042570c	net_gamelist_expire_stale	auto	
 004257fe	net_gamelist_refresh	auto	
 004259a6	game_profile_popup	auto	
 00426f30	dialog_scalar_dtor	auto	
@@ -388,14 +388,14 @@ addr	name	status	reason
 00426ff0	text_expand_vars	auto	
 004271e8	text_set_label_arg	auto	
 00427211	FUN_00427211	auto	
-004272d0	FUN_004272d0	auto	
-0042738c	FUN_0042738c	auto	
-004273e6	FUN_004273e6	auto	
+004272d0	tile_reveal_to_civ	auto	
+0042738c	unit_cancel_goto_on_contact	auto	
+004273e6	unit_stack_wake_sentries	auto	
 004274a6	unit_reveal_surroundings	auto	
 004289e0	FUN_004289e0	auto	
-004289f5	FUN_004289f5	auto	
+004289f5	strpool_block_static_init	auto	
 00428a0f	strpool_init	auto	
-00428a78	FUN_00428a78	auto	
+00428a78	strpool_free	auto	
 00428a95	strpool_add	auto	
 00428b0c	label_string	auto	
 00428b68	strpool_add_padded	auto	
@@ -406,48 +406,48 @@ addr	name	status	reason
 00428da7	FUN_00428da7	auto	
 00428dcf	FUN_00428dcf	auto	
 00428e50	FUN_00428e50	auto	
-00428fd2	FUN_00428fd2	auto	
-0042903e	FUN_0042903e	auto	
-004293a8	FUN_004293a8	auto	
-00429671	FUN_00429671	auto	
+00428fd2	city_editor_on_combo_change	auto	
+0042903e	city_editor_create_combo	auto	
+004293a8	city_editor_draw	auto	
+00429671	city_editor_open_window	auto	
 00429e53	FUN_00429e53	ehfunclet	unaff_EBP
 00429e77	city_editor_run	auto	
 00429ed0	FUN_00429ed0	ehfunclet	unaff_EBP
 0042a380	FUN_0042a380	auto	
-0042a39a	FUN_0042a39a	auto	
-0042a3ba	FUN_0042a3ba	auto	
+0042a39a	credits_font_static_init	auto	
+0042a3ba	credits_font_reg_atexit	auto	
 0042a3d7	FUN_0042a3d7	auto	
 0042a3f1	FUN_0042a3f1	auto	
-0042a40b	FUN_0042a40b	auto	
-0042a429	FUN_0042a429	auto	
+0042a40b	advisor_font_static_init	auto	
+0042a429	advisor_font_reg_atexit	auto	
 0042a446	FUN_0042a446	auto	
 0042a460	FUN_0042a460	auto	
-0042a47a	FUN_0042a47a	auto	
-0042a49a	FUN_0042a49a	auto	
+0042a47a	hall_of_fame_font_static_init	auto	
+0042a49a	hall_of_fame_font_reg_atexit	auto	
 0042a4b7	FUN_0042a4b7	auto	
 0042a4d1	FUN_0042a4d1	auto	
-0042a4eb	FUN_0042a4eb	auto	
-0042a50b	FUN_0042a50b	auto	
+0042a4eb	advisor_bold_font_static_init	auto	
+0042a50b	advisor_bold_font_reg_atexit	auto	
 0042a528	FUN_0042a528	auto	
 0042a542	FUN_0042a542	auto	
-0042a55c	FUN_0042a55c	auto	
-0042a57c	FUN_0042a57c	auto	
+0042a55c	civ_rating_title_font_static_init	auto	
+0042a57c	civ_rating_title_font_reg_atexit	auto	
 0042a599	FUN_0042a599	auto	
 0042a5b3	FUN_0042a5b3	auto	
-0042a5cd	FUN_0042a5cd	auto	
-0042a5eb	FUN_0042a5eb	auto	
+0042a5cd	advisor_button_font_static_init	auto	
+0042a5eb	advisor_button_font_reg_atexit	auto	
 0042a608	FUN_0042a608	auto	
 0042a622	FUN_0042a622	auto	
-0042a63c	FUN_0042a63c	auto	
-0042a656	FUN_0042a656	auto	
+0042a63c	advisor_window_static_init	auto	
+0042a656	advisor_window_reg_atexit	auto	
 0042a673	FUN_0042a673	auto	
 0042a68d	FUN_0042a68d	auto	
-0042a6a7	FUN_0042a6a7	auto	
-0042a6c1	FUN_0042a6c1	auto	
+0042a6a7	casualty_window_static_init	auto	
+0042a6c1	casualty_window_reg_atexit	auto	
 0042a6de	FUN_0042a6de	auto	
 0042a6f8	FUN_0042a6f8	auto	
-0042a712	FUN_0042a712	auto	
-0042a731	FUN_0042a731	auto	
+0042a712	tiles_dll_static_init	auto	
+0042a731	tiles_dll_reg_atexit	auto	
 0042a74e	FUN_0042a74e	auto	
 0042a768	picwnd_close	auto	
 0042a7bc	picwnd_open	auto	
@@ -456,34 +456,34 @@ addr	name	status	reason
 0042ac18	picwnd_blit	auto	
 0042ac4e	FUN_0042ac4e	auto	
 0042acb0	advisor_add_close_button	auto	
-0042ad8f	FUN_0042ad8f	auto	
+0042ad8f	science_advisor_draw	auto	
 0042b540	FUN_0042b540	auto	
 0042b563	FUN_0042b563	auto	
 0042b65b	FUN_0042b65b	auto	
 0042b67d	science_advisor_show	auto	
 0042b824	trade_commodity_cities_dialog	auto	
 0042bc22	FUN_0042bc22	ehfunclet	unaff_EBP
-0042bc47	FUN_0042bc47	auto	
+0042bc47	trade_supply_search_dialog	auto	
 0042bd6b	FUN_0042bd6b	ehfunclet	unaff_EBP
-0042bd8f	FUN_0042bd8f	auto	
+0042bd8f	trade_advisor_draw	auto	
 0042ccf4	FUN_0042ccf4	auto	
 0042cd11	FUN_0042cd11	auto	
 0042cd2f	trade_advisor_show	auto	
-0042ced6	FUN_0042ced6	auto	
+0042ced6	city_status_draw	auto	
 0042d618	FUN_0042d618	auto	
 0042d635	FUN_0042d635	auto	
 0042d71e	city_status_show	auto	
 0042d781	advisor_draw_city_citizens	auto	
-0042da1d	FUN_0042da1d	auto	
+0042da1d	attitude_advisor_draw	auto	
 0042e07f	FUN_0042e07f	auto	
 0042e09c	FUN_0042e09c	auto	
 0042e185	attitude_advisor_show	auto	
-0042e1e8	FUN_0042e1e8	auto	
+0042e1e8	defense_append_ability_label	auto	
 0042e220	defense_minister_draw	auto	
 0042efe3	FUN_0042efe3	auto	
 0042f000	FUN_0042f000	auto	
 0042f079	defense_minister_show	auto	
-0042f293	FUN_0042f293	auto	
+0042f293	intel_report_draw	auto	
 00430267	FUN_00430267	auto	
 0043028a	FUN_0043028a	auto	
 0043039d	FUN_0043039d	auto	
@@ -492,7 +492,7 @@ addr	name	status	reason
 00430822	FUN_00430822	auto	
 004308ae	foreign_minister_show	auto	
 0043154f	FUN_0043154f	ehfunclet	unaff_EBP
-00431573	FUN_00431573	auto	
+00431573	wonders_report_draw	auto	
 00431c56	FUN_00431c56	auto	
 00431c73	wonders_report_show	auto	
 00431d22	powergraph_show	auto	
@@ -504,7 +504,7 @@ addr	name	status	reason
 00432bf8	FUN_00432bf8	ehfunclet	unaff_EBP
 00432c1c	FUN_00432c1c	auto	
 00433122	top_cities_show	auto	
-004331d1	FUN_004331d1	auto	
+004331d1	demographics_draw_rank	auto	
 00433434	FUN_00433434	auto	
 00434d8a	demographics_show	auto	
 00434e39	FUN_00434e39	auto	
@@ -517,15 +517,15 @@ addr	name	status	reason
 00436bb7	hall_of_fame_show	auto	
 00436dd7	hall_of_fame_clear	auto	
 00436e28	hall_of_fame_load	auto	
-00436ed2	FUN_00436ed2	auto	
+00436ed2	hall_of_fame_save	auto	
 00436f5a	hall_of_fame_add_entry	auto	
 004371b3	FUN_004371b3	auto	
-004371c8	FUN_004371c8	auto	
-004371e2	FUN_004371e2	auto	
-0043720f	FUN_0043720f	auto	
-0043722c	FUN_0043722c	auto	
-00437284	FUN_00437284	auto	
-004372cd	FUN_004372cd	auto	
+004371c8	credits_text_static_init	auto	
+004371e2	credits_text_init	auto	
+0043720f	credits_text_free	auto	
+0043722c	credits_add_line	auto	
+00437284	credits_get_line	auto	
+004372cd	credits_load_section	auto	
 0043742f	credits_draw_scroll	auto	
 00437a10	FUN_00437a10	auto	
 00437a2a	FUN_00437a2a	auto	
@@ -533,7 +533,7 @@ addr	name	status	reason
 00437c6f	intel_report_end_modal	auto	
 00437c8a	FUN_00437c8a	auto	
 00437ccd	FUN_00437ccd	auto	
-00437cea	FUN_00437cea	auto	
+00437cea	casualty_timeline_draw	auto	
 0043856b	casualty_timeline_show	auto	
 004386b8	FUN_004386b8	auto	
 0043c110	picwnd_dtor	auto	
@@ -558,7 +558,7 @@ addr	name	status	reason
 0043c660	wnd_enable	auto	
 0043c690	font_init_empty	auto	
 0043c6c0	font_set_styled	auto	
-0043c740	FUN_0043c740	auto	
+0043c740	palette_scalar_dtor	auto	
 0043c790	rect_offset	auto	
 0043c7c0	gfx_draw_rect_frame	auto	
 0043c810	text_append_period	auto	
@@ -580,7 +580,7 @@ addr	name	status	reason
 0043cc7e	city_population_units	auto	
 0043cce5	civ_total_population	auto	
 0043cda6	str_append_population	auto	
-0043ce5a	FUN_0043ce5a	auto	
+0043ce5a	str_append_city_population	auto	
 0043cef9	city_objective_value	auto	
 0043cf76	city_at	auto	
 0043d07a	city_find_nearest	auto	
@@ -589,14 +589,14 @@ addr	name	status	reason
 0043d348	FUN_0043d348	auto	
 0043d3a4	FUN_0043d3a4	auto	
 0043d400	city_calc_commodity_demand	auto	
-0043f444	FUN_0043f444	auto	
-0043f493	FUN_0043f493	auto	
+0043f444	str_append_city_name	auto	
+0043f493	city_assign_default_name	auto	
 0043f7a7	city_refresh_area_tiles	auto	
 0043f8b0	city_create	auto	
 00440325	city_remove_trade_route	auto	
-004403ec	FUN_004403ec	auto	
-00440453	FUN_00440453	auto	
-00440750	FUN_00440750	auto	
+004403ec	city_set_trade_route_slot	auto	
+00440453	city_add_trade_route	auto	
+00440750	unit_caravan_establish_trade	auto	
 004413d1	city_delete	auto	
 00441a79	city_needed_size_improvement	auto	
 00441b11	city_set_production	auto	
@@ -604,209 +604,209 @@ addr	name	status	reason
 00442541	civ_reset_city_production	auto	
 0044263f	city_adjacent_to_body	auto	
 0044272d	city_adjacent_sea_info	auto	
-00442885	FUN_00442885	auto	
+00442885	ai_city_touches_landmass	auto	
 004429af	cities_share_ocean	auto	
 00444270	popup_debug_text	auto	
 004442a0	dlg_game_txt_with_unit_flags	auto	
 004442e0	dlg_game_txt_with_unit	auto	
-00444310	FUN_00444310	auto	
+00444310	setup_network_game	auto	
 0044525d	FUN_0044525d	ehfunclet	unaff_EBP
 00445269	FUN_00445269	ehfunclet	unaff_EBP
-0044528e	FUN_0044528e	auto	
+0044528e	net_prompt_ip_address	auto	
 00445407	FUN_00445407	ehfunclet	unaff_EBP
-0044542c	FUN_0044542c	auto	
+0044542c	net_prompt_player_name	auto	
 0044556d	FUN_0044556d	ehfunclet	unaff_EBP
-00445592	FUN_00445592	auto	
+00445592	net_prompt_game_name	auto	
 004456ed	FUN_004456ed	ehfunclet	unaff_EBP
-00445712	FUN_00445712	auto	
+00445712	setup_mp_load_scenario	auto	
 00445e15	FUN_00445e15	ehfunclet	unaff_EBP
 00445e21	FUN_00445e21	ehfunclet	unaff_EBP
 00445e46	net_choose_civ_dialog	auto	
 004467fa	FUN_004467fa	ehfunclet	unaff_EBP
 00447170	FUN_00447170	auto	
-004471c0	FUN_004471c0	auto	
+004471c0	lobby_list_scalar_dtor	auto	
 00447210	radiogrp_disable_item	auto	
 004472c0	radiogrp_get_selected	auto	
 004472f0	radiogrp_set_selected	auto	
 00447320	FUN_00447320	auto	
-0044733a	FUN_0044733a	auto	
-00447362	FUN_00447362	auto	
+0044733a	terrain_base_sprites_static_init	auto	
+00447362	terrain_base_sprites_reg_atexit	auto	
 0044737f	FUN_0044737f	auto	
 004473a2	FUN_004473a2	auto	
-004473bc	FUN_004473bc	auto	
-004473e4	FUN_004473e4	auto	
+004473bc	terrain_dither_sprites_static_init	auto	
+004473e4	terrain_dither_sprites_reg_atexit	auto	
 00447401	FUN_00447401	auto	
 00447424	FUN_00447424	auto	
-0044743e	FUN_0044743e	auto	
-00447466	FUN_00447466	auto	
+0044743e	river_sprites_static_init	auto	
+00447466	river_sprites_reg_atexit	auto	
 00447483	FUN_00447483	auto	
 004474a6	FUN_004474a6	auto	
-004474c0	FUN_004474c0	auto	
-004474e8	FUN_004474e8	auto	
+004474c0	forest_sprites_static_init	auto	
+004474e8	forest_sprites_reg_atexit	auto	
 00447505	FUN_00447505	auto	
 00447528	FUN_00447528	auto	
-00447542	FUN_00447542	auto	
-0044756a	FUN_0044756a	auto	
+00447542	mountain_sprites_static_init	auto	
+0044756a	mountain_sprites_reg_atexit	auto	
 00447587	FUN_00447587	auto	
 004475aa	FUN_004475aa	auto	
-004475c4	FUN_004475c4	auto	
-004475ec	FUN_004475ec	auto	
+004475c4	hill_sprites_static_init	auto	
+004475ec	hill_sprites_reg_atexit	auto	
 00447609	FUN_00447609	auto	
 0044762c	FUN_0044762c	auto	
-00447646	FUN_00447646	auto	
-00447660	FUN_00447660	auto	
+00447646	hut_sprite_static_init	auto	
+00447660	hut_sprite_reg_atexit	auto	
 0044767d	FUN_0044767d	auto	
 00447697	FUN_00447697	auto	
 004476b1	FUN_004476b1	auto	
 004476d9	FUN_004476d9	auto	
 004476f6	FUN_004476f6	auto	
 00447719	FUN_00447719	auto	
-00447733	FUN_00447733	auto	
-0044774d	FUN_0044774d	auto	
+00447733	tile_pick_mask_sprite_static_init	auto	
+0044774d	tile_pick_mask_sprite_reg_atexit	auto	
 0044776a	FUN_0044776a	auto	
 00447784	FUN_00447784	auto	
-0044779e	FUN_0044779e	auto	
-004477b8	FUN_004477b8	auto	
+0044779e	tile_direction_mask_sprite_static_init	auto	
+004477b8	tile_direction_mask_sprite_reg_atexit	auto	
 004477d5	FUN_004477d5	auto	
 004477ef	FUN_004477ef	auto	
-00447809	FUN_00447809	auto	
-00447823	FUN_00447823	auto	
+00447809	unexplored_tile_sprite_static_init	auto	
+00447823	unexplored_tile_sprite_reg_atexit	auto	
 00447840	FUN_00447840	auto	
 0044785a	FUN_0044785a	auto	
-00447874	FUN_00447874	auto	
-0044789c	FUN_0044789c	auto	
+00447874	coast_quarter_sprites_static_init	auto	
+0044789c	coast_quarter_sprites_reg_atexit	auto	
 004478b9	FUN_004478b9	auto	
 004478dc	FUN_004478dc	auto	
-004478f6	FUN_004478f6	auto	
-0044791e	FUN_0044791e	auto	
+004478f6	river_mouth_sprites_static_init	auto	
+0044791e	river_mouth_sprites_reg_atexit	auto	
 0044793b	FUN_0044793b	auto	
 0044795e	FUN_0044795e	auto	
-00447978	FUN_00447978	auto	
-004479a0	FUN_004479a0	auto	
+00447978	road_sprites_static_init	auto	
+004479a0	road_sprites_reg_atexit	auto	
 004479bd	FUN_004479bd	auto	
 004479e0	FUN_004479e0	auto	
-004479fa	FUN_004479fa	auto	
-00447a22	FUN_00447a22	auto	
+004479fa	land_improvement_sprites_static_init	auto	
+00447a22	land_improvement_sprites_reg_atexit	auto	
 00447a3f	FUN_00447a3f	auto	
 00447a62	FUN_00447a62	auto	
-00447a7c	FUN_00447a7c	auto	
-00447a96	FUN_00447a96	auto	
+00447a7c	pollution_sprite_static_init	auto	
+00447a96	pollution_sprite_reg_atexit	auto	
 00447ab3	FUN_00447ab3	auto	
 00447acd	FUN_00447acd	auto	
-00447ae7	FUN_00447ae7	auto	
-00447b01	FUN_00447b01	auto	
+00447ae7	grassland_shield_sprite_static_init	auto	
+00447b01	grassland_shield_sprite_reg_atexit	auto	
 00447b1e	FUN_00447b1e	auto	
 00447b38	FUN_00447b38	auto	
-00447b52	FUN_00447b52	auto	
-00447b7a	FUN_00447b7a	auto	
+00447b52	terrain_resource_sprites_static_init	auto	
+00447b7a	terrain_resource_sprites_reg_atexit	auto	
 00447b97	FUN_00447b97	auto	
 00447bba	FUN_00447bba	auto	
-00447bd4	FUN_00447bd4	auto	
-00447bfc	FUN_00447bfc	auto	
+00447bd4	airbase_sprites_static_init	auto	
+00447bfc	airbase_sprites_reg_atexit	auto	
 00447c19	FUN_00447c19	auto	
 00447c3c	FUN_00447c3c	auto	
-00447c56	FUN_00447c56	auto	
-00447c70	FUN_00447c70	auto	
+00447c56	caption_close_button_sprite_static_init	auto	
+00447c70	caption_close_button_sprite_reg_atexit	auto	
 00447c8d	FUN_00447c8d	auto	
 00447ca7	FUN_00447ca7	auto	
-00447cc1	FUN_00447cc1	auto	
-00447cdb	FUN_00447cdb	auto	
+00447cc1	caption_zoom_out_sprite_static_init	auto	
+00447cdb	caption_zoom_out_sprite_reg_atexit	auto	
 00447cf8	FUN_00447cf8	auto	
 00447d12	FUN_00447d12	auto	
-00447d2c	FUN_00447d2c	auto	
-00447d46	FUN_00447d46	auto	
+00447d2c	caption_zoom_out_btn_sprite_static_init	auto	
+00447d46	caption_zoom_out_btn_sprite_reg_atexit	auto	
 00447d63	FUN_00447d63	auto	
 00447d7d	FUN_00447d7d	auto	
-00447d97	FUN_00447d97	auto	
-00447db1	FUN_00447db1	auto	
+00447d97	caption_view_mode_btn_sprite_static_init	auto	
+00447db1	caption_view_mode_btn_sprite_reg_atexit	auto	
 00447dce	FUN_00447dce	auto	
 00447de8	FUN_00447de8	auto	
-00447e02	FUN_00447e02	auto	
-00447e1c	FUN_00447e1c	auto	
+00447e02	scroll_up_button_sprite_static_init	auto	
+00447e1c	scroll_up_button_sprite_reg_atexit	auto	
 00447e39	FUN_00447e39	auto	
 00447e53	FUN_00447e53	auto	
-00447e6d	FUN_00447e6d	auto	
-00447e87	FUN_00447e87	auto	
+00447e6d	city_down_arrow_sprite_static_init	auto	
+00447e87	city_down_arrow_sprite_reg_atexit	auto	
 00447ea4	FUN_00447ea4	auto	
 00447ebe	FUN_00447ebe	auto	
-00447ed8	FUN_00447ed8	auto	
-00447f00	FUN_00447f00	auto	
+00447ed8	nuke_anim_sprites_static_init	auto	
+00447f00	nuke_anim_sprites_reg_atexit	auto	
 00447f1d	FUN_00447f1d	auto	
 00447f40	FUN_00447f40	auto	
-00447f5a	FUN_00447f5a	auto	
-00447f82	FUN_00447f82	auto	
+00447f5a	sprite_editor_tool_sprites_static_init	auto	
+00447f82	sprite_editor_tool_sprites_reg_atexit	auto	
 00447f9f	FUN_00447f9f	auto	
 00447fc2	FUN_00447fc2	auto	
-00447fdc	FUN_00447fdc	auto	
-00447ff6	FUN_00447ff6	auto	
+00447fdc	editor_unit_backdrop_sprite_static_init	auto	
+00447ff6	editor_unit_backdrop_sprite_reg_atexit	auto	
 00448013	FUN_00448013	auto	
 0044802d	FUN_0044802d	auto	
-00448047	FUN_00448047	auto	
-00448061	FUN_00448061	auto	
+00448047	editor_tile_backdrop_sprite_static_init	auto	
+00448061	editor_tile_backdrop_sprite_reg_atexit	auto	
 0044807e	FUN_0044807e	auto	
 00448098	FUN_00448098	auto	
-004480b2	FUN_004480b2	auto	
-004480cc	FUN_004480cc	auto	
+004480b2	map_cursor_sprite_static_init	auto	
+004480cc	map_cursor_sprite_reg_atexit	auto	
 004480e9	FUN_004480e9	auto	
 00448103	FUN_00448103	auto	
-0044811d	FUN_0044811d	auto	
-00448137	FUN_00448137	auto	
+0044811d	unit_shield_sprite_static_init	auto	
+00448137	unit_shield_sprite_reg_atexit	auto	
 00448154	FUN_00448154	auto	
 0044816e	FUN_0044816e	auto	
-00448188	FUN_00448188	auto	
-004481b0	FUN_004481b0	auto	
+00448188	city_sprites_static_init	auto	
+004481b0	city_sprites_reg_atexit	auto	
 004481cd	FUN_004481cd	auto	
 004481f0	FUN_004481f0	auto	
-0044820a	FUN_0044820a	auto	
-00448232	FUN_00448232	auto	
+0044820a	civ_flag_sprites_static_init	auto	
+00448232	civ_flag_sprites_reg_atexit	auto	
 0044824f	FUN_0044824f	auto	
 00448272	FUN_00448272	auto	
-0044828c	FUN_0044828c	auto	
-004482b4	FUN_004482b4	auto	
+0044828c	unit_sprites_static_init	auto	
+004482b4	unit_sprites_reg_atexit	auto	
 004482d1	FUN_004482d1	auto	
 004482f4	FUN_004482f4	auto	
-0044830e	FUN_0044830e	auto	
-00448336	FUN_00448336	auto	
+0044830e	fortify_overlay_sprites_static_init	auto	
+00448336	fortify_overlay_sprites_reg_atexit	auto	
 00448353	FUN_00448353	auto	
 00448376	FUN_00448376	auto	
-00448390	FUN_00448390	auto	
-004483b8	FUN_004483b8	auto	
+00448390	citizen_sprites_static_init	auto	
+004483b8	citizen_sprites_reg_atexit	auto	
 004483d5	FUN_004483d5	auto	
 004483f8	FUN_004483f8	auto	
-00448412	FUN_00448412	auto	
-0044843a	FUN_0044843a	auto	
+00448412	small_citizen_sprites_static_init	auto	
+0044843a	small_citizen_sprites_reg_atexit	auto	
 00448457	FUN_00448457	auto	
 0044847a	FUN_0044847a	auto	
-00448494	FUN_00448494	auto	
-004484bc	FUN_004484bc	auto	
+00448494	resource_shortage_icon_sprites_static_init	auto	
+004484bc	resource_shortage_icon_sprites_reg_atexit	auto	
 004484d9	FUN_004484d9	auto	
 004484fc	FUN_004484fc	auto	
-00448516	FUN_00448516	auto	
-0044853e	FUN_0044853e	auto	
+00448516	tax_rate_icon_sprites_static_init	auto	
+0044853e	tax_rate_icon_sprites_reg_atexit	auto	
 0044855b	FUN_0044855b	auto	
 0044857e	FUN_0044857e	auto	
-00448598	FUN_00448598	auto	
-004485c0	FUN_004485c0	auto	
+00448598	small_resource_icon_sprites_static_init	auto	
+004485c0	small_resource_icon_sprites_reg_atexit	auto	
 004485dd	FUN_004485dd	auto	
 00448600	FUN_00448600	auto	
-0044861a	FUN_0044861a	auto	
-00448642	FUN_00448642	auto	
+0044861a	lux_tax_sci_icon_sprites_static_init	auto	
+00448642	lux_tax_sci_icon_sprites_reg_atexit	auto	
 0044865f	FUN_0044865f	auto	
 00448682	FUN_00448682	auto	
-0044869c	FUN_0044869c	auto	
-004486b6	FUN_004486b6	auto	
+0044869c	small_unhappy_icon_sprite_static_init	auto	
+004486b6	small_unhappy_icon_sprite_reg_atexit	auto	
 004486d3	FUN_004486d3	auto	
 004486ed	FUN_004486ed	auto	
-00448707	FUN_00448707	auto	
-00448721	FUN_00448721	auto	
+00448707	unhappy_suppressed_icon_sprite_static_init	auto	
+00448721	unhappy_suppressed_icon_sprite_reg_atexit	auto	
 0044873e	FUN_0044873e	auto	
 00448758	FUN_00448758	auto	
-00448772	FUN_00448772	auto	
-0044879a	FUN_0044879a	auto	
+00448772	research_flask_sprites_static_init	auto	
+0044879a	research_flask_sprites_reg_atexit	auto	
 004487b7	FUN_004487b7	auto	
 004487da	FUN_004487da	auto	
-004487f4	FUN_004487f4	auto	
-0044881c	FUN_0044881c	auto	
+004487f4	global_warming_sprites_static_init	auto	
+0044881c	global_warming_sprites_reg_atexit	auto	
 00448839	FUN_00448839	auto	
 0044885c	FUN_0044885c	auto	
 00448876	FUN_00448876	auto	
@@ -817,78 +817,78 @@ addr	name	status	reason
 00448912	FUN_00448912	auto	
 0044892f	FUN_0044892f	auto	
 00448949	FUN_00448949	auto	
-00448963	FUN_00448963	auto	
-0044898b	FUN_0044898b	auto	
+00448963	improvement_icon_sprites_static_init	auto	
+0044898b	improvement_icon_sprites_reg_atexit	auto	
 004489a8	FUN_004489a8	auto	
 004489cb	FUN_004489cb	auto	
-004489e5	FUN_004489e5	auto	
-00448a0d	FUN_00448a0d	auto	
+004489e5	advance_category_icon_sprites_static_init	auto	
+00448a0d	advance_category_icon_sprites_reg_atexit	auto	
 00448a2a	FUN_00448a2a	auto	
 00448a4d	FUN_00448a4d	auto	
-00448a67	FUN_00448a67	auto	
-00448a8f	FUN_00448a8f	auto	
+00448a67	explosion_sprites_static_init	auto	
+00448a8f	explosion_sprites_reg_atexit	auto	
 00448aac	FUN_00448aac	auto	
 00448acf	FUN_00448acf	auto	
-00448ae9	FUN_00448ae9	auto	
-00448b03	FUN_00448b03	auto	
+00448ae9	map_grid_sprite_static_init	auto	
+00448b03	map_grid_sprite_reg_atexit	auto	
 00448b20	FUN_00448b20	auto	
 00448b3a	FUN_00448b3a	auto	
 00448b54	FUN_00448b54	auto	
 00448b7c	FUN_00448b7c	auto	
 00448b99	FUN_00448b99	auto	
 00448bbc	FUN_00448bbc	auto	
-00448bd6	FUN_00448bd6	auto	
-00448bfe	FUN_00448bfe	auto	
+00448bd6	government_sprites_static_init	auto	
+00448bfe	government_sprites_reg_atexit	auto	
 00448c1b	FUN_00448c1b	auto	
 00448c3e	FUN_00448c3e	auto	
-00448c58	FUN_00448c58	auto	
-00448c80	FUN_00448c80	auto	
+00448c58	civ_portrait_sprites_static_init	auto	
+00448c80	civ_portrait_sprites_reg_atexit	auto	
 00448c9d	FUN_00448c9d	auto	
 00448cc0	FUN_00448cc0	auto	
-00448cda	FUN_00448cda	auto	
-00448d1c	FUN_00448d1c	auto	
+00448cda	diplo_status_icons_static_init	auto	
+00448d1c	diplo_status_icons_reg_atexit	auto	
 00448d39	FUN_00448d39	auto	
 00448d7b	FUN_00448d7b	auto	
-00448d95	FUN_00448d95	auto	
-00448daf	FUN_00448daf	auto	
+00448d95	popup_info_icon_sprite_static_init	auto	
+00448daf	popup_info_icon_sprite_reg_atexit	auto	
 00448dcc	FUN_00448dcc	auto	
 00448de6	FUN_00448de6	auto	
-00448e00	FUN_00448e00	auto	
-00448e1a	FUN_00448e1a	auto	
+00448e00	tutorial_icon_sprite_static_init	auto	
+00448e1a	tutorial_icon_sprite_reg_atexit	auto	
 00448e37	FUN_00448e37	auto	
 00448e51	FUN_00448e51	auto	
-00448e6b	FUN_00448e6b	auto	
-00448e85	FUN_00448e85	auto	
+00448e6b	window_border_tile_surface_static_init	auto	
+00448e85	window_border_tile_surface_reg_atexit	auto	
 00448ea2	FUN_00448ea2	auto	
 00448ebc	FUN_00448ebc	auto	
-00448ed6	FUN_00448ed6	auto	
-00448ef0	FUN_00448ef0	auto	
+00448ed6	panel_texture_surface_static_init	auto	
+00448ef0	panel_texture_surface_reg_atexit	auto	
 00448f0d	FUN_00448f0d	auto	
 00448f27	FUN_00448f27	auto	
-00448f41	FUN_00448f41	auto	
-00448f5b	FUN_00448f5b	auto	
+00448f41	gfx_sheet_surface_static_init	auto	
+00448f5b	gfx_sheet_surface_reg_atexit	auto	
 00448f78	FUN_00448f78	auto	
 00448f92	civ_city_style_era	auto	
-00449030	FUN_00449030	auto	
+00449030	gfx_load_terrain_sprites	auto	
 0044996f	FUN_0044996f	ehfunclet	unaff_EBP
 0044997b	FUN_0044997b	ehfunclet	unaff_EBP
 0044999c	sprite_grab_tile_cell	auto	
 004499d3	sprite_grab_from_sheet	auto	
-00449a0e	FUN_00449a0e	auto	
+00449a0e	gfx_load_icon_sprites	auto	
 0044ab4e	FUN_0044ab4e	ehfunclet	unaff_EBP
-0044ab72	FUN_0044ab72	auto	
-0044aba9	FUN_0044aba9	auto	
-0044abd5	FUN_0044abd5	auto	
+0044ab72	sprite_grab_icon_cell_keyed	auto	
+0044aba9	sprite_grab_square	auto	
+0044abd5	gfx_grab_fortify_overlay	auto	
 0044ac07	sprite_grab_city_cell	auto	
-0044ac3e	FUN_0044ac3e	auto	
-0044ad47	FUN_0044ad47	auto	
-0044ae4c	FUN_0044ae4c	auto	
-0044b239	FUN_0044b239	auto	
-0044b30e	FUN_0044b30e	auto	
+0044ac3e	city_sprite_scan_flag_offset	auto	
+0044ad47	city_sprite_scan_size_box_offset	auto	
+0044ae4c	gfx_load_city_sprites	auto	
+0044b239	unit_sprite_scan_shield_offset	auto	
+0044b30e	gfx_load_unit_sprites	auto	
 0044b49e	gfx_load_game_sprites	auto	
 0044b4f6	FUN_0044b4f6	ehfunclet	unaff_EBP
 0044c5a0	surfwnd_ctor	auto	
-0044c670	FUN_0044c670	auto	
+0044c670	surfwnd_wnd_ctor	auto	
 0044c730	wnd_ctor	auto	
 0044c8b0	wnd_handlers_ctor	auto	
 0044c8e0	wnd_clear_handlers	auto	
@@ -896,7 +896,7 @@ addr	name	status	reason
 0044ca60	wnd_dtor	game	src/game/unwind.c
 0044caab	FUN_0044caab	ehfunclet	unaff_EBP
 0044cad3	FUN_0044cad3	ehfunclet	unaff_EBP
-0044cb20	FUN_0044cb20	auto	
+0044cb20	surfwnd_wnd_dtor	auto	
 0044cb5e	FUN_0044cb5e	ehfunclet	unaff_EBP
 0044cba0	surfwnd_dtor	game	src/game/unwind.c
 0044cc01	FUN_0044cc01	ehfunclet	unaff_EBP
@@ -916,14 +916,14 @@ addr	name	status	reason
 0044d132	FUN_0044d132	ehfunclet	unaff_EBP
 0044d141	FUN_0044d141	ehfunclet	unaff_EBP
 0044d162	throneroom_create_windows	auto	
-0044d296	FUN_0044d296	auto	
+0044d296	throneroom_run_upgrade	auto	
 0044d99d	FUN_0044d99d	ehfunclet	unaff_EBP
-0044d9c1	FUN_0044d9c1	auto	
+0044d9c1	throneroom_run_view	auto	
 0044dab5	throneroom_draw_click_prompt	auto	
 0044db92	throneroom_render	auto	
 0044e762	FUN_0044e762	ehfunclet	unaff_EBP
 0044e76b	FUN_0044e76b	ehfunclet	unaff_EBP
-0044e790	FUN_0044e790	auto	
+0044e790	throneroom_render_choices	auto	
 0044f498	FUN_0044f498	ehfunclet	unaff_EBP
 0044f4a4	FUN_0044f4a4	ehfunclet	unaff_EBP
 0044f4c9	FUN_0044f4c9	auto	
@@ -935,13 +935,13 @@ addr	name	status	reason
 00450390	wnd_set_palette	auto	
 004503d0	wnd_hide	auto	
 00450400	wnd_center	auto	
-00450440	FUN_00450440	auto	
-00450480	FUN_00450480	auto	
+00450440	wnd_apply_palette_handle	auto	
+00450480	parley_create_advance_list_pane	auto	
 00450ae6	FUN_00450ae6	auto	
 00450b04	FUN_00450b04	auto	
 00450b22	parley_advance_list_on_scroll	auto	
 00450b83	FUN_00450b83	auto	
-00450df6	FUN_00450df6	auto	
+00450df6	parley_advance_list_hit_test	auto	
 00450f0b	parley_draw_advance_list	auto	
 00451830	sprite_get_width	auto	
 00451860	sprite_get_height	auto	
@@ -953,16 +953,16 @@ addr	name	status	reason
 00451a60	hotspot_set_click_callback	auto	
 00451a90	hotspot_set_dblclick_callback	auto	
 00451ac0	scrollbar_set_track_callback	auto	
-00451af0	FUN_00451af0	auto	
+00451af0	pedia_draw_category_body	auto	
 00451bf0	pedia_update_controls	auto	
-00452188	FUN_00452188	auto	
-00452315	FUN_00452315	game	src/game/retvals.c
+00452188	pedia_dispatch_category_draw	auto	
+00452315	pedia_load_description	game	src/game/retvals.c
 00452768	pedia_update_describe_button	auto	
-004529df	FUN_004529df	auto	
-00452a67	FUN_00452a67	auto	
+004529df	hyperlink_register_class	auto	
+00452a67	hyperlink_dtor	auto	
 00452ac1	FUN_00452ac1	ehfunclet	unaff_EBP
-00452ae2	FUN_00452ae2	auto	
-00452b89	FUN_00452b89	auto	
+00452ae2	hyperlink_create_hwnd	auto	
+00452b89	hyperlink_create	auto	
 00452c14	pedia_add_link	auto	
 004531b8	FUN_004531b8	auto	
 0045323a	FUN_0045323a	auto	
@@ -971,25 +971,25 @@ addr	name	status	reason
 004533c0	FUN_004533c0	auto	
 00453aa0	hotspot_scalar_dtor	auto	
 00453af0	ui_pump_messages	auto	
-00453b10	FUN_00453b10	auto	
+00453b10	pedia_link_ctor	auto	
 00453ba0	hotspot_dtor	auto	
 00453bfa	FUN_00453bfa	ehfunclet	unaff_EBP
 00453c40	ctrl_disable	auto	
 00453c80	ctrl_enable	auto	
-00453cc0	FUN_00453cc0	auto	
-00453d40	FUN_00453d40	auto	
-00453d70	FUN_00453d70	auto	
+00453cc0	hyperlink_ctor	auto	
+00453d40	hyperlink_set_click_callback	auto	
+00453d70	hyperlink_set_dblclick_callback	auto	
 00453da0	wonder_is_expired	auto	
 00453e18	wonder_get_city	auto	
 00453e51	civ_has_wonder	auto	
-00453edf	FUN_00453edf	auto	
-00453f90	FUN_00453f90	auto	
-0045406c	FUN_0045406c	auto	
-00454103	FUN_00454103	auto	
-00454260	FUN_00454260	auto	
+00453edf	wonder_get_owner	auto	
+00453f90	registry_load_default_language	auto	
+0045406c	registry_write_value	auto	
+00454103	registry_read_value	auto	
+00454260	cityview_open	auto	
 00454344	FUN_00454344	auto	
-00454354	FUN_00454354	auto	
-00454699	FUN_00454699	auto	
+00454354	cityview_ctor	auto	
+00454699	cityview_dtor	auto	
 00454798	FUN_00454798	ehfunclet	unaff_EBP
 004547a7	FUN_004547a7	ehfunclet	unaff_EBP
 004547b6	FUN_004547b6	ehfunclet	unaff_EBP
@@ -1004,22 +1004,22 @@ addr	name	status	reason
 0045486a	FUN_0045486a	ehfunclet	unaff_EBP
 00454879	FUN_00454879	ehfunclet	unaff_EBP
 00454888	FUN_00454888	ehfunclet	unaff_EBP
-004548a9	FUN_004548a9	auto	
+004548a9	cityview_load	auto	
 00454e8b	FUN_00454e8b	ehfunclet	unaff_EBP
-00454eb2	FUN_00454eb2	auto	
-00454f83	FUN_00454f83	auto	
+00454eb2	cityview_run_modal	auto	
+00454f83	cityview_classify_site	auto	
 0045512b	FUN_0045512b	auto	
-00455183	FUN_00455183	auto	
-00455314	FUN_00455314	auto	
-00455add	FUN_00455add	auto	
-00455b8e	FUN_00455b8e	auto	
-00455c5d	FUN_00455c5d	auto	
-00455d38	FUN_00455d38	auto	
-00455dfd	FUN_00455dfd	auto	
-00455ebe	FUN_00455ebe	auto	
-00455f2e	FUN_00455f2e	auto	
+00455183	cityview_create_windows	auto	
+00455314	cityview_layout_buildings	auto	
+00455add	cityview_draw_buildings	auto	
+00455b8e	cityview_take_wonder_slot	auto	
+00455c5d	cityview_take_improvement_slot	auto	
+00455d38	cityview_place_improvement	auto	
+00455dfd	cityview_place_wonder	auto	
+00455ebe	cityview_place_large_house	auto	
+00455f2e	cityview_place_small_house	auto	
 00455f9e	FUN_00455f9e	auto	
-00456005	FUN_00456005	auto	
+00456005	cityview_place_empty_lot	auto	
 0045606c	cityview_redraw_scrolled	auto	
 004560f8	cityview_draw_title	auto	
 004561d9	FUN_004561d9	auto	
@@ -1028,48 +1028,48 @@ addr	name	status	reason
 0045629b	FUN_0045629b	auto	
 0045638b	cityview_scroll_right	auto	
 004564a8	cityview_scroll_left	auto	
-00456e90	FUN_00456e90	auto	
-00456ee0	FUN_00456ee0	auto	
+00456e90	cityview_scalar_dtor	auto	
+00456ee0	wnd_set_keydown_pre_handler	auto	
 00456f20	civ_adjust_attitude	auto	
 00456f8b	diplo_patience_limit	auto	
 0045705e	diplo_eval_ai_stance	auto	
 00458a3b	diplo_set_attitude_arg	auto	
-00458ab1	FUN_00458ab1	auto	
+00458ab1	diplo_greet_emissary	auto	
 00458dd5	FUN_00458dd5	ehfunclet	unaff_EBP
 00458df9	diplo_ask_receive_emissary	auto	
 00459169	FUN_00459169	ehfunclet	unaff_EBP
 0045918e	diplo_session_reset	auto	
-004591cb	FUN_004591cb	auto	
+004591cb	diplo_offer_sell_tech	auto	
 0045950b	diplo_tech_exchange	auto	
 0045a510	FUN_0045a510	ehfunclet	unaff_EBP
 0045a535	diplo_form_alliance	auto	
 0045a6ab	diplo_sign_peace_treaty	auto	
-0045a7a8	FUN_0045a7a8	auto	
+0045a7a8	diplo_agree_ceasefire	auto	
 0045a8e3	diplo_allies_join_war	auto	
 0045ac71	diplo_declare_war	auto	
 0045b0d6	diplo_ally_demand_help	auto	
 0045b472	diplo_gold_attitude_value	auto	
-0045b4da	FUN_0045b4da	auto	
-0045dd7f	FUN_0045dd7f	auto	
+0045b4da	diplo_ai_answer_proposal	auto	
+0045dd7f	diplo_favor_menu	auto	
 0045f08d	FUN_0045f08d	ehfunclet	unaff_EBP
-0045f0b1	FUN_0045f0b1	auto	
+0045f0b1	diplo_gift_menu	auto	
 0045fd43	FUN_0045fd43	ehfunclet	unaff_EBP
 0045fd67	FUN_0045fd67	auto	
-0045fe19	FUN_0045fe19	auto	
+0045fe19	diplo_proposal_menu	auto	
 00460104	FUN_00460104	ehfunclet	unaff_EBP
 00460129	diplo_ai_meet_player	auto	
 00467580	text_set_number_arg_v	auto	
 004675b0	FUN_004675b0	auto	
-004675ca	FUN_004675ca	auto	
-004675e9	FUN_004675e9	auto	
+004675ca	scenario_events_static_init	auto	
+004675e9	scenario_events_reg_atexit	auto	
 00467606	FUN_00467606	auto	
 00467620	FUN_00467620	auto	
-0046763a	FUN_0046763a	auto	
-00467654	FUN_00467654	auto	
+0046763a	main_frame_wnd_static_init	auto	
+00467654	main_frame_wnd_reg_atexit	auto	
 00467671	FUN_00467671	auto	
 0046768b	FUN_0046768b	auto	
-004676a5	FUN_004676a5	auto	
-004676bf	FUN_004676bf	auto	
+004676a5	menu_handle_654fd4_static_init	auto	
+004676bf	menu_handle_654fd4_reg_atexit	auto	
 004676dc	FUN_004676dc	auto	
 00467750	diplo_clear_treaty_flags	auto	
 00467825	diplo_set_treaty_flags	auto	
@@ -1080,14 +1080,14 @@ addr	name	status	reason
 00467a86	FUN_00467a86	auto	
 00467abb	FUN_00467abb	auto	
 00467af0	diplo_is_hostile	auto	
-00467baf	FUN_00467baf	auto	
+00467baf	diplo_expel_units	auto	
 00467ef2	diplo_cancel_alliance	auto	
-004683f0	FUN_004683f0	auto	
+004683f0	parley_create_unit_list_pane	auto	
 00468797	FUN_00468797	auto	
 004687b5	FUN_004687b5	auto	
 004687d3	parley_unit_list_on_scroll	auto	
 00468834	FUN_00468834	auto	
-00468aa7	FUN_00468aa7	auto	
+00468aa7	parley_unit_list_hit_test	auto	
 00468bb9	parley_draw_unit_list	auto	
 004692ea	FUN_004692ea	auto	
 004693c5	FUN_004693c5	auto	
@@ -1114,21 +1114,21 @@ addr	name	status	reason
 0046ac89	clickmap_remove_by_id	auto	
 0046ace7	clickmap_add	auto	
 0046ad85	clickmap_hit_test	auto	
-0046af70	FUN_0046af70	auto	
-0046b0a1	FUN_0046b0a1	auto	
+0046af70	net_session_send_to	auto	
+0046b0a1	net_session_send_to_all	auto	
 0046b11d	FUN_0046b11d	auto	
 0046b14d	net_send_message	auto	
 0046d5a0	net_msg_header_init	auto	
 0046d5f0	net_msg_init_header	auto	
-0046d6a0	FUN_0046d6a0	auto	
-0046d720	FUN_0046d720	auto	
-0046d780	FUN_0046d780	auto	
-0046d860	FUN_0046d860	auto	
-0046d8a0	FUN_0046d8a0	auto	
-0046d8e0	FUN_0046d8e0	auto	
-0046d930	FUN_0046d930	auto	
+0046d6a0	net_msg_addr_header_init	auto	
+0046d720	net_msg_server_info_init	auto	
+0046d780	net_msg_player_list_node_init	auto	
+0046d860	net_msg_player_list_init	auto	
+0046d8a0	net_msg_server_path_init	auto	
+0046d8e0	net_msg_server_answer_init	auto	
+0046d930	net_msg_whose_turn_init	auto	
 0046d980	FUN_0046d980	auto	
-0046da40	FUN_0046da40	auto	
+0046da40	intro_play_opening_video	auto	
 0046dd98	FUN_0046dd98	ehfunclet	unaff_EBP
 0046dda4	FUN_0046dda4	ehfunclet	unaff_EBP
 0046ddb0	FUN_0046ddb0	ehfunclet	unaff_EBP
@@ -1140,20 +1140,20 @@ addr	name	status	reason
 0046e020	snd_play_effect	auto	
 0046e287	ui_delay_ticks	auto	
 0046e2f4	FUN_0046e2f4	auto	
-0046e320	FUN_0046e320	auto	
+0046e320	snd_cd_play_random_track	auto	
 0046e4a9	snd_cd_detect_layout	auto	
 0046e571	music_play_track	auto	
 0046e6a9	snd_cd_stop	auto	
 0046e6c8	snd_sync_music_option	auto	
-0046e8f0	FUN_0046e8f0	auto	
+0046e8f0	str_parse_hex	auto	
 0046e9d0	FUN_0046e9d0	auto	
-0046e9ea	FUN_0046e9ea	auto	
-0046ea04	FUN_0046ea04	auto	
+0046e9ea	grey_palette_static_init	auto	
+0046ea04	grey_palette_reg_atexit	auto	
 0046ea21	FUN_0046ea21	auto	
-0046ea3b	FUN_0046ea3b	auto	
-0046ee1e	FUN_0046ee1e	auto	
-0046ee4e	FUN_0046ee4e	auto	
-0046ef3f	FUN_0046ef3f	auto	
+0046ea3b	gfx_build_grey_remap	auto	
+0046ee1e	gfx_free_grey_remap	auto	
+0046ee4e	gfx_grey_out_windows	auto	
+0046ef3f	gfx_repaint_main_windows	auto	
 0046efd6	screen_fade_out	auto	
 0046f06f	screen_fade_in	auto	
 0046f108	palette_set_nocollapse_all	auto	
@@ -1162,46 +1162,46 @@ addr	name	status	reason
 0046f460	gfx_load_bmp_640x480	auto	
 0046fbf3	gfx_save_bmp_640x480	auto	
 004702e0	endgame_defeat_movie	auto	
-004703d4	FUN_004703d4	auto	
-004704ec	FUN_004704ec	auto	
+004703d4	defeat_movie_wnd_ctor	auto	
+004704ec	defeat_movie_wnd_dtor	auto	
 0047056b	FUN_0047056b	ehfunclet	unaff_EBP
 0047057a	FUN_0047057a	ehfunclet	unaff_EBP
 00470589	FUN_00470589	ehfunclet	unaff_EBP
 00470598	FUN_00470598	ehfunclet	unaff_EBP
 004705a7	FUN_004705a7	ehfunclet	unaff_EBP
 004705b6	FUN_004705b6	ehfunclet	unaff_EBP
-004705d7	FUN_004705d7	auto	
-004708db	FUN_004708db	auto	
+004705d7	defeat_movie_wnd_create	auto	
+004708db	defeat_movie_wnd_play	auto	
 00470c0c	FUN_00470c0c	auto	
 00470c1c	FUN_00470c1c	auto	
-00471020	FUN_00471020	auto	
+00471020	defeat_movie_wnd_scalar_dtor	auto	
 00471070	surface_get_width	auto	
 004710a0	surface_get_height	auto	
 004710d0	endgame_spaceship_arrival	auto	
 0047132e	FUN_0047132e	ehfunclet	unaff_EBP
-00471362	FUN_00471362	auto	
-0047147a	FUN_0047147a	auto	
+00471362	arrival_movie_wnd_ctor	auto	
+0047147a	arrival_movie_wnd_dtor	auto	
 004714f9	FUN_004714f9	ehfunclet	unaff_EBP
 00471508	FUN_00471508	ehfunclet	unaff_EBP
 00471517	FUN_00471517	ehfunclet	unaff_EBP
 00471526	FUN_00471526	ehfunclet	unaff_EBP
 00471535	FUN_00471535	ehfunclet	unaff_EBP
 00471544	FUN_00471544	ehfunclet	unaff_EBP
-00471565	FUN_00471565	auto	
-00471856	FUN_00471856	auto	
+00471565	arrival_movie_wnd_create	auto	
+00471856	arrival_movie_wnd_play	auto	
 00471bfe	FUN_00471bfe	auto	
 00471c14	FUN_00471c14	auto	
 00471c2a	FUN_00471c2a	auto	
 00471db7	FUN_00471db7	auto	
-00471dd8	FUN_00471dd8	auto	
+00471dd8	endgame_show_centauri_beaten	auto	
 00472393	FUN_00472393	ehfunclet	unaff_EBP
 0047239f	FUN_0047239f	ehfunclet	unaff_EBP
 004723ab	FUN_004723ab	ehfunclet	unaff_EBP
 004723b7	FUN_004723b7	ehfunclet	unaff_EBP
 004723c3	FUN_004723c3	ehfunclet	unaff_EBP
 004723cf	FUN_004723cf	ehfunclet	unaff_EBP
-004728c0	FUN_004728c0	auto	
-00472910	FUN_00472910	auto	
+004728c0	arrival_movie_wnd_scalar_dtor	auto	
+00472910	avi_player_set_frame_callback	auto	
 00472950	path_default_extension	game	src/game/regargs.c
 004729ab	path_set_extension	game	src/game/regargs.c
 00472a60	FUN_00472a60	auto	
@@ -1212,30 +1212,30 @@ addr	name	status	reason
 00472e1d	FUN_00472e1d	auto	
 00472e5c	FUN_00472e5c	auto	
 00472f10	FUN_00472f10	auto	
-00472f2a	FUN_00472f2a	auto	
-00472f44	FUN_00472f44	auto	
+00472f2a	scenario_title_surface_static_init	auto	
+00472f44	scenario_title_surface_reg_atexit	auto	
 00472f61	FUN_00472f61	auto	
-00472f7b	FUN_00472f7b	auto	
-00473064	FUN_00473064	auto	
-0047314e	FUN_0047314e	auto	
-00473190	FUN_00473190	auto	
+00472f7b	save_pack_layout_rects	auto	
+00473064	save_unpack_layout_rects	auto	
+0047314e	rect_pack_to_short	auto	
+00473190	rect_unpack_from_short	auto	
 004731d2	ui_file_name_dialog	auto	
-004732a6	FUN_004732a6	auto	
+004732a6	save_read_units_cities	auto	
 00473660	save_load_gpk	auto	
-00473c12	FUN_00473c12	auto	
-00473c68	FUN_00473c68	auto	
+00473c12	save_write_str	auto	
+00473c68	save_read_event_str	auto	
 00473d5e	save_set_file_ext	auto	
 00473e55	save_file_filter	auto	
-00473ff2	FUN_00473ff2	auto	
+00473ff2	save_filter_add_entry	auto	
 004741be	save_write_game	auto	
 0047543c	FUN_0047543c	auto	
-00475666	FUN_00475666	game	src/game/retvals.c
+00475666	save_read_game	game	src/game/retvals.c
 0047758c	game_save_dialog	auto	
 00477d8c	game_load_dialog	auto	
 004786f8	FUN_004786f8	ehfunclet	unaff_EBP
 00479d20	FUN_00479d20	auto	
-00479d3a	FUN_00479d3a	auto	
-00479d65	FUN_00479d65	auto	
+00479d3a	map_views_static_init	auto	
+00479d65	map_views_reg_atexit	auto	
 00479d82	FUN_00479d82	auto	
 00479da8	FUN_00479da8	auto	
 00479dc2	FUN_00479dc2	auto	
@@ -1248,31 +1248,31 @@ addr	name	status	reason
 00479e7e	FUN_00479e7e	auto	
 00479eae	FUN_00479eae	auto	
 00479ede	mapview_init_state	auto	
-00479fbe	FUN_00479fbe	auto	
+00479fbe	mapview_update_layout	auto	
 0047a540	mapview_screen_to_tile	auto	
 0047a6b0	mapview_tile_to_screen	auto	
-0047a747	FUN_0047a747	auto	
+0047a747	tile_calc_coast_masks	auto	
 0047a8c9	mapview_draw_tile_terrain	auto	
-0047ba1d	FUN_0047ba1d	auto	
-0047bba5	FUN_0047bba5	auto	
-0047bbea	FUN_0047bbea	auto	
-0047bc59	FUN_0047bc59	auto	
-0047bd04	FUN_0047bd04	auto	
-0047be63	FUN_0047be63	auto	
+0047ba1d	mapview_draw_tile_city	auto	
+0047bba5	mapview_draw_unit_stacked	auto	
+0047bbea	mapview_draw_unit_blinking	auto	
+0047bc59	mapview_draw_unit_at	auto	
+0047bd04	mapview_draw_stack_unit	auto	
+0047be63	mapview_draw_tile_units	auto	
 0047c103	mapview_draw_tile	auto	
-0047c2f2	FUN_0047c2f2	auto	
-0047c37f	FUN_0047c37f	auto	
+0047c2f2	map_x_in_span	auto	
+0047c37f	map_tile_in_box	auto	
 0047c3e0	mapview_tile_in_view	auto	
 0047c443	mapview_draw_city_names	auto	
 0047c7aa	mapview_tile_radius_rect	auto	
-0047c869	FUN_0047c869	auto	
-0047c9d4	FUN_0047c9d4	auto	
+0047c869	mapview_draw_tile_radius	auto	
+0047c9d4	mapview_draw_all_tiles	auto	
 0047caea	mapview_blit_tile_radius	auto	
-0047cb26	FUN_0047cb26	auto	
-0047cb50	FUN_0047cb50	auto	
+0047cb26	mapview_blit_tile	auto	
+0047cb50	mapview_blit_with_net_pump	auto	
 0047cbb4	mapview_redraw_area	auto	
-0047cced	FUN_0047cced	auto	
-0047cd1f	FUN_0047cd1f	auto	
+0047cced	mapview_redraw_tile	auto	
+0047cd1f	mapview_redraw_tile_neighbors	auto	
 0047cd51	mapview_redraw	auto	
 0047ce1e	map_redraw_area_all_views	auto	
 0047cea6	map_redraw_tile_all_views	auto	
@@ -1287,18 +1287,18 @@ addr	name	status	reason
 0047debe	FUN_0047debe	ehfunclet	unaff_EBP
 0047df20	gfx_set_zoom_scale	auto	
 0047df50	gfx_reset_zoom_scale	auto	
-0047df80	FUN_0047df80	auto	
+0047df80	rect_intersect_into	auto	
 0047dfb0	mapview_zoom_scale	auto	
 0047dff0	mapview_apply_zoom	auto	
 0047e030	mapviews_tile_visible	auto	
-0047e0e5	FUN_0047e0e5	auto	
-0047e2b3	FUN_0047e2b3	auto	
+0047e0e5	net_stacked_draw_push	auto	
+0047e2b3	net_stacked_draw_run_next	auto	
 0047e94e	net_process_messages	auto	
 00482305	FUN_00482305	ehfunclet	unaff_EBP
 00482311	FUN_00482311	ehfunclet	unaff_EBP
 00482337	FUN_00482337	auto	
 0048237d	FUN_0048237d	auto	
-004823d6	FUN_004823d6	auto	
+004823d6	net_msg_get_args	auto	
 00482470	FUN_00482470	auto	
 004824e3	net_host_quit_handoff	auto	
 00482724	FUN_00482724	auto	
@@ -1306,35 +1306,35 @@ addr	name	status	reason
 004827d5	FUN_004827d5	auto	
 0048283d	FUN_0048283d	auto	
 004828a5	net_client_transfer_server	auto	
-0048308f	FUN_0048308f	auto	
+0048308f	events_relink_pool	auto	
 00484cc0	scenario_reset_params	auto	
 00484d3b	map_display_disable	auto	
 00484d52	ui_flush_input	auto	
 00484d85	FUN_00484d85	auto	
 00484fec	game_turn_to_year	auto	
 00485208	str_append_year	auto	
-004853e7	FUN_004853e7	auto	
-00485c15	FUN_00485c15	auto	
-004868fb	FUN_004868fb	auto	
-00486c2e	FUN_00486c2e	auto	
-00486e15	FUN_00486e15	auto	
+004853e7	civ_update_power_ranks	auto	
+00485c15	game_spawn_barbarians	auto	
+004868fb	map_apply_global_warming	auto	
+00486c2e	game_update_global_warming	auto	
+00486e15	civ_throne_upgrade_threshold	auto	
 00486e6f	civ_check_throne_room_upgrade	auto	
 00487007	map_rebuild_unit_flags	auto	
 0048710a	units_reset_for_turn	auto	
 00487371	game_advance_turn	auto	
-00487a41	FUN_00487a41	auto	
-00488937	FUN_00488937	auto	
+00487a41	civ_process_cities_turn	auto	
+00488937	game_autosave	auto	
 00488a45	map_road_connection	auto	
-00488cef	FUN_00488cef	auto	
-00489292	FUN_00489292	auto	
+00488cef	civ_heal_units	auto	
+00489292	civ_check_pop_and_funds	auto	
 00489553	civ_process_turn	auto	
 004897fa	ui_redraw_all_maps	auto	
 00489859	unit_activate_next	auto	
 00489a0d	ui_focus_active_unit	auto	
-00489b9b	FUN_00489b9b	auto	
-00489be2	FUN_00489be2	auto	
-0048a004	FUN_0048a004	auto	
-0048a374	FUN_0048a374	auto	
+00489b9b	mapview_center_if_moved	auto	
+00489be2	tutorial_settler_hints	auto	
+0048a004	game_run_active_unit	auto	
+0048a374	game_wait_for_player_input	auto	
 0048a416	game_player_move_loop	auto	
 0048a92d	game_calc_human_wonder_range	auto	
 0048aa24	game_turn_start_popups	game	src/game/retvals.c
@@ -1343,38 +1343,38 @@ addr	name	status	reason
 0048b340	game_play_loop	auto	
 0048bf2d	FUN_0048bf2d	ehfunclet	unaff_EBP
 0048bf51	FUN_0048bf51	auto	
-0048bfec	FUN_0048bfec	auto	
+0048bfec	game_mp_client_turn_loop	auto	
 0048c9ce	FUN_0048c9ce	ehfunclet	unaff_EBP
-0048c9f3	FUN_0048c9f3	auto	
+0048c9f3	game_mp_host_turn_loop	auto	
 0048d989	FUN_0048d989	ehfunclet	unaff_EBP
 0048d9ad	net_heartbeat_send	auto	
 0048da51	net_heartbeat_check	auto	
 0048dab9	net_check_lost_connections	auto	
 0048de75	net_drop_flagged_players	auto	
 004904c0	popup_file_with_sprite	auto	
-00490500	FUN_00490500	auto	
+00490500	popup_text_with_city_noflags	auto	
 00490530	popup_text_with_unit_noflags	auto	
 00490560	citywnd_get_city	auto	
-00490590	FUN_00490590	auto	
+00490590	pedia_init_terrain_list	auto	
 004906fd	pedia_draw_terrain_page	auto	
-00491c20	FUN_00491c20	auto	
-00491d61	FUN_00491d61	auto	
+00491c20	pedia_show_terrain_modal	auto	
+00491d61	pedia_find_terrain_index	auto	
 004923c0	wnd_set_focus	auto	
-004923f0	FUN_004923f0	auto	
-0049275a	FUN_0049275a	auto	
+004923f0	chat_insert_macro_text	auto	
+0049275a	chat_read_macro_line	auto	
 00492868	FUN_00492868	ehfunclet	unaff_EBP
 004929c0	file_obj_open	auto	
 00492a00	file_obj_seek_cur	auto	
-00492a40	FUN_00492a40	auto	
+00492a40	file_obj_read_line	auto	
 00492a80	file_obj_get_size	auto	
 00492ab0	edit_get_sel_end	auto	
 00492ae0	edit_replace_sel	auto	
-00492b20	FUN_00492b20	auto	
-00492b60	FUN_00492b60	auto	
+00492b20	edit_set_sel	auto	
+00492b60	civ_ai_goal_negate_priority	auto	
 00492c15	civ_clear_standing_goals_near	auto	
-00492d18	FUN_00492d18	auto	
-00492dd0	FUN_00492dd0	auto	
-00492e60	FUN_00492e60	auto	
+00492d18	civ_ai_goal_insert_gap	auto	
+00492dd0	civ_standing_goal_insert_gap	auto	
+00492e60	civ_ai_goal_get_priority	auto	
 0049301b	civ_add_ai_goal	auto	
 004933f2	civ_add_standing_goal	auto	
 00493602	civ_refresh_ai_goals	auto	
@@ -1384,9 +1384,9 @@ addr	name	status	reason
 00493c7d	civ_name_plural	auto	
 00493d13	civ_adjective	auto	
 00493e50	FUN_00493e50	auto	
-00493e83	FUN_00493e83	game	src/game/unwind.c
+00493e83	portrait_dlg_show	game	src/game/unwind.c
 00493eeb	FUN_00493eeb	ehfunclet	unaff_EBP
-00493f0f	FUN_00493f0f	auto	
+00493f0f	diplo_leader_wnd_launch	auto	
 00494148	diplo_leader_wnd_close	auto	
 004941ee	diplo_leader_play_reaction	auto	
 004942a3	diplo_leader_wnd_ctor	auto	
@@ -1438,7 +1438,7 @@ addr	name	status	reason
 00497bf0	diplo_leader_wnd_scalar_dtor	auto	
 00497c40	palette_get_entry	auto	
 00497c90	surface_get_rect	auto	
-00497cc0	FUN_00497cc0	auto	
+00497cc0	wnd_set_bg_tile	auto	
 00497d00	wnd_set_caption_height	auto	
 00497d40	button_create_with_callback	auto	
 00497da0	save_read_cstr	auto	
@@ -1446,7 +1446,7 @@ addr	name	status	reason
 00497ea0	memblock_init	auto	
 00497fa0	FUN_00497fa0	auto	
 00497ff3	memblock_ensure_locked	auto	
-0049805e	FUN_0049805e	auto	
+0049805e	memblock_detach	auto	
 00498082	FUN_00498082	auto	
 004980a9	memblock_unlock	auto	
 004980ec	memblock_free	auto	
@@ -1503,7 +1503,7 @@ addr	name	status	reason
 004a5d92	tribe_editor_run	auto	
 004a5deb	FUN_004a5deb	ehfunclet	unaff_EBP
 004a6980	sprite_width	auto	
-004a69b0	FUN_004a69b0	auto	
+004a69b0	pedia_init_concept_list	auto	
 004a6b80	popup_text_with_advance	auto	
 004a6bdc	popup_text_with_improvement	auto	
 004a6c4b	popup_text_with_unit_sprite	auto	
@@ -1770,7 +1770,7 @@ addr	name	status	reason
 004ca1cd	unit_airlift_perform	auto	
 004ca39e	unit_paradrop	auto	
 004cc870	popup_game_with_improvement	auto	
-004cc8b0	FUN_004cc8b0	auto	
+004cc8b0	popup_game_with_unit	auto	
 004cc8f0	FUN_004cc8f0	auto	
 004cc90a	editor_text_dlg_wnd_static_init	auto	
 004cc924	editor_text_dlg_wnd_reg_atexit	auto	
@@ -2597,7 +2597,7 @@ addr	name	status	reason
 0055c3d3	civ_select_government_dialog	game	src/game/unwind.c
 0055c679	FUN_0055c679	ehfunclet	unaff_EBP
 0055c69d	civ_change_government	auto	
-0055cbd5	FUN_0055cbd5	auto	
+0055cbd5	diplo_ai_feels_secure	auto	
 0055d1e2	diplo_ai_swap_advances	auto	
 0055d685	diplo_ally_join_war	auto	
 0055d8d8	diplo_civs_meet	auto	
@@ -2632,8 +2632,8 @@ addr	name	status	reason
 00568354	FUN_00568354	ehfunclet	unaff_EBP
 0056835d	FUN_0056835d	ehfunclet	unaff_EBP
 00568381	frame_texture_free	auto	
-005683a5	FUN_005683a5	auto	
-005683b5	FUN_005683b5	auto	
+005683a5	frame_texture_load_hook_nop	auto	
+005683b5	frame_texture_free_hook_nop	auto	
 005683c5	gfx_dissolve_blit	auto	
 00568861	civ_city_art_era	auto	
 00568b00	FUN_00568b00	auto	
@@ -2933,7 +2933,7 @@ addr	name	status	reason
 00596ced	spaceship_group_max	auto	
 00596d3c	spaceship_group_count	auto	
 00596e06	spaceship_group_count_clamped	auto	
-00596e92	FUN_00596e92	auto	
+00596e92	spaceship_component_thrust	auto	
 00596eec	spaceship_calc_stats	auto	
 005973fd	spaceship_launch	auto	
 0059772c	spaceship_status_dialog	auto	
@@ -2965,7 +2965,7 @@ addr	name	status	reason
 0059adc8	FUN_0059adc8	ehfunclet	unaff_EBP
 0059adef	net_init_transport	auto	
 0059b293	net_session_shutdown	auto	
-0059b55b	FUN_0059b55b	auto	
+0059b55b	net_session_close_hook_nop	auto	
 0059b571	net_game_list_add	auto	
 0059b7fc	net_add_player	auto	
 0059b96a	net_remove_player	auto	
@@ -3069,7 +3069,7 @@ addr	name	status	reason
 0059f31a	dialog_set_text_color	auto	
 0059f3d7	dialog_draw_text_shadowed	auto	
 0059f5ba	dialog_draw_text_line	auto	
-0059f5f7	FUN_0059f5f7	auto	
+0059f5f7	dialog_has_text_lines	auto	
 0059f64a	dialog_draw_wrapped_text	auto	
 0059fb78	dialog_option_group_index	auto	
 0059fc19	dialog_option_at	auto	
@@ -3122,7 +3122,7 @@ addr	name	status	reason
 005a9640	checkbox_disable	auto	
 005a9670	listbox_get_text	auto	
 005a96b0	listbox_get_sel_text	auto	
-005a96f0	FUN_005a96f0	auto	
+005a96f0	dialog_uses_alt_text_color	auto	
 005a9730	dialog_draw_text_default_font	auto	
 005a9780	gfx_set_draw_target	auto	
 005a9798	gfx_draw_line_color	auto	
@@ -3341,7 +3341,7 @@ addr	name	status	reason
 005bc1db	wnd_stack_remove	auto	
 005bc280	wnd_obj_set_bg_color	auto	
 005bc35e	FUN_005bc35e	auto	
-005bc3bf	FUN_005bc3bf	auto	
+005bc3bf	wnd_obj_set_bg_tile	auto	
 005bc3d8	FUN_005bc3d8	auto	
 005bc3f1	wnd_obj_set_bg_surface	auto	
 005bc40a	wnd_obj_show_raise	auto	
@@ -3642,7 +3642,7 @@ addr	name	status	reason
 005cacd4	FUN_005cacd4	game	src/game/fixups.c
 005cb319	FUN_005cb319	auto	
 005cb601	spritebtn_create_hwnd	auto	
-005cb6db	FUN_005cb6db	auto	
+005cb6db	spritebtn_hwnd_cleanup_stub	auto	
 005cb6eb	FUN_005cb6eb	game	src/game/fixups.c
 005cbdb0	palette_get_hpalette	auto	
 005cbdd0	wnd_keyboard_nav_enabled	auto	
@@ -3811,7 +3811,7 @@ addr	name	status	reason
 005d30e0	edit_fire_key_callback	auto	
 005d3130	combo_create_window	auto	
 005d3310	FUN_005d3310	auto	
-005d356e	FUN_005d356e	auto	
+005d356e	combo_hwnd_cleanup_stub	auto	
 005d357e	combo_hwnd_add_string	auto	
 005d35a3	FUN_005d35a3	auto	
 005d35c8	combo_hwnd_set_font	auto	
@@ -4024,7 +4024,7 @@ addr	name	status	reason
 005dcef7	mem_handle_size	auto	
 005dcf11	mem_handle_realloc_impl	auto	
 005dcfb5	mem_avail_bytes_stub	auto	
-005dcfca	FUN_005dcfca	auto	
+005dcfca	mem_kb_exceeds_avail	auto	
 005dd010	mmwnd_ctor	auto	
 005dd1a0	avi_player_dtor	auto	
 005dd230	FUN_005dd230	ehfunclet	unaff_EBP
@@ -4045,7 +4045,7 @@ addr	name	status	reason
 005dd5a4	FUN_005dd5a4	auto	
 005dd64c	avi_player_draw_to	auto	
 005dd71e	avi_player_set_double_size	auto	
-005dd761	FUN_005dd761	auto	
+005dd761	avi_player_set_transparent	auto	
 005dd7de	FUN_005dd7de	auto	
 005dd87d	FUN_005dd87d	auto	
 005dd8a0	snd_system_init	auto	

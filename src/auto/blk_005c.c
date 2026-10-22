@@ -1725,7 +1725,7 @@ undefined4 __thiscall FUN_005c2e5e(DibSurface *this,iptr param_1)
   }
   else {
     local_14 = (char *)res_lock(local_230);
-    iVar3 = _strcmp(local_14,&DAT_006375ec);
+    iVar3 = _strcmp(local_14,&gif_sig_resource2);
     if (iVar3 == 0) {
       dbg_logf(ADDR(0x6375f0, ((u8 *)&g.d_006375f0)),param_1);
       res_unlock(local_230);
@@ -1877,7 +1877,7 @@ undefined4 __thiscall FUN_005c3313(DibSurface *this,iptr param_1)
   }
   else {
     local_20 = (char *)file_obj_map_view(&local_bc);
-    iVar2 = _strcmp(local_20,&DAT_00637758);
+    iVar2 = _strcmp(local_20,&gif_sig_mapped_file);
     if (iVar2 == 0) {
       dbg_log(ADDR(0x63775c, ((u8 *)&g.d_0063775c)));
       file_obj_unmap_view(&local_bc);
@@ -3632,12 +3632,12 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
   if (wnd_modal_depth != 0xf) {
     this->modal_running = 1;
     wnd_modal_depth = wnd_modal_depth + 1;
-    (&DAT_00637eb0)[wnd_modal_depth] = this;
+    (&wnd_modal_stack)[wnd_modal_depth] = this;
     if (wnd_modal_depth == 0) {
       local_8 = 0;
     }
     else {
-      local_8 = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[wnd_modal_depth]);
+      local_8 = thunk_wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
     }
     iVar1 = thunk_wnd_get_window((WndBase *)this);
     wnd_obj_disable_owner(iVar1,local_8);
@@ -3651,7 +3651,7 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
       local_c = 0;
     }
     else {
-      local_c = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[wnd_modal_depth]);
+      local_c = thunk_wnd_get_window((WndBase *)(&wnd_modal_stack_below)[wnd_modal_depth]);
     }
     iVar1 = thunk_wnd_get_window((WndBase *)this);
     wnd_obj_enable_owner(iVar1,local_c);
@@ -5243,7 +5243,7 @@ HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
   pHVar4 = *(HWND *)(iVar1 + 4);
   iVar2 = thunk_rect_height((iptr)param_1);
   iVar3 = thunk_rect_width((iptr)param_1);
-  pHVar4 = CreateWindowExA(4,s_MSControlClass_00637ca8,&DAT_00637ca4,0x50000000,*param_1,param_1[1],
+  pHVar4 = CreateWindowExA(4,s_MSControlClass_00637ca8,&hotspot_wnd_title,0x50000000,*param_1,param_1[1],
                            iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
   *(undefined4 *)(iVar3 + 0x2c) = 1;
@@ -5280,9 +5280,9 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
   this = *(HotspotDblClickView **)(iVar1 + 4);
   switch(param_2) {
   case 0x200:
-    if (DAT_00637c9c == 0) {
-      if (DAT_00637ca0 == 0) {
-        DAT_00637c9c = 1;
+    if (hotspot_mouse_inside == 0) {
+      if (hotspot_mouse_pressed == 0) {
+        hotspot_mouse_inside = 1;
         SetCapture(param_1);
         if (this != (HotspotDblClickView *)0x0) {
           iVar3 = thunk_ctrl_get_parent((Control *)this);
@@ -5300,7 +5300,7 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
       local_14.bottom = piVar1[3];
       OffsetRect(&local_14,-local_14.left,-local_14.top);
       BVar2 = PtInRect(&local_14,(POINT)(CONCAT44(param_4 >> 0x10,param_4) & 0xffffffff0000ffff));
-      if (((BVar2 == 0) && (DAT_00637c9c = 0, DAT_00637ca0 == 0)) &&
+      if (((BVar2 == 0) && (hotspot_mouse_inside = 0, hotspot_mouse_pressed == 0)) &&
          (ReleaseCapture(), this != (HotspotDblClickView *)0x0)) {
         iVar3 = thunk_ctrl_get_parent((Control *)this);
         wnd_set_active_child(iVar3);
@@ -5310,8 +5310,8 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
     }
     break;
   case 0x201:
-    if (DAT_00637c9c != 0) {
-      DAT_00637ca0 = 1;
+    if (hotspot_mouse_inside != 0) {
+      hotspot_mouse_pressed = 1;
       iVar3 = thunk_ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar3);
       uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
@@ -5319,9 +5319,9 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
     }
     break;
   case 0x202:
-    if (DAT_00637ca0 != 0) {
-      DAT_00637ca0 = 0;
-      if (DAT_00637c9c == 0) {
+    if (hotspot_mouse_pressed != 0) {
+      hotspot_mouse_pressed = 0;
+      if (hotspot_mouse_inside == 0) {
         ReleaseCapture();
         if (this != (HotspotDblClickView *)0x0) {
           iVar3 = thunk_ctrl_get_parent((Control *)this);
@@ -5339,7 +5339,7 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
     }
     break;
   case 0x203:
-    if (DAT_00637c9c != 0) {
+    if (hotspot_mouse_inside != 0) {
       iVar3 = thunk_ctrl_get_parent((Control *)this);
       wnd_set_active_child(iVar3);
       uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
@@ -5770,7 +5770,7 @@ button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,Game
   hWndParent = *(HWND *)(iVar1 + 4);
   iVar2 = thunk_rect_height((iptr)param_1);
   iVar3 = thunk_rect_width((iptr)param_1);
-  local_154 = CreateWindowExA(4,s_MSControlClass_00637d70,&DAT_00637d6c,local_2a0,*param_1,
+  local_154 = CreateWindowExA(4,s_MSControlClass_00637d70,&button_wnd_title,local_2a0,*param_1,
                               param_1[1],iVar3,iVar2,hWndParent,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey((iptr)local_170,(iptr)local_278);
   local_150.left = *param_1;
@@ -6533,7 +6533,7 @@ FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
   hWndParent = *(HWND *)(iVar4 + 4);
   iVar4 = thunk_rect_height((iptr)&local_3c);
   iVar3 = thunk_rect_width((iptr)&local_3c);
-  local_28 = CreateWindowExA(4,s_MSControlClass_00637e34,&DAT_00637e30,local_44,param_1,param_2,
+  local_28 = CreateWindowExA(4,s_MSControlClass_00637e34,&spritebtn_alt_wnd_title,local_44,param_1,param_2,
                              iVar3,iVar4,hWndParent,hMenu,hInstance,lpParam);
   iVar4 = ctrl_init_block(local_28,(iptr)param_3);
   *(undefined4 *)(iVar4 + 0x2c) = 5;
@@ -6591,7 +6591,7 @@ HWND __cdecl spritebtn_create_hwnd(int param_1,int param_2,int param_3,int param
   hWndParent = *(HWND *)(iVar1 + 4);
   iVar2 = thunk_rect_height((iptr)&local_1c);
   iVar3 = thunk_rect_width((iptr)&local_1c);
-  local_8 = CreateWindowExA(4,s_MSControlClass_00637e48,&DAT_00637e44,local_24,param_1,param_2,iVar3
+  local_8 = CreateWindowExA(4,s_MSControlClass_00637e48,&spritebtn_wnd_title,local_24,param_1,param_2,iVar3
                             ,iVar2,hWndParent,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(local_8,param_5);
   *(undefined4 *)(iVar3 + 0x2c) = 5;
@@ -6605,7 +6605,7 @@ HWND __cdecl spritebtn_create_hwnd(int param_1,int param_2,int param_3,int param
 #undef local_8
 
 /* 005cb6db auto */
-void __cdecl FUN_005cb6db(undefined4 param_1)
+void __cdecl spritebtn_hwnd_cleanup_stub(undefined4 param_1)
 
 {
   return;
@@ -7067,7 +7067,7 @@ HWND __cdecl checkbox_create_hwnd(iptr param_1,iptr param_2,char *param_3,int pa
   pHVar6 = *(HWND *)(iVar3 + 4);
   iVar4 = thunk_rect_height(param_1);
   iVar5 = thunk_rect_width(param_1);
-  pHVar6 = CreateWindowExA(4,s_MSControlClass_00637f10,&DAT_00637f0c,local_24,*(int *)param_1,
+  pHVar6 = CreateWindowExA(4,s_MSControlClass_00637f10,&checkbox_wnd_title,local_24,*(int *)param_1,
                            *(int *)(param_1 + 4),iVar5,iVar4,pHVar6,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey(param_2,(iptr)pvVar2);
   pHVar7 = LoadBitmapA(app_hinstance,(LPCSTR)0x132);
@@ -7214,7 +7214,7 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
       local_130 = local_1b0.top;
       local_12c = local_1b0.right;
       local_128 = local_1b0.bottom;
-      if (DAT_00637f08 != 0) {
+      if (checkbox_mouse_pressed != 0) {
         local_12c = local_1b0.left + 0x20;
         iVar5 = thunk_rect_height((iptr)&local_1b0);
         local_130 = iVar5 + -0x14 + local_1b0.top >> 1;
@@ -7400,7 +7400,7 @@ LAB_005ccd4b:
   }
   else if (param_2 == 0x201) {
     iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
-    if ((iVar5 != 0) && (DAT_00637f08 == 0)) {
+    if ((iVar5 != 0) && (checkbox_mouse_pressed == 0)) {
       SetFocus(param_1);
       iVar5 = thunk_checkbox_is_checked(local_198);
       if (iVar5 == 0) {
@@ -7409,7 +7409,7 @@ LAB_005ccd4b:
       else {
         thunk_checkbox_set_checked(local_198,0);
       }
-      DAT_00637f08 = 1;
+      checkbox_mouse_pressed = 1;
       SetCapture(param_1);
       InvalidateRect(param_1,(RECT *)0x0,0);
       iVar11 = thunk_ctrl_get_parent(local_198);
@@ -7424,7 +7424,7 @@ LAB_005ccd4b:
     iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
     if (iVar5 != 0) {
       ReleaseCapture();
-      DAT_00637f08 = 0;
+      checkbox_mouse_pressed = 0;
     }
   }
   return 0;
@@ -7542,7 +7542,7 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
   if (param_4 != 0) {
     param_3 = param_3 | 0x10000000;
   }
-  if (DAT_00637f58 == 0) {
+  if (scrollbar_class_registered == 0) {
     pvVar8 = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
     pHVar7 = app_hinstance;
@@ -7551,7 +7551,7 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
     pHVar5 = *(HWND *)(iVar2 + 4);
     iVar3 = thunk_rect_height((iptr)param_1);
     iVar4 = thunk_rect_width((iptr)param_1);
-    local_8 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&DAT_00637f5c,param_3 | 0x40000000,*param_1,
+    local_8 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&scrollbar_probe_wnd_title,param_3 | 0x40000000,*param_1,
                               param_1[1],iVar4,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
     scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_34 = GetWindowLongA(local_8,-0x10);
@@ -7567,7 +7567,7 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
     local_30.lpszMenuName = (LPCSTR)0x0;
     local_30.lpszClassName = s_MSScrollBarClass_00637f6c;
     RegisterClassA(&local_30);
-    DAT_00637f58 = 1;
+    scrollbar_class_registered = 1;
     DestroyWindow(local_8);
   }
   pvVar8 = (LPVOID)0x0;
@@ -7578,7 +7578,7 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
   pHVar5 = *(HWND *)(iVar4 + 4);
   iVar4 = thunk_rect_height((iptr)param_1);
   nWidth = thunk_rect_width((iptr)param_1);
-  local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&DAT_00637f80,local_34,*param_1,param_1[1]
+  local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&scrollbar_wnd_title,local_34,*param_1,param_1[1]
                             ,nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5cce80, FUN_005cce80));
   SetWindowLongA(local_8,scrollbar_base_wnd_extra,param_2);

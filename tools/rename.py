@@ -29,7 +29,8 @@ volatile while bool true false main'''.split())
 
 def files():
     out = []
-    for pat in ('re/*.tsv', 're/decomp.c', 're/proposals/*', 'tools/*.py', 'hook/*.c', 'hook/*.h'):
+    for pat in ('re/*.tsv', 're/decomp.c', 're/proposals/*', 'tools/*.py', 'hook/*.c', 'hook/*.h',
+                'harness/scripts/*.txt', 'harness/diffscripts/*.txt'):     # call FUNCTION
         out += glob.glob(os.path.join(ROOT, pat))
     for d, _, fs in os.walk(os.path.join(ROOT, 'src')):
         out += [os.path.join(d, f) for f in fs if f.endswith(('.c', '.h', '.inc'))]

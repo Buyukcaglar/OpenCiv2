@@ -929,7 +929,7 @@ void __cdecl FUN_00411705(undefined4 param_1,undefined4 param_2)
         else {
           local_8 = tile_resource(iVar2,iVar3);
         }
-        thunk_FUN_00491c20
+        thunk_pedia_show_terrain_modal
                   ((C_004083b0_a28 *)&pedia_window,local_8 * 0xb + (uint)bVar4);
       }
       if (!bVar1) {
@@ -1585,7 +1585,7 @@ void __cdecl FUN_004125c6(int param_1)
         }
         break;
       case 0x24b:
-        if ((game.multiplayer == '\0') || (DAT_0062eb30 != 0)) {
+        if ((game.multiplayer == '\0') || (mp_cheat_menu_allowed != 0)) {
           thunk_cheat_toggle_mode();
         }
         break;
@@ -2073,7 +2073,7 @@ void __thiscall mapview_create(C_004083b0_430 *this)
   }
   if ((this->field_2d8 == 0) || ((short)this->field_2dc != 0)) {
     local_8 = *(int *)(&map_view_saved_rects + this->field_2d8 * 0x10);
-    local_c = *(int *)(&DAT_006552a8 + this->field_2d8 * 0x10);
+    local_c = *(int *)(&map_view_saved_rect_tops + this->field_2d8 * 0x10);
     local_10 = thunk_rect_width((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
     local_10 = local_10 - sys_dlgframe_w2;
     local_14 = thunk_rect_height((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
@@ -3707,7 +3707,7 @@ void __thiscall FUN_00418b50(C_00418b50 *this)
   
   local_8 = 0;
   if (this->hwnd != 0) {
-    FUN_005d356e(this->hwnd);
+    combo_hwnd_cleanup_stub(this->hwnd);
   }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_00418baa */ { thunk_ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
@@ -4242,7 +4242,7 @@ void __cdecl snd_menu_end(void)
 }
 
 /* 00419cbb auto */
-undefined1 __cdecl FUN_00419cbb(undefined4 param_1,undefined4 param_2)
+undefined1 __cdecl rules_next_line_byte_clamped(undefined4 param_1,undefined4 param_2)
 
 {
   iptr iVar1;
@@ -4255,7 +4255,7 @@ undefined1 __cdecl FUN_00419cbb(undefined4 param_1,undefined4 param_2)
 }
 
 /* 00419cf4 auto */
-undefined1 __cdecl FUN_00419cf4(undefined4 param_1,undefined4 param_2)
+undefined1 __cdecl rules_next_byte_clamped(undefined4 param_1,undefined4 param_2)
 
 {
   iptr iVar1;
@@ -4271,31 +4271,31 @@ void __cdecl rules_load_cosmic(void)
 
 {
   thunk_text_open_section(ADDR(0x6559e8, ((u8 *)&g.d_006559e8)),ADDR(0x6252cc, ((u8 *)&g.d_006252cc)));
-  cosmic.road_move_mult = thunk_FUN_00419cbb(1,10);
-  cosmic.trireme_loss_chance = thunk_FUN_00419cbb(1,100);
-  cosmic.food_per_citizen = thunk_FUN_00419cbb(0,10);
-  cosmic.food_box_rows = thunk_FUN_00419cbb(4,0x14);
+  cosmic.road_move_mult = thunk_rules_next_line_byte_clamped(1,10);
+  cosmic.trireme_loss_chance = thunk_rules_next_line_byte_clamped(1,100);
+  cosmic.food_per_citizen = thunk_rules_next_line_byte_clamped(0,10);
+  cosmic.food_box_rows = thunk_rules_next_line_byte_clamped(4,0x14);
   if ((cosmic.food_box_rows & 1) != 0) {
     cosmic.food_box_rows = cosmic.food_box_rows + 1;
   }
-  cosmic.shield_box_rows = thunk_FUN_00419cbb(4,0x14);
-  cosmic.settler_food_low = thunk_FUN_00419cbb(0,10);
-  cosmic.settler_food_high = thunk_FUN_00419cbb(0,10);
-  cosmic.unhappy_size = thunk_FUN_00419cbb(4,0xc);
-  cosmic.riot_factor = thunk_FUN_00419cbb(10,100);
-  cosmic.aqueduct_size = thunk_FUN_00419cbb(4,0x32);
-  cosmic.sewer_size = thunk_FUN_00419cbb(4,0x32);
-  cosmic.tech_paradigm = thunk_FUN_00419cbb(3,10);
-  cosmic.transform_time = thunk_FUN_00419cbb(5,100);
-  cosmic.monarchy_free_support = thunk_FUN_00419cbb(0,8);
-  cosmic.communism_free_support = thunk_FUN_00419cbb(0,8);
-  cosmic.fundamentalism_free_support = thunk_FUN_00419cbb(0,8);
-  cosmic.communism_palace_dist = thunk_FUN_00419cbb(1,0x14);
-  cosmic.fund_science_loss = thunk_FUN_00419cbb(0,100);
-  cosmic.change_penalty = thunk_FUN_00419cbb(0,100);
-  cosmic.paradrop_range = thunk_FUN_00419cbb(4,100);
-  cosmic.mass_thrust_paradigm = thunk_FUN_00419cbb(0x19,200);
-  cosmic.fund_max_science = thunk_FUN_00419cbb(0,10);
+  cosmic.shield_box_rows = thunk_rules_next_line_byte_clamped(4,0x14);
+  cosmic.settler_food_low = thunk_rules_next_line_byte_clamped(0,10);
+  cosmic.settler_food_high = thunk_rules_next_line_byte_clamped(0,10);
+  cosmic.unhappy_size = thunk_rules_next_line_byte_clamped(4,0xc);
+  cosmic.riot_factor = thunk_rules_next_line_byte_clamped(10,100);
+  cosmic.aqueduct_size = thunk_rules_next_line_byte_clamped(4,0x32);
+  cosmic.sewer_size = thunk_rules_next_line_byte_clamped(4,0x32);
+  cosmic.tech_paradigm = thunk_rules_next_line_byte_clamped(3,10);
+  cosmic.transform_time = thunk_rules_next_line_byte_clamped(5,100);
+  cosmic.monarchy_free_support = thunk_rules_next_line_byte_clamped(0,8);
+  cosmic.communism_free_support = thunk_rules_next_line_byte_clamped(0,8);
+  cosmic.fundamentalism_free_support = thunk_rules_next_line_byte_clamped(0,8);
+  cosmic.communism_palace_dist = thunk_rules_next_line_byte_clamped(1,0x14);
+  cosmic.fund_science_loss = thunk_rules_next_line_byte_clamped(0,100);
+  cosmic.change_penalty = thunk_rules_next_line_byte_clamped(0,100);
+  cosmic.paradrop_range = thunk_rules_next_line_byte_clamped(4,100);
+  cosmic.mass_thrust_paradigm = thunk_rules_next_line_byte_clamped(0x19,200);
+  cosmic.fund_max_science = thunk_rules_next_line_byte_clamped(0,10);
   return;
 }
 
@@ -4540,7 +4540,7 @@ void __cdecl rules_load_units(int param_1)
     unit_types[local_8].hit_points = (char)uVar5 * '\n';
     uVar5 = thunk_text_next_int();
     unit_types[local_8].firepower = (u8)uVar5;
-    uVar2 = thunk_FUN_00419cf4(1,200);
+    uVar2 = thunk_rules_next_byte_clamped(1,200);
     unit_types[local_8].cost = uVar2;
     uVar5 = thunk_text_next_int();
     unit_types[local_8].hold = (u8)uVar5;
@@ -4589,7 +4589,7 @@ void __cdecl rules_load_units(int param_1)
 /* 0041a95f auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0041a95f(void)
+void __cdecl rules_load_terrain(void)
 
 {
   undefined1 uVar1;
@@ -4643,7 +4643,7 @@ void __cdecl FUN_0041a95f(void)
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_0041ab18(int param_1)
+void __cdecl rules_load_govts_leaders(int param_1)
 
 {
   u8 uVar1;
@@ -4786,8 +4786,8 @@ void __cdecl rules_parse_sections(undefined4 param_1)
   thunk_rules_load_advances(0);
   thunk_rules_load_improvements(0);
   thunk_rules_load_units(0);
-  thunk_FUN_0041a95f();
-  thunk_FUN_0041ab18(param_1);
+  thunk_rules_load_terrain();
+  thunk_rules_load_govts_leaders(param_1);
   thunk_text_open_section(0,ADDR(0x62532c, ((u8 *)&g.d_0062532c)));
   for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
     thunk_text_read_line(1);
@@ -4953,7 +4953,7 @@ void __cdecl FUN_0041b48f(void)
 #define saved_resume_new_game (*(undefined2 *)((u8 *)&g.d_00654fa6))
 #define saved_turn_civ (*(undefined1 *)((u8 *)&g.d_00654fa4))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_0041b4c0(void)
+undefined4 __cdecl app_startup_init(void)
 
 {
   undefined4 uVar1;
@@ -4982,7 +4982,7 @@ undefined4 __cdecl FUN_0041b4c0(void)
   ui_set_ctrl_text_shadow(0x21,1,1);
   thunk_dialog_set_list_colors(0x23,10,10,0x17,0x29,10,0x12);
   thunk_gfx_load_game_sprites();
-  thunk_FUN_00453f90();
+  thunk_registry_load_default_language();
   game_language = registry_language_id + -1;
   if (2 < game_language) {
     game_language = 0;
@@ -5046,7 +5046,7 @@ undefined4 __cdecl FUN_0041b4c0(void)
       thunk_font_set((GameFont *)dialog_default_text_font,0,0x18);
       thunk_font_set((GameFont *)dialog_default_list_font,0,0x14);
       thunk_font_set((GameFont *)dialog_default_title_font,0,0x18);
-      thunk_FUN_00421e40(3,2);
+      thunk_dlg_set_scale(3,2);
     }
     thunk_ui_init_screen_metrics();
     thunk_err_register_cleanup_fn(ADDR(0x40234c, FUN_0041b48f));
@@ -5080,7 +5080,7 @@ void __cdecl app_shutdown_cleanup(void)
   thunk_ui_flush_input();
   thunk_text_section_index_free();
   thunk_labels_free();
-  thunk_FUN_00428a78();
+  thunk_strpool_free();
   thunk_ui_flush_input();
   thunk_main_frame_destroy();
   thunk_ui_flush_input();
@@ -5172,7 +5172,7 @@ void __cdecl civ_intro_popup(iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1096)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1100)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1104)))
-undefined4 __cdecl FUN_0041ba52(int param_1)
+undefined4 __cdecl setup_new_game_dialogs(int param_1)
 
 {
   byte bVar1;
@@ -5541,7 +5541,7 @@ LAB_0041c35d:
             thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
           }
           if (local_324.field_dc != 2) break;
-          thunk_FUN_00493e83((int)game.player_civ);
+          thunk_portrait_dlg_show((int)game.player_civ);
         }
       }
 LAB_0041cfad:
@@ -5804,7 +5804,7 @@ int __cdecl setup_custom_world(void)
     }
     thunk_setup_picwnd_show((C_004083b0_430 *)&setup_picwnd,2,6,0xc);
     thunk_dlg_load_game_section(&local_304,ADDR(0x625568, ((u8 *)&g.d_00625568)),1);
-    thunk_dialog_set_default_choice((DialogOptionList *)&local_304,DAT_0064bc2c + 1);
+    thunk_dialog_set_default_choice((DialogOptionList *)&local_304,prefs_world_land_form + 1);
     thunk_dialog_set_position
               ((C_0040bc40_28 *)&local_304,0xfffffc19,
                -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
@@ -5814,7 +5814,7 @@ int __cdecl setup_custom_world(void)
     thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
     if (-2 < mapgen_land_form) {
       if (local_304.field_dc == 0) {
-        DAT_0064bc2c = (short)mapgen_land_form;
+        prefs_world_land_form = (short)mapgen_land_form;
       }
       else {
         mapgen_land_form = 0;
@@ -5825,7 +5825,7 @@ int __cdecl setup_custom_world(void)
       }
       thunk_setup_picwnd_show((C_004083b0_430 *)&setup_picwnd,2,6,0xb);
       thunk_dlg_load_game_section(&local_304,ADDR(0x625574, ((u8 *)&g.d_00625574)),1);
-      thunk_dialog_set_default_choice((DialogOptionList *)&local_304,DAT_0064bc30 + 1);
+      thunk_dialog_set_default_choice((DialogOptionList *)&local_304,prefs_world_climate + 1);
       thunk_dialog_set_position
                 ((C_0040bc40_28 *)&local_304,0xfffffc19,
                  -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1));
@@ -5835,7 +5835,7 @@ int __cdecl setup_custom_world(void)
       thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
       if (-2 < mapgen_climate) {
         if (local_304.field_dc == 0) {
-          DAT_0064bc30 = (short)mapgen_climate;
+          prefs_world_climate = (short)mapgen_climate;
         }
         else {
           iVar1 = _rand();
@@ -5843,7 +5843,7 @@ int __cdecl setup_custom_world(void)
         }
         thunk_setup_picwnd_show((C_004083b0_430 *)&setup_picwnd,2,6,0xd);
         thunk_dlg_load_game_section(&local_304,ADDR(0x625584, ((u8 *)&g.d_00625584)),1);
-        thunk_dialog_set_default_choice((DialogOptionList *)&local_304,DAT_0064bc2e + 1);
+        thunk_dialog_set_default_choice((DialogOptionList *)&local_304,prefs_world_temperature + 1);
         thunk_dialog_set_position
                   ((C_0040bc40_28 *)&local_304,0xfffffc19,
                    -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1)
@@ -5854,7 +5854,7 @@ int __cdecl setup_custom_world(void)
         thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
         if (-2 < mapgen_temperature) {
           if (local_304.field_dc == 0) {
-            DAT_0064bc2e = (short)mapgen_temperature;
+            prefs_world_temperature = (short)mapgen_temperature;
           }
           else {
             iVar1 = _rand();
@@ -5862,7 +5862,7 @@ int __cdecl setup_custom_world(void)
           }
           thunk_setup_picwnd_show((C_004083b0_430 *)&setup_picwnd,2,6,10);
           thunk_dlg_load_game_section(&local_304,ADDR(0x625590, ((u8 *)&g.d_00625590)),1);
-          thunk_dialog_set_default_choice((DialogOptionList *)&local_304,DAT_0064bc32 + 1);
+          thunk_dialog_set_default_choice((DialogOptionList *)&local_304,prefs_world_age + 1);
           thunk_dialog_set_position
                     ((C_0040bc40_28 *)&local_304,0xfffffc19,
                      -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) +
@@ -5873,7 +5873,7 @@ int __cdecl setup_custom_world(void)
           thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
           if (-2 < mapgen_age) {
             if (local_304.field_dc == 0) {
-              DAT_0064bc32 = (short)mapgen_age;
+              prefs_world_age = (short)mapgen_age;
             }
             else {
               iVar1 = _rand();
@@ -5902,7 +5902,7 @@ int __cdecl setup_custom_world(void)
 
 /* 0041dcc3 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0041dcc3(void)
+void __cdecl setup_clear_start_positions(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -6043,7 +6043,7 @@ undefined4 __cdecl map_load_dialog(void)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2416)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2420)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(2424)))
-int __cdecl FUN_0041dfe1(void)
+int __cdecl setup_start_scenario(void)
 
 {
   undefined4 uVar1;
@@ -6233,7 +6233,7 @@ LAB_0041e2b4:
 #undef local_8
 
 /* 0041e7e3 auto */
-void __cdecl FUN_0041e7e3(void)
+void __cdecl labels_reload(void)
 
 {
   int iVar1;
@@ -6262,7 +6262,7 @@ void __cdecl rules_load(undefined4 param_1)
   int iVar1;
   undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_0041e7e3();
+  thunk_labels_reload();
   thunk_gfx_load_game_sprites();
   __chdir(&scenario_dir_path);
   FUN_005f22d0(local_108,s_RULES__0062562c);
@@ -6446,7 +6446,7 @@ LAB_0041eedc:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1864)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1868)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(1872)))
-int __cdecl FUN_0041eeeb(void)
+int __cdecl game_main_menu_loop(void)
 
 {
   int iVar1;
@@ -6474,7 +6474,7 @@ int __cdecl FUN_0041eeeb(void)
     FUN_005f22d0(&game_txt_path,&DAT_0062564c);
     FUN_005f22d0(&rules_txt_path,s_RULES_00625654);
     thunk_prefs_load_civ2dat();
-    thunk_FUN_0041dcc3();
+    thunk_setup_clear_start_positions();
     thunk_events_reset((ScenarioEvents *)&scenario_events,50000);
     for (local_758 = 0; local_758 < 8; local_758 = local_758 + 1) {
       thunk_civ_refresh_ai_goals(local_758);
@@ -6546,12 +6546,12 @@ int __cdecl FUN_0041eeeb(void)
         mapgen_age = iVar1 % 3 + -1;
       }
       if (-1 < local_754) {
-        local_18 = thunk_FUN_0041ba52(local_20);
+        local_18 = thunk_setup_new_game_dialogs(local_20);
       }
       break;
     case 3:
       event_dont_play_wonders = 0;
-      local_18 = thunk_FUN_0041dfe1();
+      local_18 = thunk_setup_start_scenario();
       if (local_18 == 0) {
         if (event_dont_play_wonders != 0) {
           game.game_options = game.game_options & 0xfffeffff;
@@ -6672,7 +6672,7 @@ LAB_0041f5ea:
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_0041f69f(void)
+void __cdecl game_session_begin(void)
 
 {
   iptr iVar1;
@@ -6796,7 +6796,7 @@ void __cdecl game_main(void)
   dbg_log((iptr)PTR_s_5_4_0f_Multiplayer_26_March_99_0062765c);
   dbg_log((iptr)PTR_s_Patch_3_00627660);
   thunk_net_session_clear(&net_session);
-  iVar2 = thunk_FUN_0041b4c0();
+  iVar2 = thunk_app_startup_init();
   if (iVar2 == 0) {
     _memset(&net_lobby_launch_info,0,0xc4);
     pLVar6 = (LobbyLaunchInfo *)&net_lobby_launch_info;
@@ -6875,7 +6875,7 @@ void __cdecl game_main(void)
         cities[local_740].id = 0;
       }
       game.num_cities = 0;
-      iVar4 = thunk_FUN_0041eeeb();
+      iVar4 = thunk_game_main_menu_loop();
       if (iVar4 != 0) goto LAB_004201d0;
       thunk_FUN_004079a6();
       thunk_status_wnd_open();
@@ -6910,7 +6910,7 @@ void __cdecl game_main(void)
         XD_FlushSendBuffer(180000);
         thunk_mp_mouse_watchdog_start();
       }
-      thunk_FUN_0041f69f();
+      thunk_game_session_begin();
       if ((((((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) && (2 < game.multiplayer)) &&
           (mp_simultaneous_moves != '\0')) && (DAT_006252c8 == 0)) {
         thunk_popup_game_with_sprite(ADDR(0x62587c, ((u8 *)&g.d_0062587c)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
@@ -6934,13 +6934,13 @@ void __cdecl game_main(void)
         }
         if (mp_simultaneous_moves == '\0') {
           if (net_host_flag == '\0') {
-            iVar4 = thunk_FUN_0048bfec();
+            iVar4 = thunk_game_mp_client_turn_loop();
             if (iVar4 != 0) {
-              thunk_FUN_0048c9f3(1);
+              thunk_game_mp_host_turn_loop(1);
             }
           }
           else {
-            thunk_FUN_0048c9f3(0);
+            thunk_game_mp_host_turn_loop(0);
           }
         }
         else if (net_host_flag == '\0') {

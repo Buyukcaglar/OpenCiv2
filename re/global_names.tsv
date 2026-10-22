@@ -1500,3 +1500,360 @@ addr	name	confidence	evidence
 00666110	stacked_draw_unit_copy	medium	0x20-byte unit record copied from the stacked-draw ring entry (FUN_0047e2b3); its x/y become anim_origin_x/y.
 00637ea8	wnd_modal_depth	high	Index (-1..15) of the top of the modal window stack at 00637eac/00637eb0; wnd_run_modal_loop pushes/pops and disables the owner below.
 0067a438	diffeng_game_offset	high	Field +0x10 of diffeng section 1 (game struct): its offset within diffeng_mirror_buf, used in net_send_state_diff.
+0062d050	path_debug_requested	medium	Read at the start of path_coarse_find_waypoint which sets path_debug_pending when nonzero; cleared by unit_goto_next_dir alongside path_debug_pending.
+0062eb30	mp_cheat_menu_allowed	medium	Never written; when nonzero menu_command lets the cheat-mode item 0x701/0x24b toggle in multiplayer and menu state code leaves it enabled.
+00631b78	notice_dlg_shown	high	Set to 1 by FUN_00519171 before showing game_section_dialog; notice_dlg_close only closes the dialog when set.
+006335b0	caption_ai_str	high	AI literal appended to the map caption for a non-human turn civ (French "IA" variant at 006335ac).
+006335b4	caption_moves_space_str	high	  literal appended before label 873 "Moves" in frame_wnd_draw_caption turn-status text.
+006335b8	caption_timer_sep_str	high	:  literal appended before the turn timer text in frame_wnd_draw_caption.
+006335bc	caption_close_paren_str	high	) literal closing the turn-status part of the map caption in frame_wnd_draw_caption.
+006335c0	caption_simul_open_paren_str	high	 ( literal opening the simultaneous-moves turn-status part of the map caption.
+006335c4	caption_simul_ai_fr_str	high	IA literal used for game_language 1 in the simultaneous-moves caption.
+006335c8	caption_simul_ai_str	high	AI literal used in the simultaneous-moves caption for non-French languages.
+006335cc	caption_simul_space_str	high	  literal appended before label "Moves" in the simultaneous-moves caption.
+006335d0	caption_simul_timer_sep_str	high	:  literal appended before the timer text in the simultaneous-moves caption.
+006335d4	caption_simul_close_paren_str	high	) literal closing the simultaneous-moves caption status.
+006335d8	caption_timer_open_paren_str	high	 ( literal opening the timer-only caption suffix for a human turn civ.
+006335dc	caption_timer_close_paren_str	high	) literal closing the timer-only caption suffix.
+006335e0	frame_default_title_str	high	Empty string literal copied as the frame window title when frame_wnd_create gets a NULL title.
+006335f8	filename_valid_chars	high	128-byte table nonzero for chars allowed in file names (A-Z, 0-9, !#$%&'()-@^_`{}~); str_find_bad_filename_char scans until a zero entry.
+0063367c	cheat_unit_last_human_civ	medium	human_civ when cheat_create_unit last ran; on change the remembered owner civ is reset to -1.
+00633680	cheat_unit_owner_civ	high	Civ chosen as owner in cheat_create_unit (defaults to human_civ), used for advance filtering and passed to unit_create.
+00633684	cheat_unit_last_type	high	Unit type last picked in the CREATEUNIT dialog, used as default choice; reset to -1 when a filter toggles.
+00633688	cheat_unit_veteran	high	Toggled by the CREATEUNIT "Veteran" button; prefixes names with label 13 and sets unit flag 0x2000 on the created unit.
+0063368c	cheat_unit_show_obsolete	high	Toggled by the CREATEUNIT "Obs." button; when set lists unit types already obsoleted for the owner civ.
+00633690	cheat_unit_ignore_prereq	high	Toggled by the CREATEUNIT "Adv." button; when set lists unit types whose prerequisite advance is unknown.
+006336cc	scenario_path_sep_str	high	\\ literal appended between scenario_dir_path and the scenario name in editor_create_scenario_folder.
+006336d0	scenario_file_ext_str	high	.SCN literal appended to the new scenario path before save_write_game.
+00633dac	frame_texture_loaded	medium	Set to 1 by frame_texture_load when the frame background texture is built; no reader found.
+00633e04	status_timer_last_width	high	Status window width cached by status_draw_timer_bar; a change rebuilds the background copy and invalidates the color/percent caches.
+00633e08	status_timer_last_color	high	Last bar color (param_2) drawn by status_draw_timer_bar; redraw skipped when unchanged with same rect and percent.
+00633e0c	status_timer_last_percent	high	Last fill percent (param_1) drawn by status_draw_timer_bar, compared to skip redundant redraws.
+00633e18	status_tax_sep_str	high	. literal between tax and luxury rates in the status window rates text.
+00633e1c	status_lux_sep_str	high	. literal between luxury and science rates in the status window rates text.
+00633e24	status_moves_frac_sep_str	high	/ literal between fractional moves and road_move_mult in the status unit panel.
+00633e3c	map_label_font_size	high	Last point size set on map_label_font by gfx_select_zoom_font; font only reset when the zoomed size changes.
+00633e58	city_size_digit_str	medium	8 literal copied as a sample digit to size the city-size label box in gfx_draw_city.
+00633e5c	city_size_digit2_str	medium	Second "8" literal appended for two-digit city sizes when sizing the label box in gfx_draw_city.
+00633edc	lobby_ip_sep_str	high	:  literal between label 648 and prefs_net_ip_address in the lobby host-wait dialog title.
+006341f0	sprite_editor_default_title	high	Empty string literal used as sprite_editor_title when sprite_editor_create_window gets no title.
+006341f4	sprite_picker_default_title	high	Empty string literal used as sprite_picker_title when sprite_picker_create_window gets no title.
+0063427c	sprite_import_bmp_ext_str	high	BMP literal searched in the import file name by sprite_editor_import_sheet.
+00634280	sprite_import_gif_ext_str	high	GIF literal searched in the import file name by sprite_editor_import_sheet.
+00634590	cosmic_edit_min_values	high	Per-field minimum ints for the cosmic editor; passed as number arg 0 and lower clamp bound when editing a value in FUN_00586bb6.
+006345e8	cosmic_edit_max_values	high	Per-field maximum ints for the cosmic editor; number arg 1 and upper clamp bound in FUN_00586bb6.
+0063465c	cosmic_value_fmt_3digit	medium	%d  sprintf format for cosmic editor values >= 100 (narrower padding than the <100 format).
+00634820	err_comment_prefix_str	medium	*** literal; err_dump_text_file stops dumping lines that start with it.
+00634824	err_dump_line_fmt	high	%s\n sprintf format for each line err_dump_text_file sends to OutputDebugString.
+00634868	err_data_sep_str	medium	  literal between the data and extra-info parts of the err_fatal_exit message.
+0063486c	err_fatal_msg_fmt	high	%s\n sprintf format for the err_fatal_exit message sent to OutputDebugString.
+00634894	fatal_alloc_line_fmt	high	%s\n literal: err_fatal_exit sprintf's the "Tried to allocate N bytes" line with it into crash_debug_buffer.
+00634898	fatal_alloc_newline_str	high	\n literal printed via crash_debug_buffer after the allocation-failure line in err_fatal_exit.
+006348d0	fatal_dos_error_line_fmt	high	%s\n literal used by err_fatal_exit to print the "Most recent DOS error" line.
+006348d4	fatal_dos_error_newline_str	high	\n literal printed after the DOS error line in err_fatal_exit.
+00634930	unit_sound_button_label_ids	high	6 ints 540..545 (LABELS Battle..Sputter) indexing label_string_ids for the six unit sound editor buttons.
+00634948	unit_sound_editor_empty_title	high	Empty string "" copied into unit_sound_editor_title when no title argument is given.
+0063494c	file_copy_read_mode	high	fopen mode literal "rb" for the source file in file_copy.
+00634950	file_copy_write_mode	high	fopen mode literal "wb" for the destination file in file_copy.
+00634988	unit_sound_wav_default_ext	high	WAV literal passed as default extension to ui_file_name_dialog by the unit sound button handler.
+006349a8	unit_sound_path_sep_str	high	\\ literal appended when building the sound file path in the unit sound button handler.
+006349ac	unit_sound_wav_suffix_str	high	.WAV literal appended to the sound file name in the unit sound button handler.
+00634ca0	unit_move_in_progress	high	Reentrancy guard: unit_move_dir returns 0 if set, sets it to 1 on entry and clears it on every exit.
+00634f68	spaceship_part_masses	high	Third column (1,4,4,16,16,16) of spaceship_part_table rows; spaceship_calc_stats multiplies part counts by it to get spaceship_mass.
+0063506c	pedia_improve_cost_fmt	high	%ld literal formatting improvement cost*10 on the pedia improvement page.
+00635070	pedia_improve_upkeep_fmt	high	%ld literal formatting improvement upkeep on the pedia improvement page.
+0063508c	pedia_improve_text_space_str	high	  literal appended between joined description lines in pedia_load_improvement_text.
+00635098	net_last_recv_msg_type	high	Second dword of a received message with header magic 0x66606660; logged as "Last legal type: %s" by the secure receive callback.
+00635108	net_internet_timeout_default	high	60 default value string for the "INTERNET Timeout" profile key read in net_init_transport.
+00635168	net_tcpip_timeout_default	high	15 default value string for the "TCPIP Timeout" profile key read in net_init_transport.
+006351c4	net_ipxspx_timeout_default	high	15 default value string for the "IPXSPX Timeout" profile key read in net_init_transport.
+00635220	net_modem_timeout_default	high	30 default value string for the "MODEM Timeout" profile key read in net_init_transport.
+0063527c	net_direct_timeout_default	high	30 default value string for the "DIRECT Timeout" profile key read in net_init_transport.
+006356d0	net_hexdump_space_str	high	  literal appended after each hex byte when the secure receive callback logs a killed message dump.
+00635a44	dlg_pending_move_handler	medium	One-shot window move handler: dialog_create_window installs it via wnd_set_move_handler then clears it, like dlg_pending_idle_callback.
+00635b1c	dialog_wrap_space_str	high	  literal inserted between words when dialog_draw_wrapped_text builds a line.
+00635b84	dlg_key_text_str	high	TEXT keyword compared with strcmpi when parsing @ section options in dialog_load_text_section.
+00635bb8	dlg_key_y_prefix	high	Y literal matched by strnicmp(...,1) for the Y=<n> position option in dialog_load_text_section.
+00635bbc	dlg_key_x_prefix	high	X literal matched by strnicmp(...,1) for the X=<n> position option in dialog_load_text_section.
+00635d94	pedia_unit_cost_fmt	high	%ld literal formatting unit cost*10 on the pedia unit page.
+00635d98	pedia_unit_attack_fmt	high	%ld literal formatting unit attack on the pedia unit page.
+00635d9c	pedia_unit_defense_fmt	high	%ld literal formatting unit defense on the pedia unit page.
+00635da0	pedia_unit_hp_fmt	high	%ld literal formatting unit hit points/10 on the pedia unit page.
+00635da4	pedia_unit_firepower_fmt	high	%ld literal formatting unit firepower on the pedia unit page.
+00635da8	pedia_unit_move_fmt	high	%ld literal formatting unit move/3 on the pedia unit page.
+00635de0	email_prompt_empty_default	high	Empty string "" used as the initial EMAILADDRESS dialog text when no stored address is wanted (else prefs_email_address).
+00635df8	unit_editor_ctrl_positions	high	13 {x,y} int pairs (240,27),(155,120)... giving each unit editor field's control position; x read at +param*8 by unit_editor_create_combo.
+00635dfc	unit_editor_ctrl_pos_ys	high	y column (+4) of unit_editor_ctrl_positions, read at +param*8 by unit_editor_create_combo.
+00635e00	unit_editor_prereq_x	medium	x of field 1 (155) in unit_editor_ctrl_positions; caption label 127 "Prerequisite" is drawn above it.
+00635e04	unit_editor_prereq_y	medium	y of field 1 (120); used for the "Prerequisite" caption and the "Advance" header in unit_editor_paint.
+00635e08	unit_editor_obsolete_x	medium	x of field 2 (320); caption label 479 "Obsolescence" drawn above it in unit_editor_paint.
+00635e0c	unit_editor_obsolete_y	medium	y of field 2 (120); "Obsolescence" caption row in unit_editor_paint.
+00635e10	unit_editor_role_x	medium	x of field 3 (155); caption label 480 "Role" drawn above it in unit_editor_paint.
+00635e14	unit_editor_role_y	medium	y of field 3 (187); "Role" caption row in unit_editor_paint.
+00635e18	unit_editor_domain_x	medium	x of field 4 (320); caption label 481 "Domain" drawn above it in unit_editor_paint.
+00635e1c	unit_editor_domain_y	medium	y of field 4 (187); "Domain" caption row in unit_editor_paint.
+00635e28	unit_editor_holds_x	medium	x of field 6 (230); caption label 483 "Holds on Ship" drawn above it in unit_editor_paint.
+00635e2c	unit_editor_holds_y	medium	y of field 6 (256); "Holds on Ship" caption row in unit_editor_paint.
+00635e30	unit_editor_move_x	medium	x of field 7 (318); caption label 484 "Movement" drawn above it in unit_editor_paint.
+00635e34	unit_editor_edit2_y	medium	Element [2].y of unit_editor_edit_x/y_table (stride 8 from 00635e20): Y of label 0x1e3 / third numeric edit box in unit_editor_paint.
+00635e38	unit_editor_edit3_x	medium	Element [3].x of unit_editor_edit_x_table: X (value 0x196) of label 0x1e4 / fourth numeric edit box in unit_editor_paint.
+00635e3c	unit_editor_edit3_y	medium	Element [3].y of unit_editor_edit_y_table: Y of label 0x1e4 in unit_editor_paint.
+00635e40	unit_editor_edit4_x	medium	Element [4].x of unit_editor_edit_x_table: X of label 0x1e5 in unit_editor_paint.
+00635e44	unit_editor_edit4_y	medium	Element [4].y of unit_editor_edit_y_table: Y of label 0x1e5 in unit_editor_paint.
+00635e48	unit_editor_edit5_x	medium	Element [5].x of unit_editor_edit_x_table: X of label 0x1e6 in unit_editor_paint.
+00635e4c	unit_editor_edit5_y	medium	Element [5].y of unit_editor_edit_y_table: Y of label 0x1e6 in unit_editor_paint.
+00635e50	unit_editor_edit6_x	medium	Element [6].x of unit_editor_edit_x_table: X of label 0x1e7 in unit_editor_paint.
+00635e54	unit_editor_edit6_y	medium	Element [6].y of unit_editor_edit_y_table: Y of label 0x1e7 in unit_editor_paint.
+00635e58	unit_editor_edit7_x	medium	Element [7].x of unit_editor_edit_x_table: X of label 0x1e8 in unit_editor_paint.
+00635e5c	unit_editor_edit7_y	medium	Element [7].y of unit_editor_edit_y_table: Y of label 0x1e8 in unit_editor_paint.
+00635eb8	unit_editor_field_min_table	high	Per editor_items field (ctrl id - 0xca) lower bound passed to int_clamp when unit_editor_store_controls reads edit boxes.
+00635ed8	unit_editor_field_max_table	high	Per editor_items field upper bound passed to int_clamp in unit_editor_store_controls (mostly 0x7f).
+00635ef0	unit_editor_move_max	high	Entry [6] (move) of unit_editor_field_max_table, set to 127/road_move_mult by unit_editor_window_run since moves are stored in whole squares.
+00635f00	unit_editor_hp_max	medium	Entry [10] (hit_points/10) of unit_editor_field_max_table, set to 12 by unit_editor_window_run.
+00635f08	unit_editor_int_fmt	high	%d format sprintf'd into the edit boxes by unit_editor_load_controls.
+00635f0c	units_txt_name_sep	high	, appended after the unit name when FUN_005af69d writes an @UNITS line of RULES.TXT.
+00635f10	units_txt_domain_sep	high	,  appended after the domain field in the @UNITS line writer FUN_005af69d.
+00635f14	units_txt_move_suffix	high	., appended after the move value (RULES.TXT writes moves as "1.") in the @UNITS line writer.
+00635f18	units_txt_range_sep	high	,  appended after the range field in the @UNITS line writer FUN_005af69d.
+00635f1c	units_txt_attack_suffix	high	a, appended after the attack value ("1a,") in the @UNITS line writer.
+00635f20	units_txt_defense_suffix	high	d, appended after the defense value in the @UNITS line writer.
+00635f24	units_txt_hp_suffix	high	h, appended after hit points/10 in the @UNITS line writer.
+00635f28	units_txt_firepower_suffix	high	f,  appended after firepower in the @UNITS line writer.
+00635f2c	units_txt_cost_sep	high	, appended after the cost field in the @UNITS line writer.
+00635f30	units_txt_hold_sep	high	,  appended after the hold field in the @UNITS line writer.
+00635f34	units_txt_role_sep	high	,  appended after the role field in the @UNITS line writer.
+00635f38	units_txt_flag_digits	high	Two 4-byte strings "1","0" indexed by (flag clear)*4 to write the 15 unit flag bits in the @UNITS line writer.
+00635f40	units_txt_line_end	high	\n ending each @UNITS line before fputs in FUN_005af69d.
+006366a0	path_separator_str	high	\\ appended by path_join_upper when the directory lacks a trailing backslash.
+006367dc	lbm_form_tag	high	FORM IFF chunk id compared (strncmp 4) by the LBM loader FUN_005bd987.
+00636838	lbm_ilbm_tag	high	ILBM IFF form type accepted by the LBM loader FUN_005bd987.
+00636840	lbm_pbm_tag	high	PBM  IFF form type accepted by the LBM loader FUN_005bd987.
+006368a0	lbm_bmhd_tag	high	BMHD bitmap-header chunk id matched by the LBM loader FUN_005bd987.
+006368d4	lbm_cmap_tag	high	CMAP palette chunk id matched by the LBM loader FUN_005bd987.
+006368dc	lbm_body_tag	high	BODY pixel-data chunk id matched by the LBM loader FUN_005bd987.
+00636c94	gif_sig_file	high	GIF signature strncmp'd (3 chars) against the file header in surface_load_gif_file.
+00636e04	gif_sig_resource	high	GIF string compared with the locked GIFS resource header in surface_load_gif_resource.
+006375ec	gif_sig_resource2	medium	GIF string compared with the locked GIFS resource in FUN_005c2e5e, a second resource GIF reader.
+00637758	gif_sig_mapped_file	medium	GIF string compared with the memory-mapped file view in FUN_005c3313, a file-based GIF reader.
+00637c9c	hotspot_mouse_inside	high	Hotspot wndproc FUN_005c8caf: set on WM_MOUSEMOVE entry (SetCapture, fire enter), cleared when the cursor leaves the control rect.
+00637ca0	hotspot_mouse_pressed	high	Hotspot wndproc: set on WM_LBUTTONDOWN while inside (fire press), cleared on WM_LBUTTONUP (fire click or leave).
+00637ca4	hotspot_wnd_title	high	Empty string passed as window name to CreateWindowExA(MSControlClass) in hotspot_create_hwnd.
+00637d6c	button_wnd_title	high	Empty string passed as window name to CreateWindowExA(MSControlClass) in button_create_hwnd.
+00637e30	spritebtn_alt_wnd_title	medium	Empty window name for CreateWindowExA(MSControlClass) in FUN_005cb319, a sprite-button creator sharing wndproc 005cb6eb.
+00637e44	spritebtn_wnd_title	high	Empty string passed as window name to CreateWindowExA(MSControlClass) in spritebtn_create_hwnd.
+00637eac	wnd_modal_stack_below	high	wnd_modal_stack[-1] alias: wnd_run_modal_loop reads [wnd_modal_depth] here to get the modal window beneath the top one, whose owner is disabled/enabled.
+00637eb0	wnd_modal_stack	high	Stack of windows in wnd_run_modal_loop (16 entries), pushed at [wnd_modal_depth] on entry.
+00637f08	checkbox_mouse_pressed	high	Checkbox wndproc FUN_005cc320: set on WM_LBUTTONDOWN (toggle, SetCapture), cleared on WM_LBUTTONUP; shifts the drawn box while held.
+00637f0c	checkbox_wnd_title	high	Empty string passed as window name to CreateWindowExA(MSControlClass) in checkbox_create_hwnd.
+00637f58	scrollbar_class_registered	high	Set to 1 by scrollbar_create_hwnd after it probes a native SCROLLBAR window and registers MSScrollBarClass from it, so registration happens once.
+00637f5c	scrollbar_probe_wnd_title	medium	Empty string used as the title of the temporary native SCROLLBAR window that scrollbar_create_hwnd creates to copy its class info.
+00637f80	scrollbar_wnd_title	medium	Empty string used as the window title when scrollbar_create_hwnd creates the real MSScrollBarClass control.
+00638314	editbox_class_registered	high	Set to 1 by edit_create_window after it probes a native EDIT window and registers MSEditBoxClass, so registration happens once.
+00638318	editbox_probe_wnd_title	medium	Empty string title of the temporary native EDIT window created by edit_create_window to copy its class info.
+0063831c	editbox_native_class_name	high	String "EDIT", the system class name of the probe window in edit_create_window.
+00638334	editbox_wnd_title	medium	Empty string title passed when edit_create_window creates the real MSEditBoxClass control.
+00638348	combo_class_registered	high	Set to 1 by combo_create_window after probing a native COMBOBOX and registering MSComboBoxClass, so registration happens once.
+0063834c	combo_probe_wnd_title	medium	Empty string title of the temporary native COMBOBOX window created by combo_create_window.
+0063836c	combo_wnd_title	medium	Empty string title passed when combo_create_window creates the real MSComboBoxClass control.
+00638380	combo_no_sel_text	medium	Empty string copied to the output by FUN_005d3654 when CB_GETCURSEL returns -1 (no selection).
+00638384	listbox_class_registered	high	Set to 1 by listbox_create_hwnd after probing a native LISTBOX and registering MSListBoxClass, so registration happens once.
+00638388	listbox_probe_wnd_title	medium	Empty string title of the temporary native LISTBOX window created by listbox_create_hwnd.
+006383a4	listbox_wnd_title	medium	Empty string title passed when listbox_create_hwnd creates the real MSListBoxClass control.
+006383b8	listbox_no_sel_text	medium	Empty string copied by listbox_hwnd_get_sel_text when LB_GETCURSEL returns -1.
+006385a4	snd_wave_samples_per_sec	high	WAVEFORMATEX nSamplesPerSec after snd_wave_format (tag/channels); default 22050, copied from param_2[1] in snd_wave_open_device.
+006385a8	snd_wave_avg_bytes_per_sec	high	WAVEFORMATEX nAvgBytesPerSec; default 44100, set to 22050 (0x5622) for the mono 8-bit fallback in snd_wave_open_device.
+006385b4	snd_wave_buffers_ready	medium	Set to 1 by snd_wave_alloc_buffers once all waveOut buffers are allocated and prepared.
+0063863c	file_path_backslash_str	high	String "\\" appended to the current directory before a bare filename in file_obj_open_path.
+006386f0	dbg_newline_str	high	String "\n" sent with OutputDebugStringA after each line by dbg_output_line.
+006386fc	radio_lbutton_captured	high	Set on WM_LBUTTONDOWN with SetCapture and cleared on WM_LBUTTONUP in the radio wndproc 005d9b86; also changes the paint rect.
+00638700	radio_rbutton_captured	high	Set on WM_RBUTTONDOWN (SetCapture, fires the right-click callback) and cleared on WM_RBUTTONUP in the radio wndproc 005d9b86.
+00638704	radiogrp_item_wnd_title	medium	Empty string title of each MSControlClass radio item window created by radiogrp_create_items.
+00638718	radiogrp_str_item_wnd_title	medium	Empty string title of each MSControlClass radio item window created by radiogrp_create_items_from_str.
+0063878c	err_format_empty_str	medium	Empty string copied to the buffer by err_format_message before it appends the "Error: %s File: %s Line: %d" text.
+00638a44	midi_error_caption	medium	Empty caption string of the "The MIDI Mapper is not available" MessageBox in snd_midi_play.
+00638b50	logpal_static_system_colors	high	20 RGB triples (the Windows static colors: black, maroon ... white) copied into entries 0-9 and 246-255 by logpal_init_from_system on non-palettized displays.
+00638be0	gif_file_signature	high	String "GIF" compared with the first 3 bytes of the loaded image data in FUN_005df2b5.
+00638da0	menu_separator_tag	high	String "@SEP" that menu_hmenu_parse_items matches to create a separator item (flag 0x800).
+00638dd8	avi_blit_union_left	medium	Left of the RECT accumulated by avi_update_frame: UnionRect of the previous rect and the new frame rect, then blitted.
+00638ddc	avi_blit_union_top	medium	Top of the union RECT kept by avi_update_frame (avi_blit_union_left+4).
+00638de0	avi_blit_union_right	medium	Right of the union RECT kept by avi_update_frame (avi_blit_union_left+8).
+00638de4	avi_blit_union_bottom	medium	Bottom of the union RECT kept by avi_update_frame (avi_blit_union_left+0xc).
+00638e1c	dib_bottom_up_logged	medium	Set to 1 once dib_create has logged its "Bottom-up orientation..." message so it logs only once.
+00639218	gif_res_signature	high	String "GIF" compared with the locked resource data in FUN_005e6893 (logs and reports an error on match).
+006397e8	input_vkey_map_table	high	256-entry uint table indexed by the virtual-key code in input_map_vkey to get the game key code (0 = unmapped).
+00639c50	dbg_log_header_crlf	medium	String "\r\n" appended to the header line written by dbg_log_open.
+00639c7c	dbg_log_header_blank_lines	medium	String "\r\n\r\n" appended after the header written by dbg_log_open (followed by "smeds.log").
+00639cd8	dbg_log_file_crlf	high	String "\r\n" written (2 bytes) after each log line by dbg_log_write_file.
+00639cdc	dbg_log_debugger_crlf	high	String "\r\n" sent with OutputDebugStringA after each line by dbg_log_write_debugger.
+00639d74	ddwin_last_activate_app	medium	Last WM_ACTIVATEAPP wParam seen by the DD window proc FUN_005ef6cb; ddwin_call_activate_app is called only when it changes.
+0063c870	minimap_wnd_handlers	medium	minimap_window+0x58 (minimap_wnd+0x10): handler block passed to the wnd_set_*_handler calls in FUN_004079a6.
+0063cc49	text_string_args_plus1	medium	text_string_args+1: spaceship_status_dialog zeroes it to cut string arg 0 to its first character before __strupr.
+0063cf54	text_string_arg3	high	Element 3 of text_string_args (0x63cc48+0x30c); game_profile_popup puts the scenario name and year in it.
+0063d15c	text_string_arg5	high	Element 5 of text_string_args (0x63cc48+0x514); game_profile_popup puts the double production / double moves labels in it.
+0063d364	game_profile_timer_text	high	String cleared and filled by game_profile_popup with the multiplayer turn timer as mm:ss (or "none" label 0x285).
+0063e4c0	strpool_block	high	MemBlock constructed by 004289f5, initialised/freed by strpool_init and allocated from by strpool_add/strpool_add_padded.
+0063e4c8	strpool_data	high	Locked data pointer (+8) of strpool_block; label_string walks its NUL-separated strings from here.
+0063e550	casualty_wnd_events	medium	casualty_window +0x58 (= casualty_wnd +0x10, like advisor_wnd_events); timeline installs its dblclick handler 004386b8 on it.
+0063e624	casualty_client_width	medium	casualty_window +0x12c (like advisor_client_width); width for centered title lines in the casualty timeline.
+0063e7bc	casualty_client_right	medium	casualty_window +0x2c4 client right edge (like advisor_client_right); scrollbar rect and killer-name clip end at it.
+0063e818	casualty_close_button	high	Button id 100 at casualty_window +0x320 with callback 0042ac4e, made default and cancel button by casualty_timeline_show.
+0063e908	casualty_scrollbar	high	Scrollbar id 200 at casualty_window +0x410 created once in the timeline redraw; range/pos/page set from the casualty log.
+0063e950	casualty_page_count	medium	casualty_window +0x458 = ceil(entries/rows_per_page) clamped 1..99 (like advisor_page_count).
+0063e964	casualty_list_height	medium	casualty_window +0x46c = list bottom minus list top in the timeline redraw (like advisor_list_height).
+0063e98c	casualty_vscroll_width	medium	casualty_window +0x494 (like advisor_vscroll_width); scrollbar rect starts at client right minus it.
+0063e990	casualty_controls_created	medium	casualty_window +0x498; 0 until the timeline redraw creates the scrollbar and click handler, then set to 1.
+0063e9a0	credits_slot_widths	medium	30 ints parallel to credits_slot_sprites: rendered pixel width of each cached credits line (0 = blank line, not drawn).
+0063eaa8	credits_drawn_rect	medium	Rect (left field) around the credits text drawn this step; next partial redraw blits only this area.
+0063eaac	credits_drawn_rect_top	medium	Top field (+4) of credits_drawn_rect set by credits_draw_scroll.
+0063eab0	credits_drawn_rect_right	medium	Right field (+8) of credits_drawn_rect set by credits_draw_scroll.
+0063eab4	credits_drawn_rect_bottom	medium	Bottom field (+0xc) of credits_drawn_rect set by credits_draw_scroll.
+0063eac8	hall_of_fame_new_entry	high	0x48-byte staging record (first short = score) built by hall_of_fame_add_entry and copied into hall_of_fame_entries.
+0063eaca	hof_new_difficulty	high	Field +2 of hall_of_fame_new_entry: game difficulty, |0x80 when game_flags bit 0x10 is set.
+0063eacc	hof_new_turn	high	Field +4 of hall_of_fame_new_entry: game.turn at game end.
+0063eace	hof_new_year	high	Field +6 of hall_of_fame_new_entry: game.year at game end.
+0063ead0	hof_new_population	high	Field +8 of hall_of_fame_new_entry: civ_total_population of the civ.
+0063ead2	hof_new_objective_score	medium	Field +0xa of hall_of_fame_new_entry: scenario objective value, -1 when not a scenario with objectives.
+0063ead4	hof_new_year_increment	high	Field +0xc of hall_of_fame_new_entry: scenario_year_increment.
+0063ead6	hof_new_start_year	high	Field +0xe of hall_of_fame_new_entry: scenario_start_year.
+0063ead8	hof_new_is_scenario	medium	Field +0x10 of hall_of_fame_new_entry: game_flags & 0x80 (scenario game).
+0063eada	hof_new_rating	high	Field +0x12 of hall_of_fame_new_entry: civ_rating_percent, the sort key compared with hall_of_fame_entry_rating.
+0063eadc	hof_new_leader_female	high	Field +0x14 of hall_of_fame_new_entry: leader's female flag (selects MALEFAME/FEMALEFAME titles).
+0063eade	hof_new_title_index	high	Field +0x16 of hall_of_fame_new_entry: civ_rating_title_index.
+0063eae0	hof_new_leader_name	high	Field +0x18 (24 chars) of hall_of_fame_new_entry: strcpy of civ_leader_name.
+0063eaf8	hof_new_civ_name	high	Field +0x30 of hall_of_fame_new_entry: strcpy of civ_name_plural.
+0063edcc	advisor_client_rect	medium	advisor_window +0x2bc client rect (left field, right at advisor_client_right); rect_width taken of it and x+2/x+5 used as list left.
+0063ef60	advisor_report_id	medium	advisor_window +0x450 report id (like casualty_window_report_id); advisor_refresh_if_open repaints when it matches.
+0063f038	credits_text_block	high	MemBlock constructed by 004371c8, initialised/freed and allocated per credits line by the credits loader.
+0063f040	credits_text_data	high	Locked data pointer (+8) of credits_text_block; 00437284 walks its NUL-terminated lines to return the n-th credits line.
+0063f050	credits_slot_x	medium	30 ints parallel to credits_slot_sprites: x where each cached credits line sprite is drawn (centered in the client).
+0063f0ca	hof_entry_difficulty	high	Field +2 of hall_of_fame_entries: difficulty (low 4 bits index difficulty_names, 0x80 flag adds label 0x19a).
+0063f0cc	hof_entry_turn	high	Field +4 of hall_of_fame_entries: turn, used with year increment to compute month/year of scenario end.
+0063f0ce	hof_entry_year	high	Field +6 of hall_of_fame_entries: game year shown in the record.
+0063f0d0	hof_entry_population	high	Field +8 of hall_of_fame_entries: population shown with str_append_population.
+0063f0d2	hof_entry_objective_score	medium	Field +0xa of hall_of_fame_entries: scenario objective points shown instead of population when >=0 in scenarios.
+0063f0d4	hof_entry_year_increment	high	Field +0xc of hall_of_fame_entries: scenario year increment; negative means monthly turns.
+0063f0d6	hof_entry_start_year	high	Field +0xe of hall_of_fame_entries: scenario start year (added to turn*increment for monthly dates).
+0063f0d8	hof_entry_is_scenario	medium	Field +0x10 of hall_of_fame_entries: scenario flag; nonzero adds label 0x1a2 and enables objective/month display.
+0063f0dc	hof_entry_leader_female	high	Field +0x14 of hall_of_fame_entries: 0 selects MALEFAME, else FEMALEFAME title section.
+0063f0de	hof_entry_title_index	high	Field +0x16 of hall_of_fame_entries: line index of the fame title read from MALEFAME/FEMALEFAME.
+0063f230	hof_last_entry_score	medium	Score field of hall_of_fame_entries[5]; set to -1 by hall_of_fame_add_entry after load so the 6th slot is always free.
+0063f242	hof_last_entry_rating	medium	Rating field (+0x12) of hall_of_fame_entries[5]; set to -1 with hof_last_entry_score before inserting a new record.
+0063f544	city_wool_demand_score	medium	Element [1] (Wool) of city_commodity_demand_scores, computed from latitude and terrain counts, doubled with advance 0x25.
+0063f548	demand_score_beads	high	Element 2 (Beads, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f54c	demand_score_cloth	medium	Element 3 (Cloth, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f550	demand_score_salt	medium	Element 4 (Salt, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f554	demand_score_coal	high	Element 5 (Coal, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f558	demand_score_copper	high	Element 6 (Copper, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f55c	demand_score_dye	high	Element 7 (Dye, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f560	demand_score_wine	medium	Element 8 (Wine, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f564	demand_score_silk	high	Element 9 (Silk, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f568	demand_score_silver	high	Element 10 (Silver, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f56c	demand_score_spice	high	Element 11 (Spice, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f570	demand_score_gems	medium	Element 12 (Gems, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f574	demand_score_gold	high	Element 13 (Gold, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f578	demand_score_oil	high	Element 14 (Oil, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f57c	demand_score_uranium	high	Element 15 (Uranium, RULES.TXT @CARAVAN order) of city_commodity_demand_scores, computed in city_calc_commodity_demand.
+0063f66c	supply_score_wool	high	Element 1 (Wool, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand. Also used as base in the sort loop (supply[i+1]).
+0063f670	supply_score_beads	high	Element 2 (Beads, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f674	supply_score_cloth	high	Element 3 (Cloth, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f678	supply_score_salt	high	Element 4 (Salt, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f67c	supply_score_coal	high	Element 5 (Coal, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f680	supply_score_copper	high	Element 6 (Copper, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f684	supply_score_dye	high	Element 7 (Dye, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f688	supply_score_wine	high	Element 8 (Wine, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f68c	supply_score_silk	high	Element 9 (Silk, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f690	supply_score_silver	high	Element 10 (Silver, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand. Driven by mountain count x8.
+0063f694	supply_score_spice	high	Element 11 (Spice, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f698	supply_score_gems	high	Element 12 (Gems, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f69c	supply_score_gold	high	Element 13 (Gold, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+0063f6a0	supply_score_oil	high	Element 14 (Oil, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand. Driven by desert/tundra/glacier/swamp counts.
+0063f6a4	supply_score_uranium	high	Element 15 (Uranium, RULES.TXT @CARAVAN order) of city_commodity_supply_scores, computed in city_calc_commodity_demand.
+00641628	unexplored_dither_sprites	high	terrain_dither_sprites base 11 (built from unexplored_tile_sprite), 4 quarters drawn at tile edges toward unseen/out-of-radius diagonal neighbours.
+006446f4	farmland_sprite	high	land_improvement_sprites[1]; drawn when tile flags &0xc == 0xc (farmland) and in the farmland dialog option.
+00644730	mine_sprite	high	land_improvement_sprites[2]; drawn for mined tiles and shown with the ALREADYMINING popup.
+00644f78	shield_shortage_icon_sprite	high	resource_shortage_icon_sprites[1] (ICONS row y=0x122); drawn per wasted shield and for negative values in city_window_draw_resource_map.
+00644ff0	trade_corruption_icon_sprite	high	resource_shortage_icon_sprites[2]; drawn once per point of city_trade_corruption in city_window_draw_resource_map.
+006450a4	small_shield_icon_sprite	high	small_resource_icon_sprites[1] (10px); drawn as shield upkeep for units with flag 0x800 in city_window_draw_supported_units.
+006450e0	small_trade_icon_sprite	high	small_resource_icon_sprites[2] (10px); drawn after each trade route value in city_window_draw_units_present.
+006466c8	pollution_icon_sprite	high	ICONS.GIF 32x32 hazard triangle (0x43,0xdf), drawn city_pollution times via city_window_draw_icon_row.
+006468b4	government_despotism_sprite	high	government_sprites[1], cut from the same picture as anarchy (resource 0x56, x=2,y=0x44).
+006468f0	government_monarchy_sprite	high	government_sprites[2] (5th picture on row y=0x44); shown with the AUTOMONARCHY popup.
+0064692c	government_sprite_communism	medium	government_sprites[3] (base 0x646878 + 3*0x3c), 34x34 picture grabbed from GIF resource 0x56 in the sprite loader.
+00646968	government_sprite_fundamentalism	medium	government_sprites[4] (base + 4*0x3c), 34x34 government picture grabbed from GIF resource 0x56.
+006469a4	government_sprite_republic	medium	government_sprites[5] (base + 5*0x3c), 34x34 government picture grabbed from GIF resource 0x56.
+006469e0	government_sprite_democracy	medium	government_sprites[6] (base + 6*0x3c); passed directly to senate/democracy popups (popup_game_with_sprite, city_notify_dialog).
+00647e98	terrain_ocean_sprite	high	terrain_base_sprites[10] (0x647c40 + 10*0x3c); mapview_draw_tile_terrain draws it for ocean at far zoom (< -3) instead of coast quarters.
+0064a730	registry_value_buffer	high	0x800-byte static buffer FUN_00454103 zeroes, fills via RegQueryValueExA on an HKLM key and returns.
+0064b0d0	cityview_screen_rect	medium	RECT filled by gfx_get_screen_rect in the city view ctor (right = screen_rect_right); left/top give the city view window origin.
+0064b0d4	cityview_screen_rect_top	medium	Top field of cityview_screen_rect, used as city view window y and in its height (bottom - top + 5).
+0064b0dc	cityview_screen_rect_bottom	medium	Bottom field of cityview_screen_rect; city view height and vertical centring of the 480-high surface ((bottom-0x1e0)>>1).
+0064b148	diplo_ai_request_mode	medium	diplo_eval_ai_stance sets 1, 0 (fear/alliance/war intent) or 2 (aggressive); diplo_ai_meet_player makes war/tech requests when nonzero and tribute demands when 2.
+0064bc2c	prefs_world_land_form	high	prefs_world_params[1]: CUSTOMFORM dialog default, stores mapgen_land_form.
+0064bc2e	prefs_world_temperature	high	prefs_world_params[2]: CUSTOMTEMP dialog default, stores mapgen_temperature.
+0064bc30	prefs_world_climate	high	prefs_world_params[3]: CUSTOMCLIMATE dialog default, stores mapgen_climate.
+0064bc32	prefs_world_age	high	prefs_world_params[4]: CUSTOMAGE dialog default, stores mapgen_age.
+00654b50	civ_saved_cursor_y	high	Per-civ i16 map_cursor_y saved/restored on hotseat civ switch in game_play_loop, follows civ_saved_cursor_x.
+00654c73	civ_passwords_last_byte	high	Last byte (index 255) of civ_passwords, used as the initial carry of the rotate-scramble in passwords_scramble.
+00654c7e	cheat_saved_turn_time_ms	high	mp_turn_time_limit_ms saved when cheat mode is enabled in multiplayer (timer zeroed) and restored when it is disabled.
+00655284	saved_screen_rect	high	Screen RECT stored in the save layout block (copied from screen_rect); loading compares its size with the current screen to keep saved window rects.
+00655288	saved_screen_rect_top	high	Top field of saved_screen_rect, copied from screen_rect_top in save_write_game.
+0065528c	saved_screen_rect_right	high	Right field of saved_screen_rect, copied from ui_screen_rect_right.
+00655290	saved_screen_rect_bottom	high	Bottom field of saved_screen_rect, copied from ui_screen_rect_bottom.
+006552a8	map_view_saved_rect_tops	high	Top field (+4) of map_view_saved_rects entries, read by mapview_create per view index field_2d8.
+00655334	status_wnd_rect	high	RECT of the status window: computed by its calc_rect, saved/restored in the layout block, left/top passed to frame_wnd_create.
+00655338	status_wnd_rect_top	high	Top field of status_wnd_rect, used as status window y in status_wnd_open.
+00655344	city_wnd_rect	high	RECT of the city window: saved/restored in the layout block, moved to by layout reset, left/top passed to frame_wnd_create.
+00655348	city_wnd_rect_top	high	Top field of city_wnd_rect, used as city window y in city_window_create.
+006553e8	main_frame_base_wnd	medium	Embedded window object at main_frame_wnd+0x10 that receives the close/keydown/char handlers in main_frame_create.
+006660f0	dummy_unit_x	high	units[0x800].x set to -50 by unit_make_dummy.
+006660f2	dummy_unit_y	high	units[0x800].y set to -50 by unit_make_dummy.
+006660f4	dummy_unit_flags	high	units[0x800].flags cleared by unit_make_dummy.
+006660f6	dummy_unit_type	high	units[0x800].type set to the requested unit type by unit_make_dummy.
+006660f8	dummy_unit_moves_used	high	units[0x800].moves_used cleared by unit_make_dummy.
+006660f9	dummy_unit_visibility	high	units[0x800].visibility cleared by unit_make_dummy.
+006660fd	dummy_unit_counter	high	units[0x800].counter cleared by unit_make_dummy.
+006660fe	dummy_unit_byte_0e	medium	units[0x800] byte +0x0e (field_0e) cleared by unit_make_dummy.
+006660ff	dummy_unit_orders	high	units[0x800].orders set to -1 (none) by unit_make_dummy.
+00666100	dummy_unit_home_city	high	units[0x800].home_city set to -1 (none) by unit_make_dummy.
+00666102	dummy_unit_goto_x	high	units[0x800].goto_x set to -1 by unit_make_dummy.
+00666104	dummy_unit_goto_y	high	units[0x800].goto_y set to -1 by unit_make_dummy.
+00666106	dummy_unit_prev_in_stack	high	units[0x800].prev_in_stack set to -1 by unit_make_dummy.
+00666108	dummy_unit_next_in_stack	high	units[0x800].next_in_stack set to -1 by unit_make_dummy.
+00666112	stacked_draw_unit_y	medium	+2 (y) of the scratch unit record stacked_draw_unit_copy (units[0x801]) copied from the stacked-draw entry; becomes anim_origin_y.
+00666117	stacked_draw_unit_owner	medium	+7 (owner) of stacked_draw_unit_copy; passed as the civ argument to mapviews_ensure_visible before the move animation.
+00666126	stacked_draw_unit_prev	medium	+0x16 (prev_in_stack) of stacked_draw_unit_copy; reset to -1, used as the animation origin stack unit when >=0.
+00666128	stacked_draw_unit_next	medium	+0x18 (next_in_stack) of stacked_draw_unit_copy; reset to -1, preferred animation origin stack unit when >=0.
+006665da	prefs_parley_wnd_rect	high	16-byte RECT in the CIV2.DAT block passed to parley_wnd_ctor for parley_wnd as its saved window rect (left/top used when width>0).
+006665ea	prefs_chat_wnd_rect	high	16-byte RECT in the CIV2.DAT block passed to parley_wnd_ctor for chat_wnd as its saved window rect.
+0066c98c	main_view_status_shown	medium	Main map view field show_turn_status (+0x1e4), set to 1 when the map views are created in FUN_00413a90.
+0066ca98	mapview_end_x	medium	Map view +0x2f0: wrapped last visible tile x (origin_x + 2*cols-2) computed in mapview_update_layout; minimap outlines origin..end.
+0066ca9c	mapview_end_y	medium	Map view +0x2f4: last visible tile y (origin_y + 2*rows-2), paired with 0066ca98 in minimap_draw_view_rect.
+0066caa0	mapview_visible_cols	medium	Map view +0x2f8 = ceil(client width / tile width) (capped at map.width/2) in mapview_update_layout; x loop bound (step 2) in FUN_005560c9.
+0066caa4	mapview_visible_rows	medium	Map view +0x2fc = ceil(client height / tile height); y loop bound in FUN_005560c9 and center_y offset for origin_y.
+0066cab8	mapview_half_tile_width	high	Map view +0x310 = tile width / 2 (mapview_update_layout); centres x of the nuke animation sprite.
+0066cac0	mapview_quarter_tile_width	high	Map view +0x318 = tile width / 4 (mapview_update_layout); added to explosion frame x per view.
+0066cacc	mapview_unit_sprite_height	medium	Map view +0x324 = tile height + half tile height (unit sprite height, 48 at 64x32 tiles); used as the move animation sprite height.
+0066cad0	mapview_layout_width	medium	Map view +0x328 copy of client_width taken in mapview_update_layout for column counts and centering margin.
+0066cad4	mapview_layout_height	medium	Map view +0x32c copy of client_height taken in mapview_update_layout (also used as clamp bound for minimap_origin_y).
+0066cad8	mapview_margin_x	high	Map view +0x330 (scroll_px_x): centering margin when the map is narrower than the view; minimap rect drawn only when both margins are 0.
+0066cadc	mapview_margin_y	high	Map view +0x334 (scroll_px_y): vertical centering margin, paired with 0066cad8.
+0066ed98	net_saved_unit_next	high	Per-unit i16 copy of units[].next_in_stack saved by the host before applying a units-section state diff and restored afterwards (net_process_messages).
+0066fd98	net_saved_unit_x	high	Per-unit i16 copy of units[].x saved before a host applies a units state diff and restored after.
+00670da0	net_saved_unit_y	high	Per-unit i16 copy of units[].y saved before a host applies a units state diff and restored after.
+00671da0	net_saved_unit_prev	high	Per-unit i16 copy of units[].prev_in_stack saved before a host applies a units state diff and restored after.
+00673b30	tech_prereq_depth_cache	high	Per-advance int caching tech_prereq_walk_count (prerequisite depth), computed when <1 in diplo_leader_init_science.
+00673fa8	path_coarse_start_x	medium	Coarse start cell x (path_goal_x after path_coarse_snap_cell on the start tile) saved in path_coarse_find_waypoint.
+00673fac	path_coarse_start_y	medium	Coarse start cell y saved alongside 00673fa8 in path_coarse_find_waypoint.
+00673fb8	path_flood_goal_y	medium	Goal y the cached path cost grid was flooded for in map_path_next_dir; grid rebuilt when path_goal_y differs, restored on failure.
+006787cc	path_flood_goal_x	medium	Goal x the cached path cost grid was flooded for in map_path_next_dir; paired with 00673fb8.
+00679641	text_buffer_char_1	medium	text_buffer[1]; zeroed to cut the civ name to its first letter in spaceship_wnd_draw_title.
+00679643	text_buffer_char_3	medium	text_buffer[3]; zeroed to cut the home city name to 3 letters in city_window_draw_units_present.
+00679ff0	diffeng_packet	medium	State-diff net packet header (magic 0x66606660 at +0) passed as the buffer of net_send_message 0x5c in net_send_state_diff.
+00679ff4	diffeng_packet_msg_type	high	+4 msg type of the state-diff packet: 0x15 or 0x5c depending on param_5 of net_send_state_diff.
+00679ff8	diffeng_packet_size	medium	+8 byte size of the state-diff packet (payload end minus 00679ff0) set before each send.
+006a5b48	text_section_pool_free_bytes	high	Free byte count (+0x10) of text_section_index_pool; indexing stops when an entry would not fit.
+006a8188	pedia_close_hotspot	medium	Hotspot pointer (pedia window +0x1b20) of the caption close button created in pedia_window_create; deleted in pedia_close.
+006ad644	net_civ_new_player_flags	medium	Per-civ int: when set at the start of that civ's network turn, shows NEWPLAYER popup and sends text 0x3f; cleared for AI/local turns and session start.
+006ad6a0	chat_unread_count	medium	Number of chat messages received while chat_wnd was closed (chat_receive_message); reset when the chat window opens.
+006e5038	avi_indeo_frame_environment	medium	+0x10 of avi_indeo_frame_opts (Indeo R4 header environment field) set to 2 in avi_open_file.
+006e50a8	avi_indeo_seq_environment	medium	+0x10 of avi_indeo_seq_opts (Indeo R4 header environment field) set to 2 in avi_open_file.

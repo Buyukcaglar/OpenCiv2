@@ -639,8 +639,8 @@ C_005cf3c5	0x24	origin_y	high	sprite_get_origin returns it as second output.
 C_00452a67	0x1c	hwnd	medium	Control base hwnd slot (control_set_hwnd +0x1c), released in dtor.
 C_00453aa0	0x1c	hwnd	medium	Control base hwnd slot released by hotspot_dtor.
 C_00456ee0	0x20	tied_stream	medium	Matches CRT ios::tie: swaps and returns old tied ostream.
-C_00511560	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via FUN_005cb6db.
-C_00418b50	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via FUN_005d356e.
+C_00511560	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via spritebtn_hwnd_cleanup_stub.
+C_00418b50	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via combo_hwnd_cleanup_stub.
 C_00418ce0	0x1c	hwnd	high	Passed to combo_hwnd_add_string.
 C_00418ce0	0x2c	item_count	high	Incremented by combo_add_string, zeroed by combo_clear.
 C_00418d20	0x1c	hwnd	high	Passed to combo_hwnd_clear.

@@ -25,7 +25,7 @@ void __cdecl throneroom_show_upgrade(iptr civ)
     if ((~civs[civ].throne_room[8] & 0x7f) != 0)
         incomplete = 1;
     if (incomplete)
-        thunk_FUN_0044d296(&t.room);
+        thunk_throneroom_run_upgrade(&t.room);
     thunk_throneroom_dtor((ThroneRoomDtorView *)&t.room);
 }
 
@@ -34,6 +34,6 @@ void __cdecl throneroom_show(iptr civ)
 {
     ThroneRoom t;
     thunk_throneroom_ctor(&t.room, civ);
-    thunk_FUN_0044d9c1(&t.room);
+    thunk_throneroom_run_view(&t.room);
     thunk_throneroom_dtor((ThroneRoomDtorView *)&t.room);
 }

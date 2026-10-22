@@ -651,7 +651,7 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&sprite_editor_title,&DAT_006341f0);
+    FUN_005f22d0(&sprite_editor_title,&sprite_editor_default_title);
   }
   else {
     FUN_005f22d0(&sprite_editor_title,param_1);
@@ -2076,7 +2076,7 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&sprite_picker_title,&DAT_006341f4);
+    FUN_005f22d0(&sprite_picker_title,&sprite_picker_default_title);
   }
   else {
     FUN_005f22d0(&sprite_picker_title,param_1);
@@ -2693,9 +2693,9 @@ void __cdecl sprite_editor_import_sheet(void)
       }
       else {
 LAB_00576631:
-        pcVar5 = _strstr(local_948,&DAT_0063427c);
+        pcVar5 = _strstr(local_948,&sprite_import_bmp_ext_str);
         if (pcVar5 == (char *)0x0) {
-          pcVar5 = _strstr(local_948,&DAT_00634280);
+          pcVar5 = _strstr(local_948,&sprite_import_gif_ext_str);
           if (pcVar5 == (char *)0x0) {
             UVar12 = 0x10;
             pCVar10 = (LPCSTR)0x0;
@@ -2884,7 +2884,7 @@ void __thiscall menu_clear_lists(GameMenu *this)
 void __thiscall menu_reset(GameMenu *this,undefined4 param_1)
 
 {
-  thunk_FUN_0049805e((iptr)this->pad_4);
+  thunk_memblock_detach((iptr)this->pad_4);
   thunk_menu_clear_lists(this);
   thunk_menu_storage_reinit(this,param_1);
   return;
@@ -5280,7 +5280,7 @@ undefined4 __cdecl map_animate_explosion(undefined4 param_1,undefined4 param_2,i
       thunk_mapview_tile_to_screen
                 ((C_004083b0_430 *)(&map_views + local_b4 * 0x3f0),(iptr)(aiStack_360 + local_b4)
                  ,(iptr)(auStack_380 + local_b4),param_1,param_2);
-      aiStack_360[local_b4] = aiStack_360[local_b4] + *(int *)(&DAT_0066cac0 + local_b4 * 0x3f0);
+      aiStack_360[local_b4] = aiStack_360[local_b4] + *(int *)(&mapview_quarter_tile_width + local_b4 * 0x3f0);
       thunk_rect_set_xywh((iptr)(auStack_b0 + local_b4 * 0x10),aiStack_360[local_b4],
                          auStack_380[local_b4],aiStack_3a4[local_b4],aiStack_3c4[local_b4]);
       surface_create
@@ -5327,7 +5327,7 @@ undefined4 __cdecl map_animate_explosion(undefined4 param_1,undefined4 param_2,i
                          (iptr)(aiStack_360 + local_b4),(iptr)(auStack_380 + local_b4),param_1,
                          param_2);
               aiStack_360[local_b4] =
-                   aiStack_360[local_b4] + *(int *)(&DAT_0066cac0 + local_b4 * 0x3f0);
+                   aiStack_360[local_b4] + *(int *)(&mapview_quarter_tile_width + local_b4 * 0x3f0);
               thunk_rect_set_xywh((iptr)(auStack_b0 + local_b4 * 0x10),aiStack_360[local_b4],
                                  auStack_380[local_b4],aiStack_3a4[local_b4],aiStack_3c4[local_b4]);
               surface_create
@@ -5462,7 +5462,7 @@ void __cdecl map_animate_nuke(iptr param_1,iptr param_2)
     surface_create(local_24,local_38,local_44);
     thunk_mapview_tile_to_screen
               ((C_004083b0_430 *)&map_views,(iptr)&local_48,(iptr)&local_28,param_1,param_2);
-    local_30 = (DAT_0066cab8 + local_48) - (local_38 >> 1);
+    local_30 = (mapview_half_tile_width + local_48) - (local_38 >> 1);
     local_40 = (mapview_half_tile_height + local_28) - (local_44 >> 1);
     thunk_gfx_copy_rect_clipped(ADDR(0x66c7a8, ((u8 *)&g.d_0066c7a8)),(iptr)local_24,local_30,local_40,mapview_client_origin_x,mapview_client_origin_y,0,0,0,0,
                        local_38,local_44);

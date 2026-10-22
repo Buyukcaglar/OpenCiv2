@@ -105,11 +105,11 @@ undefined4 __cdecl unit_move_dir(iptr param_1,uptr param_2,undefined4 param_3)
   local_c = 0;
   local_30 = 1;
   bVar6 = false;
-  if ((((DAT_00634ca0 != 0) || (units[param_1].id == 0)) || (units[param_1].x < 0)) ||
+  if ((((unit_move_in_progress != 0) || (units[param_1].id == 0)) || (units[param_1].x < 0)) ||
      (units[param_1].y < 0)) {
     return 0;
   }
-  DAT_00634ca0 = 1;
+  unit_move_in_progress = 1;
   unit_move_flags = (byte)param_3;
   thunk_win_flush_pending_msgs();
   while( true ) {
@@ -1209,7 +1209,7 @@ LAB_00594aaa:
     XD_FlushSendBuffer(5000);
   }
   if (game.num_units != local_2c) {
-    DAT_00634ca0 = 0;
+    unit_move_in_progress = 0;
     return 0;
   }
   if (local_f0 == 0) {
@@ -1237,7 +1237,7 @@ LAB_00594aaa:
   if (2 < game.multiplayer) {
     thunk_net_send_state_diff(0xff,2,0,0,0);
   }
-  DAT_00634ca0 = 0;
+  unit_move_in_progress = 0;
   return local_f0;
 }
 #undef autoplay_active
@@ -1574,7 +1574,7 @@ int __cdecl spaceship_group_count_clamped(iptr param_1,int param_2)
 /* 00596e92 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_00596e92(int param_1)
+int __cdecl spaceship_component_thrust(int param_1)
 
 {
   int iVar1;
@@ -1631,12 +1631,12 @@ void __cdecl spaceship_calc_stats(iptr param_1,int param_2)
   for (local_1c = 0; local_1c < 6; local_1c = local_1c + 1) {
     spaceship_mass = spaceship_mass +
                    (int)*(short *)(local_1c * 2 + ADDR(0x64caa8, ((u8 *)&civs + 1032)) + param_1 * 0x594) *
-                   *(int *)(&DAT_00634f68 + local_1c * 0xc);
+                   *(int *)(&spaceship_part_masses + local_1c * 0xc);
   }
   local_18 = spaceship_mass;
   for (local_1c = 0; local_1c < 6; local_1c = local_1c + 1) {
     if (*(short *)(param_1 * 0x594 + ADDR(0x64caa8, ((u8 *)&civs + 1032)) + local_1c * 2) == 0) {
-      local_18 = local_18 + *(int *)(&DAT_00634f68 + local_1c * 0xc);
+      local_18 = local_18 + *(int *)(&spaceship_part_masses + local_1c * 0xc);
     }
   }
   spaceship_success_pct = 100;
@@ -1675,25 +1675,25 @@ void __cdecl spaceship_calc_stats(iptr param_1,int param_2)
   }
   iVar5 = spaceship_mass * local_c;
   uVar6 = thunk_spaceship_part_count(param_1,2);
-  iVar2 = thunk_FUN_00596e92(uVar6);
+  iVar2 = thunk_spaceship_component_thrust(uVar6);
   iVar2 = iVar2 * 10;
   uVar7 = 0;
   uVar6 = thunk_spaceship_part_count(param_1,1);
-  iVar4 = thunk_FUN_00596e92(uVar6);
+  iVar4 = thunk_spaceship_component_thrust(uVar6);
   iVar2 = thunk_int_clamp(iVar4 * 10,uVar7,iVar2);
   spaceship_flight_time = iVar5 / (iVar2 + 1);
   uVar6 = thunk_spaceship_part_count(param_1,2);
-  iVar2 = thunk_FUN_00596e92(uVar6);
+  iVar2 = thunk_spaceship_component_thrust(uVar6);
   iVar2 = iVar2 * 10;
   uVar7 = 0;
   uVar6 = thunk_spaceship_part_count(param_1,1);
-  iVar4 = thunk_FUN_00596e92(uVar6);
+  iVar4 = thunk_spaceship_component_thrust(uVar6);
   iVar2 = thunk_int_clamp(iVar4 * 10,uVar7,iVar2);
   local_10 = (int)(local_c * local_18) / (iVar2 + 1);
-  iVar2 = thunk_FUN_00596e92((int)civs[param_1].spaceship_parts[2]);
+  iVar2 = thunk_spaceship_component_thrust((int)civs[param_1].spaceship_parts[2]);
   iVar2 = iVar2 * 10;
   uVar6 = 0;
-  iVar4 = thunk_FUN_00596e92((int)civs[param_1].spaceship_parts[1]);
+  iVar4 = thunk_spaceship_component_thrust((int)civs[param_1].spaceship_parts[1]);
   iVar2 = thunk_int_clamp(iVar4 * 10,uVar6,iVar2);
   local_14 = (int)(local_c * local_18) / (iVar2 + 1);
   if (1 < local_8) {
@@ -1826,7 +1826,7 @@ void __cdecl spaceship_status_dialog(iptr param_1,int param_2)
   thunk_text_set_string_arg(1,iVar2);
   iVar2 = thunk_civ_name_plural(param_1);
   thunk_text_set_string_arg(0,iVar2);
-  DAT_0063cc49 = 0;
+  text_string_args_plus1 = 0;
   __strupr(&text_string_args);
   thunk_dialog_load_game_text(&local_30c,ADDR(0x634fb4, ((u8 *)&g.d_00634fb4)));
   for (local_18 = 0; local_18 < 6; local_18 = local_18 + 1) {
@@ -2535,7 +2535,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
   thunk_text_append_colon();
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_40,local_48,5);
   thunk_text_clear();
-  _sprintf(&text_buffer,&DAT_0063506c,(uint)improvements[local_68].cost * 10);
+  _sprintf(&text_buffer,&pedia_improve_cost_fmt,(uint)improvements[local_68].cost * 10);
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_48,5);
   iVar1 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_40 = local_38 + iVar1 + 3;
@@ -2550,7 +2550,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
   thunk_text_append_colon();
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_40,local_48,5);
   thunk_text_clear();
-  _sprintf(&text_buffer,&DAT_00635070,(uint)improvements[local_68].upkeep);
+  _sprintf(&text_buffer,&pedia_improve_upkeep_fmt,(uint)improvements[local_68].upkeep);
   surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_48,5);
   iVar1 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_40 = local_38 + iVar1 + 3;
@@ -2630,7 +2630,7 @@ void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
         sVar2 = _strlen(local_1124);
         if (sVar2 != 0) {
           uStackY_1c = 0x59a2a8;
-          FUN_005f22e0(local_1124,&DAT_0063508c);
+          FUN_005f22e0(local_1124,&pedia_improve_text_space_str);
         }
         uStackY_1c = 0x59a2be;
         FUN_005f22e0(local_1124,_Str);
@@ -2966,7 +2966,7 @@ undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param
                          s_CIV_INI_006350d0);
       if ((UVar3 == 0xffffffff) || ((int)UVar3 < 0x3c)) {
         WritePrivateProfileStringA
-                  (s_Civilization_Gold_00635120,s_INTERNET_Timeout_0063510c,&DAT_00635108,
+                  (s_Civilization_Gold_00635120,s_INTERNET_Timeout_0063510c,&net_internet_timeout_default,
                    s_CIV_INI_00635100);
         *(undefined4 *)((int)this + 0x7b0) = 0x3c;
       }
@@ -2980,7 +2980,7 @@ undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param
                         );
       if ((UVar3 == 0xffffffff) || ((int)UVar3 < 0xf)) {
         WritePrivateProfileStringA
-                  (s_Civilization_Gold_0063517c,s_TCPIP_Timeout_0063516c,&DAT_00635168,
+                  (s_Civilization_Gold_0063517c,s_TCPIP_Timeout_0063516c,&net_tcpip_timeout_default,
                    s_CIV_INI_00635160);
         *(undefined4 *)((int)this + 0x7b0) = 0xf;
       }
@@ -2999,7 +2999,7 @@ undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param
     ;
     if ((UVar3 == 0xffffffff) || ((int)UVar3 < 0xf)) {
       WritePrivateProfileStringA
-                (s_Civilization_Gold_006351d8,s_IPXSPX_Timeout_006351c8,&DAT_006351c4,
+                (s_Civilization_Gold_006351d8,s_IPXSPX_Timeout_006351c8,&net_ipxspx_timeout_default,
                  s_CIV_INI_006351bc);
       *(undefined4 *)((int)this + 0x7b0) = 0xf;
     }
@@ -3013,7 +3013,7 @@ undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param
                       (s_Civilization_Gold_00635204,s_MODEM_Timeout_006351f4,-1,s_CIV_INI_006351ec);
     if ((UVar3 == 0xffffffff) || ((int)UVar3 < 0x1e)) {
       WritePrivateProfileStringA
-                (s_Civilization_Gold_00635234,s_MODEM_Timeout_00635224,&DAT_00635220,
+                (s_Civilization_Gold_00635234,s_MODEM_Timeout_00635224,&net_modem_timeout_default,
                  s_CIV_INI_00635218);
       *(undefined4 *)((int)this + 0x7b0) = 0x1e;
     }
@@ -3029,7 +3029,7 @@ undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param
     ;
     if ((UVar3 == 0xffffffff) || ((int)UVar3 < 0x1e)) {
       WritePrivateProfileStringA
-                (s_Civilization_Gold_00635290,s_DIRECT_Timeout_00635280,&DAT_0063527c,
+                (s_Civilization_Gold_00635290,s_DIRECT_Timeout_00635280,&net_direct_timeout_default,
                  s_CIV_INI_00635274);
       *(undefined4 *)((int)this + 0x7b0) = 0x1e;
     }
@@ -3102,7 +3102,7 @@ void __thiscall net_session_shutdown(void *this,int param_1)
       thunk_net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
       thunk_net_popup_queue_clear();
       dbg_log(ADDR(0x635370, ((u8 *)&g.d_00635370)));
-      thunk_FUN_0059b55b(this);
+      thunk_net_session_close_hook_nop(this);
     }
     switch(*(undefined4 *)((int)this + 0x1f0)) {
     case 0:
@@ -3153,7 +3153,7 @@ void __thiscall net_session_shutdown(void *this,int param_1)
 }
 
 /* 0059b55b auto */
-void __thiscall FUN_0059b55b(void *this)
+void __thiscall net_session_close_hook_nop(void *this)
 
 {
   return;
@@ -3366,16 +3366,16 @@ void __cdecl FUN_0059bc41(uint param_1,int *param_2,uint param_3)
       net_last_queued_send_seq = net_send_sequence;
       local_8 = param_2;
       net_last_recv_msg_size = param_2[2];
-      DAT_00635098 = param_2[1];
+      net_last_recv_msg_type = param_2[1];
     }
     else {
       dbg_log(ADDR(0x635608, ((u8 *)&g.d_00635608)));
-      if (-1 < DAT_00635098) {
+      if (-1 < net_last_recv_msg_type) {
         __ultoa(net_last_recv_callback_size,&local_6c,10);
         dbg_logf_str(ADDR(0x635640, ((u8 *)&g.d_00635640)),(iptr)&local_6c);
         __itoa(net_last_queued_send_seq,&local_6c,10);
         dbg_logf_str(ADDR(0x635658, ((u8 *)&g.d_00635658)),(iptr)&local_6c);
-        __itoa(DAT_00635098,&local_6c,10);
+        __itoa(net_last_recv_msg_type,&local_6c,10);
         dbg_logf_str(ADDR(0x635678, ((u8 *)&g.d_00635678)),(iptr)&local_6c);
         __ultoa(net_last_recv_msg_size,&local_6c,10);
         dbg_logf_str(ADDR(0x63568c, ((u8 *)&g.d_0063568c)),(iptr)&local_6c);
@@ -3397,12 +3397,12 @@ void __cdecl FUN_0059bc41(uint param_1,int *param_2,uint param_3)
             local_6c = '0';
           }
           FUN_005f22e0(local_4c,&local_6c);
-          FUN_005f22e0(local_4c,&DAT_006356d0);
+          FUN_005f22e0(local_4c,&net_hexdump_space_str);
         }
         dbg_logf_str(ADDR(0x6356d4, ((u8 *)&g.d_006356d4)),(iptr)local_4c);
       }
       dbg_log(ADDR(0x6356d8, ((u8 *)&g.d_006356d8)));
-      DAT_00635098 = -1;
+      net_last_recv_msg_type = -1;
       local_78 = param_2;
       for (local_70 = 0; local_70 < 0x20; local_70 = local_70 + 1) {
         if (*local_78 == 0x66606660) {
@@ -5387,13 +5387,13 @@ dialog_draw_text_shadowed
   }
   if (this->shadow_color != this->text_color) {
     uVar4 = 1;
-    uVar2 = thunk_FUN_005a96f0((C_0040bc40_40 *)this);
+    uVar2 = thunk_dialog_uses_alt_text_color((C_0040bc40_40 *)this);
     thunk_dialog_set_text_color(this,param_5 & 1,uVar2,uVar4);
     surface_draw_text
               ((DibSurface *)this->surf_wnd,param_1,(iptr)param_2,param_3 + 1,param_4 + 1,5);
   }
   uVar4 = 0;
-  uVar2 = thunk_FUN_005a96f0((C_0040bc40_40 *)this);
+  uVar2 = thunk_dialog_uses_alt_text_color((C_0040bc40_40 *)this);
   thunk_dialog_set_text_color(this,param_5 & 1,uVar2,uVar4);
   surface_draw_text
             ((DibSurface *)this->surf_wnd,param_1,(iptr)param_2,param_3,param_4,5);
@@ -5413,7 +5413,7 @@ dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 p
 
 /* 0059f5f7 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall FUN_0059f5f7(DialogOptionList *this)
+undefined4 __thiscall dialog_has_text_lines(DialogOptionList *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5515,7 +5515,7 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int param_1)
         sVar4 = _strlen(local_180);
         local_60 = '\0';
         if (local_160[0] != '\0') {
-          FUN_005f22e0(&local_60,&DAT_00635b1c);
+          FUN_005f22e0(&local_60,&dialog_wrap_space_str);
         }
         FUN_005f22e0(&local_60,local_180);
         iVar2 = thunk_font_text_width((GameFont *)this->body_font,(iptr)&local_60);
@@ -5805,7 +5805,7 @@ undefined4 __thiscall dialog_compute_layout(DialogOptionList *this)
         }
       }
     }
-    if ((this->line_list != 0) && (iVar2 = thunk_FUN_0059f5f7(this), iVar2 != 0)) {
+    if ((this->line_list != 0) && (iVar2 = thunk_dialog_has_text_lines(this), iVar2 != 0)) {
       local_70 = thunk_dialog_draw_wrapped_text(this,0);
       this->list_y = this->list_y + this->section_gap + local_70;
       this->edit_y = this->edit_y + this->section_gap + local_70;

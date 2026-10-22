@@ -202,7 +202,7 @@ typedef struct Tile {
  * Evidence:
  *  - Loader rules_parse_sections calls the per-section parsers rules_load_cosmic (COSMIC),
  *    rules_load_advances (CIVILIZE), rules_load_improvements (IMPROVE+ENDWONDER), rules_load_units
- *    (UNITS), FUN_0041a95f (TERRAIN), FUN_0041ab18 (GOVERNMENTS+LEADERS) and
+ *    (UNITS), rules_load_terrain (TERRAIN), rules_load_govts_leaders (GOVERNMENTS+LEADERS) and
  *    then parses CARAVAN/ORDERS/DIFFICULTY/ATTITUDES inline.
  *  - The multiplayer table-sync switch (net_msg_build_packet / FUN_005f2110 callers,
  *    cases 0x17..0x24) sends each table as one block with its exact size:
@@ -365,11 +365,11 @@ typedef struct OrderName {
  *  - Key functions: civ_create (initialise a civ), ai_civ_turn_assess (AI
  *    per-turn census of units/cities, per-continent tables), civ_give_advance
  *    (give advance), civ_has_advance (civ knows advance), civ_research_cost
- *    (research cost), city_split_trade (split city trade by rates), FUN_00487a41
+ *    (research cost), city_split_trade (split city trade by rates), civ_process_cities_turn
  *    (AI rates / government scores), ai_choose_government (AI picks government),
- *    FUN_004853e7 (power ranking), civ_add_ai_goal (add AI goal), spaceship_calc_stats
+ *    civ_update_power_ranks (power ranking), civ_add_ai_goal (add AI goal), spaceship_calc_stats
  *    (spaceship launch), throneroom_show_upgrade/0044db92 (throne room),
- *    FUN_0041ba52 (new game setup dialogs), FUN_00486c2e (global warming),
+ *    setup_new_game_dialogs (new game setup dialogs), game_update_global_warming (global warming),
  *    historian_report_show (historians' report), game_turn_to_year (turn -> year).
  *
  * Uncertain: everything named field_XX; bit meanings of flags words are only
@@ -423,7 +423,7 @@ typedef struct Civ {
     i16 total_city_size;            /* 0x06c sum of city sizes */
     u16 military_strength;          /* 0x06e sum of attack + defence of all units */
     i16 total_attack;               /* 0x070 sum of attack of all units */
-    i16 population_milestone;       /* 0x072 last population milestone announced (FUN_00489292) */
+    i16 population_milestone;       /* 0x072 last population milestone announced (civ_check_pop_and_funds) */
     u8 advance_source[100];         /* 0x074 per advance: civ it was obtained from (0xff = none/initial) */
     u8 units_active[62];            /* 0x0d8 units alive, per unit type */
     u8 units_lost[62];              /* 0x116 units killed, per unit type (saturates at 255) */
@@ -435,7 +435,7 @@ typedef struct Civ {
     u8 continent_trade_units[64];   /* 0x312 role-7 (trade) units per landmass */
     u8 continent_flags[64];         /* 0x352 AI: other civs present (1/2 cities, 4/8 units, 0x10 threat) */
     u8 continent_policy[64];        /* 0x392 AI posture per landmass (0..5) */
-    i16 field_3d2;                  /* 0x3d2 zeroed each turn (FUN_00487a41), compared in city_choose_production */
+    i16 field_3d2;                  /* 0x3d2 zeroed each turn (civ_process_cities_turn), compared in city_choose_production */
     i16 government_score[7];        /* 0x3d4 AI preference for each government, accumulated over cities */
     i16 last_treaty_turn[8];        /* 0x3e2 turn of the last treaty event with each civ, -1 never */
     u8 leader_portrait;             /* 0x3f2 tribe index, +21 if the leader is female */

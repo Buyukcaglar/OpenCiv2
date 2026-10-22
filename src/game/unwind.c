@@ -43,7 +43,7 @@ void __thiscall surfwnd_dtor(void *this)
     *(undefined4 *)((iptr)this + 0x110) = 0;
     /* funclet 0044cc01 */
     member = (this != NULL) ? (void *)((iptr)this + 0x48) : NULL;
-    thunk_FUN_0044cb20(member);
+    thunk_surfwnd_wnd_dtor(member);
     /* funclet 0044cc29 */
     surface_dtor(this);
 }
@@ -139,7 +139,7 @@ void __cdecl civ_select_government_dialog(int param_1, int param_2)
    its check succeeds, then destroys it. */
 #define local_1f8 (*(undefined1 (*)[476])(frame_ + FRAME_OFF(0)))
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(476)))
-void __cdecl FUN_00493e83(undefined4 param_1)
+void __cdecl portrait_dlg_show(undefined4 param_1)
 {
     int iVar1;
     undefined1 frame_[FRAME_OFF(504)] __attribute__((aligned(8)));  /* original stack frame */

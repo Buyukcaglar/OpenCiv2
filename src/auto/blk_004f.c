@@ -1393,11 +1393,11 @@ undefined4 __cdecl pedia_close(void)
 {
   pedia_closed = 1;
   pedia_history_count = 0;
-  if (DAT_006a8188 != (Hotspot *)0x0) {
-    if (DAT_006a8188 != (Hotspot *)0x0) {
-      thunk_hotspot_scalar_dtor(DAT_006a8188,1);
+  if (pedia_close_hotspot != (Hotspot *)0x0) {
+    if (pedia_close_hotspot != (Hotspot *)0x0) {
+      thunk_hotspot_scalar_dtor(pedia_close_hotspot,1);
     }
-    DAT_006a8188 = (Hotspot *)0x0;
+    pedia_close_hotspot = (Hotspot *)0x0;
   }
   thunk_wnd_hide((WndBase *)&pedia_window_wnd);
   thunk_wnd_focus_and_raise((WndBase *)&main_frame_wnd);
@@ -1421,7 +1421,7 @@ void __cdecl pedia_redraw_page(void)
     thunk_pedia_clear_links((C_004083b0_4 *)&pedia_window);
     thunk_gfx_set_draw_target(ADDR(0x6a6668, ((u8 *)&g.d_006a6668)));
     thunk_pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-    thunk_FUN_00451af0((C_004083b0_a28 *)&pedia_window,pedia_category,pedia_page_mode);
+    thunk_pedia_draw_category_body((C_004083b0_a28 *)&pedia_window,pedia_category,pedia_page_mode);
     thunk_wnd_blit_surface((DibSurface *)&pedia_window);
   }
   return;
@@ -1514,7 +1514,7 @@ void __cdecl pedia_toggle_describe(undefined4 param_1)
       FUN_005f22d0(&pedia_title_text,uVar2);
       thunk_pedia_draw_frame((C_004083b0_61c *)&pedia_window);
       thunk_pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
-      thunk_FUN_00452315((C_004083b0_4 *)&pedia_window,uVar1);
+      thunk_pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
       break;
     case 7:
       pedia_page_mode = 2;
@@ -1522,7 +1522,7 @@ void __cdecl pedia_toggle_describe(undefined4 param_1)
       FUN_005f22d0(&pedia_title_text,uVar2);
       thunk_pedia_draw_frame((C_004083b0_61c *)&pedia_window);
       thunk_pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
-      thunk_FUN_00452315((C_004083b0_4 *)&pedia_window,uVar1);
+      thunk_pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
       break;
     default:
       thunk_text_append(ADDR(0x62f020, ((u8 *)&g.d_0062f020)));
@@ -1535,7 +1535,7 @@ void __cdecl pedia_toggle_describe(undefined4 param_1)
     thunk_pedia_update_controls((C_004083b0_61c *)&pedia_window);
     thunk_pedia_draw_frame((C_004083b0_61c *)&pedia_window);
     thunk_pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),0);
-    thunk_FUN_00452315((C_004083b0_4 *)&pedia_window,uVar1);
+    thunk_pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
   }
   thunk_pedia_history_push((C_004083b0_12c *)&pedia_window);
   return;
@@ -2986,7 +2986,7 @@ void __thiscall pedia_link_dtor(void *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004fa17e */ { thunk_FUN_00452a67((C_00452a67 *)(*(int *)((iptr)&this) + 4)); }
+  /* inlined unwind funclet FUN_004fa17e */ { thunk_hyperlink_dtor((C_00452a67 *)(*(int *)((iptr)&this) + 4)); }
   return;
 }
 #undef uStack_10

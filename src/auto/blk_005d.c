@@ -1511,7 +1511,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
     local_8 = local_8 | 0x800;
   }
   *(uint *)(param_2 + 0x3c) = local_8;
-  if (DAT_00638314 == 0) {
+  if (editbox_class_registered == 0) {
     pvVar10 = (LPVOID)0x0;
     pHVar8 = (HMENU)0x0;
     pHVar9 = app_hinstance;
@@ -1520,7 +1520,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
     pHVar7 = *(HWND *)(iVar2 + 4);
     iVar3 = thunk_rect_height((iptr)param_1);
     iVar4 = thunk_rect_width((iptr)param_1);
-    local_c = CreateWindowExA(4,&DAT_0063831c,&DAT_00638318,local_8,*param_1,param_1[1],iVar4,iVar3,
+    local_c = CreateWindowExA(4,&editbox_native_class_name,&editbox_probe_wnd_title,local_8,*param_1,param_1[1],iVar4,iVar3,
                               pHVar7,pHVar8,pHVar9,pvVar10);
     edit_base_wndproc = (WNDPROC)GetWindowLongA(local_c,-4);
     local_34.style = 0x88;
@@ -1535,7 +1535,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
     local_34.lpszMenuName = (LPCSTR)0x0;
     local_34.lpszClassName = s_MSEditBoxClass_00638324;
     RegisterClassA(&local_34);
-    DAT_00638314 = 1;
+    editbox_class_registered = 1;
     DestroyWindow(local_c);
   }
   pvVar10 = (LPVOID)0x0;
@@ -1546,7 +1546,7 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
   pHVar7 = *(HWND *)(iVar4 + 4);
   iVar4 = thunk_rect_height((iptr)param_1);
   nWidth = thunk_rect_width((iptr)param_1);
-  local_c = CreateWindowExA(4,s_MSEditBoxClass_00638338,&DAT_00638334,local_8 | 0x40800000,*param_1,
+  local_c = CreateWindowExA(4,s_MSEditBoxClass_00638338,&editbox_wnd_title,local_8 | 0x40800000,*param_1,
                             param_1[1],nWidth,iVar4,pHVar7,pHVar8,pHVar9,pvVar10);
   uVar5 = thunk_font_get_handle(param_5);
   pWVar6 = (WPARAM *)mem_handle_lock(uVar5);
@@ -1887,7 +1887,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
   if (param_3 != 0) {
     local_34 = 0x50a10003;
   }
-  if (DAT_00638348 == 0) {
+  if (combo_class_registered == 0) {
     pvVar8 = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
     pHVar7 = app_hinstance;
@@ -1896,7 +1896,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
     pHVar5 = *(HWND *)(iVar2 + 4);
     iVar3 = thunk_rect_height((iptr)param_1);
     iVar4 = thunk_rect_width((iptr)param_1);
-    local_8 = CreateWindowExA(4,s_COMBOBOX_00638350,&DAT_0063834c,local_34,*param_1,param_1[1],iVar4
+    local_8 = CreateWindowExA(4,s_COMBOBOX_00638350,&combo_probe_wnd_title,local_34,*param_1,param_1[1],iVar4
                               ,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
     combo_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_30.style = 0x88;
@@ -1911,7 +1911,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
     local_30.lpszMenuName = (LPCSTR)0x0;
     local_30.lpszClassName = s_MSComboBoxClass_0063835c;
     RegisterClassA(&local_30);
-    DAT_00638348 = 1;
+    combo_class_registered = 1;
     DestroyWindow(local_8);
   }
   local_34 = 0x40a10203;
@@ -1926,7 +1926,7 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
   pHVar5 = *(HWND *)(iVar4 + 4);
   iVar4 = thunk_rect_height((iptr)param_1);
   nWidth = thunk_rect_width((iptr)param_1);
-  local_8 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&DAT_0063836c,local_34,*param_1,param_1[1],
+  local_8 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&combo_wnd_title,local_34,*param_1,param_1[1],
                             nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5d3310, FUN_005d3310));
   SetWindowLongA(local_8,combo_base_wnd_extra,(LONG)combo_base_wndproc);
@@ -2013,7 +2013,7 @@ LRESULT __stdcall FUN_005d3310(HWND param_1,uint param_2,uint param_3,LPARAM par
 }
 
 /* 005d356e auto */
-void __cdecl FUN_005d356e(undefined4 param_1)
+void __cdecl combo_hwnd_cleanup_stub(undefined4 param_1)
 
 {
   return;
@@ -2071,7 +2071,7 @@ void __cdecl FUN_005d3654(HWND param_1,undefined4 param_2)
   
   LVar1 = SendMessageA(param_1,0x147,0,0);
   if (LVar1 == -1) {
-    FUN_005f22d0(param_2,&DAT_00638380);
+    FUN_005f22d0(param_2,&combo_no_sel_text);
   }
   else {
     combo_hwnd_get_item_text(param_1,LVar1,param_2);
@@ -2151,7 +2151,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
     uVar1 = local_38 | 0x50a10000;
   }
   local_38 = uVar1;
-  if (DAT_00638384 == 0) {
+  if (listbox_class_registered == 0) {
     pvVar11 = (LPVOID)0x0;
     pHVar9 = (HMENU)0x0;
     pHVar10 = app_hinstance;
@@ -2160,7 +2160,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
     pHVar8 = *(HWND *)(iVar3 + 4);
     iVar4 = thunk_rect_height((iptr)param_1);
     iVar5 = thunk_rect_width((iptr)param_1);
-    local_8 = CreateWindowExA(4,s_LISTBOX_0063838c,&DAT_00638388,local_38,*param_1,param_1[1],iVar5,
+    local_8 = CreateWindowExA(4,s_LISTBOX_0063838c,&listbox_probe_wnd_title,local_38,*param_1,param_1[1],iVar5,
                               iVar4,pHVar8,pHVar9,pHVar10,pvVar11);
     listbox_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_30.style = 0x88;
@@ -2175,7 +2175,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
     local_30.lpszMenuName = (LPCSTR)0x0;
     local_30.lpszClassName = s_MSListBoxClass_00638394;
     RegisterClassA(&local_30);
-    DAT_00638384 = 1;
+    listbox_class_registered = 1;
     DestroyWindow(local_8);
   }
   local_38 = 0x40a10001;
@@ -2193,7 +2193,7 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
   pHVar8 = *(HWND *)(iVar5 + 4);
   iVar5 = thunk_rect_height((iptr)param_1);
   nWidth = thunk_rect_width((iptr)param_1);
-  local_8 = CreateWindowExA(4,s_MSListBoxClass_006383a8,&DAT_006383a4,local_38,*param_1,param_1[1],
+  local_8 = CreateWindowExA(4,s_MSListBoxClass_006383a8,&listbox_wnd_title,local_38,*param_1,param_1[1],
                             nWidth,iVar5,pHVar8,pHVar9,pHVar10,pvVar11);
   uVar6 = thunk_font_get_handle(param_5);
   pWVar7 = (WPARAM *)mem_handle_lock(uVar6);
@@ -2352,7 +2352,7 @@ void __cdecl listbox_hwnd_get_sel_text(HWND param_1,undefined4 param_2)
   
   LVar1 = SendMessageA(param_1,0x188,0,0);
   if (LVar1 == -1) {
-    FUN_005f22d0(param_2,&DAT_006383b8);
+    FUN_005f22d0(param_2,&listbox_no_sel_text);
   }
   else {
     listbox_hwnd_get_text(param_1,LVar1,param_2);
@@ -2925,8 +2925,8 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
   if (snd_wave_device_open == 0) {
     if (param_2 != (undefined4 *)0x0) {
       snd_wave_format = *param_2;
-      DAT_006385a4 = param_2[1];
-      DAT_006385a8 = param_2[2];
+      snd_wave_samples_per_sec = param_2[1];
+      snd_wave_avg_bytes_per_sec = param_2[2];
       snd_wave_block_align = param_2[3];
     }
     UVar2 = waveOutGetNumDevs();
@@ -2945,7 +2945,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
     if ((bVar1) || (local_10 != UVar2)) {
       if (bVar1) {
         snd_wave_format = CONCAT22(1,(undefined2)snd_wave_format);
-        DAT_006385a8 = 0x5622;
+        snd_wave_avg_bytes_per_sec = 0x5622;
         snd_wave_block_align = CONCAT22((*(undefined2 *)((char *)&snd_wave_block_align + 2)),1);
       }
       local_8 = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,local_14,(LPCWAVEFORMATEX)&snd_wave_format,
@@ -5110,7 +5110,7 @@ undefined4 __cdecl file_obj_open_path(char *param_1,iptr param_2)
   pcVar1 = _strchr(param_1,0x5c);
   if (pcVar1 == (char *)0x0) {
     __getcwd(local_108,0x104);
-    FUN_005f22e0(local_108,&DAT_0063863c);
+    FUN_005f22e0(local_108,&file_path_backslash_str);
     FUN_005f22e0(local_108,param_1);
   }
   else {
@@ -5638,7 +5638,7 @@ undefined4 __cdecl dbg_output_line(LPCSTR param_1)
 
 {
   OutputDebugStringA(param_1);
-  OutputDebugStringA(&DAT_006386f0);
+  OutputDebugStringA(&dbg_newline_str);
   return 1;
 }
 
@@ -5766,7 +5766,7 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
     iVar9 = thunk_wnd_get_window(this);
     iVar10 = iVar8 >> 1;
     iVar13 = nHeight >> 1;
-    pHVar11 = CreateWindowExA(4,s_MSControlClass_00638708,&DAT_00638704,local_40,local_44,
+    pHVar11 = CreateWindowExA(4,s_MSControlClass_00638708,&radiogrp_item_wnd_title,local_40,local_44,
                               (iVar10 - iVar13) + local_8,iVar7,nHeight,*(HWND *)(iVar9 + 4),hMenu,
                               hInstance,lpParam);
     *(HWND *)(iVar6 + local_28 * 0xa4) = pHVar11;
@@ -5925,7 +5925,7 @@ radiogrp_create_items_from_str(iptr param_1,int *param_2,int param_3,iptr param_
     iVar10 = thunk_wnd_get_window(this);
     iVar11 = local_428 >> 1;
     iVar16 = iVar9 >> 1;
-    pHVar12 = CreateWindowExA(4,s_MSControlClass_0063871c,&DAT_00638718,local_448,local_44c,
+    pHVar12 = CreateWindowExA(4,s_MSControlClass_0063871c,&radiogrp_str_item_wnd_title,local_448,local_44c,
                               (iVar11 - iVar16) + local_8,iVar8,iVar9,*(HWND *)(iVar10 + 4),hMenu,
                               hInstance,lpParam);
     *(HWND *)(iVar7 + local_42c * 0xa4) = pHVar12;
@@ -6164,7 +6164,7 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
       local_b4 = local_138.top;
       local_b0 = local_138.right;
       local_ac = local_138.bottom;
-      if (DAT_006386fc != 0) {
+      if (radio_lbutton_captured != 0) {
         local_b0 = local_138.left + 0x20;
         iVar3 = thunk_rect_height((iptr)&local_138);
         local_b4 = iVar3 + -0x14 + local_138.top >> 1;
@@ -6322,7 +6322,7 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
   }
   else if (param_2 < 0x202) {
     if (param_2 == 0x201) {
-      if (DAT_006386fc == 0) {
+      if (radio_lbutton_captured == 0) {
         iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
         if ((iVar11 != *(int *)(local_bc + 0x14)) && (*(int *)(local_bc + 0x18) == 1)) {
           iVar11 = thunk_radiogrp_get_selected((RadioGroupGetSelView *)local_9c);
@@ -6342,7 +6342,7 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
           uVar15 = thunk_ctrl_get_id((ControlIdView *)local_9c);
           radiogrp_fire_callback((RadioGroupClickView *)local_9c,uVar15,uVar16);
         }
-        DAT_006386fc = 1;
+        radio_lbutton_captured = 1;
         SetCapture(param_1);
       }
     }
@@ -6457,7 +6457,7 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
     switch(param_2) {
     case 0x202:
       ReleaseCapture();
-      DAT_006386fc = 0;
+      radio_lbutton_captured = 0;
       break;
     case 0x203:
       if (*(int *)(local_bc + 0x18) == 1) {
@@ -6481,8 +6481,8 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
       }
       break;
     case 0x204:
-      if (DAT_00638700 == 0) {
-        DAT_00638700 = 1;
+      if (radio_rbutton_captured == 0) {
+        radio_rbutton_captured = 1;
         SetCapture(param_1);
         iVar12 = thunk_ctrl_get_parent((Control *)local_9c);
         wnd_set_active_child(iVar12);
@@ -6493,7 +6493,7 @@ undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARA
       break;
     case 0x205:
       ReleaseCapture();
-      DAT_00638700 = 0;
+      radio_rbutton_captured = 0;
       break;
     default:
 switchD_005dab35_default:
@@ -6739,7 +6739,7 @@ err_format_message
   undefined4 uVar2;
   char *_Format;
   
-  FUN_005f22d0(this,&DAT_0063878c);
+  FUN_005f22d0(this,&err_format_empty_str);
   _Format = s_Error___s_File___s_Line___d_00638790;
   sVar1 = _strlen((char *)this);
   _sprintf((char *)(this->pad_0 + sVar1),_Format,param_2,param_3,param_4);
@@ -8210,7 +8210,7 @@ undefined4 __cdecl mem_avail_bytes_stub(void)
 
 /* 005dcfca auto */
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
-uint __cdecl FUN_005dcfca(int param_1)
+uint __cdecl mem_kb_exceeds_avail(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -8514,7 +8514,7 @@ void __thiscall avi_player_set_double_size(C_004083b0_61c *this,undefined4 param
 }
 
 /* 005dd761 auto */
-void __thiscall FUN_005dd761(C_005dd761 *this,int param_1)
+void __thiscall avi_player_set_transparent(C_005dd761 *this,int param_1)
 
 {
   if (param_1 == 0) {
@@ -8693,7 +8693,7 @@ MCIERROR __cdecl snd_midi_play(undefined4 param_1)
     MVar1 = mciSendCommandA(local_28,0x814,0x100,(DWORD_PTR)local_14);
     if (MVar1 == 0) {
       if (((local_10 & 0xffff) != 0xffffffff) &&
-         (iVar2 = MessageBoxA((HWND)0x0,s_The_MIDI_Mapper_is_not_available_00638a48,&DAT_00638a44,4)
+         (iVar2 = MessageBoxA((HWND)0x0,s_The_MIDI_Mapper_is_not_available_00638a48,&midi_error_caption,4)
          , iVar2 == 7)) {
         mciSendCommandA(local_18,0x804,0,0);
         return 0;
@@ -9451,7 +9451,7 @@ void __cdecl logpal_init_from_system(iptr param_1)
     *(undefined1 *)(param_1 + 7 + local_c * 4) = 0;
   }
   if (gfx_palettized_display == 0) {
-    local_10 = &DAT_00638b50;
+    local_10 = &logpal_static_system_colors;
     for (local_c = 0; local_c < 10; local_c = local_c + 1) {
       *(undefined1 *)(param_1 + 4 + local_c * 4) = *local_10;
       *(undefined1 *)(param_1 + 5 + local_c * 4) = local_10[1];
@@ -9810,7 +9810,7 @@ void __cdecl FUN_005df166(void)
 {
   int iVar1;
   
-  iVar1 = FUN_005dcfca(DAT_00638b94);
+  iVar1 = mem_kb_exceeds_avail(DAT_00638b94);
   if (iVar1 == 0) {
     notice_show_count = 0;
   }
@@ -9915,7 +9915,7 @@ void __cdecl FUN_005df2b5(iptr param_1,iptr param_2)
   }
   else {
     local_24 = (char *)mem_handle_lock(local_168);
-    iVar2 = _strncmp(local_24,&DAT_00638be0,3);
+    iVar2 = _strncmp(local_24,&gif_file_signature,3);
     if (iVar2 == 0) {
       if ((local_24[10] & 0x80U) == 0) {
         dbg_logf_str(ADDR(0x638c04, ((u8 *)&g.d_00638c04)),param_1);

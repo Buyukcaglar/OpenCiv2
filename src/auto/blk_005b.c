@@ -81,8 +81,8 @@ void __thiscall unit_editor_create_combo(C_004083b0_430 *this,int param_1)
   iptr iVar3;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(&DAT_00635df8 + param_1 * 8) + this->client_x;
-  iVar2 = *(int *)(&DAT_00635dfc + param_1 * 8) + this->client_y;
+  iVar1 = *(int *)(&unit_editor_ctrl_positions + param_1 * 8) + this->client_x;
+  iVar2 = *(int *)(&unit_editor_ctrl_pos_ys + param_1 * 8) + this->client_y;
   if (param_1 == 0) {
     thunk_rect_set_xywh((iptr)local_14,iVar1 + -0xf,iVar2,0x82,this->field_2e8 << 3);
   }
@@ -230,26 +230,26 @@ void __thiscall unit_editor_paint(C_004083b0_430 *this)
   thunk_text_set_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   thunk_text_set_colors(0x29,0x12,1,1);
   local_10 = this->client_x + (int)this->field_2d8 / 2 + 5;
-  local_14 = DAT_00635e04 + this->client_y + this->field_2e8 * -2 + -2;
+  local_14 = unit_editor_prereq_y + this->client_y + this->field_2e8 * -2 + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e9);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e00 + this->client_x + 0x32;
-  local_14 = ((DAT_00635e04 + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_prereq_x + this->client_x + 0x32;
+  local_14 = ((unit_editor_prereq_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x7e);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e08 + this->client_x + 0x32;
-  local_14 = ((DAT_00635e0c + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_obsolete_x + this->client_x + 0x32;
+  local_14 = ((unit_editor_obsolete_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1de);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e10 + this->client_x + 0x32;
-  local_14 = ((DAT_00635e14 + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_role_x + this->client_x + 0x32;
+  local_14 = ((unit_editor_role_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1df);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e18 + this->client_x + 0x32;
+  local_10 = unit_editor_domain_x + this->client_x + 0x32;
   local_14 = ((this->client_y + _DAT_00635e1c) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e0);
@@ -259,38 +259,38 @@ void __thiscall unit_editor_paint(C_004083b0_430 *this)
   thunk_text_clear();
   thunk_text_append_label(0x1e1);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e28 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e2c + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_holds_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_holds_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e2);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e30 + this->client_x + 0x18;
+  local_10 = unit_editor_move_x + this->client_x + 0x18;
   local_14 = ((this->client_y + _DAT_00635e34) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e3);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e38 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e3c + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_edit3_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_edit3_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e4);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e40 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e44 + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_edit4_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_edit4_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e5);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e48 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e4c + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_edit5_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_edit5_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e6);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e50 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e54 + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_edit6_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_edit6_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e7);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = DAT_00635e58 + this->client_x + 0x18;
-  local_14 = ((DAT_00635e5c + this->client_y) - this->field_2e8) + -2;
+  local_10 = unit_editor_edit7_x + this->client_x + 0x18;
+  local_14 = ((unit_editor_edit7_y + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e8);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
@@ -3906,7 +3906,7 @@ char * __cdecl path_join_upper(char *param_1,iptr param_2,undefined4 param_3)
   for (local_58 = local_54; *local_58 != '\0'; local_58 = local_58 + 1) {
   }
   if (local_58[-1] != '\\') {
-    FUN_005f22e0(local_54,&DAT_006366a0);
+    FUN_005f22e0(local_54,&path_separator_str);
   }
   FUN_005f22d0(param_1,local_54);
   FUN_005f22e0(param_1,param_3);
@@ -4826,7 +4826,7 @@ void __cdecl FUN_005bc35e(iptr param_1,undefined1 param_2,undefined1 param_3,und
 }
 
 /* 005bc3bf auto */
-void __cdecl FUN_005bc3bf(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_bg_tile(iptr param_1,undefined4 param_2)
 
 {
   *(undefined4 *)(param_1 + 0x24) = param_2;
@@ -5922,13 +5922,13 @@ FUN_005bd987
   else {
     local_1c = (char *)res_lock(local_40);
     mem_move_src_dst((iptr)local_1c,(iptr)local_5c,8);
-    iVar4 = _strncmp(local_5c,&DAT_006367dc,4);
+    iVar4 = _strncmp(local_5c,&lbm_form_tag,4);
     if (iVar4 == 0) {
       local_1c = (char *)((int)local_1c + 8);
       mem_move_src_dst((iptr)local_1c,(iptr)local_5c,4);
-      iVar4 = _strncmp(local_5c,&DAT_00636838,4);
+      iVar4 = _strncmp(local_5c,&lbm_ilbm_tag,4);
       local_14 = (uint)(iVar4 == 0);
-      iVar4 = _strncmp(local_5c,&DAT_00636840,4);
+      iVar4 = _strncmp(local_5c,&lbm_pbm_tag,4);
       local_10 = (uint)(iVar4 == 0);
       if ((local_14 == 0) && (local_10 == 0)) {
         dbg_logf(ADDR(0x636848, ((u8 *)&g.d_00636848)),param_1);
@@ -5944,9 +5944,9 @@ FUN_005bd987
             local_1c = local_1c + 8;
             iVar4 = endian_swap32(local_58);
             local_58 = iVar4 + 1U & 0xfffffffe;
-            iVar4 = _strncmp(local_5c,&DAT_006368a0,4);
+            iVar4 = _strncmp(local_5c,&lbm_bmhd_tag,4);
             if (iVar4 == 0) break;
-            iVar4 = _strncmp(local_5c,&DAT_006368d4,4);
+            iVar4 = _strncmp(local_5c,&lbm_cmap_tag,4);
             if (iVar4 == 0) {
               if (param_4 != (GamePalette *)0x0) {
                 if (0x100 < param_3 + param_2) {
@@ -5957,7 +5957,7 @@ FUN_005bd987
               }
             }
             else {
-              iVar4 = _strncmp(local_5c,&DAT_006368dc,4);
+              iVar4 = _strncmp(local_5c,&lbm_body_tag,4);
               if (iVar4 == 0) {
                 if (((local_34 & 0xffff) == 1) && ((*(undefined2 *)((char *)&local_34 + 2)) == 1)) {
                   local_34 = 0;
@@ -6791,7 +6791,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
       }
       else {
         local_20 = (char *)mem_handle_lock(local_cc);
-        iVar1 = _strncmp(local_20,&DAT_00636c94,3);
+        iVar1 = _strncmp(local_20,&gif_sig_file,3);
         if (iVar1 == 0) {
           if ((local_20[10] & 0x80U) == 0) {
             dbg_logf_str(ADDR(0x636ce4, ((u8 *)&g.d_00636ce4)),param_1);
@@ -6933,7 +6933,7 @@ surface_load_gif_resource(DibSurface *this,iptr param_1,uint param_2,uint param_
   }
   else {
     local_14 = (char *)res_lock(local_28);
-    iVar2 = _strcmp(local_14,&DAT_00636e04);
+    iVar2 = _strcmp(local_14,&gif_sig_resource);
     if (iVar2 == 0) {
       dbg_logf(ADDR(0x636e08, ((u8 *)&g.d_00636e08)),param_1);
       res_unlock(local_28);

@@ -2707,7 +2707,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
     if ((local_30 != '\0') || ((local_28 != '\0' && (param_2 == 1)))) {
       local_138 = 1;
     }
-    thunk_FUN_00450480((C_004083b0_4 *)this,(iptr)&local_24,param_2,local_138);
+    thunk_parley_create_advance_list_pane((C_004083b0_4 *)this,(iptr)&local_24,param_2,local_138);
     break;
   case 9:
     gfx_set_text_color_index(10);
@@ -3129,7 +3129,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
     if ((local_30 != '\0') || ((local_28 != '\0' && (param_2 == 1)))) {
       local_15c = 0;
     }
-    thunk_FUN_004683f0((C_004083b0_11c *)this,(iptr)&local_24,param_2,local_15c);
+    thunk_parley_create_unit_list_pane((C_004083b0_11c *)this,(iptr)&local_24,param_2,local_15c);
     break;
   case 0xb:
     gfx_set_text_color_index(10);

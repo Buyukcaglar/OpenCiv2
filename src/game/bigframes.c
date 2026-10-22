@@ -49,7 +49,7 @@
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1104)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl FUN_0041ba52(int param_1)
+undefined4 __cdecl setup_new_game_dialogs(int param_1)
 
 {
   byte bVar1;
@@ -415,7 +415,7 @@ LAB_0041c35d:
             thunk_setup_picwnd_close(&setup_picwnd);
           }
           if (local_248 != 2) break;
-          thunk_FUN_00493e83((int)(char)game.player_civ);
+          thunk_portrait_dlg_show((int)(char)game.player_civ);
         }
       }
 LAB_0041cfad:
@@ -3630,7 +3630,7 @@ LAB_005aa7ee:
     }
     for (local_330 = 0; local_330 < 8; local_330 = local_330 + 1) {
       *(undefined4 *)(&net_civ_phase_done + local_330 * 4) = 0;
-      *(undefined4 *)(&DAT_006ad644 + local_330 * 4) = 0;
+      *(undefined4 *)(&net_civ_new_player_flags + local_330 * 4) = 0;
     }
     thunk_net_send_state_diff(0xff,2,0,0,0);
     thunk_net_send_message(0x8e,0xff,0,0,0,0,0,0,0,0);

@@ -6,7 +6,7 @@
  * Evidence:
  *  - Loader rules_parse_sections calls the per-section parsers rules_load_cosmic (COSMIC),
  *    rules_load_advances (CIVILIZE), rules_load_improvements (IMPROVE+ENDWONDER), rules_load_units
- *    (UNITS), FUN_0041a95f (TERRAIN), FUN_0041ab18 (GOVERNMENTS+LEADERS) and
+ *    (UNITS), rules_load_terrain (TERRAIN), rules_load_govts_leaders (GOVERNMENTS+LEADERS) and
  *    then parses CARAVAN/ORDERS/DIFFICULTY/ATTITUDES inline.
  *  - The multiplayer table-sync switch (net_msg_build_packet / FUN_005f2110 callers,
  *    cases 0x17..0x24) sends each table as one block with its exact size:

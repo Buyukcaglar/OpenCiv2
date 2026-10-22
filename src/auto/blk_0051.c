@@ -103,7 +103,7 @@ void __thiscall spritebtn_dtor(C_00511560 *this)
   (*(undefined3 *)((char *)&local_8 + 1)) = 0;
   (*(undefined1 *)((char *)&local_8 + 0)) = 2;
   if (this->hwnd != 0) {
-    FUN_005cb6db(this->hwnd);
+    spritebtn_hwnd_cleanup_stub(this->hwnd);
   }
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x7c)); }
@@ -131,7 +131,7 @@ int __thiscall city_window_scale(C_004083b0_4 *this,int param_1)
 void __cdecl text_append_city_population(undefined4 param_1)
 
 {
-  thunk_FUN_0043ce5a(ADDR(0x679640, ((u8 *)&g.d_00679640)),param_1);
+  thunk_str_append_city_population(ADDR(0x679640, ((u8 *)&g.d_00679640)),param_1);
   return;
 }
 
@@ -2819,27 +2819,27 @@ void __cdecl FUN_00519126(void)
 }
 
 /* 00519140 auto */
-#define DAT_00631b78 (*(int *)((u8 *)&g.d_00631b78))
+#define notice_dlg_shown (*(int *)((u8 *)&g.d_00631b78))
 void __cdecl notice_dlg_close(void)
 
 {
-  if (DAT_00631b78 != 0) {
+  if (notice_dlg_shown != 0) {
     thunk_dialog_close((Dialog *)&game_section_dialog);
     thunk_wnd_flush_paint();
   }
   return;
 }
-#undef DAT_00631b78
+#undef notice_dlg_shown
 
 /* 00519171 auto */
-#define DAT_00631b78 (*(undefined4 *)((u8 *)&g.d_00631b78))
+#define notice_dlg_shown (*(undefined4 *)((u8 *)&g.d_00631b78))
 void __cdecl FUN_00519171(iptr param_1)
 
 {
   int iVar1;
   
   thunk_notice_dlg_close();
-  DAT_00631b78 = 1;
+  notice_dlg_shown = 1;
   iVar1 = thunk_dlg_load_game_section((Dialog *)&game_section_dialog,param_1,8);
   if (iVar1 == 0) {
     thunk_dlg_show_modal((Dialog *)&game_section_dialog,0);
@@ -2847,7 +2847,7 @@ void __cdecl FUN_00519171(iptr param_1)
   }
   return;
 }
-#undef DAT_00631b78
+#undef notice_dlg_shown
 
 /* 00519200 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
@@ -4543,10 +4543,10 @@ LAB_0051daa8:
     iVar3 = thunk_FUN_00419170();
     break;
   case 1:
-    iVar3 = thunk_FUN_00444310(1);
+    iVar3 = thunk_setup_network_game(1);
     break;
   case 2:
-    iVar3 = thunk_FUN_00444310(0);
+    iVar3 = thunk_setup_network_game(0);
     if (iVar3 == 0) goto switchD_0051dd3a_default;
     UVar2 = net_adapter_index;
     UVar1 = net_xd_adapter_index;
@@ -4560,7 +4560,7 @@ LAB_0051dd88:
     goto LAB_0051daa8;
   case 3:
     net_max_players = 2;
-    iVar3 = thunk_FUN_00444310(4);
+    iVar3 = thunk_setup_network_game(4);
     break;
   default:
     goto switchD_0051dd3a_default;

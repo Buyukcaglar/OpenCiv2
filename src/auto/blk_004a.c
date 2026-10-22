@@ -1687,7 +1687,7 @@ undefined4 __thiscall sprite_width(Sprite *this)
 
 /* 004a69b0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_004a69b0(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2010,8 +2010,8 @@ void __cdecl prefs_set_mp_defaults(void)
   prefs_turn_timer_choice = 0;
   FUN_005f22d0(&prefs_turn_timer_custom,&DAT_0062cee8);
   prefs_hotseat_players_choice = 0;
-  _memset(&DAT_006665da,0,0x10);
-  _memset(&DAT_006665ea,0,0x10);
+  _memset(&prefs_parley_wnd_rect,0,0x10);
+  _memset(&prefs_chat_wnd_rect,0,0x10);
   prefs_clear_chat_on_new_game = 0;
   prefs_clear_chat_on_boot = 0;
   prefs_mp_double_production = 0;
@@ -3635,10 +3635,10 @@ iptr __cdecl map_path_next_dir(int param_1,int param_2,int param_3)
     }
   }
   local_40 = local_40 + path_grid_center_x;
-  if (((path_goal_x != DAT_006787cc) || (path_goal_y != DAT_00673fb8)) ||
+  if (((path_goal_x != path_flood_goal_x) || (path_goal_y != path_flood_goal_y)) ||
      (iVar7 = path_grid_get_cost(local_40,param_2), iVar7 == 0)) {
-    DAT_006787cc = path_goal_x;
-    DAT_00673fb8 = path_goal_y;
+    path_flood_goal_x = path_goal_x;
+    path_flood_goal_y = path_goal_y;
     _memset(&path_cost_grid,0,0x2400);
     path_queue_head = 0;
     path_queue_x = path_goal_x;
@@ -3694,7 +3694,7 @@ iptr __cdecl map_path_next_dir(int param_1,int param_2,int param_3)
              (iVar8 = map_in_bounds(iVar18,iVar16), iVar8 != 0)) {
             bVar6 = tile_terrain(iVar18,iVar16);
             if (((((bVar6 == 10) == bVar20) || ((param_1 == iVar18 && (iVar16 == param_2)))) ||
-                ((DAT_006787cc == iVar18 && (iVar16 == DAT_00673fb8)))) &&
+                ((path_flood_goal_x == iVar18 && (iVar16 == path_flood_goal_y)))) &&
                ((!bVar3 ||
                 ((iVar8 = tile_landmass(iVar18,iVar16), iVar8 != 0x3f &&
                  (*(short *)(&water_body_sizes + iVar8 * 0x10) != 1)))))) {
@@ -3821,7 +3821,7 @@ LAB_004ac850:
          (iVar15 = map_in_bounds(iVar14,iVar13), iVar15 != 0)) {
         bVar6 = tile_terrain(iVar14,iVar13);
         if ((((bVar6 == 10) == bVar20) || ((param_1 == iVar14 && (iVar13 == param_2)))) ||
-           ((DAT_006787cc == iVar14 && (iVar13 == DAT_00673fb8)))) {
+           ((path_flood_goal_x == iVar14 && (iVar13 == path_flood_goal_y)))) {
           local_3c = iVar12 - path_grid_center_x;
           if ((game.rules & 0x8000) == 0) {
             if (local_3c < 0) {
@@ -3916,8 +3916,8 @@ LAB_004ac936: ;
     }
   }
   if (local_50 < 0) {
-    path_goal_x = DAT_006787cc;
-    path_goal_y = DAT_00673fb8;
+    path_goal_x = path_flood_goal_x;
+    path_goal_y = path_flood_goal_y;
   }
   if (iVar19 != 0) {
     map_view_center_x = (undefined2)param_1;
@@ -4059,8 +4059,8 @@ map_path_length(int param_1,int param_2,int param_3,int param_4,int param_5,unde
 #undef local_14
 
 /* 004ad20f auto */
-#define DAT_0062d050 (*(int *)((u8 *)&g.d_0062d050))
 #define path_debug_pending (*(undefined4 *)((u8 *)&g.d_0062d04c))
+#define path_debug_requested (*(int *)((u8 *)&g.d_0062d050))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
 #define local_60 (*(uint *)(frame_ + FRAME_OFF(0)))
@@ -4097,7 +4097,7 @@ int __cdecl path_coarse_find_waypoint(undefined4 param_1,undefined4 param_2,int 
   undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_40 = 0;
-  local_8 = DAT_0062d050;
+  local_8 = path_debug_requested;
   path_goal_x = param_3;
   path_goal_y = param_4;
   local_24 = (uint)(unit_types[path_unit_type].domain == '\x02');
@@ -4109,8 +4109,8 @@ int __cdecl path_coarse_find_waypoint(undefined4 param_1,undefined4 param_2,int 
     path_goal_y = param_4;
   }
   else {
-    DAT_00673fa8 = path_goal_x;
-    DAT_00673fac = path_goal_y;
+    path_coarse_start_x = path_goal_x;
+    path_coarse_start_y = path_goal_y;
     path_coarse_snap_cell(param_3,param_4,local_24);
     _memset(map_coarse[2],0,(int)map.quarter_w * (int)map.quarter_h);
     path_queue_head = 0;
@@ -4218,8 +4218,8 @@ LAB_004ad51c:
   }
   return local_40;
 }
-#undef DAT_0062d050
 #undef path_debug_pending
+#undef path_debug_requested
 #undef path_goal_x
 #undef path_goal_y
 #undef local_60
@@ -4357,8 +4357,8 @@ uint __cdecl path_coarse_snap_cell(int param_1,int param_2,int param_3)
 #undef local_8
 
 /* 004adafc auto */
-#define DAT_0062d050 (*(undefined4 *)((u8 *)&g.d_0062d050))
 #define path_debug_pending (*(undefined4 *)((u8 *)&g.d_0062d04c))
+#define path_debug_requested (*(undefined4 *)((u8 *)&g.d_0062d050))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
 #define local_84 (*(int *)(frame_ + FRAME_OFF(4)))
@@ -4429,7 +4429,7 @@ uptr __cdecl unit_goto_next_dir(iptr param_1)
            (path_goal_x = iVar4, path_goal_y = iVar5,
            local_54 = thunk_map_path_next_dir(iVar6,iVar7,999), -1 < (int)local_54)) {
           path_debug_pending = 0;
-          DAT_0062d050 = 0;
+          path_debug_requested = 0;
           return local_54;
         }
         iVar16 = thunk_path_coarse_find_waypoint(iVar6,iVar7,iVar4,iVar5);
@@ -4447,7 +4447,7 @@ uptr __cdecl unit_goto_next_dir(iptr param_1)
           iVar15 = path_goal_y;
           if (-1 < (int)local_54) {
             path_debug_pending = 0;
-            DAT_0062d050 = 0;
+            path_debug_requested = 0;
             return local_54;
           }
         }
@@ -4599,11 +4599,11 @@ LAB_004ae320:
     }
   }
   path_debug_pending = 0;
-  DAT_0062d050 = 0;
+  path_debug_requested = 0;
   return local_54;
 }
-#undef DAT_0062d050
 #undef path_debug_pending
+#undef path_debug_requested
 #undef path_goal_x
 #undef path_goal_y
 #undef local_84

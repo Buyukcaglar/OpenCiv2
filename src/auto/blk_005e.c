@@ -498,7 +498,7 @@ iptr __cdecl menu_hmenu_parse_items(HMENU param_1,iptr param_2)
       local_1c = 0;
       local_10 = local_10 | 0x40;
     }
-    iVar2 = _strcmp(_Dest,&DAT_00638da0);
+    iVar2 = _strcmp(_Dest,&menu_separator_tag);
     if (iVar2 == 0) {
       local_10 = 0x800;
       *_Dest = '\0';
@@ -1954,12 +1954,12 @@ void __cdecl avi_update_frame(iptr param_1)
         local_1c.top = avi_view_rect_y;
         local_1c.right = avi_view_rect_x + _DAT_006e50d0;
         local_1c.bottom = avi_view_rect_y + _DAT_006e50d4;
-        UnionRect(&local_1c,&local_1c,(RECT *)&DAT_00638dd8);
+        UnionRect(&local_1c,&local_1c,(RECT *)&avi_blit_union_left);
         thunk_wnd_blit_surface_rect((DibSurface *)param_1,(iptr)&local_1c);
-        DAT_00638dd8 = local_1c.left;
-        DAT_00638ddc = local_1c.top;
-        DAT_00638de0 = local_1c.right;
-        DAT_00638de4 = local_1c.bottom;
+        avi_blit_union_left = local_1c.left;
+        avi_blit_union_top = local_1c.top;
+        avi_blit_union_right = local_1c.right;
+        avi_blit_union_bottom = local_1c.bottom;
       }
     }
     if (*(uint *)(param_1 + 0xa18) < local_20) {
@@ -2200,10 +2200,10 @@ undefined4 * __cdecl dib_create(iptr param_1)
       local_434[0].bmiHeader.biHeight = 1;
       local_434[0].bmiHeader.biWidth = dib_row_align4(iVar1);
       if (0 < local_434[0].bmiHeader.biHeight) {
-        if (DAT_00638e1c == 0) {
+        if (dib_bottom_up_logged == 0) {
           dbg_log(ADDR(0x638e20, ((u8 *)&g.d_00638e20)));
         }
-        DAT_00638e1c = 1;
+        dib_bottom_up_logged = 1;
       }
       if (dib_row_order == -1) {
         local_434[0].bmiHeader.biHeight = local_c;
@@ -4473,7 +4473,7 @@ FUN_005e6893
   }
   else {
     local_14 = (char *)res_lock(local_28);
-    iVar2 = _strcmp(local_14,&DAT_00639218);
+    iVar2 = _strcmp(local_14,&gif_res_signature);
     if (iVar2 == 0) {
       dbg_logf(ADDR(0x63921c, ((u8 *)&g.d_0063921c)),param_1);
       res_unlock(local_28);
@@ -7450,7 +7450,7 @@ uint __cdecl input_map_vkey(uint param_1)
   int iVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = *(uint *)(&DAT_006397e8 + (param_1 & 0xff) * 4);
+  local_8 = *(uint *)(&input_vkey_map_table + (param_1 & 0xff) * 4);
   if (local_8 != 0) {
     iVar1 = input_ctrl_key_down();
     if (iVar1 != 0) {
@@ -8748,11 +8748,11 @@ undefined4 __cdecl dbg_log_open(void)
   FUN_005f22d0(local_40c,s______________________SMEDS_LOG___00639bf8);
   FUN_005f22e0(local_40c,s_File_Output_to__00639c30);
   FUN_005f22e0(local_40c,s_smeds_log_00639c44);
-  FUN_005f22e0(local_40c,&DAT_00639c50);
+  FUN_005f22e0(local_40c,&dbg_log_header_crlf);
   FUN_005f22e0(local_40c,s_SMEDS32_Version__00639c54);
   _sprintf(local_42c,s__d__d__d_00639c68,2,0,0);
   FUN_005f22e0(local_40c,local_42c);
-  FUN_005f22e0(local_40c,&DAT_00639c7c);
+  FUN_005f22e0(local_40c,&dbg_log_header_blank_lines);
   if (smeds_log_enabled != '\0') {
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &local_8;
@@ -8818,7 +8818,7 @@ undefined4 __cdecl dbg_log_write_file(iptr param_1)
     lpNumberOfBytesWritten = &local_8;
     nNumberOfBytesToWrite = _strlen((char *)param_1);
     WriteFile(hFile,(LPCVOID)param_1,nNumberOfBytesToWrite,lpNumberOfBytesWritten,lpOverlapped);
-    WriteFile(hFile,&DAT_00639cd8,2,&local_8,(LPOVERLAPPED)0x0);
+    WriteFile(hFile,&dbg_log_file_crlf,2,&local_8,(LPOVERLAPPED)0x0);
     CloseHandle(hFile);
   }
   return 1;
@@ -8830,7 +8830,7 @@ undefined4 __cdecl dbg_log_write_debugger(iptr param_1)
 
 {
   OutputDebugStringA((LPCSTR)param_1);
-  OutputDebugStringA(&DAT_00639cdc);
+  OutputDebugStringA(&dbg_log_debugger_crlf);
   return 1;
 }
 
@@ -10210,9 +10210,9 @@ LRESULT __stdcall FUN_005ef6cb(HWND param_1,uint param_2,uint param_3,uint param
   else if (param_2 < 0x45) {
     if (param_2 != 0x44) {
       if (param_2 != 0x1c) goto switchD_005efc68_default;
-      if (param_3 != DAT_00639d74) {
+      if (param_3 != ddwin_last_activate_app) {
         ddwin_call_activate_app((DDWindowActivateView *)this,param_3);
-        DAT_00639d74 = param_3;
+        ddwin_last_activate_app = param_3;
       }
     }
   }

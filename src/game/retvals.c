@@ -21,7 +21,7 @@
  * method (ECX = the Civilopedia window); the decompiler took ECX for a value
  * left over from the __chkstk call.
  */
-void __thiscall FUN_00452315(void *this, int param_1)
+void __thiscall pedia_load_description(void *this, int param_1)
 {
   int self = (iptr)this;
   bool bVar1;
@@ -181,7 +181,7 @@ LAB_00452724:
 #define local_110 (*(int *)(frame_ + FRAME_OFF(1600)))
 #define local_10c (*(char * *)(frame_ + FRAME_OFF(1604)))
 #define local_108 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(1608)))
-int __cdecl FUN_00475666(char *param_1)
+int __cdecl save_read_game(char *param_1)
 
 {
   char cVar1;
@@ -287,7 +287,7 @@ int __cdecl FUN_00475666(char *param_1)
   goto LAB_00477352;
   thunk_ui_flush_input();
   sVar4 = _fread(&landmass_table,0x400,1,_File);
-  if ((sVar4 == 0) || (iVar3 = thunk_FUN_004732a6(local_32c & 0xffff,_File), iVar3 == 0))
+  if ((sVar4 == 0) || (iVar3 = thunk_save_read_units_cities(local_32c & 0xffff,_File), iVar3 == 0))
   goto LAB_00477352;
   for (local_21c = 0; local_21c < 0x15; local_21c = local_21c + 1) {
     sVar4 = _fread(&leaders[local_21c].times_used,1,1,_File);
@@ -316,7 +316,7 @@ int __cdecl FUN_00475666(char *param_1)
   }
   sVar4 = _fread(&power_graph_history,0x4b0,1,_File);
   if ((sVar4 == 0) || (sVar4 = _fread(&save_layout_record,0x6a,1,_File), sVar4 == 0)) goto LAB_00477352;
-  thunk_FUN_00473064();
+  thunk_save_unpack_layout_rects();
   thunk_ui_flush_input();
   for (local_21c = 0; local_21c < 8; local_21c = local_21c + 1) {
     sVar4 = _fread(&map_view_open_flags + local_21c * 0x3f0,2,1,_File);
@@ -387,83 +387,83 @@ int __cdecl FUN_00475666(char *param_1)
     }
     for (local_734 = DAT_0064b99c; local_734 != 0; local_734 = *(int *)(local_734 + 0x1bc)) {
       if (*(int *)(local_734 + 8) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 8) = uVar7;
         if (*(int *)(local_734 + 8) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x10) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x10) = uVar7;
         if (*(int *)(local_734 + 0x10) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x14) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x14) = uVar7;
         if (*(int *)(local_734 + 0x14) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x20) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x20) = uVar7;
         if (*(int *)(local_734 + 0x20) == 0) goto LAB_00477352;
       }
       for (local_330 = 0; (local_330 < 0x14 && (*(int *)(local_734 + 0x38 + local_330 * 4) != 0));
           local_330 = local_330 + 1) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x38 + local_330 * 4) = uVar7;
         if (*(int *)(local_734 + 0x38 + local_330 * 4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x88) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x88) = uVar7;
         if (*(int *)(local_734 + 0x88) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x90) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x90) = uVar7;
         if (*(int *)(local_734 + 0x90) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xc4) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0xc4) = uVar7;
         if (*(int *)(local_734 + 0xc4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xcc) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0xcc) = uVar7;
         if (*(int *)(local_734 + 0xcc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xd4) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0xd4) = uVar7;
         if (*(int *)(local_734 + 0xd4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xdc) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0xdc) = uVar7;
         if (*(int *)(local_734 + 0xdc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x13c) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x13c) = uVar7;
         if (*(int *)(local_734 + 0x13c) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x140) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x140) = uVar7;
         if (*(int *)(local_734 + 0x140) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x148) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x148) = uVar7;
         if (*(int *)(local_734 + 0x148) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x174) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x174) = uVar7;
         if (*(int *)(local_734 + 0x174) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x184) != 0) {
-        uVar7 = thunk_FUN_00473c68(_File);
+        uVar7 = thunk_save_read_event_str(_File);
         *(undefined4 *)(local_734 + 0x184) = uVar7;
         if (*(int *)(local_734 + 0x184) == 0) goto LAB_00477352;
       }
@@ -588,10 +588,10 @@ int __cdecl FUN_00475666(char *param_1)
   thunk_rules_load_units(1);
   thunk_text_close_file();
   saved_layout_valid = 1;
-  iVar3 = thunk_rect_width(&DAT_00655284);
+  iVar3 = thunk_rect_width(&saved_screen_rect);
   iVar8 = thunk_rect_width(&screen_rect);
   if (iVar3 == iVar8) {
-    iVar3 = thunk_rect_height(&DAT_00655284);
+    iVar3 = thunk_rect_height(&saved_screen_rect);
     iVar8 = thunk_rect_height(&screen_rect);
     if ((iVar3 != iVar8) || (local_220 != 0)) goto LAB_0047733e;
   }
@@ -1398,7 +1398,7 @@ uint __cdecl game_turn_start_popups(void)
                                  ,0xffffffff);
       if (-1 < (int)uVar1) {
         thunk_text_set_string_arg(0,cities[uVar1].name);
-        thunk_FUN_00490500(PTR_s_TUTORIAL_00627678,s_ONECITY_0062c6cc,uVar1);
+        thunk_popup_text_with_city_noflags(PTR_s_TUTORIAL_00627678,s_ONECITY_0062c6cc,uVar1);
         uVar1 = (int)(short)game.turn - 0x19;
         civs[DAT_006d1da0].last_city_turn = (short)uVar1;
       }

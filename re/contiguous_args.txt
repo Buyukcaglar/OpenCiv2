@@ -1,4 +1,3 @@
-FUN_00452188
 FUN_005cb319
 __fltout
 __snprintf
@@ -6,4 +5,5 @@ _fprintf
 net_msg_build_packet
 palette_save_to_file
 pedia_add_link
+pedia_dispatch_category_draw
 sprite_draw_spaced_row

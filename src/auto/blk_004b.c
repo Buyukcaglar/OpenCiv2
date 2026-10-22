@@ -3689,7 +3689,7 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 #undef local_8
 
 /* 004b7eb6 auto */
-#define DAT_006ad6a0 (*(undefined4 *)((u8 *)&g.d_006ad6a0))
+#define chat_unread_count (*(undefined4 *)((u8 *)&g.d_006ad6a0))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define parley_selected_action (*(undefined4 *)((u8 *)&g.d_0067a9b0))
@@ -3734,7 +3734,7 @@ void __thiscall parley_wnd_open(C_004083b0_430 *this,iptr param_1,u32 param_2)
       return;
     }
     wnd_set_active_child(ADDR(0x68ac30, ((u8 *)&g.d_0068ac30)));
-    DAT_006ad6a0 = 0;
+    chat_unread_count = 0;
     _DAT_006ad69c = 0;
   }
   else {
@@ -3788,7 +3788,7 @@ void __thiscall parley_wnd_open(C_004083b0_430 *this,iptr param_1,u32 param_2)
   thunk_snd_play_effect(((uint)map.seed + param_1 & 7) + 0x53,1,0,0);
   return;
 }
-#undef DAT_006ad6a0
+#undef chat_unread_count
 #undef human_civ
 #undef mp_chat_from_start
 #undef parley_selected_action
@@ -4205,9 +4205,9 @@ void __cdecl FUN_004b8e5c(int param_1)
 #undef local_8
 
 /* 004b90ad auto */
-#define DAT_006ad6a0 (*(int *)((u8 *)&g.d_006ad6a0))
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
 #define chat_mute_anonymous (*(int *)((u8 *)&g.d_0068aee0))
+#define chat_unread_count (*(int *)((u8 *)&g.d_006ad6a0))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
@@ -4280,7 +4280,7 @@ LAB_004b9295:
   }
   thunk_chat_log_append(ADDR(0x679640, ((u8 *)&g.d_00679640)));
   if (chat_wnd_closed != 0) {
-    DAT_006ad6a0 = DAT_006ad6a0 + 1;
+    chat_unread_count = chat_unread_count + 1;
     _DAT_006ad69c = _DAT_006ad69c + 1;
   }
   if ((parley_wnd_closed != 0) && (chat_wnd_closed != 0)) {
@@ -4288,9 +4288,9 @@ LAB_004b9295:
   }
   return;
 }
-#undef DAT_006ad6a0
 #undef chat_log_buffer
 #undef chat_mute_anonymous
+#undef chat_unread_count
 #undef human_civ
 #undef parley_other_civ
 #undef text_buffer
@@ -4439,7 +4439,7 @@ undefined4 __cdecl chat_input_on_key(undefined4 param_1,int param_2)
   }
   if (param_2 < 0x2b5) {
     if (0x2af < param_2) {
-      thunk_FUN_004923f0(*(undefined4 *)(local_8 + 0x298),param_2);
+      thunk_chat_insert_macro_text(*(undefined4 *)(local_8 + 0x298),param_2);
       return 0;
     }
     if (param_2 == 0xd0) {
@@ -6503,7 +6503,7 @@ void __cdecl civ_give_advance(uptr param_1,iptr param_2,iptr param_3,iptr param_
         }
       }
       thunk_civ_leonardo_upgrade(param_1);
-      uVar5 = thunk_FUN_00453edf(4);
+      uVar5 = thunk_wonder_get_owner(4);
       if ((0 < (int)uVar5) && (iVar4 = thunk_civ_has_advance(uVar5,param_2), iVar4 == 0)) {
         local_18 = 0;
         for (local_20 = 1; local_20 < 8; local_20 = local_20 + 1) {

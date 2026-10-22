@@ -39,7 +39,7 @@ void __thiscall wnd_set_palette(WndBase *this,iptr param_1)
 
 {
   this->wnd_palette = param_1;
-  thunk_FUN_00450440(this,param_1);
+  thunk_wnd_apply_palette_handle(this,param_1);
   return;
 }
 
@@ -60,7 +60,7 @@ void __thiscall wnd_center(WndCenterView *this)
 }
 
 /* 00450440 auto */
-void __thiscall FUN_00450440(WndBase *this,iptr param_1)
+void __thiscall wnd_apply_palette_handle(WndBase *this,iptr param_1)
 
 {
   wnd_obj_select_palette(this->native_wnd,*(undefined4 *)(param_1 + 0x404));
@@ -84,7 +84,7 @@ void __thiscall FUN_00450440(WndBase *this,iptr param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
-void __thiscall FUN_00450480(C_004083b0_4 *this,iptr param_1,iptr param_2,int param_3)
+void __thiscall parley_create_advance_list_pane(C_004083b0_4 *this,iptr param_1,iptr param_2,int param_3)
 
 {
   int iVar1;
@@ -295,7 +295,7 @@ void __cdecl FUN_00450b83(int param_1)
   thunk_wnd_get_cursor_pos
             ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
   if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = thunk_FUN_00450df6(local_10,local_14,local_c), -1 < iVar2)) &&
+      (iVar2 = thunk_parley_advance_list_hit_test(local_10,local_14,local_c), -1 < iVar2)) &&
      (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
     iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
     if (iVar3 == 0) {
@@ -347,7 +347,7 @@ void __cdecl FUN_00450b83(int param_1)
 
 /* 00450df6 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_00450df6(int param_1,int param_2,int param_3)
+int __cdecl parley_advance_list_hit_test(int param_1,int param_2,int param_3)
 
 {
   iptr iVar1;
@@ -705,7 +705,7 @@ void __thiscall scrollbar_set_track_callback(ScrollbarTrackSetView *this,iptr pa
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-FUN_00451af0(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2)
+pedia_draw_category_body(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2)
 
 {
   int xLeft;
@@ -725,7 +725,7 @@ FUN_00451af0(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2)
   local_8 = iVar2 * 9 + iVar3 + panel_margin_y * 0xd;
   SetRect(&local_18,xLeft,yTop,iVar1 + xLeft,local_8 + yTop);
   thunk_gfx_set_draw_target(ADDR(0x6a6668, ((u8 *)&g.d_006a6668)));
-  thunk_FUN_00452188(this,local_18.left,local_18.top,local_18.right,local_18.bottom,param_1);
+  thunk_pedia_dispatch_category_draw(this,local_18.left,local_18.top,local_18.right,local_18.bottom,param_1);
   thunk_wnd_blit_surface_rect((DibSurface *)this,(iptr)this->pad_608);
   return;
 }
@@ -898,7 +898,7 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
 
 /* 00452188 auto */
 void __thiscall
-FUN_00452188
+pedia_dispatch_category_draw
           (C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5)
 
@@ -946,7 +946,7 @@ FUN_00452188
     break;
   case 5:
     if (this->border_width == 0) {
-      thunk_FUN_00490590((C_004083b0_61c *)this,(iptr)&param_1);
+      thunk_pedia_init_terrain_list((C_004083b0_61c *)this,(iptr)&param_1);
     }
     break;
   case 6:
@@ -956,7 +956,7 @@ FUN_00452188
     break;
   case 7:
     if (this->border_width == 0) {
-      thunk_FUN_004a69b0((C_004083b0_61c *)this,(iptr)&param_1);
+      thunk_pedia_init_concept_list((C_004083b0_61c *)this,(iptr)&param_1);
     }
     break;
   case 8:
@@ -980,7 +980,7 @@ FUN_00452188
 #define local_108 (*(char (*)[2])(frame_ + FRAME_OFF(4104)))
 #define local_106 (*(undefined1 *)(frame_ + FRAME_OFF(4106)))
 #define local_104 (*(undefined1 (*)[228])(frame_ + FRAME_OFF(4108)))
-void __thiscall FUN_00452315(C_004083b0_4 *this,uptr param_1)
+void __thiscall pedia_load_description(C_004083b0_4 *this,uptr param_1)
 
 {
   bool bVar1;
@@ -1159,7 +1159,7 @@ void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1)
 /* 004529df auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_2c (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004529df(void)
+void __cdecl hyperlink_register_class(void)
 
 {
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1187,7 +1187,7 @@ void __cdecl FUN_004529df(void)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_00452a67(C_00452a67 *this)
+void __thiscall hyperlink_dtor(C_00452a67 *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1206,7 +1206,7 @@ void __thiscall FUN_00452a67(C_00452a67 *this)
 
 /* 00452ae2 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-HWND __cdecl FUN_00452ae2(int *param_1,iptr param_2)
+HWND __cdecl hyperlink_create_hwnd(int *param_1,iptr param_2)
 
 {
   WndBase *this;
@@ -1218,7 +1218,7 @@ HWND __cdecl FUN_00452ae2(int *param_1,iptr param_2)
   HINSTANCE hInstance;
   LPVOID lpParam;
   
-  thunk_FUN_004529df();
+  thunk_hyperlink_register_class();
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
   hInstance = app_hinstance;
@@ -1238,7 +1238,7 @@ HWND __cdecl FUN_00452ae2(int *param_1,iptr param_2)
 
 /* 00452b89 auto */
 void __thiscall
-FUN_00452b89(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3)
+hyperlink_create(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3)
 
 {
   u32 uVar1;
@@ -1252,7 +1252,7 @@ FUN_00452b89(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3)
   this->on_select = 0;
   this->font = 0;
   this->scroll_pos = 0;
-  uVar1 = thunk_FUN_00452ae2(param_3,(iptr)this);
+  uVar1 = thunk_hyperlink_create_hwnd(param_3,(iptr)this);
   this->hwnd = uVar1;
   return;
 }
@@ -1365,7 +1365,7 @@ pedia_add_link
     local_2c = (u32 *)0x0;
   }
   else {
-    local_2c = (u32 *)thunk_FUN_00453b10(pCVar3);
+    local_2c = (u32 *)thunk_pedia_link_ctor(pCVar3);
   }
   local_8 = 0xffffffff;
   *local_2c = local_24;
@@ -1388,28 +1388,28 @@ pedia_add_link
   else {
     local_34 = this->pad_48;
   }
-  thunk_FUN_00452b89
+  thunk_hyperlink_create
             ((C_0040f380_40 *)(local_2c + 1),(iptr)local_34,local_1c + 0xfb4,(iptr)&param_5);
   switch(param_4) {
   case 0:
-    thunk_FUN_00453d40((C_00453d40 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
-    thunk_FUN_00453d70((C_00453d70 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x401c76, FUN_004531b8));
     break;
   case 1:
-    thunk_FUN_00453d40((C_00453d40 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
-    thunk_FUN_00453d70((C_00453d70 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019ce, FUN_0045323a));
     break;
   case 2:
-    thunk_FUN_00453d40((C_00453d40 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
-    thunk_FUN_00453d70((C_00453d70 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x403729, FUN_004532bc));
     break;
   case 3:
-    thunk_FUN_00453d40((C_00453d40 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
-    thunk_FUN_00453d70((C_00453d70 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x402333, FUN_0045333e));
     break;
   case 4:
-    thunk_FUN_00453d40((C_00453d40 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
-    thunk_FUN_00453d70((C_00453d70 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
+    thunk_hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
+    thunk_hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019b0, FUN_004533c0));
   }
   thunk_ctrl_show_and_redraw((Control *)(local_2c + 1));
 switchD_00452e28_default:
@@ -1603,13 +1603,13 @@ void __cdecl ui_pump_messages(void)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_00453b10 * __thiscall FUN_00453b10(C_00453b10 *this)
+C_00453b10 * __thiscall pedia_link_ctor(C_00453b10 *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_00453cc0((Control *)(this->pad_0 + 4));
+  thunk_hyperlink_ctor((Control *)(this->pad_0 + 4));
   return this;
 }
 #undef local_10
@@ -1659,7 +1659,7 @@ void __thiscall ctrl_enable(Control *this)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-Control * __thiscall FUN_00453cc0(Control *this)
+Control * __thiscall hyperlink_ctor(Control *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1673,7 +1673,7 @@ Control * __thiscall FUN_00453cc0(Control *this)
 #undef local_8
 
 /* 00453d40 auto */
-void __thiscall FUN_00453d40(C_00453d40 *this,iptr param_1)
+void __thiscall hyperlink_set_click_callback(C_00453d40 *this,iptr param_1)
 
 {
   this->on_click = param_1;
@@ -1686,7 +1686,7 @@ void __thiscall FUN_00453d40(C_00453d40 *this,iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_00453d70(C_00453d70 *this,iptr param_1)
+void __thiscall hyperlink_set_dblclick_callback(C_00453d70 *this,iptr param_1)
 
 {
   this->on_dblclick = param_1;
@@ -1765,7 +1765,7 @@ undefined4 __cdecl civ_has_wonder(iptr param_1,iptr param_2)
 #undef scenario_flags
 
 /* 00453edf auto */
-int __cdecl FUN_00453edf(iptr param_1)
+int __cdecl wonder_get_owner(iptr param_1)
 
 {
   iptr iVar1;
@@ -1787,7 +1787,7 @@ int __cdecl FUN_00453edf(iptr param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(1032)))
 #define local_c (*(int * *)(frame_ + FRAME_OFF(1036)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1040)))
-void __cdecl FUN_00453f90(void)
+void __cdecl registry_load_default_language(void)
 
 {
   undefined1 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1795,7 +1795,7 @@ void __cdecl FUN_00453f90(void)
   local_8 = 1;
   _sprintf(local_410,s_Software__s__s_006269a4,PTR_s_MicroProse_Software_0061c354,
            PTR_s_Civilization_II_Multiplayer_Gold_0061c358);
-  local_c = (int *)thunk_FUN_00454103((iptr)local_410,ADDR(0x6269b4, ((u8 *)&g.d_006269b4)),(iptr)&local_10,(iptr)local_414);
+  local_c = (int *)thunk_registry_read_value((iptr)local_410,ADDR(0x6269b4, ((u8 *)&g.d_006269b4)),(iptr)&local_10,(iptr)local_414);
   if ((local_c == (int *)0x0) || (local_10 == 0)) {
     local_8 = 0;
   }
@@ -1807,7 +1807,7 @@ void __cdecl FUN_00453f90(void)
   }
   _sprintf(local_410,s_Software__s__s_006269c4,PTR_s_MicroProse_Software_0061c354,
            PTR_s_Civilization_II_Multiplayer_Gold_0061c358);
-  thunk_FUN_0045406c((iptr)local_410,ADDR(0x6269d4, ((u8 *)&g.d_006269d4)),(iptr)&local_8,4,4);
+  thunk_registry_write_value((iptr)local_410,ADDR(0x6269d4, ((u8 *)&g.d_006269d4)),(iptr)&local_8,4,4);
   registry_language_id = local_8;
   return;
 }
@@ -1821,7 +1821,7 @@ void __cdecl FUN_00453f90(void)
 #define local_10 (*(HKEY *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(DWORD *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-bool __cdecl FUN_0045406c(iptr param_1,iptr param_2,iptr param_3,DWORD param_4,DWORD param_5)
+bool __cdecl registry_write_value(iptr param_1,iptr param_2,iptr param_3,DWORD param_4,DWORD param_5)
 
 {
   LSTATUS LVar1;
@@ -1849,7 +1849,7 @@ bool __cdecl FUN_0045406c(iptr param_1,iptr param_2,iptr param_3,DWORD param_4,D
 #define local_10 (*(DWORD *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(HKEY *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(DWORD *)(frame_ + FRAME_OFF(8)))
-undefined * __cdecl FUN_00454103(iptr param_1,iptr param_2,iptr param_3,iptr param_4)
+undefined * __cdecl registry_read_value(iptr param_1,iptr param_2,iptr param_3,iptr param_4)
 
 {
   LSTATUS LVar1;
@@ -1857,17 +1857,17 @@ undefined * __cdecl FUN_00454103(iptr param_1,iptr param_2,iptr param_3,iptr par
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0x800;
-  _memset(&DAT_0064a730,0,0x800);
+  _memset(&registry_value_buffer,0,0x800);
   *(undefined4 *)param_3 = 0;
   *(undefined4 *)param_4 = 0;
   LVar1 = RegOpenKeyExA((HKEY)0x80000002,(LPCSTR)param_1,0,0x20019,&local_c);
   if (LVar1 == 0) {
-    LVar1 = RegQueryValueExA(local_c,(LPCSTR)param_2,(LPDWORD)0x0,&local_8,&DAT_0064a730,&local_10);
+    LVar1 = RegQueryValueExA(local_c,(LPCSTR)param_2,(LPDWORD)0x0,&local_8,&registry_value_buffer,&local_10);
     if (LVar1 == 0) {
       *(DWORD *)param_4 = local_8;
       *(DWORD *)param_3 = local_10;
       RegCloseKey(local_c);
-      puVar2 = &DAT_0064a730;
+      puVar2 = &registry_value_buffer;
     }
     else {
       RegCloseKey(local_c);
@@ -1889,7 +1889,7 @@ undefined * __cdecl FUN_00454103(iptr param_1,iptr param_2,iptr param_3,iptr par
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_00454260(uptr param_1)
+void __cdecl cityview_open(uptr param_1)
 
 {
   C_00408010_6f0 *this;
@@ -1903,16 +1903,16 @@ void __cdecl FUN_00454260(uptr param_1)
     local_1c = (CityViewWindow *)0x0;
   }
   else {
-    local_1c = (CityViewWindow *)thunk_FUN_00454354(this);
+    local_1c = (CityViewWindow *)thunk_cityview_ctor(this);
   }
   local_8 = 0xffffffff;
   if (local_1c != (CityViewWindow *)0x0) {
-    iVar1 = thunk_FUN_004548a9(local_1c,param_1);
+    iVar1 = thunk_cityview_load(local_1c,param_1);
     if (iVar1 != 0) {
-      thunk_FUN_00454eb2((Wnd *)local_1c);
+      thunk_cityview_run_modal((Wnd *)local_1c);
     }
     if (local_1c != (CityViewWindow *)0x0) {
-      thunk_FUN_00456e90(local_1c,1);
+      thunk_cityview_scalar_dtor(local_1c,1);
     }
   }
   return;
@@ -1935,7 +1935,7 @@ void __cdecl FUN_00454344(void)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-C_00408010_6f0 * __thiscall FUN_00454354(C_00408010_6f0 *this)
+C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
 
 {
   u8 *puVar1;
@@ -2001,7 +2001,7 @@ C_00408010_6f0 * __thiscall FUN_00454354(C_00408010_6f0 *this)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_00454699(void *this)
+void __thiscall cityview_dtor(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2054,7 +2054,7 @@ void __thiscall FUN_00454699(void *this)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(220)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(224)))
-undefined4 __thiscall FUN_004548a9(CityViewWindow *this,uptr param_1)
+undefined4 __thiscall cityview_load(CityViewWindow *this,uptr param_1)
 
 {
   int iVar1;
@@ -2076,7 +2076,7 @@ undefined4 __thiscall FUN_004548a9(CityViewWindow *this,uptr param_1)
   }
   else {
     thunk_dll_handle_load((DllHandle *)&this->field_6d8,(iptr)local_90);
-    thunk_FUN_00454f83(this);
+    thunk_cityview_classify_site(this);
     uVar2 = thunk_civ_city_art_era((int)cities[param_1].owner);
     this->art_era = uVar2;
     if (screen_rect_right < 0x500) {
@@ -2165,21 +2165,21 @@ undefined4 __thiscall FUN_004548a9(CityViewWindow *this,uptr param_1)
             uVar3 = 0;
           }
           else {
-            iVar1 = thunk_FUN_00455183(this);
+            iVar1 = thunk_cityview_create_windows(this);
             if (iVar1 == 0) {
               local_8 = 0xffffffff;
               /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
               uVar3 = 0;
             }
             else {
-              iVar1 = thunk_FUN_00455314(this);
+              iVar1 = thunk_cityview_layout_buildings(this);
               if (iVar1 == 0) {
                 local_8 = 0xffffffff;
                 /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
                 uVar3 = 0;
               }
               else {
-                thunk_FUN_00455add(this);
+                thunk_cityview_draw_buildings(this);
                 local_8 = 0xffffffff;
                 /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
                 uVar3 = 1;
@@ -2202,7 +2202,7 @@ undefined4 __thiscall FUN_004548a9(CityViewWindow *this,uptr param_1)
 #undef local_8
 
 /* 00454eb2 auto */
-void __thiscall FUN_00454eb2(Wnd *this)
+void __thiscall cityview_run_modal(Wnd *this)
 
 {
   thunk_wnd_handle_show_raise((WndBase *)this);
@@ -2227,7 +2227,7 @@ void __thiscall FUN_00454eb2(Wnd *this)
 
 /* 00454f83 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_00454f83(CityViewWindow *this)
+void __thiscall cityview_classify_site(CityViewWindow *this)
 
 {
   short sVar1;
@@ -2281,19 +2281,19 @@ uint __thiscall FUN_0045512b(WndBase *this)
 
 /* 00455183 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-uint __thiscall FUN_00455183(CityViewWindow *this)
+uint __thiscall cityview_create_windows(CityViewWindow *this)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_create_with_handlers
-            ((WndBase *)this,ADDR(0x626a10, ((u8 *)&g.d_00626a10)),0x800,DAT_0064b0d0,DAT_0064b0d4,
-             screen_rect_right - DAT_0064b0d0,(DAT_0064b0dc - DAT_0064b0d4) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
+            ((WndBase *)this,ADDR(0x626a10, ((u8 *)&g.d_00626a10)),0x800,cityview_screen_rect,cityview_screen_rect_top,
+             screen_rect_right - cityview_screen_rect,(cityview_screen_rect_bottom - cityview_screen_rect_top) + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
   thunk_wnd_set_bg_color((WndBase *)this,0);
   wnd_create_with_surface
-            ((DibSurface *)&this->control_list,ADDR(0x626a14, ((u8 *)&g.d_00626a14)),0x800,0,DAT_0064b0dc + -0x1e0 >> 1,
-             screen_rect_right - DAT_0064b0d0,0x1e0,(iptr)(this->pad_1e4 + 0x30),(iptr)this);
+            ((DibSurface *)&this->control_list,ADDR(0x626a14, ((u8 *)&g.d_00626a14)),0x800,0,cityview_screen_rect_bottom + -0x1e0 >> 1,
+             screen_rect_right - cityview_screen_rect,0x1e0,(iptr)(this->pad_1e4 + 0x30),(iptr)this);
   iVar1 = thunk_city_has_improvement(this->city_id,0x19);
   if (iVar1 == 0) {
     local_8 = thunk_civ_city_art_era((int)cities[this->city_id].owner);
@@ -2307,7 +2307,7 @@ uint __thiscall FUN_00455183(CityViewWindow *this)
   if (iVar1 != 0) {
     thunk_wnd_set_keydown_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x40271b, FUN_00456228));
     thunk_wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x402a77, FUN_0045626d));
-    thunk_FUN_00456ee0((C_00456ee0 *)(this->pad_c8 + 0x48),ADDR(0x402e05, FUN_0045629b));
+    thunk_wnd_set_keydown_pre_handler((C_00456ee0 *)(this->pad_c8 + 0x48),ADDR(0x402e05, FUN_0045629b));
     thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x403189, FUN_004561d9));
     thunk_cityview_redraw_scrolled(this);
   }
@@ -2318,7 +2318,7 @@ uint __thiscall FUN_00455183(CityViewWindow *this)
 /* 00455314 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall FUN_00455314(CityViewWindow *this)
+undefined4 __thiscall cityview_layout_buildings(CityViewWindow *this)
 
 {
   u32 uVar1;
@@ -2338,7 +2338,7 @@ undefined4 __thiscall FUN_00455314(CityViewWindow *this)
         local_c = 0x35;
         break;
       default:
-        local_c = thunk_FUN_00455c5d((ThroneRoomWindow *)this);
+        local_c = thunk_cityview_take_improvement_slot((ThroneRoomWindow *)this);
 joined_r0x00455451:
         if (local_c == -1) goto LAB_0045539c;
         break;
@@ -2361,14 +2361,14 @@ LAB_00455628:
       iVar2 = thunk_city_has_improvement(this->city_id,local_8);
       if (iVar2 == 0) {
         if (this->houses_left == 0) {
-          thunk_FUN_00456005(this,local_c);
+          thunk_cityview_place_empty_lot(this,local_c);
         }
         else {
-          thunk_FUN_00455f2e(this,local_c);
+          thunk_cityview_place_small_house(this,local_c);
         }
       }
       else {
-        thunk_FUN_00455d38((WndBase *)this,local_c,local_8);
+        thunk_cityview_place_improvement((WndBase *)this,local_c,local_8);
         thunk_rand_range(0,0);
       }
     }
@@ -2381,7 +2381,7 @@ LAB_00455628:
             local_c = 0x34;
             break;
           default:
-            local_c = thunk_FUN_00455c5d((ThroneRoomWindow *)this);
+            local_c = thunk_cityview_take_improvement_slot((ThroneRoomWindow *)this);
             goto joined_r0x00455451;
           case 0x1c:
           case 0x1e:
@@ -2398,7 +2398,7 @@ LAB_00455628:
         local_c = 0x35;
         goto LAB_00455628;
       default:
-        local_c = thunk_FUN_00455c5d((ThroneRoomWindow *)this);
+        local_c = thunk_cityview_take_improvement_slot((ThroneRoomWindow *)this);
         if (local_c != -1) goto LAB_00455628;
         break;
       case 0x1c:
@@ -2409,12 +2409,12 @@ LAB_00455628:
     }
 LAB_0045539c: ;
   }
-  while (iVar2 = thunk_FUN_00455c5d((ThroneRoomWindow *)this), iVar2 != -1) {
+  while (iVar2 = thunk_cityview_take_improvement_slot((ThroneRoomWindow *)this), iVar2 != -1) {
     if (this->houses_left == 0) {
-      thunk_FUN_00456005(this,iVar2);
+      thunk_cityview_place_empty_lot(this,iVar2);
     }
     else {
-      thunk_FUN_00455f2e(this,iVar2);
+      thunk_cityview_place_small_house(this,iVar2);
     }
   }
   this->houses_left = (int)cities[this->city_id].size + 2;
@@ -2422,12 +2422,12 @@ LAB_0045539c: ;
   local_c = -1;
   do {
     if (0x1b < local_8) {
-      while (iVar2 = thunk_FUN_00455b8e((ThroneRoomWindow *)this), iVar2 != -1) {
+      while (iVar2 = thunk_cityview_take_wonder_slot((ThroneRoomWindow *)this), iVar2 != -1) {
         if (this->houses_left == 0) {
           thunk_FUN_00455f9e(this,iVar2);
         }
         else {
-          thunk_FUN_00455ebe(this,iVar2);
+          thunk_cityview_place_large_house(this,iVar2);
         }
       }
       thunk_surface_release((DibSurface *)(this->pad_638 + 0x58));
@@ -2448,7 +2448,7 @@ LAB_0045539c: ;
           local_c = 4;
           break;
         default:
-          local_c = thunk_FUN_00455b8e((ThroneRoomWindow *)this);
+          local_c = thunk_cityview_take_wonder_slot((ThroneRoomWindow *)this);
           goto joined_r0x004557ba;
         case 6:
           this->field_1c8c = 1;
@@ -2470,7 +2470,7 @@ LAB_0045539c: ;
           local_c = 3;
           break;
         default:
-          local_c = thunk_FUN_00455b8e((ThroneRoomWindow *)this);
+          local_c = thunk_cityview_take_wonder_slot((ThroneRoomWindow *)this);
           if (local_c == -1) goto LAB_00455711;
           break;
         case 6:
@@ -2494,7 +2494,7 @@ LAB_0045539c: ;
       local_c = 0x3b;
       break;
     default:
-      local_c = thunk_FUN_00455b8e((ThroneRoomWindow *)this);
+      local_c = thunk_cityview_take_wonder_slot((ThroneRoomWindow *)this);
 joined_r0x004557ba:
       if (local_c != -1) break;
       goto LAB_00455711;
@@ -2508,14 +2508,14 @@ joined_r0x004557ba:
     }
 LAB_004559fe:
     if ((int)game.wonder_city[local_8] == this->city_id) {
-      thunk_FUN_00455dfd((WndBase *)this,local_c,local_8);
+      thunk_cityview_place_wonder((WndBase *)this,local_c,local_8);
       thunk_rand_range(0,0);
     }
     else if (this->houses_left == 0) {
       thunk_FUN_00455f9e(this,local_c);
     }
     else {
-      thunk_FUN_00455ebe(this,local_c);
+      thunk_cityview_place_large_house(this,local_c);
     }
 LAB_00455711:
     local_8 = local_8 + 1;
@@ -2527,7 +2527,7 @@ LAB_00455711:
 /* 00455add auto */
 #define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __thiscall FUN_00455add(CityViewWindow *this)
+void __thiscall cityview_draw_buildings(CityViewWindow *this)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2548,7 +2548,7 @@ void __thiscall FUN_00455add(CityViewWindow *this)
 #undef local_8
 
 /* 00455b8e auto */
-undefined4 __thiscall FUN_00455b8e(ThroneRoomWindow *this)
+undefined4 __thiscall cityview_take_wonder_slot(ThroneRoomWindow *this)
 
 {
   undefined4 uVar1;
@@ -2569,7 +2569,7 @@ undefined4 __thiscall FUN_00455b8e(ThroneRoomWindow *this)
 }
 
 /* 00455c5d auto */
-undefined4 __thiscall FUN_00455c5d(ThroneRoomWindow *this)
+undefined4 __thiscall cityview_take_improvement_slot(ThroneRoomWindow *this)
 
 {
   undefined4 uVar1;
@@ -2590,7 +2590,7 @@ undefined4 __thiscall FUN_00455c5d(ThroneRoomWindow *this)
 }
 
 /* 00455d38 auto */
-void __thiscall FUN_00455d38(WndBase *this,iptr param_1,iptr param_2)
+void __thiscall cityview_place_improvement(WndBase *this,iptr param_1,iptr param_2)
 
 {
   if (-1 < param_1) {
@@ -2607,7 +2607,7 @@ void __thiscall FUN_00455d38(WndBase *this,iptr param_1,iptr param_2)
 }
 
 /* 00455dfd auto */
-void __thiscall FUN_00455dfd(WndBase *this,iptr param_1,iptr param_2)
+void __thiscall cityview_place_wonder(WndBase *this,iptr param_1,iptr param_2)
 
 {
   if (-1 < param_1) {
@@ -2624,7 +2624,7 @@ void __thiscall FUN_00455dfd(WndBase *this,iptr param_1,iptr param_2)
 }
 
 /* 00455ebe auto */
-void __thiscall FUN_00455ebe(CityViewWindow *this,iptr param_1)
+void __thiscall cityview_place_large_house(CityViewWindow *this,iptr param_1)
 
 {
   int iVar1;
@@ -2637,7 +2637,7 @@ void __thiscall FUN_00455ebe(CityViewWindow *this,iptr param_1)
 }
 
 /* 00455f2e auto */
-void __thiscall FUN_00455f2e(CityViewWindow *this,iptr param_1)
+void __thiscall cityview_place_small_house(CityViewWindow *this,iptr param_1)
 
 {
   int iVar1;
@@ -2663,7 +2663,7 @@ void __thiscall FUN_00455f9e(CityViewWindow *this,iptr param_1)
 }
 
 /* 00456005 auto */
-void __thiscall FUN_00456005(CityViewWindow *this,iptr param_1)
+void __thiscall cityview_place_empty_lot(CityViewWindow *this,iptr param_1)
 
 {
   int iVar1;
@@ -2865,10 +2865,10 @@ void __thiscall cityview_scroll_left(CityViewWindow *this)
 #undef local_8
 
 /* 00456e90 auto */
-void * __thiscall FUN_00456e90(void *this,uint param_1)
+void * __thiscall cityview_scalar_dtor(void *this,uint param_1)
 
 {
-  thunk_FUN_00454699(this);
+  thunk_cityview_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -2881,7 +2881,7 @@ void * __thiscall FUN_00456e90(void *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_00456ee0(C_00456ee0 *this,iptr param_1)
+u32 __thiscall wnd_set_keydown_pre_handler(C_00456ee0 *this,iptr param_1)
 
 {
   u32 uVar1;
@@ -2990,7 +2990,7 @@ void __cdecl diplo_eval_ai_stance(iptr param_1,iptr param_2)
   diplo_ai_fear_level = 0;
   diplo_tribute_demand = 0;
   diplo_ai_aggressive = 0;
-  DAT_0064b148 = 1;
+  diplo_ai_request_mode = 1;
   for (local_14 = 1; local_14 < 0x40; local_14 = local_14 + 1) {
     if (((1 < civs[param_2].num_cities) < *(byte *)(local_14 + ADDR(0x64c932, ((u8 *)&civs + 658)) + param_2 * 0x594)) &&
        (*(ushort *)(param_2 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_14 * 2) <
@@ -3115,7 +3115,7 @@ void __cdecl diplo_eval_ai_stance(iptr param_1,iptr param_2)
   }
   if (diplo_ai_fear_level != 0) {
     diplo_ai_aggressive = 0;
-    DAT_0064b148 = 0;
+    diplo_ai_request_mode = 0;
   }
   iVar5 = thunk_civ_has_wonder(param_1,6);
   if ((iVar5 != 0) || (iVar5 = thunk_civ_has_wonder(param_1,0x18), iVar5 != 0)) {
@@ -3158,11 +3158,11 @@ LAB_00457d0d:
       }
       if (diplo_ai_aggressive == 0) {
         if ((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 8) != 0) {
-          DAT_0064b148 = 0;
+          diplo_ai_request_mode = 0;
         }
       }
       else {
-        DAT_0064b148 = 2;
+        diplo_ai_request_mode = 2;
       }
       diplo_ai_initial_aggressive = diplo_ai_aggressive;
       diplo_peace_inclination = 0;
@@ -3273,7 +3273,7 @@ LAB_00457d0d:
       }
       if (diplo_ai_declare_war != 0) {
         diplo_ai_aggressive = 0;
-        DAT_0064b148 = 0;
+        diplo_ai_request_mode = 0;
         if (0x1d < (int)diplo_cur_attitude) {
           diplo_cur_attitude = 0x1e;
         }
@@ -3321,7 +3321,7 @@ LAB_00457d0d:
          (0x62 < (int)diplo_cur_attitude)) {
         diplo_cur_attitude = 99;
       }
-      if ((((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_2 * 4) & 8) != 0) || (DAT_0064b148 == 0))
+      if ((((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_2 * 4) & 8) != 0) || (diplo_ai_request_mode == 0))
          && (0x49 < (int)diplo_cur_attitude)) {
         diplo_cur_attitude = 0x4a;
       }
@@ -3387,7 +3387,7 @@ void __cdecl diplo_set_attitude_arg(iptr param_1,iptr param_2)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(780)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-void __cdecl FUN_00458ab1(iptr param_1,iptr param_2)
+void __cdecl diplo_greet_emissary(iptr param_1,iptr param_2)
 
 {
   uint *puVar1;
@@ -3406,7 +3406,7 @@ void __cdecl FUN_00458ab1(iptr param_1,iptr param_2)
     iVar3 = thunk_int_clamp((local_14 + -0x1e0) / 3,1,9999);
     thunk_dialog_set_default_offset(-iVar2,-iVar3);
     thunk_dialog_set_position((C_0040bc40_28 *)&local_314,-iVar2,-iVar3);
-    thunk_FUN_00493f0f(param_1,param_2);
+    thunk_diplo_leader_wnd_launch(param_1,param_2);
   }
   thunk_diplo_set_attitude_arg(param_1,param_2);
   iVar4 = thunk_civ_leader_name(param_2);
@@ -3527,7 +3527,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr param_1,iptr param_2,iptr param_3,i
         diplo_emissary_response = 0;
       }
       if (diplo_emissary_response != -1) {
-        thunk_FUN_00458ab1(param_1,param_2);
+        thunk_diplo_greet_emissary(param_1,param_2);
       }
       local_314 = (uint)(diplo_emissary_response != -1);
       local_8 = 0xffffffff;
@@ -3584,7 +3584,7 @@ void __cdecl diplo_session_reset(void)
 #define diplo_cur_attitude (*(int *)((u8 *)&g.d_0064b114))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_004591cb(iptr param_1,iptr param_2,int param_3)
+undefined4 __cdecl diplo_offer_sell_tech(iptr param_1,iptr param_2,int param_3)
 
 {
   undefined4 uVar1;
@@ -3841,7 +3841,7 @@ diplo_tech_exchange(iptr param_1,iptr param_2,undefined4 param_3,undefined4 para
       uVar3 = *(uint *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4);
       iVar6 = thunk_diplo_attitude_level(diplo_cur_attitude);
       if (((int)(5 - (uint)((uVar3 & 4) == 0)) < iVar6) && (!bVar5)) {
-        iVar6 = thunk_FUN_004591cb(param_1,param_2,param_5);
+        iVar6 = thunk_diplo_offer_sell_tech(param_1,param_2,param_5);
         if (iVar6 == 0) {
           if (param_5 == 0) {
             iVar7 = thunk_civ_get_adjective(param_1);
@@ -3876,7 +3876,7 @@ diplo_tech_exchange(iptr param_1,iptr param_2,undefined4 param_3,undefined4 para
         ((unit_types[0xb].prerequisite != diplo_offer_tech_best &&
          ((unit_types[7].prerequisite != diplo_offer_tech_best && (diplo_offer_tech_best != 0x22)))))))) {
       if (param_5 != 1) {
-        iVar6 = thunk_FUN_004591cb(param_1,param_2,param_5);
+        iVar6 = thunk_diplo_offer_sell_tech(param_1,param_2,param_5);
         if (iVar6 != 0) {
           local_8 = 0xffffffff;
           /* inlined unwind funclet FUN_0045a510 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_374)); }
@@ -3922,7 +3922,7 @@ diplo_tech_exchange(iptr param_1,iptr param_2,undefined4 param_3,undefined4 para
     }
     if ((diplo_wanted_tech < 0) || (diplo_offer_tech_best < 0)) {
       if (param_5 != 1) {
-        iVar6 = thunk_FUN_004591cb(param_1,param_2,param_5);
+        iVar6 = thunk_diplo_offer_sell_tech(param_1,param_2,param_5);
         if (iVar6 != 0) {
           local_8 = 0xffffffff;
           /* inlined unwind funclet FUN_0045a510 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_374)); }
@@ -4096,7 +4096,7 @@ void __cdecl diplo_sign_peace_treaty(iptr param_1,iptr param_2)
 
 /* 0045a7a8 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0045a7a8(iptr param_1,iptr param_2)
+void __cdecl diplo_agree_ceasefire(iptr param_1,iptr param_2)
 
 {
   uint *puVar1;
@@ -4412,7 +4412,7 @@ int __cdecl diplo_gold_attitude_value(int param_1)
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(68)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(72)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(76)))
-undefined4 __cdecl FUN_0045b4da(iptr param_1,iptr param_2,int param_3)
+undefined4 __cdecl diplo_ai_answer_proposal(iptr param_1,iptr param_2,int param_3)
 
 {
   uint *puVar1;
@@ -5140,7 +5140,7 @@ LAB_0045d5d2:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(820)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(824)))
-void __cdecl FUN_0045dd7f(iptr param_1,iptr param_2)
+void __cdecl diplo_favor_menu(iptr param_1,iptr param_2)
 
 {
   uint *puVar1;
@@ -5518,7 +5518,7 @@ LAB_0045f0a3:
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(812)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
-void __cdecl FUN_0045f0b1(iptr param_1,iptr param_2)
+void __cdecl diplo_gift_menu(iptr param_1,iptr param_2)
 
 {
   char *pcVar1;
@@ -5806,7 +5806,7 @@ void __cdecl FUN_0045fd67(iptr param_1,iptr param_2)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-undefined4 __cdecl FUN_0045fe19(iptr param_1,iptr param_2)
+undefined4 __cdecl diplo_proposal_menu(iptr param_1,iptr param_2)
 
 {
   bool bVar1;

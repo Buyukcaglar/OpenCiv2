@@ -1407,7 +1407,7 @@ void __cdecl menu_command(undefined4 param_1,int param_2)
         }
         else if (param_2 < 0x702) {
           if (param_2 == 0x701) {
-            if ((game.multiplayer == '\0') || (DAT_0062eb30 != 0)) {
+            if ((game.multiplayer == '\0') || (mp_cheat_menu_allowed != 0)) {
               thunk_cheat_toggle_mode();
             }
           }
@@ -1993,7 +1993,7 @@ void __cdecl menu_build_main(void)
                 thunk_menu_set_item_checked((GameMenu *)&main_menu,0x701,local_c);
                 thunk_menu_set_item_enabled
                           ((GameMenu *)&main_menu,0x701,
-                           (uint)(game.multiplayer != '\0' && DAT_0062eb30 == 0));
+                           (uint)(game.multiplayer != '\0' && mp_cheat_menu_allowed == 0));
                 iVar1 = thunk_text_open_section(0,ADDR(0x62ed70, ((u8 *)&g.d_0062ed70)));
                 if (iVar1 == 0) {
                   uVar2 = thunk_text_read_line(1);
@@ -2184,7 +2184,7 @@ void __cdecl menu_update_states(void)
     thunk_menu_set_item_enabled((GameMenu *)&main_menu,0x9f0,1);
     thunk_menu_set_item_enabled((GameMenu *)&main_menu,0x104,0);
     thunk_menu_set_item_enabled((GameMenu *)&main_menu,0x105,0);
-    if (DAT_0062eb30 == 0) {
+    if (mp_cheat_menu_allowed == 0) {
       thunk_menu_set_item_enabled((GameMenu *)&main_menu,0x701,1);
     }
     thunk_menu_set_item_enabled((GameMenu *)&main_menu,0x120,1);
@@ -2430,7 +2430,7 @@ void __cdecl menu_update_states(void)
   }
   thunk_menu_set_item_checked((GameMenu *)&main_menu,0x701,local_68);
   thunk_menu_set_item_enabled
-            ((GameMenu *)&main_menu,0x701,(uint)(game.multiplayer != '\0' && DAT_0062eb30 == 0)
+            ((GameMenu *)&main_menu,0x701,(uint)(game.multiplayer != '\0' && mp_cheat_menu_allowed == 0)
             );
   if ((2 < game.multiplayer) && (_DAT_006ad578 != human_civ)) {
     thunk_menu_set_menu_enabled((GameMenu *)&main_menu,4,1);

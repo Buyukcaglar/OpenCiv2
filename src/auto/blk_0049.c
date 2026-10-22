@@ -10,7 +10,7 @@ void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,undef
 }
 
 /* 00490500 auto */
-void __cdecl FUN_00490500(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl popup_text_with_city_noflags(iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   thunk_popup_text_with_city(param_1,param_2,0,param_3);
@@ -39,7 +39,7 @@ u32 __thiscall citywnd_get_city(C_004083b0_4 *this)
 
 /* 00490590 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_00490590(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -227,7 +227,7 @@ LAB_00490a7d:
     iVar2 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     local_58 = local_58 + iVar2 + 10;
     thunk_text_clear();
-    iVar3 = thunk_FUN_00491d61(local_70);
+    iVar3 = thunk_pedia_find_terrain_index(local_70);
     uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(&text_buffer,uVar4);
     local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -329,7 +329,7 @@ LAB_00490a7d:
   if ((local_7c < 0) || (10 < local_7c)) {
     local_58 = this->content_left + local_44;
     local_5c = local_5c + local_80 * 2;
-    iVar3 = thunk_FUN_00491d61(local_70);
+    iVar3 = thunk_pedia_find_terrain_index(local_70);
     uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(local_bc,uVar4);
     local_8c = (int)(char)terrain_types[local_70].food;
@@ -441,7 +441,7 @@ LAB_00490a7d:
         }
       }
       else {
-        iVar3 = thunk_FUN_00491d61((int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + local_7c * 0x18));
+        iVar3 = thunk_pedia_find_terrain_index((int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + local_7c * 0x18));
         uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
         FUN_005f22d0(&text_buffer,uVar4);
         local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -484,7 +484,7 @@ LAB_00490a7d:
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
     }
     else {
-      iVar3 = thunk_FUN_00491d61((int)terrain_types[local_7c].transform_to);
+      iVar3 = thunk_pedia_find_terrain_index((int)terrain_types[local_7c].transform_to);
       uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
       FUN_005f22d0(&text_buffer,uVar4);
       local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -535,7 +535,7 @@ LAB_00490a7d:
     local_58 = local_58 + 0x14;
     local_5c = local_5c + local_80;
     thunk_text_clear();
-    iVar3 = thunk_FUN_00491d61(local_7c + 0xb);
+    iVar3 = thunk_pedia_find_terrain_index(local_7c + 0xb);
     uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
     FUN_005f22d0(&text_buffer,uVar4);
     local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -546,7 +546,7 @@ LAB_00490a7d:
     if (local_7c != 2) {
       thunk_text_clear();
       local_5c = local_5c + local_80;
-      iVar3 = thunk_FUN_00491d61(local_7c + 0x16);
+      iVar3 = thunk_pedia_find_terrain_index(local_7c + 0x16);
       uVar4 = thunk_pedia_lookup_text(pedia_terrain_names,iVar3);
       FUN_005f22d0(&text_buffer,uVar4);
       local_38 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -617,7 +617,7 @@ LAB_00490a7d:
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_terrain_names (*(undefined4 *)((u8 *)&g.d_006a7d58))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_00491c20(C_004083b0_a28 *this,int param_1)
+void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
 
 {
   undefined4 uVar1;
@@ -656,7 +656,7 @@ void __thiscall FUN_00491c20(C_004083b0_a28 *this,int param_1)
 
 /* 00491d61 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_00491d61(iptr param_1)
+undefined4 __cdecl pedia_find_terrain_index(iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -686,7 +686,7 @@ void __thiscall wnd_set_focus(WndBase *this)
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004923f0(Control *param_1,undefined4 param_2)
+void __cdecl chat_insert_macro_text(Control *param_1,undefined4 param_2)
 
 {
   bool bVar1;
@@ -755,15 +755,15 @@ void __cdecl FUN_004923f0(Control *param_1,undefined4 param_2)
     }
     goto switchD_004926f8_default;
   case 0x2b2:
-    thunk_FUN_0049275a(ADDR(0x62c9a4, ((u8 *)&g.d_0062c9a4)),ADDR(0x62c998, ((u8 *)&g.d_0062c998)));
+    thunk_chat_read_macro_line(ADDR(0x62c9a4, ((u8 *)&g.d_0062c9a4)),ADDR(0x62c998, ((u8 *)&g.d_0062c998)));
     iVar2 = DAT_0062c998;
     break;
   case 0x2b3:
-    thunk_FUN_0049275a(ADDR(0x62c9b4, ((u8 *)&g.d_0062c9b4)),ADDR(0x62c99c, ((u8 *)&g.d_0062c99c)));
+    thunk_chat_read_macro_line(ADDR(0x62c9b4, ((u8 *)&g.d_0062c9b4)),ADDR(0x62c99c, ((u8 *)&g.d_0062c99c)));
     iVar2 = DAT_0062c99c;
     break;
   case 0x2b4:
-    thunk_FUN_0049275a(ADDR(0x62c9c4, ((u8 *)&g.d_0062c9c4)),ADDR(0x62c9a0, ((u8 *)&g.d_0062c9a0)));
+    thunk_chat_read_macro_line(ADDR(0x62c9c4, ((u8 *)&g.d_0062c9c4)),ADDR(0x62c9a0, ((u8 *)&g.d_0062c9a0)));
     iVar2 = DAT_0062c9a0;
     break;
   default:
@@ -776,7 +776,7 @@ switchD_004926f8_default:
   thunk_edit_replace_sel(param_1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   iVar2 = thunk_edit_get_sel_end((EditSelEndView *)param_1);
   sVar4 = _strlen(&text_buffer);
-  thunk_FUN_00492b20((EditSelView *)param_1,iVar2 - sVar4,iVar2);
+  thunk_edit_set_sel((EditSelView *)param_1,iVar2 - sVar4,iVar2);
   return;
 }
 #undef human_civ
@@ -788,7 +788,7 @@ switchD_004926f8_default:
 #define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_a8 (*(undefined1 (*)[160])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-void __cdecl FUN_0049275a(iptr param_1,iptr param_2)
+void __cdecl chat_read_macro_line(iptr param_1,iptr param_2)
 
 {
   int iVar1;
@@ -818,7 +818,7 @@ void __cdecl FUN_0049275a(iptr param_1,iptr param_2)
       /* inlined unwind funclet FUN_00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
     }
     else {
-      thunk_FUN_00492a40((FileReadLineView *)local_a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
+      thunk_file_obj_read_line((FileReadLineView *)local_a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
       thunk_file_map_close((FileObject *)local_a8);
       sVar2 = _strlen(&text_buffer);
       *(size_t *)param_2 = *(int *)param_2 + sVar2 + 2;
@@ -867,7 +867,7 @@ undefined4 __thiscall file_obj_seek_cur(FileSeekView *this,undefined4 param_1)
 }
 
 /* 00492a40 auto */
-void __thiscall FUN_00492a40(FileReadLineView *this,iptr param_1,undefined4 param_2)
+void __thiscall file_obj_read_line(FileReadLineView *this,iptr param_1,undefined4 param_2)
 
 {
   file_obj_read_line_impl((iptr)this,param_1,param_2);
@@ -903,7 +903,7 @@ void __thiscall edit_replace_sel(Control *this,iptr param_1)
 }
 
 /* 00492b20 auto */
-void __thiscall FUN_00492b20(EditSelView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall edit_set_sel(EditSelView *this,undefined4 param_1,undefined4 param_2)
 
 {
   edit_hwnd_set_sel(this->hwnd,param_1,param_2);
@@ -911,7 +911,7 @@ void __thiscall FUN_00492b20(EditSelView *this,undefined4 param_1,undefined4 par
 }
 
 /* 00492b60 auto */
-void __cdecl FUN_00492b60(int param_1,int param_2)
+void __cdecl civ_ai_goal_negate_priority(int param_1,int param_2)
 
 {
   char cVar1;
@@ -951,14 +951,14 @@ civ_clear_standing_goals_near(iptr param_1,undefined4 param_2,undefined4 param_3
 #undef local_c
 
 /* 00492d18 auto */
-void __cdecl FUN_00492d18(iptr param_1,iptr param_2)
+void __cdecl civ_ai_goal_insert_gap(iptr param_1,iptr param_2)
 
 {
   i16 iVar1;
   i8 iVar2;
   
   if ((param_2 < 0x2f) && (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + param_2 * 6) != -1)) {
-    thunk_FUN_00492d18(param_1,param_2 + 1);
+    thunk_civ_ai_goal_insert_gap(param_1,param_2 + 1);
     iVar1 = civs[param_1].ai_goals[param_2].y;
     civs[param_1].ai_goals[param_2 + 1].x = civs[param_1].ai_goals[param_2].x;
     civs[param_1].ai_goals[param_2 + 1].y = iVar1;
@@ -971,7 +971,7 @@ void __cdecl FUN_00492d18(iptr param_1,iptr param_2)
 
 /* 00492dd0 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_00492dd0(iptr param_1,int param_2)
+void __cdecl civ_standing_goal_insert_gap(iptr param_1,int param_2)
 
 {
   i16 iVar1;
@@ -995,7 +995,7 @@ void __cdecl FUN_00492dd0(iptr param_1,int param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_00492e60(iptr param_1,int param_2,int param_3,undefined4 param_4)
+int __cdecl civ_ai_goal_get_priority(iptr param_1,int param_2,int param_3,undefined4 param_4)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1071,7 +1071,7 @@ void __cdecl civ_add_ai_goal(iptr param_1,int param_2,int param_3,int param_4,in
            (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6) == -1)) break;
         local_c = local_c + 1;
       }
-      thunk_FUN_00492d18(param_1,local_c);
+      thunk_civ_ai_goal_insert_gap(param_1,local_c);
       *(i16 *)(param_1 * 0x594 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + local_c * 6) = (i16)param_2;
       *(i16 *)(param_1 * 0x594 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + local_c * 6) = (i16)param_3;
       *(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6) = (char)param_4;
@@ -1108,7 +1108,7 @@ void __cdecl civ_add_standing_goal(iptr param_1,int param_2,int param_3,undefine
            (*(char *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) == -1)) break;
         local_8 = local_8 + 1;
       }
-      thunk_FUN_00492dd0(param_1,local_8);
+      thunk_civ_standing_goal_insert_gap(param_1,local_8);
       *(short *)(local_8 * 6 + ADDR(0x64cbd4, ((u8 *)&civs + 1332)) + param_1 * 0x594) = (short)param_2;
       *(short *)(local_8 * 6 + ADDR(0x64cbd6, ((u8 *)&civs + 1334)) + param_1 * 0x594) = (short)param_3;
       *(char *)(local_8 * 6 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + param_1 * 0x594) = (char)param_4;
@@ -1136,7 +1136,7 @@ void __cdecl civ_refresh_ai_goals(iptr param_1)
     if (*(char *)(param_1 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_8 * 6) < '\0') {
       *(undefined1 *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_8 * 6) = 0xff;
     }
-    thunk_FUN_00492b60(param_1,local_8);
+    thunk_civ_ai_goal_negate_priority(param_1,local_8);
   }
   for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
     if (-1 < *(char *)(param_1 * 0x594 + ADDR(0x64cbd8, ((u8 *)&civs + 1336)) + local_8 * 6)) {
@@ -1262,7 +1262,7 @@ void __cdecl FUN_00493e50(void)
 #define uStack_10 (*(u32 *)(frame_ + FRAME_OFF(16)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_00493e83(u32 param_1)
+void __cdecl portrait_dlg_show(u32 param_1)
 
 {
   int iVar1;
@@ -1297,7 +1297,7 @@ void __cdecl FUN_00493e83(u32 param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __cdecl FUN_00493f0f(iptr param_1,iptr param_2)
+void __cdecl diplo_leader_wnd_launch(iptr param_1,iptr param_2)
 
 {
   DiploLeaderWindow *this;
@@ -1613,7 +1613,7 @@ undefined4 __thiscall diplo_leader_init_background(DiploLeaderView *this)
   wnd_create_with_handlers
             ((WndBase *)this,ADDR(0x62cb7c, ((u8 *)&g.d_0062cb7c)),0x800,0,0,this->field_c0,this->field_c4 + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
              ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-  thunk_FUN_00497cc0(this,(iptr)&this->field_1dc);
+  thunk_wnd_set_bg_tile(this,(iptr)&this->field_1dc);
   return 1;
 }
 
@@ -1872,15 +1872,15 @@ undefined4 __thiscall diplo_leader_init_science(DiploLeaderView *this)
     iVar1 = thunk_civ_has_advance((uint)this->field_1085,local_6b0);
     if (iVar1 != 0) {
       local_6ac = local_6ac + 1;
-      if (*(int *)(&DAT_00673b30 + local_6b0 * 4) < 1) {
+      if (*(int *)(&tech_prereq_depth_cache + local_6b0 * 4) < 1) {
         tech_prereq_walk_count = 0;
         thunk_advance_count_prereq_depth(local_6b0);
         tech_prereq_walk_count = tech_prereq_walk_count + 1;
-        *(int *)(&DAT_00673b30 + local_6b0 * 4) = tech_prereq_walk_count;
+        *(int *)(&tech_prereq_depth_cache + local_6b0 * 4) = tech_prereq_walk_count;
         local_608 = tech_prereq_walk_count;
       }
       else {
-        local_608 = *(int *)(&DAT_00673b30 + local_6b0 * 4);
+        local_608 = *(int *)(&tech_prereq_depth_cache + local_6b0 * 4);
       }
       if (local_490[1] < local_608) {
         local_490[0] = local_6b0;
@@ -2242,7 +2242,7 @@ undefined1 __thiscall diplo_leader_init_video(DiploLeaderView *this)
     local_14 = avi_player_open((AviPlayerOpenView *)(this->pad_1e0 + 0x47c),(iptr)local_4c8);
     if (local_14 == 0) {
       thunk_avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e0 + 0x47c),ADDR(0x402441, thunk_diplo_leader_video_end_cb));
-      FUN_005dd761((C_005dd761 *)(this->pad_1e0 + 0x47c),1);
+      avi_player_set_transparent((C_005dd761 *)(this->pad_1e0 + 0x47c),1);
       palette_load_ctab_res(&local_448,this->field_1084 + 1000);
       palette_get_rgb(&local_448,(iptr)local_5f4,0x92,100);
       palette_set_rgb
@@ -2709,10 +2709,10 @@ u32 * __thiscall surface_get_rect(DibSurface *this)
 }
 
 /* 00497cc0 auto */
-void __thiscall FUN_00497cc0(DiploLeaderView *this,iptr param_1)
+void __thiscall wnd_set_bg_tile(DiploLeaderView *this,iptr param_1)
 
 {
-  FUN_005bc3bf(this->field_8,param_1);
+  wnd_obj_set_bg_tile(this->field_8,param_1);
   return;
 }
 
@@ -2844,7 +2844,7 @@ undefined4 __cdecl memblock_ensure_locked(iptr param_1)
 }
 
 /* 0049805e auto */
-void __cdecl FUN_0049805e(iptr param_1)
+void __cdecl memblock_detach(iptr param_1)
 
 {
   *(undefined4 *)(param_1 + 8) = 0;
@@ -3108,7 +3108,7 @@ void __cdecl passwords_scramble(void)
   char cVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  cVar1 = DAT_00654c73;
+  cVar1 = civ_passwords_last_byte;
   for (local_10 = 0; local_c = cVar1 << 5, local_10 < 0x100; local_10 = local_10 + 1) {
     cVar1 = (&civ_passwords)[local_10];
     (&civ_passwords)[local_10] =

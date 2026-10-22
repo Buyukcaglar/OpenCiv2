@@ -13,7 +13,7 @@ shot 02
 key Return
 wait 15000
 shot 09-before
-call FUN_00458ab1 458ab1 1 2
+call diplo_greet_emissary 458ab1 1 2
 wait 10000
 shot 10-leader
 key Return

@@ -1567,7 +1567,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_fc = local_bc + local_fc;
       for (local_3c = 0; local_3c < city_shield_waste; local_3c = local_3c + 1) {
         sprite_draw
-                  ((Sprite *)&DAT_00644f78,(iptr)local_180,(iptr)this,local_fc,local_4c);
+                  ((Sprite *)&shield_shortage_icon_sprite,(iptr)local_180,(iptr)this,local_fc,local_4c);
         local_fc = local_fc + local_70;
       }
     }
@@ -1596,7 +1596,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         }
         else {
           sprite_draw
-                    ((Sprite *)(&DAT_00644f78 + (uint)(0 < (int)local_c) * 0x3c),
+                    ((Sprite *)(&shield_shortage_icon_sprite + (uint)(0 < (int)local_c) * 0x3c),
                      (iptr)local_1a0,(iptr)this,local_fc,local_4c);
         }
         local_fc = local_fc + local_70;
@@ -1713,7 +1713,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_fc = local_fc + (iVar2 >> 1);
       for (local_3c = 0; local_3c < (int)city_trade_corruption; local_3c = local_3c + 1) {
         sprite_draw
-                  ((Sprite *)&DAT_00644ff0,(iptr)local_1c0,(iptr)this,local_fc,local_4c);
+                  ((Sprite *)&trade_corruption_icon_sprite,(iptr)local_1c0,(iptr)this,local_fc,local_4c);
         local_fc = local_fc + local_70;
       }
     }
@@ -2487,7 +2487,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
         }
         if ((units[local_70].flags & 0x800) != 0) {
           sprite_draw
-                    ((Sprite *)&DAT_006450a4,(iptr)local_a0,(iptr)this,local_80,local_38);
+                    ((Sprite *)&small_shield_icon_sprite,(iptr)local_a0,(iptr)this,local_80,local_38);
           local_80 = local_80 + local_50;
         }
         if (local_2c != 0) {
@@ -3225,7 +3225,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
       else {
         thunk_text_append((uint)(byte)units[local_78].home_city * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
       }
-      DAT_00679643 = 0;
+      text_buffer_char_3 = 0;
       thunk_text_set_colors(10,0x1a,1,1);
       thunk_gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_70,local_34,local_6c);
     }
@@ -3389,7 +3389,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
       thunk_gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 + -8);
       iVar1 = thunk_city_window_scale((C_004083b0_4 *)this,3);
       sprite_draw
-                ((Sprite *)&DAT_006450e0,(iptr)local_88,(iptr)this,local_4c,local_74 + iVar1)
+                ((Sprite *)&small_trade_icon_sprite,(iptr)local_88,(iptr)this,local_4c,local_74 + iVar1)
       ;
       thunk_gfx_reset_zoom_scale();
     }
@@ -5491,7 +5491,7 @@ void __cdecl city_button_view(undefined4 param_1)
           ((civ_check_destroyed_busy == 0 && ((unit_gather_cargo_busy == 0 && (unit_lift_off_map_busy == 0)))))))) &&
         ((unit_delete_cargo_busy == 0 && (unit_destroy_redraw_busy == 0)))))) {
       uVar4 = thunk_citywnd_get_city((C_004083b0_4 *)&city_window);
-      thunk_FUN_00454260(uVar4);
+      thunk_cityview_open(uVar4);
     }
     else {
       dbg_log(ADDR(0x630fc0, ((u8 *)&g.d_00630fc0)));
@@ -6544,8 +6544,8 @@ void __thiscall city_window_create(FrameWindow *this)
   iVar2 = thunk_rect_width(ADDR(0x655344, ((u8 *)&g.d_00655344)));
   iVar2 = iVar2 - sys_dlgframe_w2;
   uVar4 = 2;
-  uVar5 = DAT_00655344;
-  uVar6 = DAT_00655348;
+  uVar5 = city_wnd_rect;
+  uVar6 = city_wnd_rect_top;
   uVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x1c));
   thunk_frame_wnd_create(this,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   thunk_frame_wnd_set_title_font(this,ADDR(0x6aa898, ((u8 *)&g.d_006aa898)));

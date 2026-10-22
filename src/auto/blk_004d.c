@@ -183,7 +183,7 @@ void __cdecl spaceship_wnd_draw_title(iptr param_1)
   thunk_text_clear();
   iVar1 = thunk_civ_name_plural(param_1);
   thunk_text_append(iVar1);
-  DAT_00679641 = 0;
+  text_buffer_char_1 = 0;
   thunk_text_append(ADDR(0x62e2d4, ((u8 *)&g.d_0062e2d4)));
   iVar1 = thunk_civ_leader_name(param_1);
   thunk_text_append(iVar1);
@@ -5537,7 +5537,7 @@ void __cdecl text_section_index_build(iptr param_1,uint param_2)
       if (((local_108 == '@') && ('@' < local_107)) && (local_107 < '[')) {
         sVar3 = _strlen(&local_108);
         local_8 = sVar3 + 5;
-        if ((int)(uint)DAT_006a5b48 < (int)local_8) break;
+        if ((int)(uint)text_section_pool_free_bytes < (int)local_8) break;
         plVar4 = (long *)thunk_memblock_alloc(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)),local_8);
         *plVar4 = lVar1;
         FUN_005f22d0(plVar4 + 1,&local_108);
