@@ -200,7 +200,8 @@ void plat_screenshot(const char *path)
     unsigned size = 54 + (unsigned)(stride * screen_h);
     if (!f)
         return;
-    plat_compose();
+    if (!plat_overlay)          /* (as presenting) a popup menu is on the screen itself */
+        plat_compose();
     hdr[2] = (unsigned char)size; hdr[3] = (unsigned char)(size >> 8); hdr[4] = (unsigned char)(size >> 16);
     hdr[5] = (unsigned char)(size >> 24);
     hdr[10] = 54; hdr[14] = 40;

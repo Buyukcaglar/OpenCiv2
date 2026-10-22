@@ -420,14 +420,16 @@ static void restore_under(Popup *p)
 }
 
 /* Modal loop: returns the chosen command id (0: none). *move: -1/+1 to
- * switch to the neighbouring bar menu. */
+ * switch to the neighbouring bar menu.  Input comes from the message queue
+ * with the owner capturing the mouse, as Windows' menu loop takes it, so a
+ * replay script drives menus as it drives everything else. */
 static UINT track(HWND owner, HMENU h, int x, int y, int *move)
 {
     Menu *m = menu_get(h);
     Popup p;
     int sel = -1, done = 0, pressed = 0, inside;
     UINT result = 0;
-    HostEvent e;
+    MSG msg;
     if (!m)
         return 0;
     SendMessageA(owner, WM_INITMENUPOPUP, (WPARAM)h, 0);
@@ -436,38 +438,45 @@ static UINT track(HWND owner, HMENU h, int x, int y, int *move)
     popup_draw(h, &p, sel);
     if (move)
         *move = 0;
-    while (!done && host_wait_event(&e, -1)) {
-        int i, nsel = sel;
-        switch (e.type) {
-        case HOST_EV_QUIT:
-            done = 1;
+    SetCapture(owner);
+    while (!done) {
+        int i, nsel = sel, mx, my;
+        if (!GetMessageA(&msg, NULL, 0, 0)) {
+            PostQuitMessage((int)msg.wParam);
             break;
-        case HOST_EV_MOTION:
+        }
+        mx = msg.pt.x;
+        my = msg.pt.y;
+        switch (msg.message) {
+        case WM_MOUSEMOVE: case WM_NCMOUSEMOVE:
             nsel = -1;
             for (i = 0; i < p.n; i++)
-                if (e.x >= p.x + p.item[i].left && e.x < p.x + p.item[i].right &&
-                    e.y >= p.y + p.item[i].top && e.y < p.y + p.item[i].bottom &&
+                if (mx >= p.x + p.item[i].left && mx < p.x + p.item[i].right &&
+                    my >= p.y + p.item[i].top && my < p.y + p.item[i].bottom &&
                     !(m->items[i].flags & MF_SEPARATOR))
                     nsel = i;
             break;
-        case HOST_EV_BUTTONDOWN:
+        case WM_LBUTTONDOWN: case WM_RBUTTONDOWN: case WM_MBUTTONDOWN:
+        case WM_LBUTTONDBLCLK: case WM_RBUTTONDBLCLK: case WM_MBUTTONDBLCLK:
+        case WM_NCLBUTTONDOWN: case WM_NCRBUTTONDOWN: case WM_NCMBUTTONDOWN:
             /* (as Windows) a click outside the menu closes it */
             pressed = 1;
-            if (e.x < p.x || e.x >= p.x + p.w || e.y < p.y || e.y >= p.y + p.h)
+            if (mx < p.x || mx >= p.x + p.w || my < p.y || my >= p.y + p.h)
                 done = 1;
             break;
-        case HOST_EV_BUTTONUP:
+        case WM_LBUTTONUP: case WM_RBUTTONUP: case WM_MBUTTONUP:
+        case WM_NCLBUTTONUP: case WM_NCRBUTTONUP: case WM_NCMBUTTONUP:
             /* Releasing the click that opened the menu (on the menu bar)
                leaves it open: an item is then chosen with a second click.
                Holding the button down and releasing on an item works too. */
-            inside = e.x >= p.x && e.x < p.x + p.w && e.y >= p.y && e.y < p.y + p.h;
+            inside = mx >= p.x && mx < p.x + p.w && my >= p.y && my < p.y + p.h;
             if (inside && sel >= 0 && !(m->items[sel].flags & (MF_GRAYED | MF_DISABLED | MF_POPUP)))
                 result = (UINT)m->items[sel].id;
             if (result || (!inside && pressed))
                 done = 1;
             break;
-        case HOST_EV_KEYDOWN:
-            switch (e.vk) {
+        case WM_KEYDOWN: case WM_SYSKEYDOWN:
+            switch (msg.wParam) {
             case VK_ESCAPE: done = 1; break;
             case VK_LEFT: if (move) { *move = -1; done = 1; } break;
             case VK_RIGHT: if (move) { *move = 1; done = 1; } break;
@@ -494,7 +503,7 @@ static UINT track(HWND owner, HMENU h, int x, int y, int *move)
                 /* The underlined letter. */
                 for (i = 0; i < p.n; i++) {
                     const char *amp = m->items[i].text ? strchr(m->items[i].text, '&') : NULL;
-                    if (amp && tolower((unsigned char)amp[1]) == tolower(e.vk) &&
+                    if (amp && tolower((unsigned char)amp[1]) == tolower((int)msg.wParam) &&
                         !(m->items[i].flags & (MF_GRAYED | MF_DISABLED))) {
                         result = (UINT)m->items[i].id;
                         done = 1;
@@ -503,6 +512,10 @@ static UINT track(HWND owner, HMENU h, int x, int y, int *move)
                 }
             }
             break;
+        case WM_KEYUP: case WM_SYSKEYUP: case WM_CHAR: case WM_SYSCHAR:
+            break;
+        default:
+            DispatchMessageA(&msg);
         }
         if (nsel != sel && !done) {
             sel = nsel;
@@ -511,6 +524,8 @@ static UINT track(HWND owner, HMENU h, int x, int y, int *move)
                 SendMessageA(owner, WM_MENUSELECT, MAKEWPARAM(m->items[sel].id, m->items[sel].flags), (LPARAM)h);
         }
     }
+    if (GetCapture() == owner)
+        ReleaseCapture();
     restore_under(&p);
     return result;
 }

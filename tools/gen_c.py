@@ -483,6 +483,15 @@ FRAME_PRESETS = {
     # (0x6715d7a0 in the WWII scenario under Wine; the attitude clamps, so
     # what matters is that it is large and positive).
     'diplo_ai_review_relations': 'local_34 = 0x6715d7a0;',
+    # The AI's choice of orders reads five locals some paths leave unset;
+    # the original, always called from the same place, holds the same
+    # values there on every call (2367 calls probed over 15 turns).
+    'ai_unit_choose_orders': 'local_9c = 0x108; local_11c = 0x64a8c19c; local_70 = 0x3bd; '
+                             'local_38 = 0; local_16c = 4;',
+    # The pathfinder compares the tile owner it looked up last with the
+    # unit's owner, before any lookup when the owner is negative: 0 in the
+    # original's stack in 3892 of 4300 calls (-1 in 158).
+    'map_path_next_dir': 'local_80 = 0;',
 }
 
 

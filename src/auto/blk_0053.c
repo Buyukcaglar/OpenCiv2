@@ -2421,6 +2421,7 @@ undefined4 __cdecl ai_unit_choose_orders(void)
   undefined4 uVar33;
   iptr iVar7;
   undefined1 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
+  local_9c = 0x108; local_11c = 0x64a8c19c; local_70 = 0x3bd; local_38 = 0; local_16c = 4;  /* stale stack the original reads (FRAME_PRESETS) */
   
   local_104 = -1;
   local_58 = -1;

@@ -43,13 +43,22 @@ See `README.md`.  The Windows API is implemented over SDL2 (`src/platform`,
 `src/host`); checked with `harness/native_suite.sh` against the same Wine
 recordings:
 
-| build | how | menu | newgame | loadgame | turns | advisors | long50 |
-|-------|-----|------|---------|----------|-------|----------|--------|
-| `build/civ2-linux32` | gcc -m32 | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
-| `build/civ2-port` (64-bit, portable to macOS) | wasm32 → wasm2c → cc | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| build | how |
+|-------|-----|
+| `build/civ2-linux32` | gcc -m32 |
+| `build/civ2-port` (64-bit, portable to macOS and Windows) | wasm32 → wasm2c → cc |
 
-✓ = every screenshot pixel-identical and identical `rand()` trace (long50:
-14 057 calls).  What made it so: matching Wine's exact message semantics
+All 13 scenarios of `harness/scripts` (the six above plus mapview, units,
+reports, saveload, diplomacy, the WWII scenario and the cheat menu with
+every rules editor) give pixel-identical screenshots and the identical
+`rand()` trace, except 2 anti-aliased pixels of one edit field in the
+terrain editor.  `harness/diff_suite.sh` plays a 30-turn autoplay and two
+random-click scripts on both builds: identical (3 392 `rand()` calls).
+
+Reads of locals the 1997 code never initialises are the main source of
+differences between builds: valgrind finds them, `CIV2_STACKPROBE` reads
+what the original's stack holds there, and `tools/gen_c.py`
+(FRAME_PRESETS) starts the native frame with those values.  What made it so: matching Wine's exact message semantics
 (window positioning, painting and exposure, activation and focus, key
 state, posted messages before input) -- `harness/msgdiff.sh` and
 `harness/clockdiff.py` compare a native run with the Wine reference
@@ -67,8 +76,8 @@ message by message and clock event by clock event.
 
 ## Known limitations / next steps
 
-* **Names and types.**  2,159 of about 4,450 game functions, 1,130 of about
-  2,480 globals, 268 of 355 classes and 810 class fields are named: 87% of
+* **Names and types.**  About 2,890 of about 4,450 game functions, 1,860 of
+  about 2,480 globals, 268 of 355 classes and 810 class fields are named: 87% of
   calls and 94% of global references in the generated code read by name.
   Each name has its evidence in re/function_names.tsv, re/global_names.tsv,
   re/type_names.tsv and re/field_names.tsv; re/notes.md collects the
@@ -84,7 +93,9 @@ message by message and clock event by clock event.
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot
   addresses when linking (the same information is in `data/image/idata.bin`).
-* Coverage of the comparison is what the six scenarios exercise; untested
-  paths (multiplayer, scenarios, the editors, video playback) may still
-  differ.  Add a script under `harness/scripts/`, record it with
+* Coverage of the comparison: the scripts execute 2,032 of 4,088 game
+  functions (50%, 37% of lines; `tools/coverage_report.py` with the
+  linux32cov build, per function in re/coverage.tsv).  Never executed:
+  multiplayer (parley, net), sound and video, spaceship, events, much of
+  the Civilopedia.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
   `make ref SCRIPT=...` and bisect differences with `make bisect`.

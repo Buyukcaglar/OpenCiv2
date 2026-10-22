@@ -3612,6 +3612,7 @@ iptr __cdecl map_path_next_dir(int param_1,int param_2,int param_3)
   int iVar19;
   bool bVar20;
   undefined1 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  local_80 = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   iVar19 = path_debug_pending;
   path_grid_center_x = path_goal_x;

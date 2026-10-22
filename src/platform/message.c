@@ -478,6 +478,7 @@ LRESULT WINAPI DefWindowProcA(HWND h, UINT m, WPARAM wp, LPARAM lp)
                 ShowWindow(h, SW_MINIMIZE);
             break;
         case SC_MAXIMIZE: ShowWindow(h, SW_MAXIMIZE); break;
+        case SC_MOUSEMENU: menu_bar_click(w, (short)LOWORD(lp), (short)HIWORD(lp)); break;
         case SC_RESTORE: ShowWindow(h, SW_RESTORE); break;
         }
         return 0;
@@ -510,6 +511,11 @@ LRESULT WINAPI DefWindowProcA(HWND h, UINT m, WPARAM wp, LPARAM lp)
             return DefWindowProcA(h, WM_NCLBUTTONDOWN, wp, lp);
         return 0;
     case WM_NCLBUTTONDOWN:
+        if (wp == HTMENU) {
+            /* NC_HandleNCLButtonDown: the menu bar tracks the mouse */
+            SendMessageA(h, WM_SYSCOMMAND, SC_MOUSEMENU + HTMENU, lp);
+            return 0;
+        }
         if (wp == HTVSCROLL || wp == HTHSCROLL) {
             scroll_track_nc(w, (int)wp);
             return 0;
@@ -1187,19 +1193,16 @@ static int process_mouse(MSG *m, HWND h, UINT lo, UINT hi)
         if (!wnd_get(w->hwnd))
             return 0;
     }
-    if (plat_normal_desktop) {
+    if (plat_normal_desktop || hit == HTMENU) {
         /* Wine's process_mouse_message: the filter applies to the message
            as hit-testing made it (replays keep the earlier behaviour,
-           which the recordings were matched with) */
+           which the recordings were matched with, but for the menu bar,
+           which they never click) */
         MSG t = *m;
         t.hwnd = w->hwnd;
         t.message = hit == HTCLIENT ? client_msg : client_msg - WM_MOUSEMOVE + WM_NCMOUSEMOVE;
         if (!matches(&t, h, lo, hi))
             return -1;
-    }
-    if (hit == HTMENU && client_msg == WM_LBUTTONDOWN) {
-        menu_bar_click(w, m->pt.x, m->pt.y);
-        return 0;
     }
     if (client_msg == WM_LBUTTONDOWN || client_msg == WM_RBUTTONDOWN || client_msg == WM_MBUTTONDOWN) {
         /* Clicking a window activates its top-level window. */
