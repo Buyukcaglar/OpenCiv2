@@ -47,13 +47,13 @@ int msg_pump_events(int wait)
 {
     HostEvent e;
     int n = 0;
+    sound_poll();               /* (a replay has audio only with CIV2_TEST_AUDIO) */
     if (plat_replay) {
         /* Input comes from the script only; keep the window responsive. */
         while (window_open && host_poll_event(&e))
             ;
         return 0;
     }
-    sound_poll();
     while (wait ? host_wait_event(&e, 10) : host_poll_event(&e)) {
         wait = 0;
         n++;

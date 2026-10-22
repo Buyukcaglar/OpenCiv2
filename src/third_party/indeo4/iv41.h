@@ -10,7 +10,8 @@ typedef struct {
     int width, height;
     const uint8_t *y, *u, *v;   /* chroma: a quarter of the width and height */
     int y_stride, uv_stride;
-    int has_transparency;       /* the stream carries a transparency mask (not decoded) */
+    int has_transparency;       /* the stream carries a transparency mask */
+    const uint8_t *mask;        /* width * height bytes, 1: transparent (NULL: none decoded) */
 } Iv41Frame;
 
 Iv41 *iv41_open(int width, int height);

@@ -5,9 +5,9 @@
  *
  * The game asks the decompressor for its palette (entries 10..245 become the
  * window's), hands back the result and has 8-bit frames drawn with it: here
- * a palette of a 6x6x6 colour cube and 20 greys, matched with an ordered
- * dither.  (Intel's own palette and dither are not reproduced, nor the
- * transparency mask of the herald videos: black stands for transparent.)
+ * Intel's palette, matched with an ordered dither.  (Intel's own dither is
+ * not reproduced.)  The herald videos are transparent around the figure:
+ * the decoder's mask says where, and there the game's background stays.
  */
 #include "plat.h"
 #include "plat_files.h"
@@ -35,9 +35,26 @@ typedef struct {
     unsigned char strh[56];
     unsigned char *fmt;
     LONG fmt_size;
-    Sample *samples;
+    Sample *samples;            /* the stream's chunks */
     int n, cap;
+    DWORD bytes;                /* all chunks' data */
 } Stream;
+
+/* Video streams count chunks, one a frame; streams of fixed-size samples
+ * (audio: the format's block) count samples, which run across chunks. */
+static DWORD sample_size(const Stream *s)
+{
+    DWORD ss = rd32(s->strh + 44);
+    if (ss && s->fmt && s->fmt_size >= 14 && rd16(s->fmt + 12))
+        ss = rd16(s->fmt + 12);         /* WAVEFORMAT nBlockAlign */
+    return ss;
+}
+
+static LONG stream_length(const Stream *s)
+{
+    DWORD ss = sample_size(s);
+    return ss ? (LONG)(s->bytes / ss) : s->n;
+}
 
 #define MAX_STREAMS 4
 typedef struct {
@@ -59,6 +76,7 @@ static void add_sample(Stream *s, DWORD off, DWORD size)
     s->samples[s->n].size = size;
     s->samples[s->n].key = s->n == 0;
     s->n++;
+    s->bytes += size;
 }
 
 /* The chunks of a list from p to end: headers, stream lists, the movi data. */
@@ -207,7 +225,7 @@ HRESULT WINAPI AVIStreamInfoA(PAVISTREAM ps, LPAVISTREAMINFOA i, LONG n)
     info.dwScale = rd32(h + 20);
     info.dwRate = rd32(h + 24);
     info.dwStart = rd32(h + 28);
-    info.dwLength = (DWORD)s->n;
+    info.dwLength = (DWORD)stream_length(s);
     info.dwSuggestedBufferSize = rd32(h + 36);
     info.dwQuality = rd32(h + 40);
     info.dwSampleSize = rd32(h + 44);
@@ -220,7 +238,7 @@ HRESULT WINAPI AVIStreamInfoA(PAVISTREAM ps, LPAVISTREAMINFOA i, LONG n)
 }
 
 LONG WINAPI AVIStreamStart(PAVISTREAM ps) { API_TRACE(); Stream *s = stream_of(ps); return s ? (LONG)rd32(s->strh + 28) : 0; }
-LONG WINAPI AVIStreamLength(PAVISTREAM ps) { API_TRACE(); Stream *s = stream_of(ps); return s ? s->n : 0; }
+LONG WINAPI AVIStreamLength(PAVISTREAM ps) { API_TRACE(); Stream *s = stream_of(ps); return s ? stream_length(s) : 0; }
 
 HRESULT WINAPI AVIStreamReadFormat(PAVISTREAM ps, LONG pos, LPVOID fmt, LONG *n)
 { API_TRACE();
@@ -241,10 +259,45 @@ HRESULT WINAPI AVIStreamRead(PAVISTREAM ps, LONG start, LONG n, LPVOID buf, LONG
     AviStreamRef *r = obj_get((Handle)ps, OBJ_AVISTREAM);
     Stream *s = r ? &r->file->streams[r->index] : NULL;
     Sample *x;
-    (void)n;
+    DWORD ss;
     if (bytes) *bytes = 0;
     if (samples) *samples = 0;
-    if (!s || start < 0 || start >= s->n)
+    if (!s)
+        return AVIERR_NODATA;
+    if ((ss = sample_size(s)) != 0) {
+        /* samples start .. start + n - 1, as many as fit in cb bytes */
+        DWORD from = (DWORD)start * ss, want, got = 0, pos = 0;
+        int i;
+        if (start < 0 || from >= s->bytes)
+            return AVIERR_NODATA;
+        want = (DWORD)(n > 0 ? n : 1) * ss;
+        if (want > s->bytes - from)
+            want = s->bytes - from;
+        if (buf) {
+            if ((DWORD)cb < ss)
+                return AVIERR_BUFFERTOOSMALL;
+            if (want > (DWORD)cb)
+                want = (DWORD)cb / ss * ss;
+            for (i = 0; i < s->n && got < want; pos += s->samples[i].size, i++) {
+                DWORD a, k;
+                if (pos + s->samples[i].size <= from + got)
+                    continue;
+                a = from + got - pos;
+                k = s->samples[i].size - a;
+                if (k > want - got)
+                    k = want - got;
+                memcpy((unsigned char *)buf + got, r->file->data + s->samples[i].off + a, k);
+                got += k;
+            }
+            want = got;
+        }
+        if (buf && getenv("CIV2_LOG_VIDEO"))
+            plat_log("video: read %lu audio bytes at sample %ld\n", (unsigned long)want, (long)start);
+        if (bytes) *bytes = (LONG)want;
+        if (samples) *samples = (LONG)(want / ss);
+        return AVIERR_OK;
+    }
+    if (start < 0 || start >= s->n)
         return AVIERR_NODATA;
     x = &s->samples[start];
     if (getenv("CIV2_LOG_VIDEO"))
@@ -279,6 +332,8 @@ LONG WINAPI AVIStreamFindSample(PAVISTREAM ps, LONG pos, LONG flags)
     int step = (flags & FIND_NEXT) ? 1 : -1;
     if (!s || !s->n)
         return -1;
+    if (sample_size(s))         /* every sample of an audio stream is a key */
+        return pos < 0 ? 0 : pos >= stream_length(s) ? stream_length(s) - 1 : pos;
     if (pos < 0) pos = 0;
     if (pos >= s->n) pos = s->n - 1;
     if (!(flags & FIND_KEY))
@@ -309,26 +364,54 @@ typedef struct {
     int xDst, yDst, dxDst, dyDst, xSrc, ySrc, dxSrc, dySrc;
 } DecompressEx;
 
-/* The palette offered: Windows' 20 static colours around a colour cube and greys. */
+/* The palette offered: the one Intel's decompressor (ir41_32.dll, from the
+ * Indeo installer on the game's disc) gives an 8-bit decompression --
+ * Windows' 20 static colours around 234 of its own (tools/probe/ivpalprobe.c
+ * prints it).  The game puts entries 10..245 into its palette and draws the
+ * leader's room with them, so they decide how the room looks. */
 static void video_palette(RGBQUAD *pal)
 {
-    static const unsigned char sys[20][3] = {
-        {0, 0, 0}, {128, 0, 0}, {0, 128, 0}, {128, 128, 0}, {0, 0, 128}, {128, 0, 128}, {0, 128, 128},
-        {192, 192, 192}, {192, 220, 192}, {166, 202, 240}, {255, 251, 240}, {160, 160, 164}, {128, 128, 128},
-        {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255}};
-    int i, r, g, b, k = 10;
-    memset(pal, 0, sizeof *pal * 256);
-    for (i = 0; i < 10; i++) {
-        pal[i].rgbRed = sys[i][0]; pal[i].rgbGreen = sys[i][1]; pal[i].rgbBlue = sys[i][2];
-        pal[246 + i].rgbRed = sys[10 + i][0]; pal[246 + i].rgbGreen = sys[10 + i][1]; pal[246 + i].rgbBlue = sys[10 + i][2];
+    static const unsigned char intel[256][3] = {
+        {0, 0, 0}, {128, 0, 0}, {0, 128, 0}, {128, 128, 0}, {0, 0, 128}, {128, 0, 128}, {0, 128, 128}, {192, 192, 192},
+        {192, 220, 192}, {166, 202, 240}, {25, 25, 25}, {43, 43, 43}, {60, 60, 60}, {77, 77, 77}, {95, 95, 95}, {112, 112, 112},
+        {130, 130, 130}, {147, 147, 147}, {165, 165, 165}, {182, 182, 182}, {200, 200, 200}, {217, 217, 217}, {235, 235, 235}, {0, 51, 25},
+        {0, 69, 43}, {9, 86, 60}, {26, 104, 77}, {44, 121, 95}, {61, 138, 112}, {79, 156, 130}, {96, 173, 147}, {114, 191, 165},
+        {131, 208, 182}, {149, 226, 200}, {166, 243, 217}, {184, 255, 235}, {25, 38, 0}, {43, 55, 0}, {60, 73, 0}, {78, 90, 13},
+        {95, 107, 30}, {112, 125, 48}, {130, 142, 65}, {147, 160, 83}, {165, 177, 100}, {182, 195, 118}, {200, 212, 135}, {217, 230, 153},
+        {235, 247, 170}, {76, 0, 25}, {94, 17, 43}, {111, 34, 60}, {129, 51, 78}, {146, 69, 95}, {163, 86, 112}, {181, 104, 130},
+        {198, 121, 147}, {216, 139, 165}, {233, 156, 182}, {251, 174, 200}, {255, 191, 217}, {255, 209, 235}, {25, 13, 90}, {43, 30, 107},
+        {60, 48, 125}, {77, 65, 142}, {95, 82, 159}, {112, 100, 177}, {130, 117, 194}, {147, 135, 212}, {165, 152, 229}, {182, 170, 247},
+        {200, 187, 255}, {217, 205, 255}, {235, 222, 255}, {0, 64, 0}, {0, 81, 0}, {9, 99, 0}, {26, 116, 13}, {44, 133, 30},
+        {61, 151, 48}, {79, 168, 65}, {96, 186, 83}, {114, 203, 100}, {131, 221, 118}, {149, 238, 135}, {166, 255, 153}, {184, 255, 170},
+        {0, 39, 90}, {0, 56, 107}, {9, 74, 125}, {26, 91, 142}, {44, 108, 159}, {61, 126, 177}, {79, 143, 194}, {96, 161, 212},
+        {114, 178, 229}, {131, 196, 247}, {149, 213, 255}, {166, 231, 255}, {184, 248, 255}, {76, 0, 90}, {94, 4, 107}, {111, 22, 125},
+        {129, 39, 142}, {146, 56, 160}, {163, 74, 177}, {181, 91, 194}, {198, 109, 212}, {216, 126, 229}, {233, 144, 247}, {251, 161, 255},
+        {255, 179, 255}, {255, 196, 255}, {76, 12, 0}, {94, 29, 0}, {111, 47, 0}, {129, 64, 13}, {146, 81, 30}, {164, 99, 48},
+        {181, 116, 65}, {198, 134, 83}, {216, 151, 100}, {233, 169, 118}, {251, 186, 135}, {255, 204, 153}, {255, 221, 170}, {25, 50, 0},
+        {43, 68, 0}, {60, 85, 0}, {78, 103, 0}, {95, 120, 0}, {112, 137, 0}, {130, 155, 1}, {147, 172, 18}, {165, 190, 36},
+        {182, 207, 53}, {200, 225, 71}, {217, 242, 88}, {235, 255, 106}, {127, 0, 25}, {145, 0, 43}, {162, 8, 60}, {180, 25, 78},
+        {197, 43, 95}, {215, 60, 112}, {232, 78, 130}, {249, 95, 147}, {255, 113, 165}, {255, 130, 182}, {255, 148, 200}, {255, 165, 217},
+        {255, 183, 235}, {0, 77, 25}, {0, 95, 43}, {0, 112, 60}, {0, 130, 77}, {0, 147, 95}, {10, 164, 112}, {28, 182, 130},
+        {45, 199, 147}, {63, 217, 165}, {80, 234, 182}, {98, 252, 200}, {115, 255, 217}, {132, 255, 235}, {25, 0, 154}, {43, 18, 172},
+        {60, 35, 189}, {77, 52, 207}, {95, 70, 224}, {112, 87, 241}, {130, 105, 255}, {147, 122, 255}, {165, 140, 255}, {182, 157, 255},
+        {200, 175, 255}, {217, 192, 255}, {235, 210, 255}, {76, 24, 0}, {94, 42, 0}, {111, 59, 0}, {129, 76, 0}, {146, 94, 0},
+        {164, 111, 0}, {181, 129, 1}, {198, 146, 18}, {216, 164, 36}, {233, 181, 53}, {251, 199, 71}, {255, 216, 88}, {255, 234, 106},
+        {127, 0, 0}, {145, 3, 0}, {162, 21, 0}, {180, 38, 13}, {197, 55, 30}, {215, 73, 48}, {232, 90, 65}, {250, 108, 83},
+        {255, 125, 100}, {255, 143, 118}, {255, 160, 135}, {255, 178, 153}, {255, 195, 170}, {0, 76, 0}, {0, 94, 0}, {9, 111, 0},
+        {26, 129, 0}, {44, 146, 0}, {61, 163, 0}, {79, 181, 1}, {96, 198, 18}, {114, 216, 36}, {131, 233, 53}, {149, 251, 71},
+        {166, 255, 88}, {184, 255, 106}, {0, 65, 90}, {0, 82, 107}, {0, 100, 125}, {0, 117, 142}, {0, 134, 159}, {10, 152, 177},
+        {28, 169, 194}, {45, 187, 212}, {63, 204, 229}, {80, 222, 247}, {98, 239, 255}, {115, 255, 255}, {132, 255, 255}, {0, 26, 154},
+        {0, 44, 172}, {9, 61, 189}, {26, 78, 207}, {44, 96, 224}, {61, 113, 241}, {79, 131, 255}, {96, 148, 255}, {114, 166, 255},
+        {131, 183, 255}, {149, 201, 255}, {166, 218, 255}, {183, 236, 255}, {0, 0, 0}, {0, 0, 0}, {255, 251, 240}, {160, 160, 164},
+        {128, 128, 128}, {255, 0, 0}, {0, 255, 0}, {255, 255, 0}, {0, 0, 255}, {255, 0, 255}, {0, 255, 255}, {255, 255, 255},
+    };
+    int i;
+    for (i = 0; i < 256; i++) {
+        pal[i].rgbRed = intel[i][0];
+        pal[i].rgbGreen = intel[i][1];
+        pal[i].rgbBlue = intel[i][2];
+        pal[i].rgbReserved = 0;
     }
-    for (r = 0; r < 6; r++)
-        for (g = 0; g < 6; g++)
-            for (b = 0; b < 6; b++, k++) {
-                pal[k].rgbRed = (BYTE)(r * 51); pal[k].rgbGreen = (BYTE)(g * 51); pal[k].rgbBlue = (BYTE)(b * 51);
-            }
-    for (i = 0; i < 20; i++, k++)       /* greys between the cube's */
-        pal[k].rgbRed = pal[k].rgbGreen = pal[k].rgbBlue = (BYTE)(6 + i * 12);
 }
 
 static void build_lut(Codec *c)
@@ -338,7 +421,7 @@ static void build_lut(Codec *c)
         int r = (i >> 10 & 31) * 255 / 31, g = (i >> 5 & 31) * 255 / 31, b = (i & 31) * 255 / 31;
         best = 10;
         bd = 1 << 30;
-        for (k = 10; k < 246; k++) {
+        for (k = 10; k < 244; k++) {       /* (244, 245: unused black) */
             int dr = r - c->pal[k].rgbRed, dg = g - c->pal[k].rgbGreen, db = b - c->pal[k].rgbBlue;
             d = 3 * dr * dr + 4 * dg * dg + 2 * db * db;
             if (d < bd) {
@@ -392,9 +475,10 @@ static void draw_frame(Codec *c, const Iv41Frame *fr, const DecompressEx *d)
             U = fr->u[(sy >> 2) * fr->uv_stride + (sx >> 2)] - 128;
             V = fr->v[(sy >> 2) * fr->uv_stride + (sx >> 2)] - 128;
             /* Transparent areas (the heralds: a figure over the throne room)
-               are encoded black; the mask itself is not decoded, so black
-               stands for it and the background the game put there shows. */
-            if (fr->has_transparency && Y <= 16 && U >= -2 && U <= 2 && V >= -2 && V <= 2)
+               leave the background the game put there; they are encoded
+               black, which stands for them should a frame's mask be missing. */
+            if (fr->mask ? fr->mask[sy * fr->width + sx] :
+                fr->has_transparency && Y <= 16 && U >= -2 && U <= 2 && V >= -2 && V <= 2)
                 continue;
             Y = 298 * (Y - 16);
             r = clamp8((Y + 409 * V + 128) >> 8);

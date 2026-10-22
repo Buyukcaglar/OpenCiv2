@@ -251,6 +251,12 @@ typedef struct IVI45DecContext {
     int             show_indeo4_info;
     uint8_t         has_b_frames;
     uint8_t         has_transp;      ///< transparency mode status: 1 - enabled
+    /* Civ2 reconstruction addition: the decoded transparency plane */
+    uint8_t         *transp_mask;    ///< width * height bytes, 1: transparent
+    int             transp_w, transp_h;
+    int             transp_valid;    ///< the mask belongs to the last frame
+    IVIHuffDesc     transp_desc;     ///< run-length codebook of the last frame
+    VLC             transp_vlc;
     uint8_t         uses_tiling;
     uint8_t         uses_haar;
     uint8_t         uses_fullpel;

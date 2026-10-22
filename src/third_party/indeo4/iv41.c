@@ -121,7 +121,12 @@ int iv41_decode(Iv41 *d, const void *data, int size, Iv41Frame *out)
     out->v = d->frame->data[2];
     out->y_stride = d->frame->linesize[0];
     out->uv_stride = d->frame->linesize[1];
-    out->has_transparency = ((IVI45DecContext *)d->avctx.priv_data)->has_transp;
+    {
+        IVI45DecContext *ctx = d->avctx.priv_data;
+        out->has_transparency = ctx->has_transp;
+        out->mask = ctx->has_transp && ctx->transp_valid && ctx->transp_w == out->width &&
+                    ctx->transp_h == out->height ? ctx->transp_mask : NULL;
+    }
     return 1;
 }
 

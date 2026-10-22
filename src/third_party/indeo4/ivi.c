@@ -1065,6 +1065,8 @@ static int decode_band(IVI45DecContext *ctx,
     return result;
 }
 
+static int ivi4_decode_transparency(IVI45DecContext *ctx, int w, int h);
+
 int ff_ivi_decode_frame(AVCodecContext *avctx, AVFrame *frame,
                         int *got_frame, AVPacket *avpkt)
 {
@@ -1160,6 +1162,9 @@ int ff_ivi_decode_frame(AVCodecContext *avctx, AVFrame *frame,
 
     *got_frame = 1;
 
+    if (ctx->is_indeo4 && ctx->has_transp)
+        ctx->transp_valid = ivi4_decode_transparency(ctx, avctx->width, avctx->height) >= 0;
+
     /* If the bidirectional mode is enabled, next I and the following P
      * frame will be sent together. Unfortunately the approach below seems
      * to be the only way to handle the B-frames mode.
@@ -1205,6 +1210,87 @@ int ff_ivi_decode_frame(AVCodecContext *avctx, AVFrame *frame,
     return buf_size;
 }
 
+/*
+ * Civ2 reconstruction addition: the transparency plane of an Indeo 4 frame,
+ * which follows the colour planes (FFmpeg reads the flag only).  Layout, as
+ * ScummVM's decoder (image/codecs/indeo4.cpp) documents it: a marker, a
+ * list of rectangles, an optional key colour, a run-length codebook, then
+ * either one state for the whole frame or alternating opaque/transparent
+ * runs over the rows padded to 32 pixels, a 0 code standing for 255 pixels
+ * that the next run continues.
+ */
+static int ivi4_decode_transparency(IVI45DecContext *ctx, int w, int h)
+{
+    GetBitContext *gb = &ctx->gb;
+    IVIHuffDesc desc;
+    int i, n, opaque, aw, total, pos;
+
+    if (get_bits(gb, 2) != 3 || get_bits(gb, 3) != 0)
+        return AVERROR_INVALIDDATA;
+    for (n = get_bits(gb, 8); n > 0; n--)
+        skip_bits_long(gb, 64);                 /* x, y, width, height */
+    if (get_bits1(gb))
+        skip_bits(gb, 24);                      /* key colour */
+    if (!get_bits1(gb))
+        return AVERROR_INVALIDDATA;
+    memset(&desc, 0, sizeof desc);
+    desc.num_rows = get_bits(gb, 4);
+    if (!desc.num_rows || desc.num_rows > IVI_VLC_BITS - 1)
+        return AVERROR_INVALIDDATA;
+    for (i = 0; i < desc.num_rows; i++)
+        desc.xbits[i] = get_bits(gb, 4);
+    align_get_bits(gb);
+    if (ctx->uses_tiling || w <= 0 || h <= 0)
+        return AVERROR_PATCHWELCOME;
+
+    if (!ctx->transp_vlc.table || ivi_huff_desc_cmp(&desc, &ctx->transp_desc)) {
+        if (ctx->transp_vlc.table)
+            ff_vlc_free(&ctx->transp_vlc);
+        ctx->transp_desc = desc;
+        if (ivi_create_huff_from_desc(&desc, &ctx->transp_vlc, 0)) {
+            ctx->transp_desc.num_rows = 0;
+            return AVERROR_INVALIDDATA;
+        }
+    }
+    if (ctx->transp_w != w || ctx->transp_h != h) {
+        av_freep(&ctx->transp_mask);
+        ctx->transp_mask = av_malloc((size_t)w * h);
+        if (!ctx->transp_mask)
+            return AVERROR(ENOMEM);
+        ctx->transp_w = w;
+        ctx->transp_h = h;
+    }
+
+    if (get_bits1(gb)) {                        /* the whole frame one way */
+        memset(ctx->transp_mask, !get_bits1(gb), (size_t)w * h);
+        return 0;
+    }
+    if (get_bits1(gb) && get_bits(gb, 8) == 0xFF)
+        skip_bits(gb, 24);                      /* the data's size */
+    align_get_bits(gb);
+
+    opaque = get_bits1(gb);
+    aw = (w + 31) & ~31;
+    total = aw * h;
+    for (pos = 0; pos < total; ) {
+        int run = get_vlc2(gb, ctx->transp_vlc.table, IVI_VLC_BITS, 1), next = !opaque, end;
+        if (run < 0 || get_bits_left(gb) < 0)
+            return AVERROR_INVALIDDATA;
+        if (run == 0) {
+            run = 255;
+            next = opaque;
+        }
+        for (end = FFMIN(pos + run, total); pos < end; pos++) {
+            int x = pos % aw;
+            if (x < w)
+                ctx->transp_mask[(pos / aw) * w + x] = !opaque;
+        }
+        opaque = next;
+    }
+    align_get_bits(gb);
+    return 0;
+}
+
 /**
  *  Close Indeo5 decoder and clean up its context.
  */
@@ -1213,6 +1299,10 @@ av_cold int ff_ivi_decode_close(AVCodecContext *avctx)
     IVI45DecContext *ctx = avctx->priv_data;
 
     ivi_free_buffers(&ctx->planes[0]);
+
+    if (ctx->transp_vlc.table)
+        ff_vlc_free(&ctx->transp_vlc);
+    av_freep(&ctx->transp_mask);
 
     if (ctx->mb_vlc.cust_tab.table)
         ff_vlc_free(&ctx->mb_vlc.cust_tab);

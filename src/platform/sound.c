@@ -106,6 +106,8 @@ static uint64_t played_bytes(WaveOut *w)
 void sound_poll(void)
 {
     int i;
+    if (!audio_ok)
+        return;
     cd_poll();
     for (i = 1; i < 8192; i++) {
         HWAVEOUT h = ((Handle)OBJ_WAVEOUT << 16) | (Handle)i;

@@ -1,0 +1,27 @@
+# Movies (needs the CD's Video directory: CIV2_GAME=a game directory with it):
+# a wonder movie, then the High Council.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call wonder_show_movie 4bb8e0 5
+wait 3000
+shot w1-wonder
+wait 4000
+shot w2-wonder
+key Escape
+wait 3000
+shot w3-after
+call council_show 516570 1 0
+wait 5000
+shot c1-council
+wait 5000
+shot c2-council
+key Escape
+wait 3000
+shot c3-after
+quit

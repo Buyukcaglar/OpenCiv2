@@ -1,5 +1,6 @@
 /* Decode the video frames of an IV41 AVI (the video stream's 00dc chunks)
- * and write some as PPM: a check of src/third_party/indeo4.
+ * and write some as PPM (transparent pixels magenta): a check of
+ * src/third_party/indeo4.
  * cc -I src/third_party/indeo4 tools/probe/iv41test.c src/third_party/indeo4/{iv41,ivi,ivi_dsp,vlc,reverse}.c
  * ./a.out FILE.AVI OUTPREFIX [EVERY] */
 #include <stdio.h>
@@ -15,7 +16,7 @@ int main(int argc, char **argv)
     FILE *f = fopen(argv[1], "rb");
     long n;
     unsigned char *b;
-    unsigned w = 0, h = 0, i, frames = 0, every = argc > 3 ? atoi(argv[3]) : 10;
+    unsigned w = 0, h = 0, i, frames = 0, masks = 0, every = argc > 3 ? atoi(argv[3]) : 10;
     Iv41 *d;
     if (!f) return 1;
     fseek(f, 0, SEEK_END); n = ftell(f); fseek(f, 0, SEEK_SET);
@@ -40,6 +41,10 @@ int main(int argc, char **argv)
                     for (x = 0; x < fr.width; x++) {
                         int Y = fr.y[y * fr.y_stride + x] - 16, U = fr.u[(y / 4) * fr.uv_stride + x / 4] - 128,
                             V = fr.v[(y / 4) * fr.uv_stride + x / 4] - 128;
+                        if (fr.mask && fr.mask[y * fr.width + x]) {
+                            fputc(255, o); fputc(0, o); fputc(255, o);
+                            continue;
+                        }
                         fputc(clip((298 * Y + 409 * V + 128) >> 8), o);
                         fputc(clip((298 * Y - 100 * U - 208 * V + 128) >> 8), o);
                         fputc(clip((298 * Y + 516 * U + 128) >> 8), o);
@@ -47,11 +52,12 @@ int main(int argc, char **argv)
                 fclose(o);
             }
             if (!frames) printf("transparency: %d\n", fr.has_transparency);
+            masks += fr.mask != NULL;
             frames++;
         }
         i += 7 + len;
     }
-    printf("%u frames\n", frames);
+    printf("%u frames, %u with a transparency mask\n", frames, masks);
     iv41_close(d);
     return 0;
 }
