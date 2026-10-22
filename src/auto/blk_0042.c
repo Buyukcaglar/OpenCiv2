@@ -69,7 +69,7 @@ void __thiscall radiogrp_enable_item(RadioGroupEnableView *this,iptr param_1)
 void __cdecl text_append_comma(void)
 
 {
-  thunk_FUN_004aef96(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  thunk_str_append_comma(ADDR(0x679640, ((u8 *)&g.d_00679640)));
   return;
 }
 
@@ -774,7 +774,7 @@ LAB_00422109:
     thunk_text_clear();
     thunk_text_append_label(0x287);
     thunk_dialog_set_title(*(DialogWindowView **)this_01->pad_0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    thunk_FUN_0059e585(*(C_0059e585 **)this_01->pad_0,0);
+    thunk_dialog_set_current_pane(*(C_0059e585 **)this_01->pad_0,0);
     thunk_dialog_set_listbox(*(DialogTextView **)this_01->pad_0,0xb,0xd2,0);
     thunk_dialog_set_select_change_fn(*(DialogSelChangeSetView **)this_01->pad_0,ADDR(0x40150f, thunk_FUN_00424ae9));
     thunk_FUN_0042486f((C_0042486f *)this_01);
@@ -786,10 +786,10 @@ LAB_00422109:
     thunk_dialog_render(*(Dialog **)this_01->pad_0);
     thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(**(int **)this_01->pad_0 + 0x48),ADDR(0x401bb8, FUN_0042415c));
     while( true ) {
-      DAT_006ad2f6 = 1;
+      net_gamelist_dialog_open = 1;
       thunk_FUN_00425607(this_01,ADDR(0x40130c, FUN_00425695));
       iVar6 = thunk_dlg_show_modal(*(Dialog **)this_01->pad_0,0);
-      DAT_006ad2f6 = 0;
+      net_gamelist_dialog_open = 0;
       thunk_net_gamelist_kill_timer(this_01);
       iVar3 = net_found_games;
       if (iVar6 < 0) break;
@@ -1078,7 +1078,7 @@ void __cdecl FUN_004241f8(void)
   iVar1 = thunk_timer_ticks();
   iVar1 = iVar1 - _DAT_006ad674;
   thunk_net_process_messages((NetSession *)&net_session,1,0);
-  if ((DAT_006c9004 == 0) && (nm_server_canceled_count == 0)) {
+  if ((nm_join_gamestate_count == 0) && (nm_server_canceled_count == 0)) {
     if (2 < iVar1) {
       pcVar4 = *(char **)(*(int *)(dialog_stack_top->field_230 + 0x1c) + 8);
       sVar2 = _strlen(pcVar4);
@@ -1151,7 +1151,7 @@ void __cdecl FUN_004243ef(void)
 
 {
   thunk_net_process_messages((NetSession *)&net_session,1,0);
-  if (((DAT_006c902c != 0) || (nm_server_canceled_count != 0)) || (nm_server_reject_count != 0)) {
+  if (((nm_server_answer_count != 0) || (nm_server_canceled_count != 0)) || (nm_server_reject_count != 0)) {
     dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
   }
@@ -2669,8 +2669,8 @@ void __cdecl FUN_00428fd2(undefined4 param_1)
 }
 
 /* 0042903e auto */
-#define DAT_00625e70 (*(undefined4 *)((u8 *)&g.d_00625e70))
-#define DAT_00625e74 (*(undefined4 *)((u8 *)&g.d_00625e74))
+#define city_editor_combo_x_table (*(undefined4 *)((u8 *)&g.d_00625e70))
+#define city_editor_combo_y_table (*(undefined4 *)((u8 *)&g.d_00625e74))
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
@@ -2681,8 +2681,8 @@ void __thiscall FUN_0042903e(C_004083b0_430 *this,int param_1)
   iptr iVar2;
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_rect_set_xywh((iptr)local_14,(&DAT_00625e70)[param_1 * 2] + this->client_x + -0x1e,
-                     (&DAT_00625e74)[param_1 * 2] + this->client_y,0xa0,this->field_2e8 << 3);
+  thunk_rect_set_xywh((iptr)local_14,(&city_editor_combo_x_table)[param_1 * 2] + this->client_x + -0x1e,
+                     (&city_editor_combo_y_table)[param_1 * 2] + this->client_y,0xa0,this->field_2e8 << 3);
   iVar1 = editor_next_ctrl_id;
   editor_next_ctrl_id = editor_next_ctrl_id + 1;
   if (this == (C_004083b0_430 *)0x0) {
@@ -2728,15 +2728,15 @@ void __thiscall FUN_0042903e(C_004083b0_430 *this,int param_1)
   }
   return;
 }
-#undef DAT_00625e70
-#undef DAT_00625e74
+#undef city_editor_combo_x_table
+#undef city_editor_combo_y_table
 #undef editor_next_ctrl_id
 #undef local_24
 #undef local_14
 
 /* 004293a8 auto */
-#define DAT_00625e70 (*(int *)((u8 *)&g.d_00625e70))
-#define DAT_00625e74 (*(int *)((u8 *)&g.d_00625e74))
+#define city_editor_combo_x_table (*(int *)((u8 *)&g.d_00625e70))
+#define city_editor_combo_y_table (*(int *)((u8 *)&g.d_00625e74))
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
@@ -2772,8 +2772,8 @@ void __thiscall FUN_004293a8(C_004083b0_430 *this)
   thunk_text_set_surface((iptr)this);
   thunk_text_set_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   thunk_text_set_colors(0x29,0x12,1,1);
-  local_10 = DAT_00625e70 + this->client_x + 0x32;
-  local_14 = ((DAT_00625e74 + this->client_y) - this->field_2e8) + -2;
+  local_10 = city_editor_combo_x_table + this->client_x + 0x32;
+  local_14 = ((city_editor_combo_y_table + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   iVar2 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x864));
   thunk_text_append_str(iVar2);
@@ -2793,8 +2793,8 @@ void __thiscall FUN_004293a8(C_004083b0_430 *this)
   thunk_wnd_blit_surface((DibSurface *)this);
   return;
 }
-#undef DAT_00625e70
-#undef DAT_00625e74
+#undef city_editor_combo_x_table
+#undef city_editor_combo_y_table
 #undef editor_bg_surface
 #undef editor_running
 #undef local_28

@@ -24,7 +24,7 @@ void __thiscall edit_set_change_callback(EditChangeSetView *this,iptr param_1)
 /* 00530ee0 auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_00530ee0
+checkbox_create_fixed
           (Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,iptr param_6)
 
@@ -48,7 +48,7 @@ FUN_00530ee0
 #undef local_14
 
 /* 00530fb0 auto */
-void __thiscall FUN_00530fb0(C_00530fb0 *this)
+void __thiscall checkbox_enable(C_00530fb0 *this)
 
 {
   this->field_34 = 1;
@@ -173,7 +173,7 @@ int __cdecl ai_unit_role(iptr param_1)
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-iptr __cdecl FUN_005312e4(iptr param_1)
+iptr __cdecl ai_ship_best_landing_dir(iptr param_1)
 
 {
   short sVar1;
@@ -351,7 +351,7 @@ void __cdecl ai_ship_goto_near_shore(iptr param_1,undefined4 param_2,iptr param_
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(856)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(860)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(864)))
-void __cdecl FUN_0053184d(uptr param_1)
+void __cdecl ai_civ_turn_assess(uptr param_1)
 
 {
   char *pcVar1;
@@ -1160,7 +1160,7 @@ LAB_00534c18:
 #define local_14 (*(byte *)(frame_ + FRAME_OFF(116)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(120)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(124)))
-undefined4 __cdecl FUN_005351aa(void)
+undefined4 __cdecl ai_barbarian_unit_move(void)
 
 {
   u8 uVar1;
@@ -1681,7 +1681,7 @@ LAB_0053692c:
 
 /* 005369f3 auto */
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005369f3(iptr param_1)
+void __cdecl ai_transports_raid_empty_city(iptr param_1)
 
 {
   char cVar1;
@@ -1722,7 +1722,7 @@ void __cdecl FUN_005369f3(iptr param_1)
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-int __cdecl FUN_00536bc9(iptr param_1,iptr param_2)
+int __cdecl ai_continent_defense_quota(iptr param_1,iptr param_2)
 
 {
   uint uVar1;
@@ -1754,7 +1754,7 @@ int __cdecl FUN_00536bc9(iptr param_1,iptr param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-undefined4 __cdecl FUN_00536c4c(iptr param_1)
+undefined4 __cdecl ai_nuke_pick_target(iptr param_1)
 
 {
   uint uVar1;
@@ -1887,7 +1887,7 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
 undefined4 __cdecl
-FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,iptr param_6,
+ai_air_unit_orders(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,iptr param_6,
             int param_7,iptr param_8,int param_9)
 
 {
@@ -2382,7 +2382,7 @@ LAB_00538277:
 #define local_10 (*(int *)(frame_ + FRAME_OFF(376)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(380)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(384)))
-undefined4 __cdecl FUN_00538a29(void)
+undefined4 __cdecl ai_unit_choose_orders(void)
 
 {
   uint *puVar1;
@@ -2438,7 +2438,7 @@ undefined4 __cdecl FUN_00538a29(void)
   bVar8 = units[local_168].owner;
   uVar9 = (uptr)(char)bVar8;
   if (uVar9 == 0) {
-    uVar10 = thunk_FUN_005351aa();
+    uVar10 = thunk_ai_barbarian_unit_move();
     return uVar10;
   }
   if (('\x03' < units[local_168].orders) && (units[local_168].orders < '\n')) goto LAB_005436c1;
@@ -2615,7 +2615,7 @@ LAB_005397e7:
         }
         else {
           if (local_144 == 1) {
-            local_cc = thunk_FUN_00537331(local_168,uVar19,(iptr)&local_d4,(iptr)&local_e8,local_e4,
+            local_cc = thunk_ai_air_unit_orders(local_168,uVar19,(iptr)&local_d4,(iptr)&local_e8,local_e4,
                                           (iptr)&local_a4,local_3c,iVar11,local_158);
             if (local_cc == 0xfffffffe) goto LAB_005414d7;
             if (local_cc == 0xffffffff) goto LAB_005436c1;
@@ -2623,7 +2623,7 @@ LAB_005397e7:
             if (-1 < (int)local_cc) goto LAB_005435ca;
           }
           if ('b' < (char)unit_types[uVar19].attack) {
-            uVar20 = thunk_FUN_00536c4c(local_168);
+            uVar20 = thunk_ai_nuke_pick_target(local_168);
             local_d4 = (int)units[local_168].x;
             local_e8 = (int)units[local_168].y;
             goto LAB_005435ca;
@@ -3228,7 +3228,7 @@ LAB_0053be12:
                             if (iVar15 != 0) {
                               local_dc = 0;
                               uVar3 = *(ushort *)(uVar9 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + iVar13 * 2);
-                              iVar15 = thunk_FUN_00536bc9(uVar9,iVar13);
+                              iVar15 = thunk_ai_continent_defense_quota(uVar9,iVar13);
                               if (((int)(uint)uVar3 < iVar15) &&
                                  (*(char *)(iVar13 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) != '\x04')) {
                                 if (*(char *)(iVar13 + ADDR(0x64c9b2, ((u8 *)&civs + 786)) + uVar9 * 0x594) == '\0')
@@ -3320,7 +3320,7 @@ LAB_0053c1e5: ;
                                   (local_38 == 1000)) &&
                                  ((*(byte *)(iVar11 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar9 * 0x594) & 0x10) == 0)))) {
                           uVar3 = *(ushort *)(uVar9 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + iVar11 * 2);
-                          iVar15 = thunk_FUN_00536bc9(uVar9,iVar11);
+                          iVar15 = thunk_ai_continent_defense_quota(uVar9,iVar11);
                           uVar20 = local_40;
                           if ((iVar15 <= (int)(uint)uVar3) || (uVar28 == 4)) {
                             local_dc = 1;
@@ -3462,7 +3462,7 @@ LAB_0053c1e5: ;
                             }
                           }
                           uVar3 = *(ushort *)(uVar9 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + iVar15 * 2);
-                          iVar23 = thunk_FUN_00536bc9(uVar9,iVar15);
+                          iVar23 = thunk_ai_continent_defense_quota(uVar9,iVar15);
                           if (((int)(uint)uVar3 < iVar23) &&
                              (*(char *)(iVar15 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) != '\x04')) {
                             local_dc = 1;
@@ -3535,7 +3535,7 @@ LAB_0053c1e5: ;
                             iVar23 = thunk_unit_moves_left(iVar7);
                             if ((((int)(uint)cosmic.road_move_mult <= iVar23) &&
                                 ((iVar27 != 0 || (uVar28 != 1)))) &&
-                               ((local_c8 = thunk_FUN_005312e4(iVar7), -1 < (int)local_c8 &&
+                               ((local_c8 = thunk_ai_ship_best_landing_dir(iVar7), -1 < (int)local_c8 &&
                                 (local_c8 != 8)))) {
                               units[iVar7].field_0c = 'b';
                               uVar20 = local_c8;

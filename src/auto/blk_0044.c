@@ -574,8 +574,8 @@ undefined4 __cdecl city_needed_size_improvement(iptr param_1)
 }
 
 /* 00441b11 auto */
-#define DAT_0062c5b8 (*(int *)((u8 *)&g.d_0062c5b8))
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
+#define civ_turn_in_progress (*(int *)((u8 *)&g.d_0062c5b8))
 #define local_338 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_330 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_328 (*(iptr *)(frame_ + FRAME_OFF(16)))
@@ -617,7 +617,7 @@ void __cdecl city_set_production(iptr param_1,int param_2)
     param_2 = thunk_city_choose_production(param_1,0,0);
   }
   if (param_2 < 99) {
-    if (((1 << (bVar3 & 0x1f) & (uint)game.human_players) != 0) && (DAT_0062c5b8 == 0)) {
+    if (((1 << (bVar3 & 0x1f) & (uint)game.human_players) != 0) && (civ_turn_in_progress == 0)) {
       uVar5 = thunk_city_shields_after_change(param_1,param_2);
       cities[param_1].shield_box = (i16)uVar5;
     }
@@ -761,8 +761,8 @@ void __cdecl city_set_production(iptr param_1,int param_2)
   /* inlined unwind funclet FUN_0044251d */ { thunk_dialog_dtor((Dialog *)((iptr)&local_320)); }
   return;
 }
-#undef DAT_0062c5b8
 #undef autoplay_active
+#undef civ_turn_in_progress
 #undef local_338
 #undef local_330
 #undef local_328
@@ -961,7 +961,7 @@ undefined4 __cdecl dlg_game_txt_with_unit_flags(iptr param_1,iptr param_2,undefi
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_FUN_004a6c4b(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
+  uVar1 = thunk_popup_text_with_unit_sprite(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return uVar1;
 }
 
@@ -1536,7 +1536,7 @@ undefined4 __cdecl FUN_0044542c(void)
   }
   else {
     _memset(&prefs_net_player_name,0,0x20);
-    _strncpy(&prefs_net_player_name,&DAT_006ad28c,0x1f);
+    _strncpy(&prefs_net_player_name,&net_lobby_short_name,0x1f);
   }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0044556d */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
@@ -1588,7 +1588,7 @@ undefined4 __cdecl FUN_00445592(void)
   }
   else {
     _memset(&prefs_net_game_name,0,0x20);
-    _strncpy(&prefs_net_game_name,&DAT_006ad2ac,0x1f);
+    _strncpy(&prefs_net_game_name,&net_lobby_session_name,0x1f);
   }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004456ed */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }

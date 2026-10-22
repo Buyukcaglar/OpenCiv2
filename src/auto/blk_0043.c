@@ -3220,11 +3220,11 @@ switchD_004373ad_default:
 #undef local_8
 
 /* 0043742f auto */
-#define DAT_00625ed0 (*(uint *)((u8 *)&g.d_00625ed0))
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
 #define credits_line_count (*(int *)((u8 *)&g.d_00625ec8))
+#define credits_partial_redraw_ok (*(uint *)((u8 *)&g.d_00625ed0))
 #define credits_scroll_pos (*(int *)((u8 *)&g.d_00625ecc))
 #define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
@@ -3272,7 +3272,7 @@ void __cdecl credits_draw_scroll(int param_1)
   undefined1 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  if (DAT_00625ed0 == 0) {
+  if (credits_partial_redraw_ok == 0) {
     param_1 = 1;
   }
   if (param_1 == 0) {
@@ -3406,7 +3406,7 @@ void __cdecl credits_draw_scroll(int param_1)
     if (advisor_client_width <= local_3c) {
       param_1 = 1;
     }
-    DAT_00625ed0 = (uint)(advisor_client_width > local_3c);
+    credits_partial_redraw_ok = (uint)(advisor_client_width > local_3c);
     if (param_1 == 0) {
       thunk_wnd_blit_surface_rect((DibSurface *)&advisor_window,(iptr)&local_24);
     }
@@ -3421,11 +3421,11 @@ void __cdecl credits_draw_scroll(int param_1)
 LAB_00437a02:
   return;
 }
-#undef DAT_00625ed0
 #undef advisor_client_width
 #undef advisor_client_x
 #undef advisor_row_height
 #undef credits_line_count
+#undef credits_partial_redraw_ok
 #undef credits_scroll_pos
 #undef text_buffer
 #undef _DAT_0063ef78
@@ -3484,7 +3484,7 @@ void __cdecl FUN_00437a2a(void)
 #undef credits_scroll_pos
 
 /* 00437a4a auto */
-#define DAT_00625ed0 (*(undefined4 *)((u8 *)&g.d_00625ed0))
+#define credits_partial_redraw_ok (*(undefined4 *)((u8 *)&g.d_00625ed0))
 #define credits_scroll_pos (*(undefined4 *)((u8 *)&g.d_00625ecc))
 #define _DAT_00625ec0 (*(undefined4 *)((u8 *)&g.d_00625ec0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -3506,7 +3506,7 @@ void __cdecl credits_show(int param_1)
   iVar1 = thunk_FUN_004372cd(param_1);
   if (iVar1 == 0) {
     credits_scroll_pos = 0;
-    DAT_00625ed0 = 0;
+    credits_partial_redraw_ok = 0;
     advisor_report_civ = 0;
     if (param_1 == 3) {
       thunk_picwnd_open((C_004083b0_4c4 *)&advisor_window,10000,8,1,600,400,0,0);
@@ -3545,7 +3545,7 @@ void __cdecl credits_show(int param_1)
   thunk_FUN_0043720f();
   return;
 }
-#undef DAT_00625ed0
+#undef credits_partial_redraw_ok
 #undef credits_scroll_pos
 #undef _DAT_00625ec0
 #undef local_c
@@ -4107,7 +4107,7 @@ void __cdecl gfx_draw_rect_frame(iptr param_1,iptr param_2,undefined4 param_3)
 void __cdecl text_append_period(void)
 
 {
-  thunk_FUN_004aefd8(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  thunk_str_append_period(ADDR(0x679640, ((u8 *)&g.d_00679640)));
   return;
 }
 
@@ -4131,7 +4131,7 @@ void __cdecl text_append_long(undefined4 param_1)
 void __cdecl text_append_gold(undefined4 param_1)
 
 {
-  thunk_FUN_004af2b9(ADDR(0x679640, ((u8 *)&g.d_00679640)),param_1);
+  thunk_str_append_gold(ADDR(0x679640, ((u8 *)&g.d_00679640)),param_1);
   return;
 }
 
@@ -4625,8 +4625,8 @@ void __cdecl city_calc_commodity_demand(uptr param_1)
       local_128[local_68] = 0;
     }
     for (local_68 = 0; local_68 < 0x10; local_68 = local_68 + 1) {
-      (&INT_0063f540)[local_68] = 0;
-      (&INT_0063f668)[local_68] = (&INT_0063f540)[local_68];
+      (&city_commodity_demand_scores)[local_68] = 0;
+      (&city_commodity_supply_scores)[local_68] = (&city_commodity_demand_scores)[local_68];
       local_5c[local_68] = local_68;
       local_fc[local_68] = local_5c[local_68];
     }
@@ -4654,23 +4654,23 @@ void __cdecl city_calc_commodity_demand(uptr param_1)
     }
     local_128[6] = local_128[6] + local_128[7];
     local_128[7] = 0;
-    INT_0063f668 = local_128[9] * 3 + local_128[6] * 6 + local_128[3] * 4 + local_b4 * 3;
+    city_commodity_supply_scores = local_128[9] * 3 + local_128[6] * 6 + local_128[3] * 4 + local_b4 * 3;
     if ((int)local_8c < 0x10) {
-      INT_0063f668 = INT_0063f668 * 2;
+      city_commodity_supply_scores = city_commodity_supply_scores * 2;
     }
     if ((int)local_8c < 0x18) {
-      INT_0063f668 = INT_0063f668 << 1;
+      city_commodity_supply_scores = city_commodity_supply_scores << 1;
     }
     if ((int)local_8c < 0x31) {
       if (cities[param_1].size < '\x03') {
-        INT_0063f668 = INT_0063f668 << 1;
+        city_commodity_supply_scores = city_commodity_supply_scores << 1;
       }
     }
     else {
-      INT_0063f668 = INT_0063f668 / 2;
+      city_commodity_supply_scores = city_commodity_supply_scores / 2;
     }
     if ('\a' < cities[param_1].size) {
-      INT_0063f668 = INT_0063f668 / 2;
+      city_commodity_supply_scores = city_commodity_supply_scores / 2;
     }
     local_bc = local_128[6] + 2;
     if ((int)map.height / 3 < (int)local_14) {
@@ -4846,30 +4846,30 @@ void __cdecl city_calc_commodity_demand(uptr param_1)
       }
       DAT_0063f6a4 = (DAT_0063f6a4 * iVar8) / 6;
     }
-    INT_0063f540 = (local_128[6] + local_128[7]) * 5 + (int)(local_14 * 3) / 2 + local_128[5] * 2 +
+    city_commodity_demand_scores = (local_128[6] + local_128[7]) * 5 + (int)(local_14 * 3) / 2 + local_128[5] * 2 +
                    local_128[3];
-    iVar8 = ((int)local_8c / 10) * INT_0063f540;
+    iVar8 = ((int)local_8c / 10) * city_commodity_demand_scores;
     _DAT_0063f54c = local_128[4] * 4 + local_128[3] * 4 + ((int)(iVar8 + (iVar8 >> 0x1f & 7U)) >> 3)
     ;
     if (cities[param_1].size < '\x03') {
-      INT_0063f540 = INT_0063f540 * 2;
+      city_commodity_demand_scores = city_commodity_demand_scores * 2;
     }
     iVar8 = thunk_civ_has_advance(iVar4,0x25);
     if (iVar8 != 0) {
-      INT_0063f540 = INT_0063f540 / 3;
+      city_commodity_demand_scores = city_commodity_demand_scores / 3;
     }
     iVar8 = thunk_civ_has_advance(iVar4,0x30);
     if (iVar8 != 0) {
-      INT_0063f540 = 1;
+      city_commodity_demand_scores = 1;
     }
     if ((int)local_8c < 10) {
-      INT_0063f540 = INT_0063f540 << 1;
+      city_commodity_demand_scores = city_commodity_demand_scores << 1;
     }
     if ((int)local_8c < 0x14) {
-      INT_0063f540 = INT_0063f540 << 1;
+      city_commodity_demand_scores = city_commodity_demand_scores << 1;
     }
     if (0x2f < (int)local_8c) {
-      INT_0063f540 = INT_0063f540 / 2;
+      city_commodity_demand_scores = city_commodity_demand_scores / 2;
     }
     if ((int)map.height >> 2 == local_14 || (int)(((int)map.height >> 2) - local_14) < 0) {
       local_138 = ~(((int)map.height >> 2) - local_14) + 1;
@@ -4989,22 +4989,22 @@ void __cdecl city_calc_commodity_demand(uptr param_1)
     }
     iVar8 = thunk_city_has_improvement(param_1,0xb);
     if ((iVar8 != 0) || (iVar8 = thunk_civ_has_wonder(iVar4,10), iVar8 != 0)) {
-      (&INT_0063f540)[local_84] = (&INT_0063f540)[local_84] * 3 >> 1;
+      (&city_commodity_demand_scores)[local_84] = (&city_commodity_demand_scores)[local_84] * 3 >> 1;
     }
     iVar8 = thunk_city_has_improvement(param_1,10);
     if (iVar8 != 0) {
-      (&INT_0063f540)[local_84] = (&INT_0063f540)[local_84] * 3 >> 1;
+      (&city_commodity_demand_scores)[local_84] = (&city_commodity_demand_scores)[local_84] * 3 >> 1;
     }
     iVar8 = thunk_civ_has_advance(iVar4,0x16);
     if (iVar8 != 0) {
-      (&INT_0063f540)[local_84] = (&INT_0063f540)[local_84] >> 1;
+      (&city_commodity_demand_scores)[local_84] = (&city_commodity_demand_scores)[local_84] >> 1;
     }
     iVar8 = thunk_civ_has_advance(iVar4,0x10);
     if (iVar8 != 0) {
-      (&INT_0063f540)[local_84] = (&INT_0063f540)[local_84] >> 1;
+      (&city_commodity_demand_scores)[local_84] = (&city_commodity_demand_scores)[local_84] >> 1;
     }
     if (civs[iVar4].tribe == 0x11) {
-      (&INT_0063f540)[local_84] = (&INT_0063f540)[local_84] << 1;
+      (&city_commodity_demand_scores)[local_84] = (&city_commodity_demand_scores)[local_84] << 1;
     }
     iVar8 = local_8c - 0xc;
     if (iVar8 < 1) {
@@ -5081,13 +5081,13 @@ void __cdecl city_calc_commodity_demand(uptr param_1)
       }
     }
     for (local_68 = 0; local_68 < 0x10; local_68 = local_68 + 1) {
-      if ((&INT_0063f668)[local_68] < (&INT_0063f540)[local_68]) {
-        if (0 < (&INT_0063f668)[local_68]) {
-          (&INT_0063f668)[local_68] = 0;
+      if ((&city_commodity_supply_scores)[local_68] < (&city_commodity_demand_scores)[local_68]) {
+        if (0 < (&city_commodity_supply_scores)[local_68]) {
+          (&city_commodity_supply_scores)[local_68] = 0;
         }
       }
-      else if (0 < (&INT_0063f540)[local_68]) {
-        (&INT_0063f540)[local_68] = 0;
+      else if (0 < (&city_commodity_demand_scores)[local_68]) {
+        (&city_commodity_demand_scores)[local_68] = 0;
       }
     }
     thunk_FUN_00414f02(0x10,(iptr)local_fc,ADDR(0x63f668, ((u8 *)&g.d_0063f668)));
@@ -5430,8 +5430,8 @@ uptr __cdecl city_create(iptr param_1,iptr param_2,iptr param_3)
     cities[local_28].x = (i16)param_1;
     cities[local_28].y = (i16)param_2;
     cities[local_28].owner = (byte)param_3;
-    cities[local_28].id = DAT_00627fdc;
-    DAT_00627fdc = DAT_00627fdc + 1;
+    cities[local_28].id = next_city_id;
+    next_city_id = next_city_id + 1;
     cities[local_28].founder = (byte)param_3;
     cities[local_28].turns_captured = '\0';
     cities[local_28].flags = 0x20000;

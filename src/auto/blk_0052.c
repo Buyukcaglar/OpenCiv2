@@ -643,7 +643,7 @@ void __cdecl game_join_dialog(void)
     thunk_popup_game(ADDR(0x6322d0, ((u8 *)&g.d_006322d0)));
   }
   else {
-    iVar2 = thunk_FUN_00523f02(local_324 + -1);
+    iVar2 = thunk_setup_join_pick_civ(local_324 + -1);
     if (iVar2 == 0) {
       iVar3 = thunk_civ_name_plural(human_civ);
       thunk_text_set_string_arg_b(0,iVar3);
@@ -716,8 +716,8 @@ void __cdecl leaders_reset_custom_names(void)
 #undef local_8
 
 /* 00522f8f auto */
-#define DAT_00631ee4 (*(int *)((u8 *)&g.d_00631ee4))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
+#define setup_select_opponents (*(int *)((u8 *)&g.d_00631ee4))
 #define local_314 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_310 (*(Dialog *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(764)))
@@ -772,7 +772,7 @@ void __cdecl setup_choose_opponents(int param_1)
       local_18 = local_18 + -1;
     }
   }
-  if (DAT_00631ee4 != 0) {
+  if (setup_select_opponents != 0) {
     local_14 = 0;
     for (local_314 = 1; local_314 < 8; local_314 = local_314 + 1) {
       if (((1 << ((byte)local_314 & 0x1f) & (uint)game.human_players) == 0) &&
@@ -815,8 +815,8 @@ void __cdecl setup_choose_opponents(int param_1)
 LAB_005233ee:
   return;
 }
-#undef DAT_00631ee4
 #undef screen_height
+#undef setup_select_opponents
 #undef local_314
 #undef local_310
 #undef local_1c
@@ -841,7 +841,7 @@ LAB_005233ee:
 #define local_1c (*(u8 *)(frame_ + FRAME_OFF(12)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(u8 *)(frame_ + FRAME_OFF(32)))
-undefined4 __cdecl FUN_005233fc(iptr param_1,int param_2)
+undefined4 __cdecl net_host_register_player_civ(iptr param_1,int param_2)
 
 {
   int iVar1;
@@ -1023,7 +1023,7 @@ void __cdecl net_send_rules_tables(undefined4 param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1088)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1092)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1096)))
-undefined4 __cdecl FUN_00523f02(int param_1)
+undefined4 __cdecl setup_join_pick_civ(int param_1)
 
 {
   iptr iVar1;
@@ -1203,7 +1203,7 @@ LAB_005246d5:
 
 /* 005261a0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005261a0(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1398,7 +1398,7 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_wonder_names (*(undefined4 *)((u8 *)&g.d_006a7d4c))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_00526913(C_004083b0_a28 *this,int param_1)
+void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
 
 {
   undefined4 uVar1;
@@ -1762,7 +1762,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       param_1 = 5;
     }
   }
-  thunk_FUN_004b888e(this,param_2);
+  thunk_parley_clear_side_controls(this,param_2);
   *(int *)(this->pad_200 + param_2 * 4) = param_1;
   if (((parley_wnd_closed == 0) && (param_1 != 1)) && (param_1 != 0)) {
     if (param_1 == 0x14) {
@@ -1836,11 +1836,11 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       local_378 = this->pad_48;
     }
     iVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xba4));
-    thunk_FUN_00530ee0
+    thunk_checkbox_create_fixed
               ((Control *)this->field_2e8,(iptr)local_378,0x415,local_38,local_3c,local_34,
                iVar4);
     thunk_checkbox_set_checked((Control *)this->field_2e8,chat_remain_anonymous);
-    thunk_FUN_00530fb0((C_00530fb0 *)this->field_2e8);
+    thunk_checkbox_enable((C_00530fb0 *)this->field_2e8);
     thunk_checkbox_set_callback((CheckboxCallbackSetView *)this->field_2e8,ADDR(0x403d28, FUN_0052e7b7));
     pCVar6 = operator_new(0x3c);
     local_8 = 4;
@@ -1859,11 +1859,11 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       local_37c = this->pad_48;
     }
     iVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd84));
-    thunk_FUN_00530ee0
+    thunk_checkbox_create_fixed
               ((Control *)this->field_2ec,(iptr)local_37c,0x430,local_34 + local_38,local_3c,
                local_34,iVar4);
     thunk_checkbox_set_checked((Control *)this->field_2ec,chat_mute_anonymous);
-    thunk_FUN_00530fb0((C_00530fb0 *)this->field_2ec);
+    thunk_checkbox_enable((C_00530fb0 *)this->field_2ec);
     thunk_checkbox_set_callback((CheckboxCallbackSetView *)this->field_2ec,ADDR(0x403d28, FUN_0052e7b7));
     pCVar6 = operator_new(0x3c);
     local_8 = 5;
@@ -1882,11 +1882,11 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       local_380 = this->pad_48;
     }
     iVar4 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xba8));
-    thunk_FUN_00530ee0
+    thunk_checkbox_create_fixed
               ((Control *)this->field_2f0,(iptr)local_380,0x416,local_34 * 2 + local_38,
                local_3c,local_34,iVar4);
     thunk_checkbox_set_checked((Control *)this->field_2f0,chat_broadcast_all);
-    thunk_FUN_00530fb0((C_00530fb0 *)this->field_2f0);
+    thunk_checkbox_enable((C_00530fb0 *)this->field_2f0);
     thunk_checkbox_set_callback((CheckboxCallbackSetView *)this->field_2f0,ADDR(0x403d28, FUN_0052e7b7));
     local_3c = local_3c + local_14;
     gfx_set_text_color_index(10);
@@ -1949,13 +1949,13 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
         else {
           local_38c = this->pad_48;
         }
-        thunk_FUN_00530ee0
+        thunk_checkbox_create_fixed
                   (*(Control **)(this->pad_2c4 + local_d0 * 4 + 4),(iptr)local_38c,
                    local_d0 + 0x428,local_38 + local_c4,local_3c,0x23,ADDR(0x6324dc, ((u8 *)&g.d_006324dc)));
         thunk_checkbox_set_checked
                   (*(Control **)(this->pad_2c4 + local_d0 * 4 + 4),
                    *(undefined4 *)(&chat_muted_civs + local_d0 * 4));
-        thunk_FUN_00530fb0(*(C_00530fb0 **)(this->pad_2c4 + local_d0 * 4 + 4));
+        thunk_checkbox_enable(*(C_00530fb0 **)(this->pad_2c4 + local_d0 * 4 + 4));
         thunk_checkbox_set_callback(*(CheckboxCallbackSetView **)(this->pad_2c4 + local_d0 * 4 + 4),ADDR(0x403657, FUN_0052e71a));
         pCVar6 = operator_new(0x3c);
         local_8 = 7;
@@ -1974,14 +1974,14 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
           local_390 = this->pad_48;
         }
         iVar4 = thunk_civ_adjective(local_d0);
-        thunk_FUN_00530ee0
+        thunk_checkbox_create_fixed
                   (*(Control **)(this->pad_2c4 + local_d0 * 4 + -0x1c),(iptr)local_390,
                    local_d0 + 0x416,local_38 + local_c4 + 0x23,local_3c,
                    (local_34 + -0x23) - local_c4,iVar4);
         thunk_checkbox_set_checked
                   (*(Control **)(this->pad_2c4 + local_d0 * 4 + -0x1c),
                    *(undefined4 *)(&chat_send_to_civs + local_d0 * 4));
-        thunk_FUN_00530fb0(*(C_00530fb0 **)(this->pad_2c4 + local_d0 * 4 + -0x1c));
+        thunk_checkbox_enable(*(C_00530fb0 **)(this->pad_2c4 + local_d0 * 4 + -0x1c));
         thunk_checkbox_set_callback
                   (*(CheckboxCallbackSetView **)(this->pad_2c4 + local_d0 * 4 + -0x1c),ADDR(0x403d28, FUN_0052e7b7));
         local_d4 = local_d4 + 1;
@@ -2959,7 +2959,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       else {
         local_48c = thunk_font_line_spacing((GameFont *)&font_size24);
       }
-      local_160 = DAT_0062d868 * 2 + local_48c;
+      local_160 = panel_padding_y * 2 + local_48c;
       SetRect(&local_17c,panel_margin_x * 2 + local_24.left,local_164,local_24.left + local_168,
               local_164 + local_160);
     }
@@ -2977,7 +2977,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
       else {
         local_474 = thunk_font_line_spacing((GameFont *)&font_size24);
       }
-      local_16c = local_24.top + DAT_0062d868 * 2 + local_470 + local_474;
+      local_16c = local_24.top + panel_padding_y * 2 + local_470 + local_474;
       local_168 = local_34 + panel_margin_x * -3;
       local_160 = (local_16c - local_164) / 2;
       SetRect(&local_17c,panel_margin_x * 2 + local_24.left,local_164,local_24.left + local_168,
@@ -3324,7 +3324,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
     thunk_gfx_target_frame_rect((iptr)&local_24,10);
     thunk_rect_deflate((iptr)&local_24,1,1);
     surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    thunk_FUN_004af3e0((C_004083b0_11c *)this,(iptr)&local_24,param_2);
+    thunk_parley_build_civ_list((C_004083b0_11c *)this,(iptr)&local_24,param_2);
     break;
   case 0xd:
     local_198[0] = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc3c));
@@ -3780,7 +3780,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
     }
     break;
   case 0x13:
-    thunk_FUN_004dbee6((C_004083b0_4 *)this,this->item_buffer,0);
+    thunk_parley_build_description((C_004083b0_4 *)this,this->item_buffer,0);
     pCVar3 = operator_new(0x48);
     local_8 = 0;
     if (pCVar3 == (C_0040f380_48 *)0x0) {
@@ -3819,7 +3819,7 @@ void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int para
     break;
   case 0x14:
     thunk_window_show((C_004083b0_4 *)&parley_wnd);
-    thunk_FUN_004dbee6((C_004083b0_4 *)this,this->item_buffer,1);
+    thunk_parley_build_description((C_004083b0_4 *)this,this->item_buffer,1);
     pCVar3 = operator_new(0x48);
     local_8 = 1;
     if (pCVar3 == (C_0040f380_48 *)0x0) {
@@ -4329,7 +4329,7 @@ void __cdecl FUN_0052d9a1(undefined4 param_1)
   if ((iVar2 != 0) ||
      (iVar2 = thunk_ctrl_is_enabled(*(ControlEnabledView **)(local_8 + 0x34c)), iVar2 != 0)) {
     thunk_wnd_activate((Wnd *)(local_8 + 0x48));
-    thunk_FUN_0052dd73(param_1);
+    thunk_parley_on_mode_chosen(param_1);
   }
   return;
 }
@@ -4449,7 +4449,7 @@ LAB_0052dcf1:
 /* 0052dd73 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_8 (*(C_004db690 * *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_0052dd73(undefined4 param_1)
+void __cdecl parley_on_mode_chosen(undefined4 param_1)
 
 {
   iptr iVar1;
@@ -4544,7 +4544,7 @@ void __cdecl FUN_0052dd73(undefined4 param_1)
       local_8->pad_21c[0x1a] = '\0';
       local_8->pad_21c[0x1b] = '\0';
     }
-    uVar1 = thunk_FUN_004db690(local_8,local_8->field_1ec);
+    uVar1 = thunk_parley_send_offer(local_8,local_8->field_1ec);
     *(undefined4 *)(local_8->pad_21c + 0x18) = uVar1;
     if ((local_8->field_1ec == 6) && (local_8->field_218 == 3)) {
       if ((*(byte *)(human_civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_8->field_118 * 4) & 8) == 0) {
@@ -4614,9 +4614,9 @@ void __cdecl FUN_0052e326(void)
   case 0xf:
     local_8->field_1ec = 3;
     thunk_ctrl_disable((Control *)local_8->field_350);
-    local_8->field_1f8 = DAT_0062d7e8;
+    local_8->field_1f8 = parley_mode3_left_kind;
     local_8->field_1f0 = local_8->field_1f8;
-    local_8->field_1fc = DAT_0062d7ec;
+    local_8->field_1fc = parley_mode3_right_kind;
     local_8->field_1f4 = local_8->field_1fc;
     thunk_parley_add_side_dialog(local_8,local_8->field_1f0,0);
     thunk_parley_add_side_dialog(local_8,local_8->field_1f4,1);
@@ -4742,7 +4742,7 @@ void __cdecl FUN_0052e71a(int param_1)
   thunk_wnd_activate((Wnd *)(local_8 + 0x48));
   if ((0x428 < param_1) && (param_1 < 0x430)) {
     uVar1 = thunk_checkbox_is_checked
-                      (*(Control **)(&DAT_0068aeb0 + (param_1 + -0x428) * 4));
+                      (*(Control **)(&chat_mute_checkboxes + (param_1 + -0x428) * 4));
     *(undefined4 *)(&chat_muted_civs + (param_1 + -0x428) * 4) = uVar1;
   }
   return;
@@ -4771,15 +4771,15 @@ void __cdecl FUN_0052e7b7(int param_1)
   thunk_wnd_activate((Wnd *)(local_8 + 0x48));
   switch(param_1) {
   case 0x415:
-    chat_remain_anonymous = thunk_checkbox_is_checked(DAT_0068aed0);
+    chat_remain_anonymous = thunk_checkbox_is_checked(chat_anonymous_checkbox);
     break;
   case 0x416:
-    chat_broadcast_all = thunk_checkbox_is_checked(DAT_0068aed8);
+    chat_broadcast_all = thunk_checkbox_is_checked(chat_broadcast_checkbox);
     if (chat_broadcast_all != 0) {
       for (local_c = 1; local_c < 8; local_c = local_c + 1) {
-        if (*(int *)(&DAT_0068ae90 + local_c * 4) != 0) {
-          thunk_checkbox_set_checked(*(Control **)(&DAT_0068ae90 + local_c * 4),1);
-          thunk_ctrl_show_and_redraw(*(Control **)(&DAT_0068ae90 + local_c * 4));
+        if (*(int *)(&chat_send_checkboxes + local_c * 4) != 0) {
+          thunk_checkbox_set_checked(*(Control **)(&chat_send_checkboxes + local_c * 4),1);
+          thunk_ctrl_show_and_redraw(*(Control **)(&chat_send_checkboxes + local_c * 4));
           *(undefined4 *)(&chat_send_to_civs + local_c * 4) = 1;
         }
       }
@@ -4793,16 +4793,16 @@ void __cdecl FUN_0052e7b7(int param_1)
   case 0x41c:
   case 0x41d:
     param_1 = param_1 + -0x416;
-    uVar1 = thunk_checkbox_is_checked(*(Control **)(&DAT_0068ae90 + param_1 * 4));
+    uVar1 = thunk_checkbox_is_checked(*(Control **)(&chat_send_checkboxes + param_1 * 4));
     *(undefined4 *)(&chat_send_to_civs + param_1 * 4) = uVar1;
     if ((*(int *)(&chat_send_to_civs + param_1 * 4) == 0) && (chat_broadcast_all != 0)) {
-      thunk_checkbox_set_checked(DAT_0068aed8,0);
-      thunk_ctrl_show_and_redraw(DAT_0068aed8);
+      thunk_checkbox_set_checked(chat_broadcast_checkbox,0);
+      thunk_ctrl_show_and_redraw(chat_broadcast_checkbox);
       chat_broadcast_all = 0;
     }
     break;
   case 0x430:
-    chat_mute_anonymous = thunk_checkbox_is_checked(DAT_0068aed4);
+    chat_mute_anonymous = thunk_checkbox_is_checked(chat_mute_anonymous_checkbox);
   }
   return;
 }

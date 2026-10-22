@@ -213,7 +213,7 @@ typedef struct Tile {
  *    orders 0x655490/0x68, difficulty 0x64ba10/0x18, attitudes 0x64b9c0/0x24.
  *    This fixes the bases: advances and terrain start 4 bytes before the
  *    name field, with a static 4-char abbreviation ("AFl", "Drt") that the
- *    prerequisite lookups rules_parse_advance_abbrev / FUN_004b07d1 strcmp against.
+ *    prerequisite lookups rules_parse_advance_abbrev / rules_parse_terrain_abbrev strcmp against.
  *  - "Names" are NOT char pointers: text_next_token_str_id -> strpool_add_padded and
  *    text_next_token_pooled -> strpool_add copy the text into a string pool and return
  *    a running string id (strpool_count++); readers turn ids back into text
@@ -362,7 +362,7 @@ typedef struct OrderName {
  *  - Field meanings from the code that uses them (function addresses are
  *    the original FUN_xxxxxxxx), checked against orig/Ca_Auto.SAV (turn 81,
  *    year -2400, Romans/Caesar human civ 1, despotism, rates sum <= 10, ...).
- *  - Key functions: civ_create (initialise a civ), FUN_0053184d (AI
+ *  - Key functions: civ_create (initialise a civ), ai_civ_turn_assess (AI
  *    per-turn census of units/cities, per-continent tables), civ_give_advance
  *    (give advance), civ_has_advance (civ knows advance), civ_research_cost
  *    (research cost), city_split_trade (split city trade by rates), FUN_00487a41
@@ -417,7 +417,7 @@ typedef struct Civ {
     u8 field_50[8];                 /* 0x050 per-civ counter updated by combat (unit_resolve_attack), reset at > 9 */
     u8 advances[13];                /* 0x058 bit per advance (100 bits), see civ_has_advance */
     u8 pad_65;                      /* 0x065 */
-    i16 num_military_units;         /* 0x066 units with role < 5 (census FUN_0053184d) */
+    i16 num_military_units;         /* 0x066 units with role < 5 (census ai_civ_turn_assess) */
     i16 num_cities;                 /* 0x068 */
     i16 num_ships;                  /* 0x06a units of domain 2 (sea) */
     i16 total_city_size;            /* 0x06c sum of city sizes */

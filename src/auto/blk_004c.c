@@ -97,7 +97,7 @@ undefined4 __cdecl city_can_build_improvement(iptr param_1,iptr param_2,iptr par
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-iptr __cdecl FUN_004c09b0(iptr param_1)
+iptr __cdecl civ_pick_research_advance(iptr param_1)
 
 {
   int iVar1;
@@ -552,7 +552,7 @@ iptr __cdecl civ_choose_research_dialog(iptr param_1,int param_2)
   local_8 = 0;
   thunk_dialog_ctor(&local_308,0x4000);
   local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
-  local_604 = thunk_FUN_004c09b0(param_1);
+  local_604 = thunk_civ_pick_research_advance(param_1);
   if ((param_2 != 0) ||
      (((iVar2 = local_604, game.turn != 0 &&
        ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) != 0)) && (autoplay_active == 0)))) {
@@ -927,7 +927,7 @@ int __cdecl civ_research_cost(iptr param_1)
 #undef local_10
 
 /* 004c2b73 auto */
-void __cdecl FUN_004c2b73(uptr param_1,int param_2)
+void __cdecl civ_add_research_points(uptr param_1,int param_2)
 
 {
   short sVar1;
@@ -970,7 +970,7 @@ void __cdecl text_set_number_arg_u8(int param_1,uint param_2)
 void __cdecl popup_game_with_advance(iptr param_1,iptr param_2,undefined4 param_3)
 
 {
-  thunk_FUN_004a6b80(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
+  thunk_popup_text_with_advance(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return;
 }
 
@@ -1159,7 +1159,7 @@ LAB_004c44ea:
         if (units[iVar3].orders != cVar2) {
           thunk_city_window_on_unit_change((FrameWindow *)&city_window,iVar3,-99,-99);
         }
-        thunk_FUN_0050c6ef((C_004083b0_4 *)&city_window,iVar4,iVar5);
+        thunk_city_window_refresh_if_near((C_004083b0_4 *)&city_window,iVar4,iVar5);
       }
       return;
     }
@@ -1180,7 +1180,7 @@ LAB_004c44ea:
 #define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
 #define local_c (*(i8 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004c4ada(iptr param_1)
+void __cdecl unit_set_fortified(iptr param_1)
 
 {
   iptr iVar1;
@@ -1399,7 +1399,7 @@ undefined4 __cdecl unit_execute_orders(iptr param_1)
   local_8 = 1;
   switch(units[param_1].orders) {
   case '\x01':
-    thunk_FUN_004c4ada(param_1);
+    thunk_unit_set_fortified(param_1);
     break;
   default:
     local_8 = 0;
@@ -1613,7 +1613,7 @@ void __cdecl diplo_espionage_incident(iptr param_1,iptr param_2)
           }
         }
         else {
-          if ((DAT_0062dcf4 == 2) && (civs[param_1].num_advances < civs[param_2].num_advances)) {
+          if ((spy_last_mission == 2) && (civs[param_1].num_advances < civs[param_2].num_advances)) {
             if (autoplay_active != 0) {
               return;
             }
@@ -1774,7 +1774,7 @@ undefined4 __cdecl spy_try_escape(iptr param_1,int param_2,iptr param_3)
 
 /* 004c64aa auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-undefined4 __cdecl FUN_004c64aa(iptr param_1,iptr param_2)
+undefined4 __cdecl spy_check_caught(iptr param_1,iptr param_2)
 
 {
   byte bVar1;
@@ -1799,7 +1799,7 @@ undefined4 __cdecl FUN_004c64aa(iptr param_1,iptr param_2)
 #undef autoplay_active
 
 /* 004c654d auto */
-uint __cdecl FUN_004c654d(iptr param_1,iptr param_2)
+uint __cdecl spy_confirm_treaty_breach(iptr param_1,iptr param_2)
 
 {
   uint uVar1;
@@ -1846,7 +1846,7 @@ int __cdecl civ_distance_to_capital(iptr param_1,undefined4 param_2,undefined4 p
 #define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl FUN_004c66ba(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl city_incite_transfer(iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   char *pcVar1;
@@ -1971,7 +1971,7 @@ void __cdecl FUN_004c66ba(iptr param_1,iptr param_2,undefined4 param_3)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1000)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1004)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1008)))
-void __cdecl FUN_004c6bf5(iptr param_1,iptr param_2)
+void __cdecl spy_city_mission(iptr param_1,iptr param_2)
 
 {
   uint *puVar1;
@@ -2092,7 +2092,7 @@ void __cdecl FUN_004c6bf5(iptr param_1,iptr param_2)
     }
   }
 LAB_004c72a8:
-  DAT_0062dcf4 = local_3ac;
+  spy_last_mission = local_3ac;
   switch(local_3ac) {
   case 0:
     if ((*(byte *)(local_3b0 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_80 * 4) & 0x80) == 0) {
@@ -2161,7 +2161,7 @@ LAB_004c72a8:
     }
     break;
   case 2:
-    iVar4 = thunk_FUN_004c654d(local_3b0,local_80);
+    iVar4 = thunk_spy_confirm_treaty_breach(local_3b0,local_80);
     if (iVar4 != 0) break;
     local_20 = -1;
     iVar4 = _rand();
@@ -2189,7 +2189,7 @@ LAB_004c72a8:
           local_3ac = thunk_popup_game_sprite_flags(ADDR(0x62dddc, ((u8 *)&g.d_0062dddc)),1,(iptr)(&unit_sprites + local_398 * 0x3c),8);
           if (local_3ac < 0) break;
           if (local_3ac == 1) {
-            iVar4 = thunk_FUN_004c64aa(param_1,local_80);
+            iVar4 = thunk_spy_check_caught(param_1,local_80);
             if (iVar4 == 0) {
               if (human_civ == local_3b0) {
                 thunk_snd_play_effect(0x44,1,0,0);
@@ -2211,7 +2211,7 @@ LAB_004c72a8:
           local_3ac = thunk_popup_game_with_city(ADDR(0x62ddd0, ((u8 *)&g.d_0062ddd0)),param_2);
           if (local_3ac != 1) break;
         }
-        iVar4 = thunk_FUN_004c64aa(param_1,local_80);
+        iVar4 = thunk_spy_check_caught(param_1,local_80);
         if (iVar4 != 0) break;
         local_88 = 1;
       }
@@ -2237,7 +2237,7 @@ LAB_004c72a8:
     goto LAB_004c72a8;
   case 3:
     local_88 = 0;
-    iVar4 = thunk_FUN_004c654d(local_3b0,local_80);
+    iVar4 = thunk_spy_confirm_treaty_breach(local_3b0,local_80);
     if (iVar4 != 0) break;
     thunk_str_clear((iptr)local_70);
     if (cities[param_2].building < '\0') {
@@ -2252,7 +2252,7 @@ LAB_004c72a8:
     local_3a8 = 0;
     goto LAB_004c7f43;
   case 4:
-    iVar4 = thunk_FUN_004c654d(local_3b0,local_80);
+    iVar4 = thunk_spy_confirm_treaty_breach(local_3b0,local_80);
     if (iVar4 == 0) {
       if (cities[param_2].size < '\x02') {
         cities[param_2].food_box = 0;
@@ -2285,11 +2285,11 @@ LAB_004c72a8:
   case 5:
     if (((((autoplay_active == 0) &&
           (iVar4 = thunk_popup_game_with_sprite(ADDR(0x62de5c, ((u8 *)&g.d_0062de5c)),(iptr)(&unit_sprites + local_398 * 0x3c),8),
-          iVar4 == 1)) && (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 == 0)) &&
-        ((iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 == 0 &&
-         (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 == 0)))) &&
+          iVar4 == 1)) && (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 == 0)) &&
+        ((iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 == 0 &&
+         (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 == 0)))) &&
        ((iVar4 = thunk_city_has_improvement(param_2,1), iVar4 == 0 ||
-        (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 == 0)))) {
+        (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 == 0)))) {
       thunk_unit_nuclear_attack(local_3b0,(int)cities[param_2].x,(int)cities[param_2].y,0);
       thunk_text_set_string_arg(0,param_2 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
       iVar3 = thunk_civ_get_adjective(local_3b0);
@@ -2439,7 +2439,7 @@ LAB_004c8f6f:
           if ((human_civ == local_3b0) || (human_civ == local_80)) {
             thunk_snd_play_effect(0x44,1,0,0);
           }
-          thunk_FUN_004c66ba(param_2,local_3b0,local_3ac);
+          thunk_city_incite_transfer(param_2,local_3b0,local_3ac);
         }
         break;
       }
@@ -2541,13 +2541,13 @@ LAB_004c7fc1:
       if (((((iVar4 != 0) || (local_74 == 8)) &&
            (local_3ac = thunk_popup_game_with_sprite(ADDR(0x62de28, ((u8 *)&g.d_0062de28)),(iptr)(&unit_sprites + local_398 * 0x3c),8),
            local_3ac != 1)) ||
-          ((iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 != 0 ||
+          ((iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 != 0 ||
            ((iVar4 = thunk_city_has_improvement(param_2,1), iVar4 != 0 &&
-            (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 != 0)))))) ||
-         (((local_74 == 8 && (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 != 0)) ||
+            (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 != 0)))))) ||
+         (((local_74 == 8 && (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 != 0)) ||
           ((local_74 == 0x11 &&
-           ((iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 != 0 ||
-            (iVar4 = thunk_FUN_004c64aa(param_1,local_80), iVar4 != 0))))))))
+           ((iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 != 0 ||
+            (iVar4 = thunk_spy_check_caught(param_1,local_80), iVar4 != 0))))))))
       goto switchD_004c94cc_default;
       local_88 = 1;
     }
@@ -2910,7 +2910,7 @@ LAB_004c99a0:
 
 /* 004c9ebd auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-undefined4 __cdecl FUN_004c9ebd(iptr param_1,iptr param_2,iptr param_3)
+undefined4 __cdecl spy_unit_mission(iptr param_1,iptr param_2,iptr param_3)
 
 {
   int iVar1;
@@ -2983,7 +2983,7 @@ undefined4 __cdecl FUN_004c9ebd(iptr param_1,iptr param_2,iptr param_3)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004ca1cd(iptr param_1,iptr param_2,iptr param_3,int param_4,iptr param_5)
+void __cdecl unit_airlift_perform(iptr param_1,iptr param_2,iptr param_3,int param_4,iptr param_5)
 
 {
   int iVar1;
@@ -3254,7 +3254,7 @@ undefined4 __cdecl popup_game_with_improvement(iptr param_1,iptr param_2,undefin
 {
   undefined4 uVar1;
   
-  uVar1 = thunk_FUN_004a6bdc(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
+  uVar1 = thunk_popup_text_with_improvement(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return uVar1;
 }
 
@@ -3280,13 +3280,13 @@ undefined4 __cdecl FUN_004cc8b0(iptr param_1,undefined4 param_2,iptr param_3)
 void __cdecl FUN_004cc8f0(void)
 
 {
-  FUN_004cc90a();
-  FUN_004cc924();
+  editor_text_dlg_wnd_static_init();
+  editor_text_dlg_wnd_reg_atexit();
   return;
 }
 
 /* 004cc90a auto */
-void __cdecl FUN_004cc90a(void)
+void __cdecl editor_text_dlg_wnd_static_init(void)
 
 {
   thunk_frame_wnd_ctor((SurfaceWindow *)&editor_text_dlg_wnd);
@@ -3294,7 +3294,7 @@ void __cdecl FUN_004cc90a(void)
 }
 
 /* 004cc924 auto */
-void __cdecl FUN_004cc924(void)
+void __cdecl editor_text_dlg_wnd_reg_atexit(void)
 
 {
   _atexit(FUN_004cc941);
@@ -3321,13 +3321,13 @@ void __cdecl FUN_004cc941(void)
 void __cdecl FUN_004cc95b(void)
 
 {
-  FUN_004cc975();
-  FUN_004cc98f();
+  editor_text_edit_static_init();
+  editor_text_edit_reg_atexit();
   return;
 }
 
 /* 004cc975 auto */
-void __cdecl FUN_004cc975(void)
+void __cdecl editor_text_edit_static_init(void)
 
 {
   thunk_edit_ctor((C_0040f380_48 *)&editor_text_edit);
@@ -3335,7 +3335,7 @@ void __cdecl FUN_004cc975(void)
 }
 
 /* 004cc98f auto */
-void __cdecl FUN_004cc98f(void)
+void __cdecl editor_text_edit_reg_atexit(void)
 
 {
   _atexit(FUN_004cc9ac);
@@ -3363,13 +3363,13 @@ void __cdecl FUN_004cc9ac(void)
 void __cdecl FUN_004cc9c6(void)
 
 {
-  FUN_004cc9e0();
-  FUN_004cc9fe();
+  editor_font_static_init();
+  editor_font_reg_atexit();
   return;
 }
 
 /* 004cc9e0 auto */
-void __cdecl FUN_004cc9e0(void)
+void __cdecl editor_font_static_init(void)
 
 {
   thunk_font_init((GameFont *)&editor_font,0,0x10);
@@ -3377,7 +3377,7 @@ void __cdecl FUN_004cc9e0(void)
 }
 
 /* 004cc9fe auto */
-void __cdecl FUN_004cc9fe(void)
+void __cdecl editor_font_reg_atexit(void)
 
 {
   _atexit(FUN_004cca1b);
@@ -3790,7 +3790,7 @@ joined_r0x004cd6d4:
 #define local_117 (*(char (*)[255])(frame_ + FRAME_OFF(289)))
 #define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(544)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(560)))
-undefined4 __cdecl FUN_004cd8a6(void)
+undefined4 __cdecl tribe_editor_update_city_file(void)
 
 {
   int iVar1;
@@ -3913,7 +3913,7 @@ undefined4 __cdecl FUN_004cdcf6(undefined4 param_1,int param_2)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(780)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-undefined4 __cdecl FUN_004cdd3d(iptr param_1,undefined4 param_2,uint param_3,undefined4 param_4)
+undefined4 __cdecl editor_options_dialog(iptr param_1,undefined4 param_2,uint param_3,undefined4 param_4)
 
 {
   int iVar1;
@@ -4004,30 +4004,30 @@ int __cdecl editor_clamp_value(int param_1,int param_2,int param_3)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
-FUN_004cdfa4(int param_1,uint param_2,int param_3,int param_4,int param_5,int param_6,int param_7,
+editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int param_5,int param_6,int param_7,
             int param_8,int param_9)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&DAT_006a19f4,&DAT_0062e1d4);
+    FUN_005f22d0(&editor_text_dlg_title,&DAT_0062e1d4);
   }
   else {
-    FUN_005f22d0(&DAT_006a19f4,param_1);
+    FUN_005f22d0(&editor_text_dlg_title,param_1);
   }
   _DAT_006a1b94 = &ui_text_font;
   _DAT_006a1b8c = &caption_font;
   _DAT_006a1b90 = &caption_small_font;
   _DAT_006a19d4 = param_2;
-  DAT_006a19d8 = param_8;
-  DAT_006a19dc = param_9;
-  DAT_006a19e0 = param_7;
+  editor_text_dlg_caption_height = param_8;
+  editor_text_dlg_border_width = param_9;
+  editor_text_dlg_resize_border = param_7;
   _DAT_006a1abc = 0;
   _DAT_006a1b68 = 0;
   if ((param_2 & 4) != 0) {
-    DAT_006a19d8 = frame_caption_height;
-    DAT_006a19dc = frame_border_width;
+    editor_text_dlg_caption_height = frame_caption_height;
+    editor_text_dlg_border_width = frame_border_width;
   }
   if ((param_2 & 8) == 0) {
     local_8 = 0x202;
@@ -4035,15 +4035,15 @@ FUN_004cdfa4(int param_1,uint param_2,int param_3,int param_4,int param_5,int pa
   else {
     local_8 = 0x802;
   }
-  if (DAT_006a19d8 != 0) {
+  if (editor_text_dlg_caption_height != 0) {
     local_8 = local_8 | 0x400;
   }
   if (param_7 != 0) {
     local_8 = local_8 | 0x1000;
   }
   if ((param_2 & 2) == 0) {
-    param_5 = param_5 + DAT_006a19dc * 2;
-    param_6 = param_6 + DAT_006a19d8 + DAT_006a19dc;
+    param_5 = param_5 + editor_text_dlg_border_width * 2;
+    param_6 = param_6 + editor_text_dlg_caption_height + editor_text_dlg_border_width;
   }
   if ((param_2 & 1) != 0) {
     param_3 = (screen_width >> 1) - (param_5 >> 1);
@@ -4058,11 +4058,11 @@ FUN_004cdfa4(int param_1,uint param_2,int param_3,int param_4,int param_5,int pa
   wnd_create_with_surface
             ((DibSurface *)&editor_text_dlg_wnd,0,local_8,param_3,param_4,param_5,param_6,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
              local_c);
-  if (DAT_006a19d8 != 0) {
-    thunk_wnd_set_caption_height((WndBase *)&editor_text_dlg_inner,DAT_006a19d8);
+  if (editor_text_dlg_caption_height != 0) {
+    thunk_wnd_set_caption_height((WndBase *)&editor_text_dlg_inner,editor_text_dlg_caption_height);
   }
-  if (DAT_006a19e0 != 0) {
-    thunk_wnd_set_resize_border((WndBase *)&editor_text_dlg_inner,DAT_006a19e0);
+  if (editor_text_dlg_resize_border != 0) {
+    thunk_wnd_set_resize_border((WndBase *)&editor_text_dlg_inner,editor_text_dlg_resize_border);
   }
   thunk_frame_wnd_layout((FrameWindow *)&editor_text_dlg_wnd);
   return;
@@ -4104,7 +4104,7 @@ LAB_004ce2ca:
       wnd_end_modal_loop((C_00408010_b8 *)&editor_text_dlg_inner);
       return;
     }
-    iVar1 = thunk_FUN_004cffb0
+    iVar1 = thunk_edit_get_line
                       ((EditLineView *)&editor_text_edit,local_108,(iptr)local_104,0x100);
     if (iVar1 == 0) {
       *(undefined4 *)(editor_text_lines_out + local_108 * 4) = 0;
@@ -4167,7 +4167,7 @@ void __cdecl FUN_004ce322(void)
 /* WARNING: Removing unreachable block (ram,0x004ce49e) */
 /* WARNING: Removing unreachable block (ram,0x004ce621) */
 
-undefined4 __cdecl FUN_004ce38a(iptr param_1,undefined4 param_2)
+undefined4 __cdecl editor_text_edit_dialog(iptr param_1,undefined4 param_2)
 
 {
   undefined4 uVar1;
@@ -4185,12 +4185,12 @@ undefined4 __cdecl FUN_004ce38a(iptr param_1,undefined4 param_2)
   local_68 = thunk_font_line_spacing((GameFont *)dialog_font_ptr);
   local_68 = local_68 + 8;
   iVar2 = thunk_font_line_spacing((GameFont *)&editor_font);
-  thunk_FUN_004cdfa4(param_2,0xd,0,0x14,600,iVar2 * 0x14 + local_68,0,0,0);
+  thunk_editor_text_dlg_create(param_2,0xd,0,0x14,600,iVar2 * 0x14 + local_68,0,0,0);
   local_68 = thunk_font_line_spacing((GameFont *)dialog_font_ptr);
   local_68 = local_68 + 8;
-  local_60 = (DAT_006a19ec + -6) / 2;
-  thunk_rect_set_xywh((iptr)local_5c,DAT_006a19e4 + 4,DAT_006a19e8 + 4,DAT_006a19ec + -9,
-                     (DAT_006a19f0 - local_68) + -9);
+  local_60 = (editor_text_dlg_client_width + -6) / 2;
+  thunk_rect_set_xywh((iptr)local_5c,editor_text_dlg_client_x + 4,editor_text_dlg_client_y + 4,editor_text_dlg_client_width + -9,
+                     (editor_text_dlg_client_height - local_68) + -9);
   thunk_edit_create_styled
             ((EditControl *)&editor_text_edit,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0xc9,(iptr)local_5c,0,2,1);
   for (local_ac = 0; (local_ac < 0x14 && (*(int *)(param_1 + local_ac * 4) != 0));
@@ -4201,8 +4201,8 @@ undefined4 __cdecl FUN_004ce38a(iptr param_1,undefined4 param_2)
     thunk_edit_replace_sel
               ((Control *)&editor_text_edit,*(iptr *)(param_1 + local_ac * 4));
   }
-  iVar2 = (DAT_006a19e8 + DAT_006a19f0) - (local_68 + 2);
-  local_64 = DAT_006a19e4 + 2;
+  iVar2 = (editor_text_dlg_client_y + editor_text_dlg_client_height) - (local_68 + 2);
+  local_64 = editor_text_dlg_client_x + 2;
   thunk_rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
   iVar3 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x3f8));
   thunk_button_create(&local_4c,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x65,(iptr)local_5c,iVar3);
@@ -4318,7 +4318,7 @@ void __cdecl FUN_004ce83d(void)
 #define local_120 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_1c (*(char (*)[20])(frame_ + FRAME_OFF(260)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(280)))
-undefined4 __cdecl FUN_004ce8a4(iptr param_1,iptr param_2,int param_3,iptr param_4)
+undefined4 __cdecl editor_input_long(iptr param_1,iptr param_2,int param_3,iptr param_4)
 
 {
   long lVar1;
@@ -4336,7 +4336,7 @@ undefined4 __cdecl FUN_004ce8a4(iptr param_1,iptr param_2,int param_3,iptr param
 
 /* 004ce903 auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-int __cdecl FUN_004ce903(char *param_1,iptr param_2,uint param_3)
+int __cdecl events_alloc_string(char *param_1,iptr param_2,uint param_3)
 
 {
   size_t sVar1;
@@ -4385,28 +4385,28 @@ void __cdecl events_copy(iptr param_1,iptr param_2)
       return;
     }
     if (*(int *)(local_c + 8) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 8),param_1,0xf);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 8),param_1,0xf);
       *(undefined4 *)(local_10 + 8) = uVar2;
       if (*(int *)(local_10 + 8) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x10) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x10),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x10),param_1,0x18);
       *(undefined4 *)(local_10 + 0x10) = uVar2;
       if (*(int *)(local_10 + 0x10) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x14) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x14),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x14),param_1,0x18);
       *(undefined4 *)(local_10 + 0x14) = uVar2;
       if (*(int *)(local_10 + 0x14) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x20) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x20),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x20),param_1,0x18);
       *(undefined4 *)(local_10 + 0x20) = uVar2;
       if (*(int *)(local_10 + 0x20) == 0) {
         return;
@@ -4414,84 +4414,84 @@ void __cdecl events_copy(iptr param_1,iptr param_2)
     }
     for (local_8 = 0; (local_8 < 0x14 && (*(int *)(local_c + 0x38 + local_8 * 4) != 0));
         local_8 = local_8 + 1) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x38 + local_8 * 4),param_1,1);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x38 + local_8 * 4),param_1,1);
       *(undefined4 *)(local_10 + 0x38 + local_8 * 4) = uVar2;
       if (*(int *)(local_10 + 0x38 + local_8 * 4) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x88) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x88),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x88),param_1,0x18);
       *(undefined4 *)(local_10 + 0x88) = uVar2;
       if (*(int *)(local_10 + 0x88) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x90) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x90),param_1,0xf);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x90),param_1,0xf);
       *(undefined4 *)(local_10 + 0x90) = uVar2;
       if (*(int *)(local_10 + 0x90) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0xc4) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0xc4),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0xc4),param_1,0x18);
       *(undefined4 *)(local_10 + 0xc4) = uVar2;
       if (*(int *)(local_10 + 0xc4) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0xcc) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0xcc),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0xcc),param_1,0x18);
       *(undefined4 *)(local_10 + 0xcc) = uVar2;
       if (*(int *)(local_10 + 0xcc) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0xd4) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0xd4),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0xd4),param_1,0x18);
       *(undefined4 *)(local_10 + 0xd4) = uVar2;
       if (*(int *)(local_10 + 0xd4) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0xdc) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0xdc),param_1,0xf);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0xdc),param_1,0xf);
       *(undefined4 *)(local_10 + 0xdc) = uVar2;
       if (*(int *)(local_10 + 0xdc) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x13c) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x13c),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x13c),param_1,0x18);
       *(undefined4 *)(local_10 + 0x13c) = uVar2;
       if (*(int *)(local_10 + 0x13c) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x140) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x140),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x140),param_1,0x18);
       *(undefined4 *)(local_10 + 0x140) = uVar2;
       if (*(int *)(local_10 + 0x140) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x148) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x148),param_1,0xf);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x148),param_1,0xf);
       *(undefined4 *)(local_10 + 0x148) = uVar2;
       if (*(int *)(local_10 + 0x148) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x174) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x174),param_1,0x18);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x174),param_1,0x18);
       *(undefined4 *)(local_10 + 0x174) = uVar2;
       if (*(int *)(local_10 + 0x174) == 0) {
         return;
       }
     }
     if (*(int *)(local_c + 0x184) != 0) {
-      uVar2 = thunk_FUN_004ce903(*(undefined4 *)(local_c + 0x184),param_1,1);
+      uVar2 = thunk_events_alloc_string(*(undefined4 *)(local_c + 0x184),param_1,1);
       *(undefined4 *)(local_10 + 0x184) = uVar2;
       if (*(int *)(local_10 + 0x184) == 0) {
         return;
@@ -4534,7 +4534,7 @@ void __cdecl events_compact(void)
 /* 004cefe9 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_004cefe9(char *param_1,iptr param_2)
+int __cdecl events_rename_unit_refs(char *param_1,iptr param_2)
 
 {
   int iVar1;
@@ -4690,7 +4690,7 @@ void __thiscall wnd_set_resize_border(WndBase *this,undefined4 param_1)
 
 /* 004cffb0 auto */
 undefined4 __thiscall
-FUN_004cffb0(EditLineView *this,undefined4 param_1,iptr param_2,undefined4 param_3)
+edit_get_line(EditLineView *this,undefined4 param_1,iptr param_2,undefined4 param_3)
 
 {
   undefined4 uVar1;
@@ -4701,7 +4701,7 @@ FUN_004cffb0(EditLineView *this,undefined4 param_1,iptr param_2,undefined4 param
 
 /* 004cfff0 auto */
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004cfff0(iptr param_1)
+void __cdecl str_trim_trailing(iptr param_1)
 
 {
   uptr sVar1;

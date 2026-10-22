@@ -17,7 +17,7 @@
  *    orders 0x655490/0x68, difficulty 0x64ba10/0x18, attitudes 0x64b9c0/0x24.
  *    This fixes the bases: advances and terrain start 4 bytes before the
  *    name field, with a static 4-char abbreviation ("AFl", "Drt") that the
- *    prerequisite lookups rules_parse_advance_abbrev / FUN_004b07d1 strcmp against.
+ *    prerequisite lookups rules_parse_advance_abbrev / rules_parse_terrain_abbrev strcmp against.
  *  - "Names" are NOT char pointers: text_next_token_str_id -> strpool_add_padded and
  *    text_next_token_pooled -> strpool_add copy the text into a string pool and return
  *    a running string id (strpool_count++); readers turn ids back into text

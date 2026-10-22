@@ -590,13 +590,13 @@ undefined4 __cdecl FUN_005e89d0(void)
     g_ddcaps_hel = 0x13c;
     /* IDirectDraw::GetCaps (vtable slot 11) */
     ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)ADDR(0x006e50e8, ((u8 *)&g.d_006e50e8)), (void *)ADDR(0x006e5228, ((u8 *)&g.d_006e5228)));
-    if ((DAT_006e50ec & 0x40) == 0)
+    if ((ddraw_hw_caps_byte0 & 0x40) == 0)
         dbg_log(s_Direct_Draw__Doesn_t_Supports_Ha_006394f8);
-    if ((DAT_006e50ee & 0x40) == 0)
+    if ((ddraw_hw_caps_byte2 & 0x40) == 0)
         dbg_log(s_Direct_Draw__Doesn_t_Supports_Co_00639524);
-    if ((DAT_006e50ef & 4) == 0)
+    if ((ddraw_hw_caps_byte3 & 4) == 0)
         dbg_log(s_Direct_Draw__Doesn_t_Supports_Co_0063954c);
-    if ((DAT_006e50ef & 8) != 0)
+    if ((ddraw_hw_caps_byte3 & 8) != 0)
         dbg_log(s_Direct_Draw__Device_is_Bank_Swit_00639578);
     return 1;
 }
@@ -647,7 +647,7 @@ uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint par
 
     case 0x4c8:
         if (param_4 == 0x20d)
-            FUN_005ed4e0(view, 0);
+            wnd_call_msg4c8(view, 0);
         break;
 
     case 0x24: {    /* WM_GETMINMAXINFO */

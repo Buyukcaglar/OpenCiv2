@@ -2351,7 +2351,7 @@ undefined4 __cdecl dib_get_bits(iptr param_1)
 }
 
 /* 005e3aa8 auto */
-undefined4 __cdecl FUN_005e3aa8(int param_1)
+undefined4 __cdecl dib_unlock_bits(int param_1)
 
 {
   return 0;
@@ -5656,17 +5656,17 @@ undefined4 __cdecl FUN_005e89d0(void)
   if (iVar1 == 0) {
     _DAT_006e50e8 = 0x13c;
     _DAT_006e5228 = 0x13c;
-    (**(code **)(*(int *)ddraw_iface + 0x2c))(ddraw_iface,&DAT_006e50e8,&DAT_006e5228);
-    if ((DAT_006e50ec & 0x40) == 0) {
+    (**(code **)(*(int *)ddraw_iface + 0x2c))(ddraw_iface,&ddraw_hw_caps,&ddraw_hel_caps);
+    if ((ddraw_hw_caps_byte0 & 0x40) == 0) {
       dbg_log(ADDR(0x6394f8, ((u8 *)&g.d_006394f8)));
     }
-    if ((DAT_006e50ee & 0x40) == 0) {
+    if ((ddraw_hw_caps_byte2 & 0x40) == 0) {
       dbg_log(ADDR(0x639524, ((u8 *)&g.d_00639524)));
     }
-    if ((DAT_006e50ef & 4) == 0) {
+    if ((ddraw_hw_caps_byte3 & 4) == 0) {
       dbg_log(ADDR(0x63954c, ((u8 *)&g.d_0063954c)));
     }
-    if ((DAT_006e50ef & 8) != 0) {
+    if ((ddraw_hw_caps_byte3 & 8) != 0) {
       dbg_log(ADDR(0x639578, ((u8 *)&g.d_00639578)));
     }
     uVar2 = 1;
@@ -7757,7 +7757,7 @@ LAB_005eb8a1:
           if (param_4 != 0x20d) {
             return 0;
           }
-          FUN_005ed4e0((C_005ed4e0 *)(local_14->pad_0 + 0x10),0);
+          wnd_call_msg4c8((C_005ed4e0 *)(local_14->pad_0 + 0x10),0);
           return 0;
         }
       }
@@ -8551,7 +8551,7 @@ void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *this,undefined4 pa
 }
 
 /* 005ed4e0 auto */
-void __thiscall FUN_005ed4e0(C_005ed4e0 *this,undefined4 param_1)
+void __thiscall wnd_call_msg4c8(C_005ed4e0 *this,undefined4 param_1)
 
 {
   if (this->field_5c != 0) {
@@ -10331,7 +10331,7 @@ switchD_005efc68_default:
       return LVar2;
     }
     if (param_4 == 0x20d) {
-      FUN_005ed4e0((C_005ed4e0 *)(this->pad_0 + 0x44),0);
+      wnd_call_msg4c8((C_005ed4e0 *)(this->pad_0 + 0x44),0);
     }
   }
   return 0;

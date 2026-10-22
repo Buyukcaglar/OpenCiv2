@@ -922,7 +922,7 @@ FUN_00452188
     break;
   case 2:
     if (this->border_width == 0) {
-      thunk_FUN_00599a20(this,(iptr)&param_1);
+      thunk_pedia_init_improvement_list(this,(iptr)&param_1);
     }
     else {
       thunk_pedia_draw_improvement_page(this);
@@ -930,7 +930,7 @@ FUN_00452188
     break;
   case 3:
     if (this->border_width == 0) {
-      thunk_FUN_005261a0((C_004083b0_61c *)this,(iptr)&param_1);
+      thunk_pedia_init_wonder_list((C_004083b0_61c *)this,(iptr)&param_1);
     }
     else {
       thunk_pedia_draw_improvement(this);
@@ -951,7 +951,7 @@ FUN_00452188
     break;
   case 6:
     if (this->border_width == 0) {
-      thunk_FUN_00518f00((C_004083b0_61c *)this,(iptr)&param_1);
+      thunk_pedia_init_government_list((C_004083b0_61c *)this,(iptr)&param_1);
     }
     break;
   case 7:
@@ -1808,7 +1808,7 @@ void __cdecl FUN_00453f90(void)
   _sprintf(local_410,s_Software__s__s_006269c4,PTR_s_MicroProse_Software_0061c354,
            PTR_s_Civilization_II_Multiplayer_Gold_0061c358);
   thunk_FUN_0045406c((iptr)local_410,ADDR(0x6269d4, ((u8 *)&g.d_006269d4)),(iptr)&local_8,4,4);
-  DAT_00626960 = local_8;
+  registry_language_id = local_8;
   return;
 }
 #undef local_414
@@ -2947,12 +2947,12 @@ int __cdecl diplo_patience_limit(iptr param_1,iptr param_2)
 #undef local_8
 
 /* 0045705e auto */
-#define DAT_00626a20 (*(int *)((u8 *)&g.d_00626a20))
 #define diplo_ai_declare_war (*(int *)((u8 *)&g.d_0064b0e8))
 #define diplo_ai_fear_level (*(uint *)((u8 *)&g.d_0064b0ec))
 #define diplo_ai_outranks_target (*(uint *)((u8 *)&g.d_0064b12c))
 #define diplo_cur_attitude (*(uint *)((u8 *)&g.d_0064b114))
 #define diplo_initial_eval_done (*(int *)((u8 *)&g.d_00626a1c))
+#define diplo_opening_eval_active (*(int *)((u8 *)&g.d_00626a20))
 #define diplo_strongest_enemy (*(iptr *)((u8 *)&g.d_0064b0fc))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
@@ -2984,7 +2984,7 @@ void __cdecl diplo_eval_ai_stance(iptr param_1,iptr param_2)
   }
   diplo_ai_outranks_target = (uint)(game.power_rank[param_1] < game.power_rank[param_2]);
   diplo_suppressed_aggression = 0;
-  if ((DAT_00626a20 != 0) && (diplo_initial_eval_done == 0)) {
+  if ((diplo_opening_eval_active != 0) && (diplo_initial_eval_done == 0)) {
     diplo_last_treaty_turn = (int)*(short *)(param_1 * 0x594 + ADDR(0x64ca82, ((u8 *)&civs + 994)) + param_2 * 2);
   }
   diplo_ai_fear_level = 0;
@@ -3299,7 +3299,7 @@ LAB_00457d0d:
           diplo_ai_aggressive = 1;
         }
       }
-      if (((((DAT_00626a20 != 0) &&
+      if (((((diplo_opening_eval_active != 0) &&
             (cVar2 = civs[param_2].field_1f, iVar5 = thunk_diplo_patience_limit(param_1,param_2),
             cVar2 < iVar5)) && (4 < civs[param_2].government)) &&
           ((diplo_ai_aggressive != 0 &&
@@ -3342,12 +3342,12 @@ LAB_00457d0d:
     local_18 = local_18 + 1;
   } while( true );
 }
-#undef DAT_00626a20
 #undef diplo_ai_declare_war
 #undef diplo_ai_fear_level
 #undef diplo_ai_outranks_target
 #undef diplo_cur_attitude
 #undef diplo_initial_eval_done
+#undef diplo_opening_eval_active
 #undef diplo_strongest_enemy
 #undef scenario_flags
 #undef local_20
@@ -3572,7 +3572,7 @@ void __cdecl diplo_session_reset(void)
   diplo_emissary_asked = 0;
   diplo_emissary_response = 0;
   diplo_initial_eval_done = 0;
-  thunk_FUN_00494148();
+  thunk_diplo_leader_wnd_close();
   return;
 }
 #undef diplo_emissary_asked

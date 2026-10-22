@@ -1522,12 +1522,12 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
     iVar4 = thunk_rect_width((iptr)param_1);
     local_c = CreateWindowExA(4,&DAT_0063831c,&DAT_00638318,local_8,*param_1,param_1[1],iVar4,iVar3,
                               pHVar7,pHVar8,pHVar9,pvVar10);
-    DAT_006e47dc = (WNDPROC)GetWindowLongA(local_c,-4);
+    edit_base_wndproc = (WNDPROC)GetWindowLongA(local_c,-4);
     local_34.style = 0x88;
     local_34.cbClsExtra = 0;
-    local_34.lpfnWndProc = DAT_006e47dc;
-    DAT_006e47d8 = GetClassLongA(local_c,-0x12);
-    local_34.cbWndExtra = DAT_006e47d8 + 8;
+    local_34.lpfnWndProc = edit_base_wndproc;
+    edit_base_wnd_extra = GetClassLongA(local_c,-0x12);
+    local_34.cbWndExtra = edit_base_wnd_extra + 8;
     local_34.hInstance = app_hinstance;
     local_34.hIcon = (HICON)0x0;
     local_34.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f01);
@@ -1554,8 +1554,8 @@ HWND __cdecl edit_create_window(int *param_1,iptr param_2,uint param_3,int param
   uVar5 = thunk_font_get_handle(param_5);
   mem_handle_unlock(uVar5);
   SetWindowLongA(local_c,-4,ADDR(0x5d2a01, FUN_005d2a01));
-  SetWindowLongA(local_c,DAT_006e47d8,(LONG)DAT_006e47dc);
-  SetWindowLongA(local_c,DAT_006e47d8 + 4,param_2);
+  SetWindowLongA(local_c,edit_base_wnd_extra,(LONG)edit_base_wndproc);
+  SetWindowLongA(local_c,edit_base_wnd_extra + 4,param_2);
   return local_c;
 }
 #undef app_hinstance
@@ -1898,12 +1898,12 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
     iVar4 = thunk_rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_COMBOBOX_00638350,&DAT_0063834c,local_34,*param_1,param_1[1],iVar4
                               ,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
-    DAT_006e47ec = (WNDPROC)GetWindowLongA(local_8,-4);
+    combo_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_30.style = 0x88;
     local_30.cbClsExtra = 0;
-    local_30.lpfnWndProc = DAT_006e47ec;
-    DAT_006e47e4 = GetClassLongA(local_8,-0x12);
-    local_30.cbWndExtra = DAT_006e47e4 + 8;
+    local_30.lpfnWndProc = combo_base_wndproc;
+    combo_base_wnd_extra = GetClassLongA(local_8,-0x12);
+    local_30.cbWndExtra = combo_base_wnd_extra + 8;
     local_30.hInstance = app_hinstance;
     local_30.hIcon = (HICON)0x0;
     local_30.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
@@ -1929,8 +1929,8 @@ HWND __cdecl combo_create_window(int *param_1,iptr param_2,int param_3)
   local_8 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&DAT_0063836c,local_34,*param_1,param_1[1],
                             nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5d3310, FUN_005d3310));
-  SetWindowLongA(local_8,DAT_006e47e4,(LONG)DAT_006e47ec);
-  SetWindowLongA(local_8,DAT_006e47e4 + 4,param_2);
+  SetWindowLongA(local_8,combo_base_wnd_extra,(LONG)combo_base_wndproc);
+  SetWindowLongA(local_8,combo_base_wnd_extra + 4,param_2);
   return local_8;
 }
 #undef app_hinstance
@@ -2162,12 +2162,12 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
     iVar5 = thunk_rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_LISTBOX_0063838c,&DAT_00638388,local_38,*param_1,param_1[1],iVar5,
                               iVar4,pHVar8,pHVar9,pHVar10,pvVar11);
-    DAT_006e47f0 = (WNDPROC)GetWindowLongA(local_8,-4);
+    listbox_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_30.style = 0x88;
     local_30.cbClsExtra = 0;
-    local_30.lpfnWndProc = DAT_006e47f0;
-    DAT_006e47f4 = GetClassLongA(local_8,-0x12);
-    local_30.cbWndExtra = DAT_006e47f4 + 8;
+    local_30.lpfnWndProc = listbox_base_wndproc;
+    listbox_base_wnd_extra = GetClassLongA(local_8,-0x12);
+    local_30.cbWndExtra = listbox_base_wnd_extra + 8;
     local_30.hInstance = app_hinstance;
     local_30.hIcon = (HICON)0x0;
     local_30.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
@@ -2201,8 +2201,8 @@ HWND __cdecl listbox_create_hwnd(int *param_1,iptr param_2,int param_3,int param
   uVar6 = thunk_font_get_handle(param_5);
   mem_handle_unlock(uVar6);
   SetWindowLongA(local_8,-4,ADDR(0x5d39e2, FUN_005d39e2));
-  SetWindowLongA(local_8,DAT_006e47f4,(LONG)DAT_006e47f0);
-  SetWindowLongA(local_8,DAT_006e47f4 + 4,param_2);
+  SetWindowLongA(local_8,listbox_base_wnd_extra,(LONG)listbox_base_wndproc);
+  SetWindowLongA(local_8,listbox_base_wnd_extra + 4,param_2);
   return local_8;
 }
 #undef app_hinstance
@@ -2626,11 +2626,11 @@ HWND __cdecl timer_wnd_create(iptr param_1)
     timerdll_timer_callback = GetProcAddress(timerdll_module,s_TimerCallBack_006383d0);
     timerdll_set_timer_id = GetProcAddress(timerdll_module,s_SetTimerID_006383e0);
     timerdll_get_timer_id = GetProcAddress(timerdll_module,s_GetTimerID_006383ec);
-    DAT_006e4800 = GetProcAddress(timerdll_module,s_GetTimerIndex_006383f8);
+    timerdll_get_timer_index = GetProcAddress(timerdll_module,s_GetTimerIndex_006383f8);
     timerdll_reset_timer_notified = GetProcAddress(timerdll_module,s_ResetTimerNotified_00638408);
     if ((((timerdll_timer_callback == (FARPROC)0x0) || (timerdll_set_timer_id == (FARPROC)0x0)) ||
         (timerdll_get_timer_id == (FARPROC)0x0)) ||
-       ((DAT_006e4800 == (FARPROC)0x0 || (timerdll_reset_timer_notified == (FARPROC)0x0)))) {
+       ((timerdll_get_timer_index == (FARPROC)0x0 || (timerdll_reset_timer_notified == (FARPROC)0x0)))) {
       err_report((ErrorContext *)&err_report_ctx,9,ADDR(0x638438, ((u8 *)&g.d_00638438)),ADDR(0x63841c, ((u8 *)&g.d_0063841c)),0x55);
       FreeLibrary(timerdll_module);
     }
@@ -2931,13 +2931,13 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
     }
     UVar2 = waveOutGetNumDevs();
     for (local_10 = 0; (int)local_10 < (int)UVar2; local_10 = local_10 + 1) {
-      waveOutGetDevCapsA(local_10,(LPWAVEOUTCAPSA)&DAT_006e4818,0x34);
-      if ((DAT_006e4840 & 0x20) != 0) {
+      waveOutGetDevCapsA(local_10,(LPWAVEOUTCAPSA)&snd_wave_dev_caps,0x34);
+      if ((snd_wave_dev_formats & 0x20) != 0) {
         bVar1 = false;
         local_14 = local_10;
         break;
       }
-      if ((DAT_006e4840 & 0x10) != 0) {
+      if ((snd_wave_dev_formats & 0x10) != 0) {
         local_14 = local_10;
         bVar1 = true;
       }
@@ -7088,7 +7088,7 @@ void __cdecl dll_unload(HMODULE param_1)
   }
   if (local_8 < res_dll_module_count) {
     for (; local_8 < res_dll_module_count; local_8 = local_8 + 1) {
-      *(undefined4 *)(&res_dll_modules + local_8 * 4) = *(undefined4 *)(&DAT_006e4f64 + local_8 * 4);
+      *(undefined4 *)(&res_dll_modules + local_8 * 4) = *(undefined4 *)(&res_dll_modules_elem1 + local_8 * 4);
     }
     res_dll_module_count = res_dll_module_count - 1;
     FreeLibrary(param_1);
@@ -7394,7 +7394,7 @@ void __cdecl app_init_system(void)
     app_register_wnd_classes();
   }
   snd_system_init();
-  FUN_005dbc3a();
+  app_init_hook_nop();
   tVar1 = _time((time_t *)0x0);
   FUN_005f2260((int)tVar1);
   Ordinal_17();
@@ -7406,21 +7406,21 @@ void __cdecl app_init_system(void)
 void __cdecl app_shutdown_system(void)
 
 {
-  FUN_005bc173();
-  FUN_005dbc4a();
+  wnd_stack_check_leaks_nop();
+  app_shutdown_hook_nop();
   snd_system_shutdown();
   return;
 }
 
 /* 005dbc3a auto */
-void __cdecl FUN_005dbc3a(void)
+void __cdecl app_init_hook_nop(void)
 
 {
   return;
 }
 
 /* 005dbc4a auto */
-void __cdecl FUN_005dbc4a(void)
+void __cdecl app_shutdown_hook_nop(void)
 
 {
   return;
@@ -9002,7 +9002,7 @@ void __cdecl FUN_005de00d(void)
     local_20 = 0x100;
     mciSendCommandA(snd_cd_device_id,0x80d,0x100,(DWORD_PTR)local_2c);
   }
-  DAT_006389dc = local_8;
+  snd_cd_ejected_device = local_8;
   return;
 }
 #undef snd_cd_device_id
@@ -9027,7 +9027,7 @@ void __cdecl FUN_005de0b5(void)
   MCIERROR MVar1;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((snd_cd_device_id == 0) && (DAT_006389dc == 0)) {
+  if ((snd_cd_device_id == 0) && (snd_cd_ejected_device == 0)) {
     local_14 = s_cdaudio_00638b28;
     MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_1c);
     if (MVar1 == 0) {
@@ -9037,9 +9037,9 @@ void __cdecl FUN_005de0b5(void)
       mciSendCommandA(local_8,0x804,0,0);
     }
   }
-  else if (DAT_006389dc != 0) {
-    local_8 = DAT_006389dc;
-    DAT_006389dc = 0;
+  else if (snd_cd_ejected_device != 0) {
+    local_8 = snd_cd_ejected_device;
+    snd_cd_ejected_device = 0;
     snd_cd_mci_stop();
     local_20 = 0x200;
     mciSendCommandA(local_8,0x80d,0x200,(DWORD_PTR)local_2c);

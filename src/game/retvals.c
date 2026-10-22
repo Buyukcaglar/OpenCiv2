@@ -589,10 +589,10 @@ int __cdecl FUN_00475666(char *param_1)
   thunk_text_close_file();
   saved_layout_valid = 1;
   iVar3 = thunk_rect_width(&DAT_00655284);
-  iVar8 = thunk_rect_width(&DAT_006ab180);
+  iVar8 = thunk_rect_width(&screen_rect);
   if (iVar3 == iVar8) {
     iVar3 = thunk_rect_height(&DAT_00655284);
-    iVar8 = thunk_rect_height(&DAT_006ab180);
+    iVar8 = thunk_rect_height(&screen_rect);
     if ((iVar3 != iVar8) || (local_220 != 0)) goto LAB_0047733e;
   }
   else {
@@ -1440,16 +1440,16 @@ int __cdecl city_recalc(int param_1,int param_2)
   }
   else {
     city_calc_cached_id = param_1;
-    thunk_FUN_004e7641(param_1);
-    thunk_FUN_004e7967(param_1);
+    thunk_city_calc_tile_flags(param_1);
+    thunk_city_calc_capital_link(param_1);
     thunk_city_calc_unit_support(param_1);
-    /* FUN_004eb4a1, which is declared void but returns its last call's
-       (FUN_004ea8e4's) int: */
-    thunk_FUN_004e8f42(param_1);
-    thunk_FUN_004eb327(param_1);
-    thunk_FUN_004e97ae(param_1);
-    thunk_FUN_004e9c14(param_1);
-    iVar1 = thunk_FUN_004ea8e4(param_1);
+    /* city_calc_all_stats, which is declared void but returns its last call's
+       (city_calc_trade_happiness's) int: */
+    thunk_city_assign_workers(param_1);
+    thunk_city_count_food_routes(param_1);
+    thunk_city_fill_specialists(param_1);
+    thunk_city_calc_shields_pollution(param_1);
+    iVar1 = thunk_city_calc_trade_happiness(param_1);
   }
   return iVar1;
 }
@@ -1465,7 +1465,7 @@ int __cdecl city_recalc(int param_1,int param_2)
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
-int __cdecl FUN_004efd44(int param_1)
+int __cdecl city_process_pollution(int param_1)
 
 {
   char cVar1;

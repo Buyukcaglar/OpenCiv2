@@ -38,7 +38,7 @@ C_004083b0	0x1bb	timer_seconds_text	high	Seconds digits of caption timer text.
 C_004083b0	0x1e0	show_turn_timer	medium	frame_wnd_draw_caption shows MP turn timer only when nonzero; parley reuses as layout y.
 C_004083b0	0x1e4	show_turn_status	medium	Gates autoplay/multiplayer status text in caption; zeroed in frame_wnd_create.
 C_004083b0	0x1e8	timer_last_value	medium	Last displayed seconds-left or autoplay turns; -1 forces refresh.
-C_004083b0	0x1ec	session_mode	medium	FUN_004b4735 stores mode; 4 sets up the chat log.
+C_004083b0	0x1ec	session_mode	medium	parley_wnd_create stores mode; 4 sets up the chat log.
 C_004083b0	0x1f0	left_civ	medium	Party passed to parley_add_side_dialog with side 0.
 C_004083b0	0x1f4	right_civ	medium	Party passed to parley_add_side_dialog with side 1.
 C_004083b0	0x1f8	shown_left_civ	medium	Last synced left party; init 0x15 (none).
@@ -74,10 +74,10 @@ C_004083b0	0x5b0	audio_playing	medium	Set to 1 after avi_audio_start, cleared on
 C_004083b0	0x5b4	target_surface	medium	Parent surface passed to avi_player_create_child; FUN_005dd7de blits the frame surface into it.
 C_004083b0	0x5b8	pos_x	high	avi_player_create stores x; used as OffsetRect x when blitting to target surface.
 C_004083b0	0x5bc	pos_y	high	avi_player_create stores y; used as OffsetRect y when blitting to target surface.
-C_004083b0	0x5dc	panel_width	medium	FUN_004f4b9f sets 640 and builds the frame rect (0,0,w,h) and centers the window horizontally.
-C_004083b0	0x5e0	panel_height	medium	FUN_004f4b9f sets 400 and uses it for frame rect height and vertical centering.
+C_004083b0	0x5dc	panel_width	medium	pedia_window_create sets 640 and builds the frame rect (0,0,w,h) and centers the window horizontally.
+C_004083b0	0x5e0	panel_height	medium	pedia_window_create sets 400 and uses it for frame rect height and vertical centering.
 C_004083b0	0x5f0	frame_rect_right	medium	Right edge of the frame RECT at 0x5e8 (0,0,panel_width,panel_height) used by pedia_draw_frame.
-C_004083b0	0x5f8	content_left	high	Left of the content RECT built by SetRect/OffsetRect in FUN_004f4b9f; rect_width(&field_5f8) taken widely in pedia code.
+C_004083b0	0x5f8	content_left	high	Left of the content RECT built by SetRect/OffsetRect in pedia_window_create; rect_width(&field_5f8) taken widely in pedia code.
 C_004083b0	0x5fc	content_top	high	Top of the content RECT (offset by caption height + margin).
 C_004083b0	0x600	content_right	high	Right of the content RECT; copied with left/top/bottom in pedia_update_controls.
 C_004083b0	0x604	content_bottom	high	Bottom of the content RECT; used as yBottom in pedia drawing.

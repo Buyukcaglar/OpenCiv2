@@ -1329,8 +1329,8 @@ iptr __cdecl unit_create(iptr param_1,uptr param_2,iptr param_3,iptr param_4)
     *(int *)(&civ_unit_counts + param_2 * 4) = *(int *)(&civ_unit_counts + param_2 * 4) + 1;
     units[local_10].type = (u8)param_1;
     units[local_10].owner = (byte)param_2;
-    units[local_10].id = DAT_00627fd8;
-    DAT_00627fd8 = DAT_00627fd8 + 1;
+    units[local_10].id = next_unit_id;
+    next_unit_id = next_unit_id + 1;
     if (game.multiplayer < 3) {
       units[local_10].moves_used = '\0';
     }
@@ -4727,7 +4727,7 @@ undefined4 __cdecl wnd_obj_destroy(undefined4 *param_1)
 
 /* 005bc173 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005bc173(void)
+void __cdecl wnd_stack_check_leaks_nop(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4761,7 +4761,7 @@ void __cdecl wnd_stack_remove(int param_1)
   }
   if (local_8 < ms_window_stack_count + -1) {
     for (; local_8 < ms_window_stack_count + -1; local_8 = local_8 + 1) {
-      *(undefined4 *)(&ms_window_stack + local_8 * 4) = *(undefined4 *)(&DAT_006d1dbc + local_8 * 4);
+      *(undefined4 *)(&ms_window_stack + local_8 * 4) = *(undefined4 *)(&ms_window_stack_elem1 + local_8 * 4);
     }
   }
   ms_window_stack_count = ms_window_stack_count + -1;

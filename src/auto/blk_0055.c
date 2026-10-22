@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 00551cd0 auto */
-C_0040bc40_28 * __thiscall FUN_00551cd0(C_0040bc40_28 *this,uint param_1)
+C_0040bc40_28 * __thiscall events_delete(C_0040bc40_28 *this,uint param_1)
 
 {
   thunk_events_dtor(this);
@@ -18,7 +18,7 @@ C_0040bc40_28 * __thiscall FUN_00551cd0(C_0040bc40_28 *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_00551d20(C_00551d20 *this)
+u32 __thiscall listbox_get_count(C_00551d20 *this)
 
 {
   return this->item_count;
@@ -1796,7 +1796,7 @@ void __cdecl cheat_destroy_units_at_cursor(void)
 
 /* 00555ced auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl FUN_00555ced(int param_1)
+undefined4 __cdecl dbg_continent_policy_color(int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1854,7 +1854,7 @@ void __cdecl FUN_00555d70(void)
   for (local_c = 0; local_c < 0x30; local_c = local_c + 1) {
     iVar2 = (int)*(char *)(local_28 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_c * 6);
     if (-1 < iVar2) {
-      uVar3 = thunk_FUN_00555ced(iVar2);
+      uVar3 = thunk_dbg_continent_policy_color(iVar2);
       thunk_mapview_draw_tile_number((int)*(short *)(local_28 * 0x594 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + local_c * 6),
                          (int)*(short *)(local_28 * 0x594 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + local_c * 6),
                          (int)*(char *)(local_28 * 0x594 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + local_c * 6),uVar3);
@@ -1882,10 +1882,10 @@ void __cdecl FUN_00555d70(void)
     uVar6 = 1;
     uVar5 = 1;
     uVar4 = 10;
-    uVar3 = thunk_FUN_00555ced((uint)*(byte *)(local_20 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + local_28 * 0x594));
+    uVar3 = thunk_dbg_continent_policy_color((uint)*(byte *)(local_20 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + local_28 * 0x594));
     thunk_text_set_colors(uVar3,uVar4,uVar5,uVar6);
     thunk_gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_18,local_1c);
-    iVar2 = thunk_font_line_spacing((GameFont *)&DAT_006aa864);
+    iVar2 = thunk_font_line_spacing((GameFont *)&city_window_font_small);
     local_1c = local_1c + iVar2;
     iVar2 = thunk_surface_get_height((DibSurface *)&map_views);
     if (iVar2 + -0xc <= local_1c) {
@@ -2953,7 +2953,7 @@ void __cdecl setup_picwnd_load_image(undefined4 param_1,undefined4 param_2)
   palette_init(&local_444);
   (*(undefined1 *)((char *)&local_8 + 0)) = 1;
   thunk_win_flush_pending_msgs();
-  surface_load_gif_resource(&local_48c,DAT_006ab498 + 900,10,0xc0,(iptr)&local_444);
+  surface_load_gif_resource(&local_48c,setup_picwnd_image_id + 900,10,0xc0,(iptr)&local_444);
   thunk_win_flush_pending_msgs();
   surface_create((DibSurface *)&setup_picwnd_surface,param_1,param_2);
   thunk_gfx_copy_rect_same_pos((iptr)&local_48c,ADDR(0x6ab4b8, ((u8 *)&g.d_006ab4b8)),0,0,param_1,param_2);
@@ -3084,7 +3084,7 @@ void __thiscall setup_picwnd_redraw(C_004083b0_430 *this)
 undefined4 __cdecl FUN_0055a0e1(void)
 
 {
-  thunk_wnd_hide((WndBase *)&DAT_006ab200);
+  thunk_wnd_hide((WndBase *)&setup_picwnd_wnd);
   thunk_wnd_focus_and_raise((WndBase *)&main_frame_wnd);
   thunk_ui_flush_input();
   return 0;
@@ -3373,8 +3373,8 @@ void __cdecl map_build_coarse_connectivity(void)
         local_18 = map_coarse_cell_landmass(local_1c,local_24,(iptr)&local_28,(iptr)&local_30,local_2c);
         if (-1 < local_18) {
           for (local_44 = 0; local_44 < 4; local_44 = local_44 + 1) {
-            local_10 = map_wrap_x((char)(&DAT_006283d0)[local_44] * 4 + local_1c);
-            local_14 = (char)(&DAT_006283e0)[local_44] * 4 + local_24;
+            local_10 = map_wrap_x((char)(&coarse_dir_dx_table)[local_44] * 4 + local_1c);
+            local_14 = (char)(&coarse_dir_dy_table)[local_44] * 4 + local_24;
             iVar1 = map_in_bounds(local_10,local_14);
             if ((((iVar1 != 0) &&
                  (local_c = map_coarse_cell_landmass(local_10,local_14,(iptr)&local_40,(iptr)&local_48,local_2c)
@@ -3384,8 +3384,8 @@ void __cdecl map_build_coarse_connectivity(void)
               local_8[map.quarter_w * local_20 + local_34] =
                    local_8[map.quarter_w * local_20 + local_34] |
                    (byte)(1 << ((byte)local_44 & 0x1f));
-              local_10 = coarse_wrap_x((char)(&DAT_006283d0)[local_44] + local_34);
-              local_14 = (char)(&DAT_006283e0)[local_44] + local_20;
+              local_10 = coarse_wrap_x((char)(&coarse_dir_dx_table)[local_44] + local_34);
+              local_14 = (char)(&coarse_dir_dy_table)[local_44] + local_20;
               if (((-1 < local_10) && (-1 < local_14)) &&
                  ((local_10 < map.quarter_w && (local_14 < map.quarter_h)))) {
                 local_8[map.quarter_w * local_14 + local_10] =
@@ -3732,9 +3732,9 @@ void __cdecl mp_cmd_change_timer(void)
 void __cdecl mp_mouse_watchdog_stop(void)
 
 {
-  if (DAT_00633a80 != 0) {
-    game_timer_destroy(DAT_00633a80);
-    DAT_00633a80 = 0;
+  if (mp_mouse_watchdog_timer != 0) {
+    game_timer_destroy(mp_mouse_watchdog_timer);
+    mp_mouse_watchdog_timer = 0;
   }
   return;
 }
@@ -3744,10 +3744,10 @@ void __cdecl mp_mouse_watchdog_start(void)
 
 {
   if (2 < game.multiplayer) {
-    if (DAT_00633a80 != 0) {
-      game_timer_destroy(DAT_00633a80);
+    if (mp_mouse_watchdog_timer != 0) {
+      game_timer_destroy(mp_mouse_watchdog_timer);
     }
-    DAT_00633a80 = game_timer_create(ADDR(0x401451, thunk_mp_mouse_watchdog_tick),500,1);
+    mp_mouse_watchdog_timer = game_timer_create(ADDR(0x401451, thunk_mp_mouse_watchdog_tick),500,1);
   }
   return;
 }
@@ -3986,7 +3986,7 @@ int __cdecl diplo_count_border_intruders(iptr param_1,iptr param_2)
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   border_intruder_city = -1;
-  DAT_00633ac8 = 0;
+  diplo_border_intruded_cities = 0;
   diplo_border_intruder_units = 0;
   diplo_border_intruder_count = 0;
   diplo_border_repeat_offenses = 0;
@@ -4009,7 +4009,7 @@ LAB_0055bc9b:
             if (((char)unit_types[units[local_20].type].role < '\x05') &&
                ((units[local_20].flags & 4) == 0)) {
               if (local_18 != border_intruder_city) {
-                DAT_00633ac8 = DAT_00633ac8 + 1;
+                diplo_border_intruded_cities = diplo_border_intruded_cities + 1;
               }
               border_intruder_city = local_18;
               if ((units[local_20].flags & 0x20) == 0) {

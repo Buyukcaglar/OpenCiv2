@@ -235,11 +235,11 @@ undefined4 __cdecl unit_move_dir(iptr param_1,uptr param_2,undefined4 param_3)
             }
             thunk_map_redraw_tile_all_views(local_ec,local_fc);
           }
-          thunk_FUN_004c6bf5(param_1,uVar14);
+          thunk_spy_city_mission(param_1,uVar14);
           param_1 = iVar9;
           goto LAB_00594a80;
         }
-        iVar15 = thunk_FUN_004c9ebd(param_1,local_28,uVar12);
+        iVar15 = thunk_spy_unit_mission(param_1,local_28,uVar12);
         param_1 = iVar9;
         if (iVar15 != 0) goto LAB_00594a80;
         local_44 = tile_city_or_unit_owner(local_ec,local_fc);
@@ -2413,7 +2413,7 @@ uint __cdecl spaceship_group_at_limit(iptr param_1,iptr param_2)
 
 /* 00599a20 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_00599a20(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2685,7 +2685,7 @@ void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
       }
     }
     else {
-      thunk_FUN_00526913(this,param_1);
+      thunk_pedia_show_wonder_modal(this,param_1);
     }
   }
   return;
@@ -2800,8 +2800,8 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0059d080((NetMsgHeader *)&this->field_8);
-  thunk_FUN_00514220((NetMsgQueue *)(this[0x2733].pad_0 + 5));
+  thunk_net_msg_player_info_init((NetMsgHeader *)&this->field_8);
+  thunk_net_msgq_ctor((NetMsgQueue *)(this[0x2733].pad_0 + 5));
   local_8 = 0;
   this[0x94].pad_0[0] = '\0';
   this[0x94].pad_0[1] = '\0';
@@ -2925,7 +2925,7 @@ void __thiscall net_session_dtor(void *this)
   thunk_net_session_shutdown(this,1);
   thunk_net_reset_error_counts();
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0059adc8 */ { thunk_FUN_00514254((NetMsgQueue *)(*(int *)((iptr)&this) + 0x160d0)); }
+  /* inlined unwind funclet FUN_0059adc8 */ { thunk_net_msgq_clear((NetMsgQueue *)(*(int *)((iptr)&this) + 0x160d0)); }
   return;
 }
 #undef uStack_10
@@ -3097,10 +3097,10 @@ void __thiscall net_session_shutdown(void *this,int param_1)
       XD_FlushSendBuffer(60000);
       dbg_log(ADDR(0x635354, ((u8 *)&g.d_00635354)));
       thunk_net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
-      thunk_FUN_00511acf();
+      thunk_net_popup_queue_clear();
       XD_CloseConnection();
       thunk_net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
-      thunk_FUN_00511acf();
+      thunk_net_popup_queue_clear();
       dbg_log(ADDR(0x635370, ((u8 *)&g.d_00635370)));
       thunk_FUN_0059b55b(this);
     }
@@ -3122,7 +3122,7 @@ void __thiscall net_session_shutdown(void *this,int param_1)
       dbg_log(ADDR(0x6353dc, ((u8 *)&g.d_006353dc)));
     }
     thunk_net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
-    thunk_FUN_00511acf();
+    thunk_net_popup_queue_clear();
     if (0 < *(int *)((int)this + 0x584)) {
       dbg_logf(ADDR(0x635468, ((u8 *)&g.d_00635468)),*(iptr *)((int)this + 0x584));
     }
@@ -3148,7 +3148,7 @@ void __thiscall net_session_shutdown(void *this,int param_1)
   *(undefined4 *)((int)this + 0x1f8) = 0xffffffff;
   thunk_net_reset_error_counts();
   thunk_net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
-  thunk_FUN_00511acf();
+  thunk_net_popup_queue_clear();
   return;
 }
 
@@ -3362,22 +3362,22 @@ void __cdecl FUN_0059bc41(uint param_1,int *param_2,uint param_3)
     if (*param_2 == 0x66606660) {
       thunk_net_msgq_enqueue
                 ((NetMsgQueueEnqueueView *)&net_msg_queue,param_1 & 0xffff,(iptr)param_2,param_3);
-      DAT_006c8fb0 = param_3;
-      DAT_006c9284 = net_send_sequence;
+      net_last_recv_callback_size = param_3;
+      net_last_queued_send_seq = net_send_sequence;
       local_8 = param_2;
-      DAT_006c8fb8 = param_2[2];
+      net_last_recv_msg_size = param_2[2];
       DAT_00635098 = param_2[1];
     }
     else {
       dbg_log(ADDR(0x635608, ((u8 *)&g.d_00635608)));
       if (-1 < DAT_00635098) {
-        __ultoa(DAT_006c8fb0,&local_6c,10);
+        __ultoa(net_last_recv_callback_size,&local_6c,10);
         dbg_logf_str(ADDR(0x635640, ((u8 *)&g.d_00635640)),(iptr)&local_6c);
-        __itoa(DAT_006c9284,&local_6c,10);
+        __itoa(net_last_queued_send_seq,&local_6c,10);
         dbg_logf_str(ADDR(0x635658, ((u8 *)&g.d_00635658)),(iptr)&local_6c);
         __itoa(DAT_00635098,&local_6c,10);
         dbg_logf_str(ADDR(0x635678, ((u8 *)&g.d_00635678)),(iptr)&local_6c);
-        __ultoa(DAT_006c8fb8,&local_6c,10);
+        __ultoa(net_last_recv_msg_size,&local_6c,10);
         dbg_logf_str(ADDR(0x63568c, ((u8 *)&g.d_0063568c)),(iptr)&local_6c);
       }
       __itoa(net_send_sequence,&local_6c,10);
@@ -3454,7 +3454,7 @@ void __cdecl FUN_0059bfdb(short param_1)
   dbg_logf(ADDR(0x6357a8, ((u8 *)&g.d_006357a8)),(int)param_1);
   if ((-1 < param_1) && (param_1 < 8)) {
     net_server_conn_id = (int)param_1;
-    DAT_006ad2f5 = 1;
+    net_connected_to_server = 1;
     thunk_net_send_message(0x2f,0,(int)param_1,0,0,0,0,0,0,0);
   }
   return;
@@ -3693,7 +3693,7 @@ void __cdecl casualty_log_add(iptr param_1,iptr param_2,iptr param_3,iptr param_
   _Source = (char *)thunk_civ_name_plural((int)units[param_2].owner);
   _strncpy((char *)(*(int *)(&casualty_log_next + units[param_1].owner * 4) * 0x22 +
                     units[param_1].owner * 0x27d8 + ADDR(0x6af2aa, ((u8 *)&g.d_006af2a8 + 2))),_Source,_Count);
-  (&DAT_006af2c1)
+  (&casualty_log_killer_name_ends)
   [units[param_1].owner * 0x27d8 + *(int *)(&casualty_log_next + units[param_1].owner * 4) * 0x22] = 0;
   *(int *)(&casualty_log_next + units[param_1].owner * 4) =
        *(int *)(&casualty_log_next + units[param_1].owner * 4) + 1;
@@ -3721,7 +3721,7 @@ void __cdecl casualty_log_add(iptr param_1,iptr param_2,iptr param_3,iptr param_
 /* 0059d080 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-NetMsgHeader * __thiscall FUN_0059d080(NetMsgHeader *this)
+NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3995,8 +3995,8 @@ void __cdecl dialog_load_button_labels(void)
   if (iVar1 == 0) {
     for (local_8 = 0; local_8 < 3; local_8 = local_8 + 1) {
       uVar2 = thunk_text_read_line_pooled();
-      *(undefined4 *)(&DAT_006cec98 + local_8 * 4) = uVar2;
-      puVar3 = (undefined *)thunk_label_string(*(undefined4 *)(&DAT_006cec98 + local_8 * 4));
+      *(undefined4 *)(&dialog_button_label_ids + local_8 * 4) = uVar2;
+      puVar3 = (undefined *)thunk_label_string(*(undefined4 *)(&dialog_button_label_ids + local_8 * 4));
       (&dialog_button_labels)[local_8] = puVar3;
     }
   }
@@ -4005,10 +4005,10 @@ void __cdecl dialog_load_button_labels(void)
 #undef local_8
 
 /* 0059d487 auto */
-#define DAT_006359f4 (*(undefined1 *)((u8 *)&g.d_006359f4))
 #define dlg_bevel_dark_color (*(undefined1 *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(undefined1 *)((u8 *)&g.d_00635a08))
 #define dlg_bg_color (*(undefined1 *)((u8 *)&g.d_00635a04))
+#define dlg_frame_color (*(undefined1 *)((u8 *)&g.d_006359f4))
 #define dlg_highlight_text_color (*(undefined1 *)((u8 *)&g.d_00635a00))
 #define dlg_text_color (*(undefined1 *)((u8 *)&g.d_006359fc))
 #define dlg_text_shadow_color (*(undefined1 *)((u8 *)&g.d_006359f8))
@@ -4022,7 +4022,7 @@ dialog_set_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 {
   dlg_text_color = (undefined1)param_1;
   dlg_text_shadow_color = (undefined1)param_2;
-  DAT_006359f4 = (undefined1)param_3;
+  dlg_frame_color = (undefined1)param_3;
   dlg_highlight_text_color = (undefined1)param_4;
   dlg_bg_color = (undefined1)param_5;
   dlg_bevel_light_color = (undefined1)param_6;
@@ -4031,10 +4031,10 @@ dialog_set_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
   dlg_title_shadow_color = (undefined1)param_9;
   return;
 }
-#undef DAT_006359f4
 #undef dlg_bevel_dark_color
 #undef dlg_bevel_light_color
 #undef dlg_bg_color
+#undef dlg_frame_color
 #undef dlg_highlight_text_color
 #undef dlg_text_color
 #undef dlg_text_shadow_color
@@ -4125,13 +4125,13 @@ void __thiscall dialog_reset_string_pool(C_0040bc40_28 *this,uint param_1)
 }
 
 /* 0059d5f5 auto */
-#define DAT_006359f4 (*(byte *)((u8 *)&g.d_006359f4))
 #define DAT_00635a30 (*(u32 *)((u8 *)&g.d_00635a30))
 #define dlg_bevel_dark_color (*(byte *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(byte *)((u8 *)&g.d_00635a08))
 #define dlg_bg_color (*(byte *)((u8 *)&g.d_00635a04))
 #define dlg_default_x (*(u32 *)((u8 *)&g.d_006359cc))
 #define dlg_default_y (*(u32 *)((u8 *)&g.d_006359d0))
+#define dlg_frame_color (*(byte *)((u8 *)&g.d_006359f4))
 #define dlg_highlight_text_color (*(byte *)((u8 *)&g.d_00635a00))
 #define dlg_scale_den (*(u32 *)((u8 *)&g.d_00635a38))
 #define dlg_scale_num (*(u32 *)((u8 *)&g.d_00635a34))
@@ -4186,7 +4186,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->bg_color = (uint)dlg_bg_color;
   this->text_color = (uint)dlg_text_color;
   this->shadow_color = (uint)dlg_text_shadow_color;
-  this->frame_color = (uint)DAT_006359f4;
+  this->frame_color = (uint)dlg_frame_color;
   this->highlight_color = (uint)dlg_highlight_text_color;
   this->bevel_light_color = (uint)dlg_bevel_light_color;
   this->bevel_dark_color = (uint)dlg_bevel_dark_color;
@@ -4263,13 +4263,13 @@ void __thiscall dialog_init_defaults(Dialog *this)
   this->field_dc = 0;
   return;
 }
-#undef DAT_006359f4
 #undef DAT_00635a30
 #undef dlg_bevel_dark_color
 #undef dlg_bevel_light_color
 #undef dlg_bg_color
 #undef dlg_default_x
 #undef dlg_default_y
+#undef dlg_frame_color
 #undef dlg_highlight_text_color
 #undef dlg_scale_den
 #undef dlg_scale_num
@@ -4669,7 +4669,7 @@ void __thiscall dialog_set_list_rows(DialogTextView *this,u32 param_1)
 }
 
 /* 0059e585 auto */
-void __thiscall FUN_0059e585(C_0059e585 *this,u32 param_1)
+void __thiscall dialog_set_current_pane(C_0059e585 *this,u32 param_1)
 
 {
   if ((param_1 == 0) || (param_1 == 1)) {
@@ -4718,7 +4718,7 @@ int __thiscall dialog_line_height(DialogTextView *this)
 }
 
 /* 0059e676 auto */
-int __thiscall FUN_0059e676(C_0059e676 *this,iptr param_1)
+int __thiscall dialog_button_width_for(C_0059e676 *this,iptr param_1)
 
 {
   u32 uVar1;
@@ -5959,18 +5959,18 @@ undefined4 __thiscall dialog_compute_layout(DialogOptionList *this)
       local_78 = this->wnd_width - (this->border_width - this->bevel_width);
       this->button_width = 0;
       for (local_1c = 0; (int)local_1c < 3; local_1c = local_1c + 1) {
-        iVar2 = thunk_FUN_0059e676
+        iVar2 = thunk_dialog_button_width_for
                           ((C_0059e676 *)this,(iptr)(&dialog_button_labels)[local_1c]);
         if ((int)this->button_width <= iVar2) {
-          uVar6 = thunk_FUN_0059e676
+          uVar6 = thunk_dialog_button_width_for
                             ((C_0059e676 *)this,(iptr)(&dialog_button_labels)[local_1c]);
           this->button_width = uVar6;
         }
       }
       for (local_1c = 0; (int)local_1c < (int)this->extra_button_count; local_1c = local_1c + 1) {
-        iVar2 = thunk_FUN_0059e676((C_0059e676 *)this,(&this[1].field_2c)[local_1c]);
+        iVar2 = thunk_dialog_button_width_for((C_0059e676 *)this,(&this[1].field_2c)[local_1c]);
         if ((int)this->button_width <= iVar2) {
-          uVar6 = thunk_FUN_0059e676((C_0059e676 *)this,(&this[1].field_2c)[local_1c]);
+          uVar6 = thunk_dialog_button_width_for((C_0059e676 *)this,(&this[1].field_2c)[local_1c]);
           this->button_width = uVar6;
         }
       }

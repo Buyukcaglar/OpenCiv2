@@ -307,7 +307,7 @@ undefined4 __cdecl net_client_transfer_server(void)
     }
     else {
       FUN_005f2110(local_27c,&net_player_count,0x270);
-      iVar3 = _strcmp(&prefs_net_ip_address,&DAT_006ad310);
+      iVar3 = _strcmp(&prefs_net_ip_address,&net_slot_addresses);
       if (iVar3 == 0) {
         dbg_log(ADDR(0x62c000, ((u8 *)&g.d_0062c000)));
         thunk_net_session_shutdown(&net_session,0);
@@ -327,7 +327,7 @@ undefined4 __cdecl net_client_transfer_server(void)
         net_local_slot = 0;
         diffeng_mirror_end = diffeng_mirror_size + diffeng_mirror_buf;
         net_players_awaited = local_27c[0] + -1;
-        DAT_006ad668 = net_players_awaited;
+        net_players_awaited_initial = net_players_awaited;
         if (net_players_awaited < 1) {
           local_8 = local_228[0];
           *(undefined4 *)(&net_civ_slots + local_228[0] * 4) = 0;
@@ -340,7 +340,7 @@ undefined4 __cdecl net_client_transfer_server(void)
           iVar3 = thunk_timer_ticks();
           if ((net_timeout_seconds * 0x3c < iVar3 - _DAT_00670d98) && (net_players_awaited != 0)) {
             FUN_005f22d0(&text_string_args,net_connection_title);
-            if (net_players_awaited == DAT_006ad668) {
+            if (net_players_awaited == net_players_awaited_initial) {
               thunk_popup_game_with_sprite(ADDR(0x62c0b0, ((u8 *)&g.d_0062c0b0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
               game_loop_active = 0;
               player_turn_active = 0;
@@ -353,7 +353,7 @@ undefined4 __cdecl net_client_transfer_server(void)
               local_280 = 0;
               while ((local_280 < 7 &&
                      (iVar3 = _strcmp(acStack_274 + local_280 * 0x54,
-                                      &DAT_006ad310 + local_284 * 0x54), iVar3 != 0))) {
+                                      &net_slot_addresses + local_284 * 0x54), iVar3 != 0))) {
                 local_280 = local_280 + 1;
               }
               if (6 < local_280) {
@@ -391,7 +391,7 @@ undefined4 __cdecl net_client_transfer_server(void)
           player_turn_active = 0;
           return 0;
         }
-        FUN_005f22d0(&net_server_address,&DAT_006ad310);
+        FUN_005f22d0(&net_server_address,&net_slot_addresses);
         _DAT_00670d98 = thunk_timer_ticks();
         do {
           iVar3 = thunk_timer_ticks();
@@ -1935,7 +1935,7 @@ void __cdecl game_advance_turn(iptr param_1)
       return;
     }
     iVar3 = thunk_civ_spaceship_launched(local_1c);
-    if (((iVar3 != 0) && (iVar3 = thunk_FUN_004a75d5(local_1c), iVar3 != 0)) &&
+    if (((iVar3 != 0) && (iVar3 = thunk_civ_spaceship_arrived(local_1c), iVar3 != 0)) &&
        ((civs[local_1c].spaceship_flags & 4) == 0)) break;
     local_1c = local_1c + 1;
   }
@@ -2239,11 +2239,11 @@ void __cdecl FUN_00488937(iptr param_1)
 #undef local_54
 
 /* 00488a45 auto */
-#define DAT_0062d048 (*(undefined4 *)((u8 *)&g.d_0062d048))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
 #define path_owner_civ (*(undefined4 *)((u8 *)&g.d_0062d044))
 #define path_road_planning (*(undefined4 *)((u8 *)&g.d_0062d040))
+#define path_roads_only (*(undefined4 *)((u8 *)&g.d_0062d048))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
@@ -2273,7 +2273,7 @@ undefined4 __cdecl map_road_connection(iptr param_1,int param_2,int param_3,int 
       path_goal_x = param_4;
       path_goal_y = param_5;
       path_unit_type = 2;
-      DAT_0062d048 = 1;
+      path_roads_only = 1;
       bVar1 = true;
       while( true ) {
         iVar5 = thunk_map_path_next_dir(local_10,local_18,99);
@@ -2303,7 +2303,7 @@ undefined4 __cdecl map_road_connection(iptr param_1,int param_2,int param_3,int 
       bVar1 = false;
 LAB_00488ca7:
       path_road_planning = 0;
-      DAT_0062d048 = 0;
+      path_roads_only = 0;
       if (bVar1) {
         uVar3 = 0;
       }
@@ -2323,11 +2323,11 @@ LAB_00488ca7:
   }
   return uVar3;
 }
-#undef DAT_0062d048
 #undef path_goal_x
 #undef path_goal_y
 #undef path_owner_civ
 #undef path_road_planning
+#undef path_roads_only
 #undef local_20
 #undef local_18
 #undef local_10
@@ -2498,7 +2498,7 @@ void __cdecl FUN_00489292(iptr param_1,int param_2)
 #undef local_8
 
 /* 00489553 auto */
-#define DAT_0062c5b8 (*(undefined4 *)((u8 *)&g.d_0062c5b8))
+#define civ_turn_in_progress (*(undefined4 *)((u8 *)&g.d_0062c5b8))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl civ_process_turn(uptr param_1)
@@ -2509,7 +2509,7 @@ void __cdecl civ_process_turn(uptr param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
-  DAT_0062c5b8 = 1;
+  civ_turn_in_progress = 1;
   if ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) != 0) {
     iVar2 = thunk_civ_spaceship_exists(param_1);
     if (iVar2 != 0) {
@@ -2533,7 +2533,7 @@ void __cdecl civ_process_turn(uptr param_1)
   thunk_FUN_00488cef(param_1);
   thunk_FUN_00487a41(param_1);
   thunk_civ_turn_update_diplomacy(param_1);
-  thunk_FUN_0053184d(param_1);
+  thunk_ai_civ_turn_assess(param_1);
   thunk_FUN_00489292(param_1,iVar1);
   if ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) != 0) {
     iVar2 = thunk_civ_spaceship_exists(param_1);
@@ -2544,12 +2544,12 @@ void __cdecl civ_process_turn(uptr param_1)
     }
   }
   if (local_c != 0) {
-    iVar2 = thunk_FUN_004d0339(param_1);
+    iVar2 = thunk_spaceship_wnd_show_for_civ(param_1);
     if (iVar2 == 0) {
       thunk_spaceship_status_dialog(param_1,(uint)game.human_players & 1 << ((byte)param_1 & 0x1f));
     }
   }
-  DAT_0062c5b8 = 0;
+  civ_turn_in_progress = 0;
   if (((*(undefined1 *)((char *)&game.game_options + 1)) & 0x20) != 0) {
     __chdir(&scenario_dir_path);
     thunk_FUN_00488937(param_1);
@@ -2557,7 +2557,7 @@ void __cdecl civ_process_turn(uptr param_1)
   }
   return;
 }
-#undef DAT_0062c5b8
+#undef civ_turn_in_progress
 #undef local_10
 #undef local_c
 
@@ -2586,7 +2586,7 @@ void __cdecl ui_redraw_all_maps(int param_1)
 #undef unit_blink_skip_tick
 
 /* 00489859 auto */
-#define DAT_0062c5bc (*(int *)((u8 *)&g.d_0062c5bc))
+#define active_unit_lost_in_combat (*(int *)((u8 *)&g.d_0062c5bc))
 #define map_cursor_x (*(i16 *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(i16 *)((u8 *)&g.d_0064b1b0))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
@@ -2597,14 +2597,14 @@ void __cdecl unit_activate_next(undefined4 param_1)
   iptr iVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (DAT_0062c5bc == 0) {
+  if (active_unit_lost_in_combat == 0) {
     local_c = (iptr)game.active_unit;
   }
   else {
     local_c = -1;
   }
   iVar1 = thunk_unit_find_nearest_selectable(local_c,param_1);
-  DAT_0062c5bc = 0;
+  active_unit_lost_in_combat = 0;
   game.active_unit = (i16)iVar1;
   if (((-1 < iVar1) && (iVar1 < game.num_units)) && (units[iVar1].id != 0)) {
     if (((units[iVar1].orders != '\x01') && (units[iVar1].orders != '\x02')) &&
@@ -2628,7 +2628,7 @@ void __cdecl unit_activate_next(undefined4 param_1)
   }
   return;
 }
-#undef DAT_0062c5bc
+#undef active_unit_lost_in_combat
 #undef map_cursor_x
 #undef map_cursor_y
 #undef mp_simultaneous_moves
@@ -2717,7 +2717,7 @@ void __cdecl FUN_00489b9b(int param_1,int param_2)
 #undef mapview_center_y
 
 /* 00489be2 auto */
-#define DAT_0062c5c0 (*(int *)((u8 *)&g.d_0062c5c0))
+#define tutorial_hint_shown_this_turn (*(int *)((u8 *)&g.d_0062c5c0))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl FUN_00489be2(iptr param_1)
 
@@ -2738,7 +2738,7 @@ void __cdecl FUN_00489be2(iptr param_1)
   uptr uVar14;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (DAT_0062c5c0 == 0) {
+  if (tutorial_hint_shown_this_turn == 0) {
     iVar6 = (int)units[param_1].x;
     iVar7 = (int)units[param_1].y;
     iVar8 = (iptr)units[param_1].owner;
@@ -2759,7 +2759,7 @@ void __cdecl FUN_00489be2(iptr param_1)
     if (bVar4) {
       thunk_FUN_00489b9b(iVar6,iVar7);
       thunk_popup_text_with_unit_noflags((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62c628, ((u8 *)&g.d_0062c628)),param_1);
-      DAT_0062c5c0 = 1;
+      tutorial_hint_shown_this_turn = 1;
     }
     else if (((int)game.turn - (int)civs[iVar8].last_city_turn < 0x19) ||
             (5 < civs[iVar8].num_cities)) {
@@ -2771,32 +2771,32 @@ void __cdecl FUN_00489be2(iptr param_1)
         if ((uVar14 == 4) && ((uVar12 & 0xc) == 0)) {
           thunk_FUN_00489b9b(iVar6,iVar7);
           thunk_popup_text_with_unit_noflags((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62c63c, ((u8 *)&g.d_0062c63c)),param_1);
-          DAT_0062c5c0 = 1;
+          tutorial_hint_shown_this_turn = 1;
         }
         if (((uVar14 == 1) || ((uVar14 == 2 && (civs[iVar8].government == '\x02')))) &&
            (((uVar12 & 0xc) == 0 && (iVar9 = thunk_tile_has_irrigation_source(iVar6,iVar7), iVar9 != 0)))) {
           thunk_FUN_00489b9b(iVar6,iVar7);
           thunk_popup_text_with_unit_noflags((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62c644, ((u8 *)&g.d_0062c644)),param_1);
-          DAT_0062c5c0 = 1;
+          tutorial_hint_shown_this_turn = 1;
         }
         else if (((((uint)civs[iVar8].units_active[0] + (uint)civs[iVar8].units_active[1] < 2) &&
                   ((uVar12 & 0x10) == 0)) && (terrain_types[uVar14].move_cost == '\x01')) &&
                 (pbVar13 = (byte *)tile_at(iVar6,iVar7), (*pbVar13 & 0x80) == 0)) {
           thunk_FUN_00489b9b(iVar6,iVar7);
           thunk_popup_text_with_unit_noflags((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62c650, ((u8 *)&g.d_0062c650)),param_1);
-          DAT_0062c5c0 = 1;
+          tutorial_hint_shown_this_turn = 1;
         }
       }
     }
     else {
       thunk_popup_text_with_unit_noflags((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62c634, ((u8 *)&g.d_0062c634)),param_1);
       civs[iVar8].last_city_turn = game.turn;
-      DAT_0062c5c0 = 1;
+      tutorial_hint_shown_this_turn = 1;
     }
   }
   return;
 }
-#undef DAT_0062c5c0
+#undef tutorial_hint_shown_this_turn
 #undef local_10
 
 /* 0048a004 auto */
@@ -2932,7 +2932,6 @@ void __cdecl FUN_0048a374(void)
 #undef unit_blink_active
 
 /* 0048a416 auto */
-#define DAT_0062c5c0 (*(undefined4 *)((u8 *)&g.d_0062c5c0))
 #define city_window_closed (*(int *)((u8 *)&g.d_006aa75c))
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
 #define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
@@ -2943,6 +2942,7 @@ void __cdecl FUN_0048a374(void)
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define player_turn_active (*(char *)((u8 *)&g.d_0064b9bc))
+#define tutorial_hint_shown_this_turn (*(undefined4 *)((u8 *)&g.d_0062c5c0))
 #define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
 #define unit_focus_done (*(char *)((u8 *)&g.d_00673b04))
@@ -2964,13 +2964,13 @@ void __cdecl game_player_move_loop(void)
   game.active_unit = -1;
   thunk_ui_focus_active_unit(0);
   player_turn_active = '\x01';
-  DAT_0062c5c0 = 0;
+  tutorial_hint_shown_this_turn = 0;
   if ((2 < game.multiplayer) && (net_host_flag == '\0')) {
     for (local_18 = 0; local_18 < 8; local_18 = local_18 + 1) {
-      if (((*(int *)(&DAT_0062c468 + local_18 * 4) != 0) &&
-          (*(undefined4 *)(&DAT_0062c468 + local_18 * 4) = 0,
-          ((uint)game.civs_alive & 1 << ((&DAT_0062c468)[local_18 * 4] & 0x1f)) != 0)) &&
-         (((uint)game.human_players & 1 << ((&DAT_0062c468)[local_18 * 4] & 0x1f)) == 0)) {
+      if (((*(int *)(&net_meet_pending_flags + local_18 * 4) != 0) &&
+          (*(undefined4 *)(&net_meet_pending_flags + local_18 * 4) = 0,
+          ((uint)game.civs_alive & 1 << ((&net_meet_pending_flags)[local_18 * 4] & 0x1f)) != 0)) &&
+         (((uint)game.human_players & 1 << ((&net_meet_pending_flags)[local_18 * 4] & 0x1f)) == 0)) {
         thunk_diplo_ai_meet_player(*(iptr *)(&net_meet_pending_ai_civ + local_18 * 4),
                            *(iptr *)(&net_meet_pending_civ + local_18 * 4),
                            *(undefined4 *)(&net_meet_pending_x + local_18 * 4),
@@ -3068,7 +3068,6 @@ LAB_0048a77d:
     }
   } while( true );
 }
-#undef DAT_0062c5c0
 #undef city_window_closed
 #undef game_loop_active
 #undef human_civ
@@ -3079,6 +3078,7 @@ LAB_0048a77d:
 #undef mp_turn_time_limit_ms
 #undef net_host_flag
 #undef player_turn_active
+#undef tutorial_hint_shown_this_turn
 #undef unit_blink_active
 #undef unit_blink_phase
 #undef unit_focus_done

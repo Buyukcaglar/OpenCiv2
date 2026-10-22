@@ -9,7 +9,7 @@ void __cdecl str_trim(iptr param_1)
 {
   undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_004cfff0(param_1);
+  thunk_str_trim_trailing(param_1);
   for (local_108 = (char *)param_1;
       (*local_108 != '\0' && ((*local_108 == ' ' || (*local_108 == '\t'))));
       local_108 = local_108 + 1) {
@@ -91,7 +91,7 @@ undefined4 __cdecl spaceship_wnd_run(iptr param_1)
       }
       else {
         if (param_1 < 0) {
-          thunk_FUN_004d1725(local_2188);
+          thunk_spaceship_wnd_launch_sequence(local_2188);
         }
         else {
           thunk_spaceship_wnd_run_modal(local_2188);
@@ -124,7 +124,7 @@ undefined4 __cdecl spaceship_wnd_run(iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(8568)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(8572)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8576)))
-undefined4 __cdecl FUN_004d0339(iptr param_1)
+undefined4 __cdecl spaceship_wnd_show_for_civ(iptr param_1)
 
 {
   undefined4 uVar1;
@@ -146,7 +146,7 @@ undefined4 __cdecl FUN_004d0339(iptr param_1)
           uVar1 = 0;
         }
         else {
-          thunk_FUN_004d13b8(local_2188);
+          thunk_spaceship_wnd_present(local_2188);
           local_8 = 0xffffffff;
           /* inlined unwind funclet FUN_004d041a */ { thunk_spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
           uVar1 = 1;
@@ -365,7 +365,7 @@ undefined4 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
     thunk_dll_handle_load((DllHandle *)(this->pad_1e4 + 0x10),(iptr)local_84);
     thunk_wnd_set_cursor((WndBase *)this,0x1fc);
     thunk_spaceship_calc_stats(this->ship_civ,1);
-    thunk_FUN_004d4a7b((C_00408010_6f0 *)this);
+    thunk_spaceship_wnd_build_stats_text((C_00408010_6f0 *)this);
     if ((civs[this->ship_civ].spaceship_parts[3] != 0) && (spaceship_success_pct != 0)) {
       this->launch_state = 1;
     }
@@ -373,12 +373,12 @@ undefined4 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
     if (iVar1 != 0) {
       this->launch_state = 3;
     }
-    iVar1 = thunk_FUN_004d0d64((C_00408010_6f0 *)this);
+    iVar1 = thunk_spaceship_wnd_create((C_00408010_6f0 *)this);
     if (iVar1 == 0) {
       uVar2 = 0;
     }
     else {
-      thunk_FUN_004d53ab((WndBase *)this);
+      thunk_spaceship_wnd_make_button_sprites((WndBase *)this);
       if (this->flight_timer != 0) {
         game_timer_destroy(this->flight_timer);
         this->flight_timer = 0;
@@ -403,7 +403,7 @@ undefined4 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
 #undef local_84
 
 /* 004d0d64 auto */
-uint __thiscall FUN_004d0d64(C_00408010_6f0 *this)
+uint __thiscall spaceship_wnd_create(C_00408010_6f0 *this)
 
 {
   int iVar1;
@@ -462,17 +462,17 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
   else {
     if (this->launch_state == 3) {
       surface_load_gif_resource
-                (&local_58,DAT_006a5b14 + 19999,10,0xec,(iptr)(this->pad_1e4 + 0x14));
+                (&local_58,spaceship_wnd_component_count + 19999,10,0xec,(iptr)(this->pad_1e4 + 0x14));
       sprite_grab_from_surface
                 (&local_94,(iptr)&local_58,0xff,
-                 *(undefined4 *)(&DAT_0062e250 + (DAT_006a5b14 + -1) * 0x10),
-                 *(undefined4 *)(&DAT_0062e254 + (DAT_006a5b14 + -1) * 0x10),
-                 *(undefined4 *)(&DAT_0062e258 + (DAT_006a5b14 + -1) * 0x10),
-                 *(undefined4 *)(&DAT_0062e25c + (DAT_006a5b14 + -1) * 0x10));
+                 *(undefined4 *)(&DAT_0062e250 + (spaceship_wnd_component_count + -1) * 0x10),
+                 *(undefined4 *)(&DAT_0062e254 + (spaceship_wnd_component_count + -1) * 0x10),
+                 *(undefined4 *)(&DAT_0062e258 + (spaceship_wnd_component_count + -1) * 0x10),
+                 *(undefined4 *)(&DAT_0062e25c + (spaceship_wnd_component_count + -1) * 0x10));
       sprite_draw
                 (&local_94,(iptr)local_a4,(iptr)&this->control_list,
-                 *(undefined4 *)(&DAT_0062e250 + (DAT_006a5b14 + -1) * 0x10),
-                 *(undefined4 *)(&DAT_0062e254 + (DAT_006a5b14 + -1) * 0x10));
+                 *(undefined4 *)(&DAT_0062e250 + (spaceship_wnd_component_count + -1) * 0x10),
+                 *(undefined4 *)(&DAT_0062e254 + (spaceship_wnd_component_count + -1) * 0x10));
     }
     switch(this->launch_state) {
     case 0:
@@ -482,7 +482,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
     case 2:
       break;
     case 3:
-      thunk_FUN_004d570b(this);
+      thunk_spaceship_wnd_init_starfield(this);
       thunk_spaceship_wnd_draw_title(this->ship_civ);
     }
     thunk_spaceship_wnd_draw_close_btn(this,1,1);
@@ -571,7 +571,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall FUN_004d13b8(SpaceshipWindow *this)
+void __thiscall spaceship_wnd_present(SpaceshipWindow *this)
 
 {
   int iVar1;
@@ -668,7 +668,7 @@ void __thiscall FUN_004d13b8(SpaceshipWindow *this)
 #undef local_14
 
 /* 004d1725 auto */
-void __thiscall FUN_004d1725(SpaceshipWindow *this)
+void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *this)
 
 {
   thunk_wnd_handle_show_raise((WndBase *)this);
@@ -3602,7 +3602,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(SpaceshipWindow *this)
 #define spaceship_success_pct (*(undefined4 *)((u8 *)&g.d_006ad0ec))
 #define spaceship_support_pct (*(undefined4 *)((u8 *)&g.d_006ad0f0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_004d4a7b(C_00408010_6f0 *this)
+void __thiscall spaceship_wnd_build_stats_text(C_00408010_6f0 *this)
 
 {
   short sVar1;
@@ -3800,7 +3800,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *this,int param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(88)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
-void __thiscall FUN_004d53ab(WndBase *this)
+void __thiscall spaceship_wnd_make_button_sprites(WndBase *this)
 
 {
   int iVar1;
@@ -3875,7 +3875,7 @@ void __thiscall FUN_004d53ab(WndBase *this)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(28)))
-void __thiscall FUN_004d570b(SpaceshipWindow *this)
+void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
 
 {
   u8 *puVar1;
@@ -4023,7 +4023,7 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
     thunk_wnd_flush_paint();
   }
   if ((AviPlayer *)this[0x1da].field_8 != (AviPlayer *)0x0) {
-    thunk_FUN_004d8b20((AviPlayer *)this[0x1da].field_8,1);
+    thunk_avi_player_scalar_dtor((AviPlayer *)this[0x1da].field_8,1);
   }
   this[0x1da].field_8 = 0;
   thunk_snd_sync_music_option();
@@ -4044,11 +4044,11 @@ void __thiscall spaceship_wnd_setup_hotspots(SpaceshipWindow *this)
 {
   thunk_clickmap_clear((ClickMapClearView *)this->pad_ae4);
   if (((this->ship_civ == human_civ) && (this->launch_state != 3)) && (this->launch_state != 0)) {
-    thunk_FUN_004d8b70((ClickMap *)this->pad_ae4,0,0x1f5,0x1a1,0x34,0x24);
-    thunk_FUN_004d8b70((ClickMap *)this->pad_ae4,1,0x22f,0x1a1,0x43,0x24);
+    thunk_clickmap_add_xywh((ClickMap *)this->pad_ae4,0,0x1f5,0x1a1,0x34,0x24);
+    thunk_clickmap_add_xywh((ClickMap *)this->pad_ae4,1,0x22f,0x1a1,0x43,0x24);
   }
   else {
-    thunk_FUN_004d8b70((ClickMap *)this->pad_ae4,0,0x22f,0x1a1,0x43,0x24);
+    thunk_clickmap_add_xywh((ClickMap *)this->pad_ae4,0,0x22f,0x1a1,0x43,0x24);
   }
   return;
 }
@@ -4568,7 +4568,7 @@ u32 __thiscall font_get_handle(GameFont *this)
 }
 
 /* 004d8b20 auto */
-AviPlayer * __thiscall FUN_004d8b20(AviPlayer *this,uint param_1)
+AviPlayer * __thiscall avi_player_scalar_dtor(AviPlayer *this,uint param_1)
 
 {
   avi_player_dtor(this);
@@ -4580,7 +4580,7 @@ AviPlayer * __thiscall FUN_004d8b20(AviPlayer *this,uint param_1)
 
 /* 004d8b70 auto */
 void __thiscall
-FUN_004d8b70
+clickmap_add_xywh
           (ClickMap *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
           undefined4 param_5)
 
@@ -4591,7 +4591,7 @@ FUN_004d8b70
 
 /* 004d8bc0 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004d8bc0(void)
+void __cdecl impr_editor_load_rules(void)
 
 {
   char *_Source;
@@ -4616,7 +4616,7 @@ void __cdecl FUN_004d8bc0(void)
 
 /* 004d8caa auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004d8caa(void)
+void __cdecl impr_editor_store_rules(void)
 
 {
   char *_Dest;
@@ -4731,7 +4731,7 @@ int __cdecl impr_editor_save_controls(void)
 void __cdecl impr_editor_redraw(void)
 
 {
-  thunk_FUN_004d9b93((C_004083b0_430 *)active_editor_wnd);
+  thunk_impr_editor_paint((C_004083b0_430 *)active_editor_wnd);
   return;
 }
 
@@ -4814,7 +4814,7 @@ void __cdecl FUN_004d929a(void)
   
   iVar1 = thunk_impr_editor_save_controls();
   if (iVar1 == 0) {
-    thunk_FUN_004d8caa();
+    thunk_impr_editor_store_rules();
     thunk_rules_edit_set_section(ADDR(0x62e420, ((u8 *)&g.d_0062e420)),ADDR(0x4016f9, FUN_004d90b0));
     thunk_rules_edit_add_section(ADDR(0x62e428, ((u8 *)&g.d_0062e428)),ADDR(0x402ef5, FUN_004d91f8));
     iVar2 = thunk_rules_write_sections();
@@ -4995,7 +4995,7 @@ void __cdecl FUN_004d9619(void)
 
 /* 004d9718 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_004d9718(int param_1)
+void __cdecl impr_editor_on_select(int param_1)
 
 {
   int iVar1;
@@ -5051,7 +5051,7 @@ void __cdecl FUN_004d9718(int param_1)
 #define local_24 (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(28)))
-void __thiscall FUN_004d986e(C_004083b0_430 *this,int param_1)
+void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
@@ -5073,7 +5073,7 @@ void __thiscall FUN_004d986e(C_004083b0_430 *this,int param_1)
             ((Control *)(this->pad_2d4 + param_1 * 0x38 + 0x28),(iptr)local_2c,iVar1,
              (iptr)local_14);
   thunk_combo_set_font((ComboBoxFontView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  thunk_combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x40257c, thunk_FUN_004d9718));
+  thunk_combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x40257c, thunk_impr_editor_on_select));
   if (param_1 == 0) {
     for (local_24 = 0; local_24 < 0x43; local_24 = local_24 + 1) {
       iVar2 = thunk_label_string(improvements[local_24].name);
@@ -5099,19 +5099,19 @@ void __thiscall FUN_004d986e(C_004083b0_430 *this,int param_1)
 #undef local_14
 
 /* 004d9a9f auto */
-#define DAT_0062e3b0 (*(undefined4 *)((u8 *)&g.d_0062e3b0))
-#define DAT_0062e3b4 (*(undefined4 *)((u8 *)&g.d_0062e3b4))
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
+#define impr_editor_edit_x_table (*(undefined4 *)((u8 *)&g.d_0062e3b0))
+#define impr_editor_edit_y_table (*(undefined4 *)((u8 *)&g.d_0062e3b4))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall FUN_004d9a9f(C_004083b0_430 *this,int param_1)
+void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_rect_set_xywh((iptr)local_14,(&DAT_0062e3b0)[param_1 * 2] + this->client_x,
-                     (&DAT_0062e3b4)[param_1 * 2] + this->client_y,0x30,this->field_2e8 + 6);
+  thunk_rect_set_xywh((iptr)local_14,(&impr_editor_edit_x_table)[param_1 * 2] + this->client_x,
+                     (&impr_editor_edit_y_table)[param_1 * 2] + this->client_y,0x30,this->field_2e8 + 6);
   iVar1 = editor_next_ctrl_id;
   editor_next_ctrl_id = editor_next_ctrl_id + 1;
   if (this == (C_004083b0_430 *)0x0) {
@@ -5127,17 +5127,17 @@ void __thiscall FUN_004d9a9f(C_004083b0_430 *this,int param_1)
   thunk_edit_set_callback((EditCallbackSetView *)(this[1].pad_48 + param_1 * 0x48 + -0x2c),ADDR(0x401019, FUN_004cdcf6));
   return;
 }
-#undef DAT_0062e3b0
-#undef DAT_0062e3b4
 #undef editor_next_ctrl_id
+#undef impr_editor_edit_x_table
+#undef impr_editor_edit_y_table
 #undef local_24
 #undef local_14
 
 /* 004d9b93 auto */
-#define DAT_0062e3b0 (*(int *)((u8 *)&g.d_0062e3b0))
-#define DAT_0062e3b4 (*(int *)((u8 *)&g.d_0062e3b4))
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
+#define impr_editor_edit_x_table (*(int *)((u8 *)&g.d_0062e3b0))
+#define impr_editor_edit_y_table (*(int *)((u8 *)&g.d_0062e3b4))
 #define local_2c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_1c (*(Sprite * *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -5145,7 +5145,7 @@ void __thiscall FUN_004d9a9f(C_004083b0_430 *this,int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __thiscall FUN_004d9b93(C_004083b0_430 *this)
+void __thiscall impr_editor_paint(C_004083b0_430 *this)
 
 {
   byte bVar1;
@@ -5229,8 +5229,8 @@ void __thiscall FUN_004d9b93(C_004083b0_430 *this)
   thunk_text_clear();
   thunk_text_append_label(0x1de);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_18,0);
-  local_10 = DAT_0062e3b0 + this->client_x + 0x18;
-  local_18 = ((DAT_0062e3b4 + this->client_y) - this->field_2e8) + -2;
+  local_10 = impr_editor_edit_x_table + this->client_x + 0x18;
+  local_18 = ((impr_editor_edit_y_table + this->client_y) - this->field_2e8) + -2;
   thunk_text_clear();
   thunk_text_append_label(0x1e1);
   thunk_text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_18,0);
@@ -5242,10 +5242,10 @@ void __thiscall FUN_004d9b93(C_004083b0_430 *this)
   thunk_wnd_blit_surface((DibSurface *)this);
   return;
 }
-#undef DAT_0062e3b0
-#undef DAT_0062e3b4
 #undef editor_bg_surface
 #undef editor_running
+#undef impr_editor_edit_x_table
+#undef impr_editor_edit_y_table
 #undef local_2c
 #undef local_1c
 #undef local_18
@@ -5271,7 +5271,7 @@ void __thiscall FUN_004d9b93(C_004083b0_430 *this)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
-void __thiscall FUN_004da107(C_004083b0_430 *this)
+void __thiscall impr_editor_window_run(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
@@ -5331,10 +5331,10 @@ void __thiscall FUN_004da107(C_004083b0_430 *this)
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   for (local_460 = 0; local_460 < 5; local_460 = local_460 + 1) {
     if (*(int *)(&impr_editor_ctrl_kinds + local_460 * 8) == 9) {
-      thunk_FUN_004d9a9f(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
+      thunk_impr_editor_create_edit(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
     }
     else if (*(int *)(&impr_editor_ctrl_kinds + local_460 * 8) == 0xc) {
-      thunk_FUN_004d986e(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
+      thunk_impr_editor_create_combo(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
     }
   }
   iVar3 = thunk_font_line_spacing((GameFont *)dialog_font_ptr);
@@ -5420,13 +5420,13 @@ void __thiscall FUN_004da107(C_004083b0_430 *this)
             ((Control *)(this[1].pad_3c0 + 0x10),(iptr)local_488,0x65,(iptr)local_454,iVar5);
   thunk_button_set_callback((Control *)(this[1].pad_3c0 + 0x10),ADDR(0x401cad, FUN_004d9619));
   thunk_wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
-  thunk_FUN_004d8bc0();
+  thunk_impr_editor_load_rules();
   thunk_combo_set_cur_sel((ComboBoxSetSelView *)&this->field_2fc,this->field_2ec);
   thunk_impr_editor_load_controls();
   this->field_2f8 = 3;
   thunk_wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4019d8, FUN_004ce83d));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x401302, thunk_impr_editor_redraw));
-  thunk_FUN_004d9718(0xc9);
+  thunk_impr_editor_on_select(0xc9);
   wnd_repaint((SurfaceWindow *)this);
   thunk_window_show((C_004083b0_4 *)this);
   wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
@@ -5472,7 +5472,7 @@ void __cdecl impr_editor_run(void)
   local_8 = 0xffffffff;
   thunk_editor_wnd_ctor(&local_b58);
   local_8 = 0;
-  thunk_FUN_004da107((C_004083b0_430 *)&local_b58);
+  thunk_impr_editor_window_run((C_004083b0_430 *)&local_b58);
   wnd_repaint((SurfaceWindow *)&map_views);
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004daa3b */ { thunk_editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
@@ -5487,15 +5487,15 @@ void __cdecl impr_editor_run(void)
 void __cdecl FUN_004db210(void)
 
 {
-  FUN_004db225();
+  text_section_index_static_init();
   return;
 }
 
 /* 004db225 auto */
-void __cdecl FUN_004db225(void)
+void __cdecl text_section_index_static_init(void)
 
 {
-  thunk_memblock_ctor((MemBlock *)&DAT_006a5b38);
+  thunk_memblock_ctor((MemBlock *)&text_section_index_pool);
   return;
 }
 
@@ -5505,7 +5505,7 @@ void __cdecl FUN_004db225(void)
 #define local_108 (*(char *)(frame_ + FRAME_OFF(0)))
 #define local_107 (*(char *)(frame_ + FRAME_OFF(1)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(256)))
-void __cdecl FUN_004db23f(iptr param_1,uint param_2)
+void __cdecl text_section_index_build(iptr param_1,uint param_2)
 
 {
   FILE *_File;
@@ -5519,13 +5519,13 @@ void __cdecl FUN_004db23f(iptr param_1,uint param_2)
   thunk_memblock_init(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)),1,param_2);
   text_section_index_valid = 0;
   text_section_index_count = 0;
-  __getcwd(&DAT_0062e508,0x104);
-  FUN_005f22e0(&DAT_0062e508,&DAT_0062e614);
-  FUN_005f22e0(&DAT_0062e508,param_1);
+  __getcwd(&text_section_index_path,0x104);
+  FUN_005f22e0(&text_section_index_path,&DAT_0062e614);
+  FUN_005f22e0(&text_section_index_path,param_1);
   thunk_path_default_extension(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62cd24, ((u8 *)&g.d_0062cd24)));
   _File = (FILE *)thunk_file_open_path(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62e618, ((u8 *)&g.d_0062e618)));
   if (_File == (FILE *)0x0) {
-    DAT_0062e508 = 0;
+    text_section_index_path = 0;
   }
   else {
     while ((CRT_FEOF(_File)) == 0) {
@@ -5558,7 +5558,7 @@ void __cdecl FUN_004db23f(iptr param_1,uint param_2)
 /* 004db450 auto */
 #define text_section_index_count (*(undefined4 *)((u8 *)&g.d_0062e610))
 #define text_section_index_valid (*(undefined4 *)((u8 *)&g.d_0062e60c))
-void __cdecl FUN_004db450(void)
+void __cdecl text_section_index_free(void)
 
 {
   text_section_index_valid = 0;
@@ -5575,7 +5575,7 @@ void __cdecl FUN_004db450(void)
 #define local_114 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10c (*(char * *)(frame_ + FRAME_OFF(12)))
 #define local_108 (*(char (*)[260])(frame_ + FRAME_OFF(16)))
-undefined4 __cdecl FUN_004db481(iptr param_1,iptr param_2)
+undefined4 __cdecl text_section_index_lookup(iptr param_1,iptr param_2)
 
 {
   char *pcVar1;
@@ -5586,9 +5586,9 @@ undefined4 __cdecl FUN_004db481(iptr param_1,iptr param_2)
     __getcwd(local_108,0x104);
     FUN_005f22e0(local_108,&DAT_0062e61c);
     FUN_005f22e0(local_108,param_1);
-    iVar2 = __strcmpi(local_108,&DAT_0062e508);
+    iVar2 = __strcmpi(local_108,&text_section_index_path);
     if (iVar2 == 0) {
-      local_10c = DAT_006a5b40;
+      local_10c = text_section_index_base;
       for (local_114 = 0; local_114 < text_section_index_count; local_114 = local_114 + 1) {
         iVar2 = __strcmpi(local_10c + 4,(char *)param_2);
         pcVar1 = local_10c + 4;
@@ -5622,7 +5622,7 @@ undefined4 __cdecl FUN_004db481(iptr param_1,iptr param_2)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 * __thiscall FUN_004db690(C_004db690 *this,int param_1)
+undefined4 * __thiscall parley_send_offer(C_004db690 *this,int param_1)
 
 {
   undefined4 uVar1;
@@ -5638,7 +5638,7 @@ undefined4 * __thiscall FUN_004db690(C_004db690 *this,int param_1)
   case 8:
   case 0xc:
     for (local_1c = 0; local_1c < parley_list_count_right; local_1c = local_1c + 1) {
-      if (*(int *)(&DAT_00684bac + local_1c * 4) == 1) {
+      if (*(int *)(&parley_list_selected_right + local_1c * 4) == 1) {
         _DAT_0068abd4 = _DAT_0068abd4 + 1;
       }
     }
@@ -5647,7 +5647,7 @@ undefined4 * __thiscall FUN_004db690(C_004db690 *this,int param_1)
   case 10:
   case 0x11:
     for (local_1c = 0; local_1c < parley_list_count_right; local_1c = local_1c + 1) {
-      if (*(int *)(&DAT_00684bac + local_1c * 4) == 1) {
+      if (*(int *)(&parley_list_selected_right + local_1c * 4) == 1) {
         _DAT_0068abd4 = _DAT_0068abd4 + 1;
       }
     }
@@ -5699,13 +5699,13 @@ undefined4 * __thiscall FUN_004db690(C_004db690 *this,int param_1)
     if (local_10 + (int)puVar2 < (uint)(local_c + (int)(puVar2 + 8))) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e764, ((u8 *)&g.d_0062e764)),ADDR(0x62e738, ((u8 *)&g.d_0062e738)),0x9f);
     }
-    thunk_FUN_004dbab4(this,(iptr)(puVar2 + 8),this->offer_type_right,local_c,1);
+    thunk_parley_pack_offer_items(this,(iptr)(puVar2 + 8),this->offer_type_right,local_c,1);
     if (param_1 == 0xe) {
       iVar3 = (int)puVar2 + local_c + 0x20;
       if (local_8 + iVar3 != local_10 + (int)puVar2) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e7cc, ((u8 *)&g.d_0062e7cc)),ADDR(0x62e7a0, ((u8 *)&g.d_0062e7a0)),0xa4);
       }
-      thunk_FUN_004dbab4(this,iVar3,this->offer_type_left,local_8,0);
+      thunk_parley_pack_offer_items(this,iVar3,this->offer_type_left,local_8,0);
     }
     thunk_net_send_message(0x82,*(undefined4 *)
                              (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0
@@ -5731,7 +5731,7 @@ undefined4 * __thiscall FUN_004db690(C_004db690 *this,int param_1)
 #define local_28 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(20)))
 void __thiscall
-FUN_004dbab4
+parley_pack_offer_items
           (C_004db690 *this,iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
 
 {
@@ -5836,7 +5836,7 @@ FUN_004dbab4
 #undef local_24
 
 /* 004dbee6 auto */
-void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
+void __thiscall parley_build_description(C_004083b0_4 *this,iptr param_1,int param_2)
 
 {
   int iVar1;
@@ -5866,7 +5866,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
     }
     switch(*(undefined4 *)(param_1 + 0x10)) {
     case 6:
-      thunk_FUN_004def54(this,*(undefined4 *)(param_1 + 0x28),0);
+      thunk_parley_describe_treaty(this,*(undefined4 *)(param_1 + 0x28),0);
       break;
     case 7:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc98));
@@ -5875,7 +5875,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc9c));
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e8cc);
-      thunk_FUN_004dcafa((iptr)piVar2);
+      thunk_parley_describe_advances((iptr)piVar2);
       break;
     case 8:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc98));
@@ -5885,7 +5885,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e8e4);
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e8e8, ((u8 *)&g.d_0062e8e8)));
-      thunk_FUN_004dcc0c(*(undefined4 *)(param_1 + 0x28));
+      thunk_parley_describe_gold(*(undefined4 *)(param_1 + 0x28));
       break;
     case 9:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc98));
@@ -5894,7 +5894,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xca0));
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e8d8);
-      thunk_FUN_004dcc83((iptr)piVar2);
+      thunk_parley_describe_units((iptr)piVar2);
       break;
     case 10:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc98));
@@ -5903,13 +5903,13 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xca8));
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e8fc);
-      thunk_FUN_004dcea5((iptr)piVar2);
+      thunk_parley_describe_cities((iptr)piVar2);
       break;
     case 0xb:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc98));
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e900);
-      thunk_FUN_004dd016(*(undefined4 *)(param_1 + 0x28),0);
+      thunk_parley_describe_maps(*(undefined4 *)(param_1 + 0x28),0);
       break;
     case 0xc:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc84));
@@ -5918,7 +5918,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc94));
       thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
       FUN_005f22e0(&parley_description,&DAT_0062e8c0);
-      thunk_FUN_004dd176((iptr)piVar2);
+      thunk_parley_describe_war_targets((iptr)piVar2);
       break;
     case 0xd:
       iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xc84));
@@ -5949,44 +5949,44 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd1c));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e93c);
-        thunk_FUN_004def54(this,*(undefined4 *)(iVar2 + 0x28),1);
+        thunk_parley_describe_treaty(this,*(undefined4 *)(iVar2 + 0x28),1);
         break;
       case 8:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcb8));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e918);
-        thunk_FUN_004dcafa((iptr)puVar3);
+        thunk_parley_describe_advances((iptr)puVar3);
         break;
       case 9:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcbc));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e91c);
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e920, ((u8 *)&g.d_0062e920)));
-        thunk_FUN_004dcc0c(*(undefined4 *)(iVar2 + 0x28));
+        thunk_parley_describe_gold(*(undefined4 *)(iVar2 + 0x28));
         break;
       case 10:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcc0));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e92c);
-        thunk_FUN_004dcc83((iptr)puVar3);
+        thunk_parley_describe_units((iptr)puVar3);
         break;
       case 0xc:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xccc));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e938);
-        thunk_FUN_004dd176((iptr)puVar3);
+        thunk_parley_describe_war_targets((iptr)puVar3);
         break;
       case 0xd:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcc8));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e934);
-        thunk_FUN_004dd016(*(undefined4 *)(iVar2 + 0x28),0);
+        thunk_parley_describe_maps(*(undefined4 *)(iVar2 + 0x28),0);
         break;
       case 0x11:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcc4));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e930);
-        thunk_FUN_004dcea5((iptr)puVar3);
+        thunk_parley_describe_cities((iptr)puVar3);
       }
       FUN_005f22e0(&parley_description,&DAT_0062e940);
       switch(*piVar2) {
@@ -5995,44 +5995,44 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xd20));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e968);
-        thunk_FUN_004def54(this,*(undefined4 *)(param_1 + 0x28),1);
+        thunk_parley_describe_treaty(this,*(undefined4 *)(param_1 + 0x28),1);
         break;
       case 8:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcd0));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e944);
-        thunk_FUN_004dcafa((iptr)piVar2);
+        thunk_parley_describe_advances((iptr)piVar2);
         break;
       case 9:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcd4));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e948);
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e94c, ((u8 *)&g.d_0062e94c)));
-        thunk_FUN_004dcc0c(*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_describe_gold(*(undefined4 *)(param_1 + 0x28));
         break;
       case 10:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcd8));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e958);
-        thunk_FUN_004dcc83((iptr)piVar2);
+        thunk_parley_describe_units((iptr)piVar2);
         break;
       case 0xc:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xce4));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e964);
-        thunk_FUN_004dd176((iptr)piVar2);
+        thunk_parley_describe_war_targets((iptr)piVar2);
         break;
       case 0xd:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xce0));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e960);
-        thunk_FUN_004dd016(*(undefined4 *)(param_1 + 0x28),1);
+        thunk_parley_describe_maps(*(undefined4 *)(param_1 + 0x28),1);
         break;
       case 0x11:
         iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0xcdc));
         thunk_str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
         FUN_005f22e0(&parley_description,&DAT_0062e95c);
-        thunk_FUN_004dcea5((iptr)piVar2);
+        thunk_parley_describe_cities((iptr)piVar2);
       }
       break;
     case 0xf:
@@ -6055,25 +6055,25 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
       switch(*piVar2) {
       case 5:
       case 6:
-        thunk_FUN_004def54(this,*(undefined4 *)(param_1 + 0x28),1);
+        thunk_parley_describe_treaty(this,*(undefined4 *)(param_1 + 0x28),1);
         break;
       case 8:
-        thunk_FUN_004dcafa((iptr)piVar2);
+        thunk_parley_describe_advances((iptr)piVar2);
         break;
       case 9:
-        thunk_FUN_004dcc0c(*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_describe_gold(*(undefined4 *)(param_1 + 0x28));
         break;
       case 10:
-        thunk_FUN_004dcc83((iptr)piVar2);
+        thunk_parley_describe_units((iptr)piVar2);
         break;
       case 0xc:
-        thunk_FUN_004dd176((iptr)piVar2);
+        thunk_parley_describe_war_targets((iptr)piVar2);
         break;
       case 0xd:
-        thunk_FUN_004dd016(*(undefined4 *)(param_1 + 0x28),1);
+        thunk_parley_describe_maps(*(undefined4 *)(param_1 + 0x28),1);
         break;
       case 0x11:
-        thunk_FUN_004dcea5((iptr)piVar2);
+        thunk_parley_describe_cities((iptr)piVar2);
       }
     }
     sVar4 = _strlen(&parley_description);
@@ -6087,7 +6087,7 @@ void __thiscall FUN_004dbee6(C_004083b0_4 *this,iptr param_1,int param_2)
 /* 004dcafa auto */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_004dcafa(iptr param_1)
+void __cdecl parley_describe_advances(iptr param_1)
 
 {
   int iVar1;
@@ -6123,7 +6123,7 @@ void __cdecl FUN_004dcafa(iptr param_1)
 
 /* 004dcc0c auto */
 #define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004dcc0c(int param_1)
+void __cdecl parley_describe_gold(int param_1)
 
 {
   undefined4 uVar1;
@@ -6147,7 +6147,7 @@ void __cdecl FUN_004dcc0c(int param_1)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(260)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(264)))
 #define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(268)))
-void __cdecl FUN_004dcc83(iptr param_1)
+void __cdecl parley_describe_units(iptr param_1)
 
 {
   iptr iVar1;
@@ -6209,7 +6209,7 @@ void __cdecl FUN_004dcc83(iptr param_1)
 /* 004dcea5 auto */
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(12)))
-void __cdecl FUN_004dcea5(iptr param_1)
+void __cdecl parley_describe_cities(iptr param_1)
 
 {
   int iVar1;
@@ -6248,7 +6248,7 @@ void __cdecl FUN_004dcea5(iptr param_1)
 #undef local_14
 
 /* 004dd016 auto */
-void __cdecl FUN_004dd016(int param_1,int param_2)
+void __cdecl parley_describe_maps(int param_1,int param_2)
 
 {
   iptr iVar1;
@@ -6290,7 +6290,7 @@ void __cdecl FUN_004dd016(int param_1,int param_2)
 /* 004dd176 auto */
 #define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004dd176(iptr param_1)
+void __cdecl parley_describe_war_targets(iptr param_1)
 
 {
   int iVar1;
@@ -6345,102 +6345,102 @@ void __cdecl parley_execute_transaction(iptr param_1)
     puVar2 = (undefined4 *)(iVar4 + 0x20);
     switch(*(undefined4 *)(param_1 + 0x10)) {
     case 6:
-      thunk_FUN_004df10f(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
+      thunk_parley_apply_treaty(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
       break;
     case 7:
-      thunk_FUN_004ddfb2(iVar2,iVar1,(iptr)puVar1);
+      thunk_parley_transfer_advances(iVar2,iVar1,(iptr)puVar1);
       break;
     case 8:
-      thunk_FUN_004ddf04(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
+      thunk_parley_transfer_gold(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
       break;
     case 9:
-      thunk_FUN_004de990(iVar2,(iptr)puVar1);
+      thunk_parley_transfer_units(iVar2,(iptr)puVar1);
       break;
     case 10:
-      thunk_FUN_004de049(iVar2,(iptr)puVar1);
+      thunk_parley_transfer_cities(iVar2,(iptr)puVar1);
       break;
     case 0xb:
-      thunk_FUN_004dd8ad(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
+      thunk_parley_give_maps(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
       break;
     case 0xc:
-      thunk_FUN_004dde9e(iVar1,(iptr)puVar1);
-      thunk_FUN_004dde9e(iVar2,(iptr)puVar1);
+      thunk_parley_apply_war_pact(iVar1,(iptr)puVar1);
+      thunk_parley_apply_war_pact(iVar2,(iptr)puVar1);
       break;
     case 0xd:
-      thunk_FUN_004dd8ad(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
-      thunk_FUN_004dd8ad(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
+      thunk_parley_give_maps(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
+      thunk_parley_give_maps(iVar2,iVar1,*(undefined4 *)(param_1 + 0x28));
       break;
     case 0xe:
       switch(*puVar2) {
       case 5:
       case 6:
-        thunk_FUN_004df10f(*(undefined4 *)(iVar4 + 0x28),iVar1,iVar2);
+        thunk_parley_apply_treaty(*(undefined4 *)(iVar4 + 0x28),iVar1,iVar2);
         break;
       case 8:
-        thunk_FUN_004ddfb2(iVar2,iVar1,(iptr)puVar2);
+        thunk_parley_transfer_advances(iVar2,iVar1,(iptr)puVar2);
         break;
       case 9:
-        thunk_FUN_004ddf04(iVar2,iVar1,*(undefined4 *)(iVar4 + 0x28));
+        thunk_parley_transfer_gold(iVar2,iVar1,*(undefined4 *)(iVar4 + 0x28));
         break;
       case 10:
-        thunk_FUN_004de990(iVar2,(iptr)puVar2);
+        thunk_parley_transfer_units(iVar2,(iptr)puVar2);
         break;
       case 0xc:
-        thunk_FUN_004dde9e(iVar1,(iptr)puVar2);
+        thunk_parley_apply_war_pact(iVar1,(iptr)puVar2);
         break;
       case 0xd:
-        thunk_FUN_004dd8ad(iVar2,iVar1,*(undefined4 *)(iVar4 + 0x28));
+        thunk_parley_give_maps(iVar2,iVar1,*(undefined4 *)(iVar4 + 0x28));
         break;
       case 0x11:
-        thunk_FUN_004de049(iVar2,(iptr)puVar2);
+        thunk_parley_transfer_cities(iVar2,(iptr)puVar2);
       }
       switch(*puVar1) {
       case 5:
       case 6:
-        thunk_FUN_004df10f(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
+        thunk_parley_apply_treaty(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
         break;
       case 8:
-        thunk_FUN_004ddfb2(iVar1,iVar2,(iptr)puVar1);
+        thunk_parley_transfer_advances(iVar1,iVar2,(iptr)puVar1);
         break;
       case 9:
-        thunk_FUN_004ddf04(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_transfer_gold(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
         break;
       case 10:
-        thunk_FUN_004de990(iVar1,(iptr)puVar1);
+        thunk_parley_transfer_units(iVar1,(iptr)puVar1);
         break;
       case 0xc:
-        thunk_FUN_004dde9e(iVar2,(iptr)puVar1);
+        thunk_parley_apply_war_pact(iVar2,(iptr)puVar1);
         break;
       case 0xd:
-        thunk_FUN_004dd8ad(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_give_maps(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
         break;
       case 0x11:
-        thunk_FUN_004de049(iVar1,(iptr)puVar1);
+        thunk_parley_transfer_cities(iVar1,(iptr)puVar1);
       }
       break;
     case 0xf:
       switch(*puVar1) {
       case 5:
       case 6:
-        thunk_FUN_004df10f(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
+        thunk_parley_apply_treaty(*(undefined4 *)(param_1 + 0x28),iVar1,iVar2);
         break;
       case 8:
-        thunk_FUN_004ddfb2(iVar1,iVar2,(iptr)puVar1);
+        thunk_parley_transfer_advances(iVar1,iVar2,(iptr)puVar1);
         break;
       case 9:
-        thunk_FUN_004ddf04(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_transfer_gold(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
         break;
       case 10:
-        thunk_FUN_004de990(iVar1,(iptr)puVar1);
+        thunk_parley_transfer_units(iVar1,(iptr)puVar1);
         break;
       case 0xc:
-        thunk_FUN_004dde9e(iVar2,(iptr)puVar1);
+        thunk_parley_apply_war_pact(iVar2,(iptr)puVar1);
         break;
       case 0xd:
-        thunk_FUN_004dd8ad(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
+        thunk_parley_give_maps(iVar1,iVar2,*(undefined4 *)(param_1 + 0x28));
         break;
       case 0x11:
-        thunk_FUN_004de049(iVar1,(iptr)puVar1);
+        thunk_parley_transfer_cities(iVar1,(iptr)puVar1);
       }
     }
     thunk_net_send_state_diff(0xff,2,0,0,0);
@@ -6482,7 +6482,7 @@ void __cdecl parley_execute_transaction(iptr param_1)
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(36)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
-void __cdecl FUN_004dd8ad(iptr param_1,iptr param_2,int param_3)
+void __cdecl parley_give_maps(iptr param_1,iptr param_2,int param_3)
 
 {
   byte bVar1;
@@ -6619,7 +6619,7 @@ void __cdecl FUN_004dd8ad(iptr param_1,iptr param_2,int param_3)
 /* 004dde9e auto */
 #define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004dde9e(iptr param_1,iptr param_2)
+void __cdecl parley_apply_war_pact(iptr param_1,iptr param_2)
 
 {
   int iVar1;
@@ -6637,7 +6637,7 @@ void __cdecl FUN_004dde9e(iptr param_1,iptr param_2)
 #undef local_c
 
 /* 004ddf04 auto */
-void __cdecl FUN_004ddf04(iptr param_1,iptr param_2,i32 param_3)
+void __cdecl parley_transfer_gold(iptr param_1,iptr param_2,i32 param_3)
 
 {
   int iVar1;
@@ -6655,7 +6655,7 @@ void __cdecl FUN_004ddf04(iptr param_1,iptr param_2,i32 param_3)
 /* 004ddfb2 auto */
 #define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_004ddfb2(iptr param_1,iptr param_2,iptr param_3)
+void __cdecl parley_transfer_advances(iptr param_1,iptr param_2,iptr param_3)
 
 {
   int iVar1;
@@ -6682,7 +6682,7 @@ void __cdecl FUN_004ddfb2(iptr param_1,iptr param_2,iptr param_3)
 /* 004de049 auto */
 #define local_14 (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-void __cdecl FUN_004de049(iptr param_1,iptr param_2)
+void __cdecl parley_transfer_cities(iptr param_1,iptr param_2)
 
 {
   int iVar1;
@@ -6694,7 +6694,7 @@ void __cdecl FUN_004de049(iptr param_1,iptr param_2)
   for (local_c = 0; local_c < iVar1; local_c = local_c + 1) {
     iVar2 = thunk_parley_find_city_by_id((C_004083b0_4 *)&parley_wnd,*local_14);
     if ((-1 < iVar2) && (cities[iVar2].id != 0)) {
-      thunk_FUN_004de0e2(iVar2,param_1);
+      thunk_parley_cede_city(iVar2,param_1);
     }
     local_14 = local_14 + 2;
   }
@@ -6710,7 +6710,7 @@ void __cdecl FUN_004de049(iptr param_1,iptr param_2)
 #define local_28 (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(40)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-void __cdecl FUN_004de0e2(uptr param_1,iptr param_2)
+void __cdecl parley_cede_city(uptr param_1,iptr param_2)
 
 {
   char *pcVar1;
@@ -6870,7 +6870,7 @@ LAB_004de76b:
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(40)))
-void __cdecl FUN_004de990(iptr param_1,iptr param_2)
+void __cdecl parley_transfer_units(iptr param_1,iptr param_2)
 
 {
   char *pcVar1;
@@ -6892,7 +6892,7 @@ void __cdecl FUN_004de990(iptr param_1,iptr param_2)
           if (local_24 == local_2c) {
             local_24 = thunk_unit_next_in_stack(local_24);
           }
-          iVar3 = thunk_FUN_004ded07(local_24,(iptr)&local_30,(iptr)&local_c,
+          iVar3 = thunk_parley_find_unit_drop_tile(local_24,(iptr)&local_30,(iptr)&local_c,
                                      (int)units[local_24].owner,1);
           if (iVar3 == 0) {
             thunk_unit_delete_with_cargo(local_24,1);
@@ -6902,7 +6902,7 @@ void __cdecl FUN_004de990(iptr param_1,iptr param_2)
           }
         }
       }
-      iVar3 = thunk_FUN_004ded07(local_2c,(iptr)&local_18,(iptr)&local_1c,param_1,0);
+      iVar3 = thunk_parley_find_unit_drop_tile(local_2c,(iptr)&local_18,(iptr)&local_1c,param_1,0);
       if (iVar3 != 0) {
         pcVar1 = (char *)(units[local_2c].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + param_1 * 0x594);
         *pcVar1 = *pcVar1 + '\x01';
@@ -6952,7 +6952,7 @@ void __cdecl FUN_004de990(iptr param_1,iptr param_2)
 /* 004ded07 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl FUN_004ded07(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5)
+undefined4 __cdecl parley_find_unit_drop_tile(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5)
 
 {
   iptr iVar1;
@@ -6995,7 +6995,7 @@ undefined4 __cdecl FUN_004ded07(iptr param_1,iptr param_2,iptr param_3,iptr para
 #undef local_8
 
 /* 004def54 auto */
-void __thiscall FUN_004def54(C_004083b0_4 *this,int param_1,int param_2)
+void __thiscall parley_describe_treaty(C_004083b0_4 *this,int param_1,int param_2)
 
 {
   iptr iVar1;
@@ -7038,7 +7038,7 @@ void __thiscall FUN_004def54(C_004083b0_4 *this,int param_1,int param_2)
 }
 
 /* 004df10f auto */
-void __cdecl FUN_004df10f(undefined4 param_1,iptr param_2,iptr param_3)
+void __cdecl parley_apply_treaty(undefined4 param_1,iptr param_2,iptr param_3)
 
 {
   switch(param_1) {

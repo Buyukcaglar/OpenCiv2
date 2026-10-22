@@ -2384,7 +2384,7 @@ dialog_load_text_section
   local_78 = 1;
   local_7c = 1;
   local_10 = 0;
-  FUN_005f22d0(&DAT_006cecb0,param_2);
+  FUN_005f22d0(&dialog_section_name,param_2);
   iVar1 = thunk_text_open_section(param_1,param_2);
   if (iVar1 == 0) {
     if ((param_8 & 0x8000) == 0) {
@@ -5224,7 +5224,7 @@ void __cdecl FUN_005af9e3(void)
       if (iVar2 != 0) {
         puVar5 = &editor_item_names + local_c * 0x28;
         uVar2 = thunk_label_string(unit_types[local_c].name);
-        iVar3 = thunk_FUN_004cefe9(uVar2,(iptr)puVar5);
+        iVar3 = thunk_events_rename_unit_refs(uVar2,(iptr)puVar5);
         local_8 = local_8 + iVar3;
       }
     }

@@ -109,7 +109,7 @@ void __thiscall surface_unlock(DibSurface *this)
   uptr uVar1;
   
   if (this->bits != 0) {
-    uVar1 = FUN_005e3aa8(this->dib);
+    uVar1 = dib_unlock_bits(this->dib);
     this->bits = uVar1;
     operator_delete((void *)this->row_offsets);
   }
@@ -3629,15 +3629,15 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
   iptr iVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (iptr_00637ea8 != 0xf) {
+  if (wnd_modal_depth != 0xf) {
     this->modal_running = 1;
-    iptr_00637ea8 = iptr_00637ea8 + 1;
-    (&DAT_00637eb0)[iptr_00637ea8] = this;
-    if (iptr_00637ea8 == 0) {
+    wnd_modal_depth = wnd_modal_depth + 1;
+    (&DAT_00637eb0)[wnd_modal_depth] = this;
+    if (wnd_modal_depth == 0) {
       local_8 = 0;
     }
     else {
-      local_8 = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[iptr_00637ea8]);
+      local_8 = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[wnd_modal_depth]);
     }
     iVar1 = thunk_wnd_get_window((WndBase *)this);
     wnd_obj_disable_owner(iVar1,local_8);
@@ -3647,16 +3647,16 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
         (*(code *)this->on_modal_idle)();
       }
     }
-    if (iptr_00637ea8 == 0) {
+    if (wnd_modal_depth == 0) {
       local_c = 0;
     }
     else {
-      local_c = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[iptr_00637ea8]);
+      local_c = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[wnd_modal_depth]);
     }
     iVar1 = thunk_wnd_get_window((WndBase *)this);
     wnd_obj_enable_owner(iVar1,local_c);
-    iptr_00637ea8 = iptr_00637ea8 + -1;
-    if (-1 < iptr_00637ea8) {
+    wnd_modal_depth = wnd_modal_depth + -1;
+    if (-1 < wnd_modal_depth) {
       this->modal_running = 1;
     }
   }
@@ -4027,7 +4027,7 @@ palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 
 /* 005c6ac9 auto */
 void __thiscall
-FUN_005c6ac9(GamePalette *this,undefined4 param_1,undefined4 param_2)
+palette_refresh_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 
 {
   palette_reapply_range((iptr)this,param_1,param_2);
@@ -4201,7 +4201,7 @@ void __thiscall FUN_005c6f2c(GamePalette *this)
   iVar1 = mem_handle_lock(this->tint_saved_rgb);
   palette_set_rgb(this,this->tint_first,this->tint_count,iVar1);
   mem_handle_unlock(this->tint_saved_rgb);
-  FUN_005c6ac9(this,this->tint_first,this->tint_count);
+  palette_refresh_range(this,this->tint_first,this->tint_count);
   uVar2 = mem_handle_free(this->tint_saved_rgb);
   this->tint_saved_rgb = uVar2;
   return;
@@ -7553,13 +7553,13 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
     iVar4 = thunk_rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&DAT_00637f5c,param_3 | 0x40000000,*param_1,
                               param_1[1],iVar4,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
-    DAT_006d46f8 = (WNDPROC)GetWindowLongA(local_8,-4);
+    scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(local_8,-4);
     local_34 = GetWindowLongA(local_8,-0x10);
     local_30.style = 0x8b;
-    local_30.lpfnWndProc = DAT_006d46f8;
+    local_30.lpfnWndProc = scrollbar_base_wndproc;
     local_30.cbClsExtra = 0;
-    DAT_006d46f4 = GetClassLongA(local_8,-0x12);
-    local_30.cbWndExtra = DAT_006d46f4 + 8;
+    scrollbar_base_wnd_extra = GetClassLongA(local_8,-0x12);
+    local_30.cbWndExtra = scrollbar_base_wnd_extra + 8;
     local_30.hInstance = app_hinstance;
     local_30.hIcon = (HICON)0x0;
     local_30.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
@@ -7581,8 +7581,8 @@ HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int pa
   local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&DAT_00637f80,local_34,*param_1,param_1[1]
                             ,nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5cce80, FUN_005cce80));
-  SetWindowLongA(local_8,DAT_006d46f4,param_2);
-  SetWindowLongA(local_8,DAT_006d46f4 + 4,(LONG)DAT_006d46f8);
+  SetWindowLongA(local_8,scrollbar_base_wnd_extra,param_2);
+  SetWindowLongA(local_8,scrollbar_base_wnd_extra + 4,(LONG)scrollbar_base_wndproc);
   ShowScrollBar(local_8,2,1);
   scrollbar_hwnd_set_range(local_8,1,100);
   return local_8;

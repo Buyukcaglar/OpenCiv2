@@ -14,9 +14,9 @@ map_redraw_combat_tiles(undefined4 param_1,undefined4 param_2,undefined4 param_3
 #undef human_civ
 
 /* 00580341 auto */
-#define DAT_0062c5bc (*(undefined4 *)((u8 *)&g.d_0062c5bc))
-#define DAT_00633e40 (*(iptr *)((u8 *)&g.d_00633e40))
+#define active_unit_lost_in_combat (*(undefined4 *)((u8 *)&g.d_0062c5bc))
 #define anim_combat_defender (*(iptr *)((u8 *)&g.d_00633e48))
+#define anim_combat_defender_x (*(iptr *)((u8 *)&g.d_00633e40))
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define combat_kill_count (*(int *)((u8 *)&g.d_006acb0c))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -676,8 +676,8 @@ undefined4 __cdecl unit_resolve_attack(iptr param_1,iptr param_2,int param_3)
       thunk_snd_play_effect(0x29,1,0,0);
     }
     anim_combat_defender = local_c;
-    DAT_00633e40 = iVar11;
-    DAT_00633e44 = iVar10;
+    anim_combat_defender_x = iVar11;
+    anim_combat_defender_y = iVar10;
     if (2 < game.multiplayer) {
       for (local_18 = 1; (int)local_18 < 8; local_18 = local_18 + 1) {
         if ((human_civ != local_18) && (aiStack_58[local_18] != 0)) {
@@ -871,7 +871,7 @@ undefined4 __cdecl unit_resolve_attack(iptr param_1,iptr param_2,int param_3)
   }
 LAB_00582cbe:
   if (local_c0 == 0) {
-    DAT_0062c5bc = 1;
+    active_unit_lost_in_combat = 1;
   }
   if (bVar5) {
     snd_last_effect_id = -1;
@@ -1026,7 +1026,7 @@ LAB_00582cbe:
       }
       iVar16 = tile_unit_owner(iVar11,iVar10);
       if ((iVar16 < 0) && ((1 << (bVar3 & 0x1f) & (uint)game.human_players) != 0)) {
-        thunk_FUN_005369f3(uVar8);
+        thunk_ai_transports_raid_empty_city(uVar8);
       }
     }
   }
@@ -1205,9 +1205,9 @@ LAB_00583d2b:
   }
   return local_38;
 }
-#undef DAT_0062c5bc
-#undef DAT_00633e40
+#undef active_unit_lost_in_combat
 #undef anim_combat_defender
+#undef anim_combat_defender_x
 #undef autoplay_active
 #undef combat_kill_count
 #undef human_civ
@@ -1358,27 +1358,27 @@ void __cdecl cosmic_editor_capture_defaults(void)
   _DAT_006a2d78 = (uint)cosmic.mass_thrust_paradigm;
   _DAT_006a2d7c = (uint)cosmic.fund_max_science;
   cosmic.road_move_mult = cosmic_edit_values;
-  cosmic.trireme_loss_chance = DAT_006a2d84;
-  cosmic.food_per_citizen = DAT_006a2d88;
-  cosmic.food_box_rows = DAT_006a2d8c;
-  cosmic.shield_box_rows = DAT_006a2d90;
-  cosmic.settler_food_low = DAT_006a2d94;
-  cosmic.settler_food_high = DAT_006a2d98;
-  cosmic.unhappy_size = DAT_006a2d9c;
-  cosmic.riot_factor = DAT_006a2da0;
-  cosmic.aqueduct_size = DAT_006a2da4;
-  cosmic.sewer_size = DAT_006a2da8;
-  cosmic.tech_paradigm = DAT_006a2dac;
-  cosmic.transform_time = DAT_006a2db0;
-  cosmic.monarchy_free_support = DAT_006a2db4;
-  cosmic.communism_free_support = DAT_006a2db8;
-  cosmic.fundamentalism_free_support = DAT_006a2dbc;
-  cosmic.communism_palace_dist = DAT_006a2dc0;
-  cosmic.fund_science_loss = DAT_006a2dc4;
-  cosmic.change_penalty = DAT_006a2dc8;
-  cosmic.paradrop_range = DAT_006a2dcc;
-  cosmic.mass_thrust_paradigm = DAT_006a2dd0;
-  cosmic.fund_max_science = DAT_006a2dd4;
+  cosmic.trireme_loss_chance = cosmic_edit_trireme_loss;
+  cosmic.food_per_citizen = cosmic_edit_food_per_citizen;
+  cosmic.food_box_rows = cosmic_edit_food_box_rows;
+  cosmic.shield_box_rows = cosmic_edit_shield_box_rows;
+  cosmic.settler_food_low = cosmic_edit_settler_food_low;
+  cosmic.settler_food_high = cosmic_edit_settler_food_high;
+  cosmic.unhappy_size = cosmic_edit_unhappy_size;
+  cosmic.riot_factor = cosmic_edit_riot_factor;
+  cosmic.aqueduct_size = cosmic_edit_aqueduct_size;
+  cosmic.sewer_size = cosmic_edit_sewer_size;
+  cosmic.tech_paradigm = cosmic_edit_tech_paradigm;
+  cosmic.transform_time = cosmic_edit_transform_time;
+  cosmic.monarchy_free_support = cosmic_edit_monarchy_support;
+  cosmic.communism_free_support = cosmic_edit_communism_support;
+  cosmic.fundamentalism_free_support = cosmic_edit_fundamentalism_support;
+  cosmic.communism_palace_dist = cosmic_edit_communism_palace_dist;
+  cosmic.fund_science_loss = cosmic_edit_fund_science_loss;
+  cosmic.change_penalty = cosmic_edit_change_penalty;
+  cosmic.paradrop_range = cosmic_edit_paradrop_range;
+  cosmic.mass_thrust_paradigm = cosmic_edit_mass_thrust_paradigm;
+  cosmic.fund_max_science = cosmic_edit_fund_max_science;
   return;
 }
 #undef cosmic_edit_values
@@ -1848,7 +1848,7 @@ parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undef
   local_1c = *(undefined4 *)(param_1 + 4);
   local_18 = *(int *)(param_1 + 8);
   local_14 = *(undefined4 *)(param_1 + 0xc);
-  *(undefined4 *)(&DAT_006acb58 + param_2 * 4) = param_3;
+  *(undefined4 *)(&parley_pane_own_cities + param_2 * 4) = param_3;
   thunk_parley_build_city_list(this,param_2,0);
   if (*(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) < 1) {
     puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
@@ -2587,8 +2587,8 @@ void __thiscall parley_build_city_list(C_004083b0_11c *this,int param_1,int para
       return;
     }
     if ((cities[local_18].id != 0) &&
-       (((*(int *)(&DAT_006acb58 + param_1 * 4) != 0 && (cities[local_18].owner == human_civ))
-        || (((*(int *)(&DAT_006acb58 + param_1 * 4) == 0 &&
+       (((*(int *)(&parley_pane_own_cities + param_1 * 4) != 0 && (cities[local_18].owner == human_civ))
+        || (((*(int *)(&parley_pane_own_cities + param_1 * 4) == 0 &&
              ((int)cities[local_18].owner == this->caption_height)) &&
             (((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[local_18].known_to) != 0 ||
              ((int)cities[local_18].owner == (human_civ & 0xffU))))))))) {
@@ -2710,7 +2710,7 @@ uint __cdecl main_frame_create(void)
     uVar2 = 0x10000;
     iVar2 = thunk_wnd_get_window((WndBase *)&main_frame_wnd);
     snd_wave_open(*(undefined4 *)(iVar2 + 4),uVar2,uVar3);
-    thunk_FUN_004e3a86();
+    thunk_menu_build_main();
     surface_load_gif_resource((DibSurface *)&main_frame_bg_surface,0x5a,10,0xc0,(iptr)&local_444);
     thunk_wnd_set_bg_surface((WndBase *)&main_frame_wnd,ADDR(0x6acb68, ((u8 *)&g.d_006acb68)));
     thunk_wnd_set_bg_color((WndBase *)&main_frame_wnd,0x9e);
@@ -3029,23 +3029,23 @@ unit_sound_editor_create_wnd(int param_1,uint param_2,int param_3,int param_4,in
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&DAT_006ace8c,&DAT_00634948);
+    FUN_005f22d0(&unit_sound_editor_title,&DAT_00634948);
   }
   else {
-    FUN_005f22d0(&DAT_006ace8c,param_1);
+    FUN_005f22d0(&unit_sound_editor_title,param_1);
   }
   _DAT_006ad02c = &ui_text_font;
   _DAT_006ad024 = &caption_font;
   _DAT_006ad028 = &caption_small_font;
   _DAT_006ace6c = param_2;
-  DAT_006ace70 = param_8;
-  DAT_006ace74 = param_9;
-  DAT_006ace78 = param_7;
+  unit_sound_editor_caption_height = param_8;
+  unit_sound_editor_border_width = param_9;
+  unit_sound_editor_resize_border = param_7;
   _DAT_006acf54 = 0;
   _DAT_006ad000 = 0;
   if ((param_2 & 4) != 0) {
-    DAT_006ace70 = frame_caption_height;
-    DAT_006ace74 = frame_border_width;
+    unit_sound_editor_caption_height = frame_caption_height;
+    unit_sound_editor_border_width = frame_border_width;
   }
   if ((param_2 & 8) == 0) {
     local_8 = 0x202;
@@ -3053,15 +3053,15 @@ unit_sound_editor_create_wnd(int param_1,uint param_2,int param_3,int param_4,in
   else {
     local_8 = 0x802;
   }
-  if (DAT_006ace70 != 0) {
+  if (unit_sound_editor_caption_height != 0) {
     local_8 = local_8 | 0x400;
   }
   if (param_7 != 0) {
     local_8 = local_8 | 0x1000;
   }
   if ((param_2 & 2) == 0) {
-    param_5 = param_5 + DAT_006ace74 * 2;
-    param_6 = param_6 + DAT_006ace70 + DAT_006ace74;
+    param_5 = param_5 + unit_sound_editor_border_width * 2;
+    param_6 = param_6 + unit_sound_editor_caption_height + unit_sound_editor_border_width;
   }
   if ((param_2 & 1) != 0) {
     param_3 = (screen_width >> 1) - (param_5 >> 1);
@@ -3076,11 +3076,11 @@ unit_sound_editor_create_wnd(int param_1,uint param_2,int param_3,int param_4,in
   wnd_create_with_surface
             ((DibSurface *)&unit_sound_editor_window,0,local_8,param_3,param_4,param_5,param_6,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
              local_c);
-  if (DAT_006ace70 != 0) {
-    thunk_wnd_set_caption_height((WndBase *)&unit_sound_editor_wnd,DAT_006ace70);
+  if (unit_sound_editor_caption_height != 0) {
+    thunk_wnd_set_caption_height((WndBase *)&unit_sound_editor_wnd,unit_sound_editor_caption_height);
   }
-  if (DAT_006ace78 != 0) {
-    thunk_wnd_set_resize_border((WndBase *)&unit_sound_editor_wnd,DAT_006ace78);
+  if (unit_sound_editor_resize_border != 0) {
+    thunk_wnd_set_resize_border((WndBase *)&unit_sound_editor_wnd,unit_sound_editor_resize_border);
   }
   thunk_frame_wnd_layout((FrameWindow *)&unit_sound_editor_window);
   return;
@@ -3162,7 +3162,7 @@ void __cdecl FUN_0058a905(int param_1)
   local_8 = 0xffffffff;
   thunk_dialog_ctor(&local_308,0x4000);
   local_8 = 0;
-  if (*(int *)(&DAT_006aca14 + param_1 * 4) < 0) {
+  if (*(int *)(&unit_sound_effects_by_ctrl + param_1 * 4) < 0) {
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_0058abca */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
   }
@@ -3207,7 +3207,7 @@ void __cdecl FUN_0058a905(int param_1)
     }
     else {
       FUN_005f22e0(local_408,&DAT_006349a8);
-      FUN_005f22e0(local_408,s_AIRCOMBT_0062af70 + *(int *)(&DAT_006aca14 + param_1 * 4) * 9);
+      FUN_005f22e0(local_408,s_AIRCOMBT_0062af70 + *(int *)(&unit_sound_effects_by_ctrl + param_1 * 4) * 9);
       FUN_005f22e0(local_408,&DAT_006349ac);
       iVar3 = thunk_file_exists((iptr)local_408);
       if ((iVar3 == 0) || (iVar3 = FUN_005f66b0(local_408), iVar3 == 0)) {
@@ -3415,7 +3415,7 @@ void __cdecl unit_sound_editor_set_slots(int param_1,iptr param_2)
     else if (param_1 == 0x35) {
       _DAT_006acd38 = 0x67;
     }
-    else if (((&DAT_006a2d59)[param_1 * 0x58] & 0x10) == 0) {
+    else if (((&editor_item_flags_byte1)[param_1 * 0x58] & 0x10) == 0) {
       if (*(int *)(&editor_item_field3 + param_1 * 0x58) == 1) {
         if (*(int *)(&editor_item_field7 + param_1 * 0x58) == 0) {
           _DAT_006acd38 = 0x21;
@@ -3487,7 +3487,7 @@ void __cdecl unit_sound_editor_set_slots(int param_1,iptr param_2)
       _DAT_006acd38 = 0x32;
     }
   }
-  DAT_006acd3c = local_10;
+  unit_sound_orders_effect = local_10;
   if (-1 < local_10) {
     _DAT_006acd40 = 0x23;
   }
@@ -3575,7 +3575,7 @@ void __cdecl unit_sound_editor_run(iptr param_1,undefined4 param_2)
   thunk_button_create(&local_210,ADDR(0x6acda0, ((u8 *)&g.d_006acda0)),0x66,(iptr)local_5c,iVar2);
   thunk_button_set_callback(&local_210,ADDR(0x402da1, FUN_0058ac13));
   thunk_ctrl_set_cancel_button(&local_210);
-  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&DAT_006acdb0,ADDR(0x402559, FUN_0058ae6c));
+  thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)&unit_sound_editor_wnd_handlers,ADDR(0x402559, FUN_0058ae6c));
   thunk_wnd_set_redraw_callback((SurfaceWindow *)&unit_sound_editor_window,ADDR(0x4017d5, FUN_0058ac38));
   wnd_repaint((SurfaceWindow *)&unit_sound_editor_window);
   thunk_window_show((C_004083b0_4 *)&unit_sound_editor_window);
@@ -4683,7 +4683,7 @@ LAB_0058e34c:
               if ((local_31c == 0) ||
                  (iVar3 = thunk_dlg_game_txt_with_unit_flags(ADDR(0x634c18, ((u8 *)&g.d_00634c18)),0x1b,(ui_large_screen == 0) - 1 & 8), iVar3 != 0)
                  ) {
-                thunk_FUN_004ca1cd(iVar1,iVar4,local_14,local_31c,local_18);
+                thunk_unit_airlift_perform(iVar1,iVar4,local_14,local_31c,local_18);
                 local_8 = 0xffffffff;
                 /* inlined unwind funclet FUN_0058e5c4 */ { thunk_dialog_dtor((Dialog *)((iptr)&local_310)); }
               }

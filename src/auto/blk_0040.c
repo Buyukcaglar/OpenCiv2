@@ -1362,7 +1362,7 @@ void __cdecl map_generate(int param_1)
     do {
       FUN_0040a572(0);
     } while (mapgen_land_placed < local_14);
-    thunk_FUN_004b32fe();
+    thunk_map_assign_landmass_ids();
     local_358 = 0;
     for (local_48 = 0; (int)local_48 < 0x40; local_48 = local_48 + 1) {
       if (*(short *)(&landmass_table + local_48 * 0x10) != 0) {
@@ -1808,7 +1808,7 @@ void __cdecl map_generate(int param_1)
       }
     }
   }
-  thunk_FUN_004b32fe();
+  thunk_map_assign_landmass_ids();
   thunk_map_build_coarse_connectivity();
   thunk_FUN_0040897f();
   if ((game.rules & 0x8000) == 0) {
@@ -2047,8 +2047,8 @@ void __cdecl FUN_0040a763(int param_1,int param_2)
     uVar2 = _rand();
     uVar3 = (int)uVar2 >> 0x1f;
     iVar1 = (((uVar2 ^ uVar3) - uVar3 & 3 ^ uVar3) - uVar3) * 2;
-    param_1 = param_1 + (char)(&DAT_00628351)[iVar1];
-    param_2 = param_2 + (char)(&DAT_00628361)[iVar1];
+    param_1 = param_1 + (char)(&mapgen_cardinal_dx_table)[iVar1];
+    param_2 = param_2 + (char)(&mapgen_cardinal_dy_table)[iVar1];
     local_8 = local_8 + -1;
   }
   thunk_ui_pump_messages_net();
@@ -2155,8 +2155,8 @@ void __cdecl FUN_0040a92f(int param_1,int param_2)
     uVar4 = _rand();
     uVar5 = (int)uVar4 >> 0x1f;
     iVar3 = (((uVar4 ^ uVar5) - uVar5 & 3 ^ uVar5) - uVar5) * 2;
-    param_1 = param_1 + (char)(&DAT_00628351)[iVar3];
-    param_2 = param_2 + (char)(&DAT_00628361)[iVar3];
+    param_1 = param_1 + (char)(&mapgen_cardinal_dx_table)[iVar3];
+    param_2 = param_2 + (char)(&mapgen_cardinal_dy_table)[iVar3];
     local_8 = local_8 + -1;
   }
   thunk_ui_pump_messages_net();
@@ -2742,7 +2742,7 @@ void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
 #undef aiStack_a0
 
 /* 0040c7d0 auto */
-#define DAT_00624f1c (*(int *)((u8 *)&g.d_00624f1c))
+#define taxrate_bg_surface (*(int *)((u8 *)&g.d_00624f1c))
 #define taxrate_dialog_active (*(int *)((u8 *)&g.d_0063cbb0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __thiscall FUN_0040c7d0(C_004083b0_430 *this)
@@ -2751,11 +2751,11 @@ void __thiscall FUN_0040c7d0(C_004083b0_430 *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   thunk_frame_wnd_draw_caption((FrameWindow *)this);
-  if ((DAT_00624f1c == 0) || (taxrate_dialog_active == 0)) {
+  if ((taxrate_bg_surface == 0) || (taxrate_dialog_active == 0)) {
     thunk_gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1d);
   }
   else {
-    thunk_gfx_copy_rect_xywh(DAT_00624f1c,(iptr)this,0,0,this->client_x,this->client_y,this->field_2f8,
+    thunk_gfx_copy_rect_xywh(taxrate_bg_surface,(iptr)this,0,0,this->client_x,this->client_y,this->field_2f8,
                        this->field_2fc);
   }
   thunk_text_set_surface((iptr)this);
@@ -2843,14 +2843,14 @@ void __thiscall FUN_0040c7d0(C_004083b0_430 *this)
   thunk_wnd_blit_surface((DibSurface *)this);
   return;
 }
-#undef DAT_00624f1c
+#undef taxrate_bg_surface
 #undef taxrate_dialog_active
 #undef local_c
 
 /* 0040cd64 auto */
-#define DAT_00624f1c (*(DibSurface * *)((u8 *)&g.d_00624f1c))
 #define SCHAR_00h_0064bc1a (*(undefined *)((u8 *)&g.d_0064bc1a))
 #define SCHAR_00h_0064bc1c (*(undefined *)((u8 *)&g.d_0064bc1c))
+#define taxrate_bg_surface (*(DibSurface * *)((u8 *)&g.d_00624f1c))
 #define taxrate_dialog_active (*(int *)((u8 *)&g.d_0063cbb0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 #define _SCHAR_00h_0064bc1a (*(undefined2 *)((u8 *)&g.d_0064bc1a))
@@ -2912,7 +2912,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
     local_484 = (DibSurface *)surface_ctor(this_00);
   }
   local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
-  DAT_00624f1c = local_484;
+  taxrate_bg_surface = local_484;
   uVar4 = thunk_civ_max_tax_rate(param_1);
   this->field_2dc = uVar4;
   this->field_348 = 0;
@@ -2963,7 +2963,7 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
     this->field_318 = (int)(this->field_318 * 3) / 2;
     local_470 = 0x42;
   }
-  surface_load_gif_resource(DAT_00624f1c,local_470,10,0xc0,(iptr)&local_444);
+  surface_load_gif_resource(taxrate_bg_surface,local_470,10,0xc0,(iptr)&local_444);
   uVar4 = thunk_font_cached_height((GameFont *)&ui_text_font);
   this->field_32c = uVar4;
   iVar5 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x408));
@@ -3092,10 +3092,10 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   while (taxrate_dialog_active != 0) {
     thunk_win_pump_one_message();
   }
-  if (DAT_00624f1c != (DibSurface *)0x0) {
-    thunk_surface_delete(DAT_00624f1c,1);
+  if (taxrate_bg_surface != (DibSurface *)0x0) {
+    thunk_surface_delete(taxrate_bg_surface,1);
   }
-  DAT_00624f1c = (DibSurface *)0x0;
+  taxrate_bg_surface = (DibSurface *)0x0;
   for (local_468 = 0; local_468 < 3; local_468 = local_468 + 1) {
     *(undefined4 *)(&DAT_00624f10 + local_468 * 4) =
          *(undefined4 *)(this->pad_364 + local_468 * 4 + -0x18);
@@ -3128,9 +3128,9 @@ void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1)
   /* inlined unwind funclet FUN_0040dda0 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
   return;
 }
-#undef DAT_00624f1c
 #undef SCHAR_00h_0064bc1a
 #undef SCHAR_00h_0064bc1c
+#undef taxrate_bg_surface
 #undef taxrate_dialog_active
 #undef ui_large_screen
 #undef _SCHAR_00h_0064bc1a

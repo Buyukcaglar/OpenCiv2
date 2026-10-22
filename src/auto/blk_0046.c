@@ -2,7 +2,6 @@
 #include "auto_common.h"
 
 /* 00460129 auto */
-#define DAT_00626a20 (*(undefined4 *)((u8 *)&g.d_00626a20))
 #define diplo_ai_declare_war (*(int *)((u8 *)&g.d_0064b0e8))
 #define diplo_ai_fear_level (*(int *)((u8 *)&g.d_0064b0ec))
 #define diplo_ai_outranks_target (*(int *)((u8 *)&g.d_0064b12c))
@@ -14,6 +13,7 @@
 #define diplo_gifts_this_meeting (*(undefined4 *)((u8 *)&g.d_0064b0f0))
 #define diplo_had_ceasefire (*(uint *)((u8 *)&g.d_0064b138))
 #define diplo_initial_eval_done (*(undefined4 *)((u8 *)&g.d_00626a1c))
+#define diplo_opening_eval_active (*(undefined4 *)((u8 *)&g.d_00626a20))
 #define diplo_strongest_enemy (*(int *)((u8 *)&g.d_0064b0fc))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
@@ -88,10 +88,10 @@ diplo_ai_meet_player(iptr param_1,iptr param_2,undefined4 param_3,undefined4 par
     civs[param_2].field_1f = '\0';
   }
   diplo_initial_eval_done = 0;
-  DAT_00626a20 = 1;
+  diplo_opening_eval_active = 1;
   thunk_diplo_eval_ai_stance(param_1,param_2);
   diplo_initial_eval_done = 1;
-  DAT_00626a20 = 0;
+  diplo_opening_eval_active = 0;
   diplo_had_ceasefire = (uint)((*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 2) != 0);
   bVar20 = (*(byte *)(param_2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + param_1 * 4) & 1) == 0;
   if (param_5 == 0) {
@@ -1191,7 +1191,6 @@ LAB_00463d3b:
   _DAT_00626a28 = 0;
   return;
 }
-#undef DAT_00626a20
 #undef diplo_ai_declare_war
 #undef diplo_ai_fear_level
 #undef diplo_ai_outranks_target
@@ -1203,6 +1202,7 @@ LAB_00463d3b:
 #undef diplo_gifts_this_meeting
 #undef diplo_had_ceasefire
 #undef diplo_initial_eval_done
+#undef diplo_opening_eval_active
 #undef diplo_strongest_enemy
 #undef human_civ
 #undef scenario_events_loaded
@@ -2586,25 +2586,25 @@ void __thiscall parley_build_unit_list(C_004083b0_11c *this,int param_1,int para
 #undef local_8
 
 /* 0046a740 auto */
-#define DAT_0062841c (*(int *)((u8 *)&g.d_0062841c))
-#define DAT_00628424 (*(undefined4 *)((u8 *)&g.d_00628424))
+#define label_count (*(undefined4 *)((u8 *)&g.d_00628424))
+#define label_ids_handle (*(int *)((u8 *)&g.d_0062841c))
 void __cdecl labels_free(void)
 
 {
-  if (DAT_0062841c != 0) {
-    thunk_mem_unlock_handle(DAT_0062841c);
-    thunk_mem_free_handle(DAT_0062841c);
-    DAT_0062841c = 0;
+  if (label_ids_handle != 0) {
+    thunk_mem_unlock_handle(label_ids_handle);
+    thunk_mem_free_handle(label_ids_handle);
+    label_ids_handle = 0;
   }
-  DAT_00628424 = 0;
+  label_count = 0;
   return;
 }
-#undef DAT_0062841c
-#undef DAT_00628424
+#undef label_count
+#undef label_ids_handle
 
 /* 0046a78d auto */
-#define DAT_0062841c (*(iptr *)((u8 *)&g.d_0062841c))
-#define DAT_00628424 (*(int *)((u8 *)&g.d_00628424))
+#define label_count (*(int *)((u8 *)&g.d_00628424))
+#define label_ids_handle (*(iptr *)((u8 *)&g.d_0062841c))
 #define local_110 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(260)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(264)))
@@ -2619,18 +2619,18 @@ int __cdecl labels_load(void)
   iVar1 = thunk_text_open_section(ADDR(0x628430, ((u8 *)&g.d_00628430)),ADDR(0x628428, ((u8 *)&g.d_00628428)));
   if (iVar1 == 0) {
     thunk_text_read_line(1);
-    DAT_00628424 = thunk_text_next_int();
-    DAT_0062841c = thunk_mem_handle_alloc_tracked(0xde0);
-    if (DAT_0062841c == 0) {
+    label_count = thunk_text_next_int();
+    label_ids_handle = thunk_mem_handle_alloc_tracked(0xde0);
+    if (label_ids_handle == 0) {
       thunk_error_report(0xfffffff7,4,0,0x378,4);
     }
     else {
-      label_string_ids = thunk_mem_lock_handle(DAT_0062841c);
+      label_string_ids = thunk_mem_lock_handle(label_ids_handle);
       if (label_string_ids == 0) {
-        thunk_error_report(0xfffffff6,4,0,DAT_0062841c,0x378);
+        thunk_error_report(0xfffffff6,4,0,label_ids_handle,0x378);
       }
       else {
-        for (local_c = 0; local_c < DAT_00628424; local_c = local_c + 1) {
+        for (local_c = 0; local_c < label_count; local_c = local_c + 1) {
           uVar2 = thunk_text_read_line_pooled();
           *(undefined4 *)(label_string_ids + local_c * 4) = uVar2;
         }
@@ -2641,7 +2641,7 @@ int __cdecl labels_load(void)
           if (iVar1 == 0) {
             thunk_text_read_line(1);
             iVar1 = thunk_text_next_int();
-            for (local_c = 0; local_c < DAT_00628424; local_c = local_c + 1) {
+            for (local_c = 0; local_c < label_count; local_c = local_c + 1) {
               thunk_text_read_line(1);
             }
             for (; local_c < iVar1; local_c = local_c + 1) {
@@ -2670,8 +2670,8 @@ int __cdecl labels_load(void)
   }
   return local_8;
 }
-#undef DAT_0062841c
-#undef DAT_00628424
+#undef label_count
+#undef label_ids_handle
 #undef local_110
 #undef local_c
 #undef local_8
@@ -3029,16 +3029,16 @@ net_send_message(int param_1,undefined4 param_2,iptr param_3,iptr param_4,iptr p
   case 10:
     local_730 = (void *)0x0;
     if (param_1 == 7) {
-      local_734 = thunk_FUN_004b1a15((iptr)&local_730);
+      local_734 = thunk_diffeng_build_full_image((iptr)&local_730);
     }
     else if (param_1 == 8) {
-      local_734 = thunk_FUN_004b1c11((iptr)&local_730);
+      local_734 = thunk_diffeng_build_delta_image((iptr)&local_730);
     }
     else if (param_1 == 9) {
-      local_734 = thunk_FUN_004b153c((iptr)&local_730);
+      local_734 = thunk_diffeng_build_civ_image((iptr)&local_730);
     }
     else if (param_1 == 10) {
-      local_734 = thunk_FUN_004b18e1((iptr)&local_730);
+      local_734 = thunk_diffeng_build_map_header_image((iptr)&local_730);
     }
     local_734 = (uint)(local_734 != -1);
     if (local_730 == (void *)0x0) {

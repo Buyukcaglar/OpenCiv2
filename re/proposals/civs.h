@@ -20,7 +20,7 @@
  *  - Field meanings from the code that uses them (function addresses are
  *    the original FUN_xxxxxxxx), checked against orig/Ca_Auto.SAV (turn 81,
  *    year -2400, Romans/Caesar human civ 1, despotism, rates sum <= 10, ...).
- *  - Key functions: civ_create (initialise a civ), FUN_0053184d (AI
+ *  - Key functions: civ_create (initialise a civ), ai_civ_turn_assess (AI
  *    per-turn census of units/cities, per-continent tables), civ_give_advance
  *    (give advance), civ_has_advance (civ knows advance), civ_research_cost
  *    (research cost), city_split_trade (split city trade by rates), FUN_00487a41
@@ -75,7 +75,7 @@ typedef struct Civ {
     u8 field_50[8];                 /* 0x050 per-civ counter updated by combat (unit_resolve_attack), reset at > 9 */
     u8 advances[13];                /* 0x058 bit per advance (100 bits), see civ_has_advance */
     u8 pad_65;                      /* 0x065 */
-    i16 num_military_units;         /* 0x066 units with role < 5 (census FUN_0053184d) */
+    i16 num_military_units;         /* 0x066 units with role < 5 (census ai_civ_turn_assess) */
     i16 num_cities;                 /* 0x068 */
     i16 num_ships;                  /* 0x06a units of domain 2 (sea) */
     i16 total_city_size;            /* 0x06c sum of city sizes */

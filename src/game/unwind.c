@@ -49,7 +49,7 @@ void __thiscall surfwnd_dtor(void *this)
 }
 
 /* 0x004f3e70: destructor - destroys the member at this+0x4a4, then the base. */
-void __thiscall FUN_004f3e70(void *this)
+void __thiscall city_picture_popup_dtor(void *this)
 {
     void *member;
 
@@ -144,14 +144,14 @@ void __cdecl FUN_00493e83(undefined4 param_1)
     int iVar1;
     undefined1 frame_[FRAME_OFF(504)] __attribute__((aligned(8)));  /* original stack frame */
 
-    thunk_FUN_0049621d(local_1f8);
+    thunk_portrait_dlg_ctor(local_1f8);
     local_1c = param_1;
-    iVar1 = thunk_FUN_00496402(local_1f8);
+    iVar1 = thunk_portrait_dlg_create(local_1f8);
     if (iVar1 != 0) {
-        thunk_FUN_004965ff(local_1f8);
+        thunk_portrait_dlg_run(local_1f8);
     }
     /* funclet 00493eeb: lea ecx,[ebp-0x1f4] */
-    thunk_FUN_0049632a(local_1f8);
+    thunk_portrait_dlg_dtor(local_1f8);
 }
 #undef local_1f8
 #undef local_1c
@@ -215,7 +215,7 @@ undefined4 __cdecl FUN_005e0863(void)
    (two rows of three; the second row's caption depends on the language). */
 #define local_68 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(0)))
 #define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(72)))
-void __thiscall FUN_004d53ab(void *this)
+void __thiscall spaceship_wnd_make_button_sprites(void *this)
 {
     int iVar1;
     undefined4 uVar2;
