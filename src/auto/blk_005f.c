@@ -873,7 +873,7 @@ undefined4 __thiscall ddctrl_dispatch_msg(DDControl *this,int param_1,int param_
         (*((code **)(this->vtable))[4])(param_2,param_3);
         break;
       case 0x201:
-        (**(code **)this->vtable)(param_2,param_3);
+        (*((code **)(this->vtable))[0])(this,param_2,param_3);
         break;
       case 0x202:
         (*((code **)(this->vtable))[2])(param_2,param_3);
@@ -979,7 +979,7 @@ void __thiscall ddctrl_deactivate(void *this)
   if (*(char *)((int)this + 0x34) != '\0') {
     ddctrl_deactivate_children(this);
     *(undefined1 *)((int)this + 0x34) = 0;
-    (**(code **)(*(int *)this + 0x20))(0);
+    (*((code **)(*(int **)this))[8])(this,0);
   }
   return;
 }

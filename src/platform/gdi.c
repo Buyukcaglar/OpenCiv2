@@ -595,6 +595,18 @@ HBITMAP WINAPI CreateCompatibleBitmap(HDC h, int w, int hgt)
     return obj_new(OBJ_BITMAP, bmp_create(w, hgt, 32, 0));
 }
 
+/* The bitmap whose pixels p points to (start of its rows), or NULL. */
+Bitmap *bmp_of_bits(const void *p)
+{
+    int i;
+    for (i = 1; i < 8192; i++) {
+        Bitmap *b = obj_get(((Handle)OBJ_BITMAP << 16) | (Handle)i, OBJ_BITMAP);
+        if (b && b->bits && (const unsigned char *)p == b->bits)
+            return b;
+    }
+    return NULL;
+}
+
 HBITMAP WINAPI CreateDIBSection(HDC h, const BITMAPINFO *bi, UINT usage, void **bits, HANDLE section, DWORD off)
 {
     API_TRACE();

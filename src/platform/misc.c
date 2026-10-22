@@ -16,50 +16,7 @@ HRESULT WINAPI DirectDrawCreate(GUID *guid, LPDIRECTDRAW *dd, IUnknown *outer)
     return (HRESULT)0x88760255u;     /* DDERR_NODIRECTDRAWHW */
 }
 
-/* ---- AVI video: files do not open, so the game skips its videos ---- */
-
-void WINAPI AVIFileInit(void) { API_TRACE();}
-void WINAPI AVIFileExit(void) { API_TRACE();}
-HRESULT WINAPI AVIFileOpenA(PAVIFILE *f, LPCSTR name, UINT mode, LPCLSID handler)
-{
-    API_TRACE();
-    (void)name; (void)mode; (void)handler;
-    *f = 0;
-    return AVIERR_FILEOPEN;
-}
-ULONG WINAPI AVIFileRelease(PAVIFILE f) { API_TRACE(); (void)f; return 0; }
-HRESULT WINAPI AVIFileGetStream(PAVIFILE f, PAVISTREAM *s, DWORD type, LONG n)
-{
-    API_TRACE();
-    (void)f; (void)type; (void)n;
-    *s = 0;
-    return AVIERR_NODATA;
-}
-ULONG WINAPI AVIStreamRelease(PAVISTREAM s) { API_TRACE(); (void)s; return 0; }
-HRESULT WINAPI AVIStreamInfoA(PAVISTREAM s, LPAVISTREAMINFOA i, LONG n) { API_TRACE(); (void)s; memset(i, 0, (size_t)n); return AVIERR_NODATA; }
-LONG WINAPI AVIStreamStart(PAVISTREAM s) { API_TRACE(); (void)s; return 0; }
-LONG WINAPI AVIStreamLength(PAVISTREAM s) { API_TRACE(); (void)s; return 0; }
-HRESULT WINAPI AVIStreamReadFormat(PAVISTREAM s, LONG pos, LPVOID fmt, LONG *n) { API_TRACE(); (void)s; (void)pos; (void)fmt; *n = 0; return AVIERR_NODATA; }
-HRESULT WINAPI AVIStreamRead(PAVISTREAM s, LONG start, LONG n, LPVOID buf, LONG cb, LONG *bytes, LONG *samples)
-{
-    API_TRACE();
-    (void)s; (void)start; (void)n; (void)buf; (void)cb;
-    if (bytes) *bytes = 0;
-    if (samples) *samples = 0;
-    return AVIERR_NODATA;
-}
-LONG WINAPI AVIStreamSampleToTime(PAVISTREAM s, LONG n) { API_TRACE(); (void)s; (void)n; return 0; }
-LONG WINAPI AVIStreamTimeToSample(PAVISTREAM s, LONG t) { API_TRACE(); (void)s; (void)t; return 0; }
-LONG WINAPI AVIStreamFindSample(PAVISTREAM s, LONG pos, LONG flags) { API_TRACE(); (void)s; (void)pos; (void)flags; return -1; }
-
-HIC WINAPI ICLocate(DWORD type, DWORD handler, LPBITMAPINFOHEADER in, LPBITMAPINFOHEADER out, WORD mode)
-{
-    API_TRACE();
-    (void)type; (void)handler; (void)in; (void)out; (void)mode;
-    return 0;
-}
-LRESULT WINAPI ICSendMessage(HIC h, UINT msg, DWORD_PTR a, DWORD_PTR b) { API_TRACE(); (void)h; (void)msg; (void)a; (void)b; return ICERR_UNSUPPORTED; }
-LRESULT WINAPI ICClose(HIC h) { API_TRACE(); (void)h; return ICERR_OK; }
+/* AVI files and the IV41 codec: video.c */
 
 HWND MCIWndCreateA(HWND parent, HINSTANCE inst, DWORD style, LPCSTR file)
 {

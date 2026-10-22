@@ -26,6 +26,7 @@
 typedef enum {
     OBJ_NONE, OBJ_WINDOW, OBJ_DC, OBJ_BITMAP, OBJ_PALETTE, OBJ_BRUSH, OBJ_PEN, OBJ_FONT, OBJ_MENU, OBJ_FILE,
     OBJ_FIND, OBJ_MEM, OBJ_CURSOR, OBJ_MODULE, OBJ_RSRC, OBJ_MMIO, OBJ_WAVEOUT, OBJ_KEY, OBJ_MISC, OBJ_HOOK,
+    OBJ_AVIFILE, OBJ_AVISTREAM, OBJ_CODEC,
     OBJ_COUNT
 } ObjType;
 
@@ -82,6 +83,7 @@ typedef struct Bitmap {
 unsigned char *bmp_row(const Bitmap *b, int y);     /* row y, top = 0 */
 Bitmap *bmp_create(int w, int h, int bpp, int bottom_up);
 void bmp_destroy(Bitmap *b);
+Bitmap *bmp_of_bits(const void *p);             /* the bitmap with these pixels, or NULL */
 
 /* ---- palettes, brushes, pens, fonts ---- */
 

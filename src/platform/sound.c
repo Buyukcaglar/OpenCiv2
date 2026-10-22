@@ -7,12 +7,16 @@
  */
 #include "plat.h"
 #include "../host/host.h"
+#include "plat_files.h"
 
 static int audio_ok;
+static void cd_poll(void);
 
 void sound_init(void)
 {
-    if (plat_replay || getenv("CIV2_NOSOUND"))
+    /* CIV2_TEST_AUDIO: audio in a replay too (tests of the music; with
+       SDL_AUDIODRIVER=dummy where there is no sound card) */
+    if ((plat_replay && !getenv("CIV2_TEST_AUDIO")) || getenv("CIV2_NOSOUND"))
         return;
     audio_ok = host_audio_init();
 }
@@ -102,6 +106,7 @@ static uint64_t played_bytes(WaveOut *w)
 void sound_poll(void)
 {
     int i;
+    cd_poll();
     for (i = 1; i < 8192; i++) {
         HWAVEOUT h = ((Handle)OBJ_WAVEOUT << 16) | (Handle)i;
         WaveOut *w = wave_get(h);
@@ -272,6 +277,21 @@ HMMIO WINAPI mmioOpenA(LPSTR name, LPMMIOINFO info, DWORD flags)
     (void)flags;
     if (info)
         info->wErrorRet = 0;
+    if (!name) {
+        /* A memory file (fccIOProc 'MEM '): the caller's buffer, or one of
+           cchBuffer bytes allocated here (MMIO_ALLOCBUF). */
+        if (!info || info->fccIOProc != mmioFOURCC('M', 'E', 'M', ' ')) {
+            if (info)
+                info->wErrorRet = MMIOERR_CANNOTOPEN;
+            return 0;
+        }
+        m = calloc(1, sizeof *m);
+        m->size = (LONG)info->cchBuffer;
+        m->data = calloc(1, (size_t)m->size + MMIO_BUF);
+        if (info->pchBuffer)
+            memcpy(m->data, info->pchBuffer, (size_t)m->size);
+        return obj_new(OBJ_MMIO, m);
+    }
     plat_host_path(name, host, sizeof host, 0);
     f = fopen(host, "rb");
     if (!f) {
@@ -413,14 +433,213 @@ MMRESULT WINAPI mmioAdvance(HMMIO h, LPMMIOINFO info, UINT flags)
     return MMSYSERR_NOERROR;
 }
 
-/* ---- MCI: no devices (music and video are not played) ---- */
+/* ---- MCI: the CD drive ("cdaudio") as files ----
+ *
+ * The game plays its music from the CD's audio tracks (data track 1, music
+ * from track 2).  Here track N is Music\TrackNN.wav in the game directory
+ * (tools/extract_disc.py writes them from a disc image); without those files
+ * there is no drive, as before.  Replays have no drive either (as the
+ * reference environment).  Other MCI devices (avivideo) are not available. */
+
+typedef struct { DWORD_PTR dwCallback; MCIDEVICEID wDeviceID; LPCSTR lpstrDeviceType, lpstrElementName, lpstrAlias; } MciOpenParms;
+typedef struct { DWORD_PTR dwCallback; DWORD_PTR dwReturn; DWORD dwItem, dwTrack; } MciStatusParms;
+typedef struct { DWORD_PTR dwCallback; DWORD dwFrom, dwTo; } MciPlayParms;
+typedef struct { DWORD_PTR dwCallback; DWORD dwTo; } MciSeekParms;
+
+#define CD_ID 0x4344            /* the drive's device id */
+
+static struct {
+    int tracks;                 /* 0: no drive (no music files) */
+    int open, current;
+    FILE *f;                    /* the track playing */
+    uint32_t left;              /* its bytes not yet queued */
+    int dev, rate, chans;
+    HWND notify;                /* MCI_NOTIFY on the play: told when it ends */
+} cd;
+
+static FILE *cd_track_file(int n)
+{
+    char win[64], host[1024];
+    snprintf(win, sizeof win, "Music\\Track%02d.wav", n);
+    plat_host_path(win, host, sizeof host, 0);
+    return fopen(host, "rb");
+}
+
+static int cd_count_tracks(void)
+{
+    int n, last = 0;
+    if ((plat_replay && !getenv("CIV2_TEST_AUDIO")) || !audio_ok)
+        return 0;
+    for (n = 2; n < 100; n++) {
+        FILE *f = cd_track_file(n);
+        if (!f)
+            break;
+        fclose(f);
+        last = n;
+    }
+    return last;
+}
+
+static void cd_notify(UINT code)
+{
+    HWND h = cd.notify;
+    cd.notify = 0;
+    if (h)
+        PostMessageA(h, MM_MCINOTIFY, code, CD_ID);
+}
+
+static void cd_stop(UINT code)
+{
+    if (cd.f)
+        fclose(cd.f);
+    cd.f = NULL;
+    if (cd.dev)
+        host_audio_clear(cd.dev);
+    cd_notify(code);
+}
+
+/* Open track n (a RIFF WAVE file) and start queueing it. */
+static int cd_play(int n)
+{
+    unsigned char h[12], ck[8];
+    uint32_t rate = 0, chans = 0, bits = 0;
+    FILE *f = cd_track_file(n);
+    if (!f)
+        return 0;
+    if (fread(h, 1, 12, f) != 12 || memcmp(h, "RIFF", 4) || memcmp(h + 8, "WAVE", 4)) {
+        fclose(f);
+        return 0;
+    }
+    while (fread(ck, 1, 8, f) == 8) {
+        uint32_t len = rd32le(ck + 4);
+        if (!memcmp(ck, "fmt ", 4)) {
+            unsigned char fmt[16];
+            if (len < 16 || fread(fmt, 1, 16, f) != 16)
+                break;
+            chans = fmt[2] | fmt[3] << 8;
+            rate = rd32le(fmt + 4);
+            bits = fmt[14] | fmt[15] << 8;
+            fseek(f, (long)(len - 16 + (len & 1)), SEEK_CUR);
+        } else if (!memcmp(ck, "data", 4)) {
+            if (bits != 16 || !rate || !chans)
+                break;
+            if (cd.dev && (cd.rate != (int)rate || cd.chans != (int)chans)) {
+                host_audio_close(cd.dev);
+                cd.dev = 0;
+            }
+            if (!cd.dev) {
+                cd.dev = host_audio_open((int)rate, (int)chans, 16);
+                cd.rate = (int)rate;
+                cd.chans = (int)chans;
+            }
+            if (!cd.dev)
+                break;
+            cd.f = f;
+            cd.left = len;
+            cd.current = n;
+            return 1;
+        } else
+            fseek(f, (long)(len + (len & 1)), SEEK_CUR);
+    }
+    fclose(f);
+    return 0;
+}
+
+/* From the message loop: keep about a second queued; at the track's end,
+ * tell the window that asked (MCI_NOTIFY_SUCCESSFUL). */
+static void cd_poll(void)
+{
+    static unsigned char buf[44100];
+    uint32_t want = (uint32_t)(cd.rate * cd.chans * 2);
+    if (!cd.f)
+        return;
+    while (cd.left && host_audio_queued(cd.dev) < want) {
+        size_t n = cd.left < sizeof buf ? cd.left : sizeof buf;
+        n = fread(buf, 1, n, cd.f);
+        if (!n) {
+            cd.left = 0;
+            break;
+        }
+        host_audio_queue(cd.dev, buf, (uint32_t)n);
+        cd.left -= (uint32_t)n;
+    }
+    if (!cd.left && !host_audio_queued(cd.dev)) {
+        fclose(cd.f);
+        cd.f = NULL;
+        cd_notify(MCI_NOTIFY_SUCCESSFUL);
+    }
+}
+
+static MCIERROR cd_command(UINT msg, DWORD_PTR flags, DWORD_PTR param)
+{
+    switch (msg) {
+    case MCI_CLOSE:
+        cd_stop(MCI_NOTIFY_ABORTED);
+        cd.open = 0;
+        return 0;
+    case MCI_SET:                       /* time format (tracks), door: nothing to do */
+        return 0;
+    case MCI_STATUS: {
+        MciStatusParms *p = (MciStatusParms *)param;
+        if (!(flags & MCI_STATUS_ITEM))
+            return MCIERR_MISSING_PARAMETER;
+        switch (p->dwItem) {
+        case MCI_STATUS_NUMBER_OF_TRACKS: p->dwReturn = (DWORD_PTR)cd.tracks; return 0;
+        case MCI_STATUS_CURRENT_TRACK: p->dwReturn = (DWORD_PTR)(cd.current ? cd.current : 1); return 0;
+        case MCI_STATUS_MODE: p->dwReturn = cd.f ? MCI_MODE_PLAY : MCI_MODE_STOP; return 0;
+        case MCI_STATUS_READY: p->dwReturn = TRUE; return 0;
+        case MCI_STATUS_MEDIA_PRESENT: p->dwReturn = TRUE; return 0;
+        }
+        return MCIERR_UNSUPPORTED_FUNCTION;
+    }
+    case MCI_SEEK: {
+        MciSeekParms *p = (MciSeekParms *)param;
+        cd_stop(MCI_NOTIFY_ABORTED);
+        if (flags & MCI_TO)
+            cd.current = (int)(p->dwTo & 0xff);
+        return 0;
+    }
+    case MCI_STOP:
+    case MCI_PAUSE:
+        cd_stop(MCI_NOTIFY_ABORTED);
+        return 0;
+    case MCI_PLAY: {
+        MciPlayParms *p = (MciPlayParms *)param;
+        int n = (flags & MCI_FROM) ? (int)(p->dwFrom & 0xff) : (cd.current ? cd.current : 2);
+        cd_stop(MCI_NOTIFY_SUPERSEDED);
+        if (n < 2 || n > cd.tracks || !cd_play(n))
+            return MCIERR_OUTOFRANGE;
+        plat_log("cdaudio: playing track %d%s\n", n, (flags & MCI_NOTIFY) ? " (notify)" : "");
+        if (flags & MCI_NOTIFY)
+            cd.notify = (HWND)p->dwCallback;
+        cd_poll();
+        return 0;
+    }
+    }
+    return MCIERR_UNSUPPORTED_FUNCTION;
+}
 
 MCIERROR WINAPI mciSendCommandA(MCIDEVICEID id, UINT msg, DWORD_PTR flags, DWORD_PTR param)
 { API_TRACE();
-    (void)id; (void)flags; (void)param;
+    if (msg == MCI_OPEN) {
+        MciOpenParms *p = (MciOpenParms *)param;
+        if ((flags & MCI_OPEN_TYPE) && !(flags & MCI_OPEN_TYPE_ID) && p && p->lpstrDeviceType &&
+            !strcasecmp(p->lpstrDeviceType, "cdaudio")) {
+            if (!cd.tracks)
+                cd.tracks = cd_count_tracks();
+            if (!cd.tracks)
+                return MCIERR_DEVICE_NOT_INSTALLED;
+            cd.open = 1;
+            p->wDeviceID = CD_ID;
+            return 0;
+        }
+        return MCIERR_DEVICE_NOT_INSTALLED;
+    }
+    if (id == CD_ID && cd.open)
+        return cd_command(msg, flags, param);
     if (msg == MCI_CLOSE)
         return 0;
-    return MCIERR_DEVICE_NOT_INSTALLED;
+    return MCIERR_INVALID_DEVICE_ID;
 }
 
 MCIDEVICEID WINAPI mciGetDeviceIDA(LPCSTR name) { API_TRACE(); (void)name; return 0; }

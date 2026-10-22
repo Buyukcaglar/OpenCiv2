@@ -88,6 +88,20 @@ The Windows executable can also be cross-compiled on Linux:
 `build/SDL2.dll`, `data/native`, `harness/CIV2.DAT` and `tools/run-civ2.bat`
 (keeping the directories) to the Windows machine.
 
+### Music and videos from the CD
+
+The game plays its music from the CD's audio tracks and its heralds and movies
+from the CD's video files.  With a disc image (`.cue` and `.bin`, or a zip of
+them), copy them into the game directory once:
+
+```sh
+python3 tools/extract_disc.py DISC.zip ~/Civ2
+```
+
+This writes `KINGS/` (the diplomatic heralds), `Video/` (opening, wonders, High
+Council) and `Music/Track02.wav` … (the CD's audio tracks, played by the
+reconstruction's CD drive).  Turn music on in Game → Game Options.
+
 ## Development (Docker)
 
 Everything else runs in Docker on Linux; `tools/dk CMD` runs a command in the

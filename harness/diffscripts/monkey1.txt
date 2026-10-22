@@ -1,0 +1,826 @@
+# Monkey test (tools/make_monkey.py 1 400): random play on the autosave.
+wait 8000
+key Down Down Down Down
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+shot 000-loaded
+key Up
+wait 1500
+key p
+wait 3000
+key Left
+wait 300
+key f
+wait 3000
+key Up
+wait 3000
+key End
+wait 300
+click 35 61
+wait 300
+key Down
+wait 3000
+key r
+wait 300
+key i
+wait 3000
+key KP_6
+wait 800
+key o
+wait 1500
+click 430 334
+wait 300
+key shift+Tab
+wait 1500
+key KP_3
+wait 3000
+key Escape
+wait 800
+key Return
+wait 3000
+click 521 251
+wait 300
+key shift+c
+wait 3000
+key Prior
+wait 1500
+key Escape
+wait 1500
+key Return
+wait 300
+click 537 251
+wait 1500
+key Right
+wait 3000
+key Escape
+wait 3000
+shot 025
+key End
+wait 800
+click 208 326
+wait 800
+key KP_6
+wait 1500
+key KP_3
+wait 300
+key x
+wait 800
+key F7
+wait 800
+key Next
+wait 3000
+click 587 333
+wait 800
+click 427 298
+wait 1500
+key Up
+wait 1500
+key Right
+wait 800
+key F6
+wait 800
+click 568 458
+wait 1500
+key Escape
+wait 300
+key Left
+wait 3000
+key KP_4
+wait 800
+key Return
+wait 800
+key Up
+wait 800
+key F3
+wait 800
+key Return
+wait 1500
+key KP_2
+wait 3000
+key Right
+wait 1500
+key h
+wait 800
+key KP_1
+wait 800
+click 446 468
+wait 300
+shot 050
+key s
+wait 800
+key Home
+wait 3000
+click 440 328
+wait 800
+click 532 280
+wait 800
+key Right
+wait 3000
+key KP_2
+wait 3000
+key KP_8
+wait 800
+click 52 206
+wait 300
+click 321 202
+wait 800
+key KP_1
+wait 800
+key Home
+wait 800
+click 587 285
+wait 800
+click 525 69
+wait 3000
+key Home
+wait 800
+key m
+wait 800
+key Escape
+wait 3000
+key k
+wait 300
+key w
+wait 1500
+key Down
+wait 1500
+click 580 450
+wait 800
+key Right
+wait 1500
+key b
+wait 1500
+click 551 298
+wait 800
+key End
+wait 300
+key End
+wait 800
+shot 075
+key KP_3
+wait 1500
+key KP_4
+wait 300
+key Return
+wait 3000
+key F6
+wait 300
+key space
+wait 300
+key Left
+wait 800
+key Return
+wait 3000
+key F6
+wait 800
+key KP_3
+wait 1500
+click 581 323
+wait 300
+key KP_4
+wait 300
+click 306 56
+wait 300
+key Prior
+wait 300
+key Return
+wait 3000
+key p
+wait 800
+key Home
+wait 300
+key b
+wait 1500
+key Tab
+wait 3000
+key Left
+wait 1500
+key Down
+wait 1500
+click 331 280
+wait 3000
+key Up
+wait 300
+click 619 283
+wait 300
+key Return
+wait 3000
+key KP_2
+wait 800
+shot 100
+key KP_9
+wait 800
+key Left
+wait 1500
+key p
+wait 300
+key Return
+wait 1500
+click 403 207
+wait 300
+key KP_1
+wait 1500
+key Home
+wait 300
+key Left
+wait 800
+key KP_3
+wait 300
+click 26 375
+wait 300
+key KP_7
+wait 3000
+key Right
+wait 300
+key KP_2
+wait 300
+key Escape
+wait 800
+key Right
+wait 800
+click 331 206
+wait 300
+click 620 200
+wait 800
+click 149 329
+wait 300
+click 570 432
+wait 800
+key m
+wait 800
+key Escape
+wait 800
+key Up
+wait 3000
+click 566 178
+wait 3000
+click 468 55
+wait 3000
+click 179 182
+wait 3000
+shot 125
+key Return
+wait 3000
+click 23 81
+wait 1500
+key Return
+wait 800
+key KP_4
+wait 3000
+key Prior
+wait 300
+key Up
+wait 800
+key t
+wait 3000
+click 235 172
+wait 1500
+key l
+wait 800
+click 349 336
+wait 1500
+click 228 74
+wait 300
+click 381 131
+wait 800
+key Escape
+wait 1500
+click 384 134
+wait 3000
+key Next
+wait 3000
+key KP_1
+wait 3000
+key F8
+wait 300
+key s
+wait 1500
+key End
+wait 300
+key Right
+wait 1500
+key KP_3
+wait 300
+click 146 447
+wait 300
+key Prior
+wait 3000
+click 447 253
+wait 800
+click 452 114
+wait 3000
+shot 150
+click 126 270
+wait 3000
+click 306 192
+wait 800
+key F7
+wait 300
+click 545 274
+wait 300
+key Return
+wait 800
+click 215 138
+wait 1500
+key Down
+wait 1500
+key KP_1
+wait 3000
+click 176 329
+wait 1500
+key Next
+wait 800
+key f
+wait 800
+key End
+wait 300
+key shift+c
+wait 300
+key Escape
+wait 800
+key KP_9
+wait 1500
+key Escape
+wait 1500
+click 335 50
+wait 300
+key p
+wait 1500
+key w
+wait 1500
+click 589 302
+wait 300
+key b
+wait 3000
+key Up
+wait 1500
+key shift+Tab
+wait 800
+click 476 357
+wait 3000
+click 316 409
+wait 800
+shot 175
+key Escape
+wait 800
+key Up
+wait 3000
+key w
+wait 1500
+click 602 425
+wait 300
+key shift+c
+wait 800
+key Return
+wait 1500
+key space
+wait 800
+key s
+wait 1500
+click 79 467
+wait 300
+key KP_2
+wait 3000
+click 561 205
+wait 800
+key KP_2
+wait 3000
+key F1
+wait 300
+key Home
+wait 3000
+key Up
+wait 3000
+key t
+wait 800
+key w
+wait 1500
+key Left
+wait 800
+key KP_3
+wait 1500
+key Escape
+wait 1500
+key F7
+wait 300
+key Return
+wait 1500
+key x
+wait 800
+key w
+wait 800
+key KP_2
+wait 1500
+shot 200
+click 268 362
+wait 800
+click 35 368
+wait 3000
+key m
+wait 800
+click 198 87
+wait 800
+click 597 277
+wait 800
+key KP_2
+wait 3000
+key Down
+wait 800
+click 455 234
+wait 1500
+click 250 109
+wait 800
+click 316 84
+wait 300
+key KP_2
+wait 3000
+click 195 73
+wait 300
+click 27 435
+wait 800
+key k
+wait 3000
+key KP_4
+wait 300
+key Prior
+wait 300
+key End
+wait 3000
+key End
+wait 800
+key KP_6
+wait 3000
+key f
+wait 800
+key KP_2
+wait 1500
+key Prior
+wait 800
+click 51 57
+wait 300
+click 331 246
+wait 1500
+click 413 131
+wait 800
+shot 225
+click 35 57
+wait 3000
+key Escape
+wait 300
+key KP_1
+wait 800
+key Return
+wait 1500
+click 40 324
+wait 300
+key Up
+wait 300
+click 124 271
+wait 300
+key k
+wait 800
+click 200 389
+wait 3000
+key Return
+wait 1500
+click 252 175
+wait 300
+key Return
+wait 800
+key Return
+wait 300
+click 564 261
+wait 800
+click 553 267
+wait 300
+click 629 419
+wait 300
+key Home
+wait 800
+key Left
+wait 3000
+click 58 376
+wait 300
+click 529 290
+wait 1500
+key KP_1
+wait 300
+key Home
+wait 3000
+key s
+wait 3000
+key F3
+wait 1500
+key KP_2
+wait 300
+shot 250
+key f
+wait 300
+click 324 426
+wait 800
+key b
+wait 300
+click 315 98
+wait 3000
+click 518 335
+wait 800
+key KP_4
+wait 3000
+click 602 296
+wait 300
+key p
+wait 300
+click 302 430
+wait 800
+key f
+wait 1500
+key KP_6
+wait 800
+key End
+wait 1500
+click 550 210
+wait 3000
+key KP_7
+wait 1500
+key shift+c
+wait 300
+key Right
+wait 1500
+click 337 451
+wait 1500
+key p
+wait 1500
+key KP_8
+wait 3000
+click 84 346
+wait 300
+key F3
+wait 3000
+key KP_1
+wait 800
+click 350 235
+wait 1500
+key c
+wait 1500
+key End
+wait 300
+shot 275
+key Escape
+wait 800
+key Prior
+wait 800
+click 55 465
+wait 300
+click 276 415
+wait 300
+key Up
+wait 300
+click 226 379
+wait 800
+key m
+wait 300
+key u
+wait 1500
+key Down
+wait 3000
+click 244 267
+wait 3000
+key F5
+wait 800
+click 78 466
+wait 1500
+key Down
+wait 3000
+key u
+wait 300
+key F1
+wait 3000
+key o
+wait 300
+key KP_8
+wait 300
+key KP_8
+wait 1500
+click 560 380
+wait 1500
+key F5
+wait 3000
+key F11
+wait 1500
+key Up
+wait 3000
+key F6
+wait 800
+key Down
+wait 3000
+click 583 68
+wait 1500
+shot 300
+key KP_6
+wait 300
+click 96 52
+wait 3000
+key KP_3
+wait 1500
+key l
+wait 1500
+key Prior
+wait 3000
+key h
+wait 800
+key Prior
+wait 1500
+key Up
+wait 1500
+click 426 182
+wait 1500
+click 284 271
+wait 1500
+click 501 160
+wait 3000
+click 415 416
+wait 3000
+key Up
+wait 800
+click 238 423
+wait 300
+key Right
+wait 3000
+click 105 254
+wait 800
+click 95 268
+wait 300
+key F4
+wait 3000
+key Return
+wait 300
+click 433 393
+wait 300
+click 289 141
+wait 3000
+click 52 452
+wait 800
+key Right
+wait 3000
+key p
+wait 1500
+key k
+wait 3000
+shot 325
+key l
+wait 300
+key Return
+wait 800
+key KP_1
+wait 3000
+click 553 197
+wait 3000
+key F5
+wait 800
+click 349 298
+wait 300
+key z
+wait 1500
+click 277 78
+wait 3000
+key Home
+wait 800
+key KP_3
+wait 800
+key Up
+wait 1500
+key F7
+wait 300
+key Return
+wait 800
+click 280 193
+wait 3000
+key KP_3
+wait 3000
+key KP_9
+wait 3000
+key Prior
+wait 800
+click 598 405
+wait 3000
+key Next
+wait 1500
+key Down
+wait 800
+key k
+wait 3000
+key Up
+wait 800
+key Home
+wait 300
+key Escape
+wait 300
+key Escape
+wait 300
+shot 350
+key Down
+wait 1500
+key Up
+wait 300
+click 634 162
+wait 300
+click 290 398
+wait 1500
+key shift+Tab
+wait 3000
+key KP_3
+wait 1500
+key KP_1
+wait 800
+key End
+wait 1500
+key shift+Tab
+wait 300
+key Next
+wait 1500
+key KP_8
+wait 300
+key w
+wait 1500
+click 251 98
+wait 1500
+key F1
+wait 1500
+click 118 230
+wait 800
+key KP_3
+wait 3000
+key F9
+wait 3000
+key F4
+wait 3000
+key Home
+wait 1500
+key Prior
+wait 300
+key Right
+wait 3000
+key Left
+wait 1500
+key F3
+wait 1500
+key w
+wait 300
+click 74 385
+wait 1500
+shot 375
+key shift+Tab
+wait 300
+key p
+wait 800
+key F11
+wait 800
+key Right
+wait 3000
+click 347 236
+wait 1500
+key b
+wait 3000
+key Return
+wait 800
+key Escape
+wait 300
+key Down
+wait 800
+key F7
+wait 300
+key m
+wait 3000
+key KP_9
+wait 3000
+key c
+wait 300
+key Home
+wait 300
+click 117 350
+wait 800
+key KP_7
+wait 1500
+click 585 385
+wait 1500
+click 255 463
+wait 800
+key KP_7
+wait 800
+key End
+wait 1500
+key z
+wait 1500
+key Return
+wait 300
+key h
+wait 3000
+key KP_4
+wait 3000
+click 247 375
+wait 800
+shot 400

@@ -1,0 +1,2458 @@
+# Every civ played by the AI: load the autosave, cheat mode, Set Human Player -> None;
+# then let the turns run, pressing Return to end each turn (the observer is
+# asked) and to close popups, clicking where the throne room says "click"; a shot every 60 s (harness/diff_suite.sh).
+wait 8000
+key Down Down Down Down     # Load a Game
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+key ctrl+k
+wait 4000
+key Down                      # Yes: enable cheat mode
+wait 500
+key Return
+wait 4000
+key shift+f3
+wait 3000
+shot 00-sethuman
+key Up                        # No Human Player
+wait 500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return                    # end the turn in progress
+wait 3000
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t01
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t02
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t03
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t04
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t05
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t06
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t07
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t08
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t09
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t10
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t11
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t12
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t13
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t14
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t15
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t16
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t17
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t18
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t19
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t20
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t21
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t22
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t23
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t24
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t25
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t26
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t27
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t28
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t29
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+key Return
+wait 1500
+click 512 600
+wait 1500
+shot t30

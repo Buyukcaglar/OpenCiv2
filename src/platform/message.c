@@ -736,10 +736,21 @@ int plat_replay;
 int plat_normal_desktop = 1;
 static uint64_t real_start;
 
+/* CIV2_REALTIME: a replay script on the real clock (its waits are real
+ * milliseconds): tests of what only happens in real time.  Not
+ * deterministic; the virtual clock is the default. */
+static int virtual_clock(void)
+{
+    static int realtime = -1;
+    if (realtime < 0)
+        realtime = getenv("CIV2_REALTIME") && *getenv("CIV2_REALTIME");
+    return plat_replay && !realtime;
+}
+
 static void sync_real_clock(void)
 {
     API_TRACE();
-    if (!plat_replay) {
+    if (!virtual_clock()) {
         unsigned long long now = host_time_us() - real_start;
         if (now > vclock_us)
             vclock_us = now;
@@ -752,7 +763,7 @@ static void sync_real_clock(void)
  * the original. */
 DWORD plat_ticks(void)
 {
-    if (plat_replay)
+    if (virtual_clock())
         vclock_us += QUERY_STEP_US;
     else {
         sync_real_clock();
@@ -764,7 +775,7 @@ DWORD plat_ticks(void)
 /* The platform's own reads: no virtual time passes. */
 DWORD plat_now(void)
 {
-    if (!plat_replay)
+    if (!virtual_clock())
         sync_real_clock();
     return CLOCK_BASE_MS + (DWORD)(vclock_us / 1000);
 }
@@ -791,7 +802,7 @@ DWORD WINAPI GetTickCount(void)
 void WINAPI Sleep(DWORD ms)
 {
     API_TRACE();
-    if (plat_replay) {
+    if (virtual_clock()) {
         vclock_us += (unsigned long long)ms * 1000;
         CLK("clk advance %llu @%llu\n", (unsigned long long)ms * 1000, (unsigned long long)vclock_us);
     } else {
@@ -803,7 +814,7 @@ void WINAPI Sleep(DWORD ms)
 
 void plat_idle(void)
 {
-    if (plat_replay) {
+    if (virtual_clock()) {
         vclock_us += IDLE_STEP_MS * 1000;
         CLK("clk advance %llu @%llu\n", (unsigned long long)IDLE_STEP_MS * 1000, (unsigned long long)vclock_us);
         timers_fire();
@@ -821,6 +832,8 @@ void plat_idle(void)
         msg_pump_events(0);
         sync_real_clock();
         timers_fire();
+        if (plat_replay)
+            replay_run_script();
     }
 }
 

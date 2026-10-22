@@ -170,6 +170,34 @@ def thunk_symbols(body):
 VCALL = re.compile(r'\*\(code \*\*\)\((\*?[A-Za-z_][\w>.\-\[\]]*) \+ (0x[0-9a-f]+|\d+)\)')
 
 
+THISLESS_VCALL = re.compile(r'\(\*\*\(code \*\*\)(?:(\w+)->(vtable|field_0)|\(\*\(int \*\)(\w+) \+ (0x[0-9a-f]+|\d+)\))\)\(')
+
+
+def fix_thisless_vcalls(body):
+    """A C++ virtual call on an object, (**(code **)obj->vtable)(args) or
+    (**(code **)(*(int *)obj + K))(args): Ghidra drops the object, which
+    the original passes in ECX.  It becomes the first argument, as for every
+    other thiscall function here (COM calls, which pass it on the stack,
+    already have it)."""
+    out, pos = [], 0
+    for m in THISLESS_VCALL.finditer(body):
+        obj = m.group(1) or m.group(3)
+        slot = int(m.group(4), 0) // 4 if m.group(4) else 0
+        if m.group(4) and int(m.group(4), 0) % 4:
+            continue
+        rest = body[m.end():]
+        if re.match(r'\s*%s\s*[,)]' % re.escape(obj), rest):
+            continue
+        table = '%s->%s' % (obj, m.group(2)) if m.group(1) else '*(int **)%s' % obj
+        out.append(body[pos:m.start()])
+        out.append('(*((code **)(%s))[%d])(%s%s' % (table, slot, obj, ')' if rest.lstrip().startswith(')') else ','))
+        pos = m.end()
+        if rest.lstrip().startswith(')'):
+            pos += rest.index(')') + 1
+    out.append(body[pos:])
+    return ''.join(out)
+
+
 def fix_vtable_calls(body):
     """*(code **)(vt + K): slot K/4 of a table of function pointers.  The
     original slots are 4 bytes; indexing keeps this right when they are not."""
@@ -706,6 +734,7 @@ def main():
         body = re.sub(r'^\s*(thunk_)?FUN_005f35f0\(\);\n', '', body, flags=re.M)
         body = strip_seh(body)
         body = thunk_symbols(body)
+        body = fix_thisless_vcalls(body)
         body = fix_vtable_calls(body)
         body = fix_stdio_macros(body)
         body = fix_addr_literals(body, entry_names)

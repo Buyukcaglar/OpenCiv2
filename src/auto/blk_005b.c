@@ -4173,7 +4173,7 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *this,int param_1,int param_2)
     return;
   }
   SetRect(&local_14,0,0,param_1,param_2);
-  (**(code **)this->vtable)(&local_14);
+  (*((code **)(this->vtable))[0])(this,&local_14);
   uVar2 = wnd_get_palette_obj((WndPaletteObjView *)this->pad_48);
   surface_apply_palette((DibSurface *)this,uVar2);
   if (this == (SurfaceWindow *)0x0) {
@@ -6265,7 +6265,7 @@ FUN_005be2c4
     local_1c = (uint)*(ushort *)(local_10 + 0xe);
     local_8 = local_10;
     SetRect(&local_40,0,0,local_18,local_1c);
-    iVar2 = (**(code **)this->vtable)(&local_40);
+    iVar2 = (*((code **)(this->vtable))[0])(this,&local_40);
     if (iVar2 == 0) {
       res_free(local_28);
       uVar1 = 0;
@@ -6379,7 +6379,7 @@ FUN_005be595
     local_c0 = (uint)*(ushort *)(local_1c + 0xe);
     local_14 = local_1c;
     SetRect(&local_dc,0,0,local_bc,local_c0);
-    iVar1 = (**(code **)this->vtable)(&local_dc);
+    iVar1 = (*((code **)(this->vtable))[0])(this,&local_dc);
     if (iVar1 == 0) {
       file_obj_unmap_view(&local_b4);
       thunk_file_map_close(&local_b4);
