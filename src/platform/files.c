@@ -465,6 +465,8 @@ static HGLOBAL mem_alloc(UINT flags, SIZE_T n)
 {
     Mem *m = calloc(1, sizeof *m);
     (void)flags;
+    if (n > 64u << 20)
+        plat_suspicious("GlobalAlloc(%lu)", (unsigned long)n);
     m->p = calloc(n ? n : 1, 1);
     m->n = n;
     return obj_new(OBJ_MEM, m);

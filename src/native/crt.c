@@ -47,7 +47,10 @@ typedef struct { size_t size; size_t pad; } HeapHeader;
 
 static void *heap_alloc(size_t n)
 {
-    HeapHeader *h = malloc(sizeof(HeapHeader) + n);
+    HeapHeader *h;
+    if (n > 64u << 20)
+        plat_suspicious("malloc(%lu)", (unsigned long)n);
+    h = malloc(sizeof(HeapHeader) + n);
     if (!h)
         return NULL;
     h->size = n;

@@ -559,6 +559,17 @@ static void run_script(void)
             mouse_click(x, y, b);
             next_action_us = vclock_us + 100 * 1000;
             return;
+        } else if (strcmp(cmd, "call") == 0) {
+            /* call FUNCTION ADDR [ARGS]: run the original's function at ADDR
+               (cdecl) directly; the native replay calls FUNCTION by name */
+            char name[128];
+            unsigned addr = 0;
+            int a[4] = {0, 0, 0, 0};
+            sscanf(arg, "%127s %x %d %d %d %d", name, &addr, &a[0], &a[1], &a[2], &a[3]);
+            next_action_us = vclock_us + 100 * 1000;
+            if (addr)
+                ((int (__cdecl *)(int, int, int, int))addr)(a[0], a[1], a[2], a[3]);
+            return;
         } else if (strcmp(cmd, "shot") == 0) {
             screenshot(arg);
         } else if (strcmp(cmd, "file") == 0) {

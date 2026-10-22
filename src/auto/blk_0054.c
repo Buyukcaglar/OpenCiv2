@@ -164,6 +164,11 @@ sprite_draw_spaced_row(iptr param_1,iptr param_2,int param_3,undefined4 param_4,
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[4] = {(u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8, (u32)(uptr)param_9};  /* the arguments, contiguous as on the original stack */
+#define param_6 (*(int *)&pargs_[0])
+#define param_7 (*(int *)&pargs_[1])
+#define param_8 (*(undefined4 *)&pargs_[2])
+#define param_9 (*(int *)&pargs_[3])
   
   local_10 = 0;
   local_8 = param_6;
@@ -195,6 +200,10 @@ sprite_draw_spaced_row(iptr param_1,iptr param_2,int param_3,undefined4 param_4,
 #undef local_10
 #undef local_c
 #undef local_8
+#undef param_6
+#undef param_7
+#undef param_8
+#undef param_9
 
 /* 00548df0 auto */
 void __cdecl events_editor_focus_redraw(void)

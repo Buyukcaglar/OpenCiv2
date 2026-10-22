@@ -1,0 +1,9 @@
+FUN_00452188
+FUN_005cb319
+__fltout
+__snprintf
+_fprintf
+net_msg_build_packet
+palette_save_to_file
+pedia_add_link
+sprite_draw_spaced_row

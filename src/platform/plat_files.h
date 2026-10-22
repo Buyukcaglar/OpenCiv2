@@ -19,6 +19,7 @@ int plat_getcwd(char *win, int n);
 int64_t plat_time(void);                /* seconds since 1970 (virtual in replay) */
 void plat_trace_rand(unsigned value, const char *caller);   /* caller: function name */
 unsigned plat_srand(unsigned seed);         /* the seed to use (CIV2_SEED forces one) */
+void plat_suspicious(const char *fmt, ...);  /* see plat.h */
 void plat_fatal(const char *fmt, ...);
 
 #endif

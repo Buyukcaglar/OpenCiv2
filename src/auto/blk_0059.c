@@ -3500,6 +3500,14 @@ net_msg_build_packet(undefined4 param_1,iptr param_2,undefined4 param_3,undefine
 
 {
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[7] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8, (u32)(uptr)param_9};  /* the arguments, contiguous as on the original stack */
+#define param_3 (*(undefined4 *)&pargs_[0])
+#define param_4 (*(undefined4 *)&pargs_[1])
+#define param_5 (*(undefined4 *)&pargs_[2])
+#define param_6 (*(undefined4 *)&pargs_[3])
+#define param_7 (*(undefined4 *)&pargs_[4])
+#define param_8 (*(undefined4 *)&pargs_[5])
+#define param_9 (*(size_t *)&pargs_[6])
   
   thunk_net_msg_header_init(&local_18,param_1);
   if (param_9 == 0) {
@@ -3533,6 +3541,13 @@ net_msg_build_packet(undefined4 param_1,iptr param_2,undefined4 param_3,undefine
 #undef local_18
 #undef local_10
 #undef local_8
+#undef param_3
+#undef param_4
+#undef param_5
+#undef param_6
+#undef param_7
+#undef param_8
+#undef param_9
 
 /* 0059c276 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))

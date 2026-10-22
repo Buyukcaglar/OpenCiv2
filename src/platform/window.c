@@ -679,6 +679,9 @@ HWND WINAPI CreateWindowExA(DWORD exstyle, LPCSTR cls, LPCSTR title, DWORD style
         plat_log("CreateWindowEx: unknown class %s\n", IS_INTRESOURCE(cls) ? "(atom)" : cls);
         return NULL;
     }
+    if (!plat_sane_extent(x) || !plat_sane_extent(y) || !plat_sane_extent(cx) || !plat_sane_extent(cy) ||
+        (cx < 0 && cx != (int)0x80000000) || (cy < 0 && cy != (int)0x80000000))
+        plat_suspicious("CreateWindowEx(%s) at %d,%d size %dx%d", c->name, x, y, cx, cy);
     plat_log("CreateWindowEx(%x, %s, \"%s\", %08x, %d, %d, %d, %d, parent %x)\n", (unsigned)exstyle, c->name,
              title ? title : "", (unsigned)style, x, y, cx, cy, (unsigned)parent);
     w = calloc(1, sizeof *w);
@@ -1256,6 +1259,9 @@ static void activate_other(Window *gone)
 static WINBOOL swp(Window *w, HWND after, int x, int y, int cx, int cy, UINT flags)
 {
     WINDOWPOS wp;
+    if ((!(flags & SWP_NOMOVE) && (!plat_sane_extent(x) || !plat_sane_extent(y))) ||
+        (!(flags & SWP_NOSIZE) && (!plat_sane_extent(cx) || !plat_sane_extent(cy) || cx < -1 || cy < -1)))
+        plat_suspicious("SetWindowPos(%x) to %d,%d size %dx%d flags %x", (unsigned)w->hwnd, x, y, cx, cy, flags);
     RECT old_rect = w->rect, old_client = w->client, old_screen, new_screen;
     Region old_vis = {0, 0, NULL}, old_wvis = {0, 0, NULL};
     int raising = 0;

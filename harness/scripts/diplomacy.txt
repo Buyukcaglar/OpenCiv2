@@ -1,0 +1,21 @@
+# Open the diplomacy screen (leader in the throne room) directly.
+wait 8000
+shot 00-menu
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+shot 01-loaded
+key Return
+wait 5000
+shot 02
+key Return
+wait 15000
+shot 09-before
+call FUN_00458ab1 458ab1 1 2
+wait 10000
+shot 10-leader
+key Return
+wait 5000
+shot 11-leader

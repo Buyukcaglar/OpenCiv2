@@ -3921,6 +3921,9 @@ void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,
   iptr iVar2;
   int iVar3;
   undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[2] = {(u32)(uptr)param_2, (u32)(uptr)param_3};  /* the arguments, contiguous as on the original stack */
+#define param_2 (*(undefined4 *)&pargs_[0])
+#define param_3 (*(int *)&pargs_[1])
   
   local_8 = 0xffffffff;
   file_obj_init(&local_a8);
@@ -3949,6 +3952,8 @@ void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,
 #undef uStack_10
 #undef puStack_c
 #undef local_8
+#undef param_2
+#undef param_3
 
 /* 005c68f0 auto */
 #define local_b4 (*(int *)(frame_ + FRAME_OFF(4)))
@@ -6458,6 +6463,13 @@ FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
   HINSTANCE hInstance;
   LPVOID lpParam;
   undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[6] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
+#define param_3 (*(Control * *)&pargs_[0])
+#define param_4 (*(int *)&pargs_[1])
+#define param_5 (*(int *)&pargs_[2])
+#define param_6 (*(undefined4 *)&pargs_[3])
+#define param_7 (*(undefined4 *)&pargs_[4])
+#define param_8 (*(int *)&pargs_[5])
   
   local_2c = param_3;
   if ((char)param_3[3].field_14 == '\0') {
@@ -6539,6 +6551,12 @@ FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
 #undef local_10
 #undef local_c
 #undef local_8
+#undef param_3
+#undef param_4
+#undef param_5
+#undef param_6
+#undef param_7
+#undef param_8
 
 /* 005cb601 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))

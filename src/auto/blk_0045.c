@@ -903,6 +903,12 @@ FUN_00452188
           undefined4 param_4,undefined4 param_5)
 
 {
+  u32 pargs_[5] = {(u32)(uptr)param_1, (u32)(uptr)param_2, (u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5};  /* the arguments, contiguous as on the original stack */
+#define param_1 (*(undefined4 *)&pargs_[0])
+#define param_2 (*(undefined4 *)&pargs_[1])
+#define param_3 (*(undefined4 *)&pargs_[2])
+#define param_4 (*(undefined4 *)&pargs_[3])
+#define param_5 (*(undefined4 *)&pargs_[4])
   switch(param_5) {
   case 0:
     break;
@@ -958,6 +964,11 @@ FUN_00452188
   }
   return;
 }
+#undef param_1
+#undef param_2
+#undef param_3
+#undef param_4
+#undef param_5
 
 /* 00452315 game (src/game/retvals.c) */
 #if 0
@@ -1269,6 +1280,11 @@ pedia_add_link
   C_00453b10 *pCVar3;
   int iVar4;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[4] = {(u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
+#define param_5 (*(undefined4 *)&pargs_[0])
+#define param_6 (*(undefined4 *)&pargs_[1])
+#define param_7 (*(undefined4 *)&pargs_[2])
+#define param_8 (*(undefined4 *)&pargs_[3])
   
   local_8 = 0xffffffff;
   switch(param_4) {
@@ -1409,6 +1425,10 @@ switchD_00452e28_default:
 #undef local_10
 #undef puStack_c
 #undef local_8
+#undef param_5
+#undef param_6
+#undef param_7
+#undef param_8
 
 /* 004531b8 auto */
 #define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))

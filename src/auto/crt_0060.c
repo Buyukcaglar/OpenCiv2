@@ -645,6 +645,10 @@ _fprintf(FILE *_File,char *_Format,undefined4 param_3,undefined4 param_4,undefin
   code *pcVar1;
   int iVar2;
   int iVar3;
+  u32 pargs_[3] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5};  /* the arguments, contiguous as on the original stack */
+#define param_3 (*(undefined4 *)&pargs_[0])
+#define param_4 (*(undefined4 *)&pargs_[1])
+#define param_5 (*(undefined4 *)&pargs_[2])
   
   if (_File == (FILE *)0x0) {
     iVar2 = __CrtDbgReport(2,"fprintf.c",0x38,0,"str != NULL");
@@ -667,6 +671,9 @@ _fprintf(FILE *_File,char *_Format,undefined4 param_3,undefined4 param_4,undefin
   __ftbuf(iVar2,_File);
   return iVar3;
 }
+#undef param_3
+#undef param_4
+#undef param_5
 #endif
 
 /* 00600df0 crt */
@@ -875,6 +882,10 @@ __snprintf(char *_Dest,size_t _Count,char *_Format,undefined4 param_4,undefined4
   code *pcVar1;
   int iVar2;
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[3] = {(u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6};  /* the arguments, contiguous as on the original stack */
+#define param_4 (*(undefined4 *)&pargs_[0])
+#define param_5 (*(undefined4 *)&pargs_[1])
+#define param_6 (*(undefined4 *)&pargs_[2])
   
   if (_Dest == (char *)0x0) {
     iVar2 = __CrtDbgReport(2,"sprintf.c",0x5d,0,"string != NULL");
@@ -907,6 +918,9 @@ __snprintf(char *_Dest,size_t _Count,char *_Format,undefined4 param_4,undefined4
   return iVar2;
 }
 #undef local_24
+#undef param_4
+#undef param_5
+#undef param_6
 #endif
 
 /* 00601210 crt */
@@ -2595,6 +2609,9 @@ undefined * __cdecl __fltout(undefined4 param_1,undefined4 param_2)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  u32 pargs_[2] = {(u32)(uptr)param_1, (u32)(uptr)param_2};  /* the arguments, contiguous as on the original stack */
+#define param_1 (*(undefined4 *)&pargs_[0])
+#define param_2 (*(undefined4 *)&pargs_[1])
   
   ___dtold(&local_10,&param_1);
   _DAT_006e55d8 = FUN_006051a0(local_10,local_c,local_8,0x11,0,&DAT_006e55b0);
@@ -2610,6 +2627,8 @@ undefined * __cdecl __fltout(undefined4 param_1,undefined4 param_2)
 #undef local_10
 #undef local_c
 #undef local_8
+#undef param_1
+#undef param_2
 
 /* 00603450 crt */
 #define local_18 (*(short *)(frame_ + FRAME_OFF(0)))

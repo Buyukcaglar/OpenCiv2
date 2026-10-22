@@ -224,6 +224,31 @@ void plat_log(const char *fmt, ...)
     fflush(log_file);
 }
 
+/* A request no working program makes (a window 700000 pixels tall, a
+ * gigabyte allocation): logged as SUSPICIOUS, where test runs look for it;
+ * with CIV2_STRICT set the program stops there (and dumps core). */
+void plat_suspicious(const char *fmt, ...)
+{
+    static int strict = -1;
+    char buf[512];
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(buf, sizeof buf, fmt, ap);
+    va_end(ap);
+    plat_log("SUSPICIOUS: %s\n", buf);
+    fprintf(stderr, "civ2: SUSPICIOUS: %s\n", buf);
+    if (strict < 0)
+        strict = getenv("CIV2_STRICT") && *getenv("CIV2_STRICT");
+    if (strict)
+        abort();
+}
+
+/* A coordinate or size a window can have (CW_USEDEFAULT aside). */
+int plat_sane_extent(int v)
+{
+    return v == (int)0x80000000 || (v >= -32768 && v <= 32767);
+}
+
 void plat_fatal(const char *fmt, ...)
 {
     char buf[1024];

@@ -42,6 +42,8 @@ int obj_is_stock(Handle h);
 DWORD plat_ticks(void);                 /* timeGetTime / GetTickCount */
 DWORD plat_now(void);                   /* the platform's own clock reads */
 void plat_idle(void);                   /* nothing to do: let time pass (replay) or poll events */
+void plat_suspicious(const char *fmt, ...);  /* impossible request: logged, fatal with CIV2_STRICT */
+int plat_sane_extent(int v);
 void crt_exit_process(int code);       /* ExitProcess: exit without the game's atexit list (native/crt.c) */
 extern int plat_replay;                 /* deterministic replay active */
 extern int plat_normal_desktop;         /* windows framed and captioned as on Windows; 0: as on the

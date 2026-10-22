@@ -452,6 +452,44 @@ FRAME_PRESETS = {
 }
 
 
+def emulate_args(body):
+    """Stack arguments as one contiguous block.
+
+    The 1997 code takes the address of an argument and reads the following
+    arguments through it (a RECT passed by value as four arguments, say).
+    The arguments of a 32-bit x86 call lie next to each other on the stack;
+    a wasm function's parameters do not.  From the first argument whose
+    address is taken, the arguments are copied into 4-byte slots and used
+    from there.  Returns (body, macro names to #undef).
+    """
+    taken = [int(n) for n in re.findall(r'&param_(\d+)\b(?!\s*(?:->|\.))', body)]
+    lb = body.find('{')
+    if not taken or lb < 0:
+        return body, []
+    head = body[:lb]
+    plist = head[head.find('(', head.find(' ')) + 1:head.rfind(')')] if '(' in head else ''
+    types = {}
+    for item in plist.split(','):
+        m = re.match(r'^\s*(.*?)\s*\bparam_(\d+)\s*$', item.strip())
+        if m:
+            types[int(m.group(2))] = m.group(1).strip() or 'int'
+    first = min(taken)
+    later = sorted(k for k in types if k >= first)
+    if len(later) < 2 or later != list(range(first, first + len(later))):
+        return body, []
+    if any(re.search(r'double|float|longlong|8\b', types[k]) for k in later):
+        return body, []
+    lines = body[lb:].split('\n')
+    i = 1
+    while i < len(lines) and lines[i].strip() and DECL_FULL.match(lines[i]) or (i < len(lines) and 'frame_[' in lines[i]):
+        i += 1
+    init = '  u32 pargs_[%d] = {%s};  /* the arguments, contiguous as on the original stack */' % (
+        len(later), ', '.join('(u32)(uptr)param_%d' % k for k in later))
+    defs = ['#define param_%d (*(%s *)&pargs_[%d])' % (k, types[k], n) for n, k in enumerate(later)]
+    lines[i:i] = [init] + defs
+    return body[:lb] + '\n'.join(lines), ['param_%d' % k for k in later]
+
+
 def emulate_frame(body, name=None):
     """Place stack locals at their original frame offsets.
 
@@ -501,6 +539,7 @@ def main():
     entry_names.update(thunk_table_targets(entry_names))
     conv = {int(r['entry'], 16): r for r in load_tsv('conventions.tsv')}
     funcs = parse_decomp()
+    contiguous_args = []     # functions reading arguments through an earlier one's address
     by_addr = {f['addr']: f for f in funcs}
 
     # Thunks: thunk symbol name -> (thunk address, target address)
@@ -672,6 +711,10 @@ def main():
         body = fix_addr_literals(body, entry_names)
         body = fix_misc_names(body)
         body, frame_defs, frame_names = emulate_frame(body, f['sig']['name'] if f['sig'] else None)
+        body, arg_names = emulate_args(body)
+        frame_names = frame_names + arg_names
+        if arg_names:
+            contiguous_args.append(f['sig']['name'] if f['sig'] else '%08x' % a)
         body = fix_fields(body)
         body = body.replace('unaff_FS_OFFSET', 'seh_dummy_fs')
         m = UNSUPPORTED.search(body)
@@ -820,6 +863,11 @@ def main():
     reasons = collections.Counter(r for _, _, s, r in manifest if s == 'manual')
     print(dict(cnt))
     print(reasons.most_common(15))
+    # The x86 stack layout the 1997 code relies on, emulated (emulate_args):
+    # listed so a new case is noticed.
+    print('arguments made contiguous (emulate_args): %d functions' % len(contiguous_args))
+    with open(os.path.join(RE, 'contiguous_args.txt'), 'w') as fh:
+        fh.write(''.join(n + '\n' for n in sorted(contiguous_args)))
 
 
 _FIELDS = None

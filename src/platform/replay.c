@@ -296,6 +296,30 @@ void replay_run_script(void)
             input_mouse_button(b == 3 ? 2 : 1, 0);
             next_action_us = vclock_us + 100 * 1000;
             break;
+        } else if (!strcmp(cmd, "call")) {
+            /* call FUNCTION ADDR [ARGS]: run a game function directly (tests
+               of screens hard to reach by input); the original's address is
+               for hook/replay.c, which runs the same scripts */
+            char name[128] = "";
+            unsigned addr = 0;
+            int args[4] = {0, 0, 0, 0};
+            sscanf(arg, "%127s %x %d %d %d %d", name, &addr, &args[0], &args[1], &args[2], &args[3]);
+            (void)addr;
+#ifndef __wasm__
+            {
+                int (*fn)(int, int, int, int) = (int (*)(int, int, int, int))dlsym(RTLD_DEFAULT, name);
+                if (fn) {
+                    next_action_us = vclock_us + 100 * 1000;
+                    running = 0;        /* the call may run a modal loop that idles */
+                    fn(args[0], args[1], args[2], args[3]);
+                    running = 1;
+                } else
+                    plat_log("replay: no function %s\n", name);
+            }
+#else
+            plat_log("replay: call is not available in the portable build\n");
+#endif
+            break;
         } else if (!strcmp(cmd, "mousedown") || !strcmp(cmd, "mouseup") || !strcmp(cmd, "mousemove")) {
             /* mousedown/mousemove/mouseup X Y: drags */
             int x = 0, y = 0;
