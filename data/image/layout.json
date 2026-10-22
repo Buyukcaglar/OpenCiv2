@@ -1,0 +1,66 @@
+{
+ "image_base": 4194304,
+ "sections": [
+  {
+   "name": ".rdata",
+   "va": 2211840,
+   "vsize": 32448,
+   "file": "data/image/rdata.bin",
+   "flags": 1073741888
+  },
+  {
+   "name": ".data",
+   "va": 2244608,
+   "vsize": 797548,
+   "file": "data/image/data.bin",
+   "flags": 3221225536
+  },
+  {
+   "name": ".idata",
+   "va": 3043328,
+   "vsize": 11253,
+   "file": "data/image/idata.bin",
+   "flags": 3221225536
+  },
+  {
+   "name": ".rsrc",
+   "va": 3055616,
+   "vsize": 20328,
+   "file": "data/image/rsrc.bin",
+   "flags": 1073741888
+  }
+ ],
+ "dirs": {
+  "IMAGE_DIRECTORY_ENTRY_IMPORT": [
+   3043328,
+   240
+  ],
+  "IMAGE_DIRECTORY_ENTRY_RESOURCE": [
+   3055616,
+   20328
+  ],
+  "IMAGE_DIRECTORY_ENTRY_BASERELOC": [
+   3076096,
+   99752
+  ],
+  "IMAGE_DIRECTORY_ENTRY_DEBUG": [
+   2211840,
+   84
+  ],
+  "IMAGE_DIRECTORY_ENTRY_IAT": [
+   3045608,
+   2040
+  ]
+ },
+ "optional": {
+  "SizeOfStackReserve": 1048576,
+  "SizeOfStackCommit": 4096,
+  "SizeOfHeapReserve": 1048576,
+  "SizeOfHeapCommit": 4096,
+  "MajorOperatingSystemVersion": 4,
+  "MinorOperatingSystemVersion": 0,
+  "MajorSubsystemVersion": 4,
+  "MinorSubsystemVersion": 0,
+  "Subsystem": 2
+ }
+}

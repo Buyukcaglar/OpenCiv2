@@ -1,0 +1,39 @@
+# New game with default choices, then the first turns.  Virtual-time replay.
+wait 8000
+shot 00-menu
+key Return              # Start a New Game
+wait 3000
+shot 01-worldsize
+key Return              # Normal world
+wait 3000
+shot 02-difficulty
+key Return
+wait 3000
+shot 03-competition
+key Return
+wait 3000
+shot 04-aggression
+key Return
+wait 3000
+shot 05-rules
+key Return
+wait 3000
+shot 06-gender
+key Return
+wait 3000
+shot 07-tribe
+key Return
+wait 3000
+shot 08-name
+key Return
+wait 5000
+shot 09-citystyle
+key Return
+wait 600000             # world generation (paced by idle message-loop iterations)
+shot 10-intro
+key Return
+wait 5000
+shot 11-tutorial
+key Return
+wait 5000
+shot 12-map

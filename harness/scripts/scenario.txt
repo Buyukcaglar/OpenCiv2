@@ -1,0 +1,41 @@
+# Begin the World War II scenario and play a few turns.
+wait 8000
+key Down Down Down      # Begin Scenario
+wait 500
+file WWII.SCN
+key Return
+wait 20000
+shot 00-intro
+key Return
+wait 8000
+shot 01
+key Return
+wait 8000
+shot 02
+key Return
+wait 8000
+shot 03
+key Return
+wait 8000
+shot 04
+key Return
+wait 8000
+shot 05
+key Return
+wait 8000
+shot 06
+key Return
+wait 8000
+shot 07
+key Return
+wait 8000
+shot 08
+key ctrl+n
+wait 30000
+shot 09-turn
+key Return
+wait 8000
+key Return
+wait 8000
+shot 10
+quit

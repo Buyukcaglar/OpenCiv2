@@ -1,0 +1,59 @@
+# Load the autosave and play turns: skip all units, end turn, repeat.
+wait 8000
+shot 00-menu
+key Down Down Down Down     # Load a Game
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+shot 01-loaded
+key Return
+wait 3000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 02-turn1
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 03-turn2
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 04-turn3
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 05-turn4
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 06-turn5
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 07-turn6
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 08-turn7
+key Return
+wait 2000
+key space space space space space space space space
+key ctrl+n
+wait 15000
+shot 09-turn8
+key Return
+wait 2000

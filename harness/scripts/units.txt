@@ -1,0 +1,42 @@
+# Load the autosave and give unit orders: wait, sleep, fortify, go home,
+# then end turns so the AI moves.
+wait 8000
+key Down Down Down Down     # Load a Game
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+key w
+wait 4000
+shot 00-wait
+key s
+wait 4000
+shot 01-sleep
+key a
+wait 4000
+shot 02-activate
+key f
+wait 4000
+shot 03-fortify
+key v
+wait 4000
+shot 04-view
+key v
+wait 4000
+shot 05-move
+key h
+wait 4000
+shot 06-home
+key ctrl+n
+wait 15000
+shot 07-turn
+key Return
+wait 5000
+key Return
+wait 5000
+key ctrl+n
+wait 15000
+shot 08-turn2
+quit

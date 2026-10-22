@@ -1,0 +1,496 @@
+# New game, found the capital, then 50 turns: skip units, end turn, dismiss dialogs.
+# Exercises AI expansion, contact/diplomacy, combat and production.
+wait 8000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 3000
+key Return
+wait 600000             # world generation (paced by idle message-loop iterations)
+key Return
+wait 5000
+key Return
+wait 5000
+shot 00-start
+key b
+wait 3000
+shot 01-found
+key Return
+wait 5000
+shot 02-city
+key Escape
+wait 3000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 03-turn05
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 04-turn10
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 05-turn15
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 06-turn20
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 07-turn25
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 08-turn30
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 09-turn35
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 10-turn40
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 11-turn45
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+key space space space space
+key ctrl+n
+wait 12000
+key Return
+wait 2000
+key Return
+wait 2000
+key Return
+wait 2000
+shot 12-turn50

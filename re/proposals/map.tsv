@@ -1,0 +1,52 @@
+006d1160	data	map	MapHeader
+00636598	data	map_tiles	Tile *
+006365a0	data	map_known_handles	void *[8]
+006365c0	data	map_known	u8 *[8]
+006365e0	data	map_coarse	u8 *[4]
+006365f0	data	map_allocated	u8
+006d1170	data	map_tiles_handle	void *
+006d1174	data	map_coarse_handles	void *[4]
+006d1188	data	map_offmap_tile	Tile
+00627fe0	data	start_x	i16[21]
+00628010	data	start_y	i16[21]
+004087c0	func	map_in_bounds
+005ae052	func	map_wrap_x
+005ae0b0	func	coarse_wrap_x
+004aee90	func	map_coarse0_at
+004aeec0	func	map_coarse1_at
+004aeef0	func	map_coarse2_at
+00531263	func	map_coarse3_at
+00408830	func	map_fill_tile_byte
+00408903	func	map_copy_tile_byte
+005b7fe0	func	map_alloc
+005b8416	func	map_free
+005b85fe	func	map_new_seed
+005b8635	func	map_write
+005b8783	func	map_read
+005b8931	func	tile_at
+005b898b	func	known_at
+005b89bb	func	tile_terrain
+005b89e4	func	tile_is_ocean
+005b8a1d	func	tile_owner
+005b8a81	func	tile_landmass
+005b8aa8	func	tile_land_landmass
+005b8af0	func	tile_radius_civ
+005b8b1a	func	tile_update_known
+005b8b65	func	tile_visible_to
+005b8bac	func	tile_set_visible_to
+005b8ca6	func	tile_city_owner
+005b8d15	func	tile_airbase_owner
+005b8d62	func	tile_unit_owner
+005b8da4	func	tile_city_or_unit_owner
+005b8ee1	func	tile_resource
+005b8ffa	func	tile_has_hut
+005b90df	func	tile_add_pollution
+005b9179	func	nuclear_blast
+005b94d5	func	tile_improvements
+005b94fc	func	tile_set_improvements
+005b9646	func	tile_set_terrain
+005b976d	func	tile_set_visible
+005b99e8	func	tile_set_owner
+005b9b35	func	tile_set_landmass
+005b9c49	func	tile_set_radius_civ
+005b9d81	func	known_set

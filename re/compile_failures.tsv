@@ -1,0 +1,8 @@
+005f3030	conflicting types for ‘_sprintf’; have ‘int(char *, char *, ...)’
+005f6bd0	conflicting types for ‘_printf’; have ‘int(char *, ...)’
+005f8b70	conflicting types for ‘__CrtDbgReport’; have ‘undefined4(int,  int,  int,  undefined4,  char *, ...)’ {aka ‘int(int,  int,  int,  int,  char *, ...)’}
+005f9a00	expected ‘)’ before ‘*’ token
+00600d40	conflicting types for ‘_fprintf’; have ‘int(FILE *, char *, undefined4,  undefined4,  undefined4, ...)’ {aka ‘int(struct _iobuf *, char *, int,  int,  int, ...)’}
+00601120	conflicting types for ‘__snprintf’; have ‘int(char *, size_t,  char *, undefined4,  undefined4,  undefined4, ...)’ {aka ‘int(char *, unsigned int,  char *, int,  int,  int, ...)’}
+00601750	conflicting types for ‘__sopen’; have ‘int(char *, int,  int,  uint, ...)’ {aka ‘int(char *, int,  int,  unsigned int, ...)’}
+00606af0	expected ‘)’ before ‘*’ token

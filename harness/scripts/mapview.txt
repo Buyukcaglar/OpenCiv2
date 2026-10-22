@@ -1,0 +1,47 @@
+# Load the autosave and change the map view: zoom levels, grid, hidden
+# terrain, centring.
+wait 8000
+key Down Down Down Down     # Load a Game
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 8000
+key z
+wait 4000
+shot 00-zoomin
+key z
+wait 4000
+shot 01-zoomin2
+key x
+wait 4000
+shot 02-zoomout
+key ctrl+z
+wait 4000
+shot 03-maxin
+key shift+x
+wait 4000
+shot 04-medout
+key ctrl+x
+wait 4000
+shot 05-maxout
+key shift+z
+wait 4000
+shot 06-standard
+key ctrl+g
+wait 4000
+shot 07-grid
+key t
+wait 4000
+shot 08-hidden
+key t
+wait 4000
+shot 09-hidden-off
+key c
+wait 4000
+shot 10-center
+key ctrl+g
+wait 4000
+shot 11-grid-off
+quit

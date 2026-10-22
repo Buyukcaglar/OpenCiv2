@@ -1,0 +1,3 @@
+# Boot to the main menu (animated, so a fixed wait rather than settle).
+wait 12000
+shot 00-menu

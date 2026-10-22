@@ -1,0 +1,38 @@
+# Normal desktop (no reference recording; check the shots by eye):
+#   CIV2_NORMAL_DESKTOP=1 tools/dk sh tools/native-run.sh /work/harness/desktop/frame.txt /work/run/frame
+# Load a game, then restore, move, resize and re-maximize the main window.
+wait 8000
+shot 00-menu
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+shot 01-loaded
+key Return
+wait 5000
+shot 02
+key Return
+wait 15000
+shot 00-start
+click 996 8
+wait 2000
+shot 01-restored
+mousedown 300 8
+mousemove 350 60
+mousemove 400 108
+mouseup 400 108
+wait 2000
+shot 02-moved
+mousedown 705 543
+mousemove 750 600
+mousemove 800 650
+mouseup 800 650
+wait 2000
+shot 03-sized
+mousedown 500 115
+mouseup 500 115
+mousedown 500 115
+mouseup 500 115
+wait 2000
+shot 04-dblclick-max

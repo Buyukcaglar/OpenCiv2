@@ -1,0 +1,21 @@
+# The original game is not part of this repository: install it in ~/Civ2
+# (or set CIV2_GAME).
+/orig/
+/*.zip
+# Build outputs, runs, packages
+/build/
+/run/
+/dist/
+hook/*.o
+hook/XDaemon.dll
+__pycache__/
+*.pyc
+
+# Ghidra project and logs (re/ keeps the exported tables and decomp.c)
+/re/gproj/
+/re/*.tgz
+/re/*.log
+
+# Downloaded toolchain (tools/fetch-toolchain.sh)
+/tools/toolchain/
+/tools/docker-ext/*.tar.gz

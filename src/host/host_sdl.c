@@ -1,0 +1,361 @@
+/*
+ * The host interface (host.h) over SDL2.
+ */
+#include "host.h"
+#include <SDL.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../platform/win32_vk.h"
+
+static SDL_Window *window;
+static SDL_Renderer *renderer;
+static SDL_Texture *texture;
+static int screen_w, screen_h;
+static Uint64 perf_start;
+
+int host_init(int headless)
+{
+    if (headless && !getenv("SDL_VIDEODRIVER"))
+        SDL_setenv("SDL_VIDEODRIVER", "dummy", 0);
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
+        fprintf(stderr, "civ2: SDL: %s\n", SDL_GetError());
+        return 0;
+    }
+    perf_start = SDL_GetPerformanceCounter();
+    atexit(SDL_Quit);       /* the game ends with exit() */
+    return 1;
+}
+
+void host_quit(void)
+{
+    SDL_Quit();
+}
+
+int host_base_path(char *buf, int size)
+{
+    char *base = SDL_GetBasePath();
+    snprintf(buf, (size_t)size, "%s", base ? base : "");
+    SDL_free(base);
+    return (int)strlen(buf);
+}
+
+int host_open_window(int w, int h, int scale)
+{
+    screen_w = w;
+    screen_h = h;
+    if (scale < 1)
+        scale = 1;
+    window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w * scale, h * scale,
+                              SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
+                                                      SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    if (!window)
+        return 0;
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    if (!renderer)
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    if (!renderer)
+        return 0;
+    SDL_RenderSetLogicalSize(renderer, w, h);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+    return texture != NULL;
+}
+
+int host_display_size(int32_t *w, int32_t *h)
+{
+    SDL_DisplayMode m;
+    if (SDL_GetDesktopDisplayMode(0, &m))
+        return 0;
+    *w = m.w;
+    *h = m.h;
+    return 1;
+}
+
+void host_present(const void *pixels, int stride)
+{
+    if (!texture)
+        return;
+    SDL_UpdateTexture(texture, NULL, pixels, stride);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, NULL, NULL);
+    SDL_RenderPresent(renderer);
+}
+
+void host_minimize(void)
+{
+    if (window)
+        SDL_MinimizeWindow(window);
+}
+
+/* ---- input ---- */
+
+static int vk_of_key(const SDL_Keysym *k)
+{
+    SDL_Keycode c = k->sym;
+    if (c >= SDLK_a && c <= SDLK_z)
+        return 'A' + (int)(c - SDLK_a);
+    if (c >= SDLK_0 && c <= SDLK_9)
+        return '0' + (int)(c - SDLK_0);
+    if (c >= SDLK_F1 && c <= SDLK_F12)
+        return VK_F1 + (int)(c - SDLK_F1);
+    switch (c) {
+    case SDLK_RETURN: return VK_RETURN;
+    case SDLK_ESCAPE: return VK_ESCAPE;
+    case SDLK_BACKSPACE: return VK_BACK;
+    case SDLK_TAB: return VK_TAB;
+    case SDLK_SPACE: return VK_SPACE;
+    case SDLK_UP: return VK_UP;
+    case SDLK_DOWN: return VK_DOWN;
+    case SDLK_LEFT: return VK_LEFT;
+    case SDLK_RIGHT: return VK_RIGHT;
+    case SDLK_HOME: return VK_HOME;
+    case SDLK_END: return VK_END;
+    case SDLK_PAGEUP: return VK_PRIOR;
+    case SDLK_PAGEDOWN: return VK_NEXT;
+    case SDLK_INSERT: return VK_INSERT;
+    case SDLK_DELETE: return VK_DELETE;
+    case SDLK_LSHIFT: return VK_LSHIFT;
+    case SDLK_RSHIFT: return VK_RSHIFT;
+    case SDLK_LCTRL: return VK_LCONTROL;
+    case SDLK_RCTRL: return VK_RCONTROL;
+    case SDLK_LALT: return VK_LMENU;
+    case SDLK_RALT: return VK_RMENU;
+    case SDLK_CAPSLOCK: return VK_CAPITAL;
+    case SDLK_KP_0: return (k->mod & KMOD_NUM) ? VK_NUMPAD0 : VK_INSERT;
+    case SDLK_KP_1: return (k->mod & KMOD_NUM) ? VK_NUMPAD1 : VK_END;
+    case SDLK_KP_2: return (k->mod & KMOD_NUM) ? VK_NUMPAD2 : VK_DOWN;
+    case SDLK_KP_3: return (k->mod & KMOD_NUM) ? VK_NUMPAD3 : VK_NEXT;
+    case SDLK_KP_4: return (k->mod & KMOD_NUM) ? VK_NUMPAD4 : VK_LEFT;
+    case SDLK_KP_5: return (k->mod & KMOD_NUM) ? VK_NUMPAD5 : VK_CLEAR;
+    case SDLK_KP_6: return (k->mod & KMOD_NUM) ? VK_NUMPAD6 : VK_RIGHT;
+    case SDLK_KP_7: return (k->mod & KMOD_NUM) ? VK_NUMPAD7 : VK_HOME;
+    case SDLK_KP_8: return (k->mod & KMOD_NUM) ? VK_NUMPAD8 : VK_UP;
+    case SDLK_KP_9: return (k->mod & KMOD_NUM) ? VK_NUMPAD9 : VK_PRIOR;
+    case SDLK_KP_PERIOD: return (k->mod & KMOD_NUM) ? VK_DECIMAL : VK_DELETE;
+    case SDLK_KP_ENTER: return VK_RETURN;
+    case SDLK_KP_PLUS: return VK_ADD;
+    case SDLK_KP_MINUS: return VK_SUBTRACT;
+    case SDLK_KP_MULTIPLY: return VK_MULTIPLY;
+    case SDLK_KP_DIVIDE: return VK_DIVIDE;
+    case SDLK_MINUS: return VK_OEM_MINUS;
+    case SDLK_EQUALS: return VK_OEM_PLUS;
+    case SDLK_LEFTBRACKET: return VK_OEM_4;
+    case SDLK_RIGHTBRACKET: return VK_OEM_6;
+    case SDLK_SEMICOLON: return VK_OEM_1;
+    case SDLK_QUOTE: return VK_OEM_7;
+    case SDLK_BACKQUOTE: return VK_OEM_3;
+    case SDLK_BACKSLASH: return VK_OEM_5;
+    case SDLK_COMMA: return VK_OEM_COMMA;
+    case SDLK_PERIOD: return VK_OEM_PERIOD;
+    case SDLK_SLASH: return VK_OEM_2;
+    }
+    return 0;
+}
+
+/* SDL event -> host event; 0 for those of no interest. */
+static int convert(const SDL_Event *s, HostEvent *e)
+{
+    memset(e, 0, sizeof *e);
+    switch (s->type) {
+    case SDL_QUIT:
+        e->type = HOST_EV_QUIT;
+        return 1;
+    case SDL_KEYDOWN:
+    case SDL_KEYUP:
+        e->vk = vk_of_key(&s->key.keysym);
+        if (!e->vk)
+            return 0;
+        e->type = s->type == SDL_KEYDOWN ? HOST_EV_KEYDOWN : HOST_EV_KEYUP;
+        return 1;
+    case SDL_MOUSEMOTION:
+        e->type = HOST_EV_MOTION;
+        e->x = s->motion.x;
+        e->y = s->motion.y;
+        return 1;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+        e->type = s->type == SDL_MOUSEBUTTONDOWN ? HOST_EV_BUTTONDOWN : HOST_EV_BUTTONUP;
+        e->x = s->button.x;
+        e->y = s->button.y;
+        e->button = s->button.button == SDL_BUTTON_LEFT ? 1 : s->button.button == SDL_BUTTON_RIGHT ? 2 : 3;
+        return 1;
+    case SDL_WINDOWEVENT:
+        if (s->window.event != SDL_WINDOWEVENT_EXPOSED)
+            return 0;
+        e->type = HOST_EV_EXPOSED;
+        return 1;
+    }
+    return 0;
+}
+
+int host_poll_event(HostEvent *e)
+{
+    SDL_Event s;
+    while (SDL_PollEvent(&s))
+        if (convert(&s, e))
+            return 1;
+    return 0;
+}
+
+int host_wait_event(HostEvent *e, int timeout_ms)
+{
+    SDL_Event s;
+    Uint32 end = SDL_GetTicks() + (Uint32)(timeout_ms < 0 ? 0 : timeout_ms);
+    for (;;) {
+        int left = timeout_ms < 0 ? -1 : (int)(end - SDL_GetTicks());
+        if (timeout_ms >= 0 && left <= 0)
+            return host_poll_event(e);
+        if (!(timeout_ms < 0 ? SDL_WaitEvent(&s) : SDL_WaitEventTimeout(&s, left)))
+            return 0;
+        if (convert(&s, e))
+            return 1;
+    }
+}
+
+/* ---- time ---- */
+
+uint64_t host_time_us(void)
+{
+    return (SDL_GetPerformanceCounter() - perf_start) * 1000000ull / SDL_GetPerformanceFrequency();
+}
+
+void host_delay_ms(uint32_t ms)
+{
+    SDL_Delay(ms);
+}
+
+/* ---- cursors ---- */
+
+#define MAX_CURSORS 256
+static SDL_Cursor *cursors[MAX_CURSORS];
+
+static int cursor_slot(SDL_Cursor *c)
+{
+    int i;
+    if (!c)
+        return 0;
+    for (i = 1; i < MAX_CURSORS; i++)
+        if (!cursors[i]) {
+            cursors[i] = c;
+            return i;
+        }
+    SDL_FreeCursor(c);
+    return 0;
+}
+
+int host_cursor_system(int kind)
+{
+    static const SDL_SystemCursor map[] = {SDL_SYSTEM_CURSOR_ARROW, SDL_SYSTEM_CURSOR_IBEAM, SDL_SYSTEM_CURSOR_WAIT,
+                                           SDL_SYSTEM_CURSOR_CROSSHAIR, SDL_SYSTEM_CURSOR_SIZENWSE,
+                                           SDL_SYSTEM_CURSOR_SIZENESW, SDL_SYSTEM_CURSOR_SIZEWE, SDL_SYSTEM_CURSOR_SIZENS,
+                                           SDL_SYSTEM_CURSOR_SIZEALL, SDL_SYSTEM_CURSOR_NO, SDL_SYSTEM_CURSOR_HAND};
+    int n = (int)(sizeof map / sizeof map[0]);
+    return cursor_slot(SDL_CreateSystemCursor(map[kind >= 0 && kind < n ? kind : 0]));
+}
+
+int host_cursor_image(const uint32_t *argb, int w, int h, int hot_x, int hot_y)
+{
+    SDL_Surface *s = SDL_CreateRGBSurfaceWithFormat(0, w, h, 32, SDL_PIXELFORMAT_ARGB8888);
+    SDL_Cursor *c;
+    int y;
+    if (!s)
+        return 0;
+    for (y = 0; y < h; y++)
+        memcpy((char *)s->pixels + y * s->pitch, argb + y * w, (size_t)w * 4);
+    c = SDL_CreateColorCursor(s, hot_x, hot_y);
+    SDL_FreeSurface(s);
+    return cursor_slot(c);
+}
+
+void host_cursor_set(int cursor)
+{
+    if (cursor > 0 && cursor < MAX_CURSORS && cursors[cursor])
+        SDL_SetCursor(cursors[cursor]);
+}
+
+void host_cursor_free(int cursor)
+{
+    if (cursor > 0 && cursor < MAX_CURSORS && cursors[cursor]) {
+        SDL_FreeCursor(cursors[cursor]);
+        cursors[cursor] = NULL;
+    }
+}
+
+void host_cursor_show(int show)
+{
+    SDL_ShowCursor(show ? SDL_ENABLE : SDL_DISABLE);
+}
+
+/* ---- audio ---- */
+
+int host_audio_init(void)
+{
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO) == 0)
+        return 1;
+    fprintf(stderr, "civ2: no audio: %s\n", SDL_GetError());
+    return 0;
+}
+
+int host_audio_open(int freq, int channels, int bits)
+{
+    SDL_AudioSpec want, have;
+    memset(&want, 0, sizeof want);
+    want.freq = freq;
+    want.channels = (Uint8)channels;
+    want.format = bits == 8 ? AUDIO_U8 : AUDIO_S16LSB;
+    want.samples = 1024;
+    {
+        SDL_AudioDeviceID dev = SDL_OpenAudioDevice(NULL, 0, &want, &have, 0);
+        if (dev)
+            SDL_PauseAudioDevice(dev, 0);
+        return (int)dev;
+    }
+}
+
+void host_audio_queue(int dev, const void *data, uint32_t len)
+{
+    SDL_QueueAudio((SDL_AudioDeviceID)dev, data, len);
+}
+
+uint32_t host_audio_queued(int dev)
+{
+    return SDL_GetQueuedAudioSize((SDL_AudioDeviceID)dev);
+}
+
+void host_audio_clear(int dev)
+{
+    SDL_ClearQueuedAudio((SDL_AudioDeviceID)dev);
+}
+
+void host_audio_close(int dev)
+{
+    SDL_CloseAudioDevice((SDL_AudioDeviceID)dev);
+}
+
+/* ---- message boxes ---- */
+
+int host_message_box(int icon, const char *title, const char *text, int nbuttons, const char *const *labels,
+                     const int *ids, int enter, int escape)
+{
+    SDL_MessageBoxButtonData buttons[8];
+    SDL_MessageBoxData data;
+    int i, hit = -1;
+    if (nbuttons > 8)
+        nbuttons = 8;
+    for (i = 0; i < nbuttons; i++) {
+        buttons[i].flags = (i == enter ? SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT : 0) |
+                           (i == escape ? SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT : 0);
+        buttons[i].buttonid = ids[i];
+        buttons[i].text = labels[i];
+    }
+    memset(&data, 0, sizeof data);
+    data.flags = icon == 2 ? SDL_MESSAGEBOX_ERROR : icon == 1 ? SDL_MESSAGEBOX_WARNING : SDL_MESSAGEBOX_INFORMATION;
+    data.window = window;
+    data.title = title;
+    data.message = text;
+    data.numbuttons = nbuttons;
+    data.buttons = buttons;
+    if (SDL_ShowMessageBox(&data, &hit))
+        return -1;
+    return hit;
+}

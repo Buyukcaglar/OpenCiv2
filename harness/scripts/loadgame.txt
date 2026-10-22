@@ -1,0 +1,24 @@
+# Load the autosave and play a few turns; exercises late-game AI and the main screens.
+wait 8000
+shot 00-menu
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+shot 01-loaded
+key Return
+wait 5000
+shot 02
+key Return
+wait 5000
+shot 03
+key Return
+wait 5000
+shot 04
+key Return
+wait 10000
+shot 05
+key Return
+wait 10000
+shot 06
