@@ -4,11 +4,11 @@
  * @ATTITUDES).
  *
  * Evidence:
- *  - Loader FUN_0041b00e calls the per-section parsers FUN_00419d23 (COSMIC),
- *    FUN_0041a046 (CIVILIZE), FUN_0041a422 (IMPROVE+ENDWONDER), FUN_0041a5c4
+ *  - Loader rules_parse_sections calls the per-section parsers rules_load_cosmic (COSMIC),
+ *    rules_load_advances (CIVILIZE), rules_load_improvements (IMPROVE+ENDWONDER), rules_load_units
  *    (UNITS), FUN_0041a95f (TERRAIN), FUN_0041ab18 (GOVERNMENTS+LEADERS) and
  *    then parses CARAVAN/ORDERS/DIFFICULTY/ATTITUDES inline.
- *  - The multiplayer table-sync switch (FUN_0059c0e1 / FUN_005f2110 callers,
+ *  - The multiplayer table-sync switch (net_msg_build_packet / FUN_005f2110 callers,
  *    cases 0x17..0x24) sends each table as one block with its exact size:
  *    cosmic 0x64bcc8/0x29, advances 0x627680/0x640, improvements
  *    0x64c488/0x218, endwonder 0x64ba28/0x1c, unit types 0x64b1b8/0x4d8,
@@ -17,19 +17,19 @@
  *    orders 0x655490/0x68, difficulty 0x64ba10/0x18, attitudes 0x64b9c0/0x24.
  *    This fixes the bases: advances and terrain start 4 bytes before the
  *    name field, with a static 4-char abbreviation ("AFl", "Drt") that the
- *    prerequisite lookups FUN_004b0720 / FUN_004b07d1 strcmp against.
- *  - "Names" are NOT char pointers: FUN_004a26bf -> FUN_00428b68 and
- *    FUN_004a25aa -> FUN_00428a95 copy the text into a string pool and return
- *    a running string id (DAT_00625e60++); readers turn ids back into text
- *    with FUN_00428b0c(id).  So every name field is a fixed-width integer id
+ *    prerequisite lookups rules_parse_advance_abbrev / FUN_004b07d1 strcmp against.
+ *  - "Names" are NOT char pointers: text_next_token_str_id -> strpool_add_padded and
+ *    text_next_token_pooled -> strpool_add copy the text into a string pool and return
+ *    a running string id (strpool_count++); readers turn ids back into text
+ *    with label_string(id).  So every name field is a fixed-width integer id
  *    and all these tables have the same layout on 32/64-bit.  (NB: the same
  *    holds for UnitType.name at +0x00 -- it is an i32 string id, not char *;
- *    FUN_0041a5c4 stores the real pointer separately in DAT_0066be90[62].)
+ *    rules_load_units stores the real pointer separately in unit_type_name_ptrs[62].)
  *  - Leader records are written to save files 0x30 bytes at a time
  *    (FUN at decomp.c:46406 fwrite(&leaders[i], 0x30)) and fields +3/+4/+5
  *    are saved individually, so Leader goes inside the pack(1) block.
  *  - Value meanings from the RULES.TXT comments; ranges are those of the
- *    clamp FUN_005adfa0(v, lo, hi) used by the parser.
+ *    clamp int_clamp(v, lo, hi) used by the parser.
  *  - Prerequisite/terrain-result codes: advances "nil" = -1 (none),
  *    "no" = -2 (never); terrain "no" = -1 (cannot), "yes" = -2 (improves in
  *    place); -3 = parse error.  Both compared signed -> i8.
@@ -38,7 +38,7 @@
 #pragma pack(push, 1)
 
 /* One civilization (tribe) definition from @LEADERS (0x30 bytes; 21 slots,
- * saved verbatim).  All "name" fields are string ids (FUN_00428b0c). */
+ * saved verbatim).  All "name" fields are string ids (label_string). */
 typedef struct Leader {
     i8 attack;              /* 0x00 1 aggressive, -1 rational */
     i8 expand;              /* 0x01 1 expansionist, -1 perfectionist */

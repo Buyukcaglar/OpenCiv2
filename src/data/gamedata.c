@@ -4204,7 +4204,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061d6e4, IMG(0x0061d6e4u), 0x18);
     g.d_0061d6fc = (uptr)&FUN_005bb5be;
     memcpy(&g.d_0061d700, IMG(0x0061d700u), 0xc);
-    g.d_0061d70c = (uptr)&FUN_005c0105;
+    g.d_0061d70c = (uptr)&surface_alloc_dib_by_bpp;
     memcpy(&g.d_0061d710, IMG(0x0061d710u), 0x8);
     g.d_0061d718 = (uptr)&FUN_005bb5be;
     memcpy(&g.d_0061d71c, IMG(0x0061d71cu), 0x4);

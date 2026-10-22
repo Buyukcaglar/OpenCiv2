@@ -14,7 +14,7 @@
 void gamedata_init(void);
 extern void (*const civ2_c_inits[])(void);
 extern void (*const civ2_cpp_inits[])(void);
-int __stdcall FUN_0055add0(int inst, int prev, int cmdline, int show);   /* WinMain */
+int __stdcall win_main(int inst, int prev, int cmdline, int show);   /* WinMain */
 void replay_init(void);
 void resources_init(void);
 void sound_poll(void);
@@ -144,7 +144,7 @@ int main(int argc, char **argv)
         civ2_c_inits[i]();
     for (i = 0; civ2_cpp_inits[i]; i++)
         civ2_cpp_inits[i]();
-    FUN_0055add0((int)(uintptr_t)plat_exe_module(), 0, (int)(uintptr_t)cmdline, SW_SHOWNORMAL);
+    win_main((int)(uintptr_t)plat_exe_module(), 0, (int)(uintptr_t)cmdline, SW_SHOWNORMAL);
     host_quit();
     return 0;
 }

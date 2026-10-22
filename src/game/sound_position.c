@@ -10,7 +10,7 @@
 #define SAMPLES_PER_MS 22.05      /* 22050 Hz */
 
 /* 0x005d5643: position in milliseconds. */
-undefined4 __cdecl FUN_005d5643(void)
+undefined4 __cdecl snd_wave_get_position_ms(void)
 {
     MMTIME t;
 

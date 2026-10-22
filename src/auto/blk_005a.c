@@ -5,8 +5,8 @@
 #define local_c (*(u32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall
-FUN_005a0fea
-          (C_005a0fea *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
+dialog_draw_option_cell
+          (DialogOptionDrawView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   int iVar1;
@@ -16,7 +16,7 @@ FUN_005a0fea
   
   while (*(char *)param_1 != '\0') {
     iVar1 = *(int *)(this[2].pad_9c + this->field_48 * 4 + -4);
-    iVar2 = thunk_FUN_0040efd0((C_0040ef70_8 *)this->field_10,param_1);
+    iVar2 = thunk_font_text_width((GameFont *)this->field_10,param_1);
     if (iVar2 <= iVar1 + -6) break;
     sVar3 = _strlen((char *)param_1);
     *(undefined1 *)((sVar3 - 1) + param_1) = 0;
@@ -30,21 +30,21 @@ FUN_005a0fea
     local_c = this->field_a4;
   }
   if (local_c != local_8) {
-    FUN_005c19ad(local_c);
-    FUN_005c0f57
-              ((C_004083b0_48 *)this->field_0,this->field_10,param_1,param_2 + 2,param_3 + 1,5);
-    FUN_005c19ad(local_8);
-    FUN_005c0f57
-              ((C_004083b0_48 *)this->field_0,this->field_10,param_1,param_2 + 1,param_3,5);
+    gfx_set_text_color_index(local_c);
+    surface_draw_text
+              ((DibSurface *)this->field_0,this->field_10,param_1,param_2 + 2,param_3 + 1,5);
+    gfx_set_text_color_index(local_8);
+    surface_draw_text
+              ((DibSurface *)this->field_0,this->field_10,param_1,param_2 + 1,param_3,5);
   }
   if (param_5 == 0) {
-    FUN_005c19ad(local_8);
+    gfx_set_text_color_index(local_8);
   }
   else {
-    FUN_005c19ad(this->field_6c);
+    gfx_set_text_color_index(this->field_6c);
   }
-  FUN_005c0f57
-            ((C_004083b0_48 *)this->field_0,this->field_10,param_1,param_2,param_3,5);
+  surface_draw_text
+            ((DibSurface *)this->field_0,this->field_10,param_1,param_2,param_3,5);
   return;
 }
 #undef local_c
@@ -53,8 +53,8 @@ FUN_005a0fea
 /* 005a1148 auto */
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(0)))
 void __thiscall
-FUN_005a1148
-          (C_005a0fea *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4,
+dialog_draw_option_text
+          (DialogOptionDrawView *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4,
           undefined4 param_5)
 
 {
@@ -69,12 +69,12 @@ FUN_005a1148
     local_8 = pcVar2 + 1;
     *pcVar2 = '\0';
   }
-  thunk_FUN_005a0fea(this,(iptr)param_1,*(int *)(this[3].pad_14 + this->field_48 * 4 + -4) + param_2
+  thunk_dialog_draw_option_cell(this,(iptr)param_1,*(int *)(this[3].pad_14 + this->field_48 * 4 + -4) + param_2
                      ,param_3,param_4,param_5);
   if (local_8 != (char *)0x0) {
     iVar1 = *(int *)(this[2].pad_9c + this->field_48 * 4 + -4);
-    iVar3 = thunk_FUN_0040efd0((C_0040ef70_8 *)this->field_10,(iptr)local_8);
-    thunk_FUN_005a0fea(this,(iptr)local_8,(iVar1 + param_2 + -4) - iVar3,param_3,param_4,param_5);
+    iVar3 = thunk_font_text_width((GameFont *)this->field_10,(iptr)local_8);
+    thunk_dialog_draw_option_cell(this,(iptr)local_8,(iVar1 + param_2 + -4) - iVar3,param_3,param_4,param_5);
     *pcVar2 = '|';
   }
   return;
@@ -96,7 +96,7 @@ FUN_005a1148
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
-uint __thiscall FUN_005a120b(C_0040bc40_268 *this,iptr param_1,int param_2)
+uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param_2)
 
 {
   int iVar1;
@@ -107,58 +107,58 @@ uint __thiscall FUN_005a120b(C_0040bc40_268 *this,iptr param_1,int param_2)
   if (param_1 == 0) {
     local_18 = 0;
   }
-  else if (this->field_28 == 0) {
+  else if (this->option_count == 0) {
     local_18 = 0;
   }
   else {
-    iVar1 = thunk_FUN_0059fb78(this,*(uptr *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + 0x18));
-    iVar2 = thunk_FUN_0059fb78(this,param_1);
+    iVar1 = thunk_dialog_option_group_index(this,*(uptr *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + 0x18));
+    iVar2 = thunk_dialog_option_group_index(this,param_1);
     iVar1 = iVar2 - iVar1;
     if ((iVar1 < 0) ||
-       (iVar3 = (&this->field_5c)[*(int *)(param_1 + 0xc)] * this->field_38,
+       (iVar3 = (&this->list_rows)[*(int *)(param_1 + 0xc)] * this->columns,
        iVar3 - iVar1 == 0 || iVar3 < iVar1)) {
       local_18 = 0;
     }
     else {
-      local_24 = iVar1 / (int)(&this->field_5c)[*(int *)(param_1 + 0xc)];
-      local_2c = iVar1 % (int)(&this->field_5c)[*(int *)(param_1 + 0xc)];
+      local_24 = iVar1 / (int)(&this->list_rows)[*(int *)(param_1 + 0xc)];
+      local_2c = iVar1 % (int)(&this->list_rows)[*(int *)(param_1 + 0xc)];
       local_20 = *(int *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -0x10) * local_24 +
                  *(int *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -0x28);
       local_28 = *(int *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -8) * local_2c +
                  *(int *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -0x20);
-      thunk_FUN_004086c0((iptr)&local_14,local_20,local_28,
+      thunk_rect_set_xywh((iptr)&local_14,local_20,local_28,
                          *(iptr *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -0x10),
                          *(iptr *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -8));
-      local_18 = (uint)(this->field_220 == param_1);
+      local_18 = (uint)(this->selected_option == param_1);
       if (local_18 == 0) {
-        local_1c = this->field_90;
+        local_1c = this->list_fill_color;
       }
       else {
-        local_1c = this->field_9c;
+        local_1c = this->list_sel_fill_color;
       }
       local_3c = local_14;
       local_38 = local_10;
       local_34 = local_c;
       local_30 = local_8;
-      if (this != (C_0040bc40_268 *)0xfffffdf8) {
+      if (this != (DialogOptionList *)0xfffffdf8) {
         local_3c = local_14 + *(int *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + 0x10);
       }
-      if ((this->field_248 == 0) ||
-         (iVar2 = (*(code *)this->field_248)
-                            (this,this->field_0,*(undefined4 *)(param_1 + 4),iVar2,local_20,local_28
+      if ((this->on_draw_option == 0) ||
+         (iVar2 = (*(code *)this->on_draw_option)
+                            (this,this->surf_wnd,*(undefined4 *)(param_1 + 4),iVar2,local_20,local_28
                              ,*(undefined4 *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 + -8)),
          iVar2 == 0)) {
         if (local_18 != 0) {
-          thunk_FUN_005a99fc(this->field_0,(iptr)&local_3c,this->field_78,this->field_7c);
-          thunk_FUN_004bb800((iptr)&local_3c,1,1);
+          thunk_gfx_draw_bevel_rect(this->surf_wnd,(iptr)&local_3c,this->bevel_light_color,this->bevel_dark_color);
+          thunk_rect_deflate((iptr)&local_3c,1,1);
         }
-        thunk_FUN_0040fdb0(this->field_0,(iptr)&local_3c,local_1c);
-        thunk_FUN_005a1148
-                  ((C_005a0fea *)this,*(undefined4 *)(param_1 + 8),local_20 + 2,local_28,local_18,
+        thunk_gfx_fill_rect(this->surf_wnd,(iptr)&local_3c,local_1c);
+        thunk_dialog_draw_option_text
+                  ((DialogOptionDrawView *)this,*(undefined4 *)(param_1 + 8),local_20 + 2,local_28,local_18,
                    *(uint *)param_1 & 1);
       }
       if (param_2 != 0) {
-        thunk_FUN_00408490((C_004083b0_48 *)this->field_0,(iptr)&local_14);
+        thunk_wnd_blit_surface_rect((DibSurface *)this->surf_wnd,(iptr)&local_14);
       }
     }
   }
@@ -188,7 +188,7 @@ uint __thiscall FUN_005a120b(C_0040bc40_268 *this,iptr param_1,int param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __thiscall FUN_005a14d2(C_0040bc40_268 *this)
+void __thiscall dialog_draw_option_list(DialogOptionList *this)
 
 {
   u8 *puVar1;
@@ -200,59 +200,59 @@ void __thiscall FUN_005a14d2(C_0040bc40_268 *this)
   undefined4 uVar7;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar2 = this->field_48;
+  uVar2 = this->cur_pane;
   for (local_24 = 0; (int)local_24 < 2; local_24 = local_24 + 1) {
-    if ((local_24 != 1) || ((this->field_3c & 0x400000) != 0)) {
-      this->field_48 = local_24;
-      puVar1 = this->pad_178 + this->field_48 * 4 + 0x40;
+    if ((local_24 != 1) || ((this->style_flags & 0x400000) != 0)) {
+      this->cur_pane = local_24;
+      puVar1 = this->pad_178 + this->cur_pane * 4 + 0x40;
       puVar1[0] = '\0';
       puVar1[1] = '\0';
       puVar1[2] = '\0';
       puVar1[3] = '\0';
-      uVar3 = this->field_48;
+      uVar3 = this->cur_pane;
       local_14 = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 + -0x20);
       local_10 = *(int *)(this->pad_178 + uVar3 * 0x10 + -0x1c);
       local_c = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 + -0x18);
       local_8 = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 + -0x14);
-      if ((1 < (int)this->field_38) || ((this->field_28 == 0 || (this->field_248 != 0)))) {
-        thunk_FUN_0040fdb0(this->field_0,(iptr)(this->pad_178 + this->field_48 * 0x10 + -0x20),
-                           this->field_90);
+      if ((1 < (int)this->columns) || ((this->option_count == 0 || (this->on_draw_option != 0)))) {
+        thunk_gfx_fill_rect(this->surf_wnd,(iptr)(this->pad_178 + this->cur_pane * 0x10 + -0x20),
+                           this->list_fill_color);
       }
-      thunk_FUN_0043c7c0(this->field_0,(iptr)(this->pad_178 + this->field_48 * 0x10 + -0x40),
-                         this->field_7c);
-      FUN_005c0073((C_004083b0_48 *)this->field_0,(iptr)&local_14);
-      if (this->field_28 != 0) {
-        local_1c = *(iptr *)(iptr_006cec84 + 0x228);
-        iVar4 = thunk_FUN_0059fb78(this,*(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
+      thunk_gfx_draw_rect_frame(this->surf_wnd,(iptr)(this->pad_178 + this->cur_pane * 0x10 + -0x40),
+                         this->bevel_dark_color);
+      surface_set_clip((DibSurface *)this->surf_wnd,(iptr)&local_14);
+      if (this->option_count != 0) {
+        local_1c = *(iptr *)(active_dialog + 0x228);
+        iVar4 = thunk_dialog_option_group_index(this,*(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
         local_2c = 0;
-        for (local_18 = 0; (local_1c != 0 && (local_18 < (int)this->field_28));
+        for (local_18 = 0; (local_1c != 0 && (local_18 < (int)this->option_count));
             local_18 = local_18 + 1) {
-          if (this->field_48 == *(u32 *)(local_1c + 0xc)) {
+          if (this->cur_pane == *(u32 *)(local_1c + 0xc)) {
             if ((iVar4 <= local_2c) &&
-               (local_2c < (int)((&this->field_5c)[this->field_48] * this->field_38 + iVar4))) {
+               (local_2c < (int)((&this->list_rows)[this->cur_pane] * this->columns + iVar4))) {
               uVar7 = 0;
-              iVar5 = thunk_FUN_0059fc19(this,local_2c);
-              uVar6 = thunk_FUN_005a120b(this,iVar5,uVar7);
-              *(uint *)(this->pad_178 + this->field_48 * 4 + 0x40) =
-                   *(uint *)(this->pad_178 + this->field_48 * 4 + 0x40) | uVar6;
-              local_10 = local_10 + *(int *)(this->pad_1f8 + this->field_48 * 4 + -8);
+              iVar5 = thunk_dialog_option_at(this,local_2c);
+              uVar6 = thunk_dialog_draw_option(this,iVar5,uVar7);
+              *(uint *)(this->pad_178 + this->cur_pane * 4 + 0x40) =
+                   *(uint *)(this->pad_178 + this->cur_pane * 4 + 0x40) | uVar6;
+              local_10 = local_10 + *(int *)(this->pad_1f8 + this->cur_pane * 4 + -8);
             }
             local_2c = local_2c + 1;
           }
           local_1c = *(iptr *)(local_1c + 0x10);
         }
-        if (((this->field_38 == 1) && (this->field_248 == 0)) &&
-           (iVar4 = thunk_FUN_00407fc0((iptr)&local_14), 0 < iVar4)) {
-          thunk_FUN_0040fdb0(this->field_0,(iptr)&local_14,this->field_90);
+        if (((this->columns == 1) && (this->on_draw_option == 0)) &&
+           (iVar4 = thunk_rect_height((iptr)&local_14), 0 < iVar4)) {
+          thunk_gfx_fill_rect(this->surf_wnd,(iptr)&local_14,this->list_fill_color);
         }
       }
-      FUN_005c0034((C_004083b0_48 *)this->field_0);
-      thunk_FUN_00408490
-                ((C_004083b0_48 *)this->field_0,
-                 (iptr)(this->pad_178 + this->field_48 * 0x10 + -0x40));
+      surface_reset_clip((DibSurface *)this->surf_wnd);
+      thunk_wnd_blit_surface_rect
+                ((DibSurface *)this->surf_wnd,
+                 (iptr)(this->pad_178 + this->cur_pane * 0x10 + -0x40));
     }
   }
-  this->field_48 = uVar2;
+  this->cur_pane = uVar2;
   return;
 }
 #undef local_2c
@@ -265,28 +265,28 @@ void __thiscall FUN_005a14d2(C_0040bc40_268 *this)
 #undef local_8
 
 /* 005a1766 auto */
-int __thiscall FUN_005a1766(C_0040bc40_d8 *this,int param_1)
+int __thiscall dialog_column_of_index(DialogTextView *this,int param_1)
 
 {
-  if (this->field_38 != 1) {
-    param_1 = param_1 / (int)(&this->field_5c)[this->field_48];
+  if (this->columns != 1) {
+    param_1 = param_1 / (int)(&this->list_rows)[this->cur_pane];
   }
   return param_1;
 }
 
 /* 005a17a4 auto */
-int __thiscall FUN_005a17a4(C_0040bc40_d8 *this,int param_1)
+int __thiscall dialog_column_start_index(DialogTextView *this,int param_1)
 
 {
-  if (this->field_38 != 1) {
-    param_1 = param_1 - param_1 % (int)(&this->field_5c)[this->field_48];
+  if (this->columns != 1) {
+    param_1 = param_1 - param_1 % (int)(&this->list_rows)[this->cur_pane];
   }
   return param_1;
 }
 
 /* 005a17e9 auto */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005a17e9(C_0040bc40_268 *this,uptr param_1,int param_2)
+void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int param_2)
 
 {
   uptr uVar1;
@@ -297,52 +297,52 @@ void __thiscall FUN_005a17e9(C_0040bc40_268 *this,uptr param_1,int param_2)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
-  if ((param_1 != 0) && (this->field_220 != param_1)) {
-    local_10 = thunk_FUN_0059fb78(this,*(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-    iVar3 = thunk_FUN_0059fb78(this,param_1);
+  if ((param_1 != 0) && (this->selected_option != param_1)) {
+    local_10 = thunk_dialog_option_group_index(this,*(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+    iVar3 = thunk_dialog_option_group_index(this,param_1);
     if (iVar3 < local_10) {
       bVar2 = true;
       local_10 = iVar3;
     }
-    while ((int)((&this->field_5c)[this->field_48] * this->field_38 + local_10) <= iVar3) {
-      if (this->field_38 == 1) {
+    while ((int)((&this->list_rows)[this->cur_pane] * this->columns + local_10) <= iVar3) {
+      if (this->columns == 1) {
         local_10 = local_10 + 1;
       }
       else {
-        local_10 = local_10 + (&this->field_5c)[this->field_48];
+        local_10 = local_10 + (&this->list_rows)[this->cur_pane];
       }
       bVar2 = true;
     }
-    uVar4 = thunk_FUN_005a17a4((C_0040bc40_d8 *)this,this->field_28 - 1);
-    uVar4 = FUN_005a1a44(local_10,0,uVar4);
-    uVar4 = thunk_FUN_0059fc19(this,uVar4);
-    *(undefined4 *)(this->pad_1f8 + this->field_48 * 4 + 0x18) = uVar4;
-    uVar1 = this->field_220;
-    this->field_220 = param_1;
+    uVar4 = thunk_dialog_column_start_index((DialogTextView *)this,this->option_count - 1);
+    uVar4 = int_clamp_b(local_10,0,uVar4);
+    uVar4 = thunk_dialog_option_at(this,uVar4);
+    *(undefined4 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18) = uVar4;
+    uVar1 = this->selected_option;
+    this->selected_option = param_1;
     if ((bVar2) || (param_2 == 0)) {
-      if ((&this[1].field_1c)[this->field_48] != 0) {
-        iVar5 = thunk_FUN_0059fb78(this,*(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-        thunk_FUN_0040fcf0
-                  ((C_0040f380_40 *)(&this[1].field_1c)[this->field_48],iVar5);
+      if ((&this[1].field_1c)[this->cur_pane] != 0) {
+        iVar5 = thunk_dialog_option_group_index(this,*(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+        thunk_scrollbar_set_pos
+                  ((C_0040f380_40 *)(&this[1].field_1c)[this->cur_pane],iVar5);
       }
-      if ((&this[1].field_24)[this->field_48] != 0) {
-        iVar5 = thunk_FUN_0059fcba(this,*(undefined4 *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-        thunk_FUN_0040fcf0
-                  ((C_0040f380_40 *)(&this[1].field_24)[this->field_48],iVar5);
+      if ((&this[1].field_24)[this->cur_pane] != 0) {
+        iVar5 = thunk_dialog_column_of_option(this,*(undefined4 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+        thunk_scrollbar_set_pos
+                  ((C_0040f380_40 *)(&this[1].field_24)[this->cur_pane],iVar5);
       }
     }
     if (param_2 != 0) {
       if (bVar2) {
-        thunk_FUN_005a14d2(this);
-        if (this->field_24c != 0) {
-          (*(code *)this->field_24c)(this,*(undefined4 *)(param_1 + 4));
+        thunk_dialog_draw_option_list(this);
+        if (this->on_select_change != 0) {
+          (*(code *)this->on_select_change)(this,*(undefined4 *)(param_1 + 4));
         }
       }
       else {
-        thunk_FUN_005a120b(this,uVar1,1);
-        thunk_FUN_005a120b(this,param_1,1);
-        if (this->field_24c != 0) {
-          (*(code *)this->field_24c)(this,*(undefined4 *)(param_1 + 4));
+        thunk_dialog_draw_option(this,uVar1,1);
+        thunk_dialog_draw_option(this,param_1,1);
+        if (this->on_select_change != 0) {
+          (*(code *)this->on_select_change)(this,*(undefined4 *)(param_1 + 4));
         }
       }
     }
@@ -352,7 +352,7 @@ void __thiscall FUN_005a17e9(C_0040bc40_268 *this,uptr param_1,int param_2)
 #undef local_10
 
 /* 005a1a44 auto */
-int __cdecl FUN_005a1a44(int param_1,int param_2,int param_3)
+int __cdecl int_clamp_b(int param_1,int param_2,int param_3)
 
 {
   if (param_2 <= param_1) {
@@ -365,36 +365,36 @@ int __cdecl FUN_005a1a44(int param_1,int param_2,int param_3)
 }
 
 /* 005a1a7d auto */
-undefined4 __thiscall FUN_005a1a7d(C_0040bc40_268 *this,int param_1,int param_2)
+undefined4 __thiscall dialog_option_at_point(DialogOptionList *this,int param_1,int param_2)
 
 {
   undefined4 uVar1;
   int iVar2;
   
-  thunk_FUN_005a1caf((C_0040bc40_228 *)this,param_1,param_2);
-  if ((&this[1].field_24)[this->field_48] != 0) {
-    if (param_1 < *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x20)) {
+  thunk_dialog_pick_pane_at((DialogWindowView *)this,param_1,param_2);
+  if ((&this[1].field_24)[this->cur_pane] != 0) {
+    if (param_1 < *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x20)) {
       return 0xfffffffd;
     }
-    if (*(int *)(this->pad_178 + this->field_48 * 0x10 + -0x18) <= param_1) {
+    if (*(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x18) <= param_1) {
       return 0xfffffffc;
     }
   }
-  if (param_2 < *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x1c)) {
+  if (param_2 < *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x1c)) {
     uVar1 = 0xffffffff;
   }
-  else if (param_2 < *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x14)) {
-    if (param_1 < *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x20)) {
+  else if (param_2 < *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x14)) {
+    if (param_1 < *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x20)) {
       uVar1 = 0xfffffffd;
     }
-    else if (param_1 < *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x18)) {
-      iVar2 = thunk_FUN_0059fb78(this,*(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-      uVar1 = FUN_005a1a44((&this->field_5c)[this->field_48] *
-                           ((param_1 - *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x20)) /
-                           *(int *)(this->pad_1f8 + this->field_48 * 4 + -0x10)) +
-                           (param_2 - *(int *)(this->pad_178 + this->field_48 * 0x10 + -0x1c)) /
-                           *(int *)(this->pad_1f8 + this->field_48 * 4 + -8) + iVar2,0,
-                           this->field_28 - 1);
+    else if (param_1 < *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x18)) {
+      iVar2 = thunk_dialog_option_group_index(this,*(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+      uVar1 = int_clamp_b((&this->list_rows)[this->cur_pane] *
+                           ((param_1 - *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x20)) /
+                           *(int *)(this->pad_1f8 + this->cur_pane * 4 + -0x10)) +
+                           (param_2 - *(int *)(this->pad_178 + this->cur_pane * 0x10 + -0x1c)) /
+                           *(int *)(this->pad_1f8 + this->cur_pane * 4 + -8) + iVar2,0,
+                           this->option_count - 1);
     }
     else {
       uVar1 = 0xfffffffc;
@@ -409,13 +409,13 @@ undefined4 __thiscall FUN_005a1a7d(C_0040bc40_268 *this,int param_1,int param_2)
 /* 005a1c52 auto */
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __thiscall FUN_005a1c52(C_0040bc40_268 *this,int param_1)
+int __thiscall dialog_count_group_options(DialogOptionList *this,int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
-  for (local_c = this->field_228; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
+  for (local_c = this->option_list; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
     if (*(int *)(local_c + 0xc) == param_1) {
       local_8 = local_8 + 1;
     }
@@ -426,22 +426,22 @@ int __thiscall FUN_005a1c52(C_0040bc40_268 *this,int param_1)
 #undef local_8
 
 /* 005a1caf auto */
-void __thiscall FUN_005a1caf(C_0040bc40_228 *this,int param_1,int param_2)
+void __thiscall dialog_pick_pane_at(DialogWindowView *this,int param_1,int param_2)
 
 {
   u32 uVar1;
   
-  uVar1 = this->field_48;
-  if ((this->field_3c & 0x400000) == 0) {
-    this->field_48 = 0;
+  uVar1 = this->cur_pane;
+  if ((this->style_flags & 0x400000) == 0) {
+    this->cur_pane = 0;
   }
   else {
-    this->field_48 = 0;
-    if (((((param_2 < (int)this->field_13c) || ((int)this->field_144 < param_2)) ||
-         (param_1 < (int)this->field_138)) || ((int)this->field_140 < param_1)) &&
-       (((this->field_48 = 1, param_2 < (int)this->field_14c || ((int)this->field_154 < param_2)) ||
-        ((param_1 < (int)this->field_148 || ((int)this->field_150 < param_1)))))) {
-      this->field_48 = uVar1;
+    this->cur_pane = 0;
+    if (((((param_2 < (int)this->pane_top) || ((int)this->pane_bottom < param_2)) ||
+         (param_1 < (int)this->pane_left)) || ((int)this->pane_right < param_1)) &&
+       (((this->cur_pane = 1, param_2 < (int)this->pane1_top || ((int)this->pane1_bottom < param_2)) ||
+        ((param_1 < (int)this->pane1_left || ((int)this->pane1_right < param_1)))))) {
+      this->cur_pane = uVar1;
     }
   }
   return;
@@ -453,23 +453,23 @@ void __cdecl FUN_005a1da3(undefined4 param_1)
 {
   int iVar1;
   
-  if (iptr_006cec84 != 0) {
-    *(undefined4 *)(iptr_006cec84 + 0x48) = 0;
-    iVar1 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,param_1);
-    if (*(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) != iVar1) {
-      *(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = iVar1;
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+  if (active_dialog != 0) {
+    *(undefined4 *)(active_dialog + 0x48) = 0;
+    iVar1 = thunk_dialog_option_at((DialogOptionList *)active_dialog,param_1);
+    if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
+      *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
     }
   }
   return;
 }
 
 /* 005a1e28 auto */
-#define DAT_00634718 (*(int *)((u8 *)&g.d_00634718))
-#define DAT_006359c0 (*(undefined * *)((u8 *)&g.d_006359c0))
-#define DAT_006359c4 (*(undefined * *)((u8 *)&g.d_006359c4))
-#define DAT_00635a3c (*(int *)((u8 *)&g.d_00635a3c))
-#define DAT_00635a40 (*(int *)((u8 *)&g.d_00635a40))
+#define dlg_default_idle_callback (*(int *)((u8 *)&g.d_00635a40))
+#define dlg_palette (*(undefined * *)((u8 *)&g.d_006359c0))
+#define dlg_parent_window (*(undefined * *)((u8 *)&g.d_006359c4))
+#define dlg_pending_idle_callback (*(int *)((u8 *)&g.d_00635a3c))
+#define main_frame_created (*(int *)((u8 *)&g.d_00634718))
 #define local_2c (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
 #define local_20 (*(undefined * *)(frame_ + FRAME_OFF(16)))
@@ -479,90 +479,90 @@ void __cdecl FUN_005a1da3(undefined4 param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-undefined4 __thiscall FUN_005a1e28(C_0040bc40_228 *this)
+undefined4 __thiscall dialog_create_window(DialogWindowView *this)
 
 {
   undefined4 uVar1;
-  C_004083b0_114 *this_00;
+  SurfaceWindow *this_00;
   int iVar2;
   u32 uVar3;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  if (this->field_0 == 0) {
+  if (this->surf_wnd == 0) {
     this_00 = operator_new(0x114);
     local_8 = 0;
-    if (this_00 == (C_004083b0_114 *)0x0) {
+    if (this_00 == (SurfaceWindow *)0x0) {
       local_2c = 0;
     }
     else {
-      local_2c = thunk_FUN_0044c5a0(this_00);
+      local_2c = thunk_surfwnd_ctor(this_00);
     }
     local_8 = 0xffffffff;
-    this->field_0 = local_2c;
+    this->surf_wnd = local_2c;
     local_14[0] = 0;
-    local_18 = (undefined1 *)this->field_134;
+    local_18 = (undefined1 *)this->title_text;
     if (local_18 == (undefined1 *)0x0) {
       local_18 = local_14;
     }
-    if ((this->field_3c & 0x10000) == 0) {
+    if ((this->style_flags & 0x10000) == 0) {
       local_24 = 0xc02;
     }
     else {
       local_24 = 0x842;
     }
-    if (DAT_006359c4 == (undefined *)0x0) {
-      if (DAT_00634718 == 0) {
+    if (dlg_parent_window == (undefined *)0x0) {
+      if (main_frame_created == 0) {
         local_1c = (undefined *)0x0;
       }
       else {
-        local_1c = &DAT_006553d8;
+        local_1c = &main_frame_wnd;
       }
     }
     else {
-      local_1c = DAT_006359c4;
+      local_1c = dlg_parent_window;
     }
-    if (DAT_006359c0 == (undefined *)0x0) {
-      local_20 = &DAT_006a8c00;
+    if (dlg_palette == (undefined *)0x0) {
+      local_20 = &game_palette;
     }
     else {
-      local_20 = DAT_006359c0;
+      local_20 = dlg_palette;
     }
     if (local_1c == (undefined *)0x0) {
-      FUN_005bb3f0
-                ((C_004083b0_48 *)this->field_0,(iptr)local_18,local_24,this->field_e0,
-                 this->field_e4,this->field_40,this->field_44,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+      surface_wnd_create
+                ((DibSurface *)this->surf_wnd,(iptr)local_18,local_24,this->window_x,
+                 this->window_y,this->wnd_width,this->wnd_height,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
     }
     else {
-      FUN_005bb4ae
-                ((C_004083b0_48 *)this->field_0,(iptr)local_18,local_24,this->field_e0,
-                 this->field_e4,this->field_40,this->field_44,(iptr)local_20,(iptr)local_1c);
+      wnd_create_with_surface
+                ((DibSurface *)this->surf_wnd,(iptr)local_18,local_24,this->window_x,
+                 this->window_y,this->wnd_width,this->wnd_height,(iptr)local_20,(iptr)local_1c);
     }
-    if ((this->field_3c & 0x10000) == 0) {
-      thunk_FUN_00497d00((C_00408010_10 *)(this->field_0 + 0x48),this->field_d0);
+    if ((this->style_flags & 0x10000) == 0) {
+      thunk_wnd_set_caption_height((WndBase *)(this->surf_wnd + 0x48),this->title_height);
     }
-    iVar2 = thunk_FUN_00471070((C_004083b0_48 *)this->field_0);
-    if ((int)this->field_40 <= iVar2) {
-      uVar3 = thunk_FUN_00471070((C_004083b0_48 *)this->field_0);
-      this->field_40 = uVar3;
+    iVar2 = thunk_surface_get_width((DibSurface *)this->surf_wnd);
+    if ((int)this->wnd_width <= iVar2) {
+      uVar3 = thunk_surface_get_width((DibSurface *)this->surf_wnd);
+      this->wnd_width = uVar3;
     }
-    iVar2 = thunk_FUN_004710a0((C_004083b0_48 *)this->field_0);
-    if ((int)this->field_44 <= iVar2) {
-      uVar3 = thunk_FUN_004710a0((C_004083b0_48 *)this->field_0);
-      this->field_44 = uVar3;
+    iVar2 = thunk_surface_get_height((DibSurface *)this->surf_wnd);
+    if ((int)this->wnd_height <= iVar2) {
+      uVar3 = thunk_surface_get_height((DibSurface *)this->surf_wnd);
+      this->wnd_height = uVar3;
     }
-    thunk_FUN_004085c0((C_004083b0_114 *)this->field_0,ADDR(0x5a20f4, FUN_005a20f4));
-    if (DAT_00635a3c == 0) {
-      if (DAT_00635a40 != 0) {
-        thunk_FUN_0040f320((C_00408010_b8 *)(this->field_0 + 0x48),DAT_00635a40);
+    thunk_wnd_set_redraw_callback((SurfaceWindow *)this->surf_wnd,ADDR(0x5a20f4, FUN_005a20f4));
+    if (dlg_pending_idle_callback == 0) {
+      if (dlg_default_idle_callback != 0) {
+        thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->surf_wnd + 0x48),dlg_default_idle_callback);
       }
     }
     else {
-      thunk_FUN_0040f320((C_00408010_b8 *)(this->field_0 + 0x48),DAT_00635a3c);
-      DAT_00635a3c = 0;
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)(this->surf_wnd + 0x48),dlg_pending_idle_callback);
+      dlg_pending_idle_callback = 0;
     }
     if (DAT_00635a44 != 0) {
-      thunk_FUN_00408330((C_00408130 *)(this->field_0 + 0x58),DAT_00635a44);
+      thunk_wnd_set_move_handler((C_00408130 *)(this->surf_wnd + 0x58),DAT_00635a44);
       DAT_00635a44 = 0;
     }
     uVar1 = 1;
@@ -572,11 +572,11 @@ undefined4 __thiscall FUN_005a1e28(C_0040bc40_228 *this)
   }
   return uVar1;
 }
-#undef DAT_00634718
-#undef DAT_006359c0
-#undef DAT_006359c4
-#undef DAT_00635a3c
-#undef DAT_00635a40
+#undef dlg_default_idle_callback
+#undef dlg_palette
+#undef dlg_parent_window
+#undef dlg_pending_idle_callback
+#undef main_frame_created
 #undef local_2c
 #undef local_24
 #undef local_20
@@ -591,16 +591,16 @@ undefined4 __thiscall FUN_005a1e28(C_0040bc40_228 *this)
 void __cdecl FUN_005a20f4(void)
 
 {
-  if (iptr_006cec84 != 0) {
-    thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+  if (active_dialog != 0) {
+    thunk_dialog_render((Dialog *)active_dialog);
   }
   return;
 }
 
 /* 005a211c auto */
-#define DAT_0062f004 (*(int *)((u8 *)&g.d_0062f004))
-#define DAT_00635a58 (*(undefined4 *)((u8 *)&g.d_00635a58))
-#define DAT_006ad678 (*(C_0040bc40_2f4 * *)((u8 *)&g.d_006ad678))
+#define dialog_clamp_overflow (*(int *)((u8 *)&g.d_0062f004))
+#define dialog_stack (*(undefined4 *)((u8 *)&g.d_00635a58))
+#define dialog_stack_top (*(Dialog * *)((u8 *)&g.d_006ad678))
 #define local_198 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_194 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_190 (*(iptr *)(frame_ + FRAME_OFF(8)))
@@ -640,11 +640,11 @@ void __cdecl FUN_005a20f4(void)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(392)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(396)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(400)))
-void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
+void __thiscall dialog_create_controls(Dialog *this)
 
 {
   uint uVar1;
-  C_0040f380_3c *pCVar2;
+  Control *pCVar2;
   C_0040f380_48 *this_00;
   undefined4 uVar3;
   int iVar4;
@@ -656,39 +656,39 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
   
   local_8 = 0xffffffff;
   local_d4 = 0;
-  if (this != (C_0040bc40_2f4 *)iptr_006cec84) {
-    if ((iptr_00635a9c < 0) || (0xf < iptr_00635a9c)) {
-      FUN_005dae6b((C_005dae6b *)&DAT_006e4850,7,ADDR(0x635b40, ((u8 *)&g.d_00635b40)),ADDR(0x635b20, ((u8 *)&g.d_00635b20)),0xc75);
+  if (this != (Dialog *)active_dialog) {
+    if ((dialog_stack_depth < 0) || (0xf < dialog_stack_depth)) {
+      err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x635b40, ((u8 *)&g.d_00635b40)),ADDR(0x635b20, ((u8 *)&g.d_00635b20)),0xc75);
     }
-    iptr_00635a9c = iptr_00635a9c + 1;
-    DAT_006ad678 = this;
-    iptr_006cec84 = (iptr)this;
-    (&DAT_00635a58)[iptr_00635a9c] = this;
+    dialog_stack_depth = dialog_stack_depth + 1;
+    dialog_stack_top = this;
+    active_dialog = (iptr)this;
+    (&dialog_stack)[dialog_stack_depth] = this;
   }
-  if ((this->field_3c & 0x200) == 0) {
+  if ((this->style_flags & 0x200) == 0) {
     local_bc = 0;
-    FUN_005d4167(*(iptr *)(iptr_006cec84 + 8));
-    FUN_005d8236(ADDR(0x6cec90, ((u8 *)&g.d_006cec90)));
-    FUN_005d25a8(*(iptr *)(iptr_006cec84 + 8));
-    FUN_005d268e(ADDR(0x6cec90, ((u8 *)&g.d_006cec90)));
-    uVar1 = this->field_3c & 4;
-    local_cc = this->field_3c & 0x1000;
+    ctrl_set_pending_font(*(iptr *)(active_dialog + 8));
+    ui_set_button_font(ADDR(0x6cec90, ((u8 *)&g.d_006cec90)));
+    ui_set_ctrl_font(*(iptr *)(active_dialog + 8));
+    ui_set_default_font(ADDR(0x6cec90, ((u8 *)&g.d_006cec90)));
+    uVar1 = this->style_flags & 4;
+    local_cc = this->style_flags & 0x1000;
     if ((uVar1 == 0) && (local_cc == 0)) {
-      if (0x28 < (int)this->field_28) {
-        if (DAT_0062f004 == 0) {
-          thunk_FUN_00589ef8(0xfffffff2,9,0,0x28,this->field_28);
+      if (0x28 < (int)this->option_count) {
+        if (dialog_clamp_overflow == 0) {
+          thunk_error_report(0xfffffff2,9,0,0x28,this->option_count);
         }
         else {
-          this->field_28 = 0x28;
+          this->option_count = 0x28;
         }
       }
-      for (local_c8 = (uint *)this->field_228; local_c8 != (uint *)0x0;
+      for (local_c8 = (uint *)this->option_list; local_c8 != (uint *)0x0;
           local_c8 = (uint *)local_c8[4]) {
         local_b4[local_d4] = local_c8[2];
         local_d4 = local_d4 + 1;
       }
     }
-    if (this->field_28 != 0) {
+    if (this->option_count != 0) {
       if (local_cc == 0) {
         if (uVar1 == 0) {
           this_00 = operator_new(0x50);
@@ -697,42 +697,42 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
             local_154 = 0;
           }
           else {
-            local_154 = thunk_FUN_00531010(this_00);
+            local_154 = thunk_radiogrp_ctor(this_00);
           }
           local_8 = 0xffffffff;
-          this->field_268 = local_154;
-          uVar6 = this->field_38;
+          this->radio_group = local_154;
+          uVar6 = this->columns;
           if ((int)uVar6 < 2) {
             uVar6 = 1;
           }
-          thunk_FUN_004086c0((iptr)local_e4,this->field_f0,this->field_f4,this->field_118,
-                             this->field_b4 *
-                             ((int)((this->field_38 - 1) + this->field_28) / (int)uVar6));
-          if (this->field_0 == 0) {
+          thunk_rect_set_xywh((iptr)local_e4,this->list_x,this->list_y,this->option_width,
+                             this->option_row_height *
+                             ((int)((this->columns - 1) + this->option_count) / (int)uVar6));
+          if (this->surf_wnd == 0) {
             local_18c = 0;
           }
           else {
-            local_18c = this->field_0 + 0x48;
+            local_18c = this->surf_wnd + 0x48;
           }
-          thunk_FUN_005310a0
-                    ((C_0040f380_50 *)this->field_268,local_18c,200,(iptr)local_e4,this->field_38,
-                     this->field_28,(iptr)local_b4);
-          local_c8 = (uint *)this->field_228;
+          thunk_radiogrp_create
+                    ((RadioGroup *)this->radio_group,local_18c,200,(iptr)local_e4,this->columns,
+                     this->option_count,(iptr)local_b4);
+          local_c8 = (uint *)this->option_list;
           local_104 = 0;
           for (; local_c8 != (uint *)0x0; local_c8 = (uint *)local_c8[4]) {
-            if ((uint *)this->field_220 == local_c8) {
-              thunk_FUN_004472f0((C_004472f0 *)this->field_268,local_104);
+            if ((uint *)this->selected_option == local_c8) {
+              thunk_radiogrp_set_selected((RadioGroupSetSelView *)this->radio_group,local_104);
             }
             if ((*local_c8 & 1) != 0) {
-              thunk_FUN_00447210((C_00447210 *)this->field_268,local_104);
+              thunk_radiogrp_disable_item((RadioGroupDisableView *)this->radio_group,local_104);
             }
             local_104 = local_104 + 1;
           }
-          thunk_FUN_005311b0((C_0040f380_3c *)this->field_268,ADDR(0x4012ad, FUN_0059d397));
-          thunk_FUN_005311e0((C_0040f380_3c *)this->field_268,ADDR(0x5a3bae, FUN_005a3bae));
+          thunk_radiogrp_set_select_callback((Control *)this->radio_group,ADDR(0x4012ad, FUN_0059d397));
+          thunk_radiogrp_set_dblclick_callback((Control *)this->radio_group,ADDR(0x5a3bae, FUN_005a3bae));
         }
         else {
-          uVar6 = this->field_28;
+          uVar6 = this->option_count;
           local_14c = operator_new(uVar6 * 0x3c + 4);
           local_8 = 6;
           if (local_14c == (u32 *)0x0) {
@@ -741,286 +741,286 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
           else {
             *local_14c = uVar6;
             FUN_005f2620(local_14c + 1,0x3c,*local_14c,thunk_FUN_0040f8b0,
-                         thunk_FUN_0040f930);
+                         thunk_checkbox_dtor);
             local_14c = local_14c + 1;
           }
           local_8 = 0xffffffff;
-          this->field_26c = (uptr)local_14c;
-          uVar6 = this->field_f0;
-          local_f8 = this->field_f4;
+          this->checkboxes = (uptr)local_14c;
+          uVar6 = this->list_x;
+          local_f8 = this->list_y;
           local_c0 = 0;
-          for (local_c8 = (uint *)this->field_228; local_c8 != (uint *)0x0;
+          for (local_c8 = (uint *)this->option_list; local_c8 != (uint *)0x0;
               local_c8 = (uint *)local_c8[4]) {
-            if (this->field_0 == 0) {
+            if (this->surf_wnd == 0) {
               local_188 = 0;
             }
             else {
-              local_188 = this->field_0 + 0x48;
+              local_188 = this->surf_wnd + 0x48;
             }
-            thunk_FUN_0040f9d0
-                      ((C_0040f380_3c *)(this->field_26c + local_c0 * 0x3c),local_188,local_c0 + 200
+            thunk_checkbox_create
+                      ((Control *)(this->checkboxes + local_c0 * 0x3c),local_188,local_c0 + 200
                        ,uVar6,local_f8,local_c8[2]);
-            thunk_FUN_0040fad0
-                      ((C_0040f380_3c *)(this->field_26c + local_c0 * 0x3c),*local_c8 & 4);
+            thunk_checkbox_set_checked
+                      ((Control *)(this->checkboxes + local_c0 * 0x3c),*local_c8 & 4);
             if ((*local_c8 & 1) != 0) {
-              thunk_FUN_005a9640((C_005a9640 *)(this->field_26c + local_c0 * 0x3c));
+              thunk_checkbox_disable((CheckboxDisableView *)(this->checkboxes + local_c0 * 0x3c));
             }
-            local_f8 = local_f8 + this->field_b4;
+            local_f8 = local_f8 + this->option_row_height;
             local_c0 = local_c0 + 1;
           }
         }
       }
       else {
-        this->field_48 = 0;
-        if ((this->field_3c & 0x40000) == 0) {
-          if (((int)((&this->field_5c)[this->field_48] * this->field_38) < (int)this->field_28) ||
-             ((this->field_3c & 0x1000000) != 0)) {
-            if (this->field_38 == 1) {
+        this->cur_pane = 0;
+        if ((this->style_flags & 0x40000) == 0) {
+          if (((int)((&this->list_rows)[this->cur_pane] * this->columns) < (int)this->option_count) ||
+             ((this->style_flags & 0x1000000) != 0)) {
+            if (this->columns == 1) {
               pCVar2 = operator_new(0x40);
               local_8 = 1;
-              if (pCVar2 == (C_0040f380_3c *)0x0) {
+              if (pCVar2 == (Control *)0x0) {
                 local_124 = 0;
               }
               else {
-                local_124 = thunk_FUN_0040fb00(pCVar2);
+                local_124 = thunk_scrollbar_ctor(pCVar2);
               }
               local_8 = 0xffffffff;
-              *(undefined4 *)(this->pad_294 + this->field_48 * 4 + -0x10) = local_124;
-              if (this->field_0 == 0) {
+              *(undefined4 *)(this->pad_294 + this->cur_pane * 4 + -0x10) = local_124;
+              if (this->surf_wnd == 0) {
                 local_174 = 0;
               }
               else {
-                local_174 = this->field_0 + 0x48;
+                local_174 = this->surf_wnd + 0x48;
               }
-              thunk_FUN_0040fc50
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),local_174,
-                         0xb,(iptr)(this->pad_178 + this->field_48 * 0x10),1);
-              iVar4 = thunk_FUN_005a1c52((C_0040bc40_268 *)this,this->field_48);
-              thunk_FUN_0040fd40
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),0,
+              thunk_scrollbar_create
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),local_174,
+                         0xb,(iptr)(this->pad_178 + this->cur_pane * 0x10),1);
+              iVar4 = thunk_dialog_count_group_options((DialogOptionList *)this,this->cur_pane);
+              thunk_scrollbar_set_range
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),0,
                          iVar4 + -1);
-              iVar5 = thunk_FUN_0059fb78
-                                ((C_0040bc40_268 *)this,
-                                 *(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-              thunk_FUN_0040fcf0
-                        (*(C_0040f380_40 **)(this->pad_294 + this->field_48 * 4 + -0x10),iVar5);
-              FUN_005db0d0
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),
-                         (&this->field_5c)[this->field_48] - 1);
-              thunk_FUN_0040fd80
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
-              thunk_FUN_00451ac0
-                        (*(C_00451ac0 **)(this->pad_294 + this->field_48 * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
+              iVar5 = thunk_dialog_option_group_index
+                                ((DialogOptionList *)this,
+                                 *(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+              thunk_scrollbar_set_pos
+                        (*(C_0040f380_40 **)(this->pad_294 + this->cur_pane * 4 + -0x10),iVar5);
+              scrollbar_set_page_size
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),
+                         (&this->list_rows)[this->cur_pane] - 1);
+              thunk_scrollbar_set_callback
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
+              thunk_scrollbar_set_track_callback
+                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x4036c0, FUN_005a1da3));
             }
             else {
               pCVar2 = operator_new(0x40);
               local_8 = 2;
-              if (pCVar2 == (C_0040f380_3c *)0x0) {
+              if (pCVar2 == (Control *)0x0) {
                 local_12c = 0;
               }
               else {
-                local_12c = thunk_FUN_0040fb00(pCVar2);
+                local_12c = thunk_scrollbar_ctor(pCVar2);
               }
               local_8 = 0xffffffff;
-              *(undefined4 *)(this->pad_294 + this->field_48 * 4 + -8) = local_12c;
-              if (this->field_0 == 0) {
+              *(undefined4 *)(this->pad_294 + this->cur_pane * 4 + -8) = local_12c;
+              if (this->surf_wnd == 0) {
                 local_178 = 0;
               }
               else {
-                local_178 = this->field_0 + 0x48;
+                local_178 = this->surf_wnd + 0x48;
               }
-              thunk_FUN_0040fc50
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),local_178,0xc,
-                         (iptr)(this->pad_178 + this->field_48 * 0x10 + 0x20),0);
-              iVar4 = thunk_FUN_005a1c52((C_0040bc40_268 *)this,this->field_48);
-              uVar3 = thunk_FUN_005a1766((C_0040bc40_d8 *)this,iVar4 + -1);
-              thunk_FUN_0040fd40
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),0,uVar3);
-              uVar3 = thunk_FUN_0059fb78
-                                ((C_0040bc40_268 *)this,
-                                 *(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-              iVar5 = thunk_FUN_005a1766((C_0040bc40_d8 *)this,uVar3);
-              thunk_FUN_0040fcf0
-                        (*(C_0040f380_40 **)(this->pad_294 + this->field_48 * 4 + -8),iVar5);
-              FUN_005db0d0
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),this->field_38
+              thunk_scrollbar_create
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),local_178,0xc,
+                         (iptr)(this->pad_178 + this->cur_pane * 0x10 + 0x20),0);
+              iVar4 = thunk_dialog_count_group_options((DialogOptionList *)this,this->cur_pane);
+              uVar3 = thunk_dialog_column_of_index((DialogTextView *)this,iVar4 + -1);
+              thunk_scrollbar_set_range
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),0,uVar3);
+              uVar3 = thunk_dialog_option_group_index
+                                ((DialogOptionList *)this,
+                                 *(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+              iVar5 = thunk_dialog_column_of_index((DialogTextView *)this,uVar3);
+              thunk_scrollbar_set_pos
+                        (*(C_0040f380_40 **)(this->pad_294 + this->cur_pane * 4 + -8),iVar5);
+              scrollbar_set_page_size
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),this->columns
                         );
-              thunk_FUN_0040fd80
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
-              thunk_FUN_00451ac0
-                        (*(C_00451ac0 **)(this->pad_294 + this->field_48 * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
+              thunk_scrollbar_set_callback
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
+              thunk_scrollbar_set_track_callback
+                        (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a5494, FUN_005a5494));
             }
           }
-          thunk_FUN_00414c20((C_00414be0 *)(this->field_0 + 0x58),ADDR(0x5a4df3, FUN_005a4df3));
-          thunk_FUN_00414c60((C_00414be0 *)(this->field_0 + 0x58),ADDR(0x5a535e, FUN_005a535e));
-          thunk_FUN_00414be0((C_00414be0 *)(this->field_0 + 0x58),ADDR(0x5a4edf, FUN_005a4edf));
-          thunk_FUN_00414ca0((C_00414be0 *)(this->field_0 + 0x58),ADDR(0x5a53b8, FUN_005a53b8));
+          thunk_wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a4df3, FUN_005a4df3));
+          thunk_wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a535e, dialog_list_on_lbuttonup));
+          thunk_wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a4edf, dialog_list_on_mousemove));
+          thunk_wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->surf_wnd + 0x58),ADDR(0x5a53b8, FUN_005a53b8));
         }
         else {
           pCVar2 = operator_new(0x3c);
           local_8 = 0;
-          if (pCVar2 == (C_0040f380_3c *)0x0) {
+          if (pCVar2 == (Control *)0x0) {
             local_11c = 0;
           }
           else {
-            local_11c = thunk_FUN_00418e00(pCVar2);
+            local_11c = thunk_checkbox_ctor(pCVar2);
           }
           local_8 = 0xffffffff;
-          *(undefined4 *)(this->pad_264 + this->field_48 * 4 + 0x14) = local_11c;
-          thunk_FUN_004086c0((iptr)local_e4,this->field_f0,this->field_f4,
-                             (&this->field_4c)[this->field_48],(&this->field_54)[this->field_48]);
-          if (this->field_0 == 0) {
+          *(undefined4 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_11c;
+          thunk_rect_set_xywh((iptr)local_e4,this->list_x,this->list_y,
+                             (&this->list_width)[this->cur_pane],(&this->list_height)[this->cur_pane]);
+          if (this->surf_wnd == 0) {
             local_170 = 0;
           }
           else {
-            local_170 = this->field_0 + 0x48;
+            local_170 = this->surf_wnd + 0x48;
           }
-          thunk_FUN_00418f40
-                    (*(C_0040f380_3c **)(this->pad_264 + this->field_48 * 4 + 0x14),local_170,10,
+          thunk_listbox_create
+                    (*(Control **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_170,10,
                      (iptr)local_e4);
-          local_c8 = (uint *)this->field_228;
+          local_c8 = (uint *)this->option_list;
           local_104 = 0;
           for (; local_c8 != (uint *)0x0; local_c8 = (uint *)local_c8[4]) {
-            if (this->field_48 == local_c8[3]) {
-              thunk_FUN_00419020
-                        (*(C_00419020 **)(this->pad_264 + this->field_48 * 4 + 0x14),local_c8[2]);
-              if ((uint *)this->field_220 == local_c8) {
-                thunk_FUN_00551d80
-                          (*(C_00551d80 **)(this->pad_264 + this->field_48 * 4 + 0x14),local_104);
+            if (this->cur_pane == local_c8[3]) {
+              thunk_listbox_add_string
+                        (*(ListBoxAddView **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_c8[2]);
+              if ((uint *)this->selected_option == local_c8) {
+                thunk_listbox_set_cur_sel
+                          (*(ListBoxSetSelView **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_104);
               }
               local_104 = local_104 + 1;
             }
           }
-          thunk_FUN_00551dc0
-                    (*(C_00551dc0 **)(this->pad_264 + this->field_48 * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
+          thunk_listbox_set_dblclick_callback
+                    (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
         }
-        if ((this->field_3c & 0x400000) != 0) {
-          this->field_48 = 1;
-          if ((this->field_3c & 0x40000) == 0) {
-            if (((int)((&this->field_5c)[this->field_48] * this->field_38) < (int)this->field_28) ||
-               ((this->field_3c & 0x1000000) != 0)) {
-              if (this->field_38 == 1) {
+        if ((this->style_flags & 0x400000) != 0) {
+          this->cur_pane = 1;
+          if ((this->style_flags & 0x40000) == 0) {
+            if (((int)((&this->list_rows)[this->cur_pane] * this->columns) < (int)this->option_count) ||
+               ((this->style_flags & 0x1000000) != 0)) {
+              if (this->columns == 1) {
                 pCVar2 = operator_new(0x40);
                 local_8 = 4;
-                if (pCVar2 == (C_0040f380_3c *)0x0) {
+                if (pCVar2 == (Control *)0x0) {
                   local_13c = 0;
                 }
                 else {
-                  local_13c = thunk_FUN_0040fb00(pCVar2);
+                  local_13c = thunk_scrollbar_ctor(pCVar2);
                 }
                 local_8 = 0xffffffff;
-                *(undefined4 *)(this->pad_294 + this->field_48 * 4 + -0x10) = local_13c;
-                if (this->field_0 == 0) {
+                *(undefined4 *)(this->pad_294 + this->cur_pane * 4 + -0x10) = local_13c;
+                if (this->surf_wnd == 0) {
                   local_180 = 0;
                 }
                 else {
-                  local_180 = this->field_0 + 0x48;
+                  local_180 = this->surf_wnd + 0x48;
                 }
-                thunk_FUN_0040fc50
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),local_180
-                           ,0xb,(iptr)(this->pad_178 + this->field_48 * 0x10),1);
-                iVar4 = thunk_FUN_005a1c52((C_0040bc40_268 *)this,this->field_48);
-                thunk_FUN_0040fd40
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),0,
+                thunk_scrollbar_create
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),local_180
+                           ,0xb,(iptr)(this->pad_178 + this->cur_pane * 0x10),1);
+                iVar4 = thunk_dialog_count_group_options((DialogOptionList *)this,this->cur_pane);
+                thunk_scrollbar_set_range
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),0,
                            iVar4 + -1);
-                iVar5 = thunk_FUN_0059fb78
-                                  ((C_0040bc40_268 *)this,
-                                   *(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-                thunk_FUN_0040fcf0
-                          (*(C_0040f380_40 **)(this->pad_294 + this->field_48 * 4 + -0x10),iVar5);
-                FUN_005db0d0
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),
-                           (&this->field_5c)[this->field_48] - 1);
-                thunk_FUN_0040fd80
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c))
+                iVar5 = thunk_dialog_option_group_index
+                                  ((DialogOptionList *)this,
+                                   *(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+                thunk_scrollbar_set_pos
+                          (*(C_0040f380_40 **)(this->pad_294 + this->cur_pane * 4 + -0x10),iVar5);
+                scrollbar_set_page_size
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),
+                           (&this->list_rows)[this->cur_pane] - 1);
+                thunk_scrollbar_set_callback
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c))
                 ;
-                thunk_FUN_00451ac0
-                          (*(C_00451ac0 **)(this->pad_294 + this->field_48 * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c));
+                thunk_scrollbar_set_track_callback
+                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -0x10),ADDR(0x5a552c, FUN_005a552c));
               }
               else {
                 pCVar2 = operator_new(0x40);
                 local_8 = 5;
-                if (pCVar2 == (C_0040f380_3c *)0x0) {
+                if (pCVar2 == (Control *)0x0) {
                   local_144 = 0;
                 }
                 else {
-                  local_144 = thunk_FUN_0040fb00(pCVar2);
+                  local_144 = thunk_scrollbar_ctor(pCVar2);
                 }
                 local_8 = 0xffffffff;
-                *(undefined4 *)(this->pad_294 + this->field_48 * 4 + -8) = local_144;
-                if (this->field_0 == 0) {
+                *(undefined4 *)(this->pad_294 + this->cur_pane * 4 + -8) = local_144;
+                if (this->surf_wnd == 0) {
                   local_184 = 0;
                 }
                 else {
-                  local_184 = this->field_0 + 0x48;
+                  local_184 = this->surf_wnd + 0x48;
                 }
-                thunk_FUN_0040fc50
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),local_184,
-                           0xc,(iptr)(this->pad_178 + this->field_48 * 0x10 + 0x20),0);
-                iVar4 = thunk_FUN_005a1c52((C_0040bc40_268 *)this,this->field_48);
-                uVar3 = thunk_FUN_005a1766((C_0040bc40_d8 *)this,iVar4 + -1);
-                thunk_FUN_0040fd40
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),0,uVar3);
-                uVar3 = thunk_FUN_0059fb78
-                                  ((C_0040bc40_268 *)this,
-                                   *(uptr *)(this->pad_1f8 + this->field_48 * 4 + 0x18));
-                iVar5 = thunk_FUN_005a1766((C_0040bc40_d8 *)this,uVar3);
-                thunk_FUN_0040fcf0
-                          (*(C_0040f380_40 **)(this->pad_294 + this->field_48 * 4 + -8),iVar5);
-                FUN_005db0d0
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),
-                           this->field_38);
-                thunk_FUN_0040fd80
-                          (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
-                thunk_FUN_00451ac0
-                          (*(C_00451ac0 **)(this->pad_294 + this->field_48 * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
+                thunk_scrollbar_create
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),local_184,
+                           0xc,(iptr)(this->pad_178 + this->cur_pane * 0x10 + 0x20),0);
+                iVar4 = thunk_dialog_count_group_options((DialogOptionList *)this,this->cur_pane);
+                uVar3 = thunk_dialog_column_of_index((DialogTextView *)this,iVar4 + -1);
+                thunk_scrollbar_set_range
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),0,uVar3);
+                uVar3 = thunk_dialog_option_group_index
+                                  ((DialogOptionList *)this,
+                                   *(uptr *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+                iVar5 = thunk_dialog_column_of_index((DialogTextView *)this,uVar3);
+                thunk_scrollbar_set_pos
+                          (*(C_0040f380_40 **)(this->pad_294 + this->cur_pane * 4 + -8),iVar5);
+                scrollbar_set_page_size
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),
+                           this->columns);
+                thunk_scrollbar_set_callback
+                          (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
+                thunk_scrollbar_set_track_callback
+                          (*(ScrollbarTrackSetView **)(this->pad_294 + this->cur_pane * 4 + -8),ADDR(0x5a55b1, FUN_005a55b1));
               }
             }
           }
           else {
             pCVar2 = operator_new(0x3c);
             local_8 = 3;
-            if (pCVar2 == (C_0040f380_3c *)0x0) {
+            if (pCVar2 == (Control *)0x0) {
               local_134 = 0;
             }
             else {
-              local_134 = thunk_FUN_00418e00(pCVar2);
+              local_134 = thunk_checkbox_ctor(pCVar2);
             }
             local_8 = 0xffffffff;
-            *(undefined4 *)(this->pad_264 + this->field_48 * 4 + 0x14) = local_134;
-            thunk_FUN_004086c0((iptr)local_e4,this->field_f0,this->field_f4,
-                               (&this->field_4c)[this->field_48],(&this->field_54)[this->field_48]);
-            if (this->field_0 == 0) {
+            *(undefined4 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_134;
+            thunk_rect_set_xywh((iptr)local_e4,this->list_x,this->list_y,
+                               (&this->list_width)[this->cur_pane],(&this->list_height)[this->cur_pane]);
+            if (this->surf_wnd == 0) {
               local_17c = 0;
             }
             else {
-              local_17c = this->field_0 + 0x48;
+              local_17c = this->surf_wnd + 0x48;
             }
-            thunk_FUN_00418f40
-                      (*(C_0040f380_3c **)(this->pad_264 + this->field_48 * 4 + 0x14),local_17c,10,
+            thunk_listbox_create
+                      (*(Control **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_17c,10,
                        (iptr)local_e4);
-            local_c8 = (uint *)this->field_228;
+            local_c8 = (uint *)this->option_list;
             local_104 = 0;
             for (; local_c8 != (uint *)0x0; local_c8 = (uint *)local_c8[4]) {
-              if (this->field_48 == local_c8[3]) {
-                thunk_FUN_00419020
-                          (*(C_00419020 **)(this->pad_264 + this->field_48 * 4 + 0x14),local_c8[2]);
-                if ((uint *)this->field_220 == local_c8) {
-                  thunk_FUN_00551d80
-                            (*(C_00551d80 **)(this->pad_264 + this->field_48 * 4 + 0x14),local_104);
+              if (this->cur_pane == local_c8[3]) {
+                thunk_listbox_add_string
+                          (*(ListBoxAddView **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_c8[2]);
+                if ((uint *)this->selected_option == local_c8) {
+                  thunk_listbox_set_cur_sel
+                            (*(ListBoxSetSelView **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_104);
                 }
                 local_104 = local_104 + 1;
               }
             }
-            thunk_FUN_00551dc0
-                      (*(C_00551dc0 **)(this->pad_264 + this->field_48 * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
+            thunk_listbox_set_dblclick_callback
+                      (*(ListBoxDblClickSetView **)(this->pad_264 + this->cur_pane * 4 + 0x14),ADDR(0x5a3c83, FUN_005a3c83));
           }
-          this->field_48 = 0;
+          this->cur_pane = 0;
         }
       }
     }
-    if ((1 < (int)this->field_2c) && (this->field_28 == 0)) {
-      uVar6 = this->field_2c;
+    if ((1 < (int)this->sprite_count) && (this->option_count == 0)) {
+      uVar6 = this->sprite_count;
       local_15c = operator_new(uVar6 * 0x40 + 4);
       local_8 = 8;
       if (local_15c == (u32 *)0x0) {
@@ -1028,40 +1028,40 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
       }
       else {
         *local_15c = uVar6;
-        FUN_005f2620(local_15c + 1,0x40,*local_15c,thunk_FUN_00451930,
-                     thunk_FUN_00453ba0);
+        FUN_005f2620(local_15c + 1,0x40,*local_15c,thunk_hotspot_ctor,
+                     thunk_hotspot_dtor);
         local_15c = local_15c + 1;
       }
       local_8 = 0xffffffff;
-      this->field_280 = (uptr)local_15c;
-      uVar6 = this->field_100;
-      local_f8 = this->field_104;
-      local_c4 = this->field_234;
+      this->sprite_hotspots = (uptr)local_15c;
+      uVar6 = this->sprite_x;
+      local_f8 = this->sprite_y;
+      local_c4 = this->sprite_list;
       local_c0 = 0;
       for (; local_c4 != 0; local_c4 = *(uptr *)(local_c4 + 0x10)) {
-        local_b8 = thunk_FUN_00472cf0(this->field_120,this->field_130);
-        uVar8 = this->field_130;
-        uVar3 = thunk_FUN_004bb540(*(C_00417f70_3c **)(local_c4 + 0xc));
-        iVar4 = thunk_FUN_00472cf0(uVar3,uVar8);
-        thunk_FUN_004086c0((iptr)local_e4,uVar6,local_f8,local_b8,iVar4);
-        if (this->field_0 == 0) {
+        local_b8 = thunk_gfx_zoom_scale(this->max_sprite_width,this->sprite_zoom);
+        uVar8 = this->sprite_zoom;
+        uVar3 = thunk_sprite_height(*(Sprite **)(local_c4 + 0xc));
+        iVar4 = thunk_gfx_zoom_scale(uVar3,uVar8);
+        thunk_rect_set_xywh((iptr)local_e4,uVar6,local_f8,local_b8,iVar4);
+        if (this->surf_wnd == 0) {
           local_190 = 0;
         }
         else {
-          local_190 = this->field_0 + 0x48;
+          local_190 = this->surf_wnd + 0x48;
         }
-        thunk_FUN_004519b0
-                  ((C_0040f380_40 *)(this->field_280 + local_c0 * 0x40),local_190,local_c0 + 300,
+        thunk_hotspot_create
+                  ((C_0040f380_40 *)(this->sprite_hotspots + local_c0 * 0x40),local_190,local_c0 + 300,
                    (iptr)local_e4);
-        thunk_FUN_00451a60((C_00451a60 *)(this->field_280 + local_c0 * 0x40),ADDR(0x5a3cca, FUN_005a3cca));
-        thunk_FUN_00451a90((C_00451a90 *)(this->field_280 + local_c0 * 0x40),ADDR(0x5a3df3, FUN_005a3df3));
-        local_f8 = local_f8 + this->field_c0 + iVar4;
+        thunk_hotspot_set_click_callback((HotspotClickSetView *)(this->sprite_hotspots + local_c0 * 0x40),ADDR(0x5a3cca, dialog_on_sprite_click));
+        thunk_hotspot_set_dblclick_callback((HotspotDblClickSetView *)(this->sprite_hotspots + local_c0 * 0x40),ADDR(0x5a3df3, FUN_005a3df3));
+        local_f8 = local_f8 + this->section_gap + iVar4;
         local_c0 = local_c0 + 1;
       }
     }
-    if (this->field_238 != 0) {
-      local_fc = this->field_238;
-      uVar6 = this->field_24;
+    if (this->edit_field_list != 0) {
+      local_fc = this->edit_field_list;
+      uVar6 = this->edit_count;
       local_164 = operator_new(uVar6 * 0x48 + 4);
       local_8 = 9;
       if (local_164 == (u32 *)0x0) {
@@ -1069,38 +1069,38 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
       }
       else {
         *local_164 = uVar6;
-        FUN_005f2620(local_164 + 1,0x48,*local_164,thunk_FUN_004187a0,
-                     thunk_FUN_00418870);
+        FUN_005f2620(local_164 + 1,0x48,*local_164,thunk_edit_ctor,
+                     thunk_edit_dtor);
         local_164 = local_164 + 1;
       }
       local_8 = 0xffffffff;
-      this->field_270 = (uptr)local_164;
+      this->edit_controls = (uptr)local_164;
       local_c0 = 0;
       for (; local_fc != 0; local_fc = *(uptr *)(local_fc + 0x18)) {
-        if (this->field_0 == 0) {
+        if (this->surf_wnd == 0) {
           local_194 = 0;
         }
         else {
-          local_194 = this->field_0 + 0x48;
+          local_194 = this->surf_wnd + 0x48;
         }
         uVar3 = *(undefined4 *)(local_fc + 0x14);
         uVar7 = *(undefined4 *)(local_fc + 4);
-        iVar4 = thunk_FUN_0059e448((C_0040bc40_28 *)this);
-        FUN_005d25c0
-                  ((C_0040f380_44 *)(this->field_270 + local_c0 * 0x48),local_194,0x14,
-                   this->field_108 + this->field_110,iVar4 * local_c0 + this->field_10c,uVar7,uVar3)
+        iVar4 = thunk_dialog_edit_row_height((C_0040bc40_28 *)this);
+        edit_create_at
+                  ((EditControl *)(this->edit_controls + local_c0 * 0x48),local_194,0x14,
+                   this->edit_x + this->edit_label_width,iVar4 * local_c0 + this->edit_y,uVar7,uVar3)
         ;
         if (2 < game.multiplayer) {
-          thunk_FUN_00530eb0((C_00530eb0 *)(this->field_270 + local_c0 * 0x48),ADDR(0x402793, FUN_0059d37d))
+          thunk_edit_set_change_callback((EditChangeSetView *)(this->edit_controls + local_c0 * 0x48),ADDR(0x402793, FUN_0059d37d))
           ;
         }
-        thunk_FUN_004189c0
-                  ((C_004189c0 *)(this->field_270 + local_c0 * 0x48),*(undefined4 *)(local_fc + 8));
+        thunk_edit_set_max_len
+                  ((EditMaxLenView *)(this->edit_controls + local_c0 * 0x48),*(undefined4 *)(local_fc + 8));
         local_c0 = local_c0 + 1;
       }
     }
-    if (this->field_30 + this->field_34 != 0) {
-      iVar4 = this->field_30 + this->field_34;
+    if (this->std_button_count + this->extra_button_count != 0) {
+      iVar4 = this->std_button_count + this->extra_button_count;
       local_16c = operator_new(iVar4 * 0x3c + 4);
       local_8 = 10;
       if (local_16c == (int *)0x0) {
@@ -1108,52 +1108,52 @@ void __thiscall FUN_005a211c(C_0040bc40_2f4 *this)
       }
       else {
         *local_16c = iVar4;
-        FUN_005f2620(local_16c + 1,0x3c,*local_16c,thunk_FUN_0040f3e0,
-                     thunk_FUN_0040f570);
+        FUN_005f2620(local_16c + 1,0x3c,*local_16c,thunk_button_ctor,
+                     thunk_ctrl_dtor);
         local_16c = local_16c + 1;
       }
       local_8 = 0xffffffff;
-      this->field_274 = (uptr)local_16c;
+      this->button_controls = (uptr)local_16c;
     }
-    for (local_c0 = 0; local_c0 < (int)(this->field_30 + this->field_34); local_c0 = local_c0 + 1) {
-      if (local_c0 < (int)this->field_30) {
+    for (local_c0 = 0; local_c0 < (int)(this->std_button_count + this->extra_button_count); local_c0 = local_c0 + 1) {
+      if (local_c0 < (int)this->std_button_count) {
         local_d0 = *(iptr *)(this->pad_294 + local_c0 * 8 + 0x18);
-        local_e8 = (&PTR_DAT_00635a48)[local_d0];
+        local_e8 = (&dialog_button_labels)[local_d0];
       }
       else {
         local_d0 = -1;
-        local_e8 = *(undefined **)((int)this + (local_c0 - this->field_30) * 4 + 0x294);
+        local_e8 = *(undefined **)((int)this + (local_c0 - this->std_button_count) * 4 + 0x294);
       }
-      iVar5 = thunk_FUN_0059e648((C_0040bc40_d8 *)this);
-      thunk_FUN_004086c0((iptr)local_e4,*(undefined4 *)(this->pad_294 + local_c0 * 8 + 0x1c),
-                         this->field_114,this->field_12c,iVar5);
-      if (this->field_0 == 0) {
+      iVar5 = thunk_dialog_line_height((DialogTextView *)this);
+      thunk_rect_set_xywh((iptr)local_e4,*(undefined4 *)(this->pad_294 + local_c0 * 8 + 0x1c),
+                         this->button_y,this->button_width,iVar5);
+      if (this->surf_wnd == 0) {
         local_198 = 0;
       }
       else {
-        local_198 = this->field_0 + 0x48;
+        local_198 = this->surf_wnd + 0x48;
       }
-      thunk_FUN_0040f680
-                ((C_0040f380_3c *)(this->field_274 + local_c0 * 0x3c),local_198,local_c0 + 100,
+      thunk_button_create
+                ((Control *)(this->button_controls + local_c0 * 0x3c),local_198,local_c0 + 100,
                  (iptr)local_e4,(iptr)local_e8);
-      if ((local_d0 == 2) || ((local_d0 == 0 && ((this->field_3c & 1) == 0)))) {
-        thunk_FUN_0040f840((C_0040f380_3c *)(this->field_274 + local_c0 * 0x3c));
+      if ((local_d0 == 2) || ((local_d0 == 0 && ((this->style_flags & 1) == 0)))) {
+        thunk_ctrl_set_cancel_button((Control *)(this->button_controls + local_c0 * 0x3c));
       }
       if (local_d0 == 0) {
-        thunk_FUN_0040f7d0((C_0040f380_3c *)(this->field_274 + local_c0 * 0x3c));
+        thunk_ctrl_set_default_button((Control *)(this->button_controls + local_c0 * 0x3c));
       }
-      thunk_FUN_0040f880
-                ((C_0040f380_3c *)(this->field_274 + local_c0 * 0x3c),ADDR(0x5a3e56, FUN_005a3e56));
+      thunk_button_set_callback
+                ((Control *)(this->button_controls + local_c0 * 0x3c),ADDR(0x5a3e56, dialog_on_button_click));
     }
-    thunk_FUN_004081b0((C_00408130 *)(this->field_0 + 0x58),ADDR(0x5a407f, FUN_005a407f));
-    thunk_FUN_004081f0((C_00408130 *)(this->field_0 + 0x58),ADDR(0x5a49c1, FUN_005a49c1));
-    this->field_3c = this->field_3c | 0x200;
+    thunk_wnd_set_keydown_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a407f, FUN_005a407f));
+    thunk_wnd_set_char_handler((C_00408130 *)(this->surf_wnd + 0x58),ADDR(0x5a49c1, FUN_005a49c1));
+    this->style_flags = this->style_flags | 0x200;
   }
   return;
 }
-#undef DAT_0062f004
-#undef DAT_00635a58
-#undef DAT_006ad678
+#undef dialog_clamp_overflow
+#undef dialog_stack
+#undef dialog_stack_top
 #undef local_198
 #undef local_194
 #undef local_190
@@ -1204,21 +1204,21 @@ void __cdecl FUN_005a3bae(undefined4 param_1,int param_2)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
-  if (iptr_006cec84 != 0) {
+  if (active_dialog != 0) {
     local_c = 0;
-    for (local_8 = *(iptr *)(iptr_006cec84 + 0x228); local_8 != 0;
+    for (local_8 = *(iptr *)(active_dialog + 0x228); local_8 != 0;
         local_8 = *(iptr *)(local_8 + 0x10)) {
       if (param_2 == local_c) {
         local_10 = local_8;
       }
       local_c = local_c + 1;
     }
-    *(undefined4 *)(iptr_006cec84 + 0xd8) = 0xffffffff;
+    *(undefined4 *)(active_dialog + 0xd8) = 0xffffffff;
     if (local_10 != 0) {
-      *(undefined4 *)(iptr_006cec84 + 0xd8) = *(undefined4 *)(local_10 + 4);
+      *(undefined4 *)(active_dialog + 0xd8) = *(undefined4 *)(local_10 + 4);
     }
-    *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x2000;
-    FUN_005a3c58();
+    *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
+    dialog_end_current();
   }
   return;
 }
@@ -1227,11 +1227,11 @@ void __cdecl FUN_005a3bae(undefined4 param_1,int param_2)
 #undef local_8
 
 /* 005a3c58 auto */
-void __cdecl FUN_005a3c58(void)
+void __cdecl dialog_end_current(void)
 
 {
-  *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x400;
-  FUN_005c62cb((C_00408010_b8 *)(*(int *)iptr_006cec84 + 0x48));
+  *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x400;
+  wnd_end_modal_loop((C_00408010_b8 *)(*(int *)active_dialog + 0x48));
   return;
 }
 
@@ -1239,9 +1239,9 @@ void __cdecl FUN_005a3c58(void)
 void __cdecl FUN_005a3c83(void)
 
 {
-  if ((iptr_006cec84 != 0) && ((*(byte *)(iptr_006cec84 + 0x3d) & 4) == 0)) {
-    *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x2000;
-    FUN_005a3c58();
+  if ((active_dialog != 0) && ((*(byte *)(active_dialog + 0x3d) & 4) == 0)) {
+    *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
+    dialog_end_current();
   }
   return;
 }
@@ -1249,7 +1249,7 @@ void __cdecl FUN_005a3c83(void)
 /* 005a3cca auto */
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_005a3cca(int param_1)
+void __cdecl dialog_on_sprite_click(int param_1)
 
 {
   bool bVar1;
@@ -1257,7 +1257,7 @@ void __cdecl FUN_005a3cca(int param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = false;
-  local_c = *(undefined4 **)(iptr_006cec84 + 0x234);
+  local_c = *(undefined4 **)(active_dialog + 0x234);
   if (local_c != (undefined4 *)0x0) {
     for (local_8 = 0; local_8 < param_1 + -300; local_8 = local_8 + 1) {
       local_c = (undefined4 *)local_c[4];
@@ -1265,23 +1265,23 @@ void __cdecl FUN_005a3cca(int param_1)
         return;
       }
     }
-    *(undefined4 *)(iptr_006cec84 + 0xd8) = *local_c;
-    if ((*(undefined4 **)(iptr_006cec84 + 0x224) != local_c) &&
-       (*(undefined4 **)(iptr_006cec84 + 0x224) = local_c,
-       (*(byte *)(iptr_006cec84 + 0x3e) & 2) != 0)) {
+    *(undefined4 *)(active_dialog + 0xd8) = *local_c;
+    if ((*(undefined4 **)(active_dialog + 0x224) != local_c) &&
+       (*(undefined4 **)(active_dialog + 0x224) = local_c,
+       (*(byte *)(active_dialog + 0x3e) & 2) != 0)) {
       bVar1 = true;
     }
-    if (*(int *)(iptr_006cec84 + 0x23c) == 0) {
+    if (*(int *)(active_dialog + 0x23c) == 0) {
       if (bVar1) {
-        thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+        thunk_dialog_render((Dialog *)active_dialog);
       }
     }
     else {
-      iVar2 = (*((code **)(iptr_006cec84))[143])(*local_c);
-      thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+      iVar2 = (*((code **)(active_dialog))[143])(*local_c);
+      thunk_dialog_render((Dialog *)active_dialog);
       if (iVar2 != 0) {
-        *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x2000;
-        FUN_005a3c58();
+        *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
+        dialog_end_current();
       }
     }
   }
@@ -1296,14 +1296,14 @@ void __cdecl FUN_005a3df3(void)
 {
   int iVar1;
   
-  if (*(int *)(iptr_006cec84 + 0x240) != 0) {
-    iVar1 = (*((code **)(iptr_006cec84))[144])(0);
+  if (*(int *)(active_dialog + 0x240) != 0) {
+    iVar1 = (*((code **)(active_dialog))[144])(0);
     if (iVar1 == 0) {
-      thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+      thunk_dialog_render((Dialog *)active_dialog);
     }
     else {
-      *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x2000;
-      FUN_005a3c58();
+      *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
+      dialog_end_current();
     }
   }
   return;
@@ -1319,50 +1319,50 @@ void __cdecl FUN_005a3df3(void)
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_005a3e56(int param_1)
+void __cdecl dialog_on_button_click(int param_1)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (iptr_006cec84 != 0) {
-    _DAT_006cec80 = thunk_FUN_00421bb0();
+  if (active_dialog != 0) {
+    _DAT_006cec80 = thunk_timer_ticks();
     iVar1 = param_1 + -100;
-    if (iVar1 < *(int *)(iptr_006cec84 + 0x30)) {
-      local_18 = *(int *)(iptr_006cec84 + 0x2ac + iVar1 * 8);
+    if (iVar1 < *(int *)(active_dialog + 0x30)) {
+      local_18 = *(int *)(active_dialog + 0x2ac + iVar1 * 8);
     }
     else {
-      *(int *)(iptr_006cec84 + 0xdc) = (iVar1 - *(int *)(iptr_006cec84 + 0x30)) + 1;
+      *(int *)(active_dialog + 0xdc) = (iVar1 - *(int *)(active_dialog + 0x30)) + 1;
       local_18 = 0;
     }
     if (local_18 == 1) {
-      *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x80;
+      *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x80;
     }
-    if (((local_18 == 0) && ((*(byte *)(iptr_006cec84 + 0x3e) & 2) != 0)) &&
-       (*(int *)(iptr_006cec84 + 0x224) != 0)) {
-      local_8 = *(iptr *)(iptr_006cec84 + 0x234);
+    if (((local_18 == 0) && ((*(byte *)(active_dialog + 0x3e) & 2) != 0)) &&
+       (*(int *)(active_dialog + 0x224) != 0)) {
+      local_8 = *(iptr *)(active_dialog + 0x234);
       local_20 = 0;
-      for (; (local_8 != 0 && (*(int *)(iptr_006cec84 + 0x224) != local_8));
+      for (; (local_8 != 0 && (*(int *)(active_dialog + 0x224) != local_8));
           local_8 = *(iptr *)(local_8 + 0x10)) {
         local_20 = local_20 + 1;
       }
       if (local_8 != 0) {
-        FUN_005a3cca(local_20 + 300);
+        dialog_on_sprite_click(local_20 + 300);
       }
     }
     if (local_18 == 2) {
-      *(undefined4 *)(iptr_006cec84 + 0xd8) = 0xffffffff;
+      *(undefined4 *)(active_dialog + 0xd8) = 0xffffffff;
     }
     else {
-      if ((*(int *)(iptr_006cec84 + 0x2c) < 2) || (*(int *)(iptr_006cec84 + 0x28) != 0)) {
-        *(undefined4 *)(iptr_006cec84 + 0xd8) = 0;
+      if ((*(int *)(active_dialog + 0x2c) < 2) || (*(int *)(active_dialog + 0x28) != 0)) {
+        *(undefined4 *)(active_dialog + 0xd8) = 0;
       }
-      if ((*(int *)(iptr_006cec84 + 0x28) != 0) && ((*(uint *)(iptr_006cec84 + 0x3c) & 0x1004) == 0)
+      if ((*(int *)(active_dialog + 0x28) != 0) && ((*(uint *)(active_dialog + 0x3c) & 0x1004) == 0)
          ) {
         local_14 = 0;
         local_1c = 0;
-        local_c = *(iptr *)(iptr_006cec84 + 0x228);
-        iVar1 = thunk_FUN_004472c0(*(C_004472c0 **)(iptr_006cec84 + 0x268));
+        local_c = *(iptr *)(active_dialog + 0x228);
+        iVar1 = thunk_radiogrp_get_selected(*(RadioGroupGetSelView **)(active_dialog + 0x268));
         for (; local_c != 0; local_c = *(iptr *)(local_c + 0x10)) {
           if (iVar1 == local_14) {
             local_1c = local_c;
@@ -1370,11 +1370,11 @@ void __cdecl FUN_005a3e56(int param_1)
           local_14 = local_14 + 1;
         }
         if (local_1c != 0) {
-          *(undefined4 *)(iptr_006cec84 + 0xd8) = *(undefined4 *)(local_1c + 4);
+          *(undefined4 *)(active_dialog + 0xd8) = *(undefined4 *)(local_1c + 4);
         }
       }
     }
-    FUN_005a3c58();
+    dialog_end_current();
   }
   return;
 }
@@ -1402,131 +1402,131 @@ void __cdecl FUN_005a407f(undefined4 param_1)
   undefined4 uVar5;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (iptr_006cec84 == 0) {
+  if (active_dialog == 0) {
     return;
   }
-  if (((*(byte *)(iptr_006cec84 + 0x3d) & 0x10) == 0) || (*(int *)(iptr_006cec84 + 0x24) != 0)) {
-    _DAT_006cec80 = thunk_FUN_00421bb0();
+  if (((*(byte *)(active_dialog + 0x3d) & 0x10) == 0) || (*(int *)(active_dialog + 0x24) != 0)) {
+    _DAT_006cec80 = thunk_timer_ticks();
   }
-  if ((*(byte *)(iptr_006cec84 + 0x3e) & 2) != 0) {
+  if ((*(byte *)(active_dialog + 0x3e) & 2) != 0) {
     switch(param_1) {
     case 0xa2:
     case 0xc1:
-      *(undefined4 *)(iptr_006cec84 + 0x224) =
-           *(undefined4 *)(*(int *)(iptr_006cec84 + 0x224) + 0x10);
-      if (*(int *)(iptr_006cec84 + 0x224) == 0) {
-        *(undefined4 *)(iptr_006cec84 + 0x224) = *(undefined4 *)(iptr_006cec84 + 0x234);
+      *(undefined4 *)(active_dialog + 0x224) =
+           *(undefined4 *)(*(int *)(active_dialog + 0x224) + 0x10);
+      if (*(int *)(active_dialog + 0x224) == 0) {
+        *(undefined4 *)(active_dialog + 0x224) = *(undefined4 *)(active_dialog + 0x234);
       }
-      thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+      thunk_dialog_render((Dialog *)active_dialog);
       break;
     case 0xa8:
     case 0xc0:
-      for (local_c = *(uptr *)(iptr_006cec84 + 0x234);
-          ((local_c != 0 && (*(int *)(local_c + 0x10) != *(int *)(iptr_006cec84 + 0x224))) &&
+      for (local_c = *(uptr *)(active_dialog + 0x234);
+          ((local_c != 0 && (*(int *)(local_c + 0x10) != *(int *)(active_dialog + 0x224))) &&
           (*(int *)(local_c + 0x10) != 0)); local_c = *(uptr *)(local_c + 0x10)) {
       }
-      *(uptr *)(iptr_006cec84 + 0x224) = local_c;
-      thunk_FUN_005a577e((C_0040bc40_2f4 *)iptr_006cec84);
+      *(uptr *)(active_dialog + 0x224) = local_c;
+      thunk_dialog_render((Dialog *)active_dialog);
       break;
     case 0xd1:
-      if (*(int *)(iptr_006cec84 + 0x224) != 0) {
-        FUN_005a3cca(**(undefined4 **)(iptr_006cec84 + 0x224));
+      if (*(int *)(active_dialog + 0x224) != 0) {
+        dialog_on_sprite_click(**(undefined4 **)(active_dialog + 0x224));
       }
     }
   }
-  if ((*(uint *)(iptr_006cec84 + 0x3c) & 0x41000) != 0x1000) {
+  if ((*(uint *)(active_dialog + 0x3c) & 0x41000) != 0x1000) {
     return;
   }
-  if (*(int *)(iptr_006cec84 + 0x28) == 0) {
+  if (*(int *)(active_dialog + 0x28) == 0) {
     param_1 = 0;
   }
   do {
     switch(param_1) {
     case 0xa1:
     case 199:
-      iVar3 = thunk_FUN_0059fb78
-                        ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-      iVar4 = thunk_FUN_005a1c52
-                        ((C_0040bc40_268 *)iptr_006cec84,*(undefined4 *)(iptr_006cec84 + 0x48));
+      iVar3 = thunk_dialog_option_group_index
+                        ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+      iVar4 = thunk_dialog_count_group_options
+                        ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
       if (iVar4 + -1 <= iVar3) {
         return;
       }
-      iVar3 = thunk_FUN_005a1c52
-                        ((C_0040bc40_268 *)iptr_006cec84,*(undefined4 *)(iptr_006cec84 + 0x48));
-      uVar5 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar3 + -1);
-      *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar5;
-      thunk_FUN_005a17e9
-                ((C_0040bc40_268 *)iptr_006cec84,
-                 *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4),0);
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+      iVar3 = thunk_dialog_count_group_options
+                        ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+      uVar5 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar3 + -1);
+      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      thunk_dialog_select_option
+                ((DialogOptionList *)active_dialog,
+                 *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4),0);
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
       return;
     case 0xa2:
     case 0xc1:
-      local_8 = *(uptr *)(iptr_006cec84 + 0x220);
+      local_8 = *(uptr *)(active_dialog + 0x220);
       goto LAB_005a43d9;
     case 0xa3:
     case 0xc6:
-      if (*(int *)(iptr_006cec84 + 0x38) < 2) {
-        iVar4 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-        iVar3 = *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4);
-        iVar1 = thunk_FUN_005a1c52
-                          ((C_0040bc40_268 *)iptr_006cec84,*(undefined4 *)(iptr_006cec84 + 0x48));
+      if (*(int *)(active_dialog + 0x38) < 2) {
+        iVar4 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+        iVar3 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
+        iVar1 = thunk_dialog_count_group_options
+                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
         if (iVar3 + iVar4 < iVar1) {
           uVar5 = 1;
-          uVar2 = thunk_FUN_0059fc19
-                            ((C_0040bc40_268 *)iptr_006cec84,
-                             iVar4 + *(int *)(iptr_006cec84 + 0x5c +
-                                             *(int *)(iptr_006cec84 + 0x48) * 4));
-          thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+          uVar2 = thunk_dialog_option_at
+                            ((DialogOptionList *)active_dialog,
+                             iVar4 + *(int *)(active_dialog + 0x5c +
+                                             *(int *)(active_dialog + 0x48) * 4));
+          thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
           return;
         }
-        iVar3 = thunk_FUN_005a1c52
-                          ((C_0040bc40_268 *)iptr_006cec84,*(undefined4 *)(iptr_006cec84 + 0x48));
+        iVar3 = thunk_dialog_count_group_options
+                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
         uVar5 = 1;
-        uVar2 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar3 + -1);
-        thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+        uVar2 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar3 + -1);
+        thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
         return;
       }
       param_1 = 0xc3;
       break;
     case 0xa4:
     case 0xc2:
-      if (*(int *)(iptr_006cec84 + 0x38) != 1) {
-        iVar3 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-        iVar4 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
-        if (*(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) + iVar4 <= iVar3) {
+      if (*(int *)(active_dialog + 0x38) != 1) {
+        iVar3 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+        iVar4 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,
+                           *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
+        if (*(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) + iVar4 <= iVar3) {
           uVar5 = 1;
-          uVar2 = thunk_FUN_0059fc19
-                            ((C_0040bc40_268 *)iptr_006cec84,
-                             iVar3 - *(int *)(iptr_006cec84 + 0x5c +
-                                             *(int *)(iptr_006cec84 + 0x48) * 4));
-          thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+          uVar2 = thunk_dialog_option_at
+                            ((DialogOptionList *)active_dialog,
+                             iVar3 - *(int *)(active_dialog + 0x5c +
+                                             *(int *)(active_dialog + 0x48) * 4));
+          thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
           return;
         }
-        if (iVar3 < *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4)) {
+        if (iVar3 < *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4)) {
           return;
         }
-        iVar3 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
-        uVar5 = thunk_FUN_0059fc19
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           iVar3 - *(int *)(iptr_006cec84 + 0x5c +
-                                           *(int *)(iptr_006cec84 + 0x48) * 4));
-        *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar5;
-        iVar3 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
+        iVar3 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,
+                           *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
+        uVar5 = thunk_dialog_option_at
+                          ((DialogOptionList *)active_dialog,
+                           iVar3 - *(int *)(active_dialog + 0x5c +
+                                           *(int *)(active_dialog + 0x48) * 4));
+        *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+        iVar3 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
         uVar5 = 0;
-        uVar2 = thunk_FUN_0059fc19
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           iVar3 - *(int *)(iptr_006cec84 + 0x5c +
-                                           *(int *)(iptr_006cec84 + 0x48) * 4));
-        thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
-        thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+        uVar2 = thunk_dialog_option_at
+                          ((DialogOptionList *)active_dialog,
+                           iVar3 - *(int *)(active_dialog + 0x5c +
+                                           *(int *)(active_dialog + 0x48) * 4));
+        thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
+        thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
         return;
       }
       param_1 = 0xc0;
@@ -1535,105 +1535,105 @@ void __cdecl FUN_005a407f(undefined4 param_1)
       return;
     case 0xa6:
     case 0xc3:
-      if (*(int *)(iptr_006cec84 + 0x38) != 1) {
-        iVar4 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-        iVar3 = *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4);
-        iVar1 = thunk_FUN_005a1c52
-                          ((C_0040bc40_268 *)iptr_006cec84,*(undefined4 *)(iptr_006cec84 + 0x48));
+      if (*(int *)(active_dialog + 0x38) != 1) {
+        iVar4 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+        iVar3 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
+        iVar1 = thunk_dialog_count_group_options
+                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
         if (iVar1 <= iVar3 + iVar4) {
           return;
         }
         uVar5 = 1;
-        uVar2 = thunk_FUN_0059fc19
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           iVar4 + *(int *)(iptr_006cec84 + 0x5c +
-                                           *(int *)(iptr_006cec84 + 0x48) * 4));
-        thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+        uVar2 = thunk_dialog_option_at
+                          ((DialogOptionList *)active_dialog,
+                           iVar4 + *(int *)(active_dialog + 0x5c +
+                                           *(int *)(active_dialog + 0x48) * 4));
+        thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
         return;
       }
       param_1 = 0xc1;
       break;
     case 0xa7:
     case 0xc4:
-      iVar3 = thunk_FUN_0059fb78
-                        ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
+      iVar3 = thunk_dialog_option_group_index
+                        ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
       if (iVar3 < 1) {
         return;
       }
-      uVar5 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,0);
-      *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar5;
-      thunk_FUN_005a17e9
-                ((C_0040bc40_268 *)iptr_006cec84,
-                 *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4),0);
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+      uVar5 = thunk_dialog_option_at((DialogOptionList *)active_dialog,0);
+      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      thunk_dialog_select_option
+                ((DialogOptionList *)active_dialog,
+                 *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4),0);
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
       return;
     case 0xa8:
     case 0xc0:
-      local_8 = *(uptr *)(iptr_006cec84 + 0x220);
+      local_8 = *(uptr *)(active_dialog + 0x220);
       goto LAB_005a4287;
     case 0xa9:
     case 0xc5:
-      if (*(int *)(iptr_006cec84 + 0x38) < 2) {
-        iVar3 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-        if (*(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) <= iVar3) {
+      if (*(int *)(active_dialog + 0x38) < 2) {
+        iVar3 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+        if (*(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) <= iVar3) {
           uVar5 = 1;
-          uVar2 = thunk_FUN_0059fc19
-                            ((C_0040bc40_268 *)iptr_006cec84,
-                             iVar3 - *(int *)(iptr_006cec84 + 0x5c +
-                                             *(int *)(iptr_006cec84 + 0x48) * 4));
-          thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+          uVar2 = thunk_dialog_option_at
+                            ((DialogOptionList *)active_dialog,
+                             iVar3 - *(int *)(active_dialog + 0x5c +
+                                             *(int *)(active_dialog + 0x48) * 4));
+          thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
           return;
         }
         uVar5 = 1;
-        uVar2 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,0);
-        thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar5);
+        uVar2 = thunk_dialog_option_at((DialogOptionList *)active_dialog,0);
+        thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
         return;
       }
       param_1 = 0xc2;
     }
   } while( true );
   while (local_8 = *(uptr *)(local_8 + 0x14),
-        *(int *)(iptr_006cec84 + 0x48) != *(int *)(local_8 + 0xc)) {
+        *(int *)(active_dialog + 0x48) != *(int *)(local_8 + 0xc)) {
 LAB_005a4287:
     if (*(int *)(local_8 + 0x14) == 0) break;
   }
-  if (*(int *)(iptr_006cec84 + 0x48) != *(int *)(local_8 + 0xc)) {
+  if (*(int *)(active_dialog + 0x48) != *(int *)(local_8 + 0xc)) {
     return;
   }
-  if (*(uptr *)(iptr_006cec84 + 0x220) == local_8) {
+  if (*(uptr *)(active_dialog + 0x220) == local_8) {
     return;
   }
-  if (*(int *)(iptr_006cec84 + 0x38) != 1) {
-    iVar3 = thunk_FUN_0059fb78
-                      ((C_0040bc40_268 *)iptr_006cec84,
-                       *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
-    iVar4 = thunk_FUN_0059fb78((C_0040bc40_268 *)iptr_006cec84,local_8);
+  if (*(int *)(active_dialog + 0x38) != 1) {
+    iVar3 = thunk_dialog_option_group_index
+                      ((DialogOptionList *)active_dialog,
+                       *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
+    iVar4 = thunk_dialog_option_group_index((DialogOptionList *)active_dialog,local_8);
     if (iVar4 < iVar3) {
-      iVar3 = thunk_FUN_0059fb78
-                        ((C_0040bc40_268 *)iptr_006cec84,
-                         *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
-      uVar5 = thunk_FUN_0059fc19
-                        ((C_0040bc40_268 *)iptr_006cec84,
-                         iVar3 - *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4)
+      iVar3 = thunk_dialog_option_group_index
+                        ((DialogOptionList *)active_dialog,
+                         *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
+      uVar5 = thunk_dialog_option_at
+                        ((DialogOptionList *)active_dialog,
+                         iVar3 - *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4)
                         );
-      *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar5;
-      thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,local_8,0);
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      thunk_dialog_select_option((DialogOptionList *)active_dialog,local_8,0);
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
       return;
     }
   }
-  thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,local_8,1);
+  thunk_dialog_select_option((DialogOptionList *)active_dialog,local_8,1);
   return;
   while (local_8 = *(uptr *)(local_8 + 0x10),
-        *(int *)(iptr_006cec84 + 0x48) != *(int *)(local_8 + 0xc)) {
+        *(int *)(active_dialog + 0x48) != *(int *)(local_8 + 0xc)) {
 LAB_005a43d9:
     if (*(int *)(local_8 + 0x10) == 0) break;
   }
-  if ((*(int *)(iptr_006cec84 + 0x48) == *(int *)(local_8 + 0xc)) &&
-     (*(uptr *)(iptr_006cec84 + 0x220) != local_8)) {
-    thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,local_8,1);
+  if ((*(int *)(active_dialog + 0x48) == *(int *)(local_8 + 0xc)) &&
+     (*(uptr *)(active_dialog + 0x220) != local_8)) {
+    thunk_dialog_select_option((DialogOptionList *)active_dialog,local_8,1);
   }
   return;
 }
@@ -1660,87 +1660,87 @@ void __cdecl FUN_005a49c1(byte param_1)
   undefined4 uVar6;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((iptr_006cec84 != 0) && (iVar1 = _isalpha((uint)param_1), iVar1 != 0)) {
-    _DAT_006cec80 = thunk_FUN_00421bb0();
+  if ((active_dialog != 0) && (iVar1 = _isalpha((uint)param_1), iVar1 != 0)) {
+    _DAT_006cec80 = thunk_timer_ticks();
     uVar2 = FUN_005f2700((uint)param_1);
-    if ((*(uint *)(iptr_006cec84 + 0x3c) & 0x41000) == 0x1000) {
-      local_10 = *(uptr *)(iptr_006cec84 + 0x220);
+    if ((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000) {
+      local_10 = *(uptr *)(active_dialog + 0x220);
       local_18 = 0;
       local_c = 0;
       do {
         do {
           local_10 = *(uptr *)(local_10 + 0x10);
           if (local_10 == 0) {
-            local_10 = *(uptr *)(iptr_006cec84 + 0x228);
+            local_10 = *(uptr *)(active_dialog + 0x228);
           }
-        } while (*(int *)(iptr_006cec84 + 0x48) != *(int *)(local_10 + 0xc));
+        } while (*(int *)(active_dialog + 0x48) != *(int *)(local_10 + 0xc));
         uVar3 = FUN_005f2700((int)**(char **)(local_10 + 8));
         if (uVar3 == (uVar2 & 0xff)) {
           local_18 = local_10;
         }
       } while ((local_18 == 0) && (local_c = local_c + 1, local_c < 2000));
       if (local_18 != 0) {
-        iVar1 = thunk_FUN_0059fb78((C_0040bc40_268 *)iptr_006cec84,local_18);
+        iVar1 = thunk_dialog_option_group_index((DialogOptionList *)active_dialog,local_18);
         local_c = 0;
         while( true ) {
-          iVar4 = thunk_FUN_0059fb78
-                            ((C_0040bc40_268 *)iptr_006cec84,
-                             *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
-          iVar5 = *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) *
-                  *(int *)(iptr_006cec84 + 0x38) + iVar4;
-          if ((*(int *)(iptr_006cec84 + 0x38) == 1) || ((iVar4 <= iVar1 && (iVar1 < iVar5)))) break;
+          iVar4 = thunk_dialog_option_group_index
+                            ((DialogOptionList *)active_dialog,
+                             *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
+          iVar5 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) *
+                  *(int *)(active_dialog + 0x38) + iVar4;
+          if ((*(int *)(active_dialog + 0x38) == 1) || ((iVar4 <= iVar1 && (iVar1 < iVar5)))) break;
           if (iVar1 < iVar4) {
-            uVar6 = thunk_FUN_0059fc19
-                              ((C_0040bc40_268 *)iptr_006cec84,
-                               iVar4 - *(int *)(iptr_006cec84 + 0x5c +
-                                               *(int *)(iptr_006cec84 + 0x48) * 4));
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar6;
+            uVar6 = thunk_dialog_option_at
+                              ((DialogOptionList *)active_dialog,
+                               iVar4 - *(int *)(active_dialog + 0x5c +
+                                               *(int *)(active_dialog + 0x48) * 4));
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             local_c = local_c + 1;
           }
           else {
             if (iVar1 < iVar5) {
               return;
             }
-            uVar6 = thunk_FUN_0059fc19
-                              ((C_0040bc40_268 *)iptr_006cec84,
-                               iVar4 + *(int *)(iptr_006cec84 + 0x5c +
-                                               *(int *)(iptr_006cec84 + 0x48) * 4));
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar6;
+            uVar6 = thunk_dialog_option_at
+                              ((DialogOptionList *)active_dialog,
+                               iVar4 + *(int *)(active_dialog + 0x5c +
+                                               *(int *)(active_dialog + 0x48) * 4));
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             local_c = local_c + 1;
           }
         }
         if (local_c == 0) {
-          thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,local_18,1);
+          thunk_dialog_select_option((DialogOptionList *)active_dialog,local_18,1);
         }
         else {
-          thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,local_18,0);
-          thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+          thunk_dialog_select_option((DialogOptionList *)active_dialog,local_18,0);
+          thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
         }
       }
     }
-    else if ((*(byte *)(iptr_006cec84 + 0x3e) & 2) == 0) {
-      if (*(int *)(iptr_006cec84 + 0x34) != 0) {
+    else if ((*(byte *)(active_dialog + 0x3e) & 2) == 0) {
+      if (*(int *)(active_dialog + 0x34) != 0) {
         local_1c = -1;
-        for (local_c = 0; local_c < *(int *)(iptr_006cec84 + 0x34); local_c = local_c + 1) {
-          uVar3 = FUN_005f2700((int)**(char **)(iptr_006cec84 + 0x294 + local_c * 4));
+        for (local_c = 0; local_c < *(int *)(active_dialog + 0x34); local_c = local_c + 1) {
+          uVar3 = FUN_005f2700((int)**(char **)(active_dialog + 0x294 + local_c * 4));
           if (uVar3 == (uVar2 & 0xff)) {
             local_1c = local_c;
             break;
           }
         }
         if (-1 < local_1c) {
-          thunk_FUN_004bb5e0
-                    ((C_004bb5e0 *)
-                     ((*(int *)(iptr_006cec84 + 0x30) + local_c) * 0x3c +
-                     *(int *)(iptr_006cec84 + 0x274)));
-          FUN_005a3e56(*(int *)(iptr_006cec84 + 0x30) + local_c + 100);
+          thunk_ctrl_set_focus
+                    ((ControlFocusView *)
+                     ((*(int *)(active_dialog + 0x30) + local_c) * 0x3c +
+                     *(int *)(active_dialog + 0x274)));
+          dialog_on_button_click(*(int *)(active_dialog + 0x30) + local_c + 100);
           return;
         }
       }
-      if (*(int *)(iptr_006cec84 + 0x28) != 0) {
+      if (*(int *)(active_dialog + 0x28) != 0) {
         local_18 = 0;
         local_1c = 0;
-        for (local_10 = *(uptr *)(iptr_006cec84 + 0x228); local_10 != 0;
+        for (local_10 = *(uptr *)(active_dialog + 0x228); local_10 != 0;
             local_10 = *(uptr *)(local_10 + 0x10)) {
           uVar3 = FUN_005f2700((int)**(char **)(local_10 + 8));
           if (uVar3 == (uVar2 & 0xff)) {
@@ -1750,21 +1750,21 @@ void __cdecl FUN_005a49c1(byte param_1)
           local_1c = local_1c + 1;
         }
         if (local_18 != 0) {
-          if ((*(byte *)(iptr_006cec84 + 0x3d) & 0x10) == 0) {
-            if ((*(byte *)(iptr_006cec84 + 0x3c) & 4) == 0) {
-              thunk_FUN_004472f0(*(C_004472f0 **)(iptr_006cec84 + 0x268),local_1c);
+          if ((*(byte *)(active_dialog + 0x3d) & 0x10) == 0) {
+            if ((*(byte *)(active_dialog + 0x3c) & 4) == 0) {
+              thunk_radiogrp_set_selected(*(RadioGroupSetSelView **)(active_dialog + 0x268),local_1c);
             }
           }
           else {
-            thunk_FUN_00551d80
-                      (*(C_00551d80 **)(iptr_006cec84 + 0x278 + *(int *)(iptr_006cec84 + 0x48) * 4),
+            thunk_listbox_set_cur_sel
+                      (*(ListBoxSetSelView **)(active_dialog + 0x278 + *(int *)(active_dialog + 0x48) * 4),
                        local_1c);
           }
         }
       }
     }
     else {
-      FUN_005a3c58();
+      dialog_end_current();
     }
   }
   return;
@@ -1783,18 +1783,18 @@ void __cdecl FUN_005a4df3(undefined4 param_1,undefined4 param_2)
   uptr uVar2;
   undefined4 uVar3;
   
-  if (iptr_006cec84 != 0) {
-    thunk_FUN_005a1caf((C_0040bc40_228 *)iptr_006cec84,param_1,param_2);
-    *(undefined4 *)(iptr_006cec84 + 0x218 + *(int *)(iptr_006cec84 + 0x48) * 4) = 0;
-    if ((((*(uint *)(iptr_006cec84 + 0x3c) & 0x41000) == 0x1000) &&
-        (*(int *)(iptr_006cec84 + 0x28) != 0)) &&
-       (iVar1 = thunk_FUN_005a1a7d((C_0040bc40_268 *)iptr_006cec84,param_1,param_2),
+  if (active_dialog != 0) {
+    thunk_dialog_pick_pane_at((DialogWindowView *)active_dialog,param_1,param_2);
+    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
+    if ((((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000) &&
+        (*(int *)(active_dialog + 0x28) != 0)) &&
+       (iVar1 = thunk_dialog_option_at_point((DialogOptionList *)active_dialog,param_1,param_2),
        -1 < iVar1)) {
-      *(undefined4 *)(iptr_006cec84 + 0x218 + *(int *)(iptr_006cec84 + 0x48) * 4) = 1;
-      thunk_FUN_00414ce0((C_00408010_10 *)(*(int *)iptr_006cec84 + 0x48));
+      *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
+      thunk_wnd_set_capture((WndBase *)(*(int *)active_dialog + 0x48));
       uVar3 = 1;
-      uVar2 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar1);
-      thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar2,uVar3);
+      uVar2 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar1);
+      thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar3);
     }
   }
   return;
@@ -1802,7 +1802,7 @@ void __cdecl FUN_005a4df3(undefined4 param_1,undefined4 param_2)
 
 /* 005a4edf auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005a4edf(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -1813,90 +1813,90 @@ void __cdecl FUN_005a4edf(undefined4 param_1,undefined4 param_2)
   undefined4 uVar6;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (((iptr_006cec84 != 0) && ((*(uint *)(iptr_006cec84 + 0x3c) & 0x41000) == 0x1000)) &&
-     (*(int *)(iptr_006cec84 + 0x218 + *(int *)(iptr_006cec84 + 0x48) * 4) != 0)) {
-    iVar2 = thunk_FUN_005a1a7d((C_0040bc40_268 *)iptr_006cec84,param_1,param_2);
+  if (((active_dialog != 0) && ((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
+     (*(int *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) != 0)) {
+    iVar2 = thunk_dialog_option_at_point((DialogOptionList *)active_dialog,param_1,param_2);
     if (iVar2 < 0) {
-      if (*(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) *
-          *(int *)(iptr_006cec84 + 0x38) < *(int *)(iptr_006cec84 + 0x28)) {
-        iVar4 = thunk_FUN_0059fb78
-                          ((C_0040bc40_268 *)iptr_006cec84,
-                           *(uptr *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4));
+      if (*(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) *
+          *(int *)(active_dialog + 0x38) < *(int *)(active_dialog + 0x28)) {
+        iVar4 = thunk_dialog_option_group_index
+                          ((DialogOptionList *)active_dialog,
+                           *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4));
         switch(iVar2) {
         case -4:
-          if ((1 < *(int *)(iptr_006cec84 + 0x38)) &&
-             (iVar2 = thunk_FUN_005a17a4
-                                ((C_0040bc40_d8 *)iptr_006cec84,*(int *)(iptr_006cec84 + 0x28) + -1)
+          if ((1 < *(int *)(active_dialog + 0x38)) &&
+             (iVar2 = thunk_dialog_column_start_index
+                                ((DialogTextView *)active_dialog,*(int *)(active_dialog + 0x28) + -1)
              , iVar4 < iVar2)) {
-            iVar2 = *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4);
-            iVar1 = *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4);
-            iVar5 = thunk_FUN_005a1766
-                              ((C_0040bc40_d8 *)iptr_006cec84,*(int *)(iptr_006cec84 + 0x28) + -1);
-            iVar2 = FUN_005a1a44(iVar4 + iVar2,0,iVar1 * iVar5);
-            iVar4 = thunk_FUN_0059fb78
-                              ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-            for (local_8 = iVar4 % *(int *)(iptr_006cec84 + 0x5c +
-                                           *(int *)(iptr_006cec84 + 0x48) * 4) + iVar2;
-                *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) + local_8 <
-                *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) *
-                *(int *)(iptr_006cec84 + 0x38) + iVar2;
-                local_8 = local_8 + *(int *)(iptr_006cec84 + 0x5c +
-                                            *(int *)(iptr_006cec84 + 0x48) * 4)) {
+            iVar2 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
+            iVar1 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
+            iVar5 = thunk_dialog_column_of_index
+                              ((DialogTextView *)active_dialog,*(int *)(active_dialog + 0x28) + -1);
+            iVar2 = int_clamp_b(iVar4 + iVar2,0,iVar1 * iVar5);
+            iVar4 = thunk_dialog_option_group_index
+                              ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+            for (local_8 = iVar4 % *(int *)(active_dialog + 0x5c +
+                                           *(int *)(active_dialog + 0x48) * 4) + iVar2;
+                *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) + local_8 <
+                *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) *
+                *(int *)(active_dialog + 0x38) + iVar2;
+                local_8 = local_8 + *(int *)(active_dialog + 0x5c +
+                                            *(int *)(active_dialog + 0x48) * 4)) {
             }
-            uVar6 = FUN_005a1a44(local_8,0,*(int *)(iptr_006cec84 + 0x28) + -1);
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,uVar6);
-            *(undefined4 *)(iptr_006cec84 + 0x220) = uVar6;
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar2);
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar6;
-            thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+            uVar6 = int_clamp_b(local_8,0,*(int *)(active_dialog + 0x28) + -1);
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,uVar6);
+            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar2);
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
         case -3:
-          if ((1 < *(int *)(iptr_006cec84 + 0x38)) && (0 < iVar4)) {
-            iVar4 = iVar4 - *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4);
+          if ((1 < *(int *)(active_dialog + 0x38)) && (0 < iVar4)) {
+            iVar4 = iVar4 - *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
             if (iVar4 < 1) {
               iVar4 = 0;
             }
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar4);
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar6;
-            iVar2 = thunk_FUN_0059fb78
-                              ((C_0040bc40_268 *)iptr_006cec84,*(uptr *)(iptr_006cec84 + 0x220));
-            uVar6 = thunk_FUN_0059fc19
-                              ((C_0040bc40_268 *)iptr_006cec84,
-                               iVar4 + iVar2 % *(int *)(iptr_006cec84 + 0x5c +
-                                                       *(int *)(iptr_006cec84 + 0x48) * 4));
-            *(undefined4 *)(iptr_006cec84 + 0x220) = uVar6;
-            thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar4);
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            iVar2 = thunk_dialog_option_group_index
+                              ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
+            uVar6 = thunk_dialog_option_at
+                              ((DialogOptionList *)active_dialog,
+                               iVar4 + iVar2 % *(int *)(active_dialog + 0x5c +
+                                                       *(int *)(active_dialog + 0x48) * 4));
+            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
         case -2:
-          if ((iVar4 < *(int *)(iptr_006cec84 + 0x28) + -1) && (*(int *)(iptr_006cec84 + 0x38) == 1)
+          if ((iVar4 < *(int *)(active_dialog + 0x28) + -1) && (*(int *)(active_dialog + 0x38) == 1)
              ) {
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar4 + 1);
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = uVar6;
-            uVar6 = FUN_005a1a44(*(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4)
-                                 * *(int *)(iptr_006cec84 + 0x38) + iVar4 + 1 + -1,0,
-                                 *(int *)(iptr_006cec84 + 0x28) + -1);
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,uVar6);
-            *(undefined4 *)(iptr_006cec84 + 0x220) = uVar6;
-            thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar4 + 1);
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            uVar6 = int_clamp_b(*(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4)
+                                 * *(int *)(active_dialog + 0x38) + iVar4 + 1 + -1,0,
+                                 *(int *)(active_dialog + 0x28) + -1);
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,uVar6);
+            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
         case -1:
-          if ((0 < iVar4) && (*(int *)(iptr_006cec84 + 0x38) == 1)) {
-            uVar6 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar4 + -1);
-            *(undefined4 *)(iptr_006cec84 + 0x220) = uVar6;
-            *(undefined4 *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) =
-                 *(undefined4 *)(iptr_006cec84 + 0x220);
-            thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+          if ((0 < iVar4) && (*(int *)(active_dialog + 0x38) == 1)) {
+            uVar6 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar4 + -1);
+            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) =
+                 *(undefined4 *)(active_dialog + 0x220);
+            thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
         }
       }
     }
     else {
       uVar6 = 1;
-      uVar3 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,iVar2);
-      thunk_FUN_005a17e9((C_0040bc40_268 *)iptr_006cec84,uVar3,uVar6);
+      uVar3 = thunk_dialog_option_at((DialogOptionList *)active_dialog,iVar2);
+      thunk_dialog_select_option((DialogOptionList *)active_dialog,uVar3,uVar6);
     }
   }
   return;
@@ -1904,13 +1904,13 @@ void __cdecl FUN_005a4edf(undefined4 param_1,undefined4 param_2)
 #undef local_8
 
 /* 005a535e auto */
-void __cdecl FUN_005a535e(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_lbuttonup(undefined4 param_1,undefined4 param_2)
 
 {
-  if (iptr_006cec84 != 0) {
-    FUN_005a4edf(param_1,param_2);
-    *(undefined4 *)(iptr_006cec84 + 0x218 + *(int *)(iptr_006cec84 + 0x48) * 4) = 0;
-    thunk_FUN_00414d40((C_00408010_10 *)(*(int *)iptr_006cec84 + 0x48));
+  if (active_dialog != 0) {
+    dialog_list_on_mousemove(param_1,param_2);
+    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
+    thunk_wnd_release_capture((WndBase *)(*(int *)active_dialog + 0x48));
   }
   return;
 }
@@ -1921,17 +1921,17 @@ void __cdecl FUN_005a53b8(undefined4 param_1,undefined4 param_2)
 {
   int iVar1;
   
-  if ((((iptr_006cec84 != 0) &&
-       (thunk_FUN_005a1caf((C_0040bc40_228 *)iptr_006cec84,param_1,param_2),
-       (*(uint *)(iptr_006cec84 + 0x3c) & 0x41000) == 0x1000)) &&
-      (*(int *)(iptr_006cec84 + 0x28) != 0)) &&
-     (((*(byte *)(iptr_006cec84 + 0x3d) & 4) == 0 &&
-      (iVar1 = thunk_FUN_005a1a7d((C_0040bc40_268 *)iptr_006cec84,param_1,param_2),
+  if ((((active_dialog != 0) &&
+       (thunk_dialog_pick_pane_at((DialogWindowView *)active_dialog,param_1,param_2),
+       (*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
+      (*(int *)(active_dialog + 0x28) != 0)) &&
+     (((*(byte *)(active_dialog + 0x3d) & 4) == 0 &&
+      (iVar1 = thunk_dialog_option_at_point((DialogOptionList *)active_dialog,param_1,param_2),
       -1 < iVar1)))) {
-    *(undefined4 *)(iptr_006cec84 + 0x218 + *(int *)(iptr_006cec84 + 0x48) * 4) = 1;
-    FUN_005a535e(param_1,param_2);
-    *(uint *)(iptr_006cec84 + 0x3c) = *(uint *)(iptr_006cec84 + 0x3c) | 0x2000;
-    FUN_005a3c58();
+    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
+    dialog_list_on_lbuttonup(param_1,param_2);
+    *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
+    dialog_end_current();
   }
   return;
 }
@@ -1942,15 +1942,15 @@ void __cdecl FUN_005a5494(int param_1)
 {
   int iVar1;
   
-  if (iptr_006cec84 != 0) {
-    *(undefined4 *)(iptr_006cec84 + 0x48) = 0;
-    iVar1 = thunk_FUN_0059fc19
-                      ((C_0040bc40_268 *)iptr_006cec84,
-                       *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) * param_1
+  if (active_dialog != 0) {
+    *(undefined4 *)(active_dialog + 0x48) = 0;
+    iVar1 = thunk_dialog_option_at
+                      ((DialogOptionList *)active_dialog,
+                       *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) * param_1
                       );
-    if (*(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) != iVar1) {
-      *(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = iVar1;
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+    if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
+      *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
     }
   }
   return;
@@ -1962,12 +1962,12 @@ void __cdecl FUN_005a552c(undefined4 param_1)
 {
   int iVar1;
   
-  if (iptr_006cec84 != 0) {
-    *(undefined4 *)(iptr_006cec84 + 0x48) = 1;
-    iVar1 = thunk_FUN_0059fc19((C_0040bc40_268 *)iptr_006cec84,param_1);
-    if (*(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) != iVar1) {
-      *(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = iVar1;
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+  if (active_dialog != 0) {
+    *(undefined4 *)(active_dialog + 0x48) = 1;
+    iVar1 = thunk_dialog_option_at((DialogOptionList *)active_dialog,param_1);
+    if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
+      *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
     }
   }
   return;
@@ -1979,24 +1979,24 @@ void __cdecl FUN_005a55b1(int param_1)
 {
   int iVar1;
   
-  if (iptr_006cec84 != 0) {
-    *(undefined4 *)(iptr_006cec84 + 0x48) = 1;
-    iVar1 = thunk_FUN_0059fc19
-                      ((C_0040bc40_268 *)iptr_006cec84,
-                       *(int *)(iptr_006cec84 + 0x5c + *(int *)(iptr_006cec84 + 0x48) * 4) * param_1
+  if (active_dialog != 0) {
+    *(undefined4 *)(active_dialog + 0x48) = 1;
+    iVar1 = thunk_dialog_option_at
+                      ((DialogOptionList *)active_dialog,
+                       *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) * param_1
                       );
-    if (*(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) != iVar1) {
-      *(int *)(iptr_006cec84 + 0x210 + *(int *)(iptr_006cec84 + 0x48) * 4) = iVar1;
-      thunk_FUN_005a14d2((C_0040bc40_268 *)iptr_006cec84);
+    if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
+      *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
+      thunk_dialog_draw_option_list((DialogOptionList *)active_dialog);
     }
   }
   return;
 }
 
 /* 005a5649 auto */
-#define DAT_00635aa0 (*(int *)((u8 *)&g.d_00635aa0))
-#define DAT_00635aa4 (*(int *)((u8 *)&g.d_00635aa4))
-void __thiscall FUN_005a5649(C_0040bc40_d8 *this,iptr param_1,int param_2)
+#define dlg_client_tile_surface (*(int *)((u8 *)&g.d_00635aa4))
+#define dlg_frame_tile_surface (*(int *)((u8 *)&g.d_00635aa0))
+void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_2)
 
 {
   undefined4 uVar1;
@@ -2004,39 +2004,39 @@ void __thiscall FUN_005a5649(C_0040bc40_d8 *this,iptr param_1,int param_2)
   undefined4 uVar3;
   undefined4 uVar4;
   
-  if (this->field_4 == 0) {
-    if ((DAT_00635aa0 == 0) || (param_2 != 1)) {
-      if ((DAT_00635aa4 == 0) || (param_2 != 2)) {
-        thunk_FUN_0040fdb0(this->field_0,param_1,this->field_74);
+  if (this->bg_surface == 0) {
+    if ((dlg_frame_tile_surface == 0) || (param_2 != 1)) {
+      if ((dlg_client_tile_surface == 0) || (param_2 != 2)) {
+        thunk_gfx_fill_rect(this->surf_wnd,param_1,this->bg_color);
       }
       else {
         uVar4 = 0;
         uVar3 = 0;
-        uVar1 = thunk_FUN_00407fc0(param_1);
-        uVar2 = thunk_FUN_00407f90(param_1);
-        thunk_FUN_005a9b5d(this->field_0,DAT_00635aa4,*(undefined4 *)param_1,
+        uVar1 = thunk_rect_height(param_1);
+        uVar2 = thunk_rect_width(param_1);
+        thunk_gfx_tile_fill(this->surf_wnd,dlg_client_tile_surface,*(undefined4 *)param_1,
                            *(undefined4 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
       }
     }
     else {
       uVar4 = 0;
       uVar3 = 0;
-      uVar1 = thunk_FUN_00407fc0(param_1);
-      uVar2 = thunk_FUN_00407f90(param_1);
-      thunk_FUN_005a9b5d(this->field_0,DAT_00635aa0,*(undefined4 *)param_1,
+      uVar1 = thunk_rect_height(param_1);
+      uVar2 = thunk_rect_width(param_1);
+      thunk_gfx_tile_fill(this->surf_wnd,dlg_frame_tile_surface,*(undefined4 *)param_1,
                          *(undefined4 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
     }
   }
   else {
-    uVar1 = thunk_FUN_00407fc0(param_1);
-    uVar2 = thunk_FUN_00407f90(param_1);
-    thunk_FUN_0055a930(this->field_4,this->field_0,*(undefined4 *)param_1,
+    uVar1 = thunk_rect_height(param_1);
+    uVar2 = thunk_rect_width(param_1);
+    thunk_gfx_copy_rect_same_pos(this->bg_surface,this->surf_wnd,*(undefined4 *)param_1,
                        *(undefined4 *)(param_1 + 4),uVar2,uVar1);
   }
   return;
 }
-#undef DAT_00635aa0
-#undef DAT_00635aa4
+#undef dlg_client_tile_surface
+#undef dlg_frame_tile_surface
 
 /* 005a577e auto */
 #define local_5c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
@@ -2057,7 +2057,7 @@ void __thiscall FUN_005a5649(C_0040bc40_d8 *this,iptr param_1,int param_2)
 #define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(76)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
-void __thiscall FUN_005a577e(C_0040bc40_2f4 *this)
+void __thiscall dialog_render(Dialog *this)
 
 {
   int iVar1;
@@ -2068,157 +2068,157 @@ void __thiscall FUN_005a577e(C_0040bc40_2f4 *this)
   undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_30 = 0;
-  if ((this->field_3c & 0x20) == 0) {
-    iVar1 = thunk_FUN_0059fd2a((C_0040bc40_268 *)this);
+  if ((this->style_flags & 0x20) == 0) {
+    iVar1 = thunk_dialog_compute_layout((DialogOptionList *)this);
     if (iVar1 != 0) {
       return;
     }
-    local_30 = thunk_FUN_005a1e28((C_0040bc40_228 *)this);
-    thunk_FUN_005a211c(this);
+    local_30 = thunk_dialog_create_window((DialogWindowView *)this);
+    thunk_dialog_create_controls(this);
   }
-  if ((this->field_3c & 0x4000) == 0) {
-    thunk_FUN_004086c0((iptr)local_14,this->field_e8,this->field_ec,this->field_40,this->field_44);
-    if (this->field_cc != 0) {
-      for (local_1c = 0; local_1c < (int)this->field_c8; local_1c = local_1c + 1) {
-        thunk_FUN_005a99fc(this->field_0,(iptr)local_14,this->field_78,this->field_7c);
-        thunk_FUN_004bb800((iptr)local_14,1,1);
+  if ((this->style_flags & 0x4000) == 0) {
+    thunk_rect_set_xywh((iptr)local_14,this->origin_x,this->origin_y,this->wnd_width,this->wnd_height);
+    if (this->border_width != 0) {
+      for (local_1c = 0; local_1c < (int)this->bevel_width; local_1c = local_1c + 1) {
+        thunk_gfx_draw_bevel_rect(this->surf_wnd,(iptr)local_14,this->bevel_light_color,this->bevel_dark_color);
+        thunk_rect_deflate((iptr)local_14,1,1);
       }
-      thunk_FUN_005a5649((C_0040bc40_d8 *)this,(iptr)local_14,1);
-      thunk_FUN_004bb800((iptr)local_14,this->field_cc + this->field_c8 * -2,0);
-      local_10 = local_10 + this->field_d0 + this->field_c8 * -2;
-      local_8 = local_8 - ((this->field_d4 - this->field_d0) + this->field_c8 * -2);
-      for (local_1c = 0; local_1c < (int)this->field_c8; local_1c = local_1c + 1) {
-        thunk_FUN_005a99fc(this->field_0,(iptr)local_14,this->field_7c,this->field_78);
-        thunk_FUN_004bb800((iptr)local_14,1,1);
+      thunk_dialog_fill_rect_bg((DialogTextView *)this,(iptr)local_14,1);
+      thunk_rect_deflate((iptr)local_14,this->border_width + this->bevel_width * -2,0);
+      local_10 = local_10 + this->title_height + this->bevel_width * -2;
+      local_8 = local_8 - ((this->chrome_height - this->title_height) + this->bevel_width * -2);
+      for (local_1c = 0; local_1c < (int)this->bevel_width; local_1c = local_1c + 1) {
+        thunk_gfx_draw_bevel_rect(this->surf_wnd,(iptr)local_14,this->bevel_dark_color,this->bevel_light_color);
+        thunk_rect_deflate((iptr)local_14,1,1);
       }
     }
-    thunk_FUN_005a5649((C_0040bc40_d8 *)this,(iptr)local_14,2);
+    thunk_dialog_fill_rect_bg((DialogTextView *)this,(iptr)local_14,2);
   }
-  if ((this->field_134 != 0) && ((this->field_3c & 0x10000) == 0)) {
-    uVar5 = this->field_40;
-    iVar1 = thunk_FUN_0040efd0((C_0040ef70_8 *)this->field_c,this->field_134);
+  if ((this->title_text != 0) && ((this->style_flags & 0x10000) == 0)) {
+    uVar5 = this->wnd_width;
+    iVar1 = thunk_font_text_width((GameFont *)this->title_font,this->title_text);
     local_24 = ((int)uVar5 >> 1) - (iVar1 + 4 >> 1);
-    local_2c = this->field_c8 + this->field_b8;
-    FUN_005c19ad(this->field_8c);
-    FUN_005c0f57
-              ((C_004083b0_48 *)this->field_0,this->field_c,this->field_134,local_24 + 2,
+    local_2c = this->bevel_width + this->pad_y;
+    gfx_set_text_color_index(this->title_shadow_color);
+    surface_draw_text
+              ((DibSurface *)this->surf_wnd,this->title_font,this->title_text,local_24 + 2,
                local_2c + 1,5);
-    FUN_005c19ad(this->field_88);
-    FUN_005c0f57
-              ((C_004083b0_48 *)this->field_0,this->field_c,this->field_134,local_24 + 1,local_2c,5)
+    gfx_set_text_color_index(this->title_color);
+    surface_draw_text
+              ((DibSurface *)this->surf_wnd,this->title_font,this->title_text,local_24 + 1,local_2c,5)
     ;
-    FUN_005c0f57
-              ((C_004083b0_48 *)this->field_0,this->field_c,this->field_134,local_24,local_2c,5);
+    surface_draw_text
+              ((DibSurface *)this->surf_wnd,this->title_font,this->title_text,local_24,local_2c,5);
   }
-  thunk_FUN_0059f64a((C_0040bc40_268 *)this,1);
-  if (this->field_2c != 0) {
-    thunk_FUN_0047df20(this->field_130);
-    local_34 = this->field_100;
-    local_38 = this->field_104;
-    for (local_20 = (undefined4 *)this->field_234; local_20 != (undefined4 *)0x0;
+  thunk_dialog_draw_wrapped_text((DialogOptionList *)this,1);
+  if (this->sprite_count != 0) {
+    thunk_gfx_set_zoom_scale(this->sprite_zoom);
+    local_34 = this->sprite_x;
+    local_38 = this->sprite_y;
+    for (local_20 = (undefined4 *)this->sprite_list; local_20 != (undefined4 *)0x0;
         local_20 = (undefined4 *)local_20[4]) {
-      uVar5 = this->field_130;
-      uVar2 = thunk_FUN_004a6980((C_00417f70_3c *)local_20[3]);
-      local_18 = thunk_FUN_00472cf0(uVar2,uVar5);
-      uVar5 = this->field_130;
-      uVar2 = thunk_FUN_004bb540((C_00417f70_3c *)local_20[3]);
-      local_40 = thunk_FUN_00472cf0(uVar2,uVar5);
-      if (this->field_244 == 0) {
-        FUN_005cef31
-                  ((C_00417f70_3c *)local_20[3],(iptr)local_5c,this->field_0,local_34,local_38);
+      uVar5 = this->sprite_zoom;
+      uVar2 = thunk_sprite_width((Sprite *)local_20[3]);
+      local_18 = thunk_gfx_zoom_scale(uVar2,uVar5);
+      uVar5 = this->sprite_zoom;
+      uVar2 = thunk_sprite_height((Sprite *)local_20[3]);
+      local_40 = thunk_gfx_zoom_scale(uVar2,uVar5);
+      if (this->on_draw_sprite == 0) {
+        sprite_draw
+                  ((Sprite *)local_20[3],(iptr)local_5c,this->surf_wnd,local_34,local_38);
       }
       else {
-        (*(code *)this->field_244)
-                  (local_20[3],this->field_0,*local_20,local_20[1],local_34,local_38);
+        (*(code *)this->on_draw_sprite)
+                  (local_20[3],this->surf_wnd,*local_20,local_20[1],local_34,local_38);
       }
-      if (((this->field_3c & 0x20000) != 0) && ((undefined4 *)this->field_224 == local_20)) {
-        thunk_FUN_00408680((iptr)local_14,local_34 - 1,local_38 - 1,local_18 + local_34,
+      if (((this->style_flags & 0x20000) != 0) && ((undefined4 *)this->selected_sprite == local_20)) {
+        thunk_rect_set((iptr)local_14,local_34 - 1,local_38 - 1,local_18 + local_34,
                            local_40 + local_38);
-        thunk_FUN_0043c7c0(this->field_0,(iptr)local_14,this->field_70);
+        thunk_gfx_draw_rect_frame(this->surf_wnd,(iptr)local_14,this->frame_color);
       }
       iVar1 = local_40;
       if (local_20[2] != 0) {
-        local_44 = this->field_c4 + local_18 + local_34;
-        iVar3 = thunk_FUN_0040efa0((C_0040ef70_8 *)this->field_8);
+        local_44 = this->sprite_gap + local_18 + local_34;
+        iVar3 = thunk_font_line_spacing((GameFont *)this->body_font);
         local_28 = (iVar1 - iVar3 >> 1) + local_38;
-        thunk_FUN_005a9730((C_0040bc40_d8 *)this,local_20[2],local_44,local_28,0);
+        thunk_dialog_draw_text_default_font((DialogTextView *)this,local_20[2],local_44,local_28,0);
       }
-      local_38 = local_38 + local_40 + this->field_c0;
+      local_38 = local_38 + local_40 + this->section_gap;
     }
-    thunk_FUN_0047df50();
+    thunk_gfx_reset_zoom_scale();
   }
-  if (this->field_24 != 0) {
-    local_3c = this->field_238;
+  if (this->edit_count != 0) {
+    local_3c = this->edit_field_list;
     local_1c = 0;
     for (; local_3c != 0; local_3c = *(uptr *)(local_3c + 0x18)) {
-      FUN_005c19ad(this->field_64);
+      gfx_set_text_color_index(this->text_color);
       uVar2 = 5;
-      iVar1 = thunk_FUN_0059e448((C_0040bc40_28 *)this);
+      iVar1 = thunk_dialog_edit_row_height((C_0040bc40_28 *)this);
       iVar1 = iVar1 * local_1c;
-      iVar3 = thunk_FUN_0059e448((C_0040bc40_28 *)this);
-      uVar5 = this->field_10c;
-      iVar4 = thunk_FUN_0040efa0((C_0040ef70_8 *)this->field_8);
-      FUN_005c0d69
-                ((C_005c0d69 *)this->field_0,*(undefined4 *)(local_3c + 0x10),this->field_108,
+      iVar3 = thunk_dialog_edit_row_height((C_0040bc40_28 *)this);
+      uVar5 = this->edit_y;
+      iVar4 = thunk_font_line_spacing((GameFont *)this->body_font);
+      surface_draw_text_cur_font
+                ((SurfaceTextCurFontView *)this->surf_wnd,*(undefined4 *)(local_3c + 0x10),this->edit_x,
                  (iVar1 + (iVar3 >> 1) + uVar5) - (iVar4 >> 1),uVar2);
       local_1c = local_1c + 1;
     }
   }
-  if ((this->field_3c & 0x41000) == 0x1000) {
-    thunk_FUN_005a14d2((C_0040bc40_268 *)this);
+  if ((this->style_flags & 0x41000) == 0x1000) {
+    thunk_dialog_draw_option_list((DialogOptionList *)this);
   }
   if (local_30 == 0) {
-    thunk_FUN_00408460((C_004083b0_48 *)this->field_0);
-    if (this->field_28 != 0) {
-      if ((this->field_3c & 0x1000) == 0) {
-        if ((this->field_3c & 4) == 0) {
-          FUN_005d4014((C_005d4014 *)this->field_268);
+    thunk_wnd_blit_surface((DibSurface *)this->surf_wnd);
+    if (this->option_count != 0) {
+      if ((this->style_flags & 0x1000) == 0) {
+        if ((this->style_flags & 4) == 0) {
+          radiogrp_show_all((RadioGroupShowView *)this->radio_group);
         }
         else {
-          for (local_1c = 0; local_1c < (int)this->field_28; local_1c = local_1c + 1) {
-            thunk_FUN_0040f380((C_0040f380_3c *)(this->field_26c + local_1c * 0x3c));
+          for (local_1c = 0; local_1c < (int)this->option_count; local_1c = local_1c + 1) {
+            thunk_ctrl_show_and_redraw((Control *)(this->checkboxes + local_1c * 0x3c));
           }
         }
       }
-      else if ((this->field_3c & 0x40000) == 0) {
-        local_48 = this->field_48;
+      else if ((this->style_flags & 0x40000) == 0) {
+        local_48 = this->cur_pane;
         for (local_4c = 0; (int)local_4c < 2; local_4c = local_4c + 1) {
-          if ((local_4c != 1) || ((this->field_3c & 0x400000) != 0)) {
-            this->field_48 = local_4c;
-            if (*(int *)(this->pad_294 + this->field_48 * 4 + -0x10) != 0) {
-              thunk_FUN_0040f380
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -0x10));
+          if ((local_4c != 1) || ((this->style_flags & 0x400000) != 0)) {
+            this->cur_pane = local_4c;
+            if (*(int *)(this->pad_294 + this->cur_pane * 4 + -0x10) != 0) {
+              thunk_ctrl_show_and_redraw
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -0x10));
             }
-            if (*(int *)(this->pad_294 + this->field_48 * 4 + -8) != 0) {
-              thunk_FUN_0040f380
-                        (*(C_0040f380_3c **)(this->pad_294 + this->field_48 * 4 + -8));
+            if (*(int *)(this->pad_294 + this->cur_pane * 4 + -8) != 0) {
+              thunk_ctrl_show_and_redraw
+                        (*(Control **)(this->pad_294 + this->cur_pane * 4 + -8));
             }
           }
         }
-        this->field_48 = local_48;
+        this->cur_pane = local_48;
       }
     }
-    if (this->field_24 != 0) {
-      for (local_1c = 0; local_1c < (int)this->field_24; local_1c = local_1c + 1) {
-        thunk_FUN_0040f380((C_0040f380_3c *)(local_1c * 0x48 + this->field_270));
+    if (this->edit_count != 0) {
+      for (local_1c = 0; local_1c < (int)this->edit_count; local_1c = local_1c + 1) {
+        thunk_ctrl_show_and_redraw((Control *)(local_1c * 0x48 + this->edit_controls));
       }
     }
-    if (this->field_30 + this->field_34 != 0) {
-      for (local_1c = 0; local_1c < (int)(this->field_30 + this->field_34); local_1c = local_1c + 1)
+    if (this->std_button_count + this->extra_button_count != 0) {
+      for (local_1c = 0; local_1c < (int)(this->std_button_count + this->extra_button_count); local_1c = local_1c + 1)
       {
-        thunk_FUN_0040f380((C_0040f380_3c *)(this->field_274 + local_1c * 0x3c));
+        thunk_ctrl_show_and_redraw((Control *)(this->button_controls + local_1c * 0x3c));
       }
     }
-    if ((1 < (int)this->field_2c) && (this->field_28 == 0)) {
-      for (local_1c = 0; local_1c < (int)this->field_2c; local_1c = local_1c + 1) {
-        thunk_FUN_0040f380((C_0040f380_3c *)(this->field_280 + local_1c * 0x40));
+    if ((1 < (int)this->sprite_count) && (this->option_count == 0)) {
+      for (local_1c = 0; local_1c < (int)this->sprite_count; local_1c = local_1c + 1) {
+        thunk_ctrl_show_and_redraw((Control *)(this->sprite_hotspots + local_1c * 0x40));
       }
     }
   }
   else {
-    thunk_FUN_004085f0((C_004083b0_4 *)this->field_0);
+    thunk_window_show((C_004083b0_4 *)this->surf_wnd);
   }
-  this->field_3c = this->field_3c | 0x20;
+  this->style_flags = this->style_flags | 0x20;
   return;
 }
 #undef local_5c
@@ -2241,7 +2241,7 @@ void __thiscall FUN_005a577e(C_0040bc40_2f4 *this)
 #undef local_8
 
 /* 005a5f34 auto */
-#define DAT_006252c4 (*(int *)((u8 *)&g.d_006252c4))
+#define game_session_active (*(int *)((u8 *)&g.d_006252c4))
 #define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
 #define local_114 (*(char (*)[132])(frame_ + FRAME_OFF(4)))
 #define local_90 (*(char (*)[132])(frame_ + FRAME_OFF(136)))
@@ -2249,7 +2249,7 @@ void __thiscall FUN_005a577e(C_0040bc40_2f4 *this)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(272)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-u32 __thiscall FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2)
+u32 __thiscall dialog_run_modal(Dialog *this,iptr param_1,iptr param_2)
 
 {
   iptr iVar1;
@@ -2257,59 +2257,59 @@ u32 __thiscall FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2)
   int iVar2;
   undefined1 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (iptr_00635a9c != 0x10) {
+  if (dialog_stack_depth != 0x10) {
     if (param_2 == 0) {
-      _DAT_006cec80 = thunk_FUN_00421bb0();
+      _DAT_006cec80 = thunk_timer_ticks();
     }
     else {
-      _DAT_006cec80 = thunk_FUN_00421bb0();
+      _DAT_006cec80 = thunk_timer_ticks();
       _DAT_006cec80 = param_2 * 0x3c + -0x4b0 + _DAT_006cec80;
     }
-    if (DAT_006252c4 != 0) {
-      iVar1 = thunk_FUN_00414d10((C_00408010_10 *)&DAT_006553d8);
+    if (game_session_active != 0) {
+      iVar1 = thunk_wnd_get_window((WndBase *)&main_frame_wnd);
       BVar1 = IsIconic(*(HWND *)(iVar1 + 4));
       if (BVar1 != 0) {
-        thunk_FUN_004e7240((C_00408010_10 *)&DAT_006553d8);
+        thunk_wnd_show_restored((WndBase *)&main_frame_wnd);
       }
     }
-    this->field_3c = this->field_3c & 0xffffdfff;
-    if ((this->field_3c & 0x4000) != 0) {
-      this->field_3c = this->field_3c | 0x10000;
+    this->style_flags = this->style_flags & 0xffffdfff;
+    if ((this->style_flags & 0x4000) != 0) {
+      this->style_flags = this->style_flags | 0x10000;
     }
-    thunk_FUN_005a577e(this);
-    if (((this->field_3c & 0x20) != 0) && ((this->field_3c & 8) == 0)) {
-      if (this->field_250 == 0) {
-        FUN_005c61b0((C_00408010_b8 *)(this->field_0 + 0x48));
-        while ((this->field_3c & 0x400) == 0) {
-          thunk_FUN_0040ef50();
+    thunk_dialog_render(this);
+    if (((this->style_flags & 0x20) != 0) && ((this->style_flags & 8) == 0)) {
+      if (this->on_modal_poll == 0) {
+        wnd_run_modal_loop((C_00408010_b8 *)(this->surf_wnd + 0x48));
+        while ((this->style_flags & 0x400) == 0) {
+          thunk_win_pump_one_message();
         }
       }
       else {
-        while ((this->field_3c & 0x400) == 0) {
-          iVar2 = (*(code *)this->field_250)(this);
+        while ((this->style_flags & 0x400) == 0) {
+          iVar2 = (*(code *)this->on_modal_poll)(this);
           if (iVar2 != 0) {
-            FUN_005a3c58();
+            dialog_end_current();
           }
         }
       }
-      if ((param_1 != 0) && (this->field_270 != 0)) {
-        thunk_FUN_00418a70((C_00418a30 *)this->field_270,param_1);
+      if ((param_1 != 0) && (this->edit_controls != 0)) {
+        thunk_ctrl_get_text((ControlTextView *)this->edit_controls,param_1);
       }
-      if (1 < (int)this->field_24) {
-        for (local_8 = 0; local_8 < (int)this->field_24; local_8 = local_8 + 1) {
-          thunk_FUN_00418a70
-                    ((C_00418a30 *)(this->field_270 + local_8 * 0x48),
-                     (iptr)(&DAT_0063cc48 + local_8 * 0x104));
+      if (1 < (int)this->edit_count) {
+        for (local_8 = 0; local_8 < (int)this->edit_count; local_8 = local_8 + 1) {
+          thunk_ctrl_get_text
+                    ((ControlTextView *)(this->edit_controls + local_8 * 0x48),
+                     (iptr)(&text_string_args + local_8 * 0x104));
         }
       }
-      if ((this->field_3c & 0x1000) == 0) {
-        if ((this->field_3c & 4) != 0) {
-          local_c = (uint *)this->field_228;
+      if ((this->style_flags & 0x1000) == 0) {
+        if ((this->style_flags & 4) != 0) {
+          local_c = (uint *)this->option_list;
           local_8 = 0;
           for (; local_c != (uint *)0x0; local_c = (uint *)local_c[4]) {
             *local_c = *local_c & 0xfffffffb;
-            iVar2 = thunk_FUN_00530fe0
-                              ((C_0040f380_3c *)(this->field_26c + local_8 * 0x3c));
+            iVar2 = thunk_checkbox_is_checked
+                              ((Control *)(this->checkboxes + local_8 * 0x3c));
             if (iVar2 != 0) {
               *local_c = *local_c | 4;
             }
@@ -2317,40 +2317,40 @@ u32 __thiscall FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2)
           }
         }
       }
-      else if (this->field_d8 == 0) {
-        if ((this->field_3c & 0x40000) == 0) {
-          this->field_d8 = *(u32 *)(this->field_220 + 4);
+      else if (this->result_id == 0) {
+        if ((this->style_flags & 0x40000) == 0) {
+          this->result_id = *(u32 *)(this->selected_option + 4);
         }
         else {
-          thunk_FUN_005a96b0
-                    (*(C_005a96b0 **)(this->pad_264 + this->field_48 * 4 + 0x14),(iptr)local_90);
-          this->field_d8 = *(u32 *)(this->field_228 + 4);
-          local_c = (uint *)this->field_228;
+          thunk_listbox_get_sel_text
+                    (*(ListBoxSelTextView **)(this->pad_264 + this->cur_pane * 4 + 0x14),(iptr)local_90);
+          this->result_id = *(u32 *)(this->option_list + 4);
+          local_c = (uint *)this->option_list;
           local_8 = 0;
           for (; local_c != (uint *)0x0; local_c = (uint *)local_c[4]) {
-            thunk_FUN_005a9670
-                      (*(C_005a9670 **)(this->pad_264 + this->field_48 * 4 + 0x14),local_8,
+            thunk_listbox_get_text
+                      (*(ListBoxTextView **)(this->pad_264 + this->cur_pane * 4 + 0x14),local_8,
                        (iptr)local_114);
             iVar2 = _strcmp(local_90,local_114);
             if (iVar2 == 0) {
-              this->field_d8 = local_c[1];
+              this->result_id = local_c[1];
             }
             local_8 = local_8 + 1;
           }
         }
       }
-      if ((this->field_3c & 0x800) == 0) {
-        thunk_FUN_0059db65(this);
-        thunk_FUN_00421bd0();
-        thunk_FUN_00407ff0();
-        thunk_FUN_00419b80();
-        thunk_FUN_00407ff0();
+      if ((this->style_flags & 0x800) == 0) {
+        thunk_dialog_close(this);
+        thunk_input_flush_events();
+        thunk_win_flush_pending_msgs();
+        thunk_wnd_flush_paint();
+        thunk_win_flush_pending_msgs();
       }
     }
   }
-  return this->field_d8;
+  return this->result_id;
 }
-#undef DAT_006252c4
+#undef game_session_active
 #undef _DAT_006cec80
 #undef local_114
 #undef local_90
@@ -2371,8 +2371,8 @@ u32 __thiscall FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(372)))
 #define local_8 (*(undefined * *)(frame_ + FRAME_OFF(376)))
 undefined4 __thiscall
-FUN_005a632a
-          (C_0040bc40_2f4 *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5,
+dialog_load_text_section
+          (Dialog *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5,
           iptr param_6,iptr param_7,uint param_8)
 
 {
@@ -2385,20 +2385,20 @@ FUN_005a632a
   local_7c = 1;
   local_10 = 0;
   FUN_005f22d0(&DAT_006cecb0,param_2);
-  iVar1 = thunk_FUN_004a2379(param_1,param_2);
+  iVar1 = thunk_text_open_section(param_1,param_2);
   if (iVar1 == 0) {
     if ((param_8 & 0x8000) == 0) {
-      thunk_FUN_0059dfb9(this,param_5,param_6,param_7,param_8);
+      thunk_dialog_init(this,param_5,param_6,param_7,param_8);
     }
     else {
-      this->field_3c = this->field_3c | param_8;
+      this->style_flags = this->style_flags | param_8;
     }
     local_74 = (uint)(param_4 != 0);
     if (local_74 != 0) {
       FUN_005f22d0(local_6c,param_4);
     }
     do {
-      local_70 = (char *)thunk_FUN_004a23fc(1);
+      local_70 = (char *)thunk_text_read_line(1);
       if (local_70 == (char *)0x0) {
         local_7c = 3;
       }
@@ -2409,8 +2409,8 @@ FUN_005a632a
             local_7c = local_7c + 1;
           }
           else {
-            thunk_FUN_0059e18b
-                      ((C_0059e18b *)this,ADDR(0x635b70, ((u8 *)&g.d_00635b70)),0xffffffff,0xffffffff,0xffffffff,0);
+            thunk_dialog_add_line
+                      ((DialogAddLineView *)this,ADDR(0x635b70, ((u8 *)&g.d_00635b70)),0xffffffff,0xffffffff,0xffffffff,0);
           }
         }
         else if (*local_70 == '@') {
@@ -2432,8 +2432,8 @@ FUN_005a632a
                 if (*local_18 != '\0') {
                   local_18 = local_18 + 1;
                 }
-                thunk_FUN_00426ff0((iptr)local_18,(iptr)local_17c);
-                thunk_FUN_0059e6a9((C_0040bc40_228 *)this,(iptr)local_17c);
+                thunk_text_expand_vars((iptr)local_18,(iptr)local_17c);
+                thunk_dialog_set_title((DialogWindowView *)this,(iptr)local_17c);
               }
               else {
                 iVar1 = __strnicmp(local_18,s_BUTTON_00635b94,6);
@@ -2443,8 +2443,8 @@ FUN_005a632a
                   if (*local_18 != '\0') {
                     local_18 = local_18 + 1;
                   }
-                  thunk_FUN_00426ff0((iptr)local_18,(iptr)local_17c);
-                  thunk_FUN_0059f2a3((C_0040bc40_3c *)this,(iptr)local_17c);
+                  thunk_text_expand_vars((iptr)local_18,(iptr)local_17c);
+                  thunk_dialog_add_button((C_0040bc40_3c *)this,(iptr)local_17c);
                 }
                 else {
                   iVar1 = __strnicmp(local_18,s_COLUMNS_00635b9c,7);
@@ -2453,7 +2453,7 @@ FUN_005a632a
                       local_18 = local_18 + 1;
                     }
                     local_c = _atoi(local_18);
-                    thunk_FUN_0059e4e6((C_0040bc40_3c *)this,local_c);
+                    thunk_dialog_set_columns((C_0040bc40_3c *)this,local_c);
                   }
                   else {
                     iVar1 = __strnicmp(local_18,s_HEIGHT_00635ba4,6);
@@ -2463,7 +2463,7 @@ FUN_005a632a
                         local_18 = local_18 + 1;
                       }
                       local_c = _atoi(local_18);
-                      thunk_FUN_0059e762((C_0040bc40_28 *)this,local_c);
+                      thunk_dialog_set_height((C_0040bc40_28 *)this,local_c);
                     }
                     else {
                       iVar1 = __strcmpi(local_18,s_SMALLFONT_00635bac);
@@ -2476,7 +2476,7 @@ FUN_005a632a
                             local_18 = local_18 + 1;
                           }
                           uVar3 = _atoi(local_18);
-                          this->field_18 = uVar3;
+                          this->req_y = uVar3;
                         }
                         else {
                           iVar1 = __strnicmp(local_18,&DAT_00635bbc,1);
@@ -2487,7 +2487,7 @@ FUN_005a632a
                               local_18 = local_18 + 1;
                             }
                             uVar3 = _atoi(local_18);
-                            this->field_14 = uVar3;
+                            this->req_x = uVar3;
                           }
                           else {
                             iVar1 = __strnicmp(local_18,s_WIDTH_00635bc0,5);
@@ -2497,7 +2497,7 @@ FUN_005a632a
                                 local_18 = local_18 + 1;
                               }
                               local_c = _atoi(local_18);
-                              thunk_FUN_0059e6ff((C_0040bc40_228 *)this,local_c);
+                              thunk_dialog_set_width((DialogWindowView *)this,local_c);
                             }
                             else {
                               iVar1 = __strnicmp(local_18,s_LENGTH_00635bc8,6);
@@ -2513,7 +2513,7 @@ FUN_005a632a
                               else {
                                 iVar1 = __strnicmp(local_18,s_CHECKBOX_00635bd0,7);
                                 if (iVar1 == 0) {
-                                  this->field_3c = this->field_3c | 5;
+                                  this->style_flags = this->style_flags | 5;
                                 }
                                 else {
                                   iVar1 = __strnicmp(local_18,s_LISTBOX_00635bdc,7);
@@ -2526,13 +2526,13 @@ FUN_005a632a
                                     if (local_1c == 0) {
                                       local_1c = 0x10;
                                     }
-                                    thunk_FUN_0059e5c9
-                                              ((C_0040bc40_d8 *)this,local_1c,this->field_11c,0);
+                                    thunk_dialog_set_listbox
+                                              ((DialogTextView *)this,local_1c,this->content_width,0);
                                   }
                                   else {
                                     iVar1 = __strnicmp(local_18,s_SYSTEM_00635be4,6);
                                     if (iVar1 == 0) {
-                                      this->field_3c = this->field_3c | 0x40000;
+                                      this->style_flags = this->style_flags | 0x40000;
                                     }
                                     else {
                                       iVar1 = __strnicmp(local_18,s_DEFAULT_00635bec,7);
@@ -2578,23 +2578,23 @@ FUN_005a632a
           }
         }
         else if (local_7c == 1) {
-          thunk_FUN_00426ff0((iptr)local_70,(iptr)local_17c);
-          thunk_FUN_0059e18b
-                    ((C_0059e18b *)this,(iptr)local_17c,0xffffffff,0xffffffff,0xffffffff,0);
+          thunk_text_expand_vars((iptr)local_70,(iptr)local_17c);
+          thunk_dialog_add_line
+                    ((DialogAddLineView *)this,(iptr)local_17c,0xffffffff,0xffffffff,0xffffffff,0);
         }
         else if (local_7c == 2) {
-          thunk_FUN_00426ff0((iptr)local_70,(iptr)local_17c);
+          thunk_text_expand_vars((iptr)local_70,(iptr)local_17c);
           if (local_74 == 0) {
-            if ((this->field_3c & 4) == 0) {
-              local_14 = thunk_FUN_0059edf0
-                                   ((C_0040bc40_268 *)this,(iptr)local_17c,local_10,0);
+            if ((this->style_flags & 4) == 0) {
+              local_14 = thunk_dialog_add_option
+                                   ((DialogOptionList *)this,(iptr)local_17c,local_10,0);
             }
             else {
-              local_14 = thunk_FUN_0059f026
-                                   ((C_0040bc40_268 *)this,(iptr)local_17c,local_10,0);
+              local_14 = thunk_dialog_add_checkbox_option
+                                   ((DialogOptionList *)this,(iptr)local_17c,local_10,0);
             }
             if (param_3 == local_10) {
-              this->field_220 = local_14;
+              this->selected_option = local_14;
             }
             local_10 = local_10 + 1;
           }
@@ -2603,11 +2603,11 @@ FUN_005a632a
               param_3 = 5;
             }
             local_8 = local_6c;
-            if (this->field_24 != 0) {
-              local_8 = &DAT_0063cc48 + this->field_24 * 0x104;
+            if (this->edit_count != 0) {
+              local_8 = &text_string_args + this->edit_count * 0x104;
             }
-            thunk_FUN_0059f06d
-                      ((C_0040bc40_268 *)this,(iptr)local_17c,(iptr)local_8,param_3);
+            thunk_dialog_add_edit_field
+                      ((DialogOptionList *)this,(iptr)local_17c,(iptr)local_8,param_3);
           }
         }
       }
@@ -2615,7 +2615,7 @@ FUN_005a632a
     local_78 = 0;
   }
   else if ((param_8 & 0x8000) == 0) {
-    thunk_FUN_0059dfb9(this,param_5,param_6,param_7,param_8);
+    thunk_dialog_init(this,param_5,param_6,param_7,param_8);
   }
   return local_78;
 }
@@ -2633,25 +2633,25 @@ FUN_005a632a
 #undef local_8
 
 /* 005a6c23 auto */
-#define DAT_006359c4 (*(iptr *)((u8 *)&g.d_006359c4))
-void __cdecl FUN_005a6c23(iptr param_1)
+#define dlg_parent_window (*(iptr *)((u8 *)&g.d_006359c4))
+void __cdecl dlg_push_parent_window(iptr param_1)
 
 {
-  DAT_006359c8 = DAT_006359c4;
-  DAT_006359c4 = param_1;
+  dlg_saved_parent_window = dlg_parent_window;
+  dlg_parent_window = param_1;
   return;
 }
-#undef DAT_006359c4
+#undef dlg_parent_window
 
 /* 005a6c45 auto */
-#define DAT_006359c4 (*(undefined4 *)((u8 *)&g.d_006359c4))
-void __cdecl FUN_005a6c45(void)
+#define dlg_parent_window (*(undefined4 *)((u8 *)&g.d_006359c4))
+void __cdecl dlg_pop_parent_window(void)
 
 {
-  DAT_006359c4 = DAT_006359c8;
+  dlg_parent_window = dlg_saved_parent_window;
   return;
 }
-#undef DAT_006359c4
+#undef dlg_parent_window
 
 /* 005a9320 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -2662,17 +2662,17 @@ void __cdecl FUN_005a6c45(void)
    
    Library: Visual Studio 1998 Debug */
 
-C_0040f930 * __thiscall FUN_005a9320(C_0040f930 *this,uint param_1)
+Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint param_1)
 
 {
   if ((param_1 & 2) == 0) {
-    thunk_FUN_0040f930(this);
+    thunk_checkbox_dtor(this);
     if ((param_1 & 1) != 0) {
       operator_delete(this);
     }
   }
   else {
-    FUN_005f2490(this,0x3c,this[-1].field_1c,thunk_FUN_0040f930);
+    FUN_005f2490(this,0x3c,this[-1].field_1c,thunk_checkbox_dtor);
     operator_delete(&this[-1].field_1c);
   }
   return this;
@@ -2687,17 +2687,17 @@ C_0040f930 * __thiscall FUN_005a9320(C_0040f930 *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-C_0040f380_3c * __thiscall FUN_005a93b0(C_0040f380_3c *this,uint param_1)
+Control * __thiscall edit_vector_dtor(Control *this,uint param_1)
 
 {
   if ((param_1 & 2) == 0) {
-    thunk_FUN_00418870(this);
+    thunk_edit_dtor(this);
     if ((param_1 & 1) != 0) {
       operator_delete(this);
     }
   }
   else {
-    FUN_005f2490(this,0x48,this[-1].field_38,thunk_FUN_00418870);
+    FUN_005f2490(this,0x48,this[-1].field_38,thunk_edit_dtor);
     operator_delete(&this[-1].field_38);
   }
   return this;
@@ -2712,27 +2712,27 @@ C_0040f380_3c * __thiscall FUN_005a93b0(C_0040f380_3c *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-C_0040f380_3c * __thiscall FUN_005a9440(C_0040f380_3c *this,uint param_1)
+Control * __thiscall ctrl_vector_dtor(Control *this,uint param_1)
 
 {
   if ((param_1 & 2) == 0) {
-    thunk_FUN_0040f570(this);
+    thunk_ctrl_dtor(this);
     if ((param_1 & 1) != 0) {
       operator_delete(this);
     }
   }
   else {
-    FUN_005f2490(this,0x3c,this[-1].field_38,thunk_FUN_0040f570);
+    FUN_005f2490(this,0x3c,this[-1].field_38,thunk_ctrl_dtor);
     operator_delete(&this[-1].field_38);
   }
   return this;
 }
 
 /* 005a94d0 auto */
-C_00418ea0 * __thiscall FUN_005a94d0(C_00418ea0 *this,uint param_1)
+ListBoxControl * __thiscall listbox_scalar_dtor(ListBoxControl *this,uint param_1)
 
 {
-  thunk_FUN_00418ea0(this);
+  thunk_listbox_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -2748,27 +2748,27 @@ C_00418ea0 * __thiscall FUN_005a94d0(C_00418ea0 *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-C_00453aa0 * __thiscall FUN_005a9520(C_00453aa0 *this,uint param_1)
+Hotspot * __thiscall hotspot_vector_dtor(Hotspot *this,uint param_1)
 
 {
   if ((param_1 & 2) == 0) {
-    thunk_FUN_00453ba0(this);
+    thunk_hotspot_dtor(this);
     if ((param_1 & 1) != 0) {
       operator_delete(this);
     }
   }
   else {
-    FUN_005f2490(this,0x40,this[-1].field_1c,thunk_FUN_00453ba0);
+    FUN_005f2490(this,0x40,this[-1].field_1c,thunk_hotspot_dtor);
     operator_delete(&this[-1].field_1c);
   }
   return this;
 }
 
 /* 005a95b0 auto */
-C_004083b0_114 * __thiscall FUN_005a95b0(C_004083b0_114 *this,uint param_1)
+SurfaceWindow * __thiscall surfwnd_scalar_dtor(SurfaceWindow *this,uint param_1)
 
 {
-  thunk_FUN_0044cba0(this);
+  thunk_surfwnd_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -2776,34 +2776,34 @@ C_004083b0_114 * __thiscall FUN_005a95b0(C_004083b0_114 *this,uint param_1)
 }
 
 /* 005a9600 auto */
-void __thiscall FUN_005a9600(C_00408010_10 *this,iptr param_1)
+void __thiscall wnd_get_screen_rect(WndBase *this,iptr param_1)
 
 {
-  FUN_005bc9a3(this->field_8,param_1);
+  wnd_obj_get_screen_rect(this->native_wnd,param_1);
   return;
 }
 
 /* 005a9640 auto */
-void __thiscall FUN_005a9640(C_005a9640 *this)
+void __thiscall checkbox_disable(CheckboxDisableView *this)
 
 {
-  this->field_34 = 0;
+  this->is_enabled = 0;
   return;
 }
 
 /* 005a9670 auto */
-void __thiscall FUN_005a9670(C_005a9670 *this,undefined4 param_1,iptr param_2)
+void __thiscall listbox_get_text(ListBoxTextView *this,undefined4 param_1,iptr param_2)
 
 {
-  FUN_005d3cff(this->field_1c,param_1,param_2);
+  listbox_hwnd_get_text(this->hwnd,param_1,param_2);
   return;
 }
 
 /* 005a96b0 auto */
-void __thiscall FUN_005a96b0(C_005a96b0 *this,iptr param_1)
+void __thiscall listbox_get_sel_text(ListBoxSelTextView *this,iptr param_1)
 
 {
-  FUN_005d3d62(this->field_1c,param_1);
+  listbox_hwnd_get_sel_text(this->hwnd,param_1);
   return;
 }
 
@@ -2811,51 +2811,51 @@ void __thiscall FUN_005a96b0(C_005a96b0 *this,iptr param_1)
 uint __thiscall FUN_005a96f0(C_0040bc40_40 *this)
 
 {
-  return (uint)((this->field_3c & 0x100) != 0);
+  return (uint)((this->style_flags & 0x100) != 0);
 }
 
 /* 005a9730 auto */
 void __thiscall
-FUN_005a9730
-          (C_0040bc40_d8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+dialog_draw_text_default_font
+          (DialogTextView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  thunk_FUN_0059f3d7(this,this->field_8,param_1,param_2,param_3,param_4);
+  thunk_dialog_draw_text_shadowed(this,this->body_font,param_1,param_2,param_3,param_4);
   return;
 }
 
 /* 005a9780 auto */
-#define DAT_00635c64 (*(iptr *)((u8 *)&g.d_00635c64))
-void __cdecl FUN_005a9780(iptr param_1)
+#define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
+void __cdecl gfx_set_draw_target(iptr param_1)
 
 {
-  DAT_00635c64 = param_1;
+  gfx_draw_target = param_1;
   return;
 }
-#undef DAT_00635c64
+#undef gfx_draw_target
 
 /* 005a9798 auto */
 void __cdecl
-FUN_005a9798(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+gfx_draw_line_color(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
             undefined4 param_5,undefined4 param_6)
 
 {
-  FUN_005c19ad(param_6);
-  FUN_005c11b2((C_004083b0_48 *)param_1,param_2,param_3,param_4,param_5);
+  gfx_set_text_color_index(param_6);
+  surface_draw_line((DibSurface *)param_1,param_2,param_3,param_4,param_5);
   return;
 }
 
 /* 005a97cc auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-FUN_005a97cc(iptr param_1,undefined4 param_2,int param_3,int param_4,undefined4 param_5)
+gfx_draw_hline(iptr param_1,undefined4 param_2,int param_3,int param_4,undefined4 param_5)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_00408680((iptr)local_14,param_2,param_4,param_3 + 1,param_4 + 1);
-  thunk_FUN_0040fdb0(param_1,(iptr)local_14,param_5);
+  thunk_rect_set((iptr)local_14,param_2,param_4,param_3 + 1,param_4 + 1);
+  thunk_gfx_fill_rect(param_1,(iptr)local_14,param_5);
   return;
 }
 #undef local_14
@@ -2867,8 +2867,8 @@ void __cdecl FUN_005a9811(iptr param_1,int param_2,int param_3,int param_4,undef
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_00408680((iptr)local_14,param_2,param_3,param_4 + param_2,param_3 + 1);
-  thunk_FUN_0040fdb0(param_1,(iptr)local_14,param_5);
+  thunk_rect_set((iptr)local_14,param_2,param_3,param_4 + param_2,param_3 + 1);
+  thunk_gfx_fill_rect(param_1,(iptr)local_14,param_5);
   return;
 }
 #undef local_14
@@ -2876,13 +2876,13 @@ void __cdecl FUN_005a9811(iptr param_1,int param_2,int param_3,int param_4,undef
 /* 005a9858 auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-FUN_005a9858(iptr param_1,int param_2,undefined4 param_3,int param_4,undefined4 param_5)
+gfx_draw_vline(iptr param_1,int param_2,undefined4 param_3,int param_4,undefined4 param_5)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_00408680((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + 1);
-  thunk_FUN_0040fdb0(param_1,(iptr)local_14,param_5);
+  thunk_rect_set((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + 1);
+  thunk_gfx_fill_rect(param_1,(iptr)local_14,param_5);
   return;
 }
 #undef local_14
@@ -2894,71 +2894,71 @@ void __cdecl FUN_005a989d(iptr param_1,int param_2,int param_3,int param_4,undef
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_00408680((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + param_3);
-  thunk_FUN_0040fdb0(param_1,(iptr)local_14,param_5);
+  thunk_rect_set((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + param_3);
+  thunk_gfx_fill_rect(param_1,(iptr)local_14,param_5);
   return;
 }
 #undef local_14
 
 /* 005a98e4 auto */
 void __cdecl
-FUN_005a98e4(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
+gfx_draw_box_ltrb(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
             undefined4 param_5,undefined4 param_6)
 
 {
-  thunk_FUN_005a97cc(param_1,param_2,param_4,param_3,param_6);
-  thunk_FUN_005a97cc(param_1,param_2,param_4,param_5,param_6);
-  thunk_FUN_005a9858(param_1,param_2,param_3,param_5,param_6);
-  thunk_FUN_005a9858(param_1,param_4,param_3,param_5,param_6);
+  thunk_gfx_draw_hline(param_1,param_2,param_4,param_3,param_6);
+  thunk_gfx_draw_hline(param_1,param_2,param_4,param_5,param_6);
+  thunk_gfx_draw_vline(param_1,param_2,param_3,param_5,param_6);
+  thunk_gfx_draw_vline(param_1,param_4,param_3,param_5,param_6);
   return;
 }
 
 /* 005a9964 auto */
 void __cdecl
-FUN_005a9964(iptr param_1,int param_2,int param_3,int param_4,iptr param_5,undefined4 param_6)
+gfx_draw_frame_rect(iptr param_1,int param_2,int param_3,int param_4,iptr param_5,undefined4 param_6)
 
 {
-  thunk_FUN_005a97cc(param_1,param_2,param_4 + param_2 + -1,param_3,param_6);
-  thunk_FUN_005a97cc(param_1,param_2,param_4 + param_2 + -1,param_5 + param_3 + -1,param_6);
-  thunk_FUN_005a9858(param_1,param_2,param_3,param_5 + param_3 + -1,param_6);
-  thunk_FUN_005a9858(param_1,param_4 + param_2 + -1,param_3,param_5 + param_3 + -1,param_6);
+  thunk_gfx_draw_hline(param_1,param_2,param_4 + param_2 + -1,param_3,param_6);
+  thunk_gfx_draw_hline(param_1,param_2,param_4 + param_2 + -1,param_5 + param_3 + -1,param_6);
+  thunk_gfx_draw_vline(param_1,param_2,param_3,param_5 + param_3 + -1,param_6);
+  thunk_gfx_draw_vline(param_1,param_4 + param_2 + -1,param_3,param_5 + param_3 + -1,param_6);
   return;
 }
 
 /* 005a99fc auto */
-void __cdecl FUN_005a99fc(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl gfx_draw_bevel_rect(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
 
 {
-  thunk_FUN_005a97cc(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) + -1,
+  thunk_gfx_draw_hline(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) + -1,
                      *(undefined4 *)(param_2 + 4),param_3);
-  thunk_FUN_005a9858(param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),
+  thunk_gfx_draw_vline(param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),
                      *(int *)(param_2 + 0xc) + -1,param_3);
-  thunk_FUN_005a97cc(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) + -1,
+  thunk_gfx_draw_hline(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) + -1,
                      *(int *)(param_2 + 0xc) + -1,param_4);
-  thunk_FUN_005a9858(param_1,*(int *)(param_2 + 8) + -1,*(undefined4 *)(param_2 + 4),
+  thunk_gfx_draw_vline(param_1,*(int *)(param_2 + 8) + -1,*(undefined4 *)(param_2 + 4),
                      *(int *)(param_2 + 0xc) + -1,param_4);
   return;
 }
 
 /* 005a9aa3 auto */
-void __cdecl FUN_005a9aa3(iptr param_1,undefined4 param_2)
+void __cdecl gfx_fill_surface(iptr param_1,undefined4 param_2)
 
 {
-  FUN_005c041f((C_004083b0_48 *)param_1,param_2);
+  surface_fill((DibSurface *)param_1,param_2);
   return;
 }
 
 /* 005a9abf auto */
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-FUN_005a9abf(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4,iptr param_5,
+gfx_fill_rect_xywh(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4,iptr param_5,
             undefined4 param_6)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_004086c0((iptr)local_14,param_2,param_3,param_4,param_5);
-  FUN_005c0333((C_004083b0_48 *)param_1,(iptr)local_14,param_6);
+  thunk_rect_set_xywh((iptr)local_14,param_2,param_3,param_4,param_5);
+  surface_fill_rect((DibSurface *)param_1,(iptr)local_14,param_6);
   return;
 }
 #undef local_14
@@ -2967,15 +2967,15 @@ FUN_005a9abf(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4,ipt
 #define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl
-FUN_005a9afe(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
+gfx_copy_rect_xywh(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
             undefined4 param_6,iptr param_7,iptr param_8)
 
 {
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_004086c0((iptr)local_14,param_3,param_4,param_7,param_8);
-  thunk_FUN_004086c0((iptr)local_24,param_5,param_6,param_7,param_8);
-  FUN_005c0593((C_004083b0_48 *)param_1,param_2,(iptr)local_14,(iptr)local_24);
+  thunk_rect_set_xywh((iptr)local_14,param_3,param_4,param_7,param_8);
+  thunk_rect_set_xywh((iptr)local_24,param_5,param_6,param_7,param_8);
+  surface_blit((DibSurface *)param_1,param_2,(iptr)local_14,(iptr)local_24);
   return;
 }
 #undef local_24
@@ -2989,7 +2989,7 @@ FUN_005a9afe(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,und
 #define local_28 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
 int __cdecl
-FUN_005a9b5d(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int param_6,int param_7,
+gfx_tile_fill(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int param_6,int param_7,
             int param_8)
 
 {
@@ -3001,8 +3001,8 @@ FUN_005a9b5d(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int p
   int iVar6;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = thunk_FUN_0043c590((C_004083b0_48 *)param_2);
-  iVar2 = thunk_FUN_0043c560((C_004083b0_48 *)param_2);
+  iVar1 = thunk_surface_width((DibSurface *)param_2);
+  iVar2 = thunk_surface_height((DibSurface *)param_2);
   local_8 = iVar2;
   if ((iVar1 != 0) && (iVar2 != 0)) {
     if (param_3 == param_7 || param_3 - param_7 < 0) {
@@ -3031,7 +3031,7 @@ FUN_005a9b5d(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int p
         if (iVar4 <= iVar6) {
           iVar6 = iVar4;
         }
-        thunk_FUN_005a9afe(param_2,param_1,local_28,local_2c,local_30,local_8,iVar5 - local_30,
+        thunk_gfx_copy_rect_xywh(param_2,param_1,local_28,local_2c,local_30,local_8,iVar5 - local_30,
                            iVar6 - local_8);
         iVar6 = iVar1 - local_28;
         local_28 = 0;
@@ -3053,17 +3053,17 @@ FUN_005a9b5d(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int p
 void __cdecl FUN_005a9ce9(iptr param_1,undefined4 *param_2,undefined4 param_3,undefined4 param_4)
 
 {
-  thunk_FUN_005a97cc(param_1,*param_2,param_2[2] + -1,param_2[1],param_3);
-  thunk_FUN_005a97cc(param_1,*param_2,param_2[2] + -1,param_2[3] + -1,param_4);
-  thunk_FUN_005a9858(param_1,*param_2,param_2[1],param_2[3] + -1,param_3);
-  thunk_FUN_005a9858(param_1,param_2[2] + -1,param_2[1],param_2[3] + -1,param_4);
-  thunk_FUN_004bb800((iptr)param_2,1,1);
+  thunk_gfx_draw_hline(param_1,*param_2,param_2[2] + -1,param_2[1],param_3);
+  thunk_gfx_draw_hline(param_1,*param_2,param_2[2] + -1,param_2[3] + -1,param_4);
+  thunk_gfx_draw_vline(param_1,*param_2,param_2[1],param_2[3] + -1,param_3);
+  thunk_gfx_draw_vline(param_1,param_2[2] + -1,param_2[1],param_2[3] + -1,param_4);
+  thunk_rect_deflate((iptr)param_2,1,1);
   return;
 }
 
 /* 005a9f30 auto */
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006c9210 (*(int *)((u8 *)&g.d_006c9210))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define nm_production_complete_count (*(int *)((u8 *)&g.d_006c9210))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl FUN_005a9f30(void)
 
@@ -3071,31 +3071,31 @@ void __cdecl FUN_005a9f30(void)
   bool bVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  if ((DAT_006c9210 != 0) || (iptr_006ad308 < 2)) {
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  if ((nm_production_complete_count != 0) || (net_player_count < 2)) {
     bVar1 = true;
     for (local_c = 1; local_c < 8; local_c = local_c + 1) {
       if ((((1 << ((byte)local_c & 0x1f) & (uint)game.civs_alive) != 0) &&
           ((1 << ((byte)local_c & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(&DAT_006ced20 + local_c * 4) == 0)) {
+         (*(int *)(&net_civ_phase_done + local_c * 4) == 0)) {
         bVar1 = false;
         break;
       }
     }
     if (bVar1) {
-      DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-      FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+      dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+      wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
     }
   }
   return;
 }
-#undef DAT_006ad678
-#undef DAT_006c9210
+#undef dialog_stack_top
+#undef nm_production_complete_count
 #undef local_c
 
 /* 005aa004 auto */
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006c921c (*(int *)((u8 *)&g.d_006c921c))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define nm_human_move_complete_count (*(int *)((u8 *)&g.d_006c921c))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl FUN_005aa004(void)
 
@@ -3103,59 +3103,59 @@ void __cdecl FUN_005aa004(void)
   bool bVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  if ((DAT_006c921c != 0) || (iptr_006ad308 < 2)) {
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  if ((nm_human_move_complete_count != 0) || (net_player_count < 2)) {
     bVar1 = true;
     for (local_c = 1; local_c < 8; local_c = local_c + 1) {
       if ((((1 << ((byte)local_c & 0x1f) & (uint)game.civs_alive) != 0) &&
           ((1 << ((byte)local_c & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(&DAT_006ced20 + local_c * 4) == 0)) {
+         (*(int *)(&net_civ_phase_done + local_c * 4) == 0)) {
         bVar1 = false;
         break;
       }
     }
-    if ((bVar1) || (iptr_006ad308 < 2)) {
-      DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-      FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+    if ((bVar1) || (net_player_count < 2)) {
+      dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+      wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
     }
   }
   return;
 }
-#undef DAT_006ad678
-#undef DAT_006c921c
+#undef dialog_stack_top
+#undef nm_human_move_complete_count
 #undef local_c
 
 /* 005aa0e5 game (src/game/bigframes.c) */
 #if 0
-#define DAT_00627670 (*(int *)((u8 *)&g.d_00627670))
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_00628048 (*(byte *)((u8 *)&g.d_00628048))
-#define DAT_0062c488 (*(int *)((u8 *)&g.d_0062c488))
-#define DAT_00633a78 (*(int *)((u8 *)&g.d_00633a78))
-#define DAT_00635a3c (*(undefined1 * *)((u8 *)&g.d_00635a3c))
-#define DAT_0064b1ac (*(int *)((u8 *)&g.d_0064b1ac))
-#define DAT_00654b70 (*(int *)((u8 *)&g.d_00654b70))
-#define DAT_00654fa4 (*(undefined1 *)((u8 *)&g.d_00654fa4))
-#define DAT_00654fa6 (*(undefined2 *)((u8 *)&g.d_00654fa6))
-#define DAT_00654fa8 (*(short *)((u8 *)&g.d_00654fa8))
-#define DAT_00654faa (*(short *)((u8 *)&g.d_00654faa))
-#define DAT_00654fb0 (*(undefined2 *)((u8 *)&g.d_00654fb0))
-#define DAT_00673b08 (*(u8 *)((u8 *)&g.d_00673b08))
-#define DAT_006ad304 (*(int *)((u8 *)&g.d_006ad304))
-#define DAT_006ad35c (*(undefined4 *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad578 (*(undefined *)((u8 *)&g.d_006ad578))
-#define DAT_006ad685 (*(char *)((u8 *)&g.d_006ad685))
-#define DAT_006ad699 (*(undefined1 *)((u8 *)&g.d_006ad699))
-#define DAT_006c9210 (*(undefined4 *)((u8 *)&g.d_006c9210))
-#define DAT_006c921c (*(undefined4 *)((u8 *)&g.d_006c921c))
-#define iptr_006d1da0 (*(iptr *)((u8 *)&g.d_006d1da0))
+#define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
+#define autoplay_turns_left (*(short *)((u8 *)&g.d_00654faa))
+#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define game_over_reason (*(int *)((u8 *)&g.d_0064b1ac))
+#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
+#define mp_turn_civ (*(undefined *)((u8 *)&g.d_006ad578))
+#define mp_turn_seconds_left (*(int *)((u8 *)&g.d_00633a78))
+#define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
+#define net_claimed_civs_mask (*(undefined2 *)((u8 *)&g.d_00654fb0))
+#define net_local_slot (*(int *)((u8 *)&g.d_006ad304))
+#define net_slot_civs (*(undefined4 *)((u8 *)&g.d_006ad35c))
+#define net_tile_sync_enabled (*(undefined1 *)((u8 *)&g.d_006ad699))
+#define nm_human_move_complete_count (*(undefined4 *)((u8 *)&g.d_006c921c))
+#define nm_production_complete_count (*(undefined4 *)((u8 *)&g.d_006c9210))
+#define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
+#define saved_human_players (*(u8 *)((u8 *)&g.d_00673b08))
+#define saved_resume_new_game (*(undefined2 *)((u8 *)&g.d_00654fa6))
+#define saved_turn_civ (*(undefined1 *)((u8 *)&g.d_00654fa4))
+#define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
+#define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
+#define turn_resume_new_game (*(int *)((u8 *)&g.d_0062c488))
 #define _DAT_0066c990 (*(undefined4 *)((u8 *)&g.d_0066c990))
 #define _DAT_00673b08 (*(undefined4 *)((u8 *)&g.d_00673b08))
 #define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
 #define local_330 (*(uptr *)(frame_ + FRAME_OFF(0)))
 #define local_32c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_328 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_324 (*(C_0040bc40_2f4 *)(frame_ + FRAME_OFF(12)))
+#define local_324 (*(Dialog *)(frame_ + FRAME_OFF(12)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(768)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(772)))
 #define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
@@ -3169,7 +3169,7 @@ void __cdecl FUN_005aa004(void)
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl FUN_005aa0e5(void)
+void __cdecl net_host_turn_loop(void)
 
 {
   byte bVar1;
@@ -3181,121 +3181,121 @@ void __cdecl FUN_005aa0e5(void)
   undefined1 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0059db08(&local_324,0x4000);
+  thunk_dialog_ctor(&local_324,0x4000);
   local_8 = 0;
-  iVar5 = iptr_006d1da0;
-  iVar3 = thunk_FUN_00493c7d(iptr_006d1da0);
-  FUN_005d23bb(ADDR(0x635c68, ((u8 *)&g.d_00635c68)),iVar3,iVar5);
+  iVar5 = human_civ;
+  iVar3 = thunk_civ_name_plural(human_civ);
+  dbg_logf_str_int(ADDR(0x635c68, ((u8 *)&g.d_00635c68)),iVar3,iVar5);
   for (local_330 = 1; (int)local_330 < 8; local_330 = local_330 + 1) {
-    if (((iptr_006d1da0 != local_330) &&
+    if (((human_civ != local_330) &&
         ((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)local_330 & 0x1f) & (uint)game.human_players) != 0)) {
       uVar6 = local_330;
-      iVar3 = thunk_FUN_00493c7d(local_330);
-      FUN_005d23bb(ADDR(0x635c78, ((u8 *)&g.d_00635c78)),iVar3,uVar6);
+      iVar3 = thunk_civ_name_plural(local_330);
+      dbg_logf_str_int(ADDR(0x635c78, ((u8 *)&g.d_00635c78)),iVar3,uVar6);
     }
   }
-  thunk_FUN_0059c2b8();
-  thunk_FUN_00487007();
-  thunk_FUN_0042a768((C_004083b0_488 *)&DAT_0063eb10);
-  thunk_FUN_0042a768((C_004083b0_488 *)&DAT_0063e4f8);
-  thunk_FUN_004e4ceb();
-  thunk_FUN_004897fa(1);
-  thunk_FUN_00413476((C_004083b0_2e4 *)&DAT_0066c7a8);
+  thunk_net_reset_error_counts();
+  thunk_map_rebuild_unit_flags();
+  thunk_picwnd_close((C_004083b0_488 *)&advisor_window);
+  thunk_picwnd_close((C_004083b0_488 *)&casualty_window);
+  thunk_menu_update_states();
+  thunk_ui_redraw_all_maps(1);
+  thunk_mapview_update_title((FrameWindow *)&map_views);
   local_18 = 0;
   for (local_328 = 0; local_328 < game.num_units; local_328 = local_328 + 1) {
-    if ((units[local_328].id != 0) && (units[local_328].owner == iptr_006d1da0)) {
-      thunk_FUN_00410402
-                ((C_004083b0_430 *)&DAT_0066c7a8,(int)units[local_328].x,(int)units[local_328].y);
+    if ((units[local_328].id != 0) && (units[local_328].owner == human_civ)) {
+      thunk_mapview_center_on
+                ((C_004083b0_430 *)&map_views,(int)units[local_328].x,(int)units[local_328].y);
       local_18 = local_18 + 1;
       break;
     }
   }
   if (local_18 == 0) {
     for (local_328 = 0; local_328 < game.num_cities; local_328 = local_328 + 1) {
-      if ((cities[local_328].id != 0) && (cities[local_328].owner == iptr_006d1da0)) {
-        thunk_FUN_00410402
-                  ((C_004083b0_430 *)&DAT_0066c7a8,(int)cities[local_328].x,(int)cities[local_328].y
+      if ((cities[local_328].id != 0) && (cities[local_328].owner == human_civ)) {
+        thunk_mapview_center_on
+                  ((C_004083b0_430 *)&map_views,(int)cities[local_328].x,(int)cities[local_328].y
                   );
         break;
       }
     }
   }
-  bVar1 = DAT_00628048;
-  if (DAT_00628048 != 0) {
+  bVar1 = turn_resume_civ;
+  if (turn_resume_civ != 0) {
     do {
-      if ((1 << (DAT_00628048 & 0x1f) & (uint)game.civs_alive) != 0) goto LAB_005aa3dc;
-      DAT_00628048 = DAT_00628048 + 1;
-      if (DAT_00628048 == 8) {
-        DAT_00628048 = 0;
+      if ((1 << (turn_resume_civ & 0x1f) & (uint)game.civs_alive) != 0) goto LAB_005aa3dc;
+      turn_resume_civ = turn_resume_civ + 1;
+      if (turn_resume_civ == 8) {
+        turn_resume_civ = 0;
       }
-    } while (DAT_00628048 != bVar1);
-    DAT_0064b1ac = 1;
+    } while (turn_resume_civ != bVar1);
+    game_over_reason = 1;
   }
 LAB_005aa3dc:
   do {
-    game.human_players = DAT_006c31a8 | game.human_players;
-    DAT_006c31a8 = 0;
-    _memset(&DAT_0064ba48,-1,0xc0);
-    thunk_FUN_0048710a(-3);
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
+    game.human_players = pending_human_players | game.human_players;
+    pending_human_players = 0;
+    _memset(&net_map_lock_slots,-1,0xc0);
+    thunk_units_reset_for_turn(-3);
+    thunk_net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(60000);
-    while ((DAT_006c8fac != 0 || (DAT_006c8fa0 != 0))) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+    while ((net_msgq_priority_count != 0 || (net_msgq_normal_count != 0))) {
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
-    thunk_FUN_0048a92d();
-    if (DAT_00628048 == 0) {
-      thunk_FUN_00487371(0xfffffffd);
-      thunk_FUN_004b0b53(0xff,2,0,0,0);
+    thunk_game_calc_human_wonder_range();
+    if (turn_resume_civ == 0) {
+      thunk_game_advance_turn(0xfffffffd);
+      thunk_net_send_state_diff(0xff,2,0,0,0);
       XD_FlushSendBuffer(60000);
     }
-    iVar4 = thunk_FUN_0048aedc();
-    if ((iVar4 != 0) || (DAT_0064b1ac != 0)) {
-      DAT_00628044 = '\0';
+    iVar4 = thunk_game_check_retirement();
+    if ((iVar4 != 0) || (game_over_reason != 0)) {
+      game_loop_active = '\0';
       break;
     }
-    if ((DAT_00627670 != 0) && ((DAT_00628048 == 0 || (DAT_0062c488 != 0)))) {
-      thunk_FUN_004fba0c((C_0040bc40_310 *)&DAT_0064b690,(int)game.turn);
-      thunk_FUN_004fba9c((C_0040bc40_310 *)&DAT_0064b690,(int)game.turn);
-      thunk_FUN_004fbb2f((C_0040bc40_310 *)&DAT_0064b690,(int)game.turn);
-      thunk_FUN_004fbbdd((C_0040bc40_310 *)&DAT_0064b690);
-      thunk_FUN_004b0b53(0xff,2,0,0,0);
+    if ((scenario_events_loaded != 0) && ((turn_resume_civ == 0 || (turn_resume_new_game != 0)))) {
+      thunk_events_check_turn((ScenarioEvents *)&scenario_events,(int)game.turn);
+      thunk_events_check_turn_interval((ScenarioEvents *)&scenario_events,(int)game.turn);
+      thunk_events_check_random_turn((ScenarioEvents *)&scenario_events,(int)game.turn);
+      thunk_events_check_received_tech((ScenarioEvents *)&scenario_events);
+      thunk_net_send_state_diff(0xff,2,0,0,0);
       XD_FlushSendBuffer(5000);
     }
-    game.human_players = (DAT_006c31a8 | game.human_players) & (byte)DAT_00654fb0;
-    DAT_006c31a8 = 0;
-    DAT_006ad699 = 0;
-    for (local_330 = 0; (DAT_00628044 != '\0' && ((int)local_330 < 8)); local_330 = local_330 + 1) {
+    game.human_players = (pending_human_players | game.human_players) & (byte)net_claimed_civs_mask;
+    pending_human_players = 0;
+    net_tile_sync_enabled = 0;
+    for (local_330 = 0; (game_loop_active != '\0' && ((int)local_330 < 8)); local_330 = local_330 + 1) {
       game.turn_civ = (byte)local_330;
       if (((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0) &&
          ((1 << ((byte)local_330 & 0x1f) & (uint)game.human_players) == 0)) {
-        thunk_FUN_00489553(local_330);
-        thunk_FUN_004b0b53(0xff,2,0,0,0);
+        thunk_civ_process_turn(local_330);
+        thunk_net_send_state_diff(0xff,2,0,0,0);
       }
     }
-    DAT_006ad699 = 1;
+    net_tile_sync_enabled = 1;
     XD_FlushSendBuffer(60000);
-    thunk_FUN_0059c276();
+    thunk_net_reset_msg_counts();
     for (local_330 = 0; (int)local_330 < 8; local_330 = local_330 + 1) {
-      *(undefined4 *)(&DAT_006ced20 + local_330 * 4) = 0;
+      *(undefined4 *)(&net_civ_phase_done + local_330 * 4) = 0;
     }
-    thunk_FUN_0046b14d(0x8b,0xff,0,0,0,0,0,0,0,0);
-    iptr_006d1da0 = (&DAT_006ad35c)[DAT_006ad304 * 0x15];
-    game.player_civ = (i8)iptr_006d1da0;
-    game.turn_civ = (i8)iptr_006d1da0;
-    if (DAT_00628048 == 0) {
-      thunk_FUN_00486e6f();
+    thunk_net_send_message(0x8b,0xff,0,0,0,0,0,0,0,0);
+    human_civ = (&net_slot_civs)[net_local_slot * 0x15];
+    game.player_civ = (i8)human_civ;
+    game.turn_civ = (i8)human_civ;
+    if (turn_resume_civ == 0) {
+      thunk_civ_check_throne_room_upgrade();
     }
-    thunk_FUN_00489553(iptr_006d1da0);
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
-    *(int *)(&DAT_006ced20 + iptr_006d1da0 * 4) = *(int *)(&DAT_006ced20 + iptr_006d1da0 * 4) + 1;
-    DAT_00635a3c = ((void *)ADDR(0x00403233, FUN_005a9f30));
-    thunk_FUN_00410030(ADDR(0x635c88, ((u8 *)&g.d_00635c88)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+    thunk_civ_process_turn(human_civ);
+    thunk_net_send_state_diff(0xff,2,0,0,0);
+    *(int *)(&net_civ_phase_done + human_civ * 4) = *(int *)(&net_civ_phase_done + human_civ * 4) + 1;
+    dlg_pending_idle_callback = ((void *)ADDR(0x00403233, FUN_005a9f30));
+    thunk_popup_game_with_sprite(ADDR(0x635c88, ((u8 *)&g.d_00635c88)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     local_2c = 0;
 LAB_005aa732:
     if (local_2c == 0) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-      if (iptr_006ad308 < 2) {
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
+      if (net_player_count < 2) {
         local_2c = 1;
         goto LAB_005aa7ee;
       }
@@ -3303,7 +3303,7 @@ LAB_005aa732:
       for (local_330 = 1; (int)local_330 < 8; local_330 = local_330 + 1) {
         if ((((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0) &&
             ((1 << ((byte)local_330 & 0x1f) & (uint)game.human_players) != 0)) &&
-           (*(int *)(&DAT_006ced20 + local_330 * 4) == 0)) {
+           (*(int *)(&net_civ_phase_done + local_330 * 4) == 0)) {
           local_2c = 0;
           break;
         }
@@ -3311,145 +3311,145 @@ LAB_005aa732:
       goto LAB_005aa732;
     }
 LAB_005aa7ee:
-    DAT_006c9210 = 0;
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
+    nm_production_complete_count = 0;
+    thunk_net_send_state_diff(0xff,2,0,0,0);
     XD_FlushSendBuffer(60000);
-    thunk_FUN_0046b14d(0x8d,0xff,0,0,0,0,0,0,0,0);
-    iptr_006d1da0 = (&DAT_006ad35c)[DAT_006ad304 * 0x15];
-    game.player_civ = (i8)iptr_006d1da0;
-    DAT_006ad699 = 0;
-    if (DAT_00628048 == 0) {
-      thunk_FUN_0048710a(-1);
+    thunk_net_send_message(0x8d,0xff,0,0,0,0,0,0,0,0);
+    human_civ = (&net_slot_civs)[net_local_slot * 0x15];
+    game.player_civ = (i8)human_civ;
+    net_tile_sync_enabled = 0;
+    if (turn_resume_civ == 0) {
+      thunk_units_reset_for_turn(-1);
     }
-    for (local_330 = 0; (DAT_00628044 != '\0' && ((int)local_330 < 8)); local_330 = local_330 + 1) {
+    for (local_330 = 0; (game_loop_active != '\0' && ((int)local_330 < 8)); local_330 = local_330 + 1) {
       if (((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0) &&
          ((1 << ((byte)local_330 & 0x1f) & (uint)game.human_players) == 0)) {
         game.turn_civ = (byte)local_330;
         _DAT_006ad578 = local_330;
-        thunk_FUN_004e4ceb();
-        thunk_FUN_00568e86(local_330);
-        if ((((DAT_00628048 == 0) || (DAT_0062c488 != 0)) && (DAT_00628048 != 0)) &&
-           (DAT_0062c488 != 0)) {
-          thunk_FUN_00413476((C_004083b0_2e4 *)&DAT_0066c7a8);
-          thunk_FUN_0047cf9e(iptr_006d1da0,1);
-          thunk_FUN_00419b80();
+        thunk_menu_update_states();
+        thunk_status_draw_civ_color(local_330);
+        if ((((turn_resume_civ == 0) || (turn_resume_new_game != 0)) && (turn_resume_civ != 0)) &&
+           (turn_resume_new_game != 0)) {
+          thunk_mapview_update_title((FrameWindow *)&map_views);
+          thunk_map_redraw_all_views(human_civ,1);
+          thunk_wnd_flush_paint();
         }
-        thunk_FUN_00543cd6();
+        thunk_ai_process_civ_units();
       }
     }
     for (local_330 = 0; (int)local_330 < 8; local_330 = local_330 + 1) {
-      *(undefined4 *)(&DAT_006ced20 + local_330 * 4) = 0;
+      *(undefined4 *)(&net_civ_phase_done + local_330 * 4) = 0;
       *(undefined4 *)(&DAT_006ad644 + local_330 * 4) = 0;
     }
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
-    thunk_FUN_0046b14d(0x8e,0xff,0,0,0,0,0,0,0,0);
+    thunk_net_send_state_diff(0xff,2,0,0,0);
+    thunk_net_send_message(0x8e,0xff,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(60000);
-    game.turn_civ = (i8)iptr_006d1da0;
-    DAT_006ad699 = 1;
-    if (DAT_00628044 == '\0') {
-      thunk_FUN_0046b14d(0x31,0,0,iptr_006d1da0,0,0,0,0,0,0);
+    game.turn_civ = (i8)human_civ;
+    net_tile_sync_enabled = 1;
+    if (game_loop_active == '\0') {
+      thunk_net_send_message(0x31,0,0,human_civ,0,0,0,0,0,0);
       break;
     }
-    if ((*(short *)(&DAT_00654b60 + iptr_006d1da0 * 2) == 0) && (DAT_00654fa8 == 0)) {
-      thunk_FUN_0041b8ff(iptr_006d1da0);
-      *(undefined2 *)(&DAT_00654b60 + iptr_006d1da0 * 2) = 1;
+    if ((*(short *)(&civ_intro_shown + human_civ * 2) == 0) && (autoplay_active == 0)) {
+      thunk_civ_intro_popup(human_civ);
+      *(undefined2 *)(&civ_intro_shown + human_civ * 2) = 1;
     }
-    if (DAT_00654b70 != 0) {
-      DAT_00633a78 = DAT_00654b70 / 1000;
+    if (mp_turn_time_limit_ms != 0) {
+      mp_turn_seconds_left = mp_turn_time_limit_ms / 1000;
       _DAT_0066c990 = 0xffffffff;
     }
-    _DAT_006ad578 = iptr_006d1da0;
-    thunk_FUN_004e4ceb();
+    _DAT_006ad578 = human_civ;
+    thunk_menu_update_states();
     _DAT_0066c990 = 0xffffffff;
-    thunk_FUN_00552112((C_004083b0_2e4 *)&DAT_0066c7a8);
-    local_28 = DAT_0066ca54;
-    local_24 = DAT_0066ca58;
-    local_20 = DAT_0066ca5c;
-    local_1c = DAT_0066ca68;
-    thunk_FUN_00408490((C_004083b0_48 *)&DAT_0066c7a8,(iptr)&local_28);
-    thunk_FUN_00413476((C_004083b0_2e4 *)&DAT_0066c7a8);
-    thunk_FUN_0047cf9e(iptr_006d1da0,1);
-    thunk_FUN_00568e86(iptr_006d1da0);
-    local_14 = *(int *)(&DAT_006af220 + iptr_006d1da0 * 4) -
-               *(int *)(&DAT_006af240 + iptr_006d1da0 * 4);
-    if (DAT_00654fa8 == 0) {
-      DAT_00635a3c = ((void *)ADDR(0x00403c74, FUN_0048237d));
-      iVar3 = thunk_FUN_00493ba6(iptr_006d1da0);
-      thunk_FUN_0040ff60(0,iVar3);
-      iVar3 = thunk_FUN_00493b10(iptr_006d1da0);
-      thunk_FUN_0040ff60(1,iVar3);
-      if (*(int *)(&DAT_006af240 + iptr_006d1da0 * 4) < *(int *)(&DAT_006af220 + iptr_006d1da0 * 4))
+    thunk_frame_wnd_draw_caption((FrameWindow *)&map_views);
+    local_28 = main_view_frame_left;
+    local_24 = main_view_frame_top;
+    local_20 = main_view_frame_right;
+    local_1c = main_view_client_top;
+    thunk_wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_28);
+    thunk_mapview_update_title((FrameWindow *)&map_views);
+    thunk_map_redraw_all_views(human_civ,1);
+    thunk_status_draw_civ_color(human_civ);
+    local_14 = *(int *)(&casualty_counts + human_civ * 4) -
+               *(int *)(&casualty_reported_counts + human_civ * 4);
+    if (autoplay_active == 0) {
+      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+      iVar3 = thunk_civ_leader_title(human_civ);
+      thunk_text_set_string_arg(0,iVar3);
+      iVar3 = thunk_civ_leader_name(human_civ);
+      thunk_text_set_string_arg(1,iVar3);
+      if (*(int *)(&casualty_reported_counts + human_civ * 4) < *(int *)(&casualty_counts + human_civ * 4))
       {
-        *(undefined4 *)(&DAT_006af240 + iptr_006d1da0 * 4) =
-             *(undefined4 *)(&DAT_006af220 + iptr_006d1da0 * 4);
-        thunk_FUN_00421da0(0,local_14);
+        *(undefined4 *)(&casualty_reported_counts + human_civ * 4) =
+             *(undefined4 *)(&casualty_counts + human_civ * 4);
+        thunk_text_set_number_arg(0,local_14);
         if (local_14 == 1) {
-          thunk_FUN_0043ca10(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635c98, ((u8 *)&g.d_00635c98)));
+          thunk_dialog_load_text_noflags(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635c98, ((u8 *)&g.d_00635c98)));
         }
         else {
-          thunk_FUN_0043ca10(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635ca4, ((u8 *)&g.d_00635ca4)));
+          thunk_dialog_load_text_noflags(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635ca4, ((u8 *)&g.d_00635ca4)));
         }
-        thunk_FUN_0059ec88((C_0040bc40_268 *)&local_324,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-        thunk_FUN_0059ec64((C_0040bc40_228 *)&local_324,0);
-        thunk_FUN_00421bd0();
-        thunk_FUN_0046e020(0x30,0,0,0);
-        thunk_FUN_0040bc80(&local_324,0);
+        thunk_dialog_add_sprite((DialogOptionList *)&local_324,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+        thunk_dialog_set_image_zoom((DialogWindowView *)&local_324,0);
+        thunk_input_flush_events();
+        thunk_snd_play_effect(0x30,0,0,0);
+        thunk_dlg_show_modal(&local_324,0);
         if (local_324.field_dc != 0) {
-          thunk_FUN_0043856b(iptr_006d1da0);
+          thunk_casualty_timeline_show(human_civ);
         }
       }
       else {
-        thunk_FUN_0043ca10(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635cb0, ((u8 *)&g.d_00635cb0)));
-        thunk_FUN_0059ec88((C_0040bc40_268 *)&local_324,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-        thunk_FUN_0059ec64((C_0040bc40_228 *)&local_324,0);
-        thunk_FUN_00421bd0();
-        thunk_FUN_0046e020(0x30,0,0,0);
-        thunk_FUN_0040bc80(&local_324,0);
+        thunk_dialog_load_text_noflags(&local_324,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635cb0, ((u8 *)&g.d_00635cb0)));
+        thunk_dialog_add_sprite((DialogOptionList *)&local_324,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+        thunk_dialog_set_image_zoom((DialogWindowView *)&local_324,0);
+        thunk_input_flush_events();
+        thunk_snd_play_effect(0x30,0,0,0);
+        thunk_dlg_show_modal(&local_324,0);
       }
     }
-    if (DAT_00654fa8 == 0) {
-      thunk_FUN_0048aa24();
-      if (DAT_00654b70 != 0) {
-        thunk_FUN_0055af2e(1);
+    if (autoplay_active == 0) {
+      thunk_game_turn_start_popups();
+      if (mp_turn_time_limit_ms != 0) {
+        thunk_mp_turn_timer_start(1);
       }
-      thunk_FUN_0048a416();
+      thunk_game_player_move_loop();
     }
     else {
       _DAT_00673b08 = (uint)game.human_players;
       game.human_players = '\0';
-      if (DAT_00654b70 != 0) {
-        thunk_FUN_0055af2e(1);
+      if (mp_turn_time_limit_ms != 0) {
+        thunk_mp_turn_timer_start(1);
       }
-      thunk_FUN_00543cd6();
-      game.human_players = DAT_00673b08;
+      thunk_ai_process_civ_units();
+      game.human_players = saved_human_players;
       SVar2 = GetAsyncKeyState(0x1b);
       if (((int)SVar2 & 0x8001U) != 0) {
-        DAT_00654faa = 1;
+        autoplay_turns_left = 1;
       }
-      DAT_00654faa = DAT_00654faa + -1;
-      if (DAT_00654faa == 0) {
-        DAT_00654fa8 = 0;
+      autoplay_turns_left = autoplay_turns_left + -1;
+      if (autoplay_turns_left == 0) {
+        autoplay_active = 0;
       }
     }
-    if (DAT_00654b70 != 0) {
-      thunk_FUN_0055ae80(1);
+    if (mp_turn_time_limit_ms != 0) {
+      thunk_mp_turn_timer_stop(1);
     }
-    thunk_FUN_0056a65e(1);
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
-    DAT_00654fa4 = 0;
-    DAT_00628048 = 0;
-    DAT_00654fa6 = 0;
-    DAT_0062c488 = 0;
+    thunk_status_redraw(1);
+    thunk_net_send_state_diff(0xff,2,0,0,0);
+    saved_turn_civ = 0;
+    turn_resume_civ = 0;
+    saved_resume_new_game = 0;
+    turn_resume_new_game = 0;
     game.field_06 = game.field_06 & 0xfffe;
-    *(int *)(&DAT_006ced20 + iptr_006d1da0 * 4) = *(int *)(&DAT_006ced20 + iptr_006d1da0 * 4) + 1;
+    *(int *)(&net_civ_phase_done + human_civ * 4) = *(int *)(&net_civ_phase_done + human_civ * 4) + 1;
     XD_FlushSendBuffer(60000);
-    DAT_00635a3c = ((void *)ADDR(0x004030ee, FUN_005aa004));
-    thunk_FUN_00410030(ADDR(0x635cc0, ((u8 *)&g.d_00635cc0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+    dlg_pending_idle_callback = ((void *)ADDR(0x004030ee, FUN_005aa004));
+    thunk_popup_game_with_sprite(ADDR(0x635cc0, ((u8 *)&g.d_00635cc0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     local_30 = 0;
 LAB_005aae35:
     if (local_30 == 0) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-      if (iptr_006ad308 < 2) {
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
+      if (net_player_count < 2) {
         local_30 = 1;
         goto LAB_005aaef1;
       }
@@ -3457,7 +3457,7 @@ LAB_005aae35:
       for (local_330 = 1; (int)local_330 < 8; local_330 = local_330 + 1) {
         if ((((1 << ((byte)local_330 & 0x1f) & (uint)game.civs_alive) != 0) &&
             ((1 << ((byte)local_330 & 0x1f) & (uint)game.human_players) != 0)) &&
-           (*(int *)(&DAT_006ced20 + local_330 * 4) == 0)) {
+           (*(int *)(&net_civ_phase_done + local_330 * 4) == 0)) {
           local_30 = 0;
           break;
         }
@@ -3465,12 +3465,12 @@ LAB_005aae35:
       goto LAB_005aae35;
     }
 LAB_005aaef1:
-    DAT_006c921c = 0;
-    thunk_FUN_0048dab9();
-    if ((DAT_006ad685 == '\0') || (_DAT_006ad578 == iptr_006d1da0)) {
+    nm_human_move_complete_count = 0;
+    thunk_net_check_lost_connections();
+    if ((player_has_quit == '\0') || (_DAT_006ad578 == human_civ)) {
       for (local_328 = 0; local_328 < game.num_units; local_328 = local_328 + 1) {
         if ((units[local_328].id != 0) && ((int)units[local_328].owner == local_330)) {
-          thunk_FUN_005b6787(local_328);
+          thunk_unit_exhaust_moves(local_328);
         }
       }
       local_32c = (iptr)game.num_cities;
@@ -3480,44 +3480,44 @@ LAB_005aaef1:
         }
       }
     }
-    thunk_FUN_00453af0();
-    if (DAT_00628044 == '\0') break;
-    if ((DAT_00628044 != '\0') && (DAT_0064b1ac != 0)) {
-      DAT_00628044 = '\0';
+    thunk_ui_pump_messages();
+    if (game_loop_active == '\0') break;
+    if ((game_loop_active != '\0') && (game_over_reason != 0)) {
+      game_loop_active = '\0';
       break;
     }
-  } while (DAT_00628044 != '\0');
-  thunk_FUN_0055ae80(0);
-  thunk_FUN_004824e3();
-  if (DAT_0064b1ac != 0) {
-    thunk_FUN_0048b165();
+  } while (game_loop_active != '\0');
+  thunk_mp_turn_timer_stop(0);
+  thunk_net_host_quit_handoff();
+  if (game_over_reason != 0) {
+    thunk_game_handle_game_over();
   }
   local_8 = 0xffffffff;
   FUN_005ab07f();
   return;
 }
-#undef DAT_00627670
-#undef DAT_00628044
-#undef DAT_00628048
-#undef DAT_0062c488
-#undef DAT_00633a78
-#undef DAT_00635a3c
-#undef DAT_0064b1ac
-#undef DAT_00654b70
-#undef DAT_00654fa4
-#undef DAT_00654fa6
-#undef DAT_00654fa8
-#undef DAT_00654faa
-#undef DAT_00654fb0
-#undef DAT_00673b08
-#undef DAT_006ad304
-#undef DAT_006ad35c
-#undef DAT_006ad578
-#undef DAT_006ad685
-#undef DAT_006ad699
-#undef DAT_006c9210
-#undef DAT_006c921c
-#undef iptr_006d1da0
+#undef autoplay_active
+#undef autoplay_turns_left
+#undef dlg_pending_idle_callback
+#undef game_loop_active
+#undef game_over_reason
+#undef human_civ
+#undef mp_turn_civ
+#undef mp_turn_seconds_left
+#undef mp_turn_time_limit_ms
+#undef net_claimed_civs_mask
+#undef net_local_slot
+#undef net_slot_civs
+#undef net_tile_sync_enabled
+#undef nm_human_move_complete_count
+#undef nm_production_complete_count
+#undef player_has_quit
+#undef saved_human_players
+#undef saved_resume_new_game
+#undef saved_turn_civ
+#undef scenario_events_loaded
+#undef turn_resume_civ
+#undef turn_resume_new_game
 #undef _DAT_0066c990
 #undef _DAT_00673b08
 #undef _DAT_006ad578
@@ -3539,128 +3539,128 @@ LAB_005aaef1:
 #endif
 
 /* 005ab0a3 auto */
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_006ad35c (*(iptr *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006c8fb4 (*(int *)((u8 *)&g.d_006c8fb4))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
+#define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
 void __cdecl FUN_005ab0a3(void)
 
 {
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  thunk_FUN_0048da51(DAT_006ad35c);
-  if ((((DAT_006c9214 != 0) || (DAT_006c918c != 0)) || (DAT_00628044 == '\0')) ||
-     (DAT_006c8fb4 != 0)) {
-    DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-    FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  thunk_net_heartbeat_check(net_slot_civs);
+  if ((((nm_ai_movement_count != 0) || (nm_end_sequence_count != 0)) || (game_loop_active == '\0')) ||
+     (net_lost_conn_total != 0)) {
+    dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+    wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
   }
   return;
 }
-#undef DAT_00628044
-#undef DAT_006ad35c
-#undef DAT_006ad678
-#undef DAT_006c8fb4
+#undef dialog_stack_top
+#undef game_loop_active
+#undef net_lost_conn_total
+#undef net_slot_civs
 
 /* 005ab120 auto */
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_006ad35c (*(iptr *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006c8fb4 (*(int *)((u8 *)&g.d_006c8fb4))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
+#define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
 void __cdecl FUN_005ab120(void)
 
 {
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  thunk_FUN_0048da51(DAT_006ad35c);
-  if ((((DAT_006c9218 != 0) || (DAT_006c918c != 0)) || (DAT_00628044 == '\0')) ||
-     (DAT_006c8fb4 != 0)) {
-    DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-    FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  thunk_net_heartbeat_check(net_slot_civs);
+  if ((((nm_human_movement_count != 0) || (nm_end_sequence_count != 0)) || (game_loop_active == '\0')) ||
+     (net_lost_conn_total != 0)) {
+    dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+    wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
   }
   return;
 }
-#undef DAT_00628044
-#undef DAT_006ad35c
-#undef DAT_006ad678
-#undef DAT_006c8fb4
+#undef dialog_stack_top
+#undef game_loop_active
+#undef net_lost_conn_total
+#undef net_slot_civs
 
 /* 005ab19d auto */
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_006ad35c (*(iptr *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006ad685 (*(char *)((u8 *)&g.d_006ad685))
-#define DAT_006ad698 (*(char *)((u8 *)&g.d_006ad698))
-#define DAT_006c8fb4 (*(int *)((u8 *)&g.d_006c8fb4))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
+#define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
+#define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
+#define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
 void __cdecl FUN_005ab19d(void)
 
 {
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  thunk_FUN_0048da51(DAT_006ad35c);
-  if ((((DAT_006c920c != 0) || (DAT_006ad698 == '\x01')) || (DAT_006c918c != 0)) ||
-     (((DAT_006ad685 == '\x01' || (DAT_00628044 == '\0')) || (DAT_006c8fb4 != 0)))) {
-    DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-    FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  thunk_net_heartbeat_check(net_slot_civs);
+  if ((((nm_production_begin_count != 0) || (net_host_handoff_stage == '\x01')) || (nm_end_sequence_count != 0)) ||
+     (((player_has_quit == '\x01' || (game_loop_active == '\0')) || (net_lost_conn_total != 0)))) {
+    dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+    wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
   }
   return;
 }
-#undef DAT_00628044
-#undef DAT_006ad35c
-#undef DAT_006ad678
-#undef DAT_006ad685
-#undef DAT_006ad698
-#undef DAT_006c8fb4
+#undef dialog_stack_top
+#undef game_loop_active
+#undef net_host_handoff_stage
+#undef net_lost_conn_total
+#undef net_slot_civs
+#undef player_has_quit
 
 /* 005ab23a auto */
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_006ad35c (*(iptr *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad678 (*(int * *)((u8 *)&g.d_006ad678))
-#define DAT_006ad685 (*(char *)((u8 *)&g.d_006ad685))
-#define DAT_006ad698 (*(char *)((u8 *)&g.d_006ad698))
-#define DAT_006c8fb4 (*(int *)((u8 *)&g.d_006c8fb4))
+#define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
+#define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
+#define net_slot_civs (*(iptr *)((u8 *)&g.d_006ad35c))
+#define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
 void __cdecl FUN_005ab23a(void)
 
 {
-  thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-  thunk_FUN_0048da51(DAT_006ad35c);
-  if ((((DAT_006c920c != 0) || (DAT_006ad698 != '\0')) || (DAT_006c918c != 0)) ||
-     (((DAT_006ad685 != '\0' || (DAT_00628044 == '\0')) || (DAT_006c8fb4 != 0)))) {
-    DAT_006ad678[0xf] = DAT_006ad678[0xf] | 0x400;
-    FUN_005c62cb((C_00408010_b8 *)(*DAT_006ad678 + 0x48));
+  thunk_net_process_messages((NetSession *)&net_session,1,0);
+  thunk_net_heartbeat_check(net_slot_civs);
+  if ((((nm_production_begin_count != 0) || (net_host_handoff_stage != '\0')) || (nm_end_sequence_count != 0)) ||
+     (((player_has_quit != '\0' || (game_loop_active == '\0')) || (net_lost_conn_total != 0)))) {
+    dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
+    wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
   }
   return;
 }
-#undef DAT_00628044
-#undef DAT_006ad35c
-#undef DAT_006ad678
-#undef DAT_006ad685
-#undef DAT_006ad698
-#undef DAT_006c8fb4
+#undef dialog_stack_top
+#undef game_loop_active
+#undef net_host_handoff_stage
+#undef net_lost_conn_total
+#undef net_slot_civs
+#undef player_has_quit
 
 /* 005ab2d5 auto */
-#define DAT_00628044 (*(char *)((u8 *)&g.d_00628044))
-#define DAT_00628048 (*(char *)((u8 *)&g.d_00628048))
-#define DAT_0062c488 (*(int *)((u8 *)&g.d_0062c488))
-#define DAT_00633a78 (*(int *)((u8 *)&g.d_00633a78))
-#define DAT_00635a3c (*(undefined1 * *)((u8 *)&g.d_00635a3c))
-#define DAT_0064b1ac (*(int *)((u8 *)&g.d_0064b1ac))
-#define DAT_00654b70 (*(int *)((u8 *)&g.d_00654b70))
-#define DAT_00654fa4 (*(char *)((u8 *)&g.d_00654fa4))
-#define DAT_00654fa6 (*(short *)((u8 *)&g.d_00654fa6))
-#define DAT_00654fa8 (*(short *)((u8 *)&g.d_00654fa8))
-#define DAT_00654faa (*(undefined2 *)((u8 *)&g.d_00654faa))
-#define DAT_00673b08 (*(u8 *)((u8 *)&g.d_00673b08))
-#define DAT_006ad2f7 (*(char *)((u8 *)&g.d_006ad2f7))
-#define DAT_006ad304 (*(int *)((u8 *)&g.d_006ad304))
-#define DAT_006ad35c (*(undefined4 *)((u8 *)&g.d_006ad35c))
-#define DAT_006ad578 (*(undefined *)((u8 *)&g.d_006ad578))
-#define DAT_006ad685 (*(char *)((u8 *)&g.d_006ad685))
-#define DAT_006ad698 (*(char *)((u8 *)&g.d_006ad698))
-#define DAT_006c9038 (*(undefined4 *)((u8 *)&g.d_006c9038))
-#define iptr_006d1da0 (*(iptr *)((u8 *)&g.d_006d1da0))
+#define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
+#define autoplay_turns_left (*(undefined2 *)((u8 *)&g.d_00654faa))
+#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define game_loop_active (*(char *)((u8 *)&g.d_00628044))
+#define game_over_reason (*(int *)((u8 *)&g.d_0064b1ac))
+#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
+#define mp_turn_civ (*(undefined *)((u8 *)&g.d_006ad578))
+#define mp_turn_seconds_left (*(int *)((u8 *)&g.d_00633a78))
+#define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
+#define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
+#define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
+#define net_local_slot (*(int *)((u8 *)&g.d_006ad304))
+#define net_slot_civs (*(undefined4 *)((u8 *)&g.d_006ad35c))
+#define nm_start_civ_count (*(undefined4 *)((u8 *)&g.d_006c9038))
+#define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
+#define saved_human_players (*(u8 *)((u8 *)&g.d_00673b08))
+#define saved_resume_new_game (*(short *)((u8 *)&g.d_00654fa6))
+#define saved_turn_civ (*(char *)((u8 *)&g.d_00654fa4))
+#define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
+#define turn_resume_new_game (*(int *)((u8 *)&g.d_0062c488))
 #define _DAT_0066c990 (*(undefined4 *)((u8 *)&g.d_0066c990))
 #define _DAT_00673b08 (*(undefined4 *)((u8 *)&g.d_00673b08))
 #define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
 #define local_31c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_318 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_314 (*(C_0040bc40_2f4 *)(frame_ + FRAME_OFF(12)))
+#define local_314 (*(Dialog *)(frame_ + FRAME_OFF(12)))
 #define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(768)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(772)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(776)))
@@ -3670,7 +3670,7 @@ void __cdecl FUN_005ab23a(void)
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(792)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl FUN_005ab2d5(void)
+undefined4 __cdecl net_client_turn_loop(void)
 
 {
   char cVar1;
@@ -3683,212 +3683,212 @@ undefined4 __cdecl FUN_005ab2d5(void)
   
   local_8 = 0xffffffff;
   local_14 = 1;
-  thunk_FUN_0059db08(&local_314,0x4000);
+  thunk_dialog_ctor(&local_314,0x4000);
   local_8 = 0;
   local_20 = 1;
-  iVar5 = DAT_006ad35c;
-  iVar3 = thunk_FUN_00493c7d(DAT_006ad35c);
-  FUN_005d23bb(ADDR(0x635cd0, ((u8 *)&g.d_00635cd0)),iVar3,iVar5);
+  iVar5 = net_slot_civs;
+  iVar3 = thunk_civ_name_plural(net_slot_civs);
+  dbg_logf_str_int(ADDR(0x635cd0, ((u8 *)&g.d_00635cd0)),iVar3,iVar5);
   for (local_31c = 1; local_31c < 8; local_31c = local_31c + 1) {
-    if (((*(int *)(&DAT_006ad30c + *(int *)(&DAT_006ad558 + local_31c * 4) * 0x54) != 0) &&
+    if (((*(int *)(&net_player_slots + *(int *)(&net_civ_slots + local_31c * 4) * 0x54) != 0) &&
         ((1 << ((byte)local_31c & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)local_31c & 0x1f) & (uint)game.human_players) != 0)) {
       iVar4 = local_31c;
-      iVar3 = thunk_FUN_00493c7d(local_31c);
-      FUN_005d23bb(ADDR(0x635ce0, ((u8 *)&g.d_00635ce0)),iVar3,iVar4);
+      iVar3 = thunk_civ_name_plural(local_31c);
+      dbg_logf_str_int(ADDR(0x635ce0, ((u8 *)&g.d_00635ce0)),iVar3,iVar4);
     }
   }
-  thunk_FUN_0059c2b8();
-  iptr_006d1da0 = (&DAT_006ad35c)[DAT_006ad304 * 0x15];
-  DAT_00628048 = DAT_00654fa4;
-  DAT_0062c488 = (int)DAT_00654fa6;
-  thunk_FUN_0042a768((C_004083b0_488 *)&DAT_0063eb10);
-  thunk_FUN_0042a768((C_004083b0_488 *)&DAT_0063e4f8);
-  thunk_FUN_004e4ceb();
-  game.player_civ = (byte)iptr_006d1da0;
-  game.turn_civ = (byte)iptr_006d1da0;
-  thunk_FUN_00413476((C_004083b0_2e4 *)&DAT_0066c7a8);
+  thunk_net_reset_error_counts();
+  human_civ = (&net_slot_civs)[net_local_slot * 0x15];
+  turn_resume_civ = saved_turn_civ;
+  turn_resume_new_game = (int)saved_resume_new_game;
+  thunk_picwnd_close((C_004083b0_488 *)&advisor_window);
+  thunk_picwnd_close((C_004083b0_488 *)&casualty_window);
+  thunk_menu_update_states();
+  game.player_civ = (byte)human_civ;
+  game.turn_civ = (byte)human_civ;
+  thunk_mapview_update_title((FrameWindow *)&map_views);
   local_1c = 0;
   for (local_318 = 0; local_318 < game.num_units; local_318 = local_318 + 1) {
-    if ((units[local_318].id != 0) && (units[local_318].owner == iptr_006d1da0)) {
-      thunk_FUN_00410402
-                ((C_004083b0_430 *)&DAT_0066c7a8,(int)units[local_318].x,(int)units[local_318].y);
+    if ((units[local_318].id != 0) && (units[local_318].owner == human_civ)) {
+      thunk_mapview_center_on
+                ((C_004083b0_430 *)&map_views,(int)units[local_318].x,(int)units[local_318].y);
       local_1c = local_1c + 1;
       break;
     }
   }
   if (local_1c == 0) {
     for (local_318 = 0; local_318 < game.num_cities; local_318 = local_318 + 1) {
-      if ((cities[local_318].id != 0) && (cities[local_318].owner == iptr_006d1da0)) {
-        thunk_FUN_00410402
-                  ((C_004083b0_430 *)&DAT_0066c7a8,(int)cities[local_318].x,(int)cities[local_318].y
+      if ((cities[local_318].id != 0) && (cities[local_318].owner == human_civ)) {
+        thunk_mapview_center_on
+                  ((C_004083b0_430 *)&map_views,(int)cities[local_318].x,(int)cities[local_318].y
                   );
         break;
       }
     }
   }
-  thunk_FUN_00569363(1);
-  thunk_FUN_00568e86(iptr_006d1da0);
-  thunk_FUN_004897fa(1);
-  cVar1 = DAT_00628048;
-  if ((1 << ((byte)iptr_006d1da0 & 0x1f) & (uint)game.human_players) == 0) {
-    thunk_FUN_0048d9ad(DAT_006ad35c);
-    DAT_00635a3c = ((void *)ADDR(0x00401c35, FUN_005ab23a));
-    thunk_FUN_00426fb0(ADDR(0x635cf0, ((u8 *)&g.d_00635cf0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-    cVar1 = DAT_00628048;
+  thunk_status_draw_info(1);
+  thunk_status_draw_civ_color(human_civ);
+  thunk_ui_redraw_all_maps(1);
+  cVar1 = turn_resume_civ;
+  if ((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0) {
+    thunk_net_heartbeat_send(net_slot_civs);
+    dlg_pending_idle_callback = ((void *)ADDR(0x00401c35, FUN_005ab23a));
+    thunk_popup_game_sprite_flags(ADDR(0x635cf0, ((u8 *)&g.d_00635cf0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+    cVar1 = turn_resume_civ;
   }
 LAB_005ab60f:
   do {
-    DAT_00628048 = cVar1;
+    turn_resume_civ = cVar1;
     for (local_318 = 0; local_318 < game.num_units; local_318 = local_318 + 1) {
-      if ((units[local_318].id != 0) && (units[local_318].owner == iptr_006d1da0)) {
-        thunk_FUN_005b6787(local_318);
+      if ((units[local_318].id != 0) && (units[local_318].owner == human_civ)) {
+        thunk_unit_exhaust_moves(local_318);
       }
     }
     if (local_14 == 0) {
-      thunk_FUN_0048d9ad(DAT_006ad35c);
-      DAT_00635a3c = ((void *)ADDR(0x00402450, FUN_005ab19d));
-      thunk_FUN_00410030(ADDR(0x635d00, ((u8 *)&g.d_00635d00)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+      thunk_net_heartbeat_send(net_slot_civs);
+      dlg_pending_idle_callback = ((void *)ADDR(0x00402450, FUN_005ab19d));
+      thunk_popup_game_with_sprite(ADDR(0x635d00, ((u8 *)&g.d_00635d00)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     }
-    thunk_FUN_0048d9ad(DAT_006ad35c);
-    while ((((DAT_006c920c == 0 && (DAT_006ad698 == '\0')) && (DAT_006c918c == 0)) &&
-           ((DAT_006ad685 == '\0' && (DAT_00628044 != '\0'))))) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-      thunk_FUN_0048da51(DAT_006ad35c);
-      iVar4 = thunk_FUN_0048dab9();
+    thunk_net_heartbeat_send(net_slot_civs);
+    while ((((nm_production_begin_count == 0 && (net_host_handoff_stage == '\0')) && (nm_end_sequence_count == 0)) &&
+           ((player_has_quit == '\0' && (game_loop_active != '\0'))))) {
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
+      thunk_net_heartbeat_check(net_slot_civs);
+      iVar4 = thunk_net_check_lost_connections();
       if (iVar4 != 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+        /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
         uVar5 = 0;
         goto LAB_005abff1;
       }
     }
-    if (DAT_006ad698 != '\0') {
-      iVar4 = thunk_FUN_004828a5();
+    if (net_host_handoff_stage != '\0') {
+      iVar4 = thunk_net_client_transfer_server();
       if (iVar4 == 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+        /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
         uVar5 = 0;
         goto LAB_005abff1;
       }
-      if (DAT_006ad2f7 != '\0') {
+      if (net_host_flag != '\0') {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+        /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
         uVar5 = 1;
         goto LAB_005abff1;
       }
-      if (((DAT_006c920c == 0) && (DAT_006c918c == 0)) &&
-         ((DAT_006ad685 == '\0' && (cVar1 = DAT_00628048, DAT_00628044 != '\0'))))
+      if (((nm_production_begin_count == 0) && (nm_end_sequence_count == 0)) &&
+         ((player_has_quit == '\0' && (cVar1 = turn_resume_civ, game_loop_active != '\0'))))
       goto LAB_005ab60f;
     }
-    if ((DAT_006c918c == 0) && (DAT_00628044 != '\0')) {
-      DAT_006c9038 = 0;
-      DAT_006c920c = 0;
-      iptr_006d1da0 = (&DAT_006ad35c)[DAT_006ad304 * 0x15];
-      game.player_civ = (byte)iptr_006d1da0;
-      game.turn_civ = (byte)iptr_006d1da0;
-      if (DAT_00654b70 != 0) {
-        DAT_00633a78 = DAT_00654b70 / 1000;
+    if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
+      nm_start_civ_count = 0;
+      nm_production_begin_count = 0;
+      human_civ = (&net_slot_civs)[net_local_slot * 0x15];
+      game.player_civ = (byte)human_civ;
+      game.turn_civ = (byte)human_civ;
+      if (mp_turn_time_limit_ms != 0) {
+        mp_turn_seconds_left = mp_turn_time_limit_ms / 1000;
         _DAT_0066c990 = 0xffffffff;
       }
-      while ((DAT_006c8fac != 0 || (DAT_006c8fa0 != 0))) {
-        thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+      while ((net_msgq_priority_count != 0 || (net_msgq_normal_count != 0))) {
+        thunk_net_process_messages((NetSession *)&net_session,1,0);
       }
-      _DAT_006ad578 = iptr_006d1da0;
-      thunk_FUN_00413476((C_004083b0_2e4 *)&DAT_0066c7a8);
-      thunk_FUN_0047cf9e(iptr_006d1da0,1);
-      thunk_FUN_00569363(1);
-      thunk_FUN_00568e86(iptr_006d1da0);
-      if (DAT_00654fa8 == 0) {
-        if (DAT_00628048 == '\0') {
-          thunk_FUN_00486e6f();
+      _DAT_006ad578 = human_civ;
+      thunk_mapview_update_title((FrameWindow *)&map_views);
+      thunk_map_redraw_all_views(human_civ,1);
+      thunk_status_draw_info(1);
+      thunk_status_draw_civ_color(human_civ);
+      if (autoplay_active == 0) {
+        if (turn_resume_civ == '\0') {
+          thunk_civ_check_throne_room_upgrade();
         }
-        if ((DAT_00628048 == '\0') || (DAT_0062c488 != 0)) {
-          thunk_FUN_00489553(iptr_006d1da0);
-          thunk_FUN_004b0b53(0xff,2,0,0,0);
+        if ((turn_resume_civ == '\0') || (turn_resume_new_game != 0)) {
+          thunk_civ_process_turn(human_civ);
+          thunk_net_send_state_diff(0xff,2,0,0,0);
         }
         XD_FlushSendBuffer(60000);
-        thunk_FUN_0048aa24();
-        thunk_FUN_0046b14d(0x8c,0,iptr_006d1da0,0,0,0,0,0,0,0);
-        thunk_FUN_0048d9ad(DAT_006ad35c);
-        DAT_00635a3c = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
-        thunk_FUN_00410030(ADDR(0x635d20, ((u8 *)&g.d_00635d20)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-        while (((DAT_006c9214 == 0 && (DAT_006c918c == 0)) && (DAT_00628044 != '\0'))) {
-          thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-          thunk_FUN_0048da51(DAT_006ad35c);
-          iVar4 = thunk_FUN_0048dab9();
+        thunk_game_turn_start_popups();
+        thunk_net_send_message(0x8c,0,human_civ,0,0,0,0,0,0,0);
+        thunk_net_heartbeat_send(net_slot_civs);
+        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
+        thunk_popup_game_with_sprite(ADDR(0x635d20, ((u8 *)&g.d_00635d20)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+        while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
+          thunk_net_process_messages((NetSession *)&net_session,1,0);
+          thunk_net_heartbeat_check(net_slot_civs);
+          iVar4 = thunk_net_check_lost_connections();
           if (iVar4 != 0) {
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+            /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
             uVar5 = 0;
             goto LAB_005abff1;
           }
         }
-        if ((DAT_006c918c == 0) && (DAT_00628044 != '\0')) {
-          DAT_006c9214 = 0;
-          thunk_FUN_0048d9ad(DAT_006ad35c);
-          DAT_00635a3c = ((void *)ADDR(0x00401695, FUN_005ab120));
-          thunk_FUN_00410030(ADDR(0x635d30, ((u8 *)&g.d_00635d30)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-          while (((DAT_006c9218 == 0 && (DAT_006c918c == 0)) && (DAT_00628044 != '\0'))) {
-            thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-            thunk_FUN_0048da51(DAT_006ad35c);
-            iVar4 = thunk_FUN_0048dab9();
+        if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
+          nm_ai_movement_count = 0;
+          thunk_net_heartbeat_send(net_slot_civs);
+          dlg_pending_idle_callback = ((void *)ADDR(0x00401695, FUN_005ab120));
+          thunk_popup_game_with_sprite(ADDR(0x635d30, ((u8 *)&g.d_00635d30)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+          while (((nm_human_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
+            thunk_net_process_messages((NetSession *)&net_session,1,0);
+            thunk_net_heartbeat_check(net_slot_civs);
+            iVar4 = thunk_net_check_lost_connections();
             if (iVar4 != 0) {
               local_8 = 0xffffffff;
-              /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+              /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
               uVar5 = 0;
               goto LAB_005abff1;
             }
           }
-          if ((DAT_006c918c == 0) && (DAT_00628044 != '\0')) {
-            DAT_006c9218 = 0;
-            if ((*(short *)(&DAT_00654b60 + iptr_006d1da0 * 2) == 0) && (DAT_00654fa8 == 0)) {
-              thunk_FUN_0041b8ff(iptr_006d1da0);
-              *(undefined2 *)(&DAT_00654b60 + iptr_006d1da0 * 2) = 1;
+          if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
+            nm_human_movement_count = 0;
+            if ((*(short *)(&civ_intro_shown + human_civ * 2) == 0) && (autoplay_active == 0)) {
+              thunk_civ_intro_popup(human_civ);
+              *(undefined2 *)(&civ_intro_shown + human_civ * 2) = 1;
             }
-            local_18 = *(int *)(&DAT_006af220 + iptr_006d1da0 * 4) -
-                       *(int *)(&DAT_006af240 + iptr_006d1da0 * 4);
-            if (DAT_00654fa8 == 0) {
-              DAT_00635a3c = ((void *)ADDR(0x00403c74, FUN_0048237d));
-              iVar3 = thunk_FUN_00493ba6(iptr_006d1da0);
-              thunk_FUN_0040ff60(0,iVar3);
-              iVar3 = thunk_FUN_00493b10(iptr_006d1da0);
-              thunk_FUN_0040ff60(1,iVar3);
+            local_18 = *(int *)(&casualty_counts + human_civ * 4) -
+                       *(int *)(&casualty_reported_counts + human_civ * 4);
+            if (autoplay_active == 0) {
+              dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, FUN_0048237d));
+              iVar3 = thunk_civ_leader_title(human_civ);
+              thunk_text_set_string_arg(0,iVar3);
+              iVar3 = thunk_civ_leader_name(human_civ);
+              thunk_text_set_string_arg(1,iVar3);
               if (local_18 < 1) {
-                thunk_FUN_0043ca10(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d54, ((u8 *)&g.d_00635d54)));
-                thunk_FUN_0059ec88((C_0040bc40_268 *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-                thunk_FUN_0059ec64((C_0040bc40_228 *)&local_314,0);
-                thunk_FUN_00421bd0();
-                thunk_FUN_0046e020(0x30,0,0,0);
-                thunk_FUN_0040bc80(&local_314,0);
+                thunk_dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d54, ((u8 *)&g.d_00635d54)));
+                thunk_dialog_add_sprite((DialogOptionList *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+                thunk_dialog_set_image_zoom((DialogWindowView *)&local_314,0);
+                thunk_input_flush_events();
+                thunk_snd_play_effect(0x30,0,0,0);
+                thunk_dlg_show_modal(&local_314,0);
               }
               else {
-                *(undefined4 *)(&DAT_006af240 + iptr_006d1da0 * 4) =
-                     *(undefined4 *)(&DAT_006af220 + iptr_006d1da0 * 4);
-                thunk_FUN_00421da0(0,local_18);
+                *(undefined4 *)(&casualty_reported_counts + human_civ * 4) =
+                     *(undefined4 *)(&casualty_counts + human_civ * 4);
+                thunk_text_set_number_arg(0,local_18);
                 if (local_18 == 1) {
-                  thunk_FUN_0043ca10(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d3c, ((u8 *)&g.d_00635d3c)));
+                  thunk_dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d3c, ((u8 *)&g.d_00635d3c)));
                 }
                 else {
-                  thunk_FUN_0043ca10(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d48, ((u8 *)&g.d_00635d48)));
+                  thunk_dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d48, ((u8 *)&g.d_00635d48)));
                 }
-                thunk_FUN_0059ec88((C_0040bc40_268 *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-                thunk_FUN_0059ec64((C_0040bc40_228 *)&local_314,0);
-                thunk_FUN_00421bd0();
-                thunk_FUN_0046e020(0x30,0,0,0);
-                thunk_FUN_0040bc80(&local_314,0);
+                thunk_dialog_add_sprite((DialogOptionList *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+                thunk_dialog_set_image_zoom((DialogWindowView *)&local_314,0);
+                thunk_input_flush_events();
+                thunk_snd_play_effect(0x30,0,0,0);
+                thunk_dlg_show_modal(&local_314,0);
                 if (local_314.field_dc != 0) {
-                  thunk_FUN_0043856b(iptr_006d1da0);
+                  thunk_casualty_timeline_show(human_civ);
                 }
               }
             }
-            if (DAT_00654b70 != 0) {
-              thunk_FUN_0055af2e(1);
+            if (mp_turn_time_limit_ms != 0) {
+              thunk_mp_turn_timer_start(1);
             }
-            thunk_FUN_0048a416();
+            thunk_game_player_move_loop();
           }
           else {
-            DAT_006c918c = 0;
+            nm_end_sequence_count = 0;
           }
         }
         else {
@@ -3898,34 +3898,34 @@ LAB_005ab60f:
       else {
         _DAT_00673b08 = (uint)game.human_players;
         game.human_players = '\0';
-        if ((DAT_00628048 == '\0') || (DAT_0062c488 != 0)) {
-          thunk_FUN_00489553(iptr_006d1da0);
+        if ((turn_resume_civ == '\0') || (turn_resume_new_game != 0)) {
+          thunk_civ_process_turn(human_civ);
         }
-        thunk_FUN_0046b14d(0x8c,0,iptr_006d1da0,0,0,0,0,0,0,0);
-        thunk_FUN_0048d9ad(DAT_006ad35c);
-        DAT_00635a3c = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
-        thunk_FUN_00410030(ADDR(0x635d10, ((u8 *)&g.d_00635d10)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-        while (((DAT_006c9214 == 0 && (DAT_006c918c == 0)) && (DAT_00628044 != '\0'))) {
-          thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
-          thunk_FUN_0048da51(DAT_006ad35c);
-          iVar4 = thunk_FUN_0048dab9();
+        thunk_net_send_message(0x8c,0,human_civ,0,0,0,0,0,0,0);
+        thunk_net_heartbeat_send(net_slot_civs);
+        dlg_pending_idle_callback = ((void *)ADDR(0x004028c4, FUN_005ab0a3));
+        thunk_popup_game_with_sprite(ADDR(0x635d10, ((u8 *)&g.d_00635d10)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+        while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
+          thunk_net_process_messages((NetSession *)&net_session,1,0);
+          thunk_net_heartbeat_check(net_slot_civs);
+          iVar4 = thunk_net_check_lost_connections();
           if (iVar4 != 0) {
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+            /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
             uVar5 = 0;
             goto LAB_005abff1;
           }
         }
-        if ((DAT_006c918c == 0) && (DAT_00628044 != '\0')) {
-          DAT_006c9214 = 0;
-          if (DAT_00654b70 != 0) {
-            thunk_FUN_0055af2e(1);
+        if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
+          nm_ai_movement_count = 0;
+          if (mp_turn_time_limit_ms != 0) {
+            thunk_mp_turn_timer_start(1);
           }
-          thunk_FUN_00543cd6();
-          game.human_players = DAT_00673b08;
+          thunk_ai_process_civ_units();
+          game.human_players = saved_human_players;
           SVar2 = GetAsyncKeyState(0x1b);
           if (((int)SVar2 & 0x8001U) != 0) {
-            DAT_00654faa = 1;
+            autoplay_turns_left = 1;
           }
         }
         else {
@@ -3936,56 +3936,56 @@ LAB_005ab60f:
     else {
       local_20 = 0;
     }
-    thunk_FUN_0055ae80(1);
-    thunk_FUN_0056a65e(1);
-    thunk_FUN_00453af0();
-    if (DAT_0064b1ac != 0) {
-      DAT_00628044 = '\0';
+    thunk_mp_turn_timer_stop(1);
+    thunk_status_redraw(1);
+    thunk_ui_pump_messages();
+    if (game_over_reason != 0) {
+      game_loop_active = '\0';
     }
-    thunk_FUN_004b0b53(0xff,2,0,0,0);
-    thunk_FUN_0046b14d(0x8f,0,iptr_006d1da0,0,0,0,0,0,0,0);
+    thunk_net_send_state_diff(0xff,2,0,0,0);
+    thunk_net_send_message(0x8f,0,human_civ,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(60000);
-    DAT_00654fa4 = '\0';
-    DAT_00628048 = '\0';
-    DAT_00654fa6 = 0;
-    DAT_0062c488 = 0;
+    saved_turn_civ = '\0';
+    turn_resume_civ = '\0';
+    saved_resume_new_game = 0;
+    turn_resume_new_game = 0;
     local_14 = 0;
     cVar1 = '\0';
-    if (DAT_00628044 == '\0') {
-      thunk_FUN_0046b14d(0x2d,0,iptr_006d1da0,0,0,0,0,0,0,0);
+    if (game_loop_active == '\0') {
+      thunk_net_send_message(0x2d,0,human_civ,0,0,0,0,0,0,0);
       XD_FlushSendBuffer(60000);
-      thunk_FUN_0059b293(&iptr_006ad108,1);
-      if (DAT_0064b1ac != 0) {
-        thunk_FUN_0048b165();
+      thunk_net_session_shutdown(&net_session,1);
+      if (game_over_reason != 0) {
+        thunk_game_handle_game_over();
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005abfdb */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_314)); }
+      /* inlined unwind funclet FUN_005abfdb */ { thunk_dialog_dtor((Dialog *)((iptr)&local_314)); }
       uVar5 = 0;
 LAB_005abff1:
       return uVar5;
     }
   } while( true );
 }
-#undef DAT_00628044
-#undef DAT_00628048
-#undef DAT_0062c488
-#undef DAT_00633a78
-#undef DAT_00635a3c
-#undef DAT_0064b1ac
-#undef DAT_00654b70
-#undef DAT_00654fa4
-#undef DAT_00654fa6
-#undef DAT_00654fa8
-#undef DAT_00654faa
-#undef DAT_00673b08
-#undef DAT_006ad2f7
-#undef DAT_006ad304
-#undef DAT_006ad35c
-#undef DAT_006ad578
-#undef DAT_006ad685
-#undef DAT_006ad698
-#undef DAT_006c9038
-#undef iptr_006d1da0
+#undef autoplay_active
+#undef autoplay_turns_left
+#undef dlg_pending_idle_callback
+#undef game_loop_active
+#undef game_over_reason
+#undef human_civ
+#undef mp_turn_civ
+#undef mp_turn_seconds_left
+#undef mp_turn_time_limit_ms
+#undef net_host_flag
+#undef net_host_handoff_stage
+#undef net_local_slot
+#undef net_slot_civs
+#undef nm_start_civ_count
+#undef player_has_quit
+#undef saved_human_players
+#undef saved_resume_new_game
+#undef saved_turn_civ
+#undef turn_resume_civ
+#undef turn_resume_new_game
 #undef _DAT_0066c990
 #undef _DAT_00673b08
 #undef _DAT_006ad578
@@ -4002,27 +4002,27 @@ LAB_005abff1:
 
 /* 005ac840 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005ac840(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (((int)this->field_120 < 0) || (*(int *)(this[1].pad_4a4 + 0xdc) <= (int)this->field_120)) {
-    this->field_120 = 0;
+  if (((int)this->resize_border < 0) || (*(int *)(this[1].pad_4a4 + 0xdc) <= (int)this->resize_border)) {
+    this->resize_border = 0;
   }
   *(undefined4 *)this[4].pad_2c4 = *(undefined4 *)(this[1].pad_4a4 + 0xdc);
-  *(u32 *)(this[5].pad_48 + 100) = this->field_120;
-  *(u32 *)(this[5].pad_48 + 0x68) = this->field_120;
-  while (DAT_006a85a4 % 9 != 0) {
+  *(u32 *)(this[5].pad_48 + 100) = this->resize_border;
+  *(u32 *)(this[5].pad_48 + 0x68) = this->resize_border;
+  while (pedia_list_top % 9 != 0) {
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) + -1;
   }
   for (local_8 = 0; local_8 < *(int *)(this[1].pad_4a4 + 0xdc); local_8 = local_8 + 1) {
     *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
          *(undefined4 *)(this[2].pad_48 + local_8 * 4 + 0x18);
   }
-  thunk_FUN_0040fd40
-            ((C_0040f380_3c *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
-  thunk_FUN_0040fcf0
+  thunk_scrollbar_set_range
+            ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
+  thunk_scrollbar_set_pos
             ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
@@ -4030,18 +4030,18 @@ void __thiscall FUN_005ac840(C_004083b0_61c *this,iptr param_1)
     this[5].pad_48[0x6a] = 0xff;
     this[5].pad_48[0x6b] = 0xff;
   }
-  thunk_FUN_00451bf0(this);
-  thunk_FUN_004923c0((C_00408010_10 *)&DAT_006a66b0);
-  thunk_FUN_004518d0((C_00408010_cc *)&DAT_006a66b0);
-  thunk_FUN_004f6646((C_004083b0_120 *)&DAT_006a6668);
+  thunk_pedia_update_controls(this);
+  thunk_wnd_set_focus((WndBase *)&pedia_window_wnd);
+  thunk_wnd_activate((Wnd *)&pedia_window_wnd);
+  thunk_pedia_redraw((C_004083b0_120 *)&pedia_window);
   return;
 }
 #undef local_8
 
 /* 005ac9ad auto */
-#define DAT_0062d858 (*(int *)((u8 *)&g.d_0062d858))
-#define DAT_00635a1c (*(undefined4 *)((u8 *)&g.d_00635a1c))
-#define DAT_00679640 (*(undefined1 *)((u8 *)&g.d_00679640))
+#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
+#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_498 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_488 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_478 (*(tagRECT *)(frame_ + FRAME_OFF(32)))
@@ -4070,8 +4070,8 @@ void __thiscall FUN_005ac840(C_004083b0_61c *this,iptr param_1)
 #define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(1148)))
 #define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(1152)))
-#define local_8 (*(C_0040ef70_8 * *)(frame_ + FRAME_OFF(1168)))
-void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
+#define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(1168)))
+void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
 
 {
   int iVar1;
@@ -4080,134 +4080,134 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
   u32 yBottom;
   undefined1 frame_[FRAME_OFF(1176)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005c00ce((C_004083b0_48 *)this,(iptr)local_18);
-  FUN_005c0073((C_004083b0_48 *)this,(iptr)&this->field_5f8);
-  thunk_FUN_00451bf0((C_004083b0_61c *)this);
-  thunk_FUN_004f6564((C_004083b0_4 *)this,(iptr)&this->field_5f8,2);
-  local_8 = (C_0040ef70_8 *)&DAT_0067a798;
-  local_44 = this->field_5f8;
+  surface_get_clip((DibSurface *)this,(iptr)local_18);
+  surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
+  thunk_pedia_update_controls((C_004083b0_61c *)this);
+  thunk_pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  local_8 = (GameFont *)&font_size21;
+  local_44 = this->content_left;
   local_30 = 10;
-  local_40 = thunk_FUN_00407f90((iptr)&this->field_5f8);
+  local_40 = thunk_rect_width((iptr)&this->content_left);
   local_440 = local_40 / 2;
-  local_1c = thunk_FUN_00407fc0((iptr)&this->field_5f8);
+  local_1c = thunk_rect_height((iptr)&this->content_left);
   local_1c = local_1c / 0xc;
-  local_44c = thunk_FUN_0040ef70(local_8);
-  local_48 = this->field_5fc + 0xf;
-  local_448 = *(iptr *)(this[1].pad_274 + this->field_120 * 4 + -4);
+  local_44c = thunk_font_cached_height(local_8);
+  local_48 = this->content_top + 0xf;
+  local_448 = *(iptr *)(this[1].pad_274 + this->resize_border * 4 + -4);
   local_44 = local_44 + local_30;
-  FUN_005cda06((iptr)&local_20,(iptr)&local_24);
-  FUN_005cd775(2,1);
-  local_438 = thunk_FUN_00451830((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c))
+  gfx_get_scale_ratio((iptr)&local_20,(iptr)&local_24);
+  gfx_set_scale_ratio(2,1);
+  local_438 = thunk_sprite_get_width((Sprite *)(&unit_sprites + local_448 * 0x3c))
   ;
-  local_438 = local_438 + DAT_0062d858 * 2;
+  local_438 = local_438 + panel_margin_x * 2;
   iVar3 = local_48 + local_1c / 2;
-  iVar1 = thunk_FUN_00451860((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c));
-  FUN_005cef31
-            ((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c),(iptr)local_488,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_44,
+  iVar1 = thunk_sprite_get_height((Sprite *)(&unit_sprites + local_448 * 0x3c));
+  sprite_draw
+            ((Sprite *)(&unit_sprites + local_448 * 0x3c),(iptr)local_488,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_44,
              iVar3 - iVar1 / 2);
-  FUN_005cd775(local_20,local_24);
-  local_2c = DAT_00635a1c;
-  FUN_005c19ad(DAT_00635a1c);
-  iVar1 = thunk_FUN_00451830((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c));
+  gfx_set_scale_ratio(local_20,local_24);
+  local_2c = list_text_color;
+  gfx_set_text_color_index(list_text_color);
+  iVar1 = thunk_sprite_get_width((Sprite *)(&unit_sprites + local_448 * 0x3c));
   local_44 = local_44 + local_438 + iVar1 + 0x32;
-  local_48 = thunk_FUN_00451860((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c));
-  local_48 = this->field_5fc + local_48;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x79);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  iVar1 = thunk_FUN_0040efd0(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  local_48 = thunk_sprite_get_height((Sprite *)(&unit_sprites + local_448 * 0x3c));
+  local_48 = this->content_top + local_48;
+  thunk_text_clear();
+  thunk_text_append_label(0x79);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  iVar1 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   local_44 = local_44 + iVar1 + 5;
-  thunk_FUN_0040bbb0();
+  thunk_text_clear();
   if (unit_types[local_448].prerequisite < '\0') {
-    thunk_FUN_0040bc10(0xe);
-    FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+    thunk_text_append_label(0xe);
+    surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
   }
   else {
-    thunk_FUN_0040ff00(advances[unit_types[local_448].prerequisite].name);
-    local_450 = thunk_FUN_0040efd0(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    local_464 = thunk_FUN_0040efa0(local_8);
+    thunk_text_append_string_id(advances[unit_types[local_448].prerequisite].name);
+    local_450 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    local_464 = thunk_font_line_spacing(local_8);
     SetRect(&local_460,local_44,local_48,local_450 + local_44 + 5,local_464 + local_48);
-    thunk_FUN_00452c14(this,(int)unit_types[local_448].prerequisite,local_44,local_48,0,
+    thunk_pedia_add_link(this,(int)unit_types[local_448].prerequisite,local_44,local_48,0,
                        local_460.left,local_460.top,local_460.right,local_460.bottom);
   }
   local_3c = local_440 + -0x4b;
-  local_44 = this->field_5f8 + local_30;
-  iVar1 = thunk_FUN_00451860((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c));
-  local_48 = iVar1 * 2 + this->field_5fc + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x84);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
+  local_44 = this->content_left + local_30;
+  iVar1 = thunk_sprite_get_height((Sprite *)(&unit_sprites + local_448 * 0x3c));
+  local_48 = iVar1 * 2 + this->content_top + local_44c;
+  thunk_text_clear();
+  thunk_text_append_label(0x84);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
   if ((char)unit_types[local_448].cost < '\0') {
-    thunk_FUN_0040bc10(0xe);
-    FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+    thunk_text_append_label(0xe);
+    surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   }
   else {
-    _sprintf(&DAT_00679640,&DAT_00635d94,(char)unit_types[local_448].cost * 10);
-    FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
-    iVar1 = thunk_FUN_0040efd0(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    _sprintf(&text_buffer,&DAT_00635d94,(char)unit_types[local_448].cost * 10);
+    surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+    iVar1 = thunk_font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     local_44 = local_3c + iVar1 + 5;
     iVar3 = local_48 + local_1c / 2;
-    iVar1 = thunk_FUN_00451860((C_00417f70_3c *)&DAT_00644fb4);
-    FUN_005cef31
-              ((C_00417f70_3c *)&DAT_00644fb4,(iptr)local_498,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_44,
+    iVar1 = thunk_sprite_get_height((Sprite *)&shield_icon_sprite);
+    sprite_draw
+              ((Sprite *)&shield_icon_sprite,(iptr)local_498,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_44,
                (iVar3 + -2) - iVar1 / 2);
   }
-  local_44 = this->field_5f8 + local_30;
+  local_44 = this->content_left + local_30;
   local_48 = local_48 + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x7f);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
-  _sprintf(&DAT_00679640,&DAT_00635d98,(int)(char)unit_types[local_448].attack);
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+  thunk_text_clear();
+  thunk_text_append_label(0x7f);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
+  _sprintf(&text_buffer,&DAT_00635d98,(int)(char)unit_types[local_448].attack);
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   local_48 = local_48 + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x80);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
-  _sprintf(&DAT_00679640,&DAT_00635d9c,(int)(char)unit_types[local_448].defense);
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+  thunk_text_clear();
+  thunk_text_append_label(0x80);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
+  _sprintf(&text_buffer,&DAT_00635d9c,(int)(char)unit_types[local_448].defense);
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   local_48 = local_48 + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x82);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
-  _sprintf(&DAT_00679640,&DAT_00635da0,(int)(char)unit_types[local_448].hit_points / 10);
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+  thunk_text_clear();
+  thunk_text_append_label(0x82);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
+  _sprintf(&text_buffer,&DAT_00635da0,(int)(char)unit_types[local_448].hit_points / 10);
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   local_48 = local_48 + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x83);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
-  _sprintf(&DAT_00679640,&DAT_00635da4,(int)(char)unit_types[local_448].firepower);
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+  thunk_text_clear();
+  thunk_text_append_label(0x83);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
+  _sprintf(&text_buffer,&DAT_00635da4,(int)(char)unit_types[local_448].firepower);
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   local_48 = local_48 + local_44c;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040bc10(0x81);
-  thunk_FUN_0040fe40();
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
-  thunk_FUN_0040bbb0();
-  _sprintf(&DAT_00679640,&DAT_00635da8,(int)(char)unit_types[local_448].move / 3);
-  FUN_005c0f57((C_004083b0_48 *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
+  thunk_text_clear();
+  thunk_text_append_label(0x81);
+  thunk_text_append_colon();
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_44,local_48,5);
+  thunk_text_clear();
+  _sprintf(&text_buffer,&DAT_00635da8,(int)(char)unit_types[local_448].move / 3);
+  surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_3c,local_48,5);
   local_444 = s_PEDIA_00635dac;
-  thunk_FUN_0040bbb0();
-  thunk_FUN_0040ff30(local_448);
+  thunk_text_clear();
+  thunk_text_append_int(local_448);
   local_43c = 0;
   local_34 = 0;
   local_28 = 7;
   local_4c = 0;
-  iVar1 = thunk_FUN_004a2379((iptr)local_444,ADDR(0x635db4, ((u8 *)&g.d_00635db4)));
+  iVar1 = thunk_text_open_section((iptr)local_444,ADDR(0x635db4, ((u8 *)&g.d_00635db4)));
   if (iVar1 == 0) {
     local_468 = 0;
-    thunk_FUN_004aef20((iptr)local_434);
-    local_38 = thunk_FUN_004a23fc(1);
+    thunk_str_clear((iptr)local_434);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 1) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4216,9 +4216,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 2) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4227,9 +4227,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 4) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4238,9 +4238,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 8) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4249,9 +4249,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x10) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4260,9 +4260,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x20) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4271,9 +4271,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x40) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4282,9 +4282,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x80) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4293,9 +4293,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x100) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4304,9 +4304,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x200) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4315,9 +4315,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x400) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4326,9 +4326,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x800) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4337,9 +4337,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x1000) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4348,9 +4348,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x2000) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4359,9 +4359,9 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    local_38 = thunk_FUN_004a23fc(1);
+    local_38 = thunk_text_read_line(1);
     if ((unit_types[local_448].flags & 0x4000) != 0) {
       if (local_468 == 0) {
         FUN_005f22d0(local_434,local_38 + 1);
@@ -4370,29 +4370,29 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
       else {
         FUN_005f22e0(local_434,local_38 + 1);
       }
-      thunk_FUN_004aef36((iptr)local_434);
+      thunk_str_append_space((iptr)local_434);
     }
-    thunk_FUN_004a2020();
-    local_44 = this->field_5f8 + local_440;
-    iVar1 = thunk_FUN_00451860((C_00417f70_3c *)(&DAT_00641848 + local_448 * 0x3c));
-    local_48 = iVar1 * 2 + this->field_5fc + local_44c;
+    thunk_text_close_file();
+    local_44 = this->content_left + local_440;
+    iVar1 = thunk_sprite_get_height((Sprite *)(&unit_sprites + local_448 * 0x3c));
+    local_48 = iVar1 * 2 + this->content_top + local_44c;
     sVar2 = _strlen(local_434);
     if (sVar2 != 0) {
-      yBottom = this->field_604;
-      iVar1 = thunk_FUN_00407f90((iptr)&this->field_5f8);
+      yBottom = this->content_bottom;
+      iVar1 = thunk_rect_width((iptr)&this->content_left);
       SetRect(&local_478,local_44,local_48,local_44 + iVar1 / 2,yBottom);
-      FUN_005c1167
-                ((C_004083b0_48 *)this,(iptr)local_8,(iptr)local_434,(iptr)&local_478,5);
+      surface_draw_text_rect
+                ((DibSurface *)this,(iptr)local_8,(iptr)local_434,(iptr)&local_478,5);
     }
   }
-  thunk_FUN_00452768((C_004083b0_11c *)this,this->field_120);
-  FUN_005c0073((C_004083b0_48 *)this,(iptr)local_18);
-  thunk_FUN_00408490((C_004083b0_48 *)this,(iptr)&this->field_5f8);
+  thunk_pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  surface_set_clip((DibSurface *)this,(iptr)local_18);
+  thunk_wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
 }
-#undef DAT_0062d858
-#undef DAT_00635a1c
-#undef DAT_00679640
+#undef list_text_color
+#undef panel_margin_x
+#undef text_buffer
 #undef local_498
 #undef local_488
 #undef local_478
@@ -4424,51 +4424,51 @@ void __thiscall FUN_005ac9ad(C_004083b0_a28 *this)
 #undef local_8
 
 /* 005ad998 auto */
-#define DAT_006a677c (*(int *)((u8 *)&g.d_006a677c))
-#define DAT_006a7d50 (*(undefined4 *)((u8 *)&g.d_006a7d50))
-#define DAT_006ad908 (*(int *)((u8 *)&g.d_006ad908))
+#define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
+#define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
+#define pedia_unit_names (*(undefined4 *)((u8 *)&g.d_006a7d50))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005ad998(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1)
 
 {
   undefined4 uVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((DAT_006a677c != 0) && (DAT_006ad908 == 0)) {
+  if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     local_8 = 0;
     while (((int)local_8 < *(int *)(this[1].pad_15c + 0x18) &&
            (*(int *)(this[1].pad_274 + local_8 * 4 + -4) != param_1))) {
       local_8 = local_8 + 1;
     }
     if (*(u32 *)(this[1].pad_15c + 0x18) != local_8) {
-      thunk_FUN_004f7bd1((C_004083b0_61c *)this,4,0);
-      this->field_120 = local_8;
+      thunk_pedia_open_category((C_004083b0_61c *)this,4,0);
+      this->resize_border = local_8;
       *(u32 *)(this[3].pad_48 + 0x78) = local_8;
-      this->field_124 = 1;
-      this->field_11c = 1;
-      thunk_FUN_004f4793((C_004083b0_4 *)this);
-      thunk_FUN_00451bf0((C_004083b0_61c *)this);
-      uVar1 = thunk_FUN_004f8a9b(DAT_006a7d50,local_8);
+      this->client_x = 1;
+      this->border_width = 1;
+      thunk_pedia_clear_links((C_004083b0_4 *)this);
+      thunk_pedia_update_controls((C_004083b0_61c *)this);
+      uVar1 = thunk_pedia_lookup_text(pedia_unit_names,local_8);
       FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      thunk_FUN_004f6244((C_004083b0_61c *)this);
-      thunk_FUN_005ac9ad(this);
-      thunk_FUN_004085f0((C_004083b0_4 *)this);
-      thunk_FUN_00408460((C_004083b0_48 *)&DAT_006a6668);
-      thunk_FUN_004518d0((C_00408010_cc *)&DAT_006a66b0);
-      thunk_FUN_0040f320((C_00408010_b8 *)&DAT_006a66b0,ADDR(0x401843, FUN_004f8d04));
-      FUN_005c61b0((C_00408010_b8 *)&DAT_006a66b0);
-      thunk_FUN_0040f320((C_00408010_b8 *)&DAT_006a66b0,0);
+      thunk_pedia_draw_frame((C_004083b0_61c *)this);
+      thunk_pedia_draw_unit_page(this);
+      thunk_window_show((C_004083b0_4 *)this);
+      thunk_wnd_blit_surface((DibSurface *)&pedia_window);
+      thunk_wnd_activate((Wnd *)&pedia_window_wnd);
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, FUN_004f8d04));
+      wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
+      thunk_wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
     }
   }
   return;
 }
-#undef DAT_006a677c
-#undef DAT_006a7d50
-#undef DAT_006ad908
+#undef map_redraw_busy
+#undef pedia_closed
+#undef pedia_unit_names
 #undef local_8
 
 /* 005adfa0 auto */
-int __cdecl FUN_005adfa0(iptr param_1,iptr param_2,int param_3)
+int __cdecl int_clamp(iptr param_1,iptr param_2,int param_3)
 
 {
   if (param_2 <= param_1) {
@@ -4481,7 +4481,7 @@ int __cdecl FUN_005adfa0(iptr param_1,iptr param_2,int param_3)
 }
 
 /* 005adfd9 auto */
-void __cdecl FUN_005adfd9(iptr param_1,iptr param_2)
+void __cdecl int_swap(iptr param_1,iptr param_2)
 
 {
   undefined4 uVar1;
@@ -4495,7 +4495,7 @@ void __cdecl FUN_005adfd9(iptr param_1,iptr param_2)
 /* 005ae006 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_005ae006(uint param_1)
+int __cdecl bits_count8(uint param_1)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4544,7 +4544,7 @@ int __cdecl coarse_wrap_x(int param_1)
 
 /* 005ae10e auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005ae10e(int param_1,int param_2)
+int __cdecl map_dx_wrapped(int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4568,14 +4568,14 @@ int __cdecl FUN_005ae17d(undefined4 param_1,undefined4 param_2)
 {
   int iVar1;
   
-  iVar1 = thunk_FUN_005ae10e(param_1,param_2);
+  iVar1 = thunk_map_dx_wrapped(param_1,param_2);
   return iVar1 + 1 >> 1;
 }
 
 /* 005ae1b0 auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl FUN_005ae1b0(int param_1,int param_2,int param_3,int param_4)
+int __cdecl map_distance(int param_1,int param_2,int param_3,int param_4)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4601,7 +4601,7 @@ int __cdecl FUN_005ae1b0(int param_1,int param_2,int param_3,int param_4)
 #undef local_8
 
 /* 005ae24d auto */
-int __cdecl FUN_005ae24d(uint param_1,uint param_2)
+int __cdecl map_half_manhattan(uint param_1,uint param_2)
 
 {
   if ((int)param_1 < 1) {
@@ -4615,7 +4615,7 @@ int __cdecl FUN_005ae24d(uint param_1,uint param_2)
 
 /* 005ae296 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005ae296(uint param_1,uint param_2)
+int __cdecl dist_from_deltas(uint param_1,uint param_2)
 
 {
   int iVar1;
@@ -4640,20 +4640,20 @@ int __cdecl FUN_005ae296(uint param_1,uint param_2)
 
 /* 005ae31d auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl FUN_005ae31d(undefined4 param_1,int param_2,undefined4 param_3,int param_4)
+undefined4 __cdecl map_distance_diag(undefined4 param_1,int param_2,undefined4 param_3,int param_4)
 
 {
   undefined4 uVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar1 = thunk_FUN_005ae10e(param_1,param_3);
+  uVar1 = thunk_map_dx_wrapped(param_1,param_3);
   if (param_2 == param_4 || param_2 - param_4 < 0) {
     local_c = ~(param_2 - param_4) + 1;
   }
   else {
     local_c = param_2 - param_4;
   }
-  uVar1 = thunk_FUN_005ae296(uVar1,local_c);
+  uVar1 = thunk_dist_from_deltas(uVar1,local_c);
   return uVar1;
 }
 #undef local_c
@@ -4674,7 +4674,7 @@ undefined4 __cdecl FUN_005ae37b(uint param_1,int param_2)
 #undef local_8
 
 /* 005ae3bf auto */
-void __cdecl FUN_005ae3bf(iptr param_1,iptr param_2,iptr param_3)
+void __cdecl bit_index_split(iptr param_1,iptr param_2,iptr param_3)
 
 {
   *(iptr *)param_2 = param_1 >> 3;
@@ -4684,7 +4684,7 @@ void __cdecl FUN_005ae3bf(iptr param_1,iptr param_2,iptr param_3)
 
 /* 005ae3ec auto */
 #define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_005ae3ec(int param_1,int param_2)
+int __cdecl int_shift_signed(int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4706,15 +4706,15 @@ int __cdecl FUN_005ae3ec(int param_1,int param_2)
 #undef local_8
 
 /* 005ae580 auto */
-#define DAT_00627670 (*(undefined4 *)((u8 *)&g.d_00627670))
-#define DAT_00628048 (*(char *)((u8 *)&g.d_00628048))
-#define DAT_00654b70 (*(undefined4 *)((u8 *)&g.d_00654b70))
-#define DAT_00666542 (*(short *)((u8 *)&g.d_00666542))
-#define DAT_006a9110 (*(int *)((u8 *)&g.d_006a9110))
-#define DAT_006ab19c (*(int *)((u8 *)&g.d_006ab19c))
-#define iptr_006d1da0 (*(iptr *)((u8 *)&g.d_006d1da0))
+#define event_dont_play_wonders (*(int *)((u8 *)&g.d_006a9110))
+#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
+#define mp_turn_time_limit_ms (*(undefined4 *)((u8 *)&g.d_00654b70))
+#define prefs_pbem_menu_choice (*(short *)((u8 *)&g.d_00666542))
+#define scenario_events_loaded (*(undefined4 *)((u8 *)&g.d_00627670))
+#define screen_height (*(int *)((u8 *)&g.d_006ab19c))
+#define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
 #define local_310 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_30c (*(C_0040bc40_2f4 *)(frame_ + FRAME_OFF(4)))
+#define local_30c (*(Dialog *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(764)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
@@ -4728,129 +4728,129 @@ undefined4 __cdecl FUN_005ae580(void)
   undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0059db08(&local_30c,0x4000);
+  thunk_dialog_ctor(&local_30c,0x4000);
   local_8 = 0;
   for (local_310 = 0; local_310 < 8; local_310 = local_310 + 1) {
-    *(undefined2 *)(&DAT_00654b60 + local_310 * 2) = 0;
-    (&DAT_00654da4)[local_310 * 0x20] = 0;
+    *(undefined2 *)(&civ_intro_shown + local_310 * 2) = 0;
+    (&civ_email_addresses)[local_310 * 0x20] = 0;
   }
-  DAT_00654b70 = 0;
+  mp_turn_time_limit_ms = 0;
   game.multiplayer = '\x02';
 LAB_005ae610:
-  DAT_00631eec = 3;
-  thunk_FUN_0052263c(0xffffffff,0);
-  thunk_FUN_0040ffa0(&local_30c,ADDR(0x635dcc, ((u8 *)&g.d_00635dcc)),1);
-  thunk_FUN_0059ea99((C_0040bc40_268 *)&local_30c,(int)DAT_00666542);
-  FUN_005f22d0(&DAT_0064bb08,&DAT_00655020);
-  iVar1 = -(((int)(DAT_006ab19c + -0x1e0 + (DAT_006ab19c + -0x1e0 >> 0x1f & 7U)) >> 3) + 1);
-  uVar2 = thunk_FUN_005226fa(0);
-  thunk_FUN_0059e783((C_0040bc40_28 *)&local_30c,uVar2,iVar1);
-  iVar1 = thunk_FUN_0040bc80(&local_30c,0);
-  thunk_FUN_0046e020(0x6a,0,0,0);
-  thunk_FUN_0055a567((C_004083b0_430 *)&DAT_006ab1b8);
+  setup_dialog_pos_state = 3;
+  thunk_setup_show_side_picture(0xffffffff,0);
+  thunk_dlg_load_game_section(&local_30c,ADDR(0x635dcc, ((u8 *)&g.d_00635dcc)),1);
+  thunk_dialog_set_default_choice((DialogOptionList *)&local_30c,(int)prefs_pbem_menu_choice);
+  FUN_005f22d0(&scenario_dir_path,&game_home_dir);
+  iVar1 = -(((int)(screen_height + -0x1e0 + (screen_height + -0x1e0 >> 0x1f & 7U)) >> 3) + 1);
+  uVar2 = thunk_setup_next_dialog_x(0);
+  thunk_dialog_set_position((C_0040bc40_28 *)&local_30c,uVar2,iVar1);
+  iVar1 = thunk_dlg_show_modal(&local_30c,0);
+  thunk_snd_play_effect(0x6a,0,0,0);
+  thunk_setup_picwnd_close((C_004083b0_430 *)&setup_picwnd);
   if (iVar1 < 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005aebef */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_30c)); }
+    /* inlined unwind funclet FUN_005aebef */ { thunk_dialog_dtor((Dialog *)((iptr)&local_30c)); }
     uVar2 = 1;
 LAB_005aec05:
     return uVar2;
   }
-  DAT_00666542 = (short)iVar1;
+  prefs_pbem_menu_choice = (short)iVar1;
   if ((-1 < iVar1) && (iVar1 < 3)) {
-    __chdir(&DAT_00655020);
-    thunk_FUN_0041e864(1);
+    __chdir(&game_home_dir);
+    thunk_rules_load(1);
   }
-  DAT_00627670 = 0;
+  scenario_events_loaded = 0;
   switch(iVar1) {
   case 0:
-    iVar1 = thunk_FUN_0041d417();
+    iVar1 = thunk_setup_choose_map_size();
     if (iVar1 != 0) goto LAB_005ae610;
     local_18 = 0;
     iVar1 = _rand();
-    DAT_00624ee8 = iVar1 % 3 + -1;
-    DAT_00624eec = 0;
+    mapgen_land_mass = iVar1 % 3 + -1;
+    mapgen_land_form = 0;
     iVar1 = _rand();
     if (iVar1 % 3 == 0) {
-      DAT_00624eec = DAT_00624ee8;
+      mapgen_land_form = mapgen_land_mass;
     }
     iVar1 = _rand();
-    DAT_00624ef0 = iVar1 % 3 + -1;
+    mapgen_temperature = iVar1 % 3 + -1;
     iVar1 = _rand();
-    DAT_00624ef4 = iVar1 % 3 + -1;
+    mapgen_climate = iVar1 % 3 + -1;
     iVar1 = _rand();
-    DAT_00624ef8 = iVar1 % 3 + -1;
-    iVar1 = thunk_FUN_0051dd97(local_18,2);
+    mapgen_age = iVar1 % 3 + -1;
+    iVar1 = thunk_setup_choose_game_options(local_18,2);
     break;
   case 1:
-    iVar1 = thunk_FUN_0041dd0e();
+    iVar1 = thunk_map_load_dialog();
     if (iVar1 != 0) goto LAB_005ae610;
     local_18 = 1;
     if (map.flat != 0) {
       local_18 = 2;
     }
     iVar1 = _rand();
-    DAT_00624ee8 = iVar1 % 3 + -1;
-    DAT_00624eec = 0;
+    mapgen_land_mass = iVar1 % 3 + -1;
+    mapgen_land_form = 0;
     iVar1 = _rand();
     if (iVar1 % 3 == 0) {
-      DAT_00624eec = DAT_00624ee8;
+      mapgen_land_form = mapgen_land_mass;
     }
     iVar1 = _rand();
-    DAT_00624ef0 = iVar1 % 3 + -1;
+    mapgen_temperature = iVar1 % 3 + -1;
     iVar1 = _rand();
-    DAT_00624ef4 = iVar1 % 3 + -1;
+    mapgen_climate = iVar1 % 3 + -1;
     iVar1 = _rand();
-    DAT_00624ef8 = iVar1 % 3 + -1;
-    iVar1 = thunk_FUN_0051dd97(local_18,2);
+    mapgen_age = iVar1 % 3 + -1;
+    iVar1 = thunk_setup_choose_game_options(local_18,2);
     break;
   case 2:
-    iVar1 = thunk_FUN_0041d417();
+    iVar1 = thunk_setup_choose_map_size();
     if (iVar1 != 0) goto LAB_005ae610;
     local_18 = 0;
-    iVar1 = thunk_FUN_0041d7ea();
+    iVar1 = thunk_setup_custom_world();
     if (iVar1 != 0) goto LAB_005ae610;
-    iVar1 = thunk_FUN_0051dd97(local_18,2);
+    iVar1 = thunk_setup_choose_game_options(local_18,2);
     break;
   case 3:
-    DAT_006a9110 = 0;
-    iVar1 = thunk_FUN_005218cb(2);
+    event_dont_play_wonders = 0;
+    iVar1 = thunk_scenario_start_dialog(2);
     if (iVar1 == 0) {
-      if (DAT_006a9110 != 0) {
+      if (event_dont_play_wonders != 0) {
         game.game_options = game.game_options & 0xfffeffff;
       }
       game.multiplayer = '\x02';
-      local_14 = thunk_FUN_005227e3();
+      local_14 = thunk_setup_choose_hotseat_players();
       if (local_14 == 0) {
-        FUN_005f22d0(&DAT_0064bb08,&DAT_00655020);
+        FUN_005f22d0(&scenario_dir_path,&game_home_dir);
       }
       else {
-        iVar1 = thunk_FUN_00521fe0(local_14);
+        iVar1 = thunk_scenario_pick_human_civs(local_14);
         if (iVar1 == 0) {
-          thunk_FUN_004a73d9();
+          thunk_prefs_save_civ2dat();
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005aebef */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_30c)); }
+          /* inlined unwind funclet FUN_005aebef */ { thunk_dialog_dtor((Dialog *)((iptr)&local_30c)); }
           uVar2 = 0;
           goto LAB_005aec05;
         }
-        FUN_005f22d0(&DAT_0064bb08,&DAT_00655020);
+        FUN_005f22d0(&scenario_dir_path,&game_home_dir);
       }
     }
     else {
-      FUN_005f22d0(&DAT_0064bb08,&DAT_00655020);
+      FUN_005f22d0(&scenario_dir_path,&game_home_dir);
     }
     goto LAB_005ae610;
   case 4:
-    DAT_006a9110 = 0;
-    iVar1 = thunk_FUN_00477d8c(0,2,1);
+    event_dont_play_wonders = 0;
+    iVar1 = thunk_game_load_dialog(0,2,1);
     if (iVar1 == 0) {
       if (game.multiplayer != '\x02') goto code_r0x005aea27;
-      thunk_FUN_004a73d9();
+      thunk_prefs_save_civ2dat();
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005aebef */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_30c)); }
+      /* inlined unwind funclet FUN_005aebef */ { thunk_dialog_dtor((Dialog *)((iptr)&local_30c)); }
       uVar2 = 0;
       goto LAB_005aec05;
     }
-    if (DAT_006a9110 != 0) {
+    if (event_dont_play_wonders != 0) {
       game.game_options = game.game_options & 0xfffeffff;
     }
     goto LAB_005ae610;
@@ -4861,52 +4861,52 @@ LAB_005aec05:
 switchD_005aea9a_default:
     game.civs_alive = '\0';
     game.human_players = '\0';
-    local_14 = thunk_FUN_005227e3();
+    local_14 = thunk_setup_choose_hotseat_players();
     if (local_14 != 0) {
-      thunk_FUN_00522dfa();
+      thunk_leaders_reset_custom_names();
       for (local_310 = 0; local_310 < local_14; local_310 = local_310 + 1) {
-        while (iVar1 = thunk_FUN_0051f19c(local_310,2,0), iVar1 != 0) {
+        while (iVar1 = thunk_setup_choose_tribe(local_310,2,0), iVar1 != 0) {
           local_310 = local_310 + -1;
           if (local_310 < 0) goto switchD_005aea9a_default;
         }
       }
-      thunk_FUN_00522f8f(local_14);
-      thunk_FUN_004a73d9();
-      thunk_FUN_0041a046(1);
-      thunk_FUN_0041a5c4(1);
-      thunk_FUN_0041a422(1);
-      thunk_FUN_00419c8b();
-      thunk_FUN_00408d33(local_18);
-      thunk_FUN_004aa9c0();
-      if (DAT_00631ee8 != 0) {
-        thunk_FUN_004a9785(DAT_00631ee8 + -1);
+      thunk_setup_choose_opponents(local_14);
+      thunk_prefs_save_civ2dat();
+      thunk_rules_load_advances(1);
+      thunk_rules_load_units(1);
+      thunk_rules_load_improvements(1);
+      thunk_snd_menu_end();
+      thunk_map_generate(local_18);
+      thunk_game_init_new();
+      if (setup_accelerated_start != 0) {
+        thunk_game_accelerated_start(setup_accelerated_start + -1);
       }
       game.multiplayer = '\x02';
-      if (DAT_00628048 != '\0') {
-        game.player_civ = DAT_00628048;
-        iptr_006d1da0 = (iptr)DAT_00628048;
+      if (turn_resume_civ != '\0') {
+        game.player_civ = turn_resume_civ;
+        human_civ = (iptr)turn_resume_civ;
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005aebef */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_30c)); }
+      /* inlined unwind funclet FUN_005aebef */ { thunk_dialog_dtor((Dialog *)((iptr)&local_30c)); }
       uVar2 = 0;
       goto LAB_005aec05;
     }
   }
   goto LAB_005ae610;
 code_r0x005aea27:
-  thunk_FUN_00410030(ADDR(0x635dd4, ((u8 *)&g.d_00635dd4)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-  if (DAT_006a9110 != 0) {
+  thunk_popup_game_with_sprite(ADDR(0x635dd4, ((u8 *)&g.d_00635dd4)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+  if (event_dont_play_wonders != 0) {
     game.game_options = game.game_options & 0xfffeffff;
   }
   goto LAB_005ae610;
 }
-#undef DAT_00627670
-#undef DAT_00628048
-#undef DAT_00654b70
-#undef DAT_00666542
-#undef DAT_006a9110
-#undef DAT_006ab19c
-#undef iptr_006d1da0
+#undef event_dont_play_wonders
+#undef human_civ
+#undef mp_turn_time_limit_ms
+#undef prefs_pbem_menu_choice
+#undef scenario_events_loaded
+#undef screen_height
+#undef turn_resume_civ
 #undef local_310
 #undef local_30c
 #undef local_18
@@ -4916,10 +4916,10 @@ code_r0x005aea27:
 #undef local_8
 
 /* 005aec14 auto */
-#define DAT_00666590 (*(undefined *)((u8 *)&g.d_00666590))
+#define prefs_email_address (*(undefined *)((u8 *)&g.d_00666590))
 #define local_410 (*(undefined * *)(frame_ + FRAME_OFF(0)))
 #define local_40c (*(undefined1 (*)[260])(frame_ + FRAME_OFF(4)))
-#define local_308 (*(C_0040bc40_2f4 *)(frame_ + FRAME_OFF(264)))
+#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(264)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1020)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1024)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1028)))
@@ -4930,27 +4930,27 @@ void __cdecl FUN_005aec14(int param_1,int param_2)
   undefined1 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0059db08(&local_308,0x4000);
+  thunk_dialog_ctor(&local_308,0x4000);
   local_8 = 0;
   if (param_2 == 0) {
     local_410 = &DAT_00635de0;
   }
   else {
-    local_410 = &DAT_00666590;
+    local_410 = &prefs_email_address;
   }
-  thunk_FUN_005a632a(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635de4, ((u8 *)&g.d_00635de4)),0x1f,(iptr)local_410,0,0,0,1);
-  local_14 = thunk_FUN_005a5f34(&local_308,(iptr)local_40c,0);
+  thunk_dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635de4, ((u8 *)&g.d_00635de4)),0x1f,(iptr)local_410,0,0,0,1);
+  local_14 = thunk_dialog_run_modal(&local_308,(iptr)local_40c,0);
   if (local_14 == 0) {
-    FUN_005f22d0(&DAT_00654da4 + param_1 * 0x20,local_40c);
+    FUN_005f22d0(&civ_email_addresses + param_1 * 0x20,local_40c);
     if (param_2 != 0) {
-      FUN_005f22d0(&DAT_00666590,local_40c);
+      FUN_005f22d0(&prefs_email_address,local_40c);
     }
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005aed0d */ { thunk_FUN_0059df8a((C_0040bc40_2f4 *)((iptr)&local_308)); }
+  /* inlined unwind funclet FUN_005aed0d */ { thunk_dialog_dtor((Dialog *)((iptr)&local_308)); }
   return;
 }
-#undef DAT_00666590
+#undef prefs_email_address
 #undef local_410
 #undef local_40c
 #undef local_308
@@ -4961,7 +4961,7 @@ void __cdecl FUN_005aec14(int param_1,int param_2)
 
 /* 005aef20 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005aef20(void)
+void __cdecl unit_editor_load_rules(void)
 
 {
   char *_Source;
@@ -4970,23 +4970,23 @@ void __cdecl FUN_005aef20(void)
   
   for (local_8 = 0; local_8 < 0x3e; local_8 = local_8 + 1) {
     _Count = 0x28;
-    _Source = (char *)thunk_FUN_00428b0c(unit_types[local_8].name);
-    _strncpy(&DAT_006a1d88 + local_8 * 0x28,_Source,_Count);
-    (&DAT_006a1daf)[local_8 * 0x28] = 0;
-    *(int *)(&DAT_006a2d28 + local_8 * 0x58) = (int)unit_types[local_8].prerequisite;
-    *(int *)(&DAT_006a2d2c + local_8 * 0x58) = (int)unit_types[local_8].obsolete_by;
-    *(int *)(&DAT_006a2d30 + local_8 * 0x58) = (int)(char)unit_types[local_8].role;
-    *(int *)(&DAT_006a2d34 + local_8 * 0x58) = (int)(char)unit_types[local_8].domain;
-    *(int *)(&DAT_006a2d38 + local_8 * 0x58) = (int)(char)unit_types[local_8].cost;
-    *(int *)(&DAT_006a2d3c + local_8 * 0x58) = (int)(char)unit_types[local_8].hold;
-    *(int *)(&DAT_006a2d40 + local_8 * 0x58) =
+    _Source = (char *)thunk_label_string(unit_types[local_8].name);
+    _strncpy(&editor_item_names + local_8 * 0x28,_Source,_Count);
+    (&editor_item_name_ends)[local_8 * 0x28] = 0;
+    *(int *)(&editor_items + local_8 * 0x58) = (int)unit_types[local_8].prerequisite;
+    *(int *)(&editor_item_field1 + local_8 * 0x58) = (int)unit_types[local_8].obsolete_by;
+    *(int *)(&editor_item_field2 + local_8 * 0x58) = (int)(char)unit_types[local_8].role;
+    *(int *)(&editor_item_field3 + local_8 * 0x58) = (int)(char)unit_types[local_8].domain;
+    *(int *)(&editor_item_field4 + local_8 * 0x58) = (int)(char)unit_types[local_8].cost;
+    *(int *)(&editor_item_field5 + local_8 * 0x58) = (int)(char)unit_types[local_8].hold;
+    *(int *)(&editor_item_field6 + local_8 * 0x58) =
          (int)(char)unit_types[local_8].move / (int)(uint)cosmic.road_move_mult;
-    *(int *)(&DAT_006a2d44 + local_8 * 0x58) = (int)(char)unit_types[local_8].range;
-    *(int *)(&DAT_006a2d48 + local_8 * 0x58) = (int)(char)unit_types[local_8].attack;
-    *(int *)(&DAT_006a2d4c + local_8 * 0x58) = (int)(char)unit_types[local_8].defense;
-    *(int *)(&DAT_006a2d50 + local_8 * 0x58) = (int)(char)unit_types[local_8].hit_points / 10;
-    *(int *)(&DAT_006a2d54 + local_8 * 0x58) = (int)(char)unit_types[local_8].firepower;
-    *(u32 *)(&DAT_006a2d58 + local_8 * 0x58) = unit_types[local_8].flags;
+    *(int *)(&editor_item_field7 + local_8 * 0x58) = (int)(char)unit_types[local_8].range;
+    *(int *)(&editor_item_field8 + local_8 * 0x58) = (int)(char)unit_types[local_8].attack;
+    *(int *)(&editor_item_field9 + local_8 * 0x58) = (int)(char)unit_types[local_8].defense;
+    *(int *)(&editor_item_field10 + local_8 * 0x58) = (int)(char)unit_types[local_8].hit_points / 10;
+    *(int *)(&editor_item_field11 + local_8 * 0x58) = (int)(char)unit_types[local_8].firepower;
+    *(u32 *)(&editor_item_flags + local_8 * 0x58) = unit_types[local_8].flags;
   }
   return;
 }
@@ -4994,7 +4994,7 @@ void __cdecl FUN_005aef20(void)
 
 /* 005af140 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005af140(void)
+void __cdecl unit_editor_store_rules(void)
 
 {
   char *_Dest;
@@ -5004,23 +5004,23 @@ void __cdecl FUN_005af140(void)
   
   for (local_8 = 0; local_8 < 0x3e; local_8 = local_8 + 1) {
     _Count = 0xf;
-    _Source = &DAT_006a1d88 + local_8 * 0x28;
-    _Dest = (char *)thunk_FUN_00428b0c(unit_types[local_8].name);
+    _Source = &editor_item_names + local_8 * 0x28;
+    _Dest = (char *)thunk_label_string(unit_types[local_8].name);
     _strncpy(_Dest,_Source,_Count);
-    unit_types[local_8].prerequisite = (&DAT_006a2d28)[local_8 * 0x58];
-    unit_types[local_8].obsolete_by = (&DAT_006a2d2c)[local_8 * 0x58];
-    unit_types[local_8].role = (&DAT_006a2d30)[local_8 * 0x58];
-    unit_types[local_8].domain = (&DAT_006a2d34)[local_8 * 0x58];
-    unit_types[local_8].cost = (&DAT_006a2d38)[local_8 * 0x58];
-    unit_types[local_8].hold = (&DAT_006a2d3c)[local_8 * 0x58];
+    unit_types[local_8].prerequisite = (&editor_items)[local_8 * 0x58];
+    unit_types[local_8].obsolete_by = (&editor_item_field1)[local_8 * 0x58];
+    unit_types[local_8].role = (&editor_item_field2)[local_8 * 0x58];
+    unit_types[local_8].domain = (&editor_item_field3)[local_8 * 0x58];
+    unit_types[local_8].cost = (&editor_item_field4)[local_8 * 0x58];
+    unit_types[local_8].hold = (&editor_item_field5)[local_8 * 0x58];
     unit_types[local_8].move =
-         (char)*(undefined4 *)(&DAT_006a2d40 + local_8 * 0x58) * cosmic.road_move_mult;
-    unit_types[local_8].range = (&DAT_006a2d44)[local_8 * 0x58];
-    unit_types[local_8].attack = (&DAT_006a2d48)[local_8 * 0x58];
-    unit_types[local_8].defense = (&DAT_006a2d4c)[local_8 * 0x58];
-    unit_types[local_8].hit_points = (char)*(undefined4 *)(&DAT_006a2d50 + local_8 * 0x58) * '\n';
-    unit_types[local_8].firepower = (&DAT_006a2d54)[local_8 * 0x58];
-    unit_types[local_8].flags = *(u32 *)(&DAT_006a2d58 + local_8 * 0x58);
+         (char)*(undefined4 *)(&editor_item_field6 + local_8 * 0x58) * cosmic.road_move_mult;
+    unit_types[local_8].range = (&editor_item_field7)[local_8 * 0x58];
+    unit_types[local_8].attack = (&editor_item_field8)[local_8 * 0x58];
+    unit_types[local_8].defense = (&editor_item_field9)[local_8 * 0x58];
+    unit_types[local_8].hit_points = (char)*(undefined4 *)(&editor_item_field10 + local_8 * 0x58) * '\n';
+    unit_types[local_8].firepower = (&editor_item_field11)[local_8 * 0x58];
+    unit_types[local_8].flags = *(u32 *)(&editor_item_flags + local_8 * 0x58);
   }
   return;
 }
@@ -5030,35 +5030,35 @@ void __cdecl FUN_005af140(void)
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(char (*)[8])(frame_ + FRAME_OFF(8)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_005af343(void)
+void __cdecl unit_editor_load_controls(void)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_14 = 1; local_14 < 0xd; local_14 = local_14 + 1) {
-    if (*(int *)(&DAT_00635e60 + local_14 * 8) == 9) {
-      iVar1 = thunk_FUN_00418740
-                        ((C_00418740 *)
-                         (*(int *)(&DAT_00635e64 + local_14 * 8) * 0x48 + 0x44c + iptr_006a4f88));
+    if (*(int *)(&unit_editor_ctrl_kinds + local_14 * 8) == 9) {
+      iVar1 = thunk_ctrl_get_id
+                        ((ControlIdView *)
+                         (*(int *)(&unit_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd));
       _sprintf(local_10,&DAT_00635f08,
-               *(undefined4 *)(&DAT_006a2a00 + iVar1 * 4 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x58));
-      thunk_FUN_00418a30
-                ((C_00418a30 *)
-                 (*(int *)(&DAT_00635e64 + local_14 * 8) * 0x48 + 0x44c + iptr_006a4f88),
+               *(undefined4 *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
+      thunk_ctrl_set_text
+                ((ControlTextView *)
+                 (*(int *)(&unit_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd),
                  (iptr)local_10);
     }
-    else if (*(int *)(&DAT_00635e60 + local_14 * 8) == 0xc) {
-      iVar1 = thunk_FUN_00418740
-                        ((C_00418740 *)
-                         (iptr_006a4f88 + 0x2fc + *(int *)(&DAT_00635e64 + local_14 * 8) * 0x38));
-      local_8 = *(iptr *)(&DAT_006a2a00 + iVar1 * 4 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x58);
+    else if (*(int *)(&unit_editor_ctrl_kinds + local_14 * 8) == 0xc) {
+      iVar1 = thunk_ctrl_get_id
+                        ((ControlIdView *)
+                         (active_editor_wnd + 0x2fc + *(int *)(&unit_editor_ctrl_slots + local_14 * 8) * 0x38));
+      local_8 = *(iptr *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58);
       if ((local_14 == 1) || (local_14 == 2)) {
         local_8 = local_8 + 2;
       }
-      thunk_FUN_00418d90
-                ((C_00418d90 *)
-                 (iptr_006a4f88 + 0x2fc + *(int *)(&DAT_00635e64 + local_14 * 8) * 0x38),local_8);
+      thunk_combo_set_cur_sel
+                ((ComboBoxSetSelView *)
+                 (active_editor_wnd + 0x2fc + *(int *)(&unit_editor_ctrl_slots + local_14 * 8) * 0x38),local_8);
     }
   }
   return;
@@ -5072,7 +5072,7 @@ void __cdecl FUN_005af343(void)
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(char (*)[8])(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-int __cdecl FUN_005af4ae(void)
+int __cdecl unit_editor_store_controls(void)
 
 {
   int iVar1;
@@ -5081,34 +5081,34 @@ int __cdecl FUN_005af4ae(void)
   
   local_14 = 0;
   for (local_18 = 1; local_18 < 0xd; local_18 = local_18 + 1) {
-    if (*(int *)(&DAT_00635e60 + local_18 * 8) == 9) {
-      iVar1 = thunk_FUN_00418740
-                        ((C_00418740 *)
-                         (*(int *)(&DAT_00635e64 + local_18 * 8) * 0x48 + 0x44c + iptr_006a4f88));
+    if (*(int *)(&unit_editor_ctrl_kinds + local_18 * 8) == 9) {
+      iVar1 = thunk_ctrl_get_id
+                        ((ControlIdView *)
+                         (*(int *)(&unit_editor_ctrl_slots + local_18 * 8) * 0x48 + 0x44c + active_editor_wnd));
       iVar1 = iVar1 + -0xca;
-      thunk_FUN_00418a70
-                ((C_00418a30 *)
-                 (*(int *)(&DAT_00635e64 + local_18 * 8) * 0x48 + 0x44c + iptr_006a4f88),
+      thunk_ctrl_get_text
+                ((ControlTextView *)
+                 (*(int *)(&unit_editor_ctrl_slots + local_18 * 8) * 0x48 + 0x44c + active_editor_wnd),
                  (iptr)local_10);
       local_8 = _atoi(local_10);
-      uVar2 = thunk_FUN_005adfa0(local_8,*(undefined4 *)(&DAT_00635eb8 + iVar1 * 4),
+      uVar2 = thunk_int_clamp(local_8,*(undefined4 *)(&DAT_00635eb8 + iVar1 * 4),
                                  *(undefined4 *)(&DAT_00635ed8 + iVar1 * 4));
-      *(undefined4 *)(&DAT_006a2d28 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
-      if (*(int *)(&DAT_006a2d28 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x58 + iVar1 * 4) != local_8) {
+      *(undefined4 *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
+      if (*(int *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) != local_8) {
         local_14 = local_14 + 1;
       }
     }
-    else if (*(int *)(&DAT_00635e60 + local_18 * 8) == 0xc) {
-      local_8 = thunk_FUN_00418d60
-                          ((C_00418d60 *)
-                           (iptr_006a4f88 + 0x2fc + *(int *)(&DAT_00635e64 + local_18 * 8) * 0x38));
+    else if (*(int *)(&unit_editor_ctrl_kinds + local_18 * 8) == 0xc) {
+      local_8 = thunk_combo_get_cur_sel
+                          ((ComboBoxGetSelView *)
+                           (active_editor_wnd + 0x2fc + *(int *)(&unit_editor_ctrl_slots + local_18 * 8) * 0x38));
       if ((local_18 == 1) || (local_18 == 2)) {
         local_8 = local_8 + -2;
       }
-      iVar1 = thunk_FUN_00418740
-                        ((C_00418740 *)
-                         (iptr_006a4f88 + 0x2fc + *(int *)(&DAT_00635e64 + local_18 * 8) * 0x38));
-      *(int *)(&DAT_006a2a00 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x58 + iVar1 * 4) = local_8;
+      iVar1 = thunk_ctrl_get_id
+                        ((ControlIdView *)
+                         (active_editor_wnd + 0x2fc + *(int *)(&unit_editor_ctrl_slots + local_18 * 8) * 0x38));
+      *(int *)(&editor_ctrl_values + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = local_8;
     }
   }
   return local_14;
@@ -5119,15 +5119,15 @@ int __cdecl FUN_005af4ae(void)
 #undef local_8
 
 /* 005af682 auto */
-void __cdecl FUN_005af682(void)
+void __cdecl unit_editor_redraw(void)
 
 {
-  thunk_FUN_005b09dc((C_004083b0_430 *)iptr_006a4f88);
+  thunk_unit_editor_paint((C_004083b0_430 *)active_editor_wnd);
   return;
 }
 
 /* 005af69d auto */
-#define DAT_00679640 (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_10 (*(size_t *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
@@ -5139,62 +5139,62 @@ undefined4 __cdecl FUN_005af69d(FILE *param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_c = 0; local_c < 0x3e; local_c = local_c + 1) {
-    thunk_FUN_0040bbb0();
-    thunk_FUN_0040ff00(unit_types[local_c].name);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f0c);
-    pcVar1 = (char *)thunk_FUN_00428b0c(unit_types[local_c].name);
+    thunk_text_clear();
+    thunk_text_append_string_id(unit_types[local_c].name);
+    FUN_005f22e0(&text_buffer,&DAT_00635f0c);
+    pcVar1 = (char *)thunk_label_string(unit_types[local_c].name);
     sVar2 = _strlen(pcVar1);
     if (sVar2 < 0xd) {
-      pcVar1 = (char *)thunk_FUN_00428b0c(unit_types[local_c].name);
+      pcVar1 = (char *)thunk_label_string(unit_types[local_c].name);
       local_10 = _strlen(pcVar1);
     }
     else {
       local_10 = 0xd;
     }
-    thunk_FUN_004190a0(0xd - local_10);
-    thunk_FUN_004ccdef((int)unit_types[local_c].obsolete_by,1);
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].domain);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f10);
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].move / (int)(uint)cosmic.road_move_mult);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f14);
-    thunk_FUN_0040ff30((int)(char)unit_types[local_c].range);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f18);
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].attack);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f1c);
-    thunk_FUN_0040ff30((int)(char)unit_types[local_c].defense);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f20);
+    thunk_text_append_spaces(0xd - local_10);
+    thunk_text_append_advance_abbrev((int)unit_types[local_c].obsolete_by,1);
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].domain);
+    FUN_005f22e0(&text_buffer,&DAT_00635f10);
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].move / (int)(uint)cosmic.road_move_mult);
+    FUN_005f22e0(&text_buffer,&DAT_00635f14);
+    thunk_text_append_int((int)(char)unit_types[local_c].range);
+    FUN_005f22e0(&text_buffer,&DAT_00635f18);
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].attack);
+    FUN_005f22e0(&text_buffer,&DAT_00635f1c);
+    thunk_text_append_int((int)(char)unit_types[local_c].defense);
+    FUN_005f22e0(&text_buffer,&DAT_00635f20);
     if ((char)unit_types[local_c].defense < '\n') {
-      thunk_FUN_0040fe10();
+      thunk_text_append_space();
     }
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].hit_points / 10);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f24);
-    thunk_FUN_0040ff30((int)(char)unit_types[local_c].firepower);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f28);
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].cost);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f2c);
-    thunk_FUN_0040ff30((int)(char)unit_types[local_c].hold);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f30);
-    thunk_FUN_004ccdb6((int)(char)unit_types[local_c].role);
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f34);
-    thunk_FUN_004ccdef((int)unit_types[local_c].prerequisite,1);
-    thunk_FUN_0040fe10();
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].hit_points / 10);
+    FUN_005f22e0(&text_buffer,&DAT_00635f24);
+    thunk_text_append_int((int)(char)unit_types[local_c].firepower);
+    FUN_005f22e0(&text_buffer,&DAT_00635f28);
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].cost);
+    FUN_005f22e0(&text_buffer,&DAT_00635f2c);
+    thunk_text_append_int((int)(char)unit_types[local_c].hold);
+    FUN_005f22e0(&text_buffer,&DAT_00635f30);
+    thunk_text_append_int_2d((int)(char)unit_types[local_c].role);
+    FUN_005f22e0(&text_buffer,&DAT_00635f34);
+    thunk_text_append_advance_abbrev((int)unit_types[local_c].prerequisite,1);
+    thunk_text_append_space();
     for (local_8 = 0xe; -1 < local_8; local_8 = local_8 + -1) {
-      FUN_005f22e0(&DAT_00679640,
+      FUN_005f22e0(&text_buffer,
                    &DAT_00635f38 +
                    (((unit_types[local_c].flags & 1 << ((byte)local_8 & 0x1f)) != 0) - 1 & 4));
     }
-    FUN_005f22e0(&DAT_00679640,&DAT_00635f40);
-    _fputs(&DAT_00679640,param_1);
+    FUN_005f22e0(&text_buffer,&DAT_00635f40);
+    _fputs(&text_buffer,param_1);
   }
   return 1;
 }
-#undef DAT_00679640
+#undef text_buffer
 #undef local_10
 #undef local_c
 #undef local_8
 
 /* 005af9e3 auto */
-#define DAT_006a1d7c (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
 #define local_50 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_4c (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 #define local_2c (*(char (*)[32])(frame_ + FRAME_OFF(36)))
@@ -5214,64 +5214,64 @@ void __cdecl FUN_005af9e3(void)
   UINT UVar6;
   undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = thunk_FUN_005af4ae();
+  iVar1 = thunk_unit_editor_store_controls();
   if (iVar1 == 0) {
     local_8 = 0;
     for (local_c = 0; local_c < 0x3e; local_c = local_c + 1) {
-      pcVar4 = &DAT_006a1d88 + local_c * 0x28;
-      pcVar1 = (char *)thunk_FUN_00428b0c(unit_types[local_c].name);
+      pcVar4 = &editor_item_names + local_c * 0x28;
+      pcVar1 = (char *)thunk_label_string(unit_types[local_c].name);
       iVar2 = _strcmp(pcVar1,pcVar4);
       if (iVar2 != 0) {
-        puVar5 = &DAT_006a1d88 + local_c * 0x28;
-        uVar2 = thunk_FUN_00428b0c(unit_types[local_c].name);
+        puVar5 = &editor_item_names + local_c * 0x28;
+        uVar2 = thunk_label_string(unit_types[local_c].name);
         iVar3 = thunk_FUN_004cefe9(uVar2,(iptr)puVar5);
         local_8 = local_8 + iVar3;
       }
     }
     if (local_8 != 0) {
-      iVar3 = thunk_FUN_0054a4c4();
+      iVar3 = thunk_events_write_file();
       if (iVar3 == 0) {
-        _sprintf(local_2c,s_Error_updating_EVENTS__s_00635f4c,&DAT_0062cd24);
+        _sprintf(local_2c,s_Error_updating_EVENTS__s_00635f4c,&lang_file_ext);
         UVar6 = 0x10;
         pcVar1 = s_File_I_O_Error_00635f68;
         pcVar4 = local_2c;
-        iVar3 = thunk_FUN_00414d10((C_00408010_10 *)(iptr_006a4f88 + 0x48));
+        iVar3 = thunk_wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
         MessageBoxA(*(HWND *)(iVar3 + 4),pcVar4,pcVar1,UVar6);
       }
     }
-    thunk_FUN_005af140();
-    thunk_FUN_004ccab9(ADDR(0x635f78, ((u8 *)&g.d_00635f78)),ADDR(0x4036de, FUN_005af69d));
-    iVar3 = thunk_FUN_004ccf2d();
+    thunk_unit_editor_store_rules();
+    thunk_rules_edit_set_section(ADDR(0x635f78, ((u8 *)&g.d_00635f78)),ADDR(0x4036de, FUN_005af69d));
+    iVar3 = thunk_rules_write_sections();
     if (iVar3 == 0) {
-      _sprintf(local_4c,s_Error_updating_RULES__s_00635f80,&DAT_0062cd24);
+      _sprintf(local_4c,s_Error_updating_RULES__s_00635f80,&lang_file_ext);
       UVar6 = 0x10;
       pcVar1 = s_File_I_O_Error_00635f98;
       pcVar4 = local_4c;
-      iVar3 = thunk_FUN_00414d10((C_00408010_10 *)(iptr_006a4f88 + 0x48));
+      iVar3 = thunk_wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
       MessageBoxA(*(HWND *)(iVar3 + 4),pcVar4,pcVar1,UVar6);
     }
-    DAT_006a1d7c = 0;
-    FUN_005c62cb((C_00408010_b8 *)(iptr_006a4f88 + 0x48));
-    thunk_FUN_004e4ceb();
+    editor_running = 0;
+    wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
+    thunk_menu_update_states();
   }
   else {
-    thunk_FUN_005af343();
-    thunk_FUN_005af682();
-    if (iptr_006a4f88 == 0) {
+    thunk_unit_editor_load_controls();
+    thunk_unit_editor_redraw();
+    if (active_editor_wnd == 0) {
       local_50 = 0;
     }
     else {
-      local_50 = iptr_006a4f88 + 0x48;
+      local_50 = active_editor_wnd + 0x48;
     }
-    thunk_FUN_0059d3c9(local_50);
-    thunk_FUN_004190d0(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x635f44, ((u8 *)&g.d_00635f44)));
-    thunk_FUN_0059d3c9(0);
-    hWnd = (HWND)thunk_FUN_00418770((C_00418770 *)(iptr_006a4f88 + 0x2fc));
+    thunk_dlg_set_parent_window(local_50);
+    thunk_popup_text(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x635f44, ((u8 *)&g.d_00635f44)));
+    thunk_dlg_set_parent_window(0);
+    hWnd = (HWND)thunk_control_get_hwnd((ControlHwndView *)(active_editor_wnd + 0x2fc));
     SetFocus(hWnd);
   }
   return;
 }
-#undef DAT_006a1d7c
+#undef editor_running
 #undef local_50
 #undef local_4c
 #undef local_2c
@@ -5292,32 +5292,32 @@ void __cdecl FUN_005afbca(void)
   size_t sVar1;
   undefined1 frame_[FRAME_OFF(304)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_10 = *(int *)(iptr_006a4f88 + 0x2ec);
-  _strncpy(local_128,&DAT_006a1d88 + local_10 * 0x28,0xf);
+  local_10 = *(int *)(active_editor_wnd + 0x2ec);
+  _strncpy(local_128,&editor_item_names + local_10 * 0x28,0xf);
   local_11a = 0;
   do {
-    if (iptr_006a4f88 == 0) {
+    if (active_editor_wnd == 0) {
       local_12c = 0;
     }
     else {
-      local_12c = iptr_006a4f88 + 0x48;
+      local_12c = active_editor_wnd + 0x48;
     }
-    thunk_FUN_005a6c23(local_12c);
-    local_8 = thunk_FUN_0051d63b(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x635fa8, ((u8 *)&g.d_00635fa8)),0xe,(iptr)local_128,(iptr)local_114);
-    thunk_FUN_005a6c45();
+    thunk_dlg_push_parent_window(local_12c);
+    local_8 = thunk_dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x635fa8, ((u8 *)&g.d_00635fa8)),0xe,(iptr)local_128,(iptr)local_114);
+    thunk_dlg_pop_parent_window();
     if (local_8 == -1) break;
     sVar1 = _strlen(local_114);
   } while (sVar1 == 0);
   if (-1 < local_8) {
-    FUN_005f22d0(&DAT_006a1d88 + local_10 * 0x28,local_114);
-    local_c = thunk_FUN_00418d60((C_00418d60 *)(iptr_006a4f88 + 0x2fc));
-    thunk_FUN_00418d20((C_00418d20 *)(iptr_006a4f88 + 0x2fc));
+    FUN_005f22d0(&editor_item_names + local_10 * 0x28,local_114);
+    local_c = thunk_combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
+    thunk_combo_clear((ComboBoxClearView *)(active_editor_wnd + 0x2fc));
     for (local_10 = 0; local_10 < 0x3e; local_10 = local_10 + 1) {
-      thunk_FUN_00418ce0
-                ((C_00418ce0 *)(iptr_006a4f88 + 0x2fc),(iptr)(&DAT_006a1d88 + local_10 * 0x28));
+      thunk_combo_add_string
+                ((ComboBoxAddView *)(active_editor_wnd + 0x2fc),(iptr)(&editor_item_names + local_10 * 0x28));
     }
-    thunk_FUN_00418d90((C_00418d90 *)(iptr_006a4f88 + 0x2fc),local_c);
-    thunk_FUN_005af682();
+    thunk_combo_set_cur_sel((ComboBoxSetSelView *)(active_editor_wnd + 0x2fc),local_c);
+    thunk_unit_editor_redraw();
   }
   return;
 }
@@ -5336,29 +5336,29 @@ void __cdecl FUN_005afd3b(void)
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (iptr_006a4f88 == 0) {
+  if (active_editor_wnd == 0) {
     local_8 = 0;
   }
   else {
-    local_8 = iptr_006a4f88 + 0x48;
+    local_8 = active_editor_wnd + 0x48;
   }
-  thunk_FUN_0059d3c9(local_8);
-  thunk_FUN_004190d0(ADDR(0x635fbc, ((u8 *)&g.d_00635fbc)),ADDR(0x635fb4, ((u8 *)&g.d_00635fb4)));
-  thunk_FUN_0059d3c9(0);
+  thunk_dlg_set_parent_window(local_8);
+  thunk_popup_text(ADDR(0x635fbc, ((u8 *)&g.d_00635fbc)),ADDR(0x635fb4, ((u8 *)&g.d_00635fb4)));
+  thunk_dlg_set_parent_window(0);
   return;
 }
 #undef local_8
 
 /* 005afd9a auto */
-#define DAT_006a1d7c (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
 void __cdecl FUN_005afd9a(void)
 
 {
-  DAT_006a1d7c = 0;
-  FUN_005c62cb((C_00408010_b8 *)(iptr_006a4f88 + 0x48));
+  editor_running = 0;
+  wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
   return;
 }
-#undef DAT_006a1d7c
+#undef editor_running
 
 /* 005afdc2 auto */
 void __cdecl FUN_005afdc2(void)
@@ -5370,10 +5370,10 @@ void __cdecl FUN_005afdc2(void)
   
   puVar3 = ((void *)ADDR(0x0040177b, FUN_0056fce4));
   uVar2 = 0xb;
-  uVar1 = thunk_FUN_00428b0c(*(undefined4 *)(iptr_00628420 + 0x7d8));
-  thunk_FUN_00573e59((iptr)(&DAT_00641848 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x3c),uVar1,uVar2,
+  uVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+  thunk_sprite_editor_run((iptr)(&unit_sprites + *(int *)(active_editor_wnd + 0x2ec) * 0x3c),uVar1,uVar2,
                      (iptr)puVar3);
-  thunk_FUN_005af682();
+  thunk_unit_editor_redraw();
   return;
 }
 
@@ -5386,11 +5386,11 @@ void __cdecl FUN_005afe15(void)
   undefined *puVar2;
   undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
-  thunk_FUN_005af4ae();
-  puVar2 = &DAT_006a1d88 + *(int *)(iptr_006a4f88 + 0x2ec) * 0x28;
-  uVar1 = thunk_FUN_00428b0c(*(undefined4 *)(iptr_00628420 + 0x7dc));
+  thunk_unit_editor_store_controls();
+  puVar2 = &editor_item_names + *(int *)(active_editor_wnd + 0x2ec) * 0x28;
+  uVar1 = thunk_label_string(*(undefined4 *)(label_string_ids + 0x7dc));
   _sprintf(local_84,s__s____s_00635fc4,uVar1,puVar2);
-  thunk_FUN_0058b47e((iptr)local_84,*(undefined4 *)(iptr_006a4f88 + 0x2ec));
+  thunk_unit_sound_editor_run((iptr)local_84,*(undefined4 *)(active_editor_wnd + 0x2ec));
   return;
 }
 #undef local_84
@@ -5398,10 +5398,10 @@ void __cdecl FUN_005afe15(void)
 /* 005afe84 auto */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-void __cdecl FUN_005afe84(undefined4 param_1,int param_2)
+void __cdecl unit_editor_set_flag_check(undefined4 param_1,int param_2)
 
 {
-  thunk_FUN_0051d7d6(param_1,(uint)(param_2 != 0));
+  thunk_dlg_check_set(param_1,(uint)(param_2 != 0));
   return;
 }
 
@@ -5415,94 +5415,94 @@ void __cdecl FUN_005afea8(void)
   int iVar2;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(iptr_006a4f88 + 0x2ec);
-  thunk_FUN_0051d7bc();
-  thunk_FUN_005afe84(0,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 1);
-  thunk_FUN_005afe84(1,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 2);
-  thunk_FUN_005afe84(2,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 4);
-  thunk_FUN_005afe84(3,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 8);
-  thunk_FUN_005afe84(4,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x10);
-  thunk_FUN_005afe84(5,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x20);
-  thunk_FUN_005afe84(6,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x40);
-  thunk_FUN_005afe84(7,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x80);
-  thunk_FUN_005afe84(8,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x100);
-  thunk_FUN_005afe84(9,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x200);
-  thunk_FUN_005afe84(10,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x400);
-  thunk_FUN_005afe84(0xb,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x800);
-  thunk_FUN_005afe84(0xc,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x1000);
-  thunk_FUN_005afe84(0xd,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x2000);
-  thunk_FUN_005afe84(0xe,*(uint *)(&DAT_006a2d58 + iVar1 * 0x58) & 0x4000);
-  thunk_FUN_0040ff60(0,(iptr)(&DAT_006a1d88 + iVar1 * 0x28));
-  if (iptr_006a4f88 == 0) {
+  iVar1 = *(int *)(active_editor_wnd + 0x2ec);
+  thunk_dlg_checks_clear();
+  thunk_unit_editor_set_flag_check(0,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 1);
+  thunk_unit_editor_set_flag_check(1,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 2);
+  thunk_unit_editor_set_flag_check(2,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 4);
+  thunk_unit_editor_set_flag_check(3,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 8);
+  thunk_unit_editor_set_flag_check(4,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x10);
+  thunk_unit_editor_set_flag_check(5,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x20);
+  thunk_unit_editor_set_flag_check(6,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x40);
+  thunk_unit_editor_set_flag_check(7,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x80);
+  thunk_unit_editor_set_flag_check(8,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x100);
+  thunk_unit_editor_set_flag_check(9,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x200);
+  thunk_unit_editor_set_flag_check(10,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x400);
+  thunk_unit_editor_set_flag_check(0xb,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x800);
+  thunk_unit_editor_set_flag_check(0xc,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x1000);
+  thunk_unit_editor_set_flag_check(0xd,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x2000);
+  thunk_unit_editor_set_flag_check(0xe,*(uint *)(&editor_item_flags + iVar1 * 0x58) & 0x4000);
+  thunk_text_set_string_arg(0,(iptr)(&editor_item_names + iVar1 * 0x28));
+  if (active_editor_wnd == 0) {
     local_10 = 0;
   }
   else {
-    local_10 = iptr_006a4f88 + 0x48;
+    local_10 = active_editor_wnd + 0x48;
   }
-  thunk_FUN_0059d3c9(local_10);
-  iVar2 = thunk_FUN_00421e70(ADDR(0x635fcc, ((u8 *)&g.d_00635fcc)),1);
+  thunk_dlg_set_parent_window(local_10);
+  iVar2 = thunk_popup_game_flags(ADDR(0x635fcc, ((u8 *)&g.d_00635fcc)),1);
   if (iVar2 == 0) {
-    iVar2 = thunk_FUN_0051d817(0);
+    iVar2 = thunk_dlg_check_get(0);
     local_8 = (uint)(iVar2 != 0);
-    iVar2 = thunk_FUN_0051d817(1);
+    iVar2 = thunk_dlg_check_get(1);
     if (iVar2 != 0) {
       local_8 = local_8 | 2;
     }
-    iVar2 = thunk_FUN_0051d817(2);
+    iVar2 = thunk_dlg_check_get(2);
     if (iVar2 != 0) {
       local_8 = local_8 | 4;
     }
-    iVar2 = thunk_FUN_0051d817(3);
+    iVar2 = thunk_dlg_check_get(3);
     if (iVar2 != 0) {
       local_8 = local_8 | 8;
     }
-    iVar2 = thunk_FUN_0051d817(4);
+    iVar2 = thunk_dlg_check_get(4);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x10;
     }
-    iVar2 = thunk_FUN_0051d817(5);
+    iVar2 = thunk_dlg_check_get(5);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x20;
     }
-    iVar2 = thunk_FUN_0051d817(6);
+    iVar2 = thunk_dlg_check_get(6);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x40;
     }
-    iVar2 = thunk_FUN_0051d817(7);
+    iVar2 = thunk_dlg_check_get(7);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x80;
     }
-    iVar2 = thunk_FUN_0051d817(8);
+    iVar2 = thunk_dlg_check_get(8);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x100;
     }
-    iVar2 = thunk_FUN_0051d817(9);
+    iVar2 = thunk_dlg_check_get(9);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x200;
     }
-    iVar2 = thunk_FUN_0051d817(10);
+    iVar2 = thunk_dlg_check_get(10);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x400;
     }
-    iVar2 = thunk_FUN_0051d817(0xb);
+    iVar2 = thunk_dlg_check_get(0xb);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x800;
     }
-    iVar2 = thunk_FUN_0051d817(0xc);
+    iVar2 = thunk_dlg_check_get(0xc);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x1000;
     }
-    iVar2 = thunk_FUN_0051d817(0xd);
+    iVar2 = thunk_dlg_check_get(0xd);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x2000;
     }
-    iVar2 = thunk_FUN_0051d817(0xe);
+    iVar2 = thunk_dlg_check_get(0xe);
     if (iVar2 != 0) {
       local_8 = local_8 | 0x4000;
     }
-    *(uint *)(&DAT_006a2d58 + iVar1 * 0x58) = local_8;
+    *(uint *)(&editor_item_flags + iVar1 * 0x58) = local_8;
   }
-  thunk_FUN_0059d3c9(0);
+  thunk_dlg_set_parent_window(0);
   return;
 }
 #undef local_10

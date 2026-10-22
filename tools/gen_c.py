@@ -443,12 +443,12 @@ CRT_NATIVE_SIGS = {
 FRAME_PRESETS = {
     # A unit that does not move skips filling "which civs see the move" and
     # then reads the entry for the human player: non-zero in the original.
-    'FUN_0059062c': 'aiStack_a0[1] = aiStack_a0[2] = aiStack_a0[3] = aiStack_a0[4] = '
+    'unit_move_dir': 'aiStack_a0[1] = aiStack_a0[2] = aiStack_a0[3] = aiStack_a0[4] = '
                     'aiStack_a0[5] = aiStack_a0[6] = aiStack_a0[7] = 1;',
     # City advice counts tiles with an improvement (bit 0x10) into a counter
     # it never zeroes; the original's stack held 0 there (in 687 of 713 calls
     # over 50 turns; the rest saw a stack address left by an earlier call).
-    'FUN_0043d400': 'local_12c = 0;',
+    'city_calc_commodity_demand': 'local_12c = 0;',
 }
 
 
@@ -770,9 +770,12 @@ def main():
         # longer by generated code keep a macro, typed as Ghidra last saw them.
         defined = {g for g in gtypes if len(gtypes[g]) == 1} | set(named_globals)
         wanted = set()
+        # Globals named in re/symbols.tsv (kind var) that hand-written code uses.
+        var_names = {r['name']: r['addr'] for r in load_tsv('symbols.tsv') if r['kind'] == 'var'}
         for path in glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')) + glob.glob(os.path.join(ROOT, 'src', 'crt', '*.c')):
             src_text = open(path).read()
             wanted |= set(re.findall(r'\b(_?(?:DAT|PTR)_[0-9a-f]{8}|[su]_\w*?_[0-9a-f]{8})\b', src_text))
+            wanted |= {n for n in re.findall(r'\b[a-z_][a-z0-9_]*\b', src_text) if n in var_names}
             wanted |= set(re.findall(r'&(LAB_[0-9a-f]{8})\b', src_text))   # code addresses (not goto labels)
         legacy = sorted(wanted - defined)
         if legacy:
@@ -780,7 +783,7 @@ def main():
             for gname in legacy:
                 gt = c_type_of_global(next(iter(gtypes[gname]))) if gname in gtypes else \
                     ('string' if gname.startswith(('s_', 'u_')) else 'undefined4')
-                h.write('#ifndef %s\n%s\n#endif\n' % (gname, global_macro(gname, gname[-8:], gt)))
+                h.write('#ifndef %s\n%s\n#endif\n' % (gname, global_macro(gname, var_names.get(gname, gname[-8:]), gt)))
         h.write('\n#endif\n')
 
     for (kind, blk), fs in sorted(blocks.items()):
@@ -899,5 +902,19 @@ def global_macro(gname, ga, gt):
     return '#define %s (*(%s *)%s)' % (gname, gt, loc)
 
 
+def apply_type_names():
+    """Readable class and field names (re/type_names.tsv, re/field_names.tsv)
+    in everything written."""
+    import type_names
+    if not type_names.mapping() and not type_names.fields():
+        return
+    for path in glob.glob(os.path.join(OUT, '*.[ch]')):
+        t = open(path).read()
+        n = type_names.apply_code(type_names.apply(t))
+        if n != t:
+            open(path, 'w').write(n)
+
+
 if __name__ == '__main__':
     main()
+    apply_type_names()

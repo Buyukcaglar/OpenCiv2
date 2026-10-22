@@ -1,6 +1,7 @@
 // Applies the reconstruction's types and names to the Ghidra project:
 //   src/include/civ2types.h  -> data types (parsed with Ghidra's C parser)
-//   re/symbols.tsv           -> names and types of globals, names of functions
+//   re/symbols.tsv           -> names and types of globals (data), names of
+//                               globals (var) and of functions (func)
 // The decompiler then prints field accesses (units[i].owner) instead of raw
 // address arithmetic, and the generator emits real declarations.
 import ghidra.app.script.GhidraScript;
@@ -77,6 +78,12 @@ public class ApplyTypes extends GhidraScript {
             if (kind.equals("func")) {
                 Function fn = getFunctionAt(a);
                 if (fn != null) { fn.setName(name, SourceType.USER_DEFINED); nf++; }
+                continue;
+            }
+            if (kind.equals("var")) {
+                // a name only: the data keeps the type Ghidra gave it
+                createLabel(a, name, true, SourceType.USER_DEFINED);
+                nd++;
                 continue;
             }
             DataType dt = resolveType(f[3]);

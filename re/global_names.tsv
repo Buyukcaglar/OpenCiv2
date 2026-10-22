@@ -1,0 +1,1130 @@
+addr	name	confidence	evidence
+006d1da0	human_civ	high	The civ the local human plays: compared with unit and city owners for visibility, messages and animation.
+00624ee0	minimap_hidden	high	Set to 1 by the minimap window's minimize/close/destroy handlers and 0 on restore/layout reset; minimap redraw (0040733c) skipped while set.
+00624ee8	mapgen_land_mass	high	Set from the CUSTOMLAND dialog choice (-1..1, random if 2) in setup_custom_world; scales land amount in map_generate.
+00624eec	mapgen_land_form	high	Set from the CUSTOMFORM dialog in setup_custom_world (random case copies land mass); controls continent shaping in map generation.
+00624ef0	mapgen_temperature	high	Set from the CUSTOMTEMP dialog in setup_custom_world; used in map_generate's latitude/terrain-by-temperature logic.
+00624ef4	mapgen_climate	high	Set from the CUSTOMCLIMATE dialog in setup_custom_world; drives wetness/rainfall terrain counts in map_generate.
+00624ef8	mapgen_age	high	Set from the CUSTOMAGE dialog in setup_custom_world; controls erosion loop counts in map_generate.
+006252c4	game_session_active	medium	Set to 1 when a game starts (0041f69f), cleared on game teardown (0041f878 frees map and windows); key handlers return early when 0.
+00626a04	cityview_wnd	medium	Pointer to the active city view window object (set in its ctor, cleared at close); scroll/close handlers act on it.
+00626a2c	mp_meeting_pending	medium	Set when a human-human diplomatic meeting request (net msg 0x3d) is in progress; cleared when it is refused, timed out or ends.
+00627670	scenario_events_loaded	high	Set to 1 after EVENTS file is parsed/compacted, reset when events are cleared; gates events_check_turn and friends.
+00628044	game_loop_active	medium	Cleared on quit/network failure to stop the civ turn loop; also gates all map-view and minimap redraws (map_display_disable).
+00628048	turn_resume_civ	medium	Civ index the turn loop resumes from (loaded from save 00654fa4, human_civ on new game); 0 means start a fresh turn.
+0062804c	unit_blink_active	medium	Set while the active unit awaits orders; cleared to suppress blinking during redraws, gates the cursor-blink timer (004131c0).
+00628054	unit_blink_phase	medium	Toggled by the blink timer (004131c0) and compared with view-pieces mode to draw/hide the active unit.
+00628064	game_language	medium	Language index 0..2 from registry/dialog selecting text-file extension; branches on it in year strings and text formatting.
+00628350	dir_dx_table	high	Signed byte x-offset per direction index, added to x then map_wrap_x for adjacent-tile iteration everywhere.
+00628360	dir_dy_table	high	Signed byte y-offset per direction index, paired with dir_dx_table for adjacent-tile iteration.
+00628370	city_tile_dx_table	high	Signed byte x-offsets of the city radius tiles (looped 0..20) added to city x for yields, resource map and city work area.
+006283a0	city_tile_dy_table	high	Signed byte y-offsets of the city radius tiles, paired with city_tile_dx_table.
+0062b420	cd_music_available	high	snd_cd_detect_layout sets it to 1 when a game audio CD with known track count is found, 0 otherwise; music code checks it.
+0062cd24	lang_file_ext	high	Text file extension string chosen by language, appended to EVENTS./RULES. names and printed in "Error updating RULES.%s".
+0062d044	path_owner_civ	medium	Civ whose borders/peace treaties the pathfinder respects (passed to tile_owner_at_peace); -1 means none.
+0062d7d4	parley_mode_right_kinds	medium	Second dword of each 8-byte parley mode entry (base 0062d7d0): the right-side dialog kind for that parley mode.
+0062d858	panel_margin_x	medium	Constant horizontal margin used in parley/pedia window layout and frame drawing.
+0062d85c	panel_margin_y	medium	Constant vertical margin used in parley/pedia window layout (title heights, rects).
+0062d864	panel_bevel_width	medium	Number of bevel rectangles drawn around pedia/parley panels (loop count in pedia_draw_frame).
+0062d870	chat_log_buffer	high	Heap text buffer of the chat log: allocated in parley ctor, appended by chat_log_append, written to file and freed.
+0062e018	editor_bg_surface	high	Surface allocated by each rules editor window and loaded with EDITORPT/EDITORSQ/EDITORAS.GIF as its background, deleted on close.
+0062e01c	editor_font_size	medium	Font size passed to font_set for the rules editor windows' font 006a4f90.
+00631ed8	dlg_check_bits	high	Bitmask of dialog checkbox states read/written by dlg_check_get/dlg_check_set/dlg_checks_clear.
+00631edc	dlg_help_pressed	medium	Copied from a closed dialog's field_dc; callers loop showing the HELP topic popup while it is nonzero.
+00633584	ui_large_screen	high	Set to (screen width >= 1000); selects doubled sprite sizes and the 0x8 large flag in popups and drawing.
+00633588	frame_bevel_width	medium	Constant frame edge thickness used to derive caption height/border width and in caption drawing.
+00633598	frame_caption_height	high	Computed as font height + 2*bevel + 2*padding and passed to wnd_set_caption_height for framed windows.
+0063359c	frame_border_width	medium	Computed as 2*bevel + 2*padding; added to window rects as the frame border in frame/council/picture windows.
+006335a0	sys_dlgframe_w2	high	Twice GetSystemMetrics(SM_CXDLGFRAME), subtracted/added when sizing top-level window rects.
+006335a4	sys_dlgframe_h2	high	Twice GetSystemMetrics(SM_CYDLGFRAME), subtracted/added when sizing top-level window rects.
+00633a74	mp_turn_timer_handle	high	Handle of the multiplayer turn timer, created in mp_turn_timer_start and freed with game_timer_destroy.
+00633a78	mp_turn_seconds_left	high	Remaining turn-timer seconds, reset to time limit/1000 and shown in the caption.
+00633a84	mp_window_drag_active	high	Set by ENTER_WINDOW_DRAG handler (installs mouse hook, sends net msg 0x5d), cleared on EXIT_WINDOW_DRAG.
+00633e00	status_wnd_hidden	high	Set by status window minimize/close/destroy handlers, cleared on restore/create; status redraws skipped while set.
+00635a18	list_bg_color	medium	Default list background color index (FUN_0059d4df arg 1), filled behind unselected items in pedia/parley lists.
+00635a1c	list_text_color	medium	Default list item text color index for unselected rows in pedia/parley lists.
+00635a20	list_shadow_color	medium	Default list item text shadow color for unselected rows, paired with list_text_color.
+00635a24	list_sel_bg_color	medium	Background fill color for the selected row in pedia/parley lists.
+00635a28	dlg_sel_text_color	medium	Default text color for selected list items (set by FUN_0059d4df, copied to dialog field_a0; parley/pedia lists use it for selected rows).
+00635a2c	dlg_sel_text_shadow_color	medium	Default shadow color for selected list item text (pairs with 00635a28; drawn offset by 1px when it differs).
+00635a3c	dlg_pending_idle_callback	high	One-shot modal idle callback: callers store a function before showing a dialog, dialog code installs it via wnd_set_modal_idle_callback then clears it.
+00635c64	gfx_draw_target	high	Surface set by gfx_set_draw_target and passed to all cdecl drawing wrappers (fill/hline/bevel).
+00637e78	gfx_text_color_index	high	Palette index swapped by gfx_set_text_color_index and used with GetDIBColorTable for text/line color.
+00637ea4	wnd_active_child	high	Returned/set by wnd_get_active_child/wnd_set_active_child (function_names already calls it g_active_child).
+00637f98	gfx_scale_num	high	Zoom ratio numerator stored by gfx_set_scale_ratio and returned by gfx_get_scale_ratio.
+00637f9c	gfx_scale_den	high	Zoom ratio denominator stored by gfx_set_scale_ratio and returned by gfx_get_scale_ratio.
+00638578	snd_wave_out_handle	high	HWAVEOUT filled by waveOutOpen and passed to waveOutGetPosition/reset.
+00638584	snd_wave_max_buffers	medium	Buffer count passed to snd_wave_open; upper clamp in snd_wave_set_buffer_count.
+00638588	snd_wave_buffer_count	medium	Current number of wave buffers, grown/shrunk by snd_wave_set_buffer_count.
+006385ac	snd_wave_block_align	medium	nBlockAlign word of the WAVEFORMATEX at 006385a0 passed to waveOutOpen; divides byte counts into samples.
+006385b0	snd_wave_device_open	high	Set to 1 after successful waveOutOpen, cleared on waveOutClose; guards all waveOut calls.
+006389d8	snd_cd_device_id	high	MCIDEVICEID of the opened CD audio device used in mciSendCommand calls.
+00638b48	gfx_palettized_display	medium	Initially 1, cleared when the display lacks RC_PALETTE; gates palette fades and palette_animate.
+00638db0	avi_decompressor	high	HIC from ICLocate used in all ICSendMessage/ICDecompressEx calls of the AVI player.
+00638dc4	avi_video_stream	high	PAVISTREAM from AVIFileGetStream('vids') used for AVIStream* calls.
+00638dcc	avi_file_loaded	medium	Set to 1 after an AVI is successfully opened; every avi_* function checks it first.
+00638dd0	avi_playing	high	Set by avi_play_start, cleared by avi_play_pause; checked before seeking.
+0063c800	minimap_tile_width	medium	Pixels per map tile horizontally in the World (minimap) window, computed from window size / map.width.
+0063c804	minimap_tile_height	medium	Pixels per map tile vertically in the World (minimap) window, computed from window size / map.height.
+0063c818	minimap_window	high	Frame window titled with label 6 "World", redraw callback draws the minimap; created by FUN_004079a6.
+0063c860	minimap_wnd	medium	Embedded window (+0x48) of the minimap frame; min size, cursor, icon, hide/minimize applied to it.
+0063cbd0	setup_backdrop_surface	medium	Surface loaded from GIF resource 0x5a (or a file) and set as main window background in setup/new-game screens.
+0063cc30	text_number_args	high	Array of numeric text substitution args set by text_set_number_arg*, expanded by text_expand_vars.
+0063cc48	text_string_args	high	Array of 0x104-byte string substitution args set by text_set_string_arg, expanded by text_expand_vars.
+0063cd4c	text_string_arg1	high	Element 1 of text_string_args (0x63cc48+0x104), accessed directly.
+0063e4f8	casualty_window	medium	Picture window opened by casualty_timeline_show (advisor id 0xc), with a Close button.
+0063eac0	advisor_font	medium	Font initialised in advisor setup and used for line spacing in all advisor report drawers.
+0063eb10	advisor_window	high	Picture window shared by advisor/intel/score/rating reports (picwnd_open, modal loop, refresh).
+0063eb58	advisor_wnd	medium	Embedded window (+0x48) of advisor_window; parent of its buttons/scrollbar and target of the modal loop.
+0063ec34	advisor_client_x	medium	advisor_window field +0x124 set by frame_wnd_layout = client rect left; used as x for centered titles.
+0063ec38	advisor_client_y	medium	advisor_window field +0x128 = client rect top; report layouts offset from it.
+0063ec3c	advisor_client_width	medium	advisor_window field +0x12c = client rect width; width for centered title text.
+0063edd4	advisor_client_right	medium	advisor_window client rect right edge (+0x2c4); scrollbar/list rects end at it minus 2.
+0063ee6c	advisor_toggle_button	medium	Button id 0x65 in advisor reports labelled "Goal"/"Supply and Demand", swaps view mode.
+0063ef20	advisor_scrollbar	high	Scrollbar control created once in advisor reports; its callback scrolls the list.
+0063ef68	advisor_page_count	medium	Number of list pages = ceil(items/rows_per_page) clamped 1..99.
+0063ef70	advisor_first_row	medium	Scroll position: rows_per_page * scrollbar pos, clamped; first list item drawn.
+0063ef74	advisor_rows_per_page	medium	List rows visible = list height / row height clamped 1..99.
+0063ef78	advisor_list_top	medium	Y coordinate of the list area; click y minus it divided by row height gives the row.
+0063ef7c	advisor_list_height	medium	Height of the advisor list area (bottom - top).
+0063ef80	advisor_row_height	medium	Row height of advisor list (0x16/0x18/0x20) used for hit-testing clicks.
+0063efa8	advisor_controls_created	medium	Picwnd field +0x498 reset on open; set to 1 after scrollbar and click handler are created once.
+0063f660	nearest_city_dist	high	Distance to the city found by city_find_nearest (starts 9999), read by AI callers.
+0063f858	river_sprites	high	16 sprites from TERRAIN2 drawn when terrain byte has the river bit 0x80, indexed by neighbour mask.
+0063fc18	grassland_shield_sprite	high	Sprite drawn on grassland tiles where tile_grassland_has_shield is true.
+0063fcd8	tile_pick_mask_sprite	medium	TERRAIN1 sprite (0x42,0x1bf) rendered into a zoomed surface whose pixel colors are read to hit-test which tile part was clicked.
+0063fd18	river_mouth_sprites	high	Four sprites grabbed from TERRAIN2 row y=0x14b, drawn per direction on ocean tiles beside a river tile.
+0063fe08	gfx_sheet_surface	high	Scratch surface into which TERRAIN1/2, ICONS, PEOPLE, CITIES and UNITS GIFs are loaded before sprites are cut out.
+0063fe50	city_sprites	high	CITIES.GIF city images, 6 styles x 4 sizes x 2 (plain/walled), drawn by gfx_draw_city.
+00640b98	map_cursor_sprite	medium	ICONS.GIF tile sprite drawn at the map cursor position (DAT_0064b1b4/b0) in mapview_redraw_area.
+00641808	pollution_sprite	high	TERRAIN1 sprite drawn when tile flag 0x80 (pollution) is set.
+00641848	unit_sprites	high	63 UNITS.GIF sprites indexed by unit type, drawn by gfx_draw_unit.
+00642710	road_sprites	high	Nine TERRAIN1 road sprites (center + 8 directions), drawn for road tiles; railroad table follows at 0x64292c.
+00642b48	unit_shield_y_offsets	medium	Per-unit-type Y of the colour-4 marker on the left border of the UNITS.GIF cell, used to place the unit shield.
+00642c48	unit_shield_x_offsets	medium	Per-unit-type X of the colour-4 marker on the top border of the UNITS.GIF cell, used to place the unit shield.
+00642d48	citizen_sprites	high	PEOPLE.GIF citizen sprites, 4 rows (eras) x 11, drawn in city and advisor screens.
+00643798	civ_portrait_sprites	medium	One 64x64 image recoloured per civ (8 copies) shown in population-milestone, low-taxes and civ-destroyed popups.
+00643b38	coast_quarter_sprites	high	TERRAIN2 32x16 ocean/coast quarter-tile pieces, 8 variants x 4 quarters, drawn for ocean tiles.
+006442b8	editor_tile_backdrop_sprite	medium	64x32 backdrop cut from EDITORPT.GIF, drawn behind tiles by sprite_editor_draw_backdrop.
+006442f8	civ_flag_sprites	high	CITIES.GIF 14x22 flags for the 8 civs (stride 2 sprites), whose pixels also give the civ colour table.
+006446b8	land_improvement_sprites	high	TERRAIN1 sprites [irrigation, farmland, mine] chosen by tile flags &0xc == 4/0xc/8.
+006447b0	hill_sprites	high	16 TERRAIN2 hill connection sprites drawn for terrain type 4 (hills).
+00644e08	editor_unit_backdrop_sprite	medium	64x48 (unit-cell size) backdrop cut from EDITORPT.GIF, drawn by sprite_editor_draw_backdrop.
+00644fb4	shield_icon_sprite	medium	ICONS.GIF 14px shield icon (second row) drawn beside production costs in Civilopedia pages.
+00645068	small_resource_icon_sprites	medium	Three 10px ICONS.GIF icons (food first) drawn for unit upkeep and tile yields in the city window.
+00645160	improvement_icon_sprites	high	ICONS.GIF 36x20 improvement icons indexed by improvement id (67 slots incl. wonders).
+00645a84	wonder_icon_sprites	high	Wonder part of the improvement icon table (improvement 39 onward), indexed by improvement - 39.
+00646158	hut_sprite	high	TERRAIN1 sprite drawn on tiles that have a goody hut.
+006461d8	forest_sprites	high	16 TERRAIN2 forest connection sprites drawn for terrain type 3.
+006465d8	fortify_overlay_sprites	high	CITIES.GIF overlay drawn over a unit whose orders == 2 (fortified).
+00646650	fortress_sprite	high	CITIES.GIF fortress sprite drawn for tiles with improvement flags &0x42 == 0x40.
+00646878	government_sprites	high	Seven 34x34 government pictures indexed by government, shown in government-change popups.
+00646cb8	advance_category_icon_sprites	high	ICONS.GIF 36x20 tech icons, 5 categories x 4 epochs, shown in research dialogs and Civilopedia.
+00647168	explosion_sprites	high	Eight 32x32 ICONS.GIF animation frames used by map_animate_explosion.
+00647388	mountain_sprites	high	16 TERRAIN2 mountain connection sprites drawn for terrain type 5.
+00647c40	terrain_base_sprites	high	Eleven TERRAIN1 base terrain tiles indexed by terrain type.
+00647fa0	airbase_sprites	high	CITIES.GIF airbase sprites (empty / with plane) drawn for tile flags &0x42 == 0x42.
+006482f8	terrain_resource_sprites	high	TERRAIN1 special-resource sprites, 11 terrains x 2 resources (stride 0x78).
+00648334	terrain_resource2_sprites	medium	Second-resource column inside terrain_resource_sprites (TERRAIN1 x=0xc4), addressed separately.
+00648860	tax_rate_icon_sprites	medium	Three 14px ICONS.GIF icons (luxury, tax gold, science) drawn in the city resource panel.
+0064889c	gold_coin_icon_sprite	medium	Second entry of the tax-rate icon table, drawn for improvement upkeep in city and Civilopedia lists.
+0064b0d8	screen_rect_right	medium	Right field of the RECT at 0x64b0d0 filled by gfx_get_screen_rect, used as screen width (<0x500) for 480-high surfaces.
+0064b114	diplo_cur_attitude	medium	Working attitude value loaded from civs[].attitude, adjusted and passed to diplo_attitude_level.
+0064b1ac	game_over_reason	high	0 while playing; set 1/2 by retirement, 3 when one civ remains, 4 when the human civ is destroyed; checked to end the loop.
+0064b1b0	map_cursor_y	high	Map cursor Y (short) set by map_set_cursor_pos, used with x for city_at and cursor redraw.
+0064b1b4	map_cursor_x	high	Map cursor X (short) set by map_set_cursor_pos, wrapped with map_wrap_x.
+0064b690	scenario_events	medium	Events object (ctor/reset with 50000 bytes, events_alloc, events_check_negotiation) holding scenario event triggers.
+0064b9bc	player_turn_active	medium	Set to 1 when the human move phase starts, cleared at turn end/retire; gates cursor blink and MP timer messages.
+0064b9e8	civ_unit_counts	high	Per-civ int incremented by unit_create, decremented by unit_delete, zero check with num_cities for elimination.
+0064ba48	net_map_lock_slots	medium	8 per-civ 0x18-byte records (state, tile pairs) for net_lock_map/net_unlock_map, reset to -1.
+0064bb08	scenario_dir_path	medium	Directory of the loaded game/scenario (from file path up to last backslash), chdir'd to before loading art, else startup dir.
+0064bc10	prefs_game_rules	medium	Start of the 0x48-byte CIV2.DAT prefs block; its first word mirrors game.rules.
+0064bc1e	prefs_game_options	high	CIV2.DAT prefs copy of game.game_options, read/written by option menus.
+0064bc22	prefs_message_options	high	CIV2.DAT preference copy of game.message_options: saved by menu_message_options, loaded into game on new game/scenario start.
+0064bc60	scenario_flags	high	Scenario parameter bits (1 Total War, 2 use objective victory, 4 count wonders as objectives, 8 map revealed) toggled in EDITSCEN/EDITVICTORY, tested only when game_flags&0x80.
+0064bcb2	scenario_tech_paradigm	high	EDITPARADIGM value in tenths (default 10) multiplying tech cost in civ_research_cost.
+0064bcb4	scenario_year_increment	high	EDITINCREMENT years per turn used by game_turn_to_year (negative/0 special).
+0064bcb6	scenario_start_year	high	EDITSTARTYEAR value added in game_turn_to_year.
+0064bcb8	scenario_max_turns	high	EDITMAXTURNS value (0 = none) checked by game_check_retirement.
+0064bcba	scenario_objective_civ	high	EDITVICTORY 'Set Objectives Protagonist' civ whose cities' objective values are summed.
+00654b60	civ_intro_shown	medium	Per-civ i16: civ_intro_popup is shown when 0 (and not autoplay) and the flag set to 1; also means saved view position valid.
+00654b70	mp_turn_time_limit_ms	high	Turn timer setting in ms (custom timer input * 1000; shown as min:sec; 0 = no timer) for mp_turn_timer_start.
+00654b74	civ_passwords	high	8 x 32-byte per-civ password strings used by the passwords_* and civ_change_password_dialog functions.
+00654c74	mp_open_game	high	ADVANCEDMP checkbox 0 'Open Game (players can join)': selects label Open/Closed Game and enables the join-game menu command.
+00654c76	mp_kill_civ_on_retire	high	ADVANCEDMP checkbox 1 'Kill Civilization on Retirement', tested in game_quit_or_retire/civ_eliminate.
+00654c78	mp_show_human_starts	high	ADVANCEDMP checkbox 2 'Show Human Starting Positions'.
+00654c7a	mp_chat_from_start	high	ADVANCEDMP checkbox 3 'All Humans Can Chat From Start', tested by parley windows.
+00654c7c	mp_simultaneous_setting	high	Checkbox 6 'Humans Move Units at the Same Time': labels 845/846 Turn Based/Simultaneous, sent in net msg 0x33.
+00654fa8	autoplay_active	high	Autoplay mode toggled by entering a negative number in the game timer dialog; suppresses popups and ends when autoplay_turns_left reaches 0.
+00654faa	autoplay_turns_left	high	Autoplay turn countdown (negated timer input), decremented per turn, Esc forces end, shown in frame caption.
+00654fac	mp_double_production	high	ADVANCEDMP checkbox 4 'Double Production of Each Terrain Type' (labels 847/848), used in city_tile_yield.
+00654fae	mp_double_moves	high	ADVANCEDMP checkbox 5 'Double Movement Rate of Ground Units' (labels 849/850), used by rules_apply_double_moves.
+00654fb0	net_claimed_civs_mask	medium	Bit per civ taken by a network player: set on msg 0x30, cleared on 0x31, ANDed into game.human_players, broadcast via msg 0x2a.
+00655020	game_home_dir	high	Startup working directory (getcwd, 0x104 bytes) chdir'd back to after scenario/save directory changes.
+00655280	saved_layout_valid	medium	Set after a saved window layout is loaded; when set (with resume civ) mapview_create and layout reset keep the saved rects.
+006552a4	map_view_saved_rects	medium	Per map view (8 x 16-byte rect) saved window rectangle indexed by the view's field_2d8, copied to/from the save file layout.
+006553d8	main_frame_wnd	high	Main application window object: created 600x400, given palette, background surface/colour, icon, cursor; its client size drives layout.
+00655c38	power_graph_history	medium	0x4b0-byte saved table [turn][8 civs] of power ratings plotted by powergraph_show.
+00666130	landmass_table	medium	64 x 16-byte records saved with the map; +0 land tile count per landmass (set by map_generate), used in AI/trade size checks.
+00666134	water_body_sizes	medium	+4 field of landmass_table records: tile count of each ocean body (map_generate ocean pass), checked for coastal/harbour logic.
+00666548	prefs_mp_kill_on_retire	high	CIV2.DAT default for ADVANCEDMP checkbox 1 (Kill Civilization on Retirement), copied to/from mp_kill_civ_on_retire.
+0066654a	prefs_mp_show_human_starts	high	CIV2.DAT default for ADVANCEDMP checkbox 2 (Show Human Starting Positions).
+0066654c	prefs_mp_chat_from_start	high	CIV2.DAT default for ADVANCEDMP checkbox 3 (All Humans Can Chat From Start).
+0066654e	prefs_mp_simultaneous_moves	high	CIV2.DAT default for checkbox 6 (simultaneous moves).
+00666570	prefs_net_player_name	high	CIV2.DAT 32-byte network player name entered in NETNAME dialog, copied into connection info.
+006665b0	prefs_net_ip_address	high	CIV2.DAT IP address string from the IPVERIFY dialog / XD_GetCurrentProtoAddr.
+006665fe	prefs_mp_double_production	high	CIV2.DAT default for ADVANCEDMP checkbox 4 (double production).
+00666600	prefs_mp_double_moves	high	CIV2.DAT default for ADVANCEDMP checkbox 5 (double moves).
+0066be78	parley_units_by_city	high	Parley unit list sort mode: 0 sorted by type (shows type + home city), 1 sorted by home city name (FUN_0046990a).
+0066c4e8	save_file_path	high	Current save file path whose extension save_set_file_ext rewrites (.SAV/.HOT/.EML/.NET/.SCN).
+0066c7a8	map_views	high	Array of 8 map view windows (stride 0x3f0); element 0 is the main map view passed to mapview_* functions.
+0066c7f0	map_view_wnds	medium	Window sub-object at +0x48 of each map_views entry, used for cursor/capture calls.
+0066c988	main_view_timer_shown	medium	Main map view field_1e0: frame caption shows the MP turn timer when set (set when a time limit exists).
+0066c990	main_view_timer_cache	medium	Main map view field_1e8: last seconds value drawn in the caption, reset to -1 to force a redraw.
+0066ca54	main_view_frame_left	medium	Main map view field_2ac: left of the frame rect used for the caption blit.
+0066ca58	main_view_frame_top	medium	Main map view field_2b0: top of the frame rect used for the caption blit.
+0066ca5c	main_view_frame_right	medium	Main map view field_2b4: right of the frame rect used for the caption blit.
+0066ca84	map_view_open_flags	medium	Per map view i16 (+0x2dc, stride 0x3f0) saved in the game file: nonzero views (and view 0) get mapview_create.
+0066ca88	map_view_center_x	medium	Per map view i16 (+0x2e0) saved in the game file; main view's x set from cursor and compared before mapview_center_on.
+0066ca8a	mapview_center_y	high	Main map view (+0x2e2, stride 0x3f0) tile y paired with 0066ca88; map origin computed as it minus half the visible height, saved per view.
+0066ca8c	mapview_zoom	high	Map view +0x2e4 short stepped between -7 and 8 by zoom menu commands and used to scale tile drawing.
+0066cb00	mapview_cursor_id	high	Map view +0x358 cursor resource id (0x201 normal, 0x1fe drag, 0x202/0x203 paradrop) set alongside wnd_set_cursor_now.
+00673b08	saved_human_players	high	Holds a copy of game.human_players saved before and restored after temporary changes.
+00673e10	text_token_buf	high	Buffer that text_next_token fills with the next comma-separated token and returns.
+00673f14	text_line_cursor	high	Read pointer into the current text line, set by text_read_line and advanced past commas by text_next_token.
+00673fa0	path_goal_x	high	Pathfinder target x: map_path_next_dir measures distance to it; set from goto destination before searching.
+00673fa4	path_goal_y	high	Pathfinder target y, paired with 00673fa0.
+00679640	text_buffer	medium	Shared 256+ byte string buffer: text_read_line fgets into it, dialogs/text_append build messages in it, widely used scratch.
+0067a410	diffeng_sections	high	Table of 24 Difference Engine section descriptors (0x18 bytes: size, padded size, id, cursor, offset, data ptr) built by diffeng_register_blocks.
+0067a414	diffeng_section_padded_sizes	high	Second dword of each diffeng section (size rounded up to 4), summed for the mirror length and used to step mirror offsets.
+0067a798	font_size21	medium	Font object created with font_init(.,0,21), used for pedia and parley list text heights/widths.
+0067a7a0	font_size14	medium	Font object created with font_init(.,0,14) in a static initializer, used by parley list panes.
+0067a7a8	parley_wnd	high	The diplomacy (parley) window object: parley_wnd_ctor/dtor/open in mode 3 and side-dialog construction run on it.
+0067a8bc	parley_wnd_closed	medium	Parley window field +0x114: nonzero when not open; parley_wnd_open initialises the window only when set, network code checks it is 0.
+0067a8c0	parley_other_civ	high	Parley window field +0x118: civ being negotiated with (set from parley_wnd_open param, -1 when closed, compared with civ ids).
+0067a994	parley_mode	high	Parley window field +0x1ec set by parley_set_mode_sides from the negotiation state; indexes the side-dialog kind table 0062d7d0.
+0068abe0	font_size24	medium	Font object created with font_init(.,0,24), used for line spacing in parley and pedia frame.
+0068abe8	chat_wnd	high	Second parley-class window object opened in mode 4 (chat with human players) from menu and network messages.
+0069b018	font_size30	medium	Font object created with font_init(.,0,30), used for caption heights in parley/pedia windows and layout.
+0069b020	font_size20	medium	Font object created with font_init(.,0,20), used for parley window layout heights and text widths.
+006a1864	wonder_movie_wnd	high	Pointer to the wonder movie window set by its constructor (wonder_show_movie) and used to end its modal loop from AVI/click/key callbacks.
+006a1d7c	editor_running	high	Set to 1 when a rules editor dialog starts, its modal loop runs while nonzero, cleared by OK/Cancel.
+006a1d80	editor_next_ctrl_id	high	Next control id for editor dialog controls: reset to 0xc9 in setup, post-incremented when each control is created.
+006a1d88	editor_item_names	medium	Editor working name strings (0x28 bytes per item) copied from and back to rules names in the editors.
+006a2a00	editor_ctrl_values	high	Base for editor values indexed by control id*4 + selected item*0x58 (control 0xca maps to 006a2d28).
+006a2d28	editor_items	high	Editor working records (0x58 bytes each, 22 ints) loaded from rules (preq, city style, ...) and written back on OK; field 0.
+006a2d2c	editor_item_field1	medium	Editor record dword 1: advance preq[1], leader attack, improvement upkeep, terrain defense.
+006a2d30	editor_item_field2	medium	Editor record dword 2: advance epoch, leader expand, improvement preq.
+006a2d34	editor_item_field3	medium	Editor record dword 3: advance category, leader civilize, improvement field.
+006a2d38	editor_item_field4	medium	Editor record dword 4: advance ai_value, unit cost.
+006a2d3c	editor_item_field5	medium	Editor record dword 5: advance civilized_mod, unit hold, terrain per-row values.
+006a2d40	editor_item_field6	medium	Editor record dword 6: unit move (scaled by road_move_mult), terrain values.
+006a2d44	editor_item_field7	medium	Editor record dword 7: unit range, terrain values.
+006a2d48	editor_item_field8	medium	Editor record dword 8: unit attack, terrain values.
+006a2d58	editor_item_flags	medium	Editor record dword 12: unit type flags bitmask shown as checkboxes in the unit editor.
+006a4f90	editor_font	high	Font set with font_set and made the default and control font when an editor dialog opens.
+006a5b58	parley_description	high	Text buffer asserted by strlen(parleyDescription)==0 / <2048 in parleywin transaction.cpp, built with strcat.
+006a64f8	main_menu	medium	Menu object on which menu_add_item/menu_set_item_enabled/checked are called for game menu commands.
+006a6530	city_tile_flags	high	Per city-radius-tile status bytes (21 tiles) returned by city_tile_status_flags and used by the resource map drawing.
+006a6550	city_happy_count	high	Happy citizens of the city being calculated; city_recalc returns it minus the unhappy count.
+006a6554	city_tax_total	high	Tax (gold) share of trade computed in city_split_trade plus building bonuses.
+006a6568	city_shield_support	high	Units costing shield upkeep: reset in city_calc_unit_support, incremented by city_count_unit_support.
+006a657c	city_shield_rows	high	Shield box rows multiplier (cosmic.shield_box_rows, adjusted for AI difficulty) applied to improvement costs.
+006a65a0	city_zoom_requested	medium	Set when the player picks Zoom to City in a city message during turn processing; then the city window opens.
+006a65a8	city_unhappy_count	high	Unhappy citizens of the city being calculated (size minus content base, reduced by buildings/martial law).
+006a65ac	city_notify_enabled	medium	Set when the city owner is the local human player; city_notify_dialog_ex shows nothing unless set.
+006a65cc	city_total_shields	high	City shield production after factory/power bonuses, minus waste; compared with unit shield support.
+006a65d0	city_total_trade	high	City trade incl. trade routes, passed to city_calc_corruption and split into lux/sci/tax.
+006a65d8	city_settlers_supported	high	city_calc_unit_support counts supported units with role 5 (settlers/engineers); food upkeep is this times settler food cost.
+006a65e0	city_tile_job_x	medium	X of a city-radius tile (polluted or improvable) passed to civ_add_ai_goal type 0x15 for settler work.
+006a65e4	city_aggressive_units	high	city_calc_unit_support counts attacking units away from home (field/outside borders) that cause military unhappiness (unit flag 0x400).
+006a65e8	city_tile_job_y	medium	Y of the city-radius tile passed to civ_add_ai_goal type 0x15 for settler work.
+006a6604	city_specialist_count	high	Set from cities[].worked_tiles >> 26 (specialist count) and used to draw/assign specialists.
+006a6608	settler_food_cost	high	city_calc_food_box_rows sets it to cosmic.settler_food_low/high by government; multiplied by supported settlers.
+006a660c	city_support_unit_count	high	city_count_unit_support increments it per supported unit and compares with city size / government free support.
+006a6668	pedia_window	high	Civilopedia window object passed as this to pedia_redraw, pedia_draw_frame, pedia_show_topic_modal etc.
+006a66b0	pedia_window_wnd	medium	Inner window part (+0x48) of the Civilopedia window used for activate/focus/modal loop and hide.
+006a677c	pedia_closed	medium	Set to 1 by pedia_close and tested before opening a pedia modal or ending its modal loop.
+006a6780	pedia_category	high	Current Civilopedia category 1..8 (advances, improvements, wonders, units, terrain, governments, concepts) switched on in pedia_toggle_describe.
+006a6784	pedia_page_mode	high	Pedia page state: 0 index list, 1 stats page, 2 description text; stepped by pedia_toggle_describe and stored in history.
+006a6788	pedia_topic	medium	Index of the current pedia topic, saved in the history stack and restored on back navigation.
+006a7d58	pedia_terrain_names	high	Linked {text,id,next} list of terrain entries looked up for category 5 in pedia_toggle_describe and pedia_draw_item_list.
+006a85a0	pedia_selected_item	medium	Highlighted entry index in the pedia index list; set from clicked links and keyboard navigation.
+006a85a4	pedia_list_top	high	First visible entry of the 9-row pedia index list (kept a multiple of 9, drives the scrollbar position).
+006a85a8	pedia_link_list	high	Head of the pedia window's hyperlink hotspot list (window offset 8000) walked by link click handlers and freed by pedia_clear_links.
+006a8c00	game_palette	medium	Palette object used for palette_get_rgb and screen fades and passed to frame window creation.
+006a9110	event_dont_play_wonders	high	Set by scenario event action 0x100 (DontPlayWonders); setup code then clears game option 0x10000 (wonder movies).
+006a91b8	city_window	high	City window object passed to city_window_open/refresh/bring_to_top and citywnd_get_city.
+006a9200	city_window_wnd	medium	Inner window part (+0x48) of the city window, shown/hidden/moved to the saved city-window rect.
+006ab178	caption_small_font	medium	Font at 2/3 of the normal UI size; frame windows use it for captions too wide for the normal caption font.
+006ab190	caption_font	medium	Normal-size font assigned to frame windows' caption font field and measured for caption height.
+006ab198	screen_width	high	Width of the screen rect from gfx_get_screen_rect; >999 selects large fonts and centres dialogs.
+006ab19c	screen_height	high	Height of the screen rect from gfx_get_screen_rect, used to centre setup dialogs.
+006ab1b8	setup_picwnd	high	Setup side-picture window object passed to setup_picwnd_show/close.
+006ab4b8	setup_picwnd_surface	medium	Surface holding the setup picture, created and released with the setup picture window.
+006abc50	status_font	high	Status window font sized by status_calc_font_sizes and used for its text.
+006abc5c	status_lower_panel_height	medium	Height of the status window's second panel (rect 006abfa8); 0 hides it.
+006abc68	status_window	high	Status (info) window object repainted by status_redraw and shown/blitted.
+006abcb0	status_window_wnd	medium	Inner window part (+0x48) of the status window, hidden/shown/moved to its saved rect.
+006ac0a8	sprite_sheet_surface	medium	Surface loaded from UNITS.GIF/TERRAIN2 etc. whose cells the sprite editor picks and edits.
+006ac0f0	sprite_editor_flag_y	medium	Unit shield/flag marker y (clamped 0..14) set by clicking in the sprite editor, stored per unit at 00642b48.
+006ac0f4	sprite_editor_flag_x	medium	Unit shield/flag marker x (clamped 5..47) set by clicking in the sprite editor, stored per unit at 00642c48.
+006ac11c	sprite_picker_dialog	medium	The scrollbar sprite-picker dialog (this saved in its init), ended via its +0x48 modal loop.
+006ac128	sprite_editor_surface	high	Edit surface the sprite editor fills, plots pixels on and grabs the edited sprite from.
+006ac170	sprite_editor_orig_sprite	medium	Sprite grabbed from the edit surface when editing starts and drawn back on redraw/reset.
+006ac1b0	sprite_editor_window	high	Sprite editor frame window created, laid out and blitted by sprite_editor_run/redraw.
+006ac1f8	sprite_editor_wnd	medium	Inner window part (+0x48) of the sprite editor for cursor, modal loop and caption settings.
+006ac2d4	sprite_editor_origin_x	medium	X offset of the sprite editor layout, added to zoom grid and swatch positions.
+006ac2d8	sprite_editor_origin_y	medium	Y offset of the sprite editor layout, added to zoom grid and swatch positions.
+006ac874	sprite_editor_key_color	medium	Transparent key color of the edited sprite, used to fill the edit surface and swatches.
+006ac878	sprite_editor_width	high	Width of the edited sprite; zoom grid is 4x this and pixel clicks are bounded by it.
+006ac87c	sprite_editor_height	high	Height of the edited sprite; zoom grid is 4x this and pixel clicks are bounded by it.
+006ac8a8	sprite_editor_result_sprite	medium	Sprite re-grabbed (key 0xfe) from the edit surface by sprite_editor_rebuild_sprite.
+006ac8e8	sprite_picker_sprite	medium	Sprite grabbed from the sheet cell chosen in the sprite picker and shown at 2x.
+006ac924	sprite_sheet_mode	medium	Sprite sheet kind (0..11, 0xb = units) switched on by sprite_editor_cell_rect and backdrop drawing.
+006acd58	unit_sound_editor_window	medium	Frame window of the unit editor's sound picker (6 sound slots, label "Double-click on filename to play").
+006ad0ec	spaceship_success_pct	high	Spaceship success probability percent shown in spaceship window (colored <40/<75) and set to 100 or scaled.
+006ad228	net_lobby_launch_mode	medium	Set to the XD_LaunchedByLobby result (1 or 2), else -1; when set the lobby address is used and setup options are disabled.
+006ad2f7	net_host_flag	high	Net manager +0x1ef set from net_init_transport's host argument (read by net_is_host); join requests error out when it is 0.
+006ad2f8	net_protocol	high	Net manager +0x1f0 passed to net_init_transport; 0 shows label "(TCP/IP)", 1 "(IPX/SPX)", 2/3 the modem and direct-serial modes.
+006ad304	net_local_slot	high	Index of this machine's player slot; human_civ = net_slot_civs[net_local_slot*0x15].
+006ad30c	net_player_slots	medium	Base of 7 player records of 0x54 bytes (first int = network player id, compared with message sender); indexed through net_civ_slots.
+006ad330	net_slot_player_names	medium	Slot +0x24 string, filled from the player name prompt and shown in the caption as whose turn it is.
+006ad359	net_slot_active_flags	medium	Slot +0x4d byte, set for occupied slots; loops over 7 slots count active ones to rebuild the player count.
+006ad35c	net_slot_civs	high	Slot +0x50 int: the civ the slot's player controls (human_civ is read from it).
+006ad558	net_civ_slots	medium	Int per civ placed right after the 7 slots, giving the slot index used to reach that civ's player record.
+006ad578	mp_turn_civ	medium	Set to game.turn_civ when a turn passes; caption, turn timer and status bar test it against human_players and human_civ.
+006ad59c	net_game_name	medium	Copied from the game-name prompt (also stored at 0x666550) and from join/session messages; shown in game info and timeout popups.
+006ad63c	net_connection_title	medium	Heap string built from the connection type labels (Internet, LAN, Dial-Up) plus address, used as title argument of network popups.
+006ad640	net_session_phase	medium	Broadcast with message 0x28: host sets 1 at session setup and 3 once the game starts; below 2 lets players choose tribes, 3 marks late joiners.
+006ad664	net_players_awaited	medium	Set to player count minus one, decremented on message 0x10; wait popups end when it reaches 0 or the timeout passes.
+006ad674	net_wait_start_ticks	medium	timer_ticks() saved before each connection wait popup; later subtracted to measure elapsed wait.
+006ad678	dialog_stack_top	medium	Topmost dialog pushed on the dialog stack at 0x635a58; wait callbacks set its flag 0x400 and end its modal loop.
+006ad684	mp_simultaneous_moves	medium	Copied from option 0x654c7c and sent in message 0x33; when set, unit moves are not reset and the turn loop takes the simultaneous path.
+006ad685	player_has_quit	medium	Set to 1 after the local player retires or is eliminated; ends multiplayer wait loops and stops turn processing for them.
+006ad698	net_host_handoff_stage	medium	Set 1 by net_host_quit_handoff, incremented by messages 0xe/0xf; while nonzero join requests are refused and wait loops exit at 2.
+006ad699	net_tile_sync_enabled	medium	When set, tile_set_* changes are sent immediately as messages; cleared during batches and bulk map rebuilds.
+006ad69a	net_tile_batch_active	high	Set by net_batch_begin, cleared by net_batch_flush; clients then queue tile changes with net_batch_add.
+006ad6ac	loaded_file_kind	medium	1 when a saved game is loaded, 2 for a scenario (set alongside save_set_file_ext); sent to clients with message 6.
+006ad6ae	loaded_file_name	medium	File name part of the loaded save/scenario path, appended to the game directory to rebuild the path; sent with message 6.
+006ad7b2	loaded_file_subdir	medium	Directory of the loaded save/scenario relative to the game dir (0x104 bytes); clients chdir into it before loading rules.
+006ad8b8	net_timeout_seconds	medium	Multiplied by 1000 for XD_OpenConnection timeouts and by 60 to compare against timer_ticks in connection waits.
+006ad8bc	unit_create_busy	high	Set to 1 for the duration of unit_create; UI handlers refuse input while any such busy flag is set.
+006ad8c0	unit_delete_busy	high	Set to 1 for the duration of unit_delete; checked by UI handlers before acting.
+006ad8c4	city_create_busy	high	Set to 1 for the duration of city_create; checked by UI handlers before acting.
+006ad8c8	city_delete_busy	high	Set to 1 for the duration of city_delete; checked by UI handlers before acting.
+006ad8cc	net_lock_map_busy	high	Set to 1 for the duration of net_lock_map; checked by UI handlers before acting.
+006ad8d0	net_unlock_map_busy	high	Set to 1 for the duration of net_unlock_map; checked by UI handlers before acting.
+006ad8d4	ui_input_busy	medium	Multiplayer reentrancy guard set while a menu/key/map-click handler runs (only when all other busy flags are 0).
+006ad8d8	unit_stack_unlink_busy	high	Set to 1 for the duration of unit_stack_unlink; checked by UI handlers before acting.
+006ad8dc	unit_stack_link_busy	high	Set to 1 for the duration of unit_stack_link; checked by UI handlers before acting.
+006ad8e0	unit_stack_bottom_busy	high	Set to 1 for the duration of unit_move_to_stack_bottom; checked by UI handlers before acting.
+006ad8e4	unit_relocate_busy	high	Set to 1 for the duration of unit_relocate; checked by UI handlers before acting.
+006ad8e8	city_acquire_wonder_busy	high	Set to 1 for the duration of city_acquire_wonder; checked by UI handlers before acting.
+006ad8ec	civ_eliminate_busy	high	Set to 1 for the duration of civ_eliminate; checked by UI handlers before acting.
+006ad8f0	civ_create_busy	high	Set to 1 for the duration of civ_create; checked by UI handlers before acting.
+006ad8f4	civ_check_destroyed_busy	high	Set to 1 for the duration of civ_check_destroyed; checked by UI handlers before acting.
+006ad8f8	unit_gather_cargo_busy	high	Set to 1 for the duration of unit_gather_cargo; checked by UI handlers before acting.
+006ad8fc	unit_lift_off_map_busy	high	Set to 1 for the duration of unit_lift_off_map; checked by UI handlers before acting.
+006ad900	unit_delete_cargo_busy	high	Set to 1 for the duration of unit_delete_with_cargo; checked by UI handlers before acting.
+006ad904	unit_destroy_redraw_busy	high	Set to 1 for the duration of unit_destroy_redraw; checked by UI handlers before acting.
+006ad908	map_redraw_busy	medium	Set while mapview_redraw and map animations run; pedia popups are suppressed while it is set.
+006af220	casualty_counts	medium	Per-civ int incremented by casualty_log_add; difference from the reported count gives "units lost" in the turn-start popup.
+006af240	casualty_reported_counts	medium	Per-civ int set to casualty_counts after the lost-units popup is shown to the human player.
+006c3164	net_max_players	high	Read from CIV.INI MaxPlayers (default 7); join requests are refused when the player count reaches it.
+006c31a9	hotseat_human_players	medium	Copy of game.human_players kept in hotseat games (multiplayer==1), restored on save and tested for hotseat humans.
+006c31ac	blocked_input_kind	medium	Set to a code 1-10 by map_window_click, city_button_* and menu_command when their input is 'blocked by XD flag' (dbg_log), remembering which event was dropped.
+006c31b0	blocked_input_arg1	medium	First argument (param_1 or city) of the input event recorded with blocked_input_kind.
+006c31b4	blocked_input_arg2	medium	Second argument (param_2 or city owner) of the input event recorded with blocked_input_kind.
+006c31b8	blocked_input_arg3	medium	Third argument (param_3) of the input event recorded with blocked_input_kind.
+006c8fa0	net_msgq_normal_count	high	Field 0x5dc8 of the net message queue at 006c31d8: count of messages in the normal ring (400-1999), drained by while(...!=0) net_process_messages loops.
+006c8fac	net_msgq_priority_count	high	Field 0x5dd4 of the net message queue: count in the priority ('Alpha') ring (0-399); checked < 0x22 to throttle.
+006c8fb4	net_lost_conn_total	high	Incremented by the LostConnectionFunc handler and heartbeat timeouts; nonzero makes net_check_lost_connections drop players/shut down.
+006c8fc0	net_lost_conn_by_player	high	7-int array incremented per player slot by the LostConnectionFunc handler, copied and cleared by net_check_lost_connections/net_reset_error_counts.
+006c900c	nm_server_canceled_count	high	Slot 11 of the per-message-type receive counters at 006c8fe0 (NM_SERVER_CANCELED_START); checked by join/setup code.
+006c9038	nm_start_civ_count	high	Slot 22 of the per-message-type receive counters at 006c8fe0 (NM_START_CIVILIZATION); waited on and cleared during game start.
+006c918c	nm_end_sequence_count	high	Slot 107 of the per-message-type receive counters at 006c8fe0 (NM_END_SEQUENCE); ends network wait loops.
+006c91e4	nm_parley_cancel_count	high	Slot 129 of the per-message-type receive counters at 006c8fe0 (NM_PARLEYREQUEST_CANCEL); closes pending diplomacy dialogs.
+006cec80	dialog_timeout_start	medium	timer_ticks() stamp reset when a dialog opens; MP idle callbacks auto-close the modal dialog once ticks minus it exceed 0x4b0/0x960.
+006d1da8	moving_units_mode	high	1 = 'Moving Units', 0 = 'Viewing Pieces' (labels 9/10): toggles menu items 0x301/0x302 and gates active-unit map behaviour.
+006e47d0	dbg_log_file	medium	Object passed to dbg_log_write by every dbg_log* function and opened/closed by FUN_005d246f/FUN_005d2498.
+006e4850	err_report_ctx	medium	Object passed as first argument to every err_report assertion call (73 functions).
+006e4f60	res_dll_modules	high	HMODULE array indexed up to count 006387cc, filled by res_dll_load_library and searched with FindResourceA by res_load_bitmap.
+006e4ff0	app_hinstance	high	Program HINSTANCE used for RegisterClass, CreateWindowEx, LoadIcon/LoadCursor, SetWindowsHookEx and GetModuleFileName.
+006e5224	text_color_rgb	medium	3-byte RGB (006e5224-26) filled from a DirectDraw palette entry and used as SetTextColor/CreatePen colour by ddsurf_draw_text_*_pal.
+0064b10c	diplo_offer_tech_2nd	medium	In the AI diplomacy scan, the second-most valuable advance the AI could give the other civ; promoted to diplo_offer_tech_best after a gift.
+0064b124	diplo_offer_tech_best	medium	In the AI diplomacy scan, the advance the AI has and the other civ lacks with the highest ai_advance_value; given via civ_give_advance.
+006a65c8	city_yield_totals	medium	3-int array (food, shields, trade at 006a65c8/cc/d0) of a city's summed tile yields; food minus size*food_per_citizen gives surplus.
+006359f0	dialog_font_ptr	medium	Pointer initialised to the font object 006cec90 (font_init size 16); its font_line_spacing sizes dialog/popup lines.
+00635a48	dialog_button_labels	high	3 string pointers loaded by dialog_load_button_labels (defaults OK, Help, Cancel; reloaded from POPUPS.TXT @LABELS) and used for dialog buttons; [0] temporarily overridden.
+00637e5c	draw_current_font	high	Current font pointer (default 006d1ec8) used by surface_draw_text_cur_font and others, logging 'No current font selected' when null.
+00637e6c	ctrl_default_font	medium	Font pointer set by ui_set_default_font and copied into field_40 of new edit controls (edit_create, dialog_add_edit_field).
+00626810	throneroom_wnd	medium	Pointer to the throne room window object, set by its constructor FUN_0044ce16 and cleared on destruction/throneroom_close.
+00628420	label_string_ids	high	Locked buffer of 888 string-pool ids, one per LABELS.TXT label, read via label_string(*(table+n*4)).
+0062d03c	path_unit_type	high	Unit type whose domain/move/role/flags drive the path finder (map_path_next_dir, road connection); set to 2 (Settlers) or a unit's type.
+0062d0bc	diffeng_mirror_buf	high	Difference Engine mirror buffer allocated by diffeng_alloc_mirror, filled by diffeng_copy_to_mirror, freed by diffeng_free_mirror.
+0062e2d0	spaceship_wnd	high	Pointer to the spaceship window object set by spaceship_wnd_ctor and cleared by spaceship_wnd_dtor.
+00631acc	council_wnd	medium	Pointer to the High Council window object (council_load_speech, avi playback) set by its constructor FUN_0051661a and cleared by the destructor.
+00633e54	anim_origin_stack_unit	medium	Unit left visible on the origin tile during a move animation (next/prev in stack or first air unit); -1 when none.
+006385c0	snd_wave_buffer_ring	medium	Head of the circular list of wave-out buffers (linked via +0x1c) written by snd_wave_write_pending.
+006385c8	snd_wave_cur_buffer	medium	Current wave-out buffer cursor in the ring starting at snd_wave_buffer_ring, reset to its head on restart/shrink.
+006385d0	snd_wave_sources	high	Head of the linked list of wave sources (next at +0xb8) into which snd_wave_add_avi_stream links AVI streams; freed by snd_wave_free.
+006394c0	ddraw_iface	high	IDirectDraw interface pointer created by DirectDrawCreate and released on shutdown; used for palettes/display modes.
+00639f14	crt_errno	high	CRT errno set to EINVAL/EBADF/ENOMEM/ERANGE by CRT functions and indexed into the 'No error' message table.
+0063cbb4	taxrate_dlg	medium	Pointer to the tax rate dialog object (set in its constructor) whose fields hold max rate and tax/lux/sci values for taxrate_balance.
+0063ef6c	advisor_report_civ	medium	Civ whose advisor report is shown (set from param_1 by many advisor routines); also reused as a button result flag in one report window.
+0064b99c	events_list_head	high	Head of the scenario events linked list (next at +0x1bc), walked by the events editor and event triggers.
+0067a424	diffeng_section_ptrs	medium	Data pointer field of the 23 Difference Engine section records (stride 0x18) copied into the mirror buffer.
+006a4f88	active_editor_wnd	medium	Pointer to the currently open scenario editor window (set by each editor constructor), giving access to its combos/edits.
+006ad108	net_session	high	Net session object passed as this to net_process_messages, net_is_host, net_session_clear, net_remove_player.
+006ad308	net_player_count	high	Number of connected network players (recounted over the 7 player slots); many MP features require more than 1.
+006c31d4	net_found_games	medium	Head of the linked list (next +0x20) of discovered multiplayer games shown in the join dialog; entries expire after a timeout.
+006cec84	active_dialog	high	Pointer to the currently running dialog object (render, option list, end modal loop).
+006ced4c	adjacent_foreign_civ	high	Civ found by tile_adjacent_nonallied_civ/unit and tile_zoc_unit_adjacent (-1 if none), read by callers for attitude changes.
+006e47c8	gfx_scale_table	medium	Pointer to the current 0x100c-byte scaling lookup table at 006d470c (selected by gfx_set_scale_ratio) used by sprite blits and gfx_scale_length.
+00624f54	mapview_drag_hold_timer	medium	game_timer handle created (400 ms, FUN_00410b23) on map-view mouse-down in Moving Units mode; on expiry sets drag cursor 0x1fe and capture; destroyed by mapview_cancel_drag.
+00625ec0	advisor_modal_start_ticks	high	timer_ticks() stored when advisor/report modal loops start; MP idle callback FUN_00437c8a ends the modal after 1200 ticks.
+00626a00	cityview_scroll_x	high	Horizontal offset into the 1280-wide city-view image, initialised to (0x500-screen width)/2, clamped and adjusted by scrolling, used as blit source x.
+00626a24	diplo_session_active	medium	Set to 1 by leader-face diplomacy dialog FUN_00458ab1, cleared by diplo_session_reset; while set advance dialogs skip icons and the pedia popup.
+0062805c	unit_blink_skip_tick	medium	Set when the map recentres or Moving/Viewing mode changes; the blink timer tick FUN_004131c0 clears it instead of toggling unit_blink_phase.
+00628468	net_send_sequence	high	Incremented and stamped into each outgoing packet (+0xc) by the XD_SendSecureData/SendBroadcastData wrappers; logged as 'Sequence Number' and in ExecuteParleyTransaction logs.
+0062af14	opening_video_player	high	Points to the AVI player while civ2\video\opening.avi plays (FUN_0046da40); click/key/end callbacks end its modal loop, cleared to 0 afterwards.
+0062b42c	cd_music_continue	medium	Set when a CD music track is started (music_play_track, snd_cd_detect_layout); the CD notify callback FUN_0046e2f4 then calls snd_sync_music_option to pick the next track.
+0062bcd8	map_show_hidden_terrain	high	Set to 1 by menu_show_hidden_terrain around a full redraw and popup; map drawing code skips improvement/unit/city overlays while set.
+0062c488	turn_resume_new_game	medium	Copy of game byte 00654fa6, set when a game/scenario is started at a chosen civ; lets turn-start processing (events, civ_process_turn) run even though turn_resume_civ is set.
+0062ca40	diplo_leader_video_active	high	Set from FUN_00495e0c when the animated-leader option (0x20) loads the leader AVI; gates avi_player_play_range calls for leader reactions, cleared in the window dtor.
+0062ca48	diplo_leader_sound_ids	medium	Array of leader sound effects: base = 0x70 + 4*tribe music category, entries +1..+3 are reaction sounds; [0] looped after the intro sound.
+0062cd20	text_file_handle	high	FILE* opened with mode 'rt' for game text sections; read by text_read_line via fgets/feof, closed and zeroed by text_close_file.
+0062d040	path_road_planning	medium	Set around path searches that connect cities by road (game_accelerated_start, FUN_00488a45, 0055a980); path cost then treats every tile as road.
+0062d7d0	parley_mode_left_kinds	medium	Even entries of the 8-byte per-parley_mode pair table whose odd entries are parley_mode_right_kinds; passed to parley_add_side_dialog for the first side.
+0062d86c	chat_input_buffer	high	0x101-byte buffer allocated by the parley/chat window, bound to the 256-char edit control 0x3ef; FUN_004b968a reads typed text into it and sends it.
+0062edf4	city_yield_tile_worked	medium	Set to param_3 by city_calc_tile_yields for the tile being evaluated: when set yields add to city_yield_totals and city_tile_yield claims tile ownership.
+0062edf8	city_turn_processing	high	Set to 1 for the length of per-city turn processing FUN_004f0a9c; mouse/key/menu handlers refuse map input or show city_window_modal_notice while set.
+0062ee00	city_turn_window_shown	medium	In city turn processing set to whether the city is the one open in the city window; gates city_window_refresh/save_build_state calls.
+0062ee0c	city_tile_job_found	high	Set to 1 when a settler work tile (city_tile_job_x/y) is chosen during city turn processing; checked before adding the AI goal type 0x15.
+0062f160	events_parse_verbose	high	When nonzero the scenario-events parser printf's diagnostics ('@IF found', 'Could not find %s, check spelling'); cleared at parse start.
+00631130	net_popup_queue_head	medium	Head of a singly linked list (tail 00631134) of deferred popups with string/number args queued by FUN_00511a0e and shown one by one by FUN_00511ba2.
+00631a98	victory_screen_wnd	medium	this of the conquest-victory window (mk.dll, SLAM text) shown for game_over_reason 3; set in its ctor, cleared in dtor, key/click end its modal loop.
+00631ee8	setup_accelerated_start	high	New-game ACCELERATED dialog result (0 none); game_accelerated_start(value-1) is called after game_init_new.
+00631eec	setup_dialog_pos_state	medium	State 1..4 cycled by setup_next_dialog_x to alternate setup dialog x positions left/right; reset to 3 when setup starts.
+00633590	frame_highlight_color	medium	Read-only palette index 37 used as the top/left bevel colour of window frames and the light line of the status bar.
+00633594	frame_shadow_color	medium	Read-only palette index 18 used as the bottom/right bevel colour of window frames and the dark line of the status bar.
+00633678	cheat_terrain_saved_bits	medium	-1 until set; cheat_change_terrain stores the improvement checkbox bits chosen and reuses them (skipping the dialog) on repeat; menu 0x1b7 resets it.
+00633a7c	mp_turn_timer_last_ticks	high	timer_ticks() at the last turn-timer update; set in mp_turn_timer_start/resume and each tick of FUN_0055b0fb to subtract elapsed seconds.
+00633a88	mp_window_drag_start_ticks	high	timer_ticks() when a window drag starts (FUN_0055b47e); the watchdog releases the mouse capture after 620 ticks.
+00633a90	mp_window_drag_wnd	high	Active child window captured at window-drag start; mp_release_mouse_capture posts WM_LBUTTONUP to it and releases capture.
+00633e48	anim_combat_defender	medium	Defending unit of the combat being animated (set in unit_resolve_attack with its x,y 00633e40/44); map drawing draws it on top of its stack.
+00633e4c	anim_origin_x	medium	X of the tile holding anim_origin_stack_unit (set in unit_move_dir); the stack drawer compares tile coords against it.
+00633e50	anim_origin_y	medium	Y of the tile holding anim_origin_stack_unit (set in unit_move_dir); paired with anim_origin_x.
+00634000	sprite_editor_right_color	medium	Sprite editor paint colour bound to the right mouse button (big swatch); highlighted in the palette, used in colour replace/swap.
+00634004	sprite_editor_left_color	medium	Sprite editor paint colour bound to the left mouse button (small swatch); swapped with 00634008, used in colour replace/swap.
+00634308	menu_active_object	medium	Menu object attached to a window by FUN_00578de8/00578e38; the WM_COMMAND callback maps the command id through it before calling the handler 0063430c.
+00634718	main_frame_created	high	Set to 1 after the main frame window is created (FUN_00589a5b), 0 when destroyed; dialogs use main_frame_wnd as parent/focus only when set.
+00634f60	spaceship_part_table	high	6 rows of {label id 198..203 (Structural..Solar Panel), max count 39/8/8/4/4/4, ?}; label ids read by spaceship dialogs.
+00634f70	spaceship_propulsion_max	high	Max field of the Propulsion row (8) of spaceship_part_table; compared with spaceship_parts[1].
+00634f7c	spaceship_fuel_max	high	Max field of the Fuel row (8) of spaceship_part_table; compared with spaceship_parts[2].
+00634f88	spaceship_habitation_max	high	Max field of the Habitation row (4) of spaceship_part_table; compared with spaceship_parts[3].
+00634f94	spaceship_life_support_max	high	Max field of the Life Support row (4) of spaceship_part_table; compared with spaceship_parts[4].
+00634fa0	spaceship_solar_panel_max	high	Max field of the Solar Panel row (4) of spaceship_part_table; compared with spaceship_parts[5].
+006359c4	dlg_parent_window	high	Parent window for dialogs set by dlg_set_parent_window, saved/restored via dlg_push/pop_parent_window (006359c8); dialog_close focuses it.
+00635a00	dlg_highlight_text_color	medium	Dialog default palette index (247) copied into dialog field_6c, used as text color for highlighted items and the first list row; set by the dialog color setter 0059d487.
+00635a04	dlg_bg_color	high	Dialog default background palette index (248) copied to field_74 and used by gfx_fill_rect when no background tile is set.
+00635a08	dlg_bevel_light_color	high	Default light bevel palette index (255) copied to field_78; first color in gfx_draw_bevel_rect for raised frames.
+00635a0c	dlg_bevel_dark_color	high	Default dark bevel palette index (0) copied to field_7c; second color in gfx_draw_bevel_rect for raised frames.
+00635a58	dialog_stack	high	Array of 16 dialog pointers indexed by depth 0x635a9c; push stores this, pop reloads dialog_stack_top/active_dialog from it.
+00635aa0	dlg_frame_tile_surface	medium	Surface (64x32 tile from 0x63fe08 at 199,322) set by 0059d59d; tiled over dialog fill mode 1 (frame/border area) instead of the flat background color.
+00635aa4	dlg_client_tile_surface	medium	Points to 32x32 tile surface 0x640990; tiled over dialog fill mode 2 (inner client area) instead of the flat background color.
+00635e60	unit_editor_ctrl_kinds	medium	8-byte entries per unit-editor field: control kind (9 = edit box, 12 = combo box) checked by load/store controls.
+00635e64	unit_editor_ctrl_slots	medium	Second dword of each unit-editor field entry: index of its edit (stride 0x48 at +0x44c) or combo (stride 0x38 at +0x2fc) control.
+00636058	unit_move_anim_active	medium	Set to 1 only around map_animate_unit_move; makes tile_first_unit skip the unit scan for tiles with no unit owner.
+0063605c	dlg_unit_sprite_zoom	high	Zoom passed as gfx_draw_unit's zoom arg by the dialog unit-sprite draw callback 005b6ab5; 8 for city-window unit dialogs, -1 for unit_stack_select_dialog.
+006365f4	net_batch_used_dwords	high	Next dword index into the net batch buffer 0x6d1190 (reset to 1 after the header); flushed via msg 0x59 when near 0x100.
+006366a8	text_draw_surface	high	Surface set by text_set_surface and passed to text_draw_shadowed/centered/right_aligned by gfx_draw_text*.
+006366ac	text_draw_font	high	Font set by text_set_font; used for surface_draw_text and font_text_width in the text_draw_* helpers.
+006366b4	text_shadow_color	high	Second color of text_set_colors (-1 = none); drop shadow drawn first in this color at offset.
+006366b8	text_shadow_dx	high	Horizontal shadow offset (default 2) set by text_set_colors; added to x and to measured width.
+006366c0	text_fake_bold	medium	Set by 005baf24 to (param != 0); when set text is drawn twice 1 px apart and width grows by 1.
+006366cc	ms_window_stack_count	high	Count of HWNDs in array 0x6d1db8 (push/remove helpers 005bc1b5/005bc1db); logs 'Error: MS window stack inaccurate' when negative.
+00637e58	draw_current_surface	medium	Get/set by 005c1998/005c1972 (set returns old), cleared by surface_dtor when it is the surface being destroyed; next to draw_current_font.
+00637ef4	game_timer_mgr	high	Lazily allocated timer manager object used by game_timer_create/game_timer_destroy (slot lookup and kill).
+00637ef8	timer_alt_kind_request	medium	Set to 1 around game_timer_create for the map-view timers; flips 005d44be's choice between SetTimer and timeSetEvent.
+00637efc	avi_idle_update_enabled	medium	Set by avi_play_start, cleared by avi_play_pause; when set the idle message pump calls avi_update_current_frame.
+00637fa0	gfx_scale_x_num	medium	Horizontal scale numerator set by 005cda2a (param 1) and used by sprite_blit_xyscale_* with gfx_scale_x_den.
+00637fa4	gfx_scale_x_den	medium	Horizontal scale denominator set by 005cda2a (param 2) for sprite_blit_xyscale_*.
+00637fa8	gfx_scale_y_num	medium	Vertical scale numerator set by 005cda2a (param 3), used with sprite height in sprite_blit_xyscale_*.
+00637fac	gfx_scale_y_den	medium	Vertical scale denominator set by 005cda2a (param 4) for sprite_blit_xyscale_*.
+006383bc	timer_mm_available	medium	Initially 1, cleared when timerdll.dll path fails or a test timeSetEvent fails; selects timeSetEvent over SetTimer in 005d44be.
+0063857c	snd_wave_notify_hwnd	high	Window saved by snd_wave_open for wave-out callbacks; PeekMessage on it for MM_WOM_DONE (0x3bd) when stopping.
+0063858c	snd_wave_source_count	high	Short count of wave sources: incremented on each add (snd_wave_add_avi_stream, play), decremented on free; play refuses past 5.
+006385bc	snd_avi_stream_started	medium	Set by 005d5f91 (AVI audio start) and cleared by seek/stop 005d5d11/005d5b88; 005d57b1 refill returns error 0xe when clear.
+006385cc	snd_wave_total_buffer_bytes	medium	Total wave buffer size stored by buffer allocator 005d645e; mmio buffer sizes derive from it (x2, /2 by format).
+006387cc	res_dll_module_count	high	Number of HMODULEs in res_dll_modules; incremented by res_dll_load_library, searched by res_load_bitmap, compacted by dll_unload.
+006389d4	snd_midi_device_id	high	MCI device id of the open MIDI sequencer; closed with MCI_CLOSE (0x808) by snd_midi_close and matched in MCI notify.
+006389e0	snd_cd_track_count	high	MCI_STATUS_NUMBER_OF_TRACKS result stored by snd_cd_open; snd_cd_play_track treats track == count as last.
+00638b40	gfx_black_color_index	medium	Constant palette index 0, never written; used as text drop-shadow color and surface/ddsurf clear color.
+00638d9c	menu_next_item_id	high	Menu command id counter (initial 100) used and incremented when building menus from text by 005e0ce0/005e0f2a.
+00638da8	avi_frame_buffer	high	GlobalLock'ed buffer AVIStreamRead decodes video frames into; freed by avi_close.
+00638dac	avi_frame_buffer_size	high	Frame byte size (bpp*width*height/8) passed as buffer size to AVIStreamRead.
+00638db4	avi_frame_width	high	Video width from the stream format (+0x5c4); window sized to it (x2 when doubled) and passed to the decompressor.
+00638db8	avi_frame_height	high	Video height from the stream format (+0x5c8); window sized to it (x2 when doubled) and passed to the decompressor.
+00638dd4	avi_active_window	high	Window that opened the AVI (set by avi open 005e1c8e, cleared by avi_close); avi_update_current_frame updates it.
+00638e18	dib_row_order	medium	Set by 005e3877; -1 keeps biHeight bottom-up, 1 negates it (top-down), else multiplies, in dib_create and variants.
+00639be8	smeds_log_enabled	high	Set when smeds.log is created at startup; later log writes and LOG CLOSED only append when set.
+0063c808	minimap_view_rows	medium	Map rows shown in the minimap (map.height or panel height / minimap_tile_height); used for clamping and row loops.
+0063c80c	minimap_view_cols	medium	Tile column pairs shown in the minimap (map.width/2 or panel width / minimap_tile_width).
+0063c810	minimap_origin_y	medium	First map row shown in the minimap, centered on the view and clamped; subtracted when converting map y to minimap pixels.
+0063c814	minimap_origin_x	medium	First map x shown in the minimap, centered on the view and wrapped/clamped (kept even); subtracted for map-to-minimap conversion.
+0063c93c	minimap_client_x	medium	minimap_window +0x124 (client left, like advisor_client_x); added to tile pixel x in tile<->screen conversions.
+0063c940	minimap_client_y	medium	minimap_window +0x128 (client top); added to tile pixel y in minimap coordinate conversions.
+0063c944	minimap_client_width	high	minimap_window +0x12c; divided by map.width to compute minimap_tile_width and bounds-checks click x.
+0063c948	minimap_client_height	high	minimap_window +0x130; divided by map.height to compute minimap_tile_height and bounds-checks click y.
+0063caf0	minimap_margin_y	medium	Half the unused vertical pixels (client height - rows*tile height) clamped, centering the minimap vertically.
+0063caf4	minimap_margin_x	medium	Half the unused horizontal pixels (client width - cols*tile width), added to x when mapping tiles to minimap pixels.
+0063cbb0	taxrate_dialog_active	medium	Set to 1 when the tax-rate dialog opens, cleared by its OK callback; caller pumps messages while set and redraw blits only when set.
+0063ce50	text_string_arg2	high	Element 2 of text_string_args (0x63cc48+0x208); civ adjective copied into it alongside leader (args) and tribe (arg1).
+0063e4b8	strpool_last_string	medium	Pointer to the string most recently allocated and copied by strpool_add/strpool_add_padded; rules_load_units stores it in a table.
+0063e4e8	mp_meeting_wait_start	medium	timer_ticks when a multiplayer meeting request popup was shown; idle callback 00430822 ends the wait after net_timeout_seconds.
+0063e948	casualty_window_report_id	medium	casualty_window +0x450 report id set by picwnd_open (0xc for the casualty timeline), -1 when closed; tested before repaint.
+0063e958	casualty_scroll_pos	medium	casualty_window +0x460 scroll position set by the scrollbar callback, clamped and pushed to the scrollbar at 0063e908.
+0063ea20	credits_font	medium	Bold size-24 font used by the scrolling credits screen 0043742f to render each credits line into a sprite.
+0063eab8	advisor_bold_font	medium	Bold size-14 font measured/used by intelligence, score and casualty timeline reports (distinct from 18pt advisor_font).
+0063eb68	advisor_wnd_events	medium	advisor_wnd +0x10 message-handler part; each advisor report installs its left-button-up click handler on it.
+0063ee30	advisor_close_button	high	Button id 100 at advisor_window +0x320 with callback 0042ac4e, made default and cancel button in advisor reports.
+0063ef98	advisor_column_width	medium	One third of the advisor list width (0063ef94/3); x offset per column and click x / it gives the column (0..2).
+0063efa4	advisor_vscroll_width	high	advisor_window +0x494 set from GetSystemMetrics(SM_CXVSCROLL) in picwnd_open; scrollbar rects end at client right minus it.
+0063efac	advisor_report_param	medium	advisor_window +0x49c cleared on open; per-report argument (intel report target civ, hall of fame highlight row, view toggle).
+0063f030	hall_of_fame_font	medium	Bold size-16 font set as text font and measured for line spacing by the Hall of Fame display 004362e2.
+0063f0c8	hall_of_fame_entries	high	Six 0x48-byte Hall of Fame records read/written from HALLFAME.DAT; first short is the score, -1 marks empty.
+0063f0da	hall_of_fame_entry_rating	medium	Field +0x12 of hall_of_fame_entries (Civilization Rating), the key used to sort a new entry in; -1 when empty.
+0063f278	mp_meeting_reply	medium	Reply to a multiplayer meeting request: -1 pending, set by net message 0x80, 1 accepted / <1 refused.
+0063fc58	popup_info_icon_sprite	medium	64x64 picture from GIF resource 0x56 attached to many generic popups (REALLYQUIT, INIT, NOINTEL, WAITPRODUCTION, COUNCILTIME).
+0063fc98	signal_allied_icon_sprite	medium	64x64 diplomacy picture (5th on row y=200 of resource 0x56) shown with the SIGNALLIED popup.
+00640990	panel_texture_surface	medium	32x32 surface copied from ICONS.GIF (0x12a,0xbe); pointer stored in 00635aa4 and tile-filled as a panel background.
+006409d8	peace_treaty_icon_sprite	medium	64x64 diplomacy picture from resource 0x56 shown with TREATY, APOLOGIZE and WALLFORCE popups.
+00640bd8	terrain_dither_sprites	medium	13 bases x 4 quarter 32x16 sprites made by drawing each terrain with the TERRAIN1 dither mask; drawn per quarter at tile edges.
+0064292c	railroad_sprites	high	Nine TERRAIN1 railroad sprites (center + 8 directions) loaded one row under road_sprites, drawn for railroad tiles.
+00643af8	tutorial_icon_sprite	high	64x64 picture from resource 0x56 attached to TUTORIAL.TXT popups (FIRSTMOVE, HELP1, EXPAND0, SIMULTUT).
+00643b74	coast_quarter_east_sprites	medium	TERRAIN2 32x16 coast quarter (index 1 of coast_quarter_sprites' 4, drawn at the right of the tile), 8 variants.
+00643bb0	coast_quarter_south_sprites	medium	TERRAIN2 32x16 coast quarter (index 2, drawn at the bottom of the tile), 8 variants stride 0xf0.
+00643bec	coast_quarter_west_sprites	medium	TERRAIN2 32x16 coast quarter (index 3, drawn at the left of the tile), 8 variants stride 0xf0.
+00644334	civ_flag_dark_sprites	medium	CITIES.GIF 14x22 darker flag row (y=0x1c0) for the 8 civs, interleaved with civ_flag_sprites (stride 0x78).
+00644770	scroll_up_button_sprite	medium	ICONS.GIF 18x24 up-triangle used as the image of button 9 in the city window.
+00644b70	nuke_anim_sprites	high	Eleven 91x72 frames from GIF resource 0x55 drawn in sequence by map_animate_nuke.
+00644e48	war_icon_sprite	medium	64x64 diplomacy picture from resource 0x56 shown with DECLAREWAR, JOINWAR and PRETEXT popups.
+00644f00	resource_shortage_icon_sprites	medium	ICONS.GIF 14px row y=0x122 (food/shield/trade, stride 0x78); entry 0 drawn for a food deficit in the city resource panel.
+00644f3c	resource_icon_sprites	high	ICONS.GIF 14px food/shield/trade icons (row y=0x131, stride 0x78) drawn after totals in reports, pedia and city window.
+00645120	caption_close_button_sprite	high	ICONS.GIF 16x16 caption button id 1, which closes the map view (004135ab case 1); also the pedia close button.
+00646118	unexplored_tile_sprite	high	TERRAIN1 64x32 tile (0x83,0x1bf) drawn instead of terrain when the tile is not visible to the civ.
+00646198	map_grid_sprite	medium	ICONS.GIF 64x32 diamond outline drawn on tiles when game option 0x20 (map grid) is on and no own city is near.
+00646598	small_unhappy_icon_sprite	high	ICONS.GIF 10px red face (0x52,0x14e) drawn for unit unhappiness upkeep in the city window.
+00646a20	small_citizen_sprites	high	Eleven PEOPLE.GIF 15x26 citizen icons (happy/content/unhappy pairs then specialists) drawn in the city window citizen row.
+00647348	caption_view_mode_button_sprite	medium	ICONS.GIF 16x16 eye caption button id 4, which cycles the map view mode (field_2dc+2 & 3).
+00647748	ceasefire_icon_sprite	medium	64x64 diplomacy picture from resource 0x56 shown with CEASEFIRE, WARENDS, GRANTCEASE popups.
+00647788	caption_zoom_out_button_sprite	high	ICONS.GIF 16x16 caption button id 3, which decrements the map view zoom (004135ab case 3).
+006477c8	sprite_editor_tool_sprites	medium	Fifteen 32x32 EDITORPT.GIF icons (row y=0x1bf) drawn as a 3-column grid by sprite_editor_redraw.
+00647ed8	tile_direction_mask_sprite	medium	TERRAIN1 sprite (0x105,0x1bf) drawn into mapview surface field_3a8 whose pixel (c-10)>>4 is returned as the click direction 0..7 (8 = none).
+00647f18	window_border_tile_surface	medium	64x32 surface copied from ICONS (199,0x142), passed to frame_set_border_tile and gfx_tile_fill to tile window borders/backgrounds.
+00647f60	unit_shield_sprite	high	12x20 UNITS sprite (0x24a,1) drawn by gfx_draw_unit at unit_shield_x/y_offsets and recoloured with civ primary/mid colours (stack shadows too).
+00647fdc	airbase_occupied_sprite	high	CITIES cell (0x152,0x1a7) = airbase_sprites[1]; CITYMISC icon editor option 11 'Occupied Air Base'.
+00648018	diplo_popup_portrait_sprite	medium	64x64 portrait grabbed at y=200 of GIF resource 0x56, shown with ALLIANCE/OUTAHEREALLY/PROPOSEALLIANCE diplomacy popups (alternate 0x63fc98 chosen by game.advance_known_by[0xf]).
+00648058	unhappy_suppressed_icon_sprite	medium	Grey face icon (ICONS 0x52,0x159) drawn under supported units instead of the red unhappy face when military unhappiness is suppressed (police/Women's Suffrage/free unit).
+006480d8	city_down_arrow_sprite	high	ICONS down-arrow (0xf6,0x185) used for city-window image button 10 whose callback steps to the previous city alphabetically.
+00648118	research_flask_sprites	high	4 ICONS flask icons at y=0x122; status_draw_info draws index research_progress*4/cost (0..3).
+00648208	global_warming_sprites	high	4 ICONS sun icons at y=0x131; status_draw_info draws index warming_counter>>2 when game.warming_counter != 0.
+00648820	caption_zoom_out_sprite	medium	ICONS 16x16 (0x12,0x185) caption button id 2 for map/city windows; city handler id 2 decreases the window zoom.
+00648918	lux_tax_sci_icon_sprites	medium	3 ICONS 10px icons at (0x31,0x159) - chalice, coin, beaker in ICONS.GIF; loaded but never drawn.
+0064b0e8	diplo_ai_declare_war	medium	Set by diplo_eval_ai_stance/meet when the AI decides to break treaty; diplo_ai_meet_player then sets treaty war 0x2000 and shows the declaration popup.
+0064b0f4	diplo_captured_city_count	medium	Count of cities founded by the AI civ now owned by the other civ, computed in diplo_eval_ai_stance; >4 or <2 thresholds gate war/peace.
+0064b0f8	diplo_ai_aggressive	medium	AI hostile-intent flag in diplo_eval_ai_stance (tribute demand, threats); diplo_ai_meet_player demands tribute when set and DAT_0064b118 > 50.
+0064b108	diplo_last_treaty_turn	high	Cached civs[].last_treaty_turn for the pair; meet blocks/halves payments within 8/16 turns of it and sets it to game.turn.
+0064b11c	diplo_target_is_leader	medium	Set when the other civ is power rank 7 with >4 cities after turn 200 (and has no nukes); makes the AI gang up (aggressive, attitude 75).
+0064b140	diplo_peace_inclination	medium	Score summed in diplo_eval_ai_stance (+1 per hostile stronger neighbour, minus reputation/leader aggression); above hostility it cancels tribute/aggression.
+0064b998	scenario_event_count	high	Number of 0x1c4-byte event records at DAT_0064b98c, relinked by FUN_0048308f and sent with net msg 0x25.
+0064ba01	wonder_expires_by_impr	high	wonder_expires (0x64ba28) minus 0x27, indexed by improvement id (>=0x28) in pedia_draw_improvement and the improvements editor.
+0064bc14	prefs_difficulty	high	CIV2.DAT default for the DIFFICULTY dialog, stored into game.difficulty.
+0064bc16	prefs_tribe	high	CIV2.DAT default TRIBE selection, assigned to civs[player_civ].tribe in setup_choose_tribe.
+0064bc18	prefs_gender	high	CIV2.DAT default for the GENDER dialog (copied to 0x6ad128).
+0064bc24	prefs_enemies_choice	high	CIV2.DAT default for the ENEMIES2 dialog (game.num_enemies = 6 - choice).
+0064bc28	prefs_barbarity	high	CIV2.DAT default for the BARBARITY dialog (default 2), sets game.barbarian_activity.
+0064bc54	prefs_rules_choice	high	CIV2.DAT default for the RULES dialog (Use Standard / Customize Rules).
+0064bc56	prefs_accelerated_start	high	CIV2.DAT default for ADVANCED 'Accelerated Startup' / ACCELERATED start-year choice; throne room check uses turn > it*20+1.
+0064bc62	scenario_name	high	Scenario name string edited via cheat_scenario_params, cleared by scenario_reset_params, shown in the game profile and net game info.
+0064bcbc	scenario_victory_thresholds	medium	4 shorts (decisive/marginal victory/defeat objective thresholds) reset by scenario_reset_params and compared to the objective score.
+00654b40	civ_saved_cursor_x	medium	Per-civ i16 map_cursor_x saved/restored on hotseat civ switch; start of the 0x494-byte block written by save_write_game.
+00654da4	civ_email_addresses	high	Per-civ 32-byte PBEM email address entered via EMAILADDRESS, used by EMAILDONE1/2 popups.
+00654fa4	saved_turn_civ	medium	Civ whose turn was in progress, written into the save (mp_turn_civ) and loaded into turn_resume_civ.
+00654fd8	game_setup_complete	medium	Set when a game has been started/set up, cleared at MP setup; game_save_dialog requires it and net msgs > 0x35 are dropped while 0.
+00655128	destroyed_civ_count	high	Count (<12) of destroyed-civ records, start of the 0x152-byte block saved with the game; incremented in civ_check_destroyed.
+0065512a	destroyed_civ_turns	high	i16[12] game.turn at which each civ was destroyed (civ_check_destroyed), shown as a year on the tombstone screen.
+00655142	destroyed_civ_killers	high	byte[12] civ that destroyed each recorded civ (param_2 of civ_check_destroyed), searched by the tombstone screen.
+0065514e	destroyed_civ_portraits	high	byte[12] leader_portrait of each destroyed civ, used for its sound/portrait on the tombstone screen.
+0065515a	destroyed_civ_names	high	char[12][0x18] plural name of each destroyed civ copied in civ_check_destroyed.
+00655358	civ_primary_colors	high	Per-colour 16-byte record +0, sampled from the sheet and returned by civ_color_primary.
+0065535c	civ_mid_colors	high	Per-colour 16-byte record +4, returned by civ_color_mid.
+00655360	civ_secondary_colors	high	Per-colour 16-byte record +8 sampled at sheet row 0x1a7, returned by civ_color_secondary.
+006558e8	game_txt_path	medium	Base path of the GAME text file: 'GAME' by default or '<scenario dir>\GAME' when loading a scenario.
+00666132	landmass_fertile_tiles	medium	landmass_table +2 short: count of grassland/plains tiles per landmass (FUN_0040897f), used by AI settling checks.
+00666137	landmass_border_bits	medium	landmass_table +7: 64-bit mask per landmass of bordering bodies, set by FUN_004b3110 and tested by landmass_borders_body.
+00666538	prefs_main_menu_choice	high	Start of the 0x1bc-byte CIV2.DAT block; default/last choice of the MAINMENU dialog.
+00666546	prefs_mp_open_game	high	CIV2.DAT default for ADVANCEDMP checkbox 0 (copied from mp_open_game).
+00666550	prefs_net_game_name	high	CIV2.DAT default for the GAMENAME prompt (0x1f chars): filled from the dialog, copied to net_game_name and saved by prefs_save_civ2dat.
+00666590	prefs_email_address	high	CIV2.DAT default for the EMAILADDRESS prompt; copied into the per-civ e-mail table at 00654da4 for the local player.
+006665fa	prefs_clear_chat_on_new_game	high	@MULTIPLAYEROPTIONS checkbox 0 "Clear chat buffer at the start of a new game"; when clear chatlog.txt is loaded into the chat window.
+006665fc	prefs_clear_chat_on_boot	high	@MULTIPLAYEROPTIONS checkbox 1 "Clear chat buffer each time we boot up"; when set parley_wnd_dtor writes an empty chatlog.txt.
+0066bfd0	grey_palette	medium	Palette object (Grey.cpp) filled with each game colour mapped to the nearest of 32 base colours; target of the fade before AVI playback.
+0066c408	grey_remap_handle	medium	Memory handle "handle_grey" of the 236-byte colour remap table applied to map/status/minimap/city windows when greying the screen.
+0066c4f8	save_file_filter_buf	high	0x104-byte buffer save_file_filter builds the open/save dialog filter string in (" (*.mp)", " (*.scn)") and returns.
+0066c600	save_layout_record	medium	0x6a-byte record written/read by save_write_game/game load: saved_layout_valid plus packed window rects for map views and other windows.
+0066c670	scenario_title_surface	medium	Surface loaded from a scenario's TITLE.GIF in game_load_dialog and set as the main frame background.
+0066c8cc	mapview_client_origin_x	medium	Map view +0x124 (stride 0x3f0): x offset of the client area in the view surface, passed as clip origin to gfx_copy_rect_clipped in animations.
+0066c8d0	mapview_client_origin_y	medium	Map view +0x128 (stride 0x3f0): y counterpart of 0066c8cc.
+0066ca68	main_view_client_top	medium	Main map view +0x2c0 (client rect at +0x2bc): used as the bottom of the caption-strip rect blitted when the MP turn timer redraws.
+0066ca86	mapview_track_moves	high	Per map view u16 (+0x2de) mask 1=friendly,2=enemy moves; selects title label 300+mask (Static View/Track Friendly/Enemy/All Moves), saved per view.
+0066ca90	mapview_origin_x	high	Per map view (+0x2e8) leftmost visible tile x: tile loops start at it and animations compare it to detect scrolling.
+0066ca94	mapview_origin_y	high	Per map view (+0x2ec) topmost visible tile y, paired with 0066ca90.
+00670d98	net_handoff_wait_ticks	medium	timer_ticks() saved before each CLIENTQUITWAIT popup during server transfer; idle callbacks end the wait after net_timeout_seconds*60.
+00673af8	human_wonders_by_group_min	high	Per wonder group (4 bytes) minimum of civs[].wonders_by_group over human players, computed by game_calc_human_wonder_range; AI compares to it.
+00673d18	civ_password_prompt_pending	medium	Per-civ int set by passwords_refresh_flags for civs with a password; civ_check_password prompts while set and clears it once entered.
+00673d38	civ_has_password	medium	Per-civ int set when the civ's password is non-empty; cheat_toggle_mode refuses while any is set.
+00673f7c	score_conquest_bonus	medium	Score computation (004a28b0): conquest victory points when only this civ remains, -1 in objective scenarios; shown in score report.
+00673f80	score_civ_objective_value	medium	Sum of city_objective_value over the civ's cities in objective scenarios; adds 10 points each to the score.
+00673f88	score_total	high	Civilization score: sum of citizens, wonders, spaceship, pollution, peace, future tech and barbarian components (clamped to 0).
+00673fb0	path_grid_center_x	high	Copied from path_goal_x in map_path_next_dir; the path cost grid at 006cffc0 is indexed relative to it.
+00673fb4	path_grid_center_y	high	Copied from path_goal_y; y counterpart of 00673fb0 for the path cost grid.
+00679fe8	diffeng_scan_ptr	medium	Pointer walking the Difference Engine mirror buffer while comparing it against live sections in net_send_state_diff.
+00679fec	diffeng_scan_offset	medium	Byte offset within the current section of the Difference Engine scan, reset with the section index.
+0067a400	diffeng_mirror_size	high	Sum of padded section sizes; size of diffeng_mirror_buf allocated by diffeng_alloc_mirror.
+0067a404	diffeng_scan_section	medium	Index of the section currently scanned by net_send_state_diff, advanced when diffeng_scan_ptr leaves a section.
+0067a408	diffeng_mirror_end	high	diffeng_mirror_buf + diffeng_mirror_size; end bound for diffeng_scan_ptr.
+0067a41c	diffeng_section_checksums	medium	Field +0xc of each 0x18-byte diffeng section record: mem_checksum of the section stored when it is sent.
+0067a420	diffeng_section_offsets	high	Field +0x10 of each diffeng section record: running offset of the section within the mirror buffer set by diffeng_register_blocks.
+0067a428	diffeng_game_section	medium	Diffeng section record 1 (the game struct, 0x14c bytes); its first field (size) is read directly for checksums and sizes.
+0067a9b0	parley_selected_action	medium	Parley window +0x208: chosen "Pick an Action" radio (0 treaty,1 proposal,2 gift,3 barter,4 threat, -1 none), mapped to parley_mode.
+0067a9dc	parley_received_offer	medium	Heap copy of a received parley transaction message (net msg 0x82); executed or answered with 0x86 and then freed.
+0068abd8	font_size16	high	Font object initialised with size 0x10 by FUN_004b3e09 and used for line spacing in parley dialogs.
+0068ae84	chat_log_edit	high	Edit control showing the chat log: chat_log_append gets/sets its text from chat_log_buffer and moves the caret to the end.
+0068aedc	chat_remain_anonymous	high	Checkbox 0x415 "Remain Anonymous" state in the chat dialog; cleared on game end.
+0068aee0	chat_mute_anonymous	high	Checkbox 0x430 "Mute Anonymous" state; incoming chat from sender 0 is dropped while set.
+0068aee4	chat_broadcast_all	high	Checkbox 0x416 "Broadcast to All": checks every per-civ send box; cleared when any is unchecked.
+0068aee8	chat_send_to_civs	high	Per-civ int: "Send" checkbox (civ adjective, ids 0x417+) state selecting chat recipients.
+0068af08	chat_muted_civs	medium	Per-civ int: "Mute" column checkbox (ids 0x429+) state in the chat dialog.
+0069b028	font_size24_bold	high	Font object initialised styled with size 0x18, bold flag 1; large-mode labels in parley dialogs.
+0069b030	font_size16_bold	high	Font object initialised styled with size 0x10, bold flag 1; normal-mode labels in parley dialogs.
+0069b03c	chat_log_capacity	high	Chat log buffer size read from CIV.INI ChatShowSize, clamped to 0x2000..0xe000; chat_log_buffer allocated with it +1.
+006a1880	rules_edit_section_names	high	Section-name field of the 8-byte (name, callback) entries rules_edit_add_section appends (max 7) for rules_write_sections.
+006a1884	rules_edit_section_writers	high	Callback field of the rules_edit section table, invoked by rules_write_sections for each matching @SECTION.
+006a18c0	editor_text_dlg_wnd	medium	Frame window of the multi-line text dialog (004ce38a, up to 20 lines, OK/Cancel) used by events_editor_edit_action.
+006a1908	editor_text_dlg_inner	medium	Inner window (+0x48) of editor_text_dlg_wnd: parent of its edit/buttons and the modal loop target.
+006a1b98	editor_govt_names	high	15-char editor copies of the 7 government names followed by male and female leader titles, edited via GOVTNAME prompt.
+006a1cd8	editor_commodity_names	high	16 x 10-char buffers filled from commodity_names by the editor setup 004a3060 and edited via dlg_text_input.
+006a1daf	editor_item_name_ends	medium	Last byte (+0x27) of each 0x28-byte editor_item_names entry, zeroed after strncpy of advance/improvement/terrain/unit names.
+006a2d4c	editor_item_field9	medium	Editor record dword at +0x24 (stride 0x58): unit defense; continues editor_item_field1..8 numbering.
+006a2d50	editor_item_field10	medium	Editor record dword at +0x28: unit hit_points/10.
+006a2d54	editor_item_field11	medium	Editor record dword at +0x2c: unit firepower.
+006a2d5c	editor_item_field13	medium	Editor record dword at +0x34 (after editor_item_flags at +0x30): terrain transform_to.
+006a4f98	editor_text_result	medium	Events text-lines editor (004ce38a) result: 1 when OK callback stored the 20 edited lines, 0 on Cancel; returned to caller.
+006a4f9c	editor_text_active	medium	Set 1 while the events text-lines editor modal runs; OK/Cancel callbacks clear it and the caller pumps messages until 0.
+006a4fa0	editor_text_edit	medium	Multi-line edit control of the events text editor: created styled, filled with up to 20 lines, read back per line on OK.
+006a5b08	spaceship_wnd_open_ticks	medium	timer_ticks() stored when the spaceship window modal starts; the MP idle callback closes it after 0x4b1 ticks.
+006a654c	city_unassigned_citizens	medium	Starts at city size+1 and decrements per worked tile in the worker assignment; leftover becomes specialist count (worked_tiles bits 26+).
+006a6560	city_food_box_rows	high	Food box rows per citizen from cosmic.food_box_rows/difficulty set in city_calc_food_box_rows; food box = (size+1)*rows.
+006a656c	city_shield_waste	high	Shield corruption: capped corruption of shields minus support, subtracted from city_total_shields and shown with label 0x43 in the city window.
+006a6578	city_science_total	high	Science share of trade from science_rate in city_split_trade, boosted by library/university etc, stored to cities[].science.
+006a6580	city_trade_corruption	high	city_calc_corruption(city, total_trade) result, subtracted from city_total_trade to give base_trade.
+006a6584	city_pollution	medium	shields/x - 20 (zeroed by Solar Plant) plus size*population factor; drawn as pollution in the city window.
+006a659c	city_angry_count	medium	Unhappy citizens exceeding city size (angry citizens), consumed while balancing happy/unhappy counts.
+006a65b0	city_food_routes_out	medium	Counts trade routes with negative commodity (food supply) and subtracts them from city food yield in 004eb327.
+006a65b8	city_tile_yields	high	3-int array of food/shield/trade of the tile last evaluated by city_calc_tile_yields, added to city_yield_totals.
+006a65d4	city_tile_job_priority	medium	Priority accumulated for the pending tile job (e.g. pollution cleanup) and passed to civ_add_ai_goal with city_tile_job_x/y.
+006a65fc	city_lux_total	high	Luxury share of trade (10-sci-tax rates) in city_split_trade, boosted by marketplace/bank; drives happy count.
+006a6618	city_building_content	medium	Content effect of temple/colosseum/cathedral/wonders summed in city_split_trade; added to tax under Fundamentalism and displayed.
+006a678c	pedia_modal_active	medium	When 1 the pedia runs a modal loop; close handlers end the modal loop and reset it to 0.
+006a6790	pedia_history_count	high	Depth of the pedia back-history stacks (topic/mode/category arrays); popped by the Back handler 004f5b6f, reset on close.
+006a7d44	pedia_advance_names	high	Topic list for pedia category 1/8 (@ADVANCE_INDEX) looked up via pedia_lookup_text.
+006a7d48	pedia_improvement_names	high	Topic list for pedia category 2 (@IMPROVEMENT_INDEX); used by pedia_show_improvement_modal.
+006a7d4c	pedia_wonder_names	high	Topic list for pedia category 3 (@WONDER_INDEX) drawn by pedia_draw_improvement.
+006a7d50	pedia_unit_names	high	Topic list for pedia category 4 (@UNIT_INDEX); used by pedia_show_unit_modal.
+006a7d54	pedia_government_names	high	Topic list for pedia category 6 (@GOVERNMENT_INDEX), precedes pedia_terrain_names as in the exe string order.
+006a7d5c	pedia_concept_names	high	Topic list for pedia category 7 (CONCEPT_DESCRIPTIONS), follows pedia_terrain_names.
+006a819c	pedia_list_count	medium	Number of items in the current pedia list; bounds hit tests, keyboard navigation and pedia_topic.
+006a9120	city_tile_pick_surface	medium	Zoom-scaled 64x32 surface with tile_pick_mask_sprite drawn in; city resource map reads its pixel to find the clicked tile.
+006a9168	city_window_small_font	medium	Font set to 2/3 of the city window font size in the city window layout (00509028).
+006a9170	city_window_bg_surface	high	Surface created at scaled 636x421 and filled from CITY.GIF as the city window background.
+006aa75c	city_window_closed	medium	Set 1 when the city window is hidden by its close handler; buy/net handlers skip city window actions while set.
+006aa760	city_window_refresh_locked	medium	Saved/set to 1 by city_delete and FUN_004f0a9c to suppress city_window_refresh; net handler refreshes only when 0.
+006aa768	city_info_panel_mode	medium	City window info panel mode 0/1/2 set by three panel buttons before redrawing the info panel.
+006aa78c	city_window_size_level	medium	City window size step 1..3, bumped up/down by the size buttons and compared with 00630d34 to reload CITY.GIF.
+006aa898	city_window_font	medium	Main city window font (init size 16) resized in the city window layout; small font is 2/3 of it.
+006ab1a0	ui_text_font	medium	Third UI font set to the caption size alongside caption_font/caption_small_font and assigned as windows' text font.
+006ab5e8	diplo_border_intruder_count	high	Counter reset and incremented by diplo_count_border_intruders, tested by diplo AI meet/review.
+006ab680	fallback_drive_root	medium	X:\ root of the first fixed drive found by 0056459f; file_resolve_path falls back to it when the file is not found.
+006abae0	frame_texture_surface	high	64x32 tile from civ2art.dll resource 999 (or solid 0x21 fallback), tiled by gfx_tile_fill along frame window borders.
+006abc28	status_upper_rect	medium	RECT of the status window info panel, tile-filled and blitted by status_redraw.
+006abc38	status_text_bottom	medium	Y of the bottom of text drawn in the status lower panel; status_redraw blits down to the max of old/new value.
+006abf98	status_info_font	medium	Status window font sized by width tier in status_calc_font_sizes and used by status_draw_info.
+006abfac	status_lower_rect_top	medium	Top field of the status lower panel RECT at 006abfa8, used for its tile fill and blit.
+006ac090	map_label_font	medium	Font resized by gfx_select_zoom_font to the map zoom and used for city/unit label text in gfx_draw_city.
+006ac0a0	sprite_editor_undo_flag_y	medium	Saved copy of sprite_editor_flag_y taken by sprite_editor_rebuild_sprite and swapped back by the editor's undo button.
+006ac0a4	sprite_editor_undo_flag_x	medium	Saved copy of sprite_editor_flag_x taken by sprite_editor_rebuild_sprite and swapped back by the editor's undo button.
+006ac120	sprite_editor_tool	medium	Current sprite editor tool: 0 color picker (cursor 0x205), 1 line-drag and 2 pencil (cursor 0x204), 3 unit shield placement.
+006ac124	sprite_editor_brush_size	medium	Set to 0/1/2 by three editor buttons; sprite_editor_plot_pixel switches on it to plot 1 or more pixels.
+006ac488	sprite_picker_window	medium	Frame window object created by 00574ca6 and run by 00575dec (this saved as sprite_picker_dialog) with scrollbar and OK/Revert/Cancel buttons.
+006ac88c	sprite_editor_running	high	Set to 1 by sprite_editor_run, which pumps messages while nonzero; cleared by its OK and Cancel handlers.
+006ac890	sprite_picker_running	high	Sprite picker modal loop pumps while nonzero; cleared by its OK and Cancel button handlers.
+006ac898	sprite_editor_cursor_id	medium	Last cursor id (0x201/0x204/0x205) set on sprite_editor_wnd; compared to avoid resetting the same cursor on mouse move.
+006ac8a0	sprite_editor_target_sprite	medium	Sprite passed to sprite_editor_run; its size/key color seed the editor and OK grabs the edit surface back into it.
+006ac8a4	sprite_editor_painting	medium	Set to 1 when a paint tool click starts, cleared with ReleaseCapture on button up; mouse-move paints only while set.
+006acb0c	combat_kill_count	medium	Incremented by unit_kill_in_combat, reset by the stack-kill loop; >1 shows the MULTIPLELOSE/MULTIPLEWIN popup with the count.
+006acb68	main_frame_bg_surface	medium	Surface loaded from GIF resource 0x5a at startup and set as main_frame_wnd's background surface.
+006acbb0	main_frame_nonclient_width	medium	wnd_frame_width of main_frame_wnd stored at startup (next to nonclient height); added to client width to test for >1000 px screens.
+006acd38	unit_sound_slot_effects	medium	6 sound-effect ids (index into AIRCOMBT.. table, -1 empty) shown and played by the unit sound editor's slots.
+006acd50	unit_sound_editor_running	high	Set to 1 when the unit sound editor opens, its loop pumps while nonzero, cleared by both close handlers.
+006acda0	unit_sound_editor_wnd	medium	Inner window part (+0x48) of unit_sound_editor_window for caption height, resize border and modal loop.
+006ace7c	unit_sound_editor_client_x	medium	unit_sound_editor_window field +0x124 = client rect left; slot rects and the title are offset by it.
+006ace80	unit_sound_editor_client_y	medium	unit_sound_editor_window field +0x128 = client rect top; slot rects and the title are offset by it.
+006ace84	unit_sound_editor_client_width	medium	unit_sound_editor_window field +0x12c = client rect width; slot widths are a quarter of it and the title centred in it.
+006ad0cc	unit_move_flags	medium	Copy of unit_move_dir's param_3: bit 1 interactive (prompts/popups for the mover), bit 2 skips attack resolution/charges road moves.
+006ad0d0	unit_move_by_local_human	medium	Set in unit_move_dir to (not autoplay and unit owner == human_civ); gates popups and redraws in move/hut code.
+006ad0dc	spaceship_fuel_pct	high	Fuel components*100/propulsion components from spaceship_calc_stats, shown after label Fuel.
+006ad0e4	spaceship_mass	high	Sum of part counts times per-part mass, shown as X.Y after label Mass with 'tons'; scales flight time.
+006ad0e8	spaceship_energy_pct	high	Solar panels*200/(habitation+life support), shown after label Energy and multiplied into success odds.
+006ad0f0	spaceship_support_pct	high	Life support*100/habitation modules, shown after label Support and multiplied into success odds.
+006ad0f4	spaceship_flight_time	high	Flight time in tenths of years shown as X.Y after label Flight Time; above 15.0 years lowers success odds.
+006ad10c	net_lobby_list	medium	Pointer to the C_004471c0 waiting-for-players lobby list (its +0 dialog) used by lobby_clear_player_list/lobby_add_waiting_entry.
+006ad22c	net_lobby_launch_info	medium	0xc4-byte LobbyLaunchInfo filled by XD_LaunchedByLobby; its first string (address) is copied to the server address and IP prefs.
+006ad2fc	net_adapter_index	medium	net_session +0x1f4 read from CIV.INI Adapter (default 0) and passed with net_protocol to XD_GetCurrentProtoAddr.
+006ad300	net_server_conn_id	medium	net_session +0x1f8, -1 until ConnectedToServerFunc stores the new server connection ID (0 when hosting); join waits end when set.
+006ad358	net_slot_host_flags	medium	Player slot +0x4c byte: set to 1 when the slot's network id is 0 (the server) and for slot 0 at host handoff.
+006ad57c	net_server_address	medium	0x20-byte address string copied from the IP prefs/lobby/session list and passed to XD_OpenConnection.
+006ad5bc	net_local_player_name	medium	Copy of prefs_net_player_name set when joining/hosting; used as the name argument of option-change popups.
+006ad5dc	net_host_player_name	medium	Host player name from the session list entry (+0x90), or own name when hosting; shown in game_profile_popup.
+006ad66c	net_vote_replies_pending	medium	Set to player count minus one before an option-change request (msg 0x43), decremented by replies 0x56/0x57; wait ends at 0.
+006ad670	net_vote_status	medium	Set 0 before an option-change request; a reply with value 2 sets -1 (rejected), which cancels the change.
+006ad6a4	net_move_anim_sound	medium	Sound effect id received in message 0x9a and passed to map_animate_unit_move for the stacked move draw; reset to -1 after.
+006ad90c	net_stacked_draw_count	high	Number of queued stacked draws (100-entry ring at 006ad920); 'STACKED DRAW stack full' flushes it.
+006ad910	net_stacked_draw_first	high	gNetMgr.firstStackedDraw: read index of the 100-entry stacked-draw ring, asserted 0..99 and advanced after each replay.
+006af260	casualty_log_first	medium	Per-civ oldest-entry index of the 300-entry casualty ring; advanced when casualty_log_add wraps onto it.
+006af280	casualty_log_next	medium	Per-civ write index of the 300-entry casualty ring, incremented (mod 300) by casualty_log_add.
+006af2a2	casualty_log_x	medium	Short field +2 of each 0x22-byte casualty log entry (per civ 0x27d8): x of the loss, used with city_find_nearest.
+006af2a4	casualty_log_y	medium	Short field +4 of each 0x22-byte casualty log entry: y of the loss, used with city_find_nearest.
+006c3160	ini_simultaneous_allowed	high	Set from CIV.INI Simultaneous > 0; only then the MP options dialog offers the simultaneous-moves option.
+006c3168	net_civ_turn_ended	medium	Per-civ int incremented on message 0xa2 (client turn finished) or heartbeat timeout; host waits for it after starting the civ's turn.
+006c3188	net_civ_drop_requested	medium	Per-civ flag set by message 0x2d; net_drop_flagged_players removes those players and clears it.
+006c31a8	pending_human_players	medium	Bitmask of civs claimed by late joiners (session phase 3); merged into game.human_players at turn start/handoff then cleared.
+006c31c4	blocked_input_char_pending	medium	Set 3 when a WM_CHAR is blocked after a blocked keydown (char kept at 006c31c8), 0 on keydown; replay then also resends the char.
+006c8ff0	nm_player_list_count	high	Slot 4 of the per-message-type receive counters at 006c8fe0 (NM_PLAYER_LIST in the name table at 0x628470); checked by join code.
+006c8ff4	nm_server_reject_count	high	Slot 5 of the receive counters at 006c8fe0 (NM_SERVER_REJECT); join wait loops abort when nonzero.
+006c9010	nm_lost_server_on_join_count	high	Slot 12 of the receive counters at 006c8fe0 (NM_LOST_SERVER_ON_JOIN); checked with nm_server_canceled_count during setup.
+006c9078	nm_nation_accept_count	high	Slot 38 of the receive counters (NM_NATION_ACCEPT, sent as msg 0x26 when a civ claim succeeds); setup_choose_tribe waits on it.
+006c907c	nm_nation_reject_count	high	Slot 39 of the receive counters (NM_NATION_REJECT, msg 0x27 when the civ is already claimed); setup_choose_tribe waits on it.
+006c9088	nm_lock_data_count	high	Slot 42 of the receive counters (NM_LOCK_DATA, msg 0x2a carrying net_claimed_civs_mask); waited on by setup/send code.
+006c9090	nm_heartbeat_ack_count	high	Slot 44 of the receive counters (NM_HEART_BEAT_ACK, reply 0x2c to heartbeat 0x2b); reset/checked by net_heartbeat_send/check.
+006c90a0	nm_lock_nation_count	medium	Slot 48 of the receive counters (NM_LOCK_NATION); also bumped by hand whenever net_claimed_civs_mask changes (lost players, lock/unlock).
+006c920c	nm_production_begin_count	high	Slot 139 of the receive counters (NM_PRODUCTION_BEGIN, msg 0x8b sent by the host at turn start); clients' wait loops exit on it.
+006c9288	net_active_protocol	medium	Protocol (0 TCP .. 3 serial) passed to net_init_transport and stored on success, -1 after net_session_clear; passed to XD_GetCurrentProtoAddr.
+006cec78	dialog_title_font_obj	medium	Font object (face 0, size 16) that dialog_default_title_font points to; dialogs measure title height/width with it (field_c).
+006cec88	dialog_list_font_obj	medium	Font object (face 1, size 14) that dialog_default_list_font points to; used for list row height (dialog field_10).
+006cec90	dialog_plain_font_obj	medium	Font object (face 0, size 16) that dialog_font_ptr points to; FUN_0059e676 measures text width with it.
+006ceca8	dialog_text_font_obj	medium	Styled font object (face 0, size 16, style 1) that dialog_default_text_font points to; dialog body/option text font (field_8).
+006ced20	net_civ_phase_done	medium	Per-civ int set when NM_PRODUCTION_COMPLETE/NM_HUMAN_MOVE_COMPLETE (0x8c/0x8f) arrive for a civ; host waits until every human civ is nonzero, then clears.
+006ced50	unit_nearest_dist	high	Diagonal distance to the unit found by unit_find_nearest (starts 9999); callers compare it against small thresholds.
+006d1190	net_batch_buffer	high	0x400-byte buffer cleared by net_batch_begin/flush and filled with tile-change records by net_batch_add.
+006d1ec8	default_draw_font_obj	medium	Font object initialised empty at startup, set to face 2 size 14; draw_current_font defaults to it and dialog_set_list_rows uses its height.
+006d4700	gfx_scale_cache_num	medium	Field +0 (numerator) of 16 cached 0x100c-byte scale tables; FUN_005cda2a looks up a cached ratio by num/den.
+006d4704	gfx_scale_cache_den	medium	Field +4 (denominator) of the 16 cached 0x100c-byte scale table entries.
+006d4708	gfx_scale_cache_last_used	medium	Field +8 of each scale table cache entry: timer_ticks of last use, the least recent entry is rebuilt by FUN_005cdcdb.
+006d470c	gfx_scale_cache_tables	medium	Field +0xc of each cache entry: the 1024-int scaled-length lookup table that gfx_scale_table and the x/y table pointers point into.
+006e47c0	gfx_scale_x_table	medium	Pointer to the cached scale table for the horizontal ratio (00637fa0/a4) used by sprite_blit_xyscale_* via gfx_scale_length_tbl.
+006e47c4	gfx_scale_y_table	medium	Pointer to the cached scale table for the vertical ratio (00637fa8/ac) used by sprite_blit_xyscale_*.
+006e4808	timerdll_timer_callback	high	GetProcAddress(timerdll.dll, "TimerCallBack"); passed as the callback to timeSetEvent.
+006e4810	timerdll_set_timer_id	high	GetProcAddress(timerdll.dll, "SetTimerID"); called with the timer slot and MMRESULT after timeSetEvent.
+006e4ff8	snd_mci_notify_hwnd	medium	Hidden "MSMMWindow" window created at sound init; passed as MCI callback window by snd_cd_play_track, destroyed at shutdown.
+006e5018	choice_dlg_selection	medium	Result of the radio-button choice dialog FUN_005e026a: set by radio select/double-click callbacks, -1 on cancel, returned.
+006e5020	choice_dlg_window	medium	Surface window of the radio-button choice dialog FUN_005e026a; button callbacks end its modal loop.
+006e5225	text_color_green	medium	Second byte of text_color_rgb (006e5224-26), the G component for SetTextColor/CreatePen.
+006e5226	text_color_blue	medium	Third byte of text_color_rgb, the B component for SetTextColor/CreatePen.
+00634f64	spaceship_part_max_counts	high	Stride-3 int table (39,8,8,4,4,4) of max parts per spaceship part type compared with civs[].spaceship_parts[] by spaceship_add_part/part_limit.
+006359e4	dialog_default_text_font	medium	Font pointer (default dialog_text_font_obj) installed by dialog_init via dialog_set_font into dialog field_8.
+006359e8	dialog_default_title_font	medium	Font pointer (default dialog_title_font_obj) copied into dialog field_c by dialog_init; used for title height/width.
+006359ec	dialog_default_list_font	medium	Font pointer (default dialog_list_font_obj) copied into dialog field_10 by dialog_init; used for list row height.
+00637e60	button_default_font	high	Font pointer set by ui_set_button_font and copied into field_38 by button_create.
+00637e64	radio_default_font	medium	Font pointer set by ctrl_set_pending_font and copied into field_4c by radiogrp_create and FUN_005e0bc0.
+00637e68	checkbox_default_font	medium	Font pointer set by ui_set_ctrl_font and copied into field_38 by the checkbox creators FUN_0040f9d0/FUN_00530ee0.
+0062b87c	spaceship_arrival_window	medium	Heap window object (0x137c bytes) created by FUN_004710d0 for the spaceship arrival sequence; freed and zeroed by FUN_00471c2a/db7.
+0062ca34	diplo_leader_window	medium	Leader animation window object used by diplo_leader_play_reaction; closed, freed and zeroed by FUN_00494148.
+00635a9c	dialog_stack_depth	high	Count (0..16) of dialogs on the stack at 0x635a58: incremented by dialog_run_modal, decremented by dialog_close, sets dialog_stack_top.
+0063e954	casualty_window_civ	medium	Civ whose casualty timeline is shown, set when casualty_window opens; indexes casualty_counts and the per-civ log.
+0064b144	diplo_wanted_tech	medium	Advance the other civ has and the AI lacks with the highest ai_advance_value; FUN_004591cb prices it and diplo_tech_exchange gives it.
+006ab5e4	border_intruder_city	medium	City index near which diplo_count_border_intruders found foreign units (-1 none); its name is used in the border-violation popup.
+006acb08	combat_defender_city	high	city_at of the defending unit's tile in unit_defense_strength/resolve_attack; checked for walls (8), coastal defense (0x1b), SAM (0x1c).
+00624f58	mapview_drag_view_index	medium	Map view index captured on mouse-down (FUN_00410bc3) whose cursor is set to 0x1fe and capture taken for drag; reset to -1 by mapview_cancel_drag.
+00625160	tech_editor_ctrl_kinds	medium	Per-field control kind (9 or 12) in 8-byte records driving tech editor load/store, same layout as unit_editor_ctrl_kinds.
+00625164	tech_editor_ctrl_slots	medium	Per-field control slot index (offsets 0x44c+n*0x48 / 0x2fc+n*0x38 in active_editor_wnd) for tech editor, paired with tech_editor_ctrl_kinds.
+00625e60	strpool_count	high	Reset to 0 by strpool_init and post-incremented by strpool_add/strpool_add_padded to return the new string's index.
+00625ec4	intel_report_reopen	medium	Set to 1 by intel report button/click handlers after a sub-dialog; intel_report_show reruns its modal loop while it is nonzero.
+00625ec8	credits_line_count	medium	Reset when the credits memblock 0063f038 is initialised and incremented per line added (FUN_0043722c); credits_draw_scroll iterates lines below it.
+00625ecc	credits_scroll_pos	medium	Incremented each timer tick (FUN_00437a2a) and divided by line height in credits_draw_scroll to get first visible line/offset; reset in credits_show.
+00626a1c	diplo_initial_eval_done	medium	diplo_ai_meet_player sets 0 before the first diplo_eval_ai_stance call and 1 after, so the stance evaluator can tell first evaluation of the meeting.
+00626a30	diplo_emissary_asked	medium	Set when diplo_ask_receive_emissary shows the receive-emissary dialog in this session; cleared by diplo_session_reset and gates re-showing attitude text.
+00626a34	diplo_emissary_response	medium	Negated choice of the receive-emissary dialog (-1 refused, 0 accepted/pending, -2 view intel); -1 under autoplay; cleared by diplo_session_reset.
+0062833c	diag_dx_table	high	Static bytes {1,1,-1,-1}: x offsets of the 4 diagonal neighbours, added to x then map_wrap_x, paired with diag_dy_table.
+00628344	diag_dy_table	high	Static bytes {-1,1,1,-1}: y offsets of the 4 diagonal neighbours (NE,SE,SW,NW), used in terrain drawing and irrigation-source checks.
+0062af10	intro_theme_started	medium	Set when the opening video is ended/skipped and sound 0x6b is played; FUN_0041eeeb plays 0x6b only if it is still 0.
+0062b424	cd_music_unknown_disc	medium	Set 1 when the audio CD track count is not one of the game CD layouts (10/12/18/24); music_play_track then refuses to play specific tracks.
+0062b428	cd_music_current_track	high	CD track last started by music_play_track/FUN_0046e320; used to avoid repeating a track and as the default in the jukebox dialog.
+0062c5b4	spaceship_winner_civ	high	Civ whose spaceship arrived (set in game_advance_turn, synced via net message 0x6b); game_handle_game_over passes it to endgame_spaceship_arrival.
+0062ca38	diplo_leader_wnd_open	medium	Set when the diplomacy leader window is created and shown (FUN_00493f0f); FUN_00494148 tears the window down and restores music only if set.
+0062ca44	diplo_greeting_sound_id	medium	Sound id 0x53+((seed+civ)&7) chosen when opening the leader window, played when it is shown with FUN_00493e50 completion callback; cleared on close.
+0062cd68	tribe_editor_ctrl_kinds	medium	Per-field control kind (9 or 12) in 8-byte records used by tribe editor load/store, same layout as unit_editor_ctrl_kinds.
+0062cd6c	tribe_editor_ctrl_slots	medium	Per-field control slot index into active_editor_wnd control arrays for the tribe editor, paired with tribe_editor_ctrl_kinds.
+0062ced0	setup_chosen_leaders	medium	Per-civ leader/tribe index picked in setup_choose_opponents (<0x15); civ_create uses and clears it (0xff) at turn 0 instead of a random tribe.
+0062d04c	path_debug_pending	medium	Set by FUN_004ad20f, cleared by unit_goto_next_dir; when set map_path_next_dir shows the MOVEDEBUG path-grid debug display.
+0062e014	editor_value_clamped	high	Set by editor_clamp_value when an input was out of range; the events editor OK handler shows a warning instead of saving when set.
+0062e3c0	impr_editor_ctrl_kinds	medium	Per-field control kind (9 or 12) in 8-byte records used by improvements editor load/save, same layout as unit_editor_ctrl_kinds.
+0062e3c4	impr_editor_ctrl_slots	medium	Per-field control slot index into active_editor_wnd control arrays for the improvements editor, paired with impr_editor_ctrl_kinds.
+0062e60c	text_section_index_valid	medium	Set to 1 after FUN_004db23f scans a text file and indexes its @SECTION offsets; lookup FUN_004db481 uses the index only if set.
+0062e610	text_section_index_count	high	Number of @SECTION entries stored in the section index memblock 006a5b38; loop bound in the lookup FUN_004db481.
+0062ee08	city_calc_cached_id	medium	City id recorded by the city happiness/yield recalc (FUN_00475666/retvals) and invalidated to -1 by city_process_turn, rules reload and support changes.
+0062f004	dialog_clamp_overflow	medium	Set via FUN_004f3f60; when nonzero dialog layout clamps too-wide (>40) dialogs instead of calling error_report.
+0062f00c	pedia_going_back	medium	Set by the pedia back handler FUN_004f5b6f so pedia_history_push skips pushing the page being returned to; reset after push and in pedia_open_category.
+0062f010	pedia_back_topic	medium	Topic restored by the pedia back handler; pedia_history_push records it with its page mode/category before the current entry; -1 when none.
+00630d20	city_window_exit_btn_pending	medium	Set by city_window_begin_notice when the window was not open; city_window_open then creates the exit button and clears it.
+00630d30	city_dlg_close_pending	medium	Idle callback FUN_0050b674 sets it and records start ticks when the city vanished/turn timer expired in MP host, closing the change/rename dialog 1.2s later.
+00631134	net_popup_queue_tail	high	Last node of the network popup queue: FUN_00511a0e links new nodes after it, cleared when the queue empties.
+00631a9c	destroyed_civs_show_date	medium	When set destroyed_civs_draw_entry draws the name with ': destroyed <year>' and then clears it; set during the per-civ animation.
+00631ad0	council_active	high	Set while council_show runs; spaceship window openers skip when it is set.
+00631bf8	terrain_editor_ctrl_kinds	medium	Per-field control kind (9 or 12) in 8-byte records used by the terrain editor load/store, same layout as unit_editor_ctrl_kinds.
+00631bfc	terrain_editor_ctrl_slots	medium	Per-field control slot index into active_editor_wnd control arrays for the terrain editor, paired with terrain_editor_ctrl_kinds.
+0063357c	frame_border_tile	medium	Tile surface set by frame_set_border_tile and passed to gfx_tile_fill to paint frame captions/borders.
+0063358c	frame_padding	medium	Constant 2 counted twice into frame_caption_height and frame_border_width alongside frame_bevel_width.
+0063430c	menu_command_callback	high	Function pointer stored by FUN_00578e38 with menu_active_object and called with the resolved menu/item ids by FUN_00578d8a.
+00634768	fatal_cleanup_count	high	Number of cleanup callbacks registered (max 10) in table 006acbd0 by FUN_00589d80; the fatal error handler calls them in reverse before exit.
+00634770	error_context_text	medium	Text argument copied by error_report and printed in brackets by the fatal error handler FUN_0058a0ee.
+006347c0	error_last_open_path	high	Path of the last file opened by file_open_path; printed as 'File open failed: %s' by the fatal error handler.
+00634810	error_last_open_failed	high	Set by file_open_path when fopen returned NULL; fatal error handler reports the path when set.
+00634814	error_last_alloc_failed	high	Set by mem_handle_alloc_tracked when allocation failed; fatal error handler then prints 'Tried to allocate N bytes'.
+00634818	mem_last_alloc_size	high	Size recorded by mem_handle_alloc_tracked before allocating; fatal-error report 0058a0ee prints 'Tried to allocate N bytes' from it when the failure flag is set.
+00635094	rng_state	high	LCG state (x*0x19660d+0x3c6ef35f) set by rng_set_seed and advanced by the float RNG 0059a733 (random.c calls it g_nr_seed).
+006359c0	dlg_palette	high	Palette set by dlg_set_palette and used when creating dialog windows in 005a1e28 (falls back to game_palette when null).
+006359c8	dlg_saved_parent_window	high	Holds the previous dlg_parent_window saved by dlg_push_parent_window and restored by dlg_pop_parent_window.
+006359cc	dlg_default_x	high	X position stored by dialog_set_default_offset and copied to new dialogs' field_14 by dialog_init_defaults (unset when both x and y are 0).
+006359d0	dlg_default_y	high	Y position stored by dialog_set_default_offset and copied to new dialogs' field_18 by dialog_init_defaults.
+006359f8	dlg_text_shadow_color	medium	Second dialog color (0x21) from 0059d487, copied to field_68; text drawn offset by 1px in it when it differs from the text color.
+006359fc	dlg_text_color	medium	First dialog color (0x10) from 0059d487, copied to field_64; normal dialog body text color.
+00635a10	dlg_title_text_color	medium	Dialog color param 8 (0x12) copied to field_88; used to draw the dialog title string (field_134).
+00635a14	dlg_title_shadow_color	medium	Dialog color param 9 (0x1a) copied to field_8c; drawn first one pixel offset as the title text shadow.
+00635a34	dlg_scale_num	medium	Set to 3 by 00421e40 on wide screens, copied to dialog field_80; dialog coordinates are scaled by field_80/field_84.
+00635a38	dlg_scale_den	medium	Set to 2 by 00421e40 on wide screens, copied to dialog field_84; denominator of the dialog coordinate scaling.
+00635a40	dlg_default_idle_callback	high	Set to the net-message pump 0048237d in multiplayer games (cleared on exit); installed as modal idle callback for dialogs when no dlg_pending_idle_callback is set.
+00635e20	unit_editor_edit_x_table	medium	X offsets (stride 2 ints, paired with 00635e24) of the unit editor numeric edit boxes created by 005b08e8, also used for labels in its draw routine.
+00635e24	unit_editor_edit_y_table	medium	Y offsets paired with unit_editor_edit_x_table for unit editor edit boxes and their labels.
+006365f8	net_batch_record_sizes	high	Per-record-type dword counts: net_batch_add flushes when the record does not fit and the batch apply loop 005ba206 reads that many args per record.
+006366b0	text_fg_color	high	First color of text_set_colors (-1 = none); passed to gfx_set_text_color_index for the main text pass in text_draw_shadowed.
+006366bc	text_shadow_dy	high	Vertical shadow offset set by text_set_colors param 4, added to y in text_draw_shadowed (pairs with text_shadow_dx).
+00637e7c	radio_text_color_index	high	Palette index set by ui_set_radio_text_color; radio item paint 005d9b86 uses it for enabled text (0 = black).
+00637e80	radio_shadow_color_index	high	Shadow palette index set by ui_set_radio_text_shadow and used by radio item paint.
+00637e84	radio_shadow_dx	high	X offset of radio text shadow (ui_set_radio_text_shadow param 2), applied with OffsetRect.
+00637e88	radio_shadow_dy	high	Y offset of radio text shadow (ui_set_radio_text_shadow param 3), applied with OffsetRect.
+00637e8c	radio_disabled_color_index	high	Palette index set by ui_set_radio_disabled_color for disabled radio items (0 = gray 0x404040).
+00637e90	ctrl_text_color_index	high	Palette index set by ui_set_ctrl_text_color; control paint 005cc320 uses it for enabled text.
+00637e94	ctrl_shadow_color_index	high	Shadow palette index set by ui_set_ctrl_text_shadow for control text.
+00637e98	ctrl_shadow_dx	high	X offset of control text shadow (ui_set_ctrl_text_shadow param 2) applied with OffsetRect.
+00637e9c	ctrl_shadow_dy	high	Y offset of control text shadow (ui_set_ctrl_text_shadow param 3) applied with OffsetRect.
+00637ea0	ctrl_disabled_color_index	high	Palette index set by ui_set_ctrl_disabled_color for disabled control text.
+00637f00	ctrl_text_rgb_r	medium	Red byte set by 005ccddf; COLORREF for control text when the parent window is not a kind-8 (palettized) window.
+00637f01	ctrl_text_rgb_g	medium	Green byte set by 005ccddf for the control text RGB color.
+00637f02	ctrl_text_rgb_b	medium	Blue byte set by 005ccddf for the control text RGB color.
+00637f03	ctrl_text_rgb_set	medium	Flag set to 1 by 005ccddf; when 0 control text in non-palettized windows is black.
+00637f04	ctrl_disabled_rgb_r	medium	Red byte set by 005cce0e; COLORREF for disabled control text in non-palettized windows.
+00637f05	ctrl_disabled_rgb_g	medium	Green byte set by 005cce0e for the disabled control text RGB color.
+00637f06	ctrl_disabled_rgb_b	medium	Blue byte set by 005cce0e for the disabled control text RGB color.
+00637f07	ctrl_disabled_rgb_set	medium	Flag set to 1 by 005cce0e; when 0 disabled control text uses gray 0x404040.
+00638304	dbg_log_to_file	high	Set by 005d243f; when nonzero dbg_log_write calls dbg_log_write_file.
+00638308	dbg_log_to_debugger	high	Set by 005d2457; when nonzero dbg_log_write calls dbg_log_write_debugger.
+00638580	snd_wave_open_buffer_bytes	medium	Total buffer size passed to snd_wave_open and to snd_wave_alloc_buffers (divided by count); reused when snd_wave_play reopens.
+006385a0	snd_wave_format	high	WAVEFORMATEX copied from the AVI stream format and passed to waveOutOpen (snd_wave_block_align is its nBlockAlign).
+006386f4	radio_text_rgb_r	medium	Red byte set by 005dacd9; COLORREF for radio text in non-palettized windows.
+006386f5	radio_text_rgb_g	medium	Green byte set by 005dacd9 for the radio text RGB color.
+006386f6	radio_text_rgb_b	medium	Blue byte set by 005dacd9 for the radio text RGB color.
+006386f7	radio_text_rgb_set	medium	Flag set to 1 by 005dacd9; when 0 radio text in non-palettized windows is black.
+006386f8	radio_disabled_rgb_r	medium	Red byte set by 005dad08; COLORREF for disabled radio text in non-palettized windows (gray 0x404040 when unset).
+006386f9	radio_disabled_rgb_g	medium	Green byte set by 005dad08; with 006386f8/fa forms the COLORREF for state-0 radio text in non-palettized windows (gray 0x404040 when unset).
+006386fa	radio_disabled_rgb_b	medium	Blue byte set by 005dad08 for the disabled radio text RGB color.
+006386fb	radio_disabled_rgb_set	medium	Flag set to 1 by 005dad08; when 0 the radio wndproc 005d9b86 draws state-0 text in gray 0x404040.
+006389d0	avi_current_player	medium	Set to this by the AVI player constructor mmwnd_ctor and cleared by avi_player_dtor.
+00638b90	notice_parent_window	medium	Window passed to ui_show_text_notice_window (disabled while the notice shows) and re-enabled when it closes in 005ded90.
+00638b98	notice_text_res_id	medium	TEXT resource id passed as first argument to ui_show_text_notice_window by the timer callback 005df166.
+00638b9c	notice_disable_parent	medium	Third argument of ui_show_text_notice_window; when nonzero the parent window is disabled while the notice shows.
+00638ba0	notice_timer	high	game_timer_create handle for the repeating notice callback 005df166 (period param*1000 ms), destroyed by 005df280.
+00638ba4	notice_showing	medium	Set to 1 when the timer shows the notice window, cleared when it is closed (005ded90); blocks re-showing.
+00638ba8	notice_show_count	medium	Times the notice has been shown; reset on setup and capped at 3 by the timer callback 005df166.
+00638bac	notice_next_allowed_tick	medium	timer_ticks()+0xe10 set when the notice closes; the callback re-shows only after this tick.
+00638dbc	avi_play_start_time	high	timeGetTime() stored by avi_play_start; avi_update_frame converts now minus it to a stream sample.
+00638dc0	avi_file	high	PAVIFILE from AVIFileOpenA, used for AVIFileGetStream and released by avi_close.
+00638dc8	avi_audio_stream	high	PAVISTREAM from AVIFileGetStream('auds') handed to avi_audio_attach_stream; released by avi_close.
+00638de8	avi_frame_needs_blit	medium	Set when avi_decode_frame succeeds; avi_update_frame blits the window surface only while set; cleared by avi_play_pause.
+00638dec	avi_update_tick_count	medium	Counter reset by avi_open_file/avi_play_start and incremented on each audio-feed update in avi_update_frame.
+00639d0c	mci_video_palette	medium	HPALETTE created from 0xec system palette entries by 005ee591 for the 'avivideo' MCI device and deleted by 005ede3b.
+00639dc8	ddctrl_current_target	high	Control currently receiving a message, stored by ddctrl_set_msg_target and returned by 005f0ef0.
+0063cb94	mapgen_max_y	high	Highest row allowed for land in map_generate (height-1 or height-5); mapgen_in_bounds rejects y above it.
+0063cb98	mapgen_max_x	high	Highest column (width-3) mapgen_in_bounds allows on flat (non-wrapping) maps.
+0063cb9c	mapgen_min_x	high	Lowest column (3) mapgen_in_bounds allows on flat (non-wrapping) maps.
+0063cba0	mapgen_min_y	high	Lowest row (0 or 4, chosen randomly against max_y) mapgen_in_bounds allows for land.
+0063cba4	mapgen_land_placed	medium	Reset by map_generate, incremented per landmass tile by 0040a572; generation loops until it reaches the target land amount.
+0063cbc0	eot_blink_timer	medium	500 ms game timer for callback 0041325d that toggles the end-of-turn status blink; created by 00413a90 and destroyed by 00413bd1.
+0063cbc4	unit_blink_timer	medium	150 ms game timer for callback 004131c0 that toggles unit_blink_phase and processes net messages.
+0063e4e0	civ_rating_title_font	medium	Bold 12pt font set up by 0042a55c and used by 00435dc4 for the 'remembered as' title lines on the civilization-rating screen.
+0063e4ec	civ_rating_title_index	medium	Fame title rank (0..23) computed by 00435dc4 from the rating; hall_of_fame_add_entry stores it in the record.
+0063e4f0	tiles_dll	medium	Resource DLL handle loaded from "TILES.DLL" by 0042a712 and freed at exit by 0042a74e.
+0063e4f4	unit_ability_list_nonempty	medium	Comma separator flag for 0042e1e8 when listing unit abilities in defense_minister_draw; drawn only when set.
+0063e61c	casualty_client_x	medium	Left x of the casualty_window client area; text is centered from it and the Close button is offset by it.
+0063e620	casualty_client_y	medium	Top y of the casualty_window client area; header lines start at +2 and list ends at +0x174.
+0063e95c	casualty_rows_per_page	medium	List rows visible in the casualty timeline = list height / 0x18 clamped 1..99; also the scrollbar page size.
+0063e960	casualty_first_row_y	medium	Y of the first casualty list row (header bottom + 0x1a); the click handler 004386b8 subtracts it to find the row.
+0063e968	casualty_row_height	medium	Casualty timeline row height (0x18) used for layout and click hit-testing in 004386b8.
+0063ea18	civ_rating_percent	medium	Civilization rating % computed by 00435dc4 and printed after the CIVILIZATION RATING label; hall_of_fame_add_entry stores it.
+0063ea28	credits_slot_lines	medium	30 ints: credits text line cached in each sprite slot (-1 free); credits_draw_scroll looks lines up here.
+0063eaa0	advisor_button_font	medium	16pt font created by 0042a5cd and passed to ui_set_button_font when advisor windows open.
+0063eea8	advisor_alt_toggle_button	medium	Button id 0x66 in defense_minister_show swapped with advisor_toggle_button by 0042f000 to switch Statistics/Casualties view.
+0063ef8c	advisor_items_per_page	medium	advisor_rows_per_page * 3: entries visible in the three-column advisor lists.
+0063ef90	advisor_list_left	medium	Left x of the three-column advisor list (advisor_client_x + 2); first column x.
+0063ef94	advisor_list_width	medium	Width of the three-column advisor list; divided by 3 to give advisor_column_width.
+0063efb8	credits_slot_sprites	medium	30 sprite pointers caching rendered credits lines, parallel to credits_slot_lines; freed by credits_draw_scroll.
+0063f580	wonder_notice_flags	medium	Per civ x 28 wonders bit flags (1, 2) so city_set_production shows each wonder warning popup once; cleared per civ by 00487a41.
+0063fe8c	city_walled_sprites	high	Second half of each city_sprites pair: cells cut from CITIES.GIF at x+0x14e (walled cities), [style][size].
+00640a18	city_flag_x_offsets	high	Per style/size/walled x of color-4 marker pixel in CITIES.GIF; gfx_draw_city places the civ flag there.
+00640ad8	city_flag_y_offsets	high	Per style/size/walled y of color-4 marker pixel (minus 0xf); gfx_draw_city places the civ flag there.
+00643978	city_size_box_x_offsets	high	Per style/size/walled x of color-3 marker pixel in CITIES.GIF; gfx_draw_city draws the city size box there.
+00643a38	city_label_y_offsets	medium	Per city style/walls/size int table of the size-label box y offset, found by FUN_0044ad47 scanning the sheet's left edge for marker colour 3; gfx_draw_city adds it to the label rect (x twin is DAT_00643978).
+0064502c	trade_icon_sprite	high	resource_icon_sprites entry 2 (stride 0x78 after food 00644f3c, shield 00644fb4); drawn after the trade number in the resource map and per trade point in the city window.
+0064677c	city_disorder_icon_sprite	medium	30x30 ICONS sprite at (0xa6,0xdf); gfx_draw_city draws it instead of the size label when city flag 1 (civil disorder) is set.
+00647bc8	city_radius_grid_sprite	medium	Grid-overlay tile from ICONS (0xf8,0x1ae) that mapview_draw_tile draws instead of map_grid_sprite when the tile is within 2 of a city of the viewing civ.
+006488d8	science_icon_sprite	medium	tax_rate_icon_sprites entry 2 (after gold coin 0064889c); drawn after the city science number in the city list and per science point in the city window.
+0064b0ec	diplo_ai_fear_level	medium	diplo_eval_ai_stance sums the other civ's superior per-continent strength (or reputation-based value when it has nukes and the AI does not); nonzero cancels AI aggression and sizes the gold/tech the AI offers in diplo_ai_meet_player.
+0064b0f0	diplo_gifts_this_meeting	medium	Reset to 0 at diplo_ai_meet_player start; each tech/gold gift in FUN_0045f0b1 lowers the AI's request counter (field_1f) by count+2 then increments it.
+0064b0fc	diplo_strongest_enemy	medium	diplo_eval_ai_stance stores the civ with the highest military strength the AI is at war with; diplo_ai_meet_player asks for an alliance against it by name.
+0064b110	diplo_attitude_civ	medium	Civ whose attitude is being negotiated (AI, set from param_2 in diplo_ai_meet_player); civ_adjust_attitude mirrors changes into diplo_cur_attitude when the pair matches.
+0064b118	diplo_tribute_demand	medium	Gold the AI demands, computed by diplo_eval_ai_stance (rounded to 50, capped by the target's gold) and paid in diplo_ai_meet_player; 999 marks demand handled.
+0064b120	diplo_attitude_target	medium	The other civ of the negotiated pair (param_1 of diplo_ai_meet_player), matched with diplo_attitude_civ in civ_adjust_attitude.
+0064b128	diplo_suppressed_aggression	medium	Saves diplo_ai_aggressive when the target owns Great Wall or United Nations (which zero it); later still allows war/demands in diplo_ai_meet_player.
+0064b12c	diplo_ai_outranks_target	medium	Set to power_rank[target] < power_rank[ai] in diplo_eval_ai_stance; with the space-race flag forces AI aggression.
+0064b130	diplo_space_race_threat	medium	Set from ai_spaceship_race_behind(ai) or when a human civ has launched a spaceship at high difficulty; makes the AI aggressive.
+0064b134	diplo_ai_units_near_cities	medium	diplo_eval_ai_stance counts (stops at first) target-owned unguarded cities with an AI unit within 2 tiles, doubling the tribute demand.
+0064b138	diplo_had_ceasefire	medium	Set at diplo_ai_meet_player start from treaty bit 2 (ceasefire) between the pair; checked later to detect ceasefire changes.
+0064b13c	diplo_ai_initial_aggressive	medium	Copy of diplo_ai_aggressive taken in diplo_eval_ai_stance before peace-inclination adjustments; read by FUN_0045b4da with attitude thresholds.
+0064b98c	events_pool_base	medium	Base pointer of the scenario events memory pool (field of scenario_events at +0x2fc); events relinked from it and registered as a 50000-byte diff block.
+0064b992	events_pool_size	medium	Total size of the scenario events pool; used as bound check and as denominator of the free-memory bar in the events editor.
+0064b994	events_pool_bytes_free	medium	Remaining bytes in the events pool: printed and drawn as a bar in the events editor; adding an event needs at least 0x1c4.
+0064ba4c	net_map_lock_replies	medium	net_map_lock_slots record +4: lock reply from host (net msg 0x53), 0 pending, 1 granted, else denied; net_lock_map waits on it.
+0064ba50	net_map_lock_src_x	medium	net_map_lock_slots record +8: x of first locked tile set by net_lock_map / msg 0x55; host checks conflicts against it.
+0064ba54	net_map_lock_src_y	medium	net_map_lock_slots record +0xc: y of first locked tile in the per-civ lock record.
+0064ba58	net_map_lock_dst_x	medium	net_map_lock_slots record +0x10: x of second locked tile in the per-civ lock record.
+0064ba5c	net_map_lock_dst_y	medium	net_map_lock_slots record +0x14: y of second locked tile in the per-civ lock record.
+0064bc26	prefs_map_size	high	Default/last choice of the SIZEOFMAP dialog in setup_choose_map_size (sets map width/height); defaulted to 1 by FUN_004a70b0.
+0064bc2a	prefs_world_params	medium	short[5] custom-world choices zeroed by FUN_004a70b0; entry 0 is the land mass default of the CUSTOMLAND dialog in setup_custom_world.
+0064bcbe	scenario_marginal_victory_score	high	Objective score >= this (but below decisive) gives outcome 1 (marginal victory) in civ_calc_score; edited in EDITVICTORY.
+0064bcc0	scenario_marginal_defeat_score	high	Objective score <= this (above decisive defeat) gives outcome 3 (marginal defeat) in civ_calc_score; edited in EDITVICTORY.
+0064bcc2	scenario_decisive_defeat_score	high	Objective score <= this gives outcome 4 (decisive defeat) in civ_calc_score; edited in EDITVICTORY.
+00654fa6	saved_resume_new_game	medium	Saved-game flag set with turn_resume_new_game when a game/scenario starts at a chosen civ; when 0 with saved_turn_civ 0 the tribe picker runs on load.
+00655324	minimap_wnd_rect	medium	RECT computed by minimap_calc_rect; its left/top/size create minimap_window and position the status window below it.
+00655328	minimap_wnd_rect_top	medium	Top field of minimap_wnd_rect, used as minimap window y and as base for the status window rect.
+006559e8	rules_txt_path	medium	Base name of the RULES text file ('RULES' at startup/new game), passed to text_open_section like game_txt_path.
+006660f7	dummy_unit_owner	high	Owner byte (+7) of the dummy unit slot 0x800 set by unit_make_dummy; FUN_00472e5c deletes the dummy when it is >= 0 and resets it to -1.
+0066653a	prefs_multiplayer_type	high	CIV2.DAT default/last choice of the MULTITYPE2 dialog (hotseat/PBEM/network) in FUN_0051d9a0.
+0066653c	prefs_hotseat_menu_choice	medium	CIV2.DAT default/last choice of the HOTSEAT1 dialog in FUN_00419170 (choices 0..2 reload rules).
+0066653e	prefs_lan_menu_choice	medium	CIV2.DAT default/last choice of the LAN1 network game dialog in FUN_00444310 (option 5 = join, disabled for lobby launch).
+00666542	prefs_pbem_menu_choice	medium	CIV2.DAT default/last choice of the PBEM1 dialog in FUN_005ae580.
+00666544	prefs_net_protocol	medium	CIV2.DAT default of the NETWORKTYPE dialog; stored with net_protocol (choice != 0) in FUN_00444310.
+006665d0	prefs_turn_timer_choice	high	CIV2.DAT default/last choice of the turn timer dialog in setup_choose_game_timer (sets mp_turn_time_limit_ms; 6 = custom).
+006665d2	prefs_turn_timer_custom	medium	CIV2.DAT string (default '60') holding the custom turn timer value entered in setup_choose_game_timer choice 6.
+006665d8	prefs_hotseat_players_choice	medium	CIV2.DAT default/last choice of the hotseat human-player-count dialog (choice+2 players) in setup_choose_hotseat_players.
+0066be80	parley_list_own_side	medium	Per parley unit list int set by FUN_004683f0; when nonzero parley_build_unit_list lists the human's own units, else the other party's visible units.
+0066be90	unit_type_name_ptrs	high	rules_load_units stores strpool_last_string per unit type after reading its name; parley list sorts by strcmp of these per units[].type.
+0066bfc0	snd_last_effect_arg	medium	snd_play_effect stores its second argument here (with the id in 0066bfc4); unit_resolve_attack resets to -1 and forwards it in net msgs 0x7a/0x9a.
+0066bfc4	snd_last_effect_id	medium	snd_play_effect stores the sound id here; unit_resolve_attack clears to -1 then, if a sound played, relays it to MP peers (msg 0x7a).
+0066c4e9	save_file_ext_bare	high	save_file_path+1: the save extension without the leading dot (e.g. "SAV"), appended after "." / "*." and passed as default ext to the open/save dialogs.
+0066c720	coast_quarter_land_masks	high	4 bytes cleared then OR'd 1/2/4 per land neighbour by FUN_0047a747; mapview_draw_tile_terrain uses each as variant index into coast_quarter_sprites.
+0066ca60	main_view_frame_bottom	medium	Main map view +0x2b8, fourth dword of the frame rect whose left/top/right are 0066ca54/58/5c.
+0066cab0	mapview_tile_width	high	Map view +0x308 set to mapview_zoom_scale(0x40); used as surface width for animation sprites.
+0066cab4	mapview_tile_height	high	Map view +0x30c set to mapview_zoom_scale(0x20); divided into animation steps and used as surface height.
+0066cabc	mapview_half_tile_height	high	Map view +0x314 = tile height / 2; offsets screen y of tile centres in move and nuke animations.
+00673a78	net_meet_pending_x	medium	Per-civ x saved from net msg 0x99 and passed as diplo_ai_meet_player's x argument from game_player_move_loop.
+00673a98	net_meet_pending_y	medium	Per-civ y from net msg 0x99, passed as diplo_ai_meet_player's y argument.
+00673ab8	net_meet_pending_civ	medium	Per-civ second civ id from net msg 0x99 (index itself), passed as diplo_ai_meet_player's second civ.
+00673ad8	net_meet_pending_ai_civ	medium	Per-civ first civ id from net msg 0x99, passed as diplo_ai_meet_player's AI civ when the deferred meeting runs.
+00673afc	human_wonders_by_group_max	high	Per wonder group maximum of civs[].wonders_by_group over human players, computed alongside human_wonders_by_group_min.
+00673b00	net_heartbeat_last_tick	high	timer_ticks recorded by net_heartbeat_send; net_heartbeat_check acts when more than 3600 ticks have passed since it.
+00673b04	unit_focus_done	medium	Set to 1 by ui_focus_active_unit after centring on the unit; game_player_move_loop skips re-focusing the active unit while set and clears it each pass.
+00673d70	citypref_improvements	high	Up to 32 improvement ids read from CITYPREF.TXT by city_load_citypref; city_choose_production prefers them for human civs.
+00673f54	score_objective_outcome	high	0..4 objective scenario outcome (labels Decisive Victory..Decisive Defeat), from objective value vs thresholds; picks base scenario points.
+00673f58	score_pollution	high	Score component: -10 per polluted tile above game.field_28.
+00673f5c	score_wonders	high	Score component: 20 per wonder owned.
+00673f60	score_spaceship_arrived	high	Score component: spaceship population times success pct when the ship has arrived (flag 0x10).
+00673f64	score_objective_civ_value	medium	Sum of city_objective_value over the objective civ's cities (or this civ's), compared with victory thresholds.
+00673f68	score_scenario_points	high	Objective scenario score: 1000/750/500/250/0 by outcome plus 10 per objective value, doubled on conquest; replaces score_total.
+00673f6c	score_future_techs	high	Score component: 5 per future tech.
+00673f70	score_total_objective_value	medium	Sum of city_objective_value over all cities in objective scenarios, shown in score report.
+00673f74	score_barbarian_bonus	high	Score component: barbarian_activity*25 - 50.
+00673f78	score_citizens	high	Score component: sum of city size plus happy minus unhappy over the civ's cities.
+00673f84	score_spaceship_in_flight	medium	Spaceship population times success pct while the ship has not arrived; shown in the report but not added to score_total.
+00673f8c	score_peace	medium	Score component after turn 200: clamp(game.field_2c*3,0,100), likely turns of peace.
+00673fc0	path_result_cost	medium	Pathfinder cost limit set to max param, lowered to the cost reached at the start tile; map_path_length returns it as path length.
+00673fc8	path_queue_x	high	Ring queue (0x900 entries) of x coordinates for the pathfinder flood, seeded with path_goal_x.
+006763c8	path_queue_y	high	Ring queue of y coordinates paired with path_queue_x, seeded with path_goal_y.
+0067963f	text_buffer_minus1	medium	text_buffer-1: (&it)[strlen(text_buffer)]=0 drops the last character when truncating text to fit a width.
+00679642	text_buffer_plus2	medium	text_buffer+2: pedia index lines are copied from the third character on; FUN_00488937 truncates text_buffer after two chars.
+0067a434	diffeng_game_checksum	high	Checksum field (+0xc) of diffeng section 1 (game struct) set by mem_checksum before the section is serialized.
+0067a43c	diffeng_game_data	high	Data pointer field (+0x14) of diffeng section 1 (game struct) passed to mem_checksum and diffeng_buf_append.
+0067a440	diffeng_civ_names_section	high	Diffeng section record 2 registered for civ_names (0x790 bytes); size field read for the snapshot buffer.
+0067a458	diffeng_civs_section	high	Diffeng section record 3 registered for civs (0x2ca0 bytes).
+0067a4b8	diffeng_leaders_section	high	Diffeng section record 7 registered for leaders (0x3f0 bytes).
+0067a4e8	diffeng_scenario_section	high	Diffeng section record 9 registered for the 100-byte scenario parameter block at scenario_flags.
+0067a518	diffeng_civ_view_section	medium	Diffeng section record 11 registered for the 0x494-byte per-civ block starting at civ_saved_cursor_x.
+0067a530	diffeng_map_header_section	high	Diffeng section record 12 registered for the 0x10-byte map header struct.
+0067a638	diffeng_events_section	medium	Diffeng section record 23 registered for the 50000-byte scenario events buffer (0064b98c).
+0067a7f0	parley_wnd_frame	medium	parley_wnd+0x48 window sub-object (like map_view_wnds): brought to top by foreign_minister_show and moved to the centred rect on layout reset.
+0067a998	parley_left_kind	high	Parley window +0x1f0: left side dialog kind chosen from parley_mode_left_kinds for parley_mode.
+0067a99c	parley_right_kind	high	Parley window +0x1f4: right side dialog kind from parley_mode_right_kinds, passed to parley_add_side_dialog side 1.
+0067a9a0	parley_shown_left_kind	medium	Parley window +0x1f8: left side kind currently built; compared with +0x1f0 to rebuild the side dialog.
+0067a9a4	parley_shown_right_kind	medium	Parley window +0x1fc: right side kind currently built; compared with +0x1f4 to rebuild.
+0067a9b8	parley_barter_want_kind	medium	Parley window +0x210 set by the right-side barter radio group 0x3f5 (default 1); in mode 0xe value 2 shows the unit list and 3 the city list.
+0067a9bc	parley_demand_kind	medium	Parley window +0x214 set by the threat radio group 0x41f (FUN_0052d523); in threat mode 0xf value 2 means units and 3 cities demanded.
+0067aa44	parley_chat_log_edit	high	Parley window +0x29c chat log edit control (same offset as chat_log_edit in chat_wnd); chat_log_append sets its text and caret.
+0067ab1c	parley_gold_edits	high	Two edit-control pointers (per side) whose text is filtered to digits not exceeding civs[human_civ].gold and read with atoi as the gold offer.
+0067ab90	parley_list_counts	medium	Per-side item counts of the parley pane lists (indexed by side) looped over when collecting selected items for transaction message 0x82.
+0067ab94	parley_list_count_right	medium	Second element of parley_list_counts: item count of the right pane list, passed as n-1 to parley_sort_unit_list.
+00682ba8	parley_list_selected	medium	Per-side (stride 0x2004) int flags marking selected entries of parley pane lists; ==1 entries are counted and serialized into offers.
+006a1870	net_bribe_answer	medium	Set to -1 by unit_bribe before waiting for a remote human's reply, filled by net message 0x7b; value 1 accepts the bribe.
+006a1888	rules_edit_next_name	medium	Name field of the second rules_edit section entry, zeroed as the table terminator by rules_edit_add_section/set_section.
+006a188c	rules_edit_next_writer	medium	Writer-callback field of the second rules_edit section entry, zeroed as terminator alongside rules_edit_next_name.
+006a2d80	cosmic_edit_values	high	Int array of the cosmic rules editor fields, shown with %d by cosmic_editor_fill_list and copied back to cosmic (road_move_mult, trireme_loss_chance...).
+006a5b10	spaceship_wnd_part_counts	high	6 ints copied from civs[].spaceship_parts by spaceship_wnd_load_parts and compared with each drawn part's index while rendering the ship.
+006a6528	city_saved_shield_box	high	cities[].shield_box saved by city_save_build_state; city_shields_after_change applies cosmic.change_penalty to it when the category changes.
+006a6570	city_food_route_partner	medium	City id of the (last) trade route with food-supply commodity (negative), -1 if none; named in the supply message and its route removed.
+006a6558	city_food_routes_in	medium	Count of other cities' food-supply routes into this city (adds food); shown beside city_food_routes_out in the city window resource map.
+006a655c	city_home_attack_units	medium	city_calc_unit_support counts supported attack units inside (or in line with) the home city; with no aggressive units it relaxes unhappiness.
+006a6574	city_capital_link	medium	Capital connection level: 1/2 for the palace city (2 with advance 0x43), airports or road connection to the nearest palace; scales shield waste.
+006a6588	city_capital_distance	high	Diagonal distance to the owner's nearest Palace city (0 in the capital, 0x20 when none); passed into corruption calculation.
+006a6590	city_route_trade_values	high	Per-trade-route trade amounts computed in the city trade calc, summed into city_total_trade and printed in the city window route list.
+006a65a4	city_saved_build_category	high	Production category of cities[].building saved by city_save_build_state; a different new category triggers the change penalty.
+006a65bc	city_tile_shields	high	Shield field (index 1) of city_tile_yields for the evaluated tile, used in tile worth weighting and resource map totals.
+006a65c0	city_tile_trade	high	Trade field (index 2) of city_tile_yields for the evaluated tile, used in tile worth weighting and resource map totals.
+006a65c4	city_pop_pollution_factor	high	Population pollution factor from advances (Industrialization etc., minus Mass Transit/Solar effects); size*factor/4 is added to city_pollution.
+006a65dc	city_workers_overflow	medium	Set when worked tiles exceed the citizens (city shrank) and tiles were reassigned; city_process_turn then shows the DECREASE notice.
+006a65f0	city_unhappy_by_stage	high	Byte array of city_unhappy_count snapshots per happiness stage (0..4) drawn as the rows of the city happiness panel.
+006a65f8	city_pollution_divisor	high	Shield divisor for pollution: 1, 2 with Power/Hydro/Nuclear plant or wonder, 3 with Recycling or Solar Plant.
+006a661c	city_food_surplus	high	Food yield minus size*food_per_citizen minus settler upkeep, added to food_box in city_process_turn.
+006a6620	city_happy_by_stage	high	Byte array of city_happy_count snapshots per happiness stage (0..4) for the city happiness panel.
+006a6628	city_angry_by_stage	high	Byte array of city_angry_count snapshots per happiness stage (0..4) for the city happiness panel.
+006a7434	pedia_terrain_count	medium	Number of entries in pedia_terrain_names for category 5 and the bound of the terrain id lookup in FUN_00491d61.
+006a85ac	pedia_popped_category	medium	Category of the history entry popped by the pedia Back handler, pushed back onto the history by pedia_history_push.
+006a85b0	pedia_popped_page_mode	medium	Page mode of the history entry popped by the pedia Back handler, pushed back by pedia_history_push.
+006aa758	city_window_minimized	high	Set 1 by the city window minimize handler and cleared (with a refresh) by its restore handler.
+006aa764	city_window_open_mode	medium	City window mode; 2 means opened as the End of Turn Update (CITYMODAL2, exit sets a proceed flag) instead of closing.
+006aa76c	city_improvement_list_top	high	Scroll position of the city window improvement list scrollbar; selects which owned improvement row was clicked.
+006aad58	destroyed_civs_text_bg	medium	Surface holding a copy of the tombstone text rect background, restored before each destroyed-civ entry is drawn.
+006ab5ac	mp_turn_timer_blink	medium	Toggled every 500 ms tick of the turn timer; seconds decrease on odd ticks and the bar flashes under 30 s when set.
+006ab5b4	mp_window_drag_hook	high	WH_MOUSE hook handle installed on ENTER_WINDOW_DRAG and removed on exit.
+006ab5e0	diplo_border_intruder_units	high	Number of foreign units found near cities by diplo_count_border_intruders; shown as the count in the border warning message.
+006ab5ec	diplo_border_repeat_offenses	medium	Counts already-warned intruding units plus cities with >3 intruders; added to reputation for the AI's threat decisions.
+006ab6a8	art_palette	medium	Palette object filled from civ2art.gif and given to city view/council windows, dialogs and the main frame.
+006abc18	status_end_turn_rect	high	RECT (left field) of the End of Turn text area in the status window, tile-filled by status_draw_end_of_turn.
+006abc1c	status_end_turn_rect_top	high	Top field of status_end_turn_rect, the y where End of Turn text is drawn.
+006abc2c	status_upper_rect_top	high	Top field of status_upper_rect, used for its tile fill, separator lines and text centring.
+006abc58	status_panel_width	medium	Width of both status window panels, set from the client width in status_calc_font_sizes.
+006abc60	status_panel_x	medium	X origin (0) of the status window panel rects set in status_calc_font_sizes.
+006abf24	status_indicator_rect	medium	RECT (left field) in the status lower panel used for the civ-colour square and the turn timer bar.
+006abf2c	status_client_right	medium	status_window+0x2bc is its client RECT (set by frame_wnd_layout); this is its right edge, minus 8 gives the civ-color/timer box right.
+006abf30	status_client_bottom	medium	Bottom of the status window client RECT (status_window+0x2c8); civ-color and timer bars span bottom-6..bottom.
+006abf40	status_panel_gap	medium	Constant 8 set by status_calc_font_sizes; vertical gap added when offsetting the lower panel RECT below the upper panel.
+006abf44	status_upper_panel_height	medium	Height of status_upper_rect (0x28, 0x3c or 0x50 by window size tier) computed in status_calc_font_sizes.
+006abf48	status_timer_bg_surface	medium	Surface lazily constructed by status_draw_timer_bar that saves the bar's background to restore before redrawing the timer.
+006abfa8	status_lower_rect	medium	RECT (left at +0) of the status lower panel, set by FUN_0056a787 and used as clip/fill origin; status_lower_rect_top is its +4.
+006abfb0	status_lower_rect_right	medium	Right field (+8) of status_lower_rect, copied into the text area RECT by status_redraw.
+006abfb4	status_lower_rect_bottom	medium	Bottom field (+0xc) of status_lower_rect, loop limit for drawing lower panel lines in status_redraw.
+006ac118	sprite_editor_paint_tool	medium	Last chosen paint tool (1 line, 2 pencil); sprite_editor_tool is restored to it after color-pick or shield placement.
+006ac880	sprite_editor_last_px	medium	Sprite pixel x of the previous paint point (-1 when outside the grid); start of the line drawn while dragging.
+006ac884	sprite_editor_last_py	medium	Sprite pixel y of the previous paint point (-1 when outside the grid); start of the line drawn while dragging.
+006ac888	sprite_editor_ok_callback	medium	Function pointer passed as param_4 to sprite_editor_run and called by its OK handler after the sprite is grabbed back.
+006ac894	sprite_editor_paint_color	medium	Color of the active stroke (left or right button color, 0 meaning key color) used by sprite_editor_plot_pixel.
+006ac89c	sprite_sheet_cell_count	medium	Cell count of the current sprite sheet returned by sprite_editor_cell_rect; picker loops and scrollbar range use it.
+006acb38	net_can_escape_reply	medium	Reply value of NM_CANESCAPE_REPLY (0x77); city_capture_aftermath sets -1 then waits up to 0xe10 ticks for it.
+006acbd0	crash_handler_callbacks	medium	Up to 10 function pointers registered by FUN_00589d80 (count at 00634768), called in reverse by the fatal-error handler before DebugBreak.
+006acbf8	crash_debug_buffer	medium	sprintf buffer for fatal error/assert messages sent to OutputDebugStringA and dbg_log.
+006ad0e0	spaceship_projected_arrival_year	medium	Year computed in spaceship_calc_stats from current year plus a flight time over all parts; AI compares rivals' arrival year to it.
+006ad120	net_player_info_civ	medium	NM_PLAYER_INFO (0x2e) payload at 006ad110 +0x10: chosen civ color slot (game.player_civ) sent when claiming a tribe.
+006ad128	net_player_info_gender	medium	NM_PLAYER_INFO payload +0x18: leader gender chosen in the tribe dialog (prefs_gender).
+006ad12c	net_player_info_has_names	medium	NM_PLAYER_INFO payload +0x1c: set 1 once custom leader/tribe/adjective names are entered, cleared at setup start.
+006ad130	net_player_info_leader_name	medium	NM_PLAYER_INFO payload +0x20: custom leader name (24 chars) copied to civ_names.leader_name.
+006ad148	net_player_info_tribe_name	medium	NM_PLAYER_INFO payload +0x38: custom tribe plural name (24 chars) copied to civ_names.tribe_name.
+006ad160	net_player_info_adjective	medium	NM_PLAYER_INFO payload +0x50: custom adjective (24 chars) copied to civ_names.adjective.
+006ad178	net_player_info_has_titles	medium	NM_PLAYER_INFO payload +0x68: set 1 once the 7 custom government titles (at +0x6c) are entered.
+006ad2f0	net_connection_type	medium	Connection kind param_1 of the network setup (0..3, 4 mapped to 0) that also sets net_protocol; nonzero lets the host answer NM_GET_SERVERS.
+006ad354	net_slot_lobby_ids	medium	Player slot +0x48 int (7 x 0x54 records): lobby list entry id assigned from net_lobby_list counter, searched by FUN_0056f42b.
+006ad5fc	net_server_version	high	Version string received from the server and compared with '5.4.0f Multiplayer 26-March-99'; mismatch shows a popup.
+006ad914	net_stacked_draw_last	high	gNetMgr.lastStackedDraw: write index of the 100-entry stacked-draw ring (assert string), advanced mod 100 per enqueue.
+006ad920	net_stacked_draw_kinds	high	Message kind (+0) of each 0x40-byte stacked-draw ring entry, switched on when replaying the entry.
+006ad924	net_stacked_draw_args	high	7 int arguments (+4) of each 0x40-byte stacked-draw ring entry (unit id, coordinates) used when replaying.
+006af2a0	casualty_log_unit_types	medium	Short field +0 of each 0x22-byte casualty log entry (per civ 0x27d8): lost unit type, drawn and named in the timeline.
+006af2a6	casualty_log_years	medium	Short field +6 of each 0x22-byte casualty log entry: year of the loss, shown with text_append_year.
+006af2a8	casualty_log_killer_colors	medium	Short field +8 of each 0x22-byte casualty log entry: killer civ's secondary color; followed by its name at +0xa.
+006c31c8	blocked_input_char	medium	WM_CHAR character saved when a char is blocked after a blocked keydown (blocked_input_char_pending=3), replayed with it.
+006c31cc	blocked_input_window	medium	Active child window (minus 0x48) saved with a blocked input event, restored as active child before replay.
+006c31d0	net_drag_hold	medium	Set by NM_DRAG_HOLD_ON (0x5d), cleared by NM_DRAG_HOLD_OFF (0x5e); while set net_heartbeat_send skips the heartbeat.
+006c31d8	net_msg_queue	high	Net message queue object (C_0051438f) enqueued by FUN_0059bb54/0059bc41; its count fields are net_msgq_normal_count/priority_count.
+006c8fbc	net_xd_adapter_index	medium	Copy of the CIV.INI Adapter value (with net_adapter_index) passed to XD_GetCurrentProtoAddr; zeroed by net_session_clear.
+006c8fe0	nm_recv_counts	high	Per-message-type receive counters (int per NM_ type), incremented in net_process_messages and cleared by net_reset_msg_counts.
+006c9024	nm_server_full_count	high	Slot 17 of the receive counters at 006c8fe0 (NM_SERVER_FULL); join wait loops abort when nonzero.
+006c90b4	net_kill_or_quit_ack	high	Set -2 by civ_eliminate before sending NM_KILL_OR_QUIT (0x34) and to 1 by NM_KILL_OR_QUIT_ACK (0x35); waited on for 0xe10 ticks.
+006c90c0	net_unit_deleted_ack	high	Set -2 by unit_delete before NM_DELETE_UNIT (0x37) and to 1 on NM_UNIT_DELETED (0x38); waited on for 0xe10 ticks.
+006c90c8	net_city_deleted_ack	high	Set -2 by city_delete before NM_DELETE_CITY (0x39) and to 1 on NM_CITY_DELETED (0x3a); waited on for 0xe10 ticks.
+006c90d0	nm_city_created_result	high	Slot 60 of receive counters at 006c8fe0 (NM_CITY_CREATED); holds city id returned by host for a remote city_create, -2 while pending.
+006c90d8	nm_unit_created_result	high	Slot 62 (NM_UNIT_CREATED); holds unit id returned by host for a remote unit_create, -2 while pending.
+006c90e0	nm_unit_picked_up_count	high	Slot 64 (NM_UNIT_PICKED_UP); ack flag for remote unit_stack_unlink, -2 while pending, set 1 on reply.
+006c90e8	nm_unit_put_down_count	high	Slot 66 (NM_UNIT_PUT_DOWN); ack flag for remote unit_stack_link, -2 while pending.
+006c90f0	nm_bottomed_count	high	Slot 68 (NM_BOTTOMED); ack flag for remote unit_move_to_stack_bottom, -2 while pending.
+006c90f8	nm_unit_relocated_count	high	Slot 70 (NM_UNIT_RELOCATED); ack flag for remote unit_relocate, -2 while pending.
+006c9100	nm_wonder_acquired_result	high	Slot 72 (NM_WONDER_ACQUIRED); reply value for remote city_acquire_wonder, -2 while pending.
+006c9108	nm_ship_stacked_result	high	Slot 74 (NM_SHIP_STACKED); reply value for remote unit_gather_cargo, -2 while pending.
+006c9110	nm_unit_stacked_count	high	Slot 76 (NM_UNIT_STACKED); ack flag for remote unit_lift_off_map, -2 while pending.
+006c9118	nm_safely_deleted_count	high	Slot 78 (NM_SAFELY_DELETED); ack flag for remote unit_delete_with_cargo, -2 while pending.
+006c9120	nm_visibly_deleted_count	high	Slot 80 (NM_VISIBLY_DELETED); ack flag for remote unit_destroy_redraw, -2 while pending.
+006c914c	nm_stacker_ack_count	high	Slot 91 (NM_REALTIME_STACKER_ACKER, msg 0x5b reply to 0x3f); unit_move_dir waits until it becomes 1.
+006c9164	nm_new_civ_ack_result	high	Slot 97 (NM_NEW_CIV_ACK, msg 0x61); holds civ_create result from host, -0x1b while pending.
+006c9168	nm_kill_civ_ack_result	high	Slot 98 (NM_KILL_CIV_ACK, msg 0x62); holds civ_check_destroyed result from host, -0x1b while pending.
+006c9178	nm_continue_after_join_count	high	Slot 102 (NM_CONTINUE_AFTER_JOIN); cleared before the join-wait popup whose idle callback FUN_00482337 polls it.
+006c91ec	nm_parley_accept_offer_count	high	Slot 131 (NM_PARLEY_ACCEPT_OFFER); checked/cleared by diplomacy dialog code with parley_mode 1.
+006c9210	nm_production_complete_count	high	Slot 140 (NM_PRODUCTION_COMPLETE); turn-production wait loops check it with net_player_count.
+006c9214	nm_ai_movement_count	high	Slot 141 (NM_AI_MOVEMENT); network turn loop waits on it with nm_end_sequence_count.
+006c9218	nm_human_movement_count	high	Slot 142 (NM_HUMAN_MOVEMENT); network turn loop waits on it with nm_end_sequence_count.
+006c921c	nm_human_move_complete_count	high	Slot 143 (NM_HUMAN_MOVE_COMPLETE); wait loops check it with net_player_count.
+006c926c	nm_abort_kaboom_count	high	Slot 163 (NM_ABORT_KABOOM); incremented on receipt, cleared and polled by map_animate_explosion to abort the animation.
+006d1db8	ms_window_stack	high	Array of 4-byte window handles indexed by ms_window_stack_count; wnd_list_add_hwnd appends, removal shifts down.
+006e47fc	timerdll_get_timer_id	high	GetProcAddress(timerdll.dll, "GetTimerID"), called in timer_wnd_kill_slot.
+006e4804	timerdll_module	high	HMODULE from LoadLibraryA("timerdll.dll"); FreeLibrary in timer_wnd_destroy.
+006e480c	timerdll_reset_timer_notified	high	GetProcAddress(timerdll.dll, "ResetTimerNotified").
+006e4fec	app_prev_instance	medium	Second WinMain argument stored by app_startup next to app_hinstance; window classes registered only when it is 0.
+006e5000	snd_cd_notify_callback	high	Function pointer set by snd_cd_set_notify_callback and invoked by snd_cd_fire_notify_callback.
+006e5004	snd_midi_notify_callback	high	Function pointer set by FUN_005de6a5 and invoked by snd_midi_fire_notify_callback.
+006e500c	palette_static_half_count	high	Half of GetDeviceCaps(NUMRESERVED) system static colors (0 on non-palettized display); first/last N palette entries are reserved.
+006e5014	notice_window	medium	Surface window created by ui_show_text_notice_window, destroyed by its OK-button callback FUN_005ded90.
+006e501c	notice_ok_button	medium	Button control created in ui_show_text_notice_window with callback FUN_005ded90 that destroys it.
+006e5028	avi_indeo_frame_opts	medium	0x70-byte Indeo IV41 decode-frame options struct (size,fourcc,...) sent with ICM_SETSTATE 0x5001 to avi_decompressor.
+006e503c	avi_indeo_frame_flags	medium	Flags field (+0x14) of avi_indeo_frame_opts, set 0x80000008 (valid + bounding rect).
+006e5098	avi_indeo_seq_opts	medium	0x2c-byte Indeo IV41 decode-sequence options struct sent with ICM_SETSTATE 0x5001 to avi_decompressor.
+006e50ac	avi_indeo_seq_flags	medium	Flags field (+0x14) of avi_indeo_seq_opts, set 0/8/0x8000000c depending on window options.
+006e50c4	avi_vfw_initialized	high	Set 1 after AVIFileInit in avi_open_file; avi_close clears it (AVIFileExit).
+006e50c8	avi_view_rect_x	medium	Left of the Indeo view rect pointed to by the frame options; avi_update_frame uses it as rect.left.
+006e50cc	avi_view_rect_y	medium	Top of the Indeo view rect; avi_update_frame uses it as rect.top.
+006e50d0	avi_view_rect_width	medium	Width of the Indeo view rect; right = x + this in avi_update_frame.
+006e50d4	avi_view_rect_height	medium	Height of the Indeo view rect; bottom = y + this in avi_update_frame.
+006e5368	menu_search_pos	medium	Running item counter incremented per menu level by recursive menu_find_item_pos, reset in wnd_on_menu_command; low word of the result.
+0062ccc0	citypref_count	high	Number of improvements read from CITYPREF into the list at 00673d70 (max 32); city_choose_production iterates it.
+006385c4	snd_wave_spare_buffers	medium	Head of linked list (next at +0x1c) of unused wave buffers moved to/from snd_wave_buffer_ring by add/remove_buffers.
+0064b100	diplo_weakest_enemy_civ	medium	Set in diplo_eval_ai_stance to the weakest-military civ hostile to the AI with treaty flags 0x20|2; used in diplo_ai_meet_player.
+0064b104	diplo_war_target_civ	medium	Civ hostile to the AI that the AI asks the player to declare war on (diplo_declare_war on accept); -1 if none.
+00673fbc	path_queue_tail	high	Write index of circular (0x900) BFS queue at 00673fc8/006763c8 in map_path_next_dir.
+00673fc4	path_queue_head	high	Read index of circular (0x900) BFS queue at 00673fc8/006763c8 in map_path_next_dir.
+006a1d78	editor_text_lines_out	medium	Caller's array of 20 string pointers given to FUN_004ce38a; OK callback fills it with allocated copies of edited lines.
+006a6600	city_capital_nearest	medium	Nearest same-owner city with a Palace found by FUN_004e7967 (distance in 006a6588); used for corruption/road-connection checks.
+006acb30	unit_defense_terrain	medium	Terrain type at the defender's tile, indexes terrain_types[].defense in unit_defense_strength.

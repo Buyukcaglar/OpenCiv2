@@ -23,27 +23,27 @@ void __cdecl FUN_0055b0fb(void)
     if (g_timer_blink != 0) {
         if (g_timer_remaining != 0) {
             /* Seconds since the last tick, rounded (ticks are in 1/60 s). */
-            elapsed = (int)((double)(thunk_FUN_00421bb0() - g_timer_last_tick) / 60.0 + 0.5);
+            elapsed = (int)((double)(thunk_timer_ticks() - g_timer_last_tick) / 60.0 + 0.5);
             g_timer_remaining -= elapsed;
             if (g_timer_remaining < 0)
                 g_timer_remaining = 0;
-            g_timer_last_tick = thunk_FUN_00421bb0();
+            g_timer_last_tick = thunk_timer_ticks();
         }
         if (g_timer_remaining == 0) {
-            thunk_FUN_0050994f();
-            thunk_FUN_00437c6f();
-            thunk_FUN_0044f799();
-            thunk_FUN_004f8d51();
+            thunk_city_window_close();
+            thunk_intel_report_end_modal();
+            thunk_throneroom_close();
+            thunk_pedia_end_modal();
             g_timer_expired = 0;
-            thunk_FUN_0056ac67(100, 0xffffffff);
+            thunk_status_draw_timer_bar(100, 0xffffffff);
             return;
         }
-        thunk_FUN_00552112(&DAT_0066c7a8);
+        thunk_frame_wnd_draw_caption(&map_views);
         rect.left = (*(int *)((u8 *)&g.d_0066ca54));
         rect.top = (*(int *)((u8 *)&g.d_0066ca58));
         rect.right = (*(int *)((u8 *)&g.d_0066ca5c));
         rect.bottom = (*(int *)((u8 *)&g.d_0066ca68));
-        thunk_FUN_00408490(&DAT_0066c7a8, &rect);
+        thunk_wnd_blit_surface_rect(&map_views, &rect);
     }
     percent = (g_timer_remaining * 100000) / g_turn_time_limit;
     if (percent < 0x21)
@@ -54,8 +54,8 @@ void __cdecl FUN_0055b0fb(void)
         color = 0x2a;
     if ((color == 0x6a || g_timer_remaining < 0x1e) && g_timer_blink != 0)
         color = -1;
-    thunk_FUN_0056ac67(percent, color);
+    thunk_status_draw_timer_bar(percent, color);
     if (g_timer_event != 0)
-        FUN_005d2004(g_timer_event);
-    g_timer_event = FUN_005d1f50(((void *)ADDR(0x00402220, FUN_0055b0fb)), 500, 1);
+        game_timer_destroy(g_timer_event);
+    g_timer_event = game_timer_create(((void *)ADDR(0x00402220, FUN_0055b0fb)), 500, 1);
 }

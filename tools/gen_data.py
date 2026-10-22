@@ -168,7 +168,7 @@ def main():
 
 
 # Named arrays the game indexes one element past their end, at data that in
-# the original follows them: units[2048] is the scratch unit FUN_00472d20
+# the original follows them: units[2048] is the scratch unit unit_make_dummy
 # sets up (0x6660f0).  Native builds give these arrays the extra elements, and
 # the data there is addressed through them (gen_c.data_location).
 OVERHANG = {'units': 1}

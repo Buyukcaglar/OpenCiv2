@@ -249,7 +249,9 @@ for name in sorted(classes, key=lambda n: (classes[n][0], classes[n][1])):
     out += ['typedef struct %s {' % name] + lines + ['} %s;' % name, '']
     emitted.append(name)
 out += ['#pragma pack(pop)', '', '#endif', '']
-open('src/include/civ2classes.h', 'w').write('\n'.join(out))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import type_names  # noqa: E402  (readable class names, re/type_names.tsv)
+open('src/include/civ2classes.h', 'w').write(type_names.apply('\n'.join(out)))
 with open('re/classes.tsv', 'w') as f:
     f.write('class\tmethods\n')
     for name in emitted:

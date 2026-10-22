@@ -39,7 +39,7 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
 
     if (impr <= 0 || impr >= 0x23)
         return eax_in;
-    thunk_FUN_005ae3bf(impr, &index, &mask);
+    thunk_bit_index_split(impr, &index, &mask);
     if (on != 0)
         (&g_city_improvements(city))[index] |= (byte)mask;
     else
@@ -48,7 +48,7 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) int __cdecl FUN_0043d289(int city, int impr, int on)
+__attribute__((naked)) int __cdecl city_set_improvement(int city, int impr, int on)
 {
     __asm__ volatile(
         "pushl 12(%esp)\n\t"
@@ -60,7 +60,7 @@ __attribute__((naked)) int __cdecl FUN_0043d289(int city, int impr, int on)
         "ret");
 }
 #else
-int __cdecl FUN_0043d289(int city, int impr, int on)
+int __cdecl city_set_improvement(int city, int impr, int on)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (int)regargs_0043d289(0, city, impr, on);
@@ -202,7 +202,7 @@ int __cdecl regargs_005edc6c(uint al_in, byte *dst, byte *src, uint count,
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) short __cdecl FUN_005edc6c(byte *dst, byte *src, uint count,
+__attribute__((naked)) short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
                                                   undefined4 src_step, undefined4 dst_step)
 {
     __asm__ volatile(
@@ -218,7 +218,7 @@ __attribute__((naked)) short __cdecl FUN_005edc6c(byte *dst, byte *src, uint cou
         "ret");
 }
 #else
-short __cdecl FUN_005edc6c(byte *dst, byte *src, uint count,
+short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
                                                   undefined4 src_step, undefined4 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
@@ -262,7 +262,7 @@ int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count
 }
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) short __cdecl FUN_005edcac(char *dst, byte *src, uint count,
+__attribute__((naked)) short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
                                                   undefined4 src_step, undefined4 dst_step)
 {
     __asm__ volatile(
@@ -278,7 +278,7 @@ __attribute__((naked)) short __cdecl FUN_005edcac(char *dst, byte *src, uint cou
         "ret");
 }
 #else
-short __cdecl FUN_005edcac(char *dst, byte *src, uint count,
+short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
                                                   undefined4 src_step, undefined4 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
@@ -290,7 +290,7 @@ short __cdecl FUN_005edcac(char *dst, byte *src, uint count,
 
 /* 0x00472950: append "." + ext if the file name has no extension, then
  * uppercase it. */
-void __cdecl FUN_00472950(char *name, char *ext)
+void __cdecl path_default_extension(char *name, char *ext)
 {
     if (crt_strrchr(name, '.') == NULL) {
         FUN_005f22e0(name, &DAT_0062b970);
@@ -300,7 +300,7 @@ void __cdecl FUN_00472950(char *name, char *ext)
 }
 
 /* 0x004729ab: dst = src with its extension replaced by ext, uppercased. */
-void __cdecl FUN_004729ab(char *dst, char *src, char *ext)
+void __cdecl path_set_extension(char *dst, char *src, char *ext)
 {
     char *dot;
 
@@ -315,7 +315,7 @@ void __cdecl FUN_004729ab(char *dst, char *src, char *ext)
 }
 
 /* 0x0056b810: cut the string at its last newline; returns where (or NULL). */
-char * __cdecl FUN_0056b810(char *s)
+char * __cdecl str_strip_newline(char *s)
 {
     char *nl;
 

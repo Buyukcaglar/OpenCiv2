@@ -104,7 +104,7 @@ void __cdecl entry(void)
         show = si.wShowWindow;
     else
         show = SW_SHOWDEFAULT;
-    ret = thunk_FUN_0055add0((int)GetModuleHandleA(NULL), 0, (int)cmd, show);
+    ret = thunk_win_main((int)GetModuleHandleA(NULL), 0, (int)cmd, show);
     crt_exit(ret);      /* exit(); never returns */
 }
 

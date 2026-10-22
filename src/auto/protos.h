@@ -10,97 +10,97 @@ void __cdecl FUN_00406aeb(); /* 00406aeb */
 void __cdecl FUN_00406b02(); /* 00406b02 */
 undefined4 __cdecl FUN_00406b28(); /* 00406b28 */
 void __cdecl FUN_00406b4c(); /* 00406b4c */
-void __cdecl FUN_00406db8(); /* 00406db8 */
-undefined4 __cdecl FUN_00406e61(); /* 00406e61 */
-void __cdecl FUN_0040701e(); /* 0040701e */
+void __cdecl minimap_tile_to_screen(); /* 00406db8 */
+undefined4 __cdecl minimap_tile_color(); /* 00406e61 */
+void __cdecl minimap_draw_view_rect(); /* 0040701e */
 void __cdecl FUN_004070f1(); /* 004070f1 */
-void __cdecl FUN_0040733c(); /* 0040733c */
+void __cdecl minimap_redraw(); /* 0040733c */
 void __cdecl FUN_004074dc(); /* 004074dc */
 void __cdecl FUN_00407658(); /* 00407658 */
-void __cdecl FUN_0040785b(); /* 0040785b */
+void __cdecl minimap_calc_rect(); /* 0040785b */
 void __cdecl FUN_0040795a(); /* 0040795a */
 void __cdecl FUN_00407980(); /* 00407980 */
 void __cdecl FUN_004079a6(); /* 004079a6 */
 void __cdecl FUN_00407b31(); /* 00407b31 */
-int __cdecl FUN_00407f90(); /* 00407f90 */
-int __cdecl FUN_00407fc0(); /* 00407fc0 */
-void __cdecl FUN_00407ff0(); /* 00407ff0 */
-void __thiscall FUN_00408010(C_00408010_10 *this,undefined4 param_1); /* 00408010 */
-void __thiscall FUN_00408050(C_00408010_10 *this,undefined4 param_1); /* 00408050 */
-void __thiscall FUN_00408090(C_00408010_10 *this); /* 00408090 */
-undefined4 __thiscall FUN_004080c0(C_00408010_10 *this); /* 004080c0 */
-void __thiscall FUN_004080f0(C_00408010_10 *this,iptr param_1); /* 004080f0 */
-u32 __thiscall FUN_00408130(C_00408130 *this,iptr param_1); /* 00408130 */
-u32 __thiscall FUN_00408170(C_00408130 *this,iptr param_1); /* 00408170 */
-u32 __thiscall FUN_004081b0(C_00408130 *this,iptr param_1); /* 004081b0 */
-u32 __thiscall FUN_004081f0(C_00408130 *this,iptr param_1); /* 004081f0 */
-u32 __thiscall FUN_00408230(C_00408130 *this,iptr param_1); /* 00408230 */
-u32 __thiscall FUN_00408270(C_00408130 *this,iptr param_1); /* 00408270 */
-u32 __thiscall FUN_004082b0(C_00408130 *this,iptr param_1); /* 004082b0 */
-u32 __thiscall FUN_004082f0(C_00408130 *this,iptr param_1); /* 004082f0 */
-u32 __thiscall FUN_00408330(C_00408130 *this,iptr param_1); /* 00408330 */
-void __thiscall FUN_00408370(C_00408010_b8 *this,u32 param_1,u32 param_2); /* 00408370 */
-void __thiscall FUN_004083b0(C_004083b0_48 *this); /* 004083b0 */
-void __thiscall FUN_004083f0(C_004083b0_48 *this); /* 004083f0 */
-void __thiscall FUN_00408420(C_00408010_10 *this); /* 00408420 */
-void __thiscall FUN_00408460(C_004083b0_48 *this); /* 00408460 */
-void __thiscall FUN_00408490(C_004083b0_48 *this,iptr param_1); /* 00408490 */
-void __thiscall FUN_00408580(C_00408580 *this,iptr param_1); /* 00408580 */
-void __thiscall FUN_004085c0(C_004083b0_114 *this,iptr param_1); /* 004085c0 */
-void __thiscall FUN_004085f0(C_004083b0_4 *this); /* 004085f0 */
-void __thiscall FUN_00408620(C_00408010_cc *this); /* 00408620 */
-void __thiscall FUN_00408650(C_00408010_10 *this); /* 00408650 */
-void __cdecl FUN_00408680(); /* 00408680 */
-void __cdecl FUN_004086c0(); /* 004086c0 */
-void __cdecl FUN_00408700(); /* 00408700 */
+int __cdecl rect_width(); /* 00407f90 */
+int __cdecl rect_height(); /* 00407fc0 */
+void __cdecl win_flush_pending_msgs(); /* 00407ff0 */
+void __thiscall wnd_set_cursor(WndBase *this,undefined4 param_1); /* 00408010 */
+void __thiscall wnd_set_icon(WndBase *this,undefined4 param_1); /* 00408050 */
+void __thiscall wnd_minimize(WndBase *this); /* 00408090 */
+undefined4 __thiscall wnd_client_width(WndBase *this); /* 004080c0 */
+void __thiscall wnd_get_rect_in_parent(WndBase *this,iptr param_1); /* 004080f0 */
+u32 __thiscall wnd_set_lbuttonup_handler(C_00408130 *this,iptr param_1); /* 00408130 */
+u32 __thiscall wnd_set_rbuttonup_handler(C_00408130 *this,iptr param_1); /* 00408170 */
+u32 __thiscall wnd_set_keydown_handler(C_00408130 *this,iptr param_1); /* 004081b0 */
+u32 __thiscall wnd_set_char_handler(C_00408130 *this,iptr param_1); /* 004081f0 */
+u32 __thiscall wnd_set_close_handler(C_00408130 *this,iptr param_1); /* 00408230 */
+u32 __thiscall wnd_set_minimize_handler(C_00408130 *this,iptr param_1); /* 00408270 */
+u32 __thiscall wnd_set_restore_handler(C_00408130 *this,iptr param_1); /* 004082b0 */
+u32 __thiscall wnd_set_size_handler(C_00408130 *this,iptr param_1); /* 004082f0 */
+u32 __thiscall wnd_set_move_handler(C_00408130 *this,iptr param_1); /* 00408330 */
+void __thiscall wnd_set_min_size(C_00408010_b8 *this,u32 param_1,u32 param_2); /* 00408370 */
+void __thiscall wnd_destroy_with_surface(DibSurface *this); /* 004083b0 */
+void __thiscall surface_release(DibSurface *this); /* 004083f0 */
+void __thiscall wnd_destroy_native(WndBase *this); /* 00408420 */
+void __thiscall wnd_blit_surface(DibSurface *this); /* 00408460 */
+void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr param_1); /* 00408490 */
+void __thiscall FUN_00408580(WndValidateRectView *this,iptr param_1); /* 00408580 */
+void __thiscall wnd_set_redraw_callback(SurfaceWindow *this,iptr param_1); /* 004085c0 */
+void __thiscall window_show(C_004083b0_4 *this); /* 004085f0 */
+void __thiscall FUN_00408620(Wnd *this); /* 00408620 */
+void __thiscall wnd_handle_show_raise(WndBase *this); /* 00408650 */
+void __cdecl rect_set(); /* 00408680 */
+void __cdecl rect_set_xywh(); /* 004086c0 */
+void __cdecl gfx_target_frame_rect(); /* 00408700 */
 void __cdecl FUN_00408750(); /* 00408750 */
-void __cdecl FUN_00408780(); /* 00408780 */
+void __cdecl gfx_target_fill_rect(); /* 00408780 */
 undefined4 __cdecl map_in_bounds(); /* 004087c0 */
 void __cdecl map_fill_tile_byte(); /* 00408830 */
 void __cdecl FUN_00408873(int param_1,int param_2,int param_3,int param_4,int param_5,undefined1 param_6); /* 00408873 */
 void __cdecl map_copy_tile_byte(); /* 00408903 */
-void __cdecl FUN_0040894c(); /* 0040894c */
+void __cdecl ui_pump_messages_net(); /* 0040894c */
 void __cdecl FUN_0040897f(); /* 0040897f */
-void __cdecl FUN_00408d33(); /* 00408d33 */
+void __cdecl map_generate(); /* 00408d33 */
 void __cdecl FUN_0040a54e(); /* 0040a54e */
 void __cdecl FUN_0040a572(); /* 0040a572 */
 void __cdecl FUN_0040a763(); /* 0040a763 */
-undefined4 __cdecl FUN_0040a824(); /* 0040a824 */
-void __cdecl FUN_0040a892(); /* 0040a892 */
-void __cdecl FUN_0040a8db(); /* 0040a8db */
+undefined4 __cdecl mapgen_in_bounds(); /* 0040a824 */
+void __cdecl mapgen_mark_tile_cluster(); /* 0040a892 */
+void __cdecl mapgen_mark_tile(); /* 0040a8db */
 void __cdecl FUN_0040a92f(); /* 0040a92f */
 void __cdecl FUN_0040aaa4(); /* 0040aaa4 */
 undefined4 __cdecl FUN_0040ab41(); /* 0040ab41 */
 void __cdecl FUN_0040ac5a(); /* 0040ac5a */
-void __cdecl FUN_0040bbb0(); /* 0040bbb0 */
-void __cdecl FUN_0040bbe0(); /* 0040bbe0 */
-void __cdecl FUN_0040bc10(); /* 0040bc10 */
-void __thiscall FUN_0040bc40(C_0040bc40_2f4 *this,undefined4 param_1); /* 0040bc40 */
-undefined4 __thiscall FUN_0040bc80(C_0040bc40_2f4 *this,iptr param_1); /* 0040bc80 */
-uint __cdecl FUN_0040bcb0(); /* 0040bcb0 */
-undefined4 __cdecl FUN_0040bd10(); /* 0040bd10 */
-void __cdecl FUN_0040bdac(); /* 0040bdac */
-void __cdecl FUN_0040bed1(); /* 0040bed1 */
+void __cdecl text_clear(); /* 0040bbb0 */
+void __cdecl text_append(); /* 0040bbe0 */
+void __cdecl text_append_label(); /* 0040bc10 */
+void __thiscall dlg_reset(Dialog *this,undefined4 param_1); /* 0040bc40 */
+undefined4 __thiscall dlg_show_modal(Dialog *this,iptr param_1); /* 0040bc80 */
+uint __cdecl tile_grassland_has_shield(); /* 0040bcb0 */
+undefined4 __cdecl civ_max_tax_rate(); /* 0040bd10 */
+void __cdecl taxrate_balance(); /* 0040bdac */
+void __cdecl taxrate_dialog_redraw(); /* 0040bed1 */
 void __cdecl FUN_0040beec(); /* 0040beec */
 void __cdecl FUN_0040c07f(); /* 0040c07f */
 void __cdecl FUN_0040c212(); /* 0040c212 */
 void __cdecl FUN_0040c3a5(); /* 0040c3a5 */
 void __cdecl FUN_0040c3cd(); /* 0040c3cd */
-void __thiscall FUN_0040c480(C_004083b0_430 *this); /* 0040c480 */
+void __thiscall taxrate_calc_totals(C_004083b0_430 *this); /* 0040c480 */
 void __thiscall FUN_0040c7d0(C_004083b0_430 *this); /* 0040c7d0 */
 void __thiscall FUN_0040cd64(C_004083b0_430 *this,uptr param_1); /* 0040cd64 */
 void __cdecl FUN_0040dda0(); /* 0040dda0 */
-void __cdecl FUN_0040ddc6(); /* 0040ddc6 */
+void __cdecl taxrate_dialog_show(); /* 0040ddc6 */
 void __cdecl FUN_0040dea8(); /* 0040dea8 */
 void __cdecl FUN_0040decc(); /* 0040decc */
-void __cdecl FUN_0040e017(); /* 0040e017 */
+void __cdecl menu_find_city(); /* 0040e017 */
 void __cdecl FUN_0040e38d(); /* 0040e38d */
-void __cdecl FUN_0040e3b1(); /* 0040e3b1 */
-void __cdecl FUN_0040ef50(); /* 0040ef50 */
-u32 __thiscall FUN_0040ef70(C_0040ef70_8 *this); /* 0040ef70 */
-undefined4 __thiscall FUN_0040efa0(C_0040ef70_8 *this); /* 0040efa0 */
-undefined4 __thiscall FUN_0040efd0(C_0040ef70_8 *this,iptr param_1); /* 0040efd0 */
-C_004083b0_48 * __thiscall FUN_0040f010(C_004083b0_48 *this,uint param_1); /* 0040f010 */
+void __cdecl menu_revolution(); /* 0040e3b1 */
+void __cdecl win_pump_one_message(); /* 0040ef50 */
+u32 __thiscall font_cached_height(GameFont *this); /* 0040ef70 */
+undefined4 __thiscall font_line_spacing(GameFont *this); /* 0040efa0 */
+undefined4 __thiscall font_text_width(GameFont *this,iptr param_1); /* 0040efd0 */
+DibSurface * __thiscall surface_delete(DibSurface *this,uint param_1); /* 0040f010 */
 C_004083b0_430 * __thiscall FUN_0040f060(C_004083b0_430 *this); /* 0040f060 */
 void __thiscall FUN_0040f1e0(void *this); /* 0040f1e0 */
 void __cdecl FUN_0040f25f(); /* 0040f25f */
@@ -109,68 +109,68 @@ void __cdecl FUN_0040f286(); /* 0040f286 */
 void __cdecl FUN_0040f295(); /* 0040f295 */
 void __cdecl FUN_0040f2a4(); /* 0040f2a4 */
 void __cdecl FUN_0040f2b3(); /* 0040f2b3 */
-void __thiscall FUN_0040f320(C_00408010_b8 *this,iptr param_1); /* 0040f320 */
-void __thiscall FUN_0040f350(C_00408010_cc *this,undefined4 param_1); /* 0040f350 */
-void __thiscall FUN_0040f380(C_0040f380_3c *this); /* 0040f380 */
-C_0040f380_3c * __thiscall FUN_0040f3e0(C_0040f380_3c *this); /* 0040f3e0 */
-C_0040f380_3c * __thiscall FUN_0040f480(C_0040f380_3c *this); /* 0040f480 */
-undefined4 __thiscall FUN_0040f510(C_0040f510 *this); /* 0040f510 */
-undefined4 __thiscall FUN_0040f570(C_0040f380_3c *this); /* 0040f570 */
+void __thiscall wnd_set_modal_idle_callback(C_00408010_b8 *this,iptr param_1); /* 0040f320 */
+void __thiscall wnd_set_keyboard_nav(Wnd *this,undefined4 param_1); /* 0040f350 */
+void __thiscall ctrl_show_and_redraw(Control *this); /* 0040f380 */
+Control * __thiscall button_ctor(Control *this); /* 0040f3e0 */
+Control * __thiscall ctrl_base_ctor(Control *this); /* 0040f480 */
+undefined4 __thiscall ctrl_base_dtor(ControlBase *this); /* 0040f510 */
+undefined4 __thiscall ctrl_dtor(Control *this); /* 0040f570 */
 void __cdecl FUN_0040f5c3(); /* 0040f5c3 */
-void __thiscall FUN_0040f610(C_0040f380_3c *this); /* 0040f610 */
-void __thiscall FUN_0040f680(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 0040f680 */
-void __thiscall FUN_0040f730(C_0040f380_3c *this,iptr param_1,u32 param_2,u32 param_3,iptr param_4); /* 0040f730 */
-void __thiscall FUN_0040f7d0(C_0040f380_3c *this); /* 0040f7d0 */
-uptr __thiscall FUN_0040f810(C_0040f380_3c *this); /* 0040f810 */
-void __thiscall FUN_0040f840(C_0040f380_3c *this); /* 0040f840 */
-void __thiscall FUN_0040f880(C_0040f380_3c *this,iptr param_1); /* 0040f880 */
-C_0040f380_3c * __thiscall FUN_0040f8b0(C_0040f380_3c *this); /* 0040f8b0 */
-void __thiscall FUN_0040f930(C_0040f930 *this); /* 0040f930 */
+void __thiscall ctrl_destroy(Control *this); /* 0040f610 */
+void __thiscall button_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 0040f680 */
+void __thiscall ctrl_init(Control *this,iptr param_1,u32 param_2,u32 param_3,iptr param_4); /* 0040f730 */
+void __thiscall ctrl_set_default_button(Control *this); /* 0040f7d0 */
+uptr __thiscall ctrl_get_parent(Control *this); /* 0040f810 */
+void __thiscall ctrl_set_cancel_button(Control *this); /* 0040f840 */
+void __thiscall button_set_callback(Control *this,iptr param_1); /* 0040f880 */
+Control * __thiscall FUN_0040f8b0(Control *this); /* 0040f8b0 */
+void __thiscall checkbox_dtor(Checkbox *this); /* 0040f930 */
 void __cdecl FUN_0040f98a(); /* 0040f98a */
-void __thiscall FUN_0040f9d0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,iptr param_5); /* 0040f9d0 */
-void __thiscall FUN_0040faa0(C_0040faa0 *this,iptr param_1); /* 0040faa0 */
-void __thiscall FUN_0040fad0(C_0040f380_3c *this,u32 param_1); /* 0040fad0 */
-C_0040f380_3c * __thiscall FUN_0040fb00(C_0040f380_3c *this); /* 0040fb00 */
-void __thiscall FUN_0040fbb0(C_0040f380_3c *this); /* 0040fbb0 */
+void __thiscall checkbox_create(Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,iptr param_5); /* 0040f9d0 */
+void __thiscall checkbox_set_callback(CheckboxCallbackSetView *this,iptr param_1); /* 0040faa0 */
+void __thiscall checkbox_set_checked(Control *this,u32 param_1); /* 0040fad0 */
+Control * __thiscall scrollbar_ctor(Control *this); /* 0040fb00 */
+void __thiscall scrollbar_dtor(Control *this); /* 0040fbb0 */
 void __cdecl FUN_0040fc0a(); /* 0040fc0a */
-void __thiscall FUN_0040fc50(C_0040f380_3c *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 0040fc50 */
-void __thiscall FUN_0040fcf0(C_0040f380_40 *this,iptr param_1); /* 0040fcf0 */
-void __thiscall FUN_0040fd40(C_0040f380_3c *this,undefined4 param_1,undefined4 param_2); /* 0040fd40 */
-void __thiscall FUN_0040fd80(C_0040f380_3c *this,iptr param_1); /* 0040fd80 */
-void __cdecl FUN_0040fdb0(); /* 0040fdb0 */
-void __cdecl FUN_0040fe10(); /* 0040fe10 */
-void __cdecl FUN_0040fe40(); /* 0040fe40 */
-void __cdecl FUN_0040fe70(); /* 0040fe70 */
-void __cdecl FUN_0040fea0(); /* 0040fea0 */
-void __cdecl FUN_0040fed0(); /* 0040fed0 */
-void __cdecl FUN_0040ff00(); /* 0040ff00 */
-void __cdecl FUN_0040ff30(); /* 0040ff30 */
-undefined4 __cdecl FUN_0040ff60(); /* 0040ff60 */
-undefined4 __thiscall FUN_0040ffa0(C_0040bc40_2f4 *this,iptr param_1,undefined4 param_2); /* 0040ffa0 */
-undefined4 __thiscall FUN_0040ffe0(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 0040ffe0 */
-undefined4 __cdecl FUN_00410030(); /* 00410030 */
-undefined4 __cdecl FUN_00410070(); /* 00410070 */
+void __thiscall scrollbar_create(Control *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 0040fc50 */
+void __thiscall scrollbar_set_pos(C_0040f380_40 *this,iptr param_1); /* 0040fcf0 */
+void __thiscall scrollbar_set_range(Control *this,undefined4 param_1,undefined4 param_2); /* 0040fd40 */
+void __thiscall scrollbar_set_callback(Control *this,iptr param_1); /* 0040fd80 */
+void __cdecl gfx_fill_rect(); /* 0040fdb0 */
+void __cdecl text_append_space(); /* 0040fe10 */
+void __cdecl text_append_colon(); /* 0040fe40 */
+void __cdecl text_append_percent(); /* 0040fe70 */
+void __cdecl text_append_lparen(); /* 0040fea0 */
+void __cdecl text_append_rparen(); /* 0040fed0 */
+void __cdecl text_append_string_id(); /* 0040ff00 */
+void __cdecl text_append_int(); /* 0040ff30 */
+undefined4 __cdecl text_set_string_arg(); /* 0040ff60 */
+undefined4 __thiscall dlg_load_game_section(Dialog *this,iptr param_1,undefined4 param_2); /* 0040ffa0 */
+undefined4 __thiscall dialog_load_text_ex(Dialog *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 0040ffe0 */
+undefined4 __cdecl popup_game_with_sprite(); /* 00410030 */
+undefined4 __cdecl civ_get_adjective(); /* 00410070 */
 void __cdecl FUN_004100a0(); /* 004100a0 */
-void __cdecl FUN_004100cf(); /* 004100cf */
+void __cdecl city_info_popup(); /* 004100cf */
 void __cdecl FUN_004102d5(); /* 004102d5 */
 void __cdecl FUN_004102e1(); /* 004102e1 */
-void __thiscall FUN_00410302(C_004083b0_430 *this); /* 00410302 */
-void __cdecl FUN_0041033a(); /* 0041033a */
+void __thiscall mapview_redraw_cursor_tile(C_004083b0_430 *this); /* 00410302 */
+void __cdecl mapviews_redraw_cursor(); /* 0041033a */
 void __cdecl FUN_004103ae(); /* 004103ae */
-void __thiscall FUN_00410402(C_004083b0_430 *this,iptr param_1,undefined4 param_2); /* 00410402 */
-int __thiscall FUN_00410464(C_004083b0_430 *this,int param_1,int param_2); /* 00410464 */
-uint __cdecl FUN_004105f8(); /* 004105f8 */
+void __thiscall mapview_center_on(C_004083b0_430 *this,iptr param_1,undefined4 param_2); /* 00410402 */
+int __thiscall mapview_scroll_if_near_edge(C_004083b0_430 *this,int param_1,int param_2); /* 00410464 */
+uint __cdecl mapviews_ensure_visible(); /* 004105f8 */
 int __thiscall FUN_004106fd(C_004083b0_430 *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 004106fd */
 void __cdecl FUN_00410835(); /* 00410835 */
-void __cdecl FUN_00410a64(); /* 00410a64 */
+void __cdecl mapview_cancel_drag(); /* 00410a64 */
 void __cdecl FUN_00410b23(); /* 00410b23 */
 void __cdecl FUN_00410bc3(); /* 00410bc3 */
 void __cdecl FUN_00410cfa(); /* 00410cfa */
-uint __cdecl FUN_00410d98(); /* 00410d98 */
-undefined4 __cdecl FUN_00410e0a(); /* 00410e0a */
+uint __cdecl map_set_cursor_pos(); /* 00410d98 */
+undefined4 __cdecl ui_paradrop_cursor_active(); /* 00410e0a */
 void __cdecl FUN_00410e46(); /* 00410e46 */
-void __cdecl FUN_00410ed8(); /* 00410ed8 */
-void __cdecl FUN_00410f77(); /* 00410f77 */
+void __cdecl mapviews_reset_cursor(); /* 00410ed8 */
+void __cdecl map_window_click(); /* 00410f77 */
 void __cdecl FUN_004116c1(); /* 004116c1 */
 void __cdecl FUN_004116e3(); /* 004116e3 */
 void __cdecl FUN_00411705(); /* 00411705 */
@@ -182,43 +182,43 @@ void __cdecl FUN_00411f91(); /* 00411f91 */
 void __cdecl FUN_004125c6(); /* 004125c6 */
 void __cdecl FUN_004131c0(); /* 004131c0 */
 void __cdecl FUN_0041325d(); /* 0041325d */
-void __cdecl FUN_004132b7(); /* 004132b7 */
+void __cdecl mapview_calc_rect(); /* 004132b7 */
 bool __cdecl FUN_00413350(); /* 00413350 */
 void __cdecl FUN_004133c2(); /* 004133c2 */
 void __cdecl FUN_0041341c(); /* 0041341c */
-void __thiscall FUN_00413476(C_004083b0_2e4 *this); /* 00413476 */
+void __thiscall mapview_update_title(FrameWindow *this); /* 00413476 */
 void __cdecl FUN_004135ab(); /* 004135ab */
-void __thiscall FUN_00413717(C_004083b0_430 *this); /* 00413717 */
+void __thiscall mapview_create(C_004083b0_430 *this); /* 00413717 */
 void __cdecl FUN_00413a90(); /* 00413a90 */
 void __cdecl FUN_00413bd1(); /* 00413bd1 */
-void __thiscall FUN_00414b70(C_00414b70 *this,iptr param_1,undefined4 param_2); /* 00414b70 */
-undefined4 __thiscall FUN_00414bb0(C_00408010_10 *this); /* 00414bb0 */
-u32 __thiscall FUN_00414be0(C_00414be0 *this,iptr param_1); /* 00414be0 */
-u32 __thiscall FUN_00414c20(C_00414be0 *this,iptr param_1); /* 00414c20 */
-u32 __thiscall FUN_00414c60(C_00414be0 *this,iptr param_1); /* 00414c60 */
-u32 __thiscall FUN_00414ca0(C_00414be0 *this,iptr param_1); /* 00414ca0 */
-void __thiscall FUN_00414ce0(C_00408010_10 *this); /* 00414ce0 */
-u32 __thiscall FUN_00414d10(C_00408010_10 *this); /* 00414d10 */
-void __thiscall FUN_00414d40(C_00408010_10 *this); /* 00414d40 */
-void __cdecl FUN_00414d70(); /* 00414d70 */
-void __thiscall FUN_00414da0(C_004083b0_2e4 *this,iptr param_1); /* 00414da0 */
-undefined4 __cdecl FUN_00414dd0(); /* 00414dd0 */
+void __thiscall wnd_set_cursor_now(WndCursorView *this,iptr param_1,undefined4 param_2); /* 00414b70 */
+undefined4 __thiscall wnd_client_height(WndBase *this); /* 00414bb0 */
+u32 __thiscall wnd_set_mousemove_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00414be0 */
+u32 __thiscall wnd_set_lbuttondown_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00414c20 */
+u32 __thiscall wnd_set_lbuttonup_any_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00414c60 */
+u32 __thiscall wnd_set_dblclick_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00414ca0 */
+void __thiscall wnd_set_capture(WndBase *this); /* 00414ce0 */
+u32 __thiscall wnd_get_window(WndBase *this); /* 00414d10 */
+void __thiscall wnd_release_capture(WndBase *this); /* 00414d40 */
+void __cdecl text_append_str(); /* 00414d70 */
+void __thiscall wnd_set_caption_button_handler(FrameWindow *this,iptr param_1); /* 00414da0 */
+undefined4 __cdecl popup_game_with_city(); /* 00414dd0 */
 u32 __thiscall FUN_00414e00(C_004083b0_4 *this); /* 00414e00 */
 void __cdecl FUN_00414e30(); /* 00414e30 */
 void __cdecl FUN_00414f02(); /* 00414f02 */
 iptr __cdecl FUN_00415040(); /* 00415040 */
-FILE * __cdecl FUN_0041508c(); /* 0041508c */
+FILE * __cdecl file_open_path(); /* 0041508c */
 long __cdecl FUN_00415105(); /* 00415105 */
-uint __cdecl FUN_00415133(); /* 00415133 */
+uint __cdecl file_exists(); /* 00415133 */
 void __cdecl FUN_004151e0(); /* 004151e0 */
 void __cdecl FUN_00415307(); /* 00415307 */
-void __cdecl FUN_0041541a(); /* 0041541a */
-int __cdecl FUN_0041557b(); /* 0041557b */
-void __cdecl FUN_00415765(); /* 00415765 */
+void __cdecl tech_editor_update_controls(); /* 0041541a */
+int __cdecl tech_editor_store_controls(); /* 0041557b */
+void __cdecl tech_editor_redraw(); /* 00415765 */
 undefined4 __cdecl FUN_00415780(); /* 00415780 */
 void __cdecl FUN_00415952(); /* 00415952 */
 void __cdecl FUN_00415a40(); /* 00415a40 */
-void __cdecl FUN_00415b52(); /* 00415b52 */
+void __cdecl tech_editor_fill_usage_list(); /* 00415b52 */
 void __cdecl FUN_00415e53(); /* 00415e53 */
 void __cdecl FUN_0041612e(); /* 0041612e */
 void __cdecl FUN_0041618d(); /* 0041618d */
@@ -229,12 +229,12 @@ void __thiscall FUN_00416734(C_004083b0_430 *this,int param_1); /* 00416734 */
 void __thiscall FUN_00416828(C_004083b0_430 *this); /* 00416828 */
 void __thiscall FUN_00416c9e(C_004083b0_430 *this); /* 00416c9e */
 void __cdecl FUN_00417542(); /* 00417542 */
-void __cdecl FUN_00417566(); /* 00417566 */
+void __cdecl tech_editor_run(); /* 00417566 */
 void __cdecl FUN_004175bf(); /* 004175bf */
-void __thiscall FUN_00417ef0(C_0040ef70_8 *this,undefined4 param_1,iptr param_2); /* 00417ef0 */
-u8 __thiscall FUN_00417f70(C_00417f70_3c *this); /* 00417f70 */
-C_004083b0_a28 * __thiscall FUN_00417fa0(C_004083b0_a28 *this); /* 00417fa0 */
-void __thiscall FUN_004183d0(void *this); /* 004183d0 */
+void __thiscall font_set(GameFont *this,undefined4 param_1,iptr param_2); /* 00417ef0 */
+u8 __thiscall sprite_get_key_color(Sprite *this); /* 00417f70 */
+C_004083b0_a28 * __thiscall editor_wnd_ctor(C_004083b0_a28 *this); /* 00417fa0 */
+void __thiscall editor_wnd_dtor(void *this); /* 004183d0 */
 void __cdecl FUN_0041851f(); /* 0041851f */
 void __cdecl FUN_0041852e(); /* 0041852e */
 void __cdecl FUN_0041853d(); /* 0041853d */
@@ -257,107 +257,107 @@ void __cdecl FUN_0041862d(); /* 0041862d */
 void __cdecl FUN_0041863c(); /* 0041863c */
 void __cdecl FUN_00418654(); /* 00418654 */
 void __cdecl FUN_0041866c(); /* 0041866c */
-u32 __thiscall FUN_00418740(C_00418740 *this); /* 00418740 */
-u32 __thiscall FUN_00418770(C_00418770 *this); /* 00418770 */
-C_0040f380_48 * __thiscall FUN_004187a0(C_0040f380_48 *this); /* 004187a0 */
-void __thiscall FUN_00418870(C_0040f380_3c *this); /* 00418870 */
+u32 __thiscall ctrl_get_id(ControlIdView *this); /* 00418740 */
+u32 __thiscall control_get_hwnd(ControlHwndView *this); /* 00418770 */
+C_0040f380_48 * __thiscall edit_ctor(C_0040f380_48 *this); /* 004187a0 */
+void __thiscall edit_dtor(Control *this); /* 00418870 */
 void __cdecl FUN_004188ca(); /* 004188ca */
-void __thiscall FUN_00418910(C_0040f380_44 *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 00418910 */
-void __thiscall FUN_004189c0(C_004189c0 *this,undefined4 param_1); /* 004189c0 */
-void __thiscall FUN_00418a00(C_00418a00 *this,iptr param_1); /* 00418a00 */
-void __thiscall FUN_00418a30(C_00418a30 *this,iptr param_1); /* 00418a30 */
-void __thiscall FUN_00418a70(C_00418a30 *this,iptr param_1); /* 00418a70 */
-C_0040f380_3c * __thiscall FUN_00418ab0(C_0040f380_3c *this); /* 00418ab0 */
+void __thiscall edit_create(EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 00418910 */
+void __thiscall edit_set_max_len(EditMaxLenView *this,undefined4 param_1); /* 004189c0 */
+void __thiscall edit_set_callback(EditCallbackSetView *this,iptr param_1); /* 00418a00 */
+void __thiscall ctrl_set_text(ControlTextView *this,iptr param_1); /* 00418a30 */
+void __thiscall ctrl_get_text(ControlTextView *this,iptr param_1); /* 00418a70 */
+Control * __thiscall FUN_00418ab0(Control *this); /* 00418ab0 */
 void __thiscall FUN_00418b50(C_00418b50 *this); /* 00418b50 */
 void __cdecl FUN_00418baa(); /* 00418baa */
-void __thiscall FUN_00418bf0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00418bf0 */
-void __thiscall FUN_00418c70(C_00418c70 *this,iptr param_1); /* 00418c70 */
-u32 __thiscall FUN_00418cb0(C_0040ef70_8 *this); /* 00418cb0 */
-void __thiscall FUN_00418ce0(C_00418ce0 *this,iptr param_1); /* 00418ce0 */
-void __thiscall FUN_00418d20(C_00418d20 *this); /* 00418d20 */
-undefined4 __thiscall FUN_00418d60(C_00418d60 *this); /* 00418d60 */
-void __thiscall FUN_00418d90(C_00418d90 *this,iptr param_1); /* 00418d90 */
-void __thiscall FUN_00418dd0(C_00418dd0 *this,iptr param_1); /* 00418dd0 */
-C_0040f380_3c * __thiscall FUN_00418e00(C_0040f380_3c *this); /* 00418e00 */
-void __thiscall FUN_00418ea0(C_00418ea0 *this); /* 00418ea0 */
+void __thiscall combo_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00418bf0 */
+void __thiscall combo_set_font(ComboBoxFontView *this,iptr param_1); /* 00418c70 */
+u32 __thiscall font_get_hfont(GameFont *this); /* 00418cb0 */
+void __thiscall combo_add_string(ComboBoxAddView *this,iptr param_1); /* 00418ce0 */
+void __thiscall combo_clear(ComboBoxClearView *this); /* 00418d20 */
+undefined4 __thiscall combo_get_cur_sel(ComboBoxGetSelView *this); /* 00418d60 */
+void __thiscall combo_set_cur_sel(ComboBoxSetSelView *this,iptr param_1); /* 00418d90 */
+void __thiscall combo_set_callback(ComboBoxCallbackSetView *this,iptr param_1); /* 00418dd0 */
+Control * __thiscall checkbox_ctor(Control *this); /* 00418e00 */
+void __thiscall listbox_dtor(ListBoxControl *this); /* 00418ea0 */
 void __cdecl FUN_00418efa(); /* 00418efa */
-void __thiscall FUN_00418f40(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00418f40 */
-void __thiscall FUN_00418fe0(C_00418fe0 *this,iptr param_1); /* 00418fe0 */
-void __thiscall FUN_00419020(C_00419020 *this,iptr param_1); /* 00419020 */
-void __thiscall FUN_00419060(C_00419060 *this); /* 00419060 */
-void __cdecl FUN_004190a0(); /* 004190a0 */
-undefined4 __cdecl FUN_004190d0(); /* 004190d0 */
-undefined4 __cdecl FUN_00419100(); /* 00419100 */
-undefined4 __cdecl FUN_00419130(); /* 00419130 */
+void __thiscall listbox_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00418f40 */
+void __thiscall listbox_set_font(ListBoxFontView *this,iptr param_1); /* 00418fe0 */
+void __thiscall listbox_add_string(ListBoxAddView *this,iptr param_1); /* 00419020 */
+void __thiscall listbox_clear(ListBoxClearView *this); /* 00419060 */
+void __cdecl text_append_spaces(); /* 004190a0 */
+undefined4 __cdecl popup_text(); /* 004190d0 */
+undefined4 __cdecl popup_text_flags(); /* 00419100 */
+undefined4 __cdecl popup_text_ex(); /* 00419130 */
 undefined4 __cdecl FUN_00419170(); /* 00419170 */
 void __cdecl FUN_00419940(); /* 00419940 */
 void __cdecl FUN_0041994c(); /* 0041994c */
-void __cdecl FUN_00419b80(); /* 00419b80 */
-void __thiscall FUN_00419ba0(C_00408010_10 *this,undefined4 param_1); /* 00419ba0 */
-void __thiscall FUN_00419be0(C_00408010_10 *this,iptr param_1); /* 00419be0 */
+void __cdecl wnd_flush_paint(); /* 00419b80 */
+void __thiscall wnd_set_bg_color(WndBase *this,undefined4 param_1); /* 00419ba0 */
+void __thiscall wnd_set_bg_surface(WndBase *this,iptr param_1); /* 00419be0 */
 void __cdecl FUN_00419c20(); /* 00419c20 */
 void __cdecl FUN_00419c3a(); /* 00419c3a */
 void __cdecl FUN_00419c54(); /* 00419c54 */
 void __cdecl FUN_00419c71(); /* 00419c71 */
-void __cdecl FUN_00419c8b(); /* 00419c8b */
+void __cdecl snd_menu_end(); /* 00419c8b */
 undefined1 __cdecl FUN_00419cbb(); /* 00419cbb */
 undefined1 __cdecl FUN_00419cf4(); /* 00419cf4 */
-void __cdecl FUN_00419d23(); /* 00419d23 */
-void __cdecl FUN_00419ed3(); /* 00419ed3 */
-void __cdecl FUN_0041a046(); /* 0041a046 */
-void __cdecl FUN_0041a422(); /* 0041a422 */
-void __cdecl FUN_0041a5c4(); /* 0041a5c4 */
+void __cdecl rules_load_cosmic(); /* 00419d23 */
+void __cdecl leaders_fixup_names(); /* 00419ed3 */
+void __cdecl rules_load_advances(); /* 0041a046 */
+void __cdecl rules_load_improvements(); /* 0041a422 */
+void __cdecl rules_load_units(); /* 0041a5c4 */
 void __cdecl FUN_0041a95f(); /* 0041a95f */
 void __cdecl FUN_0041ab18(); /* 0041ab18 */
-void __cdecl FUN_0041b00e(); /* 0041b00e */
+void __cdecl rules_parse_sections(); /* 0041b00e */
 undefined4 __cdecl FUN_0041b177(); /* 0041b177 */
 void __cdecl FUN_0041b46a(); /* 0041b46a */
 void __cdecl FUN_0041b48f(); /* 0041b48f */
 undefined4 __cdecl FUN_0041b4c0(); /* 0041b4c0 */
-void __cdecl FUN_0041b8b0(); /* 0041b8b0 */
-void __cdecl FUN_0041b8ff(); /* 0041b8ff */
+void __cdecl app_shutdown_cleanup(); /* 0041b8b0 */
+void __cdecl civ_intro_popup(); /* 0041b8ff */
 #undef FUN_0041ba52
 undefined4 __cdecl FUN_0041ba52(int param_1); /* 0041ba52, hand-written */
 void __cdecl FUN_0041d3f2(); /* 0041d3f2 */
-undefined4 __cdecl FUN_0041d417(); /* 0041d417 */
+undefined4 __cdecl setup_choose_map_size(); /* 0041d417 */
 void __cdecl FUN_0041d7c5(); /* 0041d7c5 */
-int __cdecl FUN_0041d7ea(); /* 0041d7ea */
+int __cdecl setup_custom_world(); /* 0041d7ea */
 void __cdecl FUN_0041dc9e(); /* 0041dc9e */
 void __cdecl FUN_0041dcc3(); /* 0041dcc3 */
-undefined4 __cdecl FUN_0041dd0e(); /* 0041dd0e */
+undefined4 __cdecl map_load_dialog(); /* 0041dd0e */
 int __cdecl FUN_0041dfe1(); /* 0041dfe1 */
 void __cdecl FUN_0041e7b2(); /* 0041e7b2 */
 void __cdecl FUN_0041e7be(); /* 0041e7be */
 void __cdecl FUN_0041e7e3(); /* 0041e7e3 */
-void __cdecl FUN_0041e864(); /* 0041e864 */
-undefined4 __cdecl FUN_0041e8fb(); /* 0041e8fb */
+void __cdecl rules_load(); /* 0041e864 */
+undefined4 __cdecl load_game_pick_civ(); /* 0041e8fb */
 void __cdecl FUN_0041eec6(); /* 0041eec6 */
 int __cdecl FUN_0041eeeb(); /* 0041eeeb */
 void __cdecl FUN_0041f66e(); /* 0041f66e */
 void __cdecl FUN_0041f67a(); /* 0041f67a */
 void __cdecl FUN_0041f69f(); /* 0041f69f */
-void __cdecl FUN_0041f878(); /* 0041f878 */
-void __cdecl FUN_0041f8d9(); /* 0041f8d9 */
+void __cdecl game_session_end(); /* 0041f878 */
+void __cdecl game_main(); /* 0041f8d9 */
 void __cdecl FUN_004201ef(); /* 004201ef */
 void __cdecl FUN_004201fb(); /* 004201fb */
 void __cdecl FUN_00420207(); /* 00420207 */
-undefined4 __cdecl FUN_00421bb0(); /* 00421bb0 */
-void __cdecl FUN_00421bd0(); /* 00421bd0 */
-undefined4 __thiscall FUN_00421bf0(C_00421bf0_98 *this,iptr param_1); /* 00421bf0 */
-undefined4 __thiscall FUN_00421c30(C_00421bf0_98 *this); /* 00421c30 */
-void __thiscall FUN_00421c60(C_00421bf0_98 *this,iptr param_1,undefined4 param_2); /* 00421c60 */
-void __thiscall FUN_00421ca0(C_00421ca0 *this,iptr param_1); /* 00421ca0 */
-void __cdecl FUN_00421d30(); /* 00421d30 */
-undefined4 __cdecl FUN_00421d60(); /* 00421d60 */
-undefined4 __cdecl FUN_00421da0(); /* 00421da0 */
-void __thiscall FUN_00421dd0(C_0040bc40_2f4 *this); /* 00421dd0 */
-undefined4 __thiscall FUN_00421e00(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,undefined4 param_3); /* 00421e00 */
+undefined4 __cdecl timer_ticks(); /* 00421bb0 */
+void __cdecl input_flush_events(); /* 00421bd0 */
+undefined4 __thiscall file_obj_create(FileObject *this,iptr param_1); /* 00421bf0 */
+undefined4 __thiscall file_map_close(FileObject *this); /* 00421c30 */
+void __thiscall file_obj_write(FileObject *this,iptr param_1,undefined4 param_2); /* 00421c60 */
+void __thiscall radiogrp_enable_item(RadioGroupEnableView *this,iptr param_1); /* 00421ca0 */
+void __cdecl text_append_comma(); /* 00421d30 */
+undefined4 __cdecl text_set_string_arg_b(); /* 00421d60 */
+undefined4 __cdecl text_set_number_arg(); /* 00421da0 */
+void __thiscall dialog_init_default(Dialog *this); /* 00421dd0 */
+undefined4 __thiscall dialog_load_text(Dialog *this,iptr param_1,iptr param_2,undefined4 param_3); /* 00421e00 */
 void __cdecl FUN_00421e40(); /* 00421e40 */
-undefined4 __cdecl FUN_00421e70(); /* 00421e70 */
-undefined4 __cdecl FUN_00421ea0(); /* 00421ea0 */
-undefined4 __cdecl FUN_00421ed0(); /* 00421ed0 */
-void __cdecl FUN_00421f10(); /* 00421f10 */
-undefined1 __thiscall FUN_00421f40(void *this); /* 00421f40 */
+undefined4 __cdecl popup_game_flags(); /* 00421e70 */
+undefined4 __cdecl popup_game(); /* 00421ea0 */
+undefined4 __cdecl dlg_game_text_input(); /* 00421ed0 */
+void __cdecl text_append_year(); /* 00421f10 */
+undefined1 __thiscall net_is_host(void *this); /* 00421f40 */
 C_00421f70 * __thiscall FUN_00421f70(C_00421f70 *this); /* 00421f70 */
 void __thiscall FUN_00421fad(void *this); /* 00421fad */
 undefined4 __thiscall FUN_00421fcd(void *this,int param_1); /* 00421fcd */
@@ -372,39 +372,39 @@ void __cdecl FUN_0042433c(); /* 0042433c */
 void __cdecl FUN_0042439c(); /* 0042439c */
 void __cdecl FUN_004243ef(); /* 004243ef */
 void __cdecl FUN_0042444f(); /* 0042444f */
-void __thiscall FUN_004244e0(C_004244e0 *this); /* 004244e0 */
-u32 __thiscall FUN_00424688(C_004244e0 *this,iptr param_1,iptr param_2); /* 00424688 */
-void __thiscall FUN_0042472a(C_0042472a *this); /* 0042472a */
-void __thiscall FUN_004247b2(C_0042472a *this,iptr param_1,iptr param_2,iptr param_3); /* 004247b2 */
+void __thiscall FUN_004244e0(NetGameListRefreshView *this); /* 004244e0 */
+u32 __thiscall FUN_00424688(NetGameListRefreshView *this,iptr param_1,iptr param_2); /* 00424688 */
+void __thiscall net_gamelist_update_details(NetGameList *this); /* 0042472a */
+void __thiscall FUN_004247b2(NetGameList *this,iptr param_1,iptr param_2,iptr param_3); /* 004247b2 */
 void __thiscall FUN_0042486f(C_0042486f *this); /* 0042486f */
 undefined4 __cdecl FUN_00424ae9(); /* 00424ae9 */
-void __thiscall FUN_004253ef(C_0042472a *this); /* 004253ef */
-uint * __thiscall FUN_004254a8(C_004254a8 *this,iptr param_1,uint param_2); /* 004254a8 */
-void __thiscall FUN_00425607(C_00425607 *this,iptr param_1); /* 00425607 */
-void __thiscall FUN_00425650(C_00425607 *this); /* 00425650 */
+void __thiscall net_gamelist_clear(NetGameList *this); /* 004253ef */
+uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr param_1,uint param_2); /* 004254a8 */
+void __thiscall FUN_00425607(NetGameListTimerView *this,iptr param_1); /* 00425607 */
+void __thiscall net_gamelist_kill_timer(NetGameListTimerView *this); /* 00425650 */
 void __cdecl FUN_00425695(); /* 00425695 */
 void __cdecl FUN_0042570c(); /* 0042570c */
-void __cdecl FUN_004257fe(); /* 004257fe */
-undefined4 __cdecl FUN_004259a6(); /* 004259a6 */
-C_0040bc40_2f4 * __thiscall FUN_00426f30(C_0040bc40_2f4 *this,uint param_1); /* 00426f30 */
-void __thiscall FUN_00426f80(C_00408010_10 *this); /* 00426f80 */
-undefined4 __cdecl FUN_00426fb0(); /* 00426fb0 */
-void __cdecl FUN_00426ff0(); /* 00426ff0 */
-undefined4 __cdecl FUN_004271e8(); /* 004271e8 */
+void __cdecl net_gamelist_refresh(); /* 004257fe */
+undefined4 __cdecl game_profile_popup(); /* 004259a6 */
+Dialog * __thiscall dialog_scalar_dtor(Dialog *this,uint param_1); /* 00426f30 */
+void __thiscall wnd_maximize(WndBase *this); /* 00426f80 */
+undefined4 __cdecl popup_game_sprite_flags(); /* 00426fb0 */
+void __cdecl text_expand_vars(); /* 00426ff0 */
+undefined4 __cdecl text_set_label_arg(); /* 004271e8 */
 void __cdecl FUN_00427211(); /* 00427211 */
 void __cdecl FUN_004272d0(); /* 004272d0 */
 void __cdecl FUN_0042738c(); /* 0042738c */
 void __cdecl FUN_004273e6(); /* 004273e6 */
-void __cdecl FUN_004274a6(); /* 004274a6 */
+void __cdecl unit_reveal_surroundings(); /* 004274a6 */
 void __cdecl FUN_004289e0(); /* 004289e0 */
 void __cdecl FUN_004289f5(); /* 004289f5 */
-void __cdecl FUN_00428a0f(); /* 00428a0f */
+void __cdecl strpool_init(); /* 00428a0f */
 void __cdecl FUN_00428a78(); /* 00428a78 */
-int __cdecl FUN_00428a95(); /* 00428a95 */
-char * __cdecl FUN_00428b0c(); /* 00428b0c */
-int __cdecl FUN_00428b68(); /* 00428b68 */
-C_00428cb0 * __thiscall FUN_00428cb0(C_00428cb0 *this); /* 00428cb0 */
-void __cdecl FUN_00428d00(); /* 00428d00 */
+int __cdecl strpool_add(); /* 00428a95 */
+char * __cdecl label_string(); /* 00428b0c */
+int __cdecl strpool_add_padded(); /* 00428b68 */
+MemBlock * __thiscall memblock_ctor(MemBlock *this); /* 00428cb0 */
+void __cdecl city_editor_request_redraw(); /* 00428d00 */
 void __cdecl FUN_00428d1b(); /* 00428d1b */
 void __cdecl FUN_00428d48(); /* 00428d48 */
 void __cdecl FUN_00428da7(); /* 00428da7 */
@@ -415,7 +415,7 @@ void __thiscall FUN_0042903e(C_004083b0_430 *this,int param_1); /* 0042903e */
 void __thiscall FUN_004293a8(C_004083b0_430 *this); /* 004293a8 */
 void __thiscall FUN_00429671(C_004083b0_430 *this); /* 00429671 */
 void __cdecl FUN_00429e53(); /* 00429e53 */
-void __cdecl FUN_00429e77(); /* 00429e77 */
+void __cdecl city_editor_run(); /* 00429e77 */
 void __cdecl FUN_00429ed0(); /* 00429ed0 */
 void __cdecl FUN_0042a380(); /* 0042a380 */
 void __cdecl FUN_0042a39a(); /* 0042a39a */
@@ -453,76 +453,76 @@ void __cdecl FUN_0042a6f8(); /* 0042a6f8 */
 void __cdecl FUN_0042a712(); /* 0042a712 */
 void __cdecl FUN_0042a731(); /* 0042a731 */
 void __cdecl FUN_0042a74e(); /* 0042a74e */
-void __thiscall FUN_0042a768(C_004083b0_488 *this); /* 0042a768 */
-void __thiscall FUN_0042a7bc(C_004083b0_4c4 *this,uint param_1,u32 param_2,u32 param_3,u32 param_4,u32 param_5, u32 param_6,u32 param_7); /* 0042a7bc */
+void __thiscall picwnd_close(C_004083b0_488 *this); /* 0042a768 */
+void __thiscall picwnd_open(C_004083b0_4c4 *this,uint param_1,u32 param_2,u32 param_3,u32 param_4,u32 param_5, u32 param_6,u32 param_7); /* 0042a7bc */
 void __cdecl FUN_0042ab9b(); /* 0042ab9b */
-void __thiscall FUN_0042abc1(C_004083b0_2e4 *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 0042abc1 */
-void __thiscall FUN_0042ac18(C_004083b0_4c4 *this); /* 0042ac18 */
+void __thiscall picwnd_blit_at(FrameWindow *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 0042abc1 */
+void __thiscall picwnd_blit(C_004083b0_4c4 *this); /* 0042ac18 */
 void __cdecl FUN_0042ac4e(); /* 0042ac4e */
-void __thiscall FUN_0042acb0(C_004083b0_430 *this); /* 0042acb0 */
+void __thiscall advisor_add_close_button(C_004083b0_430 *this); /* 0042acb0 */
 void __cdecl FUN_0042ad8f(); /* 0042ad8f */
 void __cdecl FUN_0042b540(); /* 0042b540 */
 void __cdecl FUN_0042b563(); /* 0042b563 */
 void __cdecl FUN_0042b65b(); /* 0042b65b */
-void __cdecl FUN_0042b67d(); /* 0042b67d */
-undefined4 __cdecl FUN_0042b824(); /* 0042b824 */
+void __cdecl science_advisor_show(); /* 0042b67d */
+undefined4 __cdecl trade_commodity_cities_dialog(); /* 0042b824 */
 void __cdecl FUN_0042bc22(); /* 0042bc22 */
 void __cdecl FUN_0042bc47(); /* 0042bc47 */
 void __cdecl FUN_0042bd6b(); /* 0042bd6b */
 void __cdecl FUN_0042bd8f(); /* 0042bd8f */
 void __cdecl FUN_0042ccf4(); /* 0042ccf4 */
 void __cdecl FUN_0042cd11(); /* 0042cd11 */
-void __cdecl FUN_0042cd2f(); /* 0042cd2f */
+void __cdecl trade_advisor_show(); /* 0042cd2f */
 void __cdecl FUN_0042ced6(); /* 0042ced6 */
 void __cdecl FUN_0042d618(); /* 0042d618 */
 void __cdecl FUN_0042d635(); /* 0042d635 */
-void __cdecl FUN_0042d71e(); /* 0042d71e */
-int __cdecl FUN_0042d781(); /* 0042d781 */
+void __cdecl city_status_show(); /* 0042d71e */
+int __cdecl advisor_draw_city_citizens(); /* 0042d781 */
 void __cdecl FUN_0042da1d(); /* 0042da1d */
 void __cdecl FUN_0042e07f(); /* 0042e07f */
 void __cdecl FUN_0042e09c(); /* 0042e09c */
-void __cdecl FUN_0042e185(); /* 0042e185 */
+void __cdecl attitude_advisor_show(); /* 0042e185 */
 void __cdecl FUN_0042e1e8(); /* 0042e1e8 */
-void __cdecl FUN_0042e220(); /* 0042e220 */
+void __cdecl defense_minister_draw(); /* 0042e220 */
 void __cdecl FUN_0042efe3(); /* 0042efe3 */
 void __cdecl FUN_0042f000(); /* 0042f000 */
-void __cdecl FUN_0042f079(); /* 0042f079 */
+void __cdecl defense_minister_show(); /* 0042f079 */
 void __cdecl FUN_0042f293(); /* 0042f293 */
 void __cdecl FUN_00430267(); /* 00430267 */
 void __cdecl FUN_0043028a(); /* 0043028a */
 void __cdecl FUN_0043039d(); /* 0043039d */
 void __cdecl FUN_004305e7(); /* 004305e7 */
-void __cdecl FUN_0043060b(); /* 0043060b */
+void __cdecl intel_report_show(); /* 0043060b */
 void __cdecl FUN_00430822(); /* 00430822 */
-void __cdecl FUN_004308ae(); /* 004308ae */
+void __cdecl foreign_minister_show(); /* 004308ae */
 void __cdecl FUN_0043154f(); /* 0043154f */
 void __cdecl FUN_00431573(); /* 00431573 */
 void __cdecl FUN_00431c56(); /* 00431c56 */
-void __cdecl FUN_00431c73(); /* 00431c73 */
-void __cdecl FUN_00431d22(); /* 00431d22 */
+void __cdecl wonders_report_show(); /* 00431c73 */
+void __cdecl powergraph_show(); /* 00431d22 */
 void __cdecl FUN_004325c9(); /* 004325c9 */
 void __cdecl FUN_004325d5(); /* 004325d5 */
 void __cdecl FUN_004325e1(); /* 004325e1 */
 void __cdecl FUN_004325ed(); /* 004325ed */
-void __cdecl FUN_00432611(); /* 00432611 */
+void __cdecl historian_report_show(); /* 00432611 */
 void __cdecl FUN_00432bf8(); /* 00432bf8 */
 void __cdecl FUN_00432c1c(); /* 00432c1c */
-void __cdecl FUN_00433122(); /* 00433122 */
+void __cdecl top_cities_show(); /* 00433122 */
 void __cdecl FUN_004331d1(); /* 004331d1 */
 void __cdecl FUN_00433434(); /* 00433434 */
-void __cdecl FUN_00434d8a(); /* 00434d8a */
+void __cdecl demographics_show(); /* 00434d8a */
 void __cdecl FUN_00434e39(); /* 00434e39 */
-void __cdecl FUN_00435d15(); /* 00435d15 */
+void __cdecl civ_score_window_show(); /* 00435d15 */
 void __cdecl FUN_00435dc4(); /* 00435dc4 */
-void __cdecl FUN_004361cc(); /* 004361cc */
-void __cdecl FUN_00436287(); /* 00436287 */
+void __cdecl civ_rating_window_show(); /* 004361cc */
+void __cdecl advisor_refresh_if_open(); /* 00436287 */
 void __cdecl FUN_004362e2(); /* 004362e2 */
 void __cdecl FUN_00436b92(); /* 00436b92 */
-iptr __cdecl FUN_00436bb7(); /* 00436bb7 */
-void __cdecl FUN_00436dd7(); /* 00436dd7 */
-void __cdecl FUN_00436e28(); /* 00436e28 */
+iptr __cdecl hall_of_fame_show(); /* 00436bb7 */
+void __cdecl hall_of_fame_clear(); /* 00436dd7 */
+void __cdecl hall_of_fame_load(); /* 00436e28 */
 void __cdecl FUN_00436ed2(); /* 00436ed2 */
-void __cdecl FUN_00436f5a(); /* 00436f5a */
+void __cdecl hall_of_fame_add_entry(); /* 00436f5a */
 void __cdecl FUN_004371b3(); /* 004371b3 */
 void __cdecl FUN_004371c8(); /* 004371c8 */
 void __cdecl FUN_004371e2(); /* 004371e2 */
@@ -530,17 +530,17 @@ void __cdecl FUN_0043720f(); /* 0043720f */
 int __cdecl FUN_0043722c(); /* 0043722c */
 char * __cdecl FUN_00437284(); /* 00437284 */
 undefined4 __cdecl FUN_004372cd(); /* 004372cd */
-void __cdecl FUN_0043742f(); /* 0043742f */
+void __cdecl credits_draw_scroll(); /* 0043742f */
 void __cdecl FUN_00437a10(); /* 00437a10 */
 void __cdecl FUN_00437a2a(); /* 00437a2a */
-void __cdecl FUN_00437a4a(); /* 00437a4a */
-void __cdecl FUN_00437c6f(); /* 00437c6f */
+void __cdecl credits_show(); /* 00437a4a */
+void __cdecl intel_report_end_modal(); /* 00437c6f */
 void __cdecl FUN_00437c8a(); /* 00437c8a */
 void __cdecl FUN_00437ccd(); /* 00437ccd */
 void __cdecl FUN_00437cea(); /* 00437cea */
-void __cdecl FUN_0043856b(); /* 0043856b */
+void __cdecl casualty_timeline_show(); /* 0043856b */
 void __cdecl FUN_004386b8(); /* 004386b8 */
-void __thiscall FUN_0043c110(void *this); /* 0043c110 */
+void __thiscall picwnd_dtor(void *this); /* 0043c110 */
 void __cdecl FUN_0043c19c(); /* 0043c19c */
 void __cdecl FUN_0043c1ab(); /* 0043c1ab */
 void __cdecl FUN_0043c1ba(); /* 0043c1ba */
@@ -548,72 +548,72 @@ void __cdecl FUN_0043c1c9(); /* 0043c1c9 */
 void __cdecl FUN_0043c1d8(); /* 0043c1d8 */
 void __cdecl FUN_0043c1e7(); /* 0043c1e7 */
 void __cdecl FUN_0043c1f6(); /* 0043c1f6 */
-C_004083b0_430 * __thiscall FUN_0043c260(C_004083b0_430 *this); /* 0043c260 */
-C_0043c3f0_4 * __thiscall FUN_0043c3f0(C_0043c3f0_4 *this,iptr param_1); /* 0043c3f0 */
-void __thiscall FUN_0043c430(C_0043c3f0_4 *this); /* 0043c430 */
-C_0040ef70_8 * __thiscall FUN_0043c460(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2); /* 0043c460 */
-C_0040ef70_8 * __thiscall FUN_0043c4c0(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0043c4c0 */
-C_0040ef70_8 * __thiscall FUN_0043c520(C_0040ef70_8 *this); /* 0043c520 */
-u32 __thiscall FUN_0043c560(C_004083b0_48 *this); /* 0043c560 */
-u32 __thiscall FUN_0043c590(C_004083b0_48 *this); /* 0043c590 */
-undefined4 __thiscall FUN_0043c5c0(C_00408010_10 *this); /* 0043c5c0 */
-void __thiscall FUN_0043c5f0(C_0040f380_3c *this); /* 0043c5f0 */
-void __thiscall FUN_0043c630(C_00408010_10 *this); /* 0043c630 */
-void __thiscall FUN_0043c660(C_00408010_10 *this); /* 0043c660 */
-C_0040ef70_8 * __thiscall FUN_0043c690(C_0040ef70_8 *this); /* 0043c690 */
-void __thiscall FUN_0043c6c0(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0043c6c0 */
-C_0043c740_434 * __thiscall FUN_0043c740(C_0043c740_434 *this,uint param_1); /* 0043c740 */
-void __cdecl FUN_0043c790(); /* 0043c790 */
-void __cdecl FUN_0043c7c0(); /* 0043c7c0 */
-void __cdecl FUN_0043c810(); /* 0043c810 */
-void __cdecl FUN_0043c840(); /* 0043c840 */
-void __cdecl FUN_0043c870(); /* 0043c870 */
-void __cdecl FUN_0043c8a0(); /* 0043c8a0 */
-undefined4 __cdecl FUN_0043c8d0(); /* 0043c8d0 */
-void __cdecl FUN_0043c910(); /* 0043c910 */
-undefined4 __cdecl FUN_0043c950(); /* 0043c950 */
-void __thiscall FUN_0043c990(C_0040bc40_28 *this,uptr param_1,iptr param_2); /* 0043c990 */
-void __thiscall FUN_0043c9d0(C_0040bc40_2f4 *this,iptr param_1); /* 0043c9d0 */
-void __thiscall FUN_0043ca10(C_0040bc40_2f4 *this,iptr param_1,iptr param_2); /* 0043ca10 */
-void __cdecl FUN_0043ca50(); /* 0043ca50 */
-void __cdecl FUN_0043ca80(); /* 0043ca80 */
-undefined4 __cdecl FUN_0043cab0(); /* 0043cab0 */
-undefined4 __cdecl FUN_0043cb30(); /* 0043cb30 */
-C_00417f70_3c * __thiscall FUN_0043cbb0(C_00417f70_3c *this,uint param_1); /* 0043cbb0 */
-void __cdecl FUN_0043cc00(); /* 0043cc00 */
-int __cdecl FUN_0043cc7e(); /* 0043cc7e */
-int __cdecl FUN_0043cce5(); /* 0043cce5 */
-void __cdecl FUN_0043cda6(); /* 0043cda6 */
+C_004083b0_430 * __thiscall picwnd_ctor(C_004083b0_430 *this); /* 0043c260 */
+DllHandle * __thiscall resource_dll_load(DllHandle *this,iptr param_1); /* 0043c3f0 */
+void __thiscall dll_free(DllHandle *this); /* 0043c430 */
+GameFont * __thiscall font_init(GameFont *this,undefined4 param_1,undefined4 param_2); /* 0043c460 */
+GameFont * __thiscall font_init_styled(GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0043c4c0 */
+GameFont * __thiscall font_destroy(GameFont *this); /* 0043c520 */
+u32 __thiscall surface_height(DibSurface *this); /* 0043c560 */
+u32 __thiscall surface_width(DibSurface *this); /* 0043c590 */
+undefined4 __thiscall wnd_nonclient_height(WndBase *this); /* 0043c5c0 */
+void __thiscall control_hide(Control *this); /* 0043c5f0 */
+void __thiscall wnd_disable(WndBase *this); /* 0043c630 */
+void __thiscall wnd_enable(WndBase *this); /* 0043c660 */
+GameFont * __thiscall font_init_empty(GameFont *this); /* 0043c690 */
+void __thiscall font_set_styled(GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0043c6c0 */
+GamePalette * __thiscall FUN_0043c740(GamePalette *this,uint param_1); /* 0043c740 */
+void __cdecl rect_offset(); /* 0043c790 */
+void __cdecl gfx_draw_rect_frame(); /* 0043c7c0 */
+void __cdecl text_append_period(); /* 0043c810 */
+void __cdecl str_append(); /* 0043c840 */
+void __cdecl text_append_long(); /* 0043c870 */
+void __cdecl text_append_gold(); /* 0043c8a0 */
+undefined4 __cdecl gfx_draw_text(); /* 0043c8d0 */
+void __cdecl gfx_draw_text_centered(); /* 0043c910 */
+undefined4 __cdecl gfx_draw_text_right(); /* 0043c950 */
+void __thiscall dialog_set_list_indent(C_0040bc40_28 *this,uptr param_1,iptr param_2); /* 0043c990 */
+void __thiscall dialog_load_game_text(Dialog *this,iptr param_1); /* 0043c9d0 */
+void __thiscall dialog_load_text_noflags(Dialog *this,iptr param_1,iptr param_2); /* 0043ca10 */
+void __cdecl text_append_population(); /* 0043ca50 */
+void __cdecl text_append_city_name(); /* 0043ca80 */
+undefined4 __cdecl civ_color_primary(); /* 0043cab0 */
+undefined4 __cdecl civ_color_secondary(); /* 0043cb30 */
+Sprite * __thiscall sprite_scalar_dtor(Sprite *this,uint param_1); /* 0043cbb0 */
+void __cdecl city_reveal_to_civ(); /* 0043cc00 */
+int __cdecl city_population_units(); /* 0043cc7e */
+int __cdecl civ_total_population(); /* 0043cce5 */
+void __cdecl str_append_population(); /* 0043cda6 */
 void __cdecl FUN_0043ce5a(); /* 0043ce5a */
-uint __cdecl FUN_0043cef9(); /* 0043cef9 */
-undefined4 __cdecl FUN_0043cf76(); /* 0043cf76 */
-iptr __cdecl FUN_0043d07a(); /* 0043d07a */
-undefined4 __cdecl FUN_0043d20a(); /* 0043d20a */
-#undef FUN_0043d289
-int __cdecl FUN_0043d289(int city, int impr, int on); /* 0043d289, hand-written */
+uint __cdecl city_objective_value(); /* 0043cef9 */
+undefined4 __cdecl city_at(); /* 0043cf76 */
+iptr __cdecl city_find_nearest(); /* 0043d07a */
+undefined4 __cdecl city_has_improvement(); /* 0043d20a */
+#undef city_set_improvement
+int __cdecl city_set_improvement(int city, int impr, int on); /* 0043d289, hand-written */
 undefined4 __cdecl FUN_0043d348(); /* 0043d348 */
 undefined4 __cdecl FUN_0043d3a4(); /* 0043d3a4 */
-void __cdecl FUN_0043d400(); /* 0043d400 */
+void __cdecl city_calc_commodity_demand(); /* 0043d400 */
 void __cdecl FUN_0043f444(); /* 0043f444 */
 void __cdecl FUN_0043f493(); /* 0043f493 */
-void __cdecl FUN_0043f7a7(); /* 0043f7a7 */
-uptr __cdecl FUN_0043f8b0(); /* 0043f8b0 */
-void __cdecl FUN_00440325(); /* 00440325 */
+void __cdecl city_refresh_area_tiles(); /* 0043f7a7 */
+uptr __cdecl city_create(); /* 0043f8b0 */
+void __cdecl city_remove_trade_route(); /* 00440325 */
 void __cdecl FUN_004403ec(); /* 004403ec */
 void __cdecl FUN_00440453(); /* 00440453 */
 void __cdecl FUN_00440750(); /* 00440750 */
-void __cdecl FUN_004413d1(); /* 004413d1 */
-undefined4 __cdecl FUN_00441a79(); /* 00441a79 */
-void __cdecl FUN_00441b11(); /* 00441b11 */
+void __cdecl city_delete(); /* 004413d1 */
+undefined4 __cdecl city_needed_size_improvement(); /* 00441a79 */
+void __cdecl city_set_production(); /* 00441b11 */
 void __cdecl FUN_0044251d(); /* 0044251d */
-void __cdecl FUN_00442541(); /* 00442541 */
-undefined4 __cdecl FUN_0044263f(); /* 0044263f */
-int __cdecl FUN_0044272d(); /* 0044272d */
+void __cdecl civ_reset_city_production(); /* 00442541 */
+undefined4 __cdecl city_adjacent_to_body(); /* 0044263f */
+int __cdecl city_adjacent_sea_info(); /* 0044272d */
 undefined4 __cdecl FUN_00442885(); /* 00442885 */
-undefined4 __cdecl FUN_004429af(); /* 004429af */
-undefined4 __cdecl FUN_00444270(); /* 00444270 */
-undefined4 __cdecl FUN_004442a0(); /* 004442a0 */
-undefined4 __cdecl FUN_004442e0(); /* 004442e0 */
+undefined4 __cdecl cities_share_ocean(); /* 004429af */
+undefined4 __cdecl popup_debug_text(); /* 00444270 */
+undefined4 __cdecl dlg_game_txt_with_unit_flags(); /* 004442a0 */
+undefined4 __cdecl dlg_game_txt_with_unit(); /* 004442e0 */
 undefined4 __cdecl FUN_00444310(); /* 00444310 */
 void __cdecl FUN_0044525d(); /* 0044525d */
 void __cdecl FUN_00445269(); /* 00445269 */
@@ -626,13 +626,13 @@ void __cdecl FUN_004456ed(); /* 004456ed */
 undefined4 __cdecl FUN_00445712(); /* 00445712 */
 void __cdecl FUN_00445e15(); /* 00445e15 */
 void __cdecl FUN_00445e21(); /* 00445e21 */
-undefined4 __cdecl FUN_00445e46(); /* 00445e46 */
+undefined4 __cdecl net_choose_civ_dialog(); /* 00445e46 */
 void __cdecl FUN_004467fa(); /* 004467fa */
 void * __thiscall FUN_00447170(void *this,uint param_1); /* 00447170 */
-C_004471c0 * __thiscall FUN_004471c0(C_004471c0 *this,uint param_1); /* 004471c0 */
-void __thiscall FUN_00447210(C_00447210 *this,iptr param_1); /* 00447210 */
-u32 __thiscall FUN_004472c0(C_004472c0 *this); /* 004472c0 */
-void __thiscall FUN_004472f0(C_004472f0 *this,u32 param_1); /* 004472f0 */
+LobbyList * __thiscall FUN_004471c0(LobbyList *this,uint param_1); /* 004471c0 */
+void __thiscall radiogrp_disable_item(RadioGroupDisableView *this,iptr param_1); /* 00447210 */
+u32 __thiscall radiogrp_get_selected(RadioGroupGetSelView *this); /* 004472c0 */
+void __thiscall radiogrp_set_selected(RadioGroupSetSelView *this,u32 param_1); /* 004472f0 */
 void __cdecl FUN_00447320(); /* 00447320 */
 void __cdecl FUN_0044733a(); /* 0044733a */
 void __cdecl FUN_00447362(); /* 00447362 */
@@ -873,47 +873,47 @@ void __cdecl FUN_00448f27(); /* 00448f27 */
 void __cdecl FUN_00448f41(); /* 00448f41 */
 void __cdecl FUN_00448f5b(); /* 00448f5b */
 void __cdecl FUN_00448f78(); /* 00448f78 */
-undefined4 __cdecl FUN_00448f92(); /* 00448f92 */
+undefined4 __cdecl civ_city_style_era(); /* 00448f92 */
 void __cdecl FUN_00449030(); /* 00449030 */
 void __cdecl FUN_0044996f(); /* 0044996f */
 void __cdecl FUN_0044997b(); /* 0044997b */
-void __cdecl FUN_0044999c(); /* 0044999c */
-void __cdecl FUN_004499d3(); /* 004499d3 */
+void __cdecl sprite_grab_tile_cell(); /* 0044999c */
+void __cdecl sprite_grab_from_sheet(); /* 004499d3 */
 void __cdecl FUN_00449a0e(); /* 00449a0e */
 void __cdecl FUN_0044ab4e(); /* 0044ab4e */
 void __cdecl FUN_0044ab72(); /* 0044ab72 */
 void __cdecl FUN_0044aba9(); /* 0044aba9 */
 void __cdecl FUN_0044abd5(); /* 0044abd5 */
-void __cdecl FUN_0044ac07(); /* 0044ac07 */
+void __cdecl sprite_grab_city_cell(); /* 0044ac07 */
 void __cdecl FUN_0044ac3e(); /* 0044ac3e */
 void __cdecl FUN_0044ad47(); /* 0044ad47 */
 void __cdecl FUN_0044ae4c(); /* 0044ae4c */
 void __cdecl FUN_0044b239(); /* 0044b239 */
 void __cdecl FUN_0044b30e(); /* 0044b30e */
-void __cdecl FUN_0044b49e(); /* 0044b49e */
+void __cdecl gfx_load_game_sprites(); /* 0044b49e */
 void __cdecl FUN_0044b4f6(); /* 0044b4f6 */
-C_004083b0_114 * __thiscall FUN_0044c5a0(C_004083b0_114 *this); /* 0044c5a0 */
-C_00408010_cc * __thiscall FUN_0044c670(C_00408010_cc *this); /* 0044c670 */
-C_00408010_b8 * __thiscall FUN_0044c730(C_00408010_b8 *this); /* 0044c730 */
-C_0044c8b0 * __thiscall FUN_0044c8b0(C_0044c8b0 *this); /* 0044c8b0 */
-void __thiscall FUN_0044c8e0(C_0044c8b0 *this); /* 0044c8e0 */
-void __thiscall FUN_0044ca40(void *this); /* 0044ca40 */
-#undef FUN_0044ca60
-undefined4 __thiscall FUN_0044ca60(void *this); /* 0044ca60, hand-written */
+SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this); /* 0044c5a0 */
+Wnd * __thiscall FUN_0044c670(Wnd *this); /* 0044c670 */
+C_00408010_b8 * __thiscall wnd_ctor(C_00408010_b8 *this); /* 0044c730 */
+WndHandlers * __thiscall wnd_handlers_ctor(WndHandlers *this); /* 0044c8b0 */
+void __thiscall wnd_clear_handlers(WndHandlers *this); /* 0044c8e0 */
+void __thiscall wnd_handlers_dtor(void *this); /* 0044ca40 */
+#undef wnd_dtor
+undefined4 __thiscall wnd_dtor(void *this); /* 0044ca60, hand-written */
 void __cdecl FUN_0044caab(); /* 0044caab */
 void __cdecl FUN_0044cad3(); /* 0044cad3 */
 undefined4 __thiscall FUN_0044cb20(void *this); /* 0044cb20 */
 void __cdecl FUN_0044cb5e(); /* 0044cb5e */
-#undef FUN_0044cba0
-void __thiscall FUN_0044cba0(void *this); /* 0044cba0, hand-written */
+#undef surfwnd_dtor
+void __thiscall surfwnd_dtor(void *this); /* 0044cba0, hand-written */
 void __cdecl FUN_0044cc01(); /* 0044cc01 */
 void __cdecl FUN_0044cc29(); /* 0044cc29 */
-void __cdecl FUN_0044cc80(); /* 0044cc80 */
+void __cdecl throneroom_show_upgrade(); /* 0044cc80 */
 void __cdecl FUN_0044cd77(); /* 0044cd77 */
-void __cdecl FUN_0044cd9b(); /* 0044cd9b */
+void __cdecl throneroom_show(); /* 0044cd9b */
 void __cdecl FUN_0044cdf2(); /* 0044cdf2 */
-C_00408010_1c44 * __thiscall FUN_0044ce16(C_00408010_1c44 *this,iptr param_1); /* 0044ce16 */
-void __thiscall FUN_0044d027(C_0044d027_1c44 *this); /* 0044d027 */
+ThroneRoomWindow * __thiscall throneroom_ctor(ThroneRoomWindow *this,iptr param_1); /* 0044ce16 */
+void __thiscall throneroom_dtor(ThroneRoomDtorView *this); /* 0044d027 */
 void __cdecl FUN_0044d0d8(); /* 0044d0d8 */
 void __cdecl FUN_0044d0e7(); /* 0044d0e7 */
 void __cdecl FUN_0044d0f6(); /* 0044d0f6 */
@@ -922,74 +922,74 @@ void __cdecl FUN_0044d114(); /* 0044d114 */
 void __cdecl FUN_0044d123(); /* 0044d123 */
 void __cdecl FUN_0044d132(); /* 0044d132 */
 void __cdecl FUN_0044d141(); /* 0044d141 */
-uint __thiscall FUN_0044d162(C_00408010_6f0 *this); /* 0044d162 */
-void __thiscall FUN_0044d296(C_00408010_1c44 *this); /* 0044d296 */
+uint __thiscall throneroom_create_windows(C_00408010_6f0 *this); /* 0044d162 */
+void __thiscall FUN_0044d296(ThroneRoomWindow *this); /* 0044d296 */
 void __cdecl FUN_0044d99d(); /* 0044d99d */
-void __thiscall FUN_0044d9c1(C_00408010_1c44 *this); /* 0044d9c1 */
-void __thiscall FUN_0044dab5(C_00408010_10 *this); /* 0044dab5 */
-undefined4 __thiscall FUN_0044db92(C_00408010_1c44 *this); /* 0044db92 */
+void __thiscall FUN_0044d9c1(ThroneRoomWindow *this); /* 0044d9c1 */
+void __thiscall throneroom_draw_click_prompt(WndBase *this); /* 0044dab5 */
+undefined4 __thiscall throneroom_render(ThroneRoomWindow *this); /* 0044db92 */
 void __cdecl FUN_0044e762(); /* 0044e762 */
 void __cdecl FUN_0044e76b(); /* 0044e76b */
-undefined4 __thiscall FUN_0044e790(C_00408010_1c44 *this); /* 0044e790 */
+undefined4 __thiscall FUN_0044e790(ThroneRoomWindow *this); /* 0044e790 */
 void __cdecl FUN_0044f498(); /* 0044f498 */
 void __cdecl FUN_0044f4a4(); /* 0044f4a4 */
 void __cdecl FUN_0044f4c9(); /* 0044f4c9 */
 void __cdecl FUN_0044f717(); /* 0044f717 */
-void __cdecl FUN_0044f799(); /* 0044f799 */
-C_0043c3f0_4 * __thiscall FUN_004502b0(C_0043c3f0_4 *this); /* 004502b0 */
-void __thiscall FUN_004502e0(C_0043c3f0_4 *this,iptr param_1); /* 004502e0 */
-void __thiscall FUN_00450340(C_0043c3f0_4 *this); /* 00450340 */
-void __thiscall FUN_00450390(C_00408010_10 *this,iptr param_1); /* 00450390 */
-void __thiscall FUN_004503d0(C_00408010_10 *this); /* 004503d0 */
-void __thiscall FUN_00450400(C_00450400_10 *this); /* 00450400 */
-void __thiscall FUN_00450440(C_00408010_10 *this,iptr param_1); /* 00450440 */
+void __cdecl throneroom_close(); /* 0044f799 */
+DllHandle * __thiscall dll_handle_init(DllHandle *this); /* 004502b0 */
+void __thiscall dll_handle_load(DllHandle *this,iptr param_1); /* 004502e0 */
+void __thiscall dll_handle_free(DllHandle *this); /* 00450340 */
+void __thiscall wnd_set_palette(WndBase *this,iptr param_1); /* 00450390 */
+void __thiscall wnd_hide(WndBase *this); /* 004503d0 */
+void __thiscall wnd_center(WndCenterView *this); /* 00450400 */
+void __thiscall FUN_00450440(WndBase *this,iptr param_1); /* 00450440 */
 void __thiscall FUN_00450480(C_004083b0_4 *this,iptr param_1,iptr param_2,int param_3); /* 00450480 */
 void __cdecl FUN_00450ae6(); /* 00450ae6 */
 void __cdecl FUN_00450b04(); /* 00450b04 */
-void __cdecl FUN_00450b22(); /* 00450b22 */
+void __cdecl parley_advance_list_on_scroll(); /* 00450b22 */
 void __cdecl FUN_00450b83(); /* 00450b83 */
 int __cdecl FUN_00450df6(); /* 00450df6 */
-void __cdecl FUN_00450f0b(); /* 00450f0b */
-undefined4 __thiscall FUN_00451830(C_00417f70_3c *this); /* 00451830 */
-undefined4 __thiscall FUN_00451860(C_00417f70_3c *this); /* 00451860 */
-void __thiscall FUN_00451890(C_00408010_10 *this,iptr param_1,iptr param_2); /* 00451890 */
-void __thiscall FUN_004518d0(C_00408010_cc *this); /* 004518d0 */
-void __thiscall FUN_00451900(C_00408010_10 *this); /* 00451900 */
-C_0040f380_3c * __thiscall FUN_00451930(C_0040f380_3c *this); /* 00451930 */
-void __thiscall FUN_004519b0(C_0040f380_40 *this,iptr param_1,iptr param_2,iptr param_3); /* 004519b0 */
-void __thiscall FUN_00451a60(C_00451a60 *this,iptr param_1); /* 00451a60 */
-void __thiscall FUN_00451a90(C_00451a90 *this,iptr param_1); /* 00451a90 */
-void __thiscall FUN_00451ac0(C_00451ac0 *this,iptr param_1); /* 00451ac0 */
+void __cdecl parley_draw_advance_list(); /* 00450f0b */
+undefined4 __thiscall sprite_get_width(Sprite *this); /* 00451830 */
+undefined4 __thiscall sprite_get_height(Sprite *this); /* 00451860 */
+void __thiscall wnd_get_cursor_pos(WndBase *this,iptr param_1,iptr param_2); /* 00451890 */
+void __thiscall wnd_activate(Wnd *this); /* 004518d0 */
+void __thiscall wnd_focus_and_raise(WndBase *this); /* 00451900 */
+Control * __thiscall hotspot_ctor(Control *this); /* 00451930 */
+void __thiscall hotspot_create(C_0040f380_40 *this,iptr param_1,iptr param_2,iptr param_3); /* 004519b0 */
+void __thiscall hotspot_set_click_callback(HotspotClickSetView *this,iptr param_1); /* 00451a60 */
+void __thiscall hotspot_set_dblclick_callback(HotspotDblClickSetView *this,iptr param_1); /* 00451a90 */
+void __thiscall scrollbar_set_track_callback(ScrollbarTrackSetView *this,iptr param_1); /* 00451ac0 */
 void __thiscall FUN_00451af0(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2); /* 00451af0 */
-void __thiscall FUN_00451bf0(C_004083b0_61c *this); /* 00451bf0 */
+void __thiscall pedia_update_controls(C_004083b0_61c *this); /* 00451bf0 */
 void __thiscall FUN_00452188(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5); /* 00452188 */
 #undef FUN_00452315
 void __thiscall FUN_00452315(void *this, int param_1); /* 00452315, hand-written */
-void __thiscall FUN_00452768(C_004083b0_11c *this,int param_1); /* 00452768 */
+void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1); /* 00452768 */
 void __cdecl FUN_004529df(); /* 004529df */
 void __thiscall FUN_00452a67(C_00452a67 *this); /* 00452a67 */
 void __cdecl FUN_00452ac1(); /* 00452ac1 */
 HWND __cdecl FUN_00452ae2(); /* 00452ae2 */
 void __thiscall FUN_00452b89(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00452b89 */
-void __thiscall FUN_00452c14(C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 00452c14 */
+void __thiscall pedia_add_link(C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 00452c14 */
 void __cdecl FUN_004531b8(); /* 004531b8 */
 void __cdecl FUN_0045323a(); /* 0045323a */
 void __cdecl FUN_004532bc(); /* 004532bc */
 void __cdecl FUN_0045333e(); /* 0045333e */
 void __cdecl FUN_004533c0(); /* 004533c0 */
-C_00453aa0 * __thiscall FUN_00453aa0(C_00453aa0 *this,uint param_1); /* 00453aa0 */
-void __cdecl FUN_00453af0(); /* 00453af0 */
+Hotspot * __thiscall hotspot_scalar_dtor(Hotspot *this,uint param_1); /* 00453aa0 */
+void __cdecl ui_pump_messages(); /* 00453af0 */
 C_00453b10 * __thiscall FUN_00453b10(C_00453b10 *this); /* 00453b10 */
-void __thiscall FUN_00453ba0(C_00453aa0 *this); /* 00453ba0 */
+void __thiscall hotspot_dtor(Hotspot *this); /* 00453ba0 */
 void __cdecl FUN_00453bfa(); /* 00453bfa */
-void __thiscall FUN_00453c40(C_0040f380_3c *this); /* 00453c40 */
-void __thiscall FUN_00453c80(C_0040f380_3c *this); /* 00453c80 */
-C_0040f380_3c * __thiscall FUN_00453cc0(C_0040f380_3c *this); /* 00453cc0 */
+void __thiscall ctrl_disable(Control *this); /* 00453c40 */
+void __thiscall ctrl_enable(Control *this); /* 00453c80 */
+Control * __thiscall FUN_00453cc0(Control *this); /* 00453cc0 */
 void __thiscall FUN_00453d40(C_00453d40 *this,iptr param_1); /* 00453d40 */
 void __thiscall FUN_00453d70(C_00453d70 *this,iptr param_1); /* 00453d70 */
-undefined4 __cdecl FUN_00453da0(); /* 00453da0 */
-int __cdecl FUN_00453e18(); /* 00453e18 */
-undefined4 __cdecl FUN_00453e51(); /* 00453e51 */
+undefined4 __cdecl wonder_is_expired(); /* 00453da0 */
+int __cdecl wonder_get_city(); /* 00453e18 */
+undefined4 __cdecl civ_has_wonder(); /* 00453e51 */
 int __cdecl FUN_00453edf(); /* 00453edf */
 void __cdecl FUN_00453f90(); /* 00453f90 */
 bool __cdecl FUN_0045406c(); /* 0045406c */
@@ -1012,51 +1012,51 @@ void __cdecl FUN_0045485b(); /* 0045485b */
 void __cdecl FUN_0045486a(); /* 0045486a */
 void __cdecl FUN_00454879(); /* 00454879 */
 void __cdecl FUN_00454888(); /* 00454888 */
-undefined4 __thiscall FUN_004548a9(C_00408010_1cb4 *this,uptr param_1); /* 004548a9 */
+undefined4 __thiscall FUN_004548a9(CityViewWindow *this,uptr param_1); /* 004548a9 */
 void __cdecl FUN_00454e8b(); /* 00454e8b */
-void __thiscall FUN_00454eb2(C_00408010_cc *this); /* 00454eb2 */
-void __thiscall FUN_00454f83(C_00408010_1cb4 *this); /* 00454f83 */
-uint __thiscall FUN_0045512b(C_00408010_10 *this); /* 0045512b */
-uint __thiscall FUN_00455183(C_00408010_1cb4 *this); /* 00455183 */
-undefined4 __thiscall FUN_00455314(C_00408010_1cb4 *this); /* 00455314 */
-void __thiscall FUN_00455add(C_00408010_1cb4 *this); /* 00455add */
-undefined4 __thiscall FUN_00455b8e(C_00408010_1c44 *this); /* 00455b8e */
-undefined4 __thiscall FUN_00455c5d(C_00408010_1c44 *this); /* 00455c5d */
-void __thiscall FUN_00455d38(C_00408010_10 *this,iptr param_1,iptr param_2); /* 00455d38 */
-void __thiscall FUN_00455dfd(C_00408010_10 *this,iptr param_1,iptr param_2); /* 00455dfd */
-void __thiscall FUN_00455ebe(C_00408010_1cb4 *this,iptr param_1); /* 00455ebe */
-void __thiscall FUN_00455f2e(C_00408010_1cb4 *this,iptr param_1); /* 00455f2e */
-void __thiscall FUN_00455f9e(C_00408010_1cb4 *this,iptr param_1); /* 00455f9e */
-void __thiscall FUN_00456005(C_00408010_1cb4 *this,iptr param_1); /* 00456005 */
-void __thiscall FUN_0045606c(C_00408010_1cb4 *this); /* 0045606c */
-void __thiscall FUN_004560f8(C_00408010_1cb4 *this); /* 004560f8 */
+void __thiscall FUN_00454eb2(Wnd *this); /* 00454eb2 */
+void __thiscall FUN_00454f83(CityViewWindow *this); /* 00454f83 */
+uint __thiscall FUN_0045512b(WndBase *this); /* 0045512b */
+uint __thiscall FUN_00455183(CityViewWindow *this); /* 00455183 */
+undefined4 __thiscall FUN_00455314(CityViewWindow *this); /* 00455314 */
+void __thiscall FUN_00455add(CityViewWindow *this); /* 00455add */
+undefined4 __thiscall FUN_00455b8e(ThroneRoomWindow *this); /* 00455b8e */
+undefined4 __thiscall FUN_00455c5d(ThroneRoomWindow *this); /* 00455c5d */
+void __thiscall FUN_00455d38(WndBase *this,iptr param_1,iptr param_2); /* 00455d38 */
+void __thiscall FUN_00455dfd(WndBase *this,iptr param_1,iptr param_2); /* 00455dfd */
+void __thiscall FUN_00455ebe(CityViewWindow *this,iptr param_1); /* 00455ebe */
+void __thiscall FUN_00455f2e(CityViewWindow *this,iptr param_1); /* 00455f2e */
+void __thiscall FUN_00455f9e(CityViewWindow *this,iptr param_1); /* 00455f9e */
+void __thiscall FUN_00456005(CityViewWindow *this,iptr param_1); /* 00456005 */
+void __thiscall cityview_redraw_scrolled(CityViewWindow *this); /* 0045606c */
+void __thiscall cityview_draw_title(CityViewWindow *this); /* 004560f8 */
 void __cdecl FUN_004561d9(); /* 004561d9 */
 void __cdecl FUN_00456228(); /* 00456228 */
 void __cdecl FUN_0045626d(); /* 0045626d */
 void __cdecl FUN_0045629b(); /* 0045629b */
-void __thiscall FUN_0045638b(C_00408010_1cb4 *this); /* 0045638b */
-void __thiscall FUN_004564a8(C_00408010_1cb4 *this); /* 004564a8 */
+void __thiscall cityview_scroll_right(CityViewWindow *this); /* 0045638b */
+void __thiscall cityview_scroll_left(CityViewWindow *this); /* 004564a8 */
 void * __thiscall FUN_00456e90(void *this,uint param_1); /* 00456e90 */
 u32 __thiscall FUN_00456ee0(C_00456ee0 *this,iptr param_1); /* 00456ee0 */
-void __cdecl FUN_00456f20(); /* 00456f20 */
-int __cdecl FUN_00456f8b(); /* 00456f8b */
-void __cdecl FUN_0045705e(); /* 0045705e */
-void __cdecl FUN_00458a3b(); /* 00458a3b */
+void __cdecl civ_adjust_attitude(); /* 00456f20 */
+int __cdecl diplo_patience_limit(); /* 00456f8b */
+void __cdecl diplo_eval_ai_stance(); /* 0045705e */
+void __cdecl diplo_set_attitude_arg(); /* 00458a3b */
 void __cdecl FUN_00458ab1(); /* 00458ab1 */
 void __cdecl FUN_00458dd5(); /* 00458dd5 */
-uint __cdecl FUN_00458df9(); /* 00458df9 */
+uint __cdecl diplo_ask_receive_emissary(); /* 00458df9 */
 void __cdecl FUN_00459169(); /* 00459169 */
-void __cdecl FUN_0045918e(); /* 0045918e */
+void __cdecl diplo_session_reset(); /* 0045918e */
 undefined4 __cdecl FUN_004591cb(); /* 004591cb */
-int __cdecl FUN_0045950b(); /* 0045950b */
+int __cdecl diplo_tech_exchange(); /* 0045950b */
 void __cdecl FUN_0045a510(); /* 0045a510 */
-void __cdecl FUN_0045a535(); /* 0045a535 */
-void __cdecl FUN_0045a6ab(); /* 0045a6ab */
+void __cdecl diplo_form_alliance(); /* 0045a535 */
+void __cdecl diplo_sign_peace_treaty(); /* 0045a6ab */
 void __cdecl FUN_0045a7a8(); /* 0045a7a8 */
-void __cdecl FUN_0045a8e3(); /* 0045a8e3 */
-void __cdecl FUN_0045ac71(); /* 0045ac71 */
-void __cdecl FUN_0045b0d6(); /* 0045b0d6 */
-int __cdecl FUN_0045b472(); /* 0045b472 */
+void __cdecl diplo_allies_join_war(); /* 0045a8e3 */
+void __cdecl diplo_declare_war(); /* 0045ac71 */
+void __cdecl diplo_ally_demand_help(); /* 0045b0d6 */
+int __cdecl diplo_gold_attitude_value(); /* 0045b472 */
 undefined4 __cdecl FUN_0045b4da(); /* 0045b4da */
 void __cdecl FUN_0045dd7f(); /* 0045dd7f */
 void __cdecl FUN_0045f08d(); /* 0045f08d */
@@ -1065,8 +1065,8 @@ void __cdecl FUN_0045fd43(); /* 0045fd43 */
 void __cdecl FUN_0045fd67(); /* 0045fd67 */
 undefined4 __cdecl FUN_0045fe19(); /* 0045fe19 */
 void __cdecl FUN_00460104(); /* 00460104 */
-void __cdecl FUN_00460129(); /* 00460129 */
-void __cdecl FUN_00467580(); /* 00467580 */
+void __cdecl diplo_ai_meet_player(); /* 00460129 */
+void __cdecl text_set_number_arg_v(); /* 00467580 */
 void __cdecl FUN_004675b0(); /* 004675b0 */
 void __cdecl FUN_004675ca(); /* 004675ca */
 void __cdecl FUN_004675e9(); /* 004675e9 */
@@ -1079,62 +1079,62 @@ void __cdecl FUN_0046768b(); /* 0046768b */
 void __cdecl FUN_004676a5(); /* 004676a5 */
 void __cdecl FUN_004676bf(); /* 004676bf */
 void __cdecl FUN_004676dc(); /* 004676dc */
-void __cdecl FUN_00467750(); /* 00467750 */
-void __cdecl FUN_00467825(); /* 00467825 */
-uint __cdecl FUN_00467904(); /* 00467904 */
-void __cdecl FUN_00467933(); /* 00467933 */
-undefined4 __cdecl FUN_004679ab(); /* 004679ab */
-undefined4 __cdecl FUN_00467a5d(); /* 00467a5d */
+void __cdecl diplo_clear_treaty_flags(); /* 00467750 */
+void __cdecl diplo_set_treaty_flags(); /* 00467825 */
+uint __cdecl civ_get_attitude(); /* 00467904 */
+void __cdecl civ_set_attitude(); /* 00467933 */
+undefined4 __cdecl diplo_attitude_level(); /* 004679ab */
+undefined4 __cdecl civ_attitude_level(); /* 00467a5d */
 bool __cdecl FUN_00467a86(); /* 00467a86 */
 bool __cdecl FUN_00467abb(); /* 00467abb */
-uint __cdecl FUN_00467af0(); /* 00467af0 */
+uint __cdecl diplo_is_hostile(); /* 00467af0 */
 void __cdecl FUN_00467baf(); /* 00467baf */
-void __cdecl FUN_00467ef2(); /* 00467ef2 */
+void __cdecl diplo_cancel_alliance(); /* 00467ef2 */
 void __thiscall FUN_004683f0(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 004683f0 */
 void __cdecl FUN_00468797(); /* 00468797 */
 void __cdecl FUN_004687b5(); /* 004687b5 */
-void __cdecl FUN_004687d3(); /* 004687d3 */
+void __cdecl parley_unit_list_on_scroll(); /* 004687d3 */
 void __cdecl FUN_00468834(); /* 00468834 */
 int __cdecl FUN_00468aa7(); /* 00468aa7 */
-void __cdecl FUN_00468bb9(); /* 00468bb9 */
+void __cdecl parley_draw_unit_list(); /* 00468bb9 */
 void __cdecl FUN_004692ea(); /* 004692ea */
 void __cdecl FUN_004693c5(); /* 004693c5 */
 void __cdecl FUN_004694b7(); /* 004694b7 */
 void __cdecl FUN_00469547(); /* 00469547 */
 void __cdecl FUN_00469561(); /* 00469561 */
-void __cdecl FUN_0046957b(); /* 0046957b */
+void __cdecl parley_sort_by_city_clicked(); /* 0046957b */
 void __cdecl FUN_004695e9(); /* 004695e9 */
 void __cdecl FUN_00469603(); /* 00469603 */
-void __cdecl FUN_0046961d(); /* 0046961d */
-void __thiscall FUN_0046968b(C_004083b0_4 *this,int param_1,int param_2,iptr param_3); /* 0046968b */
-void __thiscall FUN_0046990a(void *this,int param_1,int param_2,iptr param_3); /* 0046990a */
-void __thiscall FUN_00469bdc(C_004083b0_11c *this,int param_1,int param_2); /* 00469bdc */
-void __cdecl FUN_0046a740(); /* 0046a740 */
-int __cdecl FUN_0046a78d(); /* 0046a78d */
-undefined4 __cdecl FUN_0046aaa0(); /* 0046aaa0 */
-undefined4 __cdecl FUN_0046aad0(); /* 0046aad0 */
-undefined4 __cdecl FUN_0046ab00(); /* 0046ab00 */
-void * __thiscall FUN_0046ab30(void *this); /* 0046ab30 */
-void __thiscall FUN_0046ab49(void *this); /* 0046ab49 */
-void __thiscall FUN_0046ab5f(C_0046ab5f *this); /* 0046ab5f */
-void __thiscall FUN_0046ab82(C_0046ab82 *this,int param_1); /* 0046ab82 */
-void __thiscall FUN_0046abed(C_0046ab82 *this,int param_1,int param_2); /* 0046abed */
-void __thiscall FUN_0046ac89(C_0046ab82 *this,int param_1); /* 0046ac89 */
-u32 __thiscall FUN_0046ace7(C_0046ace7 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, iptr param_5,iptr param_6); /* 0046ace7 */
-int __thiscall FUN_0046ad85(C_0046ad85 *this,int param_1,int param_2,iptr param_3,iptr param_4); /* 0046ad85 */
+void __cdecl parley_sort_by_unit_clicked(); /* 0046961d */
+void __thiscall parley_sort_unit_list(C_004083b0_4 *this,int param_1,int param_2,iptr param_3); /* 0046968b */
+void __thiscall parley_sort_units_by_city(void *this,int param_1,int param_2,iptr param_3); /* 0046990a */
+void __thiscall parley_build_unit_list(C_004083b0_11c *this,int param_1,int param_2); /* 00469bdc */
+void __cdecl labels_free(); /* 0046a740 */
+int __cdecl labels_load(); /* 0046a78d */
+undefined4 __cdecl mem_free_handle(); /* 0046aaa0 */
+undefined4 __cdecl mem_lock_handle(); /* 0046aad0 */
+undefined4 __cdecl mem_unlock_handle(); /* 0046ab00 */
+void * __thiscall clickmap_ctor(void *this); /* 0046ab30 */
+void __thiscall clickmap_dtor(void *this); /* 0046ab49 */
+void __thiscall clickmap_clear(ClickMapClearView *this); /* 0046ab5f */
+void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int param_1); /* 0046ab82 */
+void __thiscall FUN_0046abed(ClickMapRemoveView *this,int param_1,int param_2); /* 0046abed */
+void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int param_1); /* 0046ac89 */
+u32 __thiscall clickmap_add(ClickMap *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, iptr param_5,iptr param_6); /* 0046ace7 */
+int __thiscall clickmap_hit_test(ClickMapHitTestView *this,int param_1,int param_2,iptr param_3,iptr param_4); /* 0046ad85 */
 undefined1 __thiscall FUN_0046af70(void *this,int param_1,iptr param_2); /* 0046af70 */
 bool __thiscall FUN_0046b0a1(void *this,iptr param_1); /* 0046b0a1 */
 void __cdecl FUN_0046b11d(); /* 0046b11d */
-int __cdecl FUN_0046b14d(); /* 0046b14d */
-C_0046d5a0_8 * __thiscall FUN_0046d5a0(C_0046d5a0_8 *this,u32 param_1); /* 0046d5a0 */
-C_0046d5a0_8 * __thiscall FUN_0046d5f0(C_0046d5a0_8 *this,u32 param_1,iptr param_2); /* 0046d5f0 */
-C_0046d5a0_8 * __thiscall FUN_0046d6a0(C_0046d5a0_8 *this,undefined4 param_1); /* 0046d6a0 */
-C_0046d5a0_8 * __thiscall FUN_0046d720(C_0046d5a0_8 *this); /* 0046d720 */
-C_0046d5a0_8 * __thiscall FUN_0046d780(C_0046d5a0_8 *this,u32 param_1); /* 0046d780 */
-C_0046d5a0_8 * __thiscall FUN_0046d860(C_0046d5a0_8 *this); /* 0046d860 */
-C_0046d5a0_8 * __thiscall FUN_0046d8a0(C_0046d5a0_8 *this); /* 0046d8a0 */
-C_0046d5a0_8 * __thiscall FUN_0046d8e0(C_0046d5a0_8 *this); /* 0046d8e0 */
-C_0046d5a0_8 * __thiscall FUN_0046d930(C_0046d5a0_8 *this,u32 param_1); /* 0046d930 */
+int __cdecl net_send_message(); /* 0046b14d */
+NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *this,u32 param_1); /* 0046d5a0 */
+NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 param_1,iptr param_2); /* 0046d5f0 */
+NetMsgHeader * __thiscall FUN_0046d6a0(NetMsgHeader *this,undefined4 param_1); /* 0046d6a0 */
+NetMsgHeader * __thiscall FUN_0046d720(NetMsgHeader *this); /* 0046d720 */
+NetMsgHeader * __thiscall FUN_0046d780(NetMsgHeader *this,u32 param_1); /* 0046d780 */
+NetMsgHeader * __thiscall FUN_0046d860(NetMsgHeader *this); /* 0046d860 */
+NetMsgHeader * __thiscall FUN_0046d8a0(NetMsgHeader *this); /* 0046d8a0 */
+NetMsgHeader * __thiscall FUN_0046d8e0(NetMsgHeader *this); /* 0046d8e0 */
+NetMsgHeader * __thiscall FUN_0046d930(NetMsgHeader *this,u32 param_1); /* 0046d930 */
 void __cdecl FUN_0046d980(); /* 0046d980 */
 void __cdecl FUN_0046da40(); /* 0046da40 */
 void __cdecl FUN_0046dd98(); /* 0046dd98 */
@@ -1144,15 +1144,15 @@ void __cdecl FUN_0046ddbc(); /* 0046ddbc */
 void __cdecl FUN_0046dde0(); /* 0046dde0 */
 void __cdecl FUN_0046de25(); /* 0046de25 */
 void __cdecl FUN_0046dea1(); /* 0046dea1 */
-void __thiscall FUN_0046dff0(C_0046dff0 *this,iptr param_1); /* 0046dff0 */
-void __cdecl FUN_0046e020(); /* 0046e020 */
-void __cdecl FUN_0046e287(); /* 0046e287 */
+void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr param_1); /* 0046dff0 */
+void __cdecl snd_play_effect(); /* 0046e020 */
+void __cdecl ui_delay_ticks(); /* 0046e287 */
 void __cdecl FUN_0046e2f4(); /* 0046e2f4 */
 void __cdecl FUN_0046e320(); /* 0046e320 */
-void __cdecl FUN_0046e4a9(); /* 0046e4a9 */
-void __cdecl FUN_0046e571(); /* 0046e571 */
-void __cdecl FUN_0046e6a9(); /* 0046e6a9 */
-void __cdecl FUN_0046e6c8(); /* 0046e6c8 */
+void __cdecl snd_cd_detect_layout(); /* 0046e4a9 */
+void __cdecl music_play_track(); /* 0046e571 */
+void __cdecl snd_cd_stop(); /* 0046e6a9 */
+void __cdecl snd_sync_music_option(); /* 0046e6c8 */
 int __cdecl FUN_0046e8f0(); /* 0046e8f0 */
 void __cdecl FUN_0046e9d0(); /* 0046e9d0 */
 void __cdecl FUN_0046e9ea(); /* 0046e9ea */
@@ -1162,15 +1162,15 @@ void __cdecl FUN_0046ea3b(); /* 0046ea3b */
 void __cdecl FUN_0046ee1e(); /* 0046ee1e */
 void __cdecl FUN_0046ee4e(); /* 0046ee4e */
 void __cdecl FUN_0046ef3f(); /* 0046ef3f */
-void __cdecl FUN_0046efd6(); /* 0046efd6 */
-void __cdecl FUN_0046f06f(); /* 0046f06f */
-void __cdecl FUN_0046f108(); /* 0046f108 */
-void __cdecl FUN_0046f18f(); /* 0046f18f */
-C_0043c740_434 * __thiscall FUN_0046f440(C_0043c740_434 *this); /* 0046f440 */
-int __cdecl FUN_0046f460(); /* 0046f460 */
-int __cdecl FUN_0046fbf3(); /* 0046fbf3 */
-void __cdecl FUN_004702e0(); /* 004702e0 */
-C_00408010_fb8 * __thiscall FUN_004703d4(C_00408010_fb8 *this); /* 004703d4 */
+void __cdecl screen_fade_out(); /* 0046efd6 */
+void __cdecl screen_fade_in(); /* 0046f06f */
+void __cdecl palette_set_nocollapse_all(); /* 0046f108 */
+void __cdecl ui_blit_all_windows(); /* 0046f18f */
+GamePalette * __thiscall palette_get_logpalette(GamePalette *this); /* 0046f440 */
+int __cdecl gfx_load_bmp_640x480(); /* 0046f460 */
+int __cdecl gfx_save_bmp_640x480(); /* 0046fbf3 */
+void __cdecl endgame_defeat_movie(); /* 004702e0 */
+SpaceshipWindow * __thiscall FUN_004703d4(SpaceshipWindow *this); /* 004703d4 */
 void __thiscall FUN_004704ec(void *this); /* 004704ec */
 void __cdecl FUN_0047056b(); /* 0047056b */
 void __cdecl FUN_0047057a(); /* 0047057a */
@@ -1178,16 +1178,16 @@ void __cdecl FUN_00470589(); /* 00470589 */
 void __cdecl FUN_00470598(); /* 00470598 */
 void __cdecl FUN_004705a7(); /* 004705a7 */
 void __cdecl FUN_004705b6(); /* 004705b6 */
-undefined4 __thiscall FUN_004705d7(C_00408010_fb8 *this,uint param_1); /* 004705d7 */
-void __thiscall FUN_004708db(C_00408010_fb8 *this); /* 004708db */
+undefined4 __thiscall FUN_004705d7(SpaceshipWindow *this,uint param_1); /* 004705d7 */
+void __thiscall FUN_004708db(SpaceshipWindow *this); /* 004708db */
 void __cdecl FUN_00470c0c(); /* 00470c0c */
 void __cdecl FUN_00470c1c(); /* 00470c1c */
-C_00408010_10 * __thiscall FUN_00471020(C_00408010_10 *this,uint param_1); /* 00471020 */
-undefined4 __thiscall FUN_00471070(C_004083b0_48 *this); /* 00471070 */
-undefined4 __thiscall FUN_004710a0(C_004083b0_48 *this); /* 004710a0 */
-void __cdecl FUN_004710d0(); /* 004710d0 */
+WndBase * __thiscall FUN_00471020(WndBase *this,uint param_1); /* 00471020 */
+undefined4 __thiscall surface_get_width(DibSurface *this); /* 00471070 */
+undefined4 __thiscall surface_get_height(DibSurface *this); /* 004710a0 */
+void __cdecl endgame_spaceship_arrival(); /* 004710d0 */
 void __cdecl FUN_0047132e(); /* 0047132e */
-C_00408010_fb8 * __thiscall FUN_00471362(C_00408010_fb8 *this); /* 00471362 */
+SpaceshipWindow * __thiscall FUN_00471362(SpaceshipWindow *this); /* 00471362 */
 void __thiscall FUN_0047147a(void *this); /* 0047147a */
 void __cdecl FUN_004714f9(); /* 004714f9 */
 void __cdecl FUN_00471508(); /* 00471508 */
@@ -1195,8 +1195,8 @@ void __cdecl FUN_00471517(); /* 00471517 */
 void __cdecl FUN_00471526(); /* 00471526 */
 void __cdecl FUN_00471535(); /* 00471535 */
 void __cdecl FUN_00471544(); /* 00471544 */
-undefined4 __thiscall FUN_00471565(C_00408010_fb8 *this,iptr param_1); /* 00471565 */
-void __thiscall FUN_00471856(C_00408010_fb8 *this); /* 00471856 */
+undefined4 __thiscall FUN_00471565(SpaceshipWindow *this,iptr param_1); /* 00471565 */
+void __thiscall FUN_00471856(SpaceshipWindow *this); /* 00471856 */
 void __thiscall FUN_00471bfe(void *this); /* 00471bfe */
 void __thiscall FUN_00471c14(void *this); /* 00471c14 */
 void __cdecl FUN_00471c2a(); /* 00471c2a */
@@ -1210,15 +1210,15 @@ void __cdecl FUN_004723c3(); /* 004723c3 */
 void __cdecl FUN_004723cf(); /* 004723cf */
 void * __thiscall FUN_004728c0(void *this,uint param_1); /* 004728c0 */
 void __thiscall FUN_00472910(C_00472910 *this,iptr param_1,u32 param_2); /* 00472910 */
-#undef FUN_00472950
-void __cdecl FUN_00472950(char *name, char *ext); /* 00472950, hand-written */
-#undef FUN_004729ab
-void __cdecl FUN_004729ab(char *dst, char *src, char *ext); /* 004729ab, hand-written */
+#undef path_default_extension
+void __cdecl path_default_extension(char *name, char *ext); /* 00472950, hand-written */
+#undef path_set_extension
+void __cdecl path_set_extension(char *dst, char *src, char *ext); /* 004729ab, hand-written */
 void __cdecl FUN_00472a60(); /* 00472a60 */
 void __cdecl FUN_00472ab5(); /* 00472ab5 */
-void __cdecl FUN_00472b0a(); /* 00472b0a */
-int __cdecl FUN_00472cf0(); /* 00472cf0 */
-undefined4 __cdecl FUN_00472d20(); /* 00472d20 */
+void __cdecl mapview_draw_tile_number(); /* 00472b0a */
+int __cdecl gfx_zoom_scale(); /* 00472cf0 */
+undefined4 __cdecl unit_make_dummy(); /* 00472d20 */
 iptr __cdecl FUN_00472e1d(); /* 00472e1d */
 void __cdecl FUN_00472e5c(); /* 00472e5c */
 void __cdecl FUN_00472f10(); /* 00472f10 */
@@ -1229,20 +1229,20 @@ void __cdecl FUN_00472f7b(); /* 00472f7b */
 void __cdecl FUN_00473064(); /* 00473064 */
 void __cdecl FUN_0047314e(); /* 0047314e */
 void __cdecl FUN_00473190(); /* 00473190 */
-uint __cdecl FUN_004731d2(); /* 004731d2 */
+uint __cdecl ui_file_name_dialog(); /* 004731d2 */
 undefined4 __cdecl FUN_004732a6(); /* 004732a6 */
-undefined4 __cdecl FUN_00473660(); /* 00473660 */
+undefined4 __cdecl save_load_gpk(); /* 00473660 */
 undefined4 __cdecl FUN_00473c12(); /* 00473c12 */
 int __cdecl FUN_00473c68(); /* 00473c68 */
-void __cdecl FUN_00473d5e(); /* 00473d5e */
-undefined * __cdecl FUN_00473e55(); /* 00473e55 */
+void __cdecl save_set_file_ext(); /* 00473d5e */
+undefined * __cdecl save_file_filter(); /* 00473e55 */
 char * __cdecl FUN_00473ff2(); /* 00473ff2 */
-undefined4 __cdecl FUN_004741be(); /* 004741be */
+undefined4 __cdecl save_write_game(); /* 004741be */
 undefined4 __cdecl FUN_0047543c(); /* 0047543c */
 #undef FUN_00475666
 int __cdecl FUN_00475666(char *param_1); /* 00475666, hand-written */
-void __cdecl FUN_0047758c(); /* 0047758c */
-int __cdecl FUN_00477d8c(); /* 00477d8c */
+void __cdecl game_save_dialog(); /* 0047758c */
+int __cdecl game_load_dialog(); /* 00477d8c */
 void __cdecl FUN_004786f8(); /* 004786f8 */
 void __cdecl FUN_00479d20(); /* 00479d20 */
 void __cdecl FUN_00479d3a(); /* 00479d3a */
@@ -1258,37 +1258,37 @@ void __cdecl FUN_00479e47(); /* 00479e47 */
 void __cdecl FUN_00479e64(); /* 00479e64 */
 void __thiscall FUN_00479e7e(C_004083b0_430 *this,int param_1); /* 00479e7e */
 void __thiscall FUN_00479eae(C_004083b0_430 *this,int param_1); /* 00479eae */
-void __thiscall FUN_00479ede(C_004083b0_430 *this,u32 param_1); /* 00479ede */
+void __thiscall mapview_init_state(C_004083b0_430 *this,u32 param_1); /* 00479ede */
 void __thiscall FUN_00479fbe(C_004083b0_430 *this); /* 00479fbe */
-undefined4 __thiscall FUN_0047a540(C_0047a540 *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 0047a540 */
-void __thiscall FUN_0047a6b0(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3,int param_4); /* 0047a6b0 */
+undefined4 __thiscall mapview_screen_to_tile(MapViewHitView *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 0047a540 */
+void __thiscall mapview_tile_to_screen(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3,int param_4); /* 0047a6b0 */
 int __cdecl FUN_0047a747(); /* 0047a747 */
-void __thiscall FUN_0047a8c9(C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr param_4,int param_5, int param_6,int param_7,iptr param_8); /* 0047a8c9 */
+void __thiscall mapview_draw_tile_terrain(C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr param_4,int param_5, int param_6,int param_7,iptr param_8); /* 0047a8c9 */
 void __thiscall FUN_0047ba1d(C_004083b0_430 *this,undefined4 param_1,int param_2,iptr param_3,iptr param_4); /* 0047ba1d */
 void __thiscall FUN_0047bba5(C_004083b0_430 *this,iptr param_1,uint param_2,undefined4 param_3,undefined4 param_4); /* 0047bba5 */
 void __thiscall FUN_0047bbea(C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 0047bbea */
 void __thiscall FUN_0047bc59(C_004083b0_430 *this,iptr param_1); /* 0047bc59 */
 void __thiscall FUN_0047bd04(C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 0047bd04 */
 void __thiscall FUN_0047be63(C_004083b0_430 *this,undefined4 param_1,int param_2,int param_3,int param_4); /* 0047be63 */
-void __thiscall FUN_0047c103(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3); /* 0047c103 */
+void __thiscall mapview_draw_tile(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3); /* 0047c103 */
 undefined4 __cdecl FUN_0047c2f2(); /* 0047c2f2 */
 undefined4 __cdecl FUN_0047c37f(); /* 0047c37f */
-undefined4 __thiscall FUN_0047c3e0(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0047c3e0 */
-void __thiscall FUN_0047c443(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3); /* 0047c443 */
-void __thiscall FUN_0047c7aa(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3,iptr param_4); /* 0047c7aa */
+undefined4 __thiscall mapview_tile_in_view(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0047c3e0 */
+void __thiscall mapview_draw_city_names(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3); /* 0047c443 */
+void __thiscall mapview_tile_radius_rect(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3,iptr param_4); /* 0047c7aa */
 void __thiscall FUN_0047c869(C_004083b0_430 *this,int param_1,int param_2,int param_3,undefined4 param_4); /* 0047c869 */
 void __thiscall FUN_0047c9d4(C_004083b0_430 *this,undefined4 param_1); /* 0047c9d4 */
-void __thiscall FUN_0047caea(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0047caea */
+void __thiscall mapview_blit_tile_radius(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 0047caea */
 void __thiscall FUN_0047cb26(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0047cb26 */
-void __thiscall FUN_0047cb50(C_004083b0_48 *this); /* 0047cb50 */
-void __thiscall FUN_0047cbb4(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, iptr param_4,int param_5); /* 0047cbb4 */
+void __thiscall FUN_0047cb50(DibSurface *this); /* 0047cb50 */
+void __thiscall mapview_redraw_area(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, iptr param_4,int param_5); /* 0047cbb4 */
 void __thiscall FUN_0047cced(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0047cced */
 void __thiscall FUN_0047cd1f(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0047cd1f */
-void __thiscall FUN_0047cd51(C_004083b0_430 *this,iptr param_1,int param_2); /* 0047cd51 */
-void __cdecl FUN_0047ce1e(); /* 0047ce1e */
-void __cdecl FUN_0047cea6(); /* 0047cea6 */
-void __cdecl FUN_0047cf22(); /* 0047cf22 */
-void __cdecl FUN_0047cf9e(); /* 0047cf9e */
+void __thiscall mapview_redraw(C_004083b0_430 *this,iptr param_1,int param_2); /* 0047cd51 */
+void __cdecl map_redraw_area_all_views(); /* 0047ce1e */
+void __cdecl map_redraw_tile_all_views(); /* 0047cea6 */
+void __cdecl map_redraw_neighbors_all_views(); /* 0047cf22 */
+void __cdecl map_redraw_all_views(); /* 0047cf9e */
 C_004083b0_430 * __thiscall FUN_0047dce0(C_004083b0_430 *this); /* 0047dce0 */
 void __thiscall FUN_0047de10(void *this); /* 0047de10 */
 void __cdecl FUN_0047de82(); /* 0047de82 */
@@ -1296,113 +1296,113 @@ void __cdecl FUN_0047de91(); /* 0047de91 */
 void __cdecl FUN_0047dea0(); /* 0047dea0 */
 void __cdecl FUN_0047deaf(); /* 0047deaf */
 void __cdecl FUN_0047debe(); /* 0047debe */
-void __cdecl FUN_0047df20(); /* 0047df20 */
-void __cdecl FUN_0047df50(); /* 0047df50 */
+void __cdecl gfx_set_zoom_scale(); /* 0047df20 */
+void __cdecl gfx_reset_zoom_scale(); /* 0047df50 */
 void __cdecl FUN_0047df80(); /* 0047df80 */
-undefined4 __thiscall FUN_0047dfb0(C_004083b0_430 *this,undefined4 param_1); /* 0047dfb0 */
-void __thiscall FUN_0047dff0(C_004083b0_430 *this); /* 0047dff0 */
-undefined4 __cdecl FUN_0047e030(); /* 0047e030 */
+undefined4 __thiscall mapview_zoom_scale(C_004083b0_430 *this,undefined4 param_1); /* 0047dfb0 */
+void __thiscall mapview_apply_zoom(C_004083b0_430 *this); /* 0047dff0 */
+undefined4 __cdecl mapviews_tile_visible(); /* 0047e030 */
 int __cdecl FUN_0047e0e5(); /* 0047e0e5 */
 int __cdecl FUN_0047e2b3(); /* 0047e2b3 */
-void __thiscall FUN_0047e94e(C_0047e94e *this,int param_1,int param_2); /* 0047e94e */
+void __thiscall net_process_messages(NetSession *this,int param_1,int param_2); /* 0047e94e */
 void __cdecl FUN_00482305(); /* 00482305 */
 void __cdecl FUN_00482311(); /* 00482311 */
 void __cdecl FUN_00482337(); /* 00482337 */
 void __cdecl FUN_0048237d(); /* 0048237d */
 void __cdecl FUN_004823d6(); /* 004823d6 */
 void __cdecl FUN_00482470(); /* 00482470 */
-void __cdecl FUN_004824e3(); /* 004824e3 */
+void __cdecl net_host_quit_handoff(); /* 004824e3 */
 void __cdecl FUN_00482724(); /* 00482724 */
 void __cdecl FUN_0048276d(); /* 0048276d */
 void __cdecl FUN_004827d5(); /* 004827d5 */
 void __cdecl FUN_0048283d(); /* 0048283d */
-undefined4 __cdecl FUN_004828a5(); /* 004828a5 */
+undefined4 __cdecl net_client_transfer_server(); /* 004828a5 */
 void __cdecl FUN_0048308f(); /* 0048308f */
-void __cdecl FUN_00484cc0(); /* 00484cc0 */
-void __cdecl FUN_00484d3b(); /* 00484d3b */
-void __cdecl FUN_00484d52(); /* 00484d52 */
+void __cdecl scenario_reset_params(); /* 00484cc0 */
+void __cdecl map_display_disable(); /* 00484d3b */
+void __cdecl ui_flush_input(); /* 00484d52 */
 undefined4 __cdecl FUN_00484d85(); /* 00484d85 */
-int __cdecl FUN_00484fec(); /* 00484fec */
-void __cdecl FUN_00485208(); /* 00485208 */
+int __cdecl game_turn_to_year(); /* 00484fec */
+void __cdecl str_append_year(); /* 00485208 */
 void __cdecl FUN_004853e7(); /* 004853e7 */
 void __cdecl FUN_00485c15(); /* 00485c15 */
 void __cdecl FUN_004868fb(); /* 004868fb */
 void __cdecl FUN_00486c2e(); /* 00486c2e */
 int __cdecl FUN_00486e15(); /* 00486e15 */
-void __cdecl FUN_00486e6f(); /* 00486e6f */
-void __cdecl FUN_00487007(); /* 00487007 */
-void __cdecl FUN_0048710a(); /* 0048710a */
-void __cdecl FUN_00487371(); /* 00487371 */
+void __cdecl civ_check_throne_room_upgrade(); /* 00486e6f */
+void __cdecl map_rebuild_unit_flags(); /* 00487007 */
+void __cdecl units_reset_for_turn(); /* 0048710a */
+void __cdecl game_advance_turn(); /* 00487371 */
 void __cdecl FUN_00487a41(); /* 00487a41 */
 void __cdecl FUN_00488937(); /* 00488937 */
-undefined4 __cdecl FUN_00488a45(); /* 00488a45 */
+undefined4 __cdecl map_road_connection(); /* 00488a45 */
 void __cdecl FUN_00488cef(); /* 00488cef */
 void __cdecl FUN_00489292(); /* 00489292 */
-void __cdecl FUN_00489553(); /* 00489553 */
-void __cdecl FUN_004897fa(); /* 004897fa */
-void __cdecl FUN_00489859(); /* 00489859 */
-void __cdecl FUN_00489a0d(); /* 00489a0d */
+void __cdecl civ_process_turn(); /* 00489553 */
+void __cdecl ui_redraw_all_maps(); /* 004897fa */
+void __cdecl unit_activate_next(); /* 00489859 */
+void __cdecl ui_focus_active_unit(); /* 00489a0d */
 void __cdecl FUN_00489b9b(); /* 00489b9b */
 void __cdecl FUN_00489be2(); /* 00489be2 */
 undefined4 __cdecl FUN_0048a004(); /* 0048a004 */
 void __cdecl FUN_0048a374(); /* 0048a374 */
-void __cdecl FUN_0048a416(); /* 0048a416 */
-void __cdecl FUN_0048a92d(); /* 0048a92d */
-#undef FUN_0048aa24
-uint __cdecl FUN_0048aa24(void); /* 0048aa24, hand-written */
-undefined4 __cdecl FUN_0048aedc(); /* 0048aedc */
-uint __cdecl FUN_0048b165(); /* 0048b165 */
-void __cdecl FUN_0048b340(); /* 0048b340 */
+void __cdecl game_player_move_loop(); /* 0048a416 */
+void __cdecl game_calc_human_wonder_range(); /* 0048a92d */
+#undef game_turn_start_popups
+uint __cdecl game_turn_start_popups(void); /* 0048aa24, hand-written */
+undefined4 __cdecl game_check_retirement(); /* 0048aedc */
+uint __cdecl game_handle_game_over(); /* 0048b165 */
+void __cdecl game_play_loop(); /* 0048b340 */
 void __cdecl FUN_0048bf2d(); /* 0048bf2d */
 void __cdecl FUN_0048bf51(); /* 0048bf51 */
 undefined4 __cdecl FUN_0048bfec(); /* 0048bfec */
 void __cdecl FUN_0048c9ce(); /* 0048c9ce */
 void __cdecl FUN_0048c9f3(); /* 0048c9f3 */
 void __cdecl FUN_0048d989(); /* 0048d989 */
-void __cdecl FUN_0048d9ad(); /* 0048d9ad */
-void __cdecl FUN_0048da51(); /* 0048da51 */
-undefined4 __cdecl FUN_0048dab9(); /* 0048dab9 */
-int __cdecl FUN_0048de75(); /* 0048de75 */
-void __cdecl FUN_004904c0(); /* 004904c0 */
+void __cdecl net_heartbeat_send(); /* 0048d9ad */
+void __cdecl net_heartbeat_check(); /* 0048da51 */
+undefined4 __cdecl net_check_lost_connections(); /* 0048dab9 */
+int __cdecl net_drop_flagged_players(); /* 0048de75 */
+void __cdecl popup_file_with_sprite(); /* 004904c0 */
 void __cdecl FUN_00490500(); /* 00490500 */
-void __cdecl FUN_00490530(); /* 00490530 */
-u32 __thiscall FUN_00490560(C_004083b0_4 *this); /* 00490560 */
+void __cdecl popup_text_with_unit_noflags(); /* 00490530 */
+u32 __thiscall citywnd_get_city(C_004083b0_4 *this); /* 00490560 */
 void __thiscall FUN_00490590(C_004083b0_61c *this,iptr param_1); /* 00490590 */
-void __thiscall FUN_004906fd(C_004083b0_a28 *this); /* 004906fd */
+void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this); /* 004906fd */
 void __thiscall FUN_00491c20(C_004083b0_a28 *this,int param_1); /* 00491c20 */
 undefined4 __cdecl FUN_00491d61(); /* 00491d61 */
-void __thiscall FUN_004923c0(C_00408010_10 *this); /* 004923c0 */
+void __thiscall wnd_set_focus(WndBase *this); /* 004923c0 */
 void __cdecl FUN_004923f0(); /* 004923f0 */
 void __cdecl FUN_0049275a(); /* 0049275a */
 void __cdecl FUN_00492868(); /* 00492868 */
-undefined4 __thiscall FUN_004929c0(C_00421bf0_98 *this,iptr param_1); /* 004929c0 */
-undefined4 __thiscall FUN_00492a00(C_00492a00 *this,undefined4 param_1); /* 00492a00 */
-void __thiscall FUN_00492a40(C_00492a40 *this,iptr param_1,undefined4 param_2); /* 00492a40 */
-undefined4 __thiscall FUN_00492a80(C_00421bf0_98 *this); /* 00492a80 */
-undefined4 __thiscall FUN_00492ab0(C_00492ab0 *this); /* 00492ab0 */
-void __thiscall FUN_00492ae0(C_0040f380_3c *this,iptr param_1); /* 00492ae0 */
-void __thiscall FUN_00492b20(C_00492b20 *this,undefined4 param_1,undefined4 param_2); /* 00492b20 */
+undefined4 __thiscall file_obj_open(FileObject *this,iptr param_1); /* 004929c0 */
+undefined4 __thiscall file_obj_seek_cur(FileSeekView *this,undefined4 param_1); /* 00492a00 */
+void __thiscall FUN_00492a40(FileReadLineView *this,iptr param_1,undefined4 param_2); /* 00492a40 */
+undefined4 __thiscall file_obj_get_size(FileObject *this); /* 00492a80 */
+undefined4 __thiscall edit_get_sel_end(EditSelEndView *this); /* 00492ab0 */
+void __thiscall edit_replace_sel(Control *this,iptr param_1); /* 00492ae0 */
+void __thiscall FUN_00492b20(EditSelView *this,undefined4 param_1,undefined4 param_2); /* 00492b20 */
 void __cdecl FUN_00492b60(); /* 00492b60 */
-void __cdecl FUN_00492c15(); /* 00492c15 */
+void __cdecl civ_clear_standing_goals_near(); /* 00492c15 */
 void __cdecl FUN_00492d18(); /* 00492d18 */
 void __cdecl FUN_00492dd0(); /* 00492dd0 */
 int __cdecl FUN_00492e60(); /* 00492e60 */
-void __cdecl FUN_0049301b(); /* 0049301b */
-void __cdecl FUN_004933f2(); /* 004933f2 */
-void __cdecl FUN_00493602(); /* 00493602 */
-void __cdecl FUN_0049376f(); /* 0049376f */
-int __cdecl FUN_00493b10(); /* 00493b10 */
-int __cdecl FUN_00493ba6(); /* 00493ba6 */
-int __cdecl FUN_00493c7d(); /* 00493c7d */
-int __cdecl FUN_00493d13(); /* 00493d13 */
+void __cdecl civ_add_ai_goal(); /* 0049301b */
+void __cdecl civ_add_standing_goal(); /* 004933f2 */
+void __cdecl civ_refresh_ai_goals(); /* 00493602 */
+void __cdecl civ_reset_standing_goals(); /* 0049376f */
+int __cdecl civ_leader_name(); /* 00493b10 */
+int __cdecl civ_leader_title(); /* 00493ba6 */
+int __cdecl civ_name_plural(); /* 00493c7d */
+int __cdecl civ_adjective(); /* 00493d13 */
 void __cdecl FUN_00493e50(); /* 00493e50 */
 #undef FUN_00493e83
 void __cdecl FUN_00493e83(undefined4 param_1); /* 00493e83, hand-written */
 void __cdecl FUN_00493eeb(); /* 00493eeb */
 void __cdecl FUN_00493f0f(); /* 00493f0f */
 void __cdecl FUN_00494148(); /* 00494148 */
-void __cdecl FUN_004941ee(); /* 004941ee */
-C_00408010_108c * __thiscall FUN_004942a3(C_00408010_108c *this); /* 004942a3 */
+void __cdecl diplo_leader_play_reaction(); /* 004941ee */
+DiploLeaderWindow * __thiscall FUN_004942a3(DiploLeaderWindow *this); /* 004942a3 */
 void __thiscall FUN_004943c9(void *this); /* 004943c9 */
 void __cdecl FUN_0049444f(); /* 0049444f */
 void __cdecl FUN_0049445e(); /* 0049445e */
@@ -1410,28 +1410,28 @@ void __cdecl FUN_0049446d(); /* 0049446d */
 void __cdecl FUN_0049447c(); /* 0049447c */
 void __cdecl FUN_0049448b(); /* 0049448b */
 void __cdecl FUN_0049449a(); /* 0049449a */
-undefined4 __thiscall FUN_004944bb(C_004944bb *this,undefined4 param_1,iptr param_2); /* 004944bb */
-void __thiscall FUN_00494704(C_00408010_108c *this); /* 00494704 */
-void __thiscall FUN_004947f0(C_00408010_10 *this); /* 004947f0 */
-uint __thiscall FUN_0049488e(C_004944bb *this); /* 0049488e */
-undefined4 __thiscall FUN_004948e6(C_004944bb *this); /* 004948e6 */
-uint __thiscall FUN_00494949(C_004944bb *this); /* 00494949 */
+undefined4 __thiscall FUN_004944bb(DiploLeaderView *this,undefined4 param_1,iptr param_2); /* 004944bb */
+void __thiscall FUN_00494704(DiploLeaderWindow *this); /* 00494704 */
+void __thiscall FUN_004947f0(WndBase *this); /* 004947f0 */
+uint __thiscall FUN_0049488e(DiploLeaderView *this); /* 0049488e */
+undefined4 __thiscall FUN_004948e6(DiploLeaderView *this); /* 004948e6 */
+uint __thiscall FUN_00494949(DiploLeaderView *this); /* 00494949 */
 void __cdecl FUN_00494b3a(); /* 00494b3a */
-undefined4 __thiscall FUN_00494b5f(C_004944bb *this); /* 00494b5f */
+undefined4 __thiscall FUN_00494b5f(DiploLeaderView *this); /* 00494b5f */
 void __cdecl FUN_00494d71(); /* 00494d71 */
 void __cdecl FUN_00494d7d(); /* 00494d7d */
 void __cdecl FUN_00494d89(); /* 00494d89 */
 void __cdecl FUN_00494dae(); /* 00494dae */
-undefined4 __thiscall FUN_00494e2a(C_004944bb *this); /* 00494e2a */
+undefined4 __thiscall FUN_00494e2a(DiploLeaderView *this); /* 00494e2a */
 void __cdecl FUN_00495be2(); /* 00495be2 */
 void __cdecl FUN_00495bee(); /* 00495bee */
 void __cdecl FUN_00495bfa(); /* 00495bfa */
 void __cdecl FUN_00495c10(); /* 00495c10 */
-undefined4 __thiscall FUN_00495c35(C_004944bb *this); /* 00495c35 */
+undefined4 __thiscall FUN_00495c35(DiploLeaderView *this); /* 00495c35 */
 void __cdecl FUN_00495dcf(); /* 00495dcf */
 void __cdecl FUN_00495ddb(); /* 00495ddb */
 void __cdecl FUN_00495de7(); /* 00495de7 */
-undefined1 __thiscall FUN_00495e0c(C_004944bb *this); /* 00495e0c */
+undefined1 __thiscall FUN_00495e0c(DiploLeaderView *this); /* 00495e0c */
 void __cdecl FUN_00496100(); /* 00496100 */
 void __cdecl FUN_00496125(); /* 00496125 */
 C_004083b0_208 * __thiscall FUN_0049621d(C_004083b0_208 *this); /* 0049621d */
@@ -1448,52 +1448,52 @@ void __thiscall FUN_004966c4(C_004083b0_208 *this); /* 004966c4 */
 void __cdecl FUN_00496c3c(); /* 00496c3c */
 void __cdecl FUN_00496e5d(); /* 00496e5d */
 void __cdecl FUN_00496ecf(); /* 00496ecf */
-void * __thiscall FUN_00497bf0(void *this,uint param_1); /* 00497bf0 */
-void __thiscall FUN_00497c40(C_0043c740_434 *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 00497c40 */
-u32 * __thiscall FUN_00497c90(C_004083b0_48 *this); /* 00497c90 */
-void __thiscall FUN_00497cc0(C_004944bb *this,iptr param_1); /* 00497cc0 */
-void __thiscall FUN_00497d00(C_00408010_10 *this,undefined4 param_1); /* 00497d00 */
-void __thiscall FUN_00497d40(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 00497d40 */
-iptr __cdecl FUN_00497da0(); /* 00497da0 */
+void * __thiscall diplo_leader_wnd_scalar_dtor(void *this,uint param_1); /* 00497bf0 */
+void __thiscall palette_get_entry(GamePalette *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 00497c40 */
+u32 * __thiscall surface_get_rect(DibSurface *this); /* 00497c90 */
+void __thiscall FUN_00497cc0(DiploLeaderView *this,iptr param_1); /* 00497cc0 */
+void __thiscall wnd_set_caption_height(WndBase *this,undefined4 param_1); /* 00497d00 */
+void __thiscall FUN_00497d40(Control *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 00497d40 */
+iptr __cdecl save_read_cstr(); /* 00497da0 */
 void __cdecl FUN_00497e0f(); /* 00497e0f */
-bool __cdecl FUN_00497ea0(); /* 00497ea0 */
+bool __cdecl memblock_init(); /* 00497ea0 */
 void __cdecl FUN_00497fa0(undefined1 *param_1,undefined1 param_2,undefined4 param_3,undefined4 param_4, undefined2 param_5); /* 00497fa0 */
-undefined4 __cdecl FUN_00497ff3(); /* 00497ff3 */
+undefined4 __cdecl memblock_ensure_locked(); /* 00497ff3 */
 void __cdecl FUN_0049805e(); /* 0049805e */
 void __cdecl FUN_00498082(); /* 00498082 */
 void __cdecl FUN_004980a9(); /* 004980a9 */
-iptr __cdecl FUN_004980ec(); /* 004980ec */
-int __cdecl FUN_00498159(); /* 00498159 */
+iptr __cdecl memblock_free(); /* 004980ec */
+int __cdecl memblock_alloc(); /* 00498159 */
 void __cdecl FUN_00498310(); /* 00498310 */
-void __cdecl FUN_0049836a(); /* 0049836a */
+void __cdecl civ_change_password_dialog(); /* 0049836a */
 void __cdecl FUN_004985d0(); /* 004985d0 */
 undefined4 __cdecl FUN_004985f4(); /* 004985f4 */
 void __cdecl FUN_0049875f(); /* 0049875f */
-void __cdecl FUN_00498784(); /* 00498784 */
-void __cdecl FUN_0049882b(); /* 0049882b */
-void __cdecl FUN_004988b8(); /* 004988b8 */
-void __cdecl FUN_00498943(); /* 00498943 */
-void __cdecl FUN_004989d3(); /* 004989d3 */
-undefined4 __cdecl FUN_00498a5c(); /* 00498a5c */
-void __cdecl FUN_00498d40(); /* 00498d40 */
-iptr __cdecl FUN_00498e8b(); /* 00498e8b */
-void __cdecl FUN_004a2020(); /* 004a2020 */
+void __cdecl passwords_reset(); /* 00498784 */
+void __cdecl passwords_refresh_flags(); /* 0049882b */
+void __cdecl passwords_scramble(); /* 004988b8 */
+void __cdecl passwords_unscramble(); /* 00498943 */
+void __cdecl password_dialog_set_title(); /* 004989d3 */
+undefined4 __cdecl civ_check_password(); /* 00498a5c */
+void __cdecl city_load_citypref(); /* 00498d40 */
+iptr __cdecl city_choose_production(); /* 00498e8b */
+void __cdecl text_close_file(); /* 004a2020 */
 int __cdecl FUN_004a2055(); /* 004a2055 */
-int __cdecl FUN_004a2379(); /* 004a2379 */
-undefined1 * __cdecl FUN_004a23fc(); /* 004a23fc */
-undefined1 * __cdecl FUN_004a24b1(); /* 004a24b1 */
-undefined4 __cdecl FUN_004a2534(); /* 004a2534 */
+int __cdecl text_open_section(); /* 004a2379 */
+undefined1 * __cdecl text_read_line(); /* 004a23fc */
+undefined1 * __cdecl text_next_token(); /* 004a24b1 */
+undefined4 __cdecl text_next_int(); /* 004a2534 */
 void __cdecl FUN_004a2552(); /* 004a2552 */
-undefined4 __cdecl FUN_004a257a(); /* 004a257a */
-undefined4 __cdecl FUN_004a25aa(); /* 004a25aa */
+undefined4 __cdecl text_read_line_pooled(); /* 004a257a */
+undefined4 __cdecl text_next_token_pooled(); /* 004a25aa */
 short __cdecl FUN_004a25d5(); /* 004a25d5 */
-undefined4 __cdecl FUN_004a2645(); /* 004a2645 */
-undefined4 __cdecl FUN_004a26bf(); /* 004a26bf */
-int __cdecl FUN_004a28b0(); /* 004a28b0 */
+undefined4 __cdecl text_read_section_line(); /* 004a2645 */
+undefined4 __cdecl text_next_token_str_id(); /* 004a26bf */
+int __cdecl civ_calc_score(); /* 004a28b0 */
 void __cdecl FUN_004a3060(); /* 004a3060 */
 void __cdecl FUN_004a3426(); /* 004a3426 */
-void __cdecl FUN_004a3640(); /* 004a3640 */
-void __cdecl FUN_004a3757(); /* 004a3757 */
+void __cdecl tribe_editor_load_controls(); /* 004a3640 */
+void __cdecl tribe_editor_store_controls(); /* 004a3757 */
 void __cdecl FUN_004a3889(); /* 004a3889 */
 undefined4 __cdecl FUN_004a38a4(); /* 004a38a4 */
 undefined4 __cdecl FUN_004a3a21(); /* 004a3a21 */
@@ -1513,106 +1513,106 @@ void __thiscall FUN_004a4eb2(C_004083b0_430 *this,int param_1); /* 004a4eb2 */
 void __thiscall FUN_004a4f89(C_004083b0_430 *this); /* 004a4f89 */
 void __thiscall FUN_004a54d9(C_004083b0_430 *this); /* 004a54d9 */
 void __cdecl FUN_004a5d6e(); /* 004a5d6e */
-void __cdecl FUN_004a5d92(); /* 004a5d92 */
+void __cdecl tribe_editor_run(); /* 004a5d92 */
 void __cdecl FUN_004a5deb(); /* 004a5deb */
-undefined4 __thiscall FUN_004a6980(C_00417f70_3c *this); /* 004a6980 */
+undefined4 __thiscall sprite_width(Sprite *this); /* 004a6980 */
 void __thiscall FUN_004a69b0(C_004083b0_61c *this,iptr param_1); /* 004a69b0 */
 void __cdecl FUN_004a6b80(); /* 004a6b80 */
 undefined4 __cdecl FUN_004a6bdc(); /* 004a6bdc */
 undefined4 __cdecl FUN_004a6c4b(); /* 004a6c4b */
 void __cdecl FUN_004a6c85(); /* 004a6c85 */
-undefined4 __cdecl FUN_004a6cc5(); /* 004a6cc5 */
+undefined4 __cdecl popup_text_with_city(); /* 004a6cc5 */
 void __cdecl FUN_004a6dc9(); /* 004a6dc9 */
 void __cdecl FUN_004a6dd2(); /* 004a6dd2 */
 void __cdecl FUN_004a6df7(); /* 004a6df7 */
-undefined4 __cdecl FUN_004a6e39(); /* 004a6e39 */
+undefined4 __cdecl popup_text_with_unit(); /* 004a6e39 */
 void __cdecl FUN_004a6f3d(); /* 004a6f3d */
 void __cdecl FUN_004a6f46(); /* 004a6f46 */
 int __cdecl FUN_004a7070(); /* 004a7070 */
 void __cdecl FUN_004a70b0(); /* 004a70b0 */
 void __cdecl FUN_004a71bb(); /* 004a71bb */
-void __cdecl FUN_004a733d(); /* 004a733d */
-int __cdecl FUN_004a73d9(); /* 004a73d9 */
-void __cdecl FUN_004a74bc(); /* 004a74bc */
-uint __cdecl FUN_004a7577(); /* 004a7577 */
-uint __cdecl FUN_004a75a6(); /* 004a75a6 */
+void __cdecl prefs_load_civ2dat(); /* 004a733d */
+int __cdecl prefs_save_civ2dat(); /* 004a73d9 */
+void __cdecl civ_reset_spaceship(); /* 004a74bc */
+uint __cdecl civ_spaceship_launched(); /* 004a7577 */
+uint __cdecl civ_spaceship_exists(); /* 004a75a6 */
 undefined4 __cdecl FUN_004a75d5(); /* 004a75d5 */
-void __cdecl FUN_004a762d(); /* 004a762d */
-void __cdecl FUN_004a76f5(); /* 004a76f5 */
+void __cdecl civ_spaceship_lost_notify(); /* 004a762d */
+void __cdecl destroyed_civs_clear(); /* 004a76f5 */
 void __cdecl FUN_004a7754(); /* 004a7754 */
-int __cdecl FUN_004a7ce9(); /* 004a7ce9 */
+int __cdecl civ_create(); /* 004a7ce9 */
 void __cdecl FUN_004a93b3(); /* 004a93b3 */
-void __cdecl FUN_004a9785(); /* 004a9785 */
-int __cdecl FUN_004aa378(); /* 004aa378 */
-void __cdecl FUN_004aa9c0(); /* 004aa9c0 */
+void __cdecl game_accelerated_start(); /* 004a9785 */
+int __cdecl civ_check_destroyed(); /* 004aa378 */
+void __cdecl game_init_new(); /* 004aa9c0 */
 iptr __cdecl FUN_004abea0(); /* 004abea0 */
-iptr __cdecl FUN_004abfe5(); /* 004abfe5 */
+iptr __cdecl map_path_next_dir(); /* 004abfe5 */
 undefined4 __cdecl FUN_004ad01e(); /* 004ad01e */
 void __cdecl FUN_004ad076(); /* 004ad076 */
-int __cdecl FUN_004ad0d1(); /* 004ad0d1 */
+int __cdecl map_path_length(); /* 004ad0d1 */
 int __cdecl FUN_004ad20f(); /* 004ad20f */
-undefined4 __cdecl FUN_004ad784(); /* 004ad784 */
+undefined4 __cdecl map_diag_tile_by_ocean(); /* 004ad784 */
 uint __cdecl FUN_004ad822(); /* 004ad822 */
-uptr __cdecl FUN_004adafc(); /* 004adafc */
+uptr __cdecl unit_goto_next_dir(); /* 004adafc */
 u8 * __cdecl map_coarse0_at(); /* 004aee90 */
 u8 * __cdecl map_coarse1_at(); /* 004aeec0 */
 u8 * __cdecl map_coarse2_at(); /* 004aeef0 */
-iptr __cdecl FUN_004aef20(); /* 004aef20 */
-void __cdecl FUN_004aef36(); /* 004aef36 */
+iptr __cdecl str_clear(); /* 004aef20 */
+void __cdecl str_append_space(); /* 004aef36 */
 void __cdecl FUN_004aef57(); /* 004aef57 */
 void __cdecl FUN_004aef96(); /* 004aef96 */
-void __cdecl FUN_004aefb7(); /* 004aefb7 */
+void __cdecl str_append_colon(); /* 004aefb7 */
 void __cdecl FUN_004aefd8(); /* 004aefd8 */
-void __cdecl FUN_004aeff9(); /* 004aeff9 */
-void __cdecl FUN_004af01a(); /* 004af01a */
-void __cdecl FUN_004af03b(); /* 004af03b */
+void __cdecl str_append_percent(); /* 004aeff9 */
+void __cdecl str_append_lparen(); /* 004af01a */
+void __cdecl str_append_rparen(); /* 004af03b */
 void __cdecl FUN_004af05c(); /* 004af05c */
 void __cdecl FUN_004af07d(); /* 004af07d */
 void __cdecl FUN_004af09e(); /* 004af09e */
 void __cdecl FUN_004af0bf(); /* 004af0bf */
 void __cdecl FUN_004af0e0(); /* 004af0e0 */
 void __cdecl FUN_004af101(); /* 004af101 */
-void __cdecl FUN_004af122(); /* 004af122 */
-void __cdecl FUN_004af14b(); /* 004af14b */
-void __cdecl FUN_004af174(); /* 004af174 */
+void __cdecl str_append_string_id(); /* 004af122 */
+void __cdecl str_append_label(); /* 004af14b */
+void __cdecl str_concat(); /* 004af174 */
 void __cdecl FUN_004af194(); /* 004af194 */
-undefined4 __cdecl FUN_004af1d5(); /* 004af1d5 */
+undefined4 __cdecl str_append_int(); /* 004af1d5 */
 void __cdecl FUN_004af20a(); /* 004af20a */
-void __cdecl FUN_004af284(); /* 004af284 */
+void __cdecl str_append_long(); /* 004af284 */
 void __cdecl FUN_004af2b9(); /* 004af2b9 */
 void __thiscall FUN_004af3e0(C_004083b0_11c *this,iptr param_1,int param_2); /* 004af3e0 */
 void __cdecl FUN_004af867(); /* 004af867 */
 void __cdecl FUN_004af885(); /* 004af885 */
-void __cdecl FUN_004af8a3(); /* 004af8a3 */
+void __cdecl parley_civ_list_scroll(); /* 004af8a3 */
 void __cdecl FUN_004af904(); /* 004af904 */
 int __cdecl FUN_004afb77(); /* 004afb77 */
-void __cdecl FUN_004afc89(); /* 004afc89 */
+void __cdecl parley_draw_civ_list(); /* 004afc89 */
 void __cdecl FUN_004b0157(); /* 004b0157 */
-undefined1 __cdecl FUN_004b0720(); /* 004b0720 */
+undefined1 __cdecl rules_parse_advance_abbrev(); /* 004b0720 */
 undefined1 __cdecl FUN_004b07d1(); /* 004b07d1 */
 void __cdecl FUN_004b08e0(); /* 004b08e0 */
 void __cdecl FUN_004b08f5(); /* 004b08f5 */
-undefined4 __cdecl FUN_004b0905(); /* 004b0905 */
-void __cdecl FUN_004b0a0a(); /* 004b0a0a */
-void __cdecl FUN_004b0a41(); /* 004b0a41 */
+undefined4 __cdecl diffeng_alloc_mirror(); /* 004b0905 */
+void __cdecl diffeng_free_mirror(); /* 004b0a0a */
+void __cdecl diffeng_copy_to_mirror(); /* 004b0a41 */
 void __cdecl FUN_004b0ad0(); /* 004b0ad0 */
-int __cdecl FUN_004b0b53(); /* 004b0b53 */
+int __cdecl net_send_state_diff(); /* 004b0b53 */
 undefined4 __cdecl FUN_004b12b3(); /* 004b12b3 */
-int __cdecl FUN_004b1396(); /* 004b1396 */
-int __cdecl FUN_004b14a4(); /* 004b14a4 */
+int __cdecl mem_checksum(); /* 004b1396 */
+int __cdecl diffeng_total_size(); /* 004b14a4 */
 undefined4 __cdecl FUN_004b153c(); /* 004b153c */
-void __cdecl FUN_004b187f(); /* 004b187f */
+void __cdecl diffeng_buf_append(); /* 004b187f */
 undefined4 __cdecl FUN_004b18e1(); /* 004b18e1 */
 undefined4 __cdecl FUN_004b1a15(); /* 004b1a15 */
 undefined4 __cdecl FUN_004b1c11(); /* 004b1c11 */
 void __cdecl FUN_004b1de3(int *param_1,char param_2); /* 004b1de3 */
 void __cdecl FUN_004b2010(int *param_1,char param_2); /* 004b2010 */
 int __cdecl FUN_004b2123(); /* 004b2123 */
-void __cdecl FUN_004b21d7(); /* 004b21d7 */
-int __cdecl FUN_004b24a2(); /* 004b24a2 */
-undefined4 __cdecl FUN_004b251a(); /* 004b251a */
-undefined4 __cdecl FUN_004b263e(); /* 004b263e */
-void __thiscall FUN_004b3080(C_004b3080 *this,iptr param_1,u32 param_2,u32 param_3); /* 004b3080 */
+void __cdecl diffeng_register_blocks(); /* 004b21d7 */
+int __cdecl diffeng_rle_decoded_size(); /* 004b24a2 */
+undefined4 __cdecl diffeng_rle_decode(); /* 004b251a */
+undefined4 __cdecl diffeng_rle_encode(); /* 004b263e */
+void __thiscall FUN_004b3080(DiffEngSection *this,iptr param_1,u32 param_2,u32 param_3); /* 004b3080 */
 void __cdecl FUN_004b3110(); /* 004b3110 */
 void __cdecl FUN_004b315c(); /* 004b315c */
 uint __cdecl FUN_004b32fe(); /* 004b32fe */
@@ -1656,75 +1656,75 @@ void __cdecl FUN_004b4092(); /* 004b4092 */
 void __cdecl FUN_004b40ac(); /* 004b40ac */
 void __cdecl FUN_004b40d1(); /* 004b40d1 */
 void __cdecl FUN_004b40ee(); /* 004b40ee */
-C_004083b0_430 * __thiscall FUN_004b4108(C_004083b0_430 *this,iptr param_1); /* 004b4108 */
-void __thiscall FUN_004b4593(C_004083b0_430 *this); /* 004b4593 */
+C_004083b0_430 * __thiscall parley_wnd_ctor(C_004083b0_430 *this,iptr param_1); /* 004b4108 */
+void __thiscall parley_wnd_dtor(C_004083b0_430 *this); /* 004b4593 */
 void __cdecl FUN_004b4705(); /* 004b4705 */
 void __cdecl FUN_004b4711(); /* 004b4711 */
 void __thiscall FUN_004b4735(C_004083b0_430 *this,u32 param_1); /* 004b4735 */
 void __cdecl FUN_004b4be3(); /* 004b4be3 */
 void __cdecl FUN_004b4c09(); /* 004b4c09 */
 void __thiscall FUN_004b4c81(C_004083b0_174 *this); /* 004b4c81 */
-void __thiscall FUN_004b4cf0(C_004083b0_174 *this); /* 004b4cf0 */
-void __thiscall FUN_004b4e8a(C_004083b0_174 *this); /* 004b4e8a */
-void __thiscall FUN_004b4fb2(C_004083b0_430 *this); /* 004b4fb2 */
-void __thiscall FUN_004b50cf(C_004083b0_430 *this); /* 004b50cf */
+void __thiscall parley_wnd_calc_rect(C_004083b0_174 *this); /* 004b4cf0 */
+void __thiscall parley_wnd_calc_layout(C_004083b0_174 *this); /* 004b4e8a */
+void __thiscall parley_wnd_sync_sides(C_004083b0_430 *this); /* 004b4fb2 */
+void __thiscall parley_wnd_destroy_controls(C_004083b0_430 *this); /* 004b50cf */
 void __thiscall FUN_004b5c93(C_004083b0_430 *this); /* 004b5c93 */
 void __cdecl FUN_004b74c4(); /* 004b74c4 */
-void __cdecl FUN_004b75fb(); /* 004b75fb */
-void __cdecl FUN_004b7645(); /* 004b7645 */
-void __cdecl FUN_004b768d(); /* 004b768d */
-undefined4 __cdecl FUN_004b76d5(); /* 004b76d5 */
+void __cdecl diplo_wnd_escape_close(); /* 004b75fb */
+void __cdecl parley_wnd_close(); /* 004b7645 */
+void __cdecl chat_wnd_close(); /* 004b768d */
+undefined4 __cdecl diplo_wnd_close_active(); /* 004b76d5 */
 void __cdecl FUN_004b7885(); /* 004b7885 */
 void __thiscall FUN_004b794a(C_004083b0_174 *this); /* 004b794a */
-void __thiscall FUN_004b7c90(C_004083b0_4 *this,iptr param_1,int param_2); /* 004b7c90 */
-void __thiscall FUN_004b7d72(C_004b7d72 *this); /* 004b7d72 */
-void __thiscall FUN_004b7eb6(C_004083b0_430 *this,iptr param_1,u32 param_2); /* 004b7eb6 */
+void __thiscall parley_fill_background(C_004083b0_4 *this,iptr param_1,int param_2); /* 004b7c90 */
+void __thiscall parley_wnd_build_title(ParleyTitleView *this); /* 004b7d72 */
+void __thiscall parley_wnd_open(C_004083b0_430 *this,iptr param_1,u32 param_2); /* 004b7eb6 */
 void __cdecl FUN_004b81dd(); /* 004b81dd */
-void __thiscall FUN_004b8676(C_004083b0_4 *this,int param_1); /* 004b8676 */
+void __thiscall parley_set_mode_sides(C_004083b0_4 *this,int param_1); /* 004b8676 */
 void __thiscall FUN_004b888e(C_004083b0_430 *this,int param_1); /* 004b888e */
 void __cdecl FUN_004b8e5c(); /* 004b8e5c */
 void __thiscall FUN_004b90ad(C_004083b0_4 *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 004b90ad */
-void __cdecl FUN_004b93a2(); /* 004b93a2 */
-void __cdecl FUN_004b9504(); /* 004b9504 */
+void __cdecl chat_log_append(); /* 004b93a2 */
+void __cdecl chat_append_sender_name(); /* 004b9504 */
 void __cdecl FUN_004b957e(); /* 004b957e */
 void __cdecl FUN_004b95c2(); /* 004b95c2 */
 void __cdecl FUN_004b95e1(); /* 004b95e1 */
 undefined4 __cdecl FUN_004b9635(); /* 004b9635 */
 undefined4 __cdecl FUN_004b968a(); /* 004b968a */
-void __thiscall FUN_004bb370(C_00421bf0_98 *this,iptr param_1,undefined4 param_2); /* 004bb370 */
-C_0040f380_3c * __thiscall FUN_004bb3b0(C_0040f380_3c *this,uint param_1); /* 004bb3b0 */
-C_0040f380_3c * __thiscall FUN_004bb400(C_0040f380_3c *this,uint param_1); /* 004bb400 */
-C_0040f930 * __thiscall FUN_004bb450(C_0040f930 *this,uint param_1); /* 004bb450 */
-C_004bb4a0 * __thiscall FUN_004bb4a0(C_004bb4a0 *this,uint param_1); /* 004bb4a0 */
-C_0040f380_3c * __thiscall FUN_004bb4f0(C_0040f380_3c *this,uint param_1); /* 004bb4f0 */
-undefined4 __thiscall FUN_004bb540(C_00417f70_3c *this); /* 004bb540 */
-void __thiscall FUN_004bb570(C_00408010_10 *this,iptr param_1); /* 004bb570 */
+void __thiscall file_obj_read(FileObject *this,iptr param_1,undefined4 param_2); /* 004bb370 */
+Control * __thiscall ctrl_scalar_dtor(Control *this,uint param_1); /* 004bb3b0 */
+Control * __thiscall edit_scalar_dtor(Control *this,uint param_1); /* 004bb400 */
+Checkbox * __thiscall checkbox_scalar_dtor(Checkbox *this,uint param_1); /* 004bb450 */
+RadioGroupDtorView * __thiscall radiogrp_scalar_dtor(RadioGroupDtorView *this,uint param_1); /* 004bb4a0 */
+Control * __thiscall scrollbar_scalar_dtor(Control *this,uint param_1); /* 004bb4f0 */
+undefined4 __thiscall sprite_height(Sprite *this); /* 004bb540 */
+void __thiscall wnd_move_to_rect(WndBase *this,iptr param_1); /* 004bb570 */
 void __thiscall FUN_004bb5b0(C_004bb5b0 *this); /* 004bb5b0 */
-void __thiscall FUN_004bb5e0(C_004bb5e0 *this); /* 004bb5e0 */
-void __thiscall FUN_004bb620(C_0040f380_44 *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4, undefined4 param_5,undefined4 param_6); /* 004bb620 */
-void __thiscall FUN_004bb6d0(C_00418a30 *this,undefined4 param_1); /* 004bb6d0 */
-undefined4 __thiscall FUN_004bb710(C_00418a30 *this); /* 004bb710 */
-void __thiscall FUN_004bb740(C_004bb4a0 *this); /* 004bb740 */
+void __thiscall ctrl_set_focus(ControlFocusView *this); /* 004bb5e0 */
+void __thiscall edit_create_styled(EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4, undefined4 param_5,undefined4 param_6); /* 004bb620 */
+void __thiscall edit_set_caret(ControlTextView *this,undefined4 param_1); /* 004bb6d0 */
+undefined4 __thiscall edit_get_text_end(ControlTextView *this); /* 004bb710 */
+void __thiscall radiogrp_dtor(RadioGroupDtorView *this); /* 004bb740 */
 void __cdecl FUN_004bb7b0(); /* 004bb7b0 */
-void __cdecl FUN_004bb800(); /* 004bb800 */
-void __cdecl FUN_004bb840(); /* 004bb840 */
-int __cdecl FUN_004bb870(); /* 004bb870 */
-void __cdecl FUN_004bb8e0(); /* 004bb8e0 */
+void __cdecl rect_deflate(); /* 004bb800 */
+void __cdecl rect_inflate(); /* 004bb840 */
+int __cdecl mem_handle_alloc_tracked(); /* 004bb870 */
+void __cdecl wonder_show_movie(); /* 004bb8e0 */
 void __cdecl FUN_004bb97b(); /* 004bb97b */
-C_004083b0_2e4 * __thiscall FUN_004bb99f(C_004083b0_2e4 *this); /* 004bb99f */
-void __thiscall FUN_004bba79(C_004bba79_1188 *this); /* 004bba79 */
+FrameWindow * __thiscall FUN_004bb99f(FrameWindow *this); /* 004bb99f */
+void __thiscall FUN_004bba79(WonderMovieWindow *this); /* 004bba79 */
 void __cdecl FUN_004bbaf1(); /* 004bbaf1 */
 void __cdecl FUN_004bbb00(); /* 004bbb00 */
 void __cdecl FUN_004bbb0f(); /* 004bbb0f */
 void __cdecl FUN_004bbb1e(); /* 004bbb1e */
-void __thiscall FUN_004bbb3f(C_004083b0_2e4 *this,int param_1); /* 004bbb3f */
+void __thiscall FUN_004bbb3f(FrameWindow *this,int param_1); /* 004bbb3f */
 void __cdecl FUN_004bbdbd(); /* 004bbdbd */
 void __cdecl FUN_004bbdc9(); /* 004bbdc9 */
 void __cdecl FUN_004bbdd5(); /* 004bbdd5 */
 void __thiscall FUN_004bbdfb(C_004083b0_430 *this); /* 004bbdfb */
 undefined4 __thiscall FUN_004bc0bb(void *this); /* 004bc0bb */
-void __thiscall FUN_004bc0d3(C_004083b0_2e4 *this); /* 004bc0d3 */
-void __thiscall FUN_004bc10f(C_004083b0_2e4 *this); /* 004bc10f */
+void __thiscall FUN_004bc0d3(FrameWindow *this); /* 004bc0d3 */
+void __thiscall FUN_004bc10f(FrameWindow *this); /* 004bc10f */
 void __cdecl FUN_004bc193(); /* 004bc193 */
 void __cdecl FUN_004bc1b1(); /* 004bc1b1 */
 void __cdecl FUN_004bc1cf(); /* 004bc1cf */
@@ -1733,56 +1733,56 @@ undefined4 __cdecl FUN_004bc8aa(); /* 004bc8aa */
 undefined4 __cdecl FUN_004bcb9b(); /* 004bcb9b */
 undefined4 __cdecl FUN_004bcfcf(); /* 004bcfcf */
 undefined4 __cdecl FUN_004bd2a3(); /* 004bd2a3 */
-undefined4 __cdecl FUN_004bd9f0(); /* 004bd9f0 */
-undefined4 __cdecl FUN_004bdaa5(); /* 004bdaa5 */
-int __cdecl FUN_004bdb2c(); /* 004bdb2c */
-void __cdecl FUN_004be6ba(); /* 004be6ba */
-void __cdecl FUN_004bea84(); /* 004bea84 */
-void __cdecl FUN_004bee56(); /* 004bee56 */
+undefined4 __cdecl civ_has_advance(); /* 004bd9f0 */
+undefined4 __cdecl advance_has_prereq(); /* 004bdaa5 */
+int __cdecl ai_advance_value(); /* 004bdb2c */
+void __cdecl civ_leonardo_upgrade(); /* 004be6ba */
+void __cdecl civ_advance_gov_prompts(); /* 004bea84 */
+void __cdecl civ_golden_age_popup(); /* 004bee56 */
 void __cdecl FUN_004befd1(); /* 004befd1 */
-void __cdecl FUN_004bf05b(); /* 004bf05b */
+void __cdecl civ_give_advance(); /* 004bf05b */
 void __cdecl FUN_004bfd9a(); /* 004bfd9a */
-undefined4 __cdecl FUN_004bfdbe(); /* 004bfdbe */
-undefined4 __cdecl FUN_004bfe5a(); /* 004bfe5a */
-undefined4 __cdecl FUN_004c02d8(); /* 004c02d8 */
-undefined4 __cdecl FUN_004c03ae(); /* 004c03ae */
+undefined4 __cdecl civ_can_research_advance(); /* 004bfdbe */
+undefined4 __cdecl civ_can_build_unit(); /* 004bfe5a */
+undefined4 __cdecl civ_can_build_wonder(); /* 004c02d8 */
+undefined4 __cdecl city_can_build_improvement(); /* 004c03ae */
 iptr __cdecl FUN_004c09b0(); /* 004c09b0 */
 undefined4 __cdecl FUN_004c0b51(undefined4 param_1,iptr param_2,iptr param_3,byte param_4,int param_5,int param_6, int param_7); /* 004c0b51 */
 undefined4 __cdecl FUN_004c0be8(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6, int param_7); /* 004c0be8 */
 undefined4 __cdecl FUN_004c0c83(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6, int param_7); /* 004c0c83 */
-void __cdecl FUN_004c0cf7(); /* 004c0cf7 */
+void __cdecl civ_research_goal_dialog(); /* 004c0cf7 */
 void __cdecl FUN_004c193a(); /* 004c193a */
-iptr __cdecl FUN_004c195e(); /* 004c195e */
+iptr __cdecl civ_choose_research_dialog(); /* 004c195e */
 void __cdecl FUN_004c217c(); /* 004c217c */
 void __cdecl FUN_004c2188(); /* 004c2188 */
-void __cdecl FUN_004c21ad(); /* 004c21ad */
-iptr __cdecl FUN_004c21d5(); /* 004c21d5 */
+void __cdecl civ_choose_research(); /* 004c21ad */
+iptr __cdecl civ_research_complete(); /* 004c21d5 */
 void __cdecl FUN_004c2763(); /* 004c2763 */
-int __cdecl FUN_004c2788(); /* 004c2788 */
+int __cdecl civ_research_cost(); /* 004c2788 */
 void __cdecl FUN_004c2b73(); /* 004c2b73 */
-void __cdecl FUN_004c4210(); /* 004c4210 */
-void __cdecl FUN_004c4240(); /* 004c4240 */
-void __cdecl FUN_004c4280(); /* 004c4280 */
-void __cdecl FUN_004c42a0(); /* 004c42a0 */
+void __cdecl text_set_number_arg_u8(); /* 004c4210 */
+void __cdecl popup_game_with_advance(); /* 004c4240 */
+void __cdecl game_main_entry(); /* 004c4280 */
+void __cdecl unit_do_terrain_work(); /* 004c42a0 */
 void __cdecl FUN_004c4ada(); /* 004c4ada */
-void __cdecl FUN_004c4d1e(); /* 004c4d1e */
-void __cdecl FUN_004c4e6d(); /* 004c4e6d */
-void __cdecl FUN_004c50d0(); /* 004c50d0 */
-undefined4 __cdecl FUN_004c5408(); /* 004c5408 */
-void __cdecl FUN_004c54da(); /* 004c54da */
-void __cdecl FUN_004c59f0(); /* 004c59f0 */
-undefined4 __cdecl FUN_004c5fae(); /* 004c5fae */
+void __cdecl unit_found_city(); /* 004c4d1e */
+void __cdecl unit_goto_step(); /* 004c4e6d */
+void __cdecl unit_pillage(); /* 004c50d0 */
+undefined4 __cdecl unit_execute_orders(); /* 004c5408 */
+void __cdecl unit_go_home(); /* 004c54da */
+void __cdecl diplo_espionage_incident(); /* 004c59f0 */
+undefined4 __cdecl spy_try_escape(); /* 004c5fae */
 undefined4 __cdecl FUN_004c64aa(); /* 004c64aa */
 uint __cdecl FUN_004c654d(); /* 004c654d */
-int __cdecl FUN_004c65d2(); /* 004c65d2 */
+int __cdecl civ_distance_to_capital(); /* 004c65d2 */
 void __cdecl FUN_004c66ba(); /* 004c66ba */
 void __cdecl FUN_004c6bf5(); /* 004c6bf5 */
 void __cdecl FUN_004c9504(); /* 004c9504 */
-void __cdecl FUN_004c9528(); /* 004c9528 */
+void __cdecl unit_bribe(); /* 004c9528 */
 undefined4 __cdecl FUN_004c9ebd(); /* 004c9ebd */
 void __cdecl FUN_004ca1cd(); /* 004ca1cd */
-void __cdecl FUN_004ca39e(); /* 004ca39e */
-undefined4 __cdecl FUN_004cc870(); /* 004cc870 */
+void __cdecl unit_paradrop(); /* 004ca39e */
+undefined4 __cdecl popup_game_with_improvement(); /* 004cc870 */
 undefined4 __cdecl FUN_004cc8b0(); /* 004cc8b0 */
 void __cdecl FUN_004cc8f0(); /* 004cc8f0 */
 void __cdecl FUN_004cc90a(); /* 004cc90a */
@@ -1796,19 +1796,19 @@ void __cdecl FUN_004cc9c6(); /* 004cc9c6 */
 void __cdecl FUN_004cc9e0(); /* 004cc9e0 */
 void __cdecl FUN_004cc9fe(); /* 004cc9fe */
 void __cdecl FUN_004cca1b(); /* 004cca1b */
-undefined4 __cdecl FUN_004cca35(); /* 004cca35 */
-void __cdecl FUN_004ccab9(); /* 004ccab9 */
-void __cdecl FUN_004ccaed(); /* 004ccaed */
-void __cdecl FUN_004ccb6a(); /* 004ccb6a */
-void __cdecl FUN_004ccdb6(); /* 004ccdb6 */
-void __cdecl FUN_004ccdef(); /* 004ccdef */
-undefined4 __cdecl FUN_004ccf2d(); /* 004ccf2d */
+undefined4 __cdecl memblock_alloc_checked(); /* 004cca35 */
+void __cdecl rules_edit_set_section(); /* 004ccab9 */
+void __cdecl rules_edit_add_section(); /* 004ccaed */
+void __cdecl gfx_draw_tiled_frame(); /* 004ccb6a */
+void __cdecl text_append_int_2d(); /* 004ccdb6 */
+void __cdecl text_append_advance_abbrev(); /* 004ccdef */
+undefined4 __cdecl rules_write_sections(); /* 004ccf2d */
 undefined4 __cdecl FUN_004cd3d7(); /* 004cd3d7 */
 undefined4 __cdecl FUN_004cd8a6(); /* 004cd8a6 */
 undefined4 __cdecl FUN_004cdcf6(); /* 004cdcf6 */
 undefined4 __cdecl FUN_004cdd3d(); /* 004cdd3d */
 void __cdecl FUN_004cdf26(); /* 004cdf26 */
-int __cdecl FUN_004cdf4b(); /* 004cdf4b */
+int __cdecl editor_clamp_value(); /* 004cdf4b */
 void __cdecl FUN_004cdfa4(); /* 004cdfa4 */
 void __cdecl FUN_004ce196(); /* 004ce196 */
 void __cdecl FUN_004ce2f3(); /* 004ce2f3 */
@@ -1816,29 +1816,29 @@ void __cdecl FUN_004ce322(); /* 004ce322 */
 undefined4 __cdecl FUN_004ce38a(); /* 004ce38a */
 void __cdecl FUN_004ce6ed(); /* 004ce6ed */
 void __cdecl FUN_004ce6f9(); /* 004ce6f9 */
-uint __cdecl FUN_004ce71b(); /* 004ce71b */
+uint __cdecl editor_check_city_name(); /* 004ce71b */
 void __cdecl FUN_004ce83d(); /* 004ce83d */
 undefined4 __cdecl FUN_004ce8a4(); /* 004ce8a4 */
 int __cdecl FUN_004ce903(); /* 004ce903 */
-void __cdecl FUN_004ce98e(); /* 004ce98e */
-void __cdecl FUN_004cef35(); /* 004cef35 */
+void __cdecl events_copy(); /* 004ce98e */
+void __cdecl events_compact(); /* 004cef35 */
 void __cdecl FUN_004cefc5(); /* 004cefc5 */
 int __cdecl FUN_004cefe9(); /* 004cefe9 */
 int __cdecl FUN_004cf144(); /* 004cf144 */
 int __cdecl FUN_004cf3ba(); /* 004cf3ba */
-void __thiscall FUN_004cff70(C_00408010_10 *this,undefined4 param_1); /* 004cff70 */
-undefined4 __thiscall FUN_004cffb0(C_004cffb0 *this,undefined4 param_1,iptr param_2,undefined4 param_3); /* 004cffb0 */
+void __thiscall wnd_set_resize_border(WndBase *this,undefined4 param_1); /* 004cff70 */
+undefined4 __thiscall FUN_004cffb0(EditLineView *this,undefined4 param_1,iptr param_2,undefined4 param_3); /* 004cffb0 */
 void __cdecl FUN_004cfff0(); /* 004cfff0 */
-void __cdecl FUN_004d007e(); /* 004d007e */
+void __cdecl str_trim(); /* 004d007e */
 void __cdecl FUN_004d0160(); /* 004d0160 */
-void __cdecl FUN_004d01ae(); /* 004d01ae */
-undefined4 __cdecl FUN_004d0208(); /* 004d0208 */
+void __cdecl spaceship_wnd_load_parts(); /* 004d01ae */
+undefined4 __cdecl spaceship_wnd_run(); /* 004d0208 */
 void __cdecl FUN_004d0314(); /* 004d0314 */
 undefined4 __cdecl FUN_004d0339(); /* 004d0339 */
 void __cdecl FUN_004d041a(); /* 004d041a */
-void __cdecl FUN_004d043f(); /* 004d043f */
-C_00408010_fb8 * __thiscall FUN_004d0517(C_00408010_fb8 *this,u32 param_1); /* 004d0517 */
-undefined4 __thiscall FUN_004d08b0(C_004d08b0_2180 *this); /* 004d08b0 */
+void __cdecl spaceship_wnd_draw_title(); /* 004d043f */
+SpaceshipWindow * __thiscall spaceship_wnd_ctor(SpaceshipWindow *this,u32 param_1); /* 004d0517 */
+undefined4 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this); /* 004d08b0 */
 void __cdecl FUN_004d0a56(); /* 004d0a56 */
 void __cdecl FUN_004d0a65(); /* 004d0a65 */
 void __cdecl FUN_004d0a74(); /* 004d0a74 */
@@ -1855,15 +1855,15 @@ void __cdecl FUN_004d0b0a(); /* 004d0b0a */
 void __cdecl FUN_004d0b19(); /* 004d0b19 */
 void __cdecl FUN_004d0b28(); /* 004d0b28 */
 void __cdecl FUN_004d0b37(); /* 004d0b37 */
-undefined4 __thiscall FUN_004d0b58(C_00408010_fb8 *this); /* 004d0b58 */
+undefined4 __thiscall spaceship_wnd_init(SpaceshipWindow *this); /* 004d0b58 */
 uint __thiscall FUN_004d0d64(C_00408010_6f0 *this); /* 004d0d64 */
-void __thiscall FUN_004d0ea6(C_00408010_fb8 *this); /* 004d0ea6 */
+void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this); /* 004d0ea6 */
 void __cdecl FUN_004d138b(); /* 004d138b */
 void __cdecl FUN_004d1397(); /* 004d1397 */
-void __thiscall FUN_004d13b8(C_00408010_fb8 *this); /* 004d13b8 */
-void __thiscall FUN_004d1725(C_00408010_fb8 *this); /* 004d1725 */
-#undef FUN_004d17bf
-undefined4 __thiscall FUN_004d17bf(void *this); /* 004d17bf, hand-written */
+void __thiscall FUN_004d13b8(SpaceshipWindow *this); /* 004d13b8 */
+void __thiscall FUN_004d1725(SpaceshipWindow *this); /* 004d1725 */
+#undef spaceship_wnd_render_ship
+undefined4 __thiscall spaceship_wnd_render_ship(void *this); /* 004d17bf, hand-written */
 void __cdecl FUN_004d49d5(); /* 004d49d5 */
 void __cdecl FUN_004d49e1(); /* 004d49e1 */
 void __cdecl FUN_004d49ed(); /* 004d49ed */
@@ -1877,16 +1877,16 @@ void __cdecl FUN_004d4a3e(); /* 004d4a3e */
 void __cdecl FUN_004d4a4a(); /* 004d4a4a */
 void __cdecl FUN_004d4a56(); /* 004d4a56 */
 void __thiscall FUN_004d4a7b(C_00408010_6f0 *this); /* 004d4a7b */
-uint __thiscall FUN_004d4fd1(C_00408010_fb8 *this,int param_1); /* 004d4fd1 */
+uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *this,int param_1); /* 004d4fd1 */
 #undef FUN_004d53ab
 void __thiscall FUN_004d53ab(void *this); /* 004d53ab, hand-written */
 void __cdecl FUN_004d56ea(); /* 004d56ea */
-void __thiscall FUN_004d570b(C_00408010_fb8 *this); /* 004d570b */
-void __thiscall FUN_004d5b21(C_00408010_10 *this); /* 004d5b21 */
-void __thiscall FUN_004d5e41(C_00408010_fb8 *this); /* 004d5e41 */
-void __thiscall FUN_004d5ef9(C_00408010_fb8 *this); /* 004d5ef9 */
-void __thiscall FUN_004d5f79(C_00408010_fb8 *this,int param_1,int param_2); /* 004d5f79 */
-void __thiscall FUN_004d60a5(C_00408010_fb8 *this,int param_1,int param_2); /* 004d60a5 */
+void __thiscall FUN_004d570b(SpaceshipWindow *this); /* 004d570b */
+void __thiscall spaceship_play_launch_video(WndBase *this); /* 004d5b21 */
+void __thiscall spaceship_wnd_setup_hotspots(SpaceshipWindow *this); /* 004d5e41 */
+void __thiscall spaceship_wnd_draw_buttons(SpaceshipWindow *this); /* 004d5ef9 */
+void __thiscall spaceship_wnd_draw_close_btn(SpaceshipWindow *this,int param_1,int param_2); /* 004d5f79 */
+void __thiscall spaceship_wnd_draw_launch_btn(SpaceshipWindow *this,int param_1,int param_2); /* 004d60a5 */
 void __cdecl FUN_004d61c3(); /* 004d61c3 */
 void __cdecl FUN_004d6367(); /* 004d6367 */
 void __cdecl FUN_004d6384(); /* 004d6384 */
@@ -1897,14 +1897,14 @@ void __cdecl FUN_004d68a7(); /* 004d68a7 */
 void __cdecl FUN_004d6a30(); /* 004d6a30 */
 void __cdecl FUN_004d6cbc(); /* 004d6cbc */
 void __cdecl FUN_004d6f58(); /* 004d6f58 */
-u32 __thiscall FUN_004d8af0(C_0040ef70_8 *this); /* 004d8af0 */
-C_004d8b20 * __thiscall FUN_004d8b20(C_004d8b20 *this,uint param_1); /* 004d8b20 */
-void __thiscall FUN_004d8b70(C_0046ace7 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 004d8b70 */
+u32 __thiscall font_get_handle(GameFont *this); /* 004d8af0 */
+AviPlayer * __thiscall FUN_004d8b20(AviPlayer *this,uint param_1); /* 004d8b20 */
+void __thiscall FUN_004d8b70(ClickMap *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 004d8b70 */
 void __cdecl FUN_004d8bc0(); /* 004d8bc0 */
 void __cdecl FUN_004d8caa(); /* 004d8caa */
-void __cdecl FUN_004d8d80(); /* 004d8d80 */
-int __cdecl FUN_004d8ed6(); /* 004d8ed6 */
-void __cdecl FUN_004d9095(); /* 004d9095 */
+void __cdecl impr_editor_load_controls(); /* 004d8d80 */
+int __cdecl impr_editor_save_controls(); /* 004d8ed6 */
+void __cdecl impr_editor_redraw(); /* 004d9095 */
 undefined4 __cdecl FUN_004d90b0(); /* 004d90b0 */
 undefined4 __cdecl FUN_004d91f8(); /* 004d91f8 */
 void __cdecl FUN_004d929a(); /* 004d929a */
@@ -1919,7 +1919,7 @@ void __thiscall FUN_004d9a9f(C_004083b0_430 *this,int param_1); /* 004d9a9f */
 void __thiscall FUN_004d9b93(C_004083b0_430 *this); /* 004d9b93 */
 void __thiscall FUN_004da107(C_004083b0_430 *this); /* 004da107 */
 void __cdecl FUN_004da9be(); /* 004da9be */
-void __cdecl FUN_004da9e2(); /* 004da9e2 */
+void __cdecl impr_editor_run(); /* 004da9e2 */
 void __cdecl FUN_004daa3b(); /* 004daa3b */
 void __cdecl FUN_004db210(); /* 004db210 */
 void __cdecl FUN_004db225(); /* 004db225 */
@@ -1935,7 +1935,7 @@ void __cdecl FUN_004dcc83(); /* 004dcc83 */
 void __cdecl FUN_004dcea5(); /* 004dcea5 */
 void __cdecl FUN_004dd016(); /* 004dd016 */
 void __cdecl FUN_004dd176(); /* 004dd176 */
-void __cdecl FUN_004dd285(); /* 004dd285 */
+void __cdecl parley_execute_transaction(); /* 004dd285 */
 void __cdecl FUN_004dd8ad(); /* 004dd8ad */
 void __cdecl FUN_004dde9e(); /* 004dde9e */
 void __cdecl FUN_004ddf04(); /* 004ddf04 */
@@ -1952,64 +1952,64 @@ void __cdecl FUN_004e0179(); /* 004e0179 */
 void __cdecl FUN_004e0196(); /* 004e0196 */
 void __cdecl FUN_004e01b0(); /* 004e01b0 */
 void __cdecl FUN_004e02cb(); /* 004e02cb */
-void __cdecl FUN_004e02ef(); /* 004e02ef */
-void __cdecl FUN_004e068d(); /* 004e068d */
-void __cdecl FUN_004e0a8c(); /* 004e0a8c */
-void __cdecl FUN_004e0ab0(); /* 004e0ab0 */
-void __cdecl FUN_004e0d71(); /* 004e0d71 */
-void __cdecl FUN_004e0f18(); /* 004e0f18 */
-void __cdecl FUN_004e1314(); /* 004e1314 */
-void __cdecl FUN_004e1452(); /* 004e1452 */
-void __cdecl FUN_004e1763(); /* 004e1763 */
-void __cdecl FUN_004e22c9(); /* 004e22c9 */
-void __cdecl FUN_004e2597(); /* 004e2597 */
+void __cdecl ui_reset_window_layout(); /* 004e02ef */
+void __cdecl menu_load_game(); /* 004e068d */
+void __cdecl dlg_check_set_bool(); /* 004e0a8c */
+void __cdecl menu_game_options(); /* 004e0ab0 */
+void __cdecl menu_graphic_options(); /* 004e0d71 */
+void __cdecl menu_multiplayer_options(); /* 004e0f18 */
+void __cdecl rules_apply_double_moves(); /* 004e1314 */
+void __cdecl menu_message_options(); /* 004e1452 */
+void __cdecl civ_eliminate(); /* 004e1763 */
+void __cdecl game_quit_or_retire(); /* 004e22c9 */
+void __cdecl menu_show_hidden_terrain(); /* 004e2597 */
 void __cdecl FUN_004e25ef(); /* 004e25ef */
 void __cdecl FUN_004e27df(); /* 004e27df */
-void __cdecl FUN_004e2803(); /* 004e2803 */
+void __cdecl menu_command(); /* 004e2803 */
 void __cdecl FUN_004e3a86(); /* 004e3a86 */
 void __cdecl FUN_004e4c92(); /* 004e4c92 */
-void __cdecl FUN_004e4ceb(); /* 004e4ceb */
-void __thiscall FUN_004e7240(C_00408010_10 *this); /* 004e7240 */
-int __cdecl FUN_004e7270(); /* 004e7270 */
-undefined4 __cdecl FUN_004e7458(); /* 004e7458 */
-void __cdecl FUN_004e7492(); /* 004e7492 */
-uint __cdecl FUN_004e74df(); /* 004e74df */
-void __cdecl FUN_004e7549(); /* 004e7549 */
-uint __cdecl FUN_004e75a6(); /* 004e75a6 */
+void __cdecl menu_update_states(); /* 004e4ceb */
+void __thiscall wnd_show_restored(WndBase *this); /* 004e7240 */
+int __cdecl city_acquire_wonder(); /* 004e7270 */
+undefined4 __cdecl city_production_category(); /* 004e7458 */
+void __cdecl city_save_build_state(); /* 004e7492 */
+uint __cdecl city_shields_after_change(); /* 004e74df */
+void __cdecl city_set_specialist_type(); /* 004e7549 */
+uint __cdecl city_specialist_type(); /* 004e75a6 */
 int __cdecl FUN_004e75ea(); /* 004e75ea */
 void __cdecl FUN_004e7641(); /* 004e7641 */
-uint __cdecl FUN_004e78ce(); /* 004e78ce */
-void __cdecl FUN_004e790c(); /* 004e790c */
+uint __cdecl city_tile_worked(); /* 004e78ce */
+void __cdecl city_set_tile_worked(); /* 004e790c */
 void __cdecl FUN_004e7967(); /* 004e7967 */
-undefined4 __cdecl FUN_004e7d7f(); /* 004e7d7f */
-void __cdecl FUN_004e7eb1(); /* 004e7eb1 */
-void __cdecl FUN_004e80b1(); /* 004e80b1 */
-int __cdecl FUN_004e868f(); /* 004e868f */
+undefined4 __cdecl city_count_unit_support(); /* 004e7d7f */
+void __cdecl city_calc_food_box_rows(); /* 004e7eb1 */
+void __cdecl city_calc_unit_support(); /* 004e80b1 */
+int __cdecl city_tile_yield(); /* 004e868f */
 void __cdecl FUN_004e8c8c(); /* 004e8c8c */
 void __cdecl FUN_004e8db5(); /* 004e8db5 */
-void __cdecl FUN_004e8e4d(); /* 004e8e4d */
+void __cdecl city_calc_tile_yields(); /* 004e8e4d */
 uint __cdecl FUN_004e8ecf(); /* 004e8ecf */
 void __cdecl FUN_004e8f42(); /* 004e8f42 */
 void __cdecl FUN_004e9719(); /* 004e9719 */
 void __cdecl FUN_004e97ae(); /* 004e97ae */
 int __cdecl FUN_004e9849(); /* 004e9849 */
-int __cdecl FUN_004e989a(); /* 004e989a */
+int __cdecl city_calc_corruption(); /* 004e989a */
 void __cdecl FUN_004e9c14(); /* 004e9c14 */
 void __cdecl FUN_004ea031(); /* 004ea031 */
-void __cdecl FUN_004ea1f6(); /* 004ea1f6 */
+void __cdecl city_split_trade(); /* 004ea1f6 */
 int __cdecl FUN_004ea8e4(); /* 004ea8e4 */
 void __cdecl FUN_004eb327(); /* 004eb327 */
 void __cdecl FUN_004eb4a1(); /* 004eb4a1 */
-#undef FUN_004eb4ed
-int __cdecl FUN_004eb4ed(int param_1,int param_2); /* 004eb4ed, hand-written */
-int __cdecl FUN_004eb571(); /* 004eb571 */
+#undef city_recalc
+int __cdecl city_recalc(int param_1,int param_2); /* 004eb4ed, hand-written */
+int __cdecl city_notify_dialog_ex(); /* 004eb571 */
 void __cdecl FUN_004eb7e5(); /* 004eb7e5 */
-int __cdecl FUN_004eb80a(); /* 004eb80a */
+int __cdecl popup_city_picture_zoom(); /* 004eb80a */
 void __cdecl FUN_004ebbad(); /* 004ebbad */
 void __cdecl FUN_004ebbb9(); /* 004ebbb9 */
 undefined4 __cdecl FUN_004ebbde(); /* 004ebbde */
 void __cdecl FUN_004ec1c6(); /* 004ec1c6 */
-void __cdecl FUN_004ec312(); /* 004ec312 */
+void __cdecl civ_apply_eiffel_tower(); /* 004ec312 */
 void __cdecl FUN_004ec3fe(); /* 004ec3fe */
 void __cdecl FUN_004eeee7(); /* 004eeee7 */
 void __cdecl FUN_004eeef3(); /* 004eeef3 */
@@ -2019,27 +2019,27 @@ void __cdecl FUN_004ef578(); /* 004ef578 */
 void __cdecl FUN_004efbc6(); /* 004efbc6 */
 #undef FUN_004efd44
 int __cdecl FUN_004efd44(int param_1); /* 004efd44, hand-written */
-uint __cdecl FUN_004f00f0(); /* 004f00f0 */
+uint __cdecl civ_improvement_upkeep(); /* 004f00f0 */
 void __cdecl FUN_004f0221(); /* 004f0221 */
 undefined4 __cdecl FUN_004f03b7(); /* 004f03b7 */
 void __cdecl FUN_004f080d(); /* 004f080d */
-int __cdecl FUN_004f0a9c(); /* 004f0a9c */
-void __cdecl FUN_004f1220(); /* 004f1220 */
-uint __cdecl FUN_004f3d30(); /* 004f3d30 */
+int __cdecl city_process_turn(); /* 004f0a9c */
+void __cdecl wonder_apollo_reveal_map(); /* 004f1220 */
+uint __cdecl city_tile_status_flags(); /* 004f3d30 */
 C_004083b0_430 * __thiscall FUN_004f3d60(C_004083b0_430 *this); /* 004f3d60 */
 void * __thiscall FUN_004f3e20(void *this,uint param_1); /* 004f3e20 */
 #undef FUN_004f3e70
 void __thiscall FUN_004f3e70(void *this); /* 004f3e70, hand-written */
 void __cdecl FUN_004f3ebb(); /* 004f3ebb */
 void __cdecl FUN_004f3ee5(); /* 004f3ee5 */
-void __cdecl FUN_004f3f30(); /* 004f3f30 */
+void __cdecl city_notify_dialog(); /* 004f3f30 */
 void __cdecl FUN_004f3f60(); /* 004f3f60 */
 void __cdecl FUN_004f3f80(); /* 004f3f80 */
 void __cdecl FUN_004f3f9a(); /* 004f3f9a */
 void __cdecl FUN_004f3fb4(); /* 004f3fb4 */
 void __cdecl FUN_004f3fd1(); /* 004f3fd1 */
 C_004083b0_12c * __thiscall FUN_004f3feb(C_004083b0_12c *this); /* 004f3feb */
-void __thiscall FUN_004f44a7(C_004083b0_48 *this); /* 004f44a7 */
+void __thiscall FUN_004f44a7(DibSurface *this); /* 004f44a7 */
 void __cdecl FUN_004f4673(); /* 004f4673 */
 void __cdecl FUN_004f4682(); /* 004f4682 */
 void __cdecl FUN_004f4691(); /* 004f4691 */
@@ -2058,33 +2058,33 @@ void __cdecl FUN_004f4745(); /* 004f4745 */
 void __cdecl FUN_004f4754(); /* 004f4754 */
 void __cdecl FUN_004f4763(); /* 004f4763 */
 void __cdecl FUN_004f4772(); /* 004f4772 */
-void __thiscall FUN_004f4793(C_004083b0_4 *this); /* 004f4793 */
-void __thiscall FUN_004f4809(C_004083b0_4 *this); /* 004f4809 */
+void __thiscall pedia_clear_links(C_004083b0_4 *this); /* 004f4793 */
+void __thiscall pedia_free_lists(C_004083b0_4 *this); /* 004f4809 */
 void __thiscall FUN_004f4b9f(C_004083b0_a28 *this); /* 004f4b9f */
 void __cdecl FUN_004f5b24(); /* 004f5b24 */
 void __cdecl FUN_004f5b6f(); /* 004f5b6f */
-undefined4 __cdecl FUN_004f5dd1(); /* 004f5dd1 */
-void __cdecl FUN_004f5e52(); /* 004f5e52 */
+undefined4 __cdecl pedia_close(); /* 004f5dd1 */
+void __cdecl pedia_redraw_page(); /* 004f5e52 */
 void __cdecl FUN_004f5ed2(); /* 004f5ed2 */
-void __cdecl FUN_004f5f23(); /* 004f5f23 */
-void __thiscall FUN_004f6244(C_004083b0_61c *this); /* 004f6244 */
-void __thiscall FUN_004f6564(C_004083b0_4 *this,iptr param_1,int param_2); /* 004f6564 */
-void __thiscall FUN_004f6646(C_004083b0_120 *this); /* 004f6646 */
-void __thiscall FUN_004f66c6(C_004083b0_11c *this); /* 004f66c6 */
+void __cdecl pedia_toggle_describe(); /* 004f5f23 */
+void __thiscall pedia_draw_frame(C_004083b0_61c *this); /* 004f6244 */
+void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_2); /* 004f6564 */
+void __thiscall pedia_redraw(C_004083b0_120 *this); /* 004f6646 */
+void __thiscall pedia_draw_item_list(C_004083b0_11c *this); /* 004f66c6 */
 void __cdecl FUN_004f7313(); /* 004f7313 */
 int __cdecl FUN_004f734a(); /* 004f734a */
 void __thiscall FUN_004f7454(C_004083b0_4 *this,int param_1); /* 004f7454 */
 int __cdecl FUN_004f74eb(); /* 004f74eb */
 void __cdecl FUN_004f76ce(); /* 004f76ce */
 void __cdecl FUN_004f7a30(); /* 004f7a30 */
-void __thiscall FUN_004f7ac7(C_004083b0_4 *this,undefined4 param_1); /* 004f7ac7 */
-void __thiscall FUN_004f7bd1(C_004083b0_61c *this,u32 param_1,int param_2); /* 004f7bd1 */
-void __thiscall FUN_004f7c99(C_004083b0_a28 *this); /* 004f7c99 */
+void __thiscall pedia_set_category_title(C_004083b0_4 *this,undefined4 param_1); /* 004f7ac7 */
+void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2); /* 004f7bd1 */
+void __thiscall pedia_load_indexes(C_004083b0_a28 *this); /* 004f7c99 */
 void __thiscall FUN_004f896a(void *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 004f896a */
-undefined * __cdecl FUN_004f8a9b(); /* 004f8a9b */
-void __thiscall FUN_004f8af9(C_004083b0_12c *this); /* 004f8af9 */
+undefined * __cdecl pedia_lookup_text(); /* 004f8a9b */
+void __thiscall pedia_history_push(C_004083b0_12c *this); /* 004f8af9 */
 void __cdecl FUN_004f8d04(); /* 004f8d04 */
-void __cdecl FUN_004f8d51(); /* 004f8d51 */
+void __cdecl pedia_end_modal(); /* 004f8d51 */
 void * __thiscall FUN_004fa0f0(void *this,uint param_1); /* 004fa0f0 */
 void __thiscall FUN_004fa140(void *this); /* 004fa140 */
 void __cdecl FUN_004fa17e(); /* 004fa17e */
@@ -2096,33 +2096,33 @@ undefined4 __cdecl FUN_004fa250(); /* 004fa250 */
 undefined4 __cdecl FUN_004fa359(); /* 004fa359 */
 iptr __cdecl FUN_004fa403(); /* 004fa403 */
 void __thiscall FUN_004fa47e(C_0040bc40_28 *this,uint param_1); /* 004fa47e */
-C_0040bc40_310 * __thiscall FUN_004fa4be(C_0040bc40_310 *this,undefined4 param_1); /* 004fa4be */
-void __thiscall FUN_004fa569(C_0040bc40_28 *this); /* 004fa569 */
+ScenarioEvents * __thiscall events_ctor(ScenarioEvents *this,undefined4 param_1); /* 004fa4be */
+void __thiscall events_dtor(C_0040bc40_28 *this); /* 004fa569 */
 void __cdecl FUN_004fa5b8(); /* 004fa5b8 */
-void __thiscall FUN_004fa5d9(C_0040bc40_310 *this,undefined4 param_1); /* 004fa5d9 */
-void * __thiscall FUN_004fa617(C_0040bc40_310 *this); /* 004fa617 */
+void __thiscall events_reset(ScenarioEvents *this,undefined4 param_1); /* 004fa5d9 */
+void * __thiscall events_alloc(ScenarioEvents *this); /* 004fa617 */
 undefined4 __thiscall FUN_004fa707(C_0040bc40_28 *this,iptr param_1); /* 004fa707 */
 undefined4 __thiscall FUN_004fa82d(C_0040bc40_28 *this,iptr param_1); /* 004fa82d */
 undefined4 __thiscall FUN_004fa854(C_0040bc40_28 *this,iptr param_1); /* 004fa854 */
 undefined4 __thiscall FUN_004fa944(C_0040bc40_28 *this,iptr param_1); /* 004fa944 */
-undefined4 __thiscall FUN_004faab0(C_0040bc40_2f4 *this,iptr param_1); /* 004faab0 */
+undefined4 __thiscall FUN_004faab0(Dialog *this,iptr param_1); /* 004faab0 */
 undefined4 __thiscall FUN_004faba6(C_0040bc40_28 *this,iptr param_1); /* 004faba6 */
 undefined4 __thiscall FUN_004fad02(C_0040bc40_28 *this,iptr param_1); /* 004fad02 */
 undefined4 __thiscall FUN_004fadfb(C_0040bc40_28 *this,iptr param_1); /* 004fadfb */
 undefined4 __thiscall FUN_004faed4(C_0040bc40_28 *this,iptr param_1); /* 004faed4 */
 int __thiscall FUN_004fb29f(C_0040bc40_28 *this,iptr param_1); /* 004fb29f */
 int __thiscall FUN_004fb5b2(C_0040bc40_28 *this,iptr param_1); /* 004fb5b2 */
-undefined4 __thiscall FUN_004fba0c(C_0040bc40_310 *this,int param_1); /* 004fba0c */
-undefined4 __thiscall FUN_004fba9c(C_0040bc40_310 *this,int param_1); /* 004fba9c */
-undefined4 __thiscall FUN_004fbb2f(C_0040bc40_310 *this,undefined4 param_1); /* 004fbb2f */
-undefined4 __thiscall FUN_004fbbdd(C_0040bc40_310 *this); /* 004fbbdd */
-undefined4 __thiscall FUN_004fbd2b(C_0040bc40_310 *this); /* 004fbd2b */
-undefined4 __thiscall FUN_004fbd9d(C_0040bc40_310 *this,int param_1,int param_2,int param_3); /* 004fbd9d */
-undefined4 __thiscall FUN_004fbe84(C_0040bc40_310 *this,iptr param_1,iptr param_2); /* 004fbe84 */
-undefined4 __thiscall FUN_004fc20d(C_0040bc40_310 *this,iptr param_1); /* 004fc20d */
-undefined4 __thiscall FUN_004fc2bb(C_0040bc40_310 *this,iptr param_1,iptr param_2,iptr param_3); /* 004fc2bb */
-undefined4 __thiscall FUN_004fc3ae(C_0040bc40_2f4 *this,iptr param_1); /* 004fc3ae */
-int __thiscall FUN_004fc516(C_0040bc40_310 *this,iptr param_1,iptr param_2); /* 004fc516 */
+undefined4 __thiscall events_check_turn(ScenarioEvents *this,int param_1); /* 004fba0c */
+undefined4 __thiscall events_check_turn_interval(ScenarioEvents *this,int param_1); /* 004fba9c */
+undefined4 __thiscall events_check_random_turn(ScenarioEvents *this,undefined4 param_1); /* 004fbb2f */
+undefined4 __thiscall events_check_received_tech(ScenarioEvents *this); /* 004fbbdd */
+undefined4 __thiscall FUN_004fbd2b(ScenarioEvents *this); /* 004fbd2b */
+undefined4 __thiscall FUN_004fbd9d(ScenarioEvents *this,int param_1,int param_2,int param_3); /* 004fbd9d */
+undefined4 __thiscall events_check_negotiation(ScenarioEvents *this,iptr param_1,iptr param_2); /* 004fbe84 */
+undefined4 __thiscall FUN_004fc20d(ScenarioEvents *this,iptr param_1); /* 004fc20d */
+undefined4 __thiscall events_check_city_taken(ScenarioEvents *this,iptr param_1,iptr param_2,iptr param_3); /* 004fc2bb */
+undefined4 __thiscall event_run_actions(Dialog *this,iptr param_1); /* 004fc3ae */
+int __thiscall FUN_004fc516(ScenarioEvents *this,iptr param_1,iptr param_2); /* 004fc516 */
 void __cdecl FUN_00500e00(); /* 00500e00 */
 void __cdecl FUN_00500e1a(); /* 00500e1a */
 void __cdecl FUN_00500e38(); /* 00500e38 */
@@ -2148,136 +2148,136 @@ void __cdecl FUN_0050117b(); /* 0050117b */
 void __cdecl FUN_00501187(); /* 00501187 */
 void __cdecl FUN_00501190(); /* 00501190 */
 void __cdecl FUN_005011b4(); /* 005011b4 */
-void __cdecl FUN_005013bc(); /* 005013bc */
-void __thiscall FUN_00501440(C_004083b0_2e4 *this); /* 00501440 */
-void __thiscall FUN_005014bf(C_004083b0_2e4 *this); /* 005014bf */
-void __thiscall FUN_005014e5(C_004083b0_2e4 *this); /* 005014e5 */
-void __thiscall FUN_0050152b(C_004083b0_2e4 *this); /* 0050152b */
-C_004083b0_2e4 * __thiscall FUN_00501551(C_004083b0_2e4 *this); /* 00501551 */
-void __thiscall FUN_0050160a(C_004083b0_2e4 *this); /* 0050160a */
+void __cdecl city_window_modal_notice(); /* 005013bc */
+void __thiscall city_window_reset_state(FrameWindow *this); /* 00501440 */
+void __thiscall FUN_005014bf(FrameWindow *this); /* 005014bf */
+void __thiscall FUN_005014e5(FrameWindow *this); /* 005014e5 */
+void __thiscall FUN_0050152b(FrameWindow *this); /* 0050152b */
+FrameWindow * __thiscall FUN_00501551(FrameWindow *this); /* 00501551 */
+void __thiscall FUN_0050160a(FrameWindow *this); /* 0050160a */
 void __cdecl FUN_00501673(); /* 00501673 */
 void __cdecl FUN_00501682(); /* 00501682 */
 void __cdecl FUN_00501691(); /* 00501691 */
 void __thiscall FUN_005016b2(C_004083b0_12c *this,int *param_1); /* 005016b2 */
-void __thiscall FUN_00501733(C_004083b0_12c *this,iptr param_1); /* 00501733 */
-void __thiscall FUN_00501780(C_004083b0_4 *this,undefined4 param_1); /* 00501780 */
+void __thiscall city_window_begin_draw(C_004083b0_12c *this,iptr param_1); /* 00501733 */
+void __thiscall city_window_recalc_redraw(C_004083b0_4 *this,undefined4 param_1); /* 00501780 */
 void __cdecl FUN_00501819(); /* 00501819 */
 int __thiscall FUN_005019c1(C_004083b0_4 *this,int param_1,int param_2,undefined4 param_3,int param_4,int param_5, int param_6); /* 005019c1 */
 int __thiscall FUN_00501e63(C_004083b0_4 *this,int param_1,undefined4 param_2,undefined4 param_3,int param_4, int param_5,int param_6); /* 00501e63 */
-void __thiscall FUN_0050207f(C_004083b0_2e4 *this,int param_1,undefined4 param_2); /* 0050207f */
+void __thiscall city_window_draw_citizens(FrameWindow *this,int param_1,undefined4 param_2); /* 0050207f */
 void __cdecl FUN_005022c0(); /* 005022c0 */
-void __thiscall FUN_005025d5(C_004083b0_2e4 *this,int param_1); /* 005025d5 */
-void __thiscall FUN_00504c05(C_004083b0_12c *this,int param_1); /* 00504c05 */
-void __thiscall FUN_0050503e(C_004083b0_2e4 *this,int param_1); /* 0050503e */
+void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1); /* 005025d5 */
+void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1); /* 00504c05 */
+void __thiscall city_window_draw_production(FrameWindow *this,int param_1); /* 0050503e */
 void __thiscall FUN_005055dd(C_004083b0_12c *this,int param_1); /* 005055dd */
-void __thiscall FUN_00505666(C_004083b0_2e4 *this,int param_1); /* 00505666 */
+void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1); /* 00505666 */
 void __cdecl FUN_00505d3d(); /* 00505d3d */
-void __thiscall FUN_00505ffa(C_004083b0_2e4 *this,int param_1); /* 00505ffa */
-void __cdecl FUN_00506448(); /* 00506448 */
+void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1); /* 00505ffa */
+void __cdecl text_set_unit_info_args(); /* 00506448 */
 void __cdecl FUN_00506637(); /* 00506637 */
 void __cdecl FUN_00506a15(); /* 00506a15 */
 void __cdecl FUN_00506a1e(); /* 00506a1e */
 void __cdecl FUN_00506a42(); /* 00506a42 */
 void __cdecl FUN_005070b8(); /* 005070b8 */
 void __cdecl FUN_005070c1(); /* 005070c1 */
-void __thiscall FUN_005070e5(C_004083b0_2e4 *this); /* 005070e5 */
+void __thiscall FUN_005070e5(FrameWindow *this); /* 005070e5 */
 void __thiscall FUN_00507b69(C_004083b0_4 *this); /* 00507b69 */
 void __thiscall FUN_00507f31(C_004083b0_4 *this,iptr param_1,int param_2,int param_3); /* 00507f31 */
 void __thiscall FUN_00508177(C_004083b0_4 *this,iptr param_1,int param_2,int param_3,int param_4); /* 00508177 */
 void __thiscall FUN_00508552(C_004083b0_4 *this); /* 00508552 */
-void __thiscall FUN_00508adc(C_004083b0_2e4 *this,int param_1); /* 00508adc */
-void __thiscall FUN_00508bc5(C_004083b0_2e4 *this,undefined4 param_1); /* 00508bc5 */
+void __thiscall city_window_draw_info_panel(FrameWindow *this,int param_1); /* 00508adc */
+void __thiscall FUN_00508bc5(FrameWindow *this,undefined4 param_1); /* 00508bc5 */
 void __thiscall FUN_00508c84(C_004083b0_12c *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00508c84 */
 void __thiscall FUN_00508d24(C_004083b0_12c *this); /* 00508d24 */
 void __thiscall FUN_00508ec6(C_004083b0_12c *this); /* 00508ec6 */
-void __thiscall FUN_00509028(C_004083b0_2e4 *this); /* 00509028 */
-void __thiscall FUN_005092af(C_004083b0_2e4 *this); /* 005092af */
-void __thiscall FUN_00509429(C_004083b0_2e4 *this); /* 00509429 */
-void __thiscall FUN_0050951f(C_004083b0_114 *this); /* 0050951f */
-void __thiscall FUN_00509545(C_004083b0_4 *this); /* 00509545 */
-void __thiscall FUN_00509590(C_004083b0_12c *this,iptr param_1); /* 00509590 */
+void __thiscall FUN_00509028(FrameWindow *this); /* 00509028 */
+void __thiscall city_window_update_title(FrameWindow *this); /* 005092af */
+void __thiscall city_window_refresh(FrameWindow *this); /* 00509429 */
+void __thiscall FUN_0050951f(SurfaceWindow *this); /* 0050951f */
+void __thiscall city_window_bring_to_top(C_004083b0_4 *this); /* 00509545 */
+void __thiscall city_window_open(C_004083b0_12c *this,iptr param_1); /* 00509590 */
 void __cdecl FUN_00509935(); /* 00509935 */
-undefined4 __cdecl FUN_0050994f(); /* 0050994f */
-void __cdecl FUN_0050998f(); /* 0050998f */
-void __cdecl FUN_00509a49(); /* 00509a49 */
+undefined4 __cdecl city_window_close(); /* 0050994f */
+void __cdecl city_window_calc_rect(); /* 0050998f */
+void __cdecl city_window_init_size(); /* 00509a49 */
 void __cdecl FUN_00509a82(); /* 00509a82 */
 void __cdecl FUN_00509a9c(); /* 00509a9c */
 void __cdecl FUN_00509ac0(); /* 00509ac0 */
-void __cdecl FUN_00509b48(); /* 00509b48 */
+void __cdecl city_button_buy(); /* 00509b48 */
 void __cdecl FUN_0050a1b2(); /* 0050a1b2 */
 undefined4 __cdecl FUN_0050a1d6(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6, int param_7); /* 0050a1d6 */
 undefined4 __cdecl FUN_0050a2f7(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6, int param_7); /* 0050a2f7 */
-void __cdecl FUN_0050a473(); /* 0050a473 */
+void __cdecl city_button_change(); /* 0050a473 */
 void __cdecl FUN_0050b638(); /* 0050b638 */
 void __cdecl FUN_0050b644(); /* 0050b644 */
 void __cdecl FUN_0050b650(); /* 0050b650 */
 void __cdecl FUN_0050b674(); /* 0050b674 */
-void __cdecl FUN_0050b74e(); /* 0050b74e */
+void __cdecl city_button_rename(); /* 0050b74e */
 void __cdecl FUN_0050b9a4(); /* 0050b9a4 */
 void __cdecl FUN_0050ba07(); /* 0050ba07 */
 void __cdecl FUN_0050ba6a(); /* 0050ba6a */
-void __cdecl FUN_0050bacd(); /* 0050bacd */
-void __cdecl FUN_0050bc4f(); /* 0050bc4f */
+void __cdecl city_button_view(); /* 0050bacd */
+void __cdecl city_window_exit_clicked(); /* 0050bc4f */
 void __cdecl FUN_0050bcda(); /* 0050bcda */
 void __cdecl FUN_0050bd13(); /* 0050bd13 */
 void __cdecl FUN_0050bf72(); /* 0050bf72 */
-void __cdecl FUN_0050c1d1(); /* 0050c1d1 */
+void __cdecl city_window_on_mouse(); /* 0050c1d1 */
 void __cdecl FUN_0050c405(); /* 0050c405 */
 void __cdecl FUN_0050c427(); /* 0050c427 */
-void __thiscall FUN_0050c449(C_004083b0_4 *this,iptr param_1); /* 0050c449 */
-void __thiscall FUN_0050c494(C_004083b0_2e4 *this,iptr param_1,iptr param_2,iptr param_3); /* 0050c494 */
-void __thiscall FUN_0050c679(C_004083b0_2e4 *this,iptr param_1); /* 0050c679 */
+void __thiscall city_window_close_if_city(C_004083b0_4 *this,iptr param_1); /* 0050c449 */
+void __thiscall city_window_on_unit_change(FrameWindow *this,iptr param_1,iptr param_2,iptr param_3); /* 0050c494 */
+void __thiscall city_window_refresh_if_city(FrameWindow *this,iptr param_1); /* 0050c679 */
 void __thiscall FUN_0050c6ef(C_004083b0_4 *this,undefined4 param_1,undefined4 param_2); /* 0050c6ef */
-void __thiscall FUN_0050c7a3(C_004083b0_4 *this); /* 0050c7a3 */
-void __thiscall FUN_0050c859(C_004083b0_4 *this); /* 0050c859 */
-void __thiscall FUN_0050ca8d(C_004083b0_12c *this,int param_1); /* 0050ca8d */
-void __thiscall FUN_0050ccb3(C_004083b0_12c *this,int param_1); /* 0050ccb3 */
+void __thiscall city_window_clear_controls(C_004083b0_4 *this); /* 0050c7a3 */
+void __thiscall city_window_destroy_controls(C_004083b0_4 *this); /* 0050c859 */
+void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1); /* 0050ca8d */
+void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_1); /* 0050ccb3 */
 void __thiscall FUN_0050cf06(C_004083b0_12c *this); /* 0050cf06 */
-void __thiscall FUN_0050dada(C_004083b0_4 *this); /* 0050dada */
-void __thiscall FUN_0050db36(C_004083b0_12c *this); /* 0050db36 */
+void __thiscall city_window_begin_notice(C_004083b0_4 *this); /* 0050dada */
+void __thiscall city_window_end_notice(C_004083b0_12c *this); /* 0050db36 */
 void __cdecl FUN_0050db92(); /* 0050db92 */
 void __cdecl FUN_0050dbb8(); /* 0050dbb8 */
 void __cdecl FUN_0050dbde(); /* 0050dbde */
-void __thiscall FUN_0050dcb6(C_004083b0_2e4 *this); /* 0050dcb6 */
-void __thiscall FUN_0050dea8(C_004083b0_48 *this); /* 0050dea8 */
-u32 __thiscall FUN_00511320(C_00511320 *this); /* 00511320 */
+void __thiscall FUN_0050dcb6(FrameWindow *this); /* 0050dcb6 */
+void __thiscall FUN_0050dea8(DibSurface *this); /* 0050dea8 */
+u32 __thiscall wnd_get_palette(WndPaletteView *this); /* 00511320 */
 int __cdecl FUN_00511350(); /* 00511350 */
-void __cdecl FUN_005113b0(); /* 005113b0 */
-void __cdecl FUN_005113f0(); /* 005113f0 */
+void __cdecl city_draw_hline(); /* 005113b0 */
+void __cdecl city_draw_bevel_rect(); /* 005113f0 */
 void __cdecl FUN_00511430(); /* 00511430 */
-void __thiscall FUN_00511460(C_0046ace7 *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00511460 */
-void __cdecl FUN_005114d0(); /* 005114d0 */
+void __thiscall hotspot_add_rect(ClickMap *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00511460 */
+void __cdecl city_window_draw_icon_row(); /* 005114d0 */
 undefined4 __cdecl FUN_00511520(); /* 00511520 */
 C_00511560 * __thiscall FUN_00511560(C_00511560 *this,uint param_1); /* 00511560 */
 void __thiscall FUN_005115b0(C_00511560 *this); /* 005115b0 */
 void __cdecl FUN_00511624(); /* 00511624 */
 void __cdecl FUN_00511630(); /* 00511630 */
 void __cdecl FUN_0051163c(); /* 0051163c */
-int __thiscall FUN_00511690(C_004083b0_4 *this,int param_1); /* 00511690 */
+int __thiscall city_window_scale(C_004083b0_4 *this,int param_1); /* 00511690 */
 void __cdecl FUN_005116f0(); /* 005116f0 */
-C_0040f380_cc * __thiscall FUN_00511720(C_0040f380_cc *this); /* 00511720 */
+SpriteButton * __thiscall FUN_00511720(SpriteButton *this); /* 00511720 */
 void __thiscall FUN_005117f0(C_005117f0 *this,iptr param_1); /* 005117f0 */
-void __thiscall FUN_00511820(C_004083b0_2e4 *this,iptr param_1); /* 00511820 */
-void __thiscall FUN_00511850(C_004083b0_2e4 *this,iptr param_1); /* 00511850 */
-void __cdecl FUN_00511880(); /* 00511880 */
+void __thiscall FUN_00511820(FrameWindow *this,iptr param_1); /* 00511820 */
+void __thiscall FUN_00511850(FrameWindow *this,iptr param_1); /* 00511850 */
+void __cdecl net_send_text_args(); /* 00511880 */
 void __cdecl FUN_00511a0e(); /* 00511a0e */
 void __cdecl FUN_00511acf(); /* 00511acf */
 void __cdecl FUN_00511b2d(); /* 00511b2d */
 void __cdecl FUN_00511ba2(); /* 00511ba2 */
 void __cdecl FUN_0051399d(); /* 0051399d */
-C_00514220 * __thiscall FUN_00514220(C_00514220 *this); /* 00514220 */
-void __thiscall FUN_00514254(C_00514220 *this); /* 00514254 */
-void __thiscall FUN_00514272(C_00514220 *this); /* 00514272 */
+NetMsgQueue * __thiscall FUN_00514220(NetMsgQueue *this); /* 00514220 */
+void __thiscall FUN_00514254(NetMsgQueue *this); /* 00514254 */
+void __thiscall net_msgq_reset(NetMsgQueue *this); /* 00514272 */
 undefined4 __cdecl FUN_0051435f(); /* 0051435f */
-undefined4 __thiscall FUN_0051438f(C_0051438f *this,int param_1,iptr param_2,uint param_3); /* 0051438f */
+undefined4 __thiscall net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint param_3); /* 0051438f */
 undefined4 __thiscall FUN_005149d6(C_005149d6 *this,iptr param_1,iptr param_2,iptr param_3,int param_4); /* 005149d6 */
 void __cdecl FUN_00514e10(); /* 00514e10 */
 void __cdecl FUN_00514e2a(); /* 00514e2a */
 void __cdecl FUN_00514e44(); /* 00514e44 */
 void __cdecl FUN_00514e61(); /* 00514e61 */
-void __cdecl FUN_00514e7b(); /* 00514e7b */
+void __cdecl destroyed_civs_show(); /* 00514e7b */
 void __cdecl FUN_00514ef2(); /* 00514ef2 */
-C_00408010_710 * __thiscall FUN_00514f16(C_00408010_710 *this); /* 00514f16 */
+DestroyedCivsWindow * __thiscall FUN_00514f16(DestroyedCivsWindow *this); /* 00514f16 */
 void __thiscall FUN_005150b9(C_005150b9_710 *this); /* 005150b9 */
 void __cdecl FUN_0051516a(); /* 0051516a */
 void __cdecl FUN_00515179(); /* 00515179 */
@@ -2287,22 +2287,22 @@ void __cdecl FUN_005151a6(); /* 005151a6 */
 void __cdecl FUN_005151b5(); /* 005151b5 */
 void __cdecl FUN_005151c4(); /* 005151c4 */
 void __cdecl FUN_005151d3(); /* 005151d3 */
-undefined4 __thiscall FUN_005151f4(C_00408010_710 *this,uint param_1); /* 005151f4 */
-void __thiscall FUN_00515516(C_00408010_710 *this); /* 00515516 */
+undefined4 __thiscall FUN_005151f4(DestroyedCivsWindow *this,uint param_1); /* 005151f4 */
+void __thiscall FUN_00515516(DestroyedCivsWindow *this); /* 00515516 */
 void __cdecl FUN_00515978(); /* 00515978 */
-void __thiscall FUN_00515999(C_00408010_10 *this,iptr param_1); /* 00515999 */
+void __thiscall destroyed_civs_draw_entry(WndBase *this,iptr param_1); /* 00515999 */
 void __thiscall FUN_00515c15(C_00408010_6f0 *this,iptr param_1); /* 00515c15 */
 void __cdecl FUN_00515d96(); /* 00515d96 */
 void __cdecl FUN_00515da2(); /* 00515da2 */
-void __thiscall FUN_00515dc8(C_00408010_710 *this,int param_1); /* 00515dc8 */
-void __thiscall FUN_00515f3c(C_00408010_710 *this); /* 00515f3c */
-void __thiscall FUN_00516005(C_00408010_710 *this); /* 00516005 */
+void __thiscall destroyed_civs_slide_step(DestroyedCivsWindow *this,int param_1); /* 00515dc8 */
+void __thiscall FUN_00515f3c(DestroyedCivsWindow *this); /* 00515f3c */
+void __thiscall FUN_00516005(DestroyedCivsWindow *this); /* 00516005 */
 void __cdecl FUN_00516042(); /* 00516042 */
 void __cdecl FUN_00516063(); /* 00516063 */
-void __cdecl FUN_00516570(); /* 00516570 */
+void __cdecl council_show(); /* 00516570 */
 void __cdecl FUN_005165f6(); /* 005165f6 */
 C_004083b0_11c * __thiscall FUN_0051661a(C_004083b0_11c *this); /* 0051661a */
-void __thiscall FUN_005167d9(C_005167d9_1330 *this); /* 005167d9 */
+void __thiscall FUN_005167d9(CouncilWindow *this); /* 005167d9 */
 void __cdecl FUN_0051689f(); /* 0051689f */
 void __cdecl FUN_005168ae(); /* 005168ae */
 void __cdecl FUN_005168bd(); /* 005168bd */
@@ -2315,21 +2315,21 @@ void __cdecl FUN_00516917(); /* 00516917 */
 void __cdecl FUN_00516926(); /* 00516926 */
 undefined4 __thiscall FUN_00516947(C_004083b0_11c *this,u32 param_1,int param_2); /* 00516947 */
 void __thiscall FUN_00516fd4(C_004083b0_11c *this); /* 00516fd4 */
-void __thiscall FUN_00517158(C_004083b0_48 *this); /* 00517158 */
-void __thiscall FUN_00517673(C_004083b0_48 *this); /* 00517673 */
-undefined4 __thiscall FUN_005179a3(C_004083b0_4 *this,uptr param_1); /* 005179a3 */
-void __thiscall FUN_00517dd3(C_004083b0_114 *this,int param_1); /* 00517dd3 */
+void __thiscall council_draw_background(DibSurface *this); /* 00517158 */
+void __thiscall FUN_00517673(DibSurface *this); /* 00517673 */
+undefined4 __thiscall council_load_speech(C_004083b0_4 *this,uptr param_1); /* 005179a3 */
+void __thiscall council_draw_speech(SurfaceWindow *this,int param_1); /* 00517dd3 */
 void __cdecl FUN_00517fe4(); /* 00517fe4 */
 void __thiscall FUN_00518007(C_004083b0_11c *this); /* 00518007 */
 void __cdecl FUN_005181ab(); /* 005181ab */
 void __cdecl FUN_005181b4(); /* 005181b4 */
 void __cdecl FUN_005181d8(); /* 005181d8 */
-void __thiscall FUN_00518342(void *this,iptr param_1); /* 00518342 */
+void __thiscall council_move_video_to_slot(void *this,iptr param_1); /* 00518342 */
 undefined4 __thiscall FUN_00518392(void *this,undefined1 *param_1); /* 00518392 */
 void __cdecl FUN_00518471(); /* 00518471 */
 undefined4 __cdecl FUN_00518582(); /* 00518582 */
-void __thiscall FUN_00518e80(C_00518e80 *this,undefined4 param_1,undefined4 param_2); /* 00518e80 */
-undefined4 __cdecl FUN_00518ec0(); /* 00518ec0 */
+void __thiscall wnd_move_xy(WndMoveView *this,undefined4 param_1,undefined4 param_2); /* 00518e80 */
+undefined4 __cdecl dlg_input_number_game(); /* 00518ec0 */
 void __thiscall FUN_00518f00(C_004083b0_61c *this,iptr param_1); /* 00518f00 */
 void __cdecl FUN_005190d0(); /* 005190d0 */
 void __cdecl FUN_005190ea(); /* 005190ea */
@@ -2340,10 +2340,10 @@ void __cdecl FUN_00519171(); /* 00519171 */
 void __cdecl FUN_00519200(); /* 00519200 */
 void __cdecl FUN_005193ed(); /* 005193ed */
 int __cdecl FUN_005195c4(); /* 005195c4 */
-int __cdecl FUN_005195f1(); /* 005195f1 */
-void __cdecl FUN_0051961e(); /* 0051961e */
-int __cdecl FUN_005197af(); /* 005197af */
-void __cdecl FUN_005199a9(); /* 005199a9 */
+int __cdecl terrain_editor_sel_to_terrain(); /* 005195f1 */
+void __cdecl terrain_editor_load_controls(); /* 0051961e */
+int __cdecl terrain_editor_store_controls(); /* 005197af */
+void __cdecl terrain_editor_redraw(); /* 005199a9 */
 void __cdecl FUN_005199c4(); /* 005199c4 */
 undefined4 __cdecl FUN_00519ab0(); /* 00519ab0 */
 void __cdecl FUN_00519d67(); /* 00519d67 */
@@ -2354,60 +2354,60 @@ void __cdecl FUN_0051a26c(); /* 0051a26c */
 void __cdecl FUN_0051a678(); /* 0051a678 */
 void __cdecl FUN_0051a797(); /* 0051a797 */
 void __cdecl FUN_0051a8b7(); /* 0051a8b7 */
-void __cdecl FUN_0051aa4e(); /* 0051aa4e */
+void __cdecl terrain_editor_update_visibility(); /* 0051aa4e */
 void __cdecl FUN_0051acdc(); /* 0051acdc */
 void __thiscall FUN_0051adfd(C_004083b0_430 *this,int param_1); /* 0051adfd */
 void __thiscall FUN_0051b1c2(C_004083b0_430 *this,int param_1); /* 0051b1c2 */
 void __thiscall FUN_0051b2b6(C_004083b0_430 *this); /* 0051b2b6 */
 void __thiscall FUN_0051bba1(C_004083b0_430 *this); /* 0051bba1 */
 void __cdecl FUN_0051c611(); /* 0051c611 */
-void __cdecl FUN_0051c635(); /* 0051c635 */
+void __cdecl terrain_editor_open(); /* 0051c635 */
 void __cdecl FUN_0051c68e(); /* 0051c68e */
-undefined4 __cdecl FUN_0051d3e0(); /* 0051d3e0 */
+undefined4 __cdecl popup_text_run(); /* 0051d3e0 */
 void __cdecl FUN_0051d53f(); /* 0051d53f */
-undefined4 __cdecl FUN_0051d564(); /* 0051d564 */
+undefined4 __cdecl popup_text_with_sprite(); /* 0051d564 */
 void __cdecl FUN_0051d616(); /* 0051d616 */
-undefined4 __cdecl FUN_0051d63b(); /* 0051d63b */
+undefined4 __cdecl dlg_text_input(); /* 0051d63b */
 void __cdecl FUN_0051d738(); /* 0051d738 */
-undefined4 __cdecl FUN_0051d75d(); /* 0051d75d */
-void __cdecl FUN_0051d7bc(); /* 0051d7bc */
-void __cdecl FUN_0051d7d6(); /* 0051d7d6 */
-uint __cdecl FUN_0051d817(); /* 0051d817 */
+undefined4 __cdecl dlg_input_number(); /* 0051d75d */
+void __cdecl dlg_checks_clear(); /* 0051d7bc */
+void __cdecl dlg_check_set(); /* 0051d7d6 */
+uint __cdecl dlg_check_get(); /* 0051d817 */
 undefined4 __cdecl FUN_0051d950(byte param_1); /* 0051d950 */
 undefined4 __cdecl FUN_0051d9a0(); /* 0051d9a0 */
 void __cdecl FUN_0051dd72(); /* 0051dd72 */
-undefined4 __cdecl FUN_0051dd97(); /* 0051dd97 */
+undefined4 __cdecl setup_choose_game_options(); /* 0051dd97 */
 void __cdecl FUN_0051e9e7(); /* 0051e9e7 */
 void __cdecl FUN_0051ea0c(); /* 0051ea0c */
-undefined4 __cdecl FUN_0051ea8e(); /* 0051ea8e */
+undefined4 __cdecl setup_choose_game_timer(); /* 0051ea8e */
 void __cdecl FUN_0051f0f5(); /* 0051f0f5 */
 void __cdecl FUN_0051f11a(); /* 0051f11a */
 void __cdecl FUN_0051f17e(); /* 0051f17e */
-int __cdecl FUN_0051f19c(); /* 0051f19c */
+int __cdecl setup_choose_tribe(); /* 0051f19c */
 void __cdecl FUN_00521807(); /* 00521807 */
-void __cdecl FUN_0052182c(); /* 0052182c */
-undefined4 __cdecl FUN_005218cb(); /* 005218cb */
+void __cdecl dialog_prepend_title_label(); /* 0052182c */
+undefined4 __cdecl scenario_start_dialog(); /* 005218cb */
 void __cdecl FUN_00521faf(); /* 00521faf */
 void __cdecl FUN_00521fbb(); /* 00521fbb */
-undefined4 __cdecl FUN_00521fe0(); /* 00521fe0 */
+undefined4 __cdecl scenario_pick_human_civs(); /* 00521fe0 */
 void __cdecl FUN_00522617(); /* 00522617 */
-void __cdecl FUN_0052263c(); /* 0052263c */
-int __cdecl FUN_005226fa(); /* 005226fa */
-int __cdecl FUN_005227e3(); /* 005227e3 */
+void __cdecl setup_show_side_picture(); /* 0052263c */
+int __cdecl setup_next_dialog_x(); /* 005226fa */
+int __cdecl setup_choose_hotseat_players(); /* 005227e3 */
 void __cdecl FUN_00522b06(); /* 00522b06 */
-void __cdecl FUN_00522b2b(); /* 00522b2b */
+void __cdecl game_join_dialog(); /* 00522b2b */
 void __cdecl FUN_00522dd6(); /* 00522dd6 */
-void __cdecl FUN_00522dfa(); /* 00522dfa */
-void __cdecl FUN_00522f8f(); /* 00522f8f */
+void __cdecl leaders_reset_custom_names(); /* 00522dfa */
+void __cdecl setup_choose_opponents(); /* 00522f8f */
 void __cdecl FUN_005233d8(); /* 005233d8 */
 undefined4 __cdecl FUN_005233fc(); /* 005233fc */
-void __cdecl FUN_00523d8a(); /* 00523d8a */
+void __cdecl net_send_rules_tables(); /* 00523d8a */
 undefined4 __cdecl FUN_00523f02(); /* 00523f02 */
 void __cdecl FUN_005246bf(); /* 005246bf */
 void __thiscall FUN_005261a0(C_004083b0_61c *this,iptr param_1); /* 005261a0 */
-void __thiscall FUN_0052630d(C_004083b0_a28 *this); /* 0052630d */
+void __thiscall pedia_draw_improvement(C_004083b0_a28 *this); /* 0052630d */
 void __thiscall FUN_00526913(C_004083b0_a28 *this,int param_1); /* 00526913 */
-void __thiscall FUN_00526ca0(C_004083b0_430 *this,int param_1,int param_2); /* 00526ca0 */
+void __thiscall parley_add_side_dialog(C_004083b0_430 *this,int param_1,int param_2); /* 00526ca0 */
 void __cdecl FUN_0052d4d2(); /* 0052d4d2 */
 void __cdecl FUN_0052d523(); /* 0052d523 */
 void __cdecl FUN_0052d588(); /* 0052d588 */
@@ -2425,25 +2425,25 @@ void __cdecl FUN_0052e57c(); /* 0052e57c */
 void __cdecl FUN_0052e685(); /* 0052e685 */
 void __cdecl FUN_0052e71a(); /* 0052e71a */
 void __cdecl FUN_0052e7b7(); /* 0052e7b7 */
-void __thiscall FUN_0052e971(C_004083b0_430 *this); /* 0052e971 */
-iptr __thiscall FUN_0052ec47(C_004083b0_4 *this,int param_1); /* 0052ec47 */
-iptr __thiscall FUN_0052ed95(C_004083b0_4 *this,int param_1); /* 0052ed95 */
-u32 __thiscall FUN_00530e80(C_00530e80 *this); /* 00530e80 */
-void __thiscall FUN_00530eb0(C_00530eb0 *this,iptr param_1); /* 00530eb0 */
-void __thiscall FUN_00530ee0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,iptr param_6); /* 00530ee0 */
+void __thiscall parley_update_buttons(C_004083b0_430 *this); /* 0052e971 */
+iptr __thiscall parley_find_unit_by_id(C_004083b0_4 *this,int param_1); /* 0052ec47 */
+iptr __thiscall parley_find_city_by_id(C_004083b0_4 *this,int param_1); /* 0052ed95 */
+u32 __thiscall ctrl_is_enabled(ControlEnabledView *this); /* 00530e80 */
+void __thiscall edit_set_change_callback(EditChangeSetView *this,iptr param_1); /* 00530eb0 */
+void __thiscall FUN_00530ee0(Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,iptr param_6); /* 00530ee0 */
 void __thiscall FUN_00530fb0(C_00530fb0 *this); /* 00530fb0 */
-u32 __thiscall FUN_00530fe0(C_0040f380_3c *this); /* 00530fe0 */
-C_0040f380_48 * __thiscall FUN_00531010(C_0040f380_48 *this); /* 00531010 */
-void __thiscall FUN_005310a0(C_0040f380_50 *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5, iptr param_6); /* 005310a0 */
-void __thiscall FUN_005311b0(C_0040f380_3c *this,iptr param_1); /* 005311b0 */
-void __thiscall FUN_005311e0(C_0040f380_3c *this,iptr param_1); /* 005311e0 */
+u32 __thiscall checkbox_is_checked(Control *this); /* 00530fe0 */
+C_0040f380_48 * __thiscall radiogrp_ctor(C_0040f380_48 *this); /* 00531010 */
+void __thiscall radiogrp_create(RadioGroup *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5, iptr param_6); /* 005310a0 */
+void __thiscall radiogrp_set_select_callback(Control *this,iptr param_1); /* 005311b0 */
+void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr param_1); /* 005311e0 */
 void __cdecl FUN_00531210(); /* 00531210 */
 u8 * __cdecl map_coarse3_at(); /* 00531263 */
-int __cdecl FUN_00531287(); /* 00531287 */
+int __cdecl ai_unit_role(); /* 00531287 */
 iptr __cdecl FUN_005312e4(); /* 005312e4 */
-void __cdecl FUN_00531567(); /* 00531567 */
-void __cdecl FUN_00531607(); /* 00531607 */
-void __cdecl FUN_00531653(); /* 00531653 */
+void __cdecl unit_stack_wake_by_role(); /* 00531567 */
+void __cdecl unit_set_goto(); /* 00531607 */
+void __cdecl ai_ship_goto_near_shore(); /* 00531653 */
 void __cdecl FUN_0053184d(); /* 0053184d */
 undefined4 __cdecl FUN_005351aa(); /* 005351aa */
 void __cdecl FUN_005369f3(); /* 005369f3 */
@@ -2451,305 +2451,305 @@ int __cdecl FUN_00536bc9(); /* 00536bc9 */
 undefined4 __cdecl FUN_00536c4c(); /* 00536c4c */
 undefined4 __cdecl FUN_00537331(); /* 00537331 */
 undefined4 __cdecl FUN_00538a29(); /* 00538a29 */
-void __cdecl FUN_00543b80(); /* 00543b80 */
-void __cdecl FUN_00543cd6(); /* 00543cd6 */
-int __cdecl FUN_00548b70(); /* 00548b70 */
-void __cdecl FUN_00548c78(); /* 00548c78 */
-void __cdecl FUN_00548df0(); /* 00548df0 */
+void __cdecl unit_continue_active_orders(); /* 00543b80 */
+void __cdecl ai_process_civ_units(); /* 00543cd6 */
+int __cdecl ui_calc_item_spacing(); /* 00548b70 */
+void __cdecl sprite_draw_spaced_row(); /* 00548c78 */
+void __cdecl events_editor_focus_redraw(); /* 00548df0 */
 void __cdecl FUN_00548e23(); /* 00548e23 */
 void __cdecl FUN_00549aee(); /* 00549aee */
-undefined4 __cdecl FUN_0054a4c4(); /* 0054a4c4 */
-uint __cdecl FUN_0054a874(); /* 0054a874 */
-int __cdecl FUN_0054a8d3(); /* 0054a8d3 */
-undefined4 __cdecl FUN_0054a912(); /* 0054a912 */
+undefined4 __cdecl events_write_file(); /* 0054a4c4 */
+uint __cdecl bits_nth_set(); /* 0054a874 */
+int __cdecl bits_index_of(); /* 0054a8d3 */
+undefined4 __cdecl events_editor_pick_item(); /* 0054a912 */
 void __cdecl FUN_0054ada1(); /* 0054ada1 */
 int __cdecl FUN_0054adc6(); /* 0054adc6 */
-void __cdecl FUN_0054ae93(); /* 0054ae93 */
+void __cdecl events_editor_update_buttons(); /* 0054ae93 */
 void __cdecl FUN_0054b0ed(); /* 0054b0ed */
-void __cdecl FUN_0054b1d5(); /* 0054b1d5 */
-void __cdecl FUN_0054b2ec(); /* 0054b2ec */
+void __cdecl events_editor_help_trigger(); /* 0054b1d5 */
+void __cdecl events_editor_help_action(); /* 0054b2ec */
 void __cdecl FUN_0054b433(); /* 0054b433 */
 void __cdecl FUN_0054b5eb(); /* 0054b5eb */
-void __cdecl FUN_0054b635(); /* 0054b635 */
-void __cdecl FUN_0054bc1a(); /* 0054bc1a */
+void __cdecl events_editor_fill_triggers(); /* 0054b635 */
+void __cdecl events_editor_fill_actions(); /* 0054bc1a */
 void __cdecl FUN_0054c36e(); /* 0054c36e */
-undefined4 __cdecl FUN_0054c4a1(); /* 0054c4a1 */
+undefined4 __cdecl events_editor_edit_trigger(); /* 0054c4a1 */
 void __cdecl FUN_0054d4ca(); /* 0054d4ca */
 void __cdecl FUN_0054d4e6(); /* 0054d4e6 */
 void __cdecl FUN_0054d6da(); /* 0054d6da */
-uint __cdecl FUN_0054d7ef(); /* 0054d7ef */
+uint __cdecl events_editor_edit_action(); /* 0054d7ef */
 void __cdecl FUN_0054ee8f(); /* 0054ee8f */
 void __cdecl FUN_0054eeb4(); /* 0054eeb4 */
 void __cdecl FUN_0054eed0(); /* 0054eed0 */
 void __thiscall FUN_0054f16b(C_004083b0_430 *this); /* 0054f16b */
 void __thiscall FUN_0054f3b9(C_004083b0_a28 *this); /* 0054f3b9 */
 void __cdecl FUN_0054ffa4(); /* 0054ffa4 */
-void __cdecl FUN_0054ffc8(); /* 0054ffc8 */
+void __cdecl events_editor_open(); /* 0054ffc8 */
 void __cdecl FUN_00550017(); /* 00550017 */
 C_0040bc40_28 * __thiscall FUN_00551cd0(C_0040bc40_28 *this,uint param_1); /* 00551cd0 */
 u32 __thiscall FUN_00551d20(C_00551d20 *this); /* 00551d20 */
-undefined4 __thiscall FUN_00551d50(C_00551d50 *this); /* 00551d50 */
-void __thiscall FUN_00551d80(C_00551d80 *this,undefined4 param_1); /* 00551d80 */
-void __thiscall FUN_00551dc0(C_00551dc0 *this,iptr param_1); /* 00551dc0 */
-void __thiscall FUN_00551df0(C_00551df0 *this,iptr param_1); /* 00551df0 */
-undefined4 __cdecl FUN_00551e20(); /* 00551e20 */
-undefined4 __cdecl FUN_00551e60(); /* 00551e60 */
+undefined4 __thiscall listbox_get_cur_sel(ListBoxGetSelView *this); /* 00551d50 */
+void __thiscall listbox_set_cur_sel(ListBoxSetSelView *this,undefined4 param_1); /* 00551d80 */
+void __thiscall listbox_set_dblclick_callback(ListBoxDblClickSetView *this,iptr param_1); /* 00551dc0 */
+void __thiscall listbox_set_select_callback(ListBoxSelectSetView *this,iptr param_1); /* 00551df0 */
+undefined4 __cdecl popup_game_ex(); /* 00551e20 */
+undefined4 __cdecl popup_debug_ex(); /* 00551e60 */
 void __cdecl FUN_00551ea0(); /* 00551ea0 */
-void __cdecl FUN_00551eba(); /* 00551eba */
-void __cdecl FUN_00551ed8(); /* 00551ed8 */
+void __cdecl caption_font_static_init(); /* 00551eba */
+void __cdecl caption_font_reg_atexit(); /* 00551ed8 */
 void __cdecl FUN_00551ef5(); /* 00551ef5 */
 void __cdecl FUN_00551f0f(); /* 00551f0f */
-void __cdecl FUN_00551f29(); /* 00551f29 */
-void __cdecl FUN_00551f47(); /* 00551f47 */
+void __cdecl caption_small_font_static_init(); /* 00551f29 */
+void __cdecl caption_small_font_reg_atexit(); /* 00551f47 */
 void __cdecl FUN_00551f64(); /* 00551f64 */
 void __cdecl FUN_00551f7e(); /* 00551f7e */
-void __cdecl FUN_00551f98(); /* 00551f98 */
-void __cdecl FUN_00551fb6(); /* 00551fb6 */
+void __cdecl ui_text_font_static_init(); /* 00551f98 */
+void __cdecl ui_text_font_reg_atexit(); /* 00551fb6 */
 void __cdecl FUN_00551fd3(); /* 00551fd3 */
-void __cdecl FUN_00551fed(); /* 00551fed */
-void __cdecl FUN_005520fa(); /* 005520fa */
-void __thiscall FUN_00552112(C_004083b0_2e4 *this); /* 00552112 */
+void __cdecl ui_init_screen_metrics(); /* 00551fed */
+void __cdecl frame_set_border_tile(); /* 005520fa */
+void __thiscall frame_wnd_draw_caption(FrameWindow *this); /* 00552112 */
 void __cdecl FUN_00552e5b(); /* 00552e5b */
-void __thiscall FUN_00552ed2(C_004083b0_2e4 *this); /* 00552ed2 */
-void __thiscall FUN_0055318c(C_004083b0_208 *this,iptr param_1,undefined4 param_2); /* 0055318c */
-void __thiscall FUN_0055324c(C_004083b0_2e4 *this,iptr param_1); /* 0055324c */
-void __thiscall FUN_005532d7(C_004083b0_4 *this); /* 005532d7 */
-void __thiscall FUN_00553379(C_004083b0_48 *this); /* 00553379 */
-C_004083b0_114 * __thiscall FUN_0055339f(C_004083b0_114 *this); /* 0055339f */
-void __thiscall FUN_00553444(C_004083b0_48 *this); /* 00553444 */
+void __thiscall frame_wnd_layout(FrameWindow *this); /* 00552ed2 */
+void __thiscall frame_wnd_add_caption_button(C_004083b0_208 *this,iptr param_1,undefined4 param_2); /* 0055318c */
+void __thiscall frame_wnd_set_caption(FrameWindow *this,iptr param_1); /* 0055324c */
+void __thiscall frame_wnd_destroy_caption_buttons(C_004083b0_4 *this); /* 005532d7 */
+void __thiscall frame_wnd_close(DibSurface *this); /* 00553379 */
+SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this); /* 0055339f */
+void __thiscall frame_wnd_dtor(DibSurface *this); /* 00553444 */
 void __cdecl FUN_0055349b(); /* 0055349b */
-void __thiscall FUN_005534bc(C_004083b0_2e4 *this,int param_1,uint param_2,int param_3,int param_4,int param_5, int param_6,u32 param_7,u32 param_8,u32 param_9); /* 005534bc */
-u32 __thiscall FUN_00553d30(C_00553d30 *this,iptr param_1); /* 00553d30 */
-u32 __thiscall FUN_00553d70(C_00553d70 *this,iptr param_1); /* 00553d70 */
-int __cdecl FUN_00553db0(); /* 00553db0 */
-undefined4 __cdecl FUN_00553dfd(); /* 00553dfd */
-void __cdecl FUN_00553ff6(); /* 00553ff6 */
-undefined4 __cdecl FUN_00554145(); /* 00554145 */
+void __thiscall frame_wnd_create(FrameWindow *this,int param_1,uint param_2,int param_3,int param_4,int param_5, int param_6,u32 param_7,u32 param_8,u32 param_9); /* 005534bc */
+u32 __thiscall wnd_set_drag_begin_callback(WndDragBeginSetView *this,iptr param_1); /* 00553d30 */
+u32 __thiscall wnd_set_drag_end_callback(WndDragEndSetView *this,iptr param_1); /* 00553d70 */
+int __cdecl str_find_bad_filename_char(); /* 00553db0 */
+undefined4 __cdecl editor_create_scenario_folder(); /* 00553dfd */
+void __cdecl editor_toggle_scenario_flag(); /* 00553ff6 */
+undefined4 __cdecl dbg_pick_player(); /* 00554145 */
 void __cdecl FUN_00554272(); /* 00554272 */
-void __cdecl FUN_00554297(); /* 00554297 */
-void __cdecl FUN_00554423(); /* 00554423 */
-void __cdecl FUN_00554460(); /* 00554460 */
-void __cdecl FUN_005545d3(); /* 005545d3 */
+void __cdecl cheat_toggle_mode(); /* 00554297 */
+void __cdecl cheat_tech_advance(); /* 00554423 */
+void __cdecl cheat_toggle_all_advances(); /* 00554460 */
+void __cdecl cheat_edit_technologies(); /* 005545d3 */
 void __cdecl FUN_0055493e(); /* 0055493e */
-void __cdecl FUN_00554962(); /* 00554962 */
-void __cdecl FUN_0055499f(); /* 0055499f */
+void __cdecl cheat_force_government(); /* 00554962 */
+void __cdecl cheat_change_terrain(); /* 0055499f */
 void __cdecl FUN_0055518f(); /* 0055518f */
-void __cdecl FUN_005551b3(); /* 005551b3 */
+void __cdecl cheat_create_unit(); /* 005551b3 */
 void __cdecl FUN_005555eb(); /* 005555eb */
-void __cdecl FUN_0055560f(); /* 0055560f */
+void __cdecl cheat_reveal_map(); /* 0055560f */
 void __cdecl FUN_0055581b(); /* 0055581b */
-void __cdecl FUN_0055583f(); /* 0055583f */
+void __cdecl cheat_set_human_player(); /* 0055583f */
 void __cdecl FUN_005559de(); /* 005559de */
-void __cdecl FUN_00555a02(); /* 00555a02 */
-void __cdecl FUN_00555a8b(); /* 00555a8b */
+void __cdecl cheat_set_game_year(); /* 00555a02 */
+void __cdecl cheat_kill_civ(); /* 00555a8b */
 void __cdecl FUN_00555c8d(); /* 00555c8d */
-void __cdecl FUN_00555cb1(); /* 00555cb1 */
+void __cdecl cheat_destroy_units_at_cursor(); /* 00555cb1 */
 undefined4 __cdecl FUN_00555ced(); /* 00555ced */
 void __cdecl FUN_00555d70(); /* 00555d70 */
 void __cdecl FUN_005560c9(); /* 005560c9 */
-void __cdecl FUN_0055615c(); /* 0055615c */
-void __cdecl FUN_0055625b(); /* 0055625b */
+void __cdecl cheat_change_money(); /* 0055615c */
+void __cdecl cheat_edit_unit(); /* 0055625b */
 void __cdecl FUN_005569bf(); /* 005569bf */
-void __cdecl FUN_005569e3(); /* 005569e3 */
+void __cdecl cheat_edit_city(); /* 005569e3 */
 void __cdecl FUN_00556f30(); /* 00556f30 */
-void __cdecl FUN_00556f54(); /* 00556f54 */
+void __cdecl cheat_edit_king(); /* 00556f54 */
 void __cdecl FUN_00557e08(); /* 00557e08 */
-void __cdecl FUN_00557e2c(); /* 00557e2c */
+void __cdecl cheat_edit_victory(); /* 00557e2c */
 void __cdecl FUN_00558177(); /* 00558177 */
-void __cdecl FUN_0055819b(); /* 0055819b */
-void __cdecl FUN_005582ad(); /* 005582ad */
-void __cdecl FUN_0055891d(); /* 0055891d */
+void __cdecl cheat_edit_scenario_rules(); /* 0055819b */
+void __cdecl cheat_scenario_params(); /* 005582ad */
+void __cdecl cheat_save_as_scenario(); /* 0055891d */
 void __cdecl FUN_00559c20(); /* 00559c20 */
-void __cdecl FUN_00559c3a(); /* 00559c3a */
-void __cdecl FUN_00559c54(); /* 00559c54 */
+void __cdecl setup_picwnd_static_init(); /* 00559c3a */
+void __cdecl setup_picwnd_reg_atexit(); /* 00559c54 */
 void __cdecl FUN_00559c71(); /* 00559c71 */
 void __cdecl FUN_00559c8b(); /* 00559c8b */
-void __cdecl FUN_00559ca5(); /* 00559ca5 */
-void __cdecl FUN_00559cbf(); /* 00559cbf */
+void __cdecl setup_picwnd_surface_static_init(); /* 00559ca5 */
+void __cdecl setup_picwnd_surface_reg_atexit(); /* 00559cbf */
 void __cdecl FUN_00559cdc(); /* 00559cdc */
-void __cdecl FUN_00559cf6(); /* 00559cf6 */
+void __cdecl setup_picwnd_load_image(); /* 00559cf6 */
 void __cdecl FUN_00559dbd(); /* 00559dbd */
 void __cdecl FUN_00559dc9(); /* 00559dc9 */
-void __thiscall FUN_00559ded(C_004083b0_430 *this); /* 00559ded */
-C_004083b0_430 * __thiscall FUN_00559e3c(C_004083b0_430 *this); /* 00559e3c */
-void __thiscall FUN_00559ed4(C_004083b0_430 *this); /* 00559ed4 */
+void __thiscall setup_picwnd_reset_fields(C_004083b0_430 *this); /* 00559ded */
+C_004083b0_430 * __thiscall setup_picwnd_ctor(C_004083b0_430 *this); /* 00559e3c */
+void __thiscall setup_picwnd_dtor(C_004083b0_430 *this); /* 00559ed4 */
 void __cdecl FUN_00559f30(); /* 00559f30 */
 void __cdecl FUN_00559f3f(); /* 00559f3f */
-void __thiscall FUN_00559f60(C_004083b0_12c *this,int *param_1); /* 00559f60 */
-void __thiscall FUN_00559fcf(C_004083b0_12c *this,iptr param_1); /* 00559fcf */
-void __thiscall FUN_0055a00b(C_0055a00b *this,iptr param_1,int param_2,int param_3,iptr param_4,iptr param_5); /* 0055a00b */
-void __thiscall FUN_0055a051(C_004083b0_430 *this); /* 0055a051 */
+void __thiscall setup_picwnd_blit_image_rect(C_004083b0_12c *this,int *param_1); /* 00559f60 */
+void __thiscall setup_picwnd_draw_image(C_004083b0_12c *this,iptr param_1); /* 00559fcf */
+void __thiscall setup_picwnd_client_rect(SetupPicWndRectView *this,iptr param_1,int param_2,int param_3,iptr param_4,iptr param_5); /* 0055a00b */
+void __thiscall setup_picwnd_redraw(C_004083b0_430 *this); /* 0055a051 */
 undefined4 __cdecl FUN_0055a0e1(); /* 0055a0e1 */
-void __cdecl FUN_0055a10d(); /* 0055a10d */
+void __cdecl setup_picwnd_frame_rect(); /* 0055a10d */
 void __cdecl FUN_0055a15e(); /* 0055a15e */
 void __cdecl FUN_0055a178(); /* 0055a178 */
-int __cdecl FUN_0055a192(); /* 0055a192 */
-undefined4 __cdecl FUN_0055a329(); /* 0055a329 */
-void __thiscall FUN_0055a41d(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,u32 param_3); /* 0055a41d */
-void __thiscall FUN_0055a567(C_004083b0_430 *this); /* 0055a567 */
+int __cdecl setup_picwnd_position_coord(); /* 0055a192 */
+undefined4 __cdecl setup_picwnd_image_size(); /* 0055a329 */
+void __thiscall setup_picwnd_show(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,u32 param_3); /* 0055a41d */
+void __thiscall setup_picwnd_close(C_004083b0_430 *this); /* 0055a567 */
 void __thiscall FUN_0055a5a4(C_004083b0_430 *this); /* 0055a5a4 */
-void __thiscall FUN_0055a5e4(C_004083b0_430 *this); /* 0055a5e4 */
-void __thiscall FUN_0055a64a(C_004083b0_430 *this); /* 0055a64a */
-void __cdecl FUN_0055a930(); /* 0055a930 */
-void __cdecl FUN_0055a980(); /* 0055a980 */
-undefined4 __cdecl FUN_0055ac37(); /* 0055ac37 */
-undefined4 __stdcall FUN_0055add0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 0055add0 */
-void __cdecl FUN_0055ae80(); /* 0055ae80 */
-void __cdecl FUN_0055af2e(); /* 0055af2e */
-void __cdecl FUN_0055b046(); /* 0055b046 */
+void __thiscall setup_picwnd_load_dll(C_004083b0_430 *this); /* 0055a5e4 */
+void __thiscall setup_picwnd_free_dll(C_004083b0_430 *this); /* 0055a64a */
+void __cdecl gfx_copy_rect_same_pos(); /* 0055a930 */
+void __cdecl map_build_coarse_connectivity(); /* 0055a980 */
+undefined4 __cdecl map_coarse_cell_landmass(); /* 0055ac37 */
+undefined4 __stdcall win_main(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 0055add0 */
+void __cdecl mp_turn_timer_stop(); /* 0055ae80 */
+void __cdecl mp_turn_timer_start(); /* 0055af2e */
+void __cdecl mp_turn_timer_resume(); /* 0055b046 */
 #undef FUN_0055b0fb
 void __cdecl FUN_0055b0fb(void); /* 0055b0fb, hand-written */
-void __cdecl FUN_0055b2c6(); /* 0055b2c6 */
-void __cdecl FUN_0055b3c8(); /* 0055b3c8 */
-void __cdecl FUN_0055b3fd(); /* 0055b3fd */
+void __cdecl mp_cmd_change_timer(); /* 0055b2c6 */
+void __cdecl mp_mouse_watchdog_stop(); /* 0055b3c8 */
+void __cdecl mp_mouse_watchdog_start(); /* 0055b3fd */
 undefined4 __cdecl FUN_0055b451(); /* 0055b451 */
 void __cdecl FUN_0055b47e(); /* 0055b47e */
 void __cdecl FUN_0055b515(); /* 0055b515 */
-void __cdecl FUN_0055b59e(); /* 0055b59e */
-void __cdecl FUN_0055b5fa(); /* 0055b5fa */
+void __cdecl mp_release_mouse_capture(); /* 0055b59e */
+void __cdecl mp_mouse_watchdog_tick(); /* 0055b5fa */
 void __cdecl FUN_0055b677(); /* 0055b677 */
 void __cdecl FUN_0055b6c7(); /* 0055b6c7 */
-int __cdecl FUN_0055bbc0(); /* 0055bbc0 */
-undefined4 __cdecl FUN_0055bef9(); /* 0055bef9 */
-void __cdecl FUN_0055c066(); /* 0055c066 */
-undefined4 __cdecl FUN_0055c277(); /* 0055c277 */
-#undef FUN_0055c3d3
-void __cdecl FUN_0055c3d3(int param_1, int param_2); /* 0055c3d3, hand-written */
+int __cdecl diplo_count_border_intruders(); /* 0055bbc0 */
+undefined4 __cdecl diplo_senate_intervenes(); /* 0055bef9 */
+void __cdecl civ_set_government(); /* 0055c066 */
+undefined4 __cdecl civ_can_choose_government(); /* 0055c277 */
+#undef civ_select_government_dialog
+void __cdecl civ_select_government_dialog(int param_1, int param_2); /* 0055c3d3, hand-written */
 void __cdecl FUN_0055c679(); /* 0055c679 */
-void __cdecl FUN_0055c69d(); /* 0055c69d */
+void __cdecl civ_change_government(); /* 0055c69d */
 undefined4 __cdecl FUN_0055cbd5(); /* 0055cbd5 */
-undefined4 __cdecl FUN_0055d1e2(); /* 0055d1e2 */
-undefined4 __cdecl FUN_0055d685(); /* 0055d685 */
-void __cdecl FUN_0055d8d8(); /* 0055d8d8 */
-#undef FUN_0055f5a3
-void __cdecl FUN_0055f5a3(int param_1, int param_2); /* 0055f5a3, hand-written */
-void __cdecl FUN_0055f7d1(); /* 0055f7d1 */
-void __cdecl FUN_00560084(); /* 00560084 */
-void __cdecl FUN_00560d95(); /* 00560d95 */
-void __cdecl FUN_00562021(); /* 00562021 */
-undefined4 __cdecl FUN_00564470(); /* 00564470 */
+undefined4 __cdecl diplo_ai_swap_advances(); /* 0055d1e2 */
+undefined4 __cdecl diplo_ally_join_war(); /* 0055d685 */
+void __cdecl diplo_civs_meet(); /* 0055d8d8 */
+#undef ai_choose_government
+void __cdecl ai_choose_government(int param_1, int param_2); /* 0055f5a3, hand-written */
+void __cdecl diplo_ai_military_aid(); /* 0055f7d1 */
+void __cdecl civ_turn_update_diplomacy(); /* 00560084 */
+void __cdecl diplo_ai_review_relations(); /* 00560d95 */
+void __cdecl diplo_ai_seek_war_ally(); /* 00562021 */
+undefined4 __cdecl file_require_cdrom(); /* 00564470 */
 bool __cdecl FUN_00564549(); /* 00564549 */
-undefined1 * __cdecl FUN_00564574(); /* 00564574 */
-undefined1 * __cdecl FUN_0056459f(); /* 0056459f */
-undefined4 __cdecl FUN_00564713(); /* 00564713 */
-int __cdecl FUN_00564bf0(); /* 00564bf0 */
-void __thiscall FUN_00564d00(C_004083b0_798 *this,iptr param_1); /* 00564d00 */
-void __thiscall FUN_00564e6d(C_004083b0_a28 *this); /* 00564e6d */
-void __thiscall FUN_00566584(C_004083b0_a28 *this,iptr param_1); /* 00566584 */
-void __thiscall FUN_005666da(C_004083b0_a28 *this); /* 005666da */
-void __thiscall FUN_005674b9(C_004083b0_48 *this,int param_1,int param_2,int param_3,int param_4); /* 005674b9 */
-void __thiscall FUN_005675b7(C_004083b0_61c *this,undefined4 param_1,int param_2); /* 005675b7 */
+undefined1 * __cdecl file_get_fallback_drive(); /* 00564574 */
+undefined1 * __cdecl file_find_fallback_drive(); /* 0056459f */
+undefined4 __cdecl file_resolve_path(); /* 00564713 */
+int __cdecl str_parse_int_prefixed(); /* 00564bf0 */
+void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1); /* 00564d00 */
+void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this); /* 00564e6d */
+void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1); /* 00566584 */
+void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this); /* 005666da */
+void __thiscall pedia_draw_tree_connector(DibSurface *this,int param_1,int param_2,int param_3,int param_4); /* 005674b9 */
+void __thiscall pedia_draw_tree_stub(C_004083b0_61c *this,undefined4 param_1,int param_2); /* 005675b7 */
 void __cdecl FUN_005680a0(); /* 005680a0 */
-void __cdecl FUN_005680ba(); /* 005680ba */
-void __cdecl FUN_005680d4(); /* 005680d4 */
+void __cdecl shared_palette_static_init(); /* 005680ba */
+void __cdecl shared_palette_reg_atexit(); /* 005680d4 */
 void __cdecl FUN_005680f1(); /* 005680f1 */
 void __cdecl FUN_0056810b(); /* 0056810b */
-void __cdecl FUN_00568125(); /* 00568125 */
-void __cdecl FUN_0056813f(); /* 0056813f */
+void __cdecl frame_texture_surface_static_init(); /* 00568125 */
+void __cdecl frame_texture_surface_reg_atexit(); /* 0056813f */
 void __cdecl FUN_0056815c(); /* 0056815c */
-undefined4 __cdecl FUN_00568176(); /* 00568176 */
-void __cdecl FUN_005681c9(); /* 005681c9 */
+undefined4 __cdecl mem_check_available(); /* 00568176 */
+void __cdecl frame_texture_load(); /* 005681c9 */
 void __cdecl FUN_00568348(); /* 00568348 */
 void __cdecl FUN_00568354(); /* 00568354 */
 void __cdecl FUN_0056835d(); /* 0056835d */
-void __cdecl FUN_00568381(); /* 00568381 */
+void __cdecl frame_texture_free(); /* 00568381 */
 void __cdecl FUN_005683a5(); /* 005683a5 */
 void __cdecl FUN_005683b5(); /* 005683b5 */
-undefined4 __cdecl FUN_005683c5(); /* 005683c5 */
-undefined4 __cdecl FUN_00568861(); /* 00568861 */
+undefined4 __cdecl gfx_dissolve_blit(); /* 005683c5 */
+undefined4 __cdecl civ_city_art_era(); /* 00568861 */
 void __cdecl FUN_00568b00(); /* 00568b00 */
-void __cdecl FUN_00568b1a(); /* 00568b1a */
-void __cdecl FUN_00568b34(); /* 00568b34 */
+void __cdecl status_window_static_init(); /* 00568b1a */
+void __cdecl status_window_reg_atexit(); /* 00568b34 */
 void __cdecl FUN_00568b51(); /* 00568b51 */
 void __cdecl FUN_00568b6b(); /* 00568b6b */
-void __cdecl FUN_00568b85(); /* 00568b85 */
-void __cdecl FUN_00568b9f(); /* 00568b9f */
+void __cdecl status_info_font_static_init(); /* 00568b85 */
+void __cdecl status_info_font_reg_atexit(); /* 00568b9f */
 void __cdecl FUN_00568bbc(); /* 00568bbc */
 void __cdecl FUN_00568bd6(); /* 00568bd6 */
-void __cdecl FUN_00568bf0(); /* 00568bf0 */
-void __cdecl FUN_00568c0a(); /* 00568c0a */
+void __cdecl status_font_static_init(); /* 00568bf0 */
+void __cdecl status_font_reg_atexit(); /* 00568c0a */
 void __cdecl FUN_00568c27(); /* 00568c27 */
 void __cdecl FUN_00568c41(); /* 00568c41 */
 void __cdecl FUN_00568c58(); /* 00568c58 */
 undefined4 __cdecl FUN_00568c7e(); /* 00568c7e */
-void __cdecl FUN_00568ca2(); /* 00568ca2 */
-void __cdecl FUN_00568e86(); /* 00568e86 */
-void __cdecl FUN_00568f43(); /* 00568f43 */
-undefined4 __cdecl FUN_0056911d(); /* 0056911d */
-void __cdecl FUN_005691a1(); /* 005691a1 */
-void __cdecl FUN_00569363(); /* 00569363 */
-void __cdecl FUN_00569801(); /* 00569801 */
-void __cdecl FUN_0056a65e(); /* 0056a65e */
-void __cdecl FUN_0056a787(); /* 0056a787 */
+void __cdecl status_calc_font_sizes(); /* 00568ca2 */
+void __cdecl status_draw_civ_color(); /* 00568e86 */
+void __cdecl status_draw_end_of_turn(); /* 00568f43 */
+undefined4 __cdecl status_draw_cursor_loc(); /* 0056911d */
+void __cdecl status_append_unit_orders(); /* 005691a1 */
+void __cdecl status_draw_info(); /* 00569363 */
+void __cdecl status_draw_unit_panel(); /* 00569801 */
+void __cdecl status_redraw(); /* 0056a65e */
+void __cdecl status_wnd_repaint(); /* 0056a787 */
 void __cdecl FUN_0056a98b(); /* 0056a98b */
-void __cdecl FUN_0056a9f4(); /* 0056a9f4 */
+void __cdecl status_calc_wnd_rect(); /* 0056a9f4 */
 void __cdecl FUN_0056aa7f(); /* 0056aa7f */
 void __cdecl FUN_0056aaa5(); /* 0056aaa5 */
-void __cdecl FUN_0056aacb(); /* 0056aacb */
-void __cdecl FUN_0056ac46(); /* 0056ac46 */
-void __cdecl FUN_0056ac67(); /* 0056ac67 */
+void __cdecl status_wnd_open(); /* 0056aacb */
+void __cdecl status_wnd_close(); /* 0056ac46 */
+void __cdecl status_draw_timer_bar(); /* 0056ac67 */
 void __cdecl FUN_0056aeed(); /* 0056aeed */
-#undef FUN_0056b810
-char * __cdecl FUN_0056b810(char *s); /* 0056b810, hand-written */
+#undef str_strip_newline
+char * __cdecl str_strip_newline(char *s); /* 0056b810, hand-written */
 void __cdecl FUN_0056b847(); /* 0056b847 */
 void __cdecl FUN_0056b8a0(); /* 0056b8a0 */
-void __cdecl FUN_0056b8ba(); /* 0056b8ba */
-void __cdecl FUN_0056b8d4(); /* 0056b8d4 */
+void __cdecl map_label_font_static_init(); /* 0056b8ba */
+void __cdecl map_label_font_reg_atexit(); /* 0056b8d4 */
 void __cdecl FUN_0056b8f1(); /* 0056b8f1 */
-void __cdecl FUN_0056b90b(); /* 0056b90b */
-iptr __cdecl FUN_0056b96e(); /* 0056b96e */
-void __cdecl FUN_0056baff(); /* 0056baff */
-void __cdecl FUN_0056c5fc(); /* 0056c5fc */
-void __cdecl FUN_0056c705(); /* 0056c705 */
+void __cdecl gfx_select_zoom_font(); /* 0056b90b */
+iptr __cdecl unit_stack_pick_display_unit(); /* 0056b96e */
+void __cdecl gfx_draw_unit(); /* 0056baff */
+void __cdecl gfx_copy_rect_clipped(); /* 0056c5fc */
+void __cdecl map_animate_unit_move(); /* 0056c705 */
 void __cdecl FUN_0056d25b(); /* 0056d25b */
-void __cdecl FUN_0056d289(); /* 0056d289 */
-undefined4 __thiscall FUN_0056e180(C_0056e180 *this,undefined4 param_1); /* 0056e180 */
-int __cdecl FUN_0056e1c0(); /* 0056e1c0 */
-undefined4 __cdecl FUN_0056e1f0(); /* 0056e1f0 */
-C_0056e270 * __thiscall FUN_0056e270(C_0056e270 *this); /* 0056e270 */
-void __thiscall FUN_0056e2c9(void *this); /* 0056e2c9 */
-undefined4 __thiscall FUN_0056e2e9(C_004471c0 *this,undefined4 param_1,int param_2); /* 0056e2e9 */
+void __cdecl gfx_draw_city(); /* 0056d289 */
+undefined4 __thiscall map_view_zoom_scale_round(MapViewZoomView *this,undefined4 param_1); /* 0056e180 */
+int __cdecl gfx_zoom_scale_round(); /* 0056e1c0 */
+undefined4 __cdecl civ_color_mid(); /* 0056e1f0 */
+LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *this); /* 0056e270 */
+void __thiscall lobby_list_dtor(void *this); /* 0056e2c9 */
+undefined4 __thiscall lobby_host_wait_players(LobbyList *this,undefined4 param_1,int param_2); /* 0056e2e9 */
 void __cdecl FUN_0056ec92(); /* 0056ec92 */
 void __cdecl FUN_0056ed62(); /* 0056ed62 */
 void __cdecl FUN_0056ed80(); /* 0056ed80 */
-iptr __thiscall FUN_0056edd3(C_004471c0 *this,iptr param_1); /* 0056edd3 */
-void __thiscall FUN_0056ee2c(C_004471c0 *this); /* 0056ee2c */
-void __thiscall FUN_0056eed7(C_004471c0 *this,void *param_1); /* 0056eed7 */
-uint * __thiscall FUN_0056ef93(C_004471c0 *this,iptr param_1,uint param_2); /* 0056ef93 */
-void __cdecl FUN_0056f113(); /* 0056f113 */
-void __thiscall FUN_0056f301(C_004471c0 *this); /* 0056f301 */
-undefined4 __thiscall FUN_0056f372(C_004471c0 *this); /* 0056f372 */
-uptr __thiscall FUN_0056f3e0(C_004471c0 *this,int param_1); /* 0056f3e0 */
-int __thiscall FUN_0056f42b(C_004471c0 *this,int param_1); /* 0056f42b */
+iptr __thiscall lobby_entry_neighbor(LobbyList *this,iptr param_1); /* 0056edd3 */
+void __thiscall lobby_clear_player_list(LobbyList *this); /* 0056ee2c */
+void __thiscall lobby_remove_entry(LobbyList *this,void *param_1); /* 0056eed7 */
+uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr param_1,uint param_2); /* 0056ef93 */
+void __cdecl lobby_refresh_player_list(); /* 0056f113 */
+void __thiscall lobby_add_waiting_entry(LobbyList *this); /* 0056f301 */
+undefined4 __thiscall lobby_find_waiting_entry(LobbyList *this); /* 0056f372 */
+uptr __thiscall lobby_find_entry_by_id(LobbyList *this,int param_1); /* 0056f3e0 */
+int __thiscall lobby_slot_for_entry_id(LobbyList *this,int param_1); /* 0056f42b */
 void __cdecl FUN_0056f910(); /* 0056f910 */
-void __cdecl FUN_0056f92a(); /* 0056f92a */
-void __cdecl FUN_0056f944(); /* 0056f944 */
+void __cdecl sprite_sheet_surface_static_init(); /* 0056f92a */
+void __cdecl sprite_sheet_surface_reg_atexit(); /* 0056f944 */
 void __cdecl FUN_0056f961(); /* 0056f961 */
 void __cdecl FUN_0056f97b(); /* 0056f97b */
-void __cdecl FUN_0056f995(); /* 0056f995 */
-void __cdecl FUN_0056f9af(); /* 0056f9af */
+void __cdecl sprite_editor_orig_sprite_static_init(); /* 0056f995 */
+void __cdecl sprite_editor_orig_sprite_reg_atexit(); /* 0056f9af */
 void __cdecl FUN_0056f9cc(); /* 0056f9cc */
 void __cdecl FUN_0056f9e6(); /* 0056f9e6 */
-void __cdecl FUN_0056fa00(); /* 0056fa00 */
-void __cdecl FUN_0056fa1a(); /* 0056fa1a */
+void __cdecl sprite_editor_result_static_init(); /* 0056fa00 */
+void __cdecl sprite_editor_result_reg_atexit(); /* 0056fa1a */
 void __cdecl FUN_0056fa37(); /* 0056fa37 */
 void __cdecl FUN_0056fa51(); /* 0056fa51 */
-void __cdecl FUN_0056fa6b(); /* 0056fa6b */
-void __cdecl FUN_0056fa85(); /* 0056fa85 */
+void __cdecl sprite_picker_sprite_static_init(); /* 0056fa6b */
+void __cdecl sprite_picker_sprite_reg_atexit(); /* 0056fa85 */
 void __cdecl FUN_0056faa2(); /* 0056faa2 */
 void __cdecl FUN_0056fabc(); /* 0056fabc */
-void __cdecl FUN_0056fad6(); /* 0056fad6 */
-void __cdecl FUN_0056faf0(); /* 0056faf0 */
+void __cdecl sprite_editor_surface_static_init(); /* 0056fad6 */
+void __cdecl sprite_editor_surface_reg_atexit(); /* 0056faf0 */
 void __cdecl FUN_0056fb0d(); /* 0056fb0d */
 void __cdecl FUN_0056fb27(); /* 0056fb27 */
-void __cdecl FUN_0056fb41(); /* 0056fb41 */
-void __cdecl FUN_0056fb5b(); /* 0056fb5b */
+void __cdecl sprite_editor_window_static_init(); /* 0056fb41 */
+void __cdecl sprite_editor_window_reg_atexit(); /* 0056fb5b */
 void __cdecl FUN_0056fb78(); /* 0056fb78 */
 void __cdecl FUN_0056fb92(); /* 0056fb92 */
-void __cdecl FUN_0056fbac(); /* 0056fbac */
-void __cdecl FUN_0056fbc6(); /* 0056fbc6 */
+void __cdecl sprite_picker_window_static_init(); /* 0056fbac */
+void __cdecl sprite_picker_window_reg_atexit(); /* 0056fbc6 */
 void __cdecl FUN_0056fbe3(); /* 0056fbe3 */
-void __cdecl FUN_0056fbfd(); /* 0056fbfd */
+void __cdecl sprite_sheet_draw_shield_marks(); /* 0056fbfd */
 void __cdecl FUN_0056fce4(); /* 0056fce4 */
 void __cdecl FUN_0056ffb6(); /* 0056ffb6 */
 void __cdecl FUN_0056ffda(); /* 0056ffda */
@@ -2762,444 +2762,444 @@ void __cdecl FUN_00571910(); /* 00571910 */
 void __cdecl FUN_00571baa(); /* 00571baa */
 void __cdecl FUN_00571bce(); /* 00571bce */
 void __cdecl FUN_00572065(); /* 00572065 */
-void __cdecl FUN_00572089(); /* 00572089 */
+void __cdecl sprite_editor_create_window(); /* 00572089 */
 void __cdecl FUN_005722ab(); /* 005722ab */
 void __cdecl FUN_00572364(); /* 00572364 */
-void __cdecl FUN_00572389(); /* 00572389 */
-void __cdecl FUN_005723ee(); /* 005723ee */
-void __cdecl FUN_0057261a(); /* 0057261a */
-int __cdecl FUN_00572740(); /* 00572740 */
-void __cdecl FUN_005727d8(); /* 005727d8 */
-undefined * __cdecl FUN_00572887(); /* 00572887 */
-void __cdecl FUN_00572da0(); /* 00572da0 */
+void __cdecl sprite_editor_rebuild_sprite(); /* 00572389 */
+void __cdecl sprite_editor_draw_swatches(); /* 005723ee */
+void __cdecl sprite_editor_draw_palette_cell(); /* 0057261a */
+int __cdecl sprite_editor_tool_hit_test(); /* 00572740 */
+void __cdecl sprite_editor_draw_backdrop(); /* 005727d8 */
+undefined * __cdecl sprite_editor_plot_pixel(); /* 00572887 */
+void __cdecl sprite_editor_draw_flag_marker(); /* 00572da0 */
 void __cdecl FUN_00572fff(); /* 00572fff */
 void __cdecl FUN_00573adc(); /* 00573adc */
 void __cdecl FUN_00573afd(); /* 00573afd */
 void __cdecl FUN_00573b1d(); /* 00573b1d */
-void __cdecl FUN_00573e59(); /* 00573e59 */
+void __cdecl sprite_editor_run(); /* 00573e59 */
 void __cdecl FUN_0057420c(); /* 0057420c */
 void __cdecl FUN_00574218(); /* 00574218 */
-void __cdecl FUN_00574239(); /* 00574239 */
-void __thiscall FUN_00574522(C_004083b0_2e4 *this); /* 00574522 */
-void __cdecl FUN_00574686(); /* 00574686 */
-undefined4 __cdecl FUN_005746a1(); /* 005746a1 */
-void __cdecl FUN_00574c47(); /* 00574c47 */
-void __cdecl FUN_00574ca6(); /* 00574ca6 */
+void __cdecl sprite_editor_redraw(); /* 00574239 */
+void __thiscall sprite_picker_draw(FrameWindow *this); /* 00574522 */
+void __cdecl sprite_picker_redraw_cb(); /* 00574686 */
+undefined4 __cdecl sprite_editor_cell_rect(); /* 005746a1 */
+void __cdecl sprite_picker_select_cell(); /* 00574c47 */
+void __cdecl sprite_picker_create_window(); /* 00574ca6 */
 void __cdecl FUN_00574e98(); /* 00574e98 */
 void __cdecl FUN_00574f50(); /* 00574f50 */
-void __cdecl FUN_00575d89(); /* 00575d89 */
+void __cdecl sprite_editor_grab_from_sheet(); /* 00575d89 */
 void __cdecl FUN_00575dc4(); /* 00575dc4 */
-void __thiscall FUN_00575dec(C_004083b0_430 *this); /* 00575dec */
-void __cdecl FUN_0057624d(); /* 0057624d */
-void __cdecl FUN_00576267(); /* 00576267 */
+void __thiscall sprite_picker_run(C_004083b0_430 *this); /* 00575dec */
+void __cdecl sprite_picker_show(); /* 0057624d */
+void __cdecl sprite_editor_import_sheet(); /* 00576267 */
 void __cdecl FUN_005767a7(); /* 005767a7 */
 void __cdecl FUN_005767b3(); /* 005767b3 */
-void __thiscall FUN_00578390(void *this); /* 00578390 */
+void __thiscall sprite_picker_dtor(void *this); /* 00578390 */
 void __cdecl FUN_00578402(); /* 00578402 */
 void __cdecl FUN_00578411(); /* 00578411 */
 void __cdecl FUN_00578420(); /* 00578420 */
 void __cdecl FUN_0057842f(); /* 0057842f */
 void __cdecl FUN_0057843e(); /* 0057843e */
-C_004083b0_430 * __thiscall FUN_005784a0(C_004083b0_430 *this); /* 005784a0 */
-u32 __thiscall FUN_005785d0(C_00414be0 *this,iptr param_1); /* 005785d0 */
-u32 __thiscall FUN_00578610(C_00414be0 *this,iptr param_1); /* 00578610 */
-void __thiscall FUN_00578650(C_00578650 *this,uint param_1); /* 00578650 */
-void __thiscall FUN_0057868c(C_00578650 *this); /* 0057868c */
-void __thiscall FUN_005786b6(C_00578650 *this,undefined4 param_1); /* 005786b6 */
-C_00578650 * __thiscall FUN_005786f1(C_00578650 *this,undefined4 param_1); /* 005786f1 */
-void __thiscall FUN_00578770(C_00578650 *this); /* 00578770 */
+C_004083b0_430 * __thiscall sprite_picker_ctor(C_004083b0_430 *this); /* 005784a0 */
+u32 __thiscall wnd_set_rbuttondown_handler(WndHandlersMouseSetView *this,iptr param_1); /* 005785d0 */
+u32 __thiscall wnd_set_rbuttonup_any_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00578610 */
+void __thiscall menu_storage_reinit(GameMenu *this,uint param_1); /* 00578650 */
+void __thiscall menu_clear_lists(GameMenu *this); /* 0057868c */
+void __thiscall menu_reset(GameMenu *this,undefined4 param_1); /* 005786b6 */
+GameMenu * __thiscall menu_ctor(GameMenu *this,undefined4 param_1); /* 005786f1 */
+void __thiscall menu_dtor(GameMenu *this); /* 00578770 */
 void __cdecl FUN_005787bd(); /* 005787bd */
-undefined4 __thiscall FUN_005787de(C_00578650 *this,int param_1); /* 005787de */
-int __thiscall FUN_00578840(C_00578650 *this,uptr param_1); /* 00578840 */
-undefined4 __thiscall FUN_005788a9(C_00578650 *this,int param_1); /* 005788a9 */
-iptr __thiscall FUN_00578922(C_00578650 *this,int param_1); /* 00578922 */
-int __thiscall FUN_005789aa(C_00578650 *this,iptr param_1); /* 005789aa */
-undefined4 __thiscall FUN_00578a1c(C_00578650 *this,undefined4 param_1,int param_2); /* 00578a1c */
-void __cdecl FUN_00578abd(); /* 00578abd */
-undefined4 * __thiscall FUN_00578b06(C_00578650 *this,undefined4 param_1,char *param_2); /* 00578b06 */
-undefined4 * __thiscall FUN_00578c12(C_00578650 *this,undefined4 param_1,undefined4 param_2,iptr param_3,size_t param_4); /* 00578c12 */
+undefined4 __thiscall menu_find_menu(GameMenu *this,int param_1); /* 005787de */
+int __thiscall menu_visible_index(GameMenu *this,uptr param_1); /* 00578840 */
+undefined4 __thiscall menu_id_at_visible_index(GameMenu *this,int param_1); /* 005788a9 */
+iptr __thiscall menu_find_item(GameMenu *this,int param_1); /* 00578922 */
+int __thiscall menu_item_visible_index(GameMenu *this,iptr param_1); /* 005789aa */
+undefined4 __thiscall menu_item_id_at_visible_index(GameMenu *this,undefined4 param_1,int param_2); /* 00578a1c */
+void __cdecl str_pipes_to_tabs(); /* 00578abd */
+undefined4 * __thiscall menu_add_menu(GameMenu *this,undefined4 param_1,char *param_2); /* 00578b06 */
+undefined4 * __thiscall menu_add_item(GameMenu *this,undefined4 param_1,undefined4 param_2,iptr param_3,size_t param_4); /* 00578c12 */
 void __cdecl FUN_00578d8a(); /* 00578d8a */
-void __thiscall FUN_00578de8(C_00578650 *this,C_00408010_b8 *param_1); /* 00578de8 */
-void __thiscall FUN_00578e38(C_00578650 *this,iptr param_1); /* 00578e38 */
-undefined4 __thiscall FUN_00578e60(C_00578650 *this,undefined4 param_1); /* 00578e60 */
-void __thiscall FUN_00578ec7(C_00578650 *this,undefined4 param_1); /* 00578ec7 */
-void __thiscall FUN_00578f2c(C_00578650 *this,iptr param_1); /* 00578f2c */
-void __thiscall FUN_005791df(C_00578650 *this,undefined4 param_1,int param_2); /* 005791df */
-void __thiscall FUN_00579260(C_00578650 *this,undefined4 param_1,int param_2); /* 00579260 */
-C_00578650 * __thiscall FUN_005792e1(C_00578650 *this,undefined4 param_1,C_00578650 *param_2); /* 005792e1 */
-void __thiscall FUN_005793a3(C_00578650 *this,undefined4 param_1); /* 005793a3 */
-void __thiscall FUN_0057940d(C_00578650 *this,undefined4 param_1,int param_2); /* 0057940d */
-void __thiscall FUN_005794cf(C_00578650 *this,undefined4 param_1,undefined4 param_2); /* 005794cf */
-void __thiscall FUN_0057953e(C_00578650 *this,undefined4 param_1,iptr param_2); /* 0057953e */
-void __thiscall FUN_005799c0(C_00578650 *this,iptr param_1); /* 005799c0 */
-void __thiscall FUN_00579a00(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579a00 */
-void __thiscall FUN_00579a40(C_00578650 *this,undefined4 param_1,undefined4 param_2); /* 00579a40 */
-void __thiscall FUN_00579a80(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579a80 */
-undefined4 __thiscall FUN_00579ac0(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579ac0 */
-void __thiscall FUN_00579b00(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579b00 */
-void __thiscall FUN_00579b40(C_00408010_b8 *this,iptr param_1); /* 00579b40 */
-u32 __thiscall FUN_00579b90(C_00579b90 *this); /* 00579b90 */
-void __thiscall FUN_00579bc0(C_00579bc0 *this,iptr param_1); /* 00579bc0 */
-void __thiscall FUN_00579bf0(C_00408010_b8 *this); /* 00579bf0 */
-undefined4 __cdecl FUN_00579c40(); /* 00579c40 */
-int __cdecl FUN_00579dbb(); /* 00579dbb */
-undefined4 __cdecl FUN_00579ed0(); /* 00579ed0 */
-void __cdecl FUN_0057a27a(); /* 0057a27a */
+void __thiscall menu_attach_to_window(GameMenu *this,C_00408010_b8 *param_1); /* 00578de8 */
+void __thiscall menu_set_command_handler(GameMenu *this,iptr param_1); /* 00578e38 */
+undefined4 __thiscall menu_apply_item_enabled(GameMenu *this,undefined4 param_1); /* 00578e60 */
+void __thiscall menu_apply_item_checked(GameMenu *this,undefined4 param_1); /* 00578ec7 */
+void __thiscall menu_rebuild(GameMenu *this,iptr param_1); /* 00578f2c */
+void __thiscall FUN_005791df(GameMenu *this,undefined4 param_1,int param_2); /* 005791df */
+void __thiscall menu_set_item_hidden(GameMenu *this,undefined4 param_1,int param_2); /* 00579260 */
+GameMenu * __thiscall menu_set_item_enabled(GameMenu *this,undefined4 param_1,GameMenu *param_2); /* 005792e1 */
+void __thiscall menu_remove_item(GameMenu *this,undefined4 param_1); /* 005793a3 */
+void __thiscall menu_set_item_checked(GameMenu *this,undefined4 param_1,int param_2); /* 0057940d */
+void __thiscall menu_set_menu_enabled(GameMenu *this,undefined4 param_1,undefined4 param_2); /* 005794cf */
+void __thiscall menu_set_item_text(GameMenu *this,undefined4 param_1,iptr param_2); /* 0057953e */
+void __thiscall menu_native_build(GameMenu *this,iptr param_1); /* 005799c0 */
+void __thiscall menu_native_insert(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579a00 */
+void __thiscall menu_native_delete(GameMenu *this,undefined4 param_1,undefined4 param_2); /* 00579a40 */
+void __thiscall menu_native_set_text(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579a80 */
+undefined4 __thiscall menu_native_enable(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579ac0 */
+void __thiscall menu_native_check(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00579b00 */
+void __thiscall wnd_attach_menu(C_00408010_b8 *this,iptr param_1); /* 00579b40 */
+u32 __thiscall menu_get_hmenu(MenuHandleView *this); /* 00579b90 */
+void __thiscall wnd_set_menu_callback(WndMenuCbSetView *this,iptr param_1); /* 00579bc0 */
+void __thiscall wnd_redraw_menu_bar(C_00408010_b8 *this); /* 00579bf0 */
+undefined4 __cdecl diplo_force_war(); /* 00579c40 */
+int __cdecl city_treasury_share(); /* 00579dbb */
+undefined4 __cdecl diplo_confirm_attack(); /* 00579ed0 */
+void __cdecl civ_steal_advance(); /* 0057a27a */
 void __cdecl FUN_0057a661(); /* 0057a661 */
-iptr __cdecl FUN_0057a685(); /* 0057a685 */
-void __cdecl FUN_0057a7e9(); /* 0057a7e9 */
-undefined4 __cdecl FUN_0057a904(); /* 0057a904 */
-void __cdecl FUN_0057b5df(); /* 0057b5df */
+iptr __cdecl civ_find_central_city(); /* 0057a685 */
+void __cdecl city_transfer_for_civil_war(); /* 0057a7e9 */
+undefined4 __cdecl civ_civil_war(); /* 0057a904 */
+void __cdecl city_capture_aftermath(); /* 0057b5df */
 void __cdecl FUN_0057e29f(); /* 0057e29f */
-int __cdecl FUN_0057e2c3(); /* 0057e2c3 */
-int __cdecl FUN_0057e33a(); /* 0057e33a */
-iptr __cdecl FUN_0057e6e2(); /* 0057e6e2 */
-void __cdecl FUN_0057e9f9(); /* 0057e9f9 */
-void __cdecl FUN_0057eb94(); /* 0057eb94 */
-void __cdecl FUN_0057ebfd(); /* 0057ebfd */
-undefined4 __cdecl FUN_0057ed3f(); /* 0057ed3f */
+int __cdecl unit_attack_strength(); /* 0057e2c3 */
+int __cdecl unit_defense_strength(); /* 0057e33a */
+iptr __cdecl unit_stack_best_defender(); /* 0057e6e2 */
+void __cdecl unit_kill_in_combat(); /* 0057e9f9 */
+void __cdecl unit_kill_stack_in_combat(); /* 0057eb94 */
+void __cdecl unit_promote_veteran(); /* 0057ebfd */
+undefined4 __cdecl map_animate_explosion(); /* 0057ed3f */
 void __cdecl FUN_0057f628(); /* 0057f628 */
-void __cdecl FUN_0057f657(); /* 0057f657 */
-undefined4 __cdecl FUN_0057f9e3(); /* 0057f9e3 */
-void __cdecl FUN_0057febc(); /* 0057febc */
-void __cdecl FUN_005802fd(); /* 005802fd */
-undefined4 __cdecl FUN_00580341(); /* 00580341 */
-void __cdecl FUN_005866a0(); /* 005866a0 */
-void __cdecl FUN_005866d3(); /* 005866d3 */
-void __cdecl FUN_005869d4(); /* 005869d4 */
+void __cdecl map_animate_nuke(); /* 0057f657 */
+undefined4 __cdecl unit_nuclear_attack(); /* 0057f9e3 */
+void __cdecl ai_respond_to_attack(); /* 0057febc */
+void __cdecl map_redraw_combat_tiles(); /* 005802fd */
+undefined4 __cdecl unit_resolve_attack(); /* 00580341 */
+void __cdecl cosmic_editor_focus_redraw(); /* 005866a0 */
+void __cdecl cosmic_editor_capture_defaults(); /* 005866d3 */
+void __cdecl cosmic_editor_fill_list(); /* 005869d4 */
 void __cdecl FUN_00586bb6(); /* 00586bb6 */
 undefined4 __cdecl FUN_00586d0a(); /* 00586d0a */
 void __cdecl FUN_00586da1(); /* 00586da1 */
 void __cdecl FUN_00586e24(); /* 00586e24 */
 void __cdecl FUN_00586e88(); /* 00586e88 */
-void __thiscall FUN_00586eb0(C_004083b0_2e4 *this); /* 00586eb0 */
-void __thiscall FUN_00586f16(C_004083b0_430 *this); /* 00586f16 */
+void __thiscall cosmic_editor_draw_bg(FrameWindow *this); /* 00586eb0 */
+void __thiscall cosmic_editor_dialog(C_004083b0_430 *this); /* 00586f16 */
 void __cdecl FUN_005875e9(); /* 005875e9 */
-void __cdecl FUN_0058760d(); /* 0058760d */
+void __cdecl cosmic_editor_run(); /* 0058760d */
 void __cdecl FUN_00587666(); /* 00587666 */
-void __thiscall FUN_00587a90(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 00587a90 */
+void __thiscall parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 00587a90 */
 void __cdecl FUN_00587e05(); /* 00587e05 */
 void __cdecl FUN_00587e23(); /* 00587e23 */
 void __cdecl FUN_00587e41(); /* 00587e41 */
 void __cdecl FUN_00587f00(); /* 00587f00 */
 void __cdecl FUN_00587fbf(); /* 00587fbf */
-void __cdecl FUN_0058804f(); /* 0058804f */
+void __cdecl parley_city_list_scroll(); /* 0058804f */
 void __cdecl FUN_005880b0(); /* 005880b0 */
-int __cdecl FUN_0058832d(); /* 0058832d */
-void __thiscall FUN_0058843f(void *this,int param_1,int param_2,int param_3); /* 0058843f */
-void __cdecl FUN_0058878e(); /* 0058878e */
-void __cdecl FUN_00588e47(); /* 00588e47 */
-void __thiscall FUN_00588f36(C_004083b0_11c *this,int param_1,int param_2); /* 00588f36 */
+int __cdecl parley_city_list_hit_test(); /* 0058832d */
+void __thiscall parley_sort_city_list(void *this,int param_1,int param_2,int param_3); /* 0058843f */
+void __cdecl parley_draw_city_list(); /* 0058878e */
+void __cdecl parley_draw_city_sprite(); /* 00588e47 */
+void __thiscall parley_build_city_list(C_004083b0_11c *this,int param_1,int param_2); /* 00588f36 */
 void __cdecl FUN_005899f0(); /* 005899f0 */
-void __cdecl FUN_00589a0a(); /* 00589a0a */
-void __cdecl FUN_00589a24(); /* 00589a24 */
+void __cdecl main_frame_bg_surface_init(); /* 00589a0a */
+void __cdecl main_frame_bg_surface_atexit(); /* 00589a24 */
 void __cdecl FUN_00589a41(); /* 00589a41 */
-uint __cdecl FUN_00589a5b(); /* 00589a5b */
+uint __cdecl main_frame_create(); /* 00589a5b */
 void __cdecl FUN_00589c54(); /* 00589c54 */
-void __cdecl FUN_00589c79(); /* 00589c79 */
-undefined4 __thiscall FUN_00589d50(C_00408010_10 *this); /* 00589d50 */
-int __cdecl FUN_00589d80(); /* 00589d80 */
-void __cdecl FUN_00589dc5(); /* 00589dc5 */
-void __cdecl FUN_00589ef8(); /* 00589ef8 */
-undefined4 __cdecl FUN_00589fc9(); /* 00589fc9 */
-void __cdecl FUN_0058a0ee(); /* 0058a0ee */
+void __cdecl main_frame_destroy(); /* 00589c79 */
+undefined4 __thiscall wnd_frame_width(WndBase *this); /* 00589d50 */
+int __cdecl err_register_cleanup_fn(); /* 00589d80 */
+void __cdecl err_dump_text_file(); /* 00589dc5 */
+void __cdecl error_report(); /* 00589ef8 */
+undefined4 __cdecl file_read_nth_line(); /* 00589fc9 */
+void __cdecl err_fatal_exit(); /* 0058a0ee */
 void __cdecl FUN_0058a5b0(); /* 0058a5b0 */
-void __cdecl FUN_0058a5ca(); /* 0058a5ca */
-void __cdecl FUN_0058a5e4(); /* 0058a5e4 */
+void __cdecl unit_sound_editor_static_init(); /* 0058a5ca */
+void __cdecl unit_sound_editor_reg_atexit(); /* 0058a5e4 */
 void __cdecl FUN_0058a601(); /* 0058a601 */
-void __cdecl FUN_0058a61b(); /* 0058a61b */
-void __cdecl FUN_0058a80d(); /* 0058a80d */
+void __cdecl unit_sound_editor_create_wnd(); /* 0058a61b */
+void __cdecl file_copy(); /* 0058a80d */
 void __cdecl FUN_0058a905(); /* 0058a905 */
 void __cdecl FUN_0058abca(); /* 0058abca */
 void __cdecl FUN_0058abee(); /* 0058abee */
 void __cdecl FUN_0058ac13(); /* 0058ac13 */
 void __cdecl FUN_0058ac38(); /* 0058ac38 */
-undefined4 __cdecl FUN_0058ae20(); /* 0058ae20 */
+undefined4 __cdecl point_in_rect_ltrb(); /* 0058ae20 */
 void __cdecl FUN_0058ae6c(); /* 0058ae6c */
-void __cdecl FUN_0058afb6(); /* 0058afb6 */
-void __cdecl FUN_0058b47e(); /* 0058b47e */
+void __cdecl unit_sound_editor_set_slots(); /* 0058afb6 */
+void __cdecl unit_sound_editor_run(); /* 0058b47e */
 void __cdecl FUN_0058b859(); /* 0058b859 */
 void __cdecl FUN_0058b86f(); /* 0058b86f */
 void __cdecl FUN_0058b87b(); /* 0058b87b */
-void __cdecl FUN_0058bd60(); /* 0058bd60 */
-void __cdecl FUN_0058bd84(); /* 0058bd84 */
-void __cdecl FUN_0058bdfd(); /* 0058bdfd */
-void __cdecl FUN_0058be56(); /* 0058be56 */
-void __cdecl FUN_0058c295(); /* 0058c295 */
-undefined4 __cdecl FUN_0058c56c(); /* 0058c56c */
-void __cdecl FUN_0058c65e(); /* 0058c65e */
-void __cdecl FUN_0058cbe1(); /* 0058cbe1 */
-void __cdecl FUN_0058cce6(); /* 0058cce6 */
-void __cdecl FUN_0058cde5(); /* 0058cde5 */
-void __cdecl FUN_0058cfcd(); /* 0058cfcd */
+void __cdecl cmd_unit_skip_turn(); /* 0058bd60 */
+void __cdecl cmd_end_player_turn(); /* 0058bd84 */
+void __cdecl unit_cmd_wait(); /* 0058bdfd */
+void __cdecl unit_cmd_build_city(); /* 0058be56 */
+void __cdecl unit_cmd_disband(); /* 0058c295 */
+undefined4 __cdecl tile_has_irrigation_source(); /* 0058c56c */
+void __cdecl unit_cmd_terraform(); /* 0058c65e */
+void __cdecl unit_cmd_home_city(); /* 0058cbe1 */
+void __cdecl unit_cmd_fortify(); /* 0058cce6 */
+void __cdecl unit_cmd_sleep(); /* 0058cde5 */
+void __cdecl unit_cmd_pillage(); /* 0058cfcd */
 void __cdecl FUN_0058d41e(); /* 0058d41e */
-void __cdecl FUN_0058d442(); /* 0058d442 */
-void __cdecl FUN_0058d60a(); /* 0058d60a */
-void __cdecl FUN_0058d6af(); /* 0058d6af */
+void __cdecl ui_pick_unit_from_stack(); /* 0058d442 */
+void __cdecl unit_cmd_paradrop(); /* 0058d60a */
+void __cdecl unit_cmd_goto_city(); /* 0058d6af */
 void __cdecl FUN_0058ddaa(); /* 0058ddaa */
-void __cdecl FUN_0058ddce(); /* 0058ddce */
-void __cdecl FUN_0058df14(); /* 0058df14 */
-void __cdecl FUN_0058df7b(); /* 0058df7b */
+void __cdecl unit_cmd_unload(); /* 0058ddce */
+void __cdecl unit_cmd_automate(); /* 0058df14 */
+void __cdecl unit_cmd_airlift(); /* 0058df7b */
 void __cdecl FUN_0058e5c4(); /* 0058e5c4 */
 void __cdecl FUN_0058f010(); /* 0058f010 */
-#undef FUN_0058f040
-uint __cdecl FUN_0058f040(int param_1); /* 0058f040, hand-written */
-void __cdecl FUN_0058fda9(); /* 0058fda9 */
-undefined4 __cdecl FUN_0058fedb(); /* 0058fedb */
+#undef unit_enter_hut
+uint __cdecl unit_enter_hut(int param_1); /* 0058f040, hand-written */
+void __cdecl map_reveal_adjacent_units(); /* 0058fda9 */
+undefined4 __cdecl unit_caravan_enter_city(); /* 0058fedb */
 void __cdecl FUN_00590607(); /* 00590607 */
-undefined4 __cdecl FUN_0059062c(); /* 0059062c */
-undefined4 __cdecl FUN_00594d42(); /* 00594d42 */
-void __cdecl FUN_0059511c(); /* 0059511c */
-iptr __cdecl FUN_00596b00(); /* 00596b00 */
-undefined4 __cdecl FUN_00596c08(); /* 00596c08 */
-int __cdecl FUN_00596c61(); /* 00596c61 */
-int __cdecl FUN_00596ced(); /* 00596ced */
-int __cdecl FUN_00596d3c(); /* 00596d3c */
-int __cdecl FUN_00596e06(); /* 00596e06 */
+undefined4 __cdecl unit_move_dir(); /* 0059062c */
+undefined4 __cdecl net_lock_map(); /* 00594d42 */
+void __cdecl net_unlock_map(); /* 0059511c */
+iptr __cdecl spaceship_part_limit(); /* 00596b00 */
+undefined4 __cdecl spaceship_part_count(); /* 00596c08 */
+int __cdecl spaceship_group_limit(); /* 00596c61 */
+int __cdecl spaceship_group_max(); /* 00596ced */
+int __cdecl spaceship_group_count(); /* 00596d3c */
+int __cdecl spaceship_group_count_clamped(); /* 00596e06 */
 int __cdecl FUN_00596e92(); /* 00596e92 */
-void __cdecl FUN_00596eec(); /* 00596eec */
-void __cdecl FUN_005973fd(); /* 005973fd */
-void __cdecl FUN_0059772c(); /* 0059772c */
+void __cdecl spaceship_calc_stats(); /* 00596eec */
+void __cdecl spaceship_launch(); /* 005973fd */
+void __cdecl spaceship_status_dialog(); /* 0059772c */
 void __cdecl FUN_00597d4b(); /* 00597d4b */
-iptr __cdecl FUN_00597d6f(); /* 00597d6f */
-int __cdecl FUN_00598197(); /* 00598197 */
-undefined4 __cdecl FUN_00598a05(); /* 00598a05 */
-void __cdecl FUN_00598b4e(); /* 00598b4e */
+iptr __cdecl spaceship_choose_part_group(); /* 00597d6f */
+int __cdecl spaceship_add_part(); /* 00598197 */
+undefined4 __cdecl civ_spaceship_part_maxed(); /* 00598a05 */
+void __cdecl spaceship_select_view_dialog(); /* 00598b4e */
 void __cdecl FUN_00598cc7(); /* 00598cc7 */
-undefined4 __cdecl FUN_00598ceb(); /* 00598ceb */
-undefined4 __cdecl FUN_00598d45(); /* 00598d45 */
-uint __cdecl FUN_005998b0(); /* 005998b0 */
-undefined4 __cdecl FUN_00599910(); /* 00599910 */
-uint __cdecl FUN_005999c0(); /* 005999c0 */
+undefined4 __cdecl spaceship_race_active(); /* 00598ceb */
+undefined4 __cdecl ai_spaceship_race_behind(); /* 00598d45 */
+uint __cdecl spaceship_group_full(); /* 005998b0 */
+undefined4 __cdecl spaceship_group_can_build(); /* 00599910 */
+uint __cdecl spaceship_group_at_limit(); /* 005999c0 */
 void __thiscall FUN_00599a20(C_004083b0_a28 *this,iptr param_1); /* 00599a20 */
-void __thiscall FUN_00599b8d(C_004083b0_a28 *this); /* 00599b8d */
-void __thiscall FUN_0059a15d(C_004083b0_4 *this,iptr param_1); /* 0059a15d */
-void __thiscall FUN_0059a2e6(C_004083b0_a28 *this,iptr param_1); /* 0059a2e6 */
-int __cdecl FUN_0059a6f0(); /* 0059a6f0 */
-#undef FUN_0059a733
-float10 __cdecl FUN_0059a733(void); /* 0059a733, hand-written */
-#undef FUN_0059a791
-int __cdecl FUN_0059a791(int lo, int hi); /* 0059a791, hand-written */
+void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this); /* 00599b8d */
+void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1); /* 0059a15d */
+void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1); /* 0059a2e6 */
+int __cdecl rng_set_seed(); /* 0059a6f0 */
+#undef rng_next_unit
+float10 __cdecl rng_next_unit(void); /* 0059a733, hand-written */
+#undef rand_range
+int __cdecl rand_range(int lo, int hi); /* 0059a791, hand-written */
 void __cdecl FUN_0059a850(); /* 0059a850 */
-void __cdecl FUN_0059a86a(); /* 0059a86a */
-void __cdecl FUN_0059a884(); /* 0059a884 */
+void __cdecl net_session_static_init(); /* 0059a86a */
+void __cdecl net_session_reg_atexit(); /* 0059a884 */
 void __cdecl FUN_0059a8a1(); /* 0059a8a1 */
-C_0059a8bb * __thiscall FUN_0059a8bb(C_0059a8bb *this); /* 0059a8bb */
-void __thiscall FUN_0059a998(void *this); /* 0059a998 */
-void __thiscall FUN_0059ad40(void *this); /* 0059ad40 */
+NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this); /* 0059a8bb */
+void __thiscall net_session_clear(void *this); /* 0059a998 */
+void __thiscall net_session_dtor(void *this); /* 0059ad40 */
 void __cdecl FUN_0059adc8(); /* 0059adc8 */
-undefined1 __thiscall FUN_0059adef(void *this,undefined4 param_1,int param_2); /* 0059adef */
-void __thiscall FUN_0059b293(void *this,int param_1); /* 0059b293 */
+undefined1 __thiscall net_init_transport(void *this,undefined4 param_1,int param_2); /* 0059adef */
+void __thiscall net_session_shutdown(void *this,int param_1); /* 0059b293 */
 void __thiscall FUN_0059b55b(void *this); /* 0059b55b */
-void __thiscall FUN_0059b571(C_0047e94e *this,iptr param_1); /* 0059b571 */
-void __thiscall FUN_0059b7fc(C_0047e94e *this,iptr param_1); /* 0059b7fc */
-void __thiscall FUN_0059b96a(C_0047e94e *this,int param_1); /* 0059b96a */
-void __thiscall FUN_0059baf0(void *this); /* 0059baf0 */
+void __thiscall net_game_list_add(NetSession *this,iptr param_1); /* 0059b571 */
+void __thiscall net_add_player(NetSession *this,iptr param_1); /* 0059b7fc */
+void __thiscall net_remove_player(NetSession *this,int param_1); /* 0059b96a */
+void __thiscall net_free_game_list(void *this); /* 0059baf0 */
 void __cdecl FUN_0059bb54(int *param_1,ushort param_2); /* 0059bb54 */
 void __cdecl FUN_0059bc41(); /* 0059bc41 */
 void __cdecl FUN_0059bfb5(); /* 0059bfb5 */
 void __cdecl FUN_0059bfdb(short param_1); /* 0059bfdb */
 void __cdecl FUN_0059c04b(ushort param_1); /* 0059c04b */
 void __cdecl FUN_0059c0a4(); /* 0059c0a4 */
-void * __cdecl FUN_0059c0e1(); /* 0059c0e1 */
-void __cdecl FUN_0059c276(); /* 0059c276 */
-void __cdecl FUN_0059c2b8(); /* 0059c2b8 */
+void * __cdecl net_msg_build_packet(); /* 0059c0e1 */
+void __cdecl net_reset_msg_counts(); /* 0059c276 */
+void __cdecl net_reset_error_counts(); /* 0059c2b8 */
 void __cdecl FUN_0059c301(); /* 0059c301 */
-void __cdecl FUN_0059c31f(); /* 0059c31f */
-void __cdecl FUN_0059c575(); /* 0059c575 */
-C_0046d5a0_8 * __thiscall FUN_0059d080(C_0046d5a0_8 *this); /* 0059d080 */
+void __cdecl net_fill_game_info(); /* 0059c31f */
+void __cdecl casualty_log_add(); /* 0059c575 */
+NetMsgHeader * __thiscall FUN_0059d080(NetMsgHeader *this); /* 0059d080 */
 void __cdecl FUN_0059d190(); /* 0059d190 */
-void __cdecl FUN_0059d1aa(); /* 0059d1aa */
-void __cdecl FUN_0059d1ca(); /* 0059d1ca */
+void __cdecl dialog_text_font_static_init(); /* 0059d1aa */
+void __cdecl dialog_text_font_reg_atexit(); /* 0059d1ca */
 void __cdecl FUN_0059d1e7(); /* 0059d1e7 */
 void __cdecl FUN_0059d201(); /* 0059d201 */
-void __cdecl FUN_0059d21b(); /* 0059d21b */
-void __cdecl FUN_0059d239(); /* 0059d239 */
+void __cdecl dialog_title_font_static_init(); /* 0059d21b */
+void __cdecl dialog_title_font_reg_atexit(); /* 0059d239 */
 void __cdecl FUN_0059d256(); /* 0059d256 */
 void __cdecl FUN_0059d270(); /* 0059d270 */
-void __cdecl FUN_0059d28a(); /* 0059d28a */
-void __cdecl FUN_0059d2a8(); /* 0059d2a8 */
+void __cdecl dialog_list_font_static_init(); /* 0059d28a */
+void __cdecl dialog_list_font_reg_atexit(); /* 0059d2a8 */
 void __cdecl FUN_0059d2c5(); /* 0059d2c5 */
 void __cdecl FUN_0059d2df(); /* 0059d2df */
-void __cdecl FUN_0059d2f9(); /* 0059d2f9 */
-void __cdecl FUN_0059d317(); /* 0059d317 */
+void __cdecl dialog_plain_font_static_init(); /* 0059d2f9 */
+void __cdecl dialog_plain_font_reg_atexit(); /* 0059d317 */
 void __cdecl FUN_0059d334(); /* 0059d334 */
 void __cdecl FUN_0059d34e(); /* 0059d34e */
-void __cdecl FUN_0059d363(); /* 0059d363 */
+void __cdecl active_dialog_static_init(); /* 0059d363 */
 void __cdecl FUN_0059d37d(); /* 0059d37d */
 void __cdecl FUN_0059d397(); /* 0059d397 */
-void __cdecl FUN_0059d3b1(); /* 0059d3b1 */
-void __cdecl FUN_0059d3c9(); /* 0059d3c9 */
-void __cdecl FUN_0059d3e1(); /* 0059d3e1 */
-void __cdecl FUN_0059d401(); /* 0059d401 */
-void __cdecl FUN_0059d487(); /* 0059d487 */
-void __cdecl FUN_0059d4df(); /* 0059d4df */
+void __cdecl dlg_set_palette(); /* 0059d3b1 */
+void __cdecl dlg_set_parent_window(); /* 0059d3c9 */
+void __cdecl dialog_set_default_offset(); /* 0059d3e1 */
+void __cdecl dialog_load_button_labels(); /* 0059d401 */
+void __cdecl dialog_set_colors(); /* 0059d487 */
+void __cdecl dialog_set_list_colors(); /* 0059d4df */
 void __cdecl FUN_0059d527(); /* 0059d527 */
 void __cdecl FUN_0059d53f(); /* 0059d53f */
 void __cdecl FUN_0059d557(); /* 0059d557 */
 void __cdecl FUN_0059d56f(); /* 0059d56f */
-void __cdecl FUN_0059d59d(); /* 0059d59d */
-void __thiscall FUN_0059d5b5(C_0040bc40_28 *this,uint param_1); /* 0059d5b5 */
-void __thiscall FUN_0059d5f5(C_0040bc40_2f4 *this); /* 0059d5f5 */
-C_0040bc40_2f4 * __thiscall FUN_0059db08(C_0040bc40_2f4 *this,undefined4 param_1); /* 0059db08 */
-void __thiscall FUN_0059db65(C_0040bc40_2f4 *this); /* 0059db65 */
-undefined4 __thiscall FUN_0059df8a(C_0040bc40_2f4 *this); /* 0059df8a */
-void __thiscall FUN_0059dfb9(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,iptr param_3,u32 param_4); /* 0059dfb9 */
-undefined4 __thiscall FUN_0059e0eb(void *this,int param_1,iptr param_2); /* 0059e0eb */
-int * __thiscall FUN_0059e18b(C_0059e18b *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 0059e18b */
+void __cdecl dialog_set_frame_tile_surface(); /* 0059d59d */
+void __thiscall dialog_reset_string_pool(C_0040bc40_28 *this,uint param_1); /* 0059d5b5 */
+void __thiscall dialog_init_defaults(Dialog *this); /* 0059d5f5 */
+Dialog * __thiscall dialog_ctor(Dialog *this,undefined4 param_1); /* 0059db08 */
+void __thiscall dialog_close(Dialog *this); /* 0059db65 */
+undefined4 __thiscall dialog_dtor(Dialog *this); /* 0059df8a */
+void __thiscall dialog_init(Dialog *this,iptr param_1,iptr param_2,iptr param_3,u32 param_4); /* 0059dfb9 */
+undefined4 __thiscall dialog_set_item_text(void *this,int param_1,iptr param_2); /* 0059e0eb */
+int * __thiscall dialog_add_line(DialogAddLineView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 0059e18b */
 bool __thiscall FUN_0059e327(C_0059e327 *this); /* 0059e327 */
-undefined4 __thiscall FUN_0059e356(C_0040bc40_28 *this); /* 0059e356 */
-int __thiscall FUN_0059e376(C_0040bc40_28 *this); /* 0059e376 */
-u32 __thiscall FUN_0059e3fa(C_0040bc40_d8 *this); /* 0059e3fa */
-int __thiscall FUN_0059e448(C_0040bc40_28 *this); /* 0059e448 */
-void __thiscall FUN_0059e472(C_0040bc40_d8 *this,iptr param_1); /* 0059e472 */
-void __thiscall FUN_0059e4a4(C_0040bc40_28 *this,iptr param_1); /* 0059e4a4 */
-void __thiscall FUN_0059e4c5(C_0040bc40_28 *this,iptr param_1); /* 0059e4c5 */
-void __thiscall FUN_0059e4e6(C_0040bc40_3c *this,u32 param_1); /* 0059e4e6 */
-void __thiscall FUN_0059e507(C_0040bc40_d8 *this,u32 param_1); /* 0059e507 */
+undefined4 __thiscall dialog_option_icon_width(C_0040bc40_28 *this); /* 0059e356 */
+int __thiscall dialog_option_row_height(C_0040bc40_28 *this); /* 0059e376 */
+u32 __thiscall dialog_list_row_height(DialogTextView *this); /* 0059e3fa */
+int __thiscall dialog_edit_row_height(C_0040bc40_28 *this); /* 0059e448 */
+void __thiscall dialog_set_font(DialogTextView *this,iptr param_1); /* 0059e472 */
+void __thiscall dialog_set_title_font(C_0040bc40_28 *this,iptr param_1); /* 0059e4a4 */
+void __thiscall dialog_set_list_font(C_0040bc40_28 *this,iptr param_1); /* 0059e4c5 */
+void __thiscall dialog_set_columns(C_0040bc40_3c *this,u32 param_1); /* 0059e4e6 */
+void __thiscall dialog_set_list_rows(DialogTextView *this,u32 param_1); /* 0059e507 */
 void __thiscall FUN_0059e585(C_0059e585 *this,u32 param_1); /* 0059e585 */
-void __thiscall FUN_0059e5c9(C_0040bc40_d8 *this,int param_1,u32 param_2,u32 param_3); /* 0059e5c9 */
+void __thiscall dialog_set_listbox(DialogTextView *this,int param_1,u32 param_2,u32 param_3); /* 0059e5c9 */
 void __thiscall FUN_0059e624(C_0059e624 *this,u32 param_1); /* 0059e624 */
-int __thiscall FUN_0059e648(C_0040bc40_d8 *this); /* 0059e648 */
+int __thiscall dialog_line_height(DialogTextView *this); /* 0059e648 */
 int __thiscall FUN_0059e676(C_0059e676 *this,iptr param_1); /* 0059e676 */
-void __thiscall FUN_0059e6a9(C_0040bc40_228 *this,iptr param_1); /* 0059e6a9 */
-void __thiscall FUN_0059e6ff(C_0040bc40_228 *this,u32 param_1); /* 0059e6ff */
-void __thiscall FUN_0059e762(C_0040bc40_28 *this,u32 param_1); /* 0059e762 */
-void __thiscall FUN_0059e783(C_0040bc40_28 *this,u32 param_1,u32 param_2); /* 0059e783 */
-uptr __thiscall FUN_0059e7ad(C_0040bc40_268 *this,int param_1); /* 0059e7ad */
+void __thiscall dialog_set_title(DialogWindowView *this,iptr param_1); /* 0059e6a9 */
+void __thiscall dialog_set_width(DialogWindowView *this,u32 param_1); /* 0059e6ff */
+void __thiscall dialog_set_height(C_0040bc40_28 *this,u32 param_1); /* 0059e762 */
+void __thiscall dialog_set_position(C_0040bc40_28 *this,u32 param_1,u32 param_2); /* 0059e783 */
+uptr __thiscall dialog_find_option(DialogOptionList *this,int param_1); /* 0059e7ad */
 uptr __thiscall FUN_0059e812(C_0059e812 *this,int param_1); /* 0059e812 */
-int * __thiscall FUN_0059e877(C_0040bc40_268 *this,int param_1); /* 0059e877 */
-void __thiscall FUN_0059e8db(C_0040bc40_268 *this,iptr param_1,int param_2); /* 0059e8db */
-void __thiscall FUN_0059e927(C_0040bc40_268 *this,undefined4 param_1,int param_2); /* 0059e927 */
+int * __thiscall dialog_find_sprite(DialogOptionList *this,int param_1); /* 0059e877 */
+void __thiscall dialog_set_option_disabled(DialogOptionList *this,iptr param_1,int param_2); /* 0059e8db */
+void __thiscall FUN_0059e927(DialogOptionList *this,undefined4 param_1,int param_2); /* 0059e927 */
 void __thiscall FUN_0059e973(void *this); /* 0059e973 */
 void __thiscall FUN_0059e9b3(void *this); /* 0059e9b3 */
-undefined4 __thiscall FUN_0059e9f3(C_0040bc40_268 *this,undefined4 param_1); /* 0059e9f3 */
-void __thiscall FUN_0059ea4d(C_0040bc40_268 *this,undefined4 param_1,int param_2); /* 0059ea4d */
-void __thiscall FUN_0059ea99(C_0040bc40_268 *this,iptr param_1); /* 0059ea99 */
-void __thiscall FUN_0059eb0d(C_0059eb0d *this,int param_1,iptr param_2); /* 0059eb0d */
-void __thiscall FUN_0059eb42(C_0059eb0d *this,undefined4 param_1); /* 0059eb42 */
+undefined4 __thiscall dialog_option_is_checked(DialogOptionList *this,undefined4 param_1); /* 0059e9f3 */
+void __thiscall dialog_set_option_checked(DialogOptionList *this,undefined4 param_1,int param_2); /* 0059ea4d */
+void __thiscall dialog_set_default_choice(DialogOptionList *this,iptr param_1); /* 0059ea99 */
+void __thiscall dialog_get_edit_text(DialogEditTextView *this,int param_1,iptr param_2); /* 0059eb0d */
+void __thiscall FUN_0059eb42(DialogEditTextView *this,undefined4 param_1); /* 0059eb42 */
 void __thiscall FUN_0059eb68(C_0059eb68 *this,u32 param_1); /* 0059eb68 */
-void __thiscall FUN_0059eb8c(C_0040bc40_268 *this,iptr param_1); /* 0059eb8c */
-void __thiscall FUN_0059ebb0(C_0040bc40_268 *this,iptr param_1); /* 0059ebb0 */
-void __thiscall FUN_0059ebd4(C_0040bc40_28 *this,iptr param_1); /* 0059ebd4 */
-void __thiscall FUN_0059ebf8(C_0040bc40_268 *this,iptr param_1); /* 0059ebf8 */
-void __thiscall FUN_0059ec1c(C_0059ec1c *this,iptr param_1); /* 0059ec1c */
+void __thiscall dialog_set_sprite_click_fn(DialogOptionList *this,iptr param_1); /* 0059eb8c */
+void __thiscall dialog_set_sprite_dblclick_fn(DialogOptionList *this,iptr param_1); /* 0059ebb0 */
+void __thiscall dialog_set_sprite_draw_fn(C_0040bc40_28 *this,iptr param_1); /* 0059ebd4 */
+void __thiscall dialog_set_option_draw_fn(DialogOptionList *this,iptr param_1); /* 0059ebf8 */
+void __thiscall dialog_set_select_change_fn(DialogSelChangeSetView *this,iptr param_1); /* 0059ec1c */
 void __thiscall FUN_0059ec40(C_0059ec40 *this,u32 param_1); /* 0059ec40 */
-void __thiscall FUN_0059ec64(C_0040bc40_228 *this,u32 param_1); /* 0059ec64 */
-iptr * __thiscall FUN_0059ec88(C_0040bc40_268 *this,iptr param_1,iptr param_2,iptr param_3); /* 0059ec88 */
-uint * __thiscall FUN_0059edf0(C_0040bc40_268 *this,iptr param_1,iptr param_2,uint param_3); /* 0059edf0 */
-uint * __thiscall FUN_0059f026(C_0040bc40_268 *this,iptr param_1,iptr param_2,int param_3); /* 0059f026 */
-undefined4 * __thiscall FUN_0059f06d(C_0040bc40_268 *this,iptr param_1,iptr param_2,size_t param_3); /* 0059f06d */
-void __thiscall FUN_0059f2a3(C_0040bc40_3c *this,iptr param_1); /* 0059f2a3 */
-void __thiscall FUN_0059f31a(C_0040bc40_d8 *this,int param_1,int param_2,int param_3); /* 0059f31a */
-int __thiscall FUN_0059f3d7(C_0040bc40_d8 *this,iptr param_1,char *param_2,int param_3,int param_4,uint param_5); /* 0059f3d7 */
-void __thiscall FUN_0059f5ba(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 param_3); /* 0059f5ba */
-undefined4 __thiscall FUN_0059f5f7(C_0040bc40_268 *this); /* 0059f5f7 */
-int __thiscall FUN_0059f64a(C_0040bc40_268 *this,int param_1); /* 0059f64a */
-undefined4 __thiscall FUN_0059fb78(C_0040bc40_268 *this,uptr param_1); /* 0059fb78 */
-undefined4 __thiscall FUN_0059fc19(C_0040bc40_268 *this,int param_1); /* 0059fc19 */
-int __thiscall FUN_0059fcba(C_0040bc40_268 *this,uptr param_1); /* 0059fcba */
-void __thiscall FUN_0059fcf2(C_0040bc40_268 *this,int param_1); /* 0059fcf2 */
-undefined4 __thiscall FUN_0059fd2a(C_0040bc40_268 *this); /* 0059fd2a */
-void __thiscall FUN_005a0fea(C_005a0fea *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 005a0fea */
-void __thiscall FUN_005a1148(C_005a0fea *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 005a1148 */
-uint __thiscall FUN_005a120b(C_0040bc40_268 *this,iptr param_1,int param_2); /* 005a120b */
-void __thiscall FUN_005a14d2(C_0040bc40_268 *this); /* 005a14d2 */
-int __thiscall FUN_005a1766(C_0040bc40_d8 *this,int param_1); /* 005a1766 */
-int __thiscall FUN_005a17a4(C_0040bc40_d8 *this,int param_1); /* 005a17a4 */
-void __thiscall FUN_005a17e9(C_0040bc40_268 *this,uptr param_1,int param_2); /* 005a17e9 */
-int __cdecl FUN_005a1a44(); /* 005a1a44 */
-undefined4 __thiscall FUN_005a1a7d(C_0040bc40_268 *this,int param_1,int param_2); /* 005a1a7d */
-int __thiscall FUN_005a1c52(C_0040bc40_268 *this,int param_1); /* 005a1c52 */
-void __thiscall FUN_005a1caf(C_0040bc40_228 *this,int param_1,int param_2); /* 005a1caf */
+void __thiscall dialog_set_image_zoom(DialogWindowView *this,u32 param_1); /* 0059ec64 */
+iptr * __thiscall dialog_add_sprite(DialogOptionList *this,iptr param_1,iptr param_2,iptr param_3); /* 0059ec88 */
+uint * __thiscall dialog_add_option(DialogOptionList *this,iptr param_1,iptr param_2,uint param_3); /* 0059edf0 */
+uint * __thiscall dialog_add_checkbox_option(DialogOptionList *this,iptr param_1,iptr param_2,int param_3); /* 0059f026 */
+undefined4 * __thiscall dialog_add_edit_field(DialogOptionList *this,iptr param_1,iptr param_2,size_t param_3); /* 0059f06d */
+void __thiscall dialog_add_button(C_0040bc40_3c *this,iptr param_1); /* 0059f2a3 */
+void __thiscall dialog_set_text_color(DialogTextView *this,int param_1,int param_2,int param_3); /* 0059f31a */
+int __thiscall dialog_draw_text_shadowed(DialogTextView *this,iptr param_1,char *param_2,int param_3,int param_4,uint param_5); /* 0059f3d7 */
+void __thiscall dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 param_3); /* 0059f5ba */
+undefined4 __thiscall FUN_0059f5f7(DialogOptionList *this); /* 0059f5f7 */
+int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int param_1); /* 0059f64a */
+undefined4 __thiscall dialog_option_group_index(DialogOptionList *this,uptr param_1); /* 0059fb78 */
+undefined4 __thiscall dialog_option_at(DialogOptionList *this,int param_1); /* 0059fc19 */
+int __thiscall dialog_column_of_option(DialogOptionList *this,uptr param_1); /* 0059fcba */
+void __thiscall FUN_0059fcf2(DialogOptionList *this,int param_1); /* 0059fcf2 */
+undefined4 __thiscall dialog_compute_layout(DialogOptionList *this); /* 0059fd2a */
+void __thiscall dialog_draw_option_cell(DialogOptionDrawView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 005a0fea */
+void __thiscall dialog_draw_option_text(DialogOptionDrawView *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 005a1148 */
+uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param_2); /* 005a120b */
+void __thiscall dialog_draw_option_list(DialogOptionList *this); /* 005a14d2 */
+int __thiscall dialog_column_of_index(DialogTextView *this,int param_1); /* 005a1766 */
+int __thiscall dialog_column_start_index(DialogTextView *this,int param_1); /* 005a17a4 */
+void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int param_2); /* 005a17e9 */
+int __cdecl int_clamp_b(); /* 005a1a44 */
+undefined4 __thiscall dialog_option_at_point(DialogOptionList *this,int param_1,int param_2); /* 005a1a7d */
+int __thiscall dialog_count_group_options(DialogOptionList *this,int param_1); /* 005a1c52 */
+void __thiscall dialog_pick_pane_at(DialogWindowView *this,int param_1,int param_2); /* 005a1caf */
 void __cdecl FUN_005a1da3(); /* 005a1da3 */
-undefined4 __thiscall FUN_005a1e28(C_0040bc40_228 *this); /* 005a1e28 */
+undefined4 __thiscall dialog_create_window(DialogWindowView *this); /* 005a1e28 */
 void __cdecl FUN_005a20f4(); /* 005a20f4 */
-void __thiscall FUN_005a211c(C_0040bc40_2f4 *this); /* 005a211c */
+void __thiscall dialog_create_controls(Dialog *this); /* 005a211c */
 void __cdecl FUN_005a3bae(); /* 005a3bae */
-void __cdecl FUN_005a3c58(); /* 005a3c58 */
+void __cdecl dialog_end_current(); /* 005a3c58 */
 void __cdecl FUN_005a3c83(); /* 005a3c83 */
-void __cdecl FUN_005a3cca(); /* 005a3cca */
+void __cdecl dialog_on_sprite_click(); /* 005a3cca */
 void __cdecl FUN_005a3df3(); /* 005a3df3 */
-void __cdecl FUN_005a3e56(); /* 005a3e56 */
+void __cdecl dialog_on_button_click(); /* 005a3e56 */
 void __cdecl FUN_005a407f(); /* 005a407f */
 void __cdecl FUN_005a49c1(byte param_1); /* 005a49c1 */
 void __cdecl FUN_005a4df3(); /* 005a4df3 */
-void __cdecl FUN_005a4edf(); /* 005a4edf */
-void __cdecl FUN_005a535e(); /* 005a535e */
+void __cdecl dialog_list_on_mousemove(); /* 005a4edf */
+void __cdecl dialog_list_on_lbuttonup(); /* 005a535e */
 void __cdecl FUN_005a53b8(); /* 005a53b8 */
 void __cdecl FUN_005a5494(); /* 005a5494 */
 void __cdecl FUN_005a552c(); /* 005a552c */
 void __cdecl FUN_005a55b1(); /* 005a55b1 */
-void __thiscall FUN_005a5649(C_0040bc40_d8 *this,iptr param_1,int param_2); /* 005a5649 */
-void __thiscall FUN_005a577e(C_0040bc40_2f4 *this); /* 005a577e */
-u32 __thiscall FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2); /* 005a5f34 */
-undefined4 __thiscall FUN_005a632a(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5, iptr param_6,iptr param_7,uint param_8); /* 005a632a */
-void __cdecl FUN_005a6c23(); /* 005a6c23 */
-void __cdecl FUN_005a6c45(); /* 005a6c45 */
-C_0040f930 * __thiscall FUN_005a9320(C_0040f930 *this,uint param_1); /* 005a9320 */
-C_0040f380_3c * __thiscall FUN_005a93b0(C_0040f380_3c *this,uint param_1); /* 005a93b0 */
-C_0040f380_3c * __thiscall FUN_005a9440(C_0040f380_3c *this,uint param_1); /* 005a9440 */
-C_00418ea0 * __thiscall FUN_005a94d0(C_00418ea0 *this,uint param_1); /* 005a94d0 */
-C_00453aa0 * __thiscall FUN_005a9520(C_00453aa0 *this,uint param_1); /* 005a9520 */
-C_004083b0_114 * __thiscall FUN_005a95b0(C_004083b0_114 *this,uint param_1); /* 005a95b0 */
-void __thiscall FUN_005a9600(C_00408010_10 *this,iptr param_1); /* 005a9600 */
-void __thiscall FUN_005a9640(C_005a9640 *this); /* 005a9640 */
-void __thiscall FUN_005a9670(C_005a9670 *this,undefined4 param_1,iptr param_2); /* 005a9670 */
-void __thiscall FUN_005a96b0(C_005a96b0 *this,iptr param_1); /* 005a96b0 */
+void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_2); /* 005a5649 */
+void __thiscall dialog_render(Dialog *this); /* 005a577e */
+u32 __thiscall dialog_run_modal(Dialog *this,iptr param_1,iptr param_2); /* 005a5f34 */
+undefined4 __thiscall dialog_load_text_section(Dialog *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5, iptr param_6,iptr param_7,uint param_8); /* 005a632a */
+void __cdecl dlg_push_parent_window(); /* 005a6c23 */
+void __cdecl dlg_pop_parent_window(); /* 005a6c45 */
+Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint param_1); /* 005a9320 */
+Control * __thiscall edit_vector_dtor(Control *this,uint param_1); /* 005a93b0 */
+Control * __thiscall ctrl_vector_dtor(Control *this,uint param_1); /* 005a9440 */
+ListBoxControl * __thiscall listbox_scalar_dtor(ListBoxControl *this,uint param_1); /* 005a94d0 */
+Hotspot * __thiscall hotspot_vector_dtor(Hotspot *this,uint param_1); /* 005a9520 */
+SurfaceWindow * __thiscall surfwnd_scalar_dtor(SurfaceWindow *this,uint param_1); /* 005a95b0 */
+void __thiscall wnd_get_screen_rect(WndBase *this,iptr param_1); /* 005a9600 */
+void __thiscall checkbox_disable(CheckboxDisableView *this); /* 005a9640 */
+void __thiscall listbox_get_text(ListBoxTextView *this,undefined4 param_1,iptr param_2); /* 005a9670 */
+void __thiscall listbox_get_sel_text(ListBoxSelTextView *this,iptr param_1); /* 005a96b0 */
 uint __thiscall FUN_005a96f0(C_0040bc40_40 *this); /* 005a96f0 */
-void __thiscall FUN_005a9730(C_0040bc40_d8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005a9730 */
-void __cdecl FUN_005a9780(); /* 005a9780 */
-void __cdecl FUN_005a9798(); /* 005a9798 */
-void __cdecl FUN_005a97cc(); /* 005a97cc */
+void __thiscall dialog_draw_text_default_font(DialogTextView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005a9730 */
+void __cdecl gfx_set_draw_target(); /* 005a9780 */
+void __cdecl gfx_draw_line_color(); /* 005a9798 */
+void __cdecl gfx_draw_hline(); /* 005a97cc */
 void __cdecl FUN_005a9811(); /* 005a9811 */
-void __cdecl FUN_005a9858(); /* 005a9858 */
+void __cdecl gfx_draw_vline(); /* 005a9858 */
 void __cdecl FUN_005a989d(); /* 005a989d */
-void __cdecl FUN_005a98e4(); /* 005a98e4 */
-void __cdecl FUN_005a9964(); /* 005a9964 */
-void __cdecl FUN_005a99fc(); /* 005a99fc */
-void __cdecl FUN_005a9aa3(); /* 005a9aa3 */
-void __cdecl FUN_005a9abf(); /* 005a9abf */
-void __cdecl FUN_005a9afe(); /* 005a9afe */
-int __cdecl FUN_005a9b5d(); /* 005a9b5d */
+void __cdecl gfx_draw_box_ltrb(); /* 005a98e4 */
+void __cdecl gfx_draw_frame_rect(); /* 005a9964 */
+void __cdecl gfx_draw_bevel_rect(); /* 005a99fc */
+void __cdecl gfx_fill_surface(); /* 005a9aa3 */
+void __cdecl gfx_fill_rect_xywh(); /* 005a9abf */
+void __cdecl gfx_copy_rect_xywh(); /* 005a9afe */
+int __cdecl gfx_tile_fill(); /* 005a9b5d */
 void __cdecl FUN_005a9ce9(); /* 005a9ce9 */
 void __cdecl FUN_005a9f30(); /* 005a9f30 */
 void __cdecl FUN_005aa004(); /* 005aa004 */
-#undef FUN_005aa0e5
-void __cdecl FUN_005aa0e5(void); /* 005aa0e5, hand-written */
+#undef net_host_turn_loop
+void __cdecl net_host_turn_loop(void); /* 005aa0e5, hand-written */
 void __cdecl FUN_005ab07f(); /* 005ab07f */
 void __cdecl FUN_005ab0a3(); /* 005ab0a3 */
 void __cdecl FUN_005ab120(); /* 005ab120 */
 void __cdecl FUN_005ab19d(); /* 005ab19d */
 void __cdecl FUN_005ab23a(); /* 005ab23a */
-undefined4 __cdecl FUN_005ab2d5(); /* 005ab2d5 */
+undefined4 __cdecl net_client_turn_loop(); /* 005ab2d5 */
 void __cdecl FUN_005abfdb(); /* 005abfdb */
-void __thiscall FUN_005ac840(C_004083b0_61c *this,iptr param_1); /* 005ac840 */
-void __thiscall FUN_005ac9ad(C_004083b0_a28 *this); /* 005ac9ad */
-void __thiscall FUN_005ad998(C_004083b0_a28 *this,iptr param_1); /* 005ad998 */
-int __cdecl FUN_005adfa0(); /* 005adfa0 */
-void __cdecl FUN_005adfd9(); /* 005adfd9 */
-int __cdecl FUN_005ae006(); /* 005ae006 */
+void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1); /* 005ac840 */
+void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this); /* 005ac9ad */
+void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1); /* 005ad998 */
+int __cdecl int_clamp(); /* 005adfa0 */
+void __cdecl int_swap(); /* 005adfd9 */
+int __cdecl bits_count8(); /* 005ae006 */
 iptr __cdecl map_wrap_x(); /* 005ae052 */
 int __cdecl coarse_wrap_x(); /* 005ae0b0 */
-int __cdecl FUN_005ae10e(); /* 005ae10e */
+int __cdecl map_dx_wrapped(); /* 005ae10e */
 int __cdecl FUN_005ae17d(); /* 005ae17d */
-int __cdecl FUN_005ae1b0(); /* 005ae1b0 */
-int __cdecl FUN_005ae24d(); /* 005ae24d */
-int __cdecl FUN_005ae296(); /* 005ae296 */
-undefined4 __cdecl FUN_005ae31d(); /* 005ae31d */
+int __cdecl map_distance(); /* 005ae1b0 */
+int __cdecl map_half_manhattan(); /* 005ae24d */
+int __cdecl dist_from_deltas(); /* 005ae296 */
+undefined4 __cdecl map_distance_diag(); /* 005ae31d */
 undefined4 __cdecl FUN_005ae37b(); /* 005ae37b */
-void __cdecl FUN_005ae3bf(); /* 005ae3bf */
-int __cdecl FUN_005ae3ec(); /* 005ae3ec */
+void __cdecl bit_index_split(); /* 005ae3bf */
+int __cdecl int_shift_signed(); /* 005ae3ec */
 undefined4 __cdecl FUN_005ae580(); /* 005ae580 */
 void __cdecl FUN_005aebef(); /* 005aebef */
 void __cdecl FUN_005aec14(); /* 005aec14 */
 void __cdecl FUN_005aed0d(); /* 005aed0d */
-void __cdecl FUN_005aef20(); /* 005aef20 */
-void __cdecl FUN_005af140(); /* 005af140 */
-void __cdecl FUN_005af343(); /* 005af343 */
-int __cdecl FUN_005af4ae(); /* 005af4ae */
-void __cdecl FUN_005af682(); /* 005af682 */
+void __cdecl unit_editor_load_rules(); /* 005aef20 */
+void __cdecl unit_editor_store_rules(); /* 005af140 */
+void __cdecl unit_editor_load_controls(); /* 005af343 */
+int __cdecl unit_editor_store_controls(); /* 005af4ae */
+void __cdecl unit_editor_redraw(); /* 005af682 */
 undefined4 __cdecl FUN_005af69d(); /* 005af69d */
 void __cdecl FUN_005af9e3(); /* 005af9e3 */
 void __cdecl FUN_005afbca(); /* 005afbca */
@@ -3207,76 +3207,76 @@ void __cdecl FUN_005afd3b(); /* 005afd3b */
 void __cdecl FUN_005afd9a(); /* 005afd9a */
 void __cdecl FUN_005afdc2(); /* 005afdc2 */
 void __cdecl FUN_005afe15(); /* 005afe15 */
-void __cdecl FUN_005afe84(); /* 005afe84 */
+void __cdecl unit_editor_set_flag_check(); /* 005afe84 */
 void __cdecl FUN_005afea8(); /* 005afea8 */
-void __cdecl FUN_005b02a5(); /* 005b02a5 */
+void __cdecl unit_editor_update_domain_ctrls(); /* 005b02a5 */
 void __cdecl FUN_005b0373(); /* 005b0373 */
-void __thiscall FUN_005b0473(C_004083b0_430 *this,int param_1); /* 005b0473 */
-void __thiscall FUN_005b08e8(C_004083b0_430 *this,int param_1); /* 005b08e8 */
-void __thiscall FUN_005b09dc(C_004083b0_430 *this); /* 005b09dc */
-void __thiscall FUN_005b1037(C_004083b0_430 *this); /* 005b1037 */
+void __thiscall unit_editor_create_combo(C_004083b0_430 *this,int param_1); /* 005b0473 */
+void __thiscall unit_editor_create_edit(C_004083b0_430 *this,int param_1); /* 005b08e8 */
+void __thiscall unit_editor_paint(C_004083b0_430 *this); /* 005b09dc */
+void __thiscall unit_editor_window_run(C_004083b0_430 *this); /* 005b1037 */
 void __cdecl FUN_005b1a05(); /* 005b1a05 */
-void __cdecl FUN_005b1a29(); /* 005b1a29 */
+void __cdecl unit_editor_run(); /* 005b1a29 */
 void __cdecl FUN_005b1a82(); /* 005b1a82 */
-undefined4 __cdecl FUN_005b2590(); /* 005b2590 */
-int __cdecl FUN_005b29aa(); /* 005b29aa */
-int __cdecl FUN_005b29d7(); /* 005b29d7 */
-uint __cdecl FUN_005b2a39(); /* 005b2a39 */
-int __cdecl FUN_005b2c3d(); /* 005b2c3d */
-iptr __cdecl FUN_005b2c82(); /* 005b2c82 */
-iptr __cdecl FUN_005b2cc3(); /* 005b2cc3 */
-iptr __cdecl FUN_005b2d39(); /* 005b2d39 */
-undefined4 __cdecl FUN_005b2daf(); /* 005b2daf */
-undefined4 __cdecl FUN_005b2e69(); /* 005b2e69 */
-void __cdecl FUN_005b2f50(); /* 005b2f50 */
-int __cdecl FUN_005b2f92(); /* 005b2f92 */
+undefined4 __cdecl unit_stack_validate(); /* 005b2590 */
+int __cdecl unit_max_hp(); /* 005b29aa */
+int __cdecl unit_hp_remaining(); /* 005b29d7 */
+uint __cdecl unit_max_moves(); /* 005b2a39 */
+int __cdecl unit_moves_left(); /* 005b2c3d */
+iptr __cdecl unit_next_in_stack(); /* 005b2c82 */
+iptr __cdecl unit_stack_last(); /* 005b2cc3 */
+iptr __cdecl unit_stack_first(); /* 005b2d39 */
+undefined4 __cdecl unit_stack_first_at(); /* 005b2daf */
+undefined4 __cdecl tile_first_unit(); /* 005b2e69 */
+void __cdecl unit_set_sleep(); /* 005b2f50 */
+int __cdecl unit_stack_nth(); /* 005b2f92 */
 int __cdecl FUN_005b3007(); /* 005b3007 */
 iptr __cdecl FUN_005b3046(iptr param_1,int param_2,u8 param_3); /* 005b3046 */
 int __cdecl FUN_005b30e9(); /* 005b30e9 */
 int __cdecl FUN_005b3136(iptr param_1,u8 param_2); /* 005b3136 */
-void __cdecl FUN_005b319e(); /* 005b319e */
-void __cdecl FUN_005b345f(); /* 005b345f */
-void __cdecl FUN_005b36df(); /* 005b36df */
-void __cdecl FUN_005b3863(); /* 005b3863 */
-void __cdecl FUN_005b389f(); /* 005b389f */
-void __cdecl FUN_005b3ae0(); /* 005b3ae0 */
-void __cdecl FUN_005b3b78(); /* 005b3b78 */
+void __cdecl unit_stack_unlink(); /* 005b319e */
+void __cdecl unit_stack_link(); /* 005b345f */
+void __cdecl unit_relocate(); /* 005b36df */
+void __cdecl unit_relocate_in_place(); /* 005b3863 */
+void __cdecl unit_move_to_stack_bottom(); /* 005b389f */
+void __cdecl unit_stack_relocate_all(); /* 005b3ae0 */
+void __cdecl unit_stack_ships_to_top(); /* 005b3b78 */
 undefined4 __cdecl FUN_005b3cd4(); /* 005b3cd4 */
-iptr __cdecl FUN_005b3d06(); /* 005b3d06 */
-void __cdecl FUN_005b4391(); /* 005b4391 */
-void __cdecl FUN_005b47fa(); /* 005b47fa */
-void __cdecl FUN_005b488a(); /* 005b488a */
-void __cdecl FUN_005b48b1(); /* 005b48b1 */
-void __cdecl FUN_005b490e(); /* 005b490e */
-void __cdecl FUN_005b496e(); /* 005b496e */
-uint __cdecl FUN_005b49cf(); /* 005b49cf */
-uint __cdecl FUN_005b4b66(); /* 005b4b66 */
-uint __cdecl FUN_005b4c63(); /* 005b4c63 */
-undefined4 __cdecl FUN_005b4d8c(); /* 005b4d8c */
-uint __cdecl FUN_005b4de2(); /* 005b4de2 */
-void __cdecl FUN_005b4ee2(); /* 005b4ee2 */
+iptr __cdecl unit_create(); /* 005b3d06 */
+void __cdecl unit_delete(); /* 005b4391 */
+void __cdecl unit_stack_delete_all(); /* 005b47fa */
+void __cdecl unit_clear_visibility(); /* 005b488a */
+void __cdecl unit_stack_clear_visibility(); /* 005b48b1 */
+void __cdecl unit_set_seen_by(); /* 005b490e */
+void __cdecl unit_stack_set_seen_by(); /* 005b496e */
+uint __cdecl tile_adjacent_nonallied_civ(); /* 005b49cf */
+uint __cdecl tile_adjacent_nonallied_unit(); /* 005b4b66 */
+uint __cdecl tile_zoc_unit_adjacent(); /* 005b4c63 */
+undefined4 __cdecl tile_in_enemy_zoc(); /* 005b4d8c */
+uint __cdecl tile_adjacent_to_civ(); /* 005b4de2 */
+void __cdecl unit_stack_add_visibility(); /* 005b4ee2 */
 uint __cdecl FUN_005b4f3c(); /* 005b4f3c */
 void __cdecl FUN_005b4fca(); /* 005b4fca */
 undefined4 __cdecl FUN_005b503b(); /* 005b503b */
-int __cdecl FUN_005b50ad(); /* 005b50ad */
-int __cdecl FUN_005b53b6(); /* 005b53b6 */
-int __cdecl FUN_005b542e(); /* 005b542e */
-void __cdecl FUN_005b5bab(); /* 005b5bab */
-void __cdecl FUN_005b5d93(); /* 005b5d93 */
-void __cdecl FUN_005b6042(); /* 005b6042 */
+int __cdecl unit_stack_sum(); /* 005b50ad */
+int __cdecl unit_stack_count_role(); /* 005b53b6 */
+int __cdecl unit_gather_cargo(); /* 005b542e */
+void __cdecl unit_lift_off_map(); /* 005b5bab */
+void __cdecl unit_delete_with_cargo(); /* 005b5d93 */
+void __cdecl unit_destroy_redraw(); /* 005b6042 */
 int __cdecl FUN_005b620a(); /* 005b620a */
 void __cdecl FUN_005b62ee(iptr param_1,i8 param_2); /* 005b62ee */
-undefined4 __cdecl FUN_005b633f(); /* 005b633f */
-undefined4 __cdecl FUN_005b6458(); /* 005b6458 */
-iptr __cdecl FUN_005b6512(); /* 005b6512 */
-void __cdecl FUN_005b6787(); /* 005b6787 */
-iptr __cdecl FUN_005b67af(); /* 005b67af */
-int __cdecl FUN_005b6898(); /* 005b6898 */
-undefined4 __cdecl FUN_005b68f6(); /* 005b68f6 */
+undefined4 __cdecl unit_is_selectable(); /* 005b633f */
+undefined4 __cdecl unit_is_awake_with_moves(); /* 005b6458 */
+iptr __cdecl unit_find_nearest_selectable(); /* 005b6512 */
+void __cdecl unit_exhaust_moves(); /* 005b6787 */
+iptr __cdecl unit_find_nearest(); /* 005b67af */
+int __cdecl unit_home_city_name(); /* 005b6898 */
+undefined4 __cdecl ai_tile_improve_choice(); /* 005b68f6 */
 undefined4 __cdecl FUN_005b6a58(); /* 005b6a58 */
 undefined4 __cdecl FUN_005b6aa0(); /* 005b6aa0 */
 void __cdecl FUN_005b6ab5(); /* 005b6ab5 */
-undefined4 __cdecl FUN_005b6aea(); /* 005b6aea */
+undefined4 __cdecl unit_stack_select_dialog(); /* 005b6aea */
 void __cdecl FUN_005b6d9f(); /* 005b6d9f */
 void __cdecl FUN_005b6dab(); /* 005b6dab */
 void __cdecl map_alloc(); /* 005b7fe0 */
@@ -3295,808 +3295,808 @@ int __cdecl tile_radius_civ(); /* 005b8af0 */
 void __cdecl tile_update_known(); /* 005b8b1a */
 uint __cdecl tile_visible_to(); /* 005b8b65 */
 void __cdecl tile_set_visible_to(); /* 005b8bac */
-uint __cdecl FUN_005b8c18(); /* 005b8c18 */
-int __cdecl FUN_005b8c42(); /* 005b8c42 */
+uint __cdecl tile_get_fertility(); /* 005b8c18 */
+int __cdecl tile_owner_or_fertility(); /* 005b8c42 */
 undefined4 __cdecl tile_city_owner(); /* 005b8ca6 */
 undefined4 __cdecl tile_airbase_owner(); /* 005b8d15 */
 undefined4 __cdecl tile_unit_owner(); /* 005b8d62 */
 int __cdecl tile_city_or_unit_owner(); /* 005b8da4 */
-undefined4 __cdecl FUN_005b8dec(); /* 005b8dec */
+undefined4 __cdecl tile_owner_at_peace(); /* 005b8dec */
 undefined4 __cdecl tile_resource(); /* 005b8ee1 */
 undefined4 __cdecl tile_has_hut(); /* 005b8ffa */
 void __cdecl tile_add_pollution(); /* 005b90df */
 void __cdecl nuclear_blast(); /* 005b9179 */
-uint __cdecl FUN_005b9431(); /* 005b9431 */
-int __cdecl FUN_005b947f(); /* 005b947f */
+uint __cdecl landmass_borders_body(); /* 005b9431 */
+int __cdecl landmass_count_bordering(); /* 005b947f */
 uint __cdecl tile_improvements(); /* 005b94d5 */
 void __cdecl tile_set_improvements(); /* 005b94fc */
 void __cdecl tile_set_terrain(); /* 005b9646 */
 void __cdecl tile_set_visible(); /* 005b976d */
-void __cdecl FUN_005b98b7(); /* 005b98b7 */
+void __cdecl tile_set_fertility(); /* 005b98b7 */
 void __cdecl tile_set_owner(); /* 005b99e8 */
 void __cdecl tile_set_landmass(); /* 005b9b35 */
 void __cdecl tile_set_radius_civ(); /* 005b9c49 */
 void __cdecl known_set(); /* 005b9d81 */
-void __cdecl FUN_005b9ec6(); /* 005b9ec6 */
-void __cdecl FUN_005b9f1c(); /* 005b9f1c */
-void __cdecl FUN_005b9fde(); /* 005b9fde */
-void __cdecl FUN_005ba206(); /* 005ba206 */
-int __cdecl FUN_005bad40(); /* 005bad40 */
-char * __cdecl FUN_005badf0(); /* 005badf0 */
-void __cdecl FUN_005baeb0(); /* 005baeb0 */
-void __cdecl FUN_005baec8(); /* 005baec8 */
-void __cdecl FUN_005baee0(); /* 005baee0 */
+void __cdecl net_batch_begin(); /* 005b9ec6 */
+void __cdecl net_batch_flush(); /* 005b9f1c */
+void __cdecl net_batch_add(); /* 005b9fde */
+void __cdecl net_apply_tile_updates(); /* 005ba206 */
+int __cdecl str_parse_binary(); /* 005bad40 */
+char * __cdecl path_join_upper(); /* 005badf0 */
+void __cdecl text_set_surface(); /* 005baeb0 */
+void __cdecl text_set_font(); /* 005baec8 */
+void __cdecl text_set_colors(); /* 005baee0 */
 void __cdecl FUN_005baf24(); /* 005baf24 */
-int __cdecl FUN_005baf57(); /* 005baf57 */
-int __cdecl FUN_005bb024(); /* 005bb024 */
-int __cdecl FUN_005bb0af(); /* 005bb0af */
-void __thiscall FUN_005bb3f0(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005bb3f0 */
-void __thiscall FUN_005bb463(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005bb463 */
-void __thiscall FUN_005bb4ae(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005bb4ae */
-void __thiscall FUN_005bb525(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9); /* 005bb525 */
-void __thiscall FUN_005bb574(C_004083b0_114 *this); /* 005bb574 */
-bool __thiscall FUN_005bb5be(C_004083b0_48 *this,iptr param_1); /* 005bb5be */
-void __thiscall FUN_005bb621(C_004083b0_114 *this,int param_1,int param_2); /* 005bb621 */
-void __thiscall FUN_005bb6c7(C_004083b0_4 *this,int param_1,int param_2); /* 005bb6c7 */
-void __thiscall FUN_005bb760(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005bb760 */
-void __thiscall FUN_005bb7c3(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005bb7c3 */
-void __thiscall FUN_005bb80a(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005bb80a */
-void __thiscall FUN_005bb871(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8); /* 005bb871 */
-u32 __thiscall FUN_005bb8c0(C_005bb8c0 *this); /* 005bb8c0 */
-void __thiscall FUN_005bb8e0(C_005bb8e0 *this,undefined4 param_1,undefined4 param_2); /* 005bb8e0 */
-void __thiscall FUN_005bb910(C_005bb910 *this,iptr param_1,iptr param_2); /* 005bb910 */
-void __thiscall FUN_005bb950(C_005bb950 *this,iptr param_1,iptr param_2); /* 005bb950 */
-void __thiscall FUN_005bb990(C_004083b0_114 *this); /* 005bb990 */
-void __cdecl FUN_005bb9c0(); /* 005bb9c0 */
+int __cdecl text_draw_shadowed(); /* 005baf57 */
+int __cdecl text_draw_centered(); /* 005bb024 */
+int __cdecl text_draw_right_aligned(); /* 005bb0af */
+void __thiscall surface_wnd_create(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005bb3f0 */
+void __thiscall FUN_005bb463(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005bb463 */
+void __thiscall wnd_create_with_surface(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005bb4ae */
+void __thiscall FUN_005bb525(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9); /* 005bb525 */
+void __thiscall wnd_repaint(SurfaceWindow *this); /* 005bb574 */
+bool __thiscall FUN_005bb5be(DibSurface *this,iptr param_1); /* 005bb5be */
+void __thiscall surfwnd_on_resize(SurfaceWindow *this,int param_1,int param_2); /* 005bb621 */
+void __thiscall wnd_resize_clamped(C_004083b0_4 *this,int param_1,int param_2); /* 005bb6c7 */
+void __thiscall surface_wnd_create_nopal(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005bb760 */
+void __thiscall FUN_005bb7c3(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005bb7c3 */
+void __thiscall surface_wnd_create_child_nopal(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005bb80a */
+void __thiscall FUN_005bb871(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8); /* 005bb871 */
+u32 __thiscall wnd_get_palette_obj(WndPaletteObjView *this); /* 005bb8c0 */
+void __thiscall wnd_set_client_size(WndClientSizeView *this,undefined4 param_1,undefined4 param_2); /* 005bb8e0 */
+void __thiscall wnd_get_min_size(WndMinSizeView *this,iptr param_1,iptr param_2); /* 005bb910 */
+void __thiscall wnd_get_max_size(WndMaxSizeView *this,iptr param_1,iptr param_2); /* 005bb950 */
+void __thiscall wnd_call_paint_cb(SurfaceWindow *this); /* 005bb990 */
+void __cdecl win_drain_input_msgs(); /* 005bb9c0 */
 void __cdecl FUN_005bba1d(); /* 005bba1d */
-undefined4 __cdecl FUN_005bba4f(); /* 005bba4f */
-uint __cdecl FUN_005bbab8(); /* 005bbab8 */
-void __cdecl FUN_005bbb0a(); /* 005bbb0a */
-void __cdecl FUN_005bbb32(); /* 005bbb32 */
-void __cdecl FUN_005bbb5a(); /* 005bbb5a */
-uint __cdecl FUN_005bbb76(); /* 005bbb76 */
-void __cdecl FUN_005bbbce(); /* 005bbbce */
-undefined4 * __cdecl FUN_005bbc10(); /* 005bbc10 */
-void __cdecl FUN_005bbfee(); /* 005bbfee */
-void __cdecl FUN_005bc019(); /* 005bc019 */
+undefined4 __cdecl win_dispatch_one_message(); /* 005bba4f */
+uint __cdecl win_dispatch_one_paint(); /* 005bbab8 */
+void __cdecl win_dispatch_all_messages(); /* 005bbb0a */
+void __cdecl win_dispatch_all_paints(); /* 005bbb32 */
+void __cdecl app_launch_program(); /* 005bbb5a */
+uint __cdecl win_dispatch_one_custom_msg(); /* 005bbb76 */
+void __cdecl win_dispatch_custom_msgs(); /* 005bbbce */
+undefined4 * __cdecl wnd_obj_create(); /* 005bbc10 */
+void __cdecl wnd_obj_enable(); /* 005bbfee */
+void __cdecl wnd_obj_set_kind(); /* 005bc019 */
 undefined4 __cdecl FUN_005bc032(); /* 005bc032 */
 void __cdecl FUN_005bc07e(); /* 005bc07e */
-undefined4 __cdecl FUN_005bc0ab(); /* 005bc0ab */
+undefined4 __cdecl wnd_obj_destroy(); /* 005bc0ab */
 void __cdecl FUN_005bc173(); /* 005bc173 */
-void __cdecl FUN_005bc1b5(); /* 005bc1b5 */
-void __cdecl FUN_005bc1db(); /* 005bc1db */
-void __cdecl FUN_005bc280(); /* 005bc280 */
+void __cdecl wnd_list_add_hwnd(); /* 005bc1b5 */
+void __cdecl wnd_stack_remove(); /* 005bc1db */
+void __cdecl wnd_obj_set_bg_color(); /* 005bc280 */
 void __cdecl FUN_005bc35e(iptr param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4); /* 005bc35e */
 void __cdecl FUN_005bc3bf(); /* 005bc3bf */
 void __cdecl FUN_005bc3d8(); /* 005bc3d8 */
-void __cdecl FUN_005bc3f1(); /* 005bc3f1 */
-void __cdecl FUN_005bc40a(); /* 005bc40a */
-void __cdecl FUN_005bc44d(); /* 005bc44d */
+void __cdecl wnd_obj_set_bg_surface(); /* 005bc3f1 */
+void __cdecl wnd_obj_show_raise(); /* 005bc40a */
+void __cdecl wnd_obj_hide(); /* 005bc44d */
 void __cdecl FUN_005bc476(); /* 005bc476 */
-void __cdecl FUN_005bc4a1(); /* 005bc4a1 */
-void __cdecl FUN_005bc505(); /* 005bc505 */
-void __cdecl FUN_005bc5da(); /* 005bc5da */
+void __cdecl wnd_obj_move_xy(); /* 005bc4a1 */
+void __cdecl wnd_obj_set_client_size(); /* 005bc505 */
+void __cdecl wnd_obj_maximize(); /* 005bc5da */
 BOOL __cdecl FUN_005bc603(); /* 005bc603 */
-void __cdecl FUN_005bc636(); /* 005bc636 */
+void __cdecl wnd_obj_minimize(); /* 005bc636 */
 BOOL __cdecl FUN_005bc65f(); /* 005bc65f */
-void __cdecl FUN_005bc692(); /* 005bc692 */
-void __cdecl FUN_005bc6bb(); /* 005bc6bb */
+void __cdecl wnd_obj_show_restored(); /* 005bc692 */
+void __cdecl wnd_obj_validate_rect(); /* 005bc6bb */
 void __cdecl FUN_005bc6e6(); /* 005bc6e6 */
-void __cdecl FUN_005bc713(); /* 005bc713 */
-void __cdecl FUN_005bc763(); /* 005bc763 */
-LONG __cdecl FUN_005bc933(); /* 005bc933 */
-LONG __cdecl FUN_005bc96b(); /* 005bc96b */
-void __cdecl FUN_005bc9a3(); /* 005bc9a3 */
-int __cdecl FUN_005bc9d3(); /* 005bc9d3 */
-int __cdecl FUN_005bca3d(); /* 005bca3d */
-void __cdecl FUN_005bcaa7(); /* 005bcaa7 */
+void __cdecl wnd_obj_move_to_rect(); /* 005bc713 */
+void __cdecl wnd_obj_center(); /* 005bc763 */
+LONG __cdecl wnd_obj_client_width(); /* 005bc933 */
+LONG __cdecl wnd_obj_client_height(); /* 005bc96b */
+void __cdecl wnd_obj_get_screen_rect(); /* 005bc9a3 */
+int __cdecl wnd_obj_frame_width(); /* 005bc9d3 */
+int __cdecl wnd_obj_frame_height(); /* 005bca3d */
+void __cdecl gfx_get_screen_rect(); /* 005bcaa7 */
 void __cdecl FUN_005bcad7(); /* 005bcad7 */
 void __cdecl FUN_005bcb26(); /* 005bcb26 */
-void __cdecl FUN_005bcb85(); /* 005bcb85 */
-void __cdecl FUN_005bcc11(); /* 005bcc11 */
-void __cdecl FUN_005bcc8d(); /* 005bcc8d */
-void __cdecl FUN_005bcce2(); /* 005bcce2 */
-void __cdecl FUN_005bcd66(); /* 005bcd66 */
-void __cdecl FUN_005bcdc3(); /* 005bcdc3 */
-void __cdecl FUN_005bcdfc(); /* 005bcdfc */
-void __cdecl FUN_005bce5f(); /* 005bce5f */
+void __cdecl wnd_obj_get_rect_in_parent(); /* 005bcb85 */
+void __cdecl dib_blit_to_wnd_obj(); /* 005bcc11 */
+void __cdecl dib_blit_to_dib(); /* 005bcc8d */
+void __cdecl dib_stretch_to_wnd_obj(); /* 005bcce2 */
+void __cdecl dib_stretch_to_dib(); /* 005bcd66 */
+void __cdecl wnd_obj_select_palette(); /* 005bcdc3 */
+void __cdecl wnd_obj_attach_menu(); /* 005bcdfc */
+void __cdecl wnd_obj_set_icon(); /* 005bce5f */
 HCURSOR __cdecl FUN_005bceee(); /* 005bceee */
 void __cdecl FUN_005bcf1c(); /* 005bcf1c */
 void __cdecl FUN_005bcf40(); /* 005bcf40 */
 void __cdecl FUN_005bcf5a(); /* 005bcf5a */
-void __cdecl FUN_005bcfa0(); /* 005bcfa0 */
+void __cdecl ui_show_mouse_cursor(); /* 005bcfa0 */
 void __cdecl FUN_005bcfb8(); /* 005bcfb8 */
-void __cdecl FUN_005bcfdd(); /* 005bcfdd */
+void __cdecl wnd_obj_set_cursor_now(); /* 005bcfdd */
 void __cdecl FUN_005bd023(); /* 005bd023 */
-void __cdecl FUN_005bd05f(); /* 005bd05f */
-void __cdecl FUN_005bd0e7(); /* 005bd0e7 */
-void __cdecl FUN_005bd120(); /* 005bd120 */
-void __cdecl FUN_005bd14c(); /* 005bd14c */
-void __cdecl FUN_005bd1c5(); /* 005bd1c5 */
-void __cdecl FUN_005bd248(); /* 005bd248 */
-void __cdecl FUN_005bd270(); /* 005bd270 */
-int __cdecl FUN_005bd298(); /* 005bd298 */
-int __cdecl FUN_005bd39e(); /* 005bd39e */
-void __cdecl FUN_005bd48f(); /* 005bd48f */
-uint __cdecl FUN_005bd4cd(); /* 005bd4cd */
-bool __cdecl FUN_005bd500(); /* 005bd500 */
-void __cdecl FUN_005bd533(); /* 005bd533 */
-void __cdecl FUN_005bd550(); /* 005bd550 */
+void __cdecl wnd_obj_set_cursor(); /* 005bd05f */
+void __cdecl wnd_obj_focus_and_raise(); /* 005bd0e7 */
+void __cdecl wnd_obj_set_focus(); /* 005bd120 */
+void __cdecl wnd_obj_disable_owner(); /* 005bd14c */
+void __cdecl wnd_obj_enable_owner(); /* 005bd1c5 */
+void __cdecl wnd_obj_set_caption_height(); /* 005bd248 */
+void __cdecl wnd_obj_set_resize_border(); /* 005bd270 */
+int __cdecl wnd_check_mouse_release(); /* 005bd298 */
+int __cdecl input_poll_modifier(); /* 005bd39e */
+void __cdecl wnd_obj_get_cursor_pos(); /* 005bd48f */
+uint __cdecl input_lbutton_down(); /* 005bd4cd */
+bool __cdecl input_rbutton_is_down(); /* 005bd500 */
+void __cdecl wnd_obj_set_capture(); /* 005bd533 */
+void __cdecl wnd_obj_release_capture(); /* 005bd550 */
 #undef FUN_005bd566
 void __cdecl FUN_005bd566(int param_1,int param_2); /* 005bd566, hand-written */
-undefined2 __thiscall FUN_005bd610(C_005bd610 *this); /* 005bd610 */
-C_004083b0_48 * __thiscall FUN_005bd630(C_004083b0_48 *this); /* 005bd630 */
-void __thiscall FUN_005bd65c(C_004083b0_48 *this,int param_1,int param_2); /* 005bd65c */
-undefined4 __thiscall FUN_005bd696(C_004083b0_48 *this,iptr param_1); /* 005bd696 */
-void __thiscall FUN_005bd7db(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005bd7db */
-void __thiscall FUN_005bd813(C_004083b0_48 *this,int *param_1); /* 005bd813 */
-C_004083b0_48 * __thiscall FUN_005bd915(C_004083b0_48 *this); /* 005bd915 */
-undefined4 __thiscall FUN_005bd987(C_004083b0_48 *this,iptr param_1,int param_2,int param_3,C_0043c740_434 *param_4); /* 005bd987 */
+undefined2 __thiscall wnd_get_style_flags(WndStyleView *this); /* 005bd610 */
+DibSurface * __thiscall surface_ctor(DibSurface *this); /* 005bd630 */
+void __thiscall surface_create(DibSurface *this,int param_1,int param_2); /* 005bd65c */
+undefined4 __thiscall surface_alloc_dib8(DibSurface *this,iptr param_1); /* 005bd696 */
+void __thiscall surface_reload_pict_resource(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005bd7db */
+void __thiscall surface_set_dims(DibSurface *this,int *param_1); /* 005bd813 */
+DibSurface * __thiscall surface_dtor(DibSurface *this); /* 005bd915 */
+undefined4 __thiscall FUN_005bd987(DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4); /* 005bd987 */
 void __cdecl FUN_005bdf7f(); /* 005bdf7f */
-void __cdecl FUN_005be1b3(); /* 005be1b3 */
-undefined4 __thiscall FUN_005be2c4(C_004083b0_48 *this,undefined4 param_1,uint param_2,int param_3,C_0043c740_434 *param_4); /* 005be2c4 */
-undefined4 __thiscall FUN_005be595(C_004083b0_48 *this,iptr param_1,uint param_2,int param_3,C_0043c740_434 *param_4); /* 005be595 */
+void __cdecl lbm_unpack_row(); /* 005be1b3 */
+undefined4 __thiscall FUN_005be2c4(DibSurface *this,undefined4 param_1,uint param_2,int param_3,GamePalette *param_4); /* 005be2c4 */
+undefined4 __thiscall FUN_005be595(DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4); /* 005be595 */
 void __cdecl FUN_005be940(); /* 005be940 */
-undefined4 __thiscall FUN_005be967(C_004083b0_48 *this,iptr param_1,int param_2,int param_3,C_0043c740_434 *param_4); /* 005be967 */
-undefined4 __thiscall FUN_005bec8c(C_004083b0_48 *this,iptr param_1,int param_2,int param_3,C_0043c740_434 *param_4); /* 005bec8c */
+undefined4 __thiscall FUN_005be967(DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4); /* 005be967 */
+undefined4 __thiscall FUN_005bec8c(DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4); /* 005bec8c */
 void __cdecl FUN_005bf04a(); /* 005bf04a */
-undefined4 __thiscall FUN_005bf071(C_004083b0_48 *this,iptr param_1,uint param_2,uint param_3,iptr param_4); /* 005bf071 */
+undefined4 __thiscall surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,iptr param_4); /* 005bf071 */
 void __cdecl FUN_005bf5ba(); /* 005bf5ba */
-undefined4 __thiscall FUN_005bf5e1(C_004083b0_48 *this,iptr param_1,uint param_2,uint param_3,iptr param_4); /* 005bf5e1 */
-undefined4 __thiscall FUN_005bf930(C_004083b0_48 *this,iptr param_1,uint param_2,undefined4 param_3,C_0043c740_434 *param_4); /* 005bf930 */
-undefined4 __thiscall FUN_005bfad9(C_004083b0_48 *this,iptr param_1,uint param_2,int param_3,C_0043c740_434 *param_4); /* 005bfad9 */
-undefined4 __thiscall FUN_005bfcff(C_004083b0_48 *this,iptr param_1,uint param_2,int param_3,C_0043c740_434 *param_4); /* 005bfcff */
+undefined4 __thiscall surface_load_gif_resource(DibSurface *this,iptr param_1,uint param_2,uint param_3,iptr param_4); /* 005bf5e1 */
+undefined4 __thiscall surface_load_pict_resource(DibSurface *this,iptr param_1,uint param_2,undefined4 param_3,GamePalette *param_4); /* 005bf930 */
+undefined4 __thiscall FUN_005bfad9(DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4); /* 005bfad9 */
+undefined4 __thiscall FUN_005bfcff(DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4); /* 005bfcff */
 void __cdecl FUN_005c000d(); /* 005c000d */
-void __thiscall FUN_005c0034(C_004083b0_48 *this); /* 005c0034 */
-void __thiscall FUN_005c0073(C_004083b0_48 *this,iptr param_1); /* 005c0073 */
-void __thiscall FUN_005c00ce(C_004083b0_48 *this,iptr param_1); /* 005c00ce */
-undefined4 __thiscall FUN_005c0105(C_004083b0_48 *this,iptr param_1); /* 005c0105 */
-undefined4 __thiscall FUN_005c019d(C_004083b0_48 *this,iptr param_1); /* 005c019d */
-void __thiscall FUN_005c01c1(C_004083b0_48 *this); /* 005c01c1 */
-void __thiscall FUN_005c02e0(C_004083b0_48 *this); /* 005c02e0 */
-void __thiscall FUN_005c0333(C_004083b0_48 *this,iptr param_1,undefined4 param_2); /* 005c0333 */
-void __thiscall FUN_005c041f(C_004083b0_48 *this,undefined4 param_1); /* 005c041f */
-void __thiscall FUN_005c044a(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2); /* 005c044a */
-void __thiscall FUN_005c0479(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 005c0479 */
-void __thiscall FUN_005c0593(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3); /* 005c0593 */
-void __thiscall FUN_005c0753(C_004083b0_48 *this,C_005c5660 *param_1,RECT *param_2,RECT *param_3); /* 005c0753 */
-void __thiscall FUN_005c0979(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3); /* 005c0979 */
-void __thiscall FUN_005c0a55(C_004083b0_48 *this,C_00408010_10 *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c0a55 */
-void __thiscall FUN_005c0b2c(C_004083b0_48 *this,C_004083b0_48 *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c0b2c */
-uint __thiscall FUN_005c0bf2(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2); /* 005c0bf2 */
-void __thiscall FUN_005c0c5d(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c0c5d */
-void __thiscall FUN_005c0cc5(C_004083b0_48 *this,iptr param_1); /* 005c0cc5 */
-void __thiscall FUN_005c0d12(C_004083b0_48 *this,C_005c56f0 *param_1); /* 005c0d12 */
-void __thiscall FUN_005c0d69(C_005c0d69 *this,undefined4 param_1,int param_2,int param_3,uint param_4); /* 005c0d69 */
-void __thiscall FUN_005c0e57(C_005c0e57 *this,undefined4 param_1,LONG *param_2,uint param_3); /* 005c0e57 */
-void __thiscall FUN_005c0f57(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,int param_4,uint param_5); /* 005c0f57 */
-void __thiscall FUN_005c1020(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,uint param_4); /* 005c1020 */
-void __thiscall FUN_005c10fb(C_005c10fb *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c10fb */
-void __thiscall FUN_005c1167(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 005c1167 */
-void __thiscall FUN_005c11b2(C_004083b0_48 *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4); /* 005c11b2 */
-void __thiscall FUN_005c145d(C_004083b0_48 *this,iptr param_1); /* 005c145d */
-void __thiscall FUN_005c1513(C_004083b0_48 *this,int *param_1); /* 005c1513 */
-void __thiscall FUN_005c1742(C_004083b0_48 *this,int *param_1); /* 005c1742 */
+void __thiscall surface_reset_clip(DibSurface *this); /* 005c0034 */
+void __thiscall surface_set_clip(DibSurface *this,iptr param_1); /* 005c0073 */
+void __thiscall surface_get_clip(DibSurface *this,iptr param_1); /* 005c00ce */
+undefined4 __thiscall surface_alloc_dib_by_bpp(DibSurface *this,iptr param_1); /* 005c0105 */
+undefined4 __thiscall surface_resize(DibSurface *this,iptr param_1); /* 005c019d */
+void __thiscall surface_lock(DibSurface *this); /* 005c01c1 */
+void __thiscall surface_unlock(DibSurface *this); /* 005c02e0 */
+void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,undefined4 param_2); /* 005c0333 */
+void __thiscall surface_fill(DibSurface *this,undefined4 param_1); /* 005c041f */
+void __thiscall surface_replace_color_clip(DibSurface *this,undefined4 param_1,undefined4 param_2); /* 005c044a */
+void __thiscall surface_replace_color(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 005c0479 */
+void __thiscall surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3); /* 005c0593 */
+void __thiscall FUN_005c0753(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *param_3); /* 005c0753 */
+void __thiscall surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3); /* 005c0979 */
+void __thiscall FUN_005c0a55(DibSurface *this,WndBase *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c0a55 */
+void __thiscall FUN_005c0b2c(DibSurface *this,DibSurface *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c0b2c */
+uint __thiscall surface_get_pixel(DibSurface *this,undefined4 param_1,undefined4 param_2); /* 005c0bf2 */
+void __thiscall surface_set_pixel(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c0c5d */
+void __thiscall surface_set_palette(DibSurface *this,iptr param_1); /* 005c0cc5 */
+void __thiscall surface_apply_palette(DibSurface *this,PaletteVersionView *param_1); /* 005c0d12 */
+void __thiscall surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4); /* 005c0d69 */
+void __thiscall FUN_005c0e57(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3); /* 005c0e57 */
+void __thiscall surface_draw_text(DibSurface *this,iptr param_1,iptr param_2,iptr param_3,int param_4,uint param_5); /* 005c0f57 */
+void __thiscall surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_3,uint param_4); /* 005c1020 */
+void __thiscall FUN_005c10fb(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c10fb */
+void __thiscall surface_draw_text_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 005c1167 */
+void __thiscall surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4); /* 005c11b2 */
+void __thiscall surface_frame_rect(DibSurface *this,iptr param_1); /* 005c145d */
+void __thiscall FUN_005c1513(DibSurface *this,int *param_1); /* 005c1513 */
+void __thiscall FUN_005c1742(DibSurface *this,int *param_1); /* 005c1742 */
 undefined4 __cdecl FUN_005c1972(); /* 005c1972 */
 undefined4 __cdecl FUN_005c1998(); /* 005c1998 */
-undefined1 __cdecl FUN_005c19ad(); /* 005c19ad */
-int __thiscall FUN_005c19d3(C_004083b0_48 *this,int param_1,int param_2); /* 005c19d3 */
-undefined1 __thiscall FUN_005c1a00(C_004083b0_48 *this,int param_1,int param_2); /* 005c1a00 */
-void __thiscall FUN_005c1a62(C_004083b0_48 *this,iptr param_1,iptr param_2,undefined4 param_3); /* 005c1a62 */
-void __thiscall FUN_005c1b0d(C_004083b0_48 *this,int param_1,int param_2); /* 005c1b0d */
-undefined4 __thiscall FUN_005c1b47(C_004083b0_48 *this,iptr param_1); /* 005c1b47 */
-undefined4 __thiscall FUN_005c1c99(C_004083b0_48 *this,iptr param_1); /* 005c1c99 */
-void __thiscall FUN_005c1cbd(C_004083b0_48 *this,int param_1,int param_2); /* 005c1cbd */
-undefined4 __thiscall FUN_005c1cf7(C_004083b0_48 *this,iptr param_1); /* 005c1cf7 */
-undefined4 __thiscall FUN_005c1e49(C_004083b0_48 *this,iptr param_1); /* 005c1e49 */
-void __thiscall FUN_005c1e6d(C_004083b0_48 *this,int param_1,int param_2); /* 005c1e6d */
-undefined4 __thiscall FUN_005c1ea7(C_004083b0_48 *this,iptr param_1); /* 005c1ea7 */
-void __thiscall FUN_005c1ff9(C_004083b0_48 *this,iptr param_1); /* 005c1ff9 */
-short __cdecl FUN_005c201d(); /* 005c201d */
-undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1); /* 005c2048 */
-undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1); /* 005c2360 */
+undefined1 __cdecl gfx_set_text_color_index(); /* 005c19ad */
+int __thiscall surface_pixel_ptr(DibSurface *this,int param_1,int param_2); /* 005c19d3 */
+undefined1 __thiscall surface_in_clip(DibSurface *this,int param_1,int param_2); /* 005c1a00 */
+void __thiscall surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param_3); /* 005c1a62 */
+void __thiscall surface_create_dib16(DibSurface *this,int param_1,int param_2); /* 005c1b0d */
+undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1); /* 005c1b47 */
+undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1); /* 005c1c99 */
+void __thiscall FUN_005c1cbd(DibSurface *this,int param_1,int param_2); /* 005c1cbd */
+undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1); /* 005c1cf7 */
+undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1); /* 005c1e49 */
+void __thiscall FUN_005c1e6d(DibSurface *this,int param_1,int param_2); /* 005c1e6d */
+undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1); /* 005c1ea7 */
+void __thiscall FUN_005c1ff9(DibSurface *this,iptr param_1); /* 005c1ff9 */
+short __cdecl gfx_rgb_to_555(); /* 005c201d */
+undefined4 __thiscall FUN_005c2048(DibSurface *this,iptr param_1); /* 005c2048 */
+undefined4 __thiscall FUN_005c2360(DibSurface *this,iptr param_1); /* 005c2360 */
 void __cdecl FUN_005c2786(); /* 005c2786 */
-undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1); /* 005c27ad */
-undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1); /* 005c2a77 */
+undefined4 __thiscall FUN_005c27ad(DibSurface *this,iptr param_1); /* 005c27ad */
+undefined4 __thiscall FUN_005c2a77(DibSurface *this,iptr param_1); /* 005c2a77 */
 void __cdecl FUN_005c2e37(); /* 005c2e37 */
-undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1); /* 005c2e5e */
-undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1); /* 005c3313 */
+undefined4 __thiscall FUN_005c2e5e(DibSurface *this,iptr param_1); /* 005c2e5e */
+undefined4 __thiscall FUN_005c3313(DibSurface *this,iptr param_1); /* 005c3313 */
 void __cdecl FUN_005c384d(); /* 005c384d */
-undefined4 __thiscall FUN_005c3874(C_004083b0_48 *this,iptr param_1); /* 005c3874 */
-undefined4 __thiscall FUN_005c3b7a(C_004083b0_48 *this,iptr param_1); /* 005c3b7a */
+undefined4 __thiscall FUN_005c3874(DibSurface *this,iptr param_1); /* 005c3874 */
+undefined4 __thiscall FUN_005c3b7a(DibSurface *this,iptr param_1); /* 005c3b7a */
 void __cdecl FUN_005c3ed5(); /* 005c3ed5 */
-undefined4 __thiscall FUN_005c3efc(C_004083b0_48 *this,iptr param_1); /* 005c3efc */
-undefined4 __thiscall FUN_005c40b6(C_004083b0_48 *this,iptr param_1); /* 005c40b6 */
+undefined4 __thiscall FUN_005c3efc(DibSurface *this,iptr param_1); /* 005c3efc */
+undefined4 __thiscall FUN_005c40b6(DibSurface *this,iptr param_1); /* 005c40b6 */
 void __cdecl FUN_005c434e(); /* 005c434e */
-undefined4 __thiscall FUN_005c4375(C_004083b0_48 *this,iptr param_1); /* 005c4375 */
-undefined4 __thiscall FUN_005c463f(C_004083b0_48 *this,iptr param_1); /* 005c463f */
+undefined4 __thiscall FUN_005c4375(DibSurface *this,iptr param_1); /* 005c4375 */
+undefined4 __thiscall FUN_005c463f(DibSurface *this,iptr param_1); /* 005c463f */
 void __cdecl FUN_005c4a00(); /* 005c4a00 */
-void __thiscall FUN_005c4a27(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4); /* 005c4a27 */
-void __thiscall FUN_005c4b4c(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c4b4c */
-void __thiscall FUN_005c4b7f(C_005c4b7f *this,C_004083b0_48 *param_1,RECT *param_2,RECT *param_3); /* 005c4b7f */
-void __thiscall FUN_005c4c46(C_005c4c46 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3); /* 005c4c46 */
-void __thiscall FUN_005c4d0d(C_004083b0_48 *this,C_005c5740 *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c4d0d */
-void __thiscall FUN_005c4dd3(C_005c4dd3 *this,undefined4 param_1,int param_2,int param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c4dd3 */
-void __thiscall FUN_005c4eb6(C_005c4eb6 *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005c4eb6 */
-void __thiscall FUN_005c4f9f(C_005c4f9f *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 005c4f9f */
-void __thiscall FUN_005c505d(C_005c505d *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c505d */
-void __thiscall FUN_005c512d(C_005c512d *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c512d */
-void __thiscall FUN_005c51a5(C_005c51a5 *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c51a5 */
-void __thiscall FUN_005c51fc(C_004083b0_48 *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5, undefined4 param_6,undefined4 param_7); /* 005c51fc */
-void __thiscall FUN_005c52dd(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 005c52dd */
-void __thiscall FUN_005c53c3(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c53c3 */
-uint __cdecl FUN_005c5410(); /* 005c5410 */
-uint __cdecl FUN_005c5430(); /* 005c5430 */
-undefined4 __thiscall FUN_005c5470(C_00421bf0_98 *this); /* 005c5470 */
-void __thiscall FUN_005c54a0(C_00421bf0_98 *this); /* 005c54a0 */
-undefined4 __cdecl FUN_005c54d0(); /* 005c54d0 */
-bool __thiscall FUN_005c54f0(C_004083b0_48 *this); /* 005c54f0 */
-void __cdecl FUN_005c5520(); /* 005c5520 */
-undefined4 __cdecl FUN_005c5540(); /* 005c5540 */
-undefined4 __cdecl FUN_005c5560(); /* 005c5560 */
-void __cdecl FUN_005c5580(); /* 005c5580 */
-int __cdecl FUN_005c55a0(); /* 005c55a0 */
-u32 __thiscall FUN_005c55d0(C_004083b0_48 *this); /* 005c55d0 */
-u32 __thiscall FUN_005c55f0(C_004083b0_48 *this); /* 005c55f0 */
-int __thiscall FUN_005c5610(C_004083b0_48 *this,iptr param_1); /* 005c5610 */
-uptr __thiscall FUN_005c5640(C_004083b0_48 *this); /* 005c5640 */
-u32 __thiscall FUN_005c5660(C_005c5660 *this); /* 005c5660 */
-u32 __thiscall FUN_005c5680(C_005c5680 *this); /* 005c5680 */
-u32 __thiscall FUN_005c56a0(C_005c5660 *this); /* 005c56a0 */
-undefined4 __thiscall FUN_005c56c0(C_005c5660 *this); /* 005c56c0 */
-u32 __thiscall FUN_005c56f0(C_005c56f0 *this); /* 005c56f0 */
-int __thiscall FUN_005c5710(C_004083b0_48 *this,iptr param_1); /* 005c5710 */
-u32 __thiscall FUN_005c5740(C_005c5740 *this); /* 005c5740 */
-void __thiscall FUN_005c5760(C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c5760 */
+void __thiscall surface_fill_rect_rgb(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4); /* 005c4a27 */
+void __thiscall FUN_005c4b4c(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c4b4c */
+void __thiscall FUN_005c4b7f(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *param_3); /* 005c4b7f */
+void __thiscall FUN_005c4c46(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3); /* 005c4c46 */
+void __thiscall FUN_005c4d0d(DibSurface *this,DDSurfaceIfaceView *param_1,undefined4 *param_2,undefined4 *param_3); /* 005c4d0d */
+void __thiscall FUN_005c4dd3(SurfaceTextRgbCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c4dd3 */
+void __thiscall FUN_005c4eb6(SurfaceTextRectRgbCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005c4eb6 */
+void __thiscall FUN_005c4f9f(SurfaceTextRgbFontView *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 005c4f9f */
+void __thiscall FUN_005c505d(SurfaceTextRectFontView *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c505d */
+void __thiscall FUN_005c512d(SurfaceTextWrapRgbCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c512d */
+void __thiscall FUN_005c51a5(SurfaceTextWrapRgbFontView *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c51a5 */
+void __thiscall surface_draw_line_rgb(DibSurface *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5, undefined4 param_6,undefined4 param_7); /* 005c51fc */
+void __thiscall surface_frame_rect_rgb(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 005c52dd */
+void __thiscall FUN_005c53c3(DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c53c3 */
+uint __cdecl endian_swap16(); /* 005c5410 */
+uint __cdecl endian_swap32(); /* 005c5430 */
+undefined4 __thiscall file_obj_map_view(FileObject *this); /* 005c5470 */
+void __thiscall file_obj_unmap_view(FileObject *this); /* 005c54a0 */
+undefined4 __cdecl endian_from_le(); /* 005c54d0 */
+bool __thiscall surface_is_locked(DibSurface *this); /* 005c54f0 */
+void __cdecl res_free(); /* 005c5520 */
+undefined4 __cdecl res_load(); /* 005c5540 */
+undefined4 __cdecl res_lock(); /* 005c5560 */
+void __cdecl res_unlock(); /* 005c5580 */
+int __cdecl dib_row_align4(); /* 005c55a0 */
+u32 __thiscall surface_get_pitch(DibSurface *this); /* 005c55d0 */
+u32 __thiscall surface_get_dib(DibSurface *this); /* 005c55f0 */
+int __thiscall surface_next_row(DibSurface *this,iptr param_1); /* 005c5610 */
+uptr __thiscall surface_get_bits(DibSurface *this); /* 005c5640 */
+u32 __thiscall ddsurf_get_height(DDSurface *this); /* 005c5660 */
+u32 __thiscall ddsurf_get_width(DDSurfaceWidthView *this); /* 005c5680 */
+u32 __thiscall ddsurf_get_pitch(DDSurface *this); /* 005c56a0 */
+undefined4 __thiscall ddsurf_unlock(DDSurface *this); /* 005c56c0 */
+u32 __thiscall palette_get_version(PaletteVersionView *this); /* 005c56f0 */
+int __thiscall surface_prev_row(DibSurface *this,iptr param_1); /* 005c5710 */
+u32 __thiscall ddsurf_get_iface(DDSurfaceIfaceView *this); /* 005c5740 */
+void __thiscall wnd_create_framed(WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c5760 */
 void __thiscall FUN_005c57b1(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8); /* 005c57b1 */
-void __thiscall FUN_005c57f9(C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005c57f9 */
+void __thiscall wnd_create_framed_child(WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005c57f9 */
 void __thiscall FUN_005c584e(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7, undefined4 param_8,iptr param_9); /* 005c584e */
-void __thiscall FUN_005c589a(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c589a */
+void __thiscall wnd_create_framed_nopal(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c589a */
 void __thiscall FUN_005c58e7(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c58e7 */
-void __thiscall FUN_005c592b(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c592b */
+void __thiscall wnd_create_framed_child_nopal(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c592b */
 void __thiscall FUN_005c597c(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8); /* 005c597c */
-void __thiscall FUN_005c59c4(C_005c59c4 *this,iptr param_1); /* 005c59c4 */
-void __thiscall FUN_005c5a27(C_005c5a27 *this,int param_1); /* 005c5a27 */
-void __thiscall FUN_005c5aeb(C_005c5a27 *this); /* 005c5aeb */
-void __thiscall FUN_005c5b36(C_005c5b36 *this); /* 005c5b36 */
-void __thiscall FUN_005c5b7f(C_00408010_cc *this); /* 005c5b7f */
-C_005c5ea0 * __thiscall FUN_005c5c2d(void *this); /* 005c5c2d */
-undefined4 __thiscall FUN_005c5c86(void *this,undefined4 param_1); /* 005c5c86 */
-u32 __thiscall FUN_005c5e60(C_005c5e60 *this); /* 005c5e60 */
-u32 __thiscall FUN_005c5e80(C_005c5e80 *this); /* 005c5e80 */
-u8 __thiscall FUN_005c5ea0(C_005c5ea0 *this); /* 005c5ea0 */
-u32 __thiscall FUN_005c5ec0(C_005c5ec0 *this); /* 005c5ec0 */
-u32 __thiscall FUN_005c5ee0(C_005c5ee0 *this); /* 005c5ee0 */
-u32 __thiscall FUN_005c5f00(C_005c5f00 *this); /* 005c5f00 */
-void __thiscall FUN_005c5f20(C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c5f20 */
+void __thiscall wnd_append_control(WndControlListView *this,iptr param_1); /* 005c59c4 */
+void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1); /* 005c5a27 */
+void __thiscall wnd_remove_all_controls(WndControlRemoveView *this); /* 005c5aeb */
+void __thiscall FUN_005c5b36(WndControlInvalidateView *this); /* 005c5b36 */
+void __thiscall wnd_focus_first_control(Wnd *this); /* 005c5b7f */
+ControlInitialFocusView * __thiscall FUN_005c5c2d(void *this); /* 005c5c2d */
+undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1); /* 005c5c86 */
+u32 __thiscall control_get_type(ControlTypeView *this); /* 005c5e60 */
+u32 __thiscall control_get_next(ControlNextView *this); /* 005c5e80 */
+u8 __thiscall ctrl_get_initial_focus(ControlInitialFocusView *this); /* 005c5ea0 */
+u32 __thiscall checkbox_is_enabled(CheckboxEnabledView *this); /* 005c5ec0 */
+u32 __thiscall radiogrp_get_items(RadioGroupItemsView *this); /* 005c5ee0 */
+u32 __thiscall radiogrp_item_count(RadioGroupCountView *this); /* 005c5f00 */
+void __thiscall wnd_create_with_cmd_proc(WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c5f20 */
 void __thiscall FUN_005c5f7c(C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005c5f7c */
-void __thiscall FUN_005c5fc4(C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005c5fc4 */
+void __thiscall wnd_create_with_handlers(WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8); /* 005c5fc4 */
 void __thiscall FUN_005c6024(C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9); /* 005c6024 */
-void __thiscall FUN_005c6070(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c6070 */
+void __thiscall wnd_create_nopal_cmd_proc(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c6070 */
 void __thiscall FUN_005c60c8(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7); /* 005c60c8 */
-void __thiscall FUN_005c610c(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c610c */
+void __thiscall wnd_create_child_nopal_cmd_proc(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005c610c */
 void __thiscall FUN_005c6168(C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8); /* 005c6168 */
-void __thiscall FUN_005c61b0(C_00408010_b8 *this); /* 005c61b0 */
-void __thiscall FUN_005c62cb(C_00408010_b8 *this); /* 005c62cb */
-undefined4 __cdecl FUN_005c62ee(); /* 005c62ee */
-undefined4 __cdecl FUN_005c6303(); /* 005c6303 */
+void __thiscall wnd_run_modal_loop(C_00408010_b8 *this); /* 005c61b0 */
+void __thiscall wnd_end_modal_loop(C_00408010_b8 *this); /* 005c62cb */
+undefined4 __cdecl wnd_get_active_child(); /* 005c62ee */
+undefined4 __cdecl wnd_set_active_child(); /* 005c6303 */
 void __thiscall FUN_005c6329(C_00408010_b8 *this,u32 param_1); /* 005c6329 */
 void __thiscall FUN_005c636c(C_00408010_b8 *this,u32 param_1); /* 005c636c */
-bool __thiscall FUN_005c63af(C_005c63af *this,undefined4 param_1); /* 005c63af */
-void __thiscall FUN_005c6400(C_00408010_10 *this,iptr param_1,iptr param_2); /* 005c6400 */
-void __thiscall FUN_005c6440(C_00408010_10 *this,iptr param_1,iptr param_2); /* 005c6440 */
-void __thiscall FUN_005c6480(C_0043c740_434 *this,int param_1,int param_2); /* 005c6480 */
-C_0043c740_434 * __thiscall FUN_005c64da(C_0043c740_434 *this); /* 005c64da */
-C_0043c740_434 * __thiscall FUN_005c656b(C_0043c740_434 *this); /* 005c656b */
-void __thiscall FUN_005c65f9(C_0043c740_434 *this,undefined4 param_1); /* 005c65f9 */
-void __thiscall FUN_005c66b9(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c66b9 */
-void __thiscall FUN_005c6757(C_0043c740_434 *this,undefined4 param_1); /* 005c6757 */
+bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,undefined4 param_1); /* 005c63af */
+void __thiscall wnd_get_hscroll_range(WndBase *this,iptr param_1,iptr param_2); /* 005c6400 */
+void __thiscall wnd_get_vscroll_range(WndBase *this,iptr param_1,iptr param_2); /* 005c6440 */
+void __thiscall palette_commit_range(GamePalette *this,int param_1,int param_2); /* 005c6480 */
+GamePalette * __thiscall palette_init(GamePalette *this); /* 005c64da */
+GamePalette * __thiscall palette_destroy(GamePalette *this); /* 005c656b */
+void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1); /* 005c65f9 */
+void __thiscall FUN_005c66b9(GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005c66b9 */
+void __thiscall FUN_005c6757(GamePalette *this,undefined4 param_1); /* 005c6757 */
 void __thiscall FUN_005c677b(void *this,undefined4 param_1); /* 005c677b */
-void __thiscall FUN_005c67a6(void *this,iptr param_1,undefined4 param_2,int param_3); /* 005c67a6 */
+void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,int param_3); /* 005c67a6 */
 void __cdecl FUN_005c68ca(); /* 005c68ca */
-void __thiscall FUN_005c68f0(C_0043c740_434 *this,iptr param_1); /* 005c68f0 */
+void __thiscall palette_load_from_file(GamePalette *this,iptr param_1); /* 005c68f0 */
 void __cdecl FUN_005c6a1c(); /* 005c6a1c */
-void __thiscall FUN_005c6a42(C_0043c740_434 *this); /* 005c6a42 */
-void __thiscall FUN_005c6a8d(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2); /* 005c6a8d */
-void __thiscall FUN_005c6ac9(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2); /* 005c6ac9 */
-void __thiscall FUN_005c6b05(C_005c6b05 *this,undefined4 param_1,undefined4 param_2); /* 005c6b05 */
+void __thiscall palette_new_version(GamePalette *this); /* 005c6a42 */
+void __thiscall palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2); /* 005c6a8d */
+void __thiscall FUN_005c6ac9(GamePalette *this,undefined4 param_1,undefined4 param_2); /* 005c6ac9 */
+void __thiscall FUN_005c6b05(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2); /* 005c6b05 */
 void __thiscall FUN_005c6b3b(void *this,undefined4 param_1,undefined4 param_2); /* 005c6b3b */
-void __thiscall FUN_005c6b63(C_0043c740_434 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 005c6b63 */
-void __thiscall FUN_005c6b93(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005c6b93 */
-void __thiscall FUN_005c6bd5(C_005c6bd5 *this,int param_1,int param_2,int param_3); /* 005c6bd5 */
-void __thiscall FUN_005c6da8(C_0043c740_434 *this,int param_1,int param_2,iptr param_3); /* 005c6da8 */
-void __thiscall FUN_005c6e36(C_0043c740_434 *this,u32 param_1,u32 param_2,u32 param_3); /* 005c6e36 */
-void __thiscall FUN_005c6edc(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c6edc */
-void __thiscall FUN_005c6f2c(C_0043c740_434 *this); /* 005c6f2c */
+void __thiscall palette_get_rgb(GamePalette *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 005c6b63 */
+void __thiscall palette_set_entry(GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005c6b93 */
+void __thiscall FUN_005c6bd5(PaletteRotateView *this,int param_1,int param_2,int param_3); /* 005c6bd5 */
+void __thiscall palette_set_rgb(GamePalette *this,int param_1,int param_2,iptr param_3); /* 005c6da8 */
+void __thiscall palette_tint_begin_range(GamePalette *this,u32 param_1,u32 param_2,u32 param_3); /* 005c6e36 */
+void __thiscall FUN_005c6edc(GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005c6edc */
+void __thiscall FUN_005c6f2c(GamePalette *this); /* 005c6f2c */
 void __thiscall FUN_005c6fc3(C_005c6fc3 *this,int param_1,iptr param_2); /* 005c6fc3 */
 void __thiscall FUN_005c701c(C_005c701c *this,int param_1); /* 005c701c */
-void __thiscall FUN_005c71f3(C_0043c740_434 *this,u32 param_1,u32 param_2,u32 param_3,iptr param_4); /* 005c71f3 */
-void __thiscall FUN_005c72f8(C_0043c740_434 *this); /* 005c72f8 */
-void __thiscall FUN_005c738e(C_0043c740_434 *this,int param_1); /* 005c738e */
-void __thiscall FUN_005c7579(C_0043c740_434 *this,iptr param_1,C_0043c740_434 *param_2,undefined4 param_3,int param_4); /* 005c7579 */
+void __thiscall palette_fade_begin(GamePalette *this,u32 param_1,u32 param_2,u32 param_3,iptr param_4); /* 005c71f3 */
+void __thiscall palette_fade_end(GamePalette *this); /* 005c72f8 */
+void __thiscall palette_fade_step(GamePalette *this,int param_1); /* 005c738e */
+void __thiscall FUN_005c7579(GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4); /* 005c7579 */
 void __cdecl FUN_005c76e4(); /* 005c76e4 */
-void __thiscall FUN_005c770a(C_0043c740_434 *this,iptr param_1,C_0043c740_434 *param_2,undefined4 param_3,int param_4, undefined4 param_5,undefined4 param_6); /* 005c770a */
+void __thiscall FUN_005c770a(GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4, undefined4 param_5,undefined4 param_6); /* 005c770a */
 void __cdecl FUN_005c7873(); /* 005c7873 */
-undefined4 __thiscall FUN_005c7899(C_0043c740_434 *this,uint param_1,uint param_2,uint param_3); /* 005c7899 */
+undefined4 __thiscall FUN_005c7899(GamePalette *this,uint param_1,uint param_2,uint param_3); /* 005c7899 */
 void __cdecl FUN_005c7998(); /* 005c7998 */
-C_005c79bf * __thiscall FUN_005c79bf(C_005c79bf *this); /* 005c79bf */
-void __thiscall FUN_005c7a30(C_005c7a30_828 *this); /* 005c7a30 */
-void __thiscall FUN_005c7a86(C_005c7a86 *this,iptr param_1,u32 param_2,u32 param_3); /* 005c7a86 */
-void __thiscall FUN_005c7c7b(C_005c7a86 *this,iptr param_1,int param_2); /* 005c7c7b */
-int __thiscall FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4); /* 005c7e06 */
-int __thiscall FUN_005c80fd(C_005c7a86 *this,iptr param_1); /* 005c80fd */
-undefined4 __cdecl FUN_005c8200(); /* 005c8200 */
+ColorKdTreeInitView * __thiscall color_kdtree_init(ColorKdTreeInitView *this); /* 005c79bf */
+void __thiscall color_kdtree_free(ColorKdTreeFreeView *this); /* 005c7a30 */
+void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u32 param_3); /* 005c7a86 */
+void __thiscall color_kdtree_insert(ColorKdTree *this,iptr param_1,int param_2); /* 005c7c7b */
+int __thiscall color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,uint param_3,int param_4); /* 005c7e06 */
+int __thiscall color_find_nearest_grey(ColorKdTree *this,iptr param_1); /* 005c80fd */
+undefined4 __cdecl font_handle_create(); /* 005c8200 */
 undefined4 __cdecl FUN_005c8391(); /* 005c8391 */
-undefined4 __cdecl FUN_005c841d(); /* 005c841d */
-LONG __cdecl FUN_005c847f(); /* 005c847f */
-int __cdecl FUN_005c8514(); /* 005c8514 */
-LONG __cdecl FUN_005c858e(); /* 005c858e */
+undefined4 __cdecl font_handle_destroy(); /* 005c841d */
+LONG __cdecl font_measure_height(); /* 005c847f */
+int __cdecl font_handle_line_spacing(); /* 005c8514 */
+LONG __cdecl font_measure_width(); /* 005c858e */
 undefined4 __cdecl FUN_005c861c(); /* 005c861c */
 undefined4 __stdcall FUN_005c86bc(LOGFONTA *param_1,undefined4 param_2,undefined4 param_3,iptr param_4); /* 005c86bc */
-undefined4 __cdecl FUN_005c8736(); /* 005c8736 */
+undefined4 __cdecl font_enum_matching_faces(); /* 005c8736 */
 #undef FUN_005c8791
 void __cdecl FUN_005c8791(undefined4 param_1); /* 005c8791, hand-written */
-iptr __cdecl FUN_005c8834(); /* 005c8834 */
+iptr __cdecl font_calc_text_rect(); /* 005c8834 */
 int __cdecl FUN_005c8908(); /* 005c8908 */
 undefined4 __cdecl FUN_005c8984(); /* 005c8984 */
 int __cdecl FUN_005c89ed(); /* 005c89ed */
 void __cdecl FUN_005c8a85(); /* 005c8a85 */
-void __cdecl FUN_005c8b00(); /* 005c8b00 */
-void __cdecl FUN_005c8b2d(); /* 005c8b2d */
-void __cdecl FUN_005c8b58(); /* 005c8b58 */
+void __cdecl wnd_invalidate(); /* 005c8b00 */
+void __cdecl hwnd_show(); /* 005c8b2d */
+void __cdecl hwnd_hide(); /* 005c8b58 */
 void __cdecl FUN_005c8b83(); /* 005c8b83 */
-HWND __cdecl FUN_005c8be1(); /* 005c8be1 */
-void __cdecl FUN_005c8c83(); /* 005c8c83 */
+HWND __cdecl hotspot_create_hwnd(); /* 005c8be1 */
+void __cdecl region_dispose(); /* 005c8c83 */
 #undef FUN_005c8caf
 undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4); /* 005c8caf, hand-written */
-int __thiscall FUN_005c8f50(void *this); /* 005c8f50 */
-void __thiscall FUN_005c8f70(C_005c8f70 *this,undefined4 param_1); /* 005c8f70 */
-void __thiscall FUN_005c8fb0(C_005c8fb0 *this,undefined4 param_1); /* 005c8fb0 */
-void __thiscall FUN_005c8ff0(C_005c8ff0 *this,undefined4 param_1); /* 005c8ff0 */
-void __thiscall FUN_005c9030(C_005c9030 *this,undefined4 param_1); /* 005c9030 */
-void __thiscall FUN_005c9070(C_005c9070 *this,undefined4 param_1); /* 005c9070 */
-void __cdecl FUN_005c90b0(); /* 005c90b0 */
-void __cdecl FUN_005c90ca(); /* 005c90ca */
-void __cdecl FUN_005c9222(); /* 005c9222 */
-LRESULT __stdcall FUN_005c9307(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4); /* 005c9307 */
-int __cdecl FUN_005c944b(); /* 005c944b */
-undefined4 * __cdecl FUN_005c9499(); /* 005c9499 */
-LONG __cdecl FUN_005c9563(); /* 005c9563 */
-void __cdecl FUN_005c9595(); /* 005c9595 */
-void __cdecl FUN_005c96cc(); /* 005c96cc */
-void __thiscall FUN_005c9710(C_005c9710 *this,u32 param_1); /* 005c9710 */
-HWND __cdecl FUN_005c9740(); /* 005c9740 */
+int __thiscall ctrl_get_rect(void *this); /* 005c8f50 */
+void __thiscall hotspot_fire_enter(HotspotEnterView *this,undefined4 param_1); /* 005c8f70 */
+void __thiscall hotspot_fire_leave(HotspotLeaveView *this,undefined4 param_1); /* 005c8fb0 */
+void __thiscall hotspot_fire_click(HotspotClickView *this,undefined4 param_1); /* 005c8ff0 */
+void __thiscall hotspot_fire_press(HotspotPressView *this,undefined4 param_1); /* 005c9030 */
+void __thiscall hotspot_fire_dblclick(HotspotDblClickView *this,undefined4 param_1); /* 005c9070 */
+void __cdecl ctrl_hwnd_set_focus(); /* 005c90b0 */
+void __cdecl ctrl_paint_parent_bkgnd(); /* 005c90ca */
+void __cdecl ctrl_parse_hotkey(); /* 005c9222 */
+LRESULT __stdcall ctrl_default_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4); /* 005c9307 */
+int __cdecl ctrl_destroy_hwnd(); /* 005c944b */
+undefined4 * __cdecl ctrl_init_block(); /* 005c9499 */
+LONG __cdecl wnd_from_hwnd(); /* 005c9563 */
+void __cdecl ctrl_hwnd_free_block(); /* 005c9595 */
+void __cdecl wnd_redraw_client(); /* 005c96cc */
+void __thiscall control_set_hwnd(ControlHwndSetView *this,u32 param_1); /* 005c9710 */
+HWND __cdecl button_create_hwnd(); /* 005c9740 */
 void __cdecl FUN_005cabf6(); /* 005cabf6 */
-void __cdecl FUN_005cac22(); /* 005cac22 */
+void __cdecl button_press_animated(); /* 005cac22 */
 #undef FUN_005cacd4
 undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint param_4); /* 005cacd4, hand-written */
 HWND __cdecl FUN_005cb319(); /* 005cb319 */
-HWND __cdecl FUN_005cb601(); /* 005cb601 */
+HWND __cdecl spritebtn_create_hwnd(); /* 005cb601 */
 void __cdecl FUN_005cb6db(); /* 005cb6db */
 #undef FUN_005cb6eb
 undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint param_4); /* 005cb6eb, hand-written */
-u32 __thiscall FUN_005cbdb0(C_005cbdb0 *this); /* 005cbdb0 */
-u8 __thiscall FUN_005cbdd0(C_005cbdd0 *this); /* 005cbdd0 */
-void __thiscall FUN_005cbdf0(C_005cbdf0 *this,undefined4 param_1); /* 005cbdf0 */
-void __thiscall FUN_005cbe30(C_005cbe30 *this,undefined4 param_1); /* 005cbe30 */
-void __thiscall FUN_005cbe70(C_005cbe70 *this,undefined4 param_1); /* 005cbe70 */
-void __cdecl FUN_005cbeb0(); /* 005cbeb0 */
+u32 __thiscall palette_get_hpalette(PaletteHandleView *this); /* 005cbdb0 */
+u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *this); /* 005cbdd0 */
+void __thiscall button_fire_callback(ButtonClickView *this,undefined4 param_1); /* 005cbdf0 */
+void __thiscall spritebtn_fire_click(SpriteButtonClickView *this,undefined4 param_1); /* 005cbe30 */
+void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *this,undefined4 param_1); /* 005cbe70 */
+void __cdecl ui_wait_ticks(); /* 005cbeb0 */
 void __cdecl FUN_005cbed0(); /* 005cbed0 */
-void __cdecl FUN_005cbeea(); /* 005cbeea */
-void __cdecl FUN_005cbf04(); /* 005cbf04 */
+void __cdecl default_draw_font_ctor(); /* 005cbeea */
+void __cdecl default_draw_font_reg_dtor(); /* 005cbf04 */
 void __cdecl FUN_005cbf21(); /* 005cbf21 */
-void __cdecl FUN_005cbf40(); /* 005cbf40 */
-void __cdecl FUN_005cc035(); /* 005cc035 */
-HWND __cdecl FUN_005cc0f0(); /* 005cc0f0 */
-void __cdecl FUN_005cc248(); /* 005cc248 */
-void __cdecl FUN_005cc274(); /* 005cc274 */
+void __cdecl checkbox_calc_rect(); /* 005cbf40 */
+void __cdecl checkbox_calc_rect_fixed(); /* 005cc035 */
+HWND __cdecl checkbox_create_hwnd(); /* 005cc0f0 */
+void __cdecl checkbox_destroy_hwnd(); /* 005cc248 */
+void __cdecl checkbox_toggle_by_hotkey(); /* 005cc274 */
 undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4); /* 005cc320 */
 void __cdecl FUN_005ccddf(undefined1 param_1,undefined1 param_2,undefined1 param_3); /* 005ccddf */
 void __cdecl FUN_005cce0e(undefined1 param_1,undefined1 param_2,undefined1 param_3); /* 005cce0e */
-void __thiscall FUN_005cce40(C_005cce40 *this,undefined4 param_1,undefined4 param_2); /* 005cce40 */
+void __thiscall checkbox_fire_callback(CheckboxClickView *this,undefined4 param_1,undefined4 param_2); /* 005cce40 */
 void __stdcall FUN_005cce80(HWND param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 005cce80 */
-HWND __cdecl FUN_005ccf17(); /* 005ccf17 */
-void __cdecl FUN_005cd139(); /* 005cd139 */
-void __cdecl FUN_005cd149(); /* 005cd149 */
+HWND __cdecl scrollbar_create_hwnd(); /* 005ccf17 */
+void __cdecl scrollbar_destroy_hwnd(); /* 005cd139 */
+void __cdecl scrollbar_hwnd_handle_msg(); /* 005cd149 */
 void __cdecl FUN_005cd49f(); /* 005cd49f */
-void __cdecl FUN_005cd4c7(); /* 005cd4c7 */
+void __cdecl scrollbar_hwnd_set_range(); /* 005cd4c7 */
 void __cdecl FUN_005cd4fd(); /* 005cd4fd */
-void __cdecl FUN_005cd535(); /* 005cd535 */
-void __cdecl FUN_005cd559(); /* 005cd559 */
+void __cdecl scrollbar_hwnd_get_range(); /* 005cd535 */
+void __cdecl scrollbar_hwnd_set_pos(); /* 005cd559 */
 void __cdecl FUN_005cd580(); /* 005cd580 */
-void __cdecl FUN_005cd5c3(); /* 005cd5c3 */
-void __cdecl FUN_005cd5f0(); /* 005cd5f0 */
-u32 __thiscall FUN_005cd620(C_005cd620 *this); /* 005cd620 */
-void __thiscall FUN_005cd640(C_005cd640 *this,undefined4 param_1); /* 005cd640 */
-void __thiscall FUN_005cd680(C_005cd680 *this,undefined4 param_1); /* 005cd680 */
-u32 __thiscall FUN_005cd6c0(C_005cd6c0 *this); /* 005cd6c0 */
-void __cdecl FUN_005cd6e0(); /* 005cd6e0 */
-void __cdecl FUN_005cd775(); /* 005cd775 */
-void __cdecl FUN_005cda06(); /* 005cda06 */
-void __cdecl FUN_005cda2a(); /* 005cda2a */
-void __cdecl FUN_005cdcdb(); /* 005cdcdb */
-C_00417f70_3c * __thiscall FUN_005cde2c(C_00417f70_3c *this); /* 005cde2c */
-C_00417f70_3c * __thiscall FUN_005cde4d(C_00417f70_3c *this); /* 005cde4d */
-undefined4 __thiscall FUN_005cdea1(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3); /* 005cdea1 */
+void __cdecl scrollbar_get_range(); /* 005cd5c3 */
+void __cdecl wnd_set_scroll_pos(); /* 005cd5f0 */
+u32 __thiscall scrollbar_get_cur_pos(ScrollbarPosView *this); /* 005cd620 */
+void __thiscall scrollbar_fire_change(ScrollbarChangeView *this,undefined4 param_1); /* 005cd640 */
+void __thiscall scrollbar_fire_track(ScrollbarTrackView *this,undefined4 param_1); /* 005cd680 */
+u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *this); /* 005cd6c0 */
+void __cdecl gfx_scale_init(); /* 005cd6e0 */
+void __cdecl gfx_set_scale_ratio(); /* 005cd775 */
+void __cdecl gfx_get_scale_ratio(); /* 005cda06 */
+void __cdecl gfx_set_scale_tables(); /* 005cda2a */
+void __cdecl gfx_scale_build_table(); /* 005cdcdb */
+Sprite * __thiscall sprite_init(Sprite *this); /* 005cde2c */
+Sprite * __thiscall sprite_destroy(Sprite *this); /* 005cde4d */
+undefined4 __thiscall sprite_create_solid(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3); /* 005cdea1 */
 void __cdecl FUN_005cdf2d(); /* 005cdf2d */
-void __thiscall FUN_005cdf50(C_00417f70_3c *this); /* 005cdf50 */
+void __thiscall sprite_free(Sprite *this); /* 005cdf50 */
 void __cdecl FUN_005cdfb2(); /* 005cdfb2 */
-void __thiscall FUN_005cdfc2(C_00417f70_3c *this,undefined4 param_1); /* 005cdfc2 */
-void __thiscall FUN_005ce16e(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2); /* 005ce16e */
-void __thiscall FUN_005ce19a(C_00417f70_3c *this,undefined4 param_1,int param_2,int param_3,C_0043c740_434 *param_4); /* 005ce19a */
-void __thiscall FUN_005ce3a8(C_00417f70_3c *this,undefined4 param_1); /* 005ce3a8 */
-void __thiscall FUN_005ce3cc(C_00417f70_3c *this,iptr param_1,undefined4 param_2,int param_3,C_0043c740_434 *param_4); /* 005ce3cc */
+void __thiscall FUN_005cdfc2(Sprite *this,undefined4 param_1); /* 005cdfc2 */
+void __thiscall FUN_005ce16e(Sprite *this,undefined4 param_1,undefined4 param_2); /* 005ce16e */
+void __thiscall sprite_load_res_with_pal(Sprite *this,undefined4 param_1,int param_2,int param_3,GamePalette *param_4); /* 005ce19a */
+void __thiscall FUN_005ce3a8(Sprite *this,undefined4 param_1); /* 005ce3a8 */
+void __thiscall FUN_005ce3cc(Sprite *this,iptr param_1,undefined4 param_2,int param_3,GamePalette *param_4); /* 005ce3cc */
 void __cdecl FUN_005ce595(); /* 005ce595 */
-void __thiscall FUN_005ce5bb(C_00417f70_3c *this,iptr param_1); /* 005ce5bb */
+void __thiscall FUN_005ce5bb(Sprite *this,iptr param_1); /* 005ce5bb */
 void __cdecl FUN_005ce6fd(); /* 005ce6fd */
-void __thiscall FUN_005ce723(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2); /* 005ce723 */
-void __thiscall FUN_005ce74f(C_00417f70_3c *this,iptr param_1,int param_2,int param_3,C_0043c740_434 *param_4); /* 005ce74f */
+void __thiscall FUN_005ce723(Sprite *this,undefined4 param_1,undefined4 param_2); /* 005ce723 */
+void __thiscall sprite_read_file_with_palette(Sprite *this,iptr param_1,int param_2,int param_3,GamePalette *param_4); /* 005ce74f */
 void __cdecl FUN_005ce9c9(); /* 005ce9c9 */
-void __thiscall FUN_005ce9ef(C_00417f70_3c *this,iptr param_1); /* 005ce9ef */
+void __thiscall sprite_read_file(Sprite *this,iptr param_1); /* 005ce9ef */
 void __cdecl FUN_005ceb8e(); /* 005ceb8e */
-void __thiscall FUN_005cebb4(C_00417f70_3c *this,iptr param_1,iptr param_2); /* 005cebb4 */
-void __thiscall FUN_005cebec(C_00417f70_3c *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 005cebec */
-void __thiscall FUN_005cec44(C_00417f70_3c *this,iptr param_1,uint param_2,iptr param_3); /* 005cec44 */
-void __thiscall FUN_005cec80(C_00417f70_3c *this,C_004083b0_48 *param_1,uint param_2,undefined4 param_3,int param_4, int param_5); /* 005cec80 */
-void __thiscall FUN_005cedad(C_00417f70_3c *this,iptr param_1,uint param_2,int param_3,int param_4,int param_5, int param_6); /* 005cedad */
-void __thiscall FUN_005cee09(C_00417f70_3c *this,undefined4 param_1,iptr param_2); /* 005cee09 */
-void __thiscall FUN_005cee41(C_00417f70_3c *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5); /* 005cee41 */
-void __thiscall FUN_005cee99(C_00417f70_3c *this,undefined4 param_1,uint param_2,iptr param_3); /* 005cee99 */
-void __thiscall FUN_005ceed5(C_00417f70_3c *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5, int param_6); /* 005ceed5 */
-iptr __thiscall FUN_005cef31(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 005cef31 */
-iptr __thiscall FUN_005cef66(C_00417f70_3c *this,iptr param_1,iptr param_2,uint param_3,undefined4 param_4, undefined4 param_5); /* 005cef66 */
-undefined4 __thiscall FUN_005cef9f(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cef9f */
-undefined4 __thiscall FUN_005cefd4(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cefd4 */
-undefined4 __thiscall FUN_005cf00d(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf00d */
-undefined4 __thiscall FUN_005cf042(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cf042 */
-undefined4 __thiscall FUN_005cf07b(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf07b */
-undefined4 __thiscall FUN_005cf0b0(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cf0b0 */
-undefined4 __thiscall FUN_005cf0e9(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6); /* 005cf0e9 */
-iptr __thiscall FUN_005cf126(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 005cf126 */
-undefined4 __thiscall FUN_005cf15f(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6); /* 005cf15f */
-undefined4 __thiscall FUN_005cf19c(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5); /* 005cf19c */
-undefined4 __thiscall FUN_005cf1d5(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf1d5 */
-undefined4 __thiscall FUN_005cf20a(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf20a */
-void __thiscall FUN_005cf23f(C_00417f70_3c *this,iptr param_1); /* 005cf23f */
-void __thiscall FUN_005cf26d(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005cf26d */
-void __thiscall FUN_005cf29f(C_00417f70_3c *this,undefined4 param_1); /* 005cf29f */
-void __thiscall FUN_005cf2cd(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005cf2cd */
-void __thiscall FUN_005cf2ff(C_00417f70_3c *this); /* 005cf2ff */
-void __thiscall FUN_005cf337(C_00417f70_3c *this); /* 005cf337 */
-bool __thiscall FUN_005cf36f(C_00417f70_3c *this); /* 005cf36f */
-void __thiscall FUN_005cf39b(C_005cf39b *this,u32 param_1,u32 param_2); /* 005cf39b */
-void __thiscall FUN_005cf3c5(C_005cf3c5 *this,iptr param_1,iptr param_2); /* 005cf3c5 */
+void __thiscall sprite_grab_surface_rect(Sprite *this,iptr param_1,iptr param_2); /* 005cebb4 */
+void __thiscall sprite_encode_rect(Sprite *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 005cebec */
+void __thiscall sprite_grab_rect(Sprite *this,iptr param_1,uint param_2,iptr param_3); /* 005cec44 */
+void __thiscall FUN_005cec80(Sprite *this,DibSurface *param_1,uint param_2,undefined4 param_3,int param_4, int param_5); /* 005cec80 */
+void __thiscall sprite_grab_from_surface(Sprite *this,iptr param_1,uint param_2,int param_3,int param_4,int param_5, int param_6); /* 005cedad */
+void __thiscall FUN_005cee09(Sprite *this,undefined4 param_1,iptr param_2); /* 005cee09 */
+void __thiscall FUN_005cee41(Sprite *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5); /* 005cee41 */
+void __thiscall FUN_005cee99(Sprite *this,undefined4 param_1,uint param_2,iptr param_3); /* 005cee99 */
+void __thiscall FUN_005ceed5(Sprite *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5, int param_6); /* 005ceed5 */
+iptr __thiscall sprite_draw(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 005cef31 */
+iptr __thiscall sprite_draw_keyed(Sprite *this,iptr param_1,iptr param_2,uint param_3,undefined4 param_4, undefined4 param_5); /* 005cef66 */
+undefined4 __thiscall FUN_005cef9f(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cef9f */
+undefined4 __thiscall FUN_005cefd4(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cefd4 */
+undefined4 __thiscall FUN_005cf00d(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf00d */
+undefined4 __thiscall FUN_005cf042(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cf042 */
+undefined4 __thiscall FUN_005cf07b(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf07b */
+undefined4 __thiscall FUN_005cf0b0(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5); /* 005cf0b0 */
+undefined4 __thiscall FUN_005cf0e9(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6); /* 005cf0e9 */
+iptr __thiscall sprite_draw_silhouette(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 005cf126 */
+undefined4 __thiscall FUN_005cf15f(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4 ,undefined4 param_5,undefined4 param_6); /* 005cf15f */
+undefined4 __thiscall FUN_005cf19c(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5); /* 005cf19c */
+undefined4 __thiscall FUN_005cf1d5(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf1d5 */
+undefined4 __thiscall FUN_005cf20a(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005cf20a */
+void __thiscall sprite_merge_onto(Sprite *this,iptr param_1); /* 005cf23f */
+void __thiscall FUN_005cf26d(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005cf26d */
+void __thiscall FUN_005cf29f(Sprite *this,undefined4 param_1); /* 005cf29f */
+void __thiscall FUN_005cf2cd(Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005cf2cd */
+void __thiscall sprite_lock(Sprite *this); /* 005cf2ff */
+void __thiscall sprite_unlock(Sprite *this); /* 005cf337 */
+bool __thiscall sprite_has_data(Sprite *this); /* 005cf36f */
+void __thiscall sprite_set_origin(SpriteOriginSetView *this,u32 param_1,u32 param_2); /* 005cf39b */
+void __thiscall sprite_get_origin(SpriteOriginGetView *this,iptr param_1,iptr param_2); /* 005cf3c5 */
 void __thiscall FUN_005cf3f3(C_005cf3f3 *this,u32 param_1,u32 param_2); /* 005cf3f3 */
 void __thiscall FUN_005cf439(C_005cf439 *this,u32 *param_1,u32 *param_2); /* 005cf439 */
-void __thiscall FUN_005cf467(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2); /* 005cf467 */
-void __thiscall FUN_005cf541(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3); /* 005cf541 */
-int __thiscall FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3); /* 005cf64c */
-int __thiscall FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3); /* 005cfdeb */
-int * __thiscall FUN_005d056c(C_00417f70_3c *this,int *param_1,C_004083b0_48 *param_2,int param_3,int param_4, int param_5); /* 005d056c */
-int * __thiscall FUN_005d080d(C_00417f70_3c *this,int *param_1,C_005c5660 *param_2,int param_3,int param_4,int param_5); /* 005d080d */
-int * __thiscall FUN_005d0aac(C_00417f70_3c *this,int *param_1,C_004083b0_48 *param_2,int param_3,int param_4, int param_5); /* 005d0aac */
-int * __thiscall FUN_005d0dbf(C_00417f70_3c *this,int *param_1,C_005c5660 *param_2,int param_3,int param_4,int param_5); /* 005d0dbf */
-int * __thiscall FUN_005d10cd(C_00417f70_3c *this,int *param_1,C_004083b0_48 *param_2,int param_3,int param_4, int param_5,undefined4 param_6); /* 005d10cd */
-int * __thiscall FUN_005d1372(C_00417f70_3c *this,int *param_1,C_005c5660 *param_2,int param_3,int param_4,int param_5, undefined4 param_6); /* 005d1372 */
-void __thiscall FUN_005d1612(C_00417f70_3c *this,iptr param_1,C_00417f70_3c *param_2,undefined4 param_3,int param_4, int param_5); /* 005d1612 */
-void __thiscall FUN_005d1b38(C_00417f70_3c *this); /* 005d1b38 */
+void __thiscall sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2); /* 005cf467 */
+void __thiscall FUN_005cf541(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3); /* 005cf541 */
+int __thiscall sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3); /* 005cf64c */
+int __thiscall sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param_3); /* 005cfdeb */
+int * __thiscall sprite_blit_to_surface(Sprite *this,int *param_1,DibSurface *param_2,int param_3,int param_4, int param_5); /* 005d056c */
+int * __thiscall sprite_blit_to_ddsurf(Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5); /* 005d080d */
+int * __thiscall sprite_blit_xyscale_to_surface(Sprite *this,int *param_1,DibSurface *param_2,int param_3,int param_4, int param_5); /* 005d0aac */
+int * __thiscall sprite_blit_xyscale_to_ddsurf(Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5); /* 005d0dbf */
+int * __thiscall sprite_blit_silhouette_to_surface(Sprite *this,int *param_1,DibSurface *param_2,int param_3,int param_4, int param_5,undefined4 param_6); /* 005d10cd */
+int * __thiscall sprite_blit_silhouette_to_ddsurf(Sprite *this,int *param_1,DDSurface *param_2,int param_3,int param_4,int param_5, undefined4 param_6); /* 005d1372 */
+void __thiscall sprite_merge_at(Sprite *this,iptr param_1,Sprite *param_2,undefined4 param_3,int param_4, int param_5); /* 005d1612 */
+void __thiscall sprite_clear_fields(Sprite *this); /* 005d1b38 */
 u8 __thiscall FUN_005d1bb8(C_005d1bb8 *this,int param_1,int param_2); /* 005d1bb8 */
-undefined4 __cdecl FUN_005d1cb0(); /* 005d1cb0 */
-void __cdecl FUN_005d1cd0(); /* 005d1cd0 */
-int __cdecl FUN_005d1d00(); /* 005d1d00 */
-int __cdecl FUN_005d1e00(); /* 005d1e00 */
-int __thiscall FUN_005d1ef0(C_005d1ef0 *this,iptr param_1); /* 005d1ef0 */
-int __thiscall FUN_005d1f20(C_005d1f20 *this,iptr param_1); /* 005d1f20 */
-undefined4 __cdecl FUN_005d1f50(); /* 005d1f50 */
-void __cdecl FUN_005d2004(); /* 005d2004 */
-iptr __thiscall FUN_005d2042(C_005d2042 *this,u32 param_1,undefined4 param_2,u32 param_3); /* 005d2042 */
-void __thiscall FUN_005d20e6(C_005d2042 *this,iptr param_1); /* 005d20e6 */
-C_005d211e * __thiscall FUN_005d211e(C_005d211e *this); /* 005d211e */
-void __thiscall FUN_005d2182(C_005d2042 *this); /* 005d2182 */
+undefined4 __cdecl endian_from_le_u32(); /* 005d1cb0 */
+void __cdecl rect_copy_from_le(); /* 005d1cd0 */
+int __cdecl gfx_scale_length(); /* 005d1d00 */
+int __cdecl gfx_scale_length_tbl(); /* 005d1e00 */
+int __thiscall ddsurf_row_next(DDSurfaceRowNextView *this,iptr param_1); /* 005d1ef0 */
+int __thiscall ddsurf_row_prev(DDSurfaceRowPrevView *this,iptr param_1); /* 005d1f20 */
+undefined4 __cdecl game_timer_create(); /* 005d1f50 */
+void __cdecl game_timer_destroy(); /* 005d2004 */
+iptr __thiscall timer_mgr_add(TimerManager *this,u32 param_1,undefined4 param_2,u32 param_3); /* 005d2042 */
+void __thiscall game_timer_kill_slot(TimerManager *this,iptr param_1); /* 005d20e6 */
+TimerManagerCtorView * __thiscall timer_mgr_ctor(TimerManagerCtorView *this); /* 005d211e */
+void __thiscall timer_mgr_dtor(TimerManager *this); /* 005d2182 */
 void __cdecl FUN_005d21f0(); /* 005d21f0 */
-void __cdecl FUN_005d220a(); /* 005d220a */
-void __cdecl FUN_005d2224(); /* 005d2224 */
+void __cdecl dbg_log_file_static_init(); /* 005d220a */
+void __cdecl dbg_log_file_reg_atexit(); /* 005d2224 */
 void __cdecl FUN_005d2241(); /* 005d2241 */
-undefined1 __cdecl FUN_005d225b(); /* 005d225b */
-undefined1 __cdecl FUN_005d2279(); /* 005d2279 */
-undefined1 __cdecl FUN_005d22b7(); /* 005d22b7 */
-void __cdecl FUN_005d22f9(); /* 005d22f9 */
-void __cdecl FUN_005d233f(); /* 005d233f */
-undefined1 __cdecl FUN_005d237d(); /* 005d237d */
-void __cdecl FUN_005d23bb(); /* 005d23bb */
+undefined1 __cdecl dbg_log(); /* 005d225b */
+undefined1 __cdecl dbg_logf(); /* 005d2279 */
+undefined1 __cdecl dbg_logf_int2(); /* 005d22b7 */
+void __cdecl dbg_logf3(); /* 005d22f9 */
+void __cdecl dbg_logf_noret(); /* 005d233f */
+undefined1 __cdecl dbg_logf_str(); /* 005d237d */
+void __cdecl dbg_logf_str_int(); /* 005d23bb */
 void __cdecl FUN_005d23fd(); /* 005d23fd */
 void __cdecl FUN_005d243f(undefined1 param_1); /* 005d243f */
 void __cdecl FUN_005d2457(undefined1 param_1); /* 005d2457 */
-void * __thiscall FUN_005d246f(void *this); /* 005d246f */
-void __thiscall FUN_005d2498(void *this); /* 005d2498 */
-undefined1 __thiscall FUN_005d24b3(void *this,iptr param_1); /* 005d24b3 */
-void __cdecl FUN_005d2550(); /* 005d2550 */
-void __cdecl FUN_005d2568(); /* 005d2568 */
-void __cdecl FUN_005d2590(); /* 005d2590 */
-void __cdecl FUN_005d25a8(); /* 005d25a8 */
-void __thiscall FUN_005d25c0(C_0040f380_44 *this,iptr param_1,undefined4 param_2,int param_3,int param_4,int param_5, iptr param_6); /* 005d25c0 */
-void __thiscall FUN_005d2625(C_0040f380_44 *this,undefined4 param_1,undefined4 param_2,int param_3,int param_4, int param_5,undefined4 param_6,undefined4 param_7); /* 005d2625 */
-void __cdecl FUN_005d268e(); /* 005d268e */
-void __thiscall FUN_005d26b0(C_0040f380_44 *this,iptr param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5); /* 005d26b0 */
-HWND __cdecl FUN_005d2740(); /* 005d2740 */
+void * __thiscall dbg_log_file_ctor(void *this); /* 005d246f */
+void __thiscall dbg_log_file_dtor(void *this); /* 005d2498 */
+undefined1 __thiscall dbg_log_write(void *this,iptr param_1); /* 005d24b3 */
+void __cdecl ui_set_ctrl_text_color(); /* 005d2550 */
+void __cdecl ui_set_ctrl_text_shadow(); /* 005d2568 */
+void __cdecl ui_set_ctrl_disabled_color(); /* 005d2590 */
+void __cdecl ui_set_ctrl_font(); /* 005d25a8 */
+void __thiscall edit_create_at(EditControl *this,iptr param_1,undefined4 param_2,int param_3,int param_4,int param_5, iptr param_6); /* 005d25c0 */
+void __thiscall FUN_005d2625(EditControl *this,undefined4 param_1,undefined4 param_2,int param_3,int param_4, int param_5,undefined4 param_6,undefined4 param_7); /* 005d2625 */
+void __cdecl ui_set_default_font(); /* 005d268e */
+void __thiscall edit_create_with_text(EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5); /* 005d26b0 */
+HWND __cdecl edit_create_window(); /* 005d2740 */
 LRESULT __stdcall FUN_005d2a01(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4); /* 005d2a01 */
 void __cdecl FUN_005d2d15(); /* 005d2d15 */
-void __cdecl FUN_005d2d3d(); /* 005d2d3d */
-void __cdecl FUN_005d2d4d(); /* 005d2d4d */
-void __cdecl FUN_005d2d7f(); /* 005d2d7f */
-void __cdecl FUN_005d2da1(); /* 005d2da1 */
-void __cdecl FUN_005d2dc6(); /* 005d2dc6 */
-iptr __cdecl FUN_005d2ded(); /* 005d2ded */
-LRESULT __cdecl FUN_005d2e31(); /* 005d2e31 */
+void __cdecl edit_hwnd_cleanup_stub(); /* 005d2d3d */
+void __cdecl hwnd_get_text(); /* 005d2d4d */
+void __cdecl hwnd_send_settext(); /* 005d2d7f */
+void __cdecl edit_hwnd_limit_text(); /* 005d2da1 */
+void __cdecl edit_hwnd_set_sel(); /* 005d2dc6 */
+iptr __cdecl edit_hwnd_get_line(); /* 005d2ded */
+LRESULT __cdecl edit_hwnd_get_line_count(); /* 005d2e31 */
 void __cdecl FUN_005d2e54(); /* 005d2e54 */
-LRESULT __cdecl FUN_005d2e77(); /* 005d2e77 */
-LRESULT __cdecl FUN_005d2e9c(); /* 005d2e9c */
-LRESULT __cdecl FUN_005d2ec1(); /* 005d2ec1 */
+LRESULT __cdecl edit_line_from_char(); /* 005d2e77 */
+LRESULT __cdecl edit_line_index(); /* 005d2e9c */
+LRESULT __cdecl edit_line_length(); /* 005d2ec1 */
 void __cdecl FUN_005d2ee6(); /* 005d2ee6 */
-void __cdecl FUN_005d2f0d(); /* 005d2f0d */
-uint __cdecl FUN_005d2f47(); /* 005d2f47 */
-int __cdecl FUN_005d2f7e(); /* 005d2f7e */
+void __cdecl edit_hwnd_set_caret(); /* 005d2f0d */
+uint __cdecl edit_ctl_get_sel_end(); /* 005d2f47 */
+int __cdecl edit_hwnd_get_text_end(); /* 005d2f7e */
 void __cdecl FUN_005d2fca(); /* 005d2fca */
-void __cdecl FUN_005d3035(); /* 005d3035 */
+void __cdecl edit_hwnd_replace_sel(); /* 005d3035 */
 bool __cdecl FUN_005d305a(); /* 005d305a */
-undefined4 __thiscall FUN_005d30e0(C_005d30e0 *this,iptr param_1); /* 005d30e0 */
-HWND __cdecl FUN_005d3130(); /* 005d3130 */
+undefined4 __thiscall edit_fire_key_callback(EditKeyView *this,iptr param_1); /* 005d30e0 */
+HWND __cdecl combo_create_window(); /* 005d3130 */
 LRESULT __stdcall FUN_005d3310(HWND param_1,uint param_2,uint param_3,LPARAM param_4); /* 005d3310 */
 void __cdecl FUN_005d356e(); /* 005d356e */
-void __cdecl FUN_005d357e(); /* 005d357e */
+void __cdecl combo_hwnd_add_string(); /* 005d357e */
 void __cdecl FUN_005d35a3(); /* 005d35a3 */
-void __cdecl FUN_005d35c8(); /* 005d35c8 */
-void __cdecl FUN_005d360a(); /* 005d360a */
-void __cdecl FUN_005d362d(); /* 005d362d */
+void __cdecl combo_hwnd_set_font(); /* 005d35c8 */
+void __cdecl combo_hwnd_clear(); /* 005d360a */
+void __cdecl combo_hwnd_get_item_text(); /* 005d362d */
 void __cdecl FUN_005d3654(); /* 005d3654 */
-LRESULT __cdecl FUN_005d36b1(); /* 005d36b1 */
-void __cdecl FUN_005d36f6(); /* 005d36f6 */
-void __thiscall FUN_005d3720(C_005d3720 *this); /* 005d3720 */
-void __thiscall FUN_005d3760(C_005d3760 *this); /* 005d3760 */
-HWND __cdecl FUN_005d37a0(); /* 005d37a0 */
+LRESULT __cdecl combo_hwnd_get_cur_sel(); /* 005d36b1 */
+void __cdecl combo_hwnd_set_cur_sel(); /* 005d36f6 */
+void __thiscall combo_fire_dblclick(ComboBoxDblClickView *this); /* 005d3720 */
+void __thiscall combo_fire_selchange(ComboBoxSelChangeView *this); /* 005d3760 */
+HWND __cdecl listbox_create_hwnd(); /* 005d37a0 */
 LRESULT __stdcall FUN_005d39e2(HWND param_1,uint param_2,uint param_3,LPARAM param_4); /* 005d39e2 */
-void __cdecl FUN_005d3c40(); /* 005d3c40 */
-void __cdecl FUN_005d3c50(); /* 005d3c50 */
+void __cdecl listbox_hwnd_cleanup_stub(); /* 005d3c40 */
+void __cdecl listbox_hwnd_add_string(); /* 005d3c50 */
 void __cdecl FUN_005d3c75(); /* 005d3c75 */
-void __cdecl FUN_005d3c9a(); /* 005d3c9a */
-void __cdecl FUN_005d3cdc(); /* 005d3cdc */
-void __cdecl FUN_005d3cff(); /* 005d3cff */
+void __cdecl listbox_hwnd_set_font(); /* 005d3c9a */
+void __cdecl listbox_hwnd_clear(); /* 005d3cdc */
+void __cdecl listbox_hwnd_get_text(); /* 005d3cff */
 void __cdecl FUN_005d3d26(); /* 005d3d26 */
-void __cdecl FUN_005d3d62(); /* 005d3d62 */
-LRESULT __cdecl FUN_005d3dbf(); /* 005d3dbf */
+void __cdecl listbox_hwnd_get_sel_text(); /* 005d3d62 */
+LRESULT __cdecl listbox_hwnd_get_cur_sel(); /* 005d3dbf */
 LRESULT __cdecl FUN_005d3e04(); /* 005d3e04 */
 LRESULT __cdecl FUN_005d3e49(); /* 005d3e49 */
-void __cdecl FUN_005d3e92(); /* 005d3e92 */
+void __cdecl listbox_hwnd_set_cur_sel(); /* 005d3e92 */
 void __cdecl FUN_005d3eb7(); /* 005d3eb7 */
 void __cdecl FUN_005d3ede(); /* 005d3ede */
 void __cdecl FUN_005d3f05(HWND param_1,LPARAM param_2,char param_3); /* 005d3f05 */
-void __thiscall FUN_005d3f30(C_005d3f30 *this); /* 005d3f30 */
-void __thiscall FUN_005d3f70(C_005d3f70 *this); /* 005d3f70 */
+void __thiscall listbox_fire_dblclick(ListBoxDblClickView *this); /* 005d3f30 */
+void __thiscall listbox_fire_selchange(ListBoxSelChangeView *this); /* 005d3f70 */
 undefined4 __thiscall FUN_005d3fb0(C_005d3fb0 *this,int param_1); /* 005d3fb0 */
-void __thiscall FUN_005d4014(C_005d4014 *this); /* 005d4014 */
+void __thiscall radiogrp_show_all(RadioGroupShowView *this); /* 005d4014 */
 void __thiscall FUN_005d4087(C_005d4087 *this); /* 005d4087 */
-void __thiscall FUN_005d40dd(C_00447210 *this); /* 005d40dd */
-void __thiscall FUN_005d4122(C_00421ca0 *this); /* 005d4122 */
-void __cdecl FUN_005d4167(); /* 005d4167 */
-void __cdecl FUN_005d417f(); /* 005d417f */
-void __cdecl FUN_005d4197(); /* 005d4197 */
-void __cdecl FUN_005d41af(); /* 005d41af */
-uint __cdecl FUN_005d41e0(); /* 005d41e0 */
-void __cdecl FUN_005d4204(); /* 005d4204 */
-HWND __cdecl FUN_005d423c(); /* 005d423c */
-void __cdecl FUN_005d447c(); /* 005d447c */
-undefined4 __cdecl FUN_005d44be(); /* 005d44be */
-void __cdecl FUN_005d4664(); /* 005d4664 */
+void __thiscall FUN_005d40dd(RadioGroupDisableView *this); /* 005d40dd */
+void __thiscall FUN_005d4122(RadioGroupEnableView *this); /* 005d4122 */
+void __cdecl ctrl_set_pending_font(); /* 005d4167 */
+void __cdecl ui_set_radio_text_color(); /* 005d417f */
+void __cdecl ui_set_radio_disabled_color(); /* 005d4197 */
+void __cdecl ui_set_radio_text_shadow(); /* 005d41af */
+uint __cdecl timer_ticks_60hz(); /* 005d41e0 */
+void __cdecl timer_busy_wait_ticks(); /* 005d4204 */
+HWND __cdecl timer_wnd_create(); /* 005d423c */
+void __cdecl timer_wnd_destroy(); /* 005d447c */
+undefined4 __cdecl timer_wnd_start_slot(); /* 005d44be */
+void __cdecl timer_wnd_kill_slot(); /* 005d4664 */
 LRESULT __stdcall FUN_005d4700(HWND param_1,UINT param_2,WPARAM param_3,LPARAM param_4); /* 005d4700 */
-void __thiscall FUN_005d47d0(C_005d2042 *this,iptr param_1); /* 005d47d0 */
+void __thiscall game_timer_fire_slot(TimerManager *this,iptr param_1); /* 005d47d0 */
 undefined2 __cdecl FUN_005d4870(); /* 005d4870 */
 void __cdecl FUN_005d4899(); /* 005d4899 */
-void __cdecl FUN_005d48d0(); /* 005d48d0 */
-int __cdecl FUN_005d48f0(); /* 005d48f0 */
-void __cdecl FUN_005d4965(); /* 005d4965 */
-void __cdecl FUN_005d49a3(); /* 005d49a3 */
-uint __cdecl FUN_005d4a11(); /* 005d4a11 */
-uint __cdecl FUN_005d4bcb(); /* 005d4bcb */
-void __cdecl FUN_005d4c18(); /* 005d4c18 */
-undefined2 __cdecl FUN_005d4c5f(); /* 005d4c5f */
-undefined2 __cdecl FUN_005d4f6a(); /* 005d4f6a */
-undefined4 __cdecl FUN_005d52a2(); /* 005d52a2 */
-#undef FUN_005d5643
-undefined4 __cdecl FUN_005d5643(void); /* 005d5643, hand-written */
+void __cdecl snd_shutdown(); /* 005d48d0 */
+int __cdecl snd_wave_open(); /* 005d48f0 */
+void __cdecl snd_wave_close_all(); /* 005d4965 */
+void __cdecl snd_show_error(); /* 005d49a3 */
+uint __cdecl snd_wave_open_device(); /* 005d4a11 */
+uint __cdecl snd_wave_close_device(); /* 005d4bcb */
+void __cdecl snd_waveout_error_box(); /* 005d4c18 */
+undefined2 __cdecl snd_wave_load_file(); /* 005d4c5f */
+undefined2 __cdecl snd_wave_open_stream(); /* 005d4f6a */
+undefined4 __cdecl snd_wave_add_avi_stream(); /* 005d52a2 */
+#undef snd_wave_get_position_ms
+undefined4 __cdecl snd_wave_get_position_ms(void); /* 005d5643, hand-written */
 #undef FUN_005d5706
 undefined4 __cdecl FUN_005d5706(void); /* 005d5706, hand-written */
-undefined4 __cdecl FUN_005d57b1(); /* 005d57b1 */
-undefined4 __cdecl FUN_005d5b88(); /* 005d5b88 */
-void __cdecl FUN_005d5bec(); /* 005d5bec */
-undefined4 __cdecl FUN_005d5d11(); /* 005d5d11 */
-undefined2 __cdecl FUN_005d5f91(); /* 005d5f91 */
-short __cdecl FUN_005d6038(); /* 005d6038 */
-void __cdecl FUN_005d61ab(); /* 005d61ab */
+undefined4 __cdecl snd_avi_stream_feed(); /* 005d57b1 */
+undefined4 __cdecl snd_avi_stream_stop(); /* 005d5b88 */
+void __cdecl snd_avi_stream_refill(); /* 005d5bec */
+undefined4 __cdecl snd_avi_stream_prepare(); /* 005d5d11 */
+undefined2 __cdecl snd_avi_stream_start(); /* 005d5f91 */
+short __cdecl snd_wave_play(); /* 005d6038 */
+void __cdecl snd_wave_free_by_id(); /* 005d61ab */
 void __cdecl FUN_005d6222(short param_1); /* 005d6222 */
-void __cdecl FUN_005d6283(); /* 005d6283 */
-LPVOID __cdecl FUN_005d63c5(); /* 005d63c5 */
-void __cdecl FUN_005d6430(); /* 005d6430 */
-MMRESULT __cdecl FUN_005d645e(); /* 005d645e */
-void __cdecl FUN_005d6685(); /* 005d6685 */
-void __cdecl FUN_005d673a(); /* 005d673a */
-void __cdecl FUN_005d687b(); /* 005d687b */
-undefined4 __cdecl FUN_005d6947(); /* 005d6947 */
-void __cdecl FUN_005d6a2c(); /* 005d6a2c */
-void __cdecl FUN_005d6b4c(); /* 005d6b4c */
-undefined4 __cdecl FUN_005d6b89(); /* 005d6b89 */
-undefined4 __cdecl FUN_005d6c99(); /* 005d6c99 */
-undefined4 __cdecl FUN_005d717f(); /* 005d717f */
-iptr __cdecl FUN_005d7494(); /* 005d7494 */
-undefined4 __cdecl FUN_005d753e(); /* 005d753e */
-undefined4 __cdecl FUN_005d778c(); /* 005d778c */
-undefined4 __cdecl FUN_005d791b(); /* 005d791b */
+void __cdecl snd_wave_stream_refill(); /* 005d6283 */
+LPVOID __cdecl snd_global_alloc_lock(); /* 005d63c5 */
+void __cdecl snd_global_free(); /* 005d6430 */
+MMRESULT __cdecl snd_wave_alloc_buffers(); /* 005d645e */
+void __cdecl snd_wave_add_buffers(); /* 005d6685 */
+void __cdecl snd_wave_remove_buffers(); /* 005d673a */
+void __cdecl snd_wave_set_buffer_count(); /* 005d687b */
+undefined4 __cdecl snd_wave_write_pending(); /* 005d6947 */
+void __cdecl snd_wave_stop_all(); /* 005d6a2c */
+void __cdecl snd_fill_silence_u8(); /* 005d6b4c */
+undefined4 __cdecl snd_wave_reset_all(); /* 005d6b89 */
+undefined4 __cdecl snd_wave_on_buffer_done(); /* 005d6c99 */
+undefined4 __cdecl snd_wave_mix_buffer(); /* 005d717f */
+iptr __cdecl snd_wave_free(); /* 005d7494 */
+undefined4 __cdecl snd_wave_copy_source(); /* 005d753e */
+undefined4 __cdecl snd_wave_mix_source(); /* 005d778c */
+undefined4 __cdecl snd_avi_fill_buffer(); /* 005d791b */
 undefined4 __cdecl FUN_005d7b94(short param_1); /* 005d7b94 */
-C_00421bf0_98 * __thiscall FUN_005d7c00(C_00421bf0_98 *this); /* 005d7c00 */
-C_00421bf0_98 * __thiscall FUN_005d7c2c(C_00421bf0_98 *this,iptr param_1,int param_2); /* 005d7c2c */
-undefined4 __thiscall FUN_005d7c6e(C_00421bf0_98 *this); /* 005d7c6e */
+FileObject * __thiscall file_obj_init(FileObject *this); /* 005d7c00 */
+FileObject * __thiscall FUN_005d7c2c(FileObject *this,iptr param_1,int param_2); /* 005d7c2c */
+undefined4 __thiscall file_obj_close(FileObject *this); /* 005d7c6e */
 void __cdecl FUN_005d7c8c(); /* 005d7c8c */
-void __thiscall FUN_005d7cb0(C_0040f380_cc *this,C_00511320 *param_1,undefined4 param_2,int param_3,int param_4, int param_5,int param_6,iptr param_7,uint param_8); /* 005d7cb0 */
-void __thiscall FUN_005d7f72(C_0040f380_cc *this,C_00511320 *param_1,undefined4 param_2,int param_3,int param_4, int param_5,int param_6,C_00417f70_3c *param_7,uint param_8,undefined4 param_9); /* 005d7f72 */
-void __cdecl FUN_005d8236(); /* 005d8236 */
+void __thiscall spritebtn_init_from_sprite(SpriteButton *this,WndPaletteView *param_1,undefined4 param_2,int param_3,int param_4, int param_5,int param_6,iptr param_7,uint param_8); /* 005d7cb0 */
+void __thiscall FUN_005d7f72(SpriteButton *this,WndPaletteView *param_1,undefined4 param_2,int param_3,int param_4, int param_5,int param_6,Sprite *param_7,uint param_8,undefined4 param_9); /* 005d7f72 */
+void __cdecl ui_set_button_font(); /* 005d8236 */
 void __cdecl FUN_005d8250(); /* 005d8250 */
-undefined4 __cdecl FUN_005d8270(); /* 005d8270 */
+undefined4 __cdecl file_obj_open_path(); /* 005d8270 */
 void __cdecl FUN_005d83b6(); /* 005d83b6 */
-uint __cdecl FUN_005d83d6(); /* 005d83d6 */
-undefined4 __cdecl FUN_005d8476(); /* 005d8476 */
-undefined4 __cdecl FUN_005d84f6(); /* 005d84f6 */
+uint __cdecl file_obj_create_path(); /* 005d83d6 */
+undefined4 __cdecl file_obj_close_handle(); /* 005d8476 */
+undefined4 __cdecl file_obj_read_bytes(); /* 005d84f6 */
 undefined4 __cdecl FUN_005d8551(); /* 005d8551 */
-undefined4 __cdecl FUN_005d8622(); /* 005d8622 */
+undefined4 __cdecl file_obj_seek_rel(); /* 005d8622 */
 undefined4 __cdecl FUN_005d8675(); /* 005d8675 */
 undefined4 __cdecl FUN_005d86c8(); /* 005d86c8 */
-undefined4 __cdecl FUN_005d8721(); /* 005d8721 */
+undefined4 __cdecl file_obj_write_bytes(); /* 005d8721 */
 uint __cdecl FUN_005d879c(); /* 005d879c */
-int __cdecl FUN_005d881c(); /* 005d881c */
-DWORD __cdecl FUN_005d898e(); /* 005d898e */
-undefined4 __cdecl FUN_005d89e8(); /* 005d89e8 */
-undefined4 __cdecl FUN_005d8ab8(); /* 005d8ab8 */
+int __cdecl file_obj_read_line_impl(); /* 005d881c */
+DWORD __cdecl file_obj_get_size_impl(); /* 005d898e */
+undefined4 __cdecl file_obj_map_view_impl(); /* 005d89e8 */
+undefined4 __cdecl file_obj_close_mapping(); /* 005d8ab8 */
 void __cdecl FUN_005d8b34(); /* 005d8b34 */
 void __cdecl FUN_005d8b5c(); /* 005d8b5c */
 void __cdecl FUN_005d8b86(); /* 005d8b86 */
 void __cdecl FUN_005d8bb0(); /* 005d8bb0 */
-void __cdecl FUN_005d8bde(); /* 005d8bde */
-undefined4 __cdecl FUN_005d8c0c(); /* 005d8c0c */
-undefined4 __cdecl FUN_005d8d06(); /* 005d8d06 */
+void __cdecl file_dialog_unowned(); /* 005d8bde */
+undefined4 __cdecl file_dialog_run(); /* 005d8c0c */
+undefined4 __cdecl dbg_output_line(); /* 005d8d06 */
 undefined4 __cdecl FUN_005d8d30(); /* 005d8d30 */
-int __cdecl FUN_005d8d50(); /* 005d8d50 */
-int __cdecl FUN_005d8da1(); /* 005d8da1 */
-undefined4 __cdecl FUN_005d8e3f(); /* 005d8e3f */
-undefined4 __cdecl FUN_005d931b(); /* 005d931b */
-void __cdecl FUN_005d99f4(); /* 005d99f4 */
-void __cdecl FUN_005d9a9a(); /* 005d9a9a */
+int __cdecl str_split_underscores(); /* 005d8d50 */
+int __cdecl radiogrp_item_height(); /* 005d8da1 */
+undefined4 __cdecl radiogrp_create_items(); /* 005d8e3f */
+undefined4 __cdecl radiogrp_create_items_from_str(); /* 005d931b */
+void __cdecl radiogrp_destroy_items(); /* 005d99f4 */
+void __cdecl radiogrp_item_activate(); /* 005d9a9a */
 undefined4 __stdcall FUN_005d9b86(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4); /* 005d9b86 */
-undefined4 __cdecl FUN_005dab5a(); /* 005dab5a */
-void __cdecl FUN_005dabc7(); /* 005dabc7 */
-uint __cdecl FUN_005dabe5(); /* 005dabe5 */
-undefined4 __cdecl FUN_005dac39(); /* 005dac39 */
+undefined4 __cdecl ctrl_hwnd_is_radio(); /* 005dab5a */
+void __cdecl radiogrp_hwnd_invalidate(); /* 005dabc7 */
+uint __cdecl radiogrp_hwnd_is_selected(); /* 005dabe5 */
+undefined4 __cdecl radiogrp_hwnds_same_group(); /* 005dac39 */
 void __cdecl FUN_005dacd9(undefined1 param_1,undefined1 param_2,undefined1 param_3); /* 005dacd9 */
 void __cdecl FUN_005dad08(undefined1 param_1,undefined1 param_2,undefined1 param_3); /* 005dad08 */
-void __thiscall FUN_005dad40(C_005dad40 *this,undefined4 param_1,undefined4 param_2); /* 005dad40 */
-void __thiscall FUN_005dad80(C_005dad80 *this,undefined4 param_1,undefined4 param_2); /* 005dad80 */
-void __thiscall FUN_005dadc0(C_005dadc0 *this,undefined4 param_1,undefined4 param_2); /* 005dadc0 */
+void __thiscall radiogrp_fire_callback(RadioGroupClickView *this,undefined4 param_1,undefined4 param_2); /* 005dad40 */
+void __thiscall radiogrp_fire_dblclick(RadioGroupDblClickView *this,undefined4 param_1,undefined4 param_2); /* 005dad80 */
+void __thiscall radiogrp_fire_rclick(RadioGroupRClickView *this,undefined4 param_1,undefined4 param_2); /* 005dadc0 */
 void __cdecl FUN_005dae00(); /* 005dae00 */
-void __cdecl FUN_005dae1a(); /* 005dae1a */
-void __cdecl FUN_005dae34(); /* 005dae34 */
+void __cdecl err_report_ctx_static_init(); /* 005dae1a */
+void __cdecl err_report_ctx_reg_atexit(); /* 005dae34 */
 void __cdecl FUN_005dae51(); /* 005dae51 */
-void __thiscall FUN_005dae6b(C_005dae6b *this,undefined4 param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 005dae6b */
-void __thiscall FUN_005daeb1(C_005dae6b *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005daeb1 */
-C_005dae6b * __thiscall FUN_005daef7(C_005dae6b *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 005daef7 */
-u8 * __thiscall FUN_005daf63(C_005dae6b *this); /* 005daf63 */
-void __thiscall FUN_005daf92(C_005dae6b *this,undefined4 param_1); /* 005daf92 */
-void __thiscall FUN_005dafbb(C_005dae6b *this,iptr param_1); /* 005dafbb */
-void __thiscall FUN_005dafdf(C_005dae6b *this,u32 param_1); /* 005dafdf */
+void __thiscall err_report(ErrorContext *this,undefined4 param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 005dae6b */
+void __thiscall FUN_005daeb1(ErrorContext *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005daeb1 */
+ErrorContext * __thiscall err_format_message(ErrorContext *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 005daef7 */
+u8 * __thiscall err_get_stack_trace(ErrorContext *this); /* 005daf63 */
+void __thiscall err_show_fatal_box(ErrorContext *this,undefined4 param_1); /* 005daf92 */
+void __thiscall err_log_warning(ErrorContext *this,iptr param_1); /* 005dafbb */
+void __thiscall err_set_code(ErrorContext *this,u32 param_1); /* 005dafdf */
 u32 __thiscall FUN_005db016(C_005db016 *this); /* 005db016 */
-void __thiscall FUN_005db035(C_005dae6b *this,undefined4 param_1); /* 005db035 */
-void __thiscall FUN_005db059(C_005dae6b *this); /* 005db059 */
-C_005dae6b * __thiscall FUN_005db089(C_005dae6b *this); /* 005db089 */
-void __thiscall FUN_005db0b4(void *this); /* 005db0b4 */
-void __thiscall FUN_005db0d0(C_0040f380_3c *this,u32 param_1); /* 005db0d0 */
-void __thiscall FUN_005db110(C_0040f380_3c *this,iptr param_1,iptr param_2); /* 005db110 */
-HMODULE __cdecl FUN_005db140(); /* 005db140 */
-void __cdecl FUN_005db1e0(); /* 005db1e0 */
-HGLOBAL __cdecl FUN_005db1fa(); /* 005db1fa */
-HGLOBAL __cdecl FUN_005db2f8(); /* 005db2f8 */
+void __thiscall FUN_005db035(ErrorContext *this,undefined4 param_1); /* 005db035 */
+void __thiscall err_ctx_clear_codes(ErrorContext *this); /* 005db059 */
+ErrorContext * __thiscall err_ctx_ctor(ErrorContext *this); /* 005db089 */
+void __thiscall err_ctx_dtor(void *this); /* 005db0b4 */
+void __thiscall scrollbar_set_page_size(Control *this,u32 param_1); /* 005db0d0 */
+void __thiscall scrollbar_get_ctl_range(Control *this,iptr param_1,iptr param_2); /* 005db110 */
+HMODULE __cdecl res_dll_load_library(); /* 005db140 */
+void __cdecl res_free_impl(); /* 005db1e0 */
+HGLOBAL __cdecl res_load_impl(); /* 005db1fa */
+HGLOBAL __cdecl res_load_bitmap(); /* 005db2f8 */
 HGLOBAL __cdecl FUN_005db3ca(); /* 005db3ca */
-LPVOID __cdecl FUN_005db531(); /* 005db531 */
-void __cdecl FUN_005db54b(); /* 005db54b */
-void __cdecl FUN_005db55b(); /* 005db55b */
-undefined4 __cdecl FUN_005db5e9(); /* 005db5e9 */
-C_00408010_10 * __thiscall FUN_005db610(C_00408010_10 *this); /* 005db610 */
-void __thiscall FUN_005db650(C_005db650 *this); /* 005db650 */
-void __thiscall FUN_005db67b(C_00408010_10 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,iptr param_7); /* 005db67b */
-void __thiscall FUN_005db704(C_00408010_10 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005db704 */
+LPVOID __cdecl res_lock_impl(); /* 005db531 */
+void __cdecl res_unlock_impl(); /* 005db54b */
+void __cdecl dll_unload(); /* 005db55b */
+undefined4 __cdecl res_get_size(); /* 005db5e9 */
+WndBase * __thiscall wnd_record_init(WndBase *this); /* 005db610 */
+void __thiscall wnd_record_destroy(WndDestroyView *this); /* 005db650 */
+void __thiscall wnd_record_create(WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,iptr param_7); /* 005db67b */
+void __thiscall wnd_record_create_nopal(WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005db704 */
 void __thiscall FUN_005db792(C_005db792 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005db792 */
-void __thiscall FUN_005db80f(C_005db80f *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,C_00408010_10 *param_7); /* 005db80f */
-void __thiscall FUN_005db893(C_00408010_10 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,iptr param_7,C_00408010_10 *param_8); /* 005db893 */
-void __thiscall FUN_005db923(C_00408010_10 *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,C_00408010_10 *param_7); /* 005db923 */
-void __thiscall FUN_005db9b8(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005db9b8 */
-void __thiscall FUN_005dba15(C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005dba15 */
+void __thiscall FUN_005db80f(C_005db80f *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,WndBase *param_7); /* 005db80f */
+void __thiscall wnd_record_create_child(WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,iptr param_7,WndBase *param_8); /* 005db893 */
+void __thiscall wnd_record_create_child_nopal(WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,WndBase *param_7); /* 005db923 */
+void __thiscall FUN_005db9b8(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005db9b8 */
+void __thiscall FUN_005dba15(WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005dba15 */
 void __thiscall FUN_005dba72(void *this); /* 005dba72 */
-undefined4 __thiscall FUN_005dba95(void *this); /* 005dba95 */
-undefined4 __thiscall FUN_005dbab8(void *this); /* 005dbab8 */
+undefined4 __thiscall wnd_is_shift_down(void *this); /* 005dba95 */
+undefined4 __thiscall wnd_is_ctrl_down(void *this); /* 005dbab8 */
 void __thiscall FUN_005dbadb(void *this); /* 005dbadb */
 void __thiscall FUN_005dbaf6(void *this); /* 005dbaf6 */
-undefined4 __cdecl FUN_005dbb20(); /* 005dbb20 */
-undefined4 __cdecl FUN_005dbb4f(); /* 005dbb4f */
-void __cdecl FUN_005dbbb3(); /* 005dbbb3 */
-void __cdecl FUN_005dbbd6(); /* 005dbbd6 */
-void __cdecl FUN_005dbc1b(); /* 005dbc1b */
+undefined4 __cdecl app_startup(); /* 005dbb20 */
+undefined4 __cdecl app_shutdown(); /* 005dbb4f */
+void __cdecl app_init_graphics(); /* 005dbbb3 */
+void __cdecl app_init_system(); /* 005dbbd6 */
+void __cdecl app_shutdown_system(); /* 005dbc1b */
 void __cdecl FUN_005dbc3a(); /* 005dbc3a */
 void __cdecl FUN_005dbc4a(); /* 005dbc4a */
-void __cdecl FUN_005dbc5a(); /* 005dbc5a */
+void __cdecl app_register_wnd_classes(); /* 005dbc5a */
 void __cdecl FUN_005dbdba(); /* 005dbdba */
-#undef FUN_005dbe88
-LRESULT __stdcall FUN_005dbe88(HWND param_1,uint param_2,WPARAM param_3,uint param_4); /* 005dbe88, hand-written */
-C_005d2042 * __thiscall FUN_005dcac0(C_005d2042 *this,uint param_1); /* 005dcac0 */
+#undef wnd_base_wndproc
+LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint param_4); /* 005dbe88, hand-written */
+TimerManager * __thiscall timer_mgr_scalar_dtor(TimerManager *this,uint param_1); /* 005dcac0 */
 void __cdecl FUN_005dcb00(); /* 005dcb00 */
 void __cdecl FUN_005dcb1c(); /* 005dcb1c */
 void __cdecl FUN_005dcb38(); /* 005dcb38 */
 void __cdecl FUN_005dcb54(); /* 005dcb54 */
-void __cdecl FUN_005dcb70(); /* 005dcb70 */
-void __cdecl FUN_005dcb8c(); /* 005dcb8c */
+void __cdecl mem_handle_release(); /* 005dcb70 */
+void __cdecl mem_copy_src_dst(); /* 005dcb8c */
 void __cdecl FUN_005dcbb0(); /* 005dcbb0 */
 void __cdecl FUN_005dcbcc(); /* 005dcbcc */
 void __cdecl FUN_005dcbec(); /* 005dcbec */
-C_00578650 * __thiscall FUN_005dcc10(C_00578650 *this); /* 005dcc10 */
-void __thiscall FUN_005dcc32(C_00578650 *this); /* 005dcc32 */
-void __thiscall FUN_005dcc56(C_005dcc56 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005dcc56 */
+GameMenu * __thiscall menu_handle_ctor(GameMenu *this); /* 005dcc10 */
+void __thiscall menu_handle_dtor(GameMenu *this); /* 005dcc32 */
+void __thiscall FUN_005dcc56(MenuSubmenuView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005dcc56 */
 void __thiscall FUN_005dcc95(void *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005dcc95 */
 void __thiscall FUN_005dccc1(void *this,undefined4 param_1,undefined4 param_2); /* 005dccc1 */
-void __thiscall FUN_005dcce9(C_005dcc56 *this,undefined4 param_1); /* 005dcce9 */
+void __thiscall FUN_005dcce9(MenuSubmenuView *this,undefined4 param_1); /* 005dcce9 */
 void __thiscall FUN_005dcd1c(void *this,undefined4 param_1); /* 005dcd1c */
-undefined4 __thiscall FUN_005dcd40(C_005dcc56 *this,undefined4 param_1); /* 005dcd40 */
-void __cdecl FUN_005dcd70(); /* 005dcd70 */
-LPVOID __cdecl FUN_005dcdf9(); /* 005dcdf9 */
-undefined4 __cdecl FUN_005dce29(); /* 005dce29 */
-HGLOBAL __cdecl FUN_005dce4f(); /* 005dce4f */
-HGLOBAL __cdecl FUN_005dce96(); /* 005dce96 */
-void __cdecl FUN_005dced3(); /* 005dced3 */
-SIZE_T __cdecl FUN_005dcef7(); /* 005dcef7 */
-void __cdecl FUN_005dcf11(); /* 005dcf11 */
-undefined4 __cdecl FUN_005dcfb5(); /* 005dcfb5 */
+undefined4 __thiscall menu_get_submenu(MenuSubmenuView *this,undefined4 param_1); /* 005dcd40 */
+void __cdecl mem_handle_clone(); /* 005dcd70 */
+LPVOID __cdecl mem_handle_lock(); /* 005dcdf9 */
+undefined4 __cdecl mem_handle_unlock(); /* 005dce29 */
+HGLOBAL __cdecl mem_handle_alloc(); /* 005dce4f */
+HGLOBAL __cdecl mem_handle_free(); /* 005dce96 */
+void __cdecl mem_move_src_dst(); /* 005dced3 */
+SIZE_T __cdecl mem_handle_size(); /* 005dcef7 */
+void __cdecl mem_handle_realloc_impl(); /* 005dcf11 */
+undefined4 __cdecl mem_avail_bytes_stub(); /* 005dcfb5 */
 uint __cdecl FUN_005dcfca(); /* 005dcfca */
-C_004083b0_a28 * __thiscall FUN_005dd010(C_004083b0_a28 *this); /* 005dd010 */
-undefined4 __thiscall FUN_005dd1a0(C_004d8b20 *this); /* 005dd1a0 */
+C_004083b0_a28 * __thiscall mmwnd_ctor(C_004083b0_a28 *this); /* 005dd010 */
+undefined4 __thiscall avi_player_dtor(AviPlayer *this); /* 005dd1a0 */
 void __cdecl FUN_005dd230(); /* 005dd230 */
 void __cdecl FUN_005dd23f(); /* 005dd23f */
 void __cdecl FUN_005dd24e(); /* 005dd24e */
 void __cdecl FUN_005dd25d(); /* 005dd25d */
-void __thiscall FUN_005dd27e(C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4); /* 005dd27e */
-void __thiscall FUN_005dd2e3(C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4,iptr param_5); /* 005dd2e3 */
-int __thiscall FUN_005dd377(C_005dd377 *this,iptr param_1); /* 005dd377 */
-void __thiscall FUN_005dd3c2(C_005dd3c2 *this); /* 005dd3c2 */
-void __thiscall FUN_005dd3f1(C_005dd3f1 *this,u32 param_1,u32 param_2); /* 005dd3f1 */
-void __thiscall FUN_005dd45d(void *this,undefined4 param_1); /* 005dd45d */
+void __thiscall avi_player_create(C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4); /* 005dd27e */
+void __thiscall avi_player_create_child(C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4,iptr param_5); /* 005dd2e3 */
+int __thiscall avi_player_open(AviPlayerOpenView *this,iptr param_1); /* 005dd377 */
+void __thiscall avi_player_play(AviPlayerPlayView *this); /* 005dd3c2 */
+void __thiscall avi_player_play_range(AviPlayerRangeView *this,u32 param_1,u32 param_2); /* 005dd3f1 */
+void __thiscall avi_player_show_frame(void *this,undefined4 param_1); /* 005dd45d */
 void __thiscall FUN_005dd487(C_005dd487 *this); /* 005dd487 */
-void __thiscall FUN_005dd4c2(C_005dd4c2 *this,u32 param_1,u32 param_2); /* 005dd4c2 */
-void __thiscall FUN_005dd51d(C_005dd51d *this); /* 005dd51d */
+void __thiscall avi_player_loop_range(AviPlayerLoopView *this,u32 param_1,u32 param_2); /* 005dd4c2 */
+void __thiscall avi_player_pause(AviPlayerPauseView *this); /* 005dd51d */
 void __thiscall FUN_005dd53f(void *this); /* 005dd53f */
-void __thiscall FUN_005dd561(C_004083b0_48 *this,iptr param_1); /* 005dd561 */
-void __thiscall FUN_005dd5a4(C_004083b0_48 *this,C_004083b0_48 *param_1); /* 005dd5a4 */
-void __thiscall FUN_005dd64c(C_004083b0_48 *this,iptr param_1,int param_2,int param_3); /* 005dd64c */
-void __thiscall FUN_005dd71e(C_004083b0_61c *this,undefined4 param_1); /* 005dd71e */
+void __thiscall avi_player_set_palette(DibSurface *this,iptr param_1); /* 005dd561 */
+void __thiscall FUN_005dd5a4(DibSurface *this,DibSurface *param_1); /* 005dd5a4 */
+void __thiscall avi_player_draw_to(DibSurface *this,iptr param_1,int param_2,int param_3); /* 005dd64c */
+void __thiscall avi_player_set_double_size(C_004083b0_61c *this,undefined4 param_1); /* 005dd71e */
 void __thiscall FUN_005dd761(C_005dd761 *this,int param_1); /* 005dd761 */
 void __thiscall FUN_005dd7de(C_004083b0_61c *this); /* 005dd7de */
 void __cdecl FUN_005dd87d(); /* 005dd87d */
-void __cdecl FUN_005dd8a0(); /* 005dd8a0 */
+void __cdecl snd_system_init(); /* 005dd8a0 */
 LRESULT __stdcall FUN_005dd93f(HWND param_1,UINT param_2,WPARAM param_3,uint param_4); /* 005dd93f */
-void __cdecl FUN_005dd9d9(); /* 005dd9d9 */
-void __cdecl FUN_005dd9f5(); /* 005dd9f5 */
-void __cdecl FUN_005dda11(); /* 005dda11 */
+void __cdecl snd_play_wav_async(); /* 005dd9d9 */
+void __cdecl snd_play_wav_loop(); /* 005dd9f5 */
+void __cdecl snd_stop_sndplaysound(); /* 005dda11 */
 void __cdecl FUN_005dda2b(); /* 005dda2b */
-void __cdecl FUN_005dda3b(); /* 005dda3b */
-MCIERROR __cdecl FUN_005dda53(); /* 005dda53 */
-undefined4 __cdecl FUN_005ddbc7(); /* 005ddbc7 */
-void __cdecl FUN_005ddd12(); /* 005ddd12 */
-void __cdecl FUN_005ddd4e(); /* 005ddd4e */
-void __cdecl FUN_005dde57(); /* 005dde57 */
-void __cdecl FUN_005dde9d(); /* 005dde9d */
-void __cdecl FUN_005ddecf(); /* 005ddecf */
-undefined4 __cdecl FUN_005ddeff(); /* 005ddeff */
+void __cdecl snd_beep(); /* 005dda3b */
+MCIERROR __cdecl snd_midi_play(); /* 005dda53 */
+undefined4 __cdecl snd_cd_play_track(); /* 005ddbc7 */
+void __cdecl snd_midi_close(); /* 005ddd12 */
+void __cdecl snd_cd_open(); /* 005ddd4e */
+void __cdecl snd_cd_close(); /* 005dde57 */
+void __cdecl snd_cd_mci_stop(); /* 005dde9d */
+void __cdecl snd_system_shutdown(); /* 005ddecf */
+undefined4 __cdecl snd_cd_get_track_count(); /* 005ddeff */
 void __cdecl FUN_005de00d(); /* 005de00d */
 void __cdecl FUN_005de0b5(); /* 005de0b5 */
 void __cdecl FUN_005de19d(); /* 005de19d */
@@ -4110,27 +4110,27 @@ void __cdecl FUN_005de658(); /* 005de658 */
 void __cdecl FUN_005de674(); /* 005de674 */
 void __cdecl FUN_005de689(); /* 005de689 */
 void __cdecl FUN_005de6a5(); /* 005de6a5 */
-void __cdecl FUN_005de6bd(); /* 005de6bd */
+void __cdecl snd_midi_fire_notify_callback(); /* 005de6bd */
 void __cdecl FUN_005de6e0(); /* 005de6e0 */
-void __cdecl FUN_005de6fc(); /* 005de6fc */
-void __cdecl FUN_005de714(); /* 005de714 */
+void __cdecl snd_cd_set_notify_callback(); /* 005de6fc */
+void __cdecl snd_cd_fire_notify_callback(); /* 005de714 */
 void __cdecl FUN_005de737(); /* 005de737 */
 void __cdecl FUN_005de74c(); /* 005de74c */
 void __cdecl FUN_005de761(); /* 005de761 */
-void __cdecl FUN_005de780(); /* 005de780 */
-void __cdecl FUN_005de984(); /* 005de984 */
-void __cdecl FUN_005de9e0(); /* 005de9e0 */
-void __cdecl FUN_005dea62(); /* 005dea62 */
-void __cdecl FUN_005dea9e(); /* 005dea9e */
-void __cdecl FUN_005deadb(); /* 005deadb */
-void __cdecl FUN_005deb12(); /* 005deb12 */
-HPALETTE __cdecl FUN_005dec4e(); /* 005dec4e */
-void __cdecl FUN_005dec8a(); /* 005dec8a */
-void __cdecl FUN_005decb1(); /* 005decb1 */
-void __cdecl FUN_005deced(); /* 005deced */
-void __cdecl FUN_005ded12(); /* 005ded12 */
+void __cdecl logpal_init_from_system(); /* 005de780 */
+void __cdecl logpal_reserve_range(); /* 005de984 */
+void __cdecl palette_reapply_range(); /* 005de9e0 */
+void __cdecl palette_animate(); /* 005dea62 */
+void __cdecl palette_get_entry_rgb(); /* 005dea9e */
+void __cdecl logpal_set_entry(); /* 005deadb */
+void __cdecl palette_set_entry_rgb(); /* 005deb12 */
+HPALETTE __cdecl logpal_create_hpalette(); /* 005dec4e */
+void __cdecl logpal_delete_hpalette(); /* 005dec8a */
+void __cdecl logpal_apply_range(); /* 005decb1 */
+void __cdecl logpal_copy(); /* 005deced */
+void __cdecl palette_copy_rgb_range(); /* 005ded12 */
 void __cdecl FUN_005ded90(); /* 005ded90 */
-void __cdecl FUN_005dee28(); /* 005dee28 */
+void __cdecl ui_show_text_notice_window(); /* 005dee28 */
 void __cdecl FUN_005df166(); /* 005df166 */
 void __cdecl FUN_005df1fd(); /* 005df1fd */
 void __cdecl FUN_005df280(); /* 005df280 */
@@ -4138,18 +4138,18 @@ void __cdecl FUN_005df2b5(); /* 005df2b5 */
 void __cdecl FUN_005df67b(); /* 005df67b */
 void __cdecl FUN_005df687(); /* 005df687 */
 void __cdecl FUN_005df6ab(); /* 005df6ab */
-void __cdecl FUN_005df6e1(); /* 005df6e1 */
+void __cdecl gfx_dissolve_transition(); /* 005df6e1 */
 void __cdecl FUN_005df931(); /* 005df931 */
-void __cdecl FUN_005dfa4d(); /* 005dfa4d */
-iptr __cdecl FUN_005dfb61(); /* 005dfb61 */
-uint __cdecl FUN_005dfd8f(); /* 005dfd8f */
+void __cdecl surface_draw_bevel_border(); /* 005dfa4d */
+iptr __cdecl mem_rle_decompress(); /* 005dfb61 */
+uint __cdecl mem_rle_compress(); /* 005dfd8f */
 void __cdecl FUN_005e00bb(); /* 005e00bb */
 void __cdecl FUN_005e010a(); /* 005e010a */
 void __cdecl FUN_005e0122(); /* 005e0122 */
-int __cdecl FUN_005e0148(); /* 005e0148 */
-int __cdecl FUN_005e0215(); /* 005e0215 */
+int __cdecl text_count_lines_max_width(); /* 005e0148 */
+int __cdecl text_estimate_wrap_lines(); /* 005e0215 */
 void __cdecl FUN_005e0248(); /* 005e0248 */
-undefined4 __cdecl FUN_005e026a(); /* 005e026a */
+undefined4 __cdecl dlg_radio_choice_modal(); /* 005e026a */
 void __cdecl FUN_005e0802(); /* 005e0802 */
 void __cdecl FUN_005e080e(); /* 005e080e */
 void __cdecl FUN_005e081a(); /* 005e081a */
@@ -4168,276 +4168,276 @@ void __cdecl FUN_005e0a8f(); /* 005e0a8f */
 void __cdecl FUN_005e0ab3(); /* 005e0ab3 */
 void __cdecl FUN_005e0adb(); /* 005e0adb */
 undefined4 __cdecl FUN_005e0af7(); /* 005e0af7 */
-int __cdecl FUN_005e0b50(); /* 005e0b50 */
-undefined2 __cdecl FUN_005e0b80(); /* 005e0b80 */
-u32 __thiscall FUN_005e0ba0(C_005e0ba0 *this); /* 005e0ba0 */
-void __thiscall FUN_005e0bc0(C_0040f380_50 *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 005e0bc0 */
-void __cdecl FUN_005e0c90(); /* 005e0c90 */
-u32 __thiscall FUN_005e0cc0(C_005e0cc0 *this); /* 005e0cc0 */
-iptr __cdecl FUN_005e0ce0(); /* 005e0ce0 */
-HMENU __cdecl FUN_005e0f2a(); /* 005e0f2a */
+int __cdecl rand_below(); /* 005e0b50 */
+undefined2 __cdecl endian_swap16_alt(); /* 005e0b80 */
+u32 __thiscall surface_get_row_offsets(SurfaceRowOffsetsView *this); /* 005e0ba0 */
+void __thiscall radiogrp_create_from_string(RadioGroup *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 005e0bc0 */
+void __cdecl ddsurf_set_line_color_index(); /* 005e0c90 */
+u32 __thiscall ddpal_get_iface(DDPaletteIfaceView *this); /* 005e0cc0 */
+iptr __cdecl menu_hmenu_parse_items(); /* 005e0ce0 */
+HMENU __cdecl menu_hmenu_build_from_spec(); /* 005e0f2a */
 void __cdecl FUN_005e10a2(); /* 005e10a2 */
-void __cdecl FUN_005e10c7(); /* 005e10c7 */
+void __cdecl menu_hmenu_destroy(); /* 005e10c7 */
 void __cdecl FUN_005e10eb(); /* 005e10eb */
-void __cdecl FUN_005e10fb(); /* 005e10fb */
-BOOL __cdecl FUN_005e1118(); /* 005e1118 */
-void __cdecl FUN_005e11be(); /* 005e11be */
-void __cdecl FUN_005e1226(); /* 005e1226 */
-void __cdecl FUN_005e128c(); /* 005e128c */
+void __cdecl menu_redraw_bar(); /* 005e10fb */
+BOOL __cdecl menu_hmenu_enable_item(); /* 005e1118 */
+void __cdecl menu_hmenu_check_item(); /* 005e11be */
+void __cdecl menu_hmenu_delete_item(); /* 005e1226 */
+void __cdecl menu_hmenu_insert_item(); /* 005e128c */
 void __cdecl FUN_005e13b1(); /* 005e13b1 */
-void __cdecl FUN_005e14c8(); /* 005e14c8 */
+void __cdecl menu_hmenu_set_item_text(); /* 005e14c8 */
 void __cdecl FUN_005e154a(); /* 005e154a */
-HMENU __cdecl FUN_005e1599(); /* 005e1599 */
+HMENU __cdecl menu_hmenu_get_submenu(); /* 005e1599 */
 void __cdecl FUN_005e15ce(HMENU param_1,UINT param_2,char param_3); /* 005e15ce */
 void __cdecl FUN_005e1619(HMENU param_1,UINT param_2,char param_3); /* 005e1619 */
 void __cdecl FUN_005e1664(); /* 005e1664 */
 void __cdecl FUN_005e168e(); /* 005e168e */
 void __cdecl FUN_005e16c0(); /* 005e16c0 */
 void __cdecl FUN_005e16d0(); /* 005e16d0 */
-void __cdecl FUN_005e16e0(); /* 005e16e0 */
-void __cdecl FUN_005e1768(); /* 005e1768 */
-void __cdecl FUN_005e17db(); /* 005e17db */
-void __cdecl FUN_005e1805(); /* 005e1805 */
-void __cdecl FUN_005e1880(); /* 005e1880 */
+void __cdecl menu_hmenu_append_to_submenu(); /* 005e16e0 */
+void __cdecl menu_hmenu_append(); /* 005e1768 */
+void __cdecl menu_hmenu_delete_by_id(); /* 005e17db */
+void __cdecl menu_append_separator(); /* 005e1805 */
+void __cdecl wnd_install_paint_proc(); /* 005e1880 */
 void __cdecl FUN_005e18b7(); /* 005e18b7 */
 void __cdecl FUN_005e18de(); /* 005e18de */
 undefined4 __stdcall FUN_005e18ff(HWND param_1,int param_2,undefined4 param_3,uint param_4); /* 005e18ff */
-void __cdecl FUN_005e1c70(); /* 005e1c70 */
-int __cdecl FUN_005e1c8e(); /* 005e1c8e */
-#undef FUN_005e22ed
-void __cdecl FUN_005e22ed(int param_1); /* 005e22ed, hand-written */
-undefined4 __stdcall FUN_005e250c(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e250c */
-undefined4 __stdcall FUN_005e2583(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e2583 */
+void __cdecl avi_update_current_frame(); /* 005e1c70 */
+int __cdecl avi_open_file(); /* 005e1c8e */
+#undef avi_play_start
+void __cdecl avi_play_start(int param_1); /* 005e22ed, hand-written */
+undefined4 __stdcall avi_ic_decompress_ex_begin(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e250c */
+undefined4 __stdcall avi_ic_decompress_ex_query(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e2583 */
 void __cdecl FUN_005e25fa(); /* 005e25fa */
-void __cdecl FUN_005e2675(); /* 005e2675 */
-void __cdecl FUN_005e26f6(); /* 005e26f6 */
-void __cdecl FUN_005e2799(); /* 005e2799 */
-void __cdecl FUN_005e28cd(); /* 005e28cd */
-int __cdecl FUN_005e2997(); /* 005e2997 */
-undefined4 __stdcall FUN_005e2c5a(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e2c5a */
-void __cdecl FUN_005e2cd1(); /* 005e2cd1 */
-void __cdecl FUN_005e30a1(); /* 005e30a1 */
-void __cdecl FUN_005e32b2(); /* 005e32b2 */
-void __thiscall FUN_005e3550(C_005e3550 *this); /* 005e3550 */
-void __thiscall FUN_005e3580(C_005e3580 *this); /* 005e3580 */
-undefined4 * __cdecl FUN_005e35b0(); /* 005e35b0 */
+void __cdecl avi_play_pause(); /* 005e2675 */
+void __cdecl avi_player_rewind(); /* 005e26f6 */
+void __cdecl avi_close(); /* 005e2799 */
+void __cdecl avi_seek_frame(); /* 005e28cd */
+int __cdecl avi_decode_frame(); /* 005e2997 */
+undefined4 __stdcall avi_ic_decompress_ex(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9 ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13, undefined4 param_14); /* 005e2c5a */
+void __cdecl avi_update_frame(); /* 005e2cd1 */
+void __cdecl avi_apply_palette(); /* 005e30a1 */
+void __cdecl avi_restart_decompress(); /* 005e32b2 */
+void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *this); /* 005e3550 */
+void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this); /* 005e3580 */
+undefined4 * __cdecl dib_create(); /* 005e35b0 */
 void __cdecl FUN_005e3877(); /* 005e3877 */
-undefined4 __cdecl FUN_005e388f(); /* 005e388f */
-undefined4 __cdecl FUN_005e392a(); /* 005e392a */
-uint __cdecl FUN_005e395a(); /* 005e395a */
-void __cdecl FUN_005e3988(); /* 005e3988 */
-undefined4 __cdecl FUN_005e3a81(); /* 005e3a81 */
+undefined4 __cdecl dib_destroy(); /* 005e388f */
+undefined4 __cdecl dib_get_stride(); /* 005e392a */
+uint __cdecl dib_is_top_down(); /* 005e395a */
+void __cdecl dib_flip_vertical(); /* 005e3988 */
+undefined4 __cdecl dib_get_bits(); /* 005e3a81 */
 undefined4 __cdecl FUN_005e3aa8(); /* 005e3aa8 */
 void __cdecl FUN_005e3acb(); /* 005e3acb */
-void __cdecl FUN_005e3b4c(); /* 005e3b4c */
-void __cdecl FUN_005e3bdc(); /* 005e3bdc */
+void __cdecl dib_set_color_table_range(); /* 005e3b4c */
+void __cdecl dib_set_palette(); /* 005e3bdc */
 void __cdecl FUN_005e3c03(); /* 005e3c03 */
-void __cdecl FUN_005e3cb4(); /* 005e3cb4 */
-void __cdecl FUN_005e3eca(); /* 005e3eca */
-void __cdecl FUN_005e3feb(); /* 005e3feb */
-void __cdecl FUN_005e40fb(); /* 005e40fb */
-undefined4 * __cdecl FUN_005e41ba(); /* 005e41ba */
-undefined4 * __cdecl FUN_005e43c5(); /* 005e43c5 */
-undefined4 * __cdecl FUN_005e45b5(); /* 005e45b5 */
-void __cdecl FUN_005e47a5(); /* 005e47a5 */
-void __cdecl FUN_005e49a0(); /* 005e49a0 */
-void __cdecl FUN_005e4aa6(); /* 005e4aa6 */
-void __cdecl FUN_005e4b9b(); /* 005e4b9b */
-void __cdecl FUN_005e4c3f(); /* 005e4c3f */
-uint __cdecl FUN_005e4cc8(); /* 005e4cc8 */
-undefined4 __cdecl FUN_005e4d60(); /* 005e4d60 */
-void __cdecl FUN_005e4e60(); /* 005e4e60 */
-void __cdecl FUN_005e4ef8(); /* 005e4ef8 */
-void __cdecl FUN_005e4f9b(); /* 005e4f9b */
+void __cdecl dib_draw_text_at(); /* 005e3cb4 */
+void __cdecl dib_draw_text_rect(); /* 005e3eca */
+void __cdecl dib_draw_text_wrap(); /* 005e3feb */
+void __cdecl dib_draw_line(); /* 005e40fb */
+undefined4 * __cdecl dib_create16(); /* 005e41ba */
+undefined4 * __cdecl dib_create24(); /* 005e43c5 */
+undefined4 * __cdecl dib_create32(); /* 005e45b5 */
+void __cdecl dib_draw_text_at_rgb(); /* 005e47a5 */
+void __cdecl dib_draw_text_rect_rgb(); /* 005e49a0 */
+void __cdecl dib_draw_text_wrap_rgb(); /* 005e4aa6 */
+void __cdecl dib_draw_line_rgb(); /* 005e4b9b */
+void __cdecl dib_fill_rect_rgb(); /* 005e4c3f */
+uint __cdecl dib_rgb_to_native_pixel(); /* 005e4cc8 */
+undefined4 __cdecl gif_lzw_decode(); /* 005e4d60 */
+void __cdecl dib_fill_rect8(); /* 005e4e60 */
+void __cdecl dib_fill_rect16(); /* 005e4ef8 */
+void __cdecl gfx_copy_pixels(); /* 005e4f9b */
 void __cdecl FUN_005e5056(); /* 005e5056 */
-void __cdecl FUN_005e511c(); /* 005e511c */
-void __cdecl FUN_005e518e(); /* 005e518e */
-void __cdecl FUN_005e52bf(); /* 005e52bf */
-void __cdecl FUN_005e53f3(); /* 005e53f3 */
-void __cdecl FUN_005e5869(); /* 005e5869 */
-void __cdecl FUN_005e58e7(); /* 005e58e7 */
+void __cdecl gfx_copy_pixels_by_column(); /* 005e511c */
+void __cdecl sprite_blit_rows_keyed(); /* 005e518e */
+void __cdecl sprite_blit_rows_solid(); /* 005e52bf */
+void __cdecl gif_lzw_decode_stream(); /* 005e53f3 */
+void __cdecl dib_hline8(); /* 005e5869 */
+void __cdecl dib_vline8(); /* 005e58e7 */
 void __cdecl FUN_005e593a(int *param_1,int *param_2,uint param_3,int param_4,int param_5,char param_6); /* 005e593a */
 void __cdecl FUN_005e59b3(int *param_1,iptr param_2,uint param_3,int param_4,int param_5,char param_6); /* 005e59b3 */
 void __cdecl FUN_005e5a39(int *param_1,int *param_2,int param_3,int param_4,int param_5,char param_6); /* 005e5a39 */
 void __cdecl FUN_005e5b1e(int *param_1,int param_2,int param_3,int param_4,int param_5,char param_6); /* 005e5b1e */
 void __cdecl FUN_005e5c10(ushort *param_1,int *param_2,undefined4 param_3,undefined4 param_4,int param_5, undefined1 param_6); /* 005e5c10 */
 void __cdecl FUN_005e5d4f(ushort *param_1,int param_2,undefined4 param_3,int param_4,int param_5, undefined1 param_6); /* 005e5d4f */
-C_005c5660 * __thiscall FUN_005e5ea0(C_005c5660 *this); /* 005e5ea0 */
-void __thiscall FUN_005e5ee0(void *this); /* 005e5ee0 */
-void __thiscall FUN_005e5ef6(C_005c5660 *this); /* 005e5ef6 */
-void __thiscall FUN_005e5f78(C_005c5660 *this,int param_1,int param_2); /* 005e5f78 */
-undefined4 __thiscall FUN_005e5fb4(C_005c5660 *this,iptr param_1); /* 005e5fb4 */
-void __thiscall FUN_005e5fda(C_005c5660 *this,int param_1,int param_2,undefined4 param_3); /* 005e5fda */
-undefined4 __thiscall FUN_005e6018(C_005c5660 *this,iptr param_1,undefined4 param_2); /* 005e6018 */
-int __thiscall FUN_005e6188(C_005c5660 *this); /* 005e6188 */
-void __thiscall FUN_005e61e9(C_005c5660 *this); /* 005e61e9 */
-short __cdecl FUN_005e6245(); /* 005e6245 */
-short __cdecl FUN_005e626c(); /* 005e626c */
-uint __thiscall FUN_005e6297(C_005c5660 *this,iptr param_1,undefined4 param_2); /* 005e6297 */
-void __thiscall FUN_005e635f(C_005c5660 *this,u32 param_1,iptr param_2,iptr param_3); /* 005e635f */
-void __thiscall FUN_005e6450(C_005c5660 *this,int *param_1); /* 005e6450 */
-undefined4 __thiscall FUN_005e6566(C_005c5660 *this,iptr param_1); /* 005e6566 */
-undefined1 __thiscall FUN_005e658a(C_005e658a *this,undefined4 param_1,undefined4 param_2); /* 005e658a */
-void __thiscall FUN_005e65f1(C_005e658a *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e65f1 */
-undefined4 __thiscall FUN_005e6651(C_005c5660 *this,iptr param_1,int param_2,int param_3,C_005e8739 *param_4); /* 005e6651 */
-undefined4 __thiscall FUN_005e6893(C_005c5660 *this,iptr param_1,uint param_2,uint param_3,C_005e8739 *param_4); /* 005e6893 */
-undefined4 __thiscall FUN_005e6bc5(C_005c5660 *this,iptr param_1,uint param_2,undefined4 param_3,C_005e8739 *param_4); /* 005e6bc5 */
-undefined4 __thiscall FUN_005e6d4c(C_005c5660 *this,iptr param_1); /* 005e6d4c */
+DDSurface * __thiscall ddsurf_ctor(DDSurface *this); /* 005e5ea0 */
+void __thiscall ddsurf_dtor(void *this); /* 005e5ee0 */
+void __thiscall ddsurf_release(DDSurface *this); /* 005e5ef6 */
+void __thiscall FUN_005e5f78(DDSurface *this,int param_1,int param_2); /* 005e5f78 */
+undefined4 __thiscall ddsurf_create_rect_vram(DDSurface *this,iptr param_1); /* 005e5fb4 */
+void __thiscall FUN_005e5fda(DDSurface *this,int param_1,int param_2,undefined4 param_3); /* 005e5fda */
+undefined4 __thiscall ddsurf_create_rect(DDSurface *this,iptr param_1,undefined4 param_2); /* 005e6018 */
+int __thiscall ddsurf_lock(DDSurface *this); /* 005e6188 */
+void __thiscall ddsurf_restore_if_lost(DDSurface *this); /* 005e61e9 */
+short __cdecl ddsurf_rgb_to_565(); /* 005e6245 */
+short __cdecl ddsurf_rgb_to_555(); /* 005e626c */
+uint __thiscall ddsurf_create_primary(DDSurface *this,iptr param_1,undefined4 param_2); /* 005e6297 */
+void __thiscall ddsurf_init_back_buffer(DDSurface *this,u32 param_1,iptr param_2,iptr param_3); /* 005e635f */
+void __thiscall ddsurf_reset_dims(DDSurface *this,int *param_1); /* 005e6450 */
+undefined4 __thiscall ddsurf_create(DDSurface *this,iptr param_1); /* 005e6566 */
+undefined1 __thiscall FUN_005e658a(DDSurfacePixelView *this,undefined4 param_1,undefined4 param_2); /* 005e658a */
+void __thiscall FUN_005e65f1(DDSurfacePixelView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e65f1 */
+undefined4 __thiscall FUN_005e6651(DDSurface *this,iptr param_1,int param_2,int param_3,DDPaletteSetEntriesView *param_4); /* 005e6651 */
+undefined4 __thiscall FUN_005e6893(DDSurface *this,iptr param_1,uint param_2,uint param_3,DDPaletteSetEntriesView *param_4); /* 005e6893 */
+undefined4 __thiscall FUN_005e6bc5(DDSurface *this,iptr param_1,uint param_2,undefined4 param_3,DDPaletteSetEntriesView *param_4); /* 005e6bc5 */
+undefined4 __thiscall FUN_005e6d4c(DDSurface *this,iptr param_1); /* 005e6d4c */
 void __thiscall FUN_005e6f25(C_005e6f25 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e6f25 */
 void __thiscall FUN_005e6f57(C_005e6f57 *this); /* 005e6f57 */
 void __thiscall FUN_005e6f96(void *this,int *param_1); /* 005e6f96 */
 void __thiscall FUN_005e6ff1(C_005e6ff1 *this,u32 *param_1); /* 005e6ff1 */
-int __thiscall FUN_005e7028(C_005e658a *this,int param_1,int param_2,int param_3); /* 005e7028 */
-void __thiscall FUN_005e7052(C_005c5660 *this,iptr param_1,undefined4 param_2); /* 005e7052 */
-void __thiscall FUN_005e70d7(C_005c5660 *this,undefined4 param_1); /* 005e70d7 */
-void __thiscall FUN_005e7102(C_005c5660 *this,iptr param_1,undefined4 param_2,uint param_3,uint param_4); /* 005e7102 */
-void __thiscall FUN_005e7257(C_005c5660 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e7257 */
-void __thiscall FUN_005e728a(C_005c5660 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3); /* 005e728a */
-void __thiscall FUN_005e7355(C_005c5660 *this,C_004083b0_48 *param_1,RECT *param_2,RECT *param_3); /* 005e7355 */
-void __thiscall FUN_005e747c(C_005c5660 *this,C_005c5740 *param_1,undefined4 param_2,undefined4 param_3); /* 005e747c */
-void __thiscall FUN_005e74c8(C_005c5660 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3); /* 005e74c8 */
-void __thiscall FUN_005e7593(C_005c5660 *this,C_005c5740 *param_1,undefined4 param_2,undefined4 param_3); /* 005e7593 */
-void __thiscall FUN_005e75df(C_005c5660 *this,undefined4 param_1,int param_2,int param_3,uint param_4); /* 005e75df */
-void __thiscall FUN_005e76dd(C_005c5660 *this,undefined4 param_1,LONG *param_2,uint param_3); /* 005e76dd */
-void __thiscall FUN_005e77ed(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5); /* 005e77ed */
-void __thiscall FUN_005e78c6(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4); /* 005e78c6 */
-void __thiscall FUN_005e79b1(C_005c5660 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e79b1 */
-void __thiscall FUN_005e7a30(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005e7a30 */
-void __thiscall FUN_005e7a8e(C_005c5660 *this,undefined4 param_1,int param_2,int param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7a8e */
-void __thiscall FUN_005e7b98(C_005c5660 *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005e7b98 */
-void __thiscall FUN_005e7cb4(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 005e7cb4 */
-void __thiscall FUN_005e7d99(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7d99 */
-void __thiscall FUN_005e7e90(C_005c5660 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005e7e90 */
-void __thiscall FUN_005e7f1b(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7f1b */
-void __thiscall FUN_005e7f85(C_005c5660 *this,int param_1,int param_2,int param_3,int param_4); /* 005e7f85 */
-void __thiscall FUN_005e806d(C_005c5660 *this,undefined4 *param_1); /* 005e806d */
-void __thiscall FUN_005e8122(C_005c5660 *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5, undefined4 param_6,undefined4 param_7); /* 005e8122 */
-void __thiscall FUN_005e8216(C_005c5660 *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005e8216 */
-C_005e82fb * __thiscall FUN_005e82fb(C_005e82fb *this); /* 005e82fb */
-void __thiscall FUN_005e833b(C_005e833b *this); /* 005e833b */
-void __thiscall FUN_005e83c8(C_005e83c8 *this); /* 005e83c8 */
+int __thiscall ddsurf_pixel_ptr(DDSurfacePixelView *this,int param_1,int param_2,int param_3); /* 005e7028 */
+void __thiscall ddsurf_fill_rect_pixel(DDSurface *this,iptr param_1,undefined4 param_2); /* 005e7052 */
+void __thiscall FUN_005e70d7(DDSurface *this,undefined4 param_1); /* 005e70d7 */
+void __thiscall ddsurf_fill_rect_rgb(DDSurface *this,iptr param_1,undefined4 param_2,uint param_3,uint param_4); /* 005e7102 */
+void __thiscall FUN_005e7257(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e7257 */
+void __thiscall FUN_005e728a(DDSurface *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3); /* 005e728a */
+void __thiscall FUN_005e7355(DDSurface *this,DibSurface *param_1,RECT *param_2,RECT *param_3); /* 005e7355 */
+void __thiscall FUN_005e747c(DDSurface *this,DDSurfaceIfaceView *param_1,undefined4 param_2,undefined4 param_3); /* 005e747c */
+void __thiscall FUN_005e74c8(DDSurface *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3); /* 005e74c8 */
+void __thiscall FUN_005e7593(DDSurface *this,DDSurfaceIfaceView *param_1,undefined4 param_2,undefined4 param_3); /* 005e7593 */
+void __thiscall FUN_005e75df(DDSurface *this,undefined4 param_1,int param_2,int param_3,uint param_4); /* 005e75df */
+void __thiscall FUN_005e76dd(DDSurface *this,undefined4 param_1,LONG *param_2,uint param_3); /* 005e76dd */
+void __thiscall FUN_005e77ed(DDSurface *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5); /* 005e77ed */
+void __thiscall FUN_005e78c6(DDSurface *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4); /* 005e78c6 */
+void __thiscall FUN_005e79b1(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005e79b1 */
+void __thiscall FUN_005e7a30(DDSurface *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005e7a30 */
+void __thiscall FUN_005e7a8e(DDSurface *this,undefined4 param_1,int param_2,int param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7a8e */
+void __thiscall FUN_005e7b98(DDSurface *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6); /* 005e7b98 */
+void __thiscall FUN_005e7cb4(DDSurface *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4, uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 005e7cb4 */
+void __thiscall FUN_005e7d99(DDSurface *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7d99 */
+void __thiscall FUN_005e7e90(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005e7e90 */
+void __thiscall FUN_005e7f1b(DDSurface *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7); /* 005e7f1b */
+void __thiscall ddsurf_draw_line(DDSurface *this,int param_1,int param_2,int param_3,int param_4); /* 005e7f85 */
+void __thiscall FUN_005e806d(DDSurface *this,undefined4 *param_1); /* 005e806d */
+void __thiscall ddsurf_draw_line_clipped_rgb(DDSurface *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5, undefined4 param_6,undefined4 param_7); /* 005e8122 */
+void __thiscall FUN_005e8216(DDSurface *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 005e8216 */
+DDPaletteCtorView * __thiscall FUN_005e82fb(DDPaletteCtorView *this); /* 005e82fb */
+void __thiscall FUN_005e833b(DDPaletteDtorView *this); /* 005e833b */
+void __thiscall FUN_005e83c8(DDPaletteReleaseView *this); /* 005e83c8 */
 void __thiscall FUN_005e8401(C_005e8401 *this,int param_1,int param_2,int param_3); /* 005e8401 */
-void __thiscall FUN_005e866c(C_005e866c *this,u32 param_1,u32 param_2,u32 param_3); /* 005e866c */
-void __thiscall FUN_005e86f2(C_005e866c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005e86f2 */
-void __thiscall FUN_005e8739(C_005e8739 *this); /* 005e8739 */
+void __thiscall ddpal_save_entries(DDPalette *this,u32 param_1,u32 param_2,u32 param_3); /* 005e866c */
+void __thiscall FUN_005e86f2(DDPalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5,undefined4 param_6); /* 005e86f2 */
+void __thiscall FUN_005e8739(DDPaletteSetEntriesView *this); /* 005e8739 */
 void __thiscall FUN_005e87a2(C_005e87a2 *this,int param_1); /* 005e87a2 */
-void __thiscall FUN_005e8990(C_005e8739 *this,undefined4 param_1,undefined4 param_2,iptr param_3); /* 005e8990 */
+void __thiscall ddpal_set_entries(DDPaletteSetEntriesView *this,undefined4 param_1,undefined4 param_2,iptr param_3); /* 005e8990 */
 #undef FUN_005e89d0
 undefined4 __cdecl FUN_005e89d0(void); /* 005e89d0, hand-written */
 void __cdecl FUN_005e8b04(); /* 005e8b04 */
 undefined4 __cdecl FUN_005e8b54(); /* 005e8b54 */
-void __cdecl FUN_005e8c29(); /* 005e8c29 */
-void __cdecl FUN_005e8c54(); /* 005e8c54 */
-void __cdecl FUN_005e8d58(); /* 005e8d58 */
-void __cdecl FUN_005e8e06(); /* 005e8e06 */
+void __cdecl ddpal_iface_release(); /* 005e8c29 */
+void __cdecl ddpal_set_entries_rgb(); /* 005e8c54 */
+void __cdecl ddpal_get_entries_rgb(); /* 005e8d58 */
+void __cdecl ddsurf_attach_palette(); /* 005e8e06 */
 undefined4 __cdecl FUN_005e8e4f(); /* 005e8e4f */
-undefined4 __cdecl FUN_005e8eb0(); /* 005e8eb0 */
-undefined4 __cdecl FUN_005e8f4b(); /* 005e8f4b */
-undefined4 __cdecl FUN_005e8fb7(); /* 005e8fb7 */
-void __cdecl FUN_005e906b(); /* 005e906b */
-undefined4 __cdecl FUN_005e9091(); /* 005e9091 */
-undefined4 __cdecl FUN_005e910b(); /* 005e910b */
-undefined4 __cdecl FUN_005e9150(); /* 005e9150 */
-undefined4 __cdecl FUN_005e924e(); /* 005e924e */
-undefined4 __cdecl FUN_005e92c9(); /* 005e92c9 */
+undefined4 __cdecl ddraw_create_primary_surface(); /* 005e8eb0 */
+undefined4 __cdecl ddsurf_iface_get_back_buffer(); /* 005e8f4b */
+undefined4 __cdecl ddraw_create_offscreen_surface(); /* 005e8fb7 */
+void __cdecl ddsurf_iface_release(); /* 005e906b */
+undefined4 __cdecl ddsurf_iface_restore(); /* 005e9091 */
+undefined4 __cdecl ddsurf_query_pitch(); /* 005e910b */
+undefined4 __cdecl ddsurf_pixel_format(); /* 005e9150 */
+undefined4 __cdecl ddsurf_lock_raw(); /* 005e924e */
+undefined4 __cdecl ddsurf_iface_unlock(); /* 005e92c9 */
 void __cdecl FUN_005e92fd(); /* 005e92fd */
-uint __cdecl FUN_005e9331(); /* 005e9331 */
-undefined4 __cdecl FUN_005e9455(); /* 005e9455 */
-undefined4 __cdecl FUN_005e9506(); /* 005e9506 */
-undefined4 __cdecl FUN_005e95a4(); /* 005e95a4 */
-undefined4 __cdecl FUN_005e965c(); /* 005e965c */
+uint __cdecl ddsurf_rgb_to_pixel(); /* 005e9331 */
+undefined4 __cdecl ddsurf_iface_blt(); /* 005e9455 */
+undefined4 __cdecl ddsurf_iface_blt_keyed(); /* 005e9506 */
+undefined4 __cdecl ddsurf_iface_bltfast(); /* 005e95a4 */
+undefined4 __cdecl ddsurf_iface_bltfast_keyed(); /* 005e965c */
 undefined4 __cdecl FUN_005e96fe(); /* 005e96fe */
-undefined4 __cdecl FUN_005e9783(); /* 005e9783 */
-void __cdecl FUN_005e9838(); /* 005e9838 */
-void __cdecl FUN_005e98ba(); /* 005e98ba */
-void __cdecl FUN_005e9944(); /* 005e9944 */
-undefined4 __cdecl FUN_005e997c(); /* 005e997c */
-undefined4 __cdecl FUN_005e9bd7(); /* 005e9bd7 */
-undefined4 __cdecl FUN_005e9d31(); /* 005e9d31 */
-undefined4 __cdecl FUN_005e9e87(); /* 005e9e87 */
-undefined4 __cdecl FUN_005e9f8a(); /* 005e9f8a */
-undefined4 __cdecl FUN_005ea1dd(); /* 005ea1dd */
-undefined4 __cdecl FUN_005ea32f(); /* 005ea32f */
-undefined4 __cdecl FUN_005ea47d(); /* 005ea47d */
+undefined4 __cdecl ddsurf_color_fill(); /* 005e9783 */
+void __cdecl dib_blit_to_ddsurf(); /* 005e9838 */
+void __cdecl dib_stretch_blit_to_ddsurf(); /* 005e98ba */
+void __cdecl ddpal_get_text_color_entry(); /* 005e9944 */
+undefined4 __cdecl ddsurf_draw_text_at_pal(); /* 005e997c */
+undefined4 __cdecl ddsurf_draw_text_rect_pal(); /* 005e9bd7 */
+undefined4 __cdecl ddsurf_draw_text_wrap_pal(); /* 005e9d31 */
+undefined4 __cdecl ddsurf_iface_draw_line_text_color(); /* 005e9e87 */
+undefined4 __cdecl ddsurf_draw_text_at(); /* 005e9f8a */
+undefined4 __cdecl ddsurf_draw_text_rect(); /* 005ea1dd */
+undefined4 __cdecl ddsurf_draw_text_wrap(); /* 005ea32f */
+undefined4 __cdecl ddsurf_iface_draw_line_rgb(); /* 005ea47d */
 #undef FUN_005ea578
 uint __cdecl FUN_005ea578(int *surface); /* 005ea578, hand-written */
-undefined1 __cdecl FUN_005ea5c5(); /* 005ea5c5 */
+undefined1 __cdecl ddsurf_iface_is_lost(); /* 005ea5c5 */
 void __cdecl FUN_005ea610(char param_1); /* 005ea610 */
 #undef FUN_005ea677
 uint __cdecl FUN_005ea677(void); /* 005ea677, hand-written */
 undefined4 __cdecl FUN_005ea6c4(); /* 005ea6c4 */
 undefined4 __cdecl FUN_005ea711(); /* 005ea711 */
 void __cdecl FUN_005ea779(); /* 005ea779 */
-void __cdecl FUN_005ea7a0(); /* 005ea7a0 */
-undefined4 __cdecl FUN_005ea7d7(); /* 005ea7d7 */
-HWND __cdecl FUN_005ea825(); /* 005ea825 */
-HWND __cdecl FUN_005ea87c(); /* 005ea87c */
-void __cdecl FUN_005ea8d3(); /* 005ea8d3 */
-void __cdecl FUN_005eabcc(); /* 005eabcc */
-undefined4 __cdecl FUN_005eac6d(); /* 005eac6d */
-#undef FUN_005eacc0
-LRESULT __stdcall FUN_005eacc0(HWND param_1,uint param_2,uint param_3,HWND param_4); /* 005eacc0, hand-written */
-void __thiscall FUN_005eb2f0(C_005eb2f0 *this); /* 005eb2f0 */
-void __thiscall FUN_005eb330(C_005eb330 *this); /* 005eb330 */
-void __cdecl FUN_005eb370(); /* 005eb370 */
-void __cdecl FUN_005eb393(); /* 005eb393 */
+void __cdecl wnd_install_frame_proc(); /* 005ea7a0 */
+undefined4 __cdecl ctrl_list_find_by_hwnd(); /* 005ea7d7 */
+HWND __cdecl hwnd_next_sibling_wrap(); /* 005ea825 */
+HWND __cdecl hwnd_prev_sibling_wrap(); /* 005ea87c */
+void __cdecl wnd_cycle_control_focus(); /* 005ea8d3 */
+void __cdecl wnd_focus_control(); /* 005eabcc */
+undefined4 __cdecl ctrl_list_find_type11_hwnd(); /* 005eac6d */
+#undef wnd_frame_wndproc
+LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND param_4); /* 005eacc0, hand-written */
+void __thiscall edit_fire_maxtext_callback(EditMaxTextView *this); /* 005eb2f0 */
+void __thiscall edit_fire_change_callback(EditChangeView *this); /* 005eb330 */
+void __cdecl wnd_set_owner_ptr(); /* 005eb370 */
+void __cdecl wnd_install_command_proc(); /* 005eb393 */
 void __cdecl FUN_005eb3ca(); /* 005eb3ca */
-uint __cdecl FUN_005eb3ed(); /* 005eb3ed */
-#undef FUN_005eb447
-uint __stdcall FUN_005eb447(HWND param_1,uint param_2,HWND param_3,uint param_4); /* 005eb447, hand-written */
-void __cdecl FUN_005ec1a1(); /* 005ec1a1 */
-uint __cdecl FUN_005ec23a(); /* 005ec23a */
+uint __cdecl input_map_vkey(); /* 005eb3ed */
+#undef wnd_child_wndproc
+uint __stdcall wnd_child_wndproc(HWND param_1,uint param_2,HWND param_3,uint param_4); /* 005eb447, hand-written */
+void __cdecl wnd_on_menu_command(); /* 005ec1a1 */
+uint __cdecl menu_find_item_pos(); /* 005ec23a */
 undefined4 __stdcall FUN_005ec317(HWND param_1,uint param_2,uint param_3,uint param_4); /* 005ec317 */
 void __cdecl FUN_005eceda(); /* 005eceda */
-uint __cdecl FUN_005ecef0(); /* 005ecef0 */
-uint __cdecl FUN_005ecf20(); /* 005ecf20 */
-void __thiscall FUN_005ecf50(C_005ecf50 *this,undefined4 param_1,undefined4 param_2); /* 005ecf50 */
-void __thiscall FUN_005ecf90(C_005ecf90 *this,iptr param_1,iptr param_2); /* 005ecf90 */
-void __thiscall FUN_005ecfd0(C_005ecfd0 *this,iptr param_1,iptr param_2); /* 005ecfd0 */
-void __thiscall FUN_005ed010(C_005ed010 *this,undefined4 param_1,undefined4 param_2); /* 005ed010 */
-void __thiscall FUN_005ed050(C_005ed050 *this,iptr param_1,iptr param_2); /* 005ed050 */
-void __thiscall FUN_005ed090(C_005ed090 *this,undefined4 param_1,undefined4 param_2); /* 005ed090 */
-void __thiscall FUN_005ed0d0(C_005ed0d0 *this,undefined4 param_1,undefined4 param_2); /* 005ed0d0 */
-void __thiscall FUN_005ed110(C_005ed110 *this,undefined4 param_1,undefined4 param_2); /* 005ed110 */
-void __thiscall FUN_005ed150(C_005ed150 *this,undefined4 param_1); /* 005ed150 */
-void __thiscall FUN_005ed190(C_005ed190 *this,undefined4 param_1); /* 005ed190 */
-void __thiscall FUN_005ed1d0(C_005ed1d0 *this,undefined4 param_1); /* 005ed1d0 */
-void __thiscall FUN_005ed210(C_005ed210 *this,undefined4 param_1); /* 005ed210 */
-undefined4 __thiscall FUN_005ed250(C_005ed250 *this); /* 005ed250 */
-void __thiscall FUN_005ed290(C_005ed290 *this); /* 005ed290 */
-void __thiscall FUN_005ed2c0(C_005ed2c0 *this); /* 005ed2c0 */
-void __thiscall FUN_005ed2f0(C_005ed2f0 *this); /* 005ed2f0 */
-void __thiscall FUN_005ed320(C_005ed320 *this,undefined4 param_1); /* 005ed320 */
-void __thiscall FUN_005ed360(C_005ed360 *this,undefined4 param_1,undefined4 param_2); /* 005ed360 */
-void __thiscall FUN_005ed3a0(C_005ed3a0 *this,iptr param_1); /* 005ed3a0 */
-void __thiscall FUN_005ed3e0(C_005ed3e0 *this,undefined4 param_1); /* 005ed3e0 */
-void __thiscall FUN_005ed420(C_005ed420 *this,undefined4 param_1); /* 005ed420 */
-void __thiscall FUN_005ed460(C_005ed460 *this,undefined4 param_1); /* 005ed460 */
-void __thiscall FUN_005ed4a0(C_005ed4a0 *this,undefined4 param_1); /* 005ed4a0 */
+uint __cdecl input_shift_key_down(); /* 005ecef0 */
+uint __cdecl input_ctrl_key_down(); /* 005ecf20 */
+void __thiscall wnd_call_mousemove(WndOnMouseMoveView *this,undefined4 param_1,undefined4 param_2); /* 005ecf50 */
+void __thiscall wnd_call_lbuttondown(WndOnLButtonDownView *this,iptr param_1,iptr param_2); /* 005ecf90 */
+void __thiscall wnd_call_lbuttonup_raw(WndOnLButtonUpRawView *this,iptr param_1,iptr param_2); /* 005ecfd0 */
+void __thiscall wnd_call_lbuttonup(WndOnLButtonUpView *this,undefined4 param_1,undefined4 param_2); /* 005ed010 */
+void __thiscall wnd_call_rbuttondown(WndOnRButtonDownView *this,iptr param_1,iptr param_2); /* 005ed050 */
+void __thiscall wnd_call_rbuttonup_raw(WndOnRButtonUpRawView *this,undefined4 param_1,undefined4 param_2); /* 005ed090 */
+void __thiscall wnd_call_rbuttonup(WndOnRButtonUpView *this,undefined4 param_1,undefined4 param_2); /* 005ed0d0 */
+void __thiscall wnd_call_dblclick(WndOnDblClickView *this,undefined4 param_1,undefined4 param_2); /* 005ed110 */
+void __thiscall wnd_call_keydown_pre(WndOnKeyDownPreView *this,undefined4 param_1); /* 005ed150 */
+void __thiscall wnd_call_keyup(WndOnKeyUpView *this,undefined4 param_1); /* 005ed190 */
+void __thiscall wnd_call_keydown(WndOnKeyDownView *this,undefined4 param_1); /* 005ed1d0 */
+void __thiscall wnd_call_char(WndOnCharView *this,undefined4 param_1); /* 005ed210 */
+undefined4 __thiscall wnd_call_close(WndOnCloseView *this); /* 005ed250 */
+void __thiscall wnd_call_minimize(WndOnMinimizeView *this); /* 005ed290 */
+void __thiscall wnd_call_restore(WndOnRestoreView *this); /* 005ed2c0 */
+void __thiscall wnd_call_setfocus(WndOnSetFocusView *this); /* 005ed2f0 */
+void __thiscall wnd_call_size(WndOnSizeView *this,undefined4 param_1); /* 005ed320 */
+void __thiscall wnd_call_move(WndOnMoveView *this,undefined4 param_1,undefined4 param_2); /* 005ed360 */
+void __thiscall wnd_call_msg44(WndOnMsg44View *this,iptr param_1); /* 005ed3a0 */
+void __thiscall wnd_call_hscroll(WndOnHScrollView *this,undefined4 param_1); /* 005ed3e0 */
+void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *this,undefined4 param_1); /* 005ed420 */
+void __thiscall wnd_call_vscroll(WndOnVScrollView *this,undefined4 param_1); /* 005ed460 */
+void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *this,undefined4 param_1); /* 005ed4a0 */
 void __thiscall FUN_005ed4e0(C_005ed4e0 *this,undefined4 param_1); /* 005ed4e0 */
-void __thiscall FUN_005ed520(C_005ed520 *this); /* 005ed520 */
-void __thiscall FUN_005ed550(C_005ed550 *this); /* 005ed550 */
-void __thiscall FUN_005ed580(void *this,undefined4 param_1,undefined4 param_2); /* 005ed580 */
-bool __thiscall FUN_005ed5a0(C_005ed5a0 *this,undefined4 param_1,undefined4 param_2); /* 005ed5a0 */
-bool __thiscall FUN_005ed5f0(C_005ed5f0 *this,undefined4 param_1); /* 005ed5f0 */
-u32 __thiscall FUN_005ed640(C_005ed640 *this); /* 005ed640 */
-u32 __thiscall FUN_005ed660(C_005ed660 *this); /* 005ed660 */
-u32 __thiscall FUN_005ed680(C_005ed680 *this); /* 005ed680 */
-u32 __thiscall FUN_005ed6a0(C_005ed6a0 *this); /* 005ed6a0 */
-u32 __thiscall FUN_005ed6c0(C_005ed6c0 *this); /* 005ed6c0 */
-void __thiscall FUN_005ed6e0(C_005ed6e0 *this); /* 005ed6e0 */
-void __cdecl FUN_005ed710(); /* 005ed710 */
-undefined4 __cdecl FUN_005ed920(); /* 005ed920 */
-undefined4 __cdecl FUN_005eda65(); /* 005eda65 */
-undefined4 __cdecl FUN_005edb15(); /* 005edb15 */
-undefined4 __cdecl FUN_005edbb2(); /* 005edbb2 */
-#undef FUN_005edc6c
-short __cdecl FUN_005edc6c(byte *dst, byte *src, uint count, undefined4 src_step, undefined4 dst_step); /* 005edc6c, hand-written */
-#undef FUN_005edcac
-short __cdecl FUN_005edcac(char *dst, byte *src, uint count, undefined4 src_step, undefined4 dst_step); /* 005edcac, hand-written */
-void __cdecl FUN_005edd00(); /* 005edd00 */
+void __thiscall wnd_call_entersizemove(WndOnEnterSizeMoveView *this); /* 005ed520 */
+void __thiscall wnd_call_exitsizemove(WndOnExitSizeMoveView *this); /* 005ed550 */
+void __thiscall wnd_on_size_nop(void *this,undefined4 param_1,undefined4 param_2); /* 005ed580 */
+bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *this,undefined4 param_1,undefined4 param_2); /* 005ed5a0 */
+bool __thiscall wnd_call_command(WndOnCommandView *this,undefined4 param_1); /* 005ed5f0 */
+u32 __thiscall wnd_get_hscroll_pos(WndHScrollPosView *this); /* 005ed640 */
+u32 __thiscall wnd_get_vscroll_pos(WndVScrollPosView *this); /* 005ed660 */
+u32 __thiscall wnd_get_hscroll_page(WndHScrollPageView *this); /* 005ed680 */
+u32 __thiscall wnd_get_vscroll_page(WndVScrollPageView *this); /* 005ed6a0 */
+u32 __thiscall wnd_get_mci_device(WndMciDeviceView *this); /* 005ed6c0 */
+void __thiscall wnd_call_mci_done(WndOnMciDoneView *this); /* 005ed6e0 */
+void __cdecl gdi_blit_transparent(); /* 005ed710 */
+undefined4 __cdecl dbg_log_open(); /* 005ed920 */
+undefined4 __cdecl dbg_log_close(); /* 005eda65 */
+undefined4 __cdecl dbg_log_write_file(); /* 005edb15 */
+undefined4 __cdecl dbg_log_write_debugger(); /* 005edbb2 */
+#undef snd_resample_8bit
+short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count, undefined4 src_step, undefined4 dst_step); /* 005edc6c, hand-written */
+#undef snd_mix_8bit_resample
+short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count, undefined4 src_step, undefined4 dst_step); /* 005edcac, hand-written */
+void __cdecl dbg_fatal_msgbox_break(); /* 005edd00 */
 char * __cdecl FUN_005edd2b(); /* 005edd2b */
-void __cdecl FUN_005eddaa(); /* 005eddaa */
+void __cdecl dbg_stack_trace_stub(); /* 005eddaa */
 bool __cdecl FUN_005eddd0(); /* 005eddd0 */
 void __cdecl FUN_005ede3b(); /* 005ede3b */
 void __cdecl FUN_005ede94(); /* 005ede94 */
@@ -4446,111 +4446,111 @@ void __cdecl FUN_005edfcd(iptr param_1,char param_2); /* 005edfcd */
 void __cdecl FUN_005ee002(); /* 005ee002 */
 void __cdecl FUN_005ee04c(); /* 005ee04c */
 void __cdecl FUN_005ee088(); /* 005ee088 */
-undefined4 * __cdecl FUN_005ee0b1(); /* 005ee0b1 */
+undefined4 * __cdecl moviewnd_create(); /* 005ee0b1 */
 void __cdecl FUN_005ee450(); /* 005ee450 */
 void __cdecl FUN_005ee49a(); /* 005ee49a */
 void __cdecl FUN_005ee4fd(); /* 005ee4fd */
 void __cdecl FUN_005ee528(); /* 005ee528 */
 undefined4 __cdecl FUN_005ee559(); /* 005ee559 */
 void __cdecl FUN_005ee591(); /* 005ee591 */
-void __thiscall FUN_005ee6b1(C_005ee6b1 *this); /* 005ee6b1 */
-void __thiscall FUN_005ee6e3(C_005ee6b1 *this,C_00408010_10 *param_1,undefined4 param_2); /* 005ee6e3 */
-void __thiscall FUN_005ee757(C_005ee6b1 *this,C_00408010_10 *param_1); /* 005ee757 */
-void __thiscall FUN_005ee7b1(C_005ee6b1 *this,C_005eec80 *param_1,undefined4 param_2); /* 005ee7b1 */
-void __thiscall FUN_005ee825(C_005ee6b1 *this,C_005eec80 *param_1); /* 005ee825 */
-void __thiscall FUN_005ee87f(C_005ee87f *this,LPARAM param_1); /* 005ee87f */
-void __thiscall FUN_005ee8c6(C_005ee8c6 *this); /* 005ee8c6 */
-void __thiscall FUN_005ee8f1(C_005ee6b1 *this); /* 005ee8f1 */
-void __thiscall FUN_005ee91c(C_005ee91c *this,LPARAM param_1); /* 005ee91c */
-void __thiscall FUN_005ee94b(C_005ee6b1 *this); /* 005ee94b */
+void __thiscall FUN_005ee6b1(MciWnd *this); /* 005ee6b1 */
+void __thiscall FUN_005ee6e3(MciWnd *this,WndBase *param_1,undefined4 param_2); /* 005ee6e3 */
+void __thiscall FUN_005ee757(MciWnd *this,WndBase *param_1); /* 005ee757 */
+void __thiscall FUN_005ee7b1(MciWnd *this,DDWindowNativeView *param_1,undefined4 param_2); /* 005ee7b1 */
+void __thiscall FUN_005ee825(MciWnd *this,DDWindowNativeView *param_1); /* 005ee825 */
+void __thiscall FUN_005ee87f(MciWndOpenView *this,LPARAM param_1); /* 005ee87f */
+void __thiscall FUN_005ee8c6(MciWndPlayView *this); /* 005ee8c6 */
+void __thiscall mciwnd_stop(MciWnd *this); /* 005ee8f1 */
+void __thiscall FUN_005ee91c(MciWndSeekView *this,LPARAM param_1); /* 005ee91c */
+void __thiscall mciwnd_destroy(MciWnd *this); /* 005ee94b */
 void __thiscall FUN_005ee991(C_005ee991 *this); /* 005ee991 */
 void __thiscall FUN_005ee9bc(C_005ee9bc *this); /* 005ee9bc */
-void __thiscall FUN_005ee9e7(C_005ee9e7 *this); /* 005ee9e7 */
-void __thiscall FUN_005eea12(C_005eea12 *this,LPRECT param_1); /* 005eea12 */
-void __thiscall FUN_005eea3a(C_005eea3a *this); /* 005eea3a */
-void __thiscall FUN_005eeadd(C_005eeadd *this,int param_1,int param_2); /* 005eeadd */
-void __thiscall FUN_005eeb11(C_005eeb11 *this,int param_1,int param_2); /* 005eeb11 */
-void __thiscall FUN_005eeb45(C_005eeb45 *this); /* 005eeb45 */
-void __thiscall FUN_005eeb7e(C_005eeb7e *this); /* 005eeb7e */
-void __thiscall FUN_005eeba2(C_005eeba2 *this,C_005cbdb0 *param_1); /* 005eeba2 */
-void __thiscall FUN_005eebd6(C_005eebd6 *this,C_0043c740_434 *param_1); /* 005eebd6 */
-u32 __thiscall FUN_005eec80(C_005eec80 *this); /* 005eec80 */
-C_005eeca0 * __thiscall FUN_005eeca0(C_005eeca0 *this); /* 005eeca0 */
+void __thiscall FUN_005ee9e7(MciWndPauseView *this); /* 005ee9e7 */
+void __thiscall FUN_005eea12(MciWndClientRectView *this,LPRECT param_1); /* 005eea12 */
+void __thiscall FUN_005eea3a(MciWndCenterView *this); /* 005eea3a */
+void __thiscall FUN_005eeadd(MciWndResizeView *this,int param_1,int param_2); /* 005eeadd */
+void __thiscall FUN_005eeb11(MciWndMoveView *this,int param_1,int param_2); /* 005eeb11 */
+void __thiscall FUN_005eeb45(MciWndShowView *this); /* 005eeb45 */
+void __thiscall FUN_005eeb7e(MciWndHideView *this); /* 005eeb7e */
+void __thiscall FUN_005eeba2(MciWndSetPaletteView *this,PaletteHandleView *param_1); /* 005eeba2 */
+void __thiscall FUN_005eebd6(MciWndGetPaletteView *this,GamePalette *param_1); /* 005eebd6 */
+u32 __thiscall ddwin_get_native(DDWindowNativeView *this); /* 005eec80 */
+AviAudio * __thiscall avi_audio_ctor(AviAudio *this); /* 005eeca0 */
 C_005eecc3 * __thiscall FUN_005eecc3(C_005eecc3 *this,u32 param_1); /* 005eecc3 */
-void __thiscall FUN_005eed1b(C_005eed1b *this); /* 005eed1b */
-uint __thiscall FUN_005eed43(C_005eed43 *this); /* 005eed43 */
-int __thiscall FUN_005eed76(C_005eed76 *this,u32 param_1); /* 005eed76 */
-undefined4 __thiscall FUN_005eedd1(void *this); /* 005eedd1 */
-int __thiscall FUN_005eedec(C_005eedec *this,undefined4 param_1,undefined4 param_2); /* 005eedec */
-undefined2 __thiscall FUN_005eee4f(void *this); /* 005eee4f */
+void __thiscall avi_audio_release(AviAudioReleaseView *this); /* 005eed1b */
+uint __thiscall avi_audio_is_playing(AviAudioPlayingView *this); /* 005eed43 */
+int __thiscall avi_audio_attach_stream(AviAudioAttachView *this,u32 param_1); /* 005eed76 */
+undefined4 __thiscall avi_audio_get_position_ms(void *this); /* 005eedd1 */
+int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,undefined4 param_1,undefined4 param_2); /* 005eedec */
+undefined2 __thiscall avi_audio_start(void *this); /* 005eee4f */
 undefined2 __thiscall FUN_005eee6d(void *this); /* 005eee6d */
 void __thiscall FUN_005eee86(void *this); /* 005eee86 */
-undefined4 __cdecl FUN_005eeeb0(); /* 005eeeb0 */
-undefined4 __cdecl FUN_005ef0b9(); /* 005ef0b9 */
-void __cdecl FUN_005ef320(); /* 005ef320 */
-undefined4 * __cdecl FUN_005ef356(); /* 005ef356 */
+undefined4 __cdecl sys_msgbox_potentially_fatal(); /* 005eeeb0 */
+undefined4 __cdecl sys_msgbox_mapped(); /* 005ef0b9 */
+void __cdecl wnd_set_class_owner(); /* 005ef320 */
+undefined4 * __cdecl ddwin_create_native(); /* 005ef356 */
 undefined4 __cdecl FUN_005ef41e(); /* 005ef41e */
-undefined1 __cdecl FUN_005ef4e3(); /* 005ef4e3 */
+undefined1 __cdecl ddwin_native_set_display_mode(); /* 005ef4e3 */
 #undef FUN_005ef58e
 uint __cdecl FUN_005ef58e(void); /* 005ef58e, hand-written */
-undefined4 __cdecl FUN_005ef5db(); /* 005ef5db */
-bool __cdecl FUN_005ef65a(); /* 005ef65a */
+undefined4 __cdecl ddwin_destroy_native(); /* 005ef5db */
+bool __cdecl wnd_show_update(); /* 005ef65a */
 bool __cdecl FUN_005ef699(); /* 005ef699 */
 LRESULT __stdcall FUN_005ef6cb(HWND param_1,uint param_2,uint param_3,uint param_4); /* 005ef6cb */
 undefined4 __stdcall FUN_005efca3(iptr param_1,code *param_2); /* 005efca3 */
 void __cdecl FUN_005efcde(); /* 005efcde */
-void __thiscall FUN_005efd70(C_005efd70 *this,undefined4 param_1); /* 005efd70 */
-C_005c5660 * __thiscall FUN_005efdc0(C_005c5660 *this); /* 005efdc0 */
+void __thiscall ddwin_call_activate_app(DDWindowActivateView *this,undefined4 param_1); /* 005efd70 */
+DDSurface * __thiscall FUN_005efdc0(DDSurface *this); /* 005efdc0 */
 #undef FUN_005efeb0
 void __thiscall FUN_005efeb0(void *this); /* 005efeb0, hand-written */
 void __cdecl FUN_005eff2b(); /* 005eff2b */
 void __cdecl FUN_005eff3a(); /* 005eff3a */
 void __cdecl FUN_005eff62(); /* 005eff62 */
-undefined4 __thiscall FUN_005eff83(C_005eff83 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, u32 param_5,undefined4 param_6); /* 005eff83 */
-undefined4 __thiscall FUN_005effec(C_005eff83 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,u32 param_4, undefined4 param_5); /* 005effec */
+undefined4 __thiscall FUN_005eff83(DDWindowPaletteView *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, u32 param_5,undefined4 param_6); /* 005eff83 */
+undefined4 __thiscall FUN_005effec(DDWindowPaletteView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,u32 param_4, undefined4 param_5); /* 005effec */
 void __thiscall FUN_005f0056(C_005f0056 *this); /* 005f0056 */
-void __thiscall FUN_005f00b8(C_005c5660 *this); /* 005f00b8 */
-undefined1 __thiscall FUN_005f0169(C_005c5660 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005f0169 */
-void __thiscall FUN_005f01ad(C_005eff83 *this,C_005e0cc0 *param_1); /* 005f01ad */
-void __thiscall FUN_005f0213(C_005f0213 *this,C_005c5660 *param_1); /* 005f0213 */
-void __thiscall FUN_005f0266(void *this,iptr param_1); /* 005f0266 */
-void __thiscall FUN_005f029e(void *this); /* 005f029e */
-void __thiscall FUN_005f02f3(C_005c5660 *this); /* 005f02f3 */
-void __thiscall FUN_005f0342(void *this); /* 005f0342 */
-undefined1 __thiscall FUN_005f0391(C_005f0391 *this,int param_1,int param_2,int param_3); /* 005f0391 */
-void __thiscall FUN_005f04c0(void *this); /* 005f04c0 */
+void __thiscall ddwin_reset_after_mode_change(DDSurface *this); /* 005f00b8 */
+undefined1 __thiscall FUN_005f0169(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 005f0169 */
+void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *param_1); /* 005f01ad */
+void __thiscall FUN_005f0213(C_005f0213 *this,DDSurface *param_1); /* 005f0213 */
+void __thiscall ddwin_add_control(void *this,iptr param_1); /* 005f0266 */
+void __thiscall ddwin_remove_all_controls(void *this); /* 005f029e */
+void __thiscall ddwin_paint_controls(DDSurface *this); /* 005f02f3 */
+void __thiscall ddwin_deactivate_controls(void *this); /* 005f0342 */
+undefined1 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int param_1,int param_2,int param_3); /* 005f0391 */
+void __thiscall ptrlist_dtor(void *this); /* 005f04c0 */
 void __cdecl FUN_005f04fe(); /* 005f04fe */
-C_005f0520 * __thiscall FUN_005f0520(C_005f0520 *this); /* 005f0520 */
-undefined4 __thiscall FUN_005f0590(C_005f0590 *this); /* 005f0590 */
-void __thiscall FUN_005f05b0(C_005f05b0 *this); /* 005f05b0 */
-undefined4 __thiscall FUN_005f05d0(C_005f0590 *this); /* 005f05d0 */
-void __thiscall FUN_005f05f0(C_005f0590 *this,undefined4 param_1); /* 005f05f0 */
-int __thiscall FUN_005f0620(void *this); /* 005f0620 */
-C_005f0640 * __thiscall FUN_005f0640(C_005f0640 *this); /* 005f0640 */
-void __thiscall FUN_005f0676(void *this); /* 005f0676 */
-void __thiscall FUN_005f068c(C_005f068c *this,iptr param_1); /* 005f068c */
-void __thiscall FUN_005f06ad(C_005f06ad *this,iptr param_1); /* 005f06ad */
-void __thiscall FUN_005f06ce(C_005f06ce *this,u32 param_1); /* 005f06ce */
-C_005f0520 * __thiscall FUN_005f06ee(C_005f0520 *this); /* 005f06ee */
-void __thiscall FUN_005f0724(C_005f0590 *this); /* 005f0724 */
-uint __thiscall FUN_005f0742(C_005f0590 *this); /* 005f0742 */
-undefined4 __thiscall FUN_005f0770(C_005f0590 *this); /* 005f0770 */
-undefined4 __thiscall FUN_005f07b3(C_005f05b0 *this); /* 005f07b3 */
+PtrListInitView * __thiscall ptrlist_ctor(PtrListInitView *this); /* 005f0520 */
+undefined4 __thiscall ptrlist_first(PtrList *this); /* 005f0590 */
+void __thiscall ptrlist_last(PtrListLastView *this); /* 005f05b0 */
+undefined4 __thiscall ptrlist_next(PtrList *this); /* 005f05d0 */
+void __thiscall ptrlist_append(PtrList *this,undefined4 param_1); /* 005f05f0 */
+int __thiscall ddctrl_get_rect(void *this); /* 005f0620 */
+PtrListNode * __thiscall ptrlist_node_ctor(PtrListNode *this); /* 005f0640 */
+void __thiscall ptrlist_node_dtor(void *this); /* 005f0676 */
+void __thiscall ptrlist_node_set_next(PtrListNodeNextSetView *this,iptr param_1); /* 005f068c */
+void __thiscall ptrlist_node_set_prev(PtrListNodePrevSetView *this,iptr param_1); /* 005f06ad */
+void __thiscall ptrlist_node_set_data(PtrListNodeDataSetView *this,u32 param_1); /* 005f06ce */
+PtrListInitView * __thiscall ptrlist_impl_ctor(PtrListInitView *this); /* 005f06ee */
+void __thiscall ptrlist_clear(PtrList *this); /* 005f0724 */
+uint __thiscall ptrlist_is_empty(PtrList *this); /* 005f0742 */
+undefined4 __thiscall ptrlist_first_impl(PtrList *this); /* 005f0770 */
+undefined4 __thiscall ptrlist_last_impl(PtrListLastView *this); /* 005f07b3 */
 undefined4 __thiscall FUN_005f07f9(C_005f07f9 *this); /* 005f07f9 */
-undefined4 __thiscall FUN_005f0833(C_005f0590 *this); /* 005f0833 */
+undefined4 __thiscall ptrlist_next_impl(PtrList *this); /* 005f0833 */
 undefined4 __thiscall FUN_005f0897(C_005f0897 *this); /* 005f0897 */
-void __thiscall FUN_005f08fb(C_005f0590 *this,undefined4 param_1); /* 005f08fb */
-void __thiscall FUN_005f0a04(C_005f0590 *this,undefined4 param_1); /* 005f0a04 */
-int __thiscall FUN_005f0bce(C_005f0590 *this,int param_1); /* 005f0bce */
-int __thiscall FUN_005f0c21(C_005f0590 *this); /* 005f0c21 */
-void __thiscall FUN_005f0c69(C_005f0590 *this); /* 005f0c69 */
-void __thiscall FUN_005f0e13(C_005f0590 *this); /* 005f0e13 */
-u32 __thiscall FUN_005f0e50(C_005f0e50 *this); /* 005f0e50 */
-u32 __thiscall FUN_005f0e70(C_005f0e70 *this); /* 005f0e70 */
-u32 __thiscall FUN_005f0e90(C_005f0e90 *this); /* 005f0e90 */
-void * __thiscall FUN_005f0eb0(void *this,uint param_1); /* 005f0eb0 */
+void __thiscall ptrlist_append_impl(PtrList *this,undefined4 param_1); /* 005f08fb */
+void __thiscall FUN_005f0a04(PtrList *this,undefined4 param_1); /* 005f0a04 */
+int __thiscall FUN_005f0bce(PtrList *this,int param_1); /* 005f0bce */
+int __thiscall FUN_005f0c21(PtrList *this); /* 005f0c21 */
+void __thiscall ptrlist_remove_current(PtrList *this); /* 005f0c69 */
+void __thiscall ptrlist_clear_impl(PtrList *this); /* 005f0e13 */
+u32 __thiscall ptrlist_node_data(PtrListNodeDataView *this); /* 005f0e50 */
+u32 __thiscall ptrlist_node_next(PtrListNodeNextView *this); /* 005f0e70 */
+u32 __thiscall ptrlist_node_prev(PtrListNodePrevView *this); /* 005f0e90 */
+void * __thiscall ptrlist_node_delete(void *this,uint param_1); /* 005f0eb0 */
 undefined4 __cdecl FUN_005f0ef0(); /* 005f0ef0 */
-void __cdecl FUN_005f0f05(); /* 005f0f05 */
+void __cdecl ddctrl_set_msg_target(); /* 005f0f05 */
 C_005f0f1d * __thiscall FUN_005f0f1d(C_005f0f1d *this); /* 005f0f1d */
 C_005f0fe9 * __thiscall FUN_005f0fe9(C_005f0fe9 *this,u32 param_1); /* 005f0fe9 */
 C_005f10b6 * __thiscall FUN_005f10b6(C_005f10b6 *this,u32 param_1); /* 005f10b6 */
@@ -4558,21 +4558,21 @@ void __thiscall FUN_005f1183(void *this); /* 005f1183 */
 void __cdecl FUN_005f11d2(); /* 005f11d2 */
 void __thiscall FUN_005f11f6(C_005f11f6 *this,u32 param_1); /* 005f11f6 */
 void __thiscall FUN_005f1221(C_005f1221 *this,u32 param_1); /* 005f1221 */
-void __thiscall FUN_005f124c(C_005f124c *this,u32 param_1,uptr *param_2); /* 005f124c */
-undefined4 __thiscall FUN_005f130f(C_005f130f *this,int param_1,int param_2,int param_3); /* 005f130f */
-uptr __thiscall FUN_005f1514(C_005f124c *this); /* 005f1514 */
-void __thiscall FUN_005f156d(C_005f124c *this); /* 005f156d */
-void __thiscall FUN_005f15a9(C_005f124c *this,undefined4 param_1); /* 005f15a9 */
-void __thiscall FUN_005f15f2(C_005f15f2 *this); /* 005f15f2 */
-void __thiscall FUN_005f1622(C_005f1622 *this); /* 005f1622 */
-void __thiscall FUN_005f1683(void *this); /* 005f1683 */
+void __thiscall FUN_005f124c(DDControlParentView *this,u32 param_1,uptr *param_2); /* 005f124c */
+undefined4 __thiscall ddctrl_dispatch_msg(DDControl *this,int param_1,int param_2,int param_3); /* 005f130f */
+uptr __thiscall ddctrl_get_parent_window(DDControlParentView *this); /* 005f1514 */
+void __thiscall FUN_005f156d(DDControlParentView *this); /* 005f156d */
+void __thiscall FUN_005f15a9(DDControlParentView *this,undefined4 param_1); /* 005f15a9 */
+void __thiscall ddctrl_paint_tree(DDControlPaintView *this); /* 005f15f2 */
+void __thiscall ddctrl_activate(DDControlActivateView *this); /* 005f1622 */
+void __thiscall ddctrl_deactivate(void *this); /* 005f1683 */
 void __thiscall FUN_005f16c4(C_005f16c4 *this,u32 param_1); /* 005f16c4 */
 void __thiscall FUN_005f16e5(C_005f16e5 *this,u32 param_1); /* 005f16e5 */
 void __thiscall FUN_005f1706(C_005f1706 *this,u32 param_1); /* 005f1706 */
 void __thiscall FUN_005f1727(C_005f1727 *this,u32 param_1); /* 005f1727 */
 void __thiscall FUN_005f1748(C_005f1748 *this,u32 param_1); /* 005f1748 */
 void __thiscall FUN_005f1769(C_005f1769 *this); /* 005f1769 */
-void __thiscall FUN_005f179c(C_005f1622 *this,undefined4 param_1,undefined4 param_2); /* 005f179c */
+void __thiscall FUN_005f179c(DDControlActivateView *this,undefined4 param_1,undefined4 param_2); /* 005f179c */
 void __thiscall FUN_005f17bc(void *this,undefined4 param_1,undefined4 param_2); /* 005f17bc */
 void __thiscall FUN_005f17d4(C_005f17d4 *this,undefined4 param_1,undefined4 param_2); /* 005f17d4 */
 void __thiscall FUN_005f1811(C_005f1811 *this,undefined4 param_1,undefined4 param_2); /* 005f1811 */
@@ -4582,11 +4582,11 @@ void __thiscall FUN_005f18c8(void *this,undefined4 param_1,undefined4 param_2); 
 void __thiscall FUN_005f18e0(void *this,undefined4 param_1); /* 005f18e0 */
 void __thiscall FUN_005f18f8(void *this,undefined4 param_1); /* 005f18f8 */
 void __thiscall FUN_005f1910(void *this,undefined4 param_1); /* 005f1910 */
-void __thiscall FUN_005f1928(void *this,iptr param_1); /* 005f1928 */
-void __thiscall FUN_005f195a(void *this); /* 005f195a */
-void __thiscall FUN_005f19a6(void *this); /* 005f19a6 */
-void __thiscall FUN_005f19ef(C_005f15f2 *this); /* 005f19ef */
-undefined1 __thiscall FUN_005f1a40(C_005f130f *this,int param_1,int param_2,int param_3); /* 005f1a40 */
+void __thiscall ddctrl_add_child(void *this,iptr param_1); /* 005f1928 */
+void __thiscall ddctrl_remove_all_children(void *this); /* 005f195a */
+void __thiscall ddctrl_deactivate_children(void *this); /* 005f19a6 */
+void __thiscall ddctrl_paint_children(DDControlPaintView *this); /* 005f19ef */
+undefined1 __thiscall ddctrl_dispatch_to_children(DDControl *this,int param_1,int param_2,int param_3); /* 005f1a40 */
 u32 __thiscall FUN_005f1b50(C_005f1b50 *this); /* 005f1b50 */
 #undef __onexit
 int __cdecl __onexit(int func); /* 005f1b80, hand-written */
@@ -5577,123 +5577,20 @@ iptr __cdecl map_wrap_x(); /* 004022ed */
 undefined4 __cdecl map_write(); /* 004019e2 */
 void __cdecl nuclear_blast(); /* 004039fe */
 void __cdecl thunk_FUN_00406b4c(); /* 00402db5 */
-void __cdecl thunk_FUN_00406db8(); /* 00401726 */
-undefined4 __cdecl thunk_FUN_00406e61(); /* 004028d3 */
-void __cdecl thunk_FUN_0040701e(); /* 00402a95 */
-void __cdecl thunk_FUN_0040733c(); /* 00402581 */
-void __cdecl thunk_FUN_0040785b(); /* 00402527 */
 void __cdecl thunk_FUN_004079a6(); /* 004016a9 */
 void __cdecl thunk_FUN_00407b31(); /* 004024f0 */
-int __cdecl thunk_FUN_00407f90(); /* 004036bb */
-int __cdecl thunk_FUN_00407fc0(); /* 00403c7e */
-void __cdecl thunk_FUN_00407ff0(); /* 00401ad7 */
-void __thiscall thunk_FUN_00408010(C_00408010_10 *this,undefined4 param_1); /* 00402784 */
-void __thiscall thunk_FUN_00408050(C_00408010_10 *this,undefined4 param_1); /* 00402662 */
-void __thiscall thunk_FUN_00408090(C_00408010_10 *this); /* 004031d4 */
-undefined4 __thiscall thunk_FUN_004080c0(C_00408010_10 *this); /* 004015af */
-void __thiscall thunk_FUN_004080f0(C_00408010_10 *this,iptr param_1); /* 00403bc5 */
-u32 __thiscall thunk_FUN_00408130(C_00408130 *this,iptr param_1); /* 00401587 */
-u32 __thiscall thunk_FUN_00408170(C_00408130 *this,iptr param_1); /* 00401b9a */
-u32 __thiscall thunk_FUN_004081b0(C_00408130 *this,iptr param_1); /* 004018f2 */
-u32 __thiscall thunk_FUN_004081f0(C_00408130 *this,iptr param_1); /* 00401f91 */
-u32 __thiscall thunk_FUN_00408230(C_00408130 *this,iptr param_1); /* 00401082 */
-u32 __thiscall thunk_FUN_00408270(C_00408130 *this,iptr param_1); /* 00402946 */
-u32 __thiscall thunk_FUN_004082b0(C_00408130 *this,iptr param_1); /* 004014a6 */
-u32 __thiscall thunk_FUN_004082f0(C_00408130 *this,iptr param_1); /* 0040387d */
-u32 __thiscall thunk_FUN_00408330(C_00408130 *this,iptr param_1); /* 00403477 */
-void __thiscall thunk_FUN_00408370(C_00408010_b8 *this,u32 param_1,u32 param_2); /* 004039a9 */
-void __thiscall thunk_FUN_004083b0(C_004083b0_48 *this); /* 004012fd */
-void __thiscall thunk_FUN_004083f0(C_004083b0_48 *this); /* 0040333c */
-void __thiscall thunk_FUN_00408420(C_00408010_10 *this); /* 00402cd9 */
-void __thiscall thunk_FUN_00408460(C_004083b0_48 *this); /* 004014a1 */
-void __thiscall thunk_FUN_00408490(C_004083b0_48 *this,iptr param_1); /* 004010d2 */
-void __thiscall thunk_FUN_00408580(C_00408580 *this,iptr param_1); /* 004020cc */
-void __thiscall thunk_FUN_004085c0(C_004083b0_114 *this,iptr param_1); /* 00402e0a */
-void __thiscall thunk_FUN_004085f0(C_004083b0_4 *this); /* 0040138e */
-void __thiscall thunk_FUN_00408620(C_00408010_cc *this); /* 004020c7 */
-void __thiscall thunk_FUN_00408650(C_00408010_10 *this); /* 00403bd9 */
-void __cdecl thunk_FUN_00408680(); /* 00403b75 */
-void __cdecl thunk_FUN_004086c0(); /* 00402612 */
-void __cdecl thunk_FUN_00408700(); /* 00403a6c */
+void __thiscall thunk_FUN_00408580(WndValidateRectView *this,iptr param_1); /* 004020cc */
+void __thiscall thunk_FUN_00408620(Wnd *this); /* 004020c7 */
 void __cdecl thunk_FUN_00408750(); /* 00402257 */
-void __cdecl thunk_FUN_00408780(); /* 0040137f */
-void __cdecl thunk_FUN_0040894c(); /* 00401ef6 */
 void __cdecl thunk_FUN_0040897f(); /* 004019c9 */
-void __cdecl thunk_FUN_00408d33(); /* 00401a2d */
-void __cdecl thunk_FUN_0040bbb0(); /* 00401d61 */
-void __cdecl thunk_FUN_0040bbe0(); /* 00402bcb */
-void __cdecl thunk_FUN_0040bc10(); /* 00401bf4 */
-void __thiscall thunk_FUN_0040bc40(C_0040bc40_2f4 *this,undefined4 param_1); /* 004018a2 */
-undefined4 __thiscall thunk_FUN_0040bc80(C_0040bc40_2f4 *this,iptr param_1); /* 00401118 */
-uint __cdecl thunk_FUN_0040bcb0(); /* 00402af4 */
-undefined4 __cdecl thunk_FUN_0040bd10(); /* 00403530 */
-void __cdecl thunk_FUN_0040bdac(); /* 00402fd1 */
-void __cdecl thunk_FUN_0040bed1(); /* 00402cf7 */
-void __thiscall thunk_FUN_0040c480(C_004083b0_430 *this); /* 00403b93 */
 void __thiscall thunk_FUN_0040c7d0(C_004083b0_430 *this); /* 004025db */
 void __thiscall thunk_FUN_0040cd64(C_004083b0_430 *this,uptr param_1); /* 00401fdc */
-void __cdecl thunk_FUN_0040ddc6(); /* 00402c43 */
 void __cdecl thunk_FUN_0040decc(); /* 00402734 */
-void __cdecl thunk_FUN_0040e017(); /* 00401618 */
-void __cdecl thunk_FUN_0040e3b1(); /* 00402ad1 */
-void __cdecl thunk_FUN_0040ef50(); /* 0040197e */
-u32 __thiscall thunk_FUN_0040ef70(C_0040ef70_8 *this); /* 00403cec */
-undefined4 __thiscall thunk_FUN_0040efa0(C_0040ef70_8 *this); /* 00403819 */
-undefined4 __thiscall thunk_FUN_0040efd0(C_0040ef70_8 *this,iptr param_1); /* 00402b21 */
-C_004083b0_48 * __thiscall thunk_FUN_0040f010(C_004083b0_48 *this,uint param_1); /* 004020c2 */
 C_004083b0_430 * __thiscall thunk_FUN_0040f060(C_004083b0_430 *this); /* 00402a81 */
 void __thiscall thunk_FUN_0040f1e0(void *this); /* 0040240f */
-void __thiscall thunk_FUN_0040f320(C_00408010_b8 *this,iptr param_1); /* 00403cdd */
-void __thiscall thunk_FUN_0040f350(C_00408010_cc *this,undefined4 param_1); /* 00402a36 */
-void __thiscall thunk_FUN_0040f380(C_0040f380_3c *this); /* 0040169a */
-C_0040f380_3c * __thiscall thunk_FUN_0040f3e0(C_0040f380_3c *this); /* 004025a4 */
-C_0040f380_3c * __thiscall thunk_FUN_0040f480(C_0040f380_3c *this); /* 004025b3 */
-undefined4 __thiscall thunk_FUN_0040f510(C_0040f510 *this); /* 004030d0 */
-undefined4 __thiscall thunk_FUN_0040f570(C_0040f380_3c *this); /* 00401c85 */
-void __thiscall thunk_FUN_0040f610(C_0040f380_3c *this); /* 00403468 */
-void __thiscall thunk_FUN_0040f680(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 00401cdf */
-void __thiscall thunk_FUN_0040f730(C_0040f380_3c *this,iptr param_1,u32 param_2,u32 param_3,iptr param_4); /* 004015e1 */
-void __thiscall thunk_FUN_0040f7d0(C_0040f380_3c *this); /* 0040274d */
-uptr __thiscall thunk_FUN_0040f810(C_0040f380_3c *this); /* 00401cee */
-void __thiscall thunk_FUN_0040f840(C_0040f380_3c *this); /* 004032b0 */
-void __thiscall thunk_FUN_0040f880(C_0040f380_3c *this,iptr param_1); /* 00403111 */
-C_0040f380_3c * __thiscall thunk_FUN_0040f8b0(C_0040f380_3c *this); /* 00402a8b */
-void __thiscall thunk_FUN_0040f930(C_0040f930 *this); /* 004019c4 */
-void __thiscall thunk_FUN_0040f9d0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,iptr param_5); /* 00401280 */
-void __thiscall thunk_FUN_0040faa0(C_0040faa0 *this,iptr param_1); /* 0040115e */
-void __thiscall thunk_FUN_0040fad0(C_0040f380_3c *this,u32 param_1); /* 00402f04 */
-C_0040f380_3c * __thiscall thunk_FUN_0040fb00(C_0040f380_3c *this); /* 004031e3 */
-void __thiscall thunk_FUN_0040fbb0(C_0040f380_3c *this); /* 00402086 */
-void __thiscall thunk_FUN_0040fc50(C_0040f380_3c *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 004024cd */
-void __thiscall thunk_FUN_0040fcf0(C_0040f380_40 *this,iptr param_1); /* 004027bb */
-void __thiscall thunk_FUN_0040fd40(C_0040f380_3c *this,undefined4 param_1,undefined4 param_2); /* 00402121 */
-void __thiscall thunk_FUN_0040fd80(C_0040f380_3c *this,iptr param_1); /* 00402a4a */
-void __cdecl thunk_FUN_0040fdb0(); /* 004011b8 */
-void __cdecl thunk_FUN_0040fe10(); /* 00401faf */
-void __cdecl thunk_FUN_0040fe40(); /* 004025f9 */
-void __cdecl thunk_FUN_0040fe70(); /* 00401177 */
-void __cdecl thunk_FUN_0040fea0(); /* 004015eb */
-void __cdecl thunk_FUN_0040fed0(); /* 0040104b */
-void __cdecl thunk_FUN_0040ff00(); /* 00401c08 */
-void __cdecl thunk_FUN_0040ff30(); /* 00401ed8 */
-undefined4 __cdecl thunk_FUN_0040ff60(); /* 00401e29 */
-undefined4 __thiscall thunk_FUN_0040ffa0(C_0040bc40_2f4 *this,iptr param_1,undefined4 param_2); /* 004037ce */
-undefined4 __thiscall thunk_FUN_0040ffe0(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 00403b8e */
-undefined4 __cdecl thunk_FUN_00410030(); /* 004034a9 */
-undefined4 __cdecl thunk_FUN_00410070(); /* 004023d8 */
-void __cdecl thunk_FUN_004100cf(); /* 004024ff */
-void __thiscall thunk_FUN_00410302(C_004083b0_430 *this); /* 004037f1 */
-void __cdecl thunk_FUN_0041033a(); /* 00402b44 */
-void __thiscall thunk_FUN_00410402(C_004083b0_430 *this,iptr param_1,undefined4 param_2); /* 00403404 */
-int __thiscall thunk_FUN_00410464(C_004083b0_430 *this,int param_1,int param_2); /* 0040283d */
-uint __cdecl thunk_FUN_004105f8(); /* 004014b5 */
+Control * __thiscall thunk_FUN_0040f8b0(Control *this); /* 00402a8b */
 int __thiscall thunk_FUN_004106fd(C_004083b0_430 *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 0040102d */
-void __cdecl thunk_FUN_00410a64(); /* 0040132a */
-uint __cdecl thunk_FUN_00410d98(); /* 0040209f */
-undefined4 __cdecl thunk_FUN_00410e0a(); /* 00401f0f */
 void __cdecl thunk_FUN_00410e46(); /* 00403b70 */
-void __cdecl thunk_FUN_00410ed8(); /* 00402b12 */
-void __cdecl thunk_FUN_00410f77(); /* 0040200e */
 void __cdecl thunk_FUN_00411705(); /* 0040146f */
 void __cdecl thunk_FUN_00411a13(); /* 00402fc2 */
 void __cdecl thunk_FUN_00411a85(); /* 00401348 */
@@ -5701,279 +5598,81 @@ void __cdecl thunk_FUN_00411bd7(); /* 00401c26 */
 void __cdecl thunk_FUN_00411bf5(); /* 00402892 */
 void __cdecl thunk_FUN_00411f91(); /* 00401e56 */
 void __cdecl thunk_FUN_004125c6(); /* 00402cd4 */
-void __cdecl thunk_FUN_004132b7(); /* 00403102 */
-void __thiscall thunk_FUN_00413476(C_004083b0_2e4 *this); /* 00402b94 */
-void __thiscall thunk_FUN_00413717(C_004083b0_430 *this); /* 00402d7e */
 void __cdecl thunk_FUN_00413a90(); /* 004030e4 */
 void __cdecl thunk_FUN_00413bd1(); /* 00402563 */
-void __thiscall thunk_FUN_00414b70(C_00414b70 *this,iptr param_1,undefined4 param_2); /* 00401456 */
-undefined4 __thiscall thunk_FUN_00414bb0(C_00408010_10 *this); /* 00402d24 */
-u32 __thiscall thunk_FUN_00414be0(C_00414be0 *this,iptr param_1); /* 004017ad */
-u32 __thiscall thunk_FUN_00414c20(C_00414be0 *this,iptr param_1); /* 00402d33 */
-u32 __thiscall thunk_FUN_00414c60(C_00414be0 *this,iptr param_1); /* 00401a64 */
-u32 __thiscall thunk_FUN_00414ca0(C_00414be0 *this,iptr param_1); /* 00401762 */
-void __thiscall thunk_FUN_00414ce0(C_00408010_10 *this); /* 004015ff */
-u32 __thiscall thunk_FUN_00414d10(C_00408010_10 *this); /* 0040361b */
-void __thiscall thunk_FUN_00414d40(C_00408010_10 *this); /* 00402941 */
-void __cdecl thunk_FUN_00414d70(); /* 004033e1 */
-void __thiscall thunk_FUN_00414da0(C_004083b0_2e4 *this,iptr param_1); /* 00402ac2 */
-undefined4 __cdecl thunk_FUN_00414dd0(); /* 00401735 */
 u32 __thiscall thunk_FUN_00414e00(C_004083b0_4 *this); /* 00402f3b */
 void __cdecl thunk_FUN_00414f02(); /* 004011f9 */
 iptr __cdecl thunk_FUN_00415040(); /* 004022d4 */
-FILE * __cdecl thunk_FUN_0041508c(); /* 0040281f */
-uint __cdecl thunk_FUN_00415133(); /* 00401802 */
 void __cdecl thunk_FUN_004151e0(); /* 004033d2 */
 void __cdecl thunk_FUN_00415307(); /* 00401078 */
-void __cdecl thunk_FUN_0041541a(); /* 00402e00 */
-int __cdecl thunk_FUN_0041557b(); /* 00403161 */
-void __cdecl thunk_FUN_00415765(); /* 00402a68 */
 void __cdecl thunk_FUN_00415952(); /* 00403184 */
-void __cdecl thunk_FUN_00415b52(); /* 00401aa0 */
 void __cdecl thunk_FUN_0041623d(); /* 00401f7d */
 void __thiscall thunk_FUN_00416354(C_004083b0_430 *this,int param_1); /* 00403724 */
 void __thiscall thunk_FUN_00416734(C_004083b0_430 *this,int param_1); /* 00403805 */
 void __thiscall thunk_FUN_00416828(C_004083b0_430 *this); /* 00403490 */
 void __thiscall thunk_FUN_00416c9e(C_004083b0_430 *this); /* 00401c17 */
-void __cdecl thunk_FUN_00417566(); /* 0040151e */
-void __thiscall thunk_FUN_00417ef0(C_0040ef70_8 *this,undefined4 param_1,iptr param_2); /* 00402a27 */
-u8 __thiscall thunk_FUN_00417f70(C_00417f70_3c *this); /* 00403aee */
-C_004083b0_a28 * __thiscall thunk_FUN_00417fa0(C_004083b0_a28 *this); /* 004014f6 */
-void __thiscall thunk_FUN_004183d0(void *this); /* 00402aea */
-u32 __thiscall thunk_FUN_00418740(C_00418740 *this); /* 00401154 */
-u32 __thiscall thunk_FUN_00418770(C_00418770 *this); /* 00403d37 */
-C_0040f380_48 * __thiscall thunk_FUN_004187a0(C_0040f380_48 *this); /* 00401bdb */
-void __thiscall thunk_FUN_00418870(C_0040f380_3c *this); /* 004033e6 */
-void __thiscall thunk_FUN_00418910(C_0040f380_44 *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 004021e4 */
-void __thiscall thunk_FUN_004189c0(C_004189c0 *this,undefined4 param_1); /* 004010b4 */
-void __thiscall thunk_FUN_00418a00(C_00418a00 *this,iptr param_1); /* 0040270c */
-void __thiscall thunk_FUN_00418a30(C_00418a30 *this,iptr param_1); /* 00402301 */
-void __thiscall thunk_FUN_00418a70(C_00418a30 *this,iptr param_1); /* 00402351 */
-void __thiscall thunk_FUN_00418bf0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00403828 */
-void __thiscall thunk_FUN_00418c70(C_00418c70 *this,iptr param_1); /* 00403c6a */
-u32 __thiscall thunk_FUN_00418cb0(C_0040ef70_8 *this); /* 004030a3 */
-void __thiscall thunk_FUN_00418ce0(C_00418ce0 *this,iptr param_1); /* 00401d20 */
-void __thiscall thunk_FUN_00418d20(C_00418d20 *this); /* 004021d0 */
-undefined4 __thiscall thunk_FUN_00418d60(C_00418d60 *this); /* 00401ece */
-void __thiscall thunk_FUN_00418d90(C_00418d90 *this,iptr param_1); /* 0040154b */
-void __thiscall thunk_FUN_00418dd0(C_00418dd0 *this,iptr param_1); /* 00401e88 */
-C_0040f380_3c * __thiscall thunk_FUN_00418e00(C_0040f380_3c *this); /* 00402fe0 */
-void __thiscall thunk_FUN_00418ea0(C_00418ea0 *this); /* 00403ca6 */
-void __thiscall thunk_FUN_00418f40(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00403a3f */
-void __thiscall thunk_FUN_00418fe0(C_00418fe0 *this,iptr param_1); /* 004032ec */
-void __thiscall thunk_FUN_00419020(C_00419020 *this,iptr param_1); /* 004032ab */
-void __thiscall thunk_FUN_00419060(C_00419060 *this); /* 004033b9 */
-void __cdecl thunk_FUN_004190a0(); /* 00401749 */
-undefined4 __cdecl thunk_FUN_004190d0(); /* 00403288 */
-undefined4 __cdecl thunk_FUN_00419100(); /* 00401e10 */
-undefined4 __cdecl thunk_FUN_00419130(); /* 00403b9d */
 undefined4 __cdecl thunk_FUN_00419170(); /* 00401668 */
-void __cdecl thunk_FUN_00419b80(); /* 00401e1a */
-void __thiscall thunk_FUN_00419ba0(C_00408010_10 *this,undefined4 param_1); /* 00402045 */
-void __thiscall thunk_FUN_00419be0(C_00408010_10 *this,iptr param_1); /* 00402a13 */
-void __cdecl thunk_FUN_00419c8b(); /* 00402522 */
 undefined1 __cdecl thunk_FUN_00419cbb(); /* 0040239c */
 undefined1 __cdecl thunk_FUN_00419cf4(); /* 004037bf */
-void __cdecl thunk_FUN_00419d23(); /* 0040173a */
-void __cdecl thunk_FUN_00419ed3(); /* 004025fe */
-void __cdecl thunk_FUN_0041a046(); /* 00401c2b */
-void __cdecl thunk_FUN_0041a422(); /* 00401028 */
-void __cdecl thunk_FUN_0041a5c4(); /* 00402d42 */
 void __cdecl thunk_FUN_0041a95f(); /* 004039a4 */
 void __cdecl thunk_FUN_0041ab18(); /* 00401ded */
-void __cdecl thunk_FUN_0041b00e(); /* 00401258 */
 undefined4 __cdecl thunk_FUN_0041b4c0(); /* 00401e38 */
-void __cdecl thunk_FUN_0041b8b0(); /* 004012a3 */
-void __cdecl thunk_FUN_0041b8ff(); /* 00401be0 */
 undefined4 __cdecl thunk_FUN_0041ba52(); /* 00403a9e */
-undefined4 __cdecl thunk_FUN_0041d417(); /* 0040310c */
-int __cdecl thunk_FUN_0041d7ea(); /* 00401c8f */
 void __cdecl thunk_FUN_0041dcc3(); /* 004027de */
-undefined4 __cdecl thunk_FUN_0041dd0e(); /* 00402c39 */
 int __cdecl thunk_FUN_0041dfe1(); /* 004038fa */
 void __cdecl thunk_FUN_0041e7e3(); /* 0040391d */
-void __cdecl thunk_FUN_0041e864(); /* 00401adc */
-undefined4 __cdecl thunk_FUN_0041e8fb(); /* 00402db0 */
 int __cdecl thunk_FUN_0041eeeb(); /* 00401b1d */
 void __cdecl thunk_FUN_0041f69f(); /* 0040390e */
-void __cdecl thunk_FUN_0041f878(); /* 004010d7 */
-void __cdecl thunk_FUN_0041f8d9(); /* 00403026 */
-undefined4 __cdecl thunk_FUN_00421bb0(); /* 00403b2f */
-void __cdecl thunk_FUN_00421bd0(); /* 00402027 */
-undefined4 __thiscall thunk_FUN_00421bf0(C_00421bf0_98 *this,iptr param_1); /* 00402eeb */
-undefined4 __thiscall thunk_FUN_00421c30(C_00421bf0_98 *this); /* 00402b8f */
-void __thiscall thunk_FUN_00421c60(C_00421bf0_98 *this,iptr param_1,undefined4 param_2); /* 004034f4 */
-void __thiscall thunk_FUN_00421ca0(C_00421ca0 *this,iptr param_1); /* 0040344a */
-void __cdecl thunk_FUN_00421d30(); /* 004034a4 */
-undefined4 __cdecl thunk_FUN_00421d60(); /* 004032a6 */
-undefined4 __cdecl thunk_FUN_00421da0(); /* 00402fe5 */
-void __thiscall thunk_FUN_00421dd0(C_0040bc40_2f4 *this); /* 0040167c */
-undefined4 __thiscall thunk_FUN_00421e00(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,undefined4 param_3); /* 00401d2a */
 void __cdecl thunk_FUN_00421e40(); /* 004033cd */
-undefined4 __cdecl thunk_FUN_00421e70(); /* 004039c2 */
-undefined4 __cdecl thunk_FUN_00421ea0(); /* 00402ccf */
-undefined4 __cdecl thunk_FUN_00421ed0(); /* 00402379 */
-void __cdecl thunk_FUN_00421f10(); /* 00403c65 */
-undefined1 __thiscall thunk_FUN_00421f40(void *this); /* 00402c34 */
 C_00421f70 * __thiscall thunk_FUN_00421f70(C_00421f70 *this); /* 004035a3 */
 void __thiscall thunk_FUN_00421fad(void *this); /* 00402dc4 */
 undefined4 __thiscall thunk_FUN_00421fcd(void *this,int param_1); /* 00402cbb */
-void __thiscall thunk_FUN_004244e0(C_004244e0 *this); /* 00403792 */
-u32 __thiscall thunk_FUN_00424688(C_004244e0 *this,iptr param_1,iptr param_2); /* 0040221b */
-void __thiscall thunk_FUN_0042472a(C_0042472a *this); /* 00402d1f */
-void __thiscall thunk_FUN_004247b2(C_0042472a *this,iptr param_1,iptr param_2,iptr param_3); /* 004010af */
+void __thiscall thunk_FUN_004244e0(NetGameListRefreshView *this); /* 00403792 */
+u32 __thiscall thunk_FUN_00424688(NetGameListRefreshView *this,iptr param_1,iptr param_2); /* 0040221b */
+void __thiscall thunk_FUN_004247b2(NetGameList *this,iptr param_1,iptr param_2,iptr param_3); /* 004010af */
 void __thiscall thunk_FUN_0042486f(C_0042486f *this); /* 004036e8 */
 undefined4 __cdecl thunk_FUN_00424ae9(); /* 0040150f */
-void __thiscall thunk_FUN_004253ef(C_0042472a *this); /* 0040124e */
-uint * __thiscall thunk_FUN_004254a8(C_004254a8 *this,iptr param_1,uint param_2); /* 004010cd */
-void __thiscall thunk_FUN_00425607(C_00425607 *this,iptr param_1); /* 0040227a */
-void __thiscall thunk_FUN_00425650(C_00425607 *this); /* 004024eb */
+void __thiscall thunk_FUN_00425607(NetGameListTimerView *this,iptr param_1); /* 0040227a */
 void __cdecl thunk_FUN_0042570c(); /* 00402edc */
-void __cdecl thunk_FUN_004257fe(); /* 00402077 */
-undefined4 __cdecl thunk_FUN_004259a6(); /* 00403030 */
-C_0040bc40_2f4 * __thiscall thunk_FUN_00426f30(C_0040bc40_2f4 *this,uint param_1); /* 00403918 */
-void __thiscall thunk_FUN_00426f80(C_00408010_10 *this); /* 004013f7 */
-undefined4 __cdecl thunk_FUN_00426fb0(); /* 00402167 */
-void __cdecl thunk_FUN_00426ff0(); /* 00401f23 */
-undefined4 __cdecl thunk_FUN_004271e8(); /* 0040267b */
 void __cdecl thunk_FUN_004272d0(); /* 00401965 */
 void __cdecl thunk_FUN_0042738c(); /* 00402112 */
 void __cdecl thunk_FUN_004273e6(); /* 00401ba9 */
-void __cdecl thunk_FUN_004274a6(); /* 0040282e */
-void __cdecl thunk_FUN_00428a0f(); /* 00402dfb */
 void __cdecl thunk_FUN_00428a78(); /* 00402b80 */
-int __cdecl thunk_FUN_00428a95(); /* 00401730 */
-char * __cdecl thunk_FUN_00428b0c(); /* 00403387 */
-int __cdecl thunk_FUN_00428b68(); /* 0040280b */
-C_00428cb0 * __thiscall thunk_FUN_00428cb0(C_00428cb0 *this); /* 004033be */
-void __cdecl thunk_FUN_00428d00(); /* 00403ae9 */
 void __cdecl thunk_FUN_00428fd2(); /* 004036f7 */
 void __thiscall thunk_FUN_0042903e(C_004083b0_430 *this,int param_1); /* 004038d2 */
 void __thiscall thunk_FUN_004293a8(C_004083b0_430 *this); /* 004032ce */
 void __thiscall thunk_FUN_00429671(C_004083b0_430 *this); /* 0040258b */
-void __cdecl thunk_FUN_00429e77(); /* 00401dca */
-void __thiscall thunk_FUN_0042a768(C_004083b0_488 *this); /* 0040277f */
-void __thiscall thunk_FUN_0042a7bc(C_004083b0_4c4 *this,uint param_1,u32 param_2,u32 param_3,u32 param_4,u32 param_5, u32 param_6,u32 param_7); /* 00401c03 */
-void __thiscall thunk_FUN_0042abc1(C_004083b0_2e4 *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 0040127b */
-void __thiscall thunk_FUN_0042ac18(C_004083b0_4c4 *this); /* 00401636 */
-void __thiscall thunk_FUN_0042acb0(C_004083b0_430 *this); /* 004032ba */
 void __cdecl thunk_FUN_0042ad8f(); /* 00402b67 */
-void __cdecl thunk_FUN_0042b67d(); /* 0040242d */
-undefined4 __cdecl thunk_FUN_0042b824(); /* 004018f7 */
 void __cdecl thunk_FUN_0042bc47(); /* 0040207c */
 void __cdecl thunk_FUN_0042bd8f(); /* 00401857 */
-void __cdecl thunk_FUN_0042cd2f(); /* 00401ea6 */
 void __cdecl thunk_FUN_0042ced6(); /* 004029f5 */
-void __cdecl thunk_FUN_0042d71e(); /* 00401da2 */
-int __cdecl thunk_FUN_0042d781(); /* 004024c8 */
 void __cdecl thunk_FUN_0042da1d(); /* 00402838 */
-void __cdecl thunk_FUN_0042e185(); /* 004013f2 */
 void __cdecl thunk_FUN_0042e1e8(); /* 00403896 */
-void __cdecl thunk_FUN_0042e220(); /* 00403332 */
-void __cdecl thunk_FUN_0042f079(); /* 004015aa */
 void __cdecl thunk_FUN_0042f293(); /* 00402766 */
-void __cdecl thunk_FUN_0043060b(); /* 00402b7b */
-void __cdecl thunk_FUN_004308ae(); /* 00403bed */
 void __cdecl thunk_FUN_00431573(); /* 00401b45 */
-void __cdecl thunk_FUN_00431c73(); /* 00402194 */
-void __cdecl thunk_FUN_00431d22(); /* 0040189d */
-void __cdecl thunk_FUN_00432611(); /* 00403cce */
-void __cdecl thunk_FUN_00433122(); /* 00401b09 */
 void __cdecl thunk_FUN_004331d1(); /* 00403567 */
-void __cdecl thunk_FUN_00434d8a(); /* 00402324 */
-void __cdecl thunk_FUN_00435d15(); /* 00402419 */
-void __cdecl thunk_FUN_004361cc(); /* 00403837 */
-void __cdecl thunk_FUN_00436287(); /* 00402a9a */
-iptr __cdecl thunk_FUN_00436bb7(); /* 0040250e */
-void __cdecl thunk_FUN_00436dd7(); /* 0040168b */
-void __cdecl thunk_FUN_00436e28(); /* 00403229 */
 void __cdecl thunk_FUN_00436ed2(); /* 0040278e */
-void __cdecl thunk_FUN_00436f5a(); /* 00401de8 */
 void __cdecl thunk_FUN_004371e2(); /* 00401a0f */
 void __cdecl thunk_FUN_0043720f(); /* 004020bd */
 int __cdecl thunk_FUN_0043722c(); /* 00401e4c */
 char * __cdecl thunk_FUN_00437284(); /* 00402b76 */
 undefined4 __cdecl thunk_FUN_004372cd(); /* 0040137a */
-void __cdecl thunk_FUN_0043742f(); /* 00401aeb */
-void __cdecl thunk_FUN_00437a4a(); /* 00401343 */
-void __cdecl thunk_FUN_00437c6f(); /* 00403783 */
 void __cdecl thunk_FUN_00437cea(); /* 004022cf */
-void __cdecl thunk_FUN_0043856b(); /* 00401807 */
-void __thiscall thunk_FUN_0043c110(void *this); /* 00402ae5 */
-C_004083b0_430 * __thiscall thunk_FUN_0043c260(C_004083b0_430 *this); /* 004034c7 */
-C_0043c3f0_4 * __thiscall thunk_FUN_0043c3f0(C_0043c3f0_4 *this,iptr param_1); /* 004017b7 */
-void __thiscall thunk_FUN_0043c430(C_0043c3f0_4 *this); /* 00402f8b */
-C_0040ef70_8 * __thiscall thunk_FUN_0043c460(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2); /* 004017a8 */
-C_0040ef70_8 * __thiscall thunk_FUN_0043c4c0(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00401c7b */
-C_0040ef70_8 * __thiscall thunk_FUN_0043c520(C_0040ef70_8 *this); /* 004029d2 */
-u32 __thiscall thunk_FUN_0043c560(C_004083b0_48 *this); /* 00401663 */
-u32 __thiscall thunk_FUN_0043c590(C_004083b0_48 *this); /* 00401f41 */
-undefined4 __thiscall thunk_FUN_0043c5c0(C_00408010_10 *this); /* 004027b6 */
-void __thiscall thunk_FUN_0043c5f0(C_0040f380_3c *this); /* 00402982 */
-void __thiscall thunk_FUN_0043c630(C_00408010_10 *this); /* 00403bde */
-void __thiscall thunk_FUN_0043c660(C_00408010_10 *this); /* 00402a3b */
-C_0040ef70_8 * __thiscall thunk_FUN_0043c690(C_0040ef70_8 *this); /* 00401901 */
-void __thiscall thunk_FUN_0043c6c0(C_0040ef70_8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004027b1 */
-C_0043c740_434 * __thiscall thunk_FUN_0043c740(C_0043c740_434 *this,uint param_1); /* 004031de */
-void __cdecl thunk_FUN_0043c790(); /* 00401889 */
-void __cdecl thunk_FUN_0043c7c0(); /* 00401db1 */
-void __cdecl thunk_FUN_0043c810(); /* 00403b84 */
-void __cdecl thunk_FUN_0043c840(); /* 00402dd3 */
-void __cdecl thunk_FUN_0043c870(); /* 00402243 */
-void __cdecl thunk_FUN_0043c8a0(); /* 00401f37 */
-undefined4 __cdecl thunk_FUN_0043c8d0(); /* 00401e0b */
-void __cdecl thunk_FUN_0043c910(); /* 00401677 */
-undefined4 __cdecl thunk_FUN_0043c950(); /* 00403607 */
-void __thiscall thunk_FUN_0043c990(C_0040bc40_28 *this,uptr param_1,iptr param_2); /* 00403742 */
-void __thiscall thunk_FUN_0043c9d0(C_0040bc40_2f4 *this,iptr param_1); /* 00403b25 */
-void __thiscall thunk_FUN_0043ca10(C_0040bc40_2f4 *this,iptr param_1,iptr param_2); /* 004013e8 */
-void __cdecl thunk_FUN_0043ca50(); /* 00402d3d */
-void __cdecl thunk_FUN_0043ca80(); /* 00402806 */
-undefined4 __cdecl thunk_FUN_0043cab0(); /* 00401f8c */
-undefined4 __cdecl thunk_FUN_0043cb30(); /* 00403738 */
-C_00417f70_3c * __thiscall thunk_FUN_0043cbb0(C_00417f70_3c *this,uint param_1); /* 0040105a */
-void __cdecl thunk_FUN_0043cc00(); /* 00401465 */
-int __cdecl thunk_FUN_0043cc7e(); /* 0040268a */
-int __cdecl thunk_FUN_0043cce5(); /* 004037ec */
-void __cdecl thunk_FUN_0043cda6(); /* 00402f59 */
+GamePalette * __thiscall thunk_FUN_0043c740(GamePalette *this,uint param_1); /* 004031de */
 void __cdecl thunk_FUN_0043ce5a(); /* 00403c92 */
-uint __cdecl thunk_FUN_0043cef9(); /* 00402ba3 */
-undefined4 __cdecl thunk_FUN_0043cf76(); /* 00403af8 */
-iptr __cdecl thunk_FUN_0043d07a(); /* 004023c9 */
-undefined4 __cdecl thunk_FUN_0043d20a(); /* 00402c48 */
-int __cdecl thunk_FUN_0043d289(); /* 00402ee6 */
-void __cdecl thunk_FUN_0043d400(); /* 00402414 */
 void __cdecl thunk_FUN_0043f444(); /* 00401aaf */
 void __cdecl thunk_FUN_0043f493(); /* 00403cc4 */
-void __cdecl thunk_FUN_0043f7a7(); /* 00403cbf */
-uptr __cdecl thunk_FUN_0043f8b0(); /* 004011c7 */
-void __cdecl thunk_FUN_00440325(); /* 0040306c */
 void __cdecl thunk_FUN_004403ec(); /* 004018fc */
 void __cdecl thunk_FUN_00440453(); /* 00403a8f */
 void __cdecl thunk_FUN_00440750(); /* 0040309e */
-void __cdecl thunk_FUN_004413d1(); /* 00402cf2 */
-undefined4 __cdecl thunk_FUN_00441a79(); /* 004039cc */
-void __cdecl thunk_FUN_00441b11(); /* 0040217b */
-void __cdecl thunk_FUN_00442541(); /* 00401d39 */
-undefined4 __cdecl thunk_FUN_0044263f(); /* 00402bb2 */
-int __cdecl thunk_FUN_0044272d(); /* 00401c71 */
 undefined4 __cdecl thunk_FUN_00442885(); /* 004038e1 */
-undefined4 __cdecl thunk_FUN_004429af(); /* 00403440 */
-undefined4 __cdecl thunk_FUN_00444270(); /* 00401389 */
-undefined4 __cdecl thunk_FUN_004442a0(); /* 004031ca */
-undefined4 __cdecl thunk_FUN_004442e0(); /* 00401b59 */
 undefined4 __cdecl thunk_FUN_00444310(); /* 0040300d */
 undefined4 __cdecl thunk_FUN_0044528e(); /* 00402eb4 */
 undefined4 __cdecl thunk_FUN_0044542c(); /* 0040386e */
 undefined4 __cdecl thunk_FUN_00445592(); /* 00401d6b */
 undefined4 __cdecl thunk_FUN_00445712(); /* 0040198d */
-undefined4 __cdecl thunk_FUN_00445e46(); /* 00403445 */
 void * __thiscall thunk_FUN_00447170(void *this,uint param_1); /* 00402f13 */
-C_004471c0 * __thiscall thunk_FUN_004471c0(C_004471c0 *this,uint param_1); /* 00401aa5 */
-void __thiscall thunk_FUN_00447210(C_00447210 *this,iptr param_1); /* 00403864 */
-u32 __thiscall thunk_FUN_004472c0(C_004472c0 *this); /* 004022d9 */
-void __thiscall thunk_FUN_004472f0(C_004472f0 *this,u32 param_1); /* 00402ae0 */
-undefined4 __cdecl thunk_FUN_00448f92(); /* 0040296e */
+LobbyList * __thiscall thunk_FUN_004471c0(LobbyList *this,uint param_1); /* 00401aa5 */
 void __cdecl thunk_FUN_00449030(); /* 0040231f */
 void __cdecl thunk_FUN_00449a0e(); /* 00402b85 */
 void __cdecl thunk_FUN_0044ac3e(); /* 00403cab */
@@ -5981,70 +5680,25 @@ void __cdecl thunk_FUN_0044ad47(); /* 004035cb */
 void __cdecl thunk_FUN_0044ae4c(); /* 004036ed */
 void __cdecl thunk_FUN_0044b239(); /* 00402fdb */
 void __cdecl thunk_FUN_0044b30e(); /* 004012e4 */
-void __cdecl thunk_FUN_0044b49e(); /* 00402c25 */
-C_004083b0_114 * __thiscall thunk_FUN_0044c5a0(C_004083b0_114 *this); /* 00403283 */
-C_00408010_cc * __thiscall thunk_FUN_0044c670(C_00408010_cc *this); /* 0040295a */
-C_00408010_b8 * __thiscall thunk_FUN_0044c730(C_00408010_b8 *this); /* 00401997 */
-C_0044c8b0 * __thiscall thunk_FUN_0044c8b0(C_0044c8b0 *this); /* 004027d4 */
-void __thiscall thunk_FUN_0044c8e0(C_0044c8b0 *this); /* 00402aef */
-void __thiscall thunk_FUN_0044ca40(void *this); /* 00401406 */
-undefined4 __thiscall thunk_FUN_0044ca60(C_00408010_10 *this); /* 0040259a */
+Wnd * __thiscall thunk_FUN_0044c670(Wnd *this); /* 0040295a */
 undefined4 __thiscall thunk_FUN_0044cb20(void *this); /* 00403ab7 */
-void __thiscall thunk_FUN_0044cba0(C_004083b0_114 *this); /* 004032bf */
-void __cdecl thunk_FUN_0044cc80(); /* 004012f3 */
-void __cdecl thunk_FUN_0044cd9b(); /* 00402a90 */
-C_00408010_1c44 * __thiscall thunk_FUN_0044ce16(C_00408010_1c44 *this,iptr param_1); /* 00401a8c */
-void __thiscall thunk_FUN_0044d027(C_0044d027_1c44 *this); /* 00401f5a */
-uint __thiscall thunk_FUN_0044d162(C_00408010_6f0 *this); /* 004036b6 */
-void __thiscall thunk_FUN_0044d296(C_00408010_1c44 *this); /* 004037e7 */
-void __thiscall thunk_FUN_0044d9c1(C_00408010_1c44 *this); /* 004010e1 */
-void __thiscall thunk_FUN_0044dab5(C_00408010_10 *this); /* 0040254f */
-undefined4 __thiscall thunk_FUN_0044db92(C_00408010_1c44 *this); /* 00402702 */
-undefined4 __thiscall thunk_FUN_0044e790(C_00408010_1c44 *this); /* 0040193d */
-void __cdecl thunk_FUN_0044f799(); /* 004020ef */
-C_0043c3f0_4 * __thiscall thunk_FUN_004502b0(C_0043c3f0_4 *this); /* 004031c5 */
-void __thiscall thunk_FUN_004502e0(C_0043c3f0_4 *this,iptr param_1); /* 004030cb */
-void __thiscall thunk_FUN_00450340(C_0043c3f0_4 *this); /* 0040220c */
-void __thiscall thunk_FUN_00450390(C_00408010_10 *this,iptr param_1); /* 004020ea */
-void __thiscall thunk_FUN_004503d0(C_00408010_10 *this); /* 00403b6b */
-void __thiscall thunk_FUN_00450400(C_00450400_10 *this); /* 00403355 */
-void __thiscall thunk_FUN_00450440(C_00408010_10 *this,iptr param_1); /* 0040224d */
+void __thiscall thunk_FUN_0044d296(ThroneRoomWindow *this); /* 004037e7 */
+void __thiscall thunk_FUN_0044d9c1(ThroneRoomWindow *this); /* 004010e1 */
+undefined4 __thiscall thunk_FUN_0044e790(ThroneRoomWindow *this); /* 0040193d */
+void __thiscall thunk_FUN_00450440(WndBase *this,iptr param_1); /* 0040224d */
 void __thiscall thunk_FUN_00450480(C_004083b0_4 *this,iptr param_1,iptr param_2,int param_3); /* 0040338c */
-void __cdecl thunk_FUN_00450b22(); /* 00401bd1 */
 int __cdecl thunk_FUN_00450df6(); /* 004015fa */
-void __cdecl thunk_FUN_00450f0b(); /* 00403bf2 */
-undefined4 __thiscall thunk_FUN_00451830(C_00417f70_3c *this); /* 00403cba */
-undefined4 __thiscall thunk_FUN_00451860(C_00417f70_3c *this); /* 0040215d */
-void __thiscall thunk_FUN_00451890(C_00408010_10 *this,iptr param_1,iptr param_2); /* 00401ca3 */
-void __thiscall thunk_FUN_004518d0(C_00408010_cc *this); /* 004032a1 */
-void __thiscall thunk_FUN_00451900(C_00408010_10 *this); /* 0040325b */
-C_0040f380_3c * __thiscall thunk_FUN_00451930(C_0040f380_3c *this); /* 00402923 */
-void __thiscall thunk_FUN_004519b0(C_0040f380_40 *this,iptr param_1,iptr param_2,iptr param_3); /* 0040354e */
-void __thiscall thunk_FUN_00451a60(C_00451a60 *this,iptr param_1); /* 004017df */
-void __thiscall thunk_FUN_00451a90(C_00451a90 *this,iptr param_1); /* 004023b5 */
-void __thiscall thunk_FUN_00451ac0(C_00451ac0 *this,iptr param_1); /* 00403a5d */
 void __thiscall thunk_FUN_00451af0(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2); /* 004033b4 */
-void __thiscall thunk_FUN_00451bf0(C_004083b0_61c *this); /* 00401299 */
 void __thiscall thunk_FUN_00452188(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4,undefined4 param_5); /* 004034db */
 void __thiscall thunk_FUN_00452315(C_004083b0_4 *this,uptr param_1); /* 00402293 */
-void __thiscall thunk_FUN_00452768(C_004083b0_11c *this,int param_1); /* 00401e92 */
 void __cdecl thunk_FUN_004529df(); /* 00402847 */
 void __thiscall thunk_FUN_00452a67(C_00452a67 *this); /* 00401b3b */
 HWND __cdecl thunk_FUN_00452ae2(); /* 00401230 */
 void __thiscall thunk_FUN_00452b89(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00402306 */
-void __thiscall thunk_FUN_00452c14(C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 004022b1 */
-C_00453aa0 * __thiscall thunk_FUN_00453aa0(C_00453aa0 *this,uint param_1); /* 00401113 */
-void __cdecl thunk_FUN_00453af0(); /* 00402d15 */
 C_00453b10 * __thiscall thunk_FUN_00453b10(C_00453b10 *this); /* 004034ef */
-void __thiscall thunk_FUN_00453ba0(C_00453aa0 *this); /* 004024a0 */
-void __thiscall thunk_FUN_00453c40(C_0040f380_3c *this); /* 0040176c */
-void __thiscall thunk_FUN_00453c80(C_0040f380_3c *this); /* 004037b5 */
-C_0040f380_3c * __thiscall thunk_FUN_00453cc0(C_0040f380_3c *this); /* 00402ef0 */
+Control * __thiscall thunk_FUN_00453cc0(Control *this); /* 00402ef0 */
 void __thiscall thunk_FUN_00453d40(C_00453d40 *this,iptr param_1); /* 0040263a */
 void __thiscall thunk_FUN_00453d70(C_00453d70 *this,iptr param_1); /* 00403986 */
-undefined4 __cdecl thunk_FUN_00453da0(); /* 00401753 */
-int __cdecl thunk_FUN_00453e18(); /* 004035df */
-undefined4 __cdecl thunk_FUN_00453e51(); /* 0040259f */
 int __cdecl thunk_FUN_00453edf(); /* 00401f69 */
 void __cdecl thunk_FUN_00453f90(); /* 00402dc9 */
 bool __cdecl thunk_FUN_0045406c(); /* 004012c6 */
@@ -6052,281 +5706,135 @@ undefined * __cdecl thunk_FUN_00454103(); /* 0040175d */
 void __cdecl thunk_FUN_00454260(); /* 00401dfc */
 C_00408010_6f0 * __thiscall thunk_FUN_00454354(C_00408010_6f0 *this); /* 00403c47 */
 void __thiscall thunk_FUN_00454699(void *this); /* 00403175 */
-undefined4 __thiscall thunk_FUN_004548a9(C_00408010_1cb4 *this,uptr param_1); /* 0040286a */
-void __thiscall thunk_FUN_00454eb2(C_00408010_cc *this); /* 00402996 */
-void __thiscall thunk_FUN_00454f83(C_00408010_1cb4 *this); /* 00403814 */
-uint __thiscall thunk_FUN_0045512b(C_00408010_10 *this); /* 00402f6d */
-uint __thiscall thunk_FUN_00455183(C_00408010_1cb4 *this); /* 00402004 */
-undefined4 __thiscall thunk_FUN_00455314(C_00408010_1cb4 *this); /* 00401e65 */
-void __thiscall thunk_FUN_00455add(C_00408010_1cb4 *this); /* 004036ac */
-undefined4 __thiscall thunk_FUN_00455b8e(C_00408010_1c44 *this); /* 004038be */
-undefined4 __thiscall thunk_FUN_00455c5d(C_00408010_1c44 *this); /* 00403508 */
-void __thiscall thunk_FUN_00455d38(C_00408010_10 *this,iptr param_1,iptr param_2); /* 00401a23 */
-void __thiscall thunk_FUN_00455dfd(C_00408010_10 *this,iptr param_1,iptr param_2); /* 004016cc */
-void __thiscall thunk_FUN_00455ebe(C_00408010_1cb4 *this,iptr param_1); /* 00403850 */
-void __thiscall thunk_FUN_00455f2e(C_00408010_1cb4 *this,iptr param_1); /* 00402f81 */
-void __thiscall thunk_FUN_00455f9e(C_00408010_1cb4 *this,iptr param_1); /* 00403aad */
-void __thiscall thunk_FUN_00456005(C_00408010_1cb4 *this,iptr param_1); /* 00403517 */
-void __thiscall thunk_FUN_0045606c(C_00408010_1cb4 *this); /* 004013cf */
-void __thiscall thunk_FUN_004560f8(C_00408010_1cb4 *this); /* 004038eb */
-void __thiscall thunk_FUN_0045638b(C_00408010_1cb4 *this); /* 00402eaf */
-void __thiscall thunk_FUN_004564a8(C_00408010_1cb4 *this); /* 00402e50 */
+undefined4 __thiscall thunk_FUN_004548a9(CityViewWindow *this,uptr param_1); /* 0040286a */
+void __thiscall thunk_FUN_00454eb2(Wnd *this); /* 00402996 */
+void __thiscall thunk_FUN_00454f83(CityViewWindow *this); /* 00403814 */
+uint __thiscall thunk_FUN_0045512b(WndBase *this); /* 00402f6d */
+uint __thiscall thunk_FUN_00455183(CityViewWindow *this); /* 00402004 */
+undefined4 __thiscall thunk_FUN_00455314(CityViewWindow *this); /* 00401e65 */
+void __thiscall thunk_FUN_00455add(CityViewWindow *this); /* 004036ac */
+undefined4 __thiscall thunk_FUN_00455b8e(ThroneRoomWindow *this); /* 004038be */
+undefined4 __thiscall thunk_FUN_00455c5d(ThroneRoomWindow *this); /* 00403508 */
+void __thiscall thunk_FUN_00455d38(WndBase *this,iptr param_1,iptr param_2); /* 00401a23 */
+void __thiscall thunk_FUN_00455dfd(WndBase *this,iptr param_1,iptr param_2); /* 004016cc */
+void __thiscall thunk_FUN_00455ebe(CityViewWindow *this,iptr param_1); /* 00403850 */
+void __thiscall thunk_FUN_00455f2e(CityViewWindow *this,iptr param_1); /* 00402f81 */
+void __thiscall thunk_FUN_00455f9e(CityViewWindow *this,iptr param_1); /* 00403aad */
+void __thiscall thunk_FUN_00456005(CityViewWindow *this,iptr param_1); /* 00403517 */
 void * __thiscall thunk_FUN_00456e90(void *this,uint param_1); /* 00401d5c */
 u32 __thiscall thunk_FUN_00456ee0(C_00456ee0 *this,iptr param_1); /* 0040287e */
-void __cdecl thunk_FUN_00456f20(); /* 004018e3 */
-int __cdecl thunk_FUN_00456f8b(); /* 00401a3c */
-void __cdecl thunk_FUN_0045705e(); /* 00401a14 */
-void __cdecl thunk_FUN_00458a3b(); /* 0040247d */
 void __cdecl thunk_FUN_00458ab1(); /* 00401721 */
-uint __cdecl thunk_FUN_00458df9(); /* 00402c2f */
-void __cdecl thunk_FUN_0045918e(); /* 0040290a */
 undefined4 __cdecl thunk_FUN_004591cb(); /* 00402b8a */
-int __cdecl thunk_FUN_0045950b(); /* 00401f64 */
-void __cdecl thunk_FUN_0045a535(); /* 004028b5 */
-void __cdecl thunk_FUN_0045a6ab(); /* 00401eec */
 void __cdecl thunk_FUN_0045a7a8(); /* 004034d6 */
-void __cdecl thunk_FUN_0045a8e3(); /* 0040191f */
-void __cdecl thunk_FUN_0045ac71(); /* 00401d70 */
-void __cdecl thunk_FUN_0045b0d6(); /* 00401898 */
-int __cdecl thunk_FUN_0045b472(); /* 004037b0 */
 undefined4 __cdecl thunk_FUN_0045b4da(); /* 00401b2c */
 void __cdecl thunk_FUN_0045dd7f(); /* 00401690 */
 void __cdecl thunk_FUN_0045f0b1(); /* 00401839 */
 void __cdecl thunk_FUN_0045fd67(); /* 00401a9b */
 undefined4 __cdecl thunk_FUN_0045fe19(); /* 00402770 */
-void __cdecl thunk_FUN_00460129(); /* 00401604 */
-void __cdecl thunk_FUN_00467580(); /* 004038b4 */
-void __cdecl thunk_FUN_00467750(); /* 004019a6 */
-void __cdecl thunk_FUN_00467825(); /* 00403990 */
-uint __cdecl thunk_FUN_00467904(); /* 00401b36 */
-void __cdecl thunk_FUN_00467933(); /* 0040373d */
-undefined4 __cdecl thunk_FUN_004679ab(); /* 004037a1 */
-undefined4 __cdecl thunk_FUN_00467a5d(); /* 0040366b */
-uint __cdecl thunk_FUN_00467af0(); /* 00402572 */
 void __cdecl thunk_FUN_00467baf(); /* 00403292 */
-void __cdecl thunk_FUN_00467ef2(); /* 00402e41 */
 void __thiscall thunk_FUN_004683f0(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 00401703 */
-void __cdecl thunk_FUN_004687d3(); /* 00402487 */
 int __cdecl thunk_FUN_00468aa7(); /* 00401e60 */
-void __cdecl thunk_FUN_00468bb9(); /* 00401a78 */
-void __cdecl thunk_FUN_0046957b(); /* 00402761 */
-void __cdecl thunk_FUN_0046961d(); /* 00402473 */
-void __thiscall thunk_FUN_0046968b(C_004083b0_4 *this,int param_1,int param_2,iptr param_3); /* 00402f86 */
-void __thiscall thunk_FUN_0046990a(void *this,int param_1,int param_2,iptr param_3); /* 00401357 */
-void __thiscall thunk_FUN_00469bdc(C_004083b0_11c *this,int param_1,int param_2); /* 00401109 */
-void __cdecl thunk_FUN_0046a740(); /* 004036d9 */
-int __cdecl thunk_FUN_0046a78d(); /* 00402720 */
-undefined4 __cdecl thunk_FUN_0046aaa0(); /* 00402d60 */
-undefined4 __cdecl thunk_FUN_0046aad0(); /* 004013b1 */
-undefined4 __cdecl thunk_FUN_0046ab00(); /* 004010aa */
-void * __thiscall thunk_FUN_0046ab30(void *this); /* 0040315c */
-void __thiscall thunk_FUN_0046ab49(void *this); /* 00402b0d */
-void __thiscall thunk_FUN_0046ab5f(C_0046ab5f *this); /* 00401825 */
-void __thiscall thunk_FUN_0046ab82(C_0046ab82 *this,int param_1); /* 0040114f */
-void __thiscall thunk_FUN_0046ac89(C_0046ab82 *this,int param_1); /* 00402374 */
-u32 __thiscall thunk_FUN_0046ace7(C_0046ace7 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, iptr param_5,iptr param_6); /* 004010fa */
-int __thiscall thunk_FUN_0046ad85(C_0046ad85 *this,int param_1,int param_2,iptr param_3,iptr param_4); /* 00403d00 */
 undefined1 __thiscall thunk_FUN_0046af70(void *this,int param_1,iptr param_2); /* 00401947 */
 bool __thiscall thunk_FUN_0046b0a1(void *this,iptr param_1); /* 0040288d */
-int __cdecl thunk_FUN_0046b14d(); /* 004024b9 */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d5a0(C_0046d5a0_8 *this,u32 param_1); /* 0040182f */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d5f0(C_0046d5a0_8 *this,u32 param_1,iptr param_2); /* 00402aae */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d6a0(C_0046d5a0_8 *this,undefined4 param_1); /* 00403503 */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d720(C_0046d5a0_8 *this); /* 00401848 */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d780(C_0046d5a0_8 *this,u32 param_1); /* 00402f0e */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d860(C_0046d5a0_8 *this); /* 004013fc */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d8a0(C_0046d5a0_8 *this); /* 004033ff */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d8e0(C_0046d5a0_8 *this); /* 004013ed */
-C_0046d5a0_8 * __thiscall thunk_FUN_0046d930(C_0046d5a0_8 *this,u32 param_1); /* 00403800 */
+NetMsgHeader * __thiscall thunk_FUN_0046d6a0(NetMsgHeader *this,undefined4 param_1); /* 00403503 */
+NetMsgHeader * __thiscall thunk_FUN_0046d720(NetMsgHeader *this); /* 00401848 */
+NetMsgHeader * __thiscall thunk_FUN_0046d780(NetMsgHeader *this,u32 param_1); /* 00402f0e */
+NetMsgHeader * __thiscall thunk_FUN_0046d860(NetMsgHeader *this); /* 004013fc */
+NetMsgHeader * __thiscall thunk_FUN_0046d8a0(NetMsgHeader *this); /* 004033ff */
+NetMsgHeader * __thiscall thunk_FUN_0046d8e0(NetMsgHeader *this); /* 004013ed */
+NetMsgHeader * __thiscall thunk_FUN_0046d930(NetMsgHeader *this,u32 param_1); /* 00403800 */
 void __cdecl thunk_FUN_0046da40(); /* 00403003 */
-void __thiscall thunk_FUN_0046dff0(C_0046dff0 *this,iptr param_1); /* 00402b71 */
-void __cdecl thunk_FUN_0046e020(); /* 00401415 */
-void __cdecl thunk_FUN_0046e287(); /* 00403a80 */
 void __cdecl thunk_FUN_0046e320(); /* 004025c2 */
-void __cdecl thunk_FUN_0046e4a9(); /* 0040312f */
-void __cdecl thunk_FUN_0046e571(); /* 00403319 */
-void __cdecl thunk_FUN_0046e6a9(); /* 00401b81 */
-void __cdecl thunk_FUN_0046e6c8(); /* 00401eb0 */
 int __cdecl thunk_FUN_0046e8f0(); /* 00401b40 */
 void __cdecl thunk_FUN_0046ea3b(); /* 004014ab */
 void __cdecl thunk_FUN_0046ee1e(); /* 00402a0e */
 void __cdecl thunk_FUN_0046ee4e(); /* 00401073 */
 void __cdecl thunk_FUN_0046ef3f(); /* 004029a0 */
-void __cdecl thunk_FUN_0046efd6(); /* 00402bee */
-void __cdecl thunk_FUN_0046f06f(); /* 0040122b */
-void __cdecl thunk_FUN_0046f108(); /* 00401e33 */
-void __cdecl thunk_FUN_0046f18f(); /* 00401bbd */
-C_0043c740_434 * __thiscall thunk_FUN_0046f440(C_0043c740_434 *this); /* 004033fa */
-int __cdecl thunk_FUN_0046f460(); /* 0040111d */
-int __cdecl thunk_FUN_0046fbf3(); /* 004021c1 */
-void __cdecl thunk_FUN_004702e0(); /* 00401172 */
-C_00408010_fb8 * __thiscall thunk_FUN_004703d4(C_00408010_fb8 *this); /* 00403701 */
+SpaceshipWindow * __thiscall thunk_FUN_004703d4(SpaceshipWindow *this); /* 00403701 */
 void __thiscall thunk_FUN_004704ec(void *this); /* 004029c3 */
-undefined4 __thiscall thunk_FUN_004705d7(C_00408010_fb8 *this,uint param_1); /* 00403b3e */
-void __thiscall thunk_FUN_004708db(C_00408010_fb8 *this); /* 00401cd5 */
-C_00408010_10 * __thiscall thunk_FUN_00471020(C_00408010_10 *this,uint param_1); /* 00402356 */
-undefined4 __thiscall thunk_FUN_00471070(C_004083b0_48 *this); /* 004022e3 */
-undefined4 __thiscall thunk_FUN_004710a0(C_004083b0_48 *this); /* 00403b61 */
-void __cdecl thunk_FUN_004710d0(); /* 0040222a */
-C_00408010_fb8 * __thiscall thunk_FUN_00471362(C_00408010_fb8 *this); /* 00403a62 */
+undefined4 __thiscall thunk_FUN_004705d7(SpaceshipWindow *this,uint param_1); /* 00403b3e */
+void __thiscall thunk_FUN_004708db(SpaceshipWindow *this); /* 00401cd5 */
+WndBase * __thiscall thunk_FUN_00471020(WndBase *this,uint param_1); /* 00402356 */
+SpaceshipWindow * __thiscall thunk_FUN_00471362(SpaceshipWindow *this); /* 00403a62 */
 void __thiscall thunk_FUN_0047147a(void *this); /* 0040246e */
-undefined4 __thiscall thunk_FUN_00471565(C_00408010_fb8 *this,iptr param_1); /* 004023c4 */
-void __thiscall thunk_FUN_00471856(C_00408010_fb8 *this); /* 00403256 */
+undefined4 __thiscall thunk_FUN_00471565(SpaceshipWindow *this,iptr param_1); /* 004023c4 */
+void __thiscall thunk_FUN_00471856(SpaceshipWindow *this); /* 00403256 */
 void __cdecl thunk_FUN_00471dd8(); /* 004023fb */
 void * __thiscall thunk_FUN_004728c0(void *this,uint param_1); /* 0040263f */
 void __thiscall thunk_FUN_00472910(C_00472910 *this,iptr param_1,u32 param_2); /* 004016f4 */
-void __cdecl thunk_FUN_00472950(); /* 00401ffa */
-void __cdecl thunk_FUN_004729ab(); /* 00403d19 */
-void __cdecl thunk_FUN_00472b0a(); /* 00403b1b */
-int __cdecl thunk_FUN_00472cf0(); /* 00401e83 */
-undefined4 __cdecl thunk_FUN_00472d20(); /* 00401e9c */
 void __cdecl thunk_FUN_00472f7b(); /* 00402955 */
 void __cdecl thunk_FUN_00473064(); /* 00403756 */
 void __cdecl thunk_FUN_0047314e(); /* 00402905 */
 void __cdecl thunk_FUN_00473190(); /* 00403427 */
-uint __cdecl thunk_FUN_004731d2(); /* 004021f8 */
 undefined4 __cdecl thunk_FUN_004732a6(); /* 00401da7 */
-undefined4 __cdecl thunk_FUN_00473660(); /* 004035f8 */
 undefined4 __cdecl thunk_FUN_00473c12(); /* 00401b90 */
 int __cdecl thunk_FUN_00473c68(); /* 0040330a */
-void __cdecl thunk_FUN_00473d5e(); /* 00403139 */
-undefined * __cdecl thunk_FUN_00473e55(); /* 00401307 */
 char * __cdecl thunk_FUN_00473ff2(); /* 00403972 */
-undefined4 __cdecl thunk_FUN_004741be(); /* 0040116d */
 int __cdecl thunk_FUN_00475666(); /* 00402ab8 */
-void __cdecl thunk_FUN_0047758c(); /* 004035b7 */
-int __cdecl thunk_FUN_00477d8c(); /* 00403acb */
-void __thiscall thunk_FUN_00479ede(C_004083b0_430 *this,u32 param_1); /* 004037a6 */
 void __thiscall thunk_FUN_00479fbe(C_004083b0_430 *this); /* 00401fff */
-undefined4 __thiscall thunk_FUN_0047a540(C_0047a540 *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 00402b2b */
-void __thiscall thunk_FUN_0047a6b0(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3,int param_4); /* 004018de */
 int __cdecl thunk_FUN_0047a747(); /* 00403b07 */
-void __thiscall thunk_FUN_0047a8c9(C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr param_4,int param_5, int param_6,int param_7,iptr param_8); /* 004024e6 */
 void __thiscall thunk_FUN_0047ba1d(C_004083b0_430 *this,undefined4 param_1,int param_2,iptr param_3,iptr param_4); /* 00402aa9 */
 void __thiscall thunk_FUN_0047bba5(C_004083b0_430 *this,iptr param_1,uint param_2,undefined4 param_3,undefined4 param_4); /* 004029f0 */
 void __thiscall thunk_FUN_0047bbea(C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 0040132f */
 void __thiscall thunk_FUN_0047bc59(C_004083b0_430 *this,iptr param_1); /* 0040319d */
 void __thiscall thunk_FUN_0047bd04(C_004083b0_430 *this,iptr param_1,undefined4 param_2,undefined4 param_3); /* 00402ed7 */
 void __thiscall thunk_FUN_0047be63(C_004083b0_430 *this,undefined4 param_1,int param_2,int param_3,int param_4); /* 00402fcc */
-void __thiscall thunk_FUN_0047c103(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3); /* 00402068 */
 undefined4 __cdecl thunk_FUN_0047c2f2(); /* 00401591 */
 undefined4 __cdecl thunk_FUN_0047c37f(); /* 004029cd */
-undefined4 __thiscall thunk_FUN_0047c3e0(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0040261c */
-void __thiscall thunk_FUN_0047c443(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3); /* 004035d5 */
-void __thiscall thunk_FUN_0047c7aa(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3,iptr param_4); /* 00401d48 */
 void __thiscall thunk_FUN_0047c869(C_004083b0_430 *this,int param_1,int param_2,int param_3,undefined4 param_4); /* 00401014 */
 void __thiscall thunk_FUN_0047c9d4(C_004083b0_430 *this,undefined4 param_1); /* 004023f1 */
-void __thiscall thunk_FUN_0047caea(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00403832 */
 void __thiscall thunk_FUN_0047cb26(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 004034b8 */
-void __thiscall thunk_FUN_0047cb50(C_004083b0_48 *this); /* 00401dc5 */
-void __thiscall thunk_FUN_0047cbb4(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, iptr param_4,int param_5); /* 00402b9e */
+void __thiscall thunk_FUN_0047cb50(DibSurface *this); /* 00401dc5 */
 void __thiscall thunk_FUN_0047cced(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0040277a */
 void __thiscall thunk_FUN_0047cd1f(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 004020fe */
-void __thiscall thunk_FUN_0047cd51(C_004083b0_430 *this,iptr param_1,int param_2); /* 00401f32 */
-void __cdecl thunk_FUN_0047ce1e(); /* 0040184d */
-void __cdecl thunk_FUN_0047cea6(); /* 00401a4b */
-void __cdecl thunk_FUN_0047cf22(); /* 00403a3a */
-void __cdecl thunk_FUN_0047cf9e(); /* 0040337d */
-void __cdecl thunk_FUN_0047df20(); /* 00403350 */
-void __cdecl thunk_FUN_0047df50(); /* 004023d3 */
 void __cdecl thunk_FUN_0047df80(); /* 00403c3d */
-undefined4 __thiscall thunk_FUN_0047dfb0(C_004083b0_430 *this,undefined4 param_1); /* 004018bb */
-void __thiscall thunk_FUN_0047dff0(C_004083b0_430 *this); /* 00403346 */
-undefined4 __cdecl thunk_FUN_0047e030(); /* 0040256d */
 int __cdecl thunk_FUN_0047e0e5(); /* 0040281a */
 int __cdecl thunk_FUN_0047e2b3(); /* 00401fc3 */
-void __thiscall thunk_FUN_0047e94e(C_0047e94e *this,int param_1,int param_2); /* 0040181b */
 void __cdecl thunk_FUN_004823d6(); /* 004026e4 */
-void __cdecl thunk_FUN_004824e3(); /* 00402afe */
-undefined4 __cdecl thunk_FUN_004828a5(); /* 00401852 */
 void __cdecl thunk_FUN_0048308f(); /* 00403337 */
-void __cdecl thunk_FUN_00484cc0(); /* 00401a46 */
-void __cdecl thunk_FUN_00484d3b(); /* 0040163b */
-void __cdecl thunk_FUN_00484d52(); /* 0040109b */
-int __cdecl thunk_FUN_00484fec(); /* 00403418 */
-void __cdecl thunk_FUN_00485208(); /* 0040103c */
 void __cdecl thunk_FUN_004853e7(); /* 00402d51 */
 void __cdecl thunk_FUN_00485c15(); /* 00401f0a */
 void __cdecl thunk_FUN_004868fb(); /* 004023a6 */
 void __cdecl thunk_FUN_00486c2e(); /* 00401226 */
 int __cdecl thunk_FUN_00486e15(); /* 00401f96 */
-void __cdecl thunk_FUN_00486e6f(); /* 00403512 */
-void __cdecl thunk_FUN_00487007(); /* 0040180c */
-void __cdecl thunk_FUN_0048710a(); /* 00401eb5 */
-void __cdecl thunk_FUN_00487371(); /* 00402180 */
 void __cdecl thunk_FUN_00487a41(); /* 004011c2 */
 void __cdecl thunk_FUN_00488937(); /* 00402478 */
-undefined4 __cdecl thunk_FUN_00488a45(); /* 00403481 */
 void __cdecl thunk_FUN_00488cef(); /* 00401ee2 */
 void __cdecl thunk_FUN_00489292(); /* 00402e4b */
-void __cdecl thunk_FUN_00489553(); /* 00401546 */
-void __cdecl thunk_FUN_004897fa(); /* 00403d0a */
-void __cdecl thunk_FUN_00489859(); /* 00401d89 */
-void __cdecl thunk_FUN_00489a0d(); /* 004016ef */
 void __cdecl thunk_FUN_00489b9b(); /* 0040369d */
 void __cdecl thunk_FUN_00489be2(); /* 004014d8 */
 undefined4 __cdecl thunk_FUN_0048a004(); /* 00402716 */
 void __cdecl thunk_FUN_0048a374(); /* 00402108 */
-void __cdecl thunk_FUN_0048a416(); /* 00402ba8 */
-void __cdecl thunk_FUN_0048a92d(); /* 004032f6 */
-uint __cdecl thunk_FUN_0048aa24(); /* 004030d5 */
-undefined4 __cdecl thunk_FUN_0048aedc(); /* 00401046 */
-uint __cdecl thunk_FUN_0048b165(); /* 00402e9b */
-void __cdecl thunk_FUN_0048b340(); /* 00402ec8 */
 undefined4 __cdecl thunk_FUN_0048bfec(); /* 00402d92 */
 void __cdecl thunk_FUN_0048c9f3(); /* 0040146a */
-void __cdecl thunk_FUN_0048d9ad(); /* 004029c8 */
-void __cdecl thunk_FUN_0048da51(); /* 00402c02 */
-undefined4 __cdecl thunk_FUN_0048dab9(); /* 004012b2 */
-int __cdecl thunk_FUN_0048de75(); /* 00402a7c */
-void __cdecl thunk_FUN_004904c0(); /* 00402ddd */
 void __cdecl thunk_FUN_00490500(); /* 0040164f */
-void __cdecl thunk_FUN_00490530(); /* 00401ca8 */
-u32 __thiscall thunk_FUN_00490560(C_004083b0_4 *this); /* 00401136 */
 void __thiscall thunk_FUN_00490590(C_004083b0_61c *this,iptr param_1); /* 004014ba */
-void __thiscall thunk_FUN_004906fd(C_004083b0_a28 *this); /* 00403c60 */
 void __thiscall thunk_FUN_00491c20(C_004083b0_a28 *this,int param_1); /* 0040190b */
 undefined4 __cdecl thunk_FUN_00491d61(); /* 00402d6f */
-void __thiscall thunk_FUN_004923c0(C_00408010_10 *this); /* 0040226b */
 void __cdecl thunk_FUN_004923f0(); /* 00401b04 */
 void __cdecl thunk_FUN_0049275a(); /* 00403d1e */
-undefined4 __thiscall thunk_FUN_004929c0(C_00421bf0_98 *this,iptr param_1); /* 00403062 */
-undefined4 __thiscall thunk_FUN_00492a00(C_00492a00 *this,undefined4 param_1); /* 0040232e */
-void __thiscall thunk_FUN_00492a40(C_00492a40 *this,iptr param_1,undefined4 param_2); /* 00403be8 */
-undefined4 __thiscall thunk_FUN_00492a80(C_00421bf0_98 *this); /* 00403cfb */
-undefined4 __thiscall thunk_FUN_00492ab0(C_00492ab0 *this); /* 00402c93 */
-void __thiscall thunk_FUN_00492ae0(C_0040f380_3c *this,iptr param_1); /* 00402310 */
-void __thiscall thunk_FUN_00492b20(C_00492b20 *this,undefined4 param_1,undefined4 param_2); /* 00402b08 */
+void __thiscall thunk_FUN_00492a40(FileReadLineView *this,iptr param_1,undefined4 param_2); /* 00403be8 */
+void __thiscall thunk_FUN_00492b20(EditSelView *this,undefined4 param_1,undefined4 param_2); /* 00402b08 */
 void __cdecl thunk_FUN_00492b60(); /* 00401938 */
-void __cdecl thunk_FUN_00492c15(); /* 004018cf */
 void __cdecl thunk_FUN_00492d18(); /* 00401fd2 */
 void __cdecl thunk_FUN_00492dd0(); /* 0040376f */
 int __cdecl thunk_FUN_00492e60(); /* 00402635 */
-void __cdecl thunk_FUN_0049301b(); /* 00403ca1 */
-void __cdecl thunk_FUN_004933f2(); /* 00402216 */
-void __cdecl thunk_FUN_00493602(); /* 00401e74 */
-void __cdecl thunk_FUN_0049376f(); /* 004011e5 */
-int __cdecl thunk_FUN_00493b10(); /* 00401d16 */
-int __cdecl thunk_FUN_00493ba6(); /* 00402883 */
-int __cdecl thunk_FUN_00493c7d(); /* 00402554 */
-int __cdecl thunk_FUN_00493d13(); /* 0040222f */
 void __cdecl thunk_FUN_00493e83(); /* 00402a54 */
 void __cdecl thunk_FUN_00493f0f(); /* 004018b6 */
 void __cdecl thunk_FUN_00494148(); /* 0040251d */
-void __cdecl thunk_FUN_004941ee(); /* 00403b57 */
-C_00408010_108c * __thiscall thunk_FUN_004942a3(C_00408010_108c *this); /* 00403b2a */
+DiploLeaderWindow * __thiscall thunk_FUN_004942a3(DiploLeaderWindow *this); /* 00403b2a */
 void __thiscall thunk_FUN_004943c9(void *this); /* 00403b7f */
-undefined4 __thiscall thunk_FUN_004944bb(C_004944bb *this,undefined4 param_1,iptr param_2); /* 00401fa0 */
-void __thiscall thunk_FUN_00494704(C_00408010_108c *this); /* 00403cf6 */
-void __thiscall thunk_FUN_004947f0(C_00408010_10 *this); /* 0040350d */
-uint __thiscall thunk_FUN_0049488e(C_004944bb *this); /* 00401ed3 */
-undefined4 __thiscall thunk_FUN_004948e6(C_004944bb *this); /* 00402e96 */
-uint __thiscall thunk_FUN_00494949(C_004944bb *this); /* 00401262 */
-undefined4 __thiscall thunk_FUN_00494b5f(C_004944bb *this); /* 004030f8 */
+undefined4 __thiscall thunk_FUN_004944bb(DiploLeaderView *this,undefined4 param_1,iptr param_2); /* 00401fa0 */
+void __thiscall thunk_FUN_00494704(DiploLeaderWindow *this); /* 00403cf6 */
+void __thiscall thunk_FUN_004947f0(WndBase *this); /* 0040350d */
+uint __thiscall thunk_FUN_0049488e(DiploLeaderView *this); /* 00401ed3 */
+undefined4 __thiscall thunk_FUN_004948e6(DiploLeaderView *this); /* 00402e96 */
+uint __thiscall thunk_FUN_00494949(DiploLeaderView *this); /* 00401262 */
+undefined4 __thiscall thunk_FUN_00494b5f(DiploLeaderView *this); /* 004030f8 */
 void __cdecl thunk_FUN_00494dae(); /* 004038af */
-undefined4 __thiscall thunk_FUN_00494e2a(C_004944bb *this); /* 00401a6e */
-undefined4 __thiscall thunk_FUN_00495c35(C_004944bb *this); /* 004023bf */
-undefined1 __thiscall thunk_FUN_00495e0c(C_004944bb *this); /* 0040236a */
+undefined4 __thiscall thunk_FUN_00494e2a(DiploLeaderView *this); /* 00401a6e */
+undefined4 __thiscall thunk_FUN_00495c35(DiploLeaderView *this); /* 004023bf */
+undefined1 __thiscall thunk_FUN_00495e0c(DiploLeaderView *this); /* 0040236a */
 void __cdecl thunk_FUN_00496125(); /* 00402441 */
 C_004083b0_208 * __thiscall thunk_FUN_0049621d(C_004083b0_208 *this); /* 0040171c */
 void __thiscall thunk_FUN_0049632a(C_0049632a_1dc *this); /* 00403b5c */
@@ -6336,113 +5844,45 @@ void __thiscall thunk_FUN_004965ff(C_004083b0_208 *this); /* 00401d07 */
 void __thiscall thunk_FUN_004966c4(C_004083b0_208 *this); /* 00401744 */
 void __cdecl thunk_FUN_00496c3c(); /* 00403ce7 */
 void __cdecl thunk_FUN_00496ecf(); /* 00403616 */
-void * __thiscall thunk_FUN_00497bf0(void *this,uint param_1); /* 00402469 */
-void __thiscall thunk_FUN_00497c40(C_0043c740_434 *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 00402036 */
-u32 * __thiscall thunk_FUN_00497c90(C_004083b0_48 *this); /* 00401221 */
-void __thiscall thunk_FUN_00497cc0(C_004944bb *this,iptr param_1); /* 00401573 */
-void __thiscall thunk_FUN_00497d00(C_00408010_10 *this,undefined4 param_1); /* 00403080 */
-void __thiscall thunk_FUN_00497d40(C_0040f380_3c *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 00401384 */
-iptr __cdecl thunk_FUN_00497da0(); /* 00403b39 */
+void __thiscall thunk_FUN_00497cc0(DiploLeaderView *this,iptr param_1); /* 00401573 */
+void __thiscall thunk_FUN_00497d40(Control *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,iptr param_5); /* 00401384 */
 void __cdecl thunk_FUN_00497e0f(); /* 0040245f */
-bool __cdecl thunk_FUN_00497ea0(); /* 00402c07 */
-undefined4 __cdecl thunk_FUN_00497ff3(); /* 00402ea0 */
 void __cdecl thunk_FUN_0049805e(); /* 00402752 */
 void __cdecl thunk_FUN_004980a9(); /* 004014f1 */
-iptr __cdecl thunk_FUN_004980ec(); /* 00401ab4 */
-int __cdecl thunk_FUN_00498159(); /* 0040389b */
 void __cdecl thunk_FUN_00498310(); /* 00403a99 */
-void __cdecl thunk_FUN_0049836a(); /* 004023ec */
 undefined4 __cdecl thunk_FUN_004985f4(); /* 00402d97 */
-void __cdecl thunk_FUN_00498784(); /* 004033c3 */
-void __cdecl thunk_FUN_0049882b(); /* 00401ec9 */
-void __cdecl thunk_FUN_004988b8(); /* 004025e0 */
-void __cdecl thunk_FUN_00498943(); /* 004011bd */
-void __cdecl thunk_FUN_004989d3(); /* 004032c9 */
-undefined4 __cdecl thunk_FUN_00498a5c(); /* 00402d47 */
-void __cdecl thunk_FUN_00498d40(); /* 004037c4 */
-iptr __cdecl thunk_FUN_00498e8b(); /* 004030df */
-void __cdecl thunk_FUN_004a2020(); /* 0040194c */
 int __cdecl thunk_FUN_004a2055(); /* 0040173f */
-int __cdecl thunk_FUN_004a2379(); /* 00402cc5 */
-undefined1 * __cdecl thunk_FUN_004a23fc(); /* 00402743 */
-undefined1 * __cdecl thunk_FUN_004a24b1(); /* 004038a0 */
-undefined4 __cdecl thunk_FUN_004a2534(); /* 004028ba */
-undefined4 __cdecl thunk_FUN_004a257a(); /* 0040139d */
-undefined4 __cdecl thunk_FUN_004a25aa(); /* 0040376a */
 short __cdecl thunk_FUN_004a25d5(); /* 004015cd */
-undefined4 __cdecl thunk_FUN_004a2645(); /* 00401d57 */
-undefined4 __cdecl thunk_FUN_004a26bf(); /* 004012cb */
-int __cdecl thunk_FUN_004a28b0(); /* 004024e1 */
 void __cdecl thunk_FUN_004a3060(); /* 00401613 */
 void __cdecl thunk_FUN_004a3426(); /* 004030bc */
-void __cdecl thunk_FUN_004a3640(); /* 00403067 */
-void __cdecl thunk_FUN_004a3757(); /* 00403a71 */
 void __cdecl thunk_FUN_004a3889(); /* 00403cf1 */
 void __thiscall thunk_FUN_004a4a58(C_004083b0_430 *this,int param_1); /* 004015b9 */
 void __thiscall thunk_FUN_004a4eb2(C_004083b0_430 *this,int param_1); /* 00403841 */
 void __thiscall thunk_FUN_004a4f89(C_004083b0_430 *this); /* 0040382d */
 void __thiscall thunk_FUN_004a54d9(C_004083b0_430 *this); /* 00401569 */
-void __cdecl thunk_FUN_004a5d92(); /* 004032dd */
-undefined4 __thiscall thunk_FUN_004a6980(C_00417f70_3c *this); /* 004010a5 */
 void __thiscall thunk_FUN_004a69b0(C_004083b0_61c *this,iptr param_1); /* 00401c3f */
 void __cdecl thunk_FUN_004a6b80(); /* 004028e7 */
 undefined4 __cdecl thunk_FUN_004a6bdc(); /* 00403ad0 */
 undefined4 __cdecl thunk_FUN_004a6c4b(); /* 004015e6 */
-undefined4 __cdecl thunk_FUN_004a6cc5(); /* 004028fb */
-undefined4 __cdecl thunk_FUN_004a6e39(); /* 0040218f */
 void __cdecl thunk_FUN_004a70b0(); /* 004035c6 */
 void __cdecl thunk_FUN_004a71bb(); /* 004035f3 */
-void __cdecl thunk_FUN_004a733d(); /* 004014bf */
-int __cdecl thunk_FUN_004a73d9(); /* 004011ae */
-void __cdecl thunk_FUN_004a74bc(); /* 00403ac6 */
-uint __cdecl thunk_FUN_004a7577(); /* 00401f78 */
-uint __cdecl thunk_FUN_004a75a6(); /* 00403ad5 */
 undefined4 __cdecl thunk_FUN_004a75d5(); /* 00401a96 */
-void __cdecl thunk_FUN_004a762d(); /* 00402248 */
-void __cdecl thunk_FUN_004a76f5(); /* 00401fb9 */
 void __cdecl thunk_FUN_004a7754(); /* 00403855 */
-int __cdecl thunk_FUN_004a7ce9(); /* 00402b26 */
 void __cdecl thunk_FUN_004a93b3(); /* 00402f5e */
-void __cdecl thunk_FUN_004a9785(); /* 00402a22 */
-int __cdecl thunk_FUN_004aa378(); /* 0040204f */
-void __cdecl thunk_FUN_004aa9c0(); /* 0040284c */
 iptr __cdecl thunk_FUN_004abea0(); /* 004027d9 */
-iptr __cdecl thunk_FUN_004abfe5(); /* 004028b0 */
-int __cdecl thunk_FUN_004ad0d1(); /* 004036b1 */
 int __cdecl thunk_FUN_004ad20f(); /* 00401fb4 */
-uptr __cdecl thunk_FUN_004adafc(); /* 00402fa9 */
-iptr __cdecl thunk_FUN_004aef20(); /* 00403c1f */
-void __cdecl thunk_FUN_004aef36(); /* 00401758 */
 void __cdecl thunk_FUN_004aef57(); /* 004015a5 */
 void __cdecl thunk_FUN_004aef96(); /* 004023ce */
-void __cdecl thunk_FUN_004aefb7(); /* 00401069 */
 void __cdecl thunk_FUN_004aefd8(); /* 004026ee */
-void __cdecl thunk_FUN_004aeff9(); /* 00402bf8 */
-void __cdecl thunk_FUN_004af01a(); /* 00402ff9 */
-void __cdecl thunk_FUN_004af03b(); /* 00401a73 */
 void __cdecl thunk_FUN_004af05c(); /* 00402f1d */
 void __cdecl thunk_FUN_004af07d(); /* 00401db6 */
 void __cdecl thunk_FUN_004af09e(); /* 004032e7 */
-void __cdecl thunk_FUN_004af122(); /* 00403751 */
-void __cdecl thunk_FUN_004af14b(); /* 00403995 */
-void __cdecl thunk_FUN_004af174(); /* 004015f0 */
-undefined4 __cdecl thunk_FUN_004af1d5(); /* 00402874 */
-void __cdecl thunk_FUN_004af284(); /* 004018ac */
 void __cdecl thunk_FUN_004af2b9(); /* 00402063 */
 void __thiscall thunk_FUN_004af3e0(C_004083b0_11c *this,iptr param_1,int param_2); /* 0040210d */
-void __cdecl thunk_FUN_004af8a3(); /* 00401cb2 */
 int __cdecl thunk_FUN_004afb77(); /* 004013bb */
-void __cdecl thunk_FUN_004afc89(); /* 00402018 */
 void __cdecl thunk_FUN_004b0157(); /* 00401325 */
-undefined1 __cdecl thunk_FUN_004b0720(); /* 0040368e */
 undefined1 __cdecl thunk_FUN_004b07d1(); /* 00402009 */
-undefined4 __cdecl thunk_FUN_004b0905(); /* 00401aaa */
-void __cdecl thunk_FUN_004b0a0a(); /* 00402b30 */
-void __cdecl thunk_FUN_004b0a41(); /* 00401df2 */
 void __cdecl thunk_FUN_004b0ad0(); /* 0040125d */
-int __cdecl thunk_FUN_004b0b53(); /* 004029e6 */
-int __cdecl thunk_FUN_004b1396(); /* 00403ae4 */
-int __cdecl thunk_FUN_004b14a4(); /* 00402bd0 */
 undefined4 __cdecl thunk_FUN_004b153c(); /* 004026fd */
 undefined4 __cdecl thunk_FUN_004b18e1(); /* 00401294 */
 undefined4 __cdecl thunk_FUN_004b1a15(); /* 00402392 */
@@ -6450,166 +5890,66 @@ undefined4 __cdecl thunk_FUN_004b1c11(); /* 004013a7 */
 void __cdecl thunk_FUN_004b1de3(int *param_1,char param_2); /* 00403a21 */
 void __cdecl thunk_FUN_004b2010(int *param_1,char param_2); /* 004037d3 */
 int __cdecl thunk_FUN_004b2123(); /* 004024c3 */
-void __cdecl thunk_FUN_004b21d7(); /* 00401541 */
-int __cdecl thunk_FUN_004b24a2(); /* 00402bc1 */
-undefined4 __cdecl thunk_FUN_004b251a(); /* 00401dd9 */
-undefined4 __cdecl thunk_FUN_004b263e(); /* 00401cc1 */
-void __thiscall thunk_FUN_004b3080(C_004b3080 *this,iptr param_1,u32 param_2,u32 param_3); /* 00403071 */
+void __thiscall thunk_FUN_004b3080(DiffEngSection *this,iptr param_1,u32 param_2,u32 param_3); /* 00403071 */
 void __cdecl thunk_FUN_004b3110(); /* 00402e6e */
 void __cdecl thunk_FUN_004b315c(); /* 0040249b */
 uint __cdecl thunk_FUN_004b32fe(); /* 00403715 */
-C_004083b0_430 * __thiscall thunk_FUN_004b4108(C_004083b0_430 *this,iptr param_1); /* 00401285 */
-void __thiscall thunk_FUN_004b4593(C_004083b0_430 *this); /* 00401163 */
 void __thiscall thunk_FUN_004b4735(C_004083b0_430 *this,u32 param_1); /* 00402b53 */
 void __thiscall thunk_FUN_004b4c81(C_004083b0_174 *this); /* 00402900 */
-void __thiscall thunk_FUN_004b4cf0(C_004083b0_174 *this); /* 00403cd3 */
-void __thiscall thunk_FUN_004b4e8a(C_004083b0_174 *this); /* 0040129e */
-void __thiscall thunk_FUN_004b4fb2(C_004083b0_430 *this); /* 0040170d */
-void __thiscall thunk_FUN_004b50cf(C_004083b0_430 *this); /* 00403945 */
 void __thiscall thunk_FUN_004b5c93(C_004083b0_430 *this); /* 004037e2 */
-void __cdecl thunk_FUN_004b75fb(); /* 004028f6 */
-void __cdecl thunk_FUN_004b7645(); /* 004029b9 */
-void __cdecl thunk_FUN_004b768d(); /* 00403341 */
-undefined4 __cdecl thunk_FUN_004b76d5(); /* 004028d8 */
 void __thiscall thunk_FUN_004b794a(C_004083b0_174 *this); /* 00401b63 */
-void __thiscall thunk_FUN_004b7c90(C_004083b0_4 *this,iptr param_1,int param_2); /* 004017f8 */
-void __thiscall thunk_FUN_004b7d72(C_004b7d72 *this); /* 00401186 */
-void __thiscall thunk_FUN_004b7eb6(C_004083b0_430 *this,iptr param_1,u32 param_2); /* 004019ba */
 void __cdecl thunk_FUN_004b81dd(); /* 0040121c */
-void __thiscall thunk_FUN_004b8676(C_004083b0_4 *this,int param_1); /* 004026df */
 void __thiscall thunk_FUN_004b888e(C_004083b0_430 *this,int param_1); /* 0040119a */
 void __thiscall thunk_FUN_004b90ad(C_004083b0_4 *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 0040293c */
-void __cdecl thunk_FUN_004b93a2(); /* 00401249 */
-void __cdecl thunk_FUN_004b9504(); /* 0040248c */
 undefined4 __cdecl thunk_FUN_004b968a(); /* 00403562 */
-void __thiscall thunk_FUN_004bb370(C_00421bf0_98 *this,iptr param_1,undefined4 param_2); /* 00403963 */
-C_0040f380_3c * __thiscall thunk_FUN_004bb3b0(C_0040f380_3c *this,uint param_1); /* 00402fbd */
-C_0040f380_3c * __thiscall thunk_FUN_004bb400(C_0040f380_3c *this,uint param_1); /* 004032e2 */
-C_0040f930 * __thiscall thunk_FUN_004bb450(C_0040f930 *this,uint param_1); /* 00402149 */
-C_004bb4a0 * __thiscall thunk_FUN_004bb4a0(C_004bb4a0 *this,uint param_1); /* 00401488 */
-C_0040f380_3c * __thiscall thunk_FUN_004bb4f0(C_0040f380_3c *this,uint param_1); /* 00403008 */
-undefined4 __thiscall thunk_FUN_004bb540(C_00417f70_3c *this); /* 00402f27 */
-void __thiscall thunk_FUN_004bb570(C_00408010_10 *this,iptr param_1); /* 00401208 */
 void __thiscall thunk_FUN_004bb5b0(C_004bb5b0 *this); /* 00402e69 */
-void __thiscall thunk_FUN_004bb5e0(C_004bb5e0 *this); /* 00401f28 */
-void __thiscall thunk_FUN_004bb620(C_0040f380_44 *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4, undefined4 param_5,undefined4 param_6); /* 00402595 */
-void __thiscall thunk_FUN_004bb6d0(C_00418a30 *this,undefined4 param_1); /* 004028dd */
-undefined4 __thiscall thunk_FUN_004bb710(C_00418a30 *this); /* 004027cf */
-void __thiscall thunk_FUN_004bb740(C_004bb4a0 *this); /* 004019ab */
-void __cdecl thunk_FUN_004bb800(); /* 004023e7 */
-void __cdecl thunk_FUN_004bb840(); /* 00402171 */
-int __cdecl thunk_FUN_004bb870(); /* 00401dc0 */
-void __cdecl thunk_FUN_004bb8e0(); /* 00403238 */
-C_004083b0_2e4 * __thiscall thunk_FUN_004bb99f(C_004083b0_2e4 *this); /* 00401131 */
-void __thiscall thunk_FUN_004bba79(C_004bba79_1188 *this); /* 004021b7 */
-void __thiscall thunk_FUN_004bbb3f(C_004083b0_2e4 *this,int param_1); /* 00401aff */
+FrameWindow * __thiscall thunk_FUN_004bb99f(FrameWindow *this); /* 00401131 */
+void __thiscall thunk_FUN_004bba79(WonderMovieWindow *this); /* 004021b7 */
+void __thiscall thunk_FUN_004bbb3f(FrameWindow *this,int param_1); /* 00401aff */
 void __thiscall thunk_FUN_004bbdfb(C_004083b0_430 *this); /* 00402937 */
-void __thiscall thunk_FUN_004bc0d3(C_004083b0_2e4 *this); /* 0040374c */
-void __thiscall thunk_FUN_004bc10f(C_004083b0_2e4 *this); /* 00403b34 */
+void __thiscall thunk_FUN_004bc0d3(FrameWindow *this); /* 0040374c */
+void __thiscall thunk_FUN_004bc10f(FrameWindow *this); /* 00403b34 */
 undefined4 __cdecl thunk_FUN_004bc480(); /* 00401505 */
 undefined4 __cdecl thunk_FUN_004bc8aa(); /* 00402199 */
 undefined4 __cdecl thunk_FUN_004bcb9b(); /* 0040208b */
 undefined4 __cdecl thunk_FUN_004bcfcf(); /* 00401393 */
 undefined4 __cdecl thunk_FUN_004bd2a3(); /* 00401483 */
-undefined4 __cdecl thunk_FUN_004bd9f0(); /* 00402e7d */
-undefined4 __cdecl thunk_FUN_004bdaa5(); /* 0040397c */
-int __cdecl thunk_FUN_004bdb2c(); /* 004017c1 */
-void __cdecl thunk_FUN_004be6ba(); /* 004010e6 */
-void __cdecl thunk_FUN_004bea84(); /* 0040355d */
-void __cdecl thunk_FUN_004bee56(); /* 00402e2d */
 void __cdecl thunk_FUN_004befd1(); /* 004021cb */
-void __cdecl thunk_FUN_004bf05b(); /* 004038e6 */
-undefined4 __cdecl thunk_FUN_004bfdbe(); /* 00403549 */
-undefined4 __cdecl thunk_FUN_004bfe5a(); /* 00402676 */
-undefined4 __cdecl thunk_FUN_004c02d8(); /* 004011b3 */
-undefined4 __cdecl thunk_FUN_004c03ae(); /* 00403b48 */
 iptr __cdecl thunk_FUN_004c09b0(); /* 0040291e */
-void __cdecl thunk_FUN_004c0cf7(); /* 004024aa */
-iptr __cdecl thunk_FUN_004c195e(); /* 00403b20 */
-void __cdecl thunk_FUN_004c21ad(); /* 00402518 */
-iptr __cdecl thunk_FUN_004c21d5(); /* 004016fe */
-int __cdecl thunk_FUN_004c2788(); /* 004030e9 */
 void __cdecl thunk_FUN_004c2b73(); /* 0040303f */
-void __cdecl thunk_FUN_004c4210(); /* 0040134d */
-void __cdecl thunk_FUN_004c4240(); /* 004034fe */
-void __cdecl thunk_FUN_004c4280(); /* 004018b1 */
-void __cdecl thunk_FUN_004c42a0(); /* 00401d4d */
 void __cdecl thunk_FUN_004c4ada(); /* 00402c1b */
-void __cdecl thunk_FUN_004c4d1e(); /* 0040178f */
-void __cdecl thunk_FUN_004c4e6d(); /* 00401145 */
-void __cdecl thunk_FUN_004c50d0(); /* 00402acc */
-undefined4 __cdecl thunk_FUN_004c5408(); /* 00403409 */
-void __cdecl thunk_FUN_004c54da(); /* 00402dce */
-void __cdecl thunk_FUN_004c59f0(); /* 0040223e */
-undefined4 __cdecl thunk_FUN_004c5fae(); /* 00401a82 */
 undefined4 __cdecl thunk_FUN_004c64aa(); /* 00403733 */
 uint __cdecl thunk_FUN_004c654d(); /* 00402b62 */
-int __cdecl thunk_FUN_004c65d2(); /* 00402801 */
 void __cdecl thunk_FUN_004c66ba(); /* 00402dab */
 void __cdecl thunk_FUN_004c6bf5(); /* 0040305d */
-void __cdecl thunk_FUN_004c9528(); /* 004024b4 */
 undefined4 __cdecl thunk_FUN_004c9ebd(); /* 004026d0 */
 void __cdecl thunk_FUN_004ca1cd(); /* 00401f5f */
-void __cdecl thunk_FUN_004ca39e(); /* 00401a32 */
-undefined4 __cdecl thunk_FUN_004cc870(); /* 00401efb */
 undefined4 __cdecl thunk_FUN_004cc8b0(); /* 00401ebf */
-undefined4 __cdecl thunk_FUN_004cca35(); /* 0040363e */
-void __cdecl thunk_FUN_004ccab9(); /* 0040191a */
-void __cdecl thunk_FUN_004ccaed(); /* 0040118b */
-void __cdecl thunk_FUN_004ccb6a(); /* 00401e47 */
-void __cdecl thunk_FUN_004ccdb6(); /* 004039d6 */
-void __cdecl thunk_FUN_004ccdef(); /* 00401168 */
-undefined4 __cdecl thunk_FUN_004ccf2d(); /* 00403d2d */
 undefined4 __cdecl thunk_FUN_004cd8a6(); /* 0040311b */
 undefined4 __cdecl thunk_FUN_004cdd3d(); /* 004020b3 */
-int __cdecl thunk_FUN_004cdf4b(); /* 00401474 */
 void __cdecl thunk_FUN_004cdfa4(); /* 004018a7 */
 undefined4 __cdecl thunk_FUN_004ce38a(); /* 004016a4 */
-uint __cdecl thunk_FUN_004ce71b(); /* 00403765 */
 undefined4 __cdecl thunk_FUN_004ce8a4(); /* 00402f9f */
 int __cdecl thunk_FUN_004ce903(); /* 00402694 */
-void __cdecl thunk_FUN_004ce98e(); /* 00401b5e */
-void __cdecl thunk_FUN_004cef35(); /* 0040327e */
 int __cdecl thunk_FUN_004cefe9(); /* 00403bca */
-void __thiscall thunk_FUN_004cff70(C_00408010_10 *this,undefined4 param_1); /* 004013ac */
-undefined4 __thiscall thunk_FUN_004cffb0(C_004cffb0 *this,undefined4 param_1,iptr param_2,undefined4 param_3); /* 00402879 */
+undefined4 __thiscall thunk_FUN_004cffb0(EditLineView *this,undefined4 param_1,iptr param_2,undefined4 param_3); /* 00402879 */
 void __cdecl thunk_FUN_004cfff0(); /* 00401d25 */
-void __cdecl thunk_FUN_004d007e(); /* 00401929 */
-void __cdecl thunk_FUN_004d01ae(); /* 00401320 */
-undefined4 __cdecl thunk_FUN_004d0208(); /* 0040396d */
 undefined4 __cdecl thunk_FUN_004d0339(); /* 00402153 */
-void __cdecl thunk_FUN_004d043f(); /* 00402d79 */
-C_00408010_fb8 * __thiscall thunk_FUN_004d0517(C_00408010_fb8 *this,u32 param_1); /* 00402dd8 */
-undefined4 __thiscall thunk_FUN_004d08b0(C_004d08b0_2180 *this); /* 00403116 */
-undefined4 __thiscall thunk_FUN_004d0b58(C_00408010_fb8 *this); /* 00403aa8 */
 uint __thiscall thunk_FUN_004d0d64(C_00408010_6f0 *this); /* 0040265d */
-void __thiscall thunk_FUN_004d0ea6(C_00408010_fb8 *this); /* 00401366 */
-void __thiscall thunk_FUN_004d13b8(C_00408010_fb8 *this); /* 004028ab */
-void __thiscall thunk_FUN_004d1725(C_00408010_fb8 *this); /* 00401a55 */
-undefined4 __thiscall thunk_FUN_004d17bf(C_00408010_fb8 *this); /* 0040219e */
+void __thiscall thunk_FUN_004d13b8(SpaceshipWindow *this); /* 004028ab */
+void __thiscall thunk_FUN_004d1725(SpaceshipWindow *this); /* 00401a55 */
 void __thiscall thunk_FUN_004d4a7b(C_00408010_6f0 *this); /* 00403201 */
-uint __thiscall thunk_FUN_004d4fd1(C_00408010_fb8 *this,int param_1); /* 00403c01 */
-void __thiscall thunk_FUN_004d53ab(C_00408010_10 *this); /* 00403463 */
-void __thiscall thunk_FUN_004d570b(C_00408010_fb8 *this); /* 0040262b */
-void __thiscall thunk_FUN_004d5b21(C_00408010_10 *this); /* 00403b16 */
-void __thiscall thunk_FUN_004d5e41(C_00408010_fb8 *this); /* 0040324c */
-void __thiscall thunk_FUN_004d5ef9(C_00408010_fb8 *this); /* 004037ba */
-void __thiscall thunk_FUN_004d5f79(C_00408010_fb8 *this,int param_1,int param_2); /* 00401b9f */
-void __thiscall thunk_FUN_004d60a5(C_00408010_fb8 *this,int param_1,int param_2); /* 00403ba2 */
-u32 __thiscall thunk_FUN_004d8af0(C_0040ef70_8 *this); /* 00403c5b */
-C_004d8b20 * __thiscall thunk_FUN_004d8b20(C_004d8b20 *this,uint param_1); /* 0040161d */
-void __thiscall thunk_FUN_004d8b70(C_0046ace7 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 004030b7 */
+void __thiscall thunk_FUN_004d53ab(WndBase *this); /* 00403463 */
+void __thiscall thunk_FUN_004d570b(SpaceshipWindow *this); /* 0040262b */
+AviPlayer * __thiscall thunk_FUN_004d8b20(AviPlayer *this,uint param_1); /* 0040161d */
+void __thiscall thunk_FUN_004d8b70(ClickMap *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 004030b7 */
 void __cdecl thunk_FUN_004d8bc0(); /* 00403323 */
 void __cdecl thunk_FUN_004d8caa(); /* 00403193 */
-void __cdecl thunk_FUN_004d8d80(); /* 00403c15 */
-int __cdecl thunk_FUN_004d8ed6(); /* 004030fd */
-void __cdecl thunk_FUN_004d9095(); /* 00401302 */
 void __cdecl thunk_FUN_004d9718(); /* 0040257c */
 void __thiscall thunk_FUN_004d986e(C_004083b0_430 *this,int param_1); /* 00402e14 */
 void __thiscall thunk_FUN_004d9a9f(C_004083b0_430 *this,int param_1); /* 00403215 */
 void __thiscall thunk_FUN_004d9b93(C_004083b0_430 *this); /* 0040348b */
 void __thiscall thunk_FUN_004da107(C_004083b0_430 *this); /* 00401816 */
-void __cdecl thunk_FUN_004da9e2(); /* 00401e6a */
 void __cdecl thunk_FUN_004db23f(); /* 004020e0 */
 void __cdecl thunk_FUN_004db450(); /* 00401267 */
 undefined4 __cdecl thunk_FUN_004db481(); /* 00401055 */
@@ -6622,7 +5962,6 @@ void __cdecl thunk_FUN_004dcc83(); /* 004018c5 */
 void __cdecl thunk_FUN_004dcea5(); /* 00401d66 */
 void __cdecl thunk_FUN_004dd016(); /* 004039c7 */
 void __cdecl thunk_FUN_004dd176(); /* 00403495 */
-void __cdecl thunk_FUN_004dd285(); /* 0040253b */
 void __cdecl thunk_FUN_004dd8ad(); /* 004022a7 */
 void __cdecl thunk_FUN_004dde9e(); /* 00402117 */
 void __cdecl thunk_FUN_004ddf04(); /* 004028e2 */
@@ -6634,307 +5973,148 @@ undefined4 __cdecl thunk_FUN_004ded07(); /* 004014ce */
 void __thiscall thunk_FUN_004def54(C_004083b0_4 *this,int param_1,int param_2); /* 00402fb3 */
 void __cdecl thunk_FUN_004df10f(); /* 00402f77 */
 void __cdecl thunk_FUN_004e01b0(); /* 00402a04 */
-void __cdecl thunk_FUN_004e02ef(); /* 004039f4 */
-void __cdecl thunk_FUN_004e068d(); /* 004036a7 */
-void __cdecl thunk_FUN_004e0a8c(); /* 00401352 */
-void __cdecl thunk_FUN_004e0ab0(); /* 004014c4 */
-void __cdecl thunk_FUN_004e0d71(); /* 00401eba */
-void __cdecl thunk_FUN_004e0f18(); /* 004026ad */
-void __cdecl thunk_FUN_004e1314(); /* 004024dc */
-void __cdecl thunk_FUN_004e1452(); /* 00403224 */
-void __cdecl thunk_FUN_004e1763(); /* 004021df */
-void __cdecl thunk_FUN_004e22c9(); /* 00402cb1 */
-void __cdecl thunk_FUN_004e2597(); /* 00401fa5 */
 void __cdecl thunk_FUN_004e25ef(); /* 00402531 */
-void __cdecl thunk_FUN_004e2803(); /* 0040385a */
 void __cdecl thunk_FUN_004e3a86(); /* 00401d52 */
 void __cdecl thunk_FUN_004e4c92(); /* 004023a1 */
-void __cdecl thunk_FUN_004e4ceb(); /* 00402b3a */
-void __thiscall thunk_FUN_004e7240(C_00408010_10 *this); /* 00402c7f */
-int __cdecl thunk_FUN_004e7270(); /* 00402897 */
-undefined4 __cdecl thunk_FUN_004e7458(); /* 00403382 */
-void __cdecl thunk_FUN_004e7492(); /* 0040101e */
-uint __cdecl thunk_FUN_004e74df(); /* 00403c79 */
-void __cdecl thunk_FUN_004e7549(); /* 004022c5 */
-uint __cdecl thunk_FUN_004e75a6(); /* 004013c0 */
 int __cdecl thunk_FUN_004e75ea(); /* 004016c7 */
 void __cdecl thunk_FUN_004e7641(); /* 00401212 */
-uint __cdecl thunk_FUN_004e78ce(); /* 00403413 */
-void __cdecl thunk_FUN_004e790c(); /* 00401ef1 */
 void __cdecl thunk_FUN_004e7967(); /* 0040380a */
-undefined4 __cdecl thunk_FUN_004e7d7f(); /* 00403adf */
-void __cdecl thunk_FUN_004e7eb1(); /* 00401361 */
-void __cdecl thunk_FUN_004e80b1(); /* 00403206 */
-int __cdecl thunk_FUN_004e868f(); /* 00403968 */
-void __cdecl thunk_FUN_004e8e4d(); /* 0040335f */
 uint __cdecl thunk_FUN_004e8ecf(); /* 004020f9 */
 void __cdecl thunk_FUN_004e8f42(); /* 004015f5 */
 void __cdecl thunk_FUN_004e9719(); /* 004019ec */
 void __cdecl thunk_FUN_004e97ae(); /* 004013d9 */
 int __cdecl thunk_FUN_004e9849(); /* 004012d5 */
-int __cdecl thunk_FUN_004e989a(); /* 00403aa3 */
 void __cdecl thunk_FUN_004e9c14(); /* 004015b4 */
 void __cdecl thunk_FUN_004ea031(); /* 00401244 */
-void __cdecl thunk_FUN_004ea1f6(); /* 00403620 */
 int __cdecl thunk_FUN_004ea8e4(); /* 00402266 */
 void __cdecl thunk_FUN_004eb327(); /* 00402d6a */
 void __cdecl thunk_FUN_004eb4a1(); /* 00403af3 */
-int __cdecl thunk_FUN_004eb4ed(); /* 00402603 */
-int __cdecl thunk_FUN_004eb571(); /* 00403904 */
-int __cdecl thunk_FUN_004eb80a(); /* 00401811 */
 undefined4 __cdecl thunk_FUN_004ebbde(); /* 00403c9c */
 void __cdecl thunk_FUN_004ec1c6(); /* 00403571 */
-void __cdecl thunk_FUN_004ec312(); /* 00403576 */
 void __cdecl thunk_FUN_004ec3fe(); /* 00401091 */
 void __cdecl thunk_FUN_004eef23(); /* 00402464 */
 void __cdecl thunk_FUN_004ef578(); /* 00403526 */
 void __cdecl thunk_FUN_004efbc6(); /* 00402455 */
 int __cdecl thunk_FUN_004efd44(); /* 0040187a */
-uint __cdecl thunk_FUN_004f00f0(); /* 004014dd */
 void __cdecl thunk_FUN_004f0221(); /* 00402211 */
 undefined4 __cdecl thunk_FUN_004f03b7(); /* 00403521 */
 void __cdecl thunk_FUN_004f080d(); /* 004029dc */
-int __cdecl thunk_FUN_004f0a9c(); /* 00402969 */
-void __cdecl thunk_FUN_004f1220(); /* 00402e3c */
-uint __cdecl thunk_FUN_004f3d30(); /* 004032b5 */
 C_004083b0_430 * __thiscall thunk_FUN_004f3d60(C_004083b0_430 *this); /* 004031e8 */
 void * __thiscall thunk_FUN_004f3e20(void *this,uint param_1); /* 004019dd */
 void __thiscall thunk_FUN_004f3e70(void *this); /* 0040362a */
-void __cdecl thunk_FUN_004f3f30(); /* 004025ea */
 C_004083b0_12c * __thiscall thunk_FUN_004f3feb(C_004083b0_12c *this); /* 0040343b */
-void __thiscall thunk_FUN_004f44a7(C_004083b0_48 *this); /* 0040347c */
-void __thiscall thunk_FUN_004f4793(C_004083b0_4 *this); /* 00403710 */
-void __thiscall thunk_FUN_004f4809(C_004083b0_4 *this); /* 0040302b */
+void __thiscall thunk_FUN_004f44a7(DibSurface *this); /* 0040347c */
 void __thiscall thunk_FUN_004f4b9f(C_004083b0_a28 *this); /* 00402bc6 */
-undefined4 __cdecl thunk_FUN_004f5dd1(); /* 00401dcf */
-void __cdecl thunk_FUN_004f5e52(); /* 0040272a */
-void __cdecl thunk_FUN_004f5f23(); /* 0040196f */
-void __thiscall thunk_FUN_004f6244(C_004083b0_61c *this); /* 004034ae */
-void __thiscall thunk_FUN_004f6564(C_004083b0_4 *this,iptr param_1,int param_2); /* 0040399f */
-void __thiscall thunk_FUN_004f6646(C_004083b0_120 *this); /* 0040312a */
-void __thiscall thunk_FUN_004f66c6(C_004083b0_11c *this); /* 00401276 */
 int __cdecl thunk_FUN_004f734a(); /* 00403c4c */
 void __thiscall thunk_FUN_004f7454(C_004083b0_4 *this,int param_1); /* 0040214e */
 int __cdecl thunk_FUN_004f74eb(); /* 00403265 */
-void __thiscall thunk_FUN_004f7ac7(C_004083b0_4 *this,undefined4 param_1); /* 00403878 */
-void __thiscall thunk_FUN_004f7bd1(C_004083b0_61c *this,u32 param_1,int param_2); /* 004017d0 */
-void __thiscall thunk_FUN_004f7c99(C_004083b0_a28 *this); /* 00401cd0 */
 void __thiscall thunk_FUN_004f896a(void *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 00401feb */
-undefined * __cdecl thunk_FUN_004f8a9b(); /* 004023f6 */
-void __thiscall thunk_FUN_004f8af9(C_004083b0_12c *this); /* 00401dde */
-void __cdecl thunk_FUN_004f8d51(); /* 0040378d */
 void * __thiscall thunk_FUN_004fa0f0(void *this,uint param_1); /* 004027ca */
 void __thiscall thunk_FUN_004fa140(void *this); /* 00402568 */
 undefined4 __cdecl thunk_FUN_004fa250(); /* 0040100f */
 undefined4 __cdecl thunk_FUN_004fa359(); /* 00403a17 */
 void __thiscall thunk_FUN_004fa47e(C_0040bc40_28 *this,uint param_1); /* 004037dd */
-C_0040bc40_310 * __thiscall thunk_FUN_004fa4be(C_0040bc40_310 *this,undefined4 param_1); /* 00403242 */
-void __thiscall thunk_FUN_004fa569(C_0040bc40_28 *this); /* 004024f5 */
-void __thiscall thunk_FUN_004fa5d9(C_0040bc40_310 *this,undefined4 param_1); /* 00403436 */
-void * __thiscall thunk_FUN_004fa617(C_0040bc40_310 *this); /* 00401dbb */
 undefined4 __thiscall thunk_FUN_004fa707(C_0040bc40_28 *this,iptr param_1); /* 00403486 */
 undefined4 __thiscall thunk_FUN_004fa82d(C_0040bc40_28 *this,iptr param_1); /* 00401884 */
 undefined4 __thiscall thunk_FUN_004fa854(C_0040bc40_28 *this,iptr param_1); /* 00402c16 */
 undefined4 __thiscall thunk_FUN_004fa944(C_0040bc40_28 *this,iptr param_1); /* 00403634 */
-undefined4 __thiscall thunk_FUN_004faab0(C_0040bc40_2f4 *this,iptr param_1); /* 004028a6 */
+undefined4 __thiscall thunk_FUN_004faab0(Dialog *this,iptr param_1); /* 004028a6 */
 undefined4 __thiscall thunk_FUN_004faba6(C_0040bc40_28 *this,iptr param_1); /* 00403328 */
 undefined4 __thiscall thunk_FUN_004fad02(C_0040bc40_28 *this,iptr param_1); /* 004015d2 */
 undefined4 __thiscall thunk_FUN_004fadfb(C_0040bc40_28 *this,iptr param_1); /* 00401b77 */
 undefined4 __thiscall thunk_FUN_004faed4(C_0040bc40_28 *this,iptr param_1); /* 004010dc */
 int __thiscall thunk_FUN_004fb29f(C_0040bc40_28 *this,iptr param_1); /* 00402cac */
 int __thiscall thunk_FUN_004fb5b2(C_0040bc40_28 *this,iptr param_1); /* 00401127 */
-undefined4 __thiscall thunk_FUN_004fba0c(C_0040bc40_310 *this,int param_1); /* 00402225 */
-undefined4 __thiscall thunk_FUN_004fba9c(C_0040bc40_310 *this,int param_1); /* 004038c8 */
-undefined4 __thiscall thunk_FUN_004fbb2f(C_0040bc40_310 *this,undefined4 param_1); /* 00401866 */
-undefined4 __thiscall thunk_FUN_004fbbdd(C_0040bc40_310 *this); /* 00403b98 */
-undefined4 __thiscall thunk_FUN_004fbd2b(C_0040bc40_310 *this); /* 00402491 */
-undefined4 __thiscall thunk_FUN_004fbd9d(C_0040bc40_310 *this,int param_1,int param_2,int param_3); /* 004028f1 */
-undefined4 __thiscall thunk_FUN_004fbe84(C_0040bc40_310 *this,iptr param_1,iptr param_2); /* 00403a4e */
-undefined4 __thiscall thunk_FUN_004fc20d(C_0040bc40_310 *this,iptr param_1); /* 00403378 */
-undefined4 __thiscall thunk_FUN_004fc2bb(C_0040bc40_310 *this,iptr param_1,iptr param_2,iptr param_3); /* 00402275 */
-undefined4 __thiscall thunk_FUN_004fc3ae(C_0040bc40_2f4 *this,iptr param_1); /* 004035e4 */
-int __thiscall thunk_FUN_004fc516(C_0040bc40_310 *this,iptr param_1,iptr param_2); /* 004038cd */
+undefined4 __thiscall thunk_FUN_004fbd2b(ScenarioEvents *this); /* 00402491 */
+undefined4 __thiscall thunk_FUN_004fbd9d(ScenarioEvents *this,int param_1,int param_2,int param_3); /* 004028f1 */
+undefined4 __thiscall thunk_FUN_004fc20d(ScenarioEvents *this,iptr param_1); /* 00403378 */
+int __thiscall thunk_FUN_004fc516(ScenarioEvents *this,iptr param_1,iptr param_2); /* 004038cd */
 void __cdecl thunk_FUN_0050101f(); /* 004022bb */
 void __cdecl thunk_FUN_005011b4(); /* 00403a0d */
-void __cdecl thunk_FUN_005013bc(); /* 004017f3 */
-void __thiscall thunk_FUN_00501440(C_004083b0_2e4 *this); /* 00401eab */
-void __thiscall thunk_FUN_005014bf(C_004083b0_2e4 *this); /* 00402739 */
-void __thiscall thunk_FUN_005014e5(C_004083b0_2e4 *this); /* 004014e2 */
-void __thiscall thunk_FUN_0050152b(C_004083b0_2e4 *this); /* 00402de2 */
-C_004083b0_2e4 * __thiscall thunk_FUN_00501551(C_004083b0_2e4 *this); /* 00402e8c */
-void __thiscall thunk_FUN_0050160a(C_004083b0_2e4 *this); /* 004022e8 */
+void __thiscall thunk_FUN_005014bf(FrameWindow *this); /* 00402739 */
+void __thiscall thunk_FUN_005014e5(FrameWindow *this); /* 004014e2 */
+void __thiscall thunk_FUN_0050152b(FrameWindow *this); /* 00402de2 */
+FrameWindow * __thiscall thunk_FUN_00501551(FrameWindow *this); /* 00402e8c */
+void __thiscall thunk_FUN_0050160a(FrameWindow *this); /* 004022e8 */
 void __thiscall thunk_FUN_005016b2(C_004083b0_12c *this,int *param_1); /* 00403012 */
-void __thiscall thunk_FUN_00501733(C_004083b0_12c *this,iptr param_1); /* 0040285b */
-void __thiscall thunk_FUN_00501780(C_004083b0_4 *this,undefined4 param_1); /* 00402833 */
 void __cdecl thunk_FUN_00501819(); /* 0040204a */
 int __thiscall thunk_FUN_005019c1(C_004083b0_4 *this,int param_1,int param_2,undefined4 param_3,int param_4,int param_5, int param_6); /* 00402f72 */
 int __thiscall thunk_FUN_00501e63(C_004083b0_4 *this,int param_1,undefined4 param_2,undefined4 param_3,int param_4, int param_5,int param_6); /* 004034cc */
-void __thiscall thunk_FUN_0050207f(C_004083b0_2e4 *this,int param_1,undefined4 param_2); /* 00401cb7 */
 void __cdecl thunk_FUN_005022c0(); /* 004014c9 */
-void __thiscall thunk_FUN_005025d5(C_004083b0_2e4 *this,int param_1); /* 004028c9 */
-void __thiscall thunk_FUN_00504c05(C_004083b0_12c *this,int param_1); /* 00401ac3 */
-void __thiscall thunk_FUN_0050503e(C_004083b0_2e4 *this,int param_1); /* 00403cb5 */
 void __thiscall thunk_FUN_005055dd(C_004083b0_12c *this,int param_1); /* 00401d2f */
-void __thiscall thunk_FUN_00505666(C_004083b0_2e4 *this,int param_1); /* 004011a9 */
 void __cdecl thunk_FUN_00505d3d(); /* 0040108c */
-void __thiscall thunk_FUN_00505ffa(C_004083b0_2e4 *this,int param_1); /* 00401edd */
-void __cdecl thunk_FUN_00506448(); /* 004020ae */
 void __cdecl thunk_FUN_00506637(); /* 00403247 */
 void __cdecl thunk_FUN_00506a42(); /* 00402f9a */
-void __thiscall thunk_FUN_005070e5(C_004083b0_2e4 *this); /* 00403959 */
+void __thiscall thunk_FUN_005070e5(FrameWindow *this); /* 00403959 */
 void __thiscall thunk_FUN_00507b69(C_004083b0_4 *this); /* 004012c1 */
 void __thiscall thunk_FUN_00507f31(C_004083b0_4 *this,iptr param_1,int param_2,int param_3); /* 00403927 */
 void __thiscall thunk_FUN_00508177(C_004083b0_4 *this,iptr param_1,int param_2,int param_3,int param_4); /* 00401659 */
 void __thiscall thunk_FUN_00508552(C_004083b0_4 *this); /* 0040155f */
-void __thiscall thunk_FUN_00508adc(C_004083b0_2e4 *this,int param_1); /* 00402c20 */
-void __thiscall thunk_FUN_00508bc5(C_004083b0_2e4 *this,undefined4 param_1); /* 00403279 */
+void __thiscall thunk_FUN_00508bc5(FrameWindow *this,undefined4 param_1); /* 00403279 */
 void __thiscall thunk_FUN_00508c84(C_004083b0_12c *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00402a2c */
 void __thiscall thunk_FUN_00508d24(C_004083b0_12c *this); /* 004013a2 */
 void __thiscall thunk_FUN_00508ec6(C_004083b0_12c *this); /* 0040225c */
-void __thiscall thunk_FUN_00509028(C_004083b0_2e4 *this); /* 0040179e */
-void __thiscall thunk_FUN_005092af(C_004083b0_2e4 *this); /* 004014fb */
-void __thiscall thunk_FUN_00509429(C_004083b0_2e4 *this); /* 004016b8 */
-void __thiscall thunk_FUN_00509545(C_004083b0_4 *this); /* 0040358f */
-void __thiscall thunk_FUN_00509590(C_004083b0_12c *this,iptr param_1); /* 00402e78 */
-undefined4 __cdecl thunk_FUN_0050994f(); /* 00401bae */
-void __cdecl thunk_FUN_0050998f(); /* 00402a6d */
-void __cdecl thunk_FUN_00509a49(); /* 0040316b */
+void __thiscall thunk_FUN_00509028(FrameWindow *this); /* 0040179e */
 void __cdecl thunk_FUN_00509ac0(); /* 00401041 */
-void __cdecl thunk_FUN_00509b48(); /* 00402c57 */
-void __cdecl thunk_FUN_0050a473(); /* 004021d5 */
-void __cdecl thunk_FUN_0050b74e(); /* 00401e97 */
 void __cdecl thunk_FUN_0050b9a4(); /* 00402482 */
 void __cdecl thunk_FUN_0050ba07(); /* 00401217 */
 void __cdecl thunk_FUN_0050ba6a(); /* 0040304e */
-void __cdecl thunk_FUN_0050bacd(); /* 00402ec3 */
-void __cdecl thunk_FUN_0050bc4f(); /* 004034e5 */
 void __cdecl thunk_FUN_0050bd13(); /* 00402964 */
 void __cdecl thunk_FUN_0050bf72(); /* 0040370b */
-void __cdecl thunk_FUN_0050c1d1(); /* 00402e1e */
-void __thiscall thunk_FUN_0050c449(C_004083b0_4 *this,iptr param_1); /* 00402bf3 */
-void __thiscall thunk_FUN_0050c494(C_004083b0_2e4 *this,iptr param_1,iptr param_2,iptr param_3); /* 0040174e */
-void __thiscall thunk_FUN_0050c679(C_004083b0_2e4 *this,iptr param_1); /* 004015be */
 void __thiscall thunk_FUN_0050c6ef(C_004083b0_4 *this,undefined4 param_1,undefined4 param_2); /* 00402d38 */
-void __thiscall thunk_FUN_0050c7a3(C_004083b0_4 *this); /* 00402fd6 */
-void __thiscall thunk_FUN_0050c859(C_004083b0_4 *this); /* 00402d5b */
-void __thiscall thunk_FUN_0050ca8d(C_004083b0_12c *this,int param_1); /* 004018e8 */
-void __thiscall thunk_FUN_0050ccb3(C_004083b0_12c *this,int param_1); /* 004021ee */
 void __thiscall thunk_FUN_0050cf06(C_004083b0_12c *this); /* 0040105f */
-void __thiscall thunk_FUN_0050dada(C_004083b0_4 *this); /* 00403666 */
-void __thiscall thunk_FUN_0050db36(C_004083b0_12c *this); /* 004030da */
-void __thiscall thunk_FUN_0050dcb6(C_004083b0_2e4 *this); /* 004019bf */
-void __thiscall thunk_FUN_0050dea8(C_004083b0_48 *this); /* 00401b54 */
-u32 __thiscall thunk_FUN_00511320(C_00511320 *this); /* 004036ca */
+void __thiscall thunk_FUN_0050dcb6(FrameWindow *this); /* 004019bf */
+void __thiscall thunk_FUN_0050dea8(DibSurface *this); /* 00401b54 */
 int __cdecl thunk_FUN_00511350(); /* 00402e64 */
-void __cdecl thunk_FUN_005113b0(); /* 0040367f */
-void __cdecl thunk_FUN_005113f0(); /* 00401893 */
 void __cdecl thunk_FUN_00511430(); /* 00401271 */
-void __thiscall thunk_FUN_00511460(C_0046ace7 *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00401c49 */
-void __cdecl thunk_FUN_005114d0(); /* 0040398b */
 undefined4 __cdecl thunk_FUN_00511520(); /* 004023e2 */
 C_00511560 * __thiscall thunk_FUN_00511560(C_00511560 *this,uint param_1); /* 0040149c */
 void __thiscall thunk_FUN_005115b0(C_00511560 *this); /* 00403ce2 */
-int __thiscall thunk_FUN_00511690(C_004083b0_4 *this,int param_1); /* 004016bd */
 void __cdecl thunk_FUN_005116f0(); /* 00402e5a */
-C_0040f380_cc * __thiscall thunk_FUN_00511720(C_0040f380_cc *this); /* 004032c4 */
+SpriteButton * __thiscall thunk_FUN_00511720(SpriteButton *this); /* 004032c4 */
 void __thiscall thunk_FUN_005117f0(C_005117f0 *this,iptr param_1); /* 004027ac */
-void __thiscall thunk_FUN_00511820(C_004083b0_2e4 *this,iptr param_1); /* 00401500 */
-void __thiscall thunk_FUN_00511850(C_004083b0_2e4 *this,iptr param_1); /* 004016d1 */
-void __cdecl thunk_FUN_00511880(); /* 00401a05 */
+void __thiscall thunk_FUN_00511820(FrameWindow *this,iptr param_1); /* 00401500 */
+void __thiscall thunk_FUN_00511850(FrameWindow *this,iptr param_1); /* 004016d1 */
 void __cdecl thunk_FUN_00511a0e(); /* 004013ca */
 void __cdecl thunk_FUN_00511acf(); /* 00401438 */
 void __cdecl thunk_FUN_00511ba2(); /* 004030c1 */
-C_00514220 * __thiscall thunk_FUN_00514220(C_00514220 *this); /* 00403053 */
-void __thiscall thunk_FUN_00514254(C_00514220 *this); /* 00402090 */
-void __thiscall thunk_FUN_00514272(C_00514220 *this); /* 004033aa */
+NetMsgQueue * __thiscall thunk_FUN_00514220(NetMsgQueue *this); /* 00403053 */
+void __thiscall thunk_FUN_00514254(NetMsgQueue *this); /* 00402090 */
 undefined4 __cdecl thunk_FUN_0051435f(); /* 00401b13 */
-undefined4 __thiscall thunk_FUN_0051438f(C_0051438f *this,int param_1,iptr param_2,uint param_3); /* 0040371f */
 undefined4 __thiscall thunk_FUN_005149d6(C_005149d6 *this,iptr param_1,iptr param_2,iptr param_3,int param_4); /* 00401375 */
-void __cdecl thunk_FUN_00514e7b(); /* 004038f5 */
-C_00408010_710 * __thiscall thunk_FUN_00514f16(C_00408010_710 *this); /* 00401960 */
+DestroyedCivsWindow * __thiscall thunk_FUN_00514f16(DestroyedCivsWindow *this); /* 00401960 */
 void __thiscall thunk_FUN_005150b9(C_005150b9_710 *this); /* 00401a50 */
-undefined4 __thiscall thunk_FUN_005151f4(C_00408010_710 *this,uint param_1); /* 004027a7 */
-void __thiscall thunk_FUN_00515516(C_00408010_710 *this); /* 00403125 */
-void __thiscall thunk_FUN_00515999(C_00408010_10 *this,iptr param_1); /* 004038dc */
+undefined4 __thiscall thunk_FUN_005151f4(DestroyedCivsWindow *this,uint param_1); /* 004027a7 */
+void __thiscall thunk_FUN_00515516(DestroyedCivsWindow *this); /* 00403125 */
 void __thiscall thunk_FUN_00515c15(C_00408010_6f0 *this,iptr param_1); /* 00403a08 */
-void __thiscall thunk_FUN_00515dc8(C_00408010_710 *this,int param_1); /* 00402298 */
-void __thiscall thunk_FUN_00515f3c(C_00408010_710 *this); /* 0040213a */
-void __thiscall thunk_FUN_00516005(C_00408010_710 *this); /* 00401370 */
-void __cdecl thunk_FUN_00516570(); /* 00401d02 */
+void __thiscall thunk_FUN_00515f3c(DestroyedCivsWindow *this); /* 0040213a */
+void __thiscall thunk_FUN_00516005(DestroyedCivsWindow *this); /* 00401370 */
 C_004083b0_11c * __thiscall thunk_FUN_0051661a(C_004083b0_11c *this); /* 004016c2 */
-void __thiscall thunk_FUN_005167d9(C_005167d9_1330 *this); /* 00403472 */
+void __thiscall thunk_FUN_005167d9(CouncilWindow *this); /* 00403472 */
 undefined4 __thiscall thunk_FUN_00516947(C_004083b0_11c *this,u32 param_1,int param_2); /* 004018ca */
 void __thiscall thunk_FUN_00516fd4(C_004083b0_11c *this); /* 0040136b */
-void __thiscall thunk_FUN_00517158(C_004083b0_48 *this); /* 00403a58 */
-void __thiscall thunk_FUN_00517673(C_004083b0_48 *this); /* 00401523 */
-undefined4 __thiscall thunk_FUN_005179a3(C_004083b0_4 *this,uptr param_1); /* 00403c6f */
-void __thiscall thunk_FUN_00517dd3(C_004083b0_114 *this,int param_1); /* 00403a12 */
+void __thiscall thunk_FUN_00517673(DibSurface *this); /* 00401523 */
 void __thiscall thunk_FUN_00518007(C_004083b0_11c *this); /* 00402bad */
-void __thiscall thunk_FUN_00518342(void *this,iptr param_1); /* 00403611 */
 undefined4 __cdecl thunk_FUN_00518582(); /* 0040245a */
-void __thiscall thunk_FUN_00518e80(C_00518e80 *this,undefined4 param_1,undefined4 param_2); /* 00402423 */
-undefined4 __cdecl thunk_FUN_00518ec0(); /* 004012ee */
 void __thiscall thunk_FUN_00518f00(C_004083b0_61c *this,iptr param_1); /* 00402f40 */
 void __cdecl thunk_FUN_00519140(); /* 004025b8 */
 void __cdecl thunk_FUN_00519200(); /* 004022ca */
 void __cdecl thunk_FUN_005193ed(); /* 0040307b */
 int __cdecl thunk_FUN_005195c4(); /* 004035b2 */
-int __cdecl thunk_FUN_005195f1(); /* 0040147e */
-void __cdecl thunk_FUN_0051961e(); /* 00403ac1 */
-int __cdecl thunk_FUN_005197af(); /* 00403698 */
-void __cdecl thunk_FUN_005199a9(); /* 00402c7a */
 void __cdecl thunk_FUN_005199c4(); /* 00401d98 */
-void __cdecl thunk_FUN_0051aa4e(); /* 00401bc2 */
 void __thiscall thunk_FUN_0051adfd(C_004083b0_430 *this,int param_1); /* 004023ba */
 void __thiscall thunk_FUN_0051b1c2(C_004083b0_430 *this,int param_1); /* 00402dbf */
 void __thiscall thunk_FUN_0051b2b6(C_004083b0_430 *this); /* 00402991 */
 void __thiscall thunk_FUN_0051bba1(C_004083b0_430 *this); /* 00403922 */
-void __cdecl thunk_FUN_0051c635(); /* 0040379c */
-undefined4 __cdecl thunk_FUN_0051d3e0(); /* 00402e73 */
-undefined4 __cdecl thunk_FUN_0051d564(); /* 00402987 */
-undefined4 __cdecl thunk_FUN_0051d63b(); /* 00402748 */
-undefined4 __cdecl thunk_FUN_0051d75d(); /* 004025d1 */
-void __cdecl thunk_FUN_0051d7bc(); /* 00401140 */
-void __cdecl thunk_FUN_0051d7d6(); /* 00402397 */
-uint __cdecl thunk_FUN_0051d817(); /* 004025e5 */
 undefined4 __cdecl thunk_FUN_0051d9a0(); /* 00402cc0 */
-undefined4 __cdecl thunk_FUN_0051dd97(); /* 00402ecd */
-undefined4 __cdecl thunk_FUN_0051ea8e(); /* 00401b31 */
-int __cdecl thunk_FUN_0051f19c(); /* 00403134 */
-void __cdecl thunk_FUN_0052182c(); /* 00402b4e */
-undefined4 __cdecl thunk_FUN_005218cb(); /* 0040286f */
-undefined4 __cdecl thunk_FUN_00521fe0(); /* 0040260d */
-void __cdecl thunk_FUN_0052263c(); /* 00401af0 */
-int __cdecl thunk_FUN_005226fa(); /* 0040345e */
-int __cdecl thunk_FUN_005227e3(); /* 004034e0 */
-void __cdecl thunk_FUN_00522b2b(); /* 004028bf */
-void __cdecl thunk_FUN_00522dfa(); /* 004037d8 */
-void __cdecl thunk_FUN_00522f8f(); /* 004039d1 */
 undefined4 __cdecl thunk_FUN_005233fc(); /* 0040329c */
-void __cdecl thunk_FUN_00523d8a(); /* 00402400 */
 undefined4 __cdecl thunk_FUN_00523f02(); /* 0040100a */
 void __thiscall thunk_FUN_005261a0(C_004083b0_61c *this,iptr param_1); /* 004035a8 */
-void __thiscall thunk_FUN_0052630d(C_004083b0_a28 *this); /* 004031f7 */
 void __thiscall thunk_FUN_00526913(C_004083b0_a28 *this,int param_1); /* 00403936 */
-void __thiscall thunk_FUN_00526ca0(C_004083b0_430 *this,int param_1,int param_2); /* 00403300 */
 void __cdecl thunk_FUN_0052dd73(); /* 00402a09 */
-void __thiscall thunk_FUN_0052e971(C_004083b0_430 *this); /* 004036a2 */
-iptr __thiscall thunk_FUN_0052ec47(C_004083b0_4 *this,int param_1); /* 0040321f */
-iptr __thiscall thunk_FUN_0052ed95(C_004083b0_4 *this,int param_1); /* 004039ae */
-u32 __thiscall thunk_FUN_00530e80(C_00530e80 *this); /* 00402ad6 */
-void __thiscall thunk_FUN_00530eb0(C_00530eb0 *this,iptr param_1); /* 0040383c */
-void __thiscall thunk_FUN_00530ee0(C_0040f380_3c *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,iptr param_6); /* 004032f1 */
+void __thiscall thunk_FUN_00530ee0(Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,undefined4 param_5,iptr param_6); /* 004032f1 */
 void __thiscall thunk_FUN_00530fb0(C_00530fb0 *this); /* 0040301c */
-u32 __thiscall thunk_FUN_00530fe0(C_0040f380_3c *this); /* 00402fef */
-C_0040f380_48 * __thiscall thunk_FUN_00531010(C_0040f380_48 *this); /* 00402bd5 */
-void __thiscall thunk_FUN_005310a0(C_0040f380_50 *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5, iptr param_6); /* 00402fb8 */
-void __thiscall thunk_FUN_005311b0(C_0040f380_3c *this,iptr param_1); /* 0040119f */
-void __thiscall thunk_FUN_005311e0(C_0040f380_3c *this,iptr param_1); /* 00401b95 */
-int __cdecl thunk_FUN_00531287(); /* 00401032 */
 iptr __cdecl thunk_FUN_005312e4(); /* 004033f0 */
-void __cdecl thunk_FUN_00531567(); /* 00402658 */
-void __cdecl thunk_FUN_00531607(); /* 004031ed */
-void __cdecl thunk_FUN_00531653(); /* 00401fcd */
 void __cdecl thunk_FUN_0053184d(); /* 00401d11 */
 undefined4 __cdecl thunk_FUN_005351aa(); /* 00402644 */
 void __cdecl thunk_FUN_005369f3(); /* 00401492 */
@@ -6942,526 +6122,1346 @@ int __cdecl thunk_FUN_00536bc9(); /* 00403670 */
 undefined4 __cdecl thunk_FUN_00536c4c(); /* 0040182a */
 undefined4 __cdecl thunk_FUN_00537331(); /* 00402ce3 */
 undefined4 __cdecl thunk_FUN_00538a29(); /* 00401555 */
-void __cdecl thunk_FUN_00543b80(); /* 004020a9 */
-void __cdecl thunk_FUN_00543cd6(); /* 004017a3 */
-int __cdecl thunk_FUN_00548b70(); /* 00401681 */
-void __cdecl thunk_FUN_00548c78(); /* 00401fbe */
-void __cdecl thunk_FUN_00548df0(); /* 00402ed2 */
 void __cdecl thunk_FUN_00548e23(); /* 00401ce9 */
 void __cdecl thunk_FUN_00549aee(); /* 004027f7 */
-undefined4 __cdecl thunk_FUN_0054a4c4(); /* 0040318e */
-uint __cdecl thunk_FUN_0054a874(); /* 0040216c */
-int __cdecl thunk_FUN_0054a8d3(); /* 004024d7 */
-undefined4 __cdecl thunk_FUN_0054a912(); /* 00402865 */
 int __cdecl thunk_FUN_0054adc6(); /* 004031d9 */
-void __cdecl thunk_FUN_0054ae93(); /* 00401983 */
-void __cdecl thunk_FUN_0054b1d5(); /* 00401ac8 */
-void __cdecl thunk_FUN_0054b2ec(); /* 00403760 */
-void __cdecl thunk_FUN_0054b635(); /* 004012df */
-void __cdecl thunk_FUN_0054bc1a(); /* 004038f0 */
-undefined4 __cdecl thunk_FUN_0054c4a1(); /* 00401ff5 */
-uint __cdecl thunk_FUN_0054d7ef(); /* 004015d7 */
 void __thiscall thunk_FUN_0054f16b(C_004083b0_430 *this); /* 00401ae1 */
 void __thiscall thunk_FUN_0054f3b9(C_004083b0_a28 *this); /* 00401abe */
-void __cdecl thunk_FUN_0054ffc8(); /* 004039ea */
 C_0040bc40_28 * __thiscall thunk_FUN_00551cd0(C_0040bc40_28 *this,uint param_1); /* 004023b0 */
 u32 __thiscall thunk_FUN_00551d20(C_00551d20 *this); /* 004035bc */
-undefined4 __thiscall thunk_FUN_00551d50(C_00551d50 *this); /* 00402545 */
-void __thiscall thunk_FUN_00551d80(C_00551d80 *this,undefined4 param_1); /* 00402135 */
-void __thiscall thunk_FUN_00551dc0(C_00551dc0 *this,iptr param_1); /* 00402da6 */
-void __thiscall thunk_FUN_00551df0(C_00551df0 *this,iptr param_1); /* 004033a5 */
-undefined4 __cdecl thunk_FUN_00551e20(); /* 00402f95 */
-undefined4 __cdecl thunk_FUN_00551e60(); /* 004037c9 */
-void __cdecl thunk_FUN_00551fed(); /* 00402c52 */
-void __cdecl thunk_FUN_005520fa(); /* 004024fa */
-void __thiscall thunk_FUN_00552112(C_004083b0_2e4 *this); /* 00401104 */
-void __thiscall thunk_FUN_00552ed2(C_004083b0_2e4 *this); /* 00403c83 */
-void __thiscall thunk_FUN_0055318c(C_004083b0_208 *this,iptr param_1,undefined4 param_2); /* 00402932 */
-void __thiscall thunk_FUN_0055324c(C_004083b0_2e4 *this,iptr param_1); /* 00401122 */
-void __thiscall thunk_FUN_005532d7(C_004083b0_4 *this); /* 004010b9 */
-void __thiscall thunk_FUN_00553379(C_004083b0_48 *this); /* 004029fa */
-C_004083b0_114 * __thiscall thunk_FUN_0055339f(C_004083b0_114 *this); /* 00402608 */
-void __thiscall thunk_FUN_00553444(C_004083b0_48 *this); /* 00401933 */
-void __thiscall thunk_FUN_005534bc(C_004083b0_2e4 *this,int param_1,uint param_2,int param_3,int param_4,int param_5, int param_6,u32 param_7,u32 param_8,u32 param_9); /* 00402ac7 */
-u32 __thiscall thunk_FUN_00553d30(C_00553d30 *this,iptr param_1); /* 00401fc8 */
-u32 __thiscall thunk_FUN_00553d70(C_00553d70 *this,iptr param_1); /* 00401717 */
-int __cdecl thunk_FUN_00553db0(); /* 0040237e */
-undefined4 __cdecl thunk_FUN_00553dfd(); /* 00402cb6 */
-void __cdecl thunk_FUN_00553ff6(); /* 00401d93 */
-undefined4 __cdecl thunk_FUN_00554145(); /* 00402405 */
-void __cdecl thunk_FUN_00554297(); /* 00401cf8 */
-void __cdecl thunk_FUN_00554423(); /* 00403260 */
-void __cdecl thunk_FUN_00554460(); /* 00401c94 */
-void __cdecl thunk_FUN_005545d3(); /* 00401f00 */
-void __cdecl thunk_FUN_00554962(); /* 00401442 */
-void __cdecl thunk_FUN_0055499f(); /* 004026b2 */
-void __cdecl thunk_FUN_005551b3(); /* 00401686 */
-void __cdecl thunk_FUN_0055560f(); /* 004013e3 */
-void __cdecl thunk_FUN_0055583f(); /* 00401906 */
-void __cdecl thunk_FUN_00555a02(); /* 00403c06 */
-void __cdecl thunk_FUN_00555a8b(); /* 00402f45 */
-void __cdecl thunk_FUN_00555cb1(); /* 0040185c */
 undefined4 __cdecl thunk_FUN_00555ced(); /* 004027a2 */
-void __cdecl thunk_FUN_0055615c(); /* 00403981 */
-void __cdecl thunk_FUN_0055625b(); /* 00401799 */
-void __cdecl thunk_FUN_005569e3(); /* 004027f2 */
-void __cdecl thunk_FUN_00556f54(); /* 0040240a */
-void __cdecl thunk_FUN_00557e2c(); /* 00403be3 */
-void __cdecl thunk_FUN_0055819b(); /* 004033eb */
-void __cdecl thunk_FUN_005582ad(); /* 0040353a */
-void __cdecl thunk_FUN_0055891d(); /* 00401acd */
-void __cdecl thunk_FUN_00559cf6(); /* 00401ea1 */
-void __thiscall thunk_FUN_00559ded(C_004083b0_430 *this); /* 004030b2 */
-C_004083b0_430 * __thiscall thunk_FUN_00559e3c(C_004083b0_430 *this); /* 00402ca7 */
-void __thiscall thunk_FUN_00559ed4(C_004083b0_430 *this); /* 004010eb */
-void __thiscall thunk_FUN_00559f60(C_004083b0_12c *this,int *param_1); /* 0040201d */
-void __thiscall thunk_FUN_00559fcf(C_004083b0_12c *this,iptr param_1); /* 00402383 */
-void __thiscall thunk_FUN_0055a00b(C_0055a00b *this,iptr param_1,int param_2,int param_3,iptr param_4,iptr param_5); /* 00401a0a */
-void __thiscall thunk_FUN_0055a051(C_004083b0_430 *this); /* 00403044 */
-void __cdecl thunk_FUN_0055a10d(); /* 00402b99 */
-int __cdecl thunk_FUN_0055a192(); /* 00402757 */
-undefined4 __cdecl thunk_FUN_0055a329(); /* 004011ef */
-void __thiscall thunk_FUN_0055a41d(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,u32 param_3); /* 004038c3 */
-void __thiscall thunk_FUN_0055a567(C_004083b0_430 *this); /* 00402b3f */
-void __thiscall thunk_FUN_0055a5e4(C_004083b0_430 *this); /* 00401050 */
-void __thiscall thunk_FUN_0055a64a(C_004083b0_430 *this); /* 00402b1c */
-void __cdecl thunk_FUN_0055a930(); /* 004035ee */
-void __cdecl thunk_FUN_0055a980(); /* 00403305 */
-undefined4 __stdcall thunk_FUN_0055add0(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 00403a49 */
-void __cdecl thunk_FUN_0055ae80(); /* 00402c6b */
-void __cdecl thunk_FUN_0055af2e(); /* 00401622 */
-void __cdecl thunk_FUN_0055b046(); /* 0040229d */
-void __cdecl thunk_FUN_0055b2c6(); /* 00402b03 */
-void __cdecl thunk_FUN_0055b3c8(); /* 00401b4a */
-void __cdecl thunk_FUN_0055b3fd(); /* 004010c3 */
-void __cdecl thunk_FUN_0055b59e(); /* 0040352b */
-void __cdecl thunk_FUN_0055b5fa(); /* 00401451 */
-int __cdecl thunk_FUN_0055bbc0(); /* 004031cf */
-undefined4 __cdecl thunk_FUN_0055bef9(); /* 00403bcf */
-void __cdecl thunk_FUN_0055c066(); /* 00402c89 */
-undefined4 __cdecl thunk_FUN_0055c277(); /* 00403a8a */
-void __cdecl thunk_FUN_0055c3d3(); /* 00403049 */
-void __cdecl thunk_FUN_0055c69d(); /* 0040162c */
 undefined4 __cdecl thunk_FUN_0055cbd5(); /* 00403558 */
-undefined4 __cdecl thunk_FUN_0055d1e2(); /* 0040206d */
-undefined4 __cdecl thunk_FUN_0055d685(); /* 00402d65 */
-void __cdecl thunk_FUN_0055d8d8(); /* 00401479 */
-void __cdecl thunk_FUN_0055f5a3(); /* 004020b8 */
-void __cdecl thunk_FUN_0055f7d1(); /* 00403b66 */
-void __cdecl thunk_FUN_00560084(); /* 00403198 */
-void __cdecl thunk_FUN_00560d95(); /* 00401654 */
-void __cdecl thunk_FUN_00562021(); /* 0040236f */
-undefined4 __cdecl thunk_FUN_00564470(); /* 00401f9b */
-undefined1 * __cdecl thunk_FUN_00564574(); /* 004019e7 */
-undefined1 * __cdecl thunk_FUN_0056459f(); /* 00402be9 */
-undefined4 __cdecl thunk_FUN_00564713(); /* 00401064 */
-int __cdecl thunk_FUN_00564bf0(); /* 00403076 */
-void __thiscall thunk_FUN_00564d00(C_004083b0_798 *this,iptr param_1); /* 0040303a */
-void __thiscall thunk_FUN_00564e6d(C_004083b0_a28 *this); /* 0040299b */
-void __thiscall thunk_FUN_00566584(C_004083b0_a28 *this,iptr param_1); /* 00401a19 */
-void __thiscall thunk_FUN_005666da(C_004083b0_a28 *this); /* 004013d4 */
-void __thiscall thunk_FUN_005674b9(C_004083b0_48 *this,int param_1,int param_2,int param_3,int param_4); /* 00403431 */
-void __thiscall thunk_FUN_005675b7(C_004083b0_61c *this,undefined4 param_1,int param_2); /* 00401433 */
-undefined4 __cdecl thunk_FUN_00568176(); /* 004031a2 */
-void __cdecl thunk_FUN_005681c9(); /* 00402b35 */
-void __cdecl thunk_FUN_00568381(); /* 00401ff0 */
 void __cdecl thunk_FUN_005683a5(); /* 004031a7 */
 void __cdecl thunk_FUN_005683b5(); /* 00401c4e */
-undefined4 __cdecl thunk_FUN_005683c5(); /* 00401e79 */
-undefined4 __cdecl thunk_FUN_00568861(); /* 0040313e */
-void __cdecl thunk_FUN_00568ca2(); /* 0040141f */
-void __cdecl thunk_FUN_00568e86(); /* 0040131b */
-void __cdecl thunk_FUN_00568f43(); /* 00401181 */
-undefined4 __cdecl thunk_FUN_0056911d(); /* 004025a9 */
-void __cdecl thunk_FUN_005691a1(); /* 00401910 */
-void __cdecl thunk_FUN_00569363(); /* 0040365c */
-void __cdecl thunk_FUN_00569801(); /* 00401f1e */
-void __cdecl thunk_FUN_0056a65e(); /* 0040254a */
-void __cdecl thunk_FUN_0056a787(); /* 00401c30 */
-void __cdecl thunk_FUN_0056a9f4(); /* 00402284 */
-void __cdecl thunk_FUN_0056aacb(); /* 00402af9 */
-void __cdecl thunk_FUN_0056ac46(); /* 00403a03 */
-void __cdecl thunk_FUN_0056ac67(); /* 00402aa4 */
-char * __cdecl thunk_FUN_0056b810(); /* 00403774 */
-void __cdecl thunk_FUN_0056b90b(); /* 00401c12 */
-iptr __cdecl thunk_FUN_0056b96e(); /* 00402176 */
-void __cdecl thunk_FUN_0056baff(); /* 00402c4d */
-void __cdecl thunk_FUN_0056c5fc(); /* 00403bfc */
-void __cdecl thunk_FUN_0056c705(); /* 00403422 */
-void __cdecl thunk_FUN_0056d289(); /* 00402a45 */
-undefined4 __thiscall thunk_FUN_0056e180(C_0056e180 *this,undefined4 param_1); /* 00402365 */
-int __cdecl thunk_FUN_0056e1c0(); /* 00401ce4 */
-undefined4 __cdecl thunk_FUN_0056e1f0(); /* 00403675 */
-C_0056e270 * __thiscall thunk_FUN_0056e270(C_0056e270 *this); /* 004031b6 */
-void __thiscall thunk_FUN_0056e2c9(void *this); /* 00402707 */
-undefined4 __thiscall thunk_FUN_0056e2e9(C_004471c0 *this,undefined4 param_1,int param_2); /* 0040297d */
-iptr __thiscall thunk_FUN_0056edd3(C_004471c0 *this,iptr param_1); /* 004028a1 */
-void __thiscall thunk_FUN_0056ee2c(C_004471c0 *this); /* 004022fc */
-void __thiscall thunk_FUN_0056eed7(C_004471c0 *this,void *param_1); /* 00403954 */
-uint * __thiscall thunk_FUN_0056ef93(C_004471c0 *this,iptr param_1,uint param_2); /* 00402ee1 */
-void __cdecl thunk_FUN_0056f113(); /* 00401d9d */
-void __thiscall thunk_FUN_0056f301(C_004471c0 *this); /* 0040157d */
-undefined4 __thiscall thunk_FUN_0056f372(C_004471c0 *this); /* 004039f9 */
-uptr __thiscall thunk_FUN_0056f3e0(C_004471c0 *this,int param_1); /* 00403a44 */
-int __thiscall thunk_FUN_0056f42b(C_004471c0 *this,int param_1); /* 0040353f */
-void __cdecl thunk_FUN_0056fbfd(); /* 00402329 */
-void __cdecl thunk_FUN_00572089(); /* 0040135c */
-void __cdecl thunk_FUN_00572389(); /* 004021e9 */
-void __cdecl thunk_FUN_005723ee(); /* 00402de7 */
-void __cdecl thunk_FUN_0057261a(); /* 0040241e */
-int __cdecl thunk_FUN_00572740(); /* 00401ccb */
-void __cdecl thunk_FUN_005727d8(); /* 00402031 */
-undefined * __cdecl thunk_FUN_00572887(); /* 00401a00 */
-void __cdecl thunk_FUN_00572da0(); /* 0040290f */
-void __cdecl thunk_FUN_00573e59(); /* 00403797 */
-void __cdecl thunk_FUN_00574239(); /* 00401bf9 */
-void __thiscall thunk_FUN_00574522(C_004083b0_2e4 *this); /* 00403cb0 */
-void __cdecl thunk_FUN_00574686(); /* 00403887 */
-undefined4 __cdecl thunk_FUN_005746a1(); /* 004035e9 */
-void __cdecl thunk_FUN_00574c47(); /* 00401550 */
-void __cdecl thunk_FUN_00574ca6(); /* 00403594 */
-void __thiscall thunk_FUN_00575dec(C_004083b0_430 *this); /* 00402f36 */
-void __cdecl thunk_FUN_0057624d(); /* 00402a9f */
-void __cdecl thunk_FUN_00576267(); /* 004030ad */
-void __thiscall thunk_FUN_00578390(void *this); /* 0040279d */
-C_004083b0_430 * __thiscall thunk_FUN_005784a0(C_004083b0_430 *this); /* 00403157 */
-u32 __thiscall thunk_FUN_005785d0(C_00414be0 *this,iptr param_1); /* 00403107 */
-u32 __thiscall thunk_FUN_00578610(C_00414be0 *this,iptr param_1); /* 00401087 */
-void __thiscall thunk_FUN_00578650(C_00578650 *this,uint param_1); /* 00402f90 */
-void __thiscall thunk_FUN_0057868c(C_00578650 *this); /* 00402509 */
-void __thiscall thunk_FUN_005786b6(C_00578650 *this,undefined4 param_1); /* 00401faa */
-C_00578650 * __thiscall thunk_FUN_005786f1(C_00578650 *this,undefined4 param_1); /* 00403ab2 */
-void __thiscall thunk_FUN_00578770(C_00578650 *this); /* 004024be */
-undefined4 __thiscall thunk_FUN_005787de(C_00578650 *this,int param_1); /* 00401596 */
-int __thiscall thunk_FUN_00578840(C_00578650 *this,uptr param_1); /* 00403913 */
-undefined4 __thiscall thunk_FUN_005788a9(C_00578650 *this,int param_1); /* 00402bbc */
-iptr __thiscall thunk_FUN_00578922(C_00578650 *this,int param_1); /* 004039ef */
-int __thiscall thunk_FUN_005789aa(C_00578650 *this,iptr param_1); /* 0040381e */
-undefined4 __thiscall thunk_FUN_00578a1c(C_00578650 *this,undefined4 param_1,int param_2); /* 00402d4c */
-void __cdecl thunk_FUN_00578abd(); /* 00401e3d */
-undefined4 * __thiscall thunk_FUN_00578b06(C_00578650 *this,undefined4 param_1,char *param_2); /* 0040117c */
-undefined4 * __thiscall thunk_FUN_00578c12(C_00578650 *this,undefined4 param_1,undefined4 param_2,iptr param_3,size_t param_4); /* 00402d10 */
-void __thiscall thunk_FUN_00578de8(C_00578650 *this,C_00408010_b8 *param_1); /* 004024d2 */
-void __thiscall thunk_FUN_00578e38(C_00578650 *this,iptr param_1); /* 004027e8 */
-undefined4 __thiscall thunk_FUN_00578e60(C_00578650 *this,undefined4 param_1); /* 00401924 */
-void __thiscall thunk_FUN_00578ec7(C_00578650 *this,undefined4 param_1); /* 00403166 */
-void __thiscall thunk_FUN_00578f2c(C_00578650 *this,iptr param_1); /* 00402095 */
-void __thiscall thunk_FUN_00579260(C_00578650 *this,undefined4 param_1,int param_2); /* 0040328d */
-C_00578650 * __thiscall thunk_FUN_005792e1(C_00578650 *this,undefined4 param_1,C_00578650 *param_2); /* 00401cc6 */
-void __thiscall thunk_FUN_005793a3(C_00578650 *this,undefined4 param_1); /* 00402950 */
-void __thiscall thunk_FUN_0057940d(C_00578650 *this,undefined4 param_1,int param_2); /* 00403b89 */
-void __thiscall thunk_FUN_005794cf(C_00578650 *this,undefined4 param_1,undefined4 param_2); /* 00403c8d */
-void __thiscall thunk_FUN_0057953e(C_00578650 *this,undefined4 param_1,iptr param_2); /* 00403602 */
-void __thiscall thunk_FUN_005799c0(C_00578650 *this,iptr param_1); /* 00403251 */
-void __thiscall thunk_FUN_00579a00(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00402e28 */
-void __thiscall thunk_FUN_00579a40(C_00578650 *this,undefined4 param_1,undefined4 param_2); /* 00403c97 */
-void __thiscall thunk_FUN_00579a80(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004017bc */
-undefined4 __thiscall thunk_FUN_00579ac0(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00402a86 */
-void __thiscall thunk_FUN_00579b00(C_00578650 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004027c0 */
-void __thiscall thunk_FUN_00579b40(C_00408010_b8 *this,iptr param_1); /* 00402ffe */
-u32 __thiscall thunk_FUN_00579b90(C_00579b90 *this); /* 00401992 */
-void __thiscall thunk_FUN_00579bc0(C_00579bc0 *this,iptr param_1); /* 00401096 */
-void __thiscall thunk_FUN_00579bf0(C_00408010_b8 *this); /* 00402e0f */
-undefined4 __cdecl thunk_FUN_00579c40(); /* 00403891 */
-int __cdecl thunk_FUN_00579dbb(); /* 004027ed */
-undefined4 __cdecl thunk_FUN_00579ed0(); /* 00401cbc */
-void __cdecl thunk_FUN_0057a27a(); /* 00401b6d */
-iptr __cdecl thunk_FUN_0057a685(); /* 00402e82 */
-void __cdecl thunk_FUN_0057a7e9(); /* 0040331e */
-undefined4 __cdecl thunk_FUN_0057a904(); /* 00401e7e */
-void __cdecl thunk_FUN_0057b5df(); /* 0040399a */
-int __cdecl thunk_FUN_0057e2c3(); /* 00401c9e */
-int __cdecl thunk_FUN_0057e33a(); /* 0040292d */
-iptr __cdecl thunk_FUN_0057e6e2(); /* 00403274 */
-void __cdecl thunk_FUN_0057e9f9(); /* 00401c1c */
-void __cdecl thunk_FUN_0057eb94(); /* 004015c3 */
-void __cdecl thunk_FUN_0057ebfd(); /* 00401e2e */
-undefined4 __cdecl thunk_FUN_0057ed3f(); /* 004015c8 */
-void __cdecl thunk_FUN_0057f657(); /* 0040321a */
-undefined4 __cdecl thunk_FUN_0057f9e3(); /* 00403ba7 */
-void __cdecl thunk_FUN_0057febc(); /* 004039e0 */
-void __cdecl thunk_FUN_005802fd(); /* 00402022 */
-undefined4 __cdecl thunk_FUN_00580341(); /* 00402df1 */
-void __cdecl thunk_FUN_005866a0(); /* 00401c0d */
-void __cdecl thunk_FUN_005866d3(); /* 00401a37 */
-void __cdecl thunk_FUN_005869d4(); /* 00402851 */
-void __thiscall thunk_FUN_00586eb0(C_004083b0_2e4 *this); /* 00402144 */
-void __thiscall thunk_FUN_00586f16(C_004083b0_430 *this); /* 004034f9 */
-void __cdecl thunk_FUN_0058760d(); /* 00402824 */
-void __thiscall thunk_FUN_00587a90(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 00401f05 */
-void __cdecl thunk_FUN_0058804f(); /* 00403a1c */
-int __cdecl thunk_FUN_0058832d(); /* 00403170 */
-void __thiscall thunk_FUN_0058843f(void *this,int param_1,int param_2,int param_3); /* 00401ab9 */
-void __cdecl thunk_FUN_0058878e(); /* 00401bfe */
-void __cdecl thunk_FUN_00588e47(); /* 00402b17 */
-void __thiscall thunk_FUN_00588f36(C_004083b0_11c *this,int param_1,int param_2); /* 004016e0 */
-uint __cdecl thunk_FUN_00589a5b(); /* 0040244b */
-void __cdecl thunk_FUN_00589c79(); /* 00403058 */
-undefined4 __thiscall thunk_FUN_00589d50(C_00408010_10 *this); /* 00401c8a */
-int __cdecl thunk_FUN_00589d80(); /* 004029af */
-void __cdecl thunk_FUN_00589dc5(); /* 004013de */
-void __cdecl thunk_FUN_00589ef8(); /* 00402a72 */
-void __cdecl thunk_FUN_0058a61b(); /* 00401b8b */
-void __cdecl thunk_FUN_0058a80d(); /* 00402eaa */
-undefined4 __cdecl thunk_FUN_0058ae20(); /* 004034ea */
-void __cdecl thunk_FUN_0058afb6(); /* 00401000 */
-void __cdecl thunk_FUN_0058b47e(); /* 004033a0 */
-void __cdecl thunk_FUN_0058bd60(); /* 004020d6 */
-void __cdecl thunk_FUN_0058bd84(); /* 00402667 */
-void __cdecl thunk_FUN_0058bdfd(); /* 004039b8 */
-void __cdecl thunk_FUN_0058be56(); /* 00402a40 */
-void __cdecl thunk_FUN_0058c295(); /* 004011e0 */
-undefined4 __cdecl thunk_FUN_0058c56c(); /* 004033dc */
-void __cdecl thunk_FUN_0058c65e(); /* 004014b0 */
-void __cdecl thunk_FUN_0058cbe1(); /* 00402ea5 */
-void __cdecl thunk_FUN_0058cce6(); /* 004026da */
-void __cdecl thunk_FUN_0058cde5(); /* 00401190 */
-void __cdecl thunk_FUN_0058cfcd(); /* 004034b3 */
-void __cdecl thunk_FUN_0058d442(); /* 00401c5d */
-void __cdecl thunk_FUN_0058d60a(); /* 00403a76 */
-void __cdecl thunk_FUN_0058d6af(); /* 00401a87 */
-void __cdecl thunk_FUN_0058ddce(); /* 00402eb9 */
-void __cdecl thunk_FUN_0058df14(); /* 0040142e */
-void __cdecl thunk_FUN_0058df7b(); /* 0040160e */
-uptr __cdecl thunk_FUN_0058f040(); /* 004026c1 */
-void __cdecl thunk_FUN_0058fda9(); /* 00402e55 */
-undefined4 __cdecl thunk_FUN_0058fedb(); /* 0040335a */
-undefined4 __cdecl thunk_FUN_0059062c(); /* 00402829 */
-undefined4 __cdecl thunk_FUN_00594d42(); /* 00401f2d */
-void __cdecl thunk_FUN_0059511c(); /* 004026c6 */
-iptr __cdecl thunk_FUN_00596b00(); /* 004026f3 */
-undefined4 __cdecl thunk_FUN_00596c08(); /* 0040346d */
-int __cdecl thunk_FUN_00596c61(); /* 00402b5d */
-int __cdecl thunk_FUN_00596ced(); /* 004036fc */
-int __cdecl thunk_FUN_00596d3c(); /* 00403373 */
-int __cdecl thunk_FUN_00596e06(); /* 0040395e */
 int __cdecl thunk_FUN_00596e92(); /* 00401cf3 */
-void __cdecl thunk_FUN_00596eec(); /* 0040107d */
-void __cdecl thunk_FUN_005973fd(); /* 00402536 */
-void __cdecl thunk_FUN_0059772c(); /* 00402289 */
-iptr __cdecl thunk_FUN_00597d6f(); /* 004025ef */
-int __cdecl thunk_FUN_00598197(); /* 00403152 */
-undefined4 __cdecl thunk_FUN_00598a05(); /* 004029eb */
-void __cdecl thunk_FUN_00598b4e(); /* 00402239 */
-undefined4 __cdecl thunk_FUN_00598ceb(); /* 0040106e */
-undefined4 __cdecl thunk_FUN_00598d45(); /* 00401a41 */
-uint __cdecl thunk_FUN_005998b0(); /* 00402a63 */
-undefined4 __cdecl thunk_FUN_00599910(); /* 004031f2 */
-uint __cdecl thunk_FUN_005999c0(); /* 0040367a */
 void __thiscall thunk_FUN_00599a20(C_004083b0_a28 *this,iptr param_1); /* 004023ab */
-void __thiscall thunk_FUN_00599b8d(C_004083b0_a28 *this); /* 00401514 */
-void __thiscall thunk_FUN_0059a15d(C_004083b0_4 *this,iptr param_1); /* 004035c1 */
-void __thiscall thunk_FUN_0059a2e6(C_004083b0_a28 *this,iptr param_1); /* 004036c5 */
-int __cdecl thunk_FUN_0059a6f0(); /* 00401dd4 */
-float10 __cdecl thunk_FUN_0059a733(); /* 004029d7 */
-int __cdecl thunk_FUN_0059a791(); /* 004026cb */
-C_0059a8bb * __thiscall thunk_FUN_0059a8bb(C_0059a8bb *this); /* 004039b3 */
-void __thiscall thunk_FUN_0059a998(void *this); /* 00403297 */
-void __thiscall thunk_FUN_0059ad40(void *this); /* 00402360 */
-undefined1 __thiscall thunk_FUN_0059adef(void *this,undefined4 param_1,int param_2); /* 00401fd7 */
-void __thiscall thunk_FUN_0059b293(void *this,int param_1); /* 00401b7c */
 void __thiscall thunk_FUN_0059b55b(void *this); /* 0040183e */
-void __thiscall thunk_FUN_0059b571(C_0047e94e *this,iptr param_1); /* 0040110e */
-void __thiscall thunk_FUN_0059b7fc(C_0047e94e *this,iptr param_1); /* 0040133e */
-void __thiscall thunk_FUN_0059b96a(C_0047e94e *this,int param_1); /* 00401e6f */
-void __thiscall thunk_FUN_0059baf0(void *this); /* 004021a8 */
-void * __cdecl thunk_FUN_0059c0e1(); /* 00403977 */
-void __cdecl thunk_FUN_0059c276(); /* 00401f19 */
-void __cdecl thunk_FUN_0059c2b8(); /* 004021f3 */
-void __cdecl thunk_FUN_0059c31f(); /* 0040123f */
-void __cdecl thunk_FUN_0059c575(); /* 004021bc */
-C_0046d5a0_8 * __thiscall thunk_FUN_0059d080(C_0046d5a0_8 *this); /* 0040380f */
-void __cdecl thunk_FUN_0059d3b1(); /* 00403779 */
-void __cdecl thunk_FUN_0059d3c9(); /* 004017cb */
-void __cdecl thunk_FUN_0059d3e1(); /* 00402a4f */
-void __cdecl thunk_FUN_0059d401(); /* 00401460 */
-void __cdecl thunk_FUN_0059d487(); /* 00403369 */
-void __cdecl thunk_FUN_0059d4df(); /* 0040192e */
-void __cdecl thunk_FUN_0059d59d(); /* 0040359e */
-void __thiscall thunk_FUN_0059d5b5(C_0040bc40_28 *this,uint param_1); /* 0040213f */
-void __thiscall thunk_FUN_0059d5f5(C_0040bc40_2f4 *this); /* 00402f68 */
-C_0040bc40_2f4 * __thiscall thunk_FUN_0059db08(C_0040bc40_2f4 *this,undefined4 param_1); /* 004039db */
-void __thiscall thunk_FUN_0059db65(C_0040bc40_2f4 *this); /* 00401875 */
-undefined4 __thiscall thunk_FUN_0059df8a(C_0040bc40_2f4 *this); /* 004017ee */
-void __thiscall thunk_FUN_0059dfb9(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,iptr param_3,u32 param_4); /* 004017e4 */
-undefined4 __thiscall thunk_FUN_0059e0eb(void *this,int param_1,iptr param_2); /* 00403bac */
-int * __thiscall thunk_FUN_0059e18b(C_0059e18b *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00402cca */
-undefined4 __thiscall thunk_FUN_0059e356(C_0040bc40_28 *this); /* 00402eff */
-int __thiscall thunk_FUN_0059e376(C_0040bc40_28 *this); /* 00403094 */
-u32 __thiscall thunk_FUN_0059e3fa(C_0040bc40_d8 *this); /* 00403a94 */
-int __thiscall thunk_FUN_0059e448(C_0040bc40_28 *this); /* 00402f7c */
-void __thiscall thunk_FUN_0059e472(C_0040bc40_d8 *this,iptr param_1); /* 0040199c */
-void __thiscall thunk_FUN_0059e4a4(C_0040bc40_28 *this,iptr param_1); /* 00403bf7 */
-void __thiscall thunk_FUN_0059e4c5(C_0040bc40_28 *this,iptr param_1); /* 004022ac */
-void __thiscall thunk_FUN_0059e4e6(C_0040bc40_3c *this,u32 param_1); /* 0040186b */
-void __thiscall thunk_FUN_0059e507(C_0040bc40_d8 *this,u32 param_1); /* 004017b2 */
+NetMsgHeader * __thiscall thunk_FUN_0059d080(NetMsgHeader *this); /* 0040380f */
 void __thiscall thunk_FUN_0059e585(C_0059e585 *this,u32 param_1); /* 004035da */
-void __thiscall thunk_FUN_0059e5c9(C_0040bc40_d8 *this,int param_1,u32 param_2,u32 param_3); /* 004025c7 */
-int __thiscall thunk_FUN_0059e648(C_0040bc40_d8 *this); /* 00402725 */
 int __thiscall thunk_FUN_0059e676(C_0059e676 *this,iptr param_1); /* 00401834 */
-void __thiscall thunk_FUN_0059e6a9(C_0040bc40_228 *this,iptr param_1); /* 0040228e */
-void __thiscall thunk_FUN_0059e6ff(C_0040bc40_228 *this,u32 param_1); /* 0040209a */
-void __thiscall thunk_FUN_0059e762(C_0040bc40_28 *this,u32 param_1); /* 00401e24 */
-void __thiscall thunk_FUN_0059e783(C_0040bc40_28 *this,u32 param_1,u32 param_2); /* 004022f2 */
-uptr __thiscall thunk_FUN_0059e7ad(C_0040bc40_268 *this,int param_1); /* 00403747 */
-int * __thiscall thunk_FUN_0059e877(C_0040bc40_268 *this,int param_1); /* 0040298c */
-void __thiscall thunk_FUN_0059e8db(C_0040bc40_268 *this,iptr param_1,int param_2); /* 00401915 */
-undefined4 __thiscall thunk_FUN_0059e9f3(C_0040bc40_268 *this,undefined4 param_1); /* 00401d3e */
-void __thiscall thunk_FUN_0059ea4d(C_0040bc40_268 *this,undefined4 param_1,int param_2); /* 00403940 */
-void __thiscall thunk_FUN_0059ea99(C_0040bc40_268 *this,iptr param_1); /* 004018d4 */
-void __thiscall thunk_FUN_0059eb0d(C_0059eb0d *this,int param_1,iptr param_2); /* 004011cc */
-void __thiscall thunk_FUN_0059eb8c(C_0040bc40_268 *this,iptr param_1); /* 00401afa */
-void __thiscall thunk_FUN_0059ebb0(C_0040bc40_268 *this,iptr param_1); /* 00403661 */
-void __thiscall thunk_FUN_0059ebd4(C_0040bc40_28 *this,iptr param_1); /* 0040150a */
-void __thiscall thunk_FUN_0059ebf8(C_0040bc40_268 *this,iptr param_1); /* 00401023 */
-void __thiscall thunk_FUN_0059ec1c(C_0059ec1c *this,iptr param_1); /* 00403d14 */
-void __thiscall thunk_FUN_0059ec64(C_0040bc40_228 *this,u32 param_1); /* 00402860 */
-iptr * __thiscall thunk_FUN_0059ec88(C_0040bc40_268 *this,iptr param_1,iptr param_2,iptr param_3); /* 00401c3a */
-uint * __thiscall thunk_FUN_0059edf0(C_0040bc40_268 *this,iptr param_1,iptr param_2,uint param_3); /* 00402d0b */
-uint * __thiscall thunk_FUN_0059f026(C_0040bc40_268 *this,iptr param_1,iptr param_2,int param_3); /* 00401f46 */
-undefined4 * __thiscall thunk_FUN_0059f06d(C_0040bc40_268 *this,iptr param_1,iptr param_2,size_t param_3); /* 00401d1b */
-void __thiscall thunk_FUN_0059f2a3(C_0040bc40_3c *this,iptr param_1); /* 00402103 */
-void __thiscall thunk_FUN_0059f31a(C_0040bc40_d8 *this,int param_1,int param_2,int param_3); /* 00402577 */
-int __thiscall thunk_FUN_0059f3d7(C_0040bc40_d8 *this,iptr param_1,char *param_2,int param_3,int param_4,uint param_5); /* 00401e8d */
-void __thiscall thunk_FUN_0059f5ba(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 param_3); /* 0040323d */
-undefined4 __thiscall thunk_FUN_0059f5f7(C_0040bc40_268 *this); /* 0040231a */
-int __thiscall thunk_FUN_0059f64a(C_0040bc40_268 *this,int param_1); /* 0040195b */
-undefined4 __thiscall thunk_FUN_0059fb78(C_0040bc40_268 *this,uptr param_1); /* 004026e9 */
-undefined4 __thiscall thunk_FUN_0059fc19(C_0040bc40_268 *this,int param_1); /* 00403b52 */
-int __thiscall thunk_FUN_0059fcba(C_0040bc40_268 *this,uptr param_1); /* 00401b72 */
-undefined4 __thiscall thunk_FUN_0059fd2a(C_0040bc40_268 *this); /* 0040372e */
-void __thiscall thunk_FUN_005a0fea(C_005a0fea *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00401bc7 */
-void __thiscall thunk_FUN_005a1148(C_005a0fea *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 00403625 */
-uint __thiscall thunk_FUN_005a120b(C_0040bc40_268 *this,iptr param_1,int param_2); /* 004035ad */
-void __thiscall thunk_FUN_005a14d2(C_0040bc40_268 *this); /* 00403afd */
-int __thiscall thunk_FUN_005a1766(C_0040bc40_d8 *this,int param_1); /* 00403882 */
-int __thiscall thunk_FUN_005a17a4(C_0040bc40_d8 *this,int param_1); /* 004036d4 */
-void __thiscall thunk_FUN_005a17e9(C_0040bc40_268 *this,uptr param_1,int param_2); /* 004022f7 */
-undefined4 __thiscall thunk_FUN_005a1a7d(C_0040bc40_268 *this,int param_1,int param_2); /* 00401974 */
-int __thiscall thunk_FUN_005a1c52(C_0040bc40_268 *this,int param_1); /* 00402b6c */
-void __thiscall thunk_FUN_005a1caf(C_0040bc40_228 *this,int param_1,int param_2); /* 00401870 */
-undefined4 __thiscall thunk_FUN_005a1e28(C_0040bc40_228 *this); /* 00403846 */
-void __thiscall thunk_FUN_005a211c(C_0040bc40_2f4 *this); /* 0040336e */
-void __thiscall thunk_FUN_005a5649(C_0040bc40_d8 *this,iptr param_1,int param_2); /* 0040227f */
-void __thiscall thunk_FUN_005a577e(C_0040bc40_2f4 *this); /* 004026d5 */
-u32 __thiscall thunk_FUN_005a5f34(C_0040bc40_2f4 *this,iptr param_1,iptr param_2); /* 00403b11 */
-undefined4 __thiscall thunk_FUN_005a632a(C_0040bc40_2f4 *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5, iptr param_6,iptr param_7,uint param_8); /* 0040314d */
-void __cdecl thunk_FUN_005a6c23(); /* 0040295f */
-void __cdecl thunk_FUN_005a6c45(); /* 004026a8 */
-C_0040f930 * __thiscall thunk_FUN_005a9320(C_0040f930 *this,uint param_1); /* 004036e3 */
-C_0040f380_3c * __thiscall thunk_FUN_005a93b0(C_0040f380_3c *this,uint param_1); /* 00402c66 */
-C_0040f380_3c * __thiscall thunk_FUN_005a9440(C_0040f380_3c *this,uint param_1); /* 004021b2 */
-C_00418ea0 * __thiscall thunk_FUN_005a94d0(C_00418ea0 *this,uint param_1); /* 00401c62 */
-C_00453aa0 * __thiscall thunk_FUN_005a9520(C_00453aa0 *this,uint param_1); /* 00403684 */
-C_004083b0_114 * __thiscall thunk_FUN_005a95b0(C_004083b0_114 *this,uint param_1); /* 0040155a */
-void __thiscall thunk_FUN_005a9600(C_00408010_10 *this,iptr param_1); /* 00402ebe */
-void __thiscall thunk_FUN_005a9640(C_005a9640 *this); /* 0040143d */
-void __thiscall thunk_FUN_005a9670(C_005a9670 *this,undefined4 param_1,iptr param_2); /* 00401f82 */
-void __thiscall thunk_FUN_005a96b0(C_005a96b0 *this,iptr param_1); /* 0040141a */
+undefined4 __thiscall thunk_FUN_0059f5f7(DialogOptionList *this); /* 0040231a */
 uint __thiscall thunk_FUN_005a96f0(C_0040bc40_40 *this); /* 00402f18 */
-void __thiscall thunk_FUN_005a9730(C_0040bc40_d8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 00401640 */
-void __cdecl thunk_FUN_005a9780(); /* 00402be4 */
-void __cdecl thunk_FUN_005a9798(); /* 00403017 */
-void __cdecl thunk_FUN_005a97cc(); /* 00402621 */
-void __cdecl thunk_FUN_005a9858(); /* 004016ae */
-void __cdecl thunk_FUN_005a98e4(); /* 00401b86 */
-void __cdecl thunk_FUN_005a9964(); /* 00402dec */
-void __cdecl thunk_FUN_005a99fc(); /* 00401c53 */
-void __cdecl thunk_FUN_005a9aa3(); /* 00402e32 */
-void __cdecl thunk_FUN_005a9abf(); /* 004021ad */
-void __cdecl thunk_FUN_005a9afe(); /* 00402081 */
-int __cdecl thunk_FUN_005a9b5d(); /* 00402c9d */
-void __cdecl thunk_FUN_005aa0e5(); /* 004028ce */
-undefined4 __cdecl thunk_FUN_005ab2d5(); /* 0040159b */
-void __thiscall thunk_FUN_005ac840(C_004083b0_61c *this,iptr param_1); /* 0040351c */
-void __thiscall thunk_FUN_005ac9ad(C_004083b0_a28 *this); /* 004022b6 */
-void __thiscall thunk_FUN_005ad998(C_004083b0_a28 *this,iptr param_1); /* 004039bd */
-int __cdecl thunk_FUN_005adfa0(); /* 00402d56 */
-void __cdecl thunk_FUN_005adfd9(); /* 0040255e */
-int __cdecl thunk_FUN_005ae006(); /* 00401988 */
-int __cdecl thunk_FUN_005ae10e(); /* 00402b49 */
-int __cdecl thunk_FUN_005ae1b0(); /* 00403652 */
-int __cdecl thunk_FUN_005ae24d(); /* 004021da */
-int __cdecl thunk_FUN_005ae296(); /* 00401672 */
-undefined4 __cdecl thunk_FUN_005ae31d(); /* 0040377e */
-void __cdecl thunk_FUN_005ae3bf(); /* 0040165e */
-int __cdecl thunk_FUN_005ae3ec(); /* 0040112c */
-void __cdecl thunk_FUN_005aef20(); /* 00402f31 */
-void __cdecl thunk_FUN_005af140(); /* 00402ce8 */
-void __cdecl thunk_FUN_005af343(); /* 00402130 */
-int __cdecl thunk_FUN_005af4ae(); /* 00403b7a */
-void __cdecl thunk_FUN_005af682(); /* 00401e01 */
-void __cdecl thunk_FUN_005afe84(); /* 004016ea */
-void __cdecl thunk_FUN_005b02a5(); /* 004029ff */
-void __thiscall thunk_FUN_005b0473(C_004083b0_430 *this,int param_1); /* 00403a2b */
-void __thiscall thunk_FUN_005b08e8(C_004083b0_430 *this,int param_1); /* 004020db */
-void __thiscall thunk_FUN_005b09dc(C_004083b0_430 *this); /* 00401712 */
-void __thiscall thunk_FUN_005b1037(C_004083b0_430 *this); /* 00401708 */
-void __cdecl thunk_FUN_005b1a29(); /* 00402c70 */
-undefined4 __cdecl thunk_FUN_005b2590(); /* 00403869 */
-int __cdecl thunk_FUN_005b29aa(); /* 004015dc */
-int __cdecl thunk_FUN_005b29d7(); /* 00402bb7 */
-uint __cdecl thunk_FUN_005b2a39(); /* 00401820 */
-int __cdecl thunk_FUN_005b2c3d(); /* 00403bd4 */
-iptr __cdecl thunk_FUN_005b2c82(); /* 00402e23 */
-iptr __cdecl thunk_FUN_005b2cc3(); /* 00402d29 */
-iptr __cdecl thunk_FUN_005b2d39(); /* 00403391 */
-undefined4 __cdecl thunk_FUN_005b2daf(); /* 00401c44 */
-undefined4 __cdecl thunk_FUN_005b2e69(); /* 00402a59 */
-void __cdecl thunk_FUN_005b2f50(); /* 004016e5 */
-int __cdecl thunk_FUN_005b2f92(); /* 004010c8 */
-void __cdecl thunk_FUN_005b319e(); /* 0040148d */
-void __cdecl thunk_FUN_005b345f(); /* 00401159 */
-void __cdecl thunk_FUN_005b36df(); /* 0040202c */
-void __cdecl thunk_FUN_005b3863(); /* 00402df6 */
-void __cdecl thunk_FUN_005b389f(); /* 0040272f */
-void __cdecl thunk_FUN_005b3ae0(); /* 00401ee7 */
-void __cdecl thunk_FUN_005b3b78(); /* 00401fe1 */
-iptr __cdecl thunk_FUN_005b3d06(); /* 004025f4 */
-void __cdecl thunk_FUN_005b4391(); /* 0040276b */
-void __cdecl thunk_FUN_005b47fa(); /* 00402f09 */
-void __cdecl thunk_FUN_005b488a(); /* 004033f5 */
-void __cdecl thunk_FUN_005b48b1(); /* 0040269e */
-void __cdecl thunk_FUN_005b490e(); /* 004010be */
-void __cdecl thunk_FUN_005b496e(); /* 00401ad2 */
-uint __cdecl thunk_FUN_005b49cf(); /* 004029aa */
-uint __cdecl thunk_FUN_005b4b66(); /* 004031bb */
-uint __cdecl thunk_FUN_005b4c63(); /* 00402162 */
-undefined4 __cdecl thunk_FUN_005b4d8c(); /* 0040332d */
-uint __cdecl thunk_FUN_005b4de2(); /* 004033c8 */
-void __cdecl thunk_FUN_005b4ee2(); /* 00401e1f */
-int __cdecl thunk_FUN_005b50ad(); /* 004029e1 */
-int __cdecl thunk_FUN_005b53b6(); /* 00402d88 */
-int __cdecl thunk_FUN_005b542e(); /* 00401e15 */
-void __cdecl thunk_FUN_005b5bab(); /* 00402bdf */
-void __cdecl thunk_FUN_005b5d93(); /* 00402adb */
-void __cdecl thunk_FUN_005b6042(); /* 00403689 */
-undefined4 __cdecl thunk_FUN_005b633f(); /* 0040273e */
-undefined4 __cdecl thunk_FUN_005b6458(); /* 004033af */
-iptr __cdecl thunk_FUN_005b6512(); /* 00402c0c */
-void __cdecl thunk_FUN_005b6787(); /* 0040393b */
-iptr __cdecl thunk_FUN_005b67af(); /* 00402699 */
-int __cdecl thunk_FUN_005b6898(); /* 00403c10 */
-undefined4 __cdecl thunk_FUN_005b68f6(); /* 00401b18 */
-undefined4 __cdecl thunk_FUN_005b6aea(); /* 00403035 */
-uint __cdecl thunk_FUN_005b8c18(); /* 004026a3 */
-int __cdecl thunk_FUN_005b8c42(); /* 00401d34 */
-undefined4 __cdecl thunk_FUN_005b8dec(); /* 00401f3c */
-uint __cdecl thunk_FUN_005b9431(); /* 00401771 */
-int __cdecl thunk_FUN_005b947f(); /* 004038aa */
-void __cdecl thunk_FUN_005b98b7(); /* 00403143 */
-void __cdecl thunk_FUN_005b9ec6(); /* 0040360c */
-void __cdecl thunk_FUN_005b9f1c(); /* 00401794 */
-void __cdecl thunk_FUN_005b9fde(); /* 0040212b */
-void __cdecl thunk_FUN_005ba206(); /* 00402fc7 */
-int __cdecl thunk_FUN_005bad40(); /* 00401037 */
-char * __cdecl thunk_FUN_005badf0(); /* 004020d1 */
-void __cdecl thunk_FUN_005baeb0(); /* 00402252 */
-void __cdecl thunk_FUN_005baec8(); /* 0040233d */
-void __cdecl thunk_FUN_005baee0(); /* 00403bb6 */
-int __cdecl thunk_FUN_005baf57(); /* 004012e9 */
-int __cdecl thunk_FUN_005bb024(); /* 00403364 */
-int __cdecl thunk_FUN_005bb0af(); /* 00401d7f */
+undefined4 __cdecl thunk_advance_has_prereq(); /* 0040397c */
+void __thiscall thunk_advisor_add_close_button(C_004083b0_430 *this); /* 004032ba */
+int __cdecl thunk_advisor_draw_city_citizens(); /* 004024c8 */
+void __cdecl thunk_advisor_refresh_if_open(); /* 00402a9a */
+int __cdecl thunk_ai_advance_value(); /* 004017c1 */
+void __cdecl thunk_ai_choose_government(); /* 004020b8 */
+void __cdecl thunk_ai_process_civ_units(); /* 004017a3 */
+void __cdecl thunk_ai_respond_to_attack(); /* 004039e0 */
+void __cdecl thunk_ai_ship_goto_near_shore(); /* 00401fcd */
+undefined4 __cdecl thunk_ai_spaceship_race_behind(); /* 00401a41 */
+undefined4 __cdecl thunk_ai_tile_improve_choice(); /* 00401b18 */
+int __cdecl thunk_ai_unit_role(); /* 00401032 */
+void __cdecl thunk_app_shutdown_cleanup(); /* 004012a3 */
+void __cdecl thunk_attitude_advisor_show(); /* 004013f2 */
+void __thiscall thunk_avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr param_1); /* 00402b71 */
+void __cdecl thunk_bit_index_split(); /* 0040165e */
+int __cdecl thunk_bits_count8(); /* 00401988 */
+int __cdecl thunk_bits_index_of(); /* 004024d7 */
+uint __cdecl thunk_bits_nth_set(); /* 0040216c */
+void __thiscall thunk_button_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 00401cdf */
+Control * __thiscall thunk_button_ctor(Control *this); /* 004025a4 */
+void __thiscall thunk_button_set_callback(Control *this,iptr param_1); /* 00403111 */
+void __cdecl thunk_casualty_log_add(); /* 004021bc */
+void __cdecl thunk_casualty_timeline_show(); /* 00401807 */
+void __cdecl thunk_chat_append_sender_name(); /* 0040248c */
+void __cdecl thunk_chat_log_append(); /* 00401249 */
+void __cdecl thunk_chat_wnd_close(); /* 00403341 */
+void __cdecl thunk_cheat_change_money(); /* 00403981 */
+void __cdecl thunk_cheat_change_terrain(); /* 004026b2 */
+void __cdecl thunk_cheat_create_unit(); /* 00401686 */
+void __cdecl thunk_cheat_destroy_units_at_cursor(); /* 0040185c */
+void __cdecl thunk_cheat_edit_city(); /* 004027f2 */
+void __cdecl thunk_cheat_edit_king(); /* 0040240a */
+void __cdecl thunk_cheat_edit_scenario_rules(); /* 004033eb */
+void __cdecl thunk_cheat_edit_technologies(); /* 00401f00 */
+void __cdecl thunk_cheat_edit_unit(); /* 00401799 */
+void __cdecl thunk_cheat_edit_victory(); /* 00403be3 */
+void __cdecl thunk_cheat_force_government(); /* 00401442 */
+void __cdecl thunk_cheat_kill_civ(); /* 00402f45 */
+void __cdecl thunk_cheat_reveal_map(); /* 004013e3 */
+void __cdecl thunk_cheat_save_as_scenario(); /* 00401acd */
+void __cdecl thunk_cheat_scenario_params(); /* 0040353a */
+void __cdecl thunk_cheat_set_game_year(); /* 00403c06 */
+void __cdecl thunk_cheat_set_human_player(); /* 00401906 */
+void __cdecl thunk_cheat_tech_advance(); /* 00403260 */
+void __cdecl thunk_cheat_toggle_all_advances(); /* 00401c94 */
+void __cdecl thunk_cheat_toggle_mode(); /* 00401cf8 */
+void __thiscall thunk_checkbox_create(Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4 ,iptr param_5); /* 00401280 */
+Control * __thiscall thunk_checkbox_ctor(Control *this); /* 00402fe0 */
+void __thiscall thunk_checkbox_disable(CheckboxDisableView *this); /* 0040143d */
+void __thiscall thunk_checkbox_dtor(Checkbox *this); /* 004019c4 */
+u32 __thiscall thunk_checkbox_is_checked(Control *this); /* 00402fef */
+Checkbox * __thiscall thunk_checkbox_scalar_dtor(Checkbox *this,uint param_1); /* 00402149 */
+void __thiscall thunk_checkbox_set_callback(CheckboxCallbackSetView *this,iptr param_1); /* 0040115e */
+void __thiscall thunk_checkbox_set_checked(Control *this,u32 param_1); /* 00402f04 */
+Checkbox * __thiscall thunk_checkbox_vector_dtor(Checkbox *this,uint param_1); /* 004036e3 */
+undefined4 __cdecl thunk_cities_share_ocean(); /* 00403440 */
+int __cdecl thunk_city_acquire_wonder(); /* 00402897 */
+int __cdecl thunk_city_adjacent_sea_info(); /* 00401c71 */
+undefined4 __cdecl thunk_city_adjacent_to_body(); /* 00402bb2 */
+undefined4 __cdecl thunk_city_at(); /* 00403af8 */
+void __cdecl thunk_city_button_buy(); /* 00402c57 */
+void __cdecl thunk_city_button_change(); /* 004021d5 */
+void __cdecl thunk_city_button_rename(); /* 00401e97 */
+void __cdecl thunk_city_button_view(); /* 00402ec3 */
+void __cdecl thunk_city_calc_commodity_demand(); /* 00402414 */
+int __cdecl thunk_city_calc_corruption(); /* 00403aa3 */
+void __cdecl thunk_city_calc_food_box_rows(); /* 00401361 */
+void __cdecl thunk_city_calc_tile_yields(); /* 0040335f */
+void __cdecl thunk_city_calc_unit_support(); /* 00403206 */
+undefined4 __cdecl thunk_city_can_build_improvement(); /* 00403b48 */
+void __cdecl thunk_city_capture_aftermath(); /* 0040399a */
+iptr __cdecl thunk_city_choose_production(); /* 004030df */
+undefined4 __cdecl thunk_city_count_unit_support(); /* 00403adf */
+uptr __cdecl thunk_city_create(); /* 004011c7 */
+void __cdecl thunk_city_delete(); /* 00402cf2 */
+void __cdecl thunk_city_draw_bevel_rect(); /* 00401893 */
+void __cdecl thunk_city_draw_hline(); /* 0040367f */
+void __cdecl thunk_city_editor_request_redraw(); /* 00403ae9 */
+void __cdecl thunk_city_editor_run(); /* 00401dca */
+iptr __cdecl thunk_city_find_nearest(); /* 004023c9 */
+undefined4 __cdecl thunk_city_has_improvement(); /* 00402c48 */
+void __cdecl thunk_city_info_popup(); /* 004024ff */
+void __cdecl thunk_city_load_citypref(); /* 004037c4 */
+undefined4 __cdecl thunk_city_needed_size_improvement(); /* 004039cc */
+void __cdecl thunk_city_notify_dialog(); /* 004025ea */
+int __cdecl thunk_city_notify_dialog_ex(); /* 00403904 */
+uint __cdecl thunk_city_objective_value(); /* 00402ba3 */
+int __cdecl thunk_city_population_units(); /* 0040268a */
+int __cdecl thunk_city_process_turn(); /* 00402969 */
+undefined4 __cdecl thunk_city_production_category(); /* 00403382 */
+int __cdecl thunk_city_recalc(); /* 00402603 */
+void __cdecl thunk_city_refresh_area_tiles(); /* 00403cbf */
+void __cdecl thunk_city_remove_trade_route(); /* 0040306c */
+void __cdecl thunk_city_reveal_to_civ(); /* 00401465 */
+void __cdecl thunk_city_save_build_state(); /* 0040101e */
+int __cdecl thunk_city_set_improvement(); /* 00402ee6 */
+void __cdecl thunk_city_set_production(); /* 0040217b */
+void __cdecl thunk_city_set_specialist_type(); /* 004022c5 */
+void __cdecl thunk_city_set_tile_worked(); /* 00401ef1 */
+uint __cdecl thunk_city_shields_after_change(); /* 00403c79 */
+uint __cdecl thunk_city_specialist_type(); /* 004013c0 */
+void __cdecl thunk_city_split_trade(); /* 00403620 */
+void __cdecl thunk_city_status_show(); /* 00401da2 */
+uint __cdecl thunk_city_tile_status_flags(); /* 004032b5 */
+uint __cdecl thunk_city_tile_worked(); /* 00403413 */
+int __cdecl thunk_city_tile_yield(); /* 00403968 */
+void __cdecl thunk_city_transfer_for_civil_war(); /* 0040331e */
+int __cdecl thunk_city_treasury_share(); /* 004027ed */
+void __thiscall thunk_city_window_begin_draw(C_004083b0_12c *this,iptr param_1); /* 0040285b */
+void __thiscall thunk_city_window_begin_notice(C_004083b0_4 *this); /* 00403666 */
+void __thiscall thunk_city_window_bring_to_top(C_004083b0_4 *this); /* 0040358f */
+void __cdecl thunk_city_window_calc_rect(); /* 00402a6d */
+void __thiscall thunk_city_window_clear_controls(C_004083b0_4 *this); /* 00402fd6 */
+undefined4 __cdecl thunk_city_window_close(); /* 00401bae */
+void __thiscall thunk_city_window_close_if_city(C_004083b0_4 *this,iptr param_1); /* 00402bf3 */
+void __thiscall thunk_city_window_create_change_button(C_004083b0_12c *this,int param_1); /* 004021ee */
+void __thiscall thunk_city_window_create_exit_button(C_004083b0_12c *this,int param_1); /* 004018e8 */
+void __thiscall thunk_city_window_destroy_controls(C_004083b0_4 *this); /* 00402d5b */
+void __thiscall thunk_city_window_draw_citizens(FrameWindow *this,int param_1,undefined4 param_2); /* 00401cb7 */
+void __thiscall thunk_city_window_draw_food_box(C_004083b0_12c *this,int param_1); /* 00401ac3 */
+void __cdecl thunk_city_window_draw_icon_row(); /* 0040398b */
+void __thiscall thunk_city_window_draw_improvements(FrameWindow *this,int param_1); /* 00401edd */
+void __thiscall thunk_city_window_draw_info_panel(FrameWindow *this,int param_1); /* 00402c20 */
+void __thiscall thunk_city_window_draw_production(FrameWindow *this,int param_1); /* 00403cb5 */
+void __thiscall thunk_city_window_draw_resource_map(FrameWindow *this,int param_1); /* 004028c9 */
+void __thiscall thunk_city_window_draw_supported_units(FrameWindow *this,int param_1); /* 004011a9 */
+void __thiscall thunk_city_window_end_notice(C_004083b0_12c *this); /* 004030da */
+void __cdecl thunk_city_window_exit_clicked(); /* 004034e5 */
+void __cdecl thunk_city_window_init_size(); /* 0040316b */
+void __cdecl thunk_city_window_modal_notice(); /* 004017f3 */
+void __cdecl thunk_city_window_on_mouse(); /* 00402e1e */
+void __thiscall thunk_city_window_on_unit_change(FrameWindow *this,iptr param_1,iptr param_2,iptr param_3); /* 0040174e */
+void __thiscall thunk_city_window_open(C_004083b0_12c *this,iptr param_1); /* 00402e78 */
+void __thiscall thunk_city_window_recalc_redraw(C_004083b0_4 *this,undefined4 param_1); /* 00402833 */
+void __thiscall thunk_city_window_refresh(FrameWindow *this); /* 004016b8 */
+void __thiscall thunk_city_window_refresh_if_city(FrameWindow *this,iptr param_1); /* 004015be */
+void __thiscall thunk_city_window_reset_state(FrameWindow *this); /* 00401eab */
+int __thiscall thunk_city_window_scale(C_004083b0_4 *this,int param_1); /* 004016bd */
+void __thiscall thunk_city_window_update_title(FrameWindow *this); /* 004014fb */
+void __thiscall thunk_cityview_draw_title(CityViewWindow *this); /* 004038eb */
+void __thiscall thunk_cityview_redraw_scrolled(CityViewWindow *this); /* 004013cf */
+void __thiscall thunk_cityview_scroll_left(CityViewWindow *this); /* 00402e50 */
+void __thiscall thunk_cityview_scroll_right(CityViewWindow *this); /* 00402eaf */
+u32 __thiscall thunk_citywnd_get_city(C_004083b0_4 *this); /* 00401136 */
+void __cdecl thunk_civ_add_ai_goal(); /* 00403ca1 */
+void __cdecl thunk_civ_add_standing_goal(); /* 00402216 */
+int __cdecl thunk_civ_adjective(); /* 0040222f */
+void __cdecl thunk_civ_adjust_attitude(); /* 004018e3 */
+void __cdecl thunk_civ_advance_gov_prompts(); /* 0040355d */
+void __cdecl thunk_civ_apply_eiffel_tower(); /* 00403576 */
+undefined4 __cdecl thunk_civ_attitude_level(); /* 0040366b */
+int __cdecl thunk_civ_calc_score(); /* 004024e1 */
+undefined4 __cdecl thunk_civ_can_build_unit(); /* 00402676 */
+undefined4 __cdecl thunk_civ_can_build_wonder(); /* 004011b3 */
+undefined4 __cdecl thunk_civ_can_choose_government(); /* 00403a8a */
+undefined4 __cdecl thunk_civ_can_research_advance(); /* 00403549 */
+void __cdecl thunk_civ_change_government(); /* 0040162c */
+void __cdecl thunk_civ_change_password_dialog(); /* 004023ec */
+int __cdecl thunk_civ_check_destroyed(); /* 0040204f */
+undefined4 __cdecl thunk_civ_check_password(); /* 00402d47 */
+void __cdecl thunk_civ_check_throne_room_upgrade(); /* 00403512 */
+void __cdecl thunk_civ_choose_research(); /* 00402518 */
+iptr __cdecl thunk_civ_choose_research_dialog(); /* 00403b20 */
+undefined4 __cdecl thunk_civ_city_art_era(); /* 0040313e */
+undefined4 __cdecl thunk_civ_city_style_era(); /* 0040296e */
+undefined4 __cdecl thunk_civ_civil_war(); /* 00401e7e */
+void __cdecl thunk_civ_clear_standing_goals_near(); /* 004018cf */
+undefined4 __cdecl thunk_civ_color_mid(); /* 00403675 */
+undefined4 __cdecl thunk_civ_color_primary(); /* 00401f8c */
+undefined4 __cdecl thunk_civ_color_secondary(); /* 00403738 */
+int __cdecl thunk_civ_create(); /* 00402b26 */
+int __cdecl thunk_civ_distance_to_capital(); /* 00402801 */
+void __cdecl thunk_civ_eliminate(); /* 004021df */
+iptr __cdecl thunk_civ_find_central_city(); /* 00402e82 */
+undefined4 __cdecl thunk_civ_get_adjective(); /* 004023d8 */
+uint __cdecl thunk_civ_get_attitude(); /* 00401b36 */
+void __cdecl thunk_civ_give_advance(); /* 004038e6 */
+void __cdecl thunk_civ_golden_age_popup(); /* 00402e2d */
+undefined4 __cdecl thunk_civ_has_advance(); /* 00402e7d */
+undefined4 __cdecl thunk_civ_has_wonder(); /* 0040259f */
+uint __cdecl thunk_civ_improvement_upkeep(); /* 004014dd */
+void __cdecl thunk_civ_intro_popup(); /* 00401be0 */
+int __cdecl thunk_civ_leader_name(); /* 00401d16 */
+int __cdecl thunk_civ_leader_title(); /* 00402883 */
+void __cdecl thunk_civ_leonardo_upgrade(); /* 004010e6 */
+undefined4 __cdecl thunk_civ_max_tax_rate(); /* 00403530 */
+int __cdecl thunk_civ_name_plural(); /* 00402554 */
+void __cdecl thunk_civ_process_turn(); /* 00401546 */
+void __cdecl thunk_civ_rating_window_show(); /* 00403837 */
+void __cdecl thunk_civ_refresh_ai_goals(); /* 00401e74 */
+iptr __cdecl thunk_civ_research_complete(); /* 004016fe */
+int __cdecl thunk_civ_research_cost(); /* 004030e9 */
+void __cdecl thunk_civ_research_goal_dialog(); /* 004024aa */
+void __cdecl thunk_civ_reset_city_production(); /* 00401d39 */
+void __cdecl thunk_civ_reset_spaceship(); /* 00403ac6 */
+void __cdecl thunk_civ_reset_standing_goals(); /* 004011e5 */
+void __cdecl thunk_civ_score_window_show(); /* 00402419 */
+void __cdecl thunk_civ_select_government_dialog(); /* 00403049 */
+void __cdecl thunk_civ_set_attitude(); /* 0040373d */
+void __cdecl thunk_civ_set_government(); /* 00402c89 */
+uint __cdecl thunk_civ_spaceship_exists(); /* 00403ad5 */
+uint __cdecl thunk_civ_spaceship_launched(); /* 00401f78 */
+void __cdecl thunk_civ_spaceship_lost_notify(); /* 00402248 */
+undefined4 __cdecl thunk_civ_spaceship_part_maxed(); /* 004029eb */
+void __cdecl thunk_civ_steal_advance(); /* 00401b6d */
+int __cdecl thunk_civ_total_population(); /* 004037ec */
+void __cdecl thunk_civ_turn_update_diplomacy(); /* 00403198 */
+u32 __thiscall thunk_clickmap_add(ClickMap *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4, iptr param_5,iptr param_6); /* 004010fa */
+void __thiscall thunk_clickmap_clear(ClickMapClearView *this); /* 00401825 */
+void * __thiscall thunk_clickmap_ctor(void *this); /* 0040315c */
+void __thiscall thunk_clickmap_dtor(void *this); /* 00402b0d */
+int __thiscall thunk_clickmap_hit_test(ClickMapHitTestView *this,int param_1,int param_2,iptr param_3,iptr param_4); /* 00403d00 */
+void __thiscall thunk_clickmap_remove_at(ClickMapRemoveView *this,int param_1); /* 0040114f */
+void __thiscall thunk_clickmap_remove_by_id(ClickMapRemoveView *this,int param_1); /* 00402374 */
+void __cdecl thunk_cmd_end_player_turn(); /* 00402667 */
+void __cdecl thunk_cmd_unit_skip_turn(); /* 004020d6 */
+void __thiscall thunk_combo_add_string(ComboBoxAddView *this,iptr param_1); /* 00401d20 */
+void __thiscall thunk_combo_clear(ComboBoxClearView *this); /* 004021d0 */
+void __thiscall thunk_combo_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00403828 */
+undefined4 __thiscall thunk_combo_get_cur_sel(ComboBoxGetSelView *this); /* 00401ece */
+void __thiscall thunk_combo_set_callback(ComboBoxCallbackSetView *this,iptr param_1); /* 00401e88 */
+void __thiscall thunk_combo_set_cur_sel(ComboBoxSetSelView *this,iptr param_1); /* 0040154b */
+void __thiscall thunk_combo_set_font(ComboBoxFontView *this,iptr param_1); /* 00403c6a */
+u32 __thiscall thunk_control_get_hwnd(ControlHwndView *this); /* 00403d37 */
+void __thiscall thunk_control_hide(Control *this); /* 00402982 */
+void __cdecl thunk_cosmic_editor_capture_defaults(); /* 00401a37 */
+void __thiscall thunk_cosmic_editor_dialog(C_004083b0_430 *this); /* 004034f9 */
+void __thiscall thunk_cosmic_editor_draw_bg(FrameWindow *this); /* 00402144 */
+void __cdecl thunk_cosmic_editor_fill_list(); /* 00402851 */
+void __cdecl thunk_cosmic_editor_focus_redraw(); /* 00401c0d */
+void __cdecl thunk_cosmic_editor_run(); /* 00402824 */
+void __thiscall thunk_council_draw_background(DibSurface *this); /* 00403a58 */
+void __thiscall thunk_council_draw_speech(SurfaceWindow *this,int param_1); /* 00403a12 */
+undefined4 __thiscall thunk_council_load_speech(C_004083b0_4 *this,uptr param_1); /* 00403c6f */
+void __thiscall thunk_council_move_video_to_slot(void *this,iptr param_1); /* 00403611 */
+void __cdecl thunk_council_show(); /* 00401d02 */
+void __cdecl thunk_credits_draw_scroll(); /* 00401aeb */
+void __cdecl thunk_credits_show(); /* 00401343 */
+Control * __thiscall thunk_ctrl_base_ctor(Control *this); /* 004025b3 */
+undefined4 __thiscall thunk_ctrl_base_dtor(ControlBase *this); /* 004030d0 */
+void __thiscall thunk_ctrl_destroy(Control *this); /* 00403468 */
+void __thiscall thunk_ctrl_disable(Control *this); /* 0040176c */
+undefined4 __thiscall thunk_ctrl_dtor(Control *this); /* 00401c85 */
+void __thiscall thunk_ctrl_enable(Control *this); /* 004037b5 */
+u32 __thiscall thunk_ctrl_get_id(ControlIdView *this); /* 00401154 */
+uptr __thiscall thunk_ctrl_get_parent(Control *this); /* 00401cee */
+void __thiscall thunk_ctrl_get_text(ControlTextView *this,iptr param_1); /* 00402351 */
+void __thiscall thunk_ctrl_init(Control *this,iptr param_1,u32 param_2,u32 param_3,iptr param_4); /* 004015e1 */
+u32 __thiscall thunk_ctrl_is_enabled(ControlEnabledView *this); /* 00402ad6 */
+Control * __thiscall thunk_ctrl_scalar_dtor(Control *this,uint param_1); /* 00402fbd */
+void __thiscall thunk_ctrl_set_cancel_button(Control *this); /* 004032b0 */
+void __thiscall thunk_ctrl_set_default_button(Control *this); /* 0040274d */
+void __thiscall thunk_ctrl_set_focus(ControlFocusView *this); /* 00401f28 */
+void __thiscall thunk_ctrl_set_text(ControlTextView *this,iptr param_1); /* 00402301 */
+void __thiscall thunk_ctrl_show_and_redraw(Control *this); /* 0040169a */
+Control * __thiscall thunk_ctrl_vector_dtor(Control *this,uint param_1); /* 004021b2 */
+undefined4 __cdecl thunk_dbg_pick_player(); /* 00402405 */
+void __cdecl thunk_defense_minister_draw(); /* 00403332 */
+void __cdecl thunk_defense_minister_show(); /* 004015aa */
+void __cdecl thunk_demographics_show(); /* 00402324 */
+void __cdecl thunk_destroyed_civs_clear(); /* 00401fb9 */
+void __thiscall thunk_destroyed_civs_draw_entry(WndBase *this,iptr param_1); /* 004038dc */
+void __cdecl thunk_destroyed_civs_show(); /* 004038f5 */
+void __thiscall thunk_destroyed_civs_slide_step(DestroyedCivsWindow *this,int param_1); /* 00402298 */
+void __thiscall thunk_dialog_add_button(C_0040bc40_3c *this,iptr param_1); /* 00402103 */
+uint * __thiscall thunk_dialog_add_checkbox_option(DialogOptionList *this,iptr param_1,iptr param_2,int param_3); /* 00401f46 */
+undefined4 * __thiscall thunk_dialog_add_edit_field(DialogOptionList *this,iptr param_1,iptr param_2,size_t param_3); /* 00401d1b */
+int * __thiscall thunk_dialog_add_line(DialogAddLineView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00402cca */
+uint * __thiscall thunk_dialog_add_option(DialogOptionList *this,iptr param_1,iptr param_2,uint param_3); /* 00402d0b */
+iptr * __thiscall thunk_dialog_add_sprite(DialogOptionList *this,iptr param_1,iptr param_2,iptr param_3); /* 00401c3a */
+void __thiscall thunk_dialog_close(Dialog *this); /* 00401875 */
+int __thiscall thunk_dialog_column_of_index(DialogTextView *this,int param_1); /* 00403882 */
+int __thiscall thunk_dialog_column_of_option(DialogOptionList *this,uptr param_1); /* 00401b72 */
+int __thiscall thunk_dialog_column_start_index(DialogTextView *this,int param_1); /* 004036d4 */
+undefined4 __thiscall thunk_dialog_compute_layout(DialogOptionList *this); /* 0040372e */
+int __thiscall thunk_dialog_count_group_options(DialogOptionList *this,int param_1); /* 00402b6c */
+void __thiscall thunk_dialog_create_controls(Dialog *this); /* 0040336e */
+undefined4 __thiscall thunk_dialog_create_window(DialogWindowView *this); /* 00403846 */
+Dialog * __thiscall thunk_dialog_ctor(Dialog *this,undefined4 param_1); /* 004039db */
+uint __thiscall thunk_dialog_draw_option(DialogOptionList *this,iptr param_1,int param_2); /* 004035ad */
+void __thiscall thunk_dialog_draw_option_cell(DialogOptionDrawView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5); /* 00401bc7 */
+void __thiscall thunk_dialog_draw_option_list(DialogOptionList *this); /* 00403afd */
+void __thiscall thunk_dialog_draw_option_text(DialogOptionDrawView *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4, undefined4 param_5); /* 00403625 */
+void __thiscall thunk_dialog_draw_text_default_font(DialogTextView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, undefined4 param_4); /* 00401640 */
+void __thiscall thunk_dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 param_3); /* 0040323d */
+int __thiscall thunk_dialog_draw_text_shadowed(DialogTextView *this,iptr param_1,char *param_2,int param_3,int param_4,uint param_5); /* 00401e8d */
+int __thiscall thunk_dialog_draw_wrapped_text(DialogOptionList *this,int param_1); /* 0040195b */
+undefined4 __thiscall thunk_dialog_dtor(Dialog *this); /* 004017ee */
+int __thiscall thunk_dialog_edit_row_height(C_0040bc40_28 *this); /* 00402f7c */
+void __thiscall thunk_dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_2); /* 0040227f */
+uptr __thiscall thunk_dialog_find_option(DialogOptionList *this,int param_1); /* 00403747 */
+int * __thiscall thunk_dialog_find_sprite(DialogOptionList *this,int param_1); /* 0040298c */
+void __thiscall thunk_dialog_get_edit_text(DialogEditTextView *this,int param_1,iptr param_2); /* 004011cc */
+void __thiscall thunk_dialog_init(Dialog *this,iptr param_1,iptr param_2,iptr param_3,u32 param_4); /* 004017e4 */
+void __thiscall thunk_dialog_init_default(Dialog *this); /* 0040167c */
+void __thiscall thunk_dialog_init_defaults(Dialog *this); /* 00402f68 */
+int __thiscall thunk_dialog_line_height(DialogTextView *this); /* 00402725 */
+u32 __thiscall thunk_dialog_list_row_height(DialogTextView *this); /* 00403a94 */
+void __cdecl thunk_dialog_load_button_labels(); /* 00401460 */
+void __thiscall thunk_dialog_load_game_text(Dialog *this,iptr param_1); /* 00403b25 */
+undefined4 __thiscall thunk_dialog_load_text(Dialog *this,iptr param_1,iptr param_2,undefined4 param_3); /* 00401d2a */
+undefined4 __thiscall thunk_dialog_load_text_ex(Dialog *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 00403b8e */
+void __thiscall thunk_dialog_load_text_noflags(Dialog *this,iptr param_1,iptr param_2); /* 004013e8 */
+undefined4 __thiscall thunk_dialog_load_text_section(Dialog *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5, iptr param_6,iptr param_7,uint param_8); /* 0040314d */
+undefined4 __thiscall thunk_dialog_option_at(DialogOptionList *this,int param_1); /* 00403b52 */
+undefined4 __thiscall thunk_dialog_option_at_point(DialogOptionList *this,int param_1,int param_2); /* 00401974 */
+undefined4 __thiscall thunk_dialog_option_group_index(DialogOptionList *this,uptr param_1); /* 004026e9 */
+undefined4 __thiscall thunk_dialog_option_icon_width(C_0040bc40_28 *this); /* 00402eff */
+undefined4 __thiscall thunk_dialog_option_is_checked(DialogOptionList *this,undefined4 param_1); /* 00401d3e */
+int __thiscall thunk_dialog_option_row_height(C_0040bc40_28 *this); /* 00403094 */
+void __thiscall thunk_dialog_pick_pane_at(DialogWindowView *this,int param_1,int param_2); /* 00401870 */
+void __cdecl thunk_dialog_prepend_title_label(); /* 00402b4e */
+void __thiscall thunk_dialog_render(Dialog *this); /* 004026d5 */
+void __thiscall thunk_dialog_reset_string_pool(C_0040bc40_28 *this,uint param_1); /* 0040213f */
+u32 __thiscall thunk_dialog_run_modal(Dialog *this,iptr param_1,iptr param_2); /* 00403b11 */
+Dialog * __thiscall thunk_dialog_scalar_dtor(Dialog *this,uint param_1); /* 00403918 */
+void __thiscall thunk_dialog_select_option(DialogOptionList *this,uptr param_1,int param_2); /* 004022f7 */
+void __cdecl thunk_dialog_set_colors(); /* 00403369 */
+void __thiscall thunk_dialog_set_columns(C_0040bc40_3c *this,u32 param_1); /* 0040186b */
+void __thiscall thunk_dialog_set_default_choice(DialogOptionList *this,iptr param_1); /* 004018d4 */
+void __cdecl thunk_dialog_set_default_offset(); /* 00402a4f */
+void __thiscall thunk_dialog_set_font(DialogTextView *this,iptr param_1); /* 0040199c */
+void __cdecl thunk_dialog_set_frame_tile_surface(); /* 0040359e */
+void __thiscall thunk_dialog_set_height(C_0040bc40_28 *this,u32 param_1); /* 00401e24 */
+void __thiscall thunk_dialog_set_image_zoom(DialogWindowView *this,u32 param_1); /* 00402860 */
+undefined4 __thiscall thunk_dialog_set_item_text(void *this,int param_1,iptr param_2); /* 00403bac */
+void __cdecl thunk_dialog_set_list_colors(); /* 0040192e */
+void __thiscall thunk_dialog_set_list_font(C_0040bc40_28 *this,iptr param_1); /* 004022ac */
+void __thiscall thunk_dialog_set_list_indent(C_0040bc40_28 *this,uptr param_1,iptr param_2); /* 00403742 */
+void __thiscall thunk_dialog_set_list_rows(DialogTextView *this,u32 param_1); /* 004017b2 */
+void __thiscall thunk_dialog_set_listbox(DialogTextView *this,int param_1,u32 param_2,u32 param_3); /* 004025c7 */
+void __thiscall thunk_dialog_set_option_checked(DialogOptionList *this,undefined4 param_1,int param_2); /* 00403940 */
+void __thiscall thunk_dialog_set_option_disabled(DialogOptionList *this,iptr param_1,int param_2); /* 00401915 */
+void __thiscall thunk_dialog_set_option_draw_fn(DialogOptionList *this,iptr param_1); /* 00401023 */
+void __thiscall thunk_dialog_set_position(C_0040bc40_28 *this,u32 param_1,u32 param_2); /* 004022f2 */
+void __thiscall thunk_dialog_set_select_change_fn(DialogSelChangeSetView *this,iptr param_1); /* 00403d14 */
+void __thiscall thunk_dialog_set_sprite_click_fn(DialogOptionList *this,iptr param_1); /* 00401afa */
+void __thiscall thunk_dialog_set_sprite_dblclick_fn(DialogOptionList *this,iptr param_1); /* 00403661 */
+void __thiscall thunk_dialog_set_sprite_draw_fn(C_0040bc40_28 *this,iptr param_1); /* 0040150a */
+void __thiscall thunk_dialog_set_text_color(DialogTextView *this,int param_1,int param_2,int param_3); /* 00402577 */
+void __thiscall thunk_dialog_set_title(DialogWindowView *this,iptr param_1); /* 0040228e */
+void __thiscall thunk_dialog_set_title_font(C_0040bc40_28 *this,iptr param_1); /* 00403bf7 */
+void __thiscall thunk_dialog_set_width(DialogWindowView *this,u32 param_1); /* 0040209a */
+undefined4 __cdecl thunk_diffeng_alloc_mirror(); /* 00401aaa */
+void __cdecl thunk_diffeng_copy_to_mirror(); /* 00401df2 */
+void __cdecl thunk_diffeng_free_mirror(); /* 00402b30 */
+void __cdecl thunk_diffeng_register_blocks(); /* 00401541 */
+undefined4 __cdecl thunk_diffeng_rle_decode(); /* 00401dd9 */
+int __cdecl thunk_diffeng_rle_decoded_size(); /* 00402bc1 */
+undefined4 __cdecl thunk_diffeng_rle_encode(); /* 00401cc1 */
+int __cdecl thunk_diffeng_total_size(); /* 00402bd0 */
+void __cdecl thunk_diplo_ai_meet_player(); /* 00401604 */
+void __cdecl thunk_diplo_ai_military_aid(); /* 00403b66 */
+void __cdecl thunk_diplo_ai_review_relations(); /* 00401654 */
+void __cdecl thunk_diplo_ai_seek_war_ally(); /* 0040236f */
+undefined4 __cdecl thunk_diplo_ai_swap_advances(); /* 0040206d */
+void __cdecl thunk_diplo_allies_join_war(); /* 0040191f */
+void __cdecl thunk_diplo_ally_demand_help(); /* 00401898 */
+undefined4 __cdecl thunk_diplo_ally_join_war(); /* 00402d65 */
+uint __cdecl thunk_diplo_ask_receive_emissary(); /* 00402c2f */
+undefined4 __cdecl thunk_diplo_attitude_level(); /* 004037a1 */
+void __cdecl thunk_diplo_cancel_alliance(); /* 00402e41 */
+void __cdecl thunk_diplo_civs_meet(); /* 00401479 */
+void __cdecl thunk_diplo_clear_treaty_flags(); /* 004019a6 */
+undefined4 __cdecl thunk_diplo_confirm_attack(); /* 00401cbc */
+int __cdecl thunk_diplo_count_border_intruders(); /* 004031cf */
+void __cdecl thunk_diplo_declare_war(); /* 00401d70 */
+void __cdecl thunk_diplo_espionage_incident(); /* 0040223e */
+void __cdecl thunk_diplo_eval_ai_stance(); /* 00401a14 */
+undefined4 __cdecl thunk_diplo_force_war(); /* 00403891 */
+void __cdecl thunk_diplo_form_alliance(); /* 004028b5 */
+int __cdecl thunk_diplo_gold_attitude_value(); /* 004037b0 */
+uint __cdecl thunk_diplo_is_hostile(); /* 00402572 */
+void __cdecl thunk_diplo_leader_play_reaction(); /* 00403b57 */
+void * __thiscall thunk_diplo_leader_wnd_scalar_dtor(void *this,uint param_1); /* 00402469 */
+int __cdecl thunk_diplo_patience_limit(); /* 00401a3c */
+undefined4 __cdecl thunk_diplo_senate_intervenes(); /* 00403bcf */
+void __cdecl thunk_diplo_session_reset(); /* 0040290a */
+void __cdecl thunk_diplo_set_attitude_arg(); /* 0040247d */
+void __cdecl thunk_diplo_set_treaty_flags(); /* 00403990 */
+void __cdecl thunk_diplo_sign_peace_treaty(); /* 00401eec */
+int __cdecl thunk_diplo_tech_exchange(); /* 00401f64 */
+undefined4 __cdecl thunk_diplo_wnd_close_active(); /* 004028d8 */
+void __cdecl thunk_diplo_wnd_escape_close(); /* 004028f6 */
+int __cdecl thunk_dist_from_deltas(); /* 00401672 */
+uint __cdecl thunk_dlg_check_get(); /* 004025e5 */
+void __cdecl thunk_dlg_check_set(); /* 00402397 */
+void __cdecl thunk_dlg_check_set_bool(); /* 00401352 */
+void __cdecl thunk_dlg_checks_clear(); /* 00401140 */
+undefined4 __cdecl thunk_dlg_game_text_input(); /* 00402379 */
+undefined4 __cdecl thunk_dlg_game_txt_with_unit(); /* 00401b59 */
+undefined4 __cdecl thunk_dlg_game_txt_with_unit_flags(); /* 004031ca */
+undefined4 __cdecl thunk_dlg_input_number(); /* 004025d1 */
+undefined4 __cdecl thunk_dlg_input_number_game(); /* 004012ee */
+undefined4 __thiscall thunk_dlg_load_game_section(Dialog *this,iptr param_1,undefined4 param_2); /* 004037ce */
+void __cdecl thunk_dlg_pop_parent_window(); /* 004026a8 */
+void __cdecl thunk_dlg_push_parent_window(); /* 0040295f */
+void __thiscall thunk_dlg_reset(Dialog *this,undefined4 param_1); /* 004018a2 */
+void __cdecl thunk_dlg_set_palette(); /* 00403779 */
+void __cdecl thunk_dlg_set_parent_window(); /* 004017cb */
+undefined4 __thiscall thunk_dlg_show_modal(Dialog *this,iptr param_1); /* 00401118 */
+undefined4 __cdecl thunk_dlg_text_input(); /* 00402748 */
+void __thiscall thunk_dll_free(DllHandle *this); /* 00402f8b */
+void __thiscall thunk_dll_handle_free(DllHandle *this); /* 0040220c */
+DllHandle * __thiscall thunk_dll_handle_init(DllHandle *this); /* 004031c5 */
+void __thiscall thunk_dll_handle_load(DllHandle *this,iptr param_1); /* 004030cb */
+void __thiscall thunk_edit_create(EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4); /* 004021e4 */
+void __thiscall thunk_edit_create_styled(EditControl *this,iptr param_1,undefined4 param_2,iptr param_3,iptr param_4, undefined4 param_5,undefined4 param_6); /* 00402595 */
+C_0040f380_48 * __thiscall thunk_edit_ctor(C_0040f380_48 *this); /* 00401bdb */
+void __thiscall thunk_edit_dtor(Control *this); /* 004033e6 */
+undefined4 __thiscall thunk_edit_get_sel_end(EditSelEndView *this); /* 00402c93 */
+undefined4 __thiscall thunk_edit_get_text_end(ControlTextView *this); /* 004027cf */
+void __thiscall thunk_edit_replace_sel(Control *this,iptr param_1); /* 00402310 */
+Control * __thiscall thunk_edit_scalar_dtor(Control *this,uint param_1); /* 004032e2 */
+void __thiscall thunk_edit_set_callback(EditCallbackSetView *this,iptr param_1); /* 0040270c */
+void __thiscall thunk_edit_set_caret(ControlTextView *this,undefined4 param_1); /* 004028dd */
+void __thiscall thunk_edit_set_change_callback(EditChangeSetView *this,iptr param_1); /* 0040383c */
+void __thiscall thunk_edit_set_max_len(EditMaxLenView *this,undefined4 param_1); /* 004010b4 */
+Control * __thiscall thunk_edit_vector_dtor(Control *this,uint param_1); /* 00402c66 */
+uint __cdecl thunk_editor_check_city_name(); /* 00403765 */
+int __cdecl thunk_editor_clamp_value(); /* 00401474 */
+undefined4 __cdecl thunk_editor_create_scenario_folder(); /* 00402cb6 */
+void __cdecl thunk_editor_toggle_scenario_flag(); /* 00401d93 */
+C_004083b0_a28 * __thiscall thunk_editor_wnd_ctor(C_004083b0_a28 *this); /* 004014f6 */
+void __thiscall thunk_editor_wnd_dtor(void *this); /* 00402aea */
+void __cdecl thunk_endgame_defeat_movie(); /* 00401172 */
+void __cdecl thunk_endgame_spaceship_arrival(); /* 0040222a */
+void __cdecl thunk_err_dump_text_file(); /* 004013de */
+int __cdecl thunk_err_register_cleanup_fn(); /* 004029af */
+void __cdecl thunk_error_report(); /* 00402a72 */
+undefined4 __thiscall thunk_event_run_actions(Dialog *this,iptr param_1); /* 004035e4 */
+void * __thiscall thunk_events_alloc(ScenarioEvents *this); /* 00401dbb */
+undefined4 __thiscall thunk_events_check_city_taken(ScenarioEvents *this,iptr param_1,iptr param_2,iptr param_3); /* 00402275 */
+undefined4 __thiscall thunk_events_check_negotiation(ScenarioEvents *this,iptr param_1,iptr param_2); /* 00403a4e */
+undefined4 __thiscall thunk_events_check_random_turn(ScenarioEvents *this,undefined4 param_1); /* 00401866 */
+undefined4 __thiscall thunk_events_check_received_tech(ScenarioEvents *this); /* 00403b98 */
+undefined4 __thiscall thunk_events_check_turn(ScenarioEvents *this,int param_1); /* 00402225 */
+undefined4 __thiscall thunk_events_check_turn_interval(ScenarioEvents *this,int param_1); /* 004038c8 */
+void __cdecl thunk_events_compact(); /* 0040327e */
+void __cdecl thunk_events_copy(); /* 00401b5e */
+ScenarioEvents * __thiscall thunk_events_ctor(ScenarioEvents *this,undefined4 param_1); /* 00403242 */
+void __thiscall thunk_events_dtor(C_0040bc40_28 *this); /* 004024f5 */
+uint __cdecl thunk_events_editor_edit_action(); /* 004015d7 */
+undefined4 __cdecl thunk_events_editor_edit_trigger(); /* 00401ff5 */
+void __cdecl thunk_events_editor_fill_actions(); /* 004038f0 */
+void __cdecl thunk_events_editor_fill_triggers(); /* 004012df */
+void __cdecl thunk_events_editor_focus_redraw(); /* 00402ed2 */
+void __cdecl thunk_events_editor_help_action(); /* 00403760 */
+void __cdecl thunk_events_editor_help_trigger(); /* 00401ac8 */
+void __cdecl thunk_events_editor_open(); /* 004039ea */
+undefined4 __cdecl thunk_events_editor_pick_item(); /* 00402865 */
+void __cdecl thunk_events_editor_update_buttons(); /* 00401983 */
+void __thiscall thunk_events_reset(ScenarioEvents *this,undefined4 param_1); /* 00403436 */
+undefined4 __cdecl thunk_events_write_file(); /* 0040318e */
+void __cdecl thunk_file_copy(); /* 00402eaa */
+uint __cdecl thunk_file_exists(); /* 00401802 */
+undefined1 * __cdecl thunk_file_find_fallback_drive(); /* 00402be9 */
+undefined1 * __cdecl thunk_file_get_fallback_drive(); /* 004019e7 */
+undefined4 __thiscall thunk_file_map_close(FileObject *this); /* 00402b8f */
+undefined4 __thiscall thunk_file_obj_create(FileObject *this,iptr param_1); /* 00402eeb */
+undefined4 __thiscall thunk_file_obj_get_size(FileObject *this); /* 00403cfb */
+undefined4 __thiscall thunk_file_obj_open(FileObject *this,iptr param_1); /* 00403062 */
+void __thiscall thunk_file_obj_read(FileObject *this,iptr param_1,undefined4 param_2); /* 00403963 */
+undefined4 __thiscall thunk_file_obj_seek_cur(FileSeekView *this,undefined4 param_1); /* 0040232e */
+void __thiscall thunk_file_obj_write(FileObject *this,iptr param_1,undefined4 param_2); /* 004034f4 */
+FILE * __cdecl thunk_file_open_path(); /* 0040281f */
+undefined4 __cdecl thunk_file_require_cdrom(); /* 00401f9b */
+undefined4 __cdecl thunk_file_resolve_path(); /* 00401064 */
+u32 __thiscall thunk_font_cached_height(GameFont *this); /* 00403cec */
+GameFont * __thiscall thunk_font_destroy(GameFont *this); /* 004029d2 */
+u32 __thiscall thunk_font_get_handle(GameFont *this); /* 00403c5b */
+u32 __thiscall thunk_font_get_hfont(GameFont *this); /* 004030a3 */
+GameFont * __thiscall thunk_font_init(GameFont *this,undefined4 param_1,undefined4 param_2); /* 004017a8 */
+GameFont * __thiscall thunk_font_init_empty(GameFont *this); /* 00401901 */
+GameFont * __thiscall thunk_font_init_styled(GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00401c7b */
+undefined4 __thiscall thunk_font_line_spacing(GameFont *this); /* 00403819 */
+void __thiscall thunk_font_set(GameFont *this,undefined4 param_1,iptr param_2); /* 00402a27 */
+void __thiscall thunk_font_set_styled(GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004027b1 */
+undefined4 __thiscall thunk_font_text_width(GameFont *this,iptr param_1); /* 00402b21 */
+void __cdecl thunk_foreign_minister_show(); /* 00403bed */
+void __cdecl thunk_frame_set_border_tile(); /* 004024fa */
+void __cdecl thunk_frame_texture_free(); /* 00401ff0 */
+void __cdecl thunk_frame_texture_load(); /* 00402b35 */
+void __thiscall thunk_frame_wnd_add_caption_button(C_004083b0_208 *this,iptr param_1,undefined4 param_2); /* 00402932 */
+void __thiscall thunk_frame_wnd_close(DibSurface *this); /* 004029fa */
+void __thiscall thunk_frame_wnd_create(FrameWindow *this,int param_1,uint param_2,int param_3,int param_4,int param_5, int param_6,u32 param_7,u32 param_8,u32 param_9); /* 00402ac7 */
+SurfaceWindow * __thiscall thunk_frame_wnd_ctor(SurfaceWindow *this); /* 00402608 */
+void __thiscall thunk_frame_wnd_destroy_caption_buttons(C_004083b0_4 *this); /* 004010b9 */
+void __thiscall thunk_frame_wnd_draw_caption(FrameWindow *this); /* 00401104 */
+void __thiscall thunk_frame_wnd_dtor(DibSurface *this); /* 00401933 */
+void __thiscall thunk_frame_wnd_layout(FrameWindow *this); /* 00403c83 */
+void __thiscall thunk_frame_wnd_set_caption(FrameWindow *this,iptr param_1); /* 00401122 */
+void __cdecl thunk_game_accelerated_start(); /* 00402a22 */
+void __cdecl thunk_game_advance_turn(); /* 00402180 */
+void __cdecl thunk_game_calc_human_wonder_range(); /* 004032f6 */
+undefined4 __cdecl thunk_game_check_retirement(); /* 00401046 */
+uint __cdecl thunk_game_handle_game_over(); /* 00402e9b */
+void __cdecl thunk_game_init_new(); /* 0040284c */
+void __cdecl thunk_game_join_dialog(); /* 004028bf */
+int __cdecl thunk_game_load_dialog(); /* 00403acb */
+void __cdecl thunk_game_main(); /* 00403026 */
+void __cdecl thunk_game_main_entry(); /* 004018b1 */
+void __cdecl thunk_game_play_loop(); /* 00402ec8 */
+void __cdecl thunk_game_player_move_loop(); /* 00402ba8 */
+undefined4 __cdecl thunk_game_profile_popup(); /* 00403030 */
+void __cdecl thunk_game_quit_or_retire(); /* 00402cb1 */
+void __cdecl thunk_game_save_dialog(); /* 004035b7 */
+void __cdecl thunk_game_session_end(); /* 004010d7 */
+uint __cdecl thunk_game_turn_start_popups(); /* 004030d5 */
+int __cdecl thunk_game_turn_to_year(); /* 00403418 */
+void __cdecl thunk_gfx_copy_rect_clipped(); /* 00403bfc */
+void __cdecl thunk_gfx_copy_rect_same_pos(); /* 004035ee */
+void __cdecl thunk_gfx_copy_rect_xywh(); /* 00402081 */
+undefined4 __cdecl thunk_gfx_dissolve_blit(); /* 00401e79 */
+void __cdecl thunk_gfx_draw_bevel_rect(); /* 00401c53 */
+void __cdecl thunk_gfx_draw_box_ltrb(); /* 00401b86 */
+void __cdecl thunk_gfx_draw_city(); /* 00402a45 */
+void __cdecl thunk_gfx_draw_frame_rect(); /* 00402dec */
+void __cdecl thunk_gfx_draw_hline(); /* 00402621 */
+void __cdecl thunk_gfx_draw_line_color(); /* 00403017 */
+void __cdecl thunk_gfx_draw_rect_frame(); /* 00401db1 */
+undefined4 __cdecl thunk_gfx_draw_text(); /* 00401e0b */
+void __cdecl thunk_gfx_draw_text_centered(); /* 00401677 */
+undefined4 __cdecl thunk_gfx_draw_text_right(); /* 00403607 */
+void __cdecl thunk_gfx_draw_tiled_frame(); /* 00401e47 */
+void __cdecl thunk_gfx_draw_unit(); /* 00402c4d */
+void __cdecl thunk_gfx_draw_vline(); /* 004016ae */
+void __cdecl thunk_gfx_fill_rect(); /* 004011b8 */
+void __cdecl thunk_gfx_fill_rect_xywh(); /* 004021ad */
+void __cdecl thunk_gfx_fill_surface(); /* 00402e32 */
+int __cdecl thunk_gfx_load_bmp_640x480(); /* 0040111d */
+void __cdecl thunk_gfx_load_game_sprites(); /* 00402c25 */
+void __cdecl thunk_gfx_reset_zoom_scale(); /* 004023d3 */
+int __cdecl thunk_gfx_save_bmp_640x480(); /* 004021c1 */
+void __cdecl thunk_gfx_select_zoom_font(); /* 00401c12 */
+void __cdecl thunk_gfx_set_draw_target(); /* 00402be4 */
+void __cdecl thunk_gfx_set_zoom_scale(); /* 00403350 */
+void __cdecl thunk_gfx_target_fill_rect(); /* 0040137f */
+void __cdecl thunk_gfx_target_frame_rect(); /* 00403a6c */
+int __cdecl thunk_gfx_tile_fill(); /* 00402c9d */
+int __cdecl thunk_gfx_zoom_scale(); /* 00401e83 */
+int __cdecl thunk_gfx_zoom_scale_round(); /* 00401ce4 */
+void __cdecl thunk_hall_of_fame_add_entry(); /* 00401de8 */
+void __cdecl thunk_hall_of_fame_clear(); /* 0040168b */
+void __cdecl thunk_hall_of_fame_load(); /* 00403229 */
+iptr __cdecl thunk_hall_of_fame_show(); /* 0040250e */
+void __cdecl thunk_historian_report_show(); /* 00403cce */
+void __thiscall thunk_hotspot_add_rect(ClickMap *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00401c49 */
+void __thiscall thunk_hotspot_create(C_0040f380_40 *this,iptr param_1,iptr param_2,iptr param_3); /* 0040354e */
+Control * __thiscall thunk_hotspot_ctor(Control *this); /* 00402923 */
+void __thiscall thunk_hotspot_dtor(Hotspot *this); /* 004024a0 */
+Hotspot * __thiscall thunk_hotspot_scalar_dtor(Hotspot *this,uint param_1); /* 00401113 */
+void __thiscall thunk_hotspot_set_click_callback(HotspotClickSetView *this,iptr param_1); /* 004017df */
+void __thiscall thunk_hotspot_set_dblclick_callback(HotspotDblClickSetView *this,iptr param_1); /* 004023b5 */
+Hotspot * __thiscall thunk_hotspot_vector_dtor(Hotspot *this,uint param_1); /* 00403684 */
+void __cdecl thunk_impr_editor_load_controls(); /* 00403c15 */
+void __cdecl thunk_impr_editor_redraw(); /* 00401302 */
+void __cdecl thunk_impr_editor_run(); /* 00401e6a */
+int __cdecl thunk_impr_editor_save_controls(); /* 004030fd */
+void __cdecl thunk_input_flush_events(); /* 00402027 */
+int __cdecl thunk_int_clamp(); /* 00402d56 */
+int __cdecl thunk_int_shift_signed(); /* 0040112c */
+void __cdecl thunk_int_swap(); /* 0040255e */
+void __cdecl thunk_intel_report_end_modal(); /* 00403783 */
+void __cdecl thunk_intel_report_show(); /* 00402b7b */
+char * __cdecl thunk_label_string(); /* 00403387 */
+void __cdecl thunk_labels_free(); /* 004036d9 */
+int __cdecl thunk_labels_load(); /* 00402720 */
+uint __cdecl thunk_landmass_borders_body(); /* 00401771 */
+int __cdecl thunk_landmass_count_bordering(); /* 004038aa */
+void __cdecl thunk_leaders_fixup_names(); /* 004025fe */
+void __cdecl thunk_leaders_reset_custom_names(); /* 004037d8 */
+void __thiscall thunk_listbox_add_string(ListBoxAddView *this,iptr param_1); /* 004032ab */
+void __thiscall thunk_listbox_clear(ListBoxClearView *this); /* 004033b9 */
+void __thiscall thunk_listbox_create(Control *this,iptr param_1,undefined4 param_2,iptr param_3); /* 00403a3f */
+void __thiscall thunk_listbox_dtor(ListBoxControl *this); /* 00403ca6 */
+undefined4 __thiscall thunk_listbox_get_cur_sel(ListBoxGetSelView *this); /* 00402545 */
+void __thiscall thunk_listbox_get_sel_text(ListBoxSelTextView *this,iptr param_1); /* 0040141a */
+void __thiscall thunk_listbox_get_text(ListBoxTextView *this,undefined4 param_1,iptr param_2); /* 00401f82 */
+ListBoxControl * __thiscall thunk_listbox_scalar_dtor(ListBoxControl *this,uint param_1); /* 00401c62 */
+void __thiscall thunk_listbox_set_cur_sel(ListBoxSetSelView *this,undefined4 param_1); /* 00402135 */
+void __thiscall thunk_listbox_set_dblclick_callback(ListBoxDblClickSetView *this,iptr param_1); /* 00402da6 */
+void __thiscall thunk_listbox_set_font(ListBoxFontView *this,iptr param_1); /* 004032ec */
+void __thiscall thunk_listbox_set_select_callback(ListBoxSelectSetView *this,iptr param_1); /* 004033a5 */
+undefined4 __cdecl thunk_load_game_pick_civ(); /* 00402db0 */
+uint * __thiscall thunk_lobby_add_player_entry(LobbyList *this,iptr param_1,uint param_2); /* 00402ee1 */
+void __thiscall thunk_lobby_add_waiting_entry(LobbyList *this); /* 0040157d */
+void __thiscall thunk_lobby_clear_player_list(LobbyList *this); /* 004022fc */
+iptr __thiscall thunk_lobby_entry_neighbor(LobbyList *this,iptr param_1); /* 004028a1 */
+uptr __thiscall thunk_lobby_find_entry_by_id(LobbyList *this,int param_1); /* 00403a44 */
+undefined4 __thiscall thunk_lobby_find_waiting_entry(LobbyList *this); /* 004039f9 */
+undefined4 __thiscall thunk_lobby_host_wait_players(LobbyList *this,undefined4 param_1,int param_2); /* 0040297d */
+LobbyListCtorView * __thiscall thunk_lobby_list_ctor(LobbyListCtorView *this); /* 004031b6 */
+void __thiscall thunk_lobby_list_dtor(void *this); /* 00402707 */
+void __cdecl thunk_lobby_refresh_player_list(); /* 00401d9d */
+void __thiscall thunk_lobby_remove_entry(LobbyList *this,void *param_1); /* 00403954 */
+int __thiscall thunk_lobby_slot_for_entry_id(LobbyList *this,int param_1); /* 0040353f */
+uint __cdecl thunk_main_frame_create(); /* 0040244b */
+void __cdecl thunk_main_frame_destroy(); /* 00403058 */
+undefined4 __cdecl thunk_map_animate_explosion(); /* 004015c8 */
+void __cdecl thunk_map_animate_nuke(); /* 0040321a */
+void __cdecl thunk_map_animate_unit_move(); /* 00403422 */
+void __cdecl thunk_map_build_coarse_connectivity(); /* 00403305 */
+void __cdecl thunk_map_display_disable(); /* 0040163b */
+int __cdecl thunk_map_distance(); /* 00403652 */
+undefined4 __cdecl thunk_map_distance_diag(); /* 0040377e */
+int __cdecl thunk_map_dx_wrapped(); /* 00402b49 */
+void __cdecl thunk_map_generate(); /* 00401a2d */
+int __cdecl thunk_map_half_manhattan(); /* 004021da */
+undefined4 __cdecl thunk_map_load_dialog(); /* 00402c39 */
+int __cdecl thunk_map_path_length(); /* 004036b1 */
+iptr __cdecl thunk_map_path_next_dir(); /* 004028b0 */
+void __cdecl thunk_map_rebuild_unit_flags(); /* 0040180c */
+void __cdecl thunk_map_redraw_all_views(); /* 0040337d */
+void __cdecl thunk_map_redraw_area_all_views(); /* 0040184d */
+void __cdecl thunk_map_redraw_combat_tiles(); /* 00402022 */
+void __cdecl thunk_map_redraw_neighbors_all_views(); /* 00403a3a */
+void __cdecl thunk_map_redraw_tile_all_views(); /* 00401a4b */
+void __cdecl thunk_map_reveal_adjacent_units(); /* 00402e55 */
+undefined4 __cdecl thunk_map_road_connection(); /* 00403481 */
+uint __cdecl thunk_map_set_cursor_pos(); /* 0040209f */
+undefined4 __thiscall thunk_map_view_zoom_scale_round(MapViewZoomView *this,undefined4 param_1); /* 00402365 */
+void __cdecl thunk_map_window_click(); /* 0040200e */
+void __thiscall thunk_mapview_apply_zoom(C_004083b0_430 *this); /* 00403346 */
+void __thiscall thunk_mapview_blit_tile_radius(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00403832 */
+void __cdecl thunk_mapview_calc_rect(); /* 00403102 */
+void __cdecl thunk_mapview_cancel_drag(); /* 0040132a */
+void __thiscall thunk_mapview_center_on(C_004083b0_430 *this,iptr param_1,undefined4 param_2); /* 00403404 */
+void __thiscall thunk_mapview_create(C_004083b0_430 *this); /* 00402d7e */
+void __thiscall thunk_mapview_draw_city_names(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3); /* 004035d5 */
+void __thiscall thunk_mapview_draw_tile(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3); /* 00402068 */
+void __cdecl thunk_mapview_draw_tile_number(); /* 00403b1b */
+void __thiscall thunk_mapview_draw_tile_terrain(C_004083b0_430 *this,iptr param_1,int param_2,int param_3,iptr param_4,int param_5, int param_6,int param_7,iptr param_8); /* 004024e6 */
+void __thiscall thunk_mapview_init_state(C_004083b0_430 *this,u32 param_1); /* 004037a6 */
+void __thiscall thunk_mapview_redraw(C_004083b0_430 *this,iptr param_1,int param_2); /* 00401f32 */
+void __thiscall thunk_mapview_redraw_area(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3, iptr param_4,int param_5); /* 00402b9e */
+void __thiscall thunk_mapview_redraw_cursor_tile(C_004083b0_430 *this); /* 004037f1 */
+undefined4 __thiscall thunk_mapview_screen_to_tile(MapViewHitView *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4); /* 00402b2b */
+int __thiscall thunk_mapview_scroll_if_near_edge(C_004083b0_430 *this,int param_1,int param_2); /* 0040283d */
+undefined4 __thiscall thunk_mapview_tile_in_view(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2); /* 0040261c */
+void __thiscall thunk_mapview_tile_radius_rect(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,int param_3,iptr param_4); /* 00401d48 */
+void __thiscall thunk_mapview_tile_to_screen(C_004083b0_430 *this,iptr param_1,iptr param_2,int param_3,int param_4); /* 004018de */
+void __thiscall thunk_mapview_update_title(FrameWindow *this); /* 00402b94 */
+undefined4 __thiscall thunk_mapview_zoom_scale(C_004083b0_430 *this,undefined4 param_1); /* 004018bb */
+uint __cdecl thunk_mapviews_ensure_visible(); /* 004014b5 */
+void __cdecl thunk_mapviews_redraw_cursor(); /* 00402b44 */
+void __cdecl thunk_mapviews_reset_cursor(); /* 00402b12 */
+undefined4 __cdecl thunk_mapviews_tile_visible(); /* 0040256d */
+undefined4 __cdecl thunk_mem_check_available(); /* 004031a2 */
+int __cdecl thunk_mem_checksum(); /* 00403ae4 */
+undefined4 __cdecl thunk_mem_free_handle(); /* 00402d60 */
+int __cdecl thunk_mem_handle_alloc_tracked(); /* 00401dc0 */
+undefined4 __cdecl thunk_mem_lock_handle(); /* 004013b1 */
+undefined4 __cdecl thunk_mem_unlock_handle(); /* 004010aa */
+int __cdecl thunk_memblock_alloc(); /* 0040389b */
+undefined4 __cdecl thunk_memblock_alloc_checked(); /* 0040363e */
+MemBlock * __thiscall thunk_memblock_ctor(MemBlock *this); /* 004033be */
+undefined4 __cdecl thunk_memblock_ensure_locked(); /* 00402ea0 */
+iptr __cdecl thunk_memblock_free(); /* 00401ab4 */
+bool __cdecl thunk_memblock_init(); /* 00402c07 */
+undefined4 * __thiscall thunk_menu_add_item(GameMenu *this,undefined4 param_1,undefined4 param_2,iptr param_3,size_t param_4); /* 00402d10 */
+undefined4 * __thiscall thunk_menu_add_menu(GameMenu *this,undefined4 param_1,char *param_2); /* 0040117c */
+void __thiscall thunk_menu_apply_item_checked(GameMenu *this,undefined4 param_1); /* 00403166 */
+undefined4 __thiscall thunk_menu_apply_item_enabled(GameMenu *this,undefined4 param_1); /* 00401924 */
+void __thiscall thunk_menu_attach_to_window(GameMenu *this,C_00408010_b8 *param_1); /* 004024d2 */
+void __thiscall thunk_menu_clear_lists(GameMenu *this); /* 00402509 */
+void __cdecl thunk_menu_command(); /* 0040385a */
+GameMenu * __thiscall thunk_menu_ctor(GameMenu *this,undefined4 param_1); /* 00403ab2 */
+void __thiscall thunk_menu_dtor(GameMenu *this); /* 004024be */
+void __cdecl thunk_menu_find_city(); /* 00401618 */
+iptr __thiscall thunk_menu_find_item(GameMenu *this,int param_1); /* 004039ef */
+undefined4 __thiscall thunk_menu_find_menu(GameMenu *this,int param_1); /* 00401596 */
+void __cdecl thunk_menu_game_options(); /* 004014c4 */
+u32 __thiscall thunk_menu_get_hmenu(MenuHandleView *this); /* 00401992 */
+void __cdecl thunk_menu_graphic_options(); /* 00401eba */
+undefined4 __thiscall thunk_menu_id_at_visible_index(GameMenu *this,int param_1); /* 00402bbc */
+undefined4 __thiscall thunk_menu_item_id_at_visible_index(GameMenu *this,undefined4 param_1,int param_2); /* 00402d4c */
+int __thiscall thunk_menu_item_visible_index(GameMenu *this,iptr param_1); /* 0040381e */
+void __cdecl thunk_menu_load_game(); /* 004036a7 */
+void __cdecl thunk_menu_message_options(); /* 00403224 */
+void __cdecl thunk_menu_multiplayer_options(); /* 004026ad */
+void __thiscall thunk_menu_native_build(GameMenu *this,iptr param_1); /* 00403251 */
+void __thiscall thunk_menu_native_check(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004027c0 */
+void __thiscall thunk_menu_native_delete(GameMenu *this,undefined4 param_1,undefined4 param_2); /* 00403c97 */
+undefined4 __thiscall thunk_menu_native_enable(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00402a86 */
+void __thiscall thunk_menu_native_insert(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 00402e28 */
+void __thiscall thunk_menu_native_set_text(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3); /* 004017bc */
+void __thiscall thunk_menu_rebuild(GameMenu *this,iptr param_1); /* 00402095 */
+void __thiscall thunk_menu_remove_item(GameMenu *this,undefined4 param_1); /* 00402950 */
+void __thiscall thunk_menu_reset(GameMenu *this,undefined4 param_1); /* 00401faa */
+void __cdecl thunk_menu_revolution(); /* 00402ad1 */
+void __thiscall thunk_menu_set_command_handler(GameMenu *this,iptr param_1); /* 004027e8 */
+void __thiscall thunk_menu_set_item_checked(GameMenu *this,undefined4 param_1,int param_2); /* 00403b89 */
+GameMenu * __thiscall thunk_menu_set_item_enabled(GameMenu *this,undefined4 param_1,GameMenu *param_2); /* 00401cc6 */
+void __thiscall thunk_menu_set_item_hidden(GameMenu *this,undefined4 param_1,int param_2); /* 0040328d */
+void __thiscall thunk_menu_set_item_text(GameMenu *this,undefined4 param_1,iptr param_2); /* 00403602 */
+void __thiscall thunk_menu_set_menu_enabled(GameMenu *this,undefined4 param_1,undefined4 param_2); /* 00403c8d */
+void __cdecl thunk_menu_show_hidden_terrain(); /* 00401fa5 */
+void __thiscall thunk_menu_storage_reinit(GameMenu *this,uint param_1); /* 00402f90 */
+void __cdecl thunk_menu_update_states(); /* 00402b3a */
+int __thiscall thunk_menu_visible_index(GameMenu *this,uptr param_1); /* 00403913 */
+void __cdecl thunk_minimap_calc_rect(); /* 00402527 */
+void __cdecl thunk_minimap_draw_view_rect(); /* 00402a95 */
+void __cdecl thunk_minimap_redraw(); /* 00402581 */
+undefined4 __cdecl thunk_minimap_tile_color(); /* 004028d3 */
+void __cdecl thunk_minimap_tile_to_screen(); /* 00401726 */
+void __cdecl thunk_mp_cmd_change_timer(); /* 00402b03 */
+void __cdecl thunk_mp_mouse_watchdog_start(); /* 004010c3 */
+void __cdecl thunk_mp_mouse_watchdog_stop(); /* 00401b4a */
+void __cdecl thunk_mp_mouse_watchdog_tick(); /* 00401451 */
+void __cdecl thunk_mp_release_mouse_capture(); /* 0040352b */
+void __cdecl thunk_mp_turn_timer_resume(); /* 0040229d */
+void __cdecl thunk_mp_turn_timer_start(); /* 00401622 */
+void __cdecl thunk_mp_turn_timer_stop(); /* 00402c6b */
+void __cdecl thunk_music_play_track(); /* 00403319 */
+void __thiscall thunk_net_add_player(NetSession *this,iptr param_1); /* 0040133e */
+void __cdecl thunk_net_apply_tile_updates(); /* 00402fc7 */
+void __cdecl thunk_net_batch_add(); /* 0040212b */
+void __cdecl thunk_net_batch_begin(); /* 0040360c */
+void __cdecl thunk_net_batch_flush(); /* 00401794 */
+undefined4 __cdecl thunk_net_check_lost_connections(); /* 004012b2 */
+undefined4 __cdecl thunk_net_choose_civ_dialog(); /* 00403445 */
+undefined4 __cdecl thunk_net_client_transfer_server(); /* 00401852 */
+undefined4 __cdecl thunk_net_client_turn_loop(); /* 0040159b */
+int __cdecl thunk_net_drop_flagged_players(); /* 00402a7c */
+void __cdecl thunk_net_fill_game_info(); /* 0040123f */
+void __thiscall thunk_net_free_game_list(void *this); /* 004021a8 */
+void __thiscall thunk_net_game_list_add(NetSession *this,iptr param_1); /* 0040110e */
+uint * __thiscall thunk_net_gamelist_add_entry(NetGameListAddView *this,iptr param_1,uint param_2); /* 004010cd */
+void __thiscall thunk_net_gamelist_clear(NetGameList *this); /* 0040124e */
+void __thiscall thunk_net_gamelist_kill_timer(NetGameListTimerView *this); /* 004024eb */
+void __cdecl thunk_net_gamelist_refresh(); /* 00402077 */
+void __thiscall thunk_net_gamelist_update_details(NetGameList *this); /* 00402d1f */
+void __cdecl thunk_net_heartbeat_check(); /* 00402c02 */
+void __cdecl thunk_net_heartbeat_send(); /* 004029c8 */
+void __cdecl thunk_net_host_quit_handoff(); /* 00402afe */
+void __cdecl thunk_net_host_turn_loop(); /* 004028ce */
+undefined1 __thiscall thunk_net_init_transport(void *this,undefined4 param_1,int param_2); /* 00401fd7 */
+undefined1 __thiscall thunk_net_is_host(void *this); /* 00402c34 */
+undefined4 __cdecl thunk_net_lock_map(); /* 00401f2d */
+void * __cdecl thunk_net_msg_build_packet(); /* 00403977 */
+NetMsgHeader * __thiscall thunk_net_msg_header_init(NetMsgHeader *this,u32 param_1); /* 0040182f */
+NetMsgHeader * __thiscall thunk_net_msg_init_header(NetMsgHeader *this,u32 param_1,iptr param_2); /* 00402aae */
+undefined4 __thiscall thunk_net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint param_3); /* 0040371f */
+void __thiscall thunk_net_msgq_reset(NetMsgQueue *this); /* 004033aa */
+void __thiscall thunk_net_process_messages(NetSession *this,int param_1,int param_2); /* 0040181b */
+void __thiscall thunk_net_remove_player(NetSession *this,int param_1); /* 00401e6f */
+void __cdecl thunk_net_reset_error_counts(); /* 004021f3 */
+void __cdecl thunk_net_reset_msg_counts(); /* 00401f19 */
+int __cdecl thunk_net_send_message(); /* 004024b9 */
+void __cdecl thunk_net_send_rules_tables(); /* 00402400 */
+int __cdecl thunk_net_send_state_diff(); /* 004029e6 */
+void __cdecl thunk_net_send_text_args(); /* 00401a05 */
+void __thiscall thunk_net_session_clear(void *this); /* 00403297 */
+NetSessionCtorView * __thiscall thunk_net_session_ctor(NetSessionCtorView *this); /* 004039b3 */
+void __thiscall thunk_net_session_dtor(void *this); /* 00402360 */
+void __thiscall thunk_net_session_shutdown(void *this,int param_1); /* 00401b7c */
+void __cdecl thunk_net_unlock_map(); /* 004026c6 */
+void __thiscall thunk_palette_get_entry(GamePalette *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4); /* 00402036 */
+GamePalette * __thiscall thunk_palette_get_logpalette(GamePalette *this); /* 004033fa */
+void __cdecl thunk_palette_set_nocollapse_all(); /* 00401e33 */
+void __thiscall thunk_parley_add_side_dialog(C_004083b0_430 *this,int param_1,int param_2); /* 00403300 */
+void __cdecl thunk_parley_advance_list_on_scroll(); /* 00401bd1 */
+void __thiscall thunk_parley_build_city_list(C_004083b0_11c *this,int param_1,int param_2); /* 004016e0 */
+void __thiscall thunk_parley_build_unit_list(C_004083b0_11c *this,int param_1,int param_2); /* 00401109 */
+int __cdecl thunk_parley_city_list_hit_test(); /* 00403170 */
+void __cdecl thunk_parley_city_list_scroll(); /* 00403a1c */
+void __cdecl thunk_parley_civ_list_scroll(); /* 00401cb2 */
+void __thiscall thunk_parley_create_city_list_pane(C_004083b0_11c *this,iptr param_1,int param_2,undefined4 param_3); /* 00401f05 */
+void __cdecl thunk_parley_draw_advance_list(); /* 00403bf2 */
+void __cdecl thunk_parley_draw_city_list(); /* 00401bfe */
+void __cdecl thunk_parley_draw_city_sprite(); /* 00402b17 */
+void __cdecl thunk_parley_draw_civ_list(); /* 00402018 */
+void __cdecl thunk_parley_draw_unit_list(); /* 00401a78 */
+void __cdecl thunk_parley_execute_transaction(); /* 0040253b */
+void __thiscall thunk_parley_fill_background(C_004083b0_4 *this,iptr param_1,int param_2); /* 004017f8 */
+iptr __thiscall thunk_parley_find_city_by_id(C_004083b0_4 *this,int param_1); /* 004039ae */
+iptr __thiscall thunk_parley_find_unit_by_id(C_004083b0_4 *this,int param_1); /* 0040321f */
+void __thiscall thunk_parley_set_mode_sides(C_004083b0_4 *this,int param_1); /* 004026df */
+void __cdecl thunk_parley_sort_by_city_clicked(); /* 00402761 */
+void __cdecl thunk_parley_sort_by_unit_clicked(); /* 00402473 */
+void __thiscall thunk_parley_sort_city_list(void *this,int param_1,int param_2,int param_3); /* 00401ab9 */
+void __thiscall thunk_parley_sort_unit_list(C_004083b0_4 *this,int param_1,int param_2,iptr param_3); /* 00402f86 */
+void __thiscall thunk_parley_sort_units_by_city(void *this,int param_1,int param_2,iptr param_3); /* 00401357 */
+void __cdecl thunk_parley_unit_list_on_scroll(); /* 00402487 */
+void __thiscall thunk_parley_update_buttons(C_004083b0_430 *this); /* 004036a2 */
+void __thiscall thunk_parley_wnd_build_title(ParleyTitleView *this); /* 00401186 */
+void __thiscall thunk_parley_wnd_calc_layout(C_004083b0_174 *this); /* 0040129e */
+void __thiscall thunk_parley_wnd_calc_rect(C_004083b0_174 *this); /* 00403cd3 */
+void __cdecl thunk_parley_wnd_close(); /* 004029b9 */
+C_004083b0_430 * __thiscall thunk_parley_wnd_ctor(C_004083b0_430 *this,iptr param_1); /* 00401285 */
+void __thiscall thunk_parley_wnd_destroy_controls(C_004083b0_430 *this); /* 00403945 */
+void __thiscall thunk_parley_wnd_dtor(C_004083b0_430 *this); /* 00401163 */
+void __thiscall thunk_parley_wnd_open(C_004083b0_430 *this,iptr param_1,u32 param_2); /* 004019ba */
+void __thiscall thunk_parley_wnd_sync_sides(C_004083b0_430 *this); /* 0040170d */
+void __cdecl thunk_password_dialog_set_title(); /* 004032c9 */
+void __cdecl thunk_passwords_refresh_flags(); /* 00401ec9 */
+void __cdecl thunk_passwords_reset(); /* 004033c3 */
+void __cdecl thunk_passwords_scramble(); /* 004025e0 */
+void __cdecl thunk_passwords_unscramble(); /* 004011bd */
+void __cdecl thunk_path_default_extension(); /* 00401ffa */
+char * __cdecl thunk_path_join_upper(); /* 004020d1 */
+void __cdecl thunk_path_set_extension(); /* 00403d19 */
+void __thiscall thunk_pedia_add_link(C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,undefined4 param_4, undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8); /* 004022b1 */
+void __thiscall thunk_pedia_clear_links(C_004083b0_4 *this); /* 00403710 */
+undefined4 __cdecl thunk_pedia_close(); /* 00401dcf */
+void __thiscall thunk_pedia_draw_advance_page(C_004083b0_a28 *this); /* 0040299b */
+void __thiscall thunk_pedia_draw_advance_tree(C_004083b0_a28 *this); /* 004013d4 */
+void __thiscall thunk_pedia_draw_frame(C_004083b0_61c *this); /* 004034ae */
+void __thiscall thunk_pedia_draw_improvement(C_004083b0_a28 *this); /* 004031f7 */
+void __thiscall thunk_pedia_draw_improvement_page(C_004083b0_a28 *this); /* 00401514 */
+void __thiscall thunk_pedia_draw_item_list(C_004083b0_11c *this); /* 00401276 */
+void __thiscall thunk_pedia_draw_terrain_page(C_004083b0_a28 *this); /* 00403c60 */
+void __thiscall thunk_pedia_draw_tree_connector(DibSurface *this,int param_1,int param_2,int param_3,int param_4); /* 00403431 */
+void __thiscall thunk_pedia_draw_tree_stub(C_004083b0_61c *this,undefined4 param_1,int param_2); /* 00401433 */
+void __thiscall thunk_pedia_draw_unit_page(C_004083b0_a28 *this); /* 004022b6 */
+void __cdecl thunk_pedia_end_modal(); /* 0040378d */
+void __thiscall thunk_pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_2); /* 0040399f */
+void __thiscall thunk_pedia_free_lists(C_004083b0_4 *this); /* 0040302b */
+void __thiscall thunk_pedia_history_push(C_004083b0_12c *this); /* 00401dde */
+void __thiscall thunk_pedia_init_advance_list(C_004083b0_798 *this,iptr param_1); /* 0040303a */
+void __thiscall thunk_pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1); /* 004035c1 */
+void __thiscall thunk_pedia_load_indexes(C_004083b0_a28 *this); /* 00401cd0 */
+undefined * __cdecl thunk_pedia_lookup_text(); /* 004023f6 */
+void __thiscall thunk_pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2); /* 004017d0 */
+void __thiscall thunk_pedia_redraw(C_004083b0_120 *this); /* 0040312a */
+void __cdecl thunk_pedia_redraw_page(); /* 0040272a */
+void __thiscall thunk_pedia_set_category_title(C_004083b0_4 *this,undefined4 param_1); /* 00403878 */
+void __thiscall thunk_pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1); /* 004036c5 */
+void __thiscall thunk_pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1); /* 00401a19 */
+void __thiscall thunk_pedia_show_unit_list(C_004083b0_61c *this,iptr param_1); /* 0040351c */
+void __thiscall thunk_pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1); /* 004039bd */
+void __cdecl thunk_pedia_toggle_describe(); /* 0040196f */
+void __thiscall thunk_pedia_update_controls(C_004083b0_61c *this); /* 00401299 */
+void __thiscall thunk_pedia_update_describe_button(C_004083b0_11c *this,int param_1); /* 00401e92 */
+void __thiscall thunk_picwnd_blit(C_004083b0_4c4 *this); /* 00401636 */
+void __thiscall thunk_picwnd_blit_at(FrameWindow *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4); /* 0040127b */
+void __thiscall thunk_picwnd_close(C_004083b0_488 *this); /* 0040277f */
+C_004083b0_430 * __thiscall thunk_picwnd_ctor(C_004083b0_430 *this); /* 004034c7 */
+void __thiscall thunk_picwnd_dtor(void *this); /* 00402ae5 */
+void __thiscall thunk_picwnd_open(C_004083b0_4c4 *this,uint param_1,u32 param_2,u32 param_3,u32 param_4,u32 param_5, u32 param_6,u32 param_7); /* 00401c03 */
+undefined4 __cdecl thunk_point_in_rect_ltrb(); /* 004034ea */
+int __cdecl thunk_popup_city_picture_zoom(); /* 00401811 */
+undefined4 __cdecl thunk_popup_debug_ex(); /* 004037c9 */
+undefined4 __cdecl thunk_popup_debug_text(); /* 00401389 */
+void __cdecl thunk_popup_file_with_sprite(); /* 00402ddd */
+undefined4 __cdecl thunk_popup_game(); /* 00402ccf */
+undefined4 __cdecl thunk_popup_game_ex(); /* 00402f95 */
+undefined4 __cdecl thunk_popup_game_flags(); /* 004039c2 */
+undefined4 __cdecl thunk_popup_game_sprite_flags(); /* 00402167 */
+void __cdecl thunk_popup_game_with_advance(); /* 004034fe */
+undefined4 __cdecl thunk_popup_game_with_city(); /* 00401735 */
+undefined4 __cdecl thunk_popup_game_with_improvement(); /* 00401efb */
+undefined4 __cdecl thunk_popup_game_with_sprite(); /* 004034a9 */
+undefined4 __cdecl thunk_popup_text(); /* 00403288 */
+undefined4 __cdecl thunk_popup_text_ex(); /* 00403b9d */
+undefined4 __cdecl thunk_popup_text_flags(); /* 00401e10 */
+undefined4 __cdecl thunk_popup_text_run(); /* 00402e73 */
+undefined4 __cdecl thunk_popup_text_with_city(); /* 004028fb */
+undefined4 __cdecl thunk_popup_text_with_sprite(); /* 00402987 */
+undefined4 __cdecl thunk_popup_text_with_unit(); /* 0040218f */
+void __cdecl thunk_popup_text_with_unit_noflags(); /* 00401ca8 */
+void __cdecl thunk_powergraph_show(); /* 0040189d */
+void __cdecl thunk_prefs_load_civ2dat(); /* 004014bf */
+int __cdecl thunk_prefs_save_civ2dat(); /* 004011ae */
+void __thiscall thunk_radiogrp_create(RadioGroup *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5, iptr param_6); /* 00402fb8 */
+C_0040f380_48 * __thiscall thunk_radiogrp_ctor(C_0040f380_48 *this); /* 00402bd5 */
+void __thiscall thunk_radiogrp_disable_item(RadioGroupDisableView *this,iptr param_1); /* 00403864 */
+void __thiscall thunk_radiogrp_dtor(RadioGroupDtorView *this); /* 004019ab */
+void __thiscall thunk_radiogrp_enable_item(RadioGroupEnableView *this,iptr param_1); /* 0040344a */
+u32 __thiscall thunk_radiogrp_get_selected(RadioGroupGetSelView *this); /* 004022d9 */
+RadioGroupDtorView * __thiscall thunk_radiogrp_scalar_dtor(RadioGroupDtorView *this,uint param_1); /* 00401488 */
+void __thiscall thunk_radiogrp_set_dblclick_callback(Control *this,iptr param_1); /* 00401b95 */
+void __thiscall thunk_radiogrp_set_select_callback(Control *this,iptr param_1); /* 0040119f */
+void __thiscall thunk_radiogrp_set_selected(RadioGroupSetSelView *this,u32 param_1); /* 00402ae0 */
+int __cdecl thunk_rand_range(); /* 004026cb */
+void __cdecl thunk_rect_deflate(); /* 004023e7 */
+int __cdecl thunk_rect_height(); /* 00403c7e */
+void __cdecl thunk_rect_inflate(); /* 00402171 */
+void __cdecl thunk_rect_offset(); /* 00401889 */
+void __cdecl thunk_rect_set(); /* 00403b75 */
+void __cdecl thunk_rect_set_xywh(); /* 00402612 */
+int __cdecl thunk_rect_width(); /* 004036bb */
+DllHandle * __thiscall thunk_resource_dll_load(DllHandle *this,iptr param_1); /* 004017b7 */
+float10 __cdecl thunk_rng_next_unit(); /* 004029d7 */
+int __cdecl thunk_rng_set_seed(); /* 00401dd4 */
+void __cdecl thunk_rules_apply_double_moves(); /* 004024dc */
+void __cdecl thunk_rules_edit_add_section(); /* 0040118b */
+void __cdecl thunk_rules_edit_set_section(); /* 0040191a */
+void __cdecl thunk_rules_load(); /* 00401adc */
+void __cdecl thunk_rules_load_advances(); /* 00401c2b */
+void __cdecl thunk_rules_load_cosmic(); /* 0040173a */
+void __cdecl thunk_rules_load_improvements(); /* 00401028 */
+void __cdecl thunk_rules_load_units(); /* 00402d42 */
+undefined1 __cdecl thunk_rules_parse_advance_abbrev(); /* 0040368e */
+void __cdecl thunk_rules_parse_sections(); /* 00401258 */
+undefined4 __cdecl thunk_rules_write_sections(); /* 00403d2d */
+undefined * __cdecl thunk_save_file_filter(); /* 00401307 */
+undefined4 __cdecl thunk_save_load_gpk(); /* 004035f8 */
+iptr __cdecl thunk_save_read_cstr(); /* 00403b39 */
+void __cdecl thunk_save_set_file_ext(); /* 00403139 */
+undefined4 __cdecl thunk_save_write_game(); /* 0040116d */
+undefined4 __cdecl thunk_scenario_pick_human_civs(); /* 0040260d */
+void __cdecl thunk_scenario_reset_params(); /* 00401a46 */
+undefined4 __cdecl thunk_scenario_start_dialog(); /* 0040286f */
+void __cdecl thunk_science_advisor_show(); /* 0040242d */
+void __cdecl thunk_screen_fade_in(); /* 0040122b */
+void __cdecl thunk_screen_fade_out(); /* 00402bee */
+void __thiscall thunk_scrollbar_create(Control *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4); /* 004024cd */
+Control * __thiscall thunk_scrollbar_ctor(Control *this); /* 004031e3 */
+void __thiscall thunk_scrollbar_dtor(Control *this); /* 00402086 */
+Control * __thiscall thunk_scrollbar_scalar_dtor(Control *this,uint param_1); /* 00403008 */
+void __thiscall thunk_scrollbar_set_callback(Control *this,iptr param_1); /* 00402a4a */
+void __thiscall thunk_scrollbar_set_pos(C_0040f380_40 *this,iptr param_1); /* 004027bb */
+void __thiscall thunk_scrollbar_set_range(Control *this,undefined4 param_1,undefined4 param_2); /* 00402121 */
+void __thiscall thunk_scrollbar_set_track_callback(ScrollbarTrackSetView *this,iptr param_1); /* 00403a5d */
+undefined4 __cdecl thunk_setup_choose_game_options(); /* 00402ecd */
+undefined4 __cdecl thunk_setup_choose_game_timer(); /* 00401b31 */
+int __cdecl thunk_setup_choose_hotseat_players(); /* 004034e0 */
+undefined4 __cdecl thunk_setup_choose_map_size(); /* 0040310c */
+void __cdecl thunk_setup_choose_opponents(); /* 004039d1 */
+int __cdecl thunk_setup_choose_tribe(); /* 00403134 */
+int __cdecl thunk_setup_custom_world(); /* 00401c8f */
+int __cdecl thunk_setup_next_dialog_x(); /* 0040345e */
+void __thiscall thunk_setup_picwnd_blit_image_rect(C_004083b0_12c *this,int *param_1); /* 0040201d */
+void __thiscall thunk_setup_picwnd_client_rect(SetupPicWndRectView *this,iptr param_1,int param_2,int param_3,iptr param_4,iptr param_5); /* 00401a0a */
+void __thiscall thunk_setup_picwnd_close(C_004083b0_430 *this); /* 00402b3f */
+C_004083b0_430 * __thiscall thunk_setup_picwnd_ctor(C_004083b0_430 *this); /* 00402ca7 */
+void __thiscall thunk_setup_picwnd_draw_image(C_004083b0_12c *this,iptr param_1); /* 00402383 */
+void __thiscall thunk_setup_picwnd_dtor(C_004083b0_430 *this); /* 004010eb */
+void __cdecl thunk_setup_picwnd_frame_rect(); /* 00402b99 */
+void __thiscall thunk_setup_picwnd_free_dll(C_004083b0_430 *this); /* 00402b1c */
+undefined4 __cdecl thunk_setup_picwnd_image_size(); /* 004011ef */
+void __thiscall thunk_setup_picwnd_load_dll(C_004083b0_430 *this); /* 00401050 */
+void __cdecl thunk_setup_picwnd_load_image(); /* 00401ea1 */
+int __cdecl thunk_setup_picwnd_position_coord(); /* 00402757 */
+void __thiscall thunk_setup_picwnd_redraw(C_004083b0_430 *this); /* 00403044 */
+void __thiscall thunk_setup_picwnd_reset_fields(C_004083b0_430 *this); /* 004030b2 */
+void __thiscall thunk_setup_picwnd_show(C_004083b0_430 *this,undefined4 param_1,undefined4 param_2,u32 param_3); /* 004038c3 */
+void __cdecl thunk_setup_show_side_picture(); /* 00401af0 */
+void __cdecl thunk_snd_cd_detect_layout(); /* 0040312f */
+void __cdecl thunk_snd_cd_stop(); /* 00401b81 */
+void __cdecl thunk_snd_menu_end(); /* 00402522 */
+void __cdecl thunk_snd_play_effect(); /* 00401415 */
+void __cdecl thunk_snd_sync_music_option(); /* 00401eb0 */
+int __cdecl thunk_spaceship_add_part(); /* 00403152 */
+void __cdecl thunk_spaceship_calc_stats(); /* 0040107d */
+iptr __cdecl thunk_spaceship_choose_part_group(); /* 004025ef */
+uint __cdecl thunk_spaceship_group_at_limit(); /* 0040367a */
+undefined4 __cdecl thunk_spaceship_group_can_build(); /* 004031f2 */
+int __cdecl thunk_spaceship_group_count(); /* 00403373 */
+int __cdecl thunk_spaceship_group_count_clamped(); /* 0040395e */
+uint __cdecl thunk_spaceship_group_full(); /* 00402a63 */
+int __cdecl thunk_spaceship_group_limit(); /* 00402b5d */
+int __cdecl thunk_spaceship_group_max(); /* 004036fc */
+void __cdecl thunk_spaceship_launch(); /* 00402536 */
+undefined4 __cdecl thunk_spaceship_part_count(); /* 0040346d */
+iptr __cdecl thunk_spaceship_part_limit(); /* 004026f3 */
+void __thiscall thunk_spaceship_play_launch_video(WndBase *this); /* 00403b16 */
+undefined4 __cdecl thunk_spaceship_race_active(); /* 0040106e */
+void __cdecl thunk_spaceship_select_view_dialog(); /* 00402239 */
+void __cdecl thunk_spaceship_status_dialog(); /* 00402289 */
+SpaceshipWindow * __thiscall thunk_spaceship_wnd_ctor(SpaceshipWindow *this,u32 param_1); /* 00402dd8 */
+void __thiscall thunk_spaceship_wnd_draw_buttons(SpaceshipWindow *this); /* 004037ba */
+void __thiscall thunk_spaceship_wnd_draw_close_btn(SpaceshipWindow *this,int param_1,int param_2); /* 00401b9f */
+void __thiscall thunk_spaceship_wnd_draw_launch_btn(SpaceshipWindow *this,int param_1,int param_2); /* 00403ba2 */
+void __cdecl thunk_spaceship_wnd_draw_title(); /* 00402d79 */
+undefined4 __thiscall thunk_spaceship_wnd_dtor(SpaceshipWindowDtorView *this); /* 00403116 */
+undefined4 __thiscall thunk_spaceship_wnd_init(SpaceshipWindow *this); /* 00403aa8 */
+void __cdecl thunk_spaceship_wnd_load_parts(); /* 00401320 */
+undefined4 __thiscall thunk_spaceship_wnd_render_ship(SpaceshipWindow *this); /* 0040219e */
+undefined4 __cdecl thunk_spaceship_wnd_run(); /* 0040396d */
+void __thiscall thunk_spaceship_wnd_run_modal(SpaceshipWindow *this); /* 00401366 */
+void __thiscall thunk_spaceship_wnd_setup_hotspots(SpaceshipWindow *this); /* 0040324c */
+uint __thiscall thunk_spaceship_wnd_type_char(SpaceshipWindow *this,int param_1); /* 00403c01 */
+void __cdecl thunk_sprite_draw_spaced_row(); /* 00401fbe */
+undefined4 __cdecl thunk_sprite_editor_cell_rect(); /* 004035e9 */
+void __cdecl thunk_sprite_editor_create_window(); /* 0040135c */
+void __cdecl thunk_sprite_editor_draw_backdrop(); /* 00402031 */
+void __cdecl thunk_sprite_editor_draw_flag_marker(); /* 0040290f */
+void __cdecl thunk_sprite_editor_draw_palette_cell(); /* 0040241e */
+void __cdecl thunk_sprite_editor_draw_swatches(); /* 00402de7 */
+void __cdecl thunk_sprite_editor_import_sheet(); /* 004030ad */
+undefined * __cdecl thunk_sprite_editor_plot_pixel(); /* 00401a00 */
+void __cdecl thunk_sprite_editor_rebuild_sprite(); /* 004021e9 */
+void __cdecl thunk_sprite_editor_redraw(); /* 00401bf9 */
+void __cdecl thunk_sprite_editor_run(); /* 00403797 */
+int __cdecl thunk_sprite_editor_tool_hit_test(); /* 00401ccb */
+undefined4 __thiscall thunk_sprite_get_height(Sprite *this); /* 0040215d */
+u8 __thiscall thunk_sprite_get_key_color(Sprite *this); /* 00403aee */
+undefined4 __thiscall thunk_sprite_get_width(Sprite *this); /* 00403cba */
+undefined4 __thiscall thunk_sprite_height(Sprite *this); /* 00402f27 */
+void __cdecl thunk_sprite_picker_create_window(); /* 00403594 */
+C_004083b0_430 * __thiscall thunk_sprite_picker_ctor(C_004083b0_430 *this); /* 00403157 */
+void __thiscall thunk_sprite_picker_draw(FrameWindow *this); /* 00403cb0 */
+void __thiscall thunk_sprite_picker_dtor(void *this); /* 0040279d */
+void __cdecl thunk_sprite_picker_redraw_cb(); /* 00403887 */
+void __thiscall thunk_sprite_picker_run(C_004083b0_430 *this); /* 00402f36 */
+void __cdecl thunk_sprite_picker_select_cell(); /* 00401550 */
+void __cdecl thunk_sprite_picker_show(); /* 00402a9f */
+Sprite * __thiscall thunk_sprite_scalar_dtor(Sprite *this,uint param_1); /* 0040105a */
+void __cdecl thunk_sprite_sheet_draw_shield_marks(); /* 00402329 */
+undefined4 __thiscall thunk_sprite_width(Sprite *this); /* 004010a5 */
+undefined4 __cdecl thunk_spy_try_escape(); /* 00401a82 */
+void __cdecl thunk_status_append_unit_orders(); /* 00401910 */
+void __cdecl thunk_status_calc_font_sizes(); /* 0040141f */
+void __cdecl thunk_status_calc_wnd_rect(); /* 00402284 */
+void __cdecl thunk_status_draw_civ_color(); /* 0040131b */
+undefined4 __cdecl thunk_status_draw_cursor_loc(); /* 004025a9 */
+void __cdecl thunk_status_draw_end_of_turn(); /* 00401181 */
+void __cdecl thunk_status_draw_info(); /* 0040365c */
+void __cdecl thunk_status_draw_timer_bar(); /* 00402aa4 */
+void __cdecl thunk_status_draw_unit_panel(); /* 00401f1e */
+void __cdecl thunk_status_redraw(); /* 0040254a */
+void __cdecl thunk_status_wnd_close(); /* 00403a03 */
+void __cdecl thunk_status_wnd_open(); /* 00402af9 */
+void __cdecl thunk_status_wnd_repaint(); /* 00401c30 */
+void __cdecl thunk_str_append(); /* 00402dd3 */
+void __cdecl thunk_str_append_colon(); /* 00401069 */
+undefined4 __cdecl thunk_str_append_int(); /* 00402874 */
+void __cdecl thunk_str_append_label(); /* 00403995 */
+void __cdecl thunk_str_append_long(); /* 004018ac */
+void __cdecl thunk_str_append_lparen(); /* 00402ff9 */
+void __cdecl thunk_str_append_percent(); /* 00402bf8 */
+void __cdecl thunk_str_append_population(); /* 00402f59 */
+void __cdecl thunk_str_append_rparen(); /* 00401a73 */
+void __cdecl thunk_str_append_space(); /* 00401758 */
+void __cdecl thunk_str_append_string_id(); /* 00403751 */
+void __cdecl thunk_str_append_year(); /* 0040103c */
+iptr __cdecl thunk_str_clear(); /* 00403c1f */
+void __cdecl thunk_str_concat(); /* 004015f0 */
+int __cdecl thunk_str_find_bad_filename_char(); /* 0040237e */
+int __cdecl thunk_str_parse_binary(); /* 00401037 */
+int __cdecl thunk_str_parse_int_prefixed(); /* 00403076 */
+void __cdecl thunk_str_pipes_to_tabs(); /* 00401e3d */
+char * __cdecl thunk_str_strip_newline(); /* 00403774 */
+void __cdecl thunk_str_trim(); /* 00401929 */
+int __cdecl thunk_strpool_add(); /* 00401730 */
+int __cdecl thunk_strpool_add_padded(); /* 0040280b */
+void __cdecl thunk_strpool_init(); /* 00402dfb */
+DibSurface * __thiscall thunk_surface_delete(DibSurface *this,uint param_1); /* 004020c2 */
+undefined4 __thiscall thunk_surface_get_height(DibSurface *this); /* 00403b61 */
+u32 * __thiscall thunk_surface_get_rect(DibSurface *this); /* 00401221 */
+undefined4 __thiscall thunk_surface_get_width(DibSurface *this); /* 004022e3 */
+u32 __thiscall thunk_surface_height(DibSurface *this); /* 00401663 */
+void __thiscall thunk_surface_release(DibSurface *this); /* 0040333c */
+u32 __thiscall thunk_surface_width(DibSurface *this); /* 00401f41 */
+SurfaceWindow * __thiscall thunk_surfwnd_ctor(SurfaceWindow *this); /* 00403283 */
+void __thiscall thunk_surfwnd_dtor(SurfaceWindow *this); /* 004032bf */
+SurfaceWindow * __thiscall thunk_surfwnd_scalar_dtor(SurfaceWindow *this,uint param_1); /* 0040155a */
+void __cdecl thunk_taxrate_balance(); /* 00402fd1 */
+void __thiscall thunk_taxrate_calc_totals(C_004083b0_430 *this); /* 00403b93 */
+void __cdecl thunk_taxrate_dialog_redraw(); /* 00402cf7 */
+void __cdecl thunk_taxrate_dialog_show(); /* 00402c43 */
+void __cdecl thunk_tech_editor_fill_usage_list(); /* 00401aa0 */
+void __cdecl thunk_tech_editor_redraw(); /* 00402a68 */
+void __cdecl thunk_tech_editor_run(); /* 0040151e */
+int __cdecl thunk_tech_editor_store_controls(); /* 00403161 */
+void __cdecl thunk_tech_editor_update_controls(); /* 00402e00 */
+void __cdecl thunk_terrain_editor_load_controls(); /* 00403ac1 */
+void __cdecl thunk_terrain_editor_open(); /* 0040379c */
+void __cdecl thunk_terrain_editor_redraw(); /* 00402c7a */
+int __cdecl thunk_terrain_editor_sel_to_terrain(); /* 0040147e */
+int __cdecl thunk_terrain_editor_store_controls(); /* 00403698 */
+void __cdecl thunk_terrain_editor_update_visibility(); /* 00401bc2 */
+void __cdecl thunk_text_append(); /* 00402bcb */
+void __cdecl thunk_text_append_advance_abbrev(); /* 00401168 */
+void __cdecl thunk_text_append_city_name(); /* 00402806 */
+void __cdecl thunk_text_append_colon(); /* 004025f9 */
+void __cdecl thunk_text_append_comma(); /* 004034a4 */
+void __cdecl thunk_text_append_gold(); /* 00401f37 */
+void __cdecl thunk_text_append_int(); /* 00401ed8 */
+void __cdecl thunk_text_append_int_2d(); /* 004039d6 */
+void __cdecl thunk_text_append_label(); /* 00401bf4 */
+void __cdecl thunk_text_append_long(); /* 00402243 */
+void __cdecl thunk_text_append_lparen(); /* 004015eb */
+void __cdecl thunk_text_append_percent(); /* 00401177 */
+void __cdecl thunk_text_append_period(); /* 00403b84 */
+void __cdecl thunk_text_append_population(); /* 00402d3d */
+void __cdecl thunk_text_append_rparen(); /* 0040104b */
+void __cdecl thunk_text_append_space(); /* 00401faf */
+void __cdecl thunk_text_append_spaces(); /* 00401749 */
+void __cdecl thunk_text_append_str(); /* 004033e1 */
+void __cdecl thunk_text_append_string_id(); /* 00401c08 */
+void __cdecl thunk_text_append_year(); /* 00403c65 */
+void __cdecl thunk_text_clear(); /* 00401d61 */
+void __cdecl thunk_text_close_file(); /* 0040194c */
+int __cdecl thunk_text_draw_centered(); /* 00403364 */
+int __cdecl thunk_text_draw_right_aligned(); /* 00401d7f */
+int __cdecl thunk_text_draw_shadowed(); /* 004012e9 */
+void __cdecl thunk_text_expand_vars(); /* 00401f23 */
+undefined4 __cdecl thunk_text_next_int(); /* 004028ba */
+undefined1 * __cdecl thunk_text_next_token(); /* 004038a0 */
+undefined4 __cdecl thunk_text_next_token_pooled(); /* 0040376a */
+undefined4 __cdecl thunk_text_next_token_str_id(); /* 004012cb */
+int __cdecl thunk_text_open_section(); /* 00402cc5 */
+undefined1 * __cdecl thunk_text_read_line(); /* 00402743 */
+undefined4 __cdecl thunk_text_read_line_pooled(); /* 0040139d */
+undefined4 __cdecl thunk_text_read_section_line(); /* 00401d57 */
+void __cdecl thunk_text_set_colors(); /* 00403bb6 */
+void __cdecl thunk_text_set_font(); /* 0040233d */
+undefined4 __cdecl thunk_text_set_label_arg(); /* 0040267b */
+undefined4 __cdecl thunk_text_set_number_arg(); /* 00402fe5 */
+void __cdecl thunk_text_set_number_arg_u8(); /* 0040134d */
+void __cdecl thunk_text_set_number_arg_v(); /* 004038b4 */
+undefined4 __cdecl thunk_text_set_string_arg(); /* 00401e29 */
+undefined4 __cdecl thunk_text_set_string_arg_b(); /* 004032a6 */
+void __cdecl thunk_text_set_surface(); /* 00402252 */
+void __cdecl thunk_text_set_unit_info_args(); /* 004020ae */
+void __cdecl thunk_throneroom_close(); /* 004020ef */
+uint __thiscall thunk_throneroom_create_windows(C_00408010_6f0 *this); /* 004036b6 */
+ThroneRoomWindow * __thiscall thunk_throneroom_ctor(ThroneRoomWindow *this,iptr param_1); /* 00401a8c */
+void __thiscall thunk_throneroom_draw_click_prompt(WndBase *this); /* 0040254f */
+void __thiscall thunk_throneroom_dtor(ThroneRoomDtorView *this); /* 00401f5a */
+undefined4 __thiscall thunk_throneroom_render(ThroneRoomWindow *this); /* 00402702 */
+void __cdecl thunk_throneroom_show(); /* 00402a90 */
+void __cdecl thunk_throneroom_show_upgrade(); /* 004012f3 */
+uint __cdecl thunk_tile_adjacent_nonallied_civ(); /* 004029aa */
+uint __cdecl thunk_tile_adjacent_nonallied_unit(); /* 004031bb */
+uint __cdecl thunk_tile_adjacent_to_civ(); /* 004033c8 */
+undefined4 __cdecl thunk_tile_first_unit(); /* 00402a59 */
+uint __cdecl thunk_tile_get_fertility(); /* 004026a3 */
+uint __cdecl thunk_tile_grassland_has_shield(); /* 00402af4 */
+undefined4 __cdecl thunk_tile_has_irrigation_source(); /* 004033dc */
+undefined4 __cdecl thunk_tile_in_enemy_zoc(); /* 0040332d */
+undefined4 __cdecl thunk_tile_owner_at_peace(); /* 00401f3c */
+int __cdecl thunk_tile_owner_or_fertility(); /* 00401d34 */
+void __cdecl thunk_tile_set_fertility(); /* 00403143 */
+uint __cdecl thunk_tile_zoc_unit_adjacent(); /* 00402162 */
+undefined4 __cdecl thunk_timer_ticks(); /* 00403b2f */
+void __cdecl thunk_top_cities_show(); /* 00401b09 */
+void __cdecl thunk_trade_advisor_show(); /* 00401ea6 */
+undefined4 __cdecl thunk_trade_commodity_cities_dialog(); /* 004018f7 */
+void __cdecl thunk_tribe_editor_load_controls(); /* 00403067 */
+void __cdecl thunk_tribe_editor_run(); /* 004032dd */
+void __cdecl thunk_tribe_editor_store_controls(); /* 00403a71 */
+void __cdecl thunk_ui_blit_all_windows(); /* 00401bbd */
+int __cdecl thunk_ui_calc_item_spacing(); /* 00401681 */
+void __cdecl thunk_ui_delay_ticks(); /* 00403a80 */
+uint __cdecl thunk_ui_file_name_dialog(); /* 004021f8 */
+void __cdecl thunk_ui_flush_input(); /* 0040109b */
+void __cdecl thunk_ui_focus_active_unit(); /* 004016ef */
+void __cdecl thunk_ui_init_screen_metrics(); /* 00402c52 */
+undefined4 __cdecl thunk_ui_paradrop_cursor_active(); /* 00401f0f */
+void __cdecl thunk_ui_pick_unit_from_stack(); /* 00401c5d */
+void __cdecl thunk_ui_pump_messages(); /* 00402d15 */
+void __cdecl thunk_ui_pump_messages_net(); /* 00401ef6 */
+void __cdecl thunk_ui_redraw_all_maps(); /* 00403d0a */
+void __cdecl thunk_ui_reset_window_layout(); /* 004039f4 */
+void __cdecl thunk_unit_activate_next(); /* 00401d89 */
+int __cdecl thunk_unit_attack_strength(); /* 00401c9e */
+void __cdecl thunk_unit_bribe(); /* 004024b4 */
+undefined4 __cdecl thunk_unit_caravan_enter_city(); /* 0040335a */
+void __cdecl thunk_unit_clear_visibility(); /* 004033f5 */
+void __cdecl thunk_unit_cmd_airlift(); /* 0040160e */
+void __cdecl thunk_unit_cmd_automate(); /* 0040142e */
+void __cdecl thunk_unit_cmd_build_city(); /* 00402a40 */
+void __cdecl thunk_unit_cmd_disband(); /* 004011e0 */
+void __cdecl thunk_unit_cmd_fortify(); /* 004026da */
+void __cdecl thunk_unit_cmd_goto_city(); /* 00401a87 */
+void __cdecl thunk_unit_cmd_home_city(); /* 00402ea5 */
+void __cdecl thunk_unit_cmd_paradrop(); /* 00403a76 */
+void __cdecl thunk_unit_cmd_pillage(); /* 004034b3 */
+void __cdecl thunk_unit_cmd_sleep(); /* 00401190 */
+void __cdecl thunk_unit_cmd_terraform(); /* 004014b0 */
+void __cdecl thunk_unit_cmd_unload(); /* 00402eb9 */
+void __cdecl thunk_unit_cmd_wait(); /* 004039b8 */
+void __cdecl thunk_unit_continue_active_orders(); /* 004020a9 */
+iptr __cdecl thunk_unit_create(); /* 004025f4 */
+int __cdecl thunk_unit_defense_strength(); /* 0040292d */
+void __cdecl thunk_unit_delete(); /* 0040276b */
+void __cdecl thunk_unit_delete_with_cargo(); /* 00402adb */
+void __cdecl thunk_unit_destroy_redraw(); /* 00403689 */
+void __cdecl thunk_unit_do_terrain_work(); /* 00401d4d */
+void __thiscall thunk_unit_editor_create_combo(C_004083b0_430 *this,int param_1); /* 00403a2b */
+void __thiscall thunk_unit_editor_create_edit(C_004083b0_430 *this,int param_1); /* 004020db */
+void __cdecl thunk_unit_editor_load_controls(); /* 00402130 */
+void __cdecl thunk_unit_editor_load_rules(); /* 00402f31 */
+void __thiscall thunk_unit_editor_paint(C_004083b0_430 *this); /* 00401712 */
+void __cdecl thunk_unit_editor_redraw(); /* 00401e01 */
+void __cdecl thunk_unit_editor_run(); /* 00402c70 */
+void __cdecl thunk_unit_editor_set_flag_check(); /* 004016ea */
+int __cdecl thunk_unit_editor_store_controls(); /* 00403b7a */
+void __cdecl thunk_unit_editor_store_rules(); /* 00402ce8 */
+void __cdecl thunk_unit_editor_update_domain_ctrls(); /* 004029ff */
+void __thiscall thunk_unit_editor_window_run(C_004083b0_430 *this); /* 00401708 */
+uptr __cdecl thunk_unit_enter_hut(); /* 004026c1 */
+undefined4 __cdecl thunk_unit_execute_orders(); /* 00403409 */
+void __cdecl thunk_unit_exhaust_moves(); /* 0040393b */
+iptr __cdecl thunk_unit_find_nearest(); /* 00402699 */
+iptr __cdecl thunk_unit_find_nearest_selectable(); /* 00402c0c */
+void __cdecl thunk_unit_found_city(); /* 0040178f */
+int __cdecl thunk_unit_gather_cargo(); /* 00401e15 */
+void __cdecl thunk_unit_go_home(); /* 00402dce */
+uptr __cdecl thunk_unit_goto_next_dir(); /* 00402fa9 */
+void __cdecl thunk_unit_goto_step(); /* 00401145 */
+int __cdecl thunk_unit_home_city_name(); /* 00403c10 */
+int __cdecl thunk_unit_hp_remaining(); /* 00402bb7 */
+undefined4 __cdecl thunk_unit_is_awake_with_moves(); /* 004033af */
+undefined4 __cdecl thunk_unit_is_selectable(); /* 0040273e */
+void __cdecl thunk_unit_kill_in_combat(); /* 00401c1c */
+void __cdecl thunk_unit_kill_stack_in_combat(); /* 004015c3 */
+void __cdecl thunk_unit_lift_off_map(); /* 00402bdf */
+undefined4 __cdecl thunk_unit_make_dummy(); /* 00401e9c */
+int __cdecl thunk_unit_max_hp(); /* 004015dc */
+uint __cdecl thunk_unit_max_moves(); /* 00401820 */
+undefined4 __cdecl thunk_unit_move_dir(); /* 00402829 */
+void __cdecl thunk_unit_move_to_stack_bottom(); /* 0040272f */
+int __cdecl thunk_unit_moves_left(); /* 00403bd4 */
+iptr __cdecl thunk_unit_next_in_stack(); /* 00402e23 */
+undefined4 __cdecl thunk_unit_nuclear_attack(); /* 00403ba7 */
+void __cdecl thunk_unit_paradrop(); /* 00401a32 */
+void __cdecl thunk_unit_pillage(); /* 00402acc */
+void __cdecl thunk_unit_promote_veteran(); /* 00401e2e */
+void __cdecl thunk_unit_relocate(); /* 0040202c */
+void __cdecl thunk_unit_relocate_in_place(); /* 00402df6 */
+undefined4 __cdecl thunk_unit_resolve_attack(); /* 00402df1 */
+void __cdecl thunk_unit_reveal_surroundings(); /* 0040282e */
+void __cdecl thunk_unit_set_goto(); /* 004031ed */
+void __cdecl thunk_unit_set_seen_by(); /* 004010be */
+void __cdecl thunk_unit_set_sleep(); /* 004016e5 */
+void __cdecl thunk_unit_sound_editor_create_wnd(); /* 00401b8b */
+void __cdecl thunk_unit_sound_editor_run(); /* 004033a0 */
+void __cdecl thunk_unit_sound_editor_set_slots(); /* 00401000 */
+void __cdecl thunk_unit_stack_add_visibility(); /* 00401e1f */
+iptr __cdecl thunk_unit_stack_best_defender(); /* 00403274 */
+void __cdecl thunk_unit_stack_clear_visibility(); /* 0040269e */
+int __cdecl thunk_unit_stack_count_role(); /* 00402d88 */
+void __cdecl thunk_unit_stack_delete_all(); /* 00402f09 */
+iptr __cdecl thunk_unit_stack_first(); /* 00403391 */
+undefined4 __cdecl thunk_unit_stack_first_at(); /* 00401c44 */
+iptr __cdecl thunk_unit_stack_last(); /* 00402d29 */
+void __cdecl thunk_unit_stack_link(); /* 00401159 */
+int __cdecl thunk_unit_stack_nth(); /* 004010c8 */
+iptr __cdecl thunk_unit_stack_pick_display_unit(); /* 00402176 */
+void __cdecl thunk_unit_stack_relocate_all(); /* 00401ee7 */
+undefined4 __cdecl thunk_unit_stack_select_dialog(); /* 00403035 */
+void __cdecl thunk_unit_stack_set_seen_by(); /* 00401ad2 */
+void __cdecl thunk_unit_stack_ships_to_top(); /* 00401fe1 */
+int __cdecl thunk_unit_stack_sum(); /* 004029e1 */
+void __cdecl thunk_unit_stack_unlink(); /* 0040148d */
+undefined4 __cdecl thunk_unit_stack_validate(); /* 00403869 */
+void __cdecl thunk_unit_stack_wake_by_role(); /* 00402658 */
+void __cdecl thunk_units_reset_for_turn(); /* 00401eb5 */
+void __cdecl thunk_win_flush_pending_msgs(); /* 00401ad7 */
+undefined4 __stdcall thunk_win_main(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4); /* 00403a49 */
+void __cdecl thunk_win_pump_one_message(); /* 0040197e */
+void __thiscall thunk_window_show(C_004083b0_4 *this); /* 0040138e */
+void __thiscall thunk_wnd_activate(Wnd *this); /* 004032a1 */
+void __thiscall thunk_wnd_attach_menu(C_00408010_b8 *this,iptr param_1); /* 00402ffe */
+void __thiscall thunk_wnd_blit_surface(DibSurface *this); /* 004014a1 */
+void __thiscall thunk_wnd_blit_surface_rect(DibSurface *this,iptr param_1); /* 004010d2 */
+void __thiscall thunk_wnd_center(WndCenterView *this); /* 00403355 */
+void __thiscall thunk_wnd_clear_handlers(WndHandlers *this); /* 00402aef */
+undefined4 __thiscall thunk_wnd_client_height(WndBase *this); /* 00402d24 */
+undefined4 __thiscall thunk_wnd_client_width(WndBase *this); /* 004015af */
+C_00408010_b8 * __thiscall thunk_wnd_ctor(C_00408010_b8 *this); /* 00401997 */
+void __thiscall thunk_wnd_destroy_native(WndBase *this); /* 00402cd9 */
+void __thiscall thunk_wnd_destroy_with_surface(DibSurface *this); /* 004012fd */
+void __thiscall thunk_wnd_disable(WndBase *this); /* 00403bde */
+undefined4 __thiscall thunk_wnd_dtor(WndBase *this); /* 0040259a */
+void __thiscall thunk_wnd_enable(WndBase *this); /* 00402a3b */
+void __cdecl thunk_wnd_flush_paint(); /* 00401e1a */
+void __thiscall thunk_wnd_focus_and_raise(WndBase *this); /* 0040325b */
+undefined4 __thiscall thunk_wnd_frame_width(WndBase *this); /* 00401c8a */
+void __thiscall thunk_wnd_get_cursor_pos(WndBase *this,iptr param_1,iptr param_2); /* 00401ca3 */
+u32 __thiscall thunk_wnd_get_palette(WndPaletteView *this); /* 004036ca */
+void __thiscall thunk_wnd_get_rect_in_parent(WndBase *this,iptr param_1); /* 00403bc5 */
+void __thiscall thunk_wnd_get_screen_rect(WndBase *this,iptr param_1); /* 00402ebe */
+u32 __thiscall thunk_wnd_get_window(WndBase *this); /* 0040361b */
+void __thiscall thunk_wnd_handle_show_raise(WndBase *this); /* 00403bd9 */
+WndHandlers * __thiscall thunk_wnd_handlers_ctor(WndHandlers *this); /* 004027d4 */
+void __thiscall thunk_wnd_handlers_dtor(void *this); /* 00401406 */
+void __thiscall thunk_wnd_hide(WndBase *this); /* 00403b6b */
+void __thiscall thunk_wnd_maximize(WndBase *this); /* 004013f7 */
+void __thiscall thunk_wnd_minimize(WndBase *this); /* 004031d4 */
+void __thiscall thunk_wnd_move_to_rect(WndBase *this,iptr param_1); /* 00401208 */
+void __thiscall thunk_wnd_move_xy(WndMoveView *this,undefined4 param_1,undefined4 param_2); /* 00402423 */
+undefined4 __thiscall thunk_wnd_nonclient_height(WndBase *this); /* 004027b6 */
+void __thiscall thunk_wnd_redraw_menu_bar(C_00408010_b8 *this); /* 00402e0f */
+void __thiscall thunk_wnd_release_capture(WndBase *this); /* 00402941 */
+void __thiscall thunk_wnd_set_bg_color(WndBase *this,undefined4 param_1); /* 00402045 */
+void __thiscall thunk_wnd_set_bg_surface(WndBase *this,iptr param_1); /* 00402a13 */
+void __thiscall thunk_wnd_set_caption_button_handler(FrameWindow *this,iptr param_1); /* 00402ac2 */
+void __thiscall thunk_wnd_set_caption_height(WndBase *this,undefined4 param_1); /* 00403080 */
+void __thiscall thunk_wnd_set_capture(WndBase *this); /* 004015ff */
+u32 __thiscall thunk_wnd_set_char_handler(C_00408130 *this,iptr param_1); /* 00401f91 */
+u32 __thiscall thunk_wnd_set_close_handler(C_00408130 *this,iptr param_1); /* 00401082 */
+void __thiscall thunk_wnd_set_cursor(WndBase *this,undefined4 param_1); /* 00402784 */
+void __thiscall thunk_wnd_set_cursor_now(WndCursorView *this,iptr param_1,undefined4 param_2); /* 00401456 */
+u32 __thiscall thunk_wnd_set_dblclick_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00401762 */
+u32 __thiscall thunk_wnd_set_drag_begin_callback(WndDragBeginSetView *this,iptr param_1); /* 00401fc8 */
+u32 __thiscall thunk_wnd_set_drag_end_callback(WndDragEndSetView *this,iptr param_1); /* 00401717 */
+void __thiscall thunk_wnd_set_focus(WndBase *this); /* 0040226b */
+void __thiscall thunk_wnd_set_icon(WndBase *this,undefined4 param_1); /* 00402662 */
+void __thiscall thunk_wnd_set_keyboard_nav(Wnd *this,undefined4 param_1); /* 00402a36 */
+u32 __thiscall thunk_wnd_set_keydown_handler(C_00408130 *this,iptr param_1); /* 004018f2 */
+u32 __thiscall thunk_wnd_set_lbuttondown_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00402d33 */
+u32 __thiscall thunk_wnd_set_lbuttonup_any_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00401a64 */
+u32 __thiscall thunk_wnd_set_lbuttonup_handler(C_00408130 *this,iptr param_1); /* 00401587 */
+void __thiscall thunk_wnd_set_menu_callback(WndMenuCbSetView *this,iptr param_1); /* 00401096 */
+void __thiscall thunk_wnd_set_min_size(C_00408010_b8 *this,u32 param_1,u32 param_2); /* 004039a9 */
+u32 __thiscall thunk_wnd_set_minimize_handler(C_00408130 *this,iptr param_1); /* 00402946 */
+void __thiscall thunk_wnd_set_modal_idle_callback(C_00408010_b8 *this,iptr param_1); /* 00403cdd */
+u32 __thiscall thunk_wnd_set_mousemove_handler(WndHandlersMouseSetView *this,iptr param_1); /* 004017ad */
+u32 __thiscall thunk_wnd_set_move_handler(C_00408130 *this,iptr param_1); /* 00403477 */
+void __thiscall thunk_wnd_set_palette(WndBase *this,iptr param_1); /* 004020ea */
+u32 __thiscall thunk_wnd_set_rbuttondown_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00403107 */
+u32 __thiscall thunk_wnd_set_rbuttonup_any_handler(WndHandlersMouseSetView *this,iptr param_1); /* 00401087 */
+u32 __thiscall thunk_wnd_set_rbuttonup_handler(C_00408130 *this,iptr param_1); /* 00401b9a */
+void __thiscall thunk_wnd_set_redraw_callback(SurfaceWindow *this,iptr param_1); /* 00402e0a */
+void __thiscall thunk_wnd_set_resize_border(WndBase *this,undefined4 param_1); /* 004013ac */
+u32 __thiscall thunk_wnd_set_restore_handler(C_00408130 *this,iptr param_1); /* 004014a6 */
+u32 __thiscall thunk_wnd_set_size_handler(C_00408130 *this,iptr param_1); /* 0040387d */
+void __thiscall thunk_wnd_show_restored(WndBase *this); /* 00402c7f */
+void __cdecl thunk_wonder_apollo_reveal_map(); /* 00402e3c */
+int __cdecl thunk_wonder_get_city(); /* 004035df */
+undefined4 __cdecl thunk_wonder_is_expired(); /* 00401753 */
+void __cdecl thunk_wonder_show_movie(); /* 00403238 */
+void __cdecl thunk_wonders_report_show(); /* 00402194 */
 void __cdecl tile_add_pollution(); /* 00401785 */
 undefined4 __cdecl tile_airbase_owner(); /* 004026f8 */
 Tile * __cdecl tile_at(); /* 00401bb3 */

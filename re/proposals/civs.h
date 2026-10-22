@@ -3,15 +3,15 @@
  * (civ_names[8] at 0x64bcf8) and the global game state (game at 0x655ae8).
  *
  * Evidence:
- *  - Save routine FUN_004741be (writes "CIVILIZE", then version 0x2c) and
- *    loader FUN_00473660 move these as single blocks, in this order:
+ *  - Save routine save_write_game (writes "CIVILIZE", then version 0x2c) and
+ *    loader save_load_gpk move these as single blocks, in this order:
  *      fwrite(&0x655ae8, 0x14a)  game state
  *      fwrite(&0x64bcf8, 0x790)  8 x 0xf2 civ names
  *      fwrite(&0x64c6a0, 0x2ca0) 8 x 0x594 civ records
  *    So all three are saved verbatim -> pack(1), fixed-width fields only.
  *    (Save file offset = 0x0c + offset in GameState; matches the known .SAV
  *    format: difficulty at file 0x2c, human mask 0x2f, unit count 0x3a, ...)
- *  - The pre-0x28 loader branch of FUN_00473660 reads the same records
+ *  - The pre-0x28 loader branch of save_load_gpk reads the same records
  *    piecewise, which gives the array boundaries exactly:
  *      game:  0x36 header | 0x5d @0x36 | 0x5d @0x9a | 0x4c @0xfe
  *      civ:   0x58 header | 0x0c @0x58 | 0x0e @0x66 | 0x5d @0x74 |
@@ -20,15 +20,15 @@
  *  - Field meanings from the code that uses them (function addresses are
  *    the original FUN_xxxxxxxx), checked against orig/Ca_Auto.SAV (turn 81,
  *    year -2400, Romans/Caesar human civ 1, despotism, rates sum <= 10, ...).
- *  - Key functions: FUN_004a7ce9 (initialise a civ), FUN_0053184d (AI
- *    per-turn census of units/cities, per-continent tables), FUN_004bf05b
- *    (give advance), FUN_004bd9f0 (civ knows advance), FUN_004c2788
- *    (research cost), FUN_004ea1f6 (split city trade by rates), FUN_00487a41
- *    (AI rates / government scores), FUN_0055f5a3 (AI picks government),
- *    FUN_004853e7 (power ranking), FUN_0049301b (add AI goal), FUN_00596eec
- *    (spaceship launch), FUN_0044cc80/0044db92 (throne room),
+ *  - Key functions: civ_create (initialise a civ), FUN_0053184d (AI
+ *    per-turn census of units/cities, per-continent tables), civ_give_advance
+ *    (give advance), civ_has_advance (civ knows advance), civ_research_cost
+ *    (research cost), city_split_trade (split city trade by rates), FUN_00487a41
+ *    (AI rates / government scores), ai_choose_government (AI picks government),
+ *    FUN_004853e7 (power ranking), civ_add_ai_goal (add AI goal), spaceship_calc_stats
+ *    (spaceship launch), throneroom_show_upgrade/0044db92 (throne room),
  *    FUN_0041ba52 (new game setup dialogs), FUN_00486c2e (global warming),
- *    FUN_00432611 (historians' report), FUN_00484fec (turn -> year).
+ *    historian_report_show (historians' report), game_turn_to_year (turn -> year).
  *
  * Uncertain: everything named field_XX; bit meanings of flags words are only
  * listed where the code makes them clear.  GameState.field_138/139 are
@@ -63,17 +63,17 @@ typedef struct Civ {
     u8 science_rate;                /* 0x013 in tenths; luxury = 10 - science - tax */
     u8 tax_rate;                    /* 0x014 in tenths */
     u8 government;                  /* 0x015 0 anarchy .. 6 democracy */
-    u8 field_16;                    /* 0x016 rand() % 100, re-rolled every turn (FUN_00560084); AI diplomacy threshold */
+    u8 field_16;                    /* 0x016 rand() % 100, re-rolled every turn (civ_turn_update_diplomacy); AI diplomacy threshold */
     u8 wonders_by_group[4];         /* 0x017 wonders owned, counted per group of 7 (wonder index / 7) */
     u8 pad_1b;                      /* 0x01b */
-    i16 field_1c;                   /* 0x01c +1 when a unit changes owner for gold (net handler FUN_0047e94e); AI gold logic */
+    i16 field_1c;                   /* 0x01c +1 when a unit changes owner for gold (net handler net_process_messages); AI gold logic */
     u8 reputation;                  /* 0x01e 0 spotless .. 7; incremented when a treaty is broken */
     i8 field_1f;                    /* 0x01f diplomacy counter: +1/+2 per request granted, AI refuses above 4 */
     u32 treaties[8];                /* 0x020 relationship flags toward each civ (contact, peace, alliance, war, ...) */
     u8 attitude[8];                 /* 0x040 AI attitude toward each civ (0..100) */
-    i8 field_48[8];                 /* 0x048 per-civ incident counter (FUN_0045ac71), signed */
-    u8 field_50[8];                 /* 0x050 per-civ counter updated by combat (FUN_00580341), reset at > 9 */
-    u8 advances[13];                /* 0x058 bit per advance (100 bits), see FUN_004bd9f0 */
+    i8 field_48[8];                 /* 0x048 per-civ incident counter (diplo_declare_war), signed */
+    u8 field_50[8];                 /* 0x050 per-civ counter updated by combat (unit_resolve_attack), reset at > 9 */
+    u8 advances[13];                /* 0x058 bit per advance (100 bits), see civ_has_advance */
     u8 pad_65;                      /* 0x065 */
     i16 num_military_units;         /* 0x066 units with role < 5 (census FUN_0053184d) */
     i16 num_cities;                 /* 0x068 */
@@ -93,7 +93,7 @@ typedef struct Civ {
     u8 continent_trade_units[64];   /* 0x312 role-7 (trade) units per landmass */
     u8 continent_flags[64];         /* 0x352 AI: other civs present (1/2 cities, 4/8 units, 0x10 threat) */
     u8 continent_policy[64];        /* 0x392 AI posture per landmass (0..5) */
-    i16 field_3d2;                  /* 0x3d2 zeroed each turn (FUN_00487a41), compared in FUN_00498e8b */
+    i16 field_3d2;                  /* 0x3d2 zeroed each turn (FUN_00487a41), compared in city_choose_production */
     i16 government_score[7];        /* 0x3d4 AI preference for each government, accumulated over cities */
     i16 last_treaty_turn[8];        /* 0x3e2 turn of the last treaty event with each civ, -1 never */
     u8 leader_portrait;             /* 0x3f2 tribe index, +21 if the leader is female */
@@ -107,7 +107,7 @@ typedef struct Civ {
     i16 spaceship_population;       /* 0x406 colonists, thousands */
     i16 spaceship_parts[6];         /* 0x408 structurals, 2 component kinds, 3 module kinds (costs at 0x634f68) */
     CivGoal ai_goals[48];           /* 0x414 current AI goals, sorted by priority */
-    CivGoal ai_standing_goals[16];  /* 0x534 goals re-posted into ai_goals every turn (FUN_00493602) */
+    CivGoal ai_standing_goals[16];  /* 0x534 goals re-posted into ai_goals every turn (civ_refresh_ai_goals) */
 } Civ;
 
 /* Names of one civilization (0xf2 bytes; 8 slots, saved verbatim).  Empty

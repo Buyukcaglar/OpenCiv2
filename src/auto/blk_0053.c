@@ -7,17 +7,17 @@
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_00530e80(C_00530e80 *this)
+u32 __thiscall ctrl_is_enabled(ControlEnabledView *this)
 
 {
-  return this->field_2c;
+  return this->is_enabled;
 }
 
 /* 00530eb0 auto */
-void __thiscall FUN_00530eb0(C_00530eb0 *this,iptr param_1)
+void __thiscall edit_set_change_callback(EditChangeSetView *this,iptr param_1)
 
 {
-  this->field_2c = param_1;
+  this->on_change = param_1;
   return;
 }
 
@@ -25,24 +25,24 @@ void __thiscall FUN_00530eb0(C_00530eb0 *this,iptr param_1)
 #define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
 FUN_00530ee0
-          (C_0040f380_3c *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+          (Control *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,iptr param_6)
 
 {
   u32 uVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  this->field_38 = (u32)PTR_DAT_00637e68;
-  FUN_005cc035(param_3,param_4,param_5,(iptr)local_14,this->field_38);
-  if (this->field_1c != 0) {
-    thunk_FUN_0040f610(this);
+  this->font = (u32)checkbox_default_font;
+  checkbox_calc_rect_fixed(param_3,param_4,param_5,(iptr)local_14,this->font);
+  if (this->hwnd != 0) {
+    thunk_ctrl_destroy(this);
   }
-  thunk_FUN_0040f730(this,param_1,2,param_2,(iptr)local_14);
-  this->field_2c = 0;
-  this->field_34 = 1;
-  this->field_30 = 0;
-  uVar1 = FUN_005cc0f0((iptr)local_14,(iptr)this,param_6,1);
-  this->field_1c = uVar1;
+  thunk_ctrl_init(this,param_1,2,param_2,(iptr)local_14);
+  this->is_enabled = 0;
+  this->on_select = 1;
+  this->on_click = 0;
+  uVar1 = checkbox_create_hwnd((iptr)local_14,(iptr)this,param_6,1);
+  this->hwnd = uVar1;
   return;
 }
 #undef local_14
@@ -61,24 +61,24 @@ void __thiscall FUN_00530fb0(C_00530fb0 *this)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_00530fe0(C_0040f380_3c *this)
+u32 __thiscall checkbox_is_checked(Control *this)
 
 {
-  return this->field_30;
+  return this->on_click;
 }
 
 /* 00531010 auto */
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_0040f380_48 * __thiscall FUN_00531010(C_0040f380_48 *this)
+C_0040f380_48 * __thiscall radiogrp_ctor(C_0040f380_48 *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  thunk_FUN_0040f480((C_0040f380_3c *)this);
-  this->field_44 = 0;
+  thunk_ctrl_base_ctor((Control *)this);
+  this->items_handle = 0;
   return this;
 }
 #undef local_10
@@ -87,45 +87,45 @@ C_0040f380_48 * __thiscall FUN_00531010(C_0040f380_48 *this)
 
 /* 005310a0 auto */
 void __thiscall
-FUN_005310a0
-          (C_0040f380_50 *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5,
+radiogrp_create
+          (RadioGroup *this,iptr param_1,undefined4 param_2,iptr param_3,u32 param_4,u32 param_5,
           iptr param_6)
 
 {
   u32 uVar1;
   
-  if (this->field_44 != 0) {
-    thunk_FUN_0040f610((C_0040f380_3c *)this);
+  if (this->items_handle != 0) {
+    thunk_ctrl_destroy((Control *)this);
   }
-  this->field_4c = (u32)PTR_DAT_00637e64;
-  thunk_FUN_0040f730((C_0040f380_3c *)this,param_1,3,param_2,param_3);
-  this->field_2c = 0;
-  this->field_30 = 0;
-  this->field_34 = 0;
-  this->field_38 = param_5;
-  this->field_3c = param_4;
-  this->field_40 = 0;
-  uVar1 = FUN_005d8e3f((iptr)&this->field_38,param_3,param_4,(iptr)this,param_5,param_6,1,
-                       this->field_4c);
-  this->field_44 = uVar1;
-  uVar1 = FUN_005dcdf9(this->field_44);
-  this->field_48 = uVar1;
+  this->radio_font = (u32)radio_default_font;
+  thunk_ctrl_init((Control *)this,param_1,3,param_2,param_3);
+  this->is_enabled = 0;
+  this->on_click = 0;
+  this->on_select = 0;
+  this->font = param_5;
+  this->scroll_pos = param_4;
+  this->edit_font = 0;
+  uVar1 = radiogrp_create_items((iptr)&this->font,param_3,param_4,(iptr)this,param_5,param_6,1,
+                       this->radio_font);
+  this->items_handle = uVar1;
+  uVar1 = mem_handle_lock(this->items_handle);
+  this->items_ptr = uVar1;
   return;
 }
 
 /* 005311b0 auto */
-void __thiscall FUN_005311b0(C_0040f380_3c *this,iptr param_1)
+void __thiscall radiogrp_set_select_callback(Control *this,iptr param_1)
 
 {
-  this->field_2c = param_1;
+  this->is_enabled = param_1;
   return;
 }
 
 /* 005311e0 auto */
-void __thiscall FUN_005311e0(C_0040f380_3c *this,iptr param_1)
+void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr param_1)
 
 {
-  this->field_30 = param_1;
+  this->on_click = param_1;
   return;
 }
 
@@ -153,7 +153,7 @@ u8 * __cdecl map_coarse3_at(int param_1,int param_2)
 
 /* 00531287 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __cdecl FUN_00531287(iptr param_1)
+int __cdecl ai_unit_role(iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -192,25 +192,25 @@ iptr __cdecl FUN_005312e4(iptr param_1)
   local_c = -1;
   local_2c = -1;
   for (local_10 = 0; local_10 < 9; local_10 = local_10 + 1) {
-    iVar4 = map_wrap_x((int)(char)(&DAT_00628350)[local_10] + (int)sVar1);
-    iVar5 = (int)(char)(&DAT_00628360)[local_10] + (int)sVar2;
+    iVar4 = map_wrap_x((int)(char)(&dir_dx_table)[local_10] + (int)sVar1);
+    iVar5 = (int)(char)(&dir_dy_table)[local_10] + (int)sVar2;
     iVar6 = map_in_bounds(iVar4,iVar5);
     if (((iVar6 != 0) && (iVar6 = tile_is_ocean(iVar4,iVar5), iVar6 != 0)) &&
        ((local_10 == 8 || (iVar6 = tile_unit_owner(iVar4,iVar5), iVar6 < 0)))) {
       local_8 = 0;
       for (local_24 = 0; local_24 < 8; local_24 = local_24 + 1) {
-        iVar7 = map_wrap_x((char)(&DAT_00628350)[local_24] + iVar4);
-        iVar6 = (char)(&DAT_00628360)[local_24] + iVar5;
+        iVar7 = map_wrap_x((char)(&dir_dx_table)[local_24] + iVar4);
+        iVar6 = (char)(&dir_dy_table)[local_24] + iVar5;
         iVar8 = map_in_bounds(iVar7,iVar6);
         if ((((iVar8 != 0) && (iVar8 = tile_is_ocean(iVar7,iVar6), iVar8 == 0)) &&
             (iVar8 = tile_unit_owner(iVar7,iVar6), iVar8 < 0)) &&
-           (((iVar8 = thunk_FUN_005b8c42(iVar7,iVar6), 7 < iVar8 ||
+           (((iVar8 = thunk_tile_owner_or_fertility(iVar7,iVar6), 7 < iVar8 ||
              (local_14 = (byte)iVar8, (1 << (local_14 & 0x1f) & (uint)game.human_players) == 0)) ||
             ((*(byte *)(iVar3 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + iVar8 * 4) & 6) == 0)))) {
           iVar8 = tile_city_owner(iVar7,iVar6);
           if (((-1 < iVar8) && (iVar8 != iVar3)) &&
              ((iVar6 = tile_unit_owner(iVar7,iVar6), iVar6 < 0 &&
-              ((iVar6 = thunk_FUN_00467af0(iVar3,iVar8), iVar6 != 0 && (local_10 == 8)))))) {
+              ((iVar6 = thunk_diplo_is_hostile(iVar3,iVar8), iVar6 != 0 && (local_10 == 8)))))) {
             local_8 = local_8 + 0xc;
           }
           local_8 = local_8 + 1;
@@ -232,21 +232,21 @@ iptr __cdecl FUN_005312e4(iptr param_1)
 #undef local_8
 
 /* 00531567 auto */
-void __cdecl FUN_00531567(iptr param_1,uint param_2,int param_3)
+void __cdecl unit_stack_wake_by_role(iptr param_1,uint param_2,int param_3)
 
 {
-  param_1 = thunk_FUN_005b2d39(param_1);
+  param_1 = thunk_unit_stack_first(param_1);
   while ((-1 < param_1 &&
          (((units[param_1].orders != '\x03' ||
            ((param_2 & 1 << (unit_types[units[param_1].type].role & 0x1f)) == 0)) ||
           (units[param_1].orders = -1, param_3 == 0))))) {
-    param_1 = thunk_FUN_005b2c82(param_1);
+    param_1 = thunk_unit_next_in_stack(param_1);
   }
   return;
 }
 
 /* 00531607 auto */
-void __cdecl FUN_00531607(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl unit_set_goto(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
 
 {
   units[param_1].orders = '\v';
@@ -261,7 +261,7 @@ void __cdecl FUN_00531607(iptr param_1,undefined4 param_2,undefined4 param_3,und
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(32)))
-void __cdecl FUN_00531653(iptr param_1,undefined4 param_2,iptr param_3,int param_4)
+void __cdecl ai_ship_goto_near_shore(iptr param_1,undefined4 param_2,iptr param_3,int param_4)
 
 {
   bool bVar1;
@@ -279,15 +279,15 @@ void __cdecl FUN_00531653(iptr param_1,undefined4 param_2,iptr param_3,int param
   iVar2 = tile_landmass((int)units[param_1].x,(int)units[param_1].y);
   iVar3 = tile_landmass(param_3,param_4);
   for (local_8 = 0; iVar5 = local_24, iVar4 = local_20, local_8 < 0x14; local_8 = local_8 + 1) {
-    iVar4 = map_wrap_x((char)(&DAT_00628370)[local_8] + param_3);
-    iVar5 = (char)(&DAT_006283a0)[local_8] + param_4;
+    iVar4 = map_wrap_x((char)(&city_tile_dx_table)[local_8] + param_3);
+    iVar5 = (char)(&city_tile_dy_table)[local_8] + param_4;
     iVar6 = map_in_bounds(iVar4,iVar5);
     if (((iVar6 != 0) && (iVar6 = tile_is_ocean(iVar4,iVar5), iVar6 != 0)) &&
        (iVar6 = tile_landmass(iVar4,iVar5), iVar6 == iVar2)) {
       bVar1 = false;
       for (local_10 = 0; local_10 < 8; local_10 = local_10 + 1) {
-        iVar7 = map_wrap_x((char)(&DAT_00628350)[local_10] + iVar4);
-        iVar6 = (char)(&DAT_00628360)[local_10] + iVar5;
+        iVar7 = map_wrap_x((char)(&dir_dx_table)[local_10] + iVar4);
+        iVar6 = (char)(&dir_dy_table)[local_10] + iVar5;
         iVar8 = map_in_bounds(iVar7,iVar6);
         if (((iVar8 != 0) && (iVar8 = tile_is_ocean(iVar7,iVar6), iVar8 == 0)) &&
            ((iVar8 = tile_landmass(iVar7,iVar6), iVar8 == iVar3 &&
@@ -300,7 +300,7 @@ void __cdecl FUN_00531653(iptr param_1,undefined4 param_2,iptr param_3,int param
   }
   local_20 = iVar4;
   local_24 = iVar5;
-  thunk_FUN_00531607(param_1,param_2,local_20,local_24);
+  thunk_unit_set_goto(param_1,param_2,local_20,local_24);
   return;
 }
 #undef local_24
@@ -309,10 +309,10 @@ void __cdecl FUN_00531653(iptr param_1,undefined4 param_2,iptr param_3,int param
 #undef local_8
 
 /* 0053184d auto */
-#define DAT_0062ee08 (*(undefined4 *)((u8 *)&g.d_0062ee08))
-#define DAT_0064bc60 (*(short *)((u8 *)&g.d_0064bc60))
-#define DAT_006a657c (*(int *)((u8 *)&g.d_006a657c))
-#define iptr_006d1da0 (*(undefined *)((u8 *)&g.d_006d1da0))
+#define city_calc_cached_id (*(undefined4 *)((u8 *)&g.d_0062ee08))
+#define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
+#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define local_368 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_354 (*(uptr *)(frame_ + FRAME_OFF(20)))
 #define local_34c (*(int *)(frame_ + FRAME_OFF(28)))
@@ -372,7 +372,7 @@ void __cdecl FUN_0053184d(uptr param_1)
   
   local_144 = 0;
   local_25c = 0;
-  iVar5 = thunk_FUN_004bd9f0(param_1,(int)unit_types[0xd].prerequisite);
+  iVar5 = thunk_civ_has_advance(param_1,(int)unit_types[0xd].prerequisite);
   if (((iVar5 != 0) && (civs[param_1].units_active[0xd] != '\0')) &&
      ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0)) {
     for (local_344 = 0; local_344 < game.num_cities; local_344 = local_344 + 1) {
@@ -386,11 +386,11 @@ void __cdecl FUN_0053184d(uptr param_1)
             if ((cities[local_14].id != 0) && ((int)cities[local_14].owner == param_1)) {
               iVar8 = (int)cities[local_14].x;
               local_3c = (int)cities[local_14].y;
-              iVar6 = thunk_FUN_005ae1b0(local_258,local_26c,iVar8,local_3c);
+              iVar6 = thunk_map_distance(local_258,local_26c,iVar8,local_3c);
               if (iVar6 <= (int)(uint)cosmic.paradrop_range) {
                 local_150 = 0;
-                for (local_354 = thunk_FUN_005b2e69(iVar8,local_3c); -1 < (int)local_354;
-                    local_354 = thunk_FUN_005b2c82(local_354)) {
+                for (local_354 = thunk_tile_first_unit(iVar8,local_3c); -1 < (int)local_354;
+                    local_354 = thunk_unit_next_in_stack(local_354)) {
                   if ((unit_types[units[local_354].type].flags & 0x100) != 0) {
                     local_150 = 1;
                     break;
@@ -399,22 +399,22 @@ void __cdecl FUN_0053184d(uptr param_1)
                 if (local_150 != 0) break;
                 for (local_20 = 0; local_20 < game.num_cities; local_20 = local_20 + 1) {
                   if (2 < game.multiplayer) {
-                    thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+                    thunk_net_process_messages((NetSession *)&net_session,1,0);
                   }
                   if ((cities[local_20].id != 0) && ((int)cities[local_20].owner == param_1)) {
                     local_268 = (int)cities[local_20].x;
                     iVar6 = (int)cities[local_20].y;
-                    iVar9 = thunk_FUN_005ae1b0(local_258,local_26c,local_268,iVar6);
+                    iVar9 = thunk_map_distance(local_258,local_26c,local_268,iVar6);
                     if (((int)(uint)cosmic.paradrop_range < iVar9) &&
-                       (iVar9 = thunk_FUN_005ae1b0(iVar8,local_3c,local_268,iVar6),
+                       (iVar9 = thunk_map_distance(iVar8,local_3c,local_268,iVar6),
                        iVar9 <= (int)(uint)cosmic.paradrop_range)) {
-                      for (local_354 = thunk_FUN_005b2e69(local_268,iVar6); -1 < (int)local_354;
-                          local_354 = thunk_FUN_005b2c82(local_354)) {
+                      for (local_354 = thunk_tile_first_unit(local_268,iVar6); -1 < (int)local_354;
+                          local_354 = thunk_unit_next_in_stack(local_354)) {
                         if (((unit_types[units[local_354].type].flags & 0x100) != 0) &&
-                           (iVar6 = thunk_FUN_005b2c3d(local_354), iVar6 != 0)) {
-                          thunk_FUN_005b36df(local_354,iVar8,local_3c,1);
+                           (iVar6 = thunk_unit_moves_left(local_354), iVar6 != 0)) {
+                          thunk_unit_relocate(local_354,iVar8,local_3c,1);
                           units[local_354].visibility = '\0';
-                          thunk_FUN_005b6787(local_354);
+                          thunk_unit_exhaust_moves(local_354);
                           local_150 = 1;
                           break;
                         }
@@ -435,7 +435,7 @@ void __cdecl FUN_0053184d(uptr param_1)
     *(undefined1 *)(local_10 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + param_1 * 0x594) = 0;
   }
   for (local_40 = 0; local_40 < 0x1c; local_40 = local_40 + 1) {
-    iVar8 = thunk_FUN_00453e51(param_1,local_40);
+    iVar8 = thunk_civ_has_wonder(param_1,local_40);
     if (iVar8 != 0) {
       local_10 = local_40 / 7;
       pcVar1 = (char *)(local_10 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + param_1 * 0x594);
@@ -451,7 +451,7 @@ void __cdecl FUN_0053184d(uptr param_1)
     aiStack_250[local_278] = 0;
     aiStack_140[local_278] = 0;
   }
-  *(undefined4 *)(&DAT_0064b9e8 + param_1 * 4) = 0;
+  *(undefined4 *)(&civ_unit_counts + param_1 * 4) = 0;
   civs[param_1].num_military_units = 0;
   civs[param_1].num_cities = 0;
   civs[param_1].num_ships = 0;
@@ -474,7 +474,7 @@ void __cdecl FUN_0053184d(uptr param_1)
   }
   for (local_354 = 0; (int)local_354 < (int)game.num_units; local_354 = local_354 + 1) {
     if (2 < game.multiplayer) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
     if (((units[local_354].id != 0) && ((int)units[local_354].owner == param_1)) &&
        (units[local_354].flags = units[local_354].flags & 0xfc7f,
@@ -489,9 +489,9 @@ void __cdecl FUN_0053184d(uptr param_1)
           units[local_354].flags = units[local_354].flags | 0x200;
           iVar8 = tile_landmass((int)units[local_354].x,(int)units[local_354].y);
           aiStack_250[iVar8] = aiStack_250[iVar8] + 1;
-          iVar8 = thunk_FUN_0043d07a((int)units[local_354].x,(int)units[local_354].y,-1,0xffffffff,
+          iVar8 = thunk_city_find_nearest((int)units[local_354].x,(int)units[local_354].y,-1,0xffffffff,
                                      -1);
-          if ((DAT_0063f660 < 4) && ((int)cities[iVar8].owner == param_1)) {
+          if ((nearest_city_dist < 4) && ((int)cities[iVar8].owner == param_1)) {
             cities[iVar8].flags = cities[iVar8].flags | 0x40;
           }
         }
@@ -500,7 +500,7 @@ void __cdecl FUN_0053184d(uptr param_1)
   }
   for (local_354 = 0; (int)local_354 < (int)game.num_units; local_354 = local_354 + 1) {
     if (2 < game.multiplayer) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
     if (units[local_354].id != 0) {
       if ((int)units[local_354].owner == param_1) {
@@ -516,7 +516,7 @@ void __cdecl FUN_0053184d(uptr param_1)
           iVar8 = map_in_bounds(local_258,local_26c);
           if (iVar8 == 0) {
             local_278 = -1;
-            thunk_FUN_005b2f50(local_354);
+            thunk_unit_set_sleep(local_354);
           }
           else {
             local_278 = tile_land_landmass(local_258,local_26c);
@@ -530,16 +530,16 @@ void __cdecl FUN_0053184d(uptr param_1)
                 units[local_354].orders = -1;
               }
               if ((units[local_354].orders == -1) &&
-                 (iVar8 = thunk_FUN_005b4c63(local_258,local_26c,param_1), iVar8 != 0)) {
+                 (iVar8 = thunk_tile_zoc_unit_adjacent(local_258,local_26c,param_1), iVar8 != 0)) {
                 units[local_354].orders = '\x10';
               }
             }
             iVar8 = tile_is_ocean(local_258,local_26c);
             if ((iVar8 != 0) && (unit_types[units[local_354].type].domain == '\0')) {
-              thunk_FUN_005b2f50(local_354);
+              thunk_unit_set_sleep(local_354);
             }
           }
-          *(int *)(&DAT_0064b9e8 + param_1 * 4) = *(int *)(&DAT_0064b9e8 + param_1 * 4) + 1;
+          *(int *)(&civ_unit_counts + param_1 * 4) = *(int *)(&civ_unit_counts + param_1 * 4) + 1;
           if (((char)unit_types[local_274].role < '\x05') &&
              (civs[param_1].num_military_units = civs[param_1].num_military_units + 1,
              -1 < local_278)) {
@@ -589,7 +589,7 @@ void __cdecl FUN_0053184d(uptr param_1)
                 units[local_354].flags = units[local_354].flags & 0xfdff;
               }
               if (((units[local_354].flags & 0x200) != 0) &&
-                 (iVar8 = thunk_FUN_005ae31d(local_258,local_26c,(int)cities[bVar3].x,
+                 (iVar8 = thunk_map_distance_diag(local_258,local_26c,(int)cities[bVar3].x,
                                              (int)cities[bVar3].y), iVar8 < 5)) {
                 cities[bVar3].flags = cities[bVar3].flags | 0x40;
               }
@@ -614,12 +614,12 @@ void __cdecl FUN_0053184d(uptr param_1)
                ((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + units[local_354].owner * 4) & 6) == 0)) &&
               (((1 << ((byte)param_1 & 0x1f) & (uint)units[local_354].visibility) != 0 ||
                ((int)units[local_354].owner == (param_1 & 0xff))))) {
-        iVar8 = thunk_FUN_005b29aa(local_354);
-        iVar6 = thunk_FUN_005b29d7(local_354);
+        iVar8 = thunk_unit_max_hp(local_354);
+        iVar6 = thunk_unit_hp_remaining(local_354);
         if (iVar6 <= iVar8 / 2) {
           iVar6 = 1;
           iVar8 = tile_is_ocean((int)units[local_354].x,(int)units[local_354].y);
-          thunk_FUN_0049301b(param_1,(int)units[local_354].x,(int)units[local_354].y,
+          thunk_civ_add_ai_goal(param_1,(int)units[local_354].x,(int)units[local_354].y,
                              (iVar8 == 0) - 1 & 2,iVar6);
         }
       }
@@ -632,7 +632,7 @@ LAB_0053232b: ;
   local_1c = 0;
   for (local_344 = 0; local_344 < game.num_cities; local_344 = local_344 + 1) {
     if (2 < game.multiplayer) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
     if (cities[local_344].id != 0) {
       local_258 = (int)cities[local_344].x;
@@ -659,26 +659,26 @@ LAB_0053232b: ;
           }
           iVar8 = tile_unit_owner(local_258,local_26c);
           if (iVar8 < 0) {
-            thunk_FUN_0049301b(param_1,local_258,local_26c,1,5);
+            thunk_civ_add_ai_goal(param_1,local_258,local_26c,1,5);
           }
         }
         else if ((((200 < (int)((uint)game.difficulty * (int)game.turn)) ||
                   ((1 << ((byte)param_1 & 0x1f) & (int)(char)cities[local_344].known_to) != 0)) ||
                  ((int)cities[local_344].owner == (param_1 & 0xff))) ||
                 (((uint)game.human_players & 1 << (cities[local_344].owner & 0x1fU)) == 0)) {
-          iVar8 = thunk_FUN_00467af0(param_1,(int)cities[local_344].owner);
+          iVar8 = thunk_diplo_is_hostile(param_1,(int)cities[local_344].owner);
           if (((iVar8 != 0) ||
               (((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_344].owner * 4) & 0x20) != 0 &&
                ((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_344].owner * 4) & 8) == 0))))
              && ((game.turn + local_344) % 3 != 0)) {
-            iVar8 = thunk_FUN_0043d20a(local_344,8);
-            thunk_FUN_0049301b(param_1,local_258,local_26c,0,(-(uint)(iVar8 == 0) & 2) + 2);
+            iVar8 = thunk_city_has_improvement(local_344,8);
+            thunk_civ_add_ai_goal(param_1,local_258,local_26c,0,(-(uint)(iVar8 == 0) & 2) + 2);
           }
           iVar8 = tile_unit_owner(local_258,local_26c);
           if ((iVar8 < 0) &&
              ((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_344].owner * 4) & 0xe) == 0)) {
-            thunk_FUN_0049301b(param_1,local_258,local_26c,1,2);
-            thunk_FUN_0049301b(param_1,local_258,local_26c,0,3);
+            thunk_civ_add_ai_goal(param_1,local_258,local_26c,1,2);
+            thunk_civ_add_ai_goal(param_1,local_258,local_26c,0,3);
           }
         }
       }
@@ -695,7 +695,7 @@ LAB_0053232b: ;
   }
   for (local_278 = 1; local_278 < 0x3f; local_278 = local_278 + 1) {
     if (2 < game.multiplayer) {
-      thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+      thunk_net_process_messages((NetSession *)&net_session,1,0);
     }
     local_148 = 0;
     local_34 = 0;
@@ -709,7 +709,7 @@ LAB_0053232b: ;
            (uint)*(ushort *)(local_278 * 2 + ADDR(0x64c8b2, ((u8 *)&civs + 530)) + local_38 * 0x594) ||
           (*(char *)(local_278 + ADDR(0x64c932, ((u8 *)&civs + 658)) + local_38 * 0x594) != '\0')))) {
         if (param_1 != local_38) {
-          iVar8 = thunk_FUN_00467af0(param_1,local_38);
+          iVar8 = thunk_diplo_is_hostile(param_1,local_38);
           if ((iVar8 != 0) || ((*(byte *)(param_1 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_38 * 4) & 0x20) != 0))
           {
             if ((*(ushort *)(local_278 * 2 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_38 * 0x594) <
@@ -776,20 +776,20 @@ LAB_0053232b: ;
       local_264 = local_264 + 1;
     }
     iVar8 = ((uint)*(ushort *)(param_1 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + local_278 * 2) + local_14c) * 2;
-    local_254 = (uint)(iVar8 - *(short *)(&DAT_00666130 + local_278 * 0x10) != 0 &&
-                      *(short *)(&DAT_00666130 + local_278 * 0x10) <= iVar8);
+    local_254 = (uint)(iVar8 - *(short *)(&landmass_table + local_278 * 0x10) != 0 &&
+                      *(short *)(&landmass_table + local_278 * 0x10) <= iVar8);
     if (*(char *)(local_278 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + param_1 * 0x594) == '\0') {
       local_368 = leaders[civs[param_1].tribe].expand + local_264 + 1;
     }
     else {
       local_368 = local_264;
     }
-    if ((int)*(short *)(&DAT_00666132 + local_278 * 0x10) <
+    if ((int)*(short *)(&landmass_fertile_tiles + local_278 * 0x10) <
         (int)(((uint)*(byte *)(local_278 + ADDR(0x64c932, ((u8 *)&civs + 658)) + param_1 * 0x594) + local_28) * local_368 + 2))
     {
       local_254 = 1;
     }
-    iVar8 = thunk_FUN_004bd9f0(param_1,0x2e);
+    iVar8 = thunk_civ_has_advance(param_1,0x2e);
     if (iVar8 == 0) {
       local_254 = 0;
     }
@@ -816,7 +816,7 @@ LAB_0053232b: ;
     }
     if ((*(byte *)(local_278 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + param_1 * 0x594) != local_270) &&
        ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0)) {
-      thunk_FUN_00442541(param_1,local_278);
+      thunk_civ_reset_city_production(param_1,local_278);
     }
   }
   if ((civs[param_1].continent_cities[0x3f] != '\0') &&
@@ -827,13 +827,13 @@ LAB_0053232b: ;
     local_27c = (uint)game.human_players & 1 << ((byte)param_1 & 0x1f);
     if (local_27c == 0) {
       if ((local_144 == 0) && (civs[param_1].num_cities == 0)) {
-        thunk_FUN_004aa378(param_1,0);
+        thunk_civ_check_destroyed(param_1,0);
       }
       if (((int)game.turn + param_1 & 7) == 0) {
-        thunk_FUN_0055f5a3(param_1,0);
+        thunk_ai_choose_government(param_1,0);
       }
     }
-    iVar8 = thunk_FUN_005adfa0((int)civs[param_1].num_military_units >> 3,3,99);
+    iVar8 = thunk_int_clamp((int)civs[param_1].num_military_units >> 3,3,99);
     for (local_2c = 0; local_2c < 0x30; local_2c = local_2c + 1) {
       aiStack_33c[local_2c] = iVar8;
       if (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_2c * 6) == '\0') {
@@ -841,7 +841,7 @@ LAB_0053232b: ;
       }
     }
     local_25c = 0;
-    if (((((game.game_flags & 0x80) != 0) && (((int)DAT_0064bc60 & 0x8000U) != 0)) && (param_1 == 3)
+    if (((((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) && (param_1 == 3)
         ) && (local_27c == 0)) {
       local_25c = 1;
     }
@@ -850,7 +850,7 @@ LAB_00533de4:
     local_354 = local_354 - 1;
     if (-1 < (int)local_354) {
       if (2 < game.multiplayer) {
-        thunk_FUN_0047e94e((C_0047e94e *)&iptr_006ad108,1,0);
+        thunk_net_process_messages((NetSession *)&net_session,1,0);
       }
       if (((units[local_354].id != 0) && ((int)units[local_354].owner == param_1)) &&
          ((local_27c == 0 || (((int)(short)units[local_354].flags & 0x8000U) != 0)))) {
@@ -870,14 +870,14 @@ LAB_00533de4:
                 uVar4 = units[local_354].flags;
                 if ((game.turn == 1) || (uVar11 = tile_owner(0x2b,0x35), uVar11 != param_1)) {
 LAB_005340a6:
-                  thunk_FUN_00531607(local_354,0x31,0x2b,0x35);
+                  thunk_unit_set_goto(local_354,0x31,0x2b,0x35);
                   units[local_354].flags = units[local_354].flags & 0xfffc;
                   goto LAB_00533de4;
                 }
                 if (units[local_354].type == '\n') {
                   uVar14 = 2;
-                  iVar12 = thunk_FUN_005b2e69(0x2b,0x35);
-                  iVar6 = thunk_FUN_005b50ad(iVar12,uVar14);
+                  iVar12 = thunk_tile_first_unit(0x2b,0x35);
+                  iVar6 = thunk_unit_stack_sum(iVar12,uVar14);
                   if (iVar6 < 3) goto LAB_005340a6;
                 }
                 if (((units[local_354].type == '\x16') && (3 < game.turn)) && (game.turn < 0xd)) {
@@ -897,50 +897,50 @@ LAB_005340a6:
                       if (uVar11 == param_1) {
                         uVar11 = tile_owner(0x43,0x5b);
                         if (uVar11 != param_1) {
-                          thunk_FUN_00531607(local_354,0x31,0x43,0x5b);
+                          thunk_unit_set_goto(local_354,0x31,0x43,0x5b);
                         }
                       }
                       else {
-                        thunk_FUN_00531607(local_354,0x31,0x43,0x5b);
+                        thunk_unit_set_goto(local_354,0x31,0x43,0x5b);
                       }
                     }
                   }
                   else {
-                    thunk_FUN_00531607(local_354,0x31,0x4c,0x22);
+                    thunk_unit_set_goto(local_354,0x31,0x4c,0x22);
                   }
                 }
                 units[local_354].flags = uVar4;
               }
               if (((((int)game.turn & local_354 & 0xf) == 0) && (local_27c == 0)) &&
                  ((((-1 < unit_types[units[local_354].type].obsolete_by &&
-                    (iVar6 = thunk_FUN_004bd9f0(param_1,(int)unit_types[units[local_354].type].
+                    (iVar6 = thunk_civ_has_advance(param_1,(int)unit_types[units[local_354].type].
                                                              obsolete_by), iVar6 != 0)) ||
                    (((1 < civs[param_1].government &&
                      (*(char *)(local_278 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + param_1 * 0x594) == '\x04')) &&
                     (units[local_354].type == '\x02')))) &&
-                  ((iVar6 = thunk_FUN_005b4c63(local_258,local_26c,param_1), iVar6 == 0 &&
+                  ((iVar6 = thunk_tile_zoc_unit_adjacent(local_258,local_26c,param_1), iVar6 == 0 &&
                    (((iVar6 = tile_city_owner(local_258,local_26c), iVar6 < 0 ||
-                     (iVar6 = thunk_FUN_005b50ad(local_354,2), 1 < iVar6)) &&
+                     (iVar6 = thunk_unit_stack_sum(local_354,2), 1 < iVar6)) &&
                     ((iVar6 = tile_is_ocean(local_258,local_26c), iVar6 == 0 &&
                      ((*(byte *)(local_278 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + param_1 * 0x594) & 0x10) == 0)))))))))) {
                 if ((((unit_types[units[local_354].type].obsolete_by < '\0') ||
-                     (iVar6 = thunk_FUN_004bd9f0(param_1,(int)unit_types[units[local_354].type].
+                     (iVar6 = thunk_civ_has_advance(param_1,(int)unit_types[units[local_354].type].
                                                               obsolete_by), iVar6 == 0)) ||
-                    ((1 << ((byte)iptr_006d1da0 & 0x1f) & (uint)units[local_354].visibility) != 0))
-                   || (((int)units[local_354].owner == (uint)(byte)iptr_006d1da0 ||
+                    ((1 << ((byte)human_civ & 0x1f) & (uint)units[local_354].visibility) != 0))
+                   || (((int)units[local_354].owner == (uint)(byte)human_civ ||
                        ((uVar14 = tile_improvements(local_258,local_26c),
                         ((byte)uVar14 & 0x42) != 0x40 &&
                         ((iVar6 = tile_city_owner(local_258,local_26c), iVar6 < 0 ||
-                         (iVar6 = thunk_FUN_005b50ad(local_354,2), iVar6 != 1)))))))) {
-                  uVar10 = thunk_FUN_0043cf76(local_258,local_26c);
+                         (iVar6 = thunk_unit_stack_sum(local_354,2), iVar6 != 1)))))))) {
+                  uVar10 = thunk_city_at(local_258,local_26c);
                   if (-1 < (int)uVar10) {
-                    DAT_0062ee08 = 0xffffffff;
-                    thunk_FUN_004e80b1(uVar10);
+                    city_calc_cached_id = 0xffffffff;
+                    thunk_city_calc_unit_support(uVar10);
                     cities[uVar10].shield_box =
-                         (short)(((char)unit_types[units[local_354].type].cost * DAT_006a657c) / 2)
+                         (short)(((char)unit_types[units[local_354].type].cost * city_shield_rows) / 2)
                          + cities[uVar10].shield_box;
                   }
-                  thunk_FUN_005b6042(local_354,1);
+                  thunk_unit_destroy_redraw(local_354,1);
                   goto LAB_00533de4;
                 }
                 for (local_274 = 0; (int)local_274 < 0x3e; local_274 = local_274 + 1) {
@@ -955,7 +955,7 @@ LAB_005340a6:
               }
               local_18 = 9999;
               local_c = -1;
-              local_260 = thunk_FUN_00531287(local_354);
+              local_260 = thunk_ai_unit_role(local_354);
               if (((((local_260 != 7) || (units[local_354].orders != '\v')) ||
                    (iVar6 = map_in_bounds((int)units[local_354].goto_x,(int)units[local_354].goto_y)
                    , iVar6 == 0)) ||
@@ -986,7 +986,7 @@ LAB_005340a6:
                              (char)unit_types[units[local_354].type].attack)) &&
                            ((*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_24 * 6) == local_260 ||
                             (*(char *)(param_1 * 0x594 + ADDR(0x64cab8, ((u8 *)&civs + 1048)) + local_24 * 6) == '\x02')))))) {
-                      local_30 = thunk_FUN_005ae31d(local_258,local_26c,
+                      local_30 = thunk_map_distance_diag(local_258,local_26c,
                                                     (int)*(short *)(param_1 * 0x594 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) +
                                                                    local_24 * 6),
                                                     (int)*(short *)(param_1 * 0x594 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) +
@@ -1054,7 +1054,7 @@ LAB_00534c18:
                      ((byte)uVar14 & 0x42) == 0x40)) {
                     if ((*(byte *)(local_c * 6 + ADDR(0x64cab9, ((u8 *)&civs + 1049)) + param_1 * 0x594) & 1) == 0)
                     goto LAB_00533de4;
-                    thunk_FUN_004933f2(param_1,(int)units[local_354].x,(int)units[local_354].y,1,2);
+                    thunk_civ_add_standing_goal(param_1,(int)units[local_354].x,(int)units[local_354].y,1,2);
                   }
                   if (((unit_types[units[local_354].type].flags & 0x100) == 0) ||
                      (uVar11 = tile_city_owner((int)*(short *)(local_c * 6 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) +
@@ -1062,7 +1062,7 @@ LAB_00534c18:
                                                (int)*(short *)(local_c * 6 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) +
                                                               param_1 * 0x594)), uVar11 == param_1))
                   {
-                    thunk_FUN_00531607(local_354,0x31,
+                    thunk_unit_set_goto(local_354,0x31,
                                        (int)*(short *)(local_c * 6 + ADDR(0x64cab4, ((u8 *)&civs + 1044)) + param_1 * 0x594),
                                        (int)*(short *)(local_c * 6 + ADDR(0x64cab6, ((u8 *)&civs + 1046)) + param_1 * 0x594));
                     if ((unit_types[units[local_354].type].role == '\x05') &&
@@ -1094,13 +1094,13 @@ LAB_00534c18:
       cities[local_344].flags = cities[local_344].flags & 0xfffffbff;
     }
   }
-  thunk_FUN_00493602(param_1);
+  thunk_civ_refresh_ai_goals(param_1);
   return;
 }
-#undef DAT_0062ee08
-#undef DAT_0064bc60
-#undef DAT_006a657c
-#undef iptr_006d1da0
+#undef city_calc_cached_id
+#undef city_shield_rows
+#undef human_civ
+#undef scenario_flags
 #undef local_368
 #undef local_354
 #undef local_34c
@@ -1141,9 +1141,9 @@ LAB_00534c18:
 #undef local_8
 
 /* 005351aa auto */
-#define DAT_00654fa8 (*(short *)((u8 *)&g.d_00654fa8))
-#define DAT_00679640 (*(undefined1 *)((u8 *)&g.d_00679640))
-#define iptr_006d1da0 (*(iptr *)((u8 *)&g.d_006d1da0))
+#define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
+#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
+#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_84 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_80 (*(uint *)(frame_ + FRAME_OFF(8)))
@@ -1200,61 +1200,61 @@ undefined4 __cdecl FUN_005351aa(void)
   iVar10 = (iptr)sVar2;
   if (((iVar10 < 2) || (map.height + -2 <= iVar10)) ||
      (iVar11 = map_in_bounds(iVar9,iVar10), iVar11 == 0)) {
-    thunk_FUN_005b5d93(iVar7,1);
+    thunk_unit_delete_with_cargo(iVar7,1);
     return 1;
   }
-  iVar14 = thunk_FUN_005b4d8c(iVar9,iVar10,iVar8);
+  iVar14 = thunk_tile_in_enemy_zoc(iVar9,iVar10,iVar8);
   uVar19 = (uptr)units[iVar7].type;
-  local_60 = thunk_FUN_0043d07a(iVar9,iVar10,-1,0xffffffff,-1);
+  local_60 = thunk_city_find_nearest(iVar9,iVar10,-1,0xffffffff,-1);
   if (unit_types[uVar19].hold != '\0') {
-    iVar14 = thunk_FUN_005b50ad(iVar7,2);
-    iVar12 = thunk_FUN_005b53b6(iVar7,6);
+    iVar14 = thunk_unit_stack_sum(iVar7,2);
+    iVar12 = thunk_unit_stack_count_role(iVar7,6);
     if (iVar14 - iVar12 < 2) {
-      thunk_FUN_005b6042(iVar7,1);
+      thunk_unit_destroy_redraw(iVar7,1);
       return 1;
     }
     units[iVar7].counter = units[iVar7].counter + '\x01';
     if ('\x1e' < (char)units[iVar7].counter) {
-      thunk_FUN_005b6042(iVar7,1);
+      thunk_unit_destroy_redraw(iVar7,1);
       return 1;
     }
     for (local_18 = 0; local_18 < 8; local_18 = local_18 + 1) {
-      iVar17 = map_wrap_x((char)(&DAT_00628350)[local_18] + iVar9);
-      iVar14 = (char)(&DAT_00628360)[local_18] + iVar10;
+      iVar17 = map_wrap_x((char)(&dir_dx_table)[local_18] + iVar9);
+      iVar14 = (char)(&dir_dy_table)[local_18] + iVar10;
       iVar13 = map_in_bounds(iVar17,iVar14);
       if (iVar13 != 0) {
-        if (((-1 < local_60) && (DAT_0063f660 < 9)) &&
+        if (((-1 < local_60) && (nearest_city_dist < 9)) &&
            ((iVar18 = tile_is_ocean(iVar17,iVar14), iVar18 == 0 &&
             (((iVar18 = tile_city_or_unit_owner(iVar17,iVar14), iVar18 < 0 && (1 < iVar14)) &&
              (iVar14 < map.height + -2)))))) {
           iVar18 = tile_landmass((int)cities[local_60].x,(int)cities[local_60].y);
           iVar19 = tile_landmass(iVar17,iVar14);
           if (iVar18 == iVar19) {
-            iVar18 = thunk_FUN_005b50ad(iVar7,2);
-            if (((iVar18 < 3) && (iVar18 = thunk_FUN_005b53b6(iVar7,0), iVar18 == 0)) &&
-               ((iVar18 = thunk_FUN_005b53b6(iVar7,1), iVar18 == 0 && (DAT_0063f660 < 3)))) {
-              thunk_FUN_005b6042(iVar7,1);
+            iVar18 = thunk_unit_stack_sum(iVar7,2);
+            if (((iVar18 < 3) && (iVar18 = thunk_unit_stack_count_role(iVar7,0), iVar18 == 0)) &&
+               ((iVar18 = thunk_unit_stack_count_role(iVar7,1), iVar18 == 0 && (nearest_city_dist < 3)))) {
+              thunk_unit_destroy_redraw(iVar7,1);
             }
             else {
               for (local_34 = 1; local_34 < 8; local_34 = local_34 + 1) {
                 if ((((1 << ((byte)local_34 & 0x1f) & (uint)game.civs_alive) != 0) &&
                     ((1 << ((byte)local_34 & 0x1f) & (uint)game.human_players) != 0)) &&
                    ((iVar18 = tile_visible_to(iVar17,iVar14,local_34), iVar18 != 0 &&
-                    ((cities[local_60].owner == local_34 && (DAT_00654fa8 == 0)))))) {
-                  local_60 = thunk_FUN_0043d07a(iVar17,iVar14,-1,0xffffffff,-1);
-                  thunk_FUN_0040ff60(0,local_60 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-                  if (iptr_006d1da0 == local_34) {
+                    ((cities[local_60].owner == local_34 && (autoplay_active == 0)))))) {
+                  local_60 = thunk_city_find_nearest(iVar17,iVar14,-1,0xffffffff,-1);
+                  thunk_text_set_string_arg(0,local_60 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
+                  if (human_civ == local_34) {
                     if (game.multiplayer == '\0') {
-                      thunk_FUN_005b496e(iVar7,local_34);
-                      thunk_FUN_004105f8(iVar17,iVar14,iVar8);
-                      thunk_FUN_0047cea6(iVar17,iVar14);
+                      thunk_unit_stack_set_seen_by(iVar7,local_34);
+                      thunk_mapviews_ensure_visible(iVar17,iVar14,iVar8);
+                      thunk_map_redraw_tile_all_views(iVar17,iVar14);
                     }
-                    thunk_FUN_004442e0(ADDR(0x632528, ((u8 *)&g.d_00632528)),iVar7);
+                    thunk_dlg_game_txt_with_unit(ADDR(0x632528, ((u8 *)&g.d_00632528)),iVar7);
                   }
                   else if (2 < game.multiplayer) {
-                    thunk_FUN_00511880(0x4e,*(undefined4 *)
-                                             (&DAT_006ad30c +
-                                             *(int *)(&DAT_006ad558 + local_34 * 4) * 0x54),1,0,
+                    thunk_net_send_text_args(0x4e,*(undefined4 *)
+                                             (&net_player_slots +
+                                             *(int *)(&net_civ_slots + local_34 * 4) * 0x54),1,0,
                                        iVar7,0);
                   }
                 }
@@ -1262,8 +1262,8 @@ undefined4 __cdecl FUN_005351aa(void)
               iVar14 = tile_at(iVar17,iVar14);
               units[iVar7].visibility = *(byte *)(iVar14 + 4) | units[iVar7].visibility;
               units[iVar7].field_0c = 'U';
-              thunk_FUN_00531567(iVar7,0xffff,0);
-              thunk_FUN_005b6787(iVar7);
+              thunk_unit_stack_wake_by_role(iVar7,0xffff,0);
+              thunk_unit_exhaust_moves(iVar7);
             }
             goto LAB_0053692c;
           }
@@ -1289,11 +1289,11 @@ undefined4 __cdecl FUN_005351aa(void)
         if ((cities[local_60].id != 0) && (cities[local_60].owner != '\0')) {
           if (-1 < local_1c) {
             uVar22 = tile_landmass((int)cities[local_60].x,(int)cities[local_60].y);
-            iVar14 = thunk_FUN_005b9431(uVar22,local_1c);
+            iVar14 = thunk_landmass_borders_body(uVar22,local_1c);
             if (iVar14 == 0) goto LAB_00535741;
           }
-          iVar14 = thunk_FUN_00579dbb(local_60);
-          iVar18 = thunk_FUN_005ae31d(iVar9,iVar10,(int)cities[local_60].x,(int)cities[local_60].y);
+          iVar14 = thunk_city_treasury_share(local_60);
+          iVar18 = thunk_map_distance_diag(iVar9,iVar10,(int)cities[local_60].x,(int)cities[local_60].y);
           iVar14 = (iVar14 + 0x32) / (iVar18 + 1);
           if (local_10 < iVar14) {
             local_64 = local_60;
@@ -1303,19 +1303,19 @@ undefined4 __cdecl FUN_005351aa(void)
 LAB_00535741: ;
       }
       if (local_64 < 0) {
-        thunk_FUN_005b6042(iVar7,1);
+        thunk_unit_destroy_redraw(iVar7,1);
         return 1;
       }
-      thunk_FUN_00531653(iVar7,0x70,(int)cities[local_64].x,(int)cities[local_64].y);
+      thunk_ai_ship_goto_near_shore(iVar7,0x70,(int)cities[local_64].x,(int)cities[local_64].y);
     }
     goto LAB_0053692c;
   }
-  if ((DAT_0063f660 == 0) ||
+  if ((nearest_city_dist == 0) ||
      (uVar22 = tile_improvements(iVar9,iVar10), ((byte)uVar22 & 0x42) == 0x40)) {
-    iVar18 = thunk_FUN_005b50ad(iVar7,2);
-    iVar19 = thunk_FUN_005b53b6(iVar7,6);
+    iVar18 = thunk_unit_stack_sum(iVar7,2);
+    iVar19 = thunk_unit_stack_count_role(iVar7,6);
     if ((((1 < iVar18 - iVar19) || (iVar14 != 0)) && (unit_types[uVar19].role != '\x01')) ||
-       ((bVar23 = DAT_0063f660 == 0, iVar18 = thunk_FUN_005b50ad(iVar7,2),
+       ((bVar23 = nearest_city_dist == 0, iVar18 = thunk_unit_stack_sum(iVar7,2),
         (int)(bVar23 + 2 + (uint)(iVar14 == 0)) <= iVar18 &&
         ((char)unit_types[uVar19].defense <= (char)unit_types[uVar19].attack)))) goto LAB_005359af;
     units[iVar7].orders = '\x01';
@@ -1327,8 +1327,8 @@ LAB_005359af:
        ((iVar18 = tile_is_ocean(iVar9,iVar10), iVar18 == 0 || (unit_types[uVar19].hold != '\0')))) {
       iVar18 = tile_landmass((int)cities[local_60].x,(int)cities[local_60].y);
       iVar19 = tile_landmass(iVar9,iVar10);
-      if ((iVar18 != iVar19) || (8 < DAT_0063f660)) {
-        thunk_FUN_005b6042(iVar7,1);
+      if ((iVar18 != iVar19) || (8 < nearest_city_dist)) {
+        thunk_unit_destroy_redraw(iVar7,1);
         return 1;
       }
     }
@@ -1390,45 +1390,45 @@ LAB_005359af:
     if (local_68 != -3) {
       units[iVar7].goto_x = cities[local_60].x;
       units[iVar7].goto_y = cities[local_60].y;
-      uVar22 = thunk_FUN_004adafc(iVar7);
+      uVar22 = thunk_unit_goto_next_dir(iVar7);
       units[iVar7].last_dir = (u8)uVar22;
     }
     if ('\x04' < (char)unit_types[uVar19].role) {
       cVar5 = tile_terrain(iVar9,iVar10);
-      iVar18 = thunk_FUN_005b50ad(iVar7,2);
+      iVar18 = thunk_unit_stack_sum(iVar7,2);
       if (((1 < iVar18) && (cVar5 != '\n')) &&
-         (iVar18 = thunk_FUN_005b53b6(iVar7,(int)(char)unit_types[uVar19].role), iVar18 < 2)) {
+         (iVar18 = thunk_unit_stack_count_role(iVar7,(int)(char)unit_types[uVar19].role), iVar18 < 2)) {
         local_40 = 8;
         goto LAB_00536859;
       }
       if (cVar5 == '\n') {
-        if (DAT_0063f660 < 3) {
-          thunk_FUN_005b6042(iVar7,1);
+        if (nearest_city_dist < 3) {
+          thunk_unit_destroy_redraw(iVar7,1);
           return 1;
         }
       }
       else {
-        iVar18 = thunk_FUN_005b67af(iVar9,iVar10,iVar8,iVar7);
-        if ((DAT_006ced50 < 4) && ((char)unit_types[units[iVar18].type].role < '\x02')) {
-          thunk_FUN_00531607(iVar7,0x58,(int)units[iVar18].x,(int)units[iVar18].y);
+        iVar18 = thunk_unit_find_nearest(iVar9,iVar10,iVar8,iVar7);
+        if ((unit_nearest_dist < 4) && ((char)unit_types[units[iVar18].type].role < '\x02')) {
+          thunk_unit_set_goto(iVar7,0x58,(int)units[iVar18].x,(int)units[iVar18].y);
           goto LAB_0053692c;
         }
-        if ((int)(((int)game.turn & 7U) + 4) <= DAT_0063f660) {
-          thunk_FUN_005b6042(iVar7,1);
+        if ((int)(((int)game.turn & 7U) + 4) <= nearest_city_dist) {
+          thunk_unit_destroy_redraw(iVar7,1);
           return 1;
         }
       }
     }
     local_10 = -999;
     for (local_18 = 0; local_18 < 8; local_18 = local_18 + 1) {
-      iVar17 = map_wrap_x((char)(&DAT_00628350)[local_18] + iVar9);
-      iVar18 = (char)(&DAT_00628360)[local_18] + iVar10;
+      iVar17 = map_wrap_x((char)(&dir_dx_table)[local_18] + iVar9);
+      iVar18 = (char)(&dir_dy_table)[local_18] + iVar10;
       iVar19 = map_in_bounds(iVar17,iVar18);
       if (iVar19 != 0) {
         bVar6 = tile_terrain(iVar17,iVar18);
         if ((unit_types[uVar19].domain == '\x02') == (bVar6 == 10)) {
           iVar19 = tile_unit_owner(iVar17,iVar18);
-          iVar15 = thunk_FUN_005b2e69(iVar17,iVar18);
+          iVar15 = thunk_tile_first_unit(iVar17,iVar18);
           local_c = 0;
           if ((char)unit_types[uVar19].role < '\x05') {
             iVar16 = tile_city_owner(iVar17,iVar18);
@@ -1448,19 +1448,19 @@ LAB_005364bc:
               else {
                 local_c = local_c + 8;
               }
-              iVar20 = thunk_FUN_0059a791(0,5);
+              iVar20 = thunk_rand_range(0,5);
               local_c = local_c + iVar20;
               if (iVar15 < 0) {
 LAB_005365f1:
                 if ((((iVar14 == 0) || (unit_types[uVar19].role != '\0')) || (-1 < iVar15)) ||
-                   ((iVar18 = thunk_FUN_005b4d8c(iVar17,iVar18,iVar8), iVar18 == 0 ||
+                   ((iVar18 = thunk_tile_in_enemy_zoc(iVar17,iVar18,iVar8), iVar18 == 0 ||
                     ((unit_types[units[iVar7].type].flags & 2) != 0)))) {
                   if ((char)units[iVar7].last_dir == local_18) {
                     local_c = local_c + 6;
                   }
                   if (local_68 != -3) {
-                    if ((char)(&DAT_00628350)[local_18] < '\x01') {
-                      if ((char)(&DAT_00628350)[local_18] < '\0') {
+                    if ((char)(&dir_dx_table)[local_18] < '\x01') {
+                      if ((char)(&dir_dx_table)[local_18] < '\0') {
                         local_84 = -1;
                       }
                       else {
@@ -1475,8 +1475,8 @@ LAB_005365f1:
                     }
                   }
                   if (local_74 != -3) {
-                    if ((char)(&DAT_00628360)[local_18] < '\x01') {
-                      if ((char)(&DAT_00628360)[local_18] < '\0') {
+                    if ((char)(&dir_dy_table)[local_18] < '\x01') {
+                      if ((char)(&dir_dy_table)[local_18] < '\0') {
                         local_88 = -1;
                       }
                       else {
@@ -1532,46 +1532,46 @@ LAB_005365f1:
                      (local_54 = (civs[iVar16].gold / 100) * 100, local_54 < 1000)) {
                     local_54 = civs[iVar16].gold + 1;
                   }
-                  thunk_FUN_00421da0(0,local_54);
+                  thunk_text_set_number_arg(0,local_54);
                   if (((game.multiplayer < 3) &&
                       (local_14 = (byte)iVar16,
                       (1 << (local_14 & 0x1f) & (uint)game.human_players) != 0)) &&
                      (local_54 <= civs[iVar16].gold)) {
-                    local_60 = thunk_FUN_0043cf76(iVar17,iVar18);
-                    thunk_FUN_0040ff60(1,local_60 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-                    __chdir(&DAT_0064bb08);
-                    iVar20 = thunk_FUN_004a2379(ADDR(0x632544, ((u8 *)&g.d_00632544)),ADDR(0x632538, ((u8 *)&g.d_00632538)));
+                    local_60 = thunk_city_at(iVar17,iVar18);
+                    thunk_text_set_string_arg(1,local_60 * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
+                    __chdir(&scenario_dir_path);
+                    iVar20 = thunk_text_open_section(ADDR(0x632544, ((u8 *)&g.d_00632544)),ADDR(0x632538, ((u8 *)&g.d_00632538)));
                     if (iVar20 != 0) {
-                      __chdir(&DAT_00655020);
-                      iVar20 = thunk_FUN_004a2379(ADDR(0x632558, ((u8 *)&g.d_00632558)),ADDR(0x63254c, ((u8 *)&g.d_0063254c)));
+                      __chdir(&game_home_dir);
+                      iVar20 = thunk_text_open_section(ADDR(0x632558, ((u8 *)&g.d_00632558)),ADDR(0x63254c, ((u8 *)&g.d_0063254c)));
                       if (iVar20 != 0) goto LAB_0053692c;
                     }
-                    __chdir(&DAT_00655020);
-                    thunk_FUN_004a23fc(1);
-                    iVar20 = _atoi(&DAT_00679640);
+                    __chdir(&game_home_dir);
+                    thunk_text_read_line(1);
+                    iVar20 = _atoi(&text_buffer);
                     if (0 < iVar20) {
                       sVar3 = cities[local_60].y;
                       sVar4 = cities[local_60].x;
                       for (local_2c = 0; local_2c <= (sVar3 * 3 + sVar4 * 5) % iVar20;
                           local_2c = local_2c + 1) {
-                        thunk_FUN_004a23fc(1);
+                        thunk_text_read_line(1);
                       }
-                      thunk_FUN_0040ff60(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-                      thunk_FUN_004105f8((int)cities[local_60].x,(int)cities[local_60].y,iVar16);
-                      if ((DAT_00654fa8 == 0) &&
-                         (iVar20 = thunk_FUN_004442e0(ADDR(0x632560, ((u8 *)&g.d_00632560)),iVar7), iVar20 != 0)) {
+                      thunk_text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+                      thunk_mapviews_ensure_visible((int)cities[local_60].x,(int)cities[local_60].y,iVar16);
+                      if ((autoplay_active == 0) &&
+                         (iVar20 = thunk_dlg_game_txt_with_unit(ADDR(0x632560, ((u8 *)&g.d_00632560)),iVar7), iVar20 != 0)) {
                         civs[iVar16].gold = civs[iVar16].gold - local_54;
-                        thunk_FUN_00569363(1);
+                        thunk_status_draw_info(1);
                         for (local_2c = 0; local_2c < 0x14; local_2c = local_2c + 1) {
                           iVar17 = map_wrap_x((int)cities[local_60].x +
-                                              (int)(char)(&DAT_00628370)[local_2c]);
-                          iVar9 = (int)cities[local_60].y + (int)(char)(&DAT_006283a0)[local_2c];
+                                              (int)(char)(&city_tile_dx_table)[local_2c]);
+                          iVar9 = (int)cities[local_60].y + (int)(char)(&city_tile_dy_table)[local_2c];
                           iVar14 = map_in_bounds(iVar17,iVar9);
                           if (((iVar14 != 0) &&
-                              (iVar14 = thunk_FUN_005b2e69(iVar17,iVar9), -1 < iVar14)) &&
+                              (iVar14 = thunk_tile_first_unit(iVar17,iVar9), -1 < iVar14)) &&
                              (units[iVar14].owner == '\0')) {
-                            thunk_FUN_005b47fa(iVar14,1);
-                            thunk_FUN_0047cea6(iVar17,iVar9);
+                            thunk_unit_stack_delete_all(iVar14,1);
+                            thunk_map_redraw_tile_all_views(iVar17,iVar9);
                           }
                         }
                         return 1;
@@ -1584,7 +1584,7 @@ LAB_005365f1:
                   goto LAB_00536859;
                 }
                 if ((game.turn + iVar7 & 7U) != 0) {
-                  iVar20 = thunk_FUN_005b50ad(iVar7,2);
+                  iVar20 = thunk_unit_stack_sum(iVar7,2);
                   if ((iVar20 < 2) && (units[iVar7].orders = '\x01', local_10 < 99)) {
                     local_10 = 99;
                     local_40 = 8;
@@ -1603,10 +1603,10 @@ LAB_005365f1:
                 local_c = -99;
               }
             }
-            thunk_FUN_0043d07a(iVar17,iVar18,-1,0xffffffff,-1);
+            thunk_city_find_nearest(iVar17,iVar18,-1,0xffffffff,-1);
             uVar1 = terrain_types[bVar6].move_cost;
-            iVar18 = thunk_FUN_0059a791(0,3);
-            local_c = local_c + (char)uVar1 + iVar18 + DAT_0063f660 * 4;
+            iVar18 = thunk_rand_range(0,3);
+            local_c = local_c + (char)uVar1 + iVar18 + nearest_city_dist * 4;
 LAB_0053673f:
             if (local_10 <= local_c) {
               local_10 = local_c;
@@ -1618,16 +1618,16 @@ LAB_0053673f:
 LAB_00535e74: ;
     }
     iVar14 = tile_city_owner(iVar9,iVar10);
-    if (((iVar14 < 0) || (iVar14 = thunk_FUN_005b50ad(iVar7,2), 1 < iVar14)) || (0x62 < local_10)) {
+    if (((iVar14 < 0) || (iVar14 = thunk_unit_stack_sum(iVar7,2), 1 < iVar14)) || (0x62 < local_10)) {
       if ((((local_10 < 99) &&
-           (iVar14 = thunk_FUN_005b2c3d(iVar7), iVar14 <= (int)(uint)cosmic.road_move_mult)) &&
+           (iVar14 = thunk_unit_moves_left(iVar7), iVar14 <= (int)(uint)cosmic.road_move_mult)) &&
           (-1 < local_60)) &&
          (((uint)game.human_players & 1 << (cities[local_60].owner & 0x1fU)) != 0)) {
         iVar14 = tile_at(iVar9,iVar10);
         if (((*(byte *)(iVar14 + 1) & 0x4c) != 0) ||
            ((uVar19 == 9 && ((*(byte *)(iVar14 + 1) & 0x10) != 0)))) {
-          thunk_FUN_004c50d0(iVar7,0);
-          thunk_FUN_005b6787(iVar7);
+          thunk_unit_pillage(iVar7,0);
+          thunk_unit_exhaust_moves(iVar7);
           goto LAB_0053692c;
         }
       }
@@ -1639,7 +1639,7 @@ LAB_00535e74: ;
 LAB_00536859:
   if (local_40 == 8) {
     units[iVar7].last_dir = 0xff;
-    thunk_FUN_005b6787(iVar7);
+    thunk_unit_exhaust_moves(iVar7);
     if (((unit_types[uVar19].role == '\x01') ||
         (uVar22 = tile_improvements(iVar9,iVar10), ((byte)uVar22 & 0x42) == 0x40)) &&
        (units[iVar7].orders = '\x01', (units[iVar7].flags & 0x100) != 0)) {
@@ -1648,9 +1648,9 @@ LAB_00536859:
   }
   else {
     units[iVar7].orders = '\x1b';
-    uVar22 = map_wrap_x((char)(&DAT_00628350)[local_40] + iVar9);
+    uVar22 = map_wrap_x((char)(&dir_dx_table)[local_40] + iVar9);
     units[iVar7].goto_x = (i16)uVar22;
-    units[iVar7].goto_y = (char)(&DAT_00628360)[local_40] + sVar2;
+    units[iVar7].goto_y = (char)(&dir_dy_table)[local_40] + sVar2;
   }
 LAB_0053692c:
   if (((units[iVar7].orders == '\v') && (units[iVar7].goto_x == iVar9)) &&
@@ -1659,9 +1659,9 @@ LAB_0053692c:
   }
   return 0;
 }
-#undef DAT_00654fa8
-#undef DAT_00679640
-#undef iptr_006d1da0
+#undef autoplay_active
+#undef human_civ
+#undef text_buffer
 #undef local_88
 #undef local_84
 #undef local_80
@@ -1701,11 +1701,11 @@ void __cdecl FUN_005369f3(iptr param_1)
            ) && (cVar1 != iVar4)) &&
          ((((*(byte *)(iVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cVar1 * 4) & 4) == 0 &&
            (unit_types[units[local_14].type].hold != '\0')) &&
-          ((iVar4 = thunk_FUN_005b50ad(local_14,2), 1 < iVar4 &&
+          ((iVar4 = thunk_unit_stack_sum(local_14,2), 1 < iVar4 &&
            (iVar4 = tile_is_ocean((int)units[local_14].x,(int)units[local_14].y), iVar4 != 0)))))) {
-        iVar4 = thunk_FUN_005ae31d((int)sVar2,(int)sVar3,(int)units[local_14].x,
+        iVar4 = thunk_map_distance_diag((int)sVar2,(int)sVar3,(int)units[local_14].x,
                                    (int)units[local_14].y);
-        iVar5 = thunk_FUN_005b2a39(local_14);
+        iVar5 = thunk_unit_max_moves(local_14);
         if (iVar4 < iVar5) {
           units[local_14].orders = '\v';
           units[local_14].goto_x = sVar2;
@@ -1780,12 +1780,12 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
       if ((10 - iVar6 <= local_10) &&
          (1 < *(byte *)(units[param_1].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + iVar4 * 0x594))) {
         for (local_14 = 0; (int)local_14 < 8; local_14 = local_14 + 1) {
-          iVar7 = map_wrap_x((int)(char)(&DAT_00628350)[local_14] + (int)cities[local_30].x);
-          iVar6 = (int)(char)(&DAT_00628360)[local_14] + (int)cities[local_30].y;
+          iVar7 = map_wrap_x((int)(char)(&dir_dx_table)[local_14] + (int)cities[local_30].x);
+          iVar6 = (int)(char)(&dir_dy_table)[local_14] + (int)cities[local_30].y;
           iVar8 = map_in_bounds(iVar7,iVar6);
           if (((iVar8 != 0) && (iVar8 = tile_city_owner(iVar7,iVar6), iVar8 < 0)) &&
              (iVar8 = tile_unit_owner(iVar7,iVar6), iVar8 < 0)) {
-            thunk_FUN_005b36df(param_1,iVar7,iVar6,1);
+            thunk_unit_relocate(param_1,iVar7,iVar6,1);
             units[param_1].visibility = '\0';
             if (((uint)game.human_players & 1 << (cities[local_30].owner & 0x1fU)) != 0) {
               if ((*(byte *)(iVar4 * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + cities[local_30].owner * 4) & 2) == 0) {
@@ -1793,7 +1793,7 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
                 *puVar2 = *puVar2 | 0x20000;
                 puVar2 = (uint *)(iVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_30].owner * 4);
                 *puVar2 = *puVar2 & 0xffffffef;
-                thunk_FUN_00467825(iVar4,(int)cities[local_30].owner,0x10000);
+                thunk_diplo_set_treaty_flags(iVar4,(int)cities[local_30].owner,0x10000);
               }
               else {
                 *(short *)(iVar4 * 2 + ADDR(0x64ca82, ((u8 *)&civs + 994)) + cities[local_30].owner * 0x594) =
@@ -1807,7 +1807,7 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
       return 8;
     }
     if ((((((cities[local_28].id != 0) && (iVar5 = (iptr)cities[local_28].owner, iVar5 != iVar4)) &&
-          (iVar6 = thunk_FUN_0043d20a(local_28,0x11), iVar6 == 0)) &&
+          (iVar6 = thunk_city_has_improvement(local_28,0x11), iVar6 == 0)) &&
          ('\x04' < cities[local_28].size)) &&
         (((uVar1 = (uint)civs[iVar5].military_strength * 2,
           uVar1 + (uint)civs[iVar4].military_strength * -3 != 0 &&
@@ -1819,16 +1819,16 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
        && ((*(uint *)(iVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + iVar5 * 4) & 0x104) == 0x100)) {
       local_8 = 0;
       for (local_14 = 0; (int)local_14 < 9; local_14 = local_14 + 1) {
-        iVar7 = map_wrap_x((int)(char)(&DAT_00628350)[local_14] + (int)cities[local_28].x);
-        iVar6 = (int)(char)(&DAT_00628360)[local_14] + (int)cities[local_28].y;
+        iVar7 = map_wrap_x((int)(char)(&dir_dx_table)[local_14] + (int)cities[local_28].x);
+        iVar6 = (int)(char)(&dir_dy_table)[local_14] + (int)cities[local_28].y;
         iVar8 = map_in_bounds(iVar7,iVar6);
         if ((iVar8 != 0) && (iVar8 = tile_unit_owner(iVar7,iVar6), 0 < iVar8)) {
           if (iVar8 == iVar4) {
             local_8 = local_8 + -2;
           }
           else if ((*(uint *)(iVar4 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + iVar8 * 4) & 0x104) == 0x100) {
-            for (local_20 = thunk_FUN_005b2e69(iVar7,iVar6); -1 < local_20;
-                local_20 = thunk_FUN_005b2c82(local_20)) {
+            for (local_20 = thunk_tile_first_unit(iVar7,iVar6); -1 < local_20;
+                local_20 = thunk_unit_next_in_stack(local_20)) {
               local_8 = local_8 + 1;
             }
           }
@@ -1842,9 +1842,9 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
         bVar3 = false;
         for (local_c = 0; local_c < game.num_cities; local_c = local_c + 1) {
           if ((cities[local_c].id != 0) && (cities[local_c].owner == iVar4)) {
-            iVar6 = thunk_FUN_005ae1b0((int)cities[local_c].x,(int)cities[local_c].y,
+            iVar6 = thunk_map_distance((int)cities[local_c].x,(int)cities[local_c].y,
                                        (int)cities[local_28].x,(int)cities[local_28].y);
-            iVar8 = thunk_FUN_005b2a39(param_1);
+            iVar8 = thunk_unit_max_moves(param_1);
             if (iVar6 <= iVar8 / (int)(uint)cosmic.road_move_mult) {
               bVar3 = true;
               break;
@@ -1869,8 +1869,8 @@ undefined4 __cdecl FUN_00536c4c(iptr param_1)
 #undef local_8
 
 /* 00537331 auto */
-#define DAT_0064bc60 (*(short *)((u8 *)&g.d_0064bc60))
-#define DAT_0064bcba (*(short *)((u8 *)&g.d_0064bcba))
+#define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
+#define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_58 (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -1916,21 +1916,21 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
   bVar1 = units[param_1].owner;
   iVar11 = (int)(char)bVar1;
   if (unit_types[units[param_1].type].range == '\0') {
-    local_14 = thunk_FUN_005b2a39(param_1);
+    local_14 = thunk_unit_max_moves(param_1);
     local_14 = local_14 * 2;
   }
   else {
     uVar3 = unit_types[units[param_1].type].range;
     uVar4 = units[param_1].counter;
-    iVar12 = thunk_FUN_005b2a39(param_1);
-    local_14 = thunk_FUN_005b2c3d(param_1);
+    iVar12 = thunk_unit_max_moves(param_1);
+    local_14 = thunk_unit_moves_left(param_1);
     local_14 = ((int)(char)uVar3 - ((char)uVar4 + 1)) * iVar12 + local_14;
   }
   local_14 = local_14 / (int)(uint)cosmic.road_move_mult;
   local_4c = 9999;
   for (local_44 = 0; local_44 < game.num_cities; local_44 = local_44 + 1) {
     if (((cities[local_44].id != 0) && (cities[local_44].owner == iVar11)) &&
-       (iVar12 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,
+       (iVar12 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,
                                     (int)cities[local_44].x,(int)cities[local_44].y),
        iVar12 < local_4c)) {
       local_4c = iVar12;
@@ -1939,11 +1939,11 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
   if (unit_types[units[param_1].type].range != '\0') {
     if (unit_types[units[param_1].type].range == '\x01') {
       if (units[param_1].orders != '\v') {
-        iVar12 = thunk_FUN_005b2a39(param_1);
-        iVar13 = thunk_FUN_005b2c3d(param_1);
+        iVar12 = thunk_unit_max_moves(param_1);
+        iVar13 = thunk_unit_moves_left(param_1);
         if (((iVar13 <= iVar12 >> 1) && (local_14 < local_4c + 1)) && (local_4c <= local_14)) {
           units[param_1].field_0c = 'H';
-          thunk_FUN_004c54da(param_1);
+          thunk_unit_go_home(param_1);
           return 0xffffffff;
         }
       }
@@ -1951,7 +1951,7 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
     else if (((int)(char)unit_types[units[param_1].type].range / 2 <=
               (int)(char)units[param_1].counter) && (local_4c <= local_14)) {
       units[param_1].field_0c = 'H';
-      thunk_FUN_004c54da(param_1);
+      thunk_unit_go_home(param_1);
       return 0xffffffff;
     }
   }
@@ -1966,11 +1966,11 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
           sVar6 = units[local_58].x;
           sVar7 = units[local_58].y;
           for (local_20 = 0; (int)local_20 < 8; local_20 = local_20 + 1) {
-            iVar17 = map_wrap_x((int)(char)(&DAT_00628350)[local_20] + (int)sVar6);
-            iVar12 = (int)(char)(&DAT_00628360)[local_20] + (int)sVar7;
+            iVar17 = map_wrap_x((int)(char)(&dir_dx_table)[local_20] + (int)sVar6);
+            iVar12 = (int)(char)(&dir_dy_table)[local_20] + (int)sVar7;
             iVar13 = map_in_bounds(iVar17,iVar12);
             if ((iVar13 != 0) && (iVar13 = tile_city_or_unit_owner(iVar17,iVar12), iVar13 < 0)) {
-              thunk_FUN_005b36df(iVar10,iVar17,iVar12,1);
+              thunk_unit_relocate(iVar10,iVar17,iVar12,1);
               units[iVar10].visibility = '\0';
               *(iptr *)param_3 = iVar17;
               *(int *)param_4 = iVar12;
@@ -1978,18 +1978,18 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
             }
           }
         }
-        iVar12 = thunk_FUN_005b50ad(iVar10,8);
+        iVar12 = thunk_unit_stack_sum(iVar10,8);
         if (1 < iVar12) {
           for (local_44 = 0; local_44 < game.num_cities; local_44 = local_44 + 1) {
             if ((cities[local_44].id != 0) && (cities[local_44].owner == iVar11)) {
-              iVar17 = thunk_FUN_005b2e69((int)cities[local_44].x,(int)cities[local_44].y);
-              iVar13 = thunk_FUN_005b50ad(iVar17,8);
+              iVar17 = thunk_tile_first_unit((int)cities[local_44].x,(int)cities[local_44].y);
+              iVar13 = thunk_unit_stack_sum(iVar17,8);
               if (iVar13 < iVar12) {
-                iVar13 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,
+                iVar13 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,
                                             (int)cities[local_44].x,(int)cities[local_44].y);
-                iVar14 = thunk_FUN_005b2a39(iVar10);
+                iVar14 = thunk_unit_max_moves(iVar10);
                 if (iVar13 <= iVar14 / (int)(uint)cosmic.road_move_mult) {
-                  thunk_FUN_005b36df(iVar10,(int)cities[local_44].x,(int)cities[local_44].y,1);
+                  thunk_unit_relocate(iVar10,(int)cities[local_44].x,(int)cities[local_44].y,1);
                   units[iVar10].visibility = '\0';
                   *(int *)param_3 = (int)cities[local_44].x;
                   *(int *)param_4 = (int)cities[local_44].y;
@@ -2008,9 +2008,9 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
         iVar13 = (int)units[param_1].y;
         iVar14 = map_in_bounds(iVar12,iVar13);
         if (iVar14 != 0) {
-          iVar14 = thunk_FUN_005b2a39(iVar10);
+          iVar14 = thunk_unit_max_moves(iVar10);
           uVar18 = (uint)cosmic.road_move_mult;
-          iVar15 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,iVar12,iVar13);
+          iVar15 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,iVar12,iVar13);
           if (iVar15 <= iVar14 / (int)uVar18) {
             local_8 = (int)(char)unit_types[units[param_1].type].cost;
             uVar16 = tile_improvements(iVar12,iVar13);
@@ -2023,13 +2023,13 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
             }
             if ((bVar9) || (iVar14 = tile_city_owner(iVar12,iVar13), -1 < iVar14)) {
               if (!bVar9) {
-                iVar14 = thunk_FUN_005b50ad(param_1,2);
+                iVar14 = thunk_unit_stack_sum(param_1,2);
                 if (iVar14 == 1) {
                   local_8 = local_8 << 1;
                 }
                 for (local_20 = 0; (int)local_20 < 8; local_20 = local_20 + 1) {
-                  iVar17 = map_wrap_x((char)(&DAT_00628350)[local_20] + iVar12);
-                  cVar2 = (&DAT_00628360)[local_20];
+                  iVar17 = map_wrap_x((char)(&dir_dx_table)[local_20] + iVar12);
+                  cVar2 = (&dir_dy_table)[local_20];
                   iVar14 = map_in_bounds(iVar17,cVar2 + iVar13);
                   if ((iVar14 != 0) &&
                      (iVar14 = tile_unit_owner(iVar17,cVar2 + iVar13), iVar14 == iVar11)) {
@@ -2040,7 +2040,7 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
               }
             }
             else {
-              local_8 = thunk_FUN_005b50ad(param_1,0);
+              local_8 = thunk_unit_stack_sum(param_1,0);
             }
             iVar14 = tile_is_ocean(iVar12,iVar13);
             if (iVar14 != 0) {
@@ -2072,7 +2072,7 @@ FUN_00537331(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,ipt
           ((int)units[param_1].owner == (uint)bVar1)))) {
         if (unit_types[units[param_1].type].domain == '\x01') {
 LAB_00537ec2:
-          iVar12 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,
+          iVar12 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,
                                       (int)units[param_1].x,(int)units[param_1].y);
           local_30 = iVar12 * 2;
           if (((uint)game.human_players & 1 << (units[param_1].owner & 0x1fU)) != 0) {
@@ -2081,7 +2081,7 @@ LAB_00537ec2:
           if (unit_types[units[param_1].type].range != '\0') {
             local_30 = local_30 + -1;
           }
-          iVar13 = thunk_FUN_005b50ad(param_1,2);
+          iVar13 = thunk_unit_stack_sum(param_1,2);
           if (iVar13 == 1) {
             local_30 = local_30 + -1;
           }
@@ -2093,10 +2093,10 @@ LAB_00537ec2:
         }
         else {
           if (unit_types[units[param_1].type].hold == '\0') {
-            iVar12 = thunk_FUN_005b50ad(param_1,2);
+            iVar12 = thunk_unit_stack_sum(param_1,2);
           }
           else {
-            iVar12 = thunk_FUN_005b50ad(param_1,5);
+            iVar12 = thunk_unit_stack_sum(param_1,5);
           }
           if (iVar12 < 2) {
             uVar8 = units[iVar10].flags;
@@ -2108,7 +2108,7 @@ LAB_00537ec2:
                        (int)(char)unit_types[units[param_1].type].firepower *
                        (3 - (uint)((units[param_1].flags & 0x2000) == 0));
             if ((unit_types[units[param_1].type].hold != '\0') &&
-               (iVar12 = thunk_FUN_005b50ad(param_1,2), iVar12 == 1)) {
+               (iVar12 = thunk_unit_stack_sum(param_1,2), iVar12 == 1)) {
               local_1c = local_1c * 2;
             }
             bVar10 = tile_terrain((int)units[param_1].x,(int)units[param_1].y);
@@ -2122,38 +2122,38 @@ LAB_00537ec2:
     if (-1 < local_58) {
       if ((local_10 <= local_14) || (local_14 < local_4c)) {
         if (((local_4c <= local_14 - local_10) && (local_10 == 1)) || (local_14 < local_4c)) {
-          thunk_FUN_00531607(iVar10,0x41,(int)units[local_58].x,(int)units[local_58].y);
+          thunk_unit_set_goto(iVar10,0x41,(int)units[local_58].x,(int)units[local_58].y);
           return 0xffffffff;
         }
         local_50 = 9999;
         for (local_20 = 0; (int)local_20 < 8; local_20 = local_20 + 1) {
-          iVar17 = map_wrap_x((int)(char)(&DAT_00628350)[local_20] + (int)units[local_58].x);
-          iVar12 = (int)(char)(&DAT_00628360)[local_20] + (int)units[local_58].y;
+          iVar17 = map_wrap_x((int)(char)(&dir_dx_table)[local_20] + (int)units[local_58].x);
+          iVar12 = (int)(char)(&dir_dy_table)[local_20] + (int)units[local_58].y;
           iVar13 = map_in_bounds(iVar17,iVar12);
           if ((((iVar13 != 0) && (iVar13 = tile_city_owner(iVar17,iVar12), iVar13 < 0)) &&
               ((iVar13 = tile_unit_owner(iVar17,iVar12), iVar13 < 0 || (iVar11 == iVar13)))) &&
-             (iVar13 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,iVar17,
+             (iVar13 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,iVar17,
                                           iVar12), iVar13 <= local_10 + -1)) {
-            DAT_0063f660 = 9999;
+            nearest_city_dist = 9999;
             local_c = -1;
             for (local_44 = 0; local_44 < game.num_cities; local_44 = local_44 + 1) {
               if (((cities[local_44].id != 0) && (cities[local_44].owner == iVar11)) &&
-                 (iVar13 = thunk_FUN_005ae1b0(iVar17,iVar12,(int)cities[local_44].x,
-                                              (int)cities[local_44].y), iVar13 < DAT_0063f660)) {
+                 (iVar13 = thunk_map_distance(iVar17,iVar12,(int)cities[local_44].x,
+                                              (int)cities[local_44].y), iVar13 < nearest_city_dist)) {
                 local_c = local_44;
-                DAT_0063f660 = iVar13;
+                nearest_city_dist = iVar13;
               }
             }
             if (local_c < 0) {
-              DAT_0063f660 = 0;
+              nearest_city_dist = 0;
             }
-            if (DAT_0063f660 < local_50) {
-              local_50 = DAT_0063f660;
+            if (nearest_city_dist < local_50) {
+              local_50 = nearest_city_dist;
             }
           }
         }
         if (local_10 + local_50 <= local_14) {
-          thunk_FUN_00531607(iVar10,0x41,(int)units[local_58].x,(int)units[local_58].y);
+          thunk_unit_set_goto(iVar10,0x41,(int)units[local_58].x,(int)units[local_58].y);
           return 0xffffffff;
         }
       }
@@ -2166,21 +2166,21 @@ LAB_00537ec2:
           local_18 = -1;
           for (local_44 = 0; local_44 < game.num_cities; local_44 = local_44 + 1) {
             if (((cities[local_44].id != 0) && (cities[local_44].owner == iVar11)) &&
-               ((iVar12 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,
+               ((iVar12 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,
                                              (int)cities[local_44].x,(int)cities[local_44].y),
                 iVar12 <= local_14 &&
-                (iVar12 = thunk_FUN_005ae1b0(local_64,local_2c,(int)cities[local_44].x,
+                (iVar12 = thunk_map_distance(local_64,local_2c,(int)cities[local_44].x,
                                              (int)cities[local_44].y), iVar12 < local_10)))) {
               local_18 = local_44;
               local_10 = iVar12;
             }
           }
           if (-1 < local_18) {
-            thunk_FUN_00531607(iVar10,0x61,(int)cities[local_18].x,(int)cities[local_18].y);
+            thunk_unit_set_goto(iVar10,0x61,(int)cities[local_18].x,(int)cities[local_18].y);
             return 0xffffffff;
           }
           if (param_7 != 0) {
-            thunk_FUN_004c54da(iVar10);
+            thunk_unit_go_home(iVar10);
             return 0xffffffff;
           }
           units[iVar10].field_0c = 'h';
@@ -2189,7 +2189,7 @@ LAB_00537ec2:
         if (((cities[local_44].id != 0) &&
             (((uint)game.human_players & 1 << (cities[local_44].owner & 0x1fU)) != 0)) &&
            ((cities[local_44].flags & 0x10000) != 0)) {
-          local_24 = thunk_FUN_005ae1b0(local_64,local_2c,(int)cities[local_44].x,
+          local_24 = thunk_map_distance(local_64,local_2c,(int)cities[local_44].x,
                                         (int)cities[local_44].y);
           if ((*(byte *)(iVar11 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_44].owner * 4) & 0x10) == 0) {
             if ((*(byte *)(iVar11 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[local_44].owner * 4) & 0x20) == 0) {
@@ -2209,7 +2209,7 @@ LAB_00538277:
       } while( true );
     }
     if (param_7 != 0) {
-      thunk_FUN_004c54da(iVar10);
+      thunk_unit_go_home(iVar10);
       return 0xffffffff;
     }
   }
@@ -2227,10 +2227,10 @@ LAB_00538277:
     else {
       local_58 = -1;
       local_10 = -9999;
-      if ((((game.game_flags & 0x80) != 0) && (((int)DAT_0064bc60 & 0x8000U) != 0)) &&
+      if ((((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) &&
          ((game.turn == 1 &&
-          ((DAT_0064bcba == iVar11 && (iVar12 = tile_unit_owner(0x2d,0x35), -1 < iVar12)))))) {
-        thunk_FUN_00531607(iVar10,0x42,0x2d,0x35);
+          ((scenario_objective_civ == iVar11 && (iVar12 = tile_unit_owner(0x2d,0x35), -1 < iVar12)))))) {
+        thunk_unit_set_goto(iVar10,0x42,0x2d,0x35);
         if (param_9 != 0) {
           *(undefined4 *)param_6 = 1;
         }
@@ -2242,22 +2242,22 @@ LAB_00538277:
       for (local_44 = 0; local_44 < game.num_cities; local_44 = local_44 + 1) {
         if (((cities[local_44].id != 0) && (cities[local_44].owner != iVar11)) &&
            ((*(byte *)(iVar11 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_44].owner * 4) & 6) == 0)) {
-          iVar12 = thunk_FUN_005ae1b0(*(undefined4 *)param_3,*(undefined4 *)param_4,
+          iVar12 = thunk_map_distance(*(undefined4 *)param_3,*(undefined4 *)param_4,
                                       (int)cities[local_44].x,(int)cities[local_44].y);
-          iVar13 = thunk_FUN_005b2c3d(iVar10);
+          iVar13 = thunk_unit_moves_left(iVar10);
           if ((iVar12 <= iVar13 / (int)(uint)cosmic.road_move_mult) &&
-             (iVar12 = thunk_FUN_005b2e69((int)cities[local_44].x,(int)cities[local_44].y),
+             (iVar12 = thunk_tile_first_unit((int)cities[local_44].x,(int)cities[local_44].y),
              -1 < iVar12)) {
             cVar2 = cities[local_44].size;
-            iVar12 = thunk_FUN_005b50ad(iVar12,2);
+            iVar12 = thunk_unit_stack_sum(iVar12,2);
             local_8 = cVar2 * 10 + iVar12 * -0x19;
             iVar12 = tile_landmass((int)cities[local_44].x,(int)cities[local_44].y);
             if (iVar12 == param_8) {
               local_8 = local_8 + 0x28;
             }
             for (local_20 = 0; (int)local_20 < 8; local_20 = local_20 + 1) {
-              iVar17 = map_wrap_x((int)cities[local_44].x + (int)(char)(&DAT_00628350)[local_20]);
-              iVar12 = (int)cities[local_44].y + (int)(char)(&DAT_00628360)[local_20];
+              iVar17 = map_wrap_x((int)cities[local_44].x + (int)(char)(&dir_dx_table)[local_20]);
+              iVar12 = (int)cities[local_44].y + (int)(char)(&dir_dy_table)[local_20];
               iVar13 = map_in_bounds(iVar17,iVar12);
               if ((iVar13 != 0) && (iVar12 = tile_unit_owner(iVar17,iVar12), iVar12 == iVar11)) {
                 local_8 = local_8 + 0x3c;
@@ -2271,7 +2271,7 @@ LAB_00538277:
         }
       }
       if (-1 < local_58) {
-        thunk_FUN_00531607(iVar10,0x42,(int)cities[local_58].x,(int)cities[local_58].y);
+        thunk_unit_set_goto(iVar10,0x42,(int)cities[local_58].x,(int)cities[local_58].y);
         if (param_9 != 0) {
           *(undefined4 *)param_6 = 1;
         }
@@ -2284,8 +2284,8 @@ LAB_00538277:
   }
   return 0xffffff9d;
 }
-#undef DAT_0064bc60
-#undef DAT_0064bcba
+#undef scenario_flags
+#undef scenario_objective_civ
 #undef local_64
 #undef local_58
 #undef local_50
@@ -2303,8 +2303,8 @@ LAB_00538277:
 #undef local_8
 
 /* 00538a29 auto */
-#define DAT_0064bc60 (*(ushort *)((u8 *)&g.d_0064bc60))
-#define DAT_00654fac (*(short *)((u8 *)&g.d_00654fac))
+#define mp_double_production (*(short *)((u8 *)&g.d_00654fac))
+#define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define local_188 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_17c (*(uint *)(frame_ + FRAME_OFF(12)))
 #define local_170 (*(uint *)(frame_ + FRAME_OFF(24)))
@@ -2448,17 +2448,17 @@ undefined4 __cdecl FUN_00538a29(void)
   local_c8 = 8;
   iVar27 = map_in_bounds(local_d4,local_e8);
   if (iVar27 == 0) {
-    thunk_FUN_005b2f50(local_168);
+    thunk_unit_set_sleep(local_168);
     goto LAB_005436c1;
   }
-  local_158 = thunk_FUN_005b4d8c(local_d4,local_e8,uVar9);
-  local_88 = thunk_FUN_0043d07a(local_d4,local_e8,-1,0xffffffff,-1);
-  iVar27 = DAT_0063f660;
+  local_158 = thunk_tile_in_enemy_zoc(local_d4,local_e8,uVar9);
+  local_88 = thunk_city_find_nearest(local_d4,local_e8,-1,0xffffffff,-1);
+  iVar27 = nearest_city_dist;
   if (-1 < (int)local_88) {
     local_104 = tile_land_landmass((int)cities[local_88].x,(int)cities[local_88].y);
   }
-  local_40 = thunk_FUN_0043d07a(local_d4,local_e8,uVar9,0xffffffff,-1);
-  local_3c = DAT_0063f660;
+  local_40 = thunk_city_find_nearest(local_d4,local_e8,uVar9,0xffffffff,-1);
+  local_3c = nearest_city_dist;
   if (-1 < (int)local_40) {
     local_58 = tile_land_landmass((int)cities[local_40].x,(int)cities[local_40].y);
   }
@@ -2471,20 +2471,20 @@ undefined4 __cdecl FUN_00538a29(void)
      ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0)) {
     units[local_168].flags = units[local_168].flags & 0xfdff;
   }
-  local_e4 = thunk_FUN_00531287(local_168);
+  local_e4 = thunk_ai_unit_role(local_168);
   local_a0 = unit_types[units[local_168].type].flags;
   local_144 = (int)(char)unit_types[units[local_168].type].domain;
   uVar28 = (uint)*(byte *)(iVar11 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594);
-  if (((local_158 != 0) && (iptr_006ced4c != 0)) &&
-     ((local_40 == local_88 && ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + iptr_006ced4c * 4) & 4) != 0))
+  if (((local_158 != 0) && (adjacent_foreign_civ != 0)) &&
+     ((local_40 == local_88 && ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + adjacent_foreign_civ * 4) & 4) != 0))
      )) {
-    thunk_FUN_00456f20(uVar9,iptr_006ced4c,1);
-    if ((((1 << ((byte)iptr_006ced4c & 0x1f) & (uint)game.human_players) != 0) &&
+    thunk_civ_adjust_attitude(uVar9,adjacent_foreign_civ,1);
+    if ((((1 << ((byte)adjacent_foreign_civ & 0x1f) & (uint)game.human_players) != 0) &&
         (2 < game.difficulty)) &&
-       ((iVar12 = thunk_FUN_00467904(uVar9,iptr_006ced4c), 0x3c < iVar12 &&
-        ((game.power_rank[uVar9] < game.power_rank[iptr_006ced4c] &&
-         (iVar14 = thunk_FUN_0059a791(0,3), iVar14 == 0)))))) {
-      puVar1 = (uint *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + iptr_006ced4c * 4);
+       ((iVar12 = thunk_civ_get_attitude(uVar9,adjacent_foreign_civ), 0x3c < iVar12 &&
+        ((game.power_rank[uVar9] < game.power_rank[adjacent_foreign_civ] &&
+         (iVar14 = thunk_rand_range(0,3), iVar14 == 0)))))) {
+      puVar1 = (uint *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + adjacent_foreign_civ * 4);
       *puVar1 = *puVar1 | 0x20;
     }
   }
@@ -2495,7 +2495,7 @@ undefined4 __cdecl FUN_00538a29(void)
      ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[uVar20].owner * 4) & 0xe) == 0)) {
     units[local_168].orders = -1;
     local_158 = 1;
-    iptr_006ced4c = (iptr)cities[uVar20].owner;
+    adjacent_foreign_civ = (iptr)cities[uVar20].owner;
     bVar4 = true;
   }
   local_d8 = (uint)(units[local_168].damage != '\0');
@@ -2506,7 +2506,7 @@ undefined4 __cdecl FUN_00538a29(void)
     local_d8 = 3;
   }
   if ((unit_types[units[local_168].type].hold != '\0') &&
-     (iVar15 = thunk_FUN_005b2c3d(local_168), iVar15 == 0)) {
+     (iVar15 = thunk_unit_moves_left(local_168), iVar15 == 0)) {
     local_20 = 1;
     goto LAB_0053be12;
   }
@@ -2522,7 +2522,7 @@ undefined4 __cdecl FUN_00538a29(void)
     if (iVar27 != 0) {
       if (iVar27 == 1) {
         if (local_88 == local_40) {
-          thunk_FUN_00531607(local_168,100,(int)cities[local_88].x,(int)cities[local_88].y);
+          thunk_unit_set_goto(local_168,100,(int)cities[local_88].x,(int)cities[local_88].y);
           goto LAB_005436c1;
         }
         if (bVar4) {
@@ -2538,14 +2538,14 @@ undefined4 __cdecl FUN_00538a29(void)
 LAB_005392a6:
   if ((((((local_d8 == 0) || (units[local_168].moves_used != '\0')) ||
         ((local_f0 != 0 || ((local_144 != 1 || (unit_types[units[local_168].type].range != '\0')))))
-        ) || (iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 != 0)) ||
+        ) || (iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 != 0)) ||
       ((local_3c < 0xd || (units[local_168].visibility != '\0')))) ||
      (((local_d8 != 2 && ((units[local_168].flags & 8) == 0)) &&
       ((((local_d8 != 3 || (local_3c == 0)) || (local_3c < 0x18)) || (iVar27 < 9)))))) {
     units[local_168].flags = units[local_168].flags & 0xfff7;
     if (((((local_d8 != 0) && (units[local_168].moves_used == '\0')) && (local_f0 == 0)) &&
         ((local_144 == 0 ||
-         (((local_144 == 2 && (iVar15 = thunk_FUN_005b50ad(local_168,2), iVar15 < 2)) &&
+         (((local_144 == 2 && (iVar15 = thunk_unit_stack_sum(local_168,2), iVar15 < 2)) &&
           ((local_d8 == 1 || ((int)(uint)units[local_168].damage >> 1 <= local_3c / 2)))))))) &&
        (((local_144 != 2 || ((game.human_players & units[local_168].visibility) == 0)) &&
         ((local_d8 == 3 ||
@@ -2554,7 +2554,7 @@ LAB_005392a6:
         bVar31 = local_158 == 0;
       }
       else {
-        iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9);
+        iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9);
         if (iVar15 == 0) {
           bVar31 = true;
         }
@@ -2571,9 +2571,9 @@ LAB_005392a6:
     }
     if (((local_d8 == 2) && (local_144 == 2)) &&
        ((local_e4 == 2 ||
-        ((local_e4 == 4 && (iVar15 = thunk_FUN_005b50ad(local_168,2), iVar15 < 2)))))) {
-      thunk_FUN_004c54da(local_168);
-      iVar15 = thunk_FUN_005b2c3d(local_168);
+        ((local_e4 == 4 && (iVar15 = thunk_unit_stack_sum(local_168,2), iVar15 < 2)))))) {
+      thunk_unit_go_home(local_168);
+      iVar15 = thunk_unit_moves_left(local_168);
       if (iVar15 == 0) goto LAB_005436c1;
       if (units[local_168].orders == '\v') {
         local_a4 = 1;
@@ -2586,16 +2586,16 @@ LAB_005392a6:
          (((((units[local_168].flags & 0x100) != 0 ||
             ('\x02' < (char)terrain_types[local_80].defense)) &&
            ((((local_e4 == 1 ||
-              (iVar15 = thunk_FUN_005b2a39(local_168), iVar15 <= (int)(uint)cosmic.road_move_mult))
+              (iVar15 = thunk_unit_max_moves(local_168), iVar15 <= (int)(uint)cosmic.road_move_mult))
              || (local_158 == 0)) || (8 < local_3c)))) && (local_f0 == 0)))) {
         local_c8 = 8;
         uVar20 = local_c8;
       }
       else {
         if (((local_144 != 0) || (local_bc == 0)) || (local_f0 != 0)) {
-          if (((local_e4 != 4) || (iVar15 = thunk_FUN_005b50ad(local_168,2), iVar15 < 2)) &&
-             ((thunk_FUN_004c54da(local_168), units[local_168].orders == '\v' ||
-              (iVar15 = thunk_FUN_005b2c3d(local_168), iVar15 == 0)))) goto LAB_005436c1;
+          if (((local_e4 != 4) || (iVar15 = thunk_unit_stack_sum(local_168,2), iVar15 < 2)) &&
+             ((thunk_unit_go_home(local_168), units[local_168].orders == '\v' ||
+              (iVar15 = thunk_unit_moves_left(local_168), iVar15 == 0)))) goto LAB_005436c1;
           goto LAB_005397e7;
         }
         local_c8 = 8;
@@ -2604,7 +2604,7 @@ LAB_005392a6:
     }
     else {
 LAB_005397e7:
-      if (((((game.game_flags & 0x80) == 0) || (((int)(short)DAT_0064bc60 & 0x8000U) == 0)) ||
+      if (((((game.game_flags & 0x80) == 0) || (((int)(short)scenario_flags & 0x8000U) == 0)) ||
           (uVar9 != 1)) ||
          (((((*(undefined1 *)((char *)&civs[1].treaties[3] + 1)) & 0x20) != 0 || (5 < game.turn)) ||
           (0x4f < units[local_168].x)))) {
@@ -2630,7 +2630,7 @@ LAB_005397e7:
           }
           if (local_e4 == 6) {
             if ((((units[local_168].orders == '\v') &&
-                 (iVar15 = thunk_FUN_0043cf76((int)units[local_168].goto_x,
+                 (iVar15 = thunk_city_at((int)units[local_168].goto_x,
                                               (int)units[local_168].goto_y), -1 < iVar15)) &&
                 ((int)cities[iVar15].owner != uVar9)) &&
                ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[iVar15].owner * 4) & 0xe) == 0)) {
@@ -2639,7 +2639,7 @@ LAB_005397e7:
             else {
               iVar15 = tile_is_ocean(local_d4,local_e8);
               if (iVar15 == 0) {
-                local_24 = thunk_FUN_00598d45(uVar9);
+                local_24 = thunk_ai_spaceship_race_behind(uVar9);
                 local_38 = -999;
                 local_160 = 0xffffffff;
                 for (local_134 = 0; (int)local_134 < (int)game.num_cities; local_134 = local_134 + 1
@@ -2651,7 +2651,7 @@ LAB_005397e7:
                       if (iVar15 == iVar11) {
 LAB_00539cb3:
                         local_78 = (uptr)cities[local_134].owner;
-                        local_70 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x,
+                        local_70 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x,
                                                       (int)cities[local_134].y);
                         if (((uint)(byte)units[local_168].home_city % 3 != (int)local_134 % 3) &&
                            (uVar24 = tile_improvements(local_d4,local_e8),
@@ -2666,7 +2666,7 @@ LAB_00539cb3:
                           if ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_78 * 4) & 0xe) != 0) {
                             if ((((1 << ((byte)local_78 & 0x1f) & (uint)game.human_players) == 0) ||
                                 ((cities[local_134].flags & 8) != 0)) ||
-                               ((iVar15 = thunk_FUN_00598d45(uVar9), iVar15 == 0 &&
+                               ((iVar15 = thunk_ai_spaceship_race_behind(uVar9), iVar15 == 0 &&
                                 ((game.power_rank[local_78] < game.power_rank[uVar9] ||
                                  ((((units[local_168].type != '/' &&
                                     ((int)((uint)civs[local_78].num_advances -
@@ -2684,7 +2684,7 @@ LAB_00539cb3:
                             local_18 = local_18 / 2;
                           }
                           if ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + local_78 * 4) & 0x20) == 0) {
-                            iVar15 = thunk_FUN_00467904(uVar9,local_78);
+                            iVar15 = thunk_civ_get_attitude(uVar9,local_78);
                             local_18 = local_18 + iVar15;
                           }
                           else {
@@ -2711,8 +2711,8 @@ LAB_00539cb3:
                     else {
                       local_c4 = 0;
                       for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                        iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                        local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                        iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                        local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                         iVar23 = map_in_bounds(iVar21,local_74);
                         if (((iVar23 != 0) && (iVar23 = tile_is_ocean(iVar21,local_74), iVar23 == 0)
                             ) && (iVar23 = tile_landmass(iVar21,local_74), iVar23 == iVar15)) {
@@ -2727,14 +2727,14 @@ LAB_00539b29: ;
                 }
                 if ((int)local_160 < 0) {
                   if (units[local_168].orders != '\v') {
-                    thunk_FUN_005b6042(local_168,1);
+                    thunk_unit_destroy_redraw(local_168,1);
                     return 1;
                   }
                   goto LAB_005436c1;
                 }
                 local_a4 = 1;
                 if ((units[local_168].orders != '\v') || ((int)cities[local_160].owner != uVar9)) {
-                  thunk_FUN_00531607(local_168,0x53,(int)cities[local_160].x,
+                  thunk_unit_set_goto(local_168,0x53,(int)cities[local_160].x,
                                      (int)cities[local_160].y);
                 }
               }
@@ -2748,8 +2748,8 @@ LAB_00539b29: ;
               local_160 = 0xffffffff;
               local_38 = 0;
               for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                 iVar15 = map_in_bounds(iVar21,local_74);
                 if (((iVar15 != 0) && (iVar15 = tile_is_ocean(iVar21,local_74), iVar15 == 0)) &&
                    (iVar15 = tile_landmass(iVar21,local_74),
@@ -2789,7 +2789,7 @@ LAB_00539b29: ;
               local_44 = local_40;
             }
             if ((int)local_44 < 0) {
-              thunk_FUN_005b6042(local_168,1);
+              thunk_unit_destroy_redraw(local_168,1);
               return 1;
             }
             for (local_134 = 0; (int)local_134 < (int)game.num_cities; local_134 = local_134 + 1) {
@@ -2803,7 +2803,7 @@ LAB_00539b29: ;
                     local_c4 = 0;
                   }
                 }
-                iVar15 = thunk_FUN_005ae31d((int)cities[local_134].x,(int)cities[local_134].y,
+                iVar15 = thunk_map_distance_diag((int)cities[local_134].x,(int)cities[local_134].y,
                                             (int)cities[local_44].x,(int)cities[local_44].y);
                 local_70 = (((int)cities[local_44].base_trade + (int)cities[local_134].base_trade) *
                            iVar15) / 0x18;
@@ -2813,8 +2813,8 @@ LAB_00539b29: ;
                 else {
                   uVar33 = 100;
                   uVar10 = 0;
-                  iVar21 = thunk_FUN_00467904(uVar9,(int)cities[local_134].owner);
-                  local_cc = thunk_FUN_005adfa0(iVar21,uVar10,uVar33);
+                  iVar21 = thunk_civ_get_attitude(uVar9,(int)cities[local_134].owner);
+                  local_cc = thunk_int_clamp(iVar21,uVar10,uVar33);
                   local_70 = (int)((200 - local_cc) * local_70) / 100;
                 }
                 if (local_c4 == 0) {
@@ -2834,21 +2834,21 @@ LAB_00539b29: ;
               }
             }
             if (-1 < (int)local_160) {
-              thunk_FUN_00531607(local_168,99,(int)cities[local_160].x,(int)cities[local_160].y);
+              thunk_unit_set_goto(local_168,99,(int)cities[local_160].x,(int)cities[local_160].y);
               goto LAB_005436c1;
             }
             if (units[local_168].home_city != -1) {
               bVar7 = units[local_168].home_city;
               iVar15 = tile_landmass((int)cities[bVar7].x,(int)cities[bVar7].y);
               if (iVar15 == iVar11) {
-                thunk_FUN_00531607(local_168,99,(int)cities[bVar7].x,(int)cities[bVar7].y);
+                thunk_unit_set_goto(local_168,99,(int)cities[bVar7].x,(int)cities[bVar7].y);
                 goto LAB_005436c1;
               }
             }
           }
           bVar29 = local_e4 == 5;
           bVar30 = unit_types[units[local_168].type].role == '\x05';
-          local_38 = thunk_FUN_005b8c42(local_d4,local_e8);
+          local_38 = thunk_tile_owner_or_fertility(local_d4,local_e8);
           if (((iVar27 < 4) && (iVar11 == local_104)) && (7 < local_38)) {
             local_38 = 8;
           }
@@ -2857,11 +2857,11 @@ LAB_00539b29: ;
             local_38 = 0;
           }
           if ((((bVar29) &&
-               (thunk_FUN_00492c15(uVar9,5,local_d4,local_e8,0), civs[uVar9].num_cities == 0)) &&
+               (thunk_civ_clear_standing_goals_near(uVar9,5,local_d4,local_e8,0), civs[uVar9].num_cities == 0)) &&
               (game.turn == 1)) &&
              (((start_x[civs[uVar9].tribe] == local_d4 && (start_y[civs[uVar9].tribe] == local_e8))
               && (7 < local_38)))) {
-            thunk_FUN_004c4d1e(local_168,-1,0);
+            thunk_unit_found_city(local_168,-1,0);
             return 1;
           }
           local_134 = local_88;
@@ -2874,12 +2874,12 @@ LAB_00539b29: ;
               local_e0 = 8;
             }
             for (local_60 = 0; (int)local_60 < local_e0; local_60 = local_60 + 1) {
-              iVar21 = map_wrap_x((char)(&DAT_00628370)[local_60] + local_d4);
-              local_74 = (char)(&DAT_006283a0)[local_60] + local_e8;
+              iVar21 = map_wrap_x((char)(&city_tile_dx_table)[local_60] + local_d4);
+              local_74 = (char)(&city_tile_dy_table)[local_60] + local_e8;
               iVar15 = map_in_bounds(iVar21,local_74);
               if (((iVar15 != 0) && (iVar15 = tile_is_ocean(iVar21,local_74), iVar15 == 0)) &&
                  (iVar15 = tile_landmass(iVar21,local_74), iVar15 == iVar11)) {
-                local_18 = thunk_FUN_005b8c42(iVar21,local_74);
+                local_18 = thunk_tile_owner_or_fertility(iVar21,local_74);
                 if (local_38 < local_18) {
                   local_c8 = local_60;
                   local_38 = local_18;
@@ -2902,22 +2902,22 @@ LAB_00539b29: ;
                  '\x04' < (char)units[local_168].field_0e)))))) {
               if (bVar29) {
                 if ((int)local_c8 < 0) {
-                  thunk_FUN_004c4d1e(local_168,-1,0);
+                  thunk_unit_found_city(local_168,-1,0);
                   return 1;
                 }
                 units[local_168].field_0c = '2';
                 uVar20 = local_c8;
                 if ((int)local_c8 < 8) goto LAB_005435ca;
-                iVar15 = (char)(&DAT_006283a0)[local_c8] + local_e8;
-                uVar10 = map_wrap_x((char)(&DAT_00628370)[local_c8] + local_d4);
-                thunk_FUN_00531607(local_168,0x32,uVar10,iVar15);
+                iVar15 = (char)(&city_tile_dy_table)[local_c8] + local_e8;
+                uVar10 = map_wrap_x((char)(&city_tile_dx_table)[local_c8] + local_d4);
+                thunk_unit_set_goto(local_168,0x32,uVar10,iVar15);
               }
               else if ((-1 < (int)local_c8) && ((int)local_c8 < 8)) {
                 iVar23 = 2;
                 uVar33 = 5;
-                iVar15 = (char)(&DAT_006283a0)[local_c8] + local_e8;
-                uVar10 = map_wrap_x((char)(&DAT_00628370)[local_c8] + local_d4);
-                thunk_FUN_004933f2(uVar9,uVar10,iVar15,uVar33,iVar23);
+                iVar15 = (char)(&city_tile_dy_table)[local_c8] + local_e8;
+                uVar10 = map_wrap_x((char)(&city_tile_dx_table)[local_c8] + local_d4);
+                thunk_civ_add_standing_goal(uVar9,uVar10,iVar15,uVar33,iVar23);
               }
             }
           }
@@ -2926,9 +2926,9 @@ LAB_00539b29: ;
                  ((uint)game.human_players & 1 << (cities[local_88].owner & 0x1fU)) != 0 &&
                  (local_158 == 0)))) && (1 < iVar27)) &&
               ((civs[uVar9].num_advances < civs[cities[local_88].owner].num_advances &&
-               (local_18 = thunk_FUN_005b8c18(local_d4,local_e8), 8 < local_18)))) &&
+               (local_18 = thunk_tile_get_fertility(local_d4,local_e8), 8 < local_18)))) &&
              (0xe - iVar27 <= local_18)) {
-            thunk_FUN_004c4d1e(local_168,-1,0);
+            thunk_unit_found_city(local_168,-1,0);
             return 1;
           }
           if ((unit_types[units[local_168].type].flags & 0x100) != 0) {
@@ -2939,7 +2939,7 @@ LAB_00539b29: ;
                     ) {
                   if ((((cities[local_134].id != 0) && ((int)cities[local_134].owner != uVar9)) &&
                       ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[local_134].owner * 4) & 0x20) !=
-                       0)) && (iVar15 = thunk_FUN_005ae1b0(local_d4,local_e8,
+                       0)) && (iVar15 = thunk_map_distance(local_d4,local_e8,
                                                            (int)cities[local_134].x,
                                                            (int)cities[local_134].y),
                               iVar15 <= (int)(uint)cosmic.paradrop_range)) {
@@ -2953,11 +2953,11 @@ LAB_00539b29: ;
                       local_38 = 0;
                       local_160 = 0xffffffff;
                       for (local_60 = 9; -1 < (int)local_60; local_60 = local_60 - 1) {
-                        iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_8c);
-                        local_74 = (char)(&DAT_00628360)[local_60] + local_10c;
+                        iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_8c);
+                        local_74 = (char)(&dir_dy_table)[local_60] + local_10c;
                         iVar15 = map_in_bounds(iVar21,local_74);
                         if ((iVar15 != 0) &&
-                           (iVar15 = thunk_FUN_005ae1b0(local_d4,local_e8,iVar21,local_74),
+                           (iVar15 = thunk_map_distance(local_d4,local_e8,iVar21,local_74),
                            iVar15 <= (int)(uint)cosmic.paradrop_range)) {
                           local_78 = tile_unit_owner(iVar21,local_74);
                           if (local_78 == uVar9) {
@@ -2975,7 +2975,7 @@ LAB_00539b29: ;
                             }
                             bVar7 = tile_terrain(iVar21,local_74);
                             local_18 = local_18 + (char)terrain_types[bVar7].defense * 3;
-                            iVar15 = thunk_FUN_005ae1b0(local_d4,local_e8,iVar21,local_74);
+                            iVar15 = thunk_map_distance(local_d4,local_e8,iVar21,local_74);
                             local_18 = local_18 + iVar15;
                             if (local_38 < local_18) {
                               local_160 = local_60;
@@ -2985,9 +2985,9 @@ LAB_00539b29: ;
                         }
                       }
                       if (-1 < (int)local_160) {
-                        local_8c = map_wrap_x((char)(&DAT_00628350)[local_160] + local_8c);
-                        thunk_FUN_004ca39e(local_168,local_8c,
-                                           local_10c + (char)(&DAT_00628360)[local_160]);
+                        local_8c = map_wrap_x((char)(&dir_dx_table)[local_160] + local_8c);
+                        thunk_unit_paradrop(local_168,local_8c,
+                                           local_10c + (char)(&dir_dy_table)[local_160]);
                         return 0;
                       }
                     }
@@ -3001,11 +3001,11 @@ LAB_00539b29: ;
             }
             else {
               if (((local_40 == local_88) && (iVar11 == local_58)) &&
-                 (iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 == 0)) {
-                thunk_FUN_00531607(local_168,99,(int)cities[local_134].x,(int)cities[local_134].y);
+                 (iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 == 0)) {
+                thunk_unit_set_goto(local_168,99,(int)cities[local_134].x,(int)cities[local_134].y);
                 goto LAB_005436c1;
               }
-              if ((local_bc != 0) && (iVar15 = thunk_FUN_005b50ad(local_168,2), iVar15 == 1)) {
+              if ((local_bc != 0) && (iVar15 = thunk_unit_stack_sum(local_168,2), iVar15 == 1)) {
                 units[local_168].field_0c = 'F';
                 local_c8 = 8;
                 goto LAB_005436c1;
@@ -3032,7 +3032,7 @@ LAB_00539b29: ;
               if ((((cities[local_134].id != 0) && (local_134 != local_88)) &&
                   (iVar15 = tile_landmass((int)cities[local_134].x,(int)cities[local_134].y),
                   iVar15 == iVar11)) &&
-                 ((local_70 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x,
+                 ((local_70 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x,
                                                  (int)cities[local_134].y), local_70 < local_38 ||
                   ((local_70 == local_38 && ((int)cities[local_134].owner == uVar9)))))) {
                 local_160 = local_134;
@@ -3053,16 +3053,16 @@ LAB_00539b29: ;
             (((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_cc * 4) & 8) != 0 || (2 < local_3c)))))) {
 LAB_0053b8f0:
           if (local_3c == 0) {
-            local_b0 = thunk_FUN_005b53b6(local_168,1);
+            local_b0 = thunk_unit_stack_count_role(local_168,1);
             if (((local_e4 == 1) && (1 < local_b0)) || (local_e4 == 4)) {
-              iVar15 = thunk_FUN_005b4c63(local_d4,local_e8,uVar9);
+              iVar15 = thunk_tile_zoc_unit_adjacent(local_d4,local_e8,uVar9);
               if (iVar15 == 0) {
                 local_30 = 4;
               }
               else {
                 local_30 = 3;
               }
-              iVar15 = thunk_FUN_0043d20a(local_40,1);
+              iVar15 = thunk_city_has_improvement(local_40,1);
               if (iVar15 == 0) {
                 if (uVar28 == 5) {
                   local_30 = local_30 + 1;
@@ -3072,7 +3072,7 @@ LAB_0053b8f0:
                 local_30 = local_30 + -1;
               }
               uVar15 = (int)cities[local_40].size / local_30 + 1;
-              iVar15 = thunk_FUN_0043d20a(local_40,1);
+              iVar15 = thunk_city_has_improvement(local_40,1);
               local_11c = uVar15;
               if (iVar15 != 0) {
                 local_cc = 1;
@@ -3096,20 +3096,20 @@ LAB_0053b8f0:
                 local_48 = 1;
               }
               else {
-                local_9c = thunk_FUN_0057e6e2(local_168,-1);
+                local_9c = thunk_unit_stack_best_defender(local_168,-1);
                 if (local_168 == local_9c) {
                   local_48 = 1;
                 }
                 else {
                   if (local_b0 < (int)local_11c) {
-                    thunk_FUN_0049301b(uVar9,local_d4,local_e8,1,3);
+                    thunk_civ_add_ai_goal(uVar9,local_d4,local_e8,1,3);
                   }
                   if ((int)local_11c < local_b0) {
                     local_cc = (uptr)units[local_168].orders;
                     units[local_168].orders = '\x02';
-                    iVar15 = thunk_FUN_0057e6e2(local_168,-1);
+                    iVar15 = thunk_unit_stack_best_defender(local_168,-1);
                     if ((iVar15 == local_168) &&
-                       (iVar15 = thunk_FUN_005b50ad(local_168,4), iVar15 <= (int)local_11c)) {
+                       (iVar15 = thunk_unit_stack_sum(local_168,4), iVar15 <= (int)local_11c)) {
                       units[local_168].orders = (i8)local_cc;
                       local_48 = 1;
                     }
@@ -3129,10 +3129,10 @@ LAB_0053b8f0:
               }
             }
             else {
-              iVar15 = thunk_FUN_005b50ad(local_168,2);
+              iVar15 = thunk_unit_stack_sum(local_168,2);
               if ((iVar15 < 2) &&
-                 ((thunk_FUN_0049301b(uVar9,local_d4,local_e8,1,5), !bVar30 ||
-                  (iVar15 = thunk_FUN_005b4c63(local_d4,local_e8,uVar9), iVar15 != 0)))) {
+                 ((thunk_civ_add_ai_goal(uVar9,local_d4,local_e8,1,5), !bVar30 ||
+                  (iVar15 = thunk_tile_zoc_unit_adjacent(local_d4,local_e8,uVar9), iVar15 != 0)))) {
                 local_48 = 1;
               }
             }
@@ -3149,8 +3149,8 @@ LAB_0053be12:
                   local_34 = 0;
                   local_9c = 0;
                   local_98 = local_168;
-                  for (local_168 = thunk_FUN_005b2d39(local_168); iVar7 = local_98, -1 < local_168;
-                      local_168 = thunk_FUN_005b2c82(local_168)) {
+                  for (local_168 = thunk_unit_stack_first(local_168); iVar7 = local_98, -1 < local_168;
+                      local_168 = thunk_unit_next_in_stack(local_168)) {
                     if (unit_types[units[local_168].type].domain == '\0') {
                       if (units[local_168].orders == '\x02') {
                         if (((local_3c == 0) && (local_9c = local_9c + 1, (int)local_11c < local_9c)
@@ -3174,8 +3174,8 @@ LAB_0053be12:
                   }
                   local_168 = local_98;
                   if (local_e4 == 2) {
-                    thunk_FUN_00492c15(uVar9,2,local_d4,local_e8,0);
-                    thunk_FUN_00492c15(uVar9,0x12,local_d4,local_e8,0);
+                    thunk_civ_clear_standing_goals_near(uVar9,2,local_d4,local_e8,0);
+                    thunk_civ_clear_standing_goals_near(uVar9,0x12,local_d4,local_e8,0);
                   }
                   if (local_e4 == 4) {
                     if ((iVar27 == 0) && ((char)units[iVar7].counter < '\0')) {
@@ -3220,10 +3220,10 @@ LAB_0053be12:
                             iVar13 = tile_landmass((int)cities[local_134].x,(int)cities[local_134].y
                                                   );
                             if (local_3c == 0) {
-                              iVar15 = thunk_FUN_004429af(local_40,local_134);
+                              iVar15 = thunk_cities_share_ocean(local_40,local_134);
                             }
                             else {
-                              iVar15 = thunk_FUN_0044263f(local_134,iVar11);
+                              iVar15 = thunk_city_adjacent_to_body(local_134,iVar11);
                             }
                             if (iVar15 != 0) {
                               local_dc = 0;
@@ -3235,13 +3235,13 @@ LAB_0053be12:
                                 goto LAB_0053c1e5;
                                 local_dc = 1;
                               }
-                              local_70 = thunk_FUN_005ae31d(local_d4,local_e8,
+                              local_70 = thunk_map_distance_diag(local_d4,local_e8,
                                                             (int)cities[local_134].x,
                                                             (int)cities[local_134].y);
-                              local_54 = thunk_FUN_005b2e69((int)cities[local_134].x,
+                              local_54 = thunk_tile_first_unit((int)cities[local_134].x,
                                                             (int)cities[local_134].y);
                               if ((-1 < local_54) &&
-                                 (iVar15 = thunk_FUN_005b53b6(local_54,4),
+                                 (iVar15 = thunk_unit_stack_count_role(local_54,4),
                                  (int)(uint)(local_70 == 0) < iVar15)) {
                                 local_70 = local_70 + 0x10;
                               }
@@ -3260,7 +3260,7 @@ LAB_0053be12:
                                 local_160 = local_134;
                                 local_140 = local_dc;
                                 local_2c = (uint)*(byte *)(iVar13 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594);
-                                thunk_FUN_00531607(iVar7,0x33,(int)cities[local_134].x,
+                                thunk_unit_set_goto(iVar7,0x33,(int)cities[local_134].x,
                                                    (int)cities[local_134].y);
                               }
                             }
@@ -3285,38 +3285,38 @@ LAB_0053c1e5: ;
                           cities[local_160].flags = cities[local_160].flags | 0x600;
                           if (local_140 == 0) {
                             uVar10 = 5;
-                            iVar21 = thunk_FUN_005b2e69((int)units[iVar7].goto_x,
+                            iVar21 = thunk_tile_first_unit((int)units[iVar7].goto_x,
                                                         (int)units[iVar7].goto_y);
-                            iVar15 = thunk_FUN_005b53b6(iVar21,uVar10);
+                            iVar15 = thunk_unit_stack_count_role(iVar21,uVar10);
                             if (iVar15 == 0) {
                               if (local_2c != 5) {
-                                thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                                thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                    (int)units[iVar7].goto_y,5,local_70);
                               }
                               if (local_2c != 5) {
-                                thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                                thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                    (int)units[iVar7].goto_y,0x15,local_70 + -1);
                               }
                             }
                             if (local_2c != 1) {
-                              thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                              thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                  (int)units[iVar7].goto_y,1,local_70);
                             }
                             if (local_2c != 0) {
-                              thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                              thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                  (int)units[iVar7].goto_y,0,local_70);
                             }
                             if ((local_2c == 4) || (local_2c == 5)) {
-                              thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                              thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                  (int)units[iVar7].goto_y,6,local_70);
                             }
                           }
-                          thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,(int)units[iVar7].goto_y
+                          thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,(int)units[iVar7].goto_y
                                              ,7,2);
                         }
                         else if (((local_3c == 0) &&
-                                 (iVar15 = thunk_FUN_005b53b6(iVar7,4), iVar15 < 2)) &&
-                                (((iVar15 = thunk_FUN_0059a791(0,3), iVar15 != 0 ||
+                                 (iVar15 = thunk_unit_stack_count_role(iVar7,4), iVar15 < 2)) &&
+                                (((iVar15 = thunk_rand_range(0,3), iVar15 != 0 ||
                                   (local_38 == 1000)) &&
                                  ((*(byte *)(iVar11 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar9 * 0x594) & 0x10) == 0)))) {
                           uVar3 = *(ushort *)(uVar9 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + iVar11 * 2);
@@ -3332,29 +3332,29 @@ LAB_0053c1e5: ;
                             cities[local_40].flags = cities[local_40].flags | 0x600;
                             if (local_dc != 0) {
                               uVar10 = 5;
-                              iVar21 = thunk_FUN_005b2e69((int)cities[local_40].x,
+                              iVar21 = thunk_tile_first_unit((int)cities[local_40].x,
                                                           (int)cities[local_40].y);
-                              iVar27 = thunk_FUN_005b53b6(iVar21,uVar10);
+                              iVar27 = thunk_unit_stack_count_role(iVar21,uVar10);
                               if ((iVar27 == 0) && (uVar28 != 5)) {
-                                thunk_FUN_0049301b(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
+                                thunk_civ_add_ai_goal(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
                                                    ,5,local_70);
-                                thunk_FUN_0049301b(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
+                                thunk_civ_add_ai_goal(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
                                                    ,0x15,local_70 + -1);
                               }
                               if (uVar28 != 1) {
-                                thunk_FUN_0049301b(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
+                                thunk_civ_add_ai_goal(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
                                                    ,1,local_70);
                               }
                               if (uVar28 != 0) {
-                                thunk_FUN_0049301b(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
+                                thunk_civ_add_ai_goal(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y
                                                    ,0,local_70);
                               }
                               if ((uVar28 == 4) || (uVar28 == 5)) {
-                                thunk_FUN_0049301b(uVar9,(int)units[iVar7].goto_x,
+                                thunk_civ_add_ai_goal(uVar9,(int)units[iVar7].goto_x,
                                                    (int)units[iVar7].goto_y,6,local_70);
                               }
                             }
-                            thunk_FUN_0049301b(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y,7,2
+                            thunk_civ_add_ai_goal(uVar9,(int)cities[uVar20].x,(int)cities[uVar20].y,7,2
                                               );
                             local_c8 = 8;
                             uVar20 = local_c8;
@@ -3364,10 +3364,10 @@ LAB_0053c1e5: ;
                       }
                     }
                     if (local_3c == 0) {
-                      for (local_cc = thunk_FUN_005b2d39(iVar7); -1 < (int)local_cc;
-                          local_cc = thunk_FUN_005b2c82(local_cc)) {
+                      for (local_cc = thunk_unit_stack_first(iVar7); -1 < (int)local_cc;
+                          local_cc = thunk_unit_next_in_stack(local_cc)) {
                         if (unit_types[units[local_cc].type].role == '\x05') {
-                          thunk_FUN_005b3863(local_cc,1);
+                          thunk_unit_relocate_in_place(local_cc,1);
                           break;
                         }
                       }
@@ -3375,26 +3375,26 @@ LAB_0053c1e5: ;
                     if (((((local_c4 != 0) && (units[iVar7].field_0c == 'A')) &&
                          (units[iVar7].orders == '\v')) &&
                         ((iVar27 != 0 &&
-                         (iVar15 = thunk_FUN_0043cf76((int)units[iVar7].goto_x,
+                         (iVar15 = thunk_city_at((int)units[iVar7].goto_x,
                                                       (int)units[iVar7].goto_y), -1 < iVar15)))) &&
                        (((cities[iVar15].flags & 0x80) != 0 &&
-                        ((iVar15 = thunk_FUN_0044263f(iVar15,iVar11), iVar15 != 0 &&
+                        ((iVar15 = thunk_city_adjacent_to_body(iVar15,iVar11), iVar15 != 0 &&
                          ((game.turn & 0xfU) != 0)))))) {
                       local_c4 = 0;
                     }
                     if (((local_c4 != 0) || (local_94 != 0)) || (local_20 != 0)) {
                       bVar31 = local_c == 0x80;
                       for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                        iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                        local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                        iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                        local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                         iVar15 = map_in_bounds(iVar21,local_74);
                         if (((iVar15 != 0) && (iVar15 = tile_is_ocean(iVar21,local_74), iVar15 == 0)
                             ) && ((local_78 = tile_unit_owner(iVar21,local_74), (int)local_78 < 0 ||
                                   (local_78 == uVar9)))) {
                           if (local_78 == uVar9) {
                             uVar10 = 2;
-                            iVar22 = thunk_FUN_005b2e69(iVar21,local_74);
-                            iVar15 = thunk_FUN_005b50ad(iVar22,uVar10);
+                            iVar22 = thunk_tile_first_unit(iVar21,local_74);
+                            iVar15 = thunk_unit_stack_sum(iVar22,uVar10);
                             if (1 < iVar15) goto LAB_0053cdd1;
                           }
                           bVar6 = false;
@@ -3413,8 +3413,8 @@ LAB_0053c1e5: ;
                           }
                           else if (iVar15 == local_104) {
                             local_44 = 0xffffffff;
-                            for (local_cc = thunk_FUN_005b2d39(iVar7); -1 < (int)local_cc;
-                                local_cc = thunk_FUN_005b2c82(local_cc)) {
+                            for (local_cc = thunk_unit_stack_first(iVar7); -1 < (int)local_cc;
+                                local_cc = thunk_unit_next_in_stack(local_cc)) {
                               if (unit_types[units[local_cc].type].role == '\a') {
                                 if (units[local_cc].home_city == -1) {
                                   local_44 = 0xffffffff;
@@ -3425,7 +3425,7 @@ LAB_0053c1e5: ;
                               }
                             }
                             if ((int)local_44 < 0) {
-                              local_44 = thunk_FUN_0043d07a(iVar21,local_74,uVar9,0xffffffff,-1);
+                              local_44 = thunk_city_find_nearest(iVar21,local_74,uVar9,0xffffffff,-1);
                             }
                             if ((int)local_44 < 1) {
                               local_44 = 0;
@@ -3433,7 +3433,7 @@ LAB_0053c1e5: ;
                             bVar32 = units[iVar7].field_0c != '3';
                             iVar23 = tile_landmass((int)cities[local_44].x,(int)cities[local_44].y);
                             if ((iVar23 == local_104) &&
-                               (iVar23 = thunk_FUN_005ae31d((int)cities[uVar20].x,
+                               (iVar23 = thunk_map_distance_diag((int)cities[uVar20].x,
                                                             (int)cities[uVar20].y,
                                                             (int)cities[local_44].x,
                                                             (int)cities[local_44].y), iVar23 < 0x10)
@@ -3444,7 +3444,7 @@ LAB_0053c1e5: ;
                               if (cities[uVar20].size < '\b') {
                                 bVar32 = false;
                               }
-                              iVar23 = thunk_FUN_005ae31d((int)cities[uVar20].x,
+                              iVar23 = thunk_map_distance_diag((int)cities[uVar20].x,
                                                           (int)cities[uVar20].y,
                                                           (int)cities[local_44].x,
                                                           (int)cities[local_44].y);
@@ -3495,7 +3495,7 @@ LAB_0053c1e5: ;
                           if (((local_c & 0x20) == 0) &&
                              (*(char *)(iVar15 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar9 * 0x594) == '\0')) {
                             if ((*(short *)(uVar9 * 0x594 + ADDR(0x64c832, ((u8 *)&civs + 402)) + iVar15 * 2) == 0) &&
-                               (0x31 < *(short *)(&DAT_00666130 + iVar15 * 0x10))) {
+                               (0x31 < *(short *)(&landmass_table + iVar15 * 0x10))) {
                               *(byte *)(iVar15 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar9 * 0x594) =
                                    *(byte *)(iVar15 + ADDR(0x64c9f2, ((u8 *)&civs + 850)) + uVar9 * 0x594) | 0x80;
                               local_c0 = 1;
@@ -3514,7 +3514,7 @@ LAB_0053c1e5: ;
                           if ((((local_a8 == 0) &&
                                (iVar23 = tile_city_owner(iVar21,local_74), -1 < iVar23)) &&
                               (local_78 != uVar9)) &&
-                             (iVar23 = thunk_FUN_00467af0(uVar9,local_78), iVar23 != 0)) {
+                             (iVar23 = thunk_diplo_is_hostile(uVar9,local_78), iVar23 != 0)) {
                             local_dc = 1;
                           }
                           if (bVar31) {
@@ -3530,9 +3530,9 @@ LAB_0053c1e5: ;
                               units[iVar7].counter = (byte)game.turn & 7;
                             }
                           }
-                          if (((local_dc != 0) && (4 < *(short *)(&DAT_00666132 + iVar15 * 0x10)))
+                          if (((local_dc != 0) && (4 < *(short *)(&landmass_fertile_tiles + iVar15 * 0x10)))
                              && ((1 < (int)local_74 && ((int)local_74 < map.height + -2)))) {
-                            iVar23 = thunk_FUN_005b2c3d(iVar7);
+                            iVar23 = thunk_unit_moves_left(iVar7);
                             if ((((int)(uint)cosmic.road_move_mult <= iVar23) &&
                                 ((iVar27 != 0 || (uVar28 != 1)))) &&
                                ((local_c8 = thunk_FUN_005312e4(iVar7), -1 < (int)local_c8 &&
@@ -3542,29 +3542,29 @@ LAB_0053c1e5: ;
                               goto LAB_005435ca;
                             }
                             if (*(char *)(iVar15 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) == '\0') {
-                              thunk_FUN_0049301b(uVar9,local_d4,local_e8,2,5);
+                              thunk_civ_add_ai_goal(uVar9,local_d4,local_e8,2,5);
                             }
                             units[iVar7].field_0c = 'U';
-                            thunk_FUN_005b6787(iVar7);
+                            thunk_unit_exhaust_moves(iVar7);
                             units[iVar7].orders = -1;
                             if (!bVar32) {
                               local_c = local_c & 0xffffff7f;
                             }
-                            thunk_FUN_00531567(iVar7,local_c,local_c0);
+                            thunk_unit_stack_wake_by_role(iVar7,local_c,local_c0);
                             goto LAB_005436c1;
                           }
                           if (((bVar32) && (1 < (int)local_74)) && ((int)local_74 < map.height + -2)
                              ) {
                             if (*(char *)(iVar15 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) == '\0') {
-                              thunk_FUN_0049301b(uVar9,local_d4,local_e8,2,5);
+                              thunk_civ_add_ai_goal(uVar9,local_d4,local_e8,2,5);
                             }
                             units[iVar7].field_0c = 'u';
-                            thunk_FUN_005b6787(iVar7);
+                            thunk_unit_exhaust_moves(iVar7);
                             local_c = 0x80;
                             if (!bVar6) {
                               local_c = 0x82;
                             }
-                            thunk_FUN_00531567(iVar7,local_c,local_c0);
+                            thunk_unit_stack_wake_by_role(iVar7,local_c,local_c0);
                             units[iVar7].orders = -1;
                             goto LAB_005436c1;
                           }
@@ -3574,7 +3574,7 @@ LAB_0053c1e5: ;
                         }
 LAB_0053cdd1: ;
                       }
-                      iVar15 = thunk_FUN_005b2c3d(iVar7);
+                      iVar15 = thunk_unit_moves_left(iVar7);
                       if ((iVar15 <= (int)(uint)cosmic.road_move_mult) &&
                          (units[iVar7].orders == '\v')) {
                         local_17c = units[iVar7].goto_x + local_d4 >> 1;
@@ -3585,7 +3585,7 @@ LAB_0053cdd1: ;
                         if ((local_74 & 1) != 0) {
                           local_17c = local_17c + 1;
                         }
-                        thunk_FUN_0049301b(uVar9,local_17c,local_74,2,3);
+                        thunk_civ_add_ai_goal(uVar9,local_17c,local_74,2,3);
                       }
                     }
                   }
@@ -3603,13 +3603,13 @@ LAB_0053cdd1: ;
                                                       (int)cities[local_134].y),
                               *(char *)(iVar15 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) == '\x01')) {
                           if (local_3c == 0) {
-                            iVar15 = thunk_FUN_004429af(local_40,local_134);
+                            iVar15 = thunk_cities_share_ocean(local_40,local_134);
                           }
                           else {
-                            iVar15 = thunk_FUN_0044263f(local_134,iVar11);
+                            iVar15 = thunk_city_adjacent_to_body(local_134,iVar11);
                           }
                           if (iVar15 != 0) {
-                            local_70 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x
+                            local_70 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x
                                                           ,(int)cities[local_134].y);
                             iVar15 = tile_unit_owner((int)cities[local_134].x,
                                                      (int)cities[local_134].y);
@@ -3625,7 +3625,7 @@ LAB_0053cdd1: ;
                             }
                             if (local_70 < local_38) {
                               local_38 = local_70;
-                              thunk_FUN_00531607(iVar7,0x41,(int)cities[local_134].x,
+                              thunk_unit_set_goto(iVar7,0x41,(int)cities[local_134].x,
                                                  (int)cities[local_134].y);
                             }
                           }
@@ -3643,13 +3643,13 @@ LAB_0053cdd1: ;
                                                       (int)cities[local_134].y), iVar15 < 0)))) {
                           tile_landmass((int)cities[local_134].x,(int)cities[local_134].y);
                           if (local_3c == 0) {
-                            iVar15 = thunk_FUN_004429af(local_40,local_134);
+                            iVar15 = thunk_cities_share_ocean(local_40,local_134);
                           }
                           else {
-                            iVar15 = thunk_FUN_0044263f(local_134,iVar11);
+                            iVar15 = thunk_city_adjacent_to_body(local_134,iVar11);
                           }
                           if (iVar15 != 0) {
-                            local_70 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x
+                            local_70 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x
                                                           ,(int)cities[local_134].y);
                             for (local_14c = 1; local_14c < 8; local_14c = local_14c + 1) {
                               if ((((1 << ((byte)local_14c & 0x1f) & (uint)game.human_players) != 0)
@@ -3666,7 +3666,7 @@ LAB_0053cdd1: ;
                             if (local_70 < local_38) {
                               local_38 = local_70;
                               units[iVar7].counter = (byte)local_134 & 7;
-                              thunk_FUN_00531607(iVar7,0x49,(int)cities[local_134].x,
+                              thunk_unit_set_goto(iVar7,0x49,(int)cities[local_134].x,
                                                  (int)cities[local_134].y);
                             }
                           }
@@ -3701,10 +3701,10 @@ LAB_0053cdd1: ;
                               iVar15 = thunk_FUN_00442885(local_40,iVar15);
                             }
                             else {
-                              iVar15 = thunk_FUN_005b9431(iVar15,iVar11);
+                              iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
                             }
                             if (iVar15 != 0) {
-                              local_70 = thunk_FUN_005ae31d(local_d4,local_e8,
+                              local_70 = thunk_map_distance_diag(local_d4,local_e8,
                                                             (int)cities[local_134].x,
                                                             (int)cities[local_134].y);
                               if ((0 < (int)local_110) &&
@@ -3726,7 +3726,7 @@ LAB_0053cdd1: ;
                               }
                               if (local_70 < local_38) {
                                 local_38 = local_70;
-                                thunk_FUN_00531607(iVar7,0x34,(int)cities[local_134].x,
+                                thunk_unit_set_goto(iVar7,0x34,(int)cities[local_134].x,
                                                    (int)cities[local_134].y);
                               }
                             }
@@ -3740,8 +3740,8 @@ LAB_0053cdd1: ;
                       local_1c = tile_land_landmass(local_d4,local_e8);
                       local_44 = 0xffffffff;
                       local_98 = iVar7;
-                      for (local_168 = thunk_FUN_005b2d39(iVar7); iVar21 = local_98, -1 < local_168;
-                          local_168 = thunk_FUN_005b2c82(local_168)) {
+                      for (local_168 = thunk_unit_stack_first(iVar7); iVar21 = local_98, -1 < local_168;
+                          local_168 = thunk_unit_next_in_stack(local_168)) {
                         if ((unit_types[units[local_168].type].role == '\a') &&
                            (units[local_168].home_city != -1)) {
                           local_44 = (uptr)(byte)units[local_168].home_city;
@@ -3749,7 +3749,7 @@ LAB_0053cdd1: ;
                       }
                       local_168 = local_98;
                       if (((int)local_44 < 0) &&
-                         (local_44 = thunk_FUN_0043d07a(local_d4,local_e8,uVar9,0xffffffff,-1),
+                         (local_44 = thunk_city_find_nearest(local_d4,local_e8,uVar9,0xffffffff,-1),
                          (int)local_44 < 0)) {
                         local_44 = 0;
                       }
@@ -3760,20 +3760,20 @@ LAB_0053cdd1: ;
                                                   ), local_1c != iVar15)) {
                           if (local_3c == 0) {
                             if ((int)cities[local_134].owner == uVar9) {
-                              iVar15 = thunk_FUN_004429af(local_40,local_134);
+                              iVar15 = thunk_cities_share_ocean(local_40,local_134);
                             }
                             else {
                               iVar15 = thunk_FUN_00442885(local_40,iVar15);
                             }
                           }
                           else if ((int)cities[local_134].owner == uVar9) {
-                            iVar15 = thunk_FUN_0044263f(local_134,iVar11);
+                            iVar15 = thunk_city_adjacent_to_body(local_134,iVar11);
                           }
                           else {
-                            iVar15 = thunk_FUN_005b9431(iVar15,iVar11);
+                            iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
                           }
                           if (iVar15 != 0) {
-                            local_70 = thunk_FUN_005ae31d((int)cities[local_44].x,
+                            local_70 = thunk_map_distance_diag((int)cities[local_44].x,
                                                           (int)cities[local_44].y,
                                                           (int)cities[local_134].x,
                                                           (int)cities[local_134].y);
@@ -3794,12 +3794,12 @@ LAB_0053cdd1: ;
                               local_70 = local_70 / 2;
                             }
                             local_70 = cities[local_134].base_trade * local_70;
-                            iVar15 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x,
+                            iVar15 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x,
                                                         (int)cities[local_134].y);
                             local_70 = local_70 / ((iVar15 >> 3) + 1);
                             if (local_38 < local_70) {
                               local_38 = local_70;
-                              thunk_FUN_00531607(iVar21,0x54,(int)cities[local_134].x,
+                              thunk_unit_set_goto(iVar21,0x54,(int)cities[local_134].x,
                                                  (int)cities[local_134].y);
                             }
                           }
@@ -3813,7 +3813,7 @@ LAB_0053cdd1: ;
                           local_134 = local_134 + 1) {
                         if (((cities[local_134].id != 0) &&
                             (local_78 = (uptr)cities[local_134].owner, local_78 == uVar9)) &&
-                           ((local_70 = thunk_FUN_005ae31d(local_d4,local_e8,
+                           ((local_70 = thunk_map_distance_diag(local_d4,local_e8,
                                                            (int)cities[local_134].x,
                                                            (int)cities[local_134].y), 7 < local_70
                             && ((iVar15 = tile_landmass((int)cities[local_134].x,
@@ -3821,10 +3821,10 @@ LAB_0053cdd1: ;
                                 local_1c != iVar15 &&
                                 (*(char *)(iVar15 + ADDR(0x64ca32, ((u8 *)&civs + 914)) + uVar9 * 0x594) != '\x04')))))) {
                           if (local_3c == 0) {
-                            iVar23 = thunk_FUN_004429af(local_40,local_134);
+                            iVar23 = thunk_cities_share_ocean(local_40,local_134);
                           }
                           else {
-                            iVar23 = thunk_FUN_0044263f(local_134,iVar11);
+                            iVar23 = thunk_city_adjacent_to_body(local_134,iVar11);
                           }
                           if (iVar23 != 0) {
                             if ((local_c &
@@ -3833,7 +3833,7 @@ LAB_0053cdd1: ;
                             }
                             if (local_70 < local_38) {
                               local_38 = local_70;
-                              thunk_FUN_00531607(local_168,0x35,(int)cities[local_134].x,
+                              thunk_unit_set_goto(local_168,0x35,(int)cities[local_134].x,
                                                  (int)cities[local_134].y);
                             }
                           }
@@ -3847,8 +3847,8 @@ LAB_0053cdd1: ;
                         local_74 = (uint)units[local_168].goto_y;
                       }
                       else {
-                        local_74 = thunk_FUN_0059a791(0,map.height + -1);
-                        local_17c = thunk_FUN_0059a791(0,map.width + -1);
+                        local_74 = thunk_rand_range(0,map.height + -1);
+                        local_17c = thunk_rand_range(0,map.width + -1);
                         if ((local_17c & 1) != 0) {
                           local_17c = local_17c - 1;
                         }
@@ -3859,7 +3859,7 @@ LAB_0053cdd1: ;
                       iVar15 = tile_land_landmass(local_17c,local_74);
                       local_1c = tile_land_landmass(local_d4,local_e8);
                       if ((((0 < iVar15) && (iVar15 < 0x3f)) &&
-                          (0x10 < *(short *)(&DAT_00666132 + iVar15 * 0x10))) &&
+                          (0x10 < *(short *)(&landmass_fertile_tiles + iVar15 * 0x10))) &&
                          ((local_1c != iVar15 &&
                           (*(char *)(iVar15 + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar9 * 0x594) == '\0')))) {
                         local_c4 = 1;
@@ -3870,22 +3870,22 @@ LAB_0053cdd1: ;
                           }
                         }
                         else {
-                          iVar15 = thunk_FUN_005b9431(iVar15,iVar11);
+                          iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
                           if (iVar15 == 0) {
                             local_c4 = 0;
                           }
                         }
                         if (local_c4 != 0) {
-                          thunk_FUN_00531653(local_168,0x56,local_17c,local_74);
+                          thunk_ai_ship_goto_near_shore(local_168,0x56,local_17c,local_74);
                         }
                       }
                     }
                     if (units[local_168].orders != '\v') {
                       for (local_60 = 2; (int)local_60 < 0x18; local_60 = local_60 + 1) {
-                        local_7c = thunk_FUN_0059a791(0,7);
-                        iVar21 = map_wrap_x((int)(char)(&DAT_00628350)[local_7c] * local_60 +
+                        local_7c = thunk_rand_range(0,7);
+                        iVar21 = map_wrap_x((int)(char)(&dir_dx_table)[local_7c] * local_60 +
                                             local_d4);
-                        local_74 = (int)(char)(&DAT_00628360)[local_7c] * local_60 + local_e8;
+                        local_74 = (int)(char)(&dir_dy_table)[local_7c] * local_60 + local_e8;
                         iVar15 = map_in_bounds(iVar21,local_74);
                         if (((iVar15 != 0) && (1 < (int)local_74)) &&
                            (((int)local_74 <= map.height + -3 &&
@@ -3896,10 +3896,10 @@ LAB_0053cdd1: ;
                             iVar15 = thunk_FUN_00442885(local_40,iVar15);
                           }
                           else {
-                            iVar15 = thunk_FUN_005b9431(iVar15,iVar11);
+                            iVar15 = thunk_landmass_borders_body(iVar15,iVar11);
                           }
                           if (iVar15 != 0) {
-                            thunk_FUN_00531653(local_168,0x36,iVar21,local_74);
+                            thunk_ai_ship_goto_near_shore(local_168,0x36,iVar21,local_74);
                           }
                         }
                       }
@@ -3907,7 +3907,7 @@ LAB_0053cdd1: ;
                   }
                 }
                 uVar20 = local_88;
-                iVar15 = thunk_FUN_005b2a39(local_168);
+                iVar15 = thunk_unit_max_moves(local_168);
                 if (((((iVar15 <= (int)(uint)cosmic.road_move_mult) && (-1 < (int)uVar20)) &&
                      (((uint)game.human_players & 1 << (cities[uVar20].owner & 0x1fU)) != 0)) &&
                     (((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[uVar20].owner * 4) & 0x20) != 0
@@ -3928,7 +3928,7 @@ LAB_0053cdd1: ;
                     local_cc = 1;
                   }
                   if ((local_cc != 0) && (!bVar4)) {
-                    thunk_FUN_004c50d0(local_168,0);
+                    thunk_unit_pillage(local_168,0);
                     goto LAB_005436c1;
                   }
                 }
@@ -3939,13 +3939,13 @@ LAB_0053cdd1: ;
                           ('\x04' < (char)unit_types[units[local_168].type].role)) &&
                          ((local_78 = (uptr)units[local_168].owner, local_78 != uVar9 &&
                           (((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_78 * 4) & 6) == 0 &&
-                           (iVar15 = thunk_FUN_005ae1b0(local_d4,local_e8,(int)units[local_168].x,
+                           (iVar15 = thunk_map_distance(local_d4,local_e8,(int)units[local_168].x,
                                                         (int)units[local_168].y), iVar15 < 4))))))
                         && (((1 << (bVar8 & 0x1f) & (uint)units[local_168].visibility) != 0 ||
                             ((int)units[local_168].owner == (uint)bVar8)))) &&
                        (iVar15 = tile_landmass((int)units[local_168].x,(int)units[local_168].y),
                        iVar15 == iVar11)) {
-                      thunk_FUN_00531607(local_98,0x50,(int)units[local_168].x,
+                      thunk_unit_set_goto(local_98,0x50,(int)units[local_168].x,
                                          (int)units[local_168].y);
                       local_a4 = 1;
                       break;
@@ -3957,12 +3957,12 @@ LAB_0053cdd1: ;
                 if ((((uVar19 == 9) && (-1 < (int)uVar20)) &&
                     (((uint)game.human_players & 1 << (cities[uVar20].owner & 0x1fU)) != 0)) &&
                    ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[uVar20].owner * 4) & 6) == 0)) {
-                  local_70 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[uVar20].x,
+                  local_70 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[uVar20].x,
                                                 (int)cities[uVar20].y);
                   local_160 = 0xffffffff;
                   for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                    iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                    local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                    iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                    local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                     iVar15 = map_in_bounds(iVar21,local_74);
                     if ((iVar15 != 0) && (iVar15 = tile_unit_owner(iVar21,local_74), iVar15 < 0)) {
                       iVar15 = tile_city_owner(iVar21,local_74);
@@ -3970,7 +3970,7 @@ LAB_0053cdd1: ;
                         local_160 = 0xffffffff;
                         break;
                       }
-                      iVar15 = thunk_FUN_005ae31d(iVar21,local_74,(int)cities[uVar20].x,
+                      iVar15 = thunk_map_distance_diag(iVar21,local_74,(int)cities[uVar20].x,
                                                   (int)cities[uVar20].y);
                       if ((iVar15 <= local_70) &&
                          (uVar24 = tile_improvements(iVar21,local_74), (uVar24 & 0x5c) != 0)) {
@@ -3987,10 +3987,10 @@ LAB_0053cdd1: ;
                 }
                 local_f4 = 0;
                 if (((bVar30) || (local_e4 == 1)) &&
-                   (iVar15 = thunk_FUN_004bd9f0(uVar9,0x12), iVar15 != 0)) {
+                   (iVar15 = thunk_civ_has_advance(uVar9,0x12), iVar15 != 0)) {
                   local_84 = local_3c;
                   if (-1 < (int)local_40) {
-                    local_84 = thunk_FUN_005ae1b0(local_d4,local_e8,(int)cities[local_40].x,
+                    local_84 = thunk_map_distance(local_d4,local_e8,(int)cities[local_40].x,
                                                   (int)cities[local_40].y);
                   }
                   if (((local_3c != 0) && (local_40 == local_88)) &&
@@ -4003,8 +4003,8 @@ LAB_0053cdd1: ;
                     local_4c = 0;
                     local_28 = 0;
                     for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                      iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                      local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                      iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                      local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                       iVar15 = map_in_bounds(iVar21,local_74);
                       if (iVar15 != 0) {
                         uVar10 = tile_improvements(iVar21,local_74);
@@ -4015,16 +4015,16 @@ LAB_0053cdd1: ;
                         if (iVar15 != 0) {
                           local_8 = local_8 + 1;
                           if (3 < local_8) goto LAB_0053fc8d;
-                          if ((char)(&DAT_00628360)[local_60] < '\0') {
+                          if ((char)(&dir_dy_table)[local_60] < '\0') {
                             local_b8 = 1;
                           }
-                          if ('\0' < (char)(&DAT_00628360)[local_60]) {
+                          if ('\0' < (char)(&dir_dy_table)[local_60]) {
                             local_114 = 1;
                           }
-                          if ((char)(&DAT_00628350)[local_60] < '\0') {
+                          if ((char)(&dir_dx_table)[local_60] < '\0') {
                             local_28 = 1;
                           }
-                          if ('\0' < (char)(&DAT_00628350)[local_60]) {
+                          if ('\0' < (char)(&dir_dx_table)[local_60]) {
                             local_4c = 1;
                           }
                         }
@@ -4081,10 +4081,10 @@ LAB_0053cdd1: ;
                     }
                     if (local_f4 != 0) {
                       if (bVar30) {
-                        thunk_FUN_004933f2(uVar9,local_d4,local_e8,1,2);
+                        thunk_civ_add_standing_goal(uVar9,local_d4,local_e8,1,2);
                       }
                       else {
-                        thunk_FUN_004933f2(uVar9,local_d4,local_e8,0x15,
+                        thunk_civ_add_standing_goal(uVar9,local_d4,local_e8,0x15,
                                            (uint)(local_84 < 4) + local_f4);
                       }
                     }
@@ -4100,12 +4100,12 @@ LAB_0053fc8d:
                    ((local_b4 == 0 &&
                     ((iVar15 = tile_is_ocean(local_d4,local_e8), iVar15 == 0 &&
                      (iVar15 = tile_city_owner(local_d4,local_e8), iVar15 < 0)))))) {
-                  iVar15 = thunk_FUN_005b50ad(local_168,2);
+                  iVar15 = thunk_unit_stack_sum(local_168,2);
                   local_c4 = (uint)(1 < iVar15);
                   if (local_c4 == 0) {
                     for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-                      iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-                      local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+                      iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+                      local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
                       iVar15 = map_in_bounds(iVar21,local_74);
                       if ((iVar15 != 0) && (iVar15 = tile_unit_owner(iVar21,local_74), -1 < iVar15))
                       {
@@ -4115,9 +4115,9 @@ LAB_0053fc8d:
                     }
                   }
                   if (local_c4 == 0) {
-                    thunk_FUN_0049301b(uVar9,local_d4,local_e8,1,2);
+                    thunk_civ_add_ai_goal(uVar9,local_d4,local_e8,1,2);
                   }
-                  thunk_FUN_00492c15(uVar9,0x15,local_d4,local_e8,0);
+                  thunk_civ_clear_standing_goals_near(uVar9,0x15,local_d4,local_e8,0);
                   uVar17 = tile_improvements(local_d4,local_e8);
                   if ((uVar17 & 0x80) != 0) {
                     units[local_168].orders = '\t';
@@ -4132,8 +4132,8 @@ LAB_0053fc8d:
                                                  (int)units[local_168].goto_y), (uVar18 & 0x80) == 0
                      )) {
                     if (((local_f4 == 2) && ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0))
-                       && ((iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 == 0 ||
-                           (iVar15 = thunk_FUN_005b50ad(local_168,2), 1 < iVar15)))) {
+                       && ((iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 == 0 ||
+                           (iVar15 = thunk_unit_stack_sum(local_168,2), 1 < iVar15)))) {
                       units[local_168].orders = '\x04';
                       units[local_168].field_0c = 'X';
                       goto LAB_005436c1;
@@ -4154,13 +4154,13 @@ LAB_0053fc8d:
                           ((((int)(char)terrain_types[local_80].irrigate_turns / 5) * 3 + -3 <=
                             (int)cities[local_40].size ||
                            (iVar15 = tile_resource(local_d4,local_e8), iVar15 != 0)))) &&
-                         ((iVar15 = thunk_FUN_005b68f6(uVar9,local_d4,local_e8), iVar15 != 0 ||
+                         ((iVar15 = thunk_ai_tile_improve_choice(uVar9,local_d4,local_e8), iVar15 != 0 ||
                           (uVar28 == 4)))) {
                         local_170 = local_170 | 2;
                       }
                       if (local_170 != 0) {
                         if ((local_170 & 2) != 0) {
-                          iVar15 = thunk_FUN_005b68f6(uVar9,local_d4,local_e8);
+                          iVar15 = thunk_ai_tile_improve_choice(uVar9,local_d4,local_e8);
                           if (iVar15 == 1) {
                             units[local_168].orders = '\x06';
                             units[local_168].field_0c = 'I';
@@ -4178,7 +4178,7 @@ LAB_0053fc8d:
                         if (((bVar7 & 0x10) == 0) || ((bVar7 & 0x20) != 0)) {
                           if (((bVar7 & 0x10) == 0) &&
                              ((pbVar25 = (byte *)tile_at(local_d4,local_e8), (*pbVar25 & 0x80) == 0
-                              || (iVar15 = thunk_FUN_004bd9f0(uVar9,7), iVar15 != 0)))) {
+                              || (iVar15 = thunk_civ_has_advance(uVar9,7), iVar15 != 0)))) {
                             local_170 = local_170 & 1;
                             if (((local_14 & 0xc) != 0) &&
                                ((pbVar25 = (byte *)tile_at(local_d4,local_e8),
@@ -4193,7 +4193,7 @@ LAB_0053fc8d:
                           }
                         }
                         else {
-                          iVar15 = thunk_FUN_004bd9f0(uVar9,0x43);
+                          iVar15 = thunk_civ_has_advance(uVar9,0x43);
                           if (iVar15 != 0) {
                             local_170 = local_170 & 1;
                             iVar15 = tile_resource(local_d4,local_e8);
@@ -4216,8 +4216,8 @@ LAB_0053fc8d:
                       }
                       if (((local_f4 != 0) &&
                           ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0)) &&
-                         ((iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 == 0 ||
-                          (iVar15 = thunk_FUN_005b50ad(local_168,2), 1 < iVar15)))) {
+                         ((iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 == 0 ||
+                          (iVar15 = thunk_unit_stack_sum(local_168,2), 1 < iVar15)))) {
                         units[local_168].orders = '\x04';
                         units[local_168].field_0c = 'X';
                         goto LAB_005436c1;
@@ -4226,28 +4226,28 @@ LAB_0053fc8d:
                       if (((units[local_168].orders == '\v') &&
                           ((units[local_168].flags & 0x200) == 0)) &&
                          (iVar15 = (leaders[civs[uVar9].tribe].expand + 1) *
-                                   (int)*(short *)(&DAT_00666132 + iVar11 * 0x10),
+                                   (int)*(short *)(&landmass_fertile_tiles + iVar11 * 0x10),
                          uVar24 = (uint)*(byte *)(iVar11 + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar9 * 0x594),
                          iVar15 + uVar24 * -0x10 != 0 && (int)(uVar24 * 0x10) <= iVar15))
                       goto LAB_005436c1;
                       if (local_3c < 2) {
                         for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
                           local_7c = (int)game.turn + local_60 & 7;
-                          iVar21 = map_wrap_x((char)(&DAT_00628350)[local_7c] + local_d4);
-                          local_74 = (char)(&DAT_00628360)[local_7c] + local_e8;
+                          iVar21 = map_wrap_x((char)(&dir_dx_table)[local_7c] + local_d4);
+                          local_74 = (char)(&dir_dy_table)[local_7c] + local_e8;
                           iVar15 = map_in_bounds(iVar21,local_74);
                           if (((iVar15 != 0) &&
                               (iVar15 = tile_city_owner(iVar21,local_74), iVar15 < 0)) &&
-                             (((local_54 = thunk_FUN_005b2e69(iVar21,local_74), local_54 < 0 ||
+                             (((local_54 = thunk_tile_first_unit(iVar21,local_74), local_54 < 0 ||
                                (((int)units[local_54].owner == uVar9 &&
-                                (iVar15 = thunk_FUN_005b53b6(local_54,5), iVar15 == 0)))) &&
-                              (iVar15 = thunk_FUN_005b68f6(uVar9,iVar21,local_74), iVar15 != 0)))) {
+                                (iVar15 = thunk_unit_stack_count_role(local_54,5), iVar15 == 0)))) &&
+                              (iVar15 = thunk_ai_tile_improve_choice(uVar9,iVar21,local_74), iVar15 != 0)))) {
                             bVar7 = tile_terrain(iVar21,local_74);
                             local_cc = (uptr)bVar7;
                             if (((((int)(char)terrain_types[local_cc].irrigate_turns / 5) * 3 + -3
                                   <= (int)cities[uVar20].size) ||
                                 (iVar15 = tile_resource(iVar21,local_74), iVar15 != 0)) &&
-                               (iVar15 = thunk_FUN_005ae31d(local_d4,local_e8,iVar21,local_74),
+                               (iVar15 = thunk_map_distance_diag(local_d4,local_e8,iVar21,local_74),
                                iVar15 < 3)) {
                               units[local_168].field_0c = 's';
                               local_c8 = local_7c;
@@ -4260,7 +4260,7 @@ LAB_0053fc8d:
                       uVar24 = tile_improvements(local_d4,local_e8);
                       if ((((uVar24 & 0x10) == 0) &&
                           ((pbVar25 = (byte *)tile_at(local_d4,local_e8), (*pbVar25 & 0x80) == 0 ||
-                           (iVar15 = thunk_FUN_004bd9f0(uVar9,7), iVar15 != 0)))) &&
+                           (iVar15 = thunk_civ_has_advance(uVar9,7), iVar15 != 0)))) &&
                          ((local_3c < 3 && ((int)local_80 < 3)))) {
                         units[local_168].field_0c = 'r';
                         units[local_168].orders = '\x05';
@@ -4285,22 +4285,22 @@ LAB_0053fc8d:
                     local_134 = local_40;
                   }
                   if ((-1 < (int)local_134) &&
-                     (iVar15 = thunk_FUN_005ae31d(local_d4,local_e8,(int)cities[local_134].x,
+                     (iVar15 = thunk_map_distance_diag(local_d4,local_e8,(int)cities[local_134].x,
                                                   (int)cities[local_134].y), 4 < iVar15)) {
-                    thunk_FUN_00531607(local_168,99,(int)cities[local_134].x,
+                    thunk_unit_set_goto(local_168,99,(int)cities[local_134].x,
                                        (int)cities[local_134].y);
                     goto LAB_005436c1;
                   }
                   uVar24 = tile_improvements(local_d4,local_e8);
                   if (((uVar24 & 0x10) == 0) &&
                      ((pbVar25 = (byte *)tile_at(local_d4,local_e8), (*pbVar25 & 0x80) == 0 ||
-                      (iVar15 = thunk_FUN_004bd9f0(uVar9,7), iVar15 != 0)))) {
+                      (iVar15 = thunk_civ_has_advance(uVar9,7), iVar15 != 0)))) {
                     units[local_168].field_0c = 'r';
                     units[local_168].orders = '\x05';
                     goto LAB_005436c1;
                   }
                   if ((-1 < (int)local_40) && (local_158 != 0)) {
-                    thunk_FUN_00531607(local_168,99,(int)cities[local_40].x,(int)cities[local_40].y)
+                    thunk_unit_set_goto(local_168,99,(int)cities[local_40].x,(int)cities[local_40].y)
                     ;
                     goto LAB_005436c1;
                   }
@@ -4326,16 +4326,16 @@ LAB_0053fc8d:
                     }
                     uVar24 = tile_improvements(local_d4,local_e8);
                     if (((uVar24 & 0x20) == 0) &&
-                       (iVar15 = thunk_FUN_004bd9f0(uVar9,0x43), iVar15 != 0)) {
+                       (iVar15 = thunk_civ_has_advance(uVar9,0x43), iVar15 != 0)) {
                       units[local_168].field_0c = 'r';
                       units[local_168].orders = '\x05';
                       goto LAB_005436c1;
                     }
                     uVar20 = local_40;
                     for (local_60 = 0; (int)local_60 < 0x14; local_60 = local_60 + 1) {
-                      iVar21 = map_wrap_x((int)(char)(&DAT_00628370)[local_60] +
+                      iVar21 = map_wrap_x((int)(char)(&city_tile_dx_table)[local_60] +
                                           (int)cities[uVar20].x);
-                      local_74 = (int)cities[uVar20].y + (int)(char)(&DAT_006283a0)[local_60];
+                      local_74 = (int)cities[uVar20].y + (int)(char)(&city_tile_dy_table)[local_60];
                       iVar15 = map_in_bounds(iVar21,local_74);
                       if (iVar15 != 0) {
                         bVar7 = tile_terrain(iVar21,local_74);
@@ -4345,21 +4345,21 @@ LAB_0053fc8d:
                           if ((terrain_types[bVar7].mine_ai_govt != '\0') &&
                              ((char)terrain_types[bVar7].mine_ai_govt <
                               (char)terrain_types[bVar7].irrigate_ai_govt)) {
-                            thunk_FUN_00531607(local_168,0x6d,iVar21,local_74);
+                            thunk_unit_set_goto(local_168,0x6d,iVar21,local_74);
                             goto LAB_005436c1;
                           }
                           if (terrain_types[bVar7].irrigate_ai_govt != '\0') {
-                            thunk_FUN_00531607(local_168,0x69,iVar21,local_74);
+                            thunk_unit_set_goto(local_168,0x69,iVar21,local_74);
                             goto LAB_005436c1;
                           }
                         }
                         pbVar25 = (byte *)tile_at(iVar21,local_74);
                         if ((((*pbVar25 & 0x80) == 0) ||
-                            (iVar15 = thunk_FUN_004bd9f0(uVar9,7), iVar15 != 0)) &&
+                            (iVar15 = thunk_civ_has_advance(uVar9,7), iVar15 != 0)) &&
                            ((uVar24 = tile_improvements(iVar21,local_74), (uVar24 & 0x10) == 0 ||
                             ((uVar24 = tile_improvements(iVar21,local_74), (uVar24 & 0x20) == 0 &&
-                             (iVar15 = thunk_FUN_004bd9f0(uVar9,0x43), iVar15 != 0)))))) {
-                          thunk_FUN_00531607(local_168,0x72,iVar21,local_74);
+                             (iVar15 = thunk_civ_has_advance(uVar9,0x43), iVar15 != 0)))))) {
+                          thunk_unit_set_goto(local_168,0x72,iVar21,local_74);
                           goto LAB_005436c1;
                         }
                       }
@@ -4368,7 +4368,7 @@ LAB_0053fc8d:
                   else {
                     uVar24 = tile_improvements(local_d4,local_e8);
                     if (((uVar24 & 0x20) == 0) &&
-                       (iVar15 = thunk_FUN_004bd9f0(uVar9,0x43), iVar15 != 0)) {
+                       (iVar15 = thunk_civ_has_advance(uVar9,0x43), iVar15 != 0)) {
                       units[local_168].field_0c = 'r';
                       units[local_168].orders = '\x05';
                       goto LAB_005436c1;
@@ -4377,14 +4377,14 @@ LAB_0053fc8d:
                 }
                 if ((units[local_168].orders != '\v') ||
                    (((local_e4 == 2 &&
-                     (iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 != 0)) || (bVar4)
+                     (iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 != 0)) || (bVar4)
                     ))) goto LAB_00541001;
                 local_c4 = 1;
-                iVar15 = thunk_FUN_005ae1b0(local_d4,local_e8,(int)units[local_168].goto_x,
+                iVar15 = thunk_map_distance(local_d4,local_e8,(int)units[local_168].goto_x,
                                             (int)units[local_168].goto_y);
                 if (1 < iVar15) {
                   if (((int)local_e4 < 5) &&
-                     (iVar15 = thunk_FUN_005b4b66(local_d4,local_e8,uVar9), iVar15 != 0)) {
+                     (iVar15 = thunk_tile_adjacent_nonallied_unit(local_d4,local_e8,uVar9), iVar15 != 0)) {
                     local_a4 = 1;
                     local_c4 = 0;
                   }
@@ -4394,7 +4394,7 @@ LAB_0053fc8d:
                                      ((int)units[local_168].goto_x,(int)units[local_168].goto_y);
                 if (((int)local_78 < 0) || (local_78 == uVar9)) goto LAB_00540fea;
                 if ((local_e4 != 4) ||
-                   ((iVar15 = thunk_FUN_005b50ad(local_168,2), iVar15 < 2 || (local_94 != 0))))
+                   ((iVar15 = thunk_unit_stack_sum(local_168,2), iVar15 < 2 || (local_94 != 0))))
                 goto LAB_00540f1e;
                 units[local_168].orders = -1;
                 local_94 = 1;
@@ -4403,7 +4403,7 @@ LAB_0053fc8d:
           }
           else {
             local_cc = (uptr)(char)unit_types[units[local_168].type].defense;
-            iVar15 = thunk_FUN_0043d20a(local_40,8);
+            iVar15 = thunk_city_has_improvement(local_40,8);
             if (iVar15 == 0) {
               if ((units[local_168].flags & 0x100) != 0) {
                 local_cc = (int)(local_cc * 3) / 2;
@@ -4429,7 +4429,7 @@ LAB_0053fc8d:
               if (local_158 != 0) {
                 local_90 = 1;
               }
-              iVar15 = thunk_FUN_005b50ad(local_168,2);
+              iVar15 = thunk_unit_stack_sum(local_168,2);
               if (((iVar15 == 1) && (-1 < unit_types[units[local_168].type].obsolete_by)) &&
                  (game.advance_known_by[unit_types[units[local_168].type].obsolete_by] != '\0')) {
                 local_90 = 1;
@@ -4438,7 +4438,7 @@ LAB_0053fc8d:
             }
             goto LAB_0053b8f0;
           }
-          iVar15 = thunk_FUN_005b53b6(local_168,1);
+          iVar15 = thunk_unit_stack_count_role(local_168,1);
           if ((1 < iVar15) && (units[local_168].orders == '\v')) goto LAB_0053b8f0;
           units[local_168].field_0c = 'F';
           local_90 = 1;
@@ -4450,11 +4450,11 @@ LAB_005414d7:
         local_68 = 0;
         local_50 = 0;
         if (((local_e4 == 4) && (local_3c != 0)) &&
-           ((iVar15 = thunk_FUN_005b50ad(local_168,2), 1 < iVar15 &&
+           ((iVar15 = thunk_unit_stack_sum(local_168,2), 1 < iVar15 &&
             (units[local_168].orders == '\v')))) {
           local_a4 = 1;
         }
-        iVar15 = thunk_FUN_005b4c63(local_d4,local_e8,uVar9);
+        iVar15 = thunk_tile_zoc_unit_adjacent(local_d4,local_e8,uVar9);
         if (iVar15 == 0) {
           if (local_a4 == 0) {
             local_68 = 1;
@@ -4466,7 +4466,7 @@ LAB_005414d7:
         else {
           units[local_168].last_dir = 0xff;
         }
-        if (((game.game_flags & 0x80) != 0) && ((DAT_0064bc60 & 8) != 0)) {
+        if (((game.game_flags & 0x80) != 0) && ((scenario_flags & 8) != 0)) {
           local_68 = 0;
         }
         if (local_e4 == 1) {
@@ -4480,8 +4480,8 @@ LAB_005414d7:
           }
         }
         for (local_60 = 0; (int)local_60 < 8; local_60 = local_60 + 1) {
-          iVar21 = map_wrap_x((char)(&DAT_00628350)[local_60] + local_d4);
-          local_74 = (char)(&DAT_00628360)[local_60] + local_e8;
+          iVar21 = map_wrap_x((char)(&dir_dx_table)[local_60] + local_d4);
+          local_74 = (char)(&dir_dy_table)[local_60] + local_e8;
           iVar15 = map_in_bounds(iVar21,local_74);
           if (iVar15 != 0) {
             local_78 = tile_owner(iVar21,local_74);
@@ -4489,43 +4489,43 @@ LAB_005414d7:
             uVar24 = (uint)bVar8;
             local_6c = (uint)(uVar24 == 10);
             if ((local_6c == 0) || (local_144 != 0)) {
-              local_54 = thunk_FUN_005b2e69(iVar21,local_74);
+              local_54 = thunk_tile_first_unit(iVar21,local_74);
               while (((-1 < local_54 && (-1 < units[local_54].next_in_stack)) &&
                      ('\x04' < (char)unit_types[units[local_54].type].role))) {
-                local_54 = thunk_FUN_005b2c82(local_54);
+                local_54 = thunk_unit_next_in_stack(local_54);
               }
               if (((((((local_158 == 0) || (local_144 != 0)) ||
                      ((-1 < local_54 ||
-                      ((iVar15 = thunk_FUN_005b4d8c(iVar21,local_74,uVar9), iVar15 == 0 ||
+                      ((iVar15 = thunk_tile_in_enemy_zoc(iVar21,local_74,uVar9), iVar15 == 0 ||
                        ((local_a0 & 2) != 0)))))) || (local_6c != 0)) &&
                    ((((local_6c == 0 || (local_144 != 0)) || (local_54 < 0)) || (local_78 == uVar9))
                    )) && (((local_144 != 2 || (local_6c != 0)) ||
                           (((-1 < local_54 && ((local_78 != uVar9 && (local_80 == 10)))) &&
                            ((local_a0 & 8) == 0)))))) &&
                  ((((local_54 < 0 || (local_78 != uVar9)) ||
-                   (iVar15 = thunk_FUN_005b50ad(local_54,2), iVar15 < 2)) ||
+                   (iVar15 = thunk_unit_stack_sum(local_54,2), iVar15 < 2)) ||
                   ((iVar15 = tile_city_owner(iVar21,local_74), -1 < iVar15 ||
                    (uVar10 = tile_improvements(iVar21,local_74), ((byte)uVar10 & 0x42) == 0x40))))))
               {
                 local_18 = 0;
                 if (bVar30) {
                   if ((local_80 == 10) &&
-                     (iVar15 = thunk_FUN_005b4c63(iVar21,local_74,uVar9), iVar15 != 0))
+                     (iVar15 = thunk_tile_zoc_unit_adjacent(iVar21,local_74,uVar9), iVar15 != 0))
                   goto LAB_0054168e;
-                  local_18 = thunk_FUN_0059a791(0,4);
+                  local_18 = thunk_rand_range(0,4);
                 }
                 else if ((units[local_168].visibility == '\0') && (local_80 != 10)) {
                   if (local_e4 == 0) {
-                    local_18 = thunk_FUN_0059a791(0,2);
+                    local_18 = thunk_rand_range(0,2);
                     local_18 = local_18 + (char)terrain_types[uVar24].move_cost * -2;
                   }
                   else {
-                    local_18 = thunk_FUN_0059a791(0,2);
+                    local_18 = thunk_rand_range(0,2);
                     local_18 = local_18 - (char)terrain_types[uVar24].defense;
                   }
                 }
                 else {
-                  local_18 = thunk_FUN_0059a791(0,4);
+                  local_18 = thunk_rand_range(0,4);
                   if ((local_54 < 0) || (local_78 != uVar9)) {
                     if ((int)local_e4 < 6) {
                       local_18 = local_18 + (char)terrain_types[uVar24].defense * 4;
@@ -4535,7 +4535,7 @@ LAB_005414d7:
                                  (6 - ((char)terrain_types[uVar24].move_cost + -1) *
                                       (uint)cosmic.road_move_mult);
                       if ((iVar27 < 4) && (local_40 != local_88)) {
-                        local_70 = thunk_FUN_005ae1b0(iVar21,local_74,(int)cities[local_88].x,
+                        local_70 = thunk_map_distance(iVar21,local_74,(int)cities[local_88].x,
                                                       (int)cities[local_88].y);
                         if (local_70 == 1) {
                           if ((int)(uint)cosmic.road_move_mult <
@@ -4559,12 +4559,12 @@ LAB_005414d7:
                   else {
                     uVar10 = tile_improvements(iVar21,local_74);
                     if ((((byte)uVar10 & 0x43) == 1) &&
-                       (iVar15 = thunk_FUN_005b4b66(iVar21,local_74,uVar9), iVar15 != 0)) {
+                       (iVar15 = thunk_tile_adjacent_nonallied_unit(iVar21,local_74,uVar9), iVar15 != 0)) {
                       switch(local_e4) {
                       case 0:
-                        local_cc = thunk_FUN_005b53b6(local_54,0);
+                        local_cc = thunk_unit_stack_count_role(local_54,0);
                         if (((int)local_cc < 1) &&
-                           (iVar15 = thunk_FUN_005b53b6(local_54,1), iVar15 != 0)) {
+                           (iVar15 = thunk_unit_stack_count_role(local_54,1), iVar15 != 0)) {
                           local_18 = local_18 + 8;
                         }
                         else {
@@ -4572,7 +4572,7 @@ LAB_005414d7:
                         }
                         break;
                       case 1:
-                        local_cc = thunk_FUN_005b53b6(local_54,1);
+                        local_cc = thunk_unit_stack_count_role(local_54,1);
                         if ((int)local_cc < 1) {
                           local_18 = local_18 + 8;
                         }
@@ -4581,19 +4581,19 @@ LAB_005414d7:
                         }
                         break;
                       case 2:
-                        iVar15 = thunk_FUN_005b53b6(local_54,4);
+                        iVar15 = thunk_unit_stack_count_role(local_54,4);
                         if (iVar15 != 0) {
                           local_18 = local_18 + 8;
                         }
-                        iVar15 = thunk_FUN_005b53b6(local_54,2);
+                        iVar15 = thunk_unit_stack_count_role(local_54,2);
                         local_18 = local_18 + iVar15 * -4;
                         break;
                       case 4:
-                        iVar15 = thunk_FUN_005b53b6(local_54,2);
+                        iVar15 = thunk_unit_stack_count_role(local_54,2);
                         if (iVar15 != 0) {
                           local_18 = local_18 + 8;
                         }
-                        iVar15 = thunk_FUN_005b53b6(local_54,4);
+                        iVar15 = thunk_unit_stack_count_role(local_54,4);
                         local_18 = local_18 + iVar15 * -8;
                         break;
                       case 5:
@@ -4601,8 +4601,8 @@ LAB_005414d7:
                         local_18 = local_18 + -4;
                         break;
                       case 6:
-                        iVar15 = thunk_FUN_005b53b6(local_54,0);
-                        iVar23 = thunk_FUN_005b53b6(local_54,1);
+                        iVar15 = thunk_unit_stack_count_role(local_54,0);
+                        iVar23 = thunk_unit_stack_count_role(local_54,1);
                         if (iVar15 + iVar23 != 0) {
                           local_18 = local_18 + 8;
                         }
@@ -4611,23 +4611,23 @@ LAB_005414d7:
                     else {
                       switch(local_e4) {
                       case 0:
-                        iVar15 = thunk_FUN_005b50ad(local_54,0);
-                        iVar23 = thunk_FUN_005b50ad(local_54,2);
+                        iVar15 = thunk_unit_stack_sum(local_54,0);
+                        iVar23 = thunk_unit_stack_sum(local_54,2);
                         local_18 = local_18 + (iVar15 * 4) / (iVar23 + 1);
                         break;
                       case 1:
-                        iVar15 = thunk_FUN_005b50ad(local_54,3);
-                        iVar23 = thunk_FUN_005b50ad(local_54,0);
+                        iVar15 = thunk_unit_stack_sum(local_54,3);
+                        iVar23 = thunk_unit_stack_sum(local_54,0);
                         local_18 = local_18 + (iVar15 * 2) / (iVar23 + 1);
                         break;
                       case 5:
                         uVar2 = terrain_types[uVar24].defense;
-                        iVar15 = thunk_FUN_005b50ad(local_54,0);
+                        iVar15 = thunk_unit_stack_sum(local_54,0);
                         local_18 = local_18 + ((char)uVar2 + iVar15) * 2;
                         break;
                       case 6:
-                        iVar15 = thunk_FUN_005b53b6(local_54,0);
-                        iVar23 = thunk_FUN_005b53b6(local_54,1);
+                        iVar15 = thunk_unit_stack_count_role(local_54,0);
+                        iVar23 = thunk_unit_stack_count_role(local_54,1);
                         if (iVar15 + iVar23 != 0) {
                           local_18 = local_18 + 8;
                         }
@@ -4636,7 +4636,7 @@ LAB_005414d7:
                   }
                 }
                 if (local_144 == 1) {
-                  local_18 = thunk_FUN_0059a791(0,2);
+                  local_18 = thunk_rand_range(0,2);
                 }
                 if (-1 < (char)units[local_168].last_dir) {
                   if ((int)(char)units[local_168].last_dir == local_60 ||
@@ -4661,9 +4661,9 @@ LAB_005414d7:
                        && ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_88].owner * 4) & 8) ==
                            0)))) &&
                      (((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[local_88].owner * 4) & 4) != 0
-                      || (iVar15 = thunk_FUN_00467904(uVar9,(int)cities[local_88].owner),
+                      || (iVar15 = thunk_civ_get_attitude(uVar9,(int)cities[local_88].owner),
                          iVar15 < 0x32)))) {
-                    local_70 = thunk_FUN_005ae31d((int)cities[uVar20].x,(int)cities[uVar20].y,iVar21
+                    local_70 = thunk_map_distance_diag((int)cities[uVar20].x,(int)cities[uVar20].y,iVar21
                                                   ,local_74);
                     if ((iVar27 < local_70) && (iVar27 < 3)) {
                       local_18 = local_18 + 5;
@@ -4685,7 +4685,7 @@ LAB_005414d7:
                     if ((((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_5c * 4) & 4) != 0) &&
                         ((int)((uint)civs[local_5c].reputation -
                               (int)*(char *)((int)civs + uVar9 * 0x595 + 0x48)) < 7)) ||
-                       (iVar15 = thunk_FUN_00467904(uVar9,local_5c), iVar15 < 0x32)) {
+                       (iVar15 = thunk_civ_get_attitude(uVar9,local_5c), iVar15 < 0x32)) {
                       local_18 = local_18 + -5;
                       local_14 = tile_improvements(iVar21,local_74);
                       if ((local_14 & 0x1c) != 0) {
@@ -4722,7 +4722,7 @@ LAB_005414d7:
                        ((((local_144 == 2 && (unit_types[units[local_168].type].hold != '\0')) &&
                          (((iVar15 = tile_is_ocean(iVar21,local_74), iVar15 == 0 &&
                            ((char)unit_types[units[local_168].type].attack < '\x03')) ||
-                          ((iVar15 = thunk_FUN_005b50ad(local_168,2), 1 < iVar15 &&
+                          ((iVar15 = thunk_unit_stack_sum(local_168,2), 1 < iVar15 &&
                            (((char)unit_types[units[local_168].type].attack <=
                              (char)unit_types[units[local_54].type].defense ||
                             ((char)unit_types[units[local_54].type].attack <=
@@ -4733,22 +4733,22 @@ LAB_005414d7:
                     if ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_78 * 4) & 6) == 0) {
                       if ((1 << ((byte)local_78 & 0x1f) & (uint)game.human_players) == 0) {
 LAB_005429fe:
-                        local_54 = thunk_FUN_0057e6e2(local_54,local_168);
+                        local_54 = thunk_unit_stack_best_defender(local_54,local_168);
                         if (((((unit_types[units[local_54].type].domain != '\x01') ||
                               (unit_types[units[local_54].type].range == '\0')) ||
                              ((unit_types[units[local_168].type].flags & 0x10) != 0)) ||
                             (((iVar15 = tile_city_owner(iVar21,local_74), -1 < iVar15 ||
                               (iVar15 = tile_airbase_owner(iVar21,local_74), -1 < iVar15)) ||
-                             (iVar15 = thunk_FUN_005b50ad(local_54,9), iVar15 != 0)))) &&
+                             (iVar15 = thunk_unit_stack_sum(local_54,9), iVar15 != 0)))) &&
                            (((unit_types[units[local_54].type].role != '\a' ||
                              (local_40 != local_88)) ||
                             (((civs[uVar9].government < civs[local_78].government ||
                               ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_78 * 4) & 0x10) != 0)) &&
-                             (iVar15 = thunk_FUN_0059a791(0,(uint)civs[local_78].government -
+                             (iVar15 = thunk_rand_range(0,(uint)civs[local_78].government -
                                                             (uint)civs[uVar9].government),
                              iVar15 != 0)))))) {
-                          local_10 = thunk_FUN_00580341(local_168,local_60,0);
-                          iVar15 = thunk_FUN_005b50ad(local_54,0);
+                          local_10 = thunk_unit_resolve_attack(local_168,local_60,0);
+                          iVar15 = thunk_unit_stack_sum(local_54,0);
                           local_10 = ((iVar15 + 1) * local_10) /
                                      (int)(char)unit_types[units[local_168].type].cost;
                           iVar15 = tile_city_owner(iVar21,local_74);
@@ -4765,12 +4765,12 @@ LAB_005429fe:
                                 local_10 = local_10 << 1;
                               }
                               uVar2 = unit_types[units[local_168].type].attack;
-                              iVar15 = thunk_FUN_005b50ad(local_168,3);
+                              iVar15 = thunk_unit_stack_sum(local_168,3);
                               if ((char)uVar2 * 2 < iVar15) {
                                 local_10 = local_10 << 1;
                                 local_ac = 1;
                               }
-                              iVar15 = thunk_FUN_005b53b6(local_54,0);
+                              iVar15 = thunk_unit_stack_count_role(local_54,0);
                               if (iVar15 != 0) {
                                 local_10 = local_10 << 1;
                                 local_ac = 1;
@@ -4781,8 +4781,8 @@ LAB_005429fe:
                               }
                             }
                             if ((game.rules & 0x10) != 0) {
-                              iVar15 = thunk_FUN_005b29aa(local_54);
-                              iVar23 = thunk_FUN_005b29d7(local_54);
+                              iVar15 = thunk_unit_max_hp(local_54);
+                              iVar23 = thunk_unit_hp_remaining(local_54);
                               if (iVar23 <= iVar15 / 3) {
                                 local_ac = 1;
                                 local_10 = local_10 << 1;
@@ -4826,27 +4826,27 @@ LAB_005429fe:
                               (('\x03' < (char)terrain_types[uVar24].defense ||
                                (uVar10 = tile_improvements(iVar21,local_74),
                                ((byte)uVar10 & 0x42) == 0x40)))) &&
-                             (((iVar15 = thunk_FUN_005b50ad(local_54,2), iVar15 < 2 &&
+                             (((iVar15 = thunk_unit_stack_sum(local_54,2), iVar15 < 2 &&
                                (iVar15 = tile_city_owner(iVar21,local_74), iVar15 < 0)) &&
-                              (iVar15 = thunk_FUN_0059a791(0,3), iVar15 == 0)))) {
-                            thunk_FUN_004c9528(local_54,uVar9);
+                              (iVar15 = thunk_rand_range(0,3), iVar15 == 0)))) {
+                            thunk_unit_bribe(local_54,uVar9);
                           }
                         }
                         goto LAB_0054168e;
                       }
                       if (local_e4 != 6) {
                         bVar8 = civs[local_78].reputation;
-                        iVar15 = thunk_FUN_00467904(uVar9,local_78);
-                        iVar23 = thunk_FUN_0059a791(0,0x13);
+                        iVar15 = thunk_civ_get_attitude(uVar9,local_78);
+                        iVar23 = thunk_rand_range(0,0x13);
                         if (0x32 < (int)((uint)bVar8 * 5 + iVar15 + iVar23 + -10))
                         goto LAB_005429fe;
                       }
                     }
                     if (((((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + local_78 * 4) & 6) == 0) ||
                          (unit_types[units[local_54].type].role != '\x06')) ||
-                        (iVar15 = thunk_FUN_005b50ad(local_54,2), iVar15 != 1)) ||
+                        (iVar15 = thunk_unit_stack_sum(local_54,2), iVar15 != 1)) ||
                        ((unit_types[units[local_168].type].attack == '\0' ||
-                        (iVar15 = thunk_FUN_0043d07a(iVar21,local_74,-1,0xffffffff,-1),
+                        (iVar15 = thunk_city_find_nearest(iVar21,local_74,-1,0xffffffff,-1),
                         (int)cities[iVar15].owner != uVar9)))) {
                       if (local_e4 == 6) {
                         if ((uVar28 == 0) ||
@@ -4861,7 +4861,7 @@ LAB_00542801:
                               if ((1 << ((byte)local_78 & 0x1f) & (uint)game.human_players) == 0) {
                                 for (local_14c = 1; local_14c < 8; local_14c = local_14c + 1) {
                                   if (((1 << ((byte)local_14c & 0x1f) & (uint)game.human_players) !=
-                                       0) && (iVar15 = thunk_FUN_00467af0(local_78,local_14c),
+                                       0) && (iVar15 = thunk_diplo_is_hostile(local_78,local_14c),
                                              iVar15 == 0)) {
                                     local_cc = 1;
                                   }
@@ -4878,13 +4878,13 @@ LAB_00542801:
                                   }
                                 }
                                 if ((((local_cc != 0) &&
-                                     (iVar15 = thunk_FUN_005b50ad(local_54,2), iVar15 < 2)) &&
+                                     (iVar15 = thunk_unit_stack_sum(local_54,2), iVar15 < 2)) &&
                                     (iVar15 = tile_city_owner(iVar21,local_74), iVar15 < 0)) &&
-                                   ((iVar15 = thunk_FUN_0059a791(0,7), iVar15 == 0 ||
+                                   ((iVar15 = thunk_rand_range(0,7), iVar15 == 0 ||
                                     ((-1 < (int)local_88 &&
                                      (((uint)game.human_players &
                                       1 << (cities[local_88].owner & 0x1fU)) != 0)))))) {
-                                  thunk_FUN_004c9528(local_54,uVar9);
+                                  thunk_unit_bribe(local_54,uVar9);
                                 }
                               }
                             }
@@ -4893,7 +4893,7 @@ LAB_00542801:
                             local_cc = 0;
                             for (local_14c = 1; local_14c < 8; local_14c = local_14c + 1) {
                               if (((1 << ((byte)local_14c & 0x1f) & (uint)game.human_players) != 0)
-                                 && (iVar15 = thunk_FUN_00467af0(uVar9,local_14c), iVar15 != 0)) {
+                                 && (iVar15 = thunk_diplo_is_hostile(uVar9,local_14c), iVar15 != 0)) {
                                 local_cc = 1;
                               }
                             }
@@ -4921,7 +4921,7 @@ LAB_0054314b:
                 if (((local_3c != 0) && (local_144 == 2)) && ((local_54 < 0 || (local_78 == uVar9)))
                    ) {
                   iVar15 = tile_landmass(iVar21,local_74);
-                  iVar23 = thunk_FUN_0044272d(local_40,0,0);
+                  iVar23 = thunk_city_adjacent_sea_info(local_40,0,0);
                   if (iVar15 == iVar23) {
                     local_18 = local_18 + 10;
                   }
@@ -4929,8 +4929,8 @@ LAB_0054314b:
                 if ((((local_144 != 1) || (iVar15 = tile_airbase_owner(iVar21,local_74), iVar15 < 0)
                      ) || (local_78 == uVar9)) || (-1 < local_54)) {
                   if (local_68 != 0) {
-                    iVar22 = map_wrap_x((char)(&DAT_00628350)[local_60] * 4 + local_d4);
-                    iVar15 = (char)(&DAT_00628360)[local_60] * 4 + local_e8;
+                    iVar22 = map_wrap_x((char)(&dir_dx_table)[local_60] * 4 + local_d4);
+                    iVar15 = (char)(&dir_dy_table)[local_60] * 4 + local_e8;
                     iVar23 = map_in_bounds(iVar22,iVar15);
                     if ((iVar23 != 0) &&
                        (iVar23 = tile_visible_to(iVar22,iVar15,uVar9), iVar23 == 0)) {
@@ -4943,8 +4943,8 @@ LAB_0054314b:
                       }
                     }
                     for (local_7c = 0; (int)local_7c < 8; local_7c = local_7c + 1) {
-                      local_d0 = map_wrap_x((char)(&DAT_00628350)[local_7c] + iVar22);
-                      iVar23 = (char)(&DAT_00628360)[local_7c] + iVar15;
+                      local_d0 = map_wrap_x((char)(&dir_dx_table)[local_7c] + iVar22);
+                      iVar23 = (char)(&dir_dy_table)[local_7c] + iVar15;
                       iVar26 = map_in_bounds(local_d0,iVar23);
                       if (iVar26 != 0) {
                         iVar26 = tile_visible_to(local_d0,iVar23,uVar9);
@@ -4960,7 +4960,7 @@ LAB_0054314b:
                         if (bVar30) {
                           bVar8 = tile_terrain(local_d0,iVar23);
                           local_18 = local_18 + (char)terrain_types[bVar8].food;
-                          if ((game.multiplayer != '\0') && (DAT_00654fac != 0)) {
+                          if ((game.multiplayer != '\0') && (mp_double_production != 0)) {
                             bVar8 = tile_terrain(local_d0,iVar23);
                             local_18 = local_18 + (char)terrain_types[bVar8].food;
                           }
@@ -4973,14 +4973,14 @@ LAB_0054314b:
                   }
                   iVar15 = local_18;
                   if (((local_118 != 0) &&
-                      (iVar23 = thunk_FUN_005b2c3d(local_168),
+                      (iVar23 = thunk_unit_moves_left(local_168),
                       iVar23 < (int)(uint)cosmic.road_move_mult)) &&
                      (iVar23 = tile_city_owner(iVar21,local_74), iVar23 < 0)) {
-                    iVar23 = thunk_FUN_005b50ad(local_168,0);
+                    iVar23 = thunk_unit_stack_sum(local_168,0);
                     uVar33 = 99;
                     uVar10 = 1;
-                    iVar21 = thunk_FUN_005b50ad(local_168,3);
-                    iVar26 = thunk_FUN_005adfa0(iVar21,uVar10,uVar33);
+                    iVar21 = thunk_unit_stack_sum(local_168,3);
+                    iVar26 = thunk_int_clamp(iVar21,uVar10,uVar33);
                     local_18 = (iVar23 / iVar26) * local_18;
                   }
                   if (local_38 < local_18) {
@@ -4999,7 +4999,7 @@ LAB_0054314b:
 LAB_0054168e: ;
         }
         if ((local_50 != 0) &&
-           (iVar15 = (uint)cosmic.road_move_mult - local_64, iVar27 = thunk_FUN_005b2c3d(local_168),
+           (iVar15 = (uint)cosmic.road_move_mult - local_64, iVar27 = thunk_unit_moves_left(local_168),
            iVar27 < iVar15)) {
           local_c8 = 8;
         }
@@ -5035,12 +5035,12 @@ LAB_005435ca:
     units[local_168].orders = -1;
   }
   else {
-    local_d4 = map_wrap_x((char)(&DAT_00628350)[local_c8] + local_d4);
-    local_e8 = local_e8 + (char)(&DAT_00628360)[local_c8];
+    local_d4 = map_wrap_x((char)(&dir_dx_table)[local_c8] + local_d4);
+    local_e8 = local_e8 + (char)(&dir_dy_table)[local_c8];
     iVar27 = map_in_bounds(local_d4,local_e8);
     if (iVar27 == 0) {
       units[local_168].orders = -1;
-      thunk_FUN_005b6787(local_168);
+      thunk_unit_exhaust_moves(local_168);
     }
     else {
       units[local_168].orders = '\x1b';
@@ -5059,7 +5059,7 @@ LAB_005436c1:
       units[local_168].moves_used = units[local_168].moves_used + cosmic.road_move_mult;
       return 1;
     }
-    thunk_FUN_005b6787(local_168);
+    thunk_unit_exhaust_moves(local_168);
     if ((local_144 == 0) && (unit_types[units[local_168].type].role != '\x05')) {
       units[local_168].orders = '\x01';
       if ((units[local_168].flags & 0x100) != 0) {
@@ -5079,13 +5079,13 @@ LAB_005436c1:
     units[local_168].orders = -1;
     if (units[local_168].moves_used != '\0') {
       if (unit_types[units[local_168].type].role == '\x02') {
-        iVar27 = thunk_FUN_005b53b6(local_168,4);
+        iVar27 = thunk_unit_stack_count_role(local_168,4);
         if (iVar27 != 0) {
-          thunk_FUN_005b6787(local_168);
+          thunk_unit_exhaust_moves(local_168);
         }
       }
       else {
-        thunk_FUN_005b6787(local_168);
+        thunk_unit_exhaust_moves(local_168);
       }
     }
   }
@@ -5103,11 +5103,11 @@ LAB_00540fea:
 LAB_00541001:
   if ((((local_e4 == 1) && (local_80 != 10)) && (local_a4 == 0)) && (!bVar4)) {
     local_c4 = 0;
-    iVar15 = thunk_FUN_005b50ad(local_168,2);
+    iVar15 = thunk_unit_stack_sum(local_168,2);
     if ((iVar15 < 2) && (local_3c < 4)) {
       local_c4 = local_c4 | 1;
     }
-    if (((local_158 != 0) && (iVar15 = thunk_FUN_005b53b6(local_168,1), iVar15 == 1)) &&
+    if (((local_158 != 0) && (iVar15 = thunk_unit_stack_count_role(local_168,1), iVar15 == 1)) &&
        ((((int)local_88 < 0 ||
          (((local_88 == local_40 || (4 < iVar27)) ||
           ((*(byte *)(uVar9 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[local_88].owner * 4) & 0x20) != 0)))) ||
@@ -5116,7 +5116,7 @@ LAB_00541001:
       local_c4 = local_c4 | 2;
     }
     if ((local_f4 != 0) || (local_bc != 0)) {
-      iVar15 = thunk_FUN_005b53b6(local_168,1);
+      iVar15 = thunk_unit_stack_count_role(local_168,1);
       if (iVar15 == 1) {
         local_c4 = local_c4 | 4;
       }
@@ -5140,7 +5140,7 @@ LAB_00541001:
     }
     if (local_c4 != 0) {
       if ((local_c4 & 0xc) != 0) {
-        thunk_FUN_00492c15(uVar9,1,local_d4,local_e8,1);
+        thunk_civ_clear_standing_goals_near(uVar9,1,local_d4,local_e8,1);
       }
       units[local_168].field_0c = 'F';
       if ((char)unit_types[uVar19].attack < (char)unit_types[uVar19].defense) {
@@ -5153,25 +5153,25 @@ LAB_00541001:
     }
   }
   if (((bVar29) &&
-      (*(short *)(&DAT_00666132 + iVar11 * 0x10) >> 3 <
+      (*(short *)(&landmass_fertile_tiles + iVar11 * 0x10) >> 3 <
        (short)(ushort)*(byte *)(iVar11 + ADDR(0x64c932, ((u8 *)&civs + 658)) + uVar9 * 0x594))) &&
      (units[local_168].home_city != -1)) {
     if ((local_3c == 0) && (cities[local_40].size < '\n')) {
       cities[local_40].size = cities[local_40].size + '\x01';
-      thunk_FUN_005b6042(local_168,1);
-      thunk_FUN_0050c679((C_004083b0_2e4 *)&DAT_006a91b8,local_40);
-      thunk_FUN_0047ce1e(local_d4,local_e8,1,1,1);
+      thunk_unit_destroy_redraw(local_168,1);
+      thunk_city_window_refresh_if_city((FrameWindow *)&city_window,local_40);
+      thunk_map_redraw_area_all_views(local_d4,local_e8,1,1,1);
       return 1;
     }
     if (((-1 < (int)local_40) && (iVar11 == local_58)) && (cities[local_40].size < '\n')) {
-      thunk_FUN_00531607(local_168,0x42,(int)cities[local_40].x,(int)cities[local_40].y);
+      thunk_unit_set_goto(local_168,0x42,(int)cities[local_40].x,(int)cities[local_40].y);
       goto LAB_005436c1;
     }
   }
   goto LAB_005414d7;
 }
-#undef DAT_0064bc60
-#undef DAT_00654fac
+#undef mp_double_production
+#undef scenario_flags
 #undef local_188
 #undef local_17c
 #undef local_170

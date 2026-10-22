@@ -1,0 +1,269 @@
+old	name	confidence	evidence
+C_00408010_10	WndBase	medium	57 wnd_* methods touching only the first 0x10 bytes (native handle at +8); main_frame_wnd etc.
+C_00408010_cc	Wnd	medium	full game window object (0xcc); surfwnd embeds it at +0x48 (0x48+0xcc=0x114); wnd_activate/keyboard nav at +0xc4
+C_00408010_710	DestroyedCivsWindow	medium	destroyed_civs_slide_step; Wnd-derived 0x710 object
+C_00408010_fb8	SpaceshipWindow	high	spaceship_wnd_ctor/draw/run_modal; cast spaceship_wnd
+C_00408010_108c	DiploLeaderWindow	medium	ctor 004942a3 builds wnd+surfwnd+palette+mmwnd; cast diplo_leader_window
+C_00408010_1c44	ThroneRoomWindow	high	throneroom_ctor/render
+C_00408010_1cb4	CityViewWindow	medium	cityview_draw_title/scroll (1280-wide city view)
+C_004083b0_48	DibSurface	high	surface_* methods (DIB-backed drawing surface)
+C_004083b0_114	SurfaceWindow	high	surfwnd_ctor/dtor/on_resize: surface + Wnd at +0x48
+C_004083b0_2e4	FrameWindow	high	frame_wnd_create/draw_caption/layout; city_window, map_views, advisor
+C_00408580	WndValidateRectView	medium	validates rect on native window field_8
+C_0040bc40_d8	DialogTextView	medium	dialog text/font/line-height helpers
+C_0040bc40_228	DialogWindowView	medium	dialog_create_window, set_title/width
+C_0040bc40_268	DialogOptionList	medium	dialog option/checkbox/sprite list methods; cast active_dialog (80)
+C_0040bc40_2f4	Dialog	high	dialog_ctor/dtor/init/run_modal/load_text
+C_0040bc40_310	ScenarioEvents	medium	events_ctor/check_*; cast scenario_events
+C_0040ef70_8	GameFont	high	font_* methods; font_size* globals
+C_0040f1e0_510	TaxRateDialog	medium	stack object 0x518 in taxrate_dialog_show; dtor frees 3 scrollbars, checkboxes
+C_0040f380_3c	Control	high	ctrl_*/button_*/checkbox_* base control (0x3c)
+C_0040f380_44	EditControl	medium	edit_create*
+C_0040f380_50	RadioGroup	medium	radiogrp_create*
+C_0040f380_cc	SpriteButton	medium	spritebtn_init_from_sprite; 0xcc sprite button with two surfaces
+C_0040f510	ControlBase	medium	ctrl_base_dtor
+C_0040f930	Checkbox	medium	checkbox_dtor/scalar/vector dtor
+C_0040faa0	CheckboxCallbackSetView	medium	checkbox_set_callback
+C_00414b70	WndCursorView	medium	wnd_set_cursor_now via field_8
+C_00414be0	WndHandlersMouseSetView	medium	mouse handler setters into handler table (this[3].field_4 = slot 0x1c)
+C_00417f70_3c	Sprite	high	sprite_* blit/encode methods
+C_004183d0_b50	EditorWindow	medium	editor_wnd_dtor; 0xb50 scenario editor window
+C_00418740	ControlIdView	medium	ctrl_get_id
+C_00418770	ControlHwndView	medium	control_get_hwnd
+C_004189c0	EditMaxLenView	medium	edit_set_max_len
+C_00418a00	EditCallbackSetView	medium	edit_set_callback
+C_00418a30	ControlTextView	medium	ctrl_get_text/set_text, edit caret
+C_00418c70	ComboBoxFontView	medium	combo_set_font
+C_00418ce0	ComboBoxAddView	medium	combo_add_string
+C_00418d20	ComboBoxClearView	medium	combo_clear
+C_00418d60	ComboBoxGetSelView	medium	combo_get_cur_sel
+C_00418d90	ComboBoxSetSelView	medium	combo_set_cur_sel
+C_00418dd0	ComboBoxCallbackSetView	medium	combo_set_callback
+C_00418ea0	ListBoxControl	medium	listbox_dtor/scalar_dtor
+C_00418fe0	ListBoxFontView	medium	listbox_set_font
+C_00419020	ListBoxAddView	medium	listbox_add_string
+C_00419060	ListBoxClearView	medium	listbox_clear
+C_00421bf0_98	FileObject	high	file_obj_* open/read/write/map
+C_00421ca0	RadioGroupEnableView	medium	radiogrp_enable_item
+C_004244e0	NetGameListRefreshView	medium	called by net_gamelist_refresh; walks net_found_games
+C_0042472a	NetGameList	medium	net_gamelist_clear/update_details; net_session casts
+C_004254a8	NetGameListAddView	medium	net_gamelist_add_entry
+C_00425607	NetGameListTimerView	medium	starts game list refresh timer field_174
+C_00428cb0	MemBlock	medium	memblock_ctor
+C_0043c3f0_4	DllHandle	high	dll_handle_* / resource_dll_load
+C_0043c740_434	GamePalette	high	palette_* methods; game_palette global
+C_004471c0	LobbyList	medium	lobby_* player list methods
+C_00447210	RadioGroupDisableView	medium	radiogrp_disable_item
+C_004472c0	RadioGroupGetSelView	medium	radiogrp_get_selected
+C_004472f0	RadioGroupSetSelView	medium	radiogrp_set_selected
+C_0044c8b0	WndHandlers	medium	wnd_handlers_ctor/clear: handler table at window+0x10
+C_0044d027_1c44	ThroneRoomDtorView	medium	throneroom_dtor
+C_00450400_10	WndCenterView	medium	wnd_center
+C_00451a60	HotspotClickSetView	medium	hotspot_set_click_callback (+0x34)
+C_00451a90	HotspotDblClickSetView	medium	hotspot_set_dblclick_callback (+0x3c)
+C_00451ac0	ScrollbarTrackSetView	medium	scrollbar_set_track_callback
+C_00453aa0	Hotspot	medium	hotspot_dtor/scalar/vector dtor (0x40-byte hotspot)
+C_0046ab5f	ClickMapClearView	medium	clickmap_clear
+C_0046ab82	ClickMapRemoveView	medium	clickmap_remove_at/by_id
+C_0046ace7	ClickMap	medium	clickmap_add, hotspot_add_rect
+C_0046ad85	ClickMapHitTestView	medium	clickmap_hit_test
+C_0046d5a0_8	NetMsgHeader	medium	net_msg_header_init
+C_0046dff0	AviPlayerEndCbSetView	medium	avi_player_set_end_callback
+C_0047a540	MapViewHitView	medium	mapview_screen_to_tile
+C_0047e94e	NetSession	medium	net_add_player/process_messages; net_session (120)
+C_00492a00	FileSeekView	medium	file_obj_seek_cur
+C_00492a40	FileReadLineView	medium	wraps file_obj_read_line_impl
+C_00492ab0	EditSelEndView	medium	edit_get_sel_end
+C_00492b20	EditSelView	medium	edit_hwnd_set_sel on field_1c
+C_004944bb	DiploLeaderView	medium	9 methods of the diplomacy leader window (field_1085 civ, leader portrait, video)
+C_004b3080	DiffEngSection	medium	init of 0x18 Difference Engine section record; diffeng_* casts
+C_004b7d72	ParleyTitleView	medium	parley_wnd_build_title
+C_004bb4a0	RadioGroupDtorView	medium	radiogrp_dtor
+C_004bb5e0	ControlFocusView	medium	ctrl_set_focus
+C_004bba79_1188	WonderMovieWindow	medium	dtor clears wonder_movie_wnd; avi player, surface, palette members
+C_004cffb0	EditLineView	medium	edit_hwnd_get_line on field_1c
+C_004d08b0_2180	SpaceshipWindowDtorView	medium	spaceship_wnd_dtor
+C_004d8b20	AviPlayer	medium	avi_player_dtor (0xa48)
+C_00511320	WndPaletteView	medium	wnd_get_palette
+C_00514220	NetMsgQueue	medium	net_msgq_reset
+C_0051438f	NetMsgQueueEnqueueView	medium	net_msgq_enqueue
+C_005167d9_1330	CouncilWindow	medium	dtor clears council_wnd; called by council_show
+C_00518e80	WndMoveView	medium	wnd_move_xy
+C_00530e80	ControlEnabledView	medium	ctrl_is_enabled (+0x2c)
+C_00530eb0	EditChangeSetView	medium	edit_set_change_callback
+C_00551d50	ListBoxGetSelView	medium	listbox_get_cur_sel
+C_00551d80	ListBoxSetSelView	medium	listbox_set_cur_sel
+C_00551dc0	ListBoxDblClickSetView	medium	listbox_set_dblclick_callback
+C_00551df0	ListBoxSelectSetView	medium	listbox_set_select_callback
+C_00553d30	WndDragBeginSetView	medium	wnd_set_drag_begin_callback
+C_00553d70	WndDragEndSetView	medium	wnd_set_drag_end_callback
+C_0055a00b	SetupPicWndRectView	medium	setup_picwnd_client_rect
+C_0056e180	MapViewZoomView	medium	map_view_zoom_scale_round
+C_0056e270	LobbyListCtorView	medium	lobby_list_ctor
+C_00578650	GameMenu	high	menu_* methods; main_menu
+C_00579b90	MenuHandleView	medium	menu_get_hmenu
+C_00579bc0	WndMenuCbSetView	medium	wnd_set_menu_callback
+C_0059a8bb	NetSessionCtorView	medium	net_session_ctor
+C_0059e18b	DialogAddLineView	medium	dialog_add_line
+C_0059eb0d	DialogEditTextView	medium	dialog_get_edit_text
+C_0059ec1c	DialogSelChangeSetView	medium	dialog_set_select_change_fn
+C_005a0fea	DialogOptionDrawView	medium	dialog_draw_option_cell/text
+C_005a9640	CheckboxDisableView	medium	checkbox_disable
+C_005a9670	ListBoxTextView	medium	listbox_get_text
+C_005a96b0	ListBoxSelTextView	medium	listbox_get_sel_text
+C_005bb8c0	WndPaletteObjView	medium	wnd_get_palette_obj
+C_005bb8e0	WndClientSizeView	medium	wnd_set_client_size
+C_005bb910	WndMinSizeView	medium	wnd_get_min_size
+C_005bb950	WndMaxSizeView	medium	wnd_get_max_size
+C_005bd610	WndStyleView	medium	wnd_get_style_flags
+C_005c0d69	SurfaceTextCurFontView	medium	surface_draw_text_cur_font (DIB at +0x40)
+C_005c0e57	SurfaceTextRectCurFontView	medium	draws text in rect with current font, optional shadow
+C_005c10fb	SurfaceTextWrapCurFontView	medium	wrapped text with current font
+C_005c4b7f	SurfaceBlitRectView	medium	clipped blit from this surface to another DibSurface
+C_005c4c46	SurfaceBlitDDSurfView	medium	clipped blit from this surface to a DirectDraw surface
+C_005c4dd3	SurfaceTextRgbCurFontView	medium	coloured text at point, current font
+C_005c4eb6	SurfaceTextRectRgbCurFontView	medium	coloured text in rect, current font
+C_005c4f9f	SurfaceTextRgbFontView	medium	coloured text at point with explicit font
+C_005c505d	SurfaceTextRectFontView	medium	text in rect with explicit font
+C_005c512d	SurfaceTextWrapRgbCurFontView	medium	coloured wrapped text, current font
+C_005c51a5	SurfaceTextWrapRgbFontView	medium	coloured wrapped text, explicit font
+C_005c5660	DDSurface	medium	ddsurf_* DirectDraw surface wrapper (0x44)
+C_005c5680	DDSurfaceWidthView	medium	ddsurf_get_width
+C_005c56f0	PaletteVersionView	medium	palette_get_version
+C_005c5740	DDSurfaceIfaceView	medium	ddsurf_get_iface
+C_005c59c4	WndControlListView	medium	wnd_append_control (list head +0xb8)
+C_005c5a27	WndControlRemoveView	medium	wnd_remove_control/remove_all
+C_005c5b36	WndControlInvalidateView	medium	invalidates every child control window
+C_005c5e60	ControlTypeView	medium	control_get_type
+C_005c5e80	ControlNextView	medium	control_get_next
+C_005c5ea0	ControlInitialFocusView	medium	ctrl_get_initial_focus
+C_005c5ec0	CheckboxEnabledView	medium	checkbox_is_enabled
+C_005c5ee0	RadioGroupItemsView	medium	radiogrp_get_items
+C_005c5f00	RadioGroupCountView	medium	radiogrp_item_count
+C_005c63af	WndMenuSelectView	medium	wnd_fire_menu_select
+C_005c6b05	PaletteAnimateView	medium	palette_animate wrapper
+C_005c6bd5	PaletteRotateView	medium	rotates a range of palette entries
+C_005c79bf	ColorKdTreeInitView	medium	color_kdtree_init
+C_005c7a30_828	ColorKdTreeFreeView	medium	color_kdtree_free
+C_005c7a86	ColorKdTree	medium	color_kdtree_build/insert, color_find_nearest_grey
+C_005c7e06	ColorKdTreeSearchView	medium	color_kdtree_find_nearest
+C_005c8f70	HotspotEnterView	medium	hotspot_fire_enter
+C_005c8fb0	HotspotLeaveView	medium	hotspot_fire_leave
+C_005c8ff0	HotspotClickView	medium	hotspot_fire_click
+C_005c9030	HotspotPressView	medium	hotspot_fire_press
+C_005c9070	HotspotDblClickView	medium	hotspot_fire_dblclick
+C_005c9710	ControlHwndSetView	medium	control_set_hwnd
+C_005cbdb0	PaletteHandleView	medium	palette_get_hpalette
+C_005cbdd0	WndKeyNavView	medium	wnd_keyboard_nav_enabled (+0xc4)
+C_005cbdf0	ButtonClickView	medium	button_fire_callback
+C_005cbe30	SpriteButtonClickView	medium	spritebtn_fire_click
+C_005cbe70	SpriteButtonRClickView	medium	spritebtn_fire_rclick
+C_005cce40	CheckboxClickView	medium	checkbox_fire_callback
+C_005cd620	ScrollbarPosView	medium	scrollbar_get_cur_pos
+C_005cd640	ScrollbarChangeView	medium	scrollbar_fire_change
+C_005cd680	ScrollbarTrackView	medium	scrollbar_fire_track
+C_005cd6c0	ScrollbarPageView	medium	scrollbar_get_page_size
+C_005cf39b	SpriteOriginSetView	medium	sprite_set_origin
+C_005cf3c5	SpriteOriginGetView	medium	sprite_get_origin
+C_005d1ef0	DDSurfaceRowNextView	medium	ddsurf_row_next
+C_005d1f20	DDSurfaceRowPrevView	medium	ddsurf_row_prev
+C_005d2042	TimerManager	medium	timer_mgr_add/dtor, game_timer_fire/kill_slot
+C_005d211e	TimerManagerCtorView	medium	timer_mgr_ctor
+C_005d30e0	EditKeyView	medium	edit_fire_key_callback
+C_005d3720	ComboBoxDblClickView	medium	combo_fire_dblclick
+C_005d3760	ComboBoxSelChangeView	medium	combo_fire_selchange
+C_005d3f30	ListBoxDblClickView	medium	listbox_fire_dblclick
+C_005d3f70	ListBoxSelChangeView	medium	listbox_fire_selchange
+C_005d4014	RadioGroupShowView	medium	radiogrp_show_all
+C_005dad40	RadioGroupClickView	medium	radiogrp_fire_callback
+C_005dad80	RadioGroupDblClickView	medium	radiogrp_fire_dblclick
+C_005dadc0	RadioGroupRClickView	medium	radiogrp_fire_rclick
+C_005dae6b	ErrorContext	high	err_* methods; err_report_ctx (123)
+C_005db650	WndDestroyView	medium	wnd_record_destroy
+C_005dcc56	MenuSubmenuView	medium	menu_get_submenu
+C_005dd377	AviPlayerOpenView	medium	avi_player_open
+C_005dd3c2	AviPlayerPlayView	medium	avi_player_play
+C_005dd3f1	AviPlayerRangeView	medium	avi_player_play_range
+C_005dd4c2	AviPlayerLoopView	medium	avi_player_loop_range
+C_005dd51d	AviPlayerPauseView	medium	avi_player_pause
+C_005e0ba0	SurfaceRowOffsetsView	medium	surface_get_row_offsets
+C_005e0cc0	DDPaletteIfaceView	medium	ddpal_get_iface
+C_005e3550	AviPlayerEndCbCallView	medium	avi_player_call_end_callback
+C_005e3580	AviPlayerCueCbCallView	medium	avi_player_call_cue_callback
+C_005e658a	DDSurfacePixelView	medium	ddsurf_pixel_ptr
+C_005e82fb	DDPaletteCtorView	medium	clears iface +0 and mem handles +0x20..+0x28
+C_005e833b	DDPaletteDtorView	medium	releases ddpal iface and mem handles
+C_005e83c8	DDPaletteReleaseView	medium	releases ddpal iface
+C_005e866c	DDPalette	medium	ddpal_save_entries
+C_005e8739	DDPaletteSetEntriesView	medium	ddpal_set_entries
+C_005eb2f0	EditMaxTextView	medium	edit_fire_maxtext_callback
+C_005eb330	EditChangeView	medium	edit_fire_change_callback
+C_005ecf50	WndOnMouseMoveView	medium	wnd_call_mousemove
+C_005ecf90	WndOnLButtonDownView	medium	wnd_call_lbuttondown
+C_005ecfd0	WndOnLButtonUpRawView	medium	wnd_call_lbuttonup_raw
+C_005ed010	WndOnLButtonUpView	medium	wnd_call_lbuttonup
+C_005ed050	WndOnRButtonDownView	medium	wnd_call_rbuttondown
+C_005ed090	WndOnRButtonUpRawView	medium	wnd_call_rbuttonup_raw
+C_005ed0d0	WndOnRButtonUpView	medium	wnd_call_rbuttonup
+C_005ed110	WndOnDblClickView	medium	wnd_call_dblclick
+C_005ed150	WndOnKeyDownPreView	medium	wnd_call_keydown_pre
+C_005ed190	WndOnKeyUpView	medium	wnd_call_keyup
+C_005ed1d0	WndOnKeyDownView	medium	wnd_call_keydown
+C_005ed210	WndOnCharView	medium	wnd_call_char
+C_005ed250	WndOnCloseView	medium	wnd_call_close
+C_005ed290	WndOnMinimizeView	medium	wnd_call_minimize
+C_005ed2c0	WndOnRestoreView	medium	wnd_call_restore
+C_005ed2f0	WndOnSetFocusView	medium	wnd_call_setfocus
+C_005ed320	WndOnSizeView	medium	wnd_call_size
+C_005ed360	WndOnMoveView	medium	wnd_call_move
+C_005ed3a0	WndOnMsg44View	medium	wnd_call_msg44
+C_005ed3e0	WndOnHScrollView	medium	wnd_call_hscroll
+C_005ed420	WndOnHScrollTrackView	medium	wnd_call_hscroll_track
+C_005ed460	WndOnVScrollView	medium	wnd_call_vscroll
+C_005ed4a0	WndOnVScrollTrackView	medium	wnd_call_vscroll_track
+C_005ed520	WndOnEnterSizeMoveView	medium	wnd_call_entersizemove
+C_005ed550	WndOnExitSizeMoveView	medium	wnd_call_exitsizemove
+C_005ed5a0	WndOnMenuPosCommandView	medium	wnd_call_menu_pos_command
+C_005ed5f0	WndOnCommandView	medium	wnd_call_command
+C_005ed640	WndHScrollPosView	medium	wnd_get_hscroll_pos
+C_005ed660	WndVScrollPosView	medium	wnd_get_vscroll_pos
+C_005ed680	WndHScrollPageView	medium	wnd_get_hscroll_page
+C_005ed6a0	WndVScrollPageView	medium	wnd_get_vscroll_page
+C_005ed6c0	WndMciDeviceView	medium	wnd_get_mci_device
+C_005ed6e0	WndOnMciDoneView	medium	wnd_call_mci_done
+C_005ee6b1	MciWnd	medium	mciwnd_destroy/stop; HWND at +0
+C_005ee87f	MciWndOpenView	medium	MCIWNDM_OPEN (0x499) + set time format
+C_005ee8c6	MciWndPlayView	medium	MCI_PLAY (0x806)
+C_005ee91c	MciWndSeekView	medium	MCI_SEEK (0x807) to position
+C_005ee9e7	MciWndPauseView	medium	MCI_PAUSE (0x809)
+C_005eea12	MciWndClientRectView	medium	GetClientRect on HWND +0
+C_005eea3a	MciWndCenterView	medium	centres window in parent
+C_005eeadd	MciWndResizeView	medium	SetWindowPos size
+C_005eeb11	MciWndMoveView	medium	SetWindowPos position
+C_005eeb45	MciWndShowView	medium	ShowWindow + MCIWNDM_REALIZE
+C_005eeb7e	MciWndHideView	medium	ShowWindow(SW_HIDE)
+C_005eeba2	MciWndSetPaletteView	medium	MCIWNDM_SETPALETTE
+C_005eebd6	MciWndGetPaletteView	medium	MCIWNDM_GETPALETTE into GamePalette
+C_005eec80	DDWindowNativeView	medium	ddwin_get_native
+C_005eeca0	AviAudio	medium	avi_audio_ctor
+C_005eed1b	AviAudioReleaseView	medium	avi_audio_release
+C_005eed43	AviAudioPlayingView	medium	avi_audio_is_playing
+C_005eed76	AviAudioAttachView	medium	avi_audio_attach_stream
+C_005eedec	AviAudioPrepareView	medium	avi_audio_prepare_range
+C_005efd70	DDWindowActivateView	medium	ddwin_call_activate_app
+C_005eff83	DDWindowPaletteView	medium	ddwin_set_palette
+C_005f0391	DDWindow	medium	ddwin_dispatch_ctrl_msg; largest DirectDraw window view (0xd0)
+C_005f0520	PtrListInitView	medium	ptrlist_ctor
+C_005f0590	PtrList	high	ptrlist_* append/first/next/clear
+C_005f05b0	PtrListLastView	medium	ptrlist_last
+C_005f0640	PtrListNode	medium	ptrlist_node_ctor
+C_005f068c	PtrListNodeNextSetView	medium	ptrlist_node_set_next
+C_005f06ad	PtrListNodePrevSetView	medium	ptrlist_node_set_prev
+C_005f06ce	PtrListNodeDataSetView	medium	ptrlist_node_set_data
+C_005f0e50	PtrListNodeDataView	medium	ptrlist_node_data
+C_005f0e70	PtrListNodeNextView	medium	ptrlist_node_next
+C_005f0e90	PtrListNodePrevView	medium	ptrlist_node_prev
+C_005f124c	DDControlParentView	medium	ddctrl_get_parent_window
+C_005f130f	DDControl	medium	ddctrl_dispatch_msg/dispatch_to_children
+C_005f15f2	DDControlPaintView	medium	ddctrl_paint_children/tree
+C_005f1622	DDControlActivateView	medium	ddctrl_activate

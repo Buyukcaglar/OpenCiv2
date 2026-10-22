@@ -7,20 +7,20 @@
 #define g_nr_seed (*(uint *)((u8 *)&g.d_00635094))
 
 /* 0x0059a733: uniform value in [0, 1]. */
-float10 __cdecl FUN_0059a733(void)
+float10 __cdecl rng_next_unit(void)
 {
     g_nr_seed = g_nr_seed * 1664525 + 1013904223;
     return (float10)g_nr_seed / (float10)0xffffffffu;
 }
 
 /* 0x0059a791: random integer in [lo, hi] (bounds in either order). */
-int __cdecl FUN_0059a791(int lo, int hi)
+int __cdecl rand_range(int lo, int hi)
 {
     double span;
     int t;
 
     if (hi == lo) {
-        thunk_FUN_0059a733();     /* still advances the generator */
+        thunk_rng_next_unit();     /* still advances the generator */
         return lo;
     }
     if (hi < lo) {
@@ -29,5 +29,5 @@ int __cdecl FUN_0059a791(int lo, int hi)
         hi = t;
     }
     span = (double)(hi - lo) + 0.999999;
-    return (int)(thunk_FUN_0059a733() * span) + lo;
+    return (int)(thunk_rng_next_unit() * span) + lo;
 }

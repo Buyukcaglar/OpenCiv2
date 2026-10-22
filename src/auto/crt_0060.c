@@ -192,7 +192,7 @@ void __cdecl _signal(int param_1)
         BVar1 = SetConsoleCtrlHandler(ctrlevent_capture,1);
         if (BVar1 != 1) {
           DAT_00639f18 = GetLastError();
-          iptr_00639f14 = 0x16;
+          crt_errno = 0x16;
           return;
         }
         DAT_0063b25c = 1;
@@ -220,7 +220,7 @@ void __cdecl _signal(int param_1)
       return;
     }
   }
-  iptr_00639f14 = 0x16;
+  crt_errno = 0x16;
   return;
 }
 #undef DAT_00639f18
@@ -1177,7 +1177,7 @@ int __cdecl __sopen(char *_Filename,int _OpenFlag,int _ShareFlag,uint param_4,..
   }
   else {
     if (uVar1 != 2) {
-      iptr_00639f14 = 0x16;
+      crt_errno = 0x16;
       DAT_00639f18 = 0;
       return -1;
     }
@@ -1188,7 +1188,7 @@ int __cdecl __sopen(char *_Filename,int _OpenFlag,int _ShareFlag,uint param_4,..
     local_c = 0;
     break;
   default:
-    iptr_00639f14 = 0x16;
+    crt_errno = 0x16;
     DAT_00639f18 = 0;
     return -1;
   case 0x20:
@@ -1207,7 +1207,7 @@ int __cdecl __sopen(char *_Filename,int _OpenFlag,int _ShareFlag,uint param_4,..
       goto LAB_006019fc;
     }
     if (uVar1 != 0) {
-      iptr_00639f14 = 0x16;
+      crt_errno = 0x16;
       DAT_00639f18 = 0;
       return -1;
     }
@@ -1221,7 +1221,7 @@ LAB_00601912:
       goto LAB_006019fc;
     }
     if (uVar1 != 0x200) {
-      iptr_00639f14 = 0x16;
+      crt_errno = 0x16;
       DAT_00639f18 = 0;
       return -1;
     }
@@ -1232,7 +1232,7 @@ LAB_00601936:
     if (uVar1 < 0x501) {
       if (uVar1 != 0x500) {
         if (uVar1 != 0x400) {
-          iptr_00639f14 = 0x16;
+          crt_errno = 0x16;
           DAT_00639f18 = 0;
           return -1;
         }
@@ -1242,7 +1242,7 @@ LAB_00601936:
     else {
       if (uVar1 == 0x600) goto LAB_00601936;
       if (uVar1 != 0x700) {
-        iptr_00639f14 = 0x16;
+        crt_errno = 0x16;
         DAT_00639f18 = 0;
         return -1;
       }
@@ -1275,7 +1275,7 @@ LAB_006019fc:
   }
   local_18 = __alloc_osfhnd();
   if (local_18 == 0xffffffff) {
-    iptr_00639f14 = 0x18;
+    crt_errno = 0x18;
     DAT_00639f18 = 0;
     local_18 = 0xffffffff;
   }
@@ -1444,7 +1444,7 @@ int __cdecl __set_osfhnd(int param_1,intptr_t param_2)
     iVar1 = 0;
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     iVar1 = -1;
   }
@@ -1490,7 +1490,7 @@ int __cdecl __free_osfhnd(int param_1)
     iVar1 = 0;
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     iVar1 = -1;
   }
@@ -1522,7 +1522,7 @@ intptr_t __cdecl __get_osfhandle(int _FileHandle)
              (_FileHandle & 0x1fU) * 8);
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     iVar1 = -1;
   }
@@ -1570,7 +1570,7 @@ int __cdecl __open_osfhandle(intptr_t _OSFileHandle,int _Flags)
     }
     uVar2 = __alloc_osfhnd();
     if (uVar2 == 0xffffffff) {
-      iptr_00639f14 = 0x18;
+      crt_errno = 0x18;
       DAT_00639f18 = 0;
       uVar2 = 0xffffffff;
     }
@@ -1621,7 +1621,7 @@ int __cdecl __commit(int _FileHandle)
     }
     DAT_00639f18 = local_8;
   }
-  iptr_00639f14 = 9;
+  crt_errno = 9;
   return -1;
 }
 #undef DAT_00639f18
@@ -1680,7 +1680,7 @@ int __cdecl _wctomb(char *_MbCh,wchar_t _WCh)
       iVar1 = 1;
     }
     else {
-      iptr_00639f14 = 0x2a;
+      crt_errno = 0x2a;
       iVar1 = -1;
     }
   }
@@ -1688,7 +1688,7 @@ int __cdecl _wctomb(char *_MbCh,wchar_t _WCh)
     local_c[0] = 0;
     iVar1 = WideCharToMultiByte(DAT_0063a088,0x220,&_WCh,1,_MbCh,DAT_0063a29c,(LPCSTR)0x0,local_c);
     if ((iVar1 == 0) || (local_c[0] != 0)) {
-      iptr_00639f14 = 0x2a;
+      crt_errno = 0x2a;
       iVar1 = -1;
     }
   }
@@ -3035,7 +3035,7 @@ int __cdecl __chsize(int _FileHandle,long _Size)
             local_1020 = 0;
           }
           if (local_1020 == -1) {
-            iptr_00639f14 = 0xd;
+            crt_errno = 0xd;
             DAT_00639f18 = GetLastError();
           }
         }
@@ -3053,7 +3053,7 @@ int __cdecl __chsize(int _FileHandle,long _Size)
           iVar4 = __write(_FileHandle,local_1008,local_1024);
           if (iVar4 == -1) {
             if (DAT_00639f18 == 5) {
-              iptr_00639f14 = 0xd;
+              crt_errno = 0xd;
             }
             local_1020 = -1;
             break;
@@ -3066,7 +3066,7 @@ int __cdecl __chsize(int _FileHandle,long _Size)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     local_1020 = -1;
   }
   return local_1020;
@@ -4027,7 +4027,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
         iVar2 = WideCharToMultiByte(DAT_0063a088,0x220,_Source,-1,(LPSTR)0x0,0,(LPCSTR)0x0,&local_18
                                    );
         if ((iVar2 == 0) || (local_18 != 0)) {
-          iptr_00639f14 = 0x2a;
+          crt_errno = 0x2a;
           local_8 = 0xffffffff;
         }
         else {
@@ -4038,7 +4038,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
     else if (DAT_0063a078 == 0) {
       for (; local_8 < _MaxCount; local_8 = local_8 + 1) {
         if (0xff < (ushort)*_Source) {
-          iptr_00639f14 = 0x2a;
+          crt_errno = 0x2a;
           return 0xffffffff;
         }
         _Dest[local_8] = (char)*_Source;
@@ -4055,7 +4055,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
       local_8 = WideCharToMultiByte(DAT_0063a088,0x220,_Source,_MaxCount,_Dest,_MaxCount,(LPCSTR)0x0
                                     ,&local_18);
       if ((local_8 == 0) || (local_18 != 0)) {
-        iptr_00639f14 = 0x2a;
+        crt_errno = 0x2a;
         local_8 = 0xffffffff;
       }
       else if (_Dest[local_8 - 1] == '\0') {
@@ -4071,7 +4071,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
             local_14 = WideCharToMultiByte(DAT_0063a088,0,_Source,1,local_10,DAT_0063a29c,
                                            (LPCSTR)0x0,&local_18);
             if ((local_14 == 0) || (local_18 != 0)) {
-              iptr_00639f14 = 0x2a;
+              crt_errno = 0x2a;
               return 0xffffffff;
             }
             if (_MaxCount < local_14 + local_8) {
@@ -4088,7 +4088,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
           }
         }
         else {
-          iptr_00639f14 = 0x2a;
+          crt_errno = 0x2a;
           local_8 = 0xffffffff;
         }
       }
@@ -4202,7 +4202,7 @@ int __cdecl __setmode(int _FileHandle,int _Mode)
     }
     else {
       if (_Mode != 0x4000) {
-        iptr_00639f14 = 0x16;
+        crt_errno = 0x16;
         return -1;
       }
       *(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -4218,7 +4218,7 @@ int __cdecl __setmode(int _FileHandle,int _Mode)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     iVar2 = -1;
   }
   return iVar2;
@@ -5107,7 +5107,7 @@ long __cdecl __filelength(int _FileHandle)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     local_8 = -1;
   }

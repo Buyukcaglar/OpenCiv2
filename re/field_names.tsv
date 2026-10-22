@@ -1,0 +1,811 @@
+family	offset	name	confidence	evidence
+C_004083b0	0x0	vtable	high	Constructors store a PTR_FUN_ vtable address here.
+C_004083b0	0x4	pixel_width	high	surface_set_dims sets it to rect right-left; loop bound per row in remap.
+C_004083b0	0x8	pixel_height	high	surface_lock allocates height row-offset entries and loops over it.
+C_004083b0	0xc	stride	high	Row byte step in surface_lock row-offset table; stride-width skip in remap.
+C_004083b0	0x10	signed_pitch	medium	surface_alloc_dib* set it to -stride or +stride depending on DIB orientation.
+C_004083b0	0x14	clip_left	high	RECT start used by SetRect/IntersectRect in surface_set_clip/reset_clip.
+C_004083b0	0x18	clip_top	high	Second RECT member of clip rect; returned by surface_get_clip, clamps draw_line.
+C_004083b0	0x1c	clip_right	high	Third RECT member of clip rect; draw_line clamps to right-1.
+C_004083b0	0x20	clip_bottom	high	Fourth RECT member of clip rect; draw_line clamps to bottom-1.
+C_004083b0	0x24	bounds_rect	high	Full surface RECT that clip is reset to and intersected with.
+C_004083b0	0x28	bounds_top	high	Second member of bounds rect passed to SetRect in surface_reset_clip.
+C_004083b0	0x2c	bounds_right	high	Third member of bounds rect in surface_reset_clip.
+C_004083b0	0x30	bounds_bottom	high	Fourth member of bounds rect in surface_reset_clip.
+C_004083b0	0x34	bits	high	surface_lock stores dib_get_bits result; nonzero means locked.
+C_004083b0	0x38	row_offsets	high	surface_lock allocates per-row byte offset table here; freed on unlock.
+C_004083b0	0x3c	palette_version	high	Cached palette_get_version to skip redundant dib_set_palette.
+C_004083b0	0x40	dib	high	DIB handle passed to dib_get_bits/dib_is_top_down/dib_set_palette.
+C_004083b0	0x44	bytes_per_pixel	high	Multiplies x coordinates in surface_blit; switch in alloc_dib_by_bpp.
+C_004083b0	0x110	on_paint	high	Set by wnd_set_redraw_callback and called by wnd_call_paint_cb.
+C_004083b0	0x114	style_flags	medium	frame_wnd_create stores style bits (center, no-adjust, caption) here; subclasses embed child objects here.
+C_004083b0	0x118	caption_height	medium	FrameWindow caption height (frame_caption_height); pedia reuses as page kind.
+C_004083b0	0x11c	border_width	medium	FrameWindow border width used for client rect inset in frame_wnd_layout.
+C_004083b0	0x120	resize_border	medium	frame_wnd_create passes it to wnd_set_resize_border; pedia reuses as selected index.
+C_004083b0	0x124	client_x	high	frame_wnd_layout copies client_rect.left; added to all drawing x coordinates.
+C_004083b0	0x128	client_y	high	frame_wnd_layout copies client_rect.top; added to all drawing y coordinates.
+C_004083b0	0x12c	client_width	high	frame_wnd_layout sets it to rect_width(client_rect).
+C_004083b0	0x130	client_height	high	frame_wnd_layout sets it to rect_height(client_rect).
+C_004083b0	0x140	panel_rect	medium	Parley window panel RECT built by SetRect/OffsetRect in parley_wnd_calc_layout.
+C_004083b0	0x144	panel_top	medium	Second member of parley panel rect; base y for side dialogs.
+C_004083b0	0x148	panel_right	medium	Third member of parley panel rect; used to center controls.
+C_004083b0	0x14c	panel_bottom	medium	Fourth member of parley panel rect; layout grows upward from it.
+C_004083b0	0x150	init_rect	medium	parley_wnd_ctor stores the passed RECT pointer and reads its origin and width.
+C_004083b0	0x154	large_layout	medium	parley_wnd_ctor sets 1 when initial width exceeds 800, selects layout variant.
+C_004083b0	0x1b8	timer_text	high	Caption turn-timer/autoplay text buffer filled by __itoa in frame_wnd_draw_caption.
+C_004083b0	0x1ba	timer_colon	high	frame_wnd_draw_caption writes ':' between minutes and seconds.
+C_004083b0	0x1bb	timer_seconds_text	high	Seconds digits of caption timer text.
+C_004083b0	0x1e0	show_turn_timer	medium	frame_wnd_draw_caption shows MP turn timer only when nonzero; parley reuses as layout y.
+C_004083b0	0x1e4	show_turn_status	medium	Gates autoplay/multiplayer status text in caption; zeroed in frame_wnd_create.
+C_004083b0	0x1e8	timer_last_value	medium	Last displayed seconds-left or autoplay turns; -1 forces refresh.
+C_004083b0	0x1ec	session_mode	medium	FUN_004b4735 stores mode; 4 sets up the chat log.
+C_004083b0	0x1f0	left_civ	medium	Party passed to parley_add_side_dialog with side 0.
+C_004083b0	0x1f4	right_civ	medium	Party passed to parley_add_side_dialog with side 1.
+C_004083b0	0x1f8	shown_left_civ	medium	Last synced left party; init 0x15 (none).
+C_004083b0	0x1fc	caption_button_count	medium	frame_wnd_layout/draw_caption loop over caption buttons; parley reuses as shown right civ.
+C_004083b0	0x234	item_buffer	medium	Heap block freed in parley_wnd_destroy_controls.
+C_004083b0	0x2a8	on_caption_button	high	Set by wnd_set_caption_button_handler; zeroed in frame_wnd_create.
+C_004083b0	0x2ac	frame_rect	high	frame_wnd_layout sets it to full surface rect; border drawing uses its size.
+C_004083b0	0x2b0	frame_top	high	Second member of frame_rect.
+C_004083b0	0x2b4	frame_right	high	Third member of frame_rect.
+C_004083b0	0x2b8	frame_bottom	high	Fourth member of frame_rect.
+C_004083b0	0x2bc	client_rect	high	frame_wnd_layout computes inset client RECT; filled as background by subclasses.
+C_004083b0	0x2c0	client_top	high	Second member of client_rect; copied to client_y.
+C_004083b0	0x2cc	title_font	high	frame_wnd_create sets &caption_font; used to measure/draw caption.
+C_004083b0	0x2d0	title_small_font	high	frame_wnd_create sets &caption_small_font; fallback caption font.
+C_004083b0	0x308	total_tax	medium	taxrate_calc_totals sums city tax.
+C_004083b0	0x30c	total_science	medium	taxrate_calc_totals sums city science.
+C_004083b0	0x3bf	remote_side_agreed	medium	Parley per-side flag paired with 0x3be (local side, set by accept/cancel handlers and sent via net message 0xa5/0xa6); for side 1 hides active button and shows disabled one.
+C_004083b0	0x450	report_id	high	picwnd_open stores the report id param; picwnd_close tests >=0 and resets to -1 (notes: +0x450 report id).
+C_004083b0	0x458	page_count	medium	Initialized to 1 in picwnd_open; advisor_window+0x458 is the global advisor_page_count.
+C_004083b0	0x45c	report_civ	medium	Initialized in picwnd_open; advisor_window+0x45c is the global advisor_report_civ.
+C_004083b0	0x460	first_row	high	advisor_window+0x460 is advisor_first_row; notes call it the picwnd scroll position, reset to 0 on open.
+C_004083b0	0x474	image_height	high	picwnd_open stores height param or the loaded GIF surface height when <1.
+C_004083b0	0x478	window_height	medium	Window height param; 0 means image_height, negative means image_height minus it; used to center the frame window.
+C_004083b0	0x48c	image_width	high	picwnd_open stores width param or the loaded GIF surface width when <1.
+C_004083b0	0x490	window_width	medium	Window width param; 0 means image_width, negative means image_width minus it; used to center the frame window.
+C_004083b0	0x494	vscroll_width	high	GetSystemMetrics(SM_CXVSCROLL); advisor_window+0x494 is advisor_vscroll_width.
+C_004083b0	0x498	controls_created	high	Cleared on picwnd_open; advisor_window+0x498 is advisor_controls_created.
+C_004083b0	0x49c	report_param	high	Cleared on open; advisor_window+0x49c is advisor_report_param (notes: per-report parameter).
+C_004083b0	0x5a0	double_size	high	avi_player_set_double_size sets it after doubling the window; avi_play_start doubles decompress output when set.
+C_004083b0	0x5a8	has_audio	high	Set when the AVI audio stream is found and attached; gates audio prepare/start vs timeGetTime timing.
+C_004083b0	0x5ac	paused	medium	Set to 1 by avi_play_pause and ctor; frame pump checks it when syncing to audio position.
+C_004083b0	0x5b0	audio_playing	medium	Set to 1 after avi_audio_start, cleared on pause/open.
+C_004083b0	0x5b4	target_surface	medium	Parent surface passed to avi_player_create_child; FUN_005dd7de blits the frame surface into it.
+C_004083b0	0x5b8	pos_x	high	avi_player_create stores x; used as OffsetRect x when blitting to target surface.
+C_004083b0	0x5bc	pos_y	high	avi_player_create stores y; used as OffsetRect y when blitting to target surface.
+C_004083b0	0x5dc	panel_width	medium	FUN_004f4b9f sets 640 and builds the frame rect (0,0,w,h) and centers the window horizontally.
+C_004083b0	0x5e0	panel_height	medium	FUN_004f4b9f sets 400 and uses it for frame rect height and vertical centering.
+C_004083b0	0x5f0	frame_rect_right	medium	Right edge of the frame RECT at 0x5e8 (0,0,panel_width,panel_height) used by pedia_draw_frame.
+C_004083b0	0x5f8	content_left	high	Left of the content RECT built by SetRect/OffsetRect in FUN_004f4b9f; rect_width(&field_5f8) taken widely in pedia code.
+C_004083b0	0x5fc	content_top	high	Top of the content RECT (offset by caption height + margin).
+C_004083b0	0x600	content_right	high	Right of the content RECT; copied with left/top/bottom in pedia_update_controls.
+C_004083b0	0x604	content_bottom	high	Bottom of the content RECT; used as yBottom in pedia drawing.
+C_004083b0	0x658	pedia_advance_count	high	Counts enabled advances loaded into the pedia array at 0x65c; bound for pedia_add_link and pedia_init_advance_list.
+C_004083b0	0x97c	pedia_improve_count	high	Counts improvements loaded into the pedia array at 0x980; bound for pedia_add_link and the improvement list init.
+C_004083b0	0xa10	start_frame	high	AVI stream start sample; avi_player_play_range/loop_range set it; rewind target when looping.
+C_004083b0	0xa14	end_frame	high	Start + stream length - 1; playback stops or loops once the current frame passes it.
+C_004083b0	0xa18	current_frame	high	Initialized to start_frame and compared to end_frame/cue frame in the frame pump.
+C_004083b0	0xa1c	edit_action_button	medium	Editor window embedded button (id 0x65) whose callback runs events_editor_edit_action; zeroed in mmwnd_ctor.
+C_004083b0	0xa20	cue_frame	high	When nonzero and equal to the current frame it is cleared and the cue callback (+0x118) fires.
+C_004083b0	0xa24	loop	high	avi_player_loop_range sets 1, play_range/play clear it; at end frame seeks to start_frame if set.
+C_0040bc40	0x0	surf_wnd	high	Dialog's surface window (DibSurface drawing target, +0x48 is its Wnd); created in dialog_create_window.
+C_0040bc40	0x4	bg_surface	high	Backing surface copied into the window by dialog_fill_rect_bg; set from dialog_init param.
+C_0040bc40	0x8	body_font	high	Notes: field_8 body font; used for text lines, line spacing and dialog_set_font.
+C_0040bc40	0xc	title_font	high	Notes: field_c title font; measures and draws the title string.
+C_0040bc40	0x10	list_font	high	Notes: field_10 list rows font; used in dialog_draw_option_cell.
+C_0040bc40	0x14	req_x	high	Requested screen x (dialog_set_position, @ directives, default -999); copied to window_x in layout.
+C_0040bc40	0x18	req_y	high	Requested screen y (dialog_set_position, default -999); copied to window_y in layout.
+C_0040bc40	0x1c	min_height	high	Set by dialog_set_height (@HEIGHT); layout takes max(min_height, height).
+C_0040bc40	0x20	line_count	high	Incremented by dialog_add_line.
+C_0040bc40	0x24	edit_count	high	Incremented by dialog_add_edit_field (stored as the edit node index).
+C_0040bc40	0x28	option_count	high	Incremented by dialog_add_option; bound for option list loops.
+C_0040bc40	0x2c	sprite_count	high	Incremented by dialog_add_sprite.
+C_0040bc40	0x30	std_button_count	high	Recomputed in layout from flags 0x40/0x8/0x1 (Help/OK/Cancel); first part of buttons loop.
+C_0040bc40	0x34	extra_button_count	high	Incremented by dialog_add_button (max 6); added after standard buttons.
+C_0040bc40	0x38	columns	high	Set by dialog_set_columns (@COLUMNS); multiplies visible rows per pane.
+C_0040bc40	0x3c	style_flags	high	Dialog style/state bitfield (0x400 done, 0x1000 listbox, 0x10000 no title, 0x400000 two panes ...).
+C_0040bc40	0x40	wnd_width	high	Window width computed in layout and passed to window creation.
+C_0040bc40	0x44	wnd_height	high	Window height computed in layout and passed to window creation.
+C_0040bc40	0x48	cur_pane	high	Current list pane index (0/1) indexing the per-pane arrays; set by dialog_pick_pane_at.
+C_0040bc40	0x4c	list_width	high	Pane 0 list width ((&field_4c)[pane]) set by dialog_set_listbox; pane rect width.
+C_0040bc40	0x50	list_width_1	high	Pane 1 list width; used for the second pane rect in layout.
+C_0040bc40	0x54	list_height	high	Pane 0 list height = row_height*rows+2 in dialog_set_list_rows.
+C_0040bc40	0x58	list_height_1	high	Pane 1 list height; layout and second pane rect.
+C_0040bc40	0x5c	list_rows	high	Pane 0 visible rows per column set by dialog_set_list_rows.
+C_0040bc40	0x60	list_rows_1	high	Pane 1 visible rows per column used in layout scroll check.
+C_0040bc40	0x64	text_color	high	Default dlg_text_color; set as text color in render/set_text_color.
+C_0040bc40	0x68	shadow_color	high	Default dlg_text_shadow_color; shadow color in dialog_draw_text_shadowed.
+C_0040bc40	0x6c	highlight_color	high	Default dlg_highlight_text_color; highlight text in option cells.
+C_0040bc40	0x70	frame_color	medium	Default from 0x6359f4; color for gfx_draw_rect_frame in render and an alt text color.
+C_0040bc40	0x74	bg_color	high	Default dlg_bg_color; solid fill in dialog_fill_rect_bg.
+C_0040bc40	0x78	bevel_light_color	high	Default dlg_bevel_light_color; bevel rect light side.
+C_0040bc40	0x7c	bevel_dark_color	high	Default dlg_bevel_dark_color; bevel rect dark side.
+C_0040bc40	0x80	scale_num	high	Default dlg_scale_num; numerator scaling widths in dialog_set_width.
+C_0040bc40	0x84	scale_den	high	Default dlg_scale_den; denominator scaling widths in dialog_set_width.
+C_0040bc40	0x88	title_color	high	Default dlg_title_text_color; title text color in render.
+C_0040bc40	0x8c	title_shadow_color	high	Default dlg_title_shadow_color; title shadow color in render.
+C_0040bc40	0x90	list_fill_color	high	Default list_bg_color; fills option list background.
+C_0040bc40	0x94	list_fg_color	high	Default list_text_color; option cell text.
+C_0040bc40	0x98	list_fg_shadow_color	high	Default list_shadow_color; option cell shadow.
+C_0040bc40	0x9c	list_sel_fill_color	high	Default list_sel_bg_color; selected option background.
+C_0040bc40	0xa0	sel_text_color	high	Default dlg_sel_text_color; selected option text.
+C_0040bc40	0xa4	sel_shadow_color	high	Default dlg_sel_text_shadow_color; selected option shadow.
+C_0040bc40	0xac	option_extra_width	medium	Added to option text width in dialog_add_option when growing the option max width; default 0.
+C_0040bc40	0xb4	option_row_height	high	Set by dialog_set_font from dialog_option_row_height; rows * it gives list height.
+C_0040bc40	0xb8	pad_y	medium	Default 2; vertical padding added twice in line height and title height.
+C_0040bc40	0xbc	pad_x	medium	Default 2; horizontal margin added to border for content x and spacing between buttons.
+C_0040bc40	0xc0	section_gap	medium	Default 4; vertical gap between text, list, sprites and edit rows.
+C_0040bc40	0xc4	sprite_gap	medium	Default 4; horizontal gap between sprite and content / label text.
+C_0040bc40	0xc8	bevel_width	medium	Default 2; number of bevel rings drawn and deflate amount in render.
+C_0040bc40	0xcc	border_width	medium	Default 8 (0 without title); frame border added to margins and height.
+C_0040bc40	0xd0	title_height	high	Title font height + 2*bevel + 2*pad_y; passed to wnd_set_caption_height.
+C_0040bc40	0xd4	chrome_height	medium	title_height plus border and button-row height; non-client part of the dialog height in render.
+C_0040bc40	0xd8	result_id	high	Selected id returned by dialog_run_modal (set by button click/option selection).
+C_0040bc40	0xe0	window_x	high	Screen x passed to window creation; layout copies req_x.
+C_0040bc40	0xe4	window_y	high	Screen y passed to window creation; default -999, layout copies req_y.
+C_0040bc40	0xe8	origin_x	medium	From dialog_init rect param; offsets text and button positions on a host surface.
+C_0040bc40	0xec	origin_y	medium	From dialog_init rect param +4; offsets text and button y on a host surface.
+C_0040bc40	0xf0	list_x	high	Option list/radio left in layout and create_controls rect_set_xywh.
+C_0040bc40	0xf4	list_y	high	Option list top; advanced past wrapped text.
+C_0040bc40	0xf8	text_x	high	Text line x used by dialog_draw_text_line.
+C_0040bc40	0xfc	text_y	high	Text line y used by dialog_draw_wrapped_text.
+C_0040bc40	0x100	sprite_x	high	Starting x for drawing/hotspotting dialog sprites.
+C_0040bc40	0x104	sprite_y	high	Starting y for drawing/hotspotting dialog sprites.
+C_0040bc40	0x108	edit_x	high	Edit field rows x (plus label width) in create_controls/render.
+C_0040bc40	0x10c	edit_y	high	Edit field rows y, advanced past text in layout.
+C_0040bc40	0x110	edit_label_width	high	Max label text width over edit fields (dialog_add_edit_field).
+C_0040bc40	0x114	button_y	high	Button row y = height - (bevel + line height + pad); used when creating buttons.
+C_0040bc40	0x118	option_width	high	Max option text width updated by dialog_add_option.
+C_0040bc40	0x11c	content_width	high	Dialog content width (dialog_set_width, max of title/option/edit widths).
+C_0040bc40	0x120	max_sprite_width	high	Max sprite (+label) width updated by dialog_add_sprite; zoom-scaled in layout.
+C_0040bc40	0x128	edit_width	high	Max edit row width (label + field) updated by dialog_add_edit_field.
+C_0040bc40	0x12c	button_width	high	Max button label width / equal share of row; passed to button creation.
+C_0040bc40	0x130	sprite_zoom	high	Set by dialog_set_image_zoom; passed to gfx_zoom_scale and gfx_set_zoom_scale.
+C_0040bc40	0x134	title_text	high	Title string (dialog_set_title) drawn centered with title font.
+C_0040bc40	0x138	pane_left	high	Pane 0 list RECT left; hit-tested in dialog_pick_pane_at.
+C_0040bc40	0x13c	pane_top	high	Pane 0 list RECT top.
+C_0040bc40	0x140	pane_right	high	Pane 0 list RECT right; vscroll placed at right - scroll width.
+C_0040bc40	0x144	pane_bottom	high	Pane 0 list RECT bottom; grown by hscroll height.
+C_0040bc40	0x148	pane1_left	high	Pane 1 list RECT left.
+C_0040bc40	0x14c	pane1_top	high	Pane 1 list RECT top.
+C_0040bc40	0x150	pane1_right	high	Pane 1 list RECT right.
+C_0040bc40	0x154	pane1_bottom	high	Pane 1 list RECT bottom.
+C_0040bc40	0x158	pane_inner_left	high	Pane 0 inner (deflated by 1) list RECT left; its width / columns gives column width.
+C_0040bc40	0x15c	list_client_top	high	Top of list pane 1 client rect (copy of list rect 0x138..0x144, deflated) in dialog_compute_layout.
+C_0040bc40	0x160	list_client_right	high	Right of list pane 1 client rect, reduced by the vertical scrollbar width.
+C_0040bc40	0x164	list_client_bottom	high	Bottom of list pane 1 client rect, adjusted by the horizontal scrollbar height.
+C_0040bc40	0x168	list2_client_rect	high	Start (left) of list pane 2 client rect, copied from 0x148 and deflated; rect_width taken on it.
+C_0040bc40	0x16c	list2_client_top	high	Top of list pane 2 client rect.
+C_0040bc40	0x170	list2_client_right	high	Right of list pane 2 client rect, reduced by its vertical scrollbar width.
+C_0040bc40	0x174	list2_client_bottom	high	Bottom of list pane 2 client rect, adjusted by its horizontal scrollbar height.
+C_0040bc40	0x1c0	list_vscroll_width	high	GetSystemMetrics(SM_CXVSCROLL) for list pane 1; width of its scrollbar rect.
+C_0040bc40	0x1c4	list2_vscroll_width	high	GetSystemMetrics(SM_CXVSCROLL) for list pane 2.
+C_0040bc40	0x1c8	list_hscroll_height	high	GetSystemMetrics(SM_CYHSCROLL) for list pane 1, added to the pane height.
+C_0040bc40	0x1cc	list2_hscroll_height	high	GetSystemMetrics(SM_CYHSCROLL) for list pane 2.
+C_0040bc40	0x1d0	list_origin_x	medium	Left of pane 1 client rect saved after deflate (row drawing origin).
+C_0040bc40	0x1d4	list2_origin_x	medium	Left of pane 2 client rect saved after deflate.
+C_0040bc40	0x1d8	list_origin_y	medium	Top of pane 1 client rect saved after deflate.
+C_0040bc40	0x1dc	list2_origin_y	medium	Top of pane 2 client rect saved after deflate.
+C_0040bc40	0x1e0	list_x_offset	medium	Added to the content x (field_f0) to place list pane 1 rect.
+C_0040bc40	0x1e4	list2_x_offset	medium	Added to the content x (field_f0) to place list pane 2 rect.
+C_0040bc40	0x1e8	list_column_width	high	Pane 1 client width divided by the column count (field_38).
+C_0040bc40	0x1ec	list2_column_width	high	Pane 2 client width divided by the column count.
+C_0040bc40	0x1f0	list_row_height	high	dialog_list_row_height result for pane 1.
+C_0040bc40	0x1f4	list2_row_height	high	dialog_list_row_height result for pane 2.
+C_0040bc40	0x210	list_top_option	medium	dialog_option_at of the first visible row so the selected option is in view (pane 1).
+C_0040bc40	0x214	list2_top_option	medium	First visible option of pane 2.
+C_0040bc40	0x220	selected_option	high	dialog_select_option stores the chosen option; dialog_draw_option highlights when equal.
+C_0040bc40	0x224	selected_sprite	medium	Set by dialog_set_default_choice / first dialog_add_sprite; framed in dialog_render when flag 0x20000.
+C_0040bc40	0x228	option_list	high	Head of option linked list (next at +0x10) walked by count/create_controls.
+C_0040bc40	0x22c	option_tail	high	Tail of option list appended by dialog_add_option.
+C_0040bc40	0x230	line_list	high	Head of text line linked list appended by dialog_add_line.
+C_0040bc40	0x234	sprite_list	high	Head of sprite list walked by dialog_render/dialog_find_sprite.
+C_0040bc40	0x238	edit_field_list	high	Head of edit field list built by dialog_add_edit_field; used for EditControl max length.
+C_0040bc40	0x23c	on_sprite_click	high	Set by dialog_set_sprite_click_fn; notes.md dialog +0x23c sprite click.
+C_0040bc40	0x240	on_sprite_dblclick	high	Set by dialog_set_sprite_dblclick_fn.
+C_0040bc40	0x244	on_draw_sprite	high	Set by dialog_set_sprite_draw_fn; replaces sprite_draw in dialog_render.
+C_0040bc40	0x248	on_draw_option	high	Set by dialog_set_option_draw_fn; custom option row painter.
+C_0040bc40	0x24c	on_select_change	high	Set by dialog_set_select_change_fn; called from dialog_select_option.
+C_0040bc40	0x250	on_modal_poll	medium	Polled in dialog_run_modal instead of the window modal loop; nonzero ends the dialog.
+C_0040bc40	0x255	pool_valid	medium	MemBlock (string pool at 0x254) +1 allocated flag, cleared in init_defaults.
+C_0040bc40	0x258	pool_handle	medium	MemBlock +4 memory handle, zeroed in dialog_ctor.
+C_0040bc40	0x25c	pool_ptr	medium	MemBlock +8 locked pointer, zeroed in dialog_ctor.
+C_0040bc40	0x262	pool_size	high	dialog_ctor param, size passed to memblock_init / dialog_reset_string_pool.
+C_0040bc40	0x268	radio_group	high	RadioGroup control created in dialog_create_controls.
+C_0040bc40	0x26c	checkboxes	high	Array of checkbox Controls (stride 0x3c).
+C_0040bc40	0x270	edit_controls	high	Array of EditControls (stride 0x48).
+C_0040bc40	0x274	button_controls	high	Array of button Controls (stride 0x3c) with default/cancel flags.
+C_0040bc40	0x278	listbox	high	ListBoxControl destroyed in dialog_close (pane 1).
+C_0040bc40	0x27c	listbox2	medium	Second ListBoxControl destroyed in dialog_close.
+C_0040bc40	0x280	sprite_hotspots	high	Array of hotspot controls (stride 0x40) with sprite click/dblclick callbacks.
+C_0040bc40	0x284	list_vscroll	medium	Scrollbar destroyed in dialog_close; paired with 0x288 like the scroll rects.
+C_0040bc40	0x2f5	events_pool_valid	medium	ScenarioEvents MemBlock at 0x2f4 +1 flag, cleared in events_ctor.
+C_0040bc40	0x308	event_count	high	Incremented by events_alloc, zeroed by events_reset.
+C_0040bc40	0x30c	event_list	high	Head of doubly linked 0x1c4-byte event node list (events_alloc).
+C_00408010	0x0	style	medium	wnd_record_create stores the style arg passed to wnd_obj_create.
+C_00408010	0x4	wnd_palette	high	Set by wnd_set_palette.
+C_00408010	0x8	native_wnd	high	Native window object passed to all wnd_obj_* calls (notes: native handle at +8).
+C_00408010	0x78	menu	high	Set by wnd_attach_menu, checked in wnd_redraw_menu_bar.
+C_00408010	0x7c	min_width	high	wnd_set_min_size; WM_GETMINMAXINFO min track size.
+C_00408010	0x80	min_height	high	wnd_set_min_size second arg.
+C_00408010	0x84	max_width	high	Default 0x4000, returned by wnd_get_max_size.
+C_00408010	0x88	max_height	high	Default 0x4000, returned by wnd_get_max_size.
+C_00408010	0x8c	modal_running	high	Loop condition of wnd_run_modal_loop, cleared by wnd_end_modal_loop.
+C_00408010	0x90	hscroll_step	medium	Set (bounded by hscroll range) by 005c6329; default 1.
+C_00408010	0x94	vscroll_step	medium	Set (bounded by vscroll range) by 005c636c; default 1.
+C_00408010	0x98	on_menu_pos_command	high	Called by wnd_call_menu_pos_command; set by wnd_set_menu_callback.
+C_00408010	0x9c	on_command	high	Called by wnd_call_command.
+C_00408010	0xa0	on_menu_select	high	Called by wnd_fire_menu_select.
+C_00408010	0xa4	on_modal_idle	high	Set by wnd_set_modal_idle_callback; called each wnd_run_modal_loop iteration.
+C_00408010	0xb8	control_list	high	Head of child control list (next at +0x20) walked by wnd_focus_first_control; derived classes overlay surfaces here.
+C_00408010	0xc4	keyboard_nav	high	wnd_set_keyboard_nav byte; gates focusing in wnd_focus_first_control.
+C_00408010	0x1cc	ship_civ	high	SpaceshipWindow civ index used with civs[] and spaceship_calc_stats.
+C_00408010	0x1d4	frame_left	medium	Screen rect from gfx_get_screen_rect; x for window creation.
+C_00408010	0x1d8	frame_top	medium	Screen rect top used as window y.
+C_00408010	0x1dc	frame_right	medium	Screen rect right (width = right-left); DiploLeader overlays a surface here.
+C_00408010	0x1e0	frame_bottom	medium	Screen rect bottom (height = bottom-top).
+C_00408010	0x4f4	throne_width	medium	Window width passed to wnd create in throneroom_create_windows.
+C_00408010	0x4f8	throne_height	medium	Window height (+5) in throneroom_create_windows.
+C_00408010	0x500	throne_civ	high	throneroom_ctor param; civs[] index for throne_room data.
+C_00408010	0x62c	anim_timer	high	game_timer for the ship animation (60/10 ms), destroyed on close.
+C_00408010	0x630	blink_timer	medium	500 ms game_timer created when the ship is ready to launch.
+C_00408010	0x634	flight_timer	medium	Timer created when launch_state==3 (launched ship).
+C_00408010	0x6c4	killer_civ	medium	Compared with destroyed_civ_killers[i] in the destroyed civs list.
+C_00408010	0x6cc	slide_rect	high	SetRect/OffsetRect panel rect moved by destroyed_civs_slide_step.
+C_00408010	0x6d0	slide_top	medium	Second word of slide_rect.
+C_00408010	0x6d4	slide_right	medium	Third word of slide_rect.
+C_00408010	0x6ec	panel_clip_rect	medium	Fixed rect (0xd0,0x39,0x1b1,0x14c) the sliding panel is drawn in.
+C_00408010	0x6f4	panel_clip_right	medium	Third word of clip_rect.
+C_00408010	0x6fc	slide_y	medium	Vertical slide offset (0..0x133) of the panel.
+C_00408010	0x8b8	type_x	high	Teletype cursor x in spaceship_wnd_type_char, advanced by glyph width.
+C_00408010	0x8bc	type_y	high	Teletype cursor y.
+C_00408010	0x8c0	type_index	high	Index of next character of the typed text.
+C_00408010	0xae0	launch_state	high	0 idle, 1 ready, 2 launching, 3 launched (spaceship_wnd_init/run_modal).
+C_00408010	0xf18	advance_civ	medium	Civ passed to civ_has_advance while listing advances (sign of param encodes mode).
+C_00408010	0x1084	leader_tribe	high	civs[civ].tribe of the diplomacy leader, indexes per-tribe table.
+C_00408010	0x1085	leader_civ	high	Civ index of DiploLeaderWindow.
+C_00408010	0x1087	leader_era	high	civ_city_style_era of the leader civ; picks background.
+C_00408010	0x1924	choosing_item	medium	1 while waiting for the player to pick a throne room improvement.
+C_00408010	0x1928	throne_complete	high	1 when all 8 throne items are at level 4; alters rendering/upgrade path.
+C_00408010	0x192c	chosen_item	high	Throne item index upgraded (level++ or completion bit).
+C_00408010	0x19e4	terrain_kind	medium	City view site type: 0 coastal-flag city, 1 near special tile, 2 land; picks building pools.
+C_00408010	0x19e8	slot_count	medium	Number of building slots iterated (0x39/0x3c).
+C_00408010	0x19f4	houses_left	medium	City size + 2 houses still to place in the city view.
+C_00408010	0x1c90	city_id	high	cities[] index of the city view.
+C_00408010	0x1c94	art_era	high	civ_city_art_era of the city owner.
+C_00417f70	0x0	frame_rect	high	Sprite frame rect (left); bounds-frame gives draw offset in blits.
+C_00417f70	0x4	frame_top	high	Frame rect top.
+C_00417f70	0x10	bounds_rect	high	Content bounds rect loaded from SPRT resource; rect_height taken on it.
+C_00417f70	0x14	bounds_top	high	Content bounds rect top.
+C_00417f70	0x20	offset_x	medium	Scaled and added to the blit x position; from resource header.
+C_00417f70	0x24	full_height	medium	Loaded from SPRT header word 1 and scaled as a length in all blitters (pairs with full width at +0x20).
+C_00417f70	0x30	key_color	medium	Byte from SPRT header passed to every blitter and remapped through a palette table; transparent/key colour index.
+C_00417f70	0x34	data_handle	high	Memory handle of encoded pixel data, allocated/locked/freed via mem_handle_*.
+C_00417f70	0x38	data_ptr	high	Locked pointer of data_handle, passed to sprite_blit_rows_* and written to file.
+C_0040f380	0x0	ctrl_type	high	Kind code stored by ctrl_init (1 hotspot, 2 checkbox, 3 radio, 4 edit, 6 button, 8 scrollbar) and returned by control_get_type.
+C_0040f380	0x4	ctrl_id	high	Control id from ctrl_init, returned by ctrl_get_id and used by wnd_remove_control.
+C_0040f380	0x8	parent	high	Parent window set in ctrl_init, returned by ctrl_get_parent.
+C_0040f380	0xc	rect_left	high	Start of control RECT copied from ctrl_init param (ctrl_get_rect returns this+0xc).
+C_0040f380	0x10	rect_top	high	RECT.top of control rect copied in ctrl_init.
+C_0040f380	0x14	rect_right	high	RECT.right of control rect copied in ctrl_init.
+C_0040f380	0x18	rect_bottom	high	RECT.bottom of control rect copied in ctrl_init.
+C_0040f380	0x1c	hwnd	high	Control HWND: shown/invalidated, returned by control_get_hwnd, cleared on WM_DESTROY.
+C_0040f380	0x20	next_ctrl	high	Next-control link returned by control_get_next for walking the parent's control list.
+C_0040f380	0x25	hotkey_char	high	ctrl_parse_hotkey stores the lowercased character following '~' in the label.
+C_0040f380	0x28	hotkey_pos	high	ctrl_parse_hotkey stores index of the '~' hotkey char, -1 if none.
+C_0040f380	0x2c	is_enabled	medium	ctrl_enable/ctrl_disable/ctrl_is_enabled flag; reused as change/select callback by scrollbar, radio group and hotspot subclasses.
+C_0040f380	0x30	on_click	medium	button_set_callback click handler; also checkbox checked state, radio dblclick and scrollbar track callback in subclasses.
+C_0040f380	0x34	on_select	medium	Edit/combo/hotspot-click callback slot; scrollbar page size; sprite button embeds a DibSurface here.
+C_0040f380	0x38	font	medium	button_default_font/checkbox_default_font passed to create_hwnd; hotspot press callback and radio item array in subclasses.
+C_0040f380	0x3c	scroll_pos	medium	scrollbar_set_pos stores position; radio group item count, hotspot dblclick callback in subclasses.
+C_0040f380	0x40	edit_font	medium	Edit controls copy ctrl_default_font here and pass it to edit_create_window.
+C_0040f380	0x44	items_handle	medium	RadioGroup memory handle of item records from radiogrp_create_items, locked into +0x48.
+C_0040f380	0x48	items_ptr	medium	Locked pointer of the radio group items handle.
+C_0040f380	0x4c	radio_font	high	radio_default_font passed to radiogrp_create_items.
+C_0040f380	0xc4	ctrl_palette	medium	SpriteButton stores wnd_get_palette(parent) here.
+C_005c5660	0x0	dd_surface	high	DirectDraw surface interface used for lock/unlock/palette/release.
+C_005c5660	0x4	surf_height	high	Returned by ddsurf_get_height; sizes the row pointer table.
+C_005c5660	0x8	surf_width	high	Set from rect right-left in ddsurf_reset_dims; used with height in SetRect.
+C_005c5660	0xc	surf_pitch	high	Returned by ddsurf_get_pitch; row stride for row pointer table.
+C_005c5660	0x10	clip_left	medium	RECT set to full surface; IntersectRect clip target for fill and line drawing.
+C_005c5660	0x14	clip_top	medium	clip_rect.top compared against y coords in ddsurf_draw_line.
+C_005c5660	0x18	clip_right	medium	clip_rect.right compared against x coords in ddsurf_draw_line.
+C_005c5660	0x1c	clip_bottom	medium	clip_rect.bottom compared against y coords in ddsurf_draw_line.
+C_005c5660	0x30	is_back_buffer	medium	Set 1 by ddsurf_init_back_buffer; release/restore skip owned work when set.
+C_005c5660	0x34	front_surface	medium	Owning primary surface set by ddsurf_init_back_buffer; restored via ddsurf_restore_if_lost.
+C_005c5660	0x38	bits_per_pixel	medium	Pixel format from surface creation, switched on in ddsurf_fill_rect_rgb.
+C_005c5660	0x3c	row_ptrs	high	operator_new(height*4) table of row pointers built from pitch; freed in ddsurf_release.
+C_005c5660	0x40	on_restore	medium	Callback invoked after a lost surface is restored.
+C_0043c740	0x404	hpalette	high	HPALETTE from logpal_create_hpalette, animated and deleted.
+C_0043c740	0x408	pal_version	high	Nonzero 15-bit version id regenerated by palette_new_version.
+C_0043c740	0x40c	tint_steps	medium	Third parameter of palette_tint_begin_range, analogous to fade_steps.
+C_0043c740	0x410	tint_first	high	First palette index of tint range (palette_tint_begin_range param_1).
+C_0043c740	0x414	tint_count	high	Number of entries in tint range.
+C_0043c740	0x418	fade_steps	high	Total step count of palette fade; bounds and scales palette_fade_step.
+C_0043c740	0x41c	fade_first	high	First palette index of the fade range.
+C_0043c740	0x420	fade_count	high	Number of entries in fade range.
+C_0043c740	0x424	tint_red	medium	Byte tint target colour component set by FUN_005c6edc before tint begin.
+C_0043c740	0x425	tint_green	medium	Byte tint target colour component set by FUN_005c6edc.
+C_0043c740	0x426	tint_blue	medium	Byte tint target colour component set by FUN_005c6edc.
+C_0043c740	0x428	fade_src_rgb	high	Handle of saved original RGB range; restored by palette_fade_end.
+C_0043c740	0x42c	fade_dst_rgb	high	Handle of target palette RGB range copied from the destination palette.
+C_0043c740	0x430	tint_saved_rgb	high	Handle of saved RGB range for tint, allocated in palette_tint_begin_range.
+C_005f0590	0x0	head	high	First node; ptrlist_is_empty tests it, ptrlist_first starts from it.
+C_005f0590	0x4	tail	high	Last node, updated by ptrlist_append_impl.
+C_005f0590	0x8	iter_node	high	Iteration node advanced by ptrlist_first/next.
+C_00421f40	0x0	dialog	high	Owning dialog/option list object (layout, scrollbar at +0x284, selections +0x210/+0x220).
+C_00421f40	0x8	sel_name	medium	32-byte name of the game selected at dialog+0x220; also NetMsgHeader in net session.
+C_00421f40	0x28	sel_detail	medium	32-byte second string of selected game (paired with sel_name).
+C_00421f40	0x14c	option_list	high	Head of found-games option node list freed in net_gamelist_clear.
+C_004471c0	0x0	dialog	high	Lobby dialog; reset, default choice set, entry list at +0x228.
+C_004471c0	0x28	entries	medium	Head of player entry linked list (next at +0x10).
+C_005c7a86	0x0	nodes_handle	high	Memory handle of the kd-tree node array ((count+2)*16 bytes).
+C_005c7a86	0x4	nodes	high	Locked pointer to 16-byte kd-tree nodes.
+C_005c7a86	0x8	nil_node	medium	Sentinel node index (count+1) used as empty child link.
+C_005c7a86	0xc	color_count	high	Number of palette colours inserted (param_3).
+C_005c7a86	0x10	index_base	medium	Offset added to node index to yield a palette index in find_nearest.
+C_005c7a86	0x818	built	medium	Set to 1 when color_kdtree_build finishes.
+C_0051438f	0x5dc0	normal_head	high	Read index of normal ring (slots 400-1999).
+C_0051438f	0x5dc4	normal_tail	high	Write index of normal ring, wraps 2000 to 400.
+C_0051438f	0x5dc8	normal_count	high	Queued message count in normal ring; tracks max in a global.
+C_0051438f	0x5dcc	prio_head	high	Read index of priority ring (slots 0-399).
+C_0051438f	0x5dd0	prio_tail	high	Write index of priority ring.
+C_0051438f	0x5dd4	prio_count	high	Queued message count in priority ring.
+C_00578650	0x0	hmenu	high	Native menu handle built/destroyed/inserted into.
+C_00578650	0x18	menu_flags	medium	Flag word; bit 0x8000 gates menu_rebuild and is cleared when menus/items are added.
+C_00578650	0x1c	menus	high	Head of menu list walked by menu_find_menu/visible index.
+C_005c7e06	0x4	nodes	high	kd-tree node array read in color_kdtree_find_nearest.
+C_005c7e06	0x8	nil_node	medium	Sentinel node index ending the descent.
+C_005c7e06	0x10	index_base	medium	Added to node index to get the palette index.
+C_005c7e06	0x814	stack_top	high	Depth of the search node stack at +0x14.
+C_005c7e06	0x818	built	medium	Tree-built flag checked before searching.
+C_0042486f	0x0	dialog	high	Dialog the detail lines are added to.
+C_0042486f	0x128	line_0	medium	dialog_add_line result for detail line 0 (string 0x625d14).
+C_0042486f	0x12c	line_1	medium	dialog_add_line result for detail line 1 (string 0x625d18).
+C_0042486f	0x130	line_2	medium	dialog_add_line result for detail line 2 (string 0x625d1c).
+C_0042486f	0x134	line_3	medium	dialog_add_line result for detail line 3 (string 0x625d20).
+C_0042486f	0x138	line_4	medium	dialog_add_line result for detail line 4 (string 0x625d24).
+C_0042486f	0x13c	line_5	medium	dialog_add_line result for detail line 5 (string 0x625d28).
+C_0042486f	0x140	line_6	medium	dialog_add_line result for detail line 6 (string 0x625d2c).
+C_0042486f	0x144	line_7	medium	dialog_add_line result for detail line 7 (string 0x625d30).
+C_0042486f	0x148	line_8	medium	dialog_add_line result for detail line 8 (string 0x625d34).
+C_0044c8b0	0x0	on_mouse_move	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x0.
+C_0044c8b0	0x4	on_lbutton_down	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x4.
+C_0044c8b0	0x8	on_lbutton_up_raw	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x8.
+C_0044c8b0	0xc	on_lbutton_up	high	Handler slot called by the wnd_call_* dispatcher at table offset 0xc.
+C_0044c8b0	0x10	on_rbutton_down	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x10.
+C_0044c8b0	0x14	on_rbutton_up_raw	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x14.
+C_0044c8b0	0x18	on_rbutton_up	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x18.
+C_0044c8b0	0x1c	on_dblclick	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x1c.
+C_0044c8b0	0x20	on_key_down_pre	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x20.
+C_0044c8b0	0x24	on_key_up	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x24.
+C_0044c8b0	0x28	on_key_down	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x28.
+C_0044c8b0	0x2c	on_char	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x2c.
+C_0044c8b0	0x30	on_close	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x30.
+C_0044c8b0	0x34	on_minimize	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x34.
+C_0044c8b0	0x38	on_restore	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x38.
+C_0044c8b0	0x3c	on_set_focus	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x3c.
+C_0044c8b0	0x40	on_size	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x40.
+C_0044c8b0	0x44	on_move	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x44.
+C_0044c8b0	0x48	on_msg_44	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x48.
+C_0044c8b0	0x4c	on_hscroll	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x4c.
+C_0044c8b0	0x50	on_hscroll_track	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x50.
+C_0044c8b0	0x54	on_vscroll	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x54.
+C_0044c8b0	0x58	on_vscroll_track	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x58.
+C_0044c8b0	0x60	on_enter_size_move	high	Handler slot called by the wnd_call_* dispatcher at table offset 0x60.
+C_0044c8b0	0x64	on_exitsizemove	high	Last handler-table slot, invoked by wnd_call_exitsizemove (drag end).
+C_0040ef70	0x0	hfont	high	Returned by font_get_handle and passed to font measuring helpers.
+C_0040ef70	0x4	cached_height	high	Returned by font_cached_height; set from the measured height in font_init/font_set.
+C_005149d6	0x5dc0	low_read_index	high	Read index of the low-priority ring (entries 400..1999, wraps to 400).
+C_005149d6	0x5dc8	low_count	high	Pending-entry count of the low-priority ring, decremented on dequeue.
+C_005149d6	0x5dcc	high_read_index	high	Read index of the high-priority ring (entries 0..399, mod 400).
+C_005149d6	0x5dd4	high_count	high	Pending count of the high-priority ring, checked first and decremented on dequeue.
+C_005f130f	0x0	vtable	high	Message handlers called through (*field_0)[n] in ddctrl_dispatch_msg.
+C_005f130f	0x1c	hover_child	high	Child control under the mouse; gets 0xfff0 mouse-leave and is cleared in ddctrl_dispatch_to_children.
+C_005f130f	0x34	is_active	high	Set by ddctrl_activate, gates WM_KEYDOWN/WM_CHAR delivery.
+C_005f130f	0x38	rect_left	high	Left of the control rect (ddctrl_get_rect returns this+0x38) used in hit test.
+C_005f130f	0x3c	rect_top	high	Top of the control rect used in mouse hit test.
+C_005f130f	0x40	rect_right	high	Right of the control rect used in mouse hit test.
+C_005f130f	0x44	rect_bottom	high	Bottom of the control rect used in mouse hit test.
+C_00408130	0xc	on_lbuttonup	high	Handler-table slot swapped by wnd_set_lbuttonup_handler.
+C_00408130	0x18	on_rbuttonup	high	Handler-table slot swapped by wnd_set_rbuttonup_handler.
+C_00408130	0x28	on_keydown	high	Handler-table slot swapped by wnd_set_keydown_handler.
+C_00408130	0x2c	on_char	high	Handler-table slot swapped by wnd_set_char_handler.
+C_00408130	0x30	on_close	high	Handler-table slot swapped by wnd_set_close_handler.
+C_00408130	0x34	on_minimize	high	Handler-table slot swapped by wnd_set_minimize_handler.
+C_00408130	0x38	on_restore	high	Handler-table slot swapped by wnd_set_restore_handler.
+C_00408130	0x40	on_size	high	Handler-table slot swapped by wnd_set_size_handler.
+C_00408130	0x44	on_move	high	Handler-table slot swapped by wnd_set_move_handler.
+C_005c701c	0x404	hpalette	high	Passed to palette_animate; palette_get_hpalette returns field_404.
+C_005c701c	0x40c	fade_steps	medium	Fade step count: param range check and divisor for per-step colour blend.
+C_005c701c	0x410	fade_first_index	medium	First palette entry written by logpal_set_entry and animated.
+C_005c701c	0x414	fade_count	medium	Number of palette entries faded and animated.
+C_005c701c	0x424	fade_red	medium	Target red byte blended into the fade.
+C_005c701c	0x425	fade_green	medium	Target green byte blended into the fade.
+C_005c701c	0x426	fade_blue	medium	Target blue byte blended into the fade.
+C_005c701c	0x430	fade_saved_rgb	medium	Memory handle of the saved RGB triples locked during the fade.
+C_004db690	0x200	offer_type_left	medium	Proposal type (switch 8/10/0xc/0x11) for side 0, serialized only for message 0xe.
+C_004db690	0x204	offer_type_right	medium	Proposal type for side 1, always serialized into the parley message.
+C_004db690	0x10428	selected_count_left	medium	Number of selected list items on side 0 (sizes message payload).
+C_004db690	0x1042c	selected_count_right	medium	Number of selected list items on side 1 (sizes message payload).
+C_005f124c	0x4	owner	medium	Constructor arg; passed as first argument to every DDControl callback.
+C_005f124c	0x8	parent_wnd	high	Asserted pParentWin; ddwin_add_control target when no parent control.
+C_005f124c	0xc	parent_control	high	Asserted pParentControl; ddctrl_add_child target.
+C_005e87a2	0x0	dd_palette	high	IDirectDrawPalette passed to ddpal_set_entries_rgb.
+C_005e87a2	0x4	fade_steps	medium	Fade step count: range check and divisor of the blend.
+C_005e87a2	0x8	first_index	medium	First palette entry passed to ddpal_set_entries_rgb.
+C_005e87a2	0xc	entry_count	medium	Number of RGB entries faded and set.
+C_005e87a2	0x1c	fade_red	medium	Target red byte blended in.
+C_005e87a2	0x1d	fade_green	medium	Target green byte blended in.
+C_005e87a2	0x1e	fade_blue	medium	Target blue byte blended in.
+C_005e87a2	0x28	saved_rgb	medium	Memory handle of saved RGB triples locked during the fade.
+C_005ee6b1	0x0	hwnd	high	MCIWndCreateA result; target of SendMessageA, stop and close.
+C_0047a540	0x124	client_x	high	Client offset of the view subtracted from screen x (notes: +0x124).
+C_0047a540	0x128	client_y	high	Client offset of the view subtracted from screen y.
+C_0047a540	0x12c	view_width	medium	Upper bound of view-relative x in the hit test.
+C_0047a540	0x130	view_height	medium	Upper bound of view-relative y in the hit test.
+C_0047a540	0x2e8	origin_tile_x	high	Top-left visible tile x (notes) added to the computed column.
+C_0047a540	0x2ec	origin_tile_y	high	Top-left visible tile y added to the computed row.
+C_0047a540	0x308	tile_width	high	Divisor/modulus of pixel x giving the tile column and hit-mask x.
+C_0047a540	0x30c	tile_height	high	Divisor/modulus of pixel y giving the tile row and hit-mask y.
+C_0047a540	0x330	scroll_px_x	medium	Pixel offset of the tile grid subtracted from x before division.
+C_0047a540	0x334	scroll_px_y	medium	Pixel offset of the tile grid subtracted from y before division.
+C_005eff83	0x0	dd_surface	medium	DirectDraw surface handed to ddsurf_attach_palette when present.
+C_005eff83	0xb0	native_wnd	high	Record returned by ddwin_create_native, registered via wnd_set_class_owner.
+C_005eff83	0xb8	palette_attached	high	Set 1 when the palette was attached to the surface, else 0.
+C_005e866c	0x0	dd_palette	high	IDirectDrawPalette read with ddpal_get_entries_rgb.
+C_005e866c	0x4	fade_steps	medium	Third argument of ddpal_save_entries; divisor of the later fade.
+C_005e866c	0x8	first_index	high	First saved palette entry (ddpal_save_entries param_1).
+C_005e866c	0xc	entry_count	high	Number of saved palette entries (ddpal_save_entries param_2).
+C_005e866c	0x1c	fade_red	medium	Target red byte set by FUN_005e86f2.
+C_005e866c	0x1d	fade_green	medium	Target green byte set by FUN_005e86f2.
+C_005e866c	0x1e	fade_blue	medium	Target blue byte set by FUN_005e86f2.
+C_005e866c	0x28	saved_rgb	high	Memory handle holding the saved RGB entries.
+C_004d08b0	0x62c	type_timer	medium	Timer driving spaceship_wnd_type_char (typing text effect).
+C_004d08b0	0x630	blink_timer	medium	500 ms timer toggling the launch-button blink.
+C_004d08b0	0x634	starfield_timer	medium	5 ms timer animating the 0x50-star flight effect (mode 3).
+C_0043c3f0	0x0	hmodule	high	Loaded DLL handle, freed by dll_unload.
+C_005d1bb8	0x10	bounds_left	medium	Left bound of the sprite rows in the pixel lookup.
+C_005d1bb8	0x14	bounds_top	medium	Top bound; row index is y minus this.
+C_005d1bb8	0x18	bounds_right	medium	Right bound of the pixel lookup.
+C_005d1bb8	0x1c	bounds_bottom	medium	Bottom bound of the pixel lookup.
+C_005d1bb8	0x30	transparent_color	medium	Byte returned for pixels outside the encoded rows.
+C_005f0f1d	0x8	parent_wnd	high	Same layout as DDControl ctor: owning DD window.
+C_005f0f1d	0xc	parent_control	high	Owning parent control, zeroed in ctor.
+C_005f0f1d	0x1c	hover_child	high	Child under the mouse (see ddctrl_dispatch_to_children).
+C_005f0f1d	0x24	on_mousemove	high	Callback invoked by vtable slot 4 (WM_MOUSEMOVE).
+C_005f0f1d	0x28	on_lbuttonup	high	Callback invoked by vtable slot 2 (WM_LBUTTONUP).
+C_005f0f1d	0x2c	on_rbuttonup	high	Callback invoked by vtable slot 3 (WM_RBUTTONUP).
+C_005f0f1d	0x34	is_active	high	Activation flag set by ddctrl_activate.
+C_005f0fe9	0x8	parent_wnd	high	Ctor stores the parent window argument.
+C_005f0fe9	0xc	parent_control	high	Owning parent control, zeroed in ctor.
+C_005f0fe9	0x1c	hover_child	high	Child under the mouse (see ddctrl_dispatch_to_children).
+C_005f0fe9	0x24	on_mousemove	high	Callback invoked by vtable slot 4 (WM_MOUSEMOVE).
+C_005f0fe9	0x28	on_lbuttonup	high	Callback invoked by vtable slot 2 (WM_LBUTTONUP).
+C_005f0fe9	0x2c	on_rbuttonup	high	Callback invoked by vtable slot 3 (WM_RBUTTONUP).
+C_005f0fe9	0x34	is_active	high	Activation flag set by ddctrl_activate.
+C_005f10b6	0x8	parent_wnd	high	Owning DD window, zeroed in this ctor.
+C_005f10b6	0xc	parent_control	high	Ctor stores the parent control argument.
+C_005f10b6	0x1c	hover_child	high	Child under the mouse (see ddctrl_dispatch_to_children).
+C_005f10b6	0x24	on_mousemove	high	Callback invoked by vtable slot 4 (WM_MOUSEMOVE).
+C_005f10b6	0x28	on_lbuttonup	high	Callback invoked by vtable slot 2 (WM_LBUTTONUP).
+C_005f10b6	0x2c	on_rbuttonup	high	Callback invoked by vtable slot 3 (WM_RBUTTONUP).
+C_005f10b6	0x34	is_active	high	Activation flag set by ddctrl_activate.
+C_004b3080	0x0	data_size	high	Section data size (notes: Difference Engine record).
+C_004b3080	0x4	padded_size	high	Size rounded up to a multiple of 4.
+C_004b3080	0x8	section_id	high	Section id per notes.
+C_004b3080	0xc	checksum	medium	Checksum per notes, zeroed at init.
+C_004b3080	0x14	data_ptr	high	Pointer to the section data per notes.
+C_005e833b	0x0	dd_palette	high	IDirectDrawPalette released by ddpal_iface_release.
+C_005e833b	0x28	saved_rgb	medium	Saved RGB entries handle (ddpal_save_entries stores +0x28).
+C_005c79bf	0x0	nodes_handle	high	Node buffer memory handle (color_kdtree_build allocates it).
+C_005c79bf	0x4	nodes	high	Locked node buffer pointer, 16 bytes per node.
+C_005c79bf	0x8	sentinel	high	Sentinel/nil node index (count+1) terminating descents.
+C_005c79bf	0xc	color_count	high	Number of palette colours inserted.
+C_005c79bf	0x10	index_base	high	Added to the found node index in color_kdtree_find_nearest.
+C_005c79bf	0x814	stack_depth	high	Depth of the search stack at +0x14 in find_nearest.
+C_005c79bf	0x818	is_built	high	Set 1 by color_kdtree_build; find_nearest returns -1 when 0.
+C_005c79bf	0x81c	visit_count	medium	Counts node visits in find_nearest.
+C_005c7a30	0x0	nodes_handle	high	Memory handle unlocked and freed by color_kdtree_free.
+C_005c7a30	0x4	nodes	high	Locked node pointer, cleared on unlock.
+C_00514220	0x5dc0	low_read_index	high	Reset to 400 (start of low-priority ring) by net_msgq_reset.
+C_00514220	0x5dc4	main_tail	high	Enqueue writes slot at 0x5dc4 then advances it within 400..1999; reset to 400.
+C_00514220	0x5dc8	main_count	high	Incremented on enqueue into the main 400..1999 ring, compared for full/empty.
+C_00514220	0x5dcc	prio_head	high	Head index of the 0..399 priority ring, paired with tail 0x5dd0.
+C_00514220	0x5dd0	prio_tail	high	Enqueue writes slot then advances it modulo 400.
+C_00514220	0x5dd4	prio_count	high	Count of priority-ring messages, checked first on dequeue.
+C_00447210	0x38	item_count	high	Loop bound and range check on radio item index.
+C_00447210	0x40	selected_index	medium	Reset to -1 when the disabled item equals it.
+C_00447210	0x48	items	high	Array of 0xa4-byte radio items (hwnd at +0, enabled at +0x18).
+C_005db792	0x8	movie_wnd	high	Destroyed then replaced by moviewnd_create result.
+C_005db80f	0x8	movie_wnd	high	Destroyed then replaced by moviewnd_create result.
+C_005f1622	0x0	vtable	high	Called through as a function table (slot 8 = activate handler).
+C_005f1622	0x8	owner_ddwin	medium	Passed to ddwin_deactivate_controls.
+C_005f1622	0xc	parent_control	medium	Passed to ddctrl_deactivate_children; zero means top-level.
+C_005f1622	0x34	is_active	high	Set on activate; ddctrl_dispatch_msg only routes key/char when set.
+C_005f0391	0xcc	hover_control	high	Control under mouse; sent 0xfff0 mouse-leave and cleared.
+C_005f0897	0x8	cur_node	high	Current list node, stepped via ptrlist_node_prev.
+C_00425607	0x174	refresh_timer	high	game_timer_create(..,0x32,..) result, destroyed by net_gamelist_kill_timer.
+C_005e658a	0x0	dd_surface	high	Locked/unlocked via ddsurf_lock_raw/ddsurf_iface_unlock.
+C_005e658a	0x3c	row_ptrs	medium	Indexed by y*4 to get scanline pointer in ddsurf_pixel_ptr.
+C_0040f510	0x4	control_id	high	Passed as id to wnd_remove_control and to control callbacks.
+C_0040f510	0x8	owner_wnd	high	Window the control is removed from in dtor.
+C_0040f510	0x20	next_control	high	Linked-list next pointer used by wnd_remove_control.
+C_005c5a27	0xb8	first_control	high	Head of the window's control linked list.
+C_00414be0	0x0	on_mouse_move	high	Swapped by wnd_set_mousemove_handler.
+C_00414be0	0x4	on_lbutton_down	high	Swapped by wnd_set_lbuttondown_handler.
+C_00418a30	0x1c	hwnd	high	Win32 control hwnd for settext/gettext/caret.
+C_00421ca0	0x38	item_count	high	Loop bound and range check on radio item index.
+C_00421ca0	0x48	items	high	Array of 0xa4-byte radio items (hwnd at +0, enabled at +0x18).
+C_005f0056	0x0	dd_surface	high	DirectDraw surface given the palette via ddsurf_attach_palette.
+C_005f0056	0xb0	wnd	medium	Passed to wnd_show_update.
+C_005f0056	0xb8	palette_attached	high	Set to 1 once palette is attached.
+C_005f05b0	0x4	tail_node	high	ptrlist_last_impl reads last node from it.
+C_005f05b0	0x8	cur_node	high	Set to tail by ptrlist_last_impl.
+C_0046ab82	0x12c0	entry_count	high	Count of clickmap entries (max 200).
+C_004b7d72	0x118	civ_id	high	Civ whose plural name and attitude form the parley title.
+C_004bb4a0	0x38	item_count	high	Count passed to radiogrp_destroy_items.
+C_004bb4a0	0x44	items_handle	high	Memory handle unlocked and passed to radiogrp_destroy_items.
+C_005e6f57	0x20	rect_left	medium	First SetRect coordinate.
+C_005e6f57	0x24	rect_top	medium	Second SetRect coordinate.
+C_005e6f57	0x28	rect_right	medium	Third SetRect coordinate.
+C_005e6f57	0x2c	rect_bottom	medium	Fourth SetRect coordinate.
+C_005e6ff1	0x10	rect_left	medium	Copied to out rect[0].
+C_005e6ff1	0x14	rect_top	medium	Copied to out rect[1].
+C_005e6ff1	0x18	rect_right	medium	Copied to out rect[2].
+C_005e6ff1	0x1c	rect_bottom	medium	Copied to out rect[3].
+C_005e82fb	0x0	dd_palette	medium	DDPalette ctor zeroes it; released by ddpal_iface_release elsewhere.
+C_005c0d69	0x40	dib	high	DIB target for dib_draw_text_at.
+C_005c0e57	0x40	dib	high	DIB target for dib_draw_text_rect.
+C_005c4dd3	0x40	dib	high	DIB target for dib_draw_text_at_rgb.
+C_005c4eb6	0x40	dib	high	DIB target for dib_draw_text_rect_rgb.
+C_005c4f9f	0x40	dib	high	DIB target for dib_draw_text_at_rgb.
+C_005c505d	0x40	dib	high	DIB target for dib_draw_text_rect_rgb.
+C_005d2042	0x0	timer_hwnd	high	Window passed to timer_wnd_start/kill_slot and destroyed in dtor.
+C_005d30e0	0x4	control_id	high	Argument passed to the control callback.
+C_005d30e0	0x34	on_key	high	Edit key callback fired by edit_fire_key_callback.
+C_005d3720	0x4	control_id	high	Argument passed to the control callback.
+C_005d3720	0x30	on_dblclick	high	Combo double-click callback.
+C_005d3760	0x4	control_id	high	Argument passed to the control callback.
+C_005d3760	0x34	on_selchange	high	Combo selection-change callback.
+C_005d3f30	0x4	control_id	high	Argument passed to the control callback.
+C_005d3f30	0x30	on_dblclick	high	Listbox double-click callback (notes.md).
+C_005d3f70	0x4	control_id	high	Argument passed to the control callback.
+C_005d3f70	0x34	on_selchange	high	Listbox selection-change callback (notes.md).
+C_005d4014	0x38	item_count	high	Loop bound over radio items.
+C_005d4014	0x48	items	high	Array of 0xa4-byte radio items shown/invalidated.
+C_005dd3f1	0xa10	start_frame	high	Set to range start in avi_player_play_range.
+C_005dd3f1	0xa14	end_frame	high	Set to range end in avi_player_play_range.
+C_005dd3f1	0xa24	loop	high	0 for play_range, 1 for loop_range.
+C_005dd4c2	0xa10	start_frame	high	Set to range start in avi_player_loop_range.
+C_005dd4c2	0xa14	end_frame	high	Set to range end in avi_player_loop_range.
+C_005dd4c2	0xa24	loop	high	0 for play_range, 1 for loop_range.
+C_005f0213	0x0	dd_surface	high	Primary surface queried for back buffer.
+C_005f0213	0x4	surf_height	medium	SetRect bottom.
+C_005f0213	0x8	surf_width	medium	SetRect right.
+C_005f0640	0x0	item_ptr	high	Returned by ptrlist_node_data.
+C_005f0640	0x4	next_node	high	Returned by ptrlist_node_next.
+C_005f0640	0x8	prev_node	high	Returned by ptrlist_node_prev.
+C_005f0520	0x0	head_node	high	ptrlist_first_impl starts from it.
+C_005f0520	0x4	tail_node	high	ptrlist_last_impl starts from it.
+C_005f0520	0x8	cur_node	high	Iteration position for first/last/prev.
+C_005f1769	0x4	control_id	medium	Argument passed to the callback.
+C_005f17d4	0x4	control_id	medium	Argument passed to the callback.
+C_005f17d4	0x28	on_lbutton_up	high	Fired from DD control vtable slot 2 (WM_LBUTTONUP).
+C_005f1811	0x4	control_id	medium	Argument passed to the callback.
+C_005f1811	0x2c	on_rbutton_up	high	Fired from DD control vtable slot 3 (WM_RBUTTONUP).
+C_005f184e	0x4	control_id	medium	Argument passed to the callback.
+C_005f184e	0x24	on_mouse_move	high	Fired from DD control vtable slot 4 (WM_MOUSEMOVE).
+C_005f188b	0x4	control_id	medium	Argument passed to the callback.
+C_005f188b	0x30	on_dblclick	high	Fired from DD control vtable slot 5 (WM_LBUTTONDBLCLK).
+C_0046ace7	0x12c0	entry_count	high	Count of clickmap entries, capped at 200 in clickmap_add.
+C_00421f70	0x174	refresh_timer	medium	Zeroed in ctor; same offset as net game list timer.
+C_00428cb0	0x4	mem_handle	high	memblock_ensure_locked locks this handle.
+C_00428cb0	0x8	base_ptr	high	Locked pointer; alloc returns base+used.
+C_00428cb0	0xe	capacity	medium	u16 total size set at create alongside remaining at 0x10.
+C_005e83c8	0x0	dd_palette	high	Released via ddpal_iface_release and cleared.
+C_005eb2f0	0x4	control_id	high	Argument passed to the control callback.
+C_005eb2f0	0x30	on_maxtext	high	Edit max-text callback.
+C_005eb330	0x4	control_id	high	Argument passed to the control callback.
+C_005eb330	0x2c	on_change	high	Edit change callback.
+C_005eea3a	0x0	hwnd	high	GetWindowRect/GetParent/SetWindowPos to center window.
+C_005eecc3	0x0	stream_flags	medium	Bit 1 set when the AVI stream is registered.
+C_005eecc3	0x4	avi_stream	high	Stream registered with snd_wave_add_avi_stream.
+C_005eed76	0x0	stream_flags	medium	Bit 1 set when the AVI stream is registered.
+C_005eed76	0x4	avi_stream	high	Stream registered with snd_wave_add_avi_stream.
+C_0040f930	0x1c	hwnd	high	Destroyed via checkbox_destroy_hwnd.
+C_005c10fb	0x40	dib	high	DIB target for dib_draw_text_wrap.
+C_005c512d	0x40	dib	high	DIB target for dib_draw_text_wrap_rgb.
+C_005c51a5	0x40	dib	high	DIB target for dib_draw_text_wrap_rgb.
+C_005c59c4	0xb8	first_control	high	Head of control list; new control prepended.
+C_005c63af	0xa0	on_menu_select	high	WM_MENUSELECT callback.
+C_005c6fc3	0x430	palette_handle	medium	Memory handle of RGB triplets copied out.
+C_005c8f70	0x2c	on_enter	high	Hotspot enter callback (notes.md).
+C_005c8fb0	0x30	on_leave	high	Hotspot leave callback (notes.md).
+C_005c8ff0	0x34	on_click	high	Hotspot click callback (notes.md).
+C_005c9030	0x38	on_press	high	Hotspot press callback (notes.md).
+C_005c9070	0x3c	on_dblclick	high	hotspot_fire_dblclick calls it; notes list hotspot +0x3c double-click.
+C_005cbdf0	0x30	on_click	medium	button_fire_callback invokes this callback slot.
+C_005cbe30	0x2c	on_click	high	spritebtn_fire_click calls it; notes: sprite button +0x2c click.
+C_005cbe70	0x30	on_rclick	high	spritebtn_fire_rclick calls it; notes: sprite button +0x30 right click.
+C_005cce40	0x2c	on_toggle	medium	checkbox_fire_callback calls it with two args.
+C_005cd640	0x2c	on_change	high	scrollbar_fire_change; notes: scrollbar +0x2c change.
+C_005cd680	0x30	on_track	high	scrollbar_fire_track; notes: scrollbar +0x30 thumb track.
+C_005cf39b	0x20	origin_x	high	sprite_set_origin stores first param.
+C_005cf39b	0x24	origin_y	high	sprite_set_origin stores second param.
+C_005cf3c5	0x20	origin_x	high	sprite_get_origin returns it as first output.
+C_005cf3c5	0x24	origin_y	high	sprite_get_origin returns it as second output.
+C_00452a67	0x1c	hwnd	medium	Control base hwnd slot (control_set_hwnd +0x1c), released in dtor.
+C_00453aa0	0x1c	hwnd	medium	Control base hwnd slot released by hotspot_dtor.
+C_00456ee0	0x20	tied_stream	medium	Matches CRT ios::tie: swaps and returns old tied ostream.
+C_00511560	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via FUN_005cb6db.
+C_00418b50	0x1c	hwnd	medium	Control base hwnd slot, released in dtor via FUN_005d356e.
+C_00418ce0	0x1c	hwnd	high	Passed to combo_hwnd_add_string.
+C_00418ce0	0x2c	item_count	high	Incremented by combo_add_string, zeroed by combo_clear.
+C_00418d20	0x1c	hwnd	high	Passed to combo_hwnd_clear.
+C_00418d20	0x2c	item_count	high	Zeroed by combo_clear.
+C_00418ea0	0x1c	hwnd	high	Passed to listbox hwnd cleanup in listbox_dtor.
+C_00419020	0x1c	hwnd	high	Passed to listbox_hwnd_add_string.
+C_00419020	0x2c	item_count	high	Incremented by listbox_add_string.
+C_00419060	0x1c	hwnd	high	Passed to listbox_hwnd_clear.
+C_00419060	0x2c	item_count	high	Zeroed by listbox_clear.
+C_005d3fb0	0x38	item_count	high	Loop bound over 0xa4-byte items (radiogrp_item_count reads +0x38).
+C_005d3fb0	0x48	items	high	Array of 0xa4-byte items whose first dword is compared (radiogrp_get_items).
+C_005d4087	0x38	item_count	high	Loop bound over items.
+C_005d4087	0x48	items	high	Array of 0xa4-byte items; first dword is an hwnd hidden.
+C_005dad40	0x2c	on_select	medium	radiogrp_fire_callback invokes it with (index, arg).
+C_005dad80	0x30	on_dblclick	high	radiogrp_fire_dblclick calls it.
+C_005dadc0	0x34	on_rclick	high	radiogrp_fire_rclick calls it.
+C_005db650	0x8	wnd_obj	high	Native window object destroyed via wnd_obj_destroy.
+C_0056e270	0x4	next_id	medium	lobby_list_ctor sets next id = 1.
+C_005f07f9	0x8	node	medium	List node pointer whose data is returned via ptrlist_node_data.
+C_005f1221	0xc	is_enabled	medium	Set by an Enable(int)-shaped library function.
+C_0046d5a0	0x0	msg_magic	high	net_msg_header_init stores signature 0x66606660.
+C_0046d5a0	0x4	msg_type	medium	net_msg_header_init stores first param after magic.
+C_004bb5e0	0x1c	hwnd	high	Passed to ctrl_hwnd_set_focus.
+C_005bb910	0x7c	min_width	high	wnd_get_min_size first output.
+C_005bb910	0x80	min_height	high	wnd_get_min_size second output.
+C_005bb950	0x84	max_width	high	wnd_get_max_size first output.
+C_005bb950	0x88	max_height	high	wnd_get_max_size second output.
+C_005e3550	0x114	on_end	high	avi_player_call_end_callback invokes it.
+C_005e3580	0x118	on_cue	high	avi_player_call_cue_callback invokes it.
+C_005e8401	0x0	ddpalette	medium	Passed to ddpal_get/set_entries_rgb.
+C_005ecf50	0x0	on_mousemove	high	wnd_call_mousemove; handler table slot 0.
+C_005ecf90	0x4	on_lbuttondown	high	wnd_call_lbuttondown.
+C_005ecfd0	0x8	on_lbuttonup_raw	high	wnd_call_lbuttonup_raw: every WM_LBUTTONUP.
+C_005ed010	0xc	on_lbuttonup	high	wnd_call_lbuttonup: after matching down.
+C_005ed050	0x10	on_rbuttondown	high	wnd_call_rbuttondown.
+C_005ed090	0x14	on_rbuttonup_raw	high	wnd_call_rbuttonup_raw: every WM_RBUTTONUP.
+C_005ed0d0	0x18	on_rbuttonup	high	wnd_call_rbuttonup: after matching down.
+C_005ed110	0x1c	on_dblclick	high	wnd_call_dblclick (WM_LBUTTONDBLCLK).
+C_005ed150	0x20	on_keydown_pre	high	wnd_call_keydown_pre (WM_KEYDOWN first slot).
+C_005ed190	0x24	on_keyup	high	wnd_call_keyup.
+C_005ed1d0	0x28	on_keydown	high	wnd_call_keydown.
+C_005ed210	0x2c	on_char	high	wnd_call_char.
+C_005ed250	0x30	on_close	high	wnd_call_close.
+C_005ed290	0x34	on_minimize	high	wnd_call_minimize (SC_MINIMIZE).
+C_005ed2c0	0x38	on_restore	high	wnd_call_restore (SC_RESTORE).
+C_005ed2f0	0x3c	on_setfocus	high	wnd_call_setfocus.
+C_005ed320	0x40	on_size	high	wnd_call_size.
+C_005ed360	0x44	on_move	high	wnd_call_move.
+C_005ed3a0	0x48	on_commnotify	medium	wnd_call_msg44: message 0x44 (WM_COMMNOTIFY).
+C_005ed3e0	0x4c	on_hscroll	high	wnd_call_hscroll.
+C_005ed420	0x50	on_hscroll_track	high	wnd_call_hscroll_track.
+C_005ed460	0x54	on_vscroll	high	wnd_call_vscroll.
+C_005ed4a0	0x58	on_vscroll_track	high	wnd_call_vscroll_track.
+C_005ed520	0x60	on_entersizemove	high	wnd_call_entersizemove.
+C_005ed550	0x64	on_exitsizemove	high	wnd_call_exitsizemove.
+C_005ed5a0	0x98	on_menu_pos_command	high	wnd_call_menu_pos_command.
+C_005ed5f0	0x9c	on_command	high	wnd_call_command.
+C_005ed6e0	0xbc	on_mci_done	high	wnd_call_mci_done.
+C_005ee87f	0x0	hwnd	high	Used as HWND in SendMessageA.
+C_005eeb45	0x0	hwnd	high	Used as HWND in ShowWindow/SendMessageA.
+C_005eedec	0x0	audio_flags	medium	16-bit flag word; avi_audio_prepare_range sets/clears bit 2.
+C_005efd70	0xbc	on_activate_app	high	ddwin_call_activate_app invokes it.
+C_00553d30	0x60	on_drag_begin	high	wnd_set_drag_begin_callback swaps it; notes: +0x60 drag begin.
+C_00553d70	0x64	on_drag_end	high	wnd_set_drag_end_callback swaps it; notes: +0x64 drag end.
+C_00408580	0x8	wnd_obj	high	Native window object passed to wnd_obj_validate_rect.
+C_0040faa0	0x2c	on_toggle	medium	checkbox_set_callback stores the callback fired by checkbox_fire_callback.
+C_005c4b7f	0x40	dib	medium	Source passed to dib_blit_to_dib.
+C_005c4c46	0x40	dib	medium	Source passed to dib_blit_to_ddsurf.
+C_005c5680	0x8	surf_width	high	ddsurf_get_width returns it.
+C_005c56f0	0x408	pal_version	medium	palette_get_version returns it.
+C_005c5740	0x0	iface	high	ddsurf_get_iface returns the DirectDraw surface interface.
+C_005c5b36	0xb8	first_control	high	Head of control list linked via +0x20 next; each control's +0x1c hwnd invalidated.
+C_005c5e60	0x0	ctrl_type	high	control_get_type returns it.
+C_005c5e80	0x20	next_control	high	control_get_next returns it.
+C_005c5ea0	0x24	initial_focus	high	ctrl_get_initial_focus returns this byte.
+C_005c5ec0	0x34	is_enabled	high	checkbox_is_enabled returns it; checkbox_disable zeroes +0x34.
+C_005c5ee0	0x48	items	high	radiogrp_get_items returns it.
+C_005c5f00	0x38	item_count	high	radiogrp_item_count returns it.
+C_005c6b05	0x404	hpalette	medium	Passed to palette_animate (palette_get_hpalette returns +0x404).
+C_005c6bd5	0x404	hpalette	medium	Passed to palette_animate.
+C_005c9710	0x1c	hwnd	high	control_set_hwnd stores it.
+C_005cbdb0	0x404	hpalette	high	palette_get_hpalette returns it.
+C_005cbdd0	0xc4	keyboard_nav	high	wnd_keyboard_nav_enabled returns this byte.
+C_005cd620	0x3c	cur_pos	high	scrollbar_get_cur_pos; notes: scrollbar +0x3c position.
+C_005cd6c0	0x34	page_size	high	scrollbar_get_page_size; notes: +0x34 page size.
+C_00450400	0x8	wnd_obj	high	Native window object passed to wnd_obj_center.
+C_00451a60	0x34	on_click	high	hotspot_set_click_callback; notes: hotspot +0x34 click.
+C_00451a90	0x3c	on_dblclick	high	hotspot_set_dblclick_callback; notes: hotspot +0x3c double-click.
+C_00451ac0	0x30	on_track	high	scrollbar_set_track_callback.
+C_00453d40	0x34	on_click	medium	Callback setter at hotspot click slot +0x34.
+C_00453d70	0x3c	on_dblclick	medium	Callback setter at hotspot double-click slot +0x3c.
+C_005a9640	0x34	is_enabled	high	checkbox_disable zeroes it.
+C_005a9670	0x1c	hwnd	high	Passed to listbox_hwnd_get_text.
+C_005a96b0	0x1c	hwnd	high	Passed to listbox_hwnd_get_sel_text.
+C_00511320	0x4	wnd_palette	medium	wnd_get_palette returns it.
+C_005117f0	0x2c	on_click	medium	Setter receives a thunk callback address; sprite button +0x2c is the click slot per notes.
+C_00518e80	0x8	native_wnd	medium	Passed to wnd_obj_move_xy as the underlying window object.
+C_00414b70	0x8	native_wnd	medium	Passed to wnd_obj_set_cursor_now as the underlying window object.
+C_00418740	0x4	ctrl_id	high	Returned by ctrl_get_id.
+C_00418770	0x1c	hwnd	high	Returned by control_get_hwnd.
+C_004189c0	0x1c	hwnd	high	Passed to edit_hwnd_limit_text as the edit control HWND.
+C_00418a00	0x34	on_change	medium	edit_set_callback stores the edit control callback here.
+C_00418c70	0x1c	hwnd	high	Passed to combo_hwnd_set_font.
+C_00418d60	0x1c	hwnd	high	Passed to combo_hwnd_get_cur_sel.
+C_00418d90	0x1c	hwnd	high	Passed to combo_hwnd_set_cur_sel.
+C_00418dd0	0x34	on_select	medium	combo_set_callback stores the selection callback (same slot as listbox selection change).
+C_00418fe0	0x1c	hwnd	high	Passed to listbox_hwnd_set_font.
+C_00492ab0	0x1c	hwnd	high	Passed to edit_ctl_get_sel_end.
+C_00492b20	0x1c	hwnd	high	Passed to edit_hwnd_set_sel.
+C_005d1ef0	0xc	row_pitch	high	ddsurf_row_next adds it to a row pointer.
+C_005d1f20	0xc	row_pitch	high	ddsurf_row_prev subtracts it from a row pointer.
+C_005dcc56	0x0	hmenu	high	Passed to menu_hmenu_get_submenu.
+C_005dd487	0xa24	is_playing	medium	Set to 1 after avi_player_rewind and before avi_play_start.
+C_0056e180	0x2e4	zoom	high	Map view zoom passed to gfx_zoom_scale_round.
+C_005f068c	0x4	next_node	high	ptrlist_node_set_next.
+C_005f06ad	0x8	prev_node	high	ptrlist_node_set_prev.
+C_005f06ce	0x0	node_data	high	ptrlist_node_set_data.
+C_005f0e50	0x0	node_data	high	ptrlist_node_data.
+C_005f0e70	0x4	next_node	high	ptrlist_node_next.
+C_005f0e90	0x8	prev_node	high	ptrlist_node_prev.
+C_005f15f2	0x0	vtable	high	Virtual call through slot 10.
+C_0046ab5f	0x12c0	region_count	high	clickmap_clear zeroes it and clickmap_hit_test loops up to it.
+C_0046ad85	0x12c0	region_count	high	clickmap_hit_test loop bound over click regions.
+C_00579b90	0x0	hmenu	high	Returned by menu_get_hmenu.
+C_00579bc0	0x98	on_menu	high	wnd_set_menu_callback stores it.
+C_00530e80	0x2c	is_enabled	high	Returned by ctrl_is_enabled.
+C_00530eb0	0x2c	on_change	high	edit_set_change_callback stores it.
+C_005311b0	0x2c	on_select	high	radiogrp_set_select_callback stores it.
+C_005311e0	0x30	on_dblclick	high	radiogrp_set_dblclick_callback stores it.
+C_0059e812	0x238	button_list	medium	Head of linked list (next at +0x18) searched by id at +0xc.
+C_0059eb0d	0x270	edit_ctrls	high	Array of 0x48-byte edit controls indexed by dialog_get_edit_text.
+C_0059eb8c	0x23c	on_sprite_click	high	dialog_set_sprite_click_fn; notes list dialog +0x23c sprite click.
+C_0059ebb0	0x240	on_sprite_dblclick	high	dialog_set_sprite_dblclick_fn; notes list +0x240.
+C_0059ec1c	0x24c	on_select_change	high	dialog_set_select_change_fn; notes list +0x24c selection change.
+C_005bb8c0	0x4	palette_obj	high	Returned by wnd_get_palette_obj.
+C_005bb8e0	0x8	native_wnd	medium	Passed to wnd_obj_set_client_size.
+C_005bd610	0x0	style_flags	high	Returned (as short) by wnd_get_style_flags.
+C_005e0ba0	0x38	row_offsets	high	Returned by surface_get_row_offsets.
+C_005e0cc0	0x0	iface	high	DirectDraw palette interface returned by ddpal_get_iface.
+C_005e6f25	0x0	ddsurf	medium	Passed to ddsurf_rgb_to_pixel.
+C_005e8739	0x0	iface	high	DirectDraw palette passed to ddpal_set_entries_rgb.
+C_005ed640	0xb0	hscroll_pos	high	Returned by wnd_get_hscroll_pos.
+C_005ed660	0xb4	vscroll_pos	high	Returned by wnd_get_vscroll_pos.
+C_005ed680	0x90	hscroll_page	high	Returned by wnd_get_hscroll_page.
+C_005ed6a0	0x94	vscroll_page	high	Returned by wnd_get_vscroll_page.
+C_005ed6c0	0xb8	mci_device	high	Returned by wnd_get_mci_device.
+C_005ee8c6	0x0	hwnd	high	SendMessageA target (MCI window messages).
+C_005ee91c	0x0	hwnd	high	SendMessageA target.
+C_005ee991	0x0	hwnd	high	SendMessageA target.
+C_005ee9bc	0x0	hwnd	high	SendMessageA target.
+C_005ee9e7	0x0	hwnd	high	SendMessageA target.
+C_005eea12	0x0	hwnd	high	GetClientRect target.
+C_005eeadd	0x0	hwnd	high	SetWindowPos target.
+C_005eeb11	0x0	hwnd	high	SetWindowPos target.
+C_005eeb7e	0x0	hwnd	high	ShowWindow target.
+C_005eeba2	0x0	hwnd	high	SendMessageA target.
+C_005eebd6	0x0	hwnd	high	SendMessageA target returning an HPALETTE.
+C_005eec80	0xb0	native_wnd	high	Returned by ddwin_get_native.
+C_005eeca0	0x4	audio_stream	medium	avi_audio_ctor zeroes it; released in avi_audio_release.
+C_005eed1b	0x4	audio_stream	medium	Checked non-null before release in avi_audio_release.
+C_005eed43	0x0	state_flags	medium	Bit 4 means playing in avi_audio_is_playing.
+C_004472c0	0x40	selected	high	radiogrp_get_selected.
+C_004472f0	0x40	selected	high	radiogrp_set_selected.
+C_00551d20	0x2c	item_count	medium	Events editor sets listbox selection to this value minus 1 to pick the last item.
+C_00551d50	0x1c	hwnd	high	Passed to listbox_hwnd_get_cur_sel.
+C_00551d80	0x1c	hwnd	high	Passed to listbox_hwnd_set_cur_sel.
+C_00551dc0	0x30	on_dblclick	high	listbox_set_dblclick_callback; notes list listbox +0x30.
+C_00551df0	0x34	on_select	high	listbox_set_select_callback; notes list listbox +0x34.

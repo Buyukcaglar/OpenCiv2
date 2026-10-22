@@ -7,18 +7,18 @@ void __thiscall FUN_005f0056(C_005f0056 *this)
 {
   undefined4 uVar1;
   
-  FUN_005ef65a(this->field_b0);
-  if (this->field_b8 == 0) {
-    uVar1 = FUN_005e0cc0(*(C_005e0cc0 **)(this->pad_4 + 0xa8));
-    FUN_005e8e06(this->field_0,uVar1);
-    this->field_b8 = 1;
+  wnd_show_update(this->wnd);
+  if (this->palette_attached == 0) {
+    uVar1 = ddpal_get_iface(*(DDPaletteIfaceView **)(this->pad_4 + 0xa8));
+    ddsurf_attach_palette(this->dd_surface,uVar1);
+    this->palette_attached = 1;
   }
   return;
 }
 
 /* 005f00b8 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005f00b8(C_005c5660 *this)
+void __thiscall ddwin_reset_after_mode_change(DDSurface *this)
 
 {
   int iVar1;
@@ -27,15 +27,15 @@ void __thiscall FUN_005f00b8(C_005c5660 *this)
   
   SetRect(&local_14,0,0,*(int *)(*(int *)(this[2].pad_20 + 8) + 0xc),
           *(int *)(*(int *)(this[2].pad_20 + 8) + 8));
-  FUN_005ef65a(*(iptr *)(this[2].pad_20 + 8));
-  iVar1 = FUN_005e6297(this,(iptr)&local_14,*(undefined4 *)(this[2].pad_20 + 0xc));
+  wnd_show_update(*(iptr *)(this[2].pad_20 + 8));
+  iVar1 = ddsurf_create_primary(this,(iptr)&local_14,*(undefined4 *)(this[2].pad_20 + 0xc));
   if (iVar1 == 1) {
     if (this[2].field_30 == 0) {
-      uVar2 = FUN_005e0cc0(*(C_005e0cc0 **)(this[2].pad_20 + 4));
-      FUN_005e8e06(this->field_0,uVar2);
+      uVar2 = ddpal_get_iface(*(DDPaletteIfaceView **)(this[2].pad_20 + 4));
+      ddsurf_attach_palette(this->dd_surface,uVar2);
       this[2].field_30 = 1;
     }
-    FUN_005f02f3(this);
+    ddwin_paint_controls(this);
   }
   return;
 }
@@ -43,87 +43,87 @@ void __thiscall FUN_005f00b8(C_005c5660 *this)
 
 /* 005f0169 auto */
 undefined1 __thiscall
-FUN_005f0169(C_005c5660 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+FUN_005f0169(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   undefined1 uVar1;
   
-  uVar1 = FUN_005ef4e3(*(iptr *)(this[2].pad_20 + 8),param_1,param_2,param_3);
-  FUN_005f00b8(this);
+  uVar1 = ddwin_native_set_display_mode(*(iptr *)(this[2].pad_20 + 8),param_1,param_2,param_3);
+  ddwin_reset_after_mode_change(this);
   return uVar1;
 }
 
 /* 005f01ad auto */
-void __thiscall FUN_005f01ad(C_005eff83 *this,C_005e0cc0 *param_1)
+void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *param_1)
 
 {
   undefined4 uVar1;
   
-  *(C_005e0cc0 **)(this->pad_4 + 0xa8) = param_1;
-  if (this->field_0 == 0) {
-    this->field_b8 = 0;
+  *(DDPaletteIfaceView **)(this->pad_4 + 0xa8) = param_1;
+  if (this->dd_surface == 0) {
+    this->palette_attached = 0;
   }
   else {
-    uVar1 = FUN_005e0cc0(param_1);
-    FUN_005e8e06(this->field_0,uVar1);
-    this->field_b8 = 1;
+    uVar1 = ddpal_get_iface(param_1);
+    ddsurf_attach_palette(this->dd_surface,uVar1);
+    this->palette_attached = 1;
   }
   return;
 }
 
 /* 005f0213 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005f0213(C_005f0213 *this,C_005c5660 *param_1)
+void __thiscall FUN_005f0213(C_005f0213 *this,DDSurface *param_1)
 
 {
   undefined4 uVar1;
   tagRECT *ptVar2;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  SetRect(&local_14,0,0,this->field_8,this->field_4);
+  SetRect(&local_14,0,0,this->surf_width,this->surf_height);
   ptVar2 = &local_14;
-  uVar1 = FUN_005e8f4b(this->field_0);
-  FUN_005e635f(param_1,uVar1,(iptr)ptVar2,(iptr)this);
+  uVar1 = ddsurf_iface_get_back_buffer(this->dd_surface);
+  ddsurf_init_back_buffer(param_1,uVar1,(iptr)ptVar2,(iptr)this);
   return;
 }
 #undef local_14
 
 /* 005f0266 auto */
-void __thiscall FUN_005f0266(void *this,iptr param_1)
+void __thiscall ddwin_add_control(void *this,iptr param_1)
 
 {
-  FUN_005f05b0((C_005f05b0 *)((int)this + 0xc0));
-  FUN_005f05f0((C_005f0590 *)((int)this + 0xc0),param_1);
+  ptrlist_last((PtrListLastView *)((int)this + 0xc0));
+  ptrlist_append((PtrList *)((int)this + 0xc0),param_1);
   return;
 }
 
 /* 005f029e auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f029e(void *this)
+void __thiscall ddwin_remove_all_controls(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0xc0));
+  local_8 = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (local_8 != 0) {
-    FUN_005f0c69((C_005f0590 *)((int)this + 0xc0));
-    local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0xc0));
+    ptrlist_remove_current((PtrList *)((int)this + 0xc0));
+    local_8 = ptrlist_first((PtrList *)((int)this + 0xc0));
   }
   return;
 }
 #undef local_8
 
 /* 005f02f3 auto */
-#define local_8 (*(C_005f15f2 * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f02f3(C_005c5660 *this)
+#define local_8 (*(DDControlPaintView * *)(frame_ + FRAME_OFF(0)))
+void __thiscall ddwin_paint_controls(DDSurface *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (C_005f15f2 *)FUN_005f0590((C_005f0590 *)&this[2].field_38);
-  while (local_8 != (C_005f15f2 *)0x0) {
-    FUN_005f15f2(local_8);
-    local_8 = (C_005f15f2 *)FUN_005f05d0((C_005f0590 *)&this[2].field_38);
+  local_8 = (DDControlPaintView *)ptrlist_first((PtrList *)&this[2].field_38);
+  while (local_8 != (DDControlPaintView *)0x0) {
+    ddctrl_paint_tree(local_8);
+    local_8 = (DDControlPaintView *)ptrlist_next((PtrList *)&this[2].field_38);
   }
   return;
 }
@@ -131,48 +131,48 @@ void __thiscall FUN_005f02f3(C_005c5660 *this)
 
 /* 005f0342 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f0342(void *this)
+void __thiscall ddwin_deactivate_controls(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0xc0));
+  local_8 = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (local_8 != 0) {
-    FUN_005f1683(local_8);
-    local_8 = FUN_005f05d0((C_005f0590 *)((int)this + 0xc0));
+    ddctrl_deactivate(local_8);
+    local_8 = ptrlist_next((PtrList *)((int)this + 0xc0));
   }
   return;
 }
 #undef local_8
 
 /* 005f0391 auto */
-#define local_8 (*(C_005f130f * *)(frame_ + FRAME_OFF(0)))
-undefined1 __thiscall FUN_005f0391(C_005f0391 *this,int param_1,int param_2,int param_3)
+#define local_8 (*(DDControl * *)(frame_ + FRAME_OFF(0)))
+undefined1 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int param_1,int param_2,int param_3)
 
 {
   int *piVar1;
   int iVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((this->field_cc != 0) && (param_1 == 0x200)) {
-    piVar1 = (int *)FUN_005f0620((void *)this->field_cc);
+  if ((this->hover_control != 0) && (param_1 == 0x200)) {
+    piVar1 = (int *)ddctrl_get_rect((void *)this->hover_control);
     if ((param_2 < *piVar1) ||
        (((piVar1[2] < param_2 || (param_3 < piVar1[1])) || (piVar1[3] < param_3)))) {
-      FUN_005f130f((C_005f130f *)this->field_cc,0xfff0,param_2,param_3);
-      this->field_cc = 0;
+      ddctrl_dispatch_msg((DDControl *)this->hover_control,0xfff0,param_2,param_3);
+      this->hover_control = 0;
     }
   }
-  local_8 = (C_005f130f *)FUN_005f0590((C_005f0590 *)(this->pad_0 + 0xc0));
+  local_8 = (DDControl *)ptrlist_first((PtrList *)(this->pad_0 + 0xc0));
   while( true ) {
-    if (local_8 == (C_005f130f *)0x0) {
+    if (local_8 == (DDControl *)0x0) {
       return 0;
     }
-    iVar2 = FUN_005f130f(local_8,param_1,param_2,param_3);
+    iVar2 = ddctrl_dispatch_msg(local_8,param_1,param_2,param_3);
     if (iVar2 != 0) break;
-    local_8 = (C_005f130f *)FUN_005f05d0((C_005f0590 *)(this->pad_0 + 0xc0));
+    local_8 = (DDControl *)ptrlist_next((PtrList *)(this->pad_0 + 0xc0));
   }
   if (param_1 == 0x200) {
-    this->field_cc = (uptr)local_8;
+    this->hover_control = (uptr)local_8;
   }
   return 1;
 }
@@ -182,13 +182,13 @@ undefined1 __thiscall FUN_005f0391(C_005f0391 *this,int param_1,int param_2,int 
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005f04c0(void *this)
+void __thiscall ptrlist_dtor(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005f04fe */ { FUN_005f0724(*(C_005f0590 **)((iptr)&this)); }
+  /* inlined unwind funclet FUN_005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -199,13 +199,13 @@ void __thiscall FUN_005f04c0(void *this)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-C_005f0520 * __thiscall FUN_005f0520(C_005f0520 *this)
+PtrListInitView * __thiscall ptrlist_ctor(PtrListInitView *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005f06ee(this);
+  ptrlist_impl_ctor(this);
   return this;
 }
 #undef local_10
@@ -213,38 +213,38 @@ C_005f0520 * __thiscall FUN_005f0520(C_005f0520 *this)
 #undef local_8
 
 /* 005f0590 auto */
-undefined4 __thiscall FUN_005f0590(C_005f0590 *this)
+undefined4 __thiscall ptrlist_first(PtrList *this)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005f0770(this);
+  uVar1 = ptrlist_first_impl(this);
   return uVar1;
 }
 
 /* 005f05b0 auto */
-void __thiscall FUN_005f05b0(C_005f05b0 *this)
+void __thiscall ptrlist_last(PtrListLastView *this)
 
 {
-  FUN_005f07b3(this);
+  ptrlist_last_impl(this);
   return;
 }
 
 /* 005f05d0 auto */
-undefined4 __thiscall FUN_005f05d0(C_005f0590 *this)
+undefined4 __thiscall ptrlist_next(PtrList *this)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005f0833(this);
+  uVar1 = ptrlist_next_impl(this);
   return uVar1;
 }
 
 /* 005f05f0 auto */
-void __thiscall FUN_005f05f0(C_005f0590 *this,undefined4 param_1)
+void __thiscall ptrlist_append(PtrList *this,undefined4 param_1)
 
 {
-  FUN_005f08fb(this,param_1);
+  ptrlist_append_impl(this,param_1);
   return;
 }
 
@@ -254,19 +254,19 @@ void __thiscall FUN_005f05f0(C_005f0590 *this,undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-int __thiscall FUN_005f0620(void *this)
+int __thiscall ddctrl_get_rect(void *this)
 
 {
   return (int)this + 0x38;
 }
 
 /* 005f0640 auto */
-C_005f0640 * __thiscall FUN_005f0640(C_005f0640 *this)
+PtrListNode * __thiscall ptrlist_node_ctor(PtrListNode *this)
 
 {
-  this->field_0 = 0;
-  this->field_4 = 0;
-  this->field_8 = 0;
+  this->item_ptr = 0;
+  this->next_node = 0;
+  this->prev_node = 0;
   return this;
 }
 
@@ -276,89 +276,89 @@ C_005f0640 * __thiscall FUN_005f0640(C_005f0640 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005f0676(void *this)
+void __thiscall ptrlist_node_dtor(void *this)
 
 {
   return;
 }
 
 /* 005f068c auto */
-void __thiscall FUN_005f068c(C_005f068c *this,iptr param_1)
+void __thiscall ptrlist_node_set_next(PtrListNodeNextSetView *this,iptr param_1)
 
 {
-  this->field_4 = param_1;
+  this->next_node = param_1;
   return;
 }
 
 /* 005f06ad auto */
-void __thiscall FUN_005f06ad(C_005f06ad *this,iptr param_1)
+void __thiscall ptrlist_node_set_prev(PtrListNodePrevSetView *this,iptr param_1)
 
 {
-  this->field_8 = param_1;
+  this->prev_node = param_1;
   return;
 }
 
 /* 005f06ce auto */
-void __thiscall FUN_005f06ce(C_005f06ce *this,u32 param_1)
+void __thiscall ptrlist_node_set_data(PtrListNodeDataSetView *this,u32 param_1)
 
 {
-  this->field_0 = param_1;
+  this->node_data = param_1;
   return;
 }
 
 /* 005f06ee auto */
-C_005f0520 * __thiscall FUN_005f06ee(C_005f0520 *this)
+PtrListInitView * __thiscall ptrlist_impl_ctor(PtrListInitView *this)
 
 {
-  this->field_0 = 0;
-  this->field_4 = 0;
-  this->field_8 = 0;
+  this->head_node = 0;
+  this->tail_node = 0;
+  this->cur_node = 0;
   return this;
 }
 
 /* 005f0724 auto */
-void __thiscall FUN_005f0724(C_005f0590 *this)
+void __thiscall ptrlist_clear(PtrList *this)
 
 {
-  FUN_005f0e13(this);
+  ptrlist_clear_impl(this);
   return;
 }
 
 /* 005f0742 auto */
-uint __thiscall FUN_005f0742(C_005f0590 *this)
+uint __thiscall ptrlist_is_empty(PtrList *this)
 
 {
-  return (uint)(this->field_0 == 0);
+  return (uint)(this->head == 0);
 }
 
 /* 005f0770 auto */
-undefined4 __thiscall FUN_005f0770(C_005f0590 *this)
+undefined4 __thiscall ptrlist_first_impl(PtrList *this)
 
 {
   undefined4 uVar1;
   
-  if (this->field_0 == 0) {
+  if (this->head == 0) {
     uVar1 = 0;
   }
   else {
-    this->field_8 = this->field_0;
-    uVar1 = FUN_005f0e50((C_005f0e50 *)this->field_0);
+    this->iter_node = this->head;
+    uVar1 = ptrlist_node_data((PtrListNodeDataView *)this->head);
   }
   return uVar1;
 }
 
 /* 005f07b3 auto */
-undefined4 __thiscall FUN_005f07b3(C_005f05b0 *this)
+undefined4 __thiscall ptrlist_last_impl(PtrListLastView *this)
 
 {
   undefined4 uVar1;
   
-  if (this->field_4 == 0) {
+  if (this->tail_node == 0) {
     uVar1 = 0;
   }
   else {
-    this->field_8 = this->field_4;
-    uVar1 = FUN_005f0e50((C_005f0e50 *)this->field_4);
+    this->cur_node = this->tail_node;
+    uVar1 = ptrlist_node_data((PtrListNodeDataView *)this->tail_node);
   }
   return uVar1;
 }
@@ -374,33 +374,33 @@ undefined4 __thiscall FUN_005f07f9(C_005f07f9 *this)
 {
   undefined4 uVar1;
   
-  if (this->field_8 == 0) {
+  if (this->node == 0) {
     uVar1 = 0;
   }
   else {
-    uVar1 = FUN_005f0e50((C_005f0e50 *)this->field_8);
+    uVar1 = ptrlist_node_data((PtrListNodeDataView *)this->node);
   }
   return uVar1;
 }
 
 /* 005f0833 auto */
-undefined4 __thiscall FUN_005f0833(C_005f0590 *this)
+undefined4 __thiscall ptrlist_next_impl(PtrList *this)
 
 {
   uptr uVar1;
   undefined4 uVar2;
   
-  if (this->field_8 == 0) {
+  if (this->iter_node == 0) {
     uVar2 = 0;
   }
   else {
-    uVar1 = FUN_005f0e70((C_005f0e70 *)this->field_8);
-    this->field_8 = uVar1;
-    if (this->field_8 == 0) {
+    uVar1 = ptrlist_node_next((PtrListNodeNextView *)this->iter_node);
+    this->iter_node = uVar1;
+    if (this->iter_node == 0) {
       uVar2 = 0;
     }
     else {
-      uVar2 = FUN_005f0e50((C_005f0e50 *)this->field_8);
+      uVar2 = ptrlist_node_data((PtrListNodeDataView *)this->iter_node);
     }
   }
   return uVar2;
@@ -413,57 +413,57 @@ undefined4 __thiscall FUN_005f0897(C_005f0897 *this)
   uptr uVar1;
   undefined4 uVar2;
   
-  if (this->field_8 == 0) {
+  if (this->cur_node == 0) {
     uVar2 = 0;
   }
   else {
-    uVar1 = FUN_005f0e90((C_005f0e90 *)this->field_8);
-    this->field_8 = uVar1;
-    if (this->field_8 == 0) {
+    uVar1 = ptrlist_node_prev((PtrListNodePrevView *)this->cur_node);
+    this->cur_node = uVar1;
+    if (this->cur_node == 0) {
       uVar2 = 0;
     }
     else {
-      uVar2 = FUN_005f0e50((C_005f0e50 *)this->field_8);
+      uVar2 = ptrlist_node_data((PtrListNodeDataView *)this->cur_node);
     }
   }
   return uVar2;
 }
 
 /* 005f08fb auto */
-#define local_1c (*(C_005f06ad * *)(frame_ + FRAME_OFF(4)))
+#define local_1c (*(PtrListNodePrevSetView * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall FUN_005f08fb(C_005f0590 *this,undefined4 param_1)
+void __thiscall ptrlist_append_impl(PtrList *this,undefined4 param_1)
 
 {
-  C_005f0640 *this_00;
+  PtrListNode *this_00;
   int iVar1;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   this_00 = operator_new(0xc);
   local_8 = 0;
-  if (this_00 == (C_005f0640 *)0x0) {
-    local_1c = (C_005f06ad *)0x0;
+  if (this_00 == (PtrListNode *)0x0) {
+    local_1c = (PtrListNodePrevSetView *)0x0;
   }
   else {
-    local_1c = (C_005f06ad *)FUN_005f0640(this_00);
+    local_1c = (PtrListNodePrevSetView *)ptrlist_node_ctor(this_00);
   }
   local_8 = 0xffffffff;
-  iVar1 = FUN_005f0742(this);
+  iVar1 = ptrlist_is_empty(this);
   if (iVar1 == 0) {
-    FUN_005f06ce((C_005f06ce *)local_1c,param_1);
-    FUN_005f06ad(local_1c,this->field_4);
-    FUN_005f068c((C_005f068c *)this->field_4,(iptr)local_1c);
-    this->field_4 = (uptr)local_1c;
-    this->field_8 = this->field_4;
+    ptrlist_node_set_data((PtrListNodeDataSetView *)local_1c,param_1);
+    ptrlist_node_set_prev(local_1c,this->tail);
+    ptrlist_node_set_next((PtrListNodeNextSetView *)this->tail,(iptr)local_1c);
+    this->tail = (uptr)local_1c;
+    this->iter_node = this->tail;
   }
   else {
-    this->field_0 = (uptr)local_1c;
-    this->field_4 = (uptr)local_1c;
-    this->field_8 = (uptr)local_1c;
-    FUN_005f06ce((C_005f06ce *)local_1c,param_1);
+    this->head = (uptr)local_1c;
+    this->tail = (uptr)local_1c;
+    this->iter_node = (uptr)local_1c;
+    ptrlist_node_set_data((PtrListNodeDataSetView *)local_1c,param_1);
   }
   return;
 }
@@ -473,62 +473,62 @@ void __thiscall FUN_005f08fb(C_005f0590 *this,undefined4 param_1)
 #undef local_8
 
 /* 005f0a04 auto */
-#define local_2c (*(C_005f06ad * *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(C_005f068c * *)(frame_ + FRAME_OFF(12)))
+#define local_2c (*(PtrListNodePrevSetView * *)(frame_ + FRAME_OFF(4)))
+#define local_24 (*(PtrListNodeNextSetView * *)(frame_ + FRAME_OFF(12)))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __thiscall FUN_005f0a04(C_005f0590 *this,undefined4 param_1)
+void __thiscall FUN_005f0a04(PtrList *this,undefined4 param_1)
 
 {
   int iVar1;
-  C_005f0640 *pCVar2;
-  C_005f068c *this_00;
+  PtrListNode *pCVar2;
+  PtrListNodeNextSetView *this_00;
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  iVar1 = FUN_005f0742(this);
+  iVar1 = ptrlist_is_empty(this);
   if (iVar1 == 0) {
-    if (this->field_8 == 0) {
-      FUN_005f08fb(this,param_1);
+    if (this->iter_node == 0) {
+      ptrlist_append_impl(this,param_1);
     }
-    else if (this->field_8 == this->field_0) {
+    else if (this->iter_node == this->head) {
       pCVar2 = operator_new(0xc);
       local_8 = 0;
-      if (pCVar2 == (C_005f0640 *)0x0) {
-        local_24 = (C_005f068c *)0x0;
+      if (pCVar2 == (PtrListNode *)0x0) {
+        local_24 = (PtrListNodeNextSetView *)0x0;
       }
       else {
-        local_24 = (C_005f068c *)FUN_005f0640(pCVar2);
+        local_24 = (PtrListNodeNextSetView *)ptrlist_node_ctor(pCVar2);
       }
       local_8 = 0xffffffff;
-      FUN_005f06ad((C_005f06ad *)this->field_8,(iptr)local_24);
-      FUN_005f06ce((C_005f06ce *)local_24,param_1);
-      FUN_005f068c(local_24,this->field_8);
-      this->field_8 = (uptr)local_24;
-      this->field_0 = this->field_8;
+      ptrlist_node_set_prev((PtrListNodePrevSetView *)this->iter_node,(iptr)local_24);
+      ptrlist_node_set_data((PtrListNodeDataSetView *)local_24,param_1);
+      ptrlist_node_set_next(local_24,this->iter_node);
+      this->iter_node = (uptr)local_24;
+      this->head = this->iter_node;
     }
     else {
       pCVar2 = operator_new(0xc);
       local_8 = 1;
-      if (pCVar2 == (C_005f0640 *)0x0) {
-        local_2c = (C_005f06ad *)0x0;
+      if (pCVar2 == (PtrListNode *)0x0) {
+        local_2c = (PtrListNodePrevSetView *)0x0;
       }
       else {
-        local_2c = (C_005f06ad *)FUN_005f0640(pCVar2);
+        local_2c = (PtrListNodePrevSetView *)ptrlist_node_ctor(pCVar2);
       }
       local_8 = 0xffffffff;
-      this_00 = (C_005f068c *)FUN_005f0e90((C_005f0e90 *)this->field_8);
-      FUN_005f068c(this_00,(iptr)local_2c);
-      FUN_005f06ad((C_005f06ad *)this->field_8,(iptr)local_2c);
-      FUN_005f06ce((C_005f06ce *)local_2c,param_1);
-      FUN_005f06ad(local_2c,(iptr)this_00);
-      FUN_005f068c((C_005f068c *)local_2c,this->field_8);
-      this->field_8 = (uptr)local_2c;
+      this_00 = (PtrListNodeNextSetView *)ptrlist_node_prev((PtrListNodePrevView *)this->iter_node);
+      ptrlist_node_set_next(this_00,(iptr)local_2c);
+      ptrlist_node_set_prev((PtrListNodePrevSetView *)this->iter_node,(iptr)local_2c);
+      ptrlist_node_set_data((PtrListNodeDataSetView *)local_2c,param_1);
+      ptrlist_node_set_prev(local_2c,(iptr)this_00);
+      ptrlist_node_set_next((PtrListNodeNextSetView *)local_2c,this->iter_node);
+      this->iter_node = (uptr)local_2c;
     }
   }
   else {
-    FUN_005f08fb(this,param_1);
+    ptrlist_append_impl(this,param_1);
   }
   return;
 }
@@ -540,18 +540,18 @@ void __thiscall FUN_005f0a04(C_005f0590 *this,undefined4 param_1)
 
 /* 005f0bce auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __thiscall FUN_005f0bce(C_005f0590 *this,int param_1)
+int __thiscall FUN_005f0bce(PtrList *this,int param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = FUN_005f0770(this);
+  local_8 = ptrlist_first_impl(this);
   while( true ) {
     if (local_8 == 0) {
       return 0;
     }
     if (local_8 == param_1) break;
-    local_8 = FUN_005f0833(this);
+    local_8 = ptrlist_next_impl(this);
   }
   return local_8;
 }
@@ -560,16 +560,16 @@ int __thiscall FUN_005f0bce(C_005f0590 *this,int param_1)
 /* 005f0c21 auto */
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-int __thiscall FUN_005f0c21(C_005f0590 *this)
+int __thiscall FUN_005f0c21(PtrList *this)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
-  local_8 = FUN_005f0770(this);
+  local_8 = ptrlist_first_impl(this);
   while (local_8 != 0) {
     local_c = local_c + 1;
-    local_8 = FUN_005f0833(this);
+    local_8 = ptrlist_next_impl(this);
   }
   return local_c;
 }
@@ -577,82 +577,82 @@ int __thiscall FUN_005f0c21(C_005f0590 *this)
 #undef local_8
 
 /* 005f0c69 auto */
-void __thiscall FUN_005f0c69(C_005f0590 *this)
+void __thiscall ptrlist_remove_current(PtrList *this)
 
 {
   int iVar1;
-  C_005f068c *this_00;
-  C_005f06ad *this_01;
+  PtrListNodeNextSetView *this_00;
+  PtrListNodePrevSetView *this_01;
   
-  if ((this->field_8 != 0) && (iVar1 = FUN_005f0742(this), iVar1 == 0)) {
-    this_00 = (C_005f068c *)FUN_005f0e90((C_005f0e90 *)this->field_8);
-    this_01 = (C_005f06ad *)FUN_005f0e70((C_005f0e70 *)this->field_8);
-    if ((this_00 == (C_005f068c *)0x0) && (this_01 == (C_005f06ad *)0x0)) {
-      if ((void *)this->field_8 != (void *)0x0) {
-        FUN_005f0eb0((void *)this->field_8,1);
+  if ((this->iter_node != 0) && (iVar1 = ptrlist_is_empty(this), iVar1 == 0)) {
+    this_00 = (PtrListNodeNextSetView *)ptrlist_node_prev((PtrListNodePrevView *)this->iter_node);
+    this_01 = (PtrListNodePrevSetView *)ptrlist_node_next((PtrListNodeNextView *)this->iter_node);
+    if ((this_00 == (PtrListNodeNextSetView *)0x0) && (this_01 == (PtrListNodePrevSetView *)0x0)) {
+      if ((void *)this->iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)this->iter_node,1);
       }
-      this->field_0 = 0;
-      this->field_4 = 0;
-      this->field_8 = 0;
+      this->head = 0;
+      this->tail = 0;
+      this->iter_node = 0;
     }
-    else if (this_00 == (C_005f068c *)0x0) {
-      this->field_0 = (uptr)this_01;
-      FUN_005f06ad((C_005f06ad *)this->field_0,0);
-      if ((void *)this->field_8 != (void *)0x0) {
-        FUN_005f0eb0((void *)this->field_8,1);
+    else if (this_00 == (PtrListNodeNextSetView *)0x0) {
+      this->head = (uptr)this_01;
+      ptrlist_node_set_prev((PtrListNodePrevSetView *)this->head,0);
+      if ((void *)this->iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)this->iter_node,1);
       }
-      this->field_8 = this->field_0;
+      this->iter_node = this->head;
     }
-    else if (this_01 == (C_005f06ad *)0x0) {
-      this->field_4 = (uptr)this_00;
-      FUN_005f068c((C_005f068c *)this->field_4,0);
-      if ((void *)this->field_8 != (void *)0x0) {
-        FUN_005f0eb0((void *)this->field_8,1);
+    else if (this_01 == (PtrListNodePrevSetView *)0x0) {
+      this->tail = (uptr)this_00;
+      ptrlist_node_set_next((PtrListNodeNextSetView *)this->tail,0);
+      if ((void *)this->iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)this->iter_node,1);
       }
-      this->field_8 = this->field_4;
+      this->iter_node = this->tail;
     }
     else {
-      FUN_005f068c(this_00,(iptr)this_01);
-      FUN_005f06ad(this_01,(iptr)this_00);
-      if ((void *)this->field_8 != (void *)0x0) {
-        FUN_005f0eb0((void *)this->field_8,1);
+      ptrlist_node_set_next(this_00,(iptr)this_01);
+      ptrlist_node_set_prev(this_01,(iptr)this_00);
+      if ((void *)this->iter_node != (void *)0x0) {
+        ptrlist_node_delete((void *)this->iter_node,1);
       }
-      this->field_8 = (uptr)this_01;
+      this->iter_node = (uptr)this_01;
     }
   }
   return;
 }
 
 /* 005f0e13 auto */
-void __thiscall FUN_005f0e13(C_005f0590 *this)
+void __thiscall ptrlist_clear_impl(PtrList *this)
 
 {
-  FUN_005f0770(this);
-  while (this->field_8 != 0) {
-    FUN_005f0c69(this);
+  ptrlist_first_impl(this);
+  while (this->iter_node != 0) {
+    ptrlist_remove_current(this);
   }
   return;
 }
 
 /* 005f0e50 auto */
-u32 __thiscall FUN_005f0e50(C_005f0e50 *this)
+u32 __thiscall ptrlist_node_data(PtrListNodeDataView *this)
 
 {
-  return this->field_0;
+  return this->node_data;
 }
 
 /* 005f0e70 auto */
-u32 __thiscall FUN_005f0e70(C_005f0e70 *this)
+u32 __thiscall ptrlist_node_next(PtrListNodeNextView *this)
 
 {
-  return this->field_4;
+  return this->next_node;
 }
 
 /* 005f0e90 auto */
-u32 __thiscall FUN_005f0e90(C_005f0e90 *this)
+u32 __thiscall ptrlist_node_prev(PtrListNodePrevView *this)
 
 {
-  return this->field_8;
+  return this->prev_node;
 }
 
 /* 005f0eb0 auto */
@@ -661,10 +661,10 @@ u32 __thiscall FUN_005f0e90(C_005f0e90 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void * __thiscall FUN_005f0eb0(void *this,uint param_1)
+void * __thiscall ptrlist_node_delete(void *this,uint param_1)
 
 {
-  FUN_005f0676(this);
+  ptrlist_node_dtor(this);
   if ((param_1 & 1) != 0) {
     operator_delete(this);
   }
@@ -672,23 +672,23 @@ void * __thiscall FUN_005f0eb0(void *this,uint param_1)
 }
 
 /* 005f0ef0 auto */
-#define DAT_00639dc8 (*(undefined4 *)((u8 *)&g.d_00639dc8))
+#define ddctrl_current_target (*(undefined4 *)((u8 *)&g.d_00639dc8))
 undefined4 __cdecl FUN_005f0ef0(void)
 
 {
-  return DAT_00639dc8;
+  return ddctrl_current_target;
 }
-#undef DAT_00639dc8
+#undef ddctrl_current_target
 
 /* 005f0f05 auto */
-#define DAT_00639dc8 (*(iptr *)((u8 *)&g.d_00639dc8))
-void __cdecl FUN_005f0f05(iptr param_1)
+#define ddctrl_current_target (*(iptr *)((u8 *)&g.d_00639dc8))
+void __cdecl ddctrl_set_msg_target(iptr param_1)
 
 {
-  DAT_00639dc8 = param_1;
+  ddctrl_current_target = param_1;
   return;
 }
-#undef DAT_00639dc8
+#undef ddctrl_current_target
 
 /* 005f0f1d auto */
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
@@ -700,17 +700,17 @@ C_005f0f1d * __thiscall FUN_005f0f1d(C_005f0f1d *this)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005f0520((C_005f0520 *)this->pad_10);
+  ptrlist_ctor((PtrListInitView *)this->pad_10);
   *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
-  this->field_8 = 0;
-  this->field_c = 0;
-  this->field_24 = 0;
+  this->parent_wnd = 0;
+  this->parent_control = 0;
+  this->on_mousemove = 0;
   this->field_20 = 0;
-  this->field_24 = 0;
-  this->field_28 = 0;
-  this->field_2c = 0;
-  this->field_34 = '\0';
-  this->field_1c = 0;
+  this->on_mousemove = 0;
+  this->on_lbuttonup = 0;
+  this->on_rbuttonup = 0;
+  this->is_active = '\0';
+  this->hover_child = 0;
   return this;
 }
 #undef local_10
@@ -727,17 +727,17 @@ C_005f0fe9 * __thiscall FUN_005f0fe9(C_005f0fe9 *this,u32 param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005f0520((C_005f0520 *)this->pad_10);
+  ptrlist_ctor((PtrListInitView *)this->pad_10);
   *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
-  this->field_8 = param_1;
-  this->field_c = 0;
-  this->field_24 = 0;
+  this->parent_wnd = param_1;
+  this->parent_control = 0;
+  this->on_mousemove = 0;
   this->field_20 = 0;
-  this->field_24 = 0;
-  this->field_28 = 0;
-  this->field_2c = 0;
-  this->field_34 = '\0';
-  this->field_1c = 0;
+  this->on_mousemove = 0;
+  this->on_lbuttonup = 0;
+  this->on_rbuttonup = 0;
+  this->is_active = '\0';
+  this->hover_child = 0;
   return this;
 }
 #undef local_10
@@ -754,17 +754,17 @@ C_005f10b6 * __thiscall FUN_005f10b6(C_005f10b6 *this,u32 param_1)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005f0520((C_005f0520 *)this->pad_10);
+  ptrlist_ctor((PtrListInitView *)this->pad_10);
   *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
-  this->field_8 = 0;
-  this->field_c = param_1;
-  this->field_24 = 0;
+  this->parent_wnd = 0;
+  this->parent_control = param_1;
+  this->on_mousemove = 0;
   this->field_20 = 0;
-  this->field_24 = 0;
-  this->field_28 = 0;
-  this->field_2c = 0;
-  this->field_34 = '\0';
-  this->field_1c = 0;
+  this->on_mousemove = 0;
+  this->on_lbuttonup = 0;
+  this->on_rbuttonup = 0;
+  this->is_active = '\0';
+  this->hover_child = 0;
   return this;
 }
 #undef local_10
@@ -782,9 +782,9 @@ void __thiscall FUN_005f1183(void *this)
   
   *(undefined ***)this = &PTR_FUN_0061d720;
   local_8 = 0;
-  FUN_005f195a(this);
+  ddctrl_remove_all_children(this);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005f11d2 */ { FUN_005f04c0(*(int *)((iptr)&this) + 0x10); }
+  /* inlined unwind funclet FUN_005f11d2 */ { ptrlist_dtor(*(int *)((iptr)&this) + 0x10); }
   return;
 }
 #undef uStack_10
@@ -809,83 +809,83 @@ void __thiscall FUN_005f11f6(C_005f11f6 *this,u32 param_1)
 void __thiscall FUN_005f1221(C_005f1221 *this,u32 param_1)
 
 {
-  this->field_c = param_1;
+  this->is_enabled = param_1;
   this->field_8 = 0;
   return;
 }
 
 /* 005f124c auto */
-void __thiscall FUN_005f124c(C_005f124c *this,u32 param_1,uptr *param_2)
+void __thiscall FUN_005f124c(DDControlParentView *this,u32 param_1,uptr *param_2)
 
 {
   uptr uVar1;
   
-  this->field_4 = param_1;
+  this->owner = param_1;
   this[3].field_8 = *param_2;
   this[3].field_c = param_2[1];
   *(uptr *)this[4].pad_0 = param_2[2];
   this[4].field_4 = param_2[3];
-  uVar1 = FUN_005f1514(this);
-  this->field_8 = uVar1;
-  if ((this->field_8 == 0) && (this->field_c == 0)) {
+  uVar1 = ddctrl_get_parent_window(this);
+  this->parent_wnd = uVar1;
+  if ((this->parent_wnd == 0) && (this->parent_control == 0)) {
     __assert(s_pParentWin____pParentControl_00639de8,s_D__Ss_Smeds32_ddcntrl_cpp_00639dcc,0x72);
   }
-  if (this->field_c == 0) {
-    if (this->field_8 != 0) {
-      FUN_005f0266((void *)this->field_8,(iptr)this);
+  if (this->parent_control == 0) {
+    if (this->parent_wnd != 0) {
+      ddwin_add_control((void *)this->parent_wnd,(iptr)this);
     }
   }
   else {
-    FUN_005f1928((void *)this->field_c,(iptr)this);
+    ddctrl_add_child((void *)this->parent_control,(iptr)this);
   }
   return;
 }
 
 /* 005f130f auto */
-undefined4 __thiscall FUN_005f130f(C_005f130f *this,int param_1,int param_2,int param_3)
+undefined4 __thiscall ddctrl_dispatch_msg(DDControl *this,int param_1,int param_2,int param_3)
 
 {
   char cVar1;
   undefined4 uVar2;
   
-  cVar1 = FUN_005f1a40(this,param_1,param_2,param_3);
+  cVar1 = ddctrl_dispatch_to_children(this,param_1,param_2,param_3);
   if (cVar1 == '\0') {
-    FUN_005f0f05((iptr)this);
-    if ((param_1 == 0x100) && (this->field_34 != '\0')) {
-      (*((code **)(this->field_0))[6])(param_2);
+    ddctrl_set_msg_target((iptr)this);
+    if ((param_1 == 0x100) && (this->is_active != '\0')) {
+      (*((code **)(this->vtable))[6])(param_2);
       uVar2 = 1;
     }
-    else if ((param_1 == 0x102) && (this->field_34 != '\0')) {
-      (*((code **)(this->field_0))[7])(param_2);
+    else if ((param_1 == 0x102) && (this->is_active != '\0')) {
+      (*((code **)(this->vtable))[7])(param_2);
       uVar2 = 1;
     }
     else if (param_1 == 0xfff0) {
-      (*((code **)(this->field_0))[9])(param_2,param_3);
+      (*((code **)(this->vtable))[9])(param_2,param_3);
       uVar2 = 1;
     }
-    else if ((((param_2 < (int)this->field_38) || (param_3 < (int)this->field_3c)) ||
-             ((int)this->field_40 < param_2)) || ((int)this->field_44 < param_3)) {
+    else if ((((param_2 < (int)this->rect_left) || (param_3 < (int)this->rect_top)) ||
+             ((int)this->rect_right < param_2)) || ((int)this->rect_bottom < param_3)) {
       uVar2 = 0;
     }
     else {
       switch(param_1) {
       case 0x200:
-        (*((code **)(this->field_0))[4])(param_2,param_3);
+        (*((code **)(this->vtable))[4])(param_2,param_3);
         break;
       case 0x201:
-        (**(code **)this->field_0)(param_2,param_3);
+        (**(code **)this->vtable)(param_2,param_3);
         break;
       case 0x202:
-        (*((code **)(this->field_0))[2])(param_2,param_3);
+        (*((code **)(this->vtable))[2])(param_2,param_3);
         break;
       case 0x203:
-        (*((code **)(this->field_0))[5])(param_2,param_3);
+        (*((code **)(this->vtable))[5])(param_2,param_3);
         break;
       case 0x204:
-        (*((code **)(this->field_0))[1])(param_2,param_3);
+        (*((code **)(this->vtable))[1])(param_2,param_3);
         break;
       case 0x205:
-        (*((code **)(this->field_0))[3])(param_2,param_3);
+        (*((code **)(this->vtable))[3])(param_2,param_3);
       }
       uVar2 = 1;
     }
@@ -897,49 +897,49 @@ undefined4 __thiscall FUN_005f130f(C_005f130f *this,int param_1,int param_2,int 
 }
 
 /* 005f1514 auto */
-uptr __thiscall FUN_005f1514(C_005f124c *this)
+uptr __thiscall ddctrl_get_parent_window(DDControlParentView *this)
 
 {
   uptr uVar1;
   uptr uVar2;
   
-  if (this->field_8 == 0) {
-    if (this->field_c == 0) {
+  if (this->parent_wnd == 0) {
+    if (this->parent_control == 0) {
       uVar2 = 0;
     }
     else {
-      uVar1 = FUN_005f1514((C_005f124c *)this->field_c);
-      this->field_8 = uVar1;
-      uVar2 = this->field_8;
+      uVar1 = ddctrl_get_parent_window((DDControlParentView *)this->parent_control);
+      this->parent_wnd = uVar1;
+      uVar2 = this->parent_wnd;
     }
   }
   else {
-    uVar2 = this->field_8;
+    uVar2 = this->parent_wnd;
   }
   return uVar2;
 }
 
 /* 005f156d auto */
-void __thiscall FUN_005f156d(C_005f124c *this)
+void __thiscall FUN_005f156d(DDControlParentView *this)
 
 {
   uptr uVar1;
   
-  if (this->field_8 == 0) {
-    uVar1 = FUN_005f1514(this);
-    this->field_8 = uVar1;
+  if (this->parent_wnd == 0) {
+    uVar1 = ddctrl_get_parent_window(this);
+    this->parent_wnd = uVar1;
   }
-  FUN_005f1b50((C_005f1b50 *)this->field_8);
+  FUN_005f1b50((C_005f1b50 *)this->parent_wnd);
   return;
 }
 
 /* 005f15a9 auto */
-void __thiscall FUN_005f15a9(C_005f124c *this,undefined4 param_1)
+void __thiscall FUN_005f15a9(DDControlParentView *this,undefined4 param_1)
 
 {
   int iVar1;
   
-  iVar1 = FUN_005f1514(this);
+  iVar1 = ddctrl_get_parent_window(this);
   if (iVar1 == 0) {
     __assert(s_GetParentGameWin___00639e24,s_D__Ss_Smeds32_ddcntrl_cpp_00639e08,0xd8);
   }
@@ -947,37 +947,37 @@ void __thiscall FUN_005f15a9(C_005f124c *this,undefined4 param_1)
 }
 
 /* 005f15f2 auto */
-void __thiscall FUN_005f15f2(C_005f15f2 *this)
+void __thiscall ddctrl_paint_tree(DDControlPaintView *this)
 
 {
-  (*((code **)(this->field_0))[10])(this + 0xe);
-  FUN_005f19ef(this);
+  (*((code **)(this->vtable))[10])(this + 0xe);
+  ddctrl_paint_children(this);
   return;
 }
 
 /* 005f1622 auto */
-void __thiscall FUN_005f1622(C_005f1622 *this)
+void __thiscall ddctrl_activate(DDControlActivateView *this)
 
 {
-  if (this->field_34 == '\0') {
-    if (this->field_c == 0) {
-      FUN_005f0342(this->field_8);
+  if (this->is_active == '\0') {
+    if (this->parent_control == 0) {
+      ddwin_deactivate_controls(this->owner_ddwin);
     }
     else {
-      FUN_005f19a6(this->field_c);
+      ddctrl_deactivate_children(this->parent_control);
     }
-    this->field_34 = '\x01';
-    (*((code **)(this->field_0))[8])(1);
+    this->is_active = '\x01';
+    (*((code **)(this->vtable))[8])(1);
   }
   return;
 }
 
 /* 005f1683 auto */
-void __thiscall FUN_005f1683(void *this)
+void __thiscall ddctrl_deactivate(void *this)
 
 {
   if (*(char *)((int)this + 0x34) != '\0') {
-    FUN_005f19a6(this);
+    ddctrl_deactivate_children(this);
     *(undefined1 *)((int)this + 0x34) = 0;
     (**(code **)(*(int *)this + 0x20))(0);
   }
@@ -1029,16 +1029,16 @@ void __thiscall FUN_005f1769(C_005f1769 *this)
 
 {
   if (this->field_20 != 0) {
-    (*(code *)this->field_20)(this->field_4);
+    (*(code *)this->field_20)(this->control_id);
   }
   return;
 }
 
 /* 005f179c auto */
-void __thiscall FUN_005f179c(C_005f1622 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall FUN_005f179c(DDControlActivateView *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005f1622(this);
+  ddctrl_activate(this);
   return;
 }
 
@@ -1053,8 +1053,8 @@ void __thiscall FUN_005f17bc(void *this,undefined4 param_1,undefined4 param_2)
 void __thiscall FUN_005f17d4(C_005f17d4 *this,undefined4 param_1,undefined4 param_2)
 
 {
-  if (this->field_28 != 0) {
-    (*(code *)this->field_28)(this->field_4,param_1,param_2);
+  if (this->on_lbutton_up != 0) {
+    (*(code *)this->on_lbutton_up)(this->control_id,param_1,param_2);
   }
   return;
 }
@@ -1063,8 +1063,8 @@ void __thiscall FUN_005f17d4(C_005f17d4 *this,undefined4 param_1,undefined4 para
 void __thiscall FUN_005f1811(C_005f1811 *this,undefined4 param_1,undefined4 param_2)
 
 {
-  if (this->field_2c != 0) {
-    (*(code *)this->field_2c)(this->field_4,param_1,param_2);
+  if (this->on_rbutton_up != 0) {
+    (*(code *)this->on_rbutton_up)(this->control_id,param_1,param_2);
   }
   return;
 }
@@ -1073,8 +1073,8 @@ void __thiscall FUN_005f1811(C_005f1811 *this,undefined4 param_1,undefined4 para
 void __thiscall FUN_005f184e(C_005f184e *this,undefined4 param_1,undefined4 param_2)
 
 {
-  if (this->field_24 != 0) {
-    (*(code *)this->field_24)(this->field_4,param_1,param_2);
+  if (this->on_mouse_move != 0) {
+    (*(code *)this->on_mouse_move)(this->control_id,param_1,param_2);
   }
   return;
 }
@@ -1083,8 +1083,8 @@ void __thiscall FUN_005f184e(C_005f184e *this,undefined4 param_1,undefined4 para
 void __thiscall FUN_005f188b(C_005f188b *this,undefined4 param_1,undefined4 param_2)
 
 {
-  if (this->field_30 != 0) {
-    (*(code *)this->field_30)(this->field_4,param_1,param_2);
+  if (this->on_dblclick != 0) {
+    (*(code *)this->on_dblclick)(this->control_id,param_1,param_2);
   }
   return;
 }
@@ -1118,25 +1118,25 @@ void __thiscall FUN_005f1910(void *this,undefined4 param_1)
 }
 
 /* 005f1928 auto */
-void __thiscall FUN_005f1928(void *this,iptr param_1)
+void __thiscall ddctrl_add_child(void *this,iptr param_1)
 
 {
-  FUN_005f05b0((C_005f05b0 *)((int)this + 0x10));
-  FUN_005f05f0((C_005f0590 *)((int)this + 0x10),param_1);
+  ptrlist_last((PtrListLastView *)((int)this + 0x10));
+  ptrlist_append((PtrList *)((int)this + 0x10),param_1);
   return;
 }
 
 /* 005f195a auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f195a(void *this)
+void __thiscall ddctrl_remove_all_children(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0x10));
+  local_8 = ptrlist_first((PtrList *)((int)this + 0x10));
   while (local_8 != 0) {
-    FUN_005f0c69((C_005f0590 *)((int)this + 0x10));
-    local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0x10));
+    ptrlist_remove_current((PtrList *)((int)this + 0x10));
+    local_8 = ptrlist_first((PtrList *)((int)this + 0x10));
   }
   return;
 }
@@ -1144,64 +1144,64 @@ void __thiscall FUN_005f195a(void *this)
 
 /* 005f19a6 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f19a6(void *this)
+void __thiscall ddctrl_deactivate_children(void *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = FUN_005f0590((C_005f0590 *)((int)this + 0x10));
+  local_8 = ptrlist_first((PtrList *)((int)this + 0x10));
   while (local_8 != 0) {
-    FUN_005f1683(local_8);
-    local_8 = FUN_005f05d0((C_005f0590 *)((int)this + 0x10));
+    ddctrl_deactivate(local_8);
+    local_8 = ptrlist_next((PtrList *)((int)this + 0x10));
   }
   return;
 }
 #undef local_8
 
 /* 005f19ef auto */
-#define local_8 (*(C_005f15f2 * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005f19ef(C_005f15f2 *this)
+#define local_8 (*(DDControlPaintView * *)(frame_ + FRAME_OFF(0)))
+void __thiscall ddctrl_paint_children(DDControlPaintView *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (C_005f15f2 *)FUN_005f0590((C_005f0590 *)(this + 4));
-  while (local_8 != (C_005f15f2 *)0x0) {
-    FUN_005f15f2(local_8);
-    local_8 = (C_005f15f2 *)FUN_005f05d0((C_005f0590 *)(this + 4));
+  local_8 = (DDControlPaintView *)ptrlist_first((PtrList *)(this + 4));
+  while (local_8 != (DDControlPaintView *)0x0) {
+    ddctrl_paint_tree(local_8);
+    local_8 = (DDControlPaintView *)ptrlist_next((PtrList *)(this + 4));
   }
   return;
 }
 #undef local_8
 
 /* 005f1a40 auto */
-#define local_8 (*(C_005f130f * *)(frame_ + FRAME_OFF(0)))
-undefined1 __thiscall FUN_005f1a40(C_005f130f *this,int param_1,int param_2,int param_3)
+#define local_8 (*(DDControl * *)(frame_ + FRAME_OFF(0)))
+undefined1 __thiscall ddctrl_dispatch_to_children(DDControl *this,int param_1,int param_2,int param_3)
 
 {
   int *piVar1;
   int iVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((this->field_1c != 0) && (param_1 == 0x200)) {
-    piVar1 = (int *)FUN_005f0620((void *)this->field_1c);
+  if ((this->hover_child != 0) && (param_1 == 0x200)) {
+    piVar1 = (int *)ddctrl_get_rect((void *)this->hover_child);
     if ((param_2 < *piVar1) ||
        (((piVar1[2] < param_2 || (param_3 < piVar1[1])) || (piVar1[3] < param_3)))) {
-      FUN_005f130f((C_005f130f *)this->field_1c,0xfff0,param_2,param_3);
-      this->field_1c = 0;
+      ddctrl_dispatch_msg((DDControl *)this->hover_child,0xfff0,param_2,param_3);
+      this->hover_child = 0;
     }
   }
-  local_8 = (C_005f130f *)FUN_005f0590((C_005f0590 *)(this->pad_4 + 0xc));
+  local_8 = (DDControl *)ptrlist_first((PtrList *)(this->pad_4 + 0xc));
   while( true ) {
-    if (local_8 == (C_005f130f *)0x0) {
+    if (local_8 == (DDControl *)0x0) {
       return 0;
     }
-    iVar2 = FUN_005f130f(local_8,param_1,param_2,param_3);
+    iVar2 = ddctrl_dispatch_msg(local_8,param_1,param_2,param_3);
     if (iVar2 != 0) break;
-    local_8 = (C_005f130f *)FUN_005f05d0((C_005f0590 *)(this->pad_4 + 0xc));
+    local_8 = (DDControl *)ptrlist_next((PtrList *)(this->pad_4 + 0xc));
   }
   if (param_1 == 0x200) {
-    this->field_1c = (uptr)local_8;
+    this->hover_child = (uptr)local_8;
   }
   return 1;
 }

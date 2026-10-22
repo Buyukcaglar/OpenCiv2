@@ -67,11 +67,19 @@ message by message and clock event by clock event.
 
 ## Known limitations / next steps
 
-* **Names and types.**  Functions and globals are still named by address
-  (`FUN_0041ba52`, `DAT_0064f348`) and struct layouts (units, cities,
-  civilizations) are not applied; the hand-written files have descriptive
-  comments.  The names known from the binary's log strings (`Citywin`,
-  `Map_3`, `human_turn` …) and the SAV-file format are the starting point.
+* **Names and types.**  2,159 of about 4,450 game functions, 1,130 of about
+  2,480 globals, 268 of 355 classes and 810 class fields are named: 87% of
+  calls and 94% of global references in the generated code read by name.
+  Each name has its evidence in re/function_names.tsv, re/global_names.tsv,
+  re/type_names.tsv and re/field_names.tsv; re/notes.md collects the
+  structures found.  Names live in re/symbols.tsv (functions: func,
+  globals: var) and the maps above; tools/rename.py applies them to the
+  sources, tools/gen_c.py when regenerating.  Naming dossiers:
+  tools/name_batches.py, name_globals_batches.py, name_types_dossier.py,
+  name_fields_dossier.py; tools/apply_names.py takes proposals in.
+  Still to do: the rarely-called remainder (mostly small helpers), the
+  larger window subclasses whose fields overlap, and typing parameters
+  and locals (still int/undefined4 in many functions).
 * **Data is binary.**  `data/image/*.bin` are the original initialized data
   sections; converting them to C tables is mechanical but not done.
 * `tools/build_recon.py` still reads the original `civ2.exe` for import-slot

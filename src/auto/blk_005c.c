@@ -2,52 +2,52 @@
 #include "auto_common.h"
 
 /* 005c0034 auto */
-void __thiscall FUN_005c0034(C_004083b0_48 *this)
+void __thiscall surface_reset_clip(DibSurface *this)
 
 {
-  SetRect((LPRECT)&this->field_14,this->field_24,this->field_28,this->field_2c,this->field_30);
+  SetRect((LPRECT)&this->clip_left,this->bounds_rect,this->bounds_top,this->bounds_right,this->bounds_bottom);
   return;
 }
 
 /* 005c0073 auto */
-void __thiscall FUN_005c0073(C_004083b0_48 *this,iptr param_1)
+void __thiscall surface_set_clip(DibSurface *this,iptr param_1)
 
 {
-  SetRect((LPRECT)&this->field_14,*(int *)param_1,*(int *)(param_1 + 4),*(int *)(param_1 + 8),
+  SetRect((LPRECT)&this->clip_left,*(int *)param_1,*(int *)(param_1 + 4),*(int *)(param_1 + 8),
           *(int *)(param_1 + 0xc));
-  IntersectRect((LPRECT)&this->field_14,(RECT *)&this->field_14,(RECT *)&this->field_24);
+  IntersectRect((LPRECT)&this->clip_left,(RECT *)&this->clip_left,(RECT *)&this->bounds_rect);
   return;
 }
 
 /* 005c00ce auto */
-void __thiscall FUN_005c00ce(C_004083b0_48 *this,iptr param_1)
+void __thiscall surface_get_clip(DibSurface *this,iptr param_1)
 
 {
-  *(u32 *)param_1 = this->field_14;
-  *(u32 *)(param_1 + 4) = this->field_18;
-  *(u32 *)(param_1 + 8) = this->field_1c;
-  *(u32 *)(param_1 + 0xc) = this->field_20;
+  *(u32 *)param_1 = this->clip_left;
+  *(u32 *)(param_1 + 4) = this->clip_top;
+  *(u32 *)(param_1 + 8) = this->clip_right;
+  *(u32 *)(param_1 + 0xc) = this->clip_bottom;
   return;
 }
 
 /* 005c0105 auto */
-undefined4 __thiscall FUN_005c0105(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_alloc_dib_by_bpp(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
   
-  switch(this->field_44) {
+  switch(this->bytes_per_pixel) {
   case 1:
-    uVar1 = FUN_005bd696(this,param_1);
+    uVar1 = surface_alloc_dib8(this,param_1);
     break;
   case 2:
-    uVar1 = FUN_005c1b47(this,param_1);
+    uVar1 = surface_alloc_dib16(this,param_1);
     break;
   case 3:
-    uVar1 = FUN_005c1cf7(this,param_1);
+    uVar1 = surface_alloc_dib24(this,param_1);
     break;
   case 4:
-    uVar1 = FUN_005c1ea7(this,param_1);
+    uVar1 = surface_alloc_dib32(this,param_1);
     break;
   default:
     uVar1 = 0;
@@ -56,18 +56,18 @@ undefined4 __thiscall FUN_005c0105(C_004083b0_48 *this,iptr param_1)
 }
 
 /* 005c019d auto */
-undefined4 __thiscall FUN_005c019d(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_resize(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005bd696(this,param_1);
+  uVar1 = surface_alloc_dib8(this,param_1);
   return uVar1;
 }
 
 /* 005c01c1 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c01c1(C_004083b0_48 *this)
+void __thiscall surface_lock(DibSurface *this)
 
 {
   uptr uVar1;
@@ -75,25 +75,25 @@ void __thiscall FUN_005c01c1(C_004083b0_48 *this)
   int iVar3;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_34 == 0) {
-    uVar1 = FUN_005e3a81(this->field_40);
-    this->field_34 = uVar1;
-    if (this->field_34 != 0) {
-      pvVar2 = operator_new(this->field_8 << 2);
-      this->field_38 = (uptr)pvVar2;
-      iVar3 = FUN_005e395a(this->field_40);
+  if (this->bits == 0) {
+    uVar1 = dib_get_bits(this->dib);
+    this->bits = uVar1;
+    if (this->bits != 0) {
+      pvVar2 = operator_new(this->pixel_height << 2);
+      this->row_offsets = (uptr)pvVar2;
+      iVar3 = dib_is_top_down(this->dib);
       if (iVar3 == 0) {
-        *(u32 *)this->field_38 = (this->field_8 - 1) * this->field_c;
-        for (local_8 = 1; local_8 < (int)this->field_8; local_8 = local_8 + 1) {
-          *(u32 *)(this->field_38 + local_8 * 4) =
-               *(int *)((this->field_38 - 4) + local_8 * 4) - this->field_c;
+        *(u32 *)this->row_offsets = (this->pixel_height - 1) * this->stride;
+        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
+          *(u32 *)(this->row_offsets + local_8 * 4) =
+               *(int *)((this->row_offsets - 4) + local_8 * 4) - this->stride;
         }
       }
       else {
-        *(undefined4 *)this->field_38 = 0;
-        for (local_8 = 1; local_8 < (int)this->field_8; local_8 = local_8 + 1) {
-          *(u32 *)(this->field_38 + local_8 * 4) =
-               *(int *)((this->field_38 - 4) + local_8 * 4) + this->field_c;
+        *(undefined4 *)this->row_offsets = 0;
+        for (local_8 = 1; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
+          *(u32 *)(this->row_offsets + local_8 * 4) =
+               *(int *)((this->row_offsets - 4) + local_8 * 4) + this->stride;
         }
       }
     }
@@ -103,15 +103,15 @@ void __thiscall FUN_005c01c1(C_004083b0_48 *this)
 #undef local_8
 
 /* 005c02e0 auto */
-void __thiscall FUN_005c02e0(C_004083b0_48 *this)
+void __thiscall surface_unlock(DibSurface *this)
 
 {
   uptr uVar1;
   
-  if (this->field_34 != 0) {
-    uVar1 = FUN_005e3aa8(this->field_40);
-    this->field_34 = uVar1;
-    operator_delete((void *)this->field_38);
+  if (this->bits != 0) {
+    uVar1 = FUN_005e3aa8(this->dib);
+    this->bits = uVar1;
+    operator_delete((void *)this->row_offsets);
   }
   return;
 }
@@ -121,7 +121,7 @@ void __thiscall FUN_005c02e0(C_004083b0_48 *this)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall FUN_005c0333(C_004083b0_48 *this,iptr param_1,undefined4 param_2)
+void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,undefined4 param_2)
 
 {
   char cVar1;
@@ -132,20 +132,20 @@ void __thiscall FUN_005c0333(C_004083b0_48 *this,iptr param_1,undefined4 param_2
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x6370c4, ((u8 *)&g.d_006370c4)));
+    dbg_log(ADDR(0x6370c4, ((u8 *)&g.d_006370c4)));
     local_8 = 0;
-    FUN_005c01c1(this);
+    surface_lock(this);
   }
-  IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->field_14);
-  local_c = thunk_FUN_00407f90((iptr)&local_20);
-  if ((local_c != 0) && (local_10 = thunk_FUN_00407fc0((iptr)&local_20), local_10 != 0)) {
-    uVar2 = thunk_FUN_0043c560(this);
-    iVar3 = FUN_005c55f0(this);
-    iVar4 = FUN_005e395a(iVar3);
-    iVar5 = FUN_005c55d0(this);
-    FUN_005e4e60(this->field_34,param_2,local_20.left,local_20.top,local_c,local_10,
+  IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->clip_left);
+  local_c = thunk_rect_width((iptr)&local_20);
+  if ((local_c != 0) && (local_10 = thunk_rect_height((iptr)&local_20), local_10 != 0)) {
+    uVar2 = thunk_surface_height(this);
+    iVar3 = surface_get_dib(this);
+    iVar4 = dib_is_top_down(iVar3);
+    iVar5 = surface_get_pitch(this);
+    dib_fill_rect8(this->bits,param_2,local_20.left,local_20.top,local_c,local_10,
                  ((-(uint)(iVar4 == 0) & 0xfffffffe) + 1) * iVar5,uVar2);
   }
   return;
@@ -156,19 +156,19 @@ void __thiscall FUN_005c0333(C_004083b0_48 *this,iptr param_1,undefined4 param_2
 #undef local_8
 
 /* 005c041f auto */
-void __thiscall FUN_005c041f(C_004083b0_48 *this,undefined4 param_1)
+void __thiscall surface_fill(DibSurface *this,undefined4 param_1)
 
 {
-  FUN_005c0333(this,(iptr)&this->field_14,param_1);
+  surface_fill_rect(this,(iptr)&this->clip_left,param_1);
   return;
 }
 
 /* 005c044a auto */
 void __thiscall
-FUN_005c044a(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2)
+surface_replace_color_clip(DibSurface *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005c0479(this,(iptr)&this->field_14,param_1,param_2);
+  surface_replace_color(this,(iptr)&this->clip_left,param_1,param_2);
   return;
 }
 
@@ -180,7 +180,7 @@ FUN_005c044a(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2)
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 void __thiscall
-FUN_005c0479(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+surface_replace_color(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3)
 
 {
   char cVar1;
@@ -190,22 +190,22 @@ FUN_005c0479(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 para
   undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x6370ec, ((u8 *)&g.d_006370ec)));
+    dbg_log(ADDR(0x6370ec, ((u8 *)&g.d_006370ec)));
     local_8 = 0;
-    FUN_005c01c1(this);
+    surface_lock(this);
   }
-  IntersectRect(&local_24,(RECT *)param_1,(RECT *)&this->field_14);
-  local_c = thunk_FUN_00407f90((iptr)&local_24);
-  local_28 = (char *)FUN_005c19d3(this,local_24.left,local_24.top);
+  IntersectRect(&local_24,(RECT *)param_1,(RECT *)&this->clip_left);
+  local_c = thunk_rect_width((iptr)&local_24);
+  local_28 = (char *)surface_pixel_ptr(this,local_24.left,local_24.top);
   local_14 = 0;
   while( true ) {
-    iVar2 = thunk_FUN_00407fc0((iptr)&local_24);
+    iVar2 = thunk_rect_height((iptr)&local_24);
     if (iVar2 <= local_14) break;
     local_10 = 0;
     while( true ) {
-      iVar3 = thunk_FUN_00407f90((iptr)&local_24);
+      iVar3 = thunk_rect_width((iptr)&local_24);
       if (iVar3 <= local_10) break;
       if (*local_28 == (char)param_2) {
         *local_28 = (char)param_3;
@@ -213,12 +213,12 @@ FUN_005c0479(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 para
       local_28 = local_28 + 1;
       local_10 = local_10 + 1;
     }
-    iVar4 = FUN_005c5610(this,(iptr)local_28);
+    iVar4 = surface_next_row(this,(iptr)local_28);
     local_28 = (char *)(iVar4 - local_c);
     local_14 = local_14 + 1;
   }
   if (local_8 == 0) {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   return;
 }
@@ -236,7 +236,7 @@ FUN_005c0479(C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 para
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-FUN_005c0593(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
+surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 
 {
   iptr iVar1;
@@ -254,17 +254,17 @@ FUN_005c0593(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
   undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
-  bVar12 = this->field_34 == 0;
+  bVar12 = this->bits == 0;
   if (bVar12) {
-    FUN_005d225b(ADDR(0x637114, ((u8 *)&g.d_00637114)));
-    FUN_005c01c1(this);
+    dbg_log(ADDR(0x637114, ((u8 *)&g.d_00637114)));
+    surface_lock(this);
   }
   if (*(int *)(param_1 + 0x34) == 0) {
-    FUN_005d225b(ADDR(0x637144, ((u8 *)&g.d_00637144)));
-    FUN_005c01c1((C_004083b0_48 *)param_1);
+    dbg_log(ADDR(0x637144, ((u8 *)&g.d_00637144)));
+    surface_lock((DibSurface *)param_1);
     local_10 = 0;
   }
-  IntersectRect(&local_20,(RECT *)param_2,(RECT *)&this->field_14);
+  IntersectRect(&local_20,(RECT *)param_2,(RECT *)&this->clip_left);
   IntersectRect(&local_30,(RECT *)param_3,(RECT *)(param_1 + 0x14));
   local_8 = local_30.right - local_30.left;
   if (local_20.right - local_20.left <= local_30.right - local_30.left) {
@@ -275,30 +275,30 @@ FUN_005c0593(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
     local_c = local_20.bottom - local_20.top;
   }
   if ((local_8 != 0) && (local_c != 0)) {
-    iVar1 = FUN_005c55f0((C_004083b0_48 *)param_1);
-    iVar2 = FUN_005e395a(iVar1);
-    iVar3 = FUN_005c55d0((C_004083b0_48 *)param_1);
+    iVar1 = surface_get_dib((DibSurface *)param_1);
+    iVar2 = dib_is_top_down(iVar1);
+    iVar3 = surface_get_pitch((DibSurface *)param_1);
     iVar3 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar3;
-    iVar1 = FUN_005c55f0(this);
-    iVar2 = FUN_005e395a(iVar1);
-    iVar4 = FUN_005c55d0(this);
+    iVar1 = surface_get_dib(this);
+    iVar2 = dib_is_top_down(iVar1);
+    iVar4 = surface_get_pitch(this);
     iVar4 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar4;
-    uVar5 = thunk_FUN_0043c560((C_004083b0_48 *)param_1);
-    uVar6 = thunk_FUN_0043c560(this);
-    iVar7 = this->field_44 * local_8;
-    iVar8 = this->field_44 * local_30.left;
-    iVar9 = this->field_44 * local_20.left;
+    uVar5 = thunk_surface_height((DibSurface *)param_1);
+    uVar6 = thunk_surface_height(this);
+    iVar7 = this->bytes_per_pixel * local_8;
+    iVar8 = this->bytes_per_pixel * local_30.left;
+    iVar9 = this->bytes_per_pixel * local_20.left;
     iVar2 = local_c;
-    uVar10 = FUN_005c5640((C_004083b0_48 *)param_1);
-    uVar11 = FUN_005c5640(this);
-    FUN_005e4f9b(uVar11,uVar10,iVar9,local_20.top,iVar8,local_30.top,iVar7,iVar2,uVar6,uVar5,iVar4,
+    uVar10 = surface_get_bits((DibSurface *)param_1);
+    uVar11 = surface_get_bits(this);
+    gfx_copy_pixels(uVar11,uVar10,iVar9,local_20.top,iVar8,local_30.top,iVar7,iVar2,uVar6,uVar5,iVar4,
                  iVar3);
   }
   if (bVar12) {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   if (local_10 == 0) {
-    FUN_005c02e0((C_004083b0_48 *)param_1);
+    surface_unlock((DibSurface *)param_1);
   }
   return;
 }
@@ -316,7 +316,7 @@ FUN_005c0593(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
 #define local_c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
-FUN_005c0753(C_004083b0_48 *this,C_005c5660 *param_1,RECT *param_2,RECT *param_3)
+FUN_005c0753(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *param_3)
 
 {
   int iVar1;
@@ -335,15 +335,15 @@ FUN_005c0753(C_004083b0_48 *this,C_005c5660 *param_1,RECT *param_2,RECT *param_3
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
-  bVar12 = this->field_34 == 0;
+  bVar12 = this->bits == 0;
   if (bVar12) {
-    FUN_005d225b(ADDR(0x637178, ((u8 *)&g.d_00637178)));
-    FUN_005c01c1(this);
+    dbg_log(ADDR(0x637178, ((u8 *)&g.d_00637178)));
+    surface_lock(this);
   }
-  local_14 = FUN_005e6188(param_1);
+  local_14 = ddsurf_lock(param_1);
   if (local_14 != 0) {
     local_10 = 0;
-    IntersectRect(&local_24,param_2,(RECT *)&this->field_14);
+    IntersectRect(&local_24,param_2,(RECT *)&this->clip_left);
     IntersectRect(&local_34,param_3,(RECT *)&param_1->field_10);
     local_8 = local_24.right - local_24.left;
     if (local_34.right - local_34.left <= local_24.right - local_24.left) {
@@ -354,46 +354,46 @@ FUN_005c0753(C_004083b0_48 *this,C_005c5660 *param_1,RECT *param_2,RECT *param_3
       local_c = local_24.bottom - local_24.top;
     }
     if ((local_8 != 0) && (local_c != 0)) {
-      iVar1 = FUN_005c5680((C_005c5680 *)param_1);
+      iVar1 = ddsurf_get_width((DDSurfaceWidthView *)param_1);
       if (iVar1 == 0x140) {
-        iVar2 = FUN_005c56a0(param_1);
-        iVar3 = FUN_005c55f0(this);
-        iVar1 = FUN_005e395a(iVar3);
-        iVar4 = FUN_005c55d0(this);
+        iVar2 = ddsurf_get_pitch(param_1);
+        iVar3 = surface_get_dib(this);
+        iVar1 = dib_is_top_down(iVar3);
+        iVar4 = surface_get_pitch(this);
         iVar4 = ((-(uint)(iVar1 == 0) & 0xfffffffe) + 1) * iVar4;
-        uVar5 = FUN_005c5660(param_1);
-        uVar6 = thunk_FUN_0043c560(this);
+        uVar5 = ddsurf_get_height(param_1);
+        uVar6 = thunk_surface_height(this);
         iVar1 = local_14;
         iVar13 = local_8;
         iVar7 = local_c;
-        iVar3 = FUN_005c5640(this);
-        FUN_005e511c(iVar3,iVar1,local_24.left,local_24.top,local_34.left,local_34.top,iVar13,iVar7,
+        iVar3 = surface_get_bits(this);
+        gfx_copy_pixels_by_column(iVar3,iVar1,local_24.left,local_24.top,local_34.left,local_34.top,iVar13,iVar7,
                      uVar6,uVar5,iVar4,iVar2);
       }
       else {
-        uVar5 = FUN_005c56a0(param_1);
-        iVar2 = FUN_005c55f0(this);
-        iVar1 = FUN_005e395a(iVar2);
-        iVar7 = FUN_005c55d0(this);
+        uVar5 = ddsurf_get_pitch(param_1);
+        iVar2 = surface_get_dib(this);
+        iVar1 = dib_is_top_down(iVar2);
+        iVar7 = surface_get_pitch(this);
         iVar7 = ((-(uint)(iVar1 == 0) & 0xfffffffe) + 1) * iVar7;
-        uVar6 = FUN_005c5660(param_1);
-        uVar8 = thunk_FUN_0043c560(this);
-        iVar4 = this->field_44 * local_8;
-        iVar9 = this->field_44 * local_34.left;
-        iVar10 = this->field_44 * local_24.left;
+        uVar6 = ddsurf_get_height(param_1);
+        uVar8 = thunk_surface_height(this);
+        iVar4 = this->bytes_per_pixel * local_8;
+        iVar9 = this->bytes_per_pixel * local_34.left;
+        iVar10 = this->bytes_per_pixel * local_24.left;
         iVar1 = local_14;
         iVar13 = local_c;
-        uVar11 = FUN_005c5640(this);
-        FUN_005e4f9b(uVar11,iVar1,iVar10,local_24.top,iVar9,local_34.top,iVar4,iVar13,uVar8,uVar6,
+        uVar11 = surface_get_bits(this);
+        gfx_copy_pixels(uVar11,iVar1,iVar10,local_24.top,iVar9,local_34.top,iVar4,iVar13,uVar8,uVar6,
                      iVar7,uVar5);
       }
     }
   }
   if (bVar12) {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   if (local_10 == 0) {
-    FUN_005c56c0(param_1);
+    ddsurf_unlock(param_1);
   }
   return;
 }
@@ -406,7 +406,7 @@ FUN_005c0753(C_004083b0_48 *this,C_005c5660 *param_1,RECT *param_2,RECT *param_3
 
 /* 005c0979 auto */
 void __thiscall
-FUN_005c0979(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
+surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 
 {
   char cVar1;
@@ -416,26 +416,26 @@ FUN_005c0979(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
   undefined4 uVar5;
   undefined4 uVar6;
   
-  if (this->field_40 == 0) {
-    FUN_005d225b(ADDR(0x6371a8, ((u8 *)&g.d_006371a8)));
+  if (this->dib == 0) {
+    dbg_log(ADDR(0x6371a8, ((u8 *)&g.d_006371a8)));
   }
   else {
-    cVar1 = FUN_005c54f0(this);
+    cVar1 = surface_is_locked(this);
     if (cVar1 == '\0') {
-      FUN_005d225b(ADDR(0x6371cc, ((u8 *)&g.d_006371cc)));
-      FUN_005c01c1(this);
+      dbg_log(ADDR(0x6371cc, ((u8 *)&g.d_006371cc)));
+      surface_lock(this);
     }
-    uVar2 = FUN_005bb8c0((C_005bb8c0 *)param_1);
-    FUN_005c0d12(this,uVar2);
+    uVar2 = wnd_get_palette_obj((WndPaletteObjView *)param_1);
+    surface_apply_palette(this,uVar2);
     uVar2 = *(undefined4 *)(param_3 + 4);
     uVar6 = *(undefined4 *)param_3;
-    iVar3 = thunk_FUN_00414d10((C_00408010_10 *)param_1);
-    uVar4 = thunk_FUN_00407fc0(param_2);
-    uVar5 = thunk_FUN_00407f90(param_2);
-    FUN_005bcc11(this->field_40,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),uVar5,uVar4,
+    iVar3 = thunk_wnd_get_window((WndBase *)param_1);
+    uVar4 = thunk_rect_height(param_2);
+    uVar5 = thunk_rect_width(param_2);
+    dib_blit_to_wnd_obj(this->dib,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),uVar5,uVar4,
                  iVar3,uVar6,uVar2);
     if (cVar1 == '\0') {
-      FUN_005c02e0(this);
+      surface_unlock(this);
     }
   }
   return;
@@ -444,7 +444,7 @@ FUN_005c0979(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3)
 /* 005c0a55 auto */
 void __thiscall
 FUN_005c0a55
-          (C_004083b0_48 *this,C_00408010_10 *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,WndBase *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
   char cVar1;
@@ -456,23 +456,23 @@ FUN_005c0a55
   undefined4 uVar7;
   undefined4 uVar8;
   
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x6371f8, ((u8 *)&g.d_006371f8)));
-    FUN_005c01c1(this);
+    dbg_log(ADDR(0x6371f8, ((u8 *)&g.d_006371f8)));
+    surface_lock(this);
   }
-  uVar2 = FUN_005bb8c0((C_005bb8c0 *)param_1);
-  FUN_005c0d12(this,uVar2);
-  uVar3 = thunk_FUN_00407fc0((iptr)param_3);
-  uVar4 = thunk_FUN_00407f90((iptr)param_3);
+  uVar2 = wnd_get_palette_obj((WndPaletteObjView *)param_1);
+  surface_apply_palette(this,uVar2);
+  uVar3 = thunk_rect_height((iptr)param_3);
+  uVar4 = thunk_rect_width((iptr)param_3);
   uVar2 = param_3[1];
   uVar8 = *param_3;
-  iVar5 = thunk_FUN_00414d10(param_1);
-  uVar6 = thunk_FUN_00407fc0((iptr)param_2);
-  uVar7 = thunk_FUN_00407f90((iptr)param_2);
-  FUN_005bcce2(this->field_40,*param_2,param_2[1],uVar7,uVar6,iVar5,uVar8,uVar2,uVar4,uVar3);
+  iVar5 = thunk_wnd_get_window(param_1);
+  uVar6 = thunk_rect_height((iptr)param_2);
+  uVar7 = thunk_rect_width((iptr)param_2);
+  dib_stretch_to_wnd_obj(this->dib,*param_2,param_2[1],uVar7,uVar6,iVar5,uVar8,uVar2,uVar4,uVar3);
   if (cVar1 == '\0') {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   return;
 }
@@ -480,7 +480,7 @@ FUN_005c0a55
 /* 005c0b2c auto */
 void __thiscall
 FUN_005c0b2c
-          (C_004083b0_48 *this,C_004083b0_48 *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,DibSurface *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
   char cVar1;
@@ -492,41 +492,41 @@ FUN_005c0b2c
   undefined4 uVar7;
   undefined4 uVar8;
   
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x637224, ((u8 *)&g.d_00637224)));
-    FUN_005c01c1(this);
+    dbg_log(ADDR(0x637224, ((u8 *)&g.d_00637224)));
+    surface_lock(this);
   }
-  uVar2 = thunk_FUN_00407fc0((iptr)param_3);
-  uVar3 = thunk_FUN_00407f90((iptr)param_3);
+  uVar2 = thunk_rect_height((iptr)param_3);
+  uVar3 = thunk_rect_width((iptr)param_3);
   uVar8 = param_3[1];
   uVar7 = *param_3;
-  iVar4 = FUN_005c55f0(param_1);
-  uVar5 = thunk_FUN_00407fc0((iptr)param_2);
-  uVar6 = thunk_FUN_00407f90((iptr)param_2);
-  FUN_005bcd66(this->field_40,*param_2,param_2[1],uVar6,uVar5,iVar4,uVar7,uVar8,uVar3,uVar2);
+  iVar4 = surface_get_dib(param_1);
+  uVar5 = thunk_rect_height((iptr)param_2);
+  uVar6 = thunk_rect_width((iptr)param_2);
+  dib_stretch_to_dib(this->dib,*param_2,param_2[1],uVar6,uVar5,iVar4,uVar7,uVar8,uVar3,uVar2);
   if (cVar1 == '\0') {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   return;
 }
 
 /* 005c0bf2 auto */
 uint __thiscall
-FUN_005c0bf2(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2)
+surface_get_pixel(DibSurface *this,undefined4 param_1,undefined4 param_2)
 
 {
   char cVar1;
   uint uVar2;
   byte *pbVar3;
   
-  cVar1 = FUN_005c1a00(this,param_1,param_2);
+  cVar1 = surface_in_clip(this,param_1,param_2);
   if (cVar1 == '\0') {
-    FUN_005d22b7(ADDR(0x637250, ((u8 *)&g.d_00637250)),param_1,param_2);
+    dbg_logf_int2(ADDR(0x637250, ((u8 *)&g.d_00637250)),param_1,param_2);
     uVar2 = 0;
   }
   else {
-    pbVar3 = (byte *)FUN_005c19d3(this,param_1,param_2);
+    pbVar3 = (byte *)surface_pixel_ptr(this,param_1,param_2);
     uVar2 = (uint)*pbVar3;
   }
   return uVar2;
@@ -534,61 +534,61 @@ FUN_005c0bf2(C_004083b0_48 *this,undefined4 param_1,undefined4 param_2)
 
 /* 005c0c5d auto */
 void __thiscall
-FUN_005c0c5d
-          (C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+surface_set_pixel
+          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   char cVar1;
   undefined1 *puVar2;
   
-  cVar1 = FUN_005c1a00(this,param_1,param_2);
+  cVar1 = surface_in_clip(this,param_1,param_2);
   if (cVar1 == '\0') {
-    FUN_005d22b7(ADDR(0x637278, ((u8 *)&g.d_00637278)),param_1,param_2);
+    dbg_logf_int2(ADDR(0x637278, ((u8 *)&g.d_00637278)),param_1,param_2);
   }
   else {
-    puVar2 = (undefined1 *)FUN_005c19d3(this,param_1,param_2);
+    puVar2 = (undefined1 *)surface_pixel_ptr(this,param_1,param_2);
     *puVar2 = (undefined1)param_3;
   }
   return;
 }
 
 /* 005c0cc5 auto */
-void __thiscall FUN_005c0cc5(C_004083b0_48 *this,iptr param_1)
+void __thiscall surface_set_palette(DibSurface *this,iptr param_1)
 
 {
   u32 uVar1;
   
-  uVar1 = FUN_005c56f0((C_005c56f0 *)param_1);
-  if (uVar1 != this->field_3c) {
-    FUN_005e3bdc(this->field_40,param_1);
-    uVar1 = FUN_005c56f0((C_005c56f0 *)param_1);
-    this->field_3c = uVar1;
+  uVar1 = palette_get_version((PaletteVersionView *)param_1);
+  if (uVar1 != this->palette_version) {
+    dib_set_palette(this->dib,param_1);
+    uVar1 = palette_get_version((PaletteVersionView *)param_1);
+    this->palette_version = uVar1;
   }
   return;
 }
 
 /* 005c0d12 auto */
-void __thiscall FUN_005c0d12(C_004083b0_48 *this,C_005c56f0 *param_1)
+void __thiscall surface_apply_palette(DibSurface *this,PaletteVersionView *param_1)
 
 {
   u32 uVar1;
   
-  if (param_1 != (C_005c56f0 *)0x0) {
-    uVar1 = FUN_005c56f0(param_1);
-    if (uVar1 != this->field_3c) {
-      FUN_005e3bdc(this->field_40,(iptr)param_1);
-      uVar1 = FUN_005c56f0(param_1);
-      this->field_3c = uVar1;
+  if (param_1 != (PaletteVersionView *)0x0) {
+    uVar1 = palette_get_version(param_1);
+    if (uVar1 != this->palette_version) {
+      dib_set_palette(this->dib,(iptr)param_1);
+      uVar1 = palette_get_version(param_1);
+      this->palette_version = uVar1;
     }
   }
   return;
 }
 
 /* 005c0d69 auto */
-#define DAT_00638b40 (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005c0d69(C_005c0d69 *this,undefined4 param_1,int param_2,int param_3,uint param_4)
+surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4)
 
 {
   undefined1 uVar1;
@@ -596,34 +596,34 @@ FUN_005c0d69(C_005c0d69 *this,undefined4 param_1,int param_2,int param_3,uint pa
   int iVar3;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x6372a0, ((u8 *)&g.d_006372a0)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x6372a0, ((u8 *)&g.d_006372a0)));
   }
-  else if (this->field_40 != 0) {
+  else if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar2 = FUN_005c847f(*(undefined4 *)PTR_DAT_00637e5c);
+      iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
       iVar2 = iVar2 + (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
-      uVar1 = FUN_005c19ad(CONCAT31((int3)(iVar2 >> 0xb),DAT_00638b40));
+      uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
-      FUN_005e3cb4(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,iVar3 + param_2,
+      dib_draw_text_at(this->dib,*(undefined4 *)draw_current_font,param_1,iVar3 + param_2,
                    iVar3 + param_3,(iptr)(this->pad_0 + 0x14),param_4);
-      FUN_005c19ad(local_c);
+      gfx_set_text_color_index(local_c);
     }
-    FUN_005e3cb4(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,param_2,param_3,
+    dib_draw_text_at(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,
                  (iptr)(this->pad_0 + 0x14),param_4);
   }
   return;
 }
-#undef DAT_00638b40
+#undef gfx_black_color_index
 #undef local_c
 
 /* 005c0e57 auto */
-#define DAT_00638b40 (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
-FUN_005c0e57(C_005c0e57 *this,undefined4 param_1,LONG *param_2,uint param_3)
+FUN_005c0e57(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3)
 
 {
   undefined1 uVar1;
@@ -631,37 +631,37 @@ FUN_005c0e57(C_005c0e57 *this,undefined4 param_1,LONG *param_2,uint param_3)
   BOOL BVar3;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x6372c0, ((u8 *)&g.d_006372c0)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x6372c0, ((u8 *)&g.d_006372c0)));
   }
-  else if (this->field_40 != 0) {
+  else if (this->dib != 0) {
     if ((param_3 & 0x10) != 0) {
-      iVar2 = FUN_005c847f(*(undefined4 *)PTR_DAT_00637e5c);
+      iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
       iVar2 = (int)(iVar2 + (iVar2 >> 0x1f & 7U)) >> 3;
       local_14.left = *param_2;
       local_14.top = param_2[1];
       local_14.right = param_2[2];
       local_14.bottom = param_2[3];
       BVar3 = OffsetRect(&local_14,iVar2,iVar2);
-      uVar1 = FUN_005c19ad(CONCAT31((int3)((uint)BVar3 >> 8),DAT_00638b40));
+      uVar1 = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
       local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),uVar1);
-      FUN_005e3eca(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,(iptr)&local_14,param_3);
-      FUN_005c19ad(local_1c);
+      dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3);
+      gfx_set_text_color_index(local_1c);
     }
-    FUN_005e3eca(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,(iptr)param_2,param_3);
+    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
   }
   return;
 }
-#undef DAT_00638b40
+#undef gfx_black_color_index
 #undef local_1c
 #undef local_14
 
 /* 005c0f57 auto */
-#define DAT_00638b40 (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005c0f57
-          (C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,int param_4,uint param_5)
+surface_draw_text
+          (DibSurface *this,iptr param_1,iptr param_2,iptr param_3,int param_4,uint param_5)
 
 {
   undefined1 uVar1;
@@ -669,31 +669,31 @@ FUN_005c0f57
   int iVar3;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_40 != 0) {
+  if (this->dib != 0) {
     if ((param_5 & 0x10) != 0) {
-      iVar2 = FUN_005c847f(*(undefined4 *)param_1);
+      iVar2 = font_measure_height(*(undefined4 *)param_1);
       iVar2 = iVar2 + (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
-      uVar1 = FUN_005c19ad(CONCAT31((int3)(iVar2 >> 0xb),DAT_00638b40));
+      uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
-      FUN_005e3cb4(this->field_40,*(undefined4 *)param_1,param_2,param_3 + iVar3,param_4 + iVar3,
-                   (iptr)&this->field_14,param_5);
-      FUN_005c19ad(local_c);
+      dib_draw_text_at(this->dib,*(undefined4 *)param_1,param_2,param_3 + iVar3,param_4 + iVar3,
+                   (iptr)&this->clip_left,param_5);
+      gfx_set_text_color_index(local_c);
     }
-    FUN_005e3cb4(this->field_40,*(undefined4 *)param_1,param_2,param_3,param_4,(iptr)&this->field_14
+    dib_draw_text_at(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4,(iptr)&this->clip_left
                  ,param_5);
   }
   return;
 }
-#undef DAT_00638b40
+#undef gfx_black_color_index
 #undef local_c
 
 /* 005c1020 auto */
-#define DAT_00638b40 (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
-FUN_005c1020(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,uint param_4)
+surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_3,uint param_4)
 
 {
   undefined1 uVar1;
@@ -701,58 +701,58 @@ FUN_005c1020(C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,uint par
   BOOL BVar3;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_40 != 0) {
+  if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar2 = FUN_005c847f(*(undefined4 *)param_1);
+      iVar2 = font_measure_height(*(undefined4 *)param_1);
       iVar2 = (int)(iVar2 + (iVar2 >> 0x1f & 7U)) >> 3;
       local_14.left = *(LONG *)param_3;
       local_14.top = *(LONG *)(param_3 + 4);
       local_14.right = *(LONG *)(param_3 + 8);
       local_14.bottom = *(LONG *)(param_3 + 0xc);
       BVar3 = OffsetRect(&local_14,iVar2,iVar2);
-      uVar1 = FUN_005c19ad(CONCAT31((int3)((uint)BVar3 >> 8),DAT_00638b40));
+      uVar1 = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
       local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),uVar1);
-      FUN_005e3eca(this->field_40,*(undefined4 *)param_1,param_2,(iptr)&local_14,param_4);
-      FUN_005c19ad(local_1c);
+      dib_draw_text_rect(this->dib,*(undefined4 *)param_1,param_2,(iptr)&local_14,param_4);
+      gfx_set_text_color_index(local_1c);
     }
-    FUN_005e3eca(this->field_40,*(undefined4 *)param_1,param_2,param_3,param_4);
+    dib_draw_text_rect(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4);
   }
   return;
 }
-#undef DAT_00638b40
+#undef gfx_black_color_index
 #undef local_1c
 #undef local_14
 
 /* 005c10fb auto */
 void __thiscall
-FUN_005c10fb(C_005c10fb *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+FUN_005c10fb(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x6372e0, ((u8 *)&g.d_006372e0)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x6372e0, ((u8 *)&g.d_006372e0)));
   }
-  else if (this->field_40 != 0) {
-    FUN_005e3feb(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,param_2,param_3);
+  else if (this->dib != 0) {
+    dib_draw_text_wrap(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3);
   }
   return;
 }
 
 /* 005c1167 auto */
 void __thiscall
-FUN_005c1167
-          (C_004083b0_48 *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4)
+surface_draw_text_rect
+          (DibSurface *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4)
 
 {
-  if (this->field_40 != 0) {
-    FUN_005e3feb(this->field_40,*(undefined4 *)param_1,param_2,param_3,param_4);
+  if (this->dib != 0) {
+    dib_draw_text_wrap(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4);
   }
   return;
 }
 
 /* 005c11b2 auto */
-#define DAT_00637e78 (*(undefined1 *)((u8 *)&g.d_00637e78))
+#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
 void __thiscall
-FUN_005c11b2(C_004083b0_48 *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4)
+surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4)
 
 {
   iptr iVar1;
@@ -762,224 +762,224 @@ FUN_005c11b2(C_004083b0_48 *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4
   undefined4 uVar5;
   u32 uVar6;
   
-  if (((((((int)this->field_14 <= (int)param_1) || ((int)this->field_14 <= (int)param_3)) &&
-        (((int)param_3 < (int)this->field_1c || ((int)param_1 < (int)this->field_1c)))) &&
-       (((int)this->field_18 <= (int)param_2 || ((int)this->field_18 <= (int)param_4)))) &&
-      (((int)param_2 < (int)this->field_20 || ((int)param_4 < (int)this->field_20)))) &&
-     (this->field_40 != 0)) {
+  if (((((((int)this->clip_left <= (int)param_1) || ((int)this->clip_left <= (int)param_3)) &&
+        (((int)param_3 < (int)this->clip_right || ((int)param_1 < (int)this->clip_right)))) &&
+       (((int)this->clip_top <= (int)param_2 || ((int)this->clip_top <= (int)param_4)))) &&
+      (((int)param_2 < (int)this->clip_bottom || ((int)param_4 < (int)this->clip_bottom)))) &&
+     (this->dib != 0)) {
     if (param_4 == param_2) {
-      if ((int)param_1 < (int)this->field_14) {
-        param_1 = this->field_14;
+      if ((int)param_1 < (int)this->clip_left) {
+        param_1 = this->clip_left;
       }
-      if ((int)this->field_1c <= (int)param_1) {
-        param_1 = this->field_1c - 1;
+      if ((int)this->clip_right <= (int)param_1) {
+        param_1 = this->clip_right - 1;
       }
-      if ((int)param_3 < (int)this->field_14) {
-        param_3 = this->field_14;
+      if ((int)param_3 < (int)this->clip_left) {
+        param_3 = this->clip_left;
       }
-      if ((int)this->field_1c <= (int)param_3) {
-        param_3 = this->field_1c - 1;
+      if ((int)this->clip_right <= (int)param_3) {
+        param_3 = this->clip_right - 1;
       }
       if (param_3 != param_1) {
-        iVar1 = FUN_005c55f0(this);
-        iVar2 = FUN_005e395a(iVar1);
-        iVar3 = FUN_005c55d0(this);
+        iVar1 = surface_get_dib(this);
+        iVar2 = dib_is_top_down(iVar1);
+        iVar3 = surface_get_pitch(this);
         iVar3 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar3;
-        uVar4 = thunk_FUN_0043c560(this);
+        uVar4 = thunk_surface_height(this);
         uVar6 = param_3;
         if ((int)param_1 <= (int)param_3) {
           uVar6 = param_1;
         }
         iVar2 = FUN_005f7120(param_3 - param_1);
         iVar2 = iVar2 + 1;
-        uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),DAT_00637e78);
-        iVar1 = FUN_005c5640(this);
-        FUN_005e5869(iVar1,uVar5,iVar2,uVar6,param_2,uVar4,iVar3);
+        uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
+        iVar1 = surface_get_bits(this);
+        dib_hline8(iVar1,uVar5,iVar2,uVar6,param_2,uVar4,iVar3);
       }
     }
     else if (param_3 == param_1) {
-      if ((int)param_2 < (int)this->field_18) {
-        param_2 = this->field_18;
+      if ((int)param_2 < (int)this->clip_top) {
+        param_2 = this->clip_top;
       }
-      if ((int)this->field_20 <= (int)param_2) {
-        param_2 = this->field_20 - 1;
+      if ((int)this->clip_bottom <= (int)param_2) {
+        param_2 = this->clip_bottom - 1;
       }
-      if ((int)param_4 < (int)this->field_18) {
-        param_4 = this->field_18;
+      if ((int)param_4 < (int)this->clip_top) {
+        param_4 = this->clip_top;
       }
-      if ((int)this->field_20 <= (int)param_4) {
-        param_4 = this->field_20 - 1;
+      if ((int)this->clip_bottom <= (int)param_4) {
+        param_4 = this->clip_bottom - 1;
       }
       if (param_4 != param_2) {
-        iVar1 = FUN_005c55f0(this);
-        iVar2 = FUN_005e395a(iVar1);
-        iVar3 = FUN_005c55d0(this);
+        iVar1 = surface_get_dib(this);
+        iVar2 = dib_is_top_down(iVar1);
+        iVar3 = surface_get_pitch(this);
         iVar3 = ((-(uint)(iVar2 == 0) & 0xfffffffe) + 1) * iVar3;
-        uVar4 = thunk_FUN_0043c560(this);
+        uVar4 = thunk_surface_height(this);
         uVar6 = param_4;
         if ((int)param_2 <= (int)param_4) {
           uVar6 = param_2;
         }
         iVar2 = FUN_005f7120(param_4 - param_2);
         iVar2 = iVar2 + 1;
-        uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),DAT_00637e78);
-        iVar1 = FUN_005c5640(this);
-        FUN_005e58e7(iVar1,uVar5,iVar2,param_1,uVar6,uVar4,iVar3);
+        uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
+        iVar1 = surface_get_bits(this);
+        dib_vline8(iVar1,uVar5,iVar2,param_1,uVar6,uVar4,iVar3);
       }
     }
     else {
-      FUN_005e40fb(this->field_40,param_1,param_2,param_3,param_4);
+      dib_draw_line(this->dib,param_1,param_2,param_3,param_4);
     }
   }
   return;
 }
-#undef DAT_00637e78
+#undef gfx_text_color_index
 
 /* 005c145d auto */
-void __thiscall FUN_005c145d(C_004083b0_48 *this,iptr param_1)
+void __thiscall surface_frame_rect(DibSurface *this,iptr param_1)
 
 {
-  if (this->field_40 != 0) {
-    FUN_005c11b2(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
+  if (this->dib != 0) {
+    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
                  *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4));
-    FUN_005c11b2(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
+    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
                  *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc));
-    FUN_005c11b2(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
+    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
                  *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc));
-    FUN_005c11b2(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
+    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
                  *(undefined4 *)(param_1 + 4));
   }
   return;
 }
 
 /* 005c1513 auto */
-#define DAT_00637e78 (*(undefined1 *)((u8 *)&g.d_00637e78))
+#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c1513(C_004083b0_48 *this,int *param_1)
+void __thiscall FUN_005c1513(DibSurface *this,int *param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),DAT_00637e78);
-  if (this->field_40 != 0) {
-    if (this->field_44 == 1) {
-      FUN_005c19ad(0xef);
-      FUN_005c145d(this,(iptr)param_1);
-      FUN_005c19ad(0xff);
-      FUN_005e40fb(this->field_40,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
-      FUN_005e40fb(this->field_40,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
-      FUN_005c19ad(0xf7);
-      FUN_005e40fb(this->field_40,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
-      FUN_005e40fb(this->field_40,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
-      FUN_005c19ad(local_8);
+  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
+  if (this->dib != 0) {
+    if (this->bytes_per_pixel == 1) {
+      gfx_set_text_color_index(0xef);
+      surface_frame_rect(this,(iptr)param_1);
+      gfx_set_text_color_index(0xff);
+      dib_draw_line(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
+      dib_draw_line(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
+      gfx_set_text_color_index(0xf7);
+      dib_draw_line(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
+      dib_draw_line(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
+      gfx_set_text_color_index(local_8);
     }
     else {
-      FUN_005c52dd(this,(iptr)param_1,0,0,0);
-      FUN_005e4b9b(this->field_40,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0xff,
+      surface_frame_rect_rgb(this,(iptr)param_1,0,0,0);
+      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0xff,
                    0xff,0xff);
-      FUN_005e4b9b(this->field_40,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0xff,0xff
+      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0xff,0xff
                    ,0xff);
-      FUN_005e4b9b(this->field_40,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
+      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
                    0x40,0x40,0x40);
-      FUN_005e4b9b(this->field_40,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0x40,
+      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0x40,
                    0x40,0x40);
     }
   }
   return;
 }
-#undef DAT_00637e78
+#undef gfx_text_color_index
 #undef local_8
 
 /* 005c1742 auto */
-#define DAT_00637e78 (*(undefined1 *)((u8 *)&g.d_00637e78))
-#define DAT_00638b40 (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
+#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c1742(C_004083b0_48 *this,int *param_1)
+void __thiscall FUN_005c1742(DibSurface *this,int *param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),DAT_00637e78);
-  if (this->field_40 != 0) {
-    if (this->field_44 == 1) {
-      FUN_005c19ad(CONCAT31((int3)((uint)this >> 8),DAT_00638b40));
-      FUN_005c145d(this,(iptr)param_1);
-      FUN_005c19ad(0xf7);
-      FUN_005e40fb(this->field_40,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
-      FUN_005e40fb(this->field_40,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
-      FUN_005c19ad(0xff);
-      FUN_005e40fb(this->field_40,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
-      FUN_005e40fb(this->field_40,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
-      FUN_005c19ad(local_8);
+  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
+  if (this->dib != 0) {
+    if (this->bytes_per_pixel == 1) {
+      gfx_set_text_color_index(CONCAT31((int3)((uint)this >> 8),gfx_black_color_index));
+      surface_frame_rect(this,(iptr)param_1);
+      gfx_set_text_color_index(0xf7);
+      dib_draw_line(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1);
+      dib_draw_line(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1);
+      gfx_set_text_color_index(0xff);
+      dib_draw_line(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1);
+      dib_draw_line(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1);
+      gfx_set_text_color_index(local_8);
     }
     else {
-      FUN_005c52dd(this,(iptr)param_1,0,0,0);
-      FUN_005e4b9b(this->field_40,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0x40,
+      surface_frame_rect_rgb(this,(iptr)param_1,0,0,0);
+      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[1] + 1,param_1[2] + -1,param_1[1] + 1,0x40,
                    0x40,0x40);
-      FUN_005e4b9b(this->field_40,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0x40,0x40
+      dib_draw_line_rgb(this->dib,*param_1 + 1,param_1[3] + -1,*param_1 + 1,param_1[1] + 1,0x40,0x40
                    ,0x40);
-      FUN_005e4b9b(this->field_40,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
+      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[1] + 1,param_1[2] + -1,param_1[3] + -1,
                    0xff,0xff,0xff);
-      FUN_005e4b9b(this->field_40,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0xff,
+      dib_draw_line_rgb(this->dib,param_1[2] + -1,param_1[3] + -1,*param_1 + 1,param_1[3] + -1,0xff,
                    0xff,0xff);
     }
   }
   return;
 }
-#undef DAT_00637e78
-#undef DAT_00638b40
+#undef gfx_black_color_index
+#undef gfx_text_color_index
 #undef local_8
 
 /* 005c1972 auto */
-#define DAT_00637e58 (*(undefined4 *)((u8 *)&g.d_00637e58))
+#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
 undefined4 __cdecl FUN_005c1972(undefined4 param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = DAT_00637e58;
-  DAT_00637e58 = param_1;
+  uVar1 = draw_current_surface;
+  draw_current_surface = param_1;
   return uVar1;
 }
-#undef DAT_00637e58
+#undef draw_current_surface
 
 /* 005c1998 auto */
-#define DAT_00637e58 (*(undefined4 *)((u8 *)&g.d_00637e58))
+#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
 undefined4 __cdecl FUN_005c1998(void)
 
 {
-  return DAT_00637e58;
+  return draw_current_surface;
 }
-#undef DAT_00637e58
+#undef draw_current_surface
 
 /* 005c19ad auto */
-#define DAT_00637e78 (*(undefined1 *)((u8 *)&g.d_00637e78))
-undefined1 __cdecl FUN_005c19ad(undefined4 param_1)
+#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
+undefined1 __cdecl gfx_set_text_color_index(undefined4 param_1)
 
 {
   undefined1 uVar1;
   
-  uVar1 = DAT_00637e78;
-  DAT_00637e78 = (undefined1)param_1;
+  uVar1 = gfx_text_color_index;
+  gfx_text_color_index = (undefined1)param_1;
   return uVar1;
 }
-#undef DAT_00637e78
+#undef gfx_text_color_index
 
 /* 005c19d3 auto */
-int __thiscall FUN_005c19d3(C_004083b0_48 *this,int param_1,int param_2)
+int __thiscall surface_pixel_ptr(DibSurface *this,int param_1,int param_2)
 
 {
-  return *(int *)(this->field_38 + param_2 * 4) + this->field_34 + param_1;
+  return *(int *)(this->row_offsets + param_2 * 4) + this->bits + param_1;
 }
 
 /* 005c1a00 auto */
-undefined1 __thiscall FUN_005c1a00(C_004083b0_48 *this,int param_1,int param_2)
+undefined1 __thiscall surface_in_clip(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 uVar1;
   
-  if ((((param_1 < (int)this->field_14) || ((int)this->field_1c <= param_1)) ||
-      (param_2 < (int)this->field_18)) || ((int)this->field_20 <= param_2)) {
+  if ((((param_1 < (int)this->clip_left) || ((int)this->clip_right <= param_1)) ||
+      (param_2 < (int)this->clip_top)) || ((int)this->clip_bottom <= param_2)) {
     uVar1 = 0;
   }
   else {
@@ -993,21 +993,21 @@ undefined1 __thiscall FUN_005c1a00(C_004083b0_48 *this,int param_1,int param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
-FUN_005c1a62(C_004083b0_48 *this,iptr param_1,iptr param_2,undefined4 param_3)
+surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_34 != 0) {
-    local_10 = (byte *)this->field_34;
-    for (local_8 = 0; local_8 < (int)this->field_8; local_8 = local_8 + 1) {
-      for (local_c = 0; local_c < (int)this->field_4; local_c = local_c + 1) {
+  if (this->bits != 0) {
+    local_10 = (byte *)this->bits;
+    for (local_8 = 0; local_8 < (int)this->pixel_height; local_8 = local_8 + 1) {
+      for (local_c = 0; local_c < (int)this->pixel_width; local_c = local_c + 1) {
         if (-1 < (int)((uint)*local_10 - param_2)) {
           *local_10 = *(byte *)(((uint)*local_10 - param_2) + param_1);
         }
         local_10 = local_10 + 1;
       }
-      local_10 = local_10 + (this->field_c - this->field_4);
+      local_10 = local_10 + (this->stride - this->pixel_width);
     }
   }
   return;
@@ -1018,199 +1018,199 @@ FUN_005c1a62(C_004083b0_48 *this,iptr param_1,iptr param_2,undefined4 param_3)
 
 /* 005c1b0d auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005c1b0d(C_004083b0_48 *this,int param_1,int param_2)
+void __thiscall surface_create_dib16(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
-  FUN_005c1b47(this,(iptr)&local_14);
+  surface_alloc_dib16(this,(iptr)&local_14);
   return;
 }
 #undef local_14
 
 /* 005c1b47 auto */
-undefined4 __thiscall FUN_005c1b47(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
   u32 uVar2;
   int iVar3;
   
-  if (this->field_40 != 0) {
-    cVar1 = FUN_005c54f0(this);
+  if (this->dib != 0) {
+    cVar1 = surface_is_locked(this);
     if (cVar1 != '\0') {
-      FUN_005c02e0(this);
+      surface_unlock(this);
     }
-    uVar2 = FUN_005e388f(this->field_40);
-    this->field_40 = uVar2;
+    uVar2 = dib_destroy(this->dib);
+    this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_FUN_00407f90(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_FUN_00407fc0(param_1), iVar3 != 0)) {
-    FUN_005bd813(this,param_1);
-    uVar2 = FUN_005e41ba((iptr)&this->field_24);
-    this->field_40 = uVar2;
-    if (this->field_40 != 0) {
-      uVar2 = FUN_005e392a(this->field_40);
-      this->field_c = uVar2;
-      iVar3 = FUN_005e395a(this->field_40);
+  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+    surface_set_dims(this,param_1);
+    uVar2 = dib_create16((iptr)&this->bounds_rect);
+    this->dib = uVar2;
+    if (this->dib != 0) {
+      uVar2 = dib_get_stride(this->dib);
+      this->stride = uVar2;
+      iVar3 = dib_is_top_down(this->dib);
       if (iVar3 == 0) {
-        this->field_10 = -this->field_c;
+        this->signed_pitch = -this->stride;
       }
       else {
-        this->field_10 = this->field_c;
+        this->signed_pitch = this->stride;
       }
-      this->field_44 = 2;
-      FUN_005c01c1(this);
+      this->bytes_per_pixel = 2;
+      surface_lock(this);
       return 1;
     }
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,2,ADDR(0x637318, ((u8 *)&g.d_00637318)),ADDR(0x637300, ((u8 *)&g.d_00637300)),0x86c);
+    err_report((ErrorContext *)&err_report_ctx,2,ADDR(0x637318, ((u8 *)&g.d_00637318)),ADDR(0x637300, ((u8 *)&g.d_00637300)),0x86c);
     return 0;
   }
-  FUN_005bd813(this,0);
+  surface_set_dims(this,0);
   return 1;
 }
 
 /* 005c1c99 auto */
-undefined4 __thiscall FUN_005c1c99(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005c1b47(this,param_1);
+  uVar1 = surface_alloc_dib16(this,param_1);
   return uVar1;
 }
 
 /* 005c1cbd auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005c1cbd(C_004083b0_48 *this,int param_1,int param_2)
+void __thiscall FUN_005c1cbd(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
-  FUN_005c1cf7(this,(iptr)&local_14);
+  surface_alloc_dib24(this,(iptr)&local_14);
   return;
 }
 #undef local_14
 
 /* 005c1cf7 auto */
-undefined4 __thiscall FUN_005c1cf7(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
   u32 uVar2;
   int iVar3;
   
-  if (this->field_40 != 0) {
-    cVar1 = FUN_005c54f0(this);
+  if (this->dib != 0) {
+    cVar1 = surface_is_locked(this);
     if (cVar1 != '\0') {
-      FUN_005c02e0(this);
+      surface_unlock(this);
     }
-    uVar2 = FUN_005e388f(this->field_40);
-    this->field_40 = uVar2;
+    uVar2 = dib_destroy(this->dib);
+    this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_FUN_00407f90(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_FUN_00407fc0(param_1), iVar3 != 0)) {
-    FUN_005bd813(this,param_1);
-    uVar2 = FUN_005e43c5((iptr)&this->field_24);
-    this->field_40 = uVar2;
-    if (this->field_40 != 0) {
-      uVar2 = FUN_005e392a(this->field_40);
-      this->field_c = uVar2;
-      iVar3 = FUN_005e395a(this->field_40);
+  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+    surface_set_dims(this,param_1);
+    uVar2 = dib_create24((iptr)&this->bounds_rect);
+    this->dib = uVar2;
+    if (this->dib != 0) {
+      uVar2 = dib_get_stride(this->dib);
+      this->stride = uVar2;
+      iVar3 = dib_is_top_down(this->dib);
       if (iVar3 == 0) {
-        this->field_10 = -this->field_c;
+        this->signed_pitch = -this->stride;
       }
       else {
-        this->field_10 = this->field_c;
+        this->signed_pitch = this->stride;
       }
-      this->field_44 = 3;
-      FUN_005c01c1(this);
+      this->bytes_per_pixel = 3;
+      surface_lock(this);
       return 1;
     }
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,2,ADDR(0x637344, ((u8 *)&g.d_00637344)),ADDR(0x63732c, ((u8 *)&g.d_0063732c)),0x8a1);
+    err_report((ErrorContext *)&err_report_ctx,2,ADDR(0x637344, ((u8 *)&g.d_00637344)),ADDR(0x63732c, ((u8 *)&g.d_0063732c)),0x8a1);
     return 0;
   }
-  FUN_005bd813(this,0);
+  surface_set_dims(this,0);
   return 1;
 }
 
 /* 005c1e49 auto */
-undefined4 __thiscall FUN_005c1e49(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005c1cf7(this,param_1);
+  uVar1 = surface_alloc_dib24(this,param_1);
   return uVar1;
 }
 
 /* 005c1e6d auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall FUN_005c1e6d(C_004083b0_48 *this,int param_1,int param_2)
+void __thiscall FUN_005c1e6d(DibSurface *this,int param_1,int param_2)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
-  FUN_005c1ea7(this,(iptr)&local_14);
+  surface_alloc_dib32(this,(iptr)&local_14);
   return;
 }
 #undef local_14
 
 /* 005c1ea7 auto */
-undefined4 __thiscall FUN_005c1ea7(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
   u32 uVar2;
   int iVar3;
   
-  if (this->field_40 != 0) {
-    cVar1 = FUN_005c54f0(this);
+  if (this->dib != 0) {
+    cVar1 = surface_is_locked(this);
     if (cVar1 != '\0') {
-      FUN_005c02e0(this);
+      surface_unlock(this);
     }
-    uVar2 = FUN_005e388f(this->field_40);
-    this->field_40 = uVar2;
+    uVar2 = dib_destroy(this->dib);
+    this->dib = uVar2;
   }
-  if (((param_1 != 0) && (iVar3 = thunk_FUN_00407f90(param_1), iVar3 != 0)) &&
-     (iVar3 = thunk_FUN_00407fc0(param_1), iVar3 != 0)) {
-    FUN_005bd813(this,param_1);
-    uVar2 = FUN_005e45b5((iptr)&this->field_24);
-    this->field_40 = uVar2;
-    if (this->field_40 != 0) {
-      uVar2 = FUN_005e392a(this->field_40);
-      this->field_c = uVar2;
-      iVar3 = FUN_005e395a(this->field_40);
+  if (((param_1 != 0) && (iVar3 = thunk_rect_width(param_1), iVar3 != 0)) &&
+     (iVar3 = thunk_rect_height(param_1), iVar3 != 0)) {
+    surface_set_dims(this,param_1);
+    uVar2 = dib_create32((iptr)&this->bounds_rect);
+    this->dib = uVar2;
+    if (this->dib != 0) {
+      uVar2 = dib_get_stride(this->dib);
+      this->stride = uVar2;
+      iVar3 = dib_is_top_down(this->dib);
       if (iVar3 == 0) {
-        this->field_10 = -this->field_c;
+        this->signed_pitch = -this->stride;
       }
       else {
-        this->field_10 = this->field_c;
+        this->signed_pitch = this->stride;
       }
-      this->field_44 = 4;
-      FUN_005c01c1(this);
+      this->bytes_per_pixel = 4;
+      surface_lock(this);
       return 1;
     }
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,2,ADDR(0x637370, ((u8 *)&g.d_00637370)),ADDR(0x637358, ((u8 *)&g.d_00637358)),0x8d6);
+    err_report((ErrorContext *)&err_report_ctx,2,ADDR(0x637370, ((u8 *)&g.d_00637370)),ADDR(0x637358, ((u8 *)&g.d_00637358)),0x8d6);
     return 0;
   }
-  FUN_005bd813(this,0);
+  surface_set_dims(this,0);
   return 1;
 }
 
 /* 005c1ff9 auto */
-void __thiscall FUN_005c1ff9(C_004083b0_48 *this,iptr param_1)
+void __thiscall FUN_005c1ff9(DibSurface *this,iptr param_1)
 
 {
-  FUN_005c1ea7(this,param_1);
+  surface_alloc_dib32(this,param_1);
   return;
 }
 
 /* 005c201d auto */
-short __cdecl FUN_005c201d(undefined4 param_1,uint param_2,uint param_3)
+short __cdecl gfx_rgb_to_555(undefined4 param_1,uint param_2,uint param_3)
 
 {
   return CONCAT11(((byte)param_1 & 0xf8) >> 1,(byte)param_3 >> 3) + ((byte)param_2 & 0xf8) * 4;
@@ -1232,7 +1232,7 @@ short __cdecl FUN_005c201d(undefined4 param_1,uint param_2,uint param_3)
 #define local_10 (*(undefined2 * *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(56)))
-undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c2048(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -1245,31 +1245,31 @@ undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1)
   local_1b = 0x41;
   local_1a = 0x52;
   local_19 = 0x47;
-  local_24 = FUN_005c5540((iptr)&local_1c,param_1);
+  local_24 = res_load((iptr)&local_1c,param_1);
   if (local_24 == 0) {
-    FUN_005d2279(ADDR(0x637384, ((u8 *)&g.d_00637384)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x6373c4, ((u8 *)&g.d_006373c4)),ADDR(0x6373ac, ((u8 *)&g.d_006373ac)),0x905);
+    dbg_logf(ADDR(0x637384, ((u8 *)&g.d_00637384)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6373c4, ((u8 *)&g.d_006373c4)),ADDR(0x6373ac, ((u8 *)&g.d_006373ac)),0x905);
     return 0;
   }
-  local_c = (char *)FUN_005c5560(local_24);
+  local_c = (char *)res_lock(local_24);
   local_14 = (uint)*(ushort *)(local_c + 0xc);
   local_18 = (uint)*(ushort *)(local_c + 0xe);
   local_8 = local_c;
   SetRect(&local_3c,0,0,local_14,local_18);
-  iVar3 = FUN_005c1c99(this,(iptr)&local_3c);
+  iVar3 = surface_resize_for_image(this,(iptr)&local_3c);
   if (iVar3 == 0) {
-    FUN_005c5520(local_24);
+    res_free(local_24);
     return 0;
   }
   if (local_8[2] == '\x02') {
     local_c = local_c + *local_8 + 0x12;
     if ((local_8[0x11] & 0x20U) == 0) {
-      local_10 = (undefined2 *)FUN_005c19d3(this,0,local_18 - 1);
-      local_40 = -this->field_10;
+      local_10 = (undefined2 *)surface_pixel_ptr(this,0,local_18 - 1);
+      local_40 = -this->signed_pitch;
     }
     else {
-      local_10 = (undefined2 *)FUN_005c19d3(this,0,0);
-      local_40 = this->field_10;
+      local_10 = (undefined2 *)surface_pixel_ptr(this,0,0);
+      local_40 = this->signed_pitch;
     }
     cVar1 = local_8[0x10];
     if (cVar1 == '\x10') {
@@ -1285,7 +1285,7 @@ undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1)
           local_2c = local_10;
           for (local_28 = 0; local_28 < local_14; local_28 = local_28 + 1) {
             uVar4 = (undefined3)((uint)local_c >> 8);
-            uVar2 = FUN_005c201d(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
+            uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
                                  CONCAT31(uVar4,*local_c));
             *local_2c = uVar2;
             local_2c = local_2c + 1;
@@ -1299,7 +1299,7 @@ undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1)
         local_2c = local_10;
         for (local_28 = 0; local_28 < local_14; local_28 = local_28 + 1) {
           uVar4 = (undefined3)((uint)local_c >> 8);
-          uVar2 = FUN_005c201d(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
+          uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
                                CONCAT31(uVar4,*local_c));
           *local_2c = uVar2;
           local_2c = local_2c + 1;
@@ -1310,14 +1310,14 @@ undefined4 __thiscall FUN_005c2048(C_004083b0_48 *this,iptr param_1)
     }
   }
   else if (local_8[2] == '\n') {
-    FUN_005d225b(ADDR(0x6373dc, ((u8 *)&g.d_006373dc)));
+    dbg_log(ADDR(0x6373dc, ((u8 *)&g.d_006373dc)));
   }
 LAB_005c231b:
   if ((local_8[0x11] & 0x10U) != 0) {
-    FUN_005d225b(ADDR(0x637404, ((u8 *)&g.d_00637404)));
+    dbg_log(ADDR(0x637404, ((u8 *)&g.d_00637404)));
   }
-  FUN_005c5580(local_24);
-  FUN_005c5520(local_24);
+  res_unlock(local_24);
+  res_free(local_24);
   return 1;
 }
 #undef local_40
@@ -1345,13 +1345,13 @@ LAB_005c231b:
 #define local_bc (*(uint *)(frame_ + FRAME_OFF(36)))
 #define local_b8 (*(uint *)(frame_ + FRAME_OFF(40)))
 #define local_b4 (*(undefined2 * *)(frame_ + FRAME_OFF(44)))
-#define local_b0 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(48)))
+#define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(48)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c2360(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -1362,40 +1362,40 @@ undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b0);
+  file_obj_init(&local_b0);
   local_8 = 0;
-  iVar3 = thunk_FUN_004929c0(&local_b0,param_1);
+  iVar3 = thunk_file_obj_open(&local_b0,param_1);
   if (iVar3 == 0) {
-    FUN_005d225b(ADDR(0x637440, ((u8 *)&g.d_00637440)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637478, ((u8 *)&g.d_00637478)),ADDR(0x637460, ((u8 *)&g.d_00637460)),0x965);
+    dbg_log(ADDR(0x637440, ((u8 *)&g.d_00637440)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637478, ((u8 *)&g.d_00637478)),ADDR(0x637460, ((u8 *)&g.d_00637460)),0x965);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2786 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+    /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
     uVar4 = 0;
   }
   else {
-    local_18 = (char *)FUN_005c5470(&local_b0);
+    local_18 = (char *)file_obj_map_view(&local_b0);
     local_b8 = (uint)*(ushort *)(local_18 + 0xc);
     local_bc = (uint)*(ushort *)(local_18 + 0xe);
     local_14 = local_18;
     SetRect(&local_d8,0,0,local_b8,local_bc);
-    iVar3 = FUN_005c1c99(this,(iptr)&local_d8);
+    iVar3 = surface_resize_for_image(this,(iptr)&local_d8);
     if (iVar3 == 0) {
-      FUN_005c54a0(&local_b0);
-      thunk_FUN_00421c30(&local_b0);
+      file_obj_unmap_view(&local_b0);
+      thunk_file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 0;
     }
     else {
       if (local_14[2] == '\x02') {
         local_18 = local_18 + *local_14 + 0x12;
         if ((local_14[0x11] & 0x20U) == 0) {
-          local_b4 = (undefined2 *)FUN_005c19d3(this,0,local_bc - 1);
-          local_dc = -this->field_10;
+          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,local_bc - 1);
+          local_dc = -this->signed_pitch;
         }
         else {
-          local_b4 = (undefined2 *)FUN_005c19d3(this,0,0);
-          local_dc = this->field_10;
+          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,0);
+          local_dc = this->signed_pitch;
         }
         cVar1 = local_14[0x10];
         if (cVar1 == '\x10') {
@@ -1410,7 +1410,7 @@ undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
             local_c8 = local_b4;
             for (local_c4 = 0; local_c4 < local_b8; local_c4 = local_c4 + 1) {
               uVar5 = (undefined3)((uint)local_18 >> 8);
-              uVar2 = FUN_005c201d(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
+              uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
                                    CONCAT31(uVar5,*local_18));
               *local_c8 = uVar2;
               local_c8 = local_c8 + 1;
@@ -1424,7 +1424,7 @@ undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
             local_c8 = local_b4;
             for (local_c4 = 0; local_c4 < local_b8; local_c4 = local_c4 + 1) {
               uVar5 = (undefined3)((uint)local_18 >> 8);
-              uVar2 = FUN_005c201d(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
+              uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
                                    CONCAT31(uVar5,*local_18));
               *local_c8 = uVar2;
               local_c8 = local_c8 + 1;
@@ -1435,15 +1435,15 @@ undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
         }
       }
       else if (local_14[2] == '\n') {
-        FUN_005d225b(ADDR(0x637490, ((u8 *)&g.d_00637490)));
+        dbg_log(ADDR(0x637490, ((u8 *)&g.d_00637490)));
       }
       if ((local_14[0x11] & 0x10U) != 0) {
-        FUN_005d225b(ADDR(0x6374b8, ((u8 *)&g.d_006374b8)));
+        dbg_log(ADDR(0x6374b8, ((u8 *)&g.d_006374b8)));
       }
-      FUN_005c54a0(&local_b0);
-      thunk_FUN_00421c30(&local_b0);
+      file_obj_unmap_view(&local_b0);
+      thunk_file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 1;
     }
   }
@@ -1477,7 +1477,7 @@ undefined4 __thiscall FUN_005c2360(C_004083b0_48 *this,iptr param_1)
 #define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(560)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(564)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(568)))
-undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c27ad(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
@@ -1487,31 +1487,31 @@ undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1)
   undefined3 uVar5;
   undefined1 frame_[FRAME_OFF(576)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_24 = FUN_005db2f8(param_1);
+  local_24 = res_load_bitmap(param_1);
   if (local_24 == 0) {
-    FUN_005d2279(ADDR(0x6374f4, ((u8 *)&g.d_006374f4)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637530, ((u8 *)&g.d_00637530)),ADDR(0x637518, ((u8 *)&g.d_00637518)),0x9c7);
+    dbg_logf(ADDR(0x6374f4, ((u8 *)&g.d_006374f4)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637530, ((u8 *)&g.d_00637530)),ADDR(0x637518, ((u8 *)&g.d_00637518)),0x9c7);
     uVar3 = 0;
   }
   else {
-    local_c = FUN_005c5560(local_24);
+    local_c = res_lock(local_24);
     local_18 = *(int *)(local_c + 4);
     local_1c = *(int *)(local_c + 8);
     SetRect(&local_3c,0,0,local_18,local_1c);
-    iVar4 = FUN_005c1c99(this,(iptr)&local_3c);
+    iVar4 = surface_resize_for_image(this,(iptr)&local_3c);
     if (iVar4 == 0) {
-      FUN_005c5520(local_24);
+      res_free(local_24);
       uVar3 = 0;
     }
     else {
-      local_18 = FUN_005c55a0(local_18);
-      local_14 = (undefined2 *)FUN_005c19d3(this,0,this->field_8 - 1);
+      local_18 = dib_row_align4(local_18);
+      local_14 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       sVar1 = *(short *)(local_c + 0xe);
       if (sVar1 == 8) {
         local_10 = (undefined1 *)(local_c + 0x28);
         for (local_20 = 0; local_20 < 0x100; local_20 = local_20 + 1) {
           uVar5 = (undefined3)((uint)local_10 >> 8);
-          uVar2 = FUN_005c201d(CONCAT31(uVar5,local_10[2]),CONCAT31(uVar5,local_10[1]),
+          uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_10[2]),CONCAT31(uVar5,local_10[1]),
                                CONCAT31(uVar5,*local_10));
           auStack_23c[local_20] = uVar2;
           local_10 = local_10 + 4;
@@ -1524,7 +1524,7 @@ undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1)
             local_8 = local_8 + 1;
             local_2c = local_2c + 1;
           }
-          local_14 = (undefined2 *)FUN_005c5710(this,(iptr)local_14);
+          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
         }
       }
       else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
@@ -1533,17 +1533,17 @@ undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1)
           local_2c = local_14;
           for (local_28 = 0; local_28 < local_18; local_28 = local_28 + 1) {
             uVar5 = (undefined3)((uint)local_8 >> 8);
-            uVar2 = FUN_005c201d(CONCAT31(uVar5,local_8[2]),CONCAT31(uVar5,local_8[1]),
+            uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_8[2]),CONCAT31(uVar5,local_8[1]),
                                  CONCAT31(uVar5,*local_8));
             *local_2c = uVar2;
             local_2c = local_2c + 1;
             local_8 = local_8 + 3;
           }
-          local_14 = (undefined2 *)FUN_005c5710(this,(iptr)local_14);
+          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
         }
       }
-      FUN_005c5580(local_24);
-      FUN_005c5520(local_24);
+      res_unlock(local_24);
+      res_free(local_24);
       uVar3 = 1;
     }
   }
@@ -1572,14 +1572,14 @@ undefined4 __thiscall FUN_005c27ad(C_004083b0_48 *this,iptr param_1)
 #define local_c0 (*(int *)(frame_ + FRAME_OFF(544)))
 #define local_bc (*(int *)(frame_ + FRAME_OFF(548)))
 #define local_b8 (*(undefined2 * *)(frame_ + FRAME_OFF(552)))
-#define local_b4 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(556)))
+#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(556)))
 #define local_1c (*(undefined1 * *)(frame_ + FRAME_OFF(708)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(712)))
 #define local_14 (*(byte * *)(frame_ + FRAME_OFF(716)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(720)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(724)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(728)))
-undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c2a77(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
@@ -1590,39 +1590,39 @@ undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(736)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b4);
+  file_obj_init(&local_b4);
   local_8 = 0;
-  iVar3 = thunk_FUN_004929c0(&local_b4,param_1);
+  iVar3 = thunk_file_obj_open(&local_b4,param_1);
   if (iVar3 == 0) {
-    FUN_005d225b(ADDR(0x637548, ((u8 *)&g.d_00637548)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637580, ((u8 *)&g.d_00637580)),ADDR(0x637568, ((u8 *)&g.d_00637568)),0xa16);
+    dbg_log(ADDR(0x637548, ((u8 *)&g.d_00637548)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637580, ((u8 *)&g.d_00637580)),ADDR(0x637568, ((u8 *)&g.d_00637568)),0xa16);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2e37 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 0;
   }
   else {
-    local_e0 = FUN_005c5470(&local_b4);
+    local_e0 = file_obj_map_view(&local_b4);
     local_18 = local_e0 + 0xe;
     local_bc = *(int *)(local_e0 + 0x12);
     local_c0 = *(int *)(local_e0 + 0x16);
     SetRect(&local_dc,0,0,local_bc,local_c0);
-    iVar3 = FUN_005c1c99(this,(iptr)&local_dc);
+    iVar3 = surface_resize_for_image(this,(iptr)&local_dc);
     if (iVar3 == 0) {
-      FUN_005c54a0(&local_b4);
-      thunk_FUN_00421c30(&local_b4);
+      file_obj_unmap_view(&local_b4);
+      thunk_file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar4 = 0;
     }
     else {
-      local_bc = FUN_005c55a0(local_bc);
-      local_b8 = (undefined2 *)FUN_005c19d3(this,0,this->field_8 - 1);
+      local_bc = dib_row_align4(local_bc);
+      local_b8 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       sVar1 = *(short *)(local_18 + 0xe);
       if (sVar1 == 8) {
         local_1c = (undefined1 *)(local_18 + 0x28);
         for (local_c4 = 0; local_c4 < 0x100; local_c4 = local_c4 + 1) {
           uVar5 = (undefined3)((uint)local_1c >> 8);
-          uVar2 = FUN_005c201d(CONCAT31(uVar5,local_1c[2]),CONCAT31(uVar5,local_1c[1]),
+          uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_1c[2]),CONCAT31(uVar5,local_1c[1]),
                                CONCAT31(uVar5,*local_1c));
           auStack_2e0[local_c4] = uVar2;
           local_1c = local_1c + 4;
@@ -1635,7 +1635,7 @@ undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1)
             local_14 = local_14 + 1;
             local_cc = local_cc + 1;
           }
-          local_b8 = (undefined2 *)FUN_005c5710(this,(iptr)local_b8);
+          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
         }
       }
       else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
@@ -1644,19 +1644,19 @@ undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1)
           local_cc = local_b8;
           for (local_c8 = 0; local_c8 < local_bc; local_c8 = local_c8 + 1) {
             uVar5 = (undefined3)((uint)local_14 >> 8);
-            uVar2 = FUN_005c201d(CONCAT31(uVar5,local_14[2]),CONCAT31(uVar5,local_14[1]),
+            uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_14[2]),CONCAT31(uVar5,local_14[1]),
                                  CONCAT31(uVar5,*local_14));
             *local_cc = uVar2;
             local_cc = local_cc + 1;
             local_14 = local_14 + 3;
           }
-          local_b8 = (undefined2 *)FUN_005c5710(this,(iptr)local_b8);
+          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
         }
       }
-      FUN_005c54a0(&local_b4);
-      thunk_FUN_00421c30(&local_b4);
+      file_obj_unmap_view(&local_b4);
+      thunk_file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar4 = 1;
     }
   }
@@ -1702,7 +1702,7 @@ undefined4 __thiscall FUN_005c2a77(C_004083b0_48 *this,iptr param_1)
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(1344)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(1348)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1352)))
-undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c2e5e(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -1717,27 +1717,27 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
   local_27 = 0x49;
   local_26 = 0x46;
   local_25 = 0x53;
-  local_230 = FUN_005c5540((iptr)&local_28,param_1);
+  local_230 = res_load((iptr)&local_28,param_1);
   if (local_230 == 0) {
-    FUN_005d2279(ADDR(0x637598, ((u8 *)&g.d_00637598)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x6375d4, ((u8 *)&g.d_006375d4)),ADDR(0x6375bc, ((u8 *)&g.d_006375bc)),0xa6c);
+    dbg_logf(ADDR(0x637598, ((u8 *)&g.d_00637598)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6375d4, ((u8 *)&g.d_006375d4)),ADDR(0x6375bc, ((u8 *)&g.d_006375bc)),0xa6c);
     uVar2 = 0;
   }
   else {
-    local_14 = (char *)FUN_005c5560(local_230);
+    local_14 = (char *)res_lock(local_230);
     iVar3 = _strcmp(local_14,&DAT_006375ec);
     if (iVar3 == 0) {
-      FUN_005d2279(ADDR(0x6375f0, ((u8 *)&g.d_006375f0)),param_1);
-      FUN_005c5580(local_230);
-      FUN_005c5520(local_230);
-      FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x637628, ((u8 *)&g.d_00637628)),ADDR(0x637610, ((u8 *)&g.d_00637610)),0xa77);
+      dbg_logf(ADDR(0x6375f0, ((u8 *)&g.d_006375f0)),param_1);
+      res_unlock(local_230);
+      res_free(local_230);
+      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637628, ((u8 *)&g.d_00637628)),ADDR(0x637610, ((u8 *)&g.d_00637610)),0xa77);
       uVar2 = 0;
     }
     else if ((local_14[10] & 0x80U) == 0) {
-      FUN_005d2279(ADDR(0x63763c, ((u8 *)&g.d_0063763c)),param_1);
-      FUN_005c5580(local_230);
-      FUN_005c5520(local_230);
-      FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x637680, ((u8 *)&g.d_00637680)),ADDR(0x637668, ((u8 *)&g.d_00637668)),0xa80);
+      dbg_logf(ADDR(0x63763c, ((u8 *)&g.d_0063763c)),param_1);
+      res_unlock(local_230);
+      res_free(local_230);
+      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637680, ((u8 *)&g.d_00637680)),ADDR(0x637668, ((u8 *)&g.d_00637668)),0xa80);
       uVar2 = 0;
     }
     else {
@@ -1746,7 +1746,7 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
       FUN_005f2110(local_54c,local_10,local_24c * 3);
       local_234 = 0;
       for (local_22c = 0; local_22c < local_24c; local_22c = local_22c + 1) {
-        uVar1 = FUN_005c201d(*(undefined4 *)(local_54c + local_234),
+        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_54c + local_234),
                              *(uint *)(local_54c + local_234 + 1),
                              *(uint *)(local_54c + local_234 + 2));
         auStack_228[local_22c] = uVar1;
@@ -1756,30 +1756,30 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
       }
       if ((*local_10 == ',') || (*local_10 == '!')) {
         local_c = local_10 + 1;
-        local_1c = FUN_005c54d0((uint)*(ushort *)(local_10 + 5));
+        local_1c = endian_from_le((uint)*(ushort *)(local_10 + 5));
         *(short *)(local_c + 4) = (short)local_1c;
-        local_24 = FUN_005c54d0((uint)*(ushort *)(local_c + 6));
+        local_24 = endian_from_le((uint)*(ushort *)(local_c + 6));
         *(short *)(local_c + 6) = (short)local_24;
         if ((local_c[8] & 0x80U) != 0) {
-          FUN_005d225b(ADDR(0x6376e4, ((u8 *)&g.d_006376e4)));
+          dbg_log(ADDR(0x6376e4, ((u8 *)&g.d_006376e4)));
         }
         SetRect(&local_248,0,0,local_1c,local_24);
-        local_20 = FUN_005e35b0((iptr)&local_248);
+        local_20 = dib_create((iptr)&local_248);
         local_18 = local_c[9];
         local_8 = (byte *)(local_c + 10);
-        iVar4 = FUN_005e3a81(local_20);
+        iVar4 = dib_get_bits(local_20);
         uVar5 = local_1c;
         uVar6 = local_24;
-        uVar2 = FUN_005e392a(local_20);
-        FUN_005e4d60((iptr)local_8,0,CONCAT22((short)((uint)uVar2 >> 0x10),(ushort)local_18),uVar2,
+        uVar2 = dib_get_stride(local_20);
+        gif_lzw_decode((iptr)local_8,0,CONCAT22((short)((uint)uVar2 >> 0x10),(ushort)local_18),uVar2,
                      uVar5,uVar6,iVar4);
-        iVar3 = FUN_005e395a(local_20);
+        iVar3 = dib_is_top_down(local_20);
         if (iVar3 == 0) {
-          FUN_005e3988(local_20);
+          dib_flip_vertical(local_20);
         }
-        FUN_005c1c99(this,(iptr)&local_248);
-        local_10 = (char *)this->field_34;
-        local_8 = (byte *)FUN_005e3a81(local_20);
+        surface_resize_for_image(this,(iptr)&local_248);
+        local_10 = (char *)this->bits;
+        local_8 = (byte *)dib_get_bits(local_20);
         for (local_22c = 0; local_22c < local_24; local_22c = local_22c + 1) {
           local_238 = (undefined2 *)local_10;
           local_550 = local_8;
@@ -1788,20 +1788,20 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
             local_550 = local_550 + 1;
             local_238 = local_238 + 1;
           }
-          local_10 = (char *)((int)local_10 + this->field_c);
-          iVar3 = FUN_005e392a(local_20);
+          local_10 = (char *)((int)local_10 + this->stride);
+          iVar3 = dib_get_stride(local_20);
           local_8 = local_8 + iVar3;
         }
-        FUN_005e388f(local_20);
-        FUN_005c5580(local_230);
-        FUN_005c5520(local_230);
+        dib_destroy(local_20);
+        res_unlock(local_230);
+        res_free(local_230);
         uVar2 = 1;
       }
       else {
-        FUN_005d2279(ADDR(0x637694, ((u8 *)&g.d_00637694)),param_1);
-        FUN_005c5580(local_230);
-        FUN_005c5520(local_230);
-        FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x6376d0, ((u8 *)&g.d_006376d0)),ADDR(0x6376b8, ((u8 *)&g.d_006376b8)),0xa9d);
+        dbg_logf(ADDR(0x637694, ((u8 *)&g.d_00637694)),param_1);
+        res_unlock(local_230);
+        res_free(local_230);
+        err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6376d0, ((u8 *)&g.d_006376d0)),ADDR(0x6376b8, ((u8 *)&g.d_006376b8)),0xa9d);
         uVar2 = 0;
       }
     }
@@ -1844,7 +1844,7 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
 #define local_c8 (*(uint *)(frame_ + FRAME_OFF(1320)))
 #define local_c4 (*(iptr *)(frame_ + FRAME_OFF(1324)))
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(1328)))
-#define local_bc (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(1332)))
+#define local_bc (*(FileObject *)(frame_ + FRAME_OFF(1332)))
 #define local_24 (*(byte *)(frame_ + FRAME_OFF(1484)))
 #define local_20 (*(char * *)(frame_ + FRAME_OFF(1488)))
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(1492)))
@@ -1853,7 +1853,7 @@ undefined4 __thiscall FUN_005c2e5e(C_004083b0_48 *this,iptr param_1)
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1508)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1512)))
-undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c3313(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -1865,35 +1865,35 @@ undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(1520)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_bc);
+  file_obj_init(&local_bc);
   local_8 = 0;
-  iVar2 = thunk_FUN_004929c0(&local_bc,param_1);
+  iVar2 = thunk_file_obj_open(&local_bc,param_1);
   if (iVar2 == 0) {
-    FUN_005d225b(ADDR(0x637708, ((u8 *)&g.d_00637708)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637740, ((u8 *)&g.d_00637740)),ADDR(0x637728, ((u8 *)&g.d_00637728)),0xae3);
+    dbg_log(ADDR(0x637708, ((u8 *)&g.d_00637708)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637740, ((u8 *)&g.d_00637740)),ADDR(0x637728, ((u8 *)&g.d_00637728)),0xae3);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c384d */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_bc)); }
+    /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
     uVar4 = 0;
   }
   else {
-    local_20 = (char *)FUN_005c5470(&local_bc);
+    local_20 = (char *)file_obj_map_view(&local_bc);
     iVar2 = _strcmp(local_20,&DAT_00637758);
     if (iVar2 == 0) {
-      FUN_005d225b(ADDR(0x63775c, ((u8 *)&g.d_0063775c)));
-      FUN_005c54a0(&local_bc);
-      thunk_FUN_00421c30(&local_bc);
-      FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x637794, ((u8 *)&g.d_00637794)),ADDR(0x63777c, ((u8 *)&g.d_0063777c)),0xaee);
+      dbg_log(ADDR(0x63775c, ((u8 *)&g.d_0063775c)));
+      file_obj_unmap_view(&local_bc);
+      thunk_file_map_close(&local_bc);
+      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637794, ((u8 *)&g.d_00637794)),ADDR(0x63777c, ((u8 *)&g.d_0063777c)),0xaee);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_bc)); }
+      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
     else if ((local_20[10] & 0x80U) == 0) {
-      FUN_005d225b(ADDR(0x6377a8, ((u8 *)&g.d_006377a8)));
-      FUN_005c54a0(&local_bc);
-      thunk_FUN_00421c30(&local_bc);
-      FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x6377ec, ((u8 *)&g.d_006377ec)),ADDR(0x6377d4, ((u8 *)&g.d_006377d4)),0xaf7);
+      dbg_log(ADDR(0x6377a8, ((u8 *)&g.d_006377a8)));
+      file_obj_unmap_view(&local_bc);
+      thunk_file_map_close(&local_bc);
+      err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6377ec, ((u8 *)&g.d_006377ec)),ADDR(0x6377d4, ((u8 *)&g.d_006377d4)),0xaf7);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_bc)); }
+      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
     else {
@@ -1902,7 +1902,7 @@ undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
       FUN_005f2110(local_5e8,local_1c,local_2e8 * 3);
       local_2d0 = 0;
       for (local_2cc = 0; local_2cc < local_2e8; local_2cc = local_2cc + 1) {
-        uVar1 = FUN_005c201d(*(undefined4 *)(local_5e8 + local_2d0),
+        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e8 + local_2d0),
                              *(uint *)(local_5e8 + local_2d0 + 1),
                              *(uint *)(local_5e8 + local_2d0 + 2));
         auStack_2c8[local_2cc] = uVar1;
@@ -1912,30 +1912,30 @@ undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
       }
       if ((*local_1c == ',') || (*local_1c == '!')) {
         local_18 = local_1c + 1;
-        local_c0 = FUN_005c54d0((uint)*(ushort *)(local_1c + 5));
+        local_c0 = endian_from_le((uint)*(ushort *)(local_1c + 5));
         *(short *)(local_18 + 4) = (short)local_c0;
-        local_c8 = FUN_005c54d0((uint)*(ushort *)(local_18 + 6));
+        local_c8 = endian_from_le((uint)*(ushort *)(local_18 + 6));
         *(short *)(local_18 + 6) = (short)local_c8;
         if ((local_18[8] & 0x80U) != 0) {
-          FUN_005d225b(ADDR(0x637850, ((u8 *)&g.d_00637850)));
+          dbg_log(ADDR(0x637850, ((u8 *)&g.d_00637850)));
         }
         SetRect(&local_2e4,0,0,local_c0,local_c8);
-        local_c4 = FUN_005e35b0((iptr)&local_2e4);
+        local_c4 = dib_create((iptr)&local_2e4);
         local_24 = local_18[9];
         local_14 = (byte *)(local_18 + 10);
-        iVar3 = FUN_005e3a81(local_c4);
+        iVar3 = dib_get_bits(local_c4);
         uVar5 = local_c0;
         uVar6 = local_c8;
-        uVar4 = FUN_005e392a(local_c4);
-        FUN_005e4d60((iptr)local_14,0,CONCAT22((short)((uint)uVar4 >> 0x10),(ushort)local_24),uVar4,
+        uVar4 = dib_get_stride(local_c4);
+        gif_lzw_decode((iptr)local_14,0,CONCAT22((short)((uint)uVar4 >> 0x10),(ushort)local_24),uVar4,
                      uVar5,uVar6,iVar3);
-        iVar2 = FUN_005e395a(local_c4);
+        iVar2 = dib_is_top_down(local_c4);
         if (iVar2 == 0) {
-          FUN_005e3988(local_c4);
+          dib_flip_vertical(local_c4);
         }
-        FUN_005c1c99(this,(iptr)&local_2e4);
-        local_1c = (char *)this->field_34;
-        local_14 = (byte *)FUN_005e3a81(local_c4);
+        surface_resize_for_image(this,(iptr)&local_2e4);
+        local_1c = (char *)this->bits;
+        local_14 = (byte *)dib_get_bits(local_c4);
         for (local_2cc = 0; local_2cc < local_c8; local_2cc = local_2cc + 1) {
           local_2d4 = (undefined2 *)local_1c;
           local_5ec = local_14;
@@ -1944,24 +1944,24 @@ undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
             local_5ec = local_5ec + 1;
             local_2d4 = local_2d4 + 1;
           }
-          local_1c = (char *)((int)local_1c + this->field_c);
-          iVar2 = FUN_005e392a(local_c4);
+          local_1c = (char *)((int)local_1c + this->stride);
+          iVar2 = dib_get_stride(local_c4);
           local_14 = local_14 + iVar2;
         }
-        FUN_005e388f(local_c4);
-        FUN_005c54a0(&local_bc);
-        thunk_FUN_00421c30(&local_bc);
+        dib_destroy(local_c4);
+        file_obj_unmap_view(&local_bc);
+        thunk_file_map_close(&local_bc);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_bc)); }
+        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 1;
       }
       else {
-        FUN_005d225b(ADDR(0x637800, ((u8 *)&g.d_00637800)));
-        FUN_005c54a0(&local_bc);
-        thunk_FUN_00421c30(&local_bc);
-        FUN_005dae6b((C_005dae6b *)&DAT_006e4850,4,ADDR(0x63783c, ((u8 *)&g.d_0063783c)),ADDR(0x637824, ((u8 *)&g.d_00637824)),0xb14);
+        dbg_log(ADDR(0x637800, ((u8 *)&g.d_00637800)));
+        file_obj_unmap_view(&local_bc);
+        thunk_file_map_close(&local_bc);
+        err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x63783c, ((u8 *)&g.d_0063783c)),ADDR(0x637824, ((u8 *)&g.d_00637824)),0xb14);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_bc)); }
+        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 0;
       }
     }
@@ -2011,7 +2011,7 @@ undefined4 __thiscall FUN_005c3313(C_004083b0_48 *this,iptr param_1)
 #define local_10 (*(short * *)(frame_ + FRAME_OFF(1336)))
 #define local_c (*(short * *)(frame_ + FRAME_OFF(1340)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1344)))
-undefined4 __thiscall FUN_005c3874(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c3874(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -2026,44 +2026,44 @@ undefined4 __thiscall FUN_005c3874(C_004083b0_48 *this,iptr param_1)
   local_1f = 0x76;
   local_1e = 0x50;
   local_1d = 99;
-  local_228 = FUN_005c5540((iptr)&local_20,param_1);
+  local_228 = res_load((iptr)&local_20,param_1);
   if (local_228 == 0) {
-    FUN_005d2279(ADDR(0x637874, ((u8 *)&g.d_00637874)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x6378b4, ((u8 *)&g.d_006378b4)),ADDR(0x63789c, ((u8 *)&g.d_0063789c)),0xb59);
+    dbg_logf(ADDR(0x637874, ((u8 *)&g.d_00637874)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6378b4, ((u8 *)&g.d_006378b4)),ADDR(0x63789c, ((u8 *)&g.d_0063789c)),0xb59);
     uVar2 = 0;
   }
   else {
-    local_c = (short *)FUN_005c5560(local_228);
-    local_14 = FUN_005c5410((int)*local_c);
-    local_1c = FUN_005c5410((int)local_c[1]);
+    local_c = (short *)res_lock(local_228);
+    local_14 = endian_swap16((int)*local_c);
+    local_1c = endian_swap16((int)local_c[1]);
     SetRect(&local_240,0,0,local_14,local_1c);
     local_244 = *(byte *)((int)local_c + 5) + 1;
     local_10 = local_c + 3;
     FUN_005f2110(local_544,local_10,local_244 * 3);
     local_22c = 0;
     for (local_224 = 0; local_224 < local_244; local_224 = local_224 + 1) {
-      uVar1 = FUN_005c201d(*(undefined4 *)(local_544 + local_22c),
+      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_544 + local_22c),
                            *(uint *)(local_544 + local_22c + 1),*(uint *)(local_544 + local_22c + 2)
                           );
       auStack_220[local_224] = uVar1;
       local_22c = local_22c + 3;
     }
     local_8 = (byte *)((int)local_c + local_244 * 3 + 6);
-    local_18 = FUN_005e35b0((iptr)&local_240);
-    iVar3 = FUN_005e3a81(local_18);
+    local_18 = dib_create((iptr)&local_240);
+    iVar3 = dib_get_bits(local_18);
     uVar5 = local_14;
     uVar6 = local_1c;
-    uVar2 = FUN_005e392a(local_18);
-    FUN_005e4d60((iptr)local_8,0,
+    uVar2 = dib_get_stride(local_18);
+    gif_lzw_decode((iptr)local_8,0,
                  CONCAT22((short)((uint)local_c >> 0x10),(ushort)*(byte *)(local_c + 2)),uVar2,uVar5
                  ,uVar6,iVar3);
-    iVar4 = FUN_005e395a(local_18);
+    iVar4 = dib_is_top_down(local_18);
     if (iVar4 == 0) {
-      FUN_005e3988(local_18);
+      dib_flip_vertical(local_18);
     }
-    FUN_005c1c99(this,(iptr)&local_240);
-    local_10 = (short *)this->field_34;
-    local_8 = (byte *)FUN_005e3a81(local_18);
+    surface_resize_for_image(this,(iptr)&local_240);
+    local_10 = (short *)this->bits;
+    local_8 = (byte *)dib_get_bits(local_18);
     for (local_224 = 0; local_224 < local_1c; local_224 = local_224 + 1) {
       local_230 = local_10;
       local_548 = local_8;
@@ -2072,13 +2072,13 @@ undefined4 __thiscall FUN_005c3874(C_004083b0_48 *this,iptr param_1)
         local_548 = local_548 + 1;
         local_230 = local_230 + 1;
       }
-      local_10 = (short *)((int)local_10 + this->field_c);
-      iVar4 = FUN_005e392a(local_18);
+      local_10 = (short *)((int)local_10 + this->stride);
+      iVar4 = dib_get_stride(local_18);
       local_8 = local_8 + iVar4;
     }
-    FUN_005e388f(local_18);
-    FUN_005c5580(local_228);
-    FUN_005c5520(local_228);
+    dib_destroy(local_18);
+    res_unlock(local_228);
+    res_free(local_228);
     uVar2 = 1;
   }
   return uVar2;
@@ -2117,14 +2117,14 @@ undefined4 __thiscall FUN_005c3874(C_004083b0_48 *this,iptr param_1)
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(1320)))
 #define local_bc (*(iptr *)(frame_ + FRAME_OFF(1324)))
 #define local_b8 (*(uint *)(frame_ + FRAME_OFF(1328)))
-#define local_b4 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(1332)))
+#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(1332)))
 #define local_1c (*(short * *)(frame_ + FRAME_OFF(1484)))
 #define local_18 (*(short * *)(frame_ + FRAME_OFF(1488)))
 #define local_14 (*(byte * *)(frame_ + FRAME_OFF(1492)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1496)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1500)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-undefined4 __thiscall FUN_005c3b7a(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c3b7a(DibSurface *this,iptr param_1)
 
 {
   undefined2 uVar1;
@@ -2136,48 +2136,48 @@ undefined4 __thiscall FUN_005c3b7a(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(1512)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b4);
+  file_obj_init(&local_b4);
   local_8 = 0;
-  iVar2 = thunk_FUN_004929c0(&local_b4,param_1);
+  iVar2 = thunk_file_obj_open(&local_b4,param_1);
   if (iVar2 == 0) {
-    FUN_005d225b(ADDR(0x6378cc, ((u8 *)&g.d_006378cc)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x63790c, ((u8 *)&g.d_0063790c)),ADDR(0x6378f4, ((u8 *)&g.d_006378f4)),0xba3);
+    dbg_log(ADDR(0x6378cc, ((u8 *)&g.d_006378cc)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x63790c, ((u8 *)&g.d_0063790c)),ADDR(0x6378f4, ((u8 *)&g.d_006378f4)),0xba3);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 0;
   }
   else {
-    local_18 = (short *)FUN_005c5470(&local_b4);
-    local_b8 = FUN_005c5410((int)*local_18);
-    local_c0 = FUN_005c5410((int)local_18[1]);
+    local_18 = (short *)file_obj_map_view(&local_b4);
+    local_b8 = endian_swap16((int)*local_18);
+    local_c0 = endian_swap16((int)local_18[1]);
     SetRect(&local_2dc,0,0,local_b8,local_c0);
     local_2e0 = *(byte *)((int)local_18 + 5) + 1;
     local_1c = local_18 + 3;
     FUN_005f2110(local_5e0,local_1c,local_2e0 * 3);
     local_2c8 = 0;
     for (local_2c4 = 0; local_2c4 < local_2e0; local_2c4 = local_2c4 + 1) {
-      uVar1 = FUN_005c201d(*(undefined4 *)(local_5e0 + local_2c8),
+      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e0 + local_2c8),
                            *(uint *)(local_5e0 + local_2c8 + 1),*(uint *)(local_5e0 + local_2c8 + 2)
                           );
       auStack_2c0[local_2c4] = uVar1;
       local_2c8 = local_2c8 + 3;
     }
     local_14 = (byte *)((int)local_18 + local_2e0 * 3 + 6);
-    local_bc = FUN_005e35b0((iptr)&local_2dc);
-    iVar3 = FUN_005e3a81(local_bc);
+    local_bc = dib_create((iptr)&local_2dc);
+    iVar3 = dib_get_bits(local_bc);
     uVar5 = local_b8;
     uVar6 = local_c0;
-    uVar4 = FUN_005e392a(local_bc);
-    FUN_005e4d60((iptr)local_14,0,
+    uVar4 = dib_get_stride(local_bc);
+    gif_lzw_decode((iptr)local_14,0,
                  CONCAT22((short)((uint)local_18 >> 0x10),(ushort)*(byte *)(local_18 + 2)),uVar4,
                  uVar5,uVar6,iVar3);
-    iVar2 = FUN_005e395a(local_bc);
+    iVar2 = dib_is_top_down(local_bc);
     if (iVar2 == 0) {
-      FUN_005e3988(local_bc);
+      dib_flip_vertical(local_bc);
     }
-    FUN_005c1c99(this,(iptr)&local_2dc);
-    local_1c = (short *)this->field_34;
-    local_14 = (byte *)FUN_005e3a81(local_bc);
+    surface_resize_for_image(this,(iptr)&local_2dc);
+    local_1c = (short *)this->bits;
+    local_14 = (byte *)dib_get_bits(local_bc);
     for (local_2c4 = 0; local_2c4 < local_c0; local_2c4 = local_2c4 + 1) {
       local_2cc = local_1c;
       local_5e4 = local_14;
@@ -2186,15 +2186,15 @@ undefined4 __thiscall FUN_005c3b7a(C_004083b0_48 *this,iptr param_1)
         local_5e4 = local_5e4 + 1;
         local_2cc = local_2cc + 1;
       }
-      local_1c = (short *)((int)local_1c + this->field_c);
-      iVar2 = FUN_005e392a(local_bc);
+      local_1c = (short *)((int)local_1c + this->stride);
+      iVar2 = dib_get_stride(local_bc);
       local_14 = local_14 + iVar2;
     }
-    FUN_005e388f(local_bc);
-    FUN_005c54a0(&local_b4);
-    thunk_FUN_00421c30(&local_b4);
+    dib_destroy(local_bc);
+    file_obj_unmap_view(&local_b4);
+    thunk_file_map_close(&local_b4);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 1;
   }
   return uVar4;
@@ -2230,32 +2230,32 @@ undefined4 __thiscall FUN_005c3b7a(C_004083b0_48 *this,iptr param_1)
 #define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(undefined1 * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall FUN_005c3efc(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c3efc(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
   int iVar2;
   undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_20 = FUN_005db2f8(param_1);
+  local_20 = res_load_bitmap(param_1);
   if (local_20 == 0) {
-    FUN_005d2279(ADDR(0x637924, ((u8 *)&g.d_00637924)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637960, ((u8 *)&g.d_00637960)),ADDR(0x637948, ((u8 *)&g.d_00637948)),0xbeb);
+    dbg_logf(ADDR(0x637924, ((u8 *)&g.d_00637924)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637960, ((u8 *)&g.d_00637960)),ADDR(0x637948, ((u8 *)&g.d_00637948)),0xbeb);
     uVar1 = 0;
   }
   else {
-    local_c = FUN_005c5560(local_20);
+    local_c = res_lock(local_20);
     local_14 = *(int *)(local_c + 4);
     local_18 = *(int *)(local_c + 8);
     SetRect(&local_38,0,0,local_14,local_18);
-    iVar2 = FUN_005c1e49(this,(iptr)&local_38);
+    iVar2 = surface_resize_dib24(this,(iptr)&local_38);
     if (iVar2 == 0) {
-      FUN_005c5520(local_20);
+      res_free(local_20);
       uVar1 = 0;
     }
     else {
-      local_14 = FUN_005c55a0(local_14);
-      local_10 = (undefined1 *)FUN_005c19d3(this,0,this->field_8 - 1);
+      local_14 = dib_row_align4(local_14);
+      local_10 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       if (*(short *)(local_c + 0xe) == 0x18) {
         local_8 = (undefined1 *)(local_c + 0x28);
         for (local_1c = 0; local_1c < local_18; local_1c = local_1c + 1) {
@@ -2267,11 +2267,11 @@ undefined4 __thiscall FUN_005c3efc(C_004083b0_48 *this,iptr param_1)
             local_28 = local_28 + 3;
             local_8 = local_8 + 3;
           }
-          local_10 = (undefined1 *)FUN_005c5710(this,(iptr)local_10);
+          local_10 = (undefined1 *)surface_prev_row(this,(iptr)local_10);
         }
       }
-      FUN_005c5580(local_20);
-      FUN_005c5520(local_20);
+      res_unlock(local_20);
+      res_free(local_20);
       uVar1 = 1;
     }
   }
@@ -2296,13 +2296,13 @@ undefined4 __thiscall FUN_005c3efc(C_004083b0_48 *this,iptr param_1)
 #define local_bc (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_b8 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_b4 (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
-#define local_b0 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(40)))
+#define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(40)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(192)))
 #define local_14 (*(undefined1 * *)(frame_ + FRAME_OFF(196)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(204)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-undefined4 __thiscall FUN_005c40b6(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c40b6(DibSurface *this,iptr param_1)
 
 {
   iptr iVar1;
@@ -2312,33 +2312,33 @@ undefined4 __thiscall FUN_005c40b6(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(216)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b0);
+  file_obj_init(&local_b0);
   local_8 = 0;
-  iVar1 = thunk_FUN_004929c0(&local_b0,param_1);
+  iVar1 = thunk_file_obj_open(&local_b0,param_1);
   if (iVar1 == 0) {
-    FUN_005d225b(ADDR(0x637978, ((u8 *)&g.d_00637978)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x6379b0, ((u8 *)&g.d_006379b0)),ADDR(0x637998, ((u8 *)&g.d_00637998)),0xc24);
+    dbg_log(ADDR(0x637978, ((u8 *)&g.d_00637978)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6379b0, ((u8 *)&g.d_006379b0)),ADDR(0x637998, ((u8 *)&g.d_00637998)),0xc24);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c434e */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+    /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
     uVar4 = 0;
   }
   else {
-    iVar2 = FUN_005c5470(&local_b0);
+    iVar2 = file_obj_map_view(&local_b0);
     local_18 = iVar2 + 0xe;
     local_b8 = *(int *)(iVar2 + 0x12);
     local_bc = *(int *)(iVar2 + 0x16);
     SetRect(&local_d8,0,0,local_b8,local_bc);
-    iVar3 = FUN_005c1e49(this,(iptr)&local_d8);
+    iVar3 = surface_resize_dib24(this,(iptr)&local_d8);
     if (iVar3 == 0) {
-      FUN_005c54a0(&local_b0);
-      thunk_FUN_00421c30(&local_b0);
+      file_obj_unmap_view(&local_b0);
+      thunk_file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 0;
     }
     else {
-      local_b8 = FUN_005c55a0(local_b8);
-      local_b4 = (undefined1 *)FUN_005c19d3(this,0,this->field_8 - 1);
+      local_b8 = dib_row_align4(local_b8);
+      local_b4 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       if (*(short *)(local_18 + 0xe) == 0x18) {
         local_14 = (undefined1 *)(local_18 + 0x28);
         for (local_c0 = 0; local_c0 < local_bc; local_c0 = local_c0 + 1) {
@@ -2350,13 +2350,13 @@ undefined4 __thiscall FUN_005c40b6(C_004083b0_48 *this,iptr param_1)
             local_c8 = local_c8 + 3;
             local_14 = local_14 + 3;
           }
-          local_b4 = (undefined1 *)FUN_005c5710(this,(iptr)local_b4);
+          local_b4 = (undefined1 *)surface_prev_row(this,(iptr)local_b4);
         }
       }
-      FUN_005c54a0(&local_b0);
-      thunk_FUN_00421c30(&local_b0);
+      file_obj_unmap_view(&local_b0);
+      thunk_file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b0)); }
+      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 1;
     }
   }
@@ -2393,7 +2393,7 @@ undefined4 __thiscall FUN_005c40b6(C_004083b0_48 *this,iptr param_1)
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(56)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
-undefined4 __thiscall FUN_005c4375(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c4375(DibSurface *this,iptr param_1)
 
 {
   undefined4 uVar1;
@@ -2404,33 +2404,33 @@ undefined4 __thiscall FUN_005c4375(C_004083b0_48 *this,iptr param_1)
   local_1f = 0x41;
   local_1e = 0x52;
   local_1d = 0x47;
-  local_28 = FUN_005c5540((iptr)&local_20,param_1);
+  local_28 = res_load((iptr)&local_20,param_1);
   if (local_28 == 0) {
-    FUN_005d2279(ADDR(0x6379c8, ((u8 *)&g.d_006379c8)),param_1);
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637a08, ((u8 *)&g.d_00637a08)),ADDR(0x6379f0, ((u8 *)&g.d_006379f0)),0xc60);
+    dbg_logf(ADDR(0x6379c8, ((u8 *)&g.d_006379c8)),param_1);
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637a08, ((u8 *)&g.d_00637a08)),ADDR(0x6379f0, ((u8 *)&g.d_006379f0)),0xc60);
     uVar1 = 0;
   }
   else {
-    local_10 = (char *)FUN_005c5560(local_28);
+    local_10 = (char *)res_lock(local_28);
     local_18 = (uint)*(ushort *)(local_10 + 0xc);
     local_1c = (uint)*(ushort *)(local_10 + 0xe);
     local_8 = local_10;
     SetRect(&local_40,0,0,local_18,local_1c);
-    iVar2 = FUN_005c1e49(this,(iptr)&local_40);
+    iVar2 = surface_resize_dib24(this,(iptr)&local_40);
     if (iVar2 == 0) {
-      FUN_005c5520(local_28);
+      res_free(local_28);
       uVar1 = 0;
     }
     else {
       if (local_8[2] == '\x02') {
         local_10 = local_10 + *local_8 + 0x12;
         if ((local_8[0x11] & 0x20U) == 0) {
-          local_14 = (char *)FUN_005c19d3(this,0,local_1c - 1);
-          local_44 = -this->field_10;
+          local_14 = (char *)surface_pixel_ptr(this,0,local_1c - 1);
+          local_44 = -this->signed_pitch;
         }
         else {
-          local_14 = (char *)FUN_005c19d3(this,0,0);
-          local_44 = this->field_10;
+          local_14 = (char *)surface_pixel_ptr(this,0,0);
+          local_44 = this->signed_pitch;
         }
         if (local_8[0x10] == '\x18') {
           for (local_24 = 0; local_24 < local_1c; local_24 = local_24 + 1) {
@@ -2460,13 +2460,13 @@ undefined4 __thiscall FUN_005c4375(C_004083b0_48 *this,iptr param_1)
         }
       }
       else if (local_8[2] == '\n') {
-        FUN_005d225b(ADDR(0x637a20, ((u8 *)&g.d_00637a20)));
+        dbg_log(ADDR(0x637a20, ((u8 *)&g.d_00637a20)));
       }
       if ((local_8[0x11] & 0x10U) != 0) {
-        FUN_005d225b(ADDR(0x637a48, ((u8 *)&g.d_00637a48)));
+        dbg_log(ADDR(0x637a48, ((u8 *)&g.d_00637a48)));
       }
-      FUN_005c5580(local_28);
-      FUN_005c5520(local_28);
+      res_unlock(local_28);
+      res_free(local_28);
       uVar1 = 1;
     }
   }
@@ -2498,14 +2498,14 @@ undefined4 __thiscall FUN_005c4375(C_004083b0_48 *this,iptr param_1)
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_bc (*(uint *)(frame_ + FRAME_OFF(36)))
 #define local_b8 (*(char * *)(frame_ + FRAME_OFF(40)))
-#define local_b4 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(44)))
+#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(44)))
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall FUN_005c463f(C_004083b0_48 *this,iptr param_1)
+undefined4 __thiscall FUN_005c463f(DibSurface *this,iptr param_1)
 
 {
   int iVar1;
@@ -2513,40 +2513,40 @@ undefined4 __thiscall FUN_005c463f(C_004083b0_48 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b4);
+  file_obj_init(&local_b4);
   local_8 = 0;
-  iVar1 = thunk_FUN_004929c0(&local_b4,param_1);
+  iVar1 = thunk_file_obj_open(&local_b4,param_1);
   if (iVar1 == 0) {
-    FUN_005d225b(ADDR(0x637a84, ((u8 *)&g.d_00637a84)));
-    FUN_005dae6b((C_005dae6b *)&DAT_006e4850,3,ADDR(0x637abc, ((u8 *)&g.d_00637abc)),ADDR(0x637aa4, ((u8 *)&g.d_00637aa4)),0xcbd);
+    dbg_log(ADDR(0x637a84, ((u8 *)&g.d_00637a84)));
+    err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637abc, ((u8 *)&g.d_00637abc)),ADDR(0x637aa4, ((u8 *)&g.d_00637aa4)),0xcbd);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c4a00 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar2 = 0;
   }
   else {
-    local_1c = (char *)FUN_005c5470(&local_b4);
+    local_1c = (char *)file_obj_map_view(&local_b4);
     local_bc = (uint)*(ushort *)(local_1c + 0xc);
     local_c0 = (uint)*(ushort *)(local_1c + 0xe);
     local_14 = local_1c;
     SetRect(&local_dc,0,0,local_bc,local_c0);
-    iVar1 = FUN_005c1e49(this,(iptr)&local_dc);
+    iVar1 = surface_resize_dib24(this,(iptr)&local_dc);
     if (iVar1 == 0) {
-      FUN_005c54a0(&local_b4);
-      thunk_FUN_00421c30(&local_b4);
+      file_obj_unmap_view(&local_b4);
+      thunk_file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 0;
     }
     else {
       if (local_14[2] == '\x02') {
         local_1c = local_1c + *local_14 + 0x12;
         if ((local_14[0x11] & 0x20U) == 0) {
-          local_b8 = (char *)FUN_005c19d3(this,0,local_c0 - 1);
-          local_e0 = -this->field_10;
+          local_b8 = (char *)surface_pixel_ptr(this,0,local_c0 - 1);
+          local_e0 = -this->signed_pitch;
         }
         else {
-          local_b8 = (char *)FUN_005c19d3(this,0,0);
-          local_e0 = this->field_10;
+          local_b8 = (char *)surface_pixel_ptr(this,0,0);
+          local_e0 = this->signed_pitch;
         }
         if (local_14[0x10] == '\x18') {
           for (local_c4 = 0; local_c4 < local_c0; local_c4 = local_c4 + 1) {
@@ -2576,15 +2576,15 @@ undefined4 __thiscall FUN_005c463f(C_004083b0_48 *this,iptr param_1)
         }
       }
       else if (local_14[2] == '\n') {
-        FUN_005d225b(ADDR(0x637ad4, ((u8 *)&g.d_00637ad4)));
+        dbg_log(ADDR(0x637ad4, ((u8 *)&g.d_00637ad4)));
       }
       if ((local_14[0x11] & 0x10U) != 0) {
-        FUN_005d225b(ADDR(0x637afc, ((u8 *)&g.d_00637afc)));
+        dbg_log(ADDR(0x637afc, ((u8 *)&g.d_00637afc)));
       }
-      FUN_005c54a0(&local_b4);
-      thunk_FUN_00421c30(&local_b4);
+      file_obj_unmap_view(&local_b4);
+      thunk_file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 1;
     }
   }
@@ -2612,8 +2612,8 @@ undefined4 __thiscall FUN_005c463f(C_004083b0_48 *this,iptr param_1)
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
 void __thiscall
-FUN_005c4a27
-          (C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4)
+surface_fill_rect_rgb
+          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4)
 
 {
   char cVar1;
@@ -2624,25 +2624,25 @@ FUN_005c4a27
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x637b38, ((u8 *)&g.d_00637b38)));
+    dbg_log(ADDR(0x637b38, ((u8 *)&g.d_00637b38)));
     local_8 = 0;
-    FUN_005c01c1(this);
+    surface_lock(this);
   }
-  IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->field_14);
-  local_c = thunk_FUN_00407f90((iptr)&local_20);
-  if ((local_c != 0) && (local_10 = thunk_FUN_00407fc0((iptr)&local_20), local_10 != 0)) {
-    if (this->field_44 == 2) {
-      uVar2 = thunk_FUN_0043c560(this);
-      iVar3 = FUN_005c55f0(this);
-      iVar4 = FUN_005e395a(iVar3);
-      iVar5 = FUN_005c55d0(this);
-      FUN_005e4ef8(this->field_34,param_2,param_3,param_4,local_20.left,local_20.top,local_c,
+  IntersectRect(&local_20,(RECT *)param_1,(RECT *)&this->clip_left);
+  local_c = thunk_rect_width((iptr)&local_20);
+  if ((local_c != 0) && (local_10 = thunk_rect_height((iptr)&local_20), local_10 != 0)) {
+    if (this->bytes_per_pixel == 2) {
+      uVar2 = thunk_surface_height(this);
+      iVar3 = surface_get_dib(this);
+      iVar4 = dib_is_top_down(iVar3);
+      iVar5 = surface_get_pitch(this);
+      dib_fill_rect16(this->bits,param_2,param_3,param_4,local_20.left,local_20.top,local_c,
                    local_10,((-(uint)(iVar4 == 0) & 0xfffffffe) + 1) * iVar5,uVar2);
     }
     else {
-      FUN_005e4c3f(this->field_40,(iptr)&local_20,param_2,param_3,param_4);
+      dib_fill_rect_rgb(this->dib,(iptr)&local_20,param_2,param_3,param_4);
     }
   }
   return;
@@ -2655,10 +2655,10 @@ FUN_005c4a27
 /* 005c4b4c auto */
 void __thiscall
 FUN_005c4b4c
-          (C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
-  FUN_005c4a27(this,(iptr)&this->field_14,param_1,param_2,param_3);
+  surface_fill_rect_rgb(this,(iptr)&this->clip_left,param_1,param_2,param_3);
   return;
 }
 
@@ -2668,7 +2668,7 @@ FUN_005c4b4c
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-FUN_005c4b7f(C_005c4b7f *this,C_004083b0_48 *param_1,RECT *param_2,RECT *param_3)
+FUN_005c4b7f(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,RECT *param_3)
 
 {
   iptr iVar1;
@@ -2685,8 +2685,8 @@ FUN_005c4b7f(C_005c4b7f *this,C_004083b0_48 *param_1,RECT *param_2,RECT *param_3
     local_c = local_1c.bottom - local_1c.top;
   }
   if ((local_8 != 0) && (local_c != 0)) {
-    iVar1 = FUN_005c55f0(param_1);
-    FUN_005bcc8d(this->field_40,local_1c.left,local_1c.top,local_8,local_c,iVar1,local_2c.left,
+    iVar1 = surface_get_dib(param_1);
+    dib_blit_to_dib(this->dib,local_1c.left,local_1c.top,local_8,local_c,iVar1,local_2c.left,
                  local_2c.top);
   }
   return;
@@ -2702,7 +2702,7 @@ FUN_005c4b7f(C_005c4b7f *this,C_004083b0_48 *param_1,RECT *param_2,RECT *param_3
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-FUN_005c4c46(C_005c4c46 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3)
+FUN_005c4c46(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3)
 
 {
   undefined4 uVar1;
@@ -2719,8 +2719,8 @@ FUN_005c4c46(C_005c4c46 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3)
     local_c = local_1c.bottom - local_1c.top;
   }
   if ((local_8 != 0) && (local_c != 0)) {
-    uVar1 = FUN_005c5740(param_1);
-    FUN_005e9838(this->field_40,local_1c.left,local_1c.top,local_8,local_c,uVar1,local_2c.left,
+    uVar1 = ddsurf_get_iface(param_1);
+    dib_blit_to_ddsurf(this->dib,local_1c.left,local_1c.top,local_8,local_c,uVar1,local_2c.left,
                  local_2c.top);
   }
   return;
@@ -2733,7 +2733,7 @@ FUN_005c4c46(C_005c4c46 *this,C_005c5740 *param_1,RECT *param_2,RECT *param_3)
 /* 005c4d0d auto */
 void __thiscall
 FUN_005c4d0d
-          (C_004083b0_48 *this,C_005c5740 *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,DDSurfaceIfaceView *param_1,undefined4 *param_2,undefined4 *param_3)
 
 {
   char cVar1;
@@ -2745,21 +2745,21 @@ FUN_005c4d0d
   undefined4 uVar7;
   undefined4 uVar8;
   
-  cVar1 = FUN_005c54f0(this);
+  cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x637b60, ((u8 *)&g.d_00637b60)));
-    FUN_005c01c1(this);
+    dbg_log(ADDR(0x637b60, ((u8 *)&g.d_00637b60)));
+    surface_lock(this);
   }
-  uVar2 = thunk_FUN_00407fc0((iptr)param_3);
-  uVar3 = thunk_FUN_00407f90((iptr)param_3);
+  uVar2 = thunk_rect_height((iptr)param_3);
+  uVar3 = thunk_rect_width((iptr)param_3);
   uVar8 = param_3[1];
   uVar7 = *param_3;
-  uVar4 = FUN_005c5740(param_1);
-  uVar5 = thunk_FUN_00407fc0((iptr)param_2);
-  uVar6 = thunk_FUN_00407f90((iptr)param_2);
-  FUN_005e98ba(this->field_40,*param_2,param_2[1],uVar6,uVar5,uVar4,uVar7,uVar8,uVar3,uVar2);
+  uVar4 = ddsurf_get_iface(param_1);
+  uVar5 = thunk_rect_height((iptr)param_2);
+  uVar6 = thunk_rect_width((iptr)param_2);
+  dib_stretch_blit_to_ddsurf(this->dib,*param_2,param_2[1],uVar6,uVar5,uVar4,uVar7,uVar8,uVar3,uVar2);
   if (cVar1 == '\0') {
-    FUN_005c02e0(this);
+    surface_unlock(this);
   }
   return;
 }
@@ -2767,23 +2767,23 @@ FUN_005c4d0d
 /* 005c4dd3 auto */
 void __thiscall
 FUN_005c4dd3
-          (C_005c4dd3 *this,undefined4 param_1,int param_2,int param_3,uint param_4,
+          (SurfaceTextRgbCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4,
           undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
   int iVar1;
   
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x637b8c, ((u8 *)&g.d_00637b8c)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x637b8c, ((u8 *)&g.d_00637b8c)));
   }
-  else if (this->field_40 != 0) {
+  else if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar1 = FUN_005c847f(*(undefined4 *)PTR_DAT_00637e5c);
+      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      FUN_005e47a5(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,iVar1 + param_2,
+      dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,iVar1 + param_2,
                    iVar1 + param_3,(iptr)(this->pad_0 + 0x14),param_4,0,0,0);
     }
-    FUN_005e47a5(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,param_2,param_3,
+    dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,
                  (iptr)(this->pad_0 + 0x14),param_4,param_5,param_6,param_7);
   }
   return;
@@ -2793,29 +2793,29 @@ FUN_005c4dd3
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 FUN_005c4eb6
-          (C_005c4eb6 *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4,
+          (SurfaceTextRectRgbCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4,
           undefined4 param_5,undefined4 param_6)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x637bac, ((u8 *)&g.d_00637bac)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x637bac, ((u8 *)&g.d_00637bac)));
   }
-  else if (this->field_40 != 0) {
+  else if (this->dib != 0) {
     if ((param_3 & 0x10) != 0) {
-      iVar1 = FUN_005c847f(*(undefined4 *)PTR_DAT_00637e5c);
+      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
       local_14.left = *param_2;
       local_14.top = param_2[1];
       local_14.right = param_2[2];
       local_14.bottom = param_2[3];
       OffsetRect(&local_14,iVar1,iVar1);
-      FUN_005e49a0(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,(iptr)&local_14,param_3,0,
+      dib_draw_text_rect_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3,0,
                    0,0);
     }
-    FUN_005e3eca(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,(iptr)param_2,param_3);
+    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
   }
   return;
 }
@@ -2824,20 +2824,20 @@ FUN_005c4eb6
 /* 005c4f9f auto */
 void __thiscall
 FUN_005c4f9f
-          (C_005c4f9f *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4,
+          (SurfaceTextRgbFontView *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4,
           uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
 
 {
   int iVar1;
   
-  if (this->field_40 != 0) {
+  if (this->dib != 0) {
     if ((param_5 & 0x10) != 0) {
-      iVar1 = FUN_005c847f(*param_1);
+      iVar1 = font_measure_height(*param_1);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      FUN_005e47a5(this->field_40,*param_1,param_2,param_3 + iVar1,param_4 + iVar1,
+      dib_draw_text_at_rgb(this->dib,*param_1,param_2,param_3 + iVar1,param_4 + iVar1,
                    (iptr)(this->pad_0 + 0x14),param_5,0,0,0);
     }
-    FUN_005e47a5(this->field_40,*param_1,param_2,param_3,param_4,(iptr)(this->pad_0 + 0x14),param_5,
+    dib_draw_text_at_rgb(this->dib,*param_1,param_2,param_3,param_4,(iptr)(this->pad_0 + 0x14),param_5,
                  param_6,param_7,param_8);
   }
   return;
@@ -2847,25 +2847,25 @@ FUN_005c4f9f
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 FUN_005c505d
-          (C_005c505d *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4,
+          (SurfaceTextRectFontView *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4,
           undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_40 != 0) {
+  if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar1 = FUN_005c847f(*param_1);
+      iVar1 = font_measure_height(*param_1);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
       local_14.left = *param_3;
       local_14.top = param_3[1];
       local_14.right = param_3[2];
       local_14.bottom = param_3[3];
       OffsetRect(&local_14,iVar1,iVar1);
-      FUN_005e49a0(this->field_40,*param_1,param_2,(iptr)&local_14,param_4,0,0,0);
+      dib_draw_text_rect_rgb(this->dib,*param_1,param_2,(iptr)&local_14,param_4,0,0,0);
     }
-    FUN_005e49a0(this->field_40,*param_1,param_2,(iptr)param_3,param_4,param_5,param_6,param_7);
+    dib_draw_text_rect_rgb(this->dib,*param_1,param_2,(iptr)param_3,param_4,param_5,param_6,param_7);
   }
   return;
 }
@@ -2874,15 +2874,15 @@ FUN_005c505d
 /* 005c512d auto */
 void __thiscall
 FUN_005c512d
-          (C_005c512d *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (SurfaceTextWrapRgbCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
 {
-  if (PTR_DAT_00637e5c == (undefined *)0x0) {
-    FUN_005d225b(ADDR(0x637bcc, ((u8 *)&g.d_00637bcc)));
+  if (draw_current_font == (undefined *)0x0) {
+    dbg_log(ADDR(0x637bcc, ((u8 *)&g.d_00637bcc)));
   }
-  else if (this->field_40 != 0) {
-    FUN_005e4aa6(this->field_40,*(undefined4 *)PTR_DAT_00637e5c,param_1,param_2,param_3,param_4,
+  else if (this->dib != 0) {
+    dib_draw_text_wrap_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,param_4,
                  param_5,param_6);
   }
   return;
@@ -2891,49 +2891,49 @@ FUN_005c512d
 /* 005c51a5 auto */
 void __thiscall
 FUN_005c51a5
-          (C_005c51a5 *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3,
+          (SurfaceTextWrapRgbFontView *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
-  if (this->field_40 != 0) {
-    FUN_005e4aa6(this->field_40,*param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  if (this->dib != 0) {
+    dib_draw_text_wrap_rgb(this->dib,*param_1,param_2,param_3,param_4,param_5,param_6,param_7);
   }
   return;
 }
 
 /* 005c51fc auto */
 void __thiscall
-FUN_005c51fc
-          (C_004083b0_48 *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5,
+surface_draw_line_rgb
+          (DibSurface *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5,
           undefined4 param_6,undefined4 param_7)
 
 {
-  if (((((((int)this->field_14 <= param_1) || ((int)this->field_14 <= param_3)) &&
-        ((param_3 < (int)this->field_1c || (param_1 < (int)this->field_1c)))) &&
-       (((int)this->field_18 <= param_2 || ((int)this->field_18 <= param_4)))) &&
-      ((param_2 < (int)this->field_20 || (param_4 < (int)this->field_20)))) && (this->field_40 != 0)
+  if (((((((int)this->clip_left <= param_1) || ((int)this->clip_left <= param_3)) &&
+        ((param_3 < (int)this->clip_right || (param_1 < (int)this->clip_right)))) &&
+       (((int)this->clip_top <= param_2 || ((int)this->clip_top <= param_4)))) &&
+      ((param_2 < (int)this->clip_bottom || (param_4 < (int)this->clip_bottom)))) && (this->dib != 0)
      ) {
-    FUN_005e4b9b(this->field_40,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+    dib_draw_line_rgb(this->dib,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
   }
   return;
 }
 
 /* 005c52dd auto */
 void __thiscall
-FUN_005c52dd
-          (C_004083b0_48 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+surface_frame_rect_rgb
+          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           )
 
 {
-  if (this->field_40 != 0) {
-    FUN_005c51fc(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
+  if (this->dib != 0) {
+    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
                  *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
-    FUN_005c51fc(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
+    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
                  *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4
                 );
-    FUN_005c51fc(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
+    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
                  *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4);
-    FUN_005c51fc(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
+    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
                  *(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
   }
   return;
@@ -2942,112 +2942,112 @@ FUN_005c52dd
 /* 005c53c3 auto */
 void __thiscall
 FUN_005c53c3
-          (C_004083b0_48 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   int iVar1;
   undefined4 uVar2;
   
-  iVar1 = this->field_44 << 3;
-  uVar2 = FUN_005c19d3(this,0,0);
-  FUN_005e4cc8(this->field_40,uVar2,iVar1,param_1,param_2,param_3);
+  iVar1 = this->bytes_per_pixel << 3;
+  uVar2 = surface_pixel_ptr(this,0,0);
+  dib_rgb_to_native_pixel(this->dib,uVar2,iVar1,param_1,param_2,param_3);
   return;
 }
 
 /* 005c5410 auto */
-uint __cdecl FUN_005c5410(undefined4 param_1)
+uint __cdecl endian_swap16(undefined4 param_1)
 
 {
   return (uint)CONCAT11((undefined1)param_1,(*(undefined1 *)((char *)&param_1 + 1)));
 }
 
 /* 005c5430 auto */
-uint __cdecl FUN_005c5430(uint param_1)
+uint __cdecl endian_swap32(uint param_1)
 
 {
   return param_1 << 0x18 | (param_1 & 0xff00) << 8 | (param_1 & 0xff0000) >> 8 | param_1 >> 0x18;
 }
 
 /* 005c5470 auto */
-undefined4 __thiscall FUN_005c5470(C_00421bf0_98 *this)
+undefined4 __thiscall file_obj_map_view(FileObject *this)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005d89e8((iptr)this,0,0);
+  uVar1 = file_obj_map_view_impl((iptr)this,0,0);
   return uVar1;
 }
 
 /* 005c54a0 auto */
-void __thiscall FUN_005c54a0(C_00421bf0_98 *this)
+void __thiscall file_obj_unmap_view(FileObject *this)
 
 {
-  FUN_005d8ab8((iptr)this);
+  file_obj_close_mapping((iptr)this);
   return;
 }
 
 /* 005c54d0 auto */
-undefined4 __cdecl FUN_005c54d0(undefined4 param_1)
+undefined4 __cdecl endian_from_le(undefined4 param_1)
 
 {
   return param_1;
 }
 
 /* 005c54f0 auto */
-bool __thiscall FUN_005c54f0(C_004083b0_48 *this)
+bool __thiscall surface_is_locked(DibSurface *this)
 
 {
-  return this->field_34 != 0;
+  return this->bits != 0;
 }
 
 /* 005c5520 auto */
-void __cdecl FUN_005c5520(undefined4 param_1)
+void __cdecl res_free(undefined4 param_1)
 
 {
-  FUN_005db1e0(param_1);
+  res_free_impl(param_1);
   return;
 }
 
 /* 005c5540 auto */
-undefined4 __cdecl FUN_005c5540(iptr param_1,undefined4 param_2)
+undefined4 __cdecl res_load(iptr param_1,undefined4 param_2)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005db1fa(param_1,param_2);
+  uVar1 = res_load_impl(param_1,param_2);
   return uVar1;
 }
 
 /* 005c5560 auto */
-undefined4 __cdecl FUN_005c5560(undefined4 param_1)
+undefined4 __cdecl res_lock(undefined4 param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005db531(param_1);
+  uVar1 = res_lock_impl(param_1);
   return uVar1;
 }
 
 /* 005c5580 auto */
-void __cdecl FUN_005c5580(undefined4 param_1)
+void __cdecl res_unlock(undefined4 param_1)
 
 {
-  FUN_005db54b(param_1);
+  res_unlock_impl(param_1);
   return;
 }
 
 /* 005c55a0 auto */
-int __cdecl FUN_005c55a0(int param_1)
+int __cdecl dib_row_align4(int param_1)
 
 {
   return ((int)(param_1 + 3 + (param_1 + 3 >> 0x1f & 3U)) >> 2) << 2;
 }
 
 /* 005c55d0 auto */
-u32 __thiscall FUN_005c55d0(C_004083b0_48 *this)
+u32 __thiscall surface_get_pitch(DibSurface *this)
 
 {
-  return this->field_c;
+  return this->stride;
 }
 
 /* 005c55f0 auto */
@@ -3056,45 +3056,45 @@ u32 __thiscall FUN_005c55d0(C_004083b0_48 *this)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_005c55f0(C_004083b0_48 *this)
+u32 __thiscall surface_get_dib(DibSurface *this)
 
 {
-  return this->field_40;
+  return this->dib;
 }
 
 /* 005c5610 auto */
-int __thiscall FUN_005c5610(C_004083b0_48 *this,iptr param_1)
+int __thiscall surface_next_row(DibSurface *this,iptr param_1)
 
 {
-  return this->field_10 + param_1;
+  return this->signed_pitch + param_1;
 }
 
 /* 005c5640 auto */
-uptr __thiscall FUN_005c5640(C_004083b0_48 *this)
+uptr __thiscall surface_get_bits(DibSurface *this)
 
 {
-  return this->field_34;
+  return this->bits;
 }
 
 /* 005c5660 auto */
-u32 __thiscall FUN_005c5660(C_005c5660 *this)
+u32 __thiscall ddsurf_get_height(DDSurface *this)
 
 {
-  return this->field_4;
+  return this->surf_height;
 }
 
 /* 005c5680 auto */
-u32 __thiscall FUN_005c5680(C_005c5680 *this)
+u32 __thiscall ddsurf_get_width(DDSurfaceWidthView *this)
 
 {
-  return this->field_8;
+  return this->surf_width;
 }
 
 /* 005c56a0 auto */
-u32 __thiscall FUN_005c56a0(C_005c5660 *this)
+u32 __thiscall ddsurf_get_pitch(DDSurface *this)
 
 {
-  return this->field_c;
+  return this->surf_pitch;
 }
 
 /* 005c56c0 auto */
@@ -3103,12 +3103,12 @@ u32 __thiscall FUN_005c56a0(C_005c5660 *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall FUN_005c56c0(C_005c5660 *this)
+undefined4 __thiscall ddsurf_unlock(DDSurface *this)
 
 {
   undefined4 uVar1;
   
-  uVar1 = FUN_005e92c9(this->field_0);
+  uVar1 = ddsurf_iface_unlock(this->dd_surface);
   return uVar1;
 }
 
@@ -3118,38 +3118,38 @@ undefined4 __thiscall FUN_005c56c0(C_005c5660 *this)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_005c56f0(C_005c56f0 *this)
+u32 __thiscall palette_get_version(PaletteVersionView *this)
 
 {
-  return this->field_408;
+  return this->pal_version;
 }
 
 /* 005c5710 auto */
-int __thiscall FUN_005c5710(C_004083b0_48 *this,iptr param_1)
+int __thiscall surface_prev_row(DibSurface *this,iptr param_1)
 
 {
-  return param_1 - this->field_10;
+  return param_1 - this->signed_pitch;
 }
 
 /* 005c5740 auto */
-u32 __thiscall FUN_005c5740(C_005c5740 *this)
+u32 __thiscall ddsurf_get_iface(DDSurfaceIfaceView *this)
 
 {
-  return this->field_0;
+  return this->iface;
 }
 
 /* 005c5760 auto */
 void __thiscall
-FUN_005c5760
-          (C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+wnd_create_framed
+          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7)
 
 {
   iptr iVar1;
   
-  FUN_005c5f20(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005ea7a0((iptr)this,iVar1);
+  wnd_create_with_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_frame_proc((iptr)this,iVar1);
   return;
 }
 
@@ -3160,24 +3160,24 @@ FUN_005c57b1
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
 {
-  FUN_005c5760
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_FUN_00579b40(this,param_8);
+  wnd_create_framed
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
 /* 005c57f9 auto */
 void __thiscall
-FUN_005c57f9
-          (C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+wnd_create_framed_child
+          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
 
 {
   iptr iVar1;
   
-  FUN_005c5fc4(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005ea7a0((iptr)this,iVar1);
+  wnd_create_with_handlers(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_frame_proc((iptr)this,iVar1);
   return;
 }
 
@@ -3189,24 +3189,24 @@ FUN_005c584e
           undefined4 param_8,iptr param_9)
 
 {
-  FUN_005c57f9
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  thunk_FUN_00579b40(this,param_9);
+  wnd_create_framed_child
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  thunk_wnd_attach_menu(this,param_9);
   return;
 }
 
 /* 005c589a auto */
 void __thiscall
-FUN_005c589a
-          (C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+wnd_create_framed_nopal
+          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
 {
   iptr iVar1;
   
-  FUN_005c6070(this,param_1,param_2,param_3,param_4,param_5,param_6);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005ea7a0((iptr)this,iVar1);
+  wnd_create_nopal_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_frame_proc((iptr)this,iVar1);
   return;
 }
 
@@ -3217,24 +3217,24 @@ FUN_005c58e7
           undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
 
 {
-  FUN_005c589a((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6)
+  wnd_create_framed_nopal((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
   ;
-  thunk_FUN_00579b40(this,param_7);
+  thunk_wnd_attach_menu(this,param_7);
   return;
 }
 
 /* 005c592b auto */
 void __thiscall
-FUN_005c592b
-          (C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+wnd_create_framed_child_nopal
+          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
   iptr iVar1;
   
-  FUN_005c610c(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005ea7a0((iptr)this,iVar1);
+  wnd_create_child_nopal_cmd_proc(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_frame_proc((iptr)this,iVar1);
   return;
 }
 
@@ -3245,22 +3245,22 @@ FUN_005c597c
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
 {
-  FUN_005c592b
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_FUN_00579b40(this,param_8);
+  wnd_create_framed_child_nopal
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
 /* 005c59c4 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c59c4(C_005c59c4 *this,iptr param_1)
+void __thiscall wnd_append_control(WndControlListView *this,iptr param_1)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = this->field_b8;
+  local_8 = this->first_control;
   if (local_8 == 0) {
-    this->field_b8 = param_1;
+    this->first_control = param_1;
   }
   else {
     for (; *(int *)(local_8 + 0x20) != 0; local_8 = *(uptr *)(local_8 + 0x20)) {
@@ -3272,38 +3272,38 @@ void __thiscall FUN_005c59c4(C_005c59c4 *this,iptr param_1)
 #undef local_8
 
 /* 005c5a27 auto */
-#define local_8 (*(C_005c5e80 * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c5a27(C_005c5a27 *this,int param_1)
+#define local_8 (*(ControlNextView * *)(frame_ + FRAME_OFF(0)))
+void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1)
 
 {
   int iVar1;
-  C_00418740 *this_00;
-  C_005c5e80 *this_01;
+  ControlIdView *this_00;
+  ControlNextView *this_01;
   u32 uVar2;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (this->field_b8 != 0) {
-    local_8 = (C_005c5e80 *)this->field_b8;
-    iVar1 = thunk_FUN_00418740((C_00418740 *)local_8);
+  if (this->first_control != 0) {
+    local_8 = (ControlNextView *)this->first_control;
+    iVar1 = thunk_ctrl_get_id((ControlIdView *)local_8);
     if (iVar1 == param_1) {
-      this->field_b8 = local_8->field_20;
+      this->first_control = local_8->field_20;
     }
     else {
       while( true ) {
-        if (local_8 == (C_005c5e80 *)0x0) {
+        if (local_8 == (ControlNextView *)0x0) {
           return;
         }
-        iVar1 = FUN_005c5e80(local_8);
+        iVar1 = control_get_next(local_8);
         if (iVar1 == 0) {
           return;
         }
-        this_00 = (C_00418740 *)FUN_005c5e80(local_8);
-        iVar1 = thunk_FUN_00418740(this_00);
+        this_00 = (ControlIdView *)control_get_next(local_8);
+        iVar1 = thunk_ctrl_get_id(this_00);
         if (iVar1 == param_1) break;
-        local_8 = (C_005c5e80 *)FUN_005c5e80(local_8);
+        local_8 = (ControlNextView *)control_get_next(local_8);
       }
-      this_01 = (C_005c5e80 *)FUN_005c5e80(local_8);
-      uVar2 = FUN_005c5e80(this_01);
+      this_01 = (ControlNextView *)control_get_next(local_8);
+      uVar2 = control_get_next(this_01);
       local_8->field_20 = uVar2;
     }
   }
@@ -3312,17 +3312,17 @@ void __thiscall FUN_005c5a27(C_005c5a27 *this,int param_1)
 #undef local_8
 
 /* 005c5aeb auto */
-#define local_8 (*(C_00418740 * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c5aeb(C_005c5a27 *this)
+#define local_8 (*(ControlIdView * *)(frame_ + FRAME_OFF(0)))
+void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
 
 {
   undefined4 uVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = (C_00418740 *)this->field_b8; local_8 != (C_00418740 *)0x0;
-      local_8 = *(C_00418740 **)local_8[4].pad_0) {
-    uVar1 = thunk_FUN_00418740(local_8);
-    FUN_005c5a27(this,uVar1);
+  for (local_8 = (ControlIdView *)this->first_control; local_8 != (ControlIdView *)0x0;
+      local_8 = *(ControlIdView **)local_8[4].pad_0) {
+    uVar1 = thunk_ctrl_get_id(local_8);
+    wnd_remove_control(this,uVar1);
   }
   return;
 }
@@ -3330,62 +3330,62 @@ void __thiscall FUN_005c5aeb(C_005c5a27 *this)
 
 /* 005c5b36 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c5b36(C_005c5b36 *this)
+void __thiscall FUN_005c5b36(WndControlInvalidateView *this)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = this->field_b8; local_8 != 0; local_8 = *(uptr *)(local_8 + 0x20)) {
-    FUN_005c8b00(*(undefined4 *)(local_8 + 0x1c));
+  for (local_8 = this->first_control; local_8 != 0; local_8 = *(uptr *)(local_8 + 0x20)) {
+    wnd_invalidate(*(undefined4 *)(local_8 + 0x1c));
   }
   return;
 }
 #undef local_8
 
 /* 005c5b7f auto */
-#define local_8 (*(C_005c5ea0 * *)(frame_ + FRAME_OFF(0)))
-void __thiscall FUN_005c5b7f(C_00408010_cc *this)
+#define local_8 (*(ControlInitialFocusView * *)(frame_ + FRAME_OFF(0)))
+void __thiscall wnd_focus_first_control(Wnd *this)
 
 {
   char cVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (C_005c5ea0 *)this->field_b8;
+  local_8 = (ControlInitialFocusView *)this->control_list;
   while( true ) {
-    if (local_8 == (C_005c5ea0 *)0x0) {
-      if ((this->field_b8 != 0) && ((char)this->field_c4 != '\0')) {
-        FUN_005eabcc((iptr)this,this->field_b8);
+    if (local_8 == (ControlInitialFocusView *)0x0) {
+      if ((this->control_list != 0) && ((char)this->keyboard_nav != '\0')) {
+        wnd_focus_control((iptr)this,this->control_list);
       }
       return;
     }
-    cVar1 = FUN_005c5ea0(local_8);
+    cVar1 = ctrl_get_initial_focus(local_8);
     if (cVar1 != '\0') break;
-    local_8 = (C_005c5ea0 *)FUN_005c5e80((C_005c5e80 *)local_8);
+    local_8 = (ControlInitialFocusView *)control_get_next((ControlNextView *)local_8);
   }
-  if ((char)this->field_c4 == '\0') {
+  if ((char)this->keyboard_nav == '\0') {
     return;
   }
-  FUN_005eabcc((iptr)this,(iptr)local_8);
+  wnd_focus_control((iptr)this,(iptr)local_8);
   return;
 }
 #undef local_8
 
 /* 005c5c2d auto */
-#define local_8 (*(C_005c5ea0 * *)(frame_ + FRAME_OFF(0)))
-C_005c5ea0 * __thiscall FUN_005c5c2d(void *this)
+#define local_8 (*(ControlInitialFocusView * *)(frame_ + FRAME_OFF(0)))
+ControlInitialFocusView * __thiscall FUN_005c5c2d(void *this)
 
 {
   char cVar1;
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = *(C_005c5ea0 **)((int)this + 0xb8);
+  local_8 = *(ControlInitialFocusView **)((int)this + 0xb8);
   while( true ) {
-    if (local_8 == (C_005c5ea0 *)0x0) {
-      return (C_005c5ea0 *)0x0;
+    if (local_8 == (ControlInitialFocusView *)0x0) {
+      return (ControlInitialFocusView *)0x0;
     }
-    cVar1 = FUN_005c5ea0(local_8);
+    cVar1 = ctrl_get_initial_focus(local_8);
     if (cVar1 != '\0') break;
-    local_8 = (C_005c5ea0 *)FUN_005c5e80((C_005c5e80 *)local_8);
+    local_8 = (ControlInitialFocusView *)control_get_next((ControlNextView *)local_8);
   }
   return local_8;
 }
@@ -3394,10 +3394,10 @@ C_005c5ea0 * __thiscall FUN_005c5c2d(void *this)
 /* 005c5c86 auto */
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(C_005c5ee0 * *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(RadioGroupItemsView * *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(u8 (*)[4])(frame_ + FRAME_OFF(20)))
 #define local_8 (*(char *)(frame_ + FRAME_OFF(24)))
-undefined4 __thiscall FUN_005c5c86(void *this,undefined4 param_1)
+undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
 
 {
   u8 uVar1;
@@ -3414,23 +3414,23 @@ undefined4 __thiscall FUN_005c5c86(void *this,undefined4 param_1)
   local_c[1] = 0;
   __strlwr((char *)local_c);
   uVar1 = local_c[0];
-  local_10 = *(C_005c5ee0 **)((int)this + 0xb8);
+  local_10 = *(RadioGroupItemsView **)((int)this + 0xb8);
   do {
-    if (local_10 == (C_005c5ee0 *)0x0) {
+    if (local_10 == (RadioGroupItemsView *)0x0) {
       return local_14;
     }
     if (local_8 != '\0') {
       return local_14;
     }
     if (*(int *)(local_10->pad_0 + 0x28) < 0) {
-      iVar4 = FUN_005c5e60((C_005c5e60 *)local_10);
+      iVar4 = control_get_type((ControlTypeView *)local_10);
       if (iVar4 == 3) {
-        iVar4 = FUN_005c5ee0(local_10);
-        iVar5 = FUN_005c5f00((C_005c5f00 *)local_10);
+        iVar4 = radiogrp_get_items(local_10);
+        iVar5 = radiogrp_item_count((RadioGroupCountView *)local_10);
         for (local_20 = 0; local_20 < iVar5; local_20 = local_20 + 1) {
           if ((-1 < *(int *)(iVar4 + 0xa0 + local_20 * 0xa4)) &&
              (*(u8 *)(iVar4 + 0x9c + local_20 * 0xa4) == uVar1)) {
-            FUN_005d9a9a(*(undefined4 *)(iVar4 + local_20 * 0xa4));
+            radiogrp_item_activate(*(undefined4 *)(iVar4 + local_20 * 0xa4));
             local_14 = 1;
             local_8 = '\x01';
             break;
@@ -3439,21 +3439,21 @@ undefined4 __thiscall FUN_005c5c86(void *this,undefined4 param_1)
       }
     }
     else if (local_10->pad_0[0x25] == uVar1) {
-      iVar2 = FUN_005c5e60((C_005c5e60 *)local_10);
+      iVar2 = control_get_type((ControlTypeView *)local_10);
       if ((iVar2 == 6) &&
-         (iVar3 = thunk_FUN_00530e80((C_00530e80 *)local_10), iVar3 != 0)) {
-        uVar2 = thunk_FUN_00418770((C_00418770 *)local_10);
-        FUN_005cac22(uVar2);
+         (iVar3 = thunk_ctrl_is_enabled((ControlEnabledView *)local_10), iVar3 != 0)) {
+        uVar2 = thunk_control_get_hwnd((ControlHwndView *)local_10);
+        button_press_animated(uVar2);
         return 1;
       }
-      iVar4 = FUN_005c5e60((C_005c5e60 *)local_10);
-      if ((iVar4 == 2) && (iVar4 = FUN_005c5ec0((C_005c5ec0 *)local_10), iVar4 != 0)) {
-        uVar2 = thunk_FUN_00418770((C_00418770 *)local_10);
-        FUN_005cc274(uVar2);
+      iVar4 = control_get_type((ControlTypeView *)local_10);
+      if ((iVar4 == 2) && (iVar4 = checkbox_is_enabled((CheckboxEnabledView *)local_10), iVar4 != 0)) {
+        uVar2 = thunk_control_get_hwnd((ControlHwndView *)local_10);
+        checkbox_toggle_by_hotkey(uVar2);
         return 1;
       }
     }
-    local_10 = *(C_005c5ee0 **)(local_10->pad_0 + 0x20);
+    local_10 = *(RadioGroupItemsView **)(local_10->pad_0 + 0x20);
   } while( true );
 }
 #undef local_20
@@ -3463,60 +3463,60 @@ undefined4 __thiscall FUN_005c5c86(void *this,undefined4 param_1)
 #undef local_8
 
 /* 005c5e60 auto */
-u32 __thiscall FUN_005c5e60(C_005c5e60 *this)
+u32 __thiscall control_get_type(ControlTypeView *this)
 
 {
-  return this->field_0;
+  return this->ctrl_type;
 }
 
 /* 005c5e80 auto */
-u32 __thiscall FUN_005c5e80(C_005c5e80 *this)
+u32 __thiscall control_get_next(ControlNextView *this)
 
 {
-  return this->field_20;
+  return this->next_control;
 }
 
 /* 005c5ea0 auto */
-u8 __thiscall FUN_005c5ea0(C_005c5ea0 *this)
+u8 __thiscall ctrl_get_initial_focus(ControlInitialFocusView *this)
 
 {
-  return this->field_24;
+  return this->initial_focus;
 }
 
 /* 005c5ec0 auto */
-u32 __thiscall FUN_005c5ec0(C_005c5ec0 *this)
+u32 __thiscall checkbox_is_enabled(CheckboxEnabledView *this)
 
 {
-  return this->field_34;
+  return this->is_enabled;
 }
 
 /* 005c5ee0 auto */
-u32 __thiscall FUN_005c5ee0(C_005c5ee0 *this)
+u32 __thiscall radiogrp_get_items(RadioGroupItemsView *this)
 
 {
-  return this->field_48;
+  return this->items;
 }
 
 /* 005c5f00 auto */
-u32 __thiscall FUN_005c5f00(C_005c5f00 *this)
+u32 __thiscall radiogrp_item_count(RadioGroupCountView *this)
 
 {
-  return this->field_38;
+  return this->item_count;
 }
 
 /* 005c5f20 auto */
 void __thiscall
-FUN_005c5f20
-          (C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+wnd_create_with_cmd_proc
+          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7)
 
 {
   iptr iVar1;
   
-  FUN_005db67b(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005eb393((iptr)this,iVar1);
-  thunk_FUN_0044c8e0((C_0044c8b0 *)(this + 1));
+  wnd_record_create(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_command_proc((iptr)this,iVar1);
+  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3527,25 +3527,25 @@ FUN_005c5f7c
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
 
 {
-  FUN_005c5f20
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_FUN_00579b40(this,param_8);
+  wnd_create_with_cmd_proc
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
 /* 005c5fc4 auto */
 void __thiscall
-FUN_005c5fc4
-          (C_00408010_10 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+wnd_create_with_handlers
+          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
 
 {
   iptr iVar1;
   
-  FUN_005db893(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005eb393((iptr)this,iVar1);
-  thunk_FUN_0044c8e0((C_0044c8b0 *)(this + 1));
+  wnd_record_create_child(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_command_proc((iptr)this,iVar1);
+  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3556,25 +3556,25 @@ FUN_005c6024
           ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
 
 {
-  FUN_005c5fc4
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  thunk_FUN_00579b40(this,param_9);
+  wnd_create_with_handlers
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
+  thunk_wnd_attach_menu(this,param_9);
   return;
 }
 
 /* 005c6070 auto */
 void __thiscall
-FUN_005c6070
-          (C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+wnd_create_nopal_cmd_proc
+          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
 {
   iptr iVar1;
   
-  FUN_005db704(this,param_1,param_2,param_3,param_4,param_5,param_6);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005eb393((iptr)this,iVar1);
-  thunk_FUN_0044c8e0((C_0044c8b0 *)(this + 1));
+  wnd_record_create_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_command_proc((iptr)this,iVar1);
+  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3585,25 +3585,25 @@ FUN_005c60c8
           undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
 
 {
-  FUN_005c6070((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6)
+  wnd_create_nopal_cmd_proc((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
   ;
-  thunk_FUN_00579b40(this,param_7);
+  thunk_wnd_attach_menu(this,param_7);
   return;
 }
 
 /* 005c610c auto */
 void __thiscall
-FUN_005c610c
-          (C_00408010_10 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+wnd_create_child_nopal_cmd_proc
+          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
 
 {
   iptr iVar1;
   
-  FUN_005db923(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005eb393((iptr)this,iVar1);
-  thunk_FUN_0044c8e0((C_0044c8b0 *)(this + 1));
+  wnd_record_create_child_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  iVar1 = thunk_wnd_get_window(this);
+  wnd_install_command_proc((iptr)this,iVar1);
+  thunk_wnd_clear_handlers((WndHandlers *)(this + 1));
   return;
 }
 
@@ -3614,50 +3614,50 @@ FUN_005c6168
           undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
 
 {
-  FUN_005c610c
-            ((C_00408010_10 *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  thunk_FUN_00579b40(this,param_8);
+  wnd_create_child_nopal_cmd_proc
+            ((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
+  thunk_wnd_attach_menu(this,param_8);
   return;
 }
 
 /* 005c61b0 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005c61b0(C_00408010_b8 *this)
+void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
 
 {
   iptr iVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (iptr_00637ea8 != 0xf) {
-    this->field_8c = 1;
+    this->modal_running = 1;
     iptr_00637ea8 = iptr_00637ea8 + 1;
     (&DAT_00637eb0)[iptr_00637ea8] = this;
     if (iptr_00637ea8 == 0) {
       local_8 = 0;
     }
     else {
-      local_8 = thunk_FUN_00414d10((C_00408010_10 *)(&DAT_00637eac)[iptr_00637ea8]);
+      local_8 = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[iptr_00637ea8]);
     }
-    iVar1 = thunk_FUN_00414d10((C_00408010_10 *)this);
-    FUN_005bd14c(iVar1,local_8);
-    while (this->field_8c != 0) {
-      thunk_FUN_0040ef50();
-      if (this->field_a4 != 0) {
-        (*(code *)this->field_a4)();
+    iVar1 = thunk_wnd_get_window((WndBase *)this);
+    wnd_obj_disable_owner(iVar1,local_8);
+    while (this->modal_running != 0) {
+      thunk_win_pump_one_message();
+      if (this->on_modal_idle != 0) {
+        (*(code *)this->on_modal_idle)();
       }
     }
     if (iptr_00637ea8 == 0) {
       local_c = 0;
     }
     else {
-      local_c = thunk_FUN_00414d10((C_00408010_10 *)(&DAT_00637eac)[iptr_00637ea8]);
+      local_c = thunk_wnd_get_window((WndBase *)(&DAT_00637eac)[iptr_00637ea8]);
     }
-    iVar1 = thunk_FUN_00414d10((C_00408010_10 *)this);
-    FUN_005bd1c5(iVar1,local_c);
+    iVar1 = thunk_wnd_get_window((WndBase *)this);
+    wnd_obj_enable_owner(iVar1,local_c);
     iptr_00637ea8 = iptr_00637ea8 + -1;
     if (-1 < iptr_00637ea8) {
-      this->field_8c = 1;
+      this->modal_running = 1;
     }
   }
   return;
@@ -3671,34 +3671,34 @@ void __thiscall FUN_005c61b0(C_00408010_b8 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005c62cb(C_00408010_b8 *this)
+void __thiscall wnd_end_modal_loop(C_00408010_b8 *this)
 
 {
-  this->field_8c = 0;
+  this->modal_running = 0;
   return;
 }
 
 /* 005c62ee auto */
-#define DAT_00637ea4 (*(undefined4 *)((u8 *)&g.d_00637ea4))
-undefined4 __cdecl FUN_005c62ee(void)
+#define wnd_active_child (*(undefined4 *)((u8 *)&g.d_00637ea4))
+undefined4 __cdecl wnd_get_active_child(void)
 
 {
-  return DAT_00637ea4;
+  return wnd_active_child;
 }
-#undef DAT_00637ea4
+#undef wnd_active_child
 
 /* 005c6303 auto */
-#define DAT_00637ea4 (*(iptr *)((u8 *)&g.d_00637ea4))
-undefined4 __cdecl FUN_005c6303(iptr param_1)
+#define wnd_active_child (*(iptr *)((u8 *)&g.d_00637ea4))
+undefined4 __cdecl wnd_set_active_child(iptr param_1)
 
 {
   undefined4 uVar1;
   
-  uVar1 = DAT_00637ea4;
-  DAT_00637ea4 = param_1;
+  uVar1 = wnd_active_child;
+  wnd_active_child = param_1;
   return uVar1;
 }
-#undef DAT_00637ea4
+#undef wnd_active_child
 
 /* 005c6329 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -3708,9 +3708,9 @@ void __thiscall FUN_005c6329(C_00408010_b8 *this,u32 param_1)
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005c6400((C_00408010_10 *)this,(iptr)&local_c,(iptr)&local_8);
+  wnd_get_hscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
   if ((int)param_1 <= local_8 - local_c) {
-    this->field_90 = param_1;
+    this->hscroll_step = param_1;
   }
   return;
 }
@@ -3725,9 +3725,9 @@ void __thiscall FUN_005c636c(C_00408010_b8 *this,u32 param_1)
 {
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005c6440((C_00408010_10 *)this,(iptr)&local_c,(iptr)&local_8);
+  wnd_get_vscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
   if ((int)param_1 <= local_8 - local_c) {
-    this->field_94 = param_1;
+    this->vscroll_step = param_1;
   }
   return;
 }
@@ -3735,88 +3735,88 @@ void __thiscall FUN_005c636c(C_00408010_b8 *this,u32 param_1)
 #undef local_8
 
 /* 005c63af auto */
-bool __thiscall FUN_005c63af(C_005c63af *this,undefined4 param_1)
+bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,undefined4 param_1)
 
 {
   bool bVar1;
   
-  bVar1 = this->field_a0 != 0;
+  bVar1 = this->on_menu_select != 0;
   if (bVar1) {
-    (*(code *)this->field_a0)(param_1);
+    (*(code *)this->on_menu_select)(param_1);
   }
   return bVar1;
 }
 
 /* 005c6400 auto */
-void __thiscall FUN_005c6400(C_00408010_10 *this,iptr param_1,iptr param_2)
+void __thiscall wnd_get_hscroll_range(WndBase *this,iptr param_1,iptr param_2)
 
 {
   iptr iVar1;
   undefined4 uVar2;
   
   uVar2 = 0;
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005cd5c3(iVar1,param_1,param_2,uVar2);
+  iVar1 = thunk_wnd_get_window(this);
+  scrollbar_get_range(iVar1,param_1,param_2,uVar2);
   return;
 }
 
 /* 005c6440 auto */
-void __thiscall FUN_005c6440(C_00408010_10 *this,iptr param_1,iptr param_2)
+void __thiscall wnd_get_vscroll_range(WndBase *this,iptr param_1,iptr param_2)
 
 {
   iptr iVar1;
   undefined4 uVar2;
   
   uVar2 = 1;
-  iVar1 = thunk_FUN_00414d10(this);
-  FUN_005cd5c3(iVar1,param_1,param_2,uVar2);
+  iVar1 = thunk_wnd_get_window(this);
+  scrollbar_get_range(iVar1,param_1,param_2,uVar2);
   return;
 }
 
 /* 005c6480 auto */
-void __thiscall FUN_005c6480(C_0043c740_434 *this,int param_1,int param_2)
+void __thiscall palette_commit_range(GamePalette *this,int param_1,int param_2)
 
 {
   if (0x100 < param_2 + param_1) {
     param_2 = 0x100 - param_1;
   }
-  FUN_005decb1((iptr)this,this->field_404,param_1,param_2);
-  FUN_005c6a42(this);
+  logpal_apply_range((iptr)this,this->hpalette,param_1,param_2);
+  palette_new_version(this);
   return;
 }
 
 /* 005c64da auto */
-C_0043c740_434 * __thiscall FUN_005c64da(C_0043c740_434 *this)
+GamePalette * __thiscall palette_init(GamePalette *this)
 
 {
   u32 uVar1;
   
-  FUN_005de780((iptr)this);
-  uVar1 = FUN_005dec4e((iptr)this);
-  this->field_404 = uVar1;
-  FUN_005c6a42(this);
-  this->field_424 = '\0';
-  this->field_425 = '\0';
-  this->field_426 = '\0';
-  this->field_430 = 0;
-  this->field_42c = this->field_430;
-  this->field_428 = this->field_42c;
+  logpal_init_from_system((iptr)this);
+  uVar1 = logpal_create_hpalette((iptr)this);
+  this->hpalette = uVar1;
+  palette_new_version(this);
+  this->tint_red = '\0';
+  this->tint_green = '\0';
+  this->tint_blue = '\0';
+  this->tint_saved_rgb = 0;
+  this->fade_dst_rgb = this->tint_saved_rgb;
+  this->fade_src_rgb = this->fade_dst_rgb;
   return this;
 }
 
 /* 005c656b auto */
-C_0043c740_434 * __thiscall FUN_005c656b(C_0043c740_434 *this)
+GamePalette * __thiscall palette_destroy(GamePalette *this)
 
 {
-  FUN_005dec8a(this->field_404);
-  if (this->field_428 != 0) {
-    FUN_005dce96(this->field_428);
+  logpal_delete_hpalette(this->hpalette);
+  if (this->fade_src_rgb != 0) {
+    mem_handle_free(this->fade_src_rgb);
   }
-  if (this->field_42c != 0) {
-    FUN_005dce96(this->field_42c);
+  if (this->fade_dst_rgb != 0) {
+    mem_handle_free(this->fade_dst_rgb);
   }
-  if (this->field_430 != 0) {
-    this = (C_0043c740_434 *)FUN_005dce96(this->field_430);
+  if (this->tint_saved_rgb != 0) {
+    this = (GamePalette *)mem_handle_free(this->tint_saved_rgb);
   }
   return this;
 }
@@ -3826,7 +3826,7 @@ C_0043c740_434 * __thiscall FUN_005c656b(C_0043c740_434 *this)
 #define local_7 (*(undefined1 *)(frame_ + FRAME_OFF(1)))
 #define local_6 (*(undefined1 *)(frame_ + FRAME_OFF(2)))
 #define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
-void __thiscall FUN_005c65f9(C_0043c740_434 *this,undefined4 param_1)
+void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1)
 
 {
   int iVar1;
@@ -3839,17 +3839,17 @@ void __thiscall FUN_005c65f9(C_0043c740_434 *this,undefined4 param_1)
   local_7 = 0x54;
   local_6 = 0x41;
   local_5 = 0x42;
-  iVar1 = FUN_005c5540((iptr)&local_8,param_1);
+  iVar1 = res_load((iptr)&local_8,param_1);
   if (iVar1 == 0) {
-    FUN_005d233f(ADDR(0x637bec, ((u8 *)&g.d_00637bec)),param_1);
+    dbg_logf_noret(ADDR(0x637bec, ((u8 *)&g.d_00637bec)),param_1);
   }
   else {
-    puVar2 = (undefined4 *)FUN_005c5560(iVar1);
-    uVar3 = FUN_005c54d0(*puVar2);
-    uVar4 = FUN_005c54d0(puVar2[1]);
-    FUN_005c6da8(this,uVar3,uVar4,(iptr)(puVar2 + 2));
-    FUN_005c5580(iVar1);
-    FUN_005c5520(iVar1);
+    puVar2 = (undefined4 *)res_lock(iVar1);
+    uVar3 = endian_from_le(*puVar2);
+    uVar4 = endian_from_le(puVar2[1]);
+    palette_set_rgb(this,uVar3,uVar4,(iptr)(puVar2 + 2));
+    res_unlock(iVar1);
+    res_free(iVar1);
   }
   return;
 }
@@ -3865,7 +3865,7 @@ void __thiscall FUN_005c65f9(C_0043c740_434 *this,undefined4 param_1)
 #define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
 void __thiscall
 FUN_005c66b9
-          (C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
   int iVar1;
@@ -3876,15 +3876,15 @@ FUN_005c66b9
   local_7 = 0x54;
   local_6 = 0x41;
   local_5 = 0x42;
-  iVar1 = FUN_005c5540((iptr)&local_8,param_1);
+  iVar1 = res_load((iptr)&local_8,param_1);
   if (iVar1 == 0) {
-    FUN_005d233f(ADDR(0x637c10, ((u8 *)&g.d_00637c10)),param_1);
+    dbg_logf_noret(ADDR(0x637c10, ((u8 *)&g.d_00637c10)),param_1);
   }
   else {
-    iVar2 = FUN_005c5560(iVar1);
-    FUN_005c6da8(this,param_2,param_3,iVar2 + 8);
-    FUN_005c5580(iVar1);
-    FUN_005c5520(iVar1);
+    iVar2 = res_lock(iVar1);
+    palette_set_rgb(this,param_2,param_3,iVar2 + 8);
+    res_unlock(iVar1);
+    res_free(iVar1);
   }
   return;
 }
@@ -3894,10 +3894,10 @@ FUN_005c66b9
 #undef local_5
 
 /* 005c6757 auto */
-void __thiscall FUN_005c6757(C_0043c740_434 *this,undefined4 param_1)
+void __thiscall FUN_005c6757(GamePalette *this,undefined4 param_1)
 
 {
-  FUN_005c68f0(this,param_1);
+  palette_load_from_file(this,param_1);
   return;
 }
 
@@ -3905,16 +3905,16 @@ void __thiscall FUN_005c6757(C_0043c740_434 *this,undefined4 param_1)
 void __thiscall FUN_005c677b(void *this,undefined4 param_1)
 
 {
-  FUN_005c67a6(this,param_1,0,0xff);
+  palette_save_to_file(this,param_1,0,0xff);
   return;
 }
 
 /* 005c67a6 auto */
-#define local_a8 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(0)))
+#define local_a8 (*(FileObject *)(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(152)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(156)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-void __thiscall FUN_005c67a6(void *this,iptr param_1,undefined4 param_2,int param_3)
+void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,int param_3)
 
 {
   undefined4 uVar1;
@@ -3923,25 +3923,25 @@ void __thiscall FUN_005c67a6(void *this,iptr param_1,undefined4 param_2,int para
   undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_a8);
+  file_obj_init(&local_a8);
   local_8 = 0;
-  uVar1 = FUN_005dce4f(param_3 * 3);
-  iVar2 = FUN_005dcdf9(uVar1);
-  FUN_005ded12((iptr)this,iVar2,param_2,param_3);
-  iVar3 = thunk_FUN_00421bf0(&local_a8,param_1);
+  uVar1 = mem_handle_alloc(param_3 * 3);
+  iVar2 = mem_handle_lock(uVar1);
+  palette_copy_rgb_range((iptr)this,iVar2,param_2,param_3);
+  iVar3 = thunk_file_obj_create(&local_a8,param_1);
   if (iVar3 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_a8)); }
+    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
   }
   else {
-    thunk_FUN_00421c60(&local_a8,(iptr)&param_2,4);
-    thunk_FUN_00421c60(&local_a8,(iptr)&param_3,4);
-    thunk_FUN_00421c60(&local_a8,iVar2,param_3 * 3);
-    thunk_FUN_00421c30(&local_a8);
-    FUN_005dce29(uVar1);
-    FUN_005dce96(uVar1);
+    thunk_file_obj_write(&local_a8,(iptr)&param_2,4);
+    thunk_file_obj_write(&local_a8,(iptr)&param_3,4);
+    thunk_file_obj_write(&local_a8,iVar2,param_3 * 3);
+    thunk_file_map_close(&local_a8);
+    mem_handle_unlock(uVar1);
+    mem_handle_free(uVar1);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_a8)); }
+    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
   }
   return;
 }
@@ -3953,12 +3953,12 @@ void __thiscall FUN_005c67a6(void *this,iptr param_1,undefined4 param_2,int para
 /* 005c68f0 auto */
 #define local_b4 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_b0 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_ac (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(12)))
+#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(12)))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(164)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
-void __thiscall FUN_005c68f0(C_0043c740_434 *this,iptr param_1)
+void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
 
 {
   int iVar1;
@@ -3966,25 +3966,25 @@ void __thiscall FUN_005c68f0(C_0043c740_434 *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_ac);
+  file_obj_init(&local_ac);
   local_8 = 0;
-  iVar1 = thunk_FUN_004929c0(&local_ac,param_1);
+  iVar1 = thunk_file_obj_open(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
-    thunk_FUN_004bb370(&local_ac,(iptr)&local_14,4);
-    thunk_FUN_004bb370(&local_ac,(iptr)&local_b4,4);
-    local_b0 = FUN_005dce4f(local_b4 * 3);
-    iVar2 = FUN_005dcdf9(local_b0);
-    thunk_FUN_004bb370(&local_ac,iVar2,local_b4 * 3);
-    thunk_FUN_00421c30(&local_ac);
-    FUN_005c6da8(this,local_14,local_b4,iVar2);
-    FUN_005dce29(local_b0);
-    FUN_005dce96(local_b0);
+    thunk_file_obj_read(&local_ac,(iptr)&local_14,4);
+    thunk_file_obj_read(&local_ac,(iptr)&local_b4,4);
+    local_b0 = mem_handle_alloc(local_b4 * 3);
+    iVar2 = mem_handle_lock(local_b0);
+    thunk_file_obj_read(&local_ac,iVar2,local_b4 * 3);
+    thunk_file_map_close(&local_ac);
+    palette_set_rgb(this,local_14,local_b4,iVar2);
+    mem_handle_unlock(local_b0);
+    mem_handle_free(local_b0);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -3997,44 +3997,44 @@ void __thiscall FUN_005c68f0(C_0043c740_434 *this,iptr param_1)
 #undef local_8
 
 /* 005c6a42 auto */
-void __thiscall FUN_005c6a42(C_0043c740_434 *this)
+void __thiscall palette_new_version(GamePalette *this)
 
 {
   uint uVar1;
   
-  this->field_408 = 0;
-  while (this->field_408 == 0) {
+  this->pal_version = 0;
+  while (this->pal_version == 0) {
     uVar1 = _rand();
-    this->field_408 = uVar1 & 0x7fff;
+    this->pal_version = uVar1 & 0x7fff;
   }
   return;
 }
 
 /* 005c6a8d auto */
 void __thiscall
-FUN_005c6a8d(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2)
+palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005de984((iptr)this,param_1,param_2);
-  FUN_005c6480(this,param_1,param_2);
+  logpal_reserve_range((iptr)this,param_1,param_2);
+  palette_commit_range(this,param_1,param_2);
   return;
 }
 
 /* 005c6ac9 auto */
 void __thiscall
-FUN_005c6ac9(C_0043c740_434 *this,undefined4 param_1,undefined4 param_2)
+FUN_005c6ac9(GamePalette *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005de9e0((iptr)this,param_1,param_2);
-  FUN_005c6480(this,param_1,param_2);
+  palette_reapply_range((iptr)this,param_1,param_2);
+  palette_commit_range(this,param_1,param_2);
   return;
 }
 
 /* 005c6b05 auto */
-void __thiscall FUN_005c6b05(C_005c6b05 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall FUN_005c6b05(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005dea62((iptr)this,this->field_404,param_1,param_2);
+  palette_animate((iptr)this,this->hpalette,param_1,param_2);
   return;
 }
 
@@ -4049,29 +4049,29 @@ void __thiscall FUN_005c6b05(C_005c6b05 *this,undefined4 param_1,undefined4 para
 void __thiscall FUN_005c6b3b(void *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005deced(param_1,param_2);
+  logpal_copy(param_1,param_2);
   return;
 }
 
 /* 005c6b63 auto */
 void __thiscall
-FUN_005c6b63
-          (C_0043c740_434 *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+palette_get_rgb
+          (GamePalette *this,iptr param_1,undefined4 param_2,undefined4 param_3)
 
 {
-  FUN_005ded12((iptr)this,param_1,param_2,param_3);
+  palette_copy_rgb_range((iptr)this,param_1,param_2,param_3);
   return;
 }
 
 /* 005c6b93 auto */
 void __thiscall
-FUN_005c6b93
-          (C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+palette_set_entry
+          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005deb12((iptr)this,param_1,param_2,param_3,param_4);
-  FUN_005c6480(this,param_1,1);
+  palette_set_entry_rgb((iptr)this,param_1,param_2,param_3,param_4);
+  palette_commit_range(this,param_1,1);
   return;
 }
 
@@ -4084,7 +4084,7 @@ FUN_005c6b93
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-void __thiscall FUN_005c6bd5(C_005c6bd5 *this,int param_1,int param_2,int param_3)
+void __thiscall FUN_005c6bd5(PaletteRotateView *this,int param_1,int param_2,int param_3)
 
 {
   int iVar1;
@@ -4095,28 +4095,28 @@ void __thiscall FUN_005c6bd5(C_005c6bd5 *this,int param_1,int param_2,int param_
   }
   if (param_3 < 0) {
     for (local_24 = 0; -local_24 != param_3 && local_24 <= -param_3; local_24 = local_24 + 1) {
-      FUN_005dea9e((iptr)this,param_1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10);
+      palette_get_entry_rgb((iptr)this,param_1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10);
       for (local_1c = param_1; local_1c < param_2 + param_1 + -1; local_1c = local_1c + 1) {
-        FUN_005dea9e((iptr)this,local_1c + 1,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
-        FUN_005deadb((iptr)this,local_1c,local_c,local_18,local_8);
+        palette_get_entry_rgb((iptr)this,local_1c + 1,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
+        logpal_set_entry((iptr)this,local_1c,local_c,local_18,local_8);
       }
-      FUN_005deadb((iptr)this,param_2 + param_1 + -1,local_14,local_20,local_10);
+      logpal_set_entry((iptr)this,param_2 + param_1 + -1,local_14,local_20,local_10);
     }
   }
   else {
     for (local_24 = 0; local_24 < param_3; local_24 = local_24 + 1) {
-      FUN_005dea9e((iptr)this,param_2 + param_1 + -1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10
+      palette_get_entry_rgb((iptr)this,param_2 + param_1 + -1,(iptr)&local_14,(iptr)&local_20,(iptr)&local_10
                   );
       iVar1 = param_2 + param_1;
       while (local_1c = iVar1 + -1, param_1 < local_1c) {
-        FUN_005dea9e((iptr)this,iVar1 + -2,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
-        FUN_005deadb((iptr)this,local_1c,local_c,local_18,local_8);
+        palette_get_entry_rgb((iptr)this,iVar1 + -2,(iptr)&local_c,(iptr)&local_18,(iptr)&local_8);
+        logpal_set_entry((iptr)this,local_1c,local_c,local_18,local_8);
         iVar1 = local_1c;
       }
-      FUN_005deadb((iptr)this,param_1,local_14,local_20,local_10);
+      logpal_set_entry((iptr)this,param_1,local_14,local_20,local_10);
     }
   }
-  FUN_005dea62((iptr)this,this->field_404,param_1,param_2);
+  palette_animate((iptr)this,this->hpalette,param_1,param_2);
   return;
 }
 #undef local_24
@@ -4131,7 +4131,7 @@ void __thiscall FUN_005c6bd5(C_005c6bd5 *this,int param_1,int param_2,int param_
 /* 005c6da8 auto */
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
 void __thiscall
-FUN_005c6da8(C_0043c740_434 *this,int param_1,int param_2,iptr param_3)
+palette_set_rgb(GamePalette *this,int param_1,int param_2,iptr param_3)
 
 {
   undefined3 uVar1;
@@ -4142,63 +4142,63 @@ FUN_005c6da8(C_0043c740_434 *this,int param_1,int param_2,iptr param_3)
   }
   for (local_8 = param_1; local_8 < param_2 + param_1; local_8 = local_8 + 1) {
     uVar1 = (undefined3)((uint)param_3 >> 8);
-    FUN_005deb12((iptr)this,local_8,CONCAT31(uVar1,*(undefined1 *)param_3),
+    palette_set_entry_rgb((iptr)this,local_8,CONCAT31(uVar1,*(undefined1 *)param_3),
                  CONCAT31(uVar1,*(undefined1 *)(param_3 + 1)),
                  CONCAT31(uVar1,*(undefined1 *)(param_3 + 2)));
     param_3 = param_3 + 3;
   }
-  FUN_005c6480(this,param_1,param_2);
+  palette_commit_range(this,param_1,param_2);
   return;
 }
 #undef local_8
 
 /* 005c6e36 auto */
 void __thiscall
-FUN_005c6e36(C_0043c740_434 *this,u32 param_1,u32 param_2,u32 param_3)
+palette_tint_begin_range(GamePalette *this,u32 param_1,u32 param_2,u32 param_3)
 
 {
   u32 uVar1;
   iptr iVar2;
   
-  this->field_40c = param_3;
-  this->field_410 = param_1;
-  this->field_414 = param_2;
-  uVar1 = FUN_005dce4f(param_2 * 3);
-  this->field_430 = uVar1;
-  iVar2 = FUN_005dcdf9(this->field_430);
-  FUN_005ded12((iptr)this,iVar2,param_1,param_2);
-  FUN_005dce29(this->field_430);
-  FUN_005c6a8d(this,param_1,param_2);
+  this->tint_steps = param_3;
+  this->tint_first = param_1;
+  this->tint_count = param_2;
+  uVar1 = mem_handle_alloc(param_2 * 3);
+  this->tint_saved_rgb = uVar1;
+  iVar2 = mem_handle_lock(this->tint_saved_rgb);
+  palette_copy_rgb_range((iptr)this,iVar2,param_1,param_2);
+  mem_handle_unlock(this->tint_saved_rgb);
+  palette_reserve_range(this,param_1,param_2);
   return;
 }
 
 /* 005c6edc auto */
 void __thiscall
 FUN_005c6edc
-          (C_0043c740_434 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5,undefined4 param_6)
 
 {
-  this->field_424 = (u8)param_4;
-  this->field_425 = (u8)param_5;
-  this->field_426 = (u8)param_6;
-  FUN_005c6e36(this,param_1,param_2,param_3);
+  this->tint_red = (u8)param_4;
+  this->tint_green = (u8)param_5;
+  this->tint_blue = (u8)param_6;
+  palette_tint_begin_range(this,param_1,param_2,param_3);
   return;
 }
 
 /* 005c6f2c auto */
-void __thiscall FUN_005c6f2c(C_0043c740_434 *this)
+void __thiscall FUN_005c6f2c(GamePalette *this)
 
 {
   iptr iVar1;
   u32 uVar2;
   
-  iVar1 = FUN_005dcdf9(this->field_430);
-  FUN_005c6da8(this,this->field_410,this->field_414,iVar1);
-  FUN_005dce29(this->field_430);
-  FUN_005c6ac9(this,this->field_410,this->field_414);
-  uVar2 = FUN_005dce96(this->field_430);
-  this->field_430 = uVar2;
+  iVar1 = mem_handle_lock(this->tint_saved_rgb);
+  palette_set_rgb(this,this->tint_first,this->tint_count,iVar1);
+  mem_handle_unlock(this->tint_saved_rgb);
+  FUN_005c6ac9(this,this->tint_first,this->tint_count);
+  uVar2 = mem_handle_free(this->tint_saved_rgb);
+  this->tint_saved_rgb = uVar2;
   return;
 }
 
@@ -4208,9 +4208,9 @@ void __thiscall FUN_005c6fc3(C_005c6fc3 *this,int param_1,iptr param_2)
 {
   iptr iVar1;
   
-  iVar1 = FUN_005dcdf9(this->field_430);
-  FUN_005dced3(param_2,iVar1,param_1 * 3);
-  FUN_005dce29(this->field_430);
+  iVar1 = mem_handle_lock(this->palette_handle);
+  mem_move_src_dst(param_2,iVar1,param_1 * 3);
+  mem_handle_unlock(this->palette_handle);
   return;
 }
 
@@ -4233,36 +4233,36 @@ void __thiscall FUN_005c701c(C_005c701c *this,int param_1)
   iptr iVar9;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 < 0) || ((int)this->field_40c < param_1)) {
-    FUN_005d2279(ADDR(0x637c34, ((u8 *)&g.d_00637c34)),param_1);
+  if ((param_1 < 0) || ((int)this->fade_steps < param_1)) {
+    dbg_logf(ADDR(0x637c34, ((u8 *)&g.d_00637c34)),param_1);
   }
   else {
-    bVar1 = this->field_424;
-    uVar4 = this->field_40c;
-    bVar2 = this->field_426;
-    uVar5 = this->field_40c;
-    bVar3 = this->field_425;
-    uVar6 = this->field_40c;
+    bVar1 = this->fade_red;
+    uVar4 = this->fade_steps;
+    bVar2 = this->fade_blue;
+    uVar5 = this->fade_steps;
+    bVar3 = this->fade_green;
+    uVar6 = this->fade_steps;
     cVar8 = (char)param_1;
-    cVar7 = (char)this->field_40c - cVar8;
-    iVar9 = FUN_005dcdf9(this->field_430);
-    for (local_20 = 0; local_20 < (int)(this->field_414 * 3); local_20 = local_20 + 3) {
+    cVar7 = (char)this->fade_steps - cVar8;
+    iVar9 = mem_handle_lock(this->fade_saved_rgb);
+    for (local_20 = 0; local_20 < (int)(this->fade_count * 3); local_20 = local_20 + 3) {
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_20 + iVar9) /
-                               (longlong)(int)this->field_40c) * cVar8 +
+                               (longlong)(int)this->fade_steps) * cVar8 +
                          cVar7 * (char)((longlong)(ulonglong)bVar1 / (longlong)(int)uVar4));
       local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_20 + 1 + iVar9) /
-                                (longlong)(int)this->field_40c) * cVar8 +
+                                (longlong)(int)this->fade_steps) * cVar8 +
                           cVar7 * (char)((longlong)(ulonglong)bVar3 / (longlong)(int)uVar6));
       local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_20 + 2 + iVar9) /
-                               (longlong)(int)this->field_40c) * cVar8 +
+                               (longlong)(int)this->fade_steps) * cVar8 +
                          cVar7 * (char)((longlong)(ulonglong)bVar2 / (longlong)(int)uVar5));
-      FUN_005deadb((iptr)this,this->field_410 + local_20 / 3,local_c,local_1c,local_8);
+      logpal_set_entry((iptr)this,this->fade_first_index + local_20 / 3,local_c,local_1c,local_8);
     }
-    FUN_005dea62((iptr)this,this->field_404,this->field_410,this->field_414);
-    FUN_005dce29(this->field_430);
+    palette_animate((iptr)this,this->hpalette,this->fade_first_index,this->fade_count);
+    mem_handle_unlock(this->fade_saved_rgb);
   }
   return;
 }
@@ -4273,7 +4273,7 @@ void __thiscall FUN_005c701c(C_005c701c *this,int param_1)
 
 /* 005c71f3 auto */
 void __thiscall
-FUN_005c71f3(C_0043c740_434 *this,u32 param_1,u32 param_2,u32 param_3,iptr param_4)
+palette_fade_begin(GamePalette *this,u32 param_1,u32 param_2,u32 param_3,iptr param_4)
 
 {
   u32 uVar1;
@@ -4281,40 +4281,40 @@ FUN_005c71f3(C_0043c740_434 *this,u32 param_1,u32 param_2,u32 param_3,iptr param
   iptr iVar3;
   u32 uVar4;
   
-  this->field_418 = param_3;
-  this->field_41c = param_1;
-  this->field_420 = param_2;
-  uVar1 = FUN_005dce4f(param_2 * 3);
-  this->field_428 = uVar1;
-  uVar1 = FUN_005dce4f(param_2 * 3);
-  this->field_42c = uVar1;
-  iVar2 = FUN_005dcdf9(this->field_428);
-  FUN_005ded12((iptr)this,iVar2,param_1,param_2);
-  FUN_005dce29(this->field_428);
-  iVar2 = FUN_005dcdf9(this->field_42c);
+  this->fade_steps = param_3;
+  this->fade_first = param_1;
+  this->fade_count = param_2;
+  uVar1 = mem_handle_alloc(param_2 * 3);
+  this->fade_src_rgb = uVar1;
+  uVar1 = mem_handle_alloc(param_2 * 3);
+  this->fade_dst_rgb = uVar1;
+  iVar2 = mem_handle_lock(this->fade_src_rgb);
+  palette_copy_rgb_range((iptr)this,iVar2,param_1,param_2);
+  mem_handle_unlock(this->fade_src_rgb);
+  iVar2 = mem_handle_lock(this->fade_dst_rgb);
   uVar1 = param_1;
   uVar4 = param_2;
-  iVar3 = thunk_FUN_0046f440((C_0043c740_434 *)param_4);
-  FUN_005ded12(iVar3,iVar2,uVar1,uVar4);
-  FUN_005dce29(this->field_42c);
-  FUN_005c6a8d(this,param_1,param_2);
+  iVar3 = thunk_palette_get_logpalette((GamePalette *)param_4);
+  palette_copy_rgb_range(iVar3,iVar2,uVar1,uVar4);
+  mem_handle_unlock(this->fade_dst_rgb);
+  palette_reserve_range(this,param_1,param_2);
   return;
 }
 
 /* 005c72f8 auto */
-void __thiscall FUN_005c72f8(C_0043c740_434 *this)
+void __thiscall palette_fade_end(GamePalette *this)
 
 {
   iptr iVar1;
   u32 uVar2;
   
-  iVar1 = FUN_005dcdf9(this->field_428);
-  FUN_005c6da8(this,this->field_41c,this->field_420,iVar1);
-  FUN_005dce29(this->field_428);
-  uVar2 = FUN_005dce96(this->field_428);
-  this->field_428 = uVar2;
-  uVar2 = FUN_005dce96(this->field_42c);
-  this->field_42c = uVar2;
+  iVar1 = mem_handle_lock(this->fade_src_rgb);
+  palette_set_rgb(this,this->fade_first,this->fade_count,iVar1);
+  mem_handle_unlock(this->fade_src_rgb);
+  uVar2 = mem_handle_free(this->fade_src_rgb);
+  this->fade_src_rgb = uVar2;
+  uVar2 = mem_handle_free(this->fade_dst_rgb);
+  this->fade_dst_rgb = uVar2;
   return;
 }
 
@@ -4323,7 +4323,7 @@ void __thiscall FUN_005c72f8(C_0043c740_434 *this)
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-void __thiscall FUN_005c738e(C_0043c740_434 *this,int param_1)
+void __thiscall palette_fade_step(GamePalette *this,int param_1)
 
 {
   char cVar1;
@@ -4332,35 +4332,35 @@ void __thiscall FUN_005c738e(C_0043c740_434 *this,int param_1)
   iptr iVar4;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 < 0) || ((int)this->field_418 < param_1)) {
-    FUN_005d2279(ADDR(0x637c54, ((u8 *)&g.d_00637c54)),param_1);
+  if ((param_1 < 0) || ((int)this->fade_steps < param_1)) {
+    dbg_logf(ADDR(0x637c54, ((u8 *)&g.d_00637c54)),param_1);
   }
   else {
     cVar2 = (char)param_1;
-    cVar1 = (char)this->field_418 - cVar2;
-    iVar3 = FUN_005dcdf9(this->field_428);
-    iVar4 = FUN_005dcdf9(this->field_42c);
-    for (local_18 = 0; local_18 < (int)(this->field_420 * 3); local_18 = local_18 + 3) {
+    cVar1 = (char)this->fade_steps - cVar2;
+    iVar3 = mem_handle_lock(this->fade_src_rgb);
+    iVar4 = mem_handle_lock(this->fade_dst_rgb);
+    for (local_18 = 0; local_18 < (int)(this->fade_count * 3); local_18 = local_18 + 3) {
       local_10 = CONCAT31((*(undefined3 *)((char *)&local_10 + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + iVar4) /
-                                (longlong)(int)this->field_418) * cVar1 +
+                                (longlong)(int)this->fade_steps) * cVar1 +
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + iVar3) /
-                                (longlong)(int)this->field_418) * cVar2);
+                                (longlong)(int)this->fade_steps) * cVar2);
       local_14 = CONCAT31((*(undefined3 *)((char *)&local_14 + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + 1 + iVar3) /
-                                (longlong)(int)this->field_418) * cVar2 +
+                                (longlong)(int)this->fade_steps) * cVar2 +
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + 1 + iVar4) /
-                                (longlong)(int)this->field_418) * cVar1);
+                                (longlong)(int)this->fade_steps) * cVar1);
       local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_18 + 2 + iVar4) /
-                               (longlong)(int)this->field_418) * cVar1 +
+                               (longlong)(int)this->fade_steps) * cVar1 +
                          (char)((longlong)(ulonglong)*(byte *)(local_18 + 2 + iVar3) /
-                               (longlong)(int)this->field_418) * cVar2);
-      FUN_005deadb((iptr)this,this->field_41c + local_18 / 3,local_10,local_14,local_c);
+                               (longlong)(int)this->fade_steps) * cVar2);
+      logpal_set_entry((iptr)this,this->fade_first + local_18 / 3,local_10,local_14,local_c);
     }
-    FUN_005dea62((iptr)this,this->field_404,this->field_41c,this->field_420);
-    FUN_005dce29(this->field_428);
-    FUN_005dce29(this->field_42c);
+    palette_animate((iptr)this,this->hpalette,this->fade_first,this->fade_count);
+    mem_handle_unlock(this->fade_src_rgb);
+    mem_handle_unlock(this->fade_dst_rgb);
   }
   return;
 }
@@ -4375,7 +4375,7 @@ void __thiscall FUN_005c738e(C_0043c740_434 *this,int param_1)
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
 FUN_005c7579
-          (C_0043c740_434 *this,iptr param_1,C_0043c740_434 *param_2,undefined4 param_3,int param_4)
+          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4)
 
 {
   undefined4 uVar1;
@@ -4386,25 +4386,25 @@ FUN_005c7579
   
   local_8 = 0xffffffff;
   (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c76f0;
-  FUN_005c79bf((C_005c79bf *)local_830);
+  color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
-  uVar1 = FUN_005dce4f(param_4 * 3);
-  iVar2 = FUN_005dcdf9(uVar1);
-  FUN_005c6b63(this,iVar2,param_3,param_4);
-  FUN_005c7a86((C_005c7a86 *)local_830,iVar2,param_3,param_4);
-  FUN_005c6b63(param_2,iVar2,param_3,param_4);
+  uVar1 = mem_handle_alloc(param_4 * 3);
+  iVar2 = mem_handle_lock(uVar1);
+  palette_get_rgb(this,iVar2,param_3,param_4);
+  color_kdtree_build((ColorKdTree *)local_830,iVar2,param_3,param_4);
+  palette_get_rgb(param_2,iVar2,param_3,param_4);
   for (local_834 = 0; local_834 < param_4 * 3; local_834 = local_834 + 3) {
     uVar3 = (undefined3)((uint)local_834 >> 8);
-    uVar2 = FUN_005c7e06
-                      ((C_005c7e06 *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
+    uVar2 = color_kdtree_find_nearest
+                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
                        CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
                        CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
     *(char *)(param_1 + local_834 / 3) = (char)uVar2;
   }
-  FUN_005dce29(uVar1);
-  FUN_005dce96(uVar1);
+  mem_handle_unlock(uVar1);
+  mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c76e4 */ { FUN_005c7a30((C_005c7a30_828 *)((iptr)&local_830)); }
+  /* inlined unwind funclet FUN_005c76e4 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return;
 }
 #undef local_834
@@ -4417,7 +4417,7 @@ FUN_005c7579
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
 FUN_005c770a
-          (C_0043c740_434 *this,iptr param_1,C_0043c740_434 *param_2,undefined4 param_3,int param_4,
+          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4,
           undefined4 param_5,undefined4 param_6)
 
 {
@@ -4429,25 +4429,25 @@ FUN_005c770a
   
   local_8 = 0xffffffff;
   (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c787f;
-  FUN_005c79bf((C_005c79bf *)local_830);
+  color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
-  uVar1 = FUN_005dce4f(0x300);
-  iVar2 = FUN_005dcdf9(uVar1);
-  FUN_005c6b63(this,iVar2,param_5,param_6);
-  FUN_005c7a86((C_005c7a86 *)local_830,iVar2,param_5,param_6);
-  FUN_005c6b63(param_2,iVar2,param_3,param_4);
+  uVar1 = mem_handle_alloc(0x300);
+  iVar2 = mem_handle_lock(uVar1);
+  palette_get_rgb(this,iVar2,param_5,param_6);
+  color_kdtree_build((ColorKdTree *)local_830,iVar2,param_5,param_6);
+  palette_get_rgb(param_2,iVar2,param_3,param_4);
   for (local_834 = 0; local_834 < param_4 * 3; local_834 = local_834 + 3) {
     uVar3 = (undefined3)((uint)local_834 >> 8);
-    uVar2 = FUN_005c7e06
-                      ((C_005c7e06 *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
+    uVar2 = color_kdtree_find_nearest
+                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
                        CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
                        CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
     *(char *)(param_1 + local_834 / 3) = (char)uVar2;
   }
-  FUN_005dce29(uVar1);
-  FUN_005dce96(uVar1);
+  mem_handle_unlock(uVar1);
+  mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7873 */ { FUN_005c7a30((C_005c7a30_828 *)((iptr)&local_830)); }
+  /* inlined unwind funclet FUN_005c7873 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return;
 }
 #undef local_834
@@ -4458,7 +4458,7 @@ FUN_005c770a
 #define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2088)))
 undefined4 __thiscall
-FUN_005c7899(C_0043c740_434 *this,uint param_1,uint param_2,uint param_3)
+FUN_005c7899(GamePalette *this,uint param_1,uint param_2,uint param_3)
 
 {
   undefined4 uVar1;
@@ -4468,50 +4468,50 @@ FUN_005c7899(C_0043c740_434 *this,uint param_1,uint param_2,uint param_3)
   
   local_8 = 0xffffffff;
   (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c79a4;
-  FUN_005c79bf((C_005c79bf *)local_830);
+  color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
-  uVar1 = FUN_005dce4f(0x300);
-  iVar2 = FUN_005dcdf9(uVar1);
-  FUN_005c6b63(this,iVar2,0,0x100);
-  FUN_005c7a86((C_005c7a86 *)local_830,iVar2,0,0x100);
-  uVar3 = FUN_005c7e06((C_005c7e06 *)local_830,param_1,param_2,param_3,0x20);
-  FUN_005dce29(uVar1);
-  FUN_005dce96(uVar1);
+  uVar1 = mem_handle_alloc(0x300);
+  iVar2 = mem_handle_lock(uVar1);
+  palette_get_rgb(this,iVar2,0,0x100);
+  color_kdtree_build((ColorKdTree *)local_830,iVar2,0,0x100);
+  uVar3 = color_kdtree_find_nearest((ColorKdTreeSearchView *)local_830,param_1,param_2,param_3,0x20);
+  mem_handle_unlock(uVar1);
+  mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7998 */ { FUN_005c7a30((C_005c7a30_828 *)((iptr)&local_830)); }
+  /* inlined unwind funclet FUN_005c7998 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return uVar3;
 }
 #undef local_830
 #undef local_8
 
 /* 005c79bf auto */
-C_005c79bf * __thiscall FUN_005c79bf(C_005c79bf *this)
+ColorKdTreeInitView * __thiscall color_kdtree_init(ColorKdTreeInitView *this)
 
 {
-  this->field_818 = 0;
-  this->field_81c = 0;
-  this->field_814 = 0;
-  this->field_4 = 0;
-  this->field_0 = 0;
-  this->field_c = 0;
-  this->field_10 = 0;
-  this->field_8 = 0;
+  this->is_built = 0;
+  this->visit_count = 0;
+  this->stack_depth = 0;
+  this->nodes = 0;
+  this->nodes_handle = 0;
+  this->color_count = 0;
+  this->index_base = 0;
+  this->sentinel = 0;
   return this;
 }
 
 /* 005c7a30 auto */
-void __thiscall FUN_005c7a30(C_005c7a30_828 *this)
+void __thiscall color_kdtree_free(ColorKdTreeFreeView *this)
 
 {
   u32 uVar1;
   
-  if (this->field_4 != 0) {
-    uVar1 = FUN_005dce29(this->field_0);
-    this->field_4 = uVar1;
+  if (this->nodes != 0) {
+    uVar1 = mem_handle_unlock(this->nodes_handle);
+    this->nodes = uVar1;
   }
-  if (this->field_0 != 0) {
-    uVar1 = FUN_005dce96(this->field_0);
-    this->field_0 = uVar1;
+  if (this->nodes_handle != 0) {
+    uVar1 = mem_handle_free(this->nodes_handle);
+    this->nodes_handle = uVar1;
   }
   return;
 }
@@ -4526,7 +4526,7 @@ void __thiscall FUN_005c7a30(C_005c7a30_828 *this)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-void __thiscall FUN_005c7a86(C_005c7a86 *this,iptr param_1,u32 param_2,u32 param_3)
+void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u32 param_3)
 
 {
   int iVar3;
@@ -4536,23 +4536,23 @@ void __thiscall FUN_005c7a86(C_005c7a86 *this,iptr param_1,u32 param_2,u32 param
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
-  this->field_10 = param_2;
-  this->field_c = param_3;
-  uVar4 = FUN_005dce4f((this->field_c + 2) * 0x10);
-  this->field_0 = uVar4;
-  uVar4 = FUN_005dcdf9(this->field_0);
-  this->field_4 = uVar4;
-  this->field_8 = this->field_c + 1;
-  *(undefined4 *)(this->field_4 + 4) = 0xffffffff;
-  *(u32 *)(this->field_4 + 8) = this->field_8;
-  *(u32 *)(this->field_4 + 0xc) = this->field_8;
-  *(undefined4 *)(this->field_8 * 0x10 + 4 + this->field_4) = 0xffffffff;
-  *(u32 *)(this->field_8 * 0x10 + 0xc + this->field_4) = this->field_8;
-  *(undefined4 *)(this->field_8 * 0x10 + 8 + this->field_4) =
-       *(undefined4 *)(this->field_8 * 0x10 + 0xc + this->field_4);
+  this->index_base = param_2;
+  this->color_count = param_3;
+  uVar4 = mem_handle_alloc((this->color_count + 2) * 0x10);
+  this->nodes_handle = uVar4;
+  uVar4 = mem_handle_lock(this->nodes_handle);
+  this->nodes = uVar4;
+  this->nil_node = this->color_count + 1;
+  *(undefined4 *)(this->nodes + 4) = 0xffffffff;
+  *(u32 *)(this->nodes + 8) = this->nil_node;
+  *(u32 *)(this->nodes + 0xc) = this->nil_node;
+  *(undefined4 *)(this->nil_node * 0x10 + 4 + this->nodes) = 0xffffffff;
+  *(u32 *)(this->nil_node * 0x10 + 0xc + this->nodes) = this->nil_node;
+  *(undefined4 *)(this->nil_node * 0x10 + 8 + this->nodes) =
+       *(undefined4 *)(this->nil_node * 0x10 + 0xc + this->nodes);
   local_10 = 0;
   local_c = 0;
-  local_20 = FUN_005c80fd(this,param_1);
+  local_20 = color_find_nearest_grey(this,param_1);
   for (local_1c = local_20; iVar3 = local_8, -1 < local_1c; local_1c = local_1c + -1) {
     iVar1 = local_1c * 3;
     local_17 = *(undefined1 *)(iVar1 + param_1);
@@ -4560,18 +4560,18 @@ void __thiscall FUN_005c7a86(C_005c7a86 *this,iptr param_1,u32 param_2,u32 param
     local_16 = *(undefined1 *)(iVar1 + 2 + param_1);
     local_14 = local_1c;
     local_8 = local_8 + 1;
-    FUN_005c7c7b(this,(iptr)&local_18,iVar3);
+    color_kdtree_insert(this,(iptr)&local_18,iVar3);
   }
-  while (iVar3 = local_8, local_20 = local_20 + 1, local_20 < (int)this->field_c) {
+  while (iVar3 = local_8, local_20 = local_20 + 1, local_20 < (int)this->color_count) {
     iVar2 = local_20 * 3;
     local_17 = *(undefined1 *)(iVar2 + param_1);
     local_18 = *(undefined1 *)(iVar2 + 1 + param_1);
     local_16 = *(undefined1 *)(iVar2 + 2 + param_1);
     local_14 = local_20;
     local_8 = local_8 + 1;
-    FUN_005c7c7b(this,(iptr)&local_18,iVar3);
+    color_kdtree_insert(this,(iptr)&local_18,iVar3);
   }
-  this->field_818 = 1;
+  this->built = 1;
   return;
 }
 #undef local_20
@@ -4588,24 +4588,24 @@ void __thiscall FUN_005c7a86(C_005c7a86 *this,iptr param_1,u32 param_2,u32 param
 #define local_14 (*(u32 *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(u32 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall FUN_005c7c7b(C_005c7a86 *this,iptr param_1,int param_2)
+void __thiscall color_kdtree_insert(ColorKdTree *this,iptr param_1,int param_2)
 
 {
   bool bVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
-  local_14 = *(u32 *)(this->field_4 + 0xc);
+  local_14 = *(u32 *)(this->nodes + 0xc);
   local_8 = -1;
   bVar1 = true;
-  *(undefined1 *)(this->field_4 + 1 + param_2 * 0x10) = *(undefined1 *)(param_1 + 1);
-  *(undefined1 *)(this->field_4 + param_2 * 0x10) = *(undefined1 *)param_1;
-  *(undefined1 *)(this->field_4 + 2 + param_2 * 0x10) = *(undefined1 *)(param_1 + 2);
-  *(undefined4 *)(this->field_4 + 4 + param_2 * 0x10) = *(undefined4 *)(param_1 + 4);
-  *(u32 *)(this->field_4 + 0xc + param_2 * 0x10) = this->field_8;
-  *(undefined4 *)(this->field_4 + 8 + param_2 * 0x10) =
-       *(undefined4 *)(this->field_4 + 0xc + param_2 * 0x10);
-  while (this->field_8 != local_14) {
+  *(undefined1 *)(this->nodes + 1 + param_2 * 0x10) = *(undefined1 *)(param_1 + 1);
+  *(undefined1 *)(this->nodes + param_2 * 0x10) = *(undefined1 *)param_1;
+  *(undefined1 *)(this->nodes + 2 + param_2 * 0x10) = *(undefined1 *)(param_1 + 2);
+  *(undefined4 *)(this->nodes + 4 + param_2 * 0x10) = *(undefined4 *)(param_1 + 4);
+  *(u32 *)(this->nodes + 0xc + param_2 * 0x10) = this->nil_node;
+  *(undefined4 *)(this->nodes + 8 + param_2 * 0x10) =
+       *(undefined4 *)(this->nodes + 0xc + param_2 * 0x10);
+  while (this->nil_node != local_14) {
     local_c = local_14;
     if (local_8 == 2) {
       local_8 = 0;
@@ -4613,20 +4613,20 @@ void __thiscall FUN_005c7c7b(C_005c7a86 *this,iptr param_1,int param_2)
     else {
       local_8 = local_8 + 1;
     }
-    bVar1 = *(byte *)(local_8 + param_1) < *(byte *)(this->field_4 + local_14 * 0x10 + local_8);
+    bVar1 = *(byte *)(local_8 + param_1) < *(byte *)(this->nodes + local_14 * 0x10 + local_8);
     if (bVar1) {
-      local_14 = *(u32 *)(this->field_4 + 8 + local_14 * 0x10);
+      local_14 = *(u32 *)(this->nodes + 8 + local_14 * 0x10);
     }
     else {
-      local_14 = *(u32 *)(this->field_4 + 0xc + local_14 * 0x10);
+      local_14 = *(u32 *)(this->nodes + 0xc + local_14 * 0x10);
     }
     bVar1 = !bVar1;
   }
   if (bVar1) {
-    *(int *)(this->field_4 + 0xc + local_c * 0x10) = param_2;
+    *(int *)(this->nodes + 0xc + local_c * 0x10) = param_2;
   }
   else {
-    *(int *)(this->field_4 + 8 + local_c * 0x10) = param_2;
+    *(int *)(this->nodes + 8 + local_c * 0x10) = param_2;
   }
   return;
 }
@@ -4648,16 +4648,16 @@ void __thiscall FUN_005c7c7b(C_005c7a86 *this,iptr param_1,int param_2)
 #define local_c (*(u32 *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(56)))
 int __thiscall
-FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4)
+color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,uint param_3,int param_4)
 
 {
   u8 *puVar1;
   int iVar2;
   undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = this->field_8;
-  this->field_814 = 0;
-  if (this->field_818 == 0) {
+  local_c = this->nil_node;
+  this->stack_top = 0;
+  if (this->built == 0) {
     iVar2 = -1;
   }
   else {
@@ -4669,25 +4669,25 @@ FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4
     local_38[3] = (param_1 & 0xff) + param_4;
     local_28 = (param_3 & 0xff) - param_4;
     local_24 = (param_3 & 0xff) + param_4;
-    puVar1 = this->pad_14 + this->field_814 * 4;
+    puVar1 = this->pad_14 + this->stack_top * 4;
     puVar1[0] = 0xff;
     puVar1[1] = 0xff;
     puVar1[2] = 0xff;
     puVar1[3] = 0xff;
-    this->field_814 = this->field_814 + 1;
-    puVar1 = this->pad_14 + this->field_814 * 4;
+    this->stack_top = this->stack_top + 1;
+    puVar1 = this->pad_14 + this->stack_top * 4;
     puVar1[0] = '\0';
     puVar1[1] = '\0';
     puVar1[2] = '\0';
     puVar1[3] = '\0';
-    this->field_814 = this->field_814 + 1;
-    while ((this->field_814 != 0 && (local_3c != 0))) {
-      this->field_814 = this->field_814 - 1;
-      local_40 = *(u32 *)(*(int *)(this->pad_14 + this->field_814 * 4) * 0x10 + 0xc + this->field_4)
+    this->stack_top = this->stack_top + 1;
+    while ((this->stack_top != 0 && (local_3c != 0))) {
+      this->stack_top = this->stack_top - 1;
+      local_40 = *(u32 *)(*(int *)(this->pad_14 + this->stack_top * 4) * 0x10 + 0xc + this->nodes)
       ;
-      this->field_814 = this->field_814 - 1;
-      local_8 = *(iptr *)(this->pad_14 + this->field_814 * 4);
-      while ((this->field_8 != local_40 && (local_3c != 0))) {
+      this->stack_top = this->stack_top - 1;
+      local_8 = *(iptr *)(this->pad_14 + this->stack_top * 4);
+      while ((this->nil_node != local_40 && (local_3c != 0))) {
         this->field_81c = this->field_81c + 1;
         if (local_8 == 2) {
           local_8 = 0;
@@ -4695,16 +4695,16 @@ FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4
         else {
           local_8 = local_8 + 1;
         }
-        local_14 = (uint)*(byte *)(this->field_4 + local_8 + local_40 * 0x10);
+        local_14 = (uint)*(byte *)(this->nodes + local_8 + local_40 * 0x10);
         if (local_38[local_8 * 2] < (int)local_14) {
           if ((int)local_14 <= local_38[local_8 * 2 + 1]) {
-            *(iptr *)(this->pad_14 + this->field_814 * 4) = local_8;
-            this->field_814 = this->field_814 + 1;
-            *(u32 *)(this->pad_14 + this->field_814 * 4) = local_40;
-            this->field_814 = this->field_814 + 1;
-            local_1c = (uint)*(byte *)(this->field_4 + 1 + local_40 * 0x10);
-            local_20 = (uint)*(byte *)(this->field_4 + local_40 * 0x10);
-            local_18 = (uint)*(byte *)(this->field_4 + 2 + local_40 * 0x10);
+            *(iptr *)(this->pad_14 + this->stack_top * 4) = local_8;
+            this->stack_top = this->stack_top + 1;
+            *(u32 *)(this->pad_14 + this->stack_top * 4) = local_40;
+            this->stack_top = this->stack_top + 1;
+            local_1c = (uint)*(byte *)(this->nodes + 1 + local_40 * 0x10);
+            local_20 = (uint)*(byte *)(this->nodes + local_40 * 0x10);
+            local_18 = (uint)*(byte *)(this->nodes + 2 + local_40 * 0x10);
             local_10 = (local_1c - (param_1 & 0xff)) * (local_1c - (param_1 & 0xff)) +
                        (local_20 - (param_2 & 0xff)) * (local_20 - (param_2 & 0xff)) +
                        (local_18 - (param_3 & 0xff)) * (local_18 - (param_3 & 0xff));
@@ -4713,18 +4713,18 @@ FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4
               local_3c = local_10;
             }
           }
-          local_40 = *(u32 *)(this->field_4 + 8 + local_40 * 0x10);
+          local_40 = *(u32 *)(this->nodes + 8 + local_40 * 0x10);
         }
         else {
-          local_40 = *(u32 *)(this->field_4 + 0xc + local_40 * 0x10);
+          local_40 = *(u32 *)(this->nodes + 0xc + local_40 * 0x10);
         }
       }
     }
-    if (*(int *)(this->field_4 + 4 + local_c * 0x10) == -1) {
+    if (*(int *)(this->nodes + 4 + local_c * 0x10) == -1) {
       iVar2 = 0;
     }
     else {
-      iVar2 = *(int *)(this->field_4 + 4 + local_c * 0x10) + this->field_10;
+      iVar2 = *(int *)(this->nodes + 4 + local_c * 0x10) + this->index_base;
     }
   }
   return iVar2;
@@ -4746,7 +4746,7 @@ FUN_005c7e06(C_005c7e06 *this,uint param_1,uint param_2,uint param_3,int param_4
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-int __thiscall FUN_005c80fd(C_005c7a86 *this,iptr param_1)
+int __thiscall color_find_nearest_grey(ColorKdTree *this,iptr param_1)
 
 {
   int iVar1;
@@ -4754,7 +4754,7 @@ int __thiscall FUN_005c80fd(C_005c7a86 *this,iptr param_1)
   
   local_8 = 0;
   local_14 = 100000000;
-  for (local_10 = 0; local_10 < (int)(this->field_c * 3); local_10 = local_10 + 3) {
+  for (local_10 = 0; local_10 < (int)(this->color_count * 3); local_10 = local_10 + 3) {
     iVar1 = (*(byte *)(local_10 + 2 + param_1) - 0x80) * (*(byte *)(local_10 + 2 + param_1) - 0x80)
             + (*(byte *)(local_10 + 1 + param_1) - 0x80) *
               (*(byte *)(local_10 + 1 + param_1) - 0x80) +
@@ -4775,7 +4775,7 @@ int __thiscall FUN_005c80fd(C_005c7a86 *this,iptr param_1)
 #define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
 #define local_c (*(HFONT *)(frame_ + FRAME_OFF(68)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(72)))
-undefined4 __cdecl FUN_005c8200(undefined4 param_1,int param_2,undefined4 param_3)
+undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 param_3)
 
 {
   undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4817,11 +4817,11 @@ undefined4 __cdecl FUN_005c8200(undefined4 param_1,int param_2,undefined4 param_
   local_10 = 0;
   local_c = CreateFontIndirectA(&local_4c);
   if (local_c != (HFONT)0x0) {
-    local_10 = FUN_005dce4f(8);
-    local_8 = (undefined4 *)FUN_005dcdf9(local_10);
+    local_10 = mem_handle_alloc(8);
+    local_8 = (undefined4 *)mem_handle_lock(local_10);
     *local_8 = local_c;
     local_8[1] = 1;
-    FUN_005dce29(local_10);
+    mem_handle_unlock(local_10);
   }
   return local_10;
 }
@@ -4840,26 +4840,26 @@ undefined4 __cdecl FUN_005c8391(undefined4 param_1,int param_2)
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
-  iVar1 = FUN_005dcdf9(param_1);
+  iVar1 = mem_handle_lock(param_1);
   if ((iVar1 != 0) && (param_2 < *(int *)(iVar1 + 0x100))) {
-    local_10 = FUN_005dce4f(8);
-    puVar1 = (undefined4 *)FUN_005dcdf9(local_10);
+    local_10 = mem_handle_alloc(8);
+    puVar1 = (undefined4 *)mem_handle_lock(local_10);
     *puVar1 = *(undefined4 *)(iVar1 + 0x108 + param_2 * 4);
     puVar1[1] = 0;
-    FUN_005dce29(local_10);
+    mem_handle_unlock(local_10);
   }
   return local_10;
 }
 #undef local_10
 
 /* 005c841d auto */
-undefined4 __cdecl FUN_005c841d(undefined4 param_1)
+undefined4 __cdecl font_handle_destroy(undefined4 param_1)
 
 {
   undefined4 *puVar1;
   undefined4 uVar2;
   
-  puVar1 = (undefined4 *)FUN_005dcdf9(param_1);
+  puVar1 = (undefined4 *)mem_handle_lock(param_1);
   if (puVar1 == (undefined4 *)0x0) {
     uVar2 = 0;
   }
@@ -4867,8 +4867,8 @@ undefined4 __cdecl FUN_005c841d(undefined4 param_1)
     if (puVar1[1] == 1) {
       DeleteObject((HGDIOBJ)*puVar1);
     }
-    FUN_005dce29(param_1);
-    uVar2 = FUN_005dce96(param_1);
+    mem_handle_unlock(param_1);
+    uVar2 = mem_handle_free(param_1);
   }
   return uVar2;
 }
@@ -4876,7 +4876,7 @@ undefined4 __cdecl FUN_005c841d(undefined4 param_1)
 /* 005c847f auto */
 #define local_40 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(56)))
-LONG __cdecl FUN_005c847f(undefined4 param_1)
+LONG __cdecl font_measure_height(undefined4 param_1)
 
 {
   int iVar1;
@@ -4884,18 +4884,18 @@ LONG __cdecl FUN_005c847f(undefined4 param_1)
   HGDIOBJ h;
   undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = FUN_005dcef7(param_1);
+  iVar1 = mem_handle_size(param_1);
   if (iVar1 == 0) {
     local_40.tmHeight = 1;
   }
   else {
-    local_8 = (undefined4 *)FUN_005dcdf9(param_1);
+    local_8 = (undefined4 *)mem_handle_lock(param_1);
     hdc = GetDC((HWND)0x0);
     h = SelectObject(hdc,(HGDIOBJ)*local_8);
     GetTextMetricsA(hdc,&local_40);
     SelectObject(hdc,h);
     ReleaseDC((HWND)0x0,hdc);
-    FUN_005dce29(param_1);
+    mem_handle_unlock(param_1);
   }
   return local_40.tmHeight;
 }
@@ -4905,20 +4905,20 @@ LONG __cdecl FUN_005c847f(undefined4 param_1)
 /* 005c8514 auto */
 #define local_40 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(56)))
-int __cdecl FUN_005c8514(undefined4 param_1)
+int __cdecl font_handle_line_spacing(undefined4 param_1)
 
 {
   HDC hdc;
   HGDIOBJ h;
   undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (undefined4 *)FUN_005dcdf9(param_1);
+  local_8 = (undefined4 *)mem_handle_lock(param_1);
   hdc = GetDC((HWND)0x0);
   h = SelectObject(hdc,(HGDIOBJ)*local_8);
   GetTextMetricsA(hdc,&local_40);
   SelectObject(hdc,h);
   ReleaseDC((HWND)0x0,hdc);
-  FUN_005dce29(param_1);
+  mem_handle_unlock(param_1);
   return local_40.tmExternalLeading + local_40.tmHeight;
 }
 #undef local_40
@@ -4927,7 +4927,7 @@ int __cdecl FUN_005c8514(undefined4 param_1)
 /* 005c858e auto */
 #define local_10 (*(tagSIZE *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
-LONG __cdecl FUN_005c858e(undefined4 param_1,iptr param_2)
+LONG __cdecl font_measure_width(undefined4 param_1,iptr param_2)
 
 {
   HDC hdc;
@@ -4936,7 +4936,7 @@ LONG __cdecl FUN_005c858e(undefined4 param_1,iptr param_2)
   tagSIZE *lpsz;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (undefined4 *)FUN_005dcdf9(param_1);
+  local_8 = (undefined4 *)mem_handle_lock(param_1);
   hdc = GetDC((HWND)0x0);
   h = SelectObject(hdc,(HGDIOBJ)*local_8);
   lpsz = &local_10;
@@ -4944,7 +4944,7 @@ LONG __cdecl FUN_005c858e(undefined4 param_1,iptr param_2)
   GetTextExtentPointA(hdc,(LPCSTR)param_2,c,lpsz);
   SelectObject(hdc,h);
   ReleaseDC((HWND)0x0,hdc);
-  FUN_005dce29(param_1);
+  mem_handle_unlock(param_1);
   return local_10.cx;
 }
 #undef local_10
@@ -4961,12 +4961,12 @@ undefined4 __cdecl FUN_005c861c(LPCSTR param_1)
   local_c = 0;
   iVar1 = AddFontResourceA(param_1);
   if (iVar1 != 0) {
-    local_c = FUN_005dce4f(0x208);
-    iVar1 = FUN_005dcdf9(local_c);
+    local_c = mem_handle_alloc(0x208);
+    iVar1 = mem_handle_lock(local_c);
     FUN_005f22d0(iVar1,param_1);
     _strncpy((char *)(iVar1 + 0x104),param_1,3);
-    FUN_005c8736(iVar1);
-    FUN_005dce29(local_c);
+    font_enum_matching_faces(iVar1);
+    mem_handle_unlock(local_c);
   }
   return local_c;
 }
@@ -4995,7 +4995,7 @@ undefined4 __stdcall FUN_005c86bc(LOGFONTA *param_1,undefined4 param_2,undefined
 }
 
 /* 005c8736 auto */
-undefined4 __cdecl FUN_005c8736(iptr param_1)
+undefined4 __cdecl font_enum_matching_faces(iptr param_1)
 
 {
   HDC hdc;
@@ -5017,7 +5017,7 @@ void __cdecl FUN_005c8791(undefined4 param_1)
   LPCSTR lpFileName;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  lpFileName = (LPCSTR)FUN_005dcdf9(param_1);
+  lpFileName = (LPCSTR)mem_handle_lock(param_1);
   for (local_c = 0; local_c < *(int *)(lpFileName + 0x100); local_c = local_c + 1) {
     if (*(int *)(lpFileName + local_c * 4 + 0x108) != 0) {
       DeleteObject(*(HGDIOBJ *)(lpFileName + local_c * 4 + 0x108));
@@ -5029,8 +5029,8 @@ void __cdecl FUN_005c8791(undefined4 param_1)
     }
   }
   RemoveFontResourceA(lpFileName);
-  FUN_005dce29(param_1);
-  FUN_005dce96(param_1);
+  mem_handle_unlock(param_1);
+  mem_handle_free(param_1);
   return;
 }
 #undef local_c
@@ -5038,7 +5038,7 @@ void __cdecl FUN_005c8791(undefined4 param_1)
 
 /* 005c8834 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-iptr __cdecl FUN_005c8834(iptr param_1,undefined4 param_2,char *param_3,int param_4)
+iptr __cdecl font_calc_text_rect(iptr param_1,undefined4 param_2,char *param_3,int param_4)
 
 {
   undefined4 *puVar1;
@@ -5050,7 +5050,7 @@ iptr __cdecl FUN_005c8834(iptr param_1,undefined4 param_2,char *param_3,int para
   UINT format;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  puVar1 = (undefined4 *)FUN_005dcdf9(param_2);
+  puVar1 = (undefined4 *)mem_handle_lock(param_2);
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
@@ -5062,7 +5062,7 @@ iptr __cdecl FUN_005c8834(iptr param_1,undefined4 param_2,char *param_3,int para
   DrawTextA(hdc_00,param_3,cchText,lprc,format);
   SelectObject(hdc_00,h);
   DeleteDC(hdc_00);
-  FUN_005dce29(param_2);
+  mem_handle_unlock(param_2);
   *(LONG *)param_1 = local_14.left;
   *(LONG *)(param_1 + 4) = local_14.top;
   *(LONG *)(param_1 + 8) = local_14.right;
@@ -5083,14 +5083,14 @@ int __cdecl FUN_005c8908(LOGFONTA *param_1)
   local_10 = 0;
   pHVar1 = CreateFontIndirectA(param_1);
   if (pHVar1 != (HFONT)0x0) {
-    local_10 = FUN_005dce4f(8);
+    local_10 = mem_handle_alloc(8);
     if (local_10 == 0) {
       local_10 = 0;
     }
     else {
-      puVar2 = (undefined4 *)FUN_005dcdf9(local_10);
+      puVar2 = (undefined4 *)mem_handle_lock(local_10);
       *puVar2 = pHVar1;
-      FUN_005dce29(local_10);
+      mem_handle_unlock(local_10);
     }
   }
   return local_10;
@@ -5108,12 +5108,12 @@ undefined4 __cdecl FUN_005c8984(int param_1)
     uVar1 = 0;
   }
   else {
-    piVar2 = (int *)FUN_005dcdf9(param_1);
+    piVar2 = (int *)mem_handle_lock(param_1);
     if (*piVar2 != 0) {
       DeleteObject((HGDIOBJ)*piVar2);
     }
-    FUN_005dce29(param_1);
-    uVar1 = FUN_005dce96(param_1);
+    mem_handle_unlock(param_1);
+    uVar1 = mem_handle_free(param_1);
   }
   return uVar1;
 }
@@ -5131,14 +5131,14 @@ int __cdecl FUN_005c89ed(LPCSTR param_1)
   iVar1 = AddFontResourceA(param_1);
   if (iVar1 != 0) {
     iVar1 = lstrlenA(param_1);
-    local_8 = FUN_005dce4f(iVar1 + 1);
+    local_8 = mem_handle_alloc(iVar1 + 1);
     if (local_8 == 0) {
       local_8 = 0;
     }
     else {
-      lpString1 = (LPSTR)FUN_005dcdf9(local_8);
+      lpString1 = (LPSTR)mem_handle_lock(local_8);
       lstrcpyA(lpString1,param_1);
-      FUN_005dce29(local_8);
+      mem_handle_unlock(local_8);
       SendMessageA((HWND)0xffff,0x1d,0,0);
     }
   }
@@ -5154,19 +5154,19 @@ void __cdecl FUN_005c8a85(int param_1)
   BOOL BVar1;
   
   if (param_1 != 0) {
-    lpFileName = (LPCSTR)FUN_005dcdf9(param_1);
+    lpFileName = (LPCSTR)mem_handle_lock(param_1);
     BVar1 = RemoveFontResourceA(lpFileName);
     if (BVar1 != 0) {
       SendMessageA((HWND)0xffff,0x1d,0,0);
     }
-    FUN_005dce29(param_1);
-    FUN_005dce96(param_1);
+    mem_handle_unlock(param_1);
+    mem_handle_free(param_1);
   }
   return;
 }
 
 /* 005c8b00 auto */
-void __cdecl FUN_005c8b00(HWND param_1)
+void __cdecl wnd_invalidate(HWND param_1)
 
 {
   if (param_1 != (HWND)0x0) {
@@ -5176,7 +5176,7 @@ void __cdecl FUN_005c8b00(HWND param_1)
 }
 
 /* 005c8b2d auto */
-void __cdecl FUN_005c8b2d(HWND param_1)
+void __cdecl hwnd_show(HWND param_1)
 
 {
   if (param_1 != (HWND)0x0) {
@@ -5186,7 +5186,7 @@ void __cdecl FUN_005c8b2d(HWND param_1)
 }
 
 /* 005c8b58 auto */
-void __cdecl FUN_005c8b58(HWND param_1)
+void __cdecl hwnd_hide(HWND param_1)
 
 {
   if (param_1 != (HWND)0x0) {
@@ -5208,8 +5208,8 @@ void __cdecl FUN_005c8b83(HWND param_1,int param_2,int param_3)
   if (param_1 != (HWND)0x0) {
     GetWindowRect(param_1,&local_14);
     bRepaint = 1;
-    nHeight = thunk_FUN_00407fc0((iptr)&local_14);
-    nWidth = thunk_FUN_00407f90((iptr)&local_14);
+    nHeight = thunk_rect_height((iptr)&local_14);
+    nWidth = thunk_rect_width((iptr)&local_14);
     MoveWindow(param_1,param_2,param_3,nWidth,nHeight,bRepaint);
   }
   return;
@@ -5217,11 +5217,11 @@ void __cdecl FUN_005c8b83(HWND param_1,int param_2,int param_3)
 #undef local_14
 
 /* 005c8be1 auto */
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-HWND __cdecl FUN_005c8be1(int *param_1,iptr param_2)
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
 
 {
-  C_00408010_10 *this;
+  WndBase *this;
   iptr iVar1;
   iptr iVar2;
   int iVar3;
@@ -5232,27 +5232,27 @@ HWND __cdecl FUN_005c8be1(int *param_1,iptr param_2)
   
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = DAT_006e4ff0;
-  this = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_2);
-  iVar1 = thunk_FUN_00414d10(this);
+  hInstance = app_hinstance;
+  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
+  iVar1 = thunk_wnd_get_window(this);
   pHVar4 = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_FUN_00407fc0((iptr)param_1);
-  iVar3 = thunk_FUN_00407f90((iptr)param_1);
+  iVar2 = thunk_rect_height((iptr)param_1);
+  iVar3 = thunk_rect_width((iptr)param_1);
   pHVar4 = CreateWindowExA(4,s_MSControlClass_00637ca8,&DAT_00637ca4,0x50000000,*param_1,param_1[1],
                            iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
-  iVar3 = FUN_005c9499(pHVar4,param_2);
+  iVar3 = ctrl_init_block(pHVar4,param_2);
   *(undefined4 *)(iVar3 + 0x2c) = 1;
   SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, FUN_005c8caf));
   return pHVar4;
 }
-#undef DAT_006e4ff0
+#undef app_hinstance
 
 /* 005c8c83 auto */
-void __cdecl FUN_005c8c83(int param_1)
+void __cdecl region_dispose(int param_1)
 
 {
   if (param_1 == 0) {
-    FUN_005d225b(ADDR(0x637cb8, ((u8 *)&g.d_00637cb8)));
+    dbg_log(ADDR(0x637cb8, ((u8 *)&g.d_00637cb8)));
   }
   return;
 }
@@ -5263,7 +5263,7 @@ void __cdecl FUN_005c8c83(int param_1)
 undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 param_3,uint param_4)
 
 {
-  C_005c9070 *this;
+  HotspotDblClickView *this;
   iptr iVar1;
   int *piVar1;
   BOOL BVar2;
@@ -5271,24 +5271,24 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
   undefined4 uVar4;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = FUN_005c9563(param_1);
-  this = *(C_005c9070 **)(iVar1 + 4);
+  iVar1 = wnd_from_hwnd(param_1);
+  this = *(HotspotDblClickView **)(iVar1 + 4);
   switch(param_2) {
   case 0x200:
     if (DAT_00637c9c == 0) {
       if (DAT_00637ca0 == 0) {
         DAT_00637c9c = 1;
         SetCapture(param_1);
-        if (this != (C_005c9070 *)0x0) {
-          iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-          FUN_005c6303(iVar3);
-          uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-          FUN_005c8f70((C_005c8f70 *)this,uVar4);
+        if (this != (HotspotDblClickView *)0x0) {
+          iVar3 = thunk_ctrl_get_parent((Control *)this);
+          wnd_set_active_child(iVar3);
+          uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+          hotspot_fire_enter((HotspotEnterView *)this,uVar4);
         }
       }
     }
     else {
-      piVar1 = (int *)FUN_005c8f50(this);
+      piVar1 = (int *)ctrl_get_rect(this);
       local_14.left = *piVar1;
       local_14.top = piVar1[1];
       local_14.right = piVar1[2];
@@ -5296,21 +5296,21 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
       OffsetRect(&local_14,-local_14.left,-local_14.top);
       BVar2 = PtInRect(&local_14,(POINT)(CONCAT44(param_4 >> 0x10,param_4) & 0xffffffff0000ffff));
       if (((BVar2 == 0) && (DAT_00637c9c = 0, DAT_00637ca0 == 0)) &&
-         (ReleaseCapture(), this != (C_005c9070 *)0x0)) {
-        iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-        FUN_005c6303(iVar3);
-        uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-        FUN_005c8fb0((C_005c8fb0 *)this,uVar4);
+         (ReleaseCapture(), this != (HotspotDblClickView *)0x0)) {
+        iVar3 = thunk_ctrl_get_parent((Control *)this);
+        wnd_set_active_child(iVar3);
+        uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+        hotspot_fire_leave((HotspotLeaveView *)this,uVar4);
       }
     }
     break;
   case 0x201:
     if (DAT_00637c9c != 0) {
       DAT_00637ca0 = 1;
-      iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar3);
-      uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-      FUN_005c9030((C_005c9030 *)this,uVar4);
+      iVar3 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar3);
+      uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+      hotspot_fire_press((HotspotPressView *)this,uVar4);
     }
     break;
   case 0x202:
@@ -5318,31 +5318,31 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
       DAT_00637ca0 = 0;
       if (DAT_00637c9c == 0) {
         ReleaseCapture();
-        if (this != (C_005c9070 *)0x0) {
-          iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-          FUN_005c6303(iVar3);
-          uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-          FUN_005c8fb0((C_005c8fb0 *)this,uVar4);
+        if (this != (HotspotDblClickView *)0x0) {
+          iVar3 = thunk_ctrl_get_parent((Control *)this);
+          wnd_set_active_child(iVar3);
+          uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+          hotspot_fire_leave((HotspotLeaveView *)this,uVar4);
         }
       }
-      else if (this != (C_005c9070 *)0x0) {
-        iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-        FUN_005c6303(iVar3);
-        uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-        FUN_005c8ff0((C_005c8ff0 *)this,uVar4);
+      else if (this != (HotspotDblClickView *)0x0) {
+        iVar3 = thunk_ctrl_get_parent((Control *)this);
+        wnd_set_active_child(iVar3);
+        uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+        hotspot_fire_click((HotspotClickView *)this,uVar4);
       }
     }
     break;
   case 0x203:
     if (DAT_00637c9c != 0) {
-      iVar3 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar3);
-      uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-      FUN_005c9070(this,uVar4);
+      iVar3 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar3);
+      uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+      hotspot_fire_dblclick(this,uVar4);
     }
     break;
   default:
-    uVar4 = FUN_005c9307(param_1,param_2,param_3,param_4);
+    uVar4 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
     return uVar4;
   }
   return 0;
@@ -5351,64 +5351,64 @@ undefined4 __stdcall FUN_005c8caf(HWND param_1,undefined4 param_2,undefined4 par
 #endif
 
 /* 005c8f50 auto */
-int __thiscall FUN_005c8f50(void *this)
+int __thiscall ctrl_get_rect(void *this)
 
 {
   return (int)this + 0xc;
 }
 
 /* 005c8f70 auto */
-void __thiscall FUN_005c8f70(C_005c8f70 *this,undefined4 param_1)
+void __thiscall hotspot_fire_enter(HotspotEnterView *this,undefined4 param_1)
 
 {
-  if (this->field_2c != 0) {
-    (*(code *)this->field_2c)(param_1);
+  if (this->on_enter != 0) {
+    (*(code *)this->on_enter)(param_1);
   }
   return;
 }
 
 /* 005c8fb0 auto */
-void __thiscall FUN_005c8fb0(C_005c8fb0 *this,undefined4 param_1)
+void __thiscall hotspot_fire_leave(HotspotLeaveView *this,undefined4 param_1)
 
 {
-  if (this->field_30 != 0) {
-    (*(code *)this->field_30)(param_1);
+  if (this->on_leave != 0) {
+    (*(code *)this->on_leave)(param_1);
   }
   return;
 }
 
 /* 005c8ff0 auto */
-void __thiscall FUN_005c8ff0(C_005c8ff0 *this,undefined4 param_1)
+void __thiscall hotspot_fire_click(HotspotClickView *this,undefined4 param_1)
 
 {
-  if (this->field_34 != 0) {
-    (*(code *)this->field_34)(param_1);
+  if (this->on_click != 0) {
+    (*(code *)this->on_click)(param_1);
   }
   return;
 }
 
 /* 005c9030 auto */
-void __thiscall FUN_005c9030(C_005c9030 *this,undefined4 param_1)
+void __thiscall hotspot_fire_press(HotspotPressView *this,undefined4 param_1)
 
 {
-  if (this->field_38 != 0) {
-    (*(code *)this->field_38)(param_1);
+  if (this->on_press != 0) {
+    (*(code *)this->on_press)(param_1);
   }
   return;
 }
 
 /* 005c9070 auto */
-void __thiscall FUN_005c9070(C_005c9070 *this,undefined4 param_1)
+void __thiscall hotspot_fire_dblclick(HotspotDblClickView *this,undefined4 param_1)
 
 {
-  if (this->field_3c != 0) {
-    (*(code *)this->field_3c)(param_1);
+  if (this->on_dblclick != 0) {
+    (*(code *)this->on_dblclick)(param_1);
   }
   return;
 }
 
 /* 005c90b0 auto */
-void __cdecl FUN_005c90b0(HWND param_1)
+void __cdecl ctrl_hwnd_set_focus(HWND param_1)
 
 {
   SetFocus(param_1);
@@ -5419,12 +5419,12 @@ void __cdecl FUN_005c90b0(HWND param_1)
 #define local_14 (*(tagPOINT *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(HWND *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_005c90ca(iptr param_1,HWND param_2)
+void __cdecl ctrl_paint_parent_bkgnd(iptr param_1,HWND param_2)
 
 {
   LONG LVar1;
-  C_004083b0_48 *this;
-  C_00408010_10 *pCVar2;
+  DibSurface *this;
+  WndBase *pCVar2;
   iptr iVar3;
   iptr iVar4;
   int iVar5;
@@ -5436,21 +5436,21 @@ void __cdecl FUN_005c90ca(iptr param_1,HWND param_2)
   local_8 = GetParent(param_2);
   LVar1 = GetWindowLongA(local_8,0xc);
   if (LVar1 == 0) {
-    pCVar2 = (C_00408010_10 *)GetWindowLongA(local_8,0);
-    iVar5 = thunk_FUN_00414d10(pCVar2);
+    pCVar2 = (WndBase *)GetWindowLongA(local_8,0);
+    iVar5 = thunk_wnd_get_window(pCVar2);
     if (*(int *)(iVar5 + 0x14) != 0) {
       FillRect(*(HDC *)param_1,(RECT *)(param_1 + 8),*(HBRUSH *)(iVar5 + 0x14));
     }
   }
   else {
-    this = (C_004083b0_48 *)GetWindowLongA(local_8,0xc);
-    pCVar2 = (C_00408010_10 *)GetWindowLongA(local_8,0);
-    iVar3 = thunk_FUN_00414d10(pCVar2);
-    local_c = FUN_005c55f0(this);
+    this = (DibSurface *)GetWindowLongA(local_8,0xc);
+    pCVar2 = (WndBase *)GetWindowLongA(local_8,0);
+    iVar3 = thunk_wnd_get_window(pCVar2);
+    local_c = surface_get_dib(this);
     local_14.x = *(int *)(param_1 + 8);
     local_14.y = *(int *)(param_1 + 0xc);
     MapWindowPoints(param_2,*(HWND *)(iVar3 + 4),&local_14,1);
-    if ((*(int *)(iVar3 + 0x18) != 0) && (DAT_00638b48 == 1)) {
+    if ((*(int *)(iVar3 + 0x18) != 0) && (gfx_palettized_display == 1)) {
       SelectPalette(*(HDC *)param_1,*(HPALETTE *)(iVar3 + 0x18),0);
       RealizePalette(*(HDC *)param_1);
     }
@@ -5458,8 +5458,8 @@ void __cdecl FUN_005c90ca(iptr param_1,HWND param_2)
     hdcSrc = *(HDC *)(local_c + 4);
     LVar1 = local_14.x;
     y1 = local_14.y;
-    iVar4 = thunk_FUN_00407fc0(param_1 + 8);
-    iVar5 = thunk_FUN_00407f90(param_1 + 8);
+    iVar4 = thunk_rect_height(param_1 + 8);
+    iVar5 = thunk_rect_width(param_1 + 8);
     BitBlt(*(HDC *)param_1,*(int *)(param_1 + 8),*(int *)(param_1 + 0xc),iVar5,iVar4,hdcSrc,LVar1,y1
            ,rop);
   }
@@ -5473,7 +5473,7 @@ void __cdecl FUN_005c90ca(iptr param_1,HWND param_2)
 #define local_10 (*(uptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(char (*)[4])(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_005c9222(iptr param_1,iptr param_2)
+void __cdecl ctrl_parse_hotkey(iptr param_1,iptr param_2)
 
 {
   size_t sVar1;
@@ -5510,7 +5510,7 @@ LAB_005c92ae:
 
 /* 005c9307 auto */
 #define local_44 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(4)))
-LRESULT __stdcall FUN_005c9307(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
+LRESULT __stdcall ctrl_default_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM param_4)
 
 {
   HWND hWnd;
@@ -5521,20 +5521,20 @@ LRESULT __stdcall FUN_005c9307(HWND param_1,uint param_2,WPARAM param_3,LPARAM p
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
       BeginPaint(param_1,&local_44);
-      FUN_005c90ca((iptr)&local_44,param_1);
+      ctrl_paint_parent_bkgnd((iptr)&local_44,param_1);
       EndPaint(param_1,&local_44);
       return 0;
     }
     if (param_2 == 2) {
-      iVar1 = FUN_005c9563(param_1);
+      iVar1 = wnd_from_hwnd(param_1);
       if (iVar1 != 0) {
         if (*(int *)(iVar1 + 0x2c) == 3) {
           **(undefined4 **)(iVar1 + 0x24) = 0;
         }
         else {
-          FUN_005c9710(*(C_005c9710 **)(iVar1 + 4),0);
+          control_set_hwnd(*(ControlHwndSetView **)(iVar1 + 4),0);
         }
-        FUN_005c9595(param_1);
+        ctrl_hwnd_free_block(param_1);
       }
       LVar1 = DefWindowProcA(param_1,2,param_3,param_4);
       return LVar1;
@@ -5551,19 +5551,19 @@ LRESULT __stdcall FUN_005c9307(HWND param_1,uint param_2,WPARAM param_3,LPARAM p
 #undef local_44
 
 /* 005c944b auto */
-int __cdecl FUN_005c944b(iptr param_1)
+int __cdecl ctrl_destroy_hwnd(iptr param_1)
 
 {
   int iVar1;
   int iVar2;
   HWND hWnd;
   
-  iVar1 = FUN_005c5e60((C_005c5e60 *)param_1);
+  iVar1 = control_get_type((ControlTypeView *)param_1);
   if (iVar1 != 3) {
-    iVar2 = thunk_FUN_00418770((C_00418770 *)param_1);
+    iVar2 = thunk_control_get_hwnd((ControlHwndView *)param_1);
     iVar1 = 0;
     if (iVar2 != 0) {
-      hWnd = (HWND)thunk_FUN_00418770((C_00418770 *)param_1);
+      hWnd = (HWND)thunk_control_get_hwnd((ControlHwndView *)param_1);
       iVar1 = DestroyWindow(hWnd);
     }
   }
@@ -5572,7 +5572,7 @@ int __cdecl FUN_005c944b(iptr param_1)
 
 /* 005c9499 auto */
 #define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
-undefined4 * __cdecl FUN_005c9499(HWND param_1,iptr param_2)
+undefined4 * __cdecl ctrl_init_block(HWND param_1,iptr param_2)
 
 {
   undefined4 uVar1;
@@ -5580,11 +5580,11 @@ undefined4 * __cdecl FUN_005c9499(HWND param_1,iptr param_2)
   
   local_c = (undefined4 *)0x0;
   if (param_1 == (HWND)0x0) {
-    FUN_005d225b(ADDR(0x637cf4, ((u8 *)&g.d_00637cf4)));
+    dbg_log(ADDR(0x637cf4, ((u8 *)&g.d_00637cf4)));
   }
   else {
-    uVar1 = FUN_005dce4f(0x30);
-    local_c = (undefined4 *)FUN_005dcdf9(uVar1);
+    uVar1 = mem_handle_alloc(0x30);
+    local_c = (undefined4 *)mem_handle_lock(uVar1);
     local_c[2] = 0;
     local_c[5] = 0;
     local_c[4] = local_c[5];
@@ -5602,7 +5602,7 @@ undefined4 * __cdecl FUN_005c9499(HWND param_1,iptr param_2)
 #undef local_c
 
 /* 005c9563 auto */
-LONG __cdecl FUN_005c9563(HWND param_1)
+LONG __cdecl wnd_from_hwnd(HWND param_1)
 
 {
   LONG LVar1;
@@ -5617,14 +5617,14 @@ LONG __cdecl FUN_005c9563(HWND param_1)
 }
 
 /* 005c9595 auto */
-void __cdecl FUN_005c9595(HWND param_1)
+void __cdecl ctrl_hwnd_free_block(HWND param_1)
 
 {
   undefined4 uVar1;
   undefined4 *puVar2;
   
   if (param_1 == (HWND)0x0) {
-    FUN_005d225b(ADDR(0x637d30, ((u8 *)&g.d_00637d30)));
+    dbg_log(ADDR(0x637d30, ((u8 *)&g.d_00637d30)));
   }
   else {
     puVar2 = (undefined4 *)GetWindowLongA(param_1,0);
@@ -5648,9 +5648,9 @@ void __cdecl FUN_005c9595(HWND param_1)
         puVar2[9] = 0;
       }
       uVar1 = *puVar2;
-      FUN_005dce29(uVar1);
-      FUN_005dce96(uVar1);
-      SetWindowLongA(param_1,-4,ADDR(0x5c9307, FUN_005c9307));
+      mem_handle_unlock(uVar1);
+      mem_handle_free(uVar1);
+      SetWindowLongA(param_1,-4,ADDR(0x5c9307, ctrl_default_wndproc));
       SetWindowLongA(param_1,0,0);
     }
   }
@@ -5659,7 +5659,7 @@ void __cdecl FUN_005c9595(HWND param_1)
 
 /* 005c96cc auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __cdecl FUN_005c96cc(HWND param_1)
+void __cdecl wnd_redraw_client(HWND param_1)
 
 {
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5677,20 +5677,20 @@ void __cdecl FUN_005c96cc(HWND param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall FUN_005c9710(C_005c9710 *this,u32 param_1)
+void __thiscall control_set_hwnd(ControlHwndSetView *this,u32 param_1)
 
 {
-  this->field_1c = param_1;
+  this->hwnd = param_1;
   return;
 }
 
 /* 005c9740 auto */
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_2a0 (*(DWORD *)(frame_ + FRAME_OFF(0)))
 #define local_278 (*(char (*)[256])(frame_ + FRAME_OFF(40)))
 #define local_178 (*(int *)(frame_ + FRAME_OFF(296)))
 #define local_174 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(300)))
-#define local_170 (*(C_0040f380_3c * *)(frame_ + FRAME_OFF(304)))
+#define local_170 (*(Control * *)(frame_ + FRAME_OFF(304)))
 #define local_16c (*(int *)(frame_ + FRAME_OFF(308)))
 #define local_168 (*(HBITMAP *)(frame_ + FRAME_OFF(312)))
 #define local_164 (*(HDC *)(frame_ + FRAME_OFF(316)))
@@ -5713,10 +5713,10 @@ void __thiscall FUN_005c9710(C_005c9710 *this,u32 param_1)
 #define local_c (*(int *)(frame_ + FRAME_OFF(660)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(664)))
 HWND __cdecl
-FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70_8 *param_5)
+button_create_hwnd(int *param_1,iptr param_2,undefined4 param_3,int param_4,GameFont *param_5)
 
 {
-  C_00408010_10 *this;
+  WndBase *this;
   iptr iVar1;
   iptr iVar2;
   int iVar3;
@@ -5724,10 +5724,10 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
   int iVar4;
   HBITMAP h;
   HBITMAP h_00;
-  C_00511320 *pCVar5;
-  C_005cbdb0 *this_00;
+  WndPaletteView *pCVar5;
+  PaletteHandleView *this_00;
   HPALETTE hPal;
-  C_0043c740_434 *this_01;
+  GamePalette *this_01;
   iptr iVar6;
   HPEN h_01;
   HPEN h_02;
@@ -5752,22 +5752,22 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
   undefined1 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
   
   FUN_005f22d0(local_278,param_3);
-  local_170 = (C_0040f380_3c *)param_2;
+  local_170 = (Control *)param_2;
   local_2a0 = 0x40810000;
   if (param_4 != 0) {
     local_2a0 = 0x50810000;
   }
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = DAT_006e4ff0;
-  this = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_2);
-  iVar1 = thunk_FUN_00414d10(this);
+  hInstance = app_hinstance;
+  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
+  iVar1 = thunk_wnd_get_window(this);
   hWndParent = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_FUN_00407fc0((iptr)param_1);
-  iVar3 = thunk_FUN_00407f90((iptr)param_1);
+  iVar2 = thunk_rect_height((iptr)param_1);
+  iVar3 = thunk_rect_width((iptr)param_1);
   local_154 = CreateWindowExA(4,s_MSControlClass_00637d70,&DAT_00637d6c,local_2a0,*param_1,
                               param_1[1],iVar3,iVar2,hWndParent,hMenu,hInstance,lpParam);
-  FUN_005c9222((iptr)local_170,(iptr)local_278);
+  ctrl_parse_hotkey((iptr)local_170,(iptr)local_278);
   local_150.left = *param_1;
   local_150.top = param_1[1];
   local_150.right = param_1[2];
@@ -5776,29 +5776,29 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
   local_150.right = local_150.right + -2;
   local_150.bottom = local_150.bottom + -2;
   hdc = GetDC(local_154);
-  iVar3 = thunk_FUN_00407fc0((iptr)&local_150);
-  iVar4 = thunk_FUN_00407f90((iptr)&local_150);
+  iVar3 = thunk_rect_height((iptr)&local_150);
+  iVar4 = thunk_rect_width((iptr)&local_150);
   h = CreateCompatibleBitmap(hdc,iVar4,iVar3);
   if (h == (HBITMAP)0x0) {
-    FUN_005d225b(ADDR(0x637d80, ((u8 *)&g.d_00637d80)));
+    dbg_log(ADDR(0x637d80, ((u8 *)&g.d_00637d80)));
     DestroyWindow(local_154);
     local_154 = (HWND)0x0;
   }
   else {
-    iVar3 = thunk_FUN_00407fc0((iptr)&local_150);
-    iVar4 = thunk_FUN_00407f90((iptr)&local_150);
+    iVar3 = thunk_rect_height((iptr)&local_150);
+    iVar4 = thunk_rect_width((iptr)&local_150);
     h_00 = CreateCompatibleBitmap(hdc,iVar4,iVar3);
     if (h_00 == (HBITMAP)0x0) {
-      FUN_005d225b(ADDR(0x637da8, ((u8 *)&g.d_00637da8)));
+      dbg_log(ADDR(0x637da8, ((u8 *)&g.d_00637da8)));
       DestroyWindow(local_154);
       local_154 = (HWND)0x0;
     }
     else {
-      iVar3 = thunk_FUN_00407fc0((iptr)&local_150);
-      iVar4 = thunk_FUN_00407f90((iptr)&local_150);
+      iVar3 = thunk_rect_height((iptr)&local_150);
+      iVar4 = thunk_rect_width((iptr)&local_150);
       local_168 = CreateCompatibleBitmap(hdc,iVar4,iVar3);
       if (local_168 == (HBITMAP)0x0) {
-        FUN_005d225b(ADDR(0x637dd0, ((u8 *)&g.d_00637dd0)));
+        dbg_log(ADDR(0x637dd0, ((u8 *)&g.d_00637dd0)));
         DestroyWindow(local_154);
         local_154 = (HWND)0x0;
       }
@@ -5810,11 +5810,11 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
           local_18 = GetStockObject(1);
         }
         else {
-          if (DAT_00638b48 == 1) {
+          if (gfx_palettized_display == 1) {
             bForceBkgd = 0;
-            pCVar5 = (C_00511320 *)thunk_FUN_0040f810(local_170);
-            this_00 = (C_005cbdb0 *)thunk_FUN_00511320(pCVar5);
-            hPal = (HPALETTE)FUN_005cbdb0(this_00);
+            pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_170);
+            this_00 = (PaletteHandleView *)thunk_wnd_get_palette(pCVar5);
+            hPal = (HPALETTE)palette_get_hpalette(this_00);
             SelectPalette(local_164,hPal,bForceBkgd);
             RealizePalette(local_164);
           }
@@ -5822,20 +5822,20 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
           puVar13 = local_174;
           puVar11 = local_160;
           uVar10 = local_170->field_34;
-          pCVar5 = (C_00511320 *)thunk_FUN_0040f810(local_170);
-          this_01 = (C_0043c740_434 *)thunk_FUN_00511320(pCVar5);
-          iVar6 = thunk_FUN_0046f440(this_01);
-          FUN_005dea9e(iVar6,uVar10,(iptr)puVar11,(iptr)puVar13,(iptr)puVar15);
+          pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_170);
+          this_01 = (GamePalette *)thunk_wnd_get_palette(pCVar5);
+          iVar6 = thunk_palette_get_logpalette(this_01);
+          palette_get_entry_rgb(iVar6,uVar10,(iptr)puVar11,(iptr)puVar13,(iptr)puVar15);
           local_18 = CreatePen(0,1,(uint)CONCAT12(local_15c[0],CONCAT11(local_174[0],local_160[0])))
           ;
         }
         h_01 = CreatePen(0,1,0xffffff);
         h_02 = CreatePen(0,1,0x808080);
-        uVar7 = thunk_FUN_004d8af0(param_5);
-        puVar8 = (undefined4 *)FUN_005dcdf9(uVar7);
+        uVar7 = thunk_font_get_handle(param_5);
+        puVar8 = (undefined4 *)mem_handle_lock(uVar7);
         h_03 = SelectObject(local_164,(HGDIOBJ)*puVar8);
-        uVar7 = thunk_FUN_004d8af0(param_5);
-        FUN_005dce29(uVar7);
+        uVar7 = thunk_font_get_handle(param_5);
+        mem_handle_unlock(uVar7);
         h_04 = SelectObject(local_164,h);
         local_14 = local_150.left;
         local_10 = local_150.top;
@@ -5875,12 +5875,12 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
         ptVar14 = &local_28;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_FUN_00407f90((iptr)&local_28);
+        local_16c = thunk_rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar3 = thunk_rect_width((iptr)&local_150);
         iVar4 = ((local_150.left + iVar3 / 2) - local_16c / 2) + local_16c;
         LVar12 = local_150.top;
-        iVar3 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar3 = thunk_rect_width((iptr)&local_150);
         SetRect(&local_28,(local_150.left + iVar3 / 2) - local_16c / 2,LVar12,iVar4,LVar17);
         UVar16 = 0x24;
         ptVar14 = &local_28;
@@ -5958,12 +5958,12 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
         local_28.top = local_150.top;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_FUN_00407f90((iptr)&local_28);
+        local_16c = thunk_rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar3 = thunk_rect_width((iptr)&local_150);
         iVar3 = (((iVar3 >> 1) + local_150.left) - (local_16c >> 1)) + local_16c;
         LVar12 = local_150.top;
-        iVar4 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar4 = thunk_rect_width((iptr)&local_150);
         SetRect(&local_28,((iVar4 >> 1) + local_150.left) - (local_16c >> 1),LVar12,iVar3,LVar17);
         UVar16 = 0x24;
         ptVar14 = &local_28;
@@ -6050,12 +6050,12 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
         ptVar14 = &local_28;
         sVar9 = _strlen(local_278);
         DrawTextA(local_164,local_278,sVar9,ptVar14,UVar16);
-        local_16c = thunk_FUN_00407f90((iptr)&local_28);
+        local_16c = thunk_rect_width((iptr)&local_28);
         LVar17 = local_150.bottom;
-        iVar3 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar3 = thunk_rect_width((iptr)&local_150);
         iVar3 = (((iVar3 >> 1) + local_150.left) - (local_16c >> 1)) + local_16c;
         LVar12 = local_150.top;
-        iVar4 = thunk_FUN_00407f90((iptr)&local_150);
+        iVar4 = thunk_rect_width((iptr)&local_150);
         SetRect(&local_28,((iVar4 >> 1) + local_150.left) - (local_16c >> 1),LVar12,iVar3,LVar17);
         SetTextColor(local_164,0xffffff);
         UVar16 = 0x24;
@@ -6119,7 +6119,7 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
         }
         DeleteObject(h_02);
         DeleteDC(local_164);
-        iVar3 = FUN_005c9499(local_154,param_2);
+        iVar3 = ctrl_init_block(local_154,param_2);
         *(HBITMAP *)(iVar3 + 0xc) = h;
         *(HBITMAP *)(iVar3 + 0x10) = h_00;
         *(HBITMAP *)(iVar3 + 0x14) = local_168;
@@ -6130,7 +6130,7 @@ FUN_005c9740(int *param_1,iptr param_2,undefined4 param_3,int param_4,C_0040ef70
   }
   return local_154;
 }
-#undef DAT_006e4ff0
+#undef app_hinstance
 #undef local_2a0
 #undef local_278
 #undef local_178
@@ -6163,41 +6163,41 @@ void __cdecl FUN_005cabf6(int param_1)
 
 {
   if (param_1 == 0) {
-    FUN_005d225b(ADDR(0x637df8, ((u8 *)&g.d_00637df8)));
+    dbg_log(ADDR(0x637df8, ((u8 *)&g.d_00637df8)));
   }
   return;
 }
 
 /* 005cac22 auto */
-#define DAT_00637ea4 (*(undefined4 *)((u8 *)&g.d_00637ea4))
-void __cdecl FUN_005cac22(HWND param_1)
+#define wnd_active_child (*(undefined4 *)((u8 *)&g.d_00637ea4))
+void __cdecl button_press_animated(HWND param_1)
 
 {
-  C_0040f380_3c *this;
+  Control *this;
   iptr iVar1;
   int iVar2;
   undefined4 uVar3;
   
-  iVar1 = FUN_005c9563(param_1);
+  iVar1 = wnd_from_hwnd(param_1);
   if (iVar1 != 0) {
-    this = *(C_0040f380_3c **)(iVar1 + 4);
-    iVar2 = thunk_FUN_00530e80((C_00530e80 *)this);
+    this = *(Control **)(iVar1 + 4);
+    iVar2 = thunk_ctrl_is_enabled((ControlEnabledView *)this);
     if (iVar2 != 0) {
       SetFocus(param_1);
       *(undefined4 *)(iVar1 + 0x18) = 1;
-      FUN_005c96cc(param_1);
+      wnd_redraw_client(param_1);
       *(undefined4 *)(iVar1 + 0x18) = 0;
-      thunk_FUN_00453af0();
-      FUN_005cbeb0(8);
-      FUN_005c96cc(param_1);
-      DAT_00637ea4 = thunk_FUN_0040f810(this);
-      uVar3 = thunk_FUN_00418740((C_00418740 *)this);
-      FUN_005cbdf0((C_005cbdf0 *)this,uVar3);
+      thunk_ui_pump_messages();
+      ui_wait_ticks(8);
+      wnd_redraw_client(param_1);
+      wnd_active_child = thunk_ctrl_get_parent(this);
+      uVar3 = thunk_ctrl_get_id((ControlIdView *)this);
+      button_fire_callback((ButtonClickView *)this,uVar3);
     }
   }
   return;
 }
-#undef DAT_00637ea4
+#undef wnd_active_child
 
 /* 005cacd4 game (src/game/fixups.c) */
 #if 0
@@ -6206,7 +6206,7 @@ void __cdecl FUN_005cac22(HWND param_1)
 #define local_40 (*(HDC *)(frame_ + FRAME_OFF(72)))
 #define local_3c (*(HGDIOBJ *)(frame_ + FRAME_OFF(76)))
 #define local_38 (*(tagRECT *)(frame_ + FRAME_OFF(80)))
-#define local_28 (*(C_0040f380_3c * *)(frame_ + FRAME_OFF(96)))
+#define local_28 (*(Control * *)(frame_ + FRAME_OFF(96)))
 #define local_24 (*(HDC *)(frame_ + FRAME_OFF(100)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(104)))
 #define local_1c (*(HBRUSH *)(frame_ + FRAME_OFF(108)))
@@ -6222,12 +6222,12 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
   LONG *pLVar5;
   HWND pHVar6;
   iptr iVar7;
-  C_00408010_10 *this;
+  WndBase *this;
   HGDIOBJ h;
   iptr iVar8;
   int iVar9;
   iptr iVar10;
-  C_005cbdd0 *pCVar11;
+  WndKeyNavView *pCVar11;
   undefined4 uVar12;
   HDC hdcSrc;
   int x1;
@@ -6236,11 +6236,11 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
   DWORD rop;
   undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_44 = FUN_005c9563(param_1);
+  local_44 = wnd_from_hwnd(param_1);
   if (local_44 == 0) {
     return 0;
   }
-  local_28 = *(C_0040f380_3c **)(local_44 + 4);
+  local_28 = *(Control **)(local_44 + 4);
   if (0xf < param_2) {
     if (param_2 < 0x201) {
       if (param_2 != 0x200) {
@@ -6251,25 +6251,25 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
             return 0;
           }
           if ((param_3 == 0x20) &&
-             (iVar9 = thunk_FUN_00530e80((C_00530e80 *)local_28), iVar9 != 0)) {
-            pCVar11 = (C_005cbdd0 *)thunk_FUN_0040f810(local_28);
-            cVar1 = FUN_005cbdd0(pCVar11);
+             (iVar9 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28), iVar9 != 0)) {
+            pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+            cVar1 = wnd_keyboard_nav_enabled(pCVar11);
             if (cVar1 != '\0') {
               *(undefined4 *)(local_44 + 0x18) = 1;
-              FUN_005c96cc(param_1);
+              wnd_redraw_client(param_1);
               *(undefined4 *)(local_44 + 0x18) = 0;
               SVar2 = GetAsyncKeyState(0x20);
               local_8 = (int)SVar2;
-              thunk_FUN_00453af0();
+              thunk_ui_pump_messages();
               while ((*(undefined1 *)((char *)&local_8 + 1)) != '\0') {
                 SVar2 = GetAsyncKeyState(0x20);
                 local_8 = (int)SVar2;
               }
-              FUN_005c96cc(param_1);
-              iVar10 = thunk_FUN_0040f810(local_28);
-              FUN_005c6303(iVar10);
-              uVar12 = thunk_FUN_00418740((C_00418740 *)local_28);
-              FUN_005cbdf0((C_005cbdf0 *)local_28,uVar12);
+              wnd_redraw_client(param_1);
+              iVar10 = thunk_ctrl_get_parent(local_28);
+              wnd_set_active_child(iVar10);
+              uVar12 = thunk_ctrl_get_id((ControlIdView *)local_28);
+              button_fire_callback((ButtonClickView *)local_28,uVar12);
               return 0;
             }
           }
@@ -6288,7 +6288,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
           }
           ReleaseCapture();
           *(undefined4 *)(local_44 + 0x1c) = 0;
-          piVar3 = (int *)FUN_005c8f50(local_28);
+          piVar3 = (int *)ctrl_get_rect(local_28);
           local_38.left = *piVar3;
           local_38.top = piVar3[1];
           local_38.right = piVar3[2];
@@ -6302,15 +6302,15 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
             return 0;
           }
           FUN_005cacd4(param_1,0xf,0,0);
-          iVar10 = thunk_FUN_0040f810(local_28);
-          FUN_005c6303(iVar10);
-          uVar12 = thunk_FUN_00418740((C_00418740 *)local_28);
-          FUN_005cbdf0((C_005cbdf0 *)local_28,uVar12);
+          iVar10 = thunk_ctrl_get_parent(local_28);
+          wnd_set_active_child(iVar10);
+          uVar12 = thunk_ctrl_get_id((ControlIdView *)local_28);
+          button_fire_callback((ButtonClickView *)local_28,uVar12);
           return 0;
         }
         goto LAB_005cb26a;
       }
-      iVar9 = thunk_FUN_00530e80((C_00530e80 *)local_28);
+      iVar9 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28);
       if (iVar9 == 0) {
         return 0;
       }
@@ -6319,7 +6319,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
       SetCapture(param_1);
     }
     if (*(int *)(local_44 + 0x1c) != 0) {
-      piVar3 = (int *)FUN_005c8f50(local_28);
+      piVar3 = (int *)ctrl_get_rect(local_28);
       local_38.left = *piVar3;
       local_38.top = piVar3[1];
       local_38.right = piVar3[2];
@@ -6336,7 +6336,7 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
   }
   if (param_2 == 0xf) {
     local_40 = BeginPaint(param_1,&local_84);
-    pLVar5 = (LONG *)FUN_005c8f50(local_28);
+    pLVar5 = (LONG *)ctrl_get_rect(local_28);
     local_38.left = *pLVar5;
     local_38.top = pLVar5[1];
     local_38.right = pLVar5[2];
@@ -6344,15 +6344,15 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
     lpRect = &local_38;
     pHVar6 = GetParent(param_1);
     ValidateRect(pHVar6,lpRect);
-    iVar7 = thunk_FUN_00530e80((C_00530e80 *)local_28);
+    iVar7 = thunk_ctrl_is_enabled((ControlEnabledView *)local_28);
     if (iVar7 == 0) {
       pHVar6 = GetFocus();
       if (pHVar6 == param_1) {
-        pCVar11 = (C_005cbdd0 *)thunk_FUN_0040f810(local_28);
-        cVar1 = FUN_005cbdd0(pCVar11);
+        pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+        cVar1 = wnd_keyboard_nav_enabled(pCVar11);
         if (cVar1 == '\0') {
-          this = (C_00408010_10 *)thunk_FUN_0040f810(local_28);
-          iVar9 = thunk_FUN_00414d10(this);
+          this = (WndBase *)thunk_ctrl_get_parent(local_28);
+          iVar9 = thunk_wnd_get_window(this);
           SetFocus(*(HWND *)(iVar9 + 4));
         }
         else {
@@ -6376,8 +6376,8 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
     y1 = 0;
     x1 = 0;
     hdcSrc = local_24;
-    iVar8 = thunk_FUN_00407fc0((iptr)&local_38);
-    iVar9 = thunk_FUN_00407f90((iptr)&local_38);
+    iVar8 = thunk_rect_height((iptr)&local_38);
+    iVar9 = thunk_rect_width((iptr)&local_38);
     BitBlt(local_40,0,0,iVar9,iVar8,hdcSrc,x1,y1,rop);
     SelectObject(local_24,h);
     DeleteDC(local_24);
@@ -6390,8 +6390,8 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
     return 0;
   }
   if (param_2 == 7) {
-    pCVar11 = (C_005cbdd0 *)thunk_FUN_0040f810(local_28);
-    cVar1 = FUN_005cbdd0(pCVar11);
+    pCVar11 = (WndKeyNavView *)thunk_ctrl_get_parent(local_28);
+    cVar1 = wnd_keyboard_nav_enabled(pCVar11);
     if (cVar1 != '\0') {
       local_40 = GetDC(param_1);
       local_1c = GetStockObject(3);
@@ -6405,15 +6405,15 @@ undefined4 __stdcall FUN_005cacd4(HWND param_1,uint param_2,WPARAM param_3,uint 
       ReleaseDC(param_1,local_40);
       return 0;
     }
-    uVar12 = FUN_005c9307(param_1,7,param_3,param_4);
+    uVar12 = ctrl_default_wndproc(param_1,7,param_3,param_4);
     return uVar12;
   }
   if (param_2 == 8) {
-    FUN_005c96cc(param_1);
+    wnd_redraw_client(param_1);
     return 0;
   }
 LAB_005cb26a:
-  uVar12 = FUN_005c9307(param_1,param_2,param_3,param_4);
+  uVar12 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
   return uVar12;
 }
 #undef local_84
@@ -6430,11 +6430,11 @@ LAB_005cb26a:
 #endif
 
 /* 005cb319 auto */
-#define DAT_00638b40 (*(byte *)((u8 *)&g.d_00638b40))
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define gfx_black_color_index (*(byte *)((u8 *)&g.d_00638b40))
 #define local_44 (*(DWORD *)(frame_ + FRAME_OFF(4)))
 #define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(12)))
-#define local_2c (*(C_0040f380_3c * *)(frame_ + FRAME_OFF(28)))
+#define local_2c (*(Control * *)(frame_ + FRAME_OFF(28)))
 #define local_28 (*(HWND *)(frame_ + FRAME_OFF(32)))
 #define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(52)))
@@ -6442,16 +6442,16 @@ LAB_005cb26a:
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(64)))
 HWND __cdecl
-FUN_005cb319(int param_1,int param_2,C_0040f380_3c *param_3,int param_4,int param_5,
+FUN_005cb319(int param_1,int param_2,Control *param_3,int param_4,int param_5,
             undefined4 param_6,undefined4 param_7,int param_8)
 
 {
   iptr iVar1;
   iptr iVar2;
-  C_00511320 *pCVar1;
+  WndPaletteView *pCVar1;
   undefined4 uVar2;
   int iVar3;
-  C_00408010_10 *this;
+  WndBase *this;
   int iVar4;
   HWND hWndParent;
   HMENU hMenu;
@@ -6461,21 +6461,21 @@ FUN_005cb319(int param_1,int param_2,C_0040f380_3c *param_3,int param_4,int para
   
   local_2c = param_3;
   if ((char)param_3[3].field_14 == '\0') {
-    FUN_005bf930
-              ((C_004083b0_48 *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
-    FUN_005bf930
-              ((C_004083b0_48 *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
+    surface_load_pict_resource
+              ((DibSurface *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
+    surface_load_pict_resource
+              ((DibSurface *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
   }
   else {
-    FUN_005bd7db
-              ((C_004083b0_48 *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
-    FUN_005bd7db
-              ((C_004083b0_48 *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
+    surface_reload_pict_resource
+              ((DibSurface *)&param_3[2].field_4,param_4,param_6,param_7,param_3[3].field_10);
+    surface_reload_pict_resource
+              ((DibSurface *)&local_2c->field_34,param_5,param_6,param_7,local_2c[3].field_10);
   }
-  thunk_FUN_00453af0();
-  iVar1 = thunk_FUN_0043c560((C_004083b0_48 *)&local_2c[2].field_4);
+  thunk_ui_pump_messages();
+  iVar1 = thunk_surface_height((DibSurface *)&local_2c[2].field_4);
   iVar4 = param_2 + iVar1 + -1;
-  iVar2 = thunk_FUN_0043c590((C_004083b0_48 *)&local_2c[2].field_4);
+  iVar2 = thunk_surface_width((DibSurface *)&local_2c[2].field_4);
   SetRect(&local_3c,param_1,param_2,param_1 + iVar2 + -1,iVar4);
   OffsetRect(&local_3c,-local_3c.left,-local_3c.top);
   if (param_4 == param_5) {
@@ -6489,25 +6489,25 @@ FUN_005cb319(int param_1,int param_2,C_0040f380_3c *param_3,int param_4,int para
     local_c = local_24.right;
     local_8 = local_24.bottom;
     OffsetRect(&local_24,2,2);
-    FUN_005c041f((C_004083b0_48 *)&local_2c[2].field_4,(uint)DAT_00638b40);
-    FUN_005c0593
-              ((C_004083b0_48 *)&local_2c->field_34,(iptr)&local_2c[2].field_4,(iptr)&local_14,
+    surface_fill((DibSurface *)&local_2c[2].field_4,(uint)gfx_black_color_index);
+    surface_blit
+              ((DibSurface *)&local_2c->field_34,(iptr)&local_2c[2].field_4,(iptr)&local_14,
                (iptr)&local_24);
   }
-  thunk_FUN_00453af0();
-  pCVar1 = (C_00511320 *)thunk_FUN_0040f810(local_2c);
-  uVar2 = thunk_FUN_00511320(pCVar1);
-  FUN_005c0d12((C_004083b0_48 *)&local_2c[2].field_4,uVar2);
-  pCVar1 = (C_00511320 *)thunk_FUN_0040f810(local_2c);
-  uVar2 = thunk_FUN_00511320(pCVar1);
-  FUN_005c0d12((C_004083b0_48 *)&local_2c->field_34,uVar2);
-  FUN_005c19ad(0xff);
-  FUN_005c19ad(0xf8);
-  FUN_005c19ad(0xf8);
-  FUN_005c19ad(0xff);
-  iVar4 = thunk_FUN_0043c560((C_004083b0_48 *)&local_2c[2].field_4);
+  thunk_ui_pump_messages();
+  pCVar1 = (WndPaletteView *)thunk_ctrl_get_parent(local_2c);
+  uVar2 = thunk_wnd_get_palette(pCVar1);
+  surface_apply_palette((DibSurface *)&local_2c[2].field_4,uVar2);
+  pCVar1 = (WndPaletteView *)thunk_ctrl_get_parent(local_2c);
+  uVar2 = thunk_wnd_get_palette(pCVar1);
+  surface_apply_palette((DibSurface *)&local_2c->field_34,uVar2);
+  gfx_set_text_color_index(0xff);
+  gfx_set_text_color_index(0xf8);
+  gfx_set_text_color_index(0xf8);
+  gfx_set_text_color_index(0xff);
+  iVar4 = thunk_surface_height((DibSurface *)&local_2c[2].field_4);
   iVar4 = param_2 + iVar4;
-  iVar3 = thunk_FUN_0043c590((C_004083b0_48 *)&local_2c[2].field_4);
+  iVar3 = thunk_surface_width((DibSurface *)&local_2c[2].field_4);
   SetRect(&local_3c,param_1,param_2,param_1 + iVar3,iVar4);
   local_44 = 0x40810000;
   if (param_8 != 0) {
@@ -6515,21 +6515,21 @@ FUN_005cb319(int param_1,int param_2,C_0040f380_3c *param_3,int param_4,int para
   }
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = DAT_006e4ff0;
-  this = (C_00408010_10 *)thunk_FUN_0040f810(param_3);
-  iVar4 = thunk_FUN_00414d10(this);
+  hInstance = app_hinstance;
+  this = (WndBase *)thunk_ctrl_get_parent(param_3);
+  iVar4 = thunk_wnd_get_window(this);
   hWndParent = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_FUN_00407fc0((iptr)&local_3c);
-  iVar3 = thunk_FUN_00407f90((iptr)&local_3c);
+  iVar4 = thunk_rect_height((iptr)&local_3c);
+  iVar3 = thunk_rect_width((iptr)&local_3c);
   local_28 = CreateWindowExA(4,s_MSControlClass_00637e34,&DAT_00637e30,local_44,param_1,param_2,
                              iVar3,iVar4,hWndParent,hMenu,hInstance,lpParam);
-  iVar4 = FUN_005c9499(local_28,(iptr)param_3);
+  iVar4 = ctrl_init_block(local_28,(iptr)param_3);
   *(undefined4 *)(iVar4 + 0x2c) = 5;
   SetWindowLongA(local_28,-4,ADDR(0x5cb6eb, FUN_005cb6eb));
   return local_28;
 }
-#undef DAT_00638b40
-#undef DAT_006e4ff0
+#undef app_hinstance
+#undef gfx_black_color_index
 #undef local_44
 #undef local_3c
 #undef local_2c
@@ -6541,15 +6541,15 @@ FUN_005cb319(int param_1,int param_2,C_0040f380_3c *param_3,int param_4,int para
 #undef local_8
 
 /* 005cb601 auto */
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_24 (*(DWORD *)(frame_ + FRAME_OFF(4)))
 #define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(HWND *)(frame_ + FRAME_OFF(32)))
-HWND __cdecl FUN_005cb601(int param_1,int param_2,int param_3,int param_4,iptr param_5,int param_6)
+HWND __cdecl spritebtn_create_hwnd(int param_1,int param_2,int param_3,int param_4,iptr param_5,int param_6)
 
 {
-  C_00408010_10 *this;
+  WndBase *this;
   iptr iVar1;
   iptr iVar2;
   int iVar3;
@@ -6567,20 +6567,20 @@ HWND __cdecl FUN_005cb601(int param_1,int param_2,int param_3,int param_4,iptr p
   SetRect(&local_1c,param_1,param_2,param_1 + param_3,param_2 + param_4);
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = DAT_006e4ff0;
-  this = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_5);
-  iVar1 = thunk_FUN_00414d10(this);
+  hInstance = app_hinstance;
+  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_5);
+  iVar1 = thunk_wnd_get_window(this);
   hWndParent = *(HWND *)(iVar1 + 4);
-  iVar2 = thunk_FUN_00407fc0((iptr)&local_1c);
-  iVar3 = thunk_FUN_00407f90((iptr)&local_1c);
+  iVar2 = thunk_rect_height((iptr)&local_1c);
+  iVar3 = thunk_rect_width((iptr)&local_1c);
   local_8 = CreateWindowExA(4,s_MSControlClass_00637e48,&DAT_00637e44,local_24,param_1,param_2,iVar3
                             ,iVar2,hWndParent,hMenu,hInstance,lpParam);
-  iVar3 = FUN_005c9499(local_8,param_5);
+  iVar3 = ctrl_init_block(local_8,param_5);
   *(undefined4 *)(iVar3 + 0x2c) = 5;
   SetWindowLongA(local_8,-4,ADDR(0x5cb6eb, FUN_005cb6eb));
   return local_8;
 }
-#undef DAT_006e4ff0
+#undef app_hinstance
 #undef local_24
 #undef local_1c
 #undef local_c
@@ -6598,7 +6598,7 @@ void __cdecl FUN_005cb6db(undefined4 param_1)
 #define local_64 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(4)))
 #define local_24 (*(HDC *)(frame_ + FRAME_OFF(68)))
 #define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(72)))
-#define local_10 (*(C_0040f380_3c * *)(frame_ + FRAME_OFF(88)))
+#define local_10 (*(Control * *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
 undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint param_4)
@@ -6609,14 +6609,14 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
   iptr iVar3;
   int *piVar3;
   HWND pHVar4;
-  C_00511320 *pCVar5;
-  C_005cbdb0 *this;
+  WndPaletteView *pCVar5;
+  PaletteHandleView *this;
   HPALETTE hPal;
   iptr iVar7;
   iptr iVar6;
   int iVar8;
   iptr iVar9;
-  C_005cbdd0 *pCVar10;
+  WndKeyNavView *pCVar10;
   undefined4 uVar11;
   HDC pHVar12;
   int iVar13;
@@ -6627,15 +6627,15 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
   DWORD DVar16;
   undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar3 = FUN_005c9563(param_1);
+  iVar3 = wnd_from_hwnd(param_1);
   if (iVar3 == 0) {
     return 1;
   }
-  local_10 = *(C_0040f380_3c **)(iVar3 + 4);
+  local_10 = *(Control **)(iVar3 + 4);
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
       local_24 = BeginPaint(param_1,&local_64);
-      piVar3 = (int *)FUN_005c8f50(local_10);
+      piVar3 = (int *)ctrl_get_rect(local_10);
       local_20.left = *piVar3;
       local_20.top = piVar3[1];
       local_20.right = piVar3[2];
@@ -6645,46 +6645,46 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
       ValidateRect(pHVar4,lpRect);
       OffsetRect(&local_20,-local_20.left,-local_20.top);
       ValidateRect(param_1,&local_20);
-      if (DAT_00638b48 == 1) {
+      if (gfx_palettized_display == 1) {
         BVar15 = 0;
-        pCVar5 = (C_00511320 *)thunk_FUN_0040f810(local_10);
-        this = (C_005cbdb0 *)thunk_FUN_00511320(pCVar5);
-        hPal = (HPALETTE)FUN_005cbdb0(this);
+        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
+        this = (PaletteHandleView *)thunk_wnd_get_palette(pCVar5);
+        hPal = (HPALETTE)palette_get_hpalette(this);
         SelectPalette(local_24,hPal,BVar15);
       }
       if (*(int *)(iVar3 + 0x18) == 0) {
-        FUN_005c01c1((C_004083b0_48 *)&local_10->field_34);
-        pCVar5 = (C_00511320 *)thunk_FUN_0040f810(local_10);
-        uVar11 = thunk_FUN_00511320(pCVar5);
-        FUN_005c0d12((C_004083b0_48 *)&local_10->field_34,uVar11);
-        if (DAT_00638b48 == 1) {
+        surface_lock((DibSurface *)&local_10->field_34);
+        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
+        uVar11 = thunk_wnd_get_palette(pCVar5);
+        surface_apply_palette((DibSurface *)&local_10->field_34,uVar11);
+        if (gfx_palettized_display == 1) {
           RealizePalette(local_24);
         }
         DVar16 = 0xcc0020;
         iVar14 = 0;
         iVar13 = 0;
-        iVar7 = FUN_005c55f0((C_004083b0_48 *)&local_10->field_34);
+        iVar7 = surface_get_dib((DibSurface *)&local_10->field_34);
         pHVar12 = *(HDC *)(iVar7 + 4);
-        iVar6 = thunk_FUN_0043c560((C_004083b0_48 *)&local_10->field_34);
-        iVar8 = thunk_FUN_0043c590((C_004083b0_48 *)&local_10->field_34);
+        iVar6 = thunk_surface_height((DibSurface *)&local_10->field_34);
+        iVar8 = thunk_surface_width((DibSurface *)&local_10->field_34);
         BitBlt(local_24,0,0,iVar8,iVar6,pHVar12,iVar13,iVar14,DVar16);
-        FUN_005c02e0((C_004083b0_48 *)&local_10->field_34);
+        surface_unlock((DibSurface *)&local_10->field_34);
       }
       if (*(int *)(iVar3 + 0x18) == 1) {
-        FUN_005c01c1((C_004083b0_48 *)&local_10[2].field_4);
-        pCVar5 = (C_00511320 *)thunk_FUN_0040f810(local_10);
-        uVar11 = thunk_FUN_00511320(pCVar5);
-        FUN_005c0d12((C_004083b0_48 *)&local_10[2].field_4,uVar11);
+        surface_lock((DibSurface *)&local_10[2].field_4);
+        pCVar5 = (WndPaletteView *)thunk_ctrl_get_parent(local_10);
+        uVar11 = thunk_wnd_get_palette(pCVar5);
+        surface_apply_palette((DibSurface *)&local_10[2].field_4,uVar11);
         RealizePalette(local_24);
         DVar16 = 0xcc0020;
         y1 = 0;
         iVar14 = 0;
-        iVar8 = FUN_005c55f0((C_004083b0_48 *)&local_10[2].field_4);
+        iVar8 = surface_get_dib((DibSurface *)&local_10[2].field_4);
         pHVar12 = *(HDC *)(iVar8 + 4);
-        iVar8 = thunk_FUN_0043c590((C_004083b0_48 *)&local_10[2].field_4);
-        iVar13 = thunk_FUN_0043c590((C_004083b0_48 *)&local_10[2].field_4);
+        iVar8 = thunk_surface_width((DibSurface *)&local_10[2].field_4);
+        iVar13 = thunk_surface_width((DibSurface *)&local_10[2].field_4);
         BitBlt(local_24,0,0,iVar13,iVar8,pHVar12,iVar14,y1,DVar16);
-        FUN_005c02e0((C_004083b0_48 *)&local_10[2].field_4);
+        surface_unlock((DibSurface *)&local_10[2].field_4);
       }
       EndPaint(param_1,&local_64);
       pHVar4 = GetFocus();
@@ -6695,20 +6695,20 @@ undefined4 __stdcall FUN_005cb6eb(HWND param_1,uint param_2,WPARAM param_3,uint 
       return 0;
     }
     if (param_2 == 7) {
-      pCVar10 = (C_005cbdd0 *)thunk_FUN_0040f810(local_10);
-      cVar1 = FUN_005cbdd0(pCVar10);
+      pCVar10 = (WndKeyNavView *)thunk_ctrl_get_parent(local_10);
+      cVar1 = wnd_keyboard_nav_enabled(pCVar10);
       if (cVar1 != '\0') {
-        uVar11 = FUN_005c9307(param_1,7,param_3,param_4);
+        uVar11 = ctrl_default_wndproc(param_1,7,param_3,param_4);
         return uVar11;
       }
       return 0;
     }
     if (param_2 == 8) {
-      FUN_005c96cc(param_1);
+      wnd_redraw_client(param_1);
       return 0;
     }
 switchD_005cbd7f_caseD_203:
-    uVar11 = FUN_005c9307(param_1,param_2,param_3,param_4);
+    uVar11 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
     return uVar11;
   }
   if (param_2 < 0x201) {
@@ -6720,11 +6720,11 @@ switchD_005cbd7f_caseD_203:
           return 0;
         }
         if (param_3 == 0x20) {
-          pCVar10 = (C_005cbdd0 *)thunk_FUN_0040f810(local_10);
-          cVar1 = FUN_005cbdd0(pCVar10);
+          pCVar10 = (WndKeyNavView *)thunk_ctrl_get_parent(local_10);
+          cVar1 = wnd_keyboard_nav_enabled(pCVar10);
           if (cVar1 != '\0') {
             *(undefined4 *)(iVar3 + 0x18) = 1;
-            FUN_005c96cc(param_1);
+            wnd_redraw_client(param_1);
             *(undefined4 *)(iVar3 + 0x18) = 0;
             sVar2 = GetAsyncKeyState(0x20);
             while( true ) {
@@ -6735,11 +6735,11 @@ switchD_005cbd7f_caseD_203:
               if ((*(undefined1 *)((char *)&local_8 + 1)) == '\0') break;
               sVar2 = GetAsyncKeyState(0x20);
             }
-            FUN_005c96cc(param_1);
-            iVar9 = thunk_FUN_0040f810(local_10);
-            FUN_005c6303(iVar9);
-            uVar11 = thunk_FUN_00418740((C_00418740 *)local_10);
-            FUN_005cbe30((C_005cbe30 *)local_10,uVar11);
+            wnd_redraw_client(param_1);
+            iVar9 = thunk_ctrl_get_parent(local_10);
+            wnd_set_active_child(iVar9);
+            uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+            spritebtn_fire_click((SpriteButtonClickView *)local_10,uVar11);
             return 0;
           }
         }
@@ -6751,7 +6751,7 @@ switchD_005cbd7f_caseD_203:
     }
 LAB_005cb749:
     if (*(int *)(iVar3 + 0x1c) != 0) {
-      piVar3 = (int *)FUN_005c8f50(local_10);
+      piVar3 = (int *)ctrl_get_rect(local_10);
       local_20.left = *piVar3;
       local_20.top = piVar3[1];
       local_20.right = piVar3[2];
@@ -6776,7 +6776,7 @@ LAB_005cb749:
       if (*(int *)(iVar3 + 0x1c) != 0) {
         ReleaseCapture();
         *(undefined4 *)(iVar3 + 0x1c) = 0;
-        piVar3 = (int *)FUN_005c8f50(local_10);
+        piVar3 = (int *)ctrl_get_rect(local_10);
         local_20.left = *piVar3;
         local_20.top = piVar3[1];
         local_20.right = piVar3[2];
@@ -6788,10 +6788,10 @@ LAB_005cb749:
         ;
         if (BVar15 != 0) {
           FUN_005cb6eb(param_1,0xf,0,0);
-          iVar9 = thunk_FUN_0040f810(local_10);
-          FUN_005c6303(iVar9);
-          uVar11 = thunk_FUN_00418740((C_00418740 *)local_10);
-          FUN_005cbe30((C_005cbe30 *)local_10,uVar11);
+          iVar9 = thunk_ctrl_get_parent(local_10);
+          wnd_set_active_child(iVar9);
+          uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+          spritebtn_fire_click((SpriteButtonClickView *)local_10,uVar11);
         }
       }
       break;
@@ -6806,7 +6806,7 @@ LAB_005cb749:
       if (*(int *)(iVar3 + 0x1c) != 0) {
         ReleaseCapture();
         *(undefined4 *)(iVar3 + 0x1c) = 0;
-        piVar3 = (int *)FUN_005c8f50(local_10);
+        piVar3 = (int *)ctrl_get_rect(local_10);
         local_20.left = *piVar3;
         local_20.top = piVar3[1];
         local_20.right = piVar3[2];
@@ -6818,10 +6818,10 @@ LAB_005cb749:
         ;
         if (BVar15 != 0) {
           FUN_005cb6eb(param_1,0xf,0,0);
-          iVar9 = thunk_FUN_0040f810(local_10);
-          FUN_005c6303(iVar9);
-          uVar11 = thunk_FUN_00418740((C_00418740 *)local_10);
-          FUN_005cbe70((C_005cbe70 *)local_10,uVar11);
+          iVar9 = thunk_ctrl_get_parent(local_10);
+          wnd_set_active_child(iVar9);
+          uVar11 = thunk_ctrl_get_id((ControlIdView *)local_10);
+          spritebtn_fire_rclick((SpriteButtonRClickView *)local_10,uVar11);
         }
       }
     }
@@ -6842,54 +6842,54 @@ LAB_005cb749:
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall FUN_005cbdb0(C_005cbdb0 *this)
+u32 __thiscall palette_get_hpalette(PaletteHandleView *this)
 
 {
-  return this->field_404;
+  return this->hpalette;
 }
 
 /* 005cbdd0 auto */
-u8 __thiscall FUN_005cbdd0(C_005cbdd0 *this)
+u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *this)
 
 {
-  return this->field_c4;
+  return this->keyboard_nav;
 }
 
 /* 005cbdf0 auto */
-void __thiscall FUN_005cbdf0(C_005cbdf0 *this,undefined4 param_1)
+void __thiscall button_fire_callback(ButtonClickView *this,undefined4 param_1)
 
 {
-  if (this->field_30 != 0) {
-    (*(code *)this->field_30)(param_1);
+  if (this->on_click != 0) {
+    (*(code *)this->on_click)(param_1);
   }
   return;
 }
 
 /* 005cbe30 auto */
-void __thiscall FUN_005cbe30(C_005cbe30 *this,undefined4 param_1)
+void __thiscall spritebtn_fire_click(SpriteButtonClickView *this,undefined4 param_1)
 
 {
-  if (this->field_2c != 0) {
-    (*(code *)this->field_2c)(param_1);
+  if (this->on_click != 0) {
+    (*(code *)this->on_click)(param_1);
   }
   return;
 }
 
 /* 005cbe70 auto */
-void __thiscall FUN_005cbe70(C_005cbe70 *this,undefined4 param_1)
+void __thiscall spritebtn_fire_rclick(SpriteButtonRClickView *this,undefined4 param_1)
 
 {
-  if (this->field_30 != 0) {
-    (*(code *)this->field_30)(param_1);
+  if (this->on_rclick != 0) {
+    (*(code *)this->on_rclick)(param_1);
   }
   return;
 }
 
 /* 005cbeb0 auto */
-void __cdecl FUN_005cbeb0(undefined4 param_1)
+void __cdecl ui_wait_ticks(undefined4 param_1)
 
 {
-  FUN_005d4204(param_1);
+  timer_busy_wait_ticks(param_1);
   return;
 }
 
@@ -6905,21 +6905,21 @@ void __cdecl FUN_005cbeb0(undefined4 param_1)
 void __cdecl FUN_005cbed0(void)
 
 {
-  FUN_005cbeea();
-  FUN_005cbf04();
+  default_draw_font_ctor();
+  default_draw_font_reg_dtor();
   return;
 }
 
 /* 005cbeea auto */
-void __cdecl FUN_005cbeea(void)
+void __cdecl default_draw_font_ctor(void)
 
 {
-  thunk_FUN_0043c690((C_0040ef70_8 *)&DAT_006d1ec8);
+  thunk_font_init_empty((GameFont *)&default_draw_font_obj);
   return;
 }
 
 /* 005cbf04 auto */
-void __cdecl FUN_005cbf04(void)
+void __cdecl default_draw_font_reg_dtor(void)
 
 {
   _atexit(FUN_005cbf21);
@@ -6930,7 +6930,7 @@ void __cdecl FUN_005cbf04(void)
 void __cdecl FUN_005cbf21(void)
 
 {
-  thunk_FUN_0043c520((C_0040ef70_8 *)&DAT_006d1ec8);
+  thunk_font_destroy((GameFont *)&default_draw_font_obj);
   return;
 }
 
@@ -6940,7 +6940,7 @@ void __cdecl FUN_005cbf21(void)
 #define local_44 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(28)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(88)))
-void __cdecl FUN_005cbf40(char *param_1,int param_2,int param_3,iptr param_4,C_0040ef70_8 *param_5)
+void __cdecl checkbox_calc_rect(char *param_1,int param_2,int param_3,iptr param_4,GameFont *param_5)
 
 {
   HDC hdc;
@@ -6954,11 +6954,11 @@ void __cdecl FUN_005cbf40(char *param_1,int param_2,int param_3,iptr param_4,C_0
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
-  uVar1 = thunk_FUN_004d8af0(param_5);
-  local_8 = (undefined4 *)FUN_005dcdf9(uVar1);
+  uVar1 = thunk_font_get_handle(param_5);
+  local_8 = (undefined4 *)mem_handle_lock(uVar1);
   h = SelectObject(hdc_00,(HGDIOBJ)*local_8);
-  uVar1 = thunk_FUN_004d8af0(param_5);
-  FUN_005dce29(uVar1);
+  uVar1 = thunk_font_get_handle(param_5);
+  mem_handle_unlock(uVar1);
   GetTextMetricsA(hdc_00,&local_44);
   local_5c = local_44.tmHeight;
   lpsz = &local_4c;
@@ -6984,7 +6984,7 @@ void __cdecl FUN_005cbf40(char *param_1,int param_2,int param_3,iptr param_4,C_0
 #define local_4c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_40 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(16)))
 #define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(72)))
-void __cdecl FUN_005cc035(int param_1,int param_2,int param_3,iptr param_4,C_0040ef70_8 *param_5)
+void __cdecl checkbox_calc_rect_fixed(int param_1,int param_2,int param_3,iptr param_4,GameFont *param_5)
 
 {
   HDC hdc;
@@ -6995,11 +6995,11 @@ void __cdecl FUN_005cc035(int param_1,int param_2,int param_3,iptr param_4,C_004
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
-  uVar1 = thunk_FUN_004d8af0(param_5);
-  local_8 = (undefined4 *)FUN_005dcdf9(uVar1);
+  uVar1 = thunk_font_get_handle(param_5);
+  local_8 = (undefined4 *)mem_handle_lock(uVar1);
   SelectObject(hdc_00,(HGDIOBJ)*local_8);
-  uVar1 = thunk_FUN_004d8af0(param_5);
-  FUN_005dce29(uVar1);
+  uVar1 = thunk_font_get_handle(param_5);
+  mem_handle_unlock(uVar1);
   GetTextMetricsA(hdc_00,&local_40);
   local_4c = local_40.tmHeight;
   DeleteDC(hdc_00);
@@ -7014,14 +7014,14 @@ void __cdecl FUN_005cc035(int param_1,int param_2,int param_3,iptr param_4,C_004
 #undef local_8
 
 /* 005cc0f0 auto */
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_24 (*(DWORD *)(frame_ + FRAME_OFF(4)))
-HWND __cdecl FUN_005cc0f0(iptr param_1,iptr param_2,char *param_3,int param_4)
+HWND __cdecl checkbox_create_hwnd(iptr param_1,iptr param_2,char *param_3,int param_4)
 
 {
   size_t sVar1;
   void *pvVar2;
-  C_00408010_10 *this;
+  WndBase *this;
   iptr iVar3;
   iptr iVar4;
   int iVar5;
@@ -7043,19 +7043,19 @@ HWND __cdecl FUN_005cc0f0(iptr param_1,iptr param_2,char *param_3,int param_4)
   }
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = DAT_006e4ff0;
-  this = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_2);
-  iVar3 = thunk_FUN_00414d10(this);
+  hInstance = app_hinstance;
+  this = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
+  iVar3 = thunk_wnd_get_window(this);
   pHVar6 = *(HWND *)(iVar3 + 4);
-  iVar4 = thunk_FUN_00407fc0(param_1);
-  iVar5 = thunk_FUN_00407f90(param_1);
+  iVar4 = thunk_rect_height(param_1);
+  iVar5 = thunk_rect_width(param_1);
   pHVar6 = CreateWindowExA(4,s_MSControlClass_00637f10,&DAT_00637f0c,local_24,*(int *)param_1,
                            *(int *)(param_1 + 4),iVar5,iVar4,pHVar6,hMenu,hInstance,lpParam);
-  FUN_005c9222(param_2,(iptr)pvVar2);
-  pHVar7 = LoadBitmapA(DAT_006e4ff0,(LPCSTR)0x132);
-  pHVar8 = LoadBitmapA(DAT_006e4ff0,(LPCSTR)0x131);
-  pHVar9 = LoadBitmapA(DAT_006e4ff0,(LPCSTR)0x130);
-  iVar5 = FUN_005c9499(pHVar6,param_2);
+  ctrl_parse_hotkey(param_2,(iptr)pvVar2);
+  pHVar7 = LoadBitmapA(app_hinstance,(LPCSTR)0x132);
+  pHVar8 = LoadBitmapA(app_hinstance,(LPCSTR)0x131);
+  pHVar9 = LoadBitmapA(app_hinstance,(LPCSTR)0x130);
+  iVar5 = ctrl_init_block(pHVar6,param_2);
   *(HBITMAP *)(iVar5 + 0xc) = pHVar7;
   *(HBITMAP *)(iVar5 + 0x10) = pHVar8;
   *(HBITMAP *)(iVar5 + 0x14) = pHVar9;
@@ -7064,64 +7064,64 @@ HWND __cdecl FUN_005cc0f0(iptr param_1,iptr param_2,char *param_3,int param_4)
   SetWindowLongA(pHVar6,-4,ADDR(0x5cc320, FUN_005cc320));
   return pHVar6;
 }
-#undef DAT_006e4ff0
+#undef app_hinstance
 #undef local_24
 
 /* 005cc248 auto */
-void __cdecl FUN_005cc248(int param_1)
+void __cdecl checkbox_destroy_hwnd(int param_1)
 
 {
   if (param_1 == 0) {
-    FUN_005d225b(ADDR(0x637f20, ((u8 *)&g.d_00637f20)));
+    dbg_log(ADDR(0x637f20, ((u8 *)&g.d_00637f20)));
   }
   return;
 }
 
 /* 005cc274 auto */
-#define DAT_00637ea4 (*(undefined4 *)((u8 *)&g.d_00637ea4))
-void __cdecl FUN_005cc274(HWND param_1)
+#define wnd_active_child (*(undefined4 *)((u8 *)&g.d_00637ea4))
+void __cdecl checkbox_toggle_by_hotkey(HWND param_1)
 
 {
-  C_0040f380_3c *this;
+  Control *this;
   iptr iVar1;
   int iVar2;
   undefined4 uVar3;
   undefined4 uVar4;
   
-  iVar1 = FUN_005c9563(param_1);
+  iVar1 = wnd_from_hwnd(param_1);
   if (iVar1 != 0) {
-    this = *(C_0040f380_3c **)(iVar1 + 4);
+    this = *(Control **)(iVar1 + 4);
     SetFocus(param_1);
-    iVar2 = thunk_FUN_00530fe0(this);
+    iVar2 = thunk_checkbox_is_checked(this);
     if (iVar2 == 0) {
-      thunk_FUN_0040fad0(this,1);
+      thunk_checkbox_set_checked(this,1);
     }
     else {
-      thunk_FUN_0040fad0(this,0);
+      thunk_checkbox_set_checked(this,0);
     }
     SetCapture(param_1);
     InvalidateRect(param_1,(RECT *)0x0,0);
-    DAT_00637ea4 = thunk_FUN_0040f810(this);
-    uVar3 = thunk_FUN_00530fe0(this);
-    uVar4 = thunk_FUN_00418740((C_00418740 *)this);
-    FUN_005cce40((C_005cce40 *)this,uVar4,uVar3);
+    wnd_active_child = thunk_ctrl_get_parent(this);
+    uVar3 = thunk_checkbox_is_checked(this);
+    uVar4 = thunk_ctrl_get_id((ControlIdView *)this);
+    checkbox_fire_callback((CheckboxClickView *)this,uVar4,uVar3);
   }
   return;
 }
-#undef DAT_00637ea4
+#undef wnd_active_child
 
 /* 005cc320 auto */
-#define DAT_00637e90 (*(byte *)((u8 *)&g.d_00637e90))
-#define DAT_00637e94 (*(byte *)((u8 *)&g.d_00637e94))
-#define DAT_00637e98 (*(byte *)((u8 *)&g.d_00637e98))
-#define DAT_00637e9c (*(byte *)((u8 *)&g.d_00637e9c))
-#define DAT_00637ea0 (*(byte *)((u8 *)&g.d_00637ea0))
-#define DAT_00637f03 (*(char *)((u8 *)&g.d_00637f03))
-#define DAT_00637f07 (*(char *)((u8 *)&g.d_00637f07))
+#define ctrl_disabled_color_index (*(byte *)((u8 *)&g.d_00637ea0))
+#define ctrl_disabled_rgb_set (*(char *)((u8 *)&g.d_00637f07))
+#define ctrl_shadow_color_index (*(byte *)((u8 *)&g.d_00637e94))
+#define ctrl_shadow_dx (*(byte *)((u8 *)&g.d_00637e98))
+#define ctrl_shadow_dy (*(byte *)((u8 *)&g.d_00637e9c))
+#define ctrl_text_color_index (*(byte *)((u8 *)&g.d_00637e90))
+#define ctrl_text_rgb_set (*(char *)((u8 *)&g.d_00637f03))
 #define local_1b0 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_1a0 (*(HBITMAP *)(frame_ + FRAME_OFF(16)))
 #define local_19c (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_198 (*(C_0040f380_3c * *)(frame_ + FRAME_OFF(24)))
+#define local_198 (*(Control * *)(frame_ + FRAME_OFF(24)))
 #define local_194 (*(tagPAINTSTRUCT *)(frame_ + FRAME_OFF(28)))
 #define local_154 (*(HGDIOBJ *)(frame_ + FRAME_OFF(92)))
 #define local_150 (*(tagSIZE *)(frame_ + FRAME_OFF(96)))
@@ -7150,13 +7150,13 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
   int *piVar3;
   int iVar5;
   uint uVar6;
-  C_00511320 *pCVar7;
-  C_0043c740_434 *pCVar8;
+  WndPaletteView *pCVar7;
+  GamePalette *pCVar8;
   size_t sVar9;
-  C_00408010_10 *pCVar10;
+  WndBase *pCVar10;
   iptr iVar11;
   HWND pHVar12;
-  C_005cbdd0 *pCVar13;
+  WndKeyNavView *pCVar13;
   undefined4 uVar14;
   undefined1 *puVar15;
   undefined1 *puVar16;
@@ -7165,11 +7165,11 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
   UINT UVar19;
   undefined1 frame_[FRAME_OFF(432)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_19c = FUN_005c9563(param_1);
-  local_198 = *(C_0040f380_3c **)(local_19c + 4);
+  local_19c = wnd_from_hwnd(param_1);
+  local_198 = *(Control **)(local_19c + 4);
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
-      iVar3 = FUN_005c5ec0((C_005c5ec0 *)local_198);
+      iVar3 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
       if (iVar3 == 0) {
         pHVar12 = GetFocus();
         if (pHVar12 == param_1) {
@@ -7178,7 +7178,7 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
         local_1a0 = *(HBITMAP *)(local_19c + 0xc);
       }
       else {
-        iVar4 = thunk_FUN_00530fe0(local_198);
+        iVar4 = thunk_checkbox_is_checked(local_198);
         if (iVar4 == 0) {
           local_1a0 = *(HBITMAP *)(local_19c + 0x10);
         }
@@ -7187,7 +7187,7 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
         }
       }
       GetBitmapDimensionEx(local_1a0,&local_150);
-      piVar3 = (int *)FUN_005c8f50(local_198);
+      piVar3 = (int *)ctrl_get_rect(local_198);
       local_1b0.left = *piVar3;
       local_1b0.top = piVar3[1];
       local_1b0.right = piVar3[2];
@@ -7198,93 +7198,93 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
       local_128 = local_1b0.bottom;
       if (DAT_00637f08 != 0) {
         local_12c = local_1b0.left + 0x20;
-        iVar5 = thunk_FUN_00407fc0((iptr)&local_1b0);
+        iVar5 = thunk_rect_height((iptr)&local_1b0);
         local_130 = iVar5 + -0x14 + local_1b0.top >> 1;
         local_128 = local_1b0.top + 0x14;
       }
       OffsetRect(&local_1b0,-local_1b0.left,-local_1b0.top);
       local_144 = BeginPaint(param_1,&local_194);
-      FUN_005c90ca((iptr)&local_194,param_1);
-      uVar14 = thunk_FUN_004d8af0((C_0040ef70_8 *)local_198->field_38);
-      local_118 = (undefined4 *)FUN_005dcdf9(uVar14);
+      ctrl_paint_parent_bkgnd((iptr)&local_194,param_1);
+      uVar14 = thunk_font_get_handle((GameFont *)local_198->field_38);
+      local_118 = (undefined4 *)mem_handle_lock(uVar14);
       local_154 = SelectObject(local_144,(HGDIOBJ)*local_118);
-      uVar14 = thunk_FUN_004d8af0((C_0040ef70_8 *)local_198->field_38);
-      FUN_005dce29(uVar14);
+      uVar14 = thunk_font_get_handle((GameFont *)local_198->field_38);
+      mem_handle_unlock(uVar14);
       SetBkMode(local_144,1);
-      FUN_005ed710(local_144,local_1a0,local_1b0.left,local_1b0.bottom + -0x14 >> 1,0x20,0x14,0,7);
+      gdi_blit_transparent(local_144,local_1a0,local_1b0.left,local_1b0.bottom + -0x14 >> 1,0x20,0x14,0,7);
       local_1b0.left = local_1b0.left + 0x25;
       local_140 = *(char **)(local_19c + 0x24);
-      if ((DAT_00637e98 != 0) || (DAT_00637e9c != 0)) {
-        OffsetRect(&local_1b0,(uint)DAT_00637e98,(uint)DAT_00637e9c);
+      if ((ctrl_shadow_dx != 0) || (ctrl_shadow_dy != 0)) {
+        OffsetRect(&local_1b0,(uint)ctrl_shadow_dx,(uint)ctrl_shadow_dy);
         puVar18 = local_120;
         puVar16 = local_148;
         puVar15 = local_124;
-        uVar6 = (uint)DAT_00637e94;
-        pCVar7 = (C_00511320 *)thunk_FUN_0040f810(local_198);
-        pCVar8 = (C_0043c740_434 *)thunk_FUN_00511320(pCVar7);
-        thunk_FUN_00497c40(pCVar8,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
+        uVar6 = (uint)ctrl_shadow_color_index;
+        pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
+        pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
+        thunk_palette_get_entry(pCVar8,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
         SetTextColor(local_144,(uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])));
         UVar19 = 0x24;
         ptVar17 = &local_1b0;
         sVar9 = _strlen(local_140);
         DrawTextA(local_144,local_140,sVar9,ptVar17,UVar19);
-        OffsetRect(&local_1b0,-(uint)DAT_00637e98,-(uint)DAT_00637e9c);
+        OffsetRect(&local_1b0,-(uint)ctrl_shadow_dx,-(uint)ctrl_shadow_dy);
       }
-      iVar5 = FUN_005c5ec0((C_005c5ec0 *)local_198);
+      iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
       if (iVar5 == 1) {
-        pCVar10 = (C_00408010_10 *)thunk_FUN_0040f810(local_198);
-        iVar5 = thunk_FUN_00414d10(pCVar10);
+        pCVar10 = (WndBase *)thunk_ctrl_get_parent(local_198);
+        iVar5 = thunk_wnd_get_window(pCVar10);
         if (*(int *)(iVar5 + 0x40) == 8) {
-          if (DAT_00637e90 == 0) {
+          if (ctrl_text_color_index == 0) {
             SetTextColor(local_144,0);
           }
           else {
             puVar18 = local_120;
             puVar16 = local_148;
             puVar15 = local_124;
-            uVar6 = (uint)DAT_00637e90;
-            pCVar7 = (C_00511320 *)thunk_FUN_0040f810(local_198);
-            pCVar8 = (C_0043c740_434 *)thunk_FUN_00511320(pCVar7);
-            iVar11 = thunk_FUN_0046f440(pCVar8);
-            FUN_005dea9e(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
+            uVar6 = (uint)ctrl_text_color_index;
+            pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
+            pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
+            iVar11 = thunk_palette_get_logpalette(pCVar8);
+            palette_get_entry_rgb(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
             SetTextColor(local_144,(uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])))
             ;
           }
         }
-        else if (DAT_00637f03 == '\0') {
+        else if (ctrl_text_rgb_set == '\0') {
           SetTextColor(local_144,0);
         }
         else {
-          SetTextColor(local_144,(uint)CONCAT12(DAT_00637f02,CONCAT11(DAT_00637f01,DAT_00637f00)));
+          SetTextColor(local_144,(uint)CONCAT12(ctrl_text_rgb_b,CONCAT11(ctrl_text_rgb_g,ctrl_text_rgb_r)));
         }
       }
       else {
-        iVar5 = FUN_005c5ec0((C_005c5ec0 *)local_198);
+        iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
         if (iVar5 == 0) {
-          pCVar10 = (C_00408010_10 *)thunk_FUN_0040f810(local_198);
-          iVar5 = thunk_FUN_00414d10(pCVar10);
+          pCVar10 = (WndBase *)thunk_ctrl_get_parent(local_198);
+          iVar5 = thunk_wnd_get_window(pCVar10);
           if (*(int *)(iVar5 + 0x40) == 8) {
-            if (DAT_00637ea0 == 0) {
+            if (ctrl_disabled_color_index == 0) {
               SetTextColor(local_144,0x404040);
             }
             else {
               puVar18 = local_120;
               puVar16 = local_148;
               puVar15 = local_124;
-              uVar6 = (uint)DAT_00637ea0;
-              pCVar7 = (C_00511320 *)thunk_FUN_0040f810(local_198);
-              pCVar8 = (C_0043c740_434 *)thunk_FUN_00511320(pCVar7);
-              iVar11 = thunk_FUN_0046f440(pCVar8);
-              FUN_005dea9e(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
+              uVar6 = (uint)ctrl_disabled_color_index;
+              pCVar7 = (WndPaletteView *)thunk_ctrl_get_parent(local_198);
+              pCVar8 = (GamePalette *)thunk_wnd_get_palette(pCVar7);
+              iVar11 = thunk_palette_get_logpalette(pCVar8);
+              palette_get_entry_rgb(iVar11,uVar6,(iptr)puVar15,(iptr)puVar16,(iptr)puVar18);
               SetTextColor(local_144,
                            (uint)CONCAT12(local_120[0],CONCAT11(local_148[0],local_124[0])));
             }
           }
-          else if (DAT_00637f07 == '\0') {
+          else if (ctrl_disabled_rgb_set == '\0') {
             SetTextColor(local_144,0x404040);
           }
           else {
-            SetTextColor(local_144,(uint)CONCAT12(DAT_00637f06,CONCAT11(DAT_00637f05,DAT_00637f04)))
+            SetTextColor(local_144,(uint)CONCAT12(ctrl_disabled_rgb_b,CONCAT11(ctrl_disabled_rgb_g,ctrl_disabled_rgb_r)))
             ;
           }
         }
@@ -7339,17 +7339,17 @@ undefined4 __stdcall FUN_005cc320(HWND param_1,uint param_2,WPARAM param_3,LPARA
     }
     else if (param_2 != 7) {
       if (param_2 == 8) {
-        FUN_005c96cc(param_1);
+        wnd_redraw_client(param_1);
         return 0;
       }
 LAB_005ccd4b:
-      uVar14 = FUN_005c9307(param_1,param_2,param_3,param_4);
+      uVar14 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
       return uVar14;
     }
-    pCVar13 = (C_005cbdd0 *)thunk_FUN_0040f810(local_198);
-    cVar1 = FUN_005cbdd0(pCVar13);
+    pCVar13 = (WndKeyNavView *)thunk_ctrl_get_parent(local_198);
+    cVar1 = wnd_keyboard_nav_enabled(pCVar13);
     if (cVar1 == '\0') {
-      uVar14 = FUN_005c9307(param_1,param_2,param_3,param_4);
+      uVar14 = ctrl_default_wndproc(param_1,param_2,param_3,param_4);
       return uVar14;
     }
     local_144 = GetDC(param_1);
@@ -7368,8 +7368,8 @@ LAB_005ccd4b:
     }
     else {
       if (param_3 == 0x20) {
-        pCVar13 = (C_005cbdd0 *)thunk_FUN_0040f810(local_198);
-        cVar1 = FUN_005cbdd0(pCVar13);
+        pCVar13 = (WndKeyNavView *)thunk_ctrl_get_parent(local_198);
+        cVar1 = wnd_keyboard_nav_enabled(pCVar13);
         if (cVar1 != '\0') {
           SendMessageA(param_1,0x201,0,0);
           SendMessageA(param_1,0x202,0,0);
@@ -7381,29 +7381,29 @@ LAB_005ccd4b:
     }
   }
   else if (param_2 == 0x201) {
-    iVar5 = FUN_005c5ec0((C_005c5ec0 *)local_198);
+    iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
     if ((iVar5 != 0) && (DAT_00637f08 == 0)) {
       SetFocus(param_1);
-      iVar5 = thunk_FUN_00530fe0(local_198);
+      iVar5 = thunk_checkbox_is_checked(local_198);
       if (iVar5 == 0) {
-        thunk_FUN_0040fad0(local_198,1);
+        thunk_checkbox_set_checked(local_198,1);
       }
       else {
-        thunk_FUN_0040fad0(local_198,0);
+        thunk_checkbox_set_checked(local_198,0);
       }
       DAT_00637f08 = 1;
       SetCapture(param_1);
       InvalidateRect(param_1,(RECT *)0x0,0);
-      iVar11 = thunk_FUN_0040f810(local_198);
-      FUN_005c6303(iVar11);
-      uVar14 = thunk_FUN_00530fe0(local_198);
-      uVar2 = thunk_FUN_00418740((C_00418740 *)local_198);
-      FUN_005cce40((C_005cce40 *)local_198,uVar2,uVar14);
+      iVar11 = thunk_ctrl_get_parent(local_198);
+      wnd_set_active_child(iVar11);
+      uVar14 = thunk_checkbox_is_checked(local_198);
+      uVar2 = thunk_ctrl_get_id((ControlIdView *)local_198);
+      checkbox_fire_callback((CheckboxClickView *)local_198,uVar2,uVar14);
     }
   }
   else {
     if (param_2 != 0x202) goto LAB_005ccd4b;
-    iVar5 = FUN_005c5ec0((C_005c5ec0 *)local_198);
+    iVar5 = checkbox_is_enabled((CheckboxEnabledView *)local_198);
     if (iVar5 != 0) {
       ReleaseCapture();
       DAT_00637f08 = 0;
@@ -7411,13 +7411,13 @@ LAB_005ccd4b:
   }
   return 0;
 }
-#undef DAT_00637e90
-#undef DAT_00637e94
-#undef DAT_00637e98
-#undef DAT_00637e9c
-#undef DAT_00637ea0
-#undef DAT_00637f03
-#undef DAT_00637f07
+#undef ctrl_disabled_color_index
+#undef ctrl_disabled_rgb_set
+#undef ctrl_shadow_color_index
+#undef ctrl_shadow_dx
+#undef ctrl_shadow_dy
+#undef ctrl_text_color_index
+#undef ctrl_text_rgb_set
 #undef local_1b0
 #undef local_1a0
 #undef local_19c
@@ -7442,37 +7442,37 @@ LAB_005ccd4b:
 #undef local_14
 
 /* 005ccddf auto */
-#define DAT_00637f03 (*(undefined1 *)((u8 *)&g.d_00637f03))
+#define ctrl_text_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f03))
 void __cdecl FUN_005ccddf(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
-  DAT_00637f00 = param_1;
-  DAT_00637f01 = param_2;
-  DAT_00637f02 = param_3;
-  DAT_00637f03 = 1;
+  ctrl_text_rgb_r = param_1;
+  ctrl_text_rgb_g = param_2;
+  ctrl_text_rgb_b = param_3;
+  ctrl_text_rgb_set = 1;
   return;
 }
-#undef DAT_00637f03
+#undef ctrl_text_rgb_set
 
 /* 005cce0e auto */
-#define DAT_00637f07 (*(undefined1 *)((u8 *)&g.d_00637f07))
+#define ctrl_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f07))
 void __cdecl FUN_005cce0e(undefined1 param_1,undefined1 param_2,undefined1 param_3)
 
 {
-  DAT_00637f04 = param_1;
-  DAT_00637f05 = param_2;
-  DAT_00637f06 = param_3;
-  DAT_00637f07 = 1;
+  ctrl_disabled_rgb_r = param_1;
+  ctrl_disabled_rgb_g = param_2;
+  ctrl_disabled_rgb_b = param_3;
+  ctrl_disabled_rgb_set = 1;
   return;
 }
-#undef DAT_00637f07
+#undef ctrl_disabled_rgb_set
 
 /* 005cce40 auto */
-void __thiscall FUN_005cce40(C_005cce40 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall checkbox_fire_callback(CheckboxClickView *this,undefined4 param_1,undefined4 param_2)
 
 {
-  if (this->field_2c != 0) {
-    (*(code *)this->field_2c)(param_1,param_2);
+  if (this->on_toggle != 0) {
+    (*(code *)this->on_toggle)(param_1,param_2);
   }
   return;
 }
@@ -7483,27 +7483,27 @@ void __stdcall FUN_005cce80(HWND param_1,int param_2,undefined4 param_3,undefine
 {
   DWORD DVar1;
   code *pcVar2;
-  C_005c9710 *this;
+  ControlHwndSetView *this;
   
   DVar1 = GetClassLongA(param_1,-0x12);
   pcVar2 = (code *)GetWindowLongA(param_1,DVar1 - 4);
   if ((param_2 == 2) &&
-     (this = (C_005c9710 *)GetWindowLongA(param_1,DVar1 - 8), this != (C_005c9710 *)0x0)) {
-    FUN_005c9710(this,0);
+     (this = (ControlHwndSetView *)GetWindowLongA(param_1,DVar1 - 8), this != (ControlHwndSetView *)0x0)) {
+    control_set_hwnd(this,0);
   }
   (*pcVar2)(param_1,param_2,param_3,param_4);
   return;
 }
 
 /* 005ccf17 auto */
-#define DAT_006e4ff0 (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
+#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define local_34 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_30 (*(WNDCLASSA *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(HWND *)(frame_ + FRAME_OFF(48)))
-HWND __cdecl FUN_005ccf17(int *param_1,iptr param_2,uint param_3,int param_4)
+HWND __cdecl scrollbar_create_hwnd(int *param_1,iptr param_2,uint param_3,int param_4)
 
 {
-  C_00408010_10 *pCVar1;
+  WndBase *pCVar1;
   iptr iVar2;
   iptr iVar3;
   int iVar4;
@@ -7527,12 +7527,12 @@ HWND __cdecl FUN_005ccf17(int *param_1,iptr param_2,uint param_3,int param_4)
   if (DAT_00637f58 == 0) {
     pvVar8 = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
-    pHVar7 = DAT_006e4ff0;
-    pCVar1 = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_2);
-    iVar2 = thunk_FUN_00414d10(pCVar1);
+    pHVar7 = app_hinstance;
+    pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
+    iVar2 = thunk_wnd_get_window(pCVar1);
     pHVar5 = *(HWND *)(iVar2 + 4);
-    iVar3 = thunk_FUN_00407fc0((iptr)param_1);
-    iVar4 = thunk_FUN_00407f90((iptr)param_1);
+    iVar3 = thunk_rect_height((iptr)param_1);
+    iVar4 = thunk_rect_width((iptr)param_1);
     local_8 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&DAT_00637f5c,param_3 | 0x40000000,*param_1,
                               param_1[1],iVar4,iVar3,pHVar5,pHVar6,pHVar7,pvVar8);
     DAT_006d46f8 = (WNDPROC)GetWindowLongA(local_8,-4);
@@ -7542,7 +7542,7 @@ HWND __cdecl FUN_005ccf17(int *param_1,iptr param_2,uint param_3,int param_4)
     local_30.cbClsExtra = 0;
     DAT_006d46f4 = GetClassLongA(local_8,-0x12);
     local_30.cbWndExtra = DAT_006d46f4 + 8;
-    local_30.hInstance = DAT_006e4ff0;
+    local_30.hInstance = app_hinstance;
     local_30.hIcon = (HICON)0x0;
     local_30.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
     local_30.hbrBackground = GetStockObject(1);
@@ -7554,40 +7554,40 @@ HWND __cdecl FUN_005ccf17(int *param_1,iptr param_2,uint param_3,int param_4)
   }
   pvVar8 = (LPVOID)0x0;
   pHVar6 = (HMENU)0x0;
-  pHVar7 = DAT_006e4ff0;
-  pCVar1 = (C_00408010_10 *)thunk_FUN_0040f810((C_0040f380_3c *)param_2);
-  iVar4 = thunk_FUN_00414d10(pCVar1);
+  pHVar7 = app_hinstance;
+  pCVar1 = (WndBase *)thunk_ctrl_get_parent((Control *)param_2);
+  iVar4 = thunk_wnd_get_window(pCVar1);
   pHVar5 = *(HWND *)(iVar4 + 4);
-  iVar4 = thunk_FUN_00407fc0((iptr)param_1);
-  nWidth = thunk_FUN_00407f90((iptr)param_1);
+  iVar4 = thunk_rect_height((iptr)param_1);
+  nWidth = thunk_rect_width((iptr)param_1);
   local_8 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&DAT_00637f80,local_34,*param_1,param_1[1]
                             ,nWidth,iVar4,pHVar5,pHVar6,pHVar7,pvVar8);
   SetWindowLongA(local_8,-4,ADDR(0x5cce80, FUN_005cce80));
   SetWindowLongA(local_8,DAT_006d46f4,param_2);
   SetWindowLongA(local_8,DAT_006d46f4 + 4,(LONG)DAT_006d46f8);
   ShowScrollBar(local_8,2,1);
-  FUN_005cd4c7(local_8,1,100);
+  scrollbar_hwnd_set_range(local_8,1,100);
   return local_8;
 }
-#undef DAT_006e4ff0
+#undef app_hinstance
 #undef local_34
 #undef local_30
 #undef local_8
 
 /* 005cd139 auto */
-void __cdecl FUN_005cd139(undefined4 param_1)
+void __cdecl scrollbar_destroy_hwnd(undefined4 param_1)
 
 {
   return;
 }
 
 /* 005cd149 auto */
-void __cdecl FUN_005cd149(HWND param_1,uint param_2,uint param_3,int param_4)
+void __cdecl scrollbar_hwnd_handle_msg(HWND param_1,uint param_2,uint param_3,int param_4)
 
 {
   short sVar1;
   DWORD DVar2;
-  C_005cd620 *this;
+  ScrollbarPosView *this;
   iptr iVar3;
   iptr iVar4;
   WPARAM *pWVar5;
@@ -7597,81 +7597,81 @@ void __cdecl FUN_005cd149(HWND param_1,uint param_2,uint param_3,int param_4)
   LPARAM LVar8;
   
   DVar2 = GetClassLongA(param_1,-0x12);
-  this = (C_005cd620 *)GetWindowLongA(param_1,DVar2 - 8);
-  iVar3 = FUN_005cd620(this);
+  this = (ScrollbarPosView *)GetWindowLongA(param_1,DVar2 - 8);
+  iVar3 = scrollbar_get_cur_pos(this);
   if (param_2 == 0x111) {
     if (param_3 == 0x7f) {
       SetScrollPos(param_1,2,param_4,1);
       uVar7 = GetScrollPos(param_1,2);
-      this->field_3c = uVar7;
+      this->cur_pos = uVar7;
     }
   }
   else if ((0x113 < param_2) && (param_2 < 0x116)) {
     sVar1 = (short)(param_3 >> 0x10);
     switch(param_3 & 0xffff) {
     case 0:
-      iVar6 = FUN_005bd4cd();
+      iVar6 = input_lbutton_down();
       if (iVar6 == 0) {
-        iVar6 = FUN_005c8f50(this);
+        iVar6 = ctrl_get_rect(this);
         LVar8 = *(LPARAM *)(iVar6 + 4);
-        pWVar5 = (WPARAM *)FUN_005c8f50(this);
+        pWVar5 = (WPARAM *)ctrl_get_rect(this);
         PostMessageA(param_1,0x202,*pWVar5,LVar8);
       }
       else {
         SetScrollPos(param_1,2,iVar3 + -1,1);
         uVar7 = GetScrollPos(param_1,2);
-        iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-        FUN_005c6303(iVar4);
-        this->field_3c = uVar7;
-        FUN_005cd640((C_005cd640 *)this,uVar7);
+        iVar4 = thunk_ctrl_get_parent((Control *)this);
+        wnd_set_active_child(iVar4);
+        this->cur_pos = uVar7;
+        scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
       }
       break;
     case 1:
-      iVar6 = FUN_005bd4cd();
+      iVar6 = input_lbutton_down();
       if (iVar6 == 0) {
-        iVar6 = FUN_005c8f50(this);
+        iVar6 = ctrl_get_rect(this);
         LVar8 = *(LPARAM *)(iVar6 + 4);
-        pWVar5 = (WPARAM *)FUN_005c8f50(this);
+        pWVar5 = (WPARAM *)ctrl_get_rect(this);
         PostMessageA(param_1,0x202,*pWVar5,LVar8);
       }
       else {
         SetScrollPos(param_1,2,iVar3 + 1,1);
         uVar7 = GetScrollPos(param_1,2);
-        iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-        FUN_005c6303(iVar4);
-        this->field_3c = uVar7;
-        FUN_005cd640((C_005cd640 *)this,uVar7);
+        iVar4 = thunk_ctrl_get_parent((Control *)this);
+        wnd_set_active_child(iVar4);
+        this->cur_pos = uVar7;
+        scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
       }
       break;
     case 2:
-      iVar6 = FUN_005cd6c0((C_005cd6c0 *)this);
+      iVar6 = scrollbar_get_page_size((ScrollbarPageView *)this);
       SetScrollPos(param_1,2,iVar3 - iVar6,1);
       uVar7 = GetScrollPos(param_1,2);
-      iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar4);
-      this->field_3c = uVar7;
-      FUN_005cd640((C_005cd640 *)this,uVar7);
+      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar4);
+      this->cur_pos = uVar7;
+      scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
       break;
     case 3:
-      iVar5 = FUN_005cd6c0((C_005cd6c0 *)this);
+      iVar5 = scrollbar_get_page_size((ScrollbarPageView *)this);
       SetScrollPos(param_1,2,iVar3 + iVar5,1);
       uVar7 = GetScrollPos(param_1,2);
-      iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar4);
-      this->field_3c = uVar7;
-      FUN_005cd640((C_005cd640 *)this,uVar7);
+      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar4);
+      this->cur_pos = uVar7;
+      scrollbar_fire_change((ScrollbarChangeView *)this,uVar7);
       break;
     case 4:
       SetScrollPos(param_1,2,(int)sVar1,1);
-      iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar4);
-      this->field_3c = (int)sVar1;
-      FUN_005cd640((C_005cd640 *)this,this->field_3c);
+      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar4);
+      this->cur_pos = (int)sVar1;
+      scrollbar_fire_change((ScrollbarChangeView *)this,this->cur_pos);
       break;
     case 5:
-      iVar4 = thunk_FUN_0040f810((C_0040f380_3c *)this);
-      FUN_005c6303(iVar4);
-      FUN_005cd680((C_005cd680 *)this,(int)sVar1);
+      iVar4 = thunk_ctrl_get_parent((Control *)this);
+      wnd_set_active_child(iVar4);
+      scrollbar_fire_track((ScrollbarTrackView *)this,(int)sVar1);
     }
   }
   return;
@@ -7688,11 +7688,11 @@ void __cdecl FUN_005cd49f(HWND param_1,BOOL param_2)
 }
 
 /* 005cd4c7 auto */
-void __cdecl FUN_005cd4c7(HWND param_1,int param_2,int param_3)
+void __cdecl scrollbar_hwnd_set_range(HWND param_1,int param_2,int param_3)
 
 {
   SetScrollRange(param_1,2,param_2,param_3,1);
-  FUN_005cd559(param_1,param_2);
+  scrollbar_hwnd_set_pos(param_1,param_2);
   return;
 }
 
@@ -7701,12 +7701,12 @@ void __cdecl FUN_005cd4fd(HWND param_1,int param_2,int param_3,BOOL param_4)
 
 {
   SetScrollRange(param_1,2,param_2,param_3,param_4);
-  FUN_005cd559(param_1,param_2);
+  scrollbar_hwnd_set_pos(param_1,param_2);
   return;
 }
 
 /* 005cd535 auto */
-void __cdecl FUN_005cd535(HWND param_1,LPINT param_2,LPINT param_3)
+void __cdecl scrollbar_hwnd_get_range(HWND param_1,LPINT param_2,LPINT param_3)
 
 {
   GetScrollRange(param_1,2,param_2,param_3);
@@ -7714,10 +7714,10 @@ void __cdecl FUN_005cd535(HWND param_1,LPINT param_2,LPINT param_3)
 }
 
 /* 005cd559 auto */
-void __cdecl FUN_005cd559(undefined4 param_1,undefined4 param_2)
+void __cdecl scrollbar_hwnd_set_pos(undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005cd149(param_1,0x111,0x7f,param_2);
+  scrollbar_hwnd_handle_msg(param_1,0x111,0x7f,param_2);
   return;
 }
 
@@ -7726,12 +7726,12 @@ void __cdecl FUN_005cd580(iptr param_1,int param_2,int param_3,int param_4)
 
 {
   SetScrollRange(*(HWND *)(param_1 + 4),(uint)(param_4 != 0),param_2,param_3,1);
-  FUN_005cd5f0(param_1,param_2,param_4);
+  wnd_set_scroll_pos(param_1,param_2,param_4);
   return;
 }
 
 /* 005cd5c3 auto */
-void __cdecl FUN_005cd5c3(iptr param_1,LPINT param_2,LPINT param_3,int param_4)
+void __cdecl scrollbar_get_range(iptr param_1,LPINT param_2,LPINT param_3,int param_4)
 
 {
   GetScrollRange(*(HWND *)(param_1 + 4),(uint)(param_4 != 0),param_2,param_3);
@@ -7739,7 +7739,7 @@ void __cdecl FUN_005cd5c3(iptr param_1,LPINT param_2,LPINT param_3,int param_4)
 }
 
 /* 005cd5f0 auto */
-void __cdecl FUN_005cd5f0(iptr param_1,int param_2,int param_3)
+void __cdecl wnd_set_scroll_pos(iptr param_1,int param_2,int param_3)
 
 {
   SetScrollPos(*(HWND *)(param_1 + 4),(uint)(param_3 != 0),param_2,1);
@@ -7747,66 +7747,66 @@ void __cdecl FUN_005cd5f0(iptr param_1,int param_2,int param_3)
 }
 
 /* 005cd620 auto */
-u32 __thiscall FUN_005cd620(C_005cd620 *this)
+u32 __thiscall scrollbar_get_cur_pos(ScrollbarPosView *this)
 
 {
-  return this->field_3c;
+  return this->cur_pos;
 }
 
 /* 005cd640 auto */
-void __thiscall FUN_005cd640(C_005cd640 *this,undefined4 param_1)
+void __thiscall scrollbar_fire_change(ScrollbarChangeView *this,undefined4 param_1)
 
 {
-  if (this->field_2c != 0) {
-    (*(code *)this->field_2c)(param_1);
+  if (this->on_change != 0) {
+    (*(code *)this->on_change)(param_1);
   }
   return;
 }
 
 /* 005cd680 auto */
-void __thiscall FUN_005cd680(C_005cd680 *this,undefined4 param_1)
+void __thiscall scrollbar_fire_track(ScrollbarTrackView *this,undefined4 param_1)
 
 {
-  if (this->field_30 != 0) {
-    (*(code *)this->field_30)(param_1);
+  if (this->on_track != 0) {
+    (*(code *)this->on_track)(param_1);
   }
   return;
 }
 
 /* 005cd6c0 auto */
-u32 __thiscall FUN_005cd6c0(C_005cd6c0 *this)
+u32 __thiscall scrollbar_get_page_size(ScrollbarPageView *this)
 
 {
-  return this->field_34;
+  return this->page_size;
 }
 
 /* 005cd6e0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl FUN_005cd6e0(void)
+void __cdecl gfx_scale_init(void)
 
 {
   undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x10; local_8 = local_8 + 1) {
-    *(undefined4 *)(&DAT_006d4708 + local_8 * 0x100c) = 0;
-    *(undefined4 *)(&DAT_006d4700 + local_8 * 0x100c) = 0;
-    *(undefined4 *)(&DAT_006d4704 + local_8 * 0x100c) = 0;
+    *(undefined4 *)(&gfx_scale_cache_last_used + local_8 * 0x100c) = 0;
+    *(undefined4 *)(&gfx_scale_cache_num + local_8 * 0x100c) = 0;
+    *(undefined4 *)(&gfx_scale_cache_den + local_8 * 0x100c) = 0;
   }
-  FUN_005cd775(1,1);
-  FUN_005cda2a(1,1,1,1);
+  gfx_set_scale_ratio(1,1);
+  gfx_set_scale_tables(1,1,1,1);
   return;
 }
 #undef local_8
 
 /* 005cd775 auto */
-#define DAT_00637f98 (*(int *)((u8 *)&g.d_00637f98))
-#define DAT_00637f9c (*(int *)((u8 *)&g.d_00637f9c))
+#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
+#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_005cd775(int param_1,int param_2)
+void __cdecl gfx_set_scale_ratio(int param_1,int param_2)
 
 {
   undefined4 uVar1;
@@ -7818,62 +7818,62 @@ void __cdecl FUN_005cd775(int param_1,int param_2)
   if (param_2 < 2) {
     param_2 = 1;
   }
-  DAT_00637f98 = param_1;
-  DAT_00637f9c = param_2;
-  local_10 = thunk_FUN_00421bb0();
+  gfx_scale_num = param_1;
+  gfx_scale_den = param_2;
+  local_10 = thunk_timer_ticks();
   local_18 = -1;
   local_14 = 0;
   do {
     if (0xf < local_14) {
-      *(int *)(&DAT_006d4700 + local_18 * 0x100c) = DAT_00637f98;
-      *(int *)(&DAT_006d4704 + local_18 * 0x100c) = DAT_00637f9c;
-      uVar1 = thunk_FUN_00421bb0();
-      *(undefined4 *)(&DAT_006d4708 + local_18 * 0x100c) = uVar1;
+      *(int *)(&gfx_scale_cache_num + local_18 * 0x100c) = gfx_scale_num;
+      *(int *)(&gfx_scale_cache_den + local_18 * 0x100c) = gfx_scale_den;
+      uVar1 = thunk_timer_ticks();
+      *(undefined4 *)(&gfx_scale_cache_last_used + local_18 * 0x100c) = uVar1;
       local_8 = 0;
-      if (DAT_00637f98 < DAT_00637f9c) {
+      if (gfx_scale_num < gfx_scale_den) {
         local_c = 0;
         local_14 = 0;
         while (local_14 < 0x400) {
           for (; (-1 < local_c && (local_14 < 0x400)); local_14 = local_14 + 1) {
-            *(int *)(&DAT_006d470c + local_14 * 4 + local_18 * 0x100c) = local_8;
-            local_c = local_c - DAT_00637f9c;
+            *(int *)(&gfx_scale_cache_tables + local_14 * 4 + local_18 * 0x100c) = local_8;
+            local_c = local_c - gfx_scale_den;
           }
-          local_c = local_c + DAT_00637f98;
+          local_c = local_c + gfx_scale_num;
           local_8 = local_8 + 1;
         }
       }
       else {
-        local_c = DAT_00637f98;
+        local_c = gfx_scale_num;
         local_14 = 0;
         while (local_14 < 0x400) {
-          for (; (DAT_00637f9c <= local_c && (local_14 < 0x400)); local_14 = local_14 + 1) {
-            *(int *)(&DAT_006d470c + local_14 * 4 + local_18 * 0x100c) = local_8;
-            local_c = local_c - DAT_00637f9c;
+          for (; (gfx_scale_den <= local_c && (local_14 < 0x400)); local_14 = local_14 + 1) {
+            *(int *)(&gfx_scale_cache_tables + local_14 * 4 + local_18 * 0x100c) = local_8;
+            local_c = local_c - gfx_scale_den;
           }
-          local_c = local_c + DAT_00637f98;
+          local_c = local_c + gfx_scale_num;
           local_8 = local_8 + 1;
         }
       }
 LAB_005cda01:
-      iptr_006e47c8 = (int)&DAT_006d470c + local_18 * 0x100c;
+      gfx_scale_table = (int)&gfx_scale_cache_tables + local_18 * 0x100c;
       return;
     }
-    if ((*(int *)(&DAT_006d4700 + local_14 * 0x100c) == DAT_00637f98) &&
-       (*(int *)(&DAT_006d4704 + local_14 * 0x100c) == DAT_00637f9c)) {
-      uVar1 = thunk_FUN_00421bb0();
-      *(undefined4 *)(&DAT_006d4708 + local_14 * 0x100c) = uVar1;
+    if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_num) &&
+       (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_den)) {
+      uVar1 = thunk_timer_ticks();
+      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_18 = local_14;
       goto LAB_005cda01;
     }
-    if (*(int *)(&DAT_006d4708 + local_14 * 0x100c) <= local_10) {
-      local_10 = *(int *)(&DAT_006d4708 + local_14 * 0x100c);
+    if (*(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c) <= local_10) {
+      local_10 = *(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c);
       local_18 = local_14;
     }
     local_14 = local_14 + 1;
   } while( true );
 }
-#undef DAT_00637f98
-#undef DAT_00637f9c
+#undef gfx_scale_den
+#undef gfx_scale_num
 #undef local_18
 #undef local_14
 #undef local_10
@@ -7881,26 +7881,26 @@ LAB_005cda01:
 #undef local_8
 
 /* 005cda06 auto */
-#define DAT_00637f98 (*(undefined4 *)((u8 *)&g.d_00637f98))
-#define DAT_00637f9c (*(undefined4 *)((u8 *)&g.d_00637f9c))
-void __cdecl FUN_005cda06(iptr param_1,iptr param_2)
+#define gfx_scale_den (*(undefined4 *)((u8 *)&g.d_00637f9c))
+#define gfx_scale_num (*(undefined4 *)((u8 *)&g.d_00637f98))
+void __cdecl gfx_get_scale_ratio(iptr param_1,iptr param_2)
 
 {
-  *(undefined4 *)param_1 = DAT_00637f98;
-  *(undefined4 *)param_2 = DAT_00637f9c;
+  *(undefined4 *)param_1 = gfx_scale_num;
+  *(undefined4 *)param_2 = gfx_scale_den;
   return;
 }
-#undef DAT_00637f98
-#undef DAT_00637f9c
+#undef gfx_scale_den
+#undef gfx_scale_num
 
 /* 005cda2a auto */
-#define DAT_006e47c0 (*(undefined * *)((u8 *)&g.d_006e47c0))
-#define DAT_006e47c4 (*(undefined * *)((u8 *)&g.d_006e47c4))
+#define gfx_scale_x_table (*(undefined * *)((u8 *)&g.d_006e47c0))
+#define gfx_scale_y_table (*(undefined * *)((u8 *)&g.d_006e47c4))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-void __cdecl FUN_005cda2a(int param_1,int param_2,int param_3,int param_4)
+void __cdecl gfx_set_scale_tables(int param_1,int param_2,int param_3,int param_4)
 
 {
   undefined4 uVar1;
@@ -7918,54 +7918,54 @@ void __cdecl FUN_005cda2a(int param_1,int param_2,int param_3,int param_4)
   if (param_4 < 2) {
     param_4 = 1;
   }
-  DAT_00637fa0 = param_1;
-  DAT_00637fa4 = param_2;
-  DAT_00637fa8 = param_3;
-  DAT_00637fac = param_4;
-  local_10 = thunk_FUN_00421bb0();
+  gfx_scale_x_num = param_1;
+  gfx_scale_x_den = param_2;
+  gfx_scale_y_num = param_3;
+  gfx_scale_y_den = param_4;
+  local_10 = thunk_timer_ticks();
   local_8 = -1;
   for (local_14 = 0; local_14 < 0x10; local_14 = local_14 + 1) {
-    if ((*(int *)(&DAT_006d4700 + local_14 * 0x100c) == DAT_00637fa0) &&
-       (*(int *)(&DAT_006d4704 + local_14 * 0x100c) == DAT_00637fa4)) {
-      uVar1 = thunk_FUN_00421bb0();
-      *(undefined4 *)(&DAT_006d4708 + local_14 * 0x100c) = uVar1;
+    if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_x_num) &&
+       (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_x_den)) {
+      uVar1 = thunk_timer_ticks();
+      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_8 = local_14;
       goto LAB_005cdbab;
     }
-    if (*(int *)(&DAT_006d4708 + local_14 * 0x100c) <= local_10) {
-      local_10 = *(int *)(&DAT_006d4708 + local_14 * 0x100c);
+    if (*(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c) <= local_10) {
+      local_10 = *(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c);
       local_8 = local_14;
     }
   }
-  FUN_005cdcdb(local_8,DAT_00637fa0,DAT_00637fa4);
+  gfx_scale_build_table(local_8,gfx_scale_x_num,gfx_scale_x_den);
 LAB_005cdbab:
-  DAT_006e47c0 = &DAT_006d470c + local_8 * 0x100c;
-  local_10 = thunk_FUN_00421bb0();
+  gfx_scale_x_table = &gfx_scale_cache_tables + local_8 * 0x100c;
+  local_10 = thunk_timer_ticks();
   local_c = -1;
   local_14 = 0;
   do {
     if (0xf < local_14) {
-      FUN_005cdcdb(local_c,DAT_00637fa8,DAT_00637fac);
+      gfx_scale_build_table(local_c,gfx_scale_y_num,gfx_scale_y_den);
       local_14 = local_c;
 LAB_005cdcd6:
-      DAT_006e47c4 = &DAT_006d470c + local_14 * 0x100c;
+      gfx_scale_y_table = &gfx_scale_cache_tables + local_14 * 0x100c;
       return;
     }
-    if ((*(int *)(&DAT_006d4700 + local_14 * 0x100c) == DAT_00637fa8) &&
-       (*(int *)(&DAT_006d4704 + local_14 * 0x100c) == DAT_00637fac)) {
-      uVar1 = thunk_FUN_00421bb0();
-      *(undefined4 *)(&DAT_006d4708 + local_14 * 0x100c) = uVar1;
+    if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_y_num) &&
+       (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_y_den)) {
+      uVar1 = thunk_timer_ticks();
+      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       goto LAB_005cdcd6;
     }
-    if ((*(int *)(&DAT_006d4708 + local_14 * 0x100c) <= local_10) && (local_8 != local_14)) {
-      local_10 = *(int *)(&DAT_006d4708 + local_14 * 0x100c);
+    if ((*(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c) <= local_10) && (local_8 != local_14)) {
+      local_10 = *(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c);
       local_c = local_14;
     }
     local_14 = local_14 + 1;
   } while( true );
 }
-#undef DAT_006e47c0
-#undef DAT_006e47c4
+#undef gfx_scale_x_table
+#undef gfx_scale_y_table
 #undef local_14
 #undef local_10
 #undef local_c
@@ -7975,23 +7975,23 @@ LAB_005cdcd6:
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl FUN_005cdcdb(int param_1,int param_2,int param_3)
+void __cdecl gfx_scale_build_table(int param_1,int param_2,int param_3)
 
 {
   undefined4 uVar1;
   undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(int *)(&DAT_006d4700 + param_1 * 0x100c) = param_2;
-  *(int *)(&DAT_006d4704 + param_1 * 0x100c) = param_3;
-  uVar1 = thunk_FUN_00421bb0();
-  *(undefined4 *)(&DAT_006d4708 + param_1 * 0x100c) = uVar1;
+  *(int *)(&gfx_scale_cache_num + param_1 * 0x100c) = param_2;
+  *(int *)(&gfx_scale_cache_den + param_1 * 0x100c) = param_3;
+  uVar1 = thunk_timer_ticks();
+  *(undefined4 *)(&gfx_scale_cache_last_used + param_1 * 0x100c) = uVar1;
   local_8 = 0;
   if (param_2 < param_3) {
     local_c = 0;
     local_10 = 0;
     while (local_10 < 0x400) {
       for (; (-1 < local_c && (local_10 < 0x400)); local_10 = local_10 + 1) {
-        *(int *)(&DAT_006d470c + local_10 * 4 + param_1 * 0x100c) = local_8;
+        *(int *)(&gfx_scale_cache_tables + local_10 * 4 + param_1 * 0x100c) = local_8;
         local_c = local_c - param_3;
       }
       local_c = local_c + param_2;
@@ -8003,7 +8003,7 @@ void __cdecl FUN_005cdcdb(int param_1,int param_2,int param_3)
     local_10 = 0;
     while (local_10 < 0x400) {
       for (; (param_3 <= local_c && (local_10 < 0x400)); local_10 = local_10 + 1) {
-        *(int *)(&DAT_006d470c + local_10 * 4 + param_1 * 0x100c) = local_8;
+        *(int *)(&gfx_scale_cache_tables + local_10 * 4 + param_1 * 0x100c) = local_8;
         local_c = local_c - param_3;
       }
       local_c = local_c + param_2;
@@ -8022,49 +8022,49 @@ void __cdecl FUN_005cdcdb(int param_1,int param_2,int param_3)
    
    Library: Visual Studio 1998 Debug */
 
-C_00417f70_3c * __thiscall FUN_005cde2c(C_00417f70_3c *this)
+Sprite * __thiscall sprite_init(Sprite *this)
 
 {
-  FUN_005d1b38(this);
+  sprite_clear_fields(this);
   return this;
 }
 
 /* 005cde4d auto */
-C_00417f70_3c * __thiscall FUN_005cde4d(C_00417f70_3c *this)
+Sprite * __thiscall sprite_destroy(Sprite *this)
 
 {
   uptr uVar1;
   
-  if (this->field_34 != 0) {
-    if (this->field_38 != 0) {
-      uVar1 = FUN_005dce29(this->field_34);
-      this->field_38 = uVar1;
+  if (this->data_handle != 0) {
+    if (this->data_ptr != 0) {
+      uVar1 = mem_handle_unlock(this->data_handle);
+      this->data_ptr = uVar1;
     }
-    this = (C_00417f70_3c *)FUN_005dce96(this->field_34);
+    this = (Sprite *)mem_handle_free(this->data_handle);
   }
   return this;
 }
 
 /* 005cdea1 auto */
-#define local_58 (*(C_004083b0_48 *)(frame_ + FRAME_OFF(0)))
+#define local_58 (*(DibSurface *)(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(76)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
 undefined4 __thiscall
-FUN_005cdea1(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3)
+sprite_create_solid(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3)
 
 {
   undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005bd630(&local_58);
+  surface_ctor(&local_58);
   local_8 = 0;
-  FUN_005bd65c(&local_58,param_1,param_2);
-  FUN_005c041f(&local_58,param_3 & 0xff);
-  FUN_005cebec(this,(iptr)&local_58,0,0,param_1,param_2);
-  SetRect((LPRECT)&this->field_10,0,0,0,0);
+  surface_create(&local_58,param_1,param_2);
+  surface_fill(&local_58,param_3 & 0xff);
+  sprite_encode_rect(this,(iptr)&local_58,0,0,param_1,param_2);
+  SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005cdf2d */ { FUN_005bd915((C_004083b0_48 *)((iptr)&local_58)); }
+  /* inlined unwind funclet FUN_005cdf2d */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
   return uStack_10;
 }
 #undef local_58
@@ -8073,21 +8073,21 @@ FUN_005cdea1(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint para
 #undef local_8
 
 /* 005cdf50 auto */
-void __thiscall FUN_005cdf50(C_00417f70_3c *this)
+void __thiscall sprite_free(Sprite *this)
 
 {
   uptr uVar1;
   u32 uVar2;
   
-  if (this->field_38 != 0) {
-    uVar1 = FUN_005dce29(this->field_34);
-    this->field_38 = uVar1;
+  if (this->data_ptr != 0) {
+    uVar1 = mem_handle_unlock(this->data_handle);
+    this->data_ptr = uVar1;
   }
-  if (this->field_34 != 0) {
-    uVar2 = FUN_005dce96(this->field_34);
-    this->field_34 = uVar2;
+  if (this->data_handle != 0) {
+    uVar2 = mem_handle_free(this->data_handle);
+    this->data_handle = uVar2;
   }
-  FUN_005d1b38(this);
+  sprite_clear_fields(this);
   return;
 }
 
@@ -8104,7 +8104,7 @@ void __cdecl FUN_005cdfb2(undefined4 param_1,undefined4 param_2)
 #define local_a (*(undefined1 *)(frame_ + FRAME_OFF(6)))
 #define local_9 (*(undefined1 *)(frame_ + FRAME_OFF(7)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall FUN_005cdfc2(C_00417f70_3c *this,undefined4 param_1)
+void __thiscall FUN_005cdfc2(Sprite *this,undefined4 param_1)
 
 {
   int iVar1;
@@ -8118,37 +8118,37 @@ void __thiscall FUN_005cdfc2(C_00417f70_3c *this,undefined4 param_1)
   local_b = 0x50;
   local_a = 0x52;
   local_9 = 0x54;
-  iVar1 = FUN_005c5540((iptr)&local_c,param_1);
+  iVar1 = res_load((iptr)&local_c,param_1);
   if (iVar1 == 0) {
-    FUN_005d233f(ADDR(0x637fb0, ((u8 *)&g.d_00637fb0)),param_1);
+    dbg_logf_noret(ADDR(0x637fb0, ((u8 *)&g.d_00637fb0)),param_1);
   }
   else {
-    puVar2 = (undefined4 *)FUN_005c5560(iVar1);
-    uVar3 = FUN_005c54d0(*puVar2);
-    this->field_20 = uVar3;
-    uVar3 = FUN_005c54d0(puVar2[1]);
-    this->field_24 = uVar3;
-    FUN_005d1cd0((iptr)(puVar2 + 2),(iptr)this);
-    FUN_005d1cd0((iptr)(puVar2 + 6),(iptr)&this->field_10);
-    this->field_30 = *(u8 *)(puVar2 + 10);
-    local_8 = FUN_005d1cb0(*(undefined4 *)((int)puVar2 + 0x29));
-    if (this->field_38 != 0) {
-      FUN_005cf337(this);
+    puVar2 = (undefined4 *)res_lock(iVar1);
+    uVar3 = endian_from_le(*puVar2);
+    this->offset_x = uVar3;
+    uVar3 = endian_from_le(puVar2[1]);
+    this->full_height = uVar3;
+    rect_copy_from_le((iptr)(puVar2 + 2),(iptr)this);
+    rect_copy_from_le((iptr)(puVar2 + 6),(iptr)&this->bounds_rect);
+    this->key_color = *(u8 *)(puVar2 + 10);
+    local_8 = endian_from_le_u32(*(undefined4 *)((int)puVar2 + 0x29));
+    if (this->data_ptr != 0) {
+      sprite_unlock(this);
     }
-    if (this->field_34 != 0) {
-      uVar3 = FUN_005dce96(this->field_34);
-      this->field_34 = uVar3;
+    if (this->data_handle != 0) {
+      uVar3 = mem_handle_free(this->data_handle);
+      this->data_handle = uVar3;
     }
-    uVar3 = FUN_005dce4f(local_8);
-    this->field_34 = uVar3;
-    iVar4 = FUN_005dcdf9(this->field_34);
-    FUN_005dced3((int)puVar2 + 0x2d,iVar4,local_8);
-    uVar5 = thunk_FUN_00407fc0((iptr)&this->field_10);
+    uVar3 = mem_handle_alloc(local_8);
+    this->data_handle = uVar3;
+    iVar4 = mem_handle_lock(this->data_handle);
+    mem_move_src_dst((int)puVar2 + 0x2d,iVar4,local_8);
+    uVar5 = thunk_rect_height((iptr)&this->bounds_rect);
     FUN_005cdfb2(iVar4,uVar5);
-    FUN_005dce29(this->field_34);
-    FUN_005c5580(iVar1);
-    FUN_005c5520(iVar1);
-    FUN_005cf2ff(this);
+    mem_handle_unlock(this->data_handle);
+    res_unlock(iVar1);
+    res_free(iVar1);
+    sprite_lock(this);
   }
   return;
 }
@@ -8160,10 +8160,10 @@ void __thiscall FUN_005cdfc2(C_00417f70_3c *this,undefined4 param_1)
 
 /* 005ce16e auto */
 void __thiscall
-FUN_005ce16e(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
+FUN_005ce16e(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005ce19a(this,param_1,0xffffffff,0xffffffff,param_2);
+  sprite_load_res_with_pal(this,param_1,0xffffffff,0xffffffff,param_2);
   return;
 }
 
@@ -8176,8 +8176,8 @@ FUN_005ce16e(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
 #define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-FUN_005ce19a
-          (C_00417f70_3c *this,undefined4 param_1,int param_2,int param_3,C_0043c740_434 *param_4)
+sprite_load_res_with_pal
+          (Sprite *this,undefined4 param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
@@ -8190,41 +8190,41 @@ FUN_005ce19a
   local_f = 0x50;
   local_e = 0x52;
   local_d = 0x54;
-  iVar1 = FUN_005c5540((iptr)&local_10,param_1);
+  iVar1 = res_load((iptr)&local_10,param_1);
   if (iVar1 == 0) {
-    FUN_005d233f(ADDR(0x637fd4, ((u8 *)&g.d_00637fd4)),param_1);
+    dbg_logf_noret(ADDR(0x637fd4, ((u8 *)&g.d_00637fd4)),param_1);
   }
   else {
-    iVar2 = FUN_005c5560(iVar1);
-    FUN_005dced3(iVar2,(iptr)&this->field_20,4);
-    FUN_005dced3(iVar2 + 4,(iptr)&this->field_24,4);
-    FUN_005dced3(iVar2 + 8,(iptr)this,0x10);
-    FUN_005dced3(iVar2 + 0x18,(iptr)&this->field_10,0x10);
-    FUN_005dced3(iVar2 + 0x28,(iptr)&this->field_30,1);
-    FUN_005dced3(iVar2 + 0x29,(iptr)&local_c,4);
-    if (this->field_38 != 0) {
-      FUN_005cf337(this);
+    iVar2 = res_lock(iVar1);
+    mem_move_src_dst(iVar2,(iptr)&this->offset_x,4);
+    mem_move_src_dst(iVar2 + 4,(iptr)&this->full_height,4);
+    mem_move_src_dst(iVar2 + 8,(iptr)this,0x10);
+    mem_move_src_dst(iVar2 + 0x18,(iptr)&this->bounds_rect,0x10);
+    mem_move_src_dst(iVar2 + 0x28,(iptr)&this->key_color,1);
+    mem_move_src_dst(iVar2 + 0x29,(iptr)&local_c,4);
+    if (this->data_ptr != 0) {
+      sprite_unlock(this);
     }
-    if (this->field_34 != 0) {
-      uVar3 = FUN_005dce96(this->field_34);
-      this->field_34 = uVar3;
+    if (this->data_handle != 0) {
+      uVar3 = mem_handle_free(this->data_handle);
+      this->data_handle = uVar3;
     }
-    uVar3 = FUN_005dce4f(local_c);
-    this->field_34 = uVar3;
-    iVar4 = FUN_005dcdf9(this->field_34);
-    FUN_005dced3(iVar2 + 0x2d,iVar4,local_c);
-    FUN_005dce29(this->field_34);
-    FUN_005dced3(iVar2 + 0x2d,(iptr)&local_14,4);
-    FUN_005dced3(iVar2 + 0x31,(iptr)&local_8,4);
+    uVar3 = mem_handle_alloc(local_c);
+    this->data_handle = uVar3;
+    iVar4 = mem_handle_lock(this->data_handle);
+    mem_move_src_dst(iVar2 + 0x2d,iVar4,local_c);
+    mem_handle_unlock(this->data_handle);
+    mem_move_src_dst(iVar2 + 0x2d,(iptr)&local_14,4);
+    mem_move_src_dst(iVar2 + 0x31,(iptr)&local_8,4);
     if ((param_2 == -1) || (param_3 == -1)) {
-      FUN_005c6da8(param_4,local_14,local_8,iVar2 + 0x35);
+      palette_set_rgb(param_4,local_14,local_8,iVar2 + 0x35);
     }
     else {
-      FUN_005c6da8(param_4,param_2,param_3,iVar2 + 0x35);
+      palette_set_rgb(param_4,param_2,param_3,iVar2 + 0x35);
     }
-    FUN_005c5580(iVar1);
-    FUN_005c5520(iVar1);
-    FUN_005cf2ff(this);
+    res_unlock(iVar1);
+    res_free(iVar1);
+    sprite_lock(this);
   }
   return;
 }
@@ -8237,22 +8237,22 @@ FUN_005ce19a
 #undef local_8
 
 /* 005ce3a8 auto */
-void __thiscall FUN_005ce3a8(C_00417f70_3c *this,undefined4 param_1)
+void __thiscall FUN_005ce3a8(Sprite *this,undefined4 param_1)
 
 {
-  FUN_005ce9ef(this,param_1);
+  sprite_read_file(this,param_1);
   return;
 }
 
 /* 005ce3cc auto */
-#define local_ac (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(4)))
+#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
 void __thiscall
 FUN_005ce3cc
-          (C_00417f70_3c *this,iptr param_1,undefined4 param_2,int param_3,C_0043c740_434 *param_4)
+          (Sprite *this,iptr param_1,undefined4 param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
@@ -8263,36 +8263,36 @@ FUN_005ce3cc
   undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_ac);
+  file_obj_init(&local_ac);
   local_8 = 0;
-  local_14 = FUN_005dcef7(this->field_34);
-  iVar1 = thunk_FUN_00421bf0(&local_ac,param_1);
+  local_14 = mem_handle_size(this->data_handle);
+  iVar1 = thunk_file_obj_create(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_20,4);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_24,4);
-    thunk_FUN_00421c60(&local_ac,(iptr)this,0x10);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_10,0x10);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_30,1);
-    thunk_FUN_00421c60(&local_ac,(iptr)&local_14,4);
-    FUN_005cf2ff(this);
-    thunk_FUN_00421c60(&local_ac,this->field_38,local_14);
-    FUN_005cf337(this);
-    uVar2 = FUN_005dce4f(param_3 * 3);
-    iVar3 = FUN_005dcdf9(uVar2);
+    thunk_file_obj_write(&local_ac,(iptr)&this->offset_x,4);
+    thunk_file_obj_write(&local_ac,(iptr)&this->full_height,4);
+    thunk_file_obj_write(&local_ac,(iptr)this,0x10);
+    thunk_file_obj_write(&local_ac,(iptr)&this->bounds_rect,0x10);
+    thunk_file_obj_write(&local_ac,(iptr)&this->key_color,1);
+    thunk_file_obj_write(&local_ac,(iptr)&local_14,4);
+    sprite_lock(this);
+    thunk_file_obj_write(&local_ac,this->data_ptr,local_14);
+    sprite_unlock(this);
+    uVar2 = mem_handle_alloc(param_3 * 3);
+    iVar3 = mem_handle_lock(uVar2);
     iVar5 = iVar3;
     iVar1 = param_3;
-    iVar4 = thunk_FUN_0046f440(param_4);
-    FUN_005ded12(iVar4,iVar5,param_2,iVar1);
-    thunk_FUN_00421c60(&local_ac,iVar3,param_3 * 3);
-    thunk_FUN_00421c30(&local_ac);
-    FUN_005dce29(uVar2);
-    FUN_005dce96(uVar2);
+    iVar4 = thunk_palette_get_logpalette(param_4);
+    palette_copy_rgb_range(iVar4,iVar5,param_2,iVar1);
+    thunk_file_obj_write(&local_ac,iVar3,param_3 * 3);
+    thunk_file_map_close(&local_ac);
+    mem_handle_unlock(uVar2);
+    mem_handle_free(uVar2);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -8303,39 +8303,39 @@ FUN_005ce3cc
 #undef local_8
 
 /* 005ce5bb auto */
-#define local_ac (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(4)))
+#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall FUN_005ce5bb(C_00417f70_3c *this,iptr param_1)
+void __thiscall FUN_005ce5bb(Sprite *this,iptr param_1)
 
 {
   int iVar1;
   undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_ac);
+  file_obj_init(&local_ac);
   local_8 = 0;
-  local_14 = FUN_005dcef7(this->field_34);
-  iVar1 = thunk_FUN_00421bf0(&local_ac,param_1);
+  local_14 = mem_handle_size(this->data_handle);
+  iVar1 = thunk_file_obj_create(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_20,4);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_24,4);
-    thunk_FUN_00421c60(&local_ac,(iptr)this,0x10);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_10,0x10);
-    thunk_FUN_00421c60(&local_ac,(iptr)&this->field_30,1);
-    thunk_FUN_00421c60(&local_ac,(iptr)&local_14,4);
-    FUN_005cf2ff(this);
-    thunk_FUN_00421c60(&local_ac,this->field_38,local_14);
-    FUN_005cf337(this);
-    thunk_FUN_00421c30(&local_ac);
+    thunk_file_obj_write(&local_ac,(iptr)&this->offset_x,4);
+    thunk_file_obj_write(&local_ac,(iptr)&this->full_height,4);
+    thunk_file_obj_write(&local_ac,(iptr)this,0x10);
+    thunk_file_obj_write(&local_ac,(iptr)&this->bounds_rect,0x10);
+    thunk_file_obj_write(&local_ac,(iptr)&this->key_color,1);
+    thunk_file_obj_write(&local_ac,(iptr)&local_14,4);
+    sprite_lock(this);
+    thunk_file_obj_write(&local_ac,this->data_ptr,local_14);
+    sprite_unlock(this);
+    thunk_file_map_close(&local_ac);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -8347,15 +8347,15 @@ void __thiscall FUN_005ce5bb(C_00417f70_3c *this,iptr param_1)
 
 /* 005ce723 auto */
 void __thiscall
-FUN_005ce723(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
+FUN_005ce723(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 {
-  FUN_005ce74f(this,param_1,0xffffffff,0xffffffff,param_2);
+  sprite_read_file_with_palette(this,param_1,0xffffffff,0xffffffff,param_2);
   return;
 }
 
 /* 005ce74f auto */
-#define local_b4 (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(4)))
+#define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(4)))
 #define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(156)))
 #define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(164)))
@@ -8363,8 +8363,8 @@ FUN_005ce723(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
 void __thiscall
-FUN_005ce74f
-          (C_00417f70_3c *this,iptr param_1,int param_2,int param_3,C_0043c740_434 *param_4)
+sprite_read_file_with_palette
+          (Sprite *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
@@ -8374,49 +8374,49 @@ FUN_005ce74f
   undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_b4);
+  file_obj_init(&local_b4);
   local_8 = 0;
-  iVar1 = thunk_FUN_004929c0(&local_b4,param_1);
+  iVar1 = thunk_file_obj_open(&local_b4,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
   }
   else {
-    thunk_FUN_004bb370(&local_b4,(iptr)&this->field_20,4);
-    thunk_FUN_004bb370(&local_b4,(iptr)&this->field_24,4);
-    thunk_FUN_004bb370(&local_b4,(iptr)this,0x10);
-    thunk_FUN_004bb370(&local_b4,(iptr)&this->field_10,0x10);
-    thunk_FUN_004bb370(&local_b4,(iptr)&this->field_30,1);
-    thunk_FUN_004bb370(&local_b4,(iptr)&local_18,4);
-    if (this->field_38 != 0) {
-      FUN_005cf337(this);
+    thunk_file_obj_read(&local_b4,(iptr)&this->offset_x,4);
+    thunk_file_obj_read(&local_b4,(iptr)&this->full_height,4);
+    thunk_file_obj_read(&local_b4,(iptr)this,0x10);
+    thunk_file_obj_read(&local_b4,(iptr)&this->bounds_rect,0x10);
+    thunk_file_obj_read(&local_b4,(iptr)&this->key_color,1);
+    thunk_file_obj_read(&local_b4,(iptr)&local_18,4);
+    if (this->data_ptr != 0) {
+      sprite_unlock(this);
     }
-    if (this->field_34 != 0) {
-      uVar2 = FUN_005dce96(this->field_34);
-      this->field_34 = uVar2;
+    if (this->data_handle != 0) {
+      uVar2 = mem_handle_free(this->data_handle);
+      this->data_handle = uVar2;
     }
-    uVar2 = FUN_005dce4f(local_18);
-    this->field_34 = uVar2;
-    iVar3 = FUN_005dcdf9(this->field_34);
-    thunk_FUN_004bb370(&local_b4,iVar3,local_18);
-    FUN_005dce29(this->field_34);
-    thunk_FUN_004bb370(&local_b4,(iptr)&local_1c,4);
-    thunk_FUN_004bb370(&local_b4,(iptr)&local_14,4);
-    uVar4 = FUN_005dce4f(local_14 * 3);
-    iVar3 = FUN_005dcdf9(uVar4);
-    thunk_FUN_004bb370(&local_b4,iVar3,param_3 * 3);
+    uVar2 = mem_handle_alloc(local_18);
+    this->data_handle = uVar2;
+    iVar3 = mem_handle_lock(this->data_handle);
+    thunk_file_obj_read(&local_b4,iVar3,local_18);
+    mem_handle_unlock(this->data_handle);
+    thunk_file_obj_read(&local_b4,(iptr)&local_1c,4);
+    thunk_file_obj_read(&local_b4,(iptr)&local_14,4);
+    uVar4 = mem_handle_alloc(local_14 * 3);
+    iVar3 = mem_handle_lock(uVar4);
+    thunk_file_obj_read(&local_b4,iVar3,param_3 * 3);
     if ((param_2 == -1) || (param_3 == -1)) {
-      FUN_005c6da8(param_4,local_1c,local_14,iVar3);
+      palette_set_rgb(param_4,local_1c,local_14,iVar3);
     }
     else {
-      FUN_005c6da8(param_4,param_2,param_3,iVar3);
+      palette_set_rgb(param_4,param_2,param_3,iVar3);
     }
-    FUN_005dce29(uVar4);
-    FUN_005dce96(uVar4);
-    thunk_FUN_00421c30(&local_b4);
-    FUN_005cf2ff(this);
+    mem_handle_unlock(uVar4);
+    mem_handle_free(uVar4);
+    thunk_file_map_close(&local_b4);
+    sprite_lock(this);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_b4)); }
+    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
   }
   return;
 }
@@ -8429,12 +8429,12 @@ FUN_005ce74f
 #undef local_8
 
 /* 005ce9ef auto */
-#define local_ac (*(C_00421bf0_98 *)(frame_ + FRAME_OFF(4)))
+#define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
 #define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
 #define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-void __thiscall FUN_005ce9ef(C_00417f70_3c *this,iptr param_1)
+void __thiscall sprite_read_file(Sprite *this,iptr param_1)
 
 {
   int iVar1;
@@ -8443,35 +8443,35 @@ void __thiscall FUN_005ce9ef(C_00417f70_3c *this,iptr param_1)
   undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  FUN_005d7c00(&local_ac);
+  file_obj_init(&local_ac);
   local_8 = 0;
-  iVar1 = thunk_FUN_004929c0(&local_ac,param_1);
+  iVar1 = thunk_file_obj_open(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
-    thunk_FUN_004bb370(&local_ac,(iptr)&this->field_20,4);
-    thunk_FUN_004bb370(&local_ac,(iptr)&this->field_24,4);
-    thunk_FUN_004bb370(&local_ac,(iptr)this,0x10);
-    thunk_FUN_004bb370(&local_ac,(iptr)&this->field_10,0x10);
-    thunk_FUN_004bb370(&local_ac,(iptr)&this->field_30,1);
-    thunk_FUN_004bb370(&local_ac,(iptr)&local_14,4);
-    if (this->field_38 != 0) {
-      FUN_005cf337(this);
+    thunk_file_obj_read(&local_ac,(iptr)&this->offset_x,4);
+    thunk_file_obj_read(&local_ac,(iptr)&this->full_height,4);
+    thunk_file_obj_read(&local_ac,(iptr)this,0x10);
+    thunk_file_obj_read(&local_ac,(iptr)&this->bounds_rect,0x10);
+    thunk_file_obj_read(&local_ac,(iptr)&this->key_color,1);
+    thunk_file_obj_read(&local_ac,(iptr)&local_14,4);
+    if (this->data_ptr != 0) {
+      sprite_unlock(this);
     }
-    if (this->field_34 != 0) {
-      uVar2 = FUN_005dce96(this->field_34);
-      this->field_34 = uVar2;
+    if (this->data_handle != 0) {
+      uVar2 = mem_handle_free(this->data_handle);
+      this->data_handle = uVar2;
     }
-    uVar2 = FUN_005dce4f(local_14);
-    this->field_34 = uVar2;
-    iVar3 = FUN_005dcdf9(this->field_34);
-    thunk_FUN_004bb370(&local_ac,iVar3,local_14);
-    FUN_005dce29(this->field_34);
-    FUN_005cf2ff(this);
+    uVar2 = mem_handle_alloc(local_14);
+    this->data_handle = uVar2;
+    iVar3 = mem_handle_lock(this->data_handle);
+    thunk_file_obj_read(&local_ac,iVar3,local_14);
+    mem_handle_unlock(this->data_handle);
+    sprite_lock(this);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { FUN_005d7c6e((C_00421bf0_98 *)((iptr)&local_ac)); }
+    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -8482,45 +8482,45 @@ void __thiscall FUN_005ce9ef(C_00417f70_3c *this,iptr param_1)
 #undef local_8
 
 /* 005cebb4 auto */
-void __thiscall FUN_005cebb4(C_00417f70_3c *this,iptr param_1,iptr param_2)
+void __thiscall sprite_grab_surface_rect(Sprite *this,iptr param_1,iptr param_2)
 
 {
   u32 uVar1;
   
-  uVar1 = FUN_005cf64c(this,param_1,0xffffffff,param_2);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_surface(this,param_1,0xffffffff,param_2);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 
 /* 005cebec auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005cebec
-          (C_00417f70_3c *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
+sprite_encode_rect
+          (Sprite *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   u32 uVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_2,param_3,param_2 + param_4,param_5 + param_3);
-  uVar1 = FUN_005cf64c(this,param_1,0xffffffff,(iptr)&local_14);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_surface(this,param_1,0xffffffff,(iptr)&local_14);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 #undef local_14
 
 /* 005cec44 auto */
 void __thiscall
-FUN_005cec44(C_00417f70_3c *this,iptr param_1,uint param_2,iptr param_3)
+sprite_grab_rect(Sprite *this,iptr param_1,uint param_2,iptr param_3)
 
 {
   u32 uVar1;
   
-  uVar1 = FUN_005cf64c(this,param_1,param_2 & 0xff,param_3);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_surface(this,param_1,param_2 & 0xff,param_3);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 
@@ -8533,7 +8533,7 @@ FUN_005cec44(C_00417f70_3c *this,iptr param_1,uint param_2,iptr param_3)
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 FUN_005cec80
-          (C_00417f70_3c *this,C_004083b0_48 *param_1,uint param_2,undefined4 param_3,int param_4,
+          (Sprite *this,DibSurface *param_1,uint param_2,undefined4 param_3,int param_4,
           int param_5)
 
 {
@@ -8543,7 +8543,7 @@ FUN_005cec80
   u32 uVar4;
   undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  pcVar1 = (char *)FUN_005c19d3(param_1,param_4,param_5);
+  pcVar1 = (char *)surface_pixel_ptr(param_1,param_4,param_5);
   local_1c = param_4;
   for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + 1) {
     local_1c = local_1c + 1;
@@ -8556,19 +8556,19 @@ FUN_005cec80
   local_18 = local_1c + 1;
   local_1c = param_5;
   for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + iVar2) {
-    iVar2 = FUN_005c55d0(param_1);
+    iVar2 = surface_get_pitch(param_1);
     local_1c = local_1c + 1;
   }
   local_c = local_1c + -1;
   local_1c = param_5;
   for (local_8 = pcVar1; *local_8 != (char)param_3; local_8 = local_8 + -iVar3) {
-    iVar3 = FUN_005c55d0(param_1);
+    iVar3 = surface_get_pitch(param_1);
     local_1c = local_1c + -1;
   }
   local_14 = local_1c + 1;
-  uVar4 = FUN_005cf64c(this,(iptr)param_1,param_2 & 0xff,(iptr)&local_18);
-  this->field_34 = uVar4;
-  FUN_005cf2ff(this);
+  uVar4 = sprite_encode_from_surface(this,(iptr)param_1,param_2 & 0xff,(iptr)&local_18);
+  this->data_handle = uVar4;
+  sprite_lock(this);
   return;
 }
 #undef local_1c
@@ -8581,8 +8581,8 @@ FUN_005cec80
 /* 005cedad auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-FUN_005cedad
-          (C_00417f70_3c *this,iptr param_1,uint param_2,int param_3,int param_4,int param_5,
+sprite_grab_from_surface
+          (Sprite *this,iptr param_1,uint param_2,int param_3,int param_4,int param_5,
           int param_6)
 
 {
@@ -8590,22 +8590,22 @@ FUN_005cedad
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
-  uVar1 = FUN_005cf64c(this,param_1,param_2 & 0xff,(iptr)&local_14);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_surface(this,param_1,param_2 & 0xff,(iptr)&local_14);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 #undef local_14
 
 /* 005cee09 auto */
-void __thiscall FUN_005cee09(C_00417f70_3c *this,undefined4 param_1,iptr param_2)
+void __thiscall FUN_005cee09(Sprite *this,undefined4 param_1,iptr param_2)
 
 {
   u32 uVar1;
   
-  uVar1 = FUN_005cfdeb(this,param_1,0xffffffff,param_2);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_ddsurf(this,param_1,0xffffffff,param_2);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 
@@ -8613,30 +8613,30 @@ void __thiscall FUN_005cee09(C_00417f70_3c *this,undefined4 param_1,iptr param_2
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 FUN_005cee41
-          (C_00417f70_3c *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5)
+          (Sprite *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   u32 uVar1;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_2,param_3,param_4 + param_2,param_5 + param_3);
-  uVar1 = FUN_005cfdeb(this,param_1,0xffffffff,(iptr)&local_14);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_ddsurf(this,param_1,0xffffffff,(iptr)&local_14);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 #undef local_14
 
 /* 005cee99 auto */
 void __thiscall
-FUN_005cee99(C_00417f70_3c *this,undefined4 param_1,uint param_2,iptr param_3)
+FUN_005cee99(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
 
 {
   u32 uVar1;
   
-  uVar1 = FUN_005cfdeb(this,param_1,param_2 & 0xff,param_3);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_ddsurf(this,param_1,param_2 & 0xff,param_3);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 
@@ -8644,7 +8644,7 @@ FUN_005cee99(C_00417f70_3c *this,undefined4 param_1,uint param_2,iptr param_3)
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 FUN_005ceed5
-          (C_00417f70_3c *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5,
+          (Sprite *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5,
           int param_6)
 
 {
@@ -8652,250 +8652,250 @@ FUN_005ceed5
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
-  uVar1 = FUN_005cfdeb(this,param_1,param_2 & 0xff,(iptr)&local_14);
-  this->field_34 = uVar1;
-  FUN_005cf2ff(this);
+  uVar1 = sprite_encode_from_ddsurf(this,param_1,param_2 & 0xff,(iptr)&local_14);
+  this->data_handle = uVar1;
+  sprite_lock(this);
   return;
 }
 #undef local_14
 
 /* 005cef31 auto */
 iptr __thiscall
-FUN_005cef31
-          (C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+sprite_draw
+          (Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
 
 {
-  FUN_005d056c(this,param_1,param_2,0xffffffff,param_3,param_4);
+  sprite_blit_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4);
   return param_1;
 }
 
 /* 005cef66 auto */
 iptr __thiscall
-FUN_005cef66
-          (C_00417f70_3c *this,iptr param_1,iptr param_2,uint param_3,undefined4 param_4,
+sprite_draw_keyed
+          (Sprite *this,iptr param_1,iptr param_2,uint param_3,undefined4 param_4,
           undefined4 param_5)
 
 {
-  FUN_005d056c(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
+  sprite_blit_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
   return param_1;
 }
 
 /* 005cef9f auto */
 undefined4 __thiscall
 FUN_005cef9f
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005d080d(this,param_1,param_2,0xffffffff,param_3,param_4);
+  sprite_blit_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
   return param_1;
 }
 
 /* 005cefd4 auto */
 undefined4 __thiscall
 FUN_005cefd4
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
+          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
 {
-  FUN_005d080d(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
+  sprite_blit_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
   return param_1;
 }
 
 /* 005cf00d auto */
 undefined4 __thiscall
 FUN_005cf00d
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005d0aac(this,param_1,param_2,0xffffffff,param_3,param_4);
+  sprite_blit_xyscale_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4);
   return param_1;
 }
 
 /* 005cf042 auto */
 undefined4 __thiscall
 FUN_005cf042
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
+          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
 {
-  FUN_005d0aac(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
+  sprite_blit_xyscale_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
   return param_1;
 }
 
 /* 005cf07b auto */
 undefined4 __thiscall
 FUN_005cf07b
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005d0dbf(this,param_1,param_2,0xffffffff,param_3,param_4);
+  sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
   return param_1;
 }
 
 /* 005cf0b0 auto */
 undefined4 __thiscall
 FUN_005cf0b0
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
+          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5)
 
 {
-  FUN_005d0dbf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
+  sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
   return param_1;
 }
 
 /* 005cf0e9 auto */
 undefined4 __thiscall
 FUN_005cf0e9
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
+          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6)
 
 {
-  FUN_005d10cd(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
+  sprite_blit_silhouette_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
   return param_1;
 }
 
 /* 005cf126 auto */
 iptr __thiscall
-FUN_005cf126
-          (C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,
+sprite_draw_silhouette
+          (Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,
           undefined4 param_5)
 
 {
-  FUN_005d10cd(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
+  sprite_blit_silhouette_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
   return param_1;
 }
 
 /* 005cf15f auto */
 undefined4 __thiscall
 FUN_005cf15f
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
+          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
           ,undefined4 param_5,undefined4 param_6)
 
 {
-  FUN_005d1372(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
+  sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
   return param_1;
 }
 
 /* 005cf19c auto */
 undefined4 __thiscall
 FUN_005cf19c
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4,undefined4 param_5)
 
 {
-  FUN_005d1372(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
+  sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
   return param_1;
 }
 
 /* 005cf1d5 auto */
 undefined4 __thiscall
 FUN_005cf1d5
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005d056c(this,param_1,param_2,0xfffffffe,param_3,param_4);
+  sprite_blit_to_surface(this,param_1,param_2,0xfffffffe,param_3,param_4);
   return param_1;
 }
 
 /* 005cf20a auto */
 undefined4 __thiscall
 FUN_005cf20a
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
           undefined4 param_4)
 
 {
-  FUN_005d080d(this,param_1,param_2,0xfffffffe,param_3,param_4);
+  sprite_blit_to_ddsurf(this,param_1,param_2,0xfffffffe,param_3,param_4);
   return param_1;
 }
 
 /* 005cf23f auto */
-void __thiscall FUN_005cf23f(C_00417f70_3c *this,iptr param_1)
+void __thiscall sprite_merge_onto(Sprite *this,iptr param_1)
 
 {
-  FUN_005d1612(this,(iptr)this,param_1,0,0,0);
+  sprite_merge_at(this,(iptr)this,param_1,0,0,0);
   return;
 }
 
 /* 005cf26d auto */
 void __thiscall
 FUN_005cf26d
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
-  FUN_005d1612(this,(iptr)this,param_1,0,param_2,param_3);
+  sprite_merge_at(this,(iptr)this,param_1,0,param_2,param_3);
   return;
 }
 
 /* 005cf29f auto */
-void __thiscall FUN_005cf29f(C_00417f70_3c *this,undefined4 param_1)
+void __thiscall FUN_005cf29f(Sprite *this,undefined4 param_1)
 
 {
-  FUN_005d1612(this,(iptr)this,param_1,1,0,0);
+  sprite_merge_at(this,(iptr)this,param_1,1,0,0);
   return;
 }
 
 /* 005cf2cd auto */
 void __thiscall
 FUN_005cf2cd
-          (C_00417f70_3c *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
 
 {
-  FUN_005d1612(this,(iptr)this,param_1,1,param_2,param_3);
+  sprite_merge_at(this,(iptr)this,param_1,1,param_2,param_3);
   return;
 }
 
 /* 005cf2ff auto */
-void __thiscall FUN_005cf2ff(C_00417f70_3c *this)
+void __thiscall sprite_lock(Sprite *this)
 
 {
   uptr uVar1;
   
-  if (this->field_38 == 0) {
-    uVar1 = FUN_005dcdf9(this->field_34);
-    this->field_38 = uVar1;
+  if (this->data_ptr == 0) {
+    uVar1 = mem_handle_lock(this->data_handle);
+    this->data_ptr = uVar1;
   }
   return;
 }
 
 /* 005cf337 auto */
-void __thiscall FUN_005cf337(C_00417f70_3c *this)
+void __thiscall sprite_unlock(Sprite *this)
 
 {
   uptr uVar1;
   
-  if (this->field_38 != 0) {
-    uVar1 = FUN_005dce29(this->field_34);
-    this->field_38 = uVar1;
+  if (this->data_ptr != 0) {
+    uVar1 = mem_handle_unlock(this->data_handle);
+    this->data_ptr = uVar1;
   }
   return;
 }
 
 /* 005cf36f auto */
-bool __thiscall FUN_005cf36f(C_00417f70_3c *this)
+bool __thiscall sprite_has_data(Sprite *this)
 
 {
-  return this->field_38 != 0;
+  return this->data_ptr != 0;
 }
 
 /* 005cf39b auto */
-void __thiscall FUN_005cf39b(C_005cf39b *this,u32 param_1,u32 param_2)
+void __thiscall sprite_set_origin(SpriteOriginSetView *this,u32 param_1,u32 param_2)
 
 {
-  this->field_20 = param_1;
-  this->field_24 = param_2;
+  this->origin_x = param_1;
+  this->origin_y = param_2;
   return;
 }
 
 /* 005cf3c5 auto */
-void __thiscall FUN_005cf3c5(C_005cf3c5 *this,iptr param_1,iptr param_2)
+void __thiscall sprite_get_origin(SpriteOriginGetView *this,iptr param_1,iptr param_2)
 
 {
-  *(u32 *)param_1 = this->field_20;
-  *(u32 *)param_2 = this->field_24;
+  *(u32 *)param_1 = this->origin_x;
+  *(u32 *)param_2 = this->origin_y;
   return;
 }
 
@@ -8928,7 +8928,7 @@ void __thiscall FUN_005cf439(C_005cf439 *this,u32 *param_1,u32 *param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-FUN_005cf467(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
+sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 {
   int iVar1;
@@ -8936,13 +8936,13 @@ FUN_005cf467(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
   char cVar3;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  cVar3 = FUN_005cf36f(this);
+  cVar3 = sprite_has_data(this);
   if (cVar3 == '\0') {
-    FUN_005cf2ff(this);
-    FUN_005d225b(ADDR(0x637ff8, ((u8 *)&g.d_00637ff8)));
+    sprite_lock(this);
+    dbg_log(ADDR(0x637ff8, ((u8 *)&g.d_00637ff8)));
   }
-  local_8 = thunk_FUN_00407fc0((iptr)&this->field_10);
-  local_14 = (char *)this->field_38;
+  local_8 = thunk_rect_height((iptr)&this->bounds_rect);
+  local_14 = (char *)this->data_ptr;
   while (iVar1 = local_8 + -1, local_8 != 0) {
     piVar2 = (int *)(local_14 + 4);
     local_14 = local_14 + 8;
@@ -8956,7 +8956,7 @@ FUN_005cf467(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
     }
   }
   if (cVar3 == '\0') {
-    FUN_005cf337(this);
+    sprite_unlock(this);
   }
   return;
 }
@@ -8969,7 +8969,7 @@ FUN_005cf467(C_00417f70_3c *this,undefined4 param_1,undefined4 param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-FUN_005cf541(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3)
+FUN_005cf541(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
 
 {
   int iVar1;
@@ -8977,13 +8977,13 @@ FUN_005cf541(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3)
   char cVar3;
   undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  cVar3 = FUN_005cf36f(this);
+  cVar3 = sprite_has_data(this);
   if (cVar3 == '\0') {
-    FUN_005cf2ff(this);
-    FUN_005d225b(ADDR(0x638024, ((u8 *)&g.d_00638024)));
+    sprite_lock(this);
+    dbg_log(ADDR(0x638024, ((u8 *)&g.d_00638024)));
   }
-  local_8 = thunk_FUN_00407fc0((iptr)&this->field_10);
-  local_14 = (byte *)this->field_38;
+  local_8 = thunk_rect_height((iptr)&this->bounds_rect);
+  local_14 = (byte *)this->data_ptr;
   while (iVar1 = local_8 + -1, local_8 != 0) {
     pbVar2 = local_14 + 4;
     local_14 = local_14 + 8;
@@ -8996,11 +8996,11 @@ FUN_005cf541(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3)
       local_c = local_c + -1;
     }
   }
-  if (-1 < (int)((uint)this->field_30 - param_2)) {
-    this->field_30 = *(u8 *)(((uint)this->field_30 - param_2) + param_1);
+  if (-1 < (int)((uint)this->key_color - param_2)) {
+    this->key_color = *(u8 *)(((uint)this->key_color - param_2) + param_1);
   }
   if (cVar3 == '\0') {
-    FUN_005cf337(this);
+    sprite_unlock(this);
   }
   return;
 }
@@ -9031,7 +9031,7 @@ FUN_005cf541(C_00417f70_3c *this,iptr param_1,iptr param_2,undefined4 param_3)
 #define local_c (*(int *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(void * *)(frame_ + FRAME_OFF(96)))
 int __thiscall
-FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
+sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
 
 {
   char cVar1;
@@ -9050,17 +9050,17 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
   local_c = 0;
   local_24 = local_64.right - local_64.left;
   local_50 = local_64.bottom - local_64.top;
-  cVar1 = FUN_005c54f0((C_004083b0_48 *)param_1);
+  cVar1 = surface_is_locked((DibSurface *)param_1);
   if (cVar1 == '\0') {
-    FUN_005d225b(ADDR(0x638050, ((u8 *)&g.d_00638050)));
+    dbg_log(ADDR(0x638050, ((u8 *)&g.d_00638050)));
     local_34 = 0;
-    FUN_005c01c1((C_004083b0_48 *)param_1);
+    surface_lock((DibSurface *)param_1);
   }
-  local_2c = (u8 *)FUN_005c19d3((C_004083b0_48 *)param_1,local_64.left,local_64.top);
+  local_2c = (u8 *)surface_pixel_ptr((DibSurface *)param_1,local_64.left,local_64.top);
   if (local_2c == (u8 *)0x0) {
-    FUN_005d22b7(ADDR(0x63807c, ((u8 *)&g.d_0063807c)),local_64.left,local_64.top);
+    dbg_logf_int2(ADDR(0x63807c, ((u8 *)&g.d_0063807c)),local_64.left,local_64.top);
     if (local_34 == 0) {
-      FUN_005c02e0((C_004083b0_48 *)param_1);
+      surface_unlock((DibSurface *)param_1);
     }
     local_30 = 0;
   }
@@ -9078,7 +9078,7 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
         if ((*local_54 != local_40) || (param_2 == -2)) {
           local_18 = local_44;
           local_54 = local_54 + 1;
-          local_2c = (u8 *)FUN_005c5710((C_004083b0_48 *)param_1,(iptr)local_2c);
+          local_2c = (u8 *)surface_prev_row((DibSurface *)param_1,(iptr)local_2c);
           local_44 = local_50;
           local_48 = 0;
           break;
@@ -9086,11 +9086,11 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
         local_54 = local_54 + 1;
       }
       local_44 = local_44 + 1;
-      local_2c = (u8 *)FUN_005c5610((C_004083b0_48 *)param_1,(iptr)local_2c);
+      local_2c = (u8 *)surface_next_row((DibSurface *)param_1,(iptr)local_2c);
     }
     if (local_48 == 0) {
-      local_28 = (u8 *)FUN_005c19d3
-                                 ((C_004083b0_48 *)param_1,local_64.left,
+      local_28 = (u8 *)surface_pixel_ptr
+                                 ((DibSurface *)param_1,local_64.left,
                                   local_64.top + local_50 + -1);
       local_44 = 0;
       while (local_44 < local_50) {
@@ -9105,13 +9105,13 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
           local_54 = local_54 + 1;
         }
         local_44 = local_44 + 1;
-        local_28 = (u8 *)FUN_005c5710((C_004083b0_48 *)param_1,(iptr)local_28);
+        local_28 = (u8 *)surface_prev_row((DibSurface *)param_1,(iptr)local_28);
       }
       local_8 = operator_new(0xa00);
       local_20 = operator_new(0xa00);
       local_38 = operator_new(0xa00);
       if (((local_8 == (void *)0x0) || (local_20 == (void *)0x0)) || (local_38 == (void *)0x0)) {
-        FUN_005d225b(ADDR(0x6380b0, ((u8 *)&g.d_006380b0)));
+        dbg_log(ADDR(0x6380b0, ((u8 *)&g.d_006380b0)));
         local_30 = 0;
       }
       else {
@@ -9149,52 +9149,52 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
                        *(int *)((int)local_20 + local_44 * 4);
           }
           local_44 = local_44 + 1;
-          local_2c = (u8 *)FUN_005c5610((C_004083b0_48 *)param_1,(iptr)local_2c);
+          local_2c = (u8 *)surface_next_row((DibSurface *)param_1,(iptr)local_2c);
         }
-        if (this->field_38 != 0) {
-          FUN_005cf337(this);
+        if (this->data_ptr != 0) {
+          sprite_unlock(this);
         }
-        if (this->field_34 != 0) {
-          uVar4 = FUN_005dce96(this->field_34);
-          this->field_34 = uVar4;
+        if (this->data_handle != 0) {
+          uVar4 = mem_handle_free(this->data_handle);
+          this->data_handle = uVar4;
         }
         local_c = local_c + 8;
-        local_30 = FUN_005dce4f(local_c);
+        local_30 = mem_handle_alloc(local_c);
         if (local_30 == 0) {
-          FUN_005d2279(ADDR(0x6380ec, ((u8 *)&g.d_006380ec)),local_c);
+          dbg_logf(ADDR(0x6380ec, ((u8 *)&g.d_006380ec)),local_c);
           if (local_34 == 0) {
-            FUN_005c02e0((C_004083b0_48 *)param_1);
+            surface_unlock((DibSurface *)param_1);
           }
           operator_delete(local_8);
           operator_delete(local_20);
           operator_delete(local_38);
         }
         else {
-          SetRect((LPRECT)&this->field_10,local_1c,local_18,local_14,local_10);
-          iVar2 = thunk_FUN_00407fc0((iptr)&local_64);
-          iVar3 = thunk_FUN_00407f90((iptr)&local_64);
+          SetRect((LPRECT)&this->bounds_rect,local_1c,local_18,local_14,local_10);
+          iVar2 = thunk_rect_height((iptr)&local_64);
+          iVar3 = thunk_rect_width((iptr)&local_64);
           SetRect((LPRECT)this,0,0,iVar3,iVar2);
           if (param_2 == -2) {
-            this->field_30 = '\0';
+            this->key_color = '\0';
           }
           else {
-            this->field_30 = local_40;
+            this->key_color = local_40;
           }
-          this->field_20 = 0;
-          this->field_24 = 0;
-          local_4c = (undefined4 *)FUN_005dcdf9(local_30);
+          this->offset_x = 0;
+          this->full_height = 0;
+          local_4c = (undefined4 *)mem_handle_lock(local_30);
           for (local_44 = 0; local_44 < local_10 - local_18; local_44 = local_44 + 1) {
             *local_4c = *(undefined4 *)((int)local_20 + local_44 * 4);
             local_4c[1] = *(undefined4 *)((int)local_38 + local_44 * 4);
             local_4c = local_4c + 2;
-            FUN_005dced3(*(iptr *)((int)local_8 + local_44 * 4),(iptr)local_4c,
+            mem_move_src_dst(*(iptr *)((int)local_8 + local_44 * 4),(iptr)local_4c,
                          *(undefined4 *)((int)local_38 + local_44 * 4));
             local_4c = (undefined4 *)((int)local_4c + *(int *)((int)local_38 + local_44 * 4));
           }
           *local_4c = 0;
-          local_4c = (undefined4 *)FUN_005dce29(local_30);
+          local_4c = (undefined4 *)mem_handle_unlock(local_30);
           if (local_34 == 0) {
-            FUN_005c02e0((C_004083b0_48 *)param_1);
+            surface_unlock((DibSurface *)param_1);
           }
           operator_delete(local_8);
           operator_delete(local_20);
@@ -9203,22 +9203,22 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
       }
     }
     else {
-      SetRect((LPRECT)&this->field_10,0,0,0,0);
-      iVar2 = thunk_FUN_00407fc0((iptr)&local_64);
-      iVar3 = thunk_FUN_00407f90((iptr)&local_64);
+      SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
+      iVar2 = thunk_rect_height((iptr)&local_64);
+      iVar3 = thunk_rect_width((iptr)&local_64);
       SetRect((LPRECT)this,0,0,iVar3,iVar2);
       if (param_2 == -2) {
-        this->field_30 = '\0';
+        this->key_color = '\0';
       }
       else {
-        this->field_30 = local_40;
+        this->key_color = local_40;
       }
-      this->field_20 = 0;
-      this->field_24 = 0;
+      this->offset_x = 0;
+      this->full_height = 0;
       if (local_34 == 0) {
-        FUN_005c02e0((C_004083b0_48 *)param_1);
+        surface_unlock((DibSurface *)param_1);
       }
-      this->field_38 = 0;
+      this->data_ptr = 0;
       local_30 = 0;
     }
   }
@@ -9270,7 +9270,7 @@ FUN_005cf64c(C_00417f70_3c *this,iptr param_1,int param_2,iptr param_3)
 #define local_c (*(void * *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
 int __thiscall
-FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
+sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param_3)
 
 {
   int iVar1;
@@ -9279,7 +9279,7 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
   undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
-  local_8 = FUN_005e6188(param_1);
+  local_8 = ddsurf_lock(param_1);
   if (local_8 == 0) {
     local_34 = 0;
   }
@@ -9294,11 +9294,11 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
     local_10 = 0;
     local_28 = local_68.right - local_68.left;
     local_54 = local_68.bottom - local_68.top;
-    local_30 = (u8 *)FUN_005e7028
-                               ((C_005e658a *)param_1,local_68.left,local_68.top,local_8);
+    local_30 = (u8 *)ddsurf_pixel_ptr
+                               ((DDSurfacePixelView *)param_1,local_68.left,local_68.top,local_8);
     if (local_30 == (u8 *)0x0) {
-      FUN_005d22b7(ADDR(0x638124, ((u8 *)&g.d_00638124)),local_68.left,local_68.top);
-      FUN_005c56c0(param_1);
+      dbg_logf_int2(ADDR(0x638124, ((u8 *)&g.d_00638124)),local_68.left,local_68.top);
+      ddsurf_unlock(param_1);
       local_34 = 0;
     }
     else {
@@ -9315,7 +9315,7 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
           if ((*local_58 != local_44) || (param_2 == -2)) {
             local_1c = local_48;
             local_58 = local_58 + 1;
-            local_30 = (u8 *)FUN_005d1f20((C_005d1f20 *)param_1,(iptr)local_30);
+            local_30 = (u8 *)ddsurf_row_prev((DDSurfaceRowPrevView *)param_1,(iptr)local_30);
             local_48 = local_54;
             local_4c = 0;
             break;
@@ -9323,11 +9323,11 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
           local_58 = local_58 + 1;
         }
         local_48 = local_48 + 1;
-        local_30 = (u8 *)FUN_005d1ef0((C_005d1ef0 *)param_1,(iptr)local_30);
+        local_30 = (u8 *)ddsurf_row_next((DDSurfaceRowNextView *)param_1,(iptr)local_30);
       }
       if (local_4c == 0) {
-        local_2c = (u8 *)FUN_005e7028
-                                   ((C_005e658a *)param_1,local_68.left,local_68.top + local_54 + -1
+        local_2c = (u8 *)ddsurf_pixel_ptr
+                                   ((DDSurfacePixelView *)param_1,local_68.left,local_68.top + local_54 + -1
                                     ,local_8);
         local_48 = 0;
         while (local_48 < local_54) {
@@ -9342,14 +9342,14 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
             local_58 = local_58 + 1;
           }
           local_48 = local_48 + 1;
-          local_2c = (u8 *)FUN_005d1f20((C_005d1f20 *)param_1,(iptr)local_2c);
+          local_2c = (u8 *)ddsurf_row_prev((DDSurfaceRowPrevView *)param_1,(iptr)local_2c);
         }
         local_c = operator_new(0xa00);
         local_24 = operator_new(0xa00);
         local_3c = operator_new(0xa00);
         if (((local_c == (void *)0x0) || (local_24 == (void *)0x0)) || (local_3c == (void *)0x0)) {
-          FUN_005d225b(ADDR(0x638158, ((u8 *)&g.d_00638158)));
-          FUN_005c56c0(param_1);
+          dbg_log(ADDR(0x638158, ((u8 *)&g.d_00638158)));
+          ddsurf_unlock(param_1);
           local_34 = 0;
         }
         else {
@@ -9387,70 +9387,70 @@ FUN_005cfdeb(C_00417f70_3c *this,C_005c5660 *param_1,int param_2,iptr param_3)
                          *(int *)((int)local_24 + local_48 * 4);
             }
             local_48 = local_48 + 1;
-            local_30 = (u8 *)FUN_005d1ef0((C_005d1ef0 *)param_1,(iptr)local_30);
+            local_30 = (u8 *)ddsurf_row_next((DDSurfaceRowNextView *)param_1,(iptr)local_30);
           }
-          if (this->field_38 != 0) {
-            FUN_005cf337(this);
+          if (this->data_ptr != 0) {
+            sprite_unlock(this);
           }
-          if (this->field_34 != 0) {
-            uVar3 = FUN_005dce96(this->field_34);
-            this->field_34 = uVar3;
+          if (this->data_handle != 0) {
+            uVar3 = mem_handle_free(this->data_handle);
+            this->data_handle = uVar3;
           }
           local_10 = local_10 + 8;
-          local_34 = FUN_005dce4f(local_10);
+          local_34 = mem_handle_alloc(local_10);
           if (local_34 == 0) {
-            FUN_005d2279(ADDR(0x638194, ((u8 *)&g.d_00638194)),local_10);
-            FUN_005c56c0(param_1);
+            dbg_logf(ADDR(0x638194, ((u8 *)&g.d_00638194)),local_10);
+            ddsurf_unlock(param_1);
             operator_delete(local_c);
             operator_delete(local_24);
             operator_delete(local_3c);
           }
           else {
-            SetRect((LPRECT)&this->field_10,local_20,local_1c,local_18,local_14);
-            iVar1 = thunk_FUN_00407fc0((iptr)&local_68);
-            iVar2 = thunk_FUN_00407f90((iptr)&local_68);
+            SetRect((LPRECT)&this->bounds_rect,local_20,local_1c,local_18,local_14);
+            iVar1 = thunk_rect_height((iptr)&local_68);
+            iVar2 = thunk_rect_width((iptr)&local_68);
             SetRect((LPRECT)this,0,0,iVar2,iVar1);
             if (param_2 == -2) {
-              this->field_30 = '\0';
+              this->key_color = '\0';
             }
             else {
-              this->field_30 = local_44;
+              this->key_color = local_44;
             }
-            this->field_20 = 0;
-            this->field_24 = 0;
-            local_50 = (undefined4 *)FUN_005dcdf9(local_34);
+            this->offset_x = 0;
+            this->full_height = 0;
+            local_50 = (undefined4 *)mem_handle_lock(local_34);
             for (local_48 = 0; local_48 < local_14 - local_1c; local_48 = local_48 + 1) {
               *local_50 = *(undefined4 *)((int)local_24 + local_48 * 4);
               local_50[1] = *(undefined4 *)((int)local_3c + local_48 * 4);
               local_50 = local_50 + 2;
-              FUN_005dced3(*(iptr *)((int)local_c + local_48 * 4),(iptr)local_50,
+              mem_move_src_dst(*(iptr *)((int)local_c + local_48 * 4),(iptr)local_50,
                            *(undefined4 *)((int)local_3c + local_48 * 4));
               local_50 = (undefined4 *)((int)local_50 + *(int *)((int)local_3c + local_48 * 4));
             }
             *local_50 = 0;
-            local_50 = (undefined4 *)FUN_005dce29(local_34);
+            local_50 = (undefined4 *)mem_handle_unlock(local_34);
             operator_delete(local_c);
             operator_delete(local_24);
             operator_delete(local_3c);
-            FUN_005c56c0(param_1);
+            ddsurf_unlock(param_1);
           }
         }
       }
       else {
-        SetRect((LPRECT)&this->field_10,0,0,0,0);
-        iVar1 = thunk_FUN_00407fc0((iptr)&local_68);
-        iVar2 = thunk_FUN_00407f90((iptr)&local_68);
+        SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
+        iVar1 = thunk_rect_height((iptr)&local_68);
+        iVar2 = thunk_rect_width((iptr)&local_68);
         SetRect((LPRECT)this,0,0,iVar2,iVar1);
         if (param_2 == -2) {
-          this->field_30 = '\0';
+          this->key_color = '\0';
         }
         else {
-          this->field_30 = local_44;
+          this->key_color = local_44;
         }
-        this->field_20 = 0;
-        this->field_24 = 0;
-        FUN_005c56c0(param_1);
-        this->field_38 = 0;
+        this->offset_x = 0;
+        this->full_height = 0;
+        ddsurf_unlock(param_1);
+        this->data_ptr = 0;
         local_34 = 0;
       }
     }

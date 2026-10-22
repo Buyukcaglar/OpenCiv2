@@ -4727,7 +4727,7 @@ int __cdecl _fseek(FILE *_File,long _Offset,int _Origin)
     return iVar2;
   }
   if (((_File->_flag & 0x83) == 0) || (((_Origin != 0 && (_Origin != 1)) && (_Origin != 2)))) {
-    iptr_00639f14 = 0x16;
+    crt_errno = 0x16;
     iVar2 = -1;
   }
   else {
@@ -4800,7 +4800,7 @@ long __cdecl _ftell(FILE *_File)
     local_1c = (int)_File->_ptr - (int)_File->_base;
     if ((_File->_flag & 3) == 0) {
       if ((_File->_flag & 0x80) == 0) {
-        iptr_00639f14 = 0x16;
+        crt_errno = 0x16;
         return -1;
       }
     }
@@ -5204,7 +5204,7 @@ void __cdecl entry(void)
     }
     uVar5 = 0;
     pHVar4 = GetModuleHandleA((LPCSTR)0x0);
-    iVar3 = thunk_FUN_0055add0(pHVar4,uVar5,local_68,local_6c);
+    iVar3 = thunk_win_main(pHVar4,uVar5,local_68,local_6c);
                     /* WARNING: Subroutine does not return */
     _exit(iVar3);
   }
@@ -5291,7 +5291,7 @@ char * __cdecl __getdcwd(int _Drive,char *_DstBuf,int _SizeInBytes)
   else {
     iVar1 = __validdrive(_Drive);
     if (iVar1 == 0) {
-      iptr_00639f14 = 0xd;
+      crt_errno = 0xd;
       DAT_00639f18 = 0xf;
       return (char *)0x0;
     }
@@ -5313,12 +5313,12 @@ char * __cdecl __getdcwd(int _Drive,char *_DstBuf,int _SizeInBytes)
       }
       local_8 = _malloc(_Size);
       if (local_8 == (char *)0x0) {
-        iptr_00639f14 = 0xc;
+        crt_errno = 0xc;
         return (char *)0x0;
       }
     }
     else if (_SizeInBytes < (int)local_14) {
-      iptr_00639f14 = 0x22;
+      crt_errno = 0x22;
       return (char *)0x0;
     }
     pcVar2 = (char *)FUN_005f22d0(local_8,local_118);
@@ -7150,7 +7150,7 @@ int __cdecl __close(int _FileHandle)
   if ((DAT_006e6b2c <= (uint)_FileHandle) ||
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
                 (_FileHandle & 0x1fU) * 8) & 1) == 0)) {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     return -1;
   }
@@ -8201,7 +8201,7 @@ int __cdecl __read(int _FileHandle,void *_DstBuf,uint _MaxCharCount)
       if (BVar1 == 0) {
         local_c = GetLastError();
         if (local_c == 5) {
-          iptr_00639f14 = 9;
+          crt_errno = 9;
           local_1c = -1;
           DAT_00639f18 = 5;
         }
@@ -8312,7 +8312,7 @@ int __cdecl __read(int _FileHandle,void *_DstBuf,uint _MaxCharCount)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     local_1c = -1;
   }
@@ -8412,7 +8412,7 @@ int __cdecl __write(int _FileHandle,void *_Buf,uint _MaxCharCount)
         if (local_10 == 0) {
           if (((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4
                          + (_FileHandle & 0x1fU) * 8) & 0x40) == 0) || (*(char *)_Buf != '\x1a')) {
-            iptr_00639f14 = 0x1c;
+            crt_errno = 0x1c;
             DAT_00639f18 = 0;
             local_424 = -1;
           }
@@ -8422,7 +8422,7 @@ int __cdecl __write(int _FileHandle,void *_Buf,uint _MaxCharCount)
         }
         else {
           if (local_10 == 5) {
-            iptr_00639f14 = 9;
+            crt_errno = 9;
             DAT_00639f18 = local_10;
           }
           else {
@@ -8437,7 +8437,7 @@ int __cdecl __write(int _FileHandle,void *_Buf,uint _MaxCharCount)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     local_424 = -1;
   }
@@ -8473,21 +8473,21 @@ void __cdecl __dosmaperr(ulong param_1)
     if (0x2c < local_8) {
       if ((param_1 < 0x13) || (0x24 < param_1)) {
         if ((param_1 < 0xbc) || (0xca < param_1)) {
-          iptr_00639f14 = 0x16;
+          crt_errno = 0x16;
         }
         else {
-          iptr_00639f14 = 8;
+          crt_errno = 8;
         }
       }
       else {
-        iptr_00639f14 = 0xd;
+        crt_errno = 0xd;
       }
       return;
     }
     if (*(ulong *)(&DAT_0063a2b8 + local_8 * 8) == param_1) break;
     local_8 = local_8 + 1;
   }
-  iptr_00639f14 = *(iptr *)(&DAT_0063a2bc + local_8 * 8);
+  crt_errno = *(iptr *)(&DAT_0063a2bc + local_8 * 8);
   return;
 }
 #undef DAT_00639f18
@@ -9131,7 +9131,7 @@ int __cdecl __heapchk(void)
     DVar3 = GetLastError();
     if (DVar3 == 0x78) {
       DAT_00639f18 = 0x78;
-      iptr_00639f14 = 0x28;
+      crt_errno = 0x28;
     }
     else {
       local_8 = -4;
@@ -9893,7 +9893,7 @@ long __cdecl __lseek(int _FileHandle,long _Offset,int _Origin)
                 (_FileHandle & 0x1fU) * 8) & 1) != 0)) {
     hFile = (HANDLE)__get_osfhandle(_FileHandle);
     if (hFile == (HANDLE)0xffffffff) {
-      iptr_00639f14 = 9;
+      crt_errno = 9;
       DVar1 = 0xffffffff;
     }
     else {
@@ -9917,7 +9917,7 @@ long __cdecl __lseek(int _FileHandle,long _Offset,int _Origin)
     }
   }
   else {
-    iptr_00639f14 = 9;
+    crt_errno = 9;
     DAT_00639f18 = 0;
     DVar1 = 0xffffffff;
   }
