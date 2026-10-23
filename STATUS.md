@@ -73,8 +73,9 @@ message by message and clock event by clock event.
 * **Names and types.**  Everything the game code (src/auto, but for the
   MSVC runtime) refers to has a name: every function, global and class
   (no FUN_, DAT_ or C_ placeholders left), every parameter and local
-  (no param_N, iVarN or local_XX: about 14,000 named by tools/name_vars.py
-  from proposals per slice of functions), every class and struct field it
+  (no param_N, iVarN, pCVarN or local_XX: about 14,500 named by
+  tools/name_vars.py from proposals per slice of functions, src/game
+  included), every goto label (no LAB_ADDR), every class and struct field it
   accesses by name (tools/field_uses.py dossiers, tools/apply_field_names.py),
   and Ghidra's undefinedN types are explicit integers (i8, i16, i32, i64).
   Each rename was checked by building: the Windows build stayed byte for byte
@@ -102,9 +103,11 @@ message by message and clock event by clock event.
   with AddressSanitizer over every replay (build_native.py --target
   linux32asan; learned extents in re/data_extents.tsv), by checking that
   every initial value and every data pointer matches the original image, and
-  by the replays.  Untested code may still rely on two variables being
-  adjacent; gamedata.c keeps them in the original order
-  (-fno-toplevel-reorder in the gcc builds).
+  by the replays: every replay runs clean under AddressSanitizer.  Untested
+  code may still rely on two variables being adjacent; gamedata.c keeps
+  them in the original order (-fno-toplevel-reorder in the gcc builds).  A
+  DIB's pixels get a few bytes of slack as on Windows (the GIF decoder
+  writes one byte past the last row).
 * Coverage of the comparison: the scripts execute 2,295 of the 3,417
   compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

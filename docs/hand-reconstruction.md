@@ -28,8 +28,8 @@ moved between the two freely.
   past its first element), declare them as one struct or array.  The
   AddressSanitizer build finds such places:
   `tools/build_native.py --target linux32asan`, then run the replays with it.
-* **Register arguments.**  A few functions take an argument in a register
-  (`in_EAX`, `in_ECX`, `in_AL`): give the C function an explicit parameter.
+* **Register arguments** (`in_EAX`, `in_ECX`, `in_AL`) are usually leftover
+  register contents, not arguments: see src/game/regargs.c.
 * **Unwind funclets / EBP-relative code** (`unaff_EBP`): MSVC emits small
   `call $L` blocks that run with the *caller's* EBP to destroy locals;
   translate them as plain destructor calls on the caller's locals.
