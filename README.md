@@ -49,33 +49,6 @@ python3 tools/build_port.py     # -> build/civ2-port  (several minutes)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
-* The game uses the system's own window and menu bar: on macOS it fills the
-  screen below the menu bar, its menus in the menu bar; on Windows a
-  maximized window with a Windows menu bar.  `CIV2_WINDOW=1
-  tools/run-civ2.sh` — a window; `CIV2_FULLSCREEN=1` — full screen (on macOS
-  the menu bar then shows at the top edge, or always with System Settings ›
-  Control Center › Automatically hide and show the menu bar: Never).  Elsewhere (Linux), or with
-  `CIV2_CLASSIC=1`, the menu bar and window caption are drawn as the
-  original's and the game's desktop fills the screen; there `CIV2_WINDOW=1`
-  gives the 1024x768 desktop in a window (`CIV2_SCALE=2`: twice the size).
-  The game's panels (map, world, status) stay where they are; the original
-  lets them be dragged and sized by their edges (`CIV2_CLASSIC=1`, or View ›
-  Arrange Windows to put them back).  Replays (the comparison with the
-  original) always draw everything as the original.
-* On Windows the game logs to `civ2-log.txt` beside the program (a video it
-  could not play, for example).
-* The game saves into its directory (`~/Civ2`).
-* The build links with the Command Line Tools' clang when it is installed
-  (`CC=...` picks another compiler).  "unknown architecture" errors in an SDK
-  `.tbd` file mean the compiler and the SDK are from different Xcode versions.
-
-How the portable build works (all three systems): the decompiled code assumes 32-bit pointers, so
-rather than compile it for 64-bit, `build_port.py` compiles the game and the
-platform layer to a wasm32 module (the original's data model), translates that
-to C with wasm2c and compiles the result natively with the SDL2 host
-(`src/host`).  Steps: `module` → `c` → `exe`; the `c` step's output is plain C
-(`pack` bundles it with the data for a machine without wasi-sdk/wabt).
-
 ### Linux
 
 Same as macOS with `libsdl2-dev` and `python3-pefile` from the package manager.
