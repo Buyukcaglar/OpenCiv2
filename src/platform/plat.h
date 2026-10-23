@@ -49,6 +49,10 @@ void crt_exit_process(int code);       /* ExitProcess: exit without the game's a
 extern int plat_replay;                 /* deterministic replay active */
 extern int plat_normal_desktop;         /* windows framed and captioned as on Windows; 0: as on the
                                            reference (Wine, no window manager), for comparisons */
+extern int plat_native_menu;            /* the main window's menu bar is the host's (host_menu_*),
+                                           the main window without caption or frame of its own */
+extern int plat_lock_panels;            /* the game's panels (child windows: map, world, status) not
+                                           moved or sized by the mouse, as the original allows */
 
 /* ---- regions: lists of rectangles ---- */
 
@@ -219,6 +223,8 @@ int menu_bar_height(Window *w);
 void menu_bar_paint(Window *w);
 int menu_bar_click(Window *w, int x, int y);
 int menu_key(Window *w, int vk);
+void menu_native_sync(void);            /* the menu bar to the host, if it changed */
+void menu_native_command(int id);       /* the host's menu bar: an item chosen */
 
 /* ---- builtin controls ---- */
 

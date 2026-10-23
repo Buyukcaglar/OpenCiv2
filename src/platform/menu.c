@@ -16,12 +16,20 @@ typedef struct { int n, cap; MenuItem *items; } Menu;
 
 static Menu *menu_get(HMENU h) { return obj_get(h, OBJ_MENU); }
 
+/* The host's menu bar (plat_native_menu): the menu of native_owner, sent
+ * again whenever a menu changes. */
+int plat_native_menu;
+static int native_dirty = 1, native_enabled = -1;
+static HWND native_owner;
+#define CHANGED() (native_dirty = 1)
+
 HMENU WINAPI CreateMenu(void) { API_TRACE(); return obj_new(OBJ_MENU, calloc(1, sizeof(Menu))); }
 HMENU WINAPI CreatePopupMenu(void) { API_TRACE(); return CreateMenu(); }
 
 WINBOOL WINAPI DestroyMenu(HMENU h)
 {
     API_TRACE();
+    CHANGED();
     Menu *m = menu_get(h);
     int i;
     if (!m)
@@ -71,6 +79,7 @@ static void set_item(MenuItem *it, UINT flags, UINT_PTR id, LPCSTR text)
 
 static WINBOOL insert(HMENU h, int pos, UINT flags, UINT_PTR id, LPCSTR text)
 {
+    CHANGED();
     Menu *m = menu_get(h);
     if (!m)
         return FALSE;
@@ -102,6 +111,7 @@ WINBOOL WINAPI InsertMenuA(HMENU h, UINT pos, UINT flags, UINT_PTR id, LPCSTR te
 WINBOOL WINAPI ModifyMenuA(HMENU h, UINT pos, UINT flags, UINT_PTR id, LPCSTR text)
 {
     API_TRACE();
+    CHANGED();
     Menu *owner;
     int i = find_item(h, pos, flags, &owner);
     if (i < 0)
@@ -112,6 +122,7 @@ WINBOOL WINAPI ModifyMenuA(HMENU h, UINT pos, UINT flags, UINT_PTR id, LPCSTR te
 
 static WINBOOL remove_item(HMENU h, UINT pos, UINT flags, int destroy)
 {
+    CHANGED();
     Menu *owner;
     int i = find_item(h, pos, flags, &owner);
     if (i < 0)
@@ -162,6 +173,8 @@ WINBOOL WINAPI EnableMenuItem(HMENU h, UINT which, UINT flags)
         return (UINT)-1;
     old = owner->items[i].flags & (MF_GRAYED | MF_DISABLED);
     owner->items[i].flags = (owner->items[i].flags & ~(MF_GRAYED | MF_DISABLED)) | (flags & (MF_GRAYED | MF_DISABLED));
+    if (old != (flags & (MF_GRAYED | MF_DISABLED)))
+        CHANGED();
     return old;
 }
 
@@ -175,6 +188,8 @@ DWORD WINAPI CheckMenuItem(HMENU h, UINT which, UINT flags)
         return (DWORD)-1;
     old = owner->items[i].flags & MF_CHECKED;
     owner->items[i].flags = (owner->items[i].flags & ~MF_CHECKED) | (flags & MF_CHECKED);
+    if (old != (flags & MF_CHECKED))
+        CHANGED();
     return old;
 }
 
@@ -194,6 +209,14 @@ WINBOOL WINAPI SetMenu(HWND h, HMENU menu)
     if (!w || (w->style & WS_CHILD))
         return FALSE;
     w->menu = menu;
+    CHANGED();
+    if (plat_native_menu && menu) {
+        /* The host's window has the caption, frame and menu bar: the main
+           window (the one with a menu bar) fills it (maximized, it fills
+           the desktop). */
+        native_owner = h;
+        w->style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
+    }
     /* The client area changes: SetWindowPos(SWP_FRAMECHANGED). */
     (void)r;
     SetWindowPos(h, 0, 0, 0, 0, 0, SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_FRAMECHANGED);
@@ -233,7 +256,7 @@ HFONT plat_menu_font(void)
 int menu_bar_height(Window *w)
 {
     (void)w;
-    return GetSystemMetrics(SM_CYMENU);
+    return plat_native_menu ? 0 : GetSystemMetrics(SM_CYMENU);
 }
 
 static int char_width(void)
@@ -584,7 +607,7 @@ int menu_key(Window *w, int vk)
     int i;
     while (w && (w->style & WS_CHILD))
         w = w->parent;
-    if (!w || !(m = menu_get(w->menu)))
+    if (!w || !(m = menu_get(w->menu)) || plat_native_menu)
         return 0;
     if (vk == VK_MENU || vk == VK_F10)
         return 0;
@@ -609,4 +632,52 @@ WINBOOL WINAPI TrackPopupMenu(HMENU h, UINT flags, int x, int y, int res, HWND o
     if (cmd)
         PostMessageA(owner, WM_COMMAND, cmd, 0);
     return TRUE;
+}
+
+/* ---- the host's menu bar ---- */
+
+static void native_add(HMENU h, int level, int grayed)
+{
+    Menu *m = menu_get(h);
+    int i;
+    for (i = 0; m && i < m->n; i++) {
+        const MenuItem *it = &m->items[i];
+        int f = (grayed || (it->flags & (MF_GRAYED | MF_DISABLED)) ? HOST_MENU_GRAYED : 0) |
+                (it->flags & MF_CHECKED ? HOST_MENU_CHECKED : 0);
+        if (it->flags & MF_SEPARATOR) {
+            host_menu_add(level, HOST_MENU_SEPARATOR, 0, "");
+        } else if (it->flags & MF_POPUP) {
+            host_menu_add(level, f | HOST_MENU_POPUP, 0, it->text ? it->text : "");
+            if (level < 2)
+                native_add((HMENU)it->id, level + 1, 0);
+        } else {
+            host_menu_add(level, f, (int)it->id, it->text ? it->text : "");
+        }
+    }
+}
+
+void menu_native_sync(void)
+{
+    Window *w;
+    int enabled;
+    if (!plat_native_menu)
+        return;
+    w = wnd_get(native_owner);
+    /* (while the main window is disabled, by a modal dialog, so is its menu) */
+    enabled = w && !(w->style & WS_DISABLED);
+    if (!native_dirty && enabled == native_enabled)
+        return;
+    native_dirty = 0;
+    native_enabled = enabled;
+    host_menu_begin();
+    if (w && w->menu)
+        native_add(w->menu, 0, !enabled);
+    host_menu_end();
+}
+
+void menu_native_command(int id)
+{
+    Window *w = wnd_get(native_owner);
+    if (w && w->menu && !(w->style & WS_DISABLED))
+        PostMessageA(native_owner, WM_COMMAND, (WPARAM)id, 0);
 }

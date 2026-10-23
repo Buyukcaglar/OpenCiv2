@@ -2097,7 +2097,7 @@ static void nc_dirty_tree(Window *w)
 
 int wnd_has_nc(Window *w)
 {
-    return (!(w->style & WS_CHILD) && w->menu) || (w->style & (WS_VSCROLL | WS_HSCROLL)) ||
+    return (!(w->style & WS_CHILD) && w->menu && !plat_native_menu) || (w->style & (WS_VSCROLL | WS_HSCROLL)) ||
            (frame_drawn(w) && ((w->style & (WS_BORDER | WS_DLGFRAME | WS_THICKFRAME)) ||
                                (w->exstyle & (WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE))));
 }
@@ -2269,7 +2269,7 @@ void wnd_nc_paint(Window *w)
         return;
     if (frame_drawn(w))
         nc_frame(w);
-    if (!(w->style & WS_CHILD) && w->menu)
+    if (!(w->style & WS_CHILD) && w->menu && !plat_native_menu)
         menu_bar_paint(w);
     if (w->style & (WS_VSCROLL | WS_HSCROLL))
         scroll_paint_nc(w);

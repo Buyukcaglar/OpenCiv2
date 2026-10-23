@@ -20,7 +20,8 @@
 /* Input events; keys arrive as Windows virtual-key codes. */
 enum {
     HOST_EV_NONE, HOST_EV_QUIT, HOST_EV_KEYDOWN, HOST_EV_KEYUP, HOST_EV_MOTION,
-    HOST_EV_BUTTONDOWN, HOST_EV_BUTTONUP, HOST_EV_EXPOSED
+    HOST_EV_BUTTONDOWN, HOST_EV_BUTTONUP, HOST_EV_EXPOSED,
+    HOST_EV_COMMAND         /* a native menu's item chosen: vk is its id */
 };
 typedef struct HostEvent {
     int32_t type;
@@ -43,6 +44,20 @@ int HOST_API(host_open_window)(int w, int h, int scale);
 int HOST_API(host_display_size)(int32_t *w, int32_t *h);
 /* ... and of its usable area: without the taskbar, dock or menu bar. */
 int HOST_API(host_usable_size)(int32_t *w, int32_t *h);
+/* A window of the system's own kind, where there is one (Windows, macOS):
+ * mode 0 as is usual there (Windows: maximized; macOS: the screen below
+ * the menu bar), 1 full screen, 2 a window.  The desktop is its size (*w x *h); its menu
+ * bar is the system's (host_menu_*).  0: none (then host_open_window). */
+int HOST_API(host_open_native_window)(int32_t *w, int32_t *h, int mode);
+
+/* The native window's menu bar, described whole: begin, the items in
+ * order (level 0: the bar's menus; a popup's items follow it one level
+ * deeper), end.  Text as Windows menus have it: '&' mnemonics, a tab
+ * before the shortcut. */
+enum { HOST_MENU_POPUP = 1, HOST_MENU_SEPARATOR = 2, HOST_MENU_GRAYED = 4, HOST_MENU_CHECKED = 8 };
+void HOST_API(host_menu_begin)(void);
+void HOST_API(host_menu_add)(int level, int flags, int id, const char *text);
+void HOST_API(host_menu_end)(void);
 void HOST_API(host_present)(const void *pixels, int stride);
 /* Minimize the window (the desktop's main window was minimized). */
 void HOST_API(host_minimize)(void);

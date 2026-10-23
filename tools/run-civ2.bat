@@ -1,8 +1,8 @@
 @echo off
 rem Play the portable build on Windows: tools\run-civ2.bat [GAMEDIR]
 rem GAMEDIR: the installed game (default %%USERPROFILE%%\Civ2); the game saves there.
-rem The game fills the screen; set CIV2_FULLSCREEN=1 for the whole display,
-rem CIV2_WINDOW=1 for a 1024x768 window (CIV2_SCALE=2: twice the size).
+rem A maximized window with a Windows menu bar; set CIV2_FULLSCREEN=1 for full
+rem screen, CIV2_CLASSIC=1 for menus and caption drawn as the original's (README).
 setlocal
 set "HERE=%~dp0.."
 set "GAME=%~1"

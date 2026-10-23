@@ -753,6 +753,7 @@ MMRESULT WINAPI timeEndPeriod(UINT p) { API_TRACE(); (void)p; return TIMERR_NOER
 
 int plat_replay;
 int plat_normal_desktop = 1;
+int plat_lock_panels;
 static uint64_t real_start;
 
 /* CIV2_REALTIME: a replay script on the real clock (its waits are real
@@ -1193,6 +1194,8 @@ static int process_mouse(MSG *m, HWND h, UINT lo, UINT hi)
         if (!wnd_get(w->hwnd))
             return 0;
     }
+    if (plat_lock_panels && (w->style & WS_CHILD) && (hit == HTCAPTION || (hit >= HTLEFT && hit <= HTBOTTOMRIGHT)))
+        hit = HTBORDER;     /* the game's panels stay where they are */
     if (plat_normal_desktop || hit == HTMENU) {
         /* Wine's process_mouse_message: the filter applies to the message
            as hit-testing made it (replays keep the earlier behaviour,

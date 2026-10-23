@@ -69,6 +69,23 @@ u32 HOST(usable_size)(Host *h, u32 w, u32 hh)
     PUT32(hh, (u32)b);
     return r;
 }
+u32 HOST(open_native_window)(Host *h, u32 w, u32 hh, u32 mode)
+{
+    int32_t a = 0, b = 0;
+    u32 r;
+    (void)h;
+    r = (u32)host_open_native_window(&a, &b, (int)mode);
+    PUT32(w, (u32)a);
+    PUT32(hh, (u32)b);
+    return r;
+}
+void HOST(menu_begin)(Host *h) { (void)h; host_menu_begin(); }
+void HOST(menu_add)(Host *h, u32 level, u32 flags, u32 id, u32 text)
+{
+    (void)h;
+    host_menu_add((int)level, (int)flags, (int)id, MEM(text));
+}
+void HOST(menu_end)(Host *h) { (void)h; host_menu_end(); }
 void HOST(present)(Host *h, u32 pixels, u32 stride) { (void)h; host_present(MEM(pixels), (int)stride); }
 void HOST(minimize)(Host *h) { (void)h; host_minimize(); }
 

@@ -54,6 +54,7 @@ int msg_pump_events(int wait)
             ;
         return 0;
     }
+    menu_native_sync();
     while (wait ? host_wait_event(&e, 10) : host_poll_event(&e)) {
         wait = 0;
         n++;
@@ -78,6 +79,9 @@ int msg_pump_events(int wait)
             break;
         case HOST_EV_EXPOSED:
             last_present = 0;
+            break;
+        case HOST_EV_COMMAND:
+            menu_native_command(e.vk);
             break;
         }
     }
@@ -120,15 +124,25 @@ int main(int argc, char **argv)
     set_dirs(argv[0], argc > 1 ? argv[1] : NULL);
     clock_init();
     if (!plat_replay) {
-        /* As the original on Windows, whose main window fills the screen:
-         * a desktop of the display's usable area (full screen: of the whole
-         * display), in steps of whole pixels per desktop pixel.
-         * CIV2_WINDOW or CIV2_SCALE: the 1024x768 desktop in a window. */
+        /* As the original on Windows, whose main window fills the screen.
+         * Where the system has its own (Windows, macOS): its window and
+         * menu bar (CIV2_FULLSCREEN=1: full screen, CIV2_WINDOW=1: a
+         * window).  Elsewhere, or with CIV2_CLASSIC=1 (the menu bar and
+         * caption drawn as the original's): a desktop of the display's
+         * usable area (full screen: of the whole display), in steps of whole
+         * pixels per desktop pixel; CIV2_WINDOW or CIV2_SCALE: the 1024x768
+         * desktop in a window. */
         int fullscreen = getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN");
         int windowed = (getenv("CIV2_WINDOW") && *getenv("CIV2_WINDOW")) || scale;
+        int classic = getenv("CIV2_CLASSIC") && *getenv("CIV2_CLASSIC");
         int32_t dw, dh;
-        if ((fullscreen ? host_display_size(&dw, &dh) : !windowed && host_usable_size(&dw, &dh)) &&
-            dw >= 800 && dh >= 600) {
+        plat_lock_panels = !classic;
+        if (!classic && !scale && host_open_native_window(&dw, &dh, fullscreen ? 1 : windowed ? 2 : 0)) {
+            screen_w = dw;
+            screen_h = dh;
+            window_open = plat_native_menu = 1;
+        } else if ((fullscreen ? host_display_size(&dw, &dh) : !windowed && host_usable_size(&dw, &dh)) &&
+                   dw >= 800 && dh >= 600) {
             int k = dh / 768 > 1 ? dh / 768 : 1;
             screen_w = dw / k;
             screen_h = dh / k;
@@ -139,7 +153,7 @@ int main(int argc, char **argv)
     wnd_init();
     resources_init();
     sound_init();
-    if (!plat_replay || getenv("CIV2_SHOW"))
+    if (!window_open && (!plat_replay || getenv("CIV2_SHOW")))
         window_open = host_open_window(screen_w, screen_h, cover ? 0 : scale ? atoi(scale) : 1);
     replay_init();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */

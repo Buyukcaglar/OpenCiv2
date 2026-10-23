@@ -129,9 +129,14 @@ def exe(cross_windows=False):
     # assumptions across the module's memory.
     gen = sorted(glob.glob(os.path.join(CDIR, 'civ2_wasm*.c')))
     rt = [os.path.join(CDIR, f) for f in ('wasm-rt-impl.c', 'wasm-rt-mem-impl.c', 'wasm-rt-exceptions-impl.c')]
-    host = [os.path.join(ROOT, 'src', 'host', f) for f in ('port_main.c', 'wasi.c', 'host_sdl.c')]
+    # (the native menu bar: Win32 on Windows, Cocoa on macOS)
+    mac = sys.platform == 'darwin' and not cross_windows
+    host = [os.path.join(ROOT, 'src', 'host', f) for f in
+            ('port_main.c', 'wasi.c', 'host_sdl.c') + (('host_menu_win.c',) if windows else ()) +
+            (('host_menu_mac.m',) if mac else ())]
     jobs = [(s, ['-O2', '-fno-strict-aliasing', '-w']) for s in gen + rt] + \
-           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags) for s in host]
+           [(s, ['-O2', '-Wall', '-Werror=implicit-function-declaration'] + sdl_cflags +
+             (['-fobjc-arc'] if s.endswith('.m') else [])) for s in host]
 
     def compile_one(job):
         src, flags = job
@@ -146,6 +151,8 @@ def exe(cross_windows=False):
     out = os.path.join(ROOT, 'build', 'civ2-port' + ('.exe' if windows else ''))
     # (Windows: the C runtime's threads library linked in, so only SDL2.dll is needed beside the program)
     libs = ['-lm', '-static-libgcc', '-Wl,-Bstatic', '-lpthread', '-Wl,-Bdynamic'] if windows else ['-lm', '-lpthread']
+    if mac:
+        libs += ['-framework', 'Cocoa']
     run([cc, '-o', out] + objs + sdl_libs + libs)
     if sdl_dll and os.path.exists(sdl_dll):
         shutil.copy(sdl_dll, os.path.join(ROOT, 'build'))      # the game runs with SDL2.dll beside it

@@ -2,6 +2,7 @@
  * The host interface (host.h) over SDL2.
  */
 #include "host.h"
+#include "host_menu.h"
 #include <SDL.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,16 +14,21 @@ static SDL_Renderer *renderer;
 static SDL_Texture *texture;
 static int screen_w, screen_h;
 static Uint64 perf_start;
+static Uint32 menu_event;           /* an SDL user event: a native menu's item chosen */
 
 int host_init(int headless)
 {
     if (headless && !getenv("SDL_VIDEODRIVER"))
         SDL_setenv("SDL_VIDEODRIVER", "dummy", 0);
+    /* macOS: full screen in a Space of its own, the menu bar shown at the
+       top edge (read when the video subsystem starts). */
+    SDL_SetHint(SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, "1");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         fprintf(stderr, "civ2: SDL: %s\n", SDL_GetError());
         return 0;
     }
     perf_start = SDL_GetPerformanceCounter();
+    menu_event = SDL_RegisterEvents(1);
     atexit(SDL_Quit);       /* the game ends with exit() */
     return 1;
 }
@@ -40,6 +46,18 @@ int host_base_path(char *buf, int size)
     return (int)strlen(buf);
 }
 
+static int make_renderer(int w, int h)
+{
+    renderer = SDL_CreateRenderer(window, -1, 0);
+    if (!renderer)
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    if (!renderer)
+        return 0;
+    SDL_RenderSetLogicalSize(renderer, w, h);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+    return texture != NULL;
+}
+
 int host_open_window(int w, int h, int scale)
 {
     SDL_Rect r;
@@ -53,16 +71,113 @@ int host_open_window(int w, int h, int scale)
                                   w * (scale < 1 ? 1 : scale), h * (scale < 1 ? 1 : scale),
                                   SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
                                                           SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    return window && make_renderer(w, h);
+}
+
+#if defined(_WIN32) || defined(__APPLE__)
+int host_open_native_window(int32_t *w, int32_t *h, int mode)
+{
+    Uint32 flags = SDL_WINDOW_RESIZABLE;
+    SDL_Rect full;
+    int i, cw = 0, ch = 0, lw = -1, lh = -1, same = 0;
+#ifdef __APPLE__
+    /* As is usual: a window without a frame over the screen below the
+       menu bar (which stays shown); full screen once the window is up (as
+       the green button does: the menu bar shows only at the top edge). */
+    SDL_Rect r;
+    if (mode == 0 && SDL_GetDisplayUsableBounds(0, &r) == 0)
+        window = SDL_CreateWindow("Civilization II", r.x, r.y, r.w, r.h, SDL_WINDOW_BORDERLESS);
+    else
+        window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768,
+                                  flags | (mode == 1 ? 0 : SDL_WINDOW_MAXIMIZED));
+#else
+    flags |= mode == 1 ? SDL_WINDOW_FULLSCREEN_DESKTOP : SDL_WINDOW_MAXIMIZED;
+    window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768, flags);
+#endif
     if (!window)
         return 0;
-    renderer = SDL_CreateRenderer(window, -1, 0);
-    if (!renderer)
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-    if (!renderer)
-        return 0;
-    SDL_RenderSetLogicalSize(renderer, w, h);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
-    return texture != NULL;
+#ifdef __APPLE__
+    host_mac_activate();
+    for (i = 0; i < 20; i++) {
+        SDL_PumpEvents();
+        SDL_Delay(10);
+    }
+    if (mode == 1)
+        host_mac_full_screen(window);
+#endif
+#ifdef _WIN32
+    SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);     /* WM_COMMAND from the menu bar */
+#endif
+    host_menu_apply(window, NULL, 0);               /* the client area: what the menu bar leaves */
+    if (SDL_GetDisplayBounds(0, &full))
+        full.w = full.h = 0;
+    /* The size once the window manager is done (maximizing, the full
+       screen animation): full screen, the display's (or, where it is not
+       quite that, as with a camera notch, changed and then steady);
+       else steady a while. */
+    for (i = 0; i < 500; i++) {
+        SDL_PumpEvents();
+        SDL_GetWindowSize(window, &cw, &ch);
+        same = cw == lw && ch == lh ? same + 1 : 0;
+        if (mode == 1 ? (cw == full.w && ch == full.h) || ((cw != 1024 || ch != 768) && same >= 50) : same >= 20)
+            break;
+        lw = cw;
+        lh = ch;
+        SDL_Delay(10);
+    }
+    if (cw < 640 || ch < 480) {
+        cw = 1024;
+        ch = 768;
+    }
+    *w = screen_w = cw;
+    *h = screen_h = ch;
+    return make_renderer(cw, ch);
+}
+#else
+int host_open_native_window(int32_t *w, int32_t *h, int mode)
+{
+    (void)w; (void)h; (void)mode;
+    return 0;
+}
+#endif
+
+/* ---- the native menu bar ---- */
+
+static HostMenuItem menu_items[1024];
+static int menu_n;
+
+void host_menu_begin(void)
+{
+    while (menu_n > 0)
+        free(menu_items[--menu_n].text);
+}
+
+void host_menu_add(int level, int flags, int id, const char *text)
+{
+    if (menu_n < (int)(sizeof menu_items / sizeof menu_items[0])) {
+        HostMenuItem *it = &menu_items[menu_n++];
+        it->level = level;
+        it->flags = flags;
+        it->id = id;
+        it->text = SDL_strdup(text ? text : "");
+    }
+}
+
+void host_menu_end(void)
+{
+#if defined(_WIN32) || defined(__APPLE__)
+    if (window)
+        host_menu_apply(window, menu_items, menu_n);
+#endif
+}
+
+void host_menu_picked(int id)
+{
+    SDL_Event e;
+    SDL_zero(e);
+    e.type = menu_event;
+    e.user.code = id;
+    SDL_PushEvent(&e);
 }
 
 int host_display_size(int32_t *w, int32_t *h)
@@ -197,6 +312,18 @@ static int convert(const SDL_Event *s, HostEvent *e)
         if (s->window.event != SDL_WINDOWEVENT_EXPOSED)
             return 0;
         e->type = HOST_EV_EXPOSED;
+        return 1;
+#ifdef _WIN32
+    case SDL_SYSWMEVENT:
+        if (!(e->vk = host_menu_syswm_command(s->syswm.msg)))
+            return 0;
+        e->type = HOST_EV_COMMAND;
+        return 1;
+#endif
+    }
+    if (s->type == menu_event && menu_event != (Uint32)-1) {
+        e->type = HOST_EV_COMMAND;
+        e->vk = s->user.code;
         return 1;
     }
     return 0;

@@ -49,10 +49,19 @@ python3 tools/build_port.py     # -> build/civ2-port  (several minutes)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
-* The game's desktop fills the screen (without the taskbar or dock), as the
-  original's window does on Windows.  `CIV2_FULLSCREEN=1 tools/run-civ2.sh`
-  — the whole display; `CIV2_WINDOW=1` — the 1024x768 desktop in a window
-  (`CIV2_SCALE=2`: twice the size).
+* The game uses the system's own window and menu bar: on macOS it fills the
+  screen below the menu bar, its menus in the menu bar; on Windows a
+  maximized window with a Windows menu bar.  `CIV2_WINDOW=1
+  tools/run-civ2.sh` — a window; `CIV2_FULLSCREEN=1` — full screen (on macOS
+  the menu bar then shows at the top edge, or always with System Settings ›
+  Control Center › Automatically hide and show the menu bar: Never).  Elsewhere (Linux), or with
+  `CIV2_CLASSIC=1`, the menu bar and window caption are drawn as the
+  original's and the game's desktop fills the screen; there `CIV2_WINDOW=1`
+  gives the 1024x768 desktop in a window (`CIV2_SCALE=2`: twice the size).
+  The game's panels (map, world, status) stay where they are; the original
+  lets them be dragged and sized by their edges (`CIV2_CLASSIC=1`, or View ›
+  Arrange Windows to put them back).  Replays (the comparison with the
+  original) always draw everything as the original.
 * On Windows the game logs to `civ2-log.txt` beside the program (a video it
   could not play, for example).
 * The game saves into its directory (`~/Civ2`).
