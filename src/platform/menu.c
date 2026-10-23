@@ -681,3 +681,35 @@ void menu_native_command(int id)
     if (w && w->menu && !(w->style & WS_DISABLED))
         PostMessageA(native_owner, WM_COMMAND, (WPARAM)id, 0);
 }
+
+/* The id of the menu bar's item labelled text ("&" and the shortcut left
+   out), or 0: replay scripts choose items as the host's menu bar does. */
+static int find_label(HMENU h, const char *text)
+{
+    Menu *m = menu_get(h);
+    int i, id;
+    for (i = 0; m && i < m->n; i++) {
+        const MenuItem *it = &m->items[i];
+        if (it->flags & MF_POPUP) {
+            if ((id = find_label((HMENU)it->id, text)) != 0)
+                return id;
+        } else if (it->text) {
+            char s[128];
+            size_t k = 0;
+            const char *p;
+            for (p = it->text; *p && *p != '\t' && k + 1 < sizeof s; p++)
+                if (*p != '&')
+                    s[k++] = *p;
+            s[k] = 0;
+            if (!strcmp(s, text))
+                return (int)it->id;
+        }
+    }
+    return 0;
+}
+
+int menu_native_find(const char *text)
+{
+    Window *w = wnd_get(native_owner);
+    return w ? find_label(w->menu, text) : 0;
+}

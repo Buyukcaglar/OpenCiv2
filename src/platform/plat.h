@@ -225,6 +225,7 @@ int menu_bar_click(Window *w, int x, int y);
 int menu_key(Window *w, int vk);
 void menu_native_sync(void);            /* the menu bar to the host, if it changed */
 void menu_native_command(int id);       /* the host's menu bar: an item chosen */
+int menu_native_find(const char *text); /* its item labelled text: the id, or 0 */
 
 /* ---- builtin controls ---- */
 

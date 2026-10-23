@@ -330,6 +330,16 @@ void replay_run_script(void)
                 input_mouse_button(1, cmd[5] == 'd');
             next_action_us = vclock_us + 100 * 1000;
             break;
+        } else if (!strcmp(cmd, "menu")) {
+            /* menu LABEL: the host's menu bar's item so labelled chosen
+               (CIV2_TEST_NATIVE), as with the mouse */
+            int id = menu_native_find(arg);
+            if (id)
+                menu_native_command(id);
+            else
+                plat_log("replay: no menu item %s\n", arg);
+            next_action_us = vclock_us + 100 * 1000;
+            break;
         } else if (!strcmp(cmd, "shot")) {
             char path[1300];
             snprintf(path, sizeof path, "%s/%s.bmp", shot_dir, arg);
