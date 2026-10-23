@@ -291,6 +291,17 @@ static int convert(const SDL_Event *s, HostEvent *e)
         return 1;
     case SDL_KEYDOWN:
     case SDL_KEYUP:
+#ifdef __APPLE__
+        /* Command shortcuts are the system's, not the game's: ctrl-cmd-F
+           switches full screen, the rest (cmd-Q, cmd-H ...) the menu bar
+           has. */
+        if (s->key.keysym.mod & KMOD_GUI) {
+            if (s->type == SDL_KEYDOWN && !s->key.repeat && s->key.keysym.sym == SDLK_f &&
+                (s->key.keysym.mod & KMOD_CTRL) && window)
+                host_mac_full_screen(window);
+            return 0;
+        }
+#endif
         e->vk = vk_of_key(&s->key.keysym);
         if (!e->vk)
             return 0;

@@ -200,9 +200,12 @@ void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n)
             [parent addItem:mi];
         }
         if (view) {
+            /* (the shortcut shown, not a key equivalent: host_sdl.c takes ctrl-cmd-F) */
             NSMenuItem *fs = [[NSMenuItem alloc] initWithTitle:@"Full Screen" action:@selector(fullScreen:)
-                                                 keyEquivalent:@"f"];
-            fs.keyEquivalentModifierMask = NSEventModifierFlagControl | NSEventModifierFlagCommand;
+                                                 keyEquivalent:@""];
+            fs.attributedTitle = [[NSAttributedString alloc]
+                initWithString:@"Full Screen\t\u2303\u2318F"
+                    attributes:@{NSFontAttributeName: font, NSParagraphStyleAttributeName: para}];
             fs.target = target;
             fs.state = (cocoa_window().styleMask & NSWindowStyleMaskFullScreen) ? NSControlStateValueOn
                                                                                  : NSControlStateValueOff;

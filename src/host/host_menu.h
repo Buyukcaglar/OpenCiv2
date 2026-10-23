@@ -20,7 +20,8 @@ int host_menu_syswm_command(const void *msg);
 void host_menu_picked(int id);
 /* macOS: the program made the active one (its menu bar the one shown). */
 void host_mac_activate(void);
-/* macOS: the window to the system's full screen (as View > Full Screen). */
+/* macOS: the window to the system's full screen and back (as View > Full
+   Screen, ctrl-cmd-F). */
 void host_mac_full_screen(SDL_Window *window);
 
 #endif
