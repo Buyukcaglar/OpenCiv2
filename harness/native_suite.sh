@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run every scenario on the native build and compare against the original's
-# recordings (run/ref-NAME, made by harness/suite.sh).
+# recordings (run/ref-NAME, made by harness/run.py: make ref).
 # Runs inside the civ2-dev container:  tools/dk sh harness/native_suite.sh [SCRIPT...]
 # EXE selects the executable in build/ (default civ2-linux32).
 cd /work
