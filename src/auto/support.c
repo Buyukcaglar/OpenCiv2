@@ -237,8 +237,6 @@ int __cdecl mem_checksum(iptr data,uint size)
 }
 
 /* 004bb870 auto */
-#define error_last_alloc_failed (*(uint *)((u8 *)&g.d_00634814))
-#define mem_last_alloc_size (*(i32 *)((u8 *)&g.d_00634818))
 int __cdecl mem_handle_alloc_tracked(i32 size)
 
 {
@@ -249,8 +247,6 @@ int __cdecl mem_handle_alloc_tracked(i32 size)
   error_last_alloc_failed = (uint)(handle == 0);
   return handle;
 }
-#undef error_last_alloc_failed
-#undef mem_last_alloc_size
 
 /* 004cca35 auto */
 i32 __cdecl memblock_alloc_checked(iptr block,uint size)
@@ -266,7 +262,7 @@ i32 __cdecl memblock_alloc_checked(iptr block,uint size)
     uType = 0;
     lpCaption = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8d0));
     lpText = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8e8));
-    wnd = wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
+    wnd = wnd_get_window((WndBase *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x48));
     MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
     result = 0;
   }
@@ -287,7 +283,6 @@ int __cdecl int_clamp_c(int value,int lo,int hi)
 }
 
 /* 00554145 auto */
-#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 i32 __cdecl dbg_pick_player(int include_barbarians)
 
 {
@@ -302,22 +297,21 @@ i32 __cdecl dbg_pick_player(int include_barbarians)
   eh_state = 0xffffffff;
   dialog_ctor(&dlg,0x4000);
   eh_state = 0;
-  dialog_load_text(&dlg,(iptr)((u8 *)&g.d_00633710),(iptr)((u8 *)&g.d_00633704),1);
+  dialog_load_text(&dlg,(iptr)&str_debug_2,(iptr)&str_pickplayer,1);
   for (civ = (uint)(include_barbarians == 0); (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
       text_clear();
       adjective = civ_get_adjective(civ);
       text_append(adjective);
-      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),civ,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)&map_views_block.text_buffer,civ,0);
     }
   }
-  dialog_set_default_choice((DialogOptionList *)&dlg,human_civ);
+  dialog_set_default_choice((DialogOptionList *)&dlg,human_civ[0]);
   choice = dlg_show_modal(&dlg,0);
   eh_state = 0xffffffff;
   /* inlined unwind funclet 00554272 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
   return choice;
 }
-#undef human_civ
 
 /* 0055add0 auto */
 i32 __stdcall win_main(i32 instance,i32 prev_instance,i32 cmd_line,i32 show_cmd)
@@ -327,10 +321,10 @@ i32 __stdcall win_main(i32 instance,i32 prev_instance,i32 cmd_line,i32 show_cmd)
   int started;
   HWND hWnd;
   
-  CreateMutexA((LPSECURITY_ATTRIBUTES)0x0,1,s_Civilization_II_Once_Only_00633a40);
+  CreateMutexA((LPSECURITY_ATTRIBUTES)0x0,1,str_civilization_ii_once_only);
   DVar1 = GetLastError();
   if (DVar1 == 0xb7) {
-    hWnd = FindWindowA(s_MSWindowClass_00633a5c,(LPCSTR)0x0);
+    hWnd = FindWindowA(str_mswindowclass,(LPCSTR)0x0);
     if (hWnd != (HWND)0x0) {
       BringWindowToTop(hWnd);
     }
@@ -364,7 +358,7 @@ int __cdecl err_register_cleanup_fn(iptr callback)
   if (fatal_cleanup_count < 10) {
     index = fatal_cleanup_count;
     fatal_cleanup_count++;
-    *(iptr *)(&crash_handler_callbacks + slot * 4) = callback;
+    *(iptr *)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + slot * 4) = callback;
   }
   return index;
 }
@@ -381,7 +375,7 @@ void __cdecl err_dump_text_file(iptr path)
   char line[80];
   int keep_going;
   
-  _File = (FILE *)file_open_path(path,(iptr)((u8 *)&g.d_0063481c));
+  _File = (FILE *)file_open_path(path,(iptr)&str_rt_8);
   if (_File != (FILE *)0x0) {
     keep_going = 1;
     while (((keep_going != 0 && ((CRT_FEOF(_File)) == 0)) &&
@@ -392,13 +386,13 @@ void __cdecl err_dump_text_file(iptr path)
           line[i] = '\0';
         }
       }
-      cmp = _strncmp(line,&err_comment_prefix_str,3);
+      cmp = _strncmp(line,((i8 *)&err_comment_prefix_str),3);
       if (cmp == 0) {
         keep_going = 0;
       }
       else {
-        _sprintf(&crash_debug_buffer,&err_dump_line_fmt,line);
-        OutputDebugStringA(&crash_debug_buffer);
+        _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_dump_line_fmt),line);
+        OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
       }
     }
   }
@@ -418,22 +412,19 @@ void __cdecl error_report(uint error_code,int module_id,iptr context,iptr data1,
   char data1_text[12];
   
   if (context != 0) {
-    crt_strcpy(&error_context_text,context);
+    crt_strcpy(((i8 *)&error_context_text),context);
   }
   __itoa(error_code,error_text,10);
   __itoa(module_id,module_text,10);
   __ltoa(data1,data1_text,10);
   __ltoa(data2,data2_text,10);
-  file_read_nth_line((iptr)error_text,(iptr)((u8 *)&g.d_00634828),~error_code + 1);
-  file_read_nth_line((iptr)module_text,(iptr)((u8 *)&g.d_00634834),module_id);
+  file_read_nth_line((iptr)error_text,(iptr)&str_errors_db,~error_code + 1);
+  file_read_nth_line((iptr)module_text,(iptr)&str_modules_db,module_id);
   err_fatal_exit((iptr)error_text,(iptr)module_text,(iptr)data1_text,(iptr)data2_text,error_code);
   return;
 }
 
 /* 0058a0ee auto */
-#define error_last_alloc_failed (*(int *)((u8 *)&g.d_00634814))
-#define error_last_open_failed (*(int *)((u8 *)&g.d_00634810))
-#define mem_last_alloc_size (*(long *)((u8 *)&g.d_00634818))
 void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,iptr data2_text,i32 error_code)
 
 {
@@ -441,63 +432,60 @@ void __cdecl err_fatal_exit(iptr error_text,iptr module_text,iptr data1_text,ipt
   int i;
   i8 msg[256];
   
-  crt_strcpy(msg,s_Error___00634844);
+  crt_strcpy(msg,str_error_4);
   crt_strcat(msg,error_text);
-  crt_strcat(msg,s___in_module___0063484c);
+  crt_strcat(msg,str_in_module);
   crt_strcat(msg,module_text);
-  crt_strcat(msg,s___data__0063485c);
+  crt_strcat(msg,str_data);
   crt_strcat(msg,data1_text);
-  crt_strcat(msg,&err_data_sep_str);
+  crt_strcat(msg,((i8 *)&err_data_sep_str));
   crt_strcat(msg,data2_text);
-  _sprintf(&crash_debug_buffer,&err_fatal_msg_fmt,msg);
-  OutputDebugStringA(&crash_debug_buffer);
-  dbg_log((iptr)((u8 *)&g.d_006acbf8));
-  len = _strlen(&error_context_text);
+  _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&err_fatal_msg_fmt),msg);
+  OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  len = _strlen(((i8 *)&error_context_text));
   if (len != 0) {
-    _sprintf(&crash_debug_buffer,s___s__00634870,&error_context_text);
-    OutputDebugStringA(&crash_debug_buffer);
-    dbg_log((iptr)((u8 *)&g.d_006acbf8));
+    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_s_2,((i8 *)&error_context_text));
+    OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
   }
-  if (error_last_alloc_failed != 0) {
-    __ltoa(mem_last_alloc_size,(char *)data1_text,10);
-    crt_strcpy(msg,s_Tried_to_allocate_00634878);
+  if ((*(int *)&error_last_alloc_failed) != 0) {
+    __ltoa((*(long *)&mem_last_alloc_size),(char *)data1_text,10);
+    crt_strcpy(msg,str_tried_to_allocate);
     crt_strcat(msg,data1_text);
-    crt_strcat(msg,s_bytes__0063488c);
-    _sprintf(&crash_debug_buffer,&fatal_alloc_line_fmt,msg);
-    OutputDebugStringA(&crash_debug_buffer);
-    dbg_log((iptr)((u8 *)&g.d_006acbf8));
+    crt_strcat(msg,str_bytes);
+    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_line_fmt),msg);
+    OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
   }
-  _sprintf(&crash_debug_buffer,&fatal_alloc_newline_str);
-  OutputDebugStringA(&crash_debug_buffer);
-  dbg_log((iptr)((u8 *)&g.d_006acbf8));
+  _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_alloc_newline_str));
+  OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
   if (error_last_open_failed != 0) {
-    _sprintf(&crash_debug_buffer,s_File_open_failed___s_0063489c,&error_last_open_path);
-    OutputDebugStringA(&crash_debug_buffer);
-    dbg_log((iptr)((u8 *)&g.d_006acbf8));
+    _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),str_file_open_failed_s,((i8 *)&error_last_open_path));
+    OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+    dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
   }
-  crt_strcpy(msg,s_Most_recent_DOS_error__006348b4);
+  crt_strcpy(msg,str_most_recent_dos_error);
   __itoa(crt_errno,(char *)data1_text,10);
   crt_strcat(msg,data1_text);
-  _sprintf(&crash_debug_buffer,&fatal_dos_error_line_fmt,msg);
-  OutputDebugStringA(&crash_debug_buffer);
-  dbg_log((iptr)((u8 *)&g.d_006acbf8));
-  _sprintf(&crash_debug_buffer,&fatal_dos_error_newline_str);
-  OutputDebugStringA(&crash_debug_buffer);
-  dbg_log((iptr)((u8 *)&g.d_006acbf8));
-  err_dump_text_file((iptr)((u8 *)&g.d_006348d8));
+  _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_line_fmt),msg);
+  OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  _sprintf(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer),((i8 *)&fatal_dos_error_newline_str));
+  OutputDebugStringA(((i8 *)&main_frame_bg_surface_block.crash_debug_buffer));
+  dbg_log((iptr)&main_frame_bg_surface_block.crash_debug_buffer);
+  err_dump_text_file((iptr)&str_warn0_dat);
   i = fatal_cleanup_count;
   while (i = i - 1, -1 < i) {
-    if (*(int *)(&crash_handler_callbacks + i * 4) != 0) {
-      (**(code **)(&crash_handler_callbacks + i * 4))();
+    if (*(int *)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + i * 4) != 0) {
+      (**(code **)(((i8 *)&main_frame_bg_surface_block.crash_handler_callbacks) + i * 4))();
     }
   }
   DebugBreak();
                     /* WARNING: Subroutine does not return */
   _exit(3);
 }
-#undef error_last_alloc_failed
-#undef error_last_open_failed
-#undef mem_last_alloc_size
 
 /* 0058ae20 auto */
 i32 __cdecl
@@ -517,22 +505,20 @@ point_in_rect_ltrb(int x,int y,int left,int top,int right,int bottom)
 }
 
 /* 0059a6f0 auto */
-#define rng_state (*(int *)((u8 *)&g.d_00635094))
 int __cdecl rng_set_seed(int seed)
 
 {
   int prev_state;
   
-  prev_state = rng_state;
+  prev_state = g_nr_seed;
   if (seed == 0) {
     prev_state = 0;
   }
   else {
-    rng_state = seed;
+    g_nr_seed = seed;
   }
   return prev_state;
 }
-#undef rng_state
 
 /* 0059a733: written by hand in src/game/random.c */
 
@@ -652,7 +638,6 @@ void __cdecl win_drain_input_msgs(void)
 }
 
 /* 005bba4f auto */
-#define avi_idle_update_enabled (*(int *)((u8 *)&g.d_00637efc))
 i32 __cdecl win_dispatch_one_message(void)
 
 {
@@ -663,7 +648,7 @@ i32 __cdecl win_dispatch_one_message(void)
   BVar1 = PeekMessageA(&msg,(HWND)0x0,0,0,1);
   if (BVar1 == 0) {
     win_flush_pending_msgs();
-    if (avi_idle_update_enabled != 0) {
+    if (wnd_modal_stack_below_block.avi_idle_update_enabled != 0) {
       avi_update_current_frame();
     }
     dispatched = 0;
@@ -675,7 +660,6 @@ i32 __cdecl win_dispatch_one_message(void)
   }
   return dispatched;
 }
-#undef avi_idle_update_enabled
 
 /* 005bbab8 auto */
 uint __cdecl win_dispatch_one_paint(void)
@@ -734,7 +718,6 @@ uint __cdecl win_dispatch_one_custom_msg(void)
 }
 
 /* 005bbbce auto */
-#define avi_idle_update_enabled (*(int *)((u8 *)&g.d_00637efc))
 void __cdecl win_dispatch_custom_msgs(void)
 
 {
@@ -743,12 +726,11 @@ void __cdecl win_dispatch_custom_msgs(void)
   do {
     dispatched = win_dispatch_one_custom_msg();
   } while (dispatched != 0);
-  if (avi_idle_update_enabled != 0) {
+  if (wnd_modal_stack_below_block.avi_idle_update_enabled != 0) {
     avi_update_current_frame();
   }
   return;
 }
-#undef avi_idle_update_enabled
 
 /* 005c54d0 auto */
 i32 __cdecl endian_from_le(i32 value)
@@ -778,7 +760,7 @@ void __cdecl dbg_log_file_global_init(void)
 void __cdecl dbg_log_file_static_init(void)
 
 {
-  dbg_log_file_ctor(&dbg_log_file);
+  dbg_log_file_ctor(((i8 *)&default_draw_font_obj_block.dbg_log_file));
   return;
 }
 
@@ -794,7 +776,7 @@ void __cdecl dbg_log_file_reg_atexit(void)
 void __cdecl dbg_log_file_atexit_dtor(void)
 
 {
-  dbg_log_file_dtor(&dbg_log_file);
+  dbg_log_file_dtor(((i8 *)&default_draw_font_obj_block.dbg_log_file));
   return;
 }
 
@@ -804,7 +786,7 @@ i8 __cdecl dbg_log(iptr text)
 {
   i8 result;
   
-  result = dbg_log_write(&dbg_log_file,text);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),text);
   return result;
 }
 
@@ -816,7 +798,7 @@ i8 __cdecl dbg_logf(iptr fmt,iptr arg)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
-  result = dbg_log_write(&dbg_log_file,(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return result;
 }
 
@@ -828,7 +810,7 @@ i8 __cdecl dbg_logf_int2(iptr fmt,i32 arg1,i32 arg2)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2);
-  result = dbg_log_write(&dbg_log_file,(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return result;
 }
 
@@ -839,7 +821,7 @@ void __cdecl dbg_logf3(iptr fmt,iptr arg1,i32 arg2,i32 arg3)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg1,arg2,arg3);
-  dbg_log_write(&dbg_log_file,(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return;
 }
 
@@ -850,7 +832,7 @@ void __cdecl dbg_logf_noret(iptr fmt,i32 arg)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,arg);
-  dbg_log_write(&dbg_log_file,(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return;
 }
 
@@ -862,7 +844,7 @@ i8 __cdecl dbg_logf_str(iptr fmt,iptr str)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,str);
-  result = dbg_log_write(&dbg_log_file,(iptr)buf);
+  result = dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return result;
 }
 
@@ -873,7 +855,7 @@ void __cdecl dbg_logf_str_int(iptr fmt,iptr str,iptr value)
   char buf[1024];
   
   _sprintf(buf,(char *)fmt,str,value);
-  dbg_log_write(&dbg_log_file,(iptr)buf);
+  dbg_log_write(((i8 *)&default_draw_font_obj_block.dbg_log_file),(iptr)buf);
   return;
 }
 
@@ -898,8 +880,6 @@ void __thiscall dbg_log_file_dtor(void *this)
 }
 
 /* 005d24b3 auto */
-#define dbg_log_to_debugger (*(char *)((u8 *)&g.d_00638308))
-#define dbg_log_to_file (*(char *)((u8 *)&g.d_00638304))
 i8 __thiscall dbg_log_write(void *this,iptr text)
 
 {
@@ -907,7 +887,7 @@ i8 __thiscall dbg_log_write(void *this,iptr text)
   char line[1032];
   
   DVar1 = GetTickCount();
-  _sprintf(line,s___5d__0063830c,(DVar1 - *(int *)this) / 1000);
+  _sprintf(line,str_5d,(DVar1 - *(int *)this) / 1000);
   crt_strcat(line,text);
   if (dbg_log_to_debugger != '\0') {
     dbg_log_write_debugger((iptr)line);
@@ -917,8 +897,6 @@ i8 __thiscall dbg_log_write(void *this,iptr text)
   }
   return 1;
 }
-#undef dbg_log_to_debugger
-#undef dbg_log_to_file
 
 /* 005dae00 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -941,7 +919,7 @@ void __cdecl err_report_ctx_global_init(void)
 void __cdecl err_report_ctx_static_init(void)
 
 {
-  err_ctx_ctor((ErrorContext *)&err_report_ctx);
+  err_ctx_ctor((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx));
   return;
 }
 
@@ -957,7 +935,7 @@ void __cdecl err_report_ctx_reg_atexit(void)
 void __cdecl err_report_ctx_atexit_dtor(void)
 
 {
-  err_ctx_dtor((ErrorContext *)&err_report_ctx);
+  err_ctx_dtor((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx));
   return;
 }
 
@@ -970,7 +948,7 @@ err_report
   i32 msg;
   
   err_set_code(this,code);
-  msg = err_format_message(this,(iptr)((u8 *)&g.d_00638778),file,line,extra);
+  msg = err_format_message(this,(iptr)&str_fatal_error,file,line,extra);
   err_show_fatal_box(this,msg);
   return;
 }
@@ -985,8 +963,8 @@ err_format_message
   i32 trace;
   char *_Format;
   
-  crt_strcpy(this,&err_format_empty_str);
-  _Format = s_Error___s_File___s_Line___d_00638790;
+  crt_strcpy(this,((i8 *)&err_format_empty_str));
+  _Format = str_error_s_file_s_line_d;
   len = _strlen((char *)this);
   _sprintf((char *)(this->error_message_text + len),_Format,text,file,line);
   trace = err_get_stack_trace(this);
@@ -1006,7 +984,7 @@ u8 * __thiscall err_get_stack_trace(ErrorContext *this)
 void __thiscall err_show_fatal_box(ErrorContext *this,i32 msg)
 
 {
-  dbg_fatal_msgbox_break((iptr)((u8 *)&g.d_006387b4),msg);
+  dbg_fatal_msgbox_break((iptr)&str_smeds_application_error,msg);
   return;
 }
 
@@ -1125,7 +1103,7 @@ HGLOBAL __cdecl mem_handle_alloc(SIZE_T size)
   
   handle = GlobalAlloc(0x42,size);
   if (handle == (HGLOBAL)0x0) {
-    err_report((ErrorContext *)&err_report_ctx,1,(iptr)((u8 *)&g.d_00638980),(iptr)((u8 *)&g.d_00638968),0x4c);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),1,(iptr)&str_err_memallocfailed,(iptr)&str_d_ss_smeds32_pcmem_cpp,0x4c);
   }
   return handle;
 }
@@ -1137,7 +1115,7 @@ HGLOBAL __cdecl mem_handle_free(HGLOBAL handle)
   HGLOBAL result;
   
   if (handle == (HGLOBAL)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00638994));
+    dbg_log((iptr)&str_error_tried_to_dispose_of_null_handle_in);
     result = (HGLOBAL)0x0;
   }
   else {
@@ -1183,7 +1161,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
   src_size = __msize(*(void **)buf_ptr);
   src_copy = operator_new(src_size);
   if (src_copy == (byte *)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00638c78));
+    dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi);
     out_size = 0;
   }
   else {
@@ -1191,7 +1169,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
     capacity2 = src_size * 2;
     out = (byte *)crt_realloc(*(i32 *)buf_ptr,capacity2);
     if (out == (byte *)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00638cac));
+      dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_2);
       out_size = 0;
     }
     else {
@@ -1205,7 +1183,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
           capacity2 += 1000;
           grown = crt_realloc(*(i32 *)buf_ptr,capacity2);
           if (grown == 0) {
-            dbg_log((iptr)((u8 *)&g.d_00638ce0));
+            dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_3);
             return 0;
           }
           *(iptr *)buf_ptr = grown;
@@ -1236,7 +1214,7 @@ iptr __cdecl mem_rle_decompress(iptr buf_ptr)
       }
       final_buf = crt_realloc(*(i32 *)buf_ptr,out_size);
       if (final_buf == 0) {
-        dbg_log((iptr)((u8 *)&g.d_00638d14));
+        dbg_log((iptr)&str_rlldecode_could_not_allocate_decompressi_4);
         out_size = 0;
       }
       else {
@@ -1266,7 +1244,7 @@ uint __cdecl mem_rle_compress(iptr buf_ptr,int size)
   
   out_buf = operator_new(size + ((int)(size + (size >> 0x1f & 0x7fU)) >> 7) + 5);
   if (out_buf == (char *)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00638d48));
+    dbg_log((iptr)&str_rllencode_could_not_allocate_compression);
     out_size = 0xffffffff;
   }
   else {
@@ -1359,19 +1337,19 @@ i32 __cdecl dbg_log_open(void)
   DWORD bytes_written;
   
   file = (HANDLE)0x0;
-  file = CreateFileA(s_smeds_log_00639bec,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,
+  file = CreateFileA(str_smeds_log,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,
                         (HANDLE)0x0);
   if (file != (HANDLE)0xffffffff) {
     smeds_log_enabled = 1;
   }
-  crt_strcpy(header,s______________________SMEDS_LOG___00639bf8);
-  crt_strcat(header,s_File_Output_to__00639c30);
-  crt_strcat(header,s_smeds_log_00639c44);
-  crt_strcat(header,&dbg_log_header_crlf);
-  crt_strcat(header,s_SMEDS32_Version__00639c54);
-  _sprintf(version,s__d__d__d_00639c68,2,0,0);
+  crt_strcpy(header,str_smeds_log_2);
+  crt_strcat(header,str_file_output_to);
+  crt_strcat(header,str_smeds_log_3);
+  crt_strcat(header,((i8 *)&dbg_log_header_crlf));
+  crt_strcat(header,str_smeds32_version);
+  _sprintf(version,str_d_d_d,2,0,0);
   crt_strcat(header,version);
-  crt_strcat(header,&dbg_log_header_blank_lines);
+  crt_strcat(header,((i8 *)&dbg_log_header_blank_lines));
   if (smeds_log_enabled != '\0') {
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &bytes_written;
@@ -1396,10 +1374,10 @@ i32 __cdecl dbg_log_close(void)
   
   file = (HANDLE)0x0;
   if (smeds_log_enabled != '\0') {
-    file = CreateFileA(s_smeds_log_00639c84,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
+    file = CreateFileA(str_smeds_log_4,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
                           (HANDLE)0x0);
     SetFilePointer(file,0,(PLONG)0x0,2);
-    crt_strcpy(footer,s______________________LOG_CLOSED___00639c90);
+    crt_strcpy(footer,str_log_closed);
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &bytes_written;
     nNumberOfBytesToWrite = _strlen(footer);
@@ -1421,14 +1399,14 @@ i32 __cdecl dbg_log_write_file(iptr text)
   DWORD bytes_written;
   
   if (smeds_log_enabled != '\0') {
-    hFile = CreateFileA(s_smeds_log_00639ccc,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
+    hFile = CreateFileA(str_smeds_log_5,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
                         (HANDLE)0x0);
     SetFilePointer(hFile,0,(PLONG)0x0,2);
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &bytes_written;
     nNumberOfBytesToWrite = _strlen((char *)text);
     WriteFile(hFile,(LPCVOID)text,nNumberOfBytesToWrite,lpNumberOfBytesWritten,lpOverlapped);
-    WriteFile(hFile,&dbg_log_file_crlf,2,&bytes_written,(LPOVERLAPPED)0x0);
+    WriteFile(hFile,((i8 *)&dbg_log_file_crlf),2,&bytes_written,(LPOVERLAPPED)0x0);
     CloseHandle(hFile);
   }
   return 1;
@@ -1439,7 +1417,7 @@ i32 __cdecl dbg_log_write_debugger(iptr text)
 
 {
   OutputDebugStringA((LPCSTR)text);
-  OutputDebugStringA(&dbg_log_debugger_crlf);
+  OutputDebugStringA(((i8 *)&dbg_log_debugger_crlf));
   return 1;
 }
 
@@ -1460,7 +1438,7 @@ void __cdecl dbg_fatal_msgbox_break(iptr caption,LPCSTR text)
 void __cdecl dbg_stack_trace_stub(iptr buf)
 
 {
-  _sprintf((char *)buf,s_Stack_trace_not_yet_available_in_00639ce4);
+  _sprintf((char *)buf,str_stack_trace_not_yet_available_in_win32);
   return;
 }
 
@@ -1504,7 +1482,7 @@ i32 __cdecl sys_msgbox_potentially_fatal(LPCSTR text,i32 severity,i32 buttons)
   case 0x20:
     style2 = style2 | 5;
   }
-  choice = MessageBoxA((HWND)0x0,text,s_Potentially_fatal_error_00639d5c,style2 | 0x2000);
+  choice = MessageBoxA((HWND)0x0,text,str_potentially_fatal_error,style2 | 0x2000);
   switch(choice) {
   case 1:
     result = 0;

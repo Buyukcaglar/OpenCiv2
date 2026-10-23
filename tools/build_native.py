@@ -192,6 +192,9 @@ def compile_one(job):
             flags = [f for f in CFLAGS if f != '-w']
             # The platform layer is ordinary portable C, with warnings.
             extra = ['-Wall', '-Wno-unused-function', '-std=gnu99', '-D_GNU_SOURCE']
+        elif src.endswith('/src/data/gamedata.c') and 'clang' not in cc:
+            # the data in the original's order (it is defined in address order)
+            extra = ['-fno-toplevel-reorder']
         elif '/src/third_party/' in src:
             # Third-party C (src/third_party/*/), built as its authors' code.
             flags = [f for f in CFLAGS if not f.startswith('-std') and f not in ('-O1',)]

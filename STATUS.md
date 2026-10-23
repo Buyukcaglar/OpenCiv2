@@ -51,9 +51,8 @@ random-click scripts on both builds: identical (3 392 `rand()` calls).
 
 Reads of locals the 1997 code never initialises are the main source of
 differences between builds: valgrind finds them, `CIV2_STACKPROBE` reads
-what the original's stack holds there, and the function's frame starts
-with those values (they were applied by `tools/gen_c.py`'s FRAME_PRESETS;
-now edited in src/auto directly).  What made it so: matching Wine's exact message semantics
+what the original's stack holds there, and the function sets those locals
+to those values first (marked "stale stack the original reads").  What made it so: matching Wine's exact message semantics
 (window positioning, painting and exposure, activation and focus, key
 state, posted messages before input) -- `harness/msgdiff.sh` and
 `harness/clockdiff.py` compare a native run with the Wine reference
@@ -91,8 +90,21 @@ message by message and clock event by clock event.
   no code touches stay pad_ in the headers.  The machine code is the same
   but for register choice and addressing modes in six functions (an index
   through a field now, `base + 4 + 4*i` for `base + 4*(i + 1)`).
-* **Data is binary.**  `data/image/*.bin` are the original initialized data
-  sections; converting them to C tables is mechanical but not done.
+* **No emulation of the original's memory layout** (step 5).  Locals are
+  ordinary locals (tools/unframe.py), callbacks and data are referred to by
+  name (no ADDR), and the static data is 4,989 ordinary variables with C
+  initializers in original address order (src/data/gamedata.c, made by
+  tools/unglobal.py; strings named from their text).  Where the code relies
+  on data lying together, it is one object: Win32 structs and arrays the
+  decompiler split into locals, and 115 packed structs of globals
+  (`pedia_window_block.pedia_wonder_entry_count`) -- a window object and the
+  fields the code also names as globals, tables split into columns.  Found
+  with AddressSanitizer over every replay (build_native.py --target
+  linux32asan; learned extents in re/data_extents.tsv), by checking that
+  every initial value and every data pointer matches the original image, and
+  by the replays.  Untested code may still rely on two variables being
+  adjacent; gamedata.c keeps them in the original order
+  (-fno-toplevel-reorder in the gcc builds).
 * Coverage of the comparison: the scripts execute 2,295 of the 3,417
   compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never

@@ -41,7 +41,6 @@ void __cdecl rect_set_xywh(iptr rect,int x,int y,iptr width,iptr height)
 }
 
 /* 00408700 auto */
-#define gfx_draw_target (*(i32 *)((u8 *)&g.d_00635c64))
 void __cdecl gfx_target_frame_rect(iptr rect,i32 color)
 
 {
@@ -49,20 +48,16 @@ void __cdecl gfx_target_frame_rect(iptr rect,i32 color)
                      *(int *)(rect + 8) - 1,*(int *)(rect + 0xc) - 1,color);
   return;
 }
-#undef gfx_draw_target
 
 /* 00408750 auto */
-#define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl gfx_fill_draw_target(i32 color)
 
 {
   gfx_fill_surface(gfx_draw_target,color);
   return;
 }
-#undef gfx_draw_target
 
 /* 00408780 auto */
-#define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl
 gfx_target_fill_rect(i32 x,i32 y,i32 width,iptr height,
             i32 color)
@@ -71,7 +66,6 @@ gfx_target_fill_rect(i32 x,i32 y,i32 width,iptr height,
   gfx_fill_rect_xywh(gfx_draw_target,x,y,width,height,color);
   return;
 }
-#undef gfx_draw_target
 
 /* 0040ef70 auto */
 u32 __thiscall font_cached_height(GameFont *this)
@@ -330,7 +324,7 @@ void __cdecl sprite_editor_tool_sprites_global_init(void)
 void __cdecl sprite_editor_tool_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(&sprite_editor_tool_sprites,0x3c,0xf,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,sprite_init,sprite_destroy);
   return;
 }
 
@@ -346,7 +340,7 @@ void __cdecl sprite_editor_tool_sprites_reg_atexit(void)
 void __cdecl sprite_editor_tool_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(&sprite_editor_tool_sprites,0x3c,0xf,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites),0x3c,0xf,sprite_destroy);
   return;
 }
 
@@ -363,7 +357,7 @@ void __cdecl small_citizen_sprites_global_init(void)
 void __cdecl small_citizen_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(&small_citizen_sprites,0x3c,0xb,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,sprite_init,sprite_destroy);
   return;
 }
 
@@ -379,7 +373,7 @@ void __cdecl small_citizen_sprites_reg_atexit(void)
 void __cdecl small_citizen_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(&small_citizen_sprites,0x3c,0xb,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&government_sprites_block.small_citizen_sprites),0x3c,0xb,sprite_destroy);
   return;
 }
 
@@ -396,7 +390,7 @@ void __cdecl small_resource_icon_sprites_global_init(void)
 void __cdecl small_resource_icon_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(&small_resource_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,sprite_init,sprite_destroy);
   return;
 }
 
@@ -412,7 +406,7 @@ void __cdecl small_resource_icon_sprites_reg_atexit(void)
 void __cdecl small_resource_icon_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(&small_resource_icon_sprites,0x3c,3,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites),0x3c,3,sprite_destroy);
   return;
 }
 
@@ -437,7 +431,7 @@ void __cdecl small_unhappy_icon_sprite_global_init(void)
 void __cdecl small_unhappy_icon_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)&small_unhappy_icon_sprite);
+  sprite_init((Sprite *)((i8 *)&small_unhappy_icon_sprite));
   return;
 }
 
@@ -453,7 +447,7 @@ void __cdecl small_unhappy_icon_sprite_reg_atexit(void)
 void __cdecl small_unhappy_icon_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&small_unhappy_icon_sprite);
+  sprite_destroy((Sprite *)((i8 *)&small_unhappy_icon_sprite));
   return;
 }
 
@@ -470,7 +464,7 @@ void __cdecl icon_misc_sprites_global_init(void)
 void __cdecl icon_misc_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(&icon_misc_sprites,0x3c,6,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,sprite_init,sprite_destroy);
   return;
 }
 
@@ -486,7 +480,7 @@ void __cdecl icon_misc_sprites_reg_atexit(void)
 void __cdecl icon_misc_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(&icon_misc_sprites,0x3c,6,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&icon_misc_sprites_block.icon_misc_sprites),0x3c,6,sprite_destroy);
   return;
 }
 
@@ -511,7 +505,7 @@ void __cdecl icons_unused_tall_sprite_global_init(void)
 void __cdecl icons_unused_tall_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)&icons_unused_tall_sprite);
+  sprite_init((Sprite *)((i8 *)&icons_unused_tall_sprite));
   return;
 }
 
@@ -527,7 +521,7 @@ void __cdecl icons_unused_tall_sprite_reg_atexit(void)
 void __cdecl icons_unused_tall_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&icons_unused_tall_sprite);
+  sprite_destroy((Sprite *)((i8 *)&icons_unused_tall_sprite));
   return;
 }
 
@@ -544,7 +538,7 @@ void __cdecl icons_pair_sprites_global_init(void)
 void __cdecl icons_pair_sprites_static_init(void)
 
 {
-  crt_vector_ctor_iterator(&icons_pair_sprites,0x3c,4,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,sprite_init,sprite_destroy);
   return;
 }
 
@@ -560,7 +554,7 @@ void __cdecl icons_pair_sprites_reg_atexit(void)
 void __cdecl icons_pair_sprites_static_dtor(void)
 
 {
-  crt_vector_dtor_iterator(&icons_pair_sprites,0x3c,4,sprite_destroy);
+  crt_vector_dtor_iterator(((i8 *)&icons_pair_sprites_block.icons_pair_sprites),0x3c,4,sprite_destroy);
   return;
 }
 
@@ -585,7 +579,7 @@ void __cdecl gfx_sheet_surface_global_init(void)
 void __cdecl gfx_sheet_surface_static_init(void)
 
 {
-  surface_ctor((DibSurface *)&gfx_sheet_surface);
+  surface_ctor((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   return;
 }
 
@@ -601,7 +595,7 @@ void __cdecl gfx_sheet_surface_reg_atexit(void)
 void __cdecl gfx_sheet_surface_static_dtor(void)
 
 {
-  surface_dtor((DibSurface *)&gfx_sheet_surface);
+  surface_dtor((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   return;
 }
 
@@ -635,81 +629,81 @@ void __cdecl gfx_load_terrain_sprites(void)
   eh_state = 0;
   sprite_init(&blank_sprite);
   eh_state = (eh_state & 0xffffff00 | (byte)(1));
-  __chdir(&scenario_dir_path);
-  loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_006266e0),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_terrain1_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
-    loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_006266f0),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_terrain1_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626700),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_terrain1_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   x2 = 1;
   res_x = 0x83;
   res2_x = 0xc4;
   y2 = 1;
   for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
-    sprite_free((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c));
-    sprite_free((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78));
-    sprite_free((Sprite *)(&terrain_resource2_sprites + terrain2 * 0x78));
-    sprite_grab_tile_cell((iptr)(&terrain_base_sprites + terrain2 * 0x3c),x2,y2);
-    sprite_grab_tile_cell((iptr)(&terrain_resource_sprites + terrain2 * 0x78),res_x,y2);
-    sprite_grab_tile_cell((iptr)(&terrain_resource2_sprites + terrain2 * 0x78),res2_x,y2);
+    sprite_free((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78));
+    sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78));
+    sprite_grab_tile_cell((iptr)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c),x2,y2);
+    sprite_grab_tile_cell((iptr)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78),res_x,y2);
+    sprite_grab_tile_cell((iptr)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78),res2_x,y2);
     y2 += 0x21;
   }
   x2 = 0x1c8;
   y2 = 100;
   for (i = 0; (int)i < 3; i++) {
-    sprite_free((Sprite *)(&land_improvement_sprites + i * 0x3c));
-    sprite_grab_tile_cell((iptr)(&land_improvement_sprites + i * 0x3c),x2,y2);
+    sprite_free((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c));
+    sprite_grab_tile_cell((iptr)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c),x2,y2);
     y2 += 0x21;
   }
-  sprite_free((Sprite *)&pollution_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00641808),x2,y2);
+  sprite_free((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite));
+  sprite_grab_tile_cell((iptr)&pollution_sprite_block.pollution_sprite,x2,y2);
   y2 += 0x21;
-  sprite_free((Sprite *)&grassland_shield_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_0063fc18),x2,y2);
+  sprite_free((Sprite *)((i8 *)&grassland_shield_sprite));
+  sprite_grab_tile_cell((iptr)&grassland_shield_sprite,x2,y2);
   y2 += 0x21;
-  sprite_free((Sprite *)&hut_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00646158),x2,y2);
+  sprite_free((Sprite *)((i8 *)&hut_sprite));
+  sprite_grab_tile_cell((iptr)&hut_sprite,x2,y2);
   y2 = 0x16c;
   x2 = 1;
   for (i = 0; (int)i < 9; i++) {
-    sprite_free((Sprite *)(&road_sprites + i * 0x3c));
-    sprite_free((Sprite *)(&railroad_sprites + i * 0x3c));
-    sprite_grab_tile_cell((iptr)(&road_sprites + i * 0x3c),x2,y2);
-    sprite_grab_tile_cell((iptr)(&railroad_sprites + i * 0x3c),x2,y2 + 0x21);
+    sprite_free((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c));
+    sprite_grab_tile_cell((iptr)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c),x2,y2);
+    sprite_grab_tile_cell((iptr)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c),x2,y2 + 0x21);
     x2 += 0x41;
   }
   sprite_free(&dither_mask);
   sprite_grab_tile_cell((iptr)&dither_mask,1,0x1bf);
-  sprite_free((Sprite *)&tile_pick_mask_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_0063fcd8),0x42,0x1bf);
-  sprite_free((Sprite *)&unexplored_tile_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00646118),0x83,0x1bf);
-  sprite_free((Sprite *)&tile_direction_mask_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00647ed8),0x105,0x1bf);
+  sprite_free((Sprite *)((i8 *)&tile_pick_mask_sprite_block.tile_pick_mask_sprite));
+  sprite_grab_tile_cell((iptr)&tile_pick_mask_sprite_block.tile_pick_mask_sprite,0x42,0x1bf);
+  sprite_free((Sprite *)((i8 *)&unexplored_tile_sprite));
+  sprite_grab_tile_cell((iptr)&unexplored_tile_sprite,0x83,0x1bf);
+  sprite_free((Sprite *)((i8 *)&tile_direction_mask_sprite));
+  sprite_grab_tile_cell((iptr)&tile_direction_mask_sprite,0x105,0x1bf);
   sprite_free(&blank_sprite);
   sprite_grab_tile_cell((iptr)&blank_sprite,0xc4,0x1bf);
   for (terrain2 = 0; terrain2 < 0xd; terrain2++) {
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_0063fe08),0,0,0x40,0x20,7);
+    gfx_fill_rect_xywh((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,0,0,0x40,0x20,7);
     if (terrain2 < 0xb) {
       sprite_draw
-                ((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c),(iptr)grab_rect_a,(iptr)((u8 *)&g.d_0063fe08),0,0);
+                ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c),(iptr)grab_rect_a,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,0,0);
     }
     else if (terrain2 == 0xb) {
-      sprite_draw((Sprite *)&unexplored_tile_sprite,(iptr)grab_rect_b,(iptr)((u8 *)&g.d_0063fe08),0,0);
+      sprite_draw((Sprite *)((i8 *)&unexplored_tile_sprite),(iptr)grab_rect_b,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,0,0);
     }
     else {
-      sprite_draw(&blank_sprite,(iptr)grab_rect_c,(iptr)((u8 *)&g.d_0063fe08),0,0);
+      sprite_draw(&blank_sprite,(iptr)grab_rect_c,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,0,0);
     }
-    sprite_draw_keyed(&dither_mask,(iptr)grab_rect_d,(iptr)((u8 *)&g.d_0063fe08),10,0,0);
+    sprite_draw_keyed(&dither_mask,(iptr)grab_rect_d,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,10,0,0);
     for (quarter = 0; quarter < 4; quarter++) {
       if (quarter < 2) {
         x2 = 0x20;
@@ -724,65 +718,65 @@ void __cdecl gfx_load_terrain_sprites(void)
         y2 = 0x10;
       }
       sprite_free
-                ((Sprite *)(&terrain_dither_sprites + quarter * 0x3c + terrain2 * 0xf0));
-      sprite_grab_from_sheet((iptr)(&terrain_dither_sprites + terrain2 * 0xf0 + quarter * 0x3c),x2,y2,0x20,
+                ((Sprite *)(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites) + quarter * 0x3c + terrain2 * 0xf0));
+      sprite_grab_from_sheet((iptr)(((i8 *)&map_cursor_sprite_block.terrain_dither_sprites) + terrain2 * 0xf0 + quarter * 0x3c),x2,y2,0x20,
                    0x10);
     }
   }
-  surface_release((DibSurface *)&gfx_sheet_surface);
-  __chdir(&scenario_dir_path);
-  loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00626710),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_terrain2_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
-    loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626720),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_terrain2_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626730),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_terrain2_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   base_x = 1;
   base_y = 0x43;
   for (i = 0; (int)i < 0x10; i++) {
     x2 = (i & 7) * 0x41;
     y2 = ((int)i >> 3) * 0x21;
-    sprite_free((Sprite *)(&river_sprites + i * 0x3c));
-    sprite_free((Sprite *)(&forest_sprites + i * 0x3c));
-    sprite_free((Sprite *)(&mountain_sprites + i * 0x3c));
-    sprite_free((Sprite *)(&hill_sprites + i * 0x3c));
-    sprite_grab_tile_cell((iptr)(&river_sprites + i * 0x3c),base_x + x2,base_y + y2);
-    sprite_grab_tile_cell((iptr)(&forest_sprites + i * 0x3c),base_x + x2,
+    sprite_free((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c));
+    sprite_grab_tile_cell((iptr)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c),base_x + x2,base_y + y2);
+    sprite_grab_tile_cell((iptr)(((i8 *)&forest_sprites) + i * 0x3c),base_x + x2,
                  base_y + y2 + 0x42);
-    sprite_grab_tile_cell((iptr)(&mountain_sprites + i * 0x3c),base_x + x2,
+    sprite_grab_tile_cell((iptr)(((i8 *)&mountain_sprites) + i * 0x3c),base_x + x2,
                  base_y + y2 + 0x84);
-    sprite_grab_tile_cell((iptr)(&hill_sprites + i * 0x3c),base_x + x2,
+    sprite_grab_tile_cell((iptr)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c),base_x + x2,
                  base_y + y2 + 0xc6);
   }
   base_x = 1;
   base_y = 0x1ad;
   for (coast_idx = 0; coast_idx < 8; coast_idx++) {
-    sprite_free((Sprite *)(&coast_quarter_sprites + coast_idx * 0xf0));
-    sprite_free((Sprite *)(&coast_quarter_east_sprites + coast_idx * 0xf0));
-    sprite_free((Sprite *)(&coast_quarter_south_sprites + coast_idx * 0xf0));
-    sprite_free((Sprite *)(&coast_quarter_west_sprites + coast_idx * 0xf0));
-    sprite_grab_from_sheet((iptr)(&coast_quarter_sprites + coast_idx * 0xf0),base_x,base_y,0x20,0x10);
-    sprite_grab_from_sheet((iptr)(&coast_quarter_east_sprites + coast_idx * 0xf0),base_x + 0x21,base_y + 0x22,0x20,0x10);
-    sprite_grab_from_sheet((iptr)(&coast_quarter_south_sprites + coast_idx * 0xf0),base_x,base_y + 0x11,0x20,0x10);
-    sprite_grab_from_sheet((iptr)(&coast_quarter_west_sprites + coast_idx * 0xf0),base_x,base_y + 0x22,0x20,0x10);
+    sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0));
+    sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0));
+    sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0));
+    sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0));
+    sprite_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0),base_x,base_y,0x20,0x10);
+    sprite_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0),base_x + 0x21,base_y + 0x22,0x20,0x10);
+    sprite_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0),base_x,base_y + 0x11,0x20,0x10);
+    sprite_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0),base_x,base_y + 0x22,0x20,0x10);
     base_x += 0x42;
   }
   base_x = 1;
   base_y = 0x14b;
   for (i = 0; (int)i < 4; i++) {
-    sprite_free((Sprite *)(&river_mouth_sprites + i * 0x3c));
-    sprite_grab_tile_cell((iptr)(&river_mouth_sprites + i * 0x3c),base_x,base_y);
+    sprite_free((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c));
+    sprite_grab_tile_cell((iptr)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c),base_x,base_y);
     base_x += 0x41;
   }
-  surface_release((DibSurface *)&gfx_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   eh_state = eh_state & 0xffffff00;
   /* inlined unwind funclet 0044996f */ { sprite_destroy((Sprite *)((iptr)&blank_sprite)); }
   eh_state = 0xffffffff;
@@ -794,7 +788,7 @@ void __cdecl gfx_load_terrain_sprites(void)
 void __cdecl sprite_grab_tile_cell(iptr sprite,i32 x,i32 y)
 
 {
-  sprite_grab_from_surface((Sprite *)sprite,(iptr)((u8 *)&g.d_0063fe08),7,x,y,0x40,0x20);
+  sprite_grab_from_surface((Sprite *)sprite,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,x,y,0x40,0x20);
   sprite_replace_color((Sprite *)sprite,9,7);
   return;
 }
@@ -805,13 +799,12 @@ sprite_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
             i32 height)
 
 {
-  sprite_grab_from_surface((Sprite *)sprite,(iptr)((u8 *)&g.d_0063fe08),7,x,y,width,height);
+  sprite_grab_from_surface((Sprite *)sprite,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,x,y,width,height);
   sprite_replace_color((Sprite *)sprite,9,7);
   return;
 }
 
 /* 00449a0e auto */
-#define dlg_client_tile_surface (*(i8 * *)((u8 *)&g.d_00635aa4))
 void __cdecl gfx_load_icon_sprites(void)
 
 {
@@ -833,19 +826,19 @@ void __cdecl gfx_load_icon_sprites(void)
   eh_state = 0xffffffff;
   palette_init(&palette);
   eh_state = 0;
-  __chdir(&scenario_dir_path);
-  loaded = surface_load_gif_resource((DibSurface *)&gfx_sheet_surface,0x55,10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = surface_load_gif_resource((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),0x55,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
-    __chdir(&game_home_dir);
-    surface_load_gif_resource((DibSurface *)&gfx_sheet_surface,0x55,10,0xc0,(iptr)&palette);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    surface_load_gif_resource((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),0x55,10,0xc0,(iptr)&palette);
   }
-  __chdir(&game_home_dir);
+  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   x2 = 1;
   y2 = 1;
   frame_count = 0;
   for (i = 0; i < 0xb; i++) {
-    sprite_free((Sprite *)(&nuke_anim_sprites + i * 0x3c));
-    sprite_grab_from_sheet((iptr)(&nuke_anim_sprites + i * 0x3c),x2,y2,0x5b,0x48);
+    sprite_free((Sprite *)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&hill_sprites_block.nuke_anim_sprites) + i * 0x3c),x2,y2,0x5b,0x48);
     x2 += 0x5c;
     frame_count++;
     if (frame_count == 6) {
@@ -853,119 +846,119 @@ void __cdecl gfx_load_icon_sprites(void)
       y2 += 0x49;
     }
   }
-  surface_release((DibSurface *)&gfx_sheet_surface);
-  __chdir(&scenario_dir_path);
-  loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00626740),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_icons_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
-    loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_0062674c),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_icons_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626758),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_icons_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
-  sprite_free((Sprite *)&map_cursor_sprite);
-  sprite_free((Sprite *)&map_grid_sprite);
-  sprite_free((Sprite *)&city_radius_grid_sprite);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00640b98),199,0x100);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00646198),199,0x121);
-  sprite_grab_tile_cell((iptr)((u8 *)&g.d_00647bc8),0xf8,0x1ae);
-  sprite_free((Sprite *)&fortify_overlay_alt_sprite);
+  sprite_free((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite));
+  sprite_free((Sprite *)((i8 *)&map_grid_sprite));
+  sprite_free((Sprite *)((i8 *)&icons_pair_sprites_block.city_radius_grid_sprite));
+  sprite_grab_tile_cell((iptr)&map_cursor_sprite_block.map_cursor_sprite,199,0x100);
+  sprite_grab_tile_cell((iptr)&map_grid_sprite,199,0x121);
+  sprite_grab_tile_cell((iptr)&icons_pair_sprites_block.city_radius_grid_sprite,0xf8,0x1ae);
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_alt_sprite));
   gfx_grab_fortify_overlay(1,0x20,0xbb);
-  sprite_free((Sprite *)&icon_sprite_6);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_0064668c),0x22,0xdf);
-  sprite_free((Sprite *)&pollution_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006466c8),0x43,0xdf,0x20,0x20);
-  sprite_free((Sprite *)&icon_sprite_7);
-  sprite_free((Sprite *)&icon_sprite_8);
-  sprite_free((Sprite *)&city_disorder_icon_sprite);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_00646704),100,0xdf);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_00646740),0x85,0xdf);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0064677c),0xa6,0xdf,0x1e,0x1e);
-  sprite_free((Sprite *)&icon_misc_sprites);
-  sprite_free((Sprite *)&icon_sprite_1);
-  sprite_free((Sprite *)&icon_sprite_4);
-  sprite_free((Sprite *)&icon_sprite_5);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_0063f6f0),199,0x100);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_0063f72c),0xe8,0x100);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_0063f7e0),0x109,0x100);
-  sprite_grab_icon_cell_keyed((iptr)((u8 *)&g.d_0063f81c),0x12a,0x100);
-  sprite_free((Sprite *)&icon_sprite_2);
-  sprite_free((Sprite *)&icon_sprite_3);
-  sprite_free((Sprite *)&icons_unused_tall_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0063f768),0x137,1,0x1f,0x60);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0063f7a4),0x137,0x62,0x1f,0x60);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00648098),0x109,0x121,0x38,0x83);
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.icon_sprite_6));
+  sprite_grab_icon_cell_keyed((iptr)&fortify_overlay_sprites_block.icon_sprite_6,0x22,0xdf);
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.pollution_icon_sprite));
+  sprite_grab_from_sheet((iptr)&fortify_overlay_sprites_block.pollution_icon_sprite,0x43,0xdf,0x20,0x20);
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.icon_sprite_7));
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.icon_sprite_8));
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.city_disorder_icon_sprite));
+  sprite_grab_icon_cell_keyed((iptr)&fortify_overlay_sprites_block.icon_sprite_7,100,0xdf);
+  sprite_grab_icon_cell_keyed((iptr)&fortify_overlay_sprites_block.icon_sprite_8,0x85,0xdf);
+  sprite_grab_from_sheet((iptr)&fortify_overlay_sprites_block.city_disorder_icon_sprite,0xa6,0xdf,0x1e,0x1e);
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_misc_sprites));
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_sprite_1));
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_sprite_4));
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_sprite_5));
+  sprite_grab_icon_cell_keyed((iptr)&icon_misc_sprites_block.icon_misc_sprites,199,0x100);
+  sprite_grab_icon_cell_keyed((iptr)&icon_misc_sprites_block.icon_sprite_1,0xe8,0x100);
+  sprite_grab_icon_cell_keyed((iptr)&icon_misc_sprites_block.icon_sprite_4,0x109,0x100);
+  sprite_grab_icon_cell_keyed((iptr)&icon_misc_sprites_block.icon_sprite_5,0x12a,0x100);
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_sprite_2));
+  sprite_free((Sprite *)((i8 *)&icon_misc_sprites_block.icon_sprite_3));
+  sprite_free((Sprite *)((i8 *)&icons_unused_tall_sprite));
+  sprite_grab_from_sheet((iptr)&icon_misc_sprites_block.icon_sprite_2,0x137,1,0x1f,0x60);
+  sprite_grab_from_sheet((iptr)&icon_misc_sprites_block.icon_sprite_3,0x137,0x62,0x1f,0x60);
+  sprite_grab_from_sheet((iptr)&icons_unused_tall_sprite,0x109,0x121,0x38,0x83);
   x2 = 1;
   y2 = 0x122;
   for (i = 0; i < 3; i++) {
     for (k = 0; k < 2; k++) {
-      sprite_free((Sprite *)(&resource_shortage_icon_sprites + i * 0x78));
-      sprite_free((Sprite *)(&resource_icon_sprites + i * 0x78));
-      sprite_grab_square((iptr)(&resource_shortage_icon_sprites + i * 0x78),x2,y2,0xe);
-      sprite_grab_square((iptr)(&resource_icon_sprites + i * 0x78),x2,y2 + 0xf,0xe);
+      sprite_free((Sprite *)(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites) + i * 0x78));
+      sprite_free((Sprite *)(((i8 *)&war_icon_sprite_block.resource_icon_sprites) + i * 0x78));
+      sprite_grab_square((iptr)(((i8 *)&war_icon_sprite_block.resource_shortage_icon_sprites) + i * 0x78),x2,y2,0xe);
+      sprite_grab_square((iptr)(((i8 *)&war_icon_sprite_block.resource_icon_sprites) + i * 0x78),x2,y2 + 0xf,0xe);
     }
     x2 += 0xf;
   }
   x2 = 1;
   y2 = 0x140;
   for (i = 0; i < 3; i++) {
-    sprite_free((Sprite *)(&tax_rate_icon_sprites + i * 0x3c));
-    sprite_grab_square((iptr)(&tax_rate_icon_sprites + i * 0x3c),x2,y2,0xe);
+    sprite_free((Sprite *)(((i8 *)&tax_rate_icon_sprites_block.tax_rate_icon_sprites) + i * 0x3c));
+    sprite_grab_square((iptr)(((i8 *)&tax_rate_icon_sprites_block.tax_rate_icon_sprites) + i * 0x3c),x2,y2,0xe);
     x2 += 0xf;
   }
   x2 = 0x31;
   y2 = 0x14e;
   for (i = 0; i < 3; i++) {
-    sprite_free((Sprite *)(&small_resource_icon_sprites + i * 0x3c));
-    sprite_grab_square((iptr)(&small_resource_icon_sprites + i * 0x3c),x2,y2,10);
+    sprite_free((Sprite *)(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites) + i * 0x3c));
+    sprite_grab_square((iptr)(((i8 *)&small_resource_icon_sprites_block.small_resource_icon_sprites) + i * 0x3c),x2,y2,10);
     x2 += 0xb;
   }
   x2 = 0x31;
   y2 = 0x159;
   for (i = 0; i < 3; i++) {
-    sprite_free((Sprite *)(&lux_tax_sci_icon_sprites + i * 0x3c));
-    sprite_grab_square((iptr)(&lux_tax_sci_icon_sprites + i * 0x3c),x2,y2,10);
+    sprite_free((Sprite *)(((i8 *)&tax_rate_icon_sprites_block.lux_tax_sci_icon_sprites) + i * 0x3c));
+    sprite_grab_square((iptr)(((i8 *)&tax_rate_icon_sprites_block.lux_tax_sci_icon_sprites) + i * 0x3c),x2,y2,10);
     x2 += 0xb;
   }
-  sprite_free((Sprite *)&small_unhappy_icon_sprite);
-  sprite_free((Sprite *)&unhappy_suppressed_icon_sprite);
-  sprite_grab_square((iptr)((u8 *)&g.d_00646598),0x52,0x14e,10);
-  sprite_grab_square((iptr)((u8 *)&g.d_00648058),0x52,0x159,10);
+  sprite_free((Sprite *)((i8 *)&small_unhappy_icon_sprite));
+  sprite_free((Sprite *)((i8 *)&unhappy_suppressed_icon_sprite));
+  sprite_grab_square((iptr)&small_unhappy_icon_sprite,0x52,0x14e,10);
+  sprite_grab_square((iptr)&unhappy_suppressed_icon_sprite,0x52,0x159,10);
   x2 = 0x31;
   y2 = 0x122;
   for (i = 0; i < 4; i++) {
-    sprite_free((Sprite *)(&research_flask_sprites + i * 0x3c));
-    sprite_free((Sprite *)(&global_warming_sprites + i * 0x3c));
-    sprite_grab_square((iptr)(&research_flask_sprites + i * 0x3c),x2,y2,0xe);
-    sprite_grab_square((iptr)(&global_warming_sprites + i * 0x3c),x2,0x131,0xe);
+    sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites) + i * 0x3c));
+    sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites) + i * 0x3c));
+    sprite_grab_square((iptr)(((i8 *)&city_down_arrow_sprite_block.research_flask_sprites) + i * 0x3c),x2,y2,0xe);
+    sprite_grab_square((iptr)(((i8 *)&city_down_arrow_sprite_block.global_warming_sprites) + i * 0x3c),x2,0x131,0xe);
     x2 += 0xf;
   }
   x2 = 1;
   y2 = 0x164;
   for (i = 0; i < 8; i++) {
-    sprite_free((Sprite *)(&explosion_sprites + i * 0x3c));
-    sprite_grab_from_sheet((iptr)(&explosion_sprites + i * 0x3c),x2,y2,0x20,0x20);
+    sprite_free((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c),x2,y2,0x20,0x20);
     x2 += 0x21;
   }
-  surface_create((DibSurface *)&window_border_tile_surface,0x40,0x20);
-  gfx_copy_rect_xywh((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00647f18),199,0x142,0,0,0x40,0x20);
-  dialog_set_frame_tile_surface((iptr)((u8 *)&g.d_00647f18));
-  frame_set_border_tile((iptr)((u8 *)&g.d_00647f18));
-  surface_create((DibSurface *)&panel_texture_surface,0x20,0x20);
-  gfx_copy_rect_xywh((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00640990),0x12a,0xbe,0,0,0x20,0x20);
-  dlg_client_tile_surface = &panel_texture_surface;
+  surface_create((DibSurface *)((i8 *)&window_border_tile_surface),0x40,0x20);
+  gfx_copy_rect_xywh((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&window_border_tile_surface,199,0x142,0,0,0x40,0x20);
+  dialog_set_frame_tile_surface((iptr)&window_border_tile_surface);
+  frame_set_border_tile((iptr)&window_border_tile_surface);
+  surface_create((DibSurface *)((i8 *)&panel_texture_surface),0x20,0x20);
+  gfx_copy_rect_xywh((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&panel_texture_surface,0x12a,0xbe,0,0,0x20,0x20);
+  (*(i8 * *)&dlg_client_tile_surface) = ((i8 *)&panel_texture_surface);
   x2 = 0x157;
   y2 = 1;
   col = 0;
   for (i = 1; i < 0x27; i++) {
-    sprite_free((Sprite *)(&improvement_icon_sprites + i * 0x3c));
-    sprite_grab_from_sheet((iptr)(&improvement_icon_sprites + i * 0x3c),x2,y2,0x24,0x14);
+    sprite_free((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c),x2,y2,0x24,0x14);
     x2 += 0x25;
     col++;
     if (7 < col) {
@@ -978,8 +971,8 @@ void __cdecl gfx_load_icon_sprites(void)
   y2 = 0x6a;
   col = 0;
   for (i = 0; i < 0x1c; i++) {
-    sprite_free((Sprite *)(&wonder_icon_sprites + i * 0x3c));
-    sprite_grab_from_sheet((iptr)(&wonder_icon_sprites + i * 0x3c),x2,y2,0x24,0x14);
+    sprite_free((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c),x2,y2,0x24,0x14);
     x2 += 0x25;
     col++;
     if (6 < col) {
@@ -993,68 +986,68 @@ void __cdecl gfx_load_icon_sprites(void)
     x2 = 0x157;
     for (j = 0; j < 5; j++) {
       sprite_free
-                ((Sprite *)(&advance_category_icon_sprites + j * 0xf0 + i * 0x3c));
-      sprite_grab_from_sheet((iptr)(&advance_category_icon_sprites + i * 0x3c + j * 0xf0),x2,y2,0x24,
+                ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + j * 0xf0 + i * 0x3c));
+      sprite_grab_from_sheet((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + i * 0x3c + j * 0xf0),x2,y2,0x24,
                    0x14);
       x2 += 0x25;
     }
     y2 += 0x15;
   }
-  sprite_free((Sprite *)&icons_pair_sprites);
-  sprite_free((Sprite *)&icon_sprite_9);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647b50),0x15e,0xff,0x40,0x20);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647b8c),0x15e,0x120,0x40,0x20);
-  sprite_free((Sprite *)&caption_close_button_sprite);
-  sprite_free((Sprite *)&caption_zoom_out_sprite);
-  sprite_free((Sprite *)&caption_zoom_out_button_sprite);
-  sprite_free((Sprite *)&caption_view_mode_button_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00645120),1,0x185,0x10,0x10);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00648820),0x12,0x185,0x10,0x10);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647788),0x23,0x185,0x10,0x10);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647348),0x34,0x185,0x10,0x10);
-  sprite_free((Sprite *)&scroll_up_button_sprite);
-  sprite_free((Sprite *)&city_down_arrow_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00644770),0xe3,0x185,0x12,0x18);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006480d8),0xf6,0x185,0x12,0x18);
-  surface_release((DibSurface *)&gfx_sheet_surface);
-  __chdir(&game_home_dir);
-  loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626764),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  sprite_free((Sprite *)((i8 *)&icons_pair_sprites_block.icons_pair_sprites));
+  sprite_free((Sprite *)((i8 *)&icons_pair_sprites_block.icon_sprite_9));
+  sprite_grab_from_sheet((iptr)&icons_pair_sprites_block.icons_pair_sprites,0x15e,0xff,0x40,0x20);
+  sprite_grab_from_sheet((iptr)&icons_pair_sprites_block.icon_sprite_9,0x15e,0x120,0x40,0x20);
+  sprite_free((Sprite *)((i8 *)&caption_close_button_sprite_block.caption_close_button_sprite));
+  sprite_free((Sprite *)((i8 *)&caption_zoom_out_sprite));
+  sprite_free((Sprite *)((i8 *)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite));
+  sprite_free((Sprite *)((i8 *)&caption_view_mode_button_sprite));
+  sprite_grab_from_sheet((iptr)&caption_close_button_sprite_block.caption_close_button_sprite,1,0x185,0x10,0x10);
+  sprite_grab_from_sheet((iptr)&caption_zoom_out_sprite,0x12,0x185,0x10,0x10);
+  sprite_grab_from_sheet((iptr)&caption_zoom_out_button_sprite_block.caption_zoom_out_button_sprite,0x23,0x185,0x10,0x10);
+  sprite_grab_from_sheet((iptr)&caption_view_mode_button_sprite,0x34,0x185,0x10,0x10);
+  sprite_free((Sprite *)((i8 *)&scroll_up_button_sprite));
+  sprite_free((Sprite *)((i8 *)&city_down_arrow_sprite_block.city_down_arrow_sprite));
+  sprite_grab_from_sheet((iptr)&scroll_up_button_sprite,0xe3,0x185,0x12,0x18);
+  sprite_grab_from_sheet((iptr)&city_down_arrow_sprite_block.city_down_arrow_sprite,0xf6,0x185,0x12,0x18);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
+  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+  loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_editorpt_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
     x2 = 1;
     y2 = 0x1bf;
     for (i = 0; i < 0xf; i++) {
-      sprite_free((Sprite *)(&sprite_editor_tool_sprites + i * 0x3c));
-      sprite_grab_from_sheet((iptr)(&sprite_editor_tool_sprites + i * 0x3c),x2,y2,0x20,0x20);
+      sprite_free((Sprite *)(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites) + i * 0x3c));
+      sprite_grab_from_sheet((iptr)(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites) + i * 0x3c),x2,y2,0x20,0x20);
       x2 += 0x21;
     }
   }
-  sprite_free((Sprite *)&editor_unit_backdrop_sprite);
-  sprite_grab_from_surface((Sprite *)&editor_unit_backdrop_sprite,(iptr)((u8 *)&g.d_0063fe08),7,0x23f,1,0x40,0x30);
-  sprite_free((Sprite *)&editor_tile_backdrop_sprite);
-  sprite_grab_from_surface((Sprite *)&editor_tile_backdrop_sprite,(iptr)((u8 *)&g.d_0063fe08),7,0x23f,0x32,0x40,0x20);
-  surface_release((DibSurface *)&gfx_sheet_surface);
-  __chdir(&scenario_dir_path);
-  loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00626774),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  sprite_free((Sprite *)((i8 *)&editor_unit_backdrop_sprite));
+  sprite_grab_from_surface((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,0x23f,1,0x40,0x30);
+  sprite_free((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite));
+  sprite_grab_from_surface((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,0x23f,0x32,0x40,0x20);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_people_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
-    loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_00626780),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_people_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_0062678c),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_people_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   y2 = 6;
   for (row = 0; row < 4; row++) {
     x2 = 2;
     for (i = 0; i < 0xb; i++) {
       sprite_free
-                ((Sprite *)(&citizen_sprites + row * 0x294 + i * 0x3c));
-      sprite_grab_from_sheet((iptr)(&citizen_sprites + i * 0x3c + row * 0x294),x2,y2,0x1b
+                ((Sprite *)(((i8 *)&road_sprites_block.citizen_sprites) + row * 0x294 + i * 0x3c));
+      sprite_grab_from_sheet((iptr)(((i8 *)&road_sprites_block.citizen_sprites) + i * 0x3c + row * 0x294),x2,y2,0x1b
                    ,0x1e);
       x2 += 0x1c;
     }
@@ -1063,78 +1056,77 @@ void __cdecl gfx_load_icon_sprites(void)
   x2 = 2;
   y2 = 0x89;
   for (i = 0; i < 0xb; i++) {
-    sprite_free((Sprite *)(&small_citizen_sprites + i * 0x3c));
-    sprite_grab_from_sheet((iptr)(&small_citizen_sprites + i * 0x3c),x2,y2,0xf,0x1a);
+    sprite_free((Sprite *)(((i8 *)&government_sprites_block.small_citizen_sprites) + i * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&government_sprites_block.small_citizen_sprites) + i * 0x3c),x2,y2,0xf,0x1a);
     x2 += 0x10;
   }
-  surface_release((DibSurface *)&gfx_sheet_surface);
-  __chdir(&scenario_dir_path);
-  loaded = surface_load_gif_resource((DibSurface *)&gfx_sheet_surface,0x56,10,0xc0,(iptr)&palette);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = surface_load_gif_resource((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),0x56,10,0xc0,(iptr)&palette);
   if (loaded == 0) {
-    __chdir(&game_home_dir);
-    surface_load_gif_resource((DibSurface *)&gfx_sheet_surface,0x56,10,0xc0,(iptr)&palette);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+    surface_load_gif_resource((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),0x56,10,0xc0,(iptr)&palette);
   }
-  __chdir(&game_home_dir);
+  __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   x2 = 2;
   y2 = 0x44;
-  sprite_free((Sprite *)&government_sprites);
-  sprite_free((Sprite *)&government_despotism_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00646878),x2,y2,0x22,0x22);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006468b4),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_sprites));
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_despotism_sprite));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_sprites,x2,y2,0x22,0x22);
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_despotism_sprite,x2,y2,0x22,0x22);
   x2 += 0x42;
-  sprite_free((Sprite *)&government_sprite_communism);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0064692c),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_sprite_communism));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_sprite_communism,x2,y2,0x22,0x22);
   x2 += 0x42;
-  sprite_free((Sprite *)&government_sprite_fundamentalism);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00646968),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_sprite_fundamentalism));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_sprite_fundamentalism,x2,y2,0x22,0x22);
   x2 += 0x42;
-  sprite_free((Sprite *)&government_monarchy_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006468f0),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_monarchy_sprite));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_monarchy_sprite,x2,y2,0x22,0x22);
   x2 += 0x42;
-  sprite_free((Sprite *)&government_sprite_democracy);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006469e0),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_sprite_democracy));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_sprite_democracy,x2,y2,0x22,0x22);
   x2 += 0x42;
-  sprite_free((Sprite *)&government_sprite_republic);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006469a4),x2,y2,0x22,0x22);
+  sprite_free((Sprite *)((i8 *)&government_sprites_block.government_sprite_republic));
+  sprite_grab_from_sheet((iptr)&government_sprites_block.government_sprite_republic,x2,y2,0x22,0x22);
   x2 = 2;
   y2 = 200;
-  sprite_free((Sprite *)&ceasefire_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647748),x2,y2,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&ceasefire_icon_sprite));
+  sprite_grab_from_sheet((iptr)&ceasefire_icon_sprite,x2,y2,0x40,0x40);
   x2 += 0x42;
-  sprite_free((Sprite *)&peace_treaty_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_006409d8),x2,y2,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite));
+  sprite_grab_from_sheet((iptr)&peace_treaty_icon_sprite_block.peace_treaty_icon_sprite,x2,y2,0x40,0x40);
   x2 += 0x42;
-  sprite_free((Sprite *)&war_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00644e48),x2,y2,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&war_icon_sprite_block.war_icon_sprite));
+  sprite_grab_from_sheet((iptr)&war_icon_sprite_block.war_icon_sprite,x2,y2,0x40,0x40);
   x2 += 0x42;
-  sprite_free((Sprite *)&signal_allied_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0063fc98),x2,y2,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&signal_allied_icon_sprite));
+  sprite_grab_from_sheet((iptr)&signal_allied_icon_sprite,x2,y2,0x40,0x40);
   x2 += 0x42;
-  sprite_free((Sprite *)&diplo_popup_portrait_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00648018),x2,y2,0x40,0x40);
-  sprite_free((Sprite *)&popup_info_icon_sprite);
-  sprite_free((Sprite *)&tutorial_icon_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_0063fc58),0x18e,0x86,0x40,0x40);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00643af8),0x86,0x18e,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&diplo_popup_portrait_sprite));
+  sprite_grab_from_sheet((iptr)&diplo_popup_portrait_sprite,x2,y2,0x40,0x40);
+  sprite_free((Sprite *)((i8 *)&popup_info_icon_sprite));
+  sprite_free((Sprite *)((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite));
+  sprite_grab_from_sheet((iptr)&popup_info_icon_sprite,0x18e,0x86,0x40,0x40);
+  sprite_grab_from_sheet((iptr)&tutorial_icon_sprite_block.tutorial_icon_sprite,0x86,0x18e,0x40,0x40);
   for (civ = 0; civ < 8; civ++) {
-    sprite_free((Sprite *)(&civ_portrait_sprites + civ * 0x3c));
-    sprite_grab_from_sheet((iptr)(&civ_portrait_sprites + civ * 0x3c),2,0x18e,0x40,0x40);
+    sprite_free((Sprite *)(((i8 *)&road_sprites_block.civ_portrait_sprites) + civ * 0x3c));
+    sprite_grab_from_sheet((iptr)(((i8 *)&road_sprites_block.civ_portrait_sprites) + civ * 0x3c),2,0x18e,0x40,0x40);
     sprite_replace_color
-              ((Sprite *)(&civ_portrait_sprites + civ * 0x3c),8,
-               *(i32 *)(&civ_primary_colors + civ * 0x10));
+              ((Sprite *)(((i8 *)&road_sprites_block.civ_portrait_sprites) + civ * 0x3c),8,
+               *(i32 *)(((i8 *)&civ_primary_colors_block.civ_primary_colors) + civ * 0x10));
   }
-  surface_release((DibSurface *)&gfx_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0044ab4e */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef dlg_client_tile_surface
 
 /* 0044ab72 auto */
 void __cdecl sprite_grab_icon_cell_keyed(iptr sprite,i32 x,i32 y)
 
 {
-  sprite_grab_from_surface((Sprite *)sprite,(iptr)((u8 *)&g.d_0063fe08),7,x,y,0x20,0x20);
+  sprite_grab_from_surface((Sprite *)sprite,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,x,y,0x20,0x20);
   sprite_replace_color((Sprite *)sprite,9,7);
   return;
 }
@@ -1151,7 +1143,7 @@ void __cdecl sprite_grab_square(iptr sprite,i32 x,i32 y,i32 size)
 void __cdecl gfx_grab_fortify_overlay(int index,i32 x,i32 y)
 
 {
-  sprite_grab_city_cell((iptr)(&fortify_overlay_sprites + index * 0x3c),x,y);
+  sprite_grab_city_cell((iptr)(((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites) + index * 0x3c),x,y);
   return;
 }
 
@@ -1159,7 +1151,7 @@ void __cdecl gfx_grab_fortify_overlay(int index,i32 x,i32 y)
 void __cdecl sprite_grab_city_cell(iptr sprite,i32 x,i32 y)
 
 {
-  sprite_grab_from_surface((Sprite *)sprite,(iptr)((u8 *)&g.d_0063fe08),7,x,y,0x40,0x30);
+  sprite_grab_from_surface((Sprite *)sprite,(iptr)&gfx_sheet_surface_block.gfx_sheet_surface,7,x,y,0x40,0x30);
   sprite_replace_color((Sprite *)sprite,9,7);
   return;
 }
@@ -1176,33 +1168,33 @@ void __cdecl gfx_load_city_sprites(void)
   int flag_x;
   int size_idx;
   
-  __chdir(&scenario_dir_path);
-  cell_x = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_00626798),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  cell_x = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_cities_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (cell_x == 0) {
-    cell_x = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_006267a4),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    cell_x = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_cities_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (cell_x == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_006267b0),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_cities_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   y2 = 0x27;
   for (style2 = 0; style2 < 6; style2++) {
     for (size_idx = 0; size_idx < 4; size_idx++) {
       sprite_free
-                ((Sprite *)(&city_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       sprite_free
-                ((Sprite *)(&city_walled_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       cell_x = size_idx * 0x41;
-      sprite_grab_city_cell((iptr)(&city_sprites + style2 * 0x1e0 + size_idx * 0x78),cell_x + 1,y2);
+      sprite_grab_city_cell((iptr)(((i8 *)&gfx_sheet_surface_block.city_sprites) + style2 * 0x1e0 + size_idx * 0x78),cell_x + 1,y2);
       city_sprite_scan_flag_offset(style2,size_idx,0,cell_x + 1,y2);
       city_sprite_scan_size_box_offset(style2,size_idx,0,cell_x + 1,y2);
-      sprite_grab_city_cell((iptr)(&city_walled_sprites + style2 * 0x1e0 + size_idx * 0x78),cell_x + 0x14e,y2)
+      sprite_grab_city_cell((iptr)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + style2 * 0x1e0 + size_idx * 0x78),cell_x + 0x14e,y2)
       ;
       city_sprite_scan_flag_offset(style2,size_idx,1,cell_x + 0x14e,y2);
       city_sprite_scan_size_box_offset(style2,size_idx,1,cell_x + 0x14e,y2);
@@ -1211,27 +1203,27 @@ void __cdecl gfx_load_city_sprites(void)
   }
   flag_x = 1;
   for (civ = 0; civ < 8; civ++) {
-    sprite_free((Sprite *)(&civ_flag_sprites + civ * 0x78));
-    sprite_free((Sprite *)(&civ_flag_dark_sprites + civ * 0x78));
-    sprite_grab_from_sheet((iptr)(&civ_flag_sprites + civ * 0x78),flag_x,0x1a9,0xe,0x16);
-    sprite_grab_from_sheet((iptr)(&civ_flag_dark_sprites + civ * 0x78),flag_x,0x1c0,0xe,0x16);
-    color = surface_get_pixel((DibSurface *)&gfx_sheet_surface,flag_x + 3,0x1ad);
-    *(i32 *)(&civ_primary_colors + civ * 0x10) = color;
-    color = surface_get_pixel((DibSurface *)&gfx_sheet_surface,flag_x + 6,0x1ad);
-    *(i32 *)(&civ_mid_colors + civ * 0x10) = color;
-    color = surface_get_pixel((DibSurface *)&gfx_sheet_surface,flag_x,0x1a7);
-    *(i32 *)(&civ_secondary_colors + civ * 0x10) = color;
+    sprite_free((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78));
+    sprite_free((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78));
+    sprite_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78),flag_x,0x1a9,0xe,0x16);
+    sprite_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78),flag_x,0x1c0,0xe,0x16);
+    color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x + 3,0x1ad);
+    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_primary_colors) + civ * 0x10) = color;
+    color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x + 6,0x1ad);
+    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_mid_colors) + civ * 0x10) = color;
+    color = surface_get_pixel((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),flag_x,0x1a7);
+    *(i32 *)(((i8 *)&civ_primary_colors_block.civ_secondary_colors) + civ * 0x10) = color;
     flag_x += 0xf;
   }
-  sprite_free((Sprite *)&fortify_overlay_sprites);
-  sprite_free((Sprite *)&fortress_sprite);
-  sprite_grab_city_cell((iptr)((u8 *)&g.d_006465d8),0x8f,0x1a7);
-  sprite_grab_city_cell((iptr)((u8 *)&g.d_00646650),0xd0,0x1a7);
-  sprite_free((Sprite *)&airbase_sprites);
-  sprite_free((Sprite *)&airbase_occupied_sprite);
-  sprite_grab_city_cell((iptr)((u8 *)&g.d_00647fa0),0x111,0x1a7);
-  sprite_grab_city_cell((iptr)((u8 *)&g.d_00647fdc),0x152,0x1a7);
-  surface_release((DibSurface *)&gfx_sheet_surface);
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
+  sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite));
+  sprite_grab_city_cell((iptr)&fortify_overlay_sprites_block.fortify_overlay_sprites,0x8f,0x1a7);
+  sprite_grab_city_cell((iptr)&fortify_overlay_sprites_block.fortress_sprite,0xd0,0x1a7);
+  sprite_free((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites));
+  sprite_free((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite));
+  sprite_grab_city_cell((iptr)&airbase_sprites_block.airbase_sprites,0x111,0x1a7);
+  sprite_grab_city_cell((iptr)&airbase_sprites_block.airbase_occupied_sprite,0x152,0x1a7);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   return;
 }
 
@@ -1245,27 +1237,27 @@ void __cdecl gfx_load_unit_sprites(void)
   int y2;
   int x2;
   
-  __chdir(&scenario_dir_path);
-  loaded = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_0063fe08),(iptr)((u8 *)&g.d_006267bc),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  loaded = gfx_load_bmp_640x480((iptr)&gfx_sheet_surface_block.gfx_sheet_surface,(iptr)&str_units_bmp,10,0xc0,(iptr)&game_palette_block.game_palette);
   if (loaded == 0) {
-    loaded = surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_006267c8),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+    loaded = surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_units_gif,10,0xc0,(iptr)&game_palette_block.game_palette);
     if (loaded == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&gfx_sheet_surface,(iptr)((u8 *)&g.d_006267d4),10,0xc0,(iptr)((u8 *)&g.d_006a8c00));
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface),(iptr)&str_units_gif_2,10,0xc0,(iptr)&game_palette_block.game_palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   col = 0;
   y2 = 1;
   x2 = 1;
   for (unit_type = 0; unit_type < 0x3f; unit_type++) {
-    sprite_free((Sprite *)(&unit_sprites + unit_type * 0x3c));
-    sprite_grab_city_cell((iptr)(&unit_sprites + unit_type * 0x3c),x2,y2);
+    sprite_free((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
+    sprite_grab_city_cell((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),x2,y2);
     unit_sprite_scan_shield_offset(unit_type,x2,y2);
     col++;
     x2 += 0x41;
@@ -1275,9 +1267,9 @@ void __cdecl gfx_load_unit_sprites(void)
       x2 = 1;
     }
   }
-  sprite_free((Sprite *)&unit_shield_sprite);
-  sprite_grab_from_sheet((iptr)((u8 *)&g.d_00647f60),0x24a,1,0xc,0x14);
-  surface_release((DibSurface *)&gfx_sheet_surface);
+  sprite_free((Sprite *)((i8 *)&unit_shield_sprite));
+  sprite_grab_from_sheet((iptr)&unit_shield_sprite,0x24a,1,0xc,0x14);
+  surface_release((DibSurface *)((i8 *)&gfx_sheet_surface_block.gfx_sheet_surface));
   return;
 }
 
@@ -1343,7 +1335,7 @@ void __cdecl grey_palette_global_init(void)
 void __cdecl grey_palette_static_init(void)
 
 {
-  palette_init((GamePalette *)&grey_palette);
+  palette_init((GamePalette *)((i8 *)&grey_palette_block.grey_palette));
   return;
 }
 
@@ -1359,12 +1351,11 @@ void __cdecl grey_palette_reg_atexit(void)
 void __cdecl grey_palette_atexit_dtor(void)
 
 {
-  palette_destroy((GamePalette *)&grey_palette);
+  palette_destroy((GamePalette *)((i8 *)&grey_palette_block.grey_palette));
   return;
 }
 
 /* 0046ea3b auto */
-#define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
 void __cdecl gfx_build_grey_remap(void)
 
 {
@@ -1380,14 +1371,14 @@ void __cdecl gfx_build_grey_remap(void)
   
   rgb_handle = mem_handle_alloc(0x2c4);
   if (rgb_handle == 0) {
-    err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b56c),(iptr)((u8 *)&g.d_0062b550),0x22);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_handle_fullcolors,(iptr)&str_d_ss_franklinton_grey_cpp,0x22);
   }
   else {
     rgb_data = mem_handle_lock(rgb_handle);
-    palette_get_rgb((GamePalette *)&game_palette,rgb_data,10,0x20);
+    palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),rgb_data,10,0x20);
     handle = mem_handle_alloc(0x88);
     if (handle == 0) {
-      err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b59c),(iptr)((u8 *)&g.d_0062b580),0x2a);
+      err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_hlocpal,(iptr)&str_d_ss_franklinton_grey_cpp_2,0x2a);
       mem_handle_unlock(rgb_handle);
       mem_handle_free(rgb_handle);
     }
@@ -1403,7 +1394,7 @@ void __cdecl gfx_build_grey_remap(void)
       }
       h = CreatePalette(plpal);
       if (h == (HPALETTE)0x0) {
-        err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b5c0),(iptr)((u8 *)&g.d_0062b5a4),0x3e);
+        err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_handle_palette,(iptr)&str_d_ss_franklinton_grey_cpp_3,0x3e);
         mem_handle_unlock(rgb_handle);
         mem_handle_free(rgb_handle);
       }
@@ -1412,23 +1403,23 @@ void __cdecl gfx_build_grey_remap(void)
         mem_handle_free(handle);
         handle = mem_handle_alloc(0x2c4);
         if (handle == 0) {
-          err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b5ec),(iptr)((u8 *)&g.d_0062b5d0),0x48);
+          err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_handle_colors,(iptr)&str_d_ss_franklinton_grey_cpp_4,0x48);
           mem_handle_unlock(rgb_handle);
           mem_handle_free(rgb_handle);
         }
         else {
           full_rgb = mem_handle_lock(handle);
-          grey_remap_handle = mem_handle_alloc(0xec);
-          if (grey_remap_handle == 0) {
-            err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b618),(iptr)((u8 *)&g.d_0062b5fc),0x51);
+          grey_palette_block.grey_remap_handle = mem_handle_alloc(0xec);
+          if (grey_palette_block.grey_remap_handle == 0) {
+            err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_handle_grey,(iptr)&str_d_ss_franklinton_grey_cpp_5,0x51);
             mem_handle_unlock(rgb_handle);
             mem_handle_free(rgb_handle);
             mem_handle_unlock(handle);
             mem_handle_free(handle);
           }
           else {
-            remap_table = mem_handle_lock(grey_remap_handle);
-            palette_get_rgb((GamePalette *)&game_palette,full_rgb,10,0xec);
+            remap_table = mem_handle_lock(grey_palette_block.grey_remap_handle);
+            palette_get_rgb((GamePalette *)((i8 *)&game_palette_block.game_palette),full_rgb,10,0xec);
             for (offset = 0; offset < 0x2c4; offset += 3) {
               UVar4 = GetNearestPaletteIndex
                                 (h,(uint)CONCAT12(*(i8 *)(offset + 2 + full_rgb),
@@ -1436,7 +1427,7 @@ void __cdecl gfx_build_grey_remap(void)
                                                            *(i8 *)(offset + full_rgb))));
               *(char *)(remap_table + offset / 3) = (char)UVar4 + '\n';
               palette_set_entry
-                        ((GamePalette *)&grey_palette,offset / 3 + 10,
+                        ((GamePalette *)((i8 *)&grey_palette_block.grey_palette),offset / 3 + 10,
                          CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + rgb_data)),
                          CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 1 + rgb_data)),
                          CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 2 + rgb_data)));
@@ -1446,7 +1437,7 @@ void __cdecl gfx_build_grey_remap(void)
             mem_handle_free(handle);
             mem_handle_unlock(rgb_handle);
             mem_handle_free(rgb_handle);
-            mem_handle_unlock(grey_remap_handle);
+            mem_handle_unlock(grey_palette_block.grey_remap_handle);
           }
         }
       }
@@ -1454,45 +1445,40 @@ void __cdecl gfx_build_grey_remap(void)
   }
   return;
 }
-#undef grey_remap_handle
 
 /* 0046ee1e auto */
-#define grey_remap_handle (*(int *)((u8 *)&g.d_0066c408))
 void __cdecl gfx_free_grey_remap(void)
 
 {
-  if (grey_remap_handle != 0) {
-    grey_remap_handle = mem_handle_free(grey_remap_handle);
+  if (grey_palette_block.grey_remap_handle != 0) {
+    grey_palette_block.grey_remap_handle = mem_handle_free(grey_palette_block.grey_remap_handle);
   }
   return;
 }
-#undef grey_remap_handle
 
 /* 0046ee4e auto */
-#define grey_remap_handle (*(i32 *)((u8 *)&g.d_0066c408))
 void __cdecl gfx_grey_out_windows(void)
 
 {
   int remap_table;
   int view;
   
-  remap_table = mem_handle_lock(grey_remap_handle);
+  remap_table = mem_handle_lock(grey_palette_block.grey_remap_handle);
   if (remap_table != 0) {
     for (view = 0; view < 8; view++) {
-      if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
         surface_remap_colors
-                  ((DibSurface *)(&map_views + view * 0x3f0),remap_table,10,0xec);
+                  ((DibSurface *)(((i8 *)&map_views_block.map_views) + view * 0x3f0),remap_table,10,0xec);
       }
     }
-    surface_remap_colors((DibSurface *)&status_window,remap_table,10,0xec);
-    surface_remap_colors((DibSurface *)&minimap_window,remap_table,10,0xec);
-    surface_remap_colors((DibSurface *)&city_window,remap_table,10,0xec);
-    mem_handle_unlock(grey_remap_handle);
+    surface_remap_colors((DibSurface *)((i8 *)&status_window_block.status_window),remap_table,10,0xec);
+    surface_remap_colors((DibSurface *)((i8 *)&minimap_window_block.minimap_window),remap_table,10,0xec);
+    surface_remap_colors((DibSurface *)((i8 *)&city_window_block.city_window),remap_table,10,0xec);
+    mem_handle_unlock(grey_palette_block.grey_remap_handle);
     ui_blit_all_windows();
   }
   return;
 }
-#undef grey_remap_handle
 
 /* 0046ef3f auto */
 void __cdecl gfx_repaint_main_windows(void)
@@ -1501,19 +1487,18 @@ void __cdecl gfx_repaint_main_windows(void)
   int view;
   
   for (view = 0; view < 8; view++) {
-    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
-      wnd_repaint((SurfaceWindow *)(&map_views + view * 0x3f0));
+    if ((view == 0) || (*(short *)(((i8 *)&map_views_block.map_view_open_flags) + view * 0x3f0) != 0)) {
+      wnd_repaint((SurfaceWindow *)(((i8 *)&map_views_block.map_views) + view * 0x3f0));
     }
   }
-  wnd_repaint((SurfaceWindow *)&minimap_window);
-  wnd_repaint((SurfaceWindow *)&status_window);
-  wnd_repaint((SurfaceWindow *)&city_window);
+  wnd_repaint((SurfaceWindow *)((i8 *)&minimap_window_block.minimap_window));
+  wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.status_window));
+  wnd_repaint((SurfaceWindow *)((i8 *)&city_window_block.city_window));
   wnd_flush_paint();
   return;
 }
 
 /* 0046efd6 auto */
-#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
 void __cdecl screen_fade_out(void)
 
 {
@@ -1521,22 +1506,21 @@ void __cdecl screen_fade_out(void)
   
   unit_blink_active = 0;
   if (gfx_palettized_display != 0) {
-    palette_fade_begin((GamePalette *)&game_palette,10,0xec,10,(iptr)((u8 *)&g.d_0066bfd0));
+    palette_fade_begin((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec,10,(iptr)&grey_palette_block.grey_palette);
     ui_blit_all_windows();
     step = 10;
     while (-1 < step) {
-      palette_fade_step((GamePalette *)&game_palette,step);
+      palette_fade_step((GamePalette *)((i8 *)&game_palette_block.game_palette),step);
       ui_delay_ticks(1);
       step--;
     }
     palette_set_nocollapse_all();
     gfx_grey_out_windows();
-    palette_fade_end((GamePalette *)&game_palette);
+    palette_fade_end((GamePalette *)((i8 *)&game_palette_block.game_palette));
     palette_set_nocollapse_all();
   }
   return;
 }
-#undef unit_blink_active
 
 /* 0046f06f auto */
 void __cdecl screen_fade_in(void)
@@ -1545,17 +1529,17 @@ void __cdecl screen_fade_in(void)
   int step;
   
   if (gfx_palettized_display != 0) {
-    palette_fade_begin((GamePalette *)&game_palette,10,0xec,10,(iptr)((u8 *)&g.d_0066bfd0));
-    palette_fade_step((GamePalette *)&game_palette,0);
+    palette_fade_begin((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec,10,(iptr)&grey_palette_block.grey_palette);
+    palette_fade_step((GamePalette *)((i8 *)&game_palette_block.game_palette),0);
     gfx_repaint_main_windows();
     ui_blit_all_windows();
     step = 0;
     while (step < 0xb) {
-      palette_fade_step((GamePalette *)&game_palette,step);
+      palette_fade_step((GamePalette *)((i8 *)&game_palette_block.game_palette),step);
       ui_delay_ticks(1);
       step++;
     }
-    palette_fade_end((GamePalette *)&game_palette);
+    palette_fade_end((GamePalette *)((i8 *)&game_palette_block.game_palette));
     palette_set_nocollapse_all();
   }
   return;
@@ -1568,14 +1552,14 @@ void __cdecl palette_set_nocollapse_all(void)
   iptr logpal;
   int i;
   
-  logpal = palette_get_logpalette((GamePalette *)&game_palette);
+  logpal = palette_get_logpalette((GamePalette *)((i8 *)&game_palette_block.game_palette));
   if (logpal == 0) {
-    err_report((ErrorContext *)&err_report_ctx,7,(iptr)((u8 *)&g.d_0062b640),(iptr)((u8 *)&g.d_0062b624),0xbc);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),7,(iptr)&str_p,(iptr)&str_d_ss_franklinton_grey_cpp_6,0xbc);
   }
   for (i = 0; i < 0x100; i++) {
     *(i8 *)(logpal + 7 + i * 4) = 4;
   }
-  palette_commit_range((GamePalette *)&game_palette,10,0xec);
+  palette_commit_range((GamePalette *)((i8 *)&game_palette_block.game_palette),10,0xec);
   return;
 }
 
@@ -1618,26 +1602,26 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
   i8 bmp_palette[2];
   i32 bmp_palette_rest[255];
   
-  error_msg = &gfx_load_bmp_no_error_str;
+  error_msg = ((i8 *)&gfx_load_bmp_no_error_str);
   ok = 0;
-  file = __fsopen((char *)filename,&gfx_bmp_read_mode,0x40);
+  file = __fsopen((char *)filename,((i8 *)&gfx_bmp_read_mode),0x40);
   if (file == (FILE *)0x0) {
     ok = 0;
   }
   else {
     nread = _fread(file_header,0xe,1,file);
     if (nread == 0) {
-      error_msg = s_Error_reading_file_header_0062b67c;
+      error_msg = str_error_reading_file_header;
     }
     else if ((file_header[0] & 0xffff) == 0x4d42) {
       nread = _fread(&info_size,4,1,file);
       if ((nread == 0) || (nread = _fread(&width2,info_size - 4,1,file), nread == 0)) {
-        error_msg = s_Error_reading_info_header_0062b6ac;
+        error_msg = str_error_reading_info_header;
       }
       else {
         nread = _fread(bmp_palette,0x400,1,file);
         if (nread == 0) {
-          error_msg = s_Error_reading_file_palette_0062b6c8;
+          error_msg = str_error_reading_file_palette;
         }
         else if (((width2 == 0x280) && (height2 == 0x1e0)) && (bit_count == 8)) {
           ok = 1;
@@ -1673,7 +1657,7 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
                   col = col + 1) {
                 code = CRT_GETC(file);
                 if (code == 0xffffffff) {
-                  error_msg = s_Error_reading_bitmap_image_0062b704;
+                  error_msg = str_error_reading_bitmap_image;
                   ok = 0;
                   height2 = row;
                   break;
@@ -1732,16 +1716,16 @@ int __cdecl gfx_load_bmp_640x480(iptr surface,iptr filename,int first_color,int 
           }
           else if (compression == 2) {
             ok = 0;
-            error_msg = s_Incompatable_compression_mode__B_0062b720;
+            error_msg = str_incompatable_compression_mode_bi_rle4;
           }
         }
         else {
-          error_msg = s_Image_not_640_x_480_x_256_color_0062b6e4;
+          error_msg = str_image_not_640_x_480_x_256_color;
         }
       }
     }
     else {
-      error_msg = s_Invalid_bitmap_file_0062b698;
+      error_msg = str_invalid_bitmap_file;
     }
 LAB_0046fbb4:
     _fclose(file);
@@ -1790,7 +1774,7 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
   i8 bmp_palette[1024];
   
   ok = 0;
-  error_msg = &gfx_save_bmp_no_error_str;
+  error_msg = ((i8 *)&gfx_save_bmp_no_error_str);
   file_type = 0x4d42;
   file_size = 0x4b436;
   reserved1 = 0;
@@ -1837,19 +1821,19 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
       dst_index++;
     }
   }
-  file = __fsopen((char *)filename,&gfx_bmp_write_mode,0x40);
+  file = __fsopen((char *)filename,((i8 *)&gfx_bmp_write_mode),0x40);
   if (file == (FILE *)0x0) {
     ok = 0;
   }
   else {
     nwritten = _fwrite(&file_type,0xe,1,file);
     if (nwritten == 0) {
-      error_msg = s_Error_writing_file_header_0062b750;
+      error_msg = str_error_writing_file_header;
     }
     else {
       nwritten = _fwrite(&info_size,0x28,1,file);
       if (nwritten == 0) {
-        error_msg = s_Error_writing_info_header_0062b76c;
+        error_msg = str_error_writing_info_header;
       }
       else {
         nwritten = _fwrite(bmp_palette,0x400,1,file);
@@ -1865,14 +1849,14 @@ int __cdecl gfx_save_bmp_640x480(iptr surface,iptr filename,int first_color,int 
               src++;
               tmp = _fputc(pixel,file);
               if (tmp == -1) {
-                error_msg = s_Error_writing_bitmap_image_0062b7a4;
+                error_msg = str_error_writing_bitmap_image;
                 ok = 0;
                 break;
               }
             }
           } while( true );
         }
-        error_msg = s_Error_writing_file_palette_0062b788;
+        error_msg = str_error_writing_file_palette;
       }
     }
 LAB_0046ffb7:
@@ -1988,7 +1972,7 @@ PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
   button_ctor((Control *)(this->accept_button_2));
   eh_state = (eh_state & 0xffffff00 | (byte)(3));
   dll_handle_init((DllHandle *)(this->portrait_dll));
-  this->vtable = (u32)&PTR_FUN_0061d6c0;
+  this->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
   this->portrait_civ = 0;
   this->show_turn_timer = 0;
   return this;
@@ -2007,7 +1991,7 @@ void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *this)
   i8 *seh_handler;
   int eh_state;
   
-  *(i8 ***)this->window_base = &PTR_FUN_0061d6c0;
+  *(i8 ***)this->window_base = ((pointer *)&leader_anim_frame_starts_block.ptr_fun_3);
   eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
@@ -2023,14 +2007,12 @@ void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *this)
 }
 
 /* 00496402 auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 i32 __thiscall portrait_dlg_create(PortraitDialog *this)
 
 {
   wnd_create_with_surface
-            ((DibSurface *)this,(iptr)((u8 *)&g.d_0062cbc8),0xc00,0,0,frame_border_width * 8 + 0x276,
-             frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)((u8 *)&g.d_006a8c00),(iptr)((u8 *)&g.d_006553d8));
+            ((DibSurface *)this,(iptr)&str_empty_109,0xc00,0,0,frame_border_width * 8 + 0x276,
+             frame_border_width * 4 + frame_caption_height + 0x16e,(iptr)&game_palette_block.game_palette,(iptr)&main_frame_wnd_block.main_frame_wnd);
   portrait_dlg_create_buttons((WindowObjectView *)this);
   wnd_set_caption_height((WndBase *)this->window_2,frame_caption_height);
   wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),(iptr)portrait_dlg_on_click);
@@ -2040,12 +2022,8 @@ i32 __thiscall portrait_dlg_create(PortraitDialog *this)
   wnd_center((WndCenterView *)this->window_2);
   return 1;
 }
-#undef frame_border_width
-#undef frame_caption_height
 
 /* 004964b3 auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
 
 {
@@ -2063,7 +2041,7 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
     parent_a = this + 0x12;
   }
   button_create_with_callback
-            ((Control *)(this + 0x66),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(iptr)((u8 *)&g.d_0062cbcc));
+            ((Control *)(this + 0x66),(iptr)parent_a,0x65,(iptr)&button_rect,0x21,(iptr)&str_ok);
   OffsetRect(&button_rect,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
   if (this == (WindowObjectView *)0x0) {
     parent_b = (WindowObjectView *)0x0;
@@ -2072,13 +2050,11 @@ void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
     parent_b = this + 0x12;
   }
   button_create_with_callback
-            ((Control *)(this + 0x57),(iptr)parent_b,100,(iptr)&button_rect,0x21,(iptr)((u8 *)&g.d_0062cbd0));
+            ((Control *)(this + 0x57),(iptr)parent_b,100,(iptr)&button_rect,0x21,(iptr)&str_cancel);
   button_set_callback((Control *)(this + 0x57),(iptr)portrait_dlg_on_button);
   button_set_callback((Control *)(this + 0x66),(iptr)portrait_dlg_on_button);
   return;
 }
-#undef frame_border_width
-#undef frame_caption_height
 
 /* 004965ff auto */
 void __thiscall portrait_dlg_run(PortraitDialog *this)
@@ -2101,8 +2077,6 @@ void __thiscall portrait_dlg_run(PortraitDialog *this)
 }
 
 /* 004966c4 auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 void __thiscall portrait_dlg_paint(PortraitDialog *this)
 
 {
@@ -2123,11 +2097,11 @@ void __thiscall portrait_dlg_paint(PortraitDialog *this)
   iptr title;
   
   title = label_string(*(i32 *)(label_string_ids + 0x4a8));
-  dll_handle_load((DllHandle *)(this->portrait_dll),(iptr)((u8 *)&g.d_0062cbd8));
+  dll_handle_load((DllHandle *)(this->portrait_dll),(iptr)&str_mk_dll);
   loaded = surface_load_gif_resource
                     ((DibSurface *)&this->style_flags,
                      0xd3 - (uint)(leaders[civs[this->portrait_civ].tribe].female == '\0'),10,0xec,
-                     (iptr)((u8 *)&g.d_006a8c00));
+                     (iptr)&game_palette_block.game_palette);
   if (loaded != 0) {
     dll_handle_free((DllHandle *)(this->portrait_dll));
     loaded = frame_caption_height + frame_bevel_width * -2;
@@ -2190,24 +2164,20 @@ void __thiscall portrait_dlg_paint(PortraitDialog *this)
       InflateRect(&dst_rect,-1,-1);
     }
     tmp_a = surface_get_width((DibSurface *)this);
-    tmp_b = font_text_width((GameFont *)&caption_font,title);
+    tmp_b = font_text_width((GameFont *)((i8 *)&caption_font_block.caption_font),title);
     loaded = frame_bevel_width;
     tmp_b = (tmp_a >> 1) - (tmp_b + 4 >> 1);
     tmp_a = frame_bevel_width + 1;
     gfx_set_text_color_index(0x12);
-    surface_draw_text((DibSurface *)this,(iptr)((u8 *)&g.d_006ab190),title,tmp_b + 3,loaded + 2,5);
+    surface_draw_text((DibSurface *)this,(iptr)&caption_font_block.caption_font,title,tmp_b + 3,loaded + 2,5);
     gfx_set_text_color_index(0x29);
-    surface_draw_text((DibSurface *)this,(iptr)((u8 *)&g.d_006ab190),title,tmp_b + 1,tmp_a,5);
-    surface_draw_text((DibSurface *)this,(iptr)((u8 *)&g.d_006ab190),title,tmp_b,tmp_a,5);
+    surface_draw_text((DibSurface *)this,(iptr)&caption_font_block.caption_font,title,tmp_b + 1,tmp_a,5);
+    surface_draw_text((DibSurface *)this,(iptr)&caption_font_block.caption_font,title,tmp_b,tmp_a,5);
   }
   return;
 }
-#undef frame_border_width
-#undef frame_caption_height
 
 /* 00496c3c auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 void __cdecl portrait_dlg_on_click(int x,int y)
 
 {
@@ -2255,11 +2225,8 @@ void __cdecl portrait_dlg_on_click(int x,int y)
   }
   return;
 }
-#undef frame_border_width
-#undef frame_caption_height
 
 /* 00496e5d auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 void __cdecl portrait_dlg_on_dblclick(i32 x,int y)
 
 {
@@ -2280,7 +2247,6 @@ void __cdecl portrait_dlg_on_dblclick(i32 x,int y)
   }
   return;
 }
-#undef frame_border_width
 
 /* 00496ecf auto */
 void __cdecl portrait_dlg_on_button(int button_id)
@@ -2345,7 +2311,7 @@ void __cdecl font_size16_bold_global_init(void)
 void __cdecl font_size16_bold_static_init(void)
 
 {
-  font_init_styled((GameFont *)&font_size16_bold,0,0x10,1);
+  font_init_styled((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold),0,0x10,1);
   return;
 }
 
@@ -2361,7 +2327,7 @@ void __cdecl font_size16_bold_reg_atexit(void)
 void __cdecl font_size16_bold_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size16_bold);
+  font_destroy((GameFont *)((i8 *)&font_size16_bold_block.font_size16_bold));
   return;
 }
 
@@ -2387,7 +2353,7 @@ void __cdecl font_size20_global_init(void)
 void __cdecl font_size20_static_init(void)
 
 {
-  font_init((GameFont *)&font_size20,0,0x14);
+  font_init((GameFont *)((i8 *)&font_size20),0,0x14);
   return;
 }
 
@@ -2403,7 +2369,7 @@ void __cdecl font_size20_reg_atexit(void)
 void __cdecl font_size20_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size20);
+  font_destroy((GameFont *)((i8 *)&font_size20));
   return;
 }
 
@@ -2429,7 +2395,7 @@ void __cdecl font_size14_global_init(void)
 void __cdecl font_size14_static_init(void)
 
 {
-  font_init((GameFont *)&font_size14,0,0xe);
+  font_init((GameFont *)((i8 *)&font_size14),0,0xe);
   return;
 }
 
@@ -2445,7 +2411,7 @@ void __cdecl font_size14_reg_atexit(void)
 void __cdecl font_size14_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size14);
+  font_destroy((GameFont *)((i8 *)&font_size14));
   return;
 }
 
@@ -2471,7 +2437,7 @@ void __cdecl font_size16_global_init(void)
 void __cdecl font_size16_static_init(void)
 
 {
-  font_init((GameFont *)&font_size16,0,0x10);
+  font_init((GameFont *)((i8 *)&font_size16),0,0x10);
   return;
 }
 
@@ -2487,7 +2453,7 @@ void __cdecl font_size16_reg_atexit(void)
 void __cdecl font_size16_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size16);
+  font_destroy((GameFont *)((i8 *)&font_size16));
   return;
 }
 
@@ -2504,7 +2470,7 @@ void __cdecl font_size24_bold_global_init(void)
 void __cdecl font_size24_bold_static_init(void)
 
 {
-  font_init_styled((GameFont *)&font_size24_bold,0,0x18,1);
+  font_init_styled((GameFont *)((i8 *)&font_size24_bold),0,0x18,1);
   return;
 }
 
@@ -2520,7 +2486,7 @@ void __cdecl font_size24_bold_reg_atexit(void)
 void __cdecl font_size24_bold_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size24_bold);
+  font_destroy((GameFont *)((i8 *)&font_size24_bold));
   return;
 }
 
@@ -2546,7 +2512,7 @@ void __cdecl font_size30_global_init(void)
 void __cdecl font_size30_static_init(void)
 
 {
-  font_init((GameFont *)&font_size30,0,0x1e);
+  font_init((GameFont *)((i8 *)&font_size30),0,0x1e);
   return;
 }
 
@@ -2562,7 +2528,7 @@ void __cdecl font_size30_reg_atexit(void)
 void __cdecl font_size30_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size30);
+  font_destroy((GameFont *)((i8 *)&font_size30));
   return;
 }
 
@@ -2588,7 +2554,7 @@ void __cdecl font_size21_global_init(void)
 void __cdecl font_size21_static_init(void)
 
 {
-  font_init((GameFont *)&font_size21,0,0x15);
+  font_init((GameFont *)((i8 *)&font_size21),0,0x15);
   return;
 }
 
@@ -2604,7 +2570,7 @@ void __cdecl font_size21_reg_atexit(void)
 void __cdecl font_size21_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size21);
+  font_destroy((GameFont *)((i8 *)&font_size21));
   return;
 }
 
@@ -2630,7 +2596,7 @@ void __cdecl font_size24_global_init(void)
 void __cdecl font_size24_static_init(void)
 
 {
-  font_init((GameFont *)&font_size24,0,0x18);
+  font_init((GameFont *)((i8 *)&font_size24),0,0x18);
   return;
 }
 
@@ -2646,7 +2612,7 @@ void __cdecl font_size24_reg_atexit(void)
 void __cdecl font_size24_static_dtor(void)
 
 {
-  font_destroy((GameFont *)&font_size24);
+  font_destroy((GameFont *)((i8 *)&font_size24));
   return;
 }
 
@@ -2691,15 +2657,15 @@ void __cdecl gfx_draw_tiled_frame(iptr surface,int x,int y,int width,int height,
   top = y - border;
   rect_set_xywh((iptr)((i8 *)&rect.left),left,top,width + border * 2,height + border * 2);
   extent = rect_width((iptr)((i8 *)&rect.left));
-  gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left,top + 2,extent,border - 4,0,2);
+  gfx_tile_fill(surface,(iptr)&window_border_tile_surface,left,top + 2,extent,border - 4,0,2);
   offset = rect_height((iptr)((i8 *)&rect.left));
   offset -= (border - 2);
-  gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left,offset + top,extent,border - 4,0,offset);
+  gfx_tile_fill(surface,(iptr)&window_border_tile_surface,left,offset + top,extent,border - 4,0,offset);
   extent = rect_height((iptr)((i8 *)&rect.left));
-  gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),left + 2,top,border - 4,extent,2,0);
+  gfx_tile_fill(surface,(iptr)&window_border_tile_surface,left + 2,top,border - 4,extent,2,0);
   offset = rect_width((iptr)((i8 *)&rect.left));
   offset -= (border - 2);
-  gfx_tile_fill(surface,(iptr)((u8 *)&g.d_00647f18),offset + left,top,border - 4,extent,offset,0);
+  gfx_tile_fill(surface,(iptr)&window_border_tile_surface,offset + left,top,border - 4,extent,offset,0);
   for (i = 0; i < 2; i++) {
     gfx_draw_bevel_rect(surface,(iptr)((i8 *)&rect.left),0x25,0x12);
     rect_deflate((iptr)((i8 *)&rect.left),1,1);
@@ -2959,15 +2925,13 @@ void __cdecl gfx_select_zoom_font(i32 zoom)
     font_size = 0xb;
   }
   if (font_size != map_label_font_size) {
-    font_set((GameFont *)&map_label_font,1,font_size);
+    font_set((GameFont *)((i8 *)&status_window_block.map_label_font),1,font_size);
     map_label_font_size = font_size;
   }
   return;
 }
 
 /* 0056baff auto */
-#define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 void __cdecl
 gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int no_fortress)
 
@@ -3024,14 +2988,14 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
   }
   color_primary = civ_color_primary(civ);
   color_mid = civ_color_mid(civ);
-  shield_x = gfx_zoom_scale(*(i32 *)(&unit_shield_x_offsets + sprite_type * 4),zoom);
+  shield_x = gfx_zoom_scale(*(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + sprite_type * 4),zoom);
   shield_x = px + shield_x;
-  shield_y = gfx_zoom_scale(*(i32 *)(&unit_shield_y_offsets + sprite_type * 4),zoom);
+  shield_y = gfx_zoom_scale(*(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + sprite_type * 4),zoom);
   shield_y = py + shield_y;
   shield_width = gfx_zoom_scale(0xc,zoom);
   shield_height = gfx_zoom_scale(0x14,zoom);
   side = 1;
-  if (*(int *)(&unit_shield_x_offsets + sprite_type * 4) < 0x20) {
+  if (*(int *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + sprite_type * 4) < 0x20) {
     side = -1;
   }
   if (((draw_flags & 1) != 0) &&
@@ -3048,7 +3012,7 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
     }
     if (2 < (int)abs_dx) {
       sprite_draw
-                ((Sprite *)&unit_shield_sprite,(iptr)clip_stack_shadow,surface,
+                ((Sprite *)((i8 *)&unit_shield_sprite),(iptr)clip_stack_shadow,surface,
                  side + stack_dx + shield_x,stack_dy + shield_y + 1);
       rect_offset((iptr)&shield_rect.left,side,1);
       surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,0xf);
@@ -3056,21 +3020,21 @@ gfx_draw_unit(iptr surface,iptr unit,uint draw_flags,int px,int py,int zoom,int 
       rect_offset((iptr)&shield_rect.left,-side,0xffffffff);
     }
     sprite_draw
-              ((Sprite *)&unit_shield_sprite,(iptr)clip_stack,surface,stack_dx + shield_x,
+              ((Sprite *)((i8 *)&unit_shield_sprite),(iptr)clip_stack,surface,stack_dx + shield_x,
                stack_dy + shield_y);
     surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,color_mid);
     surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,color_mid);
   }
   rect_set_xywh((iptr)&shield_rect.left,shield_x,shield_y,shield_width,shield_height);
   sprite_draw
-            ((Sprite *)&unit_shield_sprite,(iptr)clip_shield_shadow,surface,side + shield_x,shield_y + 1
+            ((Sprite *)((i8 *)&unit_shield_sprite),(iptr)clip_shield_shadow,surface,side + shield_x,shield_y + 1
             );
   rect_offset((iptr)&shield_rect.left,side,1);
   surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,0x10);
   surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,0x10);
   rect_offset((iptr)&shield_rect.left,-side,0xffffffff);
   sprite_draw
-            ((Sprite *)&unit_shield_sprite,(iptr)clip_shield,surface,shield_x,shield_y);
+            ((Sprite *)((i8 *)&unit_shield_sprite),(iptr)clip_shield,surface,shield_x,shield_y);
   surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x106,color_primary);
   surface_replace_color((DibSurface *)surface,(iptr)&shield_rect.left,0x105,color_mid);
   scaled = gfx_zoom_scale(2,zoom);
@@ -3173,7 +3137,7 @@ LAB_0056c269:
     text_y = shield_rect.top + tmp / 2;
     tmp = rect_width((iptr)&shield_rect.left);
     surface_draw_text
-              ((DibSurface *)surface,(iptr)((u8 *)&g.d_006ac090),(iptr)order_text,shield_rect.left + tmp / 2,text_y,value);
+              ((DibSurface *)surface,(iptr)&status_window_block.map_label_font,(iptr)order_text,shield_rect.left + tmp / 2,text_y,value);
   }
   silhouette = (uint)(units[unit2].orders == 3);
   if ((((unit_types[units[unit2].type].domain == 1) &&
@@ -3184,31 +3148,29 @@ LAB_0056c269:
   }
   if (silhouette == 0) {
     sprite_draw
-              ((Sprite *)(&unit_sprites + sprite_type * 0x3c),(iptr)clip_unit,surface,px,
+              ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c),(iptr)clip_unit,surface,px,
                py);
   }
   else {
     sprite_draw_silhouette
-              ((Sprite *)(&unit_sprites + sprite_type * 0x3c),(iptr)clip_silhouette,surface,px,
+              ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + sprite_type * 0x3c),(iptr)clip_silhouette,surface,px,
                py,0x1a);
   }
   if (units[unit2].orders == 2) {
     sprite_draw
-              ((Sprite *)&fortify_overlay_sprites,(iptr)clip_fortify,surface,px,py);
+              ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),(iptr)clip_fortify,surface,px,py);
   }
   tmp = map_in_bounds((int)units[unit2].x,(int)units[unit2].y);
   if (((tmp != 0) &&
       (value = tile_improvements((int)units[unit2].x,(int)units[unit2].y),
       ((byte)value & 0x42) == 0x40)) && (no_fortress == 0)) {
     sprite_draw
-              ((Sprite *)&fortress_sprite,(iptr)clip_fortress,surface,px,py);
+              ((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite),(iptr)clip_fortress,surface,px,py);
   }
 LAB_0056c5e8:
   gfx_reset_zoom_scale();
   return;
 }
-#undef moving_units_mode
-#undef unit_blink_active
 
 /* 0056c5fc auto */
 void __cdecl
@@ -3248,8 +3210,6 @@ gfx_copy_rect_clipped(iptr src,iptr dst,int src_x,int src_y,int src_origin_x,int
 }
 
 /* 0056d289 auto */
-#define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 void __cdecl
 gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
 
@@ -3311,13 +3271,13 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
   if ((tmp != 0) && (tmp = civ_has_advance(civ,0x18), tmp != 0)) {
     style2 = 5;
   }
-  if ((((human_civ == civ) || (game.reveal_map != '\0')) ||
-      (((game.game_flags & 0x80) != 0 && ((scenario_flags & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
+  if ((((human_civ[0] == civ) || (game.reveal_map != '\0')) ||
+      (((game.game_flags & 0x80) != 0 && ((prefs_game_rules_block.scenario_flags[0] & 8) != 0)))) || ((draw_flags & 0x1000) != 0))
   {
     shown_size = cities[city].size;
   }
   else {
-    shown_size = *(char *)&cities[city].revealed_size[human_civ];
+    shown_size = *(char *)&cities[city].revealed_size[human_civ[0]];
   }
   city_size = (int)shown_size;
   if (style2 < 4) {
@@ -3362,42 +3322,42 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
   }
   tmp = city_has_improvement(city,1);
   if ((tmp != 0) &&
-     (((human_civ == civ ||
+     (((human_civ[0] == civ ||
        ((game.difficulty < 3 && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
       && (size_idx < 3)))) {
     size_idx++;
   }
   sprite_draw
-            ((Sprite *)(&city_sprites + size_idx * 0x78 + walled * 0x3c + style2 * 0x1e0)
+            ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + walled * 0x3c + style2 * 0x1e0)
              ,(iptr)clip_city,surface,px,py);
   tmp = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
   if ((-1 < tmp) && ((draw_flags & 2) == 0)) {
     flag_x = gfx_zoom_scale(*(i32 *)
-                                   (&city_flag_x_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
+                                   (((i8 *)&peace_treaty_icon_sprite_block.city_flag_x_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
                                   zoom);
     flag_x = px + flag_x;
     flag_y = gfx_zoom_scale(*(i32 *)
-                                   (&city_flag_y_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
+                                   (((i8 *)&peace_treaty_icon_sprite_block.city_flag_y_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
                                   zoom);
     flag_y = py + flag_y;
     sprite_draw
-              ((Sprite *)(&civ_flag_sprites + civ * 0x78),(iptr)clip_flag,surface,flag_x,
+              ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78),(iptr)clip_flag,surface,flag_x,
                flag_y);
   }
   if ((draw_flags & 1) == 0) {
     if ((cities[city].flags & 1) == 0) {
       gfx_select_zoom_font(zoom);
-      text_set_font((iptr)((u8 *)&g.d_006ac090));
+      text_set_font((iptr)&status_window_block.map_label_font);
       text_set_surface(surface);
       __itoa(city_size,size_text,10);
-      width2 = font_text_width((GameFont *)&map_label_font,(iptr)size_text);
-      height2 = font_cached_height((GameFont *)&map_label_font);
-      crt_strcpy(template_text,&city_size_digit_str);
+      width2 = font_text_width((GameFont *)((i8 *)&status_window_block.map_label_font),(iptr)size_text);
+      height2 = font_cached_height((GameFont *)((i8 *)&status_window_block.map_label_font));
+      crt_strcpy(template_text,((i8 *)&city_size_digit_str));
       text_len = _strlen(size_text);
       if (1 < text_len) {
-        crt_strcat(template_text,&city_size_digit2_str);
+        crt_strcat(template_text,((i8 *)&city_size_digit2_str));
       }
-      pad = font_text_width((GameFont *)&map_label_font,(iptr)template_text);
+      pad = font_text_width((GameFont *)((i8 *)&status_window_block.map_label_font),(iptr)template_text);
       pad -= width2;
       if (pad < 0) {
         pad = 0;
@@ -3406,11 +3366,11 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
       height2 += 2;
       rect_set_xywh((iptr)&label_rect.left,0,0,width2,height2);
       tmp = gfx_zoom_scale(*(i32 *)
-                                  (&city_label_y_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
+                                  (((i8 *)&road_sprites_block.city_label_y_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
                                  zoom);
       tmp = py + tmp;
       box_dx = gfx_zoom_scale(*(i32 *)
-                                  (&city_size_box_x_offsets + style2 * 0x20 + walled * 4 + size_idx * 8),
+                                  (((i8 *)&road_sprites_block.city_size_box_x_offsets) + style2 * 0x20 + walled * 4 + size_idx * 8),
                                  zoom);
       rect_offset((iptr)&label_rect.left,px + box_dx,tmp);
       gfx_draw_rect_frame(surface,(iptr)&label_rect.left,10);
@@ -3421,15 +3381,13 @@ gfx_draw_city(iptr surface,iptr city,uint draw_flags,int px,int py,int zoom)
     }
     else {
       sprite_draw
-                ((Sprite *)&city_disorder_icon_sprite,(iptr)clip_disorder,surface,px,py);
+                ((Sprite *)((i8 *)&fortify_overlay_sprites_block.city_disorder_icon_sprite),(iptr)clip_disorder,surface,px,py);
       surface_replace_color((DibSurface *)surface,(iptr)&label_rect.left,0x106,color_primary);
     }
   }
   gfx_reset_zoom_scale();
   return;
 }
-#undef human_civ
-#undef scenario_flags
 
 /* 0056e1c0 auto */
 int __cdecl gfx_zoom_scale_round(int value,int zoom)
@@ -3462,7 +3420,7 @@ void __cdecl sprite_sheet_surface_global_init(void)
 void __cdecl sprite_sheet_surface_static_init(void)
 
 {
-  surface_ctor((DibSurface *)&sprite_sheet_surface);
+  surface_ctor((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   return;
 }
 
@@ -3478,7 +3436,7 @@ void __cdecl sprite_sheet_surface_reg_atexit(void)
 void __cdecl sprite_sheet_surface_static_dtor(void)
 
 {
-  surface_dtor((DibSurface *)&sprite_sheet_surface);
+  surface_dtor((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   return;
 }
 
@@ -3503,7 +3461,7 @@ void __cdecl sprite_editor_orig_sprite_global_init(void)
 void __cdecl sprite_editor_orig_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)&sprite_editor_orig_sprite);
+  sprite_init((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
   return;
 }
 
@@ -3519,7 +3477,7 @@ void __cdecl sprite_editor_orig_sprite_reg_atexit(void)
 void __cdecl sprite_editor_orig_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&sprite_editor_orig_sprite);
+  sprite_destroy((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
   return;
 }
 
@@ -3544,7 +3502,7 @@ void __cdecl sprite_editor_result_global_init(void)
 void __cdecl sprite_editor_result_static_init(void)
 
 {
-  sprite_init((Sprite *)&sprite_editor_result_sprite);
+  sprite_init((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
   return;
 }
 
@@ -3560,7 +3518,7 @@ void __cdecl sprite_editor_result_reg_atexit(void)
 void __cdecl sprite_editor_result_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&sprite_editor_result_sprite);
+  sprite_destroy((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
   return;
 }
 
@@ -3585,7 +3543,7 @@ void __cdecl sprite_picker_sprite_global_init(void)
 void __cdecl sprite_picker_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)&sprite_picker_sprite);
+  sprite_init((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
   return;
 }
 
@@ -3601,7 +3559,7 @@ void __cdecl sprite_picker_sprite_reg_atexit(void)
 void __cdecl sprite_picker_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&sprite_picker_sprite);
+  sprite_destroy((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
   return;
 }
 
@@ -3626,7 +3584,7 @@ void __cdecl sprite_editor_surface_global_init(void)
 void __cdecl sprite_editor_surface_static_init(void)
 
 {
-  surface_ctor((DibSurface *)&sprite_editor_surface);
+  surface_ctor((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface));
   return;
 }
 
@@ -3642,7 +3600,7 @@ void __cdecl sprite_editor_surface_reg_atexit(void)
 void __cdecl sprite_editor_surface_static_dtor(void)
 
 {
-  surface_dtor((DibSurface *)&sprite_editor_surface);
+  surface_dtor((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface));
   return;
 }
 
@@ -3667,7 +3625,7 @@ void __cdecl sprite_editor_window_global_init(void)
 void __cdecl sprite_editor_window_static_init(void)
 
 {
-  frame_wnd_ctor((SurfaceWindow *)&sprite_editor_window);
+  frame_wnd_ctor((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
 
@@ -3683,7 +3641,7 @@ void __cdecl sprite_editor_window_reg_atexit(void)
 void __cdecl sprite_editor_window_static_dtor(void)
 
 {
-  frame_wnd_dtor((DibSurface *)&sprite_editor_window);
+  frame_wnd_dtor((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
 
@@ -3708,7 +3666,7 @@ void __cdecl sprite_picker_window_global_init(void)
 void __cdecl sprite_picker_window_static_init(void)
 
 {
-  sprite_picker_ctor((ViewWindow *)&sprite_picker_window);
+  sprite_picker_ctor((ViewWindow *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
@@ -3724,7 +3682,7 @@ void __cdecl sprite_picker_window_reg_atexit(void)
 void __cdecl sprite_picker_window_static_dtor(void)
 
 {
-  sprite_picker_dtor((WindowObjectView *)&sprite_picker_window);
+  sprite_picker_dtor((WindowObjectView *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
@@ -3740,16 +3698,16 @@ void __cdecl sprite_sheet_draw_shield_marks(int unit_type,int x,int y)
   left = x - 1;
   top = y - 1;
   for (dx = 0; dx < 0x40; dx++) {
-    surface_set_pixel((DibSurface *)&sprite_sheet_surface,left + dx + 1,top,8);
+    surface_set_pixel((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left + dx + 1,top,8);
   }
   surface_set_pixel
-            ((DibSurface *)&sprite_sheet_surface,left + *(int *)(&unit_shield_x_offsets + unit_type * 4) + 1,top,
+            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left + *(int *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + unit_type * 4) + 1,top,
              4);
   for (dy = 0; dy < 0x30; dy++) {
-    surface_set_pixel((DibSurface *)&sprite_sheet_surface,left,dy + top + 1,8);
+    surface_set_pixel((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left,dy + top + 1,8);
   }
   surface_set_pixel
-            ((DibSurface *)&sprite_sheet_surface,left,*(int *)(&unit_shield_y_offsets + unit_type * 4) + top + 1,
+            ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),left,*(int *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + unit_type * 4) + top + 1,
              4);
   return;
 }
@@ -3781,21 +3739,21 @@ void __cdecl sprite_sheet_save_units(void)
   palette_init(&palette);
   eh_state = 0;
   __getcwd(saved_dir,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634010),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_units_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_0063401c),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_units_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634028),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_units_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   start_x2 = 1;
   row = 0;
@@ -3803,15 +3761,15 @@ void __cdecl sprite_sheet_save_units(void)
   y2 = 1;
   x2 = 1;
   for (unit_type = 0; unit_type < 0x3f; unit_type++) {
-    key_color = sprite_get_key_color((Sprite *)(&unit_sprites + unit_type * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&unit_sprites + unit_type * 0x3c));
-    width = sprite_width((Sprite *)(&unit_sprites + unit_type * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_backdrop,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+              ((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_backdrop,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
     sprite_draw
-              ((Sprite *)(&unit_sprites + unit_type * 0x3c),(iptr)clip_unit,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + unit_type * 0x3c),(iptr)clip_unit,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
     sprite_sheet_draw_shield_marks(unit_type,x2,y2);
     col++;
@@ -3823,16 +3781,16 @@ void __cdecl sprite_sheet_save_units(void)
       x2 = start_x2;
     }
   }
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_00634034));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_units_bmp_3);
   if (result != 0) {
-    result = crt_remove(s_UNITS_BMP_00634040);
+    result = crt_remove(str_units_bmp_4);
     if (result != 0) goto LAB_0056ff8c;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_0063404c),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_units_bmp_5,10,0xc0,(iptr)&palette);
 LAB_0056ff8c:
   __chdir(saved_dir);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0056ffb6 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -3880,21 +3838,21 @@ void __cdecl sprite_sheet_save_cities(void)
   palette_init(&palette);
   eh_state = 0;
   __getcwd(saved_dir,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634058),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_cities_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634064),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_cities_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634070),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_cities_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   x2 = 1;
   y2 = 0x27;
@@ -3903,33 +3861,33 @@ void __cdecl sprite_sheet_save_cities(void)
     for (size_idx = 0; size_idx < 4; size_idx++) {
       cell_x = size_idx * 0x41;
       key_color = sprite_get_key_color
-                        ((Sprite *)(&city_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       fill_color = (uint)key_color;
       height = sprite_height
-                        ((Sprite *)(&city_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       width = sprite_width
-                        ((Sprite *)(&city_sprites + size_idx * 0x78 + style2 * 0x1e0));
-      gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),cell_x + x2,y2,width,height,fill_color);
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0));
+      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,y2,width,height,fill_color);
       sprite_draw
-                ((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_city_bg,(iptr)((u8 *)&g.d_006ac0a8),cell_x + x2,
+                ((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_city_bg,(iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,
                  y2);
       sprite_draw
-                ((Sprite *)(&city_sprites + size_idx * 0x78 + style2 * 0x1e0),
-                 (iptr)clip_city,(iptr)((u8 *)&g.d_006ac0a8),cell_x + x2,y2);
+                ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_sprites) + size_idx * 0x78 + style2 * 0x1e0),
+                 (iptr)clip_city,(iptr)&status_window_block.sprite_sheet_surface,cell_x + x2,y2);
       key_color = sprite_get_key_color
-                        ((Sprite *)(&city_walled_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       fill_color = (uint)key_color;
       height = sprite_height
-                        ((Sprite *)(&city_walled_sprites + size_idx * 0x78 + style2 * 0x1e0));
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0));
       width = sprite_width
-                        ((Sprite *)(&city_walled_sprites + size_idx * 0x78 + style2 * 0x1e0));
-      gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),cell_x + walled_x,y2,width,height,fill_color);
+                        ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0));
+      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,y2,width,height,fill_color);
       sprite_draw
-                ((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_walled_bg,(iptr)((u8 *)&g.d_006ac0a8),cell_x + walled_x,
+                ((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_walled_bg,(iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,
                  y2);
       sprite_draw
-                ((Sprite *)(&city_walled_sprites + size_idx * 0x78 + style2 * 0x1e0),
-                 (iptr)clip_walled,(iptr)((u8 *)&g.d_006ac0a8),cell_x + walled_x,y2);
+                ((Sprite *)(((i8 *)&gfx_sheet_surface_block.city_walled_sprites) + size_idx * 0x78 + style2 * 0x1e0),
+                 (iptr)clip_walled,(iptr)&status_window_block.sprite_sheet_surface,cell_x + walled_x,y2);
     }
     y2 += 0x31;
   }
@@ -3937,62 +3895,62 @@ void __cdecl sprite_sheet_save_cities(void)
   flag_y = 0x1a9;
   flag_dark_y = 0x1c0;
   for (civ = 0; civ < 8; civ++) {
-    key_color = sprite_get_key_color((Sprite *)(&civ_flag_sprites + civ * 0x78));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&civ_flag_sprites + civ * 0x78));
-    width = sprite_width((Sprite *)(&civ_flag_sprites + civ * 0x78));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,flag_y,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78));
+    width = sprite_width((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,flag_y,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&civ_flag_sprites + civ * 0x78),(iptr)clip_flag,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + civ * 0x78),(iptr)clip_flag,(iptr)&status_window_block.sprite_sheet_surface,
                x2,flag_y);
-    key_color = sprite_get_key_color((Sprite *)(&civ_flag_dark_sprites + civ * 0x78));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&civ_flag_dark_sprites + civ * 0x78));
-    width = sprite_width((Sprite *)(&civ_flag_dark_sprites + civ * 0x78));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,flag_dark_y,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78));
+    width = sprite_width((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,flag_dark_y,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&civ_flag_dark_sprites + civ * 0x78),(iptr)clip_flag_dark,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + civ * 0x78),(iptr)clip_flag_dark,(iptr)&status_window_block.sprite_sheet_surface,
                x2,flag_dark_y);
     x2 += 0xf;
   }
-  key_color = sprite_get_key_color((Sprite *)&fortify_overlay_sprites);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&fortify_overlay_sprites);
-  width = sprite_width((Sprite *)&fortify_overlay_sprites);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),0x8f,0x1a7,width,height,fill_color);
-  sprite_draw((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_fortify_bg,(iptr)((u8 *)&g.d_006ac0a8),0x8f,0x1a7);
-  sprite_draw((Sprite *)&fortify_overlay_sprites,(iptr)clip_fortify,(iptr)((u8 *)&g.d_006ac0a8),0x8f,0x1a7);
-  key_color = sprite_get_key_color((Sprite *)&fortress_sprite);
+  height = sprite_height((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
+  width = sprite_width((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7,width,height,fill_color);
+  sprite_draw((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_fortify_bg,(iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7);
+  sprite_draw((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites),(iptr)clip_fortify,(iptr)&status_window_block.sprite_sheet_surface,0x8f,0x1a7);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&fortress_sprite);
-  width = sprite_width((Sprite *)&fortress_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),0xd0,0x1a7,width,height,fill_color);
-  sprite_draw((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_fortress_bg,(iptr)((u8 *)&g.d_006ac0a8),0xd0,0x1a7);
-  sprite_draw((Sprite *)&fortress_sprite,(iptr)clip_fortress,(iptr)((u8 *)&g.d_006ac0a8),0xd0,0x1a7);
-  key_color = sprite_get_key_color((Sprite *)&airbase_sprites);
+  height = sprite_height((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite));
+  width = sprite_width((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7,width,height,fill_color);
+  sprite_draw((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_fortress_bg,(iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7);
+  sprite_draw((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite),(iptr)clip_fortress,(iptr)&status_window_block.sprite_sheet_surface,0xd0,0x1a7);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&airbase_sprites);
-  width = sprite_width((Sprite *)&airbase_sprites);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),0x111,0x1a7,width,height,fill_color);
-  sprite_draw((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_airbase_bg,(iptr)((u8 *)&g.d_006ac0a8),0x111,0x1a7);
-  sprite_draw((Sprite *)&airbase_sprites,(iptr)clip_airbase,(iptr)((u8 *)&g.d_006ac0a8),0x111,0x1a7);
-  key_color = sprite_get_key_color((Sprite *)&airbase_occupied_sprite);
+  height = sprite_height((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites));
+  width = sprite_width((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7,width,height,fill_color);
+  sprite_draw((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_airbase_bg,(iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7);
+  sprite_draw((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites),(iptr)clip_airbase,(iptr)&status_window_block.sprite_sheet_surface,0x111,0x1a7);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&airbase_occupied_sprite);
-  width = sprite_width((Sprite *)&airbase_occupied_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),0x152,0x1a7,width,height,fill_color);
-  sprite_draw((Sprite *)&editor_unit_backdrop_sprite,(iptr)clip_airbase_occ_bg,(iptr)((u8 *)&g.d_006ac0a8),0x152,0x1a7);
-  sprite_draw((Sprite *)&airbase_occupied_sprite,(iptr)clip_airbase_occ,(iptr)((u8 *)&g.d_006ac0a8),0x152,0x1a7);
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_0063407c));
+  height = sprite_height((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite));
+  width = sprite_width((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7,width,height,fill_color);
+  sprite_draw((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)clip_airbase_occ_bg,(iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7);
+  sprite_draw((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite),(iptr)clip_airbase_occ,(iptr)&status_window_block.sprite_sheet_surface,0x152,0x1a7);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_cities_bmp_3);
   if (result != 0) {
-    result = crt_remove(s_CITIES_BMP_00634088);
+    result = crt_remove(str_cities_bmp_4);
     if (result != 0) goto LAB_00570732;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634094),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_cities_bmp_5,10,0xc0,(iptr)&palette);
 LAB_00570732:
   __chdir(saved_dir);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   eh_state = 0xffffffff;
   /* inlined unwind funclet 0057075c */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -4041,138 +3999,138 @@ void __cdecl sprite_sheet_save_terrain1(void)
   palette_init(&palette);
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_006340a0),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain1_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_006340b0),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_terrain1_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_006340c0),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_terrain1_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   x2 = 1;
   res_x = 0x83;
   res2_x = 0xc4;
   y2 = 1;
   for (terrain2 = 0; terrain2 < 0xb; terrain2++) {
-    key_color = sprite_get_key_color((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c));
-    width = sprite_width((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)base_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)base_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
     sprite_draw
-              ((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c),(iptr)base_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + terrain2 * 0x3c),(iptr)base_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
-    key_color = sprite_get_key_color((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78));
-    width = sprite_width((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),res_x,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78));
+    width = sprite_width((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,res_x,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)res_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),res_x,y2);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)res_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,res_x,y2);
     sprite_draw
-              ((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78),(iptr)res_rect,(iptr)((u8 *)&g.d_006ac0a8),res_x
+              ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + terrain2 * 0x78),(iptr)res_rect,(iptr)&status_window_block.sprite_sheet_surface,res_x
                ,y2);
-    key_color = sprite_get_key_color((Sprite *)(&terrain_resource2_sprites + terrain2 * 0x78));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&terrain_resource2_sprites + terrain2 * 0x78));
-    width = sprite_width((Sprite *)(&terrain_resource2_sprites + terrain2 * 0x78));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),res2_x,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78));
+    width = sprite_width((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,res2_x,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)res2_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),res2_x,y2);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)res2_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,res2_x,y2);
     sprite_draw
-              ((Sprite *)(&terrain_resource2_sprites + terrain2 * 0x78),(iptr)res2_rect,(iptr)((u8 *)&g.d_006ac0a8),res2_x
+              ((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + terrain2 * 0x78),(iptr)res2_rect,(iptr)&status_window_block.sprite_sheet_surface,res2_x
                ,y2);
     y2 += 0x21;
   }
   x2 = 0x1c8;
   y2 = 100;
   for (i = 0; i < 3; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&land_improvement_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&land_improvement_sprites + terrain2 * 0x3c));
-    width = sprite_width((Sprite *)(&land_improvement_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + terrain2 * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)impr_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)impr_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
     sprite_draw
-              ((Sprite *)(&land_improvement_sprites + i * 0x3c),(iptr)impr_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + i * 0x3c),(iptr)impr_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
     y2 += 0x21;
   }
-  key_color = sprite_get_key_color((Sprite *)&pollution_sprite);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&pollution_sprite);
-  width = sprite_width((Sprite *)&pollution_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+  height = sprite_height((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite));
+  width = sprite_width((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
   sprite_draw
-            ((Sprite *)&editor_tile_backdrop_sprite,(iptr)pollution_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)pollution_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   sprite_draw
-            ((Sprite *)&pollution_sprite,(iptr)pollution_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite),(iptr)pollution_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   y2 += 0x21;
-  key_color = sprite_get_key_color((Sprite *)&grassland_shield_sprite);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&grassland_shield_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&grassland_shield_sprite);
-  width = sprite_width((Sprite *)&grassland_shield_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+  height = sprite_height((Sprite *)((i8 *)&grassland_shield_sprite));
+  width = sprite_width((Sprite *)((i8 *)&grassland_shield_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
   sprite_draw
-            ((Sprite *)&editor_tile_backdrop_sprite,(iptr)shield_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)shield_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   sprite_draw
-            ((Sprite *)&grassland_shield_sprite,(iptr)shield_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&grassland_shield_sprite),(iptr)shield_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   y2 += 0x21;
-  key_color = sprite_get_key_color((Sprite *)&hut_sprite);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&hut_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&hut_sprite);
-  width = sprite_width((Sprite *)&hut_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+  height = sprite_height((Sprite *)((i8 *)&hut_sprite));
+  width = sprite_width((Sprite *)((i8 *)&hut_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
   sprite_draw
-            ((Sprite *)&editor_tile_backdrop_sprite,(iptr)hut_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)hut_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   sprite_draw
-            ((Sprite *)&hut_sprite,(iptr)hut_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+            ((Sprite *)((i8 *)&hut_sprite),(iptr)hut_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
   y2 = 0x16c;
   x2 = 1;
   for (i = 0; i < 9; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&road_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&road_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&road_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)road_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)road_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
     sprite_draw
-              ((Sprite *)(&road_sprites + i * 0x3c),(iptr)road_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + i * 0x3c),(iptr)road_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
-    key_color = sprite_get_key_color((Sprite *)(&railroad_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&railroad_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&railroad_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2 + 0x21,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2 + 0x21,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)rail_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2 + 0x21);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)rail_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2 + 0x21);
     sprite_draw
-              ((Sprite *)(&railroad_sprites + i * 0x3c),(iptr)rail_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + i * 0x3c),(iptr)rail_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2 + 0x21);
     x2 += 0x41;
   }
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_006340d0));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_terrain1_bmp_3);
   if (result != 0) {
-    result = crt_remove(s_TERRAIN1_BMP_006340e0);
+    result = crt_remove(str_terrain1_bmp_4);
     if (result != 0) goto LAB_00570f78;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_006340f0),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain1_bmp_5,10,0xc0,(iptr)&palette);
 LAB_00570f78:
   __chdir(saved_cwd);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00570fa2 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -4217,137 +4175,137 @@ void __cdecl sprite_sheet_save_terrain2(void)
   palette_init(&palette);
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634100),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain2_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634110),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_terrain2_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634120),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_terrain2_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   base_x = 1;
   base_y = 0x43;
   for (i = 0; (int)i < 0x10; i++) {
     cell_x = (i & 7) * 0x41;
     cell_y = ((int)i >> 3) * 0x21;
-    key_color = sprite_get_key_color((Sprite *)(&river_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&river_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&river_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,base_y + cell_y,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)river_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)river_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y);
     sprite_draw
-              ((Sprite *)(&river_sprites + i * 0x3c),(iptr)river_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + i * 0x3c),(iptr)river_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y);
-    key_color = sprite_get_key_color((Sprite *)(&forest_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&forest_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&forest_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,base_y + cell_y + 0x42,width,height,fill_color
+    height = sprite_height((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x42,width,height,fill_color
                       );
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)forest_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)forest_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0x42);
     sprite_draw
-              ((Sprite *)(&forest_sprites + i * 0x3c),(iptr)forest_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&forest_sprites) + i * 0x3c),(iptr)forest_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0x42);
-    key_color = sprite_get_key_color((Sprite *)(&mountain_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&mountain_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&mountain_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,base_y + cell_y + 0x84,width,height,fill_color
+    height = sprite_height((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0x84,width,height,fill_color
                       );
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)mountain_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)mountain_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0x84);
     sprite_draw
-              ((Sprite *)(&mountain_sprites + i * 0x3c),(iptr)mountain_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&mountain_sprites) + i * 0x3c),(iptr)mountain_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0x84);
-    key_color = sprite_get_key_color((Sprite *)(&hill_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&hill_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&hill_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,base_y + cell_y + 0xc6,width,height,fill_color
+    height = sprite_height((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,base_y + cell_y + 0xc6,width,height,fill_color
                       );
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)hill_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x + cell_x,
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)hill_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x + cell_x,
                base_y + cell_y + 0xc6);
     sprite_draw
-              ((Sprite *)(&hill_sprites + i * 0x3c),(iptr)hill_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + i * 0x3c),(iptr)hill_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x + cell_x,base_y + cell_y + 0xc6);
   }
   base_x = 1;
   base_y = 0x14b;
   for (i = 0; (int)i < 4; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&river_mouth_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&river_mouth_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&river_mouth_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x,base_y,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
     sprite_draw
-              ((Sprite *)&editor_tile_backdrop_sprite,(iptr)mouth_bg_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x,base_y);
+              ((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)mouth_bg_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x,base_y);
     sprite_draw
-              ((Sprite *)(&river_mouth_sprites + i * 0x3c),(iptr)mouth_rect,(iptr)((u8 *)&g.d_006ac0a8),base_x
+              ((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + i * 0x3c),(iptr)mouth_rect,(iptr)&status_window_block.sprite_sheet_surface,base_x
                ,base_y);
     base_x += 0x41;
   }
   base_x = 1;
   base_y = 0x1ad;
   for (coast_idx = 0; coast_idx < 8; coast_idx++) {
-    key_color = sprite_get_key_color((Sprite *)(&coast_quarter_sprites + coast_idx * 0xf0));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&coast_quarter_sprites + coast_idx * 0xf0));
-    width = sprite_width((Sprite *)(&coast_quarter_sprites + coast_idx * 0xf0));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x,base_y,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0));
+    width = sprite_width((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&coast_quarter_sprites + coast_idx * 0xf0),(iptr)coast_n_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + coast_idx * 0xf0),(iptr)coast_n_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x,base_y);
-    key_color = sprite_get_key_color((Sprite *)(&coast_quarter_east_sprites + coast_idx * 0xf0));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&coast_quarter_east_sprites + coast_idx * 0xf0));
-    width = sprite_width((Sprite *)(&coast_quarter_east_sprites + coast_idx * 0xf0));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x + 0x21,base_y + 0x22,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0));
+    width = sprite_width((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x + 0x21,base_y + 0x22,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&coast_quarter_east_sprites + coast_idx * 0xf0),(iptr)coast_e_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + coast_idx * 0xf0),(iptr)coast_e_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x + 0x21,base_y + 0x22);
-    key_color = sprite_get_key_color((Sprite *)(&coast_quarter_south_sprites + coast_idx * 0xf0));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&coast_quarter_south_sprites + coast_idx * 0xf0));
-    width = sprite_width((Sprite *)(&coast_quarter_south_sprites + coast_idx * 0xf0));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x,base_y + 0x11,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0));
+    width = sprite_width((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y + 0x11,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&coast_quarter_south_sprites + coast_idx * 0xf0),(iptr)coast_s_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + coast_idx * 0xf0),(iptr)coast_s_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x,base_y + 0x11);
-    key_color = sprite_get_key_color((Sprite *)(&coast_quarter_west_sprites + coast_idx * 0xf0));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&coast_quarter_west_sprites + coast_idx * 0xf0));
-    width = sprite_width((Sprite *)(&coast_quarter_west_sprites + coast_idx * 0xf0));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),base_x,base_y + 0x22,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0));
+    width = sprite_width((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,base_x,base_y + 0x22,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&coast_quarter_west_sprites + coast_idx * 0xf0),(iptr)coast_w_rect,(iptr)((u8 *)&g.d_006ac0a8),
+              ((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + coast_idx * 0xf0),(iptr)coast_w_rect,(iptr)&status_window_block.sprite_sheet_surface,
                base_x,base_y + 0x22);
     base_x += 0x42;
   }
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_00634130));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_terrain2_bmp_3);
   if (result != 0) {
-    result = crt_remove(s_TERRAIN2_BMP_00634140);
+    result = crt_remove(str_terrain2_bmp_4);
     if (result != 0) goto LAB_005718c2;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634150),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_terrain2_bmp_5,10,0xc0,(iptr)&palette);
 LAB_005718c2:
   __chdir(saved_cwd);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
   /* inlined unwind funclet 005718ec */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -4377,51 +4335,51 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   palette_init(&palette);
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_00634160),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_2,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_0063416c),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_icons_gif_3,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_00634178),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_icons_gif_4,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   y2 = 0xd3;
   for (row = 0; row < 4; row++) {
     x2 = 0x157;
     for (category2 = 0; category2 < 5; category2++) {
       key_color = sprite_get_key_color
-                        ((Sprite *)(&advance_category_icon_sprites + category2 * 0xf0 + row * 0x3c));
+                        ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c));
       fill_color = (uint)key_color;
       height = sprite_height
-                        ((Sprite *)(&advance_category_icon_sprites + category2 * 0xf0 + row * 0x3c));
+                        ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c));
       width = sprite_width
-                        ((Sprite *)(&advance_category_icon_sprites + category2 * 0xf0 + row * 0x3c));
-      gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+                        ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c));
+      gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
       sprite_draw
-                ((Sprite *)(&advance_category_icon_sprites + category2 * 0xf0 + row * 0x3c),
-                 (iptr)icon_rect,(iptr)((u8 *)&g.d_006ac0a8),x2,y2);
+                ((Sprite *)(((i8 *)&government_sprites_block.advance_category_icon_sprites) + category2 * 0xf0 + row * 0x3c),
+                 (iptr)icon_rect,(iptr)&status_window_block.sprite_sheet_surface,x2,y2);
       x2 += 0x25;
     }
     y2 += 0x15;
   }
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_00634184));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_icons_bmp_3);
   if (result != 0) {
-    result = crt_remove(s_ICONS_BMP_00634190);
+    result = crt_remove(str_icons_bmp_4);
     if (result != 0) goto LAB_00571b80;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_0063419c),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_5,10,0xc0,(iptr)&palette);
 LAB_00571b80:
   __chdir(saved_cwd);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00571baa */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
@@ -4454,33 +4412,33 @@ void __cdecl sprite_sheet_save_building_icons(void)
   palette_init(&palette);
   seh_state = 0;
   __getcwd(saved_cwd,0x104);
-  __chdir(&scenario_dir_path);
-  result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_006341a8),10,0xc0,(iptr)&palette);
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_6,10,0xc0,(iptr)&palette);
   if (result == 0) {
     result = surface_load_gif_file
-                      ((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_006341b4),10,0xc0,(iptr)&palette);
+                      ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_icons_gif_5,10,0xc0,(iptr)&palette);
     if (result == 0) {
-      __chdir(&game_home_dir);
-      surface_load_gif_file((DibSurface *)&sprite_sheet_surface,(iptr)((u8 *)&g.d_006341c0),10,0xc0,(iptr)&palette);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
+      surface_load_gif_file((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)&str_icons_gif_6,10,0xc0,(iptr)&palette);
     }
     else {
-      __chdir(&game_home_dir);
+      __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
     }
   }
   else {
-    __chdir(&game_home_dir);
+    __chdir(((i8 *)&civ_saved_cursor_x_block.game_home_dir));
   }
   x2 = 0x157;
   y2 = 1;
   column = 0;
   for (i = 1; i < 0x27; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&improvement_icon_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&improvement_icon_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&improvement_icon_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&improvement_icon_sprites + i * 0x3c),(iptr)improvement_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + i * 0x3c),(iptr)improvement_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x25;
     column++;
@@ -4494,13 +4452,13 @@ void __cdecl sprite_sheet_save_building_icons(void)
   y2 = 0x6a;
   column = 0;
   for (i = 0; i < 0x1c; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&wonder_icon_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&wonder_icon_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&wonder_icon_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&wonder_icon_sprites + i * 0x3c),(iptr)wonder_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + i * 0x3c),(iptr)wonder_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x25;
     column++;
@@ -4510,50 +4468,41 @@ void __cdecl sprite_sheet_save_building_icons(void)
       x2 = 0x157;
     }
   }
-  key_color = sprite_get_key_color((Sprite *)&map_cursor_sprite);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite));
   fill_color = (uint)key_color;
-  height = sprite_height((Sprite *)&map_cursor_sprite);
-  width = sprite_width((Sprite *)&map_cursor_sprite);
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),199,0x100,width,height,fill_color);
-  sprite_draw((Sprite *)&map_cursor_sprite,(iptr)cursor_rect,(iptr)((u8 *)&g.d_006ac0a8),199,0x100);
+  height = sprite_height((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite));
+  width = sprite_width((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite));
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,199,0x100,width,height,fill_color);
+  sprite_draw((Sprite *)((i8 *)&map_cursor_sprite_block.map_cursor_sprite),(iptr)cursor_rect,(iptr)&status_window_block.sprite_sheet_surface,199,0x100);
   x2 = 1;
   y2 = 0x164;
   for (i = 0; i < 8; i++) {
-    key_color = sprite_get_key_color((Sprite *)(&explosion_sprites + i * 0x3c));
+    key_color = sprite_get_key_color((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c));
     fill_color = (uint)key_color;
-    height = sprite_height((Sprite *)(&explosion_sprites + i * 0x3c));
-    width = sprite_width((Sprite *)(&explosion_sprites + i * 0x3c));
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac0a8),x2,y2,width,height,fill_color);
+    height = sprite_height((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c));
+    width = sprite_width((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c));
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_sheet_surface,x2,y2,width,height,fill_color);
     sprite_draw
-              ((Sprite *)(&explosion_sprites + i * 0x3c),(iptr)explosion_rect,(iptr)((u8 *)&g.d_006ac0a8),x2
+              ((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + i * 0x3c),(iptr)explosion_rect,(iptr)&status_window_block.sprite_sheet_surface,x2
                ,y2);
     x2 += 0x21;
   }
-  __chdir(&scenario_dir_path);
-  result = file_exists((iptr)((u8 *)&g.d_006341cc));
+  __chdir(((i8 *)&net_map_lock_slots_block.scenario_dir_path));
+  result = file_exists((iptr)&str_icons_bmp_7);
   if (result != 0) {
-    result = crt_remove(s_ICONS_BMP_006341d8);
+    result = crt_remove(str_icons_bmp_8);
     if (result != 0) goto LAB_0057203b;
   }
-  gfx_save_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)((u8 *)&g.d_006341e4),10,0xc0,(iptr)&palette);
+  gfx_save_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)&str_icons_bmp_9,10,0xc0,(iptr)&palette);
 LAB_0057203b:
   __chdir(saved_cwd);
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00572065 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
 
 /* 00572089 auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define sprite_editor_style_flags_i32 (*(i32 *)((u8 *)&g.d_006ac2c4))
-#define sprite_editor_caption_button_count_i32 (*(i32 *)((u8 *)&g.d_006ac3ac))
-#define sprite_editor_caption_button_cb_i32 (*(i32 *)((u8 *)&g.d_006ac458))
-#define sprite_editor_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac47c))
-#define sprite_editor_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac480))
-#define sprite_editor_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac484))
 /* WARNING: Removing unreachable block (ram,0x0057228e) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -4566,23 +4515,23 @@ sprite_editor_create_window(int title,uint style_flags,int x,int y,int width,int
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(&sprite_editor_title,&sprite_editor_default_title);
+    crt_strcpy(((i8 *)&status_window_block.sprite_editor_title),((i8 *)&sprite_editor_default_title));
   }
   else {
-    crt_strcpy(&sprite_editor_title,title);
+    crt_strcpy(((i8 *)&status_window_block.sprite_editor_title),title);
   }
-  sprite_editor_text_font_i32 = &ui_text_font;
-  sprite_editor_title_font_i32 = &caption_font;
-  sprite_editor_title_small_font_i32 = &caption_small_font;
-  sprite_editor_style_flags_i32 = style_flags;
-  sprite_editor_caption_height = caption_height;
-  sprite_editor_border_width = border_width;
-  sprite_editor_resize_border = resize_border;
-  sprite_editor_caption_button_count_i32 = 0;
-  sprite_editor_caption_button_cb_i32 = 0;
+  status_window_block.sprite_editor_text_font_i32 = ((i8 *)&ui_text_font);
+  status_window_block.sprite_editor_title_font_i32 = ((i8 *)&caption_font_block.caption_font);
+  status_window_block.sprite_editor_title_small_font_i32 = ((i8 *)&caption_small_font_block.caption_small_font);
+  status_window_block.sprite_editor_style_flags_i32 = style_flags;
+  status_window_block.sprite_editor_caption_height = caption_height;
+  status_window_block.sprite_editor_border_width = border_width;
+  status_window_block.sprite_editor_resize_border = resize_border;
+  status_window_block.sprite_editor_caption_button_count_i32 = 0;
+  status_window_block.sprite_editor_caption_button_cb_i32 = 0;
   if ((style_flags & 4) != 0) {
-    sprite_editor_caption_height = frame_caption_height;
-    sprite_editor_border_width = frame_border_width;
+    status_window_block.sprite_editor_caption_height = frame_caption_height;
+    status_window_block.sprite_editor_border_width = frame_border_width;
   }
   if ((style_flags & 8) == 0) {
     wnd_style = 0x202;
@@ -4590,121 +4539,84 @@ sprite_editor_create_window(int title,uint style_flags,int x,int y,int width,int
   else {
     wnd_style = 0x802;
   }
-  if (sprite_editor_caption_height != 0) {
+  if (status_window_block.sprite_editor_caption_height != 0) {
     wnd_style = wnd_style | 0x400;
   }
   if (resize_border != 0) {
     wnd_style = wnd_style | 0x1000;
   }
   if ((style_flags & 2) == 0) {
-    width += sprite_editor_border_width * 2;
-    height = height + sprite_editor_caption_height + sprite_editor_border_width;
+    width += status_window_block.sprite_editor_border_width * 2;
+    height = height + status_window_block.sprite_editor_caption_height + status_window_block.sprite_editor_border_width;
   }
   if ((style_flags & 1) != 0) {
-    x = (screen_width >> 1) - (width >> 1);
-    y = (screen_height >> 1) - (height >> 1);
+    x = (caption_font_block.screen_width >> 1) - (width >> 1);
+    y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
-  if (active_editor_wnd == 0) {
+  if (editor_text_dlg_wnd_block.active_editor_wnd == 0) {
     parent_hwnd = 0;
   }
   else {
-    parent_hwnd = active_editor_wnd + 0x48;
+    parent_hwnd = editor_text_dlg_wnd_block.active_editor_wnd + 0x48;
   }
   wnd_create_with_surface
-            ((DibSurface *)&sprite_editor_window,0,wnd_style,x,y,width,height,(iptr)((u8 *)&g.d_006a8c00),
+            ((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
              parent_hwnd);
-  if (sprite_editor_caption_height != 0) {
-    wnd_set_caption_height((WndBase *)&sprite_editor_wnd,sprite_editor_caption_height);
+  if (status_window_block.sprite_editor_caption_height != 0) {
+    wnd_set_caption_height((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),status_window_block.sprite_editor_caption_height);
   }
-  if (sprite_editor_resize_border != 0) {
-    wnd_set_resize_border((WndBase *)&sprite_editor_wnd,sprite_editor_resize_border);
+  if (status_window_block.sprite_editor_resize_border != 0) {
+    wnd_set_resize_border((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),status_window_block.sprite_editor_resize_border);
   }
-  frame_wnd_layout((FrameWindow *)&sprite_editor_window);
-  dlg_set_parent_window((iptr)((u8 *)&g.d_006ac1f8));
+  frame_wnd_layout((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window));
+  dlg_set_parent_window((iptr)&status_window_block.sprite_editor_wnd);
   return;
 }
-#undef frame_border_width
-#undef frame_caption_height
-#undef screen_height
-#undef sprite_editor_style_flags_i32
-#undef sprite_editor_caption_button_count_i32
-#undef sprite_editor_caption_button_cb_i32
-#undef sprite_editor_title_font_i32
-#undef sprite_editor_title_small_font_i32
-#undef sprite_editor_text_font_i32
 
 /* 005722ab auto */
-#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_ok_callback (*(code * *)((u8 *)&g.d_006ac888))
-#define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
-#define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
 void __cdecl sprite_editor_ok_clicked(void)
 
 {
   i8 rect[16];
   
-  rect_set_xywh((iptr)rect,0,0,sprite_editor_width,sprite_editor_height);
-  surface_replace_color_clip((DibSurface *)&sprite_editor_surface,0x109,0x107);
-  sprite_grab_surface_rect(sprite_editor_target_sprite,(iptr)((u8 *)&g.d_006ac128),(iptr)rect);
-  *(i32 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_x;
-  *(i32 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_y;
-  if (sprite_editor_ok_callback != (code *)0x0) {
-    (*sprite_editor_ok_callback)();
+  rect_set_xywh((iptr)rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+  surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),0x109,0x107);
+  sprite_grab_surface_rect(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_surface,(iptr)rect);
+  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4) = status_window_block.sprite_editor_flag_x;
+  *(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4) = status_window_block.sprite_editor_flag_y;
+  if (status_window_block.sprite_editor_ok_callback != (code *)0x0) {
+    (*status_window_block.sprite_editor_ok_callback)();
   }
-  sprite_editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
-  wnd_repaint((SurfaceWindow *)&map_views);
+  status_window_block.sprite_editor_running = 0;
+  wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
+  wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
   return;
 }
-#undef sprite_editor_flag_x
-#undef sprite_editor_flag_y
-#undef sprite_editor_height
-#undef sprite_editor_ok_callback
-#undef sprite_editor_running
-#undef sprite_editor_width
 
 /* 00572364 auto */
-#define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
 void __cdecl sprite_editor_cancel_clicked(void)
 
 {
-  sprite_editor_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
+  status_window_block.sprite_editor_running = 0;
+  wnd_end_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
   return;
 }
-#undef sprite_editor_running
 
 /* 00572389 auto */
-#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_undo_flag_x (*(i32 *)((u8 *)&g.d_006ac0a4))
-#define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
-#define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
 void __cdecl sprite_editor_rebuild_sprite(void)
 
 {
   i8 rect[16];
   
-  sprite_free((Sprite *)&sprite_editor_result_sprite);
-  rect_set_xywh((iptr)rect,0,0,sprite_editor_width,sprite_editor_height);
-  sprite_grab_rect((Sprite *)&sprite_editor_result_sprite,(iptr)((u8 *)&g.d_006ac128),0xfe,(iptr)rect);
-  sprite_editor_undo_flag_x = sprite_editor_flag_x;
-  sprite_editor_undo_flag_y = sprite_editor_flag_y;
+  sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
+  rect_set_xywh((iptr)rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+  sprite_grab_rect((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite),(iptr)&status_window_block.sprite_editor_surface,0xfe,(iptr)rect);
+  status_window_block.sprite_editor_undo_flag_x = status_window_block.sprite_editor_flag_x;
+  status_window_block.sprite_editor_undo_flag_y = status_window_block.sprite_editor_flag_y;
   return;
 }
-#undef sprite_editor_flag_x
-#undef sprite_editor_flag_y
-#undef sprite_editor_height
-#undef sprite_editor_undo_flag_x
-#undef sprite_editor_undo_flag_y
-#undef sprite_editor_width
 
 /* 005723ee auto */
-#define sprite_editor_key_color (*(int *)((u8 *)&g.d_006ac874))
-#define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
 void __cdecl sprite_editor_draw_swatches(void)
 
 {
@@ -4715,45 +4627,43 @@ void __cdecl sprite_editor_draw_swatches(void)
   i8 rect[16];
   
   if (sprite_editor_right_color == 0) {
-    right_color = sprite_editor_key_color;
+    right_color = (*(int *)&status_window_block.sprite_editor_key_color);
   }
   else {
     right_color = sprite_editor_right_color;
   }
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x142,sprite_editor_origin_y + 0xac,0x20,0x20,right_color);
-  gfx_draw_frame_rect((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x142,sprite_editor_origin_y + 0xac,0x20,0x20,10);
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x142,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,right_color);
+  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x142,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
   if (sprite_editor_left_color == 0) {
-    left_color = sprite_editor_key_color;
+    left_color = (*(int *)&status_window_block.sprite_editor_key_color);
   }
   else {
     left_color = sprite_editor_left_color;
   }
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x14a,sprite_editor_origin_y + 0xb4,0x10,0x10,left_color);
-  gfx_draw_frame_rect((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x14a,sprite_editor_origin_y + 0xb4,0x10,0x10,10);
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x14a,status_window_block.sprite_editor_origin_y + 0xb4,0x10,0x10,left_color);
+  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x14a,status_window_block.sprite_editor_origin_y + 0xb4,0x10,0x10,10);
   if (sprite_editor_prev_left_color == 0) {
-    prev_left_color = sprite_editor_key_color;
+    prev_left_color = (*(int *)&status_window_block.sprite_editor_key_color);
   }
   else {
     prev_left_color = sprite_editor_prev_left_color;
   }
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x11e,sprite_editor_origin_y + 0xac,0x20,0x20,prev_left_color);
-  gfx_draw_frame_rect((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x11e,sprite_editor_origin_y + 0xac,0x20,0x20,10);
-  if (sprite_sheet_mode != 0xb) {
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,prev_left_color);
+  gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
+  if (sprite_picker_sprite_block.sprite_sheet_mode != 0xb) {
     if (sprite_editor_prev_right_color == 0) {
-      prev_right_color = sprite_editor_key_color;
+      prev_right_color = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
       prev_right_color = sprite_editor_prev_right_color;
     }
-    gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x166,sprite_editor_origin_y + 0xac,0x20,0x20,prev_right_color);
-    gfx_draw_frame_rect((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 0x166,sprite_editor_origin_y + 0xac,0x20,0x20,10);
+    gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x166,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,prev_right_color);
+    gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 0x166,status_window_block.sprite_editor_origin_y + 0xac,0x20,0x20,10);
   }
-  rect_set_xywh((iptr)rect,sprite_editor_origin_x + 0x11e,sprite_editor_origin_y + 0xac,0x68,0x20);
-  wnd_blit_surface_rect((DibSurface *)&sprite_editor_window,(iptr)rect);
+  rect_set_xywh((iptr)rect,status_window_block.sprite_editor_origin_x + 0x11e,status_window_block.sprite_editor_origin_y + 0xac,0x68,0x20);
+  wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)rect);
   return;
 }
-#undef sprite_editor_key_color
-#undef sprite_sheet_mode
 
 /* 0057261a auto */
 void __cdecl sprite_editor_draw_palette_cell(iptr surface,int origin_x,int origin_y,int color)
@@ -4769,8 +4679,8 @@ void __cdecl sprite_editor_draw_palette_cell(iptr surface,int origin_x,int origi
     col = ((color - 10U ^ sign) - sign & 0x1f ^ sign) - sign;
     row = (int)(color - 10 + (color - 10 >> 0x1f & 0x1fU)) >> 5;
     rect_set_xywh((iptr)rect,col * 0xc + origin_x,row * 0xc + origin_y,10,10);
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)rect,color);
-    gfx_draw_bevel_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)rect,10,10);
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)rect,color);
+    gfx_draw_bevel_rect((iptr)&status_window_block.sprite_editor_window,(iptr)rect,10,10);
     rect_set_xywh((iptr)rect,col * 0xc + origin_x - 1,row * 0xc + origin_y - 1,0xc,0xc)
     ;
     if ((color == sprite_editor_right_color) || (color == sprite_editor_left_color)) {
@@ -4804,26 +4714,24 @@ int __cdecl sprite_editor_tool_hit_test(int x,int y)
 }
 
 /* 005727d8 auto */
-#define sprite_editor_key_color (*(i32 *)((u8 *)&g.d_006ac874))
-#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
 void __cdecl sprite_editor_draw_backdrop(void)
 
 {
   i8 tile_rect[16];
   i8 unit_rect[16];
   
-  surface_fill((DibSurface *)&sprite_editor_surface,sprite_editor_key_color);
-  switch(sprite_sheet_mode) {
+  surface_fill((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),(*(i32 *)&status_window_block.sprite_editor_key_color));
+  switch(sprite_picker_sprite_block.sprite_sheet_mode) {
   case 1:
   case 2:
   case 0xb:
-    sprite_draw((Sprite *)&editor_unit_backdrop_sprite,(iptr)unit_rect,(iptr)((u8 *)&g.d_006ac128),0,0);
+    sprite_draw((Sprite *)((i8 *)&editor_unit_backdrop_sprite),(iptr)unit_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
     break;
   case 5:
   case 7:
   case 8:
   case 10:
-    sprite_draw((Sprite *)&editor_tile_backdrop_sprite,(iptr)tile_rect,(iptr)((u8 *)&g.d_006ac128),0,0);
+    sprite_draw((Sprite *)((i8 *)&editor_tile_backdrop_sprite_block.editor_tile_backdrop_sprite),(iptr)tile_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
   case 3:
   case 4:
   case 6:
@@ -4831,14 +4739,8 @@ void __cdecl sprite_editor_draw_backdrop(void)
   }
   return;
 }
-#undef sprite_editor_key_color
-#undef sprite_sheet_mode
 
 /* 00572887 auto */
-#define sprite_editor_brush_size (*(int *)((u8 *)&g.d_006ac124))
-#define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_key_color (*(int *)((u8 *)&g.d_006ac874))
-#define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
 i8 * __cdecl sprite_editor_plot_pixel(int px,int py)
 
 {
@@ -4854,122 +4756,114 @@ i8 * __cdecl sprite_editor_plot_pixel(int px,int py)
   int pixel_color;
   i8 saved_clip[16];
   
-  if (sprite_editor_brush_size == 0) {
-    if (sprite_editor_paint_color == 0) {
-      pixel_color = sprite_editor_key_color;
+  if (status_window_block.sprite_editor_brush_size == 0) {
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      pixel_color = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      pixel_color = sprite_editor_paint_color;
+      pixel_color = status_window_block.sprite_editor_paint_color;
     }
-    surface_set_pixel((DibSurface *)&sprite_editor_surface,px,py,pixel_color);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0x10,sprite_editor_origin_y + py * 4 + 0x10,
+    surface_set_pixel((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),px,py,pixel_color);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
                        4,4);
-    if (sprite_editor_paint_color == 0) {
-      screen_color = sprite_editor_key_color;
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      screen_color = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      screen_color = sprite_editor_paint_color;
+      screen_color = status_window_block.sprite_editor_paint_color;
     }
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac108),screen_color);
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_plot_rect,screen_color);
   }
-  else if (sprite_editor_brush_size == 1) {
-    surface_get_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),sprite_editor_origin_x + 0x10,sprite_editor_origin_y + 0x10,sprite_editor_width << 2,
-                       sprite_editor_height << 2);
-    surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)((u8 *)&g.d_006ac108));
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px - 1,py,3,1);
-    if (sprite_editor_paint_color == 0) {
-      color1 = sprite_editor_key_color;
+  else if (status_window_block.sprite_editor_brush_size == 1) {
+    surface_get_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
+                       status_window_block.sprite_editor_height << 2);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)&status_window_block.sprite_editor_plot_rect);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px - 1,py,3,1);
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color1 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color1 = sprite_editor_paint_color;
+      color1 = status_window_block.sprite_editor_paint_color;
     }
-    surface_fill_rect((DibSurface *)&sprite_editor_surface,(iptr)((u8 *)&g.d_006ac108),color1);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0xc,sprite_editor_origin_y + py * 4 + 0x10,
+    surface_fill_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),(iptr)&status_window_block.sprite_editor_plot_rect,color1);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
                        0xc,4);
-    if (sprite_editor_paint_color == 0) {
-      color2 = sprite_editor_key_color;
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color2 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color2 = sprite_editor_paint_color;
+      color2 = status_window_block.sprite_editor_paint_color;
     }
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac108),color2);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px,py - 1,1,3);
-    if (sprite_editor_paint_color == 0) {
-      color3 = sprite_editor_key_color;
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_plot_rect,color2);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px,py - 1,1,3);
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color3 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color3 = sprite_editor_paint_color;
+      color3 = status_window_block.sprite_editor_paint_color;
     }
-    surface_fill_rect((DibSurface *)&sprite_editor_surface,(iptr)((u8 *)&g.d_006ac108),color3);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0x10,py * 4 + sprite_editor_origin_y + 0xc,4
+    surface_fill_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),(iptr)&status_window_block.sprite_editor_plot_rect,color3);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,4
                        ,0xc);
-    if (sprite_editor_paint_color == 0) {
-      color4 = sprite_editor_key_color;
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color4 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color4 = sprite_editor_paint_color;
+      color4 = status_window_block.sprite_editor_paint_color;
     }
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac108),color4);
-    surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0xc,py * 4 + sprite_editor_origin_y + 0xc,
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_plot_rect,color4);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,
                        0xc,0xc);
   }
-  else if (sprite_editor_brush_size == 2) {
-    surface_get_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),sprite_editor_origin_x + 0x10,sprite_editor_origin_y + 0x10,sprite_editor_width << 2,
-                       sprite_editor_height << 2);
-    surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)((u8 *)&g.d_006ac108));
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px - 1,py,4,2);
-    if (sprite_editor_paint_color == 0) {
-      color5 = sprite_editor_key_color;
+  else if (status_window_block.sprite_editor_brush_size == 2) {
+    surface_get_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
+                       status_window_block.sprite_editor_height << 2);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)&status_window_block.sprite_editor_plot_rect);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px - 1,py,4,2);
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color5 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color5 = sprite_editor_paint_color;
+      color5 = status_window_block.sprite_editor_paint_color;
     }
-    surface_fill_rect((DibSurface *)&sprite_editor_surface,(iptr)((u8 *)&g.d_006ac108),color5);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0xc,sprite_editor_origin_y + py * 4 + 0x10,
+    surface_fill_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),(iptr)&status_window_block.sprite_editor_plot_rect,color5);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,status_window_block.sprite_editor_origin_y + py * 4 + 0x10,
                        0x10,8);
-    if (sprite_editor_paint_color == 0) {
-      color6 = sprite_editor_key_color;
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color6 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color6 = sprite_editor_paint_color;
+      color6 = status_window_block.sprite_editor_paint_color;
     }
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac108),color6);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px,py - 1,2,4);
-    if (sprite_editor_paint_color == 0) {
-      color7 = sprite_editor_key_color;
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_plot_rect,color6);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px,py - 1,2,4);
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color7 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color7 = sprite_editor_paint_color;
+      color7 = status_window_block.sprite_editor_paint_color;
     }
-    surface_fill_rect((DibSurface *)&sprite_editor_surface,(iptr)((u8 *)&g.d_006ac108),color7);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0x10,py * 4 + sprite_editor_origin_y + 0xc,8
+    surface_fill_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),(iptr)&status_window_block.sprite_editor_plot_rect,color7);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0x10,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,8
                        ,0x10);
-    if (sprite_editor_paint_color == 0) {
-      color8 = sprite_editor_key_color;
+    if (status_window_block.sprite_editor_paint_color == 0) {
+      color8 = (*(int *)&status_window_block.sprite_editor_key_color);
     }
     else {
-      color8 = sprite_editor_paint_color;
+      color8 = status_window_block.sprite_editor_paint_color;
     }
-    gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac108),color8);
-    surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-    rect_set_xywh((iptr)((u8 *)&g.d_006ac108),px * 4 + sprite_editor_origin_x + 0xc,py * 4 + sprite_editor_origin_y + 0xc,
+    gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_plot_rect,color8);
+    surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+    rect_set_xywh((iptr)&status_window_block.sprite_editor_plot_rect,px * 4 + status_window_block.sprite_editor_origin_x + 0xc,py * 4 + status_window_block.sprite_editor_origin_y + 0xc,
                        0x10,0x10);
   }
-  return &sprite_editor_plot_rect;
+  return &status_window_block.sprite_editor_plot_rect;
 }
-#undef sprite_editor_brush_size
-#undef sprite_editor_height
-#undef sprite_editor_key_color
-#undef sprite_editor_width
 
 /* 00572da0 auto */
-#define sprite_editor_flag_x (*(int *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(int *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
 void __cdecl sprite_editor_draw_flag_marker(void)
 
 {
@@ -4977,53 +4871,37 @@ void __cdecl sprite_editor_draw_flag_marker(void)
   i8 saved_clip[16];
   int flag_x;
   
-  wnd_repaint((SurfaceWindow *)&sprite_editor_window);
-  flag_y = sprite_editor_flag_y;
-  flag_x = sprite_editor_flag_x;
-  surface_get_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),sprite_editor_origin_x + 0x10,sprite_editor_origin_y + 0x10,sprite_editor_width << 2,
-                     sprite_editor_height << 2);
-  surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)((u8 *)&g.d_006ac0f8));
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),sprite_editor_origin_x + 0x20,sprite_editor_origin_y + 0x10,4,0x3c);
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),0x6a);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),sprite_editor_origin_x + 0x20,sprite_editor_origin_y + 0x4c,0xb4,4);
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),0x6a);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),sprite_editor_origin_x + 0xd0,sprite_editor_origin_y + 0x10,4,0x3c);
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),0x6a);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),flag_x * 4 + sprite_editor_origin_x + 8,sprite_editor_origin_y + flag_y * 4 + 0x10,0x14,4)
+  wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
+  flag_y = status_window_block.sprite_editor_flag_y;
+  flag_x = status_window_block.sprite_editor_flag_x;
+  surface_get_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x10,status_window_block.sprite_editor_origin_y + 0x10,status_window_block.sprite_editor_width << 2,
+                     status_window_block.sprite_editor_height << 2);
+  surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)&status_window_block.sprite_editor_marker_rect);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x20,status_window_block.sprite_editor_origin_y + 0x10,4,0x3c);
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,0x6a);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0x20,status_window_block.sprite_editor_origin_y + 0x4c,0xb4,4);
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,0x6a);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,status_window_block.sprite_editor_origin_x + 0xd0,status_window_block.sprite_editor_origin_y + 0x10,4,0x3c);
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,0x6a);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 8,status_window_block.sprite_editor_origin_y + flag_y * 4 + 0x10,0x14,4)
   ;
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),10);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),flag_x * 4 + sprite_editor_origin_x + 0x10,flag_y * 4 + sprite_editor_origin_y + 8,4,0x14)
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,10);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 0x10,flag_y * 4 + status_window_block.sprite_editor_origin_y + 8,4,0x14)
   ;
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),10);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),flag_x * 4 + sprite_editor_origin_x + 9,sprite_editor_origin_y + flag_y * 4 + 0x11,0x12,2)
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,10);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 9,status_window_block.sprite_editor_origin_y + flag_y * 4 + 0x11,0x12,2)
   ;
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),0x29);
-  rect_set_xywh((iptr)((u8 *)&g.d_006ac0f8),flag_x * 4 + sprite_editor_origin_x + 0x11,flag_y * 4 + sprite_editor_origin_y + 9,2,0x12)
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,0x29);
+  rect_set_xywh((iptr)&status_window_block.sprite_editor_marker_rect,flag_x * 4 + status_window_block.sprite_editor_origin_x + 0x11,flag_y * 4 + status_window_block.sprite_editor_origin_y + 9,2,0x12)
   ;
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac0f8),0x29);
-  surface_set_clip((DibSurface *)&sprite_editor_window,(iptr)saved_clip);
-  wnd_blit_surface((DibSurface *)&sprite_editor_window);
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_marker_rect,0x29);
+  surface_set_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),(iptr)saved_clip);
+  wnd_blit_surface((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
-#undef sprite_editor_flag_x
-#undef sprite_editor_flag_y
-#undef sprite_editor_height
-#undef sprite_editor_width
 
 /* 00572fff auto */
-#define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
-#define sprite_editor_cursor_id (*(i32 *)((u8 *)&g.d_006ac898))
-#define sprite_editor_flag_x (*(iptr *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(iptr *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_paint_tool (*(int *)((u8 *)&g.d_006ac118))
-#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
-#define sprite_editor_tool (*(int *)((u8 *)&g.d_006ac120))
-#define sprite_editor_undo_flag_x (*(iptr *)((u8 *)&g.d_006ac0a4))
-#define sprite_editor_undo_flag_y (*(iptr *)((u8 *)&g.d_006ac0a0))
-#define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
-#define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
 void __cdecl sprite_editor_on_mouse_down(int x,int y)
 
 {
@@ -5049,19 +4927,19 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
   seh_state = 0xffffffff;
   sprite_init(&temp_sprite);
   seh_state = 0;
-  window = wnd_get_window((WndBase *)&sprite_editor_wnd);
+  window = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
   SetCapture(*(HWND *)(window + 4));
-  x -= sprite_editor_origin_x;
-  y -= sprite_editor_origin_y;
+  x -= status_window_block.sprite_editor_origin_x;
+  y -= status_window_block.sprite_editor_origin_y;
   tool_index = sprite_editor_tool_hit_test(x,y);
-  old_flag_x = sprite_editor_flag_x;
-  old_flag_y = sprite_editor_flag_y;
+  old_flag_x = status_window_block.sprite_editor_flag_x;
+  old_flag_y = status_window_block.sprite_editor_flag_y;
   switch(tool_index) {
   case 0:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     SVar3 = GetKeyState(1);
     if (((int)SVar3 & 0x8000U) != 0) {
       sprite_editor_prev_left_color = sprite_editor_left_color;
@@ -5075,110 +4953,110 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       sprite_editor_right_color = 0;
     }
     sprite_editor_draw_swatches();
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),sprite_editor_origin_x + 10,sprite_editor_origin_y + 0xe0,old_color);
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,status_window_block.sprite_editor_origin_x + 10,status_window_block.sprite_editor_origin_y + 0xe0,old_color);
     y = 0;
     x = 0;
     break;
   case 1:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = 1;
-    sprite_editor_paint_tool = 1;
+    status_window_block.sprite_editor_tool = 1;
+    status_window_block.sprite_editor_paint_tool = 1;
     break;
   case 2:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = 2;
-    sprite_editor_paint_tool = 2;
+    status_window_block.sprite_editor_tool = 2;
+    status_window_block.sprite_editor_paint_tool = 2;
     break;
   case 3:
-    saved_flag_x = sprite_editor_flag_x;
-    saved_flag_y = sprite_editor_flag_y;
-    sprite_editor_flag_x = sprite_editor_undo_flag_x;
-    sprite_editor_flag_y = sprite_editor_undo_flag_y;
-    sprite_editor_undo_flag_x = old_flag_x;
-    sprite_editor_undo_flag_y = old_flag_y;
+    saved_flag_x = status_window_block.sprite_editor_flag_x;
+    saved_flag_y = status_window_block.sprite_editor_flag_y;
+    status_window_block.sprite_editor_flag_x = status_window_block.sprite_editor_undo_flag_x;
+    status_window_block.sprite_editor_flag_y = status_window_block.sprite_editor_undo_flag_y;
+    status_window_block.sprite_editor_undo_flag_x = old_flag_x;
+    status_window_block.sprite_editor_undo_flag_y = old_flag_y;
     sprite_free(&temp_sprite);
-    rect_set_xywh((iptr)grab_rect,0,0,sprite_editor_width,sprite_editor_height);
-    sprite_grab_rect(&temp_sprite,(iptr)((u8 *)&g.d_006ac128),0xfe,(iptr)grab_rect);
-    sprite_draw_keyed((Sprite *)&sprite_editor_result_sprite,(iptr)draw_rect,(iptr)((u8 *)&g.d_006ac128),0xfe,0,0);
-    sprite_free((Sprite *)&sprite_editor_result_sprite);
-    sprite_merge_onto(&temp_sprite,(iptr)((u8 *)&g.d_006ac8a8));
+    rect_set_xywh((iptr)grab_rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+    sprite_grab_rect(&temp_sprite,(iptr)&status_window_block.sprite_editor_surface,0xfe,(iptr)grab_rect);
+    sprite_draw_keyed((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite),(iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0xfe,0,0);
+    sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
+    sprite_merge_onto(&temp_sprite,(iptr)&status_window_block.sprite_editor_result_sprite);
     sprite_editor_redraw();
-    if (sprite_editor_tool == 3) {
+    if (status_window_block.sprite_editor_tool == 3) {
       sprite_editor_draw_flag_marker();
     }
     break;
   case 4:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = 0;
+    status_window_block.sprite_editor_tool = 0;
     break;
   case 5:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     sprite_editor_rebuild_sprite();
     sprite_editor_draw_backdrop();
     sprite_editor_redraw();
     break;
   case 6:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     sprite_editor_rebuild_sprite();
-    surface_replace_color_clip((DibSurface *)&sprite_editor_surface,sprite_editor_right_color,sprite_editor_left_color);
+    surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),sprite_editor_right_color,sprite_editor_left_color);
     sprite_editor_redraw();
     break;
   case 7:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     sprite_editor_rebuild_sprite();
-    surface_replace_color_clip((DibSurface *)&sprite_editor_surface,sprite_editor_left_color,1);
-    surface_replace_color_clip((DibSurface *)&sprite_editor_surface,sprite_editor_right_color,sprite_editor_left_color);
-    surface_replace_color_clip((DibSurface *)&sprite_editor_surface,1,sprite_editor_right_color);
+    surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),sprite_editor_left_color,1);
+    surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),sprite_editor_right_color,sprite_editor_left_color);
+    surface_replace_color_clip((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),1,sprite_editor_right_color);
     sprite_editor_redraw();
     break;
   case 8:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     sprite_editor_import_sheet();
     break;
   case 9:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
-    sprite_editor_brush_size = 0;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    status_window_block.sprite_editor_brush_size = 0;
     break;
   case 10:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
-    sprite_editor_brush_size = 1;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    status_window_block.sprite_editor_brush_size = 1;
     break;
   case 0xb:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
-    sprite_editor_brush_size = 2;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+    status_window_block.sprite_editor_brush_size = 2;
     break;
   case 0xc:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     SVar3 = GetKeyState(1);
     temp_x = sprite_editor_left_color;
     if (((int)SVar3 & 0x8000U) != 0) {
@@ -5196,32 +5074,32 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       sprite_editor_prev_right_color = temp_x;
     }
     sprite_editor_draw_swatches();
-    temp_x = sprite_editor_origin_x + 10;
-    temp_y = sprite_editor_origin_y + 0xe0;
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,old_color);
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,new_color);
+    temp_x = status_window_block.sprite_editor_origin_x + 10;
+    temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
     y = 0;
     x = 0;
     break;
   case 0xd:
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
     break;
   case 0xe:
-    if (sprite_sheet_mode == 0xb) {
+    if (sprite_picker_sprite_block.sprite_sheet_mode == 0xb) {
       sprite_editor_rebuild_sprite();
-      sprite_editor_tool = 3;
-      sprite_editor_flag_x = int_clamp(sprite_editor_flag_x,5,0x2f);
-      sprite_editor_flag_y = int_clamp(sprite_editor_flag_y,0,0xe);
+      status_window_block.sprite_editor_tool = 3;
+      status_window_block.sprite_editor_flag_x = int_clamp(status_window_block.sprite_editor_flag_x,5,0x2f);
+      status_window_block.sprite_editor_flag_y = int_clamp(status_window_block.sprite_editor_flag_y,0,0xe);
       sprite_editor_draw_flag_marker();
     }
     else {
-      if (sprite_editor_tool == 3) {
-        wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+      if (status_window_block.sprite_editor_tool == 3) {
+        wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
       }
-      sprite_editor_tool = sprite_editor_paint_tool;
+      status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
       SVar3 = GetKeyState(1);
       temp_x = sprite_editor_left_color;
       if (((int)SVar3 & 0x8000U) != 0) {
@@ -5239,21 +5117,21 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
         sprite_editor_prev_right_color = temp_x;
       }
       sprite_editor_draw_swatches();
-      temp_x = sprite_editor_origin_x + 10;
-      temp_y = sprite_editor_origin_y + 0xe0;
-      sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,old_color);
-      sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,new_color);
+      temp_x = status_window_block.sprite_editor_origin_x + 10;
+      temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
+      sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
+      sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
       y = 0;
       x = 0;
     }
   }
   if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
-    if (((0xf < x) && (x < sprite_editor_width * 4 + 0x10)) &&
-       ((0xf < y && (y < sprite_editor_height * 4 + 0x10)))) {
-      switch(sprite_editor_tool) {
+    if (((0xf < x) && (x < status_window_block.sprite_editor_width * 4 + 0x10)) &&
+       ((0xf < y && (y < status_window_block.sprite_editor_height * 4 + 0x10)))) {
+      switch(status_window_block.sprite_editor_tool) {
       case 0:
         new_color = surface_get_pixel
-                             ((DibSurface *)&sprite_editor_surface,x - 0x10 >> 2,
+                             ((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),x - 0x10 >> 2,
                               y - 0x10 >> 2);
         SVar3 = GetKeyState(1);
         if (((int)SVar3 & 0x8000U) == 0) {
@@ -5270,44 +5148,44 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
           sprite_editor_left_color = new_color;
         }
         sprite_editor_draw_swatches();
-        temp_x = sprite_editor_origin_x + 10;
-        temp_y = sprite_editor_origin_y + 0xe0;
-        sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,old_color);
-        sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,new_color);
-        if (sprite_editor_tool == 3) {
-          wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+        temp_x = status_window_block.sprite_editor_origin_x + 10;
+        temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
+        sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
+        sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
+        if (status_window_block.sprite_editor_tool == 3) {
+          wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
         }
-        sprite_editor_tool = sprite_editor_paint_tool;
-        sprite_editor_cursor_id = 0x204;
-        wnd_set_cursor((WndBase *)&sprite_editor_wnd,0x204);
+        status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
+        status_window_block.sprite_editor_cursor_id = 0x204;
+        wnd_set_cursor((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),0x204);
         ui_flush_input();
         break;
       case 1:
       case 2:
         sprite_editor_rebuild_sprite();
-        sprite_editor_painting = 1;
+        status_window_block.sprite_editor_painting = 1;
         temp_x = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
         temp_y = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
-        sprite_editor_last_px = temp_x;
-        sprite_editor_last_py = temp_y;
+        status_window_block.sprite_editor_last_px = temp_x;
+        status_window_block.sprite_editor_last_py = temp_y;
         SVar3 = GetKeyState(1);
         if (((int)SVar3 & 0x8000U) == 0) {
           SVar3 = GetKeyState(2);
           if (((int)SVar3 & 0x8000U) != 0) {
-            sprite_editor_paint_color = sprite_editor_right_color;
+            status_window_block.sprite_editor_paint_color = sprite_editor_right_color;
           }
         }
         else {
-          sprite_editor_paint_color = sprite_editor_left_color;
+          status_window_block.sprite_editor_paint_color = sprite_editor_left_color;
         }
         dirty_rect = sprite_editor_plot_pixel(temp_x,temp_y);
-        wnd_blit_surface_rect((DibSurface *)&sprite_editor_window,dirty_rect);
+        wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),dirty_rect);
         break;
       case 3:
         sprite_editor_rebuild_sprite();
-        sprite_editor_flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
+        status_window_block.sprite_editor_flag_x = int_clamp((int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >>
                                           2,5,0x2f);
-        sprite_editor_flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
+        status_window_block.sprite_editor_flag_y = int_clamp((int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >>
                                           2,0,0xe);
         sprite_editor_draw_flag_marker();
       }
@@ -5331,49 +5209,30 @@ void __cdecl sprite_editor_on_mouse_down(int x,int y)
       new_color = sprite_editor_left_color;
     }
     sprite_editor_draw_swatches();
-    temp_x = sprite_editor_origin_x + 10;
-    temp_y = sprite_editor_origin_y + 0xe0;
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,old_color);
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),temp_x,temp_y,new_color);
-    if (sprite_editor_tool == 3) {
-      wnd_repaint((SurfaceWindow *)&sprite_editor_window);
+    temp_x = status_window_block.sprite_editor_origin_x + 10;
+    temp_y = status_window_block.sprite_editor_origin_y + 0xe0;
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,old_color);
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,temp_x,temp_y,new_color);
+    if (status_window_block.sprite_editor_tool == 3) {
+      wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
     }
-    sprite_editor_tool = sprite_editor_paint_tool;
+    status_window_block.sprite_editor_tool = status_window_block.sprite_editor_paint_tool;
   }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00573adc */ { sprite_destroy((Sprite *)((iptr)&temp_sprite)); }
   return;
 }
-#undef sprite_editor_brush_size
-#undef sprite_editor_cursor_id
-#undef sprite_editor_flag_x
-#undef sprite_editor_flag_y
-#undef sprite_editor_height
-#undef sprite_editor_paint_tool
-#undef sprite_editor_painting
-#undef sprite_editor_tool
-#undef sprite_editor_undo_flag_x
-#undef sprite_editor_undo_flag_y
-#undef sprite_editor_width
-#undef sprite_sheet_mode
 
 /* 00573afd auto */
-#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
 void __cdecl sprite_editor_on_mouse_up(void)
 
 {
-  sprite_editor_painting = 0;
+  status_window_block.sprite_editor_painting = 0;
   ReleaseCapture();
   return;
 }
-#undef sprite_editor_painting
 
 /* 00573b1d auto */
-#define sprite_editor_cursor_id (*(int *)((u8 *)&g.d_006ac898))
-#define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_painting (*(int *)((u8 *)&g.d_006ac8a4))
-#define sprite_editor_tool (*(int *)((u8 *)&g.d_006ac120))
-#define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
 void __cdecl sprite_editor_on_mouse_move(int x,int y)
 
 {
@@ -5389,50 +5248,50 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
   int fixed_x;
   int prev_y;
   
-  x -= sprite_editor_origin_x;
-  y -= sprite_editor_origin_y;
+  x -= status_window_block.sprite_editor_origin_x;
+  y -= status_window_block.sprite_editor_origin_y;
   if ((((x < 9) || (0x187 < x)) || (y < 0xdf)) || (0x125 < y)) {
-    if (((x < 0x10) || (sprite_editor_width * 4 + 0x10 <= x)) ||
-       ((y < 0x10 || (sprite_editor_height * 4 + 0x10 <= y)))) {
-      if (sprite_editor_cursor_id != 0x201) {
-        sprite_editor_cursor_id = 0x201;
-        wnd_set_cursor((WndBase *)&sprite_editor_wnd,0x201);
+    if (((x < 0x10) || (status_window_block.sprite_editor_width * 4 + 0x10 <= x)) ||
+       ((y < 0x10 || (status_window_block.sprite_editor_height * 4 + 0x10 <= y)))) {
+      if (status_window_block.sprite_editor_cursor_id != 0x201) {
+        status_window_block.sprite_editor_cursor_id = 0x201;
+        wnd_set_cursor((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),0x201);
         ui_flush_input();
       }
-      sprite_editor_last_py = -1;
-      sprite_editor_last_px = -1;
-      px = sprite_editor_last_px;
-      py = sprite_editor_last_py;
+      status_window_block.sprite_editor_last_py = -1;
+      status_window_block.sprite_editor_last_px = -1;
+      px = status_window_block.sprite_editor_last_px;
+      py = status_window_block.sprite_editor_last_py;
     }
     else {
-      if (sprite_editor_tool == 0) {
-        if (sprite_editor_cursor_id != 0x205) {
-          sprite_editor_cursor_id = 0x205;
-          wnd_set_cursor((WndBase *)&sprite_editor_wnd,0x205);
+      if (status_window_block.sprite_editor_tool == 0) {
+        if (status_window_block.sprite_editor_cursor_id != 0x205) {
+          status_window_block.sprite_editor_cursor_id = 0x205;
+          wnd_set_cursor((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),0x205);
           ui_flush_input();
         }
       }
-      else if (((0 < sprite_editor_tool) && (sprite_editor_tool < 3)) && (sprite_editor_cursor_id != 0x204)) {
-        sprite_editor_cursor_id = 0x204;
-        wnd_set_cursor((WndBase *)&sprite_editor_wnd,0x204);
+      else if (((0 < status_window_block.sprite_editor_tool) && (status_window_block.sprite_editor_tool < 3)) && (status_window_block.sprite_editor_cursor_id != 0x204)) {
+        status_window_block.sprite_editor_cursor_id = 0x204;
+        wnd_set_cursor((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),0x204);
         ui_flush_input();
       }
-      px = sprite_editor_last_px;
-      py = sprite_editor_last_py;
-      if (sprite_editor_painting != 0) {
+      px = status_window_block.sprite_editor_last_px;
+      py = status_window_block.sprite_editor_last_py;
+      if (status_window_block.sprite_editor_painting != 0) {
         px = (int)(x - 0x10 + (x - 0x10 >> 0x1f & 3U)) >> 2;
         py = (int)(y - 0x10 + (y - 0x10 >> 0x1f & 3U)) >> 2;
-        if (sprite_editor_tool == 1) {
-          if ((sprite_editor_last_px < 0) || (sprite_editor_last_py < 0)) {
-            sprite_editor_last_px = px;
-            sprite_editor_last_py = py;
+        if (status_window_block.sprite_editor_tool == 1) {
+          if ((status_window_block.sprite_editor_last_px < 0) || (status_window_block.sprite_editor_last_py < 0)) {
+            status_window_block.sprite_editor_last_px = px;
+            status_window_block.sprite_editor_last_py = py;
           }
-          dx = px - sprite_editor_last_px;
-          dy = py - sprite_editor_last_py;
+          dx = px - status_window_block.sprite_editor_last_px;
+          dy = py - status_window_block.sprite_editor_last_py;
           prev_y = -1;
           prev_x = -1;
-          fixed_x = sprite_editor_last_px << 8;
-          fixed_y = sprite_editor_last_py << 8;
+          fixed_x = status_window_block.sprite_editor_last_px << 8;
+          fixed_y = status_window_block.sprite_editor_last_py << 8;
           while( true ) {
             cur_x = fixed_x >> 8;
             cur_y = fixed_y >> 8;
@@ -5445,53 +5304,32 @@ void __cdecl sprite_editor_on_mouse_move(int x,int y)
             fixed_x += dx;
             fixed_y += dy;
           }
-          wnd_blit_surface((DibSurface *)&sprite_editor_window);
+          wnd_blit_surface((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
         }
-        else if (sprite_editor_tool == 2) {
+        else if (status_window_block.sprite_editor_tool == 2) {
           dirty_rect = sprite_editor_plot_pixel(px,py);
-          wnd_blit_surface_rect((DibSurface *)&sprite_editor_window,dirty_rect);
+          wnd_blit_surface_rect((DibSurface *)((i8 *)&status_window_block.sprite_editor_window),dirty_rect);
         }
       }
     }
   }
   else {
-    px = sprite_editor_last_px;
-    py = sprite_editor_last_py;
-    if (sprite_editor_cursor_id != 0x205) {
-      sprite_editor_cursor_id = 0x205;
-      wnd_set_cursor((WndBase *)&sprite_editor_wnd,0x205);
+    px = status_window_block.sprite_editor_last_px;
+    py = status_window_block.sprite_editor_last_py;
+    if (status_window_block.sprite_editor_cursor_id != 0x205) {
+      status_window_block.sprite_editor_cursor_id = 0x205;
+      wnd_set_cursor((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd),0x205);
       ui_flush_input();
-      px = sprite_editor_last_px;
-      py = sprite_editor_last_py;
+      px = status_window_block.sprite_editor_last_px;
+      py = status_window_block.sprite_editor_last_py;
     }
   }
-  sprite_editor_last_py = py;
-  sprite_editor_last_px = px;
+  status_window_block.sprite_editor_last_py = py;
+  status_window_block.sprite_editor_last_px = px;
   return;
 }
-#undef sprite_editor_cursor_id
-#undef sprite_editor_height
-#undef sprite_editor_painting
-#undef sprite_editor_tool
-#undef sprite_editor_width
 
 /* 00573e59 auto */
-#define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
-#define sprite_editor_cursor_id (*(i32 *)((u8 *)&g.d_006ac898))
-#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(i32 *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
-#define sprite_editor_ok_callback (*(iptr *)((u8 *)&g.d_006ac888))
-#define sprite_editor_paint_tool (*(i32 *)((u8 *)&g.d_006ac118))
-#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
-#define sprite_editor_running (*(int *)((u8 *)&g.d_006ac88c))
-#define sprite_editor_tool (*(i32 *)((u8 *)&g.d_006ac120))
-#define sprite_editor_undo_flag_x (*(i32 *)((u8 *)&g.d_006ac0a4))
-#define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
-#define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
-#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
-#define sprite_editor_client_height_i32 (*(i32 *)((u8 *)&g.d_006ac2e0))
 /* WARNING: Removing unreachable block (ram,0x0057405e) */
 /* WARNING: Removing unreachable block (ram,0x005740e7) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -5519,87 +5357,68 @@ void __cdecl sprite_editor_run(iptr sprite,i32 title,i32 sheet_mode,iptr ok_call
   seh_state = 0;
   button_ctor(&cancel_button);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
-  sprite_sheet_mode = sheet_mode;
-  sprite_editor_target_sprite = (Sprite *)sprite;
-  sprite_editor_width = sprite_width((Sprite *)sprite);
-  sprite_editor_height = sprite_height(sprite_editor_target_sprite);
-  key_color = sprite_get_key_color(sprite_editor_target_sprite);
-  sprite_editor_key_color = (uint)key_color;
-  sprite_editor_ok_callback = ok_callback;
-  sprite_free((Sprite *)&sprite_editor_orig_sprite);
-  sprite_merge_onto(sprite_editor_target_sprite,(iptr)((u8 *)&g.d_006ac170));
-  surface_create((DibSurface *)&sprite_editor_surface,sprite_editor_width,sprite_editor_height);
+  sprite_picker_sprite_block.sprite_sheet_mode = sheet_mode;
+  status_window_block.sprite_editor_target_sprite = (Sprite *)sprite;
+  status_window_block.sprite_editor_width = sprite_width((Sprite *)sprite);
+  status_window_block.sprite_editor_height = sprite_height(status_window_block.sprite_editor_target_sprite);
+  key_color = sprite_get_key_color(status_window_block.sprite_editor_target_sprite);
+  status_window_block.sprite_editor_key_color = (uint)key_color;
+  (*(iptr *)&status_window_block.sprite_editor_ok_callback) = ok_callback;
+  sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
+  sprite_merge_onto(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_orig_sprite);
+  surface_create((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
   sprite_editor_draw_backdrop();
-  sprite_draw((Sprite *)&sprite_editor_orig_sprite,(iptr)draw_rect,(iptr)((u8 *)&g.d_006ac128),0,0);
-  sprite_editor_undo_flag_x = *(i32 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
-  sprite_editor_undo_flag_y = *(i32 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
-  sprite_editor_flag_y = sprite_editor_undo_flag_y;
-  sprite_editor_flag_x = sprite_editor_undo_flag_x;
+  sprite_draw((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
+  status_window_block.sprite_editor_undo_flag_x = *(i32 *)(((i8 *)&road_sprites_block.unit_shield_x_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4);
+  status_window_block.sprite_editor_undo_flag_y = *(i32 *)(((i8 *)&road_sprites_block.unit_shield_y_offsets) + *(int *)(editor_text_dlg_wnd_block.active_editor_wnd + 0x2ec) * 4);
+  status_window_block.sprite_editor_flag_y = status_window_block.sprite_editor_undo_flag_y;
+  status_window_block.sprite_editor_flag_x = status_window_block.sprite_editor_undo_flag_x;
   sprite_editor_rebuild_sprite();
-  sprite_editor_tool = 1;
-  sprite_editor_paint_tool = 1;
-  sprite_editor_brush_size = 0;
-  sprite_editor_cursor_id = 0x201;
-  sprite_editor_running = 1;
-  sprite_editor_painting = 0;
+  status_window_block.sprite_editor_tool = 1;
+  status_window_block.sprite_editor_paint_tool = 1;
+  status_window_block.sprite_editor_brush_size = 0;
+  status_window_block.sprite_editor_cursor_id = 0x201;
+  status_window_block.sprite_editor_running = 1;
+  status_window_block.sprite_editor_painting = 0;
   sprite_editor_create_window(title,0xd,0,0,0x192,0x14e,0,0,0);
-  line_height = font_line_spacing((GameFont *)dialog_font_ptr);
+  line_height = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   button_height = line_height + 8;
-  button_width2 = (sprite_editor_client_width - 6) / 2;
-  button_y2 = (sprite_editor_origin_y + sprite_editor_client_height_i32) - (line_height + 10);
-  button_x = sprite_editor_origin_x + 2;
+  button_width2 = (status_window_block.sprite_editor_client_width - 6) / 2;
+  button_y2 = (status_window_block.sprite_editor_origin_y + status_window_block.sprite_editor_client_height_i32) - (line_height + 10);
+  button_x = status_window_block.sprite_editor_origin_x + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
   label = label_string(*(i32 *)(label_string_ids + 0x3f8));
-  button_create(&ok_button,(iptr)((u8 *)&g.d_006ac1f8),0x65,(iptr)button_rect,label);
+  button_create(&ok_button,(iptr)&status_window_block.sprite_editor_wnd,0x65,(iptr)button_rect,label);
   button_set_callback(&ok_button,(iptr)sprite_editor_ok_clicked);
   button_x = button_x + button_width2 + 2;
   rect_set_xywh((iptr)button_rect,button_x,button_y2,button_width2,button_height);
   label = label_string(*(i32 *)(label_string_ids + 0x3fc));
-  button_create(&cancel_button,(iptr)((u8 *)&g.d_006ac1f8),0x66,(iptr)button_rect,label);
+  button_create(&cancel_button,(iptr)&status_window_block.sprite_editor_wnd,0x66,(iptr)button_rect,label);
   button_set_callback(&cancel_button,(iptr)sprite_editor_cancel_clicked);
   ctrl_set_cancel_button(&cancel_button);
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_down);
-  wnd_set_rbuttondown_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_down);
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_down);
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_up);
-  wnd_set_rbuttonup_any_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_up);
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,(iptr)sprite_editor_on_mouse_move);
-  wnd_set_redraw_callback((SurfaceWindow *)&sprite_editor_window,(iptr)sprite_editor_redraw);
-  wnd_repaint((SurfaceWindow *)&sprite_editor_window);
-  window_show((WindowObjectView *)&sprite_editor_window);
-  wnd_run_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
-  while (sprite_editor_running != 0) {
+  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_rbuttondown_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_down);
+  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
+  wnd_set_rbuttonup_any_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_up);
+  wnd_set_mousemove_handler((WndHandlersMouseSetView *)((i8 *)&status_window_block.sprite_editor_wnd_events),(iptr)sprite_editor_on_mouse_move);
+  wnd_set_redraw_callback((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window),(iptr)sprite_editor_redraw);
+  wnd_repaint((SurfaceWindow *)((i8 *)&status_window_block.sprite_editor_window));
+  window_show((WindowObjectView *)((i8 *)&status_window_block.sprite_editor_window));
+  wnd_run_modal_loop((ModalMenuWindow *)((i8 *)&status_window_block.sprite_editor_wnd));
+  while (status_window_block.sprite_editor_running != 0) {
     win_pump_one_message();
   }
   dlg_set_parent_window(0);
-  frame_wnd_close((DibSurface *)&sprite_editor_window);
+  frame_wnd_close((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 0057420c */ { ctrl_dtor((Control *)((iptr)&cancel_button)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 00574218 */ { ctrl_dtor((Control *)((iptr)&ok_button)); }
   return;
 }
-#undef sprite_editor_brush_size
-#undef sprite_editor_cursor_id
-#undef sprite_editor_flag_x
-#undef sprite_editor_flag_y
-#undef sprite_editor_height
-#undef sprite_editor_key_color
-#undef sprite_editor_ok_callback
-#undef sprite_editor_paint_tool
-#undef sprite_editor_painting
-#undef sprite_editor_running
-#undef sprite_editor_tool
-#undef sprite_editor_undo_flag_x
-#undef sprite_editor_undo_flag_y
-#undef sprite_editor_width
-#undef sprite_sheet_mode
-#undef sprite_editor_client_height_i32
 
 /* 00574239 auto */
-#define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
-#define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
 void __cdecl sprite_editor_redraw(void)
 
 {
@@ -5615,59 +5434,55 @@ void __cdecl sprite_editor_redraw(void)
   int width2;
   i8 grab_rect[16];
   
-  frame_wnd_draw_caption((FrameWindow *)&sprite_editor_window);
-  gfx_fill_rect((iptr)((u8 *)&g.d_006ac1b0),(iptr)((u8 *)&g.d_006ac46c),0x1d);
-  x2 = sprite_editor_origin_x + 0x10;
-  y2 = sprite_editor_origin_y + 0x10;
-  width2 = sprite_editor_width << 2;
-  height2 = sprite_editor_height << 2;
-  rect_set_xywh((iptr)grab_rect,0,0,sprite_editor_width,sprite_editor_height);
-  sprite_grab_surface_rect((Sprite *)&sprite_editor_orig_sprite,(iptr)((u8 *)&g.d_006ac128),(iptr)grab_rect);
-  key_color = sprite_get_key_color((Sprite *)&sprite_editor_orig_sprite);
-  sprite_editor_key_color = (uint)key_color;
-  gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),x2,y2,width2,height2,sprite_editor_key_color);
+  frame_wnd_draw_caption((FrameWindow *)((i8 *)&status_window_block.sprite_editor_window));
+  gfx_fill_rect((iptr)&status_window_block.sprite_editor_window,(iptr)&status_window_block.sprite_editor_fill_rect,0x1d);
+  x2 = status_window_block.sprite_editor_origin_x + 0x10;
+  y2 = status_window_block.sprite_editor_origin_y + 0x10;
+  width2 = status_window_block.sprite_editor_width << 2;
+  height2 = status_window_block.sprite_editor_height << 2;
+  rect_set_xywh((iptr)grab_rect,0,0,status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
+  sprite_grab_surface_rect((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)&status_window_block.sprite_editor_surface,(iptr)grab_rect);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
+  status_window_block.sprite_editor_key_color = (uint)key_color;
+  gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,x2,y2,width2,height2,status_window_block.sprite_editor_key_color);
   gfx_set_scale_ratio(4,1);
   sprite_draw_keyed
-            ((Sprite *)&sprite_editor_orig_sprite,(iptr)sprite_rect,(iptr)((u8 *)&g.d_006ac1b0),0,x2,y2);
+            ((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)sprite_rect,(iptr)&status_window_block.sprite_editor_window,0,x2,y2);
   gfx_set_scale_ratio(1,1);
-  gfx_draw_tiled_frame((iptr)((u8 *)&g.d_006ac1b0),x2,y2,width2,height2,6);
-  x2 = sprite_editor_origin_x + 10;
-  y2 = sprite_editor_origin_y + 0xe0;
+  gfx_draw_tiled_frame((iptr)&status_window_block.sprite_editor_window,x2,y2,width2,height2,6);
+  x2 = status_window_block.sprite_editor_origin_x + 10;
+  y2 = status_window_block.sprite_editor_origin_y + 0xe0;
   for (i = 0; i < 0xc0; i++) {
-    sprite_editor_draw_palette_cell((iptr)((u8 *)&g.d_006ac1b0),x2,y2,i + 10);
+    sprite_editor_draw_palette_cell((iptr)&status_window_block.sprite_editor_window,x2,y2,i + 10);
   }
-  x2 = sprite_editor_origin_x + 0x11e;
-  y2 = sprite_editor_origin_y + 0x14;
+  x2 = status_window_block.sprite_editor_origin_x + 0x11e;
+  y2 = status_window_block.sprite_editor_origin_y + 0x14;
   for (col = 0; col < 3; col++) {
     for (row = 0; row < 5; row++) {
       if (row == 0 && col == 0) {
-        gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
-                           sprite_editor_key_color);
+        gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
+                           status_window_block.sprite_editor_key_color);
       }
       else {
-        gfx_fill_rect_xywh((iptr)((u8 *)&g.d_006ac1b0),col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
+        gfx_fill_rect_xywh((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,
                            0x29);
         sprite_draw
-                  ((Sprite *)(&sprite_editor_tool_sprites + (row * 3 + col) * 0x3c),
-                   (iptr)tool_rect,(iptr)((u8 *)&g.d_006ac1b0),col * 0x24 + x2,row * 0x26 + y2);
+                  ((Sprite *)(((i8 *)&caption_zoom_out_button_sprite_block.sprite_editor_tool_sprites) + (row * 3 + col) * 0x3c),
+                   (iptr)tool_rect,(iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2);
       }
-      gfx_draw_frame_rect((iptr)((u8 *)&g.d_006ac1b0),col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,10
+      gfx_draw_frame_rect((iptr)&status_window_block.sprite_editor_window,col * 0x24 + x2,row * 0x26 + y2,0x20,0x20,10
                         );
     }
   }
   sprite_editor_draw_swatches();
-  text_set_surface((iptr)((u8 *)&g.d_006ac1b0));
-  text_set_font((iptr)((u8 *)&g.d_006a4f90));
+  text_set_surface((iptr)&status_window_block.sprite_editor_window);
+  text_set_font((iptr)&editor_font_block.editor_font);
   text_set_colors(0x29,0x12,1,1);
-  wnd_blit_surface((DibSurface *)&sprite_editor_window);
+  wnd_blit_surface((DibSurface *)((i8 *)&status_window_block.sprite_editor_window));
   return;
 }
-#undef sprite_editor_height
-#undef sprite_editor_key_color
-#undef sprite_editor_width
 
 /* 00574522 auto */
-#define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 void __thiscall sprite_picker_draw(FrameWindow *this)
 
 {
@@ -5683,43 +5498,39 @@ void __thiscall sprite_picker_draw(FrameWindow *this)
   frame_wnd_draw_caption(this);
   gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1d);
   text_set_surface((iptr)this);
-  text_set_font((iptr)((u8 *)&g.d_006ab1a0));
-  key_color = sprite_get_key_color((Sprite *)&sprite_picker_sprite);
-  sprite_editor_key_color = (uint)key_color;
-  width2 = sprite_width((Sprite *)&sprite_picker_sprite);
+  text_set_font((iptr)&ui_text_font);
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
+  status_window_block.sprite_editor_key_color = (uint)key_color;
+  width2 = sprite_width((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
   width2 = width2 * 2;
-  height2 = sprite_height((Sprite *)&sprite_picker_sprite);
+  height2 = sprite_height((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
   height2 = height2 * 2;
-  button_height = font_line_spacing((GameFont *)dialog_font_ptr);
+  button_height = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   button_height += 8;
   hscroll_height = GetSystemMetrics(3);
   hscroll_height += 2;
   x2 = this->client_x + (int)(this->client_width - width2) / 2;
   y2 = this->client_y + (int)((((this->client_height - height2) - button_height) - hscroll_height) - 4) / 2
   ;
-  gfx_fill_rect_xywh((iptr)this,x2,y2,width2,height2,sprite_editor_key_color);
+  gfx_fill_rect_xywh((iptr)this,x2,y2,width2,height2,status_window_block.sprite_editor_key_color);
   gfx_set_scale_ratio(2,1);
   sprite_draw_keyed
-            ((Sprite *)&sprite_picker_sprite,(iptr)draw_rect,(iptr)this,0,x2,y2);
+            ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite),(iptr)draw_rect,(iptr)this,0,x2,y2);
   gfx_set_scale_ratio(1,1);
   gfx_draw_tiled_frame((iptr)this,x2,y2,width2,height2,6);
   wnd_blit_surface((DibSurface *)this);
   return;
 }
-#undef sprite_editor_key_color
 
 /* 00574686 auto */
-#define sprite_picker_dialog (*(FrameWindow * *)((u8 *)&g.d_006ac11c))
 void __cdecl sprite_picker_redraw_cb(void)
 
 {
-  sprite_picker_draw(sprite_picker_dialog);
+  sprite_picker_draw((*(FrameWindow * *)&status_window_block.sprite_picker_dialog));
   return;
 }
-#undef sprite_picker_dialog
 
 /* 005746a1 auto */
-#define sprite_sheet_mode (*(uint *)((u8 *)&g.d_006ac924))
 i32 __cdecl sprite_editor_cell_rect(uint cell,iptr out_x,iptr out_y,iptr out_width,iptr out_height)
 
 {
@@ -5731,9 +5542,9 @@ i32 __cdecl sprite_editor_cell_rect(uint cell,iptr out_x,iptr out_y,iptr out_wid
   *(i32 *)out_y = *(i32 *)out_width;
   *(i32 *)out_x = *(i32 *)out_y;
   cell_count = *(i32 *)out_x;
-  if (sprite_sheet_mode < 0xc) {
+  if ((*(uint *)&sprite_picker_sprite_block.sprite_sheet_mode) < 0xc) {
     sign = (int)cell >> 0x1f;
-    switch(sprite_sheet_mode) {
+    switch((*(uint *)&sprite_picker_sprite_block.sprite_sheet_mode)) {
     case 0:
       cell_count = 0x14;
       *(int *)out_x = ((int)(cell + (sign & 3)) >> 2) * 0x25 + 0x157;
@@ -5863,7 +5674,6 @@ i32 __cdecl sprite_editor_cell_rect(uint cell,iptr out_x,iptr out_y,iptr out_wid
   }
   return cell_count;
 }
-#undef sprite_sheet_mode
 
 /* 00574c47 auto */
 void __cdecl sprite_picker_select_cell(i32 cell)
@@ -5875,23 +5685,14 @@ void __cdecl sprite_picker_select_cell(i32 cell)
   i32 width2;
   
   sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
-  sprite_free((Sprite *)&sprite_picker_sprite);
+  sprite_free((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
   sprite_grab_from_surface
-            ((Sprite *)&sprite_picker_sprite,(iptr)((u8 *)&g.d_006ac0a8),7,x2,y2,width2,height2);
+            ((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite),(iptr)&status_window_block.sprite_sheet_surface,7,x2,y2,width2,height2);
   sprite_picker_redraw_cb();
   return;
 }
 
 /* 00574ca6 auto */
-#define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
-#define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define sprite_picker_style_flags_i32 (*(i32 *)((u8 *)&g.d_006ac59c))
-#define sprite_picker_caption_button_count_i32 (*(i32 *)((u8 *)&g.d_006ac684))
-#define sprite_picker_caption_button_cb_i32 (*(i32 *)((u8 *)&g.d_006ac730))
-#define sprite_picker_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac754))
-#define sprite_picker_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac758))
-#define sprite_picker_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac75c))
 /* WARNING: Removing unreachable block (ram,0x00574e18) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -5903,23 +5704,23 @@ sprite_picker_create_window(int title,uint style_flags,int x,int y,int width,int
   uint wnd_style;
   
   if (title == 0) {
-    crt_strcpy(&sprite_picker_title,&sprite_picker_default_title);
+    crt_strcpy(((i8 *)&status_window_block.sprite_picker_title),((i8 *)&sprite_picker_default_title));
   }
   else {
-    crt_strcpy(&sprite_picker_title,title);
+    crt_strcpy(((i8 *)&status_window_block.sprite_picker_title),title);
   }
-  sprite_picker_text_font_i32 = &ui_text_font;
-  sprite_picker_title_font_i32 = &caption_font;
-  sprite_picker_title_small_font_i32 = &caption_small_font;
-  sprite_picker_style_flags_i32 = style_flags;
-  sprite_picker_caption_height = caption_height;
-  sprite_picker_border_width = border_width;
-  sprite_picker_resize_border = resize_border;
-  sprite_picker_caption_button_count_i32 = 0;
-  sprite_picker_caption_button_cb_i32 = 0;
+  status_window_block.sprite_picker_text_font_i32 = ((i8 *)&ui_text_font);
+  status_window_block.sprite_picker_title_font_i32 = ((i8 *)&caption_font_block.caption_font);
+  status_window_block.sprite_picker_title_small_font_i32 = ((i8 *)&caption_small_font_block.caption_small_font);
+  status_window_block.sprite_picker_style_flags_i32 = style_flags;
+  status_window_block.sprite_picker_caption_height = caption_height;
+  status_window_block.sprite_picker_border_width = border_width;
+  status_window_block.sprite_picker_resize_border = resize_border;
+  status_window_block.sprite_picker_caption_button_count_i32 = 0;
+  status_window_block.sprite_picker_caption_button_cb_i32 = 0;
   if ((style_flags & 4) != 0) {
-    sprite_picker_caption_height = frame_caption_height;
-    sprite_picker_border_width = frame_border_width;
+    status_window_block.sprite_picker_caption_height = frame_caption_height;
+    status_window_block.sprite_picker_border_width = frame_border_width;
   }
   if ((style_flags & 8) == 0) {
     wnd_style = 0x202;
@@ -5927,46 +5728,34 @@ sprite_picker_create_window(int title,uint style_flags,int x,int y,int width,int
   else {
     wnd_style = 0x802;
   }
-  if (sprite_picker_caption_height != 0) {
+  if (status_window_block.sprite_picker_caption_height != 0) {
     wnd_style = wnd_style | 0x400;
   }
   if (resize_border != 0) {
     wnd_style = wnd_style | 0x1000;
   }
   if ((style_flags & 2) == 0) {
-    width += sprite_picker_border_width * 2;
-    height = height + sprite_picker_caption_height + sprite_picker_border_width;
+    width += status_window_block.sprite_picker_border_width * 2;
+    height = height + status_window_block.sprite_picker_caption_height + status_window_block.sprite_picker_border_width;
   }
   if ((style_flags & 1) != 0) {
-    x = (screen_width >> 1) - (width >> 1);
-    y = (screen_height >> 1) - (height >> 1);
+    x = (caption_font_block.screen_width >> 1) - (width >> 1);
+    y = (caption_font_block.screen_height >> 1) - (height >> 1);
   }
   wnd_create_with_surface
-            ((DibSurface *)&sprite_picker_window,0,wnd_style,x,y,width,height,(iptr)((u8 *)&g.d_006a8c00),
-             (iptr)((u8 *)&g.d_006ac1f8));
-  if (sprite_picker_caption_height != 0) {
-    wnd_set_caption_height((WndBase *)&sprite_picker_wnd,sprite_picker_caption_height);
+            ((DibSurface *)((i8 *)&status_window_block.sprite_picker_window),0,wnd_style,x,y,width,height,(iptr)&game_palette_block.game_palette,
+             (iptr)&status_window_block.sprite_editor_wnd);
+  if (status_window_block.sprite_picker_caption_height != 0) {
+    wnd_set_caption_height((WndBase *)((i8 *)&status_window_block.sprite_picker_wnd),status_window_block.sprite_picker_caption_height);
   }
-  if (sprite_picker_resize_border != 0) {
-    wnd_set_resize_border((WndBase *)&sprite_picker_wnd,sprite_picker_resize_border);
+  if (status_window_block.sprite_picker_resize_border != 0) {
+    wnd_set_resize_border((WndBase *)((i8 *)&status_window_block.sprite_picker_wnd),status_window_block.sprite_picker_resize_border);
   }
-  frame_wnd_layout((FrameWindow *)&sprite_picker_window);
+  frame_wnd_layout((FrameWindow *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
-#undef frame_border_width
-#undef frame_caption_height
-#undef screen_height
-#undef sprite_picker_style_flags_i32
-#undef sprite_picker_caption_button_count_i32
-#undef sprite_picker_caption_button_cb_i32
-#undef sprite_picker_title_font_i32
-#undef sprite_picker_title_small_font_i32
-#undef sprite_picker_text_font_i32
 
 /* 00574e98 auto */
-#define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
-#define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
 void __cdecl sprite_picker_ok_clicked(void)
 
 {
@@ -5976,30 +5765,22 @@ void __cdecl sprite_picker_ok_clicked(void)
   iptr width2;
   i8 grab_rect[16];
   
-  sprite_replace_color((Sprite *)&sprite_picker_sprite,9,7);
-  width2 = sprite_width((Sprite *)&sprite_picker_sprite);
-  height2 = sprite_height((Sprite *)&sprite_picker_sprite);
-  key_color = sprite_get_key_color((Sprite *)&sprite_picker_sprite);
-  sprite_editor_key_color = (uint)key_color;
+  sprite_replace_color((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite),9,7);
+  width2 = sprite_width((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
+  height2 = sprite_height((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
+  key_color = sprite_get_key_color((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite));
+  status_window_block.sprite_editor_key_color = (uint)key_color;
   sprite_editor_draw_backdrop();
-  sprite_draw((Sprite *)&sprite_picker_sprite,(iptr)draw_rect,(iptr)((u8 *)&g.d_006ac128),0,0);
-  sprite_free((Sprite *)&sprite_editor_orig_sprite);
+  sprite_draw((Sprite *)((i8 *)&sprite_picker_sprite_block.sprite_picker_sprite),(iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
+  sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
   rect_set_xywh((iptr)grab_rect,0,0,width2,height2);
-  sprite_grab_surface_rect((Sprite *)&sprite_editor_orig_sprite,(iptr)((u8 *)&g.d_006ac128),(iptr)grab_rect);
-  sprite_picker_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
+  sprite_grab_surface_rect((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)&status_window_block.sprite_editor_surface,(iptr)grab_rect);
+  status_window_block.sprite_picker_running = 0;
+  wnd_end_modal_loop((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48));
   return;
 }
-#undef sprite_editor_key_color
-#undef sprite_picker_dialog
-#undef sprite_picker_running
 
 /* 00574f50 auto */
-#define sprite_editor_height (*(i32 *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
-#define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
-#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
 /* WARNING: Removing unreachable block (ram,0x00574f76) */
 
 void __cdecl sprite_picker_import_all_clicked(void)
@@ -6018,30 +5799,30 @@ void __cdecl sprite_picker_import_all_clicked(void)
   uint half_cell;
   int answer;
   
-  dlg_push_parent_window((iptr)((u8 *)&g.d_006ac4d0));
-  answer = popup_text_flags((iptr)((u8 *)&g.d_006359dc),(iptr)((u8 *)&g.d_006341f8),1);
+  dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+  answer = popup_text_flags((iptr)&str_debug_11,(iptr)&str_rusure,1);
   dlg_pop_parent_window();
   if (answer == 0) {
-    switch(sprite_sheet_mode) {
+    switch(sprite_picker_sprite_block.sprite_sheet_mode) {
     case 0:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         sign = (int)cell >> 0x1f;
         sprite_free
                   ((Sprite *)
-                   (&advance_category_icon_sprites +
+                   (((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                    (((cell ^ sign) - sign & 3 ^ sign) - sign) * 0x3c +
                    ((int)(cell + (sign & 3)) >> 2) * 0xf0));
         sign = (int)cell >> 0x1f;
-        sprite_editor_grab_from_sheet((iptr)(&advance_category_icon_sprites +
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&government_sprites_block.advance_category_icon_sprites) +
                            ((int)(cell + (sign & 3)) >> 2) * 0xf0 +
                            (((cell ^ sign) - sign & 3 ^ sign) - sign) * 0x3c),x2,
                      y2,width2,height2);
       }
       break;
     case 1:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         half_cell = (int)cell % 0x18;
@@ -6051,31 +5832,31 @@ void __cdecl sprite_picker_import_all_clicked(void)
         sheet_half = (int)cell / 0x18;
         sprite_free
                   ((Sprite *)
-                   (&city_sprites + size_col * 0x78 + era_row * 0x1e0 + sheet_half * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&city_sprites + era_row * 0x1e0 + sheet_half * 0x3c + size_col * 0x78),
+                   (((i8 *)&gfx_sheet_surface_block.city_sprites) + size_col * 0x78 + era_row * 0x1e0 + sheet_half * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&gfx_sheet_surface_block.city_sprites) + era_row * 0x1e0 + sheet_half * 0x3c + size_col * 0x78),
                      x2,y2,width2,height2);
       }
       break;
     case 2:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         switch(cell) {
         case 0:
-          sprite_free((Sprite *)&fortify_overlay_sprites);
-          sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_006465d8),x2,y2,width2,height2);
+          sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortify_overlay_sprites));
+          sprite_editor_grab_from_sheet((iptr)&fortify_overlay_sprites_block.fortify_overlay_sprites,x2,y2,width2,height2);
           break;
         case 1:
-          sprite_free((Sprite *)&fortress_sprite);
-          sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_00646650),x2,y2,width2,height2);
+          sprite_free((Sprite *)((i8 *)&fortify_overlay_sprites_block.fortress_sprite));
+          sprite_editor_grab_from_sheet((iptr)&fortify_overlay_sprites_block.fortress_sprite,x2,y2,width2,height2);
           break;
         case 2:
-          sprite_free((Sprite *)&airbase_sprites);
-          sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_00647fa0),x2,y2,width2,height2);
+          sprite_free((Sprite *)((i8 *)&airbase_sprites_block.airbase_sprites));
+          sprite_editor_grab_from_sheet((iptr)&airbase_sprites_block.airbase_sprites,x2,y2,width2,height2);
           break;
         case 3:
-          sprite_free((Sprite *)&airbase_occupied_sprite);
-          sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_00647fdc),x2,y2,width2,height2);
+          sprite_free((Sprite *)((i8 *)&airbase_sprites_block.airbase_occupied_sprite));
+          sprite_editor_grab_from_sheet((iptr)&airbase_sprites_block.airbase_occupied_sprite,x2,y2,width2,height2);
         }
       }
       break;
@@ -6083,27 +5864,27 @@ void __cdecl sprite_picker_import_all_clicked(void)
       for (cell = 0; (int)cell < 8; cell++) {
         sprite_editor_cell_rect(cell * 2,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&civ_flag_sprites + cell * 0x78));
-        sprite_editor_grab_from_sheet((iptr)(&civ_flag_sprites + cell * 0x78),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + cell * 0x78));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_sprites) + cell * 0x78),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell * 2 + 1,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&civ_flag_dark_sprites + cell * 0x78));
-        sprite_editor_grab_from_sheet((iptr)(&civ_flag_dark_sprites + cell * 0x78),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + cell * 0x78));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&editor_tile_backdrop_sprite_block.civ_flag_dark_sprites) + cell * 0x78),x2,y2,width2,height2);
       }
       break;
     case 4:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
         if ((int)cell < 0x26) {
-          sprite_free((Sprite *)(&improvement_icon_sprites + (cell * 4 + 4) * 0xf));
-          sprite_editor_grab_from_sheet((iptr)(&improvement_icon_sprites + (cell * 4 + 4) * 0xf),x2,y2,width2,
+          sprite_free((Sprite *)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + (cell * 4 + 4) * 0xf));
+          sprite_editor_grab_from_sheet((iptr)(((i8 *)&caption_close_button_sprite_block.improvement_icon_sprites) + (cell * 4 + 4) * 0xf),x2,y2,width2,
                        height2);
         }
         else {
           sprite_free
-                    ((Sprite *)(&wonder_icon_sprites + (cell * 4 - 0x98) * 0xf));
-          sprite_editor_grab_from_sheet((iptr)(&wonder_icon_sprites + (cell * 4 - 0x98) * 0xf),x2,y2,
+                    ((Sprite *)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + (cell * 4 - 0x98) * 0xf));
+          sprite_editor_grab_from_sheet((iptr)(((i8 *)&caption_close_button_sprite_block.wonder_icon_sprites) + (cell * 4 - 0x98) * 0xf),x2,y2,
                        width2,height2);
         }
       }
@@ -6111,128 +5892,123 @@ void __cdecl sprite_picker_import_all_clicked(void)
     case 5:
       break;
     case 6:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
-        sprite_free((Sprite *)(&explosion_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&explosion_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&government_sprites_block.explosion_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&government_sprites_block.explosion_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
       break;
     case 7:
       for (cell = 0; (int)cell < 0xb; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
-        sprite_free((Sprite *)(&terrain_base_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&terrain_base_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&terrain_base_sprites_block.terrain_base_sprites) + cell * 0x3c),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0x16,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&terrain_resource_sprites + cell * 0x78));
-        sprite_editor_grab_from_sheet((iptr)(&terrain_resource_sprites + cell * 0x78),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + cell * 0x78));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&city_down_arrow_sprite_block.terrain_resource_sprites) + cell * 0x78),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0x21,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&terrain_resource2_sprites + cell * 0x78));
-        sprite_editor_grab_from_sheet((iptr)(&terrain_resource2_sprites + cell * 0x78),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + cell * 0x78));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&city_down_arrow_sprite_block.terrain_resource2_sprites) + cell * 0x78),x2,y2,width2,height2);
       }
       break;
     case 8:
       for (cell = 0; (int)cell < 0x10; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
-        sprite_free((Sprite *)(&river_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&river_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&icon_misc_sprites_block.river_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&icon_misc_sprites_block.river_sprites) + cell * 0x3c),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0x10,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&forest_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&forest_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&forest_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&forest_sprites) + cell * 0x3c),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0x20,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&mountain_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&mountain_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&mountain_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&mountain_sprites) + cell * 0x3c),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0x30,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&hill_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&hill_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&hill_sprites_block.hill_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&hill_sprites_block.hill_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
       for (cell = 0; (int)cell < 4; cell++) {
         sprite_editor_cell_rect(cell + 0x40,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&river_mouth_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&river_mouth_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&tile_pick_mask_sprite_block.river_mouth_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
       break;
     case 9:
       for (cell = 0; (int)cell < 8; cell++) {
         sprite_editor_cell_rect(cell << 2,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&coast_quarter_sprites + cell * 0xf0));
-        sprite_editor_grab_from_sheet((iptr)(&coast_quarter_sprites + cell * 0xf0),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + cell * 0xf0));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_sprites) + cell * 0xf0),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell * 4 + 1,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&coast_quarter_east_sprites + cell * 0xf0));
-        sprite_editor_grab_from_sheet((iptr)(&coast_quarter_east_sprites + cell * 0xf0),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + cell * 0xf0));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_east_sprites) + cell * 0xf0),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell * 4 + 2,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&coast_quarter_south_sprites + cell * 0xf0));
-        sprite_editor_grab_from_sheet((iptr)(&coast_quarter_south_sprites + cell * 0xf0),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + cell * 0xf0));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_south_sprites) + cell * 0xf0),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell * 4 + 3,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&coast_quarter_west_sprites + cell * 0xf0));
-        sprite_editor_grab_from_sheet((iptr)(&coast_quarter_west_sprites + cell * 0xf0),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + cell * 0xf0));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&tutorial_icon_sprite_block.coast_quarter_west_sprites) + cell * 0xf0),x2,y2,width2,height2);
       }
       break;
     case 10:
       for (cell = 0; (int)cell < 3; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
-        sprite_free((Sprite *)(&land_improvement_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&land_improvement_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&land_improvement_sprites_block.land_improvement_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
       sprite_editor_cell_rect(3,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
-      sprite_free((Sprite *)&pollution_sprite);
-      sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_00641808),x2,y2,width2,height2);
+      sprite_free((Sprite *)((i8 *)&pollution_sprite_block.pollution_sprite));
+      sprite_editor_grab_from_sheet((iptr)&pollution_sprite_block.pollution_sprite,x2,y2,width2,height2);
       sprite_editor_cell_rect(4,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
-      sprite_free((Sprite *)&grassland_shield_sprite);
-      sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_0063fc18),x2,y2,width2,height2);
+      sprite_free((Sprite *)((i8 *)&grassland_shield_sprite));
+      sprite_editor_grab_from_sheet((iptr)&grassland_shield_sprite,x2,y2,width2,height2);
       sprite_editor_cell_rect(5,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2);
-      sprite_free((Sprite *)&hut_sprite);
-      sprite_editor_grab_from_sheet((iptr)((u8 *)&g.d_00646158),x2,y2,width2,height2);
+      sprite_free((Sprite *)((i8 *)&hut_sprite));
+      sprite_editor_grab_from_sheet((iptr)&hut_sprite,x2,y2,width2,height2);
       for (cell = 0; (int)cell < 9; cell++) {
         sprite_editor_cell_rect(cell + 6,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&road_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&road_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&road_sprites_block.road_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&road_sprites_block.road_sprites) + cell * 0x3c),x2,y2,width2,height2);
         sprite_editor_cell_rect(cell + 0xf,(iptr)&x2,(iptr)&y2,(iptr)&width2,
                            (iptr)&height2);
-        sprite_free((Sprite *)(&railroad_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&railroad_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&road_sprites_block.railroad_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&road_sprites_block.railroad_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
       break;
     case 0xb:
-      for (cell = 0; (int)cell < sprite_sheet_cell_count; cell++) {
+      for (cell = 0; (int)cell < status_window_block.sprite_sheet_cell_count; cell++) {
         sprite_editor_cell_rect(cell,(iptr)&x2,(iptr)&y2,(iptr)&width2,(iptr)&height2)
         ;
-        sprite_free((Sprite *)(&unit_sprites + cell * 0x3c));
-        sprite_editor_grab_from_sheet((iptr)(&unit_sprites + cell * 0x3c),x2,y2,width2,height2);
+        sprite_free((Sprite *)(((i8 *)&pollution_sprite_block.unit_sprites) + cell * 0x3c));
+        sprite_editor_grab_from_sheet((iptr)(((i8 *)&pollution_sprite_block.unit_sprites) + cell * 0x3c),x2,y2,width2,height2);
       }
     }
-    sprite_free((Sprite *)&sprite_editor_orig_sprite);
-    sprite_merge_onto(sprite_editor_target_sprite,(iptr)((u8 *)&g.d_006ac170));
-    surface_create((DibSurface *)&sprite_editor_surface,sprite_editor_width,sprite_editor_height);
+    sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite));
+    sprite_merge_onto(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_orig_sprite);
+    surface_create((DibSurface *)((i8 *)&status_window_block.sprite_editor_surface),status_window_block.sprite_editor_width,status_window_block.sprite_editor_height);
     sprite_editor_draw_backdrop();
-    sprite_draw((Sprite *)&sprite_editor_orig_sprite,(iptr)draw_rect,(iptr)((u8 *)&g.d_006ac128),0,0);
-    sprite_free((Sprite *)&sprite_editor_result_sprite);
-    sprite_merge_onto(sprite_editor_target_sprite,(iptr)((u8 *)&g.d_006ac8a8));
-    sprite_picker_running = 0;
-    wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
-    wnd_repaint((SurfaceWindow *)&map_views);
+    sprite_draw((Sprite *)((i8 *)&status_window_block.sprite_editor_orig_sprite),(iptr)draw_rect,(iptr)&status_window_block.sprite_editor_surface,0,0);
+    sprite_free((Sprite *)((i8 *)&status_window_block.sprite_editor_result_sprite));
+    sprite_merge_onto(status_window_block.sprite_editor_target_sprite,(iptr)&status_window_block.sprite_editor_result_sprite);
+    status_window_block.sprite_picker_running = 0;
+    wnd_end_modal_loop((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48));
+    wnd_repaint((SurfaceWindow *)((i8 *)&map_views_block.map_views));
   }
   return;
 }
-#undef sprite_editor_height
-#undef sprite_editor_width
-#undef sprite_picker_dialog
-#undef sprite_picker_running
-#undef sprite_sheet_mode
 
 /* 00575d89 auto */
 void __cdecl
@@ -6240,28 +6016,21 @@ sprite_editor_grab_from_sheet(iptr sprite,i32 x,i32 y,i32 width,
             i32 height)
 
 {
-  sprite_grab_from_surface((Sprite *)sprite,(iptr)((u8 *)&g.d_006ac0a8),7,x,y,width,height);
+  sprite_grab_from_surface((Sprite *)sprite,(iptr)&status_window_block.sprite_sheet_surface,7,x,y,width,height);
   sprite_replace_color((Sprite *)sprite,9,7);
   return;
 }
 
 /* 00575dc4 auto */
-#define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
 void __cdecl sprite_picker_cancel_clicked(void)
 
 {
-  sprite_picker_running = 0;
-  wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
+  status_window_block.sprite_picker_running = 0;
+  wnd_end_modal_loop((ModalMenuWindow *)(status_window_block.sprite_picker_dialog + 0x48));
   return;
 }
-#undef sprite_picker_dialog
-#undef sprite_picker_running
 
 /* 00575dec auto */
-#define sprite_picker_dialog (*(ViewWindow * *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(int *)((u8 *)&g.d_006ac890))
-#define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
 void __thiscall sprite_picker_run(ViewWindow *this)
 
 {
@@ -6286,7 +6055,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   i8 rect[16];
   iptr scroll_height;
   
-  sprite_picker_dialog = this;
+  (*(ViewWindow * *)&status_window_block.sprite_picker_dialog) = this;
   this->rates_civ = 0xf0;
   this->max_rate_value = 0xf0;
   border_width = 0;
@@ -6299,7 +6068,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   style_flags = 0xd;
   title = label_string(*(i32 *)(label_string_ids + 0x950));
   sprite_picker_create_window(title,style_flags,win_x,win_y,win_width,win_height,resize_border,caption_height,border_width);
-  metric = font_line_spacing((GameFont *)dialog_font_ptr);
+  metric = font_line_spacing((GameFont *)(*(i8 * *)(dialog_default_text_font_rest + 8)));
   this->init_sci_rate = metric + 8;
   this->init_lux_rate = this->client_width - 4;
   metric = GetSystemMetrics(3);
@@ -6307,7 +6076,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   this->sci_rate_sel = this->client_width - 4;
   y2 = ((this->client_y + this->client_height) - (this->init_sci_rate + 2)) - (metric + 4);
   x2 = this->client_x + 2;
-  sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
+  status_window_block.sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out,(iptr)dummy_out);
   rect_set_xywh((iptr)rect,x2,y2,this->sci_rate_sel,scroll_height);
   if (this == (ViewWindow *)0x0) {
     scroll_parent = (u8 *)0x0;
@@ -6317,7 +6086,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   }
   scrollbar_create
             ((Control *)&this->dialog_w,(iptr)scroll_parent,0x65,(iptr)rect,0);
-  scrollbar_set_range((Control *)&this->dialog_w,0,sprite_sheet_cell_count - 1);
+  scrollbar_set_range((Control *)&this->dialog_w,0,status_window_block.sprite_sheet_cell_count - 1);
   scrollbar_set_pos((ClickControl *)&this->dialog_w,0);
   scrollbar_set_callback((Control *)&this->dialog_w,(iptr)sprite_picker_select_cell);
   sprite_picker_select_cell(0);
@@ -6350,7 +6119,7 @@ void __thiscall sprite_picker_run(ViewWindow *this)
             ((Control *)(this->import_all_button),(iptr)import_parent,0xc9,(iptr)rect,label);
   button_set_callback((Control *)(this->import_all_button),(iptr)sprite_picker_import_all_clicked);
   ctrl_set_default_button((Control *)(this->import_all_button));
-  if (sprite_sheet_mode == 5) {
+  if (sprite_picker_sprite_block.sprite_sheet_mode == 5) {
     ctrl_disable((Control *)(this->import_all_button));
   }
   x2 = x2 + this->init_lux_rate + 2;
@@ -6370,26 +6139,22 @@ void __thiscall sprite_picker_run(ViewWindow *this)
   wnd_repaint((SurfaceWindow *)this);
   window_show((WindowObjectView *)this);
   wnd_run_modal_loop((ModalMenuWindow *)this->window_2);
-  while (sprite_picker_running != 0) {
+  while (status_window_block.sprite_picker_running != 0) {
     win_pump_one_message();
   }
   frame_wnd_close((DibSurface *)this);
   return;
 }
-#undef sprite_picker_dialog
-#undef sprite_picker_running
-#undef sprite_sheet_mode
 
 /* 0057624d auto */
 void __cdecl sprite_picker_show(void)
 
 {
-  sprite_picker_run((ViewWindow *)&sprite_picker_window);
+  sprite_picker_run((ViewWindow *)((i8 *)&status_window_block.sprite_picker_window));
   return;
 }
 
 /* 00576267 auto */
-#define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
 /* WARNING: Removing unreachable block (ram,0x0057656d) */
 /* WARNING: Removing unreachable block (ram,0x005763fb) */
 /* WARNING: Removing unreachable block (ram,0x00576601) */
@@ -6427,26 +6192,26 @@ void __cdecl sprite_editor_import_sheet(void)
   seh_state = 0;
   dialog_ctor(&dialog2,0x4000);
   seh_state = (seh_state & 0xffffff00 | (byte)(1));
-  switch(sprite_sheet_mode) {
+  switch(sprite_picker_sprite_block.sprite_sheet_mode) {
   case 0:
   case 4:
   case 5:
   case 6:
-    sheet_name = s_ICONS_00634210;
+    sheet_name = str_icons;
     break;
   case 1:
   case 2:
   case 3:
-    sheet_name = s_CITIES_00634218;
+    sheet_name = str_cities_2;
     break;
   case 7:
   case 8:
   case 9:
   case 10:
-    sheet_name = s_TERRAIN_00634208;
+    sheet_name = str_terrain_5;
     break;
   case 0xb:
-    sheet_name = s_UNITS_00634200;
+    sheet_name = str_units_2;
   }
   do {
     arg_c = 0;
@@ -6455,13 +6220,13 @@ void __cdecl sprite_editor_import_sheet(void)
     str = sheet_name;
     arg_name = sheet_name;
     label = label_string(*(i32 *)(label_string_ids + 0x958));
-    _sprintf(filter,s__s__s_c_s__BMP__s__GIF_c_c_00634220,sheet_name,label,arg_a,str,arg_name,
+    _sprintf(filter,str_s_s_c_s_bmp_s_gif_c_c,sheet_name,label,arg_a,str,arg_name,
              arg_b,arg_c);
-    _sprintf(file_path,s__s__BMP__s__GIF_0063423c,sheet_name,sheet_name);
+    _sprintf(file_path,str_s_bmp_s_gif,sheet_name,sheet_name);
     str = sheet_name;
     label = label_string(*(i32 *)(label_string_ids + 0x95c));
-    _sprintf(prompt,s__s__s_0063424c,label,str);
-    ok = ui_file_name_dialog((iptr)((u8 *)&g.d_006ac1f8),(iptr)prompt,(iptr)file_path,(iptr)filter,(iptr)((u8 *)&g.d_00634254),1,0
+    _sprintf(prompt,str_s_s_2,label,str);
+    ok = ui_file_name_dialog((iptr)&status_window_block.sprite_editor_wnd,(iptr)prompt,(iptr)file_path,(iptr)filter,(iptr)&str_bmp_gif,1,0
                               );
     if (ok == 0) goto LAB_00576783;
     __strupr(file_path);
@@ -6476,40 +6241,40 @@ void __cdecl sprite_editor_import_sheet(void)
     _MaxCount = _strlen(sheet_name);
     cmp = _strncmp(file_name,sheet_name,_MaxCount);
     if (cmp == 0) {
-      if ((sprite_sheet_mode == 7) || (sprite_sheet_mode == 10)) {
+      if ((sprite_picker_sprite_block.sprite_sheet_mode == 7) || (sprite_picker_sprite_block.sprite_sheet_mode == 10)) {
         result = _isdigit((int)file_name[7]);
         if ((result != 0) && ((file_name[7] & 1U) != 0)) goto LAB_00576631;
-        dlg_push_parent_window((iptr)((u8 *)&g.d_006ac4d0));
-        popup_debug_text((iptr)((u8 *)&g.d_00634264));
+        dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+        popup_debug_text((iptr)&str_oddterrain);
         dlg_pop_parent_window();
       }
-      else if (((sprite_sheet_mode == 8) || (sprite_sheet_mode == 9)) &&
+      else if (((sprite_picker_sprite_block.sprite_sheet_mode == 8) || (sprite_picker_sprite_block.sprite_sheet_mode == 9)) &&
               ((result = _isdigit((int)file_name[7]), result == 0 || ((file_name[7] & 1U) != 0)))) {
-        dlg_push_parent_window((iptr)((u8 *)&g.d_006ac4d0));
-        popup_debug_text((iptr)((u8 *)&g.d_00634270));
+        dlg_push_parent_window((iptr)&status_window_block.sprite_picker_wnd);
+        popup_debug_text((iptr)&str_eventerrain);
         dlg_pop_parent_window();
       }
       else {
 LAB_00576631:
-        str = _strstr(file_path,&sprite_import_bmp_ext_str);
+        str = _strstr(file_path,((i8 *)&sprite_import_bmp_ext_str));
         if (str == (char *)0x0) {
-          str = _strstr(file_path,&sprite_import_gif_ext_str);
+          str = _strstr(file_path,((i8 *)&sprite_import_gif_ext_str));
           if (str == (char *)0x0) {
             UVar12 = 0x10;
             pCVar10 = (LPCSTR)0x0;
             pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x968));
-            result = wnd_get_window((WndBase *)&sprite_editor_wnd);
+            result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
             MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
           }
           else {
             result = surface_load_gif_file
-                              ((DibSurface *)&sprite_sheet_surface,(iptr)file_path,10,0xc0,
+                              ((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface),(iptr)file_path,10,0xc0,
                                (iptr)&palette);
             if (result == 0) {
               UVar12 = 0x10;
               pCVar10 = (LPCSTR)0x0;
               pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
-              result = wnd_get_window((WndBase *)&sprite_editor_wnd);
+              result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
               MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
             }
             else {
@@ -6518,12 +6283,12 @@ LAB_00576631:
           }
         }
         else {
-          result = gfx_load_bmp_640x480((iptr)((u8 *)&g.d_006ac0a8),(iptr)file_path,10,0xc0,(iptr)&palette);
+          result = gfx_load_bmp_640x480((iptr)&status_window_block.sprite_sheet_surface,(iptr)file_path,10,0xc0,(iptr)&palette);
           if (result == 0) {
             UVar12 = 0x10;
             pCVar10 = (LPCSTR)0x0;
             pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
-            result = wnd_get_window((WndBase *)&sprite_editor_wnd);
+            result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
             MessageBoxA(*(HWND *)(result + 4),pCVar9,pCVar10,UVar12);
           }
           else {
@@ -6535,25 +6300,24 @@ LAB_00576631:
     else {
       str = sheet_name;
       label = label_string(*(i32 *)(label_string_ids + 0x960));
-      _sprintf(prompt,s__s___s__0063425c,label,str);
+      _sprintf(prompt,str_s_s_3,label,str);
       UVar12 = 0x40;
       pCVar9 = (LPCSTR)0x0;
       str = prompt;
-      result = wnd_get_window((WndBase *)&sprite_editor_wnd);
+      result = wnd_get_window((WndBase *)((i8 *)&status_window_block.sprite_editor_wnd));
       MessageBoxA(*(HWND *)(result + 4),str,pCVar9,UVar12);
     }
   } while (retry != 0);
   sprite_picker_show();
   sprite_editor_redraw();
 LAB_00576783:
-  surface_release((DibSurface *)&sprite_sheet_surface);
+  surface_release((DibSurface *)((i8 *)&status_window_block.sprite_sheet_surface));
   seh_state = seh_state & 0xffffff00;
   /* inlined unwind funclet 005767a7 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   seh_state = 0xffffffff;
   /* inlined unwind funclet 005767b3 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
-#undef sprite_sheet_mode
 
 /* 00578390 auto */
 /* Library Function - Single Match
@@ -6600,19 +6364,17 @@ ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
   button_ctor((Control *)(this->import_all_button));
   seh_state = (seh_state & 0xffffff00 | (byte)(3));
   button_ctor((Control *)&this->fill_rect_top);
-  this->vtable = (u32)&PTR_FUN_0061d6fc;
+  this->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_4;
   return this;
 }
 
 /* 005a9780 auto */
-#define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl gfx_set_draw_target(iptr surface)
 
 {
   gfx_draw_target = surface;
   return;
 }
-#undef gfx_draw_target
 
 /* 005a9798 auto */
 void __cdecl
@@ -6863,7 +6625,7 @@ dib_blit_to_wnd_obj(iptr src,int src_x,int src_y,int width,int height,iptr dest,
 DibSurface * __thiscall surface_ctor(DibSurface *this)
 
 {
-  this->vtable = (u32)&PTR_FUN_0061d70c;
+  this->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_5;
   surface_set_dims(this,0);
   return this;
 }
@@ -6913,7 +6675,7 @@ i32 __thiscall surface_alloc_dib8(DibSurface *this,iptr rect)
       surface_lock(this);
       return 1;
     }
-    err_report((ErrorContext *)&err_report_ctx,2,(iptr)((u8 *)&g.d_00636774),(iptr)((u8 *)&g.d_0063675c),0x71);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),2,(iptr)&str_err_portallocfailed,(iptr)&str_d_ss_smeds32_port_cpp,0x71);
     return 0;
   }
   surface_set_dims(this,0);
@@ -6946,14 +6708,13 @@ void __thiscall surface_set_dims(DibSurface *this,int *rect)
 }
 
 /* 005bd915 auto */
-#define draw_current_surface (*(DibSurface * *)((u8 *)&g.d_00637e58))
 DibSurface * __thiscall surface_dtor(DibSurface *this)
 
 {
   char locked;
   u32 new_dib;
   
-  this->vtable = (u32)&PTR_FUN_0061d70c;
+  this->vtable = (u32)&leader_anim_frame_starts_block.ptr_fun_5;
   locked = surface_is_locked(this);
   if (locked != '\0') {
     surface_unlock(this);
@@ -6966,7 +6727,6 @@ DibSurface * __thiscall surface_dtor(DibSurface *this)
   }
   return this;
 }
-#undef draw_current_surface
 
 /* 005bf071 auto */
 i32 __thiscall
@@ -7016,21 +6776,21 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
       buffer = mem_handle_unlock(mem);
       win_flush_pending_msgs();
       if (mem == 0) {
-        dbg_logf_str((iptr)((u8 *)&g.d_00636c40),filename);
-        err_report((ErrorContext *)&err_report_ctx,3,(iptr)((u8 *)&g.d_00636c7c),(iptr)((u8 *)&g.d_00636c64),0x382);
+        dbg_logf_str((iptr)&str_error_gif_resource_not_found,filename);
+        err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),3,(iptr)&str_err_resourcenotfound,(iptr)&str_d_ss_smeds32_port_cpp_2,0x382);
         seh_state = 0xffffffff;
         /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
         ret = 0;
       }
       else {
         data = (char *)mem_handle_lock(mem);
-        result = _strncmp(data,&gif_sig_file,3);
+        result = _strncmp(data,((i8 *)&gif_sig_file),3);
         if (result == 0) {
           if ((data[10] & 0x80U) == 0) {
-            dbg_logf_str((iptr)((u8 *)&g.d_00636ce4),filename);
+            dbg_logf_str((iptr)&str_error_gif_contains_no_global_color_map,filename);
             mem_handle_unlock(mem);
             mem_handle_free(mem);
-            err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636d28),(iptr)((u8 *)&g.d_00636d10),0x396);
+            err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_2,(iptr)&str_d_ss_smeds32_port_cpp_4,0x396);
             seh_state = 0xffffffff;
             /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
             ret = 0;
@@ -7059,7 +6819,7 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
               width2 = endian_from_le((uint)*(ushort *)(cursor + 5));
               height2 = endian_from_le((uint)*(ushort *)(image_desc + 6));
               if ((image_desc[8] & 0x80U) != 0) {
-                dbg_log((iptr)((u8 *)&g.d_00636d8c));
+                dbg_log((iptr)&str_warning_skipping_local_color_table);
               }
               SetRect(&rect,0,0,width2,height2);
               result = surface_resize(this,(iptr)&rect);
@@ -7092,10 +6852,10 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
               }
             }
             else {
-              dbg_logf_str((iptr)((u8 *)&g.d_00636d3c),filename);
+              dbg_logf_str((iptr)&str_error_gif_image_block_not_found,filename);
               mem_handle_unlock(mem);
               mem_handle_free(mem);
-              err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636d78),(iptr)((u8 *)&g.d_00636d60),0x3b3);
+              err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_3,(iptr)&str_d_ss_smeds32_port_cpp_5,0x3b3);
               seh_state = 0xffffffff;
               /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
               ret = 0;
@@ -7103,10 +6863,10 @@ surface_load_gif_file(DibSurface *this,iptr filename,uint first_color,uint color
           }
         }
         else {
-          dbg_logf_str((iptr)((u8 *)&g.d_00636c98),filename);
+          dbg_logf_str((iptr)&str_error_resource_is_not_a_gif,filename);
           mem_handle_unlock(mem);
           mem_handle_free(mem);
-          err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636cd0),(iptr)((u8 *)&g.d_00636cb8),0x38d);
+          err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat,(iptr)&str_d_ss_smeds32_port_cpp_3,0x38d);
           seh_state = 0xffffffff;
           /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&file)); }
           ret = 0;
@@ -7142,25 +6902,25 @@ surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint col
   res_type[3] = 0x53;
   res = res_load((iptr)res_type,res_id);
   if (res == 0) {
-    dbg_logf((iptr)((u8 *)&g.d_00636db0),res_id);
-    err_report((ErrorContext *)&err_report_ctx,3,(iptr)((u8 *)&g.d_00636dec),(iptr)((u8 *)&g.d_00636dd4),0x3f4);
+    dbg_logf((iptr)&str_error_gif_resource_not_found_2,res_id);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),3,(iptr)&str_err_resourcenotfound_2,(iptr)&str_d_ss_smeds32_port_cpp_6,0x3f4);
     ret = 0;
   }
   else {
     data = (char *)res_lock(res);
-    result = _strcmp(data,&gif_sig_resource);
+    result = _strcmp(data,((i8 *)&gif_sig_resource));
     if (result == 0) {
-      dbg_logf((iptr)((u8 *)&g.d_00636e08),res_id);
+      dbg_logf((iptr)&str_error_resource_is_not_a_gif_2,res_id);
       res_unlock(res);
       res_free(res);
-      err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636e40),(iptr)((u8 *)&g.d_00636e28),0x3ff);
+      err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_4,(iptr)&str_d_ss_smeds32_port_cpp_7,0x3ff);
       ret = 0;
     }
     else if ((data[10] & 0x80U) == 0) {
-      dbg_logf((iptr)((u8 *)&g.d_00636e54),res_id);
+      dbg_logf((iptr)&str_error_gif_contains_no_global_color_map_2,res_id);
       res_unlock(res);
       res_free(res);
-      err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636e98),(iptr)((u8 *)&g.d_00636e80),0x408);
+      err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_5,(iptr)&str_d_ss_smeds32_port_cpp_8,0x408);
       ret = 0;
     }
     else {
@@ -7183,7 +6943,7 @@ surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint col
         width2 = endian_from_le((uint)*(ushort *)(cursor + 5));
         height2 = endian_from_le((uint)*(ushort *)(image_desc + 6));
         if ((image_desc[8] & 0x80U) != 0) {
-          dbg_log((iptr)((u8 *)&g.d_00636efc));
+          dbg_log((iptr)&str_warning_skipping_local_color_table_2);
         }
         SetRect(&rect,0,0,width2,height2);
         surface_resize(this,(iptr)&rect);
@@ -7203,10 +6963,10 @@ surface_load_gif_resource(DibSurface *this,iptr res_id,uint first_color,uint col
         ret = 1;
       }
       else {
-        dbg_logf((iptr)((u8 *)&g.d_00636eac),res_id);
+        dbg_logf((iptr)&str_error_gif_image_block_not_found_2,res_id);
         res_unlock(res);
         res_free(res);
-        err_report((ErrorContext *)&err_report_ctx,4,(iptr)((u8 *)&g.d_00636ee8),(iptr)((u8 *)&g.d_00636ed0),0x424);
+        err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),4,(iptr)&str_err_badpicformat_6,(iptr)&str_d_ss_smeds32_port_cpp_9,0x424);
         ret = 0;
       }
     }
@@ -7344,7 +7104,7 @@ void __thiscall surface_fill_rect(DibSurface *this,iptr rect,i32 color)
   was_locked = 1;
   locked = surface_is_locked(this);
   if (locked == '\0') {
-    dbg_log((iptr)((u8 *)&g.d_006370c4));
+    dbg_log((iptr)&str_warning_port_not_locked_in_fillcolor);
     was_locked = 0;
     surface_lock(this);
   }
@@ -7397,7 +7157,7 @@ surface_replace_color(DibSurface *this,iptr rect,i32 from_color,i32 to_color)
   was_locked = 1;
   locked = surface_is_locked(this);
   if (locked == '\0') {
-    dbg_log((iptr)((u8 *)&g.d_006370ec));
+    dbg_log((iptr)&str_warning_port_not_locked_in_changecolor);
     was_locked = 0;
     surface_lock(this);
   }
@@ -7454,11 +7214,11 @@ surface_blit(DibSurface *this,iptr src,iptr dest_rect,iptr src_rect)
   src_was_locked = 1;
   was_unlocked = this->bits == 0;
   if (was_unlocked) {
-    dbg_log((iptr)((u8 *)&g.d_00637114));
+    dbg_log((iptr)&str_warning_source_port_not_locked_in_copyto);
     surface_lock(this);
   }
   if (*(int *)(src + 0x34) == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00637144));
+    dbg_log((iptr)&str_warning_destination_port_not_locked_in_c);
     surface_lock((DibSurface *)src);
     src_was_locked = 0;
   }
@@ -7514,12 +7274,12 @@ surface_blit_to_wnd(DibSurface *this,iptr wnd,iptr src_rect,iptr dest_pt)
   i32 dest_x;
   
   if (this->dib == 0) {
-    dbg_log((iptr)((u8 *)&g.d_006371a8));
+    dbg_log((iptr)&str_error_null_port_in_copytoscreen);
   }
   else {
     locked = surface_is_locked(this);
     if (locked == '\0') {
-      dbg_log((iptr)((u8 *)&g.d_006371cc));
+      dbg_log((iptr)&str_warning_port_not_locked_in_copytoscreen);
       surface_lock(this);
     }
     dest_y = wnd_get_palette_obj((WndPaletteObjView *)wnd);
@@ -7549,7 +7309,7 @@ surface_get_pixel(DibSurface *this,i32 x,i32 y)
   
   in_clip = surface_in_clip(this,x,y);
   if (in_clip == '\0') {
-    dbg_logf_int2((iptr)((u8 *)&g.d_00637250),x,y);
+    dbg_logf_int2((iptr)&str_warning_getpixel_out_of_clip_region,x,y);
     color = 0;
   }
   else {
@@ -7570,7 +7330,7 @@ surface_set_pixel
   
   in_clip = surface_in_clip(this,x,y);
   if (in_clip == '\0') {
-    dbg_logf_int2((iptr)((u8 *)&g.d_00637278),x,y);
+    dbg_logf_int2((iptr)&str_warning_setpixel_out_of_clip_region,x,y);
   }
   else {
     pixel = (i8 *)surface_pixel_ptr(this,x,y);
@@ -7612,7 +7372,6 @@ void __thiscall surface_apply_palette(DibSurface *this,PaletteVersionView *palet
 }
 
 /* 005c0d69 auto */
-#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
 void __thiscall
 surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uint flags)
 
@@ -7623,7 +7382,7 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
   i32 saved_color;
   
   if (draw_current_font == (i8 *)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_006372a0));
+    dbg_log((iptr)&str_error_no_current_font_selected);
   }
   else if (this->dib != 0) {
     if ((flags & 0x10) != 0) {
@@ -7641,10 +7400,8 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 text,int x,int y,uin
   }
   return;
 }
-#undef gfx_black_color_index
 
 /* 005c0f57 auto */
-#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
 void __thiscall
 surface_draw_text
           (DibSurface *this,iptr font,iptr text,iptr x,int y,uint flags)
@@ -7671,10 +7428,8 @@ surface_draw_text
   }
   return;
 }
-#undef gfx_black_color_index
 
 /* 005c1020 auto */
-#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
 void __thiscall
 surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint flags)
 
@@ -7703,7 +7458,6 @@ surface_draw_text_in_rect(DibSurface *this,iptr font,iptr text,iptr rect,uint fl
   }
   return;
 }
-#undef gfx_black_color_index
 
 /* 005c1167 auto */
 void __thiscall
@@ -7718,7 +7472,6 @@ surface_draw_text_rect
 }
 
 /* 005c11b2 auto */
-#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
 void __thiscall
 surface_draw_line(DibSurface *this,u32 x1,u32 y1,u32 x2,u32 y2)
 
@@ -7760,7 +7513,7 @@ surface_draw_line(DibSurface *this,u32 x1,u32 y1,u32 x2,u32 y2)
         }
         top_down = crt_abs(x2 - x1);
         top_down++;
-        color = CONCAT31((int3)((uint)top_down >> 8),gfx_text_color_index);
+        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&gfx_text_color_index));
         handle = surface_get_bits(this);
         dib_hline8(handle,color,top_down,start,y1,height,pitch);
       }
@@ -7790,7 +7543,7 @@ surface_draw_line(DibSurface *this,u32 x1,u32 y1,u32 x2,u32 y2)
         }
         top_down = crt_abs(y2 - y1);
         top_down++;
-        color = CONCAT31((int3)((uint)top_down >> 8),gfx_text_color_index);
+        color = CONCAT31((int3)((uint)top_down >> 8),(*(i8 *)&gfx_text_color_index));
         handle = surface_get_bits(this);
         dib_vline8(handle,color,top_down,x1,start,height,pitch);
       }
@@ -7801,20 +7554,17 @@ surface_draw_line(DibSurface *this,u32 x1,u32 y1,u32 x2,u32 y2)
   }
   return;
 }
-#undef gfx_text_color_index
 
 /* 005c19ad auto */
-#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
 i8 __cdecl gfx_set_text_color_index(i32 color_index)
 
 {
   i8 prev_index;
   
-  prev_index = gfx_text_color_index;
-  gfx_text_color_index = (i8)color_index;
+  prev_index = (*(i8 *)&gfx_text_color_index);
+  (*(i8 *)&gfx_text_color_index) = (i8)color_index;
   return prev_index;
 }
-#undef gfx_text_color_index
 
 /* 005c19d3 auto */
 int __thiscall surface_pixel_ptr(DibSurface *this,int x,int y)
@@ -7898,7 +7648,7 @@ i32 __thiscall surface_alloc_dib16(DibSurface *this,iptr rect)
       surface_lock(this);
       return 1;
     }
-    err_report((ErrorContext *)&err_report_ctx,2,(iptr)((u8 *)&g.d_00637318),(iptr)((u8 *)&g.d_00637300),0x86c);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),2,(iptr)&str_err_portallocfailed_2,(iptr)&str_d_ss_smeds32_port_cpp_10,0x86c);
     return 0;
   }
   surface_set_dims(this,0);
@@ -7940,7 +7690,7 @@ i32 __thiscall surface_alloc_dib24(DibSurface *this,iptr rect)
       surface_lock(this);
       return 1;
     }
-    err_report((ErrorContext *)&err_report_ctx,2,(iptr)((u8 *)&g.d_00637344),(iptr)((u8 *)&g.d_0063732c),0x8a1);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),2,(iptr)&str_err_portallocfailed_3,(iptr)&str_d_ss_smeds32_port_cpp_11,0x8a1);
     return 0;
   }
   surface_set_dims(this,0);
@@ -7982,7 +7732,7 @@ i32 __thiscall surface_alloc_dib32(DibSurface *this,iptr rect)
       surface_lock(this);
       return 1;
     }
-    err_report((ErrorContext *)&err_report_ctx,2,(iptr)((u8 *)&g.d_00637370),(iptr)((u8 *)&g.d_00637358),0x8d6);
+    err_report((ErrorContext *)((i8 *)&err_report_ctx_block.err_report_ctx),2,(iptr)&str_err_portallocfailed_4,(iptr)&str_d_ss_smeds32_port_cpp_12,0x8d6);
     return 0;
   }
   surface_set_dims(this,0);
@@ -8119,7 +7869,7 @@ void __thiscall palette_load_ctab_res(GamePalette *this,i32 res_id)
   res_type[3] = 0x42;
   res = res_load((iptr)res_type,res_id);
   if (res == 0) {
-    dbg_logf_noret((iptr)((u8 *)&g.d_00637bec),res_id);
+    dbg_logf_noret((iptr)&str_error_color_resource_not_found,res_id);
   }
   else {
     data = (i32 *)res_lock(res);
@@ -8261,7 +8011,7 @@ void __thiscall palette_fade_step(GamePalette *this,int step)
   i32 blue;
   
   if ((step < 0) || ((int)this->fade_steps < step)) {
-    dbg_logf((iptr)((u8 *)&g.d_00637c54),step);
+    dbg_logf((iptr)&str_color_scale_factor_out_of_range,step);
   }
   else {
     src_weight = (char)step;
@@ -8323,18 +8073,18 @@ i32 __cdecl font_handle_create(i32 face,int size,i32 style)
   switch(face) {
   case 0:
     logfont.lfPitchAndFamily = 16;
-    crt_strcpy(logfont.lfFaceName,s_Times_New_Roman_00637c74);
+    crt_strcpy(logfont.lfFaceName,str_times_new_roman);
     break;
   case 1:
     logfont.lfPitchAndFamily = ' ';
-    crt_strcpy(logfont.lfFaceName,s_Arial_00637c84);
+    crt_strcpy(logfont.lfFaceName,str_arial);
     break;
   case 2:
-    crt_strcpy(logfont.lfFaceName,s_System_00637c94);
+    crt_strcpy(logfont.lfFaceName,str_system_2);
     break;
   case 3:
     logfont.lfPitchAndFamily = '0';
-    crt_strcpy(logfont.lfFaceName,s_Courier_00637c8c);
+    crt_strcpy(logfont.lfFaceName,str_courier);
   }
   handle = 0;
   hfont2 = CreateFontIndirectA(&logfont);
@@ -8444,7 +8194,7 @@ void __cdecl region_dispose(int region)
 
 {
   if (region == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00637cb8));
+    dbg_log((iptr)&str_error_tried_to_dispose_null_region_in_ms);
   }
   return;
 }
@@ -8470,9 +8220,9 @@ void __cdecl gfx_scale_init(void)
   int i;
   
   for (i = 0; i < 0x10; i++) {
-    *(i32 *)(&gfx_scale_cache_last_used + i * 0x100c) = 0;
-    *(i32 *)(&gfx_scale_cache_num + i * 0x100c) = 0;
-    *(i32 *)(&gfx_scale_cache_den + i * 0x100c) = 0;
+    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + i * 0x100c) = 0;
+    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + i * 0x100c) = 0;
+    *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + i * 0x100c) = 0;
   }
   gfx_set_scale_ratio(1,1);
   gfx_set_scale_tables(1,1,1,1);
@@ -8480,8 +8230,6 @@ void __cdecl gfx_scale_init(void)
 }
 
 /* 005cd775 auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
 void __cdecl gfx_set_scale_ratio(int num,int den)
 
 {
@@ -8505,17 +8253,17 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
   index = 0;
   do {
     if (0xf < index) {
-      *(int *)(&gfx_scale_cache_num + slot * 0x100c) = gfx_scale_num;
-      *(int *)(&gfx_scale_cache_den + slot * 0x100c) = gfx_scale_den;
+      *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + slot * 0x100c) = gfx_scale_num;
+      *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + slot * 0x100c) = gfx_scale_den;
       now = timer_ticks();
-      *(i32 *)(&gfx_scale_cache_last_used + slot * 0x100c) = now;
+      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + slot * 0x100c) = now;
       value = 0;
       if (gfx_scale_num < gfx_scale_den) {
         accum = 0;
         index = 0;
         while (index < 0x400) {
           for (; (-1 < accum && (index < 0x400)); index++) {
-            *(int *)(&gfx_scale_cache_tables + index * 4 + slot * 0x100c) = value;
+            *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
             accum -= gfx_scale_den;
           }
           accum += gfx_scale_num;
@@ -8527,7 +8275,7 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
         index = 0;
         while (index < 0x400) {
           for (; (gfx_scale_den <= accum && (index < 0x400)); index++) {
-            *(int *)(&gfx_scale_cache_tables + index * 4 + slot * 0x100c) = value;
+            *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
             accum -= gfx_scale_den;
           }
           accum += gfx_scale_num;
@@ -8535,29 +8283,25 @@ void __cdecl gfx_set_scale_ratio(int num,int den)
         }
       }
 LAB_005cda01:
-      gfx_scale_table = (int)&gfx_scale_cache_tables + slot * 0x100c;
+      default_draw_font_obj_block.gfx_scale_table = (int)((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + slot * 0x100c;
       return;
     }
-    if ((*(int *)(&gfx_scale_cache_num + index * 0x100c) == gfx_scale_num) &&
-       (*(int *)(&gfx_scale_cache_den + index * 0x100c) == gfx_scale_den)) {
+    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_num) &&
+       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_den)) {
       now = timer_ticks();
-      *(i32 *)(&gfx_scale_cache_last_used + index * 0x100c) = now;
+      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
       slot = index;
       goto LAB_005cda01;
     }
-    if (*(int *)(&gfx_scale_cache_last_used + index * 0x100c) <= oldest_tick) {
-      oldest_tick = *(int *)(&gfx_scale_cache_last_used + index * 0x100c);
+    if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
+      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
       slot = index;
     }
     index++;
   } while( true );
 }
-#undef gfx_scale_den
-#undef gfx_scale_num
 
 /* 005cda06 auto */
-#define gfx_scale_den (*(i32 *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(i32 *)((u8 *)&g.d_00637f98))
 void __cdecl gfx_get_scale_ratio(iptr out_num,iptr out_den)
 
 {
@@ -8565,12 +8309,8 @@ void __cdecl gfx_get_scale_ratio(iptr out_num,iptr out_den)
   *(i32 *)out_den = gfx_scale_den;
   return;
 }
-#undef gfx_scale_den
-#undef gfx_scale_num
 
 /* 005cda2a auto */
-#define gfx_scale_x_table (*(i8 * *)((u8 *)&g.d_006e47c0))
-#define gfx_scale_y_table (*(i8 * *)((u8 *)&g.d_006e47c4))
 void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
 
 {
@@ -8599,21 +8339,21 @@ void __cdecl gfx_set_scale_tables(int x_num,int x_den,int y_num,int y_den)
   oldest_tick = timer_ticks();
   x_slot = -1;
   for (index = 0; index < 0x10; index++) {
-    if ((*(int *)(&gfx_scale_cache_num + index * 0x100c) == gfx_scale_x_num) &&
-       (*(int *)(&gfx_scale_cache_den + index * 0x100c) == gfx_scale_x_den)) {
+    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_x_num) &&
+       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_x_den)) {
       now = timer_ticks();
-      *(i32 *)(&gfx_scale_cache_last_used + index * 0x100c) = now;
+      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
       x_slot = index;
       goto LAB_005cdbab;
     }
-    if (*(int *)(&gfx_scale_cache_last_used + index * 0x100c) <= oldest_tick) {
-      oldest_tick = *(int *)(&gfx_scale_cache_last_used + index * 0x100c);
+    if (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) {
+      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
       x_slot = index;
     }
   }
   gfx_scale_build_table(x_slot,gfx_scale_x_num,gfx_scale_x_den);
 LAB_005cdbab:
-  gfx_scale_x_table = &gfx_scale_cache_tables + x_slot * 0x100c;
+  default_draw_font_obj_block.gfx_scale_x_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + x_slot * 0x100c;
   oldest_tick = timer_ticks();
   y_slot = -1;
   index = 0;
@@ -8622,24 +8362,22 @@ LAB_005cdbab:
       gfx_scale_build_table(y_slot,gfx_scale_y_num,gfx_scale_y_den);
       index = y_slot;
 LAB_005cdcd6:
-      gfx_scale_y_table = &gfx_scale_cache_tables + index * 0x100c;
+      default_draw_font_obj_block.gfx_scale_y_table = ((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 0x100c;
       return;
     }
-    if ((*(int *)(&gfx_scale_cache_num + index * 0x100c) == gfx_scale_y_num) &&
-       (*(int *)(&gfx_scale_cache_den + index * 0x100c) == gfx_scale_y_den)) {
+    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + index * 0x100c) == gfx_scale_y_num) &&
+       (*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + index * 0x100c) == gfx_scale_y_den)) {
       now = timer_ticks();
-      *(i32 *)(&gfx_scale_cache_last_used + index * 0x100c) = now;
+      *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) = now;
       goto LAB_005cdcd6;
     }
-    if ((*(int *)(&gfx_scale_cache_last_used + index * 0x100c) <= oldest_tick) && (x_slot != index)) {
-      oldest_tick = *(int *)(&gfx_scale_cache_last_used + index * 0x100c);
+    if ((*(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c) <= oldest_tick) && (x_slot != index)) {
+      oldest_tick = *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + index * 0x100c);
       y_slot = index;
     }
     index++;
   } while( true );
 }
-#undef gfx_scale_x_table
-#undef gfx_scale_y_table
 
 /* 005cdcdb auto */
 void __cdecl gfx_scale_build_table(int slot,int num,int den)
@@ -8650,17 +8388,17 @@ void __cdecl gfx_scale_build_table(int slot,int num,int den)
   int accum;
   int value;
   
-  *(int *)(&gfx_scale_cache_num + slot * 0x100c) = num;
-  *(int *)(&gfx_scale_cache_den + slot * 0x100c) = den;
+  *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_num) + slot * 0x100c) = num;
+  *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_den) + slot * 0x100c) = den;
   now = timer_ticks();
-  *(i32 *)(&gfx_scale_cache_last_used + slot * 0x100c) = now;
+  *(i32 *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_last_used) + slot * 0x100c) = now;
   value = 0;
   if (num < den) {
     accum = 0;
     index = 0;
     while (index < 0x400) {
       for (; (-1 < accum && (index < 0x400)); index++) {
-        *(int *)(&gfx_scale_cache_tables + index * 4 + slot * 0x100c) = value;
+        *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
         accum -= den;
       }
       accum += num;
@@ -8672,7 +8410,7 @@ void __cdecl gfx_scale_build_table(int slot,int num,int den)
     index = 0;
     while (index < 0x400) {
       for (; (den <= accum && (index < 0x400)); index++) {
-        *(int *)(&gfx_scale_cache_tables + index * 4 + slot * 0x100c) = value;
+        *(int *)(((i8 *)&default_draw_font_obj_block.gfx_scale_cache_tables) + index * 4 + slot * 0x100c) = value;
         accum -= den;
       }
       accum += num;
@@ -8916,7 +8654,7 @@ sprite_replace_color(Sprite *this,i32 old_color,i32 new_color)
   had_data = sprite_has_data(this);
   if (had_data == '\0') {
     sprite_lock(this);
-    dbg_log((iptr)((u8 *)&g.d_00637ff8));
+    dbg_log((iptr)&str_warning_sprite_not_locked_in_changecolor);
   }
   rows = rect_height((iptr)&this->bounds_rect);
   cursor = (char *)this->data_ptr;
@@ -8981,13 +8719,13 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
   height2 = rect.bottom - rect.top;
   locked = surface_is_locked((DibSurface *)surface);
   if (locked == '\0') {
-    dbg_log((iptr)((u8 *)&g.d_00638050));
+    dbg_log((iptr)&str_warning_port_not_locked_on_sprite_extrac);
     was_locked = 0;
     surface_lock((DibSurface *)surface);
   }
   top_row = (u8 *)surface_pixel_ptr((DibSurface *)surface,rect.left,rect.top);
   if (top_row == (u8 *)0x0) {
-    dbg_logf_int2((iptr)((u8 *)&g.d_0063807c),rect.left,rect.top);
+    dbg_logf_int2((iptr)&str_error_sprite_extract_illegal_pixel_mappi,rect.left,rect.top);
     if (was_locked == 0) {
       surface_unlock((DibSurface *)surface);
     }
@@ -9040,7 +8778,7 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
       run_starts = operator_new(0xa00);
       run_lens = operator_new(0xa00);
       if (((run_ptrs == (void *)0x0) || (run_starts == (void *)0x0)) || (run_lens == (void *)0x0)) {
-        dbg_log((iptr)((u8 *)&g.d_006380b0));
+        dbg_log((iptr)&str_error_unable_to_allocate_scan_line_table);
         handle = 0;
       }
       else {
@@ -9090,7 +8828,7 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
         total_size += 8;
         handle = mem_handle_alloc(total_size);
         if (handle == 0) {
-          dbg_logf((iptr)((u8 *)&g.d_006380ec),total_size);
+          dbg_logf((iptr)&str_error_couldn_t_allocate_memory_for_sprit,total_size);
           if (was_locked == 0) {
             surface_unlock((DibSurface *)surface);
           }
@@ -9155,8 +8893,6 @@ sprite_encode_from_surface(Sprite *this,iptr surface,int key_mode,iptr src_rect)
 }
 
 /* 005d056c auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
 int * __thiscall
 sprite_blit_to_surface
           (Sprite *this,int *out_rect,DibSurface *surface,int key_arg,int x,
@@ -9233,7 +8969,7 @@ sprite_blit_to_surface
       top_down = dib_is_top_down(dib);
       pitch = surface_get_pitch(surface);
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = gfx_scale_table;
+      scale_tbl = default_draw_font_obj_block.gfx_scale_table;
       bits = surface_get_bits(surface);
       sprite_blit_rows_keyed(this->data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y);
@@ -9244,7 +8980,7 @@ sprite_blit_to_surface
     out_rect[3] = clip_rect.bottom;
     return out_rect;
   }
-  dbg_log((iptr)((u8 *)&g.d_006381cc));
+  dbg_log((iptr)&str_error_sprite_size_exceeds_scale_table_si);
   SetRect(&clip_rect,0,0,0,0);
   *out_rect = clip_rect.left;
   out_rect[1] = clip_rect.top;
@@ -9252,12 +8988,8 @@ sprite_blit_to_surface
   out_rect[3] = clip_rect.bottom;
   return out_rect;
 }
-#undef gfx_scale_den
-#undef gfx_scale_num
 
 /* 005d10cd auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
 int * __thiscall
 sprite_blit_silhouette_to_surface
           (Sprite *this,int *out_rect,DibSurface *surface,int key_arg,int x,
@@ -9334,7 +9066,7 @@ sprite_blit_silhouette_to_surface
       top_down = dib_is_top_down(dib);
       pitch = surface_get_pitch(surface);
       pitch = ((-(uint)(top_down == 0) & 0xfffffffe) + 1) * pitch;
-      scale_tbl = gfx_scale_table;
+      scale_tbl = default_draw_font_obj_block.gfx_scale_table;
       bits = surface_get_bits(surface);
       sprite_blit_rows_solid(this->data_ptr,bits,scale_tbl,key2,dst_x,dst_y,pitch,surf_height,clip_w,clip_h
                    ,skip_x,tmp,scaled_h,trim_y,scaled_trim_x,scaled_trim_y,color);
@@ -9345,7 +9077,7 @@ sprite_blit_silhouette_to_surface
     out_rect[3] = clip_rect.bottom;
     return out_rect;
   }
-  dbg_log((iptr)((u8 *)&g.d_0063827c));
+  dbg_log((iptr)&str_error_sprite_size_exceeds_scale_table_si_2);
   SetRect(&clip_rect,0,0,0,0);
   *out_rect = clip_rect.left;
   out_rect[1] = clip_rect.top;
@@ -9353,8 +9085,6 @@ sprite_blit_silhouette_to_surface
   out_rect[3] = clip_rect.bottom;
   return out_rect;
 }
-#undef gfx_scale_den
-#undef gfx_scale_num
 
 /* 005d1612 auto */
 void __thiscall
@@ -9545,8 +9275,6 @@ void __thiscall sprite_clear_fields(Sprite *this)
 }
 
 /* 005d1d00 auto */
-#define gfx_scale_den (*(int *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(int *)((u8 *)&g.d_00637f98))
 int __cdecl gfx_scale_length(int length,int start,int round_up)
 
 {
@@ -9564,25 +9292,23 @@ int __cdecl gfx_scale_length(int length,int start,int round_up)
     }
     if (gfx_scale_num < gfx_scale_den) {
       index = start;
-      result = *(int *)(gfx_scale_table + start * 4) + length;
-      for (; *(int *)(gfx_scale_table + index * 4) < result; index++) {
+      result = *(int *)(default_draw_font_obj_block.gfx_scale_table + start * 4) + length;
+      for (; *(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) < result; index++) {
       }
-      if ((round_up == 0) && (*(int *)(gfx_scale_table + index * 4) != result)) {
+      if ((round_up == 0) && (*(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) != result)) {
         index--;
       }
     }
     else {
       index = start;
-      for (; *(int *)(gfx_scale_table + index * 4) <
-             *(int *)(gfx_scale_table + start * 4) + length; index++) {
+      for (; *(int *)(default_draw_font_obj_block.gfx_scale_table + index * 4) <
+             *(int *)(default_draw_font_obj_block.gfx_scale_table + start * 4) + length; index++) {
       }
     }
     result = ((-(uint)positive & 2) - 1) * (index - start);
   }
   return result;
 }
-#undef gfx_scale_den
-#undef gfx_scale_num
 
 /* 005de780 auto */
 void __cdecl logpal_init_from_system(iptr logpal)
@@ -9599,18 +9325,18 @@ void __cdecl logpal_init_from_system(iptr logpal)
   hdc = GetDC((HWND)0x0);
   raster_caps = GetDeviceCaps(hdc,0x26);
   if ((raster_caps & 0x100) == 0) {
-    palette_static_half_count = 0;
+    err_report_ctx_block.palette_static_half_count = 0;
     gfx_palettized_display = 0;
   }
   else {
     num_reserved = GetDeviceCaps(hdc,0x18);
-    palette_static_half_count = num_reserved / 2;
+    err_report_ctx_block.palette_static_half_count = num_reserved / 2;
     GetSystemPaletteEntries(hdc,0,0x100,(LPPALETTEENTRY)(logpal + 4));
   }
-  for (i = 0; i < palette_static_half_count; i++) {
+  for (i = 0; i < err_report_ctx_block.palette_static_half_count; i++) {
     *(i8 *)(logpal + 7 + i * 4) = 0;
   }
-  for (; i < 0x100 - palette_static_half_count; i++) {
+  for (; i < 0x100 - err_report_ctx_block.palette_static_half_count; i++) {
     *(i8 *)(logpal + 4 + i * 4) = 0;
     *(i8 *)(logpal + 5 + i * 4) = 0;
     *(i8 *)(logpal + 6 + i * 4) = 0;
@@ -9620,7 +9346,7 @@ void __cdecl logpal_init_from_system(iptr logpal)
     *(i8 *)(logpal + 7 + i * 4) = 0;
   }
   if (gfx_palettized_display == 0) {
-    sys_color = &logpal_static_system_colors;
+    sys_color = ((i8 *)&logpal_static_system_colors);
     for (i = 0; i < 10; i++) {
       *(i8 *)(logpal + 4 + i * 4) = *sys_color;
       *(i8 *)(logpal + 5 + i * 4) = sys_color[1];
@@ -9695,14 +9421,14 @@ palette_set_entry_rgb(iptr logpal,int index,i32 red,i32 green,i32 blue)
   *(char *)(logpal + 5 + index * 4) = (char)green;
   *(char *)(logpal + 6 + index * 4) = (char)blue;
   *(i8 *)(logpal + 7 + index * 4) = 4;
-  for (i = 0; i < palette_static_half_count; i++) {
+  for (i = 0; i < err_report_ctx_block.palette_static_half_count; i++) {
     if (((*(char *)(logpal + 4 + i * 4) == (char)red) &&
         (*(char *)(logpal + 5 + i * 4) == (char)green)) &&
        (*(char *)(logpal + 6 + i * 4) == (char)blue)) {
       *(i8 *)(logpal + 7 + index * 4) = 1;
     }
   }
-  for (i = 0x100 - palette_static_half_count; i < 0x100; i++) {
+  for (i = 0x100 - err_report_ctx_block.palette_static_half_count; i < 0x100; i++) {
     if (((*(char *)(logpal + 4 + i * 4) == (char)red) &&
         (*(char *)(logpal + 5 + i * 4) == (char)green)) &&
        (*(char *)(logpal + 6 + i * 4) == (char)blue)) {
@@ -9765,7 +9491,6 @@ void __cdecl palette_copy_rgb_range(iptr logpal,iptr dest,int first,int count)
 }
 
 /* 005e35b0 auto */
-#define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
 i32 * __cdecl dib_create(iptr rect)
 
 {
@@ -9788,7 +9513,7 @@ i32 * __cdecl dib_create(iptr rect)
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
     if (hdc == (HDC)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00638e74));
+      dbg_log((iptr)&str_error_unable_to_create_dc_in_msinitgraf);
     }
     else {
       _memset(&bmi,0,0x28);
@@ -9799,7 +9524,7 @@ i32 * __cdecl dib_create(iptr rect)
       bmi.bmiHeader.biWidth = dib_row_align4(width);
       if (0 < bmi.bmiHeader.biHeight) {
         if (dib_bottom_up_logged == 0) {
-          dbg_log((iptr)((u8 *)&g.d_00638e20));
+          dbg_log((iptr)&str_bottom_up_orientation_recommended);
         }
         dib_bottom_up_logged = 1;
       }
@@ -9815,7 +9540,7 @@ i32 * __cdecl dib_create(iptr rect)
       _memset(bmi.bmiColors,0,0x400);
       h = CreateDIBSection(hdc,(BITMAPINFO *)&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
-        dbg_log((iptr)((u8 *)&g.d_00638e44));
+        dbg_log((iptr)&str_error_unable_to_create_bitmap_in_msinitg);
         DeleteDC(hdc);
       }
       else {
@@ -9843,7 +9568,6 @@ i32 * __cdecl dib_create(iptr rect)
   }
   return dib2;
 }
-#undef dib_row_order
 
 /* 005e388f auto */
 i32 __cdecl dib_destroy(iptr dib)
@@ -9963,7 +9687,6 @@ void __cdecl dib_set_palette(iptr dib,iptr palette)
 }
 
 /* 005e3cb4 auto */
-#define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
 void __cdecl
 dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
             uint align)
@@ -9981,7 +9704,7 @@ dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
   i32 *font_data;
   
   if (font == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00638ea0));
+    dbg_log((iptr)&str_error_null_font_in_msdrawstring);
   }
   else {
     font_data = (i32 *)mem_handle_lock(font);
@@ -10024,10 +9747,8 @@ dib_draw_text_at(iptr dib,int font,char *text,int x,int y,iptr clip_rect,
   }
   return;
 }
-#undef gfx_text_color_index
 
 /* 005e3eca auto */
-#define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
 void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint align)
 
 {
@@ -10038,7 +9759,7 @@ void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint alig
   i32 *font_data;
   
   if (font == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00638ec4));
+    dbg_log((iptr)&str_error_null_font_in_msdrawstring_2);
   }
   else if (dib != 0) {
     font_data = (i32 *)mem_handle_lock(font);
@@ -10065,10 +9786,8 @@ void __cdecl dib_draw_text_rect(iptr dib,int font,char *text,iptr rect,uint alig
   }
   return;
 }
-#undef gfx_text_color_index
 
 /* 005e3feb auto */
-#define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
 void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint align)
 
 {
@@ -10079,7 +9798,7 @@ void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint al
   i32 *font_data;
   
   if (font == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00638ee8));
+    dbg_log((iptr)&str_error_null_font_in_msdrawtext);
   }
   else if (dib != 0) {
     font_data = (i32 *)mem_handle_lock(font);
@@ -10101,10 +9820,8 @@ void __cdecl dib_draw_text_wrap(iptr dib,int font,char *text,LPRECT rect,uint al
   }
   return;
 }
-#undef gfx_text_color_index
 
 /* 005e40fb auto */
-#define gfx_text_color_index (*(byte *)((u8 *)&g.d_00637e78))
 void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2)
 
 {
@@ -10124,10 +9841,8 @@ void __cdecl dib_draw_line(iptr dib,int x1,int y1,int x2,int y2)
   }
   return;
 }
-#undef gfx_text_color_index
 
 /* 005e41ba auto */
-#define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
 i32 * __cdecl dib_create16(iptr rect)
 
 {
@@ -10151,7 +9866,7 @@ i32 * __cdecl dib_create16(iptr rect)
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
     if (hdc == (HDC)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00638f38));
+      dbg_log((iptr)&str_error_unable_to_create_dc_in_msinitgraf_2);
     }
     else {
       _memset(&bmi,0,0x34);
@@ -10176,7 +9891,7 @@ i32 * __cdecl dib_create16(iptr rect)
       bmi.bmiHeader.biHeight = bmp_height;
       h = CreateDIBSection(hdc,(BITMAPINFO *)&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
-        dbg_log((iptr)((u8 *)&g.d_00638f08));
+        dbg_log((iptr)&str_error_unable_to_create_bitmap_in_msinitg_2);
         DeleteDC(hdc);
       }
       else {
@@ -10204,10 +9919,8 @@ i32 * __cdecl dib_create16(iptr rect)
   }
   return dib2;
 }
-#undef dib_row_order
 
 /* 005e43c5 auto */
-#define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
 i32 * __cdecl dib_create24(iptr rect)
 
 {
@@ -10231,7 +9944,7 @@ i32 * __cdecl dib_create24(iptr rect)
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
     if (hdc == (HDC)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00638f94));
+      dbg_log((iptr)&str_error_unable_to_create_dc_in_msinitgraf_3);
     }
     else {
       _memset(&bmi,0,0x2c);
@@ -10252,7 +9965,7 @@ i32 * __cdecl dib_create24(iptr rect)
       bmi.bmiHeader.biHeight = bmp_height;
       h = CreateDIBSection(hdc,&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
-        dbg_log((iptr)((u8 *)&g.d_00638f64));
+        dbg_log((iptr)&str_error_unable_to_create_bitmap_in_msinitg_3);
         DeleteDC(hdc);
       }
       else {
@@ -10280,10 +9993,8 @@ i32 * __cdecl dib_create24(iptr rect)
   }
   return dib2;
 }
-#undef dib_row_order
 
 /* 005e45b5 auto */
-#define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
 i32 * __cdecl dib_create32(iptr rect)
 
 {
@@ -10307,7 +10018,7 @@ i32 * __cdecl dib_create32(iptr rect)
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
     if (hdc == (HDC)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00638ff0));
+      dbg_log((iptr)&str_error_unable_to_create_dc_in_msinitgraf_4);
     }
     else {
       _memset(&bmi,0,0x2c);
@@ -10328,7 +10039,7 @@ i32 * __cdecl dib_create32(iptr rect)
       bmi.bmiHeader.biHeight = bmp_height;
       h = CreateDIBSection(hdc,&bmi,0,&bits2,(HANDLE)0x0,0);
       if (h == (HBITMAP)0x0) {
-        dbg_log((iptr)((u8 *)&g.d_00638fc0));
+        dbg_log((iptr)&str_error_unable_to_create_bitmap_in_msinitg_4);
         DeleteDC(hdc);
       }
       else {
@@ -10356,7 +10067,6 @@ i32 * __cdecl dib_create32(iptr rect)
   }
   return dib2;
 }
-#undef dib_row_order
 
 /* 005e4d60 auto */
 i32 __cdecl
@@ -10371,7 +10081,7 @@ gif_lzw_decode(iptr src,uint code_base,i32 min_code_size,uint pitch,int width,ui
   
   table_handle = mem_handle_alloc(0x6000);
   if (table_handle == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00639084));
+    dbg_log((iptr)&str_error_cannot_allocate_decompression_tabl);
     result = 0;
   }
   else {

@@ -4,12 +4,6 @@
  */
 #include "game.h"
 
-#define g_turn_time_limit   (*(int *)((u8 *)&g.d_00654b70))     /* 0 = no timer */
-#define g_timer_blink       (*(uint *)((u8 *)&g.d_006ab5ac))
-#define g_timer_remaining   (*(int *)((u8 *)&g.d_00633a78))
-#define g_timer_last_tick   (*(int *)((u8 *)&g.d_00633a7c))
-#define g_timer_event       (*(int *)((u8 *)&g.d_00633a74))
-#define g_timer_expired     (*(i8 *)((u8 *)&g.d_0064b9bc))
 
 /* 0x0055b0fb */
 void __cdecl mp_turn_timer_tick(void)
@@ -17,45 +11,45 @@ void __cdecl mp_turn_timer_tick(void)
     int percent, color, elapsed;
     RECT rect;
 
-    if (g_turn_time_limit == 0)
+    if (civ_saved_cursor_x_block.mp_turn_time_limit_ms == 0)
         return;
-    g_timer_blink ^= 1;
-    if (g_timer_blink != 0) {
-        if (g_timer_remaining != 0) {
+    (*(uint *)&setup_picwnd_block.g_timer_blink) ^= 1;
+    if ((*(uint *)&setup_picwnd_block.g_timer_blink) != 0) {
+        if (mp_turn_seconds_left != 0) {
             /* Seconds since the last tick, rounded (ticks are in 1/60 s). */
             elapsed = (int)((double)(timer_ticks() - g_timer_last_tick) / 60.0 + 0.5);
-            g_timer_remaining -= elapsed;
-            if (g_timer_remaining < 0)
-                g_timer_remaining = 0;
+            mp_turn_seconds_left -= elapsed;
+            if (mp_turn_seconds_left < 0)
+                mp_turn_seconds_left = 0;
             g_timer_last_tick = timer_ticks();
         }
-        if (g_timer_remaining == 0) {
+        if (mp_turn_seconds_left == 0) {
             city_window_close();
             intel_report_end_modal();
             throneroom_close();
             pedia_end_modal();
-            g_timer_expired = 0;
+            player_turn_active = 0;
             status_draw_timer_bar(100, 0xffffffff);
             return;
         }
-        frame_wnd_draw_caption(&map_views);
-        rect.left = (*(int *)((u8 *)&g.d_0066ca54));
-        rect.top = (*(int *)((u8 *)&g.d_0066ca58));
-        rect.right = (*(int *)((u8 *)&g.d_0066ca5c));
-        rect.bottom = (*(int *)((u8 *)&g.d_0066ca68));
-        wnd_blit_surface_rect(&map_views, &rect);
+        frame_wnd_draw_caption(((i8 *)&map_views_block.map_views));
+        rect.left = (*(int *)((u8 *)&map_views_block.main_view_frame_left));
+        rect.top = (*(int *)((u8 *)&map_views_block.main_view_frame_top));
+        rect.right = (*(int *)((u8 *)&map_views_block.main_view_frame_right));
+        rect.bottom = (*(int *)((u8 *)&map_views_block.main_view_client_top));
+        wnd_blit_surface_rect(((i8 *)&map_views_block.map_views), &rect);
     }
-    percent = (g_timer_remaining * 100000) / g_turn_time_limit;
+    percent = (mp_turn_seconds_left * 100000) / civ_saved_cursor_x_block.mp_turn_time_limit_ms;
     if (percent < 0x21)
         color = 0x6a;
     else if (percent < 0x42)
         color = 0x7a;
     else
         color = 0x2a;
-    if ((color == 0x6a || g_timer_remaining < 0x1e) && g_timer_blink != 0)
+    if ((color == 0x6a || mp_turn_seconds_left < 0x1e) &((uint *)&setup_picwnd_block.g_timer_blink) != 0)
         color = -1;
     status_draw_timer_bar(percent, color);
-    if (g_timer_event != 0)
-        game_timer_destroy(g_timer_event);
-    g_timer_event = game_timer_create(((void *)(iptr)mp_turn_timer_tick), 500, 1);
+    if (mp_turn_timer_handle != 0)
+        game_timer_destroy(mp_turn_timer_handle);
+    mp_turn_timer_handle = game_timer_create(((void *)(iptr)mp_turn_timer_tick), 500, 1);
 }

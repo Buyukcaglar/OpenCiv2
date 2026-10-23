@@ -4,13 +4,12 @@
  */
 #include "game.h"
 
-#define g_nr_seed (*(uint *)((u8 *)&g.d_00635094))
 
 /* 0x0059a733: uniform value in [0, 1]. */
 float10 __cdecl rng_next_unit(void)
 {
-    g_nr_seed = g_nr_seed * 1664525 + 1013904223;
-    return (float10)g_nr_seed / (float10)0xffffffffu;
+    (*(uint *)&g_nr_seed) = (*(uint *)&g_nr_seed) * 1664525 + 1013904223;
+    return (float10)(*(uint *)&g_nr_seed) / (float10)0xffffffffu;
 }
 
 /* 0x0059a791: random integer in [lo, hi] (bounds in either order). */

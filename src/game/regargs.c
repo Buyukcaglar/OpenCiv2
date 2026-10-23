@@ -17,8 +17,6 @@
 /* CRT strrchr: __cdecl, caller cleans (protos.h wrongly says __thiscall). */
 #define crt_strrchr _strrchr
 
-#define g_city_improvements(city) (&(*(byte *)((u8 *)&cities + 52)))[(city) * 0x58]
-#define g_ddraw (*(int * *)((u8 *)&g.d_006394c0))       /* IDirectDraw * */
 
 typedef int (__stdcall *com_fn1)(int *);
 typedef int (__stdcall *com_fn2)(int *, int);
@@ -37,9 +35,9 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
         return eax_in;
     bit_index_split(impr, &index, &mask);
     if (on != 0)
-        (&g_city_improvements(city))[index] |= (byte)mask;
+        cities[city].improvements[index] |= (byte)mask;
     else
-        (&g_city_improvements(city))[index] &= (byte)~mask;
+        cities[city].improvements[index] &= (byte)~mask;
     return city * 0xb;
 }
 
@@ -77,9 +75,9 @@ uint __cdecl regargs_005ea677(uint eax_in)
     uint hr;
     int in_vblank;
 
-    if (g_ddraw == NULL)
+    if ((*(int * *)&g_ddraw) == NULL)
         return eax_in & 0xffffff00;
-    hr = COM_METHOD(g_ddraw, com_fn2, 0x44)(g_ddraw, (iptr)&in_vblank);
+    hr = COM_METHOD((*(int * *)&g_ddraw), com_fn2, 0x44)((*(int * *)&g_ddraw), (iptr)&in_vblank);
     if (hr != 0)
         return hr & 0xffffff00;
     return (byte)in_vblank;
@@ -96,9 +94,9 @@ uint __cdecl regargs_005ef58e(uint eax_in)
 {
     uint hr;
 
-    if (g_ddraw == NULL)
+    if ((*(int * *)&g_ddraw) == NULL)
         return eax_in & 0xffffff00;
-    hr = COM_METHOD(g_ddraw, com_fn1, 0x4c)(g_ddraw);
+    hr = COM_METHOD((*(int * *)&g_ddraw), com_fn1, 0x4c)((*(int * *)&g_ddraw));
     if (hr != 0)
         return hr & 0xffffff00;
     return 1;
@@ -205,7 +203,7 @@ short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
 void __cdecl path_default_extension(char *name, char *ext)
 {
     if (crt_strrchr(name, '.') == NULL) {
-        crt_strcat(name, &path_default_ext_dot_str);
+        crt_strcat(name, ((i8 *)&path_default_ext_dot_str));
         crt_strcat(name, ext);
     }
     __strupr(name);
@@ -221,7 +219,7 @@ void __cdecl path_set_extension(char *dst, char *src, char *ext)
     dot = crt_strrchr(dst, '.');
     if (dot != NULL)
         *dot = '\0';
-    crt_strcat(dst, &path_set_ext_dot_str);
+    crt_strcat(dst, ((i8 *)&path_set_ext_dot_str));
     crt_strcat(dst, ext);
     __strupr(dst);
 }

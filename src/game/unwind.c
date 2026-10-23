@@ -35,7 +35,7 @@ void __thiscall surfwnd_dtor(void *this)
 {
     void *member;
 
-    *(i8 ***)this = &PTR_FUN_0061c060;
+    *(i8 ***)this = ((pointer *)(ptr_fun_rest + 8));
     *(i32 *)((iptr)this + 0x110) = 0;
     /* funclet 0044cc01 */
     member = (this != NULL) ? (void *)((iptr)this + 0x48) : NULL;
@@ -75,7 +75,6 @@ void __thiscall ddwin_dtor(void *this)
 
 /* 0x0055c3d3: "PICKGOVT" dialog - lets civ param_1 pick a government
    (param_2 != 0: all of them, including anarchy) and applies the choice. */
-#define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
 void __cdecl civ_select_government_dialog(int param_1, int param_2)
 {
     i32 uVar2;
@@ -87,14 +86,14 @@ void __cdecl civ_select_government_dialog(int param_1, int param_2)
     if ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) == 0) {
         /* nothing */
     }
-    else if ((game.multiplayer < 3) || (DAT_006d1da0 == param_1)) {
-        dialog_load_game_text(&local_308, s_PICKGOVT_00633acc);
+    else if ((game.multiplayer < 3) || (human_civ[0] == param_1)) {
+        dialog_load_game_text(&local_308, str_pickgovt);
         for (local_14 = (param_2 != 0) ? 0 : 1; local_14 < 7; local_14 = local_14 + 1) {
             /* (civ_can_choose_government's last 19 parameters are a decompiler artifact) */
             if ((param_2 != 0) || (civ_can_choose_government(param_1, local_14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) != 0)) {
                 text_clear();
                 text_append_string_id(government_names[local_14]);
-                dialog_add_option(&local_308, &text_buffer, local_14, 0);
+                dialog_add_option(&local_308, ((i8 *)&map_views_block.text_buffer), local_14, 0);
             }
         }
         local_30c = dlg_show_modal(&local_308, 0);
@@ -108,24 +107,23 @@ void __cdecl civ_select_government_dialog(int param_1, int param_2)
             uVar2 = civ_get_adjective(param_1);
             text_set_string_arg(2, uVar2);
             text_set_label_arg(3, government_names[local_30c]);
-            popup_game_with_sprite(s_NEWGOVT_00633ad8, &government_sprites + local_30c * 0x3c, 0);
+            popup_game_with_sprite(str_newgovt, ((i8 *)&government_sprites_block.government_sprites) + local_30c * 0x3c, 0);
             if (((4 < local_30c) && (((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0)) &&
                 ((game.field_0c & 0x20) == 0)) {
                 text_set_label_arg(0, government_names[local_30c]);
-                popup_file_with_sprite(PTR_s_TUTORIAL_00627678, s_DEMOCRATS_00633ae0, &tutorial_icon_sprite, 0);
+                popup_file_with_sprite((*(i8 * *)str_ptr_labels_rest), str_democrats, ((i8 *)&tutorial_icon_sprite_block.tutorial_icon_sprite), 0);
                 game.field_0c = game.field_0c | 0x20;
             }
         }
     }
     else {
         net_send_message(0x9f, *(i32 *)
-                                 (&net_player_slots + *(int *)(&net_civ_slots + param_1 * 4) * 0x54),
+                                 (((i8 *)&net_session_block.net_player_slots) + *(int *)(((i8 *)&net_session_block.net_civ_slots) + param_1 * 4) * 0x54),
                            param_2, 0, 0, 0, 0, 0, 0, 0);
     }
     /* funclet 0055c679 */
     dialog_dtor(&local_308);
 }
-#undef DAT_006d1da0
 
 /* 0x00493e83: builds a temporary object, stores param_1 in it, runs it if
    its check succeeds, then destroys it. */
@@ -173,11 +171,11 @@ i32 __cdecl FUN_005e0863(void)
     iVar2 = surface_get_width(&local_1b8);
     OffsetRect(&local_20, iVar2 + -0x46, iVar1);
     button_create(local_630, (i32)local_1b8.window_2, 0x65, (i32)&local_20,
-                       (i32)&DAT_00638d90);
+                       (i32)((i32 *)&str_ok_3));
     button_set_callback(local_630, (i32)dlg_radio_choice_button_cb);
     OffsetRect(&local_20, 0, -0x23);
     button_create(local_a4, (i32)local_1b8.window_2, 0x66, (i32)&local_20,
-                       (i32)s_Cancel_00638d94);
+                       (i32)str_cancel_3);
     button_set_callback(local_a4, (i32)dlg_radio_choice_button_cb);
     /* funclets 005e0a31..005e0a6a: destroy the locals in reverse order */
     edit_dtor(local_68);
@@ -203,39 +201,39 @@ void __thiscall spaceship_wnd_make_button_sprites(void *this)
     iVar1 = surface_load_gif_resource(local_68, 0x1f1, 10, 0xec, (void *)((iptr)this + 0x1f8));
     if (iVar1 != 0) {
         text_clear();
-        uVar2 = (i32)label_string(*(i32 *)(DAT_00628420 + 0x3f8));
+        uVar2 = (i32)label_string(*(i32 *)(label_string_ids + 0x3f8));
         text_append(uVar2);
         SetRect(&local_20, 0, 0, 0x34, 0x24);
         OffsetRect(&local_20, 1, 1);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0x978), (i32)local_68, 9, 1, 1, 0x34, 0x24);
         OffsetRect(&local_20, 0x35, 0);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0x9f0), (i32)local_68, 9, 0x36, 1, 0x34, 0x24);
         OffsetRect(&local_20, 0x35, 0);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0x9b4), (i32)local_68, 9, 0x6b, 1, 0x34, 0x24);
         gfx_set_text_color_index(0xc6);
         text_clear();
         if (game_language == 0) {
-            uVar2 = (i32)label_string(*(i32 *)(DAT_00628420 + 0x354));
+            uVar2 = (i32)label_string(*(i32 *)(label_string_ids + 0x354));
             text_append(uVar2);
         }
         else if (game_language == 1) {
-            text_append(s_Lancer_0062e324);
+            text_append(str_lancer);
         }
         else if (game_language == 2) {
-            text_append(s_Starten_0062e32c);
+            text_append(str_starten);
         }
         SetRect(&local_20, 0, 0, 0x43, 0x24);
         OffsetRect(&local_20, 1, 0x26);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0xa2c), (i32)local_68, 9, 1, 0x26, 0x43, 0x24);
         OffsetRect(&local_20, 0x44, 0);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0xaa4), (i32)local_68, 9, 0x45, 0x26, 0x43, 0x24);
         OffsetRect(&local_20, 0x44, 0);
-        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)&text_buffer, (LONG *)&local_20, 0);
+        surface_draw_text_in_rect(local_68, (i32 *)((iptr)this + 0x8d4), (i32)((i8 *)&map_views_block.text_buffer), (LONG *)&local_20, 0);
         sprite_grab_from_surface((void *)((iptr)this + 0xa68), (i32)local_68, 9, 0x89, 0x26, 0x43, 0x24);
     }
     /* funclet 004d56ea: lea ecx,[ebp-0x64] */

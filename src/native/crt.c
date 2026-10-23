@@ -22,18 +22,17 @@
 
 /* ---- rand: seed at 0x00639e50, as in the original ---- */
 
-#define RAND_SEED (*(u32 *)g.d_00639e50)
 
 void crt_srand(u32 seed)
 {
-    RAND_SEED = plat_srand(seed);
+    rand_seed = plat_srand(seed);
 }
 
 int crt_rand_at(const char *caller)
 {
-    RAND_SEED = RAND_SEED * 214013u + 2531011u;
-    plat_trace_rand((RAND_SEED >> 16) & 0x7fff, caller);
-    return (RAND_SEED >> 16) & 0x7fff;
+    rand_seed = rand_seed * 214013u + 2531011u;
+    plat_trace_rand((rand_seed >> 16) & 0x7fff, caller);
+    return (rand_seed >> 16) & 0x7fff;
 }
 
 int (_rand)(void)

@@ -51,7 +51,6 @@ typedef struct _EXCEPTION_POINTERS _EXCEPTION_POINTERS;
 typedef struct _CONTEXT _CONTEXT;
 typedef struct mmtime_tag mmtime_tag;
 #include "xdaemon.h"
-#include "globals.h"
 #include "protos.h"
 /* Calls through incremental-link thunks go straight to their targets. */
 #include "thunks.h"

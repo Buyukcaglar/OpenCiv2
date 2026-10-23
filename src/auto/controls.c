@@ -99,7 +99,7 @@ button_create
   if (this->hwnd != 0) {
     ctrl_destroy(this);
   }
-  this->font = (u32)button_default_font;
+  this->font = (u32)(*(i8 * *)draw_current_font_rest);
   ctrl_init(this,parent,6,ctrl_id,rect);
   this->on_click = 0;
   new_hwnd = button_create_hwnd(rect,(iptr)this,label,1,this->font);
@@ -204,7 +204,7 @@ checkbox_create
   u32 new_hwnd;
   i8 rect[16];
   
-  this->font = (u32)checkbox_default_font;
+  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
   checkbox_calc_rect(label,x,y,(iptr)rect,this->font);
   if (this->hwnd != 0) {
     ctrl_destroy(this);
@@ -373,7 +373,7 @@ edit_create
   if (this->hwnd != 0) {
     ctrl_destroy((Control *)this);
   }
-  this->edit_font = (u32)ctrl_default_font;
+  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
   ctrl_init((Control *)this,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window(rect,(iptr)this,1,1,this->edit_font);
   this->hwnd = new_hwnd;
@@ -559,7 +559,7 @@ listbox_create(Control *this,iptr parent,i32 ctrl_id,iptr rect)
   if (this->hwnd != 0) {
     ctrl_destroy(this);
   }
-  this->font = (u32)listbox_default_font;
+  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 16));
   ctrl_init(this,parent,7,ctrl_id,rect);
   new_hwnd = listbox_create_hwnd(rect,(iptr)this,1,0,this->font);
   this->hwnd = new_hwnd;
@@ -706,7 +706,7 @@ void __cdecl scrollbar_66c728_global_init(void)
 void __cdecl scrollbar_66c728_static_init(void)
 
 {
-  scrollbar_ctor((Control *)&static_scrollbar_1);
+  scrollbar_ctor((Control *)((i8 *)&static_scrollbar_1));
   return;
 }
 
@@ -722,7 +722,7 @@ void __cdecl scrollbar_66c728_reg_atexit(void)
 void __cdecl scrollbar_66c728_atexit_dtor(void)
 
 {
-  scrollbar_dtor((Control *)&static_scrollbar_1);
+  scrollbar_dtor((Control *)((i8 *)&static_scrollbar_1));
   return;
 }
 
@@ -747,7 +747,7 @@ void __cdecl scrollbar_66c768_global_init(void)
 void __cdecl scrollbar_66c768_static_init(void)
 
 {
-  scrollbar_ctor((Control *)&static_scrollbar_2);
+  scrollbar_ctor((Control *)((i8 *)&static_scrollbar_2));
   return;
 }
 
@@ -763,7 +763,7 @@ void __cdecl scrollbar_66c768_reg_atexit(void)
 void __cdecl scrollbar_66c768_atexit_dtor(void)
 
 {
-  scrollbar_dtor((Control *)&static_scrollbar_2);
+  scrollbar_dtor((Control *)((i8 *)&static_scrollbar_2));
   return;
 }
 
@@ -801,7 +801,7 @@ button_create_with_callback
 
 {
   this->on_select = callback;
-  this->font = (u32)button_default_font;
+  this->font = (u32)(*(i8 * *)draw_current_font_rest);
   button_create(this,parent,ctrl_id,rect,label);
   return;
 }
@@ -891,7 +891,7 @@ edit_create_styled
   if (this->hwnd != 0) {
     ctrl_destroy((Control *)this);
   }
-  this->edit_font = (u32)ctrl_default_font;
+  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
   ctrl_init((Control *)this,parent,4,ctrl_id,rect);
   new_hwnd = edit_create_window(rect,(iptr)this,multiline,style,this->edit_font);
   this->hwnd = new_hwnd;
@@ -1098,7 +1098,7 @@ checkbox_create_fixed
   u32 hwnd;
   i8 rect[16];
   
-  this->font = (u32)checkbox_default_font;
+  this->font = (u32)(*(i8 * *)(draw_current_font_rest + 8));
   checkbox_calc_rect_fixed(x,y,width,(iptr)rect,this->font);
   if (this->hwnd != 0) {
     ctrl_destroy(this);
@@ -1158,7 +1158,7 @@ radiogrp_create
   if (this->items_handle != 0) {
     ctrl_destroy((Control *)this);
   }
-  this->radio_font = (u32)radio_default_font;
+  this->radio_font = (u32)(*(i8 * *)(draw_current_font_rest + 4));
   ctrl_init((Control *)this,parent,3,ctrl_id,rect);
   this->is_enabled = 0;
   this->on_click = 0;
@@ -1600,7 +1600,7 @@ i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
   
   block = (i32 *)0x0;
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00637cf4));
+    dbg_log((iptr)&str_error_tried_to_initialize_null_control_i);
   }
   else {
     handle = mem_handle_alloc(0x30);
@@ -1628,7 +1628,7 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
   i32 *block;
   
   if (hwnd == (HWND)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00637d30));
+    dbg_log((iptr)&str_error_tried_to_dispose_null_control_in_d);
   }
   else {
     block = (i32 *)GetWindowLongA(hwnd,0);
@@ -1675,7 +1675,6 @@ void __thiscall control_set_hwnd(ControlHwndSetView *this,u32 hwnd)
 }
 
 /* 005c9740 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl
 button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
 
@@ -1748,13 +1747,13 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   }
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = app_hinstance;
+  hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(this);
   hWndParent = *(HWND *)(window + 4);
   height = rect_height((iptr)rect);
   value = rect_width((iptr)rect);
-  hwnd2 = CreateWindowExA(4,s_MSControlClass_00637d70,&button_wnd_title,style2,*rect,
+  hwnd2 = CreateWindowExA(4,str_mscontrolclass_2,((i8 *)&button_wnd_title),style2,*rect,
                               rect[1],value,height,hWndParent,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey((iptr)button,(iptr)label_text);
   bounds.left = *rect;
@@ -1769,7 +1768,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value2 = rect_width((iptr)&bounds);
   h = CreateCompatibleBitmap(hdc,value2,value);
   if (h == (HBITMAP)0x0) {
-    dbg_log((iptr)((u8 *)&g.d_00637d80));
+    dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton);
     DestroyWindow(hwnd2);
     hwnd2 = (HWND)0x0;
   }
@@ -1778,7 +1777,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
     value2 = rect_width((iptr)&bounds);
     h_00 = CreateCompatibleBitmap(hdc,value2,value);
     if (h_00 == (HBITMAP)0x0) {
-      dbg_log((iptr)((u8 *)&g.d_00637da8));
+      dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_2);
       DestroyWindow(hwnd2);
       hwnd2 = (HWND)0x0;
     }
@@ -1787,7 +1786,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
       value2 = rect_width((iptr)&bounds);
       bmp_disabled = CreateCompatibleBitmap(hdc,value2,value);
       if (bmp_disabled == (HBITMAP)0x0) {
-        dbg_log((iptr)((u8 *)&g.d_00637dd0));
+        dbg_log((iptr)&str_could_not_create_bitmap_in_msinitbutton_3);
         DestroyWindow(hwnd2);
         hwnd2 = (HWND)0x0;
       }
@@ -2119,10 +2118,8 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   }
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005cac22 auto */
-#define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
 void __cdecl button_press_animated(HWND hwnd)
 
 {
@@ -2150,12 +2147,10 @@ void __cdecl button_press_animated(HWND hwnd)
   }
   return;
 }
-#undef wnd_active_child
 
 /* 005cacd4: written by hand in src/game/fixups.c */
 
 /* 005cb601 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,int visible)
 
 {
@@ -2180,20 +2175,19 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
   SetRect(&rect,x,y,x + width,y + height);
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = app_hinstance;
+  hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(this);
   hWndParent = *(HWND *)(window + 4);
   rect_h = rect_height((iptr)&rect);
   value = rect_width((iptr)&rect);
-  hwnd2 = CreateWindowExA(4,s_MSControlClass_00637e48,&spritebtn_wnd_title,style2,x,y,value
+  hwnd2 = CreateWindowExA(4,str_mscontrolclass_3,((i8 *)&spritebtn_wnd_title),style2,x,y,value
                             ,rect_h,hWndParent,hMenu,hInstance,lpParam);
   value = ctrl_init_block(hwnd2,ctrl);
   *(i32 *)(value + 0x2c) = 5;
   SetWindowLongA(hwnd2,-4,(iptr)spritebtn_wndproc);
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005cb6db auto */
 void __cdecl spritebtn_hwnd_cleanup_stub(i32 hwnd)
@@ -2304,7 +2298,6 @@ void __cdecl checkbox_calc_rect_fixed(int x,int y,int width,iptr out_rect,GameFo
 }
 
 /* 005cc0f0 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
 
 {
@@ -2332,18 +2325,18 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   }
   lpParam = (LPVOID)0x0;
   hMenu = (HMENU)0x0;
-  hInstance = app_hinstance;
+  hInstance = err_report_ctx_block.app_hinstance;
   this = (WndBase *)ctrl_get_parent((Control *)ctrl);
   window = wnd_get_window(this);
   pHVar6 = *(HWND *)(window + 4);
   height = rect_height(rect);
   value = rect_width(rect);
-  pHVar6 = CreateWindowExA(4,s_MSControlClass_00637f10,&checkbox_wnd_title,style2,*(int *)rect,
+  pHVar6 = CreateWindowExA(4,str_mscontrolclass_4,((i8 *)&wnd_modal_stack_below_block.checkbox_wnd_title),style2,*(int *)rect,
                            *(int *)(rect + 4),value,height,pHVar6,hMenu,hInstance,lpParam);
   ctrl_parse_hotkey(ctrl,(iptr)label_copy);
-  pHVar7 = LoadBitmapA(app_hinstance,(LPCSTR)0x132);
-  pHVar8 = LoadBitmapA(app_hinstance,(LPCSTR)0x131);
-  pHVar9 = LoadBitmapA(app_hinstance,(LPCSTR)0x130);
+  pHVar7 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x132);
+  pHVar8 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x131);
+  pHVar9 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x130);
   value = ctrl_init_block(pHVar6,ctrl);
   *(HBITMAP *)(value + 0xc) = pHVar7;
   *(HBITMAP *)(value + 0x10) = pHVar8;
@@ -2353,20 +2346,18 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   SetWindowLongA(pHVar6,-4,(iptr)checkbox_wndproc);
   return pHVar6;
 }
-#undef app_hinstance
 
 /* 005cc248 auto */
 void __cdecl checkbox_destroy_hwnd(int hwnd)
 
 {
   if (hwnd == 0) {
-    dbg_log((iptr)((u8 *)&g.d_00637f20));
+    dbg_log((iptr)&str_error_tried_to_dispose_null_checkbox_in);
   }
   return;
 }
 
 /* 005cc274 auto */
-#define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
 void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
 
 {
@@ -2396,16 +2387,8 @@ void __cdecl checkbox_toggle_by_hotkey(HWND hwnd)
   }
   return;
 }
-#undef wnd_active_child
 
 /* 005cc320 auto */
-#define ctrl_disabled_color_index (*(byte *)((u8 *)&g.d_00637ea0))
-#define ctrl_disabled_rgb_set (*(char *)((u8 *)&g.d_00637f07))
-#define ctrl_shadow_color_index (*(byte *)((u8 *)&g.d_00637e94))
-#define ctrl_shadow_dx (*(byte *)((u8 *)&g.d_00637e98))
-#define ctrl_shadow_dy (*(byte *)((u8 *)&g.d_00637e9c))
-#define ctrl_text_color_index (*(byte *)((u8 *)&g.d_00637e90))
-#define ctrl_text_rgb_set (*(char *)((u8 *)&g.d_00637f03))
 i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
@@ -2483,7 +2466,7 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
       box_top = rect.top;
       box_right = rect.right;
       box_bottom = rect.bottom;
-      if (checkbox_mouse_pressed != 0) {
+      if (wnd_modal_stack_below_block.checkbox_mouse_pressed != 0) {
         box_right = rect.left + 0x20;
         value = rect_height((iptr)&rect);
         box_top = value - 0x14 + rect.top >> 1;
@@ -2538,11 +2521,11 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
             ;
           }
         }
-        else if (ctrl_text_rgb_set == '\0') {
+        else if (wnd_modal_stack_below_block.ctrl_text_rgb_set == '\0') {
           SetTextColor(hdc,0);
         }
         else {
-          SetTextColor(hdc,(uint)CONCAT12(ctrl_text_rgb_b,CONCAT11(ctrl_text_rgb_g,ctrl_text_rgb_r)));
+          SetTextColor(hdc,(uint)CONCAT12(wnd_modal_stack_below_block.ctrl_text_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_text_rgb_g,wnd_modal_stack_below_block.ctrl_text_rgb_r)));
         }
       }
       else {
@@ -2567,11 +2550,11 @@ i32 __stdcall checkbox_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
                            (uint)CONCAT12(blue[0],CONCAT11(green[0],red[0])));
             }
           }
-          else if (ctrl_disabled_rgb_set == '\0') {
+          else if (wnd_modal_stack_below_block.ctrl_disabled_rgb_set == '\0') {
             SetTextColor(hdc,0x404040);
           }
           else {
-            SetTextColor(hdc,(uint)CONCAT12(ctrl_disabled_rgb_b,CONCAT11(ctrl_disabled_rgb_g,ctrl_disabled_rgb_r)))
+            SetTextColor(hdc,(uint)CONCAT12(wnd_modal_stack_below_block.ctrl_disabled_rgb_b,CONCAT11(wnd_modal_stack_below_block.ctrl_disabled_rgb_g,wnd_modal_stack_below_block.ctrl_disabled_rgb_r)))
             ;
           }
         }
@@ -2669,7 +2652,7 @@ LAB_005ccd4b:
   }
   else if (msg == 0x201) {
     value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
-    if ((value != 0) && (checkbox_mouse_pressed == 0)) {
+    if ((value != 0) && (wnd_modal_stack_below_block.checkbox_mouse_pressed == 0)) {
       SetFocus(hwnd);
       value = checkbox_is_checked(checkbox);
       if (value == 0) {
@@ -2678,7 +2661,7 @@ LAB_005ccd4b:
       else {
         checkbox_set_checked(checkbox,0);
       }
-      checkbox_mouse_pressed = 1;
+      wnd_modal_stack_below_block.checkbox_mouse_pressed = 1;
       SetCapture(hwnd);
       InvalidateRect(hwnd,(RECT *)0x0,0);
       logpal = ctrl_get_parent(checkbox);
@@ -2693,18 +2676,11 @@ LAB_005ccd4b:
     value = checkbox_is_enabled((CheckboxEnabledView *)checkbox);
     if (value != 0) {
       ReleaseCapture();
-      checkbox_mouse_pressed = 0;
+      wnd_modal_stack_below_block.checkbox_mouse_pressed = 0;
     }
   }
   return 0;
 }
-#undef ctrl_disabled_color_index
-#undef ctrl_disabled_rgb_set
-#undef ctrl_shadow_color_index
-#undef ctrl_shadow_dx
-#undef ctrl_shadow_dy
-#undef ctrl_text_color_index
-#undef ctrl_text_rgb_set
 
 /* 005cce40 auto */
 void __thiscall checkbox_fire_callback(CheckboxClickView *this,i32 ctrl_id,i32 checked)
@@ -2735,7 +2711,6 @@ void __stdcall control_subclass_wndproc(HWND hwnd,int msg,i32 wparam,i32 lparam)
 }
 
 /* 005ccf17 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visible)
 
 {
@@ -2765,49 +2740,48 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   if (scrollbar_class_registered == 0) {
     create_param = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
-    pHVar7 = app_hinstance;
+    pHVar7 = err_report_ctx_block.app_hinstance;
     pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(pCVar1);
     pHVar5 = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
-    hwnd2 = CreateWindowExA(4,s_SCROLLBAR_00637f60,&scrollbar_probe_wnd_title,style_flags | 0x40000000,*rect,
+    hwnd2 = CreateWindowExA(4,str_scrollbar,((i8 *)&scrollbar_probe_wnd_title),style_flags | 0x40000000,*rect,
                               rect[1],value,height,pHVar5,pHVar6,pHVar7,create_param);
-    scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
+    default_draw_font_obj_block.scrollbar_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     style2 = GetWindowLongA(hwnd2,-0x10);
     wc.style = 0x8b;
-    wc.lpfnWndProc = scrollbar_base_wndproc;
+    wc.lpfnWndProc = default_draw_font_obj_block.scrollbar_base_wndproc;
     wc.cbClsExtra = 0;
-    scrollbar_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
-    wc.cbWndExtra = scrollbar_base_wnd_extra + 8;
-    wc.hInstance = app_hinstance;
+    default_draw_font_obj_block.scrollbar_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
+    wc.cbWndExtra = default_draw_font_obj_block.scrollbar_base_wnd_extra + 8;
+    wc.hInstance = err_report_ctx_block.app_hinstance;
     wc.hIcon = (HICON)0x0;
     wc.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
     wc.hbrBackground = GetStockObject(1);
     wc.lpszMenuName = (LPCSTR)0x0;
-    wc.lpszClassName = s_MSScrollBarClass_00637f6c;
+    wc.lpszClassName = str_msscrollbarclass;
     RegisterClassA(&wc);
     scrollbar_class_registered = 1;
     DestroyWindow(hwnd2);
   }
   create_param = (LPVOID)0x0;
   pHVar6 = (HMENU)0x0;
-  pHVar7 = app_hinstance;
+  pHVar7 = err_report_ctx_block.app_hinstance;
   pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
   value = wnd_get_window(pCVar1);
   pHVar5 = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
-  hwnd2 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&scrollbar_wnd_title,style2,*rect,rect[1]
+  hwnd2 = CreateWindowExA(4,str_msscrollbarclass_2,((i8 *)&scrollbar_wnd_title),style2,*rect,rect[1]
                             ,nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)control_subclass_wndproc);
-  SetWindowLongA(hwnd2,scrollbar_base_wnd_extra,ctrl);
-  SetWindowLongA(hwnd2,scrollbar_base_wnd_extra + 4,(LONG)scrollbar_base_wndproc);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.scrollbar_base_wnd_extra,ctrl);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.scrollbar_base_wnd_extra + 4,(LONG)default_draw_font_obj_block.scrollbar_base_wndproc);
   ShowScrollBar(hwnd2,2,1);
   scrollbar_hwnd_set_range(hwnd2,1,100);
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005cd139 auto */
 void __cdecl scrollbar_destroy_hwnd(i32 hwnd)
@@ -2980,7 +2954,7 @@ edit_create_at
 {
   tagRECT rect;
   
-  this->edit_font = (u32)ctrl_default_font;
+  this->edit_font = (u32)(*(i8 * *)(draw_current_font_rest + 12));
   this->is_enabled = 0;
   SetRect(&rect,x,y,width + x,y + 0x1e);
   edit_create(this,parent,ctrl_id,(iptr)&rect,text);
@@ -2988,7 +2962,6 @@ edit_create_at
 }
 
 /* 005d2740 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameFont *font)
 
 {
@@ -3046,39 +3019,39 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   if (editbox_class_registered == 0) {
     create_param = (LPVOID)0x0;
     pHVar8 = (HMENU)0x0;
-    pHVar9 = app_hinstance;
+    pHVar9 = err_report_ctx_block.app_hinstance;
     pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(pCVar1);
     pHVar7 = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
-    hwnd2 = CreateWindowExA(4,&editbox_native_class_name,&editbox_probe_wnd_title,style2,*rect,rect[1],value,height,
+    hwnd2 = CreateWindowExA(4,((i8 *)&editbox_native_class_name),((i8 *)&editbox_probe_wnd_title),style2,*rect,rect[1],value,height,
                               pHVar7,pHVar8,pHVar9,create_param);
-    edit_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
+    default_draw_font_obj_block.edit_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
-    wc.lpfnWndProc = edit_base_wndproc;
-    edit_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
-    wc.cbWndExtra = edit_base_wnd_extra + 8;
-    wc.hInstance = app_hinstance;
+    wc.lpfnWndProc = default_draw_font_obj_block.edit_base_wndproc;
+    default_draw_font_obj_block.edit_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
+    wc.cbWndExtra = default_draw_font_obj_block.edit_base_wnd_extra + 8;
+    wc.hInstance = err_report_ctx_block.app_hinstance;
     wc.hIcon = (HICON)0x0;
     wc.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f01);
     wc.hbrBackground = (HBRUSH)0x0;
     wc.lpszMenuName = (LPCSTR)0x0;
-    wc.lpszClassName = s_MSEditBoxClass_00638324;
+    wc.lpszClassName = str_mseditboxclass;
     RegisterClassA(&wc);
     editbox_class_registered = 1;
     DestroyWindow(hwnd2);
   }
   create_param = (LPVOID)0x0;
   pHVar8 = (HMENU)0x0;
-  pHVar9 = app_hinstance;
+  pHVar9 = err_report_ctx_block.app_hinstance;
   pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
   value = wnd_get_window(pCVar1);
   pHVar7 = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
-  hwnd2 = CreateWindowExA(4,s_MSEditBoxClass_00638338,&editbox_wnd_title,style2 | 0x40800000,*rect,
+  hwnd2 = CreateWindowExA(4,str_mseditboxclass_2,((i8 *)&editbox_wnd_title),style2 | 0x40800000,*rect,
                             rect[1],nWidth,value,pHVar7,pHVar8,pHVar9,create_param);
   font_handle = font_get_handle(font);
   pWVar6 = (WPARAM *)mem_handle_lock(font_handle);
@@ -3086,11 +3059,10 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
   SetWindowLongA(hwnd2,-4,(iptr)edit_subclass_wndproc);
-  SetWindowLongA(hwnd2,edit_base_wnd_extra,(LONG)edit_base_wndproc);
-  SetWindowLongA(hwnd2,edit_base_wnd_extra + 4,ctrl);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.edit_base_wnd_extra,(LONG)default_draw_font_obj_block.edit_base_wndproc);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.edit_base_wnd_extra + 4,ctrl);
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005d2a01 auto */
 LRESULT __stdcall edit_subclass_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
@@ -3305,7 +3277,6 @@ i32 __thiscall edit_fire_key_callback(EditKeyView *this,iptr key)
 }
 
 /* 005d3130 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
 
 {
@@ -3329,26 +3300,26 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   if (combo_class_registered == 0) {
     create_param = (LPVOID)0x0;
     pHVar6 = (HMENU)0x0;
-    pHVar7 = app_hinstance;
+    pHVar7 = err_report_ctx_block.app_hinstance;
     pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(pCVar1);
     pHVar5 = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
-    hwnd2 = CreateWindowExA(4,s_COMBOBOX_00638350,&combo_probe_wnd_title,style2,*rect,rect[1],value
+    hwnd2 = CreateWindowExA(4,str_combobox,((i8 *)&combo_probe_wnd_title),style2,*rect,rect[1],value
                               ,height,pHVar5,pHVar6,pHVar7,create_param);
-    combo_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
+    default_draw_font_obj_block.combo_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
-    wc.lpfnWndProc = combo_base_wndproc;
-    combo_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
-    wc.cbWndExtra = combo_base_wnd_extra + 8;
-    wc.hInstance = app_hinstance;
+    wc.lpfnWndProc = default_draw_font_obj_block.combo_base_wndproc;
+    default_draw_font_obj_block.combo_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
+    wc.cbWndExtra = default_draw_font_obj_block.combo_base_wnd_extra + 8;
+    wc.hInstance = err_report_ctx_block.app_hinstance;
     wc.hIcon = (HICON)0x0;
     wc.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
     wc.hbrBackground = (HBRUSH)0x0;
     wc.lpszMenuName = (LPCSTR)0x0;
-    wc.lpszClassName = s_MSComboBoxClass_0063835c;
+    wc.lpszClassName = str_mscomboboxclass;
     RegisterClassA(&wc);
     combo_class_registered = 1;
     DestroyWindow(hwnd2);
@@ -3359,20 +3330,19 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   }
   create_param = (LPVOID)0x0;
   pHVar6 = (HMENU)0x0;
-  pHVar7 = app_hinstance;
+  pHVar7 = err_report_ctx_block.app_hinstance;
   pCVar1 = (WndBase *)ctrl_get_parent((Control *)ctrl);
   value = wnd_get_window(pCVar1);
   pHVar5 = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
-  hwnd2 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&combo_wnd_title,style2,*rect,rect[1],
+  hwnd2 = CreateWindowExA(4,str_mscomboboxclass_2,((i8 *)&combo_wnd_title),style2,*rect,rect[1],
                             nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
   SetWindowLongA(hwnd2,-4,(iptr)combo_subclass_wndproc);
-  SetWindowLongA(hwnd2,combo_base_wnd_extra,(LONG)combo_base_wndproc);
-  SetWindowLongA(hwnd2,combo_base_wnd_extra + 4,ctrl);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.combo_base_wnd_extra,(LONG)default_draw_font_obj_block.combo_base_wndproc);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.combo_base_wnd_extra + 4,ctrl);
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005d3310 auto */
 LRESULT __stdcall combo_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
@@ -3525,7 +3495,6 @@ void __thiscall combo_fire_selchange(ComboBoxSelChangeView *this)
 }
 
 /* 005d37a0 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_column,GameFont *font)
 
 {
@@ -3557,26 +3526,26 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   if (listbox_class_registered == 0) {
     create_param = (LPVOID)0x0;
     pHVar9 = (HMENU)0x0;
-    pHVar10 = app_hinstance;
+    pHVar10 = err_report_ctx_block.app_hinstance;
     pCVar2 = (WndBase *)ctrl_get_parent((Control *)ctrl);
     window = wnd_get_window(pCVar2);
     pHVar8 = *(HWND *)(window + 4);
     height = rect_height((iptr)rect);
     value = rect_width((iptr)rect);
-    hwnd2 = CreateWindowExA(4,s_LISTBOX_0063838c,&listbox_probe_wnd_title,style2,*rect,rect[1],value,
+    hwnd2 = CreateWindowExA(4,str_listbox_2,((i8 *)&listbox_probe_wnd_title),style2,*rect,rect[1],value,
                               height,pHVar8,pHVar9,pHVar10,create_param);
-    listbox_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
+    default_draw_font_obj_block.listbox_base_wndproc = (WNDPROC)GetWindowLongA(hwnd2,-4);
     wc.style = 0x88;
     wc.cbClsExtra = 0;
-    wc.lpfnWndProc = listbox_base_wndproc;
-    listbox_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
-    wc.cbWndExtra = listbox_base_wnd_extra + 8;
-    wc.hInstance = app_hinstance;
+    wc.lpfnWndProc = default_draw_font_obj_block.listbox_base_wndproc;
+    default_draw_font_obj_block.listbox_base_wnd_extra = GetClassLongA(hwnd2,-0x12);
+    wc.cbWndExtra = default_draw_font_obj_block.listbox_base_wnd_extra + 8;
+    wc.hInstance = err_report_ctx_block.app_hinstance;
     wc.hIcon = (HICON)0x0;
     wc.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
     wc.hbrBackground = (HBRUSH)0x0;
     wc.lpszMenuName = (LPCSTR)0x0;
-    wc.lpszClassName = s_MSListBoxClass_00638394;
+    wc.lpszClassName = str_mslistboxclass;
     RegisterClassA(&wc);
     listbox_class_registered = 1;
     DestroyWindow(hwnd2);
@@ -3590,13 +3559,13 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   }
   create_param = (LPVOID)0x0;
   pHVar9 = (HMENU)0x0;
-  pHVar10 = app_hinstance;
+  pHVar10 = err_report_ctx_block.app_hinstance;
   pCVar2 = (WndBase *)ctrl_get_parent((Control *)ctrl);
   value = wnd_get_window(pCVar2);
   pHVar8 = *(HWND *)(value + 4);
   value = rect_height((iptr)rect);
   nWidth = rect_width((iptr)rect);
-  hwnd2 = CreateWindowExA(4,s_MSListBoxClass_006383a8,&listbox_wnd_title,style2,*rect,rect[1],
+  hwnd2 = CreateWindowExA(4,str_mslistboxclass_2,((i8 *)&listbox_wnd_title),style2,*rect,rect[1],
                             nWidth,value,pHVar8,pHVar9,pHVar10,create_param);
   font_handle = font_get_handle(font);
   pWVar7 = (WPARAM *)mem_handle_lock(font_handle);
@@ -3604,11 +3573,10 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
   SetWindowLongA(hwnd2,-4,(iptr)listbox_subclass_wndproc);
-  SetWindowLongA(hwnd2,listbox_base_wnd_extra,(LONG)listbox_base_wndproc);
-  SetWindowLongA(hwnd2,listbox_base_wnd_extra + 4,ctrl);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.listbox_base_wnd_extra,(LONG)default_draw_font_obj_block.listbox_base_wndproc);
+  SetWindowLongA(hwnd2,default_draw_font_obj_block.listbox_base_wnd_extra + 4,ctrl);
   return hwnd2;
 }
-#undef app_hinstance
 
 /* 005d39e2 auto */
 LRESULT __stdcall listbox_subclass_wndproc(HWND hwnd,uint msg,uint wparam,LPARAM lparam)
@@ -3735,7 +3703,7 @@ void __cdecl listbox_hwnd_get_sel_text(HWND hwnd,i32 buffer)
   
   LVar1 = SendMessageA(hwnd,0x188,0,0);
   if (LVar1 == -1) {
-    crt_strcpy(buffer,&listbox_no_sel_text);
+    crt_strcpy(buffer,((i8 *)&listbox_no_sel_text));
   }
   else {
     listbox_hwnd_get_text(hwnd,LVar1,buffer);
@@ -3801,12 +3769,11 @@ void __thiscall radiogrp_show_all(RadioGroupShowView *this)
 void __cdecl ctrl_set_pending_font(iptr font)
 
 {
-  radio_default_font = (i8 *)font;
+  (*(i8 * *)(draw_current_font_rest + 4)) = (i8 *)font;
   return;
 }
 
 /* 005d7cb0 auto */
-#define gfx_black_color_index (*(byte *)((u8 *)&g.d_00638b40))
 void __thiscall
 spritebtn_init_from_sprite
           (SpriteButton *this,WndPaletteView *parent,i32 ctrl_id,int x,int y,
@@ -3874,7 +3841,7 @@ spritebtn_init_from_sprite
   src_rect.right = dst_rect.right;
   src_rect.bottom = dst_rect.bottom;
   OffsetRect(&dst_rect,2,2);
-  surface_fill((DibSurface *)(this->button_surface),(uint)gfx_black_color_index);
+  surface_fill((DibSurface *)(this->button_surface),(uint)(*(byte *)&gfx_black_color_index));
   surface_blit
             ((DibSurface *)&this->on_select,(iptr)(this->button_surface),(iptr)&src_rect,
              (iptr)&dst_rect);
@@ -3888,7 +3855,6 @@ spritebtn_init_from_sprite
   this->hwnd = value;
   return;
 }
-#undef gfx_black_color_index
 
 /* 005d8da1 auto */
 int __cdecl radiogrp_item_height(GameFont *font)
@@ -3919,7 +3885,6 @@ int __cdecl radiogrp_item_height(GameFont *font)
 }
 
 /* 005d8e3f auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 i32 __cdecl
 radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_count,iptr labels,int visible
             ,i32 font)
@@ -3952,9 +3917,9 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
   char hotkey[4];
   int item_y;
   
-  pHVar2 = LoadBitmapA(app_hinstance,(LPCSTR)0x12d);
-  pHVar3 = LoadBitmapA(app_hinstance,(LPCSTR)0x12f);
-  pHVar4 = LoadBitmapA(app_hinstance,(LPCSTR)0x12e);
+  pHVar2 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12d);
+  pHVar3 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12f);
+  pHVar4 = LoadBitmapA(err_report_ctx_block.app_hinstance,(LPCSTR)0x12e);
   handle = mem_handle_alloc(item_count * 0xa4);
   items = mem_handle_lock(handle);
   col_width = rect_width((iptr)rect);
@@ -3977,12 +3942,12 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     }
     lpParam = (LPVOID)0x0;
     hMenu = (HMENU)0x0;
-    hInstance = app_hinstance;
+    hInstance = err_report_ctx_block.app_hinstance;
     this = (WndBase *)ctrl_get_parent((Control *)group);
     window = wnd_get_window(this);
     half_row = row_height >> 1;
     half_item = nHeight >> 1;
-    pHVar11 = CreateWindowExA(4,s_MSControlClass_00638708,&radiogrp_item_wnd_title,style2,item_x,
+    pHVar11 = CreateWindowExA(4,str_mscontrolclass_5,((i8 *)&radiogrp_item_wnd_title),style2,item_x,
                               (half_row - half_item) + item_y,col_width,nHeight,*(HWND *)(window + 4),hMenu,
                               hInstance,lpParam);
     *(HWND *)(items + index * 0xa4) = pHVar11;
@@ -4051,7 +4016,6 @@ LAB_005d9226:
     index++;
   } while( true );
 }
-#undef app_hinstance
 
 /* 005d99f4 auto */
 void __cdecl radiogrp_destroy_items(int count,int handle)
@@ -4061,7 +4025,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   i32 i;
   
   if (handle == 0) {
-    dbg_log((iptr)((u8 *)&g.d_0063872c));
+    dbg_log((iptr)&str_error_tried_to_dismantle_null_radioset_i);
   }
   else {
     items = mem_handle_lock(handle);
@@ -4077,7 +4041,6 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
 }
 
 /* 005d9a9a auto */
-#define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
 void __cdecl radiogrp_item_activate(HWND hwnd)
 
 {
@@ -4119,16 +4082,8 @@ void __cdecl radiogrp_item_activate(HWND hwnd)
   }
   return;
 }
-#undef wnd_active_child
 
 /* 005d9b86 auto */
-#define radio_disabled_color_index (*(byte *)((u8 *)&g.d_00637e8c))
-#define radio_disabled_rgb_set (*(char *)((u8 *)&g.d_006386fb))
-#define radio_shadow_color_index (*(byte *)((u8 *)&g.d_00637e80))
-#define radio_shadow_dx (*(byte *)((u8 *)&g.d_00637e84))
-#define radio_shadow_dy (*(byte *)((u8 *)&g.d_00637e88))
-#define radio_text_color_index (*(byte *)((u8 *)&g.d_00637e7c))
-#define radio_text_rgb_set (*(char *)((u8 *)&g.d_006386f7))
 i32 __stdcall radiogrp_item_wndproc(HWND hwnd,uint msg,WPARAM wparam,LPARAM lparam)
 
 {
@@ -4546,13 +4501,6 @@ switchD_005dab35_default:
   }
   return 0;
 }
-#undef radio_disabled_color_index
-#undef radio_disabled_rgb_set
-#undef radio_shadow_color_index
-#undef radio_shadow_dx
-#undef radio_shadow_dy
-#undef radio_text_color_index
-#undef radio_text_rgb_set
 
 /* 005dab5a auto */
 i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
@@ -4565,7 +4513,7 @@ i32 __cdecl ctrl_hwnd_is_radio(HWND hwnd)
   CHAR class_name[52];
   
   GetClassNameA(hwnd,class_name,0x32);
-  _Str2 = s_MSCONTROLCLASS_00638768;
+  _Str2 = str_mscontrolclass_6;
   _Str1 = __strupr(class_name);
   cmp = _strcmp(_Str1,_Str2);
   if ((cmp == 0) && (block = wnd_from_hwnd(hwnd), *(int *)(block + 0x2c) == 3)) {
@@ -4741,7 +4689,7 @@ uint __cdecl input_map_vkey(uint vkey)
   int key_down;
   uint key_code;
   
-  key_code = *(uint *)(&input_vkey_map_table + (vkey & 0xff) * 4);
+  key_code = *(uint *)(((i8 *)&input_vkey_map_table) + (vkey & 0xff) * 4);
   if (key_code != 0) {
     key_down = input_ctrl_key_down();
     if (key_down != 0) {
@@ -4790,14 +4738,12 @@ int __thiscall ddctrl_get_rect(void *this)
 }
 
 /* 005f0f05 auto */
-#define ddctrl_current_target (*(iptr *)((u8 *)&g.d_00639dc8))
 void __cdecl ddctrl_set_msg_target(iptr target)
 
 {
   ddctrl_current_target = target;
   return;
 }
-#undef ddctrl_current_target
 
 /* 005f130f auto */
 i32 __thiscall ddctrl_dispatch_msg(DDControl *this,int msg,int x,int y)
@@ -4885,7 +4831,7 @@ void __thiscall ddctrl_on_paint_default(DDControlParentView *this,i32 paint_arg)
   
   parent_wnd = ddctrl_get_parent_window(this);
   if (parent_wnd == 0) {
-    __assert(s_GetParentGameWin___00639e24,s_D__Ss_Smeds32_ddcntrl_cpp_00639e08,0xd8);
+    __assert(str_getparentgamewin,str_d_ss_smeds32_ddcntrl_cpp,0xd8);
   }
   return;
 }

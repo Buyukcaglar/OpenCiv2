@@ -35,25 +35,25 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
   i8 local_path[128];
   uint snd_flags;
   
-  snd_last_effect_id = effect;
-  snd_last_effect_arg = play_mode;
+  prefs_main_menu_choice_block.snd_last_effect_id = effect;
+  prefs_main_menu_choice_block.snd_last_effect_arg = play_mode;
   if (effect < 0) {
     snd_wave_free_by_id(~effect + 1);
   }
   else if ((((byte)game.game_options & 0x10) != 0) && (effect < 0x85)) {
-    crt_strcpy(wav_name,s_AIRCOMBT_0062af70 + effect * 9);
-    result = _strcmp(wav_name,s_CHEERS_0062b430);
+    crt_strcpy(wav_name,((char *)&str_aircombt) + effect * 9);
+    result = _strcmp(wav_name,str_cheers);
     if (result == 0) {
       result = rand_range(0,2);
       str_append_int((iptr)wav_name,result + 1);
     }
-    crt_strcat(wav_name,&snd_wav_ext_str);
+    crt_strcat(wav_name,((i8 *)&snd_wav_ext_str));
     str_clear((iptr)wav_path);
-    str_append((iptr)wav_path,(iptr)((u8 *)&g.d_0062b440));
+    str_append((iptr)wav_path,(iptr)&str_civ2_sound);
     str_append((iptr)wav_path,(iptr)wav_name);
     str_clear((iptr)local_path);
-    str_append((iptr)local_path,(iptr)((u8 *)&g.d_0064bb08));
-    str_append((iptr)local_path,(iptr)((u8 *)&g.d_0062b44c));
+    str_append((iptr)local_path,(iptr)&net_map_lock_slots_block.scenario_dir_path);
+    str_append((iptr)local_path,(iptr)&str_sound);
     str_append((iptr)local_path,(iptr)wav_name);
     result = file_exists((iptr)local_path);
     if (result == 0) {
@@ -88,8 +88,6 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
 }
 
 /* 0046e2f4 auto */
-#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(int *)((u8 *)&g.d_0062b42c))
 void __cdecl snd_cd_on_notify(void)
 
 {
@@ -99,14 +97,8 @@ void __cdecl snd_cd_on_notify(void)
   }
   return;
 }
-#undef cd_music_available
-#undef cd_music_continue
 
 /* 0046e320 auto */
-#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
-#define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
-#define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
 void __cdecl snd_cd_play_random_track(void)
 
 {
@@ -159,15 +151,8 @@ void __cdecl snd_cd_play_random_track(void)
   }
   return;
 }
-#undef cd_music_available
-#undef cd_music_continue
-#undef cd_music_current_track
-#undef cd_music_unknown_disc
 
 /* 0046e4a9 auto */
-#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
-#define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
 void __cdecl snd_cd_detect_layout(void)
 
 {
@@ -190,15 +175,8 @@ void __cdecl snd_cd_detect_layout(void)
   }
   return;
 }
-#undef cd_music_available
-#undef cd_music_continue
-#undef cd_music_unknown_disc
 
 /* 0046e571 auto */
-#define cd_music_available (*(int *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
-#define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
-#define cd_music_unknown_disc (*(int *)((u8 *)&g.d_0062b424))
 void __cdecl music_play_track(uint track,int force)
 
 {
@@ -233,13 +211,8 @@ void __cdecl music_play_track(uint track,int force)
   }
   return;
 }
-#undef cd_music_available
-#undef cd_music_continue
-#undef cd_music_current_track
-#undef cd_music_unknown_disc
 
 /* 0046e6a9 auto */
-#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
 void __cdecl snd_cd_stop(void)
 
 {
@@ -247,10 +220,8 @@ void __cdecl snd_cd_stop(void)
   cd_music_available = 1;
   return;
 }
-#undef cd_music_available
 
 /* 0046e6c8 auto */
-#define cd_music_available (*(int *)((u8 *)&g.d_0062b420))
 void __cdecl snd_sync_music_option(void)
 
 {
@@ -264,7 +235,6 @@ void __cdecl snd_sync_music_option(void)
   }
   return;
 }
-#undef cd_music_available
 
 /* 00472910 auto */
 void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *this,iptr callback,u32 callback_data)
@@ -299,10 +269,6 @@ void __cdecl snd_shutdown(void)
 }
 
 /* 005d48f0 auto */
-#define snd_wave_buffer_count (*(i32 *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(i32 *)((u8 *)&g.d_00638584))
-#define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
-#define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
 int __cdecl snd_wave_open(i32 notify_hwnd,i32 buffer_bytes,i32 buffer_count)
 
 {
@@ -310,22 +276,17 @@ int __cdecl snd_wave_open(i32 notify_hwnd,i32 buffer_bytes,i32 buffer_count)
   
   snd_wave_notify_hwnd = notify_hwnd;
   snd_wave_open_buffer_bytes = buffer_bytes;
-  snd_wave_max_buffers = buffer_count;
-  snd_wave_buffer_count = buffer_count;
-  result = snd_wave_open_device(notify_hwnd,0,(iptr)((u8 *)&g.d_00638578));
+  (*(i32 *)&snd_wave_max_buffers) = buffer_count;
+  (*(i32 *)&snd_wave_buffer_count) = buffer_count;
+  result = snd_wave_open_device(notify_hwnd,0,(iptr)&snd_wave_out_handle);
   if (result == 0) {
     snd_wave_alloc_buffers(buffer_bytes,snd_wave_out_handle,buffer_count);
     result = 0;
   }
   return result;
 }
-#undef snd_wave_buffer_count
-#undef snd_wave_max_buffers
-#undef snd_wave_notify_hwnd
-#undef snd_wave_out_handle
 
 /* 005d4965 auto */
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 void __cdecl snd_wave_close_all(void)
 
 {
@@ -335,25 +296,21 @@ void __cdecl snd_wave_close_all(void)
   }
   return;
 }
-#undef snd_wave_out_handle
 
 /* 005d49a3 auto */
 void __cdecl snd_show_error(int error_code)
 
 {
   if (error_code == 10) {
-    MessageBoxA((HWND)0x0,s_This_Sound_format_is_not_support_006385e4,s_Sound_Error_006385d8,0x40);
+    MessageBoxA((HWND)0x0,str_this_sound_format_is_not_supported,str_sound_error,0x40);
   }
   else if (error_code != 0xb) {
-    MessageBoxA((HWND)0x0,s_Undefined_Sound_Error_00638614,s_Sound_Error_00638608,0x40);
+    MessageBoxA((HWND)0x0,str_undefined_sound_error,str_sound_error_2,0x40);
   }
   return;
 }
 
 /* 005d4a11 auto */
-#define snd_wave_block_align (*(i32 *)((u8 *)&g.d_006385ac))
-#define snd_wave_format (*(i32 *)((u8 *)&g.d_006385a0))
-#define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
 uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle)
 
 {
@@ -366,35 +323,35 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
   use_fallback = false;
   if (snd_wave_device_open == 0) {
     if (format != (i32 *)0x0) {
-      snd_wave_format = *format;
+      snd_wave_format[0] = *format;
       snd_wave_samples_per_sec = format[1];
       snd_wave_avg_bytes_per_sec = format[2];
-      snd_wave_block_align = format[3];
+      (*(i32 *)&snd_wave_block_align) = format[3];
     }
     UVar2 = waveOutGetNumDevs();
     for (device = 0; (int)device < (int)UVar2; device++) {
-      waveOutGetDevCapsA(device,(LPWAVEOUTCAPSA)&snd_wave_dev_caps,0x34);
-      if ((snd_wave_dev_formats & 0x20) != 0) {
+      waveOutGetDevCapsA(device,(LPWAVEOUTCAPSA)&default_draw_font_obj_block.snd_wave_dev_caps,0x34);
+      if ((default_draw_font_obj_block.snd_wave_dev_formats & 0x20) != 0) {
         use_fallback = false;
         chosen_device = device;
         break;
       }
-      if ((snd_wave_dev_formats & 0x10) != 0) {
+      if ((default_draw_font_obj_block.snd_wave_dev_formats & 0x10) != 0) {
         chosen_device = device;
         use_fallback = true;
       }
     }
     if ((use_fallback) || (device != UVar2)) {
       if (use_fallback) {
-        snd_wave_format = CONCAT22(1,(i16)snd_wave_format);
+        snd_wave_format[0] = CONCAT22(1,(i16)snd_wave_format[0]);
         snd_wave_avg_bytes_per_sec = 0x5622;
-        snd_wave_block_align = (snd_wave_block_align & 0xffff0000 | (ushort)(1));
+        (*(i32 *)&snd_wave_block_align) = ((*(i32 *)&snd_wave_block_align) & 0xffff0000 | (ushort)(1));
       }
-      result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)&snd_wave_format,
+      result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)((i32 *)&snd_wave_format),
                             callback,0,0x10000);
       if ((short)result != 0) {
         sndPlaySoundA((LPCSTR)0x0,0);
-        result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)&snd_wave_format,
+        result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)((i32 *)&snd_wave_format),
                               callback,0,0x10000);
       }
       result = result & 0xffff;
@@ -412,9 +369,6 @@ uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle
   }
   return result;
 }
-#undef snd_wave_block_align
-#undef snd_wave_format
-#undef snd_wave_out_handle
 
 /* 005d4bcb auto */
 uint __cdecl snd_wave_close_device(HWAVEOUT wave_out)
@@ -439,12 +393,11 @@ void __cdecl snd_waveout_error_box(uint error_code)
   CHAR error_text[200];
   
   waveOutGetErrorTextA(error_code & 0xffff,error_text,200);
-  MessageBoxA((HWND)0x0,error_text,s_Wave_Out_Error_0063862c,0x40);
+  MessageBoxA((HWND)0x0,error_text,str_wave_out_error,0x40);
   return;
 }
 
 /* 005d4c5f auto */
-#define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
 i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_id)
 
 {
@@ -566,10 +519,8 @@ i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_
   }
   return result;
 }
-#undef snd_wave_total_buffer_bytes
 
 /* 005d4f6a auto */
-#define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
 i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
 
 {
@@ -699,14 +650,8 @@ i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
   }
   return result;
 }
-#undef snd_wave_total_buffer_bytes
 
 /* 005d52a2 auto */
-#define snd_wave_format (*(i8 *)((u8 *)&g.d_006385a0))
-#define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
-#define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
 i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
 
 {
@@ -740,7 +685,7 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
       AVIStreamRead(avi_stream,0,1,0,0,sample_buf,0);
       total_bytes = stream_info.dwSampleSize * stream_info.dwLength;
       AVIStreamReadFormat(avi_stream,0,&wave_format,&format_size);
-      if ((*(i16 *)((char *)&snd_wave_format + 2)) == 1) {
+      if ((*(i16 *)((char *)((i8 *)&snd_wave_format) + 2)) == 1) {
         if (wave_format.nChannels == 2) {
           rate_mode = (rate_mode & 0xffff0000 | (ushort)(1));
         }
@@ -756,13 +701,13 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
       }
       _memset(&mmio_info,0,0x48);
       if ((rate_mode & 0xffff) == 1) {
-        mmio_info.cchBuffer = snd_wave_total_buffer_bytes * 2;
+        mmio_info.cchBuffer = (*(uint *)&snd_wave_total_buffer_bytes) * 2;
       }
       else if ((rate_mode & 0xffff) == 3) {
-        mmio_info.cchBuffer = snd_wave_total_buffer_bytes >> 1;
+        mmio_info.cchBuffer = (*(uint *)&snd_wave_total_buffer_bytes) >> 1;
       }
       else {
-        mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
+        mmio_info.cchBuffer = (*(uint *)&snd_wave_total_buffer_bytes);
       }
       bytes_per_buffer = (uint)mmio_info.cchBuffer / snd_wave_max_buffers;
       mmio_info.fccIOProc = 0x204d454d;
@@ -825,22 +770,12 @@ i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
   }
   return result;
 }
-#undef snd_wave_format
-#undef snd_wave_max_buffers
-#undef snd_wave_out_handle
-#undef snd_wave_source_count
-#undef snd_wave_total_buffer_bytes
 
 /* 005d5643: written by hand in src/game/sound_position.c */
 
 /* 005d5706: written by hand in src/game/sound_position.c */
 
 /* 005d57b1 auto */
-#define snd_avi_stream_started (*(int *)((u8 *)&g.d_006385bc))
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define snd_avi_feed_count_i32 (*(i32 *)((u8 *)&g.d_00638590))
-#define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
-#define snd_avi_feed_samples_i32 (*(i32 *)((u8 *)&g.d_00638598))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_avi_stream_feed(uint sample_count)
@@ -935,14 +870,8 @@ i32 __cdecl snd_avi_stream_feed(uint sample_count)
   }
   return result;
 }
-#undef snd_avi_stream_started
-#undef snd_wave_out_handle
-#undef snd_avi_feed_count_i32
-#undef snd_avi_fill_count_i32
-#undef snd_avi_feed_samples_i32
 
 /* 005d5b88 auto */
-#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 i32 __cdecl snd_avi_stream_stop(void)
 
 {
@@ -958,7 +887,6 @@ i32 __cdecl snd_avi_stream_stop(void)
   }
   return result;
 }
-#undef snd_avi_stream_started
 
 /* 005d5bec auto */
 void __cdecl snd_avi_stream_refill(iptr source)
@@ -993,10 +921,6 @@ void __cdecl snd_avi_stream_refill(iptr source)
 }
 
 /* 005d5d11 auto */
-#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
 
 {
@@ -1067,13 +991,8 @@ i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
   }
   return result;
 }
-#undef snd_avi_stream_started
-#undef snd_wave_buffer_count
-#undef snd_wave_max_buffers
-#undef snd_wave_out_handle
 
 /* 005d5f91 auto */
-#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 i16 __cdecl snd_avi_stream_start(void)
 
 {
@@ -1091,14 +1010,8 @@ i16 __cdecl snd_avi_stream_start(void)
   *(iptr *)(snd_wave_sources + 0x98) = snd_wave_buffer_ring;
   return (short)ring;
 }
-#undef snd_avi_stream_started
 
 /* 005d6038 auto */
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(i32 *)((u8 *)&g.d_00638584))
-#define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define snd_wave_source_count (*(ushort *)((u8 *)&g.d_0063858c))
 short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
 
 {
@@ -1111,10 +1024,10 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
     result = 3;
   }
   else if ((snd_wave_device_open == 0) &&
-          (status = snd_wave_open(snd_wave_notify_hwnd,snd_wave_open_buffer_bytes,snd_wave_max_buffers), status != 0)) {
+          (status = snd_wave_open(snd_wave_notify_hwnd,snd_wave_open_buffer_bytes,(*(i32 *)&snd_wave_max_buffers)), status != 0)) {
     result = 0;
   }
-  else if (snd_wave_source_count < 5) {
+  else if ((*(ushort *)&snd_wave_source_count) < 5) {
     if ((flags & 8) == 0) {
       result = snd_wave_load_file(filename,flags,sound_id,sound_tag);
     }
@@ -1122,7 +1035,7 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
       result = snd_wave_open_stream(filename,flags,sound_id);
     }
     if ((result == 0) &&
-       (snd_wave_source_count = snd_wave_source_count + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
+       ((*(ushort *)&snd_wave_source_count) = (*(ushort *)&snd_wave_source_count) + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
       i = 0;
       buffer = (i32 *)snd_wave_cur_buffer;
       while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer(*buffer), status != 1))) {
@@ -1137,11 +1050,6 @@ short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
   }
   return result;
 }
-#undef snd_wave_buffer_count
-#undef snd_wave_max_buffers
-#undef snd_wave_notify_hwnd
-#undef snd_wave_out_handle
-#undef snd_wave_source_count
 
 /* 005d61ab auto */
 void __cdecl snd_wave_free_by_id(i32 sound_id)
@@ -1254,8 +1162,6 @@ void __cdecl snd_global_free(HGLOBAL handle)
 }
 
 /* 005d645e auto */
-#define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
-#define snd_wave_buffers_ready_i32 (*(i32 *)((u8 *)&g.d_006385b4))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
@@ -1322,15 +1228,12 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint 
     }
     buffer[7] = snd_wave_buffer_ring;
     snd_wave_buffers_ready_i32 = 1;
-    snd_wave_total_buffer_bytes = total_bytes;
+    (*(uint *)&snd_wave_total_buffer_bytes) = total_bytes;
   }
   return result;
 }
-#undef snd_wave_total_buffer_bytes
-#undef snd_wave_buffers_ready_i32
 
 /* 005d6685 auto */
-#define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
 void __cdecl snd_wave_add_buffers(int count)
 
 {
@@ -1346,20 +1249,18 @@ void __cdecl snd_wave_add_buffers(int count)
     *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffe;
   }
   tail2 = snd_wave_buffer_ring;
-  for (i = 0; i < snd_wave_buffer_count - 1U; i++) {
+  for (i = 0; i < (*(int *)&snd_wave_buffer_count) - 1U; i++) {
     tail2 = *(iptr *)(tail2 + 0x1c);
   }
   next_spare = *(iptr *)(buffer + 0x1c);
   *(iptr *)(tail2 + 0x1c) = snd_wave_spare_buffers;
   snd_wave_spare_buffers = next_spare;
   *(iptr *)(buffer + 0x1c) = snd_wave_buffer_ring;
-  snd_wave_buffer_count += count;
+  (*(int *)&snd_wave_buffer_count) += count;
   return;
 }
-#undef snd_wave_buffer_count
 
 /* 005d673a auto */
-#define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
 void __cdecl snd_wave_remove_buffers(int count)
 
 {
@@ -1368,10 +1269,10 @@ void __cdecl snd_wave_remove_buffers(int count)
   iptr buffer;
   
   buffer = snd_wave_buffer_ring;
-  if ((uint)(snd_wave_buffer_count - count) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
+  if ((uint)((*(int *)&snd_wave_buffer_count) - count) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
     snd_wave_cur_buffer = snd_wave_buffer_ring;
   }
-  for (i = 0; i < (int)((snd_wave_buffer_count - count) - 1U); i++) {
+  for (i = 0; i < (int)(((*(int *)&snd_wave_buffer_count) - count) - 1U); i++) {
     buffer = *(iptr *)(buffer + 0x1c);
   }
   removed = *(iptr *)(buffer + 0x1c);
@@ -1393,15 +1294,11 @@ void __cdecl snd_wave_remove_buffers(int count)
   }
   *(iptr *)(buffer + 0x1c) = snd_wave_spare_buffers;
   snd_wave_spare_buffers = removed;
-  snd_wave_buffer_count -= count;
+  (*(int *)&snd_wave_buffer_count) -= count;
   return;
 }
-#undef snd_wave_buffer_count
 
 /* 005d687b auto */
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
-#define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 void __cdecl snd_wave_set_buffer_count(uint count)
 
 {
@@ -1423,12 +1320,8 @@ void __cdecl snd_wave_set_buffer_count(uint count)
   }
   return;
 }
-#undef snd_wave_buffer_count
-#undef snd_wave_max_buffers
-#undef snd_wave_out_handle
 
 /* 005d6947 auto */
-#define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
 i32 __cdecl snd_wave_write_pending(iptr buffer)
 
 {
@@ -1444,7 +1337,7 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
       *sample = *sample ^ 0x80;
       sample++;
     }
-    MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)buffer,0x20);
+    MVar1 = waveOutWrite((*(HWAVEOUT *)&snd_wave_out_handle),*(LPWAVEHDR *)buffer,0x20);
     result = (result & 0xffff0000 | (ushort)((short)MVar1));
     if ((short)MVar1 == 0) {
       *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x20;
@@ -1460,14 +1353,8 @@ i32 __cdecl snd_wave_write_pending(iptr buffer)
   }
   return 0;
 }
-#undef snd_wave_out_handle
 
 /* 005d6a2c auto */
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_notify_hwnd (*(HWND *)((u8 *)&g.d_0063857c))
-#define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
-#define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
-#define snd_stop_drained_msg_count_i32 (*(i32 *)((u8 *)&g.d_006385d4))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl snd_wave_stop_all(void)
@@ -1483,9 +1370,9 @@ void __cdecl snd_wave_stop_all(void)
   prev = 0;
   snd_wave_stop_pending_i16 = 0;
   source = snd_wave_sources;
-  if (snd_wave_out_handle != (HWAVEOUT)0x0) {
-    waveOutReset(snd_wave_out_handle);
-    while (BVar1 = PeekMessageA(&msg,snd_wave_notify_hwnd,0x3bd,0x3bd,1), BVar1 != 0) {
+  if ((*(HWAVEOUT *)&snd_wave_out_handle) != (HWAVEOUT)0x0) {
+    waveOutReset((*(HWAVEOUT *)&snd_wave_out_handle));
+    while (BVar1 = PeekMessageA(&msg,(*(HWND *)&snd_wave_notify_hwnd),0x3bd,0x3bd,1), BVar1 != 0) {
       snd_stop_drained_msg_count_i32++;
     }
     while (source != 0) {
@@ -1508,11 +1395,6 @@ void __cdecl snd_wave_stop_all(void)
   }
   return;
 }
-#undef snd_wave_buffer_count
-#undef snd_wave_notify_hwnd
-#undef snd_wave_out_handle
-#undef snd_wave_stop_pending_i16
-#undef snd_stop_drained_msg_count_i32
 
 /* 005d6b4c auto */
 void __cdecl snd_fill_silence_u8(iptr dest,uint length)
@@ -1527,9 +1409,6 @@ void __cdecl snd_fill_silence_u8(iptr dest,uint length)
 }
 
 /* 005d6b89 auto */
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
-#define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
@@ -1568,14 +1447,8 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
   snd_wave_sources = 0;
   return result;
 }
-#undef snd_wave_buffer_count
-#undef snd_wave_max_buffers
-#undef snd_wave_stop_pending_i16
 
 /* 005d6c99 auto */
-#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
@@ -1711,12 +1584,8 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
   }
   return 0;
 }
-#undef snd_wave_block_align
-#undef snd_wave_buffer_count
-#undef snd_avi_fill_count_i32
 
 /* 005d717f auto */
-#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
 
 {
@@ -1808,10 +1677,8 @@ i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
   }
   return result;
 }
-#undef snd_wave_block_align
 
 /* 005d7494 auto */
-#define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
 iptr __cdecl snd_wave_free(iptr prev,iptr source)
 
 {
@@ -1839,10 +1706,8 @@ iptr __cdecl snd_wave_free(iptr prev,iptr source)
   }
   return next;
 }
-#undef snd_wave_source_count
 
 /* 005d753e auto */
-#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
 i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
@@ -1910,10 +1775,8 @@ i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
   }
   return result;
 }
-#undef snd_wave_block_align
 
 /* 005d778c auto */
-#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
 
 {
@@ -1969,7 +1832,6 @@ i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
   }
   return result;
 }
-#undef snd_wave_block_align
 
 /* 005d791b auto */
 i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
@@ -2034,7 +1896,6 @@ i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
 }
 
 /* 005dd010 auto */
-#define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
@@ -2052,7 +1913,7 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   palette_init((GamePalette *)&this->client_x);
   eh_state = (eh_state & 0xffffff00 | (byte)(2));
   surface_ctor((DibSurface *)(this->movie_surface));
-  this->vtable = (u32)&PTR_FUN_0061d718;
+  this->vtable = (u32)((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   this->style_flags = 0;
   this->double_size = 0;
   this->avi_option = 0;
@@ -2070,10 +1931,8 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   avi_current_player_i32 = this;
   return this;
 }
-#undef avi_current_player_i32
 
 /* 005dd1a0 auto */
-#define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall avi_player_dtor(AviPlayer *this)
@@ -2083,7 +1942,7 @@ i32 __thiscall avi_player_dtor(AviPlayer *this)
   i8 *eh_handler;
   int eh_state;
   
-  *(i8 ***)this->media_window_base = &PTR_FUN_0061d718;
+  *(i8 ***)this->media_window_base = ((pointer *)&leader_anim_frame_starts_block.ptr_fun_6);
   eh_state = eh_state & 0xff;
   (*(i8 *)((char *)&eh_state + 0)) = 3;
   avi_play_pause((iptr)this);
@@ -2099,7 +1958,6 @@ i32 __thiscall avi_player_dtor(AviPlayer *this)
   /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return eh_next;
 }
-#undef avi_current_player_i32
 
 /* 005dd27e auto */
 void __thiscall
@@ -2282,8 +2140,6 @@ void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *this,int
 }
 
 /* 005dd8a0 auto */
-#define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
-#define snd_mci_notify_hwnd (*(HWND *)((u8 *)&g.d_006e4ff8))
 void __cdecl snd_system_init(void)
 
 {
@@ -2293,25 +2149,21 @@ void __cdecl snd_system_init(void)
   wnd_class.lpfnWndProc = snd_mci_notify_wndproc;
   wnd_class.cbClsExtra = 0;
   wnd_class.cbWndExtra = 0;
-  wnd_class.hInstance = app_hinstance;
+  wnd_class.hInstance = err_report_ctx_block.app_hinstance;
   wnd_class.hIcon = (HICON)0x0;
   wnd_class.hCursor = (HCURSOR)0x0;
   wnd_class.hbrBackground = (HBRUSH)0x0;
   wnd_class.lpszMenuName = (LPCSTR)0x0;
-  wnd_class.lpszClassName = s_MSMMWindow_006389e4;
+  wnd_class.lpszClassName = str_msmmwindow;
   RegisterClassA(&wnd_class);
-  snd_mci_notify_hwnd = CreateWindowExA(0,s_MSMMWindow_006389f0,(LPCSTR)0x0,0,-0x80000000,-0x80000000,
-                                 -0x80000000,-0x80000000,(HWND)0x0,(HMENU)0x0,app_hinstance,
+  err_report_ctx_block.snd_mci_notify_hwnd = CreateWindowExA(0,str_msmmwindow_2,(LPCSTR)0x0,0,-0x80000000,-0x80000000,
+                                 -0x80000000,-0x80000000,(HWND)0x0,(HMENU)0x0,err_report_ctx_block.app_hinstance,
                                  (LPVOID)0x0);
   snd_cd_open();
   return;
 }
-#undef app_hinstance
-#undef snd_mci_notify_hwnd
 
 /* 005dd93f auto */
-#define snd_cd_device_id (*(uint *)((u8 *)&g.d_006389d8))
-#define snd_midi_device_id (*(uint *)((u8 *)&g.d_006389d4))
 LRESULT __stdcall snd_mci_notify_wndproc(HWND hwnd,UINT msg,WPARAM wparam,uint lparam)
 
 {
@@ -2333,8 +2185,6 @@ LRESULT __stdcall snd_mci_notify_wndproc(HWND hwnd,UINT msg,WPARAM wparam,uint l
   }
   return LVar1;
 }
-#undef snd_cd_device_id
-#undef snd_midi_device_id
 
 /* 005dda11 auto */
 void __cdecl snd_stop_sndplaysound(void)
@@ -2345,9 +2195,6 @@ void __cdecl snd_stop_sndplaysound(void)
 }
 
 /* 005ddbc7 auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(uint *)((u8 *)&g.d_006389e0))
-#define snd_mci_notify_hwnd (*(i32 *)((u8 *)&g.d_006e4ff8))
 i32 __cdecl snd_cd_play_track(uint track)
 
 {
@@ -2373,7 +2220,7 @@ i32 __cdecl snd_cd_play_track(uint track)
   seek_parms.dwTo = track & 0xff;
   MVar1 = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&seek_parms);
   if (MVar1 == 0) {
-    if ((track & 0xff) == snd_cd_track_count) {
+    if ((track & 0xff) == (*(uint *)&snd_cd_track_count)) {
       play_flags = 5;
     }
     else {
@@ -2381,30 +2228,26 @@ i32 __cdecl snd_cd_play_track(uint track)
     }
     play_parms.dwFrom = track & 0xff;
     play_parms.dwTo = (uint)(byte)((char)track + 1);
-    play_parms.dwCallback = snd_mci_notify_hwnd;
+    play_parms.dwCallback = (*(i32 *)&err_report_ctx_block.snd_mci_notify_hwnd);
     MVar1 = mciSendCommandA(device_id,0x806,play_flags,(DWORD_PTR)&play_parms);
     if (MVar1 == 0) {
       result = 1;
     }
     else {
       snd_cd_close();
-      dbg_logf((iptr)((u8 *)&g.d_00638aa8),MVar1);
+      dbg_logf((iptr)&str_failed_to_play_requested_cd_track_2,MVar1);
       result = 0;
     }
   }
   else {
     snd_cd_close();
-    dbg_logf((iptr)((u8 *)&g.d_00638a84),MVar1);
+    dbg_logf((iptr)&str_failed_to_play_requested_cd_track,MVar1);
     result = 0;
   }
   return result;
 }
-#undef snd_cd_device_id
-#undef snd_cd_track_count
-#undef snd_mci_notify_hwnd
 
 /* 005ddd12 auto */
-#define snd_midi_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d4))
 void __cdecl snd_midi_close(void)
 
 {
@@ -2414,11 +2257,8 @@ void __cdecl snd_midi_close(void)
   }
   return;
 }
-#undef snd_midi_device_id
 
 /* 005ddd4e auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
 void __cdecl snd_cd_open(void)
 
 {
@@ -2428,7 +2268,7 @@ void __cdecl snd_cd_open(void)
   MCI_STATUS_PARMS status_parms;
   
   if (snd_cd_device_id == 0) {
-    open_parms.lpstrDeviceType = s_cdaudio_00638acc;
+    open_parms.lpstrDeviceType = str_cdaudio;
     MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
     if (MVar1 == 0) {
       snd_cd_device_id = open_parms.wDeviceID;
@@ -2445,21 +2285,17 @@ void __cdecl snd_cd_open(void)
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
         snd_cd_device_id = 0;
-        dbg_logf((iptr)((u8 *)&g.d_00638af4),MVar1);
+        dbg_logf((iptr)&str_cdaudio_could_not_set_time_format,MVar1);
       }
     }
     else {
-      dbg_logf((iptr)((u8 *)&g.d_00638ad4),MVar1);
+      dbg_logf((iptr)&str_failed_to_open_cdaudio_device,MVar1);
     }
   }
   return;
 }
-#undef snd_cd_device_id
-#undef snd_cd_track_count
 
 /* 005dde57 auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
 void __cdecl snd_cd_close(void)
 
 {
@@ -2470,11 +2306,8 @@ void __cdecl snd_cd_close(void)
   }
   return;
 }
-#undef snd_cd_device_id
-#undef snd_cd_track_count
 
 /* 005dde9d auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 void __cdecl snd_cd_mci_stop(void)
 
 {
@@ -2483,10 +2316,8 @@ void __cdecl snd_cd_mci_stop(void)
   }
   return;
 }
-#undef snd_cd_device_id
 
 /* 005ddecf auto */
-#define snd_mci_notify_hwnd (*(HWND *)((u8 *)&g.d_006e4ff8))
 void __cdecl snd_system_shutdown(void)
 
 {
@@ -2494,14 +2325,11 @@ void __cdecl snd_system_shutdown(void)
   snd_cd_mci_stop();
   snd_cd_close();
   snd_midi_close();
-  DestroyWindow(snd_mci_notify_hwnd);
+  DestroyWindow(err_report_ctx_block.snd_mci_notify_hwnd);
   return;
 }
-#undef snd_mci_notify_hwnd
 
 /* 005ddeff auto */
-#define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
 i32 __cdecl snd_cd_get_track_count(void)
 
 {
@@ -2513,7 +2341,7 @@ i32 __cdecl snd_cd_get_track_count(void)
   i32 track_count;
   
   if (snd_cd_device_id == 0) {
-    open_parms.lpstrDeviceType = s_cdaudio_00638b18;
+    open_parms.lpstrDeviceType = str_cdaudio_2;
     MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)&open_parms);
     if (MVar1 != 0) {
       return 0xffffffff;
@@ -2543,86 +2371,44 @@ i32 __cdecl snd_cd_get_track_count(void)
   }
   return track_count;
 }
-#undef snd_cd_device_id
-#undef snd_cd_track_count
 
 /* 005de6bd auto */
-#define snd_midi_notify_callback (*(code * *)((u8 *)&g.d_006e5004))
 void __cdecl snd_midi_fire_notify_callback(void)
 
 {
-  if (snd_midi_notify_callback != (code *)0x0) {
-    (*snd_midi_notify_callback)();
+  if (err_report_ctx_block.snd_midi_notify_callback != (code *)0x0) {
+    (*err_report_ctx_block.snd_midi_notify_callback)();
   }
   return;
 }
-#undef snd_midi_notify_callback
 
 /* 005de6fc auto */
-#define snd_cd_notify_callback (*(iptr *)((u8 *)&g.d_006e5000))
 void __cdecl snd_cd_set_notify_callback(iptr callback)
 
 {
-  snd_cd_notify_callback = callback;
+  err_report_ctx_block.snd_cd_notify_callback = callback;
   return;
 }
-#undef snd_cd_notify_callback
 
 /* 005de714 auto */
-#define snd_cd_notify_callback (*(code * *)((u8 *)&g.d_006e5000))
 void __cdecl snd_cd_fire_notify_callback(void)
 
 {
-  if (snd_cd_notify_callback != (code *)0x0) {
-    (*snd_cd_notify_callback)();
+  if ((*(code * *)&err_report_ctx_block.snd_cd_notify_callback) != (code *)0x0) {
+    (*(*(code * *)&err_report_ctx_block.snd_cd_notify_callback))();
   }
   return;
 }
-#undef snd_cd_notify_callback
 
 /* 005e1c70 auto */
-#define avi_active_window (*(iptr *)((u8 *)&g.d_00638dd4))
 void __cdecl avi_update_current_frame(void)
 
 {
   avi_update_frame(avi_active_window);
   return;
 }
-#undef avi_active_window
 
 /* 005e1c8e auto */
-#define avi_active_window (*(iptr *)((u8 *)&g.d_00638dd4))
-#define avi_audio_stream (*(i32 *)((u8 *)&g.d_00638dc8))
-#define avi_decompressor (*(int *)((u8 *)&g.d_00638db0))
-#define avi_file (*(i32 *)((u8 *)&g.d_00638dc0))
-#define avi_file_loaded (*(i32 *)((u8 *)&g.d_00638dcc))
-#define avi_frame_buffer (*(LPVOID *)((u8 *)&g.d_00638da8))
-#define avi_frame_buffer_size (*(int *)((u8 *)&g.d_00638dac))
-#define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
-#define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
-#define avi_playing (*(i32 *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define avi_view_rect_x (*(i32 *)((u8 *)&g.d_006e50c8))
-#define avi_view_rect_y (*(i32 *)((u8 *)&g.d_006e50cc))
-#define avi_update_tick_count_i32 (*(i32 *)((u8 *)&g.d_00638dec))
-#define avi_indeo_frame_opts_i32 (*(i32 *)((u8 *)&g.d_006e5028))
-#define avi_indeo_frame_fourcc_i32 (*(i32 *)((u8 *)&g.d_006e502c))
-#define avi_indeo_frame_version_i32 (*(i32 *)((u8 *)&g.d_006e5030))
-#define avi_indeo_frame_type_i32 (*(i32 *)((u8 *)&g.d_006e5034))
-#define avi_indeo_frame_environment_i32 (*(i32 *)((u8 *)&g.d_006e5038))
-#define avi_indeo_frame_flags_i32 (*(i32 *)((u8 *)&g.d_006e503c))
-#define avi_indeo_view_rect_ptr_i32 (*(i32 *)((u8 *)&g.d_006e5064))
-#define avi_indeo_seq_opts_i32 (*(i32 *)((u8 *)&g.d_006e5098))
-#define avi_indeo_seq_fourcc_i32 (*(i32 *)((u8 *)&g.d_006e509c))
-#define avi_indeo_seq_version_i32 (*(i32 *)((u8 *)&g.d_006e50a0))
-#define avi_indeo_seq_type_i32 (*(i32 *)((u8 *)&g.d_006e50a4))
-#define avi_indeo_seq_environment_i32 (*(i32 *)((u8 *)&g.d_006e50a8))
-#define avi_indeo_seq_flags_i32 (*(i32 *)((u8 *)&g.d_006e50ac))
-#define avi_indeo_seq_extra_i32 (*(i32 *)((u8 *)&g.d_006e50bc))
-#define avi_view_rect_width_i32 (*(i32 *)((u8 *)&g.d_006e50d0))
-#define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
-#define avi_frames_per_second_i32 (*(i32 *)((u8 *)&g.d_006e50d8))
-#define avi_indeo_frame_extra_i32 (*(i32 *)((u8 *)&g.d_006e50dc))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl avi_open_file(iptr player,i32 filename)
@@ -2639,39 +2425,39 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   i32 format_size;
   int result;
   
-  if (avi_vfw_initialized == 0) {
+  if (err_report_ctx_block.avi_vfw_initialized == 0) {
     AVIFileInit();
-    avi_vfw_initialized = 1;
+    err_report_ctx_block.avi_vfw_initialized = 1;
   }
   avi_active_window = player;
-  avi_indeo_seq_opts_i32 = 0x2c;
-  avi_indeo_seq_fourcc_i32 = 0x31345649;
-  avi_indeo_seq_environment_i32 = 2;
-  avi_indeo_seq_version_i32 = 0x10002;
-  avi_indeo_seq_type_i32 = 4;
-  avi_indeo_seq_flags_i32 = 0;
-  avi_indeo_seq_extra_i32 = 0;
-  avi_indeo_frame_opts_i32 = 0x70;
-  avi_indeo_frame_fourcc_i32 = 0x31345649;
-  avi_indeo_frame_environment_i32 = 2;
-  avi_indeo_frame_version_i32 = 0x10002;
-  avi_indeo_frame_type_i32 = 2;
-  avi_indeo_view_rect_ptr_i32 = &avi_view_rect_x;
-  avi_indeo_frame_flags_i32 = 0x80000008;
-  avi_view_rect_x = 0;
-  avi_view_rect_y = 0;
-  avi_view_rect_width_i32 = 0;
-  avi_view_rect_height_i32 = 0;
-  result = AVIFileOpenA(&avi_file,filename,0,0);
+  err_report_ctx_block.avi_indeo_seq_opts[0] = 0x2c;
+  err_report_ctx_block.avi_indeo_seq_fourcc_i32 = 0x31345649;
+  err_report_ctx_block.avi_indeo_seq_environment_i32 = 2;
+  err_report_ctx_block.avi_indeo_seq_version_i32 = 0x10002;
+  err_report_ctx_block.avi_indeo_seq_type_i32 = 4;
+  err_report_ctx_block.g_video_flags_a = 0;
+  err_report_ctx_block.avi_indeo_seq_extra_i32 = 0;
+  err_report_ctx_block.avi_indeo_frame_opts[0] = 0x70;
+  err_report_ctx_block.avi_indeo_frame_fourcc_i32 = 0x31345649;
+  err_report_ctx_block.avi_indeo_frame_environment_i32 = 2;
+  err_report_ctx_block.avi_indeo_frame_version_i32 = 0x10002;
+  err_report_ctx_block.avi_indeo_frame_type_i32 = 2;
+  err_report_ctx_block.avi_indeo_view_rect_ptr_i32 = ((i32 *)&err_report_ctx_block.avi_view_rect_x);
+  err_report_ctx_block.g_video_flags_b = 0x80000008;
+  err_report_ctx_block.avi_view_rect_x[0] = 0;
+  err_report_ctx_block.avi_view_rect_y = 0;
+  err_report_ctx_block.avi_view_rect_width_i32 = 0;
+  err_report_ctx_block.avi_view_rect_height_i32 = 0;
+  result = AVIFileOpenA(((i32 *)&avi_file),filename,0,0);
   if (result == 0) {
-    result = AVIFileGetStream(avi_file,&avi_video_stream,0x73646976,0);
+    result = AVIFileGetStream(avi_file[0],((i32 *)&avi_video_stream),0x73646976,0);
     if (result == 0) {
       value = 0;
       if (*(int *)(player + 0x5a8) != 0) {
-        result = AVIFileGetStream(avi_file,&avi_audio_stream,0x73647561,0);
+        result = AVIFileGetStream(avi_file[0],((i32 *)&avi_audio_stream),0x73647561,0);
         if (result == 0) {
           *(i32 *)(player + 0x5b0) = 0;
-          attach_result = avi_audio_attach_stream((AviAudioAttachView *)(player + 0x11c),avi_audio_stream);
+          attach_result = avi_audio_attach_stream((AviAudioAttachView *)(player + 0x11c),avi_audio_stream[0]);
           value = result;
           if (attach_result == 0) {
             *(i32 *)(player + 0x5a8) = 1;
@@ -2687,19 +2473,19 @@ int __cdecl avi_open_file(iptr player,i32 filename)
       }
       result = value;
       format_size = 0x28;
-      AVIStreamReadFormat(avi_video_stream,1,player + 0x5c0,&format_size);
-      AVIStreamInfoA(avi_video_stream,&stream_info,0x8c);
+      AVIStreamReadFormat(avi_video_stream[0],1,player + 0x5c0,&format_size);
+      AVIStreamInfoA(avi_video_stream[0],&stream_info,0x8c);
       *(SIZE_T *)(player + 0x5d4) = stream_info.dwSuggestedBufferSize;
-      avi_frames_per_second_i32 = stream_info.dwRate / stream_info.dwScale;
+      err_report_ctx_block.avi_frames_per_second_i32 = stream_info.dwRate / stream_info.dwScale;
       avi_decompressor = ICLocate(0x63646976,stream_info.fccHandler,player + 0x5c0,0,2);
       if (avi_decompressor == 0) {
         avi_close(player);
         result = 0;
       }
       else {
-        start_frame = AVIStreamStart(avi_video_stream);
+        start_frame = AVIStreamStart(avi_video_stream[0]);
         *(i32 *)(player + 0xa10) = start_frame;
-        value = AVIStreamLength(avi_video_stream);
+        value = AVIStreamLength(avi_video_stream[0]);
         *(int *)(player + 0xa14) = *(int *)(player + 0xa10) + value - 1;
         *(i32 *)(player + 0xa18) = *(i32 *)(player + 0xa10);
         crt_memcpy(player + 0x5e8,player + 0x5c0,0x28);
@@ -2765,8 +2551,8 @@ int __cdecl avi_open_file(iptr player,i32 filename)
               value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
                       *(int *)(player + 0x5c8);
               avi_frame_buffer_size = (int)(value + (value >> 0x1f & 7U)) >> 3;
-              avi_update_tick_count_i32 = 0;
-              avi_indeo_frame_extra_i32 = 0;
+              avi_blit_union_left_block.g_video_frame_count = 0;
+              err_report_ctx_block.avi_indeo_frame_extra_i32 = 0;
               result = 0;
             }
             else {
@@ -2788,38 +2574,6 @@ int __cdecl avi_open_file(iptr player,i32 filename)
   }
   return result;
 }
-#undef avi_active_window
-#undef avi_audio_stream
-#undef avi_decompressor
-#undef avi_file
-#undef avi_file_loaded
-#undef avi_frame_buffer
-#undef avi_frame_buffer_size
-#undef avi_frame_height
-#undef avi_frame_width
-#undef avi_playing
-#undef avi_video_stream
-#undef avi_view_rect_x
-#undef avi_view_rect_y
-#undef avi_update_tick_count_i32
-#undef avi_indeo_frame_opts_i32
-#undef avi_indeo_frame_fourcc_i32
-#undef avi_indeo_frame_version_i32
-#undef avi_indeo_frame_type_i32
-#undef avi_indeo_frame_environment_i32
-#undef avi_indeo_frame_flags_i32
-#undef avi_indeo_view_rect_ptr_i32
-#undef avi_indeo_seq_opts_i32
-#undef avi_indeo_seq_fourcc_i32
-#undef avi_indeo_seq_version_i32
-#undef avi_indeo_seq_type_i32
-#undef avi_indeo_seq_environment_i32
-#undef avi_indeo_seq_flags_i32
-#undef avi_indeo_seq_extra_i32
-#undef avi_view_rect_width_i32
-#undef avi_view_rect_height_i32
-#undef avi_frames_per_second_i32
-#undef avi_indeo_frame_extra_i32
 
 /* 005e22ed: written by hand in src/game/fixups.c */
 
@@ -2880,10 +2634,6 @@ __stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 }
 
 /* 005e2675 auto */
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_needs_blit (*(i32 *)((u8 *)&g.d_00638de8))
-#define avi_idle_update_enabled (*(i32 *)((u8 *)&g.d_00637efc))
-#define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 void __cdecl avi_play_pause(iptr player)
 
 {
@@ -2893,28 +2643,15 @@ void __cdecl avi_play_pause(iptr player)
     }
     *(i32 *)(player + 0x5ac) = 1;
     if (avi_playing != 0) {
-      avi_idle_update_enabled = 0;
-      avi_frame_needs_blit = 0;
+      wnd_modal_stack_below_block.avi_idle_update_enabled = 0;
+      avi_blit_union_left_block.avi_frame_needs_blit = 0;
       avi_playing = 0;
     }
   }
   return;
 }
-#undef avi_file_loaded
-#undef avi_frame_needs_blit
-#undef avi_idle_update_enabled
-#undef avi_playing
 
 /* 005e2799 auto */
-#define avi_active_window (*(i32 *)((u8 *)&g.d_00638dd4))
-#define avi_audio_stream (*(int *)((u8 *)&g.d_00638dc8))
-#define avi_decompressor (*(int *)((u8 *)&g.d_00638db0))
-#define avi_file (*(int *)((u8 *)&g.d_00638dc0))
-#define avi_frame_buffer (*(LPCVOID *)((u8 *)&g.d_00638da8))
-#define avi_frame_buffer_size (*(i32 *)((u8 *)&g.d_00638dac))
-#define avi_frame_height (*(i32 *)((u8 *)&g.d_00638db8))
-#define avi_frame_width (*(i32 *)((u8 *)&g.d_00638db4))
-#define avi_video_stream (*(int *)((u8 *)&g.d_00638dc4))
 void __cdecl avi_close(iptr player)
 
 {
@@ -2926,28 +2663,28 @@ void __cdecl avi_close(iptr player)
       ICClose(avi_decompressor);
       avi_decompressor = 0;
     }
-    if (avi_audio_stream != 0) {
-      AVIStreamRelease(avi_audio_stream);
-      avi_audio_stream = 0;
+    if (avi_audio_stream[0] != 0) {
+      AVIStreamRelease(avi_audio_stream[0]);
+      avi_audio_stream[0] = 0;
     }
-    if (avi_video_stream != 0) {
-      AVIStreamRelease(avi_video_stream);
-      avi_video_stream = 0;
+    if (avi_video_stream[0] != 0) {
+      AVIStreamRelease(avi_video_stream[0]);
+      avi_video_stream[0] = 0;
     }
-    if (avi_file != 0) {
-      AVIFileRelease(avi_file);
-      avi_file = 0;
+    if (avi_file[0] != 0) {
+      AVIFileRelease(avi_file[0]);
+      avi_file[0] = 0;
     }
-    if (avi_vfw_initialized != 0) {
+    if (err_report_ctx_block.avi_vfw_initialized != 0) {
       AVIFileExit();
-      avi_vfw_initialized = 0;
+      err_report_ctx_block.avi_vfw_initialized = 0;
     }
-    if (avi_frame_buffer != (LPCVOID)0x0) {
-      mem_handle = GlobalHandle(avi_frame_buffer);
+    if ((*(LPCVOID *)&avi_frame_buffer) != (LPCVOID)0x0) {
+      mem_handle = GlobalHandle((*(LPCVOID *)&avi_frame_buffer));
       GlobalUnlock(mem_handle);
-      mem_handle = GlobalHandle(avi_frame_buffer);
+      mem_handle = GlobalHandle((*(LPCVOID *)&avi_frame_buffer));
       GlobalFree(mem_handle);
-      avi_frame_buffer = (LPCVOID)0x0;
+      (*(LPCVOID *)&avi_frame_buffer) = (LPCVOID)0x0;
     }
     avi_frame_buffer_size = 0;
     avi_frame_width = 0;
@@ -2956,20 +2693,8 @@ void __cdecl avi_close(iptr player)
   }
   return;
 }
-#undef avi_active_window
-#undef avi_audio_stream
-#undef avi_decompressor
-#undef avi_file
-#undef avi_frame_buffer
-#undef avi_frame_buffer_size
-#undef avi_frame_height
-#undef avi_frame_width
-#undef avi_video_stream
 
 /* 005e28cd auto */
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
 void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 
 {
@@ -2980,7 +2705,7 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
     if (avi_playing != 0) {
       avi_play_pause(player);
     }
-    key_frame = AVIStreamFindSample(avi_video_stream,frame_index,0x14);
+    key_frame = AVIStreamFindSample(avi_video_stream[0],frame_index,0x14);
     *(i32 *)(player + 0xa18) = key_frame;
     while( true ) {
       if ((int)frame_index < 0) {
@@ -2999,19 +2724,8 @@ void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
   }
   return;
 }
-#undef avi_file_loaded
-#undef avi_playing
-#undef avi_video_stream
 
 /* 005e2997 auto */
-#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_buffer (*(i32 *)((u8 *)&g.d_00638da8))
-#define avi_frame_buffer_size (*(i32 *)((u8 *)&g.d_00638dac))
-#define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
-#define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
-#define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
 int __cdecl avi_decode_frame(iptr player,int decode_flags)
 
 {
@@ -3031,9 +2745,9 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
   }
   else {
     if ((*(int *)(player + 0x5a4) != 0) && (decode_flags == 0)) {
-      surface_blit((DibSurface *)(player + 0x558),player,(iptr)((u8 *)&g.d_00638dd8),(iptr)((u8 *)&g.d_00638dd8));
+      surface_blit((DibSurface *)(player + 0x558),player,(iptr)&avi_blit_union_left_block.avi_blit_union_left,(iptr)&avi_blit_union_left_block.avi_blit_union_left);
     }
-    result = AVIStreamRead(avi_video_stream,*(i32 *)(player + 0xa18),1,avi_frame_buffer,
+    result = AVIStreamRead(avi_video_stream[0],*(i32 *)(player + 0xa18),1,(*(i32 *)&avi_frame_buffer),
                             avi_frame_buffer_size,&bytes_read,0);
     if (result == 0) {
       *(i32 *)(player + 0x5d4) = bytes_read;
@@ -3043,7 +2757,7 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
         dst_dim_b = avi_frame_width;
         dst_dim_a = avi_frame_height;
         dst_bits = surface_get_bits((DibSurface *)player);
-        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
       }
       else {
@@ -3054,14 +2768,14 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
         y_dst = 0;
         x_dst = 0;
         dst_bits = surface_get_bits((DibSurface *)player);
-        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,(*(i32 *)&avi_frame_buffer),0,0,avi_frame_width,
                                avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
         *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) >> 1;
         *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) >> 1;
       }
       if ((result != 0) && (result != 1)) {
-        wsprintfA(message,s_ICDecompressEx_returned__ld_00638df0,result);
-        MessageBoxA((HWND)0x0,message,s_Get_Frame_00638e0c,0);
+        wsprintfA(message,str_icdecompressex_returned_ld,result);
+        MessageBoxA((HWND)0x0,message,str_get_frame,0);
       }
       if ((*(int *)(player + 0xa20) != 0) &&
          (*(int *)(player + 0xa20) == *(int *)(player + 0xa18))) {
@@ -3090,14 +2804,6 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
   }
   return result;
 }
-#undef avi_decompressor
-#undef avi_file_loaded
-#undef avi_frame_buffer
-#undef avi_frame_buffer_size
-#undef avi_frame_height
-#undef avi_frame_width
-#undef avi_playing
-#undef avi_video_stream
 
 /* 005e2c5a auto */
 i32
@@ -3128,16 +2834,6 @@ __stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
 }
 
 /* 005e2cd1 auto */
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_needs_blit (*(uint *)((u8 *)&g.d_00638de8))
-#define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define avi_view_rect_x (*(int *)((u8 *)&g.d_006e50c8))
-#define avi_view_rect_y (*(int *)((u8 *)&g.d_006e50cc))
-#define avi_play_start_time_i32 (*(i32 *)((u8 *)&g.d_00638dbc))
-#define avi_update_tick_count_i32 (*(i32 *)((u8 *)&g.d_00638dec))
-#define avi_view_rect_width_i32 (*(i32 *)((u8 *)&g.d_006e50d0))
-#define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl avi_update_frame(iptr player)
@@ -3159,7 +2855,7 @@ void __cdecl avi_update_frame(iptr player)
   if (avi_playing != 0) {
     if (*(int *)(player + 0x5a8) == 0) {
       now = timeGetTime();
-      sample = AVIStreamTimeToSample(avi_video_stream,now - avi_play_start_time_i32);
+      sample = AVIStreamTimeToSample(avi_video_stream[0],now - g_video_start_time);
       target_frame = *(int *)(player + 0xa10) + sample;
       if (target_frame < *(uint *)(player + 0xa18)) {
         return;
@@ -3188,29 +2884,29 @@ void __cdecl avi_update_frame(iptr player)
         return;
       }
       audio_pos_ms = avi_audio_get_position_ms((void *)(player + 0x11c));
-      sample = AVIStreamTimeToSample(avi_video_stream,audio_pos_ms);
+      sample = AVIStreamTimeToSample(avi_video_stream[0],audio_pos_ms);
       target_frame = *(int *)(player + 0xa10) + sample;
       if ((*(int *)(player + 0x5ac) == 0) || (target_frame < *(uint *)(player + 0xa18))) {
         snd_avi_stream_feed(0x40);
-        avi_update_tick_count_i32++;
+        avi_blit_union_left_block.g_video_frame_count++;
         return;
       }
     }
-    if (avi_frame_needs_blit != 0) {
+    if ((*(uint *)&avi_blit_union_left_block.avi_frame_needs_blit) != 0) {
       if (*(int *)(player + 0x5a4) == 0) {
         wnd_blit_surface((DibSurface *)player);
       }
       else {
-        dirty_rect.left = avi_view_rect_x;
-        dirty_rect.top = avi_view_rect_y;
-        dirty_rect.right = avi_view_rect_x + avi_view_rect_width_i32;
-        dirty_rect.bottom = avi_view_rect_y + avi_view_rect_height_i32;
-        UnionRect(&dirty_rect,&dirty_rect,(RECT *)&avi_blit_union_left);
+        dirty_rect.left = err_report_ctx_block.avi_view_rect_x[0];
+        dirty_rect.top = err_report_ctx_block.avi_view_rect_y;
+        dirty_rect.right = err_report_ctx_block.avi_view_rect_x[0] + err_report_ctx_block.avi_view_rect_width_i32;
+        dirty_rect.bottom = err_report_ctx_block.avi_view_rect_y + err_report_ctx_block.avi_view_rect_height_i32;
+        UnionRect(&dirty_rect,&dirty_rect,(RECT *)((i32 *)&avi_blit_union_left_block.avi_blit_union_left));
         wnd_blit_surface_rect((DibSurface *)player,(iptr)&dirty_rect);
-        avi_blit_union_left = dirty_rect.left;
-        avi_blit_union_top = dirty_rect.top;
-        avi_blit_union_right = dirty_rect.right;
-        avi_blit_union_bottom = dirty_rect.bottom;
+        avi_blit_union_left_block.avi_blit_union_left[0] = dirty_rect.left;
+        avi_blit_union_left_block.avi_blit_union_top = dirty_rect.top;
+        avi_blit_union_left_block.avi_blit_union_right = dirty_rect.right;
+        avi_blit_union_left_block.avi_blit_union_bottom = dirty_rect.bottom;
       }
     }
     if (*(uint *)(player + 0xa18) < target_frame) {
@@ -3218,7 +2914,7 @@ void __cdecl avi_update_frame(iptr player)
       do {
         sample = key_frame;
         key_frame++;
-        key_frame = AVIStreamFindSample(avi_video_stream,key_frame,0x11);
+        key_frame = AVIStreamFindSample(avi_video_stream[0],key_frame,0x11);
         if ((int)target_frame <= key_frame) break;
       } while (key_frame != -1);
       if (*(int *)(player + 0xa18) == sample) {
@@ -3242,26 +2938,14 @@ void __cdecl avi_update_frame(iptr player)
   }
   if ((avi_playing != 0) && (*(int *)(player + 0x5a8) != 0)) {
     snd_avi_stream_feed(0x40);
-    avi_update_tick_count_i32++;
+    avi_blit_union_left_block.g_video_frame_count++;
   }
   sample = avi_decode_frame(player,0);
-  avi_frame_needs_blit = (uint)(sample == 0);
+  (*(uint *)&avi_blit_union_left_block.avi_frame_needs_blit) = (uint)(sample == 0);
   return;
 }
-#undef avi_file_loaded
-#undef avi_frame_needs_blit
-#undef avi_playing
-#undef avi_video_stream
-#undef avi_view_rect_x
-#undef avi_view_rect_y
-#undef avi_play_start_time_i32
-#undef avi_update_tick_count_i32
-#undef avi_view_rect_width_i32
-#undef avi_view_rect_height_i32
 
 /* 005e30a1 auto */
-#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 
 {
@@ -3299,16 +2983,8 @@ void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
   }
   return;
 }
-#undef avi_decompressor
-#undef avi_file_loaded
 
 /* 005e32b2 auto */
-#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
-#define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
-#define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
-#define avi_indeo_frame_flags_i32 (*(i32 *)((u8 *)&g.d_006e503c))
-#define avi_indeo_seq_flags_i32 (*(i32 *)((u8 *)&g.d_006e50ac))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl avi_restart_decompress(iptr player,int transparent)
@@ -3324,14 +3000,14 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
   if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
     if (transparent == 0) {
-      avi_indeo_seq_flags_i32 = 0;
+      err_report_ctx_block.g_video_flags_a = 0;
     }
     else {
-      avi_indeo_seq_flags_i32 = 0x80000004;
+      err_report_ctx_block.g_video_flags_a = 0x80000004;
     }
-    avi_indeo_frame_flags_i32 = 0x80000008;
-    ICSendMessage(avi_decompressor,0x5001,&avi_indeo_seq_opts,0x2c);
-    ICSendMessage(avi_decompressor,0x5001,&avi_indeo_frame_opts,0x70);
+    err_report_ctx_block.g_video_flags_b = 0x80000008;
+    ICSendMessage(avi_decompressor,0x5001,((i8 *)&err_report_ctx_block.avi_indeo_seq_opts),0x2c);
+    ICSendMessage(avi_decompressor,0x5001,((i8 *)&err_report_ctx_block.avi_indeo_frame_opts),0x70);
     if (*(int *)(player + 0x5a0) == 0) {
       result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
                              player + 0x5e8,0,0,0,avi_frame_width,avi_frame_height);
@@ -3376,12 +3052,6 @@ void __cdecl avi_restart_decompress(iptr player,int transparent)
   }
   return;
 }
-#undef avi_decompressor
-#undef avi_file_loaded
-#undef avi_frame_height
-#undef avi_frame_width
-#undef avi_indeo_frame_flags_i32
-#undef avi_indeo_seq_flags_i32
 
 /* 005e3550 auto */
 void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *this)
@@ -3404,7 +3074,6 @@ void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this)
 }
 
 /* 005ec317 auto */
-#define wnd_active_child (*(WndOnMciDoneView * *)((u8 *)&g.d_00637ea4))
 i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 
 {
@@ -3436,7 +3105,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
     if (msg != 0x10) {
       switch(msg) {
       case 3:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_move
                   ((WndOnMoveView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
@@ -3445,7 +3114,7 @@ i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
         goto switchD_005ecda6_caseD_4;
       case 5:
 switchD_005ecda6_caseD_5:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         BVar5 = IsIconic(hwnd);
         if (BVar5 == 0) {
           wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
@@ -3456,12 +3125,12 @@ switchD_005ecda6_caseD_5:
       case 6:
         goto switchD_005ecda6_caseD_6;
       case 7:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_setfocus((WndOnSetFocusView *)(wnd2->handlers));
         return 0;
       }
     }
-    wnd_active_child = wnd2;
+    (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
     value = wnd_call_close((WndOnCloseView *)(wnd2->handlers));
     if (value != 0) {
       result = wnd_base_wndproc(hwnd,0x10,wparam,lparam);
@@ -3471,7 +3140,7 @@ switchD_005ecda6_caseD_5:
   else {
     if (msg < 0x45) {
       if (msg == 0x44) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_msg44((WndOnMsg44View *)(wnd2->handlers),lparam & 0xffff);
         return 1;
       }
@@ -3495,11 +3164,11 @@ switchD_005ecda6_caseD_4:
     }
     if (msg < 0x112) {
       if (msg == 0x111) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         return 0;
       }
       if (msg == 0x100) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
         wnd_call_keydown_pre((WndOnKeyDownPreView *)(wnd2->handlers),result);
         result = input_map_vkey(wparam);
@@ -3507,13 +3176,13 @@ switchD_005ecda6_caseD_4:
         return 0;
       }
       if (msg == 0x101) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         result = input_map_vkey(wparam);
         wnd_call_keyup((WndOnKeyUpView *)(wnd2->handlers),result);
         return 0;
       }
       if (msg == 0x102) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_char((WndOnCharView *)(wnd2->handlers),wparam & 0xff);
         return 0;
       }
@@ -3521,18 +3190,18 @@ switchD_005ecda6_caseD_4:
     }
     if (msg < 0x201) {
       if (msg == 0x200) {
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_mousemove
                   ((WndOnMouseMoveView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       if (msg == 0x112) {
         if (wparam == 0xf020) {
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_minimize((WndOnMinimizeView *)(wnd2->handlers));
         }
         else {
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           if (wparam == 0xf120) {
             wnd_call_restore((WndOnRestoreView *)(wnd2->handlers));
           }
@@ -3548,7 +3217,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2--;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->hscroll_pos) = scroll_pos2;
           wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3556,7 +3225,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2++;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->hscroll_pos) = scroll_pos2;
           wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3565,7 +3234,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2 -= value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->hscroll_pos) = scroll_pos2;
           wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3574,20 +3243,20 @@ switchD_005ecda6_caseD_4:
           scroll_pos2 += value;
           SetScrollPos(hwnd,0,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,0);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->hscroll_pos) = scroll_pos2;
           wnd_call_hscroll((WndOnHScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,0,scroll_pos2,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->hscroll_pos) = scroll_pos2;
           wnd_call_hscroll
                     ((WndOnHScrollView *)(wnd2->handlers),*(i32 *)(wnd2->hscroll_pos));
           return 0;
         case 5:
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_hscroll_track((WndOnHScrollTrackView *)(wnd2->handlers),(int)thumb_pos);
           return 0;
         default:
@@ -3601,7 +3270,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2--;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->vscroll_pos) = scroll_pos2;
           wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3609,7 +3278,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2++;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->vscroll_pos) = scroll_pos2;
           wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3618,7 +3287,7 @@ switchD_005ecda6_caseD_4:
           scroll_pos2 -= value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->vscroll_pos) = scroll_pos2;
           wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
@@ -3627,20 +3296,20 @@ switchD_005ecda6_caseD_4:
           scroll_pos2 += value;
           SetScrollPos(hwnd,1,scroll_pos2,1);
           scroll_pos2 = GetScrollPos(hwnd,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->vscroll_pos) = scroll_pos2;
           wnd_call_vscroll((WndOnVScrollView *)(wnd2->handlers),scroll_pos2);
           return 0;
         case 4:
           scroll_pos2 = (int)thumb_pos;
           SetScrollPos(hwnd,1,scroll_pos2,1);
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           *(int *)(wnd2->vscroll_pos) = scroll_pos2;
           wnd_call_vscroll
                     ((WndOnVScrollView *)(wnd2->handlers),*(i32 *)(wnd2->vscroll_pos));
           return 0;
         case 5:
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_vscroll_track((WndOnVScrollTrackView *)(wnd2->handlers),(int)thumb_pos);
           return 0;
         default:
@@ -3652,7 +3321,7 @@ switchD_005ecda6_caseD_4:
     if (msg < 0x211) {
       if (msg == 0x210) {
         if (wparam == 0x201) {
-          wnd_active_child = wnd2;
+          (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
           wnd_call_lbuttondown
                     ((WndOnLButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
           return 0;
@@ -3660,7 +3329,7 @@ switchD_005ecda6_caseD_4:
         if (wparam != 0x204) {
           return 0;
         }
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_rbuttondown
                   ((WndOnRButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
@@ -3669,7 +3338,7 @@ switchD_005ecda6_caseD_4:
       case 0x201:
         pCVar4 = (WndBase *)GetWindowLongA(hwnd,0);
         parent_window = wnd_get_window(pCVar4);
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
           SetFocus(*(HWND *)(parent_window + 4));
           BringWindowToTop(hwnd);
@@ -3682,7 +3351,7 @@ switchD_005ecda6_caseD_4:
                   ((WndOnLButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x202:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         if (*(int *)(wnd2->lbutton_held) == 1) {
           wnd2->wnd_header_area[0xa4] = '\0';
           wnd2->wnd_header_area[0xa5] = '\0';
@@ -3695,7 +3364,7 @@ switchD_005ecda6_caseD_4:
                   ((WndOnLButtonUpRawView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x203:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd_call_dblclick
                   ((WndOnDblClickView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
@@ -3706,7 +3375,7 @@ switchD_005ecda6_caseD_4:
           SetFocus(*(HWND *)(parent_window + 4));
           BringWindowToTop(hwnd);
         }
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         wnd2->wnd_header_area[0xa8] = 1;
         wnd2->wnd_header_area[0xa9] = '\0';
         wnd2->wnd_header_area[0xaa] = '\0';
@@ -3715,7 +3384,7 @@ switchD_005ecda6_caseD_4:
                   ((WndOnRButtonDownView *)(wnd2->handlers),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x205:
-        wnd_active_child = wnd2;
+        (*(WndOnMciDoneView * *)&wnd_active_child) = wnd2;
         if (*(int *)(wnd2->rbutton_held) == 1) {
           wnd2->wnd_header_area[0xa8] = '\0';
           wnd2->wnd_header_area[0xa9] = '\0';
@@ -3751,7 +3420,6 @@ switchD_005ecda6_caseD_6:
   }
   return 0;
 }
-#undef wnd_active_child
 
 /* 005eeca0 auto */
 AviAudio * __thiscall avi_audio_ctor(AviAudio *this)
