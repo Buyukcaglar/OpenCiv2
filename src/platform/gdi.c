@@ -30,7 +30,9 @@ Bitmap *bmp_create(int w, int h, int bpp, int bottom_up)
     b->bpp = bpp;
     b->stride = ((b->w * bpp + 31) / 32) * 4;
     b->bottom_up = bottom_up;
-    b->bits = calloc((size_t)b->stride * (size_t)b->h, 1);
+    /* Windows backs a DIB section with whole pages; the game's GIF decoder
+       relies on that and writes one byte past the last row. */
+    b->bits = calloc((size_t)b->stride * (size_t)b->h + 4, 1);
     b->owns_bits = 1;
     if (bpp == 1) {
         b->ncolors = 2;
