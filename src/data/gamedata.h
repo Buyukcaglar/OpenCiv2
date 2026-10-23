@@ -8674,113 +8674,33 @@ typedef struct GameData {
 extern GameData g;
 
 extern Advance advances[100];
-#ifdef CIV2_NATIVE
 #define terrain_types (*(Terrain (*)[])&g.n_terrain_types)
-#else
-extern Terrain terrain_types[33];
-#endif
-#ifdef CIV2_NATIVE
 #define start_x (*(i16 (*)[])&g.n_start_x)
-#else
-extern i16 start_x[21];
-#endif
-#ifdef CIV2_NATIVE
 #define start_y (*(i16 (*)[])&g.n_start_y)
-#else
-extern i16 start_y[21];
-#endif
 extern Tile* map_tiles;
-#ifdef CIV2_NATIVE
 #define map_known_handles (*(void* (*)[])&g.n_map_known_handles)
-#else
-extern void* map_known_handles[8];
-#endif
-#ifdef CIV2_NATIVE
 #define map_known (*(u8* (*)[])&g.n_map_known)
-#else
-extern u8* map_known[8];
-#endif
-#ifdef CIV2_NATIVE
 #define map_coarse (*(u8* (*)[])&g.n_map_coarse)
-#else
-extern u8* map_coarse[4];
-#endif
 extern u8 map_allocated;
-#ifdef CIV2_NATIVE
 #define commodity_names (*(i32 (*)[])&g.n_commodity_names)
-#else
-extern i32 commodity_names[16];
-#endif
-#ifdef CIV2_NATIVE
 #define unit_types (*(UnitType (*)[])&g.n_unit_types)
-#else
-extern UnitType unit_types[62];
-#endif
-#ifdef CIV2_NATIVE
 #define government_names (*(i32 (*)[])&g.n_government_names)
-#else
-extern i32 government_names[7];
-#endif
-#ifdef CIV2_NATIVE
 #define attitude_names (*(i32 (*)[])&g.n_attitude_names)
-#else
-extern i32 attitude_names[9];
-#endif
-#ifdef CIV2_NATIVE
 #define difficulty_names (*(i32 (*)[])&g.n_difficulty_names)
-#else
-extern i32 difficulty_names[6];
-#endif
-#ifdef CIV2_NATIVE
 #define wonder_expires (*(i8 (*)[])&g.n_wonder_expires)
-#else
-extern i8 wonder_expires[28];
-#endif
 extern Cosmic cosmic;
-#ifdef CIV2_NATIVE
 #define civ_names (*(CivNames (*)[])&g.n_civ_names)
-#else
-extern CivNames civ_names[8];
-#endif
 extern Improvement improvements[67];
-#ifdef CIV2_NATIVE
 #define civs (*(Civ (*)[])&g.n_civs)
-#else
-extern Civ civs[8];
-#endif
-#ifdef CIV2_NATIVE
 #define cities (*(City (*)[])&g.n_cities)
-#else
-extern City cities[256];
-#endif
-#ifdef CIV2_NATIVE
 #define government_titles (*(GovTitle (*)[])&g.n_government_titles)
-#else
-extern GovTitle government_titles[7];
-#endif
-#ifdef CIV2_NATIVE
 #define order_names (*(OrderName (*)[])&g.n_order_names)
-#else
-extern OrderName order_names[13];
-#endif
-#ifdef CIV2_NATIVE
 #define leaders (*(Leader (*)[])&g.n_leaders)
-#else
-extern Leader leaders[21];
-#endif
 extern GameState game;
-#ifdef CIV2_NATIVE
 #define units (*(Unit (*)[])&g.n_units)
-#else
-extern Unit units[2048 + 1];
-#endif
 extern MapHeader map;
 extern void* map_tiles_handle;
-#ifdef CIV2_NATIVE
 #define map_coarse_handles (*(void* (*)[])&g.n_map_coarse_handles)
-#else
-extern void* map_coarse_handles[4];
-#endif
 extern Tile map_offmap_tile;
 
 #ifndef CIV2_PTR_INTS

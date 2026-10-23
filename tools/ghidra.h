@@ -38,15 +38,10 @@ typedef unsigned long ulong;
 typedef long long longlong;
 typedef unsigned long long ulonglong;
 typedef unsigned long long qword;
-#ifdef CIV2_NATIVE
 /* x87 80-bit temporaries: the original ran the FPU at 53-bit precision. */
 typedef double float10;
 /* Calls through function pointers may return pointers. */
 typedef iptr code();
-#else
-typedef long double float10;
-typedef int code();
-#endif
 typedef unsigned char ghidra_bool;
 typedef void *pointer;
 typedef void *pointer32;
@@ -125,13 +120,8 @@ typedef unsigned int dword;
 static inline code *swi(int n) { (void)n; __builtin_trap(); return (code *)0; }
 
 /* The MSVC runtime's getc() and feof() macros (they read FILE internals). */
-#ifdef CIV2_NATIVE
 #define CRT_GETC(f) getc(f)
 #define CRT_FEOF(f) (feof(f) ? 0x10 : 0)
-#else
-#define CRT_GETC(f) (--(f)->_cnt >= 0 ? 0xff & *(f)->_ptr++ : __filbuf(f))
-#define CRT_FEOF(f) ((f)->_flag & 0x10)
-#endif
 
 /* Emulated stack frames (see emulate_frame in tools/gen_c.py) keep each
  * local at its original offset.  Native builds double the offsets: every
@@ -143,17 +133,5 @@ static inline code *swi(int n) { (void)n; __builtin_trap(); return (code *)0; }
 #define FRAME_OFF(n) (n)
 #endif
 
-/* An address of the original image written as a number (data, or a function
- * passed as a callback): the number itself in the 32-bit build, where the
- * data is at its original address; the symbol in native builds. */
-#ifdef CIV2_NATIVE
-#define ADDR(orig, native) ((iptr)(native))
-#else
-#define ADDR(orig, native) (orig)
-#endif
-
-/* A global by its original address (hand-written code): an offset into the
- * game data struct `g`, whose 32-bit layout is the original one. */
-#define GLOBAL(type, addr) (*(type *)((unsigned char *)&g + ((addr) - 0x0061c000)))
 
 #endif

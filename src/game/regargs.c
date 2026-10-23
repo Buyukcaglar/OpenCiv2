@@ -15,11 +15,7 @@
 #include "game.h"
 
 /* CRT strrchr: __cdecl, caller cleans (protos.h wrongly says __thiscall). */
-#ifdef CIV2_NATIVE
 #define crt_strrchr _strrchr
-#else
-#define crt_strrchr ((char *(__cdecl *)(const char *, int))0x005f3c10)
-#endif
 
 #define g_city_improvements(city) (&(*(byte *)((u8 *)&cities + 52)))[(city) * 0x58]
 #define g_ddraw (*(int * *)((u8 *)&g.d_006394c0))       /* IDirectDraw * */
@@ -47,25 +43,11 @@ int __cdecl regargs_0043d289(int eax_in, int city, int impr, int on)
     return city * 0xb;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) int __cdecl city_set_improvement(int city, int impr, int on)
-{
-    __asm__ volatile(
-        "pushl 12(%esp)\n\t"
-        "pushl 12(%esp)\n\t"
-        "pushl 12(%esp)\n\t"
-        "pushl %eax\n\t"
-        "call _regargs_0043d289\n\t"
-        "addl $16, %esp\n\t"
-        "ret");
-}
-#else
 int __cdecl city_set_improvement(int city, int impr, int on)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (int)regargs_0043d289(0, city, impr, on);
 }
-#endif
 
 /* ------------------------------------------------------------------------ */
 
@@ -82,23 +64,11 @@ uint __cdecl regargs_005ea578(uint eax_in, int *surface)
     return hr & 0xffffff00;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl ddsurf_iface_can_flip(int *surface)
-{
-    __asm__ volatile(
-        "pushl 4(%esp)\n\t"
-        "pushl %eax\n\t"
-        "call _regargs_005ea578\n\t"
-        "addl $8, %esp\n\t"
-        "ret");
-}
-#else
 uint __cdecl ddsurf_iface_can_flip(int *surface)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ea578(0, surface);
 }
-#endif
 
 /* 0x005ea677: IDirectDraw::GetVerticalBlankStatus; AL = in vertical blank
  * (0 on failure or without DirectDraw). */
@@ -115,22 +85,11 @@ uint __cdecl regargs_005ea677(uint eax_in)
     return (byte)in_vblank;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl ddraw_get_vblank_status(void)
-{
-    __asm__ volatile(
-        "pushl %eax\n\t"
-        "call _regargs_005ea677\n\t"
-        "addl $4, %esp\n\t"
-        "ret");
-}
-#else
 uint __cdecl ddraw_get_vblank_status(void)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ea677(0);
 }
-#endif
 
 /* 0x005ef58e: IDirectDraw::RestoreDisplayMode; AL = succeeded. */
 uint __cdecl regargs_005ef58e(uint eax_in)
@@ -145,22 +104,11 @@ uint __cdecl regargs_005ef58e(uint eax_in)
     return 1;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) uint __cdecl ddraw_restore_display_mode(void)
-{
-    __asm__ volatile(
-        "pushl %eax\n\t"
-        "call _regargs_005ef58e\n\t"
-        "addl $4, %esp\n\t"
-        "ret");
-}
-#else
 uint __cdecl ddraw_restore_display_mode(void)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (uint)regargs_005ef58e(0);
 }
-#endif
 
 /* ------------------------------------------------------------------------ */
 
@@ -201,30 +149,12 @@ int __cdecl regargs_005edc6c(uint al_in, byte *dst, byte *src, uint count,
     return nread;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
-                                                  i32 src_step, i32 dst_step)
-{
-    __asm__ volatile(
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "movzbl %al, %eax\n\t"
-        "pushl %eax\n\t"
-        "call _regargs_005edc6c\n\t"
-        "addl $24, %esp\n\t"
-        "ret");
-}
-#else
 short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
                                                   i32 src_step, i32 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (short)regargs_005edc6c(0, dst, src, count, src_step, dst_step);
 }
-#endif
 
 /* 0x005edcac: mix the samples into dst with signed saturation. */
 int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count,
@@ -261,30 +191,12 @@ int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count
     return nread;
 }
 
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-__attribute__((naked)) short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
-                                                  i32 src_step, i32 dst_step)
-{
-    __asm__ volatile(
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "pushl 20(%esp)\n\t"
-        "movzbl %al, %eax\n\t"
-        "pushl %eax\n\t"
-        "call _regargs_005edcac\n\t"
-        "addl $24, %esp\n\t"
-        "ret");
-}
-#else
 short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
                                                   i32 src_step, i32 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (short)regargs_005edcac(0, dst, src, count, src_step, dst_step);
 }
-#endif
 
 /* ------------------------------------------------------------------------ */
 

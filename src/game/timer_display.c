@@ -57,5 +57,5 @@ void __cdecl mp_turn_timer_tick(void)
     status_draw_timer_bar(percent, color);
     if (g_timer_event != 0)
         game_timer_destroy(g_timer_event);
-    g_timer_event = game_timer_create(((void *)ADDR(0x00402220, mp_turn_timer_tick)), 500, 1);
+    g_timer_event = game_timer_create(((void *)(iptr)mp_turn_timer_tick), 500, 1);
 }

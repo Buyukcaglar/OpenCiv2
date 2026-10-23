@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Drive one Civ2 build (original or reconstructed) through an input script.
+"""Drive the original Civ2 under Wine through an input script (the recordings
+the native builds are compared against).
 
 Default mode is deterministic replay: the script is executed inside the game
 process by the hook runtime (hook/replay.c) on a virtual clock, so the run
@@ -7,7 +8,7 @@ depends only on the seed and the script.  --xdotool drives the game from
 outside in wall-clock time instead (not reproducible over long runs).
 
 Runs inside the civ2-dev container.  Usage:
-    run.py --build orig|recon --seed N --script FILE --out DIR
+    run.py --build orig --seed N --script FILE --out DIR
 
 Script language (one command per line, '#' comments):
     wait MS             sleep for MS milliseconds
@@ -64,9 +65,6 @@ def prepare_game_dir(build, gamedir):
     # Hook runtime: proxy XDaemon.dll in front of the real one.
     os.rename(f'{gamedir}/XDaemon.dll', f'{gamedir}/XDaemon_real.dll')
     shutil.copy(f'{ROOT}/hook/XDaemon.dll', f'{gamedir}/XDaemon.dll')
-    if build == 'recon':
-        # Same file name as the original so module paths and titles match.
-        shutil.copy(f'{ROOT}/build/civ2_recon.exe', f'{gamedir}/civ2.exe')
     # Pre-seeded settings: skips the one-time "heralds" RAM question.
     shutil.copy(f'{ROOT}/harness/CIV2.DAT', f'{gamedir}/CIV2.DAT')
 
@@ -85,7 +83,7 @@ def seed_wine_ini():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--build', default='orig', choices=['orig', 'recon'])
+    ap.add_argument('--build', default='orig', choices=['orig'])
     ap.add_argument('--seed', default='1')
     ap.add_argument('--script', required=True)
     ap.add_argument('--out', required=True)
@@ -93,15 +91,12 @@ def main():
     ap.add_argument('--xdotool', action='store_true', help='external wall-clock input instead of replay')
     ap.add_argument('--timeout', type=int, default=900, help='replay mode: max seconds')
     ap.add_argument('--rand-stack', default='0', help='log this many callers per rand() call')
-    ap.add_argument('--recon-exe', help='use this file as the reconstructed civ2.exe')
     a = ap.parse_args()
 
     os.makedirs(a.out, exist_ok=True)
     gamedir = '/tmp/game'
     shutil.rmtree(gamedir, ignore_errors=True)
     prepare_game_dir(a.build, gamedir)
-    if a.recon_exe:
-        shutil.copy(a.recon_exe, f'{gamedir}/civ2.exe')
 
     # Leftovers from a previous run in the same container would stop Xvfb.
     subprocess.run(['wineserver', '-k'], capture_output=True)
@@ -113,7 +108,7 @@ def main():
     time.sleep(1.5)
     env = dict(os.environ, DISPLAY=DISPLAY, CIV2_SEED=str(a.seed),
                CIV2_HOOK_LOG='Z:' + os.path.abspath(f'{a.out}/hook.log'),
-               CIV2_RAND_LOG='Z:' + os.path.abspath(f'{a.out}/rand.log'), CIV2_HOOKS='all' if a.build == 'recon' else 'none',
+               CIV2_RAND_LOG='Z:' + os.path.abspath(f'{a.out}/rand.log'), CIV2_HOOKS='none',
                CIV2_RAND_STACK=a.rand_stack, CIV2_LOG_KEYS='1')
     if not os.path.exists('/wine/system.reg'):
         subprocess.run(['wineboot', '-i'], env=env, capture_output=True)

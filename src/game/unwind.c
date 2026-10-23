@@ -12,11 +12,7 @@
 static inline i32 seh_list_head(void)
 {
     i32 r;
-#if defined(__i386__) && !defined(CIV2_NATIVE)
-    __asm__ volatile ("movl %%fs:0, %0" : "=r"(r));
-#else
     r = 0;      /* no SEH chain outside 32-bit Windows */
-#endif
     return r;
 }
 

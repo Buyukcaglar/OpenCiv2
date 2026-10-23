@@ -70,7 +70,7 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < civilize_mod)) {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-          ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) != 0)) &&
+          ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) != 0)) &&
          (civs[civ].num_advances < civs[civ2].num_advances)) {
         for (continent = 1; continent < 0x3f; continent++) {
           if ((*(char *)&civs[civ].continent_cities[continent] != '\0') &&
@@ -747,7 +747,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
      ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
     for (city = 0; city < game.num_cities; city++) {
       if (((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
-         ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) & 0x20) != 0)) {
+         ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city].owner * 4) & 0x20) != 0)) {
         x2 = (int)cities[city].x;
         y2 = (int)cities[city].y;
         occupant = tile_unit_owner(x2,y2);
@@ -808,7 +808,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     city6 = civ_has_wonder(civ,wonder);
     if (city6 != 0) {
       group = wonder / 7;
-      counter = (char *)(group + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + civ * 0x594);
+      counter = (char *)(group + (iptr)((u8 *)&civs + 23) + civ * 0x594);
       *counter = *counter + 1;
     }
   }
@@ -875,7 +875,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     if (units[unit].id != 0) {
       if ((int)units[unit].owner == civ) {
         unit_type = (uptr)units[unit].type;
-        counter = (char *)(unit_type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+        counter = (char *)(unit_type + (iptr)((u8 *)&civs + 216) + civ * 0x594);
         *counter = *counter + 1;
         if ((char)unit_types[unit_type].attack < 'c') {
           if ((units[unit].orders == 1) || (units[unit].orders == 2)) {
@@ -913,14 +913,14 @@ void __cdecl ai_civ_turn_assess(uptr civ)
           if (((char)unit_types[unit_type].role < 5) &&
              (civs[civ].num_military_units = civs[civ].num_military_units + 1,
              -1 < continent)) {
-            mil_counter = (short *)(continent * 2 + ADDR(0x64c832, ((u8 *)&civs + 402)) + civ * 0x594);
+            mil_counter = (short *)(continent * 2 + (iptr)((u8 *)&civs + 402) + civ * 0x594);
             *mil_counter = *mil_counter + 1;
           }
           if (((unit_types[units[unit].type].role == 7) &&
               (units[unit].home_city != -1)) &&
              (cities[(byte)units[unit].home_city].flags =
                    cities[(byte)units[unit].home_city].flags | 0x1000, -1 < continent)) {
-            counter = (char *)(continent + ADDR(0x64c9b2, ((u8 *)&civs + 786)) + civ * 0x594);
+            counter = (char *)(continent + (iptr)((u8 *)&civs + 786) + civ * 0x594);
             *counter = *counter + 1;
           }
           if ((unit_types[unit_type].role == 5) && (units[unit].home_city != -1)) {
@@ -1014,14 +1014,14 @@ LAB_0053232b: ;
           civs[civ].total_city_size =
                (short)cities[city].size + civs[civ].total_city_size;
           if (-1 < cities[city].building) {
-            counter = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + civ * 0x594);
+            counter = (char *)(cities[city].building + (iptr)((u8 *)&civs + 340) + civ * 0x594);
             *counter = *counter + 1;
           }
           continent = tile_land_landmass(x2,y2);
           if (-1 < continent) {
             *(char *)&civs[civ].continent_city_size[continent] =
                  *(char *)&civs[civ].continent_city_size[continent] + cities[city].size;
-            counter = (char *)(continent + ADDR(0x64c932, ((u8 *)&civs + 658)) + civ * 0x594);
+            counter = (char *)(continent + (iptr)((u8 *)&civs + 658) + civ * 0x594);
             *counter = *counter + 1;
             if ((0 < continent) && (continent < 0x3f)) {
               land_city_count++;
@@ -1059,7 +1059,7 @@ LAB_0053232b: ;
   civs[civ].flags = civs[civ].flags & 0xfffd;
   for (civ2 = 1; (int)civ2 < 8; civ2++) {
     if ((civ != civ2) &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)) {
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0)) {
       civs[civ].flags = civs[civ].flags | 2;
     }
   }
@@ -1607,7 +1607,7 @@ i32 __cdecl ai_barbarian_unit_move(void)
                       mapviews_ensure_visible(x,y3,civ2);
                       map_redraw_tile_all_views(x,y3);
                     }
-                    dlg_game_txt_with_unit(ADDR(0x632528, ((u8 *)&g.d_00632528)),unit);
+                    dlg_game_txt_with_unit((iptr)((u8 *)&g.d_00632528),unit);
                   }
                   else if (2 < game.multiplayer) {
                     net_send_text_args(0x4e,*(i32 *)
@@ -1898,10 +1898,10 @@ LAB_005365f1:
                     city = city_at(x,y2);
                     text_set_string_arg(1,(iptr)&cities[city].name);
                     __chdir(&scenario_dir_path);
-                    value = text_open_section(ADDR(0x632544, ((u8 *)&g.d_00632544)),ADDR(0x632538, ((u8 *)&g.d_00632538)));
+                    value = text_open_section((iptr)((u8 *)&g.d_00632544),(iptr)((u8 *)&g.d_00632538));
                     if (value != 0) {
                       __chdir(&game_home_dir);
-                      value = text_open_section(ADDR(0x632558, ((u8 *)&g.d_00632558)),ADDR(0x63254c, ((u8 *)&g.d_0063254c)));
+                      value = text_open_section((iptr)((u8 *)&g.d_00632558),(iptr)((u8 *)&g.d_0063254c));
                       if (value != 0) goto LAB_0053692c;
                     }
                     __chdir(&game_home_dir);
@@ -1914,10 +1914,10 @@ LAB_005365f1:
                           line = line + 1) {
                         text_read_line(1);
                       }
-                      text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+                      text_set_string_arg(0,(iptr)((u8 *)&g.d_00679640));
                       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
                       if ((autoplay_active == 0) &&
-                         (value = dlg_game_txt_with_unit(ADDR(0x632560, ((u8 *)&g.d_00632560)),unit), value != 0)) {
+                         (value = dlg_game_txt_with_unit((iptr)((u8 *)&g.d_00632560),unit), value != 0)) {
                         civs[civ].gold -= ransom;
                         status_draw_info(1);
                         for (line = 0; line < 0x14; line++) {
@@ -2146,10 +2146,10 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
             unit_relocate(unit,x,y,1);
             units[unit].visibility = '\0';
             if (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0) {
-              if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + cities[city2].owner * 4) & 2) == 0) {
-                treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
+              if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + cities[city2].owner * 4) & 2) == 0) {
+                treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + cities[city2].owner * 4);
                 *treaty = *treaty | 0x20000;
-                treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
+                treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + cities[city2].owner * 4);
                 *treaty = *treaty & 0xffffffef;
                 diplo_set_treaty_flags(civ,(int)cities[city2].owner,0x10000);
               }
@@ -2360,7 +2360,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int mode,iptr out_flag
         return 8;
       }
       if ((((units[unit].id != 0) && (units[unit].owner != civ)) &&
-          ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + units[unit].owner * 4) & 0x20) != 0)) &&
+          ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + units[unit].owner * 4) & 0x20) != 0)) &&
          (unit_types[units[unit].type].domain != 1)) {
         value = (int)units[unit].x;
         y2 = (int)units[unit].y;
@@ -2550,7 +2550,7 @@ LAB_00537ec2:
           city_dist = map_distance(x3,y3,(int)cities[city].x,
                                         (int)cities[city].y);
           if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 0x10) == 0) {
-            if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) & 0x20) == 0) {
+            if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city].owner * 4) & 0x20) == 0) {
               city_dist = city_dist << 1;
             }
             if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 4) != 0)
@@ -2843,7 +2843,7 @@ i32 __cdecl ai_unit_choose_orders(void)
        ((attitude = civ_get_attitude(civ,adjacent_foreign_civ), 0x3c < attitude &&
         ((game.power_rank[civ] < game.power_rank[adjacent_foreign_civ] &&
          (roll = rand_range(0,3), roll == 0)))))) {
-      treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + adjacent_foreign_civ * 4);
+      treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + adjacent_foreign_civ * 4);
       *treaty = *treaty | 0x20;
     }
   }
@@ -3042,7 +3042,7 @@ LAB_00539cb3:
                                ) goto LAB_00539b29;
                             score = score / 2;
                           }
-                          if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) {
+                          if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
                             city7 = civ_get_attitude(civ,civ2);
                             score += city7;
                           }
@@ -3297,7 +3297,7 @@ LAB_00539b29: ;
                 for (city = 0; (int)city < (int)game.num_cities; city = city + 1
                     ) {
                   if ((((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
-                      ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) & 0x20) !=
+                      ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city].owner * 4) & 0x20) !=
                        0)) && (city7 = map_distance(x2,y3,
                                                            (int)cities[city].x,
                                                            (int)cities[city].y),
@@ -3608,7 +3608,7 @@ LAB_0053be12:
                                  (*(char *)&civs[civ].continent_flags[dest_landmass] == '\0')) {
                                 cand_score = cand_score -
                                            ((int)(uint)*(ushort *)
-                                                        (dest_landmass * 2 + ADDR(0x64c8b2, ((u8 *)&civs + 530)) + civ * 0x594) >> 2
+                                                        (dest_landmass * 2 + (iptr)((u8 *)&civs + 530) + civ * 0x594) >> 2
                                            );
                               }
                               else {
@@ -3839,7 +3839,7 @@ LAB_0053c1e5: ;
                              (((10 < own_dist && (near_dist < 4)) &&
                               ((city7 == near_landmass &&
                                ((((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU))
-                                 != 0 && ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) +
+                                 != 0 && ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) +
                                                     cities[city4].owner * 4) & 0x20) != 0))))))))
                           {
                             needs_units = 1;
@@ -3997,7 +3997,7 @@ LAB_0053cdd1: ;
                           city = city + 1) {
                         if (((cities[city].id != 0) &&
                             (civ2 = (uptr)cities[city].owner, civ2 != civ)) &&
-                           (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0 &&
+                           (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0 &&
                             (city7 = tile_unit_owner((int)cities[city].x,
                                                       (int)cities[city].y), city7 < 0)))) {
                           tile_landmass((int)cities[city].x,(int)cities[city].y);
@@ -4013,7 +4013,7 @@ LAB_0053cdd1: ;
                             for (civ4 = 1; civ4 < 8; civ4++) {
                               if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0)
                                   && ((*(byte *)&civs[civ].treaties[civ4] & 8) != 0
-                                     )) && ((*(byte *)(civ4 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4)
+                                     )) && ((*(byte *)(civ4 * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4)
                                             & 0x20) != 0)) {
                                 cand_score = cand_score / 2;
                                 break;
@@ -4067,14 +4067,14 @@ LAB_0053cdd1: ;
                                                             (int)cities[city].x,
                                                             (int)cities[city].y);
                               if ((0 < (int)ally_civ) &&
-                                 ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + ally_civ * 0x594) & 0x20) !=
+                                 ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + ally_civ * 0x594) & 0x20) !=
                                   0)) {
                                 cand_score = cand_score / 2;
                               }
-                              if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 8) != 0) {
+                              if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 8) != 0) {
                                 cand_score = cand_score / 2;
                               }
-                              if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)
+                              if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0)
                                  && (city7 = tile_unit_owner((int)cities[city].x,
                                                               (int)cities[city].y), city7 < 0)
                                  ) {
@@ -4139,7 +4139,7 @@ LAB_0053cdd1: ;
                             if ((int)cities[city].owner == civ) {
                               cand_score = cand_score / 2;
                             }
-                            if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) &
+                            if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city].owner * 4) &
                                 0x20) != 0) {
                               cand_score -= cand_score / 3;
                             }
@@ -4269,7 +4269,7 @@ LAB_0053cdd1: ;
                 city7 = unit_max_moves(unit);
                 if (((((city7 <= (int)(uint)cosmic.road_move_mult) && (-1 < (int)city3)) &&
                      (((uint)game.human_players & 1 << (cities[city3].owner & 0x1fU)) != 0)) &&
-                    (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city3].owner * 4) & 0x20) != 0
+                    (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city3].owner * 4) & 0x20) != 0
                      && (unit_types[units[unit].type].domain == '\0')))) &&
                    (unit_types[units[unit].type].attack != '\0')) {
                   city7 = tile_at(x2,y3);
@@ -5469,7 +5469,7 @@ LAB_00541001:
     if (((in_enemy_zoc != 0) && (city7 = unit_stack_count_role(unit,1), city7 == 1)) &&
        ((((int)city4 < 0 ||
          (((city4 == city2 || (4 < near_dist)) ||
-          ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city4].owner * 4) & 0x20) != 0)))) ||
+          ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + cities[city4].owner * 4) & 0x20) != 0)))) ||
         (6 < (int)((uint)civs[cities[city4].owner].reputation -
                   (int)civs[civ].reputation_credit[cities[city4].owner]))))) {
       flag = flag | 2;
@@ -5838,9 +5838,9 @@ i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
       else if ((improvements_mask & 4) != 0) {
         return 0;
       }
-      if (((*(char *)(level + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain * 0x18) != -1) &&
-          (*(char *)(level + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + terrain * 0x18) != '\0')) &&
-         ((int)*(char *)(level + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + terrain * 0x18) <= (int)(uint)civs[civ].government))
+      if (((*(char *)(level + (iptr)((u8 *)&terrain_types + 14) + terrain * 0x18) != -1) &&
+          (*(char *)(level + (iptr)((u8 *)&terrain_types + 20) + terrain * 0x18) != '\0')) &&
+         ((int)*(char *)(level + (iptr)((u8 *)&terrain_types + 20) + terrain * 0x18) <= (int)(uint)civs[civ].government))
       {
         return level + 1;
       }

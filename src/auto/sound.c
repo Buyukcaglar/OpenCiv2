@@ -50,11 +50,11 @@ void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
     }
     crt_strcat(wav_name,&snd_wav_ext_str);
     str_clear((iptr)wav_path);
-    str_append((iptr)wav_path,ADDR(0x62b440, ((u8 *)&g.d_0062b440)));
+    str_append((iptr)wav_path,(iptr)((u8 *)&g.d_0062b440));
     str_append((iptr)wav_path,(iptr)wav_name);
     str_clear((iptr)local_path);
-    str_append((iptr)local_path,ADDR(0x64bb08, ((u8 *)&g.d_0064bb08)));
-    str_append((iptr)local_path,ADDR(0x62b44c, ((u8 *)&g.d_0062b44c)));
+    str_append((iptr)local_path,(iptr)((u8 *)&g.d_0064bb08));
+    str_append((iptr)local_path,(iptr)((u8 *)&g.d_0062b44c));
     str_append((iptr)local_path,(iptr)wav_name);
     result = file_exists((iptr)local_path);
     if (result == 0) {
@@ -184,7 +184,7 @@ void __cdecl snd_cd_detect_layout(void)
 {
   int track_count;
   
-  snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
+  snd_cd_set_notify_callback((iptr)snd_cd_on_notify);
   track_count = snd_cd_get_track_count();
   if ((track_count == -1) || (track_count == 1)) {
     cd_music_available = 0;
@@ -236,7 +236,7 @@ void __cdecl music_play_track(uint track,int force)
     else {
       cd_music_continue = 0;
       snd_cd_mci_stop();
-      snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
+      snd_cd_set_notify_callback((iptr)snd_cd_on_notify);
       snd_cd_play_track(track);
       cd_music_current_track = track;
       cd_music_continue = 1;
@@ -326,7 +326,7 @@ int __cdecl snd_wave_open(i32 notify_hwnd,i32 buffer_bytes,i32 buffer_count)
   snd_wave_open_buffer_bytes = buffer_bytes;
   snd_wave_max_buffers = buffer_count;
   snd_wave_buffer_count = buffer_count;
-  result = snd_wave_open_device(notify_hwnd,0,ADDR(0x638578, ((u8 *)&g.d_00638578)));
+  result = snd_wave_open_device(notify_hwnd,0,(iptr)((u8 *)&g.d_00638578));
   if (result == 0) {
     snd_wave_alloc_buffers(buffer_bytes,snd_wave_out_handle,buffer_count);
     result = 0;
@@ -2570,13 +2570,13 @@ i32 __cdecl snd_cd_play_track(uint track)
     }
     else {
       snd_cd_close();
-      dbg_logf(ADDR(0x638aa8, ((u8 *)&g.d_00638aa8)),MVar1);
+      dbg_logf((iptr)((u8 *)&g.d_00638aa8),MVar1);
       result = 0;
     }
   }
   else {
     snd_cd_close();
-    dbg_logf(ADDR(0x638a84, ((u8 *)&g.d_00638a84)),MVar1);
+    dbg_logf((iptr)((u8 *)&g.d_00638a84),MVar1);
     result = 0;
   }
   return result;
@@ -2641,11 +2641,11 @@ void __cdecl snd_cd_open(void)
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
         snd_cd_device_id = 0;
-        dbg_logf(ADDR(0x638af4, ((u8 *)&g.d_00638af4)),MVar1);
+        dbg_logf((iptr)((u8 *)&g.d_00638af4),MVar1);
       }
     }
     else {
-      dbg_logf(ADDR(0x638ad4, ((u8 *)&g.d_00638ad4)),MVar1);
+      dbg_logf((iptr)((u8 *)&g.d_00638ad4),MVar1);
     }
   }
   return;
@@ -3318,7 +3318,7 @@ int __cdecl avi_decode_frame(iptr player,int decode_flags)
   }
   else {
     if ((*(int *)(player + 0x5a4) != 0) && (decode_flags == 0)) {
-      surface_blit((DibSurface *)(player + 0x558),player,ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)),ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)));
+      surface_blit((DibSurface *)(player + 0x558),player,(iptr)((u8 *)&g.d_00638dd8),(iptr)((u8 *)&g.d_00638dd8));
     }
     result = AVIStreamRead(avi_video_stream,*(i32 *)(player + 0xa18),1,avi_frame_buffer,
                             avi_frame_buffer_size,&bytes_read,0);

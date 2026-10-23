@@ -4590,12 +4590,7 @@ i8 __thiscall ddctrl_dispatch_to_children(DDControl *this,int param_1,int param_
 u32 __thiscall ddwin_get_palette(DdwinGetPaletteView *this); /* 005f1b50 */
 #undef __onexit
 int __cdecl __onexit(int func); /* 005f1b80, hand-written */
-#ifdef CIV2_NATIVE
 int _atexit(void (*fn)(void)); /* 005f1c40, C runtime: src/native/crt.c */
-#else
-#undef _atexit
-int __cdecl _atexit(); /* 005f1c40 */
-#endif
 #undef ___onexitinit
 void __cdecl ___onexitinit(); /* 005f1c70 */
 #undef __global_unwind2
@@ -4629,88 +4624,28 @@ int __cdecl CatchGuardHandler(void *rec, void *rn, void *ctx, void *dc); /* 005f
 int __cdecl _CallSETranslator(void *rec, void *rn, void *ctx, void *dc, void *funcinfo, int catchdepth, void *pmarker); /* 005f1fc0, hand-written */
 #undef TranslatorGuardHandler
 int __cdecl TranslatorGuardHandler(void *rec, void *rn, void *ctx, void *dc); /* 005f20a0, hand-written */
-#ifdef CIV2_NATIVE
 void *crt_memcpy(void *dst, const void *src, uint n); /* 005f2110, C runtime: src/native/crt.c */
-#else
-#undef crt_memcpy
-i32 * __cdecl crt_memcpy(void *dst, const void *src, uint n); /* 005f2110, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 void crt_srand(u32 seed); /* 005f2260, C runtime: src/native/crt.c */
-#else
-#undef crt_srand
-void __cdecl crt_srand(); /* 005f2260 */
-#endif
-#ifdef CIV2_NATIVE
 int _rand(void); /* 005f2280, C runtime: src/native/crt.c */
-#else
-#undef _rand
-int __cdecl _rand(); /* 005f2280 */
-#endif
-#ifdef CIV2_NATIVE
 void *crt_strcpy(void *dst, const void *src); /* 005f22d0, C runtime: src/native/crt.c */
-#else
-#undef crt_strcpy
-uint * __cdecl crt_strcpy(); /* 005f22d0 */
-#endif
-#ifdef CIV2_NATIVE
 void *crt_strcat(void *dst, const void *src); /* 005f22e0, C runtime: src/native/crt.c */
-#else
-#undef crt_strcat
-uint * __cdecl crt_strcat(); /* 005f22e0 */
-#endif
-#ifdef CIV2_NATIVE
 void operator_delete(void *p); /* 005f23c0, C runtime: src/native/crt.c */
-#else
-#undef operator_delete
-i32 __cdecl operator_delete(); /* 005f23c0 */
-#endif
-#ifdef CIV2_NATIVE
 void *operator_new(size_t n); /* 005f2470, C runtime: src/native/crt.c */
-#else
-#undef operator_new
-void * __cdecl operator_new(); /* 005f2470 */
-#endif
-#ifdef CIV2_NATIVE
 void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor); /* 005f2490, C runtime: src/native/crt.c */
-#else
-#undef crt_vector_dtor_iterator
-void __stdcall crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor); /* 005f2490, hand-written */
-#endif
 #undef __ArrayUnwind
 void __stdcall __ArrayUnwind(void *ptr, uint size, int count, void *dtor); /* 005f2540, hand-written */
 #undef FUN_005f25d0
 i32 __cdecl FUN_005f25d0(); /* 005f25d0 */
-#ifdef CIV2_NATIVE
 void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor); /* 005f2620, C runtime: src/native/crt.c */
-#else
-#undef crt_vector_ctor_iterator
-void __stdcall crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor); /* 005f2620, hand-written */
-#endif
 #undef FUN_005f26e0
 int __cdecl FUN_005f26e0(); /* 005f26e0 */
-#ifdef CIV2_NATIVE
 uint crt_toupper(uint c); /* 005f2700, C runtime: src/native/crt.c */
-#else
-#undef crt_toupper
-uint __cdecl crt_toupper(uint c); /* 005f2700, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 int _isalpha(int c); /* 005f2840, C runtime: src/native/crt.c */
-#else
-#undef _isalpha
-int __cdecl _isalpha(); /* 005f2840 */
-#endif
 #undef _isupper
 int __cdecl _isupper(); /* 005f2890 */
 #undef _islower
 int __cdecl _islower(); /* 005f28e0 */
-#ifdef CIV2_NATIVE
 int _isdigit(int c); /* 005f2930, C runtime: src/native/crt.c */
-#else
-#undef _isdigit
-int __cdecl _isdigit(); /* 005f2930 */
-#endif
 #undef _isxdigit
 int __cdecl _isxdigit(); /* 005f2980 */
 #undef _isspace
@@ -4733,142 +4668,37 @@ uint __cdecl FUN_005f2be0(); /* 005f2be0 */
 int __cdecl ___iscsymf(); /* 005f2c00 */
 #undef ___iscsym
 int __cdecl ___iscsym(); /* 005f2c80 */
-#ifdef CIV2_NATIVE
 FILE *__fsopen(const char *path, const char *mode, int share); /* 005f2d00, C runtime: src/native/crt.c */
-#else
-#undef __fsopen
-FILE * __cdecl __fsopen(); /* 005f2d00 */
-#endif
-#ifdef CIV2_NATIVE
 FILE *_fopen(const char *path, const char *mode); /* 005f2e10, C runtime: src/native/crt.c */
-#else
-#undef _fopen
-FILE * __cdecl _fopen(); /* 005f2e10 */
-#endif
-#ifdef CIV2_NATIVE
 int _fclose(FILE *f); /* 005f2e40, C runtime: src/native/crt.c */
-#else
-#undef _fclose
-int __cdecl _fclose(); /* 005f2e40 */
-#endif
-#ifdef CIV2_NATIVE
 char *_strncpy(char *dst, const char *src, size_t n); /* 005f2f30, C runtime: src/native/crt.c */
-#else
-#undef _strncpy
-char * __cdecl _strncpy(); /* 005f2f30 */
-#endif
-#ifdef CIV2_NATIVE
 int _sprintf(char *buf, const char *fmt, ...); /* 005f3030, C runtime: src/native/crt.c */
-#else
-#undef _sprintf
-int __cdecl _sprintf(); /* 005f3030 */
-#endif
-#ifdef CIV2_NATIVE
 i32 _atol(const char *s); /* 005f3120, C runtime: src/native/crt.c */
-#else
-#undef _atol
-long __cdecl _atol(); /* 005f3120 */
-#endif
-#ifdef CIV2_NATIVE
 int _atoi(const char *s); /* 005f3240, C runtime: src/native/crt.c */
-#else
-#undef _atoi
-int __cdecl _atoi(); /* 005f3240 */
-#endif
 #undef __atoi64
 longlong __cdecl __atoi64(char *s); /* 005f3260, hand-written */
-#ifdef CIV2_NATIVE
 int _fputs(const char *s, FILE *f); /* 005f33b0, C runtime: src/native/crt.c */
-#else
-#undef _fputs
-int __cdecl _fputs(); /* 005f33b0 */
-#endif
-#ifdef CIV2_NATIVE
 size_t _strlen(const char *s); /* 005f3480, C runtime: src/native/crt.c */
-#else
-#undef _strlen
-size_t __cdecl _strlen(); /* 005f3480 */
-#endif
-#ifdef CIV2_NATIVE
 void *_memset(void *p, int c, size_t n); /* 005f3500, C runtime: src/native/crt.c */
-#else
-#undef _memset
-void * __cdecl _memset(); /* 005f3500 */
-#endif
-#ifdef CIV2_NATIVE
 int _strcmp(const char *a, const char *b); /* 005f3560, C runtime: src/native/crt.c */
-#else
-#undef _strcmp
-int __cdecl _strcmp(); /* 005f3560 */
-#endif
 #undef FUN_005f35f0
 void __cdecl FUN_005f35f0(); /* 005f35f0 */
-#ifdef CIV2_NATIVE
 char *_strchr(const char *s, int c); /* 005f3630, C runtime: src/native/crt.c */
-#else
-#undef _strchr
-char * __cdecl _strchr(); /* 005f3630 */
-#endif
-#ifdef CIV2_NATIVE
 int _strncmp(const char *a, const char *b, size_t n); /* 005f36f0, C runtime: src/native/crt.c */
-#else
-#undef _strncmp
-int __cdecl _strncmp(); /* 005f36f0 */
-#endif
-#ifdef CIV2_NATIVE
 size_t _fread(void *buf, size_t size, size_t n, FILE *f); /* 005f3730, C runtime: src/native/crt.c */
-#else
-#undef _fread
-size_t __cdecl _fread(); /* 005f3730 */
-#endif
-#ifdef CIV2_NATIVE
 size_t _fwrite(const void *buf, size_t size, size_t n, FILE *f); /* 005f3900, C runtime: src/native/crt.c */
-#else
-#undef _fwrite
-size_t __cdecl _fwrite(); /* 005f3900 */
-#endif
-#ifdef CIV2_NATIVE
 int __chdir(const char *path); /* 005f3b20, C runtime: src/native/crt.c */
-#else
-#undef __chdir
-int __cdecl __chdir(); /* 005f3b20 */
-#endif
-#ifdef CIV2_NATIVE
 char *_strrchr(const char *s, int c); /* 005f3c10, C runtime: src/native/crt.c */
-#else
-#undef _strrchr
-char * __cdecl _strrchr(); /* 005f3c10 */
-#endif
-#ifdef CIV2_NATIVE
 char *_fgets(char *buf, int n, FILE *f); /* 005f3c40, C runtime: src/native/crt.c */
-#else
-#undef _fgets
-char * __cdecl _fgets(); /* 005f3c40 */
-#endif
 #undef __filbuf
 int __cdecl __filbuf(); /* 005f3d70 */
-#ifdef CIV2_NATIVE
 int _fputc(int c, FILE *f); /* 005f3f50, C runtime: src/native/crt.c */
-#else
-#undef _fputc
-int __cdecl _fputc(); /* 005f3f50 */
-#endif
 #undef _putc
 int __cdecl _putc(); /* 005f3ff0 */
-#ifdef CIV2_NATIVE
 int _fgetc(FILE *f); /* 005f4010, C runtime: src/native/crt.c */
-#else
-#undef _fgetc
-int __cdecl _fgetc(); /* 005f4010 */
-#endif
 #undef _getc
 int __cdecl _getc(); /* 005f4090 */
-#ifdef CIV2_NATIVE
 int __strnicmp(const char *a, const char *b, size_t n); /* 005f40b0, C runtime: src/native/crt.c */
-#else
-#undef __strnicmp
-int __cdecl __strnicmp(); /* 005f40b0 */
-#endif
 #undef __cinit
 int __cdecl __cinit(void); /* 005f4160, hand-written */
 #undef _exit
@@ -4883,12 +4713,7 @@ void __cdecl __c_exit(); /* 005f4210 */
 void __cdecl doexit(); /* 005f4230 */
 #undef __initterm
 void __cdecl __initterm(); /* 005f4330 */
-#ifdef CIV2_NATIVE
 char *_strstr(const char *s, const char *sub); /* 005f4370, C runtime: src/native/crt.c */
-#else
-#undef _strstr
-char * __cdecl _strstr(); /* 005f4370 */
-#endif
 #undef _malloc
 void * __cdecl _malloc(); /* 005f43f0 */
 #undef __malloc_dbg
@@ -4905,12 +4730,7 @@ i32 __cdecl __heap_alloc_dbg(); /* 005f4520 */
 void * __cdecl _calloc(); /* 005f4860 */
 #undef __calloc_dbg
 i8 * __cdecl __calloc_dbg(); /* 005f4890 */
-#ifdef CIV2_NATIVE
 void *crt_realloc(void *p, size_t n); /* 005f4900, C runtime: src/native/crt.c */
-#else
-#undef crt_realloc
-i32 __cdecl crt_realloc(); /* 005f4900 */
-#endif
 #undef __realloc_dbg
 i32 __cdecl __realloc_dbg(); /* 005f4930 */
 #undef realloc_help
@@ -4923,12 +4743,7 @@ i32 __cdecl __expand_dbg(); /* 005f4f30 */
 void __cdecl FUN_005f4f70(); /* 005f4f70 */
 #undef __free_dbg
 i32 __cdecl __free_dbg(); /* 005f4f90 */
-#ifdef CIV2_NATIVE
 size_t __msize(void *p); /* 005f53c0, C runtime: src/native/crt.c */
-#else
-#undef __msize
-size_t __cdecl __msize(); /* 005f53c0 */
-#endif
 #undef __msize_dbg
 i32 __cdecl __msize_dbg(); /* 005f53e0 */
 #undef FUN_005f5550
@@ -4965,50 +4780,15 @@ void __cdecl __printMemBlockData(); /* 005f62a0 */
 i32 __cdecl __CrtDumpMemoryLeaks(); /* 005f63a0 */
 #undef __CrtMemDumpStatistics
 void __cdecl __CrtMemDumpStatistics(); /* 005f6430 */
-#ifdef CIV2_NATIVE
 void *crt_memmove(void *dst, const void *src, uint n); /* 005f6500, C runtime: src/native/crt.c */
-#else
-#undef crt_memmove
-i32 * __cdecl crt_memmove(void *dst, const void *src, uint n); /* 005f6500, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 int crt_rename(const char *from, const char *to); /* 005f6650, C runtime: src/native/crt.c */
-#else
-#undef crt_rename
-i32 __cdecl crt_rename(); /* 005f6650 */
-#endif
-#ifdef CIV2_NATIVE
 int crt_remove(const char *path); /* 005f66b0, C runtime: src/native/crt.c */
-#else
-#undef crt_remove
-i32 __cdecl crt_remove(); /* 005f66b0 */
-#endif
 #undef FUN_005f6710
 void __cdecl FUN_005f6710(); /* 005f6710 */
-#ifdef CIV2_NATIVE
 void _rewind(FILE *f); /* 005f6730, C runtime: src/native/crt.c */
-#else
-#undef _rewind
-void __cdecl _rewind(); /* 005f6730 */
-#endif
-#ifdef CIV2_NATIVE
 int _fseek(FILE *f, i32 off, int whence); /* 005f67f0, C runtime: src/native/crt.c */
-#else
-#undef _fseek
-int __cdecl _fseek(); /* 005f67f0 */
-#endif
-#ifdef CIV2_NATIVE
 i32 _ftell(FILE *f); /* 005f6920, C runtime: src/native/crt.c */
-#else
-#undef _ftell
-long __cdecl _ftell(); /* 005f6920 */
-#endif
-#ifdef CIV2_NATIVE
 int _printf(const char *fmt, ...); /* 005f6bd0, C runtime: src/native/crt.c */
-#else
-#undef _printf
-int __cdecl _printf(); /* 005f6bd0 */
-#endif
 #undef __ftol
 i32 __cdecl __ftol(); /* 005f6c60 */
 #undef __fpmath
@@ -5019,50 +4799,20 @@ void __cdecl FUN_005f6cc0(); /* 005f6cc0 */
 void __cdecl __cfltcvt_init(); /* 005f6cd0 */
 #undef FUN_005f6d20
 i32 __cdecl FUN_005f6d20(); /* 005f6d20 */
-#ifdef CIV2_NATIVE
 int _memcmp(const void *a, const void *b, size_t n); /* 005f6d50, C runtime: src/native/crt.c */
-#else
-#undef _memcmp
-int __cdecl _memcmp(); /* 005f6d50 */
-#endif
-#ifdef CIV2_NATIVE
 int __strcmpi(const char *a, const char *b); /* 005f6e00, C runtime: src/native/crt.c */
-#else
-#undef __strcmpi
-int __cdecl __strcmpi(); /* 005f6e00 */
-#endif
 #undef entry
 void __cdecl entry(void); /* 005f6e90, hand-written */
 #undef __amsg_exit
 void __cdecl __amsg_exit(); /* 005f70e0 */
-#ifdef CIV2_NATIVE
 int crt_abs(int v); /* 005f7120, C runtime: src/native/crt.c */
-#else
-#undef crt_abs
-int __cdecl crt_abs(); /* 005f7120 */
-#endif
-#ifdef CIV2_NATIVE
 char *__getcwd(char *buf, int n); /* 005f7140, C runtime: src/native/crt.c */
-#else
-#undef __getcwd
-char * __cdecl __getcwd(); /* 005f7140 */
-#endif
 #undef __getdcwd
 char * __cdecl __getdcwd(); /* 005f7170 */
 #undef __validdrive
 int __cdecl __validdrive(); /* 005f72b0 */
-#ifdef CIV2_NATIVE
 i32 _time(i32 *t); /* 005f7320, C runtime: src/native/crt.c */
-#else
-#undef _time
-time_t __cdecl _time(time_t *timeptr); /* 005f7320, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 char *_strncat(char *dst, const char *src, size_t n); /* 005f74b0, C runtime: src/native/crt.c */
-#else
-#undef _strncat
-char * __cdecl _strncat(); /* 005f74b0 */
-#endif
 #undef __assert
 void __cdecl __assert(); /* 005f75e0 */
 #undef ___InternalCxxFrameHandler
@@ -5332,26 +5082,11 @@ int __cdecl _raise(); /* 006006a0 */
 i32 * __cdecl siglookup(); /* 006008c0 */
 #undef ___crtMessageBoxA
 int __cdecl ___crtMessageBoxA(); /* 00600930 */
-#ifdef CIV2_NATIVE
 char *__itoa(int v, char *buf, int radix); /* 00600a10, C runtime: src/native/crt.c */
-#else
-#undef __itoa
-char * __cdecl __itoa(); /* 00600a10 */
-#endif
 #undef xtoa
 void __cdecl xtoa(); /* 00600a70 */
-#ifdef CIV2_NATIVE
 char *__ltoa(i32 v, char *buf, int radix); /* 00600b30, C runtime: src/native/crt.c */
-#else
-#undef __ltoa
-char * __cdecl __ltoa(); /* 00600b30 */
-#endif
-#ifdef CIV2_NATIVE
 char *__ultoa(u32 v, char *buf, int radix); /* 00600b90, C runtime: src/native/crt.c */
-#else
-#undef __ultoa
-char * __cdecl __ultoa(); /* 00600b90 */
-#endif
 #undef __i64toa
 char * __cdecl __i64toa(); /* 00600bc0 */
 #undef x64toa
@@ -5366,12 +5101,7 @@ int __cdecl _setvbuf(); /* 00600df0 */
 void __cdecl FUN_00600f50(); /* 00600f50 */
 #undef FUN_00600f70
 void __cdecl FUN_00600f70(); /* 00600f70 */
-#ifdef CIV2_NATIVE
 int __CxxUnhandledExceptionFilter(EXCEPTION_POINTERS *p); /* 00600fa0, C runtime: src/native/crt.c */
-#else
-#undef __CxxUnhandledExceptionFilter
-int __stdcall __CxxUnhandledExceptionFilter(EXCEPTION_POINTERS *ptrs); /* 00600fa0, hand-written */
-#endif
 #undef FUN_00601040
 void __cdecl FUN_00601040(); /* 00601040 */
 #undef _ValidateRead
@@ -5526,36 +5256,11 @@ int __cdecl findenv(); /* 00606ed0 */
 int * __cdecl copy_environ(); /* 00606f70 */
 #undef __mbschr
 uchar * __cdecl __mbschr(); /* 00607070 */
-#ifdef CIV2_NATIVE
 i32 __filelength(int fd); /* 006075e0, C runtime: src/native/crt.c */
-#else
-#undef __filelength
-long __cdecl __filelength(); /* 006075e0 */
-#endif
-#ifdef CIV2_NATIVE
 int FUN_006076a0(FILE *f); /* 006076a0, C runtime: src/native/crt.c */
-#else
-#undef FUN_006076a0
-i32 __cdecl FUN_006076a0(); /* 006076a0 */
-#endif
-#ifdef CIV2_NATIVE
 char *__strupr(char *s); /* 006076c0, C runtime: src/native/crt.c */
-#else
-#undef __strupr
-char * __cdecl __strupr(char *string); /* 006076c0, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 char *__strlwr(char *s); /* 006077f0, C runtime: src/native/crt.c */
-#else
-#undef __strlwr
-char * __cdecl __strlwr(char *string); /* 006077f0, hand-written */
-#endif
-#ifdef CIV2_NATIVE
 int crt_mkdir(const char *path); /* 00607920, C runtime: src/native/crt.c */
-#else
-#undef crt_mkdir
-i32 __cdecl crt_mkdir(); /* 00607920 */
-#endif
 #undef FUN_0061a000
 void __cdecl FUN_0061a000(); /* 0061a000 */
 #undef FUN_0061a759

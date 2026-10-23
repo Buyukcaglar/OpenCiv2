@@ -300,7 +300,7 @@ void __cdecl minimap_redraw(void)
   
   if ((minimap_hidden == '\0') && (game_loop_active != '\0')) {
     frame_wnd_layout((FrameWindow *)&minimap_window);
-    gfx_set_draw_target(ADDR(0x63c818, ((u8 *)&g.d_0063c818)));
+    gfx_set_draw_target((iptr)((u8 *)&g.d_0063c818));
     minimap_calc_layout();
     gfx_fill_draw_target(0);
     screen_y = minimap_client_y + minimap_margin_y_i32;
@@ -506,7 +506,7 @@ void __cdecl minimap_calc_rect(void)
   if (map_layout_wide != 0) {
     top = minimap_margin + 1;
   }
-  rect_set_xywh(ADDR(0x655324, ((u8 *)&g.d_00655324)),client_w - (sys_dlgframe_w2 + width2),top,width2 + sys_dlgframe_w2,
+  rect_set_xywh((iptr)((u8 *)&g.d_00655324),client_w - (sys_dlgframe_w2 + width2),top,width2 + sys_dlgframe_w2,
                      height2 + frame_border_width + frame_caption_height + sys_dlgframe_h2);
   return;
 }
@@ -521,7 +521,7 @@ void __cdecl minimap_calc_rect(void)
 void __cdecl minimap_on_size(void)
 
 {
-  wnd_get_rect_in_parent((WndBase *)&minimap_wnd,ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_get_rect_in_parent((WndBase *)&minimap_wnd,(iptr)((u8 *)&g.d_00655324));
   return;
 }
 
@@ -529,7 +529,7 @@ void __cdecl minimap_on_size(void)
 void __cdecl minimap_on_move(void)
 
 {
-  wnd_get_rect_in_parent((WndBase *)&minimap_wnd,ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_get_rect_in_parent((WndBase *)&minimap_wnd,(iptr)((u8 *)&g.d_00655324));
   return;
 }
 
@@ -558,9 +558,9 @@ void __cdecl minimap_window_create(void)
   create_arg9 = 0;
   create_arg8 = 0;
   create_arg7 = 6;
-  wnd_height = rect_height(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_height = rect_height((iptr)((u8 *)&g.d_00655324));
   wnd_height -= sys_dlgframe_h2;
-  wnd_width = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_width = rect_width((iptr)((u8 *)&g.d_00655324));
   wnd_width -= sys_dlgframe_w2;
   wnd_style = 6;
   wnd_x = minimap_wnd_rect;
@@ -569,18 +569,18 @@ void __cdecl minimap_window_create(void)
   frame_wnd_create
             ((FrameWindow *)&minimap_window,title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)&minimap_wnd,0x28,0x19);
-  wnd_set_redraw_callback((SurfaceWindow *)&minimap_window,ADDR(0x402581, minimap_redraw));
-  wnd_set_lbuttonup_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x4022de, minimap_on_lbuttonup));
-  wnd_set_rbuttonup_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x401942, minimap_on_rbuttonup));
-  wnd_set_keydown_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x402cd4, map_window_key));
-  wnd_set_char_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x401e56, map_window_ascii));
+  wnd_set_redraw_callback((SurfaceWindow *)&minimap_window,(iptr)minimap_redraw);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_rbuttonup);
+  wnd_set_keydown_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)map_window_key);
+  wnd_set_char_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)map_window_ascii);
   wnd_set_cursor((WndBase *)&minimap_wnd,0x1ff);
   wnd_set_icon((WndBase *)&minimap_wnd,1);
-  wnd_set_minimize_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x403d05, minimap_on_minimize));
-  wnd_set_restore_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x401956, minimap_on_restore));
-  wnd_set_close_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x40322e, minimap_on_close));
-  wnd_set_size_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x4012a8, minimap_on_size));
-  wnd_set_move_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x403931, minimap_on_move));
+  wnd_set_minimize_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_minimize);
+  wnd_set_restore_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_restore);
+  wnd_set_close_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_close);
+  wnd_set_size_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_size);
+  wnd_set_move_handler((WndEventHandlers *)&minimap_wnd_handlers,(iptr)minimap_on_move);
   wnd_repaint((SurfaceWindow *)&minimap_window);
   if (game.multiplayer != 1) {
     window_show((WindowObjectView *)&minimap_window);
@@ -965,7 +965,7 @@ void __cdecl mapview_on_lbuttondown(void)
       mapview_drag_view_index = *(int *)(view + 0x2d8);
       SVar1 = GetAsyncKeyState(0x10);
       if ((char)((ushort)SVar1 >> 8) == '\0') {
-        mapview_drag_hold_timer = game_timer_create(ADDR(0x4025cc, mapview_drag_hold_expired),400,1);
+        mapview_drag_hold_timer = game_timer_create((iptr)mapview_drag_hold_expired,400,1);
       }
       else {
         (&mapview_cursor_id)[mapview_drag_view_index * 0xfc] = 0x1fe;
@@ -1083,7 +1083,7 @@ void __cdecl mapview_calc_rect(void)
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   client_w = wnd_client_width((WndBase *)&main_frame_wnd);
-  minimap_w = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  minimap_w = rect_width((iptr)((u8 *)&g.d_00655324));
   height2 = wnd_client_height((WndBase *)&main_frame_wnd);
   height2++;
   top = 0;
@@ -1091,7 +1091,7 @@ void __cdecl mapview_calc_rect(void)
     top = minimap_margin + 1;
     height2 -= (minimap_margin + 1);
   }
-  rect_set_xywh(ADDR(0x6552a4, ((u8 *)&g.d_006552a4)),0,top,client_w - minimap_w,height2);
+  rect_set_xywh((iptr)((u8 *)&g.d_006552a4),0,top,client_w - minimap_w,height2);
   return;
 }
 #undef height2
@@ -1189,7 +1189,7 @@ void __thiscall mapview_update_title(FrameWindow *this)
       adjective = civ_get_adjective(human_civ);
       text_append_str(adjective);
       if (game_language == 2) {
-        text_append(ADDR(0x625090, ((u8 *)&g.d_00625090)));
+        text_append((iptr)((u8 *)&g.d_00625090));
       }
       text_append_space();
     }
@@ -1209,7 +1209,7 @@ void __thiscall mapview_update_title(FrameWindow *this)
     text_append_colon();
     text_append_label(mode + 300);
   }
-  frame_wnd_set_caption(this,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  frame_wnd_set_caption(this,(iptr)((u8 *)&g.d_00679640));
   return;
 }
 #undef human_civ
@@ -1324,28 +1324,28 @@ void __thiscall mapview_create(ViewWindow *this)
             ((FrameWindow *)this,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
   wnd_set_min_size((ModalMenuWindow *)this->window_2,0x100,0x80);
-  wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402315, mapview_on_redraw));
-  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4030c6, mapview_on_lbuttonup));
-  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x4018d9, mapview_on_rbuttonup));
-  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x402d9c, mapview_on_lbuttondown));
-  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x401a7d, mapview_on_lbuttonup_any));
-  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x4014e7, mapview_on_mousemove));
-  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->event_handlers),ADDR(0x40146f, map_window_double_click));
-  wnd_set_char_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x401e56, map_window_ascii));
-  wnd_set_keydown_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x402cd4, map_window_key));
-  wnd_set_close_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x40235b, mapview_on_close));
-  wnd_set_size_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x403b43, mapview_on_size));
-  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),ADDR(0x402653, mapview_on_move));
+  wnd_set_redraw_callback((SurfaceWindow *)this,(iptr)mapview_on_redraw);
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_lbuttonup);
+  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_rbuttonup);
+  wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_lbuttondown);
+  wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_lbuttonup_any);
+  wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)mapview_on_mousemove);
+  wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->event_handlers),(iptr)map_window_double_click);
+  wnd_set_char_handler((WndEventHandlers *)(this->event_handlers),(iptr)map_window_ascii);
+  wnd_set_keydown_handler((WndEventHandlers *)(this->event_handlers),(iptr)map_window_key);
+  wnd_set_close_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_close);
+  wnd_set_size_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_size);
+  wnd_set_move_handler((WndEventHandlers *)(this->event_handlers),(iptr)mapview_on_move);
   mapview_update_title((FrameWindow *)this);
   if (this->rates_civ != 0) {
-    frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
+    frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)((u8 *)&g.d_00645120),1);
   }
-  frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x648820, ((u8 *)&g.d_00648820)),2);
-  frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x647788, ((u8 *)&g.d_00647788)),3);
+  frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)((u8 *)&g.d_00648820),2);
+  frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)((u8 *)&g.d_00647788),3);
   if (this->rates_civ != 0) {
-    frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x647348, ((u8 *)&g.d_00647348)),4);
+    frame_wnd_add_caption_button((PortraitDialog *)this,(iptr)((u8 *)&g.d_00647348),4);
   }
-  wnd_set_caption_button_handler((FrameWindow *)this,ADDR(0x403cd8, mapview_on_caption_button));
+  wnd_set_caption_button_handler((FrameWindow *)this,(iptr)mapview_on_caption_button);
   wnd_repaint((SurfaceWindow *)this);
   if (game.multiplayer != 1) {
     window_show((WindowObjectView *)this);
@@ -1397,8 +1397,8 @@ void __cdecl mapviews_create_all(void)
     main_view_timer_shown = 1;
   }
   timer_alt_kind_request = 1;
-  unit_blink_timer = game_timer_create(ADDR(0x40364d, unit_blink_timer_tick),0x96,0xffffffff);
-  eot_blink_timer = game_timer_create(ADDR(0x402540, eot_blink_timer_tick),500,0xffffffff);
+  unit_blink_timer = game_timer_create((iptr)unit_blink_timer_tick,0x96,0xffffffff);
+  eot_blink_timer = game_timer_create((iptr)eot_blink_timer_tick,500,0xffffffff);
   timer_alt_kind_request = 0;
   return;
 }
@@ -1588,14 +1588,14 @@ void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
     gfx_set_text_color_index(10);
     rect_offset((iptr)rect,0xffffffff,0xffffffff);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)&map_views,(iptr)((u8 *)&g.d_0066cae0),(iptr)num_text,(iptr)rect,0);
     rect_offset((iptr)rect,3,3);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)&map_views,(iptr)((u8 *)&g.d_0066cae0),(iptr)num_text,(iptr)rect,0);
     rect_offset((iptr)rect,0xfffffffe,0xfffffffe);
     gfx_set_text_color_index(color);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+              ((DibSurface *)&map_views,(iptr)((u8 *)&g.d_0066cae0),(iptr)num_text,(iptr)rect,0);
     wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)rect);
   }
   return;

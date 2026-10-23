@@ -5,28 +5,22 @@
 | status      | functions | meaning |
 |-------------|-----------|---------|
 | auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.c, unit.c, map.c ...) |
-| game        |  114 | reconstructed by hand (src/game/*.c, src/crt/*.c) |
+| game        |  114 | reconstructed by hand (src/game/*.c) |
 | ehfunclet   |  462 | C++ unwind funclets; inlined into their callers, never called on their own |
-| crt         |  284 | statically linked MSVC 4.2 debug C runtime, translated (src/auto/msvcrt.c, the Windows build's only) |
-| crt-manual  |   11 | runtime functions defined in src/crt under an asm label (printf family etc.) or unreachable exception-handling helpers |
+| crt         |  295 | statically linked MSVC 4.2 debug C runtime: the native builds use their own C library (src/native/crt.c for what differs) |
 | asm         |    2 | `ASMGRAF` section: 16-bit leftovers from the Win16 version, unreachable |
 
 About 221,000 lines of C.  Every function that can execute has C source.
 
 ## Builds
 
-* `build/civ2_recon.exe` — the original executable with all 4445 reconstructed
-  functions grafted in.  `--wipe` overwrites every original instruction with
-  `int3`; the full suite still passes, so no original machine code runs.
-* `build/civ2.exe` — standalone: written by `tools/build_standalone.py` from the
-  compiled source plus `data/image/` (initialized data, import table,
-  resources), without reading the original `civ2.exe`.
-
-## Behavioural comparison (harness/suite.sh, seed 7)
-
-The standalone executable, the wiped build and the grafted build are each
-pixel-identical to the original at every screenshot and produce the
-identical sequence of `rand()` calls (call site and value):
+The native builds below.  Until step 5 of the clean-up (removing the
+emulation of the original's memory layout) there was also a Windows build
+grafting the compiled functions onto the original `civ2.exe`
+(tools/build_recon.py; `make bisect` swapped single functions back to the
+original's): retired, available at the git tag `pre-step5`.  It and the
+standalone executable written from it were pixel-identical to the original
+with the identical `rand()` sequence on these scenarios:
 
 | scenario  | what it does | rand() calls |
 |-----------|--------------|-------------:|
@@ -99,14 +93,12 @@ message by message and clock event by clock event.
   through a field now, `base + 4 + 4*i` for `base + 4*(i + 1)`).
 * **Data is binary.**  `data/image/*.bin` are the original initialized data
   sections; converting them to C tables is mechanical but not done.
-* `tools/build_recon.py` still reads the original `civ2.exe` for import-slot
-  addresses when linking (the same information is in `data/image/idata.bin`).
 * Coverage of the comparison: the scripts execute 2,295 of the 3,417
   compiled game functions (67%, 51% of lines; `tools/coverage_report.py`
   with the linux32cov build, per function in re/coverage.tsv).  Never
   executed: multiplayer (parley, net), sound and video, council, the
   editors' rarely used dialogs, atexit destructors.  Untested paths may still differ.  Add a script under `harness/scripts/`, record it with
-  `make ref SCRIPT=...` and bisect differences with `make bisect`.
+  `make ref SCRIPT=...` and compare with `make native-suite`.
 * **Blinking unit under a modal dialog.**  When the spy mission dialog
   opens over the map (harness/scripts/conquest.txt, Roman phalanx at
   22,58 of Ca_Auto.SAV), our build has been seen to leave the active unit

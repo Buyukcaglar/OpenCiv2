@@ -4,30 +4,17 @@
 #ifndef CIV2_AUTO_COMMON_H
 #define CIV2_AUTO_COMMON_H
 
-#ifdef CIV2_NATIVE
 /* Native builds: the Windows API is provided by src/platform/. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "../platform/win32_api.h"
-#else
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-#include <stdio.h>
-#include <mmsystem.h>
-#include <vfw.h>
-#include <ddraw.h>
-#include <commdlg.h>
-#endif
 
 #include "ghidra.h"
-#ifdef CIV2_NATIVE
 /* The code was written for MSVC, whose `long` is 32-bit (the system headers
  * above keep their own meaning). */
 #define long int
-#endif
 #include "civ2types.h"
 #include "civ2classes.h"
 #include "../data/gamedata.h"
@@ -66,12 +53,10 @@ typedef struct mmtime_tag mmtime_tag;
 #include "xdaemon.h"
 #include "globals.h"
 #include "protos.h"
-#ifdef CIV2_NATIVE
 /* Calls through incremental-link thunks go straight to their targets. */
 #include "thunks.h"
 /* rand() calls name their caller for the rand trace (src/native/crt.c). */
 int crt_rand_at(const char *caller);
 #define _rand() crt_rand_at(__func__)
-#endif
 
 #endif

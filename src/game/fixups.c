@@ -522,8 +522,8 @@ void __cdecl avi_play_start(int param_1)
         if (*(int *)(param_1 + 0x5a4) != 0)
             g_video_flags_a |= 0x80000004;
         g_video_flags_b = 0x80000008;
-        ICSendMessage(g_video_ic, 0x5001, (DWORD_PTR)ADDR(0x006e5098, ((u8 *)&g.d_006e5098)), 0x2c);
-        ICSendMessage(g_video_ic, 0x5001, (DWORD_PTR)ADDR(0x006e5028, ((u8 *)&g.d_006e5028)), 0x70);
+        ICSendMessage(g_video_ic, 0x5001, (DWORD_PTR)(iptr)((u8 *)&g.d_006e5098), 0x2c);
+        ICSendMessage(g_video_ic, 0x5001, (DWORD_PTR)(iptr)((u8 *)&g.d_006e5028), 0x70);
         *(int *)(param_1 + 0x5f0) <<= 1;
         *(int *)(param_1 + 0x5ec) <<= 1;
         avi_ic_decompress_ex_begin((i32)g_video_ic, 0, param_1 + 0x5c0, 0, 0, 0,
@@ -581,7 +581,7 @@ i32 __cdecl ddraw_init(void)
     local_2c.lpszMenuName = (LPCSTR)0x0;
     local_2c.lpszClassName = s_MSDirectWindow_006394c4;
     RegisterClassA(&local_2c);
-    hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)ADDR(0x006394c0, ((u8 *)&g.d_006394c0)), (IUnknown *)0x0);
+    hr = DirectDrawCreate((GUID *)0x0, (LPDIRECTDRAW *)(iptr)((u8 *)&g.d_006394c0), (IUnknown *)0x0);
     if (hr != 0) {
         dbg_log(s_Error__DirectDrawInitialize_Fail_006394d4);
         return 0;
@@ -589,7 +589,7 @@ i32 __cdecl ddraw_init(void)
     g_ddcaps_driver = 0x13c;
     g_ddcaps_hel = 0x13c;
     /* IDirectDraw::GetCaps (vtable slot 11) */
-    ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)ADDR(0x006e50e8, ((u8 *)&g.d_006e50e8)), (void *)ADDR(0x006e5228, ((u8 *)&g.d_006e5228)));
+    ((dd_getcaps_fn)(*(void ***)g_ddraw)[11])(g_ddraw, (void *)(iptr)((u8 *)&g.d_006e50e8), (void *)(iptr)((u8 *)&g.d_006e5228));
     if ((ddraw_hw_caps_byte0 & 0x40) == 0)
         dbg_log(s_Direct_Draw__Doesn_t_Supports_Ha_006394f8);
     if ((ddraw_hw_caps_byte2 & 0x40) == 0)

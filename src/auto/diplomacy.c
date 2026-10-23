@@ -69,7 +69,7 @@ int __cdecl diplo_patience_limit(iptr civ2,iptr civ)
   if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
     limit += 2;
   }
-  if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) {
+  if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) {
     limit = 2;
   }
   return limit;
@@ -105,7 +105,7 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
   diplo_space_race_threat = ai_spaceship_race_behind(civ);
   war_count = 0;
   for (civ3 = 1; civ3 < 8; civ3++) {
-    if ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 0x20) != 0) {
+    if ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 0x20) != 0) {
       war_count++;
     }
     if ((((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
@@ -194,7 +194,7 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
     diplo_ai_aggressive = 1;
   }
   if ((civs[civ].units_active[0x2d] != '\0') &&
-     (treaty_flags = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 0x594), *treaty_flags = *treaty_flags | 0x100,
+     (treaty_flags = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594), *treaty_flags = *treaty_flags | 0x100,
      civs[civ2].units_active[0x2d] == '\0')) {
     diplo_ai_aggressive = 1;
     diplo_tribute_demand = int_clamp(diplo_tribute_demand,100,9999);
@@ -216,7 +216,7 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
   if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
     diplo_cur_attitude -= 0x19;
   }
-  if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) {
+  if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) {
     diplo_cur_attitude += 0x19;
   }
   if (civs[civ2].reputation != '\0') {
@@ -238,7 +238,7 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
       diplo_ai_aggressive = 1;
     }
   }
-  if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 8) != 0) {
+  if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 8) != 0) {
     diplo_ai_aggressive = 1;
   }
   if (((game.rules & 0x80) != 0) && (civs[civ].science_rate == '\0')) {
@@ -260,7 +260,7 @@ void __cdecl diplo_eval_ai_stance(iptr civ2,iptr civ)
     diplo_tribute_demand += (int)((uint)civs[civ2].reputation * diplo_tribute_demand) / 2;
   }
   if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0) {
-    if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 4) & 1) != 0) {
+    if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + civ2 * 4) & 1) != 0) {
       diplo_tribute_demand = (int)(diplo_tribute_demand + (diplo_tribute_demand >> 0x1f & 3U)) >> 2;
     }
   }
@@ -323,7 +323,7 @@ LAB_00457d0d:
                ((game.difficulty != '\0' &&
                 ((*(byte *)&civs[civ3].treaties[civ2] & 1) != 0)))) {
               if (diplo_ai_fear_level == 0) {
-                if ((((*(byte *)(civ3 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) &&
+                if ((((*(byte *)(civ3 * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) &&
                     (value = civ_has_wonder(civ2,6), value == 0)) &&
                    (value = civ_has_wonder(civ2,0x18), value == 0)) {
                   diplo_ai_aggressive = 1;
@@ -334,7 +334,7 @@ LAB_00457d0d:
               }
             }
           }
-          if ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 8) != 0) {
+          if ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 8) != 0) {
             alliance_count++;
           }
           value = diplo_is_hostile(civ,civ3);
@@ -348,11 +348,11 @@ LAB_00457d0d:
               diplo_peace_inclination++;
             }
             if (((*(byte *)&civs[civ2].treaties[civ3] & 1) != 0) &&
-               ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 0x20) == 0)) {
+               ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 0x20) == 0)) {
               diplo_war_target_civ = civ3;
             }
-            if (((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) != 0) &&
-               ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 2) != 0)) {
+            if (((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) != 0) &&
+               ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 2) != 0)) {
               if (max_strength < civs[civ3].military_strength) {
                 max_strength = civs[civ3].military_strength;
                 diplo_strongest_enemy = civ3;
@@ -388,7 +388,7 @@ LAB_00457d0d:
       if ((((((diplo_initial_eval_done == 0) ||
              (6 < (int)((uint)civs[civ2].reputation -
                        (int)civs[civ].reputation_credit[civ2]))) &&
-            ((diplo_ai_declare_war = 0, (*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0 ||
+            ((diplo_ai_declare_war = 0, (*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0 ||
              (4 < diplo_captured_city_count)))) &&
            ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
           (((diplo_ai_aggressive != 0 || ((diplo_space_race_threat != 0 && (2 < game.difficulty)))) ||
@@ -448,7 +448,7 @@ LAB_00457d0d:
       if ((diplo_ai_fear_level == 0) && ((int)diplo_cur_attitude < 2)) {
         diplo_cur_attitude = 1;
       }
-      if (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x20) == 0) &&
+      if (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x20) == 0) &&
          (0x62 < (int)diplo_cur_attitude)) {
         diplo_cur_attitude = 99;
       }
@@ -456,7 +456,7 @@ LAB_00457d0d:
          && (0x49 < (int)diplo_cur_attitude)) {
         diplo_cur_attitude = 0x4a;
       }
-      if (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x20) != 0) &&
+      if (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x20) != 0) &&
          ((int)diplo_cur_attitude < 0x1b)) {
         diplo_cur_attitude = 0x1a;
       }
@@ -499,12 +499,12 @@ void __cdecl diplo_set_attitude_arg(iptr civ2,iptr civ)
   level = diplo_attitude_level(diplo_cur_attitude);
   text_append_string_id(attitude_names[level]);
   if (game_language == 2) {
-    text_append(ADDR(0x626a38, ((u8 *)&g.d_00626a38)));
+    text_append((iptr)((u8 *)&g.d_00626a38));
   }
   text_append_space();
   adjective = civ_get_adjective(civ);
   text_append(adjective);
-  text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  text_set_string_arg(0,(iptr)((u8 *)&g.d_00679640));
   return;
 }
 #undef diplo_cur_attitude
@@ -552,27 +552,27 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
   str = civ_name_plural(civ2);
   text_set_string_arg(6,str);
   text_clear();
-  text_append(ADDR(0x626a3c, ((u8 *)&g.d_00626a3c)));
+  text_append((iptr)((u8 *)&g.d_00626a3c));
   if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0) {
-    text_append(ADDR(0x626a4c, ((u8 *)&g.d_00626a4c)));
+    text_append((iptr)((u8 *)&g.d_00626a4c));
   }
   else {
-    text_append(ADDR(0x626a48, ((u8 *)&g.d_00626a48)));
+    text_append((iptr)((u8 *)&g.d_00626a48));
   }
   str = rand_range(0,3);
   text_append_int(str);
-  dialog_load_game_text(&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00679640));
   if (civs[civ].units_active[0x2d] != '\0') {
-    dlg_load_game_section(&dlg,ADDR(0x626a50, ((u8 *)&g.d_00626a50)),0x8000);
+    dlg_load_game_section(&dlg,(iptr)((u8 *)&g.d_00626a50),0x8000);
   }
   dlg_show_modal(&dlg,0);
   if ((civs[civ2].units_active[0x2d] != '\0') &&
      ((civs[civ2].treaties[civ] & 0x104) != 0x100)) {
     text_clear();
-    text_append(ADDR(0x626a60, ((u8 *)&g.d_00626a60)));
+    text_append((iptr)((u8 *)&g.d_00626a60));
     text_append_int(2 - (uint)(civs[civ].units_active[0x2d] == '\0'));
-    popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    treaty = (uint *)(civ2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+    popup_game((iptr)((u8 *)&g.d_00679640));
+    treaty = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
     *treaty = *treaty | 0x100;
   }
   seh_state = 0xffffffff;
@@ -618,7 +618,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
       diplo_emissary_asked = 1;
       while (diplo_emissary_response == 0) {
         if ((civs[civ].units_active[0x2d] != '\0') &&
-           ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 1) == 0)) {
+           ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 1) == 0)) {
           refused = 1;
         }
         diplo_eval_ai_stance(civ2,civ);
@@ -630,7 +630,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
         if (refused != 0) {
           str = civ_get_adjective(civ);
           text_set_string_arg(1,str);
-          popup_game(ADDR(0x626a6c, ((u8 *)&g.d_00626a6c)));
+          popup_game((iptr)((u8 *)&g.d_00626a6c));
           break;
         }
         str = civ_leader_title(civ);
@@ -642,7 +642,7 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr x,iptr y)
         text_set_label_arg(4,*(i32 *)
                               (label_string_ids + 0x1d8 +
                               (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
-        dialog_load_game_text(&dlg,ADDR(0x626a7c, ((u8 *)&g.d_00626a7c)));
+        dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00626a7c));
         if ((((*(byte *)&civs[human_civ].treaties[civ] & 0x80) != 0) ||
             (ret = civ_has_wonder(human_civ,0x18), ret != 0)) ||
            (ret = civ_has_wonder(human_civ,9), ret != 0)) {
@@ -772,10 +772,10 @@ i32 __cdecl diplo_offer_sell_tech(iptr civ,iptr civ2,int mode)
       text_set_label_arg(1,advances[diplo_wanted_tech].name);
       text_set_number_arg(0,price);
       if (mode < 2) {
-        choice = popup_game(ADDR(0x626a88, ((u8 *)&g.d_00626a88)));
+        choice = popup_game((iptr)((u8 *)&g.d_00626a88));
       }
       else {
-        choice = popup_game(ADDR(0x626a94, ((u8 *)&g.d_00626a94)));
+        choice = popup_game((iptr)((u8 *)&g.d_00626a94));
       }
       if (choice == 1) {
         civs[civ].gold -= price;
@@ -909,17 +909,17 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     text_set_string_arg(1,str);
     if (!allied) {
       if ((((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) ||
-          ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x10) != 0)) ||
+          ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x10) != 0)) ||
          (diplo_captured_city_count != 0)) {
         if (mode == 0) {
           ret = rand_range(0,2);
           if (ret == 0) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626ab0, ((u8 *)&g.d_00626ab0)));
+            popup_game((iptr)((u8 *)&g.d_00626ab0));
           }
           else {
             diplo_leader_play_reaction(4);
-            popup_game(ADDR(0x626aa0, ((u8 *)&g.d_00626aa0)));
+            popup_game((iptr)((u8 *)&g.d_00626aa0));
           }
         }
         seh_state = 0xffffffff;
@@ -927,18 +927,18 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
         mode = 0;
         goto LAB_0045a526;
       }
-      if ((((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 2) != 0) ||
+      if ((((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 2) != 0) ||
           ((diplo_ai_aggressive != 0 && (5 < civ_tech_count)))) ||
          (ret = diplo_attitude_level(diplo_cur_attitude), 5 < ret)) {
         if (mode == 0) {
           ret = rand_range(0,2);
           if (ret == 0) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626ad4, ((u8 *)&g.d_00626ad4)));
+            popup_game((iptr)((u8 *)&g.d_00626ad4));
           }
           else {
             diplo_leader_play_reaction(4);
-            popup_game(ADDR(0x626ac4, ((u8 *)&g.d_00626ac4)));
+            popup_game((iptr)((u8 *)&g.d_00626ac4));
           }
         }
         seh_state = 0xffffffff;
@@ -950,7 +950,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
     if ((-1 < blocking_wonder) && (3 < game.difficulty)) {
       if (mode == 0) {
         text_set_label_arg(1,improvements[blocking_wonder + 0x27].name);
-        popup_game(ADDR(0x626ae8, ((u8 *)&g.d_00626ae8)));
+        popup_game((iptr)((u8 *)&g.d_00626ae8));
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
         mode = 0;
@@ -978,7 +978,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
             str = civ_get_adjective(civ2);
             text_set_string_arg(1,str);
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626afc, ((u8 *)&g.d_00626afc)));
+            popup_game((iptr)((u8 *)&g.d_00626afc));
             seh_state = 0xffffffff;
             /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
             mode = 0;
@@ -1014,7 +1014,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
           goto LAB_0045a526;
         }
         if (mode == 0) {
-          popup_game(ADDR(0x626b10, ((u8 *)&g.d_00626b10)));
+          popup_game((iptr)((u8 *)&g.d_00626b10));
         }
       }
       seh_state = 0xffffffff;
@@ -1031,10 +1031,10 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       text_set_label_arg(1,advances[diplo_wanted_tech].name);
       diplo_leader_play_reaction(3);
       if (mode < 2) {
-        popup_game(ADDR(0x626b20, ((u8 *)&g.d_00626b20)));
+        popup_game((iptr)((u8 *)&g.d_00626b20));
       }
       else {
-        popup_game(ADDR(0x626b30, ((u8 *)&g.d_00626b30)));
+        popup_game((iptr)((u8 *)&g.d_00626b30));
       }
       civ_give_advance(civ2,diplo_wanted_tech,civ,0,0);
       diplo_wanted_tech = -1;
@@ -1060,7 +1060,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
           goto LAB_0045a526;
         }
         if (mode == 0) {
-          popup_game(ADDR(0x626b40, ((u8 *)&g.d_00626b40)));
+          popup_game((iptr)((u8 *)&g.d_00626b40));
         }
       }
       seh_state = 0xffffffff;
@@ -1094,21 +1094,21 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
       text_set_label_arg(4,advances[diplo_offer_tech_2nd].name);
     }
     text_clear();
-    text_append(ADDR(0x626b50, ((u8 *)&g.d_00626b50)));
+    text_append((iptr)((u8 *)&g.d_00626b50));
     if (((mode == 0) && (diplo_ai_aggressive == 0)) &&
        (ret = diplo_attitude_level(diplo_cur_attitude), ret < 5)) {
-      text_append(ADDR(0x626b60, ((u8 *)&g.d_00626b60)));
+      text_append((iptr)((u8 *)&g.d_00626b60));
     }
     else {
-      text_append(ADDR(0x626b5c, ((u8 *)&g.d_00626b5c)));
+      text_append((iptr)((u8 *)&g.d_00626b5c));
     }
     dialog_init_defaults(&dlg);
-    dialog_load_game_text(&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00679640));
     if ((-1 < diplo_offer_tech_2nd) && (diplo_offer_tech_2nd != diplo_offer_tech_best)) {
       str_clear((iptr)label_buf);
       str_append_label((iptr)label_buf,0x6b);
-      text_expand_vars((iptr)label_buf,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),2,0);
+      text_expand_vars((iptr)label_buf,(iptr)((u8 *)&g.d_00679640));
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),2,0);
     }
     ret = dlg_show_modal(&dlg,0);
     if (ret == 0) {
@@ -1125,14 +1125,14 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 x,i32 y,int mode,int eval_only
          ((offer2_value < offer_value &&
           ((ai_tech_count < civ_tech_count || (ret = diplo_attitude_level(diplo_cur_attitude), 4 < ret)))))) {
         diplo_leader_play_reaction(3);
-        popup_game(ADDR(0x626b64, ((u8 *)&g.d_00626b64)));
+        popup_game((iptr)((u8 *)&g.d_00626b64));
         civs[civ].diplo_request_count++;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
         mode = 0;
         goto LAB_0045a526;
       }
-      int_swap(ADDR(0x64b124, ((u8 *)&g.d_0064b124)),ADDR(0x64b10c, ((u8 *)&g.d_0064b10c)));
+      int_swap((iptr)((u8 *)&g.d_0064b124),(iptr)((u8 *)&g.d_0064b10c));
       attitude_cost = offer2_value;
     }
     civ_give_advance(civ,diplo_offer_tech_best,civ2,0,0);
@@ -1192,7 +1192,7 @@ void __cdecl diplo_form_alliance(iptr civ2,iptr civ)
   adjective = civ_get_adjective(civ2);
   text_set_string_arg(2,adjective);
   diplo_leader_play_reaction(2);
-  popup_game_with_sprite(ADDR(0x626b74, ((u8 *)&g.d_00626b74)),(iptr)(&diplo_popup_portrait_sprite +
+  popup_game_with_sprite((iptr)((u8 *)&g.d_00626b74),(iptr)(&diplo_popup_portrait_sprite +
                                     ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
   return;
 }
@@ -1221,7 +1221,7 @@ void __cdecl diplo_sign_peace_treaty(iptr civ2,iptr civ)
   str = civ_get_adjective(civ2);
   text_set_string_arg(2,str);
   diplo_leader_play_reaction(2);
-  popup_game_with_sprite(ADDR(0x626b80, ((u8 *)&g.d_00626b80)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+  popup_game_with_sprite((iptr)((u8 *)&g.d_00626b80),(iptr)((u8 *)&g.d_006409d8),0);
   return;
 }
 
@@ -1251,9 +1251,9 @@ void __cdecl diplo_agree_ceasefire(iptr civ2,iptr civ)
   str = civ_get_adjective(civ2);
   text_set_string_arg(2,str);
   diplo_leader_play_reaction(2);
-  popup_game_with_sprite(ADDR(0x626b88, ((u8 *)&g.d_00626b88)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+  popup_game_with_sprite((iptr)((u8 *)&g.d_00626b88),(iptr)((u8 *)&g.d_00647748),0);
   for (other = 1; other < 8; other++) {
-    treaty = (uint *)(other * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+    treaty = (uint *)(other * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
     *treaty = *treaty & 0xfffff7ff;
   }
   return;
@@ -1286,7 +1286,7 @@ void __cdecl diplo_allies_join_war(iptr civ,iptr civ2)
           if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
             if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
               if (human_civ == civ) {
-                popup_game_with_sprite(ADDR(0x626ba4, ((u8 *)&g.d_00626ba4)),(iptr)(&diplo_popup_portrait_sprite +
+                popup_game_with_sprite((iptr)((u8 *)&g.d_00626ba4),(iptr)(&diplo_popup_portrait_sprite +
                                                   ((game.advance_known_by[0xf] != '\0') - 1 &
                                                   0xffff7c80)),0);
               }
@@ -1297,14 +1297,14 @@ void __cdecl diplo_allies_join_war(iptr civ,iptr civ2)
               }
             }
             diplo_set_treaty_flags(civ3,civ2,0x2401);
-            treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 0x594);
+            treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ3 * 0x594);
             *treaty = *treaty | 0x80800;
           }
         }
         else {
           if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
             if (human_civ == civ2) {
-              popup_game_with_sprite(ADDR(0x626b94, ((u8 *)&g.d_00626b94)),(iptr)(&diplo_popup_portrait_sprite +
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00626b94),(iptr)(&diplo_popup_portrait_sprite +
                                                 ((game.advance_known_by[0xf] != '\0') - 1 &
                                                 0xffff7c80)),0);
             }
@@ -1316,9 +1316,9 @@ void __cdecl diplo_allies_join_war(iptr civ,iptr civ2)
           }
           civ_adjust_attitude(civ3,civ2,100);
           diplo_set_treaty_flags(civ3,civ2,0x2401);
-          treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 0x594);
+          treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ3 * 0x594);
           *treaty = *treaty | 0x80800;
-          treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 0x594);
+          treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
           *treaty = *treaty | 0x80800;
           civs[civ2].last_treaty_turn[civ3] = game.turn;
         }
@@ -1339,7 +1339,7 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
   int has_wonder;
   
   if (-1 < civ2) {
-    counter = (char *)(civ + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + civ2 * 0x594);
+    counter = (char *)(civ + (iptr)((u8 *)&civs + 72) + civ2 * 0x594);
     *counter = *counter + 1;
   }
   if ((*(byte *)&civs[civ].treaties[civ3] & 8) == 0) {
@@ -1359,7 +1359,7 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
           civs[civ].reputation++;
         }
         if ((civ2 < 0) && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-          counter = (char *)(civ3 + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + civ * 0x594);
+          counter = (char *)(civ3 + (iptr)((u8 *)&civs + 72) + civ * 0x594);
           *counter = *counter - 1;
         }
       }
@@ -1370,7 +1370,7 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
         civs[civ].reputation++;
       }
       if ((civ2 < 0) && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-        counter = (char *)(civ3 + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + civ * 0x594);
+        counter = (char *)(civ3 + (iptr)((u8 *)&civs + 72) + civ * 0x594);
         *counter = *counter - 1;
       }
       if (-1 < civ2) {
@@ -1378,12 +1378,12 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
       }
     }
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-      treaty = (uint *)(civ3 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+      treaty = (uint *)(civ3 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
       *treaty = *treaty | 0x10;
     }
     diplo_set_treaty_flags(civ,civ3,0x2000);
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-      treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 4);
+      treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ3 * 4);
       *treaty = *treaty | 0x80800;
       civs[civ].last_treaty_turn[civ3] = game.turn;
       diplo_allies_join_war(civ3,civ);
@@ -1396,7 +1396,7 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
     if ((civ2 < 0) &&
        (civs[civ].reputation = civs[civ].reputation + 1,
        (1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-      counter = (char *)(civ3 + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + civ * 0x594);
+      counter = (char *)(civ3 + (iptr)((u8 *)&civs + 72) + civ * 0x594);
       *counter = *counter - 1;
     }
     if (-1 < civ2) {
@@ -1404,7 +1404,7 @@ void __cdecl diplo_declare_war(iptr civ,iptr civ3,iptr civ2)
     }
     diplo_cancel_alliance(civ,civ3);
     if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-      treaty = (uint *)(civ3 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+      treaty = (uint *)(civ3 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
       *treaty = *treaty | 0x10;
     }
   }
@@ -1439,7 +1439,7 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
     else {
       name2 = civ_name_plural(civ2);
       text_set_string_arg(1,name2);
-      choice = popup_game_with_sprite(ADDR(0x626bb0, ((u8 *)&g.d_00626bb0)),(iptr)(&diplo_popup_portrait_sprite +
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00626bb0),(iptr)(&diplo_popup_portrait_sprite +
                                                    ((game.advance_known_by[0xf] != '\0') - 1 &
                                                    0xffff7c80)),0);
       if (choice != 1) {
@@ -1459,7 +1459,7 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
           payment = gold_units * 0x32;
           if (payment != 0) {
             text_set_number_arg(0,payment);
-            choice = popup_game_with_sprite(ADDR(0x626bbc, ((u8 *)&g.d_00626bbc)),(iptr)(&diplo_popup_portrait_sprite +
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00626bbc),(iptr)(&diplo_popup_portrait_sprite +
                                                          ((game.advance_known_by[0xf] != '\0') - 1 &
                                                          0xffff7c80)),0);
             if (choice == 1) {
@@ -1474,7 +1474,7 @@ void __cdecl diplo_ally_demand_help(iptr civ,iptr civ2)
         diplo_declare_war(civ3,civ2,civ);
       }
       else {
-        popup_game_with_sprite(ADDR(0x626bc8, ((u8 *)&g.d_00626bc8)),(iptr)(&diplo_popup_portrait_sprite +
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00626bc8),(iptr)(&diplo_popup_portrait_sprite +
                                           ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
                           );
         if (diplo_cur_attitude < 0x33) {
@@ -1628,7 +1628,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
       else {
         score = ((uint)civs[civ].military_strength * 3) / 2;
       }
-      if (((*(byte *)(diplo_war_target_civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 2) != 0) &&
+      if (((*(byte *)(diplo_war_target_civ * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 2) != 0) &&
          (score <= civs[diplo_war_target_civ].military_strength)) {
         agree = true;
         reasons = 2;
@@ -1647,7 +1647,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
               (game.power_rank[civ2] <= game.power_rank[other])) &&
              ((((*(byte *)&civs[civ2].treaties[other] & 1) != 0 ||
                ((*(byte *)&civs[civ].treaties[other] & 1) != 0)) &&
-              ((*(byte *)(other * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 0x20) == 0)))))) &&
+              ((*(byte *)(other * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 0x20) == 0)))))) &&
            (((*(byte *)&civs[civ].treaties[other] & 8) == 0 &&
             (at_war = (uint)((*(byte *)&civs[civ2].treaties[other] & 1) != 0),
             (int)(game.power_rank[other] - at_war) < best_rank)))) {
@@ -1693,10 +1693,10 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
         text_set_label_arg(3,advances[diplo_offer_tech_best].name);
         text_clear();
         diplo_leader_play_reaction(3);
-        text_append(ADDR(0x626c58, ((u8 *)&g.d_00626c58)));
+        text_append((iptr)((u8 *)&g.d_00626c58));
         str = rand_range(0,1);
         text_append_int(str);
-        city = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        city = popup_game((iptr)((u8 *)&g.d_00679640));
         if (city == 0) {
           agree = false;
         }
@@ -1726,11 +1726,11 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
           text_set_number_arg(0,gold_offer);
           text_clear();
           diplo_leader_play_reaction(3);
-          text_append(ADDR(0x626c68, ((u8 *)&g.d_00626c68)));
+          text_append((iptr)((u8 *)&g.d_00626c68));
           str = rand_range(0,1);
           text_append_int(str);
           diplo_leader_play_reaction(3);
-          city = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+          city = popup_game((iptr)((u8 *)&g.d_00679640));
           if (city == 0) {
             agree = false;
           }
@@ -1750,7 +1750,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
           str = civ_name_plural(diplo_war_target_civ);
           text_set_string_arg(4,str);
           diplo_leader_play_reaction(3);
-          city = popup_game(ADDR(0x626c8c, ((u8 *)&g.d_00626c8c)));
+          city = popup_game((iptr)((u8 *)&g.d_00626c8c));
           if (city == 0) {
             if (((reasons != 0) || (game.power_rank[civ2] == 7)) ||
                ((2 < (int)((uint)civs[civ2].reputation -
@@ -1759,10 +1759,10 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
               civs[civ].diplo_request_count++;
               diplo_leader_play_reaction(3);
               if (!paid) {
-                popup_game(ADDR(0x626cb4, ((u8 *)&g.d_00626cb4)));
+                popup_game((iptr)((u8 *)&g.d_00626cb4));
               }
               else {
-                popup_game(ADDR(0x626ca0, ((u8 *)&g.d_00626ca0)));
+                popup_game((iptr)((u8 *)&g.d_00626ca0));
               }
               result = (uint)!paid;
               return result;
@@ -1774,7 +1774,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
               diplo_set_treaty_flags(civ,diplo_war_target_civ,0x2001);
               diplo_set_treaty_flags(civ2,diplo_war_target_civ,1);
             }
-            treaty = (uint *)(diplo_war_target_civ * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 0x594);
+            treaty = (uint *)(diplo_war_target_civ * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
             *treaty = *treaty | 0x80800;
             diplo_war_target_civ = -1;
           }
@@ -1783,7 +1783,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
       }
       else {
         diplo_leader_play_reaction(3);
-        popup_game(ADDR(0x626c78, ((u8 *)&g.d_00626c78)));
+        popup_game((iptr)((u8 *)&g.d_00626c78));
       }
     }
     else if ((((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0) &&
@@ -1798,25 +1798,25 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
         if (city < 4) {
           if (game.power_rank[civ2] < game.power_rank[civ]) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626c20, ((u8 *)&g.d_00626c20)));
+            popup_game((iptr)((u8 *)&g.d_00626c20));
           }
           else if (civs[civ].diplo_request_count < 3) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626c44, ((u8 *)&g.d_00626c44)));
+            popup_game((iptr)((u8 *)&g.d_00626c44));
           }
           else {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626c30, ((u8 *)&g.d_00626c30)));
+            popup_game((iptr)((u8 *)&g.d_00626c30));
           }
         }
         else {
           diplo_leader_play_reaction(4);
-          popup_game(ADDR(0x626c0c, ((u8 *)&g.d_00626c0c)));
+          popup_game((iptr)((u8 *)&g.d_00626c0c));
         }
       }
       else {
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626bf8, ((u8 *)&g.d_00626bf8)));
+        popup_game((iptr)((u8 *)&g.d_00626bf8));
       }
     }
     else {
@@ -1826,11 +1826,11 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
          ((diplo_ai_fear_level != 0 || (city = diplo_attitude_level((uint)(diplo_cur_attitude < 2)), city != 0)
           ))) {
         diplo_leader_play_reaction(3);
-        popup_game(ADDR(0x626bd4, ((u8 *)&g.d_00626bd4)));
+        popup_game((iptr)((u8 *)&g.d_00626bd4));
       }
       else {
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626be4, ((u8 *)&g.d_00626be4)));
+        popup_game((iptr)((u8 *)&g.d_00626be4));
       }
       civs[civ].diplo_request_count++;
     }
@@ -1849,7 +1849,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
       else {
         score = ((uint)civs[civ].military_strength * 3) / 2;
       }
-      if (((*(byte *)(diplo_war_target_civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 2) != 0) &&
+      if (((*(byte *)(diplo_war_target_civ * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 2) != 0) &&
          (score <= civs[diplo_war_target_civ].military_strength)) {
         peace_flags = 3;
       }
@@ -1882,16 +1882,16 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
           if ((diplo_cur_attitude < 0x33) &&
              ((game.power_rank[civ] <= game.power_rank[civ2] || (diplo_cur_attitude < 0x1a)))) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626d00, ((u8 *)&g.d_00626d00)));
+            popup_game((iptr)((u8 *)&g.d_00626d00));
           }
           else {
             diplo_leader_play_reaction(4);
-            popup_game(ADDR(0x626cf0, ((u8 *)&g.d_00626cf0)));
+            popup_game((iptr)((u8 *)&g.d_00626cf0));
           }
         }
         else {
           diplo_leader_play_reaction(4);
-          popup_game(ADDR(0x626ce0, ((u8 *)&g.d_00626ce0)));
+          popup_game((iptr)((u8 *)&g.d_00626ce0));
         }
       }
       else {
@@ -1901,11 +1901,11 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
            ((diplo_ai_fear_level != 0 ||
             (city = diplo_attitude_level((uint)(diplo_cur_attitude < 2)), city != 0)))) {
           diplo_leader_play_reaction(3);
-          popup_game(ADDR(0x626cc0, ((u8 *)&g.d_00626cc0)));
+          popup_game((iptr)((u8 *)&g.d_00626cc0));
         }
         else {
           diplo_leader_play_reaction(4);
-          popup_game(ADDR(0x626cd0, ((u8 *)&g.d_00626cd0)));
+          popup_game((iptr)((u8 *)&g.d_00626cd0));
         }
         civs[civ].diplo_request_count++;
       }
@@ -1918,10 +1918,10 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
         text_set_label_arg(3,advances[diplo_offer_tech_best].name);
         diplo_leader_play_reaction(3);
         text_clear();
-        text_append(ADDR(0x626d10, ((u8 *)&g.d_00626d10)));
+        text_append((iptr)((u8 *)&g.d_00626d10));
         str = rand_range(0,1);
         text_append_int(str);
-        city = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        city = popup_game((iptr)((u8 *)&g.d_00679640));
         if (city == 0) {
           peace_flags = peace_flags & 8;
         }
@@ -1952,10 +1952,10 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
           text_set_number_arg(0,gold_offer);
           diplo_leader_play_reaction(3);
           text_clear();
-          text_append(ADDR(0x626d20, ((u8 *)&g.d_00626d20)));
+          text_append((iptr)((u8 *)&g.d_00626d20));
           str = rand_range(0,1);
           text_append_int(str);
-          city = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+          city = popup_game((iptr)((u8 *)&g.d_00679640));
           if (city == 0) {
             peace_flags = peace_flags & 8;
           }
@@ -1972,14 +1972,14 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
       }
       if (peace_flags == 0) {
         diplo_leader_play_reaction(3);
-        popup_game(ADDR(0x626d30, ((u8 *)&g.d_00626d30)));
+        popup_game((iptr)((u8 *)&g.d_00626d30));
       }
       else {
         if (0 < diplo_war_target_civ) {
           str = civ_name_plural(diplo_war_target_civ);
           text_set_string_arg(4,str);
           diplo_leader_play_reaction(3);
-          city = popup_game(ADDR(0x626d40, ((u8 *)&g.d_00626d40)));
+          city = popup_game((iptr)((u8 *)&g.d_00626d40));
           if (city == 0) {
             if ((((peace_flags & 6) != 0) || (game.power_rank[civ2] == 7)) ||
                (3 < (int)((uint)civs[civ2].reputation -
@@ -1987,10 +1987,10 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
               civs[civ].diplo_request_count++;
               diplo_leader_play_reaction(3);
               if (!paid) {
-                popup_game(ADDR(0x626d68, ((u8 *)&g.d_00626d68)));
+                popup_game((iptr)((u8 *)&g.d_00626d68));
               }
               else {
-                popup_game(ADDR(0x626d54, ((u8 *)&g.d_00626d54)));
+                popup_game((iptr)((u8 *)&g.d_00626d54));
               }
               result = (uint)!paid;
               return result;
@@ -2021,14 +2021,14 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
     {
       diplo_set_attitude_arg(civ2,civ);
       text_clear();
-      text_append(ADDR(0x626d74, ((u8 *)&g.d_00626d74)));
+      text_append((iptr)((u8 *)&g.d_00626d74));
       str = rand_range(0,2);
       text_append_int(str);
       diplo_ai_declare_war = 0;
       diplo_leader_play_reaction(4);
       diplo_set_treaty_flags(civ,civ2,0x2000);
       civs[civ2].last_treaty_turn[civ] = game.turn;
-      popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((u8 *)&g.d_00644e48),0);
       return 1;
     }
     if ((proposal == 3) && (game.power_rank[civ2] < game.power_rank[civ])) {
@@ -2077,7 +2077,7 @@ i32 __cdecl diplo_ai_answer_proposal(iptr civ2,iptr civ,int proposal)
         rnd_sign = (int)rnd >> 0x1f;
         if (((int)(uint)civs[civ].government <
              (int)((((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) - rnd_sign) + 5)) &&
-           (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x40) == 0 &&
+           (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) == 0 &&
             (0x19 < diplo_cur_attitude)))) goto LAB_0045d5d2;
       }
       for (unit = 0; unit < game.num_units; unit++) {
@@ -2120,7 +2120,7 @@ LAB_0045d5d2:
     }
     if (units_moved != 0) {
       diplo_leader_play_reaction(3);
-      popup_game_with_sprite(ADDR(0x626d7c, ((u8 *)&g.d_00626d7c)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00626d7c),(iptr)((u8 *)&g.d_006409d8),0);
       if (proposal == 5) {
         return 0;
       }
@@ -2130,16 +2130,16 @@ LAB_0045d5d2:
         if (((diplo_ai_initial_aggressive == 0) && (diplo_cur_attitude < 0x4c)) ||
            ((units_moved != 0 ||
             (((((diplo_ai_fear_level != 0 || (paid)) ||
-               ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x40) != 0)) ||
+               ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) != 0)) ||
               (diplo_cur_attitude < 0x1a)) && ((city = _rand(), city % 3 != 0 || (proposal == 5))))))))
         {
           if (units_moved == 0) {
             diplo_leader_play_reaction(3);
             if (proposal == 5) {
-              popup_game(ADDR(0x626ddc, ((u8 *)&g.d_00626ddc)));
+              popup_game((iptr)((u8 *)&g.d_00626ddc));
             }
             else {
-              popup_game(ADDR(0x626de8, ((u8 *)&g.d_00626de8)));
+              popup_game((iptr)((u8 *)&g.d_00626de8));
             }
           }
         }
@@ -2147,13 +2147,13 @@ LAB_0045d5d2:
           result = 1;
           diplo_set_attitude_arg(civ2,civ);
           text_clear();
-          text_append(ADDR(0x626dd4, ((u8 *)&g.d_00626dd4)));
+          text_append((iptr)((u8 *)&g.d_00626dd4));
           str = rand_range(0,2);
           text_append_int(str);
           diplo_ai_declare_war = 0;
           diplo_leader_play_reaction(4);
           diplo_set_treaty_flags(civ,civ2,0x2000);
-          popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((u8 *)&g.d_00644e48),0);
           civs[civ2].last_treaty_turn[civ] = game.turn;
         }
       }
@@ -2164,21 +2164,21 @@ LAB_0045d5d2:
               (game.power_rank[civ2] < game.power_rank[civ])) ||
              (game.power_rank[civ2] < 4)) {
             diplo_leader_play_reaction(3);
-            popup_game_with_sprite(ADDR(0x626db0, ((u8 *)&g.d_00626db0)),(iptr)(&diplo_popup_portrait_sprite +
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00626db0),(iptr)(&diplo_popup_portrait_sprite +
                                               ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80
                                               )),0);
           }
           else if (((diplo_ai_initial_aggressive == 0) && (diplo_cur_attitude < 0x33)) && (diplo_target_is_leader == 0)) {
             if (units_moved == 0) {
               diplo_leader_play_reaction(3);
-              popup_game_with_sprite(ADDR(0x626dc8, ((u8 *)&g.d_00626dc8)),(iptr)(&diplo_popup_portrait_sprite +
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00626dc8),(iptr)(&diplo_popup_portrait_sprite +
                                                 ((game.advance_known_by[0xf] != '\0') - 1 &
                                                 0xffff7c80)),0);
             }
           }
           else {
             diplo_leader_play_reaction(4);
-            popup_game_with_sprite(ADDR(0x626dbc, ((u8 *)&g.d_00626dbc)),(iptr)(&diplo_popup_portrait_sprite +
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00626dbc),(iptr)(&diplo_popup_portrait_sprite +
                                               ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80
                                               )),0);
             diplo_cancel_alliance(civ2,civ);
@@ -2193,12 +2193,12 @@ LAB_0045d5d2:
         text_set_number_arg(0,tribute);
         diplo_leader_play_reaction(2);
         if (proposal == 3) {
-          popup_game_with_sprite(ADDR(0x626d94, ((u8 *)&g.d_00626d94)),(iptr)(&diplo_popup_portrait_sprite +
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00626d94),(iptr)(&diplo_popup_portrait_sprite +
                                             ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
                              ,0);
         }
         else {
-          popup_game(ADDR(0x626da4, ((u8 *)&g.d_00626da4)));
+          popup_game((iptr)((u8 *)&g.d_00626da4));
         }
         civs[civ2].gold += tribute;
         civs[civ].gold -= tribute;
@@ -2207,7 +2207,7 @@ LAB_0045d5d2:
       else {
         text_set_label_arg(1,advances[diplo_wanted_tech].name);
         diplo_leader_play_reaction(2);
-        popup_game(ADDR(0x626d88, ((u8 *)&g.d_00626d88)));
+        popup_game((iptr)((u8 *)&g.d_00626d88));
         civ_give_advance(civ2,diplo_wanted_tech,civ,0,0);
         diplo_wanted_tech = -1;
       }
@@ -2225,7 +2225,7 @@ LAB_0045d5d2:
     diplo_eval_ai_stance(civ2,civ);
     diplo_set_attitude_arg(civ2,civ);
     diplo_leader_play_reaction(4);
-    popup_game_with_sprite(ADDR(0x626df0, ((u8 *)&g.d_00626df0)),(iptr)(&diplo_popup_portrait_sprite +
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00626df0),(iptr)(&diplo_popup_portrait_sprite +
                                       ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
     civs[civ2].reputation++;
     diplo_cancel_alliance(civ2,civ);
@@ -2297,7 +2297,7 @@ void __cdecl diplo_favor_menu(iptr civ2,iptr civ)
 LAB_0045ddb7:
   do {
     diplo_set_attitude_arg(civ2,civ);
-    menu_choice = popup_game(ADDR(0x626dfc, ((u8 *)&g.d_00626dfc)));
+    menu_choice = popup_game((iptr)((u8 *)&g.d_00626dfc));
     if (menu_choice == 0) {
       civs[civ].diplo_request_count--;
       seh_state = 0xffffffff;
@@ -2315,7 +2315,7 @@ LAB_0045ddb7:
       net_send_state_diff(0xff,2,0,0,0);
     }
     if (menu_choice != 2) goto LAB_0045eb0a;
-    dialog_load_game_text(&dlg,ADDR(0x626e08, ((u8 *)&g.d_00626e08)));
+    dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00626e08));
     for (civ4 = 1; civ4 < 8; civ4++) {
       if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.civs_alive) != 0) && (civ4 != civ))
          && (civ4 != civ2)) {
@@ -2331,11 +2331,11 @@ LAB_0045ddb7:
   text_set_string_arg(1,civ_name);
   if ((*(byte *)&civs[civ].treaties[civ3] & 1) == 0) {
     diplo_leader_play_reaction(3);
-    popup_game(ADDR(0x626e14, ((u8 *)&g.d_00626e14)));
+    popup_game((iptr)((u8 *)&g.d_00626e14));
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
   }
-  else if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) == 0) {
+  else if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 0x20) == 0) {
     price = int_clamp((int)(((((uint)civs[civ2].reputation + civs[civ].gold / 100
                                           ) - (uint)civs[civ3].reputation) -
                                         (int)civs[civ].reputation_credit[civ2]) *
@@ -2357,28 +2357,28 @@ LAB_0045ddb7:
     if ((game.power_rank[civ3] == 7) && (4 < civs[civ3].num_cities)) {
       price = price / 2;
     }
-    if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) == 0) {
+    if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 0x20) == 0) {
       price += price / 3;
     }
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
       no_embassy = true;
       for (i = 1; i < 8; i++) {
-        if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + i * 4) & 0x20) != 0) {
+        if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + i * 4) & 0x20) != 0) {
           no_embassy = false;
         }
       }
       if (no_embassy) {
         price -= ((int)(price + (price >> 0x1f & 3U)) >> 2);
       }
-      if ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 0x594) & 0x10) != 0) {
+      if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ3 * 0x594) & 0x10) != 0) {
         price -= ((int)(price + (price >> 0x1f & 3U)) >> 2);
       }
       if (game.power_rank[civ2] < game.power_rank[civ]) {
         price -= price / 3;
       }
     }
-    if ((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ3 * 0x594) & 2) != 0) {
-      if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ3 * 4) & 2) == 0) {
+    if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ3 * 0x594) & 2) != 0) {
+      if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 34) + civ3 * 4) & 2) == 0) {
         price = price / 2;
       }
       if (game.power_rank[civ2] < game.power_rank[civ3]) {
@@ -2394,7 +2394,7 @@ LAB_0045ddb7:
     if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) {
       distrust += 2;
     }
-    if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) == 0) {
+    if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 0x20) == 0) {
       distrust++;
     }
     if (game.power_rank[civ3] < game.power_rank[civ2]) {
@@ -2409,23 +2409,23 @@ LAB_0045ddb7:
     if ((distrust < 7) ||
        ((((*(byte *)&civs[civ].treaties[civ3] & 8) == 0 &&
          ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0)) &&
-        (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) != 0 &&
+        (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 0x20) != 0 &&
          (game.power_rank[civ2] <= game.power_rank[civ3])))))) {
       if ((*(byte *)&civs[civ].treaties[civ3] & 8) == 0) {
         if ((((civs[civ].gold < 1000) || (civs[civ].gold <= civs[civ2].gold)) ||
             (diplo_offer_tech_best < 0)) || (diplo_offer_tech_2nd < 0)) {
-          choice = popup_game(ADDR(0x626e54, ((u8 *)&g.d_00626e54)));
+          choice = popup_game((iptr)((u8 *)&g.d_00626e54));
         }
         else {
           price = -1;
           text_set_label_arg(2,advances[diplo_offer_tech_best].name);
           text_set_label_arg(3,advances[diplo_offer_tech_2nd].name);
-          choice = popup_game(ADDR(0x626e48, ((u8 *)&g.d_00626e48)));
+          choice = popup_game((iptr)((u8 *)&g.d_00626e48));
         }
       }
       else {
         diplo_leader_play_reaction(4);
-        choice = popup_game(ADDR(0x626e38, ((u8 *)&g.d_00626e38)));
+        choice = popup_game((iptr)((u8 *)&g.d_00626e38));
       }
       if (choice == 0) {
         seh_state = 0xffffffff;
@@ -2441,7 +2441,7 @@ LAB_0045ddb7:
         else {
           if (civs[civ2].gold < price) {
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626e60, ((u8 *)&g.d_00626e60)));
+            popup_game((iptr)((u8 *)&g.d_00626e60));
             seh_state = 0xffffffff;
             /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
             goto LAB_0045f0a3;
@@ -2451,16 +2451,16 @@ LAB_0045ddb7:
         }
         status_redraw(1);
         diplo_set_treaty_flags(civ,civ3,0x2401);
-        treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 4);
+        treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ3 * 4);
         *treaty = *treaty | 0x80800;
-        treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+        treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
         *treaty = *treaty | 0x100000;
         net_send_state_diff(0xff,2,0,0,0);
         civ_name = civ_name_plural(civ);
         text_set_string_arg(1,civ_name);
         civ_name = civ_name_plural(civ3);
         text_set_string_arg(2,civ_name);
-        popup_game(ADDR(0x626e6c, ((u8 *)&g.d_00626e6c)));
+        popup_game((iptr)((u8 *)&g.d_00626e6c));
         if (2 < game.multiplayer) {
           if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
              (human_civ != civ)) {
@@ -2485,9 +2485,9 @@ LAB_0045ddb7:
             if (((civ_mask ^ civ2_mask) - civ2_mask & 1 ^ civ2_mask) == civ2_mask) {
               civ_adjust_attitude(civ3,civ2,0x19);
               diplo_leader_play_reaction(4);
-              popup_game(ADDR(0x626e88, ((u8 *)&g.d_00626e88)));
+              popup_game((iptr)((u8 *)&g.d_00626e88));
               diplo_set_treaty_flags(civ2,civ3,0x2000);
-              treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 0x594);
+              treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ3 * 0x594);
               *treaty = *treaty | 0x10;
             }
           }
@@ -2498,7 +2498,7 @@ LAB_0045ddb7:
           if (((civ_mask ^ civ2_mask) - civ2_mask & 1 ^ civ2_mask) == civ2_mask) {
             civ_adjust_attitude(civ3,civ2,0x19);
             diplo_leader_play_reaction(4);
-            popup_game(ADDR(0x626e78, ((u8 *)&g.d_00626e78)));
+            popup_game((iptr)((u8 *)&g.d_00626e78));
             diplo_cancel_alliance(civ2,civ3);
           }
         }
@@ -2513,13 +2513,13 @@ LAB_0045eb0a:
             civ_name = civ_get_adjective(civ2);
             text_set_string_arg(1,civ_name);
             diplo_leader_play_reaction(3);
-            popup_game(ADDR(0x626e94, ((u8 *)&g.d_00626e94)));
+            popup_game((iptr)((u8 *)&g.d_00626e94));
             seh_state = 0xffffffff;
             /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
             goto LAB_0045f0a3;
           }
           diplo_leader_play_reaction(2);
-          popup_game(ADDR(0x626e9c, ((u8 *)&g.d_00626e9c)));
+          popup_game((iptr)((u8 *)&g.d_00626e9c));
           civs[civ].diplo_request_count += 2;
           civ_mask = 1 << ((byte)civ & 0x1f);
           civ2_mask = 1 << ((byte)civ2 & 0x1f);
@@ -2599,14 +2599,14 @@ LAB_0045eb0a:
     }
     else {
       diplo_leader_play_reaction(3);
-      popup_game(ADDR(0x626e28, ((u8 *)&g.d_00626e28)));
+      popup_game((iptr)((u8 *)&g.d_00626e28));
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
     }
   }
   else {
     diplo_leader_play_reaction(3);
-    popup_game(ADDR(0x626e20, ((u8 *)&g.d_00626e20)));
+    popup_game((iptr)((u8 *)&g.d_00626e20));
     seh_state = 0xffffffff;
     /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
   }
@@ -2671,7 +2671,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
   dialog_ctor(&dlg,0x4000);
   seh_state = 0;
   diplo_set_attitude_arg(civ2,civ);
-  menu_choice = popup_game(ADDR(0x626ea4, ((u8 *)&g.d_00626ea4)));
+  menu_choice = popup_game((iptr)((u8 *)&g.d_00626ea4));
   if (menu_choice == 0) {
     civs[civ].diplo_request_count--;
     seh_state = 0xffffffff;
@@ -2683,22 +2683,22 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       str = civ_name_plural(civ2);
       text_set_string_arg(1,str);
       diplo_leader_play_reaction(4);
-      popup_game(ADDR(0x626eb0, ((u8 *)&g.d_00626eb0)));
+      popup_game((iptr)((u8 *)&g.d_00626eb0));
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
     }
     else {
       text_set_label_arg(1,advances[diplo_offer_tech_best].name);
       if (diplo_offer_tech_2nd < 0) {
-        choice = popup_game(ADDR(0x626eb8, ((u8 *)&g.d_00626eb8)));
+        choice = popup_game((iptr)((u8 *)&g.d_00626eb8));
       }
       else {
         text_set_label_arg(2,advances[diplo_offer_tech_2nd].name);
-        choice = popup_game(ADDR(0x626ec4, ((u8 *)&g.d_00626ec4)));
+        choice = popup_game((iptr)((u8 *)&g.d_00626ec4));
       }
       if (choice == 0) {
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626ed0, ((u8 *)&g.d_00626ed0)));
+        popup_game((iptr)((u8 *)&g.d_00626ed0));
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
       }
@@ -2718,7 +2718,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         str = civ_get_adjective(civ);
         text_set_string_arg(1,str);
         diplo_leader_play_reaction(2);
-        popup_game(ADDR(0x626ed8, ((u8 *)&g.d_00626ed8)));
+        popup_game((iptr)((u8 *)&g.d_00626ed8));
         civs[civ].diplo_request_count -= ((char)diplo_gifts_this_meeting + 2);
         diplo_gifts_this_meeting++;
         seh_state = 0xffffffff;
@@ -2727,7 +2727,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
     }
   }
   else if (menu_choice == 2) {
-    dialog_load_game_text(&dlg,ADDR(0x626ee0, ((u8 *)&g.d_00626ee0)));
+    dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00626ee0));
     value = civs[civ2].gold / 0x32;
     prev_amount = 0;
     for (i = 1; i < 5; i++) {
@@ -2738,13 +2738,13 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         text_append_label(0x72);
         text_append_space();
         text_append_gold(gold_amount);
-        dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),gold_amount,0);
+        dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),gold_amount,0);
       }
     }
     gold_amount = dlg_show_modal(&dlg,0);
     if (gold_amount == 0) {
       diplo_leader_play_reaction(4);
-      popup_game(ADDR(0x626eec, ((u8 *)&g.d_00626eec)));
+      popup_game((iptr)((u8 *)&g.d_00626eec));
       seh_state = 0xffffffff;
       /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
     }
@@ -2758,7 +2758,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       str = civ_get_adjective(civ);
       text_set_string_arg(1,str);
       diplo_leader_play_reaction(2);
-      popup_game(ADDR(0x626ef4, ((u8 *)&g.d_00626ef4)));
+      popup_game((iptr)((u8 *)&g.d_00626ef4));
       civs[civ].diplo_request_count -= ((char)diplo_gifts_this_meeting + 2);
       diplo_gifts_this_meeting++;
       seh_state = 0xffffffff;
@@ -2768,7 +2768,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
   else {
     if (menu_choice == 3) {
       city_count = 0;
-      dlg_load_game_section(&dlg,ADDR(0x626efc, ((u8 *)&g.d_00626efc)),1);
+      dlg_load_game_section(&dlg,(iptr)((u8 *)&g.d_00626efc),1);
       for (city2 = 0; city2 < game.num_cities; city2++) {
         if ((cities[city2].id != 0) && (cities[city2].owner == civ2)) {
           dialog_add_option
@@ -2777,7 +2777,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         }
       }
       if (city_count == 0) {
-        popup_game(ADDR(0x626f0c, ((u8 *)&g.d_00626f0c)));
+        popup_game((iptr)((u8 *)&g.d_00626f0c));
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
@@ -2792,7 +2792,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       }
       unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
       if (unit2 < 0) {
-        popup_game(ADDR(0x626f1c, ((u8 *)&g.d_00626f1c)));
+        popup_game((iptr)((u8 *)&g.d_00626f1c));
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
@@ -2807,7 +2807,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         str = civ_get_adjective(civ);
         text_set_string_arg(1,str);
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626f2c, ((u8 *)&g.d_00626f2c)));
+        popup_game((iptr)((u8 *)&g.d_00626f2c));
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
         goto LAB_0045fd59;
@@ -2815,8 +2815,8 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       text_clear();
       text_append_label(0x77);
       text_append_space();
-      text_append(city * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
-      unit = unit_stack_select_dialog(unit2,ADDR(0x679640, ((u8 *)&g.d_00679640)),1);
+      text_append(city * 0x58 + (iptr)((u8 *)&cities + 32));
+      unit = unit_stack_select_dialog(unit2,(iptr)((u8 *)&g.d_00679640),1);
       if (unit < 0) {
         civs[civ].diplo_request_count--;
         seh_state = 0xffffffff;
@@ -2829,18 +2829,18 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         str = civ_get_adjective(civ);
         text_set_string_arg(1,str);
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626f38, ((u8 *)&g.d_00626f38)));
+        popup_game((iptr)((u8 *)&g.d_00626f38));
         seh_state = 0xffffffff;
         /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
         goto LAB_0045fd59;
       }
       unit_stack_unlink(unit,1);
       city3 = city4;
-      unit_count = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
+      unit_count = (char *)(units[unit].type + (iptr)((u8 *)&civs + 216) + civ2 * 0x594);
       *unit_count = *unit_count - 1;
       units[unit].owner = (i8)civ;
       units[unit].visibility = '\0';
-      unit_count = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+      unit_count = (char *)(units[unit].type + (iptr)((u8 *)&civs + 216) + civ * 0x594);
       *unit_count = *unit_count + 1;
       unit_stack_link(unit,(int)cities[city4].x,(int)cities[city4].y,1);
       units[unit].home_city = -1;
@@ -2857,7 +2857,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       str = civ_get_adjective(civ);
       text_set_string_arg(1,str);
       diplo_leader_play_reaction(2);
-      popup_game(ADDR(0x626f44, ((u8 *)&g.d_00626f44)));
+      popup_game((iptr)((u8 *)&g.d_00626f44));
       city = civ_has_advance(civ,(int)unit_types[units[unit].type].prerequisite);
       if (city == 0) {
         advance = unit_types[units[unit].type].prerequisite;
@@ -2875,7 +2875,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
           if (((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign) {
             str = civ_get_adjective(civ);
             text_set_string_arg(1,str);
-            popup_game(ADDR(0x626f4c, ((u8 *)&g.d_00626f4c)));
+            popup_game((iptr)((u8 *)&g.d_00626f4c));
             civ_give_advance(civ,advance2,civ2,0,0);
           }
         }
@@ -2920,10 +2920,10 @@ void __cdecl diplo_ai_senate_hawks_notice(iptr civ,iptr civ2)
     text_set_string_arg(1,name2);
     has_wonder = civ_has_wonder(civ,0x18);
     if (has_wonder == 0) {
-      popup_game(ADDR(0x626f68, ((u8 *)&g.d_00626f68)));
+      popup_game((iptr)((u8 *)&g.d_00626f68));
     }
     else {
-      popup_game(ADDR(0x626f5c, ((u8 *)&g.d_00626f5c)));
+      popup_game((iptr)((u8 *)&g.d_00626f5c));
     }
   }
   return;
@@ -2950,11 +2950,11 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
   dialog_ctor(&dlg,0x4000);
   seh_state = 0;
   diplo_set_attitude_arg(civ2,civ);
-  dialog_load_game_text(&dlg,ADDR(0x626f78, ((u8 *)&g.d_00626f78)));
-  err = text_open_section(ADDR(0x6558e8, ((u8 *)&g.d_006558e8)),ADDR(0x626f84, ((u8 *)&g.d_00626f84)));
+  dialog_load_game_text(&dlg,(iptr)((u8 *)&g.d_00626f78));
+  err = text_open_section((iptr)((u8 *)&g.d_006558e8),(iptr)((u8 *)&g.d_00626f84));
   if (err == 0) {
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),0,0);
+    dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),0,0);
     allied = false;
     at_peace = false;
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
@@ -2967,32 +2967,32 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
     }
     text_read_line(1);
     if (at_peace) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),1,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),1,0);
     }
     text_read_line(1);
     if ((!at_peace) && (!allied)) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),2,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),2,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),3,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),3,0);
     }
     text_read_line(1);
     if ((!allied) && (civs[civ2].government < 5)) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),4,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),4,0);
     }
     text_read_line(1);
-    if ((at_peace) && ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x40) == 0)) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),5,0);
+    if ((at_peace) && ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) == 0)) {
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),5,0);
     }
     text_read_line(1);
     if (allied) {
-      dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),6,0);
+      dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),6,0);
     }
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),7,0);
+    dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),7,0);
     text_read_line(1);
-    dialog_add_option((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),8,0);
+    dialog_add_option((DialogOptionList *)&dlg,(iptr)((u8 *)&g.d_00679640),8,0);
     choice = dlg_show_modal(&dlg,0);
   }
   text_close_file();
@@ -3107,15 +3107,15 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if (civs[civ].diplo_request_count < '\0') {
       civs[civ].diplo_request_count = '\0';
     }
-    if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 8) != 0) {
+    if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 8) != 0) {
       limit = diplo_patience_limit(civ2,civ);
       civs[civ].diplo_request_count = (i8)limit;
     }
-    if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 4) & 1) == 0) {
+    if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 34) + civ * 4) & 1) == 0) {
       if ((((3 < game.difficulty) && (advance2 = civ_spaceship_launched(civ), advance2 != 0)) &&
           (advance2 = civ_spaceship_launched(civ2), advance2 != 0)) &&
          ((civs[civ2].spaceship_arrival_year < civs[civ].spaceship_arrival_year &&
-          ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)))) {
+          ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0)))) {
         diplo_set_treaty_flags(civ,civ2,0x200000);
       }
     }
@@ -3126,28 +3126,28 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
   }
   diplo_emissary_response = (uint)(player_initiated != 0);
   if (player_initiated != 0) {
-    if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 4) & 0x20) != 0) {
+    if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + civ2 * 4) & 0x20) != 0) {
       if (diplo_emissary_asked == 0) {
         diplo_set_attitude_arg(civ2,civ);
       }
       diplo_leader_play_reaction(4);
-      popup_game(ADDR(0x626f94, ((u8 *)&g.d_00626f94)));
+      popup_game((iptr)((u8 *)&g.d_00626f94));
       ended = true;
       goto LAB_00463d3b;
     }
     patience = civs[civ].diplo_request_count;
     advance2 = diplo_patience_limit(civ2,civ);
-    if ((advance2 <= patience) && ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 4) & 0x80) != 0)) {
+    if ((advance2 <= patience) && ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 34) + civ * 4) & 0x80) != 0)) {
       if (diplo_emissary_asked == 0) {
         diplo_set_attitude_arg(civ2,civ);
       }
       if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x626fb0, ((u8 *)&g.d_00626fb0)));
+        popup_game((iptr)((u8 *)&g.d_00626fb0));
       }
       else {
         diplo_leader_play_reaction(3);
-        popup_game_with_sprite(ADDR(0x626fa0, ((u8 *)&g.d_00626fa0)),(iptr)(&diplo_popup_portrait_sprite +
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00626fa0),(iptr)(&diplo_popup_portrait_sprite +
                                           ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
                           );
       }
@@ -3158,7 +3158,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
   }
   diplo_set_treaty_flags(civ2,civ,0x800000);
   emissary_sent = true;
-  hostile = (uint)((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 4) & 0x40) != 0);
+  hostile = (uint)((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + civ2 * 4) & 0x40) != 0);
   diplo_clear_treaty_flags(civ,civ2,0x400000);
   if (((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) {
     if (((civ == 3) && (civ2 == 6)) || ((civ == 6 && (civ2 == 3)))) {
@@ -3209,9 +3209,9 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     text_set_label_arg(2,*(i32 *)(label_string_ids + variant * 4));
     text_clear();
-    text_append(ADDR(0x626fbc, ((u8 *)&g.d_00626fbc)));
+    text_append((iptr)((u8 *)&g.d_00626fbc));
     text_append_int(stance_idx);
-    advance2 = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    advance2 = popup_game((iptr)((u8 *)&g.d_00679640));
     if (advance2 == 0) {
       if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
         civ_adjust_attitude(civ,civ2,5);
@@ -3323,7 +3323,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     text_set_number_arg(0,diplo_tribute_demand);
     text_clear();
     diplo_leader_play_reaction(4);
-    text_append(ADDR(0x626fcc, ((u8 *)&g.d_00626fcc)));
+    text_append((iptr)((u8 *)&g.d_00626fcc));
     variant = rand_range(0,3);
     if ((variant == 3) && (civs[civ].military_strength < civs[civ2].military_strength)) {
       variant = 2;
@@ -3339,12 +3339,12 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     text_append_int(variant);
     if (variant == 9) {
-      choice = popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)(&diplo_popup_portrait_sprite +
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
                                                    ((game.advance_known_by[0xf] != '\0') - 1 &
                                                    0xffff7c80)),0);
     }
     else {
-      choice = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      choice = popup_game((iptr)((u8 *)&g.d_00679640));
     }
     if (choice == 1) {
       civs[civ2].gold -= diplo_tribute_demand;
@@ -3380,7 +3380,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
                           (label_string_ids + 0x1a8 +
                           (uint)(leaders[civs[civ].tribe].female == '\0') * -4));
     text_clear();
-    text_append(ADDR(0x626fd4, ((u8 *)&g.d_00626fd4)));
+    text_append((iptr)((u8 *)&g.d_00626fd4));
     variant = rand_range(0,2);
     if ((tech_gap) && (variant < 2)) {
       variant = 8;
@@ -3390,12 +3390,12 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     text_append_int(variant);
     if (variant == 9) {
-      choice = popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)(&diplo_popup_portrait_sprite +
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
                                                    ((game.advance_known_by[0xf] != '\0') - 1 &
                                                    0xffff7c80)),0);
     }
     else {
-      choice = popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      choice = popup_game((iptr)((u8 *)&g.d_00679640));
     }
     if (choice == 1) {
       civ_give_advance(civ,diplo_offer_tech_best,civ2,0,0);
@@ -3410,7 +3410,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
       else {
         text_set_label_arg(1,advances[advance2].name);
         diplo_leader_play_reaction(4);
-        advance2 = popup_game(ADDR(0x626fdc, ((u8 *)&g.d_00626fdc)));
+        advance2 = popup_game((iptr)((u8 *)&g.d_00626fdc));
         if (advance2 == 1) {
           civ_give_advance(civ,diplo_offer_tech_best,civ2,0,0);
           advance2 = ai_advance_value(civ,diplo_offer_tech_best);
@@ -3447,11 +3447,11 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     diplo_leader_play_reaction(4);
     if (diplo_tribute_demand == 999) {
-      popup_game_with_sprite(ADDR(0x626fe8, ((u8 *)&g.d_00626fe8)),(iptr)(&diplo_popup_portrait_sprite +
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00626fe8),(iptr)(&diplo_popup_portrait_sprite +
                                         ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
     }
     else {
-      popup_game_with_sprite(ADDR(0x626ff0, ((u8 *)&g.d_00626ff0)),(iptr)(&diplo_popup_portrait_sprite +
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00626ff0),(iptr)(&diplo_popup_portrait_sprite +
                                         ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
     }
     diplo_cancel_alliance(civ,civ2);
@@ -3486,14 +3486,14 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
   if (((diplo_ai_aggressive != 0) && (0x32 < diplo_tribute_demand)) &&
      (((*(byte *)&civs[civ].treaties[civ2] & 4) != 0 ||
       (((advance2 = diplo_is_hostile(civ,civ2), advance2 == 0 && (0 < diplo_last_treaty_turn)) &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 4) & 1) == 0)))))) {
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + civ2 * 4) & 1) == 0)))))) {
     diplo_ask_receive_emissary(civ2,civ,x,y);
     if (diplo_emissary_asked == 0) {
       diplo_set_attitude_arg(civ2,civ);
     }
     text_clear();
     diplo_leader_play_reaction(4);
-    text_append(ADDR(0x626ff8, ((u8 *)&g.d_00626ff8)));
+    text_append((iptr)((u8 *)&g.d_00626ff8));
     str = rand_range(0,2);
     text_append_int(str);
     diplo_set_treaty_flags(civ,civ2,0x2000);
@@ -3501,7 +3501,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if (advance2 < 0x4b) {
       civ_set_attitude(civ,civ2,0x4b);
     }
-    popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((u8 *)&g.d_00644e48),0);
     civs[civ2].last_treaty_turn[civ] = game.turn;
     goto LAB_00463d3b;
   }
@@ -3515,12 +3515,12 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if (advance2 < 0x4b) {
       civ_set_attitude(civ,civ2,0x4b);
     }
-    popup_game_with_sprite(ADDR(0x627000, ((u8 *)&g.d_00627000)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00627000),(iptr)((u8 *)&g.d_00644e48),0);
     civs[civ2].last_treaty_turn[civ] = game.turn;
     goto LAB_00463d3b;
   }
   if ((diplo_ai_aggressive != 0) &&
-     (((diplo_last_treaty_turn < 0 || ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 4) & 1) != 0)) ||
+     (((diplo_last_treaty_turn < 0 || ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 34) + civ2 * 4) & 1) != 0)) ||
       (player_initiated != 0)))) {
     diplo_ask_receive_emissary(civ2,civ,x,y);
     if (diplo_emissary_asked == 0) {
@@ -3532,7 +3532,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if (advance2 < 0x4b) {
       civ_set_attitude(civ,civ2,0x4b);
     }
-    popup_game_with_sprite(ADDR(0x627008, ((u8 *)&g.d_00627008)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00627008),(iptr)((u8 *)&g.d_00644e48),0);
     civs[civ2].last_treaty_turn[civ] = game.turn;
     goto LAB_00463d3b;
   }
@@ -3542,10 +3542,10 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     diplo_leader_play_reaction(4);
     advance2 = civ_has_wonder(civ2,6);
     if (advance2 == 0) {
-      popup_game(ADDR(0x627020, ((u8 *)&g.d_00627020)));
+      popup_game((iptr)((u8 *)&g.d_00627020));
     }
     else {
-      popup_game(ADDR(0x627010, ((u8 *)&g.d_00627010)));
+      popup_game((iptr)((u8 *)&g.d_00627010));
     }
   }
   if ((((*(byte *)&civs[civ].treaties[civ2] & 4) != 0) &&
@@ -3570,7 +3570,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
               ((game.power_rank[civ2] <= game.power_rank[other] &&
                (game.power_rank[other] <= best_rank)))))) &&
             ((*(byte *)&civs[civ2].treaties[other] & 1) != 0)) &&
-           (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + other * 4) & 0x20) == 0 &&
+           (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + other * 4) & 0x20) == 0 &&
             ((civs[civ].treaties[other] & 0x2008) == 0)))) {
           diplo_war_target_civ = other;
           best_rank = game.power_rank[other];
@@ -3592,7 +3592,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
           (((*(byte *)&civs[civ].treaties[civ2] & 2) == 0 && (diplo_captured_city_count < 2))))
          && ((game.power_rank[civ2] < 6 || (game.power_rank[civ] < 5)))) &&
         ((advance2 = diplo_ask_receive_emissary(civ2,civ,x,y), advance2 != 0 &&
-         (advance2 = popup_game_with_sprite(ADDR(0x62702c, ((u8 *)&g.d_0062702c)),(iptr)(&diplo_popup_portrait_sprite +
+         (advance2 = popup_game_with_sprite((iptr)((u8 *)&g.d_0062702c),(iptr)(&diplo_popup_portrait_sprite +
                                                      ((game.advance_known_by[0xf] != '\0') - 1 &
                                                      0xffff7c80)),0), advance2 == 0)))))) {
       propose = true;
@@ -3601,10 +3601,10 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
         str = civ_name_plural(diplo_war_target_civ);
         text_set_string_arg(4,str);
         diplo_leader_play_reaction(3);
-        advance2 = popup_game(ADDR(0x62703c, ((u8 *)&g.d_0062703c)));
+        advance2 = popup_game((iptr)((u8 *)&g.d_0062703c));
         if (advance2 == 1) {
           diplo_declare_war(civ2,diplo_war_target_civ,civ);
-          treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + diplo_war_target_civ * 4);
+          treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + diplo_war_target_civ * 4);
           *treaty = *treaty | 0x80800;
           diplo_war_target_civ = -1;
           propose = true;
@@ -3618,7 +3618,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
              (0x19 < diplo_cur_attitude)) {
             propose = false;
             diplo_leader_play_reaction(4);
-            popup_game(ADDR(0x627050, ((u8 *)&g.d_00627050)));
+            popup_game((iptr)((u8 *)&g.d_00627050));
           }
         }
       }
@@ -3629,20 +3629,20 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
       treaty_made = true;
     }
   }
-  if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) &&
+  if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) &&
      (advance2 = diplo_ask_receive_emissary(civ2,civ,x,y), advance2 != 0)) {
     str = civ_name_plural(civ);
     text_set_string_arg(1,str);
     if (paid) {
-      choice = popup_game_with_sprite(ADDR(0x627064, ((u8 *)&g.d_00627064)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00627064),(iptr)((u8 *)&g.d_00647748),0);
     }
     else if ((diplo_suppressed_aggression == 0) && (hostile == 0)) {
       str = civ_get_adjective(civ);
       text_set_string_arg(1,str);
-      choice = popup_game_with_sprite(ADDR(0x62707c, ((u8 *)&g.d_0062707c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_0062707c),(iptr)((u8 *)&g.d_00647748),0);
     }
     else {
-      choice = popup_game_with_sprite(ADDR(0x627070, ((u8 *)&g.d_00627070)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00627070),(iptr)((u8 *)&g.d_00647748),0);
     }
     if (choice != 0) {
       advance2 = civ_has_wonder(civ,6);
@@ -3652,7 +3652,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
           diplo_ai_senate_hawks_notice(civ2,civ);
         }
         else {
-          popup_game_with_sprite(ADDR(0x6270a8, ((u8 *)&g.d_006270a8)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_006270a8),(iptr)((u8 *)&g.d_00647748),0);
           choice = 0;
           senate_blocked = true;
         }
@@ -3662,10 +3662,10 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
         text_set_string_arg(1,str);
         advance2 = civ_has_wonder(civ,6);
         if (advance2 == 0) {
-          popup_game_with_sprite(ADDR(0x62709c, ((u8 *)&g.d_0062709c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_0062709c),(iptr)((u8 *)&g.d_00647748),0);
         }
         else {
-          popup_game_with_sprite(ADDR(0x62708c, ((u8 *)&g.d_0062708c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_0062708c),(iptr)((u8 *)&g.d_00647748),0);
         }
         choice = 0;
         senate_blocked = true;
@@ -3688,7 +3688,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
         if (((choice != 0) && (3 < diplo_ai_fear_level)) && (-1 < diplo_wanted_tech)) {
           text_set_label_arg(1,advances[diplo_wanted_tech].name);
           diplo_leader_play_reaction(4);
-          advance2 = popup_game_with_sprite(ADDR(0x6270b8, ((u8 *)&g.d_006270b8)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          advance2 = popup_game_with_sprite((iptr)((u8 *)&g.d_006270b8),(iptr)((u8 *)&g.d_00647748),0);
           if (advance2 != 0) {
             choice = 0;
             civ_give_advance(civ2,diplo_wanted_tech,civ,0,0);
@@ -3705,7 +3705,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
           if (variant != 0) {
             text_set_number_arg(0,variant);
             diplo_leader_play_reaction(4);
-            advance2 = popup_game_with_sprite(ADDR(0x6270c0, ((u8 *)&g.d_006270c0)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+            advance2 = popup_game_with_sprite((iptr)((u8 *)&g.d_006270c0),(iptr)((u8 *)&g.d_00647748),0);
             if (advance2 != 0) {
               civs[civ].gold -= variant;
               civs[civ2].gold += variant;
@@ -3721,7 +3721,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
              (advance2 = civ_has_wonder(civ,0x18), advance2 == 0)))))) {
           text_set_number_arg_v(0,civs[civ].gold);
           diplo_leader_play_reaction(4);
-          advance2 = popup_game_with_sprite(ADDR(0x6270cc, ((u8 *)&g.d_006270cc)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          advance2 = popup_game_with_sprite((iptr)((u8 *)&g.d_006270cc),(iptr)((u8 *)&g.d_00647748),0);
           if (advance2 != 0) {
             choice = 0;
             civs[civ2].gold += civs[civ].gold;
@@ -3744,7 +3744,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     }
     if (choice != 0) {
       diplo_leader_play_reaction(4);
-      popup_game(ADDR(0x6270e0, ((u8 *)&g.d_006270e0)));
+      popup_game((iptr)((u8 *)&g.d_006270e0));
       civs[civ2].last_treaty_turn[civ] = game.turn;
       goto LAB_00463d3b;
     }
@@ -3754,7 +3754,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
     if (6 < (int)((uint)civs[civ2].reputation -
                  (int)civs[civ].reputation_credit[civ2])) {
       diplo_leader_play_reaction(4);
-      popup_game(ADDR(0x6270d4, ((u8 *)&g.d_006270d4)));
+      popup_game((iptr)((u8 *)&g.d_006270d4));
     }
   }
   if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
@@ -3782,7 +3782,7 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 x,i32 y,int player_initiated)
        (advance2 = diplo_ask_receive_emissary(civ2,civ,x,y), advance2 != 0)) {
       str = civ_name_plural(civ);
       text_set_string_arg(1,str);
-      choice = popup_game_with_sprite(ADDR(0x6270ec, ((u8 *)&g.d_006270ec)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+      choice = popup_game_with_sprite((iptr)((u8 *)&g.d_006270ec),(iptr)((u8 *)&g.d_006409d8),0);
       if (choice != 0) {
         advance2 = civ_has_wonder(civ,6);
         if ((advance2 == 0) && (advance2 = civ_has_wonder(civ,0x18), advance2 == 0)) {
@@ -3790,7 +3790,7 @@ LAB_00462bb9:
           advance2 = diplo_senate_intervenes(civ2,civ);
           if (advance2 == 0) {
 LAB_00462c12:
-            if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x40) == 0) {
+            if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x40) == 0) {
               diplo_ai_senate_hawks_notice(civ2,civ);
             }
           }
@@ -3800,7 +3800,7 @@ LAB_00462c12:
               rnd_sign = (int)rnd >> 0x1f;
               if (((rnd ^ rnd_sign) - rnd_sign & 1 ^ rnd_sign) == rnd_sign) goto LAB_00462c12;
             }
-            popup_game_with_sprite(ADDR(0x627118, ((u8 *)&g.d_00627118)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00627118),(iptr)((u8 *)&g.d_006409d8),0);
             choice = 0;
           }
         }
@@ -3812,10 +3812,10 @@ LAB_00462c12:
           }
           advance2 = civ_has_wonder(civ,6);
           if (advance2 == 0) {
-            popup_game_with_sprite(ADDR(0x62710c, ((u8 *)&g.d_0062710c)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_0062710c),(iptr)((u8 *)&g.d_006409d8),0);
           }
           else {
-            popup_game_with_sprite(ADDR(0x6270fc, ((u8 *)&g.d_006270fc)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_006270fc),(iptr)((u8 *)&g.d_006409d8),0);
           }
           choice = 0;
         }
@@ -3842,7 +3842,7 @@ LAB_00462c12:
           }
           if (variant != 0) {
             text_set_number_arg(0,variant);
-            advance2 = popup_game_with_sprite(ADDR(0x627128, ((u8 *)&g.d_00627128)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            advance2 = popup_game_with_sprite((iptr)((u8 *)&g.d_00627128),(iptr)((u8 *)&g.d_006409d8),0);
             if (advance2 != 0) {
               civs[civ].gold -= variant;
               civs[civ2].gold += variant;
@@ -3860,13 +3860,13 @@ LAB_00462c12:
       }
       else {
         diplo_leader_play_reaction(4);
-        popup_game(ADDR(0x627138, ((u8 *)&g.d_00627138)));
+        popup_game((iptr)((u8 *)&g.d_00627138));
       }
     }
   }
   if (((diplo_emissary_asked != 0) || (player_initiated != 0)) ||
      (((*(byte *)&civs[civ].treaties[civ2] & 4) == 0 &&
-      (((diplo_ai_fear_level != 0 || ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0))
+      (((diplo_ai_fear_level != 0 || ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0))
        || ((*(byte *)&civs[civ].treaties[civ2] & 1) == 0)))))) {
     if (6 < (int)((uint)civs[civ2].reputation -
                  (int)civs[civ].reputation_credit[civ2])) {
@@ -3898,12 +3898,12 @@ LAB_00462c12:
             text_set_string_arg(1,str);
             if (((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) &&
                (diplo_ai_fear_level != 0)) {
-              popup_game_with_sprite(ADDR(0x627178, ((u8 *)&g.d_00627178)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00627178),(iptr)((u8 *)&g.d_006409d8),0);
               diplo_set_treaty_flags(civ,civ2,4);
               civs[civ2].last_treaty_turn[civ] = game.turn + 0x10;
             }
-            if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) {
-              popup_game_with_sprite(ADDR(0x627184, ((u8 *)&g.d_00627184)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+            if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) {
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00627184),(iptr)((u8 *)&g.d_00647748),0);
               diplo_set_treaty_flags(civ,civ2,2);
               civs[civ2].last_treaty_turn[civ] = game.turn;
             }
@@ -3916,21 +3916,21 @@ LAB_00462c12:
             if (diplo_ai_fear_level != 0) {
               advance2 = civ_has_wonder(civ,6);
               if (advance2 == 0) {
-                popup_game_with_sprite(ADDR(0x627150, ((u8 *)&g.d_00627150)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_00627150),(iptr)((u8 *)&g.d_006409d8),0);
               }
               else {
-                popup_game_with_sprite(ADDR(0x627140, ((u8 *)&g.d_00627140)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_00627140),(iptr)((u8 *)&g.d_006409d8),0);
               }
               diplo_set_treaty_flags(civ,civ2,4);
               civs[civ2].last_treaty_turn[civ] = game.turn + 0x10;
             }
-            if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) {
+            if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) {
               advance2 = civ_has_wonder(civ,6);
               if (advance2 == 0) {
-                popup_game_with_sprite(ADDR(0x62716c, ((u8 *)&g.d_0062716c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_0062716c),(iptr)((u8 *)&g.d_00647748),0);
               }
               else {
-                popup_game_with_sprite(ADDR(0x62715c, ((u8 *)&g.d_0062715c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_0062715c),(iptr)((u8 *)&g.d_00647748),0);
               }
               diplo_set_treaty_flags(civ,civ2,2);
               civs[civ2].last_treaty_turn[civ] = game.turn;
@@ -3950,7 +3950,7 @@ LAB_00462c12:
           patience = -1;
           for (other = 1; other < 8; other++) {
             if ((((civ != other) && (civ2 != other)) &&
-                ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + other * 4) & 0x20) == 0)) &&
+                ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + other * 4) & 0x20) == 0)) &&
                (rel = civs[civ2].reputation_credit[other], rel <= patience)) {
               civ3 = other;
               patience = rel;
@@ -3959,25 +3959,25 @@ LAB_00462c12:
           if (-1 < civ3) {
             str = civ_name_plural(civ3);
             text_set_string_arg(1,str);
-            counter = (char *)(civ3 + ADDR(0x64c6e8, ((u8 *)&civs + 72)) + civ2 * 0x594);
+            counter = (char *)(civ3 + (iptr)((u8 *)&civs + 72) + civ2 * 0x594);
             *counter = *counter + 1;
             text_clear();
-            text_append(ADDR(0x627214, ((u8 *)&g.d_00627214)));
-            if ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) {
+            text_append((iptr)((u8 *)&g.d_00627214));
+            if ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
               if (civs[civ2].military_strength < civs[civ].military_strength) {
                 diplo_leader_play_reaction(3);
-                text_append(ADDR(0x627228, ((u8 *)&g.d_00627228)));
+                text_append((iptr)((u8 *)&g.d_00627228));
               }
               else {
                 diplo_leader_play_reaction(3);
-                text_append(ADDR(0x62722c, ((u8 *)&g.d_0062722c)));
+                text_append((iptr)((u8 *)&g.d_0062722c));
               }
             }
             else {
               diplo_leader_play_reaction(4);
-              text_append(ADDR(0x627220, ((u8 *)&g.d_00627220)));
+              text_append((iptr)((u8 *)&g.d_00627220));
             }
-            popup_game(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+            popup_game((iptr)((u8 *)&g.d_00679640));
           }
         }
       }
@@ -4008,14 +4008,14 @@ LAB_00462c12:
           diplo_leader_play_reaction(2);
           if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
             if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-              popup_game(ADDR(0x62720c, ((u8 *)&g.d_0062720c)));
+              popup_game((iptr)((u8 *)&g.d_0062720c));
             }
             else {
-              popup_game(ADDR(0x6271fc, ((u8 *)&g.d_006271fc)));
+              popup_game((iptr)((u8 *)&g.d_006271fc));
             }
           }
           else {
-            popup_game(ADDR(0x6271f0, ((u8 *)&g.d_006271f0)));
+            popup_game((iptr)((u8 *)&g.d_006271f0));
           }
         }
         else {
@@ -4025,25 +4025,25 @@ LAB_00462c12:
             diplo_leader_play_reaction(2);
             if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
               if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-                popup_game(ADDR(0x6271d4, ((u8 *)&g.d_006271d4)));
+                popup_game((iptr)((u8 *)&g.d_006271d4));
               }
               else {
-                popup_game(ADDR(0x6271c8, ((u8 *)&g.d_006271c8)));
+                popup_game((iptr)((u8 *)&g.d_006271c8));
               }
             }
             else {
-              popup_game(ADDR(0x6271bc, ((u8 *)&g.d_006271bc)));
+              popup_game((iptr)((u8 *)&g.d_006271bc));
             }
           }
           else {
             diplo_leader_play_reaction(2);
             if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
               diplo_leader_play_reaction(3);
-              popup_game(ADDR(0x6271e8, ((u8 *)&g.d_006271e8)));
+              popup_game((iptr)((u8 *)&g.d_006271e8));
             }
             else {
               diplo_leader_play_reaction(2);
-              popup_game(ADDR(0x6271dc, ((u8 *)&g.d_006271dc)));
+              popup_game((iptr)((u8 *)&g.d_006271dc));
             }
           }
         }
@@ -4052,14 +4052,14 @@ LAB_00462c12:
         diplo_leader_play_reaction(4);
         if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
           if ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) {
-            popup_game(ADDR(0x6271b0, ((u8 *)&g.d_006271b0)));
+            popup_game((iptr)((u8 *)&g.d_006271b0));
           }
           else {
-            popup_game(ADDR(0x6271a0, ((u8 *)&g.d_006271a0)));
+            popup_game((iptr)((u8 *)&g.d_006271a0));
           }
         }
         else {
-          popup_game(ADDR(0x627190, ((u8 *)&g.d_00627190)));
+          popup_game((iptr)((u8 *)&g.d_00627190));
         }
       }
       if (((*(byte *)&civs[civ].treaties[civ2] & 0xc) == 0) &&
@@ -4068,10 +4068,10 @@ LAB_00462c12:
         str = civ_get_adjective(civ);
         text_set_string_arg(2,str);
         if (border_intruder_city < 2) {
-          popup_game(ADDR(0x627244, ((u8 *)&g.d_00627244)));
+          popup_game((iptr)((u8 *)&g.d_00627244));
         }
         else {
-          popup_game(ADDR(0x627234, ((u8 *)&g.d_00627234)));
+          popup_game((iptr)((u8 *)&g.d_00627234));
         }
       }
       if ((*(byte *)&civs[civ2].treaties[civ] & 8) != 0) {
@@ -4100,7 +4100,7 @@ LAB_00462c12:
               str = civ_name_plural(diplo_weakest_enemy_civ);
               text_set_string_arg(1,str);
               diplo_leader_play_reaction(3);
-              popup_game(ADDR(0x62725c, ((u8 *)&g.d_0062725c)));
+              popup_game((iptr)((u8 *)&g.d_0062725c));
             }
           }
         }
@@ -4108,7 +4108,7 @@ LAB_00462c12:
           str = civ_name_plural(diplo_strongest_enemy);
           text_set_string_arg(1,str);
           diplo_leader_play_reaction(2);
-          popup_game(ADDR(0x627250, ((u8 *)&g.d_00627250)));
+          popup_game((iptr)((u8 *)&g.d_00627250));
         }
       }
       do {
@@ -4137,10 +4137,10 @@ LAB_00462c12:
       diplo_set_attitude_arg(civ2,civ);
       diplo_leader_play_reaction(3);
       if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
-        popup_game(ADDR(0x627278, ((u8 *)&g.d_00627278)));
+        popup_game((iptr)((u8 *)&g.d_00627278));
       }
       else {
-        popup_game(ADDR(0x627268, ((u8 *)&g.d_00627268)));
+        popup_game((iptr)((u8 *)&g.d_00627268));
       }
     }
   }
@@ -4148,11 +4148,11 @@ LAB_00463d3b:
   diplo_clear_treaty_flags(civ,civ2,0x10000);
   if ((diplo_ai_declare_war == 0) || ((civs[civ2].treaties[civ] & 0x2008) != 0))
   {
-    treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 0x594);
+    treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
     *treaty = *treaty & 0xffffffdf;
   }
   else {
-    treaty = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 0x594);
+    treaty = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ * 0x594);
     *treaty = *treaty | 0x20;
   }
   if (!ended) {
@@ -4169,18 +4169,18 @@ LAB_00463d3b:
      ((civs[civ2].treaties[civ] & 0x200c) == 0)) {
     str = civ_name_plural(civ);
     text_set_string_arg(1,str);
-    popup_game_with_sprite(ADDR(0x627284, ((u8 *)&g.d_00627284)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00627284),(iptr)((u8 *)&g.d_00647748),0);
   }
   if ((((game.difficulty == '\0') &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0)) &&
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0)) &&
       (((*(byte *)&civs[human_civ].treaties[civ] & 0x80) == 0 &&
        ((advance2 = civ_has_wonder(human_civ,0x18), advance2 == 0 &&
         (advance2 = civ_has_wonder(human_civ,9), advance2 == 0)))))) &&
      (advance2 = civ_has_advance(civ,0x58), advance2 != 0)) {
     str = civ_name_plural(civ);
     text_set_string_arg(1,str);
-    dlg_game_txt_with_unit_flags(ADDR(0x627290, ((u8 *)&g.d_00627290)),0x2e,0);
-    treaty = (uint *)(civ2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+    dlg_game_txt_with_unit_flags((iptr)((u8 *)&g.d_00627290),0x2e,0);
+    treaty = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
     *treaty = *treaty | 0x80;
     intel_report_show(civ2,civ);
   }
@@ -4188,10 +4188,10 @@ LAB_00463d3b:
      (((diplo_emissary_asked != 0 || (player_initiated != 0)) &&
       ((((diplo_emissary_response != 0xffffffff && (4 < civs[civ].num_cities)) &&
         (game.power_rank[civ2] + 1 < (uint)game.power_rank[civ])) &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)))))) {
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0)))))) {
     str = civ_name_plural(civ);
     text_set_string_arg(0,str);
-    popup_text((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62729c, ((u8 *)&g.d_0062729c)));
+    popup_text((iptr)PTR_s_TUTORIAL_00627678,(iptr)((u8 *)&g.d_0062729c));
   }
   diplo_ai_meeting_active_i32 = 0;
   return;
@@ -4244,9 +4244,9 @@ void __cdecl diplo_clear_treaty_flags(iptr civ,iptr civ2,uint flags)
   if ((flags & 1) != 0) {
     diplo_clear_treaty_flags(civ,civ2,0x2000);
   }
-  treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+  treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
   *treaty = *treaty & ~flags;
-  treaty = (uint *)(civ * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 0x594);
+  treaty = (uint *)(civ * 4 + (iptr)((u8 *)&civs + 32) + civ2 * 0x594);
   *treaty = *treaty & ~flags;
   return;
 }
@@ -4267,9 +4267,9 @@ void __cdecl diplo_set_treaty_flags(iptr civ,iptr civ2,uint flags)
     diplo_clear_treaty_flags(civ,civ2,0xe);
     flags = flags | 0x200000;
   }
-  treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+  treaty = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
   *treaty = *treaty | flags;
-  treaty = (uint *)(civ2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+  treaty = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
   *treaty = *treaty | flags;
   return;
 }
@@ -4317,7 +4317,7 @@ uint __cdecl diplo_is_hostile(iptr civ,iptr civ2)
   uint result;
   int attitude;
   
-  if ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) {
+  if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
     if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
       if (((byte)*(i32 *)&civs[civ].treaties[civ2] & 5) == 1) {
         attitude = civ_get_attitude(civ,civ2);
@@ -4419,7 +4419,7 @@ void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2)
   diplo_expel_units(civ2,civ);
   map_redraw_all_views(human_civ,1);
   text_clear();
-  text_append(ADDR(0x62831c, ((u8 *)&g.d_0062831c)));
+  text_append((iptr)((u8 *)&g.d_0062831c));
   if (((human_civ == civ) || (human_civ == civ2)) && (autoplay_active == 0)) {
     if (human_civ == civ) {
       name2 = civ_name_plural(civ2);
@@ -4433,8 +4433,8 @@ void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2)
       name2 = civ_get_adjective(civ);
       text_set_string_arg(2,name2);
     }
-    text_append(ADDR(0x62832c, ((u8 *)&g.d_0062832c)));
-    popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)(&diplo_popup_portrait_sprite +
+    text_append((iptr)((u8 *)&g.d_0062832c));
+    popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
                                       ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
   }
   else {
@@ -4451,8 +4451,8 @@ void __cdecl diplo_cancel_alliance(iptr civ,iptr civ2)
       text_set_string_arg(1,name2);
       name2 = civ_name_plural(civ2);
       text_set_string_arg(2,name2);
-      text_append(ADDR(0x628330, ((u8 *)&g.d_00628330)));
-      popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)(&diplo_popup_portrait_sprite +
+      text_append((iptr)((u8 *)&g.d_00628330));
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)(&diplo_popup_portrait_sprite +
                                         ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0);
     }
   }
@@ -4675,7 +4675,7 @@ i32 __thiscall diplo_leader_wnd_init(DiploLeaderView *this,i32 viewer_civ,iptr l
   this->leader_civ = (u8)leader_civ;
   this->leader_tribe = (u8)civs[this->leader_civ].tribe;
   str_clear((iptr)dll_path);
-  str_append((iptr)dll_path,ADDR(0x62cab4, ((u8 *)&g.d_0062cab4)));
+  str_append((iptr)dll_path,(iptr)((u8 *)&g.d_0062cab4));
   ok = file_resolve_path((iptr)dll_path);
   if (ok == 0) {
     result = 0;
@@ -4760,7 +4760,7 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
   }
   dll_handle_free((DllHandle *)(this->leader_dll));
   diplo_leader_wnd_busy = 0;
-  snd_play_effect(diplo_greeting_sound_id,1,0,ADDR(0x401a91, diplo_greeting_sound_done_cb));
+  snd_play_effect(diplo_greeting_sound_id,1,0,(iptr)diplo_greeting_sound_done_cb);
   return;
 }
 #undef diplo_greeting_sound_id
@@ -4772,8 +4772,8 @@ void __thiscall diplo_leader_wnd_teardown(WndBase *this)
 {
   wnd_hide(this + 0x11);
   wnd_flush_paint();
-  wnd_set_palette(this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
-  wnd_set_palette((WndBase *)&main_frame_wnd,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  wnd_set_palette(this,(iptr)((u8 *)&g.d_006a8c00));
+  wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)((u8 *)&g.d_006a8c00));
   wnd_hide(this);
   wnd_flush_paint();
   wnd_destroy_native(this);
@@ -4793,7 +4793,7 @@ uint __thiscall diplo_leader_init_tile(DiploLeaderView *this)
   int loaded;
   
   surface_create((DibSurface *)&this->bg_tile_surface,0x40,0x40);
-  loaded = surface_load_gif_resource((DibSurface *)&this->bg_tile_surface,299,10,0x20,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
+  loaded = surface_load_gif_resource((DibSurface *)&this->bg_tile_surface,299,10,0x20,(iptr)((u8 *)&g.d_006a8c00));
   return (uint)(loaded != 0);
 }
 
@@ -4802,8 +4802,8 @@ i32 __thiscall diplo_leader_init_background(DiploLeaderView *this)
 
 {
   wnd_create_with_handlers
-            ((WndBase *)this,ADDR(0x62cb7c, ((u8 *)&g.d_0062cb7c)),0x800,0,0,this->screen_width_value,this->screen_height_value + 5,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
-             ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
+            ((WndBase *)this,(iptr)((u8 *)&g.d_0062cb7c),0x800,0,0,this->screen_width_value,this->screen_height_value + 5,(iptr)((u8 *)&g.d_006a8c00),
+             (iptr)((u8 *)&g.d_006553d8));
   wnd_set_bg_tile(this,(iptr)&this->bg_tile_surface);
   return 1;
 }
@@ -4835,7 +4835,7 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
   wnd_x = (int)(this->screen_width_value - 0x280) / 3;
   wnd_y = (int)(this->screen_height_value - 0x1e0) / 3;
   wnd_create_with_surface
-            ((DibSurface *)this->leader_surface,ADDR(0x62cb80, ((u8 *)&g.d_0062cb80)),0x800,wnd_x,wnd_y,0x280,0x1e0,
+            ((DibSurface *)this->leader_surface,(iptr)((u8 *)&g.d_0062cb80),0x800,wnd_x,wnd_y,0x280,0x1e0,
              (iptr)(this->leader_palette),(iptr)this);
   loaded = surface_load_gif_resource
                     ((DibSurface *)this->leader_surface,civs[this->leader_civ].government + 200,10,0xec,
@@ -5149,7 +5149,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
           for (j = 0; (j < 5 && (words[j * 0x32] != '\0'));
               j = j + 1) {
             str_append((iptr)(aCStack_641 + 1),(iptr)(words + j * 0x32));
-            str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb84, ((u8 *)&g.d_0062cb84)));
+            str_append((iptr)(aCStack_641 + 1),(iptr)((u8 *)&g.d_0062cb84));
             value = font_text_width(&font2,(iptr)(aCStack_641 + 1));
             if (text_width < value) break;
           }
@@ -5167,7 +5167,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
               }
               if (truncated != 0) {
                 aCStack_641[char_pos] = '\0';
-                str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb88, ((u8 *)&g.d_0062cb88)));
+                str_append((iptr)(aCStack_641 + 1),(iptr)((u8 *)&g.d_0062cb88));
               }
             }
             CopyRect(&draw_rect,&text_rect);
@@ -5200,7 +5200,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
               }
               if (truncated != 0) {
                 aCStack_641[char_pos] = '\0';
-                str_append((iptr)(aCStack_641 + 1),ADDR(0x62cb8c, ((u8 *)&g.d_0062cb8c)));
+                str_append((iptr)(aCStack_641 + 1),(iptr)((u8 *)&g.d_0062cb8c));
               }
             }
             else {
@@ -5239,7 +5239,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
             }
             if (truncated != 0) {
               line2_buf[char_pos - 1] = '\0';
-              str_append((iptr)line2_buf,ADDR(0x62cb90, ((u8 *)&g.d_0062cb90)));
+              str_append((iptr)line2_buf,(iptr)((u8 *)&g.d_0062cb90));
             }
             if (top_techs[0xc] != 0) {
               value = font_cached_height(&font2);
@@ -5393,13 +5393,13 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   eh_state = 0;
   this->leader_tribe = (u8)civs[this->leader_civ].tribe;
   str_clear((iptr)video_path);
-  str_append((iptr)video_path,ADDR(0x62cb94, ((u8 *)&g.d_0062cb94)));
+  str_append((iptr)video_path,(iptr)((u8 *)&g.d_0062cb94));
   str_clear((iptr)file_stem);
-  str_append((iptr)file_stem,ADDR(0x62cba0, ((u8 *)&g.d_0062cba0)));
+  str_append((iptr)file_stem,(iptr)((u8 *)&g.d_0062cba0));
   str_append((iptr)file_stem,(iptr)(&leader_video_tribe_codes)[civs[this->leader_civ].tribe]);
   code_term = 0;
   str_append((iptr)video_path,(iptr)file_stem);
-  str_append((iptr)video_path,ADDR(0x62cba8, ((u8 *)&g.d_0062cba8)));
+  str_append((iptr)video_path,(iptr)((u8 *)&g.d_0062cba8));
   found = file_resolve_path((iptr)video_path);
   if (found == 0) {
     eh_state = 0xffffffff;
@@ -5408,12 +5408,12 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   }
   else {
     avi_player_create_child
-              ((MediaWindow *)(this->video_player),ADDR(0x62cbb0, ((u8 *)&g.d_0062cbb0)),0x200,
+              ((MediaWindow *)(this->video_player),(iptr)((u8 *)&g.d_0062cbb0),0x200,
                *(i32 *)(&leader_video_x_table + (uint)this->leader_tribe * 8),
                *(i32 *)(&leader_video_y_table + (uint)this->leader_tribe * 8),(iptr)this->leader_surface);
     open_err = avi_player_open((AviPlayerOpenView *)(this->video_player),(iptr)video_path);
     if (open_err == 0) {
-      avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->video_player),ADDR(0x402441, diplo_leader_video_end_cb));
+      avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->video_player),(iptr)diplo_leader_video_end_cb);
       avi_player_set_transparent((AviPlayerSetTransparentView *)(this->video_player),1);
       palette_load_ctab_res(&palette,this->leader_tribe + 1000);
       palette_get_rgb(&palette,(iptr)rgb_buf,0x92,100);
@@ -5430,7 +5430,7 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
     }
     else {
       if (open_err == -0x7ffbfeac) {
-        popup_game(ADDR(0x62cbb4, ((u8 *)&g.d_0062cbb4)));
+        popup_game((iptr)((u8 *)&g.d_0062cbb4));
       }
       eh_state = 0xffffffff;
       /* inlined unwind funclet 00496100 */ { palette_destroy((GamePalette *)((iptr)&palette)); }
@@ -5543,8 +5543,8 @@ i32 __cdecl diplo_wnd_close_active(void)
         nm_parley_cancel_count = 0;
         civ_name = civ_name_plural(parley_other_civ);
         text_set_string_arg(0,civ_name);
-        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-        popup_game_with_sprite(ADDR(0x62d924, ((u8 *)&g.d_0062d924)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+        dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        popup_game_with_sprite((iptr)((u8 *)&g.d_0062d924),(iptr)((u8 *)&g.d_0063fc58),0);
       }
     }
     else {
@@ -5580,7 +5580,7 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
   uint roll;
   uint sign;
   
-  if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x20) == 0) {
+  if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x20) == 0) {
     if ((*(byte *)&civs[civ2].treaties[civ] & 0xe) == 0) {
       civ_adjust_attitude(civ2,civ,0x14);
     }
@@ -5598,14 +5598,14 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
         }
         if ((game.multiplayer < 3) || (human_civ == civ2)) {
           if ((*(byte *)&civs[civ2].treaties[civ] & 8) == 0) {
-            choice = popup_game_with_sprite(ADDR(0x62dd08, ((u8 *)&g.d_0062dd08)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd08),(iptr)((u8 *)&g.d_00644e48),0);
             if (choice == 1) {
               diplo_set_treaty_flags(civ,civ2,0x2000);
               civs[civ2].last_treaty_turn[civ] = game.turn;
             }
           }
           else {
-            choice = popup_game_with_sprite(ADDR(0x62dcf8, ((u8 *)&g.d_0062dcf8)),(iptr)(&diplo_popup_portrait_sprite +
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_0062dcf8),(iptr)(&diplo_popup_portrait_sprite +
                                                       ((game.advance_known_by[0xf] != '\0') - 1 &
                                                       0xffff7c80)),0);
             if (choice == 1) {
@@ -5625,18 +5625,18 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
          ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0)) {
         if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
           if (civs[civ].government == 4) {
-            contact_flags = (uint *)(civ2 * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ * 4);
+            contact_flags = (uint *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 32) + civ * 4);
             *contact_flags = *contact_flags | 0x10;
             civ_adjust_attitude(civ2,civ,10);
             if (autoplay_active == 0) {
               civ_name = civ_get_adjective(civ);
               text_set_string_arg(0,civ_name);
-              popup_game_with_sprite(ADDR(0x62dd28, ((u8 *)&g.d_0062dd28)),ADDR(0x646968, ((u8 *)&g.d_00646968)),0);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd28),(iptr)((u8 *)&g.d_00646968),0);
             }
           }
           else {
             if (autoplay_active == 0) {
-              popup_game_with_sprite(ADDR(0x62dd38, ((u8 *)&g.d_0062dd38)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd38),(iptr)((u8 *)&g.d_00644e48),0);
             }
             diplo_declare_war(civ,civ2,-1);
           }
@@ -5650,13 +5650,13 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
             diplo_set_attitude_arg(civ,civ2);
             choice = _rand();
             civ_adjust_attitude(civ2,civ,choice % 0xf + 5);
-            popup_game_with_sprite(ADDR(0x62dd10, ((u8 *)&g.d_0062dd10)),(iptr)(&diplo_popup_portrait_sprite +
+            popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd10),(iptr)(&diplo_popup_portrait_sprite +
                                               ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80
                                               )),0);
             return;
           }
           if (autoplay_active == 0) {
-            popup_game_with_sprite(ADDR(0x62dd18, ((u8 *)&g.d_0062dd18)),(iptr)(&diplo_popup_portrait_sprite +
+            popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd18),(iptr)(&diplo_popup_portrait_sprite +
                                               ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80
                                               )),0);
           }
@@ -5678,7 +5678,7 @@ void __cdecl diplo_espionage_incident(iptr civ,iptr civ2)
           if (autoplay_active == 0) {
             civ_name = civ_get_adjective(civ);
             text_set_string_arg(0,civ_name);
-            popup_game_with_sprite(ADDR(0x62dd44, ((u8 *)&g.d_0062dd44)),(iptr)(&government_sprites + (uint)civs[civ].government * 0x3c
+            popup_game_with_sprite((iptr)((u8 *)&g.d_0062dd44),(iptr)(&government_sprites + (uint)civs[civ].government * 0x3c
                                               ),0);
           }
           civ_change_government(civ,0);
@@ -5796,7 +5796,7 @@ i32 __cdecl diplo_senate_intervenes(iptr civ,iptr civ2)
   }
   else if (((game.game_flags & 0x80) == 0) || ((scenario_flags & 1) == 0)) {
     bonus = 0;
-    if ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x10) != 0) {
+    if ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x10) != 0) {
       bonus = 0x19;
     }
     threshold = civ_has_wonder(civ,0x18);
@@ -5844,7 +5844,7 @@ i32 __cdecl diplo_ai_feels_secure(iptr civ,iptr civ2)
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   treaty_flags = *(byte *)&civs[civ].treaties[civ2];
-  if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 8) == 0) {
+  if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 8) == 0) {
     if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0) {
       for (civ3 = 1; civ3 < 8; civ3++) {
         if ((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) {
@@ -5881,12 +5881,12 @@ i32 __cdecl diplo_ai_feels_secure(iptr civ,iptr civ2)
             }
             security = check;
             if ((((*(byte *)&civs[civ].treaties[other_civ] & 8) != 0) &&
-                ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + other_civ * 4) & 0x20) != 0)) &&
+                ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + other_civ * 4) & 0x20) != 0)) &&
                ((1 << ((byte)other_civ & 0x1f) & (uint)game.human_players) != 0)) {
               security--;
             }
             if (((game.power_rank[other_civ] == 7) && (199 < game.turn)) &&
-               ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + other_civ * 4) & 0x20) != 0)) {
+               ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + other_civ * 4) & 0x20) != 0)) {
               security--;
             }
           }
@@ -6012,7 +6012,7 @@ i32 __cdecl diplo_ai_swap_advances(uptr civ,uptr civ2)
         if (((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) &&
            ((((int)((uint)civs[civ].num_advances + (6 - (uint)game.difficulty) * 2) <
               (int)(uint)civs[civ2].num_advances || (leader_far_ahead)) &&
-            ((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 0x594) & 4) == 0)))) {
+            ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 4) == 0)))) {
           diplo_set_treaty_flags(civ,civ2,0x40000);
           civ_give_advance(civ,advance2,civ2,0,0);
           return 1;
@@ -6021,7 +6021,7 @@ i32 __cdecl diplo_ai_swap_advances(uptr civ,uptr civ2)
       else if ((((found_mask == 2) && ((*(byte *)&civs[civ2].treaties[civ] & 8) != 0)
                 ) && (((int)((uint)civs[civ2].num_advances + (6 - (uint)game.difficulty) * 2) <
                        (int)(uint)civs[civ].num_advances || (leader_far_ahead)))) &&
-              ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 4) & 4) == 0)) {
+              ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 34) + civ * 4) & 4) == 0)) {
         diplo_set_treaty_flags(civ,civ2,0x40000);
         civ_give_advance(civ2,advance3,civ,0,0);
         return 1;
@@ -6052,12 +6052,12 @@ i32 __cdecl diplo_ally_join_war(iptr civ,iptr civ2,iptr civ3)
   iptr civ_name;
   
   if ((civs[civ].treaties[civ2] & 0x2008) == 0) {
-    if ((*(byte *)(civ3 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) {
+    if ((*(byte *)(civ3 * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
       if (((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) &&
          ((*(byte *)&civs[civ3].treaties[civ2] & 0x10) != 0)) {
-        flags_ptr = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+        flags_ptr = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
         *flags_ptr = *flags_ptr | 0x20;
-        flags_ptr = (uint *)(civ2 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 0x594);
+        flags_ptr = (uint *)(civ2 * 4 + (iptr)((u8 *)&civs + 32) + civ3 * 0x594);
         *flags_ptr = *flags_ptr | 0x20;
       }
       result = 0;
@@ -6081,7 +6081,7 @@ i32 __cdecl diplo_ally_join_war(iptr civ,iptr civ2,iptr civ3)
       text_set_string_arg(1,civ_name);
       civ_name = civ_name_plural(civ2);
       text_set_string_arg(2,civ_name);
-      popup_game_with_sprite(ADDR(0x633b00, ((u8 *)&g.d_00633b00)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00633b00),(iptr)((u8 *)&g.d_00644e48),0);
       diplo_set_treaty_flags(civ,civ2,0x2000);
       result = 1;
     }
@@ -6142,7 +6142,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((2 < game.multiplayer) && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0))
         && (human_civ != civ)) &&
        ((((*(byte *)&civs[civ].treaties[civ2] & 1) == 0 ||
-         ((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 0x594) & 1) != 0)) ||
+         ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 1) != 0)) ||
         ((civs[civ].last_treaty_turn[civ2] < 0 ||
          (0xf < (int)game.turn - (int)civs[civ].last_treaty_turn[civ2])))))) {
       net_send_message(0x99,*(i32 *)
@@ -6153,7 +6153,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((2 < game.multiplayer) && ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0))
         && (human_civ != civ2)) &&
        ((((*(byte *)&civs[civ2].treaties[civ] & 1) == 0 ||
-         ((*(byte *)(civ * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 0x594) & 1) != 0)) ||
+         ((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 34) + civ2 * 0x594) & 1) != 0)) ||
         ((civs[civ2].last_treaty_turn[civ] < 0 ||
          (0xf < (int)game.turn - (int)civs[civ2].last_treaty_turn[civ])))))) {
       net_send_message(0x99,*(i32 *)
@@ -6164,7 +6164,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
         (human_civ == civ)) &&
        (((*(byte *)&civs[civ].treaties[civ2] & 1) == 0 ||
-        ((((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 0x594) & 1) != 0 ||
+        ((((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 1) != 0 ||
           (civs[civ].last_treaty_turn[civ2] < 0)) ||
          (0xf < (int)game.turn - (int)civs[civ].last_treaty_turn[civ2])))))) {
       if ((2 < game.multiplayer) && (human_civ != civ)) {
@@ -6175,7 +6175,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
         (human_civ == civ2)) &&
        (((*(byte *)&civs[civ2].treaties[civ] & 1) == 0 ||
-        ((((*(byte *)(civ * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 0x594) & 1) != 0 ||
+        ((((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 34) + civ2 * 0x594) & 1) != 0 ||
           (civs[civ2].last_treaty_turn[civ] < 0)) ||
          (0xf < (int)game.turn - (int)civs[civ2].last_treaty_turn[civ])))))) {
       if ((2 < game.multiplayer) && (human_civ != civ2)) {
@@ -6188,7 +6188,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
         (human_civ == civ)) &&
        (((*(byte *)&civs[civ].treaties[civ2] & 1) == 0 ||
-        ((((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 0x594) & 1) != 0 ||
+        ((((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 1) != 0 ||
           (civs[civ].last_treaty_turn[civ2] < 0)) ||
          (0xf < (int)game.turn - (int)civs[civ].last_treaty_turn[civ2])))))) {
       diplo_ai_meet_player(civ,civ2,x,y,0);
@@ -6196,7 +6196,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
         (human_civ == civ2)) &&
        ((((*(byte *)&civs[civ2].treaties[civ] & 1) == 0 ||
-         (((*(byte *)(civ * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ2 * 0x594) & 1) != 0 ||
+         (((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 34) + civ2 * 0x594) & 1) != 0 ||
           (civs[civ2].last_treaty_turn[civ] < 0)))) ||
         (0xf < (int)game.turn - (int)civs[civ2].last_treaty_turn[civ])))) {
       diplo_ai_meet_player(civ2,civ,x,y,0);
@@ -6217,9 +6217,9 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     text_set_string_arg(1,civ_name);
     civ_name = civ_name_plural(civ2);
     text_set_string_arg(2,civ_name);
-    dlg_pending_idle_callback = ((void *)ADDR(0x0040326a, mp_meeting_wait_idle));
+    dlg_pending_idle_callback = ((void *)(iptr)mp_meeting_wait_idle);
     mp_meeting_wait_start_i32 = timer_ticks();
-    city = popup_game_sprite_flags(ADDR(0x633b08, ((u8 *)&g.d_00633b08)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+    city = popup_game_sprite_flags((iptr)((u8 *)&g.d_00633b08),0x2000001,(iptr)((u8 *)&g.d_0063fc58),0);
     if (net_host_handoff_stage == '\0') {
       if (nm_parley_cancel_count == 0) {
         if (city == -1) {
@@ -6230,18 +6230,18 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           mp_meeting_pending = 0;
         }
         else if (mp_meeting_reply < 1) {
-          dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-          popup_game_with_sprite(ADDR(0x633b34, ((u8 *)&g.d_00633b34)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+          dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633b34),(iptr)((u8 *)&g.d_0063fc58),0);
           mp_meeting_pending = 0;
         }
         else if (mp_meeting_reply == 1) {
           mp_meeting_reply = -1;
           parley_other_civ = civ2;
-          dlg_pending_idle_callback = ((void *)ADDR(0x0040326a, mp_meeting_wait_idle));
+          dlg_pending_idle_callback = ((void *)(iptr)mp_meeting_wait_idle);
           mp_meeting_wait_start_i32 = timer_ticks();
           civ_name = civ_name_plural(civ);
           text_set_string_arg(0,civ_name);
-          popup_game_with_sprite(ADDR(0x633b44, ((u8 *)&g.d_00633b44)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633b44),(iptr)((u8 *)&g.d_0063fc58),0);
           if (net_host_handoff_stage == '\0') {
             if (nm_parley_cancel_count == 0) {
               parley_wnd_open((ViewWindow *)&parley_wnd,civ2,3);
@@ -6251,21 +6251,21 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
               nm_parley_cancel_count = 0;
               civ_name = civ_name_plural(civ2);
               text_set_string_arg(0,civ_name);
-              dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-              popup_game_with_sprite(ADDR(0x633b5c, ((u8 *)&g.d_00633b5c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+              dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00633b5c),(iptr)((u8 *)&g.d_0063fc58),0);
               mp_meeting_pending = 0;
             }
           }
           else {
             parley_other_civ = 0xffffffff;
-            dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-            popup_game_with_sprite(ADDR(0x633b50, ((u8 *)&g.d_00633b50)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+            dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633b50),(iptr)((u8 *)&g.d_0063fc58),0);
             mp_meeting_pending = 0;
           }
         }
         else {
-          dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-          popup_game_with_sprite(ADDR(0x633b6c, ((u8 *)&g.d_00633b6c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+          dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633b6c),(iptr)((u8 *)&g.d_0063fc58),0);
           mp_meeting_pending = 0;
         }
       }
@@ -6273,15 +6273,15 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
         nm_parley_cancel_count = 0;
         civ_name = civ_name_plural(civ2);
         text_set_string_arg(0,civ_name);
-        dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-        popup_game_with_sprite(ADDR(0x633b24, ((u8 *)&g.d_00633b24)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+        dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633b24),(iptr)((u8 *)&g.d_0063fc58),0);
         parley_other_civ = 0xffffffff;
         mp_meeting_pending = 0;
       }
     }
     else {
-      dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-      popup_game_with_sprite(ADDR(0x633b18, ((u8 *)&g.d_00633b18)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+      dlg_pending_idle_callback = ((void *)(iptr)turn_popup_timeout_idle);
+      popup_game_with_sprite((iptr)((u8 *)&g.d_00633b18),(iptr)((u8 *)&g.d_0063fc58),0);
       mp_meeting_pending = 0;
     }
   }
@@ -6300,15 +6300,15 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     if (((((city == 0) || (city = civ_has_wonder(civ2,6), city != 0)) ||
          (city = civ_has_wonder(civ2,0x18), city != 0)) ||
         ((4 < civs[civ].government &&
-         ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 8) == 0)))) &&
+         ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 8) == 0)))) &&
        (((city = diplo_ai_feels_secure(civ2,civ), city == 0 ||
          ((city = civ_has_wonder(civ,6), city != 0 ||
           (city = civ_has_wonder(civ,0x18), city != 0)))) ||
         ((4 < civs[civ2].government &&
-         ((*(byte *)(civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 8) == 0)))))) {
+         ((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 8) == 0)))))) {
       diplo_ai_swap_advances(civ,civ2);
       if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-        if ((autoplay_active == 0) && ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 8) != 0))
+        if ((autoplay_active == 0) && ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 8) != 0))
         {
           civ_name = civ_name_plural(civ);
           text_set_string_arg(1,civ_name);
@@ -6318,14 +6318,14 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           if (city == 0) {
             city = civ_has_wonder(civ2,6);
             if (city != 0) {
-              popup_game_with_sprite(ADDR(0x633b80, ((u8 *)&g.d_00633b80)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00633b80),(iptr)((u8 *)&g.d_006409d8),0);
             }
           }
           else {
-            popup_game_with_sprite(ADDR(0x633b78, ((u8 *)&g.d_00633b78)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633b78),(iptr)((u8 *)&g.d_006409d8),0);
           }
         }
-        if ((autoplay_active == 0) && ((*(byte *)(civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 8) != 0))
+        if ((autoplay_active == 0) && ((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 8) != 0))
         {
           civ_name = civ_name_plural(civ2);
           text_set_string_arg(1,civ_name);
@@ -6335,11 +6335,11 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           if (city == 0) {
             city = civ_has_wonder(civ,6);
             if (city != 0) {
-              popup_game_with_sprite(ADDR(0x633b94, ((u8 *)&g.d_00633b94)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+              popup_game_with_sprite((iptr)((u8 *)&g.d_00633b94),(iptr)((u8 *)&g.d_006409d8),0);
             }
           }
           else {
-            popup_game_with_sprite(ADDR(0x633b8c, ((u8 *)&g.d_00633b8c)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633b8c),(iptr)((u8 *)&g.d_006409d8),0);
           }
         }
         if ((autoplay_active == 0) &&
@@ -6348,7 +6348,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           text_set_string_arg(0,civ_name);
           civ_name = civ_name_plural(civ2);
           text_set_string_arg(1,civ_name);
-          popup_game_with_sprite(ADDR(0x633ba0, ((u8 *)&g.d_00633ba0)),(iptr)(&diplo_popup_portrait_sprite +
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633ba0),(iptr)(&diplo_popup_portrait_sprite +
                                             ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
                              ,0);
         }
@@ -6358,7 +6358,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           text_set_string_arg(0,civ_name);
           civ_name = civ_name_plural(civ);
           text_set_string_arg(1,civ_name);
-          popup_game_with_sprite(ADDR(0x633bb0, ((u8 *)&g.d_00633bb0)),(iptr)(&diplo_popup_portrait_sprite +
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633bb0),(iptr)(&diplo_popup_portrait_sprite +
                                             ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80))
                              ,0);
         }
@@ -6374,7 +6374,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           text_set_string_arg(0,civ_name);
           civ_name = civ_name_plural(civ2);
           text_set_string_arg(1,civ_name);
-          popup_game_with_sprite(ADDR(0x633bc0, ((u8 *)&g.d_00633bc0)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633bc0),(iptr)((u8 *)&g.d_006409d8),0);
         }
         diplo_set_treaty_flags(civ,civ2,4);
       }
@@ -6447,7 +6447,7 @@ LAB_0055ecb6:
             text_set_string_arg(0,civ_name);
             civ_name = civ_name_plural(civ2);
             text_set_string_arg(1,civ_name);
-            popup_game_with_sprite(ADDR(0x633be4, ((u8 *)&g.d_00633be4)),(iptr)(&diplo_popup_portrait_sprite +
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633be4),(iptr)(&diplo_popup_portrait_sprite +
                                               ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80
                                               )),0);
           }
@@ -6477,12 +6477,12 @@ LAB_0055ecb6:
                 }
                 civ_name = civ_get_adjective(civ3);
                 text_set_string_arg(3,civ_name);
-                popup_game_with_sprite(ADDR(0x633bcc, ((u8 *)&g.d_00633bcc)),ADDR(0x648018, ((u8 *)&g.d_00648018)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_00633bcc),(iptr)((u8 *)&g.d_00648018),0);
               }
               else if (autoplay_active == 0) {
                 civ_name = civ_name_plural(civ3);
                 text_set_string_arg(2,civ_name);
-                popup_game_with_sprite(ADDR(0x633bd8, ((u8 *)&g.d_00633bd8)),ADDR(0x63fc98, ((u8 *)&g.d_0063fc98)),0);
+                popup_game_with_sprite((iptr)((u8 *)&g.d_00633bd8),(iptr)((u8 *)&g.d_0063fc98),0);
               }
               joined_war = diplo_ally_join_war(civ,civ3,civ2);
               joined_war2 = diplo_ally_join_war(civ2,civ3,civ);
@@ -6490,10 +6490,10 @@ LAB_0055ecb6:
             }
             if ((((1 << ((byte)civ3 & 0x1f) & (uint)game.human_players) != 0) &&
                 (city = civ_spaceship_launched(civ3), city == 0)) && (joined_war == 0)) {
-              if ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) {
+              if ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
                 diplo_set_treaty_flags(civ,civ3,0x10000);
               }
-              if ((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) {
+              if ((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
                 diplo_set_treaty_flags(civ2,civ3,0x10000);
               }
             }
@@ -6502,7 +6502,7 @@ LAB_0055ecb6:
         }
       }
     }
-    else if (((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) || (first_or_allied)) {
+    else if (((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) || (first_or_allied)) {
       if ((autoplay_active == 0) &&
          ((*(byte *)&civs[human_civ].treaties[civ] & 8) != 0)) {
         city = diplo_ai_feels_secure(civ,civ2);
@@ -6513,7 +6513,7 @@ LAB_0055ecb6:
         text_set_string_arg(0,civ_name);
         civ_name = civ_name_plural(civ2);
         text_set_string_arg(1,civ_name);
-        popup_game_with_sprite(ADDR(0x633bf4, ((u8 *)&g.d_00633bf4)),(iptr)(&diplo_popup_portrait_sprite +
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633bf4),(iptr)(&diplo_popup_portrait_sprite +
                                           ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
                           );
       }
@@ -6527,7 +6527,7 @@ LAB_0055ecb6:
         text_set_string_arg(0,civ_name);
         civ_name = civ_name_plural(civ);
         text_set_string_arg(1,civ_name);
-        popup_game_with_sprite(ADDR(0x633c04, ((u8 *)&g.d_00633c04)),(iptr)(&diplo_popup_portrait_sprite +
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633c04),(iptr)(&diplo_popup_portrait_sprite +
                                           ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
                           );
       }
@@ -6545,17 +6545,17 @@ LAB_0055ecb6:
         text_set_string_arg(1,civ_name);
         if (((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) ||
            ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0)) {
-          popup_game_with_sprite(ADDR(0x633c20, ((u8 *)&g.d_00633c20)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633c20),(iptr)((u8 *)&g.d_00644e48),0);
         }
         else {
-          popup_game_with_sprite(ADDR(0x633c14, ((u8 *)&g.d_00633c14)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633c14),(iptr)((u8 *)&g.d_00644e48),0);
         }
       }
       diplo_clear_treaty_flags(civ,civ2,4);
       diplo_set_treaty_flags(civ,civ2,0x2000);
       if ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0) {
         diplo_clear_treaty_flags(civ,civ2,0x10);
-        flags_ptr = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+        flags_ptr = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
         *flags_ptr = *flags_ptr | 0x800;
       }
     }
@@ -6609,7 +6609,7 @@ void __cdecl diplo_ai_military_aid(iptr civ)
   war_count = 0;
   for (civ2 = 1; civ2 < 8; civ2++) {
     if ((civ2 != civ) &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)) {
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0)) {
       war_count++;
     }
   }
@@ -6623,8 +6623,8 @@ void __cdecl diplo_ai_military_aid(iptr civ)
        ) {
       for (civ3 = 1; civ3 < 8; civ3++) {
         if (((((civ3 != civ) && (civ3 != civ2)) &&
-             ((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) != 0)) &&
-            (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 2) != 0 &&
+             ((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 0x20) != 0)) &&
+            (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ3 * 4) & 2) != 0 &&
              (civs[civ2].military_strength <= civs[civ3].military_strength)))) &&
            (game.power_rank[civ2] <= game.power_rank[civ3])) {
           unit2 = -1;
@@ -6667,12 +6667,12 @@ void __cdecl diplo_ai_military_aid(iptr civ)
                    (city2 = city_at((int)units[unit2].x,(int)units[unit2].y),
                    -1 < city2)) {
                   unit_stack_unlink(unit2,1);
-                  unit_count = (char *)(units[unit2].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+                  unit_count = (char *)(units[unit2].type + (iptr)((u8 *)&civs + 216) + civ * 0x594);
                   *unit_count = *unit_count - 1;
                   units[unit2].owner = (byte)civ2;
                   units[unit2].home_city = (i8)city;
                   units[unit2].visibility = '\0';
-                  unit_count = (char *)(units[unit2].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
+                  unit_count = (char *)(units[unit2].type + (iptr)((u8 *)&civs + 216) + civ2 * 0x594);
                   *unit_count = *unit_count + 1;
                   unit_stack_link(unit2,x,y,1);
                   city_window_refresh_if_city((FrameWindow *)&city_window,city);
@@ -6687,7 +6687,7 @@ void __cdecl diplo_ai_military_aid(iptr civ)
                     civ_name = civ_name_plural(civ2);
                     text_set_string_arg(2,civ_name);
                     if (human_civ == civ3) {
-                      dlg_game_txt_with_unit(ADDR(0x633c2c, ((u8 *)&g.d_00633c2c)),unit2);
+                      dlg_game_txt_with_unit((iptr)((u8 *)&g.d_00633c2c),unit2);
                     }
                     else if (2 < game.multiplayer) {
                       net_send_text_args(0x51,*(i32 *)
@@ -6705,7 +6705,7 @@ void __cdecl diplo_ai_military_aid(iptr civ)
                     civ_name = civ_name_plural(civ3);
                     text_set_string_arg(3,civ_name);
                     if (human_civ == civ2) {
-                      dlg_game_txt_with_unit(ADDR(0x633c3c, ((u8 *)&g.d_00633c3c)),unit2);
+                      dlg_game_txt_with_unit((iptr)((u8 *)&g.d_00633c3c),unit2);
                     }
                     else if (2 < game.multiplayer) {
                       net_send_text_args(0x52,*(i32 *)
@@ -6806,10 +6806,10 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
           }
           text_set_string_arg(1,(iptr)&cities[city].name);
           if (choice == 0) {
-            popup_game_with_sprite(ADDR(0x633cc0, ((u8 *)&g.d_00633cc0)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633cc0),(iptr)((u8 *)&g.d_00647748),0);
           }
           else {
-            popup_game_with_sprite(ADDR(0x633cb4, ((u8 *)&g.d_00633cb4)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00633cb4),(iptr)((u8 *)&g.d_00647748),0);
           }
         }
         diplo_session_reset();
@@ -6822,7 +6822,7 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
         text_set_string_arg(2,civ_name);
         civ_name = civ_get_adjective(civ);
         text_set_string_arg(3,civ_name);
-        popup_game_with_sprite(ADDR(0x633c54, ((u8 *)&g.d_00633c54)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633c54),(iptr)((u8 *)&g.d_006409d8),0);
         goto LAB_00561668;
       }
       if ((civs[civ2].last_treaty_turn[civ] < game.turn) &&
@@ -6840,10 +6840,10 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
         attitude_delta = diplo_border_intruder_count - 1;
         text_set_string_arg(1,(iptr)&cities[city].name);
         if (diplo_border_intruded_cities < 2) {
-          popup_game_with_sprite(ADDR(0x633c68, ((u8 *)&g.d_00633c68)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633c68),(iptr)((u8 *)&g.d_006409d8),0);
         }
         else {
-          popup_game_with_sprite(ADDR(0x633c5c, ((u8 *)&g.d_00633c5c)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+          popup_game_with_sprite((iptr)((u8 *)&g.d_00633c5c),(iptr)((u8 *)&g.d_006409d8),0);
         }
         goto LAB_00561668;
       }
@@ -6857,10 +6857,10 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
       }
       text_set_string_arg(1,(iptr)&cities[city].name);
       if (diplo_border_intruded_cities < 2) {
-        choice = popup_game_with_sprite(ADDR(0x633c80, ((u8 *)&g.d_00633c80)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+        choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00633c80),(iptr)((u8 *)&g.d_006409d8),0);
       }
       else {
-        choice = popup_game_with_sprite(ADDR(0x633c74, ((u8 *)&g.d_00633c74)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+        choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00633c74),(iptr)((u8 *)&g.d_006409d8),0);
       }
       if (choice == 0) {
         for (unit = 0; unit < game.num_units; unit++) {
@@ -6880,11 +6880,11 @@ void __cdecl diplo_ai_review_relations(iptr civ,uptr civ2)
         map_redraw_all_views(human_civ,1);
         text_set_number_arg(0,diplo_border_intruder_units);
         text_clear();
-        text_append(ADDR(0x633c8c, ((u8 *)&g.d_00633c8c)));
+        text_append((iptr)((u8 *)&g.d_00633c8c));
         if (diplo_border_intruder_units == 1) {
-          text_append(ADDR(0x633c98, ((u8 *)&g.d_00633c98)));
+          text_append((iptr)((u8 *)&g.d_00633c98));
         }
-        popup_game_with_sprite(ADDR(0x679640, ((u8 *)&g.d_00679640)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00679640),(iptr)((u8 *)&g.d_006409d8),0);
       }
       else {
         if (civs[civ2].government == 6) {
@@ -6892,7 +6892,7 @@ LAB_00561364:
           if (((game.game_flags & 0x80) == 0) || ((scenario_flags & 1) == 0)) {
             civ_name = civ_get_adjective(civ2);
             text_set_string_arg(0,civ_name);
-            popup_game(ADDR(0x633c9c, ((u8 *)&g.d_00633c9c)));
+            popup_game((iptr)((u8 *)&g.d_00633c9c));
             civ_change_government(civ2,0);
           }
         }
@@ -6906,7 +6906,7 @@ LAB_00561364:
         diplo_declare_war(civ2,civ,-1);
         civ_name = civ_name_plural(civ);
         text_set_string_arg(1,civ_name);
-        popup_game_with_sprite(ADDR(0x633cac, ((u8 *)&g.d_00633cac)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00633cac),(iptr)((u8 *)&g.d_00644e48),0);
       }
       diplo_session_reset();
     }
@@ -6929,7 +6929,7 @@ LAB_00561668:
       hostile_count++;
     }
     y = war_score;
-    if (((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 0x594) & 0x20) != 0) &&
+    if (((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ3 * 0x594) & 0x20) != 0) &&
        (y = war_score + 1, civs[civ2].military_strength < civs[civ3].military_strength)) {
       y = war_score + 2;
     }
@@ -6967,7 +6967,7 @@ LAB_00561668:
   if ((*(byte *)&civs[civ].treaties[civ2] & 4) != 0) {
     attitude_delta -= 2;
   }
-  if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) {
+  if ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) == 0) {
     attitude_delta--;
   }
   if ((game.power_rank[civ2] < 7) && (200 < game.turn)) {
@@ -7045,7 +7045,7 @@ LAB_00561668:
   if (civs[civ].num_advances < civs[civ2].num_advances) {
     attitude_delta += (1 - leaders[civs[civ].tribe].civilize);
   }
-  if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0) && (attitude_delta < 1)) {
+  if (((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x20) != 0) && (attitude_delta < 1)) {
     attitude_delta = 0;
   }
   y = civ_has_wonder(civ,0x14);
@@ -7111,7 +7111,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
     for (civ3 = 1; (int)civ3 < 8; civ3++) {
       if (((civ3 != civ2) && (civ3 != civ)) &&
          ((1 << ((byte)civ3 & 0x1f) & (uint)game.civs_alive) != 0)) {
-        if ((((*(byte *)(civ3 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 2) != 0) &&
+        if ((((*(byte *)(civ3 * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 2) != 0) &&
             ((civs[civ2].treaties[civ] & 0x2008) == 0)) &&
            ((value = diplo_is_hostile(civ,civ3), value == 0 &&
             (((*(byte *)&civs[civ].treaties[civ2] & 1) != 0 &&
@@ -7149,13 +7149,13 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
               text_set_number_arg(0,value * 0x32);
               crt_strcpy(msg_key,s_HELPME_00633ccc);
               if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
-                str_append((iptr)msg_key,ADDR(0x633cd4, ((u8 *)&g.d_00633cd4)));
+                str_append((iptr)msg_key,(iptr)((u8 *)&g.d_00633cd4));
               }
               if (-1 < advance) {
-                str_append((iptr)msg_key,ADDR(0x633cdc, ((u8 *)&g.d_00633cdc)));
+                str_append((iptr)msg_key,(iptr)((u8 *)&g.d_00633cdc));
                 text_set_label_arg(2,advances[advance].name);
               }
-              check = popup_game_with_sprite((iptr)msg_key,ADDR(0x63fc98, ((u8 *)&g.d_0063fc98)),0);
+              check = popup_game_with_sprite((iptr)msg_key,(iptr)((u8 *)&g.d_0063fc98),0);
               if (check == 0) {
                 value = (int)civs[civ].last_treaty_turn[civ2];
                 if (value <= game.turn - 0xe) {
@@ -7174,7 +7174,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
                 diplo_set_treaty_flags(civ2,civ,0xc);
                 diplo_declare_war(civ,civ3,civ2);
                 diplo_set_treaty_flags(civ,civ3,0x2000);
-                flags_ptr = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 4);
+                flags_ptr = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ3 * 4);
                 *flags_ptr = *flags_ptr | 0x80800;
                 civs[civ].last_treaty_turn[civ3] = game.turn;
                 civs[civ].last_treaty_turn[civ2] = game.turn + 0x10;
@@ -7207,7 +7207,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
               if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
                 crt_strcpy(msg_key,s_JIHAD_00633ce8);
               }
-              value = popup_game_with_sprite((iptr)msg_key,ADDR(0x63fc98, ((u8 *)&g.d_0063fc98)),0);
+              value = popup_game_with_sprite((iptr)msg_key,(iptr)((u8 *)&g.d_0063fc98),0);
               if (value == 0) {
                 value = (int)civs[civ].last_treaty_turn[civ2];
                 if (value <= game.turn - 0xe) {
@@ -7220,7 +7220,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
                 diplo_declare_war(civ,civ3,civ2);
                 civs[civ].last_treaty_turn[civ2] = game.turn + 0x10;
                 diplo_set_treaty_flags(civ,civ3,0x2000);
-                flags_ptr = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ3 * 4);
+                flags_ptr = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ3 * 4);
                 *flags_ptr = *flags_ptr | 0x80800;
                 civs[civ].last_treaty_turn[civ3] = game.turn;
               }
@@ -7229,7 +7229,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
             return;
           }
         }
-        flags_ptr = (uint *)(civ3 * 4 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 0x594);
+        flags_ptr = (uint *)(civ3 * 4 + (iptr)((u8 *)&civs + 32) + civ2 * 0x594);
         *flags_ptr = *flags_ptr & 0xfffffdff;
         if (2 < game.multiplayer) {
           net_send_state_diff(0xff,2,0,0,0);
@@ -7268,9 +7268,9 @@ i32 __cdecl diplo_force_war(iptr civ,iptr civ2)
     diplo_set_treaty_flags(civ,civ2,0x2000);
     civ_set_attitude(civ,civ2,100);
     civ_set_attitude(civ2,civ,100);
-    if (((*(byte *)(civ2 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 4) & 0x10) == 0) &&
-       ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x10) == 0)) {
-      flags_ptr = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
+    if (((*(byte *)(civ2 * 0x594 + (iptr)((u8 *)&civs + 33) + civ * 4) & 0x10) == 0) &&
+       ((*(byte *)(civ * 0x594 + (iptr)((u8 *)&civs + 33) + civ2 * 4) & 0x10) == 0)) {
+      flags_ptr = (uint *)(civ * 0x594 + (iptr)((u8 *)&civs + 32) + civ2 * 4);
       *flags_ptr = *flags_ptr | 0x1000;
       result = 1;
     }
@@ -7289,7 +7289,7 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
   int check;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) == 0) {
+  if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 33) + civ * 0x594) & 0x20) == 0) {
     if ((treaty_mask & civs[civ].treaties[civ2]) == 0) {
       result = 0;
     }
@@ -7302,17 +7302,17 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
       if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
         if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
           if ((*(byte *)&civs[civ].treaties[civ2] & 2) == 0) {
-            choice = popup_game_with_sprite(ADDR(0x634348, ((u8 *)&g.d_00634348)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00634348),(iptr)((u8 *)&g.d_00644e48),0);
           }
-          else if ((*(byte *)(civ2 * 4 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + civ * 0x594) & 4) == 0) {
-            choice = popup_game_with_sprite(ADDR(0x63433c, ((u8 *)&g.d_0063433c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+          else if ((*(byte *)(civ2 * 4 + (iptr)((u8 *)&civs + 34) + civ * 0x594) & 4) == 0) {
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_0063433c),(iptr)((u8 *)&g.d_00647748),0);
           }
           else {
-            choice = popup_game_with_sprite(ADDR(0x634330, ((u8 *)&g.d_00634330)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
+            choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00634330),(iptr)((u8 *)&g.d_00647748),0);
           }
         }
         else {
-          choice = popup_game_with_sprite(ADDR(0x634324, ((u8 *)&g.d_00634324)),ADDR(0x6409d8, ((u8 *)&g.d_006409d8)),0);
+          choice = popup_game_with_sprite((iptr)((u8 *)&g.d_00634324),(iptr)((u8 *)&g.d_006409d8),0);
         }
         if (choice == 1) {
           check = diplo_senate_intervenes(civ,civ2);
@@ -7320,27 +7320,27 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
             if (4 < civs[civ].government) {
               check = civ_has_wonder(civ2,0x18);
               if (check == 0) {
-                if (((*(byte *)(civ * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 0x594) & 0x10) == 0) &&
+                if (((*(byte *)(civ * 4 + (iptr)((u8 *)&civs + 33) + civ2 * 0x594) & 0x10) == 0) &&
                    (civs[civ2].reputation == '\0')) {
-                  popup_game_with_sprite(ADDR(0x634374, ((u8 *)&g.d_00634374)),(iptr)(&government_sprites +
+                  popup_game_with_sprite((iptr)((u8 *)&g.d_00634374),(iptr)(&government_sprites +
                                                     (uint)civs[civ].government * 0x3c),0);
                 }
                 else {
                   civ_name = civ_get_adjective(civ2);
                   text_set_string_arg(0,civ_name);
-                  popup_game_with_sprite(ADDR(0x634364, ((u8 *)&g.d_00634364)),(iptr)(&government_sprites +
+                  popup_game_with_sprite((iptr)((u8 *)&g.d_00634364),(iptr)(&government_sprites +
                                                     (uint)civs[civ].government * 0x3c),0);
                 }
               }
               else {
-                popup_game_with_sprite(ADDR(0x63435c, ((u8 *)&g.d_0063435c)),(iptr)(&government_sprites +
+                popup_game_with_sprite((iptr)((u8 *)&g.d_0063435c),(iptr)(&government_sprites +
                                                   (uint)civs[civ].government * 0x3c),0);
               }
             }
             result = 0;
           }
           else {
-            popup_game_with_sprite(ADDR(0x634350, ((u8 *)&g.d_00634350)),(iptr)(&government_sprites + (uint)civs[civ].government * 0x3c
+            popup_game_with_sprite((iptr)((u8 *)&g.d_00634350),(iptr)(&government_sprites + (uint)civs[civ].government * 0x3c
                                               ),0);
             result = 1;
           }
@@ -7350,7 +7350,7 @@ i32 __cdecl diplo_confirm_attack(iptr civ,iptr civ2,uint treaty_mask)
         }
       }
       else {
-        popup_game_with_sprite(ADDR(0x634318, ((u8 *)&g.d_00634318)),(iptr)(&diplo_popup_portrait_sprite +
+        popup_game_with_sprite((iptr)((u8 *)&g.d_00634318),(iptr)(&diplo_popup_portrait_sprite +
                                           ((game.advance_known_by[0xf] != '\0') - 1 & 0xffff7c80)),0
                           );
         result = 1;

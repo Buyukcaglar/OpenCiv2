@@ -210,9 +210,7 @@ def main():
     gen_thunks(rows)
     gen_inits(rows)
     gen_calltable()
-    # (the MSVC runtime, src/auto/msvcrt.c, is the Windows build's: here the C library)
-    sources = sorted([f for f in glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c'))
-                      if os.path.basename(f) != 'msvcrt.c'] +
+    sources = sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) +
                      glob.glob(os.path.join(ROOT, 'src', 'game', '*.c')) +
                      [os.path.join(ROOT, 'src', 'data', 'gamedata.c'), os.path.join(GEN, 'inits.c'),
                       os.path.join(GEN, 'calltable.c')] +

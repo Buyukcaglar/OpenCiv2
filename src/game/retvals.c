@@ -104,7 +104,7 @@ LAB_0045259e:
         sVar5 = _strlen(&text_buffer);
         if (0xffe < sVar4 + sVar5) {
           sVar4 = _strlen(local_110c);
-          *(i8 *)(ADDR(0x67a63f, ((u8 *)&g.d_0067a638 + 7)) - sVar4) = 0;
+          *(i8 *)((iptr)((u8 *)&g.d_0067a638 + 7) - sVar4) = 0;
         }
         crt_strcat(local_110c,&text_buffer);
         sVar4 = _strlen(local_110c);

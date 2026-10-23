@@ -6,7 +6,7 @@
 void __cdecl text_clear(void)
 
 {
-  str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_clear((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -24,7 +24,7 @@ void __cdecl text_append(iptr str)
 void __cdecl text_append_label(i32 label_id)
 
 {
-  str_append_label(ADDR(0x679640, ((u8 *)&g.d_00679640)),label_id);
+  str_append_label((iptr)((u8 *)&g.d_00679640),label_id);
   return;
 }
 
@@ -32,7 +32,7 @@ void __cdecl text_append_label(i32 label_id)
 void __cdecl text_append_space(void)
 
 {
-  str_append_space(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_space((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -40,7 +40,7 @@ void __cdecl text_append_space(void)
 void __cdecl text_append_colon(void)
 
 {
-  str_append_colon(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_colon((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -48,7 +48,7 @@ void __cdecl text_append_colon(void)
 void __cdecl text_append_percent(void)
 
 {
-  str_append_percent(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_percent((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -56,7 +56,7 @@ void __cdecl text_append_percent(void)
 void __cdecl text_append_lparen(void)
 
 {
-  str_append_lparen(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_lparen((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -64,7 +64,7 @@ void __cdecl text_append_lparen(void)
 void __cdecl text_append_rparen(void)
 
 {
-  str_append_rparen(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_rparen((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -72,7 +72,7 @@ void __cdecl text_append_rparen(void)
 void __cdecl text_append_string_id(i32 string_id)
 
 {
-  str_append_string_id(ADDR(0x679640, ((u8 *)&g.d_00679640)),string_id);
+  str_append_string_id((iptr)((u8 *)&g.d_00679640),string_id);
   return;
 }
 
@@ -80,7 +80,7 @@ void __cdecl text_append_string_id(i32 string_id)
 void __cdecl text_append_int(iptr value)
 
 {
-  str_append_int(ADDR(0x679640, ((u8 *)&g.d_00679640)),value);
+  str_append_int((iptr)((u8 *)&g.d_00679640),value);
   return;
 }
 
@@ -98,7 +98,7 @@ i32 __cdecl text_set_string_arg(iptr index,iptr str)
 void __cdecl text_append_str(iptr str)
 
 {
-  str_concat(ADDR(0x679640, ((u8 *)&g.d_00679640)),str);
+  str_concat((iptr)((u8 *)&g.d_00679640),str);
   return;
 }
 
@@ -110,7 +110,7 @@ iptr __cdecl file_build_open_path(iptr dest,i32 name2)
     crt_strcpy(dest,name2);
   }
   else {
-    path_join_upper(dest,ADDR(0x6250d8, ((u8 *)&g.d_006250d8)),name2);
+    path_join_upper(dest,(iptr)((u8 *)&g.d_006250d8),name2);
   }
   return dest;
 }
@@ -141,7 +141,7 @@ uint __cdecl file_exists(iptr name2)
   FILE *_File;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  _File = (FILE *)file_open_path(name2,ADDR(0x625118, ((u8 *)&g.d_00625118)));
+  _File = (FILE *)file_open_path(name2,(iptr)((u8 *)&g.d_00625118));
   if (_File != (FILE *)0x0) {
     _fclose(_File);
   }
@@ -154,7 +154,7 @@ uint __cdecl file_exists(iptr name2)
 void __cdecl text_append_spaces(i32 count)
 
 {
-  str_append_spaces(ADDR(0x679640, ((u8 *)&g.d_00679640)),count);
+  str_append_spaces((iptr)((u8 *)&g.d_00679640),count);
   return;
 }
 
@@ -164,7 +164,7 @@ void __cdecl labels_reload(void)
 {
   int value;
   
-  value = text_open_section((iptr)PTR_s_LABELS_00627674,ADDR(0x625618, ((u8 *)&g.d_00625618)));
+  value = text_open_section((iptr)PTR_s_LABELS_00627674,(iptr)((u8 *)&g.d_00625618));
   if (value == 0) {
     text_read_line(1);
     value = text_next_int();
@@ -173,7 +173,7 @@ void __cdecl labels_reload(void)
     }
   }
   strpool_init(strpool_capacity);
-  strpool_add(ADDR(0x625624, ((u8 *)&g.d_00625624)));
+  strpool_add((iptr)((u8 *)&g.d_00625624));
   labels_free();
   labels_load();
   dialog_load_button_labels();
@@ -219,7 +219,7 @@ void __thiscall file_obj_write(FileObject *this,iptr data,i32 size)
 void __cdecl text_append_comma(void)
 
 {
-  str_append_comma(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_comma((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -245,7 +245,7 @@ i32 __cdecl text_set_number_arg(int index,i32 value)
 void __cdecl text_append_year(i32 year)
 
 {
-  str_append_year(ADDR(0x679640, ((u8 *)&g.d_00679640)),year);
+  str_append_year((iptr)((u8 *)&g.d_00679640),year);
   return;
 }
 
@@ -354,11 +354,11 @@ void __cdecl strpool_init(uint pool_size)
 {
   if (strpool_initialized == 0) {
     strpool_initialized = 1;
-    memblock_init(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)),2,pool_size);
+    memblock_init((iptr)((u8 *)&g.d_0063e4c0),2,pool_size);
   }
   else {
-    memblock_free(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)));
-    memblock_init(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)),2,pool_size);
+    memblock_free((iptr)((u8 *)&g.d_0063e4c0));
+    memblock_init((iptr)((u8 *)&g.d_0063e4c0),2,pool_size);
   }
   strpool_count = 0;
   return;
@@ -369,7 +369,7 @@ void __cdecl strpool_init(uint pool_size)
 void __cdecl strpool_free(void)
 
 {
-  memblock_free(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)));
+  memblock_free((iptr)((u8 *)&g.d_0063e4c0));
   return;
 }
 
@@ -388,7 +388,7 @@ int __cdecl strpool_add(iptr text)
   }
   else {
     len = _strlen((char *)text);
-    strpool_last_string = memblock_alloc(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)),len + 1);
+    strpool_last_string = memblock_alloc((iptr)((u8 *)&g.d_0063e4c0),len + 1);
     crt_strcpy(strpool_last_string,text);
     string_id = strpool_count;
     strpool_count++;
@@ -435,7 +435,7 @@ int __cdecl strpool_add_padded(iptr text,uint min_size)
   else {
     alloc_size = min_size;
   }
-  strpool_last_string = (char *)memblock_alloc(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)),alloc_size);
+  strpool_last_string = (char *)memblock_alloc((iptr)((u8 *)&g.d_0063e4c0),alloc_size);
   _memset(strpool_last_string,0,alloc_size);
   _strncpy(strpool_last_string,(char *)text,alloc_size);
   len = _strlen((char *)text);
@@ -467,7 +467,7 @@ void __thiscall dll_free(DllHandle *this)
 void __cdecl text_append_period(void)
 
 {
-  str_append_period(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_period((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -483,7 +483,7 @@ void __cdecl str_append(iptr dest,iptr src)
 void __cdecl text_append_long(i32 value)
 
 {
-  str_append_long(ADDR(0x679640, ((u8 *)&g.d_00679640)),value);
+  str_append_long((iptr)((u8 *)&g.d_00679640),value);
   return;
 }
 
@@ -491,7 +491,7 @@ void __cdecl text_append_long(i32 value)
 void __cdecl text_append_gold(i32 gold)
 
 {
-  str_append_gold(ADDR(0x679640, ((u8 *)&g.d_00679640)),gold);
+  str_append_gold((iptr)((u8 *)&g.d_00679640),gold);
   return;
 }
 
@@ -499,7 +499,7 @@ void __cdecl text_append_gold(i32 gold)
 void __cdecl text_append_population(iptr civ,i32 population)
 
 {
-  str_append_population(ADDR(0x679640, ((u8 *)&g.d_00679640)),civ,population);
+  str_append_population((iptr)((u8 *)&g.d_00679640),civ,population);
   return;
 }
 
@@ -507,7 +507,7 @@ void __cdecl text_append_population(iptr civ,i32 population)
 void __cdecl text_append_city_name(iptr city)
 
 {
-  str_append_city_name(ADDR(0x679640, ((u8 *)&g.d_00679640)),city);
+  str_append_city_name((iptr)((u8 *)&g.d_00679640),city);
   return;
 }
 
@@ -645,7 +645,7 @@ int __cdecl labels_load(void)
   i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
   
   result = -1;
-  status = text_open_section(ADDR(0x628430, ((u8 *)&g.d_00628430)),ADDR(0x628428, ((u8 *)&g.d_00628428)));
+  status = text_open_section((iptr)((u8 *)&g.d_00628430),(iptr)((u8 *)&g.d_00628428));
   if (status == 0) {
     text_read_line(1);
     label_count = text_next_int();
@@ -666,7 +666,7 @@ int __cdecl labels_load(void)
         if (i < 0x378) {
           crt_strcpy(saved_dir,&scenario_dir_path);
           crt_strcpy(&scenario_dir_path,&game_home_dir);
-          status = text_open_section(ADDR(0x628440, ((u8 *)&g.d_00628440)),ADDR(0x628438, ((u8 *)&g.d_00628438)));
+          status = text_open_section((iptr)((u8 *)&g.d_00628440),(iptr)((u8 *)&g.d_00628438));
           if (status == 0) {
             text_read_line(1);
             status = text_next_int();
@@ -680,7 +680,7 @@ int __cdecl labels_load(void)
           }
           crt_strcpy(&scenario_dir_path,saved_dir);
           if (i < 0x378) {
-            string_id = strpool_add(ADDR(0x628448, ((u8 *)&g.d_00628448)));
+            string_id = strpool_add((iptr)((u8 *)&g.d_00628448));
             for (; i < 0x378; i++) {
               *(i32 *)(label_string_ids + i * 4) = string_id;
             }
@@ -907,16 +907,16 @@ int __cdecl text_open_file_section(int filename,int section)
   else {
     text_close_file();
     crt_strcpy(name2,filename);
-    path_default_extension((iptr)name2,ADDR(0x62cd24, ((u8 *)&g.d_0062cd24)));
+    path_default_extension((iptr)name2,(iptr)((u8 *)&g.d_0062cd24));
     __getcwd(saved_cwd,0x104);
     __chdir(&scenario_dir_path);
-    text_file_handle = (FILE *)file_open_path((iptr)name2,ADDR(0x62cd28, ((u8 *)&g.d_0062cd28)));
+    text_file_handle = (FILE *)file_open_path((iptr)name2,(iptr)((u8 *)&g.d_0062cd28));
     if ((text_file_handle != (FILE *)0x0) && (len = _strlen(name2), len != 0)) {
       section_offset = text_section_index_lookup((iptr)name2,(iptr)section_tag);
     }
     __chdir(&game_home_dir);
     if (((text_file_handle == (FILE *)0x0) &&
-        (text_file_handle = (FILE *)file_open_path((iptr)name2,ADDR(0x62cd2c, ((u8 *)&g.d_0062cd2c))),
+        (text_file_handle = (FILE *)file_open_path((iptr)name2,(iptr)((u8 *)&g.d_0062cd2c)),
         text_file_handle != (FILE *)0x0)) && (len = _strlen(name2), len != 0)) {
       section_offset = text_section_index_lookup((iptr)name2,(iptr)section_tag);
     }
@@ -939,8 +939,8 @@ int __cdecl text_open_file_section(int filename,int section)
       }
       line = _fgets(&text_buffer,0xff,text_file_handle);
       if (line != (char *)0x0) {
-        str_strip_newline(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        str_trim(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        str_strip_newline((iptr)((u8 *)&g.d_00679640));
+        str_trim((iptr)((u8 *)&g.d_00679640));
         cmp = __strcmpi(&text_buffer,section_tag);
         if (cmp == 0) {
           found = true;
@@ -1000,9 +1000,9 @@ i8 * __cdecl text_read_line(int trim)
   result = (i8 *)0x0;
   if (((CRT_FEOF(text_file_handle)) == 0) &&
      (line = _fgets(&text_buffer,0xff,text_file_handle), line != (char *)0x0)) {
-    str_strip_newline(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+    str_strip_newline((iptr)((u8 *)&g.d_00679640));
     if (trim == 1) {
-      str_trim(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      str_trim((iptr)((u8 *)&g.d_00679640));
     }
     text_line_cursor = &text_buffer;
     result = &text_buffer;
@@ -1036,7 +1036,7 @@ i8 * __cdecl text_next_token(void)
     text_line_cursor++;
   }
   *dest = '\0';
-  str_trim(ADDR(0x673e10, ((u8 *)&g.d_00673e10)));
+  str_trim((iptr)((u8 *)&g.d_00673e10));
   return &text_token_buf;
 }
 #undef text_line_cursor
@@ -1062,7 +1062,7 @@ i32 __cdecl text_read_line_pooled(void)
   i32 string_id;
   
   text_read_line(1);
-  string_id = strpool_add(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  string_id = strpool_add((iptr)((u8 *)&g.d_00679640));
   return string_id;
 }
 
@@ -1073,7 +1073,7 @@ i32 __cdecl text_next_token_pooled(void)
   i32 string_id;
   
   text_next_token();
-  string_id = strpool_add(ADDR(0x673e10, ((u8 *)&g.d_00673e10)));
+  string_id = strpool_add((iptr)((u8 *)&g.d_00673e10));
   return string_id;
 }
 
@@ -1129,7 +1129,7 @@ i32 __cdecl text_next_token_str_id(i32 min_size)
   i32 string_id;
   
   text_next_token();
-  string_id = strpool_add_padded(ADDR(0x673e10, ((u8 *)&g.d_00673e10)),min_size);
+  string_id = strpool_add_padded((iptr)((u8 *)&g.d_00673e10),min_size);
   return string_id;
 }
 
@@ -1299,14 +1299,14 @@ void __cdecl text_list_append_wrapped(iptr dialog,i32 string_id,iptr item_count,
     text_append_lparen();
   }
   else {
-    text_append(ADDR(0x62db88, ((u8 *)&g.d_0062db88)));
+    text_append((iptr)((u8 *)&g.d_0062db88));
     if (*(int *)line_count < 4) {
-      text_append(ADDR(0x62db8c, ((u8 *)&g.d_0062db8c)));
+      text_append((iptr)((u8 *)&g.d_0062db8c));
     }
     else {
       *(i32 *)line_count = 0;
       dialog_add_line
-                ((DialogAddLineView *)dialog,ADDR(0x679640, ((u8 *)&g.d_00679640)),0xffffffff,0xffffffff,0xffffffff,0);
+                ((DialogAddLineView *)dialog,(iptr)((u8 *)&g.d_00679640),0xffffffff,0xffffffff,0xffffffff,0);
       text_clear();
     }
   }
@@ -1448,15 +1448,15 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
   long *entry;
   i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  memblock_free(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)));
-  memblock_init(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)),1,pool_size);
+  memblock_free((iptr)((u8 *)&g.d_006a5b38));
+  memblock_init((iptr)((u8 *)&g.d_006a5b38),1,pool_size);
   text_section_index_valid = 0;
   text_section_index_count = 0;
   __getcwd(&text_section_index_path,0x104);
   crt_strcat(&text_section_index_path,&text_index_path_sep_str);
   crt_strcat(&text_section_index_path,filename);
-  path_default_extension(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62cd24, ((u8 *)&g.d_0062cd24)));
-  _File = (FILE *)file_open_path(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62e618, ((u8 *)&g.d_0062e618)));
+  path_default_extension((iptr)((u8 *)&g.d_0062e508),(iptr)((u8 *)&g.d_0062cd24));
+  _File = (FILE *)file_open_path((iptr)((u8 *)&g.d_0062e508),(iptr)((u8 *)&g.d_0062e618));
   if (_File == (FILE *)0x0) {
     text_section_index_path = 0;
   }
@@ -1471,7 +1471,7 @@ void __cdecl text_section_index_build(iptr filename,uint pool_size)
         len = _strlen(&line_buf);
         entry_size = len + 5;
         if ((int)(uint)text_section_pool_free_bytes < (int)entry_size) break;
-        entry = (long *)memblock_alloc(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)),entry_size);
+        entry = (long *)memblock_alloc((iptr)((u8 *)&g.d_006a5b38),entry_size);
         *entry = line_offset;
         crt_strcpy(entry + 1,&line_buf);
         text_section_index_count++;
@@ -1496,7 +1496,7 @@ void __cdecl text_section_index_free(void)
 {
   text_section_index_valid = 0;
   text_section_index_count = 0;
-  memblock_free(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)));
+  memblock_free((iptr)((u8 *)&g.d_006a5b38));
   return;
 }
 #undef text_section_index_count
@@ -1563,13 +1563,13 @@ void __cdecl text_set_unit_info_args(iptr unit)
   }
   text_append_space();
   text_append_string_id(unit_types[units[unit].type].name);
-  text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  text_set_string_arg(0,(iptr)((u8 *)&g.d_00679640));
   text_clear();
   x = (int)units[unit].x;
   y = (int)units[unit].y;
   city_here = city_at(x,y);
   if (-1 < city_here) {
-    text_append(city_here * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
+    text_append(city_here * 0x58 + (iptr)((u8 *)&cities + 32));
     text_append_space();
   }
   text_append_lparen();
@@ -1584,11 +1584,11 @@ void __cdecl text_set_unit_info_args(iptr unit)
       text_append_lparen();
       text_append_label(0xb2);
       text_append_space();
-      text_append(x * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
+      text_append(x * 0x58 + (iptr)((u8 *)&cities + 32));
       text_append_rparen();
     }
   }
-  text_set_string_arg(1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  text_set_string_arg(1,(iptr)((u8 *)&g.d_00679640));
   text_clear();
   if (units[unit].home_city == -1) {
     city = 0xffffffff;
@@ -1597,7 +1597,7 @@ void __cdecl text_set_unit_info_args(iptr unit)
     city = (uint)(byte)units[unit].home_city;
   }
   text_append_city_name(city);
-  text_set_string_arg(2,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  text_set_string_arg(2,(iptr)((u8 *)&g.d_00679640));
   return;
 }
 #undef city
@@ -1606,7 +1606,7 @@ void __cdecl text_set_unit_info_args(iptr unit)
 void __cdecl text_append_plus(void)
 
 {
-  str_append_plus(ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  str_append_plus((iptr)((u8 *)&g.d_00679640));
   return;
 }
 
@@ -1614,7 +1614,7 @@ void __cdecl text_append_plus(void)
 void __cdecl text_append_city_population(i32 city)
 
 {
-  str_append_city_population(ADDR(0x679640, ((u8 *)&g.d_00679640)),city);
+  str_append_city_population((iptr)((u8 *)&g.d_00679640),city);
   return;
 }
 
@@ -1656,7 +1656,7 @@ i32 __cdecl file_require_cdrom(iptr filename)
         return 1;
       }
     }
-    popup_game_flags(ADDR(0x633d5c, ((u8 *)&g.d_00633d5c)),0x2000001);
+    popup_game_flags((iptr)((u8 *)&g.d_00633d5c),0x2000001);
   } while (dlg_help_pressed != 0);
   return 0;
 }
@@ -1725,10 +1725,10 @@ LAB_005646e1:
         text_append((iptr)drive_root);
         text_append(filename);
         hfile = OpenFile(&text_buffer,&of_struct,0x4000);
-        str_clear(ADDR(0x6ab680, ((u8 *)&g.d_006ab680)));
+        str_clear((iptr)((u8 *)&g.d_006ab680));
         fallback_drive_root = *drive_root;
         fallback_drive_root_end = 0;
-        str_append(ADDR(0x6ab680, ((u8 *)&g.d_006ab680)),ADDR(0x633d6c, ((u8 *)&g.d_00633d6c)));
+        str_append((iptr)((u8 *)&g.d_006ab680),(iptr)((u8 *)&g.d_00633d6c));
         goto LAB_005646e1;
       }
       for (; *drive_root != '\0'; drive_root++) {
@@ -1779,7 +1779,7 @@ i32 __cdecl file_resolve_path(iptr path)
   str_append((iptr)base_name,name_offset + path);
   uMode = SetErrorMode(1);
   str_clear((iptr)try_path);
-  str_append((iptr)try_path,ADDR(0x6ab600, ((u8 *)&g.d_006ab600)));
+  str_append((iptr)try_path,(iptr)((u8 *)&g.d_006ab600));
   str_append((iptr)try_path,(iptr)base_name);
   result = OpenFile(try_path,&of_struct,0x4000);
   if ((result == 0) || (result == -1)) {
@@ -1791,7 +1791,7 @@ i32 __cdecl file_resolve_path(iptr path)
       cursor = next;
     } while (ch != '\\');
     str_clear((iptr)alt_path);
-    str_append((iptr)alt_path,ADDR(0x6ab600, ((u8 *)&g.d_006ab600)));
+    str_append((iptr)alt_path,(iptr)((u8 *)&g.d_006ab600));
     if (*cursor == '\0') {
       str_append((iptr)alt_path,path);
     }
@@ -1805,7 +1805,7 @@ i32 __cdecl file_resolve_path(iptr path)
       }
       else {
         str_clear((iptr)try_path);
-        str_append((iptr)try_path,ADDR(0x6ab680, ((u8 *)&g.d_006ab680)));
+        str_append((iptr)try_path,(iptr)((u8 *)&g.d_006ab680));
         str_append((iptr)try_path,path);
         result = OpenFile(try_path,&of_struct,0x4000);
         if ((result == 0) || (result == -1)) {
@@ -1813,7 +1813,7 @@ i32 __cdecl file_resolve_path(iptr path)
         }
         else {
           str_clear((iptr)alt_path);
-          str_append((iptr)alt_path,ADDR(0x6ab680, ((u8 *)&g.d_006ab680)));
+          str_append((iptr)alt_path,(iptr)((u8 *)&g.d_006ab680));
           str_append((iptr)alt_path,path);
           str_clear(path);
           str_append(path,(iptr)alt_path);
@@ -1829,7 +1829,7 @@ i32 __cdecl file_resolve_path(iptr path)
   }
   else {
     str_clear(path);
-    str_append(path,ADDR(0x6ab600, ((u8 *)&g.d_006ab600)));
+    str_append(path,(iptr)((u8 *)&g.d_006ab600));
     str_append(path,(iptr)base_name);
     result = 1;
   }
@@ -1906,7 +1906,7 @@ i32 __cdecl file_read_nth_line(iptr dest,iptr filename,int line_num)
   i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   result = 1;
-  _File = (FILE *)file_open_path(filename,ADDR(0x634840, ((u8 *)&g.d_00634840)));
+  _File = (FILE *)file_open_path(filename,(iptr)((u8 *)&g.d_00634840));
   if (_File != (FILE *)0x0) {
     for (i = 1; i <= line_num; i++) {
       if (((CRT_FEOF(_File)) != 0) ||
@@ -2338,7 +2338,7 @@ i32 __cdecl file_obj_write_bytes(iptr file_obj,iptr buf,DWORD size)
     result = 0;
   }
   else if (*(int *)file_obj == 0) {
-    dbg_log(ADDR(0x638640, ((u8 *)&g.d_00638640)));
+    dbg_log((iptr)((u8 *)&g.d_00638640));
     result = 0;
   }
   else {
@@ -2416,7 +2416,7 @@ DWORD __cdecl file_obj_get_size_impl(iptr file_obj)
   else {
     DVar1 = GetFileSize(*(HANDLE *)(file_obj + 4),(LPDWORD)0x0);
     if (DVar1 == 0xffffffff) {
-      dbg_log(ADDR(0x63869c, ((u8 *)&g.d_0063869c)));
+      dbg_log((iptr)((u8 *)&g.d_0063869c));
       DVar1 = 0;
     }
   }

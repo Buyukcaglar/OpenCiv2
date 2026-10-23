@@ -17,17 +17,15 @@ leader receiving an envoy (his video, from the CD) and London's city view with i
 
 | path | what |
 |------|------|
-| `src/auto/` | the game, machine-translated to C once and now edited directly, a file per subject: `city.c`, `unit.c`, `ai.c`, `civ.c`, `diplomacy.c`, `reports.c`, `map.c`, `mapview.c`, `game.c`, `editor.c`, `pedia.c`, `spaceship.c`, `network.c`, `sound.c`, `window.c`, `controls.c`, `graphics.c`, `text.c`, `support.c`; `msvcrt.c` the MSVC runtime (Windows build only) |
+| `src/auto/` | the game, machine-translated to C once and now edited directly, a file per subject: `city.c`, `unit.c`, `ai.c`, `civ.c`, `diplomacy.c`, `reports.c`, `map.c`, `mapview.c`, `game.c`, `editor.c`, `pedia.c`, `spaceship.c`, `network.c`, `sound.c`, `window.c`, `controls.c`, `graphics.c`, `text.c`, `support.c` |
 | `src/game/` | game functions reconstructed by hand |
-| `src/unused/` | translated functions nothing in the game refers to (kept, not compiled) |
 | `src/data/` | the game's static data as C (`gamedata.h`/`.c`) |
 | `src/include/` | types recovered from the binary (units, cities, civilizations, classes) |
 | `src/platform/` | the Windows API the game uses (windows, GDI, controls, files, sound …) implemented in portable C |
 | `src/host/` | what the platform needs from the machine: window, input, audio over SDL2; the portable build's runtime |
 | `src/native/` | the C runtime pieces for native builds |
-| `src/crt/` | the MSVC runtime, reconstructed (Windows builds) |
 | `data/native/` | fonts as the reference renders them (glyph data, generated with Wine) |
-| `data/image/` | the original executable's data sections (input of the Windows standalone build) |
+| `data/image/` | the original executable's data sections |
 | `re/` | analysis results: function list, calling conventions, data layout, Ghidra's decompilation |
 | `tools/` | build, naming and clean-up scripts (`build_port.py`, `build_native.py`, `rename.py` …); the retired Ghidra pipeline (`gen_c.py`) |
 | `harness/` | replay scripts and the comparison against the original (`run.py`, `compare.py`, `native_suite.sh`, `msgdiff.sh`, `clockdiff.py`) |
@@ -101,15 +99,12 @@ make images          # Docker images: wine, mingw, SDL2, wasi-sdk; Ghidra
 make hook            # the replay/trace proxy DLL for the original
 make port            # build/civ2-port (portable build)
 make native          # build/civ2-linux32 (gcc -m32: same code, easier to debug)
-make suite           # record the original under Wine and compare the Windows reconstruction
 make native-suite    # compare a native build against those recordings (EXE=civ2-port, civ2-port.exe under wine)
-make build           # build/civ2_recon.exe: the reconstruction grafted onto civ2.exe
-make standalone      # build/civ2.exe from source and data/image only
 ```
 
 `harness/scripts/*.txt` are the scenarios (menu, new game, load game, turns,
 advisors, 50 turns of play).  `make ref SCRIPT=...` records the original on a
-script, `make compare` checks the reconstruction against it.
+script, `make native-suite` checks the native builds against the recordings.
 
 ## License
 

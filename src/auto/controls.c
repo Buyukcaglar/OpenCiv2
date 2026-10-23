@@ -1703,7 +1703,7 @@ i32 * __cdecl ctrl_init_block(HWND hwnd,iptr owner)
   
   block = (i32 *)0x0;
   if (hwnd == (HWND)0x0) {
-    dbg_log(ADDR(0x637cf4, ((u8 *)&g.d_00637cf4)));
+    dbg_log((iptr)((u8 *)&g.d_00637cf4));
   }
   else {
     handle = mem_handle_alloc(0x30);
@@ -1732,7 +1732,7 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
   i32 *block;
   
   if (hwnd == (HWND)0x0) {
-    dbg_log(ADDR(0x637d30, ((u8 *)&g.d_00637d30)));
+    dbg_log((iptr)((u8 *)&g.d_00637d30));
   }
   else {
     block = (i32 *)GetWindowLongA(hwnd,0);
@@ -1758,7 +1758,7 @@ void __cdecl ctrl_hwnd_free_block(HWND hwnd)
       handle = *block;
       mem_handle_unlock(handle);
       mem_handle_free(handle);
-      SetWindowLongA(hwnd,-4,ADDR(0x5c9307, ctrl_default_wndproc));
+      SetWindowLongA(hwnd,-4,(iptr)ctrl_default_wndproc);
       SetWindowLongA(hwnd,0,0);
     }
   }
@@ -1874,7 +1874,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
   value2 = rect_width((iptr)&bounds);
   h = CreateCompatibleBitmap(hdc,value2,value);
   if (h == (HBITMAP)0x0) {
-    dbg_log(ADDR(0x637d80, ((u8 *)&g.d_00637d80)));
+    dbg_log((iptr)((u8 *)&g.d_00637d80));
     DestroyWindow(hwnd2);
     hwnd2 = (HWND)0x0;
   }
@@ -1883,7 +1883,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
     value2 = rect_width((iptr)&bounds);
     h_00 = CreateCompatibleBitmap(hdc,value2,value);
     if (h_00 == (HBITMAP)0x0) {
-      dbg_log(ADDR(0x637da8, ((u8 *)&g.d_00637da8)));
+      dbg_log((iptr)((u8 *)&g.d_00637da8));
       DestroyWindow(hwnd2);
       hwnd2 = (HWND)0x0;
     }
@@ -1892,7 +1892,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
       value2 = rect_width((iptr)&bounds);
       bmp_disabled = CreateCompatibleBitmap(hdc,value2,value);
       if (bmp_disabled == (HBITMAP)0x0) {
-        dbg_log(ADDR(0x637dd0, ((u8 *)&g.d_00637dd0)));
+        dbg_log((iptr)((u8 *)&g.d_00637dd0));
         DestroyWindow(hwnd2);
         hwnd2 = (HWND)0x0;
       }
@@ -2218,7 +2218,7 @@ button_create_hwnd(int *rect,iptr ctrl,i32 label,int visible,GameFont *font)
         *(HBITMAP *)(value + 0x10) = h_00;
         *(HBITMAP *)(value + 0x14) = bmp_disabled;
         *(i32 *)(value + 0x2c) = 6;
-        SetWindowLongA(hwnd2,-4,ADDR(0x5cacd4, button_wndproc));
+        SetWindowLongA(hwnd2,-4,(iptr)button_wndproc);
       }
     }
   }
@@ -2322,7 +2322,7 @@ HWND __cdecl spritebtn_create_hwnd(int x,int y,int width,int height,iptr ctrl,in
                             ,rect_h,hWndParent,hMenu,hInstance,lpParam);
   value = ctrl_init_block(hwnd2,ctrl);
   *(i32 *)(value + 0x2c) = 5;
-  SetWindowLongA(hwnd2,-4,ADDR(0x5cb6eb, spritebtn_wndproc));
+  SetWindowLongA(hwnd2,-4,(iptr)spritebtn_wndproc);
   return hwnd2;
 }
 #undef app_hinstance
@@ -2497,7 +2497,7 @@ HWND __cdecl checkbox_create_hwnd(iptr rect,iptr ctrl,char *label,int visible)
   *(HBITMAP *)(value + 0x14) = pHVar9;
   *(i32 *)(value + 0x2c) = 2;
   *(void **)(value + 0x24) = label_copy;
-  SetWindowLongA(pHVar6,-4,ADDR(0x5cc320, checkbox_wndproc));
+  SetWindowLongA(pHVar6,-4,(iptr)checkbox_wndproc);
   return pHVar6;
 }
 #undef app_hinstance
@@ -2508,7 +2508,7 @@ void __cdecl checkbox_destroy_hwnd(int hwnd)
 
 {
   if (hwnd == 0) {
-    dbg_log(ADDR(0x637f20, ((u8 *)&g.d_00637f20)));
+    dbg_log((iptr)((u8 *)&g.d_00637f20));
   }
   return;
 }
@@ -2972,7 +2972,7 @@ HWND __cdecl scrollbar_create_hwnd(int *rect,iptr ctrl,uint style_flags,int visi
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,s_MSScrollBarClass_00637f84,&scrollbar_wnd_title,style2,*rect,rect[1]
                             ,nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
-  SetWindowLongA(hwnd2,-4,ADDR(0x5cce80, control_subclass_wndproc));
+  SetWindowLongA(hwnd2,-4,(iptr)control_subclass_wndproc);
   SetWindowLongA(hwnd2,scrollbar_base_wnd_extra,ctrl);
   SetWindowLongA(hwnd2,scrollbar_base_wnd_extra + 4,(LONG)scrollbar_base_wndproc);
   ShowScrollBar(hwnd2,2,1);
@@ -3263,7 +3263,7 @@ HWND __cdecl edit_create_window(int *rect,iptr ctrl,uint flags,int visible,GameF
   SendMessageA(hwnd2,0x30,*pWVar6,0);
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
-  SetWindowLongA(hwnd2,-4,ADDR(0x5d2a01, edit_subclass_wndproc));
+  SetWindowLongA(hwnd2,-4,(iptr)edit_subclass_wndproc);
   SetWindowLongA(hwnd2,edit_base_wnd_extra,(LONG)edit_base_wndproc);
   SetWindowLongA(hwnd2,edit_base_wnd_extra + 4,ctrl);
   return hwnd2;
@@ -3551,7 +3551,7 @@ HWND __cdecl combo_create_window(int *rect,iptr ctrl,int visible)
   nWidth = rect_width((iptr)rect);
   hwnd2 = CreateWindowExA(4,s_MSComboBoxClass_00638370,&combo_wnd_title,style2,*rect,rect[1],
                             nWidth,value,pHVar5,pHVar6,pHVar7,create_param);
-  SetWindowLongA(hwnd2,-4,ADDR(0x5d3310, combo_subclass_wndproc));
+  SetWindowLongA(hwnd2,-4,(iptr)combo_subclass_wndproc);
   SetWindowLongA(hwnd2,combo_base_wnd_extra,(LONG)combo_base_wndproc);
   SetWindowLongA(hwnd2,combo_base_wnd_extra + 4,ctrl);
   return hwnd2;
@@ -3791,7 +3791,7 @@ HWND __cdecl listbox_create_hwnd(int *rect,iptr ctrl,int visible,int multi_colum
   SendMessageA(hwnd2,0x30,*pWVar7,0);
   font_handle = font_get_handle(font);
   mem_handle_unlock(font_handle);
-  SetWindowLongA(hwnd2,-4,ADDR(0x5d39e2, listbox_subclass_wndproc));
+  SetWindowLongA(hwnd2,-4,(iptr)listbox_subclass_wndproc);
   SetWindowLongA(hwnd2,listbox_base_wnd_extra,(LONG)listbox_base_wndproc);
   SetWindowLongA(hwnd2,listbox_base_wnd_extra + 4,ctrl);
   return hwnd2;
@@ -4216,7 +4216,7 @@ radiogrp_create_items(iptr count_out,int *rect,int columns,iptr group,int item_c
     *(HBITMAP *)(block + 0x14) = pHVar4;
     *(uint *)(block + 0x24) = index * 0xa4 + items;
     *(i32 *)(block + 0x2c) = 3;
-    SetWindowLongA(*(HWND *)(items + index * 0xa4),-4,ADDR(0x5d9b86, radiogrp_item_wndproc));
+    SetWindowLongA(*(HWND *)(items + index * 0xa4),-4,(iptr)radiogrp_item_wndproc);
     SetRect((LPRECT)(index * 0xa4 + items + 4),item_x,(half_row - half_item) + item_y,
             item_x + col_width,(half_row - half_item) + item_y + nHeight);
     *(uint *)(items + 0x14 + index * 0xa4) = index;
@@ -4287,7 +4287,7 @@ void __cdecl radiogrp_destroy_items(int count,int handle)
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (handle == 0) {
-    dbg_log(ADDR(0x63872c, ((u8 *)&g.d_0063872c)));
+    dbg_log((iptr)((u8 *)&g.d_0063872c));
   }
   else {
     items = mem_handle_lock(handle);
