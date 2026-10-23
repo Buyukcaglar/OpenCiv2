@@ -105,3 +105,10 @@ message by message and clock event by clock event.
   with its top rows missing; the original showed it whole.  The blink is
   timer-driven, so the script takes no screenshot there; not yet
   explained.
+* **Map left black after Arrange Windows.**  After the View menu's zooms
+  and Arrange Windows (harness/scripts/menuview.txt run in the old order),
+  a cancelled Save Game leaves the main map black; the original repaints
+  it.  Message traces (harness/msgdiff.sh) differ in four lines: Wine has a
+  WM_PAINT pending for the map view (window 19) when the large child window
+  Arrange Windows showed and hid (window 23) is hidden again, and does not
+  erase the map frame (window 18) when it is resized.  Not yet explained.

@@ -1,0 +1,108 @@
+# The Game menu's other items (save, load, password, timer, join, retire,
+# quit: each dialog cancelled), then the View menu, through menu_command
+# as menuitems.txt, on the autosave.  (The Game items come first: after
+# Arrange Windows and the zooms a cancelled save leaves the map black
+# here, not in the original -- see STATUS.md.)
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 272     # 0x110
+wait 3000
+shot 01-110
+key Escape
+wait 2000
+call menu_command 4e2803 0 288     # 0x120
+wait 3000
+shot 02-120
+key Escape
+wait 2000
+call menu_command 4e2803 0 304     # 0x130
+wait 3000
+shot 03-130
+key Escape
+wait 2000
+call menu_command 4e2803 0 305     # 0x131
+wait 3000
+shot 04-131
+key Escape
+wait 2000
+call menu_command 4e2803 0 306     # 0x132
+wait 3000
+shot 05-132
+key Escape
+wait 2000
+call menu_command 4e2803 0 498     # 0x1f2
+wait 3000
+shot 06-1f2
+key Escape
+wait 2000
+call menu_command 4e2803 0 496     # 0x1f0
+wait 3000
+shot 07-1f0
+key Escape
+wait 2000
+call menu_command 4e2803 0 497     # 0x1f1
+wait 3000
+shot 08-1f1
+key Escape
+wait 2000
+call menu_command 4e2803 0 769     # 0x301
+wait 3000
+shot 09-301
+key Escape
+wait 2000
+call menu_command 4e2803 0 770     # 0x302
+wait 3000
+shot 10-302
+key Escape
+wait 2000
+call menu_command 4e2803 0 784     # 0x310
+wait 3000
+shot 11-310
+key Escape
+wait 2000
+call menu_command 4e2803 0 785     # 0x311
+wait 3000
+shot 12-311
+key Escape
+wait 2000
+call menu_command 4e2803 0 801     # 0x321
+wait 3000
+shot 13-321
+key Escape
+wait 2000
+call menu_command 4e2803 0 802     # 0x322
+wait 3000
+shot 14-322
+key Escape
+wait 2000
+call menu_command 4e2803 0 804     # 0x324
+wait 3000
+shot 15-324
+key Escape
+wait 2000
+call menu_command 4e2803 0 807     # 0x327
+wait 3000
+shot 16-327
+key Escape
+wait 2000
+call menu_command 4e2803 0 808     # 0x328
+wait 3000
+shot 17-328
+key Escape
+wait 2000
+call menu_command 4e2803 0 816     # 0x330
+wait 3000
+shot 18-330
+key Escape
+wait 2000
+call menu_command 4e2803 0 832     # 0x340
+wait 3000
+shot 19-340
+key Escape
+wait 2000

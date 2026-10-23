@@ -1,0 +1,119 @@
+# Every Orders menu item on the active unit (each through menu_command as
+# menuitems.txt), on the autosave.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1025     # 0x401 (no shot: the active unit blinks)
+wait 3000
+key Escape
+wait 2000
+call menu_command 4e2803 0 1040     # 0x410
+wait 3000
+shot 02-410
+key Escape
+wait 2000
+call menu_command 4e2803 0 1041     # 0x411
+wait 3000
+shot 03-411
+key Escape
+wait 2000
+call menu_command 4e2803 0 1042     # 0x412
+wait 3000
+shot 04-412
+key Escape
+wait 2000
+call menu_command 4e2803 0 1043     # 0x413
+wait 3000
+shot 05-413
+key Escape
+wait 2000
+call menu_command 4e2803 0 1047     # 0x417
+wait 3000
+shot 06-417
+key Escape
+wait 2000
+call menu_command 4e2803 0 1048     # 0x418
+wait 3000
+shot 07-418
+key Escape
+wait 2000
+call menu_command 4e2803 0 1051     # 0x41b
+wait 3000
+shot 08-41b
+key Escape
+wait 2000
+call menu_command 4e2803 0 1056     # 0x420
+wait 3000
+shot 09-420
+key Escape
+wait 2000
+call menu_command 4e2803 0 1057     # 0x421
+wait 3000
+shot 10-421
+key Escape
+wait 2000
+call menu_command 4e2803 0 1072     # 0x430
+wait 3000
+shot 11-430
+key Escape
+wait 2000
+call menu_command 4e2803 0 1088     # 0x440
+wait 3000
+shot 12-440
+key Escape
+wait 2000
+call menu_command 4e2803 0 1089     # 0x441
+wait 3000
+shot 13-441
+key Escape
+wait 2000
+call menu_command 4e2803 0 1090     # 0x442
+wait 3000
+shot 14-442
+key Escape
+wait 2000
+call menu_command 4e2803 0 1093     # 0x445
+wait 3000
+shot 15-445
+key Escape
+wait 2000
+call menu_command 4e2803 0 1104     # 0x450
+wait 3000
+shot 16-450
+key Escape
+wait 2000
+call menu_command 4e2803 0 1105     # 0x451
+wait 3000
+shot 17-451
+key Escape
+wait 2000
+call menu_command 4e2803 0 1120     # 0x460
+wait 3000
+shot 18-460
+key Escape
+wait 2000
+call menu_command 4e2803 0 1128     # 0x468
+wait 3000
+shot 19-468
+key Escape
+wait 2000
+call menu_command 4e2803 0 1136     # 0x470
+wait 3000
+shot 20-470
+key Escape
+wait 2000
+call menu_command 4e2803 0 1152     # 0x480
+wait 3000
+shot 21-480
+key Escape
+wait 2000
+call menu_command 4e2803 0 1168     # 0x490
+wait 3000
+shot 22-490
+key Escape
+wait 2000

@@ -1,0 +1,147 @@
+# The Cheat menu (cheat mode turned on first) and the scenario editors
+# (each through menu_command as menuitems.txt, each dialog cancelled), on
+# the autosave.
+wait 8000
+key Down Down Down Down     # "Load a Game"
+wait 500
+file Ca_Auto.SAV
+key Return
+wait 20000
+key Return
+wait 5000
+call menu_command 4e2803 0 1793     # 0x701
+wait 3000
+shot 01-701
+key Down                    # Yes: cheat mode on
+key Return
+wait 2000
+call menu_command 4e2803 0 1809     # 0x711
+wait 3000
+shot 02-711
+key Escape
+wait 2000
+call menu_command 4e2803 0 1810     # 0x712
+wait 3000
+shot 03-712
+key Escape
+wait 2000
+call menu_command 4e2803 0 1811     # 0x713
+wait 3000
+shot 04-713
+key Escape
+wait 2000
+call menu_command 4e2803 0 1825     # 0x721
+wait 3000
+shot 05-721
+key Escape
+wait 2000
+call menu_command 4e2803 0 1826     # 0x722
+wait 3000
+shot 06-722
+key Escape
+wait 2000
+call menu_command 4e2803 0 1841     # 0x731
+wait 3000
+shot 07-731
+key Escape
+wait 2000
+call menu_command 4e2803 0 1842     # 0x732
+wait 3000
+shot 08-732
+key Escape
+wait 2000
+call menu_command 4e2803 0 1856     # 0x740
+wait 3000
+shot 09-740
+key Escape
+wait 2000
+call menu_command 4e2803 0 1864     # 0x748
+wait 3000
+shot 10-748
+key Escape
+wait 2000
+call menu_command 4e2803 0 1872     # 0x750
+wait 3000
+shot 11-750
+key Escape
+wait 2000
+call menu_command 4e2803 0 1874     # 0x752
+wait 3000
+shot 12-752
+key Escape
+wait 2000
+call menu_command 4e2803 0 1877     # 0x755
+wait 3000
+shot 13-755
+key Escape
+wait 2000
+call menu_command 4e2803 0 1888     # 0x760
+wait 3000
+shot 14-760
+key Escape
+wait 2000
+call menu_command 4e2803 0 1893     # 0x765
+wait 3000
+shot 15-765
+key Escape
+wait 2000
+call menu_command 4e2803 0 1896     # 0x768
+wait 3000
+shot 16-768
+key Escape
+wait 2000
+call menu_command 4e2803 0 1904     # 0x770
+wait 3000
+shot 17-770
+key Escape
+wait 2000
+call menu_command 4e2803 0 2049     # 0x801
+wait 3000
+shot 18-801
+key Escape
+wait 2000
+call menu_command 4e2803 0 2050     # 0x802
+wait 3000
+shot 19-802
+key Escape
+wait 2000
+call menu_command 4e2803 0 2051     # 0x803
+wait 3000
+shot 20-803
+key Escape
+wait 2000
+call menu_command 4e2803 0 2052     # 0x804
+wait 3000
+shot 21-804
+key Escape
+wait 2000
+call menu_command 4e2803 0 2053     # 0x805
+wait 3000
+shot 22-805
+key Escape
+wait 2000
+call menu_command 4e2803 0 2054     # 0x806
+wait 3000
+shot 23-806
+key Escape
+wait 2000
+call menu_command 4e2803 0 2055     # 0x807
+wait 3000
+shot 24-807
+key Escape
+wait 2000
+call menu_command 4e2803 0 2056     # 0x808
+wait 3000
+shot 25-808
+key Escape
+wait 2000
+call menu_command 4e2803 0 2057     # 0x809
+wait 3000
+shot 26-809
+key Escape
+wait 2000
+call menu_command 4e2803 0 1280     # 0x500
+wait 3000
+shot 27-500
+key Escape
+wait 2000
