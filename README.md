@@ -17,7 +17,7 @@ leader receiving an envoy (his video, from the CD) and London's city view with i
 
 | path | what |
 |------|------|
-| `src/auto/` | the game: machine-translated to C once (≈4000 functions, in files by original address), now edited directly |
+| `src/auto/` | the game, machine-translated to C once and now edited directly, a file per subject: `city.c`, `unit.c`, `ai.c`, `civ.c`, `diplomacy.c`, `reports.c`, `map.c`, `mapview.c`, `game.c`, `editor.c`, `pedia.c`, `spaceship.c`, `network.c`, `sound.c`, `window.c`, `controls.c`, `graphics.c`, `text.c`, `support.c`; `msvcrt.c` the MSVC runtime (Windows build only) |
 | `src/game/` | game functions reconstructed by hand |
 | `src/unused/` | translated functions nothing in the game refers to (kept, not compiled) |
 | `src/data/` | the game's static data as C (`gamedata.h`/`.c`) |

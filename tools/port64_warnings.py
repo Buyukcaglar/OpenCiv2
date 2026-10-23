@@ -33,7 +33,7 @@ def main():
     ap.add_argument('--out', default=os.path.join(bn.ROOT, 'run', 'port64.txt'))
     ap.add_argument('files', nargs='*')
     a = ap.parse_args()
-    srcs = a.files or sorted(glob.glob(os.path.join(bn.ROOT, 'src', 'auto', 'blk_*.c')) +
+    srcs = a.files or sorted([f for f in glob.glob(os.path.join(bn.ROOT, 'src', 'auto', '*.c')) if not f.endswith('msvcrt.c')] +
                              glob.glob(os.path.join(bn.ROOT, 'src', 'game', '*.c')) +
                              glob.glob(os.path.join(bn.ROOT, 'src', 'native', '*.c')))
     with concurrent.futures.ThreadPoolExecutor(os.cpu_count()) as ex:

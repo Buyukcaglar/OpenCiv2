@@ -21,7 +21,7 @@ for r in csv.DictReader(open('re/functions.tsv'), delimiter='\t'):
         methods[m.group(1)].add(r['name'].replace('thunk_', ''))
 casts = collections.defaultdict(collections.Counter)
 pat = re.compile(r'\((C_[0-9a-f]{8}(?:_[0-9a-f]+)?) \*\)\s*&?\(?([A-Za-z_][\w]*)')
-for f in glob.glob('src/auto/blk_*.c') + glob.glob('src/game/*.c'):
+for f in glob.glob('src/auto/*.c') + glob.glob('src/game/*.c'):
     for m in pat.finditer(open(f, errors='replace').read()):
         if not re.match(r'^(local_|param_|i?Var|u?Var|p\w*Var|this$|DAT_|iptr_)', m.group(2)):
             casts[m.group(1)][m.group(2)] += 1

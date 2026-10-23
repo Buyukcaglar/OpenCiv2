@@ -165,7 +165,7 @@ def choose(ev, taken, forbidden):
 
 
 def files():
-    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', 'blk_*.c')) +
+    return sorted(glob.glob(os.path.join(ROOT, 'src', 'auto', '*.c')) +
                   glob.glob(os.path.join(ROOT, 'src', 'unused', 'blk_*.c')))
 
 

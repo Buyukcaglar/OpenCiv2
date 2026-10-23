@@ -4,10 +4,10 @@
 
 | status      | functions | meaning |
 |-------------|-----------|---------|
-| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly (src/auto/blk_*.c) |
+| auto        | 4040 | game functions, translated from Ghidra's output by `tools/gen_c.py`; since October 2026 the source, edited directly, in files by subject (src/auto/city.c, unit.c, map.c ...) |
 | game        |  114 | reconstructed by hand (src/game/*.c, src/crt/*.c) |
 | ehfunclet   |  462 | C++ unwind funclets; inlined into their callers, never called on their own |
-| crt         |  284 | statically linked MSVC 4.2 debug C runtime, translated (src/auto/crt_*.c) |
+| crt         |  284 | statically linked MSVC 4.2 debug C runtime, translated (src/auto/msvcrt.c, the Windows build's only) |
 | crt-manual  |   11 | runtime functions defined in src/crt under an asm label (printf family etc.) or unreachable exception-handling helpers |
 | asm         |    2 | `ASMGRAF` section: 16-bit leftovers from the Win16 version, unreachable |
 

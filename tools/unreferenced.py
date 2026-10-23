@@ -28,7 +28,7 @@ def main():
             found[r['addr']] = r['name']
     for line in open(os.path.join(ROOT, 'build', 'native', 'linux32gc', 'unreferenced.txt')):
         name, obj = line.rstrip('\n').split('\t')
-        if obj.startswith('src_auto_blk_') and name in addr_of:
+        if obj.startswith('src_auto_') and name in addr_of:
             found[addr_of[name]] = name
     # The hand-written sources are compiled whole: what they name stays.
     named = set()
@@ -42,7 +42,7 @@ def main():
     # wherever gen_c put them last time), until nothing changes.
     bodies = {}
     for d in ('auto', 'unused'):
-        for fpath in glob.glob(os.path.join(ROOT, 'src', d, 'blk_*.c')):
+        for fpath in glob.glob(os.path.join(ROOT, 'src', d, '*.c')):
             parts = re.split(r'^/\* ([0-9a-f]{8}) \w+', open(fpath, errors='replace').read(), flags=re.M)
             for i in range(1, len(parts) - 1, 2):
                 bodies[parts[i]] = parts[i + 1]
