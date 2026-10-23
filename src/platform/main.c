@@ -149,6 +149,10 @@ int main(int argc, char **argv)
             cover = !fullscreen;
         }
     }
+    if (plat_replay && getenv("CIV2_TEST_NATIVE") && *getenv("CIV2_TEST_NATIVE"))
+        /* Tests: the game as on Windows and macOS (the host's menu bar, no
+           caption of its own, panels locked), the host's part left out. */
+        plat_native_menu = plat_lock_panels = 1;
     gdi_init();
     wnd_init();
     resources_init();
