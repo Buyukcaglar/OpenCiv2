@@ -109,7 +109,7 @@ static void set_dirs(const char *argv0, const char *gamedir)
 int main(int argc, char **argv)
 {
     const char *scale = getenv("CIV2_SCALE");
-    int i;
+    int i, cover = 0;
     char cmdline[1] = "";
     plat_replay = getenv("CIV2_SCRIPT") && *getenv("CIV2_SCRIPT");
     /* Replays reproduce the reference desktop (Wine without a window
@@ -119,14 +119,20 @@ int main(int argc, char **argv)
         return 1;
     set_dirs(argv[0], argc > 1 ? argv[1] : NULL);
     clock_init();
-    if (!plat_replay && getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN")) {
-        /* Full screen: a desktop of the display's shape (the game shows
-         * more of the map), in steps of whole pixels per desktop pixel. */
+    if (!plat_replay) {
+        /* As the original on Windows, whose main window fills the screen:
+         * a desktop of the display's usable area (full screen: of the whole
+         * display), in steps of whole pixels per desktop pixel.
+         * CIV2_WINDOW or CIV2_SCALE: the 1024x768 desktop in a window. */
+        int fullscreen = getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN");
+        int windowed = (getenv("CIV2_WINDOW") && *getenv("CIV2_WINDOW")) || scale;
         int32_t dw, dh;
-        if (host_display_size(&dw, &dh) && dw >= 800 && dh >= 600) {
+        if ((fullscreen ? host_display_size(&dw, &dh) : !windowed && host_usable_size(&dw, &dh)) &&
+            dw >= 800 && dh >= 600) {
             int k = dh / 768 > 1 ? dh / 768 : 1;
             screen_w = dw / k;
             screen_h = dh / k;
+            cover = !fullscreen;
         }
     }
     gdi_init();
@@ -134,7 +140,7 @@ int main(int argc, char **argv)
     resources_init();
     sound_init();
     if (!plat_replay || getenv("CIV2_SHOW"))
-        window_open = host_open_window(screen_w, screen_h, scale ? atoi(scale) : 1);
+        window_open = host_open_window(screen_w, screen_h, cover ? 0 : scale ? atoi(scale) : 1);
     replay_init();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */
     /* The game's static data, then the C and C++ initializers the MSVC

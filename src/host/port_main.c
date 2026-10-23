@@ -4,6 +4,7 @@
  * by host_sdl.c) and WASI (wasi.c).  The host functions take module
  * addresses, translated here.
  */
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -54,6 +55,16 @@ u32 HOST(display_size)(Host *h, u32 w, u32 hh)
     u32 r;
     (void)h;
     r = (u32)host_display_size(&a, &b);
+    PUT32(w, (u32)a);
+    PUT32(hh, (u32)b);
+    return r;
+}
+u32 HOST(usable_size)(Host *h, u32 w, u32 hh)
+{
+    int32_t a = 0, b = 0;
+    u32 r;
+    (void)h;
+    r = (u32)host_usable_size(&a, &b);
     PUT32(w, (u32)a);
     PUT32(hh, (u32)b);
     return r;
@@ -140,6 +151,19 @@ int main(int argc, char **argv)
         argv = args;
     }
 #ifdef _WIN32
+    if (!getenv("CIV2_SCRIPT")) {
+        /* A GUI program has no console: what the game logs (a video it
+           could not play ...) goes to civ2-log.txt beside the program. */
+        char log[4096];
+        size_t n = (size_t)host_base_path(log, (int)sizeof log - 16);
+        int fd;
+        snprintf(log + n, sizeof log - n, "civ2-log.txt");
+        fd = open(log, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if (fd >= 0) {
+            dup2(fd, 2);        /* the module writes descriptor 2 (wasi.c) */
+            close(fd);
+        }
+    }
     {
         /* directories in the environment (CIV2_DATA ...), as the module sees them */
         static const char *const vars[] = {"CIV2_DATA", "CIV2_WINDIR", "CIV2_SHOT_DIR", "CIV2_SCRIPT",

@@ -109,7 +109,8 @@ def exe(cross_windows=False):
         cc = os.environ.get('CC') or 'x86_64-w64-mingw32-gcc'
         sdl = os.path.join(paths.SDL2_MINGW, 'x86_64-w64-mingw32')
         sdl_cflags = ['-I' + os.path.join(sdl, 'include', 'SDL2'), '-Dmain=SDL_main']
-        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-lSDL2main', '-lSDL2']
+        # (-mwindows: a GUI program, no console window; as sdl2-config gives on MSYS2)
+        sdl_libs = ['-L' + os.path.join(sdl, 'lib'), '-lmingw32', '-mwindows', '-lSDL2main', '-lSDL2']
         sdl_dll = os.path.join(sdl, 'bin', 'SDL2.dll')
         obj = OBJ + '-windows'
     else:

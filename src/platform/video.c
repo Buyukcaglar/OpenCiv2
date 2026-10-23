@@ -134,8 +134,10 @@ HRESULT WINAPI AVIFileOpenA(PAVIFILE *pf, LPCSTR name, UINT mode, LPCLSID handle
     *pf = 0;
     plat_host_path(name, host, sizeof host, 0);
     f = fopen(host, "rb");
-    if (!f)
+    if (!f) {
+        plat_log("AVIFileOpen(%s): cannot open %s\n", name, host);
         return AVIERR_FILEOPEN;
+    }
     a = calloc(1, sizeof *a);
     fseek(f, 0, SEEK_END);
     a->size = ftell(f);
@@ -143,6 +145,7 @@ HRESULT WINAPI AVIFileOpenA(PAVIFILE *pf, LPCSTR name, UINT mode, LPCLSID handle
     a->data = malloc((size_t)a->size + 1);
     if (fread(a->data, 1, (size_t)a->size, f) != (size_t)a->size || a->size < 12 ||
         memcmp(a->data, "RIFF", 4) || memcmp(a->data + 8, "AVI ", 4)) {
+        plat_log("AVIFileOpen(%s): not an AVI file\n", name);
         fclose(f);
         free(a->data);
         free(a);
@@ -514,8 +517,12 @@ HIC WINAPI ICLocate(DWORD type, DWORD handler, LPBITMAPINFOHEADER in, LPBITMAPIN
     Codec *c;
     (void)type; (void)out; (void)mode;
     if (!(in && (in->biCompression == FCC('I', 'V', '4', '1') || in->biCompression == FCC('i', 'v', '4', '1'))) &&
-        handler != FCC('I', 'V', '4', '1') && handler != FCC('i', 'v', '4', '1'))
+        handler != FCC('I', 'V', '4', '1') && handler != FCC('i', 'v', '4', '1')) {
+        DWORD k = in ? in->biCompression : handler;
+        plat_log("ICLocate: no decompressor for %c%c%c%c (only Indeo 4.1, IV41)\n", (char)k, (char)(k >> 8),
+                 (char)(k >> 16), (char)(k >> 24));
         return 0;
+    }
     c = calloc(1, sizeof *c);
     video_palette(c->pal);
     if (in) {

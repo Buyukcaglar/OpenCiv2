@@ -49,8 +49,12 @@ python3 tools/build_port.py     # -> build/civ2-port  (several minutes)
 tools/run-civ2.sh               # plays the game in ~/Civ2
 ```
 
-* `CIV2_FULLSCREEN=1 tools/run-civ2.sh` — full screen (the game's desktop
-  takes the display's shape); `CIV2_SCALE=2` — a window twice the size.
+* The game's desktop fills the screen (without the taskbar or dock), as the
+  original's window does on Windows.  `CIV2_FULLSCREEN=1 tools/run-civ2.sh`
+  — the whole display; `CIV2_WINDOW=1` — the 1024x768 desktop in a window
+  (`CIV2_SCALE=2`: twice the size).
+* On Windows the game logs to `civ2-log.txt` beside the program (a video it
+  could not play, for example).
 * The game saves into its directory (`~/Civ2`).
 * The build links with the Command Line Tools' clang when it is installed
   (`CC=...` picks another compiler).  "unknown architecture" errors in an SDK

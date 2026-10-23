@@ -36,10 +36,13 @@ void HOST_API(host_quit)(void);
 int HOST_API(host_base_path)(char *buf, int size);
 
 /* The window: w x h desktop pixels, scaled; present() shows 32-bit
- * 0xAARRGGBB pixels, rows stride bytes apart. */
+ * 0xAARRGGBB pixels, rows stride bytes apart.  scale 0: a window without
+ * a frame over the display's usable area (the desktop drawn to fill it). */
 int HOST_API(host_open_window)(int w, int h, int scale);
 /* The size of the main display (in the units windows are sized in). */
 int HOST_API(host_display_size)(int32_t *w, int32_t *h);
+/* ... and of its usable area: without the taskbar, dock or menu bar. */
+int HOST_API(host_usable_size)(int32_t *w, int32_t *h);
 void HOST_API(host_present)(const void *pixels, int stride);
 /* Minimize the window (the desktop's main window was minimized). */
 void HOST_API(host_minimize)(void);

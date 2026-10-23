@@ -42,13 +42,17 @@ int host_base_path(char *buf, int size)
 
 int host_open_window(int w, int h, int scale)
 {
+    SDL_Rect r;
     screen_w = w;
     screen_h = h;
-    if (scale < 1)
-        scale = 1;
-    window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w * scale, h * scale,
-                              SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
-                                                      SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    if (scale < 1 && SDL_GetDisplayUsableBounds(0, &r) == 0)
+        /* The desktop's main window has its own caption and borders. */
+        window = SDL_CreateWindow("Civilization II", r.x, r.y, r.w, r.h, SDL_WINDOW_BORDERLESS);
+    else
+        window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                  w * (scale < 1 ? 1 : scale), h * (scale < 1 ? 1 : scale),
+                                  SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
+                                                          SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
     if (!window)
         return 0;
     renderer = SDL_CreateRenderer(window, -1, 0);
@@ -68,6 +72,16 @@ int host_display_size(int32_t *w, int32_t *h)
         return 0;
     *w = m.w;
     *h = m.h;
+    return 1;
+}
+
+int host_usable_size(int32_t *w, int32_t *h)
+{
+    SDL_Rect r;
+    if (SDL_GetDisplayUsableBounds(0, &r))
+        return 0;
+    *w = r.w;
+    *h = r.h;
     return 1;
 }
 
