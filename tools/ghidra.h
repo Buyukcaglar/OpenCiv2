@@ -24,6 +24,7 @@ typedef long long undefined5;
 typedef long long undefined6;
 typedef long long undefined7;
 typedef long long undefined8;
+typedef long long i64;          /* (here: a native build defines long as int after this header) */
 typedef unsigned char byte;
 typedef unsigned char uchar;
 typedef signed char sbyte;

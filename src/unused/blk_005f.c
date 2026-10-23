@@ -5,7 +5,7 @@
 void __thiscall ddwin_show(C_005f0056 *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   wnd_show_update(this->wnd);
   if (this->palette_attached == 0) {
@@ -22,13 +22,13 @@ void __thiscall ddwin_reset_after_mode_change(DDSurface *this)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,*(int *)(*(int *)(this[2].pad_20 + 8) + 0xc),
           *(int *)(*(int *)(this[2].pad_20 + 8) + 8));
   wnd_show_update(*(iptr *)(this[2].pad_20 + 8));
-  iVar1 = ddsurf_create_primary(this,(iptr)&local_14,*(undefined4 *)(this[2].pad_20 + 0xc));
+  iVar1 = ddsurf_create_primary(this,(iptr)&local_14,*(i32 *)(this[2].pad_20 + 0xc));
   if (iVar1 == 1) {
     if (this[2].field_30 == 0) {
       uVar2 = ddpal_get_iface(*(DDPaletteIfaceView **)(this[2].pad_20 + 4));
@@ -42,11 +42,11 @@ void __thiscall ddwin_reset_after_mode_change(DDSurface *this)
 #undef local_14
 
 /* 005f0169 auto */
-undefined1 __thiscall
-ddwin_set_display_mode(DDSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+i8 __thiscall
+ddwin_set_display_mode(DDSurface *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   
   uVar1 = ddwin_native_set_display_mode(*(iptr *)(this[2].pad_20 + 8),param_1,param_2,param_3);
   ddwin_reset_after_mode_change(this);
@@ -57,7 +57,7 @@ ddwin_set_display_mode(DDSurface *this,undefined4 param_1,undefined4 param_2,und
 void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   *(DDPaletteIfaceView **)(this->pad_4 + 0xa8) = param_1;
   if (this->dd_surface == 0) {
@@ -76,9 +76,9 @@ void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *
 void __thiscall ddwin_attach_back_buffer(C_005f0213 *this,DDSurface *param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   tagRECT *ptVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,this->surf_width,this->surf_height);
   ptVar2 = &local_14;
@@ -102,7 +102,7 @@ void __thiscall ddwin_add_control(void *this,iptr param_1)
 void __thiscall ddwin_paint_controls(DDSurface *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (DDControlPaintView *)ptrlist_first((PtrList *)&this[2].field_38);
   while (local_8 != (DDControlPaintView *)0x0) {
@@ -114,13 +114,13 @@ void __thiscall ddwin_paint_controls(DDSurface *this)
 #undef local_8
 
 /* 005f0520 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 PtrListInitView * __thiscall ptrlist_ctor(PtrListInitView *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ptrlist_impl_ctor(this);
@@ -139,7 +139,7 @@ void __thiscall ptrlist_last(PtrListLastView *this)
 }
 
 /* 005f05f0 auto */
-void __thiscall ptrlist_append(PtrList *this,undefined4 param_1)
+void __thiscall ptrlist_append(PtrList *this,i32 param_1)
 
 {
   ptrlist_append_impl(this,param_1);
@@ -175,10 +175,10 @@ PtrListInitView * __thiscall ptrlist_impl_ctor(PtrListInitView *this)
 }
 
 /* 005f07b3 auto */
-undefined4 __thiscall ptrlist_last_impl(PtrListLastView *this)
+i32 __thiscall ptrlist_last_impl(PtrListLastView *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (this->tail_node == 0) {
     uVar1 = 0;
@@ -196,10 +196,10 @@ undefined4 __thiscall ptrlist_last_impl(PtrListLastView *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall ptrlist_current(C_005f07f9 *this)
+i32 __thiscall ptrlist_current(C_005f07f9 *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (this->node == 0) {
     uVar1 = 0;
@@ -211,11 +211,11 @@ undefined4 __thiscall ptrlist_current(C_005f07f9 *this)
 }
 
 /* 005f0897 auto */
-undefined4 __thiscall ptrlist_prev_impl(C_005f0897 *this)
+i32 __thiscall ptrlist_prev_impl(C_005f0897 *this)
 
 {
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   if (this->cur_node == 0) {
     uVar2 = 0;
@@ -235,15 +235,15 @@ undefined4 __thiscall ptrlist_prev_impl(C_005f0897 *this)
 
 /* 005f08fb auto */
 #define local_1c (*(PtrListNodePrevSetView * *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall ptrlist_append_impl(PtrList *this,undefined4 param_1)
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(20)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
+void __thiscall ptrlist_append_impl(PtrList *this,i32 param_1)
 
 {
   PtrListNode *this_00;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   this_00 = operator_new(0xc);
@@ -279,16 +279,16 @@ void __thiscall ptrlist_append_impl(PtrList *this,undefined4 param_1)
 /* 005f0a04 auto */
 #define local_2c (*(PtrListNodePrevSetView * *)(frame_ + FRAME_OFF(4)))
 #define local_24 (*(PtrListNodeNextSetView * *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-void __thiscall ptrlist_insert_before(PtrList *this,undefined4 param_1)
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(36)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(40)))
+void __thiscall ptrlist_insert_before(PtrList *this,i32 param_1)
 
 {
   int iVar1;
   PtrListNode *pCVar2;
   PtrListNodeNextSetView *this_00;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   iVar1 = ptrlist_is_empty(this);
@@ -347,7 +347,7 @@ void __thiscall ptrlist_insert_before(PtrList *this,undefined4 param_1)
 int __thiscall ptrlist_find(PtrList *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = ptrlist_first_impl(this);
   while( true ) {
@@ -362,12 +362,12 @@ int __thiscall ptrlist_find(PtrList *this,int param_1)
 #undef local_8
 
 /* 005f0c21 auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __thiscall ptrlist_count(PtrList *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   local_8 = ptrlist_first_impl(this);
@@ -381,8 +381,8 @@ int __thiscall ptrlist_count(PtrList *this)
 #undef local_8
 
 /* 005f0ef0 auto */
-#define ddctrl_current_target (*(undefined4 *)((u8 *)&g.d_00639dc8))
-undefined4 __cdecl ddctrl_get_msg_target(void)
+#define ddctrl_current_target (*(i32 *)((u8 *)&g.d_00639dc8))
+i32 __cdecl ddctrl_get_msg_target(void)
 
 {
   return ddctrl_current_target;
@@ -390,17 +390,17 @@ undefined4 __cdecl ddctrl_get_msg_target(void)
 #undef ddctrl_current_target
 
 /* 005f0f1d auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_005f0f1d * __thiscall ddctrl_ctor(C_005f0f1d *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ptrlist_ctor((PtrListInitView *)this->pad_10);
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d720;
   this->parent_wnd = 0;
   this->parent_control = 0;
   this->on_mousemove = 0;
@@ -417,17 +417,17 @@ C_005f0f1d * __thiscall ddctrl_ctor(C_005f0f1d *this)
 #undef local_8
 
 /* 005f0fe9 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_005f0fe9 * __thiscall ddctrl_ctor_in_window(C_005f0fe9 *this,u32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ptrlist_ctor((PtrListInitView *)this->pad_10);
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d720;
   this->parent_wnd = param_1;
   this->parent_control = 0;
   this->on_mousemove = 0;
@@ -444,17 +444,17 @@ C_005f0fe9 * __thiscall ddctrl_ctor_in_window(C_005f0fe9 *this,u32 param_1)
 #undef local_8
 
 /* 005f10b6 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_005f10b6 * __thiscall ddctrl_ctor_in_control(C_005f10b6 *this,u32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ptrlist_ctor((PtrListInitView *)this->pad_10);
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d720;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d720;
   this->parent_wnd = 0;
   this->parent_control = param_1;
   this->on_mousemove = 0;
@@ -471,15 +471,15 @@ C_005f10b6 * __thiscall ddctrl_ctor_in_control(C_005f10b6 *this,u32 param_1)
 #undef local_8
 
 /* 005f1183 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall ddctrl_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined ***)this = &PTR_FUN_0061d720;
+  *(i8 ***)this = &PTR_FUN_0061d720;
   local_8 = 0;
   ddctrl_remove_all_children(this);
   local_8 = 0xffffffff;
@@ -623,11 +623,11 @@ void __thiscall ddctrl_add_child(void *this,iptr param_1)
 }
 
 /* 005f195a auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddctrl_remove_all_children(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = ptrlist_first((PtrList *)((int)this + 0x10));
   while (local_8 != 0) {
@@ -643,7 +643,7 @@ void __thiscall ddctrl_remove_all_children(void *this)
 void __thiscall ddctrl_paint_children(DDControlPaintView *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (DDControlPaintView *)ptrlist_first((PtrList *)(this + 4));
   while (local_8 != (DDControlPaintView *)0x0) {

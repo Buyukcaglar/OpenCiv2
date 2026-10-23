@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 0059d527 auto */
-void __cdecl dialog_set_default_text_font(undefined *param_1)
+void __cdecl dialog_set_default_text_font(i8 *param_1)
 
 {
   dialog_default_text_font = param_1;
@@ -10,7 +10,7 @@ void __cdecl dialog_set_default_text_font(undefined *param_1)
 }
 
 /* 0059d53f auto */
-void __cdecl dialog_set_default_title_font(undefined *param_1)
+void __cdecl dialog_set_default_title_font(i8 *param_1)
 
 {
   dialog_default_title_font = param_1;
@@ -18,7 +18,7 @@ void __cdecl dialog_set_default_title_font(undefined *param_1)
 }
 
 /* 0059d557 auto */
-void __cdecl dialog_set_default_list_font(undefined *param_1)
+void __cdecl dialog_set_default_list_font(i8 *param_1)
 
 {
   dialog_default_list_font = param_1;
@@ -61,7 +61,7 @@ void __thiscall dialog_set_bevel_width(C_0059e624 *this,u32 param_1)
 uptr __thiscall dialog_find_button(C_0059e812 *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = this->button_list;
@@ -77,7 +77,7 @@ uptr __thiscall dialog_find_button(C_0059e812 *this,int param_1)
 #undef local_8
 
 /* 0059e927 auto */
-void __thiscall FUN_0059e927(DialogOptionList *this,undefined4 param_1,int param_2)
+void __thiscall FUN_0059e927(DialogOptionList *this,i32 param_1,int param_2)
 
 {
   uint *puVar1;
@@ -99,7 +99,7 @@ void __thiscall FUN_0059e927(DialogOptionList *this,undefined4 param_1,int param
 void __thiscall dialog_enable_all_options(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = *(uint **)((int)this + 0x228); local_8 != (uint *)0x0; local_8 = (uint *)local_8[4]
       ) {
@@ -114,7 +114,7 @@ void __thiscall dialog_enable_all_options(void *this)
 void __thiscall FUN_0059e9b3(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = *(uint **)((int)this + 0x228); local_8 != (uint *)0x0; local_8 = (uint *)local_8[4]
       ) {
@@ -133,7 +133,7 @@ void __thiscall dialog_get_edit_text(DialogEditTextView *this,int param_1,iptr p
 }
 
 /* 0059eb42 auto */
-void __thiscall dialog_get_first_edit_text(DialogEditTextView *this,undefined4 param_1)
+void __thiscall dialog_get_first_edit_text(DialogEditTextView *this,i32 param_1)
 
 {
   dialog_get_edit_text(this,0,param_1);

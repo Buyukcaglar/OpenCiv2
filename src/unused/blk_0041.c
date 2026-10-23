@@ -3,8 +3,8 @@
 
 /* 004100a0 auto */
 void __cdecl
-FUN_004100a0(undefined4 param_1,iptr param_2,iptr city,undefined4 param_4,int param_5,
-            undefined4 param_6)
+FUN_004100a0(i32 param_1,iptr param_2,iptr city,i32 param_4,int param_5,
+            i32 param_6)
 
 {
   gfx_draw_city(param_2,city,0,param_5 + 2,param_6,0);
@@ -16,20 +16,20 @@ FUN_004100a0(undefined4 param_1,iptr param_2,iptr city,undefined4 param_4,int pa
 void __cdecl byte_pairs_bubble_sort(int param_1,iptr param_2,iptr param_3)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   bool bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   do {
     bVar2 = false;
     for (local_c = 0; (!bVar2 && (local_c < param_1 - 1)); local_c++) {
       if (*(char *)(local_c + 1 + param_3) < *(char *)(local_c + param_3)) {
-        uVar1 = *(undefined1 *)(local_c + param_3);
-        *(undefined1 *)(local_c + param_3) = *(undefined1 *)(local_c + 1 + param_3);
-        *(undefined1 *)(local_c + 1 + param_3) = uVar1;
-        uVar1 = *(undefined1 *)(local_c + param_2);
-        *(undefined1 *)(local_c + param_2) = *(undefined1 *)(local_c + 1 + param_2);
-        *(undefined1 *)(local_c + 1 + param_2) = uVar1;
+        uVar1 = *(i8 *)(local_c + param_3);
+        *(i8 *)(local_c + param_3) = *(i8 *)(local_c + 1 + param_3);
+        *(i8 *)(local_c + 1 + param_3) = uVar1;
+        uVar1 = *(i8 *)(local_c + param_2);
+        *(i8 *)(local_c + param_2) = *(i8 *)(local_c + 1 + param_2);
+        *(i8 *)(local_c + 1 + param_2) = uVar1;
         bVar2 = true;
       }
     }
@@ -39,7 +39,7 @@ void __cdecl byte_pairs_bubble_sort(int param_1,iptr param_2,iptr param_3)
 #undef local_c
 
 /* 00415105 auto */
-long __cdecl file_stream_length(undefined4 param_1)
+long __cdecl file_stream_length(i32 param_1)
 
 {
   int _FileHandle;
@@ -58,16 +58,16 @@ long __cdecl file_stream_length(undefined4 param_1)
 #define local_2c (*(int *)(frame_ + FRAME_OFF(772)))
 #define local_28 (*(CHAR (*)[20])(frame_ + FRAME_OFF(776)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(796)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(800)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(804)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
-undefined4 __cdecl app_select_language(void)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(800)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(804)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(808)))
+i32 __cdecl app_select_language(void)
 
 {
   int iVar1;
   UINT UVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_328 = 1;

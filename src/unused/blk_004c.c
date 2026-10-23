@@ -2,21 +2,21 @@
 #include "auto_common.h"
 
 /* 004cd3d7 auto */
-#define local_274 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_274 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_270 (*(char *)(frame_ + FRAME_OFF(8)))
-#define local_26f (*(undefined1 *)(frame_ + FRAME_OFF(9)))
+#define local_26f (*(i8 *)(frame_ + FRAME_OFF(9)))
 #define local_220 (*(FILE * *)(frame_ + FRAME_OFF(88)))
 #define local_21c (*(FILE * *)(frame_ + FRAME_OFF(92)))
 #define local_218 (*(char (*)[260])(frame_ + FRAME_OFF(96)))
 #define s (*(char (*)[256])(frame_ + FRAME_OFF(356)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(612)))
-undefined4 __cdecl editor_city_file_replace_line(undefined4 param_1,char *param_2,char *param_3)
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(612)))
+i32 __cdecl editor_city_file_replace_line(i32 param_1,char *param_2,char *param_3)
 
 {
   int iVar1;
   char *pcVar2;
   size_t _MaxCount;
-  undefined1 frame_[FRAME_OFF(632)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(632)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_220 = (FILE *)0x0;
   local_21c = (FILE *)0x0;
@@ -117,12 +117,12 @@ joined_r0x004cd6d4:
 
 /* 004cf144 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl events_rename_civ_refs(char *param_1,char *param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = events_list_head; local_c != 0; local_c = *(iptr *)(local_c + 0x1bc)) {
@@ -190,12 +190,12 @@ int __cdecl events_rename_civ_refs(char *param_1,char *param_2)
 
 /* 004cf3ba auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl events_rename_city_refs(char *param_1,char *param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = events_list_head; local_c != 0; local_c = *(iptr *)(local_c + 0x1bc)) {

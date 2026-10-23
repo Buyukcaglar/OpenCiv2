@@ -27,8 +27,8 @@ int __cdecl _atexit(code *param_1)
 }
 
 /* 005f1c70 crt */
-#define DAT_006e6b54 (*(undefined4 * *)((u8 *)&g.d_006e6b54))
-#define DAT_006e6b68 (*(undefined4 * *)((u8 *)&g.d_006e6b68))
+#define DAT_006e6b54 (*(i32 * *)((u8 *)&g.d_006e6b54))
+#define DAT_006e6b68 (*(i32 * *)((u8 *)&g.d_006e6b68))
 /* Library Function - Single Match
     ___onexitinit
    
@@ -37,8 +37,8 @@ int __cdecl _atexit(code *param_1)
 void __cdecl ___onexitinit(void)
 
 {
-  DAT_006e6b68 = (undefined4 *)__malloc_dbg(0x80,2,"onexit.c",0xb6);
-  if (DAT_006e6b68 == (undefined4 *)0x0) {
+  DAT_006e6b68 = (i32 *)__malloc_dbg(0x80,2,"onexit.c",0xb6);
+  if (DAT_006e6b68 == (i32 *)0x0) {
     __amsg_exit(0x18);
   }
   *DAT_006e6b68 = 0;
@@ -62,9 +62,9 @@ void __cdecl __global_unwind2(PVOID param_1)
 }
 
 /* 005f1d0a crt */
-#define uStack_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define puStack_18 (*(undefined1 * *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define uStack_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define puStack_18 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define iStack_10 (*(int *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     __local_unwind2
@@ -77,7 +77,7 @@ void __cdecl __local_unwind2(int param_1,int param_2)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iStack_10 = param_1;
   puStack_18 = &LAB_005f1ce8;
@@ -85,8 +85,8 @@ void __cdecl __local_unwind2(int param_1,int param_2)
     iVar1 = *(int *)(param_1 + 8);
     iVar2 = *(int *)(param_1 + 0xc);
     if ((iVar2 == -1) || (iVar2 == param_2)) break;
-    local_14 = *(undefined4 *)(iVar1 + iVar2 * 0xc);
-    *(undefined4 *)(param_1 + 0xc) = local_14;
+    local_14 = *(i32 *)(iVar1 + iVar2 * 0xc);
+    *(i32 *)(param_1 + 0xc) = local_14;
     if (*(int *)(iVar1 + 4 + iVar2 * 0xc) == 0) {
       FUN_005f1d9e(0x101);
       (**(code **)(iVar1 + 8 + iVar2 * 0xc))();
@@ -112,7 +112,7 @@ int __cdecl __abnormal_termination(void)
   int iVar2;
   
   iVar2 = 0;
-  if ((*(undefined1 **)(iVar1 + 4) == &LAB_005f1ce8) &&
+  if ((*(i8 **)(iVar1 + 4) == &LAB_005f1ce8) &&
      (*(int *)(iVar1 + 8) == *(int *)(*(int *)(iVar1 + 0xc) + 0xc))) {
     iVar2 = 1;
   }
@@ -145,8 +145,8 @@ void __stdcall ___CxxLongjmpUnwind_4(int param_1)
 
 {
   ___FrameUnwindToState
-            (*(undefined4 *)(param_1 + 0x18),0,*(undefined4 *)(param_1 + 0x28),
-             *(undefined4 *)(param_1 + 0x1c));
+            (*(i32 *)(param_1 + 0x18),0,*(i32 *)(param_1 + 0x28),
+             *(i32 *)(param_1 + 0x1c));
   return;
 }
 
@@ -161,8 +161,8 @@ void __stdcall ___CxxLongjmpUnwind_4(int param_1)
 /* 005f2110: written by hand in src/crt/asm.c */
 
 /* 005f2260 crt */
-#define DAT_00639e50 (*(undefined4 *)((u8 *)&g.d_00639e50))
-void __cdecl FUN_005f2260(undefined4 param_1)
+#define DAT_00639e50 (*(i32 *)((u8 *)&g.d_00639e50))
+void __cdecl FUN_005f2260(i32 param_1)
 
 {
   DAT_00639e50 = param_1;
@@ -337,7 +337,7 @@ void * __cdecl operator_new(uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_005f25d0(undefined4 *param_1)
+i32 __cdecl FUN_005f25d0(i32 *param_1)
 
 {
   if (*(int *)*param_1 == -0x1f928c9d) {
@@ -607,7 +607,7 @@ int __cdecl ___iscsymf(int _C)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (DAT_0063a29c < 2) {
     local_8 = *(ushort *)(PTR_DAT_0063a090 + _C * 2) & 0x103;
@@ -636,7 +636,7 @@ int __cdecl ___iscsym(int _C)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (DAT_0063a29c < 2) {
     local_8 = *(ushort *)(PTR_DAT_0063a090 + _C * 2) & 0x107;
@@ -736,7 +736,7 @@ int __cdecl _fclose(FILE *_File)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = -1;
   if ((_File->_flag & 0x40) == 0) {
@@ -898,7 +898,7 @@ long __cdecl _atol(char *_Str)
 {
   byte *pbVar1;
   uint uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   while( true ) {
     if (DAT_0063a29c < 2) {
@@ -1065,7 +1065,7 @@ void * __cdecl _memset(void *_Dst,int _Val,size_t _Size)
     if (uVar2 != 0) {
       sVar3 = _Size - uVar2;
       do {
-        *(undefined1 *)puVar4 = (undefined1)_Val;
+        *(i8 *)puVar4 = (i8)_Val;
         puVar4 = (uint *)((int)puVar4 + 1);
         uVar2 = uVar2 - 1;
       } while (uVar2 != 0);
@@ -1100,8 +1100,8 @@ void * __cdecl _memset(void *_Dst,int _Val,size_t _Size)
 int __cdecl _strcmp(char *_Str1,char *_Str2)
 
 {
-  undefined2 uVar1;
-  undefined4 uVar2;
+  i16 uVar1;
+  i32 uVar2;
   byte bVar3;
   byte bVar4;
   bool bVar5;
@@ -1118,7 +1118,7 @@ int __cdecl _strcmp(char *_Str1,char *_Str2)
       }
       if (((uint)_Str1 & 2) == 0) goto LAB_005f3570;
     }
-    uVar1 = *(undefined2 *)_Str1;
+    uVar1 = *(i16 *)_Str1;
     _Str1 = _Str1 + 2;
     bVar4 = (byte)uVar1;
     bVar5 = bVar4 < (byte)*_Str2;
@@ -1136,7 +1136,7 @@ int __cdecl _strcmp(char *_Str1,char *_Str2)
   }
 LAB_005f3570:
   while( true ) {
-    uVar2 = *(undefined4 *)_Str1;
+    uVar2 = *(i32 *)_Str1;
     bVar4 = (byte)uVar2;
     bVar5 = bVar4 < (byte)*_Str2;
     if (bVar4 != *_Str2) break;
@@ -1299,8 +1299,8 @@ int __cdecl _strncmp(char *_Str1,char *_Str2,size_t _MaxCount)
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(24)))
+#define local_c (*(i8 * *)(frame_ + FRAME_OFF(20)))
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(24)))
 /* Library Function - Single Match
     _fread
    
@@ -1312,7 +1312,7 @@ size_t __cdecl _fread(void *_DstBuf,size_t _ElementSize,size_t _Count,FILE *_Fil
   uint uVar1;
   uint uVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = _DstBuf;
   uVar1 = _Count * _ElementSize;
@@ -1334,7 +1334,7 @@ size_t __cdecl _fread(void *_DstBuf,size_t _ElementSize,size_t _Count,FILE *_Fil
           if (iVar3 == -1) {
             return (uVar1 - local_10) / _ElementSize;
           }
-          local_8 = (undefined1)iVar3;
+          local_8 = (i8)iVar3;
           *local_c = local_8;
           local_c = local_c + 1;
           local_10 = local_10 - 1;
@@ -1398,7 +1398,7 @@ size_t __cdecl _fwrite(void *_Str,size_t _Size,size_t _Count,FILE *_File)
   size_t sVar2;
   int iVar3;
   uint uVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = _Str;
   uVar1 = _Count * _Size;
@@ -1473,9 +1473,9 @@ size_t __cdecl _fwrite(void *_Str,size_t _Size,size_t _Count,FILE *_File)
 
 /* 005f3b20 crt */
 #define local_110 (*(CHAR *)(frame_ + FRAME_OFF(0)))
-#define local_10f (*(undefined1 *)(frame_ + FRAME_OFF(1)))
-#define local_10e (*(undefined1 *)(frame_ + FRAME_OFF(2)))
-#define local_10d (*(undefined1 *)(frame_ + FRAME_OFF(3)))
+#define local_10f (*(i8 *)(frame_ + FRAME_OFF(1)))
+#define local_10e (*(i8 *)(frame_ + FRAME_OFF(2)))
+#define local_10d (*(i8 *)(frame_ + FRAME_OFF(3)))
 #define local_10c (*(byte *)(frame_ + FRAME_OFF(4)))
 #define local_10b (*(byte *)(frame_ + FRAME_OFF(5)))
 /* Library Function - Single Match
@@ -1489,7 +1489,7 @@ int __cdecl __chdir(char *_Path)
   BOOL BVar1;
   DWORD DVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = SetCurrentDirectoryA(_Path);
   if ((BVar1 != 0) && (DVar2 = GetCurrentDirectoryA(0x105,(LPSTR)&local_10c), DVar2 != 0)) {
@@ -1498,7 +1498,7 @@ int __cdecl __chdir(char *_Path)
     }
     local_110 = '=';
     uVar3 = __mbctoupper((uint)local_10c);
-    local_10f = (undefined1)uVar3;
+    local_10f = (i8)uVar3;
     local_10e = 0x3a;
     local_10d = 0;
     BVar1 = SetEnvironmentVariableA(&local_110,(LPCSTR)&local_10c);
@@ -1572,7 +1572,7 @@ char * __cdecl _fgets(char *_Buf,int _MaxCount,FILE *_File)
   code *pcVar2;
   int iVar3;
   char *pcVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = _Buf;
   if ((_Buf == (char *)0x0) &&
@@ -1614,8 +1614,8 @@ char * __cdecl _fgets(char *_Buf,int _MaxCount,FILE *_File)
 #undef local_c
 
 /* 005f3d70 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
-#define local_c (*(undefined * *)(frame_ + FRAME_OFF(4)))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
+#define local_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 /* Library Function - Single Match
     __filbuf
    
@@ -1628,7 +1628,7 @@ int __cdecl __filbuf(FILE *_File)
   code *pcVar2;
   int iVar3;
   uint uVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_File == (FILE *)0x0) {
     iVar3 = __CrtDbgReport(2,"_filbuf.c",0x69,0,"str != NULL");
@@ -1667,7 +1667,7 @@ int __cdecl __filbuf(FILE *_File)
           local_c = &DAT_0063a420;
         }
         else {
-          local_c = (undefined *)
+          local_c = (i8 *)
                     (*(int *)((int)&DAT_006e69f0 + ((int)(_File->_file & 0xffffffe0U) >> 3)) +
                     (_File->_file & 0x1fU) * 8);
         }
@@ -1706,7 +1706,7 @@ int __cdecl _fputc(int _Ch,FILE *_File)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_File == (FILE *)0x0) {
     iVar2 = __CrtDbgReport(2,"fputc.c",0x2d,0,"str != NULL");
@@ -1756,7 +1756,7 @@ int __cdecl _fgetc(FILE *_File)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_File == (FILE *)0x0) {
     iVar2 = __CrtDbgReport(2,"fgetc.c",0x29,0,"stream != NULL");
@@ -1892,7 +1892,7 @@ void __cdecl _exit(int _Code)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __exit(undefined4 param_1)
+void __cdecl __exit(i32 param_1)
 
 {
   doexit(param_1,1,0);
@@ -1926,10 +1926,10 @@ void __cdecl __c_exit(void)
 }
 
 /* 005f4230 crt */
-#define DAT_00639f54 (*(undefined1 *)((u8 *)&g.d_00639f54))
+#define DAT_00639f54 (*(i8 *)((u8 *)&g.d_00639f54))
 #define DAT_006e6b54 (*(int * *)((u8 *)&g.d_006e6b54))
 #define DAT_006e6b68 (*(int * *)((u8 *)&g.d_006e6b68))
-#define _DAT_00639f58 (*(undefined4 *)((u8 *)&g.d_00639f58))
+#define _DAT_00639f58 (*(i32 *)((u8 *)&g.d_00639f58))
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
@@ -1943,7 +1943,7 @@ void __cdecl doexit(UINT param_1,int param_2,int param_3)
   byte bVar1;
   HANDLE hProcess;
   UINT uExitCode;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (DAT_00639f5c == 1) {
     uExitCode = param_1;
@@ -1951,7 +1951,7 @@ void __cdecl doexit(UINT param_1,int param_2,int param_3)
     TerminateProcess(hProcess,uExitCode);
   }
   _DAT_00639f58 = 1;
-  DAT_00639f54 = (undefined1)param_3;
+  DAT_00639f54 = (i8)param_3;
   if (param_2 == 0) {
     if (DAT_006e6b68 != (int *)0x0) {
       local_8 = DAT_006e6b54;
@@ -2109,7 +2109,7 @@ LAB_005f43e3:
 }
 
 /* 005f43f0 crt */
-#define DAT_0063a428 (*(undefined4 *)((u8 *)&g.d_0063a428))
+#define DAT_0063a428 (*(i32 *)((u8 *)&g.d_0063a428))
 /* Library Function - Single Match
     _malloc
    
@@ -2126,17 +2126,17 @@ void * __cdecl _malloc(size_t _Size)
 #undef DAT_0063a428
 
 /* 005f4420 crt */
-#define DAT_0063a428 (*(undefined4 *)((u8 *)&g.d_0063a428))
+#define DAT_0063a428 (*(i32 *)((u8 *)&g.d_0063a428))
 /* Library Function - Single Match
     __malloc_dbg
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl
-__malloc_dbg(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+i32 __cdecl
+__malloc_dbg(i32 param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = __nh_malloc_dbg(param_1,DAT_0063a428,param_2,param_3,param_4);
   return uVar1;
@@ -2164,8 +2164,8 @@ void * __cdecl __nh_malloc(size_t _Size,int _NhFlag)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl
-__nh_malloc_dbg(size_t param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5)
+i32 __cdecl
+__nh_malloc_dbg(size_t param_1,int param_2,i32 param_3,i32 param_4,i32 param_5)
 
 {
   int iVar1;
@@ -2200,12 +2200,12 @@ void * __cdecl __heap_alloc(size_t _Size)
 }
 
 /* 005f4520 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
 #define DAT_00639f78 (*(int *)((u8 *)&g.d_00639f78))
 #define DAT_00639f7c (*(byte *)((u8 *)&g.d_00639f7c))
-#define DAT_006e5470 (*(undefined4 * *)((u8 *)&g.d_006e5470))
+#define DAT_006e5470 (*(i32 * *)((u8 *)&g.d_006e5470))
 #define DAT_006e5474 (*(int *)((u8 *)&g.d_006e5474))
-#define DAT_006e5478 (*(undefined4 * *)((u8 *)&g.d_006e5478))
+#define DAT_006e5478 (*(i32 * *)((u8 *)&g.d_006e5478))
 #define DAT_006e547c (*(uint *)((u8 *)&g.d_006e547c))
 #define DAT_006e5480 (*(uint *)((u8 *)&g.d_006e5480))
 /* Library Function - Single Match
@@ -2213,16 +2213,16 @@ void * __cdecl __heap_alloc(size_t _Size)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,undefined4 param_4)
+i32 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,i32 param_4)
 
 {
   code *pcVar1;
   bool bVar2;
-  undefined4 *puVar3;
+  i32 *puVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
-  undefined4 *puVar7;
+  i32 *puVar7;
   
   bVar2 = false;
   if (((((byte)DAT_00639f70 & 4) != 0) && (iVar4 = __CrtCheckMemory(), iVar4 == 0)) &&
@@ -2256,7 +2256,7 @@ undefined4 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,undefi
         return uVar5;
       }
     }
-    puVar7 = (undefined4 *)0x0;
+    puVar7 = (i32 *)0x0;
   }
   else {
     if (((param_2 & 0xffff) != 2) && (((byte)DAT_00639f70 & 1) == 0)) {
@@ -2272,9 +2272,9 @@ undefined4 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,undefi
         uVar5 = (*pcVar1)();
         return uVar5;
       }
-      puVar7 = (undefined4 *)__heap_alloc_base(param_1 + 0x24);
-      if (puVar7 == (undefined4 *)0x0) {
-        puVar7 = (undefined4 *)0x0;
+      puVar7 = (i32 *)__heap_alloc_base(param_1 + 0x24);
+      if (puVar7 == (i32 *)0x0) {
+        puVar7 = (i32 *)0x0;
       }
       else {
         DAT_00639f74 = DAT_00639f74 + 1;
@@ -2294,7 +2294,7 @@ undefined4 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,undefi
             DAT_006e5480 = DAT_006e547c;
           }
           puVar3 = puVar7;
-          if (DAT_006e5478 != (undefined4 *)0x0) {
+          if (DAT_006e5478 != (i32 *)0x0) {
             DAT_006e5478[1] = puVar7;
             puVar3 = DAT_006e5470;
           }
@@ -2321,7 +2321,7 @@ undefined4 __cdecl __heap_alloc_dbg(uint param_1,uint param_2,int param_3,undefi
         uVar5 = (*pcVar1)();
         return uVar5;
       }
-      puVar7 = (undefined4 *)0x0;
+      puVar7 = (i32 *)0x0;
     }
   }
   return puVar7;
@@ -2351,21 +2351,21 @@ void * __cdecl _calloc(size_t _Count,size_t _Size)
 }
 
 /* 005f4890 crt */
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __calloc_dbg
    
    Library: Visual Studio 1998 Debug */
 
-undefined1 * __cdecl
-__calloc_dbg(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5)
+i8 * __cdecl
+__calloc_dbg(int param_1,int param_2,i32 param_3,i32 param_4,i32 param_5)
 
 {
-  undefined1 *puVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  puVar1 = (undefined1 *)__malloc_dbg(param_2 * param_1,param_3,param_4,param_5);
-  if (puVar1 != (undefined1 *)0x0) {
+  puVar1 = (i8 *)__malloc_dbg(param_2 * param_1,param_3,param_4,param_5);
+  if (puVar1 != (i8 *)0x0) {
     for (local_10 = puVar1; local_10 < puVar1 + param_2 * param_1; local_10 = local_10 + 1) {
       *local_10 = 0;
     }
@@ -2381,10 +2381,10 @@ __calloc_dbg(int param_1,int param_2,undefined4 param_3,undefined4 param_4,undef
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_005f4900(undefined4 param_1,undefined4 param_2)
+i32 __cdecl FUN_005f4900(i32 param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = __realloc_dbg(param_1,param_2,1,0,0);
   return uVar1;
@@ -2396,19 +2396,19 @@ undefined4 __cdecl FUN_005f4900(undefined4 param_1,undefined4 param_2)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl
-__realloc_dbg(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-             undefined4 param_5)
+i32 __cdecl
+__realloc_dbg(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
+             i32 param_5)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = realloc_help(param_1,param_2,param_3,param_4,param_5,1);
   return uVar1;
 }
 
 /* 005f4970 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
 #define DAT_00639f78 (*(int *)((u8 *)&g.d_00639f78))
 #define DAT_00639f7c (*(byte *)((u8 *)&g.d_00639f7c))
 #define DAT_006e5470 (*(int * *)((u8 *)&g.d_006e5470))
@@ -2429,11 +2429,11 @@ realloc_help(int param_1,uint param_2,uint param_3,int param_4,int param_5,int p
   code *pcVar1;
   int *piVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   int iVar5;
   int *piVar6;
   bool bVar7;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     piVar2 = (int *)__malloc_dbg(param_2,param_3,param_4,param_5);
@@ -2627,7 +2627,7 @@ realloc_help(int param_1,uint param_2,uint param_3,int param_4,int param_5,int p
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005f4f00(undefined4 param_1,undefined4 param_2)
+void __cdecl FUN_005f4f00(i32 param_1,i32 param_2)
 
 {
   __expand_dbg(param_1,param_2,1,0,0);
@@ -2640,19 +2640,19 @@ void __cdecl FUN_005f4f00(undefined4 param_1,undefined4 param_2)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl
-__expand_dbg(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5)
+i32 __cdecl
+__expand_dbg(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = realloc_help(param_1,param_2,param_3,param_4,param_5,0);
   return uVar1;
 }
 
 /* 005f4f70 crt */
-void __cdecl FUN_005f4f70(undefined4 param_1)
+void __cdecl FUN_005f4f70(i32 param_1)
 
 {
   __free_dbg(param_1,1);
@@ -2677,18 +2677,18 @@ size_t __cdecl __msize(void *_Memory)
 }
 
 /* 005f53e0 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
 /* Library Function - Single Match
     __msize_dbg
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __msize_dbg(int param_1,int param_2)
+i32 __cdecl __msize_dbg(int param_1,int param_2)
 
 {
   code *pcVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   
   if (((byte)DAT_00639f70 & 4) != 0) {
     iVar2 = __CrtCheckMemory();
@@ -2730,16 +2730,16 @@ undefined4 __cdecl __msize_dbg(int param_1,int param_2)
       return uVar3;
     }
   }
-  return *(undefined4 *)(param_1 + -0x10);
+  return *(i32 *)(param_1 + -0x10);
 }
 #undef DAT_00639f70
 
 /* 005f5550 crt */
-#define DAT_00639f78 (*(undefined4 *)((u8 *)&g.d_00639f78))
-undefined4 __cdecl FUN_005f5550(undefined4 param_1)
+#define DAT_00639f78 (*(i32 *)((u8 *)&g.d_00639f78))
+i32 __cdecl FUN_005f5550(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = DAT_00639f78;
   DAT_00639f78 = param_1;
@@ -2753,7 +2753,7 @@ undefined4 __cdecl FUN_005f5550(undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __CrtSetDbgBlockType(int param_1,undefined4 param_2)
+void __cdecl __CrtSetDbgBlockType(int param_1,i32 param_2)
 
 {
   code *pcVar1;
@@ -2770,16 +2770,16 @@ void __cdecl __CrtSetDbgBlockType(int param_1,undefined4 param_2)
         return;
       }
     }
-    *(undefined4 *)(param_1 + -0xc) = param_2;
+    *(i32 *)(param_1 + -0xc) = param_2;
   }
   return;
 }
 
 /* 005f5620 crt */
-undefined * __cdecl FUN_005f5620(undefined *param_1)
+i8 * __cdecl FUN_005f5620(i8 *param_1)
 
 {
-  undefined *puVar1;
+  i8 *puVar1;
   
   puVar1 = PTR_FUN_0063a42c;
   PTR_FUN_0063a42c = param_1;
@@ -2787,20 +2787,20 @@ undefined * __cdecl FUN_005f5620(undefined *param_1)
 }
 
 /* 005f5650 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     _CheckBytes
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl _CheckBytes(byte *param_1,undefined4 param_2,int param_3)
+i32 __cdecl _CheckBytes(byte *param_1,i32 param_2,int param_3)
 
 {
   code *pcVar1;
   byte *pbVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   pbVar2 = param_1;
@@ -2826,27 +2826,27 @@ undefined4 __cdecl _CheckBytes(byte *param_1,undefined4 param_2,int param_3)
 #undef local_8
 
 /* 005f56e0 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
-#define DAT_00639f7c (*(undefined1 *)((u8 *)&g.d_00639f7c))
-#define DAT_00639f80 (*(undefined1 *)((u8 *)&g.d_00639f80))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
+#define DAT_00639f7c (*(i8 *)((u8 *)&g.d_00639f7c))
+#define DAT_00639f80 (*(i8 *)((u8 *)&g.d_00639f80))
 #define DAT_006e5478 (*(char * *)((u8 *)&g.d_006e5478))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     __CrtCheckMemory
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtCheckMemory(void)
+i32 __cdecl __CrtCheckMemory(void)
 
 {
   code *pcVar1;
   bool bVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   char *pcVar5;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   if (((byte)DAT_00639f70 & 1) == 0) {
@@ -2869,7 +2869,7 @@ undefined4 __cdecl __CrtCheckMemory(void)
         iVar3 = _CheckBytes(local_c + 0x1c,CONCAT31((int3)((uint)pcVar5 >> 8),DAT_00639f7c),4);
         if (iVar3 == 0) {
           iVar3 = __CrtDbgReport(0,0,0,0,"DAMAGE: before %hs block (#%d) at 0x%08X.\n",local_18,
-                                 *(undefined4 *)(local_c + 0x18),local_c + 0x20);
+                                 *(i32 *)(local_c + 0x18),local_c + 0x20);
           if (iVar3 == 1) {
             pcVar1 = (code *)swi(3);
             uVar4 = (*pcVar1)();
@@ -2881,7 +2881,7 @@ undefined4 __cdecl __CrtCheckMemory(void)
                             CONCAT31((int3)((uint)iVar3 >> 8),DAT_00639f7c),4);
         if (iVar3 == 0) {
           iVar3 = __CrtDbgReport(0,0,0,0,"DAMAGE: after %hs block (#%d) at 0x%08X.\n",local_18,
-                                 *(undefined4 *)(local_c + 0x18),local_c + 0x20);
+                                 *(i32 *)(local_c + 0x18),local_c + 0x20);
           if (iVar3 == 1) {
             pcVar1 = (code *)swi(3);
             uVar4 = (*pcVar1)();
@@ -2891,8 +2891,8 @@ undefined4 __cdecl __CrtCheckMemory(void)
         }
         if ((*(int *)(local_c + 0x14) == 0) &&
            (iVar3 = _CheckBytes(local_c + 0x20,
-                                CONCAT31((int3)((uint)*(undefined4 *)(local_c + 0x10) >> 8),
-                                         DAT_00639f80),*(undefined4 *)(local_c + 0x10)), iVar3 == 0)
+                                CONCAT31((int3)((uint)*(i32 *)(local_c + 0x10) >> 8),
+                                         DAT_00639f80),*(i32 *)(local_c + 0x10)), iVar3 == 0)
            ) {
           iVar3 = __CrtDbgReport(0,0,0,0,"DAMAGE: on top of Free block at 0x%08X.\n",local_c + 0x20)
           ;
@@ -2906,14 +2906,14 @@ undefined4 __cdecl __CrtCheckMemory(void)
         if (!bVar2) {
           if ((*(int *)(local_c + 8) != 0) &&
              (iVar3 = __CrtDbgReport(0,0,0,0,"%hs allocated at file %hs(%d).\n",local_18,
-                                     *(undefined4 *)(local_c + 8),*(undefined4 *)(local_c + 0xc)),
+                                     *(i32 *)(local_c + 8),*(i32 *)(local_c + 0xc)),
              iVar3 == 1)) {
             pcVar1 = (code *)swi(3);
             uVar4 = (*pcVar1)();
             return uVar4;
           }
           iVar3 = __CrtDbgReport(0,0,0,0,"%hs located at 0x%08X is %u bytes long.\n",local_18,
-                                 local_c + 0x20,*(undefined4 *)(local_c + 0x10));
+                                 local_c + 0x20,*(i32 *)(local_c + 0x10));
           if (iVar3 == 1) {
             pcVar1 = (code *)swi(3);
             uVar4 = (*pcVar1)();
@@ -2985,7 +2985,7 @@ undefined4 __cdecl __CrtCheckMemory(void)
    
    Library: Visual Studio 1998 Debug */
 
-undefined1 __cdecl __CrtSetDbgFlag(int param_1)
+i8 __cdecl __CrtSetDbgFlag(int param_1)
 
 {
   int iVar1;
@@ -2999,21 +2999,21 @@ undefined1 __cdecl __CrtSetDbgFlag(int param_1)
 #undef DAT_00639f70
 
 /* 005f5a90 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
-#define DAT_006e5478 (*(undefined4 * *)((u8 *)&g.d_006e5478))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
+#define DAT_006e5478 (*(i32 * *)((u8 *)&g.d_006e5478))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __CrtDoForAllClientObjects
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __CrtDoForAllClientObjects(code *param_1,undefined4 param_2)
+void __cdecl __CrtDoForAllClientObjects(code *param_1,i32 param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((byte)DAT_00639f70 & 1) != 0) {
-    for (local_8 = DAT_006e5478; local_8 != (undefined4 *)0x0; local_8 = (undefined4 *)*local_8) {
+    for (local_8 = DAT_006e5478; local_8 != (i32 *)0x0; local_8 = (i32 *)*local_8) {
       if ((local_8[5] & 0xffff) == 4) {
         (*param_1)(local_8 + 8,param_2);
       }
@@ -3031,7 +3031,7 @@ void __cdecl __CrtDoForAllClientObjects(code *param_1,undefined4 param_2)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtIsValidPointer(void *param_1,UINT_PTR param_2,int param_3)
+i32 __cdecl __CrtIsValidPointer(void *param_1,UINT_PTR param_2,int param_3)
 
 {
   BOOL BVar1;
@@ -3044,10 +3044,10 @@ undefined4 __cdecl __CrtIsValidPointer(void *param_1,UINT_PTR param_2,int param_
 }
 
 /* 005f5b60 crt */
-#define DAT_00639f20 (*(undefined *)((u8 *)&g.d_00639f20))
-#define local_10 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(0)))
+#define DAT_00639f20 (*(i8 *)((u8 *)&g.d_00639f20))
+#define local_10 (*(i8 (*)[4])(frame_ + FRAME_OFF(0)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i8 (*)[4])(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __CrtIsValidHeapPointer
    
@@ -3058,7 +3058,7 @@ BOOL __cdecl __CrtIsValidHeapPointer(int param_1)
 {
   BOOL BVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     BVar1 = 0;
@@ -3071,7 +3071,7 @@ BOOL __cdecl __CrtIsValidHeapPointer(int param_1)
     else {
       local_c = (char *)___sbh_find_block(param_1 + -0x20,local_10,local_8);
       if (local_c == (char *)0x0) {
-        if (((*(undefined1 *)((char *)&DAT_00639f20 + 1)) & 0x80) == 0) {
+        if (((*(i8 *)((char *)&DAT_00639f20 + 1)) & 0x80) == 0) {
           BVar1 = HeapValidate(DAT_006e69e4,0,(LPCVOID)(param_1 + -0x20));
         }
         else {
@@ -3099,9 +3099,9 @@ BOOL __cdecl __CrtIsValidHeapPointer(int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl
-__CrtIsMemoryBlock(int param_1,int param_2,undefined4 *param_3,undefined4 *param_4,
-                  undefined4 *param_5)
+i32 __cdecl
+__CrtIsMemoryBlock(int param_1,int param_2,i32 *param_3,i32 *param_4,
+                  i32 *param_5)
 
 {
   int iVar1;
@@ -3112,14 +3112,14 @@ __CrtIsMemoryBlock(int param_1,int param_2,undefined4 *param_3,undefined4 *param
         ((*(uint *)(param_1 + -0xc) & 0xffff) == 2)) || (*(int *)(param_1 + -0xc) == 3)))) &&
      (((iVar1 = __CrtIsValidPointer(param_1,param_2,1), iVar1 != 0 &&
        (*(int *)(param_1 + -0x10) == param_2)) && (*(int *)(param_1 + -8) <= DAT_00639f74)))) {
-    if (param_3 != (undefined4 *)0x0) {
-      *param_3 = *(undefined4 *)(param_1 + -8);
+    if (param_3 != (i32 *)0x0) {
+      *param_3 = *(i32 *)(param_1 + -8);
     }
-    if (param_4 != (undefined4 *)0x0) {
-      *param_4 = *(undefined4 *)(param_1 + -0x18);
+    if (param_4 != (i32 *)0x0) {
+      *param_4 = *(i32 *)(param_1 + -0x18);
     }
-    if (param_5 != (undefined4 *)0x0) {
-      *param_5 = *(undefined4 *)(param_1 + -0x14);
+    if (param_5 != (i32 *)0x0) {
+      *param_5 = *(i32 *)(param_1 + -0x14);
     }
     return 1;
   }
@@ -3127,11 +3127,11 @@ __CrtIsMemoryBlock(int param_1,int param_2,undefined4 *param_3,undefined4 *param
 }
 
 /* 005f5d30 crt */
-#define DAT_006e6b48 (*(undefined4 *)((u8 *)&g.d_006e6b48))
-undefined4 __cdecl FUN_005f5d30(undefined4 param_1)
+#define DAT_006e6b48 (*(i32 *)((u8 *)&g.d_006e6b48))
+i32 __cdecl FUN_005f5d30(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = DAT_006e6b48;
   DAT_006e6b48 = param_1;
@@ -3140,24 +3140,24 @@ undefined4 __cdecl FUN_005f5d30(undefined4 param_1)
 #undef DAT_006e6b48
 
 /* 005f5d60 crt */
-#define DAT_006e5474 (*(undefined4 *)((u8 *)&g.d_006e5474))
-#define DAT_006e5478 (*(undefined4 * *)((u8 *)&g.d_006e5478))
-#define DAT_006e5480 (*(undefined4 *)((u8 *)&g.d_006e5480))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define DAT_006e5474 (*(i32 *)((u8 *)&g.d_006e5474))
+#define DAT_006e5478 (*(i32 * *)((u8 *)&g.d_006e5478))
+#define DAT_006e5480 (*(i32 *)((u8 *)&g.d_006e5480))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __CrtMemCheckpoint
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __CrtMemCheckpoint(undefined4 *param_1)
+void __cdecl __CrtMemCheckpoint(i32 *param_1)
 
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (param_1 == (undefined4 *)0x0) {
+  if (param_1 == (i32 *)0x0) {
     iVar2 = __CrtDbgReport(0,0,0,0,&DAT_0061dc40,"_CrtMemCheckPoint: NULL state pointer.\n");
     if (iVar2 == 1) {
       pcVar1 = (code *)swi(3);
@@ -3171,7 +3171,7 @@ void __cdecl __CrtMemCheckpoint(undefined4 *param_1)
       param_1[local_8 + 6] = 0;
       param_1[local_8 + 1] = param_1[local_8 + 6];
     }
-    for (local_c = DAT_006e5478; local_c != (undefined4 *)0x0; local_c = (undefined4 *)*local_c) {
+    for (local_c = DAT_006e5478; local_c != (i32 *)0x0; local_c = (i32 *)*local_c) {
       if ((local_c[5] & 0xffff) < 5) {
         param_1[(local_c[5] & 0xffff) + 1] = param_1[(local_c[5] & 0xffff) + 1] + 1;
         param_1[(local_c[5] & 0xffff) + 6] = param_1[(local_c[5] & 0xffff) + 6] + local_c[4];
@@ -3197,24 +3197,24 @@ void __cdecl __CrtMemCheckpoint(undefined4 *param_1)
 #undef local_8
 
 /* 005f5ea0 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __CrtMemDifference
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtMemDifference(undefined4 *param_1,int param_2,int param_3)
+i32 __cdecl __CrtMemDifference(i32 *param_1,int param_2,int param_3)
 
 {
   code *pcVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
-  if (((param_1 == (undefined4 *)0x0) || (param_2 == 0)) || (param_3 == 0)) {
+  if (((param_1 == (i32 *)0x0) || (param_2 == 0)) || (param_3 == 0)) {
     iVar2 = __CrtDbgReport(0,0,0,0,&DAT_0061dc40,"_CrtMemDifference: NULL state pointer.\n");
     if (iVar2 == 1) {
       pcVar1 = (code *)swi(3);
@@ -3245,36 +3245,36 @@ undefined4 __cdecl __CrtMemDifference(undefined4 *param_1,int param_2,int param_
 #undef local_8
 
 /* 005f5fe0 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
-#define DAT_006e5478 (*(undefined4 * *)((u8 *)&g.d_006e5478))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
+#define DAT_006e5478 (*(i32 * *)((u8 *)&g.d_006e5478))
 #define DAT_006e6b48 (*(code * *)((u8 *)&g.d_006e6b48))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __CrtMemDumpAllObjectsSince
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __CrtMemDumpAllObjectsSince(undefined4 *param_1)
+void __cdecl __CrtMemDumpAllObjectsSince(i32 *param_1)
 
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (undefined4 *)0x0;
+  local_c = (i32 *)0x0;
   iVar2 = __CrtDbgReport(0,0,0,0,&DAT_0061dc40,"Dumping objects ->\n");
   if (iVar2 == 1) {
     pcVar1 = (code *)swi(3);
     (*pcVar1)();
     return;
   }
-  if (param_1 != (undefined4 *)0x0) {
-    local_c = (undefined4 *)*param_1;
+  if (param_1 != (i32 *)0x0) {
+    local_c = (i32 *)*param_1;
   }
   local_8 = DAT_006e5478;
   do {
-    if ((local_8 == (undefined4 *)0x0) || (local_8 == local_c)) {
+    if ((local_8 == (i32 *)0x0) || (local_8 == local_c)) {
       iVar2 = __CrtDbgReport(0,0,0,0,&DAT_0061dc40,"Object dump complete.\n");
       if (iVar2 != 1) {
         return;
@@ -3346,7 +3346,7 @@ void __cdecl __CrtMemDumpAllObjectsSince(undefined4 *param_1)
         __printMemBlockData(local_8);
       }
     }
-    local_8 = (undefined4 *)*local_8;
+    local_8 = (i32 *)*local_8;
   } while( true );
 }
 #undef DAT_00639f70
@@ -3371,7 +3371,7 @@ void __cdecl __printMemBlockData(int param_1)
   byte bVar1;
   code *pcVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_50 = 0;
   while( true ) {
@@ -3411,8 +3411,8 @@ void __cdecl __printMemBlockData(int param_1)
 #undef local_38
 
 /* 005f63a0 crt */
-#define DAT_00639f70 (*(undefined *)((u8 *)&g.d_00639f70))
-#define local_38 (*(undefined1 (*)[8])(frame_ + FRAME_OFF(0)))
+#define DAT_00639f70 (*(i8 *)((u8 *)&g.d_00639f70))
+#define local_38 (*(i8 (*)[8])(frame_ + FRAME_OFF(0)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(20)))
@@ -3421,13 +3421,13 @@ void __cdecl __printMemBlockData(int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtDumpMemoryLeaks(void)
+i32 __cdecl __CrtDumpMemoryLeaks(void)
 
 {
   code *pcVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   __CrtMemCheckpoint(local_38);
   if (((local_24 == 0) && (local_30 == 0)) &&
@@ -3464,13 +3464,13 @@ void __cdecl __CrtMemDumpStatistics(int param_1)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     for (local_8 = 0; local_8 < 5; local_8 = local_8 + 1) {
       iVar2 = __CrtDbgReport(0,0,0,0,"%ld bytes in %ld %hs Blocks.\n",
-                             *(undefined4 *)(param_1 + 0x18 + local_8 * 4),
-                             *(undefined4 *)(param_1 + 4 + local_8 * 4),(&PTR_DAT_00639f88)[local_8]
+                             *(i32 *)(param_1 + 0x18 + local_8 * 4),
+                             *(i32 *)(param_1 + 4 + local_8 * 4),(&PTR_DAT_00639f88)[local_8]
                             );
       if (iVar2 == 1) {
         pcVar1 = (code *)swi(3);
@@ -3479,13 +3479,13 @@ void __cdecl __CrtMemDumpStatistics(int param_1)
       }
     }
     iVar2 = __CrtDbgReport(0,0,0,0,"Largest number used: %ld bytes.\n",
-                           *(undefined4 *)(param_1 + 0x2c));
+                           *(i32 *)(param_1 + 0x2c));
     if (iVar2 == 1) {
       pcVar1 = (code *)swi(3);
       (*pcVar1)();
       return;
     }
-    iVar2 = __CrtDbgReport(0,0,0,0,"Total allocations: %ld bytes.\n",*(undefined4 *)(param_1 + 0x30)
+    iVar2 = __CrtDbgReport(0,0,0,0,"Total allocations: %ld bytes.\n",*(i32 *)(param_1 + 0x30)
                           );
     if (iVar2 == 1) {
       pcVar1 = (code *)swi(3);
@@ -3500,19 +3500,19 @@ void __cdecl __CrtMemDumpStatistics(int param_1)
 /* 005f6500: written by hand in src/crt/asm.c */
 
 /* 005f6650 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Multiple Matches With Different Base Names
     __wrename
     _rename
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_005f6650(LPCSTR param_1,LPCSTR param_2)
+i32 __cdecl FUN_005f6650(LPCSTR param_1,LPCSTR param_2)
 
 {
   BOOL BVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = MoveFileA(param_1,param_2);
   if (BVar1 == 0) {
@@ -3533,19 +3533,19 @@ undefined4 __cdecl FUN_005f6650(LPCSTR param_1,LPCSTR param_2)
 #undef local_8
 
 /* 005f66b0 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Multiple Matches With Different Base Names
     __wremove
     _remove
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_005f66b0(LPCSTR param_1)
+i32 __cdecl FUN_005f66b0(LPCSTR param_1)
 
 {
   BOOL BVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = DeleteFileA(param_1);
   if (BVar1 == 0) {
@@ -3572,7 +3572,7 @@ undefined4 __cdecl FUN_005f66b0(LPCSTR param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_005f6710(undefined4 param_1)
+void __cdecl FUN_005f6710(i32 param_1)
 
 {
   FUN_005f66b0(param_1);
@@ -3580,8 +3580,8 @@ void __cdecl FUN_005f6710(undefined4 param_1)
 }
 
 /* 005f6730 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
-#define local_10 (*(undefined * *)(frame_ + FRAME_OFF(0)))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     _rewind
    
@@ -3593,7 +3593,7 @@ void __cdecl _rewind(FILE *_File)
   uint _FileHandle;
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_File == (FILE *)0x0) {
     iVar2 = __CrtDbgReport(2,"rewind.c",0x2e,0,"str != NULL");
@@ -3610,7 +3610,7 @@ void __cdecl _rewind(FILE *_File)
     local_10 = &DAT_0063a420;
   }
   else {
-    local_10 = (undefined *)
+    local_10 = (i8 *)
                (*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0) >> 3)) +
                (_FileHandle & 0x1f) * 8);
   }
@@ -3676,7 +3676,7 @@ int __cdecl _fseek(FILE *_File,long _Offset,int _Origin)
 }
 
 /* 005f6920 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(12)))
@@ -3694,7 +3694,7 @@ long __cdecl _ftell(FILE *_File)
   int iVar2;
   long lVar3;
   char *pcVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((_File == (FILE *)0x0) && (iVar2 = __CrtDbgReport(2,"ftell.c",99,0,"str != NULL"), iVar2 == 1)
      ) {
@@ -3784,7 +3784,7 @@ long __cdecl _ftell(FILE *_File)
 /* 005f6c60: written by hand in src/crt/asm.c */
 
 /* 005f6c90 crt */
-#define _DAT_00639fac (*(undefined4 *)((u8 *)&g.d_00639fac))
+#define _DAT_00639fac (*(i32 *)((u8 *)&g.d_00639fac))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
     __fpmath
@@ -3827,10 +3827,10 @@ void __cdecl __cfltcvt_init(void)
 }
 
 /* 005f6d20 crt */
-undefined4 __cdecl FUN_005f6d20(undefined4 param_1)
+i32 __cdecl FUN_005f6d20(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = DAT_00639fa8;
   DAT_00639fa8 = param_1;
@@ -4038,7 +4038,7 @@ char * __cdecl __getcwd(char *_DstBuf,int _SizeInBytes)
 }
 
 /* 005f7170 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
 #define local_118 (*(CHAR (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_14 (*(DWORD *)(frame_ + FRAME_OFF(260)))
 #define local_10 (*(char (*)[4])(frame_ + FRAME_OFF(264)))
@@ -4055,7 +4055,7 @@ char * __cdecl __getdcwd(int _Drive,char *_DstBuf,int _SizeInBytes)
   int iVar1;
   char *pcVar2;
   uint _Size;
-  undefined1 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_Drive == 0) {
     local_14 = GetCurrentDirectoryA(0x104,local_118);
@@ -4116,7 +4116,7 @@ int __cdecl __validdrive(uint param_1)
 {
   int iVar1;
   UINT UVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     iVar1 = 1;
@@ -4248,7 +4248,7 @@ LAB_005f756a:
 }
 
 /* 005f75e0 crt */
-#define _DAT_0063aca4 (*(undefined4 *)((u8 *)&g.d_0063aca4))
+#define _DAT_0063aca4 (*(i32 *)((u8 *)&g.d_0063aca4))
 #define local_328 (*(CHAR (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_224 (*(char * *)(frame_ + FRAME_OFF(260)))
 #define local_220 (*(char (*)[540])(frame_ + FRAME_OFF(264)))
@@ -4266,7 +4266,7 @@ void __cdecl __assert(char *param_1,char *param_2,int param_3)
   size_t sVar3;
   size_t sVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((DAT_00639fcc == 1) || ((DAT_00639fcc == 0 && (DAT_00639fd0 == 1)))) {
     if ((_DAT_0063aca4 & 0x10c) == 0) {
@@ -4366,7 +4366,7 @@ void __cdecl __assert(char *param_1,char *param_2,int param_3)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_005f8160(undefined4 *param_1)
+i32 __cdecl FUN_005f8160(i32 *param_1)
 
 {
   if (*(int *)*param_1 == -0x1f928c9d) {
@@ -4415,11 +4415,11 @@ int __cdecl ExFilterRethrow(_EXCEPTION_POINTERS *param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __stdcall __CallSettingFrame_12(undefined4 param_1,undefined4 param_2,int param_3)
+i32 __stdcall __CallSettingFrame_12(i32 param_1,i32 param_2,int param_3)
 
 {
   code *pcVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   pcVar1 = (code *)FUN_005f1d95(param_3);
   (*pcVar1)();
@@ -4432,10 +4432,10 @@ undefined4 __stdcall __CallSettingFrame_12(undefined4 param_1,undefined4 param_2
 
 /* 005f8880 crt */
 #define DAT_0063a024 (*(code * *)((u8 *)&g.d_0063a024))
-#define uStack_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define puStack_10 (*(undefined1 * *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(undefined * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define uStack_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define puStack_10 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     void __cdecl terminate(void)
    
@@ -4444,7 +4444,7 @@ undefined4 __stdcall __CallSettingFrame_12(undefined4 param_1,undefined4 param_2
 void __cdecl terminate(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   puStack_c = &DAT_0061e480;
   puStack_10 = &LAB_005f9298;
@@ -4471,7 +4471,7 @@ void __cdecl terminate(void)
 void __cdecl unexpected(void)
 
 {
-  if (PTR_terminate_0063a028 != (undefined *)0x0) {
+  if (PTR_terminate_0063a028 != (i8 *)0x0) {
     (*(code *)PTR_terminate_0063a028)();
   }
   terminate();
@@ -4479,10 +4479,10 @@ void __cdecl unexpected(void)
 }
 
 /* 005f8950 crt */
-#define uStack_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define puStack_10 (*(undefined1 * *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(undefined * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define uStack_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define puStack_10 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     void __cdecl _inconsistency(void)
    
@@ -4491,11 +4491,11 @@ void __cdecl unexpected(void)
 void __cdecl _inconsistency(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   puStack_c = &DAT_0061e498;
   puStack_10 = &LAB_005f9298;
-  if (PTR_terminate_0063a02c != (undefined *)0x0) {
+  if (PTR_terminate_0063a02c != (i8 *)0x0) {
     local_8 = 1;
     (*(code *)PTR_terminate_0063a02c)();
   }
@@ -4527,19 +4527,19 @@ void __cdecl __CrtDbgBreak(void)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtSetReportMode(int param_1,uint param_2)
+i32 __cdecl __CrtSetReportMode(int param_1,uint param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((param_1 < 0) || (2 < param_1)) {
     uVar1 = 0xffffffff;
   }
   else if (param_2 == 0xffffffff) {
-    uVar1 = *(undefined4 *)(&DAT_0063a038 + param_1 * 4);
+    uVar1 = *(i32 *)(&DAT_0063a038 + param_1 * 4);
   }
   else if ((param_2 & 0xfffffff8) == 0) {
-    uVar1 = *(undefined4 *)(&DAT_0063a038 + param_1 * 4);
+    uVar1 = *(i32 *)(&DAT_0063a038 + param_1 * 4);
     *(uint *)(&DAT_0063a038 + param_1 * 4) = param_2;
   }
   else {
@@ -4554,20 +4554,20 @@ undefined4 __cdecl __CrtSetReportMode(int param_1,uint param_2)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __CrtSetReportFile(int param_1,int param_2)
+i32 __cdecl __CrtSetReportFile(int param_1,int param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   HANDLE pvVar2;
   
   if ((param_1 < 0) || (2 < param_1)) {
     uVar1 = 0xfffffffe;
   }
   else if (param_2 == -6) {
-    uVar1 = *(undefined4 *)(&DAT_0063a048 + param_1 * 4);
+    uVar1 = *(i32 *)(&DAT_0063a048 + param_1 * 4);
   }
   else {
-    uVar1 = *(undefined4 *)(&DAT_0063a048 + param_1 * 4);
+    uVar1 = *(i32 *)(&DAT_0063a048 + param_1 * 4);
     if (param_2 == -4) {
       pvVar2 = GetStdHandle(0xfffffff5);
       *(HANDLE *)(&DAT_0063a048 + param_1 * 4) = pvVar2;
@@ -4584,11 +4584,11 @@ undefined4 __cdecl __CrtSetReportFile(int param_1,int param_2)
 }
 
 /* 005f8b40 crt */
-#define DAT_006e6b30 (*(undefined4 *)((u8 *)&g.d_006e6b30))
-undefined4 __cdecl FUN_005f8b40(undefined4 param_1)
+#define DAT_006e6b30 (*(i32 *)((u8 *)&g.d_006e6b30))
+i32 __cdecl FUN_005f8b40(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = DAT_006e6b30;
   DAT_006e6b30 = param_1;
@@ -4615,9 +4615,9 @@ uint __cdecl _CrtMessageWindow(int param_1,int param_2,int param_3,char *param_4
   DWORD DVar2;
   size_t sVar3;
   char acStackY_14c [60];
-  undefined4 uStackY_50;
+  i32 uStackY_50;
   char *_Str;
-  undefined1 frame_[FRAME_OFF(4376)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(4376)] __attribute__((aligned(8)));  /* original stack frame */
   if ((param_5 == 0) &&
      (iVar1 = __CrtDbgReport(2,"dbgrpt.c",0x1da,0,"szUserMessage != NULL"), iVar1 == 1)) {
     __CrtDbgBreak();
@@ -4663,7 +4663,7 @@ uint __cdecl _CrtMessageWindow(int param_1,int param_2,int param_3,char *param_4
 void __stdcall FUN_005f9355(int param_1)
 
 {
-  __local_unwind2(*(undefined4 *)(param_1 + 0x18),*(undefined4 *)(param_1 + 0x1c));
+  __local_unwind2(*(i32 *)(param_1 + 0x18),*(i32 *)(param_1 + 0x1c));
   return;
 }
 
@@ -4680,7 +4680,7 @@ void __stdcall FUN_005f9355(int param_1)
 int __cdecl wcsncnt_005f9670(short *param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = param_2;
   for (local_8 = param_1; (local_c != 0 && (*local_8 != 0)); local_8 = local_8 + 1) {
@@ -4701,7 +4701,7 @@ int __cdecl wcsncnt_005f9670(short *param_1,int param_2)
 /* 005f9a70: written by hand in src/crt/locale.c */
 
 /* 005f9b30 crt */
-#define _DAT_0063aed8 (*(undefined4 *)((u8 *)&g.d_0063aed8))
+#define _DAT_0063aed8 (*(i32 *)((u8 *)&g.d_0063aed8))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -4720,7 +4720,7 @@ FILE * __cdecl __openfile(char *_Filename,char *_Mode,int _ShFlag,FILE *_File)
   bool bVar5;
   int iVar6;
   FILE *pFVar7;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = DAT_0063b274;
   bVar4 = false;
@@ -4873,8 +4873,8 @@ FILE * __cdecl __openfile(char *_Filename,char *_Mode,int _ShFlag,FILE *_File)
 FILE * __cdecl __getstream(void)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (FILE *)0x0;
   local_8 = 0;
@@ -4893,7 +4893,7 @@ LAB_005f9fab:
     }
     if (*(int *)(DAT_006e5694 + local_8 * 4) == 0) {
       uVar1 = __malloc_dbg(0x20,2,"stream.c",0x55);
-      *(undefined4 *)(DAT_006e5694 + local_8 * 4) = uVar1;
+      *(i32 *)(DAT_006e5694 + local_8 * 4) = uVar1;
       if (*(int *)(DAT_006e5694 + local_8 * 4) != 0) {
         local_c = *(FILE **)(DAT_006e5694 + local_8 * 4);
       }
@@ -4910,8 +4910,8 @@ LAB_005f9fab:
 #undef local_8
 
 /* 005fa010 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_8 (*(ulong *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
@@ -4927,7 +4927,7 @@ int __cdecl __close(int _FileHandle)
   HANDLE hObject;
   BOOL BVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((DAT_006e6b2c <= (uint)_FileHandle) ||
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -4954,7 +4954,7 @@ LAB_005fa099:
 LAB_005fa0c9:
   __free_osfhnd(_FileHandle);
   if (local_8 == 0) {
-    *(undefined1 *)
+    *(i8 *)
      (*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
      (_FileHandle & 0x1fU) * 8) = 0;
     iVar4 = 0;
@@ -5049,7 +5049,7 @@ int __cdecl __flush(FILE *_File)
 {
   uint _MaxCharCount;
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (((((byte)_File->_flag & 3) == 2) && ((_File->_flag & 0x108U) != 0)) &&
@@ -5099,7 +5099,7 @@ int __cdecl flsall(int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = 0;
@@ -5129,8 +5129,8 @@ int __cdecl flsall(int param_1)
 #undef local_8
 
 /* 005fa410 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
-#define local_1c (*(undefined * *)(frame_ + FRAME_OFF(4)))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
+#define local_1c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(16)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(24)))
 /* Library Function - Single Match
@@ -5145,7 +5145,7 @@ int __cdecl __flsbuf(int _Ch,FILE *_File)
   FILE *_File_00;
   int iVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((_File == (FILE *)0x0) &&
      (iVar2 = __CrtDbgReport(2,&DAT_0061e724,0x69,0,"str != NULL"), iVar2 == 1)) {
@@ -5199,7 +5199,7 @@ int __cdecl __flsbuf(int _Ch,FILE *_File)
           local_1c = &DAT_0063a420;
         }
         else {
-          local_1c = (undefined *)
+          local_1c = (i8 *)
                      (*(int *)((int)&DAT_006e69f0 + ((int)(uVar3 & 0xffffffe0) >> 3)) +
                      (uVar3 & 0x1f) * 8);
         }
@@ -5239,7 +5239,7 @@ int __cdecl __flsbuf(int _Ch,FILE *_File)
 void __cdecl write_char(int param_1,FILE *param_2,int *param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   param_2->_cnt = param_2->_cnt + -1;
   if (param_2->_cnt < 0) {
@@ -5266,7 +5266,7 @@ void __cdecl write_char(int param_1,FILE *param_2,int *param_3)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl write_multi_char(undefined4 param_1,int param_2,undefined4 param_3,int *param_4)
+void __cdecl write_multi_char(i32 param_1,int param_2,i32 param_3,int *param_4)
 
 {
   do {
@@ -5285,7 +5285,7 @@ void __cdecl write_multi_char(undefined4 param_1,int param_2,undefined4 param_3,
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl write_string(char *param_1,int param_2,undefined4 param_3,int *param_4)
+void __cdecl write_string(char *param_1,int param_2,i32 param_3,int *param_4)
 
 {
   do {
@@ -5305,11 +5305,11 @@ void __cdecl write_string(char *param_1,int param_2,undefined4 param_3,int *para
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl get_int_arg(int *param_1)
+i32 __cdecl get_int_arg(int *param_1)
 
 {
   *param_1 = *param_1 + 4;
-  return *(undefined4 *)(*param_1 + -4);
+  return *(i32 *)(*param_1 + -4);
 }
 
 /* 005fb590 crt */
@@ -5318,11 +5318,11 @@ undefined4 __cdecl get_int_arg(int *param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined8 __cdecl get_int64_arg(int *param_1)
+i64 __cdecl get_int64_arg(int *param_1)
 
 {
   *param_1 = *param_1 + 8;
-  return *(undefined8 *)(*param_1 + -8);
+  return *(i64 *)(*param_1 + -8);
 }
 
 /* 005fb5c0 crt */
@@ -5331,11 +5331,11 @@ undefined8 __cdecl get_int64_arg(int *param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl get_short_arg(int *param_1)
+i32 __cdecl get_short_arg(int *param_1)
 
 {
   *param_1 = *param_1 + 4;
-  return CONCAT22((short)((uint)*param_1 >> 0x10),*(undefined2 *)(*param_1 + -4));
+  return CONCAT22((short)((uint)*param_1 >> 0x10),*(i16 *)(*param_1 + -4));
 }
 
 /* 005fb5e0 crt */
@@ -5354,7 +5354,7 @@ int __stdcall __allmul(int param_1,int param_2,int param_3,int param_4)
 }
 
 /* 005fb620 crt */
-#define _DAT_0063aed8 (*(undefined4 *)((u8 *)&g.d_0063aed8))
+#define _DAT_0063aed8 (*(i32 *)((u8 *)&g.d_0063aed8))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
@@ -5367,8 +5367,8 @@ int __cdecl __stbuf(FILE *_File)
 {
   code *pcVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((_File == (FILE *)0x0) &&
      (iVar2 = __CrtDbgReport(2,"_sftbuf.c",0x41,0,"str != NULL"), iVar2 == 1)) {
@@ -5394,7 +5394,7 @@ int __cdecl __stbuf(FILE *_File)
     if ((_File->_flag & 0x10cU) == 0) {
       if (*(int *)(&DAT_0063a2b0 + local_c * 4) == 0) {
         uVar3 = __malloc_dbg(0x1000,2,"_sftbuf.c",0x5e);
-        *(undefined4 *)(&DAT_0063a2b0 + local_c * 4) = uVar3;
+        *(i32 *)(&DAT_0063a2b0 + local_c * 4) = uVar3;
         if (*(int *)(&DAT_0063a2b0 + local_c * 4) == 0) {
           return 0;
         }
@@ -5449,8 +5449,8 @@ void __cdecl __ftbuf(int _Flag,FILE *_File)
 }
 
 /* 005fb830 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_20 (*(char (*)[4])(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -5468,7 +5468,7 @@ int __cdecl __read(int _FileHandle,void *_DstBuf,uint _MaxCharCount)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((uint)_FileHandle < DAT_006e6b2c) &&
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -5485,14 +5485,14 @@ int __cdecl __read(int _FileHandle,void *_DstBuf,uint _MaxCharCount)
                      (_FileHandle & 0x1fU) * 8) & 0x48) != 0) &&
          (*(char *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 5 +
                    (_FileHandle & 0x1fU) * 8) != '\n')) {
-        *(undefined1 *)_DstBuf =
-             *(undefined1 *)
+        *(i8 *)_DstBuf =
+             *(i8 *)
               (*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 5 +
               (_FileHandle & 0x1fU) * 8);
         local_18 = (void *)((int)_DstBuf + 1);
         local_1c = 1;
         _MaxCharCount = _MaxCharCount - 1;
-        *(undefined1 *)
+        *(i8 *)
          (*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 5 +
          (_FileHandle & 0x1fU) * 8) = 10;
       }
@@ -5633,7 +5633,7 @@ int __cdecl __read(int _FileHandle,void *_DstBuf,uint _MaxCharCount)
 
 /* 005fbcd0 crt */
 #define DAT_00639f18 (*(ulong *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_424 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_41c (*(DWORD *)(frame_ + FRAME_OFF(12)))
@@ -5652,7 +5652,7 @@ int __cdecl __write(int _FileHandle,void *_Buf,uint _MaxCharCount)
 {
   char cVar1;
   BOOL BVar2;
-  undefined1 frame_[FRAME_OFF(1064)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1064)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((uint)_FileHandle < DAT_006e6b2c) &&
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -5767,7 +5767,7 @@ int __cdecl __write(int _FileHandle,void *_Buf,uint _MaxCharCount)
 void __cdecl __dosmaperr(ulong param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   DAT_00639f18 = param_1;
   local_8 = 0;
@@ -5800,7 +5800,7 @@ void __cdecl __dosmaperr(ulong param_1)
 /* 005fc160: written by hand in src/crt/startup.c */
 
 /* 005fc490 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __ioterm
@@ -5810,7 +5810,7 @@ void __cdecl __dosmaperr(ulong param_1)
 void __cdecl __ioterm(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x40; local_8 = local_8 + 1) {
     if ((&DAT_006e69f0)[local_8] != 0) {
@@ -5823,7 +5823,7 @@ void __cdecl __ioterm(void)
 #undef local_8
 
 /* 005fc500 crt */
-#define _DAT_0063aed8 (*(undefined4 *)((u8 *)&g.d_0063aed8))
+#define _DAT_0063aed8 (*(i32 *)((u8 *)&g.d_0063aed8))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
     __getbuf
@@ -5873,11 +5873,11 @@ int __cdecl FUN_005fc5c0(int param_1)
 /* 005fc5e0: written by hand in src/crt/locale.c */
 
 /* 005fc720 crt */
-#define DAT_006e54a0 (*(undefined4 *)((u8 *)&g.d_006e54a0))
-undefined4 __cdecl FUN_005fc720(undefined4 param_1)
+#define DAT_006e54a0 (*(i32 *)((u8 *)&g.d_006e54a0))
+i32 __cdecl FUN_005fc720(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = DAT_006e54a0;
   DAT_006e54a0 = param_1;
@@ -5886,8 +5886,8 @@ undefined4 __cdecl FUN_005fc720(undefined4 param_1)
 #undef DAT_006e54a0
 
 /* 005fc750 crt */
-#define DAT_006e54a0 (*(undefined4 *)((u8 *)&g.d_006e54a0))
-undefined4 __cdecl FUN_005fc750(void)
+#define DAT_006e54a0 (*(i32 *)((u8 *)&g.d_006e54a0))
+i32 __cdecl FUN_005fc750(void)
 
 {
   return DAT_006e54a0;
@@ -5914,16 +5914,16 @@ int __cdecl __callnewh(size_t _Size)
 #undef DAT_006e54a0
 
 /* 005fc7b0 crt */
-#define DAT_0063a428 (*(undefined4 *)((u8 *)&g.d_0063a428))
+#define DAT_0063a428 (*(i32 *)((u8 *)&g.d_0063a428))
 /* Library Function - Single Match
     __malloc_base
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __malloc_base(undefined4 param_1)
+i32 __cdecl __malloc_base(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = __nh_malloc_base(param_1,DAT_0063a428);
   return uVar1;
@@ -5937,11 +5937,11 @@ undefined4 __cdecl __malloc_base(undefined4 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __nh_malloc_base(uint param_1,int param_2)
+i32 __cdecl __nh_malloc_base(uint param_1,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 < 0xffffffe1) {
     if (param_1 == 0) {
@@ -5990,7 +5990,7 @@ LPVOID __cdecl __heap_alloc_base(int param_1)
 #undef DAT_0063ac54
 
 /* 005fc8f0 crt */
-undefined4 __cdecl FUN_005fc8f0(void)
+i32 __cdecl FUN_005fc8f0(void)
 
 {
   return 1;
@@ -5998,10 +5998,10 @@ undefined4 __cdecl FUN_005fc8f0(void)
 
 /* 005fc910 crt */
 #define DAT_0063ac54 (*(uint *)((u8 *)&g.d_0063ac54))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(LPVOID *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     __expand_base
    
@@ -6011,7 +6011,7 @@ LPVOID __cdecl __expand_base(LPVOID param_1,uint param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 < 0xffffffe1) {
     if (param_2 == 0) {
@@ -6046,23 +6046,23 @@ LPVOID __cdecl __expand_base(LPVOID param_1,uint param_2)
 /* 005fc9e0 crt */
 #define DAT_0063a428 (*(int *)((u8 *)&g.d_0063a428))
 #define DAT_0063ac54 (*(uint *)((u8 *)&g.d_0063ac54))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(byte * *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(LPVOID *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     __realloc_base
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __realloc_base(LPVOID param_1,uint param_2)
+i32 __cdecl __realloc_base(LPVOID param_1,uint param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == (LPVOID)0x0) {
     uVar1 = __malloc_base(param_2);
@@ -6141,8 +6141,8 @@ undefined4 __cdecl __realloc_base(LPVOID param_1,uint param_2)
 /* 005fcbf0: written by hand in src/crt/heap.c */
 
 /* 005fcc60 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __heapchk
    
@@ -6154,7 +6154,7 @@ int __cdecl __heapchk(void)
   int iVar1;
   BOOL BVar2;
   DWORD DVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = -2;
   iVar1 = ___sbh_heap_check();
@@ -6221,7 +6221,7 @@ int __cdecl __heap_init(void)
 }
 
 /* 005fcd60 crt */
-#define local_8 (*(undefined ** *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i8 ** *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __heap_term
    
@@ -6230,14 +6230,14 @@ int __cdecl __heap_init(void)
 void __cdecl __heap_term(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = &PTR_LOOP_0063a438;
   do {
-    if (local_8[0x204] != (undefined *)0x0) {
+    if (local_8[0x204] != (i8 *)0x0) {
       VirtualFree(local_8[0x204],0,0x8000);
     }
-    local_8 = (undefined **)*local_8;
+    local_8 = (i8 **)*local_8;
   } while (local_8 != &PTR_LOOP_0063a438);
   HeapDestroy(DAT_006e69e4);
   return;
@@ -6245,8 +6245,8 @@ void __cdecl __heap_term(void)
 #undef local_8
 
 /* 005fcdc0 crt */
-#define DAT_0063ac54 (*(undefined4 *)((u8 *)&g.d_0063ac54))
-undefined4 __cdecl FUN_005fcdc0(void)
+#define DAT_0063ac54 (*(i32 *)((u8 *)&g.d_0063ac54))
+i32 __cdecl FUN_005fcdc0(void)
 
 {
   return DAT_0063ac54;
@@ -6275,64 +6275,64 @@ bool __cdecl __set_sbh_threshold(int param_1)
 
 /* 005fce30 crt */
 #define DAT_0063ac48 (*(int *)((u8 *)&g.d_0063ac48))
-#define local_10 (*(undefined ** *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i8 ** *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     ___sbh_new_region
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl ___sbh_new_region(void)
+i32 __cdecl ___sbh_new_region(void)
 
 {
   LPVOID pvVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (DAT_0063ac48 == 0) {
     local_10 = &PTR_LOOP_0063a438;
   }
   else {
     local_10 = HeapAlloc(DAT_006e69e4,0,0x814);
-    if (local_10 == (undefined **)0x0) {
+    if (local_10 == (i8 **)0x0) {
       return 0;
     }
   }
   local_8 = VirtualAlloc((LPVOID)0x0,0x400000,0x2000,4);
-  if (local_8 != (undefined4 *)0x0) {
+  if (local_8 != (i32 *)0x0) {
     pvVar1 = VirtualAlloc(local_8,0x10000,0x1000,4);
     if (pvVar1 != (LPVOID)0x0) {
       if (local_10 == &PTR_LOOP_0063a438) {
-        if (PTR_LOOP_0063a438 == (undefined *)0x0) {
-          PTR_LOOP_0063a438 = (undefined *)&PTR_LOOP_0063a438;
+        if (PTR_LOOP_0063a438 == (i8 *)0x0) {
+          PTR_LOOP_0063a438 = (i8 *)&PTR_LOOP_0063a438;
         }
-        if (PTR_LOOP_0063a43c == (undefined *)0x0) {
-          PTR_LOOP_0063a43c = (undefined *)&PTR_LOOP_0063a438;
+        if (PTR_LOOP_0063a43c == (i8 *)0x0) {
+          PTR_LOOP_0063a43c = (i8 *)&PTR_LOOP_0063a438;
         }
       }
       else {
-        *local_10 = (undefined *)&PTR_LOOP_0063a438;
+        *local_10 = (i8 *)&PTR_LOOP_0063a438;
         local_10[1] = PTR_LOOP_0063a43c;
-        PTR_LOOP_0063a43c = (undefined *)local_10;
-        *(undefined ***)local_10[1] = local_10;
+        PTR_LOOP_0063a43c = (i8 *)local_10;
+        *(i8 ***)local_10[1] = local_10;
       }
-      local_10[0x204] = (undefined *)local_8;
-      local_10[2] = (undefined *)0x0;
-      local_10[3] = (undefined *)0x10;
+      local_10[0x204] = (i8 *)local_8;
+      local_10[2] = (i8 *)0x0;
+      local_10[3] = (i8 *)0x10;
       for (local_c = 0; local_c < 0x400; local_c = local_c + 1) {
         if (local_c < 0x10) {
-          *(undefined1 *)(local_c + 0x10 + (int)local_10) = 0xf0;
+          *(i8 *)(local_c + 0x10 + (int)local_10) = 0xf0;
         }
         else {
-          *(undefined1 *)(local_c + 0x10 + (int)local_10) = 0xff;
+          *(i8 *)(local_c + 0x10 + (int)local_10) = 0xff;
         }
-        *(undefined1 *)(local_c + 0x410 + (int)local_10) = 0xf1;
+        *(i8 *)(local_c + 0x410 + (int)local_10) = 0xf1;
       }
       _memset(local_8,0,0x10000);
       for (; local_8 < local_10[0x204] + 0x10000; local_8 = local_8 + 0x400) {
         *local_8 = local_8 + 2;
         local_8[1] = 0xf0;
-        *(undefined1 *)(local_8 + 0x3e) = 0xff;
+        *(i8 *)(local_8 + 0x3e) = 0xff;
       }
       return local_10;
     }
@@ -6349,25 +6349,25 @@ undefined4 __cdecl ___sbh_new_region(void)
 #undef local_8
 
 /* 005fd040 crt */
-#define DAT_0063ac48 (*(undefined4 *)((u8 *)&g.d_0063ac48))
+#define DAT_0063ac48 (*(i32 *)((u8 *)&g.d_0063ac48))
 /* Library Function - Single Match
     ___sbh_release_region
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl ___sbh_release_region(undefined **param_1)
+void __cdecl ___sbh_release_region(i8 **param_1)
 
 {
   VirtualFree(param_1[0x204],0,0x8000);
-  if (param_1 == (undefined **)PTR_LOOP_0063ac4c) {
+  if (param_1 == (i8 **)PTR_LOOP_0063ac4c) {
     PTR_LOOP_0063ac4c = param_1[1];
   }
   if (param_1 == &PTR_LOOP_0063a438) {
     DAT_0063ac48 = 0;
   }
   else {
-    *(undefined **)param_1[1] = *param_1;
-    *(undefined **)(*param_1 + 4) = param_1[1];
+    *(i8 **)param_1[1] = *param_1;
+    *(i8 **)(*param_1 + 4) = param_1[1];
     HeapFree(DAT_006e69e4,0,param_1);
   }
   return;
@@ -6375,7 +6375,7 @@ void __cdecl ___sbh_release_region(undefined **param_1)
 #undef DAT_0063ac48
 
 /* 005fd0d0 crt */
-#define local_18 (*(undefined * *)(frame_ + FRAME_OFF(0)))
+#define local_18 (*(i8 * *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(12)))
@@ -6384,12 +6384,12 @@ void __cdecl ___sbh_release_region(undefined **param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined * __cdecl ___sbh_decommit_pages(int param_1)
+i8 * __cdecl ___sbh_decommit_pages(int param_1)
 
 {
-  undefined *puVar1;
+  i8 *puVar1;
   BOOL BVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = PTR_LOOP_0063a43c;
   do {
@@ -6412,7 +6412,7 @@ undefined * __cdecl ___sbh_decommit_pages(int param_1)
         }
         local_c = local_c + -1;
       }
-      puVar1 = *(undefined **)(local_18 + 4);
+      puVar1 = *(i8 **)(local_18 + 4);
       if ((local_14 != 0) && (local_18[0x10] == -1)) {
         local_10 = 1;
         for (local_c = local_18 + 0x11; (local_10 < 0x400 && (*local_c == -1));
@@ -6436,22 +6436,22 @@ undefined * __cdecl ___sbh_decommit_pages(int param_1)
 #undef local_c
 
 /* 005fd250 crt */
-#define local_c (*(undefined ** *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i8 ** *)(frame_ + FRAME_OFF(4)))
 /* Library Function - Single Match
     ___sbh_find_block
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl ___sbh_find_block(undefined *param_1,undefined4 *param_2,uint *param_3)
+i32 __cdecl ___sbh_find_block(i8 *param_1,i32 *param_2,uint *param_3)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = &PTR_LOOP_0063a438;
-  while (((local_c[0x204] == (undefined *)0x0 || (param_1 <= local_c[0x204])) ||
+  while (((local_c[0x204] == (i8 *)0x0 || (param_1 <= local_c[0x204])) ||
          (local_c[0x204] + 0x400000 <= param_1))) {
-    local_c = (undefined **)*local_c;
+    local_c = (i8 **)*local_c;
     if (local_c == &PTR_LOOP_0063a438) {
       return 0;
     }
@@ -6477,7 +6477,7 @@ int __cdecl ___sbh_free_block(int param_1,int param_2,char *param_3)
   iVar1 = param_2 - *(int *)(param_1 + 0x810) >> 0xc;
   *(char *)(iVar1 + 0x10 + param_1) = *(char *)(iVar1 + 0x10 + param_1) + *param_3;
   *param_3 = '\0';
-  *(undefined1 *)(iVar1 + 0x410 + param_1) = 0xf1;
+  *(i8 *)(iVar1 + 0x410 + param_1) = 0xf1;
   if ((*(char *)(iVar1 + 0x10 + param_1) == -0x10) &&
      (DAT_0063ac50 = DAT_0063ac50 + 1, DAT_0063ac50 == 0x20)) {
     iVar1 = ___sbh_decommit_pages(0x10);
@@ -6486,31 +6486,31 @@ int __cdecl ___sbh_free_block(int param_1,int param_2,char *param_3)
 }
 
 /* 005fd390 crt */
-#define local_18 (*(undefined ** *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined * *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined * *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
+#define local_18 (*(i8 ** *)(frame_ + FRAME_OFF(0)))
+#define local_14 (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     ___sbh_alloc_block
    
    Library: Visual Studio 1998 Debug */
 
-undefined * __cdecl ___sbh_alloc_block(uint param_1)
+i8 * __cdecl ___sbh_alloc_block(uint param_1)
 
 {
   int *piVar1;
   int iVar2;
-  undefined *puVar3;
-  undefined *puVar4;
-  undefined4 *puVar5;
-  undefined *puVar6;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar3;
+  i8 *puVar4;
+  i32 *puVar5;
+  i8 *puVar6;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_18 = (undefined **)PTR_LOOP_0063ac4c;
+  local_18 = (i8 **)PTR_LOOP_0063ac4c;
   do {
-    if (local_18[0x204] != (undefined *)0x0) {
+    if (local_18[0x204] != (i8 *)0x0) {
       for (local_10 = local_18[2]; (int)local_10 < 0x400;
-          local_10 = (undefined *)((int)local_10 + 1)) {
+          local_10 = (i8 *)((int)local_10 + 1)) {
         if (((param_1 <= *(byte *)((int)local_10 + 0x10 + (int)local_18)) &&
             (*(char *)((int)local_10 + 0x10 + (int)local_18) != -1)) &&
            (param_1 < *(byte *)((int)local_10 + 0x410 + (int)local_18))) {
@@ -6518,17 +6518,17 @@ undefined * __cdecl ___sbh_alloc_block(uint param_1)
                             ((int)local_18[0x204] + (int)local_10 * 0x1000,
                              (uint)*(byte *)((int)local_10 + 0x10 + (int)local_18),param_1);
           if (iVar2 != 0) {
-            PTR_LOOP_0063ac4c = (undefined *)local_18;
+            PTR_LOOP_0063ac4c = (i8 *)local_18;
             *(char *)((int)local_10 + 0x10 + (int)local_18) =
                  *(char *)((int)local_10 + 0x10 + (int)local_18) - (char)param_1;
             local_18[2] = local_10;
-            return (undefined *)iVar2;
+            return (i8 *)iVar2;
           }
           *(char *)((int)local_10 + 0x410 + (int)local_18) = (char)param_1;
         }
       }
-      for (local_10 = (undefined *)0x0; (int)local_10 < (int)local_18[2];
-          local_10 = (undefined *)((int)local_10 + 1)) {
+      for (local_10 = (i8 *)0x0; (int)local_10 < (int)local_18[2];
+          local_10 = (i8 *)((int)local_10 + 1)) {
         if (((param_1 <= *(byte *)((int)local_10 + 0x10 + (int)local_18)) &&
             (*(char *)((int)local_10 + 0x10 + (int)local_18) != -1)) &&
            (param_1 < *(byte *)((int)local_10 + 0x410 + (int)local_18))) {
@@ -6536,39 +6536,39 @@ undefined * __cdecl ___sbh_alloc_block(uint param_1)
                             ((int)local_18[0x204] + (int)local_10 * 0x1000,
                              (uint)*(byte *)((int)local_10 + 0x10 + (int)local_18),param_1);
           if (iVar2 != 0) {
-            PTR_LOOP_0063ac4c = (undefined *)local_18;
+            PTR_LOOP_0063ac4c = (i8 *)local_18;
             *(char *)((int)local_10 + 0x10 + (int)local_18) =
                  *(char *)((int)local_10 + 0x10 + (int)local_18) - (char)param_1;
             local_18[2] = local_10;
-            return (undefined *)iVar2;
+            return (i8 *)iVar2;
           }
           *(char *)((int)local_10 + 0x410 + (int)local_18) = (char)param_1;
         }
       }
     }
-    local_18 = (undefined **)*local_18;
-  } while (local_18 != (undefined **)PTR_LOOP_0063ac4c);
+    local_18 = (i8 **)*local_18;
+  } while (local_18 != (i8 **)PTR_LOOP_0063ac4c);
   local_18 = &PTR_LOOP_0063a438;
-  while ((local_18[0x204] == (undefined *)0x0 || (local_18[3] == (undefined *)0xffffffff))) {
-    local_18 = (undefined **)*local_18;
+  while ((local_18[0x204] == (i8 *)0x0 || (local_18[3] == (i8 *)0xffffffff))) {
+    local_18 = (i8 **)*local_18;
     if (local_18 == &PTR_LOOP_0063a438) {
-      puVar6 = (undefined *)___sbh_new_region();
-      if (puVar6 != (undefined *)0x0) {
+      puVar6 = (i8 *)___sbh_new_region();
+      if (puVar6 != (i8 *)0x0) {
         piVar1 = *(int **)(puVar6 + 0x810);
         *(char *)(piVar1 + 2) = (char)param_1;
         PTR_LOOP_0063ac4c = puVar6;
         *piVar1 = (int)piVar1 + param_1 + 8;
         piVar1[1] = 0xf0 - param_1;
         puVar6[0x10] = puVar6[0x10] - (char)param_1;
-        return (undefined *)(*(int *)(puVar6 + 0x810) + 0x100);
+        return (i8 *)(*(int *)(puVar6 + 0x810) + 0x100);
       }
-      return (undefined *)0;
+      return (i8 *)0;
     }
   }
   puVar6 = local_18[3];
   puVar3 = puVar6 + 0x10;
   if (0x3ff < (int)puVar3) {
-    puVar3 = (undefined *)0x400;
+    puVar3 = (i8 *)0x400;
   }
   do {
     local_10 = puVar6 + 1;
@@ -6582,17 +6582,17 @@ undefined * __cdecl ___sbh_alloc_block(uint param_1)
                         ((int)local_10 - (int)local_18[3]) * 0x1000,0x1000,4);
   if (puVar3 + (int)puVar6 * 0x1000 == puVar4) {
     local_14 = local_18[3];
-    local_8 = (undefined4 *)(local_18[0x204] + (int)local_14 * 0x1000);
+    local_8 = (i32 *)(local_18[0x204] + (int)local_14 * 0x1000);
     for (; (int)local_14 < (int)local_10; local_14 = local_14 + 1) {
       _memset(local_8,0x1000,0);
       *local_8 = local_8 + 2;
       local_8[1] = 0xf0;
-      *(undefined1 *)(local_8 + 0x3e) = 0xff;
+      *(i8 *)(local_8 + 0x3e) = 0xff;
       (local_14 + 0x10)[(int)local_18] = 0xf0;
       (local_14 + 0x410)[(int)local_18] = 0xf1;
       local_8 = local_8 + 0x400;
     }
-    PTR_LOOP_0063ac4c = (undefined *)local_18;
+    PTR_LOOP_0063ac4c = (i8 *)local_18;
     for (; ((int)local_10 < 0x400 && ((local_10 + 0x10)[(int)local_18] != -1));
         local_10 = local_10 + 1) {
     }
@@ -6601,18 +6601,18 @@ undefined * __cdecl ___sbh_alloc_block(uint param_1)
       local_18[3] = local_10;
     }
     else {
-      local_18[3] = (undefined *)0xffffffff;
+      local_18[3] = (i8 *)0xffffffff;
     }
-    puVar5 = (undefined4 *)(local_18[0x204] + (int)puVar6 * 0x1000);
+    puVar5 = (i32 *)(local_18[0x204] + (int)puVar6 * 0x1000);
     *(char *)(puVar5 + 2) = (char)param_1;
     local_18[2] = puVar6;
     (puVar6 + 0x10)[(int)local_18] = (puVar6 + 0x10)[(int)local_18] - (char)param_1;
-    *puVar5 = (undefined *)((int)puVar5 + param_1 + 8);
+    *puVar5 = (i8 *)((int)puVar5 + param_1 + 8);
     puVar5[1] = puVar5[1] - param_1;
     puVar6 = local_18[0x204] + (int)puVar6 * 0x1000 + 0x100;
   }
   else {
-    puVar6 = (undefined *)0x0;
+    puVar6 = (i8 *)0x0;
   }
   return puVar6;
 }
@@ -6635,7 +6635,7 @@ int __cdecl ___sbh_alloc_block_from_page(int *param_1,uint param_2,uint param_3)
 {
   byte *pbVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   pbVar1 = (byte *)*param_1;
   if ((uint)param_1[1] < param_3) {
@@ -6729,7 +6729,7 @@ int __cdecl ___sbh_alloc_block_from_page(int *param_1,uint param_2,uint param_3)
 
 /* 005fdb60 crt */
 #define local_18 (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(byte * *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
@@ -6737,12 +6737,12 @@ int __cdecl ___sbh_alloc_block_from_page(int *param_1,uint param_2,uint param_3)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl ___sbh_resize_block(int param_1,undefined4 *param_2,byte *param_3,uint param_4)
+i32 __cdecl ___sbh_resize_block(int param_1,i32 *param_2,byte *param_3,uint param_4)
 
 {
   byte bVar1;
   uint uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   bVar1 = *param_3;
@@ -6752,7 +6752,7 @@ undefined4 __cdecl ___sbh_resize_block(int param_1,undefined4 *param_2,byte *par
     *(byte *)(((int)param_2 - *(int *)(param_1 + 0x810) >> 0xc) + 0x10 + param_1) =
          (*(char *)(((int)param_2 - *(int *)(param_1 + 0x810) >> 0xc) + 0x10 + param_1) -
          (byte)param_4) + bVar1;
-    *(undefined1 *)(((int)param_2 - *(int *)(param_1 + 0x810) >> 0xc) + 0x410 + param_1) = 0xf1;
+    *(i8 *)(((int)param_2 - *(int *)(param_1 + 0x810) >> 0xc) + 0x410 + param_1) = 0xf1;
     local_14 = 1;
   }
   else if ((uVar2 < param_4) && (param_3 + param_4 <= param_2 + 0x3e)) {
@@ -6793,10 +6793,10 @@ undefined4 __cdecl ___sbh_resize_block(int param_1,undefined4 *param_2,byte *par
 #define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(undefined ** *)(frame_ + FRAME_OFF(16)))
+#define local_20 (*(i8 ** *)(frame_ + FRAME_OFF(16)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(undefined * *)(frame_ + FRAME_OFF(28)))
+#define local_14 (*(i8 * *)(frame_ + FRAME_OFF(28)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(40)))
@@ -6805,22 +6805,22 @@ undefined4 __cdecl ___sbh_resize_block(int param_1,undefined4 *param_2,byte *par
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl ___sbh_heap_check(void)
+i32 __cdecl ___sbh_heap_check(void)
 
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   local_20 = &PTR_LOOP_0063a438;
   do {
-    if (local_20 == (undefined **)PTR_LOOP_0063ac4c) {
+    if (local_20 == (i8 **)PTR_LOOP_0063ac4c) {
       local_c = local_c + 1;
     }
-    if (local_20[0x204] != (undefined *)0x0) {
-      local_14 = (undefined *)0x0;
+    if (local_20[0x204] != (i8 *)0x0) {
+      local_14 = (i8 *)0x0;
       local_2c = 0;
       local_8 = (int *)local_20[0x204];
       for (; (int)local_14 < 0x400; local_14 = local_14 + 1) {
@@ -6883,7 +6883,7 @@ undefined4 __cdecl ___sbh_heap_check(void)
         local_8 = local_8 + 0x400;
       }
     }
-    local_20 = (undefined **)*local_20;
+    local_20 = (i8 **)*local_20;
     if (local_20 == &PTR_LOOP_0063a438) {
       if (local_c == 0) {
         uVar3 = 0xfffffff7;
@@ -6907,8 +6907,8 @@ undefined4 __cdecl ___sbh_heap_check(void)
 #undef local_8
 
 /* 005fdf90 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_8 (*(ulong *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
@@ -6921,7 +6921,7 @@ long __cdecl __lseek(int _FileHandle,long _Offset,int _Origin)
 {
   DWORD DVar1;
   HANDLE hFile;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((uint)_FileHandle < DAT_006e6b2c) &&
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -6964,7 +6964,7 @@ long __cdecl __lseek(int _FileHandle,long _Offset,int _Origin)
 #undef local_8
 
 /* 005fe0b0 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     ___initstdio
@@ -6974,7 +6974,7 @@ long __cdecl __lseek(int _FileHandle,long _Offset,int _Origin)
 void __cdecl ___initstdio(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (DAT_006e69e0 == 0) {
     DAT_006e69e0 = 0x200;
@@ -6991,14 +6991,14 @@ void __cdecl ___initstdio(void)
     }
   }
   for (local_8 = 0; (int)local_8 < 0x14; local_8 = local_8 + 1) {
-    *(undefined ***)(DAT_006e5694 + local_8 * 4) = &PTR_DAT_0063ac58 + local_8 * 8;
+    *(i8 ***)(DAT_006e5694 + local_8 * 4) = &PTR_DAT_0063ac58 + local_8 * 8;
   }
   for (local_8 = 0; (int)local_8 < 3; local_8 = local_8 + 1) {
     if ((*(int *)(*(int *)((int)&DAT_006e69f0 + ((int)(local_8 & 0xffffffe0) >> 3)) +
                  (local_8 & 0x1f) * 8) == -1) ||
        (*(int *)(*(int *)((int)&DAT_006e69f0 + ((int)(local_8 & 0xffffffe0) >> 3)) +
                 (local_8 & 0x1f) * 8) == 0)) {
-      *(undefined4 *)(&DAT_0063ac68 + local_8 * 0x20) = 0xffffffff;
+      *(i32 *)(&DAT_0063ac68 + local_8 * 0x20) = 0xffffffff;
     }
   }
   return;
@@ -7038,7 +7038,7 @@ void __cdecl __setdefaultprecision(void)
 }
 
 /* 005fe260 crt */
-#define _DAT_0061e818 (*(undefined8 *)((u8 *)&g.d_0061e818))
+#define _DAT_0061e818 (*(i64 *)((u8 *)&g.d_0061e818))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
     __ms_p5_test_fdiv
@@ -7058,13 +7058,13 @@ bool __cdecl __ms_p5_test_fdiv(void)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __ms_p5_mp_test_fdiv(void)
+i32 __cdecl __ms_p5_mp_test_fdiv(void)
 
 {
   HMODULE hModule;
   FARPROC pFVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   
   hModule = GetModuleHandleA("KERNEL32");
   if ((hModule != (HMODULE)0x0) &&
@@ -7089,7 +7089,7 @@ void __cdecl __forcdecpt(char *_Buf)
 {
   char cVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = _tolower((int)*_Buf);
   if (iVar2 != 0x65) {
@@ -7127,7 +7127,7 @@ void __cdecl __cropzeros(char *_Buf)
 
 {
   char *pcVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (; (*_Buf != '\0' && (DAT_0063a2a0 != *_Buf)); _Buf = _Buf + 1) {
   }
@@ -7154,7 +7154,7 @@ void __cdecl __cropzeros(char *_Buf)
 #undef local_8
 
 /* 005fe4c0 crt */
-#define _DAT_0061e848 (*(undefined8 *)((u8 *)&g.d_0061e848))
+#define _DAT_0061e848 (*(i64 *)((u8 *)&g.d_0061e848))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
     __positive
@@ -7169,9 +7169,9 @@ int __cdecl __positive(double *arg)
 #undef _DAT_0061e848
 
 /* 005fe500 crt */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __fassign
    
@@ -7180,16 +7180,16 @@ int __cdecl __positive(double *arg)
 void __cdecl __fassign(int flag,char *argument,char *number)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (flag == 0) {
     FUN_006032c0(&local_10,number);
-    *(undefined4 *)argument = local_10;
+    *(i32 *)argument = local_10;
   }
   else {
     FUN_00603240(&local_c,number);
-    *(undefined4 *)argument = local_c;
-    *(undefined4 *)(argument + 4) = local_8;
+    *(i32 *)argument = local_c;
+    *(i32 *)(argument + 4) = local_8;
   }
   return;
 }
@@ -7239,11 +7239,11 @@ int __cdecl __XcptFilter(ulong _ExceptionNum,_EXCEPTION_POINTERS *_ExceptionPtr)
 
 {
   code *pcVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   int *piVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   piVar4 = (int *)xcptlookup(_ExceptionNum);
   uVar3 = DAT_0063af90;
@@ -7264,7 +7264,7 @@ int __cdecl __XcptFilter(ulong _ExceptionNum,_EXCEPTION_POINTERS *_ExceptionPtr)
     if (piVar4[1] == 8) {
       for (local_14 = DAT_0063af80; uVar2 = DAT_0063af8c, local_14 < DAT_0063af84 + DAT_0063af80;
           local_14 = local_14 + 1) {
-        *(undefined4 *)(local_14 * 0xc + ADDR(0x63af10, ((u8 *)&g.d_0063af0c + 4))) = 0;
+        *(i32 *)(local_14 * 0xc + ADDR(0x63af10, ((u8 *)&g.d_0063af0c + 4))) = 0;
       }
       if (*piVar4 == -0x3fffff72) {
         DAT_0063af8c = 0x83;
@@ -7312,7 +7312,7 @@ int __cdecl __XcptFilter(ulong _ExceptionNum,_EXCEPTION_POINTERS *_ExceptionPtr)
 int * __cdecl xcptlookup(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = &DAT_0063af08;
   do {
@@ -7502,10 +7502,10 @@ int __cdecl __ismbbkana(uint _C)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl x_ismbbtype(undefined4 param_1,uint param_2,undefined4 param_3)
+i32 __cdecl x_ismbbtype(i32 param_1,uint param_2,i32 param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((byte)param_3 & (&DAT_0063afa1)[(byte)param_1]) == 0) {
     if (param_2 == 0) {
@@ -7537,7 +7537,7 @@ int __cdecl __setenvp(void)
 {
   size_t sVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   for (local_8 = DAT_00639fc0; *local_8 != '\0'; local_8 = local_8 + sVar1 + 1) {
@@ -7575,8 +7575,8 @@ int __cdecl __setenvp(void)
 
 /* 005ff110 crt */
 #define DAT_006e6b3c (*(char * *)((u8 *)&g.d_006e6b3c))
-#define _DAT_00639f30 (*(undefined4 *)((u8 *)&g.d_00639f30))
-#define _DAT_00639f34 (*(undefined4 *)((u8 *)&g.d_00639f34))
+#define _DAT_00639f30 (*(i32 *)((u8 *)&g.d_00639f30))
+#define _DAT_00639f34 (*(i32 *)((u8 *)&g.d_00639f34))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
@@ -7590,7 +7590,7 @@ int __cdecl __setenvp(void)
 int __cdecl __setargv(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   GetModuleFileNameA((HMODULE)0x0,&DAT_006e54a8,0x104);
   DAT_00639f4c = &DAT_006e54a8;
@@ -7627,19 +7627,19 @@ int __cdecl __setargv(void)
    Library: Visual Studio 1998 Debug */
 
 void __cdecl
-parse_cmdline(byte *param_1,undefined4 *param_2,byte *param_3,int *param_4,int *param_5)
+parse_cmdline(byte *param_1,i32 *param_2,byte *param_3,int *param_4,int *param_5)
 
 {
   byte *pbVar1;
   byte bVar2;
   bool bVar3;
   bool bVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   *param_5 = 0;
   *param_4 = 1;
   local_8 = param_1;
-  if (param_2 != (undefined4 *)0x0) {
+  if (param_2 != (i32 *)0x0) {
     *param_2 = param_3;
     param_2 = param_2 + 1;
   }
@@ -7704,7 +7704,7 @@ parse_cmdline(byte *param_1,undefined4 *param_2,byte *param_3,int *param_4,int *
       }
     }
     if (*local_8 == 0) break;
-    if (param_2 != (undefined4 *)0x0) {
+    if (param_2 != (i32 *)0x0) {
       *param_2 = param_3;
       param_2 = param_2 + 1;
     }
@@ -7771,7 +7771,7 @@ parse_cmdline(byte *param_1,undefined4 *param_2,byte *param_3,int *param_4,int *
     }
     *param_5 = *param_5 + 1;
   }
-  if (param_2 != (undefined4 *)0x0) {
+  if (param_2 != (i32 *)0x0) {
     *param_2 = 0;
   }
   *param_4 = *param_4 + 1;
@@ -7800,7 +7800,7 @@ LPVOID __cdecl ___crtGetEnvironmentStringsA(void)
   int iVar3;
   int cbMultiByte;
   LPSTR pCVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = (LPWCH)0x0;
   local_1c = (LPCH)0x0;
@@ -7887,7 +7887,7 @@ LPVOID __cdecl ___crtGetEnvironmentStringsA(void)
 
 /* 005ffdf0 crt */
 #define DAT_0063a088 (*(UINT *)((u8 *)&g.d_0063a088))
-#define DAT_0063b0bc (*(undefined4 *)((u8 *)&g.d_0063b0bc))
+#define DAT_0063b0bc (*(i32 *)((u8 *)&g.d_0063b0bc))
 /* Library Function - Single Match
     _getSystemCP
    
@@ -7920,10 +7920,10 @@ UINT __cdecl getSystemCP(UINT param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl _CPtoLCID(undefined4 param_1)
+i32 __cdecl _CPtoLCID(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   switch(param_1) {
   case 0x3a4:
@@ -7945,8 +7945,8 @@ undefined4 __cdecl _CPtoLCID(undefined4 param_1)
 }
 
 /* 005fff20 crt */
-#define DAT_0063b0a4 (*(undefined4 *)((u8 *)&g.d_0063b0a4))
-#define DAT_0063b0a8 (*(undefined4 *)((u8 *)&g.d_0063b0a8))
+#define DAT_0063b0a4 (*(i32 *)((u8 *)&g.d_0063b0a4))
+#define DAT_0063b0a8 (*(i32 *)((u8 *)&g.d_0063b0a8))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     _setSBCS
@@ -7956,7 +7956,7 @@ undefined4 __cdecl _CPtoLCID(undefined4 param_1)
 void __cdecl setSBCS(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x101; local_8 = local_8 + 1) {
     (&DAT_0063afa0)[local_8] = 0;
@@ -7964,7 +7964,7 @@ void __cdecl setSBCS(void)
   DAT_0063b0a4 = 0;
   DAT_0063b0a8 = 0;
   for (local_8 = 0; local_8 < 6; local_8 = local_8 + 1) {
-    *(undefined2 *)(&DAT_0063b0b0 + local_8 * 2) = 0;
+    *(i16 *)(&DAT_0063b0b0 + local_8 * 2) = 0;
   }
   return;
 }
@@ -7973,8 +7973,8 @@ void __cdecl setSBCS(void)
 #undef local_8
 
 /* 005fffa0 crt */
-#define DAT_0063b0a4 (*(undefined4 *)((u8 *)&g.d_0063b0a4))
-undefined4 __cdecl FUN_005fffa0(void)
+#define DAT_0063b0a4 (*(i32 *)((u8 *)&g.d_0063b0a4))
+i32 __cdecl FUN_005fffa0(void)
 
 {
   return DAT_0063b0a4;
@@ -8037,7 +8037,7 @@ void __cdecl __NMSG_WRITE(int param_1)
   DWORD DVar4;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  undefined1 frame_[FRAME_OFF(440)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(440)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_c = 0; (local_c < 0x12 && (*(int *)(&DAT_0063b1b8 + local_c * 8) != param_1));
       local_c = local_c + 1) {
@@ -8103,7 +8103,7 @@ wchar_t * __cdecl __GET_RTERRMSG(int param_1)
 
 {
   wchar_t *pwVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; (local_8 < 0x12 && (*(int *)(&DAT_0063b1b8 + local_8 * 8) != param_1));
       local_8 = local_8 + 1) {
@@ -8138,22 +8138,22 @@ void __cdecl _abort(void)
 /* 00600430: written by hand in src/crt/startup.c */
 
 /* 00600610 crt */
-#define DAT_0063b24c (*(undefined4 *)((u8 *)&g.d_0063b24c))
-#define DAT_0063b250 (*(undefined4 *)((u8 *)&g.d_0063b250))
+#define DAT_0063b24c (*(i32 *)((u8 *)&g.d_0063b24c))
+#define DAT_0063b250 (*(i32 *)((u8 *)&g.d_0063b250))
 #define local_10 (*(code * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     _ctrlevent_capture@4
    
    Library: Visual Studio 1998 Debug
    __stdcall ctrlevent_capture,4 */
 
-undefined4 __stdcall ctrlevent_capture(int param_1)
+i32 __stdcall ctrlevent_capture(int param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     local_c = &DAT_0063b24c;
@@ -8184,16 +8184,16 @@ undefined4 __stdcall ctrlevent_capture(int param_1)
 #undef local_8
 
 /* 006006a0 crt */
-#define DAT_0063af90 (*(undefined4 *)((u8 *)&g.d_0063af90))
-#define DAT_0063b24c (*(undefined4 *)((u8 *)&g.d_0063b24c))
-#define DAT_0063b250 (*(undefined4 *)((u8 *)&g.d_0063b250))
-#define DAT_0063b254 (*(undefined4 *)((u8 *)&g.d_0063b254))
-#define DAT_0063b258 (*(undefined4 *)((u8 *)&g.d_0063b258))
+#define DAT_0063af90 (*(i32 *)((u8 *)&g.d_0063af90))
+#define DAT_0063b24c (*(i32 *)((u8 *)&g.d_0063b24c))
+#define DAT_0063b250 (*(i32 *)((u8 *)&g.d_0063b250))
+#define DAT_0063b254 (*(i32 *)((u8 *)&g.d_0063b254))
+#define DAT_0063b258 (*(i32 *)((u8 *)&g.d_0063b258))
 #define local_18 (*(code * *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_14 (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     _raise
    
@@ -8203,7 +8203,7 @@ int __cdecl _raise(int _SigNum)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   switch(_SigNum) {
   case 2:
@@ -8216,7 +8216,7 @@ int __cdecl _raise(int _SigNum)
   case 8:
   case 0xb:
     iVar1 = siglookup(_SigNum);
-    local_14 = (undefined4 *)(iVar1 + 8);
+    local_14 = (i32 *)(iVar1 + 8);
     local_18 = (code *)*local_14;
     break;
   case 0xf:
@@ -8245,7 +8245,7 @@ int __cdecl _raise(int _SigNum)
     }
     if (_SigNum == 8) {
       for (local_c = DAT_0063af80; local_c < DAT_0063af84 + DAT_0063af80; local_c = local_c + 1) {
-        *(undefined4 *)(local_c * 0xc + ADDR(0x63af10, ((u8 *)&g.d_0063af0c + 4))) = 0;
+        *(i32 *)(local_c * 0xc + ADDR(0x63af10, ((u8 *)&g.d_0063af0c + 4))) = 0;
       }
     }
     else {
@@ -8280,16 +8280,16 @@ int __cdecl _raise(int _SigNum)
 #undef local_8
 
 /* 006008c0 crt */
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     _siglookup
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 * __cdecl siglookup(int param_1)
+i32 * __cdecl siglookup(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = &DAT_0063af08;
   do {
@@ -8297,7 +8297,7 @@ undefined4 * __cdecl siglookup(int param_1)
     local_8 = local_8 + 3;
   } while (local_8 < &DAT_0063af08 + DAT_0063af88 * 3);
   if (local_8[1] != param_1) {
-    local_8 = (undefined4 *)0x0;
+    local_8 = (i32 *)0x0;
   }
   return local_8;
 }
@@ -8315,7 +8315,7 @@ int __cdecl ___crtMessageBoxA(LPCSTR _LpText,LPCSTR _LpCaption,UINT _UType)
 {
   HMODULE hModule;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (DAT_0063b260 == (FARPROC)0x0) {
@@ -8376,7 +8376,7 @@ void __cdecl xtoa(uint param_1,char *param_2,uint param_3,int param_4)
   char cVar1;
   char *pcVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_2;
   if (param_4 != 0) {
@@ -8413,7 +8413,7 @@ void __cdecl xtoa(uint param_1,char *param_2,uint param_3,int param_4)
 #undef local_8
 
 /* 00600b30 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __ltoa
    
@@ -8422,7 +8422,7 @@ void __cdecl xtoa(uint param_1,char *param_2,uint param_3,int param_4)
 char * __cdecl __ltoa(long _Value,char *_Dest,int _Radix)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((_Radix == 10) && (_Value < 0)) {
     local_8 = 1;
@@ -8449,7 +8449,7 @@ char * __cdecl __ultoa(ulong _Value,char *_Dest,int _Radix)
 }
 
 /* 00600bc0 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __i64toa
    
@@ -8458,7 +8458,7 @@ char * __cdecl __ultoa(ulong _Value,char *_Dest,int _Radix)
 char * __cdecl __i64toa(longlong _Val,char *_DstBuf,int _Radix)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((_Radix == 10) && (_Val < 0x100000000)) && (_Val < 0)) {
     local_8 = 1;
@@ -8466,7 +8466,7 @@ char * __cdecl __i64toa(longlong _Val,char *_DstBuf,int _Radix)
   else {
     local_8 = 0;
   }
-  x64toa((undefined4)_Val,(*(undefined4 *)((char *)&_Val + 4)),_DstBuf,_Radix,local_8);
+  x64toa((i32)_Val,(*(i32 *)((char *)&_Val + 4)),_DstBuf,_Radix,local_8);
   return _DstBuf;
 }
 #undef local_8
@@ -8482,14 +8482,14 @@ char * __cdecl __i64toa(longlong _Val,char *_DstBuf,int _Radix)
 char * __cdecl __ui64toa(ulonglong _Val,char *_DstBuf,int _Radix)
 
 {
-  x64toa((undefined4)_Val,(*(undefined4 *)((char *)&_Val + 4)),_DstBuf,_Radix,0);
+  x64toa((i32)_Val,(*(i32 *)((char *)&_Val + 4)),_DstBuf,_Radix,0);
   return _DstBuf;
 }
 
 /* 00600d40: written by hand in src/crt/printf.c */
 
 /* 00600df0 crt */
-#define _DAT_0063aed8 (*(undefined4 *)((u8 *)&g.d_0063aed8))
+#define _DAT_0063aed8 (*(i32 *)((u8 *)&g.d_0063aed8))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
@@ -8502,7 +8502,7 @@ int __cdecl _setvbuf(FILE *_File,char *_Buf,int _Mode,size_t _Size)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   if ((_File == (FILE *)0x0) &&
@@ -8600,7 +8600,7 @@ int __cdecl _ValidateRead(void *param_1,uint param_2)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = IsBadReadPtr(param_1,param_2);
   local_8 = (uint)(BVar1 == 0);
@@ -8620,7 +8620,7 @@ int __cdecl _ValidateWrite(void *param_1,uint param_2)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = IsBadWritePtr(param_1,param_2);
   local_8 = (uint)(BVar1 == 0);
@@ -8639,7 +8639,7 @@ int __cdecl _ValidateExecute(code *param_1)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = IsBadCodePtr((FARPROC)param_1);
   local_8 = (uint)(BVar1 == 0);
@@ -8661,7 +8661,7 @@ int __cdecl __vsnprintf(char *_Dest,size_t _Count,char *_Format,va_list _Args)
 {
   code *pcVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (_Dest == (char *)0x0) {
     iVar2 = __CrtDbgReport(2,"vsprintf.c",0x5a,0,"string != NULL");
@@ -8704,11 +8704,11 @@ int __cdecl __vsnprintf(char *_Dest,size_t _Count,char *_Format,va_list _Args)
 /* 00601750: written by hand in src/crt/io.c */
 
 /* 00601cf0 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(int *)((u8 *)&g.d_006e6b2c))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __alloc_osfhnd
    
@@ -8717,7 +8717,7 @@ int __cdecl __vsnprintf(char *_Dest,size_t _Count,char *_Format,va_list _Args)
 int __cdecl __alloc_osfhnd(void)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = -1;
   local_10 = 0;
@@ -8726,21 +8726,21 @@ int __cdecl __alloc_osfhnd(void)
       return local_c;
     }
     if ((&DAT_006e69f0)[local_10] == 0) {
-      local_8 = (undefined4 *)__malloc_dbg(0x100,2,"osfinfo.c",0x79);
-      if (local_8 == (undefined4 *)0x0) {
+      local_8 = (i32 *)__malloc_dbg(0x100,2,"osfinfo.c",0x79);
+      if (local_8 == (i32 *)0x0) {
         return local_c;
       }
       (&DAT_006e69f0)[local_10] = local_8;
       DAT_006e6b2c = DAT_006e6b2c + 0x20;
-      for (; local_8 < (undefined4 *)((&DAT_006e69f0)[local_10] + 0x100); local_8 = local_8 + 2) {
-        *(undefined1 *)(local_8 + 1) = 0;
+      for (; local_8 < (i32 *)((&DAT_006e69f0)[local_10] + 0x100); local_8 = local_8 + 2) {
+        *(i8 *)(local_8 + 1) = 0;
         *local_8 = 0xffffffff;
-        *(undefined1 *)((int)local_8 + 5) = 10;
+        *(i8 *)((int)local_8 + 5) = 10;
       }
       return local_10 << 5;
     }
-    for (local_8 = (undefined4 *)(&DAT_006e69f0)[local_10];
-        local_8 < (undefined4 *)((&DAT_006e69f0)[local_10] + 0x100); local_8 = local_8 + 2) {
+    for (local_8 = (i32 *)(&DAT_006e69f0)[local_10];
+        local_8 < (i32 *)((&DAT_006e69f0)[local_10] + 0x100); local_8 = local_8 + 2) {
       if ((*(byte *)(local_8 + 1) & 1) == 0) {
         *local_8 = 0xffffffff;
         local_c = ((int)local_8 - (&DAT_006e69f0)[local_10] >> 3) + local_10 * 0x20;
@@ -8760,8 +8760,8 @@ int __cdecl __alloc_osfhnd(void)
 #undef local_8
 
 /* 00601e40 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 /* Library Function - Single Match
     __set_osfhnd
@@ -8804,8 +8804,8 @@ int __cdecl __set_osfhnd(int param_1,intptr_t param_2)
 #undef DAT_006e6b2c
 
 /* 00601f40 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 /* Library Function - Single Match
     __free_osfhnd
@@ -8833,7 +8833,7 @@ int __cdecl __free_osfhnd(int param_1)
         SetStdHandle(0xfffffff4,(HANDLE)0x0);
       }
     }
-    *(undefined4 *)
+    *(i32 *)
      (*(int *)((int)&DAT_006e69f0 + ((int)(param_1 & 0xffffffe0U) >> 3)) + (param_1 & 0x1fU) * 8) =
          0xffffffff;
     iVar1 = 0;
@@ -8850,8 +8850,8 @@ int __cdecl __free_osfhnd(int param_1)
 #undef DAT_006e6b2c
 
 /* 00602060 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 /* Library Function - Single Match
     __get_osfhandle
@@ -8882,8 +8882,8 @@ intptr_t __cdecl __get_osfhandle(int _FileHandle)
 #undef DAT_006e6b2c
 
 /* 006020e0 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define local_10 (*(byte *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __open_osfhandle
@@ -8895,7 +8895,7 @@ int __cdecl __open_osfhandle(intptr_t _OSFileHandle,int _Flags)
 {
   DWORD DVar1;
   uint uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   if ((_Flags & 8U) != 0) {
@@ -8937,7 +8937,7 @@ int __cdecl __open_osfhandle(intptr_t _OSFileHandle,int _Flags)
 
 /* 006021e0 crt */
 #define DAT_00639f18 (*(DWORD *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_8 (*(DWORD *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
@@ -8950,7 +8950,7 @@ int __cdecl __commit(int _FileHandle)
 {
   HANDLE hFile;
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((uint)_FileHandle < DAT_006e6b2c) &&
       ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -8979,7 +8979,7 @@ int __cdecl __commit(int _FileHandle)
 #undef local_8
 
 /* 006022c0 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 /* Library Function - Single Match
     __isatty
@@ -9105,8 +9105,8 @@ int __stdcall __aullrem(uint param_1,uint param_2,uint param_3,uint param_4)
 }
 
 /* 006024d0 crt */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __fcloseall
    
@@ -9116,7 +9116,7 @@ int __cdecl __fcloseall(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = 3; local_c < DAT_006e69e0; local_c = local_c + 1) {
@@ -9128,8 +9128,8 @@ int __cdecl __fcloseall(void)
         }
       }
       if (0x13 < local_c) {
-        __free_dbg(*(undefined4 *)(DAT_006e5694 + local_c * 4),2);
-        *(undefined4 *)(DAT_006e5694 + local_c * 4) = 0;
+        __free_dbg(*(i32 *)(DAT_006e5694 + local_c * 4),2);
+        *(i32 *)(DAT_006e5694 + local_c * 4) = 0;
       }
     }
   }
@@ -9139,7 +9139,7 @@ int __cdecl __fcloseall(void)
 #undef local_8
 
 /* 00602590 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __statusfp
    
@@ -9149,17 +9149,17 @@ uint __cdecl __statusfp(void)
 
 {
   uint uVar1;
-  undefined2 in_FPUStatusWord;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i16 in_FPUStatusWord;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT22((*(undefined2 *)((char *)&local_8 + 2)),in_FPUStatusWord);
+  local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),in_FPUStatusWord);
   uVar1 = __abstract_sw(local_8);
   return uVar1;
 }
 #undef local_8
 
 /* 006025c0 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __clearfp
    
@@ -9169,17 +9169,17 @@ uint __cdecl __clearfp(void)
 
 {
   uint uVar1;
-  undefined2 in_FPUStatusWord;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i16 in_FPUStatusWord;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT22((*(undefined2 *)((char *)&local_8 + 2)),in_FPUStatusWord);
+  local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),in_FPUStatusWord);
   uVar1 = __abstract_sw(local_8);
   return uVar1;
 }
 #undef local_8
 
 /* 006025f0 crt */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
 /* Library Function - Single Match
     __control87
    
@@ -9189,10 +9189,10 @@ uint __cdecl __control87(uint _NewValue,uint _Mask)
 
 {
   uint uVar1;
-  undefined2 in_FPUControlWord;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i16 in_FPUControlWord;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_14 = CONCAT22((*(undefined2 *)((char *)&local_14 + 2)),in_FPUControlWord);
+  local_14 = CONCAT22((*(i16 *)((char *)&local_14 + 2)),in_FPUControlWord);
   uVar1 = __abstract_cw(local_14);
   uVar1 = ~_Mask & uVar1 | _NewValue & _Mask;
   __hw_cw(uVar1);
@@ -9231,15 +9231,15 @@ void __cdecl __fpreset(void)
   __setdefaultprecision();
   if ((iVar1 != 0) && ((**(uint **)(iVar1 + 4) & 0x10008) != 0)) {
     iVar1 = *(int *)(iVar1 + 4);
-    *(undefined4 *)(iVar1 + 0x20) = 0;
-    *(undefined4 *)(iVar1 + 0x24) = 0xffff;
+    *(i32 *)(iVar1 + 0x20) = 0;
+    *(i32 *)(iVar1 + 0x24) = 0xffff;
   }
   return;
 }
 #undef DAT_0063af90
 
 /* 006026d0 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __abstract_cw
    
@@ -9249,7 +9249,7 @@ uint __cdecl __abstract_cw(uint param_1)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if ((param_1 & 1) != 0) {
@@ -9348,7 +9348,7 @@ ushort __cdecl __hw_cw(uint param_1)
 }
 
 /* 006029f0 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __abstract_sw
    
@@ -9357,7 +9357,7 @@ ushort __cdecl __hw_cw(uint param_1)
 uint __cdecl __abstract_sw(uint param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if ((param_1 & 1) != 0) {
@@ -9403,12 +9403,12 @@ void __cdecl __fptrap(void)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __ZeroTail(int param_1,int param_2)
+i32 __cdecl __ZeroTail(int param_1,int param_2)
 
 {
   uint uVar1;
   byte bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = (int)(param_2 + (param_2 >> 0x1f & 0x1fU)) >> 5;
   bVar2 = (byte)(param_2 >> 0x1f);
@@ -9428,9 +9428,9 @@ undefined4 __cdecl __ZeroTail(int param_1,int param_2)
 #undef local_8
 
 /* 00602b30 crt */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(16)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     __IncMan
    
@@ -9440,15 +9440,15 @@ int __cdecl __IncMan(int param_1,int param_2)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = (int)(param_2 + (param_2 >> 0x1f & 0x1fU)) >> 5;
   bVar1 = (byte)(param_2 >> 0x1f);
   local_8 = 0x1f - ((((byte)param_2 ^ bVar1) - bVar1 & 0x1f ^ bVar1) - bVar1);
-  local_14 = ___addl(*(undefined4 *)(param_1 + local_10 * 4),1 << (local_8 & 0x1f),
+  local_14 = ___addl(*(i32 *)(param_1 + local_10 * 4),1 << (local_8 & 0x1f),
                      local_10 * 4 + param_1);
   while ((local_10 = local_10 + -1, -1 < local_10 && (local_14 != 0))) {
-    local_14 = ___addl(*(undefined4 *)(param_1 + local_10 * 4),1,local_10 * 4 + param_1);
+    local_14 = ___addl(*(i32 *)(param_1 + local_10 * 4),1,local_10 * 4 + param_1);
   }
   return local_14;
 }
@@ -9457,21 +9457,21 @@ int __cdecl __IncMan(int param_1,int param_2)
 #undef local_8
 
 /* 00602bf0 crt */
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_c (*(undefined1 *)(frame_ + FRAME_OFF(20)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_c (*(i8 *)(frame_ + FRAME_OFF(20)))
 /* Library Function - Single Match
     __RoundMan
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __RoundMan(int param_1,int param_2)
+i32 __cdecl __RoundMan(int param_1,int param_2)
 
 {
   uint *puVar1;
   byte bVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = 0;
   local_14 = (int)(param_2 + (param_2 >> 0x1f & 0x1fU)) >> 5;
@@ -9486,7 +9486,7 @@ undefined4 __cdecl __RoundMan(int param_1,int param_2)
   puVar1 = (uint *)(param_1 + local_14 * 4);
   *puVar1 = *puVar1 & -1 << (local_c & 0x1f);
   while (local_14 = local_14 + 1, local_14 < 3) {
-    *(undefined4 *)(param_1 + local_14 * 4) = 0;
+    *(i32 *)(param_1 + local_14 * 4) = 0;
   }
   return local_1c;
 }
@@ -9496,17 +9496,17 @@ undefined4 __cdecl __RoundMan(int param_1,int param_2)
 
 /* 00602cd0 crt */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __CopyMan
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl __CopyMan(undefined4 *param_1,undefined4 *param_2)
+void __cdecl __CopyMan(i32 *param_1,i32 *param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_2;
   local_c = param_1;
@@ -9522,7 +9522,7 @@ void __cdecl __CopyMan(undefined4 *param_1,undefined4 *param_2)
 #undef local_8
 
 /* 00602d20 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
     __FillZeroMan
    
@@ -9531,10 +9531,10 @@ void __cdecl __CopyMan(undefined4 *param_1,undefined4 *param_2)
 void __cdecl __FillZeroMan(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 3; local_8 = local_8 + 1) {
-    *(undefined4 *)(param_1 + local_8 * 4) = 0;
+    *(i32 *)(param_1 + local_8 * 4) = 0;
   }
   return;
 }
@@ -9547,10 +9547,10 @@ void __cdecl __FillZeroMan(int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __IsZeroMan(int param_1)
+i32 __cdecl __IsZeroMan(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {
@@ -9565,9 +9565,9 @@ undefined4 __cdecl __IsZeroMan(int param_1)
 #undef local_8
 
 /* 00602db0 crt */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     __ShrMan
    
@@ -9579,7 +9579,7 @@ void __cdecl __ShrMan(int param_1,int param_2)
   uint *puVar1;
   uint uVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar3 = (int)(param_2 + (param_2 >> 0x1f & 0x1fU)) >> 5;
   local_8 = (byte)(param_2 >> 0x1f);
@@ -9595,10 +9595,10 @@ void __cdecl __ShrMan(int param_1,int param_2)
   }
   for (local_10 = 2; -1 < local_10; local_10 = local_10 + -1) {
     if (local_10 < iVar3) {
-      *(undefined4 *)(param_1 + local_10 * 4) = 0;
+      *(i32 *)(param_1 + local_10 * 4) = 0;
     }
     else {
-      *(undefined4 *)(param_1 + local_10 * 4) = *(undefined4 *)(param_1 + (local_10 - iVar3) * 4);
+      *(i32 *)(param_1 + local_10 * 4) = *(i32 *)(param_1 + (local_10 - iVar3) * 4);
     }
   }
   return;
@@ -9608,9 +9608,9 @@ void __cdecl __ShrMan(int param_1,int param_2)
 #undef local_8
 
 /* 00602ea0 crt */
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
@@ -9622,11 +9622,11 @@ void __cdecl __ShrMan(int param_1,int param_2)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl __ld12cvt(ushort *param_1,uint *param_2,int *param_3)
+i32 __cdecl __ld12cvt(ushort *param_1,uint *param_2,int *param_3)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (param_1[5] & 0x7fff) - 0x3fff;
   local_24 = param_1[5] & 0x8000;
@@ -9708,7 +9708,7 @@ undefined4 __cdecl __ld12cvt(ushort *param_1,uint *param_2,int *param_3)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00603110(undefined4 param_1,undefined4 param_2)
+void __cdecl FUN_00603110(i32 param_1,i32 param_2)
 
 {
   __ld12cvt(param_1,param_2,&DAT_0063b280);
@@ -9722,7 +9722,7 @@ void __cdecl FUN_00603110(undefined4 param_1,undefined4 param_2)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00603140(undefined4 param_1,undefined4 param_2)
+void __cdecl FUN_00603140(i32 param_1,i32 param_2)
 
 {
   __ld12cvt(param_1,param_2,&DAT_0063b298);
@@ -9740,10 +9740,10 @@ void __cdecl FUN_00603140(undefined4 param_1,undefined4 param_2)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_00603240(undefined4 param_1,char *param_2)
+void __cdecl FUN_00603240(i32 param_1,char *param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   ___strgtold12(&local_10,&local_14,param_2,0,0,0,0);
   FUN_00603110(&local_10,param_1);
@@ -9763,10 +9763,10 @@ void __cdecl FUN_00603240(undefined4 param_1,char *param_2)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl FUN_006032c0(undefined4 param_1,char *param_2)
+void __cdecl FUN_006032c0(i32 param_1,char *param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   ___strgtold12(&local_10,&local_14,param_2,0,0,0,0);
   FUN_00603140(&local_10,param_1);
@@ -9778,26 +9778,26 @@ void __cdecl FUN_006032c0(undefined4 param_1,char *param_2)
 /* 00603300: written by hand in src/crt/float.c */
 
 /* 006033e0 crt */
-#define _DAT_006e55d0 (*(undefined4 *)((u8 *)&g.d_006e55d0))
-#define _DAT_006e55d4 (*(undefined4 *)((u8 *)&g.d_006e55d4))
-#define _DAT_006e55d8 (*(undefined4 *)((u8 *)&g.d_006e55d8))
-#define _DAT_006e55dc (*(undefined4 *)((u8 *)&g.d_006e55dc))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define _DAT_006e55d0 (*(i32 *)((u8 *)&g.d_006e55d0))
+#define _DAT_006e55d4 (*(i32 *)((u8 *)&g.d_006e55d4))
+#define _DAT_006e55d8 (*(i32 *)((u8 *)&g.d_006e55d8))
+#define _DAT_006e55dc (*(i32 *)((u8 *)&g.d_006e55dc))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* Library Function - Single Match
     __fltout
    
    Library: Visual Studio 1998 Debug */
 
-undefined * __cdecl __fltout(undefined4 param_1,undefined4 param_2)
+i8 * __cdecl __fltout(i32 param_1,i32 param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[2] = {(u32)(uptr)param_1, (u32)(uptr)param_2};  /* the arguments, contiguous as on the original stack */
-#define param_1 (*(undefined4 *)&pargs_[0])
-#define param_2 (*(undefined4 *)&pargs_[1])
+#define param_1 (*(i32 *)&pargs_[0])
+#define param_2 (*(i32 *)&pargs_[1])
   
   ___dtold(&local_10,&param_1);
   _DAT_006e55d8 = FUN_006051a0(local_10,local_c,local_8,0x11,0,&DAT_006e55b0);
@@ -9831,7 +9831,7 @@ void __cdecl ___dtold(uint *param_1,uint *param_2)
   uint uVar2;
   ushort uVar3;
   uint uVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0x80000000;
   uVar4 = (*(ushort *)((int)param_2 + 6) & 0x7ff0) >> 4;
@@ -9842,7 +9842,7 @@ void __cdecl ___dtold(uint *param_1,uint *param_2)
     if (((param_2[1] & 0xfffff) == 0) && (uVar2 == 0)) {
       param_1[1] = 0;
       *param_1 = 0;
-      *(undefined2 *)(param_1 + 2) = 0;
+      *(i16 *)(param_1 + 2) = 0;
       return;
     }
     uVar3 = 0x3c01;
@@ -9879,7 +9879,7 @@ size_t __cdecl _wcslen(wchar_t *_Str)
 {
   wchar_t *pwVar1;
   wchar_t wVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = _Str;
   do {
@@ -9910,9 +9910,9 @@ void __cdecl ___tzset(void)
 #undef DAT_0063b36c
 
 /* 00603650 crt */
-#define DAT_0063b350 (*(undefined4 *)((u8 *)&g.d_0063b350))
-#define DAT_0063b360 (*(undefined4 *)((u8 *)&g.d_0063b360))
-#define DAT_006e55e0 (*(undefined4 *)((u8 *)&g.d_006e55e0))
+#define DAT_0063b350 (*(i32 *)((u8 *)&g.d_0063b350))
+#define DAT_0063b360 (*(i32 *)((u8 *)&g.d_0063b360))
+#define DAT_006e55e0 (*(i32 *)((u8 *)&g.d_006e55e0))
 #define DAT_006e562e (*(short *)((u8 *)&g.d_006e562e))
 #define DAT_006e5682 (*(short *)((u8 *)&g.d_006e5682))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(4)))
@@ -9930,10 +9930,10 @@ void __cdecl __tzset(void)
   int iVar3;
   size_t sVar4;
   long lVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   char *pcVar7;
-  undefined4 uVar8;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar8;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   DAT_006e55e0 = 0;
   DAT_0063b360 = 0xffffffff;
@@ -10023,7 +10023,7 @@ void __cdecl __tzset(void)
 /* 00603d20 crt */
 #define DAT_0063b350 (*(uint *)((u8 *)&g.d_0063b350))
 #define DAT_0063b360 (*(uint *)((u8 *)&g.d_0063b360))
-#define DAT_0063b36c (*(undefined4 *)((u8 *)&g.d_0063b36c))
+#define DAT_0063b36c (*(i32 *)((u8 *)&g.d_0063b36c))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
@@ -10038,7 +10038,7 @@ cvtdate(int param_1,int param_2,uint param_3,int param_4,int param_5,int param_6
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 1) {
     if ((param_3 & 3) == 0) {
@@ -10104,12 +10104,12 @@ cvtdate(int param_1,int param_2,uint param_3,int param_4,int param_5,int param_6
 
 /* 00603f30 crt */
 #define DAT_00639f18 (*(DWORD *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_1024 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_1020 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_101c (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_1008 (*(undefined1 (*)[4064])(frame_ + FRAME_OFF(32)))
+#define local_1008 (*(i8 (*)[4064])(frame_ + FRAME_OFF(32)))
 /* Library Function - Single Match
     __chsize
    
@@ -10125,8 +10125,8 @@ int __cdecl __chsize(int _FileHandle,long _Size)
   int iVar4;
   HANDLE hFile;
   BOOL BVar5;
-  undefined4 uStackY_28;
-  undefined1 frame_[FRAME_OFF(4136)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uStackY_28;
+  i8 frame_[FRAME_OFF(4136)] __attribute__((aligned(8)));  /* original stack frame */
   local_1020 = 0;
   if (((uint)_FileHandle < DAT_006e6b2c) &&
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -10203,17 +10203,17 @@ int __cdecl __chsize(int _FileHandle,long _Size)
 #undef local_1008
 
 /* 006041e0 crt */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 /* Library Function - Single Match
     ___addl
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl ___addl(uint param_1,uint param_2,uint *param_3)
+i32 __cdecl ___addl(uint param_1,uint param_2,uint *param_3)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   uVar1 = param_2 + param_1;
@@ -10231,7 +10231,7 @@ undefined4 __cdecl ___addl(uint param_1,uint param_2,uint *param_3)
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl ___add_12(undefined4 *param_1,undefined4 *param_2)
+void __cdecl ___add_12(i32 *param_1,i32 *param_2)
 
 {
   int iVar1;
@@ -10262,7 +10262,7 @@ void __cdecl ___add_12(undefined4 *param_1,undefined4 *param_2)
 void __cdecl ___shl_12(int *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (uint)((int)(*param_1 & -0x80000000) != 0);
   local_c = (uint)((*(byte *)((int)param_1 + 7) & 0x80) != 0);
@@ -10285,7 +10285,7 @@ void __cdecl ___shl_12(int *param_1)
 void __cdecl ___shr_12(uint *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1[2] & 1) == 0) {
     local_c = 0;
@@ -10320,7 +10320,7 @@ void __cdecl ___shr_12(uint *param_1)
 void __cdecl ___mtold12(char *param_1,int param_2,uint *param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0x404e;
   *param_3 = 0;
@@ -10384,7 +10384,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
   int iVar2;
   size_t sVar3;
   DWORD DVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_18 = 0;
@@ -10497,7 +10497,7 @@ size_t __cdecl _wcstombs(char *_Dest,wchar_t *_Source,size_t _MaxCount)
 int __cdecl wcsncnt_00605a40(short *param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = param_2 + 1;
   for (local_8 = param_1; (local_c = local_c + -1, local_c != 0 && (*local_8 != 0));
@@ -10525,7 +10525,7 @@ char * __cdecl _getenv(char *_VarName)
   int iVar1;
   size_t _MaxCount;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = DAT_00639f3c;
   if ((DAT_00639f3c == (int *)0x0) && (DAT_00639f44 != 0)) {
@@ -10552,7 +10552,7 @@ char * __cdecl _getenv(char *_VarName)
 #undef local_c
 
 /* 00605ba0 crt */
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 /* Library Function - Single Match
     __setmode
@@ -10609,11 +10609,11 @@ int __cdecl __setmode(int _FileHandle,int _Mode)
 #define local_2c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_1c (*(byte (*)[2])(frame_ + FRAME_OFF(36)))
-#define uStack_1a (*(undefined2 *)(frame_ + FRAME_OFF(38)))
+#define uStack_1a (*(i16 *)(frame_ + FRAME_OFF(38)))
 #define local_18 (*(short (*)[3])(frame_ + FRAME_OFF(40)))
-#define uStack_12 (*(undefined1 *)(frame_ + FRAME_OFF(46)))
+#define uStack_12 (*(i8 *)(frame_ + FRAME_OFF(46)))
 #define bStack_11 (*(byte *)(frame_ + FRAME_OFF(47)))
-#define local_10 (*(undefined2 *)(frame_ + FRAME_OFF(48)))
+#define local_10 (*(i16 *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
 /* Library Function - Single Match
@@ -10630,7 +10630,7 @@ void __cdecl ___ld12mul(int *param_1,int *param_2)
   ushort uVar4;
   ushort uVar5;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   local_1c[0] = 0;
@@ -10653,7 +10653,7 @@ void __cdecl ___ld12mul(int *param_1,int *param_2)
     }
     else if ((((uVar3 & 0x7fff) == 0) && (local_38 = local_38 + 1, (param_1[2] & 0x7fffffffU) == 0))
             && ((param_1[1] == 0 && (*param_1 == 0)))) {
-      *(undefined2 *)((int)param_1 + 10) = 0;
+      *(i16 *)((int)param_1 + 10) = 0;
     }
     else if ((((uVar4 & 0x7fff) == 0) && (local_38 = local_38 + 1, (param_2[2] & 0x7fffffffU) == 0))
             && ((param_2[1] == 0 && (*param_2 == 0)))) {
@@ -10667,7 +10667,7 @@ void __cdecl ___ld12mul(int *param_1,int *param_2)
         local_2c = local_24 * 2;
         local_c = 8;
         for (local_3c = 5 - local_24; 0 < local_3c; local_3c = local_3c + -1) {
-          iVar6 = ___addl(*(undefined4 *)(local_1c + local_30),
+          iVar6 = ___addl(*(i32 *)(local_1c + local_30),
                           (uint)*(ushort *)((int)param_2 + local_c) *
                           (uint)*(ushort *)(local_2c + (int)param_1),local_1c + local_30);
           if (iVar6 != 0) {
@@ -10720,13 +10720,13 @@ void __cdecl ___ld12mul(int *param_1,int *param_2)
         }
       }
       local_18[0] = (short)((uint)iVar2 >> 0x10);
-      uStack_1a = (undefined2)iVar2;
+      uStack_1a = (i16)iVar2;
       bStack_11 = (byte)((ushort)sVar1 >> 8);
-      uStack_12 = (undefined1)sVar1;
+      uStack_12 = (i8)sVar1;
       local_18[2] = (short)((uint)iVar6 >> 0x10);
       local_18[1] = (short)iVar6;
       if (local_38 < 0x7fff) {
-        *(undefined2 *)param_1 = uStack_1a;
+        *(i16 *)param_1 = uStack_1a;
         *(uint *)((int)param_1 + 2) = CONCAT22(local_18[1],local_18[0]);
         *(uint *)((int)param_1 + 6) = CONCAT13(bStack_11,CONCAT12(uStack_12,local_18[2]));
         *(ushort *)((int)param_1 + 10) = uVar5 & 0x8000 | local_38;
@@ -10771,21 +10771,21 @@ void __cdecl ___ld12mul(int *param_1,int *param_2)
 
 /* 00606110 crt */
 #define local_18 (*(ushort *)(frame_ + FRAME_OFF(0)))
-#define uStack_16 (*(undefined4 *)(frame_ + FRAME_OFF(2)))
-#define uStack_12 (*(undefined2 *)(frame_ + FRAME_OFF(6)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_16 (*(i32 *)(frame_ + FRAME_OFF(2)))
+#define uStack_12 (*(i16 *)(frame_ + FRAME_OFF(6)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(ushort * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined * *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i8 * *)(frame_ + FRAME_OFF(16)))
 /* Library Function - Single Match
     ___multtenpow12
    
    Library: Visual Studio 1998 Debug */
 
-void __cdecl ___multtenpow12(undefined2 *param_1,uint param_2,int param_3)
+void __cdecl ___multtenpow12(i16 *param_1,uint param_2,int param_3)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = &DAT_0063b380;
   if (param_2 != 0) {
@@ -10793,10 +10793,10 @@ void __cdecl ___multtenpow12(undefined2 *param_1,uint param_2,int param_3)
       param_2 = -param_2;
       local_8 = &DAT_0063b4e0;
     }
-    uStack_16 = CONCAT22((*(undefined2 *)((char *)&uStack_16 + 2)),(undefined2)uStack_16);
+    uStack_16 = CONCAT22((*(i16 *)((char *)&uStack_16 + 2)),(i16)uStack_16);
     if (param_3 == 0) {
       *param_1 = 0;
-      uStack_16 = CONCAT22((*(undefined2 *)((char *)&uStack_16 + 2)),(undefined2)uStack_16);
+      uStack_16 = CONCAT22((*(i16 *)((char *)&uStack_16 + 2)),(i16)uStack_16);
     }
     while (param_2 != 0) {
       local_8 = local_8 + 0x54;
@@ -10805,12 +10805,12 @@ void __cdecl ___multtenpow12(undefined2 *param_1,uint param_2,int param_3)
       if (uVar1 != 0) {
         local_c = (ushort *)(local_8 + uVar1 * 0xc);
         if (0x7fff < *local_c) {
-          local_18 = (ushort)*(undefined4 *)local_c;
-          (*(undefined2 *)((char *)&uStack_16 + 0)) = (undefined2)((uint)*(undefined4 *)local_c >> 0x10);
-          (*(undefined2 *)((char *)&uStack_16 + 2)) = (undefined2)*(undefined4 *)(local_c + 2);
-          uStack_12 = (undefined2)((uint)*(undefined4 *)(local_c + 2) >> 0x10);
-          local_10 = *(undefined4 *)(local_c + 4);
-          uStack_16 = CONCAT22((*(undefined2 *)((char *)&uStack_16 + 2)),(undefined2)uStack_16) + -1;
+          local_18 = (ushort)*(i32 *)local_c;
+          (*(i16 *)((char *)&uStack_16 + 0)) = (i16)((uint)*(i32 *)local_c >> 0x10);
+          (*(i16 *)((char *)&uStack_16 + 2)) = (i16)*(i32 *)(local_c + 2);
+          uStack_12 = (i16)((uint)*(i32 *)(local_c + 2) >> 0x10);
+          local_10 = *(i32 *)(local_c + 4);
+          uStack_16 = CONCAT22((*(i16 *)((char *)&uStack_16 + 2)),(i16)uStack_16) + -1;
           local_c = &local_18;
         }
         ___ld12mul(param_1,local_c);
@@ -10841,7 +10841,7 @@ int __cdecl ___wtomb_environ(void)
 {
   int iVar1;
   char **_POption;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = DAT_00639f44;
   while( true ) {
@@ -10880,7 +10880,7 @@ int __cdecl ___wtomb_environ(void)
 int __cdecl wcsncnt_00606620(short *param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = param_2;
   for (local_8 = param_1; (local_c != 0 && (*local_8 != 0)); local_8 = local_8 + 1) {
@@ -10911,7 +10911,7 @@ int __cdecl findenv(uchar *param_1,size_t param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = DAT_00639f3c;
   while( true ) {
@@ -10942,10 +10942,10 @@ int * __cdecl copy_environ(int *param_1)
   int *piVar1;
   size_t sVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   char *pcVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   local_10 = param_1;
@@ -11030,8 +11030,8 @@ uchar * __cdecl __mbschr(uchar *_Str,uint _Ch)
 #undef DAT_0063b0a4
 
 /* 006075e0 crt */
-#define DAT_00639f18 (*(undefined4 *)((u8 *)&g.d_00639f18))
-#define DAT_006e69f0 (*(undefined4 *)((u8 *)&g.d_006e69f0))
+#define DAT_00639f18 (*(i32 *)((u8 *)&g.d_00639f18))
+#define DAT_006e69f0 (*(i32 *)((u8 *)&g.d_006e69f0))
 #define DAT_006e6b2c (*(uint *)((u8 *)&g.d_006e6b2c))
 #define local_8 (*(long *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Single Match
@@ -11043,7 +11043,7 @@ long __cdecl __filelength(int _FileHandle)
 
 {
   long _Offset;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((uint)_FileHandle < DAT_006e6b2c) &&
      ((*(byte *)(*(int *)((int)&DAT_006e69f0 + ((int)(_FileHandle & 0xffffffe0U) >> 3)) + 4 +
@@ -11072,10 +11072,10 @@ long __cdecl __filelength(int _FileHandle)
 #undef local_8
 
 /* 006076a0 crt */
-undefined4 __cdecl FUN_006076a0(int param_1)
+i32 __cdecl FUN_006076a0(int param_1)
 
 {
-  return *(undefined4 *)(param_1 + 0x10);
+  return *(i32 *)(param_1 + 0x10);
 }
 
 /* 006076c0: written by hand in src/crt/locale.c */
@@ -11083,19 +11083,19 @@ undefined4 __cdecl FUN_006076a0(int param_1)
 /* 006077f0: written by hand in src/crt/locale.c */
 
 /* 00607920 crt */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 /* Library Function - Multiple Matches With Different Base Names
     __mkdir
     __wmkdir
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __cdecl FUN_00607920(LPCSTR param_1)
+i32 __cdecl FUN_00607920(LPCSTR param_1)
 
 {
   BOOL BVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = CreateDirectoryA(param_1,(LPSECURITY_ATTRIBUTES)0x0);
   if (BVar1 == 0) {

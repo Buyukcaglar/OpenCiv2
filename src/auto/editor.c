@@ -3,58 +3,58 @@
 #include "auto_common.h"
 
 /* 00417fa0 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_a28 * __thiscall editor_wnd_ctor(C_004083b0_a28 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   FUN_005f2620(&this->field_2fc,0x38,6,((void *)ADDR(0x0040388c, combo_ctor)),((void *)ADDR(0x00403553, combo_dtor)));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   FUN_005f2620(this->pad_3c0 + 0x8c,0x48,9,edit_ctor,
                edit_dtor);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   button_ctor((Control *)(this->pad_65c + 0x78));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   button_ctor((Control *)(this->pad_65c + 0xb4));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   button_ctor((Control *)(this->pad_65c + 0xf0));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   button_ctor((Control *)(this->pad_65c + 300));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   button_ctor((Control *)(this->pad_65c + 0x168));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   button_ctor((Control *)(this->pad_65c + 0x1a4));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   button_ctor((Control *)(this->pad_65c + 0x1e0));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   button_ctor((Control *)(this->pad_65c + 0x21c));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   button_ctor((Control *)(this->pad_65c + 600));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   button_ctor((Control *)(this->pad_65c + 0x294));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   button_ctor((Control *)(this->pad_65c + 0x2d0));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   button_ctor((Control *)(this->pad_65c + 0x30c));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   button_ctor((Control *)(this->pad_980 + 0x24));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
   button_ctor((Control *)(this->pad_980 + 0x60));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x10;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x10;
   button_ctor((Control *)&this->edit_action_button);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x11;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x11;
   button_ctor((Control *)&this[1].field_30);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x12;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x12;
   checkbox_ctor((Control *)(this[1].pad_48 + 0x24));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x13;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x13;
   checkbox_ctor((Control *)(this[1].pad_48 + 0x60));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),0x14);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0x14);
   checkbox_ctor((Control *)(this[1].pad_48 + 0x9c));
   this->vtable = (u32)&PTR_FUN_0061c058;
   return this;
@@ -64,56 +64,56 @@ C_004083b0_a28 * __thiscall editor_wnd_ctor(C_004083b0_a28 *this)
 #undef local_8
 
 /* 004183d0 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall editor_wnd_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x14;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x14;
   /* inlined unwind funclet FUN_0041851f */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xb0c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x13;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x13;
   /* inlined unwind funclet FUN_0041852e */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xad0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x12;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x12;
   /* inlined unwind funclet FUN_0041853d */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xa94)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x11;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x11;
   /* inlined unwind funclet FUN_0041854c */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0xa58)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x10;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x10;
   /* inlined unwind funclet FUN_0041855b */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0xa1c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
   /* inlined unwind funclet FUN_0041856a */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x9e0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   /* inlined unwind funclet FUN_00418579 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x9a4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   /* inlined unwind funclet FUN_00418588 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x968)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   /* inlined unwind funclet FUN_00418597 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x92c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   /* inlined unwind funclet FUN_004185a6 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x8f0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   /* inlined unwind funclet FUN_004185b5 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x8b4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   /* inlined unwind funclet FUN_004185c4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x878)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   /* inlined unwind funclet FUN_004185d3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x83c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   /* inlined unwind funclet FUN_004185e2 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x800)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   /* inlined unwind funclet FUN_004185f1 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x7c4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   /* inlined unwind funclet FUN_00418600 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x788)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0041860f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x74c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_0041861e */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x710)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0041862d */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x6d4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_0041863c */ { FUN_005f2490(*(int *)((iptr)&this) + 0x44c,0x48,9,edit_dtor); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_00418654 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x2fc,0x38,6,((void *)ADDR(0x00403553, combo_dtor))); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0041866c */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -215,7 +215,7 @@ void __cdecl tribe_editor_load_tables(void)
 {
   char *pcVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (leader = 0; leader < 0x15; leader++) {
     civ = 1;
@@ -296,7 +296,7 @@ void __cdecl tribe_editor_apply_tables(void)
   char *pcVar1;
   char *pcVar2;
   size_t sVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (leader = 0; leader < 0x15; leader++) {
     civ = 1;
@@ -304,12 +304,12 @@ void __cdecl tribe_editor_apply_tables(void)
       civ++;
     }
     if (civ < 8) {
-      civ_names[civ].city_style = (i16)*(undefined4 *)(&editor_items + leader * 0x58);
+      civ_names[civ].city_style = (i16)*(i32 *)(&editor_items + leader * 0x58);
     }
-    leaders[leader].city_style = (i16)*(undefined4 *)(&editor_items + leader * 0x58);
-    leaders[leader].attack = (char)*(undefined4 *)(&editor_item_field1 + leader * 0x58) - 1;
-    leaders[leader].expand = (char)*(undefined4 *)(&editor_item_field2 + leader * 0x58) - 1;
-    leaders[leader].civilize = (char)*(undefined4 *)(&editor_item_field3 + leader * 0x58) - 1;
+    leaders[leader].city_style = (i16)*(i32 *)(&editor_items + leader * 0x58);
+    leaders[leader].attack = (char)*(i32 *)(&editor_item_field1 + leader * 0x58) - 1;
+    leaders[leader].expand = (char)*(i32 *)(&editor_item_field2 + leader * 0x58) - 1;
+    leaders[leader].civilize = (char)*(i32 *)(&editor_item_field3 + leader * 0x58) - 1;
   }
   for (leader = 0; leader < 7; leader++) {
     sVar3 = 0xf;
@@ -342,7 +342,7 @@ void __cdecl tribe_editor_load_controls(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_c = 1; local_c < 5; local_c++) {
     if (*(int *)(&tribe_editor_ctrl_kinds + local_c * 8) == 9) {
@@ -368,12 +368,12 @@ void __cdecl tribe_editor_load_controls(void)
 /* 004a3757 auto */
 #define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_20 (*(char (*)[24])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(32)))
 void __cdecl tribe_editor_store_controls(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_24 = 1; local_24 < 5; local_24++) {
     if (*(int *)(&tribe_editor_ctrl_kinds + local_24 * 8) == 9) {
@@ -390,7 +390,7 @@ void __cdecl tribe_editor_store_controls(void)
       iVar1 = ctrl_get_id
                         ((ControlIdView *)
                          (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + local_24 * 8) * 0x38));
-      *(undefined4 *)(&editor_ctrl_values + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = local_8;
+      *(i32 *)(&editor_ctrl_values + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = local_8;
     }
   }
   return;
@@ -408,16 +408,16 @@ void __cdecl tribe_editor_redraw(void)
 }
 
 /* 004a38a4 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_10 (*(size_t *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl tribe_editor_write_governments(FILE *param_1)
+i32 __cdecl tribe_editor_write_governments(FILE *param_1)
 
 {
   char *pcVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 7; local_8++) {
     text_clear();
@@ -457,9 +457,9 @@ undefined4 __cdecl tribe_editor_write_governments(FILE *param_1)
 #undef local_8
 
 /* 004a3a21 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define text_file_handle (*(undefined4 *)((u8 *)&g.d_0062cd20))
-#define text_line_cursor (*(undefined4 *)((u8 *)&g.d_00673f14))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define text_file_handle (*(i32 *)((u8 *)&g.d_0062cd20))
+#define text_line_cursor (*(i32 *)((u8 *)&g.d_00673f14))
 #define local_d0 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_cc (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_c8 (*(size_t *)(frame_ + FRAME_OFF(8)))
@@ -477,17 +477,17 @@ undefined4 __cdecl tribe_editor_write_governments(FILE *param_1)
 #define local_98 (*(size_t *)(frame_ + FRAME_OFF(56)))
 #define local_94 (*(int *)(frame_ + FRAME_OFF(60)))
 #define leader (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define local_84 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(76)))
-undefined4 __cdecl tribe_editor_write_leaders(FILE *param_1,undefined4 param_2)
+#define local_84 (*(i8 (*)[128])(frame_ + FRAME_OFF(76)))
+i32 __cdecl tribe_editor_write_leaders(FILE *param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
   char *pcVar3;
   size_t sVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar1 = text_file_handle;
   text_file_handle = param_2;
@@ -670,12 +670,12 @@ undefined4 __cdecl tribe_editor_write_leaders(FILE *param_1,undefined4 param_2)
 #undef local_84
 
 /* 004a41d8 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl tribe_editor_write_caravan(FILE *param_1)
+i32 __cdecl tribe_editor_write_caravan(FILE *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x10; local_8++) {
     text_clear();
@@ -689,7 +689,7 @@ undefined4 __cdecl tribe_editor_write_caravan(FILE *param_1)
 #undef local_8
 
 /* 004a4249 auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl tribe_editor_on_ok(void)
 
@@ -699,7 +699,7 @@ void __cdecl tribe_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   tribe_editor_store_controls();
   tribe_editor_update_city_file();
@@ -730,14 +730,14 @@ void __cdecl tribe_editor_on_ok(void)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(268)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1024)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1028)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1032)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1036)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1040)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1036)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_commodity(void)
 
 {
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -789,14 +789,14 @@ void __cdecl tribe_editor_rename_commodity(void)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(268)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1024)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1028)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1032)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1036)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1040)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1036)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_govt(void)
 
 {
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -844,24 +844,24 @@ void __cdecl tribe_editor_rename_govt(void)
 
 /* 004a468b auto */
 #define local_464 (*(char * *)(frame_ + FRAME_OFF(4)))
-#define local_460 (*(undefined * *)(frame_ + FRAME_OFF(8)))
-#define local_45c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_458 (*(undefined * *)(frame_ + FRAME_OFF(16)))
+#define local_460 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_45c (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_458 (*(i8 * *)(frame_ + FRAME_OFF(16)))
 #define local_454 (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_450 (*(char (*)[260])(frame_ + FRAME_OFF(24)))
 #define local_34c (*(char (*)[64])(frame_ + FRAME_OFF(284)))
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(348)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(1104)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1108)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1112)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1116)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1120)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1112)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1116)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1120)))
 void __cdecl tribe_editor_rename_title(void)
 
 {
   int iVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -885,10 +885,10 @@ void __cdecl tribe_editor_rename_title(void)
     }
     local_458 = &editor_govt_names + iVar1 * 5;
     if ((local_18 & 1) == 0) {
-      local_45c = label_string(*(undefined4 *)(label_string_ids + 0x8fc));
+      local_45c = label_string(*(i32 *)(label_string_ids + 0x8fc));
     }
     else {
-      local_45c = label_string(*(undefined4 *)(label_string_ids + 0x900));
+      local_45c = label_string(*(i32 *)(label_string_ids + 0x900));
     }
     _sprintf(local_34c,s__s__s___s__0062ce4c,&editor_govt_names + ((int)local_18 >> 1) * 0xf,local_45c,
              local_458);
@@ -940,11 +940,11 @@ void __cdecl tribe_editor_rename_title(void)
 #undef local_8
 
 /* 004a496c auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tribe_editor_on_help(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_8 = 0;
@@ -960,7 +960,7 @@ void __cdecl tribe_editor_on_help(void)
 #undef local_8
 
 /* 004a49cb auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl tribe_editor_on_cancel(void)
 
 {
@@ -974,12 +974,12 @@ void __cdecl tribe_editor_on_cancel(void)
 void __cdecl tribe_editor_on_combo(int param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (param_1 == 0xc9) {
     tribe_editor_store_controls();
     uVar1 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
-    *(undefined4 *)(active_editor_wnd + 0x2ec) = uVar1;
+    *(i32 *)(active_editor_wnd + 0x2ec) = uVar1;
     tribe_editor_load_controls();
     tribe_editor_redraw();
   }
@@ -994,14 +994,14 @@ void __cdecl tribe_editor_on_combo(int param_1)
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define local_28 (*(u8 * *)(frame_ + FRAME_OFF(0)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tribe_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = *(int *)(&tribe_editor_combo_x_table + param_1 * 8) + this->client_x;
   iVar2 = *(int *)(&tribe_editor_combo_y_table + param_1 * 8) + this->client_y;
@@ -1036,37 +1036,37 @@ void __thiscall tribe_editor_create_combo(C_004083b0_430 *this,int param_1)
     }
     break;
   case 1:
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x834));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x834));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x838));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x838));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x83c));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x83c));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x840));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x840));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
     break;
   case 2:
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x904));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x904));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x908));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x908));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x90c));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x90c));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
     break;
   case 3:
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x910));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x910));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x914));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x914));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x918));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x918));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
     break;
   case 4:
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x91c));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x91c));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x914));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x914));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x920));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x920));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
   }
   return;
@@ -1078,15 +1078,15 @@ void __thiscall tribe_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 /* 004a4eb2 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define tribe_editor_edit_x_table (*(undefined4 *)((u8 *)&g.d_0062cd60))
-#define tribe_editor_edit_y_table (*(undefined4 *)((u8 *)&g.d_0062cd64))
+#define tribe_editor_edit_x_table (*(i32 *)((u8 *)&g.d_0062cd60))
+#define tribe_editor_edit_y_table (*(i32 *)((u8 *)&g.d_0062cd64))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tribe_editor_create_edit(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,(&tribe_editor_edit_x_table)[param_1 * 2] + this->client_x,
                      (&tribe_editor_edit_y_table)[param_1 * 2] + this->client_y,100,this->field_2e8 + 6);
@@ -1115,7 +1115,7 @@ void __thiscall tribe_editor_create_edit(C_004083b0_430 *this,int param_1)
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define tribe_editor_edit_x_table (*(int *)((u8 *)&g.d_0062cd60))
 #define tribe_editor_edit_y_table (*(int *)((u8 *)&g.d_0062cd64))
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_18 (*(Sprite * *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -1125,7 +1125,7 @@ void __thiscall tribe_editor_paint(C_004083b0_430 *this)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -1146,9 +1146,9 @@ void __thiscall tribe_editor_paint(C_004083b0_430 *this)
   local_8 = this->client_width + this->client_x - 0x60;
   local_c = this->client_y + 0x20;
   gfx_fill_rect_xywh((iptr)this,local_8,local_c,0x40,0x40,
-                     *(undefined4 *)(&civ_mid_colors + leaders[this->field_2ec].color * 0x10));
+                     *(i32 *)(&civ_mid_colors + leaders[this->field_2ec].color * 0x10));
   gfx_fill_rect_xywh((iptr)this,local_8 + 0x10,local_c + 0x10,0x20,0x20,
-                     *(undefined4 *)(&civ_primary_colors + leaders[this->field_2ec].color * 0x10));
+                     *(i32 *)(&civ_primary_colors + leaders[this->field_2ec].color * 0x10));
   gfx_draw_tiled_frame((iptr)this,local_8,local_c,0x40,0x40,6);
   text_set_surface((iptr)this);
   text_set_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -1210,7 +1210,7 @@ void __thiscall tribe_editor_paint(C_004083b0_430 *this)
 
 /* 004a54d9 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
-#define editor_next_ctrl_id (*(undefined4 *)((u8 *)&g.d_006a1d80))
+#define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define local_488 (*(u8 * *)(frame_ + FRAME_OFF(0)))
 #define local_484 (*(u8 * *)(frame_ + FRAME_OFF(4)))
@@ -1220,29 +1220,29 @@ void __thiscall tribe_editor_paint(C_004083b0_430 *this)
 #define local_474 (*(u8 * *)(frame_ + FRAME_OFF(20)))
 #define local_468 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_454 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1148)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall tribe_editor_main(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   iptr iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   u32 uVar9;
   u32 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined1 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -1250,14 +1250,14 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_468 = (DibSurface *)0x0;
   }
   else {
     local_468 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   editor_bg_surface = local_468;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -1276,16 +1276,16 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   uVar8 = 0;
   uVar7 = 0;
   uVar6 = 0xd;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x930));
+  uVar2 = label_string(*(i32 *)(label_string_ids + 0x930));
   frame_wnd_create
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   tribe_editor_load_tables();
   for (local_460 = 0; local_460 < 5; local_460++) {
     if (*(int *)(&tribe_editor_ctrl_kinds + local_460 * 8) == 9) {
-      tribe_editor_create_edit(this,*(undefined4 *)(&tribe_editor_ctrl_slots + local_460 * 8));
+      tribe_editor_create_edit(this,*(i32 *)(&tribe_editor_ctrl_slots + local_460 * 8));
     }
     else if (*(int *)(&tribe_editor_ctrl_kinds + local_460 * 8) == 0xc) {
-      tribe_editor_create_combo(this,*(undefined4 *)(&tribe_editor_ctrl_slots + local_460 * 8));
+      tribe_editor_create_combo(this,*(i32 *)(&tribe_editor_ctrl_slots + local_460 * 8));
     }
   }
   iVar3 = sprite_width
@@ -1302,7 +1302,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_474 = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x940));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x940));
   button_create
             ((Control *)(this[2].pad_48 + 0x84),(iptr)local_474,0x65,(iptr)local_454,iVar4);
   button_set_callback((Control *)(this[2].pad_48 + 0x84),ADDR(0x402775, tribe_editor_rename_commodity));
@@ -1313,7 +1313,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_478 = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x944));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x944));
   button_create
             ((Control *)(this[2].pad_104 + 4),(iptr)local_478,0x65,(iptr)local_454,iVar4);
   button_set_callback((Control *)(this[2].pad_104 + 4),ADDR(0x401631, tribe_editor_rename_govt));
@@ -1324,7 +1324,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_47c = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x948));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x948));
   button_create
             ((Control *)&this[2].field_144,(iptr)local_47c,0x65,(iptr)local_454,iVar4);
   button_set_callback((Control *)&this[2].field_144,ADDR(0x402bda, tribe_editor_rename_title));
@@ -1340,7 +1340,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_480 = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this[1].field_2a4,(iptr)local_480,0x65,(iptr)local_454,iVar4);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40275c, tribe_editor_on_ok));
@@ -1352,7 +1352,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_484 = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x8ec));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&this[1].field_2e0,(iptr)local_484,0x66,(iptr)local_454,iVar4);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x401bea, tribe_editor_on_help));
@@ -1364,7 +1364,7 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
   else {
     local_488 = this->pad_48;
   }
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this[1].field_31c,(iptr)local_488,0x66,(iptr)local_454,iVar4);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x40152d, tribe_editor_on_cancel));
@@ -1409,13 +1409,13 @@ void __thiscall tribe_editor_main(C_004083b0_430 *this)
 
 /* 004a5d92 auto */
 #define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2896)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl tribe_editor_run(void)
 
 {
-  undefined1 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
@@ -1557,7 +1557,7 @@ void __cdecl editor_font_static_dtor(void)
 
 /* 004cd8a6 auto */
 #define local_234 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_230 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_230 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define local_228 (*(FILE * *)(frame_ + FRAME_OFF(16)))
 #define local_224 (*(FILE * *)(frame_ + FRAME_OFF(20)))
@@ -1565,15 +1565,15 @@ void __cdecl editor_font_static_dtor(void)
 #define leader (*(iptr *)(frame_ + FRAME_OFF(284)))
 #define local_118 (*(char *)(frame_ + FRAME_OFF(288)))
 #define local_117 (*(char (*)[255])(frame_ + FRAME_OFF(289)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(544)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(544)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(560)))
-undefined4 __cdecl tribe_editor_update_city_file(void)
+i32 __cdecl tribe_editor_update_city_file(void)
 
 {
   int iVar1;
   char *pcVar2;
   size_t _MaxCount;
-  undefined1 frame_[FRAME_OFF(568)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(568)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_230 = 0;
   local_228 = (FILE *)0x0;
@@ -1666,10 +1666,10 @@ LAB_004cdc5a:
 #undef local_8
 
 /* 004cdcf6 auto */
-undefined4 __cdecl editor_numeric_edit_filter(undefined4 param_1,int param_2)
+i32 __cdecl editor_numeric_edit_filter(i32 param_1,int param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((((param_2 < 0x30) || (0x39 < param_2)) && (param_2 != 0x2d)) && (param_2 != 0xd6)) {
     uVar1 = 0;
@@ -1684,17 +1684,17 @@ undefined4 __cdecl editor_numeric_edit_filter(undefined4 param_1,int param_2)
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
 #define local_314 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_30c (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(772)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(780)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-undefined4 __cdecl editor_options_dialog(iptr param_1,undefined4 param_2,uint param_3,undefined4 param_4)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(776)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(780)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(784)))
+i32 __cdecl editor_options_dialog(iptr param_1,i32 param_2,uint param_3,i32 param_4)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);
@@ -1748,7 +1748,7 @@ undefined4 __cdecl editor_options_dialog(iptr param_1,undefined4 param_2,uint pa
 #undef local_8
 
 /* 004cdf4b auto */
-#define editor_value_clamped (*(undefined4 *)((u8 *)&g.d_0062e014))
+#define editor_value_clamped (*(i32 *)((u8 *)&g.d_0062e014))
 int __cdecl editor_clamp_value(int param_1,int param_2,int param_3)
 
 {
@@ -1770,12 +1770,12 @@ int __cdecl editor_clamp_value(int param_1,int param_2,int param_3)
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define _DAT_006a19d4 (*(undefined4 *)((u8 *)&g.d_006a19d4))
-#define _DAT_006a1abc (*(undefined4 *)((u8 *)&g.d_006a1abc))
-#define _DAT_006a1b68 (*(undefined4 *)((u8 *)&g.d_006a1b68))
-#define _DAT_006a1b8c (*(undefined4 *)((u8 *)&g.d_006a1b8c))
-#define _DAT_006a1b90 (*(undefined4 *)((u8 *)&g.d_006a1b90))
-#define _DAT_006a1b94 (*(undefined4 *)((u8 *)&g.d_006a1b94))
+#define _DAT_006a19d4 (*(i32 *)((u8 *)&g.d_006a19d4))
+#define _DAT_006a1abc (*(i32 *)((u8 *)&g.d_006a1abc))
+#define _DAT_006a1b68 (*(i32 *)((u8 *)&g.d_006a1b68))
+#define _DAT_006a1b8c (*(i32 *)((u8 *)&g.d_006a1b8c))
+#define _DAT_006a1b90 (*(i32 *)((u8 *)&g.d_006a1b90))
+#define _DAT_006a1b94 (*(i32 *)((u8 *)&g.d_006a1b94))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1785,7 +1785,7 @@ editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int para
             int param_8,int param_9)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     FUN_005f22d0(&editor_text_dlg_title,&editor_text_dlg_empty_title);
@@ -1857,7 +1857,7 @@ editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int para
 #undef local_8
 
 /* 004ce196 auto */
-#define editor_text_active (*(undefined4 *)((u8 *)&g.d_006a4f9c))
+#define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
 #define local_108 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_104 (*(char (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl editor_text_dlg_on_ok(void)
@@ -1865,11 +1865,11 @@ void __cdecl editor_text_dlg_on_ok(void)
 {
   int iVar1;
   size_t sVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_108 = 0; local_108 < 0x14; local_108++) {
-    *(undefined4 *)(editor_text_lines_out + local_108 * 4) = 0;
+    *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
   }
   events_compact();
   local_108 = 0;
@@ -1884,17 +1884,17 @@ LAB_004ce2ca:
     iVar1 = edit_get_line
                       ((EditLineView *)&editor_text_edit,local_108,(iptr)local_104,0x100);
     if (iVar1 == 0) {
-      *(undefined4 *)(editor_text_lines_out + local_108 * 4) = 0;
+      *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
     }
     else {
       sVar2 = _strlen(local_104);
       uVar3 = memblock_alloc_checked(ADDR(0x64b984, ((u8 *)&g.d_0064b984)),sVar2 + 1);
-      *(undefined4 *)(editor_text_lines_out + local_108 * 4) = uVar3;
+      *(i32 *)(editor_text_lines_out + local_108 * 4) = uVar3;
       if (*(int *)(editor_text_lines_out + local_108 * 4) == 0) {
-        *(undefined4 *)(editor_text_lines_out + local_108 * 4) = 0;
+        *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
         goto LAB_004ce2ca;
       }
-      FUN_005f22d0(*(undefined4 *)(editor_text_lines_out + local_108 * 4),local_104);
+      FUN_005f22d0(*(i32 *)(editor_text_lines_out + local_108 * 4),local_104);
     }
     local_108++;
   } while( true );
@@ -1904,7 +1904,7 @@ LAB_004ce2ca:
 #undef local_104
 
 /* 004ce2f3 auto */
-#define editor_text_active (*(undefined4 *)((u8 *)&g.d_006a4f9c))
+#define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
 void __cdecl editor_text_dlg_on_cancel(void)
 
 {
@@ -1935,28 +1935,28 @@ void __cdecl editor_text_dlg_redraw(void)
 #define local_68 (*(int *)(frame_ + FRAME_OFF(72)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_60 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_5c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(84)))
+#define local_5c (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
 #define local_4c (*(Control *)(frame_ + FRAME_OFF(100)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(160)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(164)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(168)))
 /* WARNING: Removing unreachable block (ram,0x004ce598) */
 /* WARNING: Removing unreachable block (ram,0x004ce49e) */
 /* WARNING: Removing unreachable block (ram,0x004ce621) */
 
-undefined4 __cdecl editor_text_edit_dialog(iptr param_1,undefined4 param_2)
+i32 __cdecl editor_text_edit_dialog(iptr param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   button_ctor(&local_4c);
   local_8 = 0;
   button_ctor(&local_a4);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   editor_text_active = 1;
   editor_text_lines_out = param_1;
   local_68 = font_line_spacing((GameFont *)dialog_font_ptr);
@@ -1981,12 +1981,12 @@ undefined4 __cdecl editor_text_edit_dialog(iptr param_1,undefined4 param_2)
   iVar2 = (editor_text_dlg_client_y + editor_text_dlg_client_height) - (local_68 + 2);
   local_64 = editor_text_dlg_client_x + 2;
   rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create(&local_4c,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x65,(iptr)local_5c,iVar3);
   button_set_callback(&local_4c,ADDR(0x401d84, editor_text_dlg_on_ok));
   local_64 = local_64 + local_60 + 2;
   rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create(&local_a4,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x66,(iptr)local_5c,iVar3);
   button_set_callback(&local_a4,ADDR(0x4011d1, editor_text_dlg_on_cancel));
   ctrl_set_cancel_button(&local_a4);
@@ -2018,7 +2018,7 @@ undefined4 __cdecl editor_text_edit_dialog(iptr param_1,undefined4 param_2)
 #undef local_8
 
 /* 004ce71b auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
 uint __cdecl editor_check_city_name(iptr param_1)
@@ -2028,7 +2028,7 @@ uint __cdecl editor_check_city_name(iptr param_1)
   size_t sVar2;
   size_t sVar3;
   uint uVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = text_open_section(ADDR(0x62e1dc, ((u8 *)&g.d_0062e1dc)),0);
   if (iVar1 == 0) {
@@ -2077,7 +2077,7 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   UINT Msg;
   WPARAM wParam;
   LPARAM lParam;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < *(int *)(active_editor_wnd + 0x2f8); local_8++) {
     lParam = 0;
@@ -2094,12 +2094,12 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
 /* 004ce8a4 auto */
 #define local_120 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_1c (*(char (*)[20])(frame_ + FRAME_OFF(260)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(280)))
-undefined4 __cdecl editor_input_long(iptr param_1,iptr param_2,int param_3,iptr param_4)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(280)))
+i32 __cdecl editor_input_long(iptr param_1,iptr param_2,int param_3,iptr param_4)
 
 {
   long lVar1;
-  undefined1 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
   
   __itoa(param_3,local_1c,10);
   local_8 = dlg_text_input(param_1,param_2,6,(iptr)local_1c,(iptr)local_120);
@@ -2115,13 +2115,13 @@ undefined4 __cdecl editor_input_long(iptr param_1,iptr param_2,int param_3,iptr 
 #define local_210 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_10c (*(CHAR (*)[260])(frame_ + FRAME_OFF(260)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(520)))
-undefined4 __cdecl editor_create_scenario_folder(void)
+i32 __cdecl editor_create_scenario_folder(void)
 
 {
   int iVar1;
   size_t sVar2;
   DWORD DVar3;
-  undefined1 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
   if (iVar1 == 0) {

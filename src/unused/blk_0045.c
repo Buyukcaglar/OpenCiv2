@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 00450b04 auto */
-void __cdecl parley_advance_list1_on_scroll(undefined4 param_1)
+void __cdecl parley_advance_list1_on_scroll(i32 param_1)
 
 {
   parley_advance_list_on_scroll(1,param_1);

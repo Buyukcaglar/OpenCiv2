@@ -2,11 +2,11 @@
 #include "auto_common.h"
 
 /* 00555ced auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl dbg_continent_policy_color(int param_1)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl dbg_continent_policy_color(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0x29;
   if (param_1 == 5) {
@@ -46,11 +46,11 @@ void __cdecl dbg_draw_ai_goals_overlay(void)
 {
   iptr city;
   int iVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = human_civ;
   if ((game.reveal_map != '\0') &&
@@ -123,9 +123,9 @@ void __cdecl dbg_draw_tile_owner_overlay(void)
 {
   int x;
   int y;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_c = 0; local_c < mapview_visible_cols; local_c += 2) {
     for (local_10 = 0; local_10 < mapview_visible_rows; local_10++) {
@@ -178,13 +178,13 @@ void __cdecl mp_window_drag_modal_timeout(void)
 #undef mp_window_drag_start_ticks
 
 /* 0055b6c7 auto */
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define mp_kill_civ_on_retire (*(short *)((u8 *)&g.d_00654c76))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
-#define player_has_quit (*(undefined1 *)((u8 *)&g.d_006ad685))
-#define player_turn_active (*(undefined1 *)((u8 *)&g.d_0064b9bc))
-#define unit_blink_phase (*(undefined1 *)((u8 *)&g.d_00628054))
+#define player_has_quit (*(i8 *)((u8 *)&g.d_006ad685))
+#define player_turn_active (*(i8 *)((u8 *)&g.d_0064b9bc))
+#define unit_blink_phase (*(i8 *)((u8 *)&g.d_00628054))
 void __cdecl game_player_resign(void)
 
 {

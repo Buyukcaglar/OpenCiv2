@@ -27,15 +27,15 @@ static void *crt_move(void *dst, const void *src, uint n)
 }
 
 /* 0x005f2110: memcpy(dst, src, n) -> dst */
-undefined4 * __cdecl FUN_005f2110(void *dst, const void *src, uint n)
+i32 * __cdecl FUN_005f2110(void *dst, const void *src, uint n)
 {
-    return (undefined4 *)crt_move(dst, src, n);
+    return (i32 *)crt_move(dst, src, n);
 }
 
 /* 0x005f6500: memmove(dst, src, n) -> dst */
-undefined4 * __cdecl FUN_005f6500(void *dst, const void *src, uint n)
+i32 * __cdecl FUN_005f6500(void *dst, const void *src, uint n)
 {
-    return (undefined4 *)crt_move(dst, src, n);
+    return (i32 *)crt_move(dst, src, n);
 }
 
 /* 0x005f35f0: __chkstk.  Allocates EAX bytes of stack below the caller's
@@ -67,7 +67,7 @@ __attribute__((naked)) void __cdecl FUN_005f35f0(void)
 
 /* 0x005f6c60: __ftol.  Converts ST0 (popped) to a 64-bit integer in EDX:EAX,
  * truncating toward zero regardless of the current rounding mode. */
-__attribute__((naked)) undefined4 __cdecl __ftol(void)
+__attribute__((naked)) i32 __cdecl __ftol(void)
 {
     __asm__ volatile(
         "pushl %ebp\n\t"

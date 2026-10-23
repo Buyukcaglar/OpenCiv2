@@ -6,7 +6,7 @@
 int __cdecl unit_stack_position(iptr unit)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = -1;
   for (; -1 < unit; unit = (iptr)units[unit].prev_in_stack) {
@@ -23,7 +23,7 @@ int __cdecl unit_stack_position(iptr unit)
 iptr __cdecl unit_stack_nth_with_role(iptr unit,int param_2,u8 param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = -1;
   local_c = -1;
@@ -41,11 +41,11 @@ iptr __cdecl unit_stack_nth_with_role(iptr unit,int param_2,u8 param_3)
 #undef local_8
 
 /* 005b30e9 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl unit_stack_count(int unit)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
@@ -60,7 +60,7 @@ int __cdecl unit_stack_count(int unit)
 int __cdecl unit_stack_count_type(iptr unit,u8 param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (unit = unit_stack_first(unit); -1 < unit; unit = unit_next_in_stack(unit)) {
@@ -73,10 +73,10 @@ int __cdecl unit_stack_count_type(iptr unit,u8 param_2)
 #undef local_8
 
 /* 005b3cd4 auto */
-undefined4 __cdecl unit_stack_first_ships_on_top(iptr unit,undefined4 param_2)
+i32 __cdecl unit_stack_first_ships_on_top(iptr unit,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   unit_stack_ships_to_top(unit,param_2);
   uVar1 = unit_stack_first(unit);
@@ -92,7 +92,7 @@ uint __cdecl tile_adjacent_to_civ(iptr param_1,int param_2,int param_3)
   int y;
   iptr x;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   y = map_in_bounds(param_1,param_2);
@@ -118,17 +118,17 @@ uint __cdecl tile_adjacent_to_civ(iptr param_1,int param_2,int param_3)
 
 /* 005b4f3c auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-uint __cdecl tile_nearby_civs_mask(undefined4 x,undefined4 y)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+uint __cdecl tile_nearby_civs_mask(i32 x,i32 y)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   iVar1 = tile_owner(x,y);
   if (-1 < iVar1) {
-    (*(undefined1 *)((char *)&local_c + 0)) = (byte)iVar1;
+    (*(i8 *)((char *)&local_c + 0)) = (byte)iVar1;
     local_8 = 1 << ((byte)local_c & 0x1f);
   }
   for (local_c = 1; local_c < 8; local_c++) {
@@ -148,7 +148,7 @@ void __cdecl unit_stack_seen_by_adjacent_civs(iptr unit)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (civ = 1; civ < 8; civ++) {
     iVar1 = tile_adjacent_to_civ((int)units[unit].x,(int)units[unit].y,civ);
@@ -161,7 +161,7 @@ void __cdecl unit_stack_seen_by_adjacent_civs(iptr unit)
 #undef civ
 
 /* 005b503b auto */
-undefined4 __cdecl unit_stack_has_type(iptr unit,uint param_2)
+i32 __cdecl unit_stack_has_type(iptr unit,uint param_2)
 
 {
   unit = unit_stack_first(unit);
@@ -182,7 +182,7 @@ int __cdecl unit_stack_ships_load_cargo(iptr unit,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   unit_stack_ships_to_top(unit,0);
@@ -242,8 +242,8 @@ void __cdecl text_set_fake_bold(int param_1)
 /* 005bb463 auto */
 void __thiscall
 surface_wnd_create_with_menu
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
   surface_wnd_create(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
@@ -254,8 +254,8 @@ surface_wnd_create_with_menu
 /* 005bb525 auto */
 void __thiscall
 wnd_create_with_surface_menu
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8,iptr param_9)
 
 {
   wnd_create_with_surface(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
@@ -266,8 +266,8 @@ wnd_create_with_surface_menu
 /* 005bb760 auto */
 void __thiscall
 surface_wnd_create_nopal
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6)
 
 {
   iptr iVar1;
@@ -283,8 +283,8 @@ surface_wnd_create_nopal
 /* 005bb7c3 auto */
 void __thiscall
 surface_wnd_create_nopal_menu
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,iptr param_7)
 
 {
   surface_wnd_create_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6);
@@ -295,8 +295,8 @@ surface_wnd_create_nopal_menu
 /* 005bb80a auto */
 void __thiscall
 surface_wnd_create_child_nopal
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7)
 
 {
   iptr iVar1;
@@ -312,8 +312,8 @@ surface_wnd_create_child_nopal
 /* 005bb871 auto */
 void __thiscall
 surface_wnd_create_child_nopal_menu
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
   surface_wnd_create_child_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
@@ -327,7 +327,7 @@ void __cdecl win_discard_all_messages(void)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   do {
     BVar1 = PeekMessageA(&local_20,(HWND)0x0,0,0,1);
@@ -345,19 +345,19 @@ void __cdecl app_launch_program(LPCSTR param_1)
 }
 
 /* 005bc019 auto */
-void __cdecl wnd_obj_set_kind(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_kind(iptr param_1,i32 param_2)
 
 {
-  *(undefined4 *)(param_1 + 0x40) = param_2;
+  *(i32 *)(param_1 + 0x40) = param_2;
   return;
 }
 
 /* 005bc032 auto */
-undefined4 __cdecl wnd_obj_is_visible(iptr param_1)
+i32 __cdecl wnd_obj_is_visible(iptr param_1)
 
 {
   BOOL BVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   if (param_1 == 0) {
     uVar2 = 0;
@@ -385,7 +385,7 @@ void __cdecl wnd_obj_send_close(iptr param_1)
 }
 
 /* 005bc35e auto */
-void __cdecl wnd_obj_set_bg_rgb(iptr param_1,undefined1 param_2,undefined1 param_3,undefined1 param_4)
+void __cdecl wnd_obj_set_bg_rgb(iptr param_1,i8 param_2,i8 param_3,i8 param_4)
 
 {
   HBRUSH pHVar1;
@@ -400,10 +400,10 @@ void __cdecl wnd_obj_set_bg_rgb(iptr param_1,undefined1 param_2,undefined1 param
 }
 
 /* 005bc3d8 auto */
-void __cdecl FUN_005bc3d8(iptr param_1,undefined4 param_2)
+void __cdecl FUN_005bc3d8(iptr param_1,i32 param_2)
 
 {
-  *(undefined4 *)(param_1 + 0x28) = param_2;
+  *(i32 *)(param_1 + 0x28) = param_2;
   return;
 }
 
@@ -462,7 +462,7 @@ void __cdecl wnd_obj_invalidate_rect(iptr param_1,RECT *param_2)
 void __cdecl wnd_obj_client_to_screen(iptr param_1,LONG param_2,LONG param_3,LONG *param_4,LONG *param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     local_c.x = param_2;
@@ -483,7 +483,7 @@ void __cdecl wnd_obj_client_to_parent(iptr param_1,LONG param_2,LONG param_3,LON
   HWND hWndTo;
   tagPOINT *lpPoints;
   UINT cPoints;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     local_c.x = param_2;
@@ -619,11 +619,11 @@ void __cdecl wnd_obj_apply_hcursor(iptr param_1,HCURSOR param_2)
 #define local_28 (*(char *)(frame_ + FRAME_OFF(32)))
 #define local_24 (*(tagMSG *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(HWND *)(frame_ + FRAME_OFF(64)))
-int __cdecl wnd_check_mouse_release(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+int __cdecl wnd_check_mouse_release(iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_28 = '\0';
   if (param_1 == 0) {
@@ -645,7 +645,7 @@ int __cdecl wnd_check_mouse_release(iptr param_1,undefined4 param_2,undefined4 p
          || (((char)param_2 == '\0' && ((local_48.message == 0x205 || (local_24.message == 0xa5)))))
          ) {
         local_28 = 1;
-        (*(undefined1 *)((char *)&param_4 + 0)) = '\0';
+        (*(i8 *)((char *)&param_4 + 0)) = '\0';
       }
     }
   } while ((char)param_4 != '\0');
@@ -670,8 +670,8 @@ bool __cdecl input_rbutton_is_down(void)
 /* 005bd7db auto */
 void __thiscall
 surface_reload_pict_resource
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   surface_release(this);
@@ -688,16 +688,16 @@ surface_reload_pict_resource
 #define local_44 (*(uptr *)(frame_ + FRAME_OFF(36)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_3c (*(uint *)(frame_ + FRAME_OFF(44)))
-#define local_38 (*(undefined1 *)(frame_ + FRAME_OFF(48)))
-#define local_37 (*(undefined1 *)(frame_ + FRAME_OFF(49)))
-#define local_36 (*(undefined1 *)(frame_ + FRAME_OFF(50)))
-#define local_35 (*(undefined1 *)(frame_ + FRAME_OFF(51)))
+#define local_38 (*(i8 *)(frame_ + FRAME_OFF(48)))
+#define local_37 (*(i8 *)(frame_ + FRAME_OFF(49)))
+#define local_36 (*(i8 *)(frame_ + FRAME_OFF(50)))
+#define local_35 (*(i8 *)(frame_ + FRAME_OFF(51)))
 #define local_34 (*(uint *)(frame_ + FRAME_OFF(52)))
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(56)))
 #define local_2c (*(byte *)(frame_ + FRAME_OFF(60)))
 #define local_2a (*(char *)(frame_ + FRAME_OFF(62)))
 #define local_28 (*(uint *)(frame_ + FRAME_OFF(64)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(68)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(68)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(72)))
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(76)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(80)))
@@ -705,7 +705,7 @@ surface_reload_pict_resource
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(96)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_lbm_resource
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
@@ -714,8 +714,8 @@ surface_load_lbm_resource
   char cVar2;
   char cVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_38 = 0x4c;
   local_37 = 0x42;
@@ -766,7 +766,7 @@ surface_load_lbm_resource
             else {
               iVar4 = _strncmp(local_5c,&lbm_body_tag,4);
               if (iVar4 == 0) {
-                if (((local_34 & 0xffff) == 1) && ((*(undefined2 *)((char *)&local_34 + 2)) == 1)) {
+                if (((local_34 & 0xffff) == 1) && ((*(i16 *)((char *)&local_34 + 2)) == 1)) {
                   local_34 = 0;
                 }
                 if (local_10 == 0) {
@@ -840,19 +840,19 @@ surface_load_lbm_resource
           mem_move_src_dst((iptr)local_1c,(iptr)&local_34,local_58);
           local_1c += local_58;
           uVar5 = endian_swap16(local_34 & 0xffff);
-          local_34 = CONCAT22((*(undefined2 *)((char *)&local_34 + 2)),(short)uVar5);
-          uVar5 = endian_swap16((uint)(*(undefined2 *)((char *)&local_34 + 2)));
-          local_34 = CONCAT22((short)uVar5,(undefined2)local_34);
+          local_34 = CONCAT22((*(i16 *)((char *)&local_34 + 2)),(short)uVar5);
+          uVar5 = endian_swap16((uint)(*(i16 *)((char *)&local_34 + 2)));
+          local_34 = CONCAT22((short)uVar5,(i16)local_34);
           uVar5 = endian_swap16(local_30 & 0xffff);
-          local_30 = CONCAT22((*(undefined2 *)((char *)&local_30 + 2)),(short)uVar5);
-          uVar5 = endian_swap16((uint)(*(undefined2 *)((char *)&local_30 + 2)));
-          local_30 = CONCAT22((short)uVar5,(undefined2)local_30);
+          local_30 = CONCAT22((*(i16 *)((char *)&local_30 + 2)),(short)uVar5);
+          uVar5 = endian_swap16((uint)(*(i16 *)((char *)&local_30 + 2)));
+          local_30 = CONCAT22((short)uVar5,(i16)local_30);
           uVar5 = endian_swap16(local_28 & 0xffff);
-          local_28 = CONCAT22((*(undefined2 *)((char *)&local_28 + 2)),(short)uVar5);
+          local_28 = CONCAT22((*(i16 *)((char *)&local_28 + 2)),(short)uVar5);
           uVar5 = endian_swap16(local_24 & 0xffff);
-          local_24 = CONCAT22((*(undefined2 *)((char *)&local_24 + 2)),(short)uVar5);
-          uVar5 = endian_swap16((uint)(*(undefined2 *)((char *)&local_24 + 2)));
-          local_24 = CONCAT22((short)uVar5,(undefined2)local_24);
+          local_24 = CONCAT22((*(i16 *)((char *)&local_24 + 2)),(short)uVar5);
+          uVar5 = endian_swap16((uint)(*(i16 *)((char *)&local_24 + 2)));
+          local_24 = CONCAT22((short)uVar5,(i16)local_24);
         } while (local_2c < 9);
         err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6368c0, ((u8 *)&g.d_006368c0)),ADDR(0x6368a8, ((u8 *)&g.d_006368a8)),0x12a);
       }
@@ -907,11 +907,11 @@ void __cdecl lbm_decode_row(iptr param_1,ushort *param_2,char *param_3,int param
   char *pcVar1;
   char cVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_5 == 0) {
     for (local_14 = 0; (int)local_14 < (int)(uint)*param_2; local_14++) {
-      *(undefined1 *)(local_14 + param_1) = 0;
+      *(i8 *)(local_14 + param_1) = 0;
     }
     for (local_6c = 0; local_6c < (int)(uint)(byte)param_2[4]; local_6c++) {
       lbm_unpack_row((iptr)local_68,(iptr)param_2,(iptr)param_3,param_4);
@@ -986,38 +986,38 @@ void __cdecl lbm_decode_row(iptr param_1,ushort *param_2,char *param_3,int param
 void __cdecl lbm_unpack_row(iptr param_1,iptr param_2,iptr param_3,int param_4)
 
 {
-  undefined1 *puVar1;
-  undefined1 uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar1;
+  i8 uVar2;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   if (*(char *)(param_2 + 10) == '\0') {
     for (; local_c < param_4; local_c++) {
-      *(undefined1 *)(local_c + param_1) = *(undefined1 *)param_3;
+      *(i8 *)(local_c + param_1) = *(i8 *)param_3;
       param_3++;
     }
   }
   else {
-    puVar1 = (undefined1 *)param_3;
+    puVar1 = (i8 *)param_3;
     if (*(char *)(param_2 + 10) == 1) {
       while (param_3 = (iptr)puVar1, local_c < param_4) {
         local_10 = (int)*(char *)param_3;
-        puVar1 = (undefined1 *)(param_3 + 1);
+        puVar1 = (i8 *)(param_3 + 1);
         if (local_10 < 0) {
           if (-0x80 < local_10) {
             uVar2 = *puVar1;
-            while (puVar1 = (undefined1 *)(param_3 + 2), local_10 < 1) {
-              *(undefined1 *)(local_c + param_1) = uVar2;
+            while (puVar1 = (i8 *)(param_3 + 2), local_10 < 1) {
+              *(i8 *)(local_c + param_1) = uVar2;
               local_c++;
               local_10++;
             }
           }
         }
         else {
-          while (param_3 = (iptr)puVar1, puVar1 = (undefined1 *)param_3, -1 < local_10) {
-            *(undefined1 *)(local_c + param_1) = *(undefined1 *)param_3;
+          while (param_3 = (iptr)puVar1, puVar1 = (i8 *)param_3, -1 < local_10) {
+            *(i8 *)(local_c + param_1) = *(i8 *)param_3;
             local_c++;
-            puVar1 = (undefined1 *)(param_3 + 1);
+            puVar1 = (i8 *)(param_3 + 1);
             local_10--;
           }
         }
@@ -1036,25 +1036,25 @@ void __cdecl lbm_unpack_row(iptr param_1,iptr param_2,iptr param_3,int param_4)
 #define local_2c (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(40)))
-#define local_1f (*(undefined1 *)(frame_ + FRAME_OFF(41)))
-#define local_1e (*(undefined1 *)(frame_ + FRAME_OFF(42)))
-#define local_1d (*(undefined1 *)(frame_ + FRAME_OFF(43)))
+#define local_20 (*(i8 *)(frame_ + FRAME_OFF(40)))
+#define local_1f (*(i8 *)(frame_ + FRAME_OFF(41)))
+#define local_1e (*(i8 *)(frame_ + FRAME_OFF(42)))
+#define local_1d (*(i8 *)(frame_ + FRAME_OFF(43)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(44)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(48)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(52)))
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(56)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_tga_resource
-          (DibSurface *this,undefined4 param_1,uint param_2,int param_3,GamePalette *param_4)
+          (DibSurface *this,i32 param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined3 uVar3;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 0x54;
   local_1f = 0x41;
@@ -1083,7 +1083,7 @@ surface_load_tga_resource
         local_c = local_10;
         for (local_24 = param_2; (int)local_24 < (int)(param_3 + param_2); local_24++)
         {
-          uVar3 = (undefined3)((uint)local_c >> 8);
+          uVar3 = (i32)((uint)local_c >> 8);
           palette_set_entry
                     (param_4,local_24,CONCAT31(uVar3,local_c[2]),CONCAT31(uVar3,local_c[1]),
                      CONCAT31(uVar3,*local_c));
@@ -1156,18 +1156,18 @@ surface_load_tga_resource
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(208)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(216)))
+i32 __thiscall
 surface_load_tga_file
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
-  undefined3 uVar3;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b4);
@@ -1200,7 +1200,7 @@ surface_load_tga_file
         local_18 = local_1c;
         for (local_c4 = param_2; (int)local_c4 < (int)(param_3 + param_2); local_c4++)
         {
-          uVar3 = (undefined3)((uint)local_18 >> 8);
+          uVar3 = (i32)((uint)local_18 >> 8);
           palette_set_entry
                     (param_4,local_c4,CONCAT31(uVar3,local_18[2]),CONCAT31(uVar3,local_18[1]),
                      CONCAT31(uVar3,*local_18));
@@ -1273,10 +1273,10 @@ surface_load_tga_file
 #define local_34 (*(iptr *)(frame_ + FRAME_OFF(148)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(152)))
 #define local_2c (*(uint *)(frame_ + FRAME_OFF(156)))
-#define local_28 (*(undefined1 *)(frame_ + FRAME_OFF(160)))
-#define local_27 (*(undefined1 *)(frame_ + FRAME_OFF(161)))
-#define local_26 (*(undefined1 *)(frame_ + FRAME_OFF(162)))
-#define local_25 (*(undefined1 *)(frame_ + FRAME_OFF(163)))
+#define local_28 (*(i8 *)(frame_ + FRAME_OFF(160)))
+#define local_27 (*(i8 *)(frame_ + FRAME_OFF(161)))
+#define local_26 (*(i8 *)(frame_ + FRAME_OFF(162)))
+#define local_25 (*(i8 *)(frame_ + FRAME_OFF(163)))
 #define local_24 (*(uptr *)(frame_ + FRAME_OFF(164)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(168)))
 #define local_1c (*(byte *)(frame_ + FRAME_OFF(172)))
@@ -1285,14 +1285,14 @@ surface_load_tga_file
 #define local_10 (*(int *)(frame_ + FRAME_OFF(184)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(188)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(192)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_pcx_resource
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(200)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(200)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_28 = 0x50;
   local_27 = 0x43;
@@ -1418,17 +1418,17 @@ surface_load_pcx_resource
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(324)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(328)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(332)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(336)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(340)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(344)))
-undefined4 __thiscall
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(336)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(340)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(344)))
+i32 __thiscall
 surface_load_pcx_file
           (DibSurface *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_c4);
@@ -1544,24 +1544,24 @@ surface_load_pcx_file
 /* 005bf930 auto */
 #define local_30 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined1 *)(frame_ + FRAME_OFF(20)))
-#define local_1b (*(undefined1 *)(frame_ + FRAME_OFF(21)))
-#define local_1a (*(undefined1 *)(frame_ + FRAME_OFF(22)))
-#define local_19 (*(undefined1 *)(frame_ + FRAME_OFF(23)))
+#define local_1c (*(i8 *)(frame_ + FRAME_OFF(20)))
+#define local_1b (*(i8 *)(frame_ + FRAME_OFF(21)))
+#define local_1a (*(i8 *)(frame_ + FRAME_OFF(22)))
+#define local_19 (*(i8 *)(frame_ + FRAME_OFF(23)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_10 (*(short * *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(short * *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_pict_resource
-          (DibSurface *this,iptr param_1,uint param_2,undefined4 param_3,GamePalette *param_4)
+          (DibSurface *this,iptr param_1,uint param_2,i32 param_3,GamePalette *param_4)
 
 {
   byte bVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = 0x43;
   local_1b = 0x76;
@@ -1628,15 +1628,15 @@ surface_load_pict_resource
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_bmp_resource
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined3 uVar3;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_24 = res_load_bitmap(param_1);
   if (local_24 == 0) {
@@ -1659,7 +1659,7 @@ surface_load_bmp_resource
         local_10 = (char *)(local_c + 0x28);
         if (param_4 != (GamePalette *)0x0) {
           for (local_20 = param_2; local_20 < param_3 + param_2; local_20++) {
-            uVar3 = (undefined3)((uint)local_10 >> 8);
+            uVar3 = (i32)((uint)local_10 >> 8);
             palette_set_entry
                       (param_4,local_20,CONCAT31(uVar3,local_10[2]),CONCAT31(uVar3,local_10[1]),
                        CONCAT31(uVar3,*local_10));
@@ -1709,7 +1709,7 @@ surface_load_bmp_resource
 /* 005bfcff auto */
 #define local_dc (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 #define local_cc (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_c8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_c8 (*(i32 *)(frame_ + FRAME_OFF(24)))
 #define local_c4 (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_bc (*(FileObject *)(frame_ + FRAME_OFF(36)))
@@ -1718,10 +1718,10 @@ surface_load_bmp_resource
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(208)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(216)))
+i32 __thiscall
 surface_load_bmp_file
           (DibSurface *this,iptr param_1,uint param_2,int param_3,GamePalette *param_4)
 
@@ -1729,9 +1729,9 @@ surface_load_bmp_file
   iptr iVar1;
   iptr iVar2;
   int iVar3;
-  undefined3 uVar5;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_bc);
@@ -1762,7 +1762,7 @@ surface_load_bmp_file
         local_1c = (char *)(local_18 + 0x28);
         if (param_4 != (GamePalette *)0x0) {
           for (local_c4 = param_2; local_c4 < param_3 + param_2; local_c4++) {
-            uVar5 = (undefined3)((uint)local_1c >> 8);
+            uVar5 = (i32)((uint)local_1c >> 8);
             palette_set_entry
                       (param_4,local_c4,CONCAT31(uVar5,local_1c[2]),CONCAT31(uVar5,local_1c[1]),
                        CONCAT31(uVar5,*local_1c));

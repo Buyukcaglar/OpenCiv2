@@ -57,14 +57,14 @@ void __cdecl taxrate_dialog_redraw(void)
 void __cdecl taxrate_on_tax_scroll(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(taxrate_dlg + 0x2dc) < param_1) {
-    *(undefined4 *)(taxrate_dlg + 0x348) = 1;
+    *(i32 *)(taxrate_dlg + 0x348) = 1;
   }
   local_8 = param_1;
   local_c = param_1;
-  local_8 = int_clamp(param_1,0,*(undefined4 *)(taxrate_dlg + 0x2dc));
+  local_8 = int_clamp(param_1,0,*(i32 *)(taxrate_dlg + 0x2dc));
   local_10 = *(int *)(taxrate_dlg + 0x2e8);
   local_14 = *(int *)(taxrate_dlg + 0x2e4);
   taxrate_balance((iptr)&local_8,(iptr)&local_10,(iptr)&local_14,taxrate_dlg + 0x2f4,
@@ -101,14 +101,14 @@ void __cdecl taxrate_on_tax_scroll(int param_1)
 void __cdecl taxrate_on_science_scroll(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(taxrate_dlg + 0x2dc) < param_1) {
-    *(undefined4 *)(taxrate_dlg + 0x348) = 1;
+    *(i32 *)(taxrate_dlg + 0x348) = 1;
   }
   local_8 = param_1;
   local_c = param_1;
-  local_8 = int_clamp(param_1,0,*(undefined4 *)(taxrate_dlg + 0x2dc));
+  local_8 = int_clamp(param_1,0,*(i32 *)(taxrate_dlg + 0x2dc));
   local_10 = *(int *)(taxrate_dlg + 0x2e4);
   local_14 = *(int *)(taxrate_dlg + 0x2e0);
   taxrate_balance((iptr)&local_8,(iptr)&local_10,(iptr)&local_14,taxrate_dlg + 0x2f0,
@@ -145,14 +145,14 @@ void __cdecl taxrate_on_science_scroll(int param_1)
 void __cdecl taxrate_on_lux_scroll(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(taxrate_dlg + 0x2dc) < param_1) {
-    *(undefined4 *)(taxrate_dlg + 0x348) = 1;
+    *(i32 *)(taxrate_dlg + 0x348) = 1;
   }
   local_8 = param_1;
   local_c = param_1;
-  local_8 = int_clamp(param_1,0,*(undefined4 *)(taxrate_dlg + 0x2dc));
+  local_8 = int_clamp(param_1,0,*(i32 *)(taxrate_dlg + 0x2dc));
   local_10 = *(int *)(taxrate_dlg + 0x2e0);
   local_14 = *(int *)(taxrate_dlg + 0x2e8);
   taxrate_balance((iptr)&local_8,(iptr)&local_10,(iptr)&local_14,taxrate_dlg + 0x2ec,
@@ -182,7 +182,7 @@ void __cdecl taxrate_on_lux_scroll(int param_1)
 #undef local_8
 
 /* 0040c3a5 auto */
-#define taxrate_dialog_active (*(undefined4 *)((u8 *)&g.d_0063cbb0))
+#define taxrate_dialog_active (*(i32 *)((u8 *)&g.d_0063cbb0))
 void __cdecl taxrate_on_ok_clicked(void)
 
 {
@@ -197,13 +197,13 @@ void __cdecl taxrate_on_ok_clicked(void)
 void __cdecl taxrate_on_lock_toggled(int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(int *)(taxrate_dlg + 0x34c + (param_1 - 300) * 4) = param_2;
   if (param_2 != 0) {
     for (local_8 = 0; local_8 < 3; local_8++) {
       if (param_1 - 300 != local_8) {
-        *(undefined4 *)(taxrate_dlg + 0x34c + local_8 * 4) = 0;
+        *(i32 *)(taxrate_dlg + 0x34c + local_8 * 4) = 0;
         checkbox_set_checked
                   ((Control *)(local_8 * 0x3c + 0x418 + taxrate_dlg),0);
         ctrl_show_and_redraw((Control *)(local_8 * 0x3c + 0x418 + taxrate_dlg))
@@ -226,7 +226,7 @@ void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
   u8 uVar2;
   int iVar3;
   uptr civ;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->total_tax = 0;
   this->field_310 = 0;
@@ -274,7 +274,7 @@ void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
 void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((taxrate_bg_surface == 0) || (taxrate_dialog_active == 0)) {
@@ -374,13 +374,13 @@ void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
 #undef local_c
 
 /* 0040cd64 auto */
-#define SCHAR_00h_0064bc1a (*(undefined *)((u8 *)&g.d_0064bc1a))
-#define SCHAR_00h_0064bc1c (*(undefined *)((u8 *)&g.d_0064bc1c))
+#define SCHAR_00h_0064bc1a (*(i8 *)((u8 *)&g.d_0064bc1a))
+#define SCHAR_00h_0064bc1c (*(i8 *)((u8 *)&g.d_0064bc1c))
 #define taxrate_bg_surface (*(DibSurface * *)((u8 *)&g.d_00624f1c))
 #define taxrate_dialog_active (*(int *)((u8 *)&g.d_0063cbb0))
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
-#define _SCHAR_00h_0064bc1a (*(undefined2 *)((u8 *)&g.d_0064bc1a))
-#define _SCHAR_00h_0064bc1c (*(undefined2 *)((u8 *)&g.d_0064bc1c))
+#define _SCHAR_00h_0064bc1a (*(i16 *)((u8 *)&g.d_0064bc1a))
+#define _SCHAR_00h_0064bc1c (*(i16 *)((u8 *)&g.d_0064bc1c))
 #define local_4a0 (*(u8 * *)(frame_ + FRAME_OFF(0)))
 #define local_49c (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_498 (*(u8 * *)(frame_ + FRAME_OFF(8)))
@@ -393,11 +393,11 @@ void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
 #define local_464 (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(64)))
 #define local_45c (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_458 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(72)))
+#define local_458 (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
 #define local_448 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(92)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1172)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1168)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1172)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1176)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -410,17 +410,17 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   DibSurface *this_00;
   u32 uVar4;
   iptr iVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   int iVar7;
   u32 uVar8;
   int iVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined4 uVar14;
-  undefined4 uVar15;
-  undefined1 frame_[FRAME_OFF(1184)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar10;
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i32 uVar14;
+  i32 uVar15;
+  i8 frame_[FRAME_OFF(1184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_464 = 0;
@@ -430,14 +430,14 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   this->field_2d8 = civ;
   taxrate_dialog_active = 1;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_484 = (DibSurface *)0x0;
   }
   else {
     local_484 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   taxrate_bg_surface = local_484;
   uVar4 = civ_max_tax_rate(civ);
   this->field_2dc = uVar4;
@@ -492,7 +492,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   surface_load_gif_resource(taxrate_bg_surface,local_470,10,0xc0,(iptr)&local_444);
   uVar4 = font_cached_height((GameFont *)&ui_text_font);
   this->field_32c = uVar4;
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x408));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x408));
   local_460 = font_text_width((GameFont *)&ui_text_font,iVar5);
   this->field_31c = (this->field_2f8 + this->field_314 * -2) - (this->field_314 + local_460);
   uVar15 = 0;
@@ -503,7 +503,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   uVar12 = 0;
   uVar11 = 0;
   uVar10 = 0xd;
-  uVar6 = label_string(*(undefined4 *)(label_string_ids + 0x404));
+  uVar6 = label_string(*(i32 *)(label_string_ids + 0x404));
   frame_wnd_create
             ((FrameWindow *)this,uVar6,uVar10,uVar11,uVar12,uVar8,uVar4,uVar13,uVar14,uVar15);
   local_448 = this->field_31c + this->field_314 + this->field_314 + this->client_x;
@@ -578,7 +578,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   else {
     local_49c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)(this[1].pad_48 + 0x54),(iptr)local_49c,0xc9,(iptr)local_458,iVar5);
   button_set_callback((Control *)(this[1].pad_48 + 0x54),ADDR(0x402a18, taxrate_on_ok_clicked));
@@ -588,8 +588,8 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
     local_45c += 6;
   }
   for (local_468 = 0; local_468 < 3; local_468++) {
-    *(undefined4 *)(this->pad_364 + local_468 * 4 - 0x18) =
-         *(undefined4 *)(&taxrate_lock_flags + local_468 * 4);
+    *(i32 *)(this->pad_364 + local_468 * 4 - 0x18) =
+         *(i32 *)(&taxrate_lock_flags + local_468 * 4);
     if (this == (C_004083b0_430 *)0x0) {
       local_4a0 = (u8 *)0x0;
     }
@@ -601,7 +601,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
                local_468 + 300,iVar7 - 0x10,local_45c,ADDR(0x624f20, ((u8 *)&g.d_00624f20)));
     checkbox_set_checked
               ((Control *)(this->pad_3c0 + local_468 * 0x3c + 0x58),
-               *(undefined4 *)(this->pad_364 + local_468 * 4 - 0x18));
+               *(i32 *)(this->pad_364 + local_468 * 4 - 0x18));
     checkbox_set_callback((CheckboxCallbackSetView *)(this->pad_3c0 + local_468 * 0x3c + 0x58),ADDR(0x40375b, taxrate_on_lock_toggled))
     ;
     local_45c = local_45c + this->field_318 + this->field_320 + this->field_32c;
@@ -623,8 +623,8 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   }
   taxrate_bg_surface = (DibSurface *)0x0;
   for (local_468 = 0; local_468 < 3; local_468++) {
-    *(undefined4 *)(&taxrate_lock_flags + local_468 * 4) =
-         *(undefined4 *)(this->pad_364 + local_468 * 4 - 0x18);
+    *(i32 *)(&taxrate_lock_flags + local_468 * 4) =
+         *(i32 *)(this->pad_364 + local_468 * 4 - 0x18);
   }
   if (((uint)civs[civ].tax_rate != this->field_2e0) ||
      ((uint)civs[civ].science_rate != this->field_2e8)) {
@@ -683,13 +683,13 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
 /* 0040ddc6 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_518 (*(C_004083b0_430 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1288)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1292)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1296)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1288)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1292)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1296)))
 void __cdecl taxrate_dialog_show(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(1304)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1304)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   taxrate_dialog_ctor(&local_518);
@@ -704,7 +704,7 @@ void __cdecl taxrate_dialog_show(iptr civ)
       city_window_refresh((FrameWindow *)&city_window);
     }
     else {
-      net_send_message(0x9d,*(undefined4 *)
+      net_send_message(0x9d,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),0,0,0,
                          0,0,0,0,0);
     }
@@ -740,7 +740,7 @@ void __cdecl taxrate_enforce_max_rate(iptr civ)
       }
     }
     else {
-      net_send_message(0x9e,*(undefined4 *)
+      net_send_message(0x9e,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),0,0,0,
                          0,0,0,0,0);
     }
@@ -750,26 +750,26 @@ void __cdecl taxrate_enforce_max_rate(iptr civ)
 #undef human_civ
 
 /* 0040f060 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_430 * __thiscall taxrate_dialog_ctor(C_004083b0_430 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   scrollbar_ctor((Control *)&this->field_358);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   scrollbar_ctor((Control *)(this->pad_364 + 0x34));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   scrollbar_ctor((Control *)(this->pad_3c0 + 0x18));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   FUN_005f2620(this->pad_3c0 + 0x58,0x3c,3,checkbox_elem_ctor,
                checkbox_dtor);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),4);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),4);
   button_ctor((Control *)(this[1].pad_48 + 0x54));
   this->vtable = (u32)&PTR_FUN_0061c054;
   return this;
@@ -779,24 +779,24 @@ C_004083b0_430 * __thiscall taxrate_dialog_ctor(C_004083b0_430 *this)
 #undef local_8
 
 /* 0040f1e0 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall taxrate_dialog_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0040f25f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x4cc)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_0040f26e */ { FUN_005f2490(*(int *)((iptr)&this) + 0x418,0x3c,3,checkbox_dtor); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0040f286 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x3d8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_0040f295 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x398)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_0040f2a4 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x358)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0040f2b3 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -813,21 +813,21 @@ void __thiscall taxrate_dialog_dtor(void *this)
 #define local_344 (*(Dialog *)(frame_ + FRAME_OFF(12)))
 #define local_50 (*(Sprite *)(frame_ + FRAME_OFF(768)))
 #define local_14 (*(uptr *)(frame_ + FRAME_OFF(828)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(832)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(836)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(832)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(836)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(840)))
 void __cdecl city_info_popup(iptr city)
 
 {
   iptr iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(848)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(848)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   sprite_init(&local_50);
   local_8 = 0;
   dialog_ctor(&local_344,0x4000);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   sprite_create_solid(&local_50,0x40,0x30,0);
   text_set_string_arg(0,(iptr)&cities[city].name);
   text_clear();
@@ -901,7 +901,7 @@ void __cdecl city_editor_request_redraw(void)
 }
 
 /* 00428d1b auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl city_editor_on_ok(void)
 
 {
@@ -913,11 +913,11 @@ void __cdecl city_editor_on_ok(void)
 #undef editor_running
 
 /* 00428d48 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl city_editor_on_help(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_8 = 0;
@@ -933,7 +933,7 @@ void __cdecl city_editor_on_help(void)
 #undef local_8
 
 /* 00428da7 auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl city_editor_on_cancel(void)
 
 {
@@ -947,13 +947,13 @@ void __cdecl city_editor_on_cancel(void)
 void __cdecl city_editor_on_edit_icon(void)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined1 *puVar3;
+  i32 uVar1;
+  i32 uVar2;
+  i8 *puVar3;
   
   puVar3 = ((void *)ADDR(0x0040123a, sprite_sheet_save_cities));
   uVar2 = 1;
-  uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+  uVar1 = label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(&city_sprites +
                            *(int *)(active_editor_wnd + 0x2f4) * 0x3c +
                            *(int *)(active_editor_wnd + 0x2ec) * 0x1e0 +
@@ -964,15 +964,15 @@ void __cdecl city_editor_on_edit_icon(void)
 
 /* 00428e50 auto */
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined * *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl city_editor_on_edit_misc(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 *puVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 *puVar3;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 2;
   if (active_editor_wnd == 0) {
@@ -1006,9 +1006,9 @@ void __cdecl city_editor_on_edit_misc(void)
     case 0xb:
       local_10 = &airbase_occupied_sprite;
     }
-    if (local_10 != (undefined *)0x0) {
+    if (local_10 != (i8 *)0x0) {
       puVar3 = ((void *)ADDR(0x0040123a, sprite_sheet_save_cities));
-      uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+      uVar2 = label_string(*(i32 *)(label_string_ids + 0x7d8));
       sprite_editor_run((iptr)local_10,uVar2,local_8,(iptr)puVar3);
     }
   }
@@ -1020,33 +1020,33 @@ void __cdecl city_editor_on_edit_misc(void)
 #undef local_8
 
 /* 00428fd2 auto */
-void __cdecl city_editor_on_combo_change(undefined4 param_1)
+void __cdecl city_editor_on_combo_change(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
-  *(undefined4 *)(active_editor_wnd + 0x2ec) = uVar1;
+  *(i32 *)(active_editor_wnd + 0x2ec) = uVar1;
   uVar1 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x334));
-  *(undefined4 *)(active_editor_wnd + 0x2f0) = uVar1;
+  *(i32 *)(active_editor_wnd + 0x2f0) = uVar1;
   uVar1 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x36c));
-  *(undefined4 *)(active_editor_wnd + 0x2f4) = uVar1;
+  *(i32 *)(active_editor_wnd + 0x2f4) = uVar1;
   city_editor_request_redraw();
   return;
 }
 
 /* 0042903e auto */
-#define city_editor_combo_x_table (*(undefined4 *)((u8 *)&g.d_00625e70))
-#define city_editor_combo_y_table (*(undefined4 *)((u8 *)&g.d_00625e74))
+#define city_editor_combo_x_table (*(i32 *)((u8 *)&g.d_00625e70))
+#define city_editor_combo_y_table (*(i32 *)((u8 *)&g.d_00625e74))
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,(&city_editor_combo_x_table)[param_1 * 2] + this->client_x - 0x1e,
                      (&city_editor_combo_y_table)[param_1 * 2] + this->client_y,0xa0,this->field_2e8 << 3);
@@ -1064,33 +1064,33 @@ void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
   combo_set_font((ComboBoxFontView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x4036f7, city_editor_on_combo_change));
   if (param_1 == 0) {
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x834));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x834));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x838));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x838));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x83c));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x83c));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x840));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x840));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x844));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x844));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x848));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x848));
     combo_add_string((ComboBoxAddView *)&this->field_2fc,iVar2);
   }
   else if (param_1 == 1) {
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x84c));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x84c));
     combo_add_string((ComboBoxAddView *)&this->field_334,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x850));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x850));
     combo_add_string((ComboBoxAddView *)&this->field_334,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x854));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x854));
     combo_add_string((ComboBoxAddView *)&this->field_334,iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x858));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x858));
     combo_add_string((ComboBoxAddView *)&this->field_334,iVar2);
   }
   else if (param_1 == 2) {
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x85c));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x85c));
     combo_add_string((ComboBoxAddView *)(this->pad_364 + 8),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x860));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x860));
     combo_add_string((ComboBoxAddView *)(this->pad_364 + 8),iVar2);
   }
   return;
@@ -1106,7 +1106,7 @@ void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
 #define city_editor_combo_y_table (*(int *)((u8 *)&g.d_00625e74))
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_18 (*(Sprite * *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -1117,7 +1117,7 @@ void __thiscall city_editor_draw(C_004083b0_430 *this)
 {
   byte bVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -1142,19 +1142,19 @@ void __thiscall city_editor_draw(C_004083b0_430 *this)
   local_10 = city_editor_combo_x_table + this->client_x + 0x32;
   local_14 = ((city_editor_combo_y_table + this->client_y) - this->field_2e8) - 2;
   text_clear();
-  iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x864));
+  iVar2 = label_string(*(i32 *)(label_string_ids + 0x864));
   text_append_str(iVar2);
   text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
   local_10 = city_editor_combo2_x + this->client_x + 0x32;
   local_14 = ((city_editor_combo2_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
-  iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x868));
+  iVar2 = label_string(*(i32 *)(label_string_ids + 0x868));
   text_append_str(iVar2);
   text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
   local_10 = city_editor_combo3_x + this->client_x + 0x32;
   local_14 = ((city_editor_combo3_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
-  iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x86c));
+  iVar2 = label_string(*(i32 *)(label_string_ids + 0x86c));
   text_append_str(iVar2);
   text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
   wnd_blit_surface((DibSurface *)this);
@@ -1173,7 +1173,7 @@ void __thiscall city_editor_draw(C_004083b0_430 *this)
 
 /* 00429671 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
-#define editor_next_ctrl_id (*(undefined4 *)((u8 *)&g.d_006a1d80))
+#define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define local_484 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_480 (*(u8 * *)(frame_ + FRAME_OFF(8)))
@@ -1182,29 +1182,29 @@ void __thiscall city_editor_draw(C_004083b0_430 *this)
 #define local_474 (*(u8 * *)(frame_ + FRAME_OFF(20)))
 #define local_468 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_454 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1148)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall city_editor_open_window(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   u32 uVar9;
   u32 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined1 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -1212,14 +1212,14 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_468 = (DibSurface *)0x0;
   }
   else {
     local_468 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   editor_bg_surface = local_468;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -1242,7 +1242,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   uVar8 = 0;
   uVar7 = 0;
   uVar6 = 0xd;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x738));
+  uVar2 = label_string(*(i32 *)(label_string_ids + 0x738));
   frame_wnd_create
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   for (local_460 = 0; local_460 < 3; local_460++) {
@@ -1260,7 +1260,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   else {
     local_474 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this[1].field_2a4,(iptr)local_474,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40317f, city_editor_on_ok));
@@ -1272,7 +1272,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   else {
     local_478 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8ec));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&this[1].field_2e0,(iptr)local_478,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x402888, city_editor_on_help));
@@ -1284,7 +1284,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   else {
     local_47c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this[1].field_31c,(iptr)local_47c,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x403706, city_editor_on_cancel));
@@ -1301,7 +1301,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   else {
     local_480 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x7cc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(this[1].pad_364 + 0x30),(iptr)local_480,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x401c21, city_editor_on_edit_icon));
@@ -1313,7 +1313,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   else {
     local_484 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8f0));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8f0));
   button_create
             ((Control *)(this[1].pad_3c0 + 0x10),(iptr)local_484,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)(this[1].pad_3c0 + 0x10),ADDR(0x40120d, city_editor_on_edit_misc));
@@ -1360,13 +1360,13 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
 
 /* 00429e77 auto */
 #define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2896)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl city_editor_run(void)
 
 {
-  undefined1 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
@@ -1383,23 +1383,23 @@ void __cdecl city_editor_run(void)
 #undef local_8
 
 /* 0042b824 auto */
-#define local_320 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_320 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_318 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_314 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(776)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(780)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(788)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(792)))
-undefined4 __cdecl trade_commodity_cities_dialog(iptr civ,iptr param_2)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(784)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(788)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(792)))
+i32 __cdecl trade_commodity_cities_dialog(iptr civ,iptr param_2)
 
 {
   bool bVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -1485,17 +1485,17 @@ undefined4 __cdecl trade_commodity_cities_dialog(iptr civ,iptr param_2)
 /* 0042bc47 auto */
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(764)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(764)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(768)))
 void __cdecl trade_supply_search_dialog(iptr civ)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);
@@ -1535,20 +1535,20 @@ LAB_0042bd81:
 #undef local_8
 
 /* 0042bd8f auto */
-#define advisor_client_width (*(undefined4 *)((u8 *)&g.d_0063ec3c))
+#define advisor_client_width (*(i32 *)((u8 *)&g.d_0063ec3c))
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(uint *)((u8 *)&g.d_0063ef70))
-#define advisor_row_height (*(undefined4 *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef68 (*(undefined4 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
-#define local_18c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_17c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_16c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_15c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_14c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(68)))
-#define local_13c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_12c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(100)))
+#define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
+#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define local_18c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_17c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_16c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_15c (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_14c (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
+#define local_13c (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define local_12c (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(116)))
 #define local_118 (*(int *)(frame_ + FRAME_OFF(120)))
 #define local_114 (*(int *)(frame_ + FRAME_OFF(124)))
@@ -1576,7 +1576,7 @@ LAB_0042bd81:
 #define local_24 (*(int *)(frame_ + FRAME_OFF(364)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(368)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(372)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(376)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(376)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(392)))
 /* WARNING: Removing unreachable block (ram,0x0042cc50) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1586,8 +1586,8 @@ void __cdecl trade_advisor_draw(void)
 {
   iptr iVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(400)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(400)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -1600,7 +1600,7 @@ void __cdecl trade_advisor_draw(void)
   text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x548));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x548));
   text_append(iVar1);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_f4,advisor_client_width);
   local_f4 += local_20;
@@ -1697,13 +1697,13 @@ void __cdecl trade_advisor_draw(void)
       if (local_f0 == 0) {
         local_e4 = local_118 + 10;
         text_clear();
-        iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x5b0));
+        iVar1 = label_string(*(i32 *)(label_string_ids + 0x5b0));
         text_append(iVar1);
         text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
         text_set_colors(0x29,10,1,1);
         gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_100 + 0x8a,local_e4);
         text_clear();
-        iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x5b4));
+        iVar1 = label_string(*(i32 *)(label_string_ids + 0x5b4));
         text_append(iVar1);
         gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_d0,local_e4);
         local_118 += local_20;
@@ -1908,8 +1908,8 @@ void __cdecl trade_advisor_draw(void)
 #undef local_8
 
 /* 0042ccf4 auto */
-#define advisor_first_row (*(undefined4 *)((u8 *)&g.d_0063ef70))
-void __cdecl trade_advisor_on_scroll(undefined4 param_1)
+#define advisor_first_row (*(i32 *)((u8 *)&g.d_0063ef70))
+void __cdecl trade_advisor_on_scroll(i32 param_1)
 
 {
   advisor_first_row = param_1;
@@ -1927,8 +1927,8 @@ void __cdecl trade_advisor_on_supply_clicked(void)
 }
 
 /* 0042cd2f auto */
-#define advisor_client_x (*(undefined4 *)((u8 *)&g.d_0063ec34))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x0042cddd) */
 /* WARNING: Removing unreachable block (ram,0x0042ce68) */
 
@@ -1938,7 +1938,7 @@ void __cdecl trade_advisor_show(iptr param_1)
   int iVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   picwnd_open((C_004083b0_4c4 *)&advisor_window,5,5,0,600,400,0,0);
   advisor_report_civ = param_1;
@@ -1947,14 +1947,14 @@ void __cdecl trade_advisor_show(iptr param_1)
   iVar2 = rect_height((iptr)local_14);
   rect_offset((iptr)local_14,advisor_client_x,(iVar1 - iVar2) + 0x18e);
   rect_offset((iptr)local_14,299,0);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)&advisor_close_button,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),100,(iptr)local_14,iVar3);
   button_set_callback((Control *)&advisor_close_button,ADDR(0x401235, advisor_on_close_clicked));
   ctrl_set_default_button((Control *)&advisor_close_button);
   ctrl_set_cancel_button((Control *)&advisor_close_button);
   rect_offset((iptr)local_14,0xfffffed5,0);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x5bc));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x5bc));
   button_create
             ((Control *)&advisor_toggle_button,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),0x65,(iptr)local_14,iVar3);
   button_set_callback((Control *)&advisor_toggle_button,ADDR(0x402ca2, trade_advisor_on_supply_clicked));
@@ -1967,14 +1967,14 @@ void __cdecl trade_advisor_show(iptr param_1)
 #undef local_14
 
 /* 0042ced6 auto */
-#define advisor_client_width (*(undefined4 *)((u8 *)&g.d_0063ec3c))
+#define advisor_client_width (*(i32 *)((u8 *)&g.d_0063ec3c))
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(iptr *)((u8 *)&g.d_0063ef70))
-#define advisor_row_height (*(undefined4 *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef68 (*(undefined4 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
-#define local_6c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
+#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define local_6c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(28)))
@@ -1992,7 +1992,7 @@ void __cdecl trade_advisor_show(iptr param_1)
 #define local_24 (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(88)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(88)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(104)))
 /* WARNING: Removing unreachable block (ram,0x0042d56a) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -2002,8 +2002,8 @@ void __cdecl city_status_draw(void)
 {
   uint uVar1;
   iptr iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2016,7 +2016,7 @@ void __cdecl city_status_draw(void)
   text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x538));
+  iVar2 = label_string(*(i32 *)(label_string_ids + 0x538));
   text_append(iVar2);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_40,advisor_client_width);
   local_40 += local_1c;
@@ -2171,8 +2171,8 @@ void __cdecl city_status_draw(void)
 #undef local_8
 
 /* 0042d618 auto */
-#define advisor_first_row (*(undefined4 *)((u8 *)&g.d_0063ef70))
-void __cdecl city_status_on_scroll(undefined4 param_1)
+#define advisor_first_row (*(i32 *)((u8 *)&g.d_0063ef70))
+void __cdecl city_status_on_scroll(i32 param_1)
 
 {
   advisor_first_row = param_1;
@@ -2184,17 +2184,17 @@ void __cdecl city_status_on_scroll(undefined4 param_1)
 /* 0042d635 auto */
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define city (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_status_on_click(undefined4 param_1,int param_2)
+void __cdecl city_status_on_click(i32 param_1,int param_2)
 
 {
   int iVar1;
   bool bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((-1 < param_2 - _DAT_0063ef78) &&
      (iVar1 = (param_2 - _DAT_0063ef78) / advisor_row_height, iVar1 < advisor_rows_per_page)) {
@@ -2232,13 +2232,13 @@ void __cdecl city_status_show(iptr param_1)
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(iptr *)((u8 *)&g.d_0063ef70))
-#define advisor_row_height (*(undefined4 *)((u8 *)&g.d_0063ef80))
+#define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
 #define text_draw_font (*(GameFont * *)((u8 *)&g.d_006366ac))
-#define _DAT_0063ef68 (*(undefined4 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
-#define local_88 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_84 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define local_88 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_84 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_74 (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(28)))
@@ -2258,7 +2258,7 @@ void __cdecl city_status_show(iptr param_1)
 #define local_34 (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_2c (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(96)))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(112)))
 #define aiStack_14 (*(int (*)[4])(frame_ + FRAME_OFF(116)))
 /* WARNING: Removing unreachable block (ram,0x00431bb2) */
@@ -2268,12 +2268,12 @@ void __cdecl wonders_report_draw(void)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_74 = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2302,7 +2302,7 @@ void __cdecl wonders_report_draw(void)
   }
   if (local_34 == 0) {
     text_clear();
-    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x550));
+    iVar1 = label_string(*(i32 *)(label_string_ids + 0x550));
     text_append(iVar1);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_58,advisor_client_width);
     local_58 = local_58 + local_30 + 4;
@@ -2454,8 +2454,8 @@ void __cdecl wonders_report_draw(void)
 #undef aiStack_14
 
 /* 00431c56 auto */
-#define advisor_first_row (*(undefined4 *)((u8 *)&g.d_0063ef70))
-void __cdecl wonders_report_on_scroll(undefined4 param_1)
+#define advisor_first_row (*(i32 *)((u8 *)&g.d_0063ef70))
+void __cdecl wonders_report_on_scroll(i32 param_1)
 
 {
   advisor_first_row = param_1;
@@ -2465,7 +2465,7 @@ void __cdecl wonders_report_on_scroll(undefined4 param_1)
 #undef advisor_first_row
 
 /* 00431c73 auto */
-#define _DAT_00625ec0 (*(undefined4 *)((u8 *)&g.d_00625ec0))
+#define _DAT_00625ec0 (*(i32 *)((u8 *)&g.d_00625ec0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl wonders_report_show(iptr param_1)
@@ -2505,7 +2505,7 @@ void __cdecl city_reveal_to_civ(iptr city,iptr param_2)
 int __cdecl city_population_units(iptr city)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   for (local_8 = 1; local_8 <= cities[city].size; local_8++) {
@@ -2526,7 +2526,7 @@ int __cdecl city_population_units(iptr city)
 uint __cdecl city_objective_value(iptr city)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (uint)((cities[city].flags & 0x4000000) != 0);
   if ((scenario_flags & 4) != 0) {
@@ -2544,11 +2544,11 @@ uint __cdecl city_objective_value(iptr city)
 
 /* 0043cf76 auto */
 #define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl city_at(int x,iptr y)
+i32 __cdecl city_at(int x,iptr y)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = map_in_bounds(x,y);
   if ((iVar1 != 0) && (iVar1 = tile_city_owner(x,y), -1 < iVar1)) {
@@ -2573,7 +2573,7 @@ iptr __cdecl city_find_nearest(iptr x,iptr y,iptr param_3,int param_4,iptr civ)
   short x2;
   short y2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = -1;
   nearest_city_dist = 9999;
@@ -2604,11 +2604,11 @@ iptr __cdecl city_find_nearest(iptr x,iptr y,iptr param_3,int param_4,iptr civ)
 /* 0043d20a auto */
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(byte (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl city_has_improvement(iptr city,iptr param_2)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl city_has_improvement(iptr city,iptr param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (((0 < param_2) && (param_2 < 0x23)) &&
@@ -2625,11 +2625,11 @@ undefined4 __cdecl city_has_improvement(iptr city,iptr param_2)
 /* 0043d289: written by hand in src/game/regargs.c */
 
 /* 0043d400 auto */
-#define _DAT_0063f54c (*(undefined4 *)((u8 *)&g.d_0063f54c))
-#define _DAT_0063f550 (*(undefined4 *)((u8 *)&g.d_0063f550))
-#define _DAT_0063f560 (*(undefined4 *)((u8 *)&g.d_0063f560))
-#define _DAT_0063f570 (*(undefined4 *)((u8 *)&g.d_0063f570))
-#define _DAT_0063f66c (*(undefined4 *)((u8 *)&g.d_0063f66c))
+#define _DAT_0063f54c (*(i32 *)((u8 *)&g.d_0063f54c))
+#define _DAT_0063f550 (*(i32 *)((u8 *)&g.d_0063f550))
+#define _DAT_0063f560 (*(i32 *)((u8 *)&g.d_0063f560))
+#define _DAT_0063f570 (*(i32 *)((u8 *)&g.d_0063f570))
+#define _DAT_0063f66c (*(i32 *)((u8 *)&g.d_0063f66c))
 #define x4 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_138 (*(int *)(frame_ + FRAME_OFF(8)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(16)))
@@ -2680,10 +2680,10 @@ void __cdecl city_calc_commodity_demand(uptr city)
   int city2;
   byte *pbVar9;
   uint uVar10;
-  undefined4 uVar11;
+  i32 uVar11;
   int iVar12;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(320)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(320)] __attribute__((aligned(8)));  /* original stack frame */
   local_12c = 0;  /* stale stack the original reads (FRAME_PRESETS) */
   
   if ((((cities[city].flags & 0x20000) != 0) || (game.reveal_map != '\0')) ||
@@ -3199,8 +3199,8 @@ void __cdecl city_calc_commodity_demand(uptr city)
         iVar3 = local_74;
         local_b8--;
       } while (*(int *)(&supply_score_wool + local_b8 * 4) < 0);
-      (*(undefined1 *)((char *)&local_74 + 0)) = (undefined1)*piVar1;
-      *(undefined1 *)&cities[city].supplies[local_68] = (undefined1)local_74;
+      (*(i8 *)((char *)&local_74 + 0)) = (i8)*piVar1;
+      *(i8 *)&cities[city].supplies[local_68] = (i8)local_74;
       local_74 = iVar3;
     }
     local_b8 = 0xf;
@@ -3211,8 +3211,8 @@ void __cdecl city_calc_commodity_demand(uptr city)
         iVar6 = local_74;
         local_b8--;
       } while ((&city_wool_demand_score)[local_b8] < 0);
-      (*(undefined1 *)((char *)&local_74 + 0)) = (undefined1)*piVar1;
-      *(undefined1 *)&cities[city].demands[local_68] = (undefined1)local_74;
+      (*(i8 *)((char *)&local_74 + 0)) = (i8)*piVar1;
+      *(i8 *)&cities[city].demands[local_68] = (i8)local_74;
       local_74 = iVar6;
     }
     if ((int)local_8c < 0x20) {
@@ -3354,18 +3354,18 @@ void __cdecl city_calc_commodity_demand(uptr city)
 #undef local_8
 
 /* 0043f493 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(12)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined1 (*)[24])(frame_ + FRAME_OFF(20)))
+#define local_1c (*(i8 (*)[24])(frame_ + FRAME_OFF(20)))
 void __cdecl city_assign_default_name(iptr city)
 
 {
   char civ;
   int iVar2;
   size_t sVar3;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 0;
   civ = cities[city].owner;
@@ -3443,7 +3443,7 @@ void __cdecl city_refresh_area_tiles(iptr city)
   int iVar6;
   uint uVar7;
   iptr iVar8;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   x2 = cities[city].x;
   y2 = cities[city].y;
@@ -3468,8 +3468,8 @@ void __cdecl city_refresh_area_tiles(iptr city)
 #undef local_8
 
 /* 0043f8b0 auto */
-#define city_create_busy (*(undefined4 *)((u8 *)&g.d_006ad8c4))
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
+#define city_create_busy (*(i32 *)((u8 *)&g.d_006ad8c4))
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define local_2c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define city (*(uptr *)(frame_ + FRAME_OFF(8)))
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(12)))
@@ -3489,9 +3489,9 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
   int y2;
   iptr iVar8;
   int iVar10;
-  undefined4 uVar11;
+  i32 uVar11;
   byte *pbVar12;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_create_busy = 1;
   if ((game.multiplayer < 3) || (cVar2 = net_is_host(&net_session), cVar2 != '\0')) {
@@ -3525,13 +3525,13 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
     if (game.wonder_city[0x19] < 0) {
       cities[city].known_to = '\0';
       for (local_2c = 0; local_2c < 8; local_2c++) {
-        *(undefined1 *)&cities[city].revealed_size[local_2c] = 0;
+        *(i8 *)&cities[city].revealed_size[local_2c] = 0;
       }
     }
     else {
       cities[city].known_to = 0xff;
       for (local_2c = 0; local_2c < 8; local_2c++) {
-        *(undefined1 *)&cities[city].revealed_size[local_2c] = 1;
+        *(i8 *)&cities[city].revealed_size[local_2c] = 1;
       }
       tile_set_visible(x,y,0xff,1,1);
       for (local_2c = 1; local_2c < 8; local_2c++) {
@@ -3666,14 +3666,14 @@ uptr __cdecl city_create(iptr x,iptr y,iptr civ)
 void __cdecl city_remove_trade_route(iptr city,iptr param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = param_2; local_8 < (char)cities[city].trade_routes - 1; local_8++)
   {
     cities[city].route_partner[local_8] =
          cities[city].route_partner[local_8 + 1];
-    *(undefined1 *)&cities[city].route_goods[local_8] =
-         *(undefined1 *)&cities[city].route_goods[local_8 + 1];
+    *(i8 *)&cities[city].route_goods[local_8] =
+         *(i8 *)&cities[city].route_goods[local_8 + 1];
   }
   cities[city].trade_routes += 0xff;
   cities[city].flags = cities[city].flags | 0x20000;
@@ -3685,7 +3685,7 @@ void __cdecl city_remove_trade_route(iptr city,iptr param_2)
 void __cdecl city_set_trade_route_slot(iptr city,iptr param_2,iptr param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   cities[city].route_partner[param_2] = (short)param_3;
   uVar1 = int_clamp(param_4,0xffffffff,0xf);
@@ -3706,7 +3706,7 @@ void __cdecl city_add_trade_route(uptr city,uptr city2,iptr param_3)
   u8 uVar1;
   iptr city3;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_10 = 0; local_10 < (char)cities[city].trade_routes; local_10++) {
     if (((int)cities[city].route_partner[local_10] == city2) &&
@@ -3763,9 +3763,9 @@ void __cdecl city_add_trade_route(uptr city,uptr city2,iptr param_3)
 #undef local_8
 
 /* 004413d1 auto */
-#define city_delete_busy (*(undefined4 *)((u8 *)&g.d_006ad8c8))
+#define city_delete_busy (*(i32 *)((u8 *)&g.d_006ad8c8))
 #define city_window_refresh_locked (*(int *)((u8 *)&g.d_006aa760))
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define net_city_deleted_ack (*(int *)((u8 *)&g.d_006c90c8))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_28 (*(uint *)(frame_ + FRAME_OFF(8)))
@@ -3773,7 +3773,7 @@ void __cdecl city_add_trade_route(uptr city,uptr city2,iptr param_3)
 #define local_14 (*(byte *)(frame_ + FRAME_OFF(28)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(i8 *)(frame_ + FRAME_OFF(36)))
-void __cdecl city_delete(uptr city,undefined4 param_2)
+void __cdecl city_delete(uptr city,i32 param_2)
 
 {
   char cVar1;
@@ -3787,7 +3787,7 @@ void __cdecl city_delete(uptr city,undefined4 param_2)
   int iVar8;
   uint uVar9;
   iptr iVar10;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((-1 < (int)city) && (cities[city].id != 0)) {
     city_delete_busy = 1;
@@ -3921,7 +3921,7 @@ LAB_004416ab:
 #undef local_c
 
 /* 00441a79 auto */
-undefined4 __cdecl city_needed_size_improvement(iptr city)
+i32 __cdecl city_needed_size_improvement(iptr city)
 
 {
   int iVar1;
@@ -3952,9 +3952,9 @@ undefined4 __cdecl city_needed_size_improvement(iptr city)
 #define city3 (*(iptr *)(frame_ + FRAME_OFF(796)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(800)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(804)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(812)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(808)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(812)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(816)))
 void __cdecl city_set_production(iptr city,int param_2)
 
 {
@@ -3962,10 +3962,10 @@ void __cdecl city_set_production(iptr city,int param_2)
   char cVar2;
   byte civ2;
   int civ;
-  undefined4 uVar5;
+  i32 uVar5;
   iptr iVar6;
   int iVar7;
-  undefined1 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_320,0x4000);
@@ -4145,13 +4145,13 @@ void __cdecl city_set_production(iptr city,int param_2)
 
 /* 0044263f auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl city_adjacent_to_body(iptr city,iptr param_2)
+i32 __cdecl city_adjacent_to_body(iptr city,iptr param_2)
 
 {
   iptr x;
   int y;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 < 0x3f) {
     for (local_8 = 0; local_8 < 8; local_8++) {
@@ -4181,7 +4181,7 @@ int __cdecl city_adjacent_sea_info(iptr city,int *param_2,uptr *param_3)
   iptr x;
   int y;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_20 = 0;
@@ -4219,13 +4219,13 @@ int __cdecl city_adjacent_sea_info(iptr city,int *param_2,uptr *param_3)
 /* 004429af auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl cities_share_ocean(iptr city,iptr city2)
+i32 __cdecl cities_share_ocean(iptr city,iptr city2)
 
 {
   iptr x;
   int y;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = -1;
   local_8 = 0;
@@ -4500,10 +4500,10 @@ void __cdecl city_sprite_scan_flag_offset(int param_1,int param_2,int param_3,in
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined4 *)(&city_flag_x_offsets + param_3 * 4 + param_1 * 0x20 + param_2 * 8) = 0;
-  *(undefined4 *)(&city_flag_y_offsets + param_3 * 4 + param_1 * 0x20 + param_2 * 8) = 0;
+  *(i32 *)(&city_flag_x_offsets + param_3 * 4 + param_1 * 0x20 + param_2 * 8) = 0;
+  *(i32 *)(&city_flag_y_offsets + param_3 * 4 + param_1 * 0x20 + param_2 * 8) = 0;
   for (local_c = 0; local_c < 0x40; local_c++) {
     iVar1 = surface_get_pixel
                       ((DibSurface *)&gfx_sheet_surface,local_c + param_4 - 1 + 1,param_5 - 1);
@@ -4530,10 +4530,10 @@ void __cdecl city_sprite_scan_size_box_offset(int param_1,int param_2,int param_
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined4 *)(&city_size_box_x_offsets + param_2 * 8 + param_1 * 0x20 + param_3 * 4) = 0;
-  *(undefined4 *)(&city_label_y_offsets + param_2 * 8 + param_1 * 0x20 + param_3 * 4) = 0;
+  *(i32 *)(&city_size_box_x_offsets + param_2 * 8 + param_1 * 0x20 + param_3 * 4) = 0;
+  *(i32 *)(&city_label_y_offsets + param_2 * 8 + param_1 * 0x20 + param_3 * 4) = 0;
   for (local_c = 0; local_c < 0x40; local_c++) {
     iVar1 = surface_get_pixel
                       ((DibSurface *)&gfx_sheet_surface,local_c + param_4 - 1 + 1,param_5 - 1);
@@ -4555,13 +4555,13 @@ void __cdecl city_sprite_scan_size_box_offset(int param_1,int param_2,int param_
 
 /* 00453da0 auto */
 #define civ (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl wonder_is_expired(iptr param_1)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl wonder_is_expired(iptr param_1)
 
 {
   char cVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   cVar1 = wonder_expires[param_1];
@@ -4616,15 +4616,15 @@ int __cdecl wonder_get_owner(iptr param_1)
 
 /* 00454260 auto */
 #define this2 (*(CityViewWindow * *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(20)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __cdecl cityview_open(uptr city)
 
 {
   C_00408010_6f0 *this;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   this = operator_new(0x1cb4);
@@ -4655,48 +4655,48 @@ void __cdecl cityview_open(uptr city)
 /* 00454354 auto */
 #define cityview_wnd (*(C_00408010_6f0 * *)((u8 *)&g.d_00626a04))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
 
 {
   u8 *puVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   wnd_ctor((C_00408010_b8 *)this);
   local_8 = 0;
   surfwnd_ctor((SurfaceWindow *)&this->control_list);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   surface_ctor((DibSurface *)&this->ship_civ);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   palette_init((GamePalette *)(this->pad_1e4 + 0x30));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   surface_ctor((DibSurface *)(this->pad_638 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   surface_ctor((DibSurface *)(this->pad_638 + 0x58));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   dll_handle_init((DllHandle *)&this->resource_dll);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   FUN_005f2620(this->pad_6dc,0x3c,0x3c,sprite_init,sprite_destroy);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   FUN_005f2620(this[3].pad_c8 + 0x44,0x3c,4,sprite_init,sprite_destroy)
   ;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   FUN_005f2620(this[3].pad_1e4 + 0x18,0x3c,4,sprite_init,sprite_destroy
               );
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   FUN_005f2620(this[3].pad_1e4 + 0x108,0x3c,4,sprite_init,
                sprite_destroy);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   FUN_005f2620(this[3].pad_1e4 + 0x1f8,0x3c,4,sprite_init,
                sprite_destroy);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   surface_ctor((DibSurface *)(this[3].pad_1e4 + 0x2e8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   font_init_empty((GameFont *)(this[4].pad_c8 + 0x20));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),0xd);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0xd);
   gfx_get_screen_rect(ADDR(0x64b0d0, ((u8 *)&g.d_0064b0d0)));
   cityview_scroll_x = (0x500 - screen_rect_right) / 2;
   mem_copy_src_dst(ADDR(0x61cce0, ((u8 *)&g.d_0061cce0)),(iptr)(this[3].pad_504 + 0x24),0x174);
@@ -4720,44 +4720,44 @@ C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
 #undef local_8
 
 /* 00454699 auto */
-#define cityview_wnd (*(undefined4 *)((u8 *)&g.d_00626a04))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define cityview_wnd (*(i32 *)((u8 *)&g.d_00626a04))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall cityview_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   cityview_wnd = 0;
   dll_handle_free((DllHandle *)((int)this + 0x6d8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   /* inlined unwind funclet FUN_00454798 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x1ca8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   /* inlined unwind funclet FUN_004547a7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x199c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   /* inlined unwind funclet FUN_004547b6 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x18ac,0x3c,4,sprite_destroy); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   /* inlined unwind funclet FUN_004547ce */ { FUN_005f2490(*(int *)((iptr)&this) + 0x17bc,0x3c,4,sprite_destroy); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   /* inlined unwind funclet FUN_004547e6 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x16cc,0x3c,4,sprite_destroy); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   /* inlined unwind funclet FUN_004547fe */ { FUN_005f2490(*(int *)((iptr)&this) + 0x15dc,0x3c,4,sprite_destroy); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   /* inlined unwind funclet FUN_00454816 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x6dc,0x3c,0x3c,sprite_destroy); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   /* inlined unwind funclet FUN_0045482e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x6d8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0045483d */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x690)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_0045484c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x648)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0045485b */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x214)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_0045486a */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1cc)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_00454879 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_00454888 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
@@ -4773,17 +4773,17 @@ void __thiscall cityview_dtor(void *this)
 #define local_9c (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_98 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_94 (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_90 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(88)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(220)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(224)))
-undefined4 __thiscall cityview_load(CityViewWindow *this,uptr city)
+#define local_90 (*(i8 (*)[128])(frame_ + FRAME_OFF(88)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(216)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(220)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(224)))
+i32 __thiscall cityview_load(CityViewWindow *this,uptr city)
 
 {
   int iVar1;
   u32 uVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(232)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(232)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surface_ctor(&local_e4);
@@ -4959,7 +4959,7 @@ void __thiscall cityview_classify_site(CityViewWindow *this)
   int y;
   int iVar5;
   byte *pbVar6;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   x2 = cities[this->city_id].x;
   y2 = cities[this->city_id].y;
@@ -5008,7 +5008,7 @@ uint __thiscall cityview_create_windows(CityViewWindow *this)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_create_with_handlers
             ((WndBase *)this,ADDR(0x626a10, ((u8 *)&g.d_00626a10)),0x800,cityview_screen_rect,cityview_screen_rect_top,
@@ -5041,12 +5041,12 @@ uint __thiscall cityview_create_windows(CityViewWindow *this)
 /* 00455314 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall cityview_layout_buildings(CityViewWindow *this)
+i32 __thiscall cityview_layout_buildings(CityViewWindow *this)
 
 {
   u32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->houses_left = (int)cities[this->city_id].size + 2;
   rng_set_seed(cities[this->city_id].x * 0x100 + (int)cities[this->city_id].y +
@@ -5248,20 +5248,20 @@ LAB_00455711:
 #undef local_8
 
 /* 00455add auto */
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall cityview_draw_buildings(CityViewWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < (int)this->slot_count; local_8++) {
     if (*(int *)(this->pad_1089 + local_8 * 4 + 0x463) != 0) {
       sprite_draw
                 (*(Sprite **)(this->pad_1089 + local_8 * 4 + 0x463),(iptr)local_18,
                  (iptr)&this->ship_civ,
-                 *(undefined4 *)(&cityview_slot_x_table + local_8 * 8 + this->terrain_kind * 0x1e0),
-                 *(undefined4 *)(&cityview_slot_y_table + local_8 * 8 + this->terrain_kind * 0x1e0));
+                 *(i32 *)(&cityview_slot_x_table + local_8 * 8 + this->terrain_kind * 0x1e0),
+                 *(i32 *)(&cityview_slot_y_table + local_8 * 8 + this->terrain_kind * 0x1e0));
     }
   }
   cityview_redraw_scrolled(this);
@@ -5271,10 +5271,10 @@ void __thiscall cityview_draw_buildings(CityViewWindow *this)
 #undef local_8
 
 /* 00455b8e auto */
-undefined4 __thiscall cityview_take_wonder_slot(ThroneRoomWindow *this)
+i32 __thiscall cityview_take_wonder_slot(ThroneRoomWindow *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   
   if (this->wonder_slots_left == 0) {
@@ -5283,19 +5283,19 @@ undefined4 __thiscall cityview_take_wonder_slot(ThroneRoomWindow *this)
   else {
     iVar2 = this->wonder_slots_left * 3 - 3;
     iVar2 = rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->wonder_slots_left - 1);
-    uVar1 = *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174);
+    uVar1 = *(i32 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174);
     this->wonder_slots_left--;
-    *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174) =
-         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x60 + this->wonder_slots_left * 4 + 0x174);
+    *(i32 *)(this->pad_19f8 + this->terrain_kind * 0x60 + iVar2 * 4 + 0x174) =
+         *(i32 *)(this->pad_19f8 + this->terrain_kind * 0x60 + this->wonder_slots_left * 4 + 0x174);
   }
   return uVar1;
 }
 
 /* 00455c5d auto */
-undefined4 __thiscall cityview_take_improvement_slot(ThroneRoomWindow *this)
+i32 __thiscall cityview_take_improvement_slot(ThroneRoomWindow *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   
   if (this->improvement_slots_left == 0) {
@@ -5304,10 +5304,10 @@ undefined4 __thiscall cityview_take_improvement_slot(ThroneRoomWindow *this)
   else {
     iVar2 = this->improvement_slots_left * 3 - 3;
     iVar2 = rand_range((int)(iVar2 + (iVar2 >> 0x1f & 3U)) >> 2,this->improvement_slots_left - 1);
-    uVar1 = *(undefined4 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c);
+    uVar1 = *(i32 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c);
     this->improvement_slots_left--;
-    *(undefined4 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c) =
-         *(undefined4 *)(this->pad_19f8 + this->terrain_kind * 0x7c + this->improvement_slots_left * 4);
+    *(i32 *)(this->pad_19f8 + iVar2 * 4 + this->terrain_kind * 0x7c) =
+         *(i32 *)(this->pad_19f8 + this->terrain_kind * 0x7c + this->improvement_slots_left * 4);
   }
   return uVar1;
 }
@@ -5319,10 +5319,10 @@ void __thiscall cityview_place_improvement(WndBase *this,iptr param_1,iptr param
   if (-1 < param_1) {
     sprite_grab_from_surface
               ((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),(iptr)&this[100].field_8,9,
-               *(undefined4 *)(&cityview_improvement_art_x + (param_2 - 1) * 0x10),
-               *(undefined4 *)(&cityview_improvement_art_y + (param_2 - 1) * 0x10),
-               *(undefined4 *)(&cityview_improvement_art_w + (param_2 - 1) * 0x10),
-               *(undefined4 *)(&cityview_improvement_art_h + (param_2 - 1) * 0x10));
+               *(i32 *)(&cityview_improvement_art_x + (param_2 - 1) * 0x10),
+               *(i32 *)(&cityview_improvement_art_y + (param_2 - 1) * 0x10),
+               *(i32 *)(&cityview_improvement_art_w + (param_2 - 1) * 0x10),
+               *(i32 *)(&cityview_improvement_art_h + (param_2 - 1) * 0x10));
     sprite_replace_color((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),7,9);
     (&this[0x14e].field_c)[param_1] = (int)this + param_1 * 0x3c + 0x6dc;
   }
@@ -5336,10 +5336,10 @@ void __thiscall cityview_place_wonder(WndBase *this,iptr param_1,iptr param_2)
   if (-1 < param_1) {
     sprite_grab_from_surface
               ((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),(iptr)(this + 0x69),9,
-               *(undefined4 *)(&cityview_wonder_art_x + param_2 * 0x10),
-               *(undefined4 *)(&cityview_wonder_art_y + param_2 * 0x10),
-               *(undefined4 *)(&cityview_wonder_art_w + param_2 * 0x10),
-               *(undefined4 *)(&cityview_wonder_art_h + param_2 * 0x10));
+               *(i32 *)(&cityview_wonder_art_x + param_2 * 0x10),
+               *(i32 *)(&cityview_wonder_art_y + param_2 * 0x10),
+               *(i32 *)(&cityview_wonder_art_w + param_2 * 0x10),
+               *(i32 *)(&cityview_wonder_art_h + param_2 * 0x10));
     sprite_replace_color((Sprite *)(param_1 * 0x3c + 0x6dc + (int)this),7,9);
     (&this[0x14e].field_c)[param_1] = (int)this + param_1 * 0x3c + 0x6dc;
   }
@@ -5404,7 +5404,7 @@ void __thiscall cityview_place_empty_lot(CityViewWindow *this,iptr param_1)
 void __thiscall cityview_redraw_scrolled(CityViewWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_24,0,0,screen_rect_right,0x1e0);
   SetRect(&local_14,cityview_scroll_x,0,screen_rect_right + cityview_scroll_x,0x1e0);
@@ -5482,7 +5482,7 @@ void __cdecl cityview_on_lbuttonup(void)
 
 /* 0045629b auto */
 #define cityview_wnd (*(CityViewWindow * *)((u8 *)&g.d_00626a04))
-void __cdecl cityview_on_key_pre(undefined4 param_1)
+void __cdecl cityview_on_key_pre(i32 param_1)
 
 {
   switch(param_1) {
@@ -5518,7 +5518,7 @@ void __thiscall cityview_scroll_right(CityViewWindow *this)
 
 {
   SHORT SVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 4;
   SetRect(&local_28,0,0,screen_rect_right,0x1e0);
@@ -5557,7 +5557,7 @@ void __thiscall cityview_scroll_left(CityViewWindow *this)
 
 {
   SHORT SVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 4;
   SetRect(&local_28,0,0,screen_rect_right,0x1e0);
@@ -5611,8 +5611,8 @@ u32 __thiscall citywnd_get_city(C_004083b0_4 *this)
 }
 
 /* 00498d40 auto */
-#define citypref_no_defend (*(undefined4 *)((u8 *)&g.d_0062ccc4))
-#define text_token_buf (*(undefined1 *)((u8 *)&g.d_00673e10))
+#define citypref_no_defend (*(i32 *)((u8 *)&g.d_0062ccc4))
+#define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl city_load_citypref(void)
@@ -5621,7 +5621,7 @@ void __cdecl city_load_citypref(void)
   int iVar1;
   char *_Str1;
   char *_Str2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   citypref_count = 0;
   iVar1 = text_open_section(ADDR(0x62ccd4, ((u8 *)&g.d_0062ccd4)),ADDR(0x62ccc8, ((u8 *)&g.d_0062ccc8)));
@@ -5720,7 +5720,7 @@ void __cdecl city_load_citypref(void)
 #define local_d8 (*(int *)(frame_ + FRAME_OFF(680)))
 #define local_d4 (*(int *)(frame_ + FRAME_OFF(684)))
 #define local_d0 (*(uint *)(frame_ + FRAME_OFF(688)))
-#define auStack_cc (*(undefined1 (*)[28])(frame_ + FRAME_OFF(692)))
+#define auStack_cc (*(i8 (*)[28])(frame_ + FRAME_OFF(692)))
 #define local_b0 (*(uint *)(frame_ + FRAME_OFF(720)))
 #define local_ac (*(int *)(frame_ + FRAME_OFF(724)))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(728)))
@@ -5777,19 +5777,19 @@ iptr __cdecl city_choose_production(iptr city,iptr param_2,iptr param_3)
   iptr iVar5;
   iptr iVar4;
   int iVar6;
-  undefined4 uVar7;
+  i32 uVar7;
   uint uVar8;
   byte *pbVar9;
   int iVar10;
   iptr unit2;
-  undefined1 frame_[FRAME_OFF(896)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(896)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_100 = 0;
   if (param_2 != 0) {
-    *(undefined4 *)param_2 = 999;
+    *(i32 *)param_2 = 999;
   }
   if (param_3 != 0) {
-    *(undefined4 *)param_3 = 999;
+    *(i32 *)param_3 = 999;
   }
   city_recalc(city,0);
   civ5 = cities[city].owner;
@@ -7790,16 +7790,16 @@ LAB_0049ea9e: ;
 #undef local_8
 
 /* 004bb8e0 auto */
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
 #define local_1190 (*(C_004083b0_430 (*)[4])(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(4480)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4484)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(4488)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(4480)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4484)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(4488)))
 void __cdecl wonder_show_movie(iptr param_1)
 
 {
-  undefined4 uStackY_24;
-  undefined1 frame_[FRAME_OFF(4496)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uStackY_24;
+  i8 frame_[FRAME_OFF(4496)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   snd_wave_stop_all();
@@ -7828,21 +7828,21 @@ void __cdecl wonder_show_movie(iptr param_1)
 
 /* 004bb99f auto */
 #define wonder_movie_wnd (*(FrameWindow * *)((u8 *)&g.d_006a1864))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 FrameWindow * __thiscall wonder_movie_wnd_ctor(FrameWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   mmwnd_ctor((C_004083b0_a28 *)&this->field_2d8);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   surface_ctor((DibSurface *)(this[4].pad_15c + 0x18));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),2);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
   palette_init((GamePalette *)this[4].pad_1bc);
   this->vtable = (u32)&PTR_FUN_0061d6c8;
   wonder_movie_wnd = this;
@@ -7854,23 +7854,23 @@ FrameWindow * __thiscall wonder_movie_wnd_ctor(FrameWindow *this)
 #undef local_8
 
 /* 004bba79 auto */
-#define wonder_movie_wnd (*(undefined4 *)((u8 *)&g.d_006a1864))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define wonder_movie_wnd (*(i32 *)((u8 *)&g.d_006a1864))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall wonder_movie_wnd_dtor(WonderMovieWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d6c8;
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d6c8;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
   wonder_movie_wnd = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_004bbaf1 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xd4c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_004bbb00 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0xd04)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004bbb0f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x2d8)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004bbb1e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -7882,32 +7882,32 @@ void __thiscall wonder_movie_wnd_dtor(WonderMovieWindow *this)
 #undef local_8
 
 /* 004bbb3f auto */
-#define local_134 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_134 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_124 (*(DllHandle *)(frame_ + FRAME_OFF(20)))
 #define local_120 (*(DibSurface *)(frame_ + FRAME_OFF(24)))
-#define local_d8 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
+#define local_d8 (*(i32 *)(frame_ + FRAME_OFF(96)))
 #define local_d4 (*(SIZE_T *)(frame_ + FRAME_OFF(100)))
 #define local_d0 (*(Sprite *)(frame_ + FRAME_OFF(104)))
-#define local_94 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(164)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(292)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(296)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(300)))
+#define local_94 (*(i8 (*)[128])(frame_ + FRAME_OFF(164)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(292)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(296)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(300)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(304)))
 void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
-  undefined1 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
+  i32 uVar9;
+  i32 uVar10;
+  i32 uVar11;
+  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_14 = 0x140;
@@ -7915,7 +7915,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
   sprite_init(&local_d0);
   local_8 = 0;
   surface_ctor(&local_120);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   local_d4 = GlobalCompact(0x100000);
   str_clear((iptr)local_94);
   str_append((iptr)local_94,ADDR(0x62da84, ((u8 *)&g.d_0062da84)));
@@ -7926,7 +7926,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
   }
   else {
     resource_dll_load(&local_124,(iptr)local_94);
-    local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),2);
+    local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
     iVar1 = surface_load_gif_resource(&local_120,param_1 + 20000,10,0xec,(iptr)this[4].pad_1bc);
     if (iVar1 == 0) {
       MessageBoxA((HWND)0x0,s_Failed_to_load_civ2art_gif_0062da9c,s_NOTICE_0062da94,0x40);
@@ -7939,7 +7939,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
       surface_release(&local_120);
     }
     dll_handle_free(&local_124);
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_004bbdbd */ { dll_free((DllHandle *)((iptr)&local_124)); }
   }
   *(int *)(this[4].pad_15c + 0x14) = param_1;
@@ -7961,7 +7961,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
   wnd_repaint((SurfaceWindow *)this);
   wnd_center((WndCenterView *)this->pad_48);
   wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004bbdc9 */ { surface_dtor((DibSurface *)((iptr)&local_120)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004bbdd5 */ { sprite_destroy((Sprite *)((iptr)&local_d0)); }
@@ -7980,13 +7980,13 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
 #undef local_8
 
 /* 004bbdfb auto */
-#define local_88 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(0)))
+#define local_88 (*(i8 (*)[128])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(128)))
 void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   wonder_movie_wnd_resize((FrameWindow *)this);
   if (((game.game_flags & 0x40) == 0) && ((game.game_flags & 0x80) == 0)) {
@@ -7995,7 +7995,7 @@ void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
     if (*(int *)(this[3].pad_48 + 0x28) < 10) {
       str_append_int((iptr)local_88,0);
     }
-    str_append_int((iptr)local_88,*(undefined4 *)(this[3].pad_48 + 0x28));
+    str_append_int((iptr)local_88,*(i32 *)(this[3].pad_48 + 0x28));
     str_concat((iptr)local_88,ADDR(0x62dacc, ((u8 *)&g.d_0062dacc)));
     iVar1 = file_resolve_path((iptr)local_88);
     if (iVar1 != 0) {
@@ -8057,7 +8057,7 @@ void __thiscall wonder_movie_wnd_resize(FrameWindow *this)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   wnd_resize_clamped
             ((C_004083b0_4 *)this,this->border_width * 2 + 0x140,
@@ -8105,12 +8105,12 @@ void __cdecl wonder_movie_on_key(int param_1)
 #undef wonder_movie_wnd
 
 /* 004c03ae auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl city_can_build_improvement(iptr civ,iptr city,iptr improvement)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl city_can_build_improvement(iptr civ,iptr city,iptr improvement)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (improvement < 0x27) {
@@ -8175,10 +8175,10 @@ undefined4 __cdecl city_can_build_improvement(iptr civ,iptr city,iptr improvemen
 
 /* 004c66ba auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl city_incite_transfer(iptr city,iptr civ,undefined4 param_3)
+void __cdecl city_incite_transfer(iptr city,iptr civ,i32 param_3)
 
 {
   char *pcVar1;
@@ -8189,7 +8189,7 @@ void __cdecl city_incite_transfer(iptr city,iptr civ,undefined4 param_3)
   iptr x;
   int y;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ3 = cities[city].owner;
   civ2 = (int)(char)civ3;
@@ -8230,7 +8230,7 @@ void __cdecl city_incite_transfer(iptr city,iptr civ,undefined4 param_3)
       text_set_string_arg(2,x);
       popup_game(ADDR(0x62dd84, ((u8 *)&g.d_0062dd84)));
       if (((1 << (civ3 & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer)) {
-        net_send_text_args(0x5e,*(undefined4 *)
+        net_send_text_args(0x5e,*(i32 *)
                                  (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),3,0,0,
                            0);
       }
@@ -8275,7 +8275,7 @@ void __cdecl impr_editor_load_rules(void)
 {
   char *_Source;
   size_t _Count;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (improvement = 0; improvement < 0x43; improvement++) {
     _Count = 0x28;
@@ -8301,7 +8301,7 @@ void __cdecl impr_editor_store_rules(void)
   char *_Dest;
   char *_Source;
   size_t _Count;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (improvement = 0; improvement < 0x43; improvement++) {
     _Count = 0x19;
@@ -8327,7 +8327,7 @@ void __cdecl impr_editor_load_controls(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_14 = 1; local_14 < 5; local_14++) {
     if (*(int *)(&impr_editor_ctrl_kinds + local_14 * 8) == 9) {
@@ -8335,7 +8335,7 @@ void __cdecl impr_editor_load_controls(void)
                         ((ControlIdView *)
                          (*(int *)(&impr_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd));
       _sprintf(local_10,&impr_editor_value_fmt,
-               *(undefined4 *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
+               *(i32 *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
       ctrl_set_text
                 ((ControlTextView *)
                  (*(int *)(&impr_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd),
@@ -8366,8 +8366,8 @@ int __cdecl impr_editor_save_controls(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   for (local_18 = 1; local_18 < 5; local_18++) {
@@ -8381,9 +8381,9 @@ int __cdecl impr_editor_save_controls(void)
                          (*(int *)(&impr_editor_ctrl_slots + local_18 * 8) * 0x48 + 0x44c + active_editor_wnd));
       iVar1 -= 0xca;
       local_8 = _atoi(local_10);
-      uVar2 = int_clamp(local_8,*(undefined4 *)(&impr_editor_field_min_table + iVar1 * 4),
-                                 *(undefined4 *)(&impr_editor_field_max_table + iVar1 * 4));
-      *(undefined4 *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
+      uVar2 = int_clamp(local_8,*(i32 *)(&impr_editor_field_min_table + iVar1 * 4),
+                                 *(i32 *)(&impr_editor_field_max_table + iVar1 * 4));
+      *(i32 *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
       if (*(int *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) != local_8) {
         local_14++;
       }
@@ -8415,15 +8415,15 @@ void __cdecl impr_editor_redraw(void)
 }
 
 /* 004d90b0 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl impr_editor_write_section(FILE *param_1)
+i32 __cdecl impr_editor_write_section(FILE *param_1)
 
 {
   char *pcVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (improvement = 0; improvement < 0x43; improvement++) {
     text_clear();
@@ -8454,12 +8454,12 @@ undefined4 __cdecl impr_editor_write_section(FILE *param_1)
 #undef improvement
 
 /* 004d91f8 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl impr_editor_write_endwonder(FILE *param_1)
+i32 __cdecl impr_editor_write_endwonder(FILE *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (improvement = 0x27; improvement < 0x43; improvement++) {
     text_clear();
@@ -8476,7 +8476,7 @@ undefined4 __cdecl impr_editor_write_endwonder(FILE *param_1)
 #undef improvement
 
 /* 004d929a auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 #define local_28 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl impr_editor_on_ok(void)
@@ -8489,7 +8489,7 @@ void __cdecl impr_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = impr_editor_save_controls();
   if (iVar1 == 0) {
@@ -8535,7 +8535,7 @@ void __cdecl impr_editor_on_ok(void)
 #define local_128 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_124 (*(char (*)[20])(frame_ + FRAME_OFF(12)))
 #define local_110 (*(char (*)[4])(frame_ + FRAME_OFF(32)))
-#define local_10c (*(undefined1 *)(frame_ + FRAME_OFF(36)))
+#define local_10c (*(i8 *)(frame_ + FRAME_OFF(36)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(292)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(296)))
 void __cdecl impr_editor_on_rename(void)
@@ -8543,7 +8543,7 @@ void __cdecl impr_editor_on_rename(void)
 {
   int iVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(304)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(304)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = *(int *)(active_editor_wnd + 0x2ec);
   _strncpy(local_124,&editor_item_names + iVar1 * 0x28,0x19);
@@ -8583,11 +8583,11 @@ void __cdecl impr_editor_on_rename(void)
 #undef local_8
 
 /* 004d953f auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl impr_editor_on_help(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_8 = 0;
@@ -8603,7 +8603,7 @@ void __cdecl impr_editor_on_help(void)
 #undef local_8
 
 /* 004d959e auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl impr_editor_on_cancel(void)
 
 {
@@ -8617,13 +8617,13 @@ void __cdecl impr_editor_on_cancel(void)
 void __cdecl impr_editor_edit_icon(void)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined1 *puVar3;
+  i32 uVar1;
+  i32 uVar2;
+  i8 *puVar3;
   
   puVar3 = ((void *)ADDR(0x00402e19, sprite_sheet_save_building_icons));
   uVar2 = 4;
-  uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+  uVar1 = label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(&improvement_icon_sprites + *(int *)(active_editor_wnd + 0x2ec) * 0x3c),uVar1,uVar2,
                      (iptr)puVar3);
   impr_editor_redraw();
@@ -8632,15 +8632,15 @@ void __cdecl impr_editor_edit_icon(void)
 
 /* 004d9619 auto */
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined * *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl impr_editor_edit_misc_icon(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 *puVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 *puVar3;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_14 = 0;
@@ -8659,9 +8659,9 @@ void __cdecl impr_editor_edit_misc_icon(void)
       local_10 = &explosion_sprites + (iVar1 * 4 - 4) * 0xf;
       local_8 = 6;
     }
-    if (local_10 != (undefined *)0x0) {
+    if (local_10 != (i8 *)0x0) {
       puVar3 = ((void *)ADDR(0x00402e19, sprite_sheet_save_building_icons));
-      uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+      uVar2 = label_string(*(i32 *)(label_string_ids + 0x7d8));
       sprite_editor_run((iptr)local_10,uVar2,local_8,(iptr)puVar3);
     }
   }
@@ -8673,20 +8673,20 @@ void __cdecl impr_editor_edit_misc_icon(void)
 #undef local_8
 
 /* 004d9718 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl impr_editor_on_select(int param_1)
 
 {
   int iVar1;
   HWND hWnd;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0xc9) {
     iVar1 = impr_editor_save_controls();
     if (iVar1 == 0) {
       uVar2 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
-      *(undefined4 *)(active_editor_wnd + 0x2ec) = uVar2;
+      *(i32 *)(active_editor_wnd + 0x2ec) = uVar2;
       if (*(int *)(active_editor_wnd + 0x2ec) == 0) {
         ctrl_disable((Control *)(active_editor_wnd + 0x7c4));
       }
@@ -8729,13 +8729,13 @@ void __cdecl impr_editor_on_select(int param_1)
 #define local_2c (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(28)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
 void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,*(int *)(&impr_editor_combo_x_table + param_1 * 8) + this->client_x - 0x32,
                      *(int *)(&impr_editor_combo_y_table + param_1 * 8) + this->client_y,200,
@@ -8760,9 +8760,9 @@ void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
     }
   }
   else if ((0 < param_1) && (param_1 < 3)) {
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7c0));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7c4));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
     for (advance = 0; advance < 100; advance++) {
       iVar2 = label_string(advances[advance].name);
@@ -8779,15 +8779,15 @@ void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 /* 004d9a9f auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define impr_editor_edit_x_table (*(undefined4 *)((u8 *)&g.d_0062e3b0))
-#define impr_editor_edit_y_table (*(undefined4 *)((u8 *)&g.d_0062e3b4))
+#define impr_editor_edit_x_table (*(i32 *)((u8 *)&g.d_0062e3b0))
+#define impr_editor_edit_y_table (*(i32 *)((u8 *)&g.d_0062e3b4))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,(&impr_editor_edit_x_table)[param_1 * 2] + this->client_x,
                      (&impr_editor_edit_y_table)[param_1 * 2] + this->client_y,0x30,this->field_2e8 + 6);
@@ -8817,7 +8817,7 @@ void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define impr_editor_edit_x_table (*(int *)((u8 *)&g.d_0062e3b0))
 #define impr_editor_edit_y_table (*(int *)((u8 *)&g.d_0062e3b4))
-#define local_2c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_2c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_1c (*(Sprite * *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(28)))
@@ -8831,7 +8831,7 @@ void __thiscall impr_editor_paint(C_004083b0_430 *this)
   int iVar2;
   char *pcVar3;
   size_t sVar4;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -8935,7 +8935,7 @@ void __thiscall impr_editor_paint(C_004083b0_430 *this)
 
 /* 004da107 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
-#define editor_next_ctrl_id (*(undefined4 *)((u8 *)&g.d_006a1d80))
+#define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define local_488 (*(u8 * *)(frame_ + FRAME_OFF(0)))
 #define local_484 (*(u8 * *)(frame_ + FRAME_OFF(4)))
@@ -8945,29 +8945,29 @@ void __thiscall impr_editor_paint(C_004083b0_430 *this)
 #define local_474 (*(u8 * *)(frame_ + FRAME_OFF(20)))
 #define local_468 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_454 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1148)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall impr_editor_window_run(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   u32 uVar9;
   u32 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined1 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -8975,14 +8975,14 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_468 = (DibSurface *)0x0;
   }
   else {
     local_468 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   editor_bg_surface = local_468;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -9005,15 +9005,15 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   uVar8 = 0;
   uVar7 = 0;
   uVar6 = 0xd;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x730));
+  uVar2 = label_string(*(i32 *)(label_string_ids + 0x730));
   frame_wnd_create
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   for (local_460 = 0; local_460 < 5; local_460++) {
     if (*(int *)(&impr_editor_ctrl_kinds + local_460 * 8) == 9) {
-      impr_editor_create_edit(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
+      impr_editor_create_edit(this,*(i32 *)(&impr_editor_ctrl_slots + local_460 * 8));
     }
     else if (*(int *)(&impr_editor_ctrl_kinds + local_460 * 8) == 0xc) {
-      impr_editor_create_combo(this,*(undefined4 *)(&impr_editor_ctrl_slots + local_460 * 8));
+      impr_editor_create_combo(this,*(i32 *)(&impr_editor_ctrl_slots + local_460 * 8));
     }
   }
   iVar3 = font_line_spacing((GameFont *)dialog_font_ptr);
@@ -9029,7 +9029,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_474 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this[1].field_2a4,(iptr)local_474,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40187f, impr_editor_on_ok));
@@ -9041,7 +9041,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_478 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xa8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             ((Control *)&this[1].field_358,(iptr)local_478,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_358,ADDR(0x40178a, impr_editor_on_rename));
@@ -9053,7 +9053,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_47c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8ec));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&this[1].field_2e0,(iptr)local_47c,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x402c75, impr_editor_on_help));
@@ -9065,7 +9065,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_480 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this[1].field_31c,(iptr)local_480,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x402072, impr_editor_on_cancel));
@@ -9082,7 +9082,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_484 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x7cc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(this[1].pad_364 + 0x30),(iptr)local_484,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x402388, impr_editor_edit_icon));
@@ -9094,7 +9094,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   else {
     local_488 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8f0));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8f0));
   button_create
             ((Control *)(this[1].pad_3c0 + 0x10),(iptr)local_488,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)(this[1].pad_3c0 + 0x10),ADDR(0x401cad, impr_editor_edit_misc_icon));
@@ -9140,13 +9140,13 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
 
 /* 004da9e2 auto */
 #define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2896)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl impr_editor_run(void)
 
 {
-  undefined1 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
@@ -9163,7 +9163,7 @@ void __cdecl impr_editor_run(void)
 #undef local_8
 
 /* 004e7270 auto */
-#define city_acquire_wonder_busy (*(undefined4 *)((u8 *)&g.d_006ad8e8))
+#define city_acquire_wonder_busy (*(i32 *)((u8 *)&g.d_006ad8e8))
 #define nm_wonder_acquired_result (*(int *)((u8 *)&g.d_006c9100))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 int __cdecl city_acquire_wonder(iptr param_1,iptr city,iptr param_3,iptr param_4,iptr param_5)
@@ -9172,7 +9172,7 @@ int __cdecl city_acquire_wonder(iptr param_1,iptr city,iptr param_3,iptr param_4
   char cVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   city_acquire_wonder_busy = 1;
@@ -9217,10 +9217,10 @@ int __cdecl city_acquire_wonder(iptr param_1,iptr city,iptr param_3,iptr param_4
 #undef local_c
 
 /* 004e7458 auto */
-undefined4 __cdecl city_production_category(iptr param_1,int param_2)
+i32 __cdecl city_production_category(iptr param_1,int param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (param_2 < 0) {
     if (param_2 < -0x22) {
@@ -9237,7 +9237,7 @@ undefined4 __cdecl city_production_category(iptr param_1,int param_2)
 }
 
 /* 004e7492 auto */
-#define city_saved_build_category (*(undefined4 *)((u8 *)&g.d_006a65a4))
+#define city_saved_build_category (*(i32 *)((u8 *)&g.d_006a65a4))
 #define city_saved_shield_box (*(int *)((u8 *)&g.d_006a6528))
 void __cdecl city_save_build_state(iptr city)
 
@@ -9298,13 +9298,13 @@ uint __cdecl city_specialist_type(iptr city,int param_2)
 }
 
 /* 004e75ea auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 int __cdecl city_count_specialists(iptr city,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   for (local_8 = 0; local_8 < 0x10; local_8++) {
@@ -9332,7 +9332,7 @@ void __cdecl city_calc_tile_flags(iptr city)
   byte *pbVar5;
   int iVar6;
   uint uVar7;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (int)(char)civ2;
@@ -9424,7 +9424,7 @@ void __cdecl city_calc_capital_link(iptr city)
   int x3;
   int y3;
   int iVar7;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   x = (int)cities[city].x;
   y = (int)cities[city].y;
@@ -9498,7 +9498,7 @@ void __cdecl city_calc_capital_link(iptr city)
 /* 004e7d7f auto */
 #define city_shield_support (*(int *)((u8 *)&g.d_006a6568))
 #define city_support_unit_count (*(int *)((u8 *)&g.d_006a660c))
-undefined4 __cdecl city_count_unit_support(iptr city,iptr unit,undefined4 param_3)
+i32 __cdecl city_count_unit_support(iptr city,iptr unit,i32 param_3)
 
 {
   city_support_unit_count++;
@@ -9548,7 +9548,7 @@ void __cdecl city_calc_food_box_rows(iptr param_1,iptr civ)
 {
   byte bVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = cosmic.settler_food_low;
   if (2 < civs[civ].government) {
@@ -9599,8 +9599,8 @@ void __cdecl city_calc_food_box_rows(iptr param_1,iptr civ)
 /* 004e80b1 auto */
 #define city_aggressive_units (*(int *)((u8 *)&g.d_006a65e4))
 #define city_shield_rows (*(uint *)((u8 *)&g.d_006a657c))
-#define city_shield_support (*(undefined4 *)((u8 *)&g.d_006a6568))
-#define city_support_unit_count (*(undefined4 *)((u8 *)&g.d_006a660c))
+#define city_shield_support (*(i32 *)((u8 *)&g.d_006a6568))
+#define city_support_unit_count (*(i32 *)((u8 *)&g.d_006a660c))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
@@ -9612,8 +9612,8 @@ void __cdecl city_calc_unit_support(uptr city)
   iptr civ;
   int iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (iptr)(char)civ2;
@@ -9724,7 +9724,7 @@ void __cdecl city_calc_unit_support(uptr city)
 #undef local_8
 
 /* 004e868f auto */
-#define city_tile_job_found (*(undefined4 *)((u8 *)&g.d_0062ee0c))
+#define city_tile_job_found (*(i32 *)((u8 *)&g.d_0062ee0c))
 #define city_tile_job_priority (*(int *)((u8 *)&g.d_006a65d4))
 #define city_tile_job_x (*(iptr *)((u8 *)&g.d_006a65e0))
 #define city_tile_job_y (*(int *)((u8 *)&g.d_006a65e8))
@@ -9743,7 +9743,7 @@ int __cdecl city_tile_yield(iptr city,iptr param_2,iptr param_3)
   uint uVar6;
   byte *pbVar7;
   uptr terrain;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (iptr)cities[city].owner;
   x = map_wrap_x((int)cities[city].x + (int)(char)(&city_tile_dx_table)[param_2]);
@@ -9890,11 +9890,11 @@ int __cdecl city_tile_yield(iptr city,iptr param_2,iptr param_3)
 /* 004e8c8c auto */
 #define city_tile_job_found (*(int *)((u8 *)&g.d_0062ee0c))
 #define city_tile_job_priority (*(int *)((u8 *)&g.d_006a65d4))
-#define city_tile_job_x (*(undefined4 *)((u8 *)&g.d_006a65e0))
-#define city_tile_job_y (*(undefined4 *)((u8 *)&g.d_006a65e8))
+#define city_tile_job_x (*(i32 *)((u8 *)&g.d_006a65e0))
+#define city_tile_job_y (*(i32 *)((u8 *)&g.d_006a65e8))
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 void __cdecl
-city_note_terraform_job(iptr param_1,iptr civ,iptr param_3,undefined4 x,undefined4 y)
+city_note_terraform_job(iptr param_1,iptr civ,iptr param_3,i32 x,i32 y)
 
 {
   byte bVar1;
@@ -9954,14 +9954,14 @@ void __cdecl city_note_road_job(iptr param_1,iptr civ,iptr x,iptr y)
 #undef city_turn_processing
 
 /* 004e8e4d auto */
-#define city_tile_yields (*(undefined4 *)((u8 *)&g.d_006a65b8))
+#define city_tile_yields (*(i32 *)((u8 *)&g.d_006a65b8))
 #define city_yield_totals (*(int *)((u8 *)&g.d_006a65c8))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl city_calc_tile_yields(iptr city,iptr param_2,int param_3)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_yield_tile_worked = param_3;
   for (local_8 = 0; local_8 < 3; local_8++) {
@@ -9979,13 +9979,13 @@ void __cdecl city_calc_tile_yields(iptr city,iptr param_2,int param_3)
 #undef local_8
 
 /* 004e8ecf auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 uint __cdecl city_release_blocked_tiles(iptr city)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   for (local_8 = 0; local_8 < 0x14; local_8++) {
@@ -10007,7 +10007,7 @@ uint __cdecl city_release_blocked_tiles(iptr city)
 #define city_total_trade (*(iptr *)((u8 *)&g.d_006a65d0))
 #define city_turn_worker_realloc (*(int *)((u8 *)&g.d_0062edfc))
 #define city_unassigned_citizens (*(uint *)((u8 *)&g.d_006a654c))
-#define city_workers_overflow (*(undefined4 *)((u8 *)&g.d_006a65dc))
+#define city_workers_overflow (*(i32 *)((u8 *)&g.d_006a65dc))
 #define city_yield_totals (*(int *)((u8 *)&g.d_006a65c8))
 #define settler_food_cost (*(int *)((u8 *)&g.d_006a6608))
 #define local_80 (*(iptr *)(frame_ + FRAME_OFF(0)))
@@ -10028,7 +10028,7 @@ void __cdecl city_assign_workers(iptr city)
   int iVar4;
   int iVar5;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_7c = 0;
   city_workers_overflow = 0;
@@ -10228,7 +10228,7 @@ void __cdecl city_fill_specialists(iptr city)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_specialist_count = city_unassigned_citizens;
   for (local_8 = 0; local_8 < city_specialist_count; local_8++) {
@@ -10247,11 +10247,11 @@ void __cdecl city_fill_specialists(iptr city)
 #undef local_8
 
 /* 004e9849 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl city_corruption_divisor(iptr param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 4;
   if (0 < param_2) {
@@ -10287,7 +10287,7 @@ int __cdecl city_calc_corruption(iptr city,int param_2,int param_3,int param_4)
   int iVar3;
   uint uVar4;
   bool bVar5;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 < 1) {
     local_c = 0;
@@ -10374,7 +10374,7 @@ void __cdecl city_calc_shields_pollution(iptr city)
 {
   iptr civ;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = 0;
@@ -10488,10 +10488,10 @@ LAB_004e9d15:
 #undef local_8
 
 /* 004ea031 auto */
-#define city_angry_count (*(undefined *)((u8 *)&g.d_006a659c))
-#define city_happy_count (*(undefined *)((u8 *)&g.d_006a6550))
+#define city_angry_count (*(i8 *)((u8 *)&g.d_006a659c))
+#define city_happy_count (*(i8 *)((u8 *)&g.d_006a6550))
 #define city_unassigned_citizens (*(int *)((u8 *)&g.d_006a654c))
-#define city_unhappy_count (*(undefined *)((u8 *)&g.d_006a65a8))
+#define city_unhappy_count (*(i8 *)((u8 *)&g.d_006a65a8))
 void __cdecl city_happy_clamp_stage(iptr city,iptr param_2)
 
 {
@@ -10520,9 +10520,9 @@ void __cdecl city_happy_clamp_stage(iptr city,iptr param_2)
     city_angry_count--;
   }
   if (-1 < param_2) {
-    (&city_happy_by_stage)[param_2] = (undefined1)city_happy_count;
-    (&city_unhappy_by_stage)[param_2] = (undefined1)city_unhappy_count;
-    (&city_angry_by_stage)[param_2] = (undefined1)city_angry_count;
+    (&city_happy_by_stage)[param_2] = (i8)city_happy_count;
+    (&city_unhappy_by_stage)[param_2] = (i8)city_unhappy_count;
+    (&city_angry_by_stage)[param_2] = (i8)city_angry_count;
   }
   return;
 }
@@ -10549,7 +10549,7 @@ void __cdecl city_split_trade(iptr city,int param_2,int param_3,int param_4)
   iptr civ;
   int iVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_3 == 1) && (cities[city].building == -0x26)) {
     local_c = param_2;
@@ -10696,14 +10696,14 @@ void __cdecl city_split_trade(iptr city,int param_2,int param_3,int param_4)
 /* 004ea8e4 auto */
 #define city_aggressive_units (*(int *)((u8 *)&g.d_006a65e4))
 #define city_angry_count (*(int *)((u8 *)&g.d_006a659c))
-#define city_happy_count (*(undefined *)((u8 *)&g.d_006a6550))
-#define city_science_total (*(undefined4 *)((u8 *)&g.d_006a6578))
-#define city_tax_total (*(undefined4 *)((u8 *)&g.d_006a6554))
-#define city_total_shields (*(undefined *)((u8 *)&g.d_006a65cc))
+#define city_happy_count (*(i8 *)((u8 *)&g.d_006a6550))
+#define city_science_total (*(i32 *)((u8 *)&g.d_006a6578))
+#define city_tax_total (*(i32 *)((u8 *)&g.d_006a6554))
+#define city_total_shields (*(i8 *)((u8 *)&g.d_006a65cc))
 #define city_total_trade (*(int *)((u8 *)&g.d_006a65d0))
 #define city_trade_corruption (*(int *)((u8 *)&g.d_006a6580))
-#define city_unhappy_count (*(undefined *)((u8 *)&g.d_006a65a8))
-#define city_yield_totals (*(undefined *)((u8 *)&g.d_006a65c8))
+#define city_unhappy_count (*(i8 *)((u8 *)&g.d_006a65a8))
+#define city_yield_totals (*(i8 *)((u8 *)&g.d_006a65c8))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(12)))
@@ -10722,7 +10722,7 @@ int __cdecl city_calc_trade_happiness(uptr city)
   int iVar6;
   int iVar7;
   uptr uVar8;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (iptr)(char)civ2;
@@ -10936,7 +10936,7 @@ int __cdecl city_calc_trade_happiness(uptr city)
 void __cdecl city_count_food_routes(iptr city)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_food_routes_out = 0;
   city_food_routes_in = 0;
@@ -10984,17 +10984,17 @@ void __cdecl city_calc_all_stats(iptr city)
 #define city_notify_enabled (*(int *)((u8 *)&g.d_006a65ac))
 #define city_zoom_requested (*(int *)((u8 *)&g.d_006a65a0))
 #define local_304 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(764)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(764)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(768)))
 int __cdecl city_notify_dialog_ex(iptr param_1,iptr city,int param_3,iptr param_4)
 
 {
   int iVar1;
   iptr iVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_304,0x4000);
@@ -11018,11 +11018,11 @@ int __cdecl city_notify_dialog_ex(iptr param_1,iptr city,int param_3,iptr param_
       if (city_zoom_requested == 0) {
         uVar4 = 0;
         iVar3 = 1;
-        iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x80));
+        iVar2 = label_string(*(i32 *)(label_string_ids + 0x80));
         dialog_add_option((DialogOptionList *)&local_304,iVar2,iVar3,uVar4);
         uVar4 = 0;
         iVar3 = 0;
-        iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x84));
+        iVar2 = label_string(*(i32 *)(label_string_ids + 0x84));
         dialog_add_option((DialogOptionList *)&local_304,iVar2,iVar3,uVar4);
         if ((game.message_options & 0x400) == 0) {
           dialog_set_default_choice((DialogOptionList *)&local_304,0);
@@ -11061,17 +11061,17 @@ int __cdecl city_notify_dialog_ex(iptr param_1,iptr city,int param_3,iptr param_
 /* 004ebbde auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define city_food_box_rows (*(int *)((u8 *)&g.d_006a6560))
-#define city_turn_window_dirty (*(undefined4 *)((u8 *)&g.d_0062ee04))
+#define city_turn_window_dirty (*(i32 *)((u8 *)&g.d_0062ee04))
 #define city_turn_window_shown (*(int *)((u8 *)&g.d_0062ee00))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define unit2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define y2 (*(int *)(frame_ + FRAME_OFF(12)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined1 (*)[6])(frame_ + FRAME_OFF(20)))
-#define local_16 (*(undefined1 *)(frame_ + FRAME_OFF(26)))
+#define local_1c (*(i8 (*)[6])(frame_ + FRAME_OFF(20)))
+#define local_16 (*(i8 *)(frame_ + FRAME_OFF(26)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-undefined4 __cdecl city_process_food(uptr city)
+i32 __cdecl city_process_food(uptr city)
 
 {
   int iVar1;
@@ -11081,7 +11081,7 @@ undefined4 __cdecl city_process_food(uptr city)
   iptr improvement;
   iptr iVar4;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (iptr)(char)civ2;
@@ -11163,7 +11163,7 @@ undefined4 __cdecl city_process_food(uptr city)
         cities[city].size--;
         text_set_label_arg(1,improvements[improvement].name);
         if (((((1 << (civ2 & 0x1f) & (uint)game.human_players) == 0) ||
-             (((*(undefined1 *)((char *)&game.game_options + 1)) & 1) == 0)) || ((game.field_0c & 8) != 0)) || (improvement != 9)) {
+             (((*(i8 *)((char *)&game.game_options + 1)) & 1) == 0)) || ((game.field_0c & 8) != 0)) || (improvement != 9)) {
           if (((int)cities[city].building != -improvement) && ((game.message_options & 1) == 0)) {
             city_notify_dialog(ADDR(0x62ee60, ((u8 *)&g.d_0062ee60)),city,(iptr)(&improvement_icon_sprites + improvement * 0x3c));
           }
@@ -11208,14 +11208,14 @@ undefined4 __cdecl city_process_food(uptr city)
 #define city_shield_support (*(int *)((u8 *)&g.d_006a6568))
 #define city_total_shields (*(int *)((u8 *)&g.d_006a65cc))
 #define city_turn_window_shown (*(int *)((u8 *)&g.d_0062ee00))
-#define city_zoom_requested (*(undefined4 *)((u8 *)&g.d_006a65a0))
+#define city_zoom_requested (*(i32 *)((u8 *)&g.d_006a65a0))
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define _DAT_006a6610 (*(undefined4 *)((u8 *)&g.d_006a6610))
+#define _DAT_006a6610 (*(i32 *)((u8 *)&g.d_006a6610))
 #define local_978 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_974 (*(undefined * *)(frame_ + FRAME_OFF(4)))
-#define local_970 (*(undefined * *)(frame_ + FRAME_OFF(8)))
-#define local_96c (*(undefined * *)(frame_ + FRAME_OFF(12)))
+#define local_974 (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_970 (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define local_96c (*(i8 * *)(frame_ + FRAME_OFF(12)))
 #define local_968 (*(char *)(frame_ + FRAME_OFF(16)))
 #define local_964 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_960 (*(Dialog *)(frame_ + FRAME_OFF(24)))
@@ -11250,9 +11250,9 @@ undefined4 __cdecl city_process_food(uptr city)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(2396)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(2400)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(2404)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2408)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2412)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2416)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2408)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2412)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2416)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_process_production(uptr city)
@@ -11264,9 +11264,9 @@ void __cdecl city_process_production(uptr city)
   int iVar4;
   iptr iVar5;
   iptr iVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   iptr iVar6;
-  undefined1 frame_[FRAME_OFF(2424)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2424)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   improvement = -1;
@@ -11378,7 +11378,7 @@ LAB_004eda9a:
                       city_notify_dialog(ADDR(0x62eedc, ((u8 *)&g.d_0062eedc)),city,ADDR(0x645fe8, ((u8 *)&g.d_00645fe8)));
                     }
                     else if (2 < game.multiplayer) {
-                      net_send_text_args(0x46,*(undefined4 *)
+                      net_send_text_args(0x46,*(i32 *)
                                                (&net_player_slots +
                                                *(int *)(&net_civ_slots + civ2 * 4) * 0x54),1,0,
                                          city,0);
@@ -11427,7 +11427,7 @@ LAB_004eda9a:
               if (local_3c == 0x15) {
                 city3 = 0xb9;
               }
-              text_set_label_arg(3,*(undefined4 *)(label_string_ids + city3 * 4));
+              text_set_label_arg(3,*(i32 *)(label_string_ids + city3 * 4));
               if (local_5c != 0) {
                 if (local_3c < 0) {
                   if ((improvement < 0x23) || (0x25 < improvement)) {
@@ -11500,7 +11500,7 @@ LAB_004eda9a:
                 /* inlined unwind funclet FUN_004eeef3 */ { dialog_dtor((Dialog *)((iptr)&local_66c)); }
               }
               if ((((local_5c != 0) && (-1 < local_3c)) && (human_civ == civ)) &&
-                 ((autoplay_active == 0 && (((*(undefined1 *)((char *)&game.game_options + 2)) & 1) != 0)))) {
+                 ((autoplay_active == 0 && (((*(i8 *)((char *)&game.game_options + 2)) & 1) != 0)))) {
                 wonder_show_movie(local_3c);
               }
               if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
@@ -11611,7 +11611,7 @@ LAB_004eda9a:
           }
           unit_type = unit_type2;
           iVar5 = unit_type;
-          (*(undefined1 *)((char *)&unit_type + 0)) = (i8)unit_type2;
+          (*(i8 *)((char *)&unit_type + 0)) = (i8)unit_type2;
           cities[city].building = (i8)unit_type;
           unit_type = iVar5;
           break;
@@ -11676,7 +11676,7 @@ LAB_004eda9a:
           y2 = (int)cities[city].y;
           text_set_string_arg(0,(iptr)&cities[city].name);
           text_set_label_arg(1,unit_types[unit_type].name);
-          text_set_label_arg(3,*(undefined4 *)(label_string_ids + 0x2ec));
+          text_set_label_arg(3,*(i32 *)(label_string_ids + 0x2ec));
           city_delete(city,0);
           iVar3 = civ_check_destroyed(civ,0);
           if (((iVar3 == 0) &&
@@ -11793,7 +11793,7 @@ LAB_004ecd0c: ;
               }
               uVar8 = 0;
               iVar7 = 3;
-              iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x300));
+              iVar5 = label_string(*(i32 *)(label_string_ids + 0x300));
               dialog_add_option((DialogOptionList *)&local_378,iVar5,iVar7,uVar8);
               local_78 = dlg_show_modal(&local_378,0);
               if (local_378.field_dc == 0) {
@@ -11802,7 +11802,7 @@ LAB_004ecd0c: ;
                                        [*(char *)&cities[city].supplies[local_78]]);
                 }
                 else {
-                  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x300));
+                  iVar5 = label_string(*(i32 *)(label_string_ids + 0x300));
                   text_set_string_arg(0,iVar5);
                 }
                 iVar3 = popup_game(ADDR(0x62eeb0, ((u8 *)&g.d_0062eeb0)));
@@ -11855,7 +11855,7 @@ LAB_004ecd0c: ;
               if (unit_types[unit_type].role == 7) {
                 city3 = 0xbc;
               }
-              text_set_label_arg(3,*(undefined4 *)(label_string_ids + city3 * 4));
+              text_set_label_arg(3,*(i32 *)(label_string_ids + city3 * 4));
               city_notify_dialog(ADDR(0x62eebc, ((u8 *)&g.d_0062eebc)),city,(iptr)(&unit_sprites + unit_type * 0x3c));
             }
           }
@@ -12063,7 +12063,7 @@ LAB_004eef15:
 /* 004eef23 auto */
 #define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
 #define city_shield_support (*(int *)((u8 *)&g.d_006a6568))
-#define city_support_unit_count (*(undefined4 *)((u8 *)&g.d_006a660c))
+#define city_support_unit_count (*(i32 *)((u8 *)&g.d_006a660c))
 #define city_total_shields (*(int *)((u8 *)&g.d_006a65cc))
 #define city_turn_window_shown (*(int *)((u8 *)&g.d_0062ee00))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
@@ -12079,10 +12079,10 @@ void __cdecl city_disband_unsupported_units(uptr city)
   bool bVar4;
   iptr civ;
   int iVar7;
-  undefined4 uVar5;
+  i32 uVar5;
   iptr city3;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (iptr)(char)civ2;
@@ -12315,7 +12315,7 @@ void __cdecl city_add_science(iptr city)
   byte civ2;
   uptr civ;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ2 = cities[city].owner;
   civ = (uptr)(char)civ2;
@@ -12356,7 +12356,7 @@ void __cdecl city_pay_improvement_upkeep(iptr city)
 {
   iptr civ;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (iptr)cities[city].owner;
   if (civs[civ].government != '\0') {
@@ -12387,8 +12387,8 @@ void __cdecl city_pay_improvement_upkeep(iptr city)
 /* 004f080d auto */
 #define city_tile_job_found (*(int *)((u8 *)&g.d_0062ee0c))
 #define city_tile_job_priority (*(int *)((u8 *)&g.d_006a65d4))
-#define city_tile_job_x (*(undefined4 *)((u8 *)&g.d_006a65e0))
-#define city_tile_job_y (*(undefined4 *)((u8 *)&g.d_006a65e8))
+#define city_tile_job_x (*(i32 *)((u8 *)&g.d_006a65e0))
+#define city_tile_job_y (*(i32 *)((u8 *)&g.d_006a65e8))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl city_add_terraform_goals(iptr city)
 
@@ -12400,7 +12400,7 @@ void __cdecl city_add_terraform_goals(iptr city)
   int y;
   int iVar6;
   uint uVar7;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
   civ2 = cities[city].owner;
@@ -12463,20 +12463,20 @@ void __cdecl city_add_terraform_goals(iptr city)
 /* 004f0a9c auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define city_aggressive_units (*(int *)((u8 *)&g.d_006a65e4))
-#define city_calc_cached_id (*(undefined4 *)((u8 *)&g.d_0062ee08))
+#define city_calc_cached_id (*(i32 *)((u8 *)&g.d_0062ee08))
 #define city_happy_count (*(int *)((u8 *)&g.d_006a6550))
-#define city_notify_enabled (*(undefined4 *)((u8 *)&g.d_006a65ac))
+#define city_notify_enabled (*(i32 *)((u8 *)&g.d_006a65ac))
 #define city_shield_support (*(int *)((u8 *)&g.d_006a6568))
 #define city_support_unit_count (*(int *)((u8 *)&g.d_006a660c))
-#define city_tile_job_found (*(undefined4 *)((u8 *)&g.d_0062ee0c))
-#define city_tile_job_priority (*(undefined4 *)((u8 *)&g.d_006a65d4))
+#define city_tile_job_found (*(i32 *)((u8 *)&g.d_0062ee0c))
+#define city_tile_job_priority (*(i32 *)((u8 *)&g.d_006a65d4))
 #define city_total_shields (*(int *)((u8 *)&g.d_006a65cc))
-#define city_turn_processing (*(undefined4 *)((u8 *)&g.d_0062edf8))
+#define city_turn_processing (*(i32 *)((u8 *)&g.d_0062edf8))
 #define city_turn_window_dirty (*(int *)((u8 *)&g.d_0062ee04))
 #define city_turn_window_shown (*(uint *)((u8 *)&g.d_0062ee00))
-#define city_turn_worker_realloc (*(undefined4 *)((u8 *)&g.d_0062edfc))
+#define city_turn_worker_realloc (*(i32 *)((u8 *)&g.d_0062edfc))
 #define city_unhappy_count (*(int *)((u8 *)&g.d_006a65a8))
-#define city_window_refresh_locked (*(undefined4 *)((u8 *)&g.d_006aa760))
+#define city_window_refresh_locked (*(i32 *)((u8 *)&g.d_006aa760))
 #define city_workers_overflow (*(int *)((u8 *)&g.d_006a65dc))
 #define city_yield_totals (*(int *)((u8 *)&g.d_006a65c8))
 #define city_zoom_requested (*(int *)((u8 *)&g.d_006a65a0))
@@ -12495,8 +12495,8 @@ int __cdecl city_process_turn(uptr city)
   iptr civ;
   uptr uVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_window_refresh_locked = 1;
   civ2 = cities[city].owner;
@@ -12663,7 +12663,7 @@ int __cdecl city_process_turn(uptr city)
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
-#define net_tile_sync_enabled (*(undefined1 *)((u8 *)&g.d_006ad699))
+#define net_tile_sync_enabled (*(i8 *)((u8 *)&g.d_006ad699))
 #define y2 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(8)))
@@ -12673,10 +12673,10 @@ void __cdecl wonder_apollo_reveal_map(void)
 
 {
   iptr iVar1;
-  undefined4 uVar1;
-  undefined4 uVar2;
+  i32 uVar1;
+  i32 uVar2;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((game.multiplayer < 3) || (net_host_flag != '\0')) {
     y2 = 0;
@@ -12689,7 +12689,7 @@ void __cdecl wonder_apollo_reveal_map(void)
         uVar1 = 0;
         iVar2 = local_14;
         iVar1 = tile_at(x2,y2);
-        known_set(x2,y2,CONCAT31((int3)((uint)iVar1 >> 8),*(undefined1 *)(iVar1 + 1)),
+        known_set(x2,y2,CONCAT31((int3)((uint)iVar1 >> 8),*(i8 *)(iVar1 + 1)),
                   iVar2,uVar1,uVar2);
       }
       x2 += 2;
@@ -12744,13 +12744,13 @@ uint __cdecl city_tile_status_flags(iptr param_1,iptr param_2)
 }
 
 /* 004f3d60 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_430 * __thiscall city_picture_popup_ctor(C_004083b0_430 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   picwnd_ctor(this);
@@ -12993,31 +12993,31 @@ void __cdecl city_tile_pick_surface_atexit_dtor(void)
 
 /* 0050101f auto */
 #define city_window_size_level (*(int *)((u8 *)&g.d_006aa78c))
-#define local_4d8 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_4d8 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_4c8 (*(DibSurface *)(frame_ + FRAME_OFF(16)))
 #define local_480 (*(GamePalette *)(frame_ + FRAME_OFF(88)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(1164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1224)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1228)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1224)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1228)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1232)))
 void __cdecl city_window_load_background(void)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(1240)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(1240)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surface_ctor(&local_4c8);
   local_8 = 0;
   sprite_init(&local_4c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   palette_init(&local_480);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   if (city_window_size_level == city_window_bg_size_level) {
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
@@ -13034,9 +13034,9 @@ void __cdecl city_window_load_background(void)
     gfx_set_zoom_scale(city_window_bg_size_level * 4 - 8);
     sprite_draw(&local_4c,(iptr)local_4d8,ADDR(0x6a9170, ((u8 *)&g.d_006a9170)),0,0);
     gfx_reset_zoom_scale();
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
@@ -13141,21 +13141,21 @@ void __thiscall city_window_remove_hotspots(FrameWindow *this)
 }
 
 /* 00501551 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 FrameWindow * __thiscall city_window_ctor(FrameWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   clickmap_ctor(&this->field_2d8);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   font_init_empty((GameFont *)&this[7].field_270);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),2);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
   this->vtable = (u32)&PTR_FUN_0061d6d4;
   city_window_reset_state(this);
   return this;
@@ -13165,21 +13165,21 @@ FrameWindow * __thiscall city_window_ctor(FrameWindow *this)
 #undef local_8
 
 /* 0050160a auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall city_window_dtor(FrameWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->vtable = (u32)&PTR_FUN_0061d6d4;
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   city_window_remove_hotspots(this);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_00501673 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x16ac)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_00501682 */ { clickmap_dtor(*(int *)((iptr)&this) + 0x2d8); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_00501691 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -13193,8 +13193,8 @@ void __thiscall city_window_dtor(FrameWindow *this)
 void __thiscall city_window_blit_bg_rect(C_004083b0_12c *this,int *param_1)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
+  i32 uVar1;
+  i32 uVar2;
   
   uVar1 = rect_height((iptr)param_1);
   uVar2 = rect_width((iptr)param_1);
@@ -13217,7 +13217,7 @@ void __thiscall city_window_begin_draw(C_004083b0_12c *this,iptr param_1)
 }
 
 /* 00501780 auto */
-void __thiscall city_window_recalc_redraw(C_004083b0_4 *this,undefined4 param_1)
+void __thiscall city_window_recalc_redraw(C_004083b0_4 *this,i32 param_1)
 
 {
   if ((((this[0x569].field_0 == 0) && (this[0x568].field_0 == 0)) && (this[0x56a].field_0 == 0)) &&
@@ -13243,8 +13243,8 @@ void __cdecl city_window_cycle_specialist(int param_1)
   int city2;
   int iVar5;
   short sVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if ((cities[city3].owner == human_civ) || (game.reveal_map != '\0')) {
@@ -13290,21 +13290,21 @@ void __cdecl city_window_cycle_specialist(int param_1)
 
 /* 005019c1 auto */
 #define city_specialist_count (*(int *)((u8 *)&g.d_006a6604))
-#define local_94 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_84 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_74 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_64 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_54 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(68)))
-#define local_44 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(100)))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(116)))
+#define local_94 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_84 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_74 (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_64 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_54 (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
+#define local_44 (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(132)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(136)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(140)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(144)))
 int __thiscall
 city_window_draw_citizen_row
-          (C_004083b0_4 *this,int param_1,int param_2,undefined4 param_3,int param_4,int param_5,
+          (C_004083b0_4 *this,int param_1,int param_2,i32 param_3,int param_4,int param_5,
           int param_6)
 
 {
@@ -13312,12 +13312,12 @@ city_window_draw_citizen_row
   int iVar2;
   int iVar3;
   int iVar4;
-  undefined1 *puVar5;
+  i8 *puVar5;
   C_004083b0_4 *pCVar6;
   iptr iVar7;
   iptr iVar8;
-  undefined4 uVar9;
-  undefined1 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar9;
+  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
   
   gfx_set_zoom_scale(this[0x575].field_0 * 4 - 8);
   iVar8 = 0;
@@ -13438,28 +13438,28 @@ city_window_draw_citizen_row
 
 /* 00501e63 auto */
 #define city_specialist_count (*(int *)((u8 *)&g.d_006a6604))
-#define local_54 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_44 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_54 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_44 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(68)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(72)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(80)))
 int __thiscall
 city_happy_draw_citizen_row
-          (C_004083b0_4 *this,int param_1,undefined4 param_2,undefined4 param_3,int param_4,
+          (C_004083b0_4 *this,int param_1,i32 param_2,i32 param_3,int param_4,
           int param_5,int param_6)
 
 {
   int iVar1;
   int iVar2;
-  undefined1 *puVar3;
+  i8 *puVar3;
   C_004083b0_4 *pCVar4;
   iptr iVar5;
   iptr iVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   gfx_set_zoom_scale(this[0x575].field_0 * 4 - 8);
   iVar6 = 0;
@@ -13522,24 +13522,24 @@ city_happy_draw_citizen_row
 #undef local_8
 
 /* 0050207f auto */
-#define city_angry_count (*(undefined4 *)((u8 *)&g.d_006a659c))
-#define city_happy_count (*(undefined4 *)((u8 *)&g.d_006a6550))
-#define city_unhappy_count (*(undefined4 *)((u8 *)&g.d_006a65a8))
+#define city_angry_count (*(i32 *)((u8 *)&g.d_006a659c))
+#define city_happy_count (*(i32 *)((u8 *)&g.d_006a6550))
+#define city_unhappy_count (*(i32 *)((u8 *)&g.d_006a65a8))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall city_window_draw_citizens(FrameWindow *this,int param_1,undefined4 param_2)
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+void __thiscall city_window_draw_citizens(FrameWindow *this,int param_1,i32 param_2)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   iptr iVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i32 uVar8;
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
@@ -13613,8 +13613,8 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
   int iVar6;
   iptr city5;
   iptr city4;
-  undefined4 uVar9;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar9;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = -1;
   city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
@@ -13705,7 +13705,7 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
 #define city_science_total (*(int *)((u8 *)&g.d_006a6578))
 #define city_shield_support (*(int *)((u8 *)&g.d_006a6568))
 #define city_tax_total (*(int *)((u8 *)&g.d_006a6554))
-#define city_tile_yields (*(undefined4 *)((u8 *)&g.d_006a65b8))
+#define city_tile_yields (*(i32 *)((u8 *)&g.d_006a65b8))
 #define city_total_shields (*(int *)((u8 *)&g.d_006a65cc))
 #define city_total_trade (*(int *)((u8 *)&g.d_006a65d0))
 #define city_trade_corruption (*(uint *)((u8 *)&g.d_006a6580))
@@ -13718,21 +13718,21 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
 #define local_1fc (*(uint *)(frame_ + FRAME_OFF(20)))
 #define local_1f8 (*(uint *)(frame_ + FRAME_OFF(24)))
 #define local_1f4 (*(uint *)(frame_ + FRAME_OFF(28)))
-#define local_1f0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_1e0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
-#define local_1d0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(64)))
-#define local_1c0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(80)))
-#define local_1b0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(96)))
-#define local_1a0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
-#define local_190 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(128)))
-#define local_180 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(144)))
-#define local_170 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(160)))
-#define local_160 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(176)))
-#define local_150 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(192)))
-#define local_140 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(208)))
-#define local_130 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(224)))
-#define local_120 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(240)))
-#define local_110 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(256)))
+#define local_1f0 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_1e0 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_1d0 (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
+#define local_1c0 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
+#define local_1b0 (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
+#define local_1a0 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_190 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
+#define local_180 (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
+#define local_170 (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
+#define local_160 (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
+#define local_150 (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
+#define local_140 (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
+#define local_130 (*(i8 (*)[16])(frame_ + FRAME_OFF(224)))
+#define local_120 (*(i8 (*)[16])(frame_ + FRAME_OFF(240)))
+#define local_110 (*(i8 (*)[16])(frame_ + FRAME_OFF(256)))
 #define local_100 (*(int *)(frame_ + FRAME_OFF(272)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(276)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(280)))
@@ -13789,10 +13789,10 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
 #define local_2c (*(int *)(frame_ + FRAME_OFF(484)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(488)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(492)))
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(496)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(496)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(512)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(516)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(520)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(520)))
 void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
 
 {
@@ -13800,21 +13800,21 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
   int iVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
   iptr iVar7;
   iptr iVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined1 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar9;
+  i32 uVar10;
+  i8 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
     city_window_begin_draw((C_004083b0_12c *)this,(iptr)(this[7].pad_15c + 0x54));
     local_90 = *(int *)(this[7].pad_15c + 0x54);
     local_a0 = *(int *)(this[7].pad_15c + 0x58);
-    local_e0 = gfx_zoom_scale(0x40,*(undefined4 *)(this[7].pad_15c + 0x40));
-    local_100 = gfx_zoom_scale(0x20,*(undefined4 *)(this[7].pad_15c + 0x40));
+    local_e0 = gfx_zoom_scale(0x40,*(i32 *)(this[7].pad_15c + 0x40));
+    local_100 = gfx_zoom_scale(0x20,*(i32 *)(this[7].pad_15c + 0x40));
     local_80 = local_e0 >> 1;
     local_50 = local_100 >> 1;
     local_58 = city_window_scale((C_004083b0_4 *)this,5);
@@ -13845,12 +13845,12 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       mapview_draw_tile_terrain
                 ((C_004083b0_430 *)&map_views,(iptr)this,local_cc,local_e4,x2,y2,
                  (int)cities[*(int *)(this[7].pad_15c + 4)].owner,
-                 *(undefined4 *)(this[7].pad_15c + 0x40),local_94);
+                 *(i32 *)(this[7].pad_15c + 0x40),local_94);
       if (local_3c < 0x15) {
         if (((&city_tile_flags)[local_94] & 8) == 0) {
           if (((&city_tile_flags)[local_94] & 4) == 0) {
             if (((&city_tile_flags)[local_94] & 2) != 0) {
-              gfx_set_zoom_scale(*(undefined4 *)(this[7].pad_15c + 0x40));
+              gfx_set_zoom_scale(*(i32 *)(this[7].pad_15c + 0x40));
               sprite_draw
                         ((Sprite *)&hut_sprite,(iptr)local_110,(iptr)this,local_cc,local_e4
                         );
@@ -13864,7 +13864,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
             }
             if (-1 < unit) {
               gfx_draw_unit((iptr)this,unit,7,local_cc,local_9c,
-                                 *(undefined4 *)(this[7].pad_15c + 0x40),0);
+                                 *(i32 *)(this[7].pad_15c + 0x40),0);
             }
           }
         }
@@ -13873,11 +13873,11 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
           if (-1 < city) {
             local_8 = 1;
             gfx_draw_city((iptr)this,city,1,local_cc,local_9c,
-                               *(undefined4 *)(this[7].pad_15c + 0x40));
+                               *(i32 *)(this[7].pad_15c + 0x40));
           }
         }
         if ((((&city_tile_flags)[local_94] & 0x10) != 0) && (((&city_tile_flags)[local_94] & 9) == 0)) {
-          gfx_set_zoom_scale(*(undefined4 *)(this[7].pad_15c + 0x40));
+          gfx_set_zoom_scale(*(i32 *)(this[7].pad_15c + 0x40));
           sprite_draw
                     ((Sprite *)&map_cursor_sprite,(iptr)local_120,(iptr)this,local_cc,local_e4);
           gfx_reset_zoom_scale();
@@ -14044,11 +14044,11 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_68 = 0;
     }
     if (local_f4 != 0) {
-      gfx_target_fill_rect(local_10,y2,local_f4,*(undefined4 *)(this[7].pad_15c + 0x28),0x2d);
+      gfx_target_fill_rect(local_10,y2,local_f4,*(i32 *)(this[7].pad_15c + 0x28),0x2d);
     }
     if (local_68 != 0) {
       uVar9 = 0x30;
-      uVar5 = *(undefined4 *)(this[7].pad_15c + 0x28);
+      uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
       iVar2 = city_window_scale((C_004083b0_4 *)this,6);
       gfx_target_fill_rect(local_a4,y2,local_68 + iVar2,uVar5,uVar9);
     }
@@ -14239,14 +14239,14 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_68 = 0;
     }
     if (local_f4 != 0) {
-      gfx_target_fill_rect(local_10,y2,local_f4,*(undefined4 *)(this[7].pad_15c + 0x28),0x54);
+      gfx_target_fill_rect(local_10,y2,local_f4,*(i32 *)(this[7].pad_15c + 0x28),0x54);
     }
     if (local_d8 != 0) {
-      gfx_target_fill_rect(local_34,y2,local_d8,*(undefined4 *)(this[7].pad_15c + 0x28),0xb);
+      gfx_target_fill_rect(local_34,y2,local_d8,*(i32 *)(this[7].pad_15c + 0x28),0xb);
     }
     if (local_68 != 0) {
       uVar9 = 0x5c;
-      uVar5 = *(undefined4 *)(this[7].pad_15c + 0x28);
+      uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
       iVar2 = city_window_scale((C_004083b0_4 *)this,6);
       gfx_target_fill_rect(local_a4,y2,local_68 + iVar2,uVar5,uVar9);
     }
@@ -14391,10 +14391,10 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_68 = 0;
     }
     if (local_f4 != 0) {
-      gfx_target_fill_rect(local_10,y2,local_f4,*(undefined4 *)(this[7].pad_15c + 0x28),0x76);
+      gfx_target_fill_rect(local_10,y2,local_f4,*(i32 *)(this[7].pad_15c + 0x28),0x76);
     }
     if (local_68 != 0) {
-      gfx_target_fill_rect(local_a4,y2,local_68,*(undefined4 *)(this[7].pad_15c + 0x28),0x79);
+      gfx_target_fill_rect(local_a4,y2,local_68,*(i32 *)(this[7].pad_15c + 0x28),0x79);
     }
     iVar2 = city_window_scale((C_004083b0_4 *)this,1);
     y2 = y2 + local_40 + iVar2;
@@ -14531,7 +14531,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     y2 = city_window_scale((C_004083b0_4 *)this,0x4f);
     y2 = local_a0 + y2;
     uVar10 = 0x79;
-    uVar5 = *(undefined4 *)(this[7].pad_15c + 0x28);
+    uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
     uVar9 = city_window_scale((C_004083b0_4 *)this,0xe2);
     gfx_target_fill_rect(local_10,y2,uVar9,uVar5,uVar10);
     iVar2 = city_window_scale((C_004083b0_4 *)this,1);
@@ -14732,32 +14732,32 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
 void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
+  i32 uVar4;
+  i32 uVar5;
   int iVar6;
   int iVar7;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((*(int *)(this[0x12].pad_48 + 0x44) == 0) && (*(int *)(this[0x12].pad_48 + 0x40) == 0)) &&
       (*(int *)(this[0x12].pad_48 + 0x48) == 0)) && (-1 < *(int *)(this[0x12].pad_48 + 0x3c))) {
     city_window_begin_draw(this,(iptr)(this[0x12].pad_48 + 0x9c));
     text_set_colors(0x2c,10,1,1);
     uVar1 = rect_width((iptr)(this[0x12].pad_48 + 0x9c));
-    uVar4 = *(undefined4 *)(this[0x12].pad_48 + 0xa0);
-    uVar5 = *(undefined4 *)(this[0x12].pad_48 + 0x9c);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0xac));
+    uVar4 = *(i32 *)(this[0x12].pad_48 + 0xa0);
+    uVar5 = *(i32 *)(this[0x12].pad_48 + 0x9c);
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0xac));
     gfx_draw_text_centered(iVar2,uVar5,uVar4,uVar1);
     iVar2 = city_window_scale((C_004083b0_4 *)this,0xb7);
     iVar3 = city_window_scale((C_004083b0_4 *)this,0x93);
     uVar4 = city_window_scale((C_004083b0_4 *)this,0xf);
     uVar5 = city_window_scale((C_004083b0_4 *)this,6);
     rect_set_xywh((iptr)&local_14,uVar5,uVar4,iVar2,iVar3);
-    rect_offset((iptr)&local_14,*(undefined4 *)(this[0x12].pad_48 + 0x9c),
-                       *(undefined4 *)(this[0x12].pad_48 + 0xa0));
+    rect_offset((iptr)&local_14,*(i32 *)(this[0x12].pad_48 + 0x9c),
+                       *(i32 *)(this[0x12].pad_48 + 0xa0));
     uVar4 = city_window_scale((C_004083b0_4 *)this,3);
     uVar5 = city_window_scale((C_004083b0_4 *)this,3);
     rect_deflate((iptr)&local_14,uVar5,uVar4);
@@ -14838,13 +14838,13 @@ void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
 
 /* 0050503e auto */
 #define city_shield_rows (*(uint *)((u8 *)&g.d_006a657c))
-#define local_6c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_6c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_5c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_50 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_48 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_48 (*(i32 *)(frame_ + FRAME_OFF(40)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(44)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_3c (*(iptr *)(frame_ + FRAME_OFF(52)))
@@ -14852,27 +14852,27 @@ void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
 #define local_34 (*(uint *)(frame_ + FRAME_OFF(60)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(64)))
 #define local_2c (*(uint *)(frame_ + FRAME_OFF(68)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(72)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(76)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(80)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(92)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(92)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(100)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(100)))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(104)))
 void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
 
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   iptr iVar4;
   int *piVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   iptr iVar7;
-  undefined4 uVar8;
-  undefined1 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar8;
+  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
   
   improvement = -1;
   unit_type = -1;
@@ -14881,9 +14881,9 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
     city_window_begin_draw((C_004083b0_12c *)this,(iptr)(this[7].pad_1bc + 0x14));
     local_3c = city_window_scale((C_004083b0_4 *)this,0xb7);
     local_50 = city_window_scale((C_004083b0_4 *)this,0x92);
-    local_14 = *(undefined4 *)(this[7].pad_1bc + 0x14);
+    local_14 = *(i32 *)(this[7].pad_1bc + 0x14);
     local_10 = *(int *)(this[7].pad_1bc + 0x18);
-    local_c = *(undefined4 *)(this[7].pad_1bc + 0x1c);
+    local_c = *(i32 *)(this[7].pad_1bc + 0x1c);
     local_8 = this[7].field_1dc;
     iVar1 = city_window_scale((C_004083b0_4 *)this,0x28);
     local_8 = local_10 + iVar1;
@@ -14899,8 +14899,8 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
       local_34 = (uint)improvements[improvement].cost;
       text_set_colors(0x54,10,1,1);
       uVar8 = rect_width((iptr)(this[7].pad_1bc + 0x14));
-      uVar3 = *(undefined4 *)(this[7].pad_1bc + 0x18);
-      uVar6 = *(undefined4 *)(this[7].pad_1bc + 0x14);
+      uVar3 = *(i32 *)(this[7].pad_1bc + 0x18);
+      uVar6 = *(i32 *)(this[7].pad_1bc + 0x14);
       iVar4 = label_string(improvements[improvement].name);
       gfx_draw_text_centered(iVar4,uVar6,uVar3,uVar8);
       gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 - 8);
@@ -14937,8 +14937,8 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
       uVar3 = city_window_scale((C_004083b0_4 *)this,0x28);
       uVar6 = city_window_scale((C_004083b0_4 *)this,6);
       rect_set_xywh((iptr)&local_14,uVar6,uVar3,iVar4,iVar7);
-      rect_offset((iptr)&local_14,*(undefined4 *)(this[7].pad_1bc + 0x14),
-                         *(undefined4 *)(this[7].pad_1bc + 0x18));
+      rect_offset((iptr)&local_14,*(i32 *)(this[7].pad_1bc + 0x14),
+                         *(i32 *)(this[7].pad_1bc + 0x18));
       uVar3 = city_window_scale((C_004083b0_4 *)this,3);
       uVar6 = city_window_scale((C_004083b0_4 *)this,3);
       rect_deflate((iptr)&local_14,uVar6,uVar3);
@@ -15033,10 +15033,10 @@ void __thiscall city_window_draw_button_area(C_004083b0_12c *this,int param_1)
 
 /* 00505666 auto */
 #define settler_food_cost (*(int *)((u8 *)&g.d_006a6608))
-#define local_c0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_b0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_a0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_90 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_c0 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_b0 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_a0 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_90 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
 #define local_80 (*(int *)(frame_ + FRAME_OFF(64)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(68)))
 #define local_78 (*(int *)(frame_ + FRAME_OFF(72)))
@@ -15061,21 +15061,21 @@ void __thiscall city_window_draw_button_area(C_004083b0_12c *this,int param_1)
 #define local_2c (*(int *)(frame_ + FRAME_OFF(148)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(152)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(156)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(160)))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(164)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(168)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(172)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(172)))
 void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
 
 {
   int iVar1;
   int iVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   iptr iVar5;
   iptr iVar6;
   iptr iVar7;
-  undefined1 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
@@ -15120,7 +15120,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
       text_set_colors(0x7c,0x12,1,1);
       uVar4 = rect_width((iptr)(this[7].pad_23c + 4));
       iVar1 = city_window_scale((C_004083b0_4 *)this,1);
-      gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(undefined4 *)(this[7].pad_23c + 4),
+      gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)(this[7].pad_23c + 4),
                          *(int *)(this[7].pad_23c + 8) + iVar1,uVar4);
     }
     local_1c = gfx_zoom_scale(0x40,local_20);
@@ -15263,7 +15263,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-void __cdecl city_window_sell_improvement(undefined4 param_1)
+void __cdecl city_window_sell_improvement(i32 param_1)
 
 {
   short sVar1;
@@ -15272,9 +15272,9 @@ void __cdecl city_window_sell_improvement(undefined4 param_1)
   iptr city2;
   int city;
   int iVar6;
-  undefined4 uVar7;
+  i32 uVar7;
   iptr iVar7;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   improvement = -1;
@@ -15339,10 +15339,10 @@ void __cdecl city_window_sell_improvement(undefined4 param_1)
 #undef local_c
 
 /* 00505ffa auto */
-#define _DAT_006aa770 (*(undefined4 *)((u8 *)&g.d_006aa770))
-#define local_78 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_68 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_58 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
+#define _DAT_006aa770 (*(i32 *)((u8 *)&g.d_006aa770))
+#define local_78 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_68 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_58 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_44 (*(int *)(frame_ + FRAME_OFF(52)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(56)))
@@ -15356,18 +15356,18 @@ void __cdecl city_window_sell_improvement(undefined4 param_1)
 #define local_20 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(92)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(100)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
 
 {
   u32 uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
@@ -15381,7 +15381,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
     uVar2 = rect_width((iptr)this[7].pad_200);
     iVar4 = *(int *)(this[7].pad_200 + 4);
     iVar3 = city_window_scale((C_004083b0_4 *)this,1);
-    gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(undefined4 *)this[7].pad_200,iVar4 - iVar3,uVar2);
+    gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)this[7].pad_200,iVar4 - iVar3,uVar2);
     local_3c = city_window_scale((C_004083b0_4 *)this,2);
     local_3c = local_30 + local_3c;
     local_44 = city_window_scale((C_004083b0_4 *)this,1);
@@ -15484,11 +15484,11 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
 
 /* 00506637 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define moving_units_mode (*(undefined4 *)((u8 *)&g.d_006d1da8))
+#define moving_units_mode (*(i32 *)((u8 *)&g.d_006d1da8))
 #define local_340 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(820)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(816)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(820)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(824)))
 void __cdecl city_window_supported_unit_menu(iptr unit)
 
@@ -15499,14 +15499,14 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
   int city;
   int iVar5;
   iptr iVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_340,0x4000);
   local_8 = 0;
   sprite_init(&local_4c);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   if (city_unit_dialog_busy == 0) {
     city_unit_dialog_busy = 1;
     city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
@@ -15523,7 +15523,7 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
       dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,unit,0);
       uVar7 = 0;
       iVar6 = 4;
-      city2 = label_string(*(undefined4 *)(label_string_ids + 0x4c8));
+      city2 = label_string(*(i32 *)(label_string_ids + 0x4c8));
       dialog_add_option((DialogOptionList *)&local_340,city2,iVar6,uVar7);
       iVar2 = dlg_show_modal(&local_340,0);
       if (0 < iVar2) {
@@ -15580,7 +15580,7 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
     /* inlined unwind funclet FUN_00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
   }
   else {
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_00506a15 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
@@ -15598,11 +15598,11 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
 /* 00506a42 auto */
 #define city_info_panel_mode (*(int *)((u8 *)&g.d_006aa768))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define moving_units_mode (*(undefined4 *)((u8 *)&g.d_006d1da8))
+#define moving_units_mode (*(i32 *)((u8 *)&g.d_006d1da8))
 #define local_340 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(820)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(816)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(820)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(824)))
 void __cdecl city_window_present_unit_menu(int param_1)
 
@@ -15617,16 +15617,16 @@ void __cdecl city_window_present_unit_menu(int param_1)
   uint city6;
   int city2;
   iptr iVar10;
-  undefined4 unit2;
-  undefined1 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 unit2;
+  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_340,0x4000);
   local_8 = 0;
   sprite_init(&local_4c);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   if (city_unit_dialog_busy != 0) {
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_005070b8 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_005070c1 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
@@ -15655,53 +15655,53 @@ void __cdecl city_window_present_unit_menu(int param_1)
   dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,unit,0);
   unit2 = 0;
   iVar10 = 0;
-  city = label_string(*(undefined4 *)(label_string_ids + 0x144));
+  city = label_string(*(i32 *)(label_string_ids + 0x144));
   dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   if (units[unit].orders != -1) {
     unit2 = 0;
     iVar10 = 1;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x148));
+    city = label_string(*(i32 *)(label_string_ids + 0x148));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
     dialog_set_default_choice((DialogOptionList *)&local_340,1);
   }
   if (units[unit].orders != 3) {
     unit2 = 0;
     iVar10 = 2;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x14c));
+    city = label_string(*(i32 *)(label_string_ids + 0x14c));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   }
   if ((units[unit].orders != 1) && (units[unit].orders != 2)) {
     unit2 = 0;
     iVar10 = 3;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x150));
+    city = label_string(*(i32 *)(label_string_ids + 0x150));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   }
   city6 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (city6 != (byte)units[unit].home_city) {
     unit2 = 0;
     iVar10 = 5;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x2cc));
+    city = label_string(*(i32 *)(label_string_ids + 0x2cc));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
     if (units[unit].home_city != -1) {
       unit2 = 0;
       iVar10 = 6;
-      city = label_string(*(undefined4 *)(label_string_ids + 0x2f4));
+      city = label_string(*(i32 *)(label_string_ids + 0x2f4));
       dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
     }
   }
   unit2 = 0;
   iVar10 = 7;
-  city = label_string(*(undefined4 *)(label_string_ids + 0x2d0));
+  city = label_string(*(i32 *)(label_string_ids + 0x2d0));
   dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   if (((((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0) &&
       (game.turn_civ != '\0')) && (city2 = unit_moves_left(unit), city2 != 0)) {
     unit2 = 0;
     iVar10 = 8;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x2f8));
+    city = label_string(*(i32 *)(label_string_ids + 0x2f8));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
     unit2 = 0;
     iVar10 = 9;
-    city = label_string(*(undefined4 *)(label_string_ids + 0x2fc));
+    city = label_string(*(i32 *)(label_string_ids + 0x2fc));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   }
   unit2 = dlg_show_modal(&local_340,0);
@@ -15778,8 +15778,8 @@ LAB_005070d7:
 #define local_a4 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_a0 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_9c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_98 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_88 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_98 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_88 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(48)))
 #define local_74 (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(56)))
@@ -15799,28 +15799,28 @@ LAB_005070d7:
 #define local_38 (*(int *)(frame_ + FRAME_OFF(112)))
 #define local_34 (*(int *)(frame_ + FRAME_OFF(116)))
 #define local_30 (*(iptr *)(frame_ + FRAME_OFF(120)))
-#define local_2c (*(undefined4 *)(frame_ + FRAME_OFF(124)))
+#define local_2c (*(i32 *)(frame_ + FRAME_OFF(124)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(128)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(132)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(136)))
-#define local_1c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(140)))
+#define local_1c (*(i8 (*)[16])(frame_ + FRAME_OFF(140)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(156)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(160)))
 void __thiscall city_window_draw_units_present(FrameWindow *this)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   int iVar5;
   int iVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_54 = this[7].field_210;
   local_58 = this[7].field_214;
-  local_2c = *(undefined4 *)(this[7].pad_15c + 0x40);
+  local_2c = *(i32 *)(this[7].pad_15c + 0x40);
   local_6c = gfx_zoom_scale(0x40,local_2c);
   local_28 = gfx_zoom_scale(0x30,local_2c);
   local_c = gfx_zoom_scale(0x40,local_2c);
@@ -15845,7 +15845,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
     text_set_colors(0x7c,0x12,1,1);
     uVar2 = rect_width((iptr)(this[7].pad_23c + 0x14));
     iVar1 = city_window_scale((C_004083b0_4 *)this,1);
-    gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(undefined4 *)(this[7].pad_23c + 0x14),this[7].field_254 + iVar1,
+    gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)(this[7].pad_23c + 0x14),this[7].field_254 + iVar1,
                        uVar2);
   }
   local_70 = local_44;
@@ -16078,13 +16078,13 @@ void __thiscall city_window_draw_support_map(C_004083b0_4 *this)
 
 {
   char civ;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   int iVar5;
   iptr x;
   int iVar7;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = cities[this[0x567].field_0].owner;
   text_clear();
@@ -16133,7 +16133,7 @@ void __thiscall city_window_draw_support_map(C_004083b0_4 *this)
 #undef local_8
 
 /* 00507f31 auto */
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -16143,7 +16143,7 @@ void __thiscall city_happy_draw_building_icons(C_004083b0_4 *this,iptr param_1,i
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   iVar1 = city_window_scale(this,0x14);
@@ -16198,7 +16198,7 @@ void __thiscall city_happy_draw_building_icons(C_004083b0_4 *this,iptr param_1,i
       gfx_set_zoom_scale(this[0x575].field_0 * 4 - 8);
       sprite_draw
                 ((Sprite *)(&improvement_icon_sprites + local_18 * 0x3c),(iptr)local_28,(iptr)this,
-                 *(undefined4 *)param_1,local_14);
+                 *(i32 *)param_1,local_14);
       gfx_reset_zoom_scale();
     }
 LAB_00507f6b:
@@ -16231,13 +16231,13 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
   iptr civ;
   int iVar4;
   iptr iVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   int iVar7;
   int iVar8;
   int iVar9;
   int *piVar10;
-  undefined4 uVar11;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
   civ = (iptr)cities[this[0x567].field_0].owner;
@@ -16251,10 +16251,10 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
     iVar4 = (iVar9 + param_2) - (iVar4 >> 1);
     text_set_colors(0x29,10,1,0);
     uVar11 = 0;
-    uVar6 = *(undefined4 *)param_1;
+    uVar6 = *(i32 *)param_1;
     iVar5 = label_string(government_names[4]);
     uVar6 = gfx_draw_text_right(iVar5,uVar6,iVar4,uVar11);
-    *(undefined4 *)param_1 = uVar6;
+    *(i32 *)param_1 = uVar6;
   }
   else if (bVar1 < 5) {
     local_28 = 0;
@@ -16275,7 +16275,7 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
         else {
           bVar2 = true;
         }
-        gfx_draw_unit((iptr)this,unit,4,*(undefined4 *)param_1,(iVar9 + param_2) - iVar8,
+        gfx_draw_unit((iptr)this,unit,4,*(i32 *)param_1,(iVar9 + param_2) - iVar8,
                            local_c,0);
       }
     }
@@ -16313,7 +16313,7 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
         uVar6 = 0;
         iVar8 = local_10;
         iVar7 = city_window_scale(this,10);
-        city_window_draw_icon_row(ADDR(0x646598, ((u8 *)&g.d_00646598)),*(undefined4 *)param_1,(iVar9 + param_2) - (iVar4 >> 1),local_14
+        city_window_draw_icon_row(ADDR(0x646598, ((u8 *)&g.d_00646598)),*(i32 *)param_1,(iVar9 + param_2) - (iVar4 >> 1),local_14
                            ,local_14,iVar7 + 1,iVar8,uVar6);
         gfx_reset_zoom_scale();
       }
@@ -16333,8 +16333,8 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
 
 /* 00508552 auto */
 #define city_building_content (*(iptr *)((u8 *)&g.d_006a6618))
-#define local_64 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_54 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_64 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_54 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(44)))
@@ -16354,12 +16354,12 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
 void __thiscall city_window_draw_happiness(C_004083b0_4 *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   iptr iVar3;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (iptr)cities[this[0x567].field_0].owner;
   text_clear();
@@ -16437,7 +16437,7 @@ void __thiscall city_window_draw_happiness(C_004083b0_4 *this)
       uVar1 = 0;
       iVar2 = local_2c;
       iVar5 = local_1c;
-      iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x160));
+      iVar3 = label_string(*(i32 *)(label_string_ids + 0x160));
       local_2c = gfx_draw_text_right(iVar3,iVar2,iVar5,uVar1);
     }
     iVar2 = city_window_scale(this,2);
@@ -16524,7 +16524,7 @@ void __thiscall city_window_draw_info_panel(FrameWindow *this,int param_1)
 }
 
 /* 00508bc5 auto */
-void __thiscall city_window_draw_all(FrameWindow *this,undefined4 param_1)
+void __thiscall city_window_draw_all(FrameWindow *this,i32 param_1)
 
 {
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
@@ -16585,8 +16585,8 @@ void __thiscall city_window_fill_margins(C_004083b0_12c *this)
   int iVar3;
   int iVar4;
   u32 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
+  i32 uVar6;
+  i32 uVar7;
   
   iVar4 = *(int *)(this[0x12].pad_48 + 100);
   iVar1 = *(int *)(this[0x12].pad_48 + 0x68);
@@ -16594,10 +16594,10 @@ void __thiscall city_window_fill_margins(C_004083b0_12c *this)
     iVar3 = *(int *)(this[0x12].pad_48 + 0x5c);
     iVar2 = city_window_scale((C_004083b0_4 *)this,0x27c);
     iVar3 -= (iVar4 + iVar2);
-    gfx_target_fill_rect(this->client_x,this->client_y,*(undefined4 *)(this[0x12].pad_48 + 100),
-                       *(undefined4 *)(this[0x12].pad_48 + 0x60),10);
+    gfx_target_fill_rect(this->client_x,this->client_y,*(i32 *)(this[0x12].pad_48 + 100),
+                       *(i32 *)(this[0x12].pad_48 + 0x60),10);
     uVar7 = 10;
-    uVar6 = *(undefined4 *)(this[0x12].pad_48 + 0x60);
+    uVar6 = *(i32 *)(this[0x12].pad_48 + 0x60);
     uVar5 = this->client_y;
     iVar2 = city_window_scale((C_004083b0_4 *)this,0x27c);
     gfx_target_fill_rect(this->client_x + iVar2 + iVar4,uVar5,iVar3,uVar6,uVar7);
@@ -16606,10 +16606,10 @@ void __thiscall city_window_fill_margins(C_004083b0_12c *this)
     iVar4 = *(int *)(this[0x12].pad_48 + 0x60);
     iVar3 = city_window_scale((C_004083b0_4 *)this,0x1a5);
     iVar4 -= (iVar1 + iVar3);
-    gfx_target_fill_rect(this->client_x,this->client_y,*(undefined4 *)(this[0x12].pad_48 + 0x5c),
-                       *(undefined4 *)(this[0x12].pad_48 + 0x68),10);
+    gfx_target_fill_rect(this->client_x,this->client_y,*(i32 *)(this[0x12].pad_48 + 0x5c),
+                       *(i32 *)(this[0x12].pad_48 + 0x68),10);
     uVar7 = 10;
-    uVar6 = *(undefined4 *)(this[0x12].pad_48 + 0x5c);
+    uVar6 = *(i32 *)(this[0x12].pad_48 + 0x5c);
     iVar3 = city_window_scale((C_004083b0_4 *)this,0x1a5);
     gfx_target_fill_rect(this->client_x,this->client_y + iVar3 + iVar1,uVar6,iVar4,uVar7);
   }
@@ -16624,9 +16624,9 @@ void __thiscall city_window_apply_size(FrameWindow *this)
   int iVar1;
   int iVar2;
   u32 uVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar3 = this->border_width;
   iVar1 = surface_get_height((DibSurface *)this);
@@ -16694,8 +16694,8 @@ void __thiscall city_window_apply_size(FrameWindow *this)
   else {
     city_window_create_controls((C_004083b0_12c *)this);
   }
-  *(undefined4 *)(this[7].pad_15c + 0x34) = *(undefined4 *)(this[7].pad_15c + 0x2c);
-  *(undefined4 *)(this[7].pad_15c + 0x38) = *(undefined4 *)(this[7].pad_15c + 0x30);
+  *(i32 *)(this[7].pad_15c + 0x34) = *(i32 *)(this[7].pad_15c + 0x2c);
+  *(i32 *)(this[7].pad_15c + 0x38) = *(i32 *)(this[7].pad_15c + 0x30);
   return;
 }
 #undef local_10
@@ -16719,7 +16719,7 @@ void __thiscall city_window_update_title(FrameWindow *this)
       text_append_comma();
       text_append_label(0x22);
       text_append_space();
-      text_append_city_population(*(undefined4 *)(this[7].pad_15c + 4));
+      text_append_city_population(*(i32 *)(this[7].pad_15c + 4));
     }
     else if (((scenario_flags & 2) != 0) &&
             (iVar1 = city_objective_value(*(iptr *)(this[7].pad_15c + 4)), iVar1 != 0)) {
@@ -16863,14 +16863,14 @@ void __thiscall city_window_open(C_004083b0_12c *this,iptr city)
     city_window_create_change_button(this,1);
     city_window_exit_requested = 0;
     if (city_turn_processing == 0) {
-      if ((((((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) && (3 < cities[city].size)) &&
+      if ((((((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) && (3 < cities[city].size)) &&
           ((game.field_0c & 1) == 0)) && (cities[city].owner != human_civ)) {
         popup_text((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x630e00, ((u8 *)&g.d_00630e00)));
         game.field_0c = game.field_0c | 1;
       }
     }
     else {
-      if (((((((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) && ((cities[city].flags & 1) != 0)) ||
+      if (((((((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) && ((cities[city].flags & 1) != 0)) ||
            (((cities[city].flags & 0x100000) != 0 && (game.difficulty < 3)))) &&
           ((cities[city].owner == human_civ && (autoplay_active == 0)))) &&
          (popup_text((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x630ddc, ((u8 *)&g.d_00630ddc))), dlg_help_pressed != 0)) {
@@ -16919,11 +16919,11 @@ void __cdecl city_window_on_redraw(void)
 }
 
 /* 0050994f auto */
-#define city_window_closed (*(undefined4 *)((u8 *)&g.d_006aa75c))
-#define _DAT_006aa754 (*(undefined4 *)((u8 *)&g.d_006aa754))
+#define city_window_closed (*(i32 *)((u8 *)&g.d_006aa75c))
+#define _DAT_006aa754 (*(i32 *)((u8 *)&g.d_006aa754))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl city_window_close(void)
+i32 __cdecl city_window_close(void)
 
 {
   city_window_closed = 1;
@@ -16937,7 +16937,7 @@ undefined4 __cdecl city_window_close(void)
 #undef _DAT_006aa754
 
 /* 0050998f auto */
-#define _DAT_006aa784 (*(undefined4 *)((u8 *)&g.d_006aa784))
+#define _DAT_006aa784 (*(i32 *)((u8 *)&g.d_006aa784))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_calc_rect(void)
@@ -16962,7 +16962,7 @@ void __cdecl city_window_calc_rect(void)
 #undef _DAT_006aa784
 
 /* 00509a49 auto */
-#define city_window_size_level (*(undefined4 *)((u8 *)&g.d_006aa78c))
+#define city_window_size_level (*(i32 *)((u8 *)&g.d_006aa78c))
 void __cdecl city_window_init_size(void)
 
 {
@@ -16976,7 +16976,7 @@ void __cdecl city_window_init_size(void)
 #undef city_window_size_level
 
 /* 00509a82 auto */
-#define _DAT_006aa758 (*(undefined4 *)((u8 *)&g.d_006aa758))
+#define _DAT_006aa758 (*(i32 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_on_minimize(void)
@@ -16988,7 +16988,7 @@ void __cdecl city_window_on_minimize(void)
 #undef _DAT_006aa758
 
 /* 00509a9c auto */
-#define _DAT_006aa758 (*(undefined4 *)((u8 *)&g.d_006aa758))
+#define _DAT_006aa758 (*(i32 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_on_restore(void)
@@ -17009,8 +17009,8 @@ void __cdecl city_text_append_build_turns(int param_1,int param_2)
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
+  i32 uVar3;
+  i32 uVar4;
   
   uVar4 = 999;
   uVar3 = 1;
@@ -17032,7 +17032,7 @@ void __cdecl city_text_append_build_turns(int param_1,int param_2)
 #undef city_total_shields
 
 /* 00509b48 auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
@@ -17053,20 +17053,20 @@ void __cdecl city_text_append_build_turns(int param_1,int param_2)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(undefined4 *)((u8 *)&g.d_006c31b8))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define local_368 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_35c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_354 (*(Dialog *)(frame_ + FRAME_OFF(20)))
-#define local_60 (*(undefined1 (*)[8])(frame_ + FRAME_OFF(776)))
-#define local_58 (*(undefined1 *)(frame_ + FRAME_OFF(784)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(856)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(860)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(864)))
+#define local_60 (*(i8 (*)[8])(frame_ + FRAME_OFF(776)))
+#define local_58 (*(i8 *)(frame_ + FRAME_OFF(784)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(856)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(860)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(864)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_button_buy(undefined4 param_1)
+void __cdecl city_button_buy(i32 param_1)
 
 {
   bool bVar1;
@@ -17082,9 +17082,9 @@ void __cdecl city_button_buy(undefined4 param_1)
   iptr city6;
   int city;
   uint uVar13;
-  undefined4 uVar14;
-  undefined4 uVar15;
-  undefined1 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar14;
+  i32 uVar15;
+  i8 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_354,0x4000);
@@ -17254,21 +17254,21 @@ void __cdecl city_button_buy(undefined4 param_1)
 #undef local_8
 
 /* 0050a1d6 auto */
-#define local_40 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_30 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_40 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_30 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(36)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
-undefined4 __cdecl
-city_change_draw_option_icon(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+i32 __cdecl
+city_change_draw_option_icon(i32 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = -1;
   local_20 = -1;
@@ -17314,15 +17314,15 @@ city_change_draw_option_icon(undefined4 param_1,iptr param_2,int param_3,byte pa
 #undef local_8
 
 /* 0050a473 auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
-#define city_dlg_close_pending (*(undefined1 *)((u8 *)&g.d_00630d30))
+#define city_dlg_close_pending (*(i8 *)((u8 *)&g.d_00630d30))
 #define civ_check_destroyed_busy (*(int *)((u8 *)&g.d_006ad8f4))
 #define civ_create_busy (*(int *)((u8 *)&g.d_006ad8f0))
 #define civ_eliminate_busy (*(int *)((u8 *)&g.d_006ad8ec))
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define net_lock_map_busy (*(int *)((u8 *)&g.d_006ad8cc))
 #define net_unlock_map_busy (*(int *)((u8 *)&g.d_006ad8d0))
@@ -17337,9 +17337,9 @@ city_change_draw_option_icon(undefined4 param_1,iptr param_2,int param_3,byte pa
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(undefined4 *)((u8 *)&g.d_006c31b8))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define unit_type3 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_954 (*(Dialog *)(frame_ + FRAME_OFF(12)))
@@ -17350,14 +17350,14 @@ city_change_draw_option_icon(undefined4 param_1,iptr param_2,int param_3,byte pa
 #define local_360 (*(Dialog *)(frame_ + FRAME_OFF(1536)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(2292)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(2296)))
-#define local_64 (*(undefined1 (*)[80])(frame_ + FRAME_OFF(2300)))
+#define local_64 (*(i8 (*)[80])(frame_ + FRAME_OFF(2300)))
 #define unit_type2 (*(iptr *)(frame_ + FRAME_OFF(2380)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2384)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2388)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2384)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2388)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(2392)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_button_change(undefined4 param_1)
+void __cdecl city_button_change(i32 param_1)
 
 {
   char *pcVar1;
@@ -17373,22 +17373,22 @@ void __cdecl city_button_change(undefined4 param_1)
   iptr city7;
   iptr city8;
   iptr *piVar13;
-  undefined4 uVar14;
+  i32 uVar14;
   iptr *piVar15;
-  undefined1 frame_[FRAME_OFF(2400)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2400)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_654,0x8000);
   local_8 = 0;
   dialog_ctor(&local_954,0x4000);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   dialog_ctor(&local_360,0x4000);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   iVar3 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (iVar3 == -1) {
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
@@ -17414,7 +17414,7 @@ void __cdecl city_button_change(undefined4 param_1)
         local_658 = (iptr)cities[city5].building;
         while (city = citywnd_get_city((C_004083b0_4 *)&city_window),
               city != -1) {
-          if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
+          if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
             piVar15 = &improvement;
             piVar13 = &unit_type;
             city6 = citywnd_get_city((C_004083b0_4 *)&city_window);
@@ -17567,11 +17567,11 @@ void __cdecl city_button_change(undefined4 param_1)
               local_65c++;
             }
           }
-          if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x80) != 0) && (game.multiplayer == '\0')) {
-            city3 = label_string(*(undefined4 *)(label_string_ids + 0x130));
+          if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) != 0) && (game.multiplayer == '\0')) {
+            city3 = label_string(*(i32 *)(label_string_ids + 0x130));
             dialog_add_button((C_0040bc40_3c *)&local_654,city3);
           }
-          if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
+          if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
             if (0xb < local_65c) {
               local_65c = 0xc;
             }
@@ -17593,15 +17593,15 @@ void __cdecl city_button_change(undefined4 param_1)
              )) {
 LAB_0050b609:
             city_window_create_change_button((C_004083b0_12c *)&city_window,1);
-            (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+            (*(i8 *)((char *)&local_8 + 0)) = 1;
             /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
-            local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+            local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
             /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
             local_8 = 0xffffffff;
             /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
             goto LAB_0050b666;
           }
-          if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
+          if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
             dialog_close(&local_360);
             dialog_close(&local_954);
             ui_flush_input();
@@ -17744,17 +17744,17 @@ LAB_0050b5dc:
         dialog_close(&local_654);
         dialog_close(&local_954);
         dialog_close(&local_360);
-        (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+        (*(i8 *)((char *)&local_8 + 0)) = 1;
         /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
-        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+        local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
         /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
         local_8 = 0xffffffff;
         /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
       }
       else {
-        (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+        (*(i8 *)((char *)&local_8 + 0)) = 1;
         /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
-        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+        local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
         /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
         local_8 = 0xffffffff;
         /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
@@ -17767,9 +17767,9 @@ LAB_0050b5dc:
       city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
       _DAT_006c31b4 = (int)cities[city2].owner;
       _DAT_006c31b8 = param_1;
-      (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+      (*(i8 *)((char *)&local_8 + 0)) = 1;
       /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
-      local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+      local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
       /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
       local_8 = 0xffffffff;
       /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
@@ -17858,15 +17858,15 @@ void __cdecl city_change_idle_autoclose(void)
 #undef net_host_flag
 
 /* 0050b74e auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
-#define city_dlg_close_pending (*(undefined1 *)((u8 *)&g.d_00630d30))
+#define city_dlg_close_pending (*(i8 *)((u8 *)&g.d_00630d30))
 #define civ_check_destroyed_busy (*(int *)((u8 *)&g.d_006ad8f4))
 #define civ_create_busy (*(int *)((u8 *)&g.d_006ad8f0))
 #define civ_eliminate_busy (*(int *)((u8 *)&g.d_006ad8ec))
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define net_lock_map_busy (*(int *)((u8 *)&g.d_006ad8cc))
 #define net_unlock_map_busy (*(int *)((u8 *)&g.d_006ad8d0))
@@ -17880,20 +17880,20 @@ void __cdecl city_change_idle_autoclose(void)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(undefined4 *)((u8 *)&g.d_006c31b8))
-#define local_108 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(0)))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_button_rename(undefined4 param_1)
+void __cdecl city_button_rename(i32 param_1)
 
 {
   iptr iVar1;
   iptr city2;
   int city;
-  undefined1 *puVar4;
-  undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar4;
+  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if ((iVar1 != -1) &&
@@ -17964,13 +17964,13 @@ void __cdecl city_button_rename(undefined4 param_1)
 #undef local_108
 
 /* 0050b9a4 auto */
-#define city_info_panel_mode (*(undefined4 *)((u8 *)&g.d_006aa768))
-void __cdecl city_button_info(undefined4 param_1)
+#define city_info_panel_mode (*(i32 *)((u8 *)&g.d_006aa768))
+void __cdecl city_button_info(i32 param_1)
 
 {
   int iVar1;
   iptr city;
-  undefined4 uVar3;
+  i32 uVar3;
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (iVar1 != -1) {
@@ -17986,13 +17986,13 @@ void __cdecl city_button_info(undefined4 param_1)
 #undef city_info_panel_mode
 
 /* 0050ba07 auto */
-#define city_info_panel_mode (*(undefined4 *)((u8 *)&g.d_006aa768))
-void __cdecl city_button_map(undefined4 param_1)
+#define city_info_panel_mode (*(i32 *)((u8 *)&g.d_006aa768))
+void __cdecl city_button_map(i32 param_1)
 
 {
   int iVar1;
   iptr city;
-  undefined4 uVar3;
+  i32 uVar3;
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (iVar1 != -1) {
@@ -18008,13 +18008,13 @@ void __cdecl city_button_map(undefined4 param_1)
 #undef city_info_panel_mode
 
 /* 0050ba6a auto */
-#define city_info_panel_mode (*(undefined4 *)((u8 *)&g.d_006aa768))
-void __cdecl city_button_happy(undefined4 param_1)
+#define city_info_panel_mode (*(i32 *)((u8 *)&g.d_006aa768))
+void __cdecl city_button_happy(i32 param_1)
 
 {
   int iVar1;
   iptr city;
-  undefined4 uVar3;
+  i32 uVar3;
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (iVar1 != -1) {
@@ -18030,7 +18030,7 @@ void __cdecl city_button_happy(undefined4 param_1)
 #undef city_info_panel_mode
 
 /* 0050bacd auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
@@ -18049,18 +18049,18 @@ void __cdecl city_button_happy(undefined4 param_1)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(undefined4 *)((u8 *)&g.d_006c31b8))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_button_view(undefined4 param_1)
+void __cdecl city_button_view(i32 param_1)
 
 {
   iptr iVar1;
   iptr iVar2;
   int city;
-  undefined4 city2;
+  i32 city2;
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if (iVar1 != -1) {
@@ -18111,8 +18111,8 @@ void __cdecl city_button_view(undefined4 param_1)
 #undef _DAT_006c31b8
 
 /* 0050bc4f auto */
-#define city_window_exit_requested (*(undefined4 *)((u8 *)&g.d_00630d18))
-void __cdecl city_window_exit_clicked(undefined4 param_1)
+#define city_window_exit_requested (*(i32 *)((u8 *)&g.d_00630d18))
+void __cdecl city_window_exit_clicked(i32 param_1)
 
 {
   int iVar1;
@@ -18137,11 +18137,11 @@ void __cdecl city_window_exit_clicked(undefined4 param_1)
 #undef city_window_exit_requested
 
 /* 0050bcda auto */
-void __cdecl city_window_on_improvement_scroll(undefined4 param_1)
+void __cdecl city_window_on_improvement_scroll(i32 param_1)
 
 {
   iptr city;
-  undefined4 uVar2;
+  i32 uVar2;
   
   city_improvement_list_top = param_1;
   uVar2 = 0;
@@ -18160,13 +18160,13 @@ void __cdecl city_window_on_improvement_scroll(undefined4 param_1)
 #define city4 (*(iptr *)(frame_ + FRAME_OFF(168)))
 #define city5 (*(iptr *)(frame_ + FRAME_OFF(172)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(176)))
-void __cdecl city_button_next_city(undefined4 param_1)
+void __cdecl city_button_next_city(i32 param_1)
 
 {
   iptr iVar1;
   iptr city3;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if ((iVar1 != -1) &&
@@ -18226,13 +18226,13 @@ void __cdecl city_button_next_city(undefined4 param_1)
 #define city4 (*(iptr *)(frame_ + FRAME_OFF(168)))
 #define city5 (*(iptr *)(frame_ + FRAME_OFF(172)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(176)))
-void __cdecl city_button_prev_city(undefined4 param_1)
+void __cdecl city_button_prev_city(i32 param_1)
 
 {
   iptr iVar1;
   iptr city3;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
   if ((iVar1 != -1) &&
@@ -18284,7 +18284,7 @@ void __cdecl city_button_prev_city(undefined4 param_1)
 #undef city2
 
 /* 0050c1d1 auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
@@ -18303,22 +18303,22 @@ void __cdecl city_button_prev_city(undefined4 param_1)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(undefined4 *)((u8 *)&g.d_006c31b8))
-#define _DAT_006c31bc (*(undefined4 *)((u8 *)&g.d_006c31bc))
-#define _DAT_006c31c0 (*(undefined4 *)((u8 *)&g.d_006c31c0))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define _DAT_006c31bc (*(i32 *)((u8 *)&g.d_006c31bc))
+#define _DAT_006c31c0 (*(i32 *)((u8 *)&g.d_006c31c0))
 #define unit (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl city_window_on_mouse(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl city_window_on_mouse(i32 param_1,i32 param_2,i32 param_3)
 
 {
   iptr iVar1;
   iptr city;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = XD_InFlushSendBuffer();
   if (((((((iVar1 == 0) && (unit_create_busy == 0)) && (unit_delete_busy == 0)) &&
@@ -18393,7 +18393,7 @@ void __cdecl city_window_on_mouse(undefined4 param_1,undefined4 param_2,undefine
 #undef local_8
 
 /* 0050c405 auto */
-void __cdecl city_window_on_lbuttonup(undefined4 param_1,undefined4 param_2)
+void __cdecl city_window_on_lbuttonup(i32 param_1,i32 param_2)
 
 {
   city_window_on_mouse(param_1,param_2,0);
@@ -18401,7 +18401,7 @@ void __cdecl city_window_on_lbuttonup(undefined4 param_1,undefined4 param_2)
 }
 
 /* 0050c427 auto */
-void __cdecl city_window_on_rbuttonup(undefined4 param_1,undefined4 param_2)
+void __cdecl city_window_on_rbuttonup(i32 param_1,i32 param_2)
 
 {
   city_window_on_mouse(param_1,param_2,1);
@@ -18463,7 +18463,7 @@ void __thiscall city_window_refresh_if_city(FrameWindow *this,iptr param_1)
 }
 
 /* 0050c6ef auto */
-void __thiscall city_window_refresh_if_near(C_004083b0_4 *this,undefined4 param_1,undefined4 param_2)
+void __thiscall city_window_refresh_if_near(C_004083b0_4 *this,i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -18542,11 +18542,11 @@ void __thiscall city_window_destroy_controls(C_004083b0_4 *this)
 }
 
 /* 0050ca8d auto */
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(36)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Removing unreachable block (ram,0x0050cc02) */
 
 void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
@@ -18556,9 +18556,9 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
   iptr iVar1;
   iptr iVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   if (*(int *)(this[0x13].pad_48 + 0x30) != 0) {
@@ -18579,7 +18579,7 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
     local_30 = button_ctor(this_00);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x30) = local_30;
+  *(i32 *)(this[0x13].pad_48 + 0x30) = local_30;
   ui_set_button_font((iptr)(this[0x13].pad_48 + 0x20));
   iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
   iVar2 = city_window_scale((C_004083b0_4 *)this,0x39);
@@ -18592,7 +18592,7 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
   iVar3 = city_window_scale((C_004083b0_4 *)this,0x3a);
   iVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
   rect_offset((iptr)local_20,iVar3 + iVar5,uVar4);
-  iVar1 = label_string(*(undefined4 *)
+  iVar1 = label_string(*(i32 *)
                               (label_string_ids + 0x94 +
                               (-(uint)(*(int *)(this[0x12].pad_48 + 0x4c) == 2) & 0xcc) * 4));
   button_create
@@ -18612,12 +18612,12 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
 
 /* 0050ccb3 auto */
 #define city_change_button_variant (*(char *)((u8 *)&g.d_00630d24))
-#define local_3c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(28)))
+#define local_3c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
 #define local_14 (*(char *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
 /* WARNING: Removing unreachable block (ram,0x0050ce6a) */
 
 void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_1)
@@ -18631,9 +18631,9 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
   iptr iVar5;
   int iVar6;
   int iVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar8;
+  i32 uVar9;
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_14 = (cities[*(int *)(this[0x12].pad_48 + 0x3c)].flags & 0x10) != 0;
@@ -18657,7 +18657,7 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
       local_3c = button_ctor(this_00);
     }
     local_8 = 0xffffffff;
-    *(undefined4 *)(this[0x13].pad_48 + 0x2c) = local_3c;
+    *(i32 *)(this[0x13].pad_48 + 0x2c) = local_3c;
     ui_set_button_font((iptr)(this[0x13].pad_48 + 0x20));
     iVar1 = *(int *)(this[0x12].pad_48 + 100);
     uVar2 = this->client_x;
@@ -18672,7 +18672,7 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
     uVar9 = 0;
     uVar8 = city_window_scale((C_004083b0_4 *)this,0x73);
     rect_offset((iptr)local_24,uVar8,uVar9);
-    iVar4 = label_string(*(undefined4 *)
+    iVar4 = label_string(*(i32 *)
                                 (label_string_ids + 0x510 +
                                 (-(uint)(local_14 == '\0') & 0xfffffee0) * 4));
     button_create
@@ -18693,37 +18693,37 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
 #undef local_8
 
 /* 0050cf06 auto */
-#define city_change_button_variant (*(undefined1 *)((u8 *)&g.d_00630d24))
-#define local_90 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_80 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define city_change_button_variant (*(i8 *)((u8 *)&g.d_00630d24))
+#define local_90 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_80 (*(i32 *)(frame_ + FRAME_OFF(16)))
 #define local_7c (*(Control * *)(frame_ + FRAME_OFF(20)))
-#define local_78 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_78 (*(i32 *)(frame_ + FRAME_OFF(24)))
 #define local_74 (*(SpriteButton * *)(frame_ + FRAME_OFF(28)))
-#define local_70 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
+#define local_70 (*(i32 *)(frame_ + FRAME_OFF(32)))
 #define local_6c (*(SpriteButton * *)(frame_ + FRAME_OFF(36)))
-#define local_68 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_68 (*(i32 *)(frame_ + FRAME_OFF(40)))
 #define local_64 (*(Control * *)(frame_ + FRAME_OFF(44)))
-#define local_60 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
+#define local_60 (*(i32 *)(frame_ + FRAME_OFF(48)))
 #define local_5c (*(Control * *)(frame_ + FRAME_OFF(52)))
-#define local_58 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_58 (*(i32 *)(frame_ + FRAME_OFF(56)))
 #define local_54 (*(Control * *)(frame_ + FRAME_OFF(60)))
-#define local_50 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
+#define local_50 (*(i32 *)(frame_ + FRAME_OFF(64)))
 #define local_4c (*(Control * *)(frame_ + FRAME_OFF(68)))
-#define local_48 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
+#define local_48 (*(i32 *)(frame_ + FRAME_OFF(72)))
 #define local_44 (*(Control * *)(frame_ + FRAME_OFF(76)))
-#define local_40 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
+#define local_40 (*(i32 *)(frame_ + FRAME_OFF(80)))
 #define local_3c (*(Control * *)(frame_ + FRAME_OFF(84)))
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(88)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(88)))
 #define local_34 (*(Control * *)(frame_ + FRAME_OFF(92)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(96)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(100)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(104)))
-#define local_24 (*(undefined1 *)(frame_ + FRAME_OFF(108)))
-#define local_23 (*(undefined1 *)(frame_ + FRAME_OFF(109)))
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(128)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(132)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(136)))
+#define local_24 (*(i8 *)(frame_ + FRAME_OFF(108)))
+#define local_23 (*(i8 *)(frame_ + FRAME_OFF(109)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(128)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(132)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(136)))
 /* WARNING: Removing unreachable block (ram,0x0050d785) */
 /* WARNING: Removing unreachable block (ram,0x0050d64a) */
 /* WARNING: Removing unreachable block (ram,0x0050d52c) */
@@ -18741,12 +18741,12 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   iptr iVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
   int iVar7;
   int iVar8;
-  undefined4 uVar9;
-  undefined1 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar9;
+  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
@@ -18760,7 +18760,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_38 = button_ctor(local_34);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x28) = local_38;
+  *(i32 *)(this[0x13].pad_48 + 0x28) = local_38;
   local_3c = operator_new(0x3c);
   local_8 = 1;
   if (local_3c == (Control *)0x0) {
@@ -18770,7 +18770,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_40 = button_ctor(local_3c);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x2c) = local_40;
+  *(i32 *)(this[0x13].pad_48 + 0x2c) = local_40;
   local_44 = operator_new(0x3c);
   local_8 = 2;
   if (local_44 == (Control *)0x0) {
@@ -18780,7 +18780,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_48 = button_ctor(local_44);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x38) = local_48;
+  *(i32 *)(this[0x13].pad_48 + 0x38) = local_48;
   local_4c = operator_new(0x3c);
   local_8 = 3;
   if (local_4c == (Control *)0x0) {
@@ -18790,7 +18790,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_50 = button_ctor(local_4c);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x40) = local_50;
+  *(i32 *)(this[0x13].pad_48 + 0x40) = local_50;
   local_54 = operator_new(0x3c);
   local_8 = 4;
   if (local_54 == (Control *)0x0) {
@@ -18800,7 +18800,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_58 = button_ctor(local_54);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x44) = local_58;
+  *(i32 *)(this[0x13].pad_48 + 0x44) = local_58;
   local_5c = operator_new(0x3c);
   local_8 = 5;
   if (local_5c == (Control *)0x0) {
@@ -18810,7 +18810,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_60 = button_ctor(local_5c);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x3c) = local_60;
+  *(i32 *)(this[0x13].pad_48 + 0x3c) = local_60;
   local_64 = operator_new(0x3c);
   local_8 = 6;
   if (local_64 == (Control *)0x0) {
@@ -18820,7 +18820,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_68 = button_ctor(local_64);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x34) = local_68;
+  *(i32 *)(this[0x13].pad_48 + 0x34) = local_68;
   local_6c = operator_new(0xcc);
   local_8 = 7;
   if (local_6c == (SpriteButton *)0x0) {
@@ -18830,7 +18830,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_70 = spritebtn_ctor(local_6c);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x48) = local_70;
+  *(i32 *)(this[0x13].pad_48 + 0x48) = local_70;
   local_74 = operator_new(0xcc);
   local_8 = 8;
   if (local_74 == (SpriteButton *)0x0) {
@@ -18840,7 +18840,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_78 = spritebtn_ctor(local_74);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x4c) = local_78;
+  *(i32 *)(this[0x13].pad_48 + 0x4c) = local_78;
   local_7c = operator_new(0x40);
   local_8 = 9;
   if (local_7c == (Control *)0x0) {
@@ -18850,7 +18850,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
     local_80 = scrollbar_ctor(local_7c);
   }
   local_8 = 0xffffffff;
-  *(undefined4 *)(this[0x13].pad_48 + 0x50) = local_80;
+  *(i32 *)(this[0x13].pad_48 + 0x50) = local_80;
   local_28 = *(int *)(this[0x12].pad_48 + 100) + this->client_x;
   local_2c = this->client_y + *(int *)(this[0x12].pad_48 + 0x68);
   ui_set_button_font((iptr)(this[0x13].pad_48 + 0x20));
@@ -18861,7 +18861,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   iVar3 = local_2c + iVar3;
   iVar4 = city_window_scale((C_004083b0_4 *)this,0x1ba);
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x8c));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x8c));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x28),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),1,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x28),ADDR(0x402c57, city_button_buy));
@@ -18875,12 +18875,12 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
   local_23 = 0;
   local_24 = 0x5e;
-  spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),9,*(undefined4 *)(this[0x13].pad_48 + 0x48),ADDR(0x644770, ((u8 *)&g.d_00644770)),(iptr)local_20);
+  spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),9,*(i32 *)(this[0x13].pad_48 + 0x48),ADDR(0x644770, ((u8 *)&g.d_00644770)),(iptr)local_20);
   spritebtn_set_click_handler(*(C_005117f0 **)(this[0x13].pad_48 + 0x48),ADDR(0x40370b, city_button_prev_city));
   uVar5 = city_window_scale((C_004083b0_4 *)this,0x19);
   rect_offset((iptr)local_20,0,uVar5);
   local_24 = 0x76;
-  spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),10,*(undefined4 *)(this[0x13].pad_48 + 0x4c),ADDR(0x6480d8, ((u8 *)&g.d_006480d8)),(iptr)local_20);
+  spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),10,*(i32 *)(this[0x13].pad_48 + 0x4c),ADDR(0x6480d8, ((u8 *)&g.d_006480d8)),(iptr)local_20);
   spritebtn_set_click_handler(*(C_005117f0 **)(this[0x13].pad_48 + 0x4c),ADDR(0x402964, city_button_next_city));
   iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
   iVar2 = city_window_scale((C_004083b0_4 *)this,0x39);
@@ -18888,21 +18888,21 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   iVar3 = local_2c + iVar3;
   iVar4 = city_window_scale((C_004083b0_4 *)this,0x1cb);
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x9c));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x9c));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x38),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),3,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x38),ADDR(0x402482, city_button_info));
   uVar9 = 0;
   uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0xa4));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0xa4));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x40),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),4,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x40),ADDR(0x401217, city_button_map));
   uVar9 = 0;
   uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0xa8));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x44),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),5,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x44),ADDR(0x401e97, city_button_rename));
@@ -18910,14 +18910,14 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   iVar3 = city_window_scale((C_004083b0_4 *)this,0xffffffc6);
   iVar4 = city_window_scale((C_004083b0_4 *)this,0xffffffc6);
   rect_offset((iptr)local_20,iVar3 + iVar4,uVar5);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0xa0));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0xa0));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x3c),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),6,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x3c),ADDR(0x40304e, city_button_happy));
   uVar9 = 0;
   uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x98));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x98));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x34),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),7,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x34),ADDR(0x402ec3, city_button_view));
@@ -18962,10 +18962,10 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   }
   if (*(int *)(this[0x12].pad_48 + 0x78) != city_tile_pick_zoom_cached) {
     city_tile_pick_zoom_cached = *(int *)(this[0x12].pad_48 + 0x78);
-    uVar5 = gfx_zoom_scale(0x20,*(undefined4 *)(this[0x12].pad_48 + 0x78));
-    uVar9 = gfx_zoom_scale(0x40,*(undefined4 *)(this[0x12].pad_48 + 0x78));
+    uVar5 = gfx_zoom_scale(0x20,*(i32 *)(this[0x12].pad_48 + 0x78));
+    uVar9 = gfx_zoom_scale(0x40,*(i32 *)(this[0x12].pad_48 + 0x78));
     surface_create((DibSurface *)&city_tile_pick_surface,uVar9,uVar5);
-    gfx_set_zoom_scale(*(undefined4 *)(this[0x12].pad_48 + 0x78));
+    gfx_set_zoom_scale(*(i32 *)(this[0x12].pad_48 + 0x78));
     sprite_draw((Sprite *)&tile_pick_mask_sprite,(iptr)local_90,ADDR(0x6a9120, ((u8 *)&g.d_006a9120)),0,0);
     gfx_reset_zoom_scale();
   }
@@ -19004,7 +19004,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
 #undef local_8
 
 /* 0050dada auto */
-#define city_window_exit_btn_pending (*(undefined1 *)((u8 *)&g.d_00630d20))
+#define city_window_exit_btn_pending (*(i8 *)((u8 *)&g.d_00630d20))
 void __thiscall city_window_begin_notice(C_004083b0_4 *this)
 
 {
@@ -19022,7 +19022,7 @@ void __thiscall city_window_begin_notice(C_004083b0_4 *this)
 #undef city_window_exit_btn_pending
 
 /* 0050db36 auto */
-#define city_window_exit_btn_pending (*(undefined1 *)((u8 *)&g.d_00630d20))
+#define city_window_exit_btn_pending (*(i8 *)((u8 *)&g.d_00630d20))
 void __thiscall city_window_end_notice(C_004083b0_12c *this)
 
 {
@@ -19089,13 +19089,13 @@ void __thiscall city_window_create(FrameWindow *this)
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined4 uVar9;
+  i32 uVar3;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
+  i32 uVar9;
   
   city_window_reset_state(this);
   this[7].pad_15c[0x14] = '\0';
@@ -19106,12 +19106,12 @@ void __thiscall city_window_create(FrameWindow *this)
   this[7].pad_15c[0x31] = '\0';
   this[7].pad_15c[0x32] = '\0';
   this[7].pad_15c[0x33] = '\0';
-  *(undefined4 *)(this[7].pad_15c + 0x2c) = *(undefined4 *)(this[7].pad_15c + 0x30);
+  *(i32 *)(this[7].pad_15c + 0x2c) = *(i32 *)(this[7].pad_15c + 0x30);
   this[7].pad_15c[0x38] = 0xff;
   this[7].pad_15c[0x39] = 0xff;
   this[7].pad_15c[0x3a] = 0xff;
   this[7].pad_15c[0x3b] = 0xff;
-  *(undefined4 *)(this[7].pad_15c + 0x34) = *(undefined4 *)(this[7].pad_15c + 0x38);
+  *(i32 *)(this[7].pad_15c + 0x34) = *(i32 *)(this[7].pad_15c + 0x38);
   this[7].pad_15c[8] = '\0';
   this[7].pad_15c[9] = '\0';
   this[7].pad_15c[10] = '\0';
@@ -19129,7 +19129,7 @@ void __thiscall city_window_create(FrameWindow *this)
   uVar4 = 2;
   uVar5 = city_wnd_rect;
   uVar6 = city_wnd_rect_top;
-  uVar3 = label_string(*(undefined4 *)(label_string_ids + 0x1c));
+  uVar3 = label_string(*(i32 *)(label_string_ids + 0x1c));
   frame_wnd_create(this,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   frame_wnd_set_title_font(this,ADDR(0x6aa898, ((u8 *)&g.d_006aa898)));
   frame_wnd_set_title_small_font(this,ADDR(0x6a9168, ((u8 *)&g.d_006a9168)));
@@ -19166,7 +19166,7 @@ void __thiscall city_window_destroy(DibSurface *this)
 /* 005113b0 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl
-city_draw_hline(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+city_draw_hline(i32 param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   gfx_draw_hline(gfx_draw_target,param_1,param_2,param_3,param_4);
@@ -19176,7 +19176,7 @@ city_draw_hline(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefin
 
 /* 005113f0 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
-void __cdecl city_draw_bevel_rect(iptr param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl city_draw_bevel_rect(iptr param_1,i32 param_2,i32 param_3)
 
 {
   gfx_draw_bevel_rect(gfx_draw_target,param_1,param_2,param_3);
@@ -19187,8 +19187,8 @@ void __cdecl city_draw_bevel_rect(iptr param_1,undefined4 param_2,undefined4 par
 /* 005114d0 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl
-city_window_draw_icon_row(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+city_window_draw_icon_row(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7,i32 param_8)
 
 {
   sprite_draw_spaced_row(gfx_draw_target,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
@@ -19212,7 +19212,7 @@ int __cdecl city_treasury_share(iptr city)
 
 {
   char civ;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = cities[city].owner;
   if (civs[civ].gold < (int)(32000 / (longlong)(int)cities[city].size)) {
@@ -19243,7 +19243,7 @@ void __cdecl city_transfer_for_civil_war(iptr city,iptr civ2,iptr civ)
 
 /* 0057b5df auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-#define city_turn_processing (*(undefined4 *)((u8 *)&g.d_0062edf8))
+#define city_turn_processing (*(i32 *)((u8 *)&g.d_0062edf8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define net_can_escape_reply (*(int *)((u8 *)&g.d_006acb38))
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
@@ -19275,13 +19275,13 @@ void __cdecl city_transfer_for_civil_war(iptr city,iptr civ2,iptr civ)
 #define local_78 (*(int *)(frame_ + FRAME_OFF(888)))
 #define local_74 (*(iptr *)(frame_ + FRAME_OFF(892)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(896)))
-#define local_6c (*(undefined1 (*)[80])(frame_ + FRAME_OFF(900)))
+#define local_6c (*(i8 (*)[80])(frame_ + FRAME_OFF(900)))
 #define city2 (*(uptr *)(frame_ + FRAME_OFF(980)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(984)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(988)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(992)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(996)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1000)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(992)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(996)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1000)))
 void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
 
 {
@@ -19299,9 +19299,9 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
   iptr x;
   uptr uVar13;
   uint uVar14;
-  undefined4 uVar15;
+  i32 uVar15;
   uint uVar16;
-  undefined1 frame_[FRAME_OFF(1008)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1008)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_38c,0x4000);
@@ -19425,7 +19425,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
         }
         else {
           net_can_escape_reply = -1;
-          net_send_text_args(0x17,*(undefined4 *)
+          net_send_text_args(0x17,*(i32 *)
                                    (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),3
                              ,1,human_civ,0);
           improvement2 = timer_ticks();
@@ -19454,7 +19454,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
         popup_game_with_city(ADDR(0x6343a4, ((u8 *)&g.d_006343a4)),city2);
       }
       else {
-        net_send_text_args(0x18,*(undefined4 *)
+        net_send_text_args(0x18,*(i32 *)
                                  (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),3,0
                            ,city2,0);
       }
@@ -19530,7 +19530,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
         text_set_string_arg(2,ADDR(0x679640, ((u8 *)&g.d_00679640)));
         if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
             (2 < game.multiplayer)) && (human_civ != civ2)) {
-          net_send_text_args(0x1a,*(undefined4 *)
+          net_send_text_args(0x1a,*(i32 *)
                                    (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),3
                              ,0,improvement2,0);
         }
@@ -19641,8 +19641,8 @@ LAB_0057c990:
     snd_play_effect(5,0,0,0);
   }
   text_set_string_arg(0,(iptr)local_6c);
-  text_set_label_arg(3,*(undefined4 *)(label_string_ids + 700 + (uint)(local_7c == 0) * -4));
-  text_set_label_arg(4,*(undefined4 *)(label_string_ids + 0x2c4 + (uint)(local_7c == 0) * -4));
+  text_set_label_arg(3,*(i32 *)(label_string_ids + 700 + (uint)(local_7c == 0) * -4));
+  text_set_label_arg(4,*(i32 *)(label_string_ids + 0x2c4 + (uint)(local_7c == 0) * -4));
   tile_update_known(x2,y,civ);
   tile_update_known(x2,y,civ2);
   if (2 < game.multiplayer) {
@@ -19660,7 +19660,7 @@ LAB_0057c990:
             map_redraw_tile_all_views(x2,y);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0x72,*(undefined4 *)
+            net_send_message(0x72,*(i32 *)
                                      (&net_player_slots + *(int *)(&net_civ_slots + civ3 * 4) * 0x54
                                      ),x2,y,0,0,0,0,0,0);
           }
@@ -19684,7 +19684,7 @@ LAB_0057c990:
                   popup_city_picture_zoom(ADDR(0x63440c, ((u8 *)&g.d_0063440c)),city,0x46,1,civ);
                 }
                 else if (2 < game.multiplayer) {
-                  net_send_text_args(0x1e,*(undefined4 *)
+                  net_send_text_args(0x1e,*(i32 *)
                                            (&net_player_slots +
                                            *(int *)(&net_civ_slots + civ3 * 4) * 0x54),4,1,
                                      civ,city);
@@ -19700,7 +19700,7 @@ LAB_0057c990:
                 popup_city_picture_zoom(ADDR(0x6343fc, ((u8 *)&g.d_006343fc)),city,0x46,1,civ);
               }
               else if (2 < game.multiplayer) {
-                net_send_text_args(0x1d,*(undefined4 *)
+                net_send_text_args(0x1d,*(i32 *)
                                          (&net_player_slots +
                                          *(int *)(&net_civ_slots + civ3 * 4) * 0x54),4,1,civ
                                    ,city);
@@ -19716,7 +19716,7 @@ LAB_0057c990:
               popup_city_picture_zoom(ADDR(0x6343f0, ((u8 *)&g.d_006343f0)),city,0x46,1,civ);
             }
             else if (2 < game.multiplayer) {
-              net_send_text_args(0x1c,*(undefined4 *)
+              net_send_text_args(0x1c,*(i32 *)
                                        (&net_player_slots +
                                        *(int *)(&net_civ_slots + civ3 * 4) * 0x54),5,1,civ,
                                  city);
@@ -19737,37 +19737,37 @@ LAB_0057c990:
     }
     if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer))
        && (human_civ != civ2)) {
-      net_send_message(0x89,*(undefined4 *)
+      net_send_message(0x89,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),
                          city,0,0,0,0,0,0,0);
-      net_send_message(0x8a,*(undefined4 *)
+      net_send_message(0x8a,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),0,0,0
                          ,0,0,0,0,0);
-      net_send_message(0x71,*(undefined4 *)
+      net_send_message(0x71,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),x2
                          ,y,civ,0,0,0,0,0);
-      net_send_message(0x72,*(undefined4 *)
+      net_send_message(0x72,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),x2
                          ,y,0,0,0,0,0,0);
-      net_send_text_args(0x1b,*(undefined4 *)
+      net_send_text_args(0x1b,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),4,1,
                          civ,city);
     }
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (2 < game.multiplayer))
        && (human_civ != civ)) {
-      net_send_message(0x89,*(undefined4 *)
+      net_send_message(0x89,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),
                          city,0,0,0,0,0,0,0);
-      net_send_message(0x8a,*(undefined4 *)
+      net_send_message(0x8a,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),0,0,0
                          ,0,0,0,0,0);
-      net_send_message(0x71,*(undefined4 *)
+      net_send_message(0x71,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),x2,
                          y,civ,0,0,0,0,0);
-      net_send_message(0x72,*(undefined4 *)
+      net_send_message(0x72,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),x2,
                          y,0,0,0,0,0,0);
-      net_send_text_args(0x1b,*(undefined4 *)
+      net_send_text_args(0x1b,*(i32 *)
                                (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),4,1,
                          civ,city);
     }
@@ -19965,7 +19965,7 @@ LAB_0057da76:
           if (((2 < game.multiplayer) &&
               ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
              (human_civ != civ2)) {
-            net_send_message(0x7a,*(undefined4 *)
+            net_send_message(0x7a,*(i32 *)
                                      (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54)
                                ,0x22,1,0,0,0,0,0,0);
           }
@@ -20003,7 +20003,7 @@ LAB_0057da76:
       }
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
           (2 < game.multiplayer)) && (human_civ != civ2)) {
-        net_send_text_args(0x1f,*(undefined4 *)
+        net_send_text_args(0x1f,*(i32 *)
                                  (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),2,0
                            ,unit,0);
       }

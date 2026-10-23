@@ -2,8 +2,8 @@
 #include "auto_common.h"
 
 /* 004a2552 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define text_line_cursor (*(undefined1 * *)((u8 *)&g.d_00673f14))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define text_line_cursor (*(i8 * *)((u8 *)&g.d_00673f14))
 void __cdecl text_cursor_to_end(void)
 
 {
@@ -27,7 +27,7 @@ int __cdecl char_to_upper_ascii(int param_1)
 }
 
 /* 004af05c auto */
-void __cdecl str_append_lbrace(undefined4 param_1)
+void __cdecl str_append_lbrace(i32 param_1)
 
 {
   FUN_005f22e0(param_1,&append_lbrace_str);
@@ -35,7 +35,7 @@ void __cdecl str_append_lbrace(undefined4 param_1)
 }
 
 /* 004af07d auto */
-void __cdecl str_append_rbrace(undefined4 param_1)
+void __cdecl str_append_rbrace(i32 param_1)
 
 {
   FUN_005f22e0(param_1,&append_rbrace_str);
@@ -43,7 +43,7 @@ void __cdecl str_append_rbrace(undefined4 param_1)
 }
 
 /* 004af0bf auto */
-void __cdecl str_append_minus(undefined4 param_1)
+void __cdecl str_append_minus(i32 param_1)
 
 {
   FUN_005f22e0(param_1,&append_minus_str);
@@ -51,7 +51,7 @@ void __cdecl str_append_minus(undefined4 param_1)
 }
 
 /* 004af0e0 auto */
-void __cdecl str_append_times(undefined4 param_1)
+void __cdecl str_append_times(i32 param_1)
 
 {
   FUN_005f22e0(param_1,&append_times_str);
@@ -59,7 +59,7 @@ void __cdecl str_append_times(undefined4 param_1)
 }
 
 /* 004af101 auto */
-void __cdecl str_append_dollar(undefined4 param_1)
+void __cdecl str_append_dollar(i32 param_1)
 
 {
   FUN_005f22e0(param_1,&append_dollar_str);
@@ -67,10 +67,10 @@ void __cdecl str_append_dollar(undefined4 param_1)
 }
 
 /* 004af194 auto */
-void __cdecl str_append_braced_label(undefined4 param_1,undefined4 param_2)
+void __cdecl str_append_braced_label(i32 param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   str_append_lbrace(param_1);
   uVar1 = label_string(param_2);
@@ -82,11 +82,11 @@ void __cdecl str_append_braced_label(undefined4 param_1,undefined4 param_2)
 /* 004af20a auto */
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(char (*)[20])(frame_ + FRAME_OFF(8)))
-void __cdecl str_append_binary8(undefined4 param_1,int param_2)
+void __cdecl str_append_binary8(i32 param_1,int param_2)
 
 {
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   __itoa(param_2,local_18,2);
   sVar1 = _strlen(local_18);
@@ -100,7 +100,7 @@ void __cdecl str_append_binary8(undefined4 param_1,int param_2)
 #undef local_18
 
 /* 004af885 auto */
-void __cdecl parley_civ_list_scroll_remote(undefined4 param_1)
+void __cdecl parley_civ_list_scroll_remote(i32 param_1)
 
 {
   parley_civ_list_scroll(1,param_1);

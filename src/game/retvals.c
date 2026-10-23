@@ -10,8 +10,8 @@
 #define local_110c (*(char (*)[4096])(frame_ + FRAME_OFF(4)))
 #define local_10c (*(char * *)(frame_ + FRAME_OFF(4100)))
 #define local_108 (*(char (*)[2])(frame_ + FRAME_OFF(4104)))
-#define local_106 (*(undefined1 *)(frame_ + FRAME_OFF(4106)))
-#define local_104 (*(undefined1 (*)[228])(frame_ + FRAME_OFF(4108)))
+#define local_106 (*(i8 *)(frame_ + FRAME_OFF(4106)))
+#define local_104 (*(i8 (*)[228])(frame_ + FRAME_OFF(4108)))
 /* _strrchr is declared __thiscall without parameters in protos.h; it is the
    plain cdecl CRT strrchr. */
 #define STRRCHR ((char *(__cdecl *)(const char *, int))_strrchr)
@@ -29,12 +29,12 @@ void __thiscall pedia_load_description(void *this, int param_1)
   char *pcVar3;
   size_t sVar4;
   size_t sVar5;
-  undefined1 frame_[FRAME_OFF(4368)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(4368)] __attribute__((aligned(8)));  /* original stack frame */
   
   str_clear(local_104);
   pedia_clear_links((void *)self);
   ui_pump_messages();
-  switch(*(undefined4 *)(self + 0x118)) {
+  switch(*(i32 *)(self + 0x118)) {
   case 1:
     param_1 = *(int *)(self + 0x65c + param_1 * 4);
     FUN_005f22d0(local_104,s__ADVANCE_INDEX_00626858);
@@ -104,7 +104,7 @@ LAB_0045259e:
         sVar5 = _strlen(&text_buffer);
         if (0xffe < sVar4 + sVar5) {
           sVar4 = _strlen(local_110c);
-          *(undefined1 *)(ADDR(0x67a63f, ((u8 *)&g.d_0067a638 + 7)) - sVar4) = 0;
+          *(i8 *)(ADDR(0x67a63f, ((u8 *)&g.d_0067a638 + 7)) - sVar4) = 0;
         }
         FUN_005f22e0(local_110c,&text_buffer);
         sVar4 = _strlen(local_110c);
@@ -129,34 +129,34 @@ LAB_00452724:
 #undef local_104
 
 /* 0x00475666 */
-#define scenario_events_loaded (*(undefined4 *)((u8 *)&g.d_00627670))
+#define scenario_events_loaded (*(i32 *)((u8 *)&g.d_00627670))
 #define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
-#define city_calc_cached_id (*(undefined4 *)((u8 *)&g.d_0062ee08))
+#define city_calc_cached_id (*(i32 *)((u8 *)&g.d_0062ee08))
 #define DAT_006365e0 (*(void * *)((u8 *)&map_coarse))
 #define DAT_006365e4 (*(void * *)((u8 *)&map_coarse + 4))
-#define map_cursor_y (*(undefined2 *)((u8 *)&g.d_0064b1b0))
-#define map_cursor_x (*(undefined2 *)((u8 *)&g.d_0064b1b4))
+#define map_cursor_y (*(i16 *)((u8 *)&g.d_0064b1b0))
+#define map_cursor_x (*(i16 *)((u8 *)&g.d_0064b1b4))
 #define DAT_0064b99c (*(int *)((u8 *)&g.d_0064b99c))
-#define scenario_flags (*(undefined2 *)((u8 *)&g.d_0064bc60))
-#define mp_open_game (*(undefined2 *)((u8 *)&g.d_00654c74))
-#define mp_kill_civ_on_retire (*(undefined2 *)((u8 *)&g.d_00654c76))
-#define mp_show_human_starts (*(undefined2 *)((u8 *)&g.d_00654c78))
-#define mp_chat_from_start (*(undefined2 *)((u8 *)&g.d_00654c7a))
+#define scenario_flags (*(i16 *)((u8 *)&g.d_0064bc60))
+#define mp_open_game (*(i16 *)((u8 *)&g.d_00654c74))
+#define mp_kill_civ_on_retire (*(i16 *)((u8 *)&g.d_00654c76))
+#define mp_show_human_starts (*(i16 *)((u8 *)&g.d_00654c78))
+#define mp_chat_from_start (*(i16 *)((u8 *)&g.d_00654c7a))
 #define saved_turn_civ (*(byte *)((u8 *)&g.d_00654fa4))
-#define mp_double_production (*(undefined2 *)((u8 *)&g.d_00654fac))
-#define mp_double_moves (*(undefined2 *)((u8 *)&g.d_00654fae))
-#define destroyed_civ_count (*(undefined2 *)((u8 *)&g.d_00655128))
-#define saved_layout_valid (*(undefined4 *)((u8 *)&g.d_00655280))
-#define prefs_mp_kill_on_retire (*(undefined2 *)((u8 *)&g.d_00666548))
-#define prefs_mp_show_human_starts (*(undefined2 *)((u8 *)&g.d_0066654a))
-#define prefs_mp_chat_from_start (*(undefined2 *)((u8 *)&g.d_0066654c))
-#define prefs_mp_simultaneous_moves (*(undefined2 *)((u8 *)&g.d_0066654e))
-#define save_layout_record (*(undefined2 *)((u8 *)&g.d_0066c600))
-#define map_view_center_x (*(undefined2 *)((u8 *)&g.d_0066ca88))
-#define mapview_center_y (*(undefined2 *)((u8 *)&g.d_0066ca8a))
-#define mapview_zoom (*(undefined2 *)((u8 *)&g.d_0066ca8c))
-#define loaded_file_name (*(undefined *)((u8 *)&g.d_006ad6ae))
-#define loaded_file_subdir (*(undefined *)((u8 *)&g.d_006ad7b2))
+#define mp_double_production (*(i16 *)((u8 *)&g.d_00654fac))
+#define mp_double_moves (*(i16 *)((u8 *)&g.d_00654fae))
+#define destroyed_civ_count (*(i16 *)((u8 *)&g.d_00655128))
+#define saved_layout_valid (*(i32 *)((u8 *)&g.d_00655280))
+#define prefs_mp_kill_on_retire (*(i16 *)((u8 *)&g.d_00666548))
+#define prefs_mp_show_human_starts (*(i16 *)((u8 *)&g.d_0066654a))
+#define prefs_mp_chat_from_start (*(i16 *)((u8 *)&g.d_0066654c))
+#define prefs_mp_simultaneous_moves (*(i16 *)((u8 *)&g.d_0066654e))
+#define save_layout_record (*(i16 *)((u8 *)&g.d_0066c600))
+#define map_view_center_x (*(i16 *)((u8 *)&g.d_0066ca88))
+#define mapview_center_y (*(i16 *)((u8 *)&g.d_0066ca8a))
+#define mapview_zoom (*(i16 *)((u8 *)&g.d_0066ca8c))
+#define loaded_file_name (*(i8 *)((u8 *)&g.d_006ad6ae))
+#define loaded_file_subdir (*(i8 *)((u8 *)&g.d_006ad7b2))
 #define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
 #define local_74c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_748 (*(int *)(frame_ + FRAME_OFF(8)))
@@ -165,7 +165,7 @@ LAB_00452724:
 #define local_738 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_734 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_730 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_728 (*(undefined1 (*)[12])(frame_ + FRAME_OFF(40)))
+#define local_728 (*(i8 (*)[12])(frame_ + FRAME_OFF(40)))
 #define local_71c (*(short (*)[4])(frame_ + FRAME_OFF(52)))
 #define asStack_714 (*(short (*)[494])(frame_ + FRAME_OFF(60)))
 #define local_338 (*(int *)(frame_ + FRAME_OFF(1048)))
@@ -180,7 +180,7 @@ LAB_00452724:
 #define local_114 (*(char (*)[4])(frame_ + FRAME_OFF(1596)))
 #define local_110 (*(int *)(frame_ + FRAME_OFF(1600)))
 #define local_10c (*(char * *)(frame_ + FRAME_OFF(1604)))
-#define local_108 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(1608)))
+#define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(1608)))
 int __cdecl save_read_game(char *param_1)
 
 {
@@ -191,9 +191,9 @@ int __cdecl save_read_game(char *param_1)
   size_t sVar4;
   size_t sVar5;
   void *pvVar6;
-  undefined4 uVar7;
+  i32 uVar7;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(1872)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1872)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_338 = 1;
   local_110 = 0;
@@ -388,83 +388,83 @@ int __cdecl save_read_game(char *param_1)
     for (local_734 = DAT_0064b99c; local_734 != 0; local_734 = *(int *)(local_734 + 0x1bc)) {
       if (*(int *)(local_734 + 8) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 8) = uVar7;
+        *(i32 *)(local_734 + 8) = uVar7;
         if (*(int *)(local_734 + 8) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x10) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x10) = uVar7;
+        *(i32 *)(local_734 + 0x10) = uVar7;
         if (*(int *)(local_734 + 0x10) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x14) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x14) = uVar7;
+        *(i32 *)(local_734 + 0x14) = uVar7;
         if (*(int *)(local_734 + 0x14) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x20) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x20) = uVar7;
+        *(i32 *)(local_734 + 0x20) = uVar7;
         if (*(int *)(local_734 + 0x20) == 0) goto LAB_00477352;
       }
       for (local_330 = 0; (local_330 < 0x14 && (*(int *)(local_734 + 0x38 + local_330 * 4) != 0));
           local_330 = local_330 + 1) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x38 + local_330 * 4) = uVar7;
+        *(i32 *)(local_734 + 0x38 + local_330 * 4) = uVar7;
         if (*(int *)(local_734 + 0x38 + local_330 * 4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x88) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x88) = uVar7;
+        *(i32 *)(local_734 + 0x88) = uVar7;
         if (*(int *)(local_734 + 0x88) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x90) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x90) = uVar7;
+        *(i32 *)(local_734 + 0x90) = uVar7;
         if (*(int *)(local_734 + 0x90) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xc4) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0xc4) = uVar7;
+        *(i32 *)(local_734 + 0xc4) = uVar7;
         if (*(int *)(local_734 + 0xc4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xcc) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0xcc) = uVar7;
+        *(i32 *)(local_734 + 0xcc) = uVar7;
         if (*(int *)(local_734 + 0xcc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xd4) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0xd4) = uVar7;
+        *(i32 *)(local_734 + 0xd4) = uVar7;
         if (*(int *)(local_734 + 0xd4) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0xdc) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0xdc) = uVar7;
+        *(i32 *)(local_734 + 0xdc) = uVar7;
         if (*(int *)(local_734 + 0xdc) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x13c) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x13c) = uVar7;
+        *(i32 *)(local_734 + 0x13c) = uVar7;
         if (*(int *)(local_734 + 0x13c) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x140) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x140) = uVar7;
+        *(i32 *)(local_734 + 0x140) = uVar7;
         if (*(int *)(local_734 + 0x140) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x148) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x148) = uVar7;
+        *(i32 *)(local_734 + 0x148) = uVar7;
         if (*(int *)(local_734 + 0x148) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x174) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x174) = uVar7;
+        *(i32 *)(local_734 + 0x174) = uVar7;
         if (*(int *)(local_734 + 0x174) == 0) goto LAB_00477352;
       }
       if (*(int *)(local_734 + 0x184) != 0) {
         uVar7 = save_read_event_str(_File);
-        *(undefined4 *)(local_734 + 0x184) = uVar7;
+        *(i32 *)(local_734 + 0x184) = uVar7;
         if (*(int *)(local_734 + 0x184) == 0) goto LAB_00477352;
       }
     }
@@ -684,7 +684,7 @@ LAB_00477352:
 #undef local_108
 
 
-/* wnd_get_style_flags is declared to return undefined1 but returns the whole window
+/* wnd_get_style_flags is declared to return i8 but returns the whole window
    style dword (*this); callers test bit 0x200 (SWS_ATTACHED) in AH.  Read
    here directly (a call through a cast to another return type traps in
    wasm). */
@@ -699,7 +699,7 @@ void __cdecl wnd_obj_set_topmost_child(int param_1,int param_2)
   
   if (param_1 != 0) {
     if (param_2 == 0) {
-      *(undefined4 *)(param_1 + 0x10) = 0;
+      *(i32 *)(param_1 + 0x10) = 0;
     }
     else {
       pHVar1 = GetParent(*(HWND *)(param_2 + 4));
@@ -709,7 +709,7 @@ void __cdecl wnd_obj_set_topmost_child(int param_1,int param_2)
           dbg_log(s_Window_not_SWS_ATTACHED_in_MSSet_0063672c);
         }
         else {
-          *(undefined4 *)(param_1 + 0x10) = *(undefined4 *)(param_2 + 4);
+          *(i32 *)(param_1 + 0x10) = *(i32 *)(param_2 + 4);
         }
       }
       else {
@@ -749,7 +749,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint
   int iVar7;
   tagRECT *ptVar8;
   tagRECT *ptVar9;
-  undefined1 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 < 0x10) {
     if (param_2 == 0xf) {
@@ -848,14 +848,14 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint
       SetMenu(param_1,(HMENU)0x0);
       pvVar5 = (void *)GetWindowLongA(param_1,0);
       iVar6 = wnd_get_window(pvVar5);
-      *(undefined4 *)(iVar6 + 0x44) = 1;
+      *(i32 *)(iVar6 + 0x44) = 1;
       if ((*(byte *)(iVar6 + 0x49) & 2) != 0) {
         iVar6 = 0;
         pHVar1 = GetParent(param_1);
         pvVar5 = (void *)GetWindowLongA(pHVar1,iVar6);
         local_18 = wnd_get_window(pvVar5);
         if (*(HWND *)(local_18 + 0xc) == param_1) {
-          *(undefined4 *)(local_18 + 0xc) = 0;
+          *(i32 *)(local_18 + 0xc) = 0;
         }
       }
       LVar4 = DefWindowProcA(param_1,param_2,param_3,param_4);
@@ -917,7 +917,7 @@ LRESULT __stdcall wnd_base_wndproc(HWND param_1,uint param_2,WPARAM param_3,uint
           local_18 = wnd_get_window(pvVar5);
           if (((*(int *)(local_18 + 0x10) != 0) && (*(HWND *)(local_18 + 0x10) != param_1)) &&
              (BVar3 = IsWindowVisible(*(HWND *)(local_18 + 0x10)), BVar3 != 0)) {
-            *(undefined4 *)(param_4 + 4) = *(undefined4 *)(local_18 + 0x10);
+            *(i32 *)(param_4 + 4) = *(i32 *)(local_18 + 0x10);
           }
         }
       }
@@ -1116,8 +1116,8 @@ switchD_005dc5f2_caseD_4:
 #define local_38 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_34 (*(HWND *)(frame_ + FRAME_OFF(28)))
 #define local_30 (*(HWND *)(frame_ + FRAME_OFF(32)))
-#define local_2c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_2c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(40)))
 #define local_24 (*(void * *)(frame_ + FRAME_OFF(44)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_1c (*(LONG *)(frame_ + FRAME_OFF(52)))
@@ -1134,12 +1134,12 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
   LRESULT LVar3;
   HWND pHVar4;
   void *pvVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   BOOL BVar7;
   uint uVar8;
   DWORD DVar9;
   int iVar10;
-  undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = (void *)GetWindowLongA(param_1,8);
   if (local_18 == (void *)0x0) {
@@ -1148,7 +1148,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
   }
   if (param_2 < 6) {
     if (param_2 == 5) {
-      local_34 = (HWND)ctrl_list_find_type11_hwnd(*(undefined4 *)((int)local_18 + 0xb8));
+      local_34 = (HWND)ctrl_list_find_type11_hwnd(*(i32 *)((int)local_18 + 0xb8));
       if (local_34 != (HWND)0x0) {
         SendMessageA(local_34,5,param_3,(LPARAM)param_4);
       }
@@ -1156,7 +1156,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
       return LVar3;
     }
     if (param_2 == 2) {
-      *(undefined4 *)((int)local_18 + 0xb8) = 0;
+      *(i32 *)((int)local_18 + 0xb8) = 0;
       SetWindowLongA(param_1,8,0);
       LVar3 = wnd_child_wndproc(param_1,2,param_3,param_4);
       return LVar3;
@@ -1166,27 +1166,27 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
     if (param_2 == 0x100) {
       SVar2 = GetAsyncKeyState(0x10);
       iVar10 = (int)SVar2;
-      (*(undefined1 *)((char *)&local_2c + 1)) = (char)((ushort)SVar2 >> 8);
+      (*(i8 *)((char *)&local_2c + 1)) = (char)((ushort)SVar2 >> 8);
       local_2c = iVar10;
-      if ((param_3 == 9) && ((*(undefined1 *)((char *)&local_2c + 1)) == '\0')) {
+      if ((param_3 == 9) && ((*(i8 *)((char *)&local_2c + 1)) == '\0')) {
         cVar1 = wnd_keyboard_nav_enabled(local_18);
         if (cVar1 != '\0') {
           wnd_cycle_control_focus(local_18,0,2);
         }
       }
-      else if ((param_3 == 9) && ((*(undefined1 *)((char *)&local_2c + 1)) != '\0')) {
+      else if ((param_3 == 9) && ((*(i8 *)((char *)&local_2c + 1)) != '\0')) {
         cVar1 = wnd_keyboard_nav_enabled(local_18);
         if (cVar1 != '\0') {
           wnd_cycle_control_focus(local_18,0,3);
         }
       }
-      else if ((param_3 == 0xd) && ((*(undefined1 *)((char *)&local_2c + 1)) == '\0')) {
+      else if ((param_3 == 0xd) && ((*(i8 *)((char *)&local_2c + 1)) == '\0')) {
         if (*(int *)((int)local_18 + 0xbc) != 0) {
           uVar6 = control_get_hwnd(*(void **)((int)local_18 + 0xbc));
           button_press_animated(uVar6);
         }
       }
-      else if ((param_3 == 0x1b) && ((*(undefined1 *)((char *)&local_2c + 1)) == '\0')) {
+      else if ((param_3 == 0x1b) && ((*(i8 *)((char *)&local_2c + 1)) == '\0')) {
         if (*(int *)((int)local_18 + 0xc0) != 0) {
           uVar6 = control_get_hwnd(*(void **)((int)local_18 + 0xc0));
           button_press_animated(uVar6);
@@ -1214,7 +1214,7 @@ LRESULT __stdcall wnd_frame_wndproc(HWND param_1,uint param_2,uint param_3,HWND 
           local_8 = wnd_get_window(pvVar5);
           local_1c = GetWindowLongA(*(HWND *)(local_8 + 4),8);
           if ((local_1c != 0) &&
-             (local_38 = ctrl_list_find_type11_hwnd(*(undefined4 *)(local_1c + 0xb8)), local_38 != 0)) {
+             (local_38 = ctrl_list_find_type11_hwnd(*(i32 *)(local_1c + 0xb8)), local_38 != 0)) {
             ((WINDOWPOS *)param_4)->hwndInsertAfter = (HWND)(iptr)local_38;
             LVar3 = DefWindowProcA(param_1,0x46,param_3,(LPARAM)param_4);
             return LVar3;
@@ -1283,7 +1283,7 @@ LAB_005eb1df:
         local_8 = wnd_get_window(pvVar5);
         local_1c = GetWindowLongA(*(HWND *)(local_8 + 4),8);
         if (((local_1c != 0) &&
-            (local_3c = (HWND)ctrl_list_find_type11_hwnd(*(undefined4 *)(local_1c + 0xb8)), local_3c != (HWND)0x0)
+            (local_3c = (HWND)ctrl_list_find_type11_hwnd(*(i32 *)(local_1c + 0xb8)), local_3c != (HWND)0x0)
             ) && (BVar7 = IsWindowVisible(local_3c), BVar7 != 0)) {
           iVar10 = GetSystemMetrics(4);
           GetWindowRect(local_3c,&local_4c);
@@ -1330,14 +1330,14 @@ uint __cdecl game_turn_start_popups(void)
 {
   uint uVar1;
   int iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = -1;
   uVar1 = (uint)(short)game.turn;
   if (((1 < (int)uVar1) &&
       (uVar1 = ((short)game.turn + -1) / 0x32, ((short)game.turn + -1) % 0x32 == 0)) &&
-     (((*(undefined1 *)((char *)&game.game_options + 2)) & 0x10) != 0)) {
+     (((*(i8 *)((char *)&game.game_options + 2)) & 0x10) != 0)) {
     local_c = -1;
     for (local_14 = 0; local_14 < game.num_cities; local_14 = local_14 + 1) {
       if ((cities[local_14].id != 0) &&
@@ -1380,7 +1380,7 @@ uint __cdecl game_turn_start_popups(void)
       council_show(DAT_006d1da0,0);   /* void; result left in EAX is garbage */
     }
   }
-  if (((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) {
+  if (((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) {
     if (game.turn == 1) {
       popup_file_with_sprite(PTR_s_TUTORIAL_00627678,s_FIRSTMOVE_0062c6b0,&tutorial_icon_sprite,0);
     }
@@ -1461,7 +1461,7 @@ int __cdecl city_recalc(int param_1,int param_2)
 /* 0x004efd44 */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-#define DAT_006d1da0 (*(undefined4 *)((u8 *)&g.d_006d1da0))
+#define DAT_006d1da0 (*(i32 *)((u8 *)&g.d_006d1da0))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
@@ -1470,10 +1470,10 @@ int __cdecl city_process_pollution(int param_1)
 {
   char cVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   cVar1 = cities[param_1].owner;
   local_14 = (int)((uint)(byte)civs[cVar1].num_advances * (uint)game.difficulty) >> 1;
@@ -1568,18 +1568,18 @@ int __cdecl city_process_pollution(int param_1)
 
 /* 0x0058f040 */
 #define DAT_006d1da0 (*(uint *)((u8 *)&g.d_006d1da0))
-#define local_60 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_60 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_50 (*(uint *)(frame_ + FRAME_OFF(16)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_3c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_3c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(56)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(76)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(76)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(84)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(84)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
 uint __cdecl unit_enter_hut(int param_1)
 
@@ -1591,10 +1591,10 @@ uint __cdecl unit_enter_hut(int param_1)
   uint uVar5;
   int iVar6;
   uint uVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   int iVar9;
   uint uVar10;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = units[param_1].owner;
   uVar3 = (uint)(char)bVar2;

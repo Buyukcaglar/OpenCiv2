@@ -9,7 +9,7 @@
 #define g_timer_remaining   (*(int *)((u8 *)&g.d_00633a78))
 #define g_timer_last_tick   (*(int *)((u8 *)&g.d_00633a7c))
 #define g_timer_event       (*(int *)((u8 *)&g.d_00633a74))
-#define g_timer_expired     (*(undefined1 *)((u8 *)&g.d_0064b9bc))
+#define g_timer_expired     (*(i8 *)((u8 *)&g.d_0064b9bc))
 
 /* 0x0055b0fb */
 void __cdecl mp_turn_timer_tick(void)

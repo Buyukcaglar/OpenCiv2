@@ -16,16 +16,16 @@ surface_copy_to_ddsurf(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *p
   iptr iVar2;
   iptr iVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
+  i32 uVar5;
+  i32 uVar6;
   int iVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   int iVar9;
   int iVar10;
-  undefined4 uVar11;
+  i32 uVar11;
   bool bVar12;
   int iVar13;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
   bVar12 = this->bits == 0;
@@ -100,17 +100,17 @@ surface_copy_to_ddsurf(DibSurface *this,DDSurface *param_1,RECT *param_2,RECT *p
 /* 005c0a55 auto */
 void __thiscall
 surface_stretch_to_wnd
-          (DibSurface *this,WndBase *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,WndBase *param_1,i32 *param_2,i32 *param_3)
 
 {
   char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
   iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   
   cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
@@ -136,17 +136,17 @@ surface_stretch_to_wnd
 /* 005c0b2c auto */
 void __thiscall
 surface_stretch_to_surface
-          (DibSurface *this,DibSurface *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,DibSurface *param_1,i32 *param_2,i32 *param_3)
 
 {
   char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   iptr iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar5;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   
   cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
@@ -168,24 +168,24 @@ surface_stretch_to_surface
 }
 
 /* 005c0e57 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
-surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3)
+surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,i32 param_1,LONG *param_2,uint param_3)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
   BOOL BVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x6372c0, ((u8 *)&g.d_006372c0)));
   }
   else if (this->dib != 0) {
     if ((param_3 & 0x10) != 0) {
-      iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
+      iVar2 = font_measure_height(*(i32 *)draw_current_font);
       iVar2 = (int)(iVar2 + (iVar2 >> 0x1f & 7U)) >> 3;
       local_14.left = *param_2;
       local_14.top = param_2[1];
@@ -193,11 +193,11 @@ surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,undefined4 p
       local_14.bottom = param_2[3];
       BVar3 = OffsetRect(&local_14,iVar2,iVar2);
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
-      local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),uVar1);
-      dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3);
+      local_1c = CONCAT31((*(i32 *)((char *)&local_1c + 1)),uVar1);
+      dib_draw_text_rect(this->dib,*(i32 *)draw_current_font,param_1,(iptr)&local_14,param_3);
       gfx_set_text_color_index(local_1c);
     }
-    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
+    dib_draw_text_rect(this->dib,*(i32 *)draw_current_font,param_1,(iptr)param_2,param_3);
   }
   return;
 }
@@ -207,14 +207,14 @@ surface_draw_text_in_rect_cur_font(SurfaceTextRectCurFontView *this,undefined4 p
 
 /* 005c10fb auto */
 void __thiscall
-surface_draw_text_rect_cur_font(SurfaceTextWrapCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+surface_draw_text_rect_cur_font(SurfaceTextWrapCurFontView *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x6372e0, ((u8 *)&g.d_006372e0)));
   }
   else if (this->dib != 0) {
-    dib_draw_text_wrap(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3);
+    dib_draw_text_wrap(this->dib,*(i32 *)draw_current_font,param_1,param_2,param_3);
   }
   return;
 }
@@ -224,27 +224,27 @@ void __thiscall surface_frame_rect(DibSurface *this,iptr param_1)
 
 {
   if (this->dib != 0) {
-    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4));
-    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc));
-    surface_draw_line(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
-                 *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc));
-    surface_draw_line(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
-                 *(undefined4 *)(param_1 + 4));
+    surface_draw_line(this,*(i32 *)param_1,*(i32 *)(param_1 + 4),
+                 *(i32 *)(param_1 + 8),*(i32 *)(param_1 + 4));
+    surface_draw_line(this,*(i32 *)(param_1 + 8),*(i32 *)(param_1 + 4),
+                 *(i32 *)(param_1 + 8),*(i32 *)(param_1 + 0xc));
+    surface_draw_line(this,*(i32 *)(param_1 + 8),*(i32 *)(param_1 + 0xc),
+                 *(i32 *)param_1,*(i32 *)(param_1 + 0xc));
+    surface_draw_line(this,*(i32 *)param_1,*(i32 *)(param_1 + 0xc),*(i32 *)param_1,
+                 *(i32 *)(param_1 + 4));
   }
   return;
 }
 
 /* 005c1513 auto */
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall surface_draw_raised_frame(DibSurface *this,int *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),gfx_text_color_index);
   if (this->dib != 0) {
     if (this->bytes_per_pixel == 1) {
       gfx_set_text_color_index(0xef);
@@ -275,15 +275,15 @@ void __thiscall surface_draw_raised_frame(DibSurface *this,int *param_1)
 #undef local_8
 
 /* 005c1742 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
+#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall surface_draw_sunken_frame(DibSurface *this,int *param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),gfx_text_color_index);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),gfx_text_color_index);
   if (this->dib != 0) {
     if (this->bytes_per_pixel == 1) {
       gfx_set_text_color_index(CONCAT31((int3)((uint)this >> 8),gfx_black_color_index));
@@ -315,11 +315,11 @@ void __thiscall surface_draw_sunken_frame(DibSurface *this,int *param_1)
 #undef local_8
 
 /* 005c1972 auto */
-#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl draw_set_current_surface(undefined4 param_1)
+#define draw_current_surface (*(i32 *)((u8 *)&g.d_00637e58))
+i32 __cdecl draw_set_current_surface(i32 param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = draw_current_surface;
   draw_current_surface = param_1;
@@ -328,8 +328,8 @@ undefined4 __cdecl draw_set_current_surface(undefined4 param_1)
 #undef draw_current_surface
 
 /* 005c1998 auto */
-#define draw_current_surface (*(undefined4 *)((u8 *)&g.d_00637e58))
-undefined4 __cdecl draw_get_current_surface(void)
+#define draw_current_surface (*(i32 *)((u8 *)&g.d_00637e58))
+i32 __cdecl draw_get_current_surface(void)
 
 {
   return draw_current_surface;
@@ -341,7 +341,7 @@ undefined4 __cdecl draw_get_current_surface(void)
 void __thiscall surface_create_dib16(DibSurface *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
   surface_alloc_dib16(this,(iptr)&local_14);
@@ -350,10 +350,10 @@ void __thiscall surface_create_dib16(DibSurface *this,int param_1,int param_2)
 #undef local_14
 
 /* 005c1c99 auto */
-undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
+i32 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = surface_alloc_dib16(this,param_1);
   return uVar1;
@@ -364,7 +364,7 @@ undefined4 __thiscall surface_resize_for_image(DibSurface *this,iptr param_1)
 void __thiscall surface_create_dib24(DibSurface *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
   surface_alloc_dib24(this,(iptr)&local_14);
@@ -373,10 +373,10 @@ void __thiscall surface_create_dib24(DibSurface *this,int param_1,int param_2)
 #undef local_14
 
 /* 005c1e49 auto */
-undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
+i32 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = surface_alloc_dib24(this,param_1);
   return uVar1;
@@ -387,7 +387,7 @@ undefined4 __thiscall surface_resize_dib24(DibSurface *this,iptr param_1)
 void __thiscall surface_create_dib32(DibSurface *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
   surface_alloc_dib32(this,(iptr)&local_14);
@@ -404,7 +404,7 @@ void __thiscall surface_resize_dib32(DibSurface *this,iptr param_1)
 }
 
 /* 005c201d auto */
-short __cdecl gfx_rgb_to_555(undefined4 param_1,uint param_2,uint param_3)
+short __cdecl gfx_rgb_to_555(i32 param_1,uint param_2,uint param_3)
 
 {
   return CONCAT11(((byte)param_1 & 0xf8) >> 1,(byte)param_3 >> 3) + ((byte)param_2 & 0xf8) * 4;
@@ -413,27 +413,27 @@ short __cdecl gfx_rgb_to_555(undefined4 param_1,uint param_2,uint param_3)
 /* 005c2048 auto */
 #define local_40 (*(u32 *)(frame_ + FRAME_OFF(0)))
 #define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_2c (*(undefined2 * *)(frame_ + FRAME_OFF(20)))
+#define local_2c (*(i16 * *)(frame_ + FRAME_OFF(20)))
 #define local_28 (*(uint *)(frame_ + FRAME_OFF(24)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(undefined1 *)(frame_ + FRAME_OFF(36)))
-#define local_1b (*(undefined1 *)(frame_ + FRAME_OFF(37)))
-#define local_1a (*(undefined1 *)(frame_ + FRAME_OFF(38)))
-#define local_19 (*(undefined1 *)(frame_ + FRAME_OFF(39)))
+#define local_1c (*(i8 *)(frame_ + FRAME_OFF(36)))
+#define local_1b (*(i8 *)(frame_ + FRAME_OFF(37)))
+#define local_1a (*(i8 *)(frame_ + FRAME_OFF(38)))
+#define local_19 (*(i8 *)(frame_ + FRAME_OFF(39)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(40)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined2 * *)(frame_ + FRAME_OFF(48)))
+#define local_10 (*(i16 * *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(56)))
-undefined4 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
+i32 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
-  undefined2 uVar2;
+  i16 uVar2;
   int iVar3;
-  undefined3 uVar4;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = 0x54;
   local_1b = 0x41;
@@ -458,18 +458,18 @@ undefined4 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
   if (local_8[2] == 2) {
     local_c = local_c + *local_8 + 0x12;
     if ((local_8[0x11] & 0x20U) == 0) {
-      local_10 = (undefined2 *)surface_pixel_ptr(this,0,local_18 - 1);
+      local_10 = (i16 *)surface_pixel_ptr(this,0,local_18 - 1);
       local_40 = -this->signed_pitch;
     }
     else {
-      local_10 = (undefined2 *)surface_pixel_ptr(this,0,0);
+      local_10 = (i16 *)surface_pixel_ptr(this,0,0);
       local_40 = this->signed_pitch;
     }
     cVar1 = local_8[0x10];
     if (cVar1 == 16) {
       for (local_20 = 0; local_20 < local_18; local_20++) {
         FUN_005f2110(local_10,local_c,local_14 * 2);
-        local_10 = (undefined2 *)((int)local_10 + local_40);
+        local_10 = (i16 *)((int)local_10 + local_40);
         local_c += local_14 * 2;
       }
     }
@@ -478,28 +478,28 @@ undefined4 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
         for (local_20 = 0; local_20 < local_18; local_20++) {
           local_2c = local_10;
           for (local_28 = 0; local_28 < local_14; local_28++) {
-            uVar4 = (undefined3)((uint)local_c >> 8);
+            uVar4 = (i32)((uint)local_c >> 8);
             uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
                                  CONCAT31(uVar4,*local_c));
             *local_2c = uVar2;
             local_2c++;
             local_c += 3;
           }
-          local_10 = (undefined2 *)((int)local_10 + local_40);
+          local_10 = (i16 *)((int)local_10 + local_40);
         }
       }
       else if (cVar1 != ' ') goto LAB_005c231b;
       for (local_20 = 0; local_20 < local_18; local_20++) {
         local_2c = local_10;
         for (local_28 = 0; local_28 < local_14; local_28++) {
-          uVar4 = (undefined3)((uint)local_c >> 8);
+          uVar4 = (i32)((uint)local_c >> 8);
           uVar2 = gfx_rgb_to_555(CONCAT31(uVar4,local_c[2]),CONCAT31(uVar4,local_c[1]),
                                CONCAT31(uVar4,*local_c));
           *local_2c = uVar2;
           local_2c++;
           local_c += 4;
         }
-        local_10 = (undefined2 *)((int)local_10 + local_40);
+        local_10 = (i16 *)((int)local_10 + local_40);
       }
     }
   }
@@ -533,27 +533,27 @@ LAB_005c231b:
 /* 005c2360 auto */
 #define local_dc (*(u32 *)(frame_ + FRAME_OFF(4)))
 #define local_d8 (*(tagRECT *)(frame_ + FRAME_OFF(8)))
-#define local_c8 (*(undefined2 * *)(frame_ + FRAME_OFF(24)))
+#define local_c8 (*(i16 * *)(frame_ + FRAME_OFF(24)))
 #define local_c4 (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_bc (*(uint *)(frame_ + FRAME_OFF(36)))
 #define local_b8 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_b4 (*(undefined2 * *)(frame_ + FRAME_OFF(44)))
+#define local_b4 (*(i16 * *)(frame_ + FRAME_OFF(44)))
 #define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(48)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(208)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(216)))
+i32 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
-  undefined2 uVar2;
+  i16 uVar2;
   int iVar3;
-  undefined3 uVar5;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b0);
@@ -584,18 +584,18 @@ undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
       if (local_14[2] == 2) {
         local_18 = local_18 + *local_14 + 0x12;
         if ((local_14[0x11] & 0x20U) == 0) {
-          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,local_bc - 1);
+          local_b4 = (i16 *)surface_pixel_ptr(this,0,local_bc - 1);
           local_dc = -this->signed_pitch;
         }
         else {
-          local_b4 = (undefined2 *)surface_pixel_ptr(this,0,0);
+          local_b4 = (i16 *)surface_pixel_ptr(this,0,0);
           local_dc = this->signed_pitch;
         }
         cVar1 = local_14[0x10];
         if (cVar1 == 16) {
           for (local_c0 = 0; local_c0 < local_bc; local_c0++) {
             FUN_005f2110(local_b4,local_18,local_b8 * 2);
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
+            local_b4 = (i16 *)((int)local_b4 + local_dc);
             local_18 += local_b8 * 2;
           }
         }
@@ -603,28 +603,28 @@ undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
           for (local_c0 = 0; local_c0 < local_bc; local_c0++) {
             local_c8 = local_b4;
             for (local_c4 = 0; local_c4 < local_b8; local_c4++) {
-              uVar5 = (undefined3)((uint)local_18 >> 8);
+              uVar5 = (i32)((uint)local_18 >> 8);
               uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
                                    CONCAT31(uVar5,*local_18));
               *local_c8 = uVar2;
               local_c8++;
               local_18 += 3;
             }
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
+            local_b4 = (i16 *)((int)local_b4 + local_dc);
           }
         }
         else if (cVar1 == ' ') {
           for (local_c0 = 0; local_c0 < local_bc; local_c0++) {
             local_c8 = local_b4;
             for (local_c4 = 0; local_c4 < local_b8; local_c4++) {
-              uVar5 = (undefined3)((uint)local_18 >> 8);
+              uVar5 = (i32)((uint)local_18 >> 8);
               uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_18[2]),CONCAT31(uVar5,local_18[1]),
                                    CONCAT31(uVar5,*local_18));
               *local_c8 = uVar2;
               local_c8++;
               local_18 += 4;
             }
-            local_b4 = (undefined2 *)((int)local_b4 + local_dc);
+            local_b4 = (i16 *)((int)local_b4 + local_dc);
           }
         }
       }
@@ -659,27 +659,27 @@ undefined4 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
 #undef local_8
 
 /* 005c27ad auto */
-#define auStack_23c (*(undefined2 (*)[256])(frame_ + FRAME_OFF(4)))
+#define auStack_23c (*(i16 (*)[256])(frame_ + FRAME_OFF(4)))
 #define local_3c (*(tagRECT *)(frame_ + FRAME_OFF(516)))
-#define local_2c (*(undefined2 * *)(frame_ + FRAME_OFF(532)))
+#define local_2c (*(i16 * *)(frame_ + FRAME_OFF(532)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(536)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(540)))
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(544)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(548)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(552)))
-#define local_14 (*(undefined2 * *)(frame_ + FRAME_OFF(556)))
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(560)))
+#define local_14 (*(i16 * *)(frame_ + FRAME_OFF(556)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(560)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(564)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(568)))
-undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
+i32 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
-  undefined2 uVar2;
-  undefined4 uVar3;
+  i16 uVar2;
+  i32 uVar3;
   int iVar4;
-  undefined3 uVar5;
-  undefined1 frame_[FRAME_OFF(576)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(576)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_24 = res_load_bitmap(param_1);
   if (local_24 == 0) {
@@ -699,12 +699,12 @@ undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
     }
     else {
       local_18 = dib_row_align4(local_18);
-      local_14 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
+      local_14 = (i16 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       sVar1 = *(short *)(local_c + 0xe);
       if (sVar1 == 8) {
-        local_10 = (undefined1 *)(local_c + 0x28);
+        local_10 = (i8 *)(local_c + 0x28);
         for (local_20 = 0; local_20 < 0x100; local_20++) {
-          uVar5 = (undefined3)((uint)local_10 >> 8);
+          uVar5 = (i32)((uint)local_10 >> 8);
           uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_10[2]),CONCAT31(uVar5,local_10[1]),
                                CONCAT31(uVar5,*local_10));
           auStack_23c[local_20] = uVar2;
@@ -718,7 +718,7 @@ undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
             local_8++;
             local_2c++;
           }
-          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
+          local_14 = (i16 *)surface_prev_row(this,(iptr)local_14);
         }
       }
       else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
@@ -726,14 +726,14 @@ undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
         for (local_20 = 0; local_20 < local_1c; local_20++) {
           local_2c = local_14;
           for (local_28 = 0; local_28 < local_18; local_28++) {
-            uVar5 = (undefined3)((uint)local_8 >> 8);
+            uVar5 = (i32)((uint)local_8 >> 8);
             uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_8[2]),CONCAT31(uVar5,local_8[1]),
                                  CONCAT31(uVar5,*local_8));
             *local_2c = uVar2;
             local_2c++;
             local_8 += 3;
           }
-          local_14 = (undefined2 *)surface_prev_row(this,(iptr)local_14);
+          local_14 = (i16 *)surface_prev_row(this,(iptr)local_14);
         }
       }
       res_unlock(local_24);
@@ -757,31 +757,31 @@ undefined4 __thiscall surface_load_bmp_resource16(DibSurface *this,iptr param_1)
 #undef local_8
 
 /* 005c2a77 auto */
-#define auStack_2e0 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(0)))
+#define auStack_2e0 (*(i16 (*)[256])(frame_ + FRAME_OFF(0)))
 #define local_e0 (*(iptr *)(frame_ + FRAME_OFF(512)))
 #define local_dc (*(tagRECT *)(frame_ + FRAME_OFF(516)))
-#define local_cc (*(undefined2 * *)(frame_ + FRAME_OFF(532)))
+#define local_cc (*(i16 * *)(frame_ + FRAME_OFF(532)))
 #define local_c8 (*(int *)(frame_ + FRAME_OFF(536)))
 #define local_c4 (*(iptr *)(frame_ + FRAME_OFF(540)))
 #define local_c0 (*(int *)(frame_ + FRAME_OFF(544)))
 #define local_bc (*(int *)(frame_ + FRAME_OFF(548)))
-#define local_b8 (*(undefined2 * *)(frame_ + FRAME_OFF(552)))
+#define local_b8 (*(i16 * *)(frame_ + FRAME_OFF(552)))
 #define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(556)))
-#define local_1c (*(undefined1 * *)(frame_ + FRAME_OFF(708)))
+#define local_1c (*(i8 * *)(frame_ + FRAME_OFF(708)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(712)))
 #define local_14 (*(byte * *)(frame_ + FRAME_OFF(716)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(720)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(724)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(728)))
-undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(720)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(724)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(728)))
+i32 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
 
 {
   short sVar1;
-  undefined2 uVar2;
+  i16 uVar2;
   int iVar3;
-  undefined3 uVar5;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(736)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(736)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b4);
@@ -810,12 +810,12 @@ undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
     }
     else {
       local_bc = dib_row_align4(local_bc);
-      local_b8 = (undefined2 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
+      local_b8 = (i16 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       sVar1 = *(short *)(local_18 + 0xe);
       if (sVar1 == 8) {
-        local_1c = (undefined1 *)(local_18 + 0x28);
+        local_1c = (i8 *)(local_18 + 0x28);
         for (local_c4 = 0; local_c4 < 0x100; local_c4++) {
-          uVar5 = (undefined3)((uint)local_1c >> 8);
+          uVar5 = (i32)((uint)local_1c >> 8);
           uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_1c[2]),CONCAT31(uVar5,local_1c[1]),
                                CONCAT31(uVar5,*local_1c));
           auStack_2e0[local_c4] = uVar2;
@@ -829,7 +829,7 @@ undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
             local_14++;
             local_cc++;
           }
-          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
+          local_b8 = (i16 *)surface_prev_row(this,(iptr)local_b8);
         }
       }
       else if ((sVar1 != 0x10) && (sVar1 == 0x18)) {
@@ -837,14 +837,14 @@ undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
         for (local_c4 = 0; local_c4 < local_c0; local_c4++) {
           local_cc = local_b8;
           for (local_c8 = 0; local_c8 < local_bc; local_c8++) {
-            uVar5 = (undefined3)((uint)local_14 >> 8);
+            uVar5 = (i32)((uint)local_14 >> 8);
             uVar2 = gfx_rgb_to_555(CONCAT31(uVar5,local_14[2]),CONCAT31(uVar5,local_14[1]),
                                  CONCAT31(uVar5,*local_14));
             *local_cc = uVar2;
             local_cc++;
             local_14 += 3;
           }
-          local_b8 = (undefined2 *)surface_prev_row(this,(iptr)local_b8);
+          local_b8 = (i16 *)surface_prev_row(this,(iptr)local_b8);
         }
       }
       file_obj_unmap_view(&local_b4);
@@ -875,19 +875,19 @@ undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
 
 /* 005c2e5e auto */
 #define local_550 (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define local_54c (*(undefined1 (*)[2])(frame_ + FRAME_OFF(4)))
+#define local_54c (*(i8 (*)[2])(frame_ + FRAME_OFF(4)))
 #define auStack_54a (*(uint (*)[191])(frame_ + FRAME_OFF(6)))
 #define local_24c (*(uint *)(frame_ + FRAME_OFF(772)))
 #define local_248 (*(tagRECT *)(frame_ + FRAME_OFF(776)))
-#define local_238 (*(undefined2 * *)(frame_ + FRAME_OFF(792)))
+#define local_238 (*(i16 * *)(frame_ + FRAME_OFF(792)))
 #define local_234 (*(uptr *)(frame_ + FRAME_OFF(796)))
 #define local_230 (*(int *)(frame_ + FRAME_OFF(800)))
 #define local_22c (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_228 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_28 (*(undefined1 *)(frame_ + FRAME_OFF(1320)))
-#define local_27 (*(undefined1 *)(frame_ + FRAME_OFF(1321)))
-#define local_26 (*(undefined1 *)(frame_ + FRAME_OFF(1322)))
-#define local_25 (*(undefined1 *)(frame_ + FRAME_OFF(1323)))
+#define auStack_228 (*(i16 (*)[256])(frame_ + FRAME_OFF(808)))
+#define local_28 (*(i8 *)(frame_ + FRAME_OFF(1320)))
+#define local_27 (*(i8 *)(frame_ + FRAME_OFF(1321)))
+#define local_26 (*(i8 *)(frame_ + FRAME_OFF(1322)))
+#define local_25 (*(i8 *)(frame_ + FRAME_OFF(1323)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(1324)))
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(1328)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(1332)))
@@ -896,16 +896,16 @@ undefined4 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(1344)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(1348)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1352)))
-undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
+i32 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
 
 {
-  undefined2 uVar1;
-  undefined4 uVar2;
+  i16 uVar1;
+  i32 uVar2;
   int iVar3;
   iptr iVar4;
   uint uVar5;
   uint uVar6;
-  undefined1 frame_[FRAME_OFF(1360)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1360)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_28 = 0x47;
   local_27 = 0x49;
@@ -940,7 +940,7 @@ undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
       FUN_005f2110(local_54c,local_10,local_24c * 3);
       local_234 = 0;
       for (local_22c = 0; local_22c < local_24c; local_22c++) {
-        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_54c + local_234),
+        uVar1 = gfx_rgb_to_555(*(i32 *)(local_54c + local_234),
                              *(uint *)(local_54c + local_234 + 1),
                              *(uint *)(local_54c + local_234 + 2));
         auStack_228[local_22c] = uVar1;
@@ -975,7 +975,7 @@ undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
         local_10 = (char *)this->bits;
         local_8 = (byte *)dib_get_bits(local_20);
         for (local_22c = 0; local_22c < local_24; local_22c++) {
-          local_238 = (undefined2 *)local_10;
+          local_238 = (i16 *)local_10;
           local_550 = local_8;
           for (local_234 = 0; local_234 < local_1c; local_234++) {
             *local_238 = auStack_228[*local_550];
@@ -1027,14 +1027,14 @@ undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
 
 /* 005c3313 auto */
 #define local_5ec (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_5e8 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(8)))
+#define local_5e8 (*(i8 (*)[2])(frame_ + FRAME_OFF(8)))
 #define auStack_5e6 (*(uint (*)[191])(frame_ + FRAME_OFF(10)))
 #define local_2e8 (*(uint *)(frame_ + FRAME_OFF(776)))
 #define local_2e4 (*(tagRECT *)(frame_ + FRAME_OFF(780)))
-#define local_2d4 (*(undefined2 * *)(frame_ + FRAME_OFF(796)))
+#define local_2d4 (*(i16 * *)(frame_ + FRAME_OFF(796)))
 #define local_2d0 (*(uptr *)(frame_ + FRAME_OFF(800)))
 #define local_2cc (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_2c8 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
+#define auStack_2c8 (*(i16 (*)[256])(frame_ + FRAME_OFF(808)))
 #define local_c8 (*(uint *)(frame_ + FRAME_OFF(1320)))
 #define local_c4 (*(iptr *)(frame_ + FRAME_OFF(1324)))
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(1328)))
@@ -1044,19 +1044,19 @@ undefined4 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(1492)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(1496)))
 #define local_14 (*(byte * *)(frame_ + FRAME_OFF(1500)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1508)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1512)))
-undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1504)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1508)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1512)))
+i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
 
 {
-  undefined2 uVar1;
+  i16 uVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
   uint uVar6;
-  undefined1 frame_[FRAME_OFF(1520)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1520)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_bc);
@@ -1096,7 +1096,7 @@ undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
       FUN_005f2110(local_5e8,local_1c,local_2e8 * 3);
       local_2d0 = 0;
       for (local_2cc = 0; local_2cc < local_2e8; local_2cc++) {
-        uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e8 + local_2d0),
+        uVar1 = gfx_rgb_to_555(*(i32 *)(local_5e8 + local_2d0),
                              *(uint *)(local_5e8 + local_2d0 + 1),
                              *(uint *)(local_5e8 + local_2d0 + 2));
         auStack_2c8[local_2cc] = uVar1;
@@ -1131,7 +1131,7 @@ undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
         local_1c = (char *)this->bits;
         local_14 = (byte *)dib_get_bits(local_c4);
         for (local_2cc = 0; local_2cc < local_c8; local_2cc++) {
-          local_2d4 = (undefined2 *)local_1c;
+          local_2d4 = (i16 *)local_1c;
           local_5ec = local_14;
           for (local_2d0 = 0; local_2d0 < local_c0; local_2d0++) {
             *local_2d4 = auStack_2c8[*local_5ec];
@@ -1186,35 +1186,35 @@ undefined4 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
 
 /* 005c3874 auto */
 #define local_548 (*(byte * *)(frame_ + FRAME_OFF(0)))
-#define local_544 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(4)))
+#define local_544 (*(i8 (*)[2])(frame_ + FRAME_OFF(4)))
 #define auStack_542 (*(uint (*)[191])(frame_ + FRAME_OFF(6)))
 #define local_244 (*(uint *)(frame_ + FRAME_OFF(772)))
 #define local_240 (*(tagRECT *)(frame_ + FRAME_OFF(776)))
-#define local_230 (*(undefined2 * *)(frame_ + FRAME_OFF(792)))
+#define local_230 (*(i16 * *)(frame_ + FRAME_OFF(792)))
 #define local_22c (*(uptr *)(frame_ + FRAME_OFF(796)))
 #define local_228 (*(int *)(frame_ + FRAME_OFF(800)))
 #define local_224 (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_220 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
-#define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(1320)))
-#define local_1f (*(undefined1 *)(frame_ + FRAME_OFF(1321)))
-#define local_1e (*(undefined1 *)(frame_ + FRAME_OFF(1322)))
-#define local_1d (*(undefined1 *)(frame_ + FRAME_OFF(1323)))
+#define auStack_220 (*(i16 (*)[256])(frame_ + FRAME_OFF(808)))
+#define local_20 (*(i8 *)(frame_ + FRAME_OFF(1320)))
+#define local_1f (*(i8 *)(frame_ + FRAME_OFF(1321)))
+#define local_1e (*(i8 *)(frame_ + FRAME_OFF(1322)))
+#define local_1d (*(i8 *)(frame_ + FRAME_OFF(1323)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(1324)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(1328)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(1332)))
 #define local_10 (*(short * *)(frame_ + FRAME_OFF(1336)))
 #define local_c (*(short * *)(frame_ + FRAME_OFF(1340)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(1344)))
-undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1)
+i32 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1)
 
 {
-  undefined2 uVar1;
-  undefined4 uVar2;
+  i16 uVar1;
+  i32 uVar2;
   iptr iVar3;
   int iVar4;
   uint uVar5;
   uint uVar6;
-  undefined1 frame_[FRAME_OFF(1352)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1352)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 0x43;
   local_1f = 0x76;
@@ -1236,7 +1236,7 @@ undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1
     FUN_005f2110(local_544,local_10,local_244 * 3);
     local_22c = 0;
     for (local_224 = 0; local_224 < local_244; local_224++) {
-      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_544 + local_22c),
+      uVar1 = gfx_rgb_to_555(*(i32 *)(local_544 + local_22c),
                            *(uint *)(local_544 + local_22c + 1),*(uint *)(local_544 + local_22c + 2)
                           );
       auStack_220[local_224] = uVar1;
@@ -1300,14 +1300,14 @@ undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1
 
 /* 005c3b7a auto */
 #define local_5e4 (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_5e0 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(8)))
+#define local_5e0 (*(i8 (*)[2])(frame_ + FRAME_OFF(8)))
 #define auStack_5de (*(uint (*)[191])(frame_ + FRAME_OFF(10)))
 #define local_2e0 (*(uint *)(frame_ + FRAME_OFF(776)))
 #define local_2dc (*(tagRECT *)(frame_ + FRAME_OFF(780)))
-#define local_2cc (*(undefined2 * *)(frame_ + FRAME_OFF(796)))
+#define local_2cc (*(i16 * *)(frame_ + FRAME_OFF(796)))
 #define local_2c8 (*(uptr *)(frame_ + FRAME_OFF(800)))
 #define local_2c4 (*(uptr *)(frame_ + FRAME_OFF(804)))
-#define auStack_2c0 (*(undefined2 (*)[256])(frame_ + FRAME_OFF(808)))
+#define auStack_2c0 (*(i16 (*)[256])(frame_ + FRAME_OFF(808)))
 #define local_c0 (*(uint *)(frame_ + FRAME_OFF(1320)))
 #define local_bc (*(iptr *)(frame_ + FRAME_OFF(1324)))
 #define local_b8 (*(uint *)(frame_ + FRAME_OFF(1328)))
@@ -1315,19 +1315,19 @@ undefined4 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1
 #define local_1c (*(short * *)(frame_ + FRAME_OFF(1484)))
 #define local_18 (*(short * *)(frame_ + FRAME_OFF(1488)))
 #define local_14 (*(byte * *)(frame_ + FRAME_OFF(1492)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1496)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1500)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-undefined4 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1496)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1500)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1504)))
+i32 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
 
 {
-  undefined2 uVar1;
+  i16 uVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
   uint uVar6;
-  undefined1 frame_[FRAME_OFF(1512)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1512)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b4);
@@ -1350,7 +1350,7 @@ undefined4 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
     FUN_005f2110(local_5e0,local_1c,local_2e0 * 3);
     local_2c8 = 0;
     for (local_2c4 = 0; local_2c4 < local_2e0; local_2c4++) {
-      uVar1 = gfx_rgb_to_555(*(undefined4 *)(local_5e0 + local_2c8),
+      uVar1 = gfx_rgb_to_555(*(i32 *)(local_5e0 + local_2c8),
                            *(uint *)(local_5e0 + local_2c8 + 1),*(uint *)(local_5e0 + local_2c8 + 2)
                           );
       auStack_2c0[local_2c4] = uVar1;
@@ -1415,21 +1415,21 @@ undefined4 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
 
 /* 005c3efc auto */
 #define local_38 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_28 (*(undefined1 * *)(frame_ + FRAME_OFF(16)))
+#define local_28 (*(i8 * *)(frame_ + FRAME_OFF(16)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(40)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined1 * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
+#define local_8 (*(i8 * *)(frame_ + FRAME_OFF(48)))
+i32 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = res_load_bitmap(param_1);
   if (local_20 == 0) {
@@ -1449,9 +1449,9 @@ undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
     }
     else {
       local_14 = dib_row_align4(local_14);
-      local_10 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
+      local_10 = (i8 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       if (*(short *)(local_c + 0xe) == 0x18) {
-        local_8 = (undefined1 *)(local_c + 0x28);
+        local_8 = (i8 *)(local_c + 0x28);
         for (local_1c = 0; local_1c < local_18; local_1c++) {
           local_28 = local_10;
           for (local_24 = 0; local_24 < local_14; local_24++) {
@@ -1461,7 +1461,7 @@ undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
             local_28 += 3;
             local_8 += 3;
           }
-          local_10 = (undefined1 *)surface_prev_row(this,(iptr)local_10);
+          local_10 = (i8 *)surface_prev_row(this,(iptr)local_10);
         }
       }
       res_unlock(local_20);
@@ -1484,26 +1484,26 @@ undefined4 __thiscall surface_load_bmp_resource24(DibSurface *this,iptr param_1)
 
 /* 005c40b6 auto */
 #define local_d8 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
-#define local_c8 (*(undefined1 * *)(frame_ + FRAME_OFF(16)))
+#define local_c8 (*(i8 * *)(frame_ + FRAME_OFF(16)))
 #define local_c4 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_c0 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_bc (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_b8 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_b4 (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
+#define local_b4 (*(i8 * *)(frame_ + FRAME_OFF(36)))
 #define local_b0 (*(FileObject *)(frame_ + FRAME_OFF(40)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(192)))
-#define local_14 (*(undefined1 * *)(frame_ + FRAME_OFF(196)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(204)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
+#define local_14 (*(i8 * *)(frame_ + FRAME_OFF(196)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(200)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(204)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(208)))
+i32 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
 
 {
   iptr iVar1;
   iptr iVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(216)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(216)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b0);
@@ -1532,9 +1532,9 @@ undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
     }
     else {
       local_b8 = dib_row_align4(local_b8);
-      local_b4 = (undefined1 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
+      local_b4 = (i8 *)surface_pixel_ptr(this,0,this->pixel_height - 1);
       if (*(short *)(local_18 + 0xe) == 0x18) {
-        local_14 = (undefined1 *)(local_18 + 0x28);
+        local_14 = (i8 *)(local_18 + 0x28);
         for (local_c0 = 0; local_c0 < local_bc; local_c0++) {
           local_c8 = local_b4;
           for (local_c4 = 0; local_c4 < local_b8; local_c4++) {
@@ -1544,7 +1544,7 @@ undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
             local_c8 += 3;
             local_14 += 3;
           }
-          local_b4 = (undefined1 *)surface_prev_row(this,(iptr)local_b4);
+          local_b4 = (i8 *)surface_prev_row(this,(iptr)local_b4);
         }
       }
       file_obj_unmap_view(&local_b0);
@@ -1577,22 +1577,22 @@ undefined4 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
 #define local_2c (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_20 (*(undefined1 *)(frame_ + FRAME_OFF(40)))
-#define local_1f (*(undefined1 *)(frame_ + FRAME_OFF(41)))
-#define local_1e (*(undefined1 *)(frame_ + FRAME_OFF(42)))
-#define local_1d (*(undefined1 *)(frame_ + FRAME_OFF(43)))
+#define local_20 (*(i8 *)(frame_ + FRAME_OFF(40)))
+#define local_1f (*(i8 *)(frame_ + FRAME_OFF(41)))
+#define local_1e (*(i8 *)(frame_ + FRAME_OFF(42)))
+#define local_1d (*(i8 *)(frame_ + FRAME_OFF(43)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(44)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(48)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(52)))
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(56)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(64)))
-undefined4 __thiscall surface_load_tga_resource24(DibSurface *this,iptr param_1)
+i32 __thiscall surface_load_tga_resource24(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 0x54;
   local_1f = 0x41;
@@ -1696,15 +1696,15 @@ undefined4 __thiscall surface_load_tga_resource24(DibSurface *this,iptr param_1)
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(208)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(216)))
+i32 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b4);
@@ -1804,18 +1804,18 @@ undefined4 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
 #define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 surface_fill_rect_rgb
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,uint param_4)
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,uint param_4)
 
 {
   char cVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   cVar1 = surface_is_locked(this);
@@ -1849,7 +1849,7 @@ surface_fill_rect_rgb
 /* 005c4b4c auto */
 void __thiscall
 surface_fill_rgb
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   surface_fill_rect_rgb(this,(iptr)&this->clip_left,param_1,param_2,param_3);
@@ -1866,7 +1866,7 @@ surface_blit_rgb(SurfaceBlitRectView *this,DibSurface *param_1,RECT *param_2,REC
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   IntersectRect(&local_1c,param_2,(RECT *)(this->pad_0 + 0x14));
   IntersectRect(&local_2c,param_3,(RECT *)&param_1->field_14);
@@ -1899,8 +1899,8 @@ void __thiscall
 surface_blit_to_ddsurf(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,RECT *param_2,RECT *param_3)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   IntersectRect(&local_1c,param_2,(RECT *)(this->pad_0 + 0x14));
   IntersectRect(&local_2c,param_3,(RECT *)(param_1 + 4));
@@ -1927,17 +1927,17 @@ surface_blit_to_ddsurf(SurfaceBlitDDSurfView *this,DDSurfaceIfaceView *param_1,R
 /* 005c4d0d auto */
 void __thiscall
 surface_stretch_to_ddsurf
-          (DibSurface *this,DDSurfaceIfaceView *param_1,undefined4 *param_2,undefined4 *param_3)
+          (DibSurface *this,DDSurfaceIfaceView *param_1,i32 *param_2,i32 *param_3)
 
 {
   char cVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   
   cVar1 = surface_is_locked(this);
   if (cVar1 == '\0') {
@@ -1961,23 +1961,23 @@ surface_stretch_to_ddsurf
 /* 005c4dd3 auto */
 void __thiscall
 surface_draw_text_rgb_cur_font
-          (SurfaceTextRgbCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4,
-          undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (SurfaceTextRgbCurFontView *this,i32 param_1,int param_2,int param_3,uint param_4,
+          i32 param_5,i32 param_6,i32 param_7)
 
 {
   int iVar1;
   
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x637b8c, ((u8 *)&g.d_00637b8c)));
   }
   else if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
+      iVar1 = font_measure_height(*(i32 *)draw_current_font);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
-      dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,iVar1 + param_2,
+      dib_draw_text_at_rgb(this->dib,*(i32 *)draw_current_font,param_1,iVar1 + param_2,
                    iVar1 + param_3,(iptr)(this->pad_0 + 0x14),param_4,0,0,0);
     }
-    dib_draw_text_at_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,
+    dib_draw_text_at_rgb(this->dib,*(i32 *)draw_current_font,param_1,param_2,param_3,
                  (iptr)(this->pad_0 + 0x14),param_4,param_5,param_6,param_7);
   }
   return;
@@ -1987,29 +1987,29 @@ surface_draw_text_rgb_cur_font
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 surface_draw_text_in_rect_rgb_cur_font
-          (SurfaceTextRectRgbCurFontView *this,undefined4 param_1,LONG *param_2,uint param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6)
+          (SurfaceTextRectRgbCurFontView *this,i32 param_1,LONG *param_2,uint param_3,i32 param_4,
+          i32 param_5,i32 param_6)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x637bac, ((u8 *)&g.d_00637bac)));
   }
   else if (this->dib != 0) {
     if ((param_3 & 0x10) != 0) {
-      iVar1 = font_measure_height(*(undefined4 *)draw_current_font);
+      iVar1 = font_measure_height(*(i32 *)draw_current_font);
       iVar1 = (int)(iVar1 + (iVar1 >> 0x1f & 7U)) >> 3;
       local_14.left = *param_2;
       local_14.top = param_2[1];
       local_14.right = param_2[2];
       local_14.bottom = param_2[3];
       OffsetRect(&local_14,iVar1,iVar1);
-      dib_draw_text_rect_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)&local_14,param_3,0,
+      dib_draw_text_rect_rgb(this->dib,*(i32 *)draw_current_font,param_1,(iptr)&local_14,param_3,0,
                    0,0);
     }
-    dib_draw_text_rect(this->dib,*(undefined4 *)draw_current_font,param_1,(iptr)param_2,param_3);
+    dib_draw_text_rect(this->dib,*(i32 *)draw_current_font,param_1,(iptr)param_2,param_3);
   }
   return;
 }
@@ -2018,8 +2018,8 @@ surface_draw_text_in_rect_rgb_cur_font
 /* 005c4f9f auto */
 void __thiscall
 surface_draw_text_rgb
-          (SurfaceTextRgbFontView *this,undefined4 *param_1,undefined4 param_2,int param_3,int param_4,
-          uint param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+          (SurfaceTextRgbFontView *this,i32 *param_1,i32 param_2,int param_3,int param_4,
+          uint param_5,i32 param_6,i32 param_7,i32 param_8)
 
 {
   int iVar1;
@@ -2041,12 +2041,12 @@ surface_draw_text_rgb
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 surface_draw_text_in_rect_rgb
-          (SurfaceTextRectFontView *this,undefined4 *param_1,undefined4 param_2,LONG *param_3,uint param_4,
-          undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (SurfaceTextRectFontView *this,i32 *param_1,i32 param_2,LONG *param_3,uint param_4,
+          i32 param_5,i32 param_6,i32 param_7)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
@@ -2068,15 +2068,15 @@ surface_draw_text_in_rect_rgb
 /* 005c512d auto */
 void __thiscall
 surface_draw_text_rect_rgb_cur_font
-          (SurfaceTextWrapRgbCurFontView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
+          (SurfaceTextWrapRgbCurFontView *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6)
 
 {
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x637bcc, ((u8 *)&g.d_00637bcc)));
   }
   else if (this->dib != 0) {
-    dib_draw_text_wrap_rgb(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,param_4,
+    dib_draw_text_wrap_rgb(this->dib,*(i32 *)draw_current_font,param_1,param_2,param_3,param_4,
                  param_5,param_6);
   }
   return;
@@ -2085,8 +2085,8 @@ surface_draw_text_rect_rgb_cur_font
 /* 005c51a5 auto */
 void __thiscall
 surface_draw_text_rect_rgb
-          (SurfaceTextWrapRgbFontView *this,undefined4 *param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (SurfaceTextWrapRgbFontView *this,i32 *param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7)
 
 {
   if (this->dib != 0) {
@@ -2098,8 +2098,8 @@ surface_draw_text_rect_rgb
 /* 005c51fc auto */
 void __thiscall
 surface_draw_line_rgb
-          (DibSurface *this,int param_1,int param_2,int param_3,int param_4,undefined4 param_5,
-          undefined4 param_6,undefined4 param_7)
+          (DibSurface *this,int param_1,int param_2,int param_3,int param_4,i32 param_5,
+          i32 param_6,i32 param_7)
 
 {
   if (((((((int)this->clip_left <= param_1) || ((int)this->clip_left <= param_3)) &&
@@ -2115,20 +2115,20 @@ surface_draw_line_rgb
 /* 005c52dd auto */
 void __thiscall
 surface_frame_rect_rgb
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
           )
 
 {
   if (this->dib != 0) {
-    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
-    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 4),
-                 *(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4
+    surface_draw_line_rgb(this,*(i32 *)param_1,*(i32 *)(param_1 + 4),
+                 *(i32 *)(param_1 + 8),*(i32 *)(param_1 + 4),param_2,param_3,param_4);
+    surface_draw_line_rgb(this,*(i32 *)(param_1 + 8),*(i32 *)(param_1 + 4),
+                 *(i32 *)(param_1 + 8),*(i32 *)(param_1 + 0xc),param_2,param_3,param_4
                 );
-    surface_draw_line_rgb(this,*(undefined4 *)(param_1 + 8),*(undefined4 *)(param_1 + 0xc),
-                 *(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),param_2,param_3,param_4);
-    surface_draw_line_rgb(this,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 0xc),*(undefined4 *)param_1,
-                 *(undefined4 *)(param_1 + 4),param_2,param_3,param_4);
+    surface_draw_line_rgb(this,*(i32 *)(param_1 + 8),*(i32 *)(param_1 + 0xc),
+                 *(i32 *)param_1,*(i32 *)(param_1 + 0xc),param_2,param_3,param_4);
+    surface_draw_line_rgb(this,*(i32 *)param_1,*(i32 *)(param_1 + 0xc),*(i32 *)param_1,
+                 *(i32 *)(param_1 + 4),param_2,param_3,param_4);
   }
   return;
 }
@@ -2136,11 +2136,11 @@ surface_frame_rect_rgb
 /* 005c53c3 auto */
 void __thiscall
 surface_rgb_to_native
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   iVar1 = this->bytes_per_pixel << 3;
   uVar2 = surface_pixel_ptr(this,0,0);
@@ -2149,10 +2149,10 @@ surface_rgb_to_native
 }
 
 /* 005c5410 auto */
-uint __cdecl endian_swap16(undefined4 param_1)
+uint __cdecl endian_swap16(i32 param_1)
 
 {
-  return (uint)CONCAT11((undefined1)param_1,(*(undefined1 *)((char *)&param_1 + 1)));
+  return (uint)CONCAT11((i8)param_1,(*(i8 *)((char *)&param_1 + 1)));
 }
 
 /* 005c5430 auto */
@@ -2163,10 +2163,10 @@ uint __cdecl endian_swap32(uint param_1)
 }
 
 /* 005c5470 auto */
-undefined4 __thiscall file_obj_map_view(FileObject *this)
+i32 __thiscall file_obj_map_view(FileObject *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = file_obj_map_view_impl((iptr)this,0,0);
   return uVar1;
@@ -2207,10 +2207,10 @@ u32 __thiscall ddsurf_get_pitch(DDSurface *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall ddsurf_unlock(DDSurface *this)
+i32 __thiscall ddsurf_unlock(DDSurface *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = ddsurf_iface_unlock(this->dd_surface);
   return uVar1;
@@ -2226,8 +2226,8 @@ u32 __thiscall ddsurf_get_iface(DDSurfaceIfaceView *this)
 /* 005c57b1 auto */
 void __thiscall
 wnd_create_framed_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
   wnd_create_framed
@@ -2239,9 +2239,9 @@ wnd_create_framed_menu
 /* 005c584e auto */
 void __thiscall
 wnd_create_framed_child_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,
-          undefined4 param_8,iptr param_9)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7,
+          i32 param_8,iptr param_9)
 
 {
   wnd_create_framed_child
@@ -2253,8 +2253,8 @@ wnd_create_framed_child_menu
 /* 005c589a auto */
 void __thiscall
 wnd_create_framed_nopal
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
+          (WndBase *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6)
 
 {
   iptr iVar1;
@@ -2268,8 +2268,8 @@ wnd_create_framed_nopal
 /* 005c58e7 auto */
 void __thiscall
 wnd_create_framed_nopal_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,iptr param_7)
 
 {
   wnd_create_framed_nopal((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
@@ -2281,8 +2281,8 @@ wnd_create_framed_nopal_menu
 /* 005c592b auto */
 void __thiscall
 wnd_create_framed_child_nopal
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (WndBase *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7)
 
 {
   iptr iVar1;
@@ -2296,8 +2296,8 @@ wnd_create_framed_child_nopal
 /* 005c597c auto */
 void __thiscall
 wnd_create_framed_child_nopal_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
   wnd_create_framed_child_nopal
@@ -2311,10 +2311,10 @@ wnd_create_framed_child_nopal_menu
 void __thiscall wnd_invalidate_controls(WndControlInvalidateView *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = this->first_control; local_8 != 0; local_8 = *(uptr *)(local_8 + 0x20)) {
-    wnd_invalidate(*(undefined4 *)(local_8 + 0x1c));
+    wnd_invalidate(*(i32 *)(local_8 + 0x1c));
   }
   return;
 }
@@ -2326,7 +2326,7 @@ ControlInitialFocusView * __thiscall wnd_find_initial_focus_control(void *this)
 
 {
   char cVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = *(ControlInitialFocusView **)((int)this + 0xb8);
   while( true ) {
@@ -2344,8 +2344,8 @@ ControlInitialFocusView * __thiscall wnd_find_initial_focus_control(void *this)
 /* 005c5f7c auto */
 void __thiscall
 wnd_create_with_cmd_proc_menu
-          (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
+          (C_00408010_b8 *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
   wnd_create_with_cmd_proc
@@ -2357,8 +2357,8 @@ wnd_create_with_cmd_proc_menu
 /* 005c6024 auto */
 void __thiscall
 wnd_create_with_handlers_menu
-          (C_00408010_b8 *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8,iptr param_9)
+          (C_00408010_b8 *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8,iptr param_9)
 
 {
   wnd_create_with_handlers
@@ -2370,8 +2370,8 @@ wnd_create_with_handlers_menu
 /* 005c6070 auto */
 void __thiscall
 wnd_create_nopal_cmd_proc
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
+          (WndBase *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6)
 
 {
   iptr iVar1;
@@ -2386,8 +2386,8 @@ wnd_create_nopal_cmd_proc
 /* 005c60c8 auto */
 void __thiscall
 wnd_create_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,iptr param_7)
 
 {
   wnd_create_nopal_cmd_proc((WndBase *)this,param_1,param_2,param_3,param_4,param_5,param_6)
@@ -2399,8 +2399,8 @@ wnd_create_nopal_cmd_proc_menu
 /* 005c610c auto */
 void __thiscall
 wnd_create_child_nopal_cmd_proc
-          (WndBase *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7)
+          (WndBase *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7)
 
 {
   iptr iVar1;
@@ -2415,8 +2415,8 @@ wnd_create_child_nopal_cmd_proc
 /* 005c6168 auto */
 void __thiscall
 wnd_create_child_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6,undefined4 param_7,iptr param_8)
+          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
   wnd_create_child_nopal_cmd_proc
@@ -2431,7 +2431,7 @@ wnd_create_child_nopal_cmd_proc_menu
 void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_get_hscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
   if ((int)param_1 <= local_8 - local_c) {
@@ -2448,7 +2448,7 @@ void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
 void __thiscall wnd_set_vscroll_step(C_00408010_b8 *this,u32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_get_vscroll_range((WndBase *)this,(iptr)&local_c,(iptr)&local_8);
   if ((int)param_1 <= local_8 - local_c) {
@@ -2464,7 +2464,7 @@ void __thiscall wnd_get_hscroll_range(WndBase *this,iptr param_1,iptr param_2)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   uVar2 = 0;
   iVar1 = wnd_get_window(this);
@@ -2477,7 +2477,7 @@ void __thiscall wnd_get_vscroll_range(WndBase *this,iptr param_1,iptr param_2)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   uVar2 = 1;
   iVar1 = wnd_get_window(this);
@@ -2486,18 +2486,18 @@ void __thiscall wnd_get_vscroll_range(WndBase *this,iptr param_1,iptr param_2)
 }
 
 /* 005c66b9 auto */
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(0)))
-#define local_7 (*(undefined1 *)(frame_ + FRAME_OFF(1)))
-#define local_6 (*(undefined1 *)(frame_ + FRAME_OFF(2)))
-#define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(0)))
+#define local_7 (*(i8 *)(frame_ + FRAME_OFF(1)))
+#define local_6 (*(i8 *)(frame_ + FRAME_OFF(2)))
+#define local_5 (*(i8 *)(frame_ + FRAME_OFF(3)))
 void __thiscall
 palette_load_ctab_res_range
-          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (GamePalette *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0x43;
   local_7 = 0x54;
@@ -2521,7 +2521,7 @@ palette_load_ctab_res_range
 #undef local_5
 
 /* 005c6757 auto */
-void __thiscall palette_load_file(GamePalette *this,undefined4 param_1)
+void __thiscall palette_load_file(GamePalette *this,i32 param_1)
 
 {
   palette_load_from_file(this,param_1);
@@ -2529,7 +2529,7 @@ void __thiscall palette_load_file(GamePalette *this,undefined4 param_1)
 }
 
 /* 005c677b auto */
-void __thiscall palette_save_full_to_file(void *this,undefined4 param_1)
+void __thiscall palette_save_full_to_file(void *this,i32 param_1)
 
 {
   palette_save_to_file(this,param_1,0,0xff);
@@ -2538,18 +2538,18 @@ void __thiscall palette_save_full_to_file(void *this,undefined4 param_1)
 
 /* 005c67a6 auto */
 #define local_a8 (*(FileObject *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(152)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(156)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,int param_3)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(152)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(156)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(160)))
+void __thiscall palette_save_to_file(void *this,iptr param_1,i32 param_2,int param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[2] = {(u32)(uptr)param_2, (u32)(uptr)param_3};  /* the arguments, contiguous as on the original stack */
-#define param_2 (*(undefined4 *)&pargs_[0])
+#define param_2 (*(i32 *)&pargs_[0])
 #define param_3 (*(int *)&pargs_[1])
   
   local_8 = 0xffffffff;
@@ -2584,18 +2584,18 @@ void __thiscall palette_save_to_file(void *this,iptr param_1,undefined4 param_2,
 
 /* 005c68f0 auto */
 #define local_b4 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_b0 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_b0 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_ac (*(FileObject *)(frame_ + FRAME_OFF(12)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(164)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(168)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(172)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(176)))
 void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_ac);
@@ -2630,7 +2630,7 @@ void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
 
 /* 005c6ac9 auto */
 void __thiscall
-palette_refresh_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
+palette_refresh_range(GamePalette *this,i32 param_1,i32 param_2)
 
 {
   palette_reapply_range((iptr)this,param_1,param_2);
@@ -2639,7 +2639,7 @@ palette_refresh_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 }
 
 /* 005c6b05 auto */
-void __thiscall palette_animate_hpalette(PaletteAnimateView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall palette_animate_hpalette(PaletteAnimateView *this,i32 param_1,i32 param_2)
 
 {
   palette_animate((iptr)this,this->hpalette,param_1,param_2);
@@ -2654,7 +2654,7 @@ void __thiscall palette_animate_hpalette(PaletteAnimateView *this,undefined4 par
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall palette_copy_logpal(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall palette_copy_logpal(void *this,i32 param_1,i32 param_2)
 
 {
   logpal_copy(param_1,param_2);
@@ -2663,18 +2663,18 @@ void __thiscall palette_copy_logpal(void *this,undefined4 param_1,undefined4 par
 
 /* 005c6bd5 auto */
 #define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(32)))
 void __thiscall palette_rotate_range(PaletteRotateView *this,int param_1,int param_2,int param_3)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (0x100 < param_2 + param_1) {
     param_2 = 0x100 - param_1;
@@ -2737,8 +2737,8 @@ palette_tint_begin_range(GamePalette *this,u32 param_1,u32 param_2,u32 param_3)
 /* 005c6edc auto */
 void __thiscall
 palette_tint_begin
-          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5,undefined4 param_6)
+          (GamePalette *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5,i32 param_6)
 
 {
   this->tint_red = (u8)param_4;
@@ -2778,9 +2778,9 @@ void __thiscall palette_tint_get_saved_rgb(C_005c6fc3 *this,int param_1,iptr par
 
 /* 005c701c auto */
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __thiscall palette_tint_step(C_005c701c *this,int param_1)
 
 {
@@ -2793,7 +2793,7 @@ void __thiscall palette_tint_step(C_005c701c *this,int param_1)
   char cVar7;
   char cVar8;
   iptr iVar9;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 < 0) || ((int)this->fade_steps < param_1)) {
     dbg_logf(ADDR(0x637c34, ((u8 *)&g.d_00637c34)),param_1);
@@ -2809,15 +2809,15 @@ void __thiscall palette_tint_step(C_005c701c *this,int param_1)
     cVar7 = (char)this->fade_steps - cVar8;
     iVar9 = mem_handle_lock(this->fade_saved_rgb);
     for (local_20 = 0; local_20 < (int)(this->fade_count * 3); local_20 += 3) {
-      local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),
+      local_c = CONCAT31((*(i32 *)((char *)&local_c + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_20 + iVar9) /
                                (longlong)(int)this->fade_steps) * cVar8 +
                          cVar7 * (char)((longlong)(ulonglong)bVar1 / (longlong)(int)uVar4));
-      local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),
+      local_1c = CONCAT31((*(i32 *)((char *)&local_1c + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_20 + 1 + iVar9) /
                                 (longlong)(int)this->fade_steps) * cVar8 +
                           cVar7 * (char)((longlong)(ulonglong)bVar3 / (longlong)(int)uVar6));
-      local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),
+      local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_20 + 2 + iVar9) /
                                (longlong)(int)this->fade_steps) * cVar8 +
                          cVar7 * (char)((longlong)(ulonglong)bVar2 / (longlong)(int)uVar5));
@@ -2835,21 +2835,21 @@ void __thiscall palette_tint_step(C_005c701c *this,int param_1)
 
 /* 005c7579 auto */
 #define local_834 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
+#define local_830 (*(i8 (*)[2088])(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
 palette_build_remap_table
-          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4)
+          (GamePalette *this,iptr param_1,GamePalette *param_2,i32 param_3,int param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
-  undefined3 uVar3;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c76f0;
+  (*(i32 *)((char *)&local_830 + 2084)) = &LAB_005c76f0;
   color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
   uVar1 = mem_handle_alloc(param_4 * 3);
@@ -2858,11 +2858,11 @@ palette_build_remap_table
   color_kdtree_build((ColorKdTree *)local_830,iVar2,param_3,param_4);
   palette_get_rgb(param_2,iVar2,param_3,param_4);
   for (local_834 = 0; local_834 < param_4 * 3; local_834 += 3) {
-    uVar3 = (undefined3)((uint)local_834 >> 8);
+    uVar3 = (i32)((uint)local_834 >> 8);
     uVar2 = color_kdtree_find_nearest
-                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
+                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(i8 *)(local_834 + iVar2)),
+                       CONCAT31(uVar3,*(i8 *)(local_834 + 1 + iVar2)),
+                       CONCAT31(uVar3,*(i8 *)(local_834 + 2 + iVar2)),0x20);
     *(char *)(param_1 + local_834 / 3) = (char)uVar2;
   }
   mem_handle_unlock(uVar1);
@@ -2877,22 +2877,22 @@ palette_build_remap_table
 
 /* 005c770a auto */
 #define local_834 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
+#define local_830 (*(i8 (*)[2088])(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2096)))
 void __thiscall
 palette_build_remap_table_ex
-          (GamePalette *this,iptr param_1,GamePalette *param_2,undefined4 param_3,int param_4,
-          undefined4 param_5,undefined4 param_6)
+          (GamePalette *this,iptr param_1,GamePalette *param_2,i32 param_3,int param_4,
+          i32 param_5,i32 param_6)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
-  undefined3 uVar3;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(2104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c787f;
+  (*(i32 *)((char *)&local_830 + 2084)) = &LAB_005c787f;
   color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
   uVar1 = mem_handle_alloc(0x300);
@@ -2901,11 +2901,11 @@ palette_build_remap_table_ex
   color_kdtree_build((ColorKdTree *)local_830,iVar2,param_5,param_6);
   palette_get_rgb(param_2,iVar2,param_3,param_4);
   for (local_834 = 0; local_834 < param_4 * 3; local_834 += 3) {
-    uVar3 = (undefined3)((uint)local_834 >> 8);
+    uVar3 = (i32)((uint)local_834 >> 8);
     uVar2 = color_kdtree_find_nearest
-                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(undefined1 *)(local_834 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 1 + iVar2)),
-                       CONCAT31(uVar3,*(undefined1 *)(local_834 + 2 + iVar2)),0x20);
+                      ((ColorKdTreeSearchView *)local_830,CONCAT31(uVar3,*(i8 *)(local_834 + iVar2)),
+                       CONCAT31(uVar3,*(i8 *)(local_834 + 1 + iVar2)),
+                       CONCAT31(uVar3,*(i8 *)(local_834 + 2 + iVar2)),0x20);
     *(char *)(param_1 + local_834 / 3) = (char)uVar2;
   }
   mem_handle_unlock(uVar1);
@@ -2919,19 +2919,19 @@ palette_build_remap_table_ex
 #undef local_8
 
 /* 005c7899 auto */
-#define local_830 (*(undefined1 (*)[2088])(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2088)))
-undefined4 __thiscall
+#define local_830 (*(i8 (*)[2088])(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2088)))
+i32 __thiscall
 palette_find_nearest_color(GamePalette *this,uint param_1,uint param_2,uint param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(2096)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(2096)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  (*(undefined4 *)((char *)&local_830 + 2084)) = &LAB_005c79a4;
+  (*(i32 *)((char *)&local_830 + 2084)) = &LAB_005c79a4;
   color_kdtree_init((ColorKdTreeInitView *)local_830);
   local_8 = 0;
   uVar1 = mem_handle_alloc(0x300);
@@ -2983,12 +2983,12 @@ void __thiscall color_kdtree_free(ColorKdTreeFreeView *this)
 /* 005c7a86 auto */
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(undefined1 *)(frame_ + FRAME_OFF(8)))
-#define local_17 (*(undefined1 *)(frame_ + FRAME_OFF(9)))
-#define local_16 (*(undefined1 *)(frame_ + FRAME_OFF(10)))
+#define local_18 (*(i8 *)(frame_ + FRAME_OFF(8)))
+#define local_17 (*(i8 *)(frame_ + FRAME_OFF(9)))
+#define local_16 (*(i8 *)(frame_ + FRAME_OFF(10)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
 void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u32 param_3)
 
@@ -2997,7 +2997,7 @@ void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u3
   u32 uVar4;
   iptr iVar2;
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   this->index_base = param_2;
@@ -3007,30 +3007,30 @@ void __thiscall color_kdtree_build(ColorKdTree *this,iptr param_1,u32 param_2,u3
   uVar4 = mem_handle_lock(this->nodes_handle);
   this->nodes = uVar4;
   this->nil_node = this->color_count + 1;
-  *(undefined4 *)(this->nodes + 4) = 0xffffffff;
+  *(i32 *)(this->nodes + 4) = 0xffffffff;
   *(u32 *)(this->nodes + 8) = this->nil_node;
   *(u32 *)(this->nodes + 0xc) = this->nil_node;
-  *(undefined4 *)(this->nil_node * 0x10 + 4 + this->nodes) = 0xffffffff;
+  *(i32 *)(this->nil_node * 0x10 + 4 + this->nodes) = 0xffffffff;
   *(u32 *)(this->nil_node * 0x10 + 0xc + this->nodes) = this->nil_node;
-  *(undefined4 *)(this->nil_node * 0x10 + 8 + this->nodes) =
-       *(undefined4 *)(this->nil_node * 0x10 + 0xc + this->nodes);
+  *(i32 *)(this->nil_node * 0x10 + 8 + this->nodes) =
+       *(i32 *)(this->nil_node * 0x10 + 0xc + this->nodes);
   local_10 = 0;
   local_c = 0;
   local_20 = color_find_nearest_grey(this,param_1);
   for (local_1c = local_20; iVar3 = local_8, -1 < local_1c; local_1c--) {
     iVar1 = local_1c * 3;
-    local_17 = *(undefined1 *)(iVar1 + param_1);
-    local_18 = *(undefined1 *)(iVar1 + 1 + param_1);
-    local_16 = *(undefined1 *)(iVar1 + 2 + param_1);
+    local_17 = *(i8 *)(iVar1 + param_1);
+    local_18 = *(i8 *)(iVar1 + 1 + param_1);
+    local_16 = *(i8 *)(iVar1 + 2 + param_1);
     local_14 = local_1c;
     local_8++;
     color_kdtree_insert(this,(iptr)&local_18,iVar3);
   }
   while (iVar3 = local_8, local_20 = local_20 + 1, local_20 < (int)this->color_count) {
     iVar2 = local_20 * 3;
-    local_17 = *(undefined1 *)(iVar2 + param_1);
-    local_18 = *(undefined1 *)(iVar2 + 1 + param_1);
-    local_16 = *(undefined1 *)(iVar2 + 2 + param_1);
+    local_17 = *(i8 *)(iVar2 + param_1);
+    local_18 = *(i8 *)(iVar2 + 1 + param_1);
+    local_16 = *(i8 *)(iVar2 + 2 + param_1);
     local_14 = local_20;
     local_8++;
     color_kdtree_insert(this,(iptr)&local_18,iVar3);
@@ -3056,19 +3056,19 @@ void __thiscall color_kdtree_insert(ColorKdTree *this,iptr param_1,int param_2)
 
 {
   bool bVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   local_14 = *(u32 *)(this->nodes + 0xc);
   local_8 = -1;
   bVar1 = true;
-  *(undefined1 *)(this->nodes + 1 + param_2 * 0x10) = *(undefined1 *)(param_1 + 1);
-  *(undefined1 *)(this->nodes + param_2 * 0x10) = *(undefined1 *)param_1;
-  *(undefined1 *)(this->nodes + 2 + param_2 * 0x10) = *(undefined1 *)(param_1 + 2);
-  *(undefined4 *)(this->nodes + 4 + param_2 * 0x10) = *(undefined4 *)(param_1 + 4);
+  *(i8 *)(this->nodes + 1 + param_2 * 0x10) = *(i8 *)(param_1 + 1);
+  *(i8 *)(this->nodes + param_2 * 0x10) = *(i8 *)param_1;
+  *(i8 *)(this->nodes + 2 + param_2 * 0x10) = *(i8 *)(param_1 + 2);
+  *(i32 *)(this->nodes + 4 + param_2 * 0x10) = *(i32 *)(param_1 + 4);
   *(u32 *)(this->nodes + 0xc + param_2 * 0x10) = this->nil_node;
-  *(undefined4 *)(this->nodes + 8 + param_2 * 0x10) =
-       *(undefined4 *)(this->nodes + 0xc + param_2 * 0x10);
+  *(i32 *)(this->nodes + 8 + param_2 * 0x10) =
+       *(i32 *)(this->nodes + 0xc + param_2 * 0x10);
   while (this->nil_node != local_14) {
     local_c = local_14;
     if (local_8 == 2) {
@@ -3117,7 +3117,7 @@ color_kdtree_find_nearest(ColorKdTreeSearchView *this,uint param_1,uint param_2,
 {
   u8 *puVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = this->nil_node;
   this->stack_top = 0;
@@ -3214,7 +3214,7 @@ int __thiscall color_find_nearest_grey(ColorKdTree *this,iptr param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_14 = 100000000;
@@ -3235,20 +3235,20 @@ int __thiscall color_find_nearest_grey(ColorKdTree *this,iptr param_1)
 #undef local_8
 
 /* 005c8391 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl font_file_get_font_handle(undefined4 param_1,int param_2)
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl font_file_get_font_handle(i32 param_1,int param_2)
 
 {
   iptr iVar1;
-  undefined4 *puVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *puVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   iVar1 = mem_handle_lock(param_1);
   if ((iVar1 != 0) && (param_2 < *(int *)(iVar1 + 0x100))) {
     local_10 = mem_handle_alloc(8);
-    puVar1 = (undefined4 *)mem_handle_lock(local_10);
-    *puVar1 = *(undefined4 *)(iVar1 + 0x108 + param_2 * 4);
+    puVar1 = (i32 *)mem_handle_lock(local_10);
+    *puVar1 = *(i32 *)(iVar1 + 0x108 + param_2 * 4);
     puVar1[1] = 0;
     mem_handle_unlock(local_10);
   }
@@ -3257,12 +3257,12 @@ undefined4 __cdecl font_file_get_font_handle(undefined4 param_1,int param_2)
 #undef local_10
 
 /* 005c861c auto */
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl font_file_load(LPCSTR param_1)
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+i32 __cdecl font_file_load(LPCSTR param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   iVar1 = AddFontResourceA(param_1);
@@ -3279,7 +3279,7 @@ undefined4 __cdecl font_file_load(LPCSTR param_1)
 #undef local_c
 
 /* 005c86bc auto */
-undefined4 __stdcall font_enum_matching_faces_cb(LOGFONTA *param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
+i32 __stdcall font_enum_matching_faces_cb(LOGFONTA *param_1,i32 param_2,i32 param_3,iptr param_4)
 
 {
   char *_Str2;
@@ -3301,33 +3301,33 @@ undefined4 __stdcall font_enum_matching_faces_cb(LOGFONTA *param_1,undefined4 pa
 }
 
 /* 005c8736 auto */
-undefined4 __cdecl font_enum_matching_faces(iptr param_1)
+i32 __cdecl font_enum_matching_faces(iptr param_1)
 
 {
   HDC hdc;
   
   hdc = GetDC((HWND)0x0);
-  *(undefined4 *)(param_1 + 0x100) = 0;
+  *(i32 *)(param_1 + 0x100) = 0;
   EnumFontFamiliesA(hdc,(LPCSTR)0x0,font_enum_matching_faces_cb,param_1);
   ReleaseDC((HWND)0x0,hdc);
-  return *(undefined4 *)(param_1 + 0x100);
+  return *(i32 *)(param_1 + 0x100);
 }
 
 /* 005c8834 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-iptr __cdecl font_calc_text_rect(iptr param_1,undefined4 param_2,char *param_3,int param_4)
+iptr __cdecl font_calc_text_rect(iptr param_1,i32 param_2,char *param_3,int param_4)
 
 {
-  undefined4 *puVar1;
+  i32 *puVar1;
   HDC hdc;
   HDC hdc_00;
   HGDIOBJ h;
   size_t cchText;
   tagRECT *lprc;
   UINT format;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  puVar1 = (undefined4 *)mem_handle_lock(param_2);
+  puVar1 = (i32 *)mem_handle_lock(param_2);
   hdc = GetDC((HWND)0x0);
   hdc_00 = CreateCompatibleDC(hdc);
   ReleaseDC((HWND)0x0,hdc);
@@ -3349,13 +3349,13 @@ iptr __cdecl font_calc_text_rect(iptr param_1,undefined4 param_2,char *param_3,i
 #undef local_14
 
 /* 005c8908 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl font_handle_create_indirect(LOGFONTA *param_1)
 
 {
   HFONT pHVar1;
-  undefined4 *puVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *puVar2;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   pHVar1 = CreateFontIndirectA(param_1);
@@ -3365,7 +3365,7 @@ int __cdecl font_handle_create_indirect(LOGFONTA *param_1)
       local_10 = 0;
     }
     else {
-      puVar2 = (undefined4 *)mem_handle_lock(local_10);
+      puVar2 = (i32 *)mem_handle_lock(local_10);
       *puVar2 = pHVar1;
       mem_handle_unlock(local_10);
     }
@@ -3375,10 +3375,10 @@ int __cdecl font_handle_create_indirect(LOGFONTA *param_1)
 #undef local_10
 
 /* 005c8984 auto */
-undefined4 __cdecl font_handle_delete(int param_1)
+i32 __cdecl font_handle_delete(int param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int *piVar2;
   
   if (param_1 == 0) {
@@ -3396,13 +3396,13 @@ undefined4 __cdecl font_handle_delete(int param_1)
 }
 
 /* 005c89ed auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl font_resource_add(LPCSTR param_1)
 
 {
   int iVar1;
   LPSTR lpString1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   iVar1 = AddFontResourceA(param_1);
@@ -3450,7 +3450,7 @@ void __cdecl hwnd_move_to(HWND param_1,int param_2,int param_3)
   int nHeight;
   int nWidth;
   BOOL bRepaint;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != (HWND)0x0) {
     GetWindowRect(param_1,&local_14);
@@ -3487,13 +3487,13 @@ void __cdecl button_destroy_hwnd(int param_1)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(64)))
 HWND __cdecl
 spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,int param_5,
-            undefined4 param_6,undefined4 param_7,int param_8)
+            i32 param_6,i32 param_7,int param_8)
 
 {
   iptr iVar1;
   iptr iVar2;
   WndPaletteView *pCVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   WndBase *this;
   int iVar4;
@@ -3501,13 +3501,13 @@ spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,
   HMENU hMenu;
   HINSTANCE hInstance;
   LPVOID lpParam;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[6] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
 #define param_3 (*(Control * *)&pargs_[0])
 #define param_4 (*(int *)&pargs_[1])
 #define param_5 (*(int *)&pargs_[2])
-#define param_6 (*(undefined4 *)&pargs_[3])
-#define param_7 (*(undefined4 *)&pargs_[4])
+#define param_6 (*(i32 *)&pargs_[3])
+#define param_7 (*(i32 *)&pargs_[4])
 #define param_8 (*(int *)&pargs_[5])
   
   local_2c = param_3;
@@ -3575,7 +3575,7 @@ spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,
   local_28 = CreateWindowExA(4,s_MSControlClass_00637e34,&spritebtn_alt_wnd_title,local_44,param_1,param_2,
                              iVar3,iVar4,hWndParent,hMenu,hInstance,lpParam);
   iVar4 = ctrl_init_block(local_28,(iptr)param_3);
-  *(undefined4 *)(iVar4 + 0x2c) = 5;
+  *(i32 *)(iVar4 + 0x2c) = 5;
   SetWindowLongA(local_28,-4,ADDR(0x5cb6eb, spritebtn_wndproc));
   return local_28;
 }
@@ -3598,8 +3598,8 @@ spritebtn_create_pict_hwnd(int param_1,int param_2,Control *param_3,int param_4,
 #undef param_8
 
 /* 005ccddf auto */
-#define ctrl_text_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f03))
-void __cdecl ctrl_set_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+#define ctrl_text_rgb_set (*(i8 *)((u8 *)&g.d_00637f03))
+void __cdecl ctrl_set_text_rgb(i8 param_1,i8 param_2,i8 param_3)
 
 {
   ctrl_text_rgb_r = param_1;
@@ -3611,8 +3611,8 @@ void __cdecl ctrl_set_text_rgb(undefined1 param_1,undefined1 param_2,undefined1 
 #undef ctrl_text_rgb_set
 
 /* 005cce0e auto */
-#define ctrl_disabled_rgb_set (*(undefined1 *)((u8 *)&g.d_00637f07))
-void __cdecl ctrl_set_disabled_rgb(undefined1 param_1,undefined1 param_2,undefined1 param_3)
+#define ctrl_disabled_rgb_set (*(i8 *)((u8 *)&g.d_00637f07))
+void __cdecl ctrl_set_disabled_rgb(i8 param_1,i8 param_2,i8 param_3)
 
 {
   ctrl_disabled_rgb_r = param_1;
@@ -3668,27 +3668,27 @@ void __cdecl wnd_set_scroll_pos(iptr param_1,int param_2,int param_3)
 }
 
 /* 005cdfb2 auto */
-void __cdecl sprite_data_fixup_stub(undefined4 param_1,undefined4 param_2)
+void __cdecl sprite_data_fixup_stub(i32 param_1,i32 param_2)
 
 {
   return;
 }
 
 /* 005cdfc2 auto */
-#define local_c (*(undefined1 *)(frame_ + FRAME_OFF(4)))
-#define local_b (*(undefined1 *)(frame_ + FRAME_OFF(5)))
-#define local_a (*(undefined1 *)(frame_ + FRAME_OFF(6)))
-#define local_9 (*(undefined1 *)(frame_ + FRAME_OFF(7)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
+#define local_c (*(i8 *)(frame_ + FRAME_OFF(4)))
+#define local_b (*(i8 *)(frame_ + FRAME_OFF(5)))
+#define local_a (*(i8 *)(frame_ + FRAME_OFF(6)))
+#define local_9 (*(i8 *)(frame_ + FRAME_OFF(7)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+void __thiscall sprite_load_res(Sprite *this,i32 param_1)
 
 {
   int iVar1;
-  undefined4 *puVar2;
+  i32 *puVar2;
   u32 uVar3;
   iptr iVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0x53;
   local_b = 0x50;
@@ -3699,7 +3699,7 @@ void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
     dbg_logf_noret(ADDR(0x637fb0, ((u8 *)&g.d_00637fb0)),param_1);
   }
   else {
-    puVar2 = (undefined4 *)res_lock(iVar1);
+    puVar2 = (i32 *)res_lock(iVar1);
     uVar3 = endian_from_le(*puVar2);
     this->offset_x = uVar3;
     uVar3 = endian_from_le(puVar2[1]);
@@ -3707,7 +3707,7 @@ void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
     rect_copy_from_le((iptr)(puVar2 + 2),(iptr)this);
     rect_copy_from_le((iptr)(puVar2 + 6),(iptr)&this->bounds_rect);
     this->key_color = *(u8 *)(puVar2 + 10);
-    local_8 = endian_from_le_u32(*(undefined4 *)((int)puVar2 + 0x29));
+    local_8 = endian_from_le_u32(*(i32 *)((int)puVar2 + 0x29));
     if (this->data_ptr != 0) {
       sprite_unlock(this);
     }
@@ -3736,7 +3736,7 @@ void __thiscall sprite_load_res(Sprite *this,undefined4 param_1)
 
 /* 005ce16e auto */
 void __thiscall
-sprite_load_res_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
+sprite_load_res_full_pal(Sprite *this,i32 param_1,i32 param_2)
 
 {
   sprite_load_res_with_pal(this,param_1,0xffffffff,0xffffffff,param_2);
@@ -3744,23 +3744,23 @@ sprite_load_res_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
 }
 
 /* 005ce19a auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined1 *)(frame_ + FRAME_OFF(8)))
-#define local_f (*(undefined1 *)(frame_ + FRAME_OFF(9)))
-#define local_e (*(undefined1 *)(frame_ + FRAME_OFF(10)))
-#define local_d (*(undefined1 *)(frame_ + FRAME_OFF(11)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i8 *)(frame_ + FRAME_OFF(8)))
+#define local_f (*(i8 *)(frame_ + FRAME_OFF(9)))
+#define local_e (*(i8 *)(frame_ + FRAME_OFF(10)))
+#define local_d (*(i8 *)(frame_ + FRAME_OFF(11)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __thiscall
 sprite_load_res_with_pal
-          (Sprite *this,undefined4 param_1,int param_2,int param_3,GamePalette *param_4)
+          (Sprite *this,i32 param_1,int param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
   int iVar2;
   u32 uVar3;
   iptr iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0x53;
   local_f = 0x50;
@@ -3813,7 +3813,7 @@ sprite_load_res_with_pal
 #undef local_8
 
 /* 005ce3a8 auto */
-void __thiscall sprite_load_file(Sprite *this,undefined4 param_1)
+void __thiscall sprite_load_file(Sprite *this,i32 param_1)
 
 {
   sprite_read_file(this,param_1);
@@ -3822,21 +3822,21 @@ void __thiscall sprite_load_file(Sprite *this,undefined4 param_1)
 
 /* 005ce3cc auto */
 #define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(156)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(160)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(164)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(168)))
 void __thiscall
 sprite_write_file_with_palette
-          (Sprite *this,iptr param_1,undefined4 param_2,int param_3,GamePalette *param_4)
+          (Sprite *this,iptr param_1,i32 param_2,int param_3,GamePalette *param_4)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
   iptr iVar4;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_ac);
@@ -3880,15 +3880,15 @@ sprite_write_file_with_palette
 
 /* 005ce5bb auto */
 #define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(156)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(160)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(164)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(168)))
 void __thiscall sprite_write_file(Sprite *this,iptr param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_ac);
@@ -3923,7 +3923,7 @@ void __thiscall sprite_write_file(Sprite *this,iptr param_1)
 
 /* 005ce723 auto */
 void __thiscall
-sprite_load_file_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
+sprite_load_file_full_pal(Sprite *this,i32 param_1,i32 param_2)
 
 {
   sprite_read_file_with_palette(this,param_1,0xffffffff,0xffffffff,param_2);
@@ -3932,12 +3932,12 @@ sprite_load_file_full_pal(Sprite *this,undefined4 param_1,undefined4 param_2)
 
 /* 005ce74f auto */
 #define local_b4 (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(156)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(160)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(176)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(168)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(172)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(176)))
 void __thiscall
 sprite_read_file_with_palette
           (Sprite *this,iptr param_1,int param_2,int param_3,GamePalette *param_4)
@@ -3946,8 +3946,8 @@ sprite_read_file_with_palette
   int iVar1;
   u32 uVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_b4);
@@ -4006,17 +4006,17 @@ sprite_read_file_with_palette
 
 /* 005ce9ef auto */
 #define local_ac (*(FileObject *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(156)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(156)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(160)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(164)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(168)))
 void __thiscall sprite_read_file(Sprite *this,iptr param_1)
 
 {
   int iVar1;
   u32 uVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_ac);
@@ -4066,7 +4066,7 @@ void __thiscall sprite_read_file(Sprite *this,iptr param_1)
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 sprite_grab_bounded_region
-          (Sprite *this,DibSurface *param_1,uint param_2,undefined4 param_3,int param_4,
+          (Sprite *this,DibSurface *param_1,uint param_2,i32 param_3,int param_4,
           int param_5)
 
 {
@@ -4074,7 +4074,7 @@ sprite_grab_bounded_region
   iptr iVar2;
   int iVar3;
   u32 uVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   pcVar1 = (char *)surface_pixel_ptr(param_1,param_4,param_5);
   local_1c = param_4;
@@ -4112,7 +4112,7 @@ sprite_grab_bounded_region
 #undef local_8
 
 /* 005cee09 auto */
-void __thiscall sprite_grab_ddsurf_rect(Sprite *this,undefined4 param_1,iptr param_2)
+void __thiscall sprite_grab_ddsurf_rect(Sprite *this,i32 param_1,iptr param_2)
 
 {
   u32 uVar1;
@@ -4127,11 +4127,11 @@ void __thiscall sprite_grab_ddsurf_rect(Sprite *this,undefined4 param_1,iptr par
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 sprite_grab_from_ddsurf
-          (Sprite *this,undefined4 param_1,int param_2,int param_3,int param_4,int param_5)
+          (Sprite *this,i32 param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_2,param_3,param_4 + param_2,param_5 + param_3);
   uVar1 = sprite_encode_from_ddsurf(this,param_1,0xffffffff,(iptr)&local_14);
@@ -4143,7 +4143,7 @@ sprite_grab_from_ddsurf
 
 /* 005cee99 auto */
 void __thiscall
-sprite_grab_ddsurf_rect_keyed(Sprite *this,undefined4 param_1,uint param_2,iptr param_3)
+sprite_grab_ddsurf_rect_keyed(Sprite *this,i32 param_1,uint param_2,iptr param_3)
 
 {
   u32 uVar1;
@@ -4158,12 +4158,12 @@ sprite_grab_ddsurf_rect_keyed(Sprite *this,undefined4 param_1,uint param_2,iptr 
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 sprite_grab_from_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,uint param_2,int param_3,int param_4,int param_5,
+          (Sprite *this,i32 param_1,uint param_2,int param_3,int param_4,int param_5,
           int param_6)
 
 {
   u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
   uVar1 = sprite_encode_from_ddsurf(this,param_1,param_2 & 0xff,(iptr)&local_14);
@@ -4174,10 +4174,10 @@ sprite_grab_from_ddsurf_keyed
 #undef local_14
 
 /* 005cef9f auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_ddsurf
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   sprite_blit_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
@@ -4185,10 +4185,10 @@ sprite_draw_ddsurf
 }
 
 /* 005cefd4 auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
+          (Sprite *this,i32 param_1,i32 param_2,uint param_3,i32 param_4
+          ,i32 param_5)
 
 {
   sprite_blit_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
@@ -4196,10 +4196,10 @@ sprite_draw_ddsurf_keyed
 }
 
 /* 005cf00d auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_scaled
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   sprite_blit_xyscale_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4);
@@ -4207,10 +4207,10 @@ sprite_draw_scaled
 }
 
 /* 005cf042 auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_scaled_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
+          (Sprite *this,i32 param_1,i32 param_2,uint param_3,i32 param_4
+          ,i32 param_5)
 
 {
   sprite_blit_xyscale_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
@@ -4218,10 +4218,10 @@ sprite_draw_scaled_keyed
 }
 
 /* 005cf07b auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_scaled_ddsurf
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4);
@@ -4229,10 +4229,10 @@ sprite_draw_scaled_ddsurf
 }
 
 /* 005cf0b0 auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_scaled_ddsurf_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5)
+          (Sprite *this,i32 param_1,i32 param_2,uint param_3,i32 param_4
+          ,i32 param_5)
 
 {
   sprite_blit_xyscale_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
@@ -4240,10 +4240,10 @@ sprite_draw_scaled_ddsurf_keyed
 }
 
 /* 005cf0e9 auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_silhouette_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6)
+          (Sprite *this,i32 param_1,i32 param_2,uint param_3,i32 param_4
+          ,i32 param_5,i32 param_6)
 
 {
   sprite_blit_silhouette_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
@@ -4251,10 +4251,10 @@ sprite_draw_silhouette_keyed
 }
 
 /* 005cf15f auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_silhouette_dd_keyed
-          (Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6)
+          (Sprite *this,i32 param_1,i32 param_2,uint param_3,i32 param_4
+          ,i32 param_5,i32 param_6)
 
 {
   sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,param_3 & 0xff,param_4,param_5,param_6);
@@ -4262,10 +4262,10 @@ sprite_draw_silhouette_dd_keyed
 }
 
 /* 005cf19c auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_silhouette_dd
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5)
 
 {
   sprite_blit_silhouette_to_ddsurf(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
@@ -4273,10 +4273,10 @@ sprite_draw_silhouette_dd
 }
 
 /* 005cf1d5 auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_key254
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   sprite_blit_to_surface(this,param_1,param_2,0xfffffffe,param_3,param_4);
@@ -4284,10 +4284,10 @@ sprite_draw_key254
 }
 
 /* 005cf20a auto */
-undefined4 __thiscall
+i32 __thiscall
 sprite_draw_ddsurf_key254
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   sprite_blit_to_ddsurf(this,param_1,param_2,0xfffffffe,param_3,param_4);
@@ -4297,7 +4297,7 @@ sprite_draw_ddsurf_key254
 /* 005cf26d auto */
 void __thiscall
 sprite_merge_onto_at
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   sprite_merge_at(this,(iptr)this,param_1,0,param_2,param_3);
@@ -4305,7 +4305,7 @@ sprite_merge_onto_at
 }
 
 /* 005cf29f auto */
-void __thiscall FUN_005cf29f(Sprite *this,undefined4 param_1)
+void __thiscall FUN_005cf29f(Sprite *this,i32 param_1)
 
 {
   sprite_merge_at(this,(iptr)this,param_1,1,0,0);
@@ -4315,7 +4315,7 @@ void __thiscall FUN_005cf29f(Sprite *this,undefined4 param_1)
 /* 005cf2cd auto */
 void __thiscall
 FUN_005cf2cd
-          (Sprite *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (Sprite *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   sprite_merge_at(this,(iptr)this,param_1,1,param_2,param_3);
@@ -4351,13 +4351,13 @@ void __thiscall FUN_005cf439(C_005cf439 *this,u32 *param_1,u32 *param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-sprite_remap_colors(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
+sprite_remap_colors(Sprite *this,iptr param_1,iptr param_2,i32 param_3)
 
 {
   int iVar1;
   byte *pbVar2;
   char cVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   cVar3 = sprite_has_data(this);
   if (cVar3 == '\0') {
@@ -4394,13 +4394,13 @@ sprite_remap_colors(Sprite *this,iptr param_1,iptr param_2,undefined4 param_3)
 #define local_68 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_58 (*(u8 * *)(frame_ + FRAME_OFF(16)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_50 (*(undefined4 * *)(frame_ + FRAME_OFF(24)))
+#define local_50 (*(i32 * *)(frame_ + FRAME_OFF(24)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_44 (*(u8 *)(frame_ + FRAME_OFF(36)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_3c (*(void * *)(frame_ + FRAME_OFF(44)))
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(48)))
 #define local_34 (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_30 (*(u8 * *)(frame_ + FRAME_OFF(56)))
 #define local_2c (*(u8 * *)(frame_ + FRAME_OFF(60)))
@@ -4420,7 +4420,7 @@ sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param
   int iVar1;
   int iVar2;
   u32 uVar3;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_8 = ddsurf_lock(param_1);
@@ -4500,8 +4500,8 @@ sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param
           local_48 = 0;
           while (local_48 < local_14 - local_1c) {
             local_10 += 8;
-            *(undefined4 *)((int)local_24 + local_48 * 4) = 0;
-            *(undefined4 *)((int)local_3c + local_48 * 4) = 0;
+            *(i32 *)((int)local_24 + local_48 * 4) = 0;
+            *(i32 *)((int)local_3c + local_48 * 4) = 0;
             local_58 = local_30;
             for (local_40 = 0; local_40 < local_28; local_40++) {
               if ((*local_58 != local_44) || (param_2 == -2)) {
@@ -4562,17 +4562,17 @@ sprite_encode_from_ddsurf(Sprite *this,DDSurface *param_1,int param_2,iptr param
             }
             this->offset_x = 0;
             this->full_height = 0;
-            local_50 = (undefined4 *)mem_handle_lock(local_34);
+            local_50 = (i32 *)mem_handle_lock(local_34);
             for (local_48 = 0; local_48 < local_14 - local_1c; local_48++) {
-              *local_50 = *(undefined4 *)((int)local_24 + local_48 * 4);
-              local_50[1] = *(undefined4 *)((int)local_3c + local_48 * 4);
+              *local_50 = *(i32 *)((int)local_24 + local_48 * 4);
+              local_50[1] = *(i32 *)((int)local_3c + local_48 * 4);
               local_50 += 2;
               mem_move_src_dst(*(iptr *)((int)local_c + local_48 * 4),(iptr)local_50,
-                           *(undefined4 *)((int)local_3c + local_48 * 4));
-              local_50 = (undefined4 *)((int)local_50 + *(int *)((int)local_3c + local_48 * 4));
+                           *(i32 *)((int)local_3c + local_48 * 4));
+              local_50 = (i32 *)((int)local_50 + *(int *)((int)local_3c + local_48 * 4));
             }
             *local_50 = 0;
-            local_50 = (undefined4 *)mem_handle_unlock(local_34);
+            local_50 = (i32 *)mem_handle_unlock(local_34);
             operator_delete(local_c);
             operator_delete(local_24);
             operator_delete(local_3c);

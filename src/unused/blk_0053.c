@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 00531210 auto */
-#define _DAT_0062803c (*(undefined4 *)((u8 *)&g.d_0062803c))
+#define _DAT_0062803c (*(i32 *)((u8 *)&g.d_0062803c))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl civ_set_current_index(int param_1)
@@ -10,7 +10,7 @@ void __cdecl civ_set_current_index(int param_1)
 {
   if ((-1 < param_1) && (param_1 < 9)) {
     _DAT_0062803c = param_1;
-    PTR_civs_00628040 = (undefined *)(civs + param_1);
+    PTR_civs_00628040 = (i8 *)(civs + param_1);
   }
   return;
 }

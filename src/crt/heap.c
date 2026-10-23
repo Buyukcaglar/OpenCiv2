@@ -272,7 +272,7 @@ int __cdecl free_dbg_body(int eax_in, void *p, int use)
     return __free_base(h);
 }
 
-__attribute__((naked)) undefined4 __cdecl __free_dbg(void *p, int use)
+__attribute__((naked)) i32 __cdecl __free_dbg(void *p, int use)
 {
     __asm__ volatile(
         "pushl 8(%esp)\n\t"
@@ -298,7 +298,7 @@ int __cdecl operator_delete_body(int eax_in, void *p)
     return __free_dbg(p, h->use);
 }
 
-__attribute__((naked)) undefined4 __cdecl operator_delete(void *p)
+__attribute__((naked)) i32 __cdecl operator_delete(void *p)
 {
     __asm__ volatile(
         "pushl 4(%esp)\n\t"

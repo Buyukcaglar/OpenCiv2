@@ -15,7 +15,7 @@ void __cdecl notice_dlg_close(void)
 #undef notice_dlg_shown
 
 /* 00519171 auto */
-#define notice_dlg_shown (*(undefined4 *)((u8 *)&g.d_00631b78))
+#define notice_dlg_shown (*(i32 *)((u8 *)&g.d_00631b78))
 void __cdecl notice_dlg_show_section(iptr param_1)
 
 {
@@ -33,7 +33,7 @@ void __cdecl notice_dlg_show_section(iptr param_1)
 #undef notice_dlg_shown
 
 /* 0051d950 auto */
-undefined4 __cdecl text_char_to_upper(byte param_1)
+i32 __cdecl text_char_to_upper(byte param_1)
 
 {
   int iVar1;

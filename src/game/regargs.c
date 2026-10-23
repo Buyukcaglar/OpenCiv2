@@ -203,7 +203,7 @@ int __cdecl regargs_005edc6c(uint al_in, byte *dst, byte *src, uint count,
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
 __attribute__((naked)) short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
-                                                  undefined4 src_step, undefined4 dst_step)
+                                                  i32 src_step, i32 dst_step)
 {
     __asm__ volatile(
         "pushl 20(%esp)\n\t"
@@ -219,7 +219,7 @@ __attribute__((naked)) short __cdecl snd_resample_8bit(byte *dst, byte *src, uin
 }
 #else
 short __cdecl snd_resample_8bit(byte *dst, byte *src, uint count,
-                                                  undefined4 src_step, undefined4 dst_step)
+                                                  i32 src_step, i32 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (short)regargs_005edc6c(0, dst, src, count, src_step, dst_step);
@@ -263,7 +263,7 @@ int __cdecl regargs_005edcac(uint al_in, signed char *dst, byte *src, uint count
 
 #if defined(__i386__) && !defined(CIV2_NATIVE)
 __attribute__((naked)) short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
-                                                  undefined4 src_step, undefined4 dst_step)
+                                                  i32 src_step, i32 dst_step)
 {
     __asm__ volatile(
         "pushl 20(%esp)\n\t"
@@ -279,7 +279,7 @@ __attribute__((naked)) short __cdecl snd_mix_8bit_resample(char *dst, byte *src,
 }
 #else
 short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
-                                                  undefined4 src_step, undefined4 dst_step)
+                                                  i32 src_step, i32 dst_step)
 {
     /* Native builds: the register input only ever mattered as leftover state. */
     return (short)regargs_005edcac(0, dst, src, count, src_step, dst_step);

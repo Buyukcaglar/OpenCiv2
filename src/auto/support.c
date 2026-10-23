@@ -23,20 +23,20 @@ void __cdecl win_pump_one_message(void)
 void __cdecl int_pairs_bubble_sort(int param_1,iptr param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   bool bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   do {
     bVar2 = false;
     for (local_c = 0; (!bVar2 && (local_c < param_1 - 1)); local_c++) {
       if (*(int *)(param_3 + 4 + local_c * 4) < *(int *)(param_3 + local_c * 4)) {
-        uVar1 = *(undefined4 *)(param_3 + local_c * 4);
-        *(undefined4 *)(param_3 + local_c * 4) = *(undefined4 *)(param_3 + 4 + local_c * 4);
-        *(undefined4 *)(param_3 + 4 + local_c * 4) = uVar1;
-        uVar1 = *(undefined4 *)(param_2 + local_c * 4);
-        *(undefined4 *)(param_2 + local_c * 4) = *(undefined4 *)(param_2 + 4 + local_c * 4);
-        *(undefined4 *)(param_2 + 4 + local_c * 4) = uVar1;
+        uVar1 = *(i32 *)(param_3 + local_c * 4);
+        *(i32 *)(param_3 + local_c * 4) = *(i32 *)(param_3 + 4 + local_c * 4);
+        *(i32 *)(param_3 + 4 + local_c * 4) = uVar1;
+        uVar1 = *(i32 *)(param_2 + local_c * 4);
+        *(i32 *)(param_2 + local_c * 4) = *(i32 *)(param_2 + 4 + local_c * 4);
+        *(i32 *)(param_2 + 4 + local_c * 4) = uVar1;
         bVar2 = true;
       }
     }
@@ -56,77 +56,77 @@ MemBlock * __thiscall memblock_ctor(MemBlock *this)
 }
 
 /* 0046aaa0 auto */
-undefined4 __cdecl mem_free_handle(iptr param_1)
+i32 __cdecl mem_free_handle(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = mem_handle_free(param_1);
   return uVar1;
 }
 
 /* 0046aad0 auto */
-undefined4 __cdecl mem_lock_handle(iptr param_1)
+i32 __cdecl mem_lock_handle(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = mem_handle_lock(param_1);
   return uVar1;
 }
 
 /* 0046ab00 auto */
-undefined4 __cdecl mem_unlock_handle(iptr param_1)
+i32 __cdecl mem_unlock_handle(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = mem_handle_unlock(param_1);
   return uVar1;
 }
 
 /* 00497ea0 auto */
-bool __cdecl memblock_init(iptr param_1,undefined4 param_2,uint param_3)
+bool __cdecl memblock_init(iptr param_1,i32 param_2,uint param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   bool bVar2;
   
   if (*(int *)(param_1 + 4) != 0) {
     if (*(int *)(param_1 + 8) != 0) {
-      mem_handle_unlock(*(undefined4 *)(param_1 + 4));
-      *(undefined4 *)(param_1 + 8) = 0;
+      mem_handle_unlock(*(i32 *)(param_1 + 4));
+      *(i32 *)(param_1 + 8) = 0;
     }
-    mem_handle_free(*(undefined4 *)(param_1 + 4));
-    *(undefined4 *)(param_1 + 4) = 0;
+    mem_handle_free(*(i32 *)(param_1 + 4));
+    *(i32 *)(param_1 + 4) = 0;
   }
-  *(undefined1 *)param_1 = (undefined1)param_2;
+  *(i8 *)param_1 = (i8)param_2;
   uVar1 = mem_handle_alloc(param_3 & 0xffff);
-  *(undefined4 *)(param_1 + 4) = uVar1;
+  *(i32 *)(param_1 + 4) = uVar1;
   bVar2 = *(int *)(param_1 + 4) != 0;
   if (bVar2) {
-    *(undefined1 *)(param_1 + 1) = 1;
-    *(undefined2 *)(param_1 + 0xc) = 0;
-    *(undefined2 *)(param_1 + 0x10) = (undefined2)param_3;
-    *(undefined2 *)(param_1 + 0xe) = (undefined2)param_3;
-    *(undefined4 *)(param_1 + 8) = 0;
+    *(i8 *)(param_1 + 1) = 1;
+    *(i16 *)(param_1 + 0xc) = 0;
+    *(i16 *)(param_1 + 0x10) = (i16)param_3;
+    *(i16 *)(param_1 + 0xe) = (i16)param_3;
+    *(i32 *)(param_1 + 8) = 0;
   }
   else {
-    *(undefined4 *)(param_1 + 4) = 0;
+    *(i32 *)(param_1 + 4) = 0;
     error_report(0xfffffffe,param_2,0,param_3 & 0xffff,0);
   }
   return !bVar2;
 }
 
 /* 00497ff3 auto */
-undefined4 __cdecl memblock_ensure_locked(iptr param_1)
+i32 __cdecl memblock_ensure_locked(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (*(int *)(param_1 + 8) == 0) {
-    uVar1 = mem_handle_lock(*(undefined4 *)(param_1 + 4));
-    *(undefined4 *)(param_1 + 8) = uVar1;
+    uVar1 = mem_handle_lock(*(i32 *)(param_1 + 4));
+    *(i32 *)(param_1 + 8) = uVar1;
     if (*(int *)(param_1 + 8) == 0) {
       error_report(0xfffffff6,(uint)*(byte *)param_1,0,0,0);
     }
@@ -138,8 +138,8 @@ undefined4 __cdecl memblock_ensure_locked(iptr param_1)
 void __cdecl memblock_detach(iptr param_1)
 
 {
-  *(undefined4 *)(param_1 + 8) = 0;
-  *(undefined4 *)(param_1 + 4) = 0;
+  *(i32 *)(param_1 + 8) = 0;
+  *(i32 *)(param_1 + 4) = 0;
   return;
 }
 
@@ -149,9 +149,9 @@ void __cdecl memblock_unlock(iptr param_1)
 {
   if (*(int *)(param_1 + 8) != 0) {
     if (*(int *)(param_1 + 4) != 0) {
-      mem_handle_unlock(*(undefined4 *)(param_1 + 4));
+      mem_handle_unlock(*(i32 *)(param_1 + 4));
     }
-    *(undefined4 *)(param_1 + 8) = 0;
+    *(i32 *)(param_1 + 8) = 0;
   }
   return;
 }
@@ -163,23 +163,23 @@ iptr __cdecl memblock_free(iptr param_1)
   if (*(char *)(param_1 + 1) != '\0') {
     memblock_unlock(param_1);
     if (*(int *)(param_1 + 4) != 0) {
-      mem_handle_free(*(undefined4 *)(param_1 + 4));
-      *(undefined4 *)(param_1 + 4) = 0;
+      mem_handle_free(*(i32 *)(param_1 + 4));
+      *(i32 *)(param_1 + 4) = 0;
     }
   }
-  *(undefined2 *)(param_1 + 0xc) = 0;
-  *(undefined2 *)(param_1 + 0x10) = 0;
-  *(undefined2 *)(param_1 + 0xe) = 0;
+  *(i16 *)(param_1 + 0xc) = 0;
+  *(i16 *)(param_1 + 0x10) = 0;
+  *(i16 *)(param_1 + 0xe) = 0;
   return param_1;
 }
 
 /* 00498159 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl memblock_alloc(iptr param_1,uint param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if ((uint)*(ushort *)(param_1 + 0x10) < (param_2 & 0xffff)) {
@@ -208,7 +208,7 @@ int __cdecl mem_checksum(iptr param_1,uint param_2)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 0) {
     local_8 = 0;
@@ -250,8 +250,8 @@ int __cdecl mem_checksum(iptr param_1,uint param_2)
 
 /* 004bb870 auto */
 #define error_last_alloc_failed (*(uint *)((u8 *)&g.d_00634814))
-#define mem_last_alloc_size (*(undefined4 *)((u8 *)&g.d_00634818))
-int __cdecl mem_handle_alloc_tracked(undefined4 param_1)
+#define mem_last_alloc_size (*(i32 *)((u8 *)&g.d_00634818))
+int __cdecl mem_handle_alloc_tracked(i32 param_1)
 
 {
   int iVar1;
@@ -265,19 +265,19 @@ int __cdecl mem_handle_alloc_tracked(undefined4 param_1)
 #undef mem_last_alloc_size
 
 /* 004cca35 auto */
-undefined4 __cdecl memblock_alloc_checked(iptr param_1,uint param_2)
+i32 __cdecl memblock_alloc_checked(iptr param_1,uint param_2)
 
 {
   LPCSTR lpCaption;
   LPCSTR lpText;
   iptr iVar1;
-  undefined4 uVar1;
+  i32 uVar1;
   UINT uType;
   
   if ((uint)*(ushort *)(param_1 + 0x10) < (param_2 & 0xffff)) {
     uType = 0;
-    lpCaption = (LPCSTR)label_string(*(undefined4 *)(label_string_ids + 0x8d0));
-    lpText = (LPCSTR)label_string(*(undefined4 *)(label_string_ids + 0x8e8));
+    lpCaption = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8d0));
+    lpText = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x8e8));
     iVar1 = wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
     MessageBoxA(*(HWND *)(iVar1 + 4),lpText,lpCaption,uType);
     uVar1 = 0;
@@ -302,15 +302,15 @@ int __cdecl int_clamp_c(int param_1,int param_2,int param_3)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define civ (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_304 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(764)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-undefined4 __cdecl dbg_pick_player(int param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(764)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(768)))
+i32 __cdecl dbg_pick_player(int param_1)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_304,0x4000);
@@ -338,7 +338,7 @@ undefined4 __cdecl dbg_pick_player(int param_1)
 #undef local_8
 
 /* 0055add0 auto */
-undefined4 __stdcall win_main(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+i32 __stdcall win_main(i32 param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   DWORD DVar1;
@@ -364,7 +364,7 @@ undefined4 __stdcall win_main(undefined4 param_1,undefined4 param_2,undefined4 p
 }
 
 /* 00568176 auto */
-undefined4 __cdecl mem_check_available(undefined4 param_1)
+i32 __cdecl mem_check_available(i32 param_1)
 
 {
   return 1;
@@ -376,7 +376,7 @@ int __cdecl err_register_cleanup_fn(iptr param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = fatal_cleanup_count;
   local_8 = -1;
@@ -400,7 +400,7 @@ void __cdecl err_dump_text_file(iptr param_1)
   char *pcVar1;
   size_t sVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   _File = (FILE *)file_open_path(param_1,ADDR(0x63481c, ((u8 *)&g.d_0063481c)));
   if (_File != (FILE *)0x0) {
@@ -440,7 +440,7 @@ void __cdecl err_dump_text_file(iptr param_1)
 void __cdecl error_report(uint param_1,int param_2,iptr param_3,iptr param_4,iptr param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_3 != 0) {
     FUN_005f22d0(&error_context_text,param_3);
@@ -464,12 +464,12 @@ void __cdecl error_report(uint param_1,int param_2,iptr param_3,iptr param_4,ipt
 #define error_last_open_failed (*(int *)((u8 *)&g.d_00634810))
 #define mem_last_alloc_size (*(long *)((u8 *)&g.d_00634818))
 #define local_108 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_104 (*(undefined1 (*)[256])(frame_ + FRAME_OFF(4)))
-void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,undefined4 param_5)
+#define local_104 (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
+void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,i32 param_5)
 
 {
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
   FUN_005f22d0(local_104,s_Error___00634844);
   FUN_005f22e0(local_104,param_1);
@@ -532,11 +532,11 @@ void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,
 #undef local_104
 
 /* 0058ae20 auto */
-undefined4 __cdecl
+i32 __cdecl
 point_in_rect_ltrb(int param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((((param_1 < param_3) || (param_5 < param_1)) || (param_2 < param_4)) || (param_6 < param_2))
   {
@@ -600,11 +600,11 @@ int __cdecl int_clamp(iptr param_1,iptr param_2,int param_3)
 void __cdecl int_swap(iptr param_1,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
-  uVar1 = *(undefined4 *)param_1;
-  *(undefined4 *)param_1 = *(undefined4 *)param_2;
-  *(undefined4 *)param_2 = uVar1;
+  uVar1 = *(i32 *)param_1;
+  *(i32 *)param_1 = *(i32 *)param_2;
+  *(i32 *)param_2 = uVar1;
   return;
 }
 
@@ -624,12 +624,12 @@ int __cdecl coarse_wrap_x(int param_1)
 }
 
 /* 005ae296 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl dist_from_deltas(uint param_1,uint param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((int)param_1 < 1) {
     param_1 = ~param_1 + 1;
@@ -649,11 +649,11 @@ int __cdecl dist_from_deltas(uint param_1,uint param_2)
 #undef local_8
 
 /* 005ae3ec auto */
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(0)))
 int __cdecl int_shift_signed(int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 != 0) {
     if (param_2 < 1) {
@@ -677,7 +677,7 @@ void __cdecl win_drain_input_msgs(void)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   do {
     BVar1 = PeekMessageA(&local_20,(HWND)0x0,0x200,0x209,1);
@@ -692,12 +692,12 @@ void __cdecl win_drain_input_msgs(void)
 /* 005bba4f auto */
 #define avi_idle_update_enabled (*(int *)((u8 *)&g.d_00637efc))
 #define local_20 (*(tagMSG *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl win_dispatch_one_message(void)
+i32 __cdecl win_dispatch_one_message(void)
 
 {
   BOOL BVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = PeekMessageA(&local_20,(HWND)0x0,0,0,1);
   if (BVar1 == 0) {
@@ -723,7 +723,7 @@ uint __cdecl win_dispatch_one_paint(void)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = PeekMessageA(&local_20,(HWND)0x0,0xf,0xf,1);
   if (BVar1 != 0) {
@@ -766,7 +766,7 @@ uint __cdecl win_dispatch_one_custom_msg(void)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   BVar1 = PeekMessageA(&local_20,(HWND)0x0,0x3bd,0x3bd,1);
   if (BVar1 != 0) {
@@ -795,7 +795,7 @@ void __cdecl win_dispatch_custom_msgs(void)
 #undef avi_idle_update_enabled
 
 /* 005c54d0 auto */
-undefined4 __cdecl endian_from_le(undefined4 param_1)
+i32 __cdecl endian_from_le(i32 param_1)
 
 {
   return param_1;
@@ -843,10 +843,10 @@ void __cdecl dbg_log_file_atexit_dtor(void)
 }
 
 /* 005d225b auto */
-undefined1 __cdecl dbg_log(iptr param_1)
+i8 __cdecl dbg_log(iptr param_1)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   
   uVar1 = dbg_log_write(&dbg_log_file,param_1);
   return uVar1;
@@ -854,11 +854,11 @@ undefined1 __cdecl dbg_log(iptr param_1)
 
 /* 005d2279 auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-undefined1 __cdecl dbg_logf(iptr param_1,iptr param_2)
+i8 __cdecl dbg_logf(iptr param_1,iptr param_2)
 
 {
-  undefined1 uVar1;
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 uVar1;
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2);
   uVar1 = dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -868,11 +868,11 @@ undefined1 __cdecl dbg_logf(iptr param_1,iptr param_2)
 
 /* 005d22b7 auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-undefined1 __cdecl dbg_logf_int2(iptr param_1,undefined4 param_2,undefined4 param_3)
+i8 __cdecl dbg_logf_int2(iptr param_1,i32 param_2,i32 param_3)
 
 {
-  undefined1 uVar1;
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 uVar1;
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2,param_3);
   uVar1 = dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -882,10 +882,10 @@ undefined1 __cdecl dbg_logf_int2(iptr param_1,undefined4 param_2,undefined4 para
 
 /* 005d22f9 auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-void __cdecl dbg_logf3(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl dbg_logf3(iptr param_1,iptr param_2,i32 param_3,i32 param_4)
 
 {
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2,param_3,param_4);
   dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -895,10 +895,10 @@ void __cdecl dbg_logf3(iptr param_1,iptr param_2,undefined4 param_3,undefined4 p
 
 /* 005d233f auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-void __cdecl dbg_logf_noret(iptr param_1,undefined4 param_2)
+void __cdecl dbg_logf_noret(iptr param_1,i32 param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2);
   dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -908,11 +908,11 @@ void __cdecl dbg_logf_noret(iptr param_1,undefined4 param_2)
 
 /* 005d237d auto */
 #define local_404 (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
-undefined1 __cdecl dbg_logf_str(iptr param_1,iptr param_2)
+i8 __cdecl dbg_logf_str(iptr param_1,iptr param_2)
 
 {
-  undefined1 uVar1;
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 uVar1;
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2);
   uVar1 = dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -925,7 +925,7 @@ undefined1 __cdecl dbg_logf_str(iptr param_1,iptr param_2)
 void __cdecl dbg_logf_str_int(iptr param_1,iptr param_2,iptr param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_404,(char *)param_1,param_2,param_3);
   dbg_log_write(&dbg_log_file,(iptr)local_404);
@@ -957,11 +957,11 @@ void __thiscall dbg_log_file_dtor(void *this)
 #define dbg_log_to_debugger (*(char *)((u8 *)&g.d_00638308))
 #define dbg_log_to_file (*(char *)((u8 *)&g.d_00638304))
 #define local_40c (*(char (*)[1032])(frame_ + FRAME_OFF(4)))
-undefined1 __thiscall dbg_log_write(void *this,iptr param_1)
+i8 __thiscall dbg_log_write(void *this,iptr param_1)
 
 {
   DWORD DVar1;
-  undefined1 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
   DVar1 = GetTickCount();
   _sprintf(local_40c,s___5d__0063830c,(DVar1 - *(int *)this) / 1000);
@@ -1022,10 +1022,10 @@ void __cdecl err_report_ctx_atexit_dtor(void)
 /* 005dae6b auto */
 void __thiscall
 err_report
-          (ErrorContext *this,undefined4 param_1,iptr param_2,iptr param_3,undefined4 param_4)
+          (ErrorContext *this,i32 param_1,iptr param_2,iptr param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   err_set_code(this,param_1);
   uVar1 = err_format_message(this,ADDR(0x638778, ((u8 *)&g.d_00638778)),param_2,param_3,param_4);
@@ -1036,11 +1036,11 @@ err_report
 /* 005daef7 auto */
 ErrorContext * __thiscall
 err_format_message
-          (ErrorContext *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+          (ErrorContext *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   size_t sVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   char *_Format;
   
   FUN_005f22d0(this,&err_format_empty_str);
@@ -1061,7 +1061,7 @@ u8 * __thiscall err_get_stack_trace(ErrorContext *this)
 }
 
 /* 005daf92 auto */
-void __thiscall err_show_fatal_box(ErrorContext *this,undefined4 param_1)
+void __thiscall err_show_fatal_box(ErrorContext *this,i32 param_1)
 
 {
   dbg_fatal_msgbox_break(ADDR(0x6387b4, ((u8 *)&g.d_006387b4)),param_1);
@@ -1083,10 +1083,10 @@ void __thiscall err_set_code(ErrorContext *this,u32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall err_ctx_set_field_708(ErrorContext *this,undefined4 param_1)
+void __thiscall err_ctx_set_field_708(ErrorContext *this,i32 param_1)
 
 {
-  *(undefined4 *)this[1].pad_0 = param_1;
+  *(i32 *)this[1].pad_0 = param_1;
   return;
 }
 
@@ -1121,7 +1121,7 @@ void __thiscall err_ctx_dtor(void *this)
 }
 
 /* 005dcb8c auto */
-void __cdecl mem_copy_src_dst(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl mem_copy_src_dst(iptr param_1,iptr param_2,i32 param_3)
 
 {
   mem_move_src_dst(param_1,param_2,param_3);
@@ -1166,7 +1166,7 @@ LPVOID __cdecl mem_handle_lock(HGLOBAL param_1)
 }
 
 /* 005dce29 auto */
-undefined4 __cdecl mem_handle_unlock(HGLOBAL param_1)
+i32 __cdecl mem_handle_unlock(HGLOBAL param_1)
 
 {
   if (param_1 != (HGLOBAL)0x0) {
@@ -1205,7 +1205,7 @@ HGLOBAL __cdecl mem_handle_free(HGLOBAL param_1)
 }
 
 /* 005dced3 auto */
-void __cdecl mem_move_src_dst(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl mem_move_src_dst(iptr param_1,iptr param_2,i32 param_3)
 
 {
   FUN_005f6500(param_2,param_1,param_3);
@@ -1237,7 +1237,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
   byte *pbVar3;
   iptr iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   sVar2 = __msize(*(void **)param_1);
   pbVar3 = operator_new(sVar2);
@@ -1248,7 +1248,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
   else {
     mem_move_src_dst(*(iptr *)param_1,(iptr)pbVar3,sVar2);
     local_14 = sVar2 * 2;
-    local_18 = (byte *)FUN_005f4900(*(undefined4 *)param_1,local_14);
+    local_18 = (byte *)FUN_005f4900(*(i32 *)param_1,local_14);
     if (local_18 == (byte *)0x0) {
       dbg_log(ADDR(0x638cac, ((u8 *)&g.d_00638cac)));
       local_8 = 0;
@@ -1262,7 +1262,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
         local_2c = (uint)*local_1c;
         if (local_30 < local_18 + (local_2c & 0x7f) + 1) {
           local_14 += 1000;
-          iVar4 = FUN_005f4900(*(undefined4 *)param_1,local_14);
+          iVar4 = FUN_005f4900(*(i32 *)param_1,local_14);
           if (iVar4 == 0) {
             dbg_log(ADDR(0x638ce0, ((u8 *)&g.d_00638ce0)));
             return 0;
@@ -1293,7 +1293,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
           }
         }
       }
-      iVar5 = FUN_005f4900(*(undefined4 *)param_1,local_8);
+      iVar5 = FUN_005f4900(*(i32 *)param_1,local_8);
       if (iVar5 == 0) {
         dbg_log(ADDR(0x638d14, ((u8 *)&g.d_00638d14)));
         local_8 = 0;
@@ -1328,7 +1328,7 @@ uint __cdecl mem_rle_compress(iptr param_1,int param_2)
   uint uVar3;
   char *pcVar4;
   void *pvVar5;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   pcVar2 = operator_new(param_2 + ((int)(param_2 + (param_2 >> 0x1f & 0x7fU)) >> 7) + 5);
   if (pcVar2 == (char *)0x0) {
@@ -1423,13 +1423,13 @@ LAB_005e0071:
 #define local_40c (*(char (*)[1024])(frame_ + FRAME_OFF(36)))
 #define local_c (*(HANDLE *)(frame_ + FRAME_OFF(1060)))
 #define local_8 (*(DWORD *)(frame_ + FRAME_OFF(1064)))
-undefined4 __cdecl dbg_log_open(void)
+i32 __cdecl dbg_log_open(void)
 
 {
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  undefined1 frame_[FRAME_OFF(1072)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1072)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (HANDLE)0x0;
   local_c = CreateFileA(s_smeds_log_00639bec,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,2,0x80,
@@ -1464,13 +1464,13 @@ undefined4 __cdecl dbg_log_open(void)
 #define local_40c (*(char (*)[1024])(frame_ + FRAME_OFF(4)))
 #define local_c (*(HANDLE *)(frame_ + FRAME_OFF(1028)))
 #define local_8 (*(DWORD *)(frame_ + FRAME_OFF(1032)))
-undefined4 __cdecl dbg_log_close(void)
+i32 __cdecl dbg_log_close(void)
 
 {
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  undefined1 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (HANDLE)0x0;
   if (smeds_log_enabled != '\0') {
@@ -1493,14 +1493,14 @@ undefined4 __cdecl dbg_log_close(void)
 
 /* 005edb15 auto */
 #define local_8 (*(DWORD *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl dbg_log_write_file(iptr param_1)
+i32 __cdecl dbg_log_write_file(iptr param_1)
 
 {
   HANDLE hFile;
   size_t nNumberOfBytesToWrite;
   DWORD *lpNumberOfBytesWritten;
   LPOVERLAPPED lpOverlapped;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (smeds_log_enabled != '\0') {
     hFile = CreateFileA(s_smeds_log_00639ccc,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
@@ -1518,7 +1518,7 @@ undefined4 __cdecl dbg_log_write_file(iptr param_1)
 #undef local_8
 
 /* 005edbb2 auto */
-undefined4 __cdecl dbg_log_write_debugger(iptr param_1)
+i32 __cdecl dbg_log_write_debugger(iptr param_1)
 
 {
   OutputDebugStringA((LPCSTR)param_1);
@@ -1548,13 +1548,13 @@ void __cdecl dbg_stack_trace_stub(iptr param_1)
 }
 
 /* 005eeeb0 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl sys_msgbox_potentially_fatal(LPCSTR param_1,undefined4 param_2,undefined4 param_3)
+i32 __cdecl sys_msgbox_potentially_fatal(LPCSTR param_1,i32 param_2,i32 param_3)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   switch(param_2) {
@@ -1617,13 +1617,13 @@ undefined4 __cdecl sys_msgbox_potentially_fatal(LPCSTR param_1,undefined4 param_
 #undef local_c
 
 /* 005ef0b9 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl sys_msgbox_mapped(LPCSTR param_1,LPCSTR param_2,undefined4 param_3,undefined4 param_4)
+i32 __cdecl sys_msgbox_mapped(LPCSTR param_1,LPCSTR param_2,i32 param_3,i32 param_4)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   switch(param_3) {
@@ -1688,13 +1688,13 @@ undefined4 __cdecl sys_msgbox_mapped(LPCSTR param_1,LPCSTR param_2,undefined4 pa
 /* 005ef58e: written by hand in src/game/regargs.c */
 
 /* 005f04c0 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall ptrlist_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&this)); }
@@ -1705,20 +1705,20 @@ void __thiscall ptrlist_dtor(void *this)
 #undef local_8
 
 /* 005f0590 auto */
-undefined4 __thiscall ptrlist_first(PtrList *this)
+i32 __thiscall ptrlist_first(PtrList *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = ptrlist_first_impl(this);
   return uVar1;
 }
 
 /* 005f05d0 auto */
-undefined4 __thiscall ptrlist_next(PtrList *this)
+i32 __thiscall ptrlist_next(PtrList *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = ptrlist_next_impl(this);
   return uVar1;
@@ -1768,10 +1768,10 @@ uint __thiscall ptrlist_is_empty(PtrList *this)
 }
 
 /* 005f0770 auto */
-undefined4 __thiscall ptrlist_first_impl(PtrList *this)
+i32 __thiscall ptrlist_first_impl(PtrList *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (this->head == 0) {
     uVar1 = 0;
@@ -1784,11 +1784,11 @@ undefined4 __thiscall ptrlist_first_impl(PtrList *this)
 }
 
 /* 005f0833 auto */
-undefined4 __thiscall ptrlist_next_impl(PtrList *this)
+i32 __thiscall ptrlist_next_impl(PtrList *this)
 
 {
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   if (this->iter_node == 0) {
     uVar2 = 0;

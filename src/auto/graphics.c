@@ -41,11 +41,11 @@ void __cdecl rect_set_xywh(iptr param_1,int param_2,int param_3,iptr param_4,ipt
 }
 
 /* 00408700 auto */
-#define gfx_draw_target (*(undefined4 *)((u8 *)&g.d_00635c64))
-void __cdecl gfx_target_frame_rect(iptr param_1,undefined4 param_2)
+#define gfx_draw_target (*(i32 *)((u8 *)&g.d_00635c64))
+void __cdecl gfx_target_frame_rect(iptr param_1,i32 param_2)
 
 {
-  gfx_draw_box_ltrb(gfx_draw_target,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
+  gfx_draw_box_ltrb(gfx_draw_target,*(i32 *)param_1,*(i32 *)(param_1 + 4),
                      *(int *)(param_1 + 8) - 1,*(int *)(param_1 + 0xc) - 1,param_2);
   return;
 }
@@ -53,7 +53,7 @@ void __cdecl gfx_target_frame_rect(iptr param_1,undefined4 param_2)
 
 /* 00408750 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
-void __cdecl gfx_fill_draw_target(undefined4 param_1)
+void __cdecl gfx_fill_draw_target(i32 param_1)
 
 {
   gfx_fill_surface(gfx_draw_target,param_1);
@@ -64,8 +64,8 @@ void __cdecl gfx_fill_draw_target(undefined4 param_1)
 /* 00408780 auto */
 #define gfx_draw_target (*(iptr *)((u8 *)&g.d_00635c64))
 void __cdecl
-gfx_target_fill_rect(undefined4 param_1,undefined4 param_2,undefined4 param_3,iptr param_4,
-            undefined4 param_5)
+gfx_target_fill_rect(i32 param_1,i32 param_2,i32 param_3,iptr param_4,
+            i32 param_5)
 
 {
   gfx_fill_rect_xywh(gfx_draw_target,param_1,param_2,param_3,param_4,param_5);
@@ -86,20 +86,20 @@ u32 __thiscall font_cached_height(GameFont *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall font_line_spacing(GameFont *this)
+i32 __thiscall font_line_spacing(GameFont *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = font_handle_line_spacing(this->hfont);
   return uVar1;
 }
 
 /* 0040efd0 auto */
-undefined4 __thiscall font_text_width(GameFont *this,iptr param_1)
+i32 __thiscall font_text_width(GameFont *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = font_measure_width(this->hfont,param_1);
   return uVar1;
@@ -117,21 +117,21 @@ DibSurface * __thiscall surface_delete(DibSurface *this,uint param_1)
 }
 
 /* 0040fdb0 auto */
-void __cdecl gfx_fill_rect(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl gfx_fill_rect(iptr param_1,iptr param_2,i32 param_3)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   iVar1 = rect_height(param_2);
   uVar2 = rect_width(param_2);
-  gfx_fill_rect_xywh(param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),uVar2,iVar1,param_3
+  gfx_fill_rect_xywh(param_1,*(i32 *)param_2,*(i32 *)(param_2 + 4),uVar2,iVar1,param_3
                     );
   return;
 }
 
 /* 00417ef0 auto */
-void __thiscall font_set(GameFont *this,undefined4 param_1,iptr param_2)
+void __thiscall font_set(GameFont *this,i32 param_1,iptr param_2)
 
 {
   u32 uVar1;
@@ -162,7 +162,7 @@ u32 __thiscall font_get_hfont(GameFont *this)
 
 /* 0043c460 auto */
 GameFont * __thiscall
-font_init(GameFont *this,undefined4 param_1,undefined4 param_2)
+font_init(GameFont *this,i32 param_1,i32 param_2)
 
 {
   u32 uVar1;
@@ -177,7 +177,7 @@ font_init(GameFont *this,undefined4 param_1,undefined4 param_2)
 /* 0043c4c0 auto */
 GameFont * __thiscall
 font_init_styled
-          (GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (GameFont *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   u32 uVar1;
@@ -234,7 +234,7 @@ GameFont * __thiscall font_init_empty(GameFont *this)
 /* 0043c6c0 auto */
 void __thiscall
 font_set_styled
-          (GameFont *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (GameFont *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   u32 uVar1;
@@ -269,26 +269,26 @@ void __cdecl rect_offset(iptr param_1,int param_2,int param_3)
 }
 
 /* 0043c7c0 auto */
-void __cdecl gfx_draw_rect_frame(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl gfx_draw_rect_frame(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  gfx_draw_box_ltrb(param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),
+  gfx_draw_box_ltrb(param_1,*(i32 *)param_2,*(i32 *)(param_2 + 4),
                      *(int *)(param_2 + 8) - 1,*(int *)(param_2 + 0xc) - 1,param_3);
   return;
 }
 
 /* 0043c8d0 auto */
-undefined4 __cdecl gfx_draw_text(iptr param_1,undefined4 param_2,iptr param_3)
+i32 __cdecl gfx_draw_text(iptr param_1,i32 param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = text_draw_shadowed(text_draw_surface,param_1,param_2,param_3);
   return uVar1;
 }
 
 /* 0043c910 auto */
-void __cdecl gfx_draw_text_centered(iptr param_1,undefined4 param_2,iptr param_3,undefined4 param_4)
+void __cdecl gfx_draw_text_centered(iptr param_1,i32 param_2,iptr param_3,i32 param_4)
 
 {
   text_draw_centered(text_draw_surface,param_1,param_2,param_3,param_4);
@@ -296,11 +296,11 @@ void __cdecl gfx_draw_text_centered(iptr param_1,undefined4 param_2,iptr param_3
 }
 
 /* 0043c950 auto */
-undefined4 __cdecl
-gfx_draw_text_right(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+i32 __cdecl
+gfx_draw_text_right(iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = text_draw_right_aligned(text_draw_surface,param_1,param_2,param_3,param_4);
   return uVar1;
@@ -606,36 +606,36 @@ void __cdecl gfx_sheet_surface_static_dtor(void)
 }
 
 /* 00449030 auto */
-#define local_f0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_e0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_d0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_c0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_f0 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_e0 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_d0 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_c0 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
 #define local_b0 (*(int *)(frame_ + FRAME_OFF(64)))
 #define local_ac (*(Sprite *)(frame_ + FRAME_OFF(68)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(128)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(132)))
-#define local_68 (*(undefined4 *)(frame_ + FRAME_OFF(136)))
+#define local_68 (*(i32 *)(frame_ + FRAME_OFF(136)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(140)))
-#define local_60 (*(undefined4 *)(frame_ + FRAME_OFF(144)))
+#define local_60 (*(i32 *)(frame_ + FRAME_OFF(144)))
 #define local_5c (*(int *)(frame_ + FRAME_OFF(148)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(152)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(156)))
 #define local_50 (*(uint *)(frame_ + FRAME_OFF(160)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(164)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(224)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(228)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(224)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(228)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(232)))
 void __cdecl gfx_load_terrain_sprites(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(240)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(240)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   sprite_init(&local_4c);
   local_8 = 0;
   sprite_init(&local_ac);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   __chdir(&scenario_dir_path);
   iVar1 = gfx_load_bmp_640x480(ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),ADDR(0x6266e0, ((u8 *)&g.d_006266e0)),10,0xc0,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
   if (iVar1 == 0) {
@@ -811,7 +811,7 @@ void __cdecl gfx_load_terrain_sprites(void)
 #undef local_8
 
 /* 0044999c auto */
-void __cdecl sprite_grab_tile_cell(iptr param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl sprite_grab_tile_cell(iptr param_1,i32 param_2,i32 param_3)
 
 {
   sprite_grab_from_surface((Sprite *)param_1,ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),7,param_2,param_3,0x40,0x20);
@@ -821,8 +821,8 @@ void __cdecl sprite_grab_tile_cell(iptr param_1,undefined4 param_2,undefined4 pa
 
 /* 004499d3 auto */
 void __cdecl
-sprite_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5)
+sprite_grab_from_sheet(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5)
 
 {
   sprite_grab_from_surface((Sprite *)param_1,ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),7,param_2,param_3,param_4,param_5);
@@ -831,7 +831,7 @@ sprite_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3,undefi
 }
 
 /* 00449a0e auto */
-#define dlg_client_tile_surface (*(undefined * *)((u8 *)&g.d_00635aa4))
+#define dlg_client_tile_surface (*(i8 * *)((u8 *)&g.d_00635aa4))
 #define local_46c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_464 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(16)))
@@ -842,14 +842,14 @@ sprite_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3,undefi
 #define local_1c (*(int *)(frame_ + FRAME_OFF(1108)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1112)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1116)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1120)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1124)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1128)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1120)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1124)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1128)))
 void __cdecl gfx_load_icon_sprites(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(1136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1136)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_45c);
@@ -1142,7 +1142,7 @@ void __cdecl gfx_load_icon_sprites(void)
     sprite_grab_from_sheet((iptr)(&civ_portrait_sprites + local_46c * 0x3c),2,0x18e,0x40,0x40);
     sprite_replace_color
               ((Sprite *)(&civ_portrait_sprites + local_46c * 0x3c),8,
-               *(undefined4 *)(&civ_primary_colors + local_46c * 0x10));
+               *(i32 *)(&civ_primary_colors + local_46c * 0x10));
   }
   surface_release((DibSurface *)&gfx_sheet_surface);
   local_8 = 0xffffffff;
@@ -1165,7 +1165,7 @@ void __cdecl gfx_load_icon_sprites(void)
 #undef local_8
 
 /* 0044ab72 auto */
-void __cdecl sprite_grab_icon_cell_keyed(iptr param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl sprite_grab_icon_cell_keyed(iptr param_1,i32 param_2,i32 param_3)
 
 {
   sprite_grab_from_surface((Sprite *)param_1,ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),7,param_2,param_3,0x20,0x20);
@@ -1174,7 +1174,7 @@ void __cdecl sprite_grab_icon_cell_keyed(iptr param_1,undefined4 param_2,undefin
 }
 
 /* 0044aba9 auto */
-void __cdecl sprite_grab_square(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl sprite_grab_square(iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   sprite_grab_from_sheet(param_1,param_2,param_3,param_4,param_4);
@@ -1182,7 +1182,7 @@ void __cdecl sprite_grab_square(iptr param_1,undefined4 param_2,undefined4 param
 }
 
 /* 0044abd5 auto */
-void __cdecl gfx_grab_fortify_overlay(int param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl gfx_grab_fortify_overlay(int param_1,i32 param_2,i32 param_3)
 
 {
   sprite_grab_city_cell((iptr)(&fortify_overlay_sprites + param_1 * 0x3c),param_2,param_3);
@@ -1190,7 +1190,7 @@ void __cdecl gfx_grab_fortify_overlay(int param_1,undefined4 param_2,undefined4 
 }
 
 /* 0044ac07 auto */
-void __cdecl sprite_grab_city_cell(iptr param_1,undefined4 param_2,undefined4 param_3)
+void __cdecl sprite_grab_city_cell(iptr param_1,i32 param_2,i32 param_3)
 
 {
   sprite_grab_from_surface((Sprite *)param_1,ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),7,param_2,param_3,0x40,0x30);
@@ -1208,8 +1208,8 @@ void __cdecl gfx_load_city_sprites(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   __chdir(&scenario_dir_path);
   iVar1 = gfx_load_bmp_640x480(ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),ADDR(0x626798, ((u8 *)&g.d_00626798)),10,0xc0,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -1251,11 +1251,11 @@ void __cdecl gfx_load_city_sprites(void)
     sprite_grab_from_sheet((iptr)(&civ_flag_sprites + local_24 * 0x78),local_c,0x1a9,0xe,0x16);
     sprite_grab_from_sheet((iptr)(&civ_flag_dark_sprites + local_24 * 0x78),local_c,0x1c0,0xe,0x16);
     uVar2 = surface_get_pixel((DibSurface *)&gfx_sheet_surface,local_c + 3,0x1ad);
-    *(undefined4 *)(&civ_primary_colors + local_24 * 0x10) = uVar2;
+    *(i32 *)(&civ_primary_colors + local_24 * 0x10) = uVar2;
     uVar2 = surface_get_pixel((DibSurface *)&gfx_sheet_surface,local_c + 6,0x1ad);
-    *(undefined4 *)(&civ_mid_colors + local_24 * 0x10) = uVar2;
+    *(i32 *)(&civ_mid_colors + local_24 * 0x10) = uVar2;
     uVar2 = surface_get_pixel((DibSurface *)&gfx_sheet_surface,local_c,0x1a7);
-    *(undefined4 *)(&civ_secondary_colors + local_24 * 0x10) = uVar2;
+    *(i32 *)(&civ_secondary_colors + local_24 * 0x10) = uVar2;
     local_c += 0xf;
   }
   sprite_free((Sprite *)&fortify_overlay_sprites);
@@ -1284,7 +1284,7 @@ void __cdecl gfx_load_unit_sprites(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   __chdir(&scenario_dir_path);
   iVar1 = gfx_load_bmp_640x480(ADDR(0x63fe08, ((u8 *)&g.d_0063fe08)),ADDR(0x6267bc, ((u8 *)&g.d_006267bc)),10,0xc0,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -1328,13 +1328,13 @@ void __cdecl gfx_load_unit_sprites(void)
 
 /* 0044b49e auto */
 #define local_124 (*(SurfaceWindow *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(280)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(284)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(288)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(280)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(284)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(288)))
 void __cdecl gfx_load_game_sprites(void)
 
 {
-  undefined1 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surfwnd_ctor(&local_124);
@@ -1353,20 +1353,20 @@ void __cdecl gfx_load_game_sprites(void)
 #undef local_8
 
 /* 00451830 auto */
-undefined4 __thiscall sprite_get_width(Sprite *this)
+i32 __thiscall sprite_get_width(Sprite *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = rect_width((iptr)&this->bounds_rect);
   return uVar1;
 }
 
 /* 00451860 auto */
-undefined4 __thiscall sprite_get_height(Sprite *this)
+i32 __thiscall sprite_get_height(Sprite *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = rect_height((iptr)&this->bounds_rect);
   return uVar1;
@@ -1427,7 +1427,7 @@ void __cdecl gfx_build_grey_remap(void)
   iptr iVar4;
   iptr iVar5;
   UINT UVar4;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = mem_handle_alloc(0x2c4);
   if (iVar1 == 0) {
@@ -1482,15 +1482,15 @@ void __cdecl gfx_build_grey_remap(void)
             palette_get_rgb((GamePalette *)&game_palette,iVar4,10,0xec);
             for (local_24 = 0; local_24 < 0x2c4; local_24 += 3) {
               UVar4 = GetNearestPaletteIndex
-                                (h,(uint)CONCAT12(*(undefined1 *)(local_24 + 2 + iVar4),
-                                                  CONCAT11(*(undefined1 *)(local_24 + 1 + iVar4),
-                                                           *(undefined1 *)(local_24 + iVar4))));
+                                (h,(uint)CONCAT12(*(i8 *)(local_24 + 2 + iVar4),
+                                                  CONCAT11(*(i8 *)(local_24 + 1 + iVar4),
+                                                           *(i8 *)(local_24 + iVar4))));
               *(char *)(iVar5 + local_24 / 3) = (char)UVar4 + '\n';
               palette_set_entry
                         ((GamePalette *)&grey_palette,local_24 / 3 + 10,
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(undefined1 *)(UVar4 * 3 + iVar2)),
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(undefined1 *)(UVar4 * 3 + 1 + iVar2)),
-                         CONCAT31((int3)(UVar4 * 3 >> 8),*(undefined1 *)(UVar4 * 3 + 2 + iVar2)));
+                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + iVar2)),
+                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 1 + iVar2)),
+                         CONCAT31((int3)(UVar4 * 3 >> 8),*(i8 *)(UVar4 * 3 + 2 + iVar2)));
             }
             DeleteObject(h);
             mem_handle_unlock(iVar3);
@@ -1521,13 +1521,13 @@ void __cdecl gfx_free_grey_remap(void)
 #undef grey_remap_handle
 
 /* 0046ee4e auto */
-#define grey_remap_handle (*(undefined4 *)((u8 *)&g.d_0066c408))
+#define grey_remap_handle (*(i32 *)((u8 *)&g.d_0066c408))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl gfx_grey_out_windows(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = mem_handle_lock(grey_remap_handle);
   if (iVar1 != 0) {
@@ -1553,7 +1553,7 @@ void __cdecl gfx_grey_out_windows(void)
 void __cdecl gfx_repaint_main_windows(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
@@ -1569,12 +1569,12 @@ void __cdecl gfx_repaint_main_windows(void)
 #undef local_8
 
 /* 0046efd6 auto */
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl screen_fade_out(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit_blink_active = 0;
   if (gfx_palettized_display != 0) {
@@ -1601,7 +1601,7 @@ void __cdecl screen_fade_out(void)
 void __cdecl screen_fade_in(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (gfx_palettized_display != 0) {
     palette_fade_begin((GamePalette *)&game_palette,10,0xec,10,ADDR(0x66bfd0, ((u8 *)&g.d_0066bfd0)));
@@ -1627,14 +1627,14 @@ void __cdecl palette_set_nocollapse_all(void)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = palette_get_logpalette((GamePalette *)&game_palette);
   if (iVar1 == 0) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62b640, ((u8 *)&g.d_0062b640)),ADDR(0x62b624, ((u8 *)&g.d_0062b624)),0xbc);
   }
   for (local_c = 0; local_c < 0x100; local_c++) {
-    *(undefined1 *)(iVar1 + 7 + local_c * 4) = 4;
+    *(i8 *)(iVar1 + 7 + local_c * 4) = 4;
   }
   palette_commit_range((GamePalette *)&game_palette,10,0xec);
   return;
@@ -1667,8 +1667,8 @@ GamePalette * __thiscall palette_get_logpalette(GamePalette *this)
 #define local_41c (*(uint (*)[4])(frame_ + FRAME_OFF(76)))
 #define local_40c (*(uint *)(frame_ + FRAME_OFF(92)))
 #define local_408 (*(char * *)(frame_ + FRAME_OFF(96)))
-#define local_404 (*(undefined1 (*)[2])(frame_ + FRAME_OFF(100)))
-#define auStack_402 (*(undefined4 (*)[255])(frame_ + FRAME_OFF(102)))
+#define local_404 (*(i8 (*)[2])(frame_ + FRAME_OFF(100)))
+#define auStack_402 (*(i32 (*)[255])(frame_ + FRAME_OFF(102)))
 int __cdecl gfx_load_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param_4,iptr param_5)
 
 {
@@ -1676,10 +1676,10 @@ int __cdecl gfx_load_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param
   size_t sVar2;
   iptr iVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar6;
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_408 = &gfx_load_bmp_no_error_str;
   local_438 = 0;
@@ -1715,9 +1715,9 @@ int __cdecl gfx_load_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param
             }
             local_434 = 0;
             for (local_430 = param_3; local_430 < param_4 + param_3; local_430++) {
-              uVar7 = *(undefined4 *)(local_404 + local_434 * 4);
-              uVar6 = *(undefined4 *)(local_404 + local_434 * 4 + 1);
-              uVar5 = *(undefined4 *)(local_404 + local_434 * 4 + 2);
+              uVar7 = *(i32 *)(local_404 + local_434 * 4);
+              uVar6 = *(i32 *)(local_404 + local_434 * 4 + 1);
+              uVar5 = *(i32 *)(local_404 + local_434 * 4 + 2);
               iVar4 = local_430;
               iVar3 = palette_get_logpalette((GamePalette *)param_5);
               palette_set_entry_rgb(iVar3,iVar4,uVar5,uVar6,uVar7);
@@ -1836,17 +1836,17 @@ LAB_0046fbb4:
 #undef auStack_402
 
 /* 0046fbf3 auto */
-#define local_460 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_460 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_45c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_458 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_454 (*(undefined2 *)(frame_ + FRAME_OFF(12)))
-#define local_452 (*(undefined2 *)(frame_ + FRAME_OFF(14)))
-#define local_450 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_44c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_448 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_444 (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_440 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_43c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
+#define local_454 (*(i16 *)(frame_ + FRAME_OFF(12)))
+#define local_452 (*(i16 *)(frame_ + FRAME_OFF(14)))
+#define local_450 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_44c (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_448 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_444 (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_440 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_43c (*(i32 *)(frame_ + FRAME_OFF(36)))
 #define local_438 (*(FILE * *)(frame_ + FRAME_OFF(40)))
 #define local_434 (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_430 (*(int *)(frame_ + FRAME_OFF(48)))
@@ -1854,24 +1854,24 @@ LAB_0046fbb4:
 #define local_428 (*(int *)(frame_ + FRAME_OFF(56)))
 #define local_424 (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_420 (*(byte * *)(frame_ + FRAME_OFF(64)))
-#define local_41c (*(undefined2 *)(frame_ + FRAME_OFF(68)))
-#define local_41a (*(undefined4 *)(frame_ + FRAME_OFF(70)))
-#define local_416 (*(undefined2 *)(frame_ + FRAME_OFF(74)))
-#define local_414 (*(undefined2 *)(frame_ + FRAME_OFF(76)))
-#define local_412 (*(undefined4 *)(frame_ + FRAME_OFF(78)))
+#define local_41c (*(i16 *)(frame_ + FRAME_OFF(68)))
+#define local_41a (*(i32 *)(frame_ + FRAME_OFF(70)))
+#define local_416 (*(i16 *)(frame_ + FRAME_OFF(74)))
+#define local_414 (*(i16 *)(frame_ + FRAME_OFF(76)))
+#define local_412 (*(i32 *)(frame_ + FRAME_OFF(78)))
 #define local_40c (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_408 (*(char * *)(frame_ + FRAME_OFF(88)))
-#define local_404 (*(undefined1 (*)[1024])(frame_ + FRAME_OFF(92)))
+#define local_404 (*(i8 (*)[1024])(frame_ + FRAME_OFF(92)))
 int __cdecl gfx_save_bmp_640x480(iptr param_1,iptr param_2,int param_3,int param_4,iptr param_5)
 
 {
   iptr iVar1;
   size_t sVar2;
   int iVar3;
-  undefined1 *puVar4;
-  undefined1 *puVar5;
-  undefined1 *puVar6;
-  undefined1 frame_[FRAME_OFF(1120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar4;
+  i8 *puVar5;
+  i8 *puVar6;
+  i8 frame_[FRAME_OFF(1120)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_434 = 0;
   local_408 = &gfx_save_bmp_no_error_str;
@@ -2000,10 +2000,10 @@ LAB_0046ffb7:
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall surface_get_width(DibSurface *this)
+i32 __thiscall surface_get_width(DibSurface *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = surface_width(this);
   return uVar1;
@@ -2015,10 +2015,10 @@ undefined4 __thiscall surface_get_width(DibSurface *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall surface_get_height(DibSurface *this)
+i32 __thiscall surface_get_height(DibSurface *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = surface_height(this);
   return uVar1;
@@ -2038,10 +2038,10 @@ int __cdecl gfx_zoom_scale(int param_1,int param_2)
 void __cdecl rect_pack_to_short(iptr param_1,iptr param_2)
 
 {
-  *(short *)param_2 = (short)*(undefined4 *)param_1;
-  *(short *)(param_2 + 4) = (short)*(undefined4 *)(param_1 + 8);
-  *(short *)(param_2 + 2) = (short)*(undefined4 *)(param_1 + 4);
-  *(short *)(param_2 + 6) = (short)*(undefined4 *)(param_1 + 0xc);
+  *(short *)param_2 = (short)*(i32 *)param_1;
+  *(short *)(param_2 + 4) = (short)*(i32 *)(param_1 + 8);
+  *(short *)(param_2 + 2) = (short)*(i32 *)(param_1 + 4);
+  *(short *)(param_2 + 6) = (short)*(i32 *)(param_1 + 0xc);
   return;
 }
 
@@ -2081,23 +2081,23 @@ void __cdecl rect_intersect_into(LPRECT param_1,iptr param_2,iptr param_3)
 }
 
 /* 0049621d auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   surface_ctor((DibSurface *)&this->style_flags);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   button_ctor((Control *)this->pad_15c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   button_ctor((Control *)(this->pad_15c + 0x3c));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),3);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),3);
   dll_handle_init((DllHandle *)(this->pad_1bc + 0x18));
   this->vtable = (u32)&PTR_FUN_0061d6c0;
   this->portrait_civ = 0;
@@ -2109,8 +2109,8 @@ C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
 #undef local_8
 
 /* 0049632a auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CCommandLineInfo::~CCommandLineInfo(void)
@@ -2120,17 +2120,17 @@ C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
 void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d6c0;
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d6c0;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x114)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
@@ -2143,7 +2143,7 @@ void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
 /* 00496402 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-undefined4 __thiscall portrait_dlg_create(C_004083b0_208 *this)
+i32 __thiscall portrait_dlg_create(C_004083b0_208 *this)
 
 {
   wnd_create_with_surface
@@ -2170,7 +2170,7 @@ undefined4 __thiscall portrait_dlg_create(C_004083b0_208 *this)
 void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
           (frame_border_width * 8 + 0x276 >> 1) - 2,
@@ -2237,15 +2237,15 @@ void __thiscall portrait_dlg_paint(C_004083b0_208 *this)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   int iVar5;
   int iVar6;
   RECT *lprcSrc;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = label_string(*(undefined4 *)(label_string_ids + 0x4a8));
+  local_8 = label_string(*(i32 *)(label_string_ids + 0x4a8));
   dll_handle_load((DllHandle *)(this->pad_1bc + 0x18),ADDR(0x62cbd8, ((u8 *)&g.d_0062cbd8)));
   iVar1 = surface_load_gif_resource
                     ((DibSurface *)&this->style_flags,
@@ -2352,7 +2352,7 @@ void __cdecl portrait_dlg_on_click(int param_1,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = wnd_get_active_child();
   if (iVar1 == 0) {
@@ -2402,11 +2402,11 @@ void __cdecl portrait_dlg_on_click(int param_1,int param_2)
 /* 00496e5d auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl portrait_dlg_on_dblclick(undefined4 param_1,int param_2)
+void __cdecl portrait_dlg_on_dblclick(i32 param_1,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = wnd_get_active_child();
   if (iVar1 == 0) {
@@ -2431,7 +2431,7 @@ void __cdecl portrait_dlg_on_button(int param_1)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = wnd_get_active_child();
   if (iVar1 == 0) {
@@ -2441,7 +2441,7 @@ void __cdecl portrait_dlg_on_button(int param_1)
     local_8 = iVar1 - 0x48;
   }
   if (((param_1 != 100) && (param_1 == 0x65)) &&
-     (*(undefined4 *)(local_8 + 0x1e4) = *(undefined4 *)(local_8 + 0x1e0),
+     (*(i32 *)(local_8 + 0x1e4) = *(i32 *)(local_8 + 0x1e0),
      leaders[civs[*(int *)(local_8 + 0x1dc)].tribe].female != '\0')) {
     *(int *)(local_8 + 0x1e4) = *(int *)(local_8 + 0x1e4) + 0x15;
   }
@@ -2468,10 +2468,10 @@ u32 * __thiscall surface_get_rect(DibSurface *this)
 }
 
 /* 004a6980 auto */
-undefined4 __thiscall sprite_width(Sprite *this)
+i32 __thiscall sprite_width(Sprite *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = rect_width((iptr)this);
   return uVar1;
@@ -2796,10 +2796,10 @@ void __cdecl font_size24_static_dtor(void)
 }
 
 /* 004bb540 auto */
-undefined4 __thiscall sprite_height(Sprite *this)
+i32 __thiscall sprite_height(Sprite *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = rect_height((iptr)this);
   return uVar1;
@@ -2823,7 +2823,7 @@ void __cdecl rect_inflate(iptr param_1,int param_2,int param_3)
 
 /* 004ccb6a auto */
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl gfx_draw_tiled_frame(iptr param_1,int param_2,int param_3,int param_4,int param_5,int param_6)
@@ -2831,9 +2831,9 @@ void __cdecl gfx_draw_tiled_frame(iptr param_1,int param_2,int param_3,int param
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = param_2 - param_6;
   iVar2 = param_3 - param_6;
@@ -2874,22 +2874,22 @@ u32 __thiscall font_get_handle(GameFont *this)
 }
 
 /* 00548c78 auto */
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 void __cdecl
-sprite_draw_spaced_row(iptr param_1,iptr param_2,int param_3,undefined4 param_4,int param_5,int param_6,
-            int param_7,undefined4 param_8,int param_9)
+sprite_draw_spaced_row(iptr param_1,iptr param_2,int param_3,i32 param_4,int param_5,int param_6,
+            int param_7,i32 param_8,int param_9)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[4] = {(u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8, (u32)(uptr)param_9};  /* the arguments, contiguous as on the original stack */
 #define param_6 (*(int *)&pargs_[0])
 #define param_7 (*(int *)&pargs_[1])
-#define param_8 (*(undefined4 *)&pargs_[2])
+#define param_8 (*(i32 *)&pargs_[2])
 #define param_9 (*(int *)&pargs_[3])
   
   local_10 = 0;
@@ -2928,12 +2928,12 @@ sprite_draw_spaced_row(iptr param_1,iptr param_2,int param_3,undefined4 param_4,
 #undef param_9
 
 /* 0054a874 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 uint __cdecl bits_nth_set(int param_1,uint param_2)
 
 {
   bool bVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   do {
@@ -2953,11 +2953,11 @@ uint __cdecl bits_nth_set(int param_1,uint param_2)
 #undef local_8
 
 /* 0054a8d3 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 int __cdecl bits_index_of(uint param_1,uint param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while (param_1 = param_1 >> 1, param_1 != 0) {
@@ -2971,8 +2971,8 @@ int __cdecl bits_index_of(uint param_1,uint param_2)
 
 /* 0055a930 auto */
 void __cdecl
-gfx_copy_rect_same_pos(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
-            undefined4 param_6)
+gfx_copy_rect_same_pos(iptr param_1,iptr param_2,i32 param_3,i32 param_4,i32 param_5,
+            i32 param_6)
 
 {
   gfx_copy_rect_xywh(param_1,param_2,param_3,param_4,param_3,param_4,param_5,param_6);
@@ -2986,7 +2986,7 @@ gfx_copy_rect_same_pos(iptr param_1,iptr param_2,undefined4 param_3,undefined4 p
 #define local_28 (*(tagRECT *)(frame_ + FRAME_OFF(32)))
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(48)))
 #define local_8 (*(LPVOID *)(frame_ + FRAME_OFF(64)))
-undefined4 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int param_4)
+i32 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int param_4)
 
 {
   int lo;
@@ -2994,12 +2994,12 @@ undefined4 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int 
   uint uVar3;
   uint uVar4;
   HGLOBAL pvVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   int iVar7;
   int iVar8;
   int iVar9;
   int iVar10;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 0) {
     lo = surface_get_height((DibSurface *)param_1);
@@ -3078,9 +3078,9 @@ undefined4 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int 
         SetRect(&local_18,iVar7,iVar8,iVar9,lo);
         wnd_blit_surface_rect((DibSurface *)param_1,(iptr)&local_18);
         local_34--;
-        *(undefined4 *)((int)local_8 + iVar2 * 8) = *(undefined4 *)((int)local_8 + local_34 * 8);
-        *(undefined4 *)((int)local_8 + iVar2 * 8 + 4) =
-             *(undefined4 *)((int)local_8 + local_34 * 8 + 4);
+        *(i32 *)((int)local_8 + iVar2 * 8) = *(i32 *)((int)local_8 + local_34 * 8);
+        *(i32 *)((int)local_8 + iVar2 * 8 + 4) =
+             *(i32 *)((int)local_8 + local_34 * 8 + 4);
       }
     }
     else {
@@ -3105,9 +3105,9 @@ undefined4 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int 
         SetRect(&local_18,iVar7,iVar8,iVar9,lo);
         wnd_blit_surface_rect((DibSurface *)param_1,(iptr)&local_18);
         local_34--;
-        *(undefined4 *)((int)local_8 + iVar2 * 8) = *(undefined4 *)((int)local_8 + local_34 * 8);
-        *(undefined4 *)((int)local_8 + iVar2 * 8 + 4) =
-             *(undefined4 *)((int)local_8 + local_34 * 8 + 4);
+        *(i32 *)((int)local_8 + iVar2 * 8) = *(i32 *)((int)local_8 + local_34 * 8);
+        *(i32 *)((int)local_8 + iVar2 * 8 + 4) =
+             *(i32 *)((int)local_8 + local_34 * 8 + 4);
       }
     }
     pvVar5 = GlobalHandle(local_8);
@@ -3127,10 +3127,10 @@ undefined4 __cdecl gfx_dissolve_blit(iptr param_1,iptr param_2,uint param_3,int 
 
 /* 0056b90b auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl gfx_select_zoom_font(undefined4 param_1)
+void __cdecl gfx_select_zoom_font(i32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = gfx_zoom_scale(0x20,param_1);
   local_8 = local_8 / 3;
@@ -3149,14 +3149,14 @@ void __cdecl gfx_select_zoom_font(undefined4 param_1)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define local_15c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_158 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(8)))
-#define local_148 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(24)))
-#define local_138 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(40)))
-#define local_128 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(56)))
-#define local_118 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(72)))
-#define local_108 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(88)))
-#define local_f8 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(104)))
-#define local_e8 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(120)))
+#define local_158 (*(i8 (*)[16])(frame_ + FRAME_OFF(8)))
+#define local_148 (*(i8 (*)[16])(frame_ + FRAME_OFF(24)))
+#define local_138 (*(i8 (*)[16])(frame_ + FRAME_OFF(40)))
+#define local_128 (*(i8 (*)[16])(frame_ + FRAME_OFF(56)))
+#define local_118 (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
+#define local_108 (*(i8 (*)[16])(frame_ + FRAME_OFF(88)))
+#define local_f8 (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
+#define local_e8 (*(i8 (*)[16])(frame_ + FRAME_OFF(120)))
 #define local_d8 (*(uptr *)(frame_ + FRAME_OFF(136)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(140)))
 #define local_d0 (*(int *)(frame_ + FRAME_OFF(144)))
@@ -3169,27 +3169,27 @@ void __cdecl gfx_select_zoom_font(undefined4 param_1)
 #define local_b4 (*(int *)(frame_ + FRAME_OFF(172)))
 #define local_b0 (*(int *)(frame_ + FRAME_OFF(176)))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(184)))
-#define local_a4 (*(undefined4 *)(frame_ + FRAME_OFF(188)))
-#define local_a0 (*(undefined4 *)(frame_ + FRAME_OFF(192)))
+#define local_a4 (*(i32 *)(frame_ + FRAME_OFF(188)))
+#define local_a0 (*(i32 *)(frame_ + FRAME_OFF(192)))
 #define local_9c (*(int *)(frame_ + FRAME_OFF(196)))
-#define local_98 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
+#define local_98 (*(i32 *)(frame_ + FRAME_OFF(200)))
 #define local_94 (*(uint *)(frame_ + FRAME_OFF(204)))
 #define unit_type (*(uint *)(frame_ + FRAME_OFF(208)))
 #define local_8c (*(iptr *)(frame_ + FRAME_OFF(212)))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(216)))
 #define local_84 (*(int *)(frame_ + FRAME_OFF(220)))
-#define local_80 (*(undefined4 *)(frame_ + FRAME_OFF(224)))
-#define local_7c (*(undefined4 *)(frame_ + FRAME_OFF(228)))
-#define local_78 (*(undefined4 *)(frame_ + FRAME_OFF(232)))
+#define local_80 (*(i32 *)(frame_ + FRAME_OFF(224)))
+#define local_7c (*(i32 *)(frame_ + FRAME_OFF(228)))
+#define local_78 (*(i32 *)(frame_ + FRAME_OFF(232)))
 #define local_74 (*(int *)(frame_ + FRAME_OFF(236)))
 #define local_70 (*(u8 (*)[80])(frame_ + FRAME_OFF(240)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(320)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(324)))
 #define local_18 (*(u8 *)(frame_ + FRAME_OFF(328)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(332)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(336)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(332)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(336)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(340)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(344)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(344)))
 void __cdecl
 gfx_draw_unit(iptr param_1,iptr unit,uint param_3,int param_4,int param_5,int param_6,int param_7)
 
@@ -3197,8 +3197,8 @@ gfx_draw_unit(iptr param_1,iptr unit,uint param_3,int param_4,int param_5,int pa
   int iVar1;
   iptr iVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = '\0';
   gfx_set_zoom_scale(param_6);
@@ -3213,9 +3213,9 @@ gfx_draw_unit(iptr param_1,iptr unit,uint param_3,int param_4,int param_5,int pa
   }
   local_78 = civ_color_primary(civ);
   local_80 = civ_color_mid(civ);
-  local_d0 = gfx_zoom_scale(*(undefined4 *)(&unit_shield_x_offsets + local_94 * 4),param_6);
+  local_d0 = gfx_zoom_scale(*(i32 *)(&unit_shield_x_offsets + local_94 * 4),param_6);
   local_d0 = param_4 + local_d0;
-  local_74 = gfx_zoom_scale(*(undefined4 *)(&unit_shield_y_offsets + local_94 * 4),param_6);
+  local_74 = gfx_zoom_scale(*(i32 *)(&unit_shield_y_offsets + local_94 * 4),param_6);
   local_74 = param_5 + local_74;
   local_8c = gfx_zoom_scale(0xc,param_6);
   local_c0 = gfx_zoom_scale(0x14,param_6);
@@ -3481,21 +3481,21 @@ gfx_copy_rect_clipped(iptr param_1,iptr param_2,int param_3,int param_4,int para
 /* 0056d289 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define local_8c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_7c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_6c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_8c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_7c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_6c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(52)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(56)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_50 (*(iptr *)(frame_ + FRAME_OFF(64)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_48 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
+#define local_48 (*(i32 *)(frame_ + FRAME_OFF(72)))
 #define local_44 (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_40 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
+#define local_40 (*(i32 *)(frame_ + FRAME_OFF(80)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_34 (*(int *)(frame_ + FRAME_OFF(92)))
-#define local_30 (*(undefined1 (*)[8])(frame_ + FRAME_OFF(96)))
+#define local_30 (*(i8 (*)[8])(frame_ + FRAME_OFF(96)))
 #define local_28 (*(uint *)(frame_ + FRAME_OFF(104)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(108)))
 #define local_20 (*(char (*)[8])(frame_ + FRAME_OFF(112)))
@@ -3511,7 +3511,7 @@ gfx_draw_city(iptr param_1,iptr city,uint param_3,int param_4,int param_5,int pa
   int iVar3;
   size_t sVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   gfx_set_zoom_scale(param_6);
   local_50 = gfx_zoom_scale(0x40,param_6);
@@ -3605,11 +3605,11 @@ gfx_draw_city(iptr param_1,iptr city,uint param_3,int param_4,int param_5,int pa
              ,(iptr)local_6c,param_1,param_4,param_5);
   iVar3 = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
   if ((-1 < iVar3) && ((param_3 & 2) == 0)) {
-    local_38 = gfx_zoom_scale(*(undefined4 *)
+    local_38 = gfx_zoom_scale(*(i32 *)
                                    (&city_flag_x_offsets + local_58 * 0x20 + local_24 * 4 + local_4c * 8),
                                   param_6);
     local_38 = param_4 + local_38;
-    local_44 = gfx_zoom_scale(*(undefined4 *)
+    local_44 = gfx_zoom_scale(*(i32 *)
                                    (&city_flag_y_offsets + local_58 * 0x20 + local_24 * 4 + local_4c * 8),
                                   param_6);
     local_44 = param_5 + local_44;
@@ -3638,11 +3638,11 @@ gfx_draw_city(iptr param_1,iptr city,uint param_3,int param_4,int param_5,int pa
       local_50 = local_50 + local_34 + 5;
       local_54 += 2;
       rect_set_xywh((iptr)&local_18,0,0,local_50,local_54);
-      iVar3 = gfx_zoom_scale(*(undefined4 *)
+      iVar3 = gfx_zoom_scale(*(i32 *)
                                   (&city_label_y_offsets + local_58 * 0x20 + local_24 * 4 + local_4c * 8),
                                  param_6);
       iVar3 = param_5 + iVar3;
-      iVar5 = gfx_zoom_scale(*(undefined4 *)
+      iVar5 = gfx_zoom_scale(*(i32 *)
                                   (&city_size_box_x_offsets + local_58 * 0x20 + local_24 * 4 + local_4c * 8),
                                  param_6);
       rect_offset((iptr)&local_18,param_4 + iVar5,iVar3);
@@ -3990,7 +3990,7 @@ void __cdecl sprite_sheet_draw_shield_marks(int param_1,int param_2,int param_3)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = param_2 - 1;
   iVar2 = param_3 - 1;
@@ -4012,8 +4012,8 @@ void __cdecl sprite_sheet_draw_shield_marks(int param_1,int param_2,int param_3)
 #undef local_c
 
 /* 0056fce4 auto */
-#define local_580 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_570 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_580 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_570 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_560 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_55c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(40)))
@@ -4022,18 +4022,18 @@ void __cdecl sprite_sheet_draw_shield_marks(int param_1,int param_2,int param_3)
 #define local_54c (*(GamePalette *)(frame_ + FRAME_OFF(52)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(1128)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1388)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1392)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1396)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1400)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1392)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1396)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1400)))
 void __cdecl sprite_sheet_save_units(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1408)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1408)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_54c);
@@ -4110,43 +4110,43 @@ LAB_0056ff8c:
 #undef local_8
 
 /* 0056ffda auto */
-#define local_64c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_63c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_62c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_61c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_60c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(68)))
-#define local_5fc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_5ec (*(undefined1 (*)[16])(frame_ + FRAME_OFF(100)))
-#define local_5dc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(116)))
-#define local_5cc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(132)))
-#define local_5bc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(148)))
-#define local_5ac (*(undefined1 (*)[16])(frame_ + FRAME_OFF(164)))
-#define local_59c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(180)))
-#define local_58c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(196)))
-#define local_57c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(212)))
+#define local_64c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_63c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_62c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_61c (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_60c (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
+#define local_5fc (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define local_5ec (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
+#define local_5dc (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
+#define local_5cc (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
+#define local_5bc (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
+#define local_5ac (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
+#define local_59c (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
+#define local_58c (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
+#define local_57c (*(i8 (*)[16])(frame_ + FRAME_OFF(212)))
 #define local_56c (*(int *)(frame_ + FRAME_OFF(228)))
 #define local_568 (*(int *)(frame_ + FRAME_OFF(232)))
 #define local_564 (*(int *)(frame_ + FRAME_OFF(236)))
-#define local_560 (*(undefined4 *)(frame_ + FRAME_OFF(240)))
-#define local_55c (*(undefined4 *)(frame_ + FRAME_OFF(244)))
+#define local_560 (*(i32 *)(frame_ + FRAME_OFF(240)))
+#define local_55c (*(i32 *)(frame_ + FRAME_OFF(244)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(248)))
 #define local_554 (*(int *)(frame_ + FRAME_OFF(252)))
 #define local_550 (*(int *)(frame_ + FRAME_OFF(256)))
 #define local_54c (*(GamePalette *)(frame_ + FRAME_OFF(260)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(1336)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1596)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1600)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1604)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1608)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1600)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1604)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1608)))
 void __cdecl sprite_sheet_save_cities(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1616)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1616)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_54c);
@@ -4299,44 +4299,44 @@ LAB_00570732:
 #undef local_8
 
 /* 00570780 auto */
-#define local_680 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_670 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_660 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_650 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
-#define local_640 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(64)))
-#define local_630 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(80)))
-#define local_620 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(96)))
-#define local_610 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
-#define local_600 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(128)))
-#define local_5f0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(144)))
-#define local_5e0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(160)))
-#define local_5d0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(176)))
-#define local_5c0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(192)))
-#define local_5b0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(208)))
-#define local_5a0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(224)))
-#define local_590 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(240)))
-#define local_580 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(256)))
-#define local_570 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(272)))
-#define local_560 (*(undefined4 *)(frame_ + FRAME_OFF(288)))
-#define local_55c (*(undefined4 *)(frame_ + FRAME_OFF(292)))
+#define local_680 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_670 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_660 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_650 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_640 (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
+#define local_630 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
+#define local_620 (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
+#define local_610 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_600 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
+#define local_5f0 (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
+#define local_5e0 (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
+#define local_5d0 (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
+#define local_5c0 (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
+#define local_5b0 (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
+#define local_5a0 (*(i8 (*)[16])(frame_ + FRAME_OFF(224)))
+#define local_590 (*(i8 (*)[16])(frame_ + FRAME_OFF(240)))
+#define local_580 (*(i8 (*)[16])(frame_ + FRAME_OFF(256)))
+#define local_570 (*(i8 (*)[16])(frame_ + FRAME_OFF(272)))
+#define local_560 (*(i32 *)(frame_ + FRAME_OFF(288)))
+#define local_55c (*(i32 *)(frame_ + FRAME_OFF(292)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(296)))
 #define local_554 (*(int *)(frame_ + FRAME_OFF(300)))
 #define local_550 (*(GamePalette *)(frame_ + FRAME_OFF(304)))
 #define local_11c (*(char (*)[260])(frame_ + FRAME_OFF(1380)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1640)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1644)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1648)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1652)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1656)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1648)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1652)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1656)))
 void __cdecl sprite_sheet_save_terrain1(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1664)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1664)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_550);
@@ -4509,20 +4509,20 @@ LAB_00570f78:
 #undef local_8
 
 /* 00570fc6 auto */
-#define local_640 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_630 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_620 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_610 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
-#define local_600 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(64)))
-#define local_5f0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(80)))
-#define local_5e0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(96)))
-#define local_5d0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
-#define local_5c0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(128)))
-#define local_5b0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(144)))
-#define local_5a0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(160)))
-#define local_590 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(176)))
-#define local_580 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(192)))
-#define local_570 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(208)))
+#define local_640 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_630 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_620 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_610 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_600 (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
+#define local_5f0 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
+#define local_5e0 (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
+#define local_5d0 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_5c0 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
+#define local_5b0 (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
+#define local_5a0 (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
+#define local_590 (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
+#define local_580 (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
+#define local_570 (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
 #define local_560 (*(int *)(frame_ + FRAME_OFF(224)))
 #define local_55c (*(int *)(frame_ + FRAME_OFF(228)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(232)))
@@ -4531,18 +4531,18 @@ LAB_00570f78:
 #define local_54c (*(GamePalette *)(frame_ + FRAME_OFF(244)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(1320)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(1580)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1584)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1588)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1592)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1584)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1588)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1592)))
 void __cdecl sprite_sheet_save_terrain2(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1600)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1600)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_54c);
@@ -4710,25 +4710,25 @@ LAB_005718c2:
 #undef local_8
 
 /* 00571910 auto */
-#define local_568 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_568 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_554 (*(GamePalette *)(frame_ + FRAME_OFF(20)))
 #define local_120 (*(int *)(frame_ + FRAME_OFF(1096)))
 #define local_11c (*(char (*)[260])(frame_ + FRAME_OFF(1100)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1360)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1364)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1368)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1372)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1376)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1368)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1372)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1376)))
 void __cdecl sprite_sheet_save_tech_icons(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1384)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1384)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_554);
@@ -4795,28 +4795,28 @@ LAB_00571b80:
 #undef local_8
 
 /* 00571bce auto */
-#define local_598 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_588 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_578 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_568 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_598 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_588 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_578 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_568 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
 #define local_558 (*(int *)(frame_ + FRAME_OFF(64)))
 #define local_554 (*(int *)(frame_ + FRAME_OFF(68)))
 #define local_550 (*(GamePalette *)(frame_ + FRAME_OFF(72)))
 #define local_11c (*(int *)(frame_ + FRAME_OFF(1148)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(1152)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1412)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1416)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1420)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1424)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1416)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1420)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1424)))
 void __cdecl sprite_sheet_save_building_icons(void)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   uint uVar5;
-  undefined1 frame_[FRAME_OFF(1432)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1432)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_550);
@@ -4929,12 +4929,12 @@ LAB_0057203b:
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define _DAT_006ac2c4 (*(undefined4 *)((u8 *)&g.d_006ac2c4))
-#define _DAT_006ac3ac (*(undefined4 *)((u8 *)&g.d_006ac3ac))
-#define _DAT_006ac458 (*(undefined4 *)((u8 *)&g.d_006ac458))
-#define _DAT_006ac47c (*(undefined4 *)((u8 *)&g.d_006ac47c))
-#define _DAT_006ac480 (*(undefined4 *)((u8 *)&g.d_006ac480))
-#define _DAT_006ac484 (*(undefined4 *)((u8 *)&g.d_006ac484))
+#define _DAT_006ac2c4 (*(i32 *)((u8 *)&g.d_006ac2c4))
+#define _DAT_006ac3ac (*(i32 *)((u8 *)&g.d_006ac3ac))
+#define _DAT_006ac458 (*(i32 *)((u8 *)&g.d_006ac458))
+#define _DAT_006ac47c (*(i32 *)((u8 *)&g.d_006ac47c))
+#define _DAT_006ac480 (*(i32 *)((u8 *)&g.d_006ac480))
+#define _DAT_006ac484 (*(i32 *)((u8 *)&g.d_006ac484))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Removing unreachable block (ram,0x0057228e) */
@@ -4945,7 +4945,7 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
             int param_8,int param_9)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     FUN_005f22d0(&sprite_editor_title,&sprite_editor_default_title);
@@ -5018,23 +5018,23 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
 #undef local_8
 
 /* 005722ab auto */
-#define sprite_editor_flag_x (*(undefined4 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(undefined4 *)((u8 *)&g.d_006ac0f0))
+#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
+#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
 #define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_ok_callback (*(code * *)((u8 *)&g.d_006ac888))
-#define sprite_editor_running (*(undefined4 *)((u8 *)&g.d_006ac88c))
+#define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_ok_clicked(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,0,0,sprite_editor_width,sprite_editor_height);
   surface_replace_color_clip((DibSurface *)&sprite_editor_surface,0x109,0x107);
   sprite_grab_surface_rect(sprite_editor_target_sprite,ADDR(0x6ac128, ((u8 *)&g.d_006ac128)),(iptr)local_14);
-  *(undefined4 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_x;
-  *(undefined4 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_y;
+  *(i32 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_x;
+  *(i32 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4) = sprite_editor_flag_y;
   if (sprite_editor_ok_callback != (code *)0x0) {
     (*sprite_editor_ok_callback)();
   }
@@ -5052,7 +5052,7 @@ void __cdecl sprite_editor_ok_clicked(void)
 #undef local_14
 
 /* 00572364 auto */
-#define sprite_editor_running (*(undefined4 *)((u8 *)&g.d_006ac88c))
+#define sprite_editor_running (*(i32 *)((u8 *)&g.d_006ac88c))
 void __cdecl sprite_editor_cancel_clicked(void)
 
 {
@@ -5063,17 +5063,17 @@ void __cdecl sprite_editor_cancel_clicked(void)
 #undef sprite_editor_running
 
 /* 00572389 auto */
-#define sprite_editor_flag_x (*(undefined4 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(undefined4 *)((u8 *)&g.d_006ac0f0))
+#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
+#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
 #define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_undo_flag_x (*(undefined4 *)((u8 *)&g.d_006ac0a4))
-#define sprite_editor_undo_flag_y (*(undefined4 *)((u8 *)&g.d_006ac0a0))
+#define sprite_editor_undo_flag_x (*(i32 *)((u8 *)&g.d_006ac0a4))
+#define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_rebuild_sprite(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   sprite_free((Sprite *)&sprite_editor_result_sprite);
   rect_set_xywh((iptr)local_14,0,0,sprite_editor_width,sprite_editor_height);
@@ -5097,11 +5097,11 @@ void __cdecl sprite_editor_rebuild_sprite(void)
 #define local_20 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl sprite_editor_draw_swatches(void)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (sprite_editor_right_color == 0) {
     local_18 = sprite_editor_key_color;
@@ -5150,14 +5150,14 @@ void __cdecl sprite_editor_draw_swatches(void)
 #undef local_14
 
 /* 0057261a auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl sprite_editor_draw_palette_cell(iptr param_1,int param_2,int param_3,int param_4)
 
 {
   int iVar1;
   int iVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((9 < param_4) && (param_4 < 0xca)) {
     uVar3 = (int)(param_4 - 10U) >> 0x1f;
@@ -5200,14 +5200,14 @@ int __cdecl sprite_editor_tool_hit_test(int param_1,int param_2)
 }
 
 /* 005727d8 auto */
-#define sprite_editor_key_color (*(undefined4 *)((u8 *)&g.d_006ac874))
-#define sprite_sheet_mode (*(undefined4 *)((u8 *)&g.d_006ac924))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define sprite_editor_key_color (*(i32 *)((u8 *)&g.d_006ac874))
+#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl sprite_editor_draw_backdrop(void)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_fill((DibSurface *)&sprite_editor_surface,sprite_editor_key_color);
   switch(sprite_sheet_mode) {
@@ -5248,11 +5248,11 @@ void __cdecl sprite_editor_draw_backdrop(void)
 #define local_20 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(44)))
-undefined * __cdecl sprite_editor_plot_pixel(int param_1,int param_2)
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(44)))
+i8 * __cdecl sprite_editor_plot_pixel(int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (sprite_editor_brush_size == 0) {
     if (sprite_editor_paint_color == 0) {
@@ -5381,13 +5381,13 @@ undefined * __cdecl sprite_editor_plot_pixel(int param_1,int param_2)
 #define sprite_editor_flag_y (*(int *)((u8 *)&g.d_006ac0f0))
 #define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl sprite_editor_draw_flag_marker(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_repaint((SurfaceWindow *)&sprite_editor_window);
   iVar1 = sprite_editor_flag_y;
@@ -5426,29 +5426,29 @@ void __cdecl sprite_editor_draw_flag_marker(void)
 #undef local_8
 
 /* 00572fff auto */
-#define sprite_editor_brush_size (*(undefined4 *)((u8 *)&g.d_006ac124))
-#define sprite_editor_cursor_id (*(undefined4 *)((u8 *)&g.d_006ac898))
+#define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
+#define sprite_editor_cursor_id (*(i32 *)((u8 *)&g.d_006ac898))
 #define sprite_editor_flag_x (*(iptr *)((u8 *)&g.d_006ac0f4))
 #define sprite_editor_flag_y (*(iptr *)((u8 *)&g.d_006ac0f0))
 #define sprite_editor_height (*(iptr *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_paint_tool (*(int *)((u8 *)&g.d_006ac118))
-#define sprite_editor_painting (*(undefined4 *)((u8 *)&g.d_006ac8a4))
+#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
 #define sprite_editor_tool (*(int *)((u8 *)&g.d_006ac120))
 #define sprite_editor_undo_flag_x (*(iptr *)((u8 *)&g.d_006ac0a4))
 #define sprite_editor_undo_flag_y (*(iptr *)((u8 *)&g.d_006ac0a0))
 #define sprite_editor_width (*(iptr *)((u8 *)&g.d_006ac878))
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
-#define local_80 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_80 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_6c (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_68 (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define local_64 (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_60 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_5c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_5c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(52)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(112)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(116)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(120)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(112)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(116)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(120)))
 void __cdecl sprite_editor_on_mouse_down(int param_1,int param_2)
 
 {
@@ -5456,10 +5456,10 @@ void __cdecl sprite_editor_on_mouse_down(int param_1,int param_2)
   iptr iVar2;
   SHORT SVar3;
   iptr iVar4;
-  undefined4 uVar4;
+  i32 uVar4;
   int iVar5;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   sprite_init(&local_4c);
@@ -5784,7 +5784,7 @@ void __cdecl sprite_editor_on_mouse_down(int param_1,int param_2)
 #undef local_8
 
 /* 00573afd auto */
-#define sprite_editor_painting (*(undefined4 *)((u8 *)&g.d_006ac8a4))
+#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
 void __cdecl sprite_editor_on_mouse_up(void)
 
 {
@@ -5814,7 +5814,7 @@ void __cdecl sprite_editor_on_mouse_move(int param_1,int param_2)
   int iVar5;
   int iVar6;
   int iVar7;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   param_1 -= sprite_editor_origin_x;
   param_2 -= sprite_editor_origin_y;
@@ -5907,50 +5907,50 @@ void __cdecl sprite_editor_on_mouse_move(int param_1,int param_2)
 #undef local_8
 
 /* 00573e59 auto */
-#define sprite_editor_brush_size (*(undefined4 *)((u8 *)&g.d_006ac124))
-#define sprite_editor_cursor_id (*(undefined4 *)((u8 *)&g.d_006ac898))
-#define sprite_editor_flag_x (*(undefined4 *)((u8 *)&g.d_006ac0f4))
-#define sprite_editor_flag_y (*(undefined4 *)((u8 *)&g.d_006ac0f0))
-#define sprite_editor_height (*(undefined4 *)((u8 *)&g.d_006ac87c))
+#define sprite_editor_brush_size (*(i32 *)((u8 *)&g.d_006ac124))
+#define sprite_editor_cursor_id (*(i32 *)((u8 *)&g.d_006ac898))
+#define sprite_editor_flag_x (*(i32 *)((u8 *)&g.d_006ac0f4))
+#define sprite_editor_flag_y (*(i32 *)((u8 *)&g.d_006ac0f0))
+#define sprite_editor_height (*(i32 *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 #define sprite_editor_ok_callback (*(iptr *)((u8 *)&g.d_006ac888))
-#define sprite_editor_paint_tool (*(undefined4 *)((u8 *)&g.d_006ac118))
-#define sprite_editor_painting (*(undefined4 *)((u8 *)&g.d_006ac8a4))
+#define sprite_editor_paint_tool (*(i32 *)((u8 *)&g.d_006ac118))
+#define sprite_editor_painting (*(i32 *)((u8 *)&g.d_006ac8a4))
 #define sprite_editor_running (*(int *)((u8 *)&g.d_006ac88c))
-#define sprite_editor_tool (*(undefined4 *)((u8 *)&g.d_006ac120))
-#define sprite_editor_undo_flag_x (*(undefined4 *)((u8 *)&g.d_006ac0a4))
-#define sprite_editor_undo_flag_y (*(undefined4 *)((u8 *)&g.d_006ac0a0))
-#define sprite_editor_width (*(undefined4 *)((u8 *)&g.d_006ac878))
-#define sprite_sheet_mode (*(undefined4 *)((u8 *)&g.d_006ac924))
-#define _DAT_006ac2e0 (*(undefined4 *)((u8 *)&g.d_006ac2e0))
-#define local_b8 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define sprite_editor_tool (*(i32 *)((u8 *)&g.d_006ac120))
+#define sprite_editor_undo_flag_x (*(i32 *)((u8 *)&g.d_006ac0a4))
+#define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
+#define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
+#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
+#define _DAT_006ac2e0 (*(i32 *)((u8 *)&g.d_006ac2e0))
+#define local_b8 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_a4 (*(Control *)(frame_ + FRAME_OFF(20)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(84)))
 #define local_60 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_5c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(92)))
+#define local_5c (*(i8 (*)[16])(frame_ + FRAME_OFF(92)))
 #define local_4c (*(Control *)(frame_ + FRAME_OFF(108)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(168)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(172)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(168)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(172)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(176)))
 /* WARNING: Removing unreachable block (ram,0x0057405e) */
 /* WARNING: Removing unreachable block (ram,0x005740e7) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4)
+void __cdecl sprite_editor_run(iptr param_1,i32 param_2,i32 param_3,iptr param_4)
 
 {
   byte bVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   button_ctor(&local_4c);
   local_8 = 0;
   button_ctor(&local_a4);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   sprite_sheet_mode = param_3;
   sprite_editor_target_sprite = (Sprite *)param_1;
   sprite_editor_width = sprite_width((Sprite *)param_1);
@@ -5963,8 +5963,8 @@ void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_
   surface_create((DibSurface *)&sprite_editor_surface,sprite_editor_width,sprite_editor_height);
   sprite_editor_draw_backdrop();
   sprite_draw((Sprite *)&sprite_editor_orig_sprite,(iptr)local_b8,ADDR(0x6ac128, ((u8 *)&g.d_006ac128)),0,0);
-  sprite_editor_undo_flag_x = *(undefined4 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
-  sprite_editor_undo_flag_y = *(undefined4 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
+  sprite_editor_undo_flag_x = *(i32 *)(&unit_shield_x_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
+  sprite_editor_undo_flag_y = *(i32 *)(&unit_shield_y_offsets + *(int *)(active_editor_wnd + 0x2ec) * 4);
   sprite_editor_flag_y = sprite_editor_undo_flag_y;
   sprite_editor_flag_x = sprite_editor_undo_flag_x;
   sprite_editor_rebuild_sprite();
@@ -5981,12 +5981,12 @@ void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_
   local_a8 = (sprite_editor_origin_y + _DAT_006ac2e0) - (iVar2 + 10);
   local_64 = sprite_editor_origin_x + 2;
   rect_set_xywh((iptr)local_5c,local_64,local_a8,local_60,local_68);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create(&local_4c,ADDR(0x6ac1f8, ((u8 *)&g.d_006ac1f8)),0x65,(iptr)local_5c,iVar3);
   button_set_callback(&local_4c,ADDR(0x401f73, sprite_editor_ok_clicked));
   local_64 = local_64 + local_60 + 2;
   rect_set_xywh((iptr)local_5c,local_64,local_a8,local_60,local_68);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create(&local_a4,ADDR(0x6ac1f8, ((u8 *)&g.d_006ac1f8)),0x66,(iptr)local_5c,iVar3);
   button_set_callback(&local_a4,ADDR(0x4011ea, sprite_editor_cancel_clicked));
   ctrl_set_cancel_button(&local_a4);
@@ -6043,8 +6043,8 @@ void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_
 #define sprite_editor_height (*(int *)((u8 *)&g.d_006ac87c))
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 #define sprite_editor_width (*(int *)((u8 *)&g.d_006ac878))
-#define local_50 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_40 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_50 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_40 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(40)))
@@ -6052,12 +6052,12 @@ void __cdecl sprite_editor_run(iptr param_1,undefined4 param_2,undefined4 param_
 #define local_20 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(60)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
 void __cdecl sprite_editor_redraw(void)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)&sprite_editor_window);
   gfx_fill_rect(ADDR(0x6ac1b0, ((u8 *)&g.d_006ac1b0)),ADDR(0x6ac46c, ((u8 *)&g.d_006ac46c)),0x1d);
@@ -6122,7 +6122,7 @@ void __cdecl sprite_editor_redraw(void)
 
 /* 00574522 auto */
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
-#define local_2c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_2c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
@@ -6133,7 +6133,7 @@ void __thiscall sprite_picker_draw(FrameWindow *this)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption(this);
   gfx_fill_rect((iptr)this,(iptr)&this->client_rect,0x1d);
@@ -6182,18 +6182,18 @@ void __cdecl sprite_picker_redraw_cb(void)
 
 /* 005746a1 auto */
 #define sprite_sheet_mode (*(uint *)((u8 *)&g.d_006ac924))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_3,iptr param_4,iptr param_5)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_3,iptr param_4,iptr param_5)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined4 *)param_5 = 0;
-  *(undefined4 *)param_4 = *(undefined4 *)param_5;
-  *(undefined4 *)param_3 = *(undefined4 *)param_4;
-  *(undefined4 *)param_2 = *(undefined4 *)param_3;
-  local_8 = *(undefined4 *)param_2;
+  *(i32 *)param_5 = 0;
+  *(i32 *)param_4 = *(i32 *)param_5;
+  *(i32 *)param_3 = *(i32 *)param_4;
+  *(i32 *)param_2 = *(i32 *)param_3;
+  local_8 = *(i32 *)param_2;
   if (sprite_sheet_mode < 0xc) {
     uVar1 = (int)param_1 >> 0x1f;
     switch(sprite_sheet_mode) {
@@ -6201,42 +6201,42 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
       local_8 = 0x14;
       *(int *)param_2 = ((int)(param_1 + (uVar1 & 3)) >> 2) * 0x25 + 0x157;
       *(uint *)param_3 = (((param_1 ^ uVar1) - uVar1 & 3 ^ uVar1) - uVar1) * 0x15 + 0xd3;
-      *(undefined4 *)param_4 = 0x24;
-      *(undefined4 *)param_5 = 0x14;
+      *(i32 *)param_4 = 0x24;
+      *(i32 *)param_5 = 0x14;
       break;
     case 1:
       if ((int)param_1 < 0x18) {
-        *(undefined4 *)param_2 = 1;
+        *(i32 *)param_2 = 1;
       }
       else {
-        *(undefined4 *)param_2 = 0x14e;
+        *(i32 *)param_2 = 0x14e;
         param_1 -= 0x18;
       }
       uVar1 = (int)param_1 >> 0x1f;
       *(uint *)param_2 = *(int *)param_2 + (((param_1 ^ uVar1) - uVar1 & 3 ^ uVar1) - uVar1) * 0x41;
       *(int *)param_3 = ((int)(param_1 + (uVar1 & 3)) >> 2) * 0x31 + 0x27;
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x30;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x30;
       local_8 = 0x30;
       break;
     case 2:
       local_8 = 4;
       *(uint *)param_2 = param_1 * 0x41 + 0x8f;
-      *(undefined4 *)param_3 = 0x1a7;
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x30;
+      *(i32 *)param_3 = 0x1a7;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x30;
       break;
     case 3:
       local_8 = 0x12;
-      *(undefined4 *)param_4 = 0xe;
-      *(undefined4 *)param_5 = 0x16;
+      *(i32 *)param_4 = 0xe;
+      *(i32 *)param_5 = 0x16;
       *(int *)param_2 = (((int)param_1 >> 1) % 9) * (*(int *)param_4 + 1) + 1;
       *(uint *)param_3 = (*(int *)param_5 + 1) * (param_1 & 1) + 0x1a9;
       break;
     case 4:
       local_8 = 0x42;
-      *(undefined4 *)param_4 = 0x24;
-      *(undefined4 *)param_5 = 0x14;
+      *(i32 *)param_4 = 0x24;
+      *(i32 *)param_5 = 0x14;
       if ((int)param_1 < 0x26) {
         *(uint *)param_2 = (((param_1 ^ uVar1) - uVar1 & 7 ^ uVar1) - uVar1) * 0x25 + 0x157;
         *(int *)param_3 = ((int)(param_1 + (uVar1 & 7)) >> 3) * 0x15 + 1;
@@ -6248,28 +6248,28 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
       break;
     case 5:
       local_8 = 1;
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x20;
-      *(undefined4 *)param_2 = 199;
-      *(undefined4 *)param_3 = 0x100;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x20;
+      *(i32 *)param_2 = 199;
+      *(i32 *)param_3 = 0x100;
       break;
     case 6:
       local_8 = 8;
-      *(undefined4 *)param_4 = 0x20;
-      *(undefined4 *)param_5 = 0x20;
+      *(i32 *)param_4 = 0x20;
+      *(i32 *)param_5 = 0x20;
       *(uint *)param_2 = (*(int *)param_4 + 1) * param_1 + 1;
-      *(undefined4 *)param_3 = 0x164;
+      *(i32 *)param_3 = 0x164;
       break;
     case 7:
       local_8 = 0x2c;
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x20;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x20;
       *(int *)param_2 = ((int)param_1 / 0xb) * 0x41 + 1;
       *(int *)param_3 = ((int)param_1 % 0xb) * 0x21 + 1;
       break;
     case 8:
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x20;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x20;
       if ((int)param_1 < 0x40) {
         *(uint *)param_2 = (((param_1 ^ uVar1) - uVar1 & 7 ^ uVar1) - uVar1) * 0x41 + 1;
         *(uint *)param_3 =
@@ -6278,15 +6278,15 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
       }
       else {
         *(uint *)param_2 = (param_1 - 0x40) * 0x41 + 1;
-        *(undefined4 *)param_3 = 0x14b;
+        *(i32 *)param_3 = 0x14b;
       }
       local_8 = 0x44;
       break;
     case 9:
-      *(undefined4 *)param_4 = 0x20;
-      *(undefined4 *)param_5 = 0x10;
-      *(undefined4 *)param_2 = 1;
-      *(undefined4 *)param_3 = 0x1ad;
+      *(i32 *)param_4 = 0x20;
+      *(i32 *)param_5 = 0x10;
+      *(i32 *)param_2 = 1;
+      *(i32 *)param_3 = 0x1ad;
       switch(((param_1 ^ uVar1) - uVar1 & 3 ^ uVar1) - uVar1) {
       case 0:
         break;
@@ -6304,9 +6304,9 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
       local_8 = 0x20;
       break;
     case 10:
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x20;
-      *(undefined4 *)param_2 = 0x1c8;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x20;
+      *(i32 *)param_2 = 0x1c8;
       if ((int)param_1 < 6) {
         *(uint *)param_3 = param_1 * 0x21 + 100;
       }
@@ -6320,8 +6320,8 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
       local_8 = 0x3f;
       *(int *)param_3 = ((int)param_1 / 9) * 0x31 + 1;
       *(int *)param_2 = ((int)param_1 % 9) * 0x41 + 1;
-      *(undefined4 *)param_4 = 0x40;
-      *(undefined4 *)param_5 = 0x30;
+      *(i32 *)param_4 = 0x40;
+      *(i32 *)param_5 = 0x30;
     }
   }
   return local_8;
@@ -6330,14 +6330,14 @@ undefined4 __cdecl sprite_editor_cell_rect(uint param_1,iptr param_2,iptr param_
 #undef local_8
 
 /* 00574c47 auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-void __cdecl sprite_picker_select_cell(undefined4 param_1)
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
+void __cdecl sprite_picker_select_cell(i32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   sprite_editor_cell_rect(param_1,(iptr)&local_10,(iptr)&local_14,(iptr)&local_8,(iptr)&local_c);
   sprite_free((Sprite *)&sprite_picker_sprite);
@@ -6355,12 +6355,12 @@ void __cdecl sprite_picker_select_cell(undefined4 param_1)
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define _DAT_006ac59c (*(undefined4 *)((u8 *)&g.d_006ac59c))
-#define _DAT_006ac684 (*(undefined4 *)((u8 *)&g.d_006ac684))
-#define _DAT_006ac730 (*(undefined4 *)((u8 *)&g.d_006ac730))
-#define _DAT_006ac754 (*(undefined4 *)((u8 *)&g.d_006ac754))
-#define _DAT_006ac758 (*(undefined4 *)((u8 *)&g.d_006ac758))
-#define _DAT_006ac75c (*(undefined4 *)((u8 *)&g.d_006ac75c))
+#define _DAT_006ac59c (*(i32 *)((u8 *)&g.d_006ac59c))
+#define _DAT_006ac684 (*(i32 *)((u8 *)&g.d_006ac684))
+#define _DAT_006ac730 (*(i32 *)((u8 *)&g.d_006ac730))
+#define _DAT_006ac754 (*(i32 *)((u8 *)&g.d_006ac754))
+#define _DAT_006ac758 (*(i32 *)((u8 *)&g.d_006ac758))
+#define _DAT_006ac75c (*(i32 *)((u8 *)&g.d_006ac75c))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Removing unreachable block (ram,0x00574e18) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -6370,7 +6370,7 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
             int param_8,int param_9)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     FUN_005f22d0(&sprite_picker_title,&sprite_picker_default_title);
@@ -6437,16 +6437,16 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
 /* 00574e98 auto */
 #define sprite_editor_key_color (*(uint *)((u8 *)&g.d_006ac874))
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(undefined4 *)((u8 *)&g.d_006ac890))
-#define local_2c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
+#define local_2c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(28)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
 void __cdecl sprite_picker_ok_clicked(void)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   sprite_replace_color((Sprite *)&sprite_picker_sprite,9,7);
   local_18 = sprite_width((Sprite *)&sprite_picker_sprite);
@@ -6471,20 +6471,20 @@ void __cdecl sprite_picker_ok_clicked(void)
 #undef local_14
 
 /* 00574f50 auto */
-#define sprite_editor_height (*(undefined4 *)((u8 *)&g.d_006ac87c))
-#define sprite_editor_width (*(undefined4 *)((u8 *)&g.d_006ac878))
+#define sprite_editor_height (*(i32 *)((u8 *)&g.d_006ac87c))
+#define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(undefined4 *)((u8 *)&g.d_006ac890))
-#define sprite_sheet_mode (*(undefined4 *)((u8 *)&g.d_006ac924))
-#define local_3c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
+#define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
+#define local_3c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
 /* WARNING: Removing unreachable block (ram,0x00574f76) */
@@ -6493,7 +6493,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   dlg_push_parent_window(ADDR(0x6ac4d0, ((u8 *)&g.d_006ac4d0)));
   local_8 = popup_text_flags(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x6341f8, ((u8 *)&g.d_006341f8)),1);
@@ -6724,8 +6724,8 @@ void __cdecl sprite_picker_import_all_clicked(void)
 
 /* 00575d89 auto */
 void __cdecl
-sprite_editor_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5)
+sprite_editor_grab_from_sheet(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5)
 
 {
   sprite_grab_from_surface((Sprite *)param_1,ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),7,param_2,param_3,param_4,param_5);
@@ -6735,7 +6735,7 @@ sprite_editor_grab_from_sheet(iptr param_1,undefined4 param_2,undefined4 param_3
 
 /* 00575dc4 auto */
 #define sprite_picker_dialog (*(int *)((u8 *)&g.d_006ac11c))
-#define sprite_picker_running (*(undefined4 *)((u8 *)&g.d_006ac890))
+#define sprite_picker_running (*(i32 *)((u8 *)&g.d_006ac890))
 void __cdecl sprite_picker_cancel_clicked(void)
 
 {
@@ -6754,26 +6754,26 @@ void __cdecl sprite_picker_cancel_clicked(void)
 #define local_30 (*(u8 * *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(u8 * *)(frame_ + FRAME_OFF(12)))
 #define local_28 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(20)))
+#define local_24 (*(i8 (*)[4])(frame_ + FRAME_OFF(20)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(48)))
 void __thiscall sprite_picker_run(C_004083b0_430 *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
   u32 uVar7;
   u32 uVar8;
-  undefined4 uVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar9;
+  i32 uVar10;
+  i32 uVar11;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   sprite_picker_dialog = this;
   this->field_2d8 = 0xf0;
@@ -6786,7 +6786,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   uVar6 = 0;
   uVar5 = 0;
   uVar4 = 0xd;
-  uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x950));
+  uVar1 = label_string(*(i32 *)(label_string_ids + 0x950));
   sprite_picker_create_window(uVar1,uVar4,uVar5,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11);
   iVar2 = font_line_spacing((GameFont *)dialog_font_ptr);
   this->field_2f4 = iVar2 + 8;
@@ -6821,7 +6821,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   else {
     local_2c = this->pad_48;
   }
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this->field_338,(iptr)local_2c,0xc9,(iptr)local_18,iVar3);
   button_set_callback((Control *)&this->field_338,ADDR(0x4013c5, sprite_picker_ok_clicked));
@@ -6834,7 +6834,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   else {
     local_30 = this->pad_48;
   }
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x954));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x954));
   button_create
             ((Control *)(this->pad_364 + 0x10),(iptr)local_30,0xc9,(iptr)local_18,iVar3);
   button_set_callback((Control *)(this->pad_364 + 0x10),ADDR(0x4029a5, sprite_picker_import_all_clicked));
@@ -6850,7 +6850,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   else {
     local_34 = this->pad_48;
   }
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this->field_3b0,(iptr)local_34,0xca,(iptr)local_18,iVar3);
   button_set_callback((Control *)&this->field_3b0,ADDR(0x402cde, sprite_picker_cancel_clicked));
@@ -6896,8 +6896,8 @@ void __cdecl sprite_picker_show(void)
 #define local_73c (*(GamePalette *)(frame_ + FRAME_OFF(660)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(1736)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(2492)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2496)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2500)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2496)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2500)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(2504)))
 /* WARNING: Removing unreachable block (ram,0x0057656d) */
 /* WARNING: Removing unreachable block (ram,0x005763fb) */
@@ -6906,26 +6906,26 @@ void __cdecl sprite_picker_show(void)
 void __cdecl sprite_editor_import_sheet(void)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
   size_t _MaxCount;
   iptr iVar3;
   int iVar4;
   char *pcVar5;
-  undefined4 uVar6;
+  i32 uVar6;
   char *pcVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   LPCSTR pCVar9;
   LPCSTR pCVar10;
-  undefined4 uVar11;
+  i32 uVar11;
   UINT UVar12;
-  undefined1 frame_[FRAME_OFF(2512)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2512)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_73c);
   local_8 = 0;
   dialog_ctor(&local_308,0x4000);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   switch(sprite_sheet_mode) {
   case 0:
   case 4:
@@ -6953,12 +6953,12 @@ void __cdecl sprite_editor_import_sheet(void)
     uVar6 = 0;
     pcVar5 = local_844;
     pcVar7 = local_844;
-    uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x958));
+    uVar1 = label_string(*(i32 *)(label_string_ids + 0x958));
     _sprintf(local_840,s__s__s_c_s__BMP__s__GIF_c_c_00634220,local_844,uVar1,uVar6,pcVar5,pcVar7,
              uVar8,uVar11);
     _sprintf(local_948,s__s__BMP__s__GIF_0063423c,local_844,local_844);
     pcVar5 = local_844;
-    uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x95c));
+    uVar1 = label_string(*(i32 *)(label_string_ids + 0x95c));
     _sprintf(local_9d0,s__s__s_0063424c,uVar1,pcVar5);
     iVar2 = ui_file_name_dialog(ADDR(0x6ac1f8, ((u8 *)&g.d_006ac1f8)),(iptr)local_9d0,(iptr)local_948,(iptr)local_840,ADDR(0x634254, ((u8 *)&g.d_00634254)),1,0
                               );
@@ -6996,7 +6996,7 @@ LAB_00576631:
           if (pcVar5 == (char *)0x0) {
             UVar12 = 0x10;
             pCVar10 = (LPCSTR)0x0;
-            pCVar9 = (LPCSTR)label_string(*(undefined4 *)(label_string_ids + 0x968));
+            pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x968));
             iVar4 = wnd_get_window((WndBase *)&sprite_editor_wnd);
             MessageBoxA(*(HWND *)(iVar4 + 4),pCVar9,pCVar10,UVar12);
           }
@@ -7007,7 +7007,7 @@ LAB_00576631:
             if (iVar4 == 0) {
               UVar12 = 0x10;
               pCVar10 = (LPCSTR)0x0;
-              pCVar9 = (LPCSTR)label_string(*(undefined4 *)(label_string_ids + 0x964));
+              pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
               iVar4 = wnd_get_window((WndBase *)&sprite_editor_wnd);
               MessageBoxA(*(HWND *)(iVar4 + 4),pCVar9,pCVar10,UVar12);
             }
@@ -7021,7 +7021,7 @@ LAB_00576631:
           if (iVar4 == 0) {
             UVar12 = 0x10;
             pCVar10 = (LPCSTR)0x0;
-            pCVar9 = (LPCSTR)label_string(*(undefined4 *)(label_string_ids + 0x964));
+            pCVar9 = (LPCSTR)label_string(*(i32 *)(label_string_ids + 0x964));
             iVar4 = wnd_get_window((WndBase *)&sprite_editor_wnd);
             MessageBoxA(*(HWND *)(iVar4 + 4),pCVar9,pCVar10,UVar12);
           }
@@ -7033,7 +7033,7 @@ LAB_00576631:
     }
     else {
       pcVar5 = local_844;
-      uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x960));
+      uVar1 = label_string(*(i32 *)(label_string_ids + 0x960));
       _sprintf(local_9d0,s__s___s__0063425c,uVar1,pcVar5);
       UVar12 = 0x40;
       pCVar9 = (LPCSTR)0x0;
@@ -7066,8 +7066,8 @@ LAB_00576783:
 #undef local_8
 
 /* 00578390 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CBitmapButton::~CBitmapButton(void)
@@ -7077,16 +7077,16 @@ LAB_00576783:
 void __thiscall sprite_picker_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_00578402 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x3b0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_00578411 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x374)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_00578420 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x338)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_0057842f */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x2f8)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0057843e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -7097,23 +7097,23 @@ void __thiscall sprite_picker_dtor(void *this)
 #undef local_8
 
 /* 005784a0 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_430 * __thiscall sprite_picker_ctor(C_004083b0_430 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   scrollbar_ctor((Control *)&this->field_2f8);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   button_ctor((Control *)&this->field_338);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   button_ctor((Control *)(this->pad_364 + 0x10));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),3);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),3);
   button_ctor((Control *)&this->field_3b0);
   this->vtable = (u32)&PTR_FUN_0061d6fc;
   return this;
@@ -7134,8 +7134,8 @@ void __cdecl gfx_set_draw_target(iptr param_1)
 
 /* 005a9798 auto */
 void __cdecl
-gfx_draw_line_color(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6)
+gfx_draw_line_color(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5,i32 param_6)
 
 {
   gfx_set_text_color_index(param_6);
@@ -7144,12 +7144,12 @@ gfx_draw_line_color(iptr param_1,undefined4 param_2,undefined4 param_3,undefined
 }
 
 /* 005a97cc auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-gfx_draw_hline(iptr param_1,undefined4 param_2,int param_3,int param_4,undefined4 param_5)
+gfx_draw_hline(iptr param_1,i32 param_2,int param_3,int param_4,i32 param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set((iptr)local_14,param_2,param_4,param_3 + 1,param_4 + 1);
   gfx_fill_rect(param_1,(iptr)local_14,param_5);
@@ -7158,12 +7158,12 @@ gfx_draw_hline(iptr param_1,undefined4 param_2,int param_3,int param_4,undefined
 #undef local_14
 
 /* 005a9858 auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-gfx_draw_vline(iptr param_1,int param_2,undefined4 param_3,int param_4,undefined4 param_5)
+gfx_draw_vline(iptr param_1,int param_2,i32 param_3,int param_4,i32 param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + 1);
   gfx_fill_rect(param_1,(iptr)local_14,param_5);
@@ -7173,8 +7173,8 @@ gfx_draw_vline(iptr param_1,int param_2,undefined4 param_3,int param_4,undefined
 
 /* 005a98e4 auto */
 void __cdecl
-gfx_draw_box_ltrb(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6)
+gfx_draw_box_ltrb(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5,i32 param_6)
 
 {
   gfx_draw_hline(param_1,param_2,param_4,param_3,param_6);
@@ -7186,7 +7186,7 @@ gfx_draw_box_ltrb(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 
 
 /* 005a9964 auto */
 void __cdecl
-gfx_draw_frame_rect(iptr param_1,int param_2,int param_3,int param_4,iptr param_5,undefined4 param_6)
+gfx_draw_frame_rect(iptr param_1,int param_2,int param_3,int param_4,iptr param_5,i32 param_6)
 
 {
   gfx_draw_hline(param_1,param_2,param_4 + param_2 - 1,param_3,param_6);
@@ -7197,22 +7197,22 @@ gfx_draw_frame_rect(iptr param_1,int param_2,int param_3,int param_4,iptr param_
 }
 
 /* 005a99fc auto */
-void __cdecl gfx_draw_bevel_rect(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl gfx_draw_bevel_rect(iptr param_1,iptr param_2,i32 param_3,i32 param_4)
 
 {
-  gfx_draw_hline(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) - 1,
-                     *(undefined4 *)(param_2 + 4),param_3);
-  gfx_draw_vline(param_1,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),
+  gfx_draw_hline(param_1,*(i32 *)param_2,*(int *)(param_2 + 8) - 1,
+                     *(i32 *)(param_2 + 4),param_3);
+  gfx_draw_vline(param_1,*(i32 *)param_2,*(i32 *)(param_2 + 4),
                      *(int *)(param_2 + 0xc) - 1,param_3);
-  gfx_draw_hline(param_1,*(undefined4 *)param_2,*(int *)(param_2 + 8) - 1,
+  gfx_draw_hline(param_1,*(i32 *)param_2,*(int *)(param_2 + 8) - 1,
                      *(int *)(param_2 + 0xc) - 1,param_4);
-  gfx_draw_vline(param_1,*(int *)(param_2 + 8) - 1,*(undefined4 *)(param_2 + 4),
+  gfx_draw_vline(param_1,*(int *)(param_2 + 8) - 1,*(i32 *)(param_2 + 4),
                      *(int *)(param_2 + 0xc) - 1,param_4);
   return;
 }
 
 /* 005a9aa3 auto */
-void __cdecl gfx_fill_surface(iptr param_1,undefined4 param_2)
+void __cdecl gfx_fill_surface(iptr param_1,i32 param_2)
 
 {
   surface_fill((DibSurface *)param_1,param_2);
@@ -7220,13 +7220,13 @@ void __cdecl gfx_fill_surface(iptr param_1,undefined4 param_2)
 }
 
 /* 005a9abf auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __cdecl
-gfx_fill_rect_xywh(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param_4,iptr param_5,
-            undefined4 param_6)
+gfx_fill_rect_xywh(iptr param_1,i32 param_2,i32 param_3,iptr param_4,iptr param_5,
+            i32 param_6)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,param_2,param_3,param_4,param_5);
   surface_fill_rect((DibSurface *)param_1,(iptr)local_14,param_6);
@@ -7235,14 +7235,14 @@ gfx_fill_rect_xywh(iptr param_1,undefined4 param_2,undefined4 param_3,iptr param
 #undef local_14
 
 /* 005a9afe auto */
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl
-gfx_copy_rect_xywh(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
-            undefined4 param_6,iptr param_7,iptr param_8)
+gfx_copy_rect_xywh(iptr param_1,iptr param_2,i32 param_3,i32 param_4,i32 param_5,
+            i32 param_6,iptr param_7,iptr param_8)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,param_3,param_4,param_7,param_8);
   rect_set_xywh((iptr)local_24,param_5,param_6,param_7,param_8);
@@ -7270,7 +7270,7 @@ gfx_tile_fill(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int 
   int iVar4;
   int iVar5;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = surface_width((DibSurface *)param_2);
   iVar2 = surface_height((DibSurface *)param_2);
@@ -7322,11 +7322,11 @@ gfx_tile_fill(iptr param_1,iptr param_2,int param_3,int param_4,int param_5,int 
 
 /* 005ae006 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl bits_count8(uint param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = 0; local_c < 8; local_c++) {
@@ -7352,8 +7352,8 @@ void __cdecl bit_index_split(iptr param_1,iptr param_2,iptr param_3)
 /* 005bb3f0 auto */
 void __thiscall
 surface_wnd_create
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7)
 
 {
   iptr iVar1;
@@ -7410,7 +7410,7 @@ DibSurface * __thiscall surface_ctor(DibSurface *this)
 void __thiscall surface_create(DibSurface *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,0,0,param_1,param_2);
   surface_alloc_dib8(this,(iptr)&local_14);
@@ -7419,7 +7419,7 @@ void __thiscall surface_create(DibSurface *this,int param_1,int param_2)
 #undef local_14
 
 /* 005bd696 auto */
-undefined4 __thiscall surface_alloc_dib8(DibSurface *this,iptr param_1)
+i32 __thiscall surface_alloc_dib8(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -7519,17 +7519,17 @@ DibSurface * __thiscall surface_dtor(DibSurface *this)
 #define local_1c (*(char * *)(frame_ + FRAME_OFF(196)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(200)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(204)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(208)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(212)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(216)))
-undefined4 __thiscall
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(208)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(216)))
+i32 __thiscall
 surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,iptr param_4)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(224)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   file_obj_init(&local_c0);
@@ -7674,10 +7674,10 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
 /* 005bf5e1 auto */
 #define local_38 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined1 *)(frame_ + FRAME_OFF(20)))
-#define local_23 (*(undefined1 *)(frame_ + FRAME_OFF(21)))
-#define local_22 (*(undefined1 *)(frame_ + FRAME_OFF(22)))
-#define local_21 (*(undefined1 *)(frame_ + FRAME_OFF(23)))
+#define local_24 (*(i8 *)(frame_ + FRAME_OFF(20)))
+#define local_23 (*(i8 *)(frame_ + FRAME_OFF(21)))
+#define local_22 (*(i8 *)(frame_ + FRAME_OFF(22)))
+#define local_21 (*(i8 *)(frame_ + FRAME_OFF(23)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(byte *)(frame_ + FRAME_OFF(32)))
@@ -7685,14 +7685,14 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
 #define local_10 (*(char * *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(char * *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(48)))
-undefined4 __thiscall
+i32 __thiscall
 surface_load_gif_resource(DibSurface *this,iptr param_1,uint param_2,uint param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_24 = 0x47;
   local_23 = 0x49;
@@ -7815,10 +7815,10 @@ void __thiscall surface_get_clip(DibSurface *this,iptr param_1)
 }
 
 /* 005c0105 auto */
-undefined4 __thiscall surface_alloc_dib_by_bpp(DibSurface *this,iptr param_1)
+i32 __thiscall surface_alloc_dib_by_bpp(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   switch(this->bytes_per_pixel) {
   case 1:
@@ -7840,10 +7840,10 @@ undefined4 __thiscall surface_alloc_dib_by_bpp(DibSurface *this,iptr param_1)
 }
 
 /* 005c019d auto */
-undefined4 __thiscall surface_resize(DibSurface *this,iptr param_1)
+i32 __thiscall surface_resize(DibSurface *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = surface_alloc_dib8(this,param_1);
   return uVar1;
@@ -7857,7 +7857,7 @@ void __thiscall surface_lock(DibSurface *this)
   uptr uVar1;
   void *pvVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->bits == 0) {
     uVar1 = dib_get_bits(this->dib);
@@ -7874,7 +7874,7 @@ void __thiscall surface_lock(DibSurface *this)
         }
       }
       else {
-        *(undefined4 *)this->row_offsets = 0;
+        *(i32 *)this->row_offsets = 0;
         for (local_8 = 1; local_8 < (int)this->pixel_height; local_8++) {
           *(u32 *)(this->row_offsets + local_8 * 4) =
                *(int *)((this->row_offsets - 4) + local_8 * 4) + this->stride;
@@ -7904,16 +7904,16 @@ void __thiscall surface_unlock(DibSurface *this)
 #define local_20 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,undefined4 param_2)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
+void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,i32 param_2)
 
 {
   char cVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   cVar1 = surface_is_locked(this);
@@ -7940,7 +7940,7 @@ void __thiscall surface_fill_rect(DibSurface *this,iptr param_1,undefined4 param
 #undef local_8
 
 /* 005c041f auto */
-void __thiscall surface_fill(DibSurface *this,undefined4 param_1)
+void __thiscall surface_fill(DibSurface *this,i32 param_1)
 
 {
   surface_fill_rect(this,(iptr)&this->clip_left,param_1);
@@ -7949,7 +7949,7 @@ void __thiscall surface_fill(DibSurface *this,undefined4 param_1)
 
 /* 005c044a auto */
 void __thiscall
-surface_replace_color_clip(DibSurface *this,undefined4 param_1,undefined4 param_2)
+surface_replace_color_clip(DibSurface *this,i32 param_1,i32 param_2)
 
 {
   surface_replace_color(this,(iptr)&this->clip_left,param_1,param_2);
@@ -7964,14 +7964,14 @@ surface_replace_color_clip(DibSurface *this,undefined4 param_1,undefined4 param_
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 void __thiscall
-surface_replace_color(DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+surface_replace_color(DibSurface *this,iptr param_1,i32 param_2,i32 param_3)
 
 {
   char cVar1;
   iptr iVar2;
   iptr iVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   cVar1 = surface_is_locked(this);
@@ -8027,15 +8027,15 @@ surface_blit(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
   int iVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
+  i32 uVar5;
+  i32 uVar6;
   int iVar7;
   int iVar8;
   int iVar9;
-  undefined4 uVar10;
-  undefined4 uVar11;
+  i32 uVar10;
+  i32 uVar11;
   bool bVar12;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
   bVar12 = this->bits == 0;
@@ -8098,11 +8098,11 @@ surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 
 {
   char cVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
   
   if (this->dib == 0) {
     dbg_log(ADDR(0x6371a8, ((u8 *)&g.d_006371a8)));
@@ -8115,12 +8115,12 @@ surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
     }
     uVar2 = wnd_get_palette_obj((WndPaletteObjView *)param_1);
     surface_apply_palette(this,uVar2);
-    uVar2 = *(undefined4 *)(param_3 + 4);
-    uVar6 = *(undefined4 *)param_3;
+    uVar2 = *(i32 *)(param_3 + 4);
+    uVar6 = *(i32 *)param_3;
     iVar3 = wnd_get_window((WndBase *)param_1);
     uVar4 = rect_height(param_2);
     uVar5 = rect_width(param_2);
-    dib_blit_to_wnd_obj(this->dib,*(undefined4 *)param_2,*(undefined4 *)(param_2 + 4),uVar5,uVar4,
+    dib_blit_to_wnd_obj(this->dib,*(i32 *)param_2,*(i32 *)(param_2 + 4),uVar5,uVar4,
                  iVar3,uVar6,uVar2);
     if (cVar1 == '\0') {
       surface_unlock(this);
@@ -8131,7 +8131,7 @@ surface_blit_to_wnd(DibSurface *this,iptr param_1,iptr param_2,iptr param_3)
 
 /* 005c0bf2 auto */
 uint __thiscall
-surface_get_pixel(DibSurface *this,undefined4 param_1,undefined4 param_2)
+surface_get_pixel(DibSurface *this,i32 param_1,i32 param_2)
 
 {
   char cVar1;
@@ -8153,19 +8153,19 @@ surface_get_pixel(DibSurface *this,undefined4 param_1,undefined4 param_2)
 /* 005c0c5d auto */
 void __thiscall
 surface_set_pixel
-          (DibSurface *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+          (DibSurface *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   char cVar1;
-  undefined1 *puVar2;
+  i8 *puVar2;
   
   cVar1 = surface_in_clip(this,param_1,param_2);
   if (cVar1 == '\0') {
     dbg_logf_int2(ADDR(0x637278, ((u8 *)&g.d_00637278)),param_1,param_2);
   }
   else {
-    puVar2 = (undefined1 *)surface_pixel_ptr(this,param_1,param_2);
-    *puVar2 = (undefined1)param_3;
+    puVar2 = (i8 *)surface_pixel_ptr(this,param_1,param_2);
+    *puVar2 = (i8)param_3;
   }
   return;
 }
@@ -8203,32 +8203,32 @@ void __thiscall surface_apply_palette(DibSurface *this,PaletteVersionView *param
 }
 
 /* 005c0d69 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
-surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int param_2,int param_3,uint param_4)
+surface_draw_text_cur_font(SurfaceTextCurFontView *this,i32 param_1,int param_2,int param_3,uint param_4)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (draw_current_font == (undefined *)0x0) {
+  if (draw_current_font == (i8 *)0x0) {
     dbg_log(ADDR(0x6372a0, ((u8 *)&g.d_006372a0)));
   }
   else if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar2 = font_measure_height(*(undefined4 *)draw_current_font);
+      iVar2 = font_measure_height(*(i32 *)draw_current_font);
       iVar2 += (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
-      local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
-      dib_draw_text_at(this->dib,*(undefined4 *)draw_current_font,param_1,iVar3 + param_2,
+      local_c = CONCAT31((*(i32 *)((char *)&local_c + 1)),uVar1);
+      dib_draw_text_at(this->dib,*(i32 *)draw_current_font,param_1,iVar3 + param_2,
                    iVar3 + param_3,(iptr)(this->pad_0 + 0x14),param_4);
       gfx_set_text_color_index(local_c);
     }
-    dib_draw_text_at(this->dib,*(undefined4 *)draw_current_font,param_1,param_2,param_3,
+    dib_draw_text_at(this->dib,*(i32 *)draw_current_font,param_1,param_2,param_3,
                  (iptr)(this->pad_0 + 0x14),param_4);
   }
   return;
@@ -8237,30 +8237,30 @@ surface_draw_text_cur_font(SurfaceTextCurFontView *this,undefined4 param_1,int p
 #undef local_c
 
 /* 005c0f57 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 void __thiscall
 surface_draw_text
           (DibSurface *this,iptr param_1,iptr param_2,iptr param_3,int param_4,uint param_5)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->dib != 0) {
     if ((param_5 & 0x10) != 0) {
-      iVar2 = font_measure_height(*(undefined4 *)param_1);
+      iVar2 = font_measure_height(*(i32 *)param_1);
       iVar2 += (iVar2 >> 0x1f & 7U);
       iVar3 = iVar2 >> 3;
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)(iVar2 >> 0xb),gfx_black_color_index));
-      local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),uVar1);
-      dib_draw_text_at(this->dib,*(undefined4 *)param_1,param_2,param_3 + iVar3,param_4 + iVar3,
+      local_c = CONCAT31((*(i32 *)((char *)&local_c + 1)),uVar1);
+      dib_draw_text_at(this->dib,*(i32 *)param_1,param_2,param_3 + iVar3,param_4 + iVar3,
                    (iptr)&this->clip_left,param_5);
       gfx_set_text_color_index(local_c);
     }
-    dib_draw_text_at(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4,(iptr)&this->clip_left
+    dib_draw_text_at(this->dib,*(i32 *)param_1,param_2,param_3,param_4,(iptr)&this->clip_left
                  ,param_5);
   }
   return;
@@ -8269,21 +8269,21 @@ surface_draw_text
 #undef local_c
 
 /* 005c1020 auto */
-#define gfx_black_color_index (*(undefined1 *)((u8 *)&g.d_00638b40))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define gfx_black_color_index (*(i8 *)((u8 *)&g.d_00638b40))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
 void __thiscall
 surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_3,uint param_4)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
   BOOL BVar3;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->dib != 0) {
     if ((param_4 & 0x10) != 0) {
-      iVar2 = font_measure_height(*(undefined4 *)param_1);
+      iVar2 = font_measure_height(*(i32 *)param_1);
       iVar2 = (int)(iVar2 + (iVar2 >> 0x1f & 7U)) >> 3;
       local_14.left = *(LONG *)param_3;
       local_14.top = *(LONG *)(param_3 + 4);
@@ -8291,11 +8291,11 @@ surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_
       local_14.bottom = *(LONG *)(param_3 + 0xc);
       BVar3 = OffsetRect(&local_14,iVar2,iVar2);
       uVar1 = gfx_set_text_color_index(CONCAT31((int3)((uint)BVar3 >> 8),gfx_black_color_index));
-      local_1c = CONCAT31((*(undefined3 *)((char *)&local_1c + 1)),uVar1);
-      dib_draw_text_rect(this->dib,*(undefined4 *)param_1,param_2,(iptr)&local_14,param_4);
+      local_1c = CONCAT31((*(i32 *)((char *)&local_1c + 1)),uVar1);
+      dib_draw_text_rect(this->dib,*(i32 *)param_1,param_2,(iptr)&local_14,param_4);
       gfx_set_text_color_index(local_1c);
     }
-    dib_draw_text_rect(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4);
+    dib_draw_text_rect(this->dib,*(i32 *)param_1,param_2,param_3,param_4);
   }
   return;
 }
@@ -8306,17 +8306,17 @@ surface_draw_text_in_rect(DibSurface *this,iptr param_1,iptr param_2,iptr param_
 /* 005c1167 auto */
 void __thiscall
 surface_draw_text_rect
-          (DibSurface *this,iptr param_1,iptr param_2,iptr param_3,undefined4 param_4)
+          (DibSurface *this,iptr param_1,iptr param_2,iptr param_3,i32 param_4)
 
 {
   if (this->dib != 0) {
-    dib_draw_text_wrap(this->dib,*(undefined4 *)param_1,param_2,param_3,param_4);
+    dib_draw_text_wrap(this->dib,*(i32 *)param_1,param_2,param_3,param_4);
   }
   return;
 }
 
 /* 005c11b2 auto */
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
+#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
 void __thiscall
 surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param_4)
 
@@ -8324,8 +8324,8 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
   iptr iVar1;
   int iVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
+  i32 uVar4;
+  i32 uVar5;
   u32 uVar6;
   
   if (((((((int)this->clip_left <= (int)param_1) || ((int)this->clip_left <= (int)param_3)) &&
@@ -8402,14 +8402,14 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
 #undef gfx_text_color_index
 
 /* 005c19ad auto */
-#define gfx_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e78))
-undefined1 __cdecl gfx_set_text_color_index(undefined4 param_1)
+#define gfx_text_color_index (*(i8 *)((u8 *)&g.d_00637e78))
+i8 __cdecl gfx_set_text_color_index(i32 param_1)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   
   uVar1 = gfx_text_color_index;
-  gfx_text_color_index = (undefined1)param_1;
+  gfx_text_color_index = (i8)param_1;
   return uVar1;
 }
 #undef gfx_text_color_index
@@ -8422,10 +8422,10 @@ int __thiscall surface_pixel_ptr(DibSurface *this,int param_1,int param_2)
 }
 
 /* 005c1a00 auto */
-undefined1 __thiscall surface_in_clip(DibSurface *this,int param_1,int param_2)
+i8 __thiscall surface_in_clip(DibSurface *this,int param_1,int param_2)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   
   if ((((param_1 < (int)this->clip_left) || ((int)this->clip_right <= param_1)) ||
       (param_2 < (int)this->clip_top)) || ((int)this->clip_bottom <= param_2)) {
@@ -8442,10 +8442,10 @@ undefined1 __thiscall surface_in_clip(DibSurface *this,int param_1,int param_2)
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
-surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param_3)
+surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->bits != 0) {
     local_10 = (byte *)this->bits;
@@ -8466,7 +8466,7 @@ surface_remap_colors(DibSurface *this,iptr param_1,iptr param_2,undefined4 param
 #undef local_8
 
 /* 005c1b47 auto */
-undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
+i32 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -8508,7 +8508,7 @@ undefined4 __thiscall surface_alloc_dib16(DibSurface *this,iptr param_1)
 }
 
 /* 005c1cf7 auto */
-undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
+i32 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -8550,7 +8550,7 @@ undefined4 __thiscall surface_alloc_dib24(DibSurface *this,iptr param_1)
 }
 
 /* 005c1ea7 auto */
-undefined4 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
+i32 __thiscall surface_alloc_dib32(DibSurface *this,iptr param_1)
 
 {
   char cVar1;
@@ -8706,18 +8706,18 @@ GamePalette * __thiscall palette_destroy(GamePalette *this)
 }
 
 /* 005c65f9 auto */
-#define local_8 (*(undefined1 *)(frame_ + FRAME_OFF(0)))
-#define local_7 (*(undefined1 *)(frame_ + FRAME_OFF(1)))
-#define local_6 (*(undefined1 *)(frame_ + FRAME_OFF(2)))
-#define local_5 (*(undefined1 *)(frame_ + FRAME_OFF(3)))
-void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1)
+#define local_8 (*(i8 *)(frame_ + FRAME_OFF(0)))
+#define local_7 (*(i8 *)(frame_ + FRAME_OFF(1)))
+#define local_6 (*(i8 *)(frame_ + FRAME_OFF(2)))
+#define local_5 (*(i8 *)(frame_ + FRAME_OFF(3)))
+void __thiscall palette_load_ctab_res(GamePalette *this,i32 param_1)
 
 {
   int iVar1;
-  undefined4 *puVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *puVar2;
+  i32 uVar3;
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0x43;
   local_7 = 0x54;
@@ -8728,7 +8728,7 @@ void __thiscall palette_load_ctab_res(GamePalette *this,undefined4 param_1)
     dbg_logf_noret(ADDR(0x637bec, ((u8 *)&g.d_00637bec)),param_1);
   }
   else {
-    puVar2 = (undefined4 *)res_lock(iVar1);
+    puVar2 = (i32 *)res_lock(iVar1);
     uVar3 = endian_from_le(*puVar2);
     uVar4 = endian_from_le(puVar2[1]);
     palette_set_rgb(this,uVar3,uVar4,(iptr)(puVar2 + 2));
@@ -8758,7 +8758,7 @@ void __thiscall palette_new_version(GamePalette *this)
 
 /* 005c6a8d auto */
 void __thiscall
-palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
+palette_reserve_range(GamePalette *this,i32 param_1,i32 param_2)
 
 {
   logpal_reserve_range((iptr)this,param_1,param_2);
@@ -8769,7 +8769,7 @@ palette_reserve_range(GamePalette *this,undefined4 param_1,undefined4 param_2)
 /* 005c6b63 auto */
 void __thiscall
 palette_get_rgb
-          (GamePalette *this,iptr param_1,undefined4 param_2,undefined4 param_3)
+          (GamePalette *this,iptr param_1,i32 param_2,i32 param_3)
 
 {
   palette_copy_rgb_range((iptr)this,param_1,param_2,param_3);
@@ -8779,8 +8779,8 @@ palette_get_rgb
 /* 005c6b93 auto */
 void __thiscall
 palette_set_entry
-          (GamePalette *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (GamePalette *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   palette_set_entry_rgb((iptr)this,param_1,param_2,param_3,param_4);
@@ -8789,22 +8789,22 @@ palette_set_entry
 }
 
 /* 005c6da8 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 palette_set_rgb(GamePalette *this,int param_1,int param_2,iptr param_3)
 
 {
-  undefined3 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (0x100 < param_2 + param_1) {
     param_2 = 0x100 - param_1;
   }
   for (local_8 = param_1; local_8 < param_2 + param_1; local_8++) {
-    uVar1 = (undefined3)((uint)param_3 >> 8);
-    palette_set_entry_rgb((iptr)this,local_8,CONCAT31(uVar1,*(undefined1 *)param_3),
-                 CONCAT31(uVar1,*(undefined1 *)(param_3 + 1)),
-                 CONCAT31(uVar1,*(undefined1 *)(param_3 + 2)));
+    uVar1 = (i32)((uint)param_3 >> 8);
+    palette_set_entry_rgb((iptr)this,local_8,CONCAT31(uVar1,*(i8 *)param_3),
+                 CONCAT31(uVar1,*(i8 *)(param_3 + 1)),
+                 CONCAT31(uVar1,*(i8 *)(param_3 + 2)));
     param_3 += 3;
   }
   palette_commit_range(this,param_1,param_2);
@@ -8861,9 +8861,9 @@ void __thiscall palette_fade_end(GamePalette *this)
 
 /* 005c738e auto */
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
 void __thiscall palette_fade_step(GamePalette *this,int param_1)
 
 {
@@ -8871,7 +8871,7 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
   char cVar2;
   iptr iVar3;
   iptr iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 < 0) || ((int)this->fade_steps < param_1)) {
     dbg_logf(ADDR(0x637c54, ((u8 *)&g.d_00637c54)),param_1);
@@ -8882,17 +8882,17 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
     iVar3 = mem_handle_lock(this->fade_src_rgb);
     iVar4 = mem_handle_lock(this->fade_dst_rgb);
     for (local_18 = 0; local_18 < (int)(this->fade_count * 3); local_18 += 3) {
-      local_10 = CONCAT31((*(undefined3 *)((char *)&local_10 + 1)),
+      local_10 = CONCAT31((*(i32 *)((char *)&local_10 + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + iVar4) /
                                 (longlong)(int)this->fade_steps) * cVar1 +
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + iVar3) /
                                 (longlong)(int)this->fade_steps) * cVar2);
-      local_14 = CONCAT31((*(undefined3 *)((char *)&local_14 + 1)),
+      local_14 = CONCAT31((*(i32 *)((char *)&local_14 + 1)),
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + 1 + iVar3) /
                                 (longlong)(int)this->fade_steps) * cVar2 +
                           (char)((longlong)(ulonglong)*(byte *)(local_18 + 1 + iVar4) /
                                 (longlong)(int)this->fade_steps) * cVar1);
-      local_c = CONCAT31((*(undefined3 *)((char *)&local_c + 1)),
+      local_c = CONCAT31((*(i32 *)((char *)&local_c + 1)),
                          (char)((longlong)(ulonglong)*(byte *)(local_18 + 2 + iVar4) /
                                (longlong)(int)this->fade_steps) * cVar1 +
                          (char)((longlong)(ulonglong)*(byte *)(local_18 + 2 + iVar3) /
@@ -8912,13 +8912,13 @@ void __thiscall palette_fade_step(GamePalette *this,int param_1)
 
 /* 005c8200 auto */
 #define local_4c (*(LOGFONTA *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(64)))
 #define local_c (*(HFONT *)(frame_ + FRAME_OFF(68)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(72)))
-undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 param_3)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(72)))
+i32 __cdecl font_handle_create(i32 param_1,int param_2,i32 param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_4c.lfHeight = -param_2;
   local_4c.lfWidth = 0;
@@ -8958,7 +8958,7 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
   local_c = CreateFontIndirectA(&local_4c);
   if (local_c != (HFONT)0x0) {
     local_10 = mem_handle_alloc(8);
-    local_8 = (undefined4 *)mem_handle_lock(local_10);
+    local_8 = (i32 *)mem_handle_lock(local_10);
     *local_8 = local_c;
     local_8[1] = 1;
     mem_handle_unlock(local_10);
@@ -8971,14 +8971,14 @@ undefined4 __cdecl font_handle_create(undefined4 param_1,int param_2,undefined4 
 #undef local_8
 
 /* 005c841d auto */
-undefined4 __cdecl font_handle_destroy(undefined4 param_1)
+i32 __cdecl font_handle_destroy(i32 param_1)
 
 {
-  undefined4 *puVar1;
-  undefined4 uVar2;
+  i32 *puVar1;
+  i32 uVar2;
   
-  puVar1 = (undefined4 *)mem_handle_lock(param_1);
-  if (puVar1 == (undefined4 *)0x0) {
+  puVar1 = (i32 *)mem_handle_lock(param_1);
+  if (puVar1 == (i32 *)0x0) {
     uVar2 = 0;
   }
   else {
@@ -8993,21 +8993,21 @@ undefined4 __cdecl font_handle_destroy(undefined4 param_1)
 
 /* 005c847f auto */
 #define local_40 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(56)))
-LONG __cdecl font_measure_height(undefined4 param_1)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(56)))
+LONG __cdecl font_measure_height(i32 param_1)
 
 {
   int iVar1;
   HDC hdc;
   HGDIOBJ h;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = mem_handle_size(param_1);
   if (iVar1 == 0) {
     local_40.tmHeight = 1;
   }
   else {
-    local_8 = (undefined4 *)mem_handle_lock(param_1);
+    local_8 = (i32 *)mem_handle_lock(param_1);
     hdc = GetDC((HWND)0x0);
     h = SelectObject(hdc,(HGDIOBJ)*local_8);
     GetTextMetricsA(hdc,&local_40);
@@ -9022,15 +9022,15 @@ LONG __cdecl font_measure_height(undefined4 param_1)
 
 /* 005c8514 auto */
 #define local_40 (*(tagTEXTMETRICA *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(56)))
-int __cdecl font_handle_line_spacing(undefined4 param_1)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(56)))
+int __cdecl font_handle_line_spacing(i32 param_1)
 
 {
   HDC hdc;
   HGDIOBJ h;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (undefined4 *)mem_handle_lock(param_1);
+  local_8 = (i32 *)mem_handle_lock(param_1);
   hdc = GetDC((HWND)0x0);
   h = SelectObject(hdc,(HGDIOBJ)*local_8);
   GetTextMetricsA(hdc,&local_40);
@@ -9044,17 +9044,17 @@ int __cdecl font_handle_line_spacing(undefined4 param_1)
 
 /* 005c858e auto */
 #define local_10 (*(tagSIZE *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
-LONG __cdecl font_measure_width(undefined4 param_1,iptr param_2)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
+LONG __cdecl font_measure_width(i32 param_1,iptr param_2)
 
 {
   HDC hdc;
   HGDIOBJ h;
   size_t c;
   tagSIZE *lpsz;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (undefined4 *)mem_handle_lock(param_1);
+  local_8 = (i32 *)mem_handle_lock(param_1);
   hdc = GetDC((HWND)0x0);
   h = SelectObject(hdc,(HGDIOBJ)*local_8);
   lpsz = &local_10;
@@ -9099,12 +9099,12 @@ u32 __thiscall palette_get_hpalette(PaletteHandleView *this)
 void __cdecl gfx_scale_init(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x10; local_8++) {
-    *(undefined4 *)(&gfx_scale_cache_last_used + local_8 * 0x100c) = 0;
-    *(undefined4 *)(&gfx_scale_cache_num + local_8 * 0x100c) = 0;
-    *(undefined4 *)(&gfx_scale_cache_den + local_8 * 0x100c) = 0;
+    *(i32 *)(&gfx_scale_cache_last_used + local_8 * 0x100c) = 0;
+    *(i32 *)(&gfx_scale_cache_num + local_8 * 0x100c) = 0;
+    *(i32 *)(&gfx_scale_cache_den + local_8 * 0x100c) = 0;
   }
   gfx_set_scale_ratio(1,1);
   gfx_set_scale_tables(1,1,1,1);
@@ -9123,8 +9123,8 @@ void __cdecl gfx_scale_init(void)
 void __cdecl gfx_set_scale_ratio(int param_1,int param_2)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 < 2) {
     param_1 = 1;
@@ -9142,7 +9142,7 @@ void __cdecl gfx_set_scale_ratio(int param_1,int param_2)
       *(int *)(&gfx_scale_cache_num + local_18 * 0x100c) = gfx_scale_num;
       *(int *)(&gfx_scale_cache_den + local_18 * 0x100c) = gfx_scale_den;
       uVar1 = timer_ticks();
-      *(undefined4 *)(&gfx_scale_cache_last_used + local_18 * 0x100c) = uVar1;
+      *(i32 *)(&gfx_scale_cache_last_used + local_18 * 0x100c) = uVar1;
       local_8 = 0;
       if (gfx_scale_num < gfx_scale_den) {
         local_c = 0;
@@ -9175,7 +9175,7 @@ LAB_005cda01:
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_den)) {
       uVar1 = timer_ticks();
-      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
+      *(i32 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_18 = local_14;
       goto LAB_005cda01;
     }
@@ -9195,21 +9195,21 @@ LAB_005cda01:
 #undef local_8
 
 /* 005cda06 auto */
-#define gfx_scale_den (*(undefined4 *)((u8 *)&g.d_00637f9c))
-#define gfx_scale_num (*(undefined4 *)((u8 *)&g.d_00637f98))
+#define gfx_scale_den (*(i32 *)((u8 *)&g.d_00637f9c))
+#define gfx_scale_num (*(i32 *)((u8 *)&g.d_00637f98))
 void __cdecl gfx_get_scale_ratio(iptr param_1,iptr param_2)
 
 {
-  *(undefined4 *)param_1 = gfx_scale_num;
-  *(undefined4 *)param_2 = gfx_scale_den;
+  *(i32 *)param_1 = gfx_scale_num;
+  *(i32 *)param_2 = gfx_scale_den;
   return;
 }
 #undef gfx_scale_den
 #undef gfx_scale_num
 
 /* 005cda2a auto */
-#define gfx_scale_x_table (*(undefined * *)((u8 *)&g.d_006e47c0))
-#define gfx_scale_y_table (*(undefined * *)((u8 *)&g.d_006e47c4))
+#define gfx_scale_x_table (*(i8 * *)((u8 *)&g.d_006e47c0))
+#define gfx_scale_y_table (*(i8 * *)((u8 *)&g.d_006e47c4))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
@@ -9217,8 +9217,8 @@ void __cdecl gfx_get_scale_ratio(iptr param_1,iptr param_2)
 void __cdecl gfx_set_scale_tables(int param_1,int param_2,int param_3,int param_4)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 < 2) {
     param_1 = 1;
@@ -9242,7 +9242,7 @@ void __cdecl gfx_set_scale_tables(int param_1,int param_2,int param_3,int param_
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_x_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_x_den)) {
       uVar1 = timer_ticks();
-      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
+      *(i32 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       local_8 = local_14;
       goto LAB_005cdbab;
     }
@@ -9268,7 +9268,7 @@ LAB_005cdcd6:
     if ((*(int *)(&gfx_scale_cache_num + local_14 * 0x100c) == gfx_scale_y_num) &&
        (*(int *)(&gfx_scale_cache_den + local_14 * 0x100c) == gfx_scale_y_den)) {
       uVar1 = timer_ticks();
-      *(undefined4 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
+      *(i32 *)(&gfx_scale_cache_last_used + local_14 * 0x100c) = uVar1;
       goto LAB_005cdcd6;
     }
     if ((*(int *)(&gfx_scale_cache_last_used + local_14 * 0x100c) <= local_10) && (local_8 != local_14)) {
@@ -9292,13 +9292,13 @@ LAB_005cdcd6:
 void __cdecl gfx_scale_build_table(int param_1,int param_2,int param_3)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(int *)(&gfx_scale_cache_num + param_1 * 0x100c) = param_2;
   *(int *)(&gfx_scale_cache_den + param_1 * 0x100c) = param_3;
   uVar1 = timer_ticks();
-  *(undefined4 *)(&gfx_scale_cache_last_used + param_1 * 0x100c) = uVar1;
+  *(i32 *)(&gfx_scale_cache_last_used + param_1 * 0x100c) = uVar1;
   local_8 = 0;
   if (param_2 < param_3) {
     local_c = 0;
@@ -9361,14 +9361,14 @@ Sprite * __thiscall sprite_destroy(Sprite *this)
 
 /* 005cdea1 auto */
 #define local_58 (*(DibSurface *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(76)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
-undefined4 __thiscall
-sprite_create_solid(Sprite *this,undefined4 param_1,undefined4 param_2,uint param_3)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(72)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(76)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(80)))
+i32 __thiscall
+sprite_create_solid(Sprite *this,i32 param_1,i32 param_2,uint param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surface_ctor(&local_58);
@@ -9425,7 +9425,7 @@ sprite_encode_rect
 
 {
   u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_2,param_3,param_2 + param_4,param_5 + param_3);
   uVar1 = sprite_encode_from_surface(this,param_1,0xffffffff,(iptr)&local_14);
@@ -9457,7 +9457,7 @@ sprite_grab_from_surface
 
 {
   u32 uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   SetRect(&local_14,param_3,param_4,param_5 + param_3,param_6 + param_4);
   uVar1 = sprite_encode_from_surface(this,param_1,param_2 & 0xff,(iptr)&local_14);
@@ -9470,7 +9470,7 @@ sprite_grab_from_surface
 /* 005cef31 auto */
 iptr __thiscall
 sprite_draw
-          (Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+          (Sprite *this,iptr param_1,iptr param_2,i32 param_3,i32 param_4)
 
 {
   sprite_blit_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4);
@@ -9480,8 +9480,8 @@ sprite_draw
 /* 005cef66 auto */
 iptr __thiscall
 sprite_draw_keyed
-          (Sprite *this,iptr param_1,iptr param_2,uint param_3,undefined4 param_4,
-          undefined4 param_5)
+          (Sprite *this,iptr param_1,iptr param_2,uint param_3,i32 param_4,
+          i32 param_5)
 
 {
   sprite_blit_to_surface(this,param_1,param_2,param_3 & 0xff,param_4,param_5);
@@ -9491,8 +9491,8 @@ sprite_draw_keyed
 /* 005cf126 auto */
 iptr __thiscall
 sprite_draw_silhouette
-          (Sprite *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5)
+          (Sprite *this,iptr param_1,iptr param_2,i32 param_3,i32 param_4,
+          i32 param_5)
 
 {
   sprite_blit_silhouette_to_surface(this,param_1,param_2,0xffffffff,param_3,param_4,param_5);
@@ -9563,13 +9563,13 @@ void __thiscall sprite_get_origin(SpriteOriginGetView *this,iptr param_1,iptr pa
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2)
+sprite_replace_color(Sprite *this,i32 param_1,i32 param_2)
 
 {
   int iVar1;
   int *piVar2;
   char cVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   cVar3 = sprite_has_data(this);
   if (cVar3 == '\0') {
@@ -9603,7 +9603,7 @@ sprite_replace_color(Sprite *this,undefined4 param_1,undefined4 param_2)
 #define local_64 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 #define local_54 (*(u8 * *)(frame_ + FRAME_OFF(20)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_4c (*(undefined4 * *)(frame_ + FRAME_OFF(28)))
+#define local_4c (*(i32 * *)(frame_ + FRAME_OFF(28)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_44 (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_40 (*(u8 *)(frame_ + FRAME_OFF(40)))
@@ -9629,7 +9629,7 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
   int iVar2;
   int iVar3;
   u32 uVar4;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_34 = 1;
   local_48 = 1;
@@ -9709,8 +9709,8 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
         local_44 = 0;
         while (local_44 < local_10 - local_18) {
           local_c += 8;
-          *(undefined4 *)((int)local_20 + local_44 * 4) = 0;
-          *(undefined4 *)((int)local_38 + local_44 * 4) = 0;
+          *(i32 *)((int)local_20 + local_44 * 4) = 0;
+          *(i32 *)((int)local_38 + local_44 * 4) = 0;
           local_54 = local_2c;
           for (local_3c = 0; local_3c < local_24; local_3c++) {
             if ((*local_54 != local_40) || (param_2 == -2)) {
@@ -9773,17 +9773,17 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
           }
           this->offset_x = 0;
           this->full_height = 0;
-          local_4c = (undefined4 *)mem_handle_lock(local_30);
+          local_4c = (i32 *)mem_handle_lock(local_30);
           for (local_44 = 0; local_44 < local_10 - local_18; local_44++) {
-            *local_4c = *(undefined4 *)((int)local_20 + local_44 * 4);
-            local_4c[1] = *(undefined4 *)((int)local_38 + local_44 * 4);
+            *local_4c = *(i32 *)((int)local_20 + local_44 * 4);
+            local_4c[1] = *(i32 *)((int)local_38 + local_44 * 4);
             local_4c += 2;
             mem_move_src_dst(*(iptr *)((int)local_8 + local_44 * 4),(iptr)local_4c,
-                         *(undefined4 *)((int)local_38 + local_44 * 4));
-            local_4c = (undefined4 *)((int)local_4c + *(int *)((int)local_38 + local_44 * 4));
+                         *(i32 *)((int)local_38 + local_44 * 4));
+            local_4c = (i32 *)((int)local_4c + *(int *)((int)local_38 + local_44 * 4));
           }
           *local_4c = 0;
-          local_4c = (undefined4 *)mem_handle_unlock(local_30);
+          local_4c = (i32 *)mem_handle_unlock(local_30);
           if (local_34 == 0) {
             surface_unlock((DibSurface *)param_1);
           }
@@ -9843,7 +9843,7 @@ sprite_encode_from_surface(Sprite *this,iptr param_1,int param_2,iptr param_3)
 #define local_30 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
@@ -9857,24 +9857,24 @@ sprite_blit_to_surface
   int iVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
   BOOL BVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   iptr iVar9;
   int iVar10;
   int iVar11;
-  undefined4 uVar12;
+  i32 uVar12;
   iptr iVar13;
-  undefined4 uVar14;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar14;
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
+    (*(i8 *)((char *)&param_3 + 0)) = this->key_color;
   }
   else {
   }
-  local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
+  local_24 = CONCAT31((*(i32 *)((char *)&local_24 + 1)),(u8)param_3);
   local_8 = this->bounds_rect - this->frame_rect;
   iVar1 = this->bounds_top - this->frame_top;
   iVar2 = sprite_width(this);
@@ -9952,38 +9952,38 @@ sprite_blit_to_surface
 #define local_30 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 int * __thiscall
 sprite_blit_silhouette_to_surface
           (Sprite *this,int *param_1,DibSurface *param_2,int param_3,int param_4,
-          int param_5,undefined4 param_6)
+          int param_5,i32 param_6)
 
 {
   int iVar1;
   int iVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
   BOOL BVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   iptr iVar9;
   int iVar10;
   int iVar11;
-  undefined4 uVar12;
+  i32 uVar12;
   iptr iVar13;
-  undefined4 uVar14;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar14;
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_3 == -1) {
-    (*(undefined1 *)((char *)&param_3 + 0)) = this->key_color;
+    (*(i8 *)((char *)&param_3 + 0)) = this->key_color;
   }
   else {
   }
-  local_24 = CONCAT31((*(undefined3 *)((char *)&local_24 + 1)),(u8)param_3);
+  local_24 = CONCAT31((*(i32 *)((char *)&local_24 + 1)),(u8)param_3);
   local_8 = this->bounds_rect - this->frame_rect;
   iVar1 = this->bounds_top - this->frame_top;
   iVar2 = sprite_width(this);
@@ -10066,7 +10066,7 @@ sprite_blit_silhouette_to_surface
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(76)))
 void __thiscall
 sprite_merge_at
-          (Sprite *this,iptr param_1,Sprite *param_2,undefined4 param_3,int param_4,
+          (Sprite *this,iptr param_1,Sprite *param_2,i32 param_3,int param_4,
           int param_5)
 
 {
@@ -10085,7 +10085,7 @@ sprite_merge_at
   int iVar13;
   int iVar14;
   u32 uVar15;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(param_1 + 0x34) != 0) {
     if (param_2->field_34 == 0) {
@@ -10093,8 +10093,8 @@ sprite_merge_at
               *(int *)(param_1 + 0xc) + param_5);
       param_2->field_10 = *(u32 *)(param_1 + 0x10);
       param_2->field_14 = *(u32 *)(param_1 + 0x14);
-      *(undefined4 *)param_2->pad_18 = *(undefined4 *)(param_1 + 0x18);
-      *(undefined4 *)(param_2->pad_18 + 4) = *(undefined4 *)(param_1 + 0x1c);
+      *(i32 *)param_2->pad_18 = *(i32 *)(param_1 + 0x18);
+      *(i32 *)(param_2->pad_18 + 4) = *(i32 *)(param_1 + 0x1c);
       OffsetRect((LPRECT)&param_2->field_10,param_4,param_5);
       param_2->field_20 = *(int *)(param_1 + 0x20) + param_4;
       param_2->field_24 = *(int *)(param_1 + 0x24) + param_5;
@@ -10261,7 +10261,7 @@ int __cdecl gfx_scale_length(int param_1,int param_2,int param_3)
 {
   int iVar1;
   bool bVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     iVar1 = 0;
@@ -10295,7 +10295,7 @@ int __cdecl gfx_scale_length(int param_1,int param_2,int param_3)
 #undef local_10
 
 /* 005de780 auto */
-#define local_10 (*(undefined1 * *)(frame_ + FRAME_OFF(0)))
+#define local_10 (*(i8 * *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl logpal_init_from_system(iptr param_1)
 
@@ -10303,10 +10303,10 @@ void __cdecl logpal_init_from_system(iptr param_1)
   HDC hdc;
   uint uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined2 *)param_1 = 0x300;
-  *(undefined2 *)(param_1 + 2) = 0x100;
+  *(i16 *)param_1 = 0x300;
+  *(i16 *)(param_1 + 2) = 0x100;
   hdc = GetDC((HWND)0x0);
   uVar1 = GetDeviceCaps(hdc,0x26);
   if ((uVar1 & 0x100) == 0) {
@@ -10319,29 +10319,29 @@ void __cdecl logpal_init_from_system(iptr param_1)
     GetSystemPaletteEntries(hdc,0,0x100,(LPPALETTEENTRY)(param_1 + 4));
   }
   for (local_c = 0; local_c < palette_static_half_count; local_c++) {
-    *(undefined1 *)(param_1 + 7 + local_c * 4) = 0;
+    *(i8 *)(param_1 + 7 + local_c * 4) = 0;
   }
   for (; local_c < 0x100 - palette_static_half_count; local_c++) {
-    *(undefined1 *)(param_1 + 4 + local_c * 4) = 0;
-    *(undefined1 *)(param_1 + 5 + local_c * 4) = 0;
-    *(undefined1 *)(param_1 + 6 + local_c * 4) = 0;
-    *(undefined1 *)(param_1 + 7 + local_c * 4) = 4;
+    *(i8 *)(param_1 + 4 + local_c * 4) = 0;
+    *(i8 *)(param_1 + 5 + local_c * 4) = 0;
+    *(i8 *)(param_1 + 6 + local_c * 4) = 0;
+    *(i8 *)(param_1 + 7 + local_c * 4) = 4;
   }
   for (; local_c < 0x100; local_c++) {
-    *(undefined1 *)(param_1 + 7 + local_c * 4) = 0;
+    *(i8 *)(param_1 + 7 + local_c * 4) = 0;
   }
   if (gfx_palettized_display == 0) {
     local_10 = &logpal_static_system_colors;
     for (local_c = 0; local_c < 10; local_c++) {
-      *(undefined1 *)(param_1 + 4 + local_c * 4) = *local_10;
-      *(undefined1 *)(param_1 + 5 + local_c * 4) = local_10[1];
-      *(undefined1 *)(param_1 + 6 + local_c * 4) = local_10[2];
+      *(i8 *)(param_1 + 4 + local_c * 4) = *local_10;
+      *(i8 *)(param_1 + 5 + local_c * 4) = local_10[1];
+      *(i8 *)(param_1 + 6 + local_c * 4) = local_10[2];
       local_10 += 3;
     }
     for (local_c = 0xf6; local_c < 0x100; local_c++) {
-      *(undefined1 *)(param_1 + 4 + local_c * 4) = *local_10;
-      *(undefined1 *)(param_1 + 5 + local_c * 4) = local_10[1];
-      *(undefined1 *)(param_1 + 6 + local_c * 4) = local_10[2];
+      *(i8 *)(param_1 + 4 + local_c * 4) = *local_10;
+      *(i8 *)(param_1 + 5 + local_c * 4) = local_10[1];
+      *(i8 *)(param_1 + 6 + local_c * 4) = local_10[2];
       local_10 += 3;
     }
   }
@@ -10356,13 +10356,13 @@ void __cdecl logpal_init_from_system(iptr param_1)
 void __cdecl logpal_reserve_range(iptr param_1,int param_2,int param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (0x100 < param_3 + param_2) {
     param_3 = 0x100 - param_2;
   }
   for (local_8 = param_2; local_8 < param_3 + param_2; local_8++) {
-    *(undefined1 *)(param_1 + 7 + local_8 * 4) = 1;
+    *(i8 *)(param_1 + 7 + local_8 * 4) = 1;
   }
   return;
 }
@@ -10382,47 +10382,47 @@ void __cdecl palette_animate(iptr param_1,HPALETTE param_2,UINT param_3,UINT par
 void __cdecl palette_get_entry_rgb(iptr param_1,int param_2,iptr param_3,iptr param_4,iptr param_5)
 
 {
-  *(undefined1 *)param_3 = *(undefined1 *)(param_1 + 4 + param_2 * 4);
-  *(undefined1 *)param_4 = *(undefined1 *)(param_1 + 5 + param_2 * 4);
-  *(undefined1 *)param_5 = *(undefined1 *)(param_1 + 6 + param_2 * 4);
+  *(i8 *)param_3 = *(i8 *)(param_1 + 4 + param_2 * 4);
+  *(i8 *)param_4 = *(i8 *)(param_1 + 5 + param_2 * 4);
+  *(i8 *)param_5 = *(i8 *)(param_1 + 6 + param_2 * 4);
   return;
 }
 
 /* 005deadb auto */
 void __cdecl
-logpal_set_entry(iptr param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5)
+logpal_set_entry(iptr param_1,int param_2,i32 param_3,i32 param_4,i32 param_5)
 
 {
-  *(undefined1 *)(param_1 + 4 + param_2 * 4) = (undefined1)param_3;
-  *(undefined1 *)(param_1 + 5 + param_2 * 4) = (undefined1)param_4;
-  *(undefined1 *)(param_1 + 6 + param_2 * 4) = (undefined1)param_5;
+  *(i8 *)(param_1 + 4 + param_2 * 4) = (i8)param_3;
+  *(i8 *)(param_1 + 5 + param_2 * 4) = (i8)param_4;
+  *(i8 *)(param_1 + 6 + param_2 * 4) = (i8)param_5;
   return;
 }
 
 /* 005deb12 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl
-palette_set_entry_rgb(iptr param_1,int param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5)
+palette_set_entry_rgb(iptr param_1,int param_2,i32 param_3,i32 param_4,i32 param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(char *)(param_1 + 4 + param_2 * 4) = (char)param_3;
   *(char *)(param_1 + 5 + param_2 * 4) = (char)param_4;
   *(char *)(param_1 + 6 + param_2 * 4) = (char)param_5;
-  *(undefined1 *)(param_1 + 7 + param_2 * 4) = 4;
+  *(i8 *)(param_1 + 7 + param_2 * 4) = 4;
   for (local_8 = 0; local_8 < palette_static_half_count; local_8++) {
     if (((*(char *)(param_1 + 4 + local_8 * 4) == (char)param_3) &&
         (*(char *)(param_1 + 5 + local_8 * 4) == (char)param_4)) &&
        (*(char *)(param_1 + 6 + local_8 * 4) == (char)param_5)) {
-      *(undefined1 *)(param_1 + 7 + param_2 * 4) = 1;
+      *(i8 *)(param_1 + 7 + param_2 * 4) = 1;
     }
   }
   for (local_8 = 0x100 - palette_static_half_count; local_8 < 0x100; local_8++) {
     if (((*(char *)(param_1 + 4 + local_8 * 4) == (char)param_3) &&
         (*(char *)(param_1 + 5 + local_8 * 4) == (char)param_4)) &&
        (*(char *)(param_1 + 6 + local_8 * 4) == (char)param_5)) {
-      *(undefined1 *)(param_1 + 7 + param_2 * 4) = 1;
+      *(i8 *)(param_1 + 7 + param_2 * 4) = 1;
     }
   }
   return;
@@ -10430,11 +10430,11 @@ palette_set_entry_rgb(iptr param_1,int param_2,undefined4 param_3,undefined4 par
 #undef local_8
 
 /* 005dec4e auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 HPALETTE __cdecl logpal_create_hpalette(iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (gfx_palettized_display == 1) {
     local_8 = CreatePalette((LOGPALETTE *)param_1);
@@ -10472,13 +10472,13 @@ void __cdecl logpal_apply_range(iptr param_1,HPALETTE param_2,UINT param_3,UINT 
 void __cdecl palette_copy_rgb_range(iptr param_1,iptr param_2,int param_3,int param_4)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = param_3; local_c < param_4 + param_3; local_c++) {
-    *(undefined1 *)(local_8 + param_2) = *(undefined1 *)(param_1 + 4 + local_c * 4);
-    *(undefined1 *)(local_8 + 1 + param_2) = *(undefined1 *)(param_1 + 5 + local_c * 4);
-    *(undefined1 *)(local_8 + 2 + param_2) = *(undefined1 *)(param_1 + 6 + local_c * 4);
+    *(i8 *)(local_8 + param_2) = *(i8 *)(param_1 + 4 + local_c * 4);
+    *(i8 *)(local_8 + 1 + param_2) = *(i8 *)(param_1 + 5 + local_c * 4);
+    *(i8 *)(local_8 + 2 + param_2) = *(i8 *)(param_1 + 6 + local_c * 4);
     local_8 += 3;
   }
   return;
@@ -10488,11 +10488,11 @@ void __cdecl palette_copy_rgb_range(iptr param_1,iptr param_2,int param_3,int pa
 
 /* 005e35b0 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define local_444 (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define local_444 (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_434 (*(BITMAPINFO (*)[24])(frame_ + FRAME_OFF(20)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(1084)))
 #define local_8 (*(void * *)(frame_ + FRAME_OFF(1088)))
-undefined4 * __cdecl dib_create(iptr param_1)
+i32 * __cdecl dib_create(iptr param_1)
 
 {
   int iVar1;
@@ -10500,13 +10500,13 @@ undefined4 * __cdecl dib_create(iptr param_1)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ pvVar2;
-  undefined1 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_444 = (undefined4 *)0x0;
+  local_444 = (i32 *)0x0;
   iVar1 = *(int *)(param_1 + 8) - *(int *)param_1;
   local_c = *(int *)(param_1 + 0xc) - *(int *)(param_1 + 4);
   if ((iVar1 < 1) || (local_c < 1)) {
-    local_444 = (undefined4 *)0x0;
+    local_444 = (i32 *)0x0;
   }
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
@@ -10573,10 +10573,10 @@ undefined4 * __cdecl dib_create(iptr param_1)
 #undef local_8
 
 /* 005e388f auto */
-undefined4 __cdecl dib_destroy(iptr param_1)
+i32 __cdecl dib_destroy(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (param_1 != 0) {
     if (*(int *)(param_1 + 4) != 0) {
@@ -10587,7 +10587,7 @@ undefined4 __cdecl dib_destroy(iptr param_1)
     if (*(int *)(param_1 + 8) != 0) {
       DeleteObject(*(HGDIOBJ *)(param_1 + 8));
     }
-    uVar1 = *(undefined4 *)param_1;
+    uVar1 = *(i32 *)param_1;
     mem_handle_unlock(uVar1);
     mem_handle_free(uVar1);
   }
@@ -10595,16 +10595,16 @@ undefined4 __cdecl dib_destroy(iptr param_1)
 }
 
 /* 005e392a auto */
-undefined4 __cdecl dib_get_stride(iptr param_1)
+i32 __cdecl dib_get_stride(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (param_1 == 0) {
     uVar1 = 0;
   }
   else {
-    uVar1 = *(undefined4 *)(param_1 + 0x20);
+    uVar1 = *(i32 *)(param_1 + 0x20);
   }
   return uVar1;
 }
@@ -10618,23 +10618,23 @@ uint __cdecl dib_is_top_down(iptr param_1)
 
 /* 005e3988 auto */
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
 void __cdecl dib_flip_vertical(iptr param_1)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = dib_get_bits(param_1);
-  uVar1 = mem_handle_alloc(*(undefined4 *)(param_1 + 0x20));
+  uVar1 = mem_handle_alloc(*(i32 *)(param_1 + 0x20));
   uVar2 = mem_handle_lock(uVar1);
   local_14 = (*(int *)(param_1 + 0x1c) - 1) * *(int *)(param_1 + 0x20) + local_c;
   for (local_18 = 0; local_18 < *(int *)(param_1 + 0x1c) / 2; local_18++) {
-    FUN_005f6500(uVar2,local_14,*(undefined4 *)(param_1 + 0x20));
-    FUN_005f6500(local_14,local_c,*(undefined4 *)(param_1 + 0x20));
-    FUN_005f6500(local_c,uVar2,*(undefined4 *)(param_1 + 0x20));
+    FUN_005f6500(uVar2,local_14,*(i32 *)(param_1 + 0x20));
+    FUN_005f6500(local_14,local_c,*(i32 *)(param_1 + 0x20));
+    FUN_005f6500(local_c,uVar2,*(i32 *)(param_1 + 0x20));
     local_c += *(int *)(param_1 + 0x20);
     local_14 -= *(int *)(param_1 + 0x20);
   }
@@ -10647,22 +10647,22 @@ void __cdecl dib_flip_vertical(iptr param_1)
 #undef local_c
 
 /* 005e3a81 auto */
-undefined4 __cdecl dib_get_bits(iptr param_1)
+i32 __cdecl dib_get_bits(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (param_1 == 0) {
     uVar1 = 0;
   }
   else {
-    uVar1 = *(undefined4 *)(param_1 + 0x24);
+    uVar1 = *(i32 *)(param_1 + 0x24);
   }
   return uVar1;
 }
 
 /* 005e3aa8 auto */
-undefined4 __cdecl dib_unlock_bits(int param_1)
+i32 __cdecl dib_unlock_bits(int param_1)
 
 {
   return 0;
@@ -10674,7 +10674,7 @@ undefined4 __cdecl dib_unlock_bits(int param_1)
 void __cdecl dib_set_color_table_range(iptr param_1,GamePalette *param_2,UINT param_3,UINT param_4)
 
 {
-  undefined1 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1032)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = param_3; (int)local_8 < (int)(param_4 + param_3); local_8++) {
     palette_get_entry
@@ -10702,7 +10702,7 @@ void __cdecl dib_set_palette(iptr param_1,iptr param_2)
 #define local_20 (*(HGDIOBJ *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(UINT *)(frame_ + FRAME_OFF(12)))
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(16)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(32)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(32)))
 void __cdecl
 dib_draw_text_at(iptr param_1,int param_2,char *param_3,int param_4,int param_5,iptr param_6,
             uint param_7)
@@ -10713,13 +10713,13 @@ dib_draw_text_at(iptr param_1,int param_2,char *param_3,int param_4,int param_5,
   size_t cchText;
   tagRECT *lprc;
   UINT format;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 0) {
     dbg_log(ADDR(0x638ea0, ((u8 *)&g.d_00638ea0)));
   }
   else {
-    local_8 = (undefined4 *)mem_handle_lock(param_2);
+    local_8 = (i32 *)mem_handle_lock(param_2);
     iVar1 = font_measure_height(param_2);
     iVar1 = param_5 + iVar1;
     iVar2 = font_measure_width(param_2,(iptr)param_3);
@@ -10771,18 +10771,18 @@ dib_draw_text_at(iptr param_1,int param_2,char *param_3,int param_4,int param_5,
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(RGBQUAD *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(HGDIOBJ *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __cdecl dib_draw_text_rect(iptr param_1,int param_2,char *param_3,iptr param_4,uint param_5)
 
 {
   size_t cchText;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 0) {
     dbg_log(ADDR(0x638ec4, ((u8 *)&g.d_00638ec4)));
   }
   else if (param_1 != 0) {
-    local_8 = (undefined4 *)mem_handle_lock(param_2);
+    local_8 = (i32 *)mem_handle_lock(param_2);
     local_c = SelectObject(*(HDC *)(param_1 + 4),(HGDIOBJ)*local_8);
     GetDIBColorTable(*(HDC *)(param_1 + 4),(uint)gfx_text_color_index,1,&local_10);
     SetTextColor(*(HDC *)(param_1 + 4),
@@ -10817,18 +10817,18 @@ void __cdecl dib_draw_text_rect(iptr param_1,int param_2,char *param_3,iptr para
 #define local_14 (*(UINT *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(RGBQUAD *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(HGDIOBJ *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __cdecl dib_draw_text_wrap(iptr param_1,int param_2,char *param_3,LPRECT param_4,uint param_5)
 
 {
   size_t cchText;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == 0) {
     dbg_log(ADDR(0x638ee8, ((u8 *)&g.d_00638ee8)));
   }
   else if (param_1 != 0) {
-    local_8 = (undefined4 *)mem_handle_lock(param_2);
+    local_8 = (i32 *)mem_handle_lock(param_2);
     local_c = SelectObject(*(HDC *)(param_1 + 4),(HGDIOBJ)*local_8);
     GetDIBColorTable(*(HDC *)(param_1 + 4),(uint)gfx_text_color_index,1,&local_10);
     SetTextColor(*(HDC *)(param_1 + 4),
@@ -10861,7 +10861,7 @@ void __cdecl dib_draw_text_wrap(iptr param_1,int param_2,char *param_3,LPRECT pa
 void __cdecl dib_draw_line(iptr param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     GetDIBColorTable(*(HDC *)(param_1 + 4),(uint)gfx_text_color_index,1,&local_10);
@@ -10882,12 +10882,12 @@ void __cdecl dib_draw_line(iptr param_1,int param_2,int param_3,int param_4,int 
 
 /* 005e41ba auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define local_50 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define local_50 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 #define local_3c (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(64)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(68)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(64)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(68)))
 #define local_8 (*(void * *)(frame_ + FRAME_OFF(72)))
-undefined4 * __cdecl dib_create16(iptr param_1)
+i32 * __cdecl dib_create16(iptr param_1)
 
 {
   int iVar1;
@@ -10897,13 +10897,13 @@ undefined4 * __cdecl dib_create16(iptr param_1)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ pvVar4;
-  undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_50 = (undefined4 *)0x0;
+  local_50 = (i32 *)0x0;
   iVar2 = *(int *)(param_1 + 8) - *(int *)param_1;
   iVar3 = *(int *)(param_1 + 0xc) - *(int *)(param_1 + 4);
   if ((iVar2 < 1) || (iVar3 < 1)) {
-    local_50 = (undefined4 *)0x0;
+    local_50 = (i32 *)0x0;
   }
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
@@ -10973,10 +10973,10 @@ undefined4 * __cdecl dib_create16(iptr param_1)
 
 /* 005e43c5 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define local_48 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define local_48 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(void * *)(frame_ + FRAME_OFF(64)))
-undefined4 * __cdecl dib_create24(iptr param_1)
+i32 * __cdecl dib_create24(iptr param_1)
 
 {
   int iVar1;
@@ -10986,13 +10986,13 @@ undefined4 * __cdecl dib_create24(iptr param_1)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ pvVar4;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_48 = (undefined4 *)0x0;
+  local_48 = (i32 *)0x0;
   iVar2 = *(int *)(param_1 + 8) - *(int *)param_1;
   iVar3 = *(int *)(param_1 + 0xc) - *(int *)(param_1 + 4);
   if ((iVar2 < 1) || (iVar3 < 1)) {
-    local_48 = (undefined4 *)0x0;
+    local_48 = (i32 *)0x0;
   }
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
@@ -11053,10 +11053,10 @@ undefined4 * __cdecl dib_create24(iptr param_1)
 
 /* 005e45b5 auto */
 #define dib_row_order (*(int *)((u8 *)&g.d_00638e18))
-#define local_48 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define local_48 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(BITMAPINFO *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(void * *)(frame_ + FRAME_OFF(64)))
-undefined4 * __cdecl dib_create32(iptr param_1)
+i32 * __cdecl dib_create32(iptr param_1)
 
 {
   int iVar1;
@@ -11066,13 +11066,13 @@ undefined4 * __cdecl dib_create32(iptr param_1)
   HBITMAP h;
   HGLOBAL hMem;
   HGDIOBJ pvVar4;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_48 = (undefined4 *)0x0;
+  local_48 = (i32 *)0x0;
   iVar2 = *(int *)(param_1 + 8) - *(int *)param_1;
   iVar3 = *(int *)(param_1 + 0xc) - *(int *)(param_1 + 4);
   if ((iVar2 < 1) || (iVar3 < 1)) {
-    local_48 = (undefined4 *)0x0;
+    local_48 = (i32 *)0x0;
   }
   else {
     hdc = CreateCompatibleDC((HDC)0x0);
@@ -11132,16 +11132,16 @@ undefined4 * __cdecl dib_create32(iptr param_1)
 #undef local_8
 
 /* 005e4d60 auto */
-#define local_18 (*(undefined2 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl
-gif_lzw_decode(iptr param_1,uint param_2,undefined4 param_3,uint param_4,int param_5,uint param_6,
+#define local_18 (*(i16 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl
+gif_lzw_decode(iptr param_1,uint param_2,i32 param_3,uint param_4,int param_5,uint param_6,
             iptr param_7)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = mem_handle_alloc(0x6000);
   if (iVar1 == 0) {
@@ -11151,9 +11151,9 @@ gif_lzw_decode(iptr param_1,uint param_2,undefined4 param_3,uint param_4,int par
   else {
     iVar3 = mem_handle_lock(iVar1);
     for (local_18 = 0; local_18 < 0x1000; local_18++) {
-      *(undefined2 *)(iVar3 + local_18 * 2) = 0xffff;
+      *(i16 *)(iVar3 + local_18 * 2) = 0xffff;
       *(ushort *)(iVar3 + 0x2000 + local_18 * 2) = (ushort)(byte)param_2 + local_18;
-      *(undefined2 *)(iVar3 + 0x4000 + local_18 * 2) = 1;
+      *(i16 *)(iVar3 + 0x4000 + local_18 * 2) = 1;
     }
     gif_lzw_decode_stream(param_1,param_7,iVar3,param_5,param_6,param_4,param_3);
     mem_handle_unlock(iVar1);
@@ -11211,25 +11211,25 @@ gfx_copy_pixels(int param_1,int param_2,int param_3,int param_4,int param_5,int 
             int param_8,int param_9,int param_10,int param_11,int param_12)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   uint uVar2;
   int iVar3;
-  undefined4 *puVar4;
-  undefined4 *puVar5;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *puVar4;
+  i32 *puVar5;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar3 = param_11;
   if (param_11 < 1) {
     param_4 = (param_9 - 1) - param_4;
     iVar3 = -param_11;
   }
-  puVar4 = (undefined4 *)(param_1 + param_4 * iVar3 + param_3);
+  puVar4 = (i32 *)(param_1 + param_4 * iVar3 + param_3);
   iVar3 = param_12;
   if (param_12 < 1) {
     param_6 = (param_10 - 1) - param_6;
     iVar3 = -param_12;
   }
-  puVar5 = (undefined4 *)(param_2 + param_6 * iVar3 + param_5);
+  puVar5 = (i32 *)(param_2 + param_6 * iVar3 + param_5);
   local_8 = param_8;
   do {
     uVar2 = param_7 >> 2;
@@ -11241,13 +11241,13 @@ gfx_copy_pixels(int param_1,int param_2,int param_3,int param_4,int param_5,int 
       }
     }
     for (uVar2 = param_7 & 3; uVar2 != 0; uVar2--) {
-      uVar1 = *(undefined1 *)puVar4;
-      puVar4 = (undefined4 *)((int)puVar4 + 1);
-      *(undefined1 *)puVar5 = uVar1;
-      puVar5 = (undefined4 *)((int)puVar5 + 1);
+      uVar1 = *(i8 *)puVar4;
+      puVar4 = (i32 *)((int)puVar4 + 1);
+      *(i8 *)puVar5 = uVar1;
+      puVar5 = (i32 *)((int)puVar5 + 1);
     }
-    puVar4 = (undefined4 *)((int)puVar4 + (param_11 - param_7));
-    puVar5 = (undefined4 *)((int)puVar5 + (param_12 - param_7));
+    puVar4 = (i32 *)((int)puVar4 + (param_11 - param_7));
+    puVar5 = (i32 *)((int)puVar5 + (param_12 - param_7));
     local_8--;
   } while (local_8 != 0);
   return;
@@ -11259,9 +11259,9 @@ gfx_copy_pixels(int param_1,int param_2,int param_3,int param_4,int param_5,int 
 /* WARNING: Unable to use type for symbol iVar2 */
 
 void __cdecl
-sprite_blit_rows_keyed(iptr param_1,int param_2,iptr param_3,undefined4 param_4,int param_5,int param_6,
+sprite_blit_rows_keyed(iptr param_1,int param_2,iptr param_3,i32 param_4,int param_5,int param_6,
             int param_7,int param_8,int param_9,int param_10,int param_11,int param_12,
-            undefined4 param_13,int param_14,int param_15,int param_16)
+            i32 param_13,int param_14,int param_15,int param_16)
 
 {
   int *piVar1;
@@ -11272,7 +11272,7 @@ sprite_blit_rows_keyed(iptr param_1,int param_2,iptr param_3,undefined4 param_4,
   char *pcVar5;
   char *pcVar6;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar4 = param_7;
   if (param_7 < 1) {
@@ -11324,9 +11324,9 @@ sprite_blit_rows_keyed(iptr param_1,int param_2,iptr param_3,undefined4 param_4,
 /* WARNING: Unable to use type for symbol iVar1 */
 
 void __cdecl
-sprite_blit_rows_solid(iptr param_1,int param_2,iptr param_3,undefined4 param_4,int param_5,int param_6,
+sprite_blit_rows_solid(iptr param_1,int param_2,iptr param_3,i32 param_4,int param_5,int param_6,
             int param_7,int param_8,int param_9,int param_10,int param_11,int param_12,
-            undefined4 param_13,int param_14,int param_15,int param_16,undefined4 param_17)
+            i32 param_13,int param_14,int param_15,int param_16,i32 param_17)
 
 {
   int *piVar1;
@@ -11334,17 +11334,17 @@ sprite_blit_rows_solid(iptr param_1,int param_2,iptr param_3,undefined4 param_4,
   int iVar3;
   iptr iVar5;
   iptr iVar6;
-  undefined1 *puVar4;
-  undefined1 *puVar5;
+  i8 *puVar4;
+  i8 *puVar5;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar3 = param_7;
   if (param_7 < 1) {
     param_6 = (param_8 - 1) - param_6;
     iVar3 = -param_7;
   }
-  puVar4 = (undefined1 *)(param_2 + param_6 * iVar3 + param_5);
+  puVar4 = (i8 *)(param_2 + param_6 * iVar3 + param_5);
   local_20 = (int *)((param_12 + param_16) * 4 + param_3);
   iVar6 = param_1 + 8;
   do {
@@ -11366,7 +11366,7 @@ sprite_blit_rows_solid(iptr param_1,int param_2,iptr param_3,undefined4 param_4,
           iVar5 = *piVar1 - iVar1;
           if (iVar3 <= iVar5) break;
           if (*(char *)(iVar5 + iVar6) != (char)param_4) {
-            *puVar5 = (undefined1)param_17;
+            *puVar5 = (i8)param_17;
           }
           piVar1++;
           puVar5++;
@@ -11386,20 +11386,20 @@ sprite_blit_rows_solid(iptr param_1,int param_2,iptr param_3,undefined4 param_4,
 
 /* 005e53f3 auto */
 #define local_5c (*(byte * *)(frame_ + FRAME_OFF(4)))
-#define local_58 (*(undefined1 * *)(frame_ + FRAME_OFF(8)))
+#define local_58 (*(i8 * *)(frame_ + FRAME_OFF(8)))
 #define local_54 (*(ushort *)(frame_ + FRAME_OFF(12)))
 #define local_50 (*(ushort *)(frame_ + FRAME_OFF(16)))
 #define local_4c (*(ushort *)(frame_ + FRAME_OFF(20)))
 #define local_44 (*(uint *)(frame_ + FRAME_OFF(28)))
 #define local_40 (*(ushort *)(frame_ + FRAME_OFF(32)))
-#define local_24 (*(undefined1 * *)(frame_ + FRAME_OFF(60)))
+#define local_24 (*(i8 * *)(frame_ + FRAME_OFF(60)))
 #define local_20 (*(ushort *)(frame_ + FRAME_OFF(64)))
 #define local_14 (*(ushort *)(frame_ + FRAME_OFF(76)))
 #define local_c (*(ushort *)(frame_ + FRAME_OFF(84)))
 #define local_8 (*(byte * *)(frame_ + FRAME_OFF(88)))
 void __cdecl
-gif_lzw_decode_stream(byte *param_1,undefined1 *param_2,iptr param_3,int param_4,uint param_5,uint param_6,
-            undefined4 param_7)
+gif_lzw_decode_stream(byte *param_1,i8 *param_2,iptr param_3,int param_4,uint param_5,uint param_6,
+            i32 param_7)
 
 {
   byte *pbVar1;
@@ -11408,16 +11408,16 @@ gif_lzw_decode_stream(byte *param_1,undefined1 *param_2,iptr param_3,int param_4
   ushort uVar4;
   ushort uVar5;
   ushort uVar6;
-  undefined1 *puVar7;
+  i8 *puVar7;
   uptr uVar8;
   iptr iVar9;
   uptr uVar9;
   iptr iVar10;
   iptr iVar11;
-  undefined1 *puVar8;
-  undefined1 *puVar9;
-  undefined1 *puVar10;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar8;
+  i8 *puVar9;
+  i8 *puVar10;
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar10 = param_3 + 0x2000;
   iVar11 = param_3 + 0x4000;
@@ -11477,7 +11477,7 @@ LAB_005e549a:
     if (local_c != uVar3) {
       uVar9 = (uptr)local_54;
       *(ushort *)(param_3 + uVar9) = local_c;
-      *(undefined2 *)(iVar11 + uVar9) = *(undefined2 *)(iVar11 + (uint)local_c);
+      *(i16 *)(iVar11 + uVar9) = *(i16 *)(iVar11 + (uint)local_c);
       *(short *)(iVar11 + uVar9) = *(short *)(iVar11 + uVar9) + 1;
       if (uVar6 < local_54) {
         local_24 += *(ushort *)(iVar11 + (uint)uVar6);
@@ -11488,11 +11488,11 @@ LAB_005e549a:
         }
         do {
           puVar10 = local_58 - 1;
-          *puVar10 = *(undefined1 *)(iVar10 + (uint)local_4c);
+          *puVar10 = *(i8 *)(iVar10 + (uint)local_4c);
           uVar2 = *(ushort *)(param_3 + (uint)local_4c);
           if (uVar2 == 0xffff) break;
           puVar10 = local_58 - 2;
-          *puVar10 = *(undefined1 *)(iVar10 + (uint)uVar2);
+          *puVar10 = *(i8 *)(iVar10 + (uint)uVar2);
           local_4c = *(ushort *)(param_3 + (uint)uVar2);
           local_58 = puVar10;
         } while (local_4c != 0xffff);
@@ -11507,17 +11507,17 @@ LAB_005e549a:
         }
         do {
           puVar10 = local_58 - 1;
-          *puVar10 = *(undefined1 *)(iVar10 + (uint)local_c);
+          *puVar10 = *(i8 *)(iVar10 + (uint)local_c);
           uVar2 = *(ushort *)(param_3 + (uint)local_c);
           if (uVar2 == 0xffff) break;
           puVar10 = local_58 - 2;
-          *puVar10 = *(undefined1 *)(iVar10 + (uint)uVar2);
+          *puVar10 = *(i8 *)(iVar10 + (uint)uVar2);
           local_c = *(ushort *)(param_3 + (uint)uVar2);
           local_58 = puVar10;
         } while (local_c != 0xffff);
         local_24[-1] = *puVar10;
       }
-      *(undefined1 *)(iVar10 + (uint)local_54) = *puVar10;
+      *(i8 *)(iVar10 + (uint)local_54) = *puVar10;
       local_54 += 2;
       local_c = uVar6;
       if ((local_20 < local_54) && (local_50 != 0xc)) {
@@ -11533,11 +11533,11 @@ LAB_005e549a:
       return;
     }
     do {
-      local_58[-1] = *(undefined1 *)(iVar10 + (uint)local_4c);
+      local_58[-1] = *(i8 *)(iVar10 + (uint)local_4c);
       uVar2 = *(ushort *)(param_3 + (uint)local_4c);
       local_c = uVar6;
       if (uVar2 == 0xffff) break;
-      local_58[-2] = *(undefined1 *)(iVar10 + (uint)uVar2);
+      local_58[-2] = *(i8 *)(iVar10 + (uint)uVar2);
       local_4c = *(ushort *)(param_3 + (uint)uVar2);
       local_58 -= 2;
     } while (local_4c != 0xffff);
@@ -11558,55 +11558,55 @@ LAB_005e549a:
 
 /* 005e5869 auto */
 void __cdecl
-dib_hline8(iptr param_1,undefined4 param_2,uint param_3,int param_4,int param_5,int param_6,
+dib_hline8(iptr param_1,i32 param_2,uint param_3,int param_4,int param_5,int param_6,
             int param_7)
 
 {
   ushort uVar1;
   int iVar2;
-  undefined4 *puVar3;
+  i32 *puVar3;
   
   if (param_7 < 1) {
     param_7 = -param_7;
     param_5 = (param_6 - 1) - param_5;
   }
-  puVar3 = (undefined4 *)(param_1 + param_5 * param_7 + param_4);
+  puVar3 = (i32 *)(param_1 + param_5 * param_7 + param_4);
   uVar1 = (ushort)param_3 >> 2;
   iVar2 = CONCAT22((short)(param_3 >> 0x10),uVar1);
   if (uVar1 != 0) {
     for (; iVar2 != 0; iVar2--) {
-      *puVar3 = CONCAT22(CONCAT11((undefined1)param_2,(undefined1)param_2),
-                         CONCAT11((undefined1)param_2,(undefined1)param_2));
+      *puVar3 = CONCAT22(CONCAT11((i8)param_2,(i8)param_2),
+                         CONCAT11((i8)param_2,(i8)param_2));
       puVar3++;
     }
   }
   if ((param_3 & 2) != 0) {
-    *(ushort *)puVar3 = CONCAT11((undefined1)param_2,(undefined1)param_2);
-    puVar3 = (undefined4 *)((int)puVar3 + 2);
+    *(ushort *)puVar3 = CONCAT11((i8)param_2,(i8)param_2);
+    puVar3 = (i32 *)((int)puVar3 + 2);
   }
   if ((param_3 & 1) != 0) {
-    *(undefined1 *)puVar3 = (undefined1)param_2;
+    *(i8 *)puVar3 = (i8)param_2;
   }
   return;
 }
 
 /* 005e58e7 auto */
 void __cdecl
-dib_vline8(iptr param_1,undefined4 param_2,int param_3,iptr param_4,int param_5,int param_6,
+dib_vline8(iptr param_1,i32 param_2,int param_3,iptr param_4,int param_5,int param_6,
             iptr param_7)
 
 {
   iptr iVar1;
-  undefined1 *puVar1;
+  i8 *puVar1;
   
   iVar1 = param_7;
   if (param_7 < 1) {
     iVar1 = -param_7;
     param_5 = (param_6 - 1) - param_5;
   }
-  puVar1 = (undefined1 *)(param_1 + param_5 * iVar1 + param_4);
+  puVar1 = (i8 *)(param_1 + param_5 * iVar1 + param_4);
   do {
-    *puVar1 = (undefined1)param_2;
+    *puVar1 = (i8)param_2;
     puVar1 += param_7;
     param_3--;
   } while (param_3 != 0);

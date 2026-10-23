@@ -2,11 +2,11 @@
 #include "auto_common.h"
 
 /* 005a9811 auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl gfx_draw_hline_len(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+void __cdecl gfx_draw_hline_len(iptr param_1,int param_2,int param_3,int param_4,i32 param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set((iptr)local_14,param_2,param_3,param_4 + param_2,param_3 + 1);
   gfx_fill_rect(param_1,(iptr)local_14,param_5);
@@ -15,11 +15,11 @@ void __cdecl gfx_draw_hline_len(iptr param_1,int param_2,int param_3,int param_4
 #undef local_14
 
 /* 005a989d auto */
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl gfx_draw_vline_len(iptr param_1,int param_2,int param_3,int param_4,undefined4 param_5)
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+void __cdecl gfx_draw_vline_len(iptr param_1,int param_2,int param_3,int param_4,i32 param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set((iptr)local_14,param_2,param_3,param_2 + 1,param_4 + param_3);
   gfx_fill_rect(param_1,(iptr)local_14,param_5);
@@ -28,7 +28,7 @@ void __cdecl gfx_draw_vline_len(iptr param_1,int param_2,int param_3,int param_4
 #undef local_14
 
 /* 005a9ce9 auto */
-void __cdecl gfx_draw_bevel_inset(iptr param_1,undefined4 *param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl gfx_draw_bevel_inset(iptr param_1,i32 *param_2,i32 param_3,i32 param_4)
 
 {
   gfx_draw_hline(param_1,*param_2,param_2[2] - 1,param_2[1],param_3);
@@ -40,7 +40,7 @@ void __cdecl gfx_draw_bevel_inset(iptr param_1,undefined4 *param_2,undefined4 pa
 }
 
 /* 005ae17d auto */
-int __cdecl map_dx_wrapped_half(undefined4 param_1,undefined4 param_2)
+int __cdecl map_dx_wrapped_half(i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -63,11 +63,11 @@ int __cdecl map_half_manhattan(uint param_1,uint param_2)
 }
 
 /* 005ae37b auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl dir_is_adjacent(uint param_1,int param_2)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl dir_is_adjacent(uint param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (((param_2 + 1U & 7) == param_1) || ((param_2 - 1U & 7) == param_1)) {
@@ -78,18 +78,18 @@ undefined4 __cdecl dir_is_adjacent(uint param_1,int param_2)
 #undef local_8
 
 /* 005aec14 auto */
-#define prefs_email_address (*(undefined *)((u8 *)&g.d_00666590))
-#define local_410 (*(undefined * *)(frame_ + FRAME_OFF(0)))
-#define local_40c (*(undefined1 (*)[260])(frame_ + FRAME_OFF(4)))
+#define prefs_email_address (*(i8 *)((u8 *)&g.d_00666590))
+#define local_410 (*(i8 * *)(frame_ + FRAME_OFF(0)))
+#define local_40c (*(i8 (*)[260])(frame_ + FRAME_OFF(4)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(264)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1020)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1024)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1028)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1032)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1024)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1028)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1032)))
 void __cdecl pbem_ask_email_address(int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);

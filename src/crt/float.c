@@ -237,7 +237,7 @@ static void fos_zero(fos_t *fos)
 /* 0x006051a0: $I10_OUTPUT(ld (3 dwords), ndigits, output_flags, fos):
  * decimal digits of an 80-bit long double, rounded to ndigits (or, with
  * flag 1, to ndigits places after the decimal point). */
-undefined4 __cdecl FUN_006051a0(uint manlo, uint manhi, uint expword, int ndigits,
+i32 __cdecl FUN_006051a0(uint manlo, uint manhi, uint expword, int ndigits,
                                 uint flags, fos_t *fos)
 {
     static const byte one_tenth_init[12] = {

@@ -3,7 +3,7 @@
 #include "auto_common.h"
 
 /* 00408010 auto */
-void __thiscall wnd_set_cursor(WndBase *this,undefined4 param_1)
+void __thiscall wnd_set_cursor(WndBase *this,i32 param_1)
 
 {
   wnd_obj_set_cursor(this->native_wnd,param_1);
@@ -11,7 +11,7 @@ void __thiscall wnd_set_cursor(WndBase *this,undefined4 param_1)
 }
 
 /* 00408050 auto */
-void __thiscall wnd_set_icon(WndBase *this,undefined4 param_1)
+void __thiscall wnd_set_icon(WndBase *this,i32 param_1)
 
 {
   wnd_obj_set_icon(this->native_wnd,param_1);
@@ -27,10 +27,10 @@ void __thiscall wnd_minimize(WndBase *this)
 }
 
 /* 004080c0 auto */
-undefined4 __thiscall wnd_client_width(WndBase *this)
+i32 __thiscall wnd_client_width(WndBase *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_obj_client_width(this->native_wnd);
   return uVar1;
@@ -200,7 +200,7 @@ void __thiscall wnd_blit_surface(DibSurface *this)
 void __thiscall wnd_blit_surface_rect(DibSurface *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     if (this == (DibSurface *)0x0) {
@@ -285,7 +285,7 @@ void __cdecl ui_pump_messages_net(void)
 }
 
 /* 0040bc40 auto */
-void __thiscall dlg_reset(Dialog *this,undefined4 param_1)
+void __thiscall dlg_reset(Dialog *this,i32 param_1)
 
 {
   dialog_init(this,0,0,0,param_1);
@@ -293,10 +293,10 @@ void __thiscall dlg_reset(Dialog *this,undefined4 param_1)
 }
 
 /* 0040bc80 auto */
-undefined4 __thiscall dlg_show_modal(Dialog *this,iptr param_1)
+i32 __thiscall dlg_show_modal(Dialog *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dialog_run_modal(this,0,param_1);
   return uVar1;
@@ -310,9 +310,9 @@ undefined4 __thiscall dlg_show_modal(Dialog *this,iptr param_1)
 #define local_310 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(24)))
 #define civ (*(int *)(frame_ + FRAME_OFF(780)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(788)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(792)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(784)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(788)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(792)))
 void __cdecl menu_find_city(void)
 
 {
@@ -321,7 +321,7 @@ void __cdecl menu_find_city(void)
   iptr iVar4;
   iptr city2;
   iptr civ2;
-  undefined1 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);
@@ -460,41 +460,41 @@ void __thiscall wnd_set_modal_idle_callback(C_00408010_b8 *this,iptr param_1)
 }
 
 /* 0040f350 auto */
-void __thiscall wnd_set_keyboard_nav(Wnd *this,undefined4 param_1)
+void __thiscall wnd_set_keyboard_nav(Wnd *this,i32 param_1)
 
 {
-  *(undefined1 *)&this->keyboard_nav = (undefined1)param_1;
+  *(i8 *)&this->keyboard_nav = (i8)param_1;
   return;
 }
 
 /* 0040ffa0 auto */
-undefined4 __thiscall
-dlg_load_game_section(Dialog *this,iptr param_1,undefined4 param_2)
+i32 __thiscall
+dlg_load_game_section(Dialog *this,iptr param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dialog_load_text_ex(this,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2);
   return uVar1;
 }
 
 /* 0040ffe0 auto */
-undefined4 __thiscall
+i32 __thiscall
 dialog_load_text_ex
-          (Dialog *this,iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+          (Dialog *this,iptr param_1,iptr param_2,i32 param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dialog_load_text_section(this,param_1,param_2,param_3,0,0,0,0,param_4);
   return uVar1;
 }
 
 /* 00410030 auto */
-undefined4 __cdecl popup_game_with_sprite(iptr param_1,iptr param_2,undefined4 param_3)
+i32 __cdecl popup_game_with_sprite(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_sprite(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return uVar1;
@@ -502,10 +502,10 @@ undefined4 __cdecl popup_game_with_sprite(iptr param_1,iptr param_2,undefined4 p
 
 /* 00410e0a auto */
 #define mapview_cursor_id (*(int *)((u8 *)&g.d_0066cb00))
-undefined4 __cdecl ui_paradrop_cursor_active(void)
+i32 __cdecl ui_paradrop_cursor_active(void)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((mapview_cursor_id == 0x202) || (mapview_cursor_id == 0x203)) {
     uVar1 = 1;
@@ -518,7 +518,7 @@ undefined4 __cdecl ui_paradrop_cursor_active(void)
 #undef mapview_cursor_id
 
 /* 00414b70 auto */
-void __thiscall wnd_set_cursor_now(WndCursorView *this,iptr param_1,undefined4 param_2)
+void __thiscall wnd_set_cursor_now(WndCursorView *this,iptr param_1,i32 param_2)
 
 {
   wnd_obj_set_cursor_now(this->native_wnd,param_1,param_2);
@@ -526,10 +526,10 @@ void __thiscall wnd_set_cursor_now(WndCursorView *this,iptr param_1,undefined4 p
 }
 
 /* 00414bb0 auto */
-undefined4 __thiscall wnd_client_height(WndBase *this)
+i32 __thiscall wnd_client_height(WndBase *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_obj_client_height(this->native_wnd);
   return uVar1;
@@ -601,7 +601,7 @@ u32 __thiscall wnd_get_window(WndBase *this)
 void __thiscall wnd_release_capture(WndBase *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_get_window(this);
   wnd_obj_release_capture(uVar1);
@@ -622,40 +622,40 @@ void __thiscall wnd_set_caption_button_handler(FrameWindow *this,iptr param_1)
 }
 
 /* 00414dd0 auto */
-undefined4 __cdecl popup_game_with_city(iptr param_1,iptr param_2)
+i32 __cdecl popup_game_with_city(iptr param_1,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_city(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2);
   return uVar1;
 }
 
 /* 004190d0 auto */
-undefined4 __cdecl popup_text(iptr param_1,iptr param_2)
+i32 __cdecl popup_text(iptr param_1,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_flags(param_1,param_2,0);
   return uVar1;
 }
 
 /* 00419100 auto */
-undefined4 __cdecl popup_text_flags(iptr param_1,iptr param_2,undefined4 param_3)
+i32 __cdecl popup_text_flags(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_ex(param_1,param_2,0,param_3);
   return uVar1;
 }
 
 /* 00419130 auto */
-undefined4 __cdecl popup_text_ex(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4)
+i32 __cdecl popup_text_ex(iptr param_1,iptr param_2,i32 param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_run(param_1,param_2,param_3,0,0,0,param_4);
   return uVar1;
@@ -670,7 +670,7 @@ void __cdecl wnd_flush_paint(void)
 }
 
 /* 00419ba0 auto */
-void __thiscall wnd_set_bg_color(WndBase *this,undefined4 param_1)
+void __thiscall wnd_set_bg_color(WndBase *this,i32 param_1)
 
 {
   wnd_obj_set_bg_color(this->native_wnd,param_1);
@@ -699,20 +699,20 @@ void __thiscall dialog_init_default(Dialog *this)
    
    Library: Visual Studio 1998 Debug */
 
-undefined4 __thiscall
-dialog_load_text(Dialog *this,iptr param_1,iptr param_2,undefined4 param_3)
+i32 __thiscall
+dialog_load_text(Dialog *this,iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dialog_load_text_ex(this,param_1,param_2,0,param_3);
   return uVar1;
 }
 
 /* 00421e40 auto */
-#define dlg_scale_den (*(undefined4 *)((u8 *)&g.d_00635a38))
-#define dlg_scale_num (*(undefined4 *)((u8 *)&g.d_00635a34))
-void __cdecl dlg_set_scale(undefined4 param_1,undefined4 param_2)
+#define dlg_scale_den (*(i32 *)((u8 *)&g.d_00635a38))
+#define dlg_scale_num (*(i32 *)((u8 *)&g.d_00635a34))
+void __cdecl dlg_set_scale(i32 param_1,i32 param_2)
 
 {
   dlg_scale_num = param_1;
@@ -723,30 +723,30 @@ void __cdecl dlg_set_scale(undefined4 param_1,undefined4 param_2)
 #undef dlg_scale_num
 
 /* 00421e70 auto */
-undefined4 __cdecl popup_game_flags(iptr param_1,undefined4 param_2)
+i32 __cdecl popup_game_flags(iptr param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_flags(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2);
   return uVar1;
 }
 
 /* 00421ea0 auto */
-undefined4 __cdecl popup_game(iptr param_1)
+i32 __cdecl popup_game(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1);
   return uVar1;
 }
 
 /* 00421ed0 auto */
-undefined4 __cdecl dlg_game_text_input(iptr param_1,undefined4 param_2,iptr param_3,iptr param_4)
+i32 __cdecl dlg_game_text_input(iptr param_1,i32 param_2,iptr param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dlg_text_input(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3,param_4);
   return uVar1;
@@ -772,10 +772,10 @@ void __thiscall wnd_maximize(WndBase *this)
 }
 
 /* 00426fb0 auto */
-undefined4 __cdecl popup_game_sprite_flags(iptr param_1,undefined4 param_2,iptr param_3,undefined4 param_4)
+i32 __cdecl popup_game_sprite_flags(iptr param_1,i32 param_2,iptr param_3,i32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_sprite(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3,param_4);
   return uVar1;
@@ -798,9 +798,9 @@ void __thiscall picwnd_close(C_004083b0_488 *this)
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1080)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1084)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1088)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1080)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1084)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1088)))
 void __thiscall
 picwnd_open
           (C_004083b0_4c4 *this,uint param_1,u32 param_2,u32 param_3,u32 param_4,u32 param_5,
@@ -812,7 +812,7 @@ picwnd_open
   int iVar3;
   u32 uVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -892,7 +892,7 @@ picwnd_open
 /* 0042abc1 auto */
 void __thiscall
 picwnd_blit_at
-          (FrameWindow *this,int param_1,int param_2,undefined4 param_3,undefined4 param_4)
+          (FrameWindow *this,int param_1,int param_2,i32 param_3,i32 param_4)
 
 {
   gfx_copy_rect_xywh((iptr)&this->field_2d8,(iptr)this,param_1,param_2,this->client_x + param_1,
@@ -909,8 +909,8 @@ void __thiscall picwnd_blit(C_004083b0_4c4 *this)
 }
 
 /* 0043c110 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: __thiscall CDaoFieldInfo::~CDaoFieldInfo(void)
@@ -920,20 +920,20 @@ void __thiscall picwnd_blit(C_004083b0_4c4 *this)
 void __thiscall picwnd_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   /* inlined unwind funclet FUN_0043c19c */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x410)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_0043c1ab */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x3d4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_0043c1ba */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x398)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_0043c1c9 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x35c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_0043c1d8 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 800)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_0043c1e7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x2d8)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0043c1f6 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
@@ -944,27 +944,27 @@ void __thiscall picwnd_dtor(void *this)
 #undef local_8
 
 /* 0043c260 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_004083b0_430 * __thiscall picwnd_ctor(C_004083b0_430 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   surface_ctor((DibSurface *)&this->field_2d8);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   button_ctor((Control *)&this->field_320);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   button_ctor((Control *)&this->field_35c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   button_ctor((Control *)(this->pad_364 + 0x34));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   button_ctor((Control *)(this->pad_3c0 + 0x14));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),5);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),5);
   scrollbar_ctor((Control *)(this->pad_3c0 + 0x50));
   this->vtable = (u32)&PTR_FUN_0061c05c;
   return this;
@@ -974,10 +974,10 @@ C_004083b0_430 * __thiscall picwnd_ctor(C_004083b0_430 *this)
 #undef local_8
 
 /* 0043c5c0 auto */
-undefined4 __thiscall wnd_nonclient_height(WndBase *this)
+i32 __thiscall wnd_nonclient_height(WndBase *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_obj_frame_height(this->native_wnd);
   return uVar1;
@@ -1024,30 +1024,30 @@ void __thiscall dialog_load_text_noflags(Dialog *this,iptr param_1,iptr param_2)
 }
 
 /* 00444270 auto */
-undefined4 __cdecl popup_debug_text(iptr param_1)
+i32 __cdecl popup_debug_text(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),param_1);
   return uVar1;
 }
 
 /* 004442a0 auto */
-undefined4 __cdecl dlg_game_txt_with_unit_flags(iptr param_1,iptr param_2,undefined4 param_3)
+i32 __cdecl dlg_game_txt_with_unit_flags(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_unit_sprite(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return uVar1;
 }
 
 /* 004442e0 auto */
-undefined4 __cdecl dlg_game_txt_with_unit(iptr param_1,iptr param_2)
+i32 __cdecl dlg_game_txt_with_unit(iptr param_1,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_unit(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2);
   return uVar1;
@@ -1382,13 +1382,13 @@ void __cdecl panel_texture_surface_static_dtor(void)
 }
 
 /* 0044c5a0 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surface_ctor((DibSurface *)this);
@@ -1404,20 +1404,20 @@ SurfaceWindow * __thiscall surfwnd_ctor(SurfaceWindow *this)
 #undef local_8
 
 /* 0044c670 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 Wnd * __thiscall surfwnd_wnd_ctor(Wnd *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   wnd_ctor((C_00408010_b8 *)this);
   this->control_list = 0;
   this->field_bc = 0;
   this->field_c0 = 0;
-  *(undefined1 *)&this->keyboard_nav = 1;
+  *(i8 *)&this->keyboard_nav = 1;
   return this;
 }
 #undef local_10
@@ -1425,13 +1425,13 @@ Wnd * __thiscall surfwnd_wnd_ctor(Wnd *this)
 #undef local_8
 
 /* 0044c730 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_00408010_b8 * __thiscall wnd_ctor(C_00408010_b8 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   wnd_record_init((WndBase *)this);
@@ -1513,13 +1513,13 @@ void __thiscall wnd_handlers_dtor(void *this)
 /* 0044ca60: written by hand in src/game/unwind.c */
 
 /* 0044cb20 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall surfwnd_wnd_dtor(void *this)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+i32 __thiscall surfwnd_wnd_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0044cb5e */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
@@ -1564,7 +1564,7 @@ void __thiscall wnd_center(WndCenterView *this)
 void __thiscall wnd_apply_palette_handle(WndBase *this,iptr param_1)
 
 {
-  wnd_obj_select_palette(this->native_wnd,*(undefined4 *)(param_1 + 0x404));
+  wnd_obj_select_palette(this->native_wnd,*(i32 *)(param_1 + 0x404));
   return;
 }
 
@@ -1597,13 +1597,13 @@ void __thiscall wnd_focus_and_raise(WndBase *this)
 }
 
 /* 00451930 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall hotspot_ctor(Control *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ctrl_base_ctor(this);
@@ -1675,13 +1675,13 @@ void __cdecl ui_pump_messages(void)
 }
 
 /* 00453ba0 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall hotspot_dtor(Hotspot *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (this->hwnd != 0) {
@@ -1775,7 +1775,7 @@ void __cdecl ui_delay_ticks(int param_1)
 void __cdecl ui_blit_all_windows(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 8; local_8++) {
     if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
@@ -1808,7 +1808,7 @@ ui_file_name_dialog(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr par
 {
   iptr iVar1;
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   _memset(&local_54,0,0x4c);
   local_54 = 0x4c;
@@ -1870,9 +1870,9 @@ void __cdecl ui_flush_input(void)
 
 /* 004897fa auto */
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
-#define unit_blink_phase (*(undefined1 *)((u8 *)&g.d_00628054))
-#define unit_blink_skip_tick (*(undefined1 *)((u8 *)&g.d_0062805c))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
+#define unit_blink_phase (*(i8 *)((u8 *)&g.d_00628054))
+#define unit_blink_skip_tick (*(i8 *)((u8 *)&g.d_0062805c))
 void __cdecl ui_redraw_all_maps(int param_1)
 
 {
@@ -1898,12 +1898,12 @@ void __cdecl ui_redraw_all_maps(int param_1)
 #define map_cursor_y (*(short *)((u8 *)&g.d_0064b1b0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
-#define mp_turn_civ (*(undefined *)((u8 *)&g.d_006ad578))
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
-#define unit_blink_phase (*(undefined1 *)((u8 *)&g.d_00628054))
-#define unit_blink_skip_tick (*(undefined1 *)((u8 *)&g.d_0062805c))
-#define unit_focus_done (*(undefined1 *)((u8 *)&g.d_00673b04))
-#define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
+#define mp_turn_civ (*(i8 *)((u8 *)&g.d_006ad578))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
+#define unit_blink_phase (*(i8 *)((u8 *)&g.d_00628054))
+#define unit_blink_skip_tick (*(i8 *)((u8 *)&g.d_0062805c))
+#define unit_focus_done (*(i8 *)((u8 *)&g.d_00673b04))
+#define _DAT_006ad578 (*(i32 *)((u8 *)&g.d_006ad578))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl ui_focus_active_unit(int param_1)
@@ -1961,7 +1961,7 @@ void __cdecl ui_focus_active_unit(int param_1)
 #undef _DAT_006ad578
 
 /* 004904c0 auto */
-void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,undefined4 param_4)
+void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,i32 param_4)
 
 {
   popup_text_with_sprite(param_1,param_2,0,param_3,param_4);
@@ -1969,7 +1969,7 @@ void __cdecl popup_file_with_sprite(iptr param_1,iptr param_2,iptr param_3,undef
 }
 
 /* 00490500 auto */
-void __cdecl popup_text_with_city_noflags(iptr param_1,iptr param_2,undefined4 param_3)
+void __cdecl popup_text_with_city_noflags(iptr param_1,iptr param_2,i32 param_3)
 
 {
   popup_text_with_city(param_1,param_2,0,param_3);
@@ -2001,7 +2001,7 @@ void __thiscall wnd_set_bg_tile(DiploLeaderView *this,iptr param_1)
 }
 
 /* 00497d00 auto */
-void __thiscall wnd_set_caption_height(WndBase *this,undefined4 param_1)
+void __thiscall wnd_set_caption_height(WndBase *this,i32 param_1)
 
 {
   wnd_obj_set_caption_height(this->native_wnd,param_1);
@@ -2010,7 +2010,7 @@ void __thiscall wnd_set_caption_height(WndBase *this,undefined4 param_1)
 
 /* 004a6b80 auto */
 void __cdecl
-popup_text_with_advance(iptr param_1,iptr param_2,undefined4 param_3,iptr advance,undefined4 param_5)
+popup_text_with_advance(iptr param_1,iptr param_2,i32 param_3,iptr advance,i32 param_5)
 
 {
   popup_text_with_sprite(param_1,param_2,param_3,
@@ -2021,13 +2021,13 @@ popup_text_with_advance(iptr param_1,iptr param_2,undefined4 param_3,iptr advanc
 }
 
 /* 004a6bdc auto */
-#define local_8 (*(undefined * *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl
-popup_text_with_improvement(iptr param_1,iptr param_2,undefined4 param_3,int param_4,undefined4 param_5)
+#define local_8 (*(i8 * *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl
+popup_text_with_improvement(iptr param_1,iptr param_2,i32 param_3,int param_4,i32 param_5)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_4 < 0x27) {
     local_8 = &improvement_icon_sprites + param_4 * 0x3c;
@@ -2041,11 +2041,11 @@ popup_text_with_improvement(iptr param_1,iptr param_2,undefined4 param_3,int par
 #undef local_8
 
 /* 004a6c4b auto */
-undefined4 __cdecl
-popup_text_with_unit_sprite(iptr param_1,iptr param_2,undefined4 param_3,int param_4,undefined4 param_5)
+i32 __cdecl
+popup_text_with_unit_sprite(iptr param_1,iptr param_2,i32 param_3,int param_4,i32 param_5)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_sprite(param_1,param_2,param_3,(iptr)(&unit_sprites + param_4 * 0x3c),param_5)
   ;
@@ -2055,8 +2055,8 @@ popup_text_with_unit_sprite(iptr param_1,iptr param_2,undefined4 param_3,int par
 /* 004a6c85 auto */
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 void __cdecl
-popup_city_sprite_draw_cb(undefined4 param_1,iptr param_2,iptr city,undefined4 param_4,int param_5,
-            undefined4 param_6)
+popup_city_sprite_draw_cb(i32 param_1,iptr param_2,iptr city,i32 param_4,int param_5,
+            i32 param_6)
 
 {
   gfx_draw_city(param_2,city,0,param_5 + 2,param_6,(ui_large_screen == 0) - 1 & 8);
@@ -2069,20 +2069,20 @@ popup_city_sprite_draw_cb(undefined4 param_1,iptr param_2,iptr city,undefined4 p
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 #define local_340 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(820)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(816)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(820)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(824)))
-undefined4 __cdecl popup_text_with_city(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4)
+i32 __cdecl popup_text_with_city(iptr param_1,iptr param_2,i32 param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_340,0x4000);
   local_8 = 0;
   sprite_init(&local_4c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   sprite_create_solid
             (&local_4c,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
@@ -2092,7 +2092,7 @@ undefined4 __cdecl popup_text_with_city(iptr param_1,iptr param_2,undefined4 par
   dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,param_4,0);
   uVar1 = dlg_show_modal(&local_340,0);
   dlg_help_pressed = local_340.field_dc;
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004a6dc9 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004a6dd2 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
@@ -2109,8 +2109,8 @@ undefined4 __cdecl popup_text_with_city(iptr param_1,iptr param_2,undefined4 par
 /* 004a6df7 auto */
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 void __cdecl
-popup_unit_sprite_draw_cb(undefined4 param_1,iptr param_2,iptr unit,undefined4 param_4,int param_5,
-            undefined4 param_6)
+popup_unit_sprite_draw_cb(i32 param_1,iptr param_2,iptr unit,i32 param_4,int param_5,
+            i32 param_6)
 
 {
   gfx_draw_unit(param_2,unit,4,param_5 + 2,param_6,(ui_large_screen == 0) - 1 & 8,0);
@@ -2123,20 +2123,20 @@ popup_unit_sprite_draw_cb(undefined4 param_1,iptr param_2,iptr unit,undefined4 p
 #define ui_large_screen (*(int *)((u8 *)&g.d_00633584))
 #define local_340 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(820)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(816)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(820)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(824)))
-undefined4 __cdecl popup_text_with_unit(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4)
+i32 __cdecl popup_text_with_unit(iptr param_1,iptr param_2,i32 param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(832)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_340,0x4000);
   local_8 = 0;
   sprite_init(&local_4c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   sprite_create_solid
             (&local_4c,(2 - (uint)(ui_large_screen == 0)) * 0x40,(2 - (uint)(ui_large_screen == 0)) * 0x30
              ,0);
@@ -2146,7 +2146,7 @@ undefined4 __cdecl popup_text_with_unit(iptr param_1,iptr param_2,undefined4 par
   dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,param_4,0);
   uVar1 = dlg_show_modal(&local_340,0);
   dlg_help_pressed = local_340.field_dc;
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004a6f3d */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004a6f46 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
@@ -2170,7 +2170,7 @@ void __cdecl accel_start_develop_city(iptr city,int param_2)
 
 {
   byte civ;
-  undefined1 uVar2;
+  i8 uVar2;
   char cVar3;
   int x2;
   int y2;
@@ -2178,7 +2178,7 @@ void __cdecl accel_start_develop_city(iptr city,int param_2)
   int y;
   int iVar8;
   int iVar9;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   x2 = (int)cities[city].x;
   y2 = (int)cities[city].y;
@@ -2272,7 +2272,7 @@ void __thiscall wnd_move_to_rect(WndBase *this,iptr param_1)
 }
 
 /* 004c4240 auto */
-void __cdecl popup_game_with_advance(iptr param_1,iptr advance,undefined4 param_3)
+void __cdecl popup_game_with_advance(iptr param_1,iptr advance,i32 param_3)
 
 {
   popup_text_with_advance(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,advance,param_3);
@@ -2280,27 +2280,27 @@ void __cdecl popup_game_with_advance(iptr param_1,iptr advance,undefined4 param_
 }
 
 /* 004cc870 auto */
-undefined4 __cdecl popup_game_with_improvement(iptr param_1,iptr param_2,undefined4 param_3)
+i32 __cdecl popup_game_with_improvement(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_improvement(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,0,param_2,param_3);
   return uVar1;
 }
 
 /* 004cc8b0 auto */
-undefined4 __cdecl popup_game_with_unit(iptr param_1,undefined4 param_2,iptr param_3)
+i32 __cdecl popup_game_with_unit(iptr param_1,i32 param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_unit(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3);
   return uVar1;
 }
 
 /* 004cff70 auto */
-void __thiscall wnd_set_resize_border(WndBase *this,undefined4 param_1)
+void __thiscall wnd_set_resize_border(WndBase *this,i32 param_1)
 
 {
   wnd_obj_set_resize_border(this->native_wnd,param_1);
@@ -2311,16 +2311,16 @@ void __thiscall wnd_set_resize_border(WndBase *this,undefined4 param_1)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(760)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(764)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl menu_wonder_movies(void)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -2354,9 +2354,9 @@ void __cdecl menu_wonder_movies(void)
 #undef local_8
 
 /* 004e02ef auto */
-#define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
+#define minimap_hidden (*(i8 *)((u8 *)&g.d_00624ee0))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define status_wnd_hidden (*(undefined1 *)((u8 *)&g.d_00633e00))
+#define status_wnd_hidden (*(i8 *)((u8 *)&g.d_00633e00))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
@@ -2367,7 +2367,7 @@ void __cdecl ui_reset_window_layout(void)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_maximize((WndBase *)&main_frame_wnd);
   city_window_init_size();
@@ -2426,7 +2426,7 @@ void __cdecl ui_reset_window_layout(void)
   wnd_move_to_rect((WndBase *)&chat_wnd_frame,(iptr)chat_wnd_init_rect);
   for (local_8 = 1; local_8 < 8; local_8++) {
     if (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0) {
-      *(undefined2 *)(&map_view_open_flags + local_8 * 0x3f0) = 0;
+      *(i16 *)(&map_view_open_flags + local_8 * 0x3f0) = 0;
       wnd_destroy_with_surface((DibSurface *)(&map_views + local_8 * 0x3f0));
     }
   }
@@ -2447,13 +2447,13 @@ void __cdecl ui_reset_window_layout(void)
 #undef local_8
 
 /* 004e068d auto */
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
-#define minimap_hidden (*(undefined1 *)((u8 *)&g.d_00624ee0))
-#define moving_units_mode (*(undefined4 *)((u8 *)&g.d_006d1da8))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
+#define minimap_hidden (*(i8 *)((u8 *)&g.d_00624ee0))
+#define moving_units_mode (*(i32 *)((u8 *)&g.d_006d1da8))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
 #define saved_layout_valid (*(int *)((u8 *)&g.d_00655280))
 #define saved_turn_civ (*(byte *)((u8 *)&g.d_00654fa4))
-#define status_wnd_hidden (*(undefined1 *)((u8 *)&g.d_00633e00))
+#define status_wnd_hidden (*(i8 *)((u8 *)&g.d_00633e00))
 #define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl menu_load_game(void)
@@ -2461,7 +2461,7 @@ void __cdecl menu_load_game(void)
 {
   byte bVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   mp_turn_timer_stop(1);
   city_window_close();
@@ -2569,7 +2569,7 @@ void __cdecl menu_load_game(void)
 /* 004e0a8c auto */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-void __cdecl dlg_check_set_bool(undefined4 param_1,int param_2)
+void __cdecl dlg_check_set_bool(i32 param_1,int param_2)
 
 {
   dlg_check_set(param_1,(uint)(param_2 != 0));
@@ -2721,7 +2721,7 @@ void __cdecl menu_graphic_options(void)
 #undef prefs_game_options
 
 /* 004e0f18 auto */
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define mp_double_moves (*(ushort *)((u8 *)&g.d_00654fae))
 #define mp_double_production (*(ushort *)((u8 *)&g.d_00654fac))
 #define mp_simultaneous_setting (*(short *)((u8 *)&g.d_00654c7c))
@@ -2731,7 +2731,7 @@ void __cdecl menu_graphic_options(void)
 #define prefs_clear_chat_on_new_game (*(ushort *)((u8 *)&g.d_006665fa))
 #define prefs_mp_double_moves (*(ushort *)((u8 *)&g.d_00666600))
 #define prefs_mp_double_production (*(ushort *)((u8 *)&g.d_006665fe))
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -2739,7 +2739,7 @@ void __cdecl menu_multiplayer_options(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   dlg_checks_clear();
   dlg_check_set_bool(0,(int)(short)prefs_clear_chat_on_new_game);
@@ -2889,8 +2889,8 @@ void __cdecl menu_message_options(void)
 
 /* 004e2597 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define map_show_hidden_terrain (*(undefined4 *)((u8 *)&g.d_0062bcd8))
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
+#define map_show_hidden_terrain (*(i32 *)((u8 *)&g.d_0062bcd8))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
 void __cdecl menu_show_hidden_terrain(void)
 
 {
@@ -2911,14 +2911,14 @@ void __cdecl menu_show_hidden_terrain(void)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(760)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(764)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl menu_select_music(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x4000);
@@ -2984,8 +2984,8 @@ LAB_004e27f5:
 #undef local_8
 
 /* 004e2803 auto */
-#define blocked_input_kind (*(undefined4 *)((u8 *)&g.d_006c31ac))
-#define cheat_terrain_saved_bits (*(undefined4 *)((u8 *)&g.d_00633678))
+#define blocked_input_kind (*(i32 *)((u8 *)&g.d_006c31ac))
+#define cheat_terrain_saved_bits (*(i32 *)((u8 *)&g.d_00633678))
 #define city_acquire_wonder_busy (*(int *)((u8 *)&g.d_006ad8e8))
 #define city_create_busy (*(int *)((u8 *)&g.d_006ad8c4))
 #define city_delete_busy (*(int *)((u8 *)&g.d_006ad8c8))
@@ -3012,11 +3012,11 @@ LAB_004e27f5:
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(undefined4 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(undefined4 *)((u8 *)&g.d_006c31b4))
+#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl menu_command(undefined4 param_1,int param_2)
+void __cdecl menu_command(i32 param_1,int param_2)
 
 {
   SHORT SVar1;
@@ -3562,17 +3562,17 @@ void __cdecl menu_command(undefined4 param_1,int param_2)
 #undef _DAT_006c31b4
 
 /* 004e3a86 auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl menu_build_main(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   menu_reset((GameMenu *)&main_menu,0x1bbc);
   iVar1 = text_open_section(ADDR(0x62ed34, ((u8 *)&g.d_0062ed34)),ADDR(0x62ed2c, ((u8 *)&g.d_0062ed2c)));
@@ -4000,11 +4000,11 @@ void __cdecl menu_build_main(void)
 #undef local_8
 
 /* 004e4c92 auto */
-#define local_54 (*(undefined1 (*)[80])(frame_ + FRAME_OFF(4)))
-void __cdecl menu_set_item_label(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+#define local_54 (*(i8 (*)[80])(frame_ + FRAME_OFF(4)))
+void __cdecl menu_set_item_label(i32 param_1,i32 param_2,i32 param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_clear();
   text_append_label(param_2);
@@ -4019,24 +4019,24 @@ void __cdecl menu_set_item_label(undefined4 param_1,undefined4 param_2,undefined
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define mp_open_game (*(short *)((u8 *)&g.d_00654c74))
-#define mp_turn_civ (*(undefined *)((u8 *)&g.d_006ad578))
+#define mp_turn_civ (*(i8 *)((u8 *)&g.d_006ad578))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
-#define local_70 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define local_6c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_68 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_64 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_60 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_5c (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_58 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_54 (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_50 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_48 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_44 (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_40 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_3c (*(undefined4 *)(frame_ + FRAME_OFF(52)))
+#define _DAT_006ad578 (*(i32 *)((u8 *)&g.d_006ad578))
+#define local_70 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define local_6c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_68 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_64 (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_60 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_5c (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_58 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_54 (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_50 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_4c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_48 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_44 (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_40 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define local_3c (*(i32 *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(104)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -4056,7 +4056,7 @@ void __cdecl menu_update_states(void)
   int city;
   iptr x2;
   uint uVar17;
-  undefined4 uVar18;
+  i32 uVar18;
   iptr iVar11;
   iptr iVar12;
   int terrain2;
@@ -4065,7 +4065,7 @@ void __cdecl menu_update_states(void)
   iptr iVar14;
   uptr terrain;
   bool bVar21;
-  undefined1 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
   
   menu_set_item_enabled((GameMenu *)&main_menu,0x606,game.rules & 0x80);
   if (game.multiplayer == '\0') {
@@ -4312,14 +4312,14 @@ void __cdecl menu_update_states(void)
       menu_set_item_enabled((GameMenu *)&main_menu,0x421,1);
     }
   }
-  if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
+  if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
     local_64 = 1;
   }
   else {
     local_64 = 0;
   }
   menu_set_menu_enabled((GameMenu *)&main_menu,7,local_64);
-  if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
+  if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) {
     local_68 = 0;
   }
   else {
@@ -4332,7 +4332,7 @@ void __cdecl menu_update_states(void)
   if ((2 < game.multiplayer) && (_DAT_006ad578 != human_civ)) {
     menu_set_menu_enabled((GameMenu *)&main_menu,4,1);
   }
-  if ((((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
+  if ((((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
       ((game.game_flags & 0x80) == 0)) ||
      (iVar13 = _strcmp(&scenario_dir_path,&game_home_dir), iVar13 == 0)) {
     local_6c = 0;
@@ -4341,7 +4341,7 @@ void __cdecl menu_update_states(void)
     local_6c = 1;
   }
   menu_set_item_checked((GameMenu *)&main_menu,0x801,local_6c);
-  if (((((*(undefined1 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
+  if (((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) == 0) || (game.multiplayer != '\0')) ||
      (((game.game_flags & 0x80) == 0 || (iVar14 = _strcmp(&scenario_dir_path,&game_home_dir), iVar14 == 0)
       ))) {
     local_70 = 1;
@@ -4395,29 +4395,29 @@ void __thiscall wnd_show_restored(WndBase *this)
 #define local_484 (*(Sprite *)(frame_ + FRAME_OFF(36)))
 #define local_448 (*(void * *)(frame_ + FRAME_OFF(96)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(100)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1176)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1180)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1176)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1180)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(1184)))
 int __cdecl popup_city_picture_zoom(iptr param_1,iptr city,uint param_3,int param_4,iptr civ)
 
 {
   C_004083b0_430 *this;
   int iVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   iptr iVar4;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(1192)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1192)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
   local_8 = 0;
   sprite_init(&local_484);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (autoplay_active == 0) {
     if (param_4 == 0) {
       if (city_notify_enabled == 0) {
-        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+        local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
         /* inlined unwind funclet FUN_004ebbad */ { sprite_destroy((Sprite *)((iptr)&local_484)); }
         local_8 = 0xffffffff;
         /* inlined unwind funclet FUN_004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
@@ -4429,14 +4429,14 @@ int __cdecl popup_city_picture_zoom(iptr param_1,iptr city,uint param_3,int para
       text_set_string_arg_b(0,(iptr)&cities[city].name);
     }
     this = operator_new(0x798);
-    (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+    (*(i8 *)((char *)&local_8 + 0)) = 2;
     if (this == (C_004083b0_430 *)0x0) {
       local_498 = (void *)0x0;
     }
     else {
       local_498 = (void *)city_picture_popup_ctor(this);
     }
-    local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+    local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
     local_448 = local_498;
     iVar1 = civ_has_advance(civ,0x25);
     if (iVar1 != 0) {
@@ -4459,12 +4459,12 @@ int __cdecl popup_city_picture_zoom(iptr param_1,iptr city,uint param_3,int para
     if ((param_4 == 0) && (city_zoom_requested == 0)) {
       uVar2 = 0;
       iVar5 = 1;
-      iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x80));
+      iVar4 = label_string(*(i32 *)(label_string_ids + 0x80));
       dialog_add_option
                 ((DialogOptionList *)((int)local_448 + 0x4a4),iVar4,iVar5,uVar2);
       uVar2 = 0;
       iVar5 = 0;
-      iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x84));
+      iVar4 = label_string(*(i32 *)(label_string_ids + 0x84));
       dialog_add_option
                 ((DialogOptionList *)((int)local_448 + 0x4a4),iVar4,iVar5,uVar2);
       if ((game.message_options & 0x400) == 0) {
@@ -4487,7 +4487,7 @@ int __cdecl popup_city_picture_zoom(iptr param_1,iptr city,uint param_3,int para
     /* inlined unwind funclet FUN_004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
   }
   else {
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_004ebbad */ { sprite_destroy((Sprite *)((iptr)&local_484)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_004ebbb9 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
@@ -4517,20 +4517,20 @@ u32 __thiscall wnd_get_palette(WndPaletteView *this)
 
 /* 00511460 auto */
 void __thiscall
-hotspot_add_rect(ClickMap *this,iptr param_1,undefined4 param_2,iptr param_3)
+hotspot_add_rect(ClickMap *this,iptr param_1,i32 param_2,iptr param_3)
 
 {
-  clickmap_add(this,param_1,param_2,*(undefined4 *)param_3,*(undefined4 *)(param_3 + 4),
+  clickmap_add(this,param_1,param_2,*(i32 *)param_3,*(i32 *)(param_3 + 4),
                      *(int *)(param_3 + 8) - *(int *)param_3,
                      *(int *)(param_3 + 0xc) - *(int *)(param_3 + 4));
   return;
 }
 
 /* 00511520 auto */
-undefined4 __cdecl popup_game_with_city_flags(iptr param_1,undefined4 param_2,undefined4 param_3)
+i32 __cdecl popup_game_with_city_flags(iptr param_1,i32 param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_with_city(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3);
   return uVar1;
@@ -4563,7 +4563,7 @@ void __thiscall frame_wnd_set_title_small_font(FrameWindow *this,iptr param_1)
 }
 
 /* 00518e80 auto */
-void __thiscall wnd_move_xy(WndMoveView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_move_xy(WndMoveView *this,i32 param_1,i32 param_2)
 
 {
   wnd_obj_move_xy(this->native_wnd,param_1,param_2);
@@ -4571,10 +4571,10 @@ void __thiscall wnd_move_xy(WndMoveView *this,undefined4 param_1,undefined4 para
 }
 
 /* 00518ec0 auto */
-undefined4 __cdecl dlg_input_number_game(iptr param_1,undefined4 param_2,iptr param_3)
+i32 __cdecl dlg_input_number_game(iptr param_1,i32 param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = dlg_input_number(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3);
   return uVar1;
@@ -4585,16 +4585,16 @@ undefined4 __cdecl dlg_input_number_game(iptr param_1,undefined4 param_2,iptr pa
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(756)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(764)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-undefined4 __cdecl
-popup_text_run(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
-            undefined4 param_6,undefined4 param_7)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(764)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(768)))
+i32 __cdecl
+popup_text_run(iptr param_1,iptr param_2,i32 param_3,i32 param_4,i32 param_5,
+            i32 param_6,i32 param_7)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);
@@ -4636,15 +4636,15 @@ popup_text_run(iptr param_1,iptr param_2,undefined4 param_3,undefined4 param_4,u
 /* 0051d564 auto */
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
 #define local_304 (*(Dialog *)(frame_ + FRAME_OFF(4)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(760)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(764)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-undefined4 __cdecl
-popup_text_with_sprite(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4,undefined4 param_5)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(764)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(768)))
+i32 __cdecl
+popup_text_with_sprite(iptr param_1,iptr param_2,i32 param_3,iptr param_4,i32 param_5)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(776)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_304,0x4000);
@@ -4665,18 +4665,18 @@ popup_text_with_sprite(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4
 #undef local_8
 
 /* 0051d63b auto */
-#define local_30c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_30c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(char * *)(frame_ + FRAME_OFF(764)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-undefined4 __cdecl
-dlg_text_input(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4,iptr param_5)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
+i32 __cdecl
+dlg_text_input(iptr param_1,iptr param_2,i32 param_3,iptr param_4,iptr param_5)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_30c = 0;
@@ -4706,12 +4706,12 @@ dlg_text_input(iptr param_1,iptr param_2,undefined4 param_3,iptr param_4,iptr pa
 /* 0051d75d auto */
 #define local_120 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
 #define local_1c (*(char (*)[20])(frame_ + FRAME_OFF(260)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(280)))
-undefined4 __cdecl dlg_input_number(iptr param_1,iptr param_2,int param_3,iptr param_4)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(280)))
+i32 __cdecl dlg_input_number(iptr param_1,iptr param_2,int param_3,iptr param_4)
 
 {
   long lVar1;
-  undefined1 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
   
   __itoa(param_3,local_1c,10);
   local_8 = dlg_text_input(param_1,param_2,5,(iptr)local_1c,(iptr)local_120);
@@ -4724,7 +4724,7 @@ undefined4 __cdecl dlg_input_number(iptr param_1,iptr param_2,int param_3,iptr p
 #undef local_8
 
 /* 0051d7bc auto */
-#define dlg_check_bits (*(undefined4 *)((u8 *)&g.d_00631ed8))
+#define dlg_check_bits (*(i32 *)((u8 *)&g.d_00631ed8))
 void __cdecl dlg_checks_clear(void)
 
 {
@@ -4735,7 +4735,7 @@ void __cdecl dlg_checks_clear(void)
 
 /* 0051d7d6 auto */
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
-void __cdecl dlg_check_set(undefined4 param_1,int param_2)
+void __cdecl dlg_check_set(i32 param_1,int param_2)
 
 {
   if (param_2 == 0) {
@@ -4750,7 +4750,7 @@ void __cdecl dlg_check_set(undefined4 param_1,int param_2)
 
 /* 0051d817 auto */
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
-uint __cdecl dlg_check_get(undefined4 param_1)
+uint __cdecl dlg_check_get(i32 param_1)
 
 {
   return 1 << ((byte)param_1 & 0x1f) & dlg_check_bits;
@@ -4759,23 +4759,23 @@ uint __cdecl dlg_check_get(undefined4 param_1)
 
 /* 0052182c auto */
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-void __cdecl dialog_prepend_title_label(iptr param_1,undefined4 param_2)
+void __cdecl dialog_prepend_title_label(iptr param_1,i32 param_2)
 
 {
   size_t sVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_84[0] = '\0';
   str_append_label((iptr)local_84,param_2);
   if (*(int *)(param_1 + 0x134) != 0) {
     FUN_005f22e0(local_84,&dialog_title_label_space_str);
-    FUN_005f22e0(local_84,*(undefined4 *)(param_1 + 0x134));
+    FUN_005f22e0(local_84,*(i32 *)(param_1 + 0x134));
   }
   sVar1 = _strlen(local_84);
   uVar2 = memblock_alloc(param_1 + 0x254,sVar1 + 1);
-  *(undefined4 *)(param_1 + 0x134) = uVar2;
-  FUN_005f22d0(*(undefined4 *)(param_1 + 0x134),local_84);
+  *(i32 *)(param_1 + 0x134) = uVar2;
+  FUN_005f22d0(*(i32 *)(param_1 + 0x134),local_84);
   return;
 }
 #undef local_84
@@ -4797,10 +4797,10 @@ int __cdecl ui_calc_item_spacing(int param_1,int param_2,int param_3,iptr param_
   iVar3 = param_2;
   if (param_1 == 1) {
     if (param_5 != 0) {
-      *(undefined4 *)param_5 = 0;
+      *(i32 *)param_5 = 0;
     }
     if (param_4 != 0) {
-      *(undefined4 *)param_4 = 1;
+      *(i32 *)param_4 = 1;
     }
   }
   else {
@@ -4814,7 +4814,7 @@ int __cdecl ui_calc_item_spacing(int param_1,int param_2,int param_3,iptr param_
     }
     if ((iVar2 < param_2) && (iVar3 = iVar2, iVar2 < 1)) {
       if (param_5 != 0) {
-        *(undefined4 *)param_5 = 0;
+        *(i32 *)param_5 = 0;
       }
       if (param_4 != 0) {
         *(int *)param_4 = (iVar1 - param_2) + 1;
@@ -4826,20 +4826,20 @@ int __cdecl ui_calc_item_spacing(int param_1,int param_2,int param_3,iptr param_
 }
 
 /* 00551e20 auto */
-undefined4 __cdecl popup_game_ex(iptr param_1,undefined4 param_2,undefined4 param_3)
+i32 __cdecl popup_game_ex(iptr param_1,i32 param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_ex(ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,param_3);
   return uVar1;
 }
 
 /* 00551e60 auto */
-undefined4 __cdecl popup_debug_ex(iptr param_1,undefined4 param_2,undefined4 param_3)
+i32 __cdecl popup_debug_ex(iptr param_1,i32 param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = popup_text_ex(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),param_1,param_2,param_3);
   return uVar1;
@@ -4974,7 +4974,7 @@ void __cdecl ui_text_font_static_dtor(void)
 /* 00551fed auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define screen_height (*(undefined4 *)((u8 *)&g.d_006ab19c))
+#define screen_height (*(i32 *)((u8 *)&g.d_006ab19c))
 #define ui_large_screen (*(uint *)((u8 *)&g.d_00633584))
 void __cdecl ui_init_screen_metrics(void)
 
@@ -5024,15 +5024,15 @@ void __cdecl frame_set_border_tile(iptr param_1)
 #define mp_turn_civ (*(byte *)((u8 *)&g.d_006ad578))
 #define mp_turn_seconds_left (*(u32 *)((u8 *)&g.d_00633a78))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
-#define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
+#define _DAT_006ad578 (*(i32 *)((u8 *)&g.d_006ad578))
 #define local_168 (*(u32 *)(frame_ + FRAME_OFF(0)))
 #define local_164 (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define local_160 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(8)))
+#define local_160 (*(i8 (*)[16])(frame_ + FRAME_OFF(8)))
 #define local_150 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_14c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_148 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_144 (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_140 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_140 (*(i32 *)(frame_ + FRAME_OFF(40)))
 #define local_13c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_138 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_134 (*(int *)(frame_ + FRAME_OFF(52)))
@@ -5040,7 +5040,7 @@ void __cdecl frame_set_border_tile(iptr param_1)
 #define local_12c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_128 (*(GameFont * *)(frame_ + FRAME_OFF(64)))
 #define local_124 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_120 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
+#define local_120 (*(i32 *)(frame_ + FRAME_OFF(72)))
 #define local_11c (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_118 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_114 (*(char (*)[256])(frame_ + FRAME_OFF(84)))
@@ -5053,12 +5053,12 @@ void __cdecl frame_set_border_tile(iptr param_1)
 void __thiscall frame_wnd_draw_caption(FrameWindow *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   int iVar3;
   uptr sVar4;
   uptr sVar5;
-  undefined1 frame_[FRAME_OFF(360)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(360)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_reset_clip((DibSurface *)this);
   local_120 = frame_highlight_color;
@@ -5297,7 +5297,7 @@ void __cdecl frame_wnd_on_caption_button_click(int param_1)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = wnd_get_active_child();
   if (iVar1 == 0) {
@@ -5307,7 +5307,7 @@ void __cdecl frame_wnd_on_caption_button_click(int param_1)
     local_8 = iVar1 - 0x48;
   }
   if (*(int *)(local_8 + 0x2a8) != 0) {
-    (*((code **)(local_8))[170])(*(undefined4 *)(local_8 + 0x200 + (param_1 - 1000) * 0x1c));
+    (*((code **)(local_8))[170])(*(i32 *)(local_8 + 0x200 + (param_1 - 1000) * 0x1c));
   }
   return;
 }
@@ -5316,13 +5316,13 @@ void __cdecl frame_wnd_on_caption_button_click(int param_1)
 /* 00552ed2 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define local_40 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_3c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_3c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall frame_wnd_layout(FrameWindow *this)
 
 {
@@ -5330,7 +5330,7 @@ void __thiscall frame_wnd_layout(FrameWindow *this)
   int iVar2;
   u32 uVar3;
   Control *this_00;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   iVar1 = surface_get_width((DibSurface *)this);
@@ -5361,7 +5361,7 @@ void __thiscall frame_wnd_layout(FrameWindow *this)
       local_3c = hotspot_ctor(this_00);
     }
     local_8 = 0xffffffff;
-    *(undefined4 *)(this->pad_200 + local_24 * 0x1c + 0x18) = local_3c;
+    *(i32 *)(this->pad_200 + local_24 * 0x1c + 0x18) = local_3c;
     if (this == (FrameWindow *)0x0) {
       local_40 = (u8 *)0x0;
     }
@@ -5388,22 +5388,22 @@ void __thiscall frame_wnd_layout(FrameWindow *this)
 #undef local_8
 
 /* 0055318c auto */
-void __thiscall frame_wnd_add_caption_button(C_004083b0_208 *this,iptr param_1,undefined4 param_2)
+void __thiscall frame_wnd_add_caption_button(C_004083b0_208 *this,iptr param_1,i32 param_2)
 
 {
   u8 *puVar1;
   u32 uVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   
   if ((int)this->caption_button_count < 6) {
     uVar2 = this->caption_button_count;
     this->caption_button_count++;
     *(iptr *)(this[1].pad_48 + uVar2 * 0x1c - 0x3c) = param_1;
-    *(undefined4 *)(this->pad_200 + uVar2 * 0x1c) = param_2;
+    *(i32 *)(this->pad_200 + uVar2 * 0x1c) = param_2;
     uVar3 = sprite_width((Sprite *)param_1);
-    *(undefined4 *)(this[1].pad_48 + uVar2 * 0x1c - 0x44) = uVar3;
+    *(i32 *)(this[1].pad_48 + uVar2 * 0x1c - 0x44) = uVar3;
     uVar3 = sprite_height((Sprite *)param_1);
-    *(undefined4 *)(this[1].pad_48 + uVar2 * 0x1c - 0x40) = uVar3;
+    *(i32 *)(this[1].pad_48 + uVar2 * 0x1c - 0x40) = uVar3;
     puVar1 = this[1].pad_48 + uVar2 * 0x1c - 0x38;
     puVar1[0] = '\0';
     puVar1[1] = '\0';
@@ -5421,7 +5421,7 @@ void __thiscall frame_wnd_add_caption_button(C_004083b0_208 *this,iptr param_1,u
 void __thiscall frame_wnd_set_caption(FrameWindow *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   _memset(this->pad_134,0,0x84);
   _strncpy((char *)this->pad_134,(char *)param_1,0x83);
@@ -5443,7 +5443,7 @@ void __thiscall frame_wnd_set_caption(FrameWindow *this,iptr param_1)
 void __thiscall frame_wnd_destroy_caption_buttons(C_004083b0_4 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 6; local_8++) {
     if (this[local_8 * 7 + 0x86].field_0 != 0) {
@@ -5468,14 +5468,14 @@ void __thiscall frame_wnd_close(DibSurface *this)
 
 /* 0055339f auto */
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
 
 {
   u8 *puVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surfwnd_ctor(this);
@@ -5495,9 +5495,9 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
 #undef local_8
 
 /* 00553444 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall COleCntrFrameWnd::~COleCntrFrameWnd(void)
    
@@ -5506,7 +5506,7 @@ SurfaceWindow * __thiscall frame_wnd_ctor(SurfaceWindow *this)
 void __thiscall frame_wnd_dtor(DibSurface *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->vtable = (u32)&PTR_FUN_0061d6dc;
   local_8 = 0;
@@ -5531,7 +5531,7 @@ frame_wnd_create
           int param_6,u32 param_7,u32 param_8,u32 param_9)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     FUN_005f22d0(this->pad_134,&frame_default_title_str);
@@ -5539,7 +5539,7 @@ frame_wnd_create
   else {
     FUN_005f22d0(this->pad_134,param_1);
   }
-  *(undefined **)this->pad_2d4 = &ui_text_font;
+  *(i8 **)this->pad_2d4 = &ui_text_font;
   this->title_font = (uptr)&caption_font;
   this->title_small_font = (uptr)&caption_small_font;
   this->show_turn_timer = 0;
@@ -5656,14 +5656,14 @@ void __cdecl frame_texture_surface_static_dtor(void)
 }
 
 /* 005681c9 auto */
-#define _DAT_00633dac (*(undefined4 *)((u8 *)&g.d_00633dac))
-#define local_128 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define _DAT_00633dac (*(i32 *)((u8 *)&g.d_00633dac))
+#define local_128 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_118 (*(DllHandle *)(frame_ + FRAME_OFF(16)))
 #define local_114 (*(DibSurface *)(frame_ + FRAME_OFF(20)))
-#define local_cc (*(undefined1 (*)[128])(frame_ + FRAME_OFF(92)))
+#define local_cc (*(i8 (*)[128])(frame_ + FRAME_OFF(92)))
 #define local_4c (*(Sprite *)(frame_ + FRAME_OFF(220)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(280)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(284)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(280)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(284)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(288)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -5671,14 +5671,14 @@ void __cdecl frame_texture_load(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(296)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   gfx_build_grey_remap();
   surface_ctor(&local_114);
   local_8 = 0;
   sprite_init(&local_4c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   _DAT_00633dac = 1;
   str_clear((iptr)local_cc);
   str_append((iptr)local_cc,ADDR(0x633db0, ((u8 *)&g.d_00633db0)));
@@ -5689,7 +5689,7 @@ void __cdecl frame_texture_load(void)
   }
   else {
     resource_dll_load(&local_118,(iptr)local_cc);
-    local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),2);
+    local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
     iVar1 = surface_load_gif_resource(&local_114,999,10,0xec,ADDR(0x6ab6a8, ((u8 *)&g.d_006ab6a8)));
     if (iVar1 == 0) {
       MessageBoxA((HWND)0x0,s_Failed_to_load_civ2art_gif_00633dcc,s_NOTICE_00633dc4,0x40);
@@ -5702,11 +5702,11 @@ void __cdecl frame_texture_load(void)
       surface_release(&local_114);
     }
     dll_handle_free(&local_118);
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_00568348 */ { dll_free((DllHandle *)((iptr)&local_118)); }
   }
   frame_texture_load_hook_nop();
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_00568354 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_0056835d */ { surface_dtor((DibSurface *)((iptr)&local_114)); }
@@ -5802,7 +5802,7 @@ void __thiscall menu_clear_lists(GameMenu *this)
 }
 
 /* 005786b6 auto */
-void __thiscall menu_reset(GameMenu *this,undefined4 param_1)
+void __thiscall menu_reset(GameMenu *this,i32 param_1)
 
 {
   memblock_detach((iptr)this->pad_4);
@@ -5812,13 +5812,13 @@ void __thiscall menu_reset(GameMenu *this,undefined4 param_1)
 }
 
 /* 005786f1 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-GameMenu * __thiscall menu_ctor(GameMenu *this,undefined4 param_1)
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+GameMenu * __thiscall menu_ctor(GameMenu *this,i32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   menu_handle_ctor(this);
@@ -5832,13 +5832,13 @@ GameMenu * __thiscall menu_ctor(GameMenu *this,undefined4 param_1)
 #undef local_8
 
 /* 00578770 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall menu_dtor(GameMenu *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   memblock_free((iptr)this->pad_4);
@@ -5852,10 +5852,10 @@ void __thiscall menu_dtor(GameMenu *this)
 
 /* 005787de auto */
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __thiscall menu_find_menu(GameMenu *this,int param_1)
+i32 __thiscall menu_find_menu(GameMenu *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = this->menus;
   while( true ) {
@@ -5875,7 +5875,7 @@ undefined4 __thiscall menu_find_menu(GameMenu *this,int param_1)
 int __thiscall menu_visible_index(GameMenu *this,uptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 1;
   for (local_8 = this->menus; (local_8 != 0 && (param_1 != local_8));
@@ -5892,10 +5892,10 @@ int __thiscall menu_visible_index(GameMenu *this,uptr param_1)
 /* 005788a9 auto */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __thiscall menu_id_at_visible_index(GameMenu *this,int param_1)
+i32 __thiscall menu_id_at_visible_index(GameMenu *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
   local_c = this->menus;
@@ -5905,7 +5905,7 @@ undefined4 __thiscall menu_id_at_visible_index(GameMenu *this,int param_1)
     }
     if ((*(byte *)(local_c + 8) & 2) == 0) {
       if (local_10 == param_1) {
-        return *(undefined4 *)(local_c + 4);
+        return *(i32 *)(local_c + 4);
       }
       local_10++;
     }
@@ -5922,7 +5922,7 @@ undefined4 __thiscall menu_id_at_visible_index(GameMenu *this,int param_1)
 iptr __thiscall menu_find_item(GameMenu *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_10 = this->menus;
@@ -5949,7 +5949,7 @@ iptr __thiscall menu_find_item(GameMenu *this,int param_1)
 int __thiscall menu_item_visible_index(GameMenu *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 1;
   for (local_8 = *(iptr *)(*(int *)(param_1 + 0x18) + 0x18); (local_8 != 0 && (param_1 != local_8));
@@ -5966,11 +5966,11 @@ int __thiscall menu_item_visible_index(GameMenu *this,iptr param_1)
 /* 00578a1c auto */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __thiscall menu_item_id_at_visible_index(GameMenu *this,undefined4 param_1,int param_2)
+i32 __thiscall menu_item_id_at_visible_index(GameMenu *this,i32 param_1,int param_2)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 1;
   iVar1 = menu_find_menu(this,param_1);
@@ -5978,7 +5978,7 @@ undefined4 __thiscall menu_item_id_at_visible_index(GameMenu *this,undefined4 pa
     for (local_c = *(iptr *)(iVar1 + 0x18); local_c != 0; local_c = *(iptr *)(local_c + 0x10)) {
       if ((*(byte *)(local_c + 8) & 2) == 0) {
         if (local_10 == param_2) {
-          return *(undefined4 *)(local_c + 4);
+          return *(i32 *)(local_c + 4);
         }
         local_10++;
       }
@@ -5991,15 +5991,15 @@ undefined4 __thiscall menu_item_id_at_visible_index(GameMenu *this,undefined4 pa
 
 /* 00578b06 auto */
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-undefined4 * __thiscall menu_add_menu(GameMenu *this,undefined4 param_1,char *param_2)
+i32 * __thiscall menu_add_menu(GameMenu *this,i32 param_1,char *param_2)
 
 {
-  undefined4 *puVar1;
+  i32 *puVar1;
   size_t sVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  puVar1 = (undefined4 *)memblock_alloc((iptr)this->pad_4,0x1c);
+  puVar1 = (i32 *)memblock_alloc((iptr)this->pad_4,0x1c);
   if (this->menus == 0) {
     this->menus = (uptr)puVar1;
     puVar1[5] = 0;
@@ -6008,7 +6008,7 @@ undefined4 * __thiscall menu_add_menu(GameMenu *this,undefined4 param_1,char *pa
     for (local_c = this->menus; *(int *)(local_c + 0x10) != 0;
         local_c = *(uptr *)(local_c + 0x10)) {
     }
-    *(undefined4 **)(local_c + 0x10) = puVar1;
+    *(i32 **)(local_c + 0x10) = puVar1;
     puVar1[5] = local_c;
   }
   puVar1[4] = 0;
@@ -6028,31 +6028,31 @@ undefined4 * __thiscall menu_add_menu(GameMenu *this,undefined4 param_1,char *pa
 
 /* 00578c12 auto */
 #define local_10 (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 * __thiscall
+i32 * __thiscall
 menu_add_item
-          (GameMenu *this,undefined4 param_1,undefined4 param_2,iptr param_3,size_t param_4)
+          (GameMenu *this,i32 param_1,i32 param_2,iptr param_3,size_t param_4)
 
 {
   iptr iVar1;
   size_t sVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (undefined4 *)0x0;
+  local_c = (i32 *)0x0;
   iVar1 = menu_find_menu(this,param_1);
   if (iVar1 != 0) {
-    local_c = (undefined4 *)memblock_alloc((iptr)this->pad_4,0x1c);
+    local_c = (i32 *)memblock_alloc((iptr)this->pad_4,0x1c);
     if (*(int *)(iVar1 + 0x18) == 0) {
-      *(undefined4 **)(iVar1 + 0x18) = local_c;
+      *(i32 **)(iVar1 + 0x18) = local_c;
       local_c[5] = 0;
     }
     else {
       for (local_8 = *(iptr *)(iVar1 + 0x18); *(int *)(local_8 + 0x10) != 0;
           local_8 = *(iptr *)(local_8 + 0x10)) {
       }
-      *(undefined4 **)(local_8 + 0x10) = local_c;
+      *(i32 **)(local_8 + 0x10) = local_c;
       local_c[5] = local_8;
     }
     local_c[6] = iVar1;
@@ -6086,11 +6086,11 @@ menu_add_item
 
 /* 00578d8a auto */
 #define menu_command_callback (*(code * *)((u8 *)&g.d_0063430c))
-void __cdecl menu_dispatch_command(undefined4 param_1,undefined4 param_2)
+void __cdecl menu_dispatch_command(i32 param_1,i32 param_2)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
+  i32 uVar1;
+  i32 uVar2;
   
   if (menu_command_callback != (code *)0x0) {
     uVar1 = menu_id_at_visible_index(menu_active_object,param_1);
@@ -6126,13 +6126,13 @@ void __thiscall menu_set_command_handler(GameMenu *this,iptr param_1)
 #undef menu_command_callback
 
 /* 00578e60 auto */
-undefined4 __thiscall menu_apply_item_enabled(GameMenu *this,undefined4 param_1)
+i32 __thiscall menu_apply_item_enabled(GameMenu *this,i32 param_1)
 
 {
   iptr iVar1;
   uint uVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   
   iVar1 = menu_find_item(this,param_1);
   if (iVar1 == 0) {
@@ -6141,48 +6141,48 @@ undefined4 __thiscall menu_apply_item_enabled(GameMenu *this,undefined4 param_1)
   else {
     uVar1 = ~*(uint *)(iVar1 + 8) & 1;
     uVar2 = menu_item_visible_index(this,iVar1);
-    uVar3 = menu_visible_index(this,*(undefined4 *)(iVar1 + 0x18));
+    uVar3 = menu_visible_index(this,*(i32 *)(iVar1 + 0x18));
     uVar2 = menu_native_enable(this,uVar3,uVar2,uVar1);
   }
   return uVar2;
 }
 
 /* 00578ec7 auto */
-void __thiscall menu_apply_item_checked(GameMenu *this,undefined4 param_1)
+void __thiscall menu_apply_item_checked(GameMenu *this,i32 param_1)
 
 {
   iptr iVar1;
   uint uVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   
   iVar1 = menu_find_item(this,param_1);
   if (iVar1 != 0) {
     uVar1 = *(uint *)(iVar1 + 8) & 4;
     uVar2 = menu_item_visible_index(this,iVar1);
-    uVar3 = menu_visible_index(this,*(undefined4 *)(iVar1 + 0x18));
+    uVar3 = menu_visible_index(this,*(i32 *)(iVar1 + 0x18));
     menu_native_check(this,uVar3,uVar2,uVar1);
   }
   return;
 }
 
 /* 00578f2c auto */
-#define local_118 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define local_118 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 #define local_114 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_110 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_10c (*(undefined4 * *)(frame_ + FRAME_OFF(12)))
+#define local_10c (*(i32 * *)(frame_ + FRAME_OFF(12)))
 #define local_108 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_104 (*(undefined1 (*)[256])(frame_ + FRAME_OFF(20)))
+#define local_104 (*(i8 (*)[256])(frame_ + FRAME_OFF(20)))
 void __thiscall menu_rebuild(GameMenu *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((this->menu_flags & 0x8000) == 0) {
     local_104[0] = 0;
-    local_118 = (undefined4 *)this->menus;
+    local_118 = (i32 *)this->menus;
     local_114 = 1;
-    for (; local_118 != (undefined4 *)0x0; local_118 = (undefined4 *)local_118[4]) {
+    for (; local_118 != (i32 *)0x0; local_118 = (i32 *)local_118[4]) {
       if ((*(byte *)(local_118 + 2) & 2) == 0) {
         FUN_005f22e0(local_104,*local_118);
         FUN_005f22e0(local_104,&menu_title_sep_str);
@@ -6198,16 +6198,16 @@ void __thiscall menu_rebuild(GameMenu *this,iptr param_1)
     if (param_1 != 0) {
       menu_native_build(this,(iptr)local_104);
     }
-    local_118 = (undefined4 *)this->menus;
+    local_118 = (i32 *)this->menus;
     local_114 = 1;
-    for (; local_118 != (undefined4 *)0x0; local_118 = *(undefined4 **)((int)local_118 + 0x10)) {
+    for (; local_118 != (i32 *)0x0; local_118 = *(i32 **)((int)local_118 + 0x10)) {
       if ((*(byte *)((int)local_118 + 8) & 2) == 0) {
         if (param_1 != 0) {
           menu_native_delete(this,local_114,1);
         }
-        local_10c = *(undefined4 **)((int)local_118 + 0x18);
+        local_10c = *(i32 **)((int)local_118 + 0x18);
         local_110 = 1;
-        for (; local_10c != (undefined4 *)0x0; local_10c = (undefined4 *)local_10c[4]) {
+        for (; local_10c != (i32 *)0x0; local_10c = (i32 *)local_10c[4]) {
           if ((*(byte *)(local_10c + 2) & 2) == 0) {
             *(int *)((int)local_118 + 0xcU) = *(int *)((int)local_118 + 0xcU) + 1;
             menu_native_insert(this,local_114,local_110,*local_10c);
@@ -6239,7 +6239,7 @@ void __thiscall menu_rebuild(GameMenu *this,iptr param_1)
 #undef local_104
 
 /* 00579260 auto */
-void __thiscall menu_set_item_hidden(GameMenu *this,undefined4 param_1,int param_2)
+void __thiscall menu_set_item_hidden(GameMenu *this,i32 param_1,int param_2)
 
 {
   iptr iVar1;
@@ -6265,12 +6265,12 @@ void __thiscall menu_set_item_hidden(GameMenu *this,undefined4 param_1,int param
 /* 005792e1 auto */
 #define local_c (*(GameMenu * *)(frame_ + FRAME_OFF(4)))
 GameMenu * __thiscall
-menu_set_item_enabled(GameMenu *this,undefined4 param_1,GameMenu *param_2)
+menu_set_item_enabled(GameMenu *this,i32 param_1,GameMenu *param_2)
 
 {
   GameMenu *pCVar1;
   GameMenu *pCVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   pCVar1 = (GameMenu *)menu_find_item(this,param_1);
   pCVar2 = pCVar1;
@@ -6294,25 +6294,25 @@ menu_set_item_enabled(GameMenu *this,undefined4 param_1,GameMenu *param_2)
 #undef local_c
 
 /* 005793a3 auto */
-void __thiscall menu_remove_item(GameMenu *this,undefined4 param_1)
+void __thiscall menu_remove_item(GameMenu *this,i32 param_1)
 
 {
   iptr iVar1;
-  undefined4 uVar1;
-  undefined4 uVar2;
+  i32 uVar1;
+  i32 uVar2;
   
   iVar1 = menu_find_item(this,param_1);
   if (iVar1 != 0) {
     uVar1 = menu_item_visible_index(this,iVar1);
-    uVar2 = menu_visible_index(this,*(undefined4 *)(iVar1 + 0x18));
+    uVar2 = menu_visible_index(this,*(i32 *)(iVar1 + 0x18));
     menu_native_delete(this,uVar2,uVar1);
-    *(undefined4 *)(*(int *)(iVar1 + 0x14) + 0x10) = *(undefined4 *)(iVar1 + 0x10);
+    *(i32 *)(*(int *)(iVar1 + 0x14) + 0x10) = *(i32 *)(iVar1 + 0x10);
   }
   return;
 }
 
 /* 0057940d auto */
-void __thiscall menu_set_item_checked(GameMenu *this,undefined4 param_1,int param_2)
+void __thiscall menu_set_item_checked(GameMenu *this,i32 param_1,int param_2)
 
 {
   byte bVar1;
@@ -6337,16 +6337,16 @@ void __thiscall menu_set_item_checked(GameMenu *this,undefined4 param_1,int para
 
 /* 005794cf auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall menu_set_menu_enabled(GameMenu *this,undefined4 param_1,undefined4 param_2)
+void __thiscall menu_set_menu_enabled(GameMenu *this,i32 param_1,i32 param_2)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = menu_find_menu(this,param_1);
   if (iVar1 != 0) {
     for (local_8 = *(iptr *)(iVar1 + 0x18); local_8 != 0; local_8 = *(iptr *)(local_8 + 0x10)) {
-      menu_set_item_enabled(this,*(undefined4 *)(local_8 + 4),param_2);
+      menu_set_item_enabled(this,*(i32 *)(local_8 + 4),param_2);
     }
   }
   return;
@@ -6354,16 +6354,16 @@ void __thiscall menu_set_menu_enabled(GameMenu *this,undefined4 param_1,undefine
 #undef local_8
 
 /* 0057953e auto */
-void __thiscall menu_set_item_text(GameMenu *this,undefined4 param_1,iptr param_2)
+void __thiscall menu_set_item_text(GameMenu *this,i32 param_1,iptr param_2)
 
 {
-  undefined4 *puVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
+  i32 *puVar1;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
   
-  puVar1 = (undefined4 *)menu_find_item(this,param_1);
-  if (puVar1 != (undefined4 *)0x0) {
+  puVar1 = (i32 *)menu_find_item(this,param_1);
+  if (puVar1 != (i32 *)0x0) {
     FUN_005f22d0(*puVar1,param_2);
     str_pipes_to_tabs(*puVar1);
     if (((this->menu_flags & 0x8000) != 0) && ((*(byte *)(puVar1 + 2) & 2) == 0)) {
@@ -6389,7 +6389,7 @@ void __thiscall menu_native_build(GameMenu *this,iptr param_1)
 
 /* 00579a00 auto */
 void __thiscall
-menu_native_insert(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+menu_native_insert(GameMenu *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   menu_hmenu_insert_item(this->hmenu,param_1,param_2,param_3);
@@ -6397,7 +6397,7 @@ menu_native_insert(GameMenu *this,undefined4 param_1,undefined4 param_2,undefine
 }
 
 /* 00579a40 auto */
-void __thiscall menu_native_delete(GameMenu *this,undefined4 param_1,undefined4 param_2)
+void __thiscall menu_native_delete(GameMenu *this,i32 param_1,i32 param_2)
 
 {
   menu_hmenu_delete_item(this->hmenu,param_1,param_2);
@@ -6406,7 +6406,7 @@ void __thiscall menu_native_delete(GameMenu *this,undefined4 param_1,undefined4 
 
 /* 00579a80 auto */
 void __thiscall
-menu_native_set_text(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+menu_native_set_text(GameMenu *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   menu_hmenu_set_item_text(this->hmenu,param_1,param_2,param_3);
@@ -6414,11 +6414,11 @@ menu_native_set_text(GameMenu *this,undefined4 param_1,undefined4 param_2,undefi
 }
 
 /* 00579ac0 auto */
-undefined4 __thiscall
-menu_native_enable(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+i32 __thiscall
+menu_native_enable(GameMenu *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = menu_hmenu_enable_item(this->hmenu,param_1,param_2,param_3);
   return uVar1;
@@ -6426,7 +6426,7 @@ menu_native_enable(GameMenu *this,undefined4 param_1,undefined4 param_2,undefine
 
 /* 00579b00 auto */
 void __thiscall
-menu_native_check(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined4 param_3)
+menu_native_check(GameMenu *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   menu_hmenu_check_item(this->hmenu,param_1,param_2,param_3);
@@ -6437,7 +6437,7 @@ menu_native_check(GameMenu *this,undefined4 param_1,undefined4 param_2,undefined
 void __thiscall wnd_attach_menu(C_00408010_b8 *this,iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr iVar2;
   
   uVar1 = menu_get_hmenu((MenuHandleView *)param_1);
@@ -6481,10 +6481,10 @@ void __thiscall wnd_redraw_menu_bar(C_00408010_b8 *this)
 }
 
 /* 00589d50 auto */
-undefined4 __thiscall wnd_frame_width(WndBase *this)
+i32 __thiscall wnd_frame_width(WndBase *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_obj_frame_width(this->native_wnd);
   return uVar1;
@@ -6504,7 +6504,7 @@ void __cdecl cmd_unit_skip_turn(void)
 void __cdecl cmd_end_player_turn(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (unit = 0; unit < game.num_units; unit++) {
     if ((units[unit].id != 0) && (units[unit].owner == human_civ)) {
@@ -6521,15 +6521,15 @@ void __cdecl cmd_end_player_turn(void)
 #define map_cursor_x (*(short *)((u8 *)&g.d_0064b1b4))
 #define map_cursor_y (*(short *)((u8 *)&g.d_0064b1b0))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define unit_blink_active (*(undefined1 *)((u8 *)&g.d_0062804c))
+#define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl ui_pick_unit_from_stack(void)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit_blink_active = 0;
   if (moving_units_mode == 1) {
@@ -6562,7 +6562,7 @@ void __cdecl ui_pick_unit_from_stack(void)
     if (iVar1 == 1) goto LAB_0058d58e;
   }
   uVar3 = 1;
-  iVar2 = label_string(*(undefined4 *)(label_string_ids + 0xf8));
+  iVar2 = label_string(*(i32 *)(label_string_ids + 0xf8));
   unit = unit_stack_select_dialog(unit,iVar2,uVar3);
   if (unit < 0) {
     return;
@@ -6763,7 +6763,7 @@ void __cdecl active_dialog_static_init(void)
 #undef dialog_stack
 
 /* 0059d37d auto */
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl dialog_edit_on_change(void)
@@ -6775,7 +6775,7 @@ void __cdecl dialog_edit_on_change(void)
 #undef _DAT_006cec80
 
 /* 0059d397 auto */
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl dialog_radio_on_select(void)
@@ -6807,9 +6807,9 @@ void __cdecl dlg_set_parent_window(iptr param_1)
 #undef dlg_parent_window
 
 /* 0059d3e1 auto */
-#define dlg_default_x (*(undefined4 *)((u8 *)&g.d_006359cc))
-#define dlg_default_y (*(undefined4 *)((u8 *)&g.d_006359d0))
-void __cdecl dialog_set_default_offset(undefined4 param_1,undefined4 param_2)
+#define dlg_default_x (*(i32 *)((u8 *)&g.d_006359cc))
+#define dlg_default_y (*(i32 *)((u8 *)&g.d_006359d0))
+void __cdecl dialog_set_default_offset(i32 param_1,i32 param_2)
 
 {
   dlg_default_x = param_1;
@@ -6825,16 +6825,16 @@ void __cdecl dialog_load_button_labels(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined *puVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 *puVar3;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = text_open_section(ADDR(0x635ac4, ((u8 *)&g.d_00635ac4)),ADDR(0x635abc, ((u8 *)&g.d_00635abc)));
   if (iVar1 == 0) {
     for (local_8 = 0; local_8 < 3; local_8++) {
       uVar2 = text_read_line_pooled();
-      *(undefined4 *)(&dialog_button_label_ids + local_8 * 4) = uVar2;
-      puVar3 = (undefined *)label_string(*(undefined4 *)(&dialog_button_label_ids + local_8 * 4));
+      *(i32 *)(&dialog_button_label_ids + local_8 * 4) = uVar2;
+      puVar3 = (i8 *)label_string(*(i32 *)(&dialog_button_label_ids + local_8 * 4));
       (&dialog_button_labels)[local_8] = puVar3;
     }
   }
@@ -6843,30 +6843,30 @@ void __cdecl dialog_load_button_labels(void)
 #undef local_8
 
 /* 0059d487 auto */
-#define dlg_bevel_dark_color (*(undefined1 *)((u8 *)&g.d_00635a0c))
-#define dlg_bevel_light_color (*(undefined1 *)((u8 *)&g.d_00635a08))
-#define dlg_bg_color (*(undefined1 *)((u8 *)&g.d_00635a04))
-#define dlg_frame_color (*(undefined1 *)((u8 *)&g.d_006359f4))
-#define dlg_highlight_text_color (*(undefined1 *)((u8 *)&g.d_00635a00))
-#define dlg_text_color (*(undefined1 *)((u8 *)&g.d_006359fc))
-#define dlg_text_shadow_color (*(undefined1 *)((u8 *)&g.d_006359f8))
-#define dlg_title_shadow_color (*(undefined1 *)((u8 *)&g.d_00635a14))
-#define dlg_title_text_color (*(undefined1 *)((u8 *)&g.d_00635a10))
+#define dlg_bevel_dark_color (*(i8 *)((u8 *)&g.d_00635a0c))
+#define dlg_bevel_light_color (*(i8 *)((u8 *)&g.d_00635a08))
+#define dlg_bg_color (*(i8 *)((u8 *)&g.d_00635a04))
+#define dlg_frame_color (*(i8 *)((u8 *)&g.d_006359f4))
+#define dlg_highlight_text_color (*(i8 *)((u8 *)&g.d_00635a00))
+#define dlg_text_color (*(i8 *)((u8 *)&g.d_006359fc))
+#define dlg_text_shadow_color (*(i8 *)((u8 *)&g.d_006359f8))
+#define dlg_title_shadow_color (*(i8 *)((u8 *)&g.d_00635a14))
+#define dlg_title_text_color (*(i8 *)((u8 *)&g.d_00635a10))
 void __cdecl
-dialog_set_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,
-            undefined4 param_9)
+dialog_set_colors(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7,i32 param_8,
+            i32 param_9)
 
 {
-  dlg_text_color = (undefined1)param_1;
-  dlg_text_shadow_color = (undefined1)param_2;
-  dlg_frame_color = (undefined1)param_3;
-  dlg_highlight_text_color = (undefined1)param_4;
-  dlg_bg_color = (undefined1)param_5;
-  dlg_bevel_light_color = (undefined1)param_6;
-  dlg_bevel_dark_color = (undefined1)param_7;
-  dlg_title_text_color = (undefined1)param_8;
-  dlg_title_shadow_color = (undefined1)param_9;
+  dlg_text_color = (i8)param_1;
+  dlg_text_shadow_color = (i8)param_2;
+  dlg_frame_color = (i8)param_3;
+  dlg_highlight_text_color = (i8)param_4;
+  dlg_bg_color = (i8)param_5;
+  dlg_bevel_light_color = (i8)param_6;
+  dlg_bevel_dark_color = (i8)param_7;
+  dlg_title_text_color = (i8)param_8;
+  dlg_title_shadow_color = (i8)param_9;
   return;
 }
 #undef dlg_bevel_dark_color
@@ -6880,16 +6880,16 @@ dialog_set_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,undef
 #undef dlg_title_text_color
 
 /* 0059d4df auto */
-#define DAT_00635a30 (*(undefined4 *)((u8 *)&g.d_00635a30))
-#define dlg_sel_text_color (*(undefined4 *)((u8 *)&g.d_00635a28))
-#define dlg_sel_text_shadow_color (*(undefined4 *)((u8 *)&g.d_00635a2c))
-#define list_bg_color (*(undefined4 *)((u8 *)&g.d_00635a18))
-#define list_sel_bg_color (*(undefined4 *)((u8 *)&g.d_00635a24))
-#define list_shadow_color (*(undefined4 *)((u8 *)&g.d_00635a20))
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define DAT_00635a30 (*(i32 *)((u8 *)&g.d_00635a30))
+#define dlg_sel_text_color (*(i32 *)((u8 *)&g.d_00635a28))
+#define dlg_sel_text_shadow_color (*(i32 *)((u8 *)&g.d_00635a2c))
+#define list_bg_color (*(i32 *)((u8 *)&g.d_00635a18))
+#define list_sel_bg_color (*(i32 *)((u8 *)&g.d_00635a24))
+#define list_shadow_color (*(i32 *)((u8 *)&g.d_00635a20))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 void __cdecl
-dialog_set_list_colors(undefined4 param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7)
+dialog_set_list_colors(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7)
 
 {
   list_bg_color = param_1;
@@ -6954,7 +6954,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
 
 {
   u8 *puVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->surf_wnd = 0;
   this->bg_surface = 0;
@@ -7090,7 +7090,7 @@ void __thiscall dialog_init_defaults(Dialog *this)
 #undef local_8
 
 /* 0059db08 auto */
-Dialog * __thiscall dialog_ctor(Dialog *this,undefined4 param_1)
+Dialog * __thiscall dialog_ctor(Dialog *this,i32 param_1)
 
 {
   memblock_ctor((MemBlock *)this->pad_254);
@@ -7102,11 +7102,11 @@ Dialog * __thiscall dialog_ctor(Dialog *this,undefined4 param_1)
 }
 
 /* 0059db65 auto */
-#define dialog_stack (*(undefined4 *)((u8 *)&g.d_00635a58))
+#define dialog_stack (*(i32 *)((u8 *)&g.d_00635a58))
 #define dialog_stack_top (*(iptr *)((u8 *)&g.d_006ad678))
 #define dlg_parent_window (*(WndBase * *)((u8 *)&g.d_006359c4))
 #define main_frame_created (*(int *)((u8 *)&g.d_00634718))
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall dialog_close(Dialog *this)
@@ -7211,10 +7211,10 @@ void __thiscall dialog_close(Dialog *this)
 #undef _DAT_006cec80
 
 /* 0059df8a auto */
-undefined4 __thiscall dialog_dtor(Dialog *this)
+i32 __thiscall dialog_dtor(Dialog *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   dialog_close(this);
   uVar1 = memblock_free((iptr)this->pad_254);
@@ -7227,7 +7227,7 @@ dialog_init
           (Dialog *this,iptr param_1,iptr param_2,iptr param_3,u32 param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((this->style_flags & 0x20) == 0) {
     memblock_init((iptr)this->pad_254,9,CONCAT22((short)((uint)this >> 0x10),this->pool_size));
@@ -7263,11 +7263,11 @@ dialog_init
 
 /* 0059e0eb auto */
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall dialog_set_item_text(void *this,int param_1,iptr param_2)
+i32 __thiscall dialog_set_item_text(void *this,int param_1,iptr param_2)
 
 {
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = *(int **)((int)this + 0x230); (*local_8 != param_1 && (local_8 != (int *)0x0));
       local_8 = (int *)local_8[7]) {
@@ -7292,7 +7292,7 @@ dialog_add_line
   int *piVar1;
   size_t sVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (int *)0x0;
   for (local_8 = (int *)this->field_230; local_8 != (int *)0x0; local_8 = (int *)local_8[7]) {
@@ -7345,7 +7345,7 @@ LAB_0059e2e4:
 #undef local_8
 
 /* 0059e356 auto */
-undefined4 __thiscall dialog_option_icon_width(C_0040bc40_28 *this)
+i32 __thiscall dialog_option_icon_width(C_0040bc40_28 *this)
 
 {
   return 0x20;
@@ -7358,7 +7358,7 @@ int __thiscall dialog_option_row_height(C_0040bc40_28 *this)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = dialog_option_icon_width(this);
   iVar1 = font_line_spacing((GameFont *)this->body_font);
@@ -7566,7 +7566,7 @@ void __thiscall dialog_set_position(C_0040bc40_28 *this,u32 param_1,u32 param_2)
 uptr __thiscall dialog_find_option(DialogOptionList *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = this->option_list;
@@ -7587,7 +7587,7 @@ uptr __thiscall dialog_find_option(DialogOptionList *this,int param_1)
 int * __thiscall dialog_find_sprite(DialogOptionList *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (int *)0x0;
   local_c = (int *)this->sprite_list;
@@ -7621,12 +7621,12 @@ void __thiscall dialog_set_option_disabled(DialogOptionList *this,iptr param_1,i
 }
 
 /* 0059e9f3 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall dialog_option_is_checked(DialogOptionList *this,undefined4 param_1)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __thiscall dialog_option_is_checked(DialogOptionList *this,i32 param_1)
 
 {
   byte *pbVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   pbVar1 = (byte *)dialog_find_option(this,param_1);
@@ -7643,7 +7643,7 @@ undefined4 __thiscall dialog_option_is_checked(DialogOptionList *this,undefined4
 #undef local_8
 
 /* 0059ea4d auto */
-void __thiscall dialog_set_option_checked(DialogOptionList *this,undefined4 param_1,int param_2)
+void __thiscall dialog_set_option_checked(DialogOptionList *this,i32 param_1,int param_2)
 
 {
   uint *puVar1;
@@ -7772,7 +7772,7 @@ dialog_add_sprite(DialogOptionList *this,iptr param_1,iptr param_2,iptr param_3)
   iptr iVar3;
   int iVar4;
   u32 uVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   for (local_c = this->sprite_list; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
@@ -7830,7 +7830,7 @@ dialog_add_option(DialogOptionList *this,iptr param_1,iptr param_2,uint param_3)
   uint uVar5;
   int iVar6;
   u32 uVar7;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   local_c = this->option_list;
@@ -7915,28 +7915,28 @@ dialog_add_checkbox_option(DialogOptionList *this,iptr param_1,iptr param_2,int 
 #define local_14 (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uptr *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(16)))
-undefined4 * __thiscall
+i32 * __thiscall
 dialog_add_edit_field(DialogOptionList *this,iptr param_1,iptr param_2,size_t param_3)
 
 {
-  undefined4 *puVar1;
+  i32 *puVar1;
   size_t sVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   u32 uVar4;
   int iVar5;
   u32 uVar6;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   for (local_10 = this->edit_field_list; local_10 != 0; local_10 = *(uptr *)(local_10 + 0x18)) {
     local_14 = local_10;
   }
-  puVar1 = (undefined4 *)memblock_alloc((iptr)this->pad_254,0x1c);
+  puVar1 = (i32 *)memblock_alloc((iptr)this->pad_254,0x1c);
   if (local_14 == 0) {
     this->edit_field_list = (u32)puVar1;
   }
   else {
-    *(undefined4 **)(local_14 + 0x18) = puVar1;
+    *(i32 **)(local_14 + 0x18) = puVar1;
   }
   puVar1[6] = 0;
   *puVar1 = 0;
@@ -7969,7 +7969,7 @@ dialog_add_edit_field(DialogOptionList *this,iptr param_1,iptr param_2,size_t pa
   }
   this->edit_width = uVar6;
   if (param_2 == 0) {
-    *(undefined1 *)puVar1[5] = 0;
+    *(i8 *)puVar1[5] = 0;
   }
   else {
     _memset((void *)puVar1[5],0,0x100);
@@ -8007,7 +8007,7 @@ void __thiscall dialog_add_button(C_0040bc40_3c *this,iptr param_1)
 void __thiscall dialog_set_text_color(DialogTextView *this,int param_1,int param_2,int param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     if (param_2 == 0) {
@@ -8051,9 +8051,9 @@ dialog_draw_text_shadowed
 
 {
   char *pcVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   
   while (pcVar1 = _strchr(param_2,0x5f), pcVar1 != (char *)0x0) {
     *pcVar1 = ' ';
@@ -8076,7 +8076,7 @@ dialog_draw_text_shadowed
 
 /* 0059f5ba auto */
 void __thiscall
-dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 param_3)
+dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,i32 param_3)
 
 {
   dialog_draw_text_default_font
@@ -8086,10 +8086,10 @@ dialog_draw_text_line(C_0040bc40_118 *this,iptr param_1,int param_2,undefined4 p
 
 /* 0059f5f7 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __thiscall dialog_has_text_lines(DialogOptionList *this)
+i32 __thiscall dialog_has_text_lines(DialogOptionList *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = this->line_list;
   while( true ) {
@@ -8111,7 +8111,7 @@ undefined4 __thiscall dialog_has_text_lines(DialogOptionList *this)
 #define local_16c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_160 (*(char (*)[256])(frame_ + FRAME_OFF(40)))
 #define local_60 (*(char *)(frame_ + FRAME_OFF(296)))
-#define local_5f (*(undefined1 (*)[79])(frame_ + FRAME_OFF(297)))
+#define local_5f (*(i8 (*)[79])(frame_ + FRAME_OFF(297)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(376)))
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(380)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(384)))
@@ -8126,7 +8126,7 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int param_1)
   int iVar4;
   int iVar5;
   bool bVar6;
-  undefined1 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar6 = this->shadow_color != this->text_color;
   local_c = this->line_list;
@@ -8223,8 +8223,8 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int param_1)
     }
     else if (param_1 != 0) {
       dialog_draw_text_default_font
-                ((DialogTextView *)this,*(undefined4 *)(local_c + 8),*(undefined4 *)(local_c + 0x10),
-                 *(undefined4 *)(local_c + 0x14),*(undefined4 *)(local_c + 4));
+                ((DialogTextView *)this,*(i32 *)(local_c + 8),*(i32 *)(local_c + 0x10),
+                 *(i32 *)(local_c + 0x14),*(i32 *)(local_c + 4));
     }
   }
   if (local_160[0] != '\0') {
@@ -8258,10 +8258,10 @@ int __thiscall dialog_draw_wrapped_text(DialogOptionList *this,int param_1)
 /* 0059fb78 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall dialog_option_group_index(DialogOptionList *this,uptr param_1)
+i32 __thiscall dialog_option_group_index(DialogOptionList *this,uptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->option_list != 0) {
     local_c = 0;
@@ -8282,10 +8282,10 @@ undefined4 __thiscall dialog_option_group_index(DialogOptionList *this,uptr para
 /* 0059fc19 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall dialog_option_at(DialogOptionList *this,int param_1)
+i32 __thiscall dialog_option_at(DialogOptionList *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->option_list != 0) {
     local_c = 0;
@@ -8319,13 +8319,13 @@ int __thiscall dialog_column_of_option(DialogOptionList *this,uptr param_1)
 #define local_78 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_68 (*(undefined1 (*)[12])(frame_ + FRAME_OFF(16)))
+#define local_68 (*(i8 (*)[12])(frame_ + FRAME_OFF(16)))
 #define local_5c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_58 (*(u32 *)(frame_ + FRAME_OFF(32)))
-#define local_54 (*(undefined1 (*)[8])(frame_ + FRAME_OFF(36)))
+#define local_54 (*(i8 (*)[8])(frame_ + FRAME_OFF(36)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_44 (*(undefined4 *)(frame_ + FRAME_OFF(52)))
+#define local_44 (*(i32 *)(frame_ + FRAME_OFF(52)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(56)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(60)))
 #define local_38 (*(u32 *)(frame_ + FRAME_OFF(64)))
@@ -8341,16 +8341,16 @@ int __thiscall dialog_column_of_option(DialogOptionList *this,uptr param_1)
 #define local_10 (*(u32 *)(frame_ + FRAME_OFF(104)))
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(108)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(112)))
-undefined4 __thiscall dialog_compute_layout(DialogOptionList *this)
+i32 __thiscall dialog_compute_layout(DialogOptionList *this)
 
 {
   u32 uVar1;
   int iVar2;
   size_t sVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   u32 uVar6;
   uptr uVar5;
-  undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_44 = 1;
   local_70 = 0;
@@ -8783,14 +8783,14 @@ dialog_draw_option_cell
   int iVar1;
   int iVar2;
   uptr sVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   while (*(char *)param_1 != '\0') {
     iVar1 = *(int *)(this[2].pad_9c + this->field_48 * 4 - 4);
     iVar2 = font_text_width((GameFont *)this->field_10,param_1);
     if (iVar2 <= iVar1 - 6) break;
     sVar3 = _strlen((char *)param_1);
-    *(undefined1 *)((sVar3 - 1) + param_1) = 0;
+    *(i8 *)((sVar3 - 1) + param_1) = 0;
   }
   if (param_4 == 0) {
     local_8 = this->field_94;
@@ -8825,14 +8825,14 @@ dialog_draw_option_cell
 #define local_8 (*(char * *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 dialog_draw_option_text
-          (DialogOptionDrawView *this,char *param_1,int param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5)
+          (DialogOptionDrawView *this,char *param_1,int param_2,i32 param_3,i32 param_4,
+          i32 param_5)
 
 {
   int iVar1;
   char *pcVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (char *)0x0;
   pcVar2 = _strchr(param_1,0x7c);
@@ -8854,9 +8854,9 @@ dialog_draw_option_text
 
 /* 005a120b auto */
 #define local_3c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define local_34 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define local_34 (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(16)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
@@ -8864,16 +8864,16 @@ dialog_draw_option_text
 #define local_1c (*(u32 *)(frame_ + FRAME_OFF(36)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(40)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(52)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
 uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param_2)
 
 {
   int iVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     local_18 = 0;
@@ -8916,8 +8916,8 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param
       }
       if ((this->on_draw_option == 0) ||
          (iVar2 = (*(code *)this->on_draw_option)
-                            (this,this->surf_wnd,*(undefined4 *)(param_1 + 4),iVar2,local_20,local_28
-                             ,*(undefined4 *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 - 8)),
+                            (this,this->surf_wnd,*(i32 *)(param_1 + 4),iVar2,local_20,local_28
+                             ,*(i32 *)(this->pad_1f8 + *(int *)(param_1 + 0xc) * 4 - 8)),
          iVar2 == 0)) {
         if (local_18 != 0) {
           gfx_draw_bevel_rect(this->surf_wnd,(iptr)&local_3c,this->bevel_light_color,this->bevel_dark_color);
@@ -8925,7 +8925,7 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param
         }
         gfx_fill_rect(this->surf_wnd,(iptr)&local_3c,local_1c);
         dialog_draw_option_text
-                  ((DialogOptionDrawView *)this,*(undefined4 *)(param_1 + 8),local_20 + 2,local_28,local_18,
+                  ((DialogOptionDrawView *)this,*(i32 *)(param_1 + 8),local_20 + 2,local_28,local_18,
                    *(uint *)param_1 & 1);
       }
       if (param_2 != 0) {
@@ -8955,10 +8955,10 @@ uint __thiscall dialog_draw_option(DialogOptionList *this,iptr param_1,int param
 #define local_24 (*(u32 *)(frame_ + FRAME_OFF(12)))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(28)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(28)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(40)))
 void __thiscall dialog_draw_option_list(DialogOptionList *this)
 
 {
@@ -8968,8 +8968,8 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
   int iVar4;
   iptr iVar5;
   uint uVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar2 = this->cur_pane;
   for (local_24 = 0; (int)local_24 < 2; local_24++) {
@@ -8981,10 +8981,10 @@ void __thiscall dialog_draw_option_list(DialogOptionList *this)
       puVar1[2] = '\0';
       puVar1[3] = '\0';
       uVar3 = this->cur_pane;
-      local_14 = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 - 0x20);
+      local_14 = *(i32 *)(this->pad_178 + uVar3 * 0x10 - 0x20);
       local_10 = *(int *)(this->pad_178 + uVar3 * 0x10 - 0x1c);
-      local_c = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 - 0x18);
-      local_8 = *(undefined4 *)(this->pad_178 + uVar3 * 0x10 - 0x14);
+      local_c = *(i32 *)(this->pad_178 + uVar3 * 0x10 - 0x18);
+      local_8 = *(i32 *)(this->pad_178 + uVar3 * 0x10 - 0x14);
       if ((1 < (int)this->columns) || ((this->option_count == 0 || (this->on_draw_option != 0)))) {
         gfx_fill_rect(this->surf_wnd,(iptr)(this->pad_178 + this->cur_pane * 0x10 - 0x20),
                            this->list_fill_color);
@@ -9063,9 +9063,9 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int par
   uptr uVar1;
   bool bVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
   if ((param_1 != 0) && (this->selected_option != param_1)) {
@@ -9087,7 +9087,7 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int par
     uVar4 = dialog_column_start_index((DialogTextView *)this,this->option_count - 1);
     uVar4 = int_clamp_b(local_10,0,uVar4);
     uVar4 = dialog_option_at(this,uVar4);
-    *(undefined4 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18) = uVar4;
+    *(i32 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18) = uVar4;
     uVar1 = this->selected_option;
     this->selected_option = param_1;
     if ((bVar2) || (param_2 == 0)) {
@@ -9097,7 +9097,7 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int par
                   ((C_0040f380_40 *)(&this[1].field_1c)[this->cur_pane],iVar5);
       }
       if ((&this[1].field_24)[this->cur_pane] != 0) {
-        iVar5 = dialog_column_of_option(this,*(undefined4 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
+        iVar5 = dialog_column_of_option(this,*(i32 *)(this->pad_1f8 + this->cur_pane * 4 + 0x18));
         scrollbar_set_pos
                   ((C_0040f380_40 *)(&this[1].field_24)[this->cur_pane],iVar5);
       }
@@ -9106,14 +9106,14 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int par
       if (bVar2) {
         dialog_draw_option_list(this);
         if (this->on_select_change != 0) {
-          (*(code *)this->on_select_change)(this,*(undefined4 *)(param_1 + 4));
+          (*(code *)this->on_select_change)(this,*(i32 *)(param_1 + 4));
         }
       }
       else {
         dialog_draw_option(this,uVar1,1);
         dialog_draw_option(this,param_1,1);
         if (this->on_select_change != 0) {
-          (*(code *)this->on_select_change)(this,*(undefined4 *)(param_1 + 4));
+          (*(code *)this->on_select_change)(this,*(i32 *)(param_1 + 4));
         }
       }
     }
@@ -9123,10 +9123,10 @@ void __thiscall dialog_select_option(DialogOptionList *this,uptr param_1,int par
 #undef local_10
 
 /* 005a1a7d auto */
-undefined4 __thiscall dialog_option_at_point(DialogOptionList *this,int param_1,int param_2)
+i32 __thiscall dialog_option_at_point(DialogOptionList *this,int param_1,int param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   
   dialog_pick_pane_at((DialogWindowView *)this,param_1,param_2);
@@ -9170,7 +9170,7 @@ undefined4 __thiscall dialog_option_at_point(DialogOptionList *this,int param_1,
 int __thiscall dialog_count_group_options(DialogOptionList *this,int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = this->option_list; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
@@ -9206,13 +9206,13 @@ void __thiscall dialog_pick_pane_at(DialogWindowView *this,int param_1,int param
 }
 
 /* 005a1da3 auto */
-void __cdecl dialog_list_on_vscroll(undefined4 param_1)
+void __cdecl dialog_list_on_vscroll(i32 param_1)
 
 {
   int iVar1;
   
   if (active_dialog != 0) {
-    *(undefined4 *)(active_dialog + 0x48) = 0;
+    *(i32 *)(active_dialog + 0x48) = 0;
     iVar1 = dialog_option_at((DialogOptionList *)active_dialog,param_1);
     if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
       *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
@@ -9224,27 +9224,27 @@ void __cdecl dialog_list_on_vscroll(undefined4 param_1)
 
 /* 005a1e28 auto */
 #define dlg_default_idle_callback (*(int *)((u8 *)&g.d_00635a40))
-#define dlg_palette (*(undefined * *)((u8 *)&g.d_006359c0))
-#define dlg_parent_window (*(undefined * *)((u8 *)&g.d_006359c4))
+#define dlg_palette (*(i8 * *)((u8 *)&g.d_006359c0))
+#define dlg_parent_window (*(i8 * *)((u8 *)&g.d_006359c4))
 #define dlg_pending_idle_callback (*(int *)((u8 *)&g.d_00635a3c))
 #define main_frame_created (*(int *)((u8 *)&g.d_00634718))
 #define local_2c (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(undefined * *)(frame_ + FRAME_OFF(16)))
-#define local_1c (*(undefined * *)(frame_ + FRAME_OFF(20)))
-#define local_18 (*(undefined1 * *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(28)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-undefined4 __thiscall dialog_create_window(DialogWindowView *this)
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define local_20 (*(i8 * *)(frame_ + FRAME_OFF(16)))
+#define local_1c (*(i8 * *)(frame_ + FRAME_OFF(20)))
+#define local_18 (*(i8 * *)(frame_ + FRAME_OFF(24)))
+#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(28)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(36)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(40)))
+i32 __thiscall dialog_create_window(DialogWindowView *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   SurfaceWindow *this_00;
   int iVar2;
   u32 uVar3;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   if (this->surf_wnd == 0) {
@@ -9259,8 +9259,8 @@ undefined4 __thiscall dialog_create_window(DialogWindowView *this)
     local_8 = 0xffffffff;
     this->surf_wnd = local_2c;
     local_14[0] = 0;
-    local_18 = (undefined1 *)this->title_text;
-    if (local_18 == (undefined1 *)0x0) {
+    local_18 = (i8 *)this->title_text;
+    if (local_18 == (i8 *)0x0) {
       local_18 = local_14;
     }
     if ((this->style_flags & 0x10000) == 0) {
@@ -9269,9 +9269,9 @@ undefined4 __thiscall dialog_create_window(DialogWindowView *this)
     else {
       local_24 = 0x842;
     }
-    if (dlg_parent_window == (undefined *)0x0) {
+    if (dlg_parent_window == (i8 *)0x0) {
       if (main_frame_created == 0) {
-        local_1c = (undefined *)0x0;
+        local_1c = (i8 *)0x0;
       }
       else {
         local_1c = &main_frame_wnd;
@@ -9280,13 +9280,13 @@ undefined4 __thiscall dialog_create_window(DialogWindowView *this)
     else {
       local_1c = dlg_parent_window;
     }
-    if (dlg_palette == (undefined *)0x0) {
+    if (dlg_palette == (i8 *)0x0) {
       local_20 = &game_palette;
     }
     else {
       local_20 = dlg_palette;
     }
-    if (local_1c == (undefined *)0x0) {
+    if (local_1c == (i8 *)0x0) {
       surface_wnd_create
                 ((DibSurface *)this->surf_wnd,(iptr)local_18,local_24,this->window_x,
                  this->window_y,this->wnd_width,this->wnd_height,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
@@ -9357,7 +9357,7 @@ void __cdecl dialog_on_redraw(void)
 
 /* 005a211c auto */
 #define dialog_clamp_overflow (*(int *)((u8 *)&g.d_0062f004))
-#define dialog_stack (*(undefined4 *)((u8 *)&g.d_00635a58))
+#define dialog_stack (*(i32 *)((u8 *)&g.d_00635a58))
 #define dialog_stack_top (*(Dialog * *)((u8 *)&g.d_006ad678))
 #define local_198 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_194 (*(int *)(frame_ + FRAME_OFF(4)))
@@ -9375,42 +9375,42 @@ void __cdecl dialog_on_redraw(void)
 #define local_15c (*(u32 * *)(frame_ + FRAME_OFF(60)))
 #define local_154 (*(uptr *)(frame_ + FRAME_OFF(68)))
 #define local_14c (*(u32 * *)(frame_ + FRAME_OFF(76)))
-#define local_144 (*(undefined4 *)(frame_ + FRAME_OFF(84)))
-#define local_13c (*(undefined4 *)(frame_ + FRAME_OFF(92)))
-#define local_134 (*(undefined4 *)(frame_ + FRAME_OFF(100)))
-#define local_12c (*(undefined4 *)(frame_ + FRAME_OFF(108)))
-#define local_124 (*(undefined4 *)(frame_ + FRAME_OFF(116)))
-#define local_11c (*(undefined4 *)(frame_ + FRAME_OFF(124)))
+#define local_144 (*(i32 *)(frame_ + FRAME_OFF(84)))
+#define local_13c (*(i32 *)(frame_ + FRAME_OFF(92)))
+#define local_134 (*(i32 *)(frame_ + FRAME_OFF(100)))
+#define local_12c (*(i32 *)(frame_ + FRAME_OFF(108)))
+#define local_124 (*(i32 *)(frame_ + FRAME_OFF(116)))
+#define local_11c (*(i32 *)(frame_ + FRAME_OFF(124)))
 #define local_104 (*(int *)(frame_ + FRAME_OFF(148)))
 #define local_fc (*(uptr *)(frame_ + FRAME_OFF(156)))
 #define local_f8 (*(u32 *)(frame_ + FRAME_OFF(160)))
-#define local_e8 (*(undefined * *)(frame_ + FRAME_OFF(176)))
-#define local_e4 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(180)))
+#define local_e8 (*(i8 * *)(frame_ + FRAME_OFF(176)))
+#define local_e4 (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
 #define local_d4 (*(iptr *)(frame_ + FRAME_OFF(196)))
 #define local_d0 (*(iptr *)(frame_ + FRAME_OFF(200)))
 #define local_cc (*(uint *)(frame_ + FRAME_OFF(204)))
 #define local_c8 (*(uint * *)(frame_ + FRAME_OFF(208)))
 #define local_c4 (*(uptr *)(frame_ + FRAME_OFF(212)))
 #define local_c0 (*(int *)(frame_ + FRAME_OFF(216)))
-#define local_bc (*(undefined1 *)(frame_ + FRAME_OFF(220)))
+#define local_bc (*(i8 *)(frame_ + FRAME_OFF(220)))
 #define local_b8 (*(iptr *)(frame_ + FRAME_OFF(224)))
 #define local_b4 (*(uint (*)[41])(frame_ + FRAME_OFF(228)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(392)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(396)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(400)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(392)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(396)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(400)))
 void __thiscall dialog_create_controls(Dialog *this)
 
 {
   uint uVar1;
   Control *pCVar2;
   C_0040f380_48 *this_00;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
   iptr iVar5;
   u32 uVar6;
-  undefined4 uVar7;
+  i32 uVar7;
   u32 uVar8;
-  undefined1 frame_[FRAME_OFF(408)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(408)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_d4 = 0;
@@ -9543,7 +9543,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                 local_124 = scrollbar_ctor(pCVar2);
               }
               local_8 = 0xffffffff;
-              *(undefined4 *)(this->pad_294 + this->cur_pane * 4 - 0x10) = local_124;
+              *(i32 *)(this->pad_294 + this->cur_pane * 4 - 0x10) = local_124;
               if (this->surf_wnd == 0) {
                 local_174 = 0;
               }
@@ -9580,7 +9580,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                 local_12c = scrollbar_ctor(pCVar2);
               }
               local_8 = 0xffffffff;
-              *(undefined4 *)(this->pad_294 + this->cur_pane * 4 - 8) = local_12c;
+              *(i32 *)(this->pad_294 + this->cur_pane * 4 - 8) = local_12c;
               if (this->surf_wnd == 0) {
                 local_178 = 0;
               }
@@ -9624,7 +9624,7 @@ void __thiscall dialog_create_controls(Dialog *this)
             local_11c = checkbox_ctor(pCVar2);
           }
           local_8 = 0xffffffff;
-          *(undefined4 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_11c;
+          *(i32 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_11c;
           rect_set_xywh((iptr)local_e4,this->list_x,this->list_y,
                              (&this->list_width)[this->cur_pane],(&this->list_height)[this->cur_pane]);
           if (this->surf_wnd == 0) {
@@ -9667,7 +9667,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                   local_13c = scrollbar_ctor(pCVar2);
                 }
                 local_8 = 0xffffffff;
-                *(undefined4 *)(this->pad_294 + this->cur_pane * 4 - 0x10) = local_13c;
+                *(i32 *)(this->pad_294 + this->cur_pane * 4 - 0x10) = local_13c;
                 if (this->surf_wnd == 0) {
                   local_180 = 0;
                 }
@@ -9705,7 +9705,7 @@ void __thiscall dialog_create_controls(Dialog *this)
                   local_144 = scrollbar_ctor(pCVar2);
                 }
                 local_8 = 0xffffffff;
-                *(undefined4 *)(this->pad_294 + this->cur_pane * 4 - 8) = local_144;
+                *(i32 *)(this->pad_294 + this->cur_pane * 4 - 8) = local_144;
                 if (this->surf_wnd == 0) {
                   local_184 = 0;
                 }
@@ -9745,7 +9745,7 @@ void __thiscall dialog_create_controls(Dialog *this)
               local_134 = checkbox_ctor(pCVar2);
             }
             local_8 = 0xffffffff;
-            *(undefined4 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_134;
+            *(i32 *)(this->pad_264 + this->cur_pane * 4 + 0x14) = local_134;
             rect_set_xywh((iptr)local_e4,this->list_x,this->list_y,
                                (&this->list_width)[this->cur_pane],(&this->list_height)[this->cur_pane]);
             if (this->surf_wnd == 0) {
@@ -9841,8 +9841,8 @@ void __thiscall dialog_create_controls(Dialog *this)
         else {
           local_194 = this->surf_wnd + 0x48;
         }
-        uVar3 = *(undefined4 *)(local_fc + 0x14);
-        uVar7 = *(undefined4 *)(local_fc + 4);
+        uVar3 = *(i32 *)(local_fc + 0x14);
+        uVar7 = *(i32 *)(local_fc + 4);
         iVar4 = dialog_edit_row_height((C_0040bc40_28 *)this);
         edit_create_at
                   ((EditControl *)(this->edit_controls + local_c0 * 0x48),local_194,0x14,
@@ -9853,7 +9853,7 @@ void __thiscall dialog_create_controls(Dialog *this)
           ;
         }
         edit_set_max_len
-                  ((EditMaxLenView *)(this->edit_controls + local_c0 * 0x48),*(undefined4 *)(local_fc + 8));
+                  ((EditMaxLenView *)(this->edit_controls + local_c0 * 0x48),*(i32 *)(local_fc + 8));
         local_c0++;
       }
     }
@@ -9880,10 +9880,10 @@ void __thiscall dialog_create_controls(Dialog *this)
       }
       else {
         local_d0 = -1;
-        local_e8 = *(undefined **)((int)this + (local_c0 - this->std_button_count) * 4 + 0x294);
+        local_e8 = *(i8 **)((int)this + (local_c0 - this->std_button_count) * 4 + 0x294);
       }
       iVar5 = dialog_line_height((DialogTextView *)this);
-      rect_set_xywh((iptr)local_e4,*(undefined4 *)(this->pad_294 + local_c0 * 8 + 0x1c),
+      rect_set_xywh((iptr)local_e4,*(i32 *)(this->pad_294 + local_c0 * 8 + 0x1c),
                          this->button_y,this->button_width,iVar5);
       if (this->surf_wnd == 0) {
         local_198 = 0;
@@ -9954,12 +9954,12 @@ void __thiscall dialog_create_controls(Dialog *this)
 
 /* 005a3bae auto */
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl dialog_radio_on_dblclick(undefined4 param_1,int param_2)
+void __cdecl dialog_radio_on_dblclick(i32 param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   if (active_dialog != 0) {
@@ -9971,9 +9971,9 @@ void __cdecl dialog_radio_on_dblclick(undefined4 param_1,int param_2)
       }
       local_c++;
     }
-    *(undefined4 *)(active_dialog + 0xd8) = 0xffffffff;
+    *(i32 *)(active_dialog + 0xd8) = 0xffffffff;
     if (local_10 != 0) {
-      *(undefined4 *)(active_dialog + 0xd8) = *(undefined4 *)(local_10 + 4);
+      *(i32 *)(active_dialog + 0xd8) = *(i32 *)(local_10 + 4);
     }
     *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
     dialog_end_current();
@@ -10005,27 +10005,27 @@ void __cdecl dialog_listbox_on_dblclick(void)
 }
 
 /* 005a3cca auto */
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl dialog_on_sprite_click(int param_1)
 
 {
   bool bVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = false;
-  local_c = *(undefined4 **)(active_dialog + 0x234);
-  if (local_c != (undefined4 *)0x0) {
+  local_c = *(i32 **)(active_dialog + 0x234);
+  if (local_c != (i32 *)0x0) {
     for (local_8 = 0; local_8 < param_1 - 300; local_8++) {
-      local_c = (undefined4 *)local_c[4];
-      if (local_c == (undefined4 *)0x0) {
+      local_c = (i32 *)local_c[4];
+      if (local_c == (i32 *)0x0) {
         return;
       }
     }
-    *(undefined4 *)(active_dialog + 0xd8) = *local_c;
-    if ((*(undefined4 **)(active_dialog + 0x224) != local_c) &&
-       (*(undefined4 **)(active_dialog + 0x224) = local_c,
+    *(i32 *)(active_dialog + 0xd8) = *local_c;
+    if ((*(i32 **)(active_dialog + 0x224) != local_c) &&
+       (*(i32 **)(active_dialog + 0x224) = local_c,
        (*(byte *)(active_dialog + 0x3e) & 2) != 0)) {
       bVar1 = true;
     }
@@ -10068,7 +10068,7 @@ void __cdecl dialog_sprite_on_dblclick(void)
 }
 
 /* 005a3e56 auto */
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
@@ -10081,7 +10081,7 @@ void __cdecl dialog_on_button_click(int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_dialog != 0) {
     _DAT_006cec80 = timer_ticks();
@@ -10109,11 +10109,11 @@ void __cdecl dialog_on_button_click(int param_1)
       }
     }
     if (local_18 == 2) {
-      *(undefined4 *)(active_dialog + 0xd8) = 0xffffffff;
+      *(i32 *)(active_dialog + 0xd8) = 0xffffffff;
     }
     else {
       if ((*(int *)(active_dialog + 0x2c) < 2) || (*(int *)(active_dialog + 0x28) != 0)) {
-        *(undefined4 *)(active_dialog + 0xd8) = 0;
+        *(i32 *)(active_dialog + 0xd8) = 0;
       }
       if ((*(int *)(active_dialog + 0x28) != 0) && ((*(uint *)(active_dialog + 0x3c) & 0x1004) == 0)
          ) {
@@ -10128,7 +10128,7 @@ void __cdecl dialog_on_button_click(int param_1)
           local_14++;
         }
         if (local_1c != 0) {
-          *(undefined4 *)(active_dialog + 0xd8) = *(undefined4 *)(local_1c + 4);
+          *(i32 *)(active_dialog + 0xd8) = *(i32 *)(local_1c + 4);
         }
       }
     }
@@ -10145,20 +10145,20 @@ void __cdecl dialog_on_button_click(int param_1)
 #undef local_8
 
 /* 005a407f auto */
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl dialog_on_keydown(undefined4 param_1)
+void __cdecl dialog_on_keydown(i32 param_1)
 
 {
   int iVar1;
   uptr uVar2;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_dialog == 0) {
     return;
@@ -10170,10 +10170,10 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
     switch(param_1) {
     case 0xa2:
     case 0xc1:
-      *(undefined4 *)(active_dialog + 0x224) =
-           *(undefined4 *)(*(int *)(active_dialog + 0x224) + 0x10);
+      *(i32 *)(active_dialog + 0x224) =
+           *(i32 *)(*(int *)(active_dialog + 0x224) + 0x10);
       if (*(int *)(active_dialog + 0x224) == 0) {
-        *(undefined4 *)(active_dialog + 0x224) = *(undefined4 *)(active_dialog + 0x234);
+        *(i32 *)(active_dialog + 0x224) = *(i32 *)(active_dialog + 0x234);
       }
       dialog_render((Dialog *)active_dialog);
       break;
@@ -10188,7 +10188,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
       break;
     case 0xd1:
       if (*(int *)(active_dialog + 0x224) != 0) {
-        dialog_on_sprite_click(**(undefined4 **)(active_dialog + 0x224));
+        dialog_on_sprite_click(**(i32 **)(active_dialog + 0x224));
       }
     }
   }
@@ -10205,14 +10205,14 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
       iVar3 = dialog_option_group_index
                         ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
       iVar4 = dialog_count_group_options
-                        ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+                        ((DialogOptionList *)active_dialog,*(i32 *)(active_dialog + 0x48));
       if (iVar4 - 1 <= iVar3) {
         return;
       }
       iVar3 = dialog_count_group_options
-                        ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+                        ((DialogOptionList *)active_dialog,*(i32 *)(active_dialog + 0x48));
       uVar5 = dialog_option_at((DialogOptionList *)active_dialog,iVar3 - 1);
-      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
       dialog_select_option
                 ((DialogOptionList *)active_dialog,
                  *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4),0);
@@ -10229,7 +10229,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
                           ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
         iVar3 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
         iVar1 = dialog_count_group_options
-                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+                          ((DialogOptionList *)active_dialog,*(i32 *)(active_dialog + 0x48));
         if (iVar3 + iVar4 < iVar1) {
           uVar5 = 1;
           uVar2 = dialog_option_at
@@ -10240,7 +10240,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
           return;
         }
         iVar3 = dialog_count_group_options
-                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+                          ((DialogOptionList *)active_dialog,*(i32 *)(active_dialog + 0x48));
         uVar5 = 1;
         uVar2 = dialog_option_at((DialogOptionList *)active_dialog,iVar3 - 1);
         dialog_select_option((DialogOptionList *)active_dialog,uVar2,uVar5);
@@ -10275,7 +10275,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
                           ((DialogOptionList *)active_dialog,
                            iVar3 - *(int *)(active_dialog + 0x5c +
                                            *(int *)(active_dialog + 0x48) * 4));
-        *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+        *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
         iVar3 = dialog_option_group_index
                           ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
         uVar5 = 0;
@@ -10298,7 +10298,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
                           ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
         iVar3 = *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4);
         iVar1 = dialog_count_group_options
-                          ((DialogOptionList *)active_dialog,*(undefined4 *)(active_dialog + 0x48));
+                          ((DialogOptionList *)active_dialog,*(i32 *)(active_dialog + 0x48));
         if (iVar1 <= iVar3 + iVar4) {
           return;
         }
@@ -10320,7 +10320,7 @@ void __cdecl dialog_on_keydown(undefined4 param_1)
         return;
       }
       uVar5 = dialog_option_at((DialogOptionList *)active_dialog,0);
-      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
       dialog_select_option
                 ((DialogOptionList *)active_dialog,
                  *(uptr *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4),0);
@@ -10376,7 +10376,7 @@ LAB_005a4287:
                         ((DialogOptionList *)active_dialog,
                          iVar3 - *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4)
                         );
-      *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
+      *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar5;
       dialog_select_option((DialogOptionList *)active_dialog,local_8,0);
       dialog_draw_option_list((DialogOptionList *)active_dialog);
       return;
@@ -10400,7 +10400,7 @@ LAB_005a43d9:
 #undef local_8
 
 /* 005a49c1 auto */
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 #define local_1c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(uptr *)(frame_ + FRAME_OFF(8)))
 #define local_10 (*(uptr *)(frame_ + FRAME_OFF(16)))
@@ -10415,8 +10415,8 @@ void __cdecl dialog_on_char(byte param_1)
   uint uVar3;
   int iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((active_dialog != 0) && (iVar1 = _isalpha((uint)param_1), iVar1 != 0)) {
     _DAT_006cec80 = timer_ticks();
@@ -10452,7 +10452,7 @@ void __cdecl dialog_on_char(byte param_1)
                               ((DialogOptionList *)active_dialog,
                                iVar4 - *(int *)(active_dialog + 0x5c +
                                                *(int *)(active_dialog + 0x48) * 4));
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             local_c++;
           }
           else {
@@ -10463,7 +10463,7 @@ void __cdecl dialog_on_char(byte param_1)
                               ((DialogOptionList *)active_dialog,
                                iVar4 + *(int *)(active_dialog + 0x5c +
                                                *(int *)(active_dialog + 0x48) * 4));
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             local_c++;
           }
         }
@@ -10534,21 +10534,21 @@ void __cdecl dialog_on_char(byte param_1)
 #undef local_c
 
 /* 005a4df3 auto */
-void __cdecl dialog_list_on_lbuttondown(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_lbuttondown(i32 param_1,i32 param_2)
 
 {
   int iVar1;
   uptr uVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   
   if (active_dialog != 0) {
     dialog_pick_pane_at((DialogWindowView *)active_dialog,param_1,param_2);
-    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
+    *(i32 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
     if ((((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000) &&
         (*(int *)(active_dialog + 0x28) != 0)) &&
        (iVar1 = dialog_option_at_point((DialogOptionList *)active_dialog,param_1,param_2),
        -1 < iVar1)) {
-      *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
+      *(i32 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
       wnd_set_capture((WndBase *)(*(int *)active_dialog + 0x48));
       uVar3 = 1;
       uVar2 = dialog_option_at((DialogOptionList *)active_dialog,iVar1);
@@ -10560,7 +10560,7 @@ void __cdecl dialog_list_on_lbuttondown(undefined4 param_1,undefined4 param_2)
 
 /* 005a4edf auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_mousemove(i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -10568,8 +10568,8 @@ void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
   uptr uVar3;
   int iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((active_dialog != 0) && ((*(uint *)(active_dialog + 0x3c) & 0x41000) == 0x1000)) &&
      (*(int *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) != 0)) {
@@ -10603,9 +10603,9 @@ void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
             }
             uVar6 = int_clamp_b(local_8,0,*(int *)(active_dialog + 0x28) - 1);
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,uVar6);
-            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            *(i32 *)(active_dialog + 0x220) = uVar6;
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,iVar2);
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
@@ -10616,14 +10616,14 @@ void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
               iVar4 = 0;
             }
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,iVar4);
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             iVar2 = dialog_option_group_index
                               ((DialogOptionList *)active_dialog,*(uptr *)(active_dialog + 0x220));
             uVar6 = dialog_option_at
                               ((DialogOptionList *)active_dialog,
                                iVar4 + iVar2 % *(int *)(active_dialog + 0x5c +
                                                        *(int *)(active_dialog + 0x48) * 4));
-            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            *(i32 *)(active_dialog + 0x220) = uVar6;
             dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
@@ -10631,21 +10631,21 @@ void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
           if ((iVar4 < *(int *)(active_dialog + 0x28) - 1) && (*(int *)(active_dialog + 0x38) == 1)
              ) {
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,iVar4 + 1);
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = uVar6;
             uVar6 = int_clamp_b(*(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4)
                                  * *(int *)(active_dialog + 0x38) + iVar4 + 1 - 1,0,
                                  *(int *)(active_dialog + 0x28) - 1);
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,uVar6);
-            *(undefined4 *)(active_dialog + 0x220) = uVar6;
+            *(i32 *)(active_dialog + 0x220) = uVar6;
             dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
           break;
         case -1:
           if ((0 < iVar4) && (*(int *)(active_dialog + 0x38) == 1)) {
             uVar6 = dialog_option_at((DialogOptionList *)active_dialog,iVar4 - 1);
-            *(undefined4 *)(active_dialog + 0x220) = uVar6;
-            *(undefined4 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) =
-                 *(undefined4 *)(active_dialog + 0x220);
+            *(i32 *)(active_dialog + 0x220) = uVar6;
+            *(i32 *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) =
+                 *(i32 *)(active_dialog + 0x220);
             dialog_draw_option_list((DialogOptionList *)active_dialog);
           }
         }
@@ -10662,19 +10662,19 @@ void __cdecl dialog_list_on_mousemove(undefined4 param_1,undefined4 param_2)
 #undef local_8
 
 /* 005a535e auto */
-void __cdecl dialog_list_on_lbuttonup(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_lbuttonup(i32 param_1,i32 param_2)
 
 {
   if (active_dialog != 0) {
     dialog_list_on_mousemove(param_1,param_2);
-    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
+    *(i32 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 0;
     wnd_release_capture((WndBase *)(*(int *)active_dialog + 0x48));
   }
   return;
 }
 
 /* 005a53b8 auto */
-void __cdecl dialog_list_on_dblclick(undefined4 param_1,undefined4 param_2)
+void __cdecl dialog_list_on_dblclick(i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -10686,7 +10686,7 @@ void __cdecl dialog_list_on_dblclick(undefined4 param_1,undefined4 param_2)
      (((*(byte *)(active_dialog + 0x3d) & 4) == 0 &&
       (iVar1 = dialog_option_at_point((DialogOptionList *)active_dialog,param_1,param_2),
       -1 < iVar1)))) {
-    *(undefined4 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
+    *(i32 *)(active_dialog + 0x218 + *(int *)(active_dialog + 0x48) * 4) = 1;
     dialog_list_on_lbuttonup(param_1,param_2);
     *(uint *)(active_dialog + 0x3c) = *(uint *)(active_dialog + 0x3c) | 0x2000;
     dialog_end_current();
@@ -10701,7 +10701,7 @@ void __cdecl dialog_list_on_hscroll(int param_1)
   int iVar1;
   
   if (active_dialog != 0) {
-    *(undefined4 *)(active_dialog + 0x48) = 0;
+    *(i32 *)(active_dialog + 0x48) = 0;
     iVar1 = dialog_option_at
                       ((DialogOptionList *)active_dialog,
                        *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) * param_1
@@ -10715,13 +10715,13 @@ void __cdecl dialog_list_on_hscroll(int param_1)
 }
 
 /* 005a552c auto */
-void __cdecl dialog_list2_on_vscroll(undefined4 param_1)
+void __cdecl dialog_list2_on_vscroll(i32 param_1)
 
 {
   int iVar1;
   
   if (active_dialog != 0) {
-    *(undefined4 *)(active_dialog + 0x48) = 1;
+    *(i32 *)(active_dialog + 0x48) = 1;
     iVar1 = dialog_option_at((DialogOptionList *)active_dialog,param_1);
     if (*(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) != iVar1) {
       *(int *)(active_dialog + 0x210 + *(int *)(active_dialog + 0x48) * 4) = iVar1;
@@ -10738,7 +10738,7 @@ void __cdecl dialog_list2_on_hscroll(int param_1)
   int iVar1;
   
   if (active_dialog != 0) {
-    *(undefined4 *)(active_dialog + 0x48) = 1;
+    *(i32 *)(active_dialog + 0x48) = 1;
     iVar1 = dialog_option_at
                       ((DialogOptionList *)active_dialog,
                        *(int *)(active_dialog + 0x5c + *(int *)(active_dialog + 0x48) * 4) * param_1
@@ -10757,10 +10757,10 @@ void __cdecl dialog_list2_on_hscroll(int param_1)
 void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_2)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
+  i32 uVar1;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
   
   if (this->bg_surface == 0) {
     if ((dlg_frame_tile_surface == 0) || (param_2 != 1)) {
@@ -10772,8 +10772,8 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_
         uVar3 = 0;
         uVar1 = rect_height(param_1);
         uVar2 = rect_width(param_1);
-        gfx_tile_fill(this->surf_wnd,dlg_client_tile_surface,*(undefined4 *)param_1,
-                           *(undefined4 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
+        gfx_tile_fill(this->surf_wnd,dlg_client_tile_surface,*(i32 *)param_1,
+                           *(i32 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
       }
     }
     else {
@@ -10781,15 +10781,15 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_
       uVar3 = 0;
       uVar1 = rect_height(param_1);
       uVar2 = rect_width(param_1);
-      gfx_tile_fill(this->surf_wnd,dlg_frame_tile_surface,*(undefined4 *)param_1,
-                         *(undefined4 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
+      gfx_tile_fill(this->surf_wnd,dlg_frame_tile_surface,*(i32 *)param_1,
+                         *(i32 *)(param_1 + 4),uVar2,uVar1,uVar3,uVar4);
     }
   }
   else {
     uVar1 = rect_height(param_1);
     uVar2 = rect_width(param_1);
-    gfx_copy_rect_same_pos(this->bg_surface,this->surf_wnd,*(undefined4 *)param_1,
-                       *(undefined4 *)(param_1 + 4),uVar2,uVar1);
+    gfx_copy_rect_same_pos(this->bg_surface,this->surf_wnd,*(i32 *)param_1,
+                       *(i32 *)(param_1 + 4),uVar2,uVar1);
   }
   return;
 }
@@ -10797,7 +10797,7 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_
 #undef dlg_frame_tile_surface
 
 /* 005a577e auto */
-#define local_5c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_5c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_4c (*(u32 *)(frame_ + FRAME_OFF(20)))
 #define local_48 (*(u32 *)(frame_ + FRAME_OFF(24)))
 #define local_44 (*(int *)(frame_ + FRAME_OFF(28)))
@@ -10809,21 +10809,21 @@ void __thiscall dialog_fill_rect_bg(DialogTextView *this,iptr param_1,int param_
 #define local_2c (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(56)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_20 (*(undefined4 * *)(frame_ + FRAME_OFF(64)))
+#define local_20 (*(i32 * *)(frame_ + FRAME_OFF(64)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(68)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(76)))
+#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(76)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(80)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
 void __thiscall dialog_render(Dialog *this)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   u32 uVar5;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_30 = 0;
   if ((this->style_flags & 0x20) == 0) {
@@ -10873,8 +10873,8 @@ void __thiscall dialog_render(Dialog *this)
     gfx_set_zoom_scale(this->sprite_zoom);
     local_34 = this->sprite_x;
     local_38 = this->sprite_y;
-    for (local_20 = (undefined4 *)this->sprite_list; local_20 != (undefined4 *)0x0;
-        local_20 = (undefined4 *)local_20[4]) {
+    for (local_20 = (i32 *)this->sprite_list; local_20 != (i32 *)0x0;
+        local_20 = (i32 *)local_20[4]) {
       uVar5 = this->sprite_zoom;
       uVar2 = sprite_width((Sprite *)local_20[3]);
       local_18 = gfx_zoom_scale(uVar2,uVar5);
@@ -10889,7 +10889,7 @@ void __thiscall dialog_render(Dialog *this)
         (*(code *)this->on_draw_sprite)
                   (local_20[3],this->surf_wnd,*local_20,local_20[1],local_34,local_38);
       }
-      if (((this->style_flags & 0x20000) != 0) && ((undefined4 *)this->selected_sprite == local_20)) {
+      if (((this->style_flags & 0x20000) != 0) && ((i32 *)this->selected_sprite == local_20)) {
         rect_set((iptr)local_14,local_34 - 1,local_38 - 1,local_18 + local_34,
                            local_40 + local_38);
         gfx_draw_rect_frame(this->surf_wnd,(iptr)local_14,this->frame_color);
@@ -10917,7 +10917,7 @@ void __thiscall dialog_render(Dialog *this)
       uVar5 = this->edit_y;
       iVar4 = font_line_spacing((GameFont *)this->body_font);
       surface_draw_text_cur_font
-                ((SurfaceTextCurFontView *)this->surf_wnd,*(undefined4 *)(local_3c + 0x10),this->edit_x,
+                ((SurfaceTextCurFontView *)this->surf_wnd,*(i32 *)(local_3c + 0x10),this->edit_x,
                  (iVar1 + (iVar3 >> 1) + uVar5) - (iVar4 >> 1),uVar2);
       local_1c++;
     }
@@ -11000,7 +11000,7 @@ void __thiscall dialog_render(Dialog *this)
 
 /* 005a5f34 auto */
 #define game_session_active (*(int *)((u8 *)&g.d_006252c4))
-#define _DAT_006cec80 (*(undefined4 *)((u8 *)&g.d_006cec80))
+#define _DAT_006cec80 (*(i32 *)((u8 *)&g.d_006cec80))
 #define local_114 (*(char (*)[132])(frame_ + FRAME_OFF(4)))
 #define local_90 (*(char (*)[132])(frame_ + FRAME_OFF(136)))
 #define local_c (*(uint * *)(frame_ + FRAME_OFF(268)))
@@ -11013,7 +11013,7 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr param_1,iptr param_2)
   iptr iVar1;
   BOOL BVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (dialog_stack_depth != 0x10) {
     if (param_2 == 0) {
@@ -11116,19 +11116,19 @@ u32 __thiscall dialog_run_modal(Dialog *this,iptr param_1,iptr param_2)
 #undef local_8
 
 /* 005a632a auto */
-#define local_17c (*(undefined1 (*)[256])(frame_ + FRAME_OFF(4)))
+#define local_17c (*(i8 (*)[256])(frame_ + FRAME_OFF(4)))
 #define local_7c (*(int *)(frame_ + FRAME_OFF(260)))
-#define local_78 (*(undefined4 *)(frame_ + FRAME_OFF(264)))
+#define local_78 (*(i32 *)(frame_ + FRAME_OFF(264)))
 #define local_74 (*(uint *)(frame_ + FRAME_OFF(268)))
 #define local_70 (*(char * *)(frame_ + FRAME_OFF(272)))
-#define local_6c (*(undefined1 (*)[80])(frame_ + FRAME_OFF(276)))
+#define local_6c (*(i8 (*)[80])(frame_ + FRAME_OFF(276)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(356)))
 #define local_18 (*(char * *)(frame_ + FRAME_OFF(360)))
 #define local_14 (*(uptr *)(frame_ + FRAME_OFF(364)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(368)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(372)))
-#define local_8 (*(undefined * *)(frame_ + FRAME_OFF(376)))
-undefined4 __thiscall
+#define local_8 (*(i8 * *)(frame_ + FRAME_OFF(376)))
+i32 __thiscall
 dialog_load_text_section
           (Dialog *this,iptr param_1,iptr param_2,int param_3,iptr param_4,iptr param_5,
           iptr param_6,iptr param_7,uint param_8)
@@ -11137,7 +11137,7 @@ dialog_load_text_section
   int iVar1;
   size_t sVar2;
   u32 uVar3;
-  undefined1 frame_[FRAME_OFF(384)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(384)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_78 = 1;
   local_7c = 1;
@@ -11402,7 +11402,7 @@ void __cdecl dlg_push_parent_window(iptr param_1)
 #undef dlg_parent_window
 
 /* 005a6c45 auto */
-#define dlg_parent_window (*(undefined4 *)((u8 *)&g.d_006359c4))
+#define dlg_parent_window (*(i32 *)((u8 *)&g.d_006359c4))
 void __cdecl dlg_pop_parent_window(void)
 
 {
@@ -11465,8 +11465,8 @@ uint __thiscall dialog_uses_alt_text_color(C_0040bc40_40 *this)
 /* 005a9730 auto */
 void __thiscall
 dialog_draw_text_default_font
-          (DialogTextView *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4)
+          (DialogTextView *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4)
 
 {
   dialog_draw_text_shadowed(this,this->body_font,param_1,param_2,param_3,param_4);
@@ -11476,8 +11476,8 @@ dialog_draw_text_default_font
 /* 005bb4ae auto */
 void __thiscall
 wnd_create_with_surface
-          (DibSurface *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
+          (DibSurface *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
   iptr iVar1;
@@ -11514,8 +11514,8 @@ bool __thiscall surfwnd_resize_dib(DibSurface *this,iptr param_1)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar2;
+  i32 uVar3;
   
   iVar1 = surface_alloc_dib_by_bpp(this,param_1);
   if (iVar1 == 1) {
@@ -11533,8 +11533,8 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *this,int param_1,int param_2)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = surface_get_width((DibSurface *)this);
   if ((iVar1 == param_1) &&
@@ -11566,7 +11566,7 @@ void __thiscall surfwnd_on_resize(SurfaceWindow *this,int param_1,int param_2)
 void __thiscall wnd_resize_clamped(C_004083b0_4 *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_get_min_size((WndMinSizeView *)(this + 0x12),(iptr)&local_10,(iptr)&local_14);
   wnd_get_max_size((WndMaxSizeView *)(this + 0x12),(iptr)&local_8,(iptr)&local_c);
@@ -11598,7 +11598,7 @@ u32 __thiscall wnd_get_palette_obj(WndPaletteObjView *this)
 }
 
 /* 005bb8e0 auto */
-void __thiscall wnd_set_client_size(WndClientSizeView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_set_client_size(WndClientSizeView *this,i32 param_1,i32 param_2)
 
 {
   wnd_obj_set_client_size(this->native_wnd,param_1,param_2);
@@ -11645,22 +11645,22 @@ void __thiscall wnd_call_paint_cb(SurfaceWindow *this)
 #define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-undefined4 * __cdecl
+i32 * __cdecl
 wnd_obj_create(LPCSTR param_1,uint param_2,int param_3,int param_4,int param_5,int param_6,
             iptr param_7)
 
 {
-  undefined4 uVar1;
-  undefined4 *puVar2;
+  i32 uVar1;
+  i32 *puVar2;
   int iVar3;
   HWND pHVar4;
   HDC pHVar5;
   HCURSOR pHVar6;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 0;
   uVar1 = mem_handle_alloc(0x4c);
-  puVar2 = (undefined4 *)mem_handle_lock(uVar1);
+  puVar2 = (i32 *)mem_handle_lock(uVar1);
   *puVar2 = uVar1;
   local_c = 0;
   local_10 = 0;
@@ -11824,12 +11824,12 @@ void __cdecl wnd_obj_enable(iptr param_1,BOOL param_2)
 }
 
 /* 005bc0ab auto */
-undefined4 __cdecl wnd_obj_destroy(undefined4 *param_1)
+i32 __cdecl wnd_obj_destroy(i32 *param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
-  if (param_1 != (undefined4 *)0x0) {
+  if (param_1 != (i32 *)0x0) {
     wnd_stack_remove(param_1[1]);
     if (param_1[0x11] == 0) {
       if (param_1[1] != 0) {
@@ -11855,7 +11855,7 @@ undefined4 __cdecl wnd_obj_destroy(undefined4 *param_1)
 void __cdecl wnd_stack_check_leaks_nop(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (ms_window_stack_count != 0) {
     for (local_8 = 0; local_8 < ms_window_stack_count; local_8++) {
@@ -11866,10 +11866,10 @@ void __cdecl wnd_stack_check_leaks_nop(void)
 #undef local_8
 
 /* 005bc1b5 auto */
-void __cdecl wnd_list_add_hwnd(undefined4 param_1)
+void __cdecl wnd_list_add_hwnd(i32 param_1)
 
 {
-  *(undefined4 *)(&ms_window_stack + ms_window_stack_count * 4) = param_1;
+  *(i32 *)(&ms_window_stack + ms_window_stack_count * 4) = param_1;
   ms_window_stack_count++;
   return;
 }
@@ -11879,14 +11879,14 @@ void __cdecl wnd_list_add_hwnd(undefined4 param_1)
 void __cdecl wnd_stack_remove(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; (local_8 < ms_window_stack_count && (*(int *)(&ms_window_stack + local_8 * 4) != param_1));
       local_8 = local_8 + 1) {
   }
   if (local_8 < ms_window_stack_count - 1) {
     for (; local_8 < ms_window_stack_count - 1; local_8++) {
-      *(undefined4 *)(&ms_window_stack + local_8 * 4) = *(undefined4 *)(&ms_window_stack_elem1 + local_8 * 4);
+      *(i32 *)(&ms_window_stack + local_8 * 4) = *(i32 *)(&ms_window_stack_elem1 + local_8 * 4);
     }
   }
   ms_window_stack_count--;
@@ -11898,16 +11898,16 @@ void __cdecl wnd_stack_remove(int param_1)
 #undef local_8
 
 /* 005bc280 auto */
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
 #define local_10 (*(WndPaletteView * *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(16)))
+#define local_c (*(i8 (*)[4])(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i8 (*)[4])(frame_ + FRAME_OFF(16)))
 void __cdecl wnd_obj_set_bg_color(iptr param_1,uint param_2)
 
 {
   HBRUSH pHVar1;
   GamePalette *this;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(int *)(param_1 + 0x14) != 0) {
     DeleteObject(*(HGDIOBJ *)(param_1 + 0x14));
@@ -11936,18 +11936,18 @@ void __cdecl wnd_obj_set_bg_color(iptr param_1,uint param_2)
 #undef local_8
 
 /* 005bc3bf auto */
-void __cdecl wnd_obj_set_bg_tile(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_bg_tile(iptr param_1,i32 param_2)
 
 {
-  *(undefined4 *)(param_1 + 0x24) = param_2;
+  *(i32 *)(param_1 + 0x24) = param_2;
   return;
 }
 
 /* 005bc3f1 auto */
-void __cdecl wnd_obj_set_bg_surface(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_bg_surface(iptr param_1,i32 param_2)
 
 {
-  *(undefined4 *)(param_1 + 0x2c) = param_2;
+  *(i32 *)(param_1 + 0x2c) = param_2;
   return;
 }
 
@@ -11982,7 +11982,7 @@ void __cdecl wnd_obj_move_xy(iptr param_1,int param_2,int param_3)
   int nHeight;
   int nWidth;
   BOOL bRepaint;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     GetWindowRect(*(HWND *)(param_1 + 4),&local_14);
@@ -12004,7 +12004,7 @@ void __cdecl wnd_obj_set_client_size(iptr param_1,int param_2,int param_3)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     GetWindowRect(*(HWND *)(param_1 + 4),&local_14);
@@ -12097,7 +12097,7 @@ void __cdecl wnd_obj_center(iptr param_1,int param_2,int param_3)
   int iVar2;
   int iVar3;
   BOOL bRepaint;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     GetWindowRect(*(HWND *)(param_1 + 4),&local_34);
@@ -12154,7 +12154,7 @@ void __cdecl wnd_obj_center(iptr param_1,int param_2,int param_3)
 LONG __cdecl wnd_obj_client_width(iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     local_14.right = 0;
@@ -12171,7 +12171,7 @@ LONG __cdecl wnd_obj_client_width(iptr param_1)
 LONG __cdecl wnd_obj_client_height(iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     local_14.bottom = 0;
@@ -12200,7 +12200,7 @@ int __cdecl wnd_obj_frame_width(iptr param_1)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     iVar1 = 0;
@@ -12223,7 +12223,7 @@ int __cdecl wnd_obj_frame_height(iptr param_1)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     iVar1 = 0;
@@ -12249,7 +12249,7 @@ void __cdecl wnd_obj_get_rect_in_parent(iptr param_1,LPRECT param_2)
   HWND hWndTo;
   tagPOINT *lpPoints;
   UINT cPoints;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != 0) {
     GetWindowRect(*(HWND *)(param_1 + 4),param_2);
@@ -12286,7 +12286,7 @@ void __cdecl wnd_obj_attach_menu(iptr param_1,HMENU param_2)
 {
   int iVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   
   if (param_1 != 0) {
     SetMenu(*(HWND *)(param_1 + 4),param_2);
@@ -12323,7 +12323,7 @@ void __cdecl wnd_obj_set_icon(iptr param_1,uint param_2)
 #undef app_hinstance
 
 /* 005bcfdd auto */
-void __cdecl wnd_obj_set_cursor_now(iptr param_1,undefined4 param_2,int param_3)
+void __cdecl wnd_obj_set_cursor_now(iptr param_1,i32 param_2,int param_3)
 
 {
   if ((param_1 != 0) && (wnd_obj_set_cursor(param_1,param_2), param_3 != 0)) {
@@ -12425,21 +12425,21 @@ void __cdecl wnd_obj_enable_owner(iptr param_1,iptr param_2)
 }
 
 /* 005bd248 auto */
-void __cdecl wnd_obj_set_caption_height(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_caption_height(iptr param_1,i32 param_2)
 
 {
   if (param_1 != 0) {
-    *(undefined4 *)(param_1 + 0x38) = param_2;
+    *(i32 *)(param_1 + 0x38) = param_2;
   }
   return;
 }
 
 /* 005bd270 auto */
-void __cdecl wnd_obj_set_resize_border(iptr param_1,undefined4 param_2)
+void __cdecl wnd_obj_set_resize_border(iptr param_1,i32 param_2)
 
 {
   if (param_1 != 0) {
-    *(undefined4 *)(param_1 + 0x3c) = param_2;
+    *(i32 *)(param_1 + 0x3c) = param_2;
   }
   return;
 }
@@ -12449,7 +12449,7 @@ void __cdecl wnd_obj_set_resize_border(iptr param_1,undefined4 param_2)
 void __cdecl wnd_obj_get_cursor_pos(iptr param_1,LONG *param_2,LONG *param_3)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   GetCursorPos(&local_c);
   ScreenToClient(*(HWND *)(param_1 + 4),&local_c);
@@ -12468,7 +12468,7 @@ void __cdecl wnd_obj_set_capture(iptr param_1)
 }
 
 /* 005bd550 auto */
-void __cdecl wnd_obj_release_capture(undefined4 param_1)
+void __cdecl wnd_obj_release_capture(i32 param_1)
 
 {
   ReleaseCapture();
@@ -12478,7 +12478,7 @@ void __cdecl wnd_obj_release_capture(undefined4 param_1)
 /* 005bd566: written by hand in src/game/retvals.c */
 
 /* 005bd610 auto */
-undefined2 __thiscall wnd_get_style_flags(WndStyleView *this)
+i16 __thiscall wnd_get_style_flags(WndStyleView *this)
 
 {
   return (short)this->style_flags;
@@ -12487,8 +12487,8 @@ undefined2 __thiscall wnd_get_style_flags(WndStyleView *this)
 /* 005c5760 auto */
 void __thiscall
 wnd_create_framed
-          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (WndBase *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7)
 
 {
   iptr iVar1;
@@ -12502,8 +12502,8 @@ wnd_create_framed
 /* 005c57f9 auto */
 void __thiscall
 wnd_create_framed_child
-          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
+          (WndBase *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
   iptr iVar1;
@@ -12519,7 +12519,7 @@ wnd_create_framed_child
 void __thiscall wnd_append_control(WndControlListView *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = this->first_control;
   if (local_8 == 0) {
@@ -12543,7 +12543,7 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1)
   ControlIdView *this_00;
   ControlNextView *this_01;
   u32 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->first_control != 0) {
     local_8 = (ControlNextView *)this->first_control;
@@ -12579,8 +12579,8 @@ void __thiscall wnd_remove_control(WndControlRemoveView *this,int param_1)
 void __thiscall wnd_remove_all_controls(WndControlRemoveView *this)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = (ControlIdView *)this->first_control; local_8 != (ControlIdView *)0x0;
       local_8 = *(ControlIdView **)local_8[4].pad_0) {
@@ -12597,7 +12597,7 @@ void __thiscall wnd_focus_first_control(Wnd *this)
 
 {
   char cVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (ControlInitialFocusView *)this->control_list;
   while( true ) {
@@ -12621,20 +12621,20 @@ void __thiscall wnd_focus_first_control(Wnd *this)
 
 /* 005c5c86 auto */
 #define local_20 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_10 (*(RadioGroupItemsView * *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(u8 (*)[4])(frame_ + FRAME_OFF(20)))
 #define local_8 (*(char *)(frame_ + FRAME_OFF(24)))
-undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
+i32 __thiscall wnd_dispatch_hotkey_char(void *this,i32 param_1)
 
 {
   u8 uVar1;
   iptr iVar2;
   iptr iVar3;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = '\0';
   local_14 = 0;
@@ -12658,7 +12658,7 @@ undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
         for (local_20 = 0; local_20 < iVar5; local_20++) {
           if ((-1 < *(int *)(iVar4 + 0xa0 + local_20 * 0xa4)) &&
              (*(u8 *)(iVar4 + 0x9c + local_20 * 0xa4) == uVar1)) {
-            radiogrp_item_activate(*(undefined4 *)(iVar4 + local_20 * 0xa4));
+            radiogrp_item_activate(*(i32 *)(iVar4 + local_20 * 0xa4));
             local_14 = 1;
             local_8 = 1;
             break;
@@ -12693,8 +12693,8 @@ undefined4 __thiscall wnd_dispatch_hotkey_char(void *this,undefined4 param_1)
 /* 005c5f20 auto */
 void __thiscall
 wnd_create_with_cmd_proc
-          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7)
+          (WndBase *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7)
 
 {
   iptr iVar1;
@@ -12709,8 +12709,8 @@ wnd_create_with_cmd_proc
 /* 005c5fc4 auto */
 void __thiscall
 wnd_create_with_handlers
-          (WndBase *this,iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4
-          ,undefined4 param_5,undefined4 param_6,iptr param_7,iptr param_8)
+          (WndBase *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
   iptr iVar1;
@@ -12729,7 +12729,7 @@ void __thiscall wnd_run_modal_loop(C_00408010_b8 *this)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (wnd_modal_depth != 0xf) {
     this->modal_running = 1;
@@ -12781,8 +12781,8 @@ void __thiscall wnd_end_modal_loop(C_00408010_b8 *this)
 }
 
 /* 005c62ee auto */
-#define wnd_active_child (*(undefined4 *)((u8 *)&g.d_00637ea4))
-undefined4 __cdecl wnd_get_active_child(void)
+#define wnd_active_child (*(i32 *)((u8 *)&g.d_00637ea4))
+i32 __cdecl wnd_get_active_child(void)
 
 {
   return wnd_active_child;
@@ -12791,10 +12791,10 @@ undefined4 __cdecl wnd_get_active_child(void)
 
 /* 005c6303 auto */
 #define wnd_active_child (*(iptr *)((u8 *)&g.d_00637ea4))
-undefined4 __cdecl wnd_set_active_child(iptr param_1)
+i32 __cdecl wnd_set_active_child(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = wnd_active_child;
   wnd_active_child = param_1;
@@ -12803,7 +12803,7 @@ undefined4 __cdecl wnd_set_active_child(iptr param_1)
 #undef wnd_active_child
 
 /* 005c63af auto */
-bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,undefined4 param_1)
+bool __thiscall wnd_fire_menu_select(WndMenuSelectView *this,i32 param_1)
 
 {
   bool bVar1;
@@ -12870,14 +12870,14 @@ HWND __cdecl hotspot_create_hwnd(int *param_1,iptr param_2)
   pHVar4 = CreateWindowExA(4,s_MSControlClass_00637ca8,&hotspot_wnd_title,0x50000000,*param_1,param_1[1],
                            iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
-  *(undefined4 *)(iVar3 + 0x2c) = 1;
+  *(i32 *)(iVar3 + 0x2c) = 1;
   SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, hotspot_wndproc));
   return pHVar4;
 }
 #undef app_hinstance
 
 /* 005c8f70 auto */
-void __thiscall hotspot_fire_enter(HotspotEnterView *this,undefined4 param_1)
+void __thiscall hotspot_fire_enter(HotspotEnterView *this,i32 param_1)
 
 {
   if (this->on_enter != 0) {
@@ -12887,7 +12887,7 @@ void __thiscall hotspot_fire_enter(HotspotEnterView *this,undefined4 param_1)
 }
 
 /* 005c8fb0 auto */
-void __thiscall hotspot_fire_leave(HotspotLeaveView *this,undefined4 param_1)
+void __thiscall hotspot_fire_leave(HotspotLeaveView *this,i32 param_1)
 
 {
   if (this->on_leave != 0) {
@@ -12897,7 +12897,7 @@ void __thiscall hotspot_fire_leave(HotspotLeaveView *this,undefined4 param_1)
 }
 
 /* 005c8ff0 auto */
-void __thiscall hotspot_fire_click(HotspotClickView *this,undefined4 param_1)
+void __thiscall hotspot_fire_click(HotspotClickView *this,i32 param_1)
 
 {
   if (this->on_click != 0) {
@@ -12907,7 +12907,7 @@ void __thiscall hotspot_fire_click(HotspotClickView *this,undefined4 param_1)
 }
 
 /* 005c9030 auto */
-void __thiscall hotspot_fire_press(HotspotPressView *this,undefined4 param_1)
+void __thiscall hotspot_fire_press(HotspotPressView *this,i32 param_1)
 
 {
   if (this->on_press != 0) {
@@ -12917,7 +12917,7 @@ void __thiscall hotspot_fire_press(HotspotPressView *this,undefined4 param_1)
 }
 
 /* 005c9070 auto */
-void __thiscall hotspot_fire_dblclick(HotspotDblClickView *this,undefined4 param_1)
+void __thiscall hotspot_fire_dblclick(HotspotDblClickView *this,i32 param_1)
 
 {
   if (this->on_dblclick != 0) {
@@ -12946,7 +12946,7 @@ LONG __cdecl wnd_from_hwnd(HWND param_1)
 void __cdecl wnd_redraw_client(HWND param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   GetClientRect(param_1,&local_14);
   InvalidateRect(param_1,&local_14,1);
@@ -12963,7 +12963,7 @@ u8 __thiscall wnd_keyboard_nav_enabled(WndKeyNavView *this)
 }
 
 /* 005cbeb0 auto */
-void __cdecl ui_wait_ticks(undefined4 param_1)
+void __cdecl ui_wait_ticks(i32 param_1)
 
 {
   timer_busy_wait_ticks(param_1);
@@ -13012,25 +13012,25 @@ void __cdecl default_draw_font_static_dtor(void)
 }
 
 /* 005d2550 auto */
-#define ctrl_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e90))
-void __cdecl ui_set_ctrl_text_color(undefined4 param_1)
+#define ctrl_text_color_index (*(i8 *)((u8 *)&g.d_00637e90))
+void __cdecl ui_set_ctrl_text_color(i32 param_1)
 
 {
-  ctrl_text_color_index = (undefined1)param_1;
+  ctrl_text_color_index = (i8)param_1;
   return;
 }
 #undef ctrl_text_color_index
 
 /* 005d2568 auto */
-#define ctrl_shadow_color_index (*(undefined1 *)((u8 *)&g.d_00637e94))
-#define ctrl_shadow_dx (*(undefined1 *)((u8 *)&g.d_00637e98))
-#define ctrl_shadow_dy (*(undefined1 *)((u8 *)&g.d_00637e9c))
-void __cdecl ui_set_ctrl_text_shadow(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+#define ctrl_shadow_color_index (*(i8 *)((u8 *)&g.d_00637e94))
+#define ctrl_shadow_dx (*(i8 *)((u8 *)&g.d_00637e98))
+#define ctrl_shadow_dy (*(i8 *)((u8 *)&g.d_00637e9c))
+void __cdecl ui_set_ctrl_text_shadow(i32 param_1,i32 param_2,i32 param_3)
 
 {
-  ctrl_shadow_color_index = (undefined1)param_1;
-  ctrl_shadow_dx = (undefined1)param_2;
-  ctrl_shadow_dy = (undefined1)param_3;
+  ctrl_shadow_color_index = (i8)param_1;
+  ctrl_shadow_dx = (i8)param_2;
+  ctrl_shadow_dy = (i8)param_3;
   return;
 }
 #undef ctrl_shadow_color_index
@@ -13038,11 +13038,11 @@ void __cdecl ui_set_ctrl_text_shadow(undefined4 param_1,undefined4 param_2,undef
 #undef ctrl_shadow_dy
 
 /* 005d2590 auto */
-#define ctrl_disabled_color_index (*(undefined1 *)((u8 *)&g.d_00637ea0))
-void __cdecl ui_set_ctrl_disabled_color(undefined4 param_1)
+#define ctrl_disabled_color_index (*(i8 *)((u8 *)&g.d_00637ea0))
+void __cdecl ui_set_ctrl_disabled_color(i32 param_1)
 
 {
-  ctrl_disabled_color_index = (undefined1)param_1;
+  ctrl_disabled_color_index = (i8)param_1;
   return;
 }
 #undef ctrl_disabled_color_index
@@ -13051,7 +13051,7 @@ void __cdecl ui_set_ctrl_disabled_color(undefined4 param_1)
 void __cdecl ui_set_ctrl_font(iptr param_1)
 
 {
-  checkbox_default_font = (undefined *)param_1;
+  checkbox_default_font = (i8 *)param_1;
   return;
 }
 
@@ -13059,7 +13059,7 @@ void __cdecl ui_set_ctrl_font(iptr param_1)
 void __cdecl ui_set_default_font(iptr param_1)
 
 {
-  ctrl_default_font = (undefined *)param_1;
+  ctrl_default_font = (i8 *)param_1;
   return;
 }
 
@@ -13083,35 +13083,35 @@ void __cdecl hwnd_send_settext(HWND param_1,LPARAM param_2)
 }
 
 /* 005d417f auto */
-#define radio_text_color_index (*(undefined1 *)((u8 *)&g.d_00637e7c))
-void __cdecl ui_set_radio_text_color(undefined4 param_1)
+#define radio_text_color_index (*(i8 *)((u8 *)&g.d_00637e7c))
+void __cdecl ui_set_radio_text_color(i32 param_1)
 
 {
-  radio_text_color_index = (undefined1)param_1;
+  radio_text_color_index = (i8)param_1;
   return;
 }
 #undef radio_text_color_index
 
 /* 005d4197 auto */
-#define radio_disabled_color_index (*(undefined1 *)((u8 *)&g.d_00637e8c))
-void __cdecl ui_set_radio_disabled_color(undefined4 param_1)
+#define radio_disabled_color_index (*(i8 *)((u8 *)&g.d_00637e8c))
+void __cdecl ui_set_radio_disabled_color(i32 param_1)
 
 {
-  radio_disabled_color_index = (undefined1)param_1;
+  radio_disabled_color_index = (i8)param_1;
   return;
 }
 #undef radio_disabled_color_index
 
 /* 005d41af auto */
-#define radio_shadow_color_index (*(undefined1 *)((u8 *)&g.d_00637e80))
-#define radio_shadow_dx (*(undefined1 *)((u8 *)&g.d_00637e84))
-#define radio_shadow_dy (*(undefined1 *)((u8 *)&g.d_00637e88))
-void __cdecl ui_set_radio_text_shadow(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+#define radio_shadow_color_index (*(i8 *)((u8 *)&g.d_00637e80))
+#define radio_shadow_dx (*(i8 *)((u8 *)&g.d_00637e84))
+#define radio_shadow_dy (*(i8 *)((u8 *)&g.d_00637e88))
+void __cdecl ui_set_radio_text_shadow(i32 param_1,i32 param_2,i32 param_3)
 
 {
-  radio_shadow_color_index = (undefined1)param_1;
-  radio_shadow_dx = (undefined1)param_2;
-  radio_shadow_dy = (undefined1)param_3;
+  radio_shadow_color_index = (i8)param_1;
+  radio_shadow_dx = (i8)param_2;
+  radio_shadow_dy = (i8)param_3;
   return;
 }
 #undef radio_shadow_color_index
@@ -13122,7 +13122,7 @@ void __cdecl ui_set_radio_text_shadow(undefined4 param_1,undefined4 param_2,unde
 void __cdecl ui_set_button_font(iptr param_1)
 
 {
-  button_default_font = (undefined *)param_1;
+  button_default_font = (i8 *)param_1;
   return;
 }
 
@@ -13151,8 +13151,8 @@ void __thiscall wnd_record_destroy(WndDestroyView *this)
 /* 005db67b auto */
 void __thiscall
 wnd_record_create
-          (WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6,iptr param_7)
+          (WndBase *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
+          i32 param_5,i32 param_6,iptr param_7)
 
 {
   u32 uVar1;
@@ -13172,8 +13172,8 @@ wnd_record_create
 /* 005db893 auto */
 void __thiscall
 wnd_record_create_child
-          (WndBase *this,undefined4 param_1,u32 param_2,undefined4 param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6,iptr param_7,WndBase *param_8)
+          (WndBase *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
+          i32 param_5,i32 param_6,iptr param_7,WndBase *param_8)
 
 {
   u32 uVar1;
@@ -13193,20 +13193,20 @@ wnd_record_create_child
 }
 
 /* 005dba95 auto */
-undefined4 __thiscall wnd_is_shift_down(void *this)
+i32 __thiscall wnd_is_shift_down(void *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = input_poll_modifier(0x100);
   return uVar1;
 }
 
 /* 005dbab8 auto */
-undefined4 __thiscall wnd_is_ctrl_down(void *this)
+i32 __thiscall wnd_is_ctrl_down(void *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = input_poll_modifier(0x200);
   return uVar1;
@@ -13266,7 +13266,7 @@ iptr __cdecl menu_hmenu_parse_items(HMENU param_1,iptr param_2)
   HLOCAL hMem;
   char *_Dest;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = false;
   local_1c = 0;
@@ -13355,7 +13355,7 @@ HMENU __cdecl menu_hmenu_build_from_spec(char *param_1)
   HLOCAL hMem;
   char *_Dest;
   HMENU uIDNewItem;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = param_1;
   hMenu = CreateMenu();
@@ -13418,7 +13418,7 @@ void __cdecl menu_redraw_bar(iptr param_1)
 }
 
 /* 005e1118 auto */
-BOOL __cdecl menu_hmenu_enable_item(HMENU param_1,int param_2,int param_3,undefined4 param_4)
+BOOL __cdecl menu_hmenu_enable_item(HMENU param_1,int param_2,int param_3,i32 param_4)
 
 {
   BOOL BVar1;
@@ -13445,7 +13445,7 @@ BOOL __cdecl menu_hmenu_enable_item(HMENU param_1,int param_2,int param_3,undefi
 }
 
 /* 005e11be auto */
-void __cdecl menu_hmenu_check_item(HMENU param_1,int param_2,int param_3,undefined4 param_4)
+void __cdecl menu_hmenu_check_item(HMENU param_1,int param_2,int param_3,i32 param_4)
 
 {
   HMENU hMenu;
@@ -13489,7 +13489,7 @@ void __cdecl menu_hmenu_insert_item(HMENU param_1,int param_2,int param_3,LPCSTR
 {
   UINT_PTR uIDNewItem;
   HMENU pHVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 != (HMENU)0x0) {
     pHVar1 = GetSubMenu(param_1,param_2 - 1);
@@ -13563,11 +13563,11 @@ void __cdecl wnd_install_paint_proc(iptr param_1,iptr param_2)
 #define local_10 (*(LONG *)(frame_ + FRAME_OFF(104)))
 #define local_c (*(LONG *)(frame_ + FRAME_OFF(108)))
 #define local_8 (*(LONG *)(frame_ + FRAME_OFF(112)))
-undefined4 __stdcall surfwnd_subclass_wndproc(HWND param_1,int param_2,undefined4 param_3,uint param_4)
+i32 __stdcall surfwnd_subclass_wndproc(HWND param_1,int param_2,i32 param_3,uint param_4)
 
 {
   SurfaceWindow *this;
-  undefined4 uVar1;
+  i32 uVar1;
   BOOL BVar2;
   iptr iVar3;
   iptr iVar4;
@@ -13582,7 +13582,7 @@ undefined4 __stdcall surfwnd_subclass_wndproc(HWND param_1,int param_2,undefined
   int xSrc;
   int ySrc;
   DWORD rop;
-  undefined1 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
   this = (SurfaceWindow *)GetWindowLongA(param_1,0xc);
   if (this == (SurfaceWindow *)0x0) {
@@ -13751,7 +13751,7 @@ void __cdecl wnd_cycle_control_focus(iptr param_1,HWND param_2,int param_3)
   CheckboxEnabledView *this;
   UINT UVar4;
   UINT uCmd;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == (HWND)0x0) {
     param_2 = GetFocus();
@@ -13830,7 +13830,7 @@ void __cdecl wnd_cycle_control_focus(iptr param_1,HWND param_2,int param_3)
         wnd_cycle_control_focus(param_1,local_10,param_3);
         return;
       }
-      this = (CheckboxEnabledView *)ctrl_list_find_by_hwnd(param_2,*(undefined4 *)(param_1 + 0xb8));
+      this = (CheckboxEnabledView *)ctrl_list_find_by_hwnd(param_2,*(i32 *)(param_1 + 0xb8));
       if ((this != (CheckboxEnabledView *)0x0) &&
          ((((iVar3 = control_get_type((ControlTypeView *)this), iVar3 == 6 &&
             (iVar3 = ctrl_is_enabled((ControlEnabledView *)this), iVar3 != 0)) ||
@@ -13862,14 +13862,14 @@ void __cdecl wnd_focus_control(iptr param_1,iptr param_2)
 {
   char cVar1;
   int iVar2;
-  undefined4 *puVar3;
-  undefined4 uVar4;
+  i32 *puVar3;
+  i32 uVar4;
   
   cVar1 = wnd_keyboard_nav_enabled((WndKeyNavView *)param_1);
   if (cVar1 != '\0') {
     iVar2 = control_get_type((ControlTypeView *)param_2);
     if (iVar2 == 3) {
-      puVar3 = (undefined4 *)radiogrp_get_items((RadioGroupItemsView *)param_2);
+      puVar3 = (i32 *)radiogrp_get_items((RadioGroupItemsView *)param_2);
       uVar4 = hwnd_prev_sibling_wrap(*puVar3);
       wnd_cycle_control_focus(param_1,uVar4,2);
     }
@@ -13900,8 +13900,8 @@ void __cdecl wnd_install_command_proc(iptr param_1,iptr param_2)
 }
 
 /* 005ec1a1 auto */
-#define menu_search_pos (*(undefined4 *)((u8 *)&g.d_006e5368))
-void __cdecl wnd_on_menu_command(HWND param_1,undefined4 param_2)
+#define menu_search_pos (*(i32 *)((u8 *)&g.d_006e5368))
+void __cdecl wnd_on_menu_command(HWND param_1,i32 param_2)
 
 {
   char cVar1;
@@ -13925,7 +13925,7 @@ void __cdecl wnd_on_menu_command(HWND param_1,undefined4 param_2)
 
 /* 005ec23a auto */
 #define menu_search_pos (*(int *)((u8 *)&g.d_006e5368))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 uint __cdecl menu_find_item_pos(HMENU param_1,UINT param_2)
 
@@ -13933,7 +13933,7 @@ uint __cdecl menu_find_item_pos(HMENU param_1,UINT param_2)
   int iVar1;
   UINT UVar2;
   HMENU pHVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   menu_search_pos++;
@@ -13962,7 +13962,7 @@ uint __cdecl menu_find_item_pos(HMENU param_1,UINT param_2)
 #undef local_8
 
 /* 005ecf50 auto */
-void __thiscall wnd_call_mousemove(WndOnMouseMoveView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_mousemove(WndOnMouseMoveView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_mousemove != 0) {
@@ -13992,7 +13992,7 @@ void __thiscall wnd_call_lbuttonup_raw(WndOnLButtonUpRawView *this,iptr param_1,
 }
 
 /* 005ed010 auto */
-void __thiscall wnd_call_lbuttonup(WndOnLButtonUpView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_lbuttonup(WndOnLButtonUpView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_lbuttonup != 0) {
@@ -14012,7 +14012,7 @@ void __thiscall wnd_call_rbuttondown(WndOnRButtonDownView *this,iptr param_1,ipt
 }
 
 /* 005ed090 auto */
-void __thiscall wnd_call_rbuttonup_raw(WndOnRButtonUpRawView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_rbuttonup_raw(WndOnRButtonUpRawView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_rbuttonup_raw != 0) {
@@ -14022,7 +14022,7 @@ void __thiscall wnd_call_rbuttonup_raw(WndOnRButtonUpRawView *this,undefined4 pa
 }
 
 /* 005ed0d0 auto */
-void __thiscall wnd_call_rbuttonup(WndOnRButtonUpView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_rbuttonup(WndOnRButtonUpView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_rbuttonup != 0) {
@@ -14032,7 +14032,7 @@ void __thiscall wnd_call_rbuttonup(WndOnRButtonUpView *this,undefined4 param_1,u
 }
 
 /* 005ed110 auto */
-void __thiscall wnd_call_dblclick(WndOnDblClickView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_dblclick(WndOnDblClickView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_dblclick != 0) {
@@ -14042,7 +14042,7 @@ void __thiscall wnd_call_dblclick(WndOnDblClickView *this,undefined4 param_1,und
 }
 
 /* 005ed150 auto */
-void __thiscall wnd_call_keydown_pre(WndOnKeyDownPreView *this,undefined4 param_1)
+void __thiscall wnd_call_keydown_pre(WndOnKeyDownPreView *this,i32 param_1)
 
 {
   if (this->on_keydown_pre != 0) {
@@ -14052,7 +14052,7 @@ void __thiscall wnd_call_keydown_pre(WndOnKeyDownPreView *this,undefined4 param_
 }
 
 /* 005ed190 auto */
-void __thiscall wnd_call_keyup(WndOnKeyUpView *this,undefined4 param_1)
+void __thiscall wnd_call_keyup(WndOnKeyUpView *this,i32 param_1)
 
 {
   if (this->on_keyup != 0) {
@@ -14062,7 +14062,7 @@ void __thiscall wnd_call_keyup(WndOnKeyUpView *this,undefined4 param_1)
 }
 
 /* 005ed1d0 auto */
-void __thiscall wnd_call_keydown(WndOnKeyDownView *this,undefined4 param_1)
+void __thiscall wnd_call_keydown(WndOnKeyDownView *this,i32 param_1)
 
 {
   if (this->on_keydown != 0) {
@@ -14072,7 +14072,7 @@ void __thiscall wnd_call_keydown(WndOnKeyDownView *this,undefined4 param_1)
 }
 
 /* 005ed210 auto */
-void __thiscall wnd_call_char(WndOnCharView *this,undefined4 param_1)
+void __thiscall wnd_call_char(WndOnCharView *this,i32 param_1)
 
 {
   if (this->on_char != 0) {
@@ -14082,10 +14082,10 @@ void __thiscall wnd_call_char(WndOnCharView *this,undefined4 param_1)
 }
 
 /* 005ed250 auto */
-undefined4 __thiscall wnd_call_close(WndOnCloseView *this)
+i32 __thiscall wnd_call_close(WndOnCloseView *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (this->on_close == 0) {
     uVar1 = 0;
@@ -14127,7 +14127,7 @@ void __thiscall wnd_call_setfocus(WndOnSetFocusView *this)
 }
 
 /* 005ed320 auto */
-void __thiscall wnd_call_size(WndOnSizeView *this,undefined4 param_1)
+void __thiscall wnd_call_size(WndOnSizeView *this,i32 param_1)
 
 {
   if (this->on_size != 0) {
@@ -14137,7 +14137,7 @@ void __thiscall wnd_call_size(WndOnSizeView *this,undefined4 param_1)
 }
 
 /* 005ed360 auto */
-void __thiscall wnd_call_move(WndOnMoveView *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_call_move(WndOnMoveView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_move != 0) {
@@ -14157,7 +14157,7 @@ void __thiscall wnd_call_msg44(WndOnMsg44View *this,iptr param_1)
 }
 
 /* 005ed3e0 auto */
-void __thiscall wnd_call_hscroll(WndOnHScrollView *this,undefined4 param_1)
+void __thiscall wnd_call_hscroll(WndOnHScrollView *this,i32 param_1)
 
 {
   if (this->on_hscroll != 0) {
@@ -14167,7 +14167,7 @@ void __thiscall wnd_call_hscroll(WndOnHScrollView *this,undefined4 param_1)
 }
 
 /* 005ed420 auto */
-void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *this,undefined4 param_1)
+void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *this,i32 param_1)
 
 {
   if (this->on_hscroll_track != 0) {
@@ -14177,7 +14177,7 @@ void __thiscall wnd_call_hscroll_track(WndOnHScrollTrackView *this,undefined4 pa
 }
 
 /* 005ed460 auto */
-void __thiscall wnd_call_vscroll(WndOnVScrollView *this,undefined4 param_1)
+void __thiscall wnd_call_vscroll(WndOnVScrollView *this,i32 param_1)
 
 {
   if (this->on_vscroll != 0) {
@@ -14187,7 +14187,7 @@ void __thiscall wnd_call_vscroll(WndOnVScrollView *this,undefined4 param_1)
 }
 
 /* 005ed4a0 auto */
-void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *this,undefined4 param_1)
+void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *this,i32 param_1)
 
 {
   if (this->on_vscroll_track != 0) {
@@ -14197,7 +14197,7 @@ void __thiscall wnd_call_vscroll_track(WndOnVScrollTrackView *this,undefined4 pa
 }
 
 /* 005ed4e0 auto */
-void __thiscall wnd_call_msg4c8(C_005ed4e0 *this,undefined4 param_1)
+void __thiscall wnd_call_msg4c8(C_005ed4e0 *this,i32 param_1)
 
 {
   if (this->on_msg_4c8 != 0) {
@@ -14227,14 +14227,14 @@ void __thiscall wnd_call_exitsizemove(WndOnExitSizeMoveView *this)
 }
 
 /* 005ed580 auto */
-void __thiscall wnd_on_size_nop(void *this,undefined4 param_1,undefined4 param_2)
+void __thiscall wnd_on_size_nop(void *this,i32 param_1,i32 param_2)
 
 {
   return;
 }
 
 /* 005ed5a0 auto */
-bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *this,undefined4 param_1,undefined4 param_2)
+bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *this,i32 param_1,i32 param_2)
 
 {
   bool bVar1;
@@ -14247,7 +14247,7 @@ bool __thiscall wnd_call_menu_pos_command(WndOnMenuPosCommandView *this,undefine
 }
 
 /* 005ed5f0 auto */
-bool __thiscall wnd_call_command(WndOnCommandView *this,undefined4 param_1)
+bool __thiscall wnd_call_command(WndOnCommandView *this,i32 param_1)
 
 {
   bool bVar1;
@@ -14330,12 +14330,12 @@ void __thiscall wnd_call_mci_done(WndOnMciDoneView *this)
 }
 
 /* 005ef5db auto */
-undefined4 __cdecl ddwin_destroy_native(undefined4 *param_1)
+i32 __cdecl ddwin_destroy_native(i32 *param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
-  if (param_1 != (undefined4 *)0x0) {
+  if (param_1 != (i32 *)0x0) {
     if (param_1[5] == 0) {
       if (param_1[1] != 0) {
         ShowWindow((HWND)param_1[1],0);
@@ -14357,10 +14357,10 @@ LRESULT __stdcall ddwin_native_wndproc(HWND param_1,uint param_2,uint param_3,ui
   char cVar1;
   DDWindow *this;
   LRESULT LVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
   uptr DVar5;
-  undefined4 uVar5;
+  i32 uVar5;
   
   this = (DDWindow *)GetClassLongA(param_1,4);
   if (this == (DDWindow *)0x0) {
@@ -14371,7 +14371,7 @@ LRESULT __stdcall ddwin_native_wndproc(HWND param_1,uint param_2,uint param_3,ui
     if (param_2 != 0x10) {
       if (param_2 == 2) {
         DVar5 = GetClassLongA(param_1,0);
-        *(undefined4 *)(DVar5 + 0x14) = 1;
+        *(i32 *)(DVar5 + 0x14) = 1;
         LVar2 = DefWindowProcA(param_1,2,param_3,param_4);
         return LVar2;
       }
@@ -14514,7 +14514,7 @@ switchD_005efc68_default:
 }
 
 /* 005efd70 auto */
-void __thiscall ddwin_call_activate_app(DDWindowActivateView *this,undefined4 param_1)
+void __thiscall ddwin_call_activate_app(DDWindowActivateView *this,i32 param_1)
 
 {
   if (this->on_activate_app != 0) {
@@ -14526,11 +14526,11 @@ void __thiscall ddwin_call_activate_app(DDWindowActivateView *this,undefined4 pa
 /* 005efeb0: written by hand in src/game/unwind.c */
 
 /* 005f029e auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddwin_remove_all_controls(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (local_8 != 0) {
@@ -14542,11 +14542,11 @@ void __thiscall ddwin_remove_all_controls(void *this)
 #undef local_8
 
 /* 005f0342 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall ddwin_deactivate_controls(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = ptrlist_first((PtrList *)((int)this + 0xc0));
   while (local_8 != 0) {
@@ -14559,12 +14559,12 @@ void __thiscall ddwin_deactivate_controls(void *this)
 
 /* 005f0391 auto */
 #define local_8 (*(DDControl * *)(frame_ + FRAME_OFF(0)))
-undefined1 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int param_1,int param_2,int param_3)
+i8 __thiscall ddwin_dispatch_ctrl_msg(DDWindow *this,int param_1,int param_2,int param_3)
 
 {
   int *piVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((this->hover_control != 0) && (param_1 == 0x200)) {
     piVar1 = (int *)ddctrl_get_rect((void *)this->hover_control);

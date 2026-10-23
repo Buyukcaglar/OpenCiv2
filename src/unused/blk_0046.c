@@ -2,10 +2,10 @@
 #include "auto_common.h"
 
 /* 00467a5d auto */
-undefined4 __cdecl civ_attitude_level(iptr civ,iptr param_2)
+i32 __cdecl civ_attitude_level(iptr civ,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = civ_get_attitude(civ,param_2);
   uVar1 = diplo_attitude_level(uVar1);
@@ -13,7 +13,7 @@ undefined4 __cdecl civ_attitude_level(iptr civ,iptr param_2)
 }
 
 /* 00467a86 auto */
-bool __cdecl civ_attitude_is_friendly(undefined4 civ,undefined4 param_2)
+bool __cdecl civ_attitude_is_friendly(i32 civ,i32 param_2)
 
 {
   int iVar1;
@@ -23,7 +23,7 @@ bool __cdecl civ_attitude_is_friendly(undefined4 civ,undefined4 param_2)
 }
 
 /* 00467abb auto */
-bool __cdecl civ_attitude_is_unfriendly(undefined4 civ,undefined4 param_2)
+bool __cdecl civ_attitude_is_unfriendly(i32 civ,i32 param_2)
 
 {
   int iVar1;
@@ -33,7 +33,7 @@ bool __cdecl civ_attitude_is_unfriendly(undefined4 civ,undefined4 param_2)
 }
 
 /* 004687b5 auto */
-void __cdecl parley_unit_list_scroll_right(undefined4 param_1)
+void __cdecl parley_unit_list_scroll_right(i32 param_1)
 
 {
   parley_unit_list_on_scroll(1,param_1);
@@ -48,7 +48,7 @@ void __cdecl parley_request_city_origin_clicked(void)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = wnd_get_active_child();
   if (local_8 == 0) {
@@ -60,7 +60,7 @@ void __cdecl parley_request_city_origin_clicked(void)
   wnd_activate((Wnd *)(local_8 + 0x48));
   iVar1 = civ_name_plural(human_civ);
   text_set_string_arg(0,iVar1);
-  net_send_text_args(100,*(undefined4 *)
+  net_send_text_args(100,*(i32 *)
                           (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),1,0,
                      human_civ,0);
   return;
@@ -91,7 +91,7 @@ void __cdecl parley_sort_by_unit_right_clicked(void)
 void __thiscall clickmap_remove_by_id_tag(ClickMapRemoveView *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = -1;
   local_8 = 0;
@@ -115,7 +115,7 @@ LAB_0046ac67:
 #undef local_8
 
 /* 0046b11d auto */
-void __cdecl net_send_string_message(undefined4 param_1,iptr param_2)
+void __cdecl net_send_string_message(i32 param_1,iptr param_2)
 
 {
   net_send_message(param_1,0,0,0,0,0,0,0,param_2,0);
@@ -127,12 +127,12 @@ void __cdecl ui_show_label_splash(DibSurface *param_1,int param_2)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined *puVar7;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i8 *puVar7;
   
   puVar7 = &game_palette;
   uVar6 = 100;
@@ -140,7 +140,7 @@ void __cdecl ui_show_label_splash(DibSurface *param_1,int param_2)
   uVar4 = 0;
   uVar3 = 0;
   uVar2 = 0x69;
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 8));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 8));
   surface_wnd_create(param_1,iVar1,uVar2,uVar3,uVar4,uVar5,uVar6,(iptr)puVar7);
   ui_flush_input();
   wnd_center((WndCenterView *)(param_1 + 1));
@@ -149,7 +149,7 @@ void __cdecl ui_show_label_splash(DibSurface *param_1,int param_2)
   uVar5 = 0;
   uVar4 = 0x32;
   uVar3 = 0x80;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + param_2 * 4));
+  uVar2 = label_string(*(i32 *)(label_string_ids + param_2 * 4));
   surface_draw_text_cur_font((SurfaceTextCurFontView *)param_1,uVar2,uVar3,uVar4,uVar5);
   window_show((C_004083b0_4 *)param_1);
   wnd_flush_paint();

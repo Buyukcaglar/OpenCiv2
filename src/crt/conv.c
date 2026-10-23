@@ -37,7 +37,7 @@ longlong __cdecl __atoi64(char *s)
 
 /* 0x00600c30: x64toa(lo, hi, buf, radix, is_neg) -- static helper of
  * _i64toa/_ui64toa; digits above 9 are lower case. */
-void __stdcall x64toa(int param_1, int param_2, char *param_3, undefined4 param_4, int param_5)
+void __stdcall x64toa(int param_1, int param_2, char *param_3, i32 param_4, int param_5)
 {
     ulonglong val = (ulonglong)(uint)param_2 << 32 | (uint)param_1;
     uint radix = (uint)param_4;

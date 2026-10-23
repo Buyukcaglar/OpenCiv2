@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 00587e23 auto */
-void __cdecl parley_city_list_scroll_remote(undefined4 param_1)
+void __cdecl parley_city_list_scroll_remote(i32 param_1)
 
 {
   parley_city_list_scroll(1,param_1);
@@ -17,7 +17,7 @@ void __cdecl parley_request_city_info(void)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = wnd_get_active_child();
   if (local_8 == 0) {
@@ -29,7 +29,7 @@ void __cdecl parley_request_city_info(void)
   wnd_activate((Wnd *)(local_8 + 0x48));
   iVar1 = civ_name_plural(human_civ);
   text_set_string_arg(0,iVar1);
-  net_send_text_args(0x65,*(undefined4 *)
+  net_send_text_args(0x65,*(i32 *)
                            (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),1,0,
                      human_civ,0);
   return;

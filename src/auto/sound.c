@@ -27,14 +27,14 @@ void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr par
 /* 0046e020 auto */
 #define local_118 (*(char (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_108 (*(char (*)[128])(frame_ + FRAME_OFF(16)))
-#define local_88 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(144)))
+#define local_88 (*(i8 (*)[128])(frame_ + FRAME_OFF(144)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(272)))
 void __cdecl snd_play_effect(iptr param_1,iptr param_2,int param_3,iptr param_4)
 
 {
   int iVar1;
   char *pcVar2;
-  undefined1 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
   snd_last_effect_id = param_1;
   snd_last_effect_arg = param_2;
@@ -93,7 +93,7 @@ void __cdecl snd_play_effect(iptr param_1,iptr param_2,int param_3,iptr param_4)
 #undef local_8
 
 /* 0046e2f4 auto */
-#define cd_music_available (*(undefined4 *)((u8 *)&g.d_0062b420))
+#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
 #define cd_music_continue (*(int *)((u8 *)&g.d_0062b42c))
 void __cdecl snd_cd_on_notify(void)
 
@@ -108,10 +108,10 @@ void __cdecl snd_cd_on_notify(void)
 #undef cd_music_continue
 
 /* 0046e320 auto */
-#define cd_music_available (*(undefined4 *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(undefined4 *)((u8 *)&g.d_0062b42c))
+#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
+#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
-#define cd_music_unknown_disc (*(undefined4 *)((u8 *)&g.d_0062b424))
+#define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
@@ -120,7 +120,7 @@ void __cdecl snd_cd_on_notify(void)
 void __cdecl snd_cd_play_random_track(void)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while (local_8 < 10) {
@@ -176,9 +176,9 @@ void __cdecl snd_cd_play_random_track(void)
 #undef local_8
 
 /* 0046e4a9 auto */
-#define cd_music_available (*(undefined4 *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(undefined4 *)((u8 *)&g.d_0062b42c))
-#define cd_music_unknown_disc (*(undefined4 *)((u8 *)&g.d_0062b424))
+#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
+#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
+#define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
 void __cdecl snd_cd_detect_layout(void)
 
 {
@@ -207,7 +207,7 @@ void __cdecl snd_cd_detect_layout(void)
 
 /* 0046e571 auto */
 #define cd_music_available (*(int *)((u8 *)&g.d_0062b420))
-#define cd_music_continue (*(undefined4 *)((u8 *)&g.d_0062b42c))
+#define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
 #define cd_music_unknown_disc (*(int *)((u8 *)&g.d_0062b424))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
@@ -215,7 +215,7 @@ void __cdecl snd_cd_detect_layout(void)
 void __cdecl music_play_track(uint param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((byte)game.game_options & 8) == 0) {
     if (cd_music_available == 0) {
@@ -253,7 +253,7 @@ void __cdecl music_play_track(uint param_1,int param_2)
 #undef local_8
 
 /* 0046e6a9 auto */
-#define cd_music_available (*(undefined4 *)((u8 *)&g.d_0062b420))
+#define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
 void __cdecl snd_cd_stop(void)
 
 {
@@ -313,11 +313,11 @@ void __cdecl snd_shutdown(void)
 }
 
 /* 005d48f0 auto */
-#define snd_wave_buffer_count (*(undefined4 *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(undefined4 *)((u8 *)&g.d_00638584))
-#define snd_wave_notify_hwnd (*(undefined4 *)((u8 *)&g.d_0063857c))
-#define snd_wave_out_handle (*(undefined4 *)((u8 *)&g.d_00638578))
-int __cdecl snd_wave_open(undefined4 param_1,undefined4 param_2,undefined4 param_3)
+#define snd_wave_buffer_count (*(i32 *)((u8 *)&g.d_00638588))
+#define snd_wave_max_buffers (*(i32 *)((u8 *)&g.d_00638584))
+#define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
+#define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
+int __cdecl snd_wave_open(i32 param_1,i32 param_2,i32 param_3)
 
 {
   int iVar1;
@@ -365,22 +365,22 @@ void __cdecl snd_show_error(int param_1)
 }
 
 /* 005d4a11 auto */
-#define snd_wave_block_align (*(undefined4 *)((u8 *)&g.d_006385ac))
-#define snd_wave_format (*(undefined4 *)((u8 *)&g.d_006385a0))
-#define snd_wave_out_handle (*(undefined4 *)((u8 *)&g.d_00638578))
+#define snd_wave_block_align (*(i32 *)((u8 *)&g.d_006385ac))
+#define snd_wave_format (*(i32 *)((u8 *)&g.d_006385a0))
+#define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
 #define local_14 (*(UINT *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(UINT_PTR *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(16)))
-uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr param_3)
+uint __cdecl snd_wave_open_device(DWORD_PTR param_1,i32 *param_2,iptr param_3)
 
 {
   bool bVar1;
   UINT UVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = false;
   if (snd_wave_device_open == 0) {
-    if (param_2 != (undefined4 *)0x0) {
+    if (param_2 != (i32 *)0x0) {
       snd_wave_format = *param_2;
       snd_wave_samples_per_sec = param_2[1];
       snd_wave_avg_bytes_per_sec = param_2[2];
@@ -401,9 +401,9 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
     }
     if ((bVar1) || (local_10 != UVar2)) {
       if (bVar1) {
-        snd_wave_format = CONCAT22(1,(undefined2)snd_wave_format);
+        snd_wave_format = CONCAT22(1,(i16)snd_wave_format);
         snd_wave_avg_bytes_per_sec = 0x5622;
-        snd_wave_block_align = CONCAT22((*(undefined2 *)((char *)&snd_wave_block_align + 2)),1);
+        snd_wave_block_align = CONCAT22((*(i16 *)((char *)&snd_wave_block_align + 2)),1);
       }
       local_8 = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,local_14,(LPCWAVEFORMATEX)&snd_wave_format,
                             param_1,0,0x10000);
@@ -414,7 +414,7 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
       }
       local_8 = local_8 & 0xffff;
       if ((local_8 == 0) && (snd_wave_device_open = 1, param_3 != 0)) {
-        *(undefined4 *)param_3 = snd_wave_out_handle;
+        *(i32 *)param_3 = snd_wave_out_handle;
       }
     }
     else {
@@ -435,12 +435,12 @@ uint __cdecl snd_wave_open_device(DWORD_PTR param_1,undefined4 *param_2,iptr par
 #undef local_8
 
 /* 005d4bcb auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 uint __cdecl snd_wave_close_device(HWAVEOUT param_1)
 
 {
   MMRESULT MVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (snd_wave_device_open != 0) {
@@ -457,7 +457,7 @@ uint __cdecl snd_wave_close_device(HWAVEOUT param_1)
 void __cdecl snd_waveout_error_box(uint param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
   
   waveOutGetErrorTextA(param_1 & 0xffff,local_cc,200);
   MessageBoxA((HWND)0x0,local_cc,s_Wave_Out_Error_0063862c,0x40);
@@ -476,13 +476,13 @@ void __cdecl snd_waveout_error_box(uint param_1)
 #define local_2c (*(FOURCC *)(frame_ + FRAME_OFF(108)))
 #define local_28 (*(FOURCC *)(frame_ + FRAME_OFF(112)))
 #define local_24 (*(FOURCC *)(frame_ + FRAME_OFF(116)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(120)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(120)))
 #define local_1c (*(_MMCKINFO *)(frame_ + FRAME_OFF(124)))
 #define local_8 (*(HMMIO *)(frame_ + FRAME_OFF(144)))
-undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined4 param_3,FOURCC param_4)
+i16 __cdecl snd_wave_load_file(LPSTR param_1,i32 param_2,i32 param_3,FOURCC param_4)
 
 {
-  undefined2 uVar1;
+  i16 uVar1;
   MMRESULT MVar2;
   DWORD DVar3;
   int iVar4;
@@ -490,7 +490,7 @@ undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
-  undefined1 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
   
   _memset(&local_84,0,0x48);
   local_84.cchBuffer = snd_wave_total_buffer_bytes;
@@ -508,7 +508,7 @@ undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined
         local_38 = local_98.cksize;
         DVar3 = mmioRead(local_8,(HPSTR)&local_2c,local_98.cksize);
         if (DVar3 == local_38) {
-          if ((local_28 == 0x5622) && ((*(undefined2 *)((char *)&local_20 + 2)) == 8)) {
+          if ((local_28 == 0x5622) && ((*(i16 *)((char *)&local_20 + 2)) == 8)) {
             mmioAscend(local_8,&local_98,0);
             local_98.ckid = 0x61746164;
             MVar2 = mmioDescend(local_8,&local_98,&local_1c,0x10);
@@ -544,12 +544,12 @@ undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined
                     *pFVar8 = p_Var6->ckid;
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
-                  *(undefined2 *)((int)local_34 + 0x8a) = (undefined2)param_3;
+                  *(i16 *)((int)local_34 + 0x8a) = (i16)param_3;
                   local_34[0x1d] = local_2c;
                   local_34[0x1e] = local_28;
                   local_34[0x1f] = local_24;
                   local_34[0x20] = local_20;
-                  *(undefined2 *)(local_34 + 0x22) = 1;
+                  *(i16 *)(local_34 + 0x22) = 1;
                   local_34[0x2d] = param_4;
                   if (snd_wave_sources == 0) {
                     snd_wave_sources = (iptr)local_34;
@@ -617,14 +617,14 @@ undefined2 __cdecl snd_wave_load_file(LPSTR param_1,undefined4 param_2,undefined
 #define local_30 (*(FOURCC *)(frame_ + FRAME_OFF(112)))
 #define local_2c (*(FOURCC *)(frame_ + FRAME_OFF(116)))
 #define local_28 (*(FOURCC *)(frame_ + FRAME_OFF(120)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(124)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(124)))
 #define local_20 (*(_MMCKINFO *)(frame_ + FRAME_OFF(128)))
 #define local_c (*(HMMIO *)(frame_ + FRAME_OFF(148)))
 #define local_8 (*(HMMIO *)(frame_ + FRAME_OFF(152)))
-undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefined4 param_3)
+i16 __cdecl snd_wave_open_stream(LPSTR param_1,i32 param_2,i32 param_3)
 
 {
-  undefined2 uVar1;
+  i16 uVar1;
   MMRESULT MVar2;
   DWORD DVar3;
   int iVar4;
@@ -632,7 +632,7 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
-  undefined1 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = mmioOpenA(param_1,(LPMMIOINFO)0x0,0);
   if (local_c == (HMMIO)0x0) {
@@ -648,7 +648,7 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
         local_3c = local_9c.cksize;
         DVar3 = mmioRead(local_c,(HPSTR)&local_30,local_9c.cksize);
         if (DVar3 == local_3c) {
-          if ((local_2c == 0x5622) && ((*(undefined2 *)((char *)&local_24 + 2)) == 8)) {
+          if ((local_2c == 0x5622) && ((*(i16 *)((char *)&local_24 + 2)) == 8)) {
             mmioAscend(local_c,&local_9c,0);
             local_9c.ckid = 0x61746164;
             MVar2 = mmioDescend(local_c,&local_9c,&local_20,0x10);
@@ -676,7 +676,7 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
                   else {
                     _memset(local_38,0,0xbc);
                     local_38[0x1b] = (FOURCC)local_34;
-                    *(undefined2 *)(local_38 + 0x22) = 1;
+                    *(i16 *)(local_38 + 0x22) = 1;
                     local_38[0x1d] = local_30;
                     local_38[0x1e] = local_2c;
                     local_38[0x1f] = local_28;
@@ -697,7 +697,7 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
                       p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                     }
                     local_38[0x1c] = local_38[0x1c] | 4;
-                    *(undefined2 *)((int)local_38 + 0x8a) = (undefined2)param_3;
+                    *(i16 *)((int)local_38 + 0x8a) = (i16)param_3;
                     snd_wave_stream_refill((iptr)local_38);
                     if (snd_wave_sources == 0) {
                       snd_wave_sources = (iptr)local_38;
@@ -757,36 +757,36 @@ undefined2 __cdecl snd_wave_open_stream(LPSTR param_1,undefined4 param_2,undefin
 #undef local_8
 
 /* 005d52a2 auto */
-#define snd_wave_format (*(undefined *)((u8 *)&g.d_006385a0))
+#define snd_wave_format (*(i8 *)((u8 *)&g.d_006385a0))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
 #define local_10c (*(_MMIOINFO *)(frame_ + FRAME_OFF(4)))
-#define local_c4 (*(undefined4 *)(frame_ + FRAME_OFF(76)))
-#define local_c0 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
-#define local_bc (*(undefined4 *)(frame_ + FRAME_OFF(84)))
-#define local_b8 (*(undefined4 *)(frame_ + FRAME_OFF(88)))
-#define local_b4 (*(undefined4 * *)(frame_ + FRAME_OFF(92)))
+#define local_c4 (*(i32 *)(frame_ + FRAME_OFF(76)))
+#define local_c0 (*(i32 *)(frame_ + FRAME_OFF(80)))
+#define local_bc (*(i32 *)(frame_ + FRAME_OFF(84)))
+#define local_b8 (*(i32 *)(frame_ + FRAME_OFF(88)))
+#define local_b4 (*(i32 * *)(frame_ + FRAME_OFF(92)))
 #define local_b0 (*(HGLOBAL *)(frame_ + FRAME_OFF(96)))
-#define local_ac (*(undefined1 (*)[4])(frame_ + FRAME_OFF(100)))
+#define local_ac (*(i8 (*)[4])(frame_ + FRAME_OFF(100)))
 #define local_a8 (*(uint *)(frame_ + FRAME_OFF(104)))
 #define local_a4 (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_a0 (*(undefined4 *)(frame_ + FRAME_OFF(112)))
+#define local_a0 (*(i32 *)(frame_ + FRAME_OFF(112)))
 #define local_9c (*(uint *)(frame_ + FRAME_OFF(116)))
 #define local_98 (*(int (*)[8])(frame_ + FRAME_OFF(120)))
 #define local_78 (*(int *)(frame_ + FRAME_OFF(152)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(168)))
 #define local_c (*(HMMIO *)(frame_ + FRAME_OFF(260)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(264)))
-undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(264)))
+i32 __cdecl snd_wave_add_avi_stream(int param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   _MMIOINFO *p_Var3;
   DWORD *pDVar4;
-  undefined1 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_a0 = 0xe;
   if (snd_wave_out_handle == 0) {
@@ -801,19 +801,19 @@ undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
       AVIStreamRead(param_1,0,1,0,0,local_ac,0);
       local_a4 = local_68 * local_78;
       AVIStreamReadFormat(param_1,0,&local_c4,&local_a0);
-      if ((*(undefined2 *)((char *)&snd_wave_format + 2)) == 1) {
-        if ((*(undefined2 *)((char *)&local_c4 + 2)) == 2) {
-          local_8 = CONCAT22((*(undefined2 *)((char *)&local_8 + 2)),1);
+      if ((*(i16 *)((char *)&snd_wave_format + 2)) == 1) {
+        if ((*(i16 *)((char *)&local_c4 + 2)) == 2) {
+          local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),1);
         }
         else {
-          local_8 = CONCAT22((*(undefined2 *)((char *)&local_8 + 2)),2);
+          local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),2);
         }
       }
-      else if ((*(undefined2 *)((char *)&local_c4 + 2)) == 2) {
-        local_8 = (uint)(*(undefined2 *)((char *)&local_8 + 2)) << 0x10;
+      else if ((*(i16 *)((char *)&local_c4 + 2)) == 2) {
+        local_8 = (uint)(*(i16 *)((char *)&local_8 + 2)) << 0x10;
       }
       else {
-        local_8 = CONCAT22((*(undefined2 *)((char *)&local_8 + 2)),3);
+        local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),3);
       }
       _memset(&local_10c,0,0x48);
       if ((local_8 & 0xffff) == 1) {
@@ -840,14 +840,14 @@ undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
         }
         else {
           local_b4 = GlobalLock(local_b0);
-          if (local_b4 == (undefined4 *)0x0) {
+          if (local_b4 == (i32 *)0x0) {
             GlobalFree(local_b0);
             uVar1 = 2;
           }
           else {
             _memset(local_b4,0,0xbc);
             local_b4[0x1b] = local_b0;
-            *(undefined2 *)(local_b4 + 0x22) = 4;
+            *(i16 *)(local_b4 + 0x22) = 4;
             local_b4[0x1d] = local_c4;
             local_b4[0x1e] = local_c0;
             local_b4[0x1f] = local_bc;
@@ -916,22 +916,22 @@ undefined4 __cdecl snd_wave_add_avi_stream(int param_1)
 /* 005d57b1 auto */
 #define snd_avi_stream_started (*(int *)((u8 *)&g.d_006385bc))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define _DAT_00638590 (*(undefined4 *)((u8 *)&g.d_00638590))
-#define _DAT_00638594 (*(undefined4 *)((u8 *)&g.d_00638594))
-#define _DAT_00638598 (*(undefined4 *)((u8 *)&g.d_00638598))
+#define _DAT_00638590 (*(i32 *)((u8 *)&g.d_00638590))
+#define _DAT_00638594 (*(i32 *)((u8 *)&g.d_00638594))
+#define _DAT_00638598 (*(i32 *)((u8 *)&g.d_00638598))
 #define local_24 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl snd_avi_stream_feed(uint param_1)
+i32 __cdecl snd_avi_stream_feed(uint param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   uint uVar2;
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = snd_wave_sources;
   if (snd_wave_out_handle == 0) {
@@ -969,37 +969,37 @@ undefined4 __cdecl snd_avi_stream_feed(uint param_1)
         local_24 = uVar2;
       }
       local_8 = 0;
-      AVIStreamRead(*(undefined4 *)(snd_wave_sources + 0x84),
+      AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                     *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
                     local_24 / *(ushort *)(snd_wave_sources + 0x80),
-                    *(undefined4 *)(snd_wave_sources + 0x34),local_24,&local_8,0);
+                    *(i32 *)(snd_wave_sources + 0x34),local_24,&local_8,0);
       *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + local_8;
       *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + local_8;
       if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-        *(undefined4 *)(iVar1 + 0x34) = *(undefined4 *)(iVar1 + 0x30);
+        *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
       }
       *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + local_8;
       if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
         *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 8;
-        *(undefined4 *)(snd_wave_sources + 0x98) = *(undefined4 *)(local_c + 0x1c);
+        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(local_c + 0x1c);
         local_c = *(iptr *)(snd_wave_sources + 0x98);
-        *(undefined4 *)(snd_wave_sources + 0x68) = 0;
+        *(i32 *)(snd_wave_sources + 0x68) = 0;
       }
       if (*(uint *)(snd_wave_sources + 8) <=
           (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
         for (local_20 = 0;
             local_20 < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68));
             local_20 = local_20 + 1) {
-          **(undefined1 **)(iVar1 + 0x34) = 0x80;
+          **(i8 **)(iVar1 + 0x34) = 0x80;
           *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + 1;
         }
         if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-          *(undefined4 *)(iVar1 + 0x34) = *(undefined4 *)(iVar1 + 0x30);
+          *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
         }
         *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 8;
         *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 2;
-        *(undefined4 *)(snd_wave_sources + 0x98) = *(undefined4 *)(local_c + 0x1c);
-        *(undefined4 *)(snd_wave_sources + 0x68) = 0;
+        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(local_c + 0x1c);
+        *(i32 *)(snd_wave_sources + 0x68) = 0;
         *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
       }
       _DAT_00638590++;
@@ -1025,11 +1025,11 @@ undefined4 __cdecl snd_avi_stream_feed(uint param_1)
 #undef local_8
 
 /* 005d5b88 auto */
-#define snd_avi_stream_started (*(undefined4 *)((u8 *)&g.d_006385bc))
-undefined4 __cdecl snd_avi_stream_stop(void)
+#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
+i32 __cdecl snd_avi_stream_stop(void)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   snd_avi_stream_started = 0;
   if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
@@ -1051,7 +1051,7 @@ void __cdecl snd_avi_stream_refill(iptr param_1)
 {
   uint uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if ((*(int *)(param_1 + 0x3c) == *(int *)(param_1 + 0x34)) ||
@@ -1062,10 +1062,10 @@ void __cdecl snd_avi_stream_refill(iptr param_1)
     if (uVar1 < *(uint *)(param_1 + 0x2c)) {
       local_10 = uVar1;
     }
-    *(undefined4 *)(param_1 + 0x34) = *(undefined4 *)(param_1 + 0x30);
-    AVIStreamRead(*(undefined4 *)(param_1 + 0x84),
+    *(i32 *)(param_1 + 0x34) = *(i32 *)(param_1 + 0x30);
+    AVIStreamRead(*(i32 *)(param_1 + 0x84),
                   *(uint *)(param_1 + 0x90) / (uint)*(ushort *)(param_1 + 0x80),
-                  local_10 / *(ushort *)(param_1 + 0x80),*(undefined4 *)(param_1 + 0x34),local_10,
+                  local_10 / *(ushort *)(param_1 + 0x80),*(i32 *)(param_1 + 0x34),local_10,
                   &local_8,0);
     *(int *)(param_1 + 0x90) = *(int *)(param_1 + 0x90) + local_8;
     iVar2 = *(int *)(param_1 + 0x2c) - local_8;
@@ -1079,19 +1079,19 @@ void __cdecl snd_avi_stream_refill(iptr param_1)
 #undef local_8
 
 /* 005d5d11 auto */
-#define snd_avi_stream_started (*(undefined4 *)((u8 *)&g.d_006385bc))
+#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,iptr param_3)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl snd_avi_stream_prepare(i32 param_1,i32 param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_wave_out_handle == 0) {
     uVar1 = 3;
@@ -1103,8 +1103,8 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
     if (snd_wave_buffer_count != snd_wave_max_buffers) {
       snd_wave_set_buffer_count(snd_wave_max_buffers);
     }
-    iVar2 = AVIStreamTimeToSample(*(undefined4 *)(snd_wave_sources + 0x84),param_1);
-    local_10 = AVIStreamTimeToSample(*(undefined4 *)(snd_wave_sources + 0x84),param_2);
+    iVar2 = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),param_1);
+    local_10 = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),param_2);
     local_10 = (uint)*(ushort *)(snd_wave_sources + 0x80) * local_10;
     iVar2 = (uint)*(ushort *)(snd_wave_sources + 0x80) * iVar2;
     if (local_10 == 0) {
@@ -1121,15 +1121,15 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
       *(int *)(snd_wave_sources + 8) = local_10;
       *(int *)(snd_wave_sources + 0x90) = iVar2;
       *(int *)(snd_wave_sources + 0x94) = iVar2;
-      *(undefined4 *)(snd_wave_sources + 100) = 0;
-      *(undefined4 *)(snd_wave_sources + 0x68) = 0;
-      *(undefined4 *)(snd_wave_sources + 0x34) = *(undefined4 *)(snd_wave_sources + 0x3c);
+      *(i32 *)(snd_wave_sources + 100) = 0;
+      *(i32 *)(snd_wave_sources + 0x68) = 0;
+      *(i32 *)(snd_wave_sources + 0x34) = *(i32 *)(snd_wave_sources + 0x3c);
       snd_avi_stream_refill(snd_wave_sources);
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffd;
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffe;
       *(iptr *)(snd_wave_sources + 0x8c) = param_3;
       snd_avi_stream_started = 0;
-      local_8 = (undefined4 *)snd_wave_buffer_ring;
+      local_8 = (i32 *)snd_wave_buffer_ring;
       for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
         local_8[3] = local_8[3] & 0xffffffdf;
         local_8[3] = local_8[3] & 0xfffffffe;
@@ -1137,16 +1137,16 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
         local_8[3] = local_8[3] & 0xffffffef;
         local_8[3] = local_8[3] & 0xffffffdf;
         local_8[3] = local_8[3] & 0xffffffbf;
-        local_8[4] = *(undefined4 *)*local_8;
+        local_8[4] = *(i32 *)*local_8;
         iVar2 = snd_wave_mix_buffer(*local_8);
         if (iVar2 == 1) break;
-        local_8 = (undefined4 *)local_8[7];
+        local_8 = (i32 *)local_8[7];
       }
       snd_avi_stream_refill(snd_wave_sources);
-      local_8 = (undefined4 *)snd_wave_buffer_ring;
+      local_8 = (i32 *)snd_wave_buffer_ring;
       for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
         *(uint *)((int)local_8 + 0xc) = *(uint *)((int)local_8 + 0xc) | 8;
-        local_8 = *(undefined4 **)((int)local_8 + 0x1c);
+        local_8 = *(i32 **)((int)local_8 + 0x1c);
       }
       snd_wave_cur_buffer = snd_wave_buffer_ring;
       uVar1 = 0;
@@ -1163,8 +1163,8 @@ undefined4 __cdecl snd_avi_stream_prepare(undefined4 param_1,undefined4 param_2,
 #undef local_8
 
 /* 005d5f91 auto */
-#define snd_avi_stream_started (*(undefined4 *)((u8 *)&g.d_006385bc))
-undefined2 __cdecl snd_avi_stream_start(void)
+#define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
+i16 __cdecl snd_avi_stream_start(void)
 
 {
   iptr iVar1;
@@ -1185,18 +1185,18 @@ undefined2 __cdecl snd_avi_stream_start(void)
 
 /* 005d6038 auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define snd_wave_max_buffers (*(undefined4 *)((u8 *)&g.d_00638584))
-#define snd_wave_notify_hwnd (*(undefined4 *)((u8 *)&g.d_0063857c))
+#define snd_wave_max_buffers (*(i32 *)((u8 *)&g.d_00638584))
+#define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(ushort *)((u8 *)&g.d_0063858c))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
-short __cdecl snd_wave_play(iptr param_1,uint param_2,undefined4 param_3,undefined4 param_4)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
+short __cdecl snd_wave_play(iptr param_1,uint param_2,i32 param_3,i32 param_4)
 
 {
   short sVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_wave_out_handle == 0) {
     sVar1 = 3;
@@ -1215,9 +1215,9 @@ short __cdecl snd_wave_play(iptr param_1,uint param_2,undefined4 param_3,undefin
     if ((sVar1 == 0) &&
        (snd_wave_source_count = snd_wave_source_count + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
       local_10 = 0;
-      local_8 = (undefined4 *)snd_wave_cur_buffer;
+      local_8 = (i32 *)snd_wave_cur_buffer;
       while ((local_10 < snd_wave_buffer_count && (iVar2 = snd_wave_mix_buffer(*local_8), iVar2 != 1))) {
-        local_8 = (undefined4 *)local_8[7];
+        local_8 = (i32 *)local_8[7];
         local_10++;
       }
       snd_wave_write_pending(snd_wave_cur_buffer);
@@ -1239,10 +1239,10 @@ short __cdecl snd_wave_play(iptr param_1,uint param_2,undefined4 param_3,undefin
 /* 005d61ab auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl snd_wave_free_by_id(undefined4 param_1)
+void __cdecl snd_wave_free_by_id(i32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = snd_wave_sources;
@@ -1261,7 +1261,7 @@ void __cdecl snd_wave_free_by_id(undefined4 param_1)
 #undef local_8
 
 /* 005d6283 auto */
-#define local_5c (*(undefined4 (*)[5])(frame_ + FRAME_OFF(4)))
+#define local_5c (*(i32 (*)[5])(frame_ + FRAME_OFF(4)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_44 (*(HPSTR *)(frame_ + FRAME_OFF(28)))
 #define local_40 (*(HPSTR *)(frame_ + FRAME_OFF(32)))
@@ -1274,13 +1274,13 @@ void __cdecl snd_wave_stream_refill(iptr param_1)
 
 {
   int iVar1;
-  undefined4 *puVar2;
-  undefined4 *puVar3;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 *puVar2;
+  i32 *puVar3;
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0;
   local_14 = 0;
-  puVar2 = (undefined4 *)(param_1 + 0x18);
+  puVar2 = (i32 *)(param_1 + 0x18);
   puVar3 = local_5c;
   for (iVar1 = 0x12; iVar1 != 0; iVar1--) {
     *puVar3 = *puVar2;
@@ -1312,7 +1312,7 @@ void __cdecl snd_wave_stream_refill(iptr param_1)
     }
     else {
       mmioRead(*(HMMIO *)(param_1 + 0x60),local_40,local_10);
-      *(undefined4 *)(param_1 + 0x68) = 0;
+      *(i32 *)(param_1 + 0x68) = 0;
       local_40 += local_10;
       local_8 = local_38 - (int)local_40;
       mmioSeek(*(HMMIO *)(param_1 + 0x60),*(LONG *)(param_1 + 0x10),0);
@@ -1346,7 +1346,7 @@ LPVOID __cdecl snd_global_alloc_lock(SIZE_T param_1,iptr param_2)
     pvVar2 = GlobalLock(*(HGLOBAL *)param_2);
     if (pvVar2 == (LPVOID)0x0) {
       GlobalFree(*(HGLOBAL *)param_2);
-      *(undefined4 *)param_2 = 0;
+      *(i32 *)param_2 = 0;
     }
   }
   return pvVar2;
@@ -1365,7 +1365,7 @@ void __cdecl snd_global_free(HGLOBAL param_1)
 
 /* 005d645e auto */
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
-#define _DAT_006385b4 (*(undefined4 *)((u8 *)&g.d_006385b4))
+#define _DAT_006385b4 (*(i32 *)((u8 *)&g.d_006385b4))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int * *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(12)))
@@ -1379,7 +1379,7 @@ MMRESULT __cdecl snd_wave_alloc_buffers(uint param_1,HWAVEOUT param_2,uint param
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (int *)0x0;
   local_c = param_1 / param_3;
@@ -1455,7 +1455,7 @@ void __cdecl snd_wave_add_buffers(int param_1)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = snd_wave_spare_buffers;
   *(uint *)(snd_wave_spare_buffers + 0xc) = *(uint *)(snd_wave_spare_buffers + 0xc) & 0xfffffffe;
@@ -1487,7 +1487,7 @@ void __cdecl snd_wave_remove_buffers(int param_1)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = snd_wave_buffer_ring;
   if ((uint)(snd_wave_buffer_count - param_1) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
@@ -1556,21 +1556,21 @@ void __cdecl snd_wave_set_buffer_count(uint param_1)
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(byte * *)(frame_ + FRAME_OFF(12)))
-undefined4 __cdecl snd_wave_write_pending(iptr param_1)
+i32 __cdecl snd_wave_write_pending(iptr param_1)
 
 {
   MMRESULT MVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = local_10 & 0xffff0000;
   while ((*(uint *)(param_1 + 0xc) >> 6 & 1) != 0) {
-    local_c = (byte *)**(undefined4 **)param_1;
+    local_c = (byte *)**(i32 **)param_1;
     for (local_14 = 0; local_14 < *(uint *)(*(int *)param_1 + 4); local_14++) {
       *local_c = *local_c ^ 0x80;
       local_c++;
     }
     MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)param_1,0x20);
-    local_10 = CONCAT22((*(undefined2 *)((char *)&local_10 + 2)),(short)MVar1);
+    local_10 = CONCAT22((*(i16 *)((char *)&local_10 + 2)),(short)MVar1);
     if ((short)MVar1 == 0) {
       *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 0x20;
       *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) & 0xffffffbf;
@@ -1594,8 +1594,8 @@ undefined4 __cdecl snd_wave_write_pending(iptr param_1)
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_notify_hwnd (*(HWND *)((u8 *)&g.d_0063857c))
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
-#define _DAT_006385b8 (*(undefined2 *)((u8 *)&g.d_006385b8))
-#define _DAT_006385d4 (*(undefined4 *)((u8 *)&g.d_006385d4))
+#define _DAT_006385b8 (*(i16 *)((u8 *)&g.d_006385b8))
+#define _DAT_006385d4 (*(i32 *)((u8 *)&g.d_006385d4))
 #define local_30 (*(tagMSG *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(28)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
@@ -1607,7 +1607,7 @@ void __cdecl snd_wave_stop_all(void)
 
 {
   BOOL BVar1;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   _DAT_006385b8 = 0;
@@ -1653,10 +1653,10 @@ void __cdecl snd_wave_stop_all(void)
 void __cdecl snd_fill_silence_u8(iptr param_1,uint param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < param_2; local_8++) {
-    *(undefined1 *)(local_8 + param_1) = 0x80;
+    *(i8 *)(local_8 + param_1) = 0x80;
   }
   return;
 }
@@ -1665,18 +1665,18 @@ void __cdecl snd_fill_silence_u8(iptr param_1,uint param_2)
 /* 005d6b89 auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
-#define _DAT_006385b8 (*(undefined2 *)((u8 *)&g.d_006385b8))
+#define _DAT_006385b8 (*(i16 *)((u8 *)&g.d_006385b8))
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int * *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
+i32 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
 
 {
   int *piVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = snd_wave_buffer_ring;
   local_8 = (int *)snd_wave_buffer_ring;
@@ -1713,28 +1713,28 @@ undefined4 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
 #undef local_8
 
 /* 005d6c99 auto */
-#define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
+#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
-#define _DAT_00638594 (*(undefined4 *)((u8 *)&g.d_00638594))
-#define local_30 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
+#define _DAT_00638594 (*(i32 *)((u8 *)&g.d_00638594))
+#define local_30 (*(i32 * *)(frame_ + FRAME_OFF(0)))
 #define local_2c (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_28 (*(byte * *)(frame_ + FRAME_OFF(8)))
 #define local_20 (*(int * *)(frame_ + FRAME_OFF(16)))
-#define local_18 (*(undefined4 * *)(frame_ + FRAME_OFF(24)))
+#define local_18 (*(i32 * *)(frame_ + FRAME_OFF(24)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define local_8 (*(code * *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
+i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
 
 {
-  undefined2 uVar1;
-  undefined4 *puVar2;
+  i16 uVar1;
+  i32 *puVar2;
   int src;
   MMRESULT MVar5;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar3 = snd_wave_sources;
   local_10 = local_10 & 0xffff0000;
@@ -1749,21 +1749,21 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
       local_2c++;
     }
     if ((*(byte *)(local_20 + 3) & 1) == 0) {
-      local_30 = (undefined4 *)snd_wave_sources;
+      local_30 = (i32 *)snd_wave_sources;
       if ((((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) &&
           (((uint)local_20[3] >> 1 & 1) != 0)) && (((uint)local_20[3] >> 4 & 1) != 0)) {
         **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) & 0xfffb;
         *(uint *)(iVar3 + 0x70) = *(uint *)(iVar3 + 0x70) | 2;
       }
       do {
-        puVar2 = (undefined4 *)*local_20;
+        puVar2 = (i32 *)*local_20;
         local_28 = *(byte **)*local_20;
-        while ((local_30 != (undefined4 *)0x0 && ((*(uint *)((int)local_30 + 0x70) >> 1 & 1) != 0)))
+        while ((local_30 != (i32 *)0x0 && ((*(uint *)((int)local_30 + 0x70) >> 1 & 1) != 0)))
         {
-          local_30 = *(undefined4 **)((int)local_30 + 0xb8);
+          local_30 = *(i32 **)((int)local_30 + 0xb8);
         }
-        if (local_30 == (undefined4 *)0x0) {
-          snd_fill_silence_u8(*(iptr *)*local_20,*(undefined4 *)(*local_20 + 4));
+        if (local_30 == (i32 *)0x0) {
+          snd_fill_silence_u8(*(iptr *)*local_20,*(i32 *)(*local_20 + 4));
           local_20[3] = local_20[3] & 0xffffffdf;
         }
         else {
@@ -1777,7 +1777,7 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
                       *(int *)((int)local_30 + 0x30);
               snd_resample_8bit(local_20[4],src,local_20[6] / (int)(uint)(ushort)snd_wave_block_align,
                            CONCAT22((short)((uint)local_30 >> 0x10),
-                                    *(undefined2 *)((int)local_30 + 0x80)),
+                                    *(i16 *)((int)local_30 + 0x80)),
                            CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
               if (((uint)local_20[3] >> 1 & 1) != 0) {
                 local_20[3] = local_20[3] | 0x10;
@@ -1786,8 +1786,8 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
             else {
               snd_wave_copy_source((iptr)local_30,*puVar2,puVar2[1]);
             }
-            for (local_30 = *(undefined4 **)((int)local_30 + 0xb8); local_30 != (undefined4 *)0x0;
-                local_30 = *(undefined4 **)((int)local_30 + 0xb8)) {
+            for (local_30 = *(i32 **)((int)local_30 + 0xb8); local_30 != (i32 *)0x0;
+                local_30 = *(i32 **)((int)local_30 + 0xb8)) {
               if ((*(uint *)((int)local_30 + 0x70) >> 1 & 1) == 0) {
                 snd_wave_mix_source((uptr)local_30,*puVar2,puVar2[1]);
               }
@@ -1800,7 +1800,7 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
             local_28++;
           }
           MVar5 = waveOutWrite(param_1,(LPWAVEHDR)*local_20,0x20);
-          local_10 = CONCAT22((*(undefined2 *)((char *)&local_10 + 2)),(short)MVar5);
+          local_10 = CONCAT22((*(i16 *)((char *)&local_10 + 2)),(short)MVar5);
           if ((short)MVar5 == 0) {
             local_20[3] = local_20[3] & 0xffffffbf;
             local_20[3] = local_20[3] | 0x20;
@@ -1811,10 +1811,10 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
             local_20[3] = local_20[3] & 0xffffffdf;
           }
         }
-        local_30 = (undefined4 *)snd_wave_sources;
-        local_18 = (undefined4 *)0x0;
+        local_30 = (i32 *)snd_wave_sources;
+        local_18 = (i32 *)0x0;
         local_14 = 0;
-        while (local_30 != (undefined4 *)0x0) {
+        while (local_30 != (i32 *)0x0) {
           if ((*(byte *)(local_30 + 0x1c) & 1) == 0) {
             if (((((uint)local_30[0x1c] >> 1 & 1) == 0) &&
                 (local_14 = local_14 + 1, ((uint)local_30[0x1c] >> 3 & 1) != 0)) &&
@@ -1827,22 +1827,22 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
               }
             }
             local_18 = local_30;
-            local_30 = (undefined4 *)local_30[0x2e];
+            local_30 = (i32 *)local_30[0x2e];
           }
           else if (*(short *)(local_30 + 0x22) == 4) {
             local_18 = local_30;
-            local_30 = (undefined4 *)local_30[0x2e];
+            local_30 = (i32 *)local_30[0x2e];
           }
           else {
             if (local_30[0x2d] != 0) {
               local_8 = (code *)local_30[0x2d];
               local_30[0x2d] = 0;
-              uVar1 = *(undefined2 *)((int)local_30 + 0x8a);
+              uVar1 = *(i16 *)((int)local_30 + 0x8a);
             }
-            local_30 = (undefined4 *)snd_wave_free((iptr)local_18,(iptr)local_30);
+            local_30 = (i32 *)snd_wave_free((iptr)local_18,(iptr)local_30);
           }
         }
-        local_30 = (undefined4 *)snd_wave_sources;
+        local_30 = (i32 *)snd_wave_sources;
         local_20 = (int *)local_20[7];
       } while ((local_14 != 0) && (((uint)local_20[3] >> 5 & 1) == 0));
       if (local_8 != (code *)0x0) {
@@ -1865,17 +1865,17 @@ undefined4 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
 #undef local_8
 
 /* 005d717f auto */
-#define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
-#define local_20 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(20)))
-undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
+#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
+#define local_20 (*(i32 * *)(frame_ + FRAME_OFF(0)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(20)))
+i32 __cdecl snd_wave_mix_buffer(i32 *param_1)
 
 {
   bool bVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int src;
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar1 = false;
   if (snd_wave_device_open == 0) {
@@ -1884,11 +1884,11 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
   else {
     iVar1 = param_1[3];
     *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) & 0xfffffffd;
-    local_20 = (undefined4 *)snd_wave_sources;
-    while ((local_20 != (undefined4 *)0x0 && ((*(uint *)((int)local_20 + 0x70) >> 1 & 1) != 0))) {
-      local_20 = *(undefined4 **)((int)local_20 + 0xb8);
+    local_20 = (i32 *)snd_wave_sources;
+    while ((local_20 != (i32 *)0x0 && ((*(uint *)((int)local_20 + 0x70) >> 1 & 1) != 0))) {
+      local_20 = *(i32 **)((int)local_20 + 0xb8);
     }
-    if (local_20 == (undefined4 *)0x0) {
+    if (local_20 == (i32 *)0x0) {
       *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) & 0xffffffdf;
     }
     else {
@@ -1896,10 +1896,10 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
         if (*(short *)((int)local_20 + 0x88) == 4) {
           src = (*(uint *)(iVar1 + 0xc) >> 7 & 0xff) * *(int *)((int)local_20 + 0x9c) +
                   *(int *)((int)local_20 + 0x30);
-          snd_resample_8bit(*(undefined4 *)(iVar1 + 0x10),src,
+          snd_resample_8bit(*(i32 *)(iVar1 + 0x10),src,
                        *(int *)(iVar1 + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
                        CONCAT22((short)((uint)local_20 >> 0x10),
-                                *(undefined2 *)((int)local_20 + 0x80)),
+                                *(i16 *)((int)local_20 + 0x80)),
                        CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
         }
         else {
@@ -1909,9 +1909,9 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
           }
         }
         *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) | 0x40;
-        local_20 = *(undefined4 **)((int)local_20 + 0xb8);
+        local_20 = *(i32 **)((int)local_20 + 0xb8);
       }
-      for (; local_20 != (undefined4 *)0x0; local_20 = *(undefined4 **)((int)local_20 + 0xb8)) {
+      for (; local_20 != (i32 *)0x0; local_20 = *(i32 **)((int)local_20 + 0xb8)) {
         if (((*(uint *)((int)local_20 + 0x70) >> 1 & 1) == 0) &&
            (src = snd_wave_mix_source((uptr)local_20,*param_1,param_1[1]), src == 0)) {
           bVar1 = false;
@@ -1919,9 +1919,9 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
       }
       param_1[4] = param_1[4] & 0xfffffffe;
     }
-    local_20 = (undefined4 *)snd_wave_sources;
-    local_c = (undefined4 *)0x0;
-    while (local_20 != (undefined4 *)0x0) {
+    local_20 = (i32 *)snd_wave_sources;
+    local_c = (i32 *)0x0;
+    while (local_20 != (i32 *)0x0) {
       if ((*(byte *)(local_20 + 0x1c) & 1) == 0) {
         if ((((uint)local_20[0x1c] >> 1 & 1) == 0) && (((uint)local_20[0x1c] >> 3 & 1) != 0)) {
           if (*(short *)(local_20 + 0x22) == 4) {
@@ -1937,16 +1937,16 @@ undefined4 __cdecl snd_wave_mix_buffer(undefined4 *param_1)
           }
         }
         local_c = local_20;
-        local_20 = (undefined4 *)local_20[0x2e];
+        local_20 = (i32 *)local_20[0x2e];
       }
       else if (*(short *)(local_20 + 0x22) == 4) {
         *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) | 2;
         local_20[0x1c] = local_20[0x1c] | 2;
         local_c = local_20;
-        local_20 = (undefined4 *)local_20[0x2e];
+        local_20 = (i32 *)local_20[0x2e];
       }
       else {
-        local_20 = (undefined4 *)snd_wave_free((iptr)local_c,(iptr)local_20);
+        local_20 = (i32 *)snd_wave_free((iptr)local_c,(iptr)local_20);
       }
     }
     if ((snd_wave_sources == 0) || (bVar1)) {
@@ -1994,19 +1994,19 @@ iptr __cdecl snd_wave_free(iptr param_1,iptr param_2)
 #undef snd_wave_source_count
 
 /* 005d753e auto */
-#define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
+#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 #define count (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-undefined4 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
+i32 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
 
 {
   ushort uVar1;
   uint uVar2;
   uint uVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar2 = param_3 / (ushort)snd_wave_block_align;
   if ((param_1 == 0) || ((*(byte *)(param_1 + 0x70) & 1) != 0)) {
@@ -2035,13 +2035,13 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
     uVar2 -= count;
   }
   if (count != 0) {
-    uVar1 = snd_resample_8bit(dst,*(undefined4 *)(param_1 + 0x34),count,
-                         CONCAT22((short)((uint)param_1 >> 0x10),*(undefined2 *)(param_1 + 0x80)),
+    uVar1 = snd_resample_8bit(dst,*(i32 *)(param_1 + 0x34),count,
+                         CONCAT22((short)((uint)param_1 >> 0x10),*(i16 *)(param_1 + 0x80)),
                          CONCAT22((short)(uVar2 >> 0x10),(ushort)snd_wave_block_align));
     *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + (uint)uVar1;
     if ((*(short *)(param_1 + 0x88) == 4) && (*(int *)(param_1 + 0x3c) == *(int *)(param_1 + 0x34)))
     {
-      *(undefined4 *)(param_1 + 0x34) = *(undefined4 *)(param_1 + 0x30);
+      *(i32 *)(param_1 + 0x34) = *(i32 *)(param_1 + 0x30);
     }
     *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xffffffef;
   }
@@ -2050,7 +2050,7 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
       *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
     }
     else {
-      *(undefined4 *)(param_1 + 100) = 0;
+      *(i32 *)(param_1 + 100) = 0;
     }
     uVar4 = 0;
   }
@@ -2068,19 +2068,19 @@ undefined4 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
 #undef local_c
 
 /* 005d778c auto */
-#define snd_wave_block_align (*(undefined *)((u8 *)&g.d_006385ac))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define count (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define count (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
-undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 dst,uint param_3)
+i32 __cdecl snd_wave_mix_source(uptr param_1,i32 dst,uint param_3)
 
 {
   ushort uVar1;
   uint uVar2;
   uint uVar3;
   uptr uVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
     local_c = *(int *)(param_1 + 8) - *(int *)(param_1 + 100);
@@ -2105,8 +2105,8 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 dst,uint param_3)
     uVar4 = param_1;
   }
   if (count != 0) {
-    uVar1 = snd_mix_8bit_resample(dst,*(undefined4 *)(param_1 + 0x34),count,
-                         CONCAT22((short)(param_1 >> 0x10),*(undefined2 *)(param_1 + 0x80)),
+    uVar1 = snd_mix_8bit_resample(dst,*(i32 *)(param_1 + 0x34),count,
+                         CONCAT22((short)(param_1 >> 0x10),*(i16 *)(param_1 + 0x80)),
                          CONCAT22((short)(uVar4 >> 0x10),(ushort)snd_wave_block_align));
     local_14 = (uint)uVar1;
     *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + local_14;
@@ -2115,7 +2115,7 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 dst,uint param_3)
     *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
   }
   else {
-    *(undefined4 *)(param_1 + 100) = 0;
+    *(i32 *)(param_1 + 100) = 0;
   }
   if (((*(byte *)(param_1 + 0x70) & 1) == 0) || ((*(uint *)(param_1 + 0x70) >> 2 & 1) != 0)) {
     uVar5 = 0;
@@ -2134,13 +2134,13 @@ undefined4 __cdecl snd_wave_mix_source(uptr param_1,undefined4 dst,uint param_3)
 #define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
+i32 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   uint uVar2;
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = snd_wave_sources;
   if (*(int *)(param_2 + 0x98) == param_1) {
@@ -2151,39 +2151,39 @@ undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
     if (uVar2 < local_14) {
       local_14 = uVar2;
     }
-    AVIStreamRead(*(undefined4 *)(snd_wave_sources + 0x84),
+    AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                   *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                  local_14 / *(ushort *)(snd_wave_sources + 0x80),*(undefined4 *)(snd_wave_sources + 0x34)
+                  local_14 / *(ushort *)(snd_wave_sources + 0x80),*(i32 *)(snd_wave_sources + 0x34)
                   ,local_14,&local_8,0);
     *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + local_8;
     *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + local_8;
     *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + local_8;
     if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-      *(undefined4 *)(iVar1 + 0x34) = *(undefined4 *)(iVar1 + 0x30);
+      *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
     }
     if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
       *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 8;
-      *(undefined4 *)(snd_wave_sources + 0x98) = *(undefined4 *)(param_1 + 0x1c);
+      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(param_1 + 0x1c);
       param_1 = *(iptr *)(snd_wave_sources + 0x98);
-      *(undefined4 *)(snd_wave_sources + 0x68) = 0;
+      *(i32 *)(snd_wave_sources + 0x68) = 0;
     }
     if (*(uint *)(snd_wave_sources + 8) <=
         (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
       local_10 = 0;
       while ((local_10 < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) &&
              (*(uint *)(iVar1 + 0x34) < *(uint *)(iVar1 + 0x3c)))) {
-        **(undefined1 **)(iVar1 + 0x34) = 0x80;
+        **(i8 **)(iVar1 + 0x34) = 0x80;
         *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + 1;
         local_10++;
       }
       if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-        *(undefined4 *)(iVar1 + 0x34) = *(undefined4 *)(iVar1 + 0x30);
+        *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
       }
       *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) & 0xfffffff7;
       *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 2;
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
-      *(undefined4 *)(snd_wave_sources + 0x98) = *(undefined4 *)(param_1 + 0x1c);
-      *(undefined4 *)(snd_wave_sources + 0x68) = 0;
+      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(param_1 + 0x1c);
+      *(i32 *)(snd_wave_sources + 0x68) = 0;
     }
     uVar1 = 0;
   }
@@ -2197,24 +2197,24 @@ undefined4 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
 #undef local_8
 
 /* 005dd010 auto */
-#define _DAT_006389d0 (*(undefined4 *)((u8 *)&g.d_006389d0))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define _DAT_006389d0 (*(i32 *)((u8 *)&g.d_006389d0))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 C_004083b0_a28 * __thiscall mmwnd_ctor(C_004083b0_a28 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   avi_audio_ctor((AviAudio *)&this->border_width);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   palette_init((GamePalette *)&this->client_x);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),2);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
   surface_ctor((DibSurface *)(this->pad_4a4 + 0xb4));
   this->vtable = (u32)&PTR_FUN_0061d718;
   this->style_flags = 0;
@@ -2240,28 +2240,28 @@ C_004083b0_a28 * __thiscall mmwnd_ctor(C_004083b0_a28 *this)
 #undef local_8
 
 /* 005dd1a0 auto */
-#define _DAT_006389d0 (*(undefined4 *)((u8 *)&g.d_006389d0))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define _DAT_006389d0 (*(i32 *)((u8 *)&g.d_006389d0))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __thiscall avi_player_dtor(AviPlayer *this)
+i32 __thiscall avi_player_dtor(AviPlayer *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  *(undefined ***)this->pad_0 = &PTR_FUN_0061d718;
-  (*(undefined3 *)((char *)&local_8 + 1)) = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  *(i8 ***)this->pad_0 = &PTR_FUN_0061d718;
+  (*(i32 *)((char *)&local_8 + 1)) = 0;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   avi_play_pause((iptr)this);
   avi_close((iptr)this);
   _DAT_006389d0 = 0;
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_005dd230 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x558)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_005dd23f */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x124)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)((iptr)&this) + 0x11c)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
@@ -2275,7 +2275,7 @@ undefined4 __thiscall avi_player_dtor(AviPlayer *this)
 /* 005dd27e auto */
 void __thiscall
 avi_player_create
-          (C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4)
+          (C_004083b0_61c *this,iptr param_1,i32 param_2,u32 param_3,u32 param_4)
 
 {
   surface_wnd_create
@@ -2291,11 +2291,11 @@ avi_player_create
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 avi_player_create_child
-          (C_004083b0_61c *this,iptr param_1,undefined4 param_2,u32 param_3,u32 param_4,iptr param_5
+          (C_004083b0_61c *this,iptr param_1,i32 param_2,u32 param_3,u32 param_4,iptr param_5
           )
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_5 == 0) {
     local_8 = 0;
@@ -2355,7 +2355,7 @@ void __thiscall avi_player_play_range(AviPlayerRangeView *this,u32 param_1,u32 p
 }
 
 /* 005dd45d auto */
-void __thiscall avi_player_show_frame(void *this,undefined4 param_1)
+void __thiscall avi_player_show_frame(void *this,i32 param_1)
 
 {
   avi_seek_frame((iptr)this,param_1,1);
@@ -2401,7 +2401,7 @@ avi_player_draw_to(DibSurface *this,iptr param_1,int param_2,int param_3)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((-1 < param_2) && (-1 < param_3)) {
     iVar1 = surface_width((DibSurface *)param_1);
@@ -2426,7 +2426,7 @@ avi_player_draw_to(DibSurface *this,iptr param_1,int param_2,int param_3)
 #undef local_14
 
 /* 005dd71e auto */
-void __thiscall avi_player_set_double_size(C_004083b0_61c *this,undefined4 param_1)
+void __thiscall avi_player_set_double_size(C_004083b0_61c *this,i32 param_1)
 
 {
   int iVar1;
@@ -2464,7 +2464,7 @@ void __thiscall avi_player_set_transparent(C_005dd761 *this,int param_1)
 void __cdecl snd_system_init(void)
 
 {
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_2c.style = 0;
   local_2c.lpfnWndProc = snd_mci_notify_wndproc;
@@ -2525,20 +2525,20 @@ void __cdecl snd_stop_sndplaysound(void)
 /* 005ddbc7 auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(uint *)((u8 *)&g.d_006389e0))
-#define snd_mci_notify_hwnd (*(undefined4 *)((u8 *)&g.d_006e4ff8))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define snd_mci_notify_hwnd (*(i32 *)((u8 *)&g.d_006e4ff8))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(DWORD_PTR *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
-undefined4 __cdecl snd_cd_play_track(uint param_1)
+i32 __cdecl snd_cd_play_track(uint param_1)
 
 {
   MCIERROR MVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
     snd_cd_open();
@@ -2607,21 +2607,21 @@ void __cdecl snd_midi_close(void)
 
 /* 005ddd4e auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(undefined4 *)((u8 *)&g.d_006389e0))
-#define local_34 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
+#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
+#define local_34 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
 #define local_30 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(24)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
+#define local_20 (*(i8 (*)[4])(frame_ + FRAME_OFF(24)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __cdecl snd_cd_open(void)
 
 {
   MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
     local_2c = s_cdaudio_00638acc;
@@ -2664,7 +2664,7 @@ void __cdecl snd_cd_open(void)
 
 /* 005dde57 auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(undefined4 *)((u8 *)&g.d_006389e0))
+#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
 void __cdecl snd_cd_close(void)
 
 {
@@ -2706,21 +2706,21 @@ void __cdecl snd_system_shutdown(void)
 
 /* 005ddeff auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
-#define snd_cd_track_count (*(undefined4 *)((u8 *)&g.d_006389e0))
-#define local_3c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
+#define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
+#define local_3c (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
 #define local_38 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
 #define local_34 (*(char * *)(frame_ + FRAME_OFF(12)))
 #define local_24 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(32)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_14 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(52)))
-undefined4 __cdecl snd_cd_get_track_count(void)
+#define local_20 (*(i8 (*)[4])(frame_ + FRAME_OFF(32)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(44)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(52)))
+i32 __cdecl snd_cd_get_track_count(void)
 
 {
   MCIERROR MVar1;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
     local_34 = s_cdaudio_00638b18;
@@ -2810,57 +2810,57 @@ void __cdecl avi_update_current_frame(void)
 
 /* 005e1c8e auto */
 #define avi_active_window (*(iptr *)((u8 *)&g.d_00638dd4))
-#define avi_audio_stream (*(undefined4 *)((u8 *)&g.d_00638dc8))
+#define avi_audio_stream (*(i32 *)((u8 *)&g.d_00638dc8))
 #define avi_decompressor (*(int *)((u8 *)&g.d_00638db0))
-#define avi_file (*(undefined4 *)((u8 *)&g.d_00638dc0))
-#define avi_file_loaded (*(undefined4 *)((u8 *)&g.d_00638dcc))
+#define avi_file (*(i32 *)((u8 *)&g.d_00638dc0))
+#define avi_file_loaded (*(i32 *)((u8 *)&g.d_00638dcc))
 #define avi_frame_buffer (*(LPVOID *)((u8 *)&g.d_00638da8))
 #define avi_frame_buffer_size (*(int *)((u8 *)&g.d_00638dac))
 #define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
-#define avi_playing (*(undefined4 *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(undefined4 *)((u8 *)&g.d_00638dc4))
-#define avi_view_rect_x (*(undefined4 *)((u8 *)&g.d_006e50c8))
-#define avi_view_rect_y (*(undefined4 *)((u8 *)&g.d_006e50cc))
-#define _DAT_00638dec (*(undefined4 *)((u8 *)&g.d_00638dec))
-#define _DAT_006e5028 (*(undefined4 *)((u8 *)&g.d_006e5028))
-#define _DAT_006e502c (*(undefined4 *)((u8 *)&g.d_006e502c))
-#define _DAT_006e5030 (*(undefined4 *)((u8 *)&g.d_006e5030))
-#define _DAT_006e5034 (*(undefined4 *)((u8 *)&g.d_006e5034))
-#define _DAT_006e5038 (*(undefined4 *)((u8 *)&g.d_006e5038))
-#define _DAT_006e503c (*(undefined4 *)((u8 *)&g.d_006e503c))
-#define _DAT_006e5064 (*(undefined4 *)((u8 *)&g.d_006e5064))
-#define _DAT_006e5098 (*(undefined4 *)((u8 *)&g.d_006e5098))
-#define _DAT_006e509c (*(undefined4 *)((u8 *)&g.d_006e509c))
-#define _DAT_006e50a0 (*(undefined4 *)((u8 *)&g.d_006e50a0))
-#define _DAT_006e50a4 (*(undefined4 *)((u8 *)&g.d_006e50a4))
-#define _DAT_006e50a8 (*(undefined4 *)((u8 *)&g.d_006e50a8))
-#define _DAT_006e50ac (*(undefined4 *)((u8 *)&g.d_006e50ac))
-#define _DAT_006e50bc (*(undefined4 *)((u8 *)&g.d_006e50bc))
-#define _DAT_006e50d0 (*(undefined4 *)((u8 *)&g.d_006e50d0))
-#define _DAT_006e50d4 (*(undefined4 *)((u8 *)&g.d_006e50d4))
-#define _DAT_006e50d8 (*(undefined4 *)((u8 *)&g.d_006e50d8))
-#define _DAT_006e50dc (*(undefined4 *)((u8 *)&g.d_006e50dc))
-#define local_360 (*(undefined1 (*)[708])(frame_ + FRAME_OFF(0)))
-#define local_9c (*(undefined1 (*)[4])(frame_ + FRAME_OFF(708)))
-#define local_98 (*(undefined4 *)(frame_ + FRAME_OFF(712)))
+#define avi_playing (*(i32 *)((u8 *)&g.d_00638dd0))
+#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
+#define avi_view_rect_x (*(i32 *)((u8 *)&g.d_006e50c8))
+#define avi_view_rect_y (*(i32 *)((u8 *)&g.d_006e50cc))
+#define _DAT_00638dec (*(i32 *)((u8 *)&g.d_00638dec))
+#define _DAT_006e5028 (*(i32 *)((u8 *)&g.d_006e5028))
+#define _DAT_006e502c (*(i32 *)((u8 *)&g.d_006e502c))
+#define _DAT_006e5030 (*(i32 *)((u8 *)&g.d_006e5030))
+#define _DAT_006e5034 (*(i32 *)((u8 *)&g.d_006e5034))
+#define _DAT_006e5038 (*(i32 *)((u8 *)&g.d_006e5038))
+#define _DAT_006e503c (*(i32 *)((u8 *)&g.d_006e503c))
+#define _DAT_006e5064 (*(i32 *)((u8 *)&g.d_006e5064))
+#define _DAT_006e5098 (*(i32 *)((u8 *)&g.d_006e5098))
+#define _DAT_006e509c (*(i32 *)((u8 *)&g.d_006e509c))
+#define _DAT_006e50a0 (*(i32 *)((u8 *)&g.d_006e50a0))
+#define _DAT_006e50a4 (*(i32 *)((u8 *)&g.d_006e50a4))
+#define _DAT_006e50a8 (*(i32 *)((u8 *)&g.d_006e50a8))
+#define _DAT_006e50ac (*(i32 *)((u8 *)&g.d_006e50ac))
+#define _DAT_006e50bc (*(i32 *)((u8 *)&g.d_006e50bc))
+#define _DAT_006e50d0 (*(i32 *)((u8 *)&g.d_006e50d0))
+#define _DAT_006e50d4 (*(i32 *)((u8 *)&g.d_006e50d4))
+#define _DAT_006e50d8 (*(i32 *)((u8 *)&g.d_006e50d8))
+#define _DAT_006e50dc (*(i32 *)((u8 *)&g.d_006e50dc))
+#define local_360 (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
+#define local_9c (*(i8 (*)[4])(frame_ + FRAME_OFF(708)))
+#define local_98 (*(i32 *)(frame_ + FRAME_OFF(712)))
 #define local_88 (*(uint *)(frame_ + FRAME_OFF(728)))
 #define local_84 (*(uint *)(frame_ + FRAME_OFF(732)))
 #define local_74 (*(SIZE_T *)(frame_ + FRAME_OFF(748)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(848)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(852)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(852)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(856)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-int __cdecl avi_open_file(iptr param_1,undefined4 param_2)
+int __cdecl avi_open_file(iptr param_1,i32 param_2)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   iptr iVar4;
   HGLOBAL pvVar5;
-  undefined1 frame_[FRAME_OFF(864)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(864)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (avi_vfw_initialized == 0) {
     AVIFileInit();
@@ -2893,18 +2893,18 @@ int __cdecl avi_open_file(iptr param_1,undefined4 param_2)
       if (*(int *)(param_1 + 0x5a8) != 0) {
         local_8 = AVIFileGetStream(avi_file,&avi_audio_stream,0x73647561,0);
         if (local_8 == 0) {
-          *(undefined4 *)(param_1 + 0x5b0) = 0;
+          *(i32 *)(param_1 + 0x5b0) = 0;
           iVar1 = avi_audio_attach_stream((AviAudioAttachView *)(param_1 + 0x11c),avi_audio_stream);
           iVar3 = local_8;
           if (iVar1 == 0) {
-            *(undefined4 *)(param_1 + 0x5a8) = 1;
+            *(i32 *)(param_1 + 0x5a8) = 1;
           }
           else {
-            *(undefined4 *)(param_1 + 0x5a8) = 0;
+            *(i32 *)(param_1 + 0x5a8) = 0;
           }
         }
         else {
-          *(undefined4 *)(param_1 + 0x5a8) = 0;
+          *(i32 *)(param_1 + 0x5a8) = 0;
           iVar3 = local_8;
         }
       }
@@ -2921,15 +2921,15 @@ int __cdecl avi_open_file(iptr param_1,undefined4 param_2)
       }
       else {
         uVar2 = AVIStreamStart(avi_video_stream);
-        *(undefined4 *)(param_1 + 0xa10) = uVar2;
+        *(i32 *)(param_1 + 0xa10) = uVar2;
         iVar3 = AVIStreamLength(avi_video_stream);
         *(int *)(param_1 + 0xa14) = *(int *)(param_1 + 0xa10) + iVar3 - 1;
-        *(undefined4 *)(param_1 + 0xa18) = *(undefined4 *)(param_1 + 0xa10);
+        *(i32 *)(param_1 + 0xa18) = *(i32 *)(param_1 + 0xa10);
         FUN_005f2110(param_1 + 0x5e8,param_1 + 0x5c0,0x28);
-        *(undefined4 *)(param_1 + 0x5f8) = 0;
-        *(undefined2 *)(param_1 + 0x5f6) = 8;
-        *(undefined4 *)(param_1 + 0x5fc) = 0;
-        *(undefined4 *)(param_1 + 0x608) = 0x100;
+        *(i32 *)(param_1 + 0x5f8) = 0;
+        *(i16 *)(param_1 + 0x5f6) = 8;
+        *(i32 *)(param_1 + 0x5fc) = 0;
+        *(i32 *)(param_1 + 0x608) = 0x100;
         avi_frame_width = *(int *)(param_1 + 0x5c4);
         avi_frame_height = *(int *)(param_1 + 0x5c8);
         iVar4 = surface_get_dib((DibSurface *)param_1);
@@ -2959,23 +2959,23 @@ int __cdecl avi_open_file(iptr param_1,undefined4 param_2)
         }
         else {
           local_8 = avi_ic_decompress_ex_query(avi_decompressor,0,param_1 + 0x5c0,0,0,0,
-                                 *(undefined4 *)(param_1 + 0x5c4),*(undefined4 *)(param_1 + 0x5c8),
-                                 param_1 + 0x5e8,0,0,0,*(undefined4 *)(param_1 + 0x5c4),
-                                 *(undefined4 *)(param_1 + 0x5c8));
+                                 *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8),
+                                 param_1 + 0x5e8,0,0,0,*(i32 *)(param_1 + 0x5c4),
+                                 *(i32 *)(param_1 + 0x5c8));
           if (local_8 == 0) {
             ICSendMessage(avi_decompressor,0x401e,param_1 + 0x5c0,param_1 + 0x5e8);
             for (local_10 = 0; local_10 < 0xec; local_10++) {
-              local_360[local_10 * 3] = *(undefined1 *)(param_1 + 0x63a + local_10 * 4);
-              local_360[local_10 * 3 + 1] = *(undefined1 *)(param_1 + 0x639 + local_10 * 4);
-              local_360[local_10 * 3 + 2] = *(undefined1 *)(param_1 + 0x638 + local_10 * 4);
+              local_360[local_10 * 3] = *(i8 *)(param_1 + 0x63a + local_10 * 4);
+              local_360[local_10 * 3 + 1] = *(i8 *)(param_1 + 0x639 + local_10 * 4);
+              local_360[local_10 * 3 + 2] = *(i8 *)(param_1 + 0x638 + local_10 * 4);
             }
             palette_set_rgb
                       ((GamePalette *)(param_1 + 0x124),10,0xec,(iptr)local_360);
             ICSendMessage(avi_decompressor,0x401d,param_1 + 0x5e8,0);
             local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,
-                                   *(undefined4 *)(param_1 + 0x5c4),*(undefined4 *)(param_1 + 0x5c8)
-                                   ,param_1 + 0x5e8,0,0,0,*(undefined4 *)(param_1 + 0x5c4),
-                                   *(undefined4 *)(param_1 + 0x5c8));
+                                   *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8)
+                                   ,param_1 + 0x5e8,0,0,0,*(i32 *)(param_1 + 0x5c4),
+                                   *(i32 *)(param_1 + 0x5c8));
             if (local_8 == 0) {
               avi_file_loaded = 1;
               avi_playing = 0;
@@ -3056,28 +3056,28 @@ int __cdecl avi_open_file(iptr param_1,undefined4 param_2)
 /* 005e22ed: written by hand in src/game/fixups.c */
 
 /* 005e250c auto */
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-undefined4
-__stdcall avi_ic_decompress_ex_begin(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14)
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+i32
+__stdcall avi_ic_decompress_ex_begin(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
+            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
+            i32 param_14)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_38 = param_2;
   local_34 = param_3;
@@ -3110,28 +3110,28 @@ __stdcall avi_ic_decompress_ex_begin(undefined4 param_1,undefined4 param_2,iptr 
 #undef local_8
 
 /* 005e2583 auto */
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-undefined4
-__stdcall avi_ic_decompress_ex_query(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14)
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+i32
+__stdcall avi_ic_decompress_ex_query(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
+            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
+            i32 param_14)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_38 = param_2;
   local_34 = param_3;
@@ -3165,17 +3165,17 @@ __stdcall avi_ic_decompress_ex_query(undefined4 param_1,undefined4 param_2,iptr 
 
 /* 005e2675 auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_needs_blit (*(undefined4 *)((u8 *)&g.d_00638de8))
-#define avi_idle_update_enabled (*(undefined4 *)((u8 *)&g.d_00637efc))
+#define avi_frame_needs_blit (*(i32 *)((u8 *)&g.d_00638de8))
+#define avi_idle_update_enabled (*(i32 *)((u8 *)&g.d_00637efc))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 void __cdecl avi_play_pause(iptr param_1)
 
 {
   if ((param_1 != 0) && (avi_file_loaded != 0)) {
     if (*(int *)(param_1 + 0x5a8) != 0) {
-      *(undefined4 *)(param_1 + 0x5b0) = 0;
+      *(i32 *)(param_1 + 0x5b0) = 0;
     }
-    *(undefined4 *)(param_1 + 0x5ac) = 1;
+    *(i32 *)(param_1 + 0x5ac) = 1;
     if (avi_playing != 0) {
       avi_idle_update_enabled = 0;
       avi_frame_needs_blit = 0;
@@ -3190,14 +3190,14 @@ void __cdecl avi_play_pause(iptr param_1)
 #undef avi_playing
 
 /* 005e2799 auto */
-#define avi_active_window (*(undefined4 *)((u8 *)&g.d_00638dd4))
+#define avi_active_window (*(i32 *)((u8 *)&g.d_00638dd4))
 #define avi_audio_stream (*(int *)((u8 *)&g.d_00638dc8))
 #define avi_decompressor (*(int *)((u8 *)&g.d_00638db0))
 #define avi_file (*(int *)((u8 *)&g.d_00638dc0))
 #define avi_frame_buffer (*(LPCVOID *)((u8 *)&g.d_00638da8))
-#define avi_frame_buffer_size (*(undefined4 *)((u8 *)&g.d_00638dac))
-#define avi_frame_height (*(undefined4 *)((u8 *)&g.d_00638db8))
-#define avi_frame_width (*(undefined4 *)((u8 *)&g.d_00638db4))
+#define avi_frame_buffer_size (*(i32 *)((u8 *)&g.d_00638dac))
+#define avi_frame_height (*(i32 *)((u8 *)&g.d_00638db8))
+#define avi_frame_width (*(i32 *)((u8 *)&g.d_00638db4))
 #define avi_video_stream (*(int *)((u8 *)&g.d_00638dc4))
 void __cdecl avi_close(iptr param_1)
 
@@ -3253,20 +3253,20 @@ void __cdecl avi_close(iptr param_1)
 /* 005e28cd auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(undefined4 *)((u8 *)&g.d_00638dc4))
+#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
 void __cdecl avi_seek_frame(iptr param_1,uint param_2,int param_3)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 != 0) && (avi_file_loaded != 0)) {
     if (avi_playing != 0) {
       avi_play_pause(param_1);
     }
     uVar1 = AVIStreamFindSample(avi_video_stream,param_2,0x14);
-    *(undefined4 *)(param_1 + 0xa18) = uVar1;
+    *(i32 *)(param_1 + 0xa18) = uVar1;
     while( true ) {
       if ((int)param_2 < 0) {
         local_8 = 0;
@@ -3290,26 +3290,26 @@ void __cdecl avi_seek_frame(iptr param_1,uint param_2,int param_3)
 #undef local_8
 
 /* 005e2997 auto */
-#define avi_decompressor (*(undefined4 *)((u8 *)&g.d_00638db0))
+#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define avi_frame_buffer (*(undefined4 *)((u8 *)&g.d_00638da8))
-#define avi_frame_buffer_size (*(undefined4 *)((u8 *)&g.d_00638dac))
+#define avi_frame_buffer (*(i32 *)((u8 *)&g.d_00638da8))
+#define avi_frame_buffer_size (*(i32 *)((u8 *)&g.d_00638dac))
 #define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(undefined4 *)((u8 *)&g.d_00638dc4))
+#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
 #define local_5c (*(CHAR (*)[80])(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(84)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(84)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
 int __cdecl avi_decode_frame(iptr param_1,int param_2)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
+  i32 uVar1;
+  i32 uVar2;
+  i32 uVar3;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   local_c = 0;
@@ -3320,10 +3320,10 @@ int __cdecl avi_decode_frame(iptr param_1,int param_2)
     if ((*(int *)(param_1 + 0x5a4) != 0) && (param_2 == 0)) {
       surface_blit((DibSurface *)(param_1 + 0x558),param_1,ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)),ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)));
     }
-    local_8 = AVIStreamRead(avi_video_stream,*(undefined4 *)(param_1 + 0xa18),1,avi_frame_buffer,
+    local_8 = AVIStreamRead(avi_video_stream,*(i32 *)(param_1 + 0xa18),1,avi_frame_buffer,
                             avi_frame_buffer_size,&local_c,0);
     if (local_8 == 0) {
-      *(undefined4 *)(param_1 + 0x5d4) = local_c;
+      *(i32 *)(param_1 + 0x5d4) = local_c;
       if (*(int *)(param_1 + 0x5a0) == 0) {
         uVar3 = 0;
         uVar2 = 0;
@@ -3352,7 +3352,7 @@ int __cdecl avi_decode_frame(iptr param_1,int param_2)
       }
       if ((*(int *)(param_1 + 0xa20) != 0) &&
          (*(int *)(param_1 + 0xa20) == *(int *)(param_1 + 0xa18))) {
-        *(undefined4 *)(param_1 + 0xa20) = 0;
+        *(i32 *)(param_1 + 0xa20) = 0;
         avi_player_call_cue_callback((AviPlayerCueCbCallView *)param_1);
       }
       if ((*(uint *)(param_1 + 0xa14) < *(uint *)(param_1 + 0xa18)) && (avi_playing != 0)) {
@@ -3362,7 +3362,7 @@ int __cdecl avi_decode_frame(iptr param_1,int param_2)
           local_8 = 0;
         }
         else {
-          avi_seek_frame(param_1,*(undefined4 *)(param_1 + 0xa10),0);
+          avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
           avi_play_start(param_1);
           local_8 = 0;
         }
@@ -3390,28 +3390,28 @@ int __cdecl avi_decode_frame(iptr param_1,int param_2)
 #undef local_8
 
 /* 005e2c5a auto */
-#define local_38 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-undefined4
-__stdcall avi_ic_decompress_ex(undefined4 param_1,undefined4 param_2,iptr param_3,undefined4 param_4,
-            undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8,iptr param_9
-            ,undefined4 param_10,undefined4 param_11,undefined4 param_12,undefined4 param_13,
-            undefined4 param_14)
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+i32
+__stdcall avi_ic_decompress_ex(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
+            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
+            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
+            i32 param_14)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_38 = param_2;
   local_34 = param_3;
@@ -3447,13 +3447,13 @@ __stdcall avi_ic_decompress_ex(undefined4 param_1,undefined4 param_2,iptr param_
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_frame_needs_blit (*(uint *)((u8 *)&g.d_00638de8))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-#define avi_video_stream (*(undefined4 *)((u8 *)&g.d_00638dc4))
+#define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
 #define avi_view_rect_x (*(int *)((u8 *)&g.d_006e50c8))
 #define avi_view_rect_y (*(int *)((u8 *)&g.d_006e50cc))
-#define _DAT_00638dbc (*(undefined4 *)((u8 *)&g.d_00638dbc))
-#define _DAT_00638dec (*(undefined4 *)((u8 *)&g.d_00638dec))
-#define _DAT_006e50d0 (*(undefined4 *)((u8 *)&g.d_006e50d0))
-#define _DAT_006e50d4 (*(undefined4 *)((u8 *)&g.d_006e50d4))
+#define _DAT_00638dbc (*(i32 *)((u8 *)&g.d_00638dbc))
+#define _DAT_00638dec (*(i32 *)((u8 *)&g.d_00638dec))
+#define _DAT_006e50d0 (*(i32 *)((u8 *)&g.d_006e50d0))
+#define _DAT_006e50d4 (*(i32 *)((u8 *)&g.d_006e50d4))
 #define local_20 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_1c (*(RECT *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
@@ -3464,8 +3464,8 @@ void __cdecl avi_update_frame(iptr param_1)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
     return;
@@ -3487,7 +3487,7 @@ void __cdecl avi_update_frame(iptr param_1)
           avi_player_call_end_callback((AviPlayerEndCbCallView *)param_1);
           return;
         }
-        avi_seek_frame(param_1,*(undefined4 *)(param_1 + 0xa10),0);
+        avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
         avi_play_start(param_1);
         return;
       }
@@ -3500,7 +3500,7 @@ void __cdecl avi_update_frame(iptr param_1)
           avi_player_call_end_callback((AviPlayerEndCbCallView *)param_1);
           return;
         }
-        avi_seek_frame(param_1,*(undefined4 *)(param_1 + 0xa10),0);
+        avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
         avi_play_start(param_1);
         return;
       }
@@ -3581,36 +3581,36 @@ void __cdecl avi_update_frame(iptr param_1)
 #undef local_8
 
 /* 005e30a1 auto */
-#define avi_decompressor (*(undefined4 *)((u8 *)&g.d_00638db0))
+#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define local_2d0 (*(undefined1 (*)[708])(frame_ + FRAME_OFF(0)))
+#define local_2d0 (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(708)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(712)))
 void __cdecl avi_apply_palette(iptr param_1,GamePalette *param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(720)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(720)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
     palette_get_rgb(param_2,(iptr)local_2d0,0,0xec);
     for (local_c = 0; local_c < 0xec; local_c++) {
-      *(undefined1 *)(param_1 + 0x610 + local_c * 4) = local_2d0[local_c * 3 + 2];
-      *(undefined1 *)(param_1 + 0x611 + local_c * 4) = local_2d0[local_c * 3 + 1];
-      *(undefined1 *)(param_1 + 0x612 + local_c * 4) = local_2d0[local_c * 3];
-      *(undefined1 *)(param_1 + 0x613 + local_c * 4) = 0;
+      *(i8 *)(param_1 + 0x610 + local_c * 4) = local_2d0[local_c * 3 + 2];
+      *(i8 *)(param_1 + 0x611 + local_c * 4) = local_2d0[local_c * 3 + 1];
+      *(i8 *)(param_1 + 0x612 + local_c * 4) = local_2d0[local_c * 3];
+      *(i8 *)(param_1 + 0x613 + local_c * 4) = 0;
     }
     ICSendMessage(avi_decompressor,0x401d,param_1 + 0x5e8,0);
     if (*(int *)(param_1 + 0x5a0) == 0) {
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(undefined4 *)(param_1 + 0x5c4),
-                             *(undefined4 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
-                             *(undefined4 *)(param_1 + 0x5c4),*(undefined4 *)(param_1 + 0x5c8));
+      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(i32 *)(param_1 + 0x5c4),
+                             *(i32 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
+                             *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8));
     }
     else {
       *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) << 1;
       *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) << 1;
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(undefined4 *)(param_1 + 0x5c4),
-                             *(undefined4 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
+      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(i32 *)(param_1 + 0x5c4),
+                             *(i32 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
                              *(int *)(param_1 + 0x5c4) * 2,*(int *)(param_1 + 0x5c8) * 2);
       *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) / 2;
       *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) / 2;
@@ -3628,15 +3628,15 @@ void __cdecl avi_apply_palette(iptr param_1,GamePalette *param_2)
 #undef local_8
 
 /* 005e32b2 auto */
-#define avi_decompressor (*(undefined4 *)((u8 *)&g.d_00638db0))
+#define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_frame_height (*(int *)((u8 *)&g.d_00638db8))
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
-#define _DAT_006e503c (*(undefined4 *)((u8 *)&g.d_006e503c))
-#define _DAT_006e50ac (*(undefined4 *)((u8 *)&g.d_006e50ac))
+#define _DAT_006e503c (*(i32 *)((u8 *)&g.d_006e503c))
+#define _DAT_006e50ac (*(i32 *)((u8 *)&g.d_006e50ac))
 #define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 #define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(36)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -3645,7 +3645,7 @@ void __cdecl avi_restart_decompress(iptr param_1,int param_2)
 {
   int yBottom;
   int xRight;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
@@ -3694,7 +3694,7 @@ void __cdecl avi_restart_decompress(iptr param_1,int param_2)
       if (avi_file_loaded != 0) {
         surface_blit
                   ((DibSurface *)(param_1 + 0x558),param_1,(iptr)&local_1c,(iptr)&local_1c);
-        local_c = *(undefined4 *)(param_1 + 0xa18);
+        local_c = *(i32 *)(param_1 + 0xa18);
         avi_seek_frame(param_1,local_c,0);
         wnd_blit_surface((DibSurface *)param_1);
       }
@@ -3735,7 +3735,7 @@ void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this)
 
 /* 005ec317 auto */
 #define wnd_active_child (*(WndOnMciDoneView * *)((u8 *)&g.d_00637ea4))
-#define local_34 (*(undefined1 (*)[4])(frame_ + FRAME_OFF(4)))
+#define local_34 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_2c (*(uptr *)(frame_ + FRAME_OFF(12)))
 #define local_28 (*(int *)(frame_ + FRAME_OFF(16)))
@@ -3747,16 +3747,16 @@ void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this)
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(40)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-undefined4 __stdcall moviewnd_wndproc(HWND param_1,uint param_2,uint param_3,uint param_4)
+i32 __stdcall moviewnd_wndproc(HWND param_1,uint param_2,uint param_3,uint param_4)
 
 {
   short sVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
   WndBase *pCVar4;
   BOOL BVar5;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = (WndOnMciDoneView *)GetWindowLongA(param_1,4);
   if (local_14 == (WndOnMciDoneView *)0x0) {
@@ -3915,7 +3915,7 @@ switchD_005ecda6_caseD_4:
           wnd_active_child = local_14;
           *(int *)(local_14->pad_4 + 0xac) = local_18;
           wnd_call_hscroll
-                    ((WndOnHScrollView *)(local_14->pad_4 + 0xc),*(undefined4 *)(local_14->pad_4 + 0xac));
+                    ((WndOnHScrollView *)(local_14->pad_4 + 0xc),*(i32 *)(local_14->pad_4 + 0xac));
           return 0;
         case 5:
           wnd_active_child = local_14;
@@ -3968,7 +3968,7 @@ switchD_005ecda6_caseD_4:
           wnd_active_child = local_14;
           *(int *)(local_14->pad_4 + 0xb0) = local_18;
           wnd_call_vscroll
-                    ((WndOnVScrollView *)(local_14->pad_4 + 0xc),*(undefined4 *)(local_14->pad_4 + 0xb0));
+                    ((WndOnVScrollView *)(local_14->pad_4 + 0xc),*(i32 *)(local_14->pad_4 + 0xb0));
           return 0;
         case 5:
           wnd_active_child = local_14;
@@ -4139,17 +4139,17 @@ int __thiscall avi_audio_attach_stream(AviAudioAttachView *this,u32 param_1)
 }
 
 /* 005eedd1 auto */
-undefined4 __thiscall avi_audio_get_position_ms(void *this)
+i32 __thiscall avi_audio_get_position_ms(void *this)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = snd_wave_get_position_ms();
   return uVar1;
 }
 
 /* 005eedec auto */
-int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,undefined4 param_1,undefined4 param_2)
+int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -4165,7 +4165,7 @@ int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,undefined4 para
 }
 
 /* 005eee4f auto */
-undefined2 __thiscall avi_audio_start(void *this)
+i16 __thiscall avi_audio_start(void *this)
 
 {
   snd_avi_stream_start();

@@ -3,10 +3,10 @@
 #include "auto_common.h"
 
 /* 0040bd10 auto */
-undefined4 __cdecl civ_max_tax_rate(iptr civ)
+i32 __cdecl civ_max_tax_rate(iptr civ)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (civs[civ].government < 2) {
     uVar1 = 6;
@@ -24,10 +24,10 @@ undefined4 __cdecl civ_max_tax_rate(iptr civ)
 }
 
 /* 00410070 auto */
-undefined4 __cdecl civ_get_adjective(iptr civ)
+i32 __cdecl civ_get_adjective(iptr civ)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   uVar1 = civ_adjective(civ);
   return uVar1;
@@ -40,7 +40,7 @@ void __cdecl tech_editor_load_items(void)
 {
   char *_Source;
   size_t _Count;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (advance = 0; advance < 100; advance++) {
     _Count = 0x28;
@@ -66,7 +66,7 @@ void __cdecl tech_editor_save_items(void)
   char *_Dest;
   char *_Source;
   size_t _Count;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (advance = 0; advance < 100; advance++) {
     _Count = 0x14;
@@ -92,7 +92,7 @@ void __cdecl tech_editor_update_controls(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_14 = 1; local_14 < 7; local_14++) {
     if (*(int *)(&tech_editor_ctrl_kinds + local_14 * 8) == 9) {
@@ -100,7 +100,7 @@ void __cdecl tech_editor_update_controls(void)
                         ((ControlIdView *)
                          (*(int *)(&tech_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd));
       _sprintf(local_10,&tech_editor_int_fmt,
-               *(undefined4 *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
+               *(i32 *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
       ctrl_set_text
                 ((ControlTextView *)
                  (*(int *)(&tech_editor_ctrl_slots + local_14 * 8) * 0x48 + 0x44c + active_editor_wnd),
@@ -134,8 +134,8 @@ int __cdecl tech_editor_store_controls(void)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   for (local_18 = 1; local_18 < 7; local_18++) {
@@ -149,9 +149,9 @@ int __cdecl tech_editor_store_controls(void)
                         ((ControlIdView *)
                          (*(int *)(&tech_editor_ctrl_slots + local_18 * 8) * 0x48 + 0x44c + active_editor_wnd));
       iVar1 -= 0xca;
-      uVar2 = int_clamp(local_8,*(undefined4 *)(&tech_editor_field_min_table + iVar1 * 4),
-                                 *(undefined4 *)(&tech_editor_field_max_table + iVar1 * 4));
-      *(undefined4 *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
+      uVar2 = int_clamp(local_8,*(i32 *)(&tech_editor_field_min_table + iVar1 * 4),
+                                 *(i32 *)(&tech_editor_field_max_table + iVar1 * 4));
+      *(i32 *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = uVar2;
       iVar1 = ctrl_get_id
                         ((ControlIdView *)
                          (*(int *)(&tech_editor_ctrl_slots + local_18 * 8) * 0x48 + 0x44c + active_editor_wnd));
@@ -188,15 +188,15 @@ void __cdecl tech_editor_redraw(void)
 }
 
 /* 00415780 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl tech_editor_write_civilize(FILE *param_1)
+i32 __cdecl tech_editor_write_civilize(FILE *param_1)
 
 {
   char *pcVar1;
   size_t sVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (advance = 0; advance < 100; advance++) {
     text_clear();
@@ -242,7 +242,7 @@ void __cdecl tech_editor_relink_prereqs(void)
 
 {
   bool bVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   game.num_advances = 0;
   for (advance = 0; advance < 100; advance++) {
@@ -259,7 +259,7 @@ void __cdecl tech_editor_relink_prereqs(void)
             bVar1 = true;
           }
         }
-        advances[advance].preq[local_c] = (undefined1)advance2;
+        advances[advance].preq[local_c] = (i8)advance2;
       }
     }
   }
@@ -270,7 +270,7 @@ void __cdecl tech_editor_relink_prereqs(void)
 #undef local_c
 
 /* 00415a40 auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 #define local_28 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl tech_editor_on_ok(void)
@@ -283,7 +283,7 @@ void __cdecl tech_editor_on_ok(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = tech_editor_store_controls();
   if (iVar1 == 0) {
@@ -334,10 +334,10 @@ void __cdecl tech_editor_fill_usage_list(void)
   bool bVar1;
   bool bVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i32 uVar5;
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
   bVar1 = false;
@@ -345,7 +345,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
     if ((int)unit_types[unit_type].prerequisite == *(int *)(active_editor_wnd + 0x2ec)) {
       if (!bVar1) {
-        iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x808));
+        iVar3 = label_string(*(i32 *)(label_string_ids + 0x808));
         listbox_add_string((ListBoxAddView *)(active_editor_wnd + 0xa94),iVar3);
         bVar1 = true;
       }
@@ -356,7 +356,7 @@ void __cdecl tech_editor_fill_usage_list(void)
   for (advance = 0; advance < 100; advance++) {
     if ((int)advances[advance].preq[0] == *(int *)(active_editor_wnd + 0x2ec)) {
       if (!bVar2) {
-        iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x80c));
+        iVar3 = label_string(*(i32 *)(label_string_ids + 0x80c));
         listbox_add_string((ListBoxAddView *)(active_editor_wnd + 0xa94),iVar3);
         bVar2 = true;
       }
@@ -366,7 +366,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         uVar4 = label_string(advances[advances[advance].preq[1]].name);
-        uVar5 = label_string(*(undefined4 *)(label_string_ids + 0x1ec));
+        uVar5 = label_string(*(i32 *)(label_string_ids + 0x1ec));
         uVar6 = label_string(advances[advance].name);
         _sprintf(local_54,s__s___s__s__00625204,uVar6,uVar5,uVar4);
       }
@@ -374,7 +374,7 @@ void __cdecl tech_editor_fill_usage_list(void)
     }
     else if ((int)advances[advance].preq[1] == *(int *)(active_editor_wnd + 0x2ec)) {
       if (!bVar2) {
-        iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x80c));
+        iVar3 = label_string(*(i32 *)(label_string_ids + 0x80c));
         listbox_add_string((ListBoxAddView *)(active_editor_wnd + 0xa94),iVar3);
         bVar2 = true;
       }
@@ -384,7 +384,7 @@ void __cdecl tech_editor_fill_usage_list(void)
       }
       else {
         uVar4 = label_string(advances[advances[advance].preq[0]].name);
-        uVar5 = label_string(*(undefined4 *)(label_string_ids + 0x1ec));
+        uVar5 = label_string(*(i32 *)(label_string_ids + 0x1ec));
         uVar6 = label_string(advances[advance].name);
         _sprintf(local_54,s__s___s__s__00625214,uVar6,uVar5,uVar4);
       }
@@ -401,7 +401,7 @@ void __cdecl tech_editor_fill_usage_list(void)
 #define local_134 (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_130 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_12c (*(char (*)[19])(frame_ + FRAME_OFF(12)))
-#define local_119 (*(undefined1 *)(frame_ + FRAME_OFF(31)))
+#define local_119 (*(i8 *)(frame_ + FRAME_OFF(31)))
 #define local_118 (*(char (*)[260])(frame_ + FRAME_OFF(32)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(292)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(296)))
@@ -413,7 +413,7 @@ void __cdecl tech_editor_on_rename(void)
   int iVar1;
   size_t sVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = *(int *)(active_editor_wnd + 0x2ec);
   _strncpy(local_12c,&editor_item_names + iVar1 * 0x28,0x14);
@@ -439,13 +439,13 @@ void __cdecl tech_editor_on_rename(void)
     combo_clear((ComboBoxClearView *)(active_editor_wnd + 0x2fc));
     combo_clear((ComboBoxClearView *)(active_editor_wnd + 0x334));
     combo_clear((ComboBoxClearView *)(active_editor_wnd + 0x36c));
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x7c0));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(active_editor_wnd + 0x334),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x7c0));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(active_editor_wnd + 0x36c),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x7c4));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(active_editor_wnd + 0x334),iVar3);
-    iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x7c4));
+    iVar3 = label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(active_editor_wnd + 0x36c),iVar3);
     for (local_130 = 0; local_130 < 100; local_130++) {
       combo_add_string
@@ -474,11 +474,11 @@ void __cdecl tech_editor_on_rename(void)
 #undef local_8
 
 /* 0041612e auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_on_help(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_8 = 0;
@@ -494,7 +494,7 @@ void __cdecl tech_editor_on_help(void)
 #undef local_8
 
 /* 0041618d auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl tech_editor_on_cancel(void)
 
 {
@@ -508,13 +508,13 @@ void __cdecl tech_editor_on_cancel(void)
 void __cdecl tech_editor_on_edit_icon(void)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined1 *puVar3;
+  i32 uVar1;
+  i32 uVar2;
+  i8 *puVar3;
   
   puVar3 = ((void *)ADDR(0x00401d8e, sprite_sheet_save_tech_icons));
   uVar2 = 0;
-  uVar1 = label_string(*(undefined4 *)(label_string_ids + 0x7d8));
+  uVar1 = label_string(*(i32 *)(label_string_ids + 0x7d8));
   sprite_editor_run((iptr)(&advance_category_icon_sprites +
                            *(int *)(&editor_item_field3 + *(int *)(active_editor_wnd + 0x2ec) * 0x58) * 0xf0 +
                            *(int *)(&editor_item_field2 + *(int *)(active_editor_wnd + 0x2ec) * 0x58) * 0x3c),
@@ -524,20 +524,20 @@ void __cdecl tech_editor_on_edit_icon(void)
 }
 
 /* 0041623d auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tech_editor_on_combo(int param_1)
 
 {
   int iVar1;
   HWND hWnd;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0xc9) {
     iVar1 = tech_editor_store_controls();
     if (iVar1 == 0) {
       uVar2 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
-      *(undefined4 *)(active_editor_wnd + 0x2ec) = uVar2;
+      *(i32 *)(active_editor_wnd + 0x2ec) = uVar2;
       tech_editor_update_controls();
       tech_editor_fill_usage_list();
       tech_editor_redraw();
@@ -573,13 +573,13 @@ void __cdecl tech_editor_on_combo(int param_1)
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define local_28 (*(u8 * *)(frame_ + FRAME_OFF(0)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tech_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,*(int *)(&tech_editor_combo_x_table + param_1 * 8) + this->client_x - 0x1e,
                      *(int *)(&tech_editor_combo_y_table + param_1 * 8) + this->client_y,0xa0,
@@ -606,9 +606,9 @@ void __thiscall tech_editor_create_combo(C_004083b0_430 *this,int param_1)
     break;
   case 1:
   case 2:
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7c0));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x7c0));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x7c4));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x7c4));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
     for (advance = 0; advance < 100; advance++) {
       iVar2 = label_string(advances[advance].name);
@@ -616,25 +616,25 @@ void __thiscall tech_editor_create_combo(C_004083b0_430 *this,int param_1)
     }
     break;
   case 3:
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x810));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x810));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x814));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x814));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x818));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x818));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x81c));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x81c));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
     break;
   case 4:
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x820));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x820));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x824));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x824));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x828));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x828));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x82c));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x82c));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
-    iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x830));
+    iVar2 = label_string(*(i32 *)(label_string_ids + 0x830));
     combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar2);
   }
   return;
@@ -646,15 +646,15 @@ void __thiscall tech_editor_create_combo(C_004083b0_430 *this,int param_1)
 
 /* 00416734 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define tech_editor_edit_x_table (*(undefined4 *)((u8 *)&g.d_00625150))
-#define tech_editor_edit_y_table (*(undefined4 *)((u8 *)&g.d_00625154))
+#define tech_editor_edit_x_table (*(i32 *)((u8 *)&g.d_00625150))
+#define tech_editor_edit_y_table (*(i32 *)((u8 *)&g.d_00625154))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __thiscall tech_editor_create_edit(C_004083b0_430 *this,int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rect_set_xywh((iptr)local_14,(&tech_editor_edit_x_table)[param_1 * 2] + this->client_x,
                      (&tech_editor_edit_y_table)[param_1 * 2] + this->client_y,0x30,this->field_2e8 + 6);
@@ -684,9 +684,9 @@ void __thiscall tech_editor_create_edit(C_004083b0_430 *this,int param_1)
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define tech_editor_edit_x_table (*(int *)((u8 *)&g.d_00625150))
 #define tech_editor_edit_y_table (*(int *)((u8 *)&g.d_00625154))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define _DAT_0062514c (*(undefined4 *)((u8 *)&g.d_0062514c))
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define _DAT_0062514c (*(i32 *)((u8 *)&g.d_0062514c))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_18 (*(Sprite * *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -698,7 +698,7 @@ void __thiscall tech_editor_paint(C_004083b0_430 *this)
 
 {
   byte bVar1;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
   if ((editor_bg_surface == 0) || (editor_running == 0)) {
@@ -788,29 +788,29 @@ void __thiscall tech_editor_paint(C_004083b0_430 *this)
 #define local_478 (*(u8 * *)(frame_ + FRAME_OFF(24)))
 #define local_468 (*(DibSurface * *)(frame_ + FRAME_OFF(40)))
 #define local_460 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_454 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(60)))
+#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(60)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(76)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1152)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1156)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1152)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1156)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1160)))
 void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   u32 uVar9;
   u32 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined1 frame_[FRAME_OFF(1168)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i8 frame_[FRAME_OFF(1168)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -818,14 +818,14 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_468 = (DibSurface *)0x0;
   }
   else {
     local_468 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   editor_bg_surface = local_468;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -848,15 +848,15 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   uVar8 = 0;
   uVar7 = 0;
   uVar6 = 0xd;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x734));
+  uVar2 = label_string(*(i32 *)(label_string_ids + 0x734));
   frame_wnd_create
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   for (local_460 = 0; local_460 < 7; local_460++) {
     if (*(int *)(&tech_editor_ctrl_kinds + local_460 * 8) == 9) {
-      tech_editor_create_edit(this,*(undefined4 *)(&tech_editor_ctrl_slots + local_460 * 8));
+      tech_editor_create_edit(this,*(i32 *)(&tech_editor_ctrl_slots + local_460 * 8));
     }
     else if (*(int *)(&tech_editor_ctrl_kinds + local_460 * 8) == 0xc) {
-      tech_editor_create_combo(this,*(undefined4 *)(&tech_editor_ctrl_slots + local_460 * 8));
+      tech_editor_create_combo(this,*(i32 *)(&tech_editor_ctrl_slots + local_460 * 8));
     }
   }
   rect_set_xywh((iptr)local_454,this->client_x + 0x32,this->client_y + 0xe7,0x1cb,0x6e);
@@ -884,7 +884,7 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   else {
     local_47c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this[1].field_2a4,(iptr)local_47c,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x401e51, tech_editor_on_ok));
@@ -896,7 +896,7 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   else {
     local_480 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xa8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             ((Control *)&this[1].field_358,(iptr)local_480,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_358,ADDR(0x402054, tech_editor_on_rename));
@@ -908,7 +908,7 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   else {
     local_484 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8ec));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&this[1].field_2e0,(iptr)local_484,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x403bb1, tech_editor_on_help));
@@ -920,7 +920,7 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   else {
     local_488 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this[1].field_31c,(iptr)local_488,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x40394a, tech_editor_on_cancel));
@@ -936,7 +936,7 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
   else {
     local_48c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x7cc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x7cc));
   button_create
             ((Control *)(this[1].pad_364 + 0x30),(iptr)local_48c,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x4019d3, tech_editor_on_edit_icon));
@@ -982,13 +982,13 @@ void __thiscall tech_editor_dialog_run(C_004083b0_430 *this)
 
 /* 00417566 auto */
 #define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2896)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl tech_editor_run(void)
 
 {
-  undefined1 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
@@ -1005,11 +1005,11 @@ void __cdecl tech_editor_run(void)
 #undef local_8
 
 /* 00419cbb auto */
-undefined1 __cdecl rules_next_line_byte_clamped(undefined4 param_1,undefined4 param_2)
+i8 __cdecl rules_next_line_byte_clamped(i32 param_1,i32 param_2)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   text_read_line(1);
   iVar1 = text_next_int();
@@ -1018,11 +1018,11 @@ undefined1 __cdecl rules_next_line_byte_clamped(undefined4 param_1,undefined4 pa
 }
 
 /* 00419cf4 auto */
-undefined1 __cdecl rules_next_byte_clamped(undefined4 param_1,undefined4 param_2)
+i8 __cdecl rules_next_byte_clamped(i32 param_1,i32 param_2)
 
 {
   iptr iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   iVar1 = text_next_int();
   uVar2 = int_clamp(iVar1,param_1,param_2);
@@ -1063,8 +1063,8 @@ void __cdecl rules_load_cosmic(void)
 }
 
 /* 0041a046 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define text_token_buf (*(undefined1 *)((u8 *)&g.d_00673e10))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
 #define advance2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(12)))
@@ -1072,11 +1072,11 @@ void __cdecl rules_load_advances(int param_1)
 
 {
   bool bVar1;
-  undefined1 uVar2;
+  i8 uVar2;
   size_t sVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   i32 iVar5;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_open_section(ADDR(0x6559e8, ((u8 *)&g.d_006559e8)),ADDR(0x6252d4, ((u8 *)&g.d_006252d4)));
   game.num_advances = 0;
@@ -1158,7 +1158,7 @@ void __cdecl rules_load_advances(int param_1)
             bVar1 = true;
           }
         }
-        advances[advance].preq[local_c] = (undefined1)advance2;
+        advances[advance].preq[local_c] = (i8)advance2;
       }
     }
   }
@@ -1177,8 +1177,8 @@ void __cdecl rules_load_improvements(int param_1)
 {
   i8 iVar1;
   i32 iVar2;
-  undefined4 uVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar3;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_open_section(ADDR(0x6559e8, ((u8 *)&g.d_006559e8)),ADDR(0x6252ec, ((u8 *)&g.d_006252ec)));
   for (improvement = 0; improvement < 0x43; improvement++) {
@@ -1220,10 +1220,10 @@ void __cdecl rules_load_improvements(int param_1)
 #undef improvement
 
 /* 0041a5c4 auto */
-#define double_moves_applied (*(undefined4 *)((u8 *)&g.d_00628068))
-#define strpool_last_string (*(undefined4 *)((u8 *)&g.d_0063e4b8))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define text_token_buf (*(undefined1 *)((u8 *)&g.d_00673e10))
+#define double_moves_applied (*(i32 *)((u8 *)&g.d_00628068))
+#define strpool_last_string (*(i32 *)((u8 *)&g.d_0063e4b8))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define text_token_buf (*(i8 *)((u8 *)&g.d_00673e10))
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl rules_load_units(int param_1)
 
@@ -1232,9 +1232,9 @@ void __cdecl rules_load_units(int param_1)
   u8 uVar2;
   ushort uVar3;
   size_t sVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   i32 iVar6;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   double_moves_applied = 0;
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
@@ -1248,7 +1248,7 @@ void __cdecl rules_load_units(int param_1)
     if (param_1 == 0) {
       iVar6 = text_next_token_str_id(0xf);
       unit_types[unit_type].name = iVar6;
-      *(undefined4 *)(&unit_type_name_ptrs + unit_type * 4) = strpool_last_string;
+      *(i32 *)(&unit_type_name_ptrs + unit_type * 4) = strpool_last_string;
     }
     else {
       text_next_token();
@@ -1322,11 +1322,11 @@ void __cdecl rules_load_units(int param_1)
 void __cdecl rules_load_terrain(void)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   i8 iVar2;
   i32 iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_open_section(0,ADDR(0x625310, ((u8 *)&g.d_00625310)));
   for (terrain2 = 0; terrain2 < 0x21; terrain2++) {
@@ -1345,7 +1345,7 @@ void __cdecl rules_load_terrain(void)
       for (local_8 = 0; local_8 < 2; local_8++) {
         uVar4 = text_next_token();
         uVar1 = rules_parse_terrain_abbrev(uVar4);
-        *(undefined1 *)(local_8 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18) = uVar1;
+        *(i8 *)(local_8 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18) = uVar1;
         uVar4 = text_next_int();
         *(char *)(local_8 + ADDR(0x627cd0, ((u8 *)&terrain_types + 16)) + terrain2 * 0x18) = (char)uVar4;
         uVar4 = text_next_int();
@@ -1380,14 +1380,14 @@ void __cdecl rules_load_govts_leaders(int param_1)
   i8 iVar2;
   i16 iVar3;
   i16 iVar4;
-  undefined2 uVar5;
-  undefined2 uVar6;
+  i16 uVar5;
+  i16 uVar6;
   i32 iVar7;
-  undefined4 uVar8;
+  i32 uVar8;
   iptr iVar9;
   int iVar10;
-  undefined4 uVar11;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_open_section(0,ADDR(0x625318, ((u8 *)&g.d_00625318)));
   for (leader = 0; leader < 7; leader++) {
@@ -1506,11 +1506,11 @@ void __cdecl rules_load_govts_leaders(int param_1)
 /* 0041b00e auto */
 #define text_token_buf (*(char *)((u8 *)&g.d_00673e10))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl rules_parse_sections(undefined4 param_1)
+void __cdecl rules_parse_sections(i32 param_1)
 
 {
   i32 iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   rules_load_cosmic();
   rules_load_advances(0);
@@ -1549,7 +1549,7 @@ void __cdecl rules_parse_sections(undefined4 param_1)
 #undef local_8
 
 /* 0041b8ff auto */
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_38 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define aiStack_34 (*(iptr (*)[12])(frame_ + FRAME_OFF(12)))
@@ -1558,7 +1558,7 @@ void __cdecl civ_intro_popup(iptr civ)
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   advance = 100;
   local_38 = 0;
@@ -1598,12 +1598,12 @@ void __cdecl civ_intro_popup(iptr civ)
 /* 0041ba52: written by hand in src/game/bigframes.c */
 
 /* 0041e864 auto */
-#define local_108 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(0)))
-void __cdecl rules_load(undefined4 param_1)
+#define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
+void __cdecl rules_load(i32 param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
   labels_reload();
   gfx_load_game_sprites();
@@ -1658,12 +1658,12 @@ void __cdecl civ_rating_title_font_static_dtor(void)
 #define advisor_client_width (*(int *)((u8 *)&g.d_0063ec3c))
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(iptr *)((u8 *)&g.d_0063ef70))
-#define advisor_row_height (*(undefined4 *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef68 (*(undefined4 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
-#define _DAT_0063ef90 (*(undefined4 *)((u8 *)&g.d_0063ef90))
-#define local_80 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
+#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define _DAT_0063ef90 (*(i32 *)((u8 *)&g.d_0063ef90))
+#define local_80 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -1686,7 +1686,7 @@ void __cdecl civ_rating_title_font_static_dtor(void)
 #define local_24 (*(int *)(frame_ + FRAME_OFF(92)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(96)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(100)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(104)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(120)))
 /* WARNING: Removing unreachable block (ram,0x0042b48e) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1696,11 +1696,11 @@ void __cdecl science_advisor_draw(void)
 {
   iptr iVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -1713,7 +1713,7 @@ void __cdecl science_advisor_draw(void)
   text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x54c));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x54c));
   text_append(iVar1);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_50,advisor_client_width);
   local_50 += local_1c;
@@ -1899,7 +1899,7 @@ void __cdecl science_advisor_on_scroll(int param_1)
 /* 0042b563 auto */
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -1911,7 +1911,7 @@ void __cdecl science_advisor_on_click(int param_1,int param_2)
   int iVar2;
   int iVar3;
   bool bVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((-1 < param_2 - _DAT_0063ef78) &&
        (iVar1 = (param_2 - _DAT_0063ef78) / advisor_row_height, iVar1 < advisor_rows_per_page)) &&
@@ -1943,8 +1943,8 @@ void __cdecl science_advisor_on_goal_clicked(void)
 }
 
 /* 0042b67d auto */
-#define advisor_client_x (*(undefined4 *)((u8 *)&g.d_0063ec34))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 /* WARNING: Removing unreachable block (ram,0x0042b72b) */
 /* WARNING: Removing unreachable block (ram,0x0042b7b6) */
 
@@ -1954,7 +1954,7 @@ void __cdecl science_advisor_show(iptr param_1)
   int iVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   picwnd_open((C_004083b0_4c4 *)&advisor_window,6,6,0,600,400,0,0);
   advisor_report_civ = param_1;
@@ -1963,14 +1963,14 @@ void __cdecl science_advisor_show(iptr param_1)
   iVar2 = rect_height((iptr)local_14);
   rect_offset((iptr)local_14,advisor_client_x,(iVar1 - iVar2) + 0x18e);
   rect_offset((iptr)local_14,299,0);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)&advisor_close_button,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),100,(iptr)local_14,iVar3);
   button_set_callback((Control *)&advisor_close_button,ADDR(0x401235, advisor_on_close_clicked));
   ctrl_set_default_button((Control *)&advisor_close_button);
   ctrl_set_cancel_button((Control *)&advisor_close_button);
   rect_offset((iptr)local_14,0xfffffed5,0);
-  iVar3 = label_string(*(undefined4 *)(label_string_ids + 0x5cc));
+  iVar3 = label_string(*(i32 *)(label_string_ids + 0x5cc));
   button_create
             ((Control *)&advisor_toggle_button,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),0x65,(iptr)local_14,iVar3);
   button_set_callback((Control *)&advisor_toggle_button,ADDR(0x401ae6, science_advisor_on_goal_clicked));
@@ -1992,16 +1992,16 @@ void __cdecl science_advisor_show(iptr param_1)
 #define city_unhappy_count (*(int *)((u8 *)&g.d_006a65a8))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
 #define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
-#define scenario_victory_thresholds (*(undefined2 *)((u8 *)&g.d_0064bcbc))
+#define scenario_victory_thresholds (*(i16 *)((u8 *)&g.d_0064bcbc))
 #define score_citizens (*(iptr *)((u8 *)&g.d_00673f78))
 #define score_civ_objective_value (*(iptr *)((u8 *)&g.d_00673f80))
 #define score_objective_civ_value (*(iptr *)((u8 *)&g.d_00673f64))
 #define score_total_objective_value (*(iptr *)((u8 *)&g.d_00673f70))
 #define score_wonders (*(iptr *)((u8 *)&g.d_00673f5c))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
-#define local_90 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_80 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define local_90 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_80 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(40)))
@@ -2037,7 +2037,7 @@ void __cdecl civ_score_window_draw(void)
   iptr iVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2050,7 +2050,7 @@ void __cdecl civ_score_window_draw(void)
   text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x55c));
+  iVar1 = label_string(*(i32 *)(label_string_ids + 0x55c));
   text_append(iVar1);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_5c,advisor_client_width);
   local_5c += local_10;
@@ -2446,7 +2446,7 @@ LAB_004355c2:
 #undef local_8
 
 /* 00435d15 auto */
-#define _DAT_00625ec0 (*(undefined4 *)((u8 *)&g.d_00625ec0))
+#define _DAT_00625ec0 (*(i32 *)((u8 *)&g.d_00625ec0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl civ_score_window_show(iptr param_1)
@@ -2470,19 +2470,19 @@ void __cdecl civ_score_window_show(iptr param_1)
 #undef _DAT_00625ec0
 
 /* 00435dc4 auto */
-#define advisor_client_width (*(undefined4 *)((u8 *)&g.d_0063ec3c))
-#define advisor_client_x (*(undefined4 *)((u8 *)&g.d_0063ec34))
+#define advisor_client_width (*(i32 *)((u8 *)&g.d_0063ec3c))
+#define advisor_client_x (*(i32 *)((u8 *)&g.d_0063ec34))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
 #define civ_rating_percent (*(int *)((u8 *)&g.d_0063ea18))
 #define civ_rating_title_index (*(int *)((u8 *)&g.d_0063e4ec))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define _DAT_0063ef78 (*(undefined4 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(undefined4 *)((u8 *)&g.d_0063ef7c))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define local_80 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_74 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_68 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_60 (*(undefined1 (*)[80])(frame_ + FRAME_OFF(32)))
+#define local_60 (*(i8 (*)[80])(frame_ + FRAME_OFF(32)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(112)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(116)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(120)))
@@ -2495,7 +2495,7 @@ void __cdecl civ_rating_window_draw(void)
   int iVar3;
   iptr iVar4;
   iptr civ;
-  undefined1 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
@@ -2535,7 +2535,7 @@ void __cdecl civ_rating_window_draw(void)
   text_set_font(ADDR(0x63eac0, ((u8 *)&g.d_0063eac0)));
   text_set_colors(0x25,0x12,2,1);
   text_clear();
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x670));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x670));
   text_append(iVar4);
   text_append_colon();
   text_append_int(iVar3);
@@ -2609,7 +2609,7 @@ void __cdecl civ_rating_window_draw(void)
 #undef local_8
 
 /* 004361cc auto */
-#define _DAT_00625ec0 (*(undefined4 *)((u8 *)&g.d_00625ec0))
+#define _DAT_00625ec0 (*(i32 *)((u8 *)&g.d_00625ec0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl civ_rating_window_show(iptr param_1)
@@ -2635,10 +2635,10 @@ void __cdecl civ_rating_window_show(iptr param_1)
 
 /* 0043cab0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl civ_color_primary(iptr civ)
+i32 __cdecl civ_color_primary(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (civ == 0) {
     local_8 = 0;
@@ -2646,16 +2646,16 @@ undefined4 __cdecl civ_color_primary(iptr civ)
   else {
     local_8 = (int)leaders[civs[civ].tribe].color;
   }
-  return *(undefined4 *)(&civ_primary_colors + local_8 * 0x10);
+  return *(i32 *)(&civ_primary_colors + local_8 * 0x10);
 }
 #undef local_8
 
 /* 0043cb30 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl civ_color_secondary(iptr civ)
+i32 __cdecl civ_color_secondary(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (civ == 0) {
     local_8 = 0;
@@ -2663,7 +2663,7 @@ undefined4 __cdecl civ_color_secondary(iptr civ)
   else {
     local_8 = (int)leaders[civs[civ].tribe].color;
   }
-  return *(undefined4 *)(&civ_secondary_colors + local_8 * 0x10);
+  return *(i32 *)(&civ_secondary_colors + local_8 * 0x10);
 }
 #undef local_8
 
@@ -2674,7 +2674,7 @@ int __cdecl civ_total_population(iptr civ)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -2701,7 +2701,7 @@ void __cdecl civ_reset_city_production(uptr param_1,iptr param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((game.multiplayer != 1) || ((1 << ((byte)param_1 & 0x1f) & (uint)hotseat_human_players) == 0)) {
     for (city = 0; city < game.num_cities; city++) {
@@ -2917,11 +2917,11 @@ void __cdecl civ_portrait_sprites_static_dtor(void)
 }
 
 /* 00448f92 auto */
-undefined4 __cdecl civ_city_style_era(iptr civ)
+i32 __cdecl civ_city_style_era(iptr civ)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   iVar1 = civ_has_advance(civ,0x18);
   if ((iVar1 != 0) && (iVar1 = civ_has_advance(civ,5), iVar1 != 0)) {
@@ -2943,10 +2943,10 @@ undefined4 __cdecl civ_city_style_era(iptr civ)
 
 /* 00453e51 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-undefined4 __cdecl civ_has_wonder(iptr civ,iptr param_2)
+i32 __cdecl civ_has_wonder(iptr civ,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   iptr city;
   
   if (((param_2 == 0x14) && ((game.game_flags & 0x80) != 0)) && ((scenario_flags & 1) != 0)) {
@@ -3002,7 +3002,7 @@ uint __cdecl civ_get_attitude(iptr civ,iptr param_2)
 void __cdecl civ_set_attitude(iptr civ,iptr param_2,iptr param_3)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if (((game.multiplayer != 1) || ((1 << ((byte)civ & 0x1f) & (uint)hotseat_human_players) == 0)) ||
      (human_civ == civ)) {
@@ -3033,11 +3033,11 @@ void __cdecl civ_update_power_ranks(void)
 {
   uint *puVar1;
   int iVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   uint uVar4;
   uint uVar5;
   uptr uVar2;
-  undefined1 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (civ = 1; (int)civ < 8; civ++) {
     if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0) {
@@ -3213,7 +3213,7 @@ LAB_00485891:
 int __cdecl civ_throne_upgrade_threshold(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = 0; local_c <= param_1; local_c++) {
@@ -3235,7 +3235,7 @@ void __cdecl civ_check_throne_room_upgrade(void)
   int iVar3;
   int iVar4;
   iptr civ;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = human_civ;
   if (((game.game_flags & 0x80) == 0) && (game.multiplayer != 1)) {
@@ -3252,7 +3252,7 @@ void __cdecl civ_check_throne_room_upgrade(void)
       iVar4 = civ_throne_upgrade_threshold(civs[civ].throne_room_upgrades + 1);
       if ((iVar4 <= iVar3) &&
          ((civs[civ].throne_room_upgrades = civs[civ].throne_room_upgrades + 1,
-          civs[civ].throne_room_upgrades < 0x26 && (((*(undefined1 *)((char *)&game.game_options + 2)) & 2) != 0)))) {
+          civs[civ].throne_room_upgrades < 0x26 && (((*(i8 *)((char *)&game.game_options + 2)) & 2) != 0)))) {
         throneroom_show_upgrade(human_civ);
       }
     }
@@ -3280,9 +3280,9 @@ void __cdecl civ_process_cities_turn(uptr civ)
   char cVar1;
   bool bVar2;
   int iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = 0;
   civs[civ].field_3d2 = 0;
@@ -3467,7 +3467,7 @@ void __cdecl civ_process_cities_turn(uptr civ)
 #undef local_c
 
 /* 00488cef auto */
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(24)))
@@ -3480,11 +3480,11 @@ void __cdecl civ_heal_units(iptr civ)
   uint uVar4;
   iptr iVar5;
   iptr iVar6;
-  undefined4 uVar5;
+  i32 uVar5;
   int city;
   int iVar8;
   iptr civ2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (unit = 0; unit < game.num_units; unit++) {
     if (2 < game.multiplayer) {
@@ -3595,7 +3595,7 @@ void __cdecl civ_check_pop_and_funds(iptr civ,int param_2)
   short sVar1;
   int iVar2;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = -1;
   iVar2 = civ_total_population(civ);
@@ -3632,7 +3632,7 @@ void __cdecl civ_check_pop_and_funds(iptr civ,int param_2)
 #undef local_8
 
 /* 00489553 auto */
-#define civ_turn_in_progress (*(undefined4 *)((u8 *)&g.d_0062c5b8))
+#define civ_turn_in_progress (*(i32 *)((u8 *)&g.d_0062c5b8))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl civ_process_turn(uptr civ)
@@ -3640,7 +3640,7 @@ void __cdecl civ_process_turn(uptr civ)
 {
   i32 iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   civ_turn_in_progress = 1;
@@ -3684,7 +3684,7 @@ void __cdecl civ_process_turn(uptr civ)
     }
   }
   civ_turn_in_progress = 0;
-  if (((*(undefined1 *)((char *)&game.game_options + 1)) & 0x20) != 0) {
+  if (((*(i8 *)((char *)&game.game_options + 1)) & 0x20) != 0) {
     __chdir(&scenario_dir_path);
     game_autosave(civ);
     __chdir(&game_home_dir);
@@ -3714,11 +3714,11 @@ void __cdecl civ_ai_goal_negate_priority(int civ,int param_2)
 /* 00492c15 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl
-civ_clear_standing_goals_near(iptr civ,undefined4 param_2,undefined4 param_3,undefined4 param_4,int param_5)
+civ_clear_standing_goals_near(iptr civ,i32 param_2,i32 param_3,i32 param_4,int param_5)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_c = 0; local_c < 0x10; local_c++) {
     if (civs[civ].ai_standing_goals[local_c].role == (char)param_2) {
@@ -3761,7 +3761,7 @@ void __cdecl civ_standing_goal_insert_gap(iptr civ,int param_2)
 {
   i16 iVar1;
   i8 iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0xe; param_2 <= local_8; local_8--) {
     iVar1 = civs[civ].ai_standing_goals[local_8].y;
@@ -3778,12 +3778,12 @@ void __cdecl civ_standing_goal_insert_gap(iptr civ,int param_2)
 
 /* 00492e60 auto */
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl civ_ai_goal_get_priority(iptr civ,int param_2,int param_3,undefined4 param_4)
+int __cdecl civ_ai_goal_get_priority(iptr civ,int param_2,int param_3,i32 param_4)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   for (local_8 = 0; local_8 < 0x30; local_8++) {
@@ -3820,7 +3820,7 @@ void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int param_4,int param_5)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   while( true ) {
@@ -3876,10 +3876,10 @@ void __cdecl civ_add_ai_goal(iptr civ,int x,int y,int param_4,int param_5)
 
 /* 004933f2 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl civ_add_standing_goal(iptr civ,int param_2,int param_3,undefined4 param_4,int param_5)
+void __cdecl civ_add_standing_goal(iptr civ,int param_2,int param_3,i32 param_4,int param_5)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {
@@ -3915,7 +3915,7 @@ void __cdecl civ_add_standing_goal(iptr civ,int param_2,int param_3,undefined4 p
 void __cdecl civ_refresh_ai_goals(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x30; local_8++) {
     if (civs[civ].ai_goals[local_8].priority < '\0') {
@@ -3940,7 +3940,7 @@ void __cdecl civ_refresh_ai_goals(iptr civ)
 void __cdecl civ_reset_standing_goals(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 0x10; local_8++) {
     civs[civ].ai_standing_goals[local_8].role = 0xff;
@@ -3957,7 +3957,7 @@ int __cdecl civ_leader_name(iptr civ)
   int iVar1;
   
   if (civ < 1) {
-    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x44));
+    iVar1 = label_string(*(i32 *)(label_string_ids + 0x44));
   }
   else if (leaders[civs[civ].tribe].leader_name < 0) {
     iVar1 = civ * 0xf2 + ADDR(0x64bcfa, ((u8 *)&civ_names + 2));
@@ -3996,7 +3996,7 @@ int __cdecl civ_name_plural(iptr civ)
   int iVar1;
   
   if (civ < 1) {
-    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x3c));
+    iVar1 = label_string(*(i32 *)(label_string_ids + 0x3c));
   }
   else if (leaders[civs[civ].tribe].plural < 0) {
     iVar1 = civ * 0xf2 + ADDR(0x64bd12, ((u8 *)&civ_names + 26));
@@ -4014,7 +4014,7 @@ int __cdecl civ_adjective(iptr civ)
   int iVar1;
   
   if (civ < 1) {
-    iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x40));
+    iVar1 = label_string(*(i32 *)(label_string_ids + 0x40));
   }
   else if (leaders[civs[civ].tribe].adjective < 0) {
     iVar1 = civ * 0xf2 + ADDR(0x64bd2a, ((u8 *)&civ_names + 50));
@@ -4030,7 +4030,7 @@ int __cdecl civ_adjective(iptr civ)
 void __cdecl advance_count_prereq_depth(iptr advance)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (tech_prereq_walk_count < 0x65) {
     for (local_8 = 0; local_8 < 2; local_8++) {
@@ -4049,7 +4049,7 @@ void __cdecl advance_count_prereq_depth(iptr advance)
 void __cdecl civ_password_ensure_set(int civ)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   mp_turn_timer_stop(1);
   passwords_unscramble();
@@ -4067,13 +4067,13 @@ void __cdecl civ_password_ensure_set(int civ)
 #define local_328 (*(Dialog *)(frame_ + FRAME_OFF(32)))
 #define local_34 (*(char (*)[32])(frame_ + FRAME_OFF(788)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(820)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(824)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(828)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(832)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(824)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(828)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(832)))
 void __cdecl civ_change_password_dialog(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(840)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(840)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_328,0x4000);
@@ -4112,7 +4112,7 @@ void __cdecl civ_change_password_dialog(iptr civ)
   }
 LAB_004985a2:
   passwords_refresh_flags();
-  *(undefined4 *)(&civ_password_prompt_pending + civ * 4) = 0;
+  *(i32 *)(&civ_password_prompt_pending + civ * 4) = 0;
   mp_turn_timer_resume(1);
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004985d0 */ { dialog_dtor((Dialog *)((iptr)&local_328)); }
@@ -4127,18 +4127,18 @@ LAB_004985a2:
 #undef local_8
 
 /* 004985f4 auto */
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define local_328 (*(char (*)[32])(frame_ + FRAME_OFF(0)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(788)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(792)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(796)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(800)))
-undefined4 __cdecl civ_password_prompt(int civ)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(792)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(796)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(800)))
+i32 __cdecl civ_password_prompt(int civ)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(808)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x4000);
@@ -4181,8 +4181,8 @@ undefined4 __cdecl civ_password_prompt(int civ)
 #undef local_8
 
 /* 00498a5c auto */
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
-undefined4 __cdecl civ_check_password(iptr civ)
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
+i32 __cdecl civ_check_password(iptr civ)
 
 {
   int iVar1;
@@ -4200,7 +4200,7 @@ undefined4 __cdecl civ_check_password(iptr civ)
       game_loop_active = 1;
       iVar1 = civ_password_prompt(civ);
       if (iVar1 == 0) {
-        *(undefined4 *)(&civ_password_prompt_pending + civ * 4) = 0;
+        *(i32 *)(&civ_password_prompt_pending + civ * 4) = 0;
         return 1;
       }
     } while (iVar1 == 1);
@@ -4231,7 +4231,7 @@ int __cdecl civ_calc_score(iptr civ)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   score_citizens = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -4376,7 +4376,7 @@ int __cdecl civ_calc_score(iptr civ)
 void __cdecl civ_reset_spaceship(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   civs[civ].spaceship_flags = '\0';
   civs[civ].spaceship_population = 0;
@@ -4404,11 +4404,11 @@ uint __cdecl civ_spaceship_exists(iptr civ)
 }
 
 /* 004a75d5 auto */
-undefined4 __cdecl civ_spaceship_arrived(iptr civ)
+i32 __cdecl civ_spaceship_arrived(iptr civ)
 
 {
   int iVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   iVar1 = civ_spaceship_launched(civ);
   if ((iVar1 == 0) || (game.year < civs[civ].spaceship_arrival_year)) {
@@ -4450,12 +4450,12 @@ void __cdecl civ_spaceship_lost_notify(iptr civ)
 }
 
 /* 004a7ce9 auto */
-#define civ_create_busy (*(undefined4 *)((u8 *)&g.d_006ad8f0))
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
-#define game_over_reason (*(undefined4 *)((u8 *)&g.d_0064b1ac))
+#define civ_create_busy (*(i32 *)((u8 *)&g.d_006ad8f0))
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
+#define game_over_reason (*(i32 *)((u8 *)&g.d_0064b1ac))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define map_view_center_x (*(undefined2 *)((u8 *)&g.d_0066ca88))
-#define mapview_center_y (*(undefined2 *)((u8 *)&g.d_0066ca8a))
+#define map_view_center_x (*(i16 *)((u8 *)&g.d_0066ca88))
+#define mapview_center_y (*(i16 *)((u8 *)&g.d_0066ca8a))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_new_civ_ack_result (*(int *)((u8 *)&g.d_006c9164))
 #define local_1c0 (*(int *)(frame_ + FRAME_OFF(0)))
@@ -4495,9 +4495,9 @@ int __cdecl civ_create(iptr civ)
   iptr iVar4;
   iptr iVar5;
   int iVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
-  undefined1 frame_[FRAME_OFF(448)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar7;
+  i32 uVar8;
+  i8 frame_[FRAME_OFF(448)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) || (game.turn == 0)) {
     civ_create_busy = 1;
@@ -4520,7 +4520,7 @@ int __cdecl civ_create(iptr civ)
       civs[civ].field_1f = '\0';
       civs[civ].field_3d2 = 0;
       for (local_1c = 0; local_1c < 10; local_1c++) {
-        *(undefined1 *)&civs[civ].throne_room[local_1c] = 0;
+        *(i8 *)&civs[civ].throne_room[local_1c] = 0;
       }
       civs[civ].throne_room[0] = 1;
       civs[civ].throne_room[1] = 1;
@@ -4530,8 +4530,8 @@ int __cdecl civ_create(iptr civ)
       for (leader = 0; leader < 8; leader++) {
         civs[civ].field_48[leader] = 0;
         civs[leader].field_48[civ] = 0;
-        *(undefined1 *)&civs[civ].field_50[leader] = 0;
-        *(undefined1 *)&civs[leader].field_50[civ] = 0;
+        *(i8 *)&civs[civ].field_50[leader] = 0;
+        *(i8 *)&civs[leader].field_50[civ] = 0;
       }
       civs[civ].attitude[0] = 'd';
       for (leader = 1; leader < 8; leader++) {
@@ -4541,8 +4541,8 @@ int __cdecl civ_create(iptr civ)
         else if ((1 << ((byte)leader & 0x1f) & (uint)game.human_players) == 0) {
           iVar5 = _rand();
           *(char *)&civs[leader].attitude[civ] = (char)(iVar5 % 0x50) + '\n';
-          *(undefined1 *)&civs[civ].attitude[leader] =
-               *(undefined1 *)&civs[leader].attitude[civ];
+          *(i8 *)&civs[civ].attitude[leader] =
+               *(i8 *)&civs[leader].attitude[civ];
         }
         else {
           uVar8 = 0x4b;
@@ -4550,14 +4550,14 @@ int __cdecl civ_create(iptr civ)
           iVar6 = _rand();
           uVar7 = int_clamp((uint)game.difficulty * 5 + iVar6 % 0x50 + 10,uVar7,uVar8);
           *(char *)&civs[leader].attitude[civ] = (char)uVar7;
-          *(undefined1 *)&civs[civ].attitude[leader] =
-               *(undefined1 *)&civs[leader].attitude[civ];
+          *(i8 *)&civs[civ].attitude[leader] =
+               *(i8 *)&civs[leader].attitude[civ];
         }
       }
       civ_refresh_ai_goals(civ);
       civ_reset_standing_goals(civ);
       for (local_1c = 0; local_1c < 0x40; local_1c++) {
-        *(undefined1 *)&civs[civ].continent_policy[local_1c] = 5;
+        *(i8 *)&civs[civ].continent_policy[local_1c] = 5;
         aiStack_13c[local_1c] = 0;
         for (leader = 1; leader < 8; leader++) {
           aiStack_13c[local_1c] =
@@ -4565,7 +4565,7 @@ int __cdecl civ_create(iptr civ)
         }
       }
       civs[civ].num_cities = 0;
-      *(undefined4 *)(&civ_unit_counts + civ * 4) = 0;
+      *(i32 *)(&civ_unit_counts + civ * 4) = 0;
       civs[civ].num_military_units = 0;
       civs[civ].military_strength = 0;
       civs[civ].total_attack = 0;
@@ -4573,22 +4573,22 @@ int __cdecl civ_create(iptr civ)
       civs[civ].num_ships = 0;
       civs[civ].population_milestone = 0;
       for (local_1c = 0; local_1c < 4; local_1c++) {
-        *(undefined1 *)&civs[civ].wonders_by_group[local_1c] = 0;
+        *(i8 *)&civs[civ].wonders_by_group[local_1c] = 0;
       }
       for (leader = 0; leader < 8; leader++) {
         civs[leader].last_treaty_turn[civ] = 0xffff;
       }
       local_148 = ~(1 << ((byte)civ & 0x1f));
       for (local_1c = 0; local_1c < 100; local_1c++) {
-        *(undefined1 *)&civs[civ].advance_source[local_1c] = 0xff;
+        *(i8 *)&civs[civ].advance_source[local_1c] = 0xff;
         game.advance_known_by[local_1c] = game.advance_known_by[local_1c] & (byte)local_148;
       }
       for (leader = 0; leader < 8; leader++) {
-        *(undefined4 *)&civs[civ].treaties[leader] = 0;
-        *(undefined4 *)&civs[leader].treaties[civ] = 0;
+        *(i32 *)&civs[civ].treaties[leader] = 0;
+        *(i32 *)&civs[leader].treaties[civ] = 0;
       }
       for (local_1c = 0; local_1c < 0xd; local_1c++) {
-        *(undefined1 *)&civs[civ].advances[local_1c] = 0;
+        *(i8 *)&civs[civ].advances[local_1c] = 0;
       }
       if (game.turn != 0) {
         local_28 = (uint)game.civs_alive & 1 << ((byte)civ & 0x1f);
@@ -4614,9 +4614,9 @@ int __cdecl civ_create(iptr civ)
         }
       }
       for (local_1c = 0; local_1c < 0x3e; local_1c++) {
-        *(undefined1 *)&civs[civ].units_active[local_1c] = 0;
-        *(undefined1 *)&civs[civ].units_in_production[local_1c] = 0;
-        *(undefined1 *)&civs[civ].units_lost[local_1c] = 0;
+        *(i8 *)&civs[civ].units_active[local_1c] = 0;
+        *(i8 *)&civs[civ].units_in_production[local_1c] = 0;
+        *(i8 *)&civs[civ].units_lost[local_1c] = 0;
       }
       if (civ == 0) {
         civ_create_busy = 0;
@@ -4631,7 +4631,7 @@ int __cdecl civ_create(iptr civ)
               sVar1 = leaders[local_1c].color;
               local_2c = (int)sVar1;
               iVar6 = local_2c;
-              (*(undefined1 *)((char *)&local_2c + 0)) = (byte)sVar1;
+              (*(i8 *)((char *)&local_2c + 0)) = (byte)sVar1;
               bVar2 = (byte)local_2c & 0x1f;
               local_2c = iVar6;
               if ((((1 << bVar2 & (uint)game.human_players) == 0) && (civ == sVar1)) &&
@@ -4798,8 +4798,8 @@ int __cdecl civ_create(iptr civ)
               }
             }
             if (human_civ == civ) {
-              map_view_center_x = (undefined2)x2;
-              mapview_center_y = (undefined2)y2;
+              map_view_center_x = (i16)x2;
+              mapview_center_y = (i16)y2;
             }
             unit = unit_create(0,civ,x2,y2);
             civs[civ].capital_x = (i16)x2;
@@ -4913,11 +4913,11 @@ int __cdecl civ_create(iptr civ)
 
 /* 004aa378 auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
-#define civ_check_destroyed_busy (*(undefined4 *)((u8 *)&g.d_006ad8f4))
+#define civ_check_destroyed_busy (*(i32 *)((u8 *)&g.d_006ad8f4))
 #define destroyed_civ_count (*(short *)((u8 *)&g.d_00655128))
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
-#define game_over_reason (*(undefined4 *)((u8 *)&g.d_0064b1ac))
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
+#define game_over_reason (*(i32 *)((u8 *)&g.d_0064b1ac))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_kill_civ_ack_result (*(int *)((u8 *)&g.d_006c9168))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
@@ -4932,8 +4932,8 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
   iptr iVar3;
   iptr iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (civ == 0) {
     iVar5 = 0;
@@ -4966,7 +4966,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
           iVar5 = (int)destroyed_civ_count;
           destroyed_civ_count++;
           *(i16 *)(&destroyed_civ_turns + iVar5 * 2) = game.turn;
-          (&destroyed_civ_killers)[iVar5] = (undefined1)civ2;
+          (&destroyed_civ_killers)[iVar5] = (i8)civ2;
           (&destroyed_civ_portraits)[iVar5] = civs[civ].leader_portrait;
           uVar6 = civ_name_plural(civ);
           FUN_005f22d0(&destroyed_civ_names + iVar5 * 0x18,uVar6);
@@ -4995,7 +4995,7 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
           game_over_reason = 4;
         }
         else if ((2 < game.multiplayer) && (human_civ != civ)) {
-          net_send_message(0x6b,*(undefined4 *)
+          net_send_message(0x6b,*(i32 *)
                                    (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),
                              (uint)game.game_flags,4,0,0,0,0,0,0);
         }
@@ -5072,12 +5072,12 @@ int __cdecl civ_check_destroyed(iptr civ,iptr civ2)
 /* 004b0720 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define advance (*(int *)(frame_ + FRAME_OFF(8)))
-undefined1 __cdecl rules_parse_advance_abbrev(char *param_1)
+i8 __cdecl rules_parse_advance_abbrev(char *param_1)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = _strcmp(param_1,&rules_advance_no_str);
   if (iVar2 == 0) {
@@ -5096,7 +5096,7 @@ undefined1 __cdecl rules_parse_advance_abbrev(char *param_1)
           local_c = advance;
         }
       }
-      uVar1 = (undefined1)local_c;
+      uVar1 = (i8)local_c;
     }
   }
   return uVar1;
@@ -5107,12 +5107,12 @@ undefined1 __cdecl rules_parse_advance_abbrev(char *param_1)
 /* 004b07d1 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define terrain2 (*(int *)(frame_ + FRAME_OFF(8)))
-undefined1 __cdecl rules_parse_terrain_abbrev(char *param_1)
+i8 __cdecl rules_parse_terrain_abbrev(char *param_1)
 
 {
-  undefined1 uVar1;
+  i8 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = __strcmpi(param_1,&rules_terrain_no_str);
   if (iVar2 == 0) {
@@ -5131,7 +5131,7 @@ undefined1 __cdecl rules_parse_terrain_abbrev(char *param_1)
           local_c = terrain2;
         }
       }
-      uVar1 = (undefined1)local_c;
+      uVar1 = (i8)local_c;
     }
   }
   return uVar1;
@@ -5142,11 +5142,11 @@ undefined1 __cdecl rules_parse_terrain_abbrev(char *param_1)
 /* 004bd9f0 auto */
 #define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(byte (*)[4])(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl civ_has_advance(iptr civ,iptr param_2)
+i32 __cdecl civ_has_advance(iptr civ,iptr param_2)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 == -2) {
     uVar1 = 0;
@@ -5180,10 +5180,10 @@ undefined4 __cdecl civ_has_advance(iptr civ,iptr param_2)
 #undef local_8
 
 /* 004bdaa5 auto */
-undefined4 __cdecl advance_has_prereq(iptr advance,iptr param_2)
+i32 __cdecl advance_has_prereq(iptr advance,iptr param_2)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
   
   if (advance < 0) {
@@ -5218,7 +5218,7 @@ void __cdecl civ_leonardo_upgrade(iptr civ)
 {
   byte unit_type;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = civ_has_wonder(civ,0xe);
   if (iVar2 != 0) {
@@ -5254,7 +5254,7 @@ void __cdecl civ_leonardo_upgrade(iptr civ)
                 dlg_game_txt_with_unit_flags(ADDR(0x62db04, ((u8 *)&g.d_0062db04)),unit_type3,(ui_large_screen == 0) - 1 & 8);
               }
               else {
-                net_send_text_args(0x3e,*(undefined4 *)
+                net_send_text_args(0x3e,*(i32 *)
                                          (&net_player_slots +
                                          *(int *)(&net_civ_slots + civ * 4) * 0x54),3,0,unit_type3,
                                    ui_large_screen);
@@ -5290,7 +5290,7 @@ void __cdecl civ_advance_gov_prompts(iptr civ,iptr advance)
 {
   int iVar1;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (advance == 0x36) {
     if ((civs[civ].government == 1) &&
@@ -5302,7 +5302,7 @@ void __cdecl civ_advance_gov_prompts(iptr civ,iptr advance)
     }
   }
   else if ((((advance == 0x47) || (advance == 0x15)) || (advance == 0xf)) || (advance == 0x1f)) {
-    if (((((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) && (advance == 0x47)) &&
+    if (((((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) && (advance == 0x47)) &&
        (civs[civ].government < 3)) {
       popup_file_with_sprite((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62db28, ((u8 *)&g.d_0062db28)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
       return;
@@ -5340,7 +5340,7 @@ void __cdecl civ_advance_gov_prompts(iptr civ,iptr advance)
       }
     }
   }
-  if (((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) {
+  if (((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) {
     if (advance == 0x43) {
       popup_file_with_sprite((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62db48, ((u8 *)&g.d_0062db48)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
     }
@@ -5372,7 +5372,7 @@ void __cdecl civ_golden_age_popup(iptr civ)
 {
   iptr iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = civ_get_adjective(civ);
   text_set_string_arg(0,iVar1);
@@ -5416,7 +5416,7 @@ void __cdecl civ_golden_age_popup(iptr civ)
 /* 004bf05b auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define diplo_session_active (*(int *)((u8 *)&g.d_00626a24))
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define advance3 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(12)))
@@ -5429,10 +5429,10 @@ void __cdecl civ_golden_age_popup(iptr civ)
 #define civ4 (*(int *)(frame_ + FRAME_OFF(792)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(796)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(800)))
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(804)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(812)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(816)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(804)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(808)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(812)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(816)))
 void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int param_5)
 
 {
@@ -5441,7 +5441,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
   iptr iVar3;
   int improvement2;
   uptr civ3;
-  undefined1 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_1c = 0;
@@ -5461,7 +5461,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
       bit_index_split(advance,(iptr)&advance3,(iptr)local_324);
       civs[civ].advances[advance3] =
            civs[civ].advances[advance3] | local_324[0];
-      *(undefined1 *)&civs[civ].advance_source[advance] = (undefined1)civ2;
+      *(i8 *)&civs[civ].advance_source[advance] = (i8)civ2;
       if (game.advance_known_by[advance] == '\0') {
         local_1c = 1;
       }
@@ -5480,7 +5480,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
       if ((autoplay_active == 0) &&
          ((((human_civ == civ && (civ2 < 0)) ||
            ((human_civ == civ &&
-            ((civ == civ2 && (((*(undefined1 *)((char *)&game.game_options + 2)) & 8) == 0)))))) ||
+            ((civ == civ2 && (((*(i8 *)((char *)&game.game_options + 2)) & 8) == 0)))))) ||
           ((human_civ != civ &&
            ((((((*(byte *)&civs[human_civ].treaties[civ] & 0x80) != 0 ||
                (iVar1 = civ_has_wonder(human_civ,0x18), iVar1 != 0)) ||
@@ -5575,7 +5575,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
       }
       if (((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
            (human_civ == civ)) && (civ2 != 0)) && (autoplay_active == 0)) {
-        if (((diplo_session_active == 0) && (((*(undefined1 *)((char *)&game.game_options + 2)) & 8) != 0)) && (param_4 == 0)) {
+        if (((diplo_session_active == 0) && (((*(i8 *)((char *)&game.game_options + 2)) & 8) != 0)) && (param_4 == 0)) {
           pedia_show_topic_modal((C_004083b0_a28 *)&pedia_window,advance);
         }
         civ_advance_gov_prompts(civ,advance);
@@ -5673,7 +5673,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
     }
   }
   else {
-    net_send_message(0x9b,*(undefined4 *)
+    net_send_message(0x9b,*(i32 *)
                              (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),civ,
                        advance,civ2,param_4,0,0,0,0);
     local_8 = 0xffffffff;
@@ -5702,7 +5702,7 @@ void __cdecl civ_give_advance(uptr civ,iptr advance,iptr civ2,iptr param_4,int p
 #undef local_8
 
 /* 004bfdbe auto */
-undefined4 __cdecl civ_can_research_advance(iptr civ,iptr advance)
+i32 __cdecl civ_can_research_advance(iptr civ,iptr advance)
 
 {
   int iVar1;
@@ -5717,14 +5717,14 @@ undefined4 __cdecl civ_can_research_advance(iptr civ,iptr advance)
 }
 
 /* 004bfe5a auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define unit_type2 (*(iptr *)(frame_ + FRAME_OFF(8)))
-undefined4 __cdecl civ_can_build_unit(iptr civ,iptr city,iptr unit_type)
+i32 __cdecl civ_can_build_unit(iptr civ,iptr city,iptr unit_type)
 
 {
   char cVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   cVar1 = unit_types[unit_type].prerequisite;
@@ -5776,12 +5776,12 @@ undefined4 __cdecl civ_can_build_unit(iptr civ,iptr city,iptr unit_type)
 
 /* 004c02d8 auto */
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl civ_can_build_wonder(iptr civ,iptr param_2)
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+i32 __cdecl civ_can_build_wonder(iptr civ,iptr param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = 0;
   if ((((((game.game_flags & 0x80) == 0) || ((scenario_flags & 4) == 0)) || (game.reveal_map != '\0'))
@@ -5806,7 +5806,7 @@ iptr __cdecl civ_pick_research_advance(iptr civ)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = -1;
   local_18 = -1;
@@ -5849,16 +5849,16 @@ iptr __cdecl civ_pick_research_advance(iptr civ)
 #undef local_8
 
 /* 004c0b51 auto */
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-undefined4 __cdecl
-research_option_draw_advance(undefined4 param_1,iptr param_2,iptr advance,byte param_4,int param_5,int param_6,
+i32 __cdecl
+research_option_draw_advance(i32 param_1,iptr param_2,iptr advance,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = param_5;
   if ((param_4 & 1) != 0) {
@@ -5879,18 +5879,18 @@ research_option_draw_advance(undefined4 param_1,iptr param_2,iptr advance,byte p
 #undef local_8
 
 /* 004c0be8 auto */
-#define local_28 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-undefined4 __cdecl
-research_option_draw_unit(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+i32 __cdecl
+research_option_draw_unit(i32 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = 0xfffffffe;
   local_10 = param_5;
@@ -5916,16 +5916,16 @@ research_option_draw_unit(undefined4 param_1,iptr param_2,int param_3,byte param
 #undef local_8
 
 /* 004c0c83 auto */
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-undefined4 __cdecl
-research_option_draw_improvement(undefined4 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
+i32 __cdecl
+research_option_draw_improvement(i32 param_1,iptr param_2,int param_3,byte param_4,int param_5,int param_6,
             int param_7)
 
 {
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = param_5;
   if ((param_4 & 1) != 0) {
@@ -5956,17 +5956,17 @@ research_option_draw_improvement(undefined4 param_1,iptr param_2,int param_3,byt
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(436)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(440)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(1196)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1200)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1204)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1208)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1200)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1204)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1208)))
 void __cdecl civ_research_goal_dialog(iptr civ,int param_2,int civ2)
 
 {
   iptr iVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(1216)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(1216)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_308,0x2000);
@@ -6048,19 +6048,19 @@ void __cdecl civ_research_goal_dialog(iptr civ,int param_2,int civ2)
       }
       local_310 = 0;
       if (aiStack_334[1] != 0) {
-        iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x30c));
+        iVar1 = label_string(*(i32 *)(label_string_ids + 0x30c));
         dialog_add_button((C_0040bc40_3c *)&local_308,iVar1);
         aiStack_334[local_310 + 2] = 0;
         local_310++;
       }
       if (aiStack_334[1] != 1) {
-        iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x310));
+        iVar1 = label_string(*(i32 *)(label_string_ids + 0x310));
         dialog_add_button((C_0040bc40_3c *)&local_308,iVar1);
         aiStack_334[local_310 + 2] = 1;
         local_310++;
       }
       if (aiStack_334[1] != 2) {
-        iVar1 = label_string(*(undefined4 *)(label_string_ids + 0x314));
+        iVar1 = label_string(*(i32 *)(label_string_ids + 0x314));
         dialog_add_button((C_0040bc40_3c *)&local_308,iVar1);
         aiStack_334[local_310 + 2] = 2;
         local_310++;
@@ -6239,8 +6239,8 @@ LAB_004c1734:
 #define advance3 (*(iptr *)(frame_ + FRAME_OFF(804)))
 #define local_308 (*(Dialog *)(frame_ + FRAME_OFF(808)))
 #define local_14 (*(iptr *)(frame_ + FRAME_OFF(1564)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1568)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1572)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1568)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1572)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(1576)))
 iptr __cdecl civ_choose_research_dialog(iptr civ,int param_2)
 
@@ -6249,20 +6249,20 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int param_2)
   iptr iVar1;
   int iVar4;
   iptr iVar3;
-  undefined1 frame_[FRAME_OFF(1584)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1584)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_600,0x4000);
   local_8 = 0;
   dialog_ctor(&local_308,0x4000);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),1);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   local_604 = civ_pick_research_advance(civ);
   if ((param_2 != 0) ||
      (((advance2 = local_604, game.turn != 0 &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) && (autoplay_active == 0)))) {
     while( true ) {
       advance2 = local_604;
-      if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) && (param_2 == 0)) {
+      if ((((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) && (param_2 == 0)) {
         text_clear();
         text_append_string_id(advances[advance2].name);
         if (advance2 == 0x59) {
@@ -6347,9 +6347,9 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int param_2)
         dialog_run_modal(&local_308,0,iVar1 - 300);
       }
       iVar4 = civ_has_advance(civ,0x26);
-      text_set_label_arg(0,*(undefined4 *)(label_string_ids + 0xc4 + (uint)(iVar4 == 0) * -4));
+      text_set_label_arg(0,*(i32 *)(label_string_ids + 0xc4 + (uint)(iVar4 == 0) * -4));
       dialog_load_game_text(&local_600,ADDR(0x62dc38, ((u8 *)&g.d_0062dc38)));
-      if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
+      if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
         dialog_set_position((C_0040bc40_28 *)&local_600,5,0xfffffc19);
       }
       dialog_set_option_draw_fn((DialogOptionList *)&local_600,ADDR(0x402f63, research_option_draw_advance));
@@ -6377,7 +6377,7 @@ iptr __cdecl civ_choose_research_dialog(iptr civ,int param_2)
       advance2 = local_604;
       if (local_620 == 0) break;
       iVar3 = dialog_run_modal(&local_600,0,300);
-      if (((*(undefined1 *)((char *)&game.game_options + 1)) & 2) != 0) {
+      if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
         dialog_close(&local_308);
         ui_flush_input();
       }
@@ -6430,9 +6430,9 @@ void __cdecl civ_choose_research(iptr civ)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_304 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
 iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
 
 {
@@ -6440,7 +6440,7 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
   iptr city;
   iptr iVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_304,0x4000);
@@ -6476,7 +6476,7 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
       iVar3 = civ_adjective(civ);
       text_set_string_arg_b(0,iVar3);
       iVar4 = civ_has_advance(civ,0x26);
-      text_set_label_arg(1,*(undefined4 *)(label_string_ids + 0xc4 + (uint)(iVar4 == 0) * -4));
+      text_set_label_arg(1,*(i32 *)(label_string_ids + 0xc4 + (uint)(iVar4 == 0) * -4));
       text_clear();
       text_append_string_id(advances[advance].name);
       if (advance == 0x59) {
@@ -6492,7 +6492,7 @@ iptr __cdecl civ_research_complete(uptr civ,iptr civ2)
                        (char)advances[advance].epoch * 0x3c),0,0);
       dialog_set_image_zoom((DialogWindowView *)&local_304,8);
       dlg_show_modal(&local_304,0);
-      if (((*(undefined1 *)((char *)&game.game_options + 2)) & 8) != 0) {
+      if (((*(i8 *)((char *)&game.game_options + 2)) & 8) != 0) {
         pedia_show_topic_modal((C_004083b0_a28 *)&pedia_window,advance);
       }
       if ((((advance == 0x3c) && ((civs[civ].flags & 0x20) != 0)) &&
@@ -6554,7 +6554,7 @@ int __cdecl civ_research_cost(iptr civ)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar1 = (uint)civs[civ].num_advances + (uint)civs[civ].field_12;
   if (uVar1 < 2) {
@@ -6651,7 +6651,7 @@ void __cdecl civ_add_research_points(uptr civ,int param_2)
       }
     }
     if ((civs[civ].research_progress != 0) && (civs[civ].researching < 0)) {
-      if ((((*(undefined1 *)((char *)&game.game_options + 1)) & 1) != 0) &&
+      if ((((*(i8 *)((char *)&game.game_options + 1)) & 1) != 0) &&
          ((civs[civ].num_advances < 2 &&
           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)))) {
         popup_file_with_sprite((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62dc98, ((u8 *)&g.d_0062dc98)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
@@ -6665,11 +6665,11 @@ void __cdecl civ_add_research_points(uptr civ,int param_2)
 /* 004c65d2 auto */
 #define city (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-int __cdecl civ_distance_to_capital(iptr civ,undefined4 param_2,undefined4 param_3)
+int __cdecl civ_distance_to_capital(iptr civ,i32 param_2,i32 param_3)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0x10;
   for (city = 0; city < game.num_cities; city++) {
@@ -6686,10 +6686,10 @@ int __cdecl civ_distance_to_capital(iptr civ,undefined4 param_2,undefined4 param
 #undef local_8
 
 /* 004ccab9 auto */
-#define _DAT_006a1880 (*(undefined4 *)((u8 *)&g.d_006a1880))
-#define _DAT_006a1884 (*(undefined4 *)((u8 *)&g.d_006a1884))
-#define _DAT_006a1888 (*(undefined4 *)((u8 *)&g.d_006a1888))
-#define _DAT_006a188c (*(undefined4 *)((u8 *)&g.d_006a188c))
+#define _DAT_006a1880 (*(i32 *)((u8 *)&g.d_006a1880))
+#define _DAT_006a1884 (*(i32 *)((u8 *)&g.d_006a1884))
+#define _DAT_006a1888 (*(i32 *)((u8 *)&g.d_006a1888))
+#define _DAT_006a188c (*(i32 *)((u8 *)&g.d_006a188c))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl rules_edit_set_section(iptr param_1,iptr param_2)
@@ -6711,7 +6711,7 @@ void __cdecl rules_edit_set_section(iptr param_1,iptr param_2)
 void __cdecl rules_edit_add_section(iptr param_1,iptr param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; (*(int *)(&rules_edit_section_names + local_8 * 8) != 0 && (local_8 < 7));
       local_8 = local_8 + 1) {
@@ -6719,23 +6719,23 @@ void __cdecl rules_edit_add_section(iptr param_1,iptr param_2)
   if (local_8 < 7) {
     *(iptr *)(&rules_edit_section_names + local_8 * 8) = param_1;
     *(iptr *)(&rules_edit_section_writers + local_8 * 8) = param_2;
-    *(undefined4 *)(&rules_edit_next_name + local_8 * 8) = 0;
-    *(undefined4 *)(&rules_edit_next_writer + local_8 * 8) = 0;
+    *(i32 *)(&rules_edit_next_name + local_8 * 8) = 0;
+    *(i32 *)(&rules_edit_next_writer + local_8 * 8) = 0;
   }
   return;
 }
 #undef local_8
 
 /* 004ccf2d auto */
-#define local_278 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_278 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_274 (*(char (*)[80])(frame_ + FRAME_OFF(4)))
 #define local_224 (*(FILE * *)(frame_ + FRAME_OFF(84)))
 #define local_220 (*(FILE * *)(frame_ + FRAME_OFF(88)))
 #define local_21c (*(char (*)[260])(frame_ + FRAME_OFF(92)))
-#define local_118 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(352)))
+#define local_118 (*(i8 (*)[16])(frame_ + FRAME_OFF(352)))
 #define local_108 (*(int *)(frame_ + FRAME_OFF(368)))
 #define s (*(char (*)[256])(frame_ + FRAME_OFF(372)))
-undefined4 __cdecl rules_write_sections(void)
+i32 __cdecl rules_write_sections(void)
 
 {
   iptr iVar1;
@@ -6745,7 +6745,7 @@ undefined4 __cdecl rules_write_sections(void)
   size_t sVar5;
   char *lpCaption;
   UINT uType;
-  undefined1 frame_[FRAME_OFF(632)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(632)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_108 = 0;
   local_278 = 0;
@@ -6787,7 +6787,7 @@ undefined4 __cdecl rules_write_sections(void)
     for (; *(int *)(&rules_edit_section_names + local_108 * 8) != 0; local_108++) {
       local_274[0] = '@';
       local_274[1] = 0;
-      FUN_005f22e0(local_274,*(undefined4 *)(&rules_edit_section_names + local_108 * 8));
+      FUN_005f22e0(local_274,*(i32 *)(&rules_edit_section_names + local_108 * 8));
       __strupr(local_274);
       do {
         pcVar4 = _fgets(s,0x100,local_220);
@@ -6843,7 +6843,7 @@ LAB_004cd353:
 void __cdecl rules_apply_double_moves(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((game.multiplayer == '\0') || (mp_double_moves == 0)) || (double_moves_applied != 0)) {
     if (((game.multiplayer != '\0') && (mp_double_moves == 0)) && (double_moves_applied == 1)) {
@@ -6872,8 +6872,8 @@ void __cdecl rules_apply_double_moves(void)
 #undef unit_type
 
 /* 004e1763 auto */
-#define civ_eliminate_busy (*(undefined4 *)((u8 *)&g.d_006ad8ec))
-#define game_loop_active (*(undefined1 *)((u8 *)&g.d_00628044))
+#define civ_eliminate_busy (*(i32 *)((u8 *)&g.d_006ad8ec))
+#define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define mp_kill_civ_on_retire (*(short *)((u8 *)&g.d_00654c76))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
@@ -6886,7 +6886,7 @@ void __cdecl rules_apply_double_moves(void)
 #define unit2 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(byte *)(frame_ + FRAME_OFF(36)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(44)))
-void __cdecl civ_eliminate(iptr civ,undefined4 param_2,undefined4 param_3)
+void __cdecl civ_eliminate(iptr civ,i32 param_2,i32 param_3)
 
 {
   uint *puVar1;
@@ -6901,7 +6901,7 @@ void __cdecl civ_eliminate(iptr civ,undefined4 param_2,undefined4 param_3)
   int iVar10;
   uint uVar11;
   iptr iVar12;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar5 = false;
   civ_eliminate_busy = 1;
@@ -7115,7 +7115,7 @@ void __cdecl civ_apply_eiffel_tower(iptr civ)
 
 {
   uint *puVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((civs[civ].flags & 0x10) == 0) {
     civs[civ].reputation = civs[civ].reputation >> 1;
@@ -7139,7 +7139,7 @@ uint __cdecl civ_improvement_upkeep(iptr civ,iptr improvement)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (uint)improvements[improvement].upkeep;
   if (improvement == 2) {
@@ -7182,7 +7182,7 @@ void __cdecl civ_set_government(iptr civ,iptr param_2)
 {
   uint *puVar1;
   u8 uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar2 = civs[civ].government;
   civs[civ].government = (u8)param_2;
@@ -7216,18 +7216,18 @@ void __cdecl civ_set_government(iptr civ,iptr param_2)
 #undef local_8
 
 /* 0055c277 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl
-civ_can_choose_government(iptr civ,iptr param_2,undefined4 param_3,undefined4 param_4,undefined4 param_5,
-            iptr param_6,iptr param_7,undefined4 param_8,iptr param_9,iptr param_10,iptr param_11,
-            undefined4 param_12,iptr param_13,undefined4 param_14,undefined4 param_15,
-            undefined4 param_16,undefined4 param_17,undefined4 param_18,undefined4 param_19,
-            undefined4 param_20,undefined4 param_21)
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl
+civ_can_choose_government(iptr civ,iptr param_2,i32 param_3,i32 param_4,i32 param_5,
+            iptr param_6,iptr param_7,i32 param_8,iptr param_9,iptr param_10,iptr param_11,
+            i32 param_12,iptr param_13,i32 param_14,i32 param_15,
+            i32 param_16,i32 param_17,i32 param_18,i32 param_19,
+            i32 param_20,i32 param_21)
 
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 1;
   iVar1 = civ_has_wonder(civ,0x13);
@@ -7284,7 +7284,7 @@ void __cdecl civ_change_government(iptr civ,uptr param_2)
   iptr iVar1;
   int iVar2;
   uint uVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar3 = (uint)civs[civ].government;
   if (param_2 != 0) {
@@ -7333,14 +7333,14 @@ void __cdecl civ_change_government(iptr civ,uptr param_2)
                 (iVar2 = civ_has_wonder(civ2,0x18), iVar2 != 0)) ||
                (iVar2 = civ_has_wonder(civ2,9), iVar2 != 0)))))) {
             if (((civs[civ].flags & 1) == 0) || (autoplay_active != 0)) {
-              net_send_text_args(0x2c,*(undefined4 *)
+              net_send_text_args(0x2c,*(i32 *)
                                        (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54
                                        ),1,0,uVar3,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags | 1;
               local_10++;
             }
             else {
-              net_send_text_args(0x2b,*(undefined4 *)
+              net_send_text_args(0x2b,*(i32 *)
                                        (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54
                                        ),4,0,param_2,(ui_large_screen == 0) - 1 & 8);
               civs[civ].flags = civs[civ].flags & 0xfffe;
@@ -7388,7 +7388,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
   u8 uVar2;
   int iVar3;
   iptr iVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   uVar2 = civs[civ].government;
   civs[civ].flags = civs[civ].flags & 0xffb7;
@@ -7427,10 +7427,10 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
         net_process_messages((NetSession *)&net_session,1,0);
       }
       if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x40) == 0) {
-        *(undefined4 *)(&diplo_recent_peace_table + civ2 * 4) = 0;
+        *(i32 *)(&diplo_recent_peace_table + civ2 * 4) = 0;
       }
       else {
-        *(undefined4 *)(&diplo_recent_peace_table + civ2 * 4) = 1;
+        *(i32 *)(&diplo_recent_peace_table + civ2 * 4) = 1;
       }
       puVar1 = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + civ2 * 4);
       *puVar1 = *puVar1 & 0xff5fbfff;
@@ -7513,7 +7513,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
                           text_set_string_arg(0,iVar4);
                           iVar4 = civ_name_plural(civ2);
                           text_set_string_arg(1,iVar4);
-                          net_send_text_args(0x50,*(undefined4 *)
+                          net_send_text_args(0x50,*(i32 *)
                                                    (&net_player_slots +
                                                    *(int *)(&net_civ_slots + civ3 * 4) * 0x54),2,0
                                              ,0,0);
@@ -7559,7 +7559,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
             diplo_ai_review_relations(civ,civ2);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa0,*(undefined4 *)
+            net_send_message(0xa0,*(i32 *)
                                      (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54)
                                ,civ,civ2,0,0,0,0,0,0);
           }
@@ -7575,7 +7575,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
             diplo_ai_seek_war_ally(civ,civ4);
           }
           else if (2 < game.multiplayer) {
-            net_send_message(0xa1,*(undefined4 *)
+            net_send_message(0xa1,*(i32 *)
                                      (&net_player_slots + *(int *)(&net_civ_slots + civ4 * 4) * 0x54)
                                ,civ,civ4,0,0,0,0,0,0);
           }
@@ -7593,7 +7593,7 @@ void __cdecl civ_turn_update_diplomacy(uptr civ)
 #undef civ3
 
 /* 00568861 auto */
-undefined4 __cdecl civ_city_art_era(iptr civ)
+i32 __cdecl civ_city_art_era(iptr civ)
 
 {
   int iVar1;
@@ -7611,10 +7611,10 @@ undefined4 __cdecl civ_city_art_era(iptr civ)
 
 /* 0056e1f0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl civ_color_mid(iptr civ)
+i32 __cdecl civ_color_mid(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (civ == 0) {
     local_8 = 0;
@@ -7622,7 +7622,7 @@ undefined4 __cdecl civ_color_mid(iptr civ)
   else {
     local_8 = (int)leaders[civs[civ].tribe].color;
   }
-  return *(undefined4 *)(&civ_mid_colors + local_8 * 0x10);
+  return *(i32 *)(&civ_mid_colors + local_8 * 0x10);
 }
 #undef local_8
 
@@ -7635,18 +7635,18 @@ undefined4 __cdecl civ_color_mid(iptr civ)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(12)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(768)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(772)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(780)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(776)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(780)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(784)))
 void __cdecl civ_steal_advance(iptr civ,iptr civ2)
 
 {
   int iVar1;
   iptr iVar2;
   bool bVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   iptr iVar4;
-  undefined1 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   local_318 = -1;
@@ -7706,7 +7706,7 @@ void __cdecl civ_steal_advance(iptr civ,iptr civ2)
           popup_game_with_advance(ADDR(0x634388, ((u8 *)&g.d_00634388)),advance,0);
         }
         else if (2 < game.multiplayer) {
-          net_send_text_args(99,*(undefined4 *)
+          net_send_text_args(99,*(i32 *)
                                  (&net_player_slots + *(int *)(&net_civ_slots + civ2 * 4) * 0x54),2,0,
                              advance,0);
         }
@@ -7744,7 +7744,7 @@ iptr __cdecl civ_find_central_city(iptr civ)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_10 = 0x7fff;
   local_18 = -1;
@@ -7797,16 +7797,16 @@ iptr __cdecl civ_find_central_city(iptr civ)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(336)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(340)))
 #define y3 (*(int *)(frame_ + FRAME_OFF(344)))
-undefined4 __cdecl civ_civil_war(iptr civ)
+i32 __cdecl civ_civil_war(iptr civ)
 
 {
   char civ4;
   iptr iVar2;
-  undefined4 uVar2;
+  i32 uVar2;
   iptr iVar3;
   int city2;
   iptr iVar5;
-  undefined1 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(352)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = events_check_no_schism((ScenarioEvents *)&scenario_events,civ);
   if (iVar2 == 0) {
@@ -7867,14 +7867,14 @@ undefined4 __cdecl civ_civil_war(iptr civ)
           civs[civ2].research_progress = civs[civ].research_progress;
           civs[civ2].num_advances = civs[civ].num_advances;
           for (advance = 0; advance < 0xd; advance++) {
-            *(undefined1 *)&civs[civ2].advances[advance] =
-                 *(undefined1 *)&civs[civ].advances[advance];
+            *(i8 *)&civs[civ2].advances[advance] =
+                 *(i8 *)&civs[civ].advances[advance];
           }
           for (civ3 = 1; civ3 < 8; civ3++) {
             civs[civ3].last_treaty_turn[civ2] = game.turn - 8;
           }
-          *(undefined4 *)&civs[civ2].treaties[civ] = 0x2001;
-          *(undefined4 *)&civs[civ].treaties[civ2] = 0x82801;
+          *(i32 *)&civs[civ2].treaties[civ] = 0x2001;
+          *(i32 *)&civs[civ].treaties[civ2] = 0x82801;
           local_28 = map_tiles;
           local_30 = (byte)(1 << ((byte)civ & 0x1f));
           local_38 = (byte)(1 << ((byte)civ2 & 0x1f));
@@ -8035,50 +8035,50 @@ void __cdecl cosmic_editor_focus_redraw(void)
 
 /* 005866d3 auto */
 #define cosmic_edit_values (*(u8 *)((u8 *)&g.d_006a2d80))
-#define _DAT_006a2d28 (*(undefined4 *)((u8 *)&g.d_006a2d28))
-#define _DAT_006a2d2c (*(undefined4 *)((u8 *)&g.d_006a2d2c))
-#define _DAT_006a2d30 (*(undefined4 *)((u8 *)&g.d_006a2d30))
-#define _DAT_006a2d34 (*(undefined4 *)((u8 *)&g.d_006a2d34))
-#define _DAT_006a2d38 (*(undefined4 *)((u8 *)&g.d_006a2d38))
-#define _DAT_006a2d3c (*(undefined4 *)((u8 *)&g.d_006a2d3c))
-#define _DAT_006a2d40 (*(undefined4 *)((u8 *)&g.d_006a2d40))
-#define _DAT_006a2d44 (*(undefined4 *)((u8 *)&g.d_006a2d44))
-#define _DAT_006a2d48 (*(undefined4 *)((u8 *)&g.d_006a2d48))
-#define _DAT_006a2d4c (*(undefined4 *)((u8 *)&g.d_006a2d4c))
-#define _DAT_006a2d50 (*(undefined4 *)((u8 *)&g.d_006a2d50))
-#define _DAT_006a2d54 (*(undefined4 *)((u8 *)&g.d_006a2d54))
-#define _DAT_006a2d58 (*(undefined4 *)((u8 *)&g.d_006a2d58))
-#define _DAT_006a2d5c (*(undefined4 *)((u8 *)&g.d_006a2d5c))
-#define _DAT_006a2d60 (*(undefined4 *)((u8 *)&g.d_006a2d60))
-#define _DAT_006a2d64 (*(undefined4 *)((u8 *)&g.d_006a2d64))
-#define _DAT_006a2d68 (*(undefined4 *)((u8 *)&g.d_006a2d68))
-#define _DAT_006a2d6c (*(undefined4 *)((u8 *)&g.d_006a2d6c))
-#define _DAT_006a2d70 (*(undefined4 *)((u8 *)&g.d_006a2d70))
-#define _DAT_006a2d74 (*(undefined4 *)((u8 *)&g.d_006a2d74))
-#define _DAT_006a2d78 (*(undefined4 *)((u8 *)&g.d_006a2d78))
-#define _DAT_006a2d7c (*(undefined4 *)((u8 *)&g.d_006a2d7c))
-#define _DAT_006a2d80 (*(undefined4 *)((u8 *)&g.d_006a2d80))
-#define _DAT_006a2d84 (*(undefined4 *)((u8 *)&g.d_006a2d84))
-#define _DAT_006a2d88 (*(undefined4 *)((u8 *)&g.d_006a2d88))
-#define _DAT_006a2d8c (*(undefined4 *)((u8 *)&g.d_006a2d8c))
-#define _DAT_006a2d90 (*(undefined4 *)((u8 *)&g.d_006a2d90))
-#define _DAT_006a2d94 (*(undefined4 *)((u8 *)&g.d_006a2d94))
-#define _DAT_006a2d98 (*(undefined4 *)((u8 *)&g.d_006a2d98))
-#define _DAT_006a2d9c (*(undefined4 *)((u8 *)&g.d_006a2d9c))
-#define _DAT_006a2da0 (*(undefined4 *)((u8 *)&g.d_006a2da0))
-#define _DAT_006a2da4 (*(undefined4 *)((u8 *)&g.d_006a2da4))
-#define _DAT_006a2da8 (*(undefined4 *)((u8 *)&g.d_006a2da8))
-#define _DAT_006a2dac (*(undefined4 *)((u8 *)&g.d_006a2dac))
-#define _DAT_006a2db0 (*(undefined4 *)((u8 *)&g.d_006a2db0))
-#define _DAT_006a2db4 (*(undefined4 *)((u8 *)&g.d_006a2db4))
-#define _DAT_006a2db8 (*(undefined4 *)((u8 *)&g.d_006a2db8))
-#define _DAT_006a2dbc (*(undefined4 *)((u8 *)&g.d_006a2dbc))
-#define _DAT_006a2dc0 (*(undefined4 *)((u8 *)&g.d_006a2dc0))
-#define _DAT_006a2dc4 (*(undefined4 *)((u8 *)&g.d_006a2dc4))
-#define _DAT_006a2dc8 (*(undefined4 *)((u8 *)&g.d_006a2dc8))
-#define _DAT_006a2dcc (*(undefined4 *)((u8 *)&g.d_006a2dcc))
-#define _DAT_006a2dd0 (*(undefined4 *)((u8 *)&g.d_006a2dd0))
-#define _DAT_006a2dd4 (*(undefined4 *)((u8 *)&g.d_006a2dd4))
+#define _DAT_006a2d28 (*(i32 *)((u8 *)&g.d_006a2d28))
+#define _DAT_006a2d2c (*(i32 *)((u8 *)&g.d_006a2d2c))
+#define _DAT_006a2d30 (*(i32 *)((u8 *)&g.d_006a2d30))
+#define _DAT_006a2d34 (*(i32 *)((u8 *)&g.d_006a2d34))
+#define _DAT_006a2d38 (*(i32 *)((u8 *)&g.d_006a2d38))
+#define _DAT_006a2d3c (*(i32 *)((u8 *)&g.d_006a2d3c))
+#define _DAT_006a2d40 (*(i32 *)((u8 *)&g.d_006a2d40))
+#define _DAT_006a2d44 (*(i32 *)((u8 *)&g.d_006a2d44))
+#define _DAT_006a2d48 (*(i32 *)((u8 *)&g.d_006a2d48))
+#define _DAT_006a2d4c (*(i32 *)((u8 *)&g.d_006a2d4c))
+#define _DAT_006a2d50 (*(i32 *)((u8 *)&g.d_006a2d50))
+#define _DAT_006a2d54 (*(i32 *)((u8 *)&g.d_006a2d54))
+#define _DAT_006a2d58 (*(i32 *)((u8 *)&g.d_006a2d58))
+#define _DAT_006a2d5c (*(i32 *)((u8 *)&g.d_006a2d5c))
+#define _DAT_006a2d60 (*(i32 *)((u8 *)&g.d_006a2d60))
+#define _DAT_006a2d64 (*(i32 *)((u8 *)&g.d_006a2d64))
+#define _DAT_006a2d68 (*(i32 *)((u8 *)&g.d_006a2d68))
+#define _DAT_006a2d6c (*(i32 *)((u8 *)&g.d_006a2d6c))
+#define _DAT_006a2d70 (*(i32 *)((u8 *)&g.d_006a2d70))
+#define _DAT_006a2d74 (*(i32 *)((u8 *)&g.d_006a2d74))
+#define _DAT_006a2d78 (*(i32 *)((u8 *)&g.d_006a2d78))
+#define _DAT_006a2d7c (*(i32 *)((u8 *)&g.d_006a2d7c))
+#define _DAT_006a2d80 (*(i32 *)((u8 *)&g.d_006a2d80))
+#define _DAT_006a2d84 (*(i32 *)((u8 *)&g.d_006a2d84))
+#define _DAT_006a2d88 (*(i32 *)((u8 *)&g.d_006a2d88))
+#define _DAT_006a2d8c (*(i32 *)((u8 *)&g.d_006a2d8c))
+#define _DAT_006a2d90 (*(i32 *)((u8 *)&g.d_006a2d90))
+#define _DAT_006a2d94 (*(i32 *)((u8 *)&g.d_006a2d94))
+#define _DAT_006a2d98 (*(i32 *)((u8 *)&g.d_006a2d98))
+#define _DAT_006a2d9c (*(i32 *)((u8 *)&g.d_006a2d9c))
+#define _DAT_006a2da0 (*(i32 *)((u8 *)&g.d_006a2da0))
+#define _DAT_006a2da4 (*(i32 *)((u8 *)&g.d_006a2da4))
+#define _DAT_006a2da8 (*(i32 *)((u8 *)&g.d_006a2da8))
+#define _DAT_006a2dac (*(i32 *)((u8 *)&g.d_006a2dac))
+#define _DAT_006a2db0 (*(i32 *)((u8 *)&g.d_006a2db0))
+#define _DAT_006a2db4 (*(i32 *)((u8 *)&g.d_006a2db4))
+#define _DAT_006a2db8 (*(i32 *)((u8 *)&g.d_006a2db8))
+#define _DAT_006a2dbc (*(i32 *)((u8 *)&g.d_006a2dbc))
+#define _DAT_006a2dc0 (*(i32 *)((u8 *)&g.d_006a2dc0))
+#define _DAT_006a2dc4 (*(i32 *)((u8 *)&g.d_006a2dc4))
+#define _DAT_006a2dc8 (*(i32 *)((u8 *)&g.d_006a2dc8))
+#define _DAT_006a2dcc (*(i32 *)((u8 *)&g.d_006a2dcc))
+#define _DAT_006a2dd0 (*(i32 *)((u8 *)&g.d_006a2dd0))
+#define _DAT_006a2dd4 (*(i32 *)((u8 *)&g.d_006a2dd4))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl cosmic_editor_capture_defaults(void)
@@ -8200,8 +8200,8 @@ void __cdecl cosmic_editor_capture_defaults(void)
 #undef _DAT_006a2dd4
 
 /* 005869d4 auto */
-#define cosmic_edit_values (*(undefined1 *)((u8 *)&g.d_006a2d80))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define cosmic_edit_values (*(i8 *)((u8 *)&g.d_006a2d80))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_a4 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(132)))
@@ -8210,7 +8210,7 @@ void __cdecl cosmic_editor_fill_list(void)
 {
   char *_Str;
   size_t sVar1;
-  undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_a8 = 0;
   listbox_clear((ListBoxClearView *)(active_editor_wnd + 0xa94));
@@ -8220,22 +8220,22 @@ void __cdecl cosmic_editor_fill_list(void)
     sVar1 = _strlen(_Str);
     if ((sVar1 < 3) || (0x15 < local_a8)) break;
     if (*(int *)(&cosmic_edit_values + local_a8 * 4) < 10) {
-      _sprintf(local_a4,s__d_0063464c,*(undefined4 *)(&cosmic_edit_values + local_a8 * 4));
+      _sprintf(local_a4,s__d_0063464c,*(i32 *)(&cosmic_edit_values + local_a8 * 4));
     }
     else if (*(int *)(&cosmic_edit_values + local_a8 * 4) < 100) {
-      _sprintf(local_a4,s__d_00634654,*(undefined4 *)(&cosmic_edit_values + local_a8 * 4));
+      _sprintf(local_a4,s__d_00634654,*(i32 *)(&cosmic_edit_values + local_a8 * 4));
     }
     else {
-      _sprintf(local_a4,&cosmic_value_fmt_3digit,*(undefined4 *)(&cosmic_edit_values + local_a8 * 4));
+      _sprintf(local_a4,&cosmic_value_fmt_3digit,*(i32 *)(&cosmic_edit_values + local_a8 * 4));
     }
     if (*(int *)(&editor_items + local_a8 * 4) < 10) {
-      _sprintf(local_24,s___d____00634660,*(undefined4 *)(&editor_items + local_a8 * 4));
+      _sprintf(local_24,s___d____00634660,*(i32 *)(&editor_items + local_a8 * 4));
     }
     else if (*(int *)(&editor_items + local_a8 * 4) < 100) {
-      _sprintf(local_24,s___d____00634670,*(undefined4 *)(&editor_items + local_a8 * 4));
+      _sprintf(local_24,s___d____00634670,*(i32 *)(&editor_items + local_a8 * 4));
     }
     else {
-      _sprintf(local_24,s___d____0063467c,*(undefined4 *)(&editor_items + local_a8 * 4));
+      _sprintf(local_24,s___d____0063467c,*(i32 *)(&editor_items + local_a8 * 4));
     }
     FUN_005f22e0(local_a4,local_24);
     FUN_005f22e0(local_a4,&text_buffer);
@@ -8261,10 +8261,10 @@ void __cdecl cosmic_editor_edit_value(void)
   int iVar1;
   char *pcVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined4 uVar5;
+  i32 uVar4;
+  i32 uVar5;
   char *pcVar6;
-  undefined1 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = listbox_get_cur_sel((ListBoxGetSelView *)(active_editor_wnd + 0xa94));
   if (active_editor_wnd == 0) {
@@ -8274,17 +8274,17 @@ void __cdecl cosmic_editor_edit_value(void)
     local_120 = active_editor_wnd + 0x48;
   }
   dlg_set_parent_window(local_120);
-  text_set_number_arg(0,*(undefined4 *)(&cosmic_edit_min_values + iVar1 * 4));
-  text_set_number_arg(1,*(undefined4 *)(&cosmic_edit_max_values + iVar1 * 4));
+  text_set_number_arg(0,*(i32 *)(&cosmic_edit_min_values + iVar1 * 4));
+  text_set_number_arg(1,*(i32 *)(&cosmic_edit_max_values + iVar1 * 4));
   pcVar6 = local_118;
   pcVar2 = __itoa(*(int *)(&editor_items + iVar1 * 4),local_14,10);
   iVar3 = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x634688, ((u8 *)&g.d_00634688)),3,(iptr)pcVar2,(iptr)pcVar6);
   if (-1 < iVar3) {
-    uVar4 = *(undefined4 *)(&cosmic_edit_max_values + iVar1 * 4);
-    uVar5 = *(undefined4 *)(&cosmic_edit_min_values + iVar1 * 4);
+    uVar4 = *(i32 *)(&cosmic_edit_max_values + iVar1 * 4);
+    uVar5 = *(i32 *)(&cosmic_edit_min_values + iVar1 * 4);
     iVar3 = _atoi(local_118);
     uVar4 = int_clamp(iVar3,uVar5,uVar4);
-    *(undefined4 *)(&editor_items + iVar1 * 4) = uVar4;
+    *(i32 *)(&editor_items + iVar1 * 4) = uVar4;
     cosmic_editor_fill_list();
     listbox_set_cur_sel((ListBoxSetSelView *)(active_editor_wnd + 0xa94),iVar1);
   }
@@ -8298,19 +8298,19 @@ void __cdecl cosmic_editor_edit_value(void)
 #undef local_14
 
 /* 00586d0a auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_84 (*(char (*)[128])(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl cosmic_editor_write_section(FILE *param_1,FILE *param_2)
+i32 __cdecl cosmic_editor_write_section(FILE *param_1,FILE *param_2)
 
 {
   char *pcVar1;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_88 = 0; local_88 < 0x16; local_88++) {
     _fgets(local_84,0x80,param_2);
     pcVar1 = _strchr(local_84,0x3b);
-    _sprintf(&text_buffer,s___8d_s_00634690,*(undefined4 *)(&editor_items + local_88 * 4),pcVar1);
+    _sprintf(&text_buffer,s___8d_s_00634690,*(i32 *)(&editor_items + local_88 * 4),pcVar1);
     _fputs(&text_buffer,param_1);
   }
   return 1;
@@ -8320,7 +8320,7 @@ undefined4 __cdecl cosmic_editor_write_section(FILE *param_1,FILE *param_2)
 #undef local_84
 
 /* 00586da1 auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 #define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl cosmic_editor_ok_clicked(void)
 
@@ -8330,7 +8330,7 @@ void __cdecl cosmic_editor_ok_clicked(void)
   char *lpText;
   char *lpCaption;
   UINT uType;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   rules_edit_set_section(ADDR(0x634698, ((u8 *)&g.d_00634698)),ADDR(0x40172b, cosmic_editor_write_section));
   iVar1 = rules_write_sections();
@@ -8350,11 +8350,11 @@ void __cdecl cosmic_editor_ok_clicked(void)
 #undef local_24
 
 /* 00586e24 auto */
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl cosmic_editor_help_clicked(void)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
     local_8 = 0;
@@ -8371,7 +8371,7 @@ void __cdecl cosmic_editor_help_clicked(void)
 #undef local_8
 
 /* 00586e88 auto */
-#define editor_running (*(undefined4 *)((u8 *)&g.d_006a1d7c))
+#define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
 void __cdecl cosmic_editor_cancel_clicked(void)
 
 {
@@ -8404,29 +8404,29 @@ void __thiscall cosmic_editor_draw_bg(FrameWindow *this)
 #define local_478 (*(u8 * *)(frame_ + FRAME_OFF(16)))
 #define local_474 (*(u8 * *)(frame_ + FRAME_OFF(20)))
 #define local_464 (*(DibSurface * *)(frame_ + FRAME_OFF(36)))
-#define local_454 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 #define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1148)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
 
 {
   DibSurface *this_00;
   uptr uVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int iVar4;
   iptr iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined4 uVar8;
+  i32 uVar6;
+  i32 uVar7;
+  i32 uVar8;
   u32 uVar9;
   u32 uVar10;
-  undefined4 uVar11;
-  undefined4 uVar12;
-  undefined4 uVar13;
-  undefined1 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar11;
+  i32 uVar12;
+  i32 uVar13;
+  i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   palette_init(&local_444);
@@ -8434,14 +8434,14 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
     local_464 = (DibSurface *)0x0;
   }
   else {
     local_464 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   editor_bg_surface = local_464;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
@@ -8463,7 +8463,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   uVar8 = 0;
   uVar7 = 0;
   uVar6 = 0xd;
-  uVar2 = label_string(*(undefined4 *)(label_string_ids + 0x94c));
+  uVar2 = label_string(*(i32 *)(label_string_ids + 0x94c));
   frame_wnd_create
             ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
   rect_set_xywh((iptr)local_454,this->client_x + 2,this->client_y + 2,this->client_width - 5,
@@ -8496,7 +8496,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   else {
     local_478 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3f8));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
             ((Control *)&this[1].field_2a4,(iptr)local_478,0x65,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40342c, cosmic_editor_ok_clicked));
@@ -8508,7 +8508,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   else {
     local_47c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8e0));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8e0));
   button_create
             ((Control *)&this[1].field_358,(iptr)local_47c,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_358,ADDR(0x4038a5, cosmic_editor_edit_value));
@@ -8521,7 +8521,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   else {
     local_480 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x8ec));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
             ((Control *)&this[1].field_2e0,(iptr)local_480,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x4010f5, cosmic_editor_help_clicked));
@@ -8533,7 +8533,7 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
   else {
     local_484 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x3fc));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
             ((Control *)&this[1].field_31c,(iptr)local_484,0x66,(iptr)local_454,iVar5);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x402fae, cosmic_editor_cancel_clicked));
@@ -8571,13 +8571,13 @@ void __thiscall cosmic_editor_dialog(C_004083b0_430 *this)
 
 /* 0058760d auto */
 #define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(2896)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl cosmic_editor_run(void)
 
 {
-  undefined1 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
@@ -8594,7 +8594,7 @@ void __cdecl cosmic_editor_run(void)
 #undef local_8
 
 /* 00598a05 auto */
-undefined4 __cdecl civ_spaceship_part_maxed(iptr civ,iptr param_2)
+i32 __cdecl civ_spaceship_part_maxed(iptr civ,iptr param_2)
 
 {
   if (param_2 == 0x23) {

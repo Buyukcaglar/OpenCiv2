@@ -4,7 +4,7 @@
 
 /* 004d0160 auto */
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
-#define _DAT_006a5b08 (*(undefined4 *)((u8 *)&g.d_006a5b08))
+#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl spaceship_wnd_net_idle(void)
@@ -27,7 +27,7 @@ void __cdecl spaceship_wnd_net_idle(void)
 void __cdecl spaceship_wnd_load_parts(iptr civ)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_8 = 0; local_8 < 6; local_8++) {
     *(int *)(&spaceship_wnd_part_counts + local_8 * 4) =
@@ -41,16 +41,16 @@ void __cdecl spaceship_wnd_load_parts(iptr civ)
 #define council_active (*(char *)((u8 *)&g.d_00631ad0))
 #define local_2194 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_2188 (*(SpaceshipWindow (*)[2])(frame_ + FRAME_OFF(16)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(8584)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(8588)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8592)))
-undefined4 __cdecl spaceship_wnd_run(iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(8584)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(8588)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8592)))
+i32 __cdecl spaceship_wnd_run(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined4 uStackY_24;
-  undefined1 frame_[FRAME_OFF(8600)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uStackY_24;
+  i8 frame_[FRAME_OFF(8600)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   if (spaceship_wnd == 0) {
@@ -102,16 +102,16 @@ undefined4 __cdecl spaceship_wnd_run(iptr param_1)
 #define council_active (*(char *)((u8 *)&g.d_00631ad0))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define local_2188 (*(SpaceshipWindow (*)[2])(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(8568)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(8572)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8576)))
-undefined4 __cdecl spaceship_wnd_show_for_civ(iptr param_1)
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(8568)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(8572)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8576)))
+i32 __cdecl spaceship_wnd_show_for_civ(iptr param_1)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined4 uStackY_24;
-  undefined1 frame_[FRAME_OFF(8584)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uStackY_24;
+  i8 frame_[FRAME_OFF(8584)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   if (human_civ == param_1) {
@@ -159,7 +159,7 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
 
 {
   iptr iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_clear();
   iVar1 = civ_name_plural(civ);
@@ -184,47 +184,47 @@ void __cdecl spaceship_wnd_draw_title(iptr civ)
 #undef local_14
 
 /* 004d0517 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 SpaceshipWindow * __thiscall spaceship_wnd_ctor(SpaceshipWindow *this,u32 param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   wnd_ctor((C_00408010_b8 *)this);
   local_8 = 0;
   surfwnd_ctor((SurfaceWindow *)&this->control_list);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   dll_handle_init((DllHandle *)(this->pad_1e4 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   palette_init((GamePalette *)(this->pad_1e4 + 0x14));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   font_init_empty((GameFont *)this->pad_8c4);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   font_init_empty((GameFont *)(this->pad_8c4 + 8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   font_init_empty((GameFont *)(this->pad_8c4 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   surface_ctor((DibSurface *)this->pad_8f4);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   sprite_init((Sprite *)(this->pad_8f4 + 0x48));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   sprite_init((Sprite *)(this->pad_8f4 + 0x84));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   sprite_init((Sprite *)(this->pad_8f4 + 0xc0));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   sprite_init((Sprite *)(this->pad_8f4 + 0xfc));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   sprite_init((Sprite *)(this->pad_8f4 + 0x138));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   sprite_init((Sprite *)(this->pad_8f4 + 0x174));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   sprite_init((Sprite *)(this->pad_8f4 + 0x1b0));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   clickmap_ctor(this->pad_ae4);
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),0xf);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0xf);
   this->ship_civ = param_1;
   this->anim_timer = 0;
   gfx_get_screen_rect((iptr)&this->frame_left);
@@ -265,13 +265,13 @@ SpaceshipWindow * __thiscall spaceship_wnd_ctor(SpaceshipWindow *this,u32 param_
 #undef local_8
 
 /* 004d08b0 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-undefined4 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this)
+i32 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xf;
   dll_handle_free((DllHandle *)(this->pad_0 + 500));
@@ -288,35 +288,35 @@ undefined4 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this)
     game_timer_destroy(this->blink_timer);
     this->blink_timer = 0;
   }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   /* inlined unwind funclet FUN_004d0a56 */ { clickmap_dtor(*(int *)((iptr)&this) + 0xae4); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   /* inlined unwind funclet FUN_004d0a65 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xaa4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   /* inlined unwind funclet FUN_004d0a74 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa68)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   /* inlined unwind funclet FUN_004d0a83 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa2c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   /* inlined unwind funclet FUN_004d0a92 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9f0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   /* inlined unwind funclet FUN_004d0aa1 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9b4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   /* inlined unwind funclet FUN_004d0ab0 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x978)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   /* inlined unwind funclet FUN_004d0abf */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x93c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   /* inlined unwind funclet FUN_004d0ace */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x8f4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   /* inlined unwind funclet FUN_004d0add */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8d4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_004d0aec */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8cc)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_004d0afb */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8c4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_004d0b0a */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x1f8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_004d0b19 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 500)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004d0b28 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004d0b37 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
@@ -328,13 +328,13 @@ undefined4 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this)
 
 /* 004d0b58 auto */
 #define spaceship_success_pct (*(int *)((u8 *)&g.d_006ad0ec))
-#define local_84 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(4)))
-undefined4 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
+#define local_84 (*(i8 (*)[128])(frame_ + FRAME_OFF(4)))
+i32 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
 
 {
   int iVar1;
-  undefined4 uVar2;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar2;
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   str_clear((iptr)local_84);
   str_append((iptr)local_84,ADDR(0x62e2e4, ((u8 *)&g.d_0062e2e4)));
@@ -411,12 +411,12 @@ uint __thiscall spaceship_wnd_create(C_00408010_6f0 *this)
 }
 
 /* 004d0ea6 auto */
-#define _DAT_006a5b08 (*(undefined4 *)((u8 *)&g.d_006a5b08))
-#define local_a4 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
+#define local_a4 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_94 (*(Sprite *)(frame_ + FRAME_OFF(20)))
 #define local_58 (*(DibSurface *)(frame_ + FRAME_OFF(80)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(152)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(156)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(152)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(156)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(160)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -425,17 +425,17 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
 {
   int iVar1;
   u32 uVar2;
-  undefined1 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surface_ctor(&local_58);
   local_8 = 0;
   sprite_init(&local_94);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   spaceship_wnd_load_parts(this->ship_civ);
   iVar1 = spaceship_wnd_render_ship(this);
   if (iVar1 == 0) {
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
@@ -446,14 +446,14 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
                 (&local_58,spaceship_wnd_component_count + 19999,10,0xec,(iptr)(this->pad_1e4 + 0x14));
       sprite_grab_from_surface
                 (&local_94,(iptr)&local_58,0xff,
-                 *(undefined4 *)(&spaceship_launch_sprite_xs + (spaceship_wnd_component_count - 1) * 0x10),
-                 *(undefined4 *)(&spaceship_launch_sprite_ys + (spaceship_wnd_component_count - 1) * 0x10),
-                 *(undefined4 *)(&spaceship_launch_sprite_widths + (spaceship_wnd_component_count - 1) * 0x10),
-                 *(undefined4 *)(&spaceship_part_sprite_heights + (spaceship_wnd_component_count - 1) * 0x10));
+                 *(i32 *)(&spaceship_launch_sprite_xs + (spaceship_wnd_component_count - 1) * 0x10),
+                 *(i32 *)(&spaceship_launch_sprite_ys + (spaceship_wnd_component_count - 1) * 0x10),
+                 *(i32 *)(&spaceship_launch_sprite_widths + (spaceship_wnd_component_count - 1) * 0x10),
+                 *(i32 *)(&spaceship_part_sprite_heights + (spaceship_wnd_component_count - 1) * 0x10));
       sprite_draw
                 (&local_94,(iptr)local_a4,(iptr)&this->control_list,
-                 *(undefined4 *)(&spaceship_launch_sprite_xs + (spaceship_wnd_component_count - 1) * 0x10),
-                 *(undefined4 *)(&spaceship_launch_sprite_ys + (spaceship_wnd_component_count - 1) * 0x10));
+                 *(i32 *)(&spaceship_launch_sprite_xs + (spaceship_wnd_component_count - 1) * 0x10),
+                 *(i32 *)(&spaceship_launch_sprite_ys + (spaceship_wnd_component_count - 1) * 0x10));
     }
     switch(this->launch_state) {
     case 0:
@@ -531,7 +531,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
     wnd_set_palette((WndBase *)this,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)));
     wnd_hide((WndBase *)this);
     wnd_flush_paint();
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
@@ -548,7 +548,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
 
 /* 004d13b8 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define _DAT_006a5b08 (*(undefined4 *)((u8 *)&g.d_006a5b08))
+#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -557,7 +557,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *this)
 {
   int iVar1;
   u32 uVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->ship_civ == human_civ) {
     if (this->anim_timer != 0) {
@@ -670,10 +670,10 @@ void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *this)
 /* 004d17bf: written by hand in src/game/bigframes.c */
 
 /* 004d4a7b auto */
-#define spaceship_energy_pct (*(undefined4 *)((u8 *)&g.d_006ad0e8))
-#define spaceship_fuel_pct (*(undefined4 *)((u8 *)&g.d_006ad0dc))
-#define spaceship_success_pct (*(undefined4 *)((u8 *)&g.d_006ad0ec))
-#define spaceship_support_pct (*(undefined4 *)((u8 *)&g.d_006ad0f0))
+#define spaceship_energy_pct (*(i32 *)((u8 *)&g.d_006ad0e8))
+#define spaceship_fuel_pct (*(i32 *)((u8 *)&g.d_006ad0dc))
+#define spaceship_success_pct (*(i32 *)((u8 *)&g.d_006ad0ec))
+#define spaceship_support_pct (*(i32 *)((u8 *)&g.d_006ad0f0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 void __thiscall spaceship_wnd_build_stats_text(C_00408010_6f0 *this)
 
@@ -681,7 +681,7 @@ void __thiscall spaceship_wnd_build_stats_text(C_00408010_6f0 *this)
   short sVar1;
   bool bVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   bVar2 = false;
   str_clear((iptr)this->pad_638);
@@ -694,7 +694,7 @@ void __thiscall spaceship_wnd_build_stats_text(C_00408010_6f0 *this)
   }
   for (local_c = 0; local_c < 6; local_c++) {
     str_append_string_id((iptr)this->pad_638,
-                       *(undefined4 *)(label_string_ids + *(int *)(&spaceship_part_table + local_c * 0xc) * 4))
+                       *(i32 *)(label_string_ids + *(int *)(&spaceship_part_table + local_c * 0xc) * 4))
     ;
     str_append_colon((iptr)this->pad_638);
     str_append_int((iptr)this->pad_638,
@@ -769,12 +769,12 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *this,int param_1)
 {
   int iVar1;
   uint uVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
   u32 uVar5;
   u8 *puVar6;
   int yBottom;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((param_1 == 0) || (iVar1 = rand_range(0,1), iVar1 == 0)) {
     uVar3 = font_get_handle((GameFont *)(this->pad_8c4 + 0x10));
@@ -869,7 +869,7 @@ uint __thiscall spaceship_wnd_type_char(SpaceshipWindow *this,int param_1)
 /* 004d53ab: written by hand in src/game/unwind.c */
 
 /* 004d570b auto */
-#define local_30 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_30 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -878,19 +878,19 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
 
 {
   u8 *puVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   int iVar3;
   int xRight;
   iptr iVar4;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_20 = 0; local_20 < 0x50; local_20++) {
     uVar2 = rand_range(0xffff8300,32000);
-    *(undefined4 *)(this[1].pad_ae4 + local_20 * 0xc + 0x31c) = uVar2;
+    *(i32 *)(this[1].pad_ae4 + local_20 * 0xc + 0x31c) = uVar2;
     uVar2 = rand_range(0xffffa240,24000);
-    *(undefined4 *)(this[1].pad_ae4 + local_20 * 0xc + 800) = uVar2;
+    *(i32 *)(this[1].pad_ae4 + local_20 * 0xc + 800) = uVar2;
     uVar2 = rand_range(1,100);
-    *(undefined4 *)(this[1].pad_ae4 + local_20 * 0xc + 0x324) = uVar2;
+    *(i32 *)(this[1].pad_ae4 + local_20 * 0xc + 0x324) = uVar2;
   }
   iVar3 = surface_get_height((DibSurface *)&this->control_list);
   xRight = surface_get_width((DibSurface *)&this->control_list);
@@ -903,9 +903,9 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
                *(int *)(this[1].pad_ae4 + local_20 * 0xc + 0x324) + 0xf0;
     if ((((0x280 < local_18) || (local_18 < 0)) || (0x1e0 < local_1c)) || (local_1c < 0)) {
       uVar2 = rand_range(0xffff8300,32000);
-      *(undefined4 *)(this[1].pad_ae4 + local_20 * 0xc + 0x31c) = uVar2;
+      *(i32 *)(this[1].pad_ae4 + local_20 * 0xc + 0x31c) = uVar2;
       uVar2 = rand_range(0xffffa240,24000);
-      *(undefined4 *)(this[1].pad_ae4 + local_20 * 0xc + 800) = uVar2;
+      *(i32 *)(this[1].pad_ae4 + local_20 * 0xc + 800) = uVar2;
       puVar1 = this[1].pad_ae4 + local_20 * 0xc + 0x324;
       puVar1[0] = 'd';
       puVar1[1] = '\0';
@@ -929,7 +929,7 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
     iVar3 = spaceship_wnd_type_char(this,0);
   } while (iVar3 != 0);
   str_clear((iptr)(this->pad_700 + 0x138));
-  iVar4 = label_string(*(undefined4 *)(label_string_ids + 0x718));
+  iVar4 = label_string(*(i32 *)(label_string_ids + 0x718));
   str_append((iptr)(this->pad_700 + 0x138),iVar4);
   str_append_colon((iptr)(this->pad_700 + 0x138));
   str_append_space((iptr)(this->pad_700 + 0x138));
@@ -962,17 +962,17 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
 
 /* 004d5b21 auto */
 #define local_9c (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define local_94 (*(undefined1 (*)[128])(frame_ + FRAME_OFF(12)))
+#define local_94 (*(i8 (*)[128])(frame_ + FRAME_OFF(12)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(140)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(144)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(148)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(152)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(144)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(148)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(152)))
 void __thiscall spaceship_play_launch_video(WndBase *this)
 
 {
   C_004083b0_a28 *this_00;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   snd_cd_stop();
@@ -1058,7 +1058,7 @@ void __thiscall spaceship_wnd_setup_hotspots(SpaceshipWindow *this)
 void __thiscall spaceship_wnd_draw_buttons(SpaceshipWindow *this)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((this->launch_state != 1) && (this->launch_state != 0)) {
     SetRect(&local_14,0x1f5,0x1a1,0x229,0x1c5);
@@ -1072,14 +1072,14 @@ void __thiscall spaceship_wnd_draw_buttons(SpaceshipWindow *this)
 
 /* 004d5f79 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_44 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_44 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(52)))
 void __thiscall spaceship_wnd_draw_close_btn(SpaceshipWindow *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((this->ship_civ == human_civ) && (this->launch_state != 3)) && (this->launch_state != 0)) {
     SetRect(&local_14,0x1f5,0x1a1,0x229,0x1c5);
@@ -1114,14 +1114,14 @@ void __thiscall spaceship_wnd_draw_close_btn(SpaceshipWindow *this,int param_1,i
 
 /* 004d60a5 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_44 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_24 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_44 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(52)))
 void __thiscall spaceship_wnd_draw_launch_btn(SpaceshipWindow *this,int param_1,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((this->ship_civ == human_civ) && (this->launch_state != 3)) && (this->launch_state != 0)) &&
      (this->launch_state != 2)) {
@@ -1156,11 +1156,11 @@ void __thiscall spaceship_wnd_draw_launch_btn(SpaceshipWindow *this,int param_1,
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl spaceship_video_on_lbuttonup(undefined4 param_1,undefined4 param_2)
+void __cdecl spaceship_video_on_lbuttonup(i32 param_1,i32 param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = wnd_get_active_child();
   if (local_8 == 0) {
@@ -1225,10 +1225,10 @@ void __cdecl spaceship_wnd_blink_launch_btn(void)
   
   this = spaceship_wnd;
   if (*(int *)(spaceship_wnd + 0x8ec) == 0) {
-    *(undefined4 *)(spaceship_wnd + 0x8ec) = 1;
+    *(i32 *)(spaceship_wnd + 0x8ec) = 1;
   }
   else {
-    *(undefined4 *)(spaceship_wnd + 0x8ec) = 0;
+    *(i32 *)(spaceship_wnd + 0x8ec) = 0;
   }
   if (*(int *)(this + 0x8ec) == 0) {
     spaceship_wnd_draw_launch_btn((SpaceshipWindow *)this,1,1);
@@ -1249,10 +1249,10 @@ void __cdecl spaceship_wnd_starfield_tick(void)
   int *piVar1;
   int iVar3;
   int iVar4;
-  undefined4 uVar5;
+  i32 uVar5;
   int iVar6;
   iptr iVar2;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = spaceship_wnd;
   win_flush_pending_msgs();
@@ -1269,11 +1269,11 @@ void __cdecl spaceship_wnd_starfield_tick(void)
     *piVar1 = *piVar1 - 1;
     if (*(int *)(iVar2 + 0x1dc0 + local_1c * 0xc) == 0) {
       uVar5 = rand_range(0xffff8300,32000);
-      *(undefined4 *)(iVar2 + 0x1db8 + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1db8 + local_1c * 0xc) = uVar5;
       uVar5 = rand_range(0xffffa240,24000);
-      *(undefined4 *)(iVar2 + 0x1dbc + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1dbc + local_1c * 0xc) = uVar5;
       uVar5 = rand_range(0x32,100);
-      *(undefined4 *)(iVar2 + 0x1dc0 + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1dc0 + local_1c * 0xc) = uVar5;
     }
     local_14 = *(int *)(iVar2 + 0x1db8 + local_1c * 0xc) / *(int *)(iVar2 + 0x1dc0 + local_1c * 0xc)
                + 0x140;
@@ -1281,11 +1281,11 @@ void __cdecl spaceship_wnd_starfield_tick(void)
                + 0xf0;
     if ((((0x280 < local_14) || (local_14 < 0)) || (0x1e0 < local_18)) || (local_18 < 0)) {
       uVar5 = rand_range(0xffff8300,32000);
-      *(undefined4 *)(iVar2 + 0x1db8 + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1db8 + local_1c * 0xc) = uVar5;
       uVar5 = rand_range(0xffffa240,24000);
-      *(undefined4 *)(iVar2 + 0x1dbc + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1dbc + local_1c * 0xc) = uVar5;
       uVar5 = rand_range(0x32,100);
-      *(undefined4 *)(iVar2 + 0x1dc0 + local_1c * 0xc) = uVar5;
+      *(i32 *)(iVar2 + 0x1dc0 + local_1c * 0xc) = uVar5;
       local_14 = *(int *)(iVar2 + 0x1db8 + local_1c * 0xc) /
                  *(int *)(iVar2 + 0x1dc0 + local_1c * 0xc) + 0x140;
       local_18 = *(int *)(iVar2 + 0x1dbc + local_1c * 0xc) /
@@ -1318,7 +1318,7 @@ void __cdecl spaceship_wnd_on_key(int param_1)
 {
   iptr this;
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = wnd_get_active_child();
   this = spaceship_wnd;
@@ -1336,13 +1336,13 @@ void __cdecl spaceship_wnd_on_key(int param_1)
       spaceship_wnd_draw_close_btn((SpaceshipWindow *)spaceship_wnd,1,0);
       if (*(int *)(this + 0x8f0) == 0) {
         if (*(int *)(this + 0x62c) != 0) {
-          game_timer_destroy(*(undefined4 *)(this + 0x62c));
-          *(undefined4 *)(this + 0x62c) = 0;
+          game_timer_destroy(*(i32 *)(this + 0x62c));
+          *(i32 *)(this + 0x62c) = 0;
         }
         do {
           iVar1 = spaceship_wnd_type_char((SpaceshipWindow *)this,0);
         } while (iVar1 != 0);
-        *(undefined4 *)(this + 0x8f0) = 1;
+        *(i32 *)(this + 0x8f0) = 1;
         spaceship_wnd_draw_close_btn((SpaceshipWindow *)this,1,1);
       }
       else {
@@ -1367,11 +1367,11 @@ void __cdecl spaceship_video_on_end(void)
 /* 004d68a7 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(8)))
-void __cdecl spaceship_wnd_on_lbuttondown(undefined4 param_1,undefined4 param_2)
+void __cdecl spaceship_wnd_on_lbuttondown(i32 param_1,i32 param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (SpaceshipWindow *)spaceship_wnd;
   if (((*(int *)(spaceship_wnd + 0x1db0) == 0) && (*(int *)(spaceship_wnd + 0x1dac) == 0)) &&
@@ -1412,12 +1412,12 @@ void __cdecl spaceship_wnd_on_lbuttondown(undefined4 param_1,undefined4 param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl spaceship_wnd_on_lbuttonup(undefined4 param_1,undefined4 param_2)
+void __cdecl spaceship_wnd_on_lbuttonup(i32 param_1,i32 param_2)
 
 {
   int iVar1;
   u32 uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_c = (SpaceshipWindow *)spaceship_wnd;
   local_8 = wnd_get_active_child();
@@ -1489,12 +1489,12 @@ void __cdecl spaceship_wnd_on_lbuttonup(undefined4 param_1,undefined4 param_2)
 /* 004d6cbc auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(SpaceshipWindow * *)(frame_ + FRAME_OFF(8)))
-void __cdecl spaceship_wnd_on_mousemove(undefined4 param_1,undefined4 param_2)
+void __cdecl spaceship_wnd_on_mousemove(i32 param_1,i32 param_2)
 
 {
   int iVar1;
   u32 uVar2;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (SpaceshipWindow *)spaceship_wnd;
   iVar1 = clickmap_hit_test
@@ -1558,7 +1558,7 @@ iptr __cdecl spaceship_part_limit(iptr civ,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (&spaceship_part_max_counts)[param_2 * 3];
   if ((param_2 == 1) || (param_2 == 2)) {
@@ -1580,11 +1580,11 @@ iptr __cdecl spaceship_part_limit(iptr civ,int param_2)
 #undef local_8
 
 /* 00596c08 auto */
-undefined4 __cdecl spaceship_part_count(iptr civ,int param_2)
+i32 __cdecl spaceship_part_count(iptr civ,int param_2)
 
 {
   short sVar1;
-  undefined4 uVar2;
+  i32 uVar2;
   
   sVar1 = civs[civ].spaceship_parts[param_2];
   uVar2 = spaceship_part_limit(civ,param_2);
@@ -1681,12 +1681,12 @@ int __cdecl spaceship_group_count_clamped(iptr civ,int param_2)
 
 /* 00596e92 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 int __cdecl spaceship_component_thrust(int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   for (local_c = 0; local_c < param_1; local_c++) {
@@ -1723,9 +1723,9 @@ void __cdecl spaceship_calc_stats(iptr civ,int param_2)
   iptr iVar3;
   int iVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined4 uVar7;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i32 uVar7;
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = civ_spaceship_launched(civ);
   if (iVar2 == 0) {
@@ -1846,7 +1846,7 @@ void __cdecl spaceship_launch(iptr civ)
   uint *puVar1;
   iptr iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   civs[civ].spaceship_flags = civs[civ].spaceship_flags | 2;
   if (game.first_launch_turn < 0) {
@@ -1909,16 +1909,16 @@ void __cdecl spaceship_launch(iptr civ)
 #define local_30c (*(Dialog *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(760)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(764)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl spaceship_status_dialog(iptr civ,int param_2)
 
 {
   short sVar1;
   iptr iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_30c,0x2000);
@@ -1946,7 +1946,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int param_2)
   }
   for (local_18 = 0; local_18 < 6; local_18++) {
     text_clear();
-    text_append_string_id(*(undefined4 *)(label_string_ids + *(int *)(&spaceship_part_table + local_18 * 0xc) * 4)
+    text_append_string_id(*(i32 *)(label_string_ids + *(int *)(&spaceship_part_table + local_18 * 0xc) * 4)
                       );
     text_append_colon();
     text_append_int((int)civs[civ].spaceship_parts[local_18]);
@@ -2017,7 +2017,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int param_2)
   if (iVar3 == 0) {
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (param_2 != 0)) &&
        (spaceship_success_pct != 0)) {
-      iVar2 = label_string(*(undefined4 *)(label_string_ids + 0x354));
+      iVar2 = label_string(*(i32 *)(label_string_ids + 0x354));
       dialog_add_button((C_0040bc40_3c *)&local_30c,iVar2);
     }
   }
@@ -2071,7 +2071,7 @@ iptr __cdecl spaceship_choose_part_group(iptr civ,iptr param_2)
   bool bVar3;
   int iVar4;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   spaceship_calc_stats(civ,0);
   iVar4 = civ_spaceship_launched(civ);
@@ -2170,7 +2170,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr param_2)
   short sVar2;
   bool bVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_18 = -1;
   spaceship_calc_stats(civ,0);
@@ -2229,7 +2229,7 @@ int __cdecl spaceship_add_part(iptr civ,iptr param_2)
       if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) ||
          ((int)civs[civ].spaceship_parts[local_18] < (&spaceship_part_max_counts)[local_18 * 3]
          )) break;
-      text_set_label_arg(0,*(undefined4 *)
+      text_set_label_arg(0,*(i32 *)
                             (label_string_ids + *(int *)(&spaceship_part_table + local_18 * 0xc) * 4));
       popup_game(ADDR(0x635018, ((u8 *)&g.d_00635018)));
     }
@@ -2325,9 +2325,9 @@ int __cdecl spaceship_add_part(iptr civ,iptr param_2)
 /* 00598b4e auto */
 #define civ2 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_304 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(768)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(772)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(768)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(776)))
 void __cdecl spaceship_select_view_dialog(iptr param_1)
 
 {
@@ -2335,8 +2335,8 @@ void __cdecl spaceship_select_view_dialog(iptr param_1)
   int civ;
   iptr iVar3;
   int iVar4;
-  undefined4 uVar5;
-  undefined1 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar5;
+  i8 frame_[FRAME_OFF(784)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   dialog_ctor(&local_304,0x4000);
@@ -2363,7 +2363,7 @@ void __cdecl spaceship_select_view_dialog(iptr param_1)
       spaceship_wnd_load_parts(civ);
       iVar4 = spaceship_wnd_run(civ);
       if (iVar4 == 0) {
-        (*(undefined1 *)((char *)&civ2 + 0)) = (byte)civ;
+        (*(i8 *)((char *)&civ2 + 0)) = (byte)civ;
         spaceship_status_dialog(civ,(uint)game.human_players & 1 << ((byte)civ2 & 0x1f));
       }
       local_8 = 0xffffffff;
@@ -2384,10 +2384,10 @@ void __cdecl spaceship_select_view_dialog(iptr param_1)
 #undef local_8
 
 /* 00598ceb auto */
-undefined4 __cdecl spaceship_race_active(void)
+i32 __cdecl spaceship_race_active(void)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   
   if ((game.rules & 0x80) == 0) {
     if ((game.wonder_city[0x19] == -1) && ((game.human_players & game.advance_known_by[0x4c]) == 0))
@@ -2417,7 +2417,7 @@ uint __cdecl spaceship_group_full(iptr civ,iptr param_2)
 }
 
 /* 00599910 auto */
-undefined4 __cdecl spaceship_group_can_build(iptr civ,iptr param_2)
+i32 __cdecl spaceship_group_can_build(iptr civ,iptr param_2)
 
 {
   int iVar1;

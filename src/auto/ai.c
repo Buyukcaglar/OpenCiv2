@@ -4,16 +4,16 @@
 
 /* 00442885 auto */
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl ai_city_touches_landmass(iptr city,int param_2)
+i32 __cdecl ai_city_touches_landmass(iptr city,int param_2)
 
 {
   short x2;
   short y2;
   int y;
-  undefined4 uVar4;
+  i32 uVar4;
   iptr x;
   int iVar6;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   x2 = cities[city].x;
   y2 = cities[city].y;
@@ -64,7 +64,7 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
   iptr iVar5;
   int iVar6;
   int city2;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_38 = (int)leaders[civs[civ].tribe].civilize;
   if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < local_38)) {
@@ -441,19 +441,19 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
 #undef local_8
 
 /* 004f03b7 auto */
-#define city_tile_job_found (*(undefined4 *)((u8 *)&g.d_0062ee0c))
+#define city_tile_job_found (*(i32 *)((u8 *)&g.d_0062ee0c))
 #define city_tile_job_x (*(int *)((u8 *)&g.d_006a65e0))
 #define city_tile_job_y (*(int *)((u8 *)&g.d_006a65e8))
 #define path_goal_x (*(int *)((u8 *)&g.d_00673fa0))
 #define path_goal_y (*(int *)((u8 *)&g.d_00673fa4))
-#define path_owner_civ (*(undefined4 *)((u8 *)&g.d_0062d044))
-#define path_road_planning (*(undefined4 *)((u8 *)&g.d_0062d040))
+#define path_owner_civ (*(i32 *)((u8 *)&g.d_0062d044))
+#define path_road_planning (*(i32 *)((u8 *)&g.d_0062d040))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define local_34 (*(int *)(frame_ + FRAME_OFF(4)))
 #define y2 (*(int *)(frame_ + FRAME_OFF(20)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
-undefined4 __cdecl ai_find_road_link_tile(iptr city)
+i32 __cdecl ai_find_road_link_tile(iptr city)
 
 {
   bool bVar1;
@@ -466,7 +466,7 @@ undefined4 __cdecl ai_find_road_link_tile(iptr city)
   int iVar8;
   uint uVar9;
   byte *pbVar10;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
   civ = (int)cities[city].owner;
@@ -551,7 +551,7 @@ undefined4 __cdecl ai_find_road_link_tile(iptr city)
 int __cdecl ai_unit_role(iptr unit)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = (int)(char)unit_types[units[unit].type].role;
   if ((local_8 == 5) && ((units[unit].flags & 0x200) != 0)) {
@@ -579,7 +579,7 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
   int y;
   iptr x;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   x3 = units[unit].x;
   y3 = units[unit].y;
@@ -631,7 +631,7 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
 #define local_20 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_10 (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(32)))
-void __cdecl ai_ship_goto_near_shore(iptr unit,undefined4 param_2,iptr x,int y)
+void __cdecl ai_ship_goto_near_shore(iptr unit,i32 param_2,iptr x,int y)
 
 {
   bool bVar1;
@@ -642,7 +642,7 @@ void __cdecl ai_ship_goto_near_shore(iptr unit,undefined4 param_2,iptr x,int y)
   int y2;
   iptr x2;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = x;
   local_24 = y;
@@ -679,9 +679,9 @@ void __cdecl ai_ship_goto_near_shore(iptr unit,undefined4 param_2,iptr x,int y)
 #undef local_8
 
 /* 0053184d auto */
-#define city_calc_cached_id (*(undefined4 *)((u8 *)&g.d_0062ee08))
+#define city_calc_cached_id (*(i32 *)((u8 *)&g.d_0062ee08))
 #define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
-#define human_civ (*(undefined *)((u8 *)&g.d_006d1da0))
+#define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define local_368 (*(int *)(frame_ + FRAME_OFF(0)))
 #define unit (*(uptr *)(frame_ + FRAME_OFF(20)))
@@ -737,8 +737,8 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   iptr unit2;
   uptr city5;
   uint uVar13;
-  undefined4 uVar14;
-  undefined1 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar14;
+  i8 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_144 = 0;
   local_25c = 0;
@@ -802,7 +802,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     }
   }
   for (local_10 = 0; local_10 < 4; local_10++) {
-    *(undefined1 *)&civs[civ].wonders_by_group[local_10] = 0;
+    *(i8 *)&civs[civ].wonders_by_group[local_10] = 0;
   }
   for (local_40 = 0; local_40 < 0x1c; local_40++) {
     iVar8 = civ_has_wonder(civ,local_40);
@@ -813,15 +813,15 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     }
   }
   for (local_278 = 0; local_278 < 0x40; local_278++) {
-    *(undefined2 *)&civs[civ].continent_military[local_278] = 0;
-    *(undefined2 *)&civs[civ].continent_attack[local_278] = 0;
-    *(undefined1 *)&civs[civ].continent_city_size[local_278] = 0;
-    *(undefined1 *)&civs[civ].continent_trade_units[local_278] = 0;
-    *(undefined1 *)&civs[civ].continent_flags[local_278] = 0;
+    *(i16 *)&civs[civ].continent_military[local_278] = 0;
+    *(i16 *)&civs[civ].continent_attack[local_278] = 0;
+    *(i8 *)&civs[civ].continent_city_size[local_278] = 0;
+    *(i8 *)&civs[civ].continent_trade_units[local_278] = 0;
+    *(i8 *)&civs[civ].continent_flags[local_278] = 0;
     aiStack_250[local_278] = 0;
     aiStack_140[local_278] = 0;
   }
-  *(undefined4 *)(&civ_unit_counts + civ * 4) = 0;
+  *(i32 *)(&civ_unit_counts + civ * 4) = 0;
   civs[civ].num_military_units = 0;
   civs[civ].num_cities = 0;
   civs[civ].num_ships = 0;
@@ -829,8 +829,8 @@ void __cdecl ai_civ_turn_assess(uptr civ)
   civs[civ].military_strength = 0;
   civs[civ].total_attack = 0;
   for (unit_type = 0; (int)unit_type < 0x3e; unit_type++) {
-    *(undefined1 *)&civs[civ].units_active[unit_type] = 0;
-    *(undefined1 *)&civs[civ].units_in_production[unit_type] = 0;
+    *(i8 *)&civs[civ].units_active[unit_type] = 0;
+    *(i8 *)&civs[civ].units_in_production[unit_type] = 0;
   }
   for (local_24 = 0; local_24 < 0x30; local_24++) {
     if ((civs[civ].ai_goals[local_24].role == 21) &&
@@ -997,7 +997,7 @@ void __cdecl ai_civ_turn_assess(uptr civ)
 LAB_0053232b: ;
   }
   for (local_278 = 0; local_278 < 0x40; local_278++) {
-    *(undefined1 *)&civs[civ].continent_cities[local_278] = 0;
+    *(i8 *)&civs[civ].continent_cities[local_278] = 0;
   }
   local_1c = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -1164,16 +1164,16 @@ LAB_0053232b: ;
       local_254 = 0;
     }
     if (local_254 == 0) {
-      *(undefined1 *)&civs[civ].continent_policy[local_278] = 5;
+      *(i8 *)&civs[civ].continent_policy[local_278] = 5;
     }
     else {
-      *(undefined1 *)&civs[civ].continent_policy[local_278] = 4;
+      *(i8 *)&civs[civ].continent_policy[local_278] = 4;
     }
     if (local_340 != 0) {
-      *(undefined1 *)&civs[civ].continent_policy[local_278] = 0;
+      *(i8 *)&civs[civ].continent_policy[local_278] = 0;
     }
     if ((local_34 != 0) || (local_148 != 0)) {
-      *(undefined1 *)&civs[civ].continent_policy[local_278] = 1;
+      *(i8 *)&civs[civ].continent_policy[local_278] = 1;
     }
     if (local_34 != 0) {
       civs[civ].continent_flags[local_278] =
@@ -1182,7 +1182,7 @@ LAB_0053232b: ;
     if (((*(short *)&civs[civ].continent_military[local_278] == 0) &&
         (*(char *)&civs[civ].continent_cities[local_278] == '\0')) &&
        ((civs[civ].continent_flags[local_278] & 0xc) != 8)) {
-      *(undefined1 *)&civs[civ].continent_policy[local_278] = 0;
+      *(i8 *)&civs[civ].continent_policy[local_278] = 0;
     }
     if ((civs[civ].continent_policy[local_278] != local_270) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
@@ -1501,7 +1501,7 @@ LAB_00534c18:
 /* 005351aa auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_88 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_84 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_80 (*(uint *)(frame_ + FRAME_OFF(8)))
@@ -1518,7 +1518,7 @@ LAB_00534c18:
 #define local_14 (*(byte *)(frame_ + FRAME_OFF(116)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(120)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(124)))
-undefined4 __cdecl ai_barbarian_unit_move(void)
+i32 __cdecl ai_barbarian_unit_move(void)
 
 {
   u8 uVar1;
@@ -1542,10 +1542,10 @@ undefined4 __cdecl ai_barbarian_unit_move(void)
   iptr civ;
   int iVar20;
   uint uVar21;
-  undefined4 uVar22;
+  i32 uVar22;
   uptr unit_type;
   bool bVar23;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_40 = 8;
   unit = (iptr)game.active_unit;
@@ -1610,7 +1610,7 @@ undefined4 __cdecl ai_barbarian_unit_move(void)
                     dlg_game_txt_with_unit(ADDR(0x632528, ((u8 *)&g.d_00632528)),unit);
                   }
                   else if (2 < game.multiplayer) {
-                    net_send_text_args(0x4e,*(undefined4 *)
+                    net_send_text_args(0x4e,*(i32 *)
                                              (&net_player_slots +
                                              *(int *)(&net_civ_slots + civ3 * 4) * 0x54),1,0,
                                        unit,0);
@@ -2047,7 +2047,7 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
   short y;
   int civ;
   int iVar5;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   x = cities[city].x;
   y = cities[city].y;
@@ -2077,14 +2077,14 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
 #undef unit
 
 /* 00536bc9 auto */
-#define local_14 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(12)))
+#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 int __cdecl ai_continent_defense_quota(iptr civ,iptr param_2)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_14 = 0;
   local_c = (uint)civs[civ].continent_cities[param_2];
@@ -2112,7 +2112,7 @@ int __cdecl ai_continent_defense_quota(iptr civ,iptr param_2)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define city3 (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-undefined4 __cdecl ai_nuke_pick_target(iptr unit)
+i32 __cdecl ai_nuke_pick_target(iptr unit)
 
 {
   uint uVar1;
@@ -2123,7 +2123,7 @@ undefined4 __cdecl ai_nuke_pick_target(iptr unit)
   int y;
   iptr x;
   int iVar8;
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (iptr)units[unit].owner;
   local_10 = -1;
@@ -2244,7 +2244,7 @@ undefined4 __cdecl ai_nuke_pick_target(iptr unit)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
-undefined4 __cdecl
+i32 __cdecl
 ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param_6,
             int param_7,iptr param_8,int param_9)
 
@@ -2264,11 +2264,11 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
   int y2;
   int iVar14;
   int iVar15;
-  undefined4 uVar16;
+  i32 uVar16;
   iptr x2;
   uint uVar18;
   iptr unit2;
-  undefined1 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit2 = unit;
   civ2 = units[unit].owner;
@@ -2288,7 +2288,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
   local_4c = 9999;
   for (city = 0; city < game.num_cities; city++) {
     if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-       (iVar12 = map_distance(*(undefined4 *)x,*(undefined4 *)y,
+       (iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
                                     (int)cities[city].x,(int)cities[city].y),
        iVar12 < local_4c)) {
       local_4c = iVar12;
@@ -2343,7 +2343,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
               x2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
               y2 = unit_stack_sum(x2,8);
               if (y2 < iVar12) {
-                y2 = map_distance(*(undefined4 *)x,*(undefined4 *)y,
+                y2 = map_distance(*(i32 *)x,*(i32 *)y,
                                             (int)cities[city].x,(int)cities[city].y);
                 iVar14 = unit_max_moves(unit2);
                 if (y2 <= iVar14 / (int)(uint)cosmic.road_move_mult) {
@@ -2368,7 +2368,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
         if (iVar14 != 0) {
           iVar14 = unit_max_moves(unit2);
           uVar18 = (uint)cosmic.road_move_mult;
-          iVar15 = map_distance(*(undefined4 *)x,*(undefined4 *)y,iVar12,y2);
+          iVar15 = map_distance(*(i32 *)x,*(i32 *)y,iVar12,y2);
           if (iVar15 <= iVar14 / (int)uVar18) {
             local_8 = (int)(char)unit_types[units[unit].type].cost;
             uVar16 = tile_improvements(iVar12,y2);
@@ -2430,7 +2430,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
           ((int)units[unit].owner == (uint)civ2)))) {
         if (unit_types[units[unit].type].domain == 1) {
 LAB_00537ec2:
-          iVar12 = map_distance(*(undefined4 *)x,*(undefined4 *)y,
+          iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
                                       (int)units[unit].x,(int)units[unit].y);
           local_30 = iVar12 * 2;
           if (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0) {
@@ -2490,7 +2490,7 @@ LAB_00537ec2:
           y2 = map_in_bounds(x2,iVar12);
           if ((((y2 != 0) && (y2 = tile_city_owner(x2,iVar12), y2 < 0)) &&
               ((y2 = tile_unit_owner(x2,iVar12), y2 < 0 || (civ == y2)))) &&
-             (y2 = map_distance(*(undefined4 *)x,*(undefined4 *)y,x2,
+             (y2 = map_distance(*(i32 *)x,*(i32 *)y,x2,
                                           iVar12), y2 <= local_10 - 1)) {
             nearest_city_dist = 9999;
             local_c = -1;
@@ -2524,7 +2524,7 @@ LAB_00537ec2:
           city2 = -1;
           for (city = 0; city < game.num_cities; city++) {
             if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-               ((iVar12 = map_distance(*(undefined4 *)x,*(undefined4 *)y,
+               ((iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
                                              (int)cities[city].x,(int)cities[city].y),
                 iVar12 <= local_14 &&
                 (iVar12 = map_distance(x3,y3,(int)cities[city].x,
@@ -2575,7 +2575,7 @@ LAB_00538277:
      ((char)unit_types[unit_type].attack < 'c')) {
     if (units[unit2].orders == 11) {
       if ((units[unit2].counter == '\0') && (param_9 != 0)) {
-        *(undefined4 *)param_6 = 1;
+        *(i32 *)param_6 = 1;
         if (*(int *)param_6 != 0) {
           return 0xfffffffe;
         }
@@ -2590,7 +2590,7 @@ LAB_00538277:
           ((scenario_objective_civ == civ && (iVar12 = tile_unit_owner(0x2d,0x35), -1 < iVar12)))))) {
         unit_set_goto(unit2,0x42,0x2d,0x35);
         if (param_9 != 0) {
-          *(undefined4 *)param_6 = 1;
+          *(i32 *)param_6 = 1;
         }
         if (*(int *)param_6 != 0) {
           return 0xfffffffe;
@@ -2600,7 +2600,7 @@ LAB_00538277:
       for (city = 0; city < game.num_cities; city++) {
         if (((cities[city].id != 0) && (cities[city].owner != civ)) &&
            ((*(byte *)&civs[civ].treaties[cities[city].owner] & 6) == 0)) {
-          iVar12 = map_distance(*(undefined4 *)x,*(undefined4 *)y,
+          iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
                                       (int)cities[city].x,(int)cities[city].y);
           y2 = unit_moves_left(unit2);
           if ((iVar12 <= y2 / (int)(uint)cosmic.road_move_mult) &&
@@ -2631,7 +2631,7 @@ LAB_00538277:
       if (-1 < unit3) {
         unit_set_goto(unit2,0x42,(int)cities[unit3].x,(int)cities[unit3].y);
         if (param_9 != 0) {
-          *(undefined4 *)param_6 = 1;
+          *(i32 *)param_6 = 1;
         }
         if (*(int *)param_6 != 0) {
           return 0xfffffffe;
@@ -2693,7 +2693,7 @@ LAB_00538277:
 #define unit4 (*(uptr *)(frame_ + FRAME_OFF(188)))
 #define local_c8 (*(uptr *)(frame_ + FRAME_OFF(192)))
 #define local_c4 (*(uint *)(frame_ + FRAME_OFF(196)))
-#define local_c0 (*(undefined4 *)(frame_ + FRAME_OFF(200)))
+#define local_c0 (*(i32 *)(frame_ + FRAME_OFF(200)))
 #define local_bc (*(uint *)(frame_ + FRAME_OFF(204)))
 #define local_b8 (*(int *)(frame_ + FRAME_OFF(208)))
 #define local_b4 (*(int *)(frame_ + FRAME_OFF(212)))
@@ -2740,7 +2740,7 @@ LAB_00538277:
 #define local_10 (*(int *)(frame_ + FRAME_OFF(376)))
 #define local_c (*(uint *)(frame_ + FRAME_OFF(380)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(384)))
-undefined4 __cdecl ai_unit_choose_orders(void)
+i32 __cdecl ai_unit_choose_orders(void)
 
 {
   uint *puVar1;
@@ -2751,7 +2751,7 @@ undefined4 __cdecl ai_unit_choose_orders(void)
   bool bVar6;
   byte bVar7;
   uptr civ;
-  undefined4 uVar10;
+  i32 uVar10;
   iptr iVar11;
   iptr iVar12;
   iptr iVar14;
@@ -2776,9 +2776,9 @@ undefined4 __cdecl ai_unit_choose_orders(void)
   bool bVar30;
   bool bVar31;
   bool bVar32;
-  undefined4 uVar33;
+  i32 uVar33;
   iptr unit2;
-  undefined1 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
   local_9c = 0x108; local_11c = 0x64a8c19c; local_70 = 0x3bd; local_38 = 0; local_16c = 4;  /* stale stack the original reads (FRAME_PRESETS) */
   
   local_104 = -1;
@@ -2965,7 +2965,7 @@ LAB_005392a6:
 LAB_005397e7:
       if (((((game.game_flags & 0x80) == 0) || (((int)(short)scenario_flags & 0x8000U) == 0)) ||
           (civ != 1)) ||
-         (((((*(undefined1 *)((char *)&civs[1].treaties[3] + 1)) & 0x20) != 0 || (5 < game.turn)) ||
+         (((((*(i8 *)((char *)&civs[1].treaties[3] + 1)) & 0x20) != 0 || (5 < game.turn)) ||
           (0x4f < units[unit].x)))) {
         if (((local_144 == 0) && (local_3c == 0)) &&
            (((units[unit].flags & 0x100) == 0 &&
@@ -5624,7 +5624,7 @@ void __cdecl ai_process_civ_units(void)
   i16 iVar2;
   int civ;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (int)game.turn_civ;
   bVar1 = false;
@@ -5704,7 +5704,7 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
   int civ2;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit = 0;
   while( true ) {
@@ -5764,13 +5764,13 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
 #define civ2 (*(int *)(frame_ + FRAME_OFF(16)))
-undefined4 __cdecl ai_spaceship_race_behind(iptr civ)
+i32 __cdecl ai_spaceship_race_behind(iptr civ)
 
 {
   iptr iVar1;
   iptr iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar1 = spaceship_race_active();
   if ((((iVar1 != 0) && (iVar2 = civ_spaceship_launched(civ), iVar2 == 0)) &&
@@ -5814,14 +5814,14 @@ undefined4 __cdecl ai_spaceship_race_behind(iptr civ)
 
 /* 005b68f6 auto */
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-undefined4 __cdecl ai_tile_improve_choice(iptr civ,iptr x,undefined4 y)
+i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
 
 {
   byte bVar1;
   int iVar2;
   uint uVar3;
   uint uVar4;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   iVar2 = tile_city_owner(x,y);
   if (((iVar2 < 0) && (uVar3 = tile_improvements(x,y), (uVar3 & 8) == 0)) &&

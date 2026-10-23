@@ -5,11 +5,11 @@
 #define local_14 (*(int * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int * *)(frame_ + FRAME_OFF(12)))
-undefined4 __cdecl diffeng_section_changed(int param_1)
+i32 __cdecl diffeng_section_changed(int param_1)
 
 {
   uint uVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((&diffeng_section_ptrs)[param_1 * 6] != 0) && (diffeng_mirror_buf != 0)) {
     local_14 = (int *)(&diffeng_section_ptrs)[param_1 * 6];
@@ -33,7 +33,7 @@ undefined4 __cdecl diffeng_section_changed(int param_1)
 #undef local_c
 
 /* 004bc0bb auto */
-undefined4 __thiscall FUN_004bc0bb(void *this)
+i32 __thiscall FUN_004bc0bb(void *this)
 
 {
   return 0;

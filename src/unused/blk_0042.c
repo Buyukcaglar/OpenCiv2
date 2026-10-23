@@ -2,10 +2,10 @@
 #include "auto_common.h"
 
 /* 00427211 auto */
-void __cdecl text_set_arg_from_labels(undefined4 param_1,int param_2)
+void __cdecl text_set_arg_from_labels(i32 param_1,int param_2)
 
 {
-  text_set_label_arg(param_1,*(undefined4 *)(label_string_ids + param_2 * 4));
+  text_set_label_arg(param_1,*(i32 *)(label_string_ids + param_2 * 4));
   return;
 }
 

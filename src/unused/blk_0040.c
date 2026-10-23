@@ -13,14 +13,14 @@
 #define local_24 (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(40)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_18 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_14 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_18 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
 void __cdecl minimap_redraw_area(int param_1,int param_2,int param_3,int param_4)
 
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_20 = 999;
   local_30 = -1;
@@ -91,17 +91,17 @@ void __cdecl minimap_redraw_area(int param_1,int param_2,int param_3,int param_4
 #undef local_14
 
 /* 00408873 auto */
-#define local_14 (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define local_14 (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined1 * *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i8 * *)(frame_ + FRAME_OFF(16)))
 void __cdecl
-FUN_00408873(int param_1,int param_2,int param_3,int param_4,int param_5,undefined1 param_6)
+FUN_00408873(int param_1,int param_2,int param_3,int param_4,int param_5,i8 param_6)
 
 {
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_14 = (undefined1 *)(((map.width * param_3 + param_2) * 6 & 0xffffU) + param_1);
+  local_14 = (i8 *)(((map.width * param_3 + param_2) * 6 & 0xffffU) + param_1);
   for (local_10 = 0; local_10 < param_5; local_10++) {
     local_8 = local_14;
     for (local_c = 0; local_c < param_4; local_c++) {

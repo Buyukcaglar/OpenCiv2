@@ -3,10 +3,10 @@
 
 /* 0043d348 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl city_supplies_commodity(int city,int param_2)
+i32 __cdecl city_supplies_commodity(int city,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {
@@ -22,10 +22,10 @@ undefined4 __cdecl city_supplies_commodity(int city,int param_2)
 
 /* 0043d3a4 auto */
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl city_demands_commodity(int city,int param_2)
+i32 __cdecl city_demands_commodity(int city,int param_2)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {

@@ -2,8 +2,8 @@
 #include "auto_common.h"
 
 /* 004f3f60 auto */
-#define dialog_clamp_overflow (*(undefined4 *)((u8 *)&g.d_0062f004))
-void __cdecl dialog_set_clamp_overflow(undefined4 param_1)
+#define dialog_clamp_overflow (*(i32 *)((u8 *)&g.d_0062f004))
+void __cdecl dialog_set_clamp_overflow(i32 param_1)
 
 {
   dialog_clamp_overflow = param_1;
@@ -17,7 +17,7 @@ iptr __cdecl events_parse_terrain(char *param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {

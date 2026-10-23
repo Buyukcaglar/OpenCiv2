@@ -3,17 +3,17 @@
 
 /* 00497fa0 auto */
 void __cdecl
-memblock_attach(undefined1 *param_1,undefined1 param_2,undefined4 param_3,undefined4 param_4,
-            undefined2 param_5)
+memblock_attach(i8 *param_1,i8 param_2,i32 param_3,i32 param_4,
+            i16 param_5)
 
 {
   param_1[1] = 0;
   *param_1 = param_2;
-  *(undefined4 *)(param_1 + 4) = param_3;
-  *(undefined4 *)(param_1 + 8) = param_4;
-  *(undefined2 *)(param_1 + 0xc) = 0;
-  *(undefined2 *)(param_1 + 0x10) = param_5;
-  *(undefined2 *)(param_1 + 0xe) = *(undefined2 *)(param_1 + 0x10);
+  *(i32 *)(param_1 + 4) = param_3;
+  *(i32 *)(param_1 + 8) = param_4;
+  *(i16 *)(param_1 + 0xc) = 0;
+  *(i16 *)(param_1 + 0x10) = param_5;
+  *(i16 *)(param_1 + 0xe) = *(i16 *)(param_1 + 0x10);
   return;
 }
 
@@ -21,8 +21,8 @@ memblock_attach(undefined1 *param_1,undefined1 param_2,undefined4 param_3,undefi
 void __cdecl memblock_reset(iptr param_1)
 
 {
-  *(undefined2 *)(param_1 + 0xc) = 0;
-  *(undefined2 *)(param_1 + 0x10) = *(undefined2 *)(param_1 + 0xe);
+  *(i16 *)(param_1 + 0xc) = 0;
+  *(i16 *)(param_1 + 0x10) = *(i16 *)(param_1 + 0xe);
   return;
 }
 

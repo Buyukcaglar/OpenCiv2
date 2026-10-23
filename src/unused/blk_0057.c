@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 005791df auto */
-void __thiscall menu_set_menu_hidden(GameMenu *this,undefined4 param_1,int param_2)
+void __thiscall menu_set_menu_hidden(GameMenu *this,i32 param_1,int param_2)
 
 {
   iptr iVar1;

@@ -7,7 +7,7 @@
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-pedia_draw_category_body(C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2)
+pedia_draw_category_body(C_004083b0_a28 *this,i32 param_1,i32 param_2)
 
 {
   int xLeft;
@@ -15,7 +15,7 @@ pedia_draw_category_body(C_004083b0_a28 *this,undefined4 param_1,undefined4 para
   int iVar1;
   int iVar2;
   int iVar3;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   gfx_set_text_color_index(10);
   xLeft = this->content_left + panel_margin_x;
@@ -44,16 +44,16 @@ pedia_draw_category_body(C_004083b0_a28 *this,undefined4 param_1,undefined4 para
 #define local_1c (*(u32 *)(frame_ + FRAME_OFF(36)))
 #define local_18 (*(u32 *)(frame_ + FRAME_OFF(40)))
 #define local_14 (*(u32 *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(56)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall pedia_update_controls(C_004083b0_61c *this)
 
 {
   u32 uVar1;
   int iVar2;
   Control *pCVar3;
-  undefined1 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   control_hide((Control *)(this[3].pad_4a4 + 0x1c));
@@ -201,16 +201,16 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
 /* 00452188 auto */
 void __thiscall
 pedia_dispatch_category_draw
-          (C_004083b0_a28 *this,undefined4 param_1,undefined4 param_2,undefined4 param_3,
-          undefined4 param_4,undefined4 param_5)
+          (C_004083b0_a28 *this,i32 param_1,i32 param_2,i32 param_3,
+          i32 param_4,i32 param_5)
 
 {
   u32 pargs_[5] = {(u32)(uptr)param_1, (u32)(uptr)param_2, (u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5};  /* the arguments, contiguous as on the original stack */
-#define param_1 (*(undefined4 *)&pargs_[0])
-#define param_2 (*(undefined4 *)&pargs_[1])
-#define param_3 (*(undefined4 *)&pargs_[2])
-#define param_4 (*(undefined4 *)&pargs_[3])
-#define param_5 (*(undefined4 *)&pargs_[4])
+#define param_1 (*(i32 *)&pargs_[0])
+#define param_2 (*(i32 *)&pargs_[1])
+#define param_3 (*(i32 *)&pargs_[2])
+#define param_4 (*(i32 *)&pargs_[3])
+#define param_5 (*(i32 *)&pargs_[4])
   switch(param_5) {
   case 0:
     break;
@@ -276,12 +276,12 @@ pedia_dispatch_category_draw
 
 /* 00452768 auto */
 #define local_10c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_108 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(8)))
+#define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
 void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((game.game_flags & 0x80) != 0) && (this->caption_height != 7)) &&
      (iVar1 = _strcmp(&scenario_dir_path,&game_home_dir), iVar1 != 0)) {
@@ -343,7 +343,7 @@ void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1)
 void __cdecl hyperlink_register_class(void)
 
 {
-  undefined1 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (hyperlink_class_registered == 0) {
     hyperlink_class_registered = 1;
@@ -365,13 +365,13 @@ void __cdecl hyperlink_register_class(void)
 #undef local_2c
 
 /* 00452a67 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall hyperlink_dtor(C_00452a67 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   if (this->hwnd != 0) {
@@ -411,7 +411,7 @@ HWND __cdecl hyperlink_create_hwnd(int *param_1,iptr param_2)
   pHVar4 = CreateWindowExA(4,s_MSHyperTextClass_00626920,&hyperlink_window_title_str,0x50000000,*param_1,
                            param_1[1],iVar3,iVar2,pHVar4,hMenu,hInstance,lpParam);
   iVar3 = ctrl_init_block(pHVar4,param_2);
-  *(undefined4 *)(iVar3 + 0x2c) = 1;
+  *(i32 *)(iVar3 + 0x2c) = 1;
   SetWindowLongA(pHVar4,-4,ADDR(0x5c8caf, hotspot_wndproc));
   return pHVar4;
 }
@@ -419,7 +419,7 @@ HWND __cdecl hyperlink_create_hwnd(int *param_1,iptr param_2)
 
 /* 00452b89 auto */
 void __thiscall
-hyperlink_create(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_3)
+hyperlink_create(C_0040f380_40 *this,iptr param_1,i32 param_2,iptr param_3)
 
 {
   u32 uVar1;
@@ -440,19 +440,19 @@ hyperlink_create(C_0040f380_40 *this,iptr param_1,undefined4 param_2,iptr param_
 
 /* 00452c14 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_34 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_2c (*(u32 * *)(frame_ + FRAME_OFF(12)))
 #define local_24 (*(u32 *)(frame_ + FRAME_OFF(20)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(40)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(44)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 pedia_add_link
-          (C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,undefined4 param_4,
-          undefined4 param_5,undefined4 param_6,undefined4 param_7,undefined4 param_8)
+          (C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,i32 param_4,
+          i32 param_5,i32 param_6,i32 param_7,i32 param_8)
 
 {
   int iVar1;
@@ -460,12 +460,12 @@ pedia_add_link
   uptr sVar3;
   C_00453b10 *pCVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[4] = {(u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
-#define param_5 (*(undefined4 *)&pargs_[0])
-#define param_6 (*(undefined4 *)&pargs_[1])
-#define param_7 (*(undefined4 *)&pargs_[2])
-#define param_8 (*(undefined4 *)&pargs_[3])
+#define param_5 (*(i32 *)&pargs_[0])
+#define param_6 (*(i32 *)&pargs_[1])
+#define param_7 (*(i32 *)&pargs_[2])
+#define param_8 (*(i32 *)&pargs_[3])
   
   local_8 = 0xffffffff;
   switch(param_4) {
@@ -612,22 +612,22 @@ switchD_00452e28_default:
 #undef param_8
 
 /* 004531b8 auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_advance(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_1 - 0xfb4;
-  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (undefined4 *)0x0));
-      local_c = (undefined4 *)local_c[0x11]) {
+  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (i32 *)0x0));
+      local_c = (i32 *)local_c[0x11]) {
     local_8--;
   }
-  if (local_c != (undefined4 *)0x0) {
+  if (local_c != (i32 *)0x0) {
     pedia_category = 1;
     pedia_page_mode = 0;
     pedia_selected_item = *local_c;
@@ -642,22 +642,22 @@ void __cdecl pedia_link_on_click_advance(int param_1)
 #undef local_8
 
 /* 0045323a auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_improvement(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_1 - 0xfb4;
-  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (undefined4 *)0x0));
-      local_c = (undefined4 *)local_c[0x11]) {
+  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (i32 *)0x0));
+      local_c = (i32 *)local_c[0x11]) {
     local_8--;
   }
-  if (local_c != (undefined4 *)0x0) {
+  if (local_c != (i32 *)0x0) {
     pedia_category = 2;
     pedia_page_mode = 0;
     pedia_selected_item = *local_c;
@@ -672,22 +672,22 @@ void __cdecl pedia_link_on_click_improvement(int param_1)
 #undef local_8
 
 /* 004532bc auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_wonder(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_1 - 0xfb4;
-  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (undefined4 *)0x0));
-      local_c = (undefined4 *)local_c[0x11]) {
+  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (i32 *)0x0));
+      local_c = (i32 *)local_c[0x11]) {
     local_8--;
   }
-  if (local_c != (undefined4 *)0x0) {
+  if (local_c != (i32 *)0x0) {
     pedia_category = 3;
     pedia_page_mode = 0;
     pedia_selected_item = *local_c;
@@ -702,22 +702,22 @@ void __cdecl pedia_link_on_click_wonder(int param_1)
 #undef local_8
 
 /* 0045333e auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_unit(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_1 - 0xfb4;
-  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (undefined4 *)0x0));
-      local_c = (undefined4 *)local_c[0x11]) {
+  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (i32 *)0x0));
+      local_c = (i32 *)local_c[0x11]) {
     local_8--;
   }
-  if (local_c != (undefined4 *)0x0) {
+  if (local_c != (i32 *)0x0) {
     pedia_category = 4;
     pedia_page_mode = 0;
     pedia_selected_item = *local_c;
@@ -732,22 +732,22 @@ void __cdecl pedia_link_on_click_unit(int param_1)
 #undef local_8
 
 /* 004533c0 auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(4)))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_link_on_click_terrain(int param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = param_1 - 0xfb4;
-  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (undefined4 *)0x0));
-      local_c = (undefined4 *)local_c[0x11]) {
+  for (local_c = pedia_link_list; (local_8 != 0 && (local_c != (i32 *)0x0));
+      local_c = (i32 *)local_c[0x11]) {
     local_8--;
   }
-  if (local_c != (undefined4 *)0x0) {
+  if (local_c != (i32 *)0x0) {
     pedia_category = 5;
     pedia_page_mode = 0;
     pedia_selected_item = *local_c;
@@ -762,13 +762,13 @@ void __cdecl pedia_link_on_click_terrain(int param_1)
 #undef local_8
 
 /* 00453b10 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 C_00453b10 * __thiscall pedia_link_ctor(C_00453b10 *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   hyperlink_ctor((Control *)(this->pad_0 + 4));
@@ -779,13 +779,13 @@ C_00453b10 * __thiscall pedia_link_ctor(C_00453b10 *this)
 #undef local_8
 
 /* 00453cc0 auto */
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 Control * __thiscall hyperlink_ctor(Control *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   ctrl_base_ctor(this);
@@ -821,20 +821,20 @@ void __thiscall hyperlink_set_dblclick_callback(C_00453d70 *this,iptr param_1)
 void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || (*(int *)(this[2].pad_15c + 0x38) <= (int)this->resize_border)) {
     this->resize_border = 0;
   }
-  *(undefined4 *)this[4].pad_2c4 = *(undefined4 *)(this[2].pad_15c + 0x38);
+  *(i32 *)this[4].pad_2c4 = *(i32 *)(this[2].pad_15c + 0x38);
   *(u32 *)(this[5].pad_48 + 100) = this->resize_border;
   *(u32 *)(this[5].pad_48 + 0x68) = this->resize_border;
   while (pedia_list_top % 9 != 0) {
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
   for (local_8 = 0; local_8 < *(int *)(this[2].pad_15c + 0x38); local_8++) {
-    *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
-         *(undefined4 *)(this[2].pad_200 + local_8 * 4 + 0x1c);
+    *(i32 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
+         *(i32 *)(this[2].pad_200 + local_8 * 4 + 0x1c);
   }
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
@@ -855,27 +855,27 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 #undef local_8
 
 /* 004906fd auto */
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define pedia_terrain_names (*(undefined4 *)((u8 *)&g.d_006a7d58))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define local_2a0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_290 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_280 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_270 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
-#define local_260 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(64)))
-#define local_250 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(80)))
-#define local_240 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(96)))
-#define local_230 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
-#define local_220 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(128)))
-#define local_210 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(144)))
-#define local_200 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(160)))
-#define local_1f0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(176)))
-#define local_1e0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(192)))
-#define local_1d0 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(208)))
+#define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define local_2a0 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_290 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_280 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_270 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_260 (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
+#define local_250 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
+#define local_240 (*(i8 (*)[16])(frame_ + FRAME_OFF(96)))
+#define local_230 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_220 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
+#define local_210 (*(i8 (*)[16])(frame_ + FRAME_OFF(144)))
+#define local_200 (*(i8 (*)[16])(frame_ + FRAME_OFF(160)))
+#define local_1f0 (*(i8 (*)[16])(frame_ + FRAME_OFF(176)))
+#define local_1e0 (*(i8 (*)[16])(frame_ + FRAME_OFF(192)))
+#define local_1d0 (*(i8 (*)[16])(frame_ + FRAME_OFF(208)))
 #define local_1c0 (*(char (*)[256])(frame_ + FRAME_OFF(224)))
 #define local_c0 (*(int *)(frame_ + FRAME_OFF(480)))
-#define local_bc (*(undefined1 (*)[40])(frame_ + FRAME_OFF(484)))
+#define local_bc (*(i8 (*)[40])(frame_ + FRAME_OFF(484)))
 #define local_94 (*(int *)(frame_ + FRAME_OFF(524)))
 #define local_90 (*(int *)(frame_ + FRAME_OFF(528)))
 #define local_8c (*(int *)(frame_ + FRAME_OFF(532)))
@@ -898,13 +898,13 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 #define local_48 (*(int *)(frame_ + FRAME_OFF(600)))
 #define local_44 (*(int *)(frame_ + FRAME_OFF(604)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(608)))
-#define local_3c (*(undefined4 *)(frame_ + FRAME_OFF(612)))
+#define local_3c (*(i32 *)(frame_ + FRAME_OFF(612)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(616)))
 #define local_34 (*(tagRECT *)(frame_ + FRAME_OFF(620)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(636)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(636)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(640)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(644)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(648)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(648)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(664)))
 void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
 
@@ -912,11 +912,11 @@ void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
   u8 uVar1;
   int iVar2;
   iptr iVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   char *_Format;
   int iVar5;
-  undefined1 *puVar6;
-  undefined1 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar6;
+  i8 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -1046,7 +1046,7 @@ LAB_00490a7d:
       FUN_005f22d0(&text_buffer,s__150__0062c960);
     }
     else {
-      iVar3 = label_string(*(undefined4 *)(label_string_ids + 0xb08));
+      iVar3 = label_string(*(i32 *)(label_string_ids + 0xb08));
       text_append(iVar3);
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_50,local_5c,5);
@@ -1128,11 +1128,11 @@ LAB_00490a7d:
       puVar6 = local_bc;
       iVar2 = local_8c;
       iVar5 = local_84;
-      _Format = (char *)label_string(*(undefined4 *)(label_string_ids + 0xb10));
+      _Format = (char *)label_string(*(i32 *)(label_string_ids + 0xb10));
       _sprintf(&text_buffer,_Format,puVar6,iVar2,iVar5);
     }
     else {
-      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb14));
+      uVar4 = label_string(*(i32 *)(label_string_ids + 0xb14));
       FUN_005f22d0(&text_buffer,uVar4);
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
@@ -1140,7 +1140,7 @@ LAB_00490a7d:
     text_clear();
     str_clear((iptr)local_1c0);
     if (local_94 < local_88) {
-      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb18));
+      uVar4 = label_string(*(i32 *)(label_string_ids + 0xb18));
       FUN_005f22d0(local_1c0,uVar4);
       _sprintf(&text_buffer,local_1c0,local_94,local_88);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
@@ -1148,29 +1148,29 @@ LAB_00490a7d:
       text_clear();
       str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
-        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb1c));
+        uVar4 = label_string(*(i32 *)(label_string_ids + 0xb1c));
         FUN_005f22e0(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
-        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb20));
+        uVar4 = label_string(*(i32 *)(label_string_ids + 0xb20));
         FUN_005f22e0(&text_buffer,uVar4);
       }
     }
     else {
-      uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb24));
+      uVar4 = label_string(*(i32 *)(label_string_ids + 0xb24));
       FUN_005f22d0(&text_buffer,uVar4);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
       local_5c += local_80;
       text_clear();
       str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
-        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb1c));
+        uVar4 = label_string(*(i32 *)(label_string_ids + 0xb1c));
         FUN_005f22e0(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
-        uVar4 = label_string(*(undefined4 *)(label_string_ids + 0xb28));
+        uVar4 = label_string(*(i32 *)(label_string_ids + 0xb28));
         FUN_005f22e0(&text_buffer,uVar4);
       }
     }
@@ -1285,7 +1285,7 @@ LAB_00490a7d:
       text_append_label(0x293);
       text_append_colon();
       text_append_space();
-      iVar3 = label_string(*(undefined4 *)(label_string_ids + 0xb0c));
+      iVar3 = label_string(*(i32 *)(label_string_ids + 0xb0c));
       text_append(iVar3);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
       if (((terrain2 == 0) || (terrain2 == 2)) || (terrain2 == 1)) {
@@ -1394,13 +1394,13 @@ LAB_00490a7d:
 
 /* 00491c20 auto */
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-#define pedia_terrain_names (*(undefined4 *)((u8 *)&g.d_006a7d58))
+#define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (pedia_closed != 0) {
     local_8 = 0;
@@ -1435,10 +1435,10 @@ void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
 
 /* 00491d61 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-undefined4 __cdecl pedia_find_terrain_index(iptr param_1)
+i32 __cdecl pedia_find_terrain_index(iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0;
   while( true ) {
@@ -1457,7 +1457,7 @@ undefined4 __cdecl pedia_find_terrain_index(iptr param_1)
 void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || ((int)this[2].field_2a0 <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -1469,8 +1469,8 @@ void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
   for (local_8 = 0; local_8 < (int)this[2].field_2a0; local_8++) {
-    *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
-         *(undefined4 *)(this[3].pad_48 + local_8 * 4 + 0x40);
+    *(i32 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
+         *(i32 *)(this[3].pad_48 + local_8 * 4 + 0x40);
   }
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
@@ -1533,50 +1533,50 @@ void __cdecl pedia_window_static_dtor(void)
 
 /* 004f3feb auto */
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
 C_004083b0_12c * __thiscall pedia_window_ctor(C_004083b0_12c *this)
 
 {
   u8 *puVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
   button_ctor((Control *)(this[0x13].pad_48 + 0x88));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   button_ctor((Control *)(this[0x13].pad_104 + 8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   button_ctor((Control *)&this[0x14].field_1c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   button_ctor((Control *)(this[0x14].pad_48 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   button_ctor((Control *)(this[0x14].pad_48 + 0x4c));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   button_ctor((Control *)(this[0x14].pad_48 + 0x88));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   button_ctor((Control *)(this[0x14].pad_104 + 8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   button_ctor((Control *)&this[0x15].field_1c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   button_ctor((Control *)(this[0x15].pad_48 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   button_ctor((Control *)(this[0x15].pad_48 + 0x4c));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   button_ctor((Control *)(this[0x15].pad_48 + 0x88));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   button_ctor((Control *)(this[0x15].pad_104 + 8));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   button_ctor((Control *)&this[0x16].field_1c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   button_ctor((Control *)(this[0x16].pad_48 + 0x10));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   button_ctor((Control *)(this[0x16].pad_48 + 0x4c));
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
   edit_ctor((C_0040f380_48 *)(this[0x16].pad_48 + 0x88));
-  local_8 = CONCAT31((*(undefined3 *)((char *)&local_8 + 1)),0x10);
+  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0x10);
   scrollbar_ctor((Control *)&this[0x16].field_118);
   this->vtable = (u32)&PTR_FUN_0061d6d0;
   this->style_flags = 1;
@@ -1679,13 +1679,13 @@ C_004083b0_12c * __thiscall pedia_window_ctor(C_004083b0_12c *this)
 #undef local_8
 
 /* 004f44a7 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall pedia_window_dtor(DibSurface *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->vtable = (u32)&PTR_FUN_0061d6d0;
   local_8 = 0x11;
@@ -1704,39 +1704,39 @@ void __thiscall pedia_window_dtor(DibSurface *this)
     this[0x60].field_20 = 0;
   }
   wnd_destroy_with_surface(this);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0x10;
+  (*(i8 *)((char *)&local_8 + 0)) = 0x10;
   /* inlined unwind funclet FUN_004f4673 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x1ae0)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
   /* inlined unwind funclet FUN_004f4682 */ { edit_dtor((Control *)(*(int *)((iptr)&this) + 0x1a98)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   /* inlined unwind funclet FUN_004f4691 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a5c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
   /* inlined unwind funclet FUN_004f46a0 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a20)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
   /* inlined unwind funclet FUN_004f46af */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19e4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   /* inlined unwind funclet FUN_004f46be */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19a8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   /* inlined unwind funclet FUN_004f46cd */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x196c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   /* inlined unwind funclet FUN_004f46dc */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1930)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   /* inlined unwind funclet FUN_004f46eb */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18f4)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   /* inlined unwind funclet FUN_004f46fa */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18b8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   /* inlined unwind funclet FUN_004f4709 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x187c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   /* inlined unwind funclet FUN_004f4718 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1840)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   /* inlined unwind funclet FUN_004f4727 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1804)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   /* inlined unwind funclet FUN_004f4736 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x17c8)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   /* inlined unwind funclet FUN_004f4745 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x178c)); }
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   /* inlined unwind funclet FUN_004f4754 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1750)); }
-  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
   /* inlined unwind funclet FUN_004f4763 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1714)); }
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004f4772 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
@@ -1851,9 +1851,9 @@ void __thiscall pedia_free_lists(C_004083b0_4 *this)
 #define local_44 (*(u32 *)(frame_ + FRAME_OFF(76)))
 #define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(108)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(124)))
-#define local_10 (*(undefined4 *)(frame_ + FRAME_OFF(128)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(132)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(136)))
+#define local_10 (*(i32 *)(frame_ + FRAME_OFF(128)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(132)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(136)))
 void __thiscall pedia_window_create(C_004083b0_a28 *this)
 
 {
@@ -1864,7 +1864,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   int iVar4;
   iptr iVar5;
   int yTop;
-  undefined1 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   pedia_free_lists((C_004083b0_4 *)this);
@@ -1944,7 +1944,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_4c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x9c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x9c));
   button_create
             ((Control *)this[2].pad_2c4,(iptr)local_4c,0xfa1,(iptr)&local_24,iVar5);
   button_set_callback((Control *)this[2].pad_2c4,ADDR(0x40196f, pedia_toggle_describe));
@@ -1955,7 +1955,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_50 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)&this[2].field_300,(iptr)local_50,0xfa2,(iptr)&local_24,iVar5);
   ctrl_set_default_button((Control *)&this[2].field_300);
@@ -1968,7 +1968,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_54 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd58));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd58));
   button_create
             ((Control *)(this[2].pad_464 + 4),(iptr)local_54,0xfb2,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_464 + 4),ADDR(0x4018ed, pedia_on_back));
@@ -1980,7 +1980,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_58 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x9c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x9c));
   button_create
             ((Control *)this[2].pad_4a4,(iptr)local_58,0xfab,(iptr)&local_24,iVar5);
   button_set_callback((Control *)this[2].pad_4a4,ADDR(0x40196f, pedia_toggle_describe));
@@ -1991,7 +1991,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_5c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd80));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd80));
   button_create
             ((Control *)(this[2].pad_4a4 + 0x3c),(iptr)local_5c,0xfac,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0x3c),ADDR(0x401ec4, pedia_show_tech_tree));
@@ -2002,7 +2002,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_60 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)(this[2].pad_4a4 + 0x78),(iptr)local_60,0xfad,(iptr)&local_24,iVar5);
   ctrl_set_default_button((Control *)(this[2].pad_4a4 + 0x78));
@@ -2016,7 +2016,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_64 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd58));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd58));
   button_create
             ((Control *)(this[2].pad_4a4 + 0xb4),(iptr)local_64,0xfae,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0xb4),ADDR(0x4018ed, pedia_on_back));
@@ -2027,7 +2027,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_68 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd80));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd80));
   button_create
             ((Control *)(this[2].pad_4a4 + 0xf0),(iptr)local_68,0xfaf,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0xf0),ADDR(0x401ec4, pedia_show_tech_tree));
@@ -2038,7 +2038,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_6c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xb04));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xb04));
   button_create
             ((Control *)(this[2].pad_5c0 + 0x10),(iptr)local_6c,0xfb0,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_5c0 + 0x10),ADDR(0x40196f, pedia_toggle_describe));
@@ -2049,7 +2049,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_70 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)(this[2].pad_608 + 4),(iptr)local_70,0xfb1,(iptr)&local_24,iVar5);
   ctrl_set_default_button((Control *)(this[2].pad_608 + 4));
@@ -2063,7 +2063,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_74 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd58));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd58));
   button_create
             ((Control *)&this[2].field_33c,(iptr)local_74,0xfa3,(iptr)&local_24,iVar5);
   button_set_callback((Control *)&this[2].field_33c,ADDR(0x4018ed, pedia_on_back));
@@ -2074,7 +2074,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_78 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xb04));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xb04));
   button_create
             ((Control *)(this[2].pad_364 + 0x14),(iptr)local_78,0xfa4,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_364 + 0x14),ADDR(0x40196f, pedia_toggle_describe));
@@ -2085,7 +2085,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_7c = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)&this[2].field_3b4,(iptr)local_7c,0xfa5,(iptr)&local_24,iVar5);
   button_set_callback((Control *)&this[2].field_3b4,ADDR(0x4037fb, pedia_on_close));
@@ -2097,7 +2097,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_80 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0xd58));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0xd58));
   button_create
             ((Control *)(this[2].pad_3c0 + 0x30),(iptr)local_80,0xfa6,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_3c0 + 0x30),ADDR(0x4018ed, pedia_on_back));
@@ -2108,7 +2108,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   else {
     local_84 = this->pad_48;
   }
-  iVar5 = label_string(*(undefined4 *)(label_string_ids + 0x51c));
+  iVar5 = label_string(*(i32 *)(label_string_ids + 0x51c));
   button_create
             ((Control *)(this[2].pad_3c0 + 0x6c),(iptr)local_84,0xfa7,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_3c0 + 0x6c),ADDR(0x4037fb, pedia_on_close));
@@ -2172,7 +2172,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
 #undef local_8
 
 /* 004f5b24 auto */
-#define pedia_history_count (*(undefined4 *)((u8 *)&g.d_006a6790))
+#define pedia_history_count (*(i32 *)((u8 *)&g.d_006a6790))
 void __cdecl pedia_on_close(void)
 
 {
@@ -2188,9 +2188,9 @@ void __cdecl pedia_on_close(void)
 #undef pedia_history_count
 
 /* 004f5b6f auto */
-#define pedia_back_topic (*(undefined4 *)((u8 *)&g.d_0062f010))
+#define pedia_back_topic (*(i32 *)((u8 *)&g.d_0062f010))
 #define pedia_category (*(int *)((u8 *)&g.d_006a6780))
-#define pedia_going_back (*(undefined4 *)((u8 *)&g.d_0062f00c))
+#define pedia_going_back (*(i32 *)((u8 *)&g.d_0062f00c))
 #define pedia_history_count (*(int *)((u8 *)&g.d_006a6790))
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
@@ -2206,9 +2206,9 @@ void __cdecl pedia_on_back(void)
     } while (*(int *)(&pedia_history_topics + pedia_history_count * 4) == pedia_topic);
     if (pedia_history_count != 0) {
       pedia_going_back = 1;
-      pedia_back_topic = *(undefined4 *)(&pedia_history_topics + pedia_history_count * 4);
-      pedia_popped_page_mode = *(undefined4 *)(&pedia_history_page_modes + pedia_history_count * 4);
-      pedia_popped_category = *(undefined4 *)(&pedia_history_categories + pedia_history_count * 4);
+      pedia_back_topic = *(i32 *)(&pedia_history_topics + pedia_history_count * 4);
+      pedia_popped_page_mode = *(i32 *)(&pedia_history_page_modes + pedia_history_count * 4);
+      pedia_popped_category = *(i32 *)(&pedia_history_categories + pedia_history_count * 4);
     }
     if (*(int *)(&pedia_history_page_modes + pedia_history_count * 4) != 0) {
       pedia_category = *(int *)(&pedia_history_categories + pedia_history_count * 4);
@@ -2262,9 +2262,9 @@ void __cdecl pedia_on_back(void)
 #undef pedia_topic
 
 /* 004f5dd1 auto */
-#define pedia_closed (*(undefined4 *)((u8 *)&g.d_006a677c))
-#define pedia_history_count (*(undefined4 *)((u8 *)&g.d_006a6790))
-undefined4 __cdecl pedia_close(void)
+#define pedia_closed (*(i32 *)((u8 *)&g.d_006a677c))
+#define pedia_history_count (*(i32 *)((u8 *)&g.d_006a6790))
+i32 __cdecl pedia_close(void)
 
 {
   pedia_closed = 1;
@@ -2284,7 +2284,7 @@ undefined4 __cdecl pedia_close(void)
 #undef pedia_history_count
 
 /* 004f5e52 auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 void __cdecl pedia_redraw_page(void)
@@ -2307,10 +2307,10 @@ void __cdecl pedia_redraw_page(void)
 #undef pedia_page_mode
 
 /* 004f5ed2 auto */
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_page_mode (*(undefined4 *)((u8 *)&g.d_006a6784))
-#define pedia_selected_item (*(undefined4 *)((u8 *)&g.d_006a85a0))
-#define pedia_topic (*(undefined4 *)((u8 *)&g.d_006a6788))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_page_mode (*(i32 *)((u8 *)&g.d_006a6784))
+#define pedia_selected_item (*(i32 *)((u8 *)&g.d_006a85a0))
+#define pedia_topic (*(i32 *)((u8 *)&g.d_006a6788))
 void __cdecl pedia_show_tech_tree(void)
 
 {
@@ -2329,21 +2329,21 @@ void __cdecl pedia_show_tech_tree(void)
 #undef pedia_topic
 
 /* 004f5f23 auto */
-#define pedia_advance_names (*(undefined4 *)((u8 *)&g.d_006a7d44))
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_concept_names (*(undefined4 *)((u8 *)&g.d_006a7d5c))
-#define pedia_government_names (*(undefined4 *)((u8 *)&g.d_006a7d54))
-#define pedia_improvement_names (*(undefined4 *)((u8 *)&g.d_006a7d48))
+#define pedia_advance_names (*(i32 *)((u8 *)&g.d_006a7d44))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_concept_names (*(i32 *)((u8 *)&g.d_006a7d5c))
+#define pedia_government_names (*(i32 *)((u8 *)&g.d_006a7d54))
+#define pedia_improvement_names (*(i32 *)((u8 *)&g.d_006a7d48))
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(uptr *)((u8 *)&g.d_006a85a0))
-#define pedia_terrain_names (*(undefined4 *)((u8 *)&g.d_006a7d58))
+#define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
 #define pedia_topic (*(uptr *)((u8 *)&g.d_006a6788))
-#define pedia_unit_names (*(undefined4 *)((u8 *)&g.d_006a7d50))
-#define pedia_wonder_names (*(undefined4 *)((u8 *)&g.d_006a7d4c))
-void __cdecl pedia_toggle_describe(undefined4 param_1)
+#define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
+#define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
+void __cdecl pedia_toggle_describe(i32 param_1)
 
 {
-  undefined4 uVar2;
+  i32 uVar2;
   uptr uVar1;
   
   uVar1 = pedia_selected_item;
@@ -2431,11 +2431,11 @@ void __cdecl pedia_toggle_describe(undefined4 param_1)
 /* 004f6244 auto */
 #define dlg_bevel_dark_color (*(byte *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(byte *)((u8 *)&g.d_00635a08))
-#define panel_margin_x (*(undefined4 *)((u8 *)&g.d_0062d858))
-#define local_34 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
+#define panel_margin_x (*(i32 *)((u8 *)&g.d_0062d858))
+#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(20)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(undefined * *)(frame_ + FRAME_OFF(28)))
+#define local_1c (*(i8 * *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 void __thiscall pedia_draw_frame(C_004083b0_61c *this)
@@ -2443,7 +2443,7 @@ void __thiscall pedia_draw_frame(C_004083b0_61c *this)
 {
   int iVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_reset_clip((DibSurface *)this);
   FUN_005f2110(&local_14,this->pad_5e8,0x10);
@@ -2510,10 +2510,10 @@ void __thiscall pedia_draw_frame(C_004083b0_61c *this)
 void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_2)
 
 {
-  undefined4 uVar1;
-  undefined4 uVar2;
-  undefined4 uVar3;
-  undefined4 uVar4;
+  i32 uVar1;
+  i32 uVar2;
+  i32 uVar3;
+  i32 uVar4;
   
   if ((dlg_frame_tile_surface == 0) || (param_2 != 1)) {
     if ((dlg_client_tile_surface == 0) || (param_2 != 2)) {
@@ -2524,7 +2524,7 @@ void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_
       uVar3 = 0;
       uVar1 = rect_height(param_1);
       uVar2 = rect_width(param_1);
-      gfx_tile_fill((iptr)this,dlg_client_tile_surface,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4)
+      gfx_tile_fill((iptr)this,dlg_client_tile_surface,*(i32 *)param_1,*(i32 *)(param_1 + 4)
                          ,uVar2,uVar1,uVar3,uVar4);
     }
   }
@@ -2533,7 +2533,7 @@ void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_
     uVar3 = 0;
     uVar1 = rect_height(param_1);
     uVar2 = rect_width(param_1);
-    gfx_tile_fill((iptr)this,dlg_frame_tile_surface,*(undefined4 *)param_1,*(undefined4 *)(param_1 + 4),
+    gfx_tile_fill((iptr)this,dlg_frame_tile_surface,*(i32 *)param_1,*(i32 *)(param_1 + 4),
                        uVar2,uVar1,uVar3,uVar4);
   }
   return;
@@ -2563,50 +2563,50 @@ void __thiscall pedia_redraw(C_004083b0_120 *this)
 /* 004f66c6 auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
 #define dlg_sel_text_shadow_color (*(int *)((u8 *)&g.d_00635a2c))
-#define list_bg_color (*(undefined4 *)((u8 *)&g.d_00635a18))
-#define list_sel_bg_color (*(undefined4 *)((u8 *)&g.d_00635a24))
+#define list_bg_color (*(i32 *)((u8 *)&g.d_00635a18))
+#define list_sel_bg_color (*(i32 *)((u8 *)&g.d_00635a24))
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define pedia_advance_names (*(undefined4 *)((u8 *)&g.d_006a7d44))
-#define pedia_concept_names (*(undefined4 *)((u8 *)&g.d_006a7d5c))
-#define pedia_government_names (*(undefined4 *)((u8 *)&g.d_006a7d54))
-#define pedia_improvement_names (*(undefined4 *)((u8 *)&g.d_006a7d48))
+#define pedia_advance_names (*(i32 *)((u8 *)&g.d_006a7d44))
+#define pedia_concept_names (*(i32 *)((u8 *)&g.d_006a7d5c))
+#define pedia_government_names (*(i32 *)((u8 *)&g.d_006a7d54))
+#define pedia_improvement_names (*(i32 *)((u8 *)&g.d_006a7d48))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
-#define pedia_terrain_names (*(undefined4 *)((u8 *)&g.d_006a7d58))
-#define pedia_unit_names (*(undefined4 *)((u8 *)&g.d_006a7d50))
-#define pedia_wonder_names (*(undefined4 *)((u8 *)&g.d_006a7d4c))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define local_14c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_148 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
+#define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
+#define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define local_14c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_148 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define local_144 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_140 (*(undefined4 *)(frame_ + FRAME_OFF(16)))
+#define local_140 (*(i32 *)(frame_ + FRAME_OFF(16)))
 #define local_13c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_138 (*(undefined4 *)(frame_ + FRAME_OFF(24)))
-#define local_134 (*(undefined4 *)(frame_ + FRAME_OFF(28)))
-#define local_130 (*(undefined4 *)(frame_ + FRAME_OFF(32)))
-#define local_12c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_11c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_10c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(68)))
-#define local_fc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_ec (*(undefined1 (*)[16])(frame_ + FRAME_OFF(100)))
-#define local_dc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(116)))
-#define local_cc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(132)))
-#define local_bc (*(undefined1 (*)[16])(frame_ + FRAME_OFF(148)))
-#define local_ac (*(undefined1 (*)[16])(frame_ + FRAME_OFF(164)))
-#define local_9c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(180)))
-#define local_8c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(196)))
+#define local_138 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define local_134 (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define local_130 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define local_12c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_11c (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_10c (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
+#define local_fc (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define local_ec (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
+#define local_dc (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
+#define local_cc (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
+#define local_bc (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
+#define local_ac (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
+#define local_9c (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
+#define local_8c (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
 #define local_7c (*(int *)(frame_ + FRAME_OFF(212)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(216)))
 #define local_74 (*(int *)(frame_ + FRAME_OFF(220)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(224)))
 #define local_6c (*(int *)(frame_ + FRAME_OFF(228)))
-#define local_68 (*(undefined4 *)(frame_ + FRAME_OFF(232)))
+#define local_68 (*(i32 *)(frame_ + FRAME_OFF(232)))
 #define local_64 (*(int *)(frame_ + FRAME_OFF(236)))
 #define local_60 (*(int *)(frame_ + FRAME_OFF(240)))
 #define local_5c (*(int *)(frame_ + FRAME_OFF(244)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(248)))
-#define local_54 (*(undefined4 *)(frame_ + FRAME_OFF(252)))
+#define local_54 (*(i32 *)(frame_ + FRAME_OFF(252)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(256)))
 #define local_4c (*(int *)(frame_ + FRAME_OFF(260)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(264)))
@@ -2618,7 +2618,7 @@ void __thiscall pedia_redraw(C_004083b0_120 *this)
 #define local_30 (*(uint *)(frame_ + FRAME_OFF(288)))
 #define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(292)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(308)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(312)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
 void __thiscall pedia_draw_item_list(C_004083b0_11c *this)
 
@@ -2626,8 +2626,8 @@ void __thiscall pedia_draw_item_list(C_004083b0_11c *this)
   int iVar1;
   int iVar2;
   int iVar3;
-  undefined4 uVar4;
-  undefined1 frame_[FRAME_OFF(336)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar4;
+  i8 frame_[FRAME_OFF(336)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_3c = 0;
   pedia_history_push((C_004083b0_12c *)&pedia_window);
@@ -2994,7 +2994,7 @@ int __cdecl pedia_list_hit_test(int param_1,int param_2)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_2 < pedia_list_rect_top) {
     local_14 = -1;
@@ -3041,24 +3041,24 @@ void __thiscall pedia_scroll_to_item(C_004083b0_4 *this,int param_1)
 }
 
 /* 004f74eb auto */
-#define pedia_advance_names (*(undefined4 * *)((u8 *)&g.d_006a7d44))
-#define pedia_category (*(undefined4 *)((u8 *)&g.d_006a6780))
-#define pedia_concept_names (*(undefined4 * *)((u8 *)&g.d_006a7d5c))
-#define pedia_government_names (*(undefined4 * *)((u8 *)&g.d_006a7d54))
-#define pedia_improvement_names (*(undefined4 * *)((u8 *)&g.d_006a7d48))
+#define pedia_advance_names (*(i32 * *)((u8 *)&g.d_006a7d44))
+#define pedia_category (*(i32 *)((u8 *)&g.d_006a6780))
+#define pedia_concept_names (*(i32 * *)((u8 *)&g.d_006a7d5c))
+#define pedia_government_names (*(i32 * *)((u8 *)&g.d_006a7d54))
+#define pedia_improvement_names (*(i32 * *)((u8 *)&g.d_006a7d48))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
-#define pedia_terrain_names (*(undefined4 * *)((u8 *)&g.d_006a7d58))
-#define pedia_unit_names (*(undefined4 * *)((u8 *)&g.d_006a7d50))
-#define pedia_wonder_names (*(undefined4 * *)((u8 *)&g.d_006a7d4c))
+#define pedia_terrain_names (*(i32 * *)((u8 *)&g.d_006a7d58))
+#define pedia_unit_names (*(i32 * *)((u8 *)&g.d_006a7d50))
+#define pedia_wonder_names (*(i32 * *)((u8 *)&g.d_006a7d4c))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(undefined4 * *)(frame_ + FRAME_OFF(8)))
+#define local_10 (*(i32 * *)(frame_ + FRAME_OFF(8)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 int __cdecl pedia_find_item_by_key(int param_1)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   switch(pedia_category) {
   case 1:
@@ -3102,7 +3102,7 @@ int __cdecl pedia_find_item_by_key(int param_1)
       local_8 = local_10;
     }
     else {
-      local_8 = (undefined4 *)local_8[2];
+      local_8 = (i32 *)local_8[2];
     }
   }
   local_c = pedia_selected_item + 1;
@@ -3115,7 +3115,7 @@ int __cdecl pedia_find_item_by_key(int param_1)
       local_c = 0;
     }
     else {
-      local_8 = (undefined4 *)local_8[2];
+      local_8 = (i32 *)local_8[2];
       local_c++;
     }
     local_14--;
@@ -3143,7 +3143,7 @@ int __cdecl pedia_find_item_by_key(int param_1)
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
-void __cdecl pedia_list_on_key(undefined4 param_1)
+void __cdecl pedia_list_on_key(i32 param_1)
 
 {
   int iVar1;
@@ -3238,13 +3238,13 @@ void __cdecl pedia_list_on_key(undefined4 param_1)
 #define pedia_page_mode (*(int *)((u8 *)&g.d_006a6784))
 #define pedia_selected_item (*(int *)((u8 *)&g.d_006a85a0))
 #define pedia_topic (*(int *)((u8 *)&g.d_006a6788))
-#define local_c (*(undefined4 *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define local_c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __cdecl pedia_list_on_click(void)
 
 {
   int iVar1;
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((((pedia_page_mode == 0) &&
        (wnd_get_cursor_pos
@@ -3263,8 +3263,8 @@ void __cdecl pedia_list_on_click(void)
 #undef local_8
 
 /* 004f7ac7 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-void __thiscall pedia_set_category_title(C_004083b0_4 *this,undefined4 param_1)
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+void __thiscall pedia_set_category_title(C_004083b0_4 *this,i32 param_1)
 
 {
   text_clear();
@@ -3300,8 +3300,8 @@ void __thiscall pedia_set_category_title(C_004083b0_4 *this,undefined4 param_1)
 #undef text_buffer
 
 /* 004f7bd1 auto */
-#define pedia_back_topic (*(undefined4 *)((u8 *)&g.d_0062f010))
-#define pedia_going_back (*(undefined4 *)((u8 *)&g.d_0062f00c))
+#define pedia_back_topic (*(i32 *)((u8 *)&g.d_0062f010))
+#define pedia_going_back (*(i32 *)((u8 *)&g.d_0062f00c))
 void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2)
 
 {
@@ -3328,15 +3328,15 @@ void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2
 #undef pedia_going_back
 
 /* 004f7c99 auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define text_buffer_plus2 (*(undefined *)((u8 *)&g.d_00679642))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define text_buffer_plus2 (*(i8 *)((u8 *)&g.d_00679642))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_10 (*(char (*)[2])(frame_ + FRAME_OFF(16)))
-#define local_e (*(undefined1 *)(frame_ + FRAME_OFF(18)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(24)))
+#define local_e (*(i8 *)(frame_ + FRAME_OFF(18)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(20)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(24)))
 void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
 
 {
@@ -3346,9 +3346,9 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
   char *pcVar4;
   size_t sVar5;
   void *pvVar6;
-  undefined4 uVar7;
+  i32 uVar7;
   iptr iVar8;
-  undefined1 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (local_18 = 0; local_18 < 100; local_18++) {
     puVar1 = this->pad_65c + local_18 * 4;
@@ -3491,7 +3491,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         *(int *)(this[1].pad_48 + *(int *)(this[1].pad_48 + 0x48) * 4 + 0x4c) = local_14;
         *(iptr *)(this[1].pad_104 + *(int *)(this[1].pad_48 + 0x48) * 4) = improvement;
         local_c = operator_new(0xc);
-        local_c[1] = *(undefined4 *)(this[1].pad_48 + 0x48);
+        local_c[1] = *(i32 *)(this[1].pad_48 + 0x48);
         if (this[2].field_294 == 0) {
           this[2].field_294 = (uptr)local_c;
         }
@@ -3532,7 +3532,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         *(int *)(this[1].pad_15c + *(int *)(this[1].pad_15c + 0x18) * 4 + 0x1c) = local_14;
         *(iptr *)(this[1].pad_274 + *(int *)(this[1].pad_15c + 0x18) * 4 - 4) = improvement;
         local_c = operator_new(0xc);
-        local_c[1] = *(undefined4 *)(this[1].pad_15c + 0x18);
+        local_c[1] = *(i32 *)(this[1].pad_15c + 0x18);
         if (this[2].field_298 == 0) {
           this[2].field_298 = (uptr)local_c;
         }
@@ -3572,7 +3572,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
       *(int *)(this[1].pad_364 + *(int *)(this[1].pad_364 + 4) * 4 + 8) = local_14;
       *(iptr *)(this[1].pad_364 + *(int *)(this[1].pad_364 + 4) * 4 + 0x24) = improvement;
       local_c = operator_new(0xc);
-      local_c[1] = *(undefined4 *)(this[1].pad_364 + 4);
+      local_c[1] = *(i32 *)(this[1].pad_364 + 4);
       if (this[2].field_29c == 0) {
         this[2].field_29c = (uptr)local_c;
       }
@@ -3623,7 +3623,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         if ((0xc < improvement) &&
            (iVar3 = _strcmp(terrain_types[improvement].abbrev,&pedia_grassland_shield_abbrev_str), iVar3 == 0)) {
           text_append_space();
-          uVar7 = label_string(*(undefined4 *)(label_string_ids + 0xb00));
+          uVar7 = label_string(*(i32 *)(label_string_ids + 0xb00));
           FUN_005f22e0(&text_buffer,uVar7);
         }
         sVar5 = _strlen(&text_buffer);
@@ -3657,11 +3657,11 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
       _strncpy(local_10,&text_buffer,2);
       iVar3 = _strcmp(local_10,&pedia_index_marker_str);
       if (iVar3 == 0) {
-        *(undefined4 *)(this[1].pad_4a4 + *(int *)(this[1].pad_4a4 + 0xc) * 4 + 0x10) =
-             *(undefined4 *)(this[1].pad_4a4 + 0xc);
+        *(i32 *)(this[1].pad_4a4 + *(int *)(this[1].pad_4a4 + 0xc) * 4 + 0x10) =
+             *(i32 *)(this[1].pad_4a4 + 0xc);
         *(iptr *)(this[1].pad_65c + *(int *)(this[1].pad_4a4 + 0xc) * 4 + 600) = improvement;
         local_c = operator_new(0xc);
-        local_c[1] = *(undefined4 *)(this[1].pad_4a4 + 0xc);
+        local_c[1] = *(i32 *)(this[1].pad_4a4 + 0xc);
         if (this[2].field_2a4 == 0) {
           this[2].field_2a4 = (uptr)local_c;
         }
@@ -3701,41 +3701,41 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
 /* 004f896a auto */
 #define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(undefined4 * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(16)))
+#define local_c (*(i32 * *)(frame_ + FRAME_OFF(12)))
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(16)))
 void __thiscall pedia_sort_list(void *this,iptr param_1,iptr param_2,iptr param_3,iptr param_4)
 
 {
-  undefined4 uVar1;
+  i32 uVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (undefined4 *)param_1;
-  local_8 = (undefined4 *)param_1;
+  local_c = (i32 *)param_1;
+  local_8 = (i32 *)param_1;
   for (local_14 = 0; local_14 < param_4 - 1; local_14++) {
     local_18 = local_14;
     if (local_8[2] != 0) {
-      local_c = (undefined4 *)local_8[2];
+      local_c = (i32 *)local_8[2];
     }
     while (local_18 = local_18 + 1, local_18 < param_4) {
       iVar2 = _strcmp((char *)*local_8,(char *)*local_c);
       if (0 < iVar2) {
-        uVar1 = *(undefined4 *)(param_2 + local_14 * 4);
-        *(undefined4 *)(param_2 + local_14 * 4) = *(undefined4 *)(param_2 + local_18 * 4);
-        *(undefined4 *)(param_2 + local_18 * 4) = uVar1;
-        uVar1 = *(undefined4 *)(param_3 + local_14 * 4);
-        *(undefined4 *)(param_3 + local_14 * 4) = *(undefined4 *)(param_3 + local_18 * 4);
-        *(undefined4 *)(param_3 + local_18 * 4) = uVar1;
+        uVar1 = *(i32 *)(param_2 + local_14 * 4);
+        *(i32 *)(param_2 + local_14 * 4) = *(i32 *)(param_2 + local_18 * 4);
+        *(i32 *)(param_2 + local_18 * 4) = uVar1;
+        uVar1 = *(i32 *)(param_3 + local_14 * 4);
+        *(i32 *)(param_3 + local_14 * 4) = *(i32 *)(param_3 + local_18 * 4);
+        *(i32 *)(param_3 + local_18 * 4) = uVar1;
         uVar1 = *local_8;
         *local_8 = *local_c;
         *local_c = uVar1;
       }
       if (local_c[2] != 0) {
-        local_c = (undefined4 *)local_c[2];
+        local_c = (i32 *)local_c[2];
       }
     }
     if (local_8[2] != 0) {
-      local_8 = (undefined4 *)local_8[2];
+      local_8 = (i32 *)local_8[2];
     }
   }
   return;
@@ -3746,19 +3746,19 @@ void __thiscall pedia_sort_list(void *this,iptr param_1,iptr param_2,iptr param_
 #undef local_8
 
 /* 004f8a9b auto */
-#define local_8 (*(undefined4 * *)(frame_ + FRAME_OFF(0)))
-undefined * __cdecl pedia_lookup_text(undefined4 *param_1,iptr param_2)
+#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(0)))
+i8 * __cdecl pedia_lookup_text(i32 *param_1,iptr param_2)
 
 {
-  undefined *puVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 *puVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = param_1; (local_8 != (undefined4 *)0x0 && (local_8[1] != param_2));
-      local_8 = (undefined4 *)local_8[2]) {
+  for (local_8 = param_1; (local_8 != (i32 *)0x0 && (local_8[1] != param_2));
+      local_8 = (i32 *)local_8[2]) {
   }
   puVar1 = pedia_missing_text;
-  if (local_8 != (undefined4 *)0x0) {
-    puVar1 = (undefined *)*local_8;
+  if (local_8 != (i32 *)0x0) {
+    puVar1 = (i8 *)*local_8;
   }
   return puVar1;
 }
@@ -3783,8 +3783,8 @@ void __thiscall pedia_history_push(C_004083b0_12c *this)
           (*(u32 *)(this->pad_104 + pedia_history_count * 4 + 0x24) != this->resize_border)))) {
         if (-1 < pedia_back_topic) {
           *(int *)(this[1].pad_48 + this->client_y * 4 - 0x48) = pedia_back_topic;
-          *(undefined4 *)(this[2].pad_48 + this->client_y * 4 + 0x1c) = pedia_popped_page_mode;
-          *(undefined4 *)(this[3].pad_48 + this->client_y * 4 + 0x80) = pedia_popped_category;
+          *(i32 *)(this[2].pad_48 + this->client_y * 4 + 0x1c) = pedia_popped_page_mode;
+          *(i32 *)(this[3].pad_48 + this->client_y * 4 + 0x80) = pedia_popped_category;
           this->client_y++;
         }
         *(u32 *)(this[1].pad_48 + this->client_y * 4 - 0x48) = this->resize_border;
@@ -3848,9 +3848,9 @@ void * __thiscall pedia_link_scalar_dtor(void *this,uint param_1)
 }
 
 /* 004fa140 auto */
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(8)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: __thiscall CControlBarInfo::~CControlBarInfo(void)
    
@@ -3859,7 +3859,7 @@ void * __thiscall pedia_link_scalar_dtor(void *this,uint param_1)
 void __thiscall pedia_link_dtor(void *this)
 
 {
-  undefined1 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   /* inlined unwind funclet FUN_004fa17e */ { hyperlink_dtor((C_00452a67 *)(*(int *)((iptr)&this) + 4)); }
@@ -3874,7 +3874,7 @@ void __thiscall pedia_link_dtor(void *this)
 void __thiscall pedia_init_government_list(C_004083b0_61c *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || ((int)this[2].field_158 <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -3886,8 +3886,8 @@ void __thiscall pedia_init_government_list(C_004083b0_61c *this,iptr param_1)
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
   for (local_8 = 0; local_8 < (int)this[2].field_158; local_8++) {
-    *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
-         *(undefined4 *)(this[2].pad_15c + local_8 * 4 + 0x1c);
+    *(i32 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
+         *(i32 *)(this[2].pad_15c + local_8 * 4 + 0x1c);
   }
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
@@ -3945,7 +3945,7 @@ void __cdecl notice_dlg_static_dtor(void)
 void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || ((int)this[1].field_49c <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -3957,8 +3957,8 @@ void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
   for (local_8 = 0; local_8 < (int)this[1].field_49c; local_8++) {
-    *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
-         *(undefined4 *)(this[1].pad_4a4 + local_8 * 4 + 0x6c);
+    *(i32 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
+         *(i32 *)(this[1].pad_4a4 + local_8 * 4 + 0x6c);
   }
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
@@ -3979,26 +3979,26 @@ void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
 #undef local_8
 
 /* 0052630d auto */
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define local_88 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_78 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define local_88 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_78 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define local_64 (*(tagRECT *)(frame_ + FRAME_OFF(36)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(52)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(60)))
+#define local_4c (*(i32 *)(frame_ + FRAME_OFF(60)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_44 (*(undefined4 *)(frame_ + FRAME_OFF(68)))
+#define local_44 (*(i32 *)(frame_ + FRAME_OFF(68)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(72)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(76)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_34 (*(undefined4 *)(frame_ + FRAME_OFF(84)))
+#define local_34 (*(i32 *)(frame_ + FRAME_OFF(84)))
 #define local_30 (*(tagRECT *)(frame_ + FRAME_OFF(88)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(104)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(112)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(112)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(128)))
 /* WARNING: Removing unreachable block (ram,0x0052661a) */
 
@@ -4010,7 +4010,7 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
   size_t sVar3;
   int iVar4;
   u32 yBottom;
-  undefined1 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_34 = 0;
   surface_get_clip((DibSurface *)this,(iptr)local_18);
@@ -4135,13 +4135,13 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
 /* 00526913 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-#define pedia_wonder_names (*(undefined4 *)((u8 *)&g.d_006a7d4c))
+#define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     for (local_8 = 0;
@@ -4179,7 +4179,7 @@ void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
 void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || ((int)this->pedia_advance_count <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -4191,8 +4191,8 @@ void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
     *(int *)(this[4].pad_48 + 0x94) = *(int *)(this[4].pad_48 + 0x94) - 1;
   }
   for (local_8 = 0; local_8 < (int)this->pedia_advance_count; local_8++) {
-    *(undefined4 *)(this[3].pad_464 + local_8 * 4 + 0xc) =
-         *(undefined4 *)(this[1].pad_48 + local_8 * 4 + 0xc);
+    *(i32 *)(this[3].pad_464 + local_8 * 4 + 0xc) =
+         *(i32 *)(this[1].pad_48 + local_8 * 4 + 0xc);
   }
   scrollbar_set_range
             ((Control *)(this[3].pad_3c0 + 0x58),0,*(int *)(this[3].pad_464 + 8) / 9);
@@ -4213,11 +4213,11 @@ void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
 #undef local_8
 
 /* 00564e6d auto */
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_1ac (*(undefined1 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_19c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_18c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(36)))
+#define local_1ac (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define local_19c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define local_18c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 #define local_17c (*(iptr *)(frame_ + FRAME_OFF(52)))
 #define local_178 (*(int *)(frame_ + FRAME_OFF(56)))
 #define advance3 (*(iptr *)(frame_ + FRAME_OFF(60)))
@@ -4240,7 +4240,7 @@ void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
 #define local_127 (*(char (*)[259])(frame_ + FRAME_OFF(137)))
 #define local_24 (*(int *)(frame_ + FRAME_OFF(396)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(400)))
-#define local_1c (*(undefined1 (*)[16])(frame_ + FRAME_OFF(404)))
+#define local_1c (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
 #define local_c (*(GameFont * *)(frame_ + FRAME_OFF(420)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(424)))
 void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
@@ -4251,7 +4251,7 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
   size_t sVar3;
   int iVar4;
   bool bVar5;
-  undefined1 frame_[FRAME_OFF(432)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(432)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_get_clip((DibSurface *)this,(iptr)local_1c);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -4684,14 +4684,14 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
 
 /* 00566584 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
-#define pedia_advance_names (*(undefined4 *)((u8 *)&g.d_006a7d44))
+#define pedia_advance_names (*(i32 *)((u8 *)&g.d_006a7d44))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     local_8 = 0;
@@ -4730,10 +4730,10 @@ void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
 #define local_154 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_150 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_14c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_148 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_138 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_128 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(48)))
-#define local_118 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(64)))
+#define local_148 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_138 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_128 (*(i8 (*)[16])(frame_ + FRAME_OFF(48)))
+#define local_118 (*(i8 (*)[16])(frame_ + FRAME_OFF(64)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(80)))
 #define local_104 (*(int *)(frame_ + FRAME_OFF(84)))
 #define aiStack_100 (*(int (*)[8])(frame_ + FRAME_OFF(88)))
@@ -4756,7 +4756,7 @@ void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
 #define local_4c (*(int (*)[3])(frame_ + FRAME_OFF(268)))
 #define local_40 (*(tagRECT *)(frame_ + FRAME_OFF(280)))
 #define aiStack_30 (*(int (*)[4])(frame_ + FRAME_OFF(296)))
-#define local_20 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(312)))
+#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
 #define local_10 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
 #define local_c (*(int (*)[2])(frame_ + FRAME_OFF(332)))
 void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this)
@@ -4766,7 +4766,7 @@ void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this)
   int *piVar2;
   int iVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(344)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(344)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_get_clip((DibSurface *)this,(iptr)local_20);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -5020,7 +5020,7 @@ pedia_draw_tree_connector(DibSurface *this,int param_1,int param_2,int param_3,i
 }
 
 /* 005675b7 auto */
-void __thiscall pedia_draw_tree_stub(C_004083b0_61c *this,undefined4 param_1,int param_2)
+void __thiscall pedia_draw_tree_stub(C_004083b0_61c *this,i32 param_1,int param_2)
 
 {
   gfx_set_text_color_index(10);
@@ -5079,7 +5079,7 @@ void __cdecl shared_palette_static_dtor(void)
 void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || ((int)this->pedia_improve_count <= (int)this->resize_border)) {
     this->resize_border = 0;
@@ -5091,8 +5091,8 @@ void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
     *(int *)(this[3].pad_48 + 0x7c) = *(int *)(this[3].pad_48 + 0x7c) - 1;
   }
   for (local_8 = 0; local_8 < (int)this->pedia_improve_count; local_8++) {
-    *(undefined4 *)(this[2].pad_65c + local_8 * 4 + 0x8c) =
-         *(undefined4 *)(this->pad_980 + local_8 * 4 + 0x9c);
+    *(i32 *)(this[2].pad_65c + local_8 * 4 + 0x8c) =
+         *(i32 *)(this->pad_980 + local_8 * 4 + 0x9c);
   }
   scrollbar_set_range
             ((Control *)(this[2].pad_65c + 0x34),0,*(int *)(this[2].pad_65c + 0x88) / 9);
@@ -5113,27 +5113,27 @@ void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
 #undef local_8
 
 /* 00599b8d auto */
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define local_98 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_88 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_78 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define local_98 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_88 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_78 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(48)))
 #define local_64 (*(tagRECT *)(frame_ + FRAME_OFF(52)))
 #define local_54 (*(int *)(frame_ + FRAME_OFF(68)))
 #define local_50 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(76)))
+#define local_4c (*(i32 *)(frame_ + FRAME_OFF(76)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_44 (*(undefined4 *)(frame_ + FRAME_OFF(84)))
+#define local_44 (*(i32 *)(frame_ + FRAME_OFF(84)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(92)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_34 (*(undefined4 *)(frame_ + FRAME_OFF(100)))
+#define local_34 (*(i32 *)(frame_ + FRAME_OFF(100)))
 #define local_30 (*(tagRECT *)(frame_ + FRAME_OFF(104)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(120)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(124)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(128)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(128)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(144)))
 /* WARNING: Removing unreachable block (ram,0x00599e9a) */
 /* WARNING: Removing unreachable block (ram,0x00599fc4) */
@@ -5145,7 +5145,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
   size_t sVar2;
   int iVar3;
   u32 yBottom;
-  undefined1 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_34 = 0;
   surface_get_clip((DibSurface *)this,(iptr)local_18);
@@ -5260,18 +5260,18 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
 #undef local_8
 
 /* 0059a15d auto */
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define local_1124 (*(char (*)[4096])(frame_ + FRAME_OFF(4)))
-#define local_124 (*(undefined1 (*)[256])(frame_ + FRAME_OFF(4100)))
-#define local_24 (*(undefined1 (*)[8])(frame_ + FRAME_OFF(4356)))
+#define local_124 (*(i8 (*)[256])(frame_ + FRAME_OFF(4100)))
+#define local_24 (*(i8 (*)[8])(frame_ + FRAME_OFF(4356)))
 void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
 
 {
   int iVar1;
   char *_Str;
   size_t sVar2;
-  undefined4 uStackY_1c;
-  undefined1 frame_[FRAME_OFF(4392)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uStackY_1c;
+  i8 frame_[FRAME_OFF(4392)] __attribute__((aligned(8)));  /* original stack frame */
   str_clear((iptr)local_1124);
   uStackY_1c = 0x59a190;
   FUN_005f22d0(local_24,s_PEDIAIMPROVE_00635074);
@@ -5312,13 +5312,13 @@ void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
 /* 0059a2e6 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-#define pedia_improvement_names (*(undefined4 *)((u8 *)&g.d_006a7d48))
+#define pedia_improvement_names (*(i32 *)((u8 *)&g.d_006a7d48))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     if (param_1 < 0x27) {
@@ -5363,20 +5363,20 @@ void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
 void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
 
 {
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((int)this->resize_border < 0) || (*(int *)(this[1].pad_4a4 + 0xdc) <= (int)this->resize_border)) {
     this->resize_border = 0;
   }
-  *(undefined4 *)this[4].pad_2c4 = *(undefined4 *)(this[1].pad_4a4 + 0xdc);
+  *(i32 *)this[4].pad_2c4 = *(i32 *)(this[1].pad_4a4 + 0xdc);
   *(u32 *)(this[5].pad_48 + 100) = this->resize_border;
   *(u32 *)(this[5].pad_48 + 0x68) = this->resize_border;
   while (pedia_list_top % 9 != 0) {
     *(int *)(this[5].pad_48 + 0x68) = *(int *)(this[5].pad_48 + 0x68) - 1;
   }
   for (local_8 = 0; local_8 < *(int *)(this[1].pad_4a4 + 0xdc); local_8++) {
-    *(undefined4 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
-         *(undefined4 *)(this[2].pad_48 + local_8 * 4 + 0x18);
+    *(i32 *)(this[4].pad_2c4 + local_8 * 4 + 4) =
+         *(i32 *)(this[2].pad_48 + local_8 * 4 + 0x18);
   }
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
@@ -5397,11 +5397,11 @@ void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
 #undef local_8
 
 /* 005ac9ad auto */
-#define list_text_color (*(undefined4 *)((u8 *)&g.d_00635a1c))
+#define list_text_color (*(i32 *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define text_buffer (*(undefined1 *)((u8 *)&g.d_00679640))
-#define local_498 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_488 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
+#define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
+#define local_498 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_488 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_478 (*(tagRECT *)(frame_ + FRAME_OFF(32)))
 #define local_468 (*(int *)(frame_ + FRAME_OFF(48)))
 #define local_464 (*(int *)(frame_ + FRAME_OFF(52)))
@@ -5411,23 +5411,23 @@ void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(80)))
 #define local_444 (*(char * *)(frame_ + FRAME_OFF(84)))
 #define local_440 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_43c (*(undefined4 *)(frame_ + FRAME_OFF(92)))
+#define local_43c (*(i32 *)(frame_ + FRAME_OFF(92)))
 #define local_438 (*(int *)(frame_ + FRAME_OFF(96)))
 #define local_434 (*(char (*)[1000])(frame_ + FRAME_OFF(100)))
-#define local_4c (*(undefined4 *)(frame_ + FRAME_OFF(1100)))
+#define local_4c (*(i32 *)(frame_ + FRAME_OFF(1100)))
 #define local_48 (*(int *)(frame_ + FRAME_OFF(1104)))
 #define local_44 (*(u32 *)(frame_ + FRAME_OFF(1108)))
 #define local_40 (*(int *)(frame_ + FRAME_OFF(1112)))
 #define local_3c (*(int *)(frame_ + FRAME_OFF(1116)))
 #define local_38 (*(int *)(frame_ + FRAME_OFF(1120)))
-#define local_34 (*(undefined4 *)(frame_ + FRAME_OFF(1124)))
+#define local_34 (*(i32 *)(frame_ + FRAME_OFF(1124)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(1128)))
-#define local_2c (*(undefined4 *)(frame_ + FRAME_OFF(1132)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(1136)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(1140)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
+#define local_2c (*(i32 *)(frame_ + FRAME_OFF(1132)))
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(1136)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(1140)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(1144)))
 #define local_1c (*(int *)(frame_ + FRAME_OFF(1148)))
-#define local_18 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(1152)))
+#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(1152)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(1168)))
 void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
 
@@ -5436,7 +5436,7 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
   size_t sVar2;
   int iVar3;
   u32 yBottom;
-  undefined1 frame_[FRAME_OFF(1176)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(1176)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
@@ -5784,13 +5784,13 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
 /* 005ad998 auto */
 #define map_redraw_busy (*(int *)((u8 *)&g.d_006ad908))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
-#define pedia_unit_names (*(undefined4 *)((u8 *)&g.d_006a7d50))
+#define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
 void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1)
 
 {
-  undefined4 uVar1;
-  undefined1 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar1;
+  i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((pedia_closed != 0) && (map_redraw_busy == 0)) {
     local_8 = 0;

@@ -25,13 +25,13 @@
 #define local_450 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_448 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_444 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_43c (*(undefined1 *)(frame_ + FRAME_OFF(28)))
+#define local_43c (*(i8 *)(frame_ + FRAME_OFF(28)))
 #define local_438 (*(char *)(frame_ + FRAME_OFF(32)))
-#define local_434 (*(undefined1 (*)[260])(frame_ + FRAME_OFF(36)))
-#define local_330 (*(undefined4 *)(frame_ + FRAME_OFF(296)))
+#define local_434 (*(i8 (*)[260])(frame_ + FRAME_OFF(36)))
+#define local_330 (*(i32 *)(frame_ + FRAME_OFF(296)))
 #define local_32c (*(int *)(frame_ + FRAME_OFF(300)))
 #define local_328 (*(int *)(frame_ + FRAME_OFF(304)))
-#define local_324 (*(undefined1 (*)[40])(frame_ + FRAME_OFF(308)))
+#define local_324 (*(i8 (*)[40])(frame_ + FRAME_OFF(308)))
 #define local_2fc (*(int *)(frame_ + FRAME_OFF(348)))
 #define local_2e8 (*(byte *)(frame_ + FRAME_OFF(368)))
 #define local_248 (*(int *)(frame_ + FRAME_OFF(528)))
@@ -44,21 +44,21 @@
 #define local_1c (*(int *)(frame_ + FRAME_OFF(1084)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(1088)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(1092)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(1096)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(1100)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(1104)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1096)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1100)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1104)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-undefined4 __cdecl setup_new_game_dialogs(int param_1)
+i32 __cdecl setup_new_game_dialogs(int param_1)
 
 {
   byte bVar1;
   int iVar2;
   uint uVar3;
-  undefined4 uVar4;
+  i32 uVar4;
   int iVar5;
-  undefined4 uVar6;
-  undefined1 frame_[FRAME_OFF(1112)] __attribute__((aligned(8)));  /* original stack frame */
+  i32 uVar6;
+  i8 frame_[FRAME_OFF(1112)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   puStack_c = &LAB_0041d3fe;
@@ -320,14 +320,14 @@ LAB_0041c35d:
       game.player_civ = leaders[local_1c].color;
       prefs_tribe = (short)local_1c;
       civs[(char)game.player_civ].tribe = prefs_tribe;
-      civs[(char)game.player_civ].leader_portrait = (undefined1)local_1c;
+      civs[(char)game.player_civ].leader_portrait = (i8)local_1c;
       if (iVar2 != 0) {
         civs[(char)game.player_civ].leader_portrait =
              civs[(char)game.player_civ].leader_portrait + '\x15';
       }
       DAT_006d1da0 = (int)(char)game.player_civ;
       game.human_players = (byte)(1 << (game.player_civ & 0x1f));
-      local_43c = (undefined1)iVar2;
+      local_43c = (i8)iVar2;
       leaders[civs[(char)game.player_civ].tribe].female = local_43c;
       leaders[civs[(char)game.player_civ].tribe].leader_name
            = leaders[civs[(char)game.player_civ].tribe].names[(uint)(byte)(&leaders[0].female)
@@ -422,7 +422,7 @@ LAB_0041cfad:
       setup_picwnd_show(&setup_picwnd,1,6,8);
       dlg_load_game_section(local_324,s_CUSTOMCITY_00625524,0x20001);
       for (local_444 = 0; local_444 < 4; local_444 = local_444 + 1) {
-        uVar4 = label_string(*(undefined4 *)(DAT_00628420 + 0x3d8 + local_444 * 4));
+        uVar4 = label_string(*(i32 *)(DAT_00628420 + 0x3d8 + local_444 * 4));
         dialog_add_sprite(local_324,local_444 * 0x1e0 + ADDR(0x63fff4, ((u8 *)&g.d_0063fe8c + 360)),local_444,uVar4);
       }
       dialog_set_default_choice(local_324,
@@ -439,8 +439,8 @@ LAB_0041cfad:
         game.civs_alive = game.human_players | 1;
         for (local_20 = 0; local_20 < (int)(uint)game.num_enemies; local_20 = local_20 + 1) {
           iVar2 = _rand();
-          (*(undefined1 *)((char *)&local_448 + 0)) = (byte)(iVar2 >> 0x1f);
-          (*(undefined1 *)((char *)&local_448 + 0)) =
+          (*(i8 *)((char *)&local_448 + 0)) = (byte)(iVar2 >> 0x1f);
+          (*(i8 *)((char *)&local_448 + 0)) =
                (((byte)iVar2 ^ (byte)local_448) - (byte)local_448 & 7 ^ (byte)local_448) -
                (byte)local_448;
           if ((1 << ((byte)local_448 & 0x1f) & (uint)game.civs_alive) == 0) {
@@ -461,7 +461,7 @@ LAB_0041cfad:
               text_set_number_arg(0,local_24);
               setup_picwnd_show(&setup_picwnd,2,6,9);
               dlg_load_game_section(local_324,s_OPPONENT_00625530,1);
-              *(undefined4 *)(local_fc + 4) = 0x15;
+              *(i32 *)(local_fc + 4) = 0x15;
               for (local_2c = 0; local_2c < 0x15; local_2c = local_2c + 1) {
                 if (leaders[local_2c].color == local_448) {
                   text_clear();
@@ -481,7 +481,7 @@ LAB_0041cfad:
               setup_picwnd_close(&setup_picwnd);
               if (local_2c < 0) goto LAB_0041cfad;
               if (local_2c < 0x15) {
-                (&setup_chosen_leaders)[local_448] = (undefined1)local_2c;
+                (&setup_chosen_leaders)[local_448] = (i8)local_2c;
               }
             }
             local_448 = local_448 + 1;
@@ -545,577 +545,577 @@ LAB_0041cfad:
 #undef local_8
 
 /* 0x004d17bf: unwind funclet 0x004d4a11 destroys the control at EBP-0x12c (local_130). */
-#define local_d88 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_d78 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_d68 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(32)))
-#define local_d58 (*(undefined4 *)(frame_ + FRAME_OFF(48)))
-#define local_d54 (*(undefined1 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_d44 (*(undefined4 *)(frame_ + FRAME_OFF(68)))
-#define local_d40 (*(undefined4 *)(frame_ + FRAME_OFF(72)))
-#define local_d3c (*(undefined4 *)(frame_ + FRAME_OFF(76)))
-#define local_d38 (*(undefined4 *)(frame_ + FRAME_OFF(80)))
-#define local_d34 (*(undefined4 *)(frame_ + FRAME_OFF(84)))
-#define local_d30 (*(undefined4 *)(frame_ + FRAME_OFF(88)))
-#define local_d2c (*(undefined4 *)(frame_ + FRAME_OFF(92)))
-#define local_d28 (*(undefined4 *)(frame_ + FRAME_OFF(96)))
-#define local_d24 (*(undefined4 *)(frame_ + FRAME_OFF(100)))
-#define local_d20 (*(undefined4 *)(frame_ + FRAME_OFF(104)))
-#define local_d1c (*(undefined4 *)(frame_ + FRAME_OFF(108)))
-#define local_d18 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(112)))
-#define local_cd0 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(184)))
+#define local_d88 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define local_d78 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define local_d68 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
+#define local_d58 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define local_d54 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define local_d44 (*(i32 *)(frame_ + FRAME_OFF(68)))
+#define local_d40 (*(i32 *)(frame_ + FRAME_OFF(72)))
+#define local_d3c (*(i32 *)(frame_ + FRAME_OFF(76)))
+#define local_d38 (*(i32 *)(frame_ + FRAME_OFF(80)))
+#define local_d34 (*(i32 *)(frame_ + FRAME_OFF(84)))
+#define local_d30 (*(i32 *)(frame_ + FRAME_OFF(88)))
+#define local_d2c (*(i32 *)(frame_ + FRAME_OFF(92)))
+#define local_d28 (*(i32 *)(frame_ + FRAME_OFF(96)))
+#define local_d24 (*(i32 *)(frame_ + FRAME_OFF(100)))
+#define local_d20 (*(i32 *)(frame_ + FRAME_OFF(104)))
+#define local_d1c (*(i32 *)(frame_ + FRAME_OFF(108)))
+#define local_d18 (*(i8 (*)[72])(frame_ + FRAME_OFF(112)))
+#define local_cd0 (*(i8 (*)[72])(frame_ + FRAME_OFF(184)))
 #define local_c88 (*(byte (*)[4])(frame_ + FRAME_OFF(256)))
 #define local_c84 (*(int (*)[6])(frame_ + FRAME_OFF(260)))
-#define local_c6c (*(undefined1 *)(frame_ + FRAME_OFF(284)))
-#define local_c6b (*(undefined1 *)(frame_ + FRAME_OFF(285)))
-#define local_c68 (*(undefined4 *)(frame_ + FRAME_OFF(288)))
-#define local_c64 (*(undefined4 *)(frame_ + FRAME_OFF(292)))
-#define local_c60 (*(undefined4 *)(frame_ + FRAME_OFF(296)))
-#define local_c5c (*(undefined4 *)(frame_ + FRAME_OFF(300)))
-#define local_c58 (*(undefined4 *)(frame_ + FRAME_OFF(304)))
-#define local_c54 (*(undefined4 *)(frame_ + FRAME_OFF(308)))
-#define local_c50 (*(undefined1 *)(frame_ + FRAME_OFF(312)))
-#define local_c4f (*(undefined1 *)(frame_ + FRAME_OFF(313)))
-#define local_c4c (*(undefined4 *)(frame_ + FRAME_OFF(316)))
-#define local_c48 (*(undefined4 *)(frame_ + FRAME_OFF(320)))
-#define local_c44 (*(undefined4 *)(frame_ + FRAME_OFF(324)))
-#define local_c40 (*(undefined4 *)(frame_ + FRAME_OFF(328)))
-#define local_c3c (*(undefined4 *)(frame_ + FRAME_OFF(332)))
-#define local_c38 (*(undefined4 *)(frame_ + FRAME_OFF(336)))
-#define local_c34 (*(undefined1 *)(frame_ + FRAME_OFF(340)))
-#define local_c33 (*(undefined1 *)(frame_ + FRAME_OFF(341)))
-#define local_c30 (*(undefined4 *)(frame_ + FRAME_OFF(344)))
-#define local_c2c (*(undefined4 *)(frame_ + FRAME_OFF(348)))
-#define local_c28 (*(undefined4 *)(frame_ + FRAME_OFF(352)))
-#define local_c24 (*(undefined4 *)(frame_ + FRAME_OFF(356)))
-#define local_c20 (*(undefined4 *)(frame_ + FRAME_OFF(360)))
-#define local_c1c (*(undefined4 *)(frame_ + FRAME_OFF(364)))
-#define local_c18 (*(undefined1 *)(frame_ + FRAME_OFF(368)))
-#define local_c17 (*(undefined1 *)(frame_ + FRAME_OFF(369)))
-#define local_c14 (*(undefined4 *)(frame_ + FRAME_OFF(372)))
-#define local_c10 (*(undefined4 *)(frame_ + FRAME_OFF(376)))
-#define local_c0c (*(undefined4 *)(frame_ + FRAME_OFF(380)))
-#define local_c08 (*(undefined4 *)(frame_ + FRAME_OFF(384)))
-#define local_c04 (*(undefined4 *)(frame_ + FRAME_OFF(388)))
-#define local_c00 (*(undefined4 *)(frame_ + FRAME_OFF(392)))
-#define local_bfc (*(undefined1 *)(frame_ + FRAME_OFF(396)))
-#define local_bfb (*(undefined1 *)(frame_ + FRAME_OFF(397)))
-#define local_bf8 (*(undefined4 *)(frame_ + FRAME_OFF(400)))
-#define local_bf4 (*(undefined4 *)(frame_ + FRAME_OFF(404)))
-#define local_bf0 (*(undefined4 *)(frame_ + FRAME_OFF(408)))
-#define local_bec (*(undefined4 *)(frame_ + FRAME_OFF(412)))
-#define local_be8 (*(undefined4 *)(frame_ + FRAME_OFF(416)))
-#define local_be4 (*(undefined4 *)(frame_ + FRAME_OFF(420)))
-#define local_be0 (*(undefined1 *)(frame_ + FRAME_OFF(424)))
-#define local_bdf (*(undefined1 *)(frame_ + FRAME_OFF(425)))
-#define local_bdc (*(undefined4 *)(frame_ + FRAME_OFF(428)))
-#define local_bd8 (*(undefined4 *)(frame_ + FRAME_OFF(432)))
-#define local_bd4 (*(undefined4 *)(frame_ + FRAME_OFF(436)))
-#define local_bd0 (*(undefined4 *)(frame_ + FRAME_OFF(440)))
-#define local_bcc (*(undefined4 *)(frame_ + FRAME_OFF(444)))
-#define local_bc8 (*(undefined4 *)(frame_ + FRAME_OFF(448)))
+#define local_c6c (*(i8 *)(frame_ + FRAME_OFF(284)))
+#define local_c6b (*(i8 *)(frame_ + FRAME_OFF(285)))
+#define local_c68 (*(i32 *)(frame_ + FRAME_OFF(288)))
+#define local_c64 (*(i32 *)(frame_ + FRAME_OFF(292)))
+#define local_c60 (*(i32 *)(frame_ + FRAME_OFF(296)))
+#define local_c5c (*(i32 *)(frame_ + FRAME_OFF(300)))
+#define local_c58 (*(i32 *)(frame_ + FRAME_OFF(304)))
+#define local_c54 (*(i32 *)(frame_ + FRAME_OFF(308)))
+#define local_c50 (*(i8 *)(frame_ + FRAME_OFF(312)))
+#define local_c4f (*(i8 *)(frame_ + FRAME_OFF(313)))
+#define local_c4c (*(i32 *)(frame_ + FRAME_OFF(316)))
+#define local_c48 (*(i32 *)(frame_ + FRAME_OFF(320)))
+#define local_c44 (*(i32 *)(frame_ + FRAME_OFF(324)))
+#define local_c40 (*(i32 *)(frame_ + FRAME_OFF(328)))
+#define local_c3c (*(i32 *)(frame_ + FRAME_OFF(332)))
+#define local_c38 (*(i32 *)(frame_ + FRAME_OFF(336)))
+#define local_c34 (*(i8 *)(frame_ + FRAME_OFF(340)))
+#define local_c33 (*(i8 *)(frame_ + FRAME_OFF(341)))
+#define local_c30 (*(i32 *)(frame_ + FRAME_OFF(344)))
+#define local_c2c (*(i32 *)(frame_ + FRAME_OFF(348)))
+#define local_c28 (*(i32 *)(frame_ + FRAME_OFF(352)))
+#define local_c24 (*(i32 *)(frame_ + FRAME_OFF(356)))
+#define local_c20 (*(i32 *)(frame_ + FRAME_OFF(360)))
+#define local_c1c (*(i32 *)(frame_ + FRAME_OFF(364)))
+#define local_c18 (*(i8 *)(frame_ + FRAME_OFF(368)))
+#define local_c17 (*(i8 *)(frame_ + FRAME_OFF(369)))
+#define local_c14 (*(i32 *)(frame_ + FRAME_OFF(372)))
+#define local_c10 (*(i32 *)(frame_ + FRAME_OFF(376)))
+#define local_c0c (*(i32 *)(frame_ + FRAME_OFF(380)))
+#define local_c08 (*(i32 *)(frame_ + FRAME_OFF(384)))
+#define local_c04 (*(i32 *)(frame_ + FRAME_OFF(388)))
+#define local_c00 (*(i32 *)(frame_ + FRAME_OFF(392)))
+#define local_bfc (*(i8 *)(frame_ + FRAME_OFF(396)))
+#define local_bfb (*(i8 *)(frame_ + FRAME_OFF(397)))
+#define local_bf8 (*(i32 *)(frame_ + FRAME_OFF(400)))
+#define local_bf4 (*(i32 *)(frame_ + FRAME_OFF(404)))
+#define local_bf0 (*(i32 *)(frame_ + FRAME_OFF(408)))
+#define local_bec (*(i32 *)(frame_ + FRAME_OFF(412)))
+#define local_be8 (*(i32 *)(frame_ + FRAME_OFF(416)))
+#define local_be4 (*(i32 *)(frame_ + FRAME_OFF(420)))
+#define local_be0 (*(i8 *)(frame_ + FRAME_OFF(424)))
+#define local_bdf (*(i8 *)(frame_ + FRAME_OFF(425)))
+#define local_bdc (*(i32 *)(frame_ + FRAME_OFF(428)))
+#define local_bd8 (*(i32 *)(frame_ + FRAME_OFF(432)))
+#define local_bd4 (*(i32 *)(frame_ + FRAME_OFF(436)))
+#define local_bd0 (*(i32 *)(frame_ + FRAME_OFF(440)))
+#define local_bcc (*(i32 *)(frame_ + FRAME_OFF(444)))
+#define local_bc8 (*(i32 *)(frame_ + FRAME_OFF(448)))
 #define local_bc4 (*(byte (*)[676])(frame_ + FRAME_OFF(452)))
-#define local_920 (*(undefined4 *)(frame_ + FRAME_OFF(1128)))
-#define local_91c (*(undefined4 *)(frame_ + FRAME_OFF(1132)))
-#define local_918 (*(undefined4 *)(frame_ + FRAME_OFF(1136)))
-#define local_914 (*(undefined4 *)(frame_ + FRAME_OFF(1140)))
-#define local_910 (*(undefined4 *)(frame_ + FRAME_OFF(1144)))
-#define local_90c (*(undefined4 *)(frame_ + FRAME_OFF(1148)))
-#define local_908 (*(undefined1 *)(frame_ + FRAME_OFF(1152)))
-#define local_907 (*(undefined1 *)(frame_ + FRAME_OFF(1153)))
-#define local_904 (*(undefined4 *)(frame_ + FRAME_OFF(1156)))
-#define local_900 (*(undefined4 *)(frame_ + FRAME_OFF(1160)))
-#define local_8fc (*(undefined4 *)(frame_ + FRAME_OFF(1164)))
-#define local_8f8 (*(undefined4 *)(frame_ + FRAME_OFF(1168)))
-#define local_8f4 (*(undefined4 *)(frame_ + FRAME_OFF(1172)))
-#define local_8f0 (*(undefined4 *)(frame_ + FRAME_OFF(1176)))
-#define local_8ec (*(undefined1 *)(frame_ + FRAME_OFF(1180)))
-#define local_8eb (*(undefined1 *)(frame_ + FRAME_OFF(1181)))
-#define local_8e8 (*(undefined4 *)(frame_ + FRAME_OFF(1184)))
-#define local_8e4 (*(undefined4 *)(frame_ + FRAME_OFF(1188)))
-#define local_8e0 (*(undefined4 *)(frame_ + FRAME_OFF(1192)))
-#define local_8dc (*(undefined4 *)(frame_ + FRAME_OFF(1196)))
-#define local_8d8 (*(undefined4 *)(frame_ + FRAME_OFF(1200)))
-#define local_8d4 (*(undefined4 *)(frame_ + FRAME_OFF(1204)))
-#define local_8d0 (*(undefined1 *)(frame_ + FRAME_OFF(1208)))
-#define local_8cf (*(undefined1 *)(frame_ + FRAME_OFF(1209)))
-#define local_8cc (*(undefined4 *)(frame_ + FRAME_OFF(1212)))
-#define local_8c8 (*(undefined4 *)(frame_ + FRAME_OFF(1216)))
-#define local_8c4 (*(undefined4 *)(frame_ + FRAME_OFF(1220)))
-#define local_8c0 (*(undefined4 *)(frame_ + FRAME_OFF(1224)))
-#define local_8bc (*(undefined4 *)(frame_ + FRAME_OFF(1228)))
-#define local_8b8 (*(undefined4 *)(frame_ + FRAME_OFF(1232)))
-#define local_8b4 (*(undefined1 *)(frame_ + FRAME_OFF(1236)))
-#define local_8b3 (*(undefined1 *)(frame_ + FRAME_OFF(1237)))
-#define local_8b0 (*(undefined4 *)(frame_ + FRAME_OFF(1240)))
-#define local_8ac (*(undefined4 *)(frame_ + FRAME_OFF(1244)))
-#define local_8a8 (*(undefined4 *)(frame_ + FRAME_OFF(1248)))
-#define local_8a4 (*(undefined4 *)(frame_ + FRAME_OFF(1252)))
-#define local_8a0 (*(undefined4 *)(frame_ + FRAME_OFF(1256)))
-#define local_89c (*(undefined4 *)(frame_ + FRAME_OFF(1260)))
-#define local_898 (*(undefined1 *)(frame_ + FRAME_OFF(1264)))
-#define local_897 (*(undefined1 *)(frame_ + FRAME_OFF(1265)))
-#define local_894 (*(undefined4 *)(frame_ + FRAME_OFF(1268)))
-#define local_890 (*(undefined4 *)(frame_ + FRAME_OFF(1272)))
-#define local_88c (*(undefined4 *)(frame_ + FRAME_OFF(1276)))
-#define local_888 (*(undefined4 *)(frame_ + FRAME_OFF(1280)))
-#define local_884 (*(undefined4 *)(frame_ + FRAME_OFF(1284)))
-#define local_880 (*(undefined4 *)(frame_ + FRAME_OFF(1288)))
-#define local_87c (*(undefined1 *)(frame_ + FRAME_OFF(1292)))
-#define local_87b (*(undefined1 *)(frame_ + FRAME_OFF(1293)))
-#define local_878 (*(undefined4 *)(frame_ + FRAME_OFF(1296)))
-#define local_874 (*(undefined4 *)(frame_ + FRAME_OFF(1300)))
-#define local_870 (*(undefined4 *)(frame_ + FRAME_OFF(1304)))
-#define local_86c (*(undefined4 *)(frame_ + FRAME_OFF(1308)))
-#define local_868 (*(undefined4 *)(frame_ + FRAME_OFF(1312)))
-#define local_864 (*(undefined4 *)(frame_ + FRAME_OFF(1316)))
-#define local_860 (*(undefined1 *)(frame_ + FRAME_OFF(1320)))
-#define local_85f (*(undefined1 *)(frame_ + FRAME_OFF(1321)))
-#define local_85c (*(undefined4 *)(frame_ + FRAME_OFF(1324)))
-#define local_858 (*(undefined4 *)(frame_ + FRAME_OFF(1328)))
-#define local_854 (*(undefined4 *)(frame_ + FRAME_OFF(1332)))
-#define local_850 (*(undefined4 *)(frame_ + FRAME_OFF(1336)))
-#define local_84c (*(undefined4 *)(frame_ + FRAME_OFF(1340)))
-#define local_848 (*(undefined4 *)(frame_ + FRAME_OFF(1344)))
-#define local_844 (*(undefined1 *)(frame_ + FRAME_OFF(1348)))
-#define local_843 (*(undefined1 *)(frame_ + FRAME_OFF(1349)))
-#define local_840 (*(undefined4 *)(frame_ + FRAME_OFF(1352)))
-#define local_83c (*(undefined4 *)(frame_ + FRAME_OFF(1356)))
-#define local_838 (*(undefined4 *)(frame_ + FRAME_OFF(1360)))
-#define local_834 (*(undefined4 *)(frame_ + FRAME_OFF(1364)))
-#define local_830 (*(undefined4 *)(frame_ + FRAME_OFF(1368)))
-#define local_82c (*(undefined4 *)(frame_ + FRAME_OFF(1372)))
-#define local_828 (*(undefined1 *)(frame_ + FRAME_OFF(1376)))
-#define local_827 (*(undefined1 *)(frame_ + FRAME_OFF(1377)))
-#define local_824 (*(undefined4 *)(frame_ + FRAME_OFF(1380)))
-#define local_820 (*(undefined4 *)(frame_ + FRAME_OFF(1384)))
-#define local_81c (*(undefined4 *)(frame_ + FRAME_OFF(1388)))
-#define local_818 (*(undefined4 *)(frame_ + FRAME_OFF(1392)))
-#define local_814 (*(undefined4 *)(frame_ + FRAME_OFF(1396)))
-#define local_810 (*(undefined4 *)(frame_ + FRAME_OFF(1400)))
-#define local_80c (*(undefined1 *)(frame_ + FRAME_OFF(1404)))
-#define local_80b (*(undefined1 *)(frame_ + FRAME_OFF(1405)))
-#define local_808 (*(undefined4 *)(frame_ + FRAME_OFF(1408)))
-#define local_804 (*(undefined4 *)(frame_ + FRAME_OFF(1412)))
-#define local_800 (*(undefined4 *)(frame_ + FRAME_OFF(1416)))
-#define local_7fc (*(undefined4 *)(frame_ + FRAME_OFF(1420)))
-#define local_7f8 (*(undefined4 *)(frame_ + FRAME_OFF(1424)))
-#define local_7f4 (*(undefined4 *)(frame_ + FRAME_OFF(1428)))
-#define local_7f0 (*(undefined1 *)(frame_ + FRAME_OFF(1432)))
-#define local_7ef (*(undefined1 *)(frame_ + FRAME_OFF(1433)))
-#define local_7ec (*(undefined4 *)(frame_ + FRAME_OFF(1436)))
-#define local_7e8 (*(undefined4 *)(frame_ + FRAME_OFF(1440)))
-#define local_7e4 (*(undefined4 *)(frame_ + FRAME_OFF(1444)))
-#define local_7e0 (*(undefined4 *)(frame_ + FRAME_OFF(1448)))
-#define local_7dc (*(undefined4 *)(frame_ + FRAME_OFF(1452)))
-#define local_7d8 (*(undefined4 *)(frame_ + FRAME_OFF(1456)))
-#define local_7d4 (*(undefined1 *)(frame_ + FRAME_OFF(1460)))
-#define local_7d3 (*(undefined1 *)(frame_ + FRAME_OFF(1461)))
-#define local_7d0 (*(undefined4 *)(frame_ + FRAME_OFF(1464)))
-#define local_7cc (*(undefined4 *)(frame_ + FRAME_OFF(1468)))
-#define local_7c8 (*(undefined4 *)(frame_ + FRAME_OFF(1472)))
-#define local_7c4 (*(undefined4 *)(frame_ + FRAME_OFF(1476)))
-#define local_7c0 (*(undefined4 *)(frame_ + FRAME_OFF(1480)))
-#define local_7bc (*(undefined4 *)(frame_ + FRAME_OFF(1484)))
-#define local_7b8 (*(undefined1 *)(frame_ + FRAME_OFF(1488)))
-#define local_7b7 (*(undefined1 *)(frame_ + FRAME_OFF(1489)))
-#define local_7b4 (*(undefined4 *)(frame_ + FRAME_OFF(1492)))
-#define local_7b0 (*(undefined4 *)(frame_ + FRAME_OFF(1496)))
-#define local_7ac (*(undefined4 *)(frame_ + FRAME_OFF(1500)))
-#define local_7a8 (*(undefined4 *)(frame_ + FRAME_OFF(1504)))
-#define local_7a4 (*(undefined4 *)(frame_ + FRAME_OFF(1508)))
-#define local_7a0 (*(undefined4 *)(frame_ + FRAME_OFF(1512)))
-#define local_79c (*(undefined1 *)(frame_ + FRAME_OFF(1516)))
-#define local_79b (*(undefined1 *)(frame_ + FRAME_OFF(1517)))
-#define local_798 (*(undefined4 *)(frame_ + FRAME_OFF(1520)))
-#define local_794 (*(undefined4 *)(frame_ + FRAME_OFF(1524)))
-#define local_790 (*(undefined4 *)(frame_ + FRAME_OFF(1528)))
-#define local_78c (*(undefined4 *)(frame_ + FRAME_OFF(1532)))
-#define local_788 (*(undefined4 *)(frame_ + FRAME_OFF(1536)))
-#define local_784 (*(undefined4 *)(frame_ + FRAME_OFF(1540)))
-#define local_780 (*(undefined1 *)(frame_ + FRAME_OFF(1544)))
-#define local_77f (*(undefined1 *)(frame_ + FRAME_OFF(1545)))
-#define local_77c (*(undefined4 *)(frame_ + FRAME_OFF(1548)))
-#define local_778 (*(undefined4 *)(frame_ + FRAME_OFF(1552)))
-#define local_774 (*(undefined4 *)(frame_ + FRAME_OFF(1556)))
-#define local_770 (*(undefined4 *)(frame_ + FRAME_OFF(1560)))
-#define local_76c (*(undefined4 *)(frame_ + FRAME_OFF(1564)))
-#define local_768 (*(undefined4 *)(frame_ + FRAME_OFF(1568)))
-#define local_764 (*(undefined1 *)(frame_ + FRAME_OFF(1572)))
-#define local_763 (*(undefined1 *)(frame_ + FRAME_OFF(1573)))
-#define local_760 (*(undefined4 *)(frame_ + FRAME_OFF(1576)))
-#define local_75c (*(undefined4 *)(frame_ + FRAME_OFF(1580)))
-#define local_758 (*(undefined4 *)(frame_ + FRAME_OFF(1584)))
-#define local_754 (*(undefined4 *)(frame_ + FRAME_OFF(1588)))
-#define local_750 (*(undefined4 *)(frame_ + FRAME_OFF(1592)))
-#define local_74c (*(undefined4 *)(frame_ + FRAME_OFF(1596)))
-#define local_748 (*(undefined1 *)(frame_ + FRAME_OFF(1600)))
-#define local_747 (*(undefined1 *)(frame_ + FRAME_OFF(1601)))
-#define local_744 (*(undefined4 *)(frame_ + FRAME_OFF(1604)))
-#define local_740 (*(undefined4 *)(frame_ + FRAME_OFF(1608)))
-#define local_73c (*(undefined4 *)(frame_ + FRAME_OFF(1612)))
-#define local_738 (*(undefined4 *)(frame_ + FRAME_OFF(1616)))
-#define local_734 (*(undefined4 *)(frame_ + FRAME_OFF(1620)))
-#define local_730 (*(undefined4 *)(frame_ + FRAME_OFF(1624)))
-#define local_72c (*(undefined1 *)(frame_ + FRAME_OFF(1628)))
-#define local_72b (*(undefined1 *)(frame_ + FRAME_OFF(1629)))
-#define local_728 (*(undefined4 *)(frame_ + FRAME_OFF(1632)))
-#define local_724 (*(undefined4 *)(frame_ + FRAME_OFF(1636)))
-#define local_720 (*(undefined4 *)(frame_ + FRAME_OFF(1640)))
-#define local_71c (*(undefined4 *)(frame_ + FRAME_OFF(1644)))
-#define local_718 (*(undefined4 *)(frame_ + FRAME_OFF(1648)))
-#define local_714 (*(undefined4 *)(frame_ + FRAME_OFF(1652)))
-#define local_710 (*(undefined1 *)(frame_ + FRAME_OFF(1656)))
-#define local_70f (*(undefined1 *)(frame_ + FRAME_OFF(1657)))
-#define local_70c (*(undefined4 *)(frame_ + FRAME_OFF(1660)))
-#define local_708 (*(undefined4 *)(frame_ + FRAME_OFF(1664)))
-#define local_704 (*(undefined4 *)(frame_ + FRAME_OFF(1668)))
-#define local_700 (*(undefined4 *)(frame_ + FRAME_OFF(1672)))
-#define local_6fc (*(undefined4 *)(frame_ + FRAME_OFF(1676)))
-#define local_6f8 (*(undefined4 *)(frame_ + FRAME_OFF(1680)))
-#define local_6f4 (*(undefined1 *)(frame_ + FRAME_OFF(1684)))
-#define local_6f3 (*(undefined1 *)(frame_ + FRAME_OFF(1685)))
-#define local_6f0 (*(undefined4 *)(frame_ + FRAME_OFF(1688)))
-#define local_6ec (*(undefined4 *)(frame_ + FRAME_OFF(1692)))
-#define local_6e8 (*(undefined4 *)(frame_ + FRAME_OFF(1696)))
-#define local_6e4 (*(undefined4 *)(frame_ + FRAME_OFF(1700)))
-#define local_6e0 (*(undefined4 *)(frame_ + FRAME_OFF(1704)))
-#define local_6dc (*(undefined4 *)(frame_ + FRAME_OFF(1708)))
-#define local_6d8 (*(undefined1 *)(frame_ + FRAME_OFF(1712)))
-#define local_6d7 (*(undefined1 *)(frame_ + FRAME_OFF(1713)))
-#define local_6d4 (*(undefined4 *)(frame_ + FRAME_OFF(1716)))
-#define local_6d0 (*(undefined4 *)(frame_ + FRAME_OFF(1720)))
-#define local_6cc (*(undefined4 *)(frame_ + FRAME_OFF(1724)))
-#define local_6c8 (*(undefined4 *)(frame_ + FRAME_OFF(1728)))
-#define local_6c4 (*(undefined4 *)(frame_ + FRAME_OFF(1732)))
-#define local_6c0 (*(undefined4 *)(frame_ + FRAME_OFF(1736)))
-#define local_6bc (*(undefined1 *)(frame_ + FRAME_OFF(1740)))
-#define local_6bb (*(undefined1 *)(frame_ + FRAME_OFF(1741)))
-#define local_6b8 (*(undefined4 *)(frame_ + FRAME_OFF(1744)))
-#define local_6b4 (*(undefined4 *)(frame_ + FRAME_OFF(1748)))
-#define local_6b0 (*(undefined4 *)(frame_ + FRAME_OFF(1752)))
-#define local_6ac (*(undefined4 *)(frame_ + FRAME_OFF(1756)))
-#define local_6a8 (*(undefined4 *)(frame_ + FRAME_OFF(1760)))
-#define local_6a4 (*(undefined4 *)(frame_ + FRAME_OFF(1764)))
-#define local_6a0 (*(undefined1 *)(frame_ + FRAME_OFF(1768)))
-#define local_69f (*(undefined1 *)(frame_ + FRAME_OFF(1769)))
-#define local_69c (*(undefined4 *)(frame_ + FRAME_OFF(1772)))
-#define local_698 (*(undefined4 *)(frame_ + FRAME_OFF(1776)))
-#define local_694 (*(undefined4 *)(frame_ + FRAME_OFF(1780)))
-#define local_690 (*(undefined4 *)(frame_ + FRAME_OFF(1784)))
-#define local_68c (*(undefined4 *)(frame_ + FRAME_OFF(1788)))
-#define local_688 (*(undefined4 *)(frame_ + FRAME_OFF(1792)))
-#define local_684 (*(undefined1 *)(frame_ + FRAME_OFF(1796)))
-#define local_683 (*(undefined1 *)(frame_ + FRAME_OFF(1797)))
-#define local_680 (*(undefined4 *)(frame_ + FRAME_OFF(1800)))
-#define local_67c (*(undefined4 *)(frame_ + FRAME_OFF(1804)))
-#define local_678 (*(undefined4 *)(frame_ + FRAME_OFF(1808)))
-#define local_674 (*(undefined4 *)(frame_ + FRAME_OFF(1812)))
-#define local_670 (*(undefined4 *)(frame_ + FRAME_OFF(1816)))
-#define local_66c (*(undefined4 *)(frame_ + FRAME_OFF(1820)))
-#define local_668 (*(undefined1 *)(frame_ + FRAME_OFF(1824)))
-#define local_667 (*(undefined1 *)(frame_ + FRAME_OFF(1825)))
-#define local_664 (*(undefined4 *)(frame_ + FRAME_OFF(1828)))
-#define local_660 (*(undefined4 *)(frame_ + FRAME_OFF(1832)))
-#define local_65c (*(undefined4 *)(frame_ + FRAME_OFF(1836)))
-#define local_658 (*(undefined4 *)(frame_ + FRAME_OFF(1840)))
-#define local_654 (*(undefined4 *)(frame_ + FRAME_OFF(1844)))
-#define local_650 (*(undefined4 *)(frame_ + FRAME_OFF(1848)))
-#define local_64c (*(undefined1 *)(frame_ + FRAME_OFF(1852)))
-#define local_64b (*(undefined1 *)(frame_ + FRAME_OFF(1853)))
-#define local_648 (*(undefined4 *)(frame_ + FRAME_OFF(1856)))
-#define local_644 (*(undefined4 *)(frame_ + FRAME_OFF(1860)))
-#define local_640 (*(undefined4 *)(frame_ + FRAME_OFF(1864)))
-#define local_63c (*(undefined4 *)(frame_ + FRAME_OFF(1868)))
-#define local_638 (*(undefined4 *)(frame_ + FRAME_OFF(1872)))
-#define local_634 (*(undefined4 *)(frame_ + FRAME_OFF(1876)))
-#define local_630 (*(undefined1 *)(frame_ + FRAME_OFF(1880)))
-#define local_62f (*(undefined1 *)(frame_ + FRAME_OFF(1881)))
-#define local_62c (*(undefined4 *)(frame_ + FRAME_OFF(1884)))
-#define local_628 (*(undefined4 *)(frame_ + FRAME_OFF(1888)))
-#define local_624 (*(undefined4 *)(frame_ + FRAME_OFF(1892)))
-#define local_620 (*(undefined4 *)(frame_ + FRAME_OFF(1896)))
-#define local_61c (*(undefined4 *)(frame_ + FRAME_OFF(1900)))
-#define local_618 (*(undefined4 *)(frame_ + FRAME_OFF(1904)))
-#define local_614 (*(undefined1 *)(frame_ + FRAME_OFF(1908)))
-#define local_613 (*(undefined1 *)(frame_ + FRAME_OFF(1909)))
-#define local_610 (*(undefined4 *)(frame_ + FRAME_OFF(1912)))
-#define local_60c (*(undefined4 *)(frame_ + FRAME_OFF(1916)))
-#define local_608 (*(undefined4 *)(frame_ + FRAME_OFF(1920)))
-#define local_604 (*(undefined4 *)(frame_ + FRAME_OFF(1924)))
-#define local_600 (*(undefined4 *)(frame_ + FRAME_OFF(1928)))
-#define local_5fc (*(undefined4 *)(frame_ + FRAME_OFF(1932)))
-#define local_5f8 (*(undefined1 *)(frame_ + FRAME_OFF(1936)))
-#define local_5f7 (*(undefined1 *)(frame_ + FRAME_OFF(1937)))
-#define local_5f4 (*(undefined4 *)(frame_ + FRAME_OFF(1940)))
-#define local_5f0 (*(undefined4 *)(frame_ + FRAME_OFF(1944)))
-#define local_5ec (*(undefined4 *)(frame_ + FRAME_OFF(1948)))
-#define local_5e8 (*(undefined4 *)(frame_ + FRAME_OFF(1952)))
-#define local_5e4 (*(undefined4 *)(frame_ + FRAME_OFF(1956)))
-#define local_5e0 (*(undefined4 *)(frame_ + FRAME_OFF(1960)))
-#define local_5dc (*(undefined1 *)(frame_ + FRAME_OFF(1964)))
-#define local_5db (*(undefined1 *)(frame_ + FRAME_OFF(1965)))
-#define local_5d8 (*(undefined4 *)(frame_ + FRAME_OFF(1968)))
-#define local_5d4 (*(undefined4 *)(frame_ + FRAME_OFF(1972)))
-#define local_5d0 (*(undefined4 *)(frame_ + FRAME_OFF(1976)))
-#define local_5cc (*(undefined4 *)(frame_ + FRAME_OFF(1980)))
-#define local_5c8 (*(undefined4 *)(frame_ + FRAME_OFF(1984)))
-#define local_5c4 (*(undefined4 *)(frame_ + FRAME_OFF(1988)))
-#define local_5c0 (*(undefined1 *)(frame_ + FRAME_OFF(1992)))
-#define local_5bf (*(undefined1 *)(frame_ + FRAME_OFF(1993)))
-#define local_5bc (*(undefined4 *)(frame_ + FRAME_OFF(1996)))
-#define local_5b8 (*(undefined4 *)(frame_ + FRAME_OFF(2000)))
-#define local_5b4 (*(undefined4 *)(frame_ + FRAME_OFF(2004)))
-#define local_5b0 (*(undefined4 *)(frame_ + FRAME_OFF(2008)))
-#define local_5ac (*(undefined4 *)(frame_ + FRAME_OFF(2012)))
-#define local_5a8 (*(undefined4 *)(frame_ + FRAME_OFF(2016)))
-#define local_5a4 (*(undefined1 *)(frame_ + FRAME_OFF(2020)))
-#define local_5a3 (*(undefined1 *)(frame_ + FRAME_OFF(2021)))
-#define local_5a0 (*(undefined4 *)(frame_ + FRAME_OFF(2024)))
-#define local_59c (*(undefined4 *)(frame_ + FRAME_OFF(2028)))
-#define local_598 (*(undefined4 *)(frame_ + FRAME_OFF(2032)))
-#define local_594 (*(undefined4 *)(frame_ + FRAME_OFF(2036)))
-#define local_590 (*(undefined4 *)(frame_ + FRAME_OFF(2040)))
-#define local_58c (*(undefined4 *)(frame_ + FRAME_OFF(2044)))
-#define local_588 (*(undefined1 *)(frame_ + FRAME_OFF(2048)))
-#define local_587 (*(undefined1 *)(frame_ + FRAME_OFF(2049)))
-#define local_584 (*(undefined4 *)(frame_ + FRAME_OFF(2052)))
-#define local_580 (*(undefined4 *)(frame_ + FRAME_OFF(2056)))
-#define local_57c (*(undefined4 *)(frame_ + FRAME_OFF(2060)))
-#define local_578 (*(undefined4 *)(frame_ + FRAME_OFF(2064)))
-#define local_574 (*(undefined4 *)(frame_ + FRAME_OFF(2068)))
-#define local_570 (*(undefined4 *)(frame_ + FRAME_OFF(2072)))
-#define local_56c (*(undefined1 *)(frame_ + FRAME_OFF(2076)))
-#define local_56b (*(undefined1 *)(frame_ + FRAME_OFF(2077)))
-#define local_568 (*(undefined4 *)(frame_ + FRAME_OFF(2080)))
-#define local_564 (*(undefined4 *)(frame_ + FRAME_OFF(2084)))
-#define local_560 (*(undefined4 *)(frame_ + FRAME_OFF(2088)))
-#define local_55c (*(undefined4 *)(frame_ + FRAME_OFF(2092)))
-#define local_558 (*(undefined4 *)(frame_ + FRAME_OFF(2096)))
-#define local_554 (*(undefined4 *)(frame_ + FRAME_OFF(2100)))
-#define local_550 (*(undefined1 *)(frame_ + FRAME_OFF(2104)))
-#define local_54f (*(undefined1 *)(frame_ + FRAME_OFF(2105)))
-#define local_54c (*(undefined4 *)(frame_ + FRAME_OFF(2108)))
-#define local_548 (*(undefined4 *)(frame_ + FRAME_OFF(2112)))
-#define local_544 (*(undefined4 *)(frame_ + FRAME_OFF(2116)))
-#define local_540 (*(undefined4 *)(frame_ + FRAME_OFF(2120)))
-#define local_53c (*(undefined4 *)(frame_ + FRAME_OFF(2124)))
-#define local_538 (*(undefined4 *)(frame_ + FRAME_OFF(2128)))
-#define local_534 (*(undefined1 *)(frame_ + FRAME_OFF(2132)))
-#define local_533 (*(undefined1 *)(frame_ + FRAME_OFF(2133)))
-#define local_530 (*(undefined4 *)(frame_ + FRAME_OFF(2136)))
-#define local_52c (*(undefined4 *)(frame_ + FRAME_OFF(2140)))
-#define local_528 (*(undefined4 *)(frame_ + FRAME_OFF(2144)))
-#define local_524 (*(undefined4 *)(frame_ + FRAME_OFF(2148)))
-#define local_520 (*(undefined4 *)(frame_ + FRAME_OFF(2152)))
-#define local_51c (*(undefined4 *)(frame_ + FRAME_OFF(2156)))
-#define local_518 (*(undefined1 *)(frame_ + FRAME_OFF(2160)))
-#define local_517 (*(undefined1 *)(frame_ + FRAME_OFF(2161)))
-#define local_514 (*(undefined4 *)(frame_ + FRAME_OFF(2164)))
-#define local_510 (*(undefined4 *)(frame_ + FRAME_OFF(2168)))
-#define local_50c (*(undefined4 *)(frame_ + FRAME_OFF(2172)))
-#define local_508 (*(undefined4 *)(frame_ + FRAME_OFF(2176)))
-#define local_504 (*(undefined4 *)(frame_ + FRAME_OFF(2180)))
-#define local_500 (*(undefined4 *)(frame_ + FRAME_OFF(2184)))
-#define local_4fc (*(undefined1 *)(frame_ + FRAME_OFF(2188)))
-#define local_4fb (*(undefined1 *)(frame_ + FRAME_OFF(2189)))
-#define local_4f8 (*(undefined4 *)(frame_ + FRAME_OFF(2192)))
-#define local_4f4 (*(undefined4 *)(frame_ + FRAME_OFF(2196)))
-#define local_4f0 (*(undefined4 *)(frame_ + FRAME_OFF(2200)))
-#define local_4ec (*(undefined4 *)(frame_ + FRAME_OFF(2204)))
-#define local_4e8 (*(undefined4 *)(frame_ + FRAME_OFF(2208)))
-#define local_4e4 (*(undefined4 *)(frame_ + FRAME_OFF(2212)))
-#define local_4e0 (*(undefined1 *)(frame_ + FRAME_OFF(2216)))
-#define local_4df (*(undefined1 *)(frame_ + FRAME_OFF(2217)))
-#define local_4dc (*(undefined4 *)(frame_ + FRAME_OFF(2220)))
-#define local_4d8 (*(undefined4 *)(frame_ + FRAME_OFF(2224)))
-#define local_4d4 (*(undefined4 *)(frame_ + FRAME_OFF(2228)))
-#define local_4d0 (*(undefined4 *)(frame_ + FRAME_OFF(2232)))
-#define local_4cc (*(undefined4 *)(frame_ + FRAME_OFF(2236)))
-#define local_4c8 (*(undefined4 *)(frame_ + FRAME_OFF(2240)))
-#define local_4c4 (*(undefined1 *)(frame_ + FRAME_OFF(2244)))
-#define local_4c3 (*(undefined1 *)(frame_ + FRAME_OFF(2245)))
-#define local_4c0 (*(undefined4 *)(frame_ + FRAME_OFF(2248)))
-#define local_4bc (*(undefined4 *)(frame_ + FRAME_OFF(2252)))
-#define local_4b8 (*(undefined4 *)(frame_ + FRAME_OFF(2256)))
-#define local_4b4 (*(undefined4 *)(frame_ + FRAME_OFF(2260)))
-#define local_4b0 (*(undefined4 *)(frame_ + FRAME_OFF(2264)))
-#define local_4ac (*(undefined4 *)(frame_ + FRAME_OFF(2268)))
-#define local_4a8 (*(undefined1 *)(frame_ + FRAME_OFF(2272)))
-#define local_4a7 (*(undefined1 *)(frame_ + FRAME_OFF(2273)))
-#define local_4a4 (*(undefined4 *)(frame_ + FRAME_OFF(2276)))
-#define local_4a0 (*(undefined4 *)(frame_ + FRAME_OFF(2280)))
-#define local_49c (*(undefined4 *)(frame_ + FRAME_OFF(2284)))
-#define local_498 (*(undefined4 *)(frame_ + FRAME_OFF(2288)))
-#define local_494 (*(undefined4 *)(frame_ + FRAME_OFF(2292)))
-#define local_490 (*(undefined4 *)(frame_ + FRAME_OFF(2296)))
-#define local_48c (*(undefined1 *)(frame_ + FRAME_OFF(2300)))
-#define local_48b (*(undefined1 *)(frame_ + FRAME_OFF(2301)))
-#define local_488 (*(undefined4 *)(frame_ + FRAME_OFF(2304)))
-#define local_484 (*(undefined4 *)(frame_ + FRAME_OFF(2308)))
-#define local_480 (*(undefined4 *)(frame_ + FRAME_OFF(2312)))
-#define local_47c (*(undefined4 *)(frame_ + FRAME_OFF(2316)))
-#define local_478 (*(undefined4 *)(frame_ + FRAME_OFF(2320)))
-#define local_474 (*(undefined4 *)(frame_ + FRAME_OFF(2324)))
-#define local_470 (*(undefined1 *)(frame_ + FRAME_OFF(2328)))
-#define local_46f (*(undefined1 *)(frame_ + FRAME_OFF(2329)))
-#define local_46c (*(undefined4 *)(frame_ + FRAME_OFF(2332)))
-#define local_468 (*(undefined4 *)(frame_ + FRAME_OFF(2336)))
-#define local_464 (*(undefined4 *)(frame_ + FRAME_OFF(2340)))
-#define local_460 (*(undefined4 *)(frame_ + FRAME_OFF(2344)))
-#define local_45c (*(undefined4 *)(frame_ + FRAME_OFF(2348)))
-#define local_458 (*(undefined4 *)(frame_ + FRAME_OFF(2352)))
-#define local_454 (*(undefined1 *)(frame_ + FRAME_OFF(2356)))
-#define local_453 (*(undefined1 *)(frame_ + FRAME_OFF(2357)))
-#define local_450 (*(undefined4 *)(frame_ + FRAME_OFF(2360)))
-#define local_44c (*(undefined4 *)(frame_ + FRAME_OFF(2364)))
-#define local_448 (*(undefined4 *)(frame_ + FRAME_OFF(2368)))
-#define local_444 (*(undefined4 *)(frame_ + FRAME_OFF(2372)))
-#define local_440 (*(undefined4 *)(frame_ + FRAME_OFF(2376)))
-#define local_43c (*(undefined4 *)(frame_ + FRAME_OFF(2380)))
-#define local_438 (*(undefined1 *)(frame_ + FRAME_OFF(2384)))
-#define local_437 (*(undefined1 *)(frame_ + FRAME_OFF(2385)))
-#define local_434 (*(undefined4 *)(frame_ + FRAME_OFF(2388)))
-#define local_430 (*(undefined4 *)(frame_ + FRAME_OFF(2392)))
-#define local_42c (*(undefined4 *)(frame_ + FRAME_OFF(2396)))
-#define local_428 (*(undefined4 *)(frame_ + FRAME_OFF(2400)))
-#define local_424 (*(undefined4 *)(frame_ + FRAME_OFF(2404)))
-#define local_420 (*(undefined4 *)(frame_ + FRAME_OFF(2408)))
-#define local_41c (*(undefined1 *)(frame_ + FRAME_OFF(2412)))
-#define local_41b (*(undefined1 *)(frame_ + FRAME_OFF(2413)))
-#define local_418 (*(undefined4 *)(frame_ + FRAME_OFF(2416)))
-#define local_414 (*(undefined4 *)(frame_ + FRAME_OFF(2420)))
-#define local_410 (*(undefined4 *)(frame_ + FRAME_OFF(2424)))
-#define local_40c (*(undefined4 *)(frame_ + FRAME_OFF(2428)))
-#define local_408 (*(undefined4 *)(frame_ + FRAME_OFF(2432)))
-#define local_404 (*(undefined4 *)(frame_ + FRAME_OFF(2436)))
-#define local_400 (*(undefined1 *)(frame_ + FRAME_OFF(2440)))
-#define local_3ff (*(undefined1 *)(frame_ + FRAME_OFF(2441)))
-#define local_3fc (*(undefined4 *)(frame_ + FRAME_OFF(2444)))
-#define local_3f8 (*(undefined4 *)(frame_ + FRAME_OFF(2448)))
-#define local_3f4 (*(undefined4 *)(frame_ + FRAME_OFF(2452)))
-#define local_3f0 (*(undefined4 *)(frame_ + FRAME_OFF(2456)))
-#define local_3ec (*(undefined4 *)(frame_ + FRAME_OFF(2460)))
-#define local_3e8 (*(undefined4 *)(frame_ + FRAME_OFF(2464)))
-#define local_3e4 (*(undefined1 *)(frame_ + FRAME_OFF(2468)))
-#define local_3e3 (*(undefined1 *)(frame_ + FRAME_OFF(2469)))
-#define local_3e0 (*(undefined4 *)(frame_ + FRAME_OFF(2472)))
-#define local_3dc (*(undefined4 *)(frame_ + FRAME_OFF(2476)))
-#define local_3d8 (*(undefined4 *)(frame_ + FRAME_OFF(2480)))
-#define local_3d4 (*(undefined4 *)(frame_ + FRAME_OFF(2484)))
-#define local_3d0 (*(undefined4 *)(frame_ + FRAME_OFF(2488)))
-#define local_3cc (*(undefined4 *)(frame_ + FRAME_OFF(2492)))
-#define local_3c8 (*(undefined1 *)(frame_ + FRAME_OFF(2496)))
-#define local_3c7 (*(undefined1 *)(frame_ + FRAME_OFF(2497)))
-#define local_3c4 (*(undefined4 *)(frame_ + FRAME_OFF(2500)))
-#define local_3c0 (*(undefined4 *)(frame_ + FRAME_OFF(2504)))
-#define local_3bc (*(undefined4 *)(frame_ + FRAME_OFF(2508)))
-#define local_3b8 (*(undefined4 *)(frame_ + FRAME_OFF(2512)))
-#define local_3b4 (*(undefined4 *)(frame_ + FRAME_OFF(2516)))
-#define local_3b0 (*(undefined4 *)(frame_ + FRAME_OFF(2520)))
-#define local_3ac (*(undefined1 *)(frame_ + FRAME_OFF(2524)))
-#define local_3ab (*(undefined1 *)(frame_ + FRAME_OFF(2525)))
-#define local_3a8 (*(undefined4 *)(frame_ + FRAME_OFF(2528)))
-#define local_3a4 (*(undefined4 *)(frame_ + FRAME_OFF(2532)))
-#define local_3a0 (*(undefined4 *)(frame_ + FRAME_OFF(2536)))
-#define local_39c (*(undefined4 *)(frame_ + FRAME_OFF(2540)))
-#define local_398 (*(undefined4 *)(frame_ + FRAME_OFF(2544)))
-#define local_394 (*(undefined4 *)(frame_ + FRAME_OFF(2548)))
-#define local_390 (*(undefined1 *)(frame_ + FRAME_OFF(2552)))
-#define local_38f (*(undefined1 *)(frame_ + FRAME_OFF(2553)))
-#define local_38c (*(undefined4 *)(frame_ + FRAME_OFF(2556)))
-#define local_388 (*(undefined4 *)(frame_ + FRAME_OFF(2560)))
-#define local_384 (*(undefined4 *)(frame_ + FRAME_OFF(2564)))
-#define local_380 (*(undefined4 *)(frame_ + FRAME_OFF(2568)))
-#define local_37c (*(undefined4 *)(frame_ + FRAME_OFF(2572)))
-#define local_378 (*(undefined4 *)(frame_ + FRAME_OFF(2576)))
-#define local_374 (*(undefined1 *)(frame_ + FRAME_OFF(2580)))
-#define local_373 (*(undefined1 *)(frame_ + FRAME_OFF(2581)))
-#define local_370 (*(undefined4 *)(frame_ + FRAME_OFF(2584)))
-#define local_36c (*(undefined4 *)(frame_ + FRAME_OFF(2588)))
-#define local_368 (*(undefined4 *)(frame_ + FRAME_OFF(2592)))
-#define local_364 (*(undefined4 *)(frame_ + FRAME_OFF(2596)))
-#define local_360 (*(undefined4 *)(frame_ + FRAME_OFF(2600)))
-#define local_35c (*(undefined4 *)(frame_ + FRAME_OFF(2604)))
-#define local_358 (*(undefined1 *)(frame_ + FRAME_OFF(2608)))
-#define local_357 (*(undefined1 *)(frame_ + FRAME_OFF(2609)))
-#define local_354 (*(undefined4 *)(frame_ + FRAME_OFF(2612)))
-#define local_350 (*(undefined4 *)(frame_ + FRAME_OFF(2616)))
-#define local_34c (*(undefined4 *)(frame_ + FRAME_OFF(2620)))
-#define local_348 (*(undefined4 *)(frame_ + FRAME_OFF(2624)))
-#define local_344 (*(undefined4 *)(frame_ + FRAME_OFF(2628)))
-#define local_340 (*(undefined4 *)(frame_ + FRAME_OFF(2632)))
-#define local_33c (*(undefined1 *)(frame_ + FRAME_OFF(2636)))
-#define local_33b (*(undefined1 *)(frame_ + FRAME_OFF(2637)))
-#define local_338 (*(undefined4 *)(frame_ + FRAME_OFF(2640)))
-#define local_334 (*(undefined4 *)(frame_ + FRAME_OFF(2644)))
-#define local_330 (*(undefined4 *)(frame_ + FRAME_OFF(2648)))
-#define local_32c (*(undefined4 *)(frame_ + FRAME_OFF(2652)))
-#define local_328 (*(undefined4 *)(frame_ + FRAME_OFF(2656)))
-#define local_324 (*(undefined4 *)(frame_ + FRAME_OFF(2660)))
-#define local_320 (*(undefined1 *)(frame_ + FRAME_OFF(2664)))
-#define local_31f (*(undefined1 *)(frame_ + FRAME_OFF(2665)))
-#define local_31c (*(undefined4 *)(frame_ + FRAME_OFF(2668)))
-#define local_318 (*(undefined4 *)(frame_ + FRAME_OFF(2672)))
-#define local_314 (*(undefined4 *)(frame_ + FRAME_OFF(2676)))
-#define local_310 (*(undefined4 *)(frame_ + FRAME_OFF(2680)))
-#define local_30c (*(undefined4 *)(frame_ + FRAME_OFF(2684)))
-#define local_308 (*(undefined4 *)(frame_ + FRAME_OFF(2688)))
-#define local_304 (*(undefined1 *)(frame_ + FRAME_OFF(2692)))
-#define local_303 (*(undefined1 *)(frame_ + FRAME_OFF(2693)))
-#define local_300 (*(undefined4 *)(frame_ + FRAME_OFF(2696)))
-#define local_2fc (*(undefined4 *)(frame_ + FRAME_OFF(2700)))
-#define local_2f8 (*(undefined4 *)(frame_ + FRAME_OFF(2704)))
-#define local_2f4 (*(undefined4 *)(frame_ + FRAME_OFF(2708)))
-#define local_2f0 (*(undefined4 *)(frame_ + FRAME_OFF(2712)))
-#define local_2ec (*(undefined4 *)(frame_ + FRAME_OFF(2716)))
-#define local_2e8 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(2720)))
+#define local_920 (*(i32 *)(frame_ + FRAME_OFF(1128)))
+#define local_91c (*(i32 *)(frame_ + FRAME_OFF(1132)))
+#define local_918 (*(i32 *)(frame_ + FRAME_OFF(1136)))
+#define local_914 (*(i32 *)(frame_ + FRAME_OFF(1140)))
+#define local_910 (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define local_90c (*(i32 *)(frame_ + FRAME_OFF(1148)))
+#define local_908 (*(i8 *)(frame_ + FRAME_OFF(1152)))
+#define local_907 (*(i8 *)(frame_ + FRAME_OFF(1153)))
+#define local_904 (*(i32 *)(frame_ + FRAME_OFF(1156)))
+#define local_900 (*(i32 *)(frame_ + FRAME_OFF(1160)))
+#define local_8fc (*(i32 *)(frame_ + FRAME_OFF(1164)))
+#define local_8f8 (*(i32 *)(frame_ + FRAME_OFF(1168)))
+#define local_8f4 (*(i32 *)(frame_ + FRAME_OFF(1172)))
+#define local_8f0 (*(i32 *)(frame_ + FRAME_OFF(1176)))
+#define local_8ec (*(i8 *)(frame_ + FRAME_OFF(1180)))
+#define local_8eb (*(i8 *)(frame_ + FRAME_OFF(1181)))
+#define local_8e8 (*(i32 *)(frame_ + FRAME_OFF(1184)))
+#define local_8e4 (*(i32 *)(frame_ + FRAME_OFF(1188)))
+#define local_8e0 (*(i32 *)(frame_ + FRAME_OFF(1192)))
+#define local_8dc (*(i32 *)(frame_ + FRAME_OFF(1196)))
+#define local_8d8 (*(i32 *)(frame_ + FRAME_OFF(1200)))
+#define local_8d4 (*(i32 *)(frame_ + FRAME_OFF(1204)))
+#define local_8d0 (*(i8 *)(frame_ + FRAME_OFF(1208)))
+#define local_8cf (*(i8 *)(frame_ + FRAME_OFF(1209)))
+#define local_8cc (*(i32 *)(frame_ + FRAME_OFF(1212)))
+#define local_8c8 (*(i32 *)(frame_ + FRAME_OFF(1216)))
+#define local_8c4 (*(i32 *)(frame_ + FRAME_OFF(1220)))
+#define local_8c0 (*(i32 *)(frame_ + FRAME_OFF(1224)))
+#define local_8bc (*(i32 *)(frame_ + FRAME_OFF(1228)))
+#define local_8b8 (*(i32 *)(frame_ + FRAME_OFF(1232)))
+#define local_8b4 (*(i8 *)(frame_ + FRAME_OFF(1236)))
+#define local_8b3 (*(i8 *)(frame_ + FRAME_OFF(1237)))
+#define local_8b0 (*(i32 *)(frame_ + FRAME_OFF(1240)))
+#define local_8ac (*(i32 *)(frame_ + FRAME_OFF(1244)))
+#define local_8a8 (*(i32 *)(frame_ + FRAME_OFF(1248)))
+#define local_8a4 (*(i32 *)(frame_ + FRAME_OFF(1252)))
+#define local_8a0 (*(i32 *)(frame_ + FRAME_OFF(1256)))
+#define local_89c (*(i32 *)(frame_ + FRAME_OFF(1260)))
+#define local_898 (*(i8 *)(frame_ + FRAME_OFF(1264)))
+#define local_897 (*(i8 *)(frame_ + FRAME_OFF(1265)))
+#define local_894 (*(i32 *)(frame_ + FRAME_OFF(1268)))
+#define local_890 (*(i32 *)(frame_ + FRAME_OFF(1272)))
+#define local_88c (*(i32 *)(frame_ + FRAME_OFF(1276)))
+#define local_888 (*(i32 *)(frame_ + FRAME_OFF(1280)))
+#define local_884 (*(i32 *)(frame_ + FRAME_OFF(1284)))
+#define local_880 (*(i32 *)(frame_ + FRAME_OFF(1288)))
+#define local_87c (*(i8 *)(frame_ + FRAME_OFF(1292)))
+#define local_87b (*(i8 *)(frame_ + FRAME_OFF(1293)))
+#define local_878 (*(i32 *)(frame_ + FRAME_OFF(1296)))
+#define local_874 (*(i32 *)(frame_ + FRAME_OFF(1300)))
+#define local_870 (*(i32 *)(frame_ + FRAME_OFF(1304)))
+#define local_86c (*(i32 *)(frame_ + FRAME_OFF(1308)))
+#define local_868 (*(i32 *)(frame_ + FRAME_OFF(1312)))
+#define local_864 (*(i32 *)(frame_ + FRAME_OFF(1316)))
+#define local_860 (*(i8 *)(frame_ + FRAME_OFF(1320)))
+#define local_85f (*(i8 *)(frame_ + FRAME_OFF(1321)))
+#define local_85c (*(i32 *)(frame_ + FRAME_OFF(1324)))
+#define local_858 (*(i32 *)(frame_ + FRAME_OFF(1328)))
+#define local_854 (*(i32 *)(frame_ + FRAME_OFF(1332)))
+#define local_850 (*(i32 *)(frame_ + FRAME_OFF(1336)))
+#define local_84c (*(i32 *)(frame_ + FRAME_OFF(1340)))
+#define local_848 (*(i32 *)(frame_ + FRAME_OFF(1344)))
+#define local_844 (*(i8 *)(frame_ + FRAME_OFF(1348)))
+#define local_843 (*(i8 *)(frame_ + FRAME_OFF(1349)))
+#define local_840 (*(i32 *)(frame_ + FRAME_OFF(1352)))
+#define local_83c (*(i32 *)(frame_ + FRAME_OFF(1356)))
+#define local_838 (*(i32 *)(frame_ + FRAME_OFF(1360)))
+#define local_834 (*(i32 *)(frame_ + FRAME_OFF(1364)))
+#define local_830 (*(i32 *)(frame_ + FRAME_OFF(1368)))
+#define local_82c (*(i32 *)(frame_ + FRAME_OFF(1372)))
+#define local_828 (*(i8 *)(frame_ + FRAME_OFF(1376)))
+#define local_827 (*(i8 *)(frame_ + FRAME_OFF(1377)))
+#define local_824 (*(i32 *)(frame_ + FRAME_OFF(1380)))
+#define local_820 (*(i32 *)(frame_ + FRAME_OFF(1384)))
+#define local_81c (*(i32 *)(frame_ + FRAME_OFF(1388)))
+#define local_818 (*(i32 *)(frame_ + FRAME_OFF(1392)))
+#define local_814 (*(i32 *)(frame_ + FRAME_OFF(1396)))
+#define local_810 (*(i32 *)(frame_ + FRAME_OFF(1400)))
+#define local_80c (*(i8 *)(frame_ + FRAME_OFF(1404)))
+#define local_80b (*(i8 *)(frame_ + FRAME_OFF(1405)))
+#define local_808 (*(i32 *)(frame_ + FRAME_OFF(1408)))
+#define local_804 (*(i32 *)(frame_ + FRAME_OFF(1412)))
+#define local_800 (*(i32 *)(frame_ + FRAME_OFF(1416)))
+#define local_7fc (*(i32 *)(frame_ + FRAME_OFF(1420)))
+#define local_7f8 (*(i32 *)(frame_ + FRAME_OFF(1424)))
+#define local_7f4 (*(i32 *)(frame_ + FRAME_OFF(1428)))
+#define local_7f0 (*(i8 *)(frame_ + FRAME_OFF(1432)))
+#define local_7ef (*(i8 *)(frame_ + FRAME_OFF(1433)))
+#define local_7ec (*(i32 *)(frame_ + FRAME_OFF(1436)))
+#define local_7e8 (*(i32 *)(frame_ + FRAME_OFF(1440)))
+#define local_7e4 (*(i32 *)(frame_ + FRAME_OFF(1444)))
+#define local_7e0 (*(i32 *)(frame_ + FRAME_OFF(1448)))
+#define local_7dc (*(i32 *)(frame_ + FRAME_OFF(1452)))
+#define local_7d8 (*(i32 *)(frame_ + FRAME_OFF(1456)))
+#define local_7d4 (*(i8 *)(frame_ + FRAME_OFF(1460)))
+#define local_7d3 (*(i8 *)(frame_ + FRAME_OFF(1461)))
+#define local_7d0 (*(i32 *)(frame_ + FRAME_OFF(1464)))
+#define local_7cc (*(i32 *)(frame_ + FRAME_OFF(1468)))
+#define local_7c8 (*(i32 *)(frame_ + FRAME_OFF(1472)))
+#define local_7c4 (*(i32 *)(frame_ + FRAME_OFF(1476)))
+#define local_7c0 (*(i32 *)(frame_ + FRAME_OFF(1480)))
+#define local_7bc (*(i32 *)(frame_ + FRAME_OFF(1484)))
+#define local_7b8 (*(i8 *)(frame_ + FRAME_OFF(1488)))
+#define local_7b7 (*(i8 *)(frame_ + FRAME_OFF(1489)))
+#define local_7b4 (*(i32 *)(frame_ + FRAME_OFF(1492)))
+#define local_7b0 (*(i32 *)(frame_ + FRAME_OFF(1496)))
+#define local_7ac (*(i32 *)(frame_ + FRAME_OFF(1500)))
+#define local_7a8 (*(i32 *)(frame_ + FRAME_OFF(1504)))
+#define local_7a4 (*(i32 *)(frame_ + FRAME_OFF(1508)))
+#define local_7a0 (*(i32 *)(frame_ + FRAME_OFF(1512)))
+#define local_79c (*(i8 *)(frame_ + FRAME_OFF(1516)))
+#define local_79b (*(i8 *)(frame_ + FRAME_OFF(1517)))
+#define local_798 (*(i32 *)(frame_ + FRAME_OFF(1520)))
+#define local_794 (*(i32 *)(frame_ + FRAME_OFF(1524)))
+#define local_790 (*(i32 *)(frame_ + FRAME_OFF(1528)))
+#define local_78c (*(i32 *)(frame_ + FRAME_OFF(1532)))
+#define local_788 (*(i32 *)(frame_ + FRAME_OFF(1536)))
+#define local_784 (*(i32 *)(frame_ + FRAME_OFF(1540)))
+#define local_780 (*(i8 *)(frame_ + FRAME_OFF(1544)))
+#define local_77f (*(i8 *)(frame_ + FRAME_OFF(1545)))
+#define local_77c (*(i32 *)(frame_ + FRAME_OFF(1548)))
+#define local_778 (*(i32 *)(frame_ + FRAME_OFF(1552)))
+#define local_774 (*(i32 *)(frame_ + FRAME_OFF(1556)))
+#define local_770 (*(i32 *)(frame_ + FRAME_OFF(1560)))
+#define local_76c (*(i32 *)(frame_ + FRAME_OFF(1564)))
+#define local_768 (*(i32 *)(frame_ + FRAME_OFF(1568)))
+#define local_764 (*(i8 *)(frame_ + FRAME_OFF(1572)))
+#define local_763 (*(i8 *)(frame_ + FRAME_OFF(1573)))
+#define local_760 (*(i32 *)(frame_ + FRAME_OFF(1576)))
+#define local_75c (*(i32 *)(frame_ + FRAME_OFF(1580)))
+#define local_758 (*(i32 *)(frame_ + FRAME_OFF(1584)))
+#define local_754 (*(i32 *)(frame_ + FRAME_OFF(1588)))
+#define local_750 (*(i32 *)(frame_ + FRAME_OFF(1592)))
+#define local_74c (*(i32 *)(frame_ + FRAME_OFF(1596)))
+#define local_748 (*(i8 *)(frame_ + FRAME_OFF(1600)))
+#define local_747 (*(i8 *)(frame_ + FRAME_OFF(1601)))
+#define local_744 (*(i32 *)(frame_ + FRAME_OFF(1604)))
+#define local_740 (*(i32 *)(frame_ + FRAME_OFF(1608)))
+#define local_73c (*(i32 *)(frame_ + FRAME_OFF(1612)))
+#define local_738 (*(i32 *)(frame_ + FRAME_OFF(1616)))
+#define local_734 (*(i32 *)(frame_ + FRAME_OFF(1620)))
+#define local_730 (*(i32 *)(frame_ + FRAME_OFF(1624)))
+#define local_72c (*(i8 *)(frame_ + FRAME_OFF(1628)))
+#define local_72b (*(i8 *)(frame_ + FRAME_OFF(1629)))
+#define local_728 (*(i32 *)(frame_ + FRAME_OFF(1632)))
+#define local_724 (*(i32 *)(frame_ + FRAME_OFF(1636)))
+#define local_720 (*(i32 *)(frame_ + FRAME_OFF(1640)))
+#define local_71c (*(i32 *)(frame_ + FRAME_OFF(1644)))
+#define local_718 (*(i32 *)(frame_ + FRAME_OFF(1648)))
+#define local_714 (*(i32 *)(frame_ + FRAME_OFF(1652)))
+#define local_710 (*(i8 *)(frame_ + FRAME_OFF(1656)))
+#define local_70f (*(i8 *)(frame_ + FRAME_OFF(1657)))
+#define local_70c (*(i32 *)(frame_ + FRAME_OFF(1660)))
+#define local_708 (*(i32 *)(frame_ + FRAME_OFF(1664)))
+#define local_704 (*(i32 *)(frame_ + FRAME_OFF(1668)))
+#define local_700 (*(i32 *)(frame_ + FRAME_OFF(1672)))
+#define local_6fc (*(i32 *)(frame_ + FRAME_OFF(1676)))
+#define local_6f8 (*(i32 *)(frame_ + FRAME_OFF(1680)))
+#define local_6f4 (*(i8 *)(frame_ + FRAME_OFF(1684)))
+#define local_6f3 (*(i8 *)(frame_ + FRAME_OFF(1685)))
+#define local_6f0 (*(i32 *)(frame_ + FRAME_OFF(1688)))
+#define local_6ec (*(i32 *)(frame_ + FRAME_OFF(1692)))
+#define local_6e8 (*(i32 *)(frame_ + FRAME_OFF(1696)))
+#define local_6e4 (*(i32 *)(frame_ + FRAME_OFF(1700)))
+#define local_6e0 (*(i32 *)(frame_ + FRAME_OFF(1704)))
+#define local_6dc (*(i32 *)(frame_ + FRAME_OFF(1708)))
+#define local_6d8 (*(i8 *)(frame_ + FRAME_OFF(1712)))
+#define local_6d7 (*(i8 *)(frame_ + FRAME_OFF(1713)))
+#define local_6d4 (*(i32 *)(frame_ + FRAME_OFF(1716)))
+#define local_6d0 (*(i32 *)(frame_ + FRAME_OFF(1720)))
+#define local_6cc (*(i32 *)(frame_ + FRAME_OFF(1724)))
+#define local_6c8 (*(i32 *)(frame_ + FRAME_OFF(1728)))
+#define local_6c4 (*(i32 *)(frame_ + FRAME_OFF(1732)))
+#define local_6c0 (*(i32 *)(frame_ + FRAME_OFF(1736)))
+#define local_6bc (*(i8 *)(frame_ + FRAME_OFF(1740)))
+#define local_6bb (*(i8 *)(frame_ + FRAME_OFF(1741)))
+#define local_6b8 (*(i32 *)(frame_ + FRAME_OFF(1744)))
+#define local_6b4 (*(i32 *)(frame_ + FRAME_OFF(1748)))
+#define local_6b0 (*(i32 *)(frame_ + FRAME_OFF(1752)))
+#define local_6ac (*(i32 *)(frame_ + FRAME_OFF(1756)))
+#define local_6a8 (*(i32 *)(frame_ + FRAME_OFF(1760)))
+#define local_6a4 (*(i32 *)(frame_ + FRAME_OFF(1764)))
+#define local_6a0 (*(i8 *)(frame_ + FRAME_OFF(1768)))
+#define local_69f (*(i8 *)(frame_ + FRAME_OFF(1769)))
+#define local_69c (*(i32 *)(frame_ + FRAME_OFF(1772)))
+#define local_698 (*(i32 *)(frame_ + FRAME_OFF(1776)))
+#define local_694 (*(i32 *)(frame_ + FRAME_OFF(1780)))
+#define local_690 (*(i32 *)(frame_ + FRAME_OFF(1784)))
+#define local_68c (*(i32 *)(frame_ + FRAME_OFF(1788)))
+#define local_688 (*(i32 *)(frame_ + FRAME_OFF(1792)))
+#define local_684 (*(i8 *)(frame_ + FRAME_OFF(1796)))
+#define local_683 (*(i8 *)(frame_ + FRAME_OFF(1797)))
+#define local_680 (*(i32 *)(frame_ + FRAME_OFF(1800)))
+#define local_67c (*(i32 *)(frame_ + FRAME_OFF(1804)))
+#define local_678 (*(i32 *)(frame_ + FRAME_OFF(1808)))
+#define local_674 (*(i32 *)(frame_ + FRAME_OFF(1812)))
+#define local_670 (*(i32 *)(frame_ + FRAME_OFF(1816)))
+#define local_66c (*(i32 *)(frame_ + FRAME_OFF(1820)))
+#define local_668 (*(i8 *)(frame_ + FRAME_OFF(1824)))
+#define local_667 (*(i8 *)(frame_ + FRAME_OFF(1825)))
+#define local_664 (*(i32 *)(frame_ + FRAME_OFF(1828)))
+#define local_660 (*(i32 *)(frame_ + FRAME_OFF(1832)))
+#define local_65c (*(i32 *)(frame_ + FRAME_OFF(1836)))
+#define local_658 (*(i32 *)(frame_ + FRAME_OFF(1840)))
+#define local_654 (*(i32 *)(frame_ + FRAME_OFF(1844)))
+#define local_650 (*(i32 *)(frame_ + FRAME_OFF(1848)))
+#define local_64c (*(i8 *)(frame_ + FRAME_OFF(1852)))
+#define local_64b (*(i8 *)(frame_ + FRAME_OFF(1853)))
+#define local_648 (*(i32 *)(frame_ + FRAME_OFF(1856)))
+#define local_644 (*(i32 *)(frame_ + FRAME_OFF(1860)))
+#define local_640 (*(i32 *)(frame_ + FRAME_OFF(1864)))
+#define local_63c (*(i32 *)(frame_ + FRAME_OFF(1868)))
+#define local_638 (*(i32 *)(frame_ + FRAME_OFF(1872)))
+#define local_634 (*(i32 *)(frame_ + FRAME_OFF(1876)))
+#define local_630 (*(i8 *)(frame_ + FRAME_OFF(1880)))
+#define local_62f (*(i8 *)(frame_ + FRAME_OFF(1881)))
+#define local_62c (*(i32 *)(frame_ + FRAME_OFF(1884)))
+#define local_628 (*(i32 *)(frame_ + FRAME_OFF(1888)))
+#define local_624 (*(i32 *)(frame_ + FRAME_OFF(1892)))
+#define local_620 (*(i32 *)(frame_ + FRAME_OFF(1896)))
+#define local_61c (*(i32 *)(frame_ + FRAME_OFF(1900)))
+#define local_618 (*(i32 *)(frame_ + FRAME_OFF(1904)))
+#define local_614 (*(i8 *)(frame_ + FRAME_OFF(1908)))
+#define local_613 (*(i8 *)(frame_ + FRAME_OFF(1909)))
+#define local_610 (*(i32 *)(frame_ + FRAME_OFF(1912)))
+#define local_60c (*(i32 *)(frame_ + FRAME_OFF(1916)))
+#define local_608 (*(i32 *)(frame_ + FRAME_OFF(1920)))
+#define local_604 (*(i32 *)(frame_ + FRAME_OFF(1924)))
+#define local_600 (*(i32 *)(frame_ + FRAME_OFF(1928)))
+#define local_5fc (*(i32 *)(frame_ + FRAME_OFF(1932)))
+#define local_5f8 (*(i8 *)(frame_ + FRAME_OFF(1936)))
+#define local_5f7 (*(i8 *)(frame_ + FRAME_OFF(1937)))
+#define local_5f4 (*(i32 *)(frame_ + FRAME_OFF(1940)))
+#define local_5f0 (*(i32 *)(frame_ + FRAME_OFF(1944)))
+#define local_5ec (*(i32 *)(frame_ + FRAME_OFF(1948)))
+#define local_5e8 (*(i32 *)(frame_ + FRAME_OFF(1952)))
+#define local_5e4 (*(i32 *)(frame_ + FRAME_OFF(1956)))
+#define local_5e0 (*(i32 *)(frame_ + FRAME_OFF(1960)))
+#define local_5dc (*(i8 *)(frame_ + FRAME_OFF(1964)))
+#define local_5db (*(i8 *)(frame_ + FRAME_OFF(1965)))
+#define local_5d8 (*(i32 *)(frame_ + FRAME_OFF(1968)))
+#define local_5d4 (*(i32 *)(frame_ + FRAME_OFF(1972)))
+#define local_5d0 (*(i32 *)(frame_ + FRAME_OFF(1976)))
+#define local_5cc (*(i32 *)(frame_ + FRAME_OFF(1980)))
+#define local_5c8 (*(i32 *)(frame_ + FRAME_OFF(1984)))
+#define local_5c4 (*(i32 *)(frame_ + FRAME_OFF(1988)))
+#define local_5c0 (*(i8 *)(frame_ + FRAME_OFF(1992)))
+#define local_5bf (*(i8 *)(frame_ + FRAME_OFF(1993)))
+#define local_5bc (*(i32 *)(frame_ + FRAME_OFF(1996)))
+#define local_5b8 (*(i32 *)(frame_ + FRAME_OFF(2000)))
+#define local_5b4 (*(i32 *)(frame_ + FRAME_OFF(2004)))
+#define local_5b0 (*(i32 *)(frame_ + FRAME_OFF(2008)))
+#define local_5ac (*(i32 *)(frame_ + FRAME_OFF(2012)))
+#define local_5a8 (*(i32 *)(frame_ + FRAME_OFF(2016)))
+#define local_5a4 (*(i8 *)(frame_ + FRAME_OFF(2020)))
+#define local_5a3 (*(i8 *)(frame_ + FRAME_OFF(2021)))
+#define local_5a0 (*(i32 *)(frame_ + FRAME_OFF(2024)))
+#define local_59c (*(i32 *)(frame_ + FRAME_OFF(2028)))
+#define local_598 (*(i32 *)(frame_ + FRAME_OFF(2032)))
+#define local_594 (*(i32 *)(frame_ + FRAME_OFF(2036)))
+#define local_590 (*(i32 *)(frame_ + FRAME_OFF(2040)))
+#define local_58c (*(i32 *)(frame_ + FRAME_OFF(2044)))
+#define local_588 (*(i8 *)(frame_ + FRAME_OFF(2048)))
+#define local_587 (*(i8 *)(frame_ + FRAME_OFF(2049)))
+#define local_584 (*(i32 *)(frame_ + FRAME_OFF(2052)))
+#define local_580 (*(i32 *)(frame_ + FRAME_OFF(2056)))
+#define local_57c (*(i32 *)(frame_ + FRAME_OFF(2060)))
+#define local_578 (*(i32 *)(frame_ + FRAME_OFF(2064)))
+#define local_574 (*(i32 *)(frame_ + FRAME_OFF(2068)))
+#define local_570 (*(i32 *)(frame_ + FRAME_OFF(2072)))
+#define local_56c (*(i8 *)(frame_ + FRAME_OFF(2076)))
+#define local_56b (*(i8 *)(frame_ + FRAME_OFF(2077)))
+#define local_568 (*(i32 *)(frame_ + FRAME_OFF(2080)))
+#define local_564 (*(i32 *)(frame_ + FRAME_OFF(2084)))
+#define local_560 (*(i32 *)(frame_ + FRAME_OFF(2088)))
+#define local_55c (*(i32 *)(frame_ + FRAME_OFF(2092)))
+#define local_558 (*(i32 *)(frame_ + FRAME_OFF(2096)))
+#define local_554 (*(i32 *)(frame_ + FRAME_OFF(2100)))
+#define local_550 (*(i8 *)(frame_ + FRAME_OFF(2104)))
+#define local_54f (*(i8 *)(frame_ + FRAME_OFF(2105)))
+#define local_54c (*(i32 *)(frame_ + FRAME_OFF(2108)))
+#define local_548 (*(i32 *)(frame_ + FRAME_OFF(2112)))
+#define local_544 (*(i32 *)(frame_ + FRAME_OFF(2116)))
+#define local_540 (*(i32 *)(frame_ + FRAME_OFF(2120)))
+#define local_53c (*(i32 *)(frame_ + FRAME_OFF(2124)))
+#define local_538 (*(i32 *)(frame_ + FRAME_OFF(2128)))
+#define local_534 (*(i8 *)(frame_ + FRAME_OFF(2132)))
+#define local_533 (*(i8 *)(frame_ + FRAME_OFF(2133)))
+#define local_530 (*(i32 *)(frame_ + FRAME_OFF(2136)))
+#define local_52c (*(i32 *)(frame_ + FRAME_OFF(2140)))
+#define local_528 (*(i32 *)(frame_ + FRAME_OFF(2144)))
+#define local_524 (*(i32 *)(frame_ + FRAME_OFF(2148)))
+#define local_520 (*(i32 *)(frame_ + FRAME_OFF(2152)))
+#define local_51c (*(i32 *)(frame_ + FRAME_OFF(2156)))
+#define local_518 (*(i8 *)(frame_ + FRAME_OFF(2160)))
+#define local_517 (*(i8 *)(frame_ + FRAME_OFF(2161)))
+#define local_514 (*(i32 *)(frame_ + FRAME_OFF(2164)))
+#define local_510 (*(i32 *)(frame_ + FRAME_OFF(2168)))
+#define local_50c (*(i32 *)(frame_ + FRAME_OFF(2172)))
+#define local_508 (*(i32 *)(frame_ + FRAME_OFF(2176)))
+#define local_504 (*(i32 *)(frame_ + FRAME_OFF(2180)))
+#define local_500 (*(i32 *)(frame_ + FRAME_OFF(2184)))
+#define local_4fc (*(i8 *)(frame_ + FRAME_OFF(2188)))
+#define local_4fb (*(i8 *)(frame_ + FRAME_OFF(2189)))
+#define local_4f8 (*(i32 *)(frame_ + FRAME_OFF(2192)))
+#define local_4f4 (*(i32 *)(frame_ + FRAME_OFF(2196)))
+#define local_4f0 (*(i32 *)(frame_ + FRAME_OFF(2200)))
+#define local_4ec (*(i32 *)(frame_ + FRAME_OFF(2204)))
+#define local_4e8 (*(i32 *)(frame_ + FRAME_OFF(2208)))
+#define local_4e4 (*(i32 *)(frame_ + FRAME_OFF(2212)))
+#define local_4e0 (*(i8 *)(frame_ + FRAME_OFF(2216)))
+#define local_4df (*(i8 *)(frame_ + FRAME_OFF(2217)))
+#define local_4dc (*(i32 *)(frame_ + FRAME_OFF(2220)))
+#define local_4d8 (*(i32 *)(frame_ + FRAME_OFF(2224)))
+#define local_4d4 (*(i32 *)(frame_ + FRAME_OFF(2228)))
+#define local_4d0 (*(i32 *)(frame_ + FRAME_OFF(2232)))
+#define local_4cc (*(i32 *)(frame_ + FRAME_OFF(2236)))
+#define local_4c8 (*(i32 *)(frame_ + FRAME_OFF(2240)))
+#define local_4c4 (*(i8 *)(frame_ + FRAME_OFF(2244)))
+#define local_4c3 (*(i8 *)(frame_ + FRAME_OFF(2245)))
+#define local_4c0 (*(i32 *)(frame_ + FRAME_OFF(2248)))
+#define local_4bc (*(i32 *)(frame_ + FRAME_OFF(2252)))
+#define local_4b8 (*(i32 *)(frame_ + FRAME_OFF(2256)))
+#define local_4b4 (*(i32 *)(frame_ + FRAME_OFF(2260)))
+#define local_4b0 (*(i32 *)(frame_ + FRAME_OFF(2264)))
+#define local_4ac (*(i32 *)(frame_ + FRAME_OFF(2268)))
+#define local_4a8 (*(i8 *)(frame_ + FRAME_OFF(2272)))
+#define local_4a7 (*(i8 *)(frame_ + FRAME_OFF(2273)))
+#define local_4a4 (*(i32 *)(frame_ + FRAME_OFF(2276)))
+#define local_4a0 (*(i32 *)(frame_ + FRAME_OFF(2280)))
+#define local_49c (*(i32 *)(frame_ + FRAME_OFF(2284)))
+#define local_498 (*(i32 *)(frame_ + FRAME_OFF(2288)))
+#define local_494 (*(i32 *)(frame_ + FRAME_OFF(2292)))
+#define local_490 (*(i32 *)(frame_ + FRAME_OFF(2296)))
+#define local_48c (*(i8 *)(frame_ + FRAME_OFF(2300)))
+#define local_48b (*(i8 *)(frame_ + FRAME_OFF(2301)))
+#define local_488 (*(i32 *)(frame_ + FRAME_OFF(2304)))
+#define local_484 (*(i32 *)(frame_ + FRAME_OFF(2308)))
+#define local_480 (*(i32 *)(frame_ + FRAME_OFF(2312)))
+#define local_47c (*(i32 *)(frame_ + FRAME_OFF(2316)))
+#define local_478 (*(i32 *)(frame_ + FRAME_OFF(2320)))
+#define local_474 (*(i32 *)(frame_ + FRAME_OFF(2324)))
+#define local_470 (*(i8 *)(frame_ + FRAME_OFF(2328)))
+#define local_46f (*(i8 *)(frame_ + FRAME_OFF(2329)))
+#define local_46c (*(i32 *)(frame_ + FRAME_OFF(2332)))
+#define local_468 (*(i32 *)(frame_ + FRAME_OFF(2336)))
+#define local_464 (*(i32 *)(frame_ + FRAME_OFF(2340)))
+#define local_460 (*(i32 *)(frame_ + FRAME_OFF(2344)))
+#define local_45c (*(i32 *)(frame_ + FRAME_OFF(2348)))
+#define local_458 (*(i32 *)(frame_ + FRAME_OFF(2352)))
+#define local_454 (*(i8 *)(frame_ + FRAME_OFF(2356)))
+#define local_453 (*(i8 *)(frame_ + FRAME_OFF(2357)))
+#define local_450 (*(i32 *)(frame_ + FRAME_OFF(2360)))
+#define local_44c (*(i32 *)(frame_ + FRAME_OFF(2364)))
+#define local_448 (*(i32 *)(frame_ + FRAME_OFF(2368)))
+#define local_444 (*(i32 *)(frame_ + FRAME_OFF(2372)))
+#define local_440 (*(i32 *)(frame_ + FRAME_OFF(2376)))
+#define local_43c (*(i32 *)(frame_ + FRAME_OFF(2380)))
+#define local_438 (*(i8 *)(frame_ + FRAME_OFF(2384)))
+#define local_437 (*(i8 *)(frame_ + FRAME_OFF(2385)))
+#define local_434 (*(i32 *)(frame_ + FRAME_OFF(2388)))
+#define local_430 (*(i32 *)(frame_ + FRAME_OFF(2392)))
+#define local_42c (*(i32 *)(frame_ + FRAME_OFF(2396)))
+#define local_428 (*(i32 *)(frame_ + FRAME_OFF(2400)))
+#define local_424 (*(i32 *)(frame_ + FRAME_OFF(2404)))
+#define local_420 (*(i32 *)(frame_ + FRAME_OFF(2408)))
+#define local_41c (*(i8 *)(frame_ + FRAME_OFF(2412)))
+#define local_41b (*(i8 *)(frame_ + FRAME_OFF(2413)))
+#define local_418 (*(i32 *)(frame_ + FRAME_OFF(2416)))
+#define local_414 (*(i32 *)(frame_ + FRAME_OFF(2420)))
+#define local_410 (*(i32 *)(frame_ + FRAME_OFF(2424)))
+#define local_40c (*(i32 *)(frame_ + FRAME_OFF(2428)))
+#define local_408 (*(i32 *)(frame_ + FRAME_OFF(2432)))
+#define local_404 (*(i32 *)(frame_ + FRAME_OFF(2436)))
+#define local_400 (*(i8 *)(frame_ + FRAME_OFF(2440)))
+#define local_3ff (*(i8 *)(frame_ + FRAME_OFF(2441)))
+#define local_3fc (*(i32 *)(frame_ + FRAME_OFF(2444)))
+#define local_3f8 (*(i32 *)(frame_ + FRAME_OFF(2448)))
+#define local_3f4 (*(i32 *)(frame_ + FRAME_OFF(2452)))
+#define local_3f0 (*(i32 *)(frame_ + FRAME_OFF(2456)))
+#define local_3ec (*(i32 *)(frame_ + FRAME_OFF(2460)))
+#define local_3e8 (*(i32 *)(frame_ + FRAME_OFF(2464)))
+#define local_3e4 (*(i8 *)(frame_ + FRAME_OFF(2468)))
+#define local_3e3 (*(i8 *)(frame_ + FRAME_OFF(2469)))
+#define local_3e0 (*(i32 *)(frame_ + FRAME_OFF(2472)))
+#define local_3dc (*(i32 *)(frame_ + FRAME_OFF(2476)))
+#define local_3d8 (*(i32 *)(frame_ + FRAME_OFF(2480)))
+#define local_3d4 (*(i32 *)(frame_ + FRAME_OFF(2484)))
+#define local_3d0 (*(i32 *)(frame_ + FRAME_OFF(2488)))
+#define local_3cc (*(i32 *)(frame_ + FRAME_OFF(2492)))
+#define local_3c8 (*(i8 *)(frame_ + FRAME_OFF(2496)))
+#define local_3c7 (*(i8 *)(frame_ + FRAME_OFF(2497)))
+#define local_3c4 (*(i32 *)(frame_ + FRAME_OFF(2500)))
+#define local_3c0 (*(i32 *)(frame_ + FRAME_OFF(2504)))
+#define local_3bc (*(i32 *)(frame_ + FRAME_OFF(2508)))
+#define local_3b8 (*(i32 *)(frame_ + FRAME_OFF(2512)))
+#define local_3b4 (*(i32 *)(frame_ + FRAME_OFF(2516)))
+#define local_3b0 (*(i32 *)(frame_ + FRAME_OFF(2520)))
+#define local_3ac (*(i8 *)(frame_ + FRAME_OFF(2524)))
+#define local_3ab (*(i8 *)(frame_ + FRAME_OFF(2525)))
+#define local_3a8 (*(i32 *)(frame_ + FRAME_OFF(2528)))
+#define local_3a4 (*(i32 *)(frame_ + FRAME_OFF(2532)))
+#define local_3a0 (*(i32 *)(frame_ + FRAME_OFF(2536)))
+#define local_39c (*(i32 *)(frame_ + FRAME_OFF(2540)))
+#define local_398 (*(i32 *)(frame_ + FRAME_OFF(2544)))
+#define local_394 (*(i32 *)(frame_ + FRAME_OFF(2548)))
+#define local_390 (*(i8 *)(frame_ + FRAME_OFF(2552)))
+#define local_38f (*(i8 *)(frame_ + FRAME_OFF(2553)))
+#define local_38c (*(i32 *)(frame_ + FRAME_OFF(2556)))
+#define local_388 (*(i32 *)(frame_ + FRAME_OFF(2560)))
+#define local_384 (*(i32 *)(frame_ + FRAME_OFF(2564)))
+#define local_380 (*(i32 *)(frame_ + FRAME_OFF(2568)))
+#define local_37c (*(i32 *)(frame_ + FRAME_OFF(2572)))
+#define local_378 (*(i32 *)(frame_ + FRAME_OFF(2576)))
+#define local_374 (*(i8 *)(frame_ + FRAME_OFF(2580)))
+#define local_373 (*(i8 *)(frame_ + FRAME_OFF(2581)))
+#define local_370 (*(i32 *)(frame_ + FRAME_OFF(2584)))
+#define local_36c (*(i32 *)(frame_ + FRAME_OFF(2588)))
+#define local_368 (*(i32 *)(frame_ + FRAME_OFF(2592)))
+#define local_364 (*(i32 *)(frame_ + FRAME_OFF(2596)))
+#define local_360 (*(i32 *)(frame_ + FRAME_OFF(2600)))
+#define local_35c (*(i32 *)(frame_ + FRAME_OFF(2604)))
+#define local_358 (*(i8 *)(frame_ + FRAME_OFF(2608)))
+#define local_357 (*(i8 *)(frame_ + FRAME_OFF(2609)))
+#define local_354 (*(i32 *)(frame_ + FRAME_OFF(2612)))
+#define local_350 (*(i32 *)(frame_ + FRAME_OFF(2616)))
+#define local_34c (*(i32 *)(frame_ + FRAME_OFF(2620)))
+#define local_348 (*(i32 *)(frame_ + FRAME_OFF(2624)))
+#define local_344 (*(i32 *)(frame_ + FRAME_OFF(2628)))
+#define local_340 (*(i32 *)(frame_ + FRAME_OFF(2632)))
+#define local_33c (*(i8 *)(frame_ + FRAME_OFF(2636)))
+#define local_33b (*(i8 *)(frame_ + FRAME_OFF(2637)))
+#define local_338 (*(i32 *)(frame_ + FRAME_OFF(2640)))
+#define local_334 (*(i32 *)(frame_ + FRAME_OFF(2644)))
+#define local_330 (*(i32 *)(frame_ + FRAME_OFF(2648)))
+#define local_32c (*(i32 *)(frame_ + FRAME_OFF(2652)))
+#define local_328 (*(i32 *)(frame_ + FRAME_OFF(2656)))
+#define local_324 (*(i32 *)(frame_ + FRAME_OFF(2660)))
+#define local_320 (*(i8 *)(frame_ + FRAME_OFF(2664)))
+#define local_31f (*(i8 *)(frame_ + FRAME_OFF(2665)))
+#define local_31c (*(i32 *)(frame_ + FRAME_OFF(2668)))
+#define local_318 (*(i32 *)(frame_ + FRAME_OFF(2672)))
+#define local_314 (*(i32 *)(frame_ + FRAME_OFF(2676)))
+#define local_310 (*(i32 *)(frame_ + FRAME_OFF(2680)))
+#define local_30c (*(i32 *)(frame_ + FRAME_OFF(2684)))
+#define local_308 (*(i32 *)(frame_ + FRAME_OFF(2688)))
+#define local_304 (*(i8 *)(frame_ + FRAME_OFF(2692)))
+#define local_303 (*(i8 *)(frame_ + FRAME_OFF(2693)))
+#define local_300 (*(i32 *)(frame_ + FRAME_OFF(2696)))
+#define local_2fc (*(i32 *)(frame_ + FRAME_OFF(2700)))
+#define local_2f8 (*(i32 *)(frame_ + FRAME_OFF(2704)))
+#define local_2f4 (*(i32 *)(frame_ + FRAME_OFF(2708)))
+#define local_2f0 (*(i32 *)(frame_ + FRAME_OFF(2712)))
+#define local_2ec (*(i32 *)(frame_ + FRAME_OFF(2716)))
+#define local_2e8 (*(i8 (*)[72])(frame_ + FRAME_OFF(2720)))
 #define local_2a0 (*(int *)(frame_ + FRAME_OFF(2792)))
-#define local_29c (*(undefined1 (*)[72])(frame_ + FRAME_OFF(2796)))
-#define local_254 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(2868)))
-#define local_20c (*(undefined1 (*)[72])(frame_ + FRAME_OFF(2940)))
-#define local_1c4 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3012)))
+#define local_29c (*(i8 (*)[72])(frame_ + FRAME_OFF(2796)))
+#define local_254 (*(i8 (*)[72])(frame_ + FRAME_OFF(2868)))
+#define local_20c (*(i8 (*)[72])(frame_ + FRAME_OFF(2940)))
+#define local_1c4 (*(i8 (*)[72])(frame_ + FRAME_OFF(3012)))
 #define local_17c (*(int *)(frame_ + FRAME_OFF(3084)))
-#define local_178 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3088)))
-#define local_130 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3160)))
-#define local_e8 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3232)))
-#define local_a0 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3304)))
-#define local_58 (*(undefined1 (*)[72])(frame_ + FRAME_OFF(3376)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(3448)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(3452)))
+#define local_178 (*(i8 (*)[72])(frame_ + FRAME_OFF(3088)))
+#define local_130 (*(i8 (*)[72])(frame_ + FRAME_OFF(3160)))
+#define local_e8 (*(i8 (*)[72])(frame_ + FRAME_OFF(3232)))
+#define local_a0 (*(i8 (*)[72])(frame_ + FRAME_OFF(3304)))
+#define local_58 (*(i8 (*)[72])(frame_ + FRAME_OFF(3376)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(3448)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(3452)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(3456)))
-undefined4 __thiscall spaceship_wnd_render_ship(void *this)
+i32 __thiscall spaceship_wnd_render_ship(void *this)
 
 {
   byte bVar1;
   int iVar2;
-  undefined1 frame_[FRAME_OFF(3464)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(3464)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   puStack_c = &LAB_004d4a62;
   surface_ctor(local_2e8);
   local_8 = 0;
   surface_ctor(local_29c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&local_8 + 0)) = 1;
   surface_ctor(local_1c4);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&local_8 + 0)) = 2;
   surface_ctor(local_58);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&local_8 + 0)) = 3;
   surface_ctor(local_d18);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&local_8 + 0)) = 4;
   surface_ctor(local_cd0);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&local_8 + 0)) = 5;
   surface_ctor(local_130);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&local_8 + 0)) = 6;
   surface_ctor(local_178);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&local_8 + 0)) = 7;
   surface_ctor(local_20c);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&local_8 + 0)) = 8;
   surface_ctor(local_254);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&local_8 + 0)) = 9;
   surface_ctor(local_e8);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&local_8 + 0)) = 10;
   surface_ctor(local_a0);
-  (*(undefined1 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   local_c88[0] = 2;
   local_c88[1] = 6;
   local_c84[0] = 0x1cf;
@@ -2255,27 +2255,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
   iVar2 = surface_load_gif_resource(local_29c,0x1b9,10,0xec,(iptr)this + 0x1f8);
   if (iVar2 == 0) {
     local_d1c = 0;
-    (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+    (*(i8 *)((char *)&local_8 + 0)) = 10;
     /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+    (*(i8 *)((char *)&local_8 + 0)) = 9;
     /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+    (*(i8 *)((char *)&local_8 + 0)) = 8;
     /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+    (*(i8 *)((char *)&local_8 + 0)) = 7;
     /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+    (*(i8 *)((char *)&local_8 + 0)) = 6;
     /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+    (*(i8 *)((char *)&local_8 + 0)) = 5;
     /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+    (*(i8 *)((char *)&local_8 + 0)) = 4;
     /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+    (*(i8 *)((char *)&local_8 + 0)) = 3;
     /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+    (*(i8 *)((char *)&local_8 + 0)) = 2;
     /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+    (*(i8 *)((char *)&local_8 + 0)) = 1;
     /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
     /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
     local_8 = 0xffffffff;
     /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2285,27 +2285,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
     iVar2 = surface_load_gif_resource(local_1c4,0x1e0,10,0xec,(iptr)this + 0x1f8);
     if (iVar2 == 0) {
       local_d20 = 0;
-      (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+      (*(i8 *)((char *)&local_8 + 0)) = 10;
       /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+      (*(i8 *)((char *)&local_8 + 0)) = 9;
       /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+      (*(i8 *)((char *)&local_8 + 0)) = 8;
       /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+      (*(i8 *)((char *)&local_8 + 0)) = 7;
       /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+      (*(i8 *)((char *)&local_8 + 0)) = 6;
       /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+      (*(i8 *)((char *)&local_8 + 0)) = 5;
       /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+      (*(i8 *)((char *)&local_8 + 0)) = 4;
       /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+      (*(i8 *)((char *)&local_8 + 0)) = 3;
       /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+      (*(i8 *)((char *)&local_8 + 0)) = 2;
       /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-      (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+      (*(i8 *)((char *)&local_8 + 0)) = 1;
       /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-      local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+      local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
       /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
       local_8 = 0xffffffff;
       /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2316,27 +2316,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
       iVar2 = surface_load_gif_resource(local_58,0x1c7,10,0xec,(iptr)this + 0x1f8);
       if (iVar2 == 0) {
         local_d24 = 0;
-        (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+        (*(i8 *)((char *)&local_8 + 0)) = 10;
         /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+        (*(i8 *)((char *)&local_8 + 0)) = 9;
         /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+        (*(i8 *)((char *)&local_8 + 0)) = 8;
         /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+        (*(i8 *)((char *)&local_8 + 0)) = 7;
         /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+        (*(i8 *)((char *)&local_8 + 0)) = 6;
         /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+        (*(i8 *)((char *)&local_8 + 0)) = 5;
         /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+        (*(i8 *)((char *)&local_8 + 0)) = 4;
         /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+        (*(i8 *)((char *)&local_8 + 0)) = 3;
         /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+        (*(i8 *)((char *)&local_8 + 0)) = 2;
         /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-        (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+        (*(i8 *)((char *)&local_8 + 0)) = 1;
         /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+        local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
         /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
         local_8 = 0xffffffff;
         /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2347,27 +2347,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
         iVar2 = surface_load_gif_resource(local_d18,0x1ea,10,0xec,(iptr)this + 0x1f8);
         if (iVar2 == 0) {
           local_d28 = 0;
-          (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+          (*(i8 *)((char *)&local_8 + 0)) = 10;
           /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+          (*(i8 *)((char *)&local_8 + 0)) = 9;
           /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+          (*(i8 *)((char *)&local_8 + 0)) = 8;
           /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+          (*(i8 *)((char *)&local_8 + 0)) = 7;
           /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+          (*(i8 *)((char *)&local_8 + 0)) = 6;
           /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+          (*(i8 *)((char *)&local_8 + 0)) = 5;
           /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+          (*(i8 *)((char *)&local_8 + 0)) = 4;
           /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+          (*(i8 *)((char *)&local_8 + 0)) = 3;
           /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+          (*(i8 *)((char *)&local_8 + 0)) = 2;
           /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-          (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+          (*(i8 *)((char *)&local_8 + 0)) = 1;
           /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-          local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+          local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
           /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
           local_8 = 0xffffffff;
           /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2378,27 +2378,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
           iVar2 = surface_load_gif_resource(local_cd0,0x1d6,10,0xec,(iptr)this + 0x1f8);
           if (iVar2 == 0) {
             local_d2c = 0;
-            (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+            (*(i8 *)((char *)&local_8 + 0)) = 10;
             /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+            (*(i8 *)((char *)&local_8 + 0)) = 9;
             /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+            (*(i8 *)((char *)&local_8 + 0)) = 8;
             /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+            (*(i8 *)((char *)&local_8 + 0)) = 7;
             /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+            (*(i8 *)((char *)&local_8 + 0)) = 6;
             /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+            (*(i8 *)((char *)&local_8 + 0)) = 5;
             /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+            (*(i8 *)((char *)&local_8 + 0)) = 4;
             /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+            (*(i8 *)((char *)&local_8 + 0)) = 3;
             /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+            (*(i8 *)((char *)&local_8 + 0)) = 2;
             /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-            (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+            (*(i8 *)((char *)&local_8 + 0)) = 1;
             /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-            local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+            local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
             /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
             local_8 = 0xffffffff;
             /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2409,27 +2409,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
             iVar2 = surface_load_gif_resource(local_178,0x1ba,10,0xec,(iptr)this + 0x1f8);
             if (iVar2 == 0) {
               local_d30 = 0;
-              (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+              (*(i8 *)((char *)&local_8 + 0)) = 10;
               /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+              (*(i8 *)((char *)&local_8 + 0)) = 9;
               /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+              (*(i8 *)((char *)&local_8 + 0)) = 8;
               /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+              (*(i8 *)((char *)&local_8 + 0)) = 7;
               /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+              (*(i8 *)((char *)&local_8 + 0)) = 6;
               /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+              (*(i8 *)((char *)&local_8 + 0)) = 5;
               /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+              (*(i8 *)((char *)&local_8 + 0)) = 4;
               /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+              (*(i8 *)((char *)&local_8 + 0)) = 3;
               /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+              (*(i8 *)((char *)&local_8 + 0)) = 2;
               /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-              (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+              (*(i8 *)((char *)&local_8 + 0)) = 1;
               /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-              local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+              local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
               /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
               local_8 = 0xffffffff;
               /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2440,27 +2440,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
               iVar2 = surface_load_gif_resource(local_20c,0x1e1,10,0xec,(iptr)this + 0x1f8);
               if (iVar2 == 0) {
                 local_d34 = 0;
-                (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                (*(i8 *)((char *)&local_8 + 0)) = 10;
                 /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                (*(i8 *)((char *)&local_8 + 0)) = 9;
                 /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                (*(i8 *)((char *)&local_8 + 0)) = 8;
                 /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                (*(i8 *)((char *)&local_8 + 0)) = 7;
                 /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                (*(i8 *)((char *)&local_8 + 0)) = 6;
                 /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                (*(i8 *)((char *)&local_8 + 0)) = 5;
                 /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                (*(i8 *)((char *)&local_8 + 0)) = 4;
                 /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                (*(i8 *)((char *)&local_8 + 0)) = 3;
                 /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                (*(i8 *)((char *)&local_8 + 0)) = 2;
                 /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                (*(i8 *)((char *)&local_8 + 0)) = 1;
                 /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                 /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                 local_8 = 0xffffffff;
                 /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2471,27 +2471,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                 iVar2 = surface_load_gif_resource(local_254,0x1c8,10,0xec,(iptr)this + 0x1f8);
                 if (iVar2 == 0) {
                   local_d38 = 0;
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                  (*(i8 *)((char *)&local_8 + 0)) = 10;
                   /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                  (*(i8 *)((char *)&local_8 + 0)) = 9;
                   /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                  (*(i8 *)((char *)&local_8 + 0)) = 8;
                   /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                  (*(i8 *)((char *)&local_8 + 0)) = 7;
                   /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                  (*(i8 *)((char *)&local_8 + 0)) = 6;
                   /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                  (*(i8 *)((char *)&local_8 + 0)) = 5;
                   /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                  (*(i8 *)((char *)&local_8 + 0)) = 4;
                   /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                  (*(i8 *)((char *)&local_8 + 0)) = 3;
                   /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                  (*(i8 *)((char *)&local_8 + 0)) = 2;
                   /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                  (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                  (*(i8 *)((char *)&local_8 + 0)) = 1;
                   /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                  local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                   /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                   local_8 = 0xffffffff;
                   /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2502,27 +2502,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                   iVar2 = surface_load_gif_resource(local_e8,0x1e9,10,0xec,(iptr)this + 0x1f8);
                   if (iVar2 == 0) {
                     local_d3c = 0;
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                    (*(i8 *)((char *)&local_8 + 0)) = 10;
                     /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                    (*(i8 *)((char *)&local_8 + 0)) = 9;
                     /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                    (*(i8 *)((char *)&local_8 + 0)) = 8;
                     /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                    (*(i8 *)((char *)&local_8 + 0)) = 7;
                     /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                    (*(i8 *)((char *)&local_8 + 0)) = 6;
                     /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                    (*(i8 *)((char *)&local_8 + 0)) = 5;
                     /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                    (*(i8 *)((char *)&local_8 + 0)) = 4;
                     /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                    (*(i8 *)((char *)&local_8 + 0)) = 3;
                     /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                    (*(i8 *)((char *)&local_8 + 0)) = 2;
                     /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                    (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                    (*(i8 *)((char *)&local_8 + 0)) = 1;
                     /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                    local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                    local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                     /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                     local_8 = 0xffffffff;
                     /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2533,27 +2533,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                     iVar2 = surface_load_gif_resource(local_a0,0x1d7,10,0xec,(iptr)this + 0x1f8);
                     if (iVar2 == 0) {
                       local_d40 = 0;
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                      (*(i8 *)((char *)&local_8 + 0)) = 10;
                       /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                      (*(i8 *)((char *)&local_8 + 0)) = 9;
                       /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                      (*(i8 *)((char *)&local_8 + 0)) = 8;
                       /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                      (*(i8 *)((char *)&local_8 + 0)) = 7;
                       /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                      (*(i8 *)((char *)&local_8 + 0)) = 6;
                       /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                      (*(i8 *)((char *)&local_8 + 0)) = 5;
                       /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                      (*(i8 *)((char *)&local_8 + 0)) = 4;
                       /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                      (*(i8 *)((char *)&local_8 + 0)) = 3;
                       /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                      (*(i8 *)((char *)&local_8 + 0)) = 2;
                       /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                      (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                      (*(i8 *)((char *)&local_8 + 0)) = 1;
                       /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                      local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                      local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                       /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                       local_8 = 0xffffffff;
                       /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2564,27 +2564,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                       iVar2 = surface_load_gif_resource(local_130,0x1eb,10,0xec,(iptr)this + 0x1f8);
                       if (iVar2 == 0) {
                         local_d44 = 0;
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                        (*(i8 *)((char *)&local_8 + 0)) = 10;
                         /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                        (*(i8 *)((char *)&local_8 + 0)) = 9;
                         /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                        (*(i8 *)((char *)&local_8 + 0)) = 8;
                         /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                        (*(i8 *)((char *)&local_8 + 0)) = 7;
                         /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                        (*(i8 *)((char *)&local_8 + 0)) = 6;
                         /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                        (*(i8 *)((char *)&local_8 + 0)) = 5;
                         /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                        (*(i8 *)((char *)&local_8 + 0)) = 4;
                         /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                        (*(i8 *)((char *)&local_8 + 0)) = 3;
                         /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                        (*(i8 *)((char *)&local_8 + 0)) = 2;
                         /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                        (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                        (*(i8 *)((char *)&local_8 + 0)) = 1;
                         /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                        local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                        local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                         /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                         local_8 = 0xffffffff;
                         /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2598,7 +2598,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                               *(int *)(&spaceship_wnd_part_counts + (uint)local_c88[local_2a0 * 0x1c] * 4)) {
                             if (local_c88[local_2a0 * 0x1c] == 1) {
                               bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                              iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),1);
+                              iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),1);
                               if (iVar2 < (int)(uint)bVar1) {
                                 sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_178,9,
                                              local_c84[local_2a0 * 7 + 5],1,
@@ -2614,7 +2614,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                             }
                             else if (local_c88[local_2a0 * 0x1c] == 4) {
                               bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                              iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),4);
+                              iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),4);
                               if (iVar2 < (int)(uint)bVar1) {
                                 sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_20c,9,
                                              local_c84[local_2a0 * 7 + 5],1,
@@ -2630,7 +2630,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                             }
                             else if (local_c88[local_2a0 * 0x1c] == 2) {
                               bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                              iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),2);
+                              iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),2);
                               if (iVar2 < (int)(uint)bVar1) {
                                 sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_254,9,
                                              local_c84[local_2a0 * 7 + 5],1,
@@ -2646,7 +2646,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                             }
                             else if (local_c88[local_2a0 * 0x1c] == 5) {
                               bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                              iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),5);
+                              iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),5);
                               if (iVar2 < (int)(uint)bVar1) {
                                 sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_e8,9,
                                              local_c84[local_2a0 * 7 + 5],1,
@@ -2662,7 +2662,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                             }
                             else if (local_c88[local_2a0 * 0x1c] == 3) {
                               bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                              iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),3);
+                              iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),3);
                               if (iVar2 < (int)(uint)bVar1) {
                                 sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_a0,9,
                                              local_c84[local_2a0 * 7 + 5],1,
@@ -2699,27 +2699,27 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                                              (iptr)this + 0x1f8);
                         if (iVar2 == 0) {
                           local_d58 = 0;
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                          (*(i8 *)((char *)&local_8 + 0)) = 10;
                           /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                          (*(i8 *)((char *)&local_8 + 0)) = 9;
                           /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                          (*(i8 *)((char *)&local_8 + 0)) = 8;
                           /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                          (*(i8 *)((char *)&local_8 + 0)) = 7;
                           /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                          (*(i8 *)((char *)&local_8 + 0)) = 6;
                           /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                          (*(i8 *)((char *)&local_8 + 0)) = 5;
                           /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                          (*(i8 *)((char *)&local_8 + 0)) = 4;
                           /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                          (*(i8 *)((char *)&local_8 + 0)) = 3;
                           /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                          (*(i8 *)((char *)&local_8 + 0)) = 2;
                           /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                          (*(i8 *)((char *)&local_8 + 0)) = 1;
                           /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                          local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                          local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                           /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                           local_8 = 0xffffffff;
                           /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -2740,7 +2740,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                                 *(int *)(&spaceship_wnd_part_counts + (uint)local_c88[local_2a0 * 0x1c] * 4)) {
                               if (local_c88[local_2a0 * 0x1c] == 1) {
                                 bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                                iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),1);
+                                iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),1);
                                 if (iVar2 < (int)(uint)bVar1) {
                                   sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_178,9,
                                                local_c84[local_2a0 * 7 + 5],1,
@@ -2756,7 +2756,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                               }
                               else if (local_c88[local_2a0 * 0x1c] == 4) {
                                 bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                                iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),4);
+                                iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),4);
                                 if (iVar2 < (int)(uint)bVar1) {
                                   sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_20c,9,
                                                local_c84[local_2a0 * 7 + 5],1,
@@ -2772,7 +2772,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                               }
                               else if (local_c88[local_2a0 * 0x1c] == 2) {
                                 bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                                iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),2);
+                                iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),2);
                                 if (iVar2 < (int)(uint)bVar1) {
                                   sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_254,9,
                                                local_c84[local_2a0 * 7 + 5],1,
@@ -2788,7 +2788,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                               }
                               else if (local_c88[local_2a0 * 0x1c] == 5) {
                                 bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                                iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),5);
+                                iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),5);
                                 if (iVar2 < (int)(uint)bVar1) {
                                   sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_e8,9,
                                                local_c84[local_2a0 * 7 + 5],1,
@@ -2804,7 +2804,7 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                               }
                               else if (local_c88[local_2a0 * 0x1c] == 3) {
                                 bVar1 = local_c88[local_2a0 * 0x1c + 1];
-                                iVar2 = spaceship_part_count(*(undefined4 *)((iptr)this + 0x1cc),3);
+                                iVar2 = spaceship_part_count(*(i32 *)((iptr)this + 0x1cc),3);
                                 if (iVar2 < (int)(uint)bVar1) {
                                   sprite_grab_from_surface((void *)((iptr)this + 0x93c),local_a0,9,
                                                local_c84[local_2a0 * 7 + 5],1,
@@ -2837,28 +2837,28 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
                           }
                           sprite_draw((void *)((iptr)this + 0x93c),local_d88,(iptr)this + 0xb8,0xaf,
                                        99);
-                          spaceship_wnd_draw_title(*(undefined4 *)((iptr)this + 0x1cc));
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 10;
+                          spaceship_wnd_draw_title(*(i32 *)((iptr)this + 0x1cc));
+                          (*(i8 *)((char *)&local_8 + 0)) = 10;
                           /* inlined unwind funclet FUN_004d49d5 */ { surface_dtor((void *)((iptr)&local_a0)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 9;
+                          (*(i8 *)((char *)&local_8 + 0)) = 9;
                           /* inlined unwind funclet FUN_004d49e1 */ { surface_dtor((void *)((iptr)&local_e8)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 8;
+                          (*(i8 *)((char *)&local_8 + 0)) = 8;
                           /* inlined unwind funclet FUN_004d49ed */ { surface_dtor((void *)((iptr)&local_254)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 7;
+                          (*(i8 *)((char *)&local_8 + 0)) = 7;
                           /* inlined unwind funclet FUN_004d49f9 */ { surface_dtor((void *)((iptr)&local_20c)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 6;
+                          (*(i8 *)((char *)&local_8 + 0)) = 6;
                           /* inlined unwind funclet FUN_004d4a05 */ { surface_dtor((void *)((iptr)&local_178)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 5;
+                          (*(i8 *)((char *)&local_8 + 0)) = 5;
                           /* inlined unwind funclet FUN_004d4a11 */ { surface_dtor((void *)((iptr)&local_130)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 4;
+                          (*(i8 *)((char *)&local_8 + 0)) = 4;
                           /* inlined unwind funclet FUN_004d4a1d */ { surface_dtor((void *)((iptr)&local_cd0)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 3;
+                          (*(i8 *)((char *)&local_8 + 0)) = 3;
                           /* inlined unwind funclet FUN_004d4a29 */ { surface_dtor((void *)((iptr)&local_d18)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 2;
+                          (*(i8 *)((char *)&local_8 + 0)) = 2;
                           /* inlined unwind funclet FUN_004d4a35 */ { surface_dtor((void *)((iptr)&local_58)); }
-                          (*(undefined1 *)((char *)&local_8 + 0)) = 1;
+                          (*(i8 *)((char *)&local_8 + 0)) = 1;
                           /* inlined unwind funclet FUN_004d4a3e */ { surface_dtor((void *)((iptr)&local_1c4)); }
-                          local_8 = (uint)(*(undefined3 *)((char *)&local_8 + 1)) << 8;
+                          local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
                           /* inlined unwind funclet FUN_004d4a4a */ { surface_dtor((void *)((iptr)&local_29c)); }
                           local_8 = 0xffffffff;
                           /* inlined unwind funclet FUN_004d4a56 */ { surface_dtor((void *)((iptr)&local_2e8)); }
@@ -3421,44 +3421,44 @@ undefined4 __thiscall spaceship_wnd_render_ship(void *this)
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
 #define turn_resume_civ (*(byte *)((u8 *)&g.d_00628048))
 #define turn_resume_new_game (*(int *)((u8 *)&g.d_0062c488))
-#define dlg_pending_idle_callback (*(undefined1 * *)((u8 *)&g.d_00635a3c))
+#define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define game_over_reason (*(int *)((u8 *)&g.d_0064b1ac))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
-#define saved_turn_civ (*(undefined1 *)((u8 *)&g.d_00654fa4))
-#define saved_resume_new_game (*(undefined2 *)((u8 *)&g.d_00654fa6))
+#define saved_turn_civ (*(i8 *)((u8 *)&g.d_00654fa4))
+#define saved_resume_new_game (*(i16 *)((u8 *)&g.d_00654fa6))
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define autoplay_turns_left (*(short *)((u8 *)&g.d_00654faa))
-#define net_claimed_civs_mask (*(undefined2 *)((u8 *)&g.d_00654fb0))
+#define net_claimed_civs_mask (*(i16 *)((u8 *)&g.d_00654fb0))
 #define saved_human_players (*(byte *)((u8 *)&g.d_00673b08))
-#define DAT_006ad108 (*(undefined4 *)((u8 *)&g.d_006ad108))
+#define DAT_006ad108 (*(i32 *)((u8 *)&g.d_006ad108))
 #define net_local_slot (*(int *)((u8 *)&g.d_006ad304))
 #define DAT_006ad308 (*(int *)((u8 *)&g.d_006ad308))
-#define net_slot_civs (*(undefined4 *)((u8 *)&g.d_006ad35c))
-#define mp_turn_civ (*(undefined *)((u8 *)&g.d_006ad578))
+#define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
+#define mp_turn_civ (*(i8 *)((u8 *)&g.d_006ad578))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
-#define net_tile_sync_enabled (*(undefined1 *)((u8 *)&g.d_006ad699))
-#define nm_production_complete_count (*(undefined4 *)((u8 *)&g.d_006c9210))
-#define nm_human_move_complete_count (*(undefined4 *)((u8 *)&g.d_006c921c))
+#define net_tile_sync_enabled (*(i8 *)((u8 *)&g.d_006ad699))
+#define nm_production_complete_count (*(i32 *)((u8 *)&g.d_006c9210))
+#define nm_human_move_complete_count (*(i32 *)((u8 *)&g.d_006c921c))
 #define DAT_006d1da0 (*(int *)((u8 *)&g.d_006d1da0))
-#define _DAT_0066c990 (*(undefined4 *)((u8 *)&g.d_0066c990))
-#define _DAT_00673b08 (*(undefined4 *)((u8 *)&g.d_00673b08))
-#define _DAT_006ad578 (*(undefined4 *)((u8 *)&g.d_006ad578))
+#define _DAT_0066c990 (*(i32 *)((u8 *)&g.d_0066c990))
+#define _DAT_00673b08 (*(i32 *)((u8 *)&g.d_00673b08))
+#define _DAT_006ad578 (*(i32 *)((u8 *)&g.d_006ad578))
 #define local_330 (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_32c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_328 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_324 (*(undefined1 (*)[220])(frame_ + FRAME_OFF(12)))
+#define local_324 (*(i8 (*)[220])(frame_ + FRAME_OFF(12)))
 #define local_248 (*(int *)(frame_ + FRAME_OFF(232)))
 #define local_30 (*(int *)(frame_ + FRAME_OFF(768)))
 #define local_2c (*(int *)(frame_ + FRAME_OFF(772)))
-#define local_28 (*(undefined4 *)(frame_ + FRAME_OFF(776)))
-#define local_24 (*(undefined4 *)(frame_ + FRAME_OFF(780)))
-#define local_20 (*(undefined4 *)(frame_ + FRAME_OFF(784)))
-#define local_1c (*(undefined4 *)(frame_ + FRAME_OFF(788)))
+#define local_28 (*(i32 *)(frame_ + FRAME_OFF(776)))
+#define local_24 (*(i32 *)(frame_ + FRAME_OFF(780)))
+#define local_20 (*(i32 *)(frame_ + FRAME_OFF(784)))
+#define local_1c (*(i32 *)(frame_ + FRAME_OFF(788)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(792)))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(796)))
-#define uStack_10 (*(undefined4 *)(frame_ + FRAME_OFF(800)))
-#define puStack_c (*(undefined1 * *)(frame_ + FRAME_OFF(804)))
-#define local_8 (*(undefined4 *)(frame_ + FRAME_OFF(808)))
+#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(800)))
+#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(804)))
+#define local_8 (*(i32 *)(frame_ + FRAME_OFF(808)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl net_host_turn_loop(void)
@@ -3466,9 +3466,9 @@ void __cdecl net_host_turn_loop(void)
 {
   byte bVar1;
   SHORT SVar2;
-  undefined4 uVar3;
+  i32 uVar3;
   int iVar4;
-  undefined1 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(816)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   puStack_c = &LAB_005ab08b;
@@ -3568,7 +3568,7 @@ LAB_005aa3dc:
     XD_FlushSendBuffer(60000);
     net_reset_msg_counts();
     for (local_330 = 0; local_330 < 8; local_330 = local_330 + 1) {
-      *(undefined4 *)(&net_civ_phase_done + local_330 * 4) = 0;
+      *(i32 *)(&net_civ_phase_done + local_330 * 4) = 0;
     }
     net_send_message(0x8b,0xff,0,0,0,0,0,0,0,0);
     DAT_006d1da0 = (&net_slot_civs)[net_local_slot * 0x15];
@@ -3629,8 +3629,8 @@ LAB_005aa7ee:
       }
     }
     for (local_330 = 0; local_330 < 8; local_330 = local_330 + 1) {
-      *(undefined4 *)(&net_civ_phase_done + local_330 * 4) = 0;
-      *(undefined4 *)(&net_civ_new_player_flags + local_330 * 4) = 0;
+      *(i32 *)(&net_civ_phase_done + local_330 * 4) = 0;
+      *(i32 *)(&net_civ_new_player_flags + local_330 * 4) = 0;
     }
     net_send_state_diff(0xff,2,0,0,0);
     net_send_message(0x8e,0xff,0,0,0,0,0,0,0,0);
@@ -3643,7 +3643,7 @@ LAB_005aa7ee:
     }
     if ((*(short *)(&civ_intro_shown + DAT_006d1da0 * 2) == 0) && (autoplay_active == 0)) {
       civ_intro_popup(DAT_006d1da0);
-      *(undefined2 *)(&civ_intro_shown + DAT_006d1da0 * 2) = 1;
+      *(i16 *)(&civ_intro_shown + DAT_006d1da0 * 2) = 1;
     }
     if (mp_turn_time_limit_ms != 0) {
       mp_turn_seconds_left = mp_turn_time_limit_ms / 1000;
@@ -3670,8 +3670,8 @@ LAB_005aa7ee:
       uVar3 = civ_leader_name(DAT_006d1da0);
       text_set_string_arg(1,uVar3);
       if (*(int *)(&casualty_reported_counts + DAT_006d1da0 * 4) < *(int *)(&casualty_counts + DAT_006d1da0 * 4)) {
-        *(undefined4 *)(&casualty_reported_counts + DAT_006d1da0 * 4) =
-             *(undefined4 *)(&casualty_counts + DAT_006d1da0 * 4);
+        *(i32 *)(&casualty_reported_counts + DAT_006d1da0 * 4) =
+             *(i32 *)(&casualty_counts + DAT_006d1da0 * 4);
         text_set_number_arg(0,local_14);
         if (local_14 == 1) {
           dialog_load_text_noflags(local_324,&DAT_006359d4,s_CASUALTY_00635c98);

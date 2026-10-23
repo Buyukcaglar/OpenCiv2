@@ -38,7 +38,7 @@ static void eh_unreachable(const char *name)
 
 /* 0x005f1d95: _NLG_Notify1 -- record ECX (frame data), EAX (target address)
  * and EBP in _NLG_Destination (0x639e38) for the debugger; pops 4 bytes. */
-__attribute__((naked)) undefined4 __stdcall FUN_005f1d95(undefined4 param_1)
+__attribute__((naked)) i32 __stdcall FUN_005f1d95(i32 param_1)
 {
     __asm__ volatile(
         "pushl %ebx\n\t"
@@ -54,7 +54,7 @@ __attribute__((naked)) undefined4 __stdcall FUN_005f1d95(undefined4 param_1)
 
 /* 0x005f1d9e: _NLG_Notify -- as above, but the frame data is the caller's
  * first argument ([ebp+8]). */
-__attribute__((naked)) void __stdcall FUN_005f1d9e(undefined4 param_1)
+__attribute__((naked)) void __stdcall FUN_005f1d9e(i32 param_1)
 {
     __asm__ volatile(
         "pushl %ebx\n\t"
@@ -149,7 +149,7 @@ void __stdcall _UnwindNestedFrames(void *rn, void *rec)
 }
 
 /* 0x005f1e90: entered from the __ehhandler thunks with EAX = FuncInfo. */
-undefined4 __cdecl ___CxxFrameHandler(void *rec, void *rn, void *ctx, void *dc)
+i32 __cdecl ___CxxFrameHandler(void *rec, void *rn, void *ctx, void *dc)
 {
     eh_unreachable("___CxxFrameHandler");
     return 0;

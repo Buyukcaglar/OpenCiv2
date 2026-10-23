@@ -23,7 +23,7 @@ void __thiscall FUN_00471c14(void *this)
 }
 
 /* 00472a60 auto */
-void __cdecl debug_popup_danger(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl debug_popup_danger(iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   text_set_string_arg_b(0,param_1);
@@ -35,7 +35,7 @@ void __cdecl debug_popup_danger(iptr param_1,undefined4 param_2,undefined4 param
 }
 
 /* 00472ab5 auto */
-void __cdecl debug_popup_danger_hex(iptr param_1,undefined4 param_2,undefined4 param_3,undefined4 param_4)
+void __cdecl debug_popup_danger_hex(iptr param_1,i32 param_2,i32 param_3,i32 param_4)
 
 {
   text_set_string_arg_b(0,param_1);
@@ -71,18 +71,18 @@ void __cdecl unit_delete_dummy(void)
 #undef dummy_unit_owner
 
 /* 0047543c auto */
-#define local_214 (*(undefined4 *)(frame_ + FRAME_OFF(4)))
+#define local_214 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_210 (*(short (*)[2])(frame_ + FRAME_OFF(8)))
 #define local_20c (*(char (*)[260])(frame_ + FRAME_OFF(12)))
 #define local_108 (*(char (*)[260])(frame_ + FRAME_OFF(272)))
-undefined4 __cdecl save_load_map_only(undefined4 param_1)
+i32 __cdecl save_load_map_only(i32 param_1)
 
 {
   char *pcVar1;
   FILE *_File;
   int iVar2;
   size_t sVar3;
-  undefined1 frame_[FRAME_OFF(536)] __attribute__((aligned(8)));  /* original stack frame */
+  i8 frame_[FRAME_OFF(536)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_214 = 1;
   save_set_file_ext(0);
