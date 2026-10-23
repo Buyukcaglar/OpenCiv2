@@ -41,11 +41,13 @@ typedef struct {
 } Stream;
 
 /* Video streams count chunks, one a frame; streams of fixed-size samples
- * (audio: the format's block) count samples, which run across chunks. */
+ * (audio: the format's block) count samples, which run across chunks.
+ * Audio counts blocks even where the header gives no sample size (the
+ * opening movie, its chunks interleaved in 'rec ' lists), as AVIFile does. */
 static DWORD sample_size(const Stream *s)
 {
     DWORD ss = rd32(s->strh + 44);
-    if (ss && s->fmt && s->fmt_size >= 14 && rd16(s->fmt + 12))
+    if ((ss || rd32(s->strh) == FCC('a', 'u', 'd', 's')) && s->fmt && s->fmt_size >= 14 && rd16(s->fmt + 12))
         ss = rd16(s->fmt + 12);         /* WAVEFORMAT nBlockAlign */
     return ss;
 }
