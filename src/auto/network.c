@@ -63,37 +63,37 @@ void __cdecl net_join_wait_server_idle(void)
 void __cdecl net_join_wait_gamestate_idle(void)
 
 {
-  int iVar1;
-  size_t sVar2;
-  char *pcVar3;
-  char *pcVar4;
+  int elapsed;
+  size_t text_len;
+  char *marker;
+  char *text;
   
-  iVar1 = timer_ticks();
-  iVar1 -= net_wait_start_ticks_i32;
+  elapsed = timer_ticks();
+  elapsed -= net_wait_start_ticks_i32;
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_join_gamestate_count == 0) && (nm_server_canceled_count == 0)) {
-    if (2 < iVar1) {
-      pcVar4 = *(char **)(*(int *)(dialog_stack_top->field_230 + 0x1c) + 8);
-      sVar2 = _strlen(pcVar4);
-      pcVar3 = _strchr(pcVar4,0x3e);
-      if (pcVar4 + (sVar2 - 1) == pcVar3) {
-        *pcVar3 = '<';
+    if (2 < elapsed) {
+      text = *(char **)(*(int *)(dialog_stack_top->field_230 + 0x1c) + 8);
+      text_len = _strlen(text);
+      marker = _strchr(text,0x3e);
+      if (text + (text_len - 1) == marker) {
+        *marker = '<';
       }
       else {
-        *pcVar3 = '-';
-        pcVar3[1] = '>';
+        *marker = '-';
+        marker[1] = '>';
       }
-      pcVar3 = _strchr(pcVar4,0x3c);
-      if (pcVar3 == (char *)0x0) {
-        pcVar4 = _strchr(pcVar4,0x3e);
-        pcVar4[-1] = '<';
+      marker = _strchr(text,0x3c);
+      if (marker == (char *)0x0) {
+        text = _strchr(text,0x3e);
+        text[-1] = '<';
       }
-      else if (pcVar3 == pcVar4) {
-        *pcVar3 = '>';
+      else if (marker == text) {
+        *marker = '>';
       }
       else {
-        *pcVar3 = '-';
-        pcVar3[-1] = '<';
+        *marker = '-';
+        marker[-1] = '<';
       }
       dialog_render(dialog_stack_top);
       net_wait_start_ticks_i32 = timer_ticks();
@@ -161,12 +161,12 @@ void __cdecl net_join_wait_answer_idle(void)
 void __cdecl net_join_wait_idle_cb(void)
 
 {
-  int iVar1;
+  int elapsed;
   
-  iVar1 = timer_ticks();
-  iVar1 -= net_wait_start_ticks_i32;
+  elapsed = timer_ticks();
+  elapsed -= net_wait_start_ticks_i32;
   net_process_messages((NetSession *)&net_session,1,0);
-  if ((net_server_conn_id == -1) && (0x4d8 < iVar1)) {
+  if ((net_server_conn_id == -1) && (0x4d8 < elapsed)) {
     dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
   }
@@ -184,76 +184,76 @@ void __cdecl net_join_wait_idle_cb(void)
 void __thiscall net_gamelist_restore_selection(NetGameListRefreshView *this)
 
 {
-  int iVar1;
-  i32 uVar2;
-  int iVar3;
-  int iVar4;
-  iptr iVar5;
+  int option_count;
+  i32 option;
+  int top_index;
+  int selected_index;
+  iptr scroll_pos;
   
-  iVar1 = dialog_count_group_options((DialogOptionList *)this->field_0,0);
-  scrollbar_set_range(*(Control **)(this->field_0 + 0x284),0,iVar1 - 1);
-  uVar2 = net_gamelist_find_option(this,(iptr)&this->field_8,(iptr)&this->field_28);
-  *(i32 *)(this->field_0 + 0x220) = uVar2;
-  if (iVar1 < 0xb) {
+  option_count = dialog_count_group_options((DialogOptionList *)this->field_0,0);
+  scrollbar_set_range(*(Control **)(this->field_0 + 0x284),0,option_count - 1);
+  option = net_gamelist_find_option(this,(iptr)&this->field_8,(iptr)&this->field_28);
+  *(i32 *)(this->field_0 + 0x220) = option;
+  if (option_count < 0xb) {
     *(u32 *)(this->field_0 + 0x210) = this->field_14c;
   }
   else {
-    uVar2 = net_gamelist_find_option(this,(iptr)&this->field_48,(iptr)&this->field_68);
-    *(i32 *)(this->field_0 + 0x210) = uVar2;
+    option = net_gamelist_find_option(this,(iptr)&this->field_48,(iptr)&this->field_68);
+    *(i32 *)(this->field_0 + 0x210) = option;
   }
   if (*(int *)(this->field_0 + 0x1b8) != 0) {
-    iVar3 = dialog_option_group_index
+    top_index = dialog_option_group_index
                       ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
-    iVar1 = *(int *)(this->field_0 + 0x5c);
-    iVar4 = dialog_option_group_index
+    option_count = *(int *)(this->field_0 + 0x5c);
+    selected_index = dialog_option_group_index
                       ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
-    if (iVar1 + iVar3 <= iVar4) {
-      iVar1 = dialog_option_group_index
+    if (option_count + top_index <= selected_index) {
+      option_count = dialog_option_group_index
                         ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
-      uVar2 = dialog_option_at
+      option = dialog_option_at
                         ((DialogOptionList *)this->field_0,
-                         (iVar1 - *(int *)(this->field_0 + 0x5c)) + 1);
-      *(i32 *)(this->field_0 + 0x210) = uVar2;
+                         (option_count - *(int *)(this->field_0 + 0x5c)) + 1);
+      *(i32 *)(this->field_0 + 0x210) = option;
     }
-    iVar1 = dialog_option_group_index
+    option_count = dialog_option_group_index
                       ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
-    iVar3 = dialog_option_group_index
+    top_index = dialog_option_group_index
                       ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x220));
-    if (iVar3 < iVar1) {
+    if (top_index < option_count) {
       *(i32 *)(this->field_0 + 0x210) = *(i32 *)(this->field_0 + 0x220);
     }
   }
-  iVar5 = dialog_option_group_index
+  scroll_pos = dialog_option_group_index
                     ((DialogOptionList *)this->field_0,*(uptr *)(this->field_0 + 0x210));
-  scrollbar_set_pos(*(ClickControl **)(this->field_0 + 0x284),iVar5);
+  scrollbar_set_pos(*(ClickControl **)(this->field_0 + 0x284),scroll_pos);
   return;
 }
 
 /* 00424688 auto */
-#define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *this,iptr param_1,iptr param_2)
+#define option (*(uptr *)(frame_ + FRAME_OFF(4)))
+#define game2 (*(iptr *)(frame_ + FRAME_OFF(8)))
+u32 __thiscall net_gamelist_find_option(NetGameListRefreshView *this,iptr game_name,iptr host_name)
 
 {
-  int iVar1;
+  int cmp;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = this->field_14c;
-  local_8 = net_found_games;
+  option = this->field_14c;
+  game2 = net_found_games;
   while( true ) {
-    if (local_8 == 0) {
+    if (game2 == 0) {
       return this->field_14c;
     }
-    iVar1 = _strcmp((char *)(local_8 + 0x70),(char *)param_1);
-    if ((iVar1 == 0) && (iVar1 = _strcmp((char *)(local_8 + 0x90),(char *)param_2), iVar1 == 0))
+    cmp = _strcmp((char *)(game2 + 0x70),(char *)game_name);
+    if ((cmp == 0) && (cmp = _strcmp((char *)(game2 + 0x90),(char *)host_name), cmp == 0))
     break;
-    local_c = *(uptr *)(local_c + 0x10);
-    local_8 = *(iptr *)(local_8 + 0x20);
+    option = *(uptr *)(option + 0x10);
+    game2 = *(iptr *)(game2 + 0x20);
   }
-  return local_c;
+  return option;
 }
-#undef local_c
-#undef local_8
+#undef option
+#undef game2
 
 /* 0042472a auto */
 void __thiscall net_gamelist_update_details(NetGameList *this)
@@ -275,83 +275,83 @@ void __thiscall net_gamelist_update_details(NetGameList *this)
 }
 
 /* 004247b2 auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __thiscall net_gamelist_get_entry_names(NetGameList *this,iptr param_1,iptr param_2,iptr param_3)
+#define remaining (*(int *)(frame_ + FRAME_OFF(4)))
+#define game2 (*(iptr *)(frame_ + FRAME_OFF(8)))
+void __thiscall net_gamelist_get_entry_names(NetGameList *this,iptr option,iptr out_game_name,iptr out_host_name)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = net_found_games;
-      (local_8 != 0 && (*(int *)(param_1 + 4) != *(int *)(local_8 + 0x2c)));
-      local_8 = *(iptr *)(local_8 + 0x20)) {
+  for (game2 = net_found_games;
+      (game2 != 0 && (*(int *)(option + 4) != *(int *)(game2 + 0x2c)));
+      game2 = *(iptr *)(game2 + 0x20)) {
   }
-  if (local_8 == 0) {
-    local_8 = net_found_games;
-    for (local_c = dialog_option_group_index((DialogOptionList *)this->field_0,param_1);
-        (*(int *)(local_8 + 0x20) != 0 && (local_c != 0)); local_c--) {
-      local_8 = *(iptr *)(local_8 + 0x20);
+  if (game2 == 0) {
+    game2 = net_found_games;
+    for (remaining = dialog_option_group_index((DialogOptionList *)this->field_0,option);
+        (*(int *)(game2 + 0x20) != 0 && (remaining != 0)); remaining--) {
+      game2 = *(iptr *)(game2 + 0x20);
     }
   }
-  crt_strcpy(param_2,local_8 + 0x70);
-  crt_strcpy(param_3,local_8 + 0x90);
+  crt_strcpy(out_game_name,game2 + 0x70);
+  crt_strcpy(out_host_name,game2 + 0x90);
   return;
 }
-#undef local_c
-#undef local_8
+#undef remaining
+#undef game2
 
 /* 0042486f auto */
 void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *this)
 
 {
-  int iVar1;
-  u32 *puVar2;
-  int iVar3;
+  int line_y;
+  u32 *line;
+  int spacing;
   
   dialog_compute_layout((DialogOptionList *)this->dialog);
-  iVar1 = *(int *)(this->dialog + 0xd0) + *(int *)(this->dialog + 0xb8) + 2;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d14, ((u8 *)&g.d_00625d14)),0xe6,iVar1,0x80,0);
-  this->line_0 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d18, ((u8 *)&g.d_00625d18)),0xe6,iVar1,0x80,0);
-  this->line_1 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d1c, ((u8 *)&g.d_00625d1c)),0xe6,iVar1,0x80,0);
-  this->line_2 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d20, ((u8 *)&g.d_00625d20)),0xe6,iVar1,0x80,0);
-  this->line_3 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d24, ((u8 *)&g.d_00625d24)),0xe6,iVar1,0x80,0);
-  this->line_4 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d28, ((u8 *)&g.d_00625d28)),0xe6,iVar1,0x80,0);
-  this->line_5 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d2c, ((u8 *)&g.d_00625d2c)),0xe6,iVar1,0x80,0);
-  this->line_6 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  iVar1 += iVar3;
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d30, ((u8 *)&g.d_00625d30)),0xe6,iVar1,0x80,0);
-  this->line_7 = *puVar2;
-  iVar3 = font_line_spacing(*(GameFont **)(this->dialog + 8));
-  puVar2 = (u32 *)dialog_add_line
-                            ((DialogAddLineView *)this->dialog,ADDR(0x625d34, ((u8 *)&g.d_00625d34)),0xe6,iVar1 + iVar3,0x80,0);
-  this->line_8 = *puVar2;
+  line_y = *(int *)(this->dialog + 0xd0) + *(int *)(this->dialog + 0xb8) + 2;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d14, ((u8 *)&g.d_00625d14)),0xe6,line_y,0x80,0);
+  this->line_0 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d18, ((u8 *)&g.d_00625d18)),0xe6,line_y,0x80,0);
+  this->line_1 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d1c, ((u8 *)&g.d_00625d1c)),0xe6,line_y,0x80,0);
+  this->line_2 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d20, ((u8 *)&g.d_00625d20)),0xe6,line_y,0x80,0);
+  this->line_3 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d24, ((u8 *)&g.d_00625d24)),0xe6,line_y,0x80,0);
+  this->line_4 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d28, ((u8 *)&g.d_00625d28)),0xe6,line_y,0x80,0);
+  this->line_5 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d2c, ((u8 *)&g.d_00625d2c)),0xe6,line_y,0x80,0);
+  this->line_6 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line_y += spacing;
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d30, ((u8 *)&g.d_00625d30)),0xe6,line_y,0x80,0);
+  this->line_7 = *line;
+  spacing = font_line_spacing(*(GameFont **)(this->dialog + 8));
+  line = (u32 *)dialog_add_line
+                            ((DialogAddLineView *)this->dialog,ADDR(0x625d34, ((u8 *)&g.d_00625d34)),0xe6,line_y + spacing,0x80,0);
+  this->line_8 = *line;
   font_line_spacing(*(GameFont **)(this->dialog + 8));
   return;
 }
@@ -359,186 +359,186 @@ void __thiscall net_gamelist_add_info_lines(NetGamelistAddInfoLinesView *this)
 /* 00424ae9 auto */
 #define scenario_start_year (*(i16 *)((u8 *)&g.d_0064bcb6))
 #define scenario_year_increment (*(i16 *)((u8 *)&g.d_0064bcb4))
-#define local_118 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_114 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_110 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_108 (*(char (*)[21])(frame_ + FRAME_OFF(16)))
-#define local_f3 (*(i8 *)(frame_ + FRAME_OFF(37)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(272)))
-i32 __cdecl net_gamelist_show_game_info(void *param_1,i32 param_2)
+#define civ_bits (*(uint *)(frame_ + FRAME_OFF(0)))
+#define civ_count (*(int *)(frame_ + FRAME_OFF(4)))
+#define bit (*(int *)(frame_ + FRAME_OFF(8)))
+#define text (*(char (*)[21])(frame_ + FRAME_OFF(16)))
+#define text_cutoff (*(i8 *)(frame_ + FRAME_OFF(37)))
+#define found_game (*(iptr *)(frame_ + FRAME_OFF(272)))
+i32 __cdecl net_gamelist_show_game_info(void *dialog,i32 unused)
 
 {
-  size_t sVar1;
-  i32 uVar2;
-  int iVar3;
-  int iVar4;
-  iptr iVar5;
+  size_t text_len;
+  i32 year;
+  int seconds;
+  int minutes;
+  iptr scroll_pos;
   i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = net_found_games;
+  found_game = net_found_games;
   if (net_found_games == 0) {
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x128),ADDR(0x625d48, ((u8 *)&g.d_00625d48)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 300),ADDR(0x625d4c, ((u8 *)&g.d_00625d4c)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x130),ADDR(0x625d50, ((u8 *)&g.d_00625d50)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x134),ADDR(0x625d54, ((u8 *)&g.d_00625d54)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x138),ADDR(0x625d58, ((u8 *)&g.d_00625d58)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x13c),ADDR(0x625d5c, ((u8 *)&g.d_00625d5c)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x140),ADDR(0x625d60, ((u8 *)&g.d_00625d60)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x144),ADDR(0x625d64, ((u8 *)&g.d_00625d64)));
-    dialog_set_item_text(param_1,*(i32 *)(net_session + 0x148),ADDR(0x625d68, ((u8 *)&g.d_00625d68)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x128),ADDR(0x625d48, ((u8 *)&g.d_00625d48)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 300),ADDR(0x625d4c, ((u8 *)&g.d_00625d4c)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x130),ADDR(0x625d50, ((u8 *)&g.d_00625d50)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x134),ADDR(0x625d54, ((u8 *)&g.d_00625d54)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x138),ADDR(0x625d58, ((u8 *)&g.d_00625d58)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x13c),ADDR(0x625d5c, ((u8 *)&g.d_00625d5c)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x140),ADDR(0x625d60, ((u8 *)&g.d_00625d60)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x144),ADDR(0x625d64, ((u8 *)&g.d_00625d64)));
+    dialog_set_item_text(dialog,*(i32 *)(net_session + 0x148),ADDR(0x625d68, ((u8 *)&g.d_00625d68)));
   }
   else {
-    for (; (local_8 != 0 &&
-           (*(int *)(local_8 + 0x2c) != *(int *)(*(int *)(*(int *)net_session + 0x220) + 4)));
-        local_8 = *(iptr *)(local_8 + 0x20)) {
+    for (; (found_game != 0 &&
+           (*(int *)(found_game + 0x2c) != *(int *)(*(int *)(*(int *)net_session + 0x220) + 4)));
+        found_game = *(iptr *)(found_game + 0x20)) {
     }
-    if (local_8 != 0) {
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x26f);
-      str_append_space((iptr)local_108);
-      crt_strcat(local_108,local_8 + 0x70);
-      str_append_space((iptr)local_108);
-      str_append_lparen((iptr)local_108);
-      str_append_label((iptr)local_108,(*(short *)(local_8 + 0xb0) == 0) + 0x277);
-      str_append_rparen((iptr)local_108);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x128),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x270);
-      str_append_space((iptr)local_108);
-      crt_strcat(local_108,local_8 + 0x90);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 300),(iptr)local_108);
-      str_clear((iptr)local_108);
-      sVar1 = _strlen((char *)(local_8 + 0xbc));
-      if (sVar1 == 0) {
-        str_append_label((iptr)local_108,0x34c);
+    if (found_game != 0) {
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x26f);
+      str_append_space((iptr)text);
+      crt_strcat(text,found_game + 0x70);
+      str_append_space((iptr)text);
+      str_append_lparen((iptr)text);
+      str_append_label((iptr)text,(*(short *)(found_game + 0xb0) == 0) + 0x277);
+      str_append_rparen((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x128),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x270);
+      str_append_space((iptr)text);
+      crt_strcat(text,found_game + 0x90);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 300),(iptr)text);
+      str_clear((iptr)text);
+      text_len = _strlen((char *)(found_game + 0xbc));
+      if (text_len == 0) {
+        str_append_label((iptr)text,0x34c);
       }
       else {
-        crt_strcpy(local_108,local_8 + 0xbc);
+        crt_strcpy(text,found_game + 0xbc);
       }
-      sVar1 = _strlen(local_108);
-      if (0x19 < sVar1) {
-        local_f3 = 0;
+      text_len = _strlen(text);
+      if (0x19 < text_len) {
+        text_cutoff = 0;
       }
-      str_append_space((iptr)local_108);
-      str_append_lparen((iptr)local_108);
-      game.game_flags = *(u16 *)(local_8 + 0x110);
-      game.first_launch_turn = *(i16 *)(local_8 + 0x112);
-      scenario_year_increment = *(i16 *)(local_8 + 0x114);
-      scenario_start_year = *(i16 *)(local_8 + 0x116);
-      game.difficulty = *(u8 *)(local_8 + 0xb2);
-      uVar2 = game_turn_to_year((int)*(short *)(local_8 + 0x118));
-      str_append_year((iptr)local_108,uVar2);
-      str_append_rparen((iptr)local_108);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x130),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,*(byte *)(local_8 + 0xb2) + 0x279);
-      str_append_space((iptr)local_108);
-      str_append_lparen((iptr)local_108);
-      str_append_label((iptr)local_108,0x34e - (uint)(*(short *)(local_8 + 0x11e) == 0));
-      str_append_rparen((iptr)local_108);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x134),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x36c);
-      str_append_space((iptr)local_108);
-      str_append_int((iptr)local_108,(int)*(short *)(local_8 + 0x11a) / 2);
-      crt_strcat(local_108,&gamelist_map_size_sep_str);
-      str_append_int((iptr)local_108,(int)*(short *)(local_8 + 0x11c));
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x138),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x350 - (uint)(*(short *)(local_8 + 0x10e) == 0));
-      crt_strcat(local_108,&gamelist_double_opts_sep_str);
-      str_append_label((iptr)local_108,0x352 - (uint)(*(short *)(local_8 + 0x10c) == 0));
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x13c),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x273);
-      str_append_space((iptr)local_108);
-      str_append_label((iptr)local_108,*(byte *)(local_8 + 0xb3) + 0x27f);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x140),(iptr)local_108);
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x276);
-      str_append_space((iptr)local_108);
-      if (*(int *)(local_8 + 0xb8) == 0) {
-        str_append_label((iptr)local_108,0x285);
-      }
-      else {
-        iVar3 = *(int *)(local_8 + 0xb8) / 1000;
-        iVar4 = iVar3 / 0x3c;
-        iVar3 = iVar3 % 0x3c;
-        if (iVar4 < 10) {
-          str_append_int((iptr)local_108,0);
-        }
-        str_append_int((iptr)local_108,iVar4);
-        crt_strcat(local_108,&gamelist_timer_colon_str);
-        if (iVar3 < 10) {
-          str_append_int((iptr)local_108,0);
-        }
-        str_append_int((iptr)local_108,iVar3);
-      }
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x144),(iptr)local_108);
-      local_110 = 1;
-      local_114 = 0;
-      local_118 = (uint)*(byte *)(local_8 + 0xb4);
-      for (; local_118 = (int)local_118 >> 1, local_110 < 8; local_110++) {
-        if ((local_118 & 1) != 0) {
-          local_114++;
-        }
-      }
-      str_clear((iptr)local_108);
-      str_append_label((iptr)local_108,0x274);
-      str_append_space((iptr)local_108);
-      str_append_int((iptr)local_108,local_114);
-      crt_strcat(local_108,&gamelist_open_paren_str);
-      str_append_label((iptr)local_108,0x275);
-      str_append_space((iptr)local_108);
-      local_110 = 0;
-      local_114 = 0;
-      local_118 = (uint)*(byte *)(local_8 + 0xb5);
-      for (; local_110 < 8; local_110++) {
-        if ((local_118 & 1) != 0) {
-          local_114++;
-        }
-        local_118 = (int)local_118 >> 1;
-      }
-      if ((*(short *)(local_8 + 0x120) < 3) || (local_114 == 0)) {
-        str_append_label((iptr)local_108,0x353);
+      str_append_space((iptr)text);
+      str_append_lparen((iptr)text);
+      game.game_flags = *(u16 *)(found_game + 0x110);
+      game.first_launch_turn = *(i16 *)(found_game + 0x112);
+      scenario_year_increment = *(i16 *)(found_game + 0x114);
+      scenario_start_year = *(i16 *)(found_game + 0x116);
+      game.difficulty = *(u8 *)(found_game + 0xb2);
+      year = game_turn_to_year((int)*(short *)(found_game + 0x118));
+      str_append_year((iptr)text,year);
+      str_append_rparen((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x130),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,*(byte *)(found_game + 0xb2) + 0x279);
+      str_append_space((iptr)text);
+      str_append_lparen((iptr)text);
+      str_append_label((iptr)text,0x34e - (uint)(*(short *)(found_game + 0x11e) == 0));
+      str_append_rparen((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x134),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x36c);
+      str_append_space((iptr)text);
+      str_append_int((iptr)text,(int)*(short *)(found_game + 0x11a) / 2);
+      crt_strcat(text,&gamelist_map_size_sep_str);
+      str_append_int((iptr)text,(int)*(short *)(found_game + 0x11c));
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x138),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x350 - (uint)(*(short *)(found_game + 0x10e) == 0));
+      crt_strcat(text,&gamelist_double_opts_sep_str);
+      str_append_label((iptr)text,0x352 - (uint)(*(short *)(found_game + 0x10c) == 0));
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x13c),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x273);
+      str_append_space((iptr)text);
+      str_append_label((iptr)text,*(byte *)(found_game + 0xb3) + 0x27f);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x140),(iptr)text);
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x276);
+      str_append_space((iptr)text);
+      if (*(int *)(found_game + 0xb8) == 0) {
+        str_append_label((iptr)text,0x285);
       }
       else {
-        str_append_int((iptr)local_108,local_114);
+        seconds = *(int *)(found_game + 0xb8) / 1000;
+        minutes = seconds / 0x3c;
+        seconds = seconds % 0x3c;
+        if (minutes < 10) {
+          str_append_int((iptr)text,0);
+        }
+        str_append_int((iptr)text,minutes);
+        crt_strcat(text,&gamelist_timer_colon_str);
+        if (seconds < 10) {
+          str_append_int((iptr)text,0);
+        }
+        str_append_int((iptr)text,seconds);
       }
-      str_append_rparen((iptr)local_108);
-      dialog_set_item_text(param_1,*(i32 *)(net_session + 0x148),(iptr)local_108);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x144),(iptr)text);
+      bit = 1;
+      civ_count = 0;
+      civ_bits = (uint)*(byte *)(found_game + 0xb4);
+      for (; civ_bits = (int)civ_bits >> 1, bit < 8; bit++) {
+        if ((civ_bits & 1) != 0) {
+          civ_count++;
+        }
+      }
+      str_clear((iptr)text);
+      str_append_label((iptr)text,0x274);
+      str_append_space((iptr)text);
+      str_append_int((iptr)text,civ_count);
+      crt_strcat(text,&gamelist_open_paren_str);
+      str_append_label((iptr)text,0x275);
+      str_append_space((iptr)text);
+      bit = 0;
+      civ_count = 0;
+      civ_bits = (uint)*(byte *)(found_game + 0xb5);
+      for (; bit < 8; bit++) {
+        if ((civ_bits & 1) != 0) {
+          civ_count++;
+        }
+        civ_bits = (int)civ_bits >> 1;
+      }
+      if ((*(short *)(found_game + 0x120) < 3) || (civ_count == 0)) {
+        str_append_label((iptr)text,0x353);
+      }
+      else {
+        str_append_int((iptr)text,civ_count);
+      }
+      str_append_rparen((iptr)text);
+      dialog_set_item_text(dialog,*(i32 *)(net_session + 0x148),(iptr)text);
     }
   }
-  iVar5 = dialog_option_group_index
+  scroll_pos = dialog_option_group_index
                     (*(DialogOptionList **)net_session,*(uptr *)(*(int *)net_session + 0x210));
-  scrollbar_set_pos(*(ClickControl **)(*(int *)net_session + 0x284),iVar5);
+  scrollbar_set_pos(*(ClickControl **)(*(int *)net_session + 0x284),scroll_pos);
   dialog_render(*(Dialog **)net_session);
   return 1;
 }
 #undef scenario_start_year
 #undef scenario_year_increment
-#undef local_118
-#undef local_114
-#undef local_110
-#undef local_108
-#undef local_f3
-#undef local_8
+#undef civ_bits
+#undef civ_count
+#undef bit
+#undef text
+#undef text_cutoff
+#undef found_game
 
 /* 004253ef auto */
-#define local_c (*(void * *)(frame_ + FRAME_OFF(4)))
+#define option (*(void * *)(frame_ + FRAME_OFF(4)))
 void __thiscall net_gamelist_clear(NetGameList *this)
 
 {
-  void *pvVar1;
+  void *next;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (void *)this->field_14c;
+  option = (void *)this->field_14c;
   net_gamelist_update_details(this);
-  while (local_c != (void *)0x0) {
-    pvVar1 = *(void **)((int)local_c + 0x10);
-    operator_delete(*(void **)((int)local_c + 8));
-    operator_delete(local_c);
-    local_c = pvVar1;
+  while (option != (void *)0x0) {
+    next = *(void **)((int)option + 0x10);
+    operator_delete(*(void **)((int)option + 8));
+    operator_delete(option);
+    option = next;
   }
   this->field_14c = 0;
   *(i32 *)(this->field_0 + 0x28) = 0;
@@ -546,72 +546,72 @@ void __thiscall net_gamelist_clear(NetGameList *this)
   *(i32 *)(this->field_0 + 0x220) = 0;
   return;
 }
-#undef local_c
+#undef option
 
 /* 004254a8 auto */
-#define local_10 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr param_1,uint param_2)
+#define last (*(uptr *)(frame_ + FRAME_OFF(0)))
+#define option (*(uptr *)(frame_ + FRAME_OFF(4)))
+uint * __thiscall net_gamelist_add_entry(NetGameListAddView *this,iptr name2,uint id)
 
 {
-  int *piVar1;
-  uint *puVar2;
-  size_t sVar3;
-  void *pvVar4;
-  int iVar5;
-  int iVar6;
+  int *count_ptr;
+  uint *entry;
+  size_t name_len;
+  void *name_copy;
+  int entry_width;
+  int max_width;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_10 = 0;
-  for (local_c = this->field_14c; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
-    local_10 = local_c;
+  last = 0;
+  for (option = this->field_14c; option != 0; option = *(uptr *)(option + 0x10)) {
+    last = option;
   }
-  puVar2 = operator_new(0x18);
-  puVar2[4] = 0;
-  puVar2[5] = local_10;
-  if (local_10 == 0) {
-    this->field_14c = (u32)puVar2;
-    *(uint **)(this->field_0 + 0x228) = puVar2;
+  entry = operator_new(0x18);
+  entry[4] = 0;
+  entry[5] = last;
+  if (last == 0) {
+    this->field_14c = (u32)entry;
+    *(uint **)(this->field_0 + 0x228) = entry;
   }
   else {
-    *(uint **)(local_10 + 0x10) = puVar2;
+    *(uint **)(last + 0x10) = entry;
   }
-  *puVar2 = 0;
-  sVar3 = _strlen((char *)param_1);
-  pvVar4 = operator_new(sVar3 + 1);
-  puVar2[2] = (uint)pvVar4;
-  crt_strcpy(puVar2[2],param_1);
-  if (*(char *)param_1 == '\0') {
-    *puVar2 = *puVar2 | 1;
+  *entry = 0;
+  name_len = _strlen((char *)name2);
+  name_copy = operator_new(name_len + 1);
+  entry[2] = (uint)name_copy;
+  crt_strcpy(entry[2],name2);
+  if (*(char *)name2 == '\0') {
+    *entry = *entry | 1;
   }
-  puVar2[1] = param_2;
-  puVar2[3] = 0;
-  iVar5 = font_text_width(*(GameFont **)(this->field_0 + 8),puVar2[2]);
-  iVar6 = dialog_option_icon_width((DialogCore *)this->field_0);
-  iVar5 = iVar5 + iVar6 + *(int *)(this->field_0 + 0xac) + 5;
-  iVar6 = *(int *)(this->field_0 + 0x118);
-  if (iVar6 <= iVar5) {
-    iVar6 = iVar5;
+  entry[1] = id;
+  entry[3] = 0;
+  entry_width = font_text_width(*(GameFont **)(this->field_0 + 8),entry[2]);
+  max_width = dialog_option_icon_width((DialogCore *)this->field_0);
+  entry_width = entry_width + max_width + *(int *)(this->field_0 + 0xac) + 5;
+  max_width = *(int *)(this->field_0 + 0x118);
+  if (max_width <= entry_width) {
+    max_width = entry_width;
   }
-  *(int *)(this->field_0 + 0x118) = iVar6;
-  piVar1 = (int *)(this->field_0 + 0x28);
-  *piVar1 = *piVar1 + 1;
-  return puVar2;
+  *(int *)(this->field_0 + 0x118) = max_width;
+  count_ptr = (int *)(this->field_0 + 0x28);
+  *count_ptr = *count_ptr + 1;
+  return entry;
 }
-#undef local_10
-#undef local_c
+#undef last
+#undef option
 
 /* 00425607 auto */
-void __thiscall net_gamelist_start_timer(NetGameListTimerView *this,iptr param_1)
+void __thiscall net_gamelist_start_timer(NetGameListTimerView *this,iptr callback)
 
 {
-  u32 uVar1;
+  u32 timer;
   
   if (this->refresh_timer != 0) {
     net_gamelist_kill_timer(this);
   }
-  uVar1 = game_timer_create(param_1,0x32,1);
-  this->refresh_timer = uVar1;
+  timer = game_timer_create(callback,0x32,1);
+  this->refresh_timer = timer;
   return;
 }
 
@@ -630,71 +630,71 @@ void __thiscall net_gamelist_kill_timer(NetGameListTimerView *this)
 void __cdecl net_gamelist_poll_tick(void)
 
 {
-  i32 uVar1;
+  i32 timer;
   
   net_send_message(1,0,0,0,0,0,0,0,0,0);
   net_gamelist_expire_stale();
   if (*(int *)(net_session + 0x174) != 0) {
     game_timer_destroy(*(i32 *)(net_session + 0x174));
   }
-  uVar1 = game_timer_create(ADDR(0x40130c, net_gamelist_poll_tick),0xfa,1);
-  *(i32 *)(net_session + 0x174) = uVar1;
+  timer = game_timer_create(ADDR(0x40130c, net_gamelist_poll_tick),0xfa,1);
+  *(i32 *)(net_session + 0x174) = timer;
   return;
 }
 
 /* 0042570c auto */
 #define net_timeout_seconds (*(int *)((u8 *)&g.d_006ad8b8))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define game2 (*(iptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_gamelist_expire_stale(void)
 
 {
-  bool bVar1;
-  int iVar2;
-  iptr iVar1;
+  bool removed;
+  int now;
+  iptr next;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  bVar1 = false;
-  local_c = net_found_games;
-  iVar2 = timer_ticks();
-  while (local_c != 0) {
-    if (net_timeout_seconds * 0x3c < iVar2 - *(int *)(local_c + 0x28)) {
-      if (net_found_games == local_c) {
-        net_found_games = *(iptr *)(local_c + 0x20);
+  removed = false;
+  game2 = net_found_games;
+  now = timer_ticks();
+  while (game2 != 0) {
+    if (net_timeout_seconds * 0x3c < now - *(int *)(game2 + 0x28)) {
+      if (net_found_games == game2) {
+        net_found_games = *(iptr *)(game2 + 0x20);
       }
-      if (*(int *)(local_c + 0x24) != 0) {
-        *(i32 *)(*(int *)(local_c + 0x24) + 0x20) = *(i32 *)(local_c + 0x20);
+      if (*(int *)(game2 + 0x24) != 0) {
+        *(i32 *)(*(int *)(game2 + 0x24) + 0x20) = *(i32 *)(game2 + 0x20);
       }
-      if (*(int *)(local_c + 0x20) != 0) {
-        *(i32 *)(*(int *)(local_c + 0x20) + 0x24) = *(i32 *)(local_c + 0x24);
+      if (*(int *)(game2 + 0x20) != 0) {
+        *(i32 *)(*(int *)(game2 + 0x20) + 0x24) = *(i32 *)(game2 + 0x24);
       }
-      iVar1 = *(iptr *)(local_c + 0x20);
-      operator_delete((void *)local_c);
-      bVar1 = true;
-      local_c = iVar1;
+      next = *(iptr *)(game2 + 0x20);
+      operator_delete((void *)game2);
+      removed = true;
+      game2 = next;
     }
     else {
-      local_c = *(iptr *)(local_c + 0x20);
+      game2 = *(iptr *)(game2 + 0x20);
     }
   }
-  if (bVar1) {
+  if (removed) {
     net_gamelist_refresh();
   }
   return;
 }
 #undef net_timeout_seconds
-#undef local_c
+#undef game2
 
 /* 004257fe auto */
 #define net_max_players (*(int *)((u8 *)&g.d_006c3164))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define civ_bits (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define bit (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define total_civs (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define game2 (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define human_count (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __cdecl net_gamelist_refresh(void)
 
 {
-  uint *puVar1;
+  uint *entry;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (net_session != 0) {
@@ -706,35 +706,35 @@ void __cdecl net_gamelist_refresh(void)
       net_gamelist_update_details((NetGameList *)net_session);
     }
     else {
-      for (local_c = net_found_games; local_c != 0; local_c = *(iptr *)(local_c + 0x20)) {
-        if (*(int *)(local_c + 0x2c) == 0) {
-          *(i32 *)(local_c + 0x2c) = *(i32 *)(net_session + 4);
+      for (game2 = net_found_games; game2 != 0; game2 = *(iptr *)(game2 + 0x20)) {
+        if (*(int *)(game2 + 0x2c) == 0) {
+          *(i32 *)(game2 + 0x2c) = *(i32 *)(net_session + 4);
           *(int *)(net_session + 4) = *(int *)(net_session + 4) + 1;
         }
-        puVar1 = (uint *)net_gamelist_add_entry
-                                   ((NetGameListAddView *)net_session,local_c + 0x70,
-                                    *(i32 *)(local_c + 0x2c));
-        local_18 = 0;
-        local_10 = 0;
-        local_1c = (uint)*(byte *)(local_c + 0xb4);
-        for (; local_18 < 8; local_18++) {
-          if ((local_1c & 1) != 0) {
-            local_10++;
+        entry = (uint *)net_gamelist_add_entry
+                                   ((NetGameListAddView *)net_session,game2 + 0x70,
+                                    *(i32 *)(game2 + 0x2c));
+        bit = 0;
+        total_civs = 0;
+        civ_bits = (uint)*(byte *)(game2 + 0xb4);
+        for (; bit < 8; bit++) {
+          if ((civ_bits & 1) != 0) {
+            total_civs++;
           }
-          local_1c = (int)local_1c >> 1;
+          civ_bits = (int)civ_bits >> 1;
         }
-        local_18 = 0;
-        local_8 = 0;
-        local_1c = (uint)*(byte *)(local_c + 0xb5);
-        for (; local_18 < 8; local_18++) {
-          if ((local_1c & 1) != 0) {
-            local_8++;
+        bit = 0;
+        human_count = 0;
+        civ_bits = (uint)*(byte *)(game2 + 0xb5);
+        for (; bit < 8; bit++) {
+          if ((civ_bits & 1) != 0) {
+            human_count++;
           }
-          local_1c = (int)local_1c >> 1;
+          civ_bits = (int)civ_bits >> 1;
         }
-        if (((net_max_players <= local_8) || (local_10 <= local_8)) ||
-           (*(short *)(local_c + 0xb0) == 0)) {
-          *puVar1 = *puVar1 | 1;
+        if (((net_max_players <= human_count) || (total_civs <= human_count)) ||
+           (*(short *)(game2 + 0xb0) == 0)) {
+          *entry = *entry | 1;
         }
       }
     }
@@ -744,11 +744,11 @@ void __cdecl net_gamelist_refresh(void)
   return;
 }
 #undef net_max_players
-#undef local_1c
-#undef local_18
-#undef local_10
-#undef local_c
-#undef local_8
+#undef civ_bits
+#undef bit
+#undef total_civs
+#undef game2
+#undef human_count
 
 /* 00430822 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -761,11 +761,11 @@ void __cdecl net_gamelist_refresh(void)
 void __cdecl mp_meeting_wait_idle(void)
 
 {
-  int iVar1;
+  int now;
   
   net_process_messages((NetSession *)&net_session,1,0);
-  iVar1 = timer_ticks();
-  if (((net_timeout_seconds * 0x3c <= iVar1 - mp_meeting_wait_start_i32) || (mp_meeting_reply != -1)) ||
+  now = timer_ticks();
+  if (((net_timeout_seconds * 0x3c <= now - mp_meeting_wait_start_i32) || (mp_meeting_reply != -1)) ||
      (nm_parley_cancel_count != 0)) {
     dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
     wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
@@ -785,165 +785,165 @@ void __cdecl mp_meeting_wait_idle(void)
 #define net_adapter_index (*(uint *)((u8 *)&g.d_006ad2fc))
 #define net_protocol (*(int *)((u8 *)&g.d_006ad2f8))
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
-#define local_40c (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1020)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
+#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_ip_address(void)
 
 {
-  char *pcVar1;
-  size_t sVar2;
-  i32 uVar3;
+  char *proto_addr;
+  size_t input_len;
+  i32 result;
   i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_308,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
   if ((net_lobby_launch_mode == -1) || (net_lobby_launch_mode == 1)) {
-    pcVar1 = XD_GetCurrentProtoAddr(net_adapter_index,net_protocol);
-    if (pcVar1 == (char *)0x0) {
+    proto_addr = XD_GetCurrentProtoAddr(net_adapter_index,net_protocol);
+    if (proto_addr == (char *)0x0) {
       do {
-        dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265b8, ((u8 *)&g.d_006265b8)),0x1f,ADDR(0x6665b0, ((u8 *)&g.d_006665b0)),0,0,0,1);
-        local_14 = dialog_run_modal(&local_308,(iptr)local_40c,0);
-        if (local_14 == -1) {
-          local_8 = 0xffffffff;
-          /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-          uVar3 = 0;
+        dialog_load_text_section(&dlg,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265b8, ((u8 *)&g.d_006265b8)),0x1f,ADDR(0x6665b0, ((u8 *)&g.d_006665b0)),0,0,0,1);
+        choice = dialog_run_modal(&dlg,(iptr)input,0);
+        if (choice == -1) {
+          eh_state = 0xffffffff;
+          /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+          result = 0;
           goto LAB_0044541d;
         }
-        sVar2 = _strlen(local_40c);
-      } while (sVar2 == 0);
-      crt_strcpy(&prefs_net_ip_address,local_40c);
+        input_len = _strlen(input);
+      } while (input_len == 0);
+      crt_strcpy(&prefs_net_ip_address,input);
     }
     else {
-      pcVar1 = XD_GetCurrentProtoAddr(net_adapter_index,net_protocol);
-      crt_strcpy(&prefs_net_ip_address,pcVar1);
+      proto_addr = XD_GetCurrentProtoAddr(net_adapter_index,net_protocol);
+      crt_strcpy(&prefs_net_ip_address,proto_addr);
     }
   }
   else {
     crt_strcpy(&prefs_net_ip_address,&net_lobby_launch_info);
   }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-  uVar3 = 1;
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 00445407 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  result = 1;
 LAB_0044541d:
-  return uVar3;
+  return result;
 }
 #undef net_adapter_index
 #undef net_protocol
 #undef prefs_net_ip_address
-#undef local_40c
-#undef local_308
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef input
+#undef dlg
+#undef choice
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 0044542c auto */
 #define prefs_net_player_name (*(i8 *)((u8 *)&g.d_00666570))
-#define local_40c (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1020)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
+#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_player_name(void)
 
 {
-  size_t sVar1;
-  i32 uVar2;
+  size_t input_len;
+  i32 result;
   i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_308,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
   if (net_lobby_launch_mode == -1) {
     do {
-      dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265c4, ((u8 *)&g.d_006265c4)),0x1f,ADDR(0x666570, ((u8 *)&g.d_00666570)),0,0,0,1);
-      local_14 = dialog_run_modal(&local_308,(iptr)local_40c,0);
-      if (local_14 == -1) {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-        uVar2 = 0;
+      dialog_load_text_section(&dlg,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265c4, ((u8 *)&g.d_006265c4)),0x1f,ADDR(0x666570, ((u8 *)&g.d_00666570)),0,0,0,1);
+      choice = dialog_run_modal(&dlg,(iptr)input,0);
+      if (choice == -1) {
+        eh_state = 0xffffffff;
+        /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        result = 0;
         goto LAB_00445583;
       }
-      sVar1 = _strlen(local_40c);
-    } while (sVar1 == 0);
-    crt_strcpy(&prefs_net_player_name,local_40c);
+      input_len = _strlen(input);
+    } while (input_len == 0);
+    crt_strcpy(&prefs_net_player_name,input);
     prefs_save_civ2dat();
   }
   else {
     _memset(&prefs_net_player_name,0,0x20);
     _strncpy(&prefs_net_player_name,&net_lobby_short_name,0x1f);
   }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-  uVar2 = 1;
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 0044556d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  result = 1;
 LAB_00445583:
-  return uVar2;
+  return result;
 }
 #undef prefs_net_player_name
-#undef local_40c
-#undef local_308
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef input
+#undef dlg
+#undef choice
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 00445592 auto */
 #define prefs_net_game_name (*(i8 *)((u8 *)&g.d_00666550))
-#define local_40c (*(char (*)[260])(frame_ + FRAME_OFF(4)))
-#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(264)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1020)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1024)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1028)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define input (*(char (*)[260])(frame_ + FRAME_OFF(4)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(264)))
+#define choice (*(int *)(frame_ + FRAME_OFF(1020)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1024)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1028)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1032)))
 i32 __cdecl net_prompt_game_name(void)
 
 {
-  size_t sVar1;
-  i32 uVar2;
+  size_t input_len;
+  i32 result;
   i8 frame_[FRAME_OFF(1040)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_308,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
   if (net_lobby_launch_mode == -1) {
     do {
-      dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265cc, ((u8 *)&g.d_006265cc)),0x1f,ADDR(0x666550, ((u8 *)&g.d_00666550)),0,0,0,1);
-      local_14 = dialog_run_modal(&local_308,(iptr)local_40c,0);
-      if (local_14 == -1) {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-        uVar2 = 0;
+      dialog_load_text_section(&dlg,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x6265cc, ((u8 *)&g.d_006265cc)),0x1f,ADDR(0x666550, ((u8 *)&g.d_00666550)),0,0,0,1);
+      choice = dialog_run_modal(&dlg,(iptr)input,0);
+      if (choice == -1) {
+        eh_state = 0xffffffff;
+        /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        result = 0;
         goto LAB_00445703;
       }
-      sVar1 = _strlen(local_40c);
-    } while (sVar1 == 0);
-    crt_strcpy(&prefs_net_game_name,local_40c);
-    crt_strcpy(&net_game_name,local_40c);
+      input_len = _strlen(input);
+    } while (input_len == 0);
+    crt_strcpy(&prefs_net_game_name,input);
+    crt_strcpy(&net_game_name,input);
     prefs_save_civ2dat();
   }
   else {
     _memset(&prefs_net_game_name,0,0x20);
     _strncpy(&prefs_net_game_name,&net_lobby_session_name,0x1f);
   }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-  uVar2 = 1;
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004456ed */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  result = 1;
 LAB_00445703:
-  return uVar2;
+  return result;
 }
 #undef prefs_net_game_name
-#undef local_40c
-#undef local_308
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef input
+#undef dlg
+#undef choice
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 00445e46 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
@@ -958,44 +958,44 @@ LAB_00445703:
 #define net_player_info_has_titles_i32 (*(i32 *)((u8 *)&g.d_006ad178))
 #define net_wait_start_ticks_i32 (*(i32 *)((u8 *)&g.d_006ad674))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_444 (*(u8 *)(frame_ + FRAME_OFF(4)))
-#define local_440 (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
-#define local_33c (*(int *)(frame_ + FRAME_OFF(268)))
-#define local_338 (*(int *)(frame_ + FRAME_OFF(272)))
-#define local_334 (*(int *)(frame_ + FRAME_OFF(276)))
-#define local_330 (*(iptr *)(frame_ + FRAME_OFF(280)))
-#define local_32c (*(Dialog *)(frame_ + FRAME_OFF(284)))
-#define local_38 (*(byte * *)(frame_ + FRAME_OFF(1040)))
-#define aiStack_34 (*(iptr (*)[8])(frame_ + FRAME_OFF(1044)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1076)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1080)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1084)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1088)))
+#define is_female (*(u8 *)(frame_ + FRAME_OFF(4)))
+#define input (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
+#define index (*(int *)(frame_ + FRAME_OFF(268)))
+#define available_count (*(int *)(frame_ + FRAME_OFF(272)))
+#define option_count2 (*(int *)(frame_ + FRAME_OFF(276)))
+#define selected2 (*(iptr *)(frame_ + FRAME_OFF(280)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(284)))
+#define option (*(byte * *)(frame_ + FRAME_OFF(1040)))
+#define option_civs (*(iptr (*)[8])(frame_ + FRAME_OFF(1044)))
+#define wait_start (*(int *)(frame_ + FRAME_OFF(1076)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1080)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1084)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1088)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __cdecl net_choose_civ_dialog(int param_1)
+i32 __cdecl net_choose_civ_dialog(int title_offset)
 
 {
   iptr civ2;
-  iptr iVar3;
-  int iVar2;
-  iptr iVar4;
-  i32 uVar5;
-  i32 uVar6;
-  i32 uVar7;
-  i32 uVar8;
+  iptr choice;
+  int result;
+  iptr leader_str;
+  i32 ret;
+  i32 arg6;
+  i32 arg7;
+  i32 arg8;
   i8 frame_[FRAME_OFF(1096)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_32c,0x4000);
-  local_8 = 0;
-  local_330 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
+  selected2 = 0;
   net_player_info_has_names_i32 = 0;
   net_player_info_has_titles_i32 = 0;
   do {
-    dlg_reset(&local_32c,0x801);
-    dialog_prepend_title_label((iptr)&local_32c,param_1 + 0x25e);
-    local_33c = 0;
+    dlg_reset(&dlg,0x801);
+    dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
+    index = 0;
     for (civ = 1; civ < 8; civ++) {
       if ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) {
         text_clear();
@@ -1016,168 +1016,168 @@ i32 __cdecl net_choose_civ_dialog(int param_1)
         text_append_space();
         text_append_label(0xc4);
         text_append(ADDR(0x626610, ((u8 *)&g.d_00626610)));
-        iVar2 = local_33c;
-        local_33c++;
-        local_38 = (byte *)dialog_add_option
-                                     ((DialogOptionList *)&local_32c,ADDR(0x679640, ((u8 *)&g.d_00679640)),iVar2,0);
-        aiStack_34[*(int *)(local_38 + 4)] = civ;
+        result = index;
+        index++;
+        option = (byte *)dialog_add_option
+                                     ((DialogOptionList *)&dlg,ADDR(0x679640, ((u8 *)&g.d_00679640)),result,0);
+        option_civs[*(int *)(option + 4)] = civ;
       }
     }
-    local_334 = local_33c;
+    option_count2 = index;
 LAB_00446036:
     do {
-      local_338 = 0;
-      for (local_33c = 0; local_33c < local_334; local_33c++) {
-        local_38 = (byte *)dialog_find_option
-                                     ((DialogOptionList *)&local_32c,local_33c);
-        if (local_38 != (byte *)0x0) {
-          (*(i8 *)((char *)&civ + 0)) = (byte)aiStack_34[*(int *)(local_38 + 4)];
+      available_count = 0;
+      for (index = 0; index < option_count2; index++) {
+        option = (byte *)dialog_find_option
+                                     ((DialogOptionList *)&dlg,index);
+        if (option != (byte *)0x0) {
+          (*(i8 *)((char *)&civ + 0)) = (byte)option_civs[*(int *)(option + 4)];
           if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) &&
              ((1 << ((byte)civ & 0x1f) & (int)net_claimed_civs_mask) == 0)) {
-            local_338++;
+            available_count++;
             dialog_set_option_disabled
-                      ((DialogOptionList *)&local_32c,*(iptr *)(local_38 + 4),0);
-            if ((RadioGroupDisableView *)local_32c.field_268 != (RadioGroupDisableView *)0x0) {
+                      ((DialogOptionList *)&dlg,*(iptr *)(option + 4),0);
+            if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
               radiogrp_enable_item
-                        ((RadioGroupEnableView *)local_32c.field_268,*(iptr *)(local_38 + 4));
+                        ((RadioGroupEnableView *)dlg.field_268,*(iptr *)(option + 4));
             }
           }
           else {
             dialog_set_option_disabled
-                      ((DialogOptionList *)&local_32c,*(iptr *)(local_38 + 4),1);
-            if ((RadioGroupDisableView *)local_32c.field_268 != (RadioGroupDisableView *)0x0) {
+                      ((DialogOptionList *)&dlg,*(iptr *)(option + 4),1);
+            if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
               radiogrp_disable_item
-                        ((RadioGroupDisableView *)local_32c.field_268,*(iptr *)(local_38 + 4));
+                        ((RadioGroupDisableView *)dlg.field_268,*(iptr *)(option + 4));
             }
           }
         }
       }
-      if (local_338 == 0) {
+      if (available_count == 0) {
         popup_game(ADDR(0x626614, ((u8 *)&g.d_00626614)));
-        dialog_close(&local_32c);
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&local_32c)); }
-        uVar5 = 1;
+        dialog_close(&dlg);
+        eh_state = 0xffffffff;
+        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        ret = 1;
         goto LAB_00446810;
       }
-      for (local_33c = 0; local_33c < local_334; local_33c++) {
-        local_38 = (byte *)dialog_find_option
-                                     ((DialogOptionList *)&local_32c,local_330);
-        if ((local_38 != (byte *)0x0) && ((*local_38 & 1) == 0)) {
-          dialog_set_default_choice((DialogOptionList *)&local_32c,*(iptr *)(local_38 + 4));
-          if ((RadioGroupDisableView *)local_32c.field_268 != (RadioGroupDisableView *)0x0) {
+      for (index = 0; index < option_count2; index++) {
+        option = (byte *)dialog_find_option
+                                     ((DialogOptionList *)&dlg,selected2);
+        if ((option != (byte *)0x0) && ((*option & 1) == 0)) {
+          dialog_set_default_choice((DialogOptionList *)&dlg,*(iptr *)(option + 4));
+          if ((RadioGroupDisableView *)dlg.field_268 != (RadioGroupDisableView *)0x0) {
             radiogrp_set_selected
-                      ((RadioGroupSetSelView *)local_32c.field_268,*(i32 *)(local_38 + 4));
+                      ((RadioGroupSetSelView *)dlg.field_268,*(i32 *)(option + 4));
           }
           break;
         }
-        local_330++;
-        if (local_330 == local_334) {
-          local_330 = 0;
+        selected2++;
+        if (selected2 == option_count2) {
+          selected2 = 0;
         }
       }
       net_reset_msg_counts();
       net_wait_start_ticks_i32 = timer_ticks();
-      local_32c.field_3c = local_32c.field_3c & 0xfffffbff;
-      local_32c.field_d8 = 0;
-      local_32c.field_dc = 0;
+      dlg.field_3c = dlg.field_3c & 0xfffffbff;
+      dlg.field_d8 = 0;
+      dlg.field_dc = 0;
       dlg_pending_idle_callback = ((void *)ADDR(0x0040126c, net_lock_wait_idle_cb));
-      iVar3 = dlg_show_modal(&local_32c,0);
-      local_330 = radiogrp_get_selected((RadioGroupGetSelView *)local_32c.field_268);
-      if (iVar3 < 0) {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&local_32c)); }
-        uVar5 = 1;
+      choice = dlg_show_modal(&dlg,0);
+      selected2 = radiogrp_get_selected((RadioGroupGetSelView *)dlg.field_268);
+      if (choice < 0) {
+        eh_state = 0xffffffff;
+        /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+        ret = 1;
         goto LAB_00446810;
       }
     } while (nm_lock_data_count != 0);
     if (nm_server_canceled_count != 0) {
       popup_game_with_sprite(ADDR(0x626620, ((u8 *)&g.d_00626620)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&local_32c)); }
-      uVar5 = 1;
+      eh_state = 0xffffffff;
+      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+      ret = 1;
       goto LAB_00446810;
     }
-    civ2 = aiStack_34[iVar3];
+    civ2 = option_civs[choice];
     net_player_info_civ_i32 = civ2;
-    local_330 = iVar3;
+    selected2 = choice;
     net_send_message(0x30,0,0,civ2,0,0,0,0,0,0);
     if (net_host_flag == '\0') {
       net_reset_msg_counts();
-      local_14 = timer_ticks();
+      wait_start = timer_ticks();
       while (((nm_nation_accept_count == 0 && (nm_nation_reject_count == 0)) &&
-             (iVar2 = timer_ticks(), iVar2 - local_14 < net_timeout_seconds * 0x3c))) {
+             (result = timer_ticks(), result - wait_start < net_timeout_seconds * 0x3c))) {
         net_process_messages((NetSession *)&net_session,1,0);
       }
     }
     if ((nm_nation_accept_count == 0) && (nm_nation_reject_count == 0)) {
-      dialog_close(&local_32c);
+      dialog_close(&dlg);
       popup_game_with_sprite(ADDR(0x626630, ((u8 *)&g.d_00626630)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&local_32c)); }
-      uVar5 = 1;
+      eh_state = 0xffffffff;
+      /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+      ret = 1;
       goto LAB_00446810;
     }
     if (nm_nation_reject_count != 0) {
       popup_game_with_sprite(ADDR(0x626644, ((u8 *)&g.d_00626644)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       goto LAB_00446036;
     }
-    dialog_close(&local_32c);
+    dialog_close(&dlg);
     (*(i8 *)((char *)&civ + 0)) = (byte)civ2;
     game.human_players = game.human_players | (byte)(1 << ((byte)civ & 0x1f));
     game.player_civ = (byte)civ;
     game.turn_civ = (byte)civ;
     game.game_options = game.game_options & 0xfffffeff;
     human_civ = civ2;
-    iVar2 = civ_check_password(civ2);
-    if (iVar2 == 0) {
+    result = civ_check_password(civ2);
+    if (result == 0) {
       game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
       net_send_message(0x31,0,0,civ2,0,0,0,0,0,0);
     }
     else {
-      dlg_load_game_section(&local_32c,ADDR(0x626654, ((u8 *)&g.d_00626654)),1);
-      dialog_prepend_title_label((iptr)&local_32c,param_1 + 0x25e);
+      dlg_load_game_section(&dlg,ADDR(0x626654, ((u8 *)&g.d_00626654)),1);
+      dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
       dialog_set_default_choice
-                ((DialogOptionList *)&local_32c,(uint)leaders[civs[game.player_civ].tribe].female);
+                ((DialogOptionList *)&dlg,(uint)leaders[civs[game.player_civ].tribe].female);
       dialog_set_position
-                ((DialogCore *)&local_32c,0xfffffc19,
+                ((DialogCore *)&dlg,0xfffffc19,
                  -(((int)(screen_height - 0x1e0 + (screen_height - 0x1e0 >> 0x1f & 7U)) >> 3) + 1));
       dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
-      iVar2 = dlg_show_modal(&local_32c,0);
-      net_player_info_gender_i32 = iVar2;
+      result = dlg_show_modal(&dlg,0);
+      net_player_info_gender_i32 = result;
       snd_play_effect(0x6a,0,0,0);
-      if (iVar2 < 0) {
+      if (result < 0) {
         game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
         net_send_message(0x31,0,0,civ2,0,0,0,0,0,0);
       }
       else {
-        local_444 = (u8)iVar2;
-        leaders[civs[game.player_civ].tribe].female = local_444;
+        is_female = (u8)result;
+        leaders[civs[game.player_civ].tribe].female = is_female;
         civs[human_civ].flags = civs[human_civ].flags & 0xfdff;
-        if (iVar2 != 0) {
+        if (result != 0) {
           civs[human_civ].flags = civs[human_civ].flags | 0x200;
         }
-        uVar8 = 1;
-        uVar7 = 0;
-        uVar6 = 0;
-        uVar5 = 0;
-        iVar4 = civ_leader_name((int)game.player_civ);
-        iVar2 = dialog_load_text_section
-                          (&local_32c,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62665c, ((u8 *)&g.d_0062665c)),0x17,iVar4,uVar5,uVar6,uVar7,uVar8);
-        if (iVar2 == 0) {
-          dialog_prepend_title_label((iptr)&local_32c,param_1 + 0x25e);
+        arg8 = 1;
+        arg7 = 0;
+        arg6 = 0;
+        ret = 0;
+        leader_str = civ_leader_name((int)game.player_civ);
+        result = dialog_load_text_section
+                          (&dlg,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x62665c, ((u8 *)&g.d_0062665c)),0x17,leader_str,ret,arg6,arg7,arg8);
+        if (result == 0) {
+          dialog_prepend_title_label((iptr)&dlg,title_offset + 0x25e);
           dlg_pending_idle_callback = ((void *)ADDR(0x00402c3e, net_pump_idle_cb));
-          iVar2 = dialog_run_modal(&local_32c,(iptr)local_440,0);
-          if (iVar2 == 0) {
-            crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,local_440);
-            crt_strcpy(&net_player_info_leader_name,local_440);
+          result = dialog_run_modal(&dlg,(iptr)input,0);
+          if (result == 0) {
+            crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,input);
+            crt_strcpy(&net_player_info_leader_name,input);
             net_player_info_tribe_name = 0;
             net_player_info_adjective = 0;
-            local_8 = 0xffffffff;
-            /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&local_32c)); }
-            uVar5 = 0;
+            eh_state = 0xffffffff;
+            /* inlined unwind funclet 004467fa */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+            ret = 0;
 LAB_00446810:
-            return uVar5;
+            return ret;
           }
           game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
           net_send_message(0x31,0,0,civ2,0,0,0,0,0,0);
@@ -1198,37 +1198,37 @@ LAB_00446810:
 #undef net_player_info_has_titles_i32
 #undef net_wait_start_ticks_i32
 #undef civ
-#undef local_444
-#undef local_440
-#undef local_33c
-#undef local_338
-#undef local_334
-#undef local_330
-#undef local_32c
-#undef local_38
-#undef aiStack_34
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef is_female
+#undef input
+#undef index
+#undef available_count
+#undef option_count2
+#undef selected2
+#undef dlg
+#undef option
+#undef option_civs
+#undef wait_start
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 00447170 auto */
-void * __thiscall net_gamelist_view_scalar_dtor(void *this,uint param_1)
+void * __thiscall net_gamelist_view_scalar_dtor(void *this,uint flags)
 
 {
   net_gamelist_view_dtor(this);
-  if ((param_1 & 1) != 0) {
+  if ((flags & 1) != 0) {
     operator_delete(this);
   }
   return this;
 }
 
 /* 004471c0 auto */
-LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *this,uint param_1)
+LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *this,uint flags)
 
 {
   lobby_list_dtor(this);
-  if ((param_1 & 1) != 0) {
+  if ((flags & 1) != 0) {
     operator_delete(this);
   }
   return this;
@@ -1237,313 +1237,313 @@ LobbyList * __thiscall lobby_list_scalar_dtor(LobbyList *this,uint param_1)
 /* 00450480 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define local_44 (*(WindowObjectView * *)(frame_ + FRAME_OFF(4)))
-#define local_40 (*(WindowObjectView * *)(frame_ + FRAME_OFF(8)))
-#define local_3c (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define local_34 (*(u32 *)(frame_ + FRAME_OFF(20)))
+#define parent22 (*(WindowObjectView * *)(frame_ + FRAME_OFF(4)))
+#define parent2 (*(WindowObjectView * *)(frame_ + FRAME_OFF(8)))
+#define hotspot (*(u32 *)(frame_ + FRAME_OFF(12)))
+#define scrollbar (*(u32 *)(frame_ + FRAME_OFF(20)))
 #define advance (*(uptr *)(frame_ + FRAME_OFF(28)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_24 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(48)))
+#define sb_left (*(int *)(frame_ + FRAME_OFF(32)))
+#define sb_top (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define sb_right (*(int *)(frame_ + FRAME_OFF(40)))
+#define sb_bottom (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define can_see_other (*(int *)(frame_ + FRAME_OFF(48)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(56)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(60)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(64)))
-void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr param_1,iptr param_2,int param_3)
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(56)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(60)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(64)))
+void __thiscall parley_create_advance_list_pane(WindowObjectView *this,iptr rect,iptr pane,int their_side)
 
 {
-  int iVar1;
-  int iVar2;
+  int result;
+  int scroll_width;
   Control *pCVar3;
   i8 frame_[FRAME_OFF(72)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_18 = 0;
-  local_28 = *(int *)param_1;
-  local_24 = *(i32 *)(param_1 + 4);
-  local_20 = *(int *)(param_1 + 8);
-  local_1c = *(i32 *)(param_1 + 0xc);
-  iVar1 = civ_has_wonder(human_civ,0x18);
-  if ((((iVar1 == 0) && (iVar1 = civ_has_wonder(human_civ,9), iVar1 == 0)) &&
+  eh_state = 0xffffffff;
+  can_see_other = 0;
+  sb_left = *(int *)rect;
+  sb_top = *(i32 *)(rect + 4);
+  sb_right = *(int *)(rect + 8);
+  sb_bottom = *(i32 *)(rect + 0xc);
+  result = civ_has_wonder(human_civ,0x18);
+  if ((((result == 0) && (result = civ_has_wonder(human_civ,9), result == 0)) &&
       ((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 0x80) == 0)) &&
      (((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 8) == 0 &&
       (game.reveal_map == '\0')))) {
-    local_18 = 0;
+    can_see_other = 0;
   }
   else {
-    local_18 = 1;
+    can_see_other = 1;
   }
-  this[param_2 + 0xfa].field_0 = 0;
+  this[pane + 0xfa].field_0 = 0;
   civ = human_civ;
-  if ((param_3 != 0) && (local_18 != 0)) {
+  if ((their_side != 0) && (can_see_other != 0)) {
     civ = parley_other_civ;
   }
   for (advance = 0; (int)advance < 100; advance++) {
-    if (param_3 == 0) {
-      iVar1 = civ_has_advance(human_civ,advance);
-      if ((iVar1 != 0) &&
-         ((local_18 == 0 || (iVar1 = civ_has_advance(parley_other_civ,advance), iVar1 == 0)))) {
-        this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0xfc].field_0 = advance;
-        this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0x2100].field_0 = 0;
-        this[param_2 + 0xfa].field_0++;
+    if (their_side == 0) {
+      result = civ_has_advance(human_civ,advance);
+      if ((result != 0) &&
+         ((can_see_other == 0 || (result = civ_has_advance(parley_other_civ,advance), result == 0)))) {
+        this[this[pane + 0xfa].field_0 + pane * 0x801 + 0xfc].field_0 = advance;
+        this[this[pane + 0xfa].field_0 + pane * 0x801 + 0x2100].field_0 = 0;
+        this[pane + 0xfa].field_0++;
       }
     }
     else if (((human_civ == civ) ||
-             (iVar1 = civ_has_advance(human_civ,advance), iVar1 != 0)) ||
-            (iVar1 = civ_has_advance(civ,advance), iVar1 == 0)) {
+             (result = civ_has_advance(human_civ,advance), result != 0)) ||
+            (result = civ_has_advance(civ,advance), result == 0)) {
       if (((human_civ == civ) &&
-          (iVar1 = civ_has_advance(human_civ,advance), iVar1 == 0)) &&
+          (result = civ_has_advance(human_civ,advance), result == 0)) &&
          (((int)advance < 0x59 && (advances[advance].enabled == 1)))) {
-        this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0xfc].field_0 = advance;
-        this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0x2100].field_0 = 0;
-        this[param_2 + 0xfa].field_0++;
+        this[this[pane + 0xfa].field_0 + pane * 0x801 + 0xfc].field_0 = advance;
+        this[this[pane + 0xfa].field_0 + pane * 0x801 + 0x2100].field_0 = 0;
+        this[pane + 0xfa].field_0++;
       }
     }
     else {
-      this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0xfc].field_0 = advance;
-      this[this[param_2 + 0xfa].field_0 + param_2 * 0x801 + 0x2100].field_0 = 0;
-      this[param_2 + 0xfa].field_0++;
+      this[this[pane + 0xfa].field_0 + pane * 0x801 + 0xfc].field_0 = advance;
+      this[this[pane + 0xfa].field_0 + pane * 0x801 + 0x2100].field_0 = 0;
+      this[pane + 0xfa].field_0++;
     }
   }
-  if ((int)this[param_2 + 0xfa].field_0 < 1) {
-    this[param_2 + 0x4104].field_0 = 0xffffffff;
+  if ((int)this[pane + 0xfa].field_0 < 1) {
+    this[pane + 0x4104].field_0 = 0xffffffff;
   }
   else {
-    this[param_2 + 0x4104].field_0 = 0;
+    this[pane + 0x4104].field_0 = 0;
   }
-  this[param_2 + 0xf8].field_0 = 3;
-  this[param_2 * 4 + 0xf0].field_0 = *(u32 *)param_1;
-  this[param_2 * 4 + 0xf1].field_0 = *(u32 *)(param_1 + 4);
-  this[param_2 * 4 + 0xf2].field_0 = *(u32 *)(param_1 + 8);
-  this[param_2 * 4 + 0xf3].field_0 = *(u32 *)(param_1 + 0xc);
-  if ((int)this[param_2 + 0x4108].field_0 < (int)this[param_2 + 0xfa].field_0) {
-    iVar2 = GetSystemMetrics(2);
-    iVar1 = local_20;
-    this[param_2 * 4 + 0xf2].field_0 -= iVar2;
-    local_28 = GetSystemMetrics(2);
-    local_28 = iVar1 - local_28;
+  this[pane + 0xf8].field_0 = 3;
+  this[pane * 4 + 0xf0].field_0 = *(u32 *)rect;
+  this[pane * 4 + 0xf1].field_0 = *(u32 *)(rect + 4);
+  this[pane * 4 + 0xf2].field_0 = *(u32 *)(rect + 8);
+  this[pane * 4 + 0xf3].field_0 = *(u32 *)(rect + 0xc);
+  if ((int)this[pane + 0x4108].field_0 < (int)this[pane + 0xfa].field_0) {
+    scroll_width = GetSystemMetrics(2);
+    result = sb_right;
+    this[pane * 4 + 0xf2].field_0 -= scroll_width;
+    sb_left = GetSystemMetrics(2);
+    sb_left = result - sb_left;
     pCVar3 = operator_new(0x40);
-    local_8 = 0;
+    eh_state = 0;
     if (pCVar3 == (Control *)0x0) {
-      local_34 = 0;
+      scrollbar = 0;
     }
     else {
-      local_34 = scrollbar_ctor(pCVar3);
+      scrollbar = scrollbar_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    this[param_2 + 0xdf].field_0 = local_34;
+    eh_state = 0xffffffff;
+    this[pane + 0xdf].field_0 = scrollbar;
     if (this == (WindowObjectView *)0x0) {
-      local_40 = (WindowObjectView *)0x0;
+      parent2 = (WindowObjectView *)0x0;
     }
     else {
-      local_40 = this + 0x12;
+      parent2 = this + 0x12;
     }
     scrollbar_create
-              ((Control *)this[param_2 + 0xdf].field_0,(iptr)local_40,param_2 + 0x411,
-               (iptr)&local_28,1);
+              ((Control *)this[pane + 0xdf].field_0,(iptr)parent2,pane + 0x411,
+               (iptr)&sb_left,1);
     scrollbar_set_range
-              ((Control *)this[param_2 + 0xdf].field_0,0,
-               (this[param_2 + 0xfa].field_0 - 1) - this[param_2 + 0x4108].field_0);
-    scrollbar_set_pos((ClickControl *)this[param_2 + 0xdf].field_0,0);
+              ((Control *)this[pane + 0xdf].field_0,0,
+               (this[pane + 0xfa].field_0 - 1) - this[pane + 0x4108].field_0);
+    scrollbar_set_pos((ClickControl *)this[pane + 0xdf].field_0,0);
     scrollbar_set_page_size
-              ((Control *)this[param_2 + 0xdf].field_0,this[param_2 + 0x4108].field_0);
+              ((Control *)this[pane + 0xdf].field_0,this[pane + 0x4108].field_0);
     scrollbar_set_callback
-              ((Control *)this[param_2 + 0xdf].field_0,
-               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((param_2 == 0) - 1 & 0xffffdd37)));
+              ((Control *)this[pane + 0xdf].field_0,
+               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((pane == 0) - 1 & 0xffffdd37)));
     scrollbar_set_track_callback
-              ((ScrollbarTrackSetView *)this[param_2 + 0xdf].field_0,
-               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((param_2 == 0) - 1 & 0xffffdd37)));
+              ((ScrollbarTrackSetView *)this[pane + 0xdf].field_0,
+               (iptr)(((void *)ADDR(0x0040349f, parley_advance_list0_on_scroll)) + ((pane == 0) - 1 & 0xffffdd37)));
   }
   pCVar3 = operator_new(0x40);
-  local_8 = 1;
+  eh_state = 1;
   if (pCVar3 == (Control *)0x0) {
-    local_3c = 0;
+    hotspot = 0;
   }
   else {
-    local_3c = hotspot_ctor(pCVar3);
+    hotspot = hotspot_ctor(pCVar3);
   }
-  local_8 = 0xffffffff;
-  this[param_2 + 0xe1].field_0 = local_3c;
+  eh_state = 0xffffffff;
+  this[pane + 0xe1].field_0 = hotspot;
   if (this == (WindowObjectView *)0x0) {
-    local_44 = (WindowObjectView *)0x0;
+    parent22 = (WindowObjectView *)0x0;
   }
   else {
-    local_44 = this + 0x12;
+    parent22 = this + 0x12;
   }
   hotspot_create
-            ((ClickControl *)this[param_2 + 0xe1].field_0,(iptr)local_44,param_2 + 0x413,
-             (iptr)(this + param_2 * 4 + 0xf0));
-  hotspot_set_click_callback((HotspotClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
-  hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[param_2 + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
-  parley_draw_advance_list(param_2);
+            ((ClickControl *)this[pane + 0xe1].field_0,(iptr)parent22,pane + 0x413,
+             (iptr)(this + pane * 4 + 0xf0));
+  hotspot_set_click_callback((HotspotClickSetView *)this[pane + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
+  hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[pane + 0xe1].field_0,ADDR(0x4017da, parley_advance_list_on_click));
+  parley_draw_advance_list(pane);
   return;
 }
 #undef human_civ
 #undef parley_other_civ
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_34
+#undef parent22
+#undef parent2
+#undef hotspot
+#undef scrollbar
 #undef advance
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
+#undef sb_left
+#undef sb_top
+#undef sb_right
+#undef sb_bottom
+#undef can_see_other
 #undef civ
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 00450ae6 auto */
-void __cdecl parley_advance_list0_on_scroll(i32 param_1)
+void __cdecl parley_advance_list0_on_scroll(i32 pos)
 
 {
-  parley_advance_list_on_scroll(0,param_1);
+  parley_advance_list_on_scroll(0,pos);
   return;
 }
 
 /* 00450b22 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_advance_list_on_scroll(int param_1,i32 param_2)
+#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_advance_list_on_scroll(int pane,i32 pos)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    window = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 + 0x10410 + param_1 * 4) = param_2;
-  parley_draw_advance_list(param_1);
+  wnd_activate((Wnd *)(window + 0x48));
+  *(i32 *)(window + 0x10410 + pane * 4) = pos;
+  parley_draw_advance_list(pane);
   return;
 }
-#undef local_8
+#undef window
 
 /* 00450b83 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl parley_advance_list_on_click(int param_1)
+#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define pane (*(int *)(frame_ + FRAME_OFF(20)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(24)))
+void __cdecl parley_advance_list_on_click(int control_id)
 
 {
-  uint *puVar1;
-  int iVar2;
-  int iVar3;
+  uint *sel_flag;
+  int row;
+  int key_down;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  row = wnd_get_active_child();
+  if (row == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    window = row - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  local_c = param_1 - 0x413;
+  wnd_activate((Wnd *)(window + 0x48));
+  pane = control_id - 0x413;
   wnd_get_cursor_pos
-            ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
-  if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = parley_advance_list_hit_test(local_10,local_14,local_c), -1 < iVar2)) &&
-     (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
-    iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
-    if (iVar3 == 0) {
-      iVar3 = wnd_is_ctrl_down((void *)(local_8 + 0x48));
-      if (iVar3 == 0) {
-        for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4);
-            local_18 = local_18 + 1) {
-          if (local_18 != iVar2) {
-            *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 0;
+            ((WndBase *)(window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((*(int *)(window + 1000 + pane * 4) != 0) &&
+      (row = parley_advance_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
+     (row < *(int *)(window + 1000 + pane * 4))) {
+    key_down = wnd_is_shift_down((void *)(window + 0x48));
+    if (key_down == 0) {
+      key_down = wnd_is_ctrl_down((void *)(window + 0x48));
+      if (key_down == 0) {
+        for (i = 0; i < *(int *)(window + 1000 + pane * 4);
+            i = i + 1) {
+          if (i != row) {
+            *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 0;
           }
         }
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(iVar2 * 4 + local_c * 0x2004 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(window + 0x10418 + pane * 4) = row;
+        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + window);
+        *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(iVar2 * 4 + local_c * 0x2004 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(window + 0x10418 + pane * 4) = row;
+        sel_flag = (uint *)(row * 4 + pane * 0x2004 + 0x8400 + window);
+        *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4); local_18++)
+      for (i = 0; i < *(int *)(window + 1000 + pane * 4); i++)
       {
-        *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 0;
+        *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 0;
       }
-      if (*(int *)(local_8 + 0x10418 + local_c * 4) < iVar2) {
-        local_18 = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_1c = iVar2;
+      if (*(int *)(window + 0x10418 + pane * 4) < row) {
+        i = *(int *)(window + 0x10418 + pane * 4);
+        range_end = row;
       }
       else {
-        local_1c = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_18 = iVar2;
+        range_end = *(int *)(window + 0x10418 + pane * 4);
+        i = row;
       }
-      for (; local_18 <= local_1c; local_18++) {
-        *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 1;
+      for (; i <= range_end; i++) {
+        *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) = 1;
       }
     }
-    parley_draw_advance_list(local_c);
+    parley_draw_advance_list(pane);
   }
   return;
 }
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef range_end
+#undef i
+#undef cursor_y
+#undef cursor_x
+#undef pane
+#undef window
 
 /* 00450df6 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl parley_advance_list_hit_test(int param_1,int param_2,int param_3)
+#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
+int __cdecl parley_advance_list_hit_test(int px,int py,int pane)
 
 {
-  iptr iVar1;
-  int iVar2;
-  int iVar3;
+  iptr child;
+  int result;
+  int list_height;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    window = child - 0x48;
   }
-  if (param_2 < *(int *)(param_3 * 0x10 + 0x3c4 + local_8)) {
-    iVar2 = -1;
+  if (py < *(int *)(pane * 0x10 + 0x3c4 + window)) {
+    result = -1;
   }
-  else if (param_2 < *(int *)(param_3 * 0x10 + 0x3cc + local_8)) {
-    if (param_1 < *(int *)(param_3 * 0x10 + 0x3c0 + local_8)) {
-      iVar2 = -3;
+  else if (py < *(int *)(pane * 0x10 + 0x3cc + window)) {
+    if (px < *(int *)(pane * 0x10 + 0x3c0 + window)) {
+      result = -3;
     }
-    else if (param_1 < *(int *)(param_3 * 0x10 + 0x3c8 + local_8)) {
-      iVar2 = *(int *)(param_3 * 0x10 + 0x3c4 + local_8);
-      iVar3 = rect_height(param_3 * 0x10 + local_8 + 0x3c0);
-      iVar2 = (param_2 - iVar2) / (iVar3 / (*(int *)(local_8 + 0x10420 + param_3 * 4) + 1)) +
-              *(int *)(local_8 + 0x10410 + param_3 * 4);
+    else if (px < *(int *)(pane * 0x10 + 0x3c8 + window)) {
+      result = *(int *)(pane * 0x10 + 0x3c4 + window);
+      list_height = rect_height(pane * 0x10 + window + 0x3c0);
+      result = (py - result) / (list_height / (*(int *)(window + 0x10420 + pane * 4) + 1)) +
+              *(int *)(window + 0x10410 + pane * 4);
     }
     else {
-      iVar2 = -4;
+      result = -4;
     }
   }
   else {
-    iVar2 = -2;
+    result = -2;
   }
-  return iVar2;
+  return result;
 }
-#undef local_8
+#undef window
 
 /* 00450f0b auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -1553,167 +1553,167 @@ int __cdecl parley_advance_list_hit_test(int param_1,int param_2,int param_3)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_7c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_78 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_70 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_60 (*(int *)(frame_ + FRAME_OFF(32)))
+#define icon_x (*(int *)(frame_ + FRAME_OFF(4)))
+#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define text_y_offset (*(int *)(frame_ + FRAME_OFF(32)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_54 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_3c (*(Sprite * *)(frame_ + FRAME_OFF(68)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_34 (*(ViewWindow * *)(frame_ + FRAME_OFF(76)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(100)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
-void __cdecl parley_draw_advance_list(iptr param_1)
+#define icon_step (*(int *)(frame_ + FRAME_OFF(40)))
+#define row (*(int *)(frame_ + FRAME_OFF(44)))
+#define row_top (*(int *)(frame_ + FRAME_OFF(48)))
+#define list_left (*(int *)(frame_ + FRAME_OFF(52)))
+#define list_width2 (*(int *)(frame_ + FRAME_OFF(56)))
+#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(60)))
+#define text_x_offset (*(int *)(frame_ + FRAME_OFF(64)))
+#define icon_sprite (*(Sprite * *)(frame_ + FRAME_OFF(68)))
+#define text_color2 (*(int *)(frame_ + FRAME_OFF(72)))
+#define window (*(ViewWindow * *)(frame_ + FRAME_OFF(76)))
+#define selected2 (*(int *)(frame_ + FRAME_OFF(80)))
+#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
+#define row_height (*(int *)(frame_ + FRAME_OFF(100)))
+#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
+#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
+void __cdecl parley_draw_advance_list(iptr pane)
 
 {
-  u8 *puVar1;
-  int iVar2;
-  int iVar3;
-  iptr iVar4;
+  u8 *has_sel;
+  int tmp;
+  int tmp2;
+  iptr name_label;
   i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_34 = (ViewWindow *)0x0;
+  tmp = wnd_get_active_child();
+  if (tmp == 0) {
+    window = (ViewWindow *)0x0;
   }
   else {
-    local_34 = (ViewWindow *)(iVar2 - 0x48);
+    window = (ViewWindow *)(tmp - 0x48);
   }
-  surface_get_clip((DibSurface *)local_34,(iptr)local_18);
-  surface_set_clip((DibSurface *)local_34,(iptr)(local_34->pad_3c0 + param_1 * 0x10));
+  surface_get_clip((DibSurface *)window,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)window,(iptr)(window->pad_3c0 + pane * 0x10));
   surface_fill_rect
-            ((DibSurface *)local_34,(iptr)(local_34->pad_3c0 + param_1 * 0x10),list_bg_color);
-  if (local_34->field_154 == 0) {
-    local_8 = (GameFont *)&font_size14;
+            ((DibSurface *)window,(iptr)(window->pad_3c0 + pane * 0x10),list_bg_color);
+  if (window->field_154 == 0) {
+    font2 = (GameFont *)&font_size14;
   }
   else {
-    local_8 = (GameFont *)&font_size21;
+    font2 = (GameFont *)&font_size21;
   }
-  local_4c = *(int *)(local_34->pad_3c0 + param_1 * 0x10);
-  local_48 = rect_width((iptr)(local_34->pad_3c0 + param_1 * 0x10));
-  local_1c = rect_height((iptr)(local_34->pad_3c0 + param_1 * 0x10));
-  local_1c = local_1c / (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x38) + 1);
-  iVar2 = local_1c / 2;
-  iVar3 = font_cached_height(local_8);
-  local_60 = iVar2 - iVar3 / 2;
-  puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  local_54 = 0;
+  list_left = *(int *)(window->pad_3c0 + pane * 0x10);
+  list_width2 = rect_width((iptr)(window->pad_3c0 + pane * 0x10));
+  row_height = rect_height((iptr)(window->pad_3c0 + pane * 0x10));
+  row_height = row_height / (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x38) + 1);
+  tmp = row_height / 2;
+  tmp2 = font_cached_height(font2);
+  text_y_offset = tmp - tmp2 / 2;
+  has_sel = window->pad_200 + pane * 4 - 0x1c;
+  has_sel[0] = '\0';
+  has_sel[1] = '\0';
+  has_sel[2] = '\0';
+  has_sel[3] = '\0';
+  row = 0;
   do {
-    if (*(int *)(local_34->pad_3c0 + param_1 * 4 + 0x28) <= local_54) {
+    if (*(int *)(window->pad_3c0 + pane * 4 + 0x28) <= row) {
 LAB_00451089:
-      for (local_54 = 0; local_54 < *(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x38) + 1;
-          local_54 = local_54 + 1) {
-        local_50 = *(int *)(local_34->pad_3c0 + param_1 * 0x10 + 4) + local_54 * local_1c +
+      for (row = 0; row < *(int *)(window[0x3e].pad_48 + pane * 4 + 0x38) + 1;
+          row = row + 1) {
+        row_top = *(int *)(window->pad_3c0 + pane * 0x10 + 4) + row * row_height +
                    panel_margin_y;
-        SetRect(&local_2c,local_4c,local_50,local_4c + local_48,local_50 + local_1c);
-        if (((local_54 == 0) || (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) != -1)) &&
-           (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 <
-            *(int *)(local_34->pad_3c0 + param_1 * 4 + 0x28))) {
-          local_30 = *(int *)(param_1 * 0x2004 +
-                              (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54) * 4
-                              + 0x8400 + (int)local_34);
-          if (local_30 == 0) {
-            local_38 = list_text_color;
-            local_44 = list_shadow_color;
+        SetRect(&row_rect,list_left,row_top,list_left + list_width2,row_top + row_height);
+        if (((row == 0) || (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) != -1)) &&
+           (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) + row <
+            *(int *)(window->pad_3c0 + pane * 4 + 0x28))) {
+          selected2 = *(int *)(pane * 0x2004 +
+                              (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) + row) * 4
+                              + 0x8400 + (int)window);
+          if (selected2 == 0) {
+            text_color2 = list_text_color;
+            shadow_color2 = list_shadow_color;
           }
           else {
-            local_38 = dlg_sel_text_color;
-            local_44 = dlg_sel_text_shadow_color;
+            text_color2 = dlg_sel_text_color;
+            shadow_color2 = dlg_sel_text_shadow_color;
           }
-          advance = *(int *)(param_1 * 0x2004 +
-                              (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54) * 4
-                              + 0x3f0 + (int)local_34);
-          local_3c = (Sprite *)
+          advance = *(int *)(pane * 0x2004 +
+                              (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) + row) * 4
+                              + 0x3f0 + (int)window);
+          icon_sprite = (Sprite *)
                      (&advance_category_icon_sprites +
                      (char)advances[advance].category * 0xf0 +
                      (char)advances[advance].epoch * 0x3c);
-          iVar2 = sprite_get_width(local_3c);
-          local_40 = panel_margin_x * 3 + iVar2 * 2;
-          local_2c.left += local_40;
-          if (local_30 == 0) {
-            local_78 = list_bg_color;
+          tmp = sprite_get_width(icon_sprite);
+          text_x_offset = panel_margin_x * 3 + tmp * 2;
+          row_rect.left += text_x_offset;
+          if (selected2 == 0) {
+            bg_color2 = list_bg_color;
           }
           else {
-            local_78 = list_sel_bg_color;
+            bg_color2 = list_sel_bg_color;
           }
-          surface_fill_rect((DibSurface *)local_34,(iptr)&local_2c,local_78);
-          if (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) == -1) {
+          surface_fill_rect((DibSurface *)window,(iptr)&row_rect,bg_color2);
+          if (*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) == -1) {
             text_clear();
-            if ((param_1 == 0) || (parley_mode == 7)) {
+            if ((pane == 0) || (parley_mode == 7)) {
               text_append_label(0x36b);
             }
             else {
               text_append_label(0x36a);
             }
-            puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-            puVar1[0] = '\0';
-            puVar1[1] = '\0';
-            puVar1[2] = '\0';
-            puVar1[3] = '\0';
-            iVar2 = rect_width((iptr)(local_34->pad_3c0 + param_1 * 0x10));
-            iVar3 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-            local_40 = (iVar2 - iVar3) / 2;
+            has_sel = window->pad_200 + pane * 4 - 0x1c;
+            has_sel[0] = '\0';
+            has_sel[1] = '\0';
+            has_sel[2] = '\0';
+            has_sel[3] = '\0';
+            tmp = rect_width((iptr)(window->pad_3c0 + pane * 0x10));
+            tmp2 = font_text_width(font2,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+            text_x_offset = (tmp - tmp2) / 2;
           }
           else {
-            local_58 = sprite_get_width(local_3c);
-            local_58 += panel_margin_x * 2;
-            local_7c = local_58;
-            if ((*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 & 1U) == 0) {
-              local_7c = panel_margin_x;
+            icon_step = sprite_get_width(icon_sprite);
+            icon_step += panel_margin_x * 2;
+            icon_x = icon_step;
+            if ((*(int *)(window[0x3e].pad_48 + pane * 4 + 0x28) + row & 1U) == 0) {
+              icon_x = panel_margin_x;
             }
-            iVar3 = local_50 + local_1c / 2;
-            iVar2 = sprite_get_height(local_3c);
+            tmp2 = row_top + row_height / 2;
+            tmp = sprite_get_height(icon_sprite);
             sprite_draw
-                      (local_3c,(iptr)local_70,ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),local_4c + local_7c,iVar3 - iVar2 / 2);
+                      (icon_sprite,(iptr)sprite_rect,ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),list_left + icon_x,tmp2 - tmp / 2);
             text_clear();
-            iVar4 = label_string(advances[advance].name);
-            text_append(iVar4);
+            name_label = label_string(advances[advance].name);
+            text_append(name_label);
           }
-          if (local_44 != local_38) {
-            gfx_set_text_color_index(local_44);
+          if (shadow_color2 != text_color2) {
+            gfx_set_text_color_index(shadow_color2);
             surface_draw_text
-                      ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_4c + local_40 + 2,
-                       local_50 + local_60 + 1,5);
-            gfx_set_text_color_index(local_38);
+                      ((DibSurface *)window,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),list_left + text_x_offset + 2,
+                       row_top + text_y_offset + 1,5);
+            gfx_set_text_color_index(text_color2);
             surface_draw_text
-                      ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_4c + local_40 + 1,
-                       local_50 + local_60,5);
+                      ((DibSurface *)window,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),list_left + text_x_offset + 1,
+                       row_top + text_y_offset,5);
           }
-          gfx_set_text_color_index(local_38);
+          gfx_set_text_color_index(text_color2);
           surface_draw_text
-                    ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_4c + local_40,
-                     local_50 + local_60,5);
+                    ((DibSurface *)window,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),list_left + text_x_offset,
+                     row_top + text_y_offset,5);
         }
       }
-      surface_set_clip((DibSurface *)local_34,(iptr)local_18);
-      parley_update_buttons(local_34);
-      ctrl_show_and_redraw(*(Control **)(local_34->pad_364 + param_1 * 4 + 0x20))
+      surface_set_clip((DibSurface *)window,(iptr)saved_clip);
+      parley_update_buttons(window);
+      ctrl_show_and_redraw(*(Control **)(window->pad_364 + pane * 4 + 0x20))
       ;
       return;
     }
-    if (*(int *)(param_1 * 0x2004 + local_54 * 4 + 0x8400 + (int)local_34) != 0) {
-      puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-      puVar1[0] = 1;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if (*(int *)(pane * 0x2004 + row * 4 + 0x8400 + (int)window) != 0) {
+      has_sel = window->pad_200 + pane * 4 - 0x1c;
+      has_sel[0] = 1;
+      has_sel[1] = '\0';
+      has_sel[2] = '\0';
+      has_sel[3] = '\0';
       goto LAB_00451089;
     }
-    local_54++;
+    row++;
   } while( true );
 }
 #undef dlg_sel_text_color
@@ -1723,316 +1723,316 @@ LAB_00451089:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef local_7c
-#undef local_78
-#undef local_70
-#undef local_60
+#undef icon_x
+#undef bg_color2
+#undef sprite_rect
+#undef text_y_offset
 #undef advance
-#undef local_58
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_1c
-#undef local_18
-#undef local_8
+#undef icon_step
+#undef row
+#undef row_top
+#undef list_left
+#undef list_width2
+#undef shadow_color2
+#undef text_x_offset
+#undef icon_sprite
+#undef text_color2
+#undef window
+#undef selected2
+#undef row_rect
+#undef row_height
+#undef saved_clip
+#undef font2
 
 /* 004683f0 auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define local_40 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_3c (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_34 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_2c (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
+#define parent22 (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define parent2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define hotspot (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define sb_left (*(int *)(frame_ + FRAME_OFF(28)))
+#define sb_top (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define sb_right (*(int *)(frame_ + FRAME_OFF(36)))
+#define sb_bottom (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define window (*(int *)(frame_ + FRAME_OFF(44)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(56)))
 void __thiscall
-parley_create_unit_list_pane(ListPaneWindow *this,iptr param_1,int param_2,i32 param_3)
+parley_create_unit_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_side)
 
 {
-  u8 *puVar1;
-  int iVar2;
-  int iVar3;
+  u8 *field;
+  int sb_right_orig;
+  int scroll_width;
   Control *pCVar4;
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_14 = wnd_get_active_child();
-  if (local_14 == 0) {
-    local_14 = 0;
+  eh_state = 0xffffffff;
+  window = wnd_get_active_child();
+  if (window == 0) {
+    window = 0;
   }
   else {
-    local_14 -= 0x48;
+    window -= 0x48;
   }
-  *(i32 *)(&parley_list_own_side + param_2 * 4) = param_3;
-  local_24 = *(int *)param_1;
-  local_20 = *(i32 *)(param_1 + 4);
-  local_1c = *(int *)(param_1 + 8);
-  local_18 = *(i32 *)(param_1 + 0xc);
+  *(i32 *)(&parley_list_own_side + pane * 4) = own_side;
+  sb_left = *(int *)rect;
+  sb_top = *(i32 *)(rect + 4);
+  sb_right = *(int *)(rect + 8);
+  sb_bottom = *(i32 *)(rect + 0xc);
   parley_units_by_city = 0;
-  parley_build_unit_list(this,param_2,0);
-  if (*(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) < 1) {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
+  parley_build_unit_list(this,pane,0);
+  if (*(int *)(this[3].pad_48 + pane * 4 + 0x4c) < 1) {
+    field = this[0xea].pad_48 + pane * 4 + 0x30;
+    field[0] = 0xff;
+    field[1] = 0xff;
+    field[2] = 0xff;
+    field[3] = 0xff;
   }
   else {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    field = this[0xea].pad_48 + pane * 4 + 0x30;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
   }
-  puVar1 = this[3].pad_48 + param_2 * 4 + 0x44;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x24) = *(i32 *)param_1;
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x28) = *(i32 *)(param_1 + 4);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) = *(i32 *)(param_1 + 8);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x30) = *(i32 *)(param_1 + 0xc);
-  if (*(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40) <
-      *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c)) {
-    iVar3 = GetSystemMetrics(2);
-    iVar2 = local_1c;
-    *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) =
-         *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) - iVar3;
-    local_24 = GetSystemMetrics(2);
-    local_24 = iVar2 - local_24;
+  field = this[3].pad_48 + pane * 4 + 0x44;
+  field[0] = '\0';
+  field[1] = '\0';
+  field[2] = '\0';
+  field[3] = '\0';
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x24) = *(i32 *)rect;
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x28) = *(i32 *)(rect + 4);
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x2c) = *(i32 *)(rect + 8);
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
+  if (*(int *)(this[0xea].pad_48 + pane * 4 + 0x40) <
+      *(int *)(this[3].pad_48 + pane * 4 + 0x4c)) {
+    scroll_width = GetSystemMetrics(2);
+    sb_right_orig = sb_right;
+    *(int *)(this[3].pad_48 + pane * 0x10 + 0x2c) =
+         *(int *)(this[3].pad_48 + pane * 0x10 + 0x2c) - scroll_width;
+    sb_left = GetSystemMetrics(2);
+    sb_left = sb_right_orig - sb_left;
     pCVar4 = operator_new(0x40);
-    local_8 = 0;
+    eh_state = 0;
     if (pCVar4 == (Control *)0x0) {
-      local_2c = 0;
+      scrollbar = 0;
     }
     else {
-      local_2c = scrollbar_ctor(pCVar4);
+      scrollbar = scrollbar_ctor(pCVar4);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x20) = local_2c;
+    eh_state = 0xffffffff;
+    *(i32 *)(this[3].pad_48 + pane * 4 - 0x20) = scrollbar;
     if (this == (ListPaneWindow *)0x0) {
-      local_3c = (u8 *)0x0;
+      parent2 = (u8 *)0x0;
     }
     else {
-      local_3c = this->pad_48;
+      parent2 = this->pad_48;
     }
     scrollbar_create
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),(iptr)local_3c,
-               param_2 + 0x3fa,(iptr)&local_24,1);
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),(iptr)parent2,
+               pane + 0x3fa,(iptr)&sb_left,1);
     scrollbar_set_range
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),0,
-               *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) -
-               *(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x20),0);
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),0,
+               *(int *)(this[3].pad_48 + pane * 4 + 0x4c) -
+               *(int *)(this[0xea].pad_48 + pane * 4 + 0x40));
+    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + pane * 4 - 0x20),0);
     scrollbar_set_page_size
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               *(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40) - 1);
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),
+               *(int *)(this[0xea].pad_48 + pane * 4 + 0x40) - 1);
     scrollbar_set_callback
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((param_2 == 0) - 1 & 0x276)));
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((pane == 0) - 1 & 0x276)));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((param_2 == 0) - 1 & 0x276)));
+              (*(ScrollbarTrackSetView **)(this[3].pad_48 + pane * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x004035fd, parley_unit_list_scroll_left)) + ((pane == 0) - 1 & 0x276)));
   }
   pCVar4 = operator_new(0x40);
-  local_8 = 1;
+  eh_state = 1;
   if (pCVar4 == (Control *)0x0) {
-    local_34 = 0;
+    hotspot = 0;
   }
   else {
-    local_34 = hotspot_ctor(pCVar4);
+    hotspot = hotspot_ctor(pCVar4);
   }
-  local_8 = 0xffffffff;
-  *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x18) = local_34;
+  eh_state = 0xffffffff;
+  *(i32 *)(this[3].pad_48 + pane * 4 - 0x18) = hotspot;
   if (this == (ListPaneWindow *)0x0) {
-    local_40 = (u8 *)0x0;
+    parent22 = (u8 *)0x0;
   }
   else {
-    local_40 = this->pad_48;
+    parent22 = this->pad_48;
   }
   hotspot_create
-            (*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x18),(iptr)local_40,
-             param_2 + 0x3fc,(iptr)(this[3].pad_48 + param_2 * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x401dac, parley_unit_list_on_click));
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x401dac, parley_unit_list_on_click));
-  parley_draw_unit_list(param_2);
+            (*(ClickControl **)(this[3].pad_48 + pane * 4 - 0x18),(iptr)parent22,
+             pane + 0x3fc,(iptr)(this[3].pad_48 + pane * 0x10 + 0x24));
+  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + pane * 4 - 0x18),ADDR(0x401dac, parley_unit_list_on_click));
+  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + pane * 4 - 0x18),ADDR(0x401dac, parley_unit_list_on_click));
+  parley_draw_unit_list(pane);
   return;
 }
 #undef parley_units_by_city
-#undef local_40
-#undef local_3c
-#undef local_34
-#undef local_2c
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef parent22
+#undef parent2
+#undef hotspot
+#undef scrollbar
+#undef sb_left
+#undef sb_top
+#undef sb_right
+#undef sb_bottom
+#undef window
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 00468797 auto */
-void __cdecl parley_unit_list_scroll_left(i32 param_1)
+void __cdecl parley_unit_list_scroll_left(i32 pos)
 
 {
-  parley_unit_list_on_scroll(0,param_1);
+  parley_unit_list_on_scroll(0,pos);
   return;
 }
 
 /* 004687d3 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_unit_list_on_scroll(int param_1,i32 param_2)
+#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_unit_list_on_scroll(int pane,i32 pos)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    window = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 + 0x10410 + param_1 * 4) = param_2;
-  parley_draw_unit_list(param_1);
+  wnd_activate((Wnd *)(window + 0x48));
+  *(i32 *)(window + 0x10410 + pane * 4) = pos;
+  parley_draw_unit_list(pane);
   return;
 }
-#undef local_8
+#undef window
 
 /* 00468834 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl parley_unit_list_on_click(int param_1)
+#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define pane (*(int *)(frame_ + FRAME_OFF(20)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(24)))
+void __cdecl parley_unit_list_on_click(int control_id)
 
 {
-  uint *puVar1;
-  int iVar2;
-  int iVar3;
+  uint *sel_flag;
+  int row;
+  int key_down;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  row = wnd_get_active_child();
+  if (row == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    window = row - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  local_c = param_1 - 0x3fc;
+  wnd_activate((Wnd *)(window + 0x48));
+  pane = control_id - 0x3fc;
   wnd_get_cursor_pos
-            ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
-  if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = parley_unit_list_hit_test(local_10,local_14,local_c), -1 < iVar2)) &&
-     (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
-    iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
-    if (iVar3 == 0) {
-      iVar3 = wnd_is_ctrl_down((void *)(local_8 + 0x48));
-      if (iVar3 == 0) {
-        for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4);
-            local_18 = local_18 + 1) {
-          if (local_18 != iVar2) {
-            *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 0;
+            ((WndBase *)(window + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((*(int *)(window + 1000 + pane * 4) != 0) &&
+      (row = parley_unit_list_hit_test(cursor_x,cursor_y,pane), -1 < row)) &&
+     (row < *(int *)(window + 1000 + pane * 4))) {
+    key_down = wnd_is_shift_down((void *)(window + 0x48));
+    if (key_down == 0) {
+      key_down = wnd_is_ctrl_down((void *)(window + 0x48));
+      if (key_down == 0) {
+        for (i = 0; i < *(int *)(window + 1000 + pane * 4);
+            i = i + 1) {
+          if (i != row) {
+            *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 0;
           }
         }
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(local_c * 0x2004 + iVar2 * 4 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(window + 0x10418 + pane * 4) = row;
+        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + window);
+        *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(local_c * 0x2004 + iVar2 * 4 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(window + 0x10418 + pane * 4) = row;
+        sel_flag = (uint *)(pane * 0x2004 + row * 4 + 0x8400 + window);
+        *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4); local_18++)
+      for (i = 0; i < *(int *)(window + 1000 + pane * 4); i++)
       {
-        *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 0;
+        *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 0;
       }
-      if (*(int *)(local_8 + 0x10418 + local_c * 4) < iVar2) {
-        local_18 = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_1c = iVar2;
+      if (*(int *)(window + 0x10418 + pane * 4) < row) {
+        i = *(int *)(window + 0x10418 + pane * 4);
+        range_end = row;
       }
       else {
-        local_1c = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_18 = iVar2;
+        range_end = *(int *)(window + 0x10418 + pane * 4);
+        i = row;
       }
-      for (; local_18 <= local_1c; local_18++) {
-        *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 1;
+      for (; i <= range_end; i++) {
+        *(i32 *)(pane * 0x2004 + i * 4 + 0x8400 + window) = 1;
       }
     }
-    parley_draw_unit_list(local_c);
+    parley_draw_unit_list(pane);
   }
   return;
 }
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef range_end
+#undef i
+#undef cursor_y
+#undef cursor_x
+#undef pane
+#undef window
 
 /* 00468aa7 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl parley_unit_list_hit_test(int param_1,int param_2,int param_3)
+#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
+int __cdecl parley_unit_list_hit_test(int px,int py,int pane)
 
 {
-  iptr iVar1;
-  int iVar2;
-  int iVar3;
+  iptr child;
+  int result;
+  int list_height;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    window = child - 0x48;
   }
-  if (param_2 < *(int *)(param_3 * 0x10 + 0x3c4 + local_8)) {
-    iVar2 = -1;
+  if (py < *(int *)(pane * 0x10 + 0x3c4 + window)) {
+    result = -1;
   }
-  else if (param_2 < *(int *)(param_3 * 0x10 + 0x3cc + local_8)) {
-    if (param_1 < *(int *)(param_3 * 0x10 + 0x3c0 + local_8)) {
-      iVar2 = -3;
+  else if (py < *(int *)(pane * 0x10 + 0x3cc + window)) {
+    if (px < *(int *)(pane * 0x10 + 0x3c0 + window)) {
+      result = -3;
     }
-    else if (param_1 < *(int *)(param_3 * 0x10 + 0x3c8 + local_8)) {
-      iVar2 = *(int *)(param_3 * 0x10 + 0x3c4 + local_8);
-      iVar3 = rect_height(param_3 * 0x10 + local_8 + 0x3c0);
-      iVar2 = (param_2 - iVar2) / (iVar3 / *(int *)(local_8 + 0x10420 + param_3 * 4)) +
-              *(int *)(local_8 + 0x10410 + param_3 * 4);
+    else if (px < *(int *)(pane * 0x10 + 0x3c8 + window)) {
+      result = *(int *)(pane * 0x10 + 0x3c4 + window);
+      list_height = rect_height(pane * 0x10 + window + 0x3c0);
+      result = (py - result) / (list_height / *(int *)(window + 0x10420 + pane * 4)) +
+              *(int *)(window + 0x10410 + pane * 4);
     }
     else {
-      iVar2 = -4;
+      result = -4;
     }
   }
   else {
-    iVar2 = -2;
+    result = -2;
   }
-  return iVar2;
+  return result;
 }
-#undef local_8
+#undef window
 
 /* 00468bb9 auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -2042,212 +2042,212 @@ int __cdecl parley_unit_list_hit_test(int param_1,int param_2,int param_3)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define parley_units_by_city (*(int *)((u8 *)&g.d_0066be78))
-#define local_80 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_7c (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_78 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_70 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_60 (*(int *)(frame_ + FRAME_OFF(32)))
+#define icon_x (*(int *)(frame_ + FRAME_OFF(0)))
+#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define icon_width (*(int *)(frame_ + FRAME_OFF(8)))
+#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define text_y_offset (*(int *)(frame_ + FRAME_OFF(32)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_54 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(56)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_3c (*(Sprite * *)(frame_ + FRAME_OFF(68)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(72)))
+#define icon_step (*(int *)(frame_ + FRAME_OFF(40)))
+#define row (*(int *)(frame_ + FRAME_OFF(44)))
+#define row_top (*(int *)(frame_ + FRAME_OFF(48)))
+#define list_left (*(int *)(frame_ + FRAME_OFF(52)))
+#define list_width2 (*(int *)(frame_ + FRAME_OFF(56)))
+#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(60)))
+#define text_x_offset (*(int *)(frame_ + FRAME_OFF(64)))
+#define unit_sprite (*(Sprite * *)(frame_ + FRAME_OFF(68)))
+#define text_color2 (*(int *)(frame_ + FRAME_OFF(72)))
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(76)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(84)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(100)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
-#define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
-void __cdecl parley_draw_unit_list(iptr param_1)
+#define selected2 (*(int *)(frame_ + FRAME_OFF(80)))
+#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(84)))
+#define row_height (*(int *)(frame_ + FRAME_OFF(100)))
+#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(104)))
+#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(120)))
+void __cdecl parley_draw_unit_list(iptr pane)
 
 {
-  u8 *puVar1;
-  int iVar2;
-  int iVar3;
-  iptr iVar4;
-  int iVar5;
-  i32 uVar6;
+  u8 *has_sel;
+  int tmp;
+  int tmp2;
+  iptr str;
+  int row_mid;
+  i32 denom;
   i8 frame_[FRAME_OFF(128)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
+  tmp = wnd_get_active_child();
+  if (tmp == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar2 - 0x48);
+    this2 = (ViewWindow *)(tmp - 0x48);
   }
-  surface_get_clip((DibSurface *)this2,(iptr)local_18);
-  surface_set_clip((DibSurface *)this2,(iptr)(this2->pad_3c0 + param_1 * 0x10));
+  surface_get_clip((DibSurface *)this2,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10));
 LAB_00468c0c:
   surface_fill_rect
-            ((DibSurface *)this2,(iptr)(this2->pad_3c0 + param_1 * 0x10),list_bg_color);
+            ((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10),list_bg_color);
   if (this2->field_154 == 0) {
-    local_8 = (GameFont *)&font_size14;
+    font2 = (GameFont *)&font_size14;
   }
   else {
-    local_8 = (GameFont *)&font_size21;
+    font2 = (GameFont *)&font_size21;
   }
-  local_4c = *(int *)(this2->pad_3c0 + param_1 * 0x10);
-  local_48 = rect_width((iptr)(this2->pad_3c0 + param_1 * 0x10));
-  local_1c = rect_height((iptr)(this2->pad_3c0 + param_1 * 0x10));
-  local_1c = local_1c / *(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x38);
-  iVar2 = local_1c / 2;
-  iVar3 = font_cached_height(local_8);
-  local_60 = iVar2 - iVar3 / 2;
-  puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  for (local_54 = 0; local_54 < *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28);
-      local_54 = local_54 + 1) {
-    if (*(int *)(local_54 * 4 + param_1 * 0x2004 + 0x8400 + (int)this2) != 0) {
-      puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-      puVar1[0] = 1;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+  list_left = *(int *)(this2->pad_3c0 + pane * 0x10);
+  list_width2 = rect_width((iptr)(this2->pad_3c0 + pane * 0x10));
+  row_height = rect_height((iptr)(this2->pad_3c0 + pane * 0x10));
+  row_height = row_height / *(int *)(this2[0x3e].pad_48 + pane * 4 + 0x38);
+  tmp = row_height / 2;
+  tmp2 = font_cached_height(font2);
+  text_y_offset = tmp - tmp2 / 2;
+  has_sel = this2->pad_200 + pane * 4 - 0x1c;
+  has_sel[0] = '\0';
+  has_sel[1] = '\0';
+  has_sel[2] = '\0';
+  has_sel[3] = '\0';
+  for (row = 0; row < *(int *)(this2->pad_3c0 + pane * 4 + 0x28);
+      row = row + 1) {
+    if (*(int *)(row * 4 + pane * 0x2004 + 0x8400 + (int)this2) != 0) {
+      has_sel = this2->pad_200 + pane * 4 - 0x1c;
+      has_sel[0] = 1;
+      has_sel[1] = '\0';
+      has_sel[2] = '\0';
+      has_sel[3] = '\0';
       break;
     }
   }
-  local_54 = 0;
+  row = 0;
   do {
-    if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x38) <= local_54) {
+    if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x38) <= row) {
 LAB_004692ba:
-      surface_set_clip((DibSurface *)this2,(iptr)local_18);
+      surface_set_clip((DibSurface *)this2,(iptr)saved_clip);
       parley_update_buttons(this2);
-      ctrl_show_and_redraw(*(Control **)(this2->pad_364 + param_1 * 4 + 0x20))
+      ctrl_show_and_redraw(*(Control **)(this2->pad_364 + pane * 4 + 0x20))
       ;
       return;
     }
-    local_50 = *(int *)(this2->pad_3c0 + param_1 * 0x10 + 4) + local_1c * local_54;
-    SetRect(&local_2c,local_4c,local_50,local_48 + local_4c,local_1c + local_50);
-    if ((local_54 != 0) && (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) == -1))
+    row_top = *(int *)(this2->pad_3c0 + pane * 0x10 + 4) + row_height * row;
+    SetRect(&row_rect,list_left,row_top,list_width2 + list_left,row_height + row_top);
+    if ((row != 0) && (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) == -1))
     goto LAB_004692ba;
-    if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 <
-        *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) {
-      local_30 = *(int *)(param_1 * 0x2004 +
-                          (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54) * 4 +
+    if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row <
+        *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) {
+      selected2 = *(int *)(pane * 0x2004 +
+                          (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row) * 4 +
                           0x8400 + (int)this2);
-      if (local_30 == 0) {
-        local_38 = list_text_color;
-        local_44 = list_shadow_color;
+      if (selected2 == 0) {
+        text_color2 = list_text_color;
+        shadow_color2 = list_shadow_color;
       }
       else {
-        local_38 = dlg_sel_text_color;
-        local_44 = dlg_sel_text_shadow_color;
+        text_color2 = dlg_sel_text_color;
+        shadow_color2 = dlg_sel_text_shadow_color;
       }
       unit = 0;
-      if ((0 < *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) &&
+      if ((0 < *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) &&
          (unit = parley_find_unit_by_id
                                ((WindowObjectView *)this2,
                                 *(i32 *)
-                                 (param_1 * 0x2004 +
-                                  (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54)
+                                 (pane * 0x2004 +
+                                  (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row)
                                   * 4 + 0x43f8 + (int)this2)), unit < 0)) break;
-      local_3c = (Sprite *)(&unit_sprites + (uint)units[unit].type * 0x3c);
+      unit_sprite = (Sprite *)(&unit_sprites + (uint)units[unit].type * 0x3c);
       if (this2->field_154 == 0) {
-        iVar2 = sprite_get_width(local_3c);
-        local_78 = (iVar2 * 2) / 3;
+        tmp = sprite_get_width(unit_sprite);
+        icon_width = (tmp * 2) / 3;
       }
       else {
-        local_78 = sprite_get_width(local_3c);
+        icon_width = sprite_get_width(unit_sprite);
       }
-      local_40 = (-(uint)(this2->field_154 == 0) & 0xfffffffc) + 10 + local_78 * 2;
-      local_2c.left = local_2c.left + local_40 - 3;
-      if (local_30 == 0) {
-        local_7c = list_bg_color;
+      text_x_offset = (-(uint)(this2->field_154 == 0) & 0xfffffffc) + 10 + icon_width * 2;
+      row_rect.left = row_rect.left + text_x_offset - 3;
+      if (selected2 == 0) {
+        bg_color2 = list_bg_color;
       }
       else {
-        local_7c = list_sel_bg_color;
+        bg_color2 = list_sel_bg_color;
       }
-      surface_fill_rect((DibSurface *)this2,(iptr)&local_2c,local_7c);
-      if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) == -1) {
+      surface_fill_rect((DibSurface *)this2,(iptr)&row_rect,bg_color2);
+      if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) == -1) {
         text_clear();
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xb7c));
-        text_append(iVar4);
-        puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-        puVar1[0] = '\0';
-        puVar1[1] = '\0';
-        puVar1[2] = '\0';
-        puVar1[3] = '\0';
-        iVar2 = rect_width((iptr)(this2->pad_3c0 + param_1 * 0x10));
-        iVar3 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        local_40 = (iVar2 - iVar3) / 2;
+        str = label_string(*(i32 *)(label_string_ids + 0xb7c));
+        text_append(str);
+        has_sel = this2->pad_200 + pane * 4 - 0x1c;
+        has_sel[0] = '\0';
+        has_sel[1] = '\0';
+        has_sel[2] = '\0';
+        has_sel[3] = '\0';
+        tmp = rect_width((iptr)(this2->pad_3c0 + pane * 0x10));
+        tmp2 = font_text_width(font2,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+        text_x_offset = (tmp - tmp2) / 2;
       }
       else {
-        uVar6 = 0x30;
-        iVar2 = font_cached_height(local_8);
-        gfx_set_scale_ratio(iVar2 * 2,uVar6);
-        iVar2 = font_cached_height(local_8);
-        local_58 = (iVar2 << 7) / 0x30;
-        local_80 = local_58;
-        if ((*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 & 1U) == 0) {
-          local_80 = 0;
+        denom = 0x30;
+        tmp = font_cached_height(font2);
+        gfx_set_scale_ratio(tmp * 2,denom);
+        tmp = font_cached_height(font2);
+        icon_step = (tmp << 7) / 0x30;
+        icon_x = icon_step;
+        if ((*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row & 1U) == 0) {
+          icon_x = 0;
         }
-        iVar5 = local_50 + local_1c / 2;
-        iVar2 = sprite_get_height(local_3c);
-        iVar3 = font_cached_height(local_8);
+        row_mid = row_top + row_height / 2;
+        tmp = sprite_get_height(unit_sprite);
+        tmp2 = font_cached_height(font2);
         sprite_draw
-                  (local_3c,(iptr)local_70,ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),local_4c + local_80,
-                   iVar5 - (iVar2 * iVar3) / 0x30);
+                  (unit_sprite,(iptr)sprite_rect,ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),list_left + icon_x,
+                   row_mid - (tmp * tmp2) / 0x30);
         gfx_set_scale_ratio(1,1);
         if (parley_units_by_city == 0) {
           text_clear();
           text_append_string_id(unit_types[units[unit].type].name);
           if (((parley_mode == 9) ||
-              (((parley_mode == 0xe && (param_1 == 0)) && (this2->field_3bd != '\0')))) ||
-             ((((parley_mode == 0xe && (param_1 == 1)) && (this2->field_3bc != '\0')) ||
+              (((parley_mode == 0xe && (pane == 0)) && (this2->field_3bd != '\0')))) ||
+             ((((parley_mode == 0xe && (pane == 1)) && (this2->field_3bc != '\0')) ||
               ((parley_mode == 0xf && (this2->field_3bc != '\0')))))) {
             text_append_str(ADDR(0x62840c, ((u8 *)&g.d_0062840c)));
-            iVar4 = unit_home_city_name(unit);
-            text_append_str(iVar4);
+            str = unit_home_city_name(unit);
+            text_append_str(str);
             text_append_str(ADDR(0x628410, ((u8 *)&g.d_00628410)));
           }
         }
         else {
           text_clear();
-          iVar4 = unit_home_city_name(unit);
-          text_append_str(iVar4);
+          str = unit_home_city_name(unit);
+          text_append_str(str);
           text_append_str(ADDR(0x628414, ((u8 *)&g.d_00628414)));
           text_append_string_id(unit_types[units[unit].type].name);
           text_append_str(ADDR(0x628418, ((u8 *)&g.d_00628418)));
         }
       }
-      if (local_44 != local_38) {
-        gfx_set_text_color_index(local_44);
+      if (shadow_color2 != text_color2) {
+        gfx_set_text_color_index(shadow_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_40 + local_4c + 2,
-                   local_60 + local_50 + 1,5);
-        gfx_set_text_color_index(local_38);
+                  ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_x_offset + list_left + 2,
+                   text_y_offset + row_top + 1,5);
+        gfx_set_text_color_index(text_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_40 + local_4c + 1,
-                   local_60 + local_50,5);
+                  ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_x_offset + list_left + 1,
+                   text_y_offset + row_top,5);
       }
-      gfx_set_text_color_index(local_38);
+      gfx_set_text_color_index(text_color2);
       surface_draw_text
-                ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_40 + local_4c,
-                 local_60 + local_50,5);
+                ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_x_offset + list_left,
+                 text_y_offset + row_top,5);
     }
-    local_54++;
+    row++;
   } while( true );
-  parley_build_unit_list((ListPaneWindow *)this2,param_1,1);
-  if (*(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) == 0) {
-    puVar1 = this2[0x3e].pad_48 + param_1 * 4 + 0x28;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
+  parley_build_unit_list((ListPaneWindow *)this2,pane,1);
+  if (*(int *)(this2->pad_3c0 + pane * 4 + 0x28) == 0) {
+    has_sel = this2[0x3e].pad_48 + pane * 4 + 0x28;
+    has_sel[0] = 0xff;
+    has_sel[1] = 0xff;
+    has_sel[2] = 0xff;
+    has_sel[3] = 0xff;
   }
-  else if (*(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) <
-           *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) {
-    *(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) =
-         *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) - 1;
+  else if (*(int *)(this2->pad_3c0 + pane * 4 + 0x28) <
+           *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) {
+    *(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) =
+         *(int *)(this2->pad_3c0 + pane * 4 + 0x28) - 1;
   }
   goto LAB_00468c0c;
 }
@@ -2258,92 +2258,92 @@ LAB_004692ba:
 #undef list_shadow_color
 #undef list_text_color
 #undef parley_units_by_city
-#undef local_80
-#undef local_7c
-#undef local_78
-#undef local_70
-#undef local_60
+#undef icon_x
+#undef bg_color2
+#undef icon_width
+#undef sprite_rect
+#undef text_y_offset
 #undef unit
-#undef local_58
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
+#undef icon_step
+#undef row
+#undef row_top
+#undef list_left
+#undef list_width2
+#undef shadow_color2
+#undef text_x_offset
+#undef unit_sprite
+#undef text_color2
 #undef this2
-#undef local_30
-#undef local_2c
-#undef local_1c
-#undef local_18
-#undef local_8
+#undef selected2
+#undef row_rect
+#undef row_height
+#undef saved_clip
+#undef font2
 
 /* 004692ea auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_reveal_city_origin_clicked(void)
 
 {
-  iptr iVar1;
+  iptr child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    window = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  ctrl_show_and_redraw(*(Control **)(local_8 + 0x3a4));
-  control_hide(*(Control **)(local_8 + 0x39c));
-  *(i8 *)(local_8 + 0x3bd) = 1;
-  ctrl_enable(*(Control **)(local_8 + 0x38c));
-  ctrl_enable(*(Control **)(local_8 + 0x394));
+  wnd_activate((Wnd *)(window + 0x48));
+  ctrl_show_and_redraw(*(Control **)(window + 0x3a4));
+  control_hide(*(Control **)(window + 0x39c));
+  *(i8 *)(window + 0x3bd) = 1;
+  ctrl_enable(*(Control **)(window + 0x38c));
+  ctrl_enable(*(Control **)(window + 0x394));
   net_send_message(0xa7,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3bd),0,0,0,0,0,0);
+                           *(int *)(&net_civ_slots + *(int *)(window + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(window + 0x3bd),0,0,0,0,0,0);
   parley_draw_unit_list(0);
   return;
 }
 #undef human_civ
-#undef local_8
+#undef window
 
 /* 004693c5 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
+#define window (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_hide_city_origin_clicked(void)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (WindowObjectView *)0x0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = (WindowObjectView *)0x0;
   }
   else {
-    local_8 = (WindowObjectView *)(iVar1 - 0x48);
+    window = (WindowObjectView *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(local_8 + 0x12));
-  ctrl_show_and_redraw((Control *)local_8[0xe7].field_0);
-  control_hide((Control *)local_8[0xe9].field_0);
-  *(i8 *)((int)&local_8[0xef].field_0 + 1) = 0;
-  ctrl_disable((Control *)local_8[0xe3].field_0);
-  ctrl_disable((Control *)local_8[0xe5].field_0);
+  wnd_activate((Wnd *)(window + 0x12));
+  ctrl_show_and_redraw((Control *)window[0xe7].field_0);
+  control_hide((Control *)window[0xe9].field_0);
+  *(i8 *)((int)&window[0xef].field_0 + 1) = 0;
+  ctrl_disable((Control *)window[0xe3].field_0);
+  ctrl_disable((Control *)window[0xe5].field_0);
   net_send_message(0xa8,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + local_8[0x46].field_0 * 4) * 0x54),human_civ
-                     ,(int)*(char *)((int)&local_8[0xef].field_0 + 1),0,0,0,0,0,0);
-  parley_sort_unit_list(local_8,0,local_8[0xfa].field_0 - 1,0);
+                           *(int *)(&net_civ_slots + window[0x46].field_0 * 4) * 0x54),human_civ
+                     ,(int)*(char *)((int)&window[0xef].field_0 + 1),0,0,0,0,0,0);
+  parley_sort_unit_list(window,0,window[0xfa].field_0 - 1,0);
   parley_draw_unit_list(0);
   return;
 }
 #undef human_civ
-#undef local_8
+#undef window
 
 /* 00469547 auto */
 void __cdecl parley_sort_by_city_left_clicked(void)
@@ -2354,26 +2354,26 @@ void __cdecl parley_sort_by_city_left_clicked(void)
 }
 
 /* 0046957b auto */
-#define local_8 (*(void * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_sort_by_city_clicked(iptr param_1)
+#define window (*(void * *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_sort_by_city_clicked(iptr pane)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (void *)0x0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = (void *)0x0;
   }
   else {
-    local_8 = (void *)(iVar1 - 0x48);
+    window = (void *)(child - 0x48);
   }
-  wnd_activate((Wnd *)((int)local_8 + 0x48));
-  parley_sort_units_by_city(local_8,0,*(int *)((int)local_8 + param_1 * 4 + 1000) - 1,param_1);
-  parley_draw_unit_list(param_1);
+  wnd_activate((Wnd *)((int)window + 0x48));
+  parley_sort_units_by_city(window,0,*(int *)((int)window + pane * 4 + 1000) - 1,pane);
+  parley_draw_unit_list(pane);
   return;
 }
-#undef local_8
+#undef window
 
 /* 004695e9 auto */
 void __cdecl parley_sort_by_unit_left_clicked(void)
@@ -2384,70 +2384,70 @@ void __cdecl parley_sort_by_unit_left_clicked(void)
 }
 
 /* 0046961d auto */
-#define local_8 (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_sort_by_unit_clicked(iptr param_1)
+#define window (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_sort_by_unit_clicked(iptr pane)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (WindowObjectView *)0x0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = (WindowObjectView *)0x0;
   }
   else {
-    local_8 = (WindowObjectView *)(iVar1 - 0x48);
+    window = (WindowObjectView *)(child - 0x48);
   }
-  wnd_activate((Wnd *)(local_8 + 0x12));
-  parley_sort_unit_list(local_8,0,local_8[param_1 + 0xfa].field_0 - 1,param_1);
-  parley_draw_unit_list(param_1);
+  wnd_activate((Wnd *)(window + 0x12));
+  parley_sort_unit_list(window,0,window[pane + 0xfa].field_0 - 1,pane);
+  parley_draw_unit_list(pane);
   return;
 }
-#undef local_8
+#undef window
 
 /* 0046968b auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall parley_sort_unit_list(WindowObjectView *this,int param_1,int param_2,iptr param_3)
+#define j (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(16)))
+void __thiscall parley_sort_unit_list(WindowObjectView *this,int first,int last,iptr pane)
 
 {
-  i32 uVar1;
-  iptr iVar2;
-  int iVar3;
+  i32 swap;
+  iptr child;
+  int cmp;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    window = child - 0x48;
   }
-  if (1 < *(int *)(local_8 + 1000 + param_3 * 4)) {
+  if (1 < *(int *)(window + 1000 + pane * 4)) {
     parley_units_by_city = 0;
-    for (local_10 = param_1; local_14 = local_10, local_10 < param_2; local_10++) {
-      while (local_14 = local_14 + 1, local_14 <= param_2) {
-        iVar3 = _strcmp(*(char **)(&unit_type_name_ptrs +
-                                  (uint)units[*(int *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 +
-                                                      local_8)].type * 4),
+    for (i = first; j = i, i < last; i++) {
+      while (j = j + 1, j <= last) {
+        cmp = _strcmp(*(char **)(&unit_type_name_ptrs +
+                                  (uint)units[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 +
+                                                      window)].type * 4),
                         *(char **)(&unit_type_name_ptrs +
-                                  (uint)units[*(int *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 +
-                                                      local_8)].type * 4));
-        if (0 < iVar3) {
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) = uVar1;
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) = uVar1;
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8) = uVar1;
+                                  (uint)units[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 +
+                                                      window)].type * 4));
+        if (0 < cmp) {
+          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window) = swap;
+          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window) = swap;
+          swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window) = swap;
         }
       }
     }
@@ -2455,178 +2455,178 @@ void __thiscall parley_sort_unit_list(WindowObjectView *this,int param_1,int par
   return;
 }
 #undef parley_units_by_city
-#undef local_14
-#undef local_10
-#undef local_8
+#undef j
+#undef i
+#undef window
 
 /* 0046990a auto */
 #define parley_units_by_city (*(i32 *)((u8 *)&g.d_0066be78))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall parley_sort_units_by_city(void *this,int param_1,int param_2,iptr param_3)
+#define j (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(16)))
+void __thiscall parley_sort_units_by_city(void *this,int first,int last,iptr pane)
 
 {
-  i32 uVar1;
-  iptr iVar2;
+  i32 swap;
+  iptr child;
   char *_Str2;
   char *_Str1;
-  int iVar3;
+  int cmp;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    window = child - 0x48;
   }
-  if (*(int *)(local_8 + 1000 + param_3 * 4) < 2) {
+  if (*(int *)(window + 1000 + pane * 4) < 2) {
     return;
   }
   parley_units_by_city = 1;
-  local_10 = param_1;
+  i = first;
 LAB_0046996e:
-  local_14 = local_10;
-  if (param_2 <= local_10) {
+  j = i;
+  if (last <= i) {
     return;
   }
 LAB_00469989:
   do {
-    local_14++;
-    if (param_2 < local_14) break;
-    if (units[*(int *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8)].home_city != -1) {
-      if (units[*(int *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8)].home_city != -1) {
-        _Str2 = (char *)unit_home_city_name(*(iptr *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 +
-                                                    local_8));
-        _Str1 = (char *)unit_home_city_name(*(iptr *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 +
-                                                    local_8));
-        iVar3 = _strcmp(_Str1,_Str2);
-        if (iVar3 < 1) goto LAB_00469989;
+    j++;
+    if (last < j) break;
+    if (units[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 + window)].home_city != -1) {
+      if (units[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 + window)].home_city != -1) {
+        _Str2 = (char *)unit_home_city_name(*(iptr *)(j * 4 + pane * 0x2004 + 0x3f0 +
+                                                    window));
+        _Str1 = (char *)unit_home_city_name(*(iptr *)(i * 4 + pane * 0x2004 + 0x3f0 +
+                                                    window));
+        cmp = _strcmp(_Str1,_Str2);
+        if (cmp < 1) goto LAB_00469989;
       }
-      uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-      *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) =
-           *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-      *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) = uVar1;
-      uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-      *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) =
-           *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-      *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) = uVar1;
-      uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-      *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8) =
-           *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-      *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8) = uVar1;
+      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window);
+      *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + window) =
+           *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window);
+      *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + window) = swap;
+      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window);
+      *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + window) =
+           *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window);
+      *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + window) = swap;
+      swap = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window);
+      *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + window) =
+           *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window);
+      *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + window) = swap;
     }
   } while( true );
-  local_10++;
+  i++;
   goto LAB_0046996e;
 }
 #undef parley_units_by_city
-#undef local_14
-#undef local_10
-#undef local_8
+#undef j
+#undef i
+#undef window
 
 /* 00469bdc auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define parley_units_by_city (*(int *)((u8 *)&g.d_0066be78))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_18 (*(void * *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(40)))
-void __thiscall parley_build_unit_list(ListPaneWindow *this,int param_1,int param_2)
+#define old_count (*(int *)(frame_ + FRAME_OFF(4)))
+#define k (*(int *)(frame_ + FRAME_OFF(8)))
+#define selected_ids (*(void * *)(frame_ + FRAME_OFF(24)))
+#define dir (*(iptr *)(frame_ + FRAME_OFF(36)))
+#define window (*(iptr *)(frame_ + FRAME_OFF(40)))
+void __thiscall parley_build_unit_list(ListPaneWindow *this,int pane,int keep_selection)
 
 {
-  int *piVar1;
+  int *count_ptr;
   short x2;
   short y2;
-  bool bVar4;
-  iptr iVar5;
+  bool near_land;
+  iptr child;
   iptr x;
   int y;
-  int iVar8;
+  int in_bounds;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_18 = (void *)0x0;
-  iVar5 = wnd_get_active_child();
-  if (iVar5 == 0) {
-    local_8 = 0;
+  selected_ids = (void *)0x0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    window = 0;
   }
   else {
-    local_8 = iVar5 - 0x48;
+    window = child - 0x48;
   }
-  if (param_2 != 0) {
-    local_18 = operator_new(*(int *)(local_8 + 1000 + param_1 * 4) << 2);
-    if (local_18 == (void *)0x0) {
-      param_2 = 0;
+  if (keep_selection != 0) {
+    selected_ids = operator_new(*(int *)(window + 1000 + pane * 4) << 2);
+    if (selected_ids == (void *)0x0) {
+      keep_selection = 0;
     }
     else {
-      local_2c = *(int *)(local_8 + 1000 + param_1 * 4);
-      for (unit = 0; unit < local_2c; unit++) {
-        if (*(int *)(param_1 * 0x2004 + unit * 4 + 0x8400 + local_8) == 0) {
-          *(i32 *)((int)local_18 + unit * 4) = 0xffffffff;
+      old_count = *(int *)(window + 1000 + pane * 4);
+      for (unit = 0; unit < old_count; unit++) {
+        if (*(int *)(pane * 0x2004 + unit * 4 + 0x8400 + window) == 0) {
+          *(i32 *)((int)selected_ids + unit * 4) = 0xffffffff;
         }
         else {
-          *(i32 *)((int)local_18 + unit * 4) =
-               *(i32 *)(param_1 * 0x2004 + unit * 4 + 0x43f8 + local_8);
+          *(i32 *)((int)selected_ids + unit * 4) =
+               *(i32 *)(pane * 0x2004 + unit * 4 + 0x43f8 + window);
         }
       }
     }
   }
-  *(i32 *)(local_8 + 1000 + param_1 * 4) = 0;
+  *(i32 *)(window + 1000 + pane * 4) = 0;
   unit = 0;
   do {
     if (game.num_units <= unit) {
-      if ((param_2 != 0) && (local_18 != (void *)0x0)) {
-        operator_delete(local_18);
+      if ((keep_selection != 0) && (selected_ids != (void *)0x0)) {
+        operator_delete(selected_ids);
       }
       if (parley_units_by_city == 0) {
         parley_sort_unit_list
-                  ((WindowObjectView *)this,0,*(int *)(local_8 + 1000 + param_1 * 4) - 1,param_1);
+                  ((WindowObjectView *)this,0,*(int *)(window + 1000 + pane * 4) - 1,pane);
       }
       else {
-        parley_sort_units_by_city(this,0,*(int *)(local_8 + 1000 + param_1 * 4) - 1,param_1);
+        parley_sort_units_by_city(this,0,*(int *)(window + 1000 + pane * 4) - 1,pane);
       }
       return;
     }
     if ((units[unit].id != 0) &&
-       (((*(int *)(&parley_list_own_side + param_1 * 4) != 0 && (units[unit].owner == human_civ)) ||
-        (((*(int *)(&parley_list_own_side + param_1 * 4) == 0 &&
+       (((*(int *)(&parley_list_own_side + pane * 4) != 0 && (units[unit].owner == human_civ)) ||
+        (((*(int *)(&parley_list_own_side + pane * 4) == 0 &&
           ((int)units[unit].owner == this->caption_height)) &&
          (((1 << ((byte)human_civ & 0x1f) & (uint)units[unit].visibility) != 0 ||
           ((int)units[unit].owner == (human_civ & 0xffU))))))))) {
       x2 = units[unit].x;
       y2 = units[unit].y;
-      bVar4 = false;
-      for (local_c = 0; local_c < 8; local_c++) {
-        x = map_wrap_x((int)(char)(&dir_dx_table)[local_c] + (int)x2);
-        y = (int)(char)(&dir_dy_table)[local_c] + (int)y2;
-        iVar8 = map_in_bounds(x,y);
-        if ((iVar8 != 0) && (y = tile_is_ocean(x,y), y == 0)) {
-          bVar4 = true;
+      near_land = false;
+      for (dir = 0; dir < 8; dir++) {
+        x = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)x2);
+        y = (int)(char)(&dir_dy_table)[dir] + (int)y2;
+        in_bounds = map_in_bounds(x,y);
+        if ((in_bounds != 0) && (y = tile_is_ocean(x,y), y == 0)) {
+          near_land = true;
           break;
         }
       }
-      if ((bVar4) || (y = unit_stack_sum(unit,2), y == 1)) {
-        *(iptr *)(param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x3f0 + local_8) =
+      if ((near_land) || (y = unit_stack_sum(unit,2), y == 1)) {
+        *(iptr *)(pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x3f0 + window) =
              unit;
-        *(i32 *)(param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x43f8 + local_8) =
+        *(i32 *)(pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x43f8 + window) =
              units[unit].id;
         *(i32 *)
-         (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x8400 + local_8) = 0;
-        if ((param_2 == 1) && (local_18 != (void *)0x0)) {
-          for (local_28 = 0; local_28 < local_2c; local_28++) {
-            if (units[unit].id == *(int *)((int)local_18 + local_28 * 4)) {
+         (pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x8400 + window) = 0;
+        if ((keep_selection == 1) && (selected_ids != (void *)0x0)) {
+          for (k = 0; k < old_count; k++) {
+            if (units[unit].id == *(int *)((int)selected_ids + k * 4)) {
               *(i32 *)
-               (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x8400 + local_8) =
+               (pane * 0x2004 + *(int *)(window + 1000 + pane * 4) * 4 + 0x8400 + window) =
                    1;
               break;
             }
           }
         }
-        piVar1 = (int *)(local_8 + 1000 + param_1 * 4);
-        *piVar1 = *piVar1 + 1;
+        count_ptr = (int *)(window + 1000 + pane * 4);
+        *count_ptr = *count_ptr + 1;
       }
     }
     unit++;
@@ -2635,62 +2635,62 @@ void __thiscall parley_build_unit_list(ListPaneWindow *this,int param_1,int para
 #undef human_civ
 #undef parley_units_by_city
 #undef unit
-#undef local_2c
-#undef local_28
-#undef local_18
-#undef local_c
-#undef local_8
+#undef old_count
+#undef k
+#undef selected_ids
+#undef dir
+#undef window
 
 /* 0046af70 auto */
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-i8 __thiscall net_session_send_to(void *this,int param_1,iptr param_2)
+i8 __thiscall net_session_send_to(void *this,int player,iptr msg)
 
 {
-  i8 uVar1;
-  int iVar2;
+  i8 ok;
+  int sent;
   
-  if ((((param_1 < 0) || (7 < param_1)) && (param_1 != 0xff)) && (param_1 != 0)) {
+  if ((((player < 0) || (7 < player)) && (player != 0xff)) && (player != 0)) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62a67c, ((u8 *)&g.d_0062a67c)),ADDR(0x62a658, ((u8 *)&g.d_0062a658)),0x139);
   }
-  if (*(int *)(param_2 + 8) == 0) {
+  if (*(int *)(msg + 8) == 0) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62a6f4, ((u8 *)&g.d_0062a6f4)),ADDR(0x62a6d0, ((u8 *)&g.d_0062a6d0)),0x13a);
   }
-  *(int *)(param_2 + 0xc) = net_send_sequence;
+  *(int *)(msg + 0xc) = net_send_sequence;
   net_send_sequence++;
-  iVar2 = XD_SendSecureData((ushort)param_1,(void *)param_2,*(ulong *)(param_2 + 8),0);
-  *(int *)((int)this + 0x578) = iVar2;
+  sent = XD_SendSecureData((ushort)player,(void *)msg,*(ulong *)(msg + 8),0);
+  *(int *)((int)this + 0x578) = sent;
   if (*(int *)((int)this + 0x578) < 0) {
-    dbg_logf3(ADDR(0x62a704, ((u8 *)&g.d_0062a704)),param_1,*(i32 *)((int)this + 0x578),*(i32 *)(param_2 + 4));
-    if (*(int *)(param_2 + 4) == 0x6a) {
-      dbg_logf_str(ADDR(0x62a754, ((u8 *)&g.d_0062a754)),(iptr)(s__NM_POP_RETIREDIE__00629990 + *(int *)(param_2 + 0x10) * 0x20))
+    dbg_logf3(ADDR(0x62a704, ((u8 *)&g.d_0062a704)),player,*(i32 *)((int)this + 0x578),*(i32 *)(msg + 4));
+    if (*(int *)(msg + 4) == 0x6a) {
+      dbg_logf_str(ADDR(0x62a754, ((u8 *)&g.d_0062a754)),(iptr)(s__NM_POP_RETIREDIE__00629990 + *(int *)(msg + 0x10) * 0x20))
       ;
     }
-    uVar1 = 0;
+    ok = 0;
   }
   else {
-    uVar1 = 1;
+    ok = 1;
   }
-  return uVar1;
+  return ok;
 }
 #undef net_send_sequence
 
 /* 0046b0a1 auto */
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-bool __thiscall net_session_send_to_all(void *this,iptr param_1)
+bool __thiscall net_session_send_to_all(void *this,iptr msg)
 
 {
-  bool bVar1;
-  int iVar2;
+  bool failed;
+  int sent;
   
-  *(int *)(param_1 + 0xc) = net_send_sequence;
+  *(int *)(msg + 0xc) = net_send_sequence;
   net_send_sequence++;
-  iVar2 = XD_SendBroadcastData((void *)param_1,*(ulong *)(param_1 + 8),0);
-  *(int *)((int)this + 0x578) = iVar2;
-  bVar1 = *(int *)((int)this + 0x578) < *(int *)(param_1 + 8);
-  if (bVar1) {
+  sent = XD_SendBroadcastData((void *)msg,*(ulong *)(msg + 8),0);
+  *(int *)((int)this + 0x578) = sent;
+  failed = *(int *)((int)this + 0x578) < *(int *)(msg + 8);
+  if (failed) {
     dbg_logf(ADDR(0x62a764, ((u8 *)&g.d_0062a764)),*(iptr *)((int)this + 0x578));
   }
-  return !bVar1;
+  return !failed;
 }
 #undef net_send_sequence
 
@@ -2703,119 +2703,119 @@ bool __thiscall net_session_send_to_all(void *this,iptr param_1)
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_session_phase (*(i32 *)((u8 *)&g.d_006ad640))
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
-#define local_a24 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(4)))
-#define local_a14 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(20)))
-#define local_a04 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(36)))
-#define local_9f4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(52)))
-#define local_9e4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(68)))
-#define local_9d4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(84)))
-#define local_9c4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(100)))
-#define local_9b4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(116)))
-#define local_9a4 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(132)))
-#define local_994 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(148)))
-#define local_984 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(164)))
-#define local_974 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(180)))
-#define local_964 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(196)))
-#define local_950 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(216)))
-#define local_940 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(232)))
-#define local_930 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(248)))
-#define local_920 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(264)))
-#define local_910 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(280)))
-#define local_8fc (*(i32 *)(frame_ + FRAME_OFF(300)))
-#define local_8f8 (*(i32 *)(frame_ + FRAME_OFF(304)))
-#define local_8f4 (*(i32 *)(frame_ + FRAME_OFF(308)))
-#define local_8f0 (*(i32 *)(frame_ + FRAME_OFF(312)))
-#define local_8ec (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(316)))
-#define local_8d8 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(336)))
-#define local_8c8 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(352)))
-#define local_8b8 (*(NetMsgHeader (*)[38])(frame_ + FRAME_OFF(368)))
-#define local_784 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(676)))
-#define local_774 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(692)))
-#define local_764 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(708)))
-#define local_754 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(724)))
-#define local_744 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(740)))
-#define local_734 (*(uint *)(frame_ + FRAME_OFF(756)))
-#define local_730 (*(void * *)(frame_ + FRAME_OFF(760)))
-#define local_72c (*(NetMsgHeader (*)[12])(frame_ + FRAME_OFF(764)))
-#define local_6c8 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(864)))
-#define local_6b8 (*(i8 (*)[624])(frame_ + FRAME_OFF(880)))
-#define local_448 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(1504)))
-#define local_438 (*(i16 *)(frame_ + FRAME_OFF(1520)))
-#define local_436 (*(i8 (*)[260])(frame_ + FRAME_OFF(1522)))
-#define local_332 (*(i8 (*)[262])(frame_ + FRAME_OFF(1782)))
-#define local_22c (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(2044)))
-#define local_21c (*(NetMsgHeader (*)[50])(frame_ + FRAME_OFF(2060)))
-#define local_88 (*(i16 *)(frame_ + FRAME_OFF(2464)))
-#define local_84 (*(NetMsgHeader (*)[15])(frame_ + FRAME_OFF(2468)))
-#define local_c (*(void * *)(frame_ + FRAME_OFF(2588)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(2592)))
+#define msg_5b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(4)))
+#define msg_2b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(20)))
+#define msg_9c (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(36)))
+#define msg_58 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(52)))
+#define msg_8d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(68)))
+#define msg_8b (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(84)))
+#define msg_26 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(100)))
+#define msg_46 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(116)))
+#define msg_44 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(132)))
+#define msg_42 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(148)))
+#define msg_40 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(164)))
+#define msg_8a (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(180)))
+#define msg_83 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(196)))
+#define msg_35 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(216)))
+#define msg_79 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(232)))
+#define msg_78 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(248)))
+#define msg_74 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(264)))
+#define whose_turn_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(280)))
+#define caption_left (*(i32 *)(frame_ + FRAME_OFF(300)))
+#define caption_top (*(i32 *)(frame_ + FRAME_OFF(304)))
+#define caption_right (*(i32 *)(frame_ + FRAME_OFF(308)))
+#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(312)))
+#define msg_16 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(316)))
+#define msg_5d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(336)))
+#define msg_14 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(352)))
+#define answer_msg (*(NetMsgHeader (*)[38])(frame_ + FRAME_OFF(368)))
+#define msg_12 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(676)))
+#define msg_6f (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(692)))
+#define msg_6e (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(708)))
+#define msg_6d (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(724)))
+#define simple_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(740)))
+#define image_result (*(uint *)(frame_ + FRAME_OFF(756)))
+#define image_buf (*(void * *)(frame_ + FRAME_OFF(760)))
+#define player_node_msg (*(NetMsgHeader (*)[12])(frame_ + FRAME_OFF(764)))
+#define player_list_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(864)))
+#define player_list_data (*(i8 (*)[624])(frame_ + FRAME_OFF(880)))
+#define server_path_msg (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(1504)))
+#define path_kind (*(i16 *)(frame_ + FRAME_OFF(1520)))
+#define path_name (*(i8 (*)[260])(frame_ + FRAME_OFF(1522)))
+#define path_subdir (*(i8 (*)[262])(frame_ + FRAME_OFF(1782)))
+#define msg_05 (*(NetMsgHeader (*)[2])(frame_ + FRAME_OFF(2044)))
+#define server_info_msg (*(NetMsgHeader (*)[50])(frame_ + FRAME_OFF(2060)))
+#define server_phase (*(i16 *)(frame_ + FRAME_OFF(2464)))
+#define announce_msg (*(NetMsgHeader (*)[15])(frame_ + FRAME_OFF(2468)))
+#define packet (*(void * *)(frame_ + FRAME_OFF(2588)))
+#define result (*(int *)(frame_ + FRAME_OFF(2592)))
 /* WARNING: Removing unreachable block (ram,0x0046cdce) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl
-net_send_message(int param_1,i32 param_2,iptr param_3,iptr param_4,iptr param_5,iptr param_6,
-            iptr param_7,i32 param_8,iptr param_9,iptr param_10)
+net_send_message(int msg_type,i32 dest,iptr arg1,iptr arg2,iptr arg3,iptr arg4,
+            iptr arg5,i32 arg6,iptr text,iptr raw_msg)
 
 {
-  char cVar1;
-  size_t sVar2;
+  char sent;
+  size_t text_len;
   i8 frame_[FRAME_OFF(2600)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (void *)0x0;
-  switch(param_1) {
+  packet = (void *)0x0;
+  switch(msg_type) {
   case 1:
-    net_msg_init_header(local_84,param_1,ADDR(0x62a78c, ((u8 *)&g.d_0062a78c)));
-    cVar1 = net_session_send_to_all(&net_session,(iptr)local_84);
-    return (int)cVar1;
+    net_msg_init_header(announce_msg,msg_type,ADDR(0x62a78c, ((u8 *)&g.d_0062a78c)));
+    sent = net_session_send_to_all(&net_session,(iptr)announce_msg);
+    return (int)sent;
   case 2:
-    net_msg_server_info_init(local_21c);
-    local_88 = (i16)net_session_phase;
-    cVar1 = net_session_send_to_all(&net_session,(iptr)local_21c);
-    return (int)cVar1;
+    net_msg_server_info_init(server_info_msg);
+    server_phase = (i16)net_session_phase;
+    sent = net_session_send_to_all(&net_session,(iptr)server_info_msg);
+    return (int)sent;
   default:
     return 0;
   case 4:
-    net_msg_player_list_init(local_6c8);
-    crt_memcpy(local_6b8,&net_player_count,0x270);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_6c8);
-    return (int)cVar1;
+    net_msg_player_list_init(player_list_msg);
+    crt_memcpy(player_list_data,&net_player_count,0x270);
+    sent = net_session_send_to(&net_session,dest,(iptr)player_list_msg);
+    return (int)sent;
   case 5:
-    net_msg_header_init(local_22c,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_22c);
-    return (int)cVar1;
+    net_msg_header_init(msg_05,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_05);
+    return (int)sent;
   case 6:
-    net_msg_server_path_init(local_448);
-    local_438 = loaded_file_kind;
-    crt_strcpy(local_436,&loaded_file_name);
-    crt_strcpy(local_332,&loaded_file_subdir);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_448);
-    return (int)cVar1;
+    net_msg_server_path_init(server_path_msg);
+    path_kind = loaded_file_kind;
+    crt_strcpy(path_name,&loaded_file_name);
+    crt_strcpy(path_subdir,&loaded_file_subdir);
+    sent = net_session_send_to(&net_session,dest,(iptr)server_path_msg);
+    return (int)sent;
   case 7:
   case 8:
   case 9:
   case 10:
-    local_730 = (void *)0x0;
-    if (param_1 == 7) {
-      local_734 = diffeng_build_full_image((iptr)&local_730);
+    image_buf = (void *)0x0;
+    if (msg_type == 7) {
+      image_result = diffeng_build_full_image((iptr)&image_buf);
     }
-    else if (param_1 == 8) {
-      local_734 = diffeng_build_delta_image((iptr)&local_730);
+    else if (msg_type == 8) {
+      image_result = diffeng_build_delta_image((iptr)&image_buf);
     }
-    else if (param_1 == 9) {
-      local_734 = diffeng_build_civ_image((iptr)&local_730);
+    else if (msg_type == 9) {
+      image_result = diffeng_build_civ_image((iptr)&image_buf);
     }
-    else if (param_1 == 10) {
-      local_734 = diffeng_build_map_header_image((iptr)&local_730);
+    else if (msg_type == 10) {
+      image_result = diffeng_build_map_header_image((iptr)&image_buf);
     }
-    local_734 = (uint)(local_734 != -1);
-    if (local_730 == (void *)0x0) {
+    image_result = (uint)(image_result != -1);
+    if (image_buf == (void *)0x0) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62a7b4, ((u8 *)&g.d_0062a7b4)),ADDR(0x62a790, ((u8 *)&g.d_0062a790)),0x22c);
     }
-    local_730 = (void *)net_msg_build_packet(param_1,(iptr)local_730,local_734,0,0,0,0,0,0);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_730);
-    local_734 = (uint)cVar1;
-    operator_delete(local_730);
-    return local_734;
+    image_buf = (void *)net_msg_build_packet(msg_type,(iptr)image_buf,image_result,0,0,0,0,0,0);
+    sent = net_session_send_to(&net_session,dest,(iptr)image_buf);
+    image_result = (uint)sent;
+    operator_delete(image_buf);
+    return image_result;
   case 0xb:
   case 0xc:
   case 0xd:
@@ -2824,111 +2824,111 @@ net_send_message(int param_1,i32 param_2,iptr param_3,iptr param_4,iptr param_5,
   case 0x10:
   case 0x11:
   case 0x32:
-    net_msg_header_init(local_744,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_744);
-    return (int)cVar1;
+    net_msg_header_init(simple_msg,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)simple_msg);
+    return (int)sent;
   case 0x12:
-    net_msg_header_init(local_784,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_784);
-    return (int)cVar1;
+    net_msg_header_init(msg_12,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_12);
+    return (int)sent;
   case 0x13:
-    net_msg_server_answer_init(local_8b8);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_8b8);
-    return (int)cVar1;
+    net_msg_server_answer_init(answer_msg);
+    sent = net_session_send_to(&net_session,dest,(iptr)answer_msg);
+    return (int)sent;
   case 0x14:
-    net_msg_header_init(local_8c8,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_8c8);
-    return (int)cVar1;
+    net_msg_header_init(msg_14,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_14);
+    return (int)sent;
   case 0x15:
   case 0x5c:
-    cVar1 = net_session_send_to(&net_session,param_2,param_10);
-    if (cVar1 == '\0') {
+    sent = net_session_send_to(&net_session,dest,raw_msg);
+    if (sent == '\0') {
       return 0;
     }
-    return *(i32 *)(param_10 + 8);
+    return *(i32 *)(raw_msg + 8);
   case 0x16:
-    net_msg_header_init(local_8ec,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_8ec);
-    return (int)cVar1;
+    net_msg_header_init(msg_16,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_16);
+    return (int)sent;
   case 0x17:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64bcc8, ((u8 *)&cosmic)),0,0,0,0,0,0,0x29);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64bcc8, ((u8 *)&cosmic)),0,0,0,0,0,0,0x29);
     break;
   case 0x18:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x627680, ((u8 *)&advances)),0,0,0,0,0,0,0x640);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x627680, ((u8 *)&advances)),0,0,0,0,0,0,0x640);
     break;
   case 0x19:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64c488, ((u8 *)&improvements)),0,0,0,0,0,0,0x218);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64c488, ((u8 *)&improvements)),0,0,0,0,0,0,0x218);
     break;
   case 0x1a:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64ba28, ((u8 *)&wonder_expires)),0,0,0,0,0,0,0x1c);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64ba28, ((u8 *)&wonder_expires)),0,0,0,0,0,0,0x1c);
     break;
   case 0x1b:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64b1b8, ((u8 *)&unit_types)),0,0,0,0,0,0,0x4d8);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64b1b8, ((u8 *)&unit_types)),0,0,0,0,0,0,0x4d8);
     break;
   case 0x1c:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x627cc0, ((u8 *)&terrain_types)),0,0,0,0,0,0,0x318);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x627cc0, ((u8 *)&terrain_types)),0,0,0,0,0,0,0x318);
     break;
   case 0x1d:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64b9a0, ((u8 *)&government_names)),0,0,0,0,0,0,0x1c);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64b9a0, ((u8 *)&government_names)),0,0,0,0,0,0,0x1c);
     break;
   case 0x1e:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x654fe0, ((u8 *)&government_titles)),0,0,0,0,0,0,0x38);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x654fe0, ((u8 *)&government_titles)),0,0,0,0,0,0,0x38);
     break;
   case 0x1f:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x6554f8, ((u8 *)&leaders)),0,0,0,0,0,0,0x3f0);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x6554f8, ((u8 *)&leaders)),0,0,0,0,0,0,0x3f0);
     break;
   case 0x20:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64c6a0, ((u8 *)&civs)),0,0,0,0,0,0,0x7524);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64c6a0, ((u8 *)&civs)),0,0,0,0,0,0,0x7524);
     break;
   case 0x21:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64b168, ((u8 *)&commodity_names)),0,0,0,0,0,0,0x40);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64b168, ((u8 *)&commodity_names)),0,0,0,0,0,0,0x40);
     break;
   case 0x22:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x655490, ((u8 *)&order_names)),0,0,0,0,0,0,0x68);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x655490, ((u8 *)&order_names)),0,0,0,0,0,0,0x68);
     break;
   case 0x23:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64ba10, ((u8 *)&difficulty_names)),0,0,0,0,0,0,0x18);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64ba10, ((u8 *)&difficulty_names)),0,0,0,0,0,0,0x18);
     break;
   case 0x24:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x64b9c0, ((u8 *)&attitude_names)),0,0,0,0,0,0,0x24);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x64b9c0, ((u8 *)&attitude_names)),0,0,0,0,0,0,0x24);
     break;
   case 0x25:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x26:
   case 0x27:
-    net_msg_header_init(local_9c4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9c4);
-    return (int)cVar1;
+    net_msg_header_init(msg_26,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_26);
+    return (int)sent;
   case 0x28:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x2a:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     nm_lock_data_count++;
     break;
   case 0x2b:
   case 0x2c:
-    net_msg_header_init(local_a14,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_a14);
-    return (int)cVar1;
+    net_msg_header_init(msg_2b,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_2b);
+    return (int)sent;
   case 0x2d:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x2e:
-    cVar1 = net_session_send_to(&net_session,param_2,ADDR(0x6ad110, ((u8 *)&g.d_006ad110)));
-    return (int)cVar1;
+    sent = net_session_send_to(&net_session,dest,ADDR(0x6ad110, ((u8 *)&g.d_006ad110)));
+    return (int)sent;
   case 0x2f:
-    net_msg_player_list_node_init(local_72c,param_3);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_72c);
-    return (int)cVar1;
+    net_msg_player_list_node_init(player_node_msg,arg1);
+    sent = net_session_send_to(&net_session,dest,(iptr)player_node_msg);
+    return (int)sent;
   case 0x30:
     if (net_host_flag == '\0') {
-      local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+      packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
       break;
     }
-    if ((1 << ((byte)param_4 & 0x1f) & (int)(short)net_claimed_civs_mask) == 0) {
-      net_claimed_civs_mask = net_claimed_civs_mask | (ushort)(1 << ((byte)param_4 & 0x1f));
+    if ((1 << ((byte)arg2 & 0x1f) & (int)(short)net_claimed_civs_mask) == 0) {
+      net_claimed_civs_mask = net_claimed_civs_mask | (ushort)(1 << ((byte)arg2 & 0x1f));
       net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
       nm_nation_accept_count++;
       return 1;
@@ -2937,64 +2937,64 @@ net_send_message(int param_1,i32 param_2,iptr param_3,iptr param_4,iptr param_5,
   case 0x31:
     if (net_host_flag != '\0') {
       game.human_players = game.human_players & (byte)net_claimed_civs_mask;
-      if ((1 << ((byte)param_4 & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
-        net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)param_4 & 0x1f));
+      if ((1 << ((byte)arg2 & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
+        net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)arg2 & 0x1f));
         game.human_players = game.human_players & (byte)net_claimed_civs_mask;
         net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
         nm_lock_data_count++;
       }
       return 1;
     }
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x33:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x34:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x35:
   case 0x81:
-    net_msg_header_init(local_950,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_950);
-    return (int)cVar1;
+    net_msg_header_init(msg_35,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_35);
+    return (int)sent;
   case 0x37:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x38:
-    local_c = (void *)net_msg_build_packet(param_1,(iptr)(units + param_3),param_3,(int)game.num_units
-                                         ,param_5,param_6,param_7,param_8,0x20);
+    packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,(int)game.num_units
+                                         ,arg3,arg4,arg5,arg6,0x20);
     break;
   case 0x39:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x3a:
-    local_c = (void *)net_msg_build_packet(param_1,(iptr)(cities + param_3),param_3,
-                                         (int)game.num_cities,param_5,param_6,param_7,param_8,0x58);
+    packet = (void *)net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
+                                         (int)game.num_cities,arg3,arg4,arg5,arg6,0x58);
     break;
   case 0x3b:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x3c:
-    if (param_3 == -1) {
-      local_c = (void *)net_msg_build_packet(param_1,0,0xffffffff,0,0,0,0,0,0);
+    if (arg1 == -1) {
+      packet = (void *)net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
     }
     else {
-      local_c = (void *)net_msg_build_packet(param_1,(iptr)(cities + param_3),param_3,
-                                           (int)game.num_cities,param_5,param_6,param_7,param_8,0x58
+      packet = (void *)net_msg_build_packet(msg_type,(iptr)(cities + arg1),arg1,
+                                           (int)game.num_cities,arg3,arg4,arg5,arg6,0x58
                                           );
     }
     break;
   case 0x3d:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x3e:
-    if (param_3 == -1) {
-      local_c = (void *)net_msg_build_packet(param_1,0,0xffffffff,0,0,0,0,0,0);
+    if (arg1 == -1) {
+      packet = (void *)net_msg_build_packet(msg_type,0,0xffffffff,0,0,0,0,0,0);
     }
     else {
-      local_c = (void *)net_msg_build_packet(param_1,(iptr)(units + param_3),param_3,
-                                           (int)game.num_units,param_5,param_6,param_7,param_8,0x20)
+      packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,
+                                           (int)game.num_units,arg3,arg4,arg5,arg6,0x20)
       ;
     }
     break;
@@ -3002,316 +3002,316 @@ net_send_message(int param_1,i32 param_2,iptr param_3,iptr param_4,iptr param_5,
   case 0x4b:
   case 0x4d:
   case 0x4f:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x40:
   case 0x4c:
   case 0x4e:
   case 0x50:
-    net_msg_header_init(local_984,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_984);
-    return (int)cVar1;
+    net_msg_header_init(msg_40,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_40);
+    return (int)sent;
   case 0x41:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x42:
-    net_msg_header_init(local_994,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_994);
-    return (int)cVar1;
+    net_msg_header_init(msg_42,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_42);
+    return (int)sent;
   case 0x43:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x44:
-    net_msg_header_init(local_9a4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9a4);
-    return (int)cVar1;
+    net_msg_header_init(msg_44,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_44);
+    return (int)sent;
   case 0x45:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x46:
-    net_msg_header_init(local_9b4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9b4);
-    return (int)cVar1;
+    net_msg_header_init(msg_46,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_46);
+    return (int)sent;
   case 0x47:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x48:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x49:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x4a:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x51:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x52:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x53:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x54:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x55:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x56:
   case 0x57:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x58:
-    net_msg_header_init(local_9f4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9f4);
-    return (int)cVar1;
+    net_msg_header_init(msg_58,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_58);
+    return (int)sent;
   case 0x59:
-    local_c = (void *)net_msg_build_packet(param_1,ADDR(0x6d1190, ((u8 *)&g.d_006d1190)),0,0,0,0,0,0,net_batch_used_dwords << 2);
+    packet = (void *)net_msg_build_packet(msg_type,ADDR(0x6d1190, ((u8 *)&g.d_006d1190)),0,0,0,0,0,0,net_batch_used_dwords << 2);
     break;
   case 0x5a:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,param_8,0
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
                                         );
     break;
   case 0x5b:
   case 0x65:
   case 0x66:
   case 0xa3:
-    net_msg_header_init(local_a24,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_a24);
-    return (int)cVar1;
+    net_msg_header_init(msg_5b,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_5b);
+    return (int)sent;
   case 0x5d:
   case 0x5e:
-    net_msg_header_init(local_8d8,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_8d8);
-    return (int)cVar1;
+    net_msg_header_init(msg_5d,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_5d);
+    return (int)sent;
   case 0x5f:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x60:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x61:
   case 0x62:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 99:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 100:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x68:
-    sVar2 = _strlen((char *)param_9);
-    local_c = (void *)net_msg_build_packet(param_1,param_9,param_3,param_4,param_5,0,0,0,sVar2 + 1);
+    text_len = _strlen((char *)text);
+    packet = (void *)net_msg_build_packet(msg_type,text,arg1,arg2,arg3,0,0,0,text_len + 1);
     break;
   case 0x69:
-    net_msg_whose_turn_init(local_910,param_3);
+    net_msg_whose_turn_init(whose_turn_msg,arg1);
     main_view_timer_cache_i32 = 0xffffffff;
     frame_wnd_draw_caption((FrameWindow *)&map_views);
-    local_8fc = main_view_frame_left;
-    local_8f8 = main_view_frame_top;
-    local_8f4 = main_view_frame_right;
-    local_8f0 = main_view_client_top;
-    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_8fc);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_910);
-    return (int)cVar1;
+    caption_left = main_view_frame_left;
+    caption_top = main_view_frame_top;
+    caption_right = main_view_frame_right;
+    caption_bottom = main_view_client_top;
+    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
+    sent = net_session_send_to(&net_session,dest,(iptr)whose_turn_msg);
+    return (int)sent;
   case 0x6a:
-    local_c = (void *)net_msg_build_packet(param_1,param_10,param_3,param_4,param_5,param_6,param_7,0,
+    packet = (void *)net_msg_build_packet(msg_type,raw_msg,arg1,arg2,arg3,arg4,arg5,0,
                                          0);
     break;
   case 0x6b:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x6c:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x6d:
-    net_msg_header_init(local_754,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_754);
-    return (int)cVar1;
+    net_msg_header_init(msg_6d,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_6d);
+    return (int)sent;
   case 0x6e:
-    net_msg_header_init(local_764,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_764);
-    return (int)cVar1;
+    net_msg_header_init(msg_6e,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_6e);
+    return (int)sent;
   case 0x6f:
-    net_msg_header_init(local_774,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_774);
-    return (int)cVar1;
+    net_msg_header_init(msg_6f,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_6f);
+    return (int)sent;
   case 0x70:
-    local_c = (void *)net_msg_build_packet(param_1,(iptr)(units + param_3),param_3,param_4,param_5,
-                                         param_6,param_7,param_8,0x20);
+    packet = (void *)net_msg_build_packet(msg_type,(iptr)(units + arg1),arg1,arg2,arg3,
+                                         arg4,arg5,arg6,0x20);
     break;
   case 0x71:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x72:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x73:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x74:
-    net_msg_header_init(local_920,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_920);
-    return (int)cVar1;
+    net_msg_header_init(msg_74,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_74);
+    return (int)sent;
   case 0x75:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x76:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x77:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x78:
-    net_msg_header_init(local_930,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_930);
-    return (int)cVar1;
+    net_msg_header_init(msg_78,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_78);
+    return (int)sent;
   case 0x79:
-    net_msg_header_init(local_940,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_940);
-    return (int)cVar1;
+    net_msg_header_init(msg_79,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_79);
+    return (int)sent;
   case 0x7a:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7b:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x7c:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x7d:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7e:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x7f:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x80:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x82:
-    cVar1 = net_session_send_to(&net_session,param_2,param_10);
-    if (cVar1 == '\0') {
+    sent = net_session_send_to(&net_session,dest,raw_msg);
+    if (sent == '\0') {
       return 0;
     }
-    return *(i32 *)(param_10 + 8);
+    return *(i32 *)(raw_msg + 8);
   case 0x83:
   case 0x84:
   case 0x85:
-    net_msg_header_init(local_964,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_964);
-    return (int)cVar1;
+    net_msg_header_init(msg_83,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_83);
+    return (int)sent;
   case 0x86:
-    cVar1 = net_session_send_to(&net_session,param_2,param_10);
-    if (cVar1 == '\0') {
+    sent = net_session_send_to(&net_session,dest,raw_msg);
+    if (sent == '\0') {
       return 0;
     }
-    return *(i32 *)(param_10 + 8);
+    return *(i32 *)(raw_msg + 8);
   case 0x87:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x88:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x89:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x8a:
-    net_msg_header_init(local_974,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_974);
-    return (int)cVar1;
+    net_msg_header_init(msg_8a,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_8a);
+    return (int)sent;
   case 0x8b:
-    net_msg_header_init(local_9d4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9d4);
-    return (int)cVar1;
+    net_msg_header_init(msg_8b,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_8b);
+    return (int)sent;
   case 0x8c:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x8d:
   case 0x8e:
-    net_msg_header_init(local_9e4,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_9e4);
-    return (int)cVar1;
+    net_msg_header_init(msg_8d,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_8d);
+    return (int)sent;
   case 0x8f:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0x90:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x91:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x92:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,0,0);
     break;
   case 0x93:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x94:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x95:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x96:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x97:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,param_7,param_8,0
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,arg5,arg6,0
                                         );
     break;
   case 0x98:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,0,0,0,0);
     break;
   case 0x99:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x9a:
   case 0xa0:
   case 0xa1:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0x9b:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,param_5,param_6,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,arg3,arg4,0,0,0);
     break;
   case 0x9c:
   case 0x9d:
   case 0x9e:
-    net_msg_header_init(local_a04,param_1);
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_a04);
-    return (int)cVar1;
+    net_msg_header_init(msg_9c,msg_type);
+    sent = net_session_send_to(&net_session,dest,(iptr)msg_9c);
+    return (int)sent;
   case 0x9f:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0xa2:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,0,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,0,0,0,0,0,0);
     break;
   case 0xa4:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0xa5:
   case 0xa6:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
     break;
   case 0xa7:
   case 0xa8:
-    local_c = (void *)net_msg_build_packet(param_1,0,param_3,param_4,0,0,0,0,0);
+    packet = (void *)net_msg_build_packet(msg_type,0,arg1,arg2,0,0,0,0,0);
   }
-  if (local_c == (void *)0x0) {
+  if (packet == (void *)0x0) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62a7e8, ((u8 *)&g.d_0062a7e8)),ADDR(0x62a7c4, ((u8 *)&g.d_0062a7c4)),0x523);
-    local_8 = 0;
+    result = 0;
   }
   else {
-    cVar1 = net_session_send_to(&net_session,param_2,(iptr)local_c);
-    local_8 = (int)cVar1;
-    operator_delete(local_c);
+    sent = net_session_send_to(&net_session,dest,(iptr)packet);
+    result = (int)sent;
+    operator_delete(packet);
   }
-  return local_8;
+  return result;
 }
 #undef loaded_file_kind
 #undef loaded_file_name
@@ -3321,72 +3321,72 @@ net_send_message(int param_1,i32 param_2,iptr param_3,iptr param_4,iptr param_5,
 #undef net_host_flag
 #undef net_session_phase
 #undef main_view_timer_cache_i32
-#undef local_a24
-#undef local_a14
-#undef local_a04
-#undef local_9f4
-#undef local_9e4
-#undef local_9d4
-#undef local_9c4
-#undef local_9b4
-#undef local_9a4
-#undef local_994
-#undef local_984
-#undef local_974
-#undef local_964
-#undef local_950
-#undef local_940
-#undef local_930
-#undef local_920
-#undef local_910
-#undef local_8fc
-#undef local_8f8
-#undef local_8f4
-#undef local_8f0
-#undef local_8ec
-#undef local_8d8
-#undef local_8c8
-#undef local_8b8
-#undef local_784
-#undef local_774
-#undef local_764
-#undef local_754
-#undef local_744
-#undef local_734
-#undef local_730
-#undef local_72c
-#undef local_6c8
-#undef local_6b8
-#undef local_448
-#undef local_438
-#undef local_436
-#undef local_332
-#undef local_22c
-#undef local_21c
-#undef local_88
-#undef local_84
-#undef local_c
-#undef local_8
+#undef msg_5b
+#undef msg_2b
+#undef msg_9c
+#undef msg_58
+#undef msg_8d
+#undef msg_8b
+#undef msg_26
+#undef msg_46
+#undef msg_44
+#undef msg_42
+#undef msg_40
+#undef msg_8a
+#undef msg_83
+#undef msg_35
+#undef msg_79
+#undef msg_78
+#undef msg_74
+#undef whose_turn_msg
+#undef caption_left
+#undef caption_top
+#undef caption_right
+#undef caption_bottom
+#undef msg_16
+#undef msg_5d
+#undef msg_14
+#undef answer_msg
+#undef msg_12
+#undef msg_6f
+#undef msg_6e
+#undef msg_6d
+#undef simple_msg
+#undef image_result
+#undef image_buf
+#undef player_node_msg
+#undef player_list_msg
+#undef player_list_data
+#undef server_path_msg
+#undef path_kind
+#undef path_name
+#undef path_subdir
+#undef msg_05
+#undef server_info_msg
+#undef server_phase
+#undef announce_msg
+#undef packet
+#undef result
 
 /* 0046d5a0 auto */
-NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *this,u32 param_1)
+NetMsgHeader * __thiscall net_msg_header_init(NetMsgHeader *this,u32 type)
 
 {
   this[1].field_0 = 0x10;
   this->msg_magic = 0x66606660;
-  this->msg_type = param_1;
+  this->msg_type = type;
   return this;
 }
 
 /* 0046d5f0 auto */
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
-NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 param_1,iptr param_2)
+NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 msg_type,iptr name2)
 
 {
   net_msg_addr_header_init(this,0);
-  this[0xe].field_0 = param_1;
+  this[0xe].field_0 = msg_type;
   _memset(this + 6,0,0x20);
-  _strncpy((char *)(this + 6),(char *)param_2,0x20);
+  _strncpy((char *)(this + 6),(char *)name2,0x20);
   _memset(this + 10,0,0x20);
   _strncpy((char *)(this + 10),&prefs_net_ip_address,0x20);
   this[1].field_0 = 0x74;
@@ -3396,10 +3396,10 @@ NetMsgHeader * __thiscall net_msg_init_header(NetMsgHeader *this,u32 param_1,ipt
 
 /* 0046d6a0 auto */
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
-NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *this,i32 param_1)
+NetMsgHeader * __thiscall net_msg_addr_header_init(NetMsgHeader *this,i32 msg_type)
 
 {
-  net_msg_header_init(this,param_1);
+  net_msg_header_init(this,msg_type);
   _memset(this + 2,0,0x20);
   _strncpy((char *)(this + 2),&prefs_net_ip_address,0x20);
   this[1].field_0 = 0x30;
@@ -3420,11 +3420,11 @@ NetMsgHeader * __thiscall net_msg_server_info_init(NetMsgHeader *this)
 /* 0046d780 auto */
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
 #define prefs_net_player_name (*(i8 *)((u8 *)&g.d_00666570))
-NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *this,u32 param_1)
+NetMsgHeader * __thiscall net_msg_player_list_node_init(NetMsgHeader *this,u32 player_id)
 
 {
   net_msg_header_init(this,0x2f);
-  this[2].field_0 = param_1;
+  this[2].field_0 = player_id;
   _memset(&this[2].field_4,0,0x20);
   _strncpy((char *)&this[2].field_4,&prefs_net_ip_address,0x20);
   crt_strcpy(&this[6].field_4,&prefs_net_player_name);
@@ -3468,23 +3468,23 @@ NetMsgHeader * __thiscall net_msg_server_answer_init(NetMsgHeader *this)
 }
 
 /* 0046d930 auto */
-NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *this,u32 param_1)
+NetMsgHeader * __thiscall net_msg_whose_turn_init(NetMsgHeader *this,u32 turn_civ)
 
 {
   net_msg_header_init(this,0x69);
-  this[2].field_0 = param_1;
+  this[2].field_0 = turn_civ;
   this[1].field_0 = 0x14;
   return this;
 }
 
 /* 0047e0e5 auto */
 #define net_stacked_draw_count (*(uint *)((u8 *)&g.d_006ad90c))
-#define local_24 (*(i8 (*)[28])(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
+#define dummy_args (*(i8 (*)[28])(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(32)))
+int __cdecl net_stacked_draw_push(int kind,iptr args,iptr unit_data)
 
 {
-  int iVar1;
+  int result;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((net_stacked_draw_last == net_stacked_draw_first) && (net_stacked_draw_count != 0)) {
@@ -3497,8 +3497,8 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
       net_stacked_draw_last = 0;
     }
     net_stacked_draw_count = (uint)(unit_stack_check_enabled != 0);
-    net_stacked_draw_push(0xa3,(iptr)local_24,0);
-    iVar1 = net_stacked_draw_push(0x74,(iptr)local_24,0);
+    net_stacked_draw_push(0xa3,(iptr)dummy_args,0);
+    result = net_stacked_draw_push(0x74,(iptr)dummy_args,0);
   }
   else {
     if ((net_stacked_draw_first < 0) || (99 < net_stacked_draw_first)) {
@@ -3507,26 +3507,26 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
     if ((net_stacked_draw_last < 0) || (99 < net_stacked_draw_last)) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62bdac, ((u8 *)&g.d_0062bdac)),ADDR(0x62bd88, ((u8 *)&g.d_0062bd88)),0x5b);
     }
-    *(int *)(&net_stacked_draw_kinds + net_stacked_draw_last * 0x40) = param_1;
-    for (local_8 = 0; local_8 < 7; local_8++) {
-      *(i32 *)(&net_stacked_draw_args + local_8 * 4 + net_stacked_draw_last * 0x40) =
-           *(i32 *)(param_2 + local_8 * 4);
+    *(int *)(&net_stacked_draw_kinds + net_stacked_draw_last * 0x40) = kind;
+    for (i = 0; i < 7; i++) {
+      *(i32 *)(&net_stacked_draw_args + i * 4 + net_stacked_draw_last * 0x40) =
+           *(i32 *)(args + i * 4);
     }
-    if (param_1 == 0x70) {
-      crt_memcpy(net_stacked_draw_last * 0x40 + ADDR(0x6ad940, ((u8 *)&g.d_006ad934 + 12)),param_3,0x20);
+    if (kind == 0x70) {
+      crt_memcpy(net_stacked_draw_last * 0x40 + ADDR(0x6ad940, ((u8 *)&g.d_006ad934 + 12)),unit_data,0x20);
     }
     net_stacked_draw_count++;
     if ((int)net_stacked_draw_peak < (int)net_stacked_draw_count) {
       net_stacked_draw_peak = net_stacked_draw_count;
     }
-    iVar1 = (net_stacked_draw_last + 1) / 100;
+    result = (net_stacked_draw_last + 1) / 100;
     net_stacked_draw_last = (net_stacked_draw_last + 1) % 100;
   }
-  return iVar1;
+  return result;
 }
 #undef net_stacked_draw_count
-#undef local_24
-#undef local_8
+#undef dummy_args
+#undef i
 
 /* 0047e2b3 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -3535,18 +3535,18 @@ int __cdecl net_stacked_draw_push(int param_1,iptr param_2,iptr param_3)
 #define net_move_anim_sound_arg (*(i32 *)((u8 *)&g.d_006ad6a8))
 #define net_stacked_draw_count (*(int *)((u8 *)&g.d_006ad90c))
 #define unit_move_anim_active (*(i32 *)((u8 *)&g.d_00636058))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define stack_count (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl net_stacked_draw_run_next(void)
 
 {
   int y;
-  iptr iVar2;
-  iptr iVar3;
+  iptr visible;
+  iptr tile;
   iptr unit;
   iptr unit2;
-  int iVar6;
+  int count;
   int x;
-  i32 uVar8;
+  i32 sum_mode;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   switch(*(i32 *)(&net_stacked_draw_kinds + net_stacked_draw_first * 0x40)) {
@@ -3555,8 +3555,8 @@ int __cdecl net_stacked_draw_run_next(void)
     y = *(int *)(&net_stacked_draw_arg2 + net_stacked_draw_first * 0x40);
     unit2 = *(iptr *)(&net_stacked_draw_arg3 + net_stacked_draw_first * 0x40);
     unit_stack_validate(*(iptr *)(&net_stacked_draw_args + net_stacked_draw_first * 0x40));
-    iVar2 = mapviews_tile_visible(x,y);
-    if (iVar2 != 0) {
+    visible = mapviews_tile_visible(x,y);
+    if (visible != 0) {
       crt_memcpy(&stacked_draw_unit_copy,net_stacked_draw_first * 0x40 + ADDR(0x6ad940, ((u8 *)&g.d_006ad934 + 12)),0x20);
       stacked_draw_unit_prev = -1;
       stacked_draw_unit_next = -1;
@@ -3564,24 +3564,24 @@ int __cdecl net_stacked_draw_run_next(void)
       if (*(int *)(&net_stacked_draw_arg4 + net_stacked_draw_first * 0x40) == -1) {
         snd_play_effect(99,1,0,0);
       }
-      iVar3 = tile_at(x,y);
-      uVar8 = 2;
+      tile = tile_at(x,y);
+      sum_mode = 2;
       unit = tile_first_unit(x,y);
-      local_8 = unit_stack_sum(unit,uVar8);
+      stack_count = unit_stack_sum(unit,sum_mode);
       if ((stacked_draw_unit_copy != x) || (stacked_draw_unit_y != y)) {
-        local_8++;
+        stack_count++;
       }
-      if (local_8 == 1) {
-        *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
+      if (stack_count == 1) {
+        *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
       }
-      else if (1 < local_8) {
+      else if (1 < stack_count) {
         anim_origin_x = (int)stacked_draw_unit_copy;
         anim_origin_y = (int)stacked_draw_unit_y;
-        iVar6 = unit_stack_sum(0x801,5);
-        if (iVar6 == 0) {
+        count = unit_stack_sum(0x801,5);
+        if (count == 0) {
           if (stacked_draw_unit_next < 0) {
             if (stacked_draw_unit_prev < 0) {
-              *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
+              *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
             }
             else {
               anim_origin_stack_unit = (iptr)stacked_draw_unit_prev;
@@ -3592,9 +3592,9 @@ int __cdecl net_stacked_draw_run_next(void)
           }
         }
         else {
-          iVar6 = unit_stack_sum(0x801,5);
-          if (iVar6 < 2) {
-            *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
+          count = unit_stack_sum(0x801,5);
+          if (count < 2) {
+            *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
           }
           else {
             anim_origin_stack_unit = unit_stack_first(0x801);
@@ -3603,7 +3603,7 @@ int __cdecl net_stacked_draw_run_next(void)
                  (unit_types[units[anim_origin_stack_unit].type].domain == 2)) goto LAB_0047e5c2;
               anim_origin_stack_unit = (iptr)units[anim_origin_stack_unit].next_in_stack;
             } while (-1 < anim_origin_stack_unit);
-            *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) & 0xfe;
+            *(byte *)(tile + 1) = *(byte *)(tile + 1) & 0xfe;
           }
         }
       }
@@ -3611,12 +3611,12 @@ LAB_0047e5c2:
       unit_move_anim_active = 1;
       map_animate_unit_move(0x801,x,y,unit2,net_move_anim_sound,net_move_anim_sound_arg);
       unit_move_anim_active = 0;
-      uVar8 = 2;
+      sum_mode = 2;
       unit2 = tile_first_unit(x,y);
-      iVar6 = unit_stack_sum(unit2,uVar8);
-      if (iVar6 != 0) {
+      count = unit_stack_sum(unit2,sum_mode);
+      if (count != 0) {
         if (net_host_flag == '\0') {
-          *(byte *)(iVar3 + 1) = *(byte *)(iVar3 + 1) | 1;
+          *(byte *)(tile + 1) = *(byte *)(tile + 1) | 1;
         }
         else {
           tile_set_improvements(x,y,1,1,1);
@@ -3687,7 +3687,7 @@ LAB_0047e5c2:
 #undef net_move_anim_sound_arg
 #undef net_stacked_draw_count
 #undef unit_move_anim_active
-#undef local_8
+#undef stack_count
 
 /* 0047e94e auto */
 #define blocked_input_char (*(i8 *)((u8 *)&g.d_006c31c8))
@@ -3754,98 +3754,98 @@ LAB_0047e5c2:
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define local_748 (*(int * *)(frame_ + FRAME_OFF(0)))
-#define local_740 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_738 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define local_734 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_718 (*(i8 *)(frame_ + FRAME_OFF(48)))
-#define local_714 (*(i8 *)(frame_ + FRAME_OFF(52)))
-#define local_6fc (*(i8 (*)[28])(frame_ + FRAME_OFF(76)))
-#define local_6e0 (*(i32 *)(frame_ + FRAME_OFF(104)))
-#define local_6dc (*(i32 *)(frame_ + FRAME_OFF(108)))
-#define local_6d8 (*(i32 *)(frame_ + FRAME_OFF(112)))
-#define local_6d4 (*(i32 *)(frame_ + FRAME_OFF(116)))
-#define local_6d0 (*(uint *)(frame_ + FRAME_OFF(120)))
-#define local_6cc (*(u8 *)(frame_ + FRAME_OFF(124)))
+#define popup_data (*(int * *)(frame_ + FRAME_OFF(0)))
+#define dequeue_wait (*(int *)(frame_ + FRAME_OFF(8)))
+#define dblclick_wnd (*(iptr *)(frame_ + FRAME_OFF(16)))
+#define click_wnd (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define home_city_id (*(i8 *)(frame_ + FRAME_OFF(48)))
+#define new_owner (*(i8 *)(frame_ + FRAME_OFF(52)))
+#define draw_args (*(i8 (*)[28])(frame_ + FRAME_OFF(76)))
+#define caption_left (*(i32 *)(frame_ + FRAME_OFF(104)))
+#define caption_top (*(i32 *)(frame_ + FRAME_OFF(108)))
+#define caption_right (*(i32 *)(frame_ + FRAME_OFF(112)))
+#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(116)))
+#define section_id2 (*(uint *)(frame_ + FRAME_OFF(120)))
+#define saved_multiplayer (*(u8 *)(frame_ + FRAME_OFF(124)))
 #define unit2 (*(iptr *)(frame_ + FRAME_OFF(128)))
-#define local_6c4 (*(uint * *)(frame_ + FRAME_OFF(132)))
-#define local_6c0 (*(int *)(frame_ + FRAME_OFF(136)))
-#define local_6bc (*(int *)(frame_ + FRAME_OFF(140)))
-#define local_6b8 (*(int *)(frame_ + FRAME_OFF(144)))
-#define local_6b0 (*(i16 *)(frame_ + FRAME_OFF(152)))
-#define local_6ac (*(i8 *)(frame_ + FRAME_OFF(156)))
-#define local_6a8 (*(int *)(frame_ + FRAME_OFF(160)))
-#define local_6a4 (*(int *)(frame_ + FRAME_OFF(164)))
-#define local_6a0 (*(int *)(frame_ + FRAME_OFF(168)))
-#define local_69c (*(int *)(frame_ + FRAME_OFF(172)))
-#define local_698 (*(uint *)(frame_ + FRAME_OFF(176)))
-#define local_694 (*(int *)(frame_ + FRAME_OFF(180)))
-#define local_690 (*(u16 *)(frame_ + FRAME_OFF(184)))
-#define local_68c (*(i8 *)(frame_ + FRAME_OFF(188)))
-#define local_688 (*(i8 *)(frame_ + FRAME_OFF(192)))
-#define local_684 (*(uptr *)(frame_ + FRAME_OFF(196)))
-#define local_680 (*(i16 *)(frame_ + FRAME_OFF(200)))
-#define local_67c (*(u32 *)(frame_ + FRAME_OFF(204)))
-#define local_678 (*(int *)(frame_ + FRAME_OFF(208)))
-#define local_674 (*(Dialog *)(frame_ + FRAME_OFF(212)))
-#define local_380 (*(int *)(frame_ + FRAME_OFF(968)))
-#define local_37c (*(Dialog *)(frame_ + FRAME_OFF(972)))
-#define local_88 (*(u32 *)(frame_ + FRAME_OFF(1728)))
-#define local_84 (*(int * *)(frame_ + FRAME_OFF(1732)))
+#define rle_src (*(uint * *)(frame_ + FRAME_OFF(132)))
+#define rle_src_end (*(int *)(frame_ + FRAME_OFF(136)))
+#define rle_dst (*(int *)(frame_ + FRAME_OFF(140)))
+#define rle_dst_end (*(int *)(frame_ + FRAME_OFF(144)))
+#define saved_moving_unit (*(i16 *)(frame_ + FRAME_OFF(152)))
+#define saved_player_civ (*(i8 *)(frame_ + FRAME_OFF(156)))
+#define decoded_size (*(int *)(frame_ + FRAME_OFF(160)))
+#define section_idx (*(int *)(frame_ + FRAME_OFF(164)))
+#define units_saved (*(int *)(frame_ + FRAME_OFF(168)))
+#define turn_civ_changed (*(int *)(frame_ + FRAME_OFF(172)))
+#define section_offset (*(uint *)(frame_ + FRAME_OFF(176)))
+#define city_changed (*(int *)(frame_ + FRAME_OFF(180)))
+#define saved_msg_options (*(u16 *)(frame_ + FRAME_OFF(184)))
+#define saved_field_1c (*(i8 *)(frame_ + FRAME_OFF(188)))
+#define saved_turn_civ_val (*(i8 *)(frame_ + FRAME_OFF(192)))
+#define section_size (*(uptr *)(frame_ + FRAME_OFF(196)))
+#define saved_active_unit (*(i16 *)(frame_ + FRAME_OFF(200)))
+#define saved_game_options (*(u32 *)(frame_ + FRAME_OFF(204)))
+#define slot (*(int *)(frame_ + FRAME_OFF(208)))
+#define join_dialog (*(Dialog *)(frame_ + FRAME_OFF(212)))
+#define wait_start (*(int *)(frame_ + FRAME_OFF(968)))
+#define wait_dialog (*(Dialog *)(frame_ + FRAME_OFF(972)))
+#define saved_busy (*(u32 *)(frame_ + FRAME_OFF(1728)))
+#define hello_msg (*(int * *)(frame_ + FRAME_OFF(1732)))
 #define y4 (*(int *)(frame_ + FRAME_OFF(1736)))
 #define x3 (*(int *)(frame_ + FRAME_OFF(1740)))
-#define local_78 (*(i32 *)(frame_ + FRAME_OFF(1744)))
-#define local_74 (*(i32 *)(frame_ + FRAME_OFF(1748)))
-#define local_70 (*(i32 *)(frame_ + FRAME_OFF(1752)))
-#define local_6c (*(i32 *)(frame_ + FRAME_OFF(1756)))
-#define local_68 (*(int *)(frame_ + FRAME_OFF(1760)))
-#define local_64 (*(u32 *)(frame_ + FRAME_OFF(1764)))
-#define local_60 (*(uint *)(frame_ + FRAME_OFF(1768)))
-#define local_5c (*(uint *)(frame_ + FRAME_OFF(1772)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(1776)))
+#define timer_left (*(i32 *)(frame_ + FRAME_OFF(1744)))
+#define timer_top (*(i32 *)(frame_ + FRAME_OFF(1748)))
+#define timer_right (*(i32 *)(frame_ + FRAME_OFF(1752)))
+#define timer_bottom (*(i32 *)(frame_ + FRAME_OFF(1756)))
+#define input_kind (*(int *)(frame_ + FRAME_OFF(1760)))
+#define deferred_input (*(u32 *)(frame_ + FRAME_OFF(1764)))
+#define input_char (*(uint *)(frame_ + FRAME_OFF(1768)))
+#define msg_size (*(uint *)(frame_ + FRAME_OFF(1772)))
+#define sender (*(int *)(frame_ + FRAME_OFF(1776)))
 #define unit4 (*(iptr *)(frame_ + FRAME_OFF(1780)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(1784)))
-#define local_4c (*(i32 *)(frame_ + FRAME_OFF(1788)))
-#define local_48 (*(uint * *)(frame_ + FRAME_OFF(1792)))
-#define local_44 (*(i8 *)(frame_ + FRAME_OFF(1796)))
+#define image_kind (*(int *)(frame_ + FRAME_OFF(1784)))
+#define header_size (*(i32 *)(frame_ + FRAME_OFF(1788)))
+#define payload (*(uint * *)(frame_ + FRAME_OFF(1792)))
+#define unused_flag (*(i8 *)(frame_ + FRAME_OFF(1796)))
 #define unit (*(uptr *)(frame_ + FRAME_OFF(1800)))
-#define local_3c (*(uptr *)(frame_ + FRAME_OFF(1804)))
+#define civ3 (*(uptr *)(frame_ + FRAME_OFF(1804)))
 #define unit3 (*(uptr *)(frame_ + FRAME_OFF(1808)))
 #define y2 (*(iptr *)(frame_ + FRAME_OFF(1812)))
 #define x2 (*(iptr *)(frame_ + FRAME_OFF(1816)))
 #define y3 (*(int *)(frame_ + FRAME_OFF(1820)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(1824)))
-#define local_24 (*(int * *)(frame_ + FRAME_OFF(1828)))
-#define local_20 (*(int * *)(frame_ + FRAME_OFF(1832)))
-#define local_1c (*(char *)(frame_ + FRAME_OFF(1836)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(1840)))
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(1844)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1848)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1852)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1856)))
+#define extra_len (*(int *)(frame_ + FRAME_OFF(1824)))
+#define msg_hdr (*(int * *)(frame_ + FRAME_OFF(1828)))
+#define msg (*(int * *)(frame_ + FRAME_OFF(1832)))
+#define gamelist_dirty (*(char *)(frame_ + FRAME_OFF(1836)))
+#define image_size (*(int *)(frame_ + FRAME_OFF(1840)))
+#define result (*(iptr *)(frame_ + FRAME_OFF(1844)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(1848)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(1852)))
+#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(1856)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
+void __thiscall net_process_messages(NetSession *this,int max_msgs,int wait_mode)
 
 {
-  int *piVar1;
-  u8 *puVar2;
-  char *pcVar3;
+  int *drop_counter;
+  u8 *civ_flag;
+  char *type_count;
   char civ;
-  iptr iVar6;
-  iptr iVar7;
-  u32 uVar6;
+  iptr flush_pending;
+  iptr flush_pending2;
+  u32 now;
   i32 x;
-  iptr iVar8;
+  iptr ret_val;
   int city;
-  bool bVar10;
+  bool had_pending;
   uptr civ2;
   uptr unit5;
   i8 frame_[FRAME_OFF(1864)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_1c = '\0';
-  local_44 = 0;
+  unwind_state = 0xffffffff;
+  gamelist_dirty = '\0';
+  unused_flag = 0;
   if ((((((((this[0xf6].field_4 == 0) && (*(int *)this[0xf7].pad_0 == 0)) &&
           (this[0xf7].field_4 == 0)) &&
          ((*(int *)this[0xf8].pad_0 == 0 && (this[0xf8].field_4 == 0)))) &&
@@ -3856,23 +3856,23 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           ))))))) && ((*(int *)this[0xfd].pad_0 == 0 && (this[0xfd].field_4 == 0)))) &&
      ((*(int *)this[0xfe].pad_0 == 0 &&
       (((this[0xfe].field_4 == 0 && (*(int *)this[0xff].pad_0 == 0)) &&
-       ((this[0xff].field_4 == 0 && (iVar6 = XD_InFlushSendBuffer(), iVar6 == 0)))))))) {
+       ((this[0xff].field_4 == 0 && (flush_pending = XD_InFlushSendBuffer(), flush_pending == 0)))))))) {
     if (((this[0x2c14].field_4 != 0) && (net_deferred_input_busy == '\0')) &&
-       (iVar7 = XD_InFlushSendBuffer(), iVar7 == 0)) {
-      local_64 = this[0x2c14].field_4;
+       (flush_pending2 = XD_InFlushSendBuffer(), flush_pending2 == 0)) {
+      deferred_input = this[0x2c14].field_4;
       net_deferred_input_busy = 1;
       dbg_log(ADDR(0x62bdf8, ((u8 *)&g.d_0062bdf8)));
       this[0x2c14].field_4 = 0;
-      switch(local_64) {
+      switch(deferred_input) {
       case 1:
         if (*(short *)(this[0x2c18].field_4 + 0x2dc) != 0) {
           if (this[0x2c18].field_4 == 0) {
-            local_734 = 0;
+            click_wnd = 0;
           }
           else {
-            local_734 = this[0x2c18].field_4 + 0x48;
+            click_wnd = this[0x2c18].field_4 + 0x48;
           }
-          wnd_set_active_child(local_734);
+          wnd_set_active_child(click_wnd);
           map_window_click(*(i32 *)this[0x2c15].pad_0,this[0x2c15].field_4,
                              *(i32 *)this[0x2c16].pad_0);
         }
@@ -3880,21 +3880,21 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
       case 2:
         if (*(short *)(this[0x2c18].field_4 + 0x2dc) != 0) {
           if (this[0x2c18].field_4 == 0) {
-            local_738 = 0;
+            dblclick_wnd = 0;
           }
           else {
-            local_738 = this[0x2c18].field_4 + 0x48;
+            dblclick_wnd = this[0x2c18].field_4 + 0x48;
           }
-          wnd_set_active_child(local_738);
+          wnd_set_active_child(dblclick_wnd);
           map_window_double_click(*(i32 *)this[0x2c15].pad_0,this[0x2c15].field_4);
         }
         break;
       case 4:
-        local_68 = blocked_input_char_pending;
-        local_60 = CONCAT31((*(i32 *)((char *)&local_60 + 1)),blocked_input_char);
+        input_kind = blocked_input_char_pending;
+        input_char = CONCAT31((*(i32 *)((char *)&input_char + 1)),blocked_input_char);
         map_window_key(*(i32 *)this[0x2c15].pad_0);
-        if (local_68 == 3) {
-          map_window_ascii(local_60);
+        if (input_kind == 3) {
+          map_window_ascii(input_char);
         }
         break;
       case 5:
@@ -3937,7 +3937,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
     if ((int)this[0xb0].field_4 < *(int *)this[0xb0].pad_0) {
       this[0xb0].field_4 = *(u32 *)this[0xb0].pad_0;
     }
-    while (param_1 != 0) {
+    while (max_msgs != 0) {
       if (((*(int *)this[0x102].pad_0 == 0) && (*(int *)this[0x100].pad_0 == 0)) &&
          (0 < (int)this[0x100].field_4)) {
         this[0x102].pad_0[0] = 1;
@@ -3960,50 +3960,50 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
       }
       if ((net_msgq_normal_count < 0x12d) && (net_msgq_priority_count < 0x22)) {
         ui_pump_messages();
-        param_1--;
+        max_msgs--;
       }
       if (net_msgq_priority_count < 0x22) {
-        local_740 = param_2;
+        dequeue_wait = wait_mode;
       }
       else {
-        local_740 = 1;
+        dequeue_wait = 1;
       }
       civ = net_msgq_dequeue
-                        ((NetMessageQueue *)(this + 0x2c1a),(iptr)&local_58,(iptr)&local_20,
-                         (iptr)&local_5c,local_740);
+                        ((NetMessageQueue *)(this + 0x2c1a),(iptr)&sender,(iptr)&msg,
+                         (iptr)&msg_size,dequeue_wait);
       if (civ == '\0') break;
-      if (local_20 == (int *)0x0) {
+      if (msg == (int *)0x0) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62be4c, ((u8 *)&g.d_0062be4c)),ADDR(0x62be28, ((u8 *)&g.d_0062be28)),0x195);
       }
-      local_24 = local_20;
-      if (*local_20 == 0x66606660) {
-        *(int *)(&nm_recv_counts + local_20[1] * 4) = *(int *)(&nm_recv_counts + local_20[1] * 4) + 1;
-        if ((0x35 < local_20[1]) && (game_setup_complete == 0)) {
-          operator_delete(local_20);
+      msg_hdr = msg;
+      if (*msg == 0x66606660) {
+        *(int *)(&nm_recv_counts + msg[1] * 4) = *(int *)(&nm_recv_counts + msg[1] * 4) + 1;
+        if ((0x35 < msg[1]) && (game_setup_complete == 0)) {
+          operator_delete(msg);
           break;
         }
-        local_48 = (uint *)(local_20 + 0xb);
-        switch(local_20[1]) {
+        payload = (uint *)(msg + 0xb);
+        switch(msg[1]) {
         case 0:
-          local_84 = local_20;
-          *(int *)(&nm_recv_counts + local_20[0x1c] * 4) =
-               *(int *)(&nm_recv_counts + local_20[0x1c] * 4) + 1;
-          if (local_20[0x1c] == 1) {
+          hello_msg = msg;
+          *(int *)(&nm_recv_counts + msg[0x1c] * 4) =
+               *(int *)(&nm_recv_counts + msg[0x1c] * 4) + 1;
+          if (msg[0x1c] == 1) {
             if (((*(char *)((int)&this[0x3d].field_4 + 3) != '\0') && (net_host_handoff_stage == '\0')) &&
                (net_connection_type != 0)) {
               net_send_message(2,0,0,0,0,0,0,0,0,0);
             }
           }
-          else if (local_20[0x1c] == 2) {
-            net_game_list_add(this,(iptr)local_20);
-            local_1c = 1;
+          else if (msg[0x1c] == 2) {
+            net_game_list_add(this,(iptr)msg);
+            gamelist_dirty = 1;
           }
           break;
         default:
           dbg_log(ADDR(0x62bf14, ((u8 *)&g.d_0062bf14)));
           break;
         case 4:
-          crt_memcpy(this + 0x40,local_20 + 4,0x270);
+          crt_memcpy(this + 0x40,msg + 4,0x270);
           for (unit4 = 0; unit4 < 7; unit4++) {
             if ((*(char *)((int)this + unit4 * 0x54 + 0x251) != '\0') &&
                (*(int *)((int)this + unit4 * 0x54 + 0x204) == *(int *)this[0x3f].pad_0)) {
@@ -4013,31 +4013,31 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           }
           break;
         case 5:
-          uVar6 = timer_ticks();
-          this[0xad].field_4 = uVar6;
+          now = timer_ticks();
+          this[0xad].field_4 = now;
           break;
         case 6:
-          loaded_file_kind = (i16)local_20[4];
-          crt_strcpy(&loaded_file_name,(int)local_20 + 0x12);
-          crt_strcpy(&loaded_file_subdir,(int)local_24 + 0x116);
+          loaded_file_kind = (i16)msg[4];
+          crt_strcpy(&loaded_file_name,(int)msg + 0x12);
+          crt_strcpy(&loaded_file_subdir,(int)msg_hdr + 0x116);
           break;
         case 7:
         case 8:
         case 9:
-          local_4c = 0x2c;
-          local_50 = local_20[4];
-          local_18 = local_5c - 0x2c;
-          crt_memmove(local_20,local_20 + 0xb,local_18);
-          local_20 = (int *)crt_realloc(local_20,local_18);
-          diffeng_apply_image(&local_20,local_50);
+          header_size = 0x2c;
+          image_kind = msg[4];
+          image_size = msg_size - 0x2c;
+          crt_memmove(msg,msg + 0xb,image_size);
+          msg = (int *)crt_realloc(msg,image_size);
+          diffeng_apply_image(&msg,image_kind);
           break;
         case 10:
-          local_4c = 0x2c;
-          local_50 = local_20[4];
-          local_18 = local_5c - 0x2c;
-          crt_memmove(local_20,local_20 + 0xb,local_18);
-          local_20 = (int *)crt_realloc(local_20,local_18);
-          diffeng_apply_map_header_image(&local_20,local_50);
+          header_size = 0x2c;
+          image_kind = msg[4];
+          image_size = msg_size - 0x2c;
+          crt_memmove(msg,msg + 0xb,image_size);
+          msg = (int *)crt_realloc(msg,image_size);
+          diffeng_apply_map_header_image(&msg,image_kind);
           break;
         case 0xb:
         case 0xc:
@@ -4055,52 +4055,52 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           net_players_awaited--;
           break;
         case 0x12:
-          net_send_message(0x13,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x13,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x13:
           if (net_session != 0) {
-            crt_strcpy(net_session + 0x88,local_20 + 4);
-            crt_strcpy(net_session + 0xa8,local_24 + 0x20);
-            crt_strcpy(net_session + 200,local_24 + 0x28);
-            crt_strcpy(net_session + 0xe8,local_24 + 0x10);
+            crt_strcpy(net_session + 0x88,msg + 4);
+            crt_strcpy(net_session + 0xa8,msg_hdr + 0x20);
+            crt_strcpy(net_session + 200,msg_hdr + 0x28);
+            crt_strcpy(net_session + 0xe8,msg_hdr + 0x10);
           }
-          crt_strcpy(&net_server_address,local_24 + 4);
-          crt_strcpy(&net_game_name,local_24 + 0x20);
+          crt_strcpy(&net_server_address,msg_hdr + 4);
+          crt_strcpy(&net_game_name,msg_hdr + 0x20);
           crt_strcpy(&net_local_player_name,&prefs_net_player_name);
-          crt_strcpy(&net_server_version,local_24 + 0x10);
+          crt_strcpy(&net_server_version,msg_hdr + 0x10);
           break;
         case 0x14:
           break;
         case 0x15:
         case 0x5c:
-          local_694 = 0;
-          local_6a0 = 0;
-          local_69c = 0;
-          net_msg_get_args((iptr)local_20,&unit);
+          city_changed = 0;
+          units_saved = 0;
+          turn_civ_changed = 0;
+          net_msg_get_args((iptr)msg,&unit);
           if (diffeng_mirror_buf != 0) {
-            for (local_6a4 = 0; local_6a4 < (int)unit; local_6a4++) {
-              local_6d0 = *local_48;
-              local_698 = local_48[1];
-              local_684 = local_48[2];
-              local_48 += 3;
-              if ((local_6d0 & 0x7fff) == 1) {
-                local_680 = game.active_unit;
-                local_6b0 = game.moving_unit;
-                local_6cc = game.multiplayer;
-                local_6ac = game.player_civ;
-                local_68c = game.field_1c;
-                local_688 = game.turn_civ;
-                local_67c = game.game_options;
-                local_690 = game.message_options;
+            for (section_idx = 0; section_idx < (int)unit; section_idx++) {
+              section_id2 = *payload;
+              section_offset = payload[1];
+              section_size = payload[2];
+              payload += 3;
+              if ((section_id2 & 0x7fff) == 1) {
+                saved_active_unit = game.active_unit;
+                saved_moving_unit = game.moving_unit;
+                saved_multiplayer = game.multiplayer;
+                saved_player_civ = game.player_civ;
+                saved_field_1c = game.field_1c;
+                saved_turn_civ_val = game.turn_civ;
+                saved_game_options = game.game_options;
+                saved_msg_options = game.message_options;
               }
-              else if (((net_host_flag == '\0') || ((local_6d0 & 0x7fff) != 5)) || (local_6a0 != 0))
+              else if (((net_host_flag == '\0') || ((section_id2 & 0x7fff) != 5)) || (units_saved != 0))
               {
-                if ((local_6d0 & 0x7fff) == 0xb) {
-                  local_69c = 1;
+                if ((section_id2 & 0x7fff) == 0xb) {
+                  turn_civ_changed = 1;
                 }
               }
               else {
-                local_6a0 = 1;
+                units_saved = 1;
                 for (unit2 = 0; unit2 < game.num_units; unit2++) {
                   *(i16 *)(&net_saved_unit_x + unit2 * 2) = units[unit2].x;
                   *(i16 *)(&net_saved_unit_y + unit2 * 2) = units[unit2].y;
@@ -4108,41 +4108,41 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
                   *(i16 *)(&net_saved_unit_prev + unit2 * 2) = units[unit2].prev_in_stack;
                 }
               }
-              if ((local_6d0 & 0x8000) == 0) {
-                crt_memcpy((&diffeng_section_ptrs)[local_6d0 * 6] + local_698,local_48,local_684);
-                crt_memcpy(*(int *)(&diffeng_section_offsets + local_6d0 * 0x18) + local_698 + diffeng_mirror_buf,
-                             local_48,local_684);
+              if ((section_id2 & 0x8000) == 0) {
+                crt_memcpy((&diffeng_section_ptrs)[section_id2 * 6] + section_offset,payload,section_size);
+                crt_memcpy(*(int *)(&diffeng_section_offsets + section_id2 * 0x18) + section_offset + diffeng_mirror_buf,
+                             payload,section_size);
               }
               else {
-                local_6d0 = local_6d0 & 0x7fff;
-                local_6c0 = local_684 + (int)local_48;
-                local_6c4 = local_48;
-                local_6a8 = diffeng_rle_decoded_size((iptr)&local_6c4);
-                local_6bc = (&diffeng_section_ptrs)[local_6d0 * 6] + local_698;
-                local_6b8 = local_6bc + local_6a8;
-                diffeng_rle_decode((iptr)&local_6c4);
-                crt_memcpy(*(int *)(&diffeng_section_offsets + local_6d0 * 0x18) + local_698 + diffeng_mirror_buf,
-                             (&diffeng_section_ptrs)[local_6d0 * 6] + local_698,local_6a8);
+                section_id2 = section_id2 & 0x7fff;
+                rle_src_end = section_size + (int)payload;
+                rle_src = payload;
+                decoded_size = diffeng_rle_decoded_size((iptr)&rle_src);
+                rle_dst = (&diffeng_section_ptrs)[section_id2 * 6] + section_offset;
+                rle_dst_end = rle_dst + decoded_size;
+                diffeng_rle_decode((iptr)&rle_src);
+                crt_memcpy(*(int *)(&diffeng_section_offsets + section_id2 * 0x18) + section_offset + diffeng_mirror_buf,
+                             (&diffeng_section_ptrs)[section_id2 * 6] + section_offset,decoded_size);
               }
-              if (local_6d0 == 1) {
-                game.active_unit = local_680;
-                game.moving_unit = local_6b0;
-                game.multiplayer = local_6cc;
-                game.player_civ = local_6ac;
-                game.field_1c = local_68c;
-                game.turn_civ = local_688;
-                game.game_options = local_67c;
-                game.message_options = local_690;
+              if (section_id2 == 1) {
+                game.active_unit = saved_active_unit;
+                game.moving_unit = saved_moving_unit;
+                game.multiplayer = saved_multiplayer;
+                game.player_civ = saved_player_civ;
+                game.field_1c = saved_field_1c;
+                game.turn_civ = saved_turn_civ_val;
+                game.game_options = saved_game_options;
+                game.message_options = saved_msg_options;
               }
-              if (local_6d0 == 6) {
-                local_694 = 1;
+              if (section_id2 == 6) {
+                city_changed = 1;
               }
-              local_48 = (uint *)((int)local_48 + local_684);
+              payload = (uint *)((int)payload + section_size);
             }
-            if (local_694 != 0) {
+            if (city_changed != 0) {
               city_window_refresh((FrameWindow *)&city_window);
             }
-            if ((net_host_flag != '\0') && (local_6a0 != 0)) {
+            if ((net_host_flag != '\0') && (units_saved != 0)) {
               for (unit2 = 0; unit2 < game.num_units; unit2++) {
                 units[unit2].x = *(i16 *)(&net_saved_unit_x + unit2 * 2);
                 units[unit2].y = *(i16 *)(&net_saved_unit_y + unit2 * 2);
@@ -4150,7 +4150,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
                 units[unit2].prev_in_stack = *(i16 *)(&net_saved_unit_prev + unit2 * 2);
               }
             }
-            if (local_69c != 0) {
+            if (turn_civ_changed != 0) {
               turn_resume_civ = saved_turn_civ;
             }
           }
@@ -4158,51 +4158,51 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0x16:
           break;
         case 0x17:
-          crt_memcpy(&cosmic,local_48,0x29);
+          crt_memcpy(&cosmic,payload,0x29);
           break;
         case 0x18:
-          crt_memcpy(advances,local_48,0x640);
+          crt_memcpy(advances,payload,0x640);
           break;
         case 0x19:
-          crt_memcpy(improvements,local_48,0x218);
+          crt_memcpy(improvements,payload,0x218);
           break;
         case 0x1a:
-          crt_memcpy(wonder_expires,local_48,0x1c);
+          crt_memcpy(wonder_expires,payload,0x1c);
           break;
         case 0x1b:
-          crt_memcpy(unit_types,local_48,0x4d8);
+          crt_memcpy(unit_types,payload,0x4d8);
           break;
         case 0x1c:
-          crt_memcpy(terrain_types,local_48,0x318);
+          crt_memcpy(terrain_types,payload,0x318);
           break;
         case 0x1d:
-          crt_memcpy(government_names,local_48,0x1c);
+          crt_memcpy(government_names,payload,0x1c);
           break;
         case 0x1e:
-          crt_memcpy(government_titles,local_48,0x38);
+          crt_memcpy(government_titles,payload,0x38);
           break;
         case 0x1f:
-          crt_memcpy(leaders,local_48,0x3f0);
+          crt_memcpy(leaders,payload,0x3f0);
           break;
         case 0x20:
-          crt_memcpy(civs,local_48,0x7524);
+          crt_memcpy(civs,payload,0x7524);
           break;
         case 0x21:
-          crt_memcpy(commodity_names,local_48,0x40);
+          crt_memcpy(commodity_names,payload,0x40);
           break;
         case 0x22:
-          crt_memcpy(order_names,local_48,0x68);
+          crt_memcpy(order_names,payload,0x68);
           break;
         case 0x23:
-          crt_memcpy(difficulty_names,local_48,0x18);
+          crt_memcpy(difficulty_names,payload,0x18);
           break;
         case 0x24:
-          crt_memcpy(attitude_names,local_48,0x24);
+          crt_memcpy(attitude_names,payload,0x24);
           break;
         case 0x25:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           scenario_events_loaded = unit;
-          scenario_event_count = local_3c;
+          scenario_event_count = civ3;
           if (unit != 0) {
             events_relink_pool();
           }
@@ -4212,22 +4212,22 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0x27:
           break;
         case 0x28:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_session_phase = unit;
           break;
         case 0x2a:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_claimed_civs_mask = (ushort)unit;
           game.human_players = game.human_players & (byte)unit;
           nm_lock_nation_count_i32++;
           break;
         case 0x2b:
-          net_send_message(0x2c,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x2c,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x2c:
           break;
         case 0x2d:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           *(i32 *)(&net_civ_drop_requested + unit * 4) = 1;
           net_drop_flagged_players();
           break;
@@ -4236,74 +4236,74 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62bec8, ((u8 *)&g.d_0062bec8)),ADDR(0x62bea4, ((u8 *)&g.d_0062bea4)),0x22a);
           }
           if (net_host_handoff_stage == '\0') {
-            city = net_host_register_player_civ((iptr)local_24,local_58);
+            city = net_host_register_player_civ((iptr)msg_hdr,sender);
             if (city == 0) {
-              net_send_message(0xc,local_58,0,0,0,0,0,0,0,0);
+              net_send_message(0xc,sender,0,0,0,0,0,0,0,0);
             }
             else {
               nm_lock_nation_count_i32++;
               if (2 < (int)net_session_phase) {
-                dialog_ctor(&local_674,0x4000);
-                local_8 = 1;
+                dialog_ctor(&join_dialog,0x4000);
+                unwind_state = 1;
                 net_send_message(0x65,0xff,0,0,0,0,0,0,0,0);
                 mp_turn_timer_stop(0);
-                dlg_load_game_section(&local_674,ADDR(0x62bed8, ((u8 *)&g.d_0062bed8)),0x2000000);
-                dlg_show_modal(&local_674,0);
-                net_send_message(0x33,local_58,(int)mp_double_production,(int)mp_double_moves,
+                dlg_load_game_section(&join_dialog,ADDR(0x62bed8, ((u8 *)&g.d_0062bed8)),0x2000000);
+                dlg_show_modal(&join_dialog,0);
+                net_send_message(0x33,sender,(int)mp_double_production,(int)mp_double_moves,
                                    (int)mp_simultaneous_setting,0,0,0,0,0);
                 net_send_message(4,0xff,0,0,0,0,0,0,0,0);
                 XD_FlushSendBuffer(5000);
                 net_send_state_diff(0xff,2,0,0,0);
                 XD_FlushSendBuffer(5000);
-                net_send_message(10,local_58,0,0,0,0,0,0,0,0);
-                net_send_state_diff(local_58,1,0,0,0);
+                net_send_message(10,sender,0,0,0,0,0,0,0,0);
+                net_send_state_diff(sender,1,0,0,0);
                 XD_FlushSendBuffer(5000);
-                net_send_message(0x25,local_58,scenario_events_loaded,scenario_event_count,0,0,0,0,0,0);
-                net_send_rules_tables(local_58);
+                net_send_message(0x25,sender,scenario_events_loaded,scenario_event_count,0,0,0,0,0,0);
+                net_send_rules_tables(sender);
                 XD_FlushSendBuffer(5000);
-                net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
-                net_send_message(0x16,local_58,0,0,0,0,0,0,0,0);
+                net_send_message(0x28,sender,net_session_phase,0,0,0,0,0,0,0);
+                net_send_message(0x16,sender,0,0,0,0,0,0,0,0);
                 net_send_message(0x9c,0xff,0,0,0,0,0,0,0,0);
-                local_380 = timer_ticks();
+                wait_start = timer_ticks();
                 do {
                   city = XD_FlushSendBuffer(5000);
                   if (city == 0) break;
                   net_process_messages((NetSession *)&net_session,100,0);
                   city = timer_ticks();
-                } while (17999 < city - local_380);
+                } while (17999 < city - wait_start);
                 net_send_message(0x66,0xff,0,0,0,0,0,0,0,0);
-                dialog_close(&local_674);
+                dialog_close(&join_dialog);
                 mp_turn_timer_resume(0);
-                for (local_678 = 0;
-                    (local_678 < 7 && (*(int *)(&net_player_slots + local_678 * 0x54) != local_58));
-                    local_678 = local_678 + 1) {
+                for (slot = 0;
+                    (slot < 7 && (*(int *)(&net_player_slots + slot * 0x54) != sender));
+                    slot = slot + 1) {
                 }
-                if (local_678 < 7) {
-                  puVar2 = this[0xa7].pad_0 + (&net_slot_civs)[local_678 * 0x15] * 4 + 4;
-                  puVar2[0] = 1;
-                  puVar2[1] = '\0';
-                  puVar2[2] = '\0';
-                  puVar2[3] = '\0';
+                if (slot < 7) {
+                  civ_flag = this[0xa7].pad_0 + (&net_slot_civs)[slot * 0x15] * 4 + 4;
+                  civ_flag[0] = 1;
+                  civ_flag[1] = '\0';
+                  civ_flag[2] = '\0';
+                  civ_flag[3] = '\0';
                 }
-                local_8 = 0xffffffff;
-                /* inlined unwind funclet 00482305 */ { dialog_dtor((Dialog *)((iptr)&local_674)); }
+                unwind_state = 0xffffffff;
+                /* inlined unwind funclet 00482305 */ { dialog_dtor((Dialog *)((iptr)&join_dialog)); }
               }
             }
           }
           else {
-            net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0xb,sender,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x2f:
           if (net_host_handoff_stage == '\0') {
             if (net_player_count < net_max_players) {
-              net_add_player(this,(iptr)local_20);
+              net_add_player(this,(iptr)msg);
               if ((net_lobby_list == (int *)0x0) || (*net_lobby_list == 0)) {
                 if (0 < (int)net_session_phase) {
-                  net_send_message(0x28,local_58,net_session_phase,0,0,0,0,0,0,0);
+                  net_send_message(0x28,sender,net_session_phase,0,0,0,0,0,0,0);
                   net_send_message(4,0xff,0,0,0,0,0,0,0,0);
-                  net_send_message(6,local_58,0,0,0,0,0,0,0,0);
-                  net_send_message(9,local_58,0,0,0,0,0,0,0,0);
+                  net_send_message(6,sender,0,0,0,0,0,0,0,0);
+                  net_send_message(9,sender,0,0,0,0,0,0,0,0);
                 }
               }
               else {
@@ -4311,210 +4311,210 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
               }
             }
             else {
-              net_send_message(0x11,local_58,0,0,0,0,0,0,0,0);
+              net_send_message(0x11,sender,0,0,0,0,0,0,0,0);
             }
           }
           else {
-            net_send_message(0xb,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0xb,sender,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x30:
-          net_msg_get_args((iptr)local_20,&unit);
-          if (((int)(short)net_claimed_civs_mask & 1 << ((byte)local_3c & 0x1f)) == 0) {
-            net_claimed_civs_mask = (ushort)(1 << ((byte)local_3c & 0x1f)) | net_claimed_civs_mask;
-            net_send_message(0x26,local_58,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          if (((int)(short)net_claimed_civs_mask & 1 << ((byte)civ3 & 0x1f)) == 0) {
+            net_claimed_civs_mask = (ushort)(1 << ((byte)civ3 & 0x1f)) | net_claimed_civs_mask;
+            net_send_message(0x26,sender,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
             net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
             nm_lock_nation_count_i32++;
           }
           else {
-            net_send_message(0x27,local_58,0,0,0,0,0,0,0,0);
+            net_send_message(0x27,sender,0,0,0,0,0,0,0,0);
           }
           break;
         case 0x31:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           game.human_players = game.human_players & (byte)net_claimed_civs_mask;
-          if (((int)(short)net_claimed_civs_mask & 1 << ((byte)local_3c & 0x1f)) != 0) {
-            net_claimed_civs_mask = ~(ushort)(1 << ((byte)local_3c & 0x1f)) & net_claimed_civs_mask;
+          if (((int)(short)net_claimed_civs_mask & 1 << ((byte)civ3 & 0x1f)) != 0) {
+            net_claimed_civs_mask = ~(ushort)(1 << ((byte)civ3 & 0x1f)) & net_claimed_civs_mask;
             game.human_players = game.human_players & (byte)net_claimed_civs_mask;
             net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
             nm_lock_nation_count_i32++;
           }
           break;
         case 0x32:
-          *(i32 *)(&net_lost_conn_by_player + local_58 * 4) = 0xffffffff;
-          net_remove_player(this,local_58);
+          *(i32 *)(&net_lost_conn_by_player + sender * 4) = 0xffffffff;
+          net_remove_player(this,sender);
           if ((this->field_4 != 0) &&
-             (piVar1 = (int *)(this->field_4 + 0x54 + local_58 * 4), *piVar1 = *piVar1 + 1,
+             (drop_counter = (int *)(this->field_4 + 0x54 + sender * 4), *drop_counter = *drop_counter + 1,
              *net_lobby_list != 0)) {
             lobby_refresh_player_list();
           }
           break;
         case 0x33:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           mp_double_production = (short)unit;
-          mp_double_moves = (short)local_3c;
+          mp_double_moves = (short)civ3;
           mp_simultaneous_moves = (char)unit3;
           mp_simultaneous_setting = (short)(char)unit3;
           break;
         case 0x34:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           civ_eliminate(unit,0,0);
-          net_send_message(0x35,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x35,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x35:
           net_kill_or_quit_ack = 1;
           break;
         case 0x37:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if ((-1 < (int)unit) && (units[unit].id != 0)) {
             x3 = (int)units[unit].x;
             y4 = (int)units[unit].y;
           }
           unit_delete(unit,1);
-          net_send_message(0x38,local_58,unit,0,0,0,0,0,0,0);
+          net_send_message(0x38,sender,unit,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x38:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_unit_deleted_ack = 1;
           break;
         case 0x39:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           city_delete(unit,0);
-          net_send_message(0x3a,local_58,unit,0,0,0,0,0,0,0);
+          net_send_message(0x3a,sender,unit,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3a:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_city_deleted_ack = 1;
-          crt_memcpy(cities + unit,local_48,0x58);
+          crt_memcpy(cities + unit,payload,0x58);
           break;
         case 0x3b:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_14 = city_create(unit,local_3c,unit3);
-          net_send_message(0x3c,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          result = city_create(unit,civ3,unit3);
+          net_send_message(0x3c,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3c:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_city_created_result = unit;
           if (unit != 0xffffffff) {
-            crt_memcpy(cities + unit,local_48,0x58);
-            game.num_cities = (i16)local_3c;
+            crt_memcpy(cities + unit,payload,0x58);
+            game.num_cities = (i16)civ3;
           }
           break;
         case 0x3d:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_14 = unit_create(unit,local_3c,unit3,y2);
-          net_send_message(0x3e,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          result = unit_create(unit,civ3,unit3,y2);
+          net_send_message(0x3e,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x3e:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_unit_created_result = unit;
           if (unit != 0xffffffff) {
-            game.num_units = (i16)local_3c;
+            game.num_units = (i16)civ3;
           }
           break;
         case 0x3f:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_stack_unlink(unit,1);
-          net_send_message(0x40,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x40,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x40:
           nm_unit_picked_up_count = 1;
           break;
         case 0x41:
-          net_msg_get_args((iptr)local_20,&unit);
-          unit_stack_link(unit,local_3c,unit3,1);
-          net_send_message(0x42,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          unit_stack_link(unit,civ3,unit3,1);
+          net_send_message(0x42,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x42:
           nm_unit_put_down_count = 1;
           break;
         case 0x43:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_move_to_stack_bottom(unit,1);
-          net_send_message(0x44,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x44,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x44:
           nm_bottomed_count = 1;
           break;
         case 0x45:
-          net_msg_get_args((iptr)local_20,&unit);
-          unit_relocate(unit,local_3c,unit3,1);
-          net_send_message(0x46,local_58,0,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          unit_relocate(unit,civ3,unit3,1);
+          net_send_message(0x46,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x46:
           nm_unit_relocated_count = 1;
           break;
         case 0x47:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_14 = city_acquire_wonder(unit,local_3c,unit3,y2,x2);
-          net_send_message(0x48,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          result = city_acquire_wonder(unit,civ3,unit3,y2,x2);
+          net_send_message(0x48,sender,result,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(5000);
           break;
         case 0x48:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_wonder_acquired_result = unit;
           break;
         case 0x49:
-          net_msg_get_args((iptr)local_20,&unit);
-          iVar8 = unit_gather_cargo(unit,local_3c,1);
-          net_send_message(0x4a,local_58,iVar8,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          ret_val = unit_gather_cargo(unit,civ3,1);
+          net_send_message(0x4a,sender,ret_val,0,0,0,0,0,0,0);
           break;
         case 0x4a:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_ship_stacked_result = unit;
           break;
         case 0x4b:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_lift_off_map(unit,1);
-          net_send_message(0x4c,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x4c,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x4c:
           nm_unit_stacked_count = 1;
           break;
         case 0x4d:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_delete_with_cargo(unit,1);
-          net_send_message(0x4e,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x4e,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x4e:
           nm_safely_deleted_count = 1;
           break;
         case 0x4f:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_destroy_redraw(unit,1);
-          net_send_message(0x50,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x50,sender,0,0,0,0,0,0,0,0);
           break;
         case 0x50:
           nm_visibly_deleted_count = 1;
           break;
         case 0x51:
-          net_msg_get_args((iptr)local_20,&unit);
-          net_lock_map(unit,local_3c,unit3,y2,x2,0);
+          net_msg_get_args((iptr)msg,&unit);
+          net_lock_map(unit,civ3,unit3,y2,x2,0);
           break;
         case 0x52:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_unlock_map(unit,0);
-          net_send_message(0x54,local_58,unit,0,0,0,0,0,0,0);
+          net_send_message(0x54,sender,unit,0,0,0,0,0,0,0);
           break;
         case 0x53:
-          net_msg_get_args((iptr)local_20,&unit);
-          *(uptr *)(&net_map_lock_replies + unit * 0x18) = local_3c;
+          net_msg_get_args((iptr)msg,&unit);
+          *(uptr *)(&net_map_lock_replies + unit * 0x18) = civ3;
           break;
         case 0x54:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           *(int *)(&net_map_lock_slots + unit * 0x18) = *(int *)(&net_map_lock_slots + unit * 0x18) + 1;
           break;
         case 0x55:
-          net_msg_get_args((iptr)local_20,&unit);
-          *(uptr *)(&net_map_lock_src_x + unit * 0x18) = local_3c;
+          net_msg_get_args((iptr)msg,&unit);
+          *(uptr *)(&net_map_lock_src_x + unit * 0x18) = civ3;
           *(uptr *)(&net_map_lock_src_y + unit * 0x18) = unit3;
           *(iptr *)(&net_map_lock_dst_x + unit * 0x18) = y2;
           *(iptr *)(&net_map_lock_dst_y + unit * 0x18) = x2;
@@ -4524,7 +4524,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           break;
         case 0x56:
         case 0x57:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_vote_replies_pending--;
           if (unit == 2) {
             net_vote_status = 0xffffffff;
@@ -4534,14 +4534,14 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           wonder_apollo_reveal_map();
           break;
         case 0x59:
-          net_apply_tile_updates((iptr)local_48);
+          net_apply_tile_updates((iptr)payload);
           break;
         case 0x5a:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           unit_lift_off_map(unit3,0);
           unit_stack_clear_visibility(unit3);
           if (y2 == 0) {
-            unit_stack_set_seen_by(unit3,local_3c);
+            unit_stack_set_seen_by(unit3,civ3);
           }
           unit_stack_relocate_all(unit3,x2,y3,0);
           if ((-1 < units[unit3].next_in_stack) &&
@@ -4552,7 +4552,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             net_unlock_map(unit,0);
           }
           net_send_state_diff(0xff,2,0,0,1);
-          net_send_message(0x5b,local_58,0,0,0,0,0,0,0,0);
+          net_send_message(0x5b,sender,0,0,0,0,0,0,0,0);
           XD_FlushSendBuffer(60000);
           break;
         case 0x5b:
@@ -4567,108 +4567,108 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           dbg_log(ADDR(0x62bef0, ((u8 *)&g.d_0062bef0)));
           break;
         case 0x5f:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_14 = civ_create(unit);
-          net_send_message(0x61,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          result = civ_create(unit);
+          net_send_message(0x61,sender,result,0,0,0,0,0,0,0);
           break;
         case 0x60:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_14 = civ_check_destroyed(unit,local_3c);
-          net_send_message(0x62,local_58,local_14,0,0,0,0,0,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          result = civ_check_destroyed(unit,civ3);
+          net_send_message(0x62,sender,result,0,0,0,0,0,0,0);
           break;
         case 0x61:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_new_civ_ack_result = unit;
           break;
         case 0x62:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           nm_kill_civ_ack_result = unit;
           break;
         case 99:
-          net_msg_get_args((iptr)local_20,&unit);
-          civ2 = local_3c;
+          net_msg_get_args((iptr)msg,&unit);
+          civ2 = civ3;
           unit5 = unit;
           civ = units[unit].owner;
-          civs[local_3c].gold -= unit3;
-          pcVar3 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
-          *pcVar3 = *pcVar3 - 1;
-          pcVar3 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + local_3c * 0x594);
-          *pcVar3 = *pcVar3 + 1;
-          civs[local_3c].field_1c++;
-          local_714 = (i8)local_3c;
-          units[unit].owner = local_714;
+          civs[civ3].gold -= unit3;
+          type_count = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+          *type_count = *type_count - 1;
+          type_count = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ3 * 0x594);
+          *type_count = *type_count + 1;
+          civs[civ3].field_1c++;
+          new_owner = (i8)civ3;
+          units[unit].owner = new_owner;
           units[unit].home_city = -1;
           units[unit].moves_used = '\0';
           units[unit].orders = -1;
           city = city_find_nearest((int)units[unit].x,(int)units[unit].y,-1,0xffffffff,-1)
           ;
           if ((-1 < city) && ((int)cities[city].owner == civ2)) {
-            local_718 = (i8)city;
-            units[unit5].home_city = local_718;
+            home_city_id = (i8)city;
+            units[unit5].home_city = home_city_id;
           }
           unit_set_seen_by(unit5,(int)civ);
           tile_set_owner((int)units[unit5].x,(int)units[unit5].y,civ2,1);
           net_send_state_diff(0xff,2,0,0,1);
           break;
         case 100:
-          net_msg_get_args((iptr)local_20,&unit);
-          casualty_log_add(unit,local_3c,unit3,y2,x2);
+          net_msg_get_args((iptr)msg,&unit);
+          casualty_log_add(unit,civ3,unit3,y2,x2);
           break;
         case 0x65:
-          dialog_ctor(&local_37c,0x4000);
-          local_8 = 0;
-          local_88 = this[0xae].field_4;
+          dialog_ctor(&wait_dialog,0x4000);
+          unwind_state = 0;
+          saved_busy = this[0xae].field_4;
           this[0xae].field_4 = 1;
           mp_turn_timer_stop(0);
           nm_continue_after_join_count = 0;
           dlg_pending_idle_callback = ((void *)ADDR(0x00402c2a, net_game_xmit_wait_idle));
           popup_game_sprite_flags(ADDR(0x62be94, ((u8 *)&g.d_0062be94)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-          dialog_close(&local_37c);
-          this[0xae].field_4 = local_88;
+          dialog_close(&wait_dialog);
+          this[0xae].field_4 = saved_busy;
           mp_turn_timer_resume(0);
-          local_8 = 0xffffffff;
-          /* inlined unwind funclet 00482311 */ { dialog_dtor((Dialog *)((iptr)&local_37c)); }
+          unwind_state = 0xffffffff;
+          /* inlined unwind funclet 00482311 */ { dialog_dtor((Dialog *)((iptr)&wait_dialog)); }
           break;
         case 0x66:
           break;
         case 0x68:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_4c = 0x2c;
+          net_msg_get_args((iptr)msg,&unit);
+          header_size = 0x2c;
           chat_receive_message
-                    ((WindowObjectView *)&chat_wnd,unit,local_3c,unit3,(iptr)(local_20 + 0xb)
+                    ((WindowObjectView *)&chat_wnd,unit,civ3,unit3,(iptr)(msg + 0xb)
                     );
           break;
         case 0x69:
-          bVar10 = *(int *)this[0x102].pad_0 != 0;
-          if (bVar10) {
+          had_pending = *(int *)this[0x102].pad_0 != 0;
+          if (had_pending) {
             net_stacked_draw_last = (net_stacked_draw_first + 1) % 100;
           }
           else {
             net_stacked_draw_first = 0;
             net_stacked_draw_last = 0;
           }
-          net_stacked_draw_count = (uint)bVar10;
-          net_stacked_draw_push(0xa3,(iptr)local_6fc,0);
-          net_stacked_draw_push(0x74,(iptr)local_6fc,0);
-          game.turn_civ = (i8)local_24[4];
+          net_stacked_draw_count = (uint)had_pending;
+          net_stacked_draw_push(0xa3,(iptr)draw_args,0);
+          net_stacked_draw_push(0x74,(iptr)draw_args,0);
+          game.turn_civ = (i8)msg_hdr[4];
           mp_turn_civ_i32 = (int)game.turn_civ;
           mp_turn_timer_stop(1);
           menu_update_states();
           main_view_timer_cache_i32 = 0xffffffff;
           frame_wnd_draw_caption((FrameWindow *)&map_views);
-          local_6e0 = main_view_frame_left;
-          local_6dc = main_view_frame_top;
-          local_6d8 = main_view_frame_right;
-          local_6d4 = main_view_client_top;
-          wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_6e0);
+          caption_left = main_view_frame_left;
+          caption_top = main_view_frame_top;
+          caption_right = main_view_frame_right;
+          caption_bottom = main_view_client_top;
+          wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
           break;
         case 0x6a:
-          net_msg_get_args((iptr)local_20,&unit);
-          local_4c = 0x2c;
+          net_msg_get_args((iptr)msg,&unit);
+          header_size = 0x2c;
           if ((unit == 0x3d) &&
              (((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0 ||
               (mp_meeting_pending != 0)))) {
-            net_send_message(0x80,local_58,2,0,0,0,0,0,0,0);
+            net_send_message(0x80,sender,2,0,0,0,0,0,0,0);
           }
           else {
             if (unit == 0x3d) {
@@ -4676,33 +4676,33 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             }
             if (((unit != 100) || (parley_reveal_units_prompt_open != 1)) &&
                ((unit != 0x65 || (parley_reveal_city_prompt_open != 1)))) {
-              if (local_28 == 0) {
-                local_748 = (int *)0x0;
+              if (extra_len == 0) {
+                popup_data = (int *)0x0;
               }
               else {
-                local_748 = local_20 + 0xb;
+                popup_data = msg + 0xb;
               }
-              net_popup_queue_push(unit,local_3c,unit3,y2,x2,local_748,local_28);
+              net_popup_queue_push(unit,civ3,unit3,y2,x2,popup_data,extra_len);
             }
           }
           break;
         case 0x6b:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           game.game_flags = (u16)unit;
-          game_over_reason = local_3c;
+          game_over_reason = civ3;
           spaceship_winner_civ = unit3;
           break;
         case 0x6c:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           mp_turn_time_limit_ms = unit;
           if (unit == 0) {
             main_view_timer_shown = 0;
             frame_wnd_draw_caption((FrameWindow *)&map_views);
-            local_78 = main_view_frame_left;
-            local_74 = main_view_frame_top;
-            local_70 = main_view_frame_right;
-            local_6c = main_view_client_top;
-            wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_78);
+            timer_left = main_view_frame_left;
+            timer_top = main_view_frame_top;
+            timer_right = main_view_frame_right;
+            timer_bottom = main_view_client_top;
+            wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&timer_left);
           }
           else {
             main_view_timer_shown = 1;
@@ -4722,55 +4722,55 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           mp_turn_timer_resume(0);
           break;
         case 0x70:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if (y3 != 0) {
-            x = map_wrap_x((int)(char)(&dir_dx_table)[y2] + local_3c);
+            x = map_wrap_x((int)(char)(&dir_dx_table)[y2] + civ3);
             city = city_at(x,(int)(char)(&dir_dy_table)[y2] + unit3);
             if ((city < 0) && ((game.game_options & 0x1000) == 0)) {
-              local_24[1] = 0x72;
-              unit = local_3c;
-              local_3c = unit3;
+              msg_hdr[1] = 0x72;
+              unit = civ3;
+              civ3 = unit3;
             }
           }
-          net_stacked_draw_push(local_24[1],(iptr)&unit,(iptr)local_48);
+          net_stacked_draw_push(msg_hdr[1],(iptr)&unit,(iptr)payload);
           break;
         case 0x71:
-          net_msg_get_args((iptr)local_20,&unit);
-          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+          net_msg_get_args((iptr)msg,&unit);
+          net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x72:
-          net_msg_get_args((iptr)local_20,&unit);
-          city = mapviews_tile_visible(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
-            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+            net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x73:
-          net_msg_get_args((iptr)local_20,&unit);
-          city = mapviews_tile_visible(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          city = mapviews_tile_visible(unit,civ3);
           if ((city != 0) || (city = mapviews_tile_visible(unit3,y2), city != 0)) {
-            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+            net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x74:
-          net_stacked_draw_push(local_20[1],(iptr)&unit,0);
+          net_stacked_draw_push(msg[1],(iptr)&unit,0);
           break;
         case 0x75:
-          net_msg_get_args((iptr)local_20,&unit);
-          city = mapviews_tile_visible(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
-            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+            net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x76:
-          net_msg_get_args((iptr)local_20,&unit);
-          city = mapviews_tile_visible(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          city = mapviews_tile_visible(unit,civ3);
           if (city != 0) {
-            net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+            net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           }
           break;
         case 0x77:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_can_escape_reply = unit;
           break;
         case 0x78:
@@ -4780,35 +4780,35 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           status_redraw(1);
           break;
         case 0x7a:
-          net_msg_get_args((iptr)local_20,&unit);
-          snd_play_effect(unit,local_3c,0,0);
+          net_msg_get_args((iptr)msg,&unit);
+          snd_play_effect(unit,civ3,0,0);
           break;
         case 0x7b:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_bribe_answer = unit;
           break;
         case 0x7c:
-          net_msg_get_args((iptr)local_20,&unit);
-          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+          net_msg_get_args((iptr)msg,&unit);
+          net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x7d:
-          net_msg_get_args((iptr)local_20,&unit);
-          net_stacked_draw_push(local_24[1],(iptr)&unit,0);
+          net_msg_get_args((iptr)msg,&unit);
+          net_stacked_draw_push(msg_hdr[1],(iptr)&unit,0);
           break;
         case 0x7e:
-          net_msg_get_args((iptr)local_20,&unit);
-          diplo_ally_demand_help(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          diplo_ally_demand_help(unit,civ3);
           break;
         case 0x7f:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           advisor_refresh_if_open(unit);
           break;
         case 0x80:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           mp_meeting_reply = unit;
           break;
         case 0x81:
-          if ((((&net_slot_civs)[local_58 * 0x15] == parley_other_civ) || (parley_other_civ == 0xfffffffe))
+          if ((((&net_slot_civs)[sender * 0x15] == parley_other_civ) || (parley_other_civ == 0xfffffffe))
              || (parley_wnd_closed == 0)) {
             if (parley_wnd_closed == 0) {
               parley_wnd_close();
@@ -4824,9 +4824,9 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             operator_delete(parley_received_offer);
             parley_received_offer = (void *)0x0;
           }
-          parley_received_offer = operator_new(local_5c);
+          parley_received_offer = operator_new(msg_size);
           if (parley_received_offer != (void *)0x0) {
-            crt_memcpy(parley_received_offer,local_20,local_5c);
+            crt_memcpy(parley_received_offer,msg,msg_size);
           }
           parley_poll_net_replies();
           break;
@@ -4840,19 +4840,19 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           parley_poll_net_replies();
           break;
         case 0x86:
-          parley_execute_transaction((iptr)local_20);
+          parley_execute_transaction((iptr)msg);
           break;
         case 0x87:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           city_window_on_unit_change
-                    ((FrameWindow *)&city_window,unit,local_3c,unit3);
+                    ((FrameWindow *)&city_window,unit,civ3,unit3);
           break;
         case 0x88:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           city_window_refresh_if_city((FrameWindow *)&city_window,unit);
           break;
         case 0x89:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           city_window_close_if_city((WindowObjectView *)&city_window,unit);
           break;
         case 0x8a:
@@ -4863,7 +4863,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0x8b:
           break;
         case 0x8c:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           *(int *)(&net_civ_phase_done + unit * 4) = *(int *)(&net_civ_phase_done + unit * 4) + 1;
           break;
         case 0x8d:
@@ -4871,7 +4871,7 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
         case 0x8e:
           break;
         case 0x8f:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           *(int *)(&net_civ_phase_done + unit * 4) = *(int *)(&net_civ_phase_done + unit * 4) + 1;
           for (unit4 = 0; unit4 < game.num_units; unit4++) {
             if ((units[unit4].id != 0) && ((int)units[unit4].owner == unit)) {
@@ -4880,57 +4880,57 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           }
           break;
         case 0x90:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_improvements(unit,local_3c,unit3,y2,x2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_improvements(unit,civ3,unit3,y2,x2);
           break;
         case 0x91:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_terrain(unit,local_3c,unit3,y2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_terrain(unit,civ3,unit3,y2);
           break;
         case 0x92:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_visible(unit,local_3c,unit3,y2,x2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_visible(unit,civ3,unit3,y2,x2);
           break;
         case 0x93:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_fertility(unit,local_3c,unit3,y2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_fertility(unit,civ3,unit3,y2);
           break;
         case 0x94:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_owner(unit,local_3c,unit3,y2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_owner(unit,civ3,unit3,y2);
           break;
         case 0x95:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_landmass(unit,local_3c,unit3,y2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_landmass(unit,civ3,unit3,y2);
           break;
         case 0x96:
-          net_msg_get_args((iptr)local_20,&unit);
-          tile_set_radius_civ(unit,local_3c,unit3,y2);
+          net_msg_get_args((iptr)msg,&unit);
+          tile_set_radius_civ(unit,civ3,unit3,y2);
           break;
         case 0x97:
-          net_msg_get_args((iptr)local_20,&unit);
-          known_set(unit,local_3c,unit3,y2,x2,y3);
+          net_msg_get_args((iptr)msg,&unit);
+          known_set(unit,civ3,unit3,y2,x2,y3);
           break;
         case 0x98:
-          net_msg_get_args((iptr)local_20,&unit);
-          *(char *)&civs[unit].attitude[local_3c] = (char)unit3;
+          net_msg_get_args((iptr)msg,&unit);
+          *(char *)&civs[unit].attitude[civ3] = (char)unit3;
           break;
         case 0x99:
-          net_msg_get_args((iptr)local_20,&unit);
-          *(i32 *)(&net_meet_pending_flags + local_3c * 4) = 1;
-          *(uptr *)(&net_meet_pending_ai_civ + local_3c * 4) = unit;
-          *(uptr *)(&net_meet_pending_civ + local_3c * 4) = local_3c;
-          *(uptr *)(&net_meet_pending_x + local_3c * 4) = unit3;
-          *(iptr *)(&net_meet_pending_y + local_3c * 4) = y2;
+          net_msg_get_args((iptr)msg,&unit);
+          *(i32 *)(&net_meet_pending_flags + civ3 * 4) = 1;
+          *(uptr *)(&net_meet_pending_ai_civ + civ3 * 4) = unit;
+          *(uptr *)(&net_meet_pending_civ + civ3 * 4) = civ3;
+          *(uptr *)(&net_meet_pending_x + civ3 * 4) = unit3;
+          *(iptr *)(&net_meet_pending_y + civ3 * 4) = y2;
           break;
         case 0x9a:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           net_move_anim_sound = unit;
-          net_move_anim_sound_arg = local_3c;
+          net_move_anim_sound_arg = civ3;
           break;
         case 0x9b:
-          net_msg_get_args((iptr)local_20,&unit);
-          civ_give_advance(unit,local_3c,unit3,y2,0);
+          net_msg_get_args((iptr)msg,&unit);
+          civ_give_advance(unit,civ3,unit3,y2,0);
           break;
         case 0x9c:
           break;
@@ -4941,35 +4941,35 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           taxrate_enforce_max_rate(human_civ);
           break;
         case 0x9f:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           civ_select_government_dialog(human_civ,unit);
           break;
         case 0xa0:
-          net_msg_get_args((iptr)local_20,&unit);
-          diplo_ai_review_relations(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          diplo_ai_review_relations(unit,civ3);
           break;
         case 0xa1:
-          net_msg_get_args((iptr)local_20,&unit);
-          diplo_ai_seek_war_ally(unit,local_3c);
+          net_msg_get_args((iptr)msg,&unit);
+          diplo_ai_seek_war_ally(unit,civ3);
           break;
         case 0xa2:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           *(int *)(&net_civ_turn_ended + unit * 4) = *(int *)(&net_civ_turn_ended + unit * 4) + 1;
           break;
         case 0xa3:
-          net_stacked_draw_push(local_20[1],(iptr)&unit,0);
+          net_stacked_draw_push(msg[1],(iptr)&unit,0);
           break;
         case 0xa4:
-          net_msg_get_args((iptr)local_20,&unit);
-          iVar8 = civ_name_plural(unit);
-          text_set_string_arg(0,iVar8);
-          iVar8 = civ_name_plural(local_3c);
-          text_set_string_arg(1,iVar8);
-          if ((*(byte *)&civs[local_3c].treaties[unit] & 8) == 0) {
+          net_msg_get_args((iptr)msg,&unit);
+          ret_val = civ_name_plural(unit);
+          text_set_string_arg(0,ret_val);
+          ret_val = civ_name_plural(civ3);
+          text_set_string_arg(1,ret_val);
+          if ((*(byte *)&civs[civ3].treaties[unit] & 8) == 0) {
             city = popup_game_with_sprite(ADDR(0x62bf0c, ((u8 *)&g.d_0062bf0c)),ADDR(0x644e48, ((u8 *)&g.d_00644e48)),0);
             if (city == 1) {
-              diplo_set_treaty_flags(unit,local_3c,0x2000);
-              civs[local_3c].last_treaty_turn[unit] = game.turn;
+              diplo_set_treaty_flags(unit,civ3,0x2000);
+              civs[civ3].last_treaty_turn[unit] = game.turn;
             }
           }
           else {
@@ -4977,15 +4977,15 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
                                                       ((game.advance_known_by[0xf] != '\0') - 1 &
                                                       0xffff7c80)),0);
             if (city == 1) {
-              diplo_clear_treaty_flags(unit,local_3c,8);
-              civs[local_3c].last_treaty_turn[unit] = game.turn;
+              diplo_clear_treaty_flags(unit,civ3,8);
+              civs[civ3].last_treaty_turn[unit] = game.turn;
             }
           }
           break;
         case 0xa5:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
-            parley_remote_cities_revealed = (byte)local_3c;
+            parley_remote_cities_revealed = (byte)civ3;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 3)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 3)))) {
               ctrl_disable(parley_request_done_button);
@@ -4995,9 +4995,9 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           }
           break;
         case 0xa6:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
-            parley_remote_cities_revealed = (byte)local_3c;
+            parley_remote_cities_revealed = (byte)civ3;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 3)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 3)))) {
               ctrl_enable(parley_request_done_button);
@@ -5007,9 +5007,9 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           }
           break;
         case 0xa7:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
-            parley_remote_units_revealed = (byte)local_3c;
+            parley_remote_units_revealed = (byte)civ3;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 2)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 2)))) {
               ctrl_disable(parley_request_done_button);
@@ -5021,9 +5021,9 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
           }
           break;
         case 0xa8:
-          net_msg_get_args((iptr)local_20,&unit);
+          net_msg_get_args((iptr)msg,&unit);
           if ((parley_wnd_closed == 0) && (parley_other_civ == unit)) {
-            parley_remote_units_revealed = (byte)local_3c;
+            parley_remote_units_revealed = (byte)civ3;
             if (((parley_mode == 0xe) && (parley_barter_want_kind == 2)) ||
                ((parley_mode == 0xf && (parley_demand_kind == 2)))) {
               ctrl_enable(parley_request_done_button);
@@ -5035,17 +5035,17 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
             }
           }
         }
-        operator_delete(local_20);
+        operator_delete(msg);
       }
       else {
-        dbg_logf_int2(ADDR(0x62be5c, ((u8 *)&g.d_0062be5c)),local_20[1],local_20[2]);
+        dbg_logf_int2(ADDR(0x62be5c, ((u8 *)&g.d_0062be5c)),msg[1],msg[2]);
       }
     }
-    if (((param_2 == 0) && (*(char *)((int)&this[0x3d].field_4 + 2) != '\0')) && (local_1c != '\0'))
+    if (((wait_mode == 0) && (*(char *)((int)&this[0x3d].field_4 + 2) != '\0')) && (gamelist_dirty != '\0'))
     {
       net_gamelist_refresh();
     }
-    if (((param_2 == 0) && (this[0xae].field_4 == 0)) && (net_popup_queue_head != 0)) {
+    if (((wait_mode == 0) && (this[0xae].field_4 == 0)) && (net_popup_queue_head != 0)) {
       net_popup_queue_show_next();
     }
     *(int *)this[0xb0].pad_0 = *(int *)this[0xb0].pad_0 - 1;
@@ -5116,75 +5116,75 @@ void __thiscall net_process_messages(NetSession *this,int param_1,int param_2)
 #undef main_view_timer_cache_i32
 #undef mp_turn_civ_i32
 #undef nm_lock_nation_count_i32
-#undef local_748
-#undef local_740
-#undef local_738
-#undef local_734
-#undef local_718
-#undef local_714
-#undef local_6fc
-#undef local_6e0
-#undef local_6dc
-#undef local_6d8
-#undef local_6d4
-#undef local_6d0
-#undef local_6cc
+#undef popup_data
+#undef dequeue_wait
+#undef dblclick_wnd
+#undef click_wnd
+#undef home_city_id
+#undef new_owner
+#undef draw_args
+#undef caption_left
+#undef caption_top
+#undef caption_right
+#undef caption_bottom
+#undef section_id2
+#undef saved_multiplayer
 #undef unit2
-#undef local_6c4
-#undef local_6c0
-#undef local_6bc
-#undef local_6b8
-#undef local_6b0
-#undef local_6ac
-#undef local_6a8
-#undef local_6a4
-#undef local_6a0
-#undef local_69c
-#undef local_698
-#undef local_694
-#undef local_690
-#undef local_68c
-#undef local_688
-#undef local_684
-#undef local_680
-#undef local_67c
-#undef local_678
-#undef local_674
-#undef local_380
-#undef local_37c
-#undef local_88
-#undef local_84
+#undef rle_src
+#undef rle_src_end
+#undef rle_dst
+#undef rle_dst_end
+#undef saved_moving_unit
+#undef saved_player_civ
+#undef decoded_size
+#undef section_idx
+#undef units_saved
+#undef turn_civ_changed
+#undef section_offset
+#undef city_changed
+#undef saved_msg_options
+#undef saved_field_1c
+#undef saved_turn_civ_val
+#undef section_size
+#undef saved_active_unit
+#undef saved_game_options
+#undef slot
+#undef join_dialog
+#undef wait_start
+#undef wait_dialog
+#undef saved_busy
+#undef hello_msg
 #undef y4
 #undef x3
-#undef local_78
-#undef local_74
-#undef local_70
-#undef local_6c
-#undef local_68
-#undef local_64
-#undef local_60
-#undef local_5c
-#undef local_58
+#undef timer_left
+#undef timer_top
+#undef timer_right
+#undef timer_bottom
+#undef input_kind
+#undef deferred_input
+#undef input_char
+#undef msg_size
+#undef sender
 #undef unit4
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
+#undef image_kind
+#undef header_size
+#undef payload
+#undef unused_flag
 #undef unit
-#undef local_3c
+#undef civ3
 #undef unit3
 #undef y2
 #undef x2
 #undef y3
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef extra_len
+#undef msg_hdr
+#undef msg
+#undef gamelist_dirty
+#undef image_size
+#undef result
+#undef seh_prev
+#undef seh_handler
+#undef unwind_state
 
 /* 00482337 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5203,16 +5203,16 @@ void __cdecl net_game_xmit_wait_idle(void)
 #undef nm_continue_after_join_count
 
 /* 004823d6 auto */
-void __cdecl net_msg_get_args(iptr param_1,i32 *param_2)
+void __cdecl net_msg_get_args(iptr msg,i32 *args)
 
 {
-  *param_2 = *(i32 *)(param_1 + 0x10);
-  param_2[1] = *(i32 *)(param_1 + 0x14);
-  param_2[2] = *(i32 *)(param_1 + 0x18);
-  param_2[3] = *(i32 *)(param_1 + 0x1c);
-  param_2[4] = *(i32 *)(param_1 + 0x20);
-  param_2[5] = *(i32 *)(param_1 + 0x24);
-  param_2[6] = *(i32 *)(param_1 + 0x28);
+  *args = *(i32 *)(msg + 0x10);
+  args[1] = *(i32 *)(msg + 0x14);
+  args[2] = *(i32 *)(msg + 0x18);
+  args[3] = *(i32 *)(msg + 0x1c);
+  args[4] = *(i32 *)(msg + 0x20);
+  args[5] = *(i32 *)(msg + 0x24);
+  args[6] = *(i32 *)(msg + 0x28);
   return;
 }
 
@@ -5221,11 +5221,11 @@ void __cdecl net_msg_get_args(iptr param_1,i32 *param_2)
 void __cdecl net_server_quit_wait_idle(void)
 
 {
-  int iVar1;
+  int human_count;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if (((net_players_awaited != 0) &&
-      (iVar1 = bits_count8((uint)(game.human_players == '\0')), iVar1 == 0)) &&
+      (human_count = bits_count8((uint)(game.human_players == '\0')), human_count == 0)) &&
      (1 < net_player_count)) {
     return;
   }
@@ -5246,14 +5246,14 @@ void __cdecl net_server_quit_wait_idle(void)
 #define net_player_slots_i32 (*(i32 *)((u8 *)&g.d_006ad30c))
 #define net_civ_slots_i32 (*(i32 *)((u8 *)&g.d_006ad558))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define slot (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl net_host_quit_handoff(void)
 
 {
-  byte bVar1;
-  int iVar2;
+  byte sign;
+  int human_count;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_host_handoff_stage = 1;
@@ -5267,22 +5267,22 @@ void __cdecl net_host_quit_handoff(void)
     net_drop_flagged_players();
     dlg_pending_idle_callback = ((void *)ADDR(0x00403cc9, net_server_quit_wait_idle));
     popup_game_sprite_flags(ADDR(0x62bf34, ((u8 *)&g.d_0062bf34)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-    iVar2 = bits_count8((uint)(game.human_players == '\0'));
-    if (iVar2 == 0) {
+    human_count = bits_count8((uint)(game.human_players == '\0'));
+    if (human_count == 0) {
       net_send_message(0xf,0xff,0,0,0,0,0,0,0,0);
-      bVar1 = (byte)(mp_turn_civ_i32 + 1 >> 0x1f);
-      saved_turn_civ = (((byte)(mp_turn_civ_i32 + 1) ^ bVar1) - bVar1 & 7 ^ bVar1) - bVar1;
-      for (local_8 = 1; (local_8 < 7 && ((&net_slot_active_flags)[local_8 * 0x54] == '\0'));
-          local_8 = local_8 + 1) {
+      sign = (byte)(mp_turn_civ_i32 + 1 >> 0x1f);
+      saved_turn_civ = (((byte)(mp_turn_civ_i32 + 1) ^ sign) - sign & 7 ^ sign) - sign;
+      for (slot = 1; (slot < 7 && ((&net_slot_active_flags)[slot * 0x54] == '\0'));
+          slot = slot + 1) {
       }
-      if (local_8 < 7) {
-        crt_memcpy(&net_player_slots,&net_player_slots + local_8 * 0x54,0x54);
+      if (slot < 7) {
+        crt_memcpy(&net_player_slots,&net_player_slots + slot * 0x54,0x54);
         net_slot_host_flags = 1;
         net_player_slots_i32 = 0;
-        net_civ_slots_i32 = *(i32 *)(&net_civ_slots + local_8 * 4);
+        net_civ_slots_i32 = *(i32 *)(&net_civ_slots + slot * 4);
         net_player_count--;
-        *(i32 *)(&net_civ_slots + local_8 * 4) = 0xffffffff;
-        _memset(&net_player_slots + local_8 * 0x54,0,0x54);
+        *(i32 *)(&net_civ_slots + slot * 4) = 0xffffffff;
+        _memset(&net_player_slots + slot * 0x54,0,0x54);
         net_send_state_diff(0xff,2,0,1,0);
         net_send_message(0x16,0xff,0,0,0,0,0,0,0,0);
         net_send_message(4,0xff,0,0,0,0,0,0,0,0);
@@ -5302,7 +5302,7 @@ void __cdecl net_host_quit_handoff(void)
 #undef net_player_slots_i32
 #undef net_civ_slots_i32
 #undef mp_turn_civ_i32
-#undef local_8
+#undef slot
 
 /* 00482724 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5330,11 +5330,11 @@ void __cdecl net_client_quit_wait_idle(void)
 void __cdecl net_quit_wait_start_civ_idle(void)
 
 {
-  int iVar1;
+  int now;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_start_civ_count == 0) &&
-     (iVar1 = timer_ticks(), iVar1 - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
+     (now = timer_ticks(), now - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
     return;
   }
   dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
@@ -5355,11 +5355,11 @@ void __cdecl net_quit_wait_start_civ_idle(void)
 void __cdecl net_quit_wait_player_list_idle(void)
 
 {
-  int iVar1;
+  int now;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_player_list_count == 0) &&
-     (iVar1 = timer_ticks(), iVar1 - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
+     (now = timer_ticks(), now - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
     return;
   }
   dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
@@ -5379,11 +5379,11 @@ void __cdecl net_quit_wait_player_list_idle(void)
 void __cdecl net_quit_wait_players_idle(void)
 
 {
-  int iVar1;
+  int now;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((net_players_awaited != 0) &&
-     (iVar1 = timer_ticks(), iVar1 - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
+     (now = timer_ticks(), now - net_handoff_wait_ticks_i32 <= net_timeout_seconds * 0x3c)) {
     return;
   }
   dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
@@ -5420,21 +5420,21 @@ void __cdecl net_quit_wait_players_idle(void)
 #define turn_resume_civ (*(i8 *)((u8 *)&g.d_00628048))
 #define net_handoff_wait_ticks_i32 (*(i32 *)((u8 *)&g.d_00670d98))
 #define nm_server_quit_count_i32 (*(i32 *)((u8 *)&g.d_006c901c))
-#define local_284 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_280 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_27c (*(int (*)[2])(frame_ + FRAME_OFF(12)))
-#define acStack_274 (*(char (*)[76])(frame_ + FRAME_OFF(20)))
-#define local_228 (*(int (*)[135])(frame_ + FRAME_OFF(96)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(636)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(640)))
+#define slot (*(int *)(frame_ + FRAME_OFF(4)))
+#define old_slot (*(int *)(frame_ + FRAME_OFF(8)))
+#define saved_slots (*(int (*)[2])(frame_ + FRAME_OFF(12)))
+#define saved_addresses (*(char (*)[76])(frame_ + FRAME_OFF(20)))
+#define saved_civs (*(int (*)[135])(frame_ + FRAME_OFF(96)))
+#define status (*(int *)(frame_ + FRAME_OFF(636)))
+#define slot_civ (*(int *)(frame_ + FRAME_OFF(640)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_client_transfer_server(void)
 
 {
-  char cVar1;
-  i32 uVar2;
-  int iVar3;
+  char transport_ok;
+  i32 result;
+  int cmp;
   i8 frame_[FRAME_OFF(648)] __attribute__((aligned(8)));  /* original stack frame */
   
   nm_server_quit_count_i32 = 0;
@@ -5453,7 +5453,7 @@ i32 __cdecl net_client_transfer_server(void)
     popup_game_with_sprite(ADDR(0x62bf9c, ((u8 *)&g.d_0062bf9c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     player_turn_active = 0;
     game_loop_active = 0;
-    uVar2 = 0;
+    result = 0;
   }
   else {
     turn_resume_civ = saved_turn_civ;
@@ -5466,17 +5466,17 @@ i32 __cdecl net_client_transfer_server(void)
       popup_game_with_sprite(ADDR(0x62bff0, ((u8 *)&g.d_0062bff0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       player_turn_active = 0;
       game_loop_active = 0;
-      uVar2 = 0;
+      result = 0;
     }
     else {
-      crt_memcpy(local_27c,&net_player_count,0x270);
-      iVar3 = _strcmp(&prefs_net_ip_address,&net_slot_addresses);
-      if (iVar3 == 0) {
+      crt_memcpy(saved_slots,&net_player_count,0x270);
+      cmp = _strcmp(&prefs_net_ip_address,&net_slot_addresses);
+      if (cmp == 0) {
         dbg_log(ADDR(0x62c000, ((u8 *)&g.d_0062c000)));
         net_session_shutdown(&net_session,0);
-        cVar1 = net_init_transport(&net_session,net_protocol,1);
-        local_c = (int)cVar1;
-        if (local_c == 0) {
+        transport_ok = net_init_transport(&net_session,net_protocol,1);
+        status = (int)transport_ok;
+        if (status == 0) {
           dbg_log(ADDR(0x62c034, ((u8 *)&g.d_0062c034)));
           crt_strcpy(&text_string_args,net_connection_title);
           popup_game_with_sprite(ADDR(0x62c06c, ((u8 *)&g.d_0062c06c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -5489,19 +5489,19 @@ i32 __cdecl net_client_transfer_server(void)
         net_server_conn_id = 0;
         net_local_slot = 0;
         diffeng_mirror_end = diffeng_mirror_size + diffeng_mirror_buf;
-        net_players_awaited = local_27c[0] - 1;
+        net_players_awaited = saved_slots[0] - 1;
         net_players_awaited_initial = net_players_awaited;
         if (net_players_awaited < 1) {
-          local_8 = local_228[0];
-          *(i32 *)(&net_civ_slots + local_228[0] * 4) = 0;
-          net_slot_civs = local_228[0];
+          slot_civ = saved_civs[0];
+          *(i32 *)(&net_civ_slots + saved_civs[0] * 4) = 0;
+          net_slot_civs = saved_civs[0];
         }
         else {
           dlg_pending_idle_callback = ((void *)ADDR(0x00402ff4, net_quit_wait_players_idle));
           net_handoff_wait_ticks_i32 = timer_ticks();
           popup_game_sprite_flags(ADDR(0x62c0a0, ((u8 *)&g.d_0062c0a0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-          iVar3 = timer_ticks();
-          if ((net_timeout_seconds * 0x3c < iVar3 - net_handoff_wait_ticks_i32) && (net_players_awaited != 0)) {
+          cmp = timer_ticks();
+          if ((net_timeout_seconds * 0x3c < cmp - net_handoff_wait_ticks_i32) && (net_players_awaited != 0)) {
             crt_strcpy(&text_string_args,net_connection_title);
             if (net_players_awaited == net_players_awaited_initial) {
               popup_game_with_sprite(ADDR(0x62c0b0, ((u8 *)&g.d_0062c0b0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -5511,20 +5511,20 @@ i32 __cdecl net_client_transfer_server(void)
             }
             popup_game_with_sprite(ADDR(0x62c0bc, ((u8 *)&g.d_0062c0bc)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           }
-          for (local_284 = 0; local_284 < 7; local_284++) {
-            if ((&net_slot_active_flags)[local_284 * 0x54] != '\0') {
-              local_280 = 0;
-              while ((local_280 < 7 &&
-                     (iVar3 = _strcmp(acStack_274 + local_280 * 0x54,
-                                      &net_slot_addresses + local_284 * 0x54), iVar3 != 0))) {
-                local_280++;
+          for (slot = 0; slot < 7; slot++) {
+            if ((&net_slot_active_flags)[slot * 0x54] != '\0') {
+              old_slot = 0;
+              while ((old_slot < 7 &&
+                     (cmp = _strcmp(saved_addresses + old_slot * 0x54,
+                                      &net_slot_addresses + slot * 0x54), cmp != 0))) {
+                old_slot++;
               }
-              if (6 < local_280) {
+              if (6 < old_slot) {
                 err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62c0ec, ((u8 *)&g.d_0062c0ec)),ADDR(0x62c0c8, ((u8 *)&g.d_0062c0c8)),0x8a7);
               }
-              local_8 = local_228[local_280 * 0x15];
-              *(int *)(&net_civ_slots + local_8 * 4) = local_284;
-              (&net_slot_civs)[local_284 * 0x15] = local_8;
+              slot_civ = saved_civs[old_slot * 0x15];
+              *(int *)(&net_civ_slots + slot_civ * 4) = slot;
+              (&net_slot_civs)[slot * 0x15] = slot_civ;
             }
           }
           mp_simultaneous_moves = (i8)mp_simultaneous_setting;
@@ -5545,9 +5545,9 @@ i32 __cdecl net_client_transfer_server(void)
       }
       else {
         dbg_logf_str(ADDR(0x62c11c, ((u8 *)&g.d_0062c11c)),ADDR(0x6ad57c, ((u8 *)&g.d_006ad57c)));
-        local_c = XD_CloseConnection();
-        if (local_c != 0) {
-          dbg_logf_str_int(ADDR(0x62c13c, ((u8 *)&g.d_0062c13c)),ADDR(0x6ad57c, ((u8 *)&g.d_006ad57c)),local_c);
+        status = XD_CloseConnection();
+        if (status != 0) {
+          dbg_logf_str_int(ADDR(0x62c13c, ((u8 *)&g.d_0062c13c)),ADDR(0x6ad57c, ((u8 *)&g.d_006ad57c)),status);
           crt_strcpy(&text_string_args,net_connection_title);
           popup_game_with_sprite(ADDR(0x62c184, ((u8 *)&g.d_0062c184)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           game_loop_active = 0;
@@ -5557,12 +5557,12 @@ i32 __cdecl net_client_transfer_server(void)
         crt_strcpy(&net_server_address,&net_slot_addresses);
         net_handoff_wait_ticks_i32 = timer_ticks();
         do {
-          iVar3 = timer_ticks();
-        } while (iVar3 - net_handoff_wait_ticks_i32 < 0x3c);
+          cmp = timer_ticks();
+        } while (cmp - net_handoff_wait_ticks_i32 < 0x3c);
         dbg_logf_str(ADDR(0x62c194, ((u8 *)&g.d_0062c194)),ADDR(0x6ad57c, ((u8 *)&g.d_006ad57c)));
-        local_c = XD_OpenConnection(&net_server_address,net_timeout_seconds * 1000);
-        if (local_c < 0) {
-          dbg_logf(ADDR(0x62c1c0, ((u8 *)&g.d_0062c1c0)),local_c);
+        status = XD_OpenConnection(&net_server_address,net_timeout_seconds * 1000);
+        if (status < 0) {
+          dbg_logf(ADDR(0x62c1c0, ((u8 *)&g.d_0062c1c0)),status);
           crt_strcpy(&text_string_args,net_connection_title);
           popup_game_with_sprite(ADDR(0x62c1f0, ((u8 *)&g.d_0062c1f0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           game_loop_active = 0;
@@ -5588,10 +5588,10 @@ i32 __cdecl net_client_transfer_server(void)
         nm_player_list_count = 0;
         popup_game_with_sprite(ADDR(0x62c28c, ((u8 *)&g.d_0062c28c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       }
-      uVar2 = 1;
+      result = 1;
     }
   }
-  return uVar2;
+  return result;
 }
 #undef diffeng_mirror_end
 #undef diffeng_mirror_size
@@ -5618,13 +5618,13 @@ i32 __cdecl net_client_transfer_server(void)
 #undef turn_resume_civ
 #undef net_handoff_wait_ticks_i32
 #undef nm_server_quit_count_i32
-#undef local_284
-#undef local_280
-#undef local_27c
-#undef acStack_274
-#undef local_228
-#undef local_c
-#undef local_8
+#undef slot
+#undef old_slot
+#undef saved_slots
+#undef saved_addresses
+#undef saved_civs
+#undef status
+#undef slot_civ
 
 /* 0048bf51 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
@@ -5663,13 +5663,13 @@ void __cdecl net_client_hot_wait_idle(void)
 #define net_heartbeat_last_tick_i32 (*(i32 *)((u8 *)&g.d_00673b00))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl net_heartbeat_send(iptr param_1)
+void __cdecl net_heartbeat_send(iptr civ)
 
 {
   if (net_drag_hold == '\0') {
     nm_heartbeat_ack_count = 0;
     net_send_message(0x2b,*(i32 *)
-                             (&net_player_slots + *(int *)(&net_civ_slots + param_1 * 4) * 0x54),0,0,0,0,
+                             (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),0,0,0,0,
                        0,0,0,0);
   }
   else {
@@ -5696,21 +5696,21 @@ void __cdecl net_heartbeat_send(iptr param_1)
 #define net_heartbeat_last_tick_i32 (*(i32 *)((u8 *)&g.d_00673b00))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl net_heartbeat_check(iptr param_1)
+void __cdecl net_heartbeat_check(iptr civ)
 
 {
-  int iVar1;
+  int now;
   
-  iVar1 = timer_ticks();
-  if (0xe0f < iVar1 - net_heartbeat_last_tick_i32) {
+  now = timer_ticks();
+  if (0xe0f < now - net_heartbeat_last_tick_i32) {
     if (nm_heartbeat_ack_count == 0) {
-      *(int *)(&net_civ_turn_ended + param_1 * 4) = *(int *)(&net_civ_turn_ended + param_1 * 4) + 1;
+      *(int *)(&net_civ_turn_ended + civ * 4) = *(int *)(&net_civ_turn_ended + civ * 4) + 1;
       if (net_host_flag == '\0') {
         net_lost_conn_total++;
       }
     }
     else {
-      net_heartbeat_send(param_1);
+      net_heartbeat_send(civ);
     }
   }
   return;
@@ -5728,17 +5728,17 @@ void __cdecl net_heartbeat_check(iptr param_1)
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_24 (*(int (*)[7])(frame_ + FRAME_OFF(12)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(40)))
+#define civ (*(int *)(frame_ + FRAME_OFF(0)))
+#define dropped_count (*(int *)(frame_ + FRAME_OFF(8)))
+#define lost_counts (*(int (*)[7])(frame_ + FRAME_OFF(12)))
+#define slot (*(iptr *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_check_lost_connections(void)
 
 {
-  int iVar1;
-  bool bVar2;
+  int slot_civ;
+  bool no_player;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (net_host_flag == '\0') {
@@ -5751,45 +5751,45 @@ i32 __cdecl net_check_lost_connections(void)
     }
   }
   else {
-    local_28 = net_drop_flagged_players();
-    for (local_30 = 1; local_30 < 8; local_30++) {
-      bVar2 = true;
-      if (((1 << ((byte)local_30 & 0x1f) & (uint)game.civs_alive) != 0) &&
-         ((1 << ((byte)local_30 & 0x1f) & (uint)game.human_players) != 0)) {
-        for (local_8 = 0; local_8 < 7; local_8++) {
-          if (((&net_slot_active_flags)[local_8 * 0x54] != '\0') &&
-             ((&net_slot_civs)[local_8 * 0x15] == local_30)) {
-            bVar2 = false;
+    dropped_count = net_drop_flagged_players();
+    for (civ = 1; civ < 8; civ++) {
+      no_player = true;
+      if (((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+         ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
+        for (slot = 0; slot < 7; slot++) {
+          if (((&net_slot_active_flags)[slot * 0x54] != '\0') &&
+             ((&net_slot_civs)[slot * 0x15] == civ)) {
+            no_player = false;
             break;
           }
         }
-        if (bVar2) {
-          game.human_players = game.human_players & ~(byte)(1 << ((byte)local_30 & 0x1f));
-          if ((1 << ((byte)local_30 & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
-            net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)local_30 & 0x1f));
+        if (no_player) {
+          game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
+          if ((1 << ((byte)civ & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
+            net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)civ & 0x1f));
             net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
             nm_lock_nation_count_i32++;
           }
-          local_28++;
+          dropped_count++;
         }
       }
     }
     if (net_lost_conn_total != 0) {
-      crt_memcpy(local_24,&net_lost_conn_by_player,0x1c);
+      crt_memcpy(lost_counts,&net_lost_conn_by_player,0x1c);
       net_reset_error_counts();
-      for (local_8 = 1; local_8 < 7; local_8++) {
-        if ((0 < local_24[local_8]) && ((&net_slot_active_flags)[local_8 * 0x54] != '\0')) {
-          local_28++;
-          iVar1 = (&net_slot_civs)[local_8 * 0x15];
-          text_set_string_arg(0,(iptr)(&net_slot_player_names + local_8 * 0x54));
+      for (slot = 1; slot < 7; slot++) {
+        if ((0 < lost_counts[slot]) && ((&net_slot_active_flags)[slot * 0x54] != '\0')) {
+          dropped_count++;
+          slot_civ = (&net_slot_civs)[slot * 0x15];
+          text_set_string_arg(0,(iptr)(&net_slot_player_names + slot * 0x54));
           net_send_text_args(0x53,0xff,1,0,0,0);
-          *(i32 *)(&net_civ_drop_requested + iVar1 * 4) = 0;
-          (*(i8 *)((char *)&local_30 + 0)) = (byte)iVar1;
-          game.human_players = game.human_players & ~(byte)(1 << ((byte)local_30 & 0x1f));
+          *(i32 *)(&net_civ_drop_requested + slot_civ * 4) = 0;
+          (*(i8 *)((char *)&civ + 0)) = (byte)slot_civ;
+          game.human_players = game.human_players & ~(byte)(1 << ((byte)civ & 0x1f));
           net_remove_player
-                    ((NetSession *)&net_session,*(i32 *)(&net_player_slots + local_8 * 0x54));
-          if ((1 << ((byte)local_30 & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
-            net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)local_30 & 0x1f));
+                    ((NetSession *)&net_session,*(i32 *)(&net_player_slots + slot * 0x54));
+          if ((1 << ((byte)civ & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
+            net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << ((byte)civ & 0x1f));
             net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
             nm_lock_nation_count_i32++;
           }
@@ -5797,10 +5797,10 @@ i32 __cdecl net_check_lost_connections(void)
         }
       }
     }
-    if (local_28 != 0) {
+    if (dropped_count != 0) {
       net_player_count = 0;
-      for (local_8 = 0; local_8 < 7; local_8++) {
-        if ((&net_slot_active_flags)[local_8 * 0x54] != '\0') {
+      for (slot = 0; slot < 7; slot++) {
+        if ((&net_slot_active_flags)[slot * 0x54] != '\0') {
           net_player_count++;
         }
       }
@@ -5817,127 +5817,127 @@ i32 __cdecl net_check_lost_connections(void)
 #undef net_slot_active_flags
 #undef net_slot_civs
 #undef nm_lock_nation_count_i32
-#undef local_30
-#undef local_28
-#undef local_24
-#undef local_8
+#undef civ
+#undef dropped_count
+#undef lost_counts
+#undef slot
 
 /* 0048de75 auto */
 #define net_claimed_civs_mask (*(ushort *)((u8 *)&g.d_00654fb0))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
 #define nm_lock_nation_count_i32 (*(i32 *)((u8 *)&g.d_006c90a0))
-#define local_10 (*(byte *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define civ_bit (*(byte *)(frame_ + FRAME_OFF(0)))
+#define dropped_count (*(int *)(frame_ + FRAME_OFF(4)))
+#define slot (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl net_drop_flagged_players(void)
 
 {
-  int iVar1;
+  int slot_civ;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = 0;
-  for (local_8 = 1; local_8 < 7; local_8++) {
-    if (((&net_slot_active_flags)[local_8 * 0x54] != '\0') &&
-       (*(int *)(&net_civ_drop_requested + (&net_slot_civs)[local_8 * 0x15] * 4) != 0)) {
-      local_c++;
-      iVar1 = (&net_slot_civs)[local_8 * 0x15];
-      *(i32 *)(&net_civ_drop_requested + iVar1 * 4) = 0;
-      *(i32 *)(&net_lost_conn_by_player + *(int *)(&net_player_slots + local_8 * 0x54) * 4) = 0;
-      local_10 = (byte)iVar1;
-      game.human_players = game.human_players & ~(byte)(1 << (local_10 & 0x1f));
+  dropped_count = 0;
+  for (slot = 1; slot < 7; slot++) {
+    if (((&net_slot_active_flags)[slot * 0x54] != '\0') &&
+       (*(int *)(&net_civ_drop_requested + (&net_slot_civs)[slot * 0x15] * 4) != 0)) {
+      dropped_count++;
+      slot_civ = (&net_slot_civs)[slot * 0x15];
+      *(i32 *)(&net_civ_drop_requested + slot_civ * 4) = 0;
+      *(i32 *)(&net_lost_conn_by_player + *(int *)(&net_player_slots + slot * 0x54) * 4) = 0;
+      civ_bit = (byte)slot_civ;
+      game.human_players = game.human_players & ~(byte)(1 << (civ_bit & 0x1f));
       net_remove_player
-                ((NetSession *)&net_session,*(i32 *)(&net_player_slots + local_8 * 0x54));
-      if ((1 << (local_10 & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
-        net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << (local_10 & 0x1f));
+                ((NetSession *)&net_session,*(i32 *)(&net_player_slots + slot * 0x54));
+      if ((1 << (civ_bit & 0x1f) & (int)(short)net_claimed_civs_mask) != 0) {
+        net_claimed_civs_mask = net_claimed_civs_mask & ~(ushort)(1 << (civ_bit & 0x1f));
         nm_lock_nation_count_i32++;
       }
     }
   }
-  if (local_c != 0) {
+  if (dropped_count != 0) {
     net_send_message(0x2a,0xff,(int)(short)net_claimed_civs_mask,0,0,0,0,0,0,0);
     net_send_message(4,0xff,0,0,0,0,0,0,0,0);
   }
-  return local_c;
+  return dropped_count;
 }
 #undef net_claimed_civs_mask
 #undef net_slot_active_flags
 #undef net_slot_civs
 #undef nm_lock_nation_count_i32
-#undef local_10
-#undef local_c
-#undef local_8
+#undef civ_bit
+#undef dropped_count
+#undef slot
 
 /* 004923f0 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl chat_insert_macro_text(Control *param_1,i32 param_2)
+#define tries (*(int *)(frame_ + FRAME_OFF(4)))
+void __cdecl chat_insert_macro_text(Control *edit,i32 macro_id)
 
 {
-  bool bVar1;
+  bool all_contact;
   int civ;
-  iptr iVar3;
-  size_t sVar4;
+  iptr name2;
+  size_t text_len;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_clear();
-  local_14 = 0;
+  tries = 0;
   if (((game.wonder_city[0x18] == -1) && (civ = civ_has_wonder(human_civ,9), civ == 0))
      && (game.reveal_map == '\0')) {
-    bVar1 = false;
+    all_contact = false;
   }
   else {
-    bVar1 = true;
+    all_contact = true;
   }
-  switch(param_2) {
+  switch(macro_id) {
   case 0x2b0:
-    while (((((civ = chat_macro_next_adj_civ, local_14 < 8 && (human_civ != chat_macro_next_adj_civ)) && (!bVar1))
+    while (((((civ = chat_macro_next_adj_civ, tries < 8 && (human_civ != chat_macro_next_adj_civ)) && (!all_contact))
             && ((mp_chat_from_start == 0 ||
                 ((1 << ((byte)chat_macro_next_adj_civ & 0x1f) & (uint)game.human_players) == 0)))) &&
            ((*(byte *)&civs[chat_macro_next_adj_civ].treaties[human_civ] & 1) == 0))) {
-      local_14++;
+      tries++;
       chat_macro_next_adj_civ++;
       if (chat_macro_next_adj_civ == 8) {
         chat_macro_next_adj_civ = 1;
       }
     }
-    if (local_14 == 8) {
+    if (tries == 8) {
       return;
     }
     chat_macro_next_adj_civ++;
-    iVar3 = civ_adjective(civ);
-    text_append(iVar3);
+    name2 = civ_adjective(civ);
+    text_append(name2);
     text_append_space();
     if (chat_macro_next_adj_civ == 8) {
       chat_macro_next_adj_civ = 1;
     }
     goto switchD_004926f8_default;
   case 0x2b1:
-    while ((((local_14 < 8 && (human_civ != chat_macro_next_leader_civ)) &&
-            ((!bVar1 &&
+    while ((((tries < 8 && (human_civ != chat_macro_next_leader_civ)) &&
+            ((!all_contact &&
              ((mp_chat_from_start == 0 ||
               ((1 << ((byte)chat_macro_next_leader_civ & 0x1f) & (uint)game.human_players) == 0)))))) &&
            ((*(byte *)&civs[chat_macro_next_leader_civ].treaties[human_civ] & 1) == 0))) {
-      local_14++;
+      tries++;
       chat_macro_next_leader_civ++;
       if (chat_macro_next_leader_civ == 8) {
         chat_macro_next_leader_civ = 1;
       }
     }
-    if (local_14 == 8) {
+    if (tries == 8) {
       return;
     }
-    iVar3 = civ_leader_title(chat_macro_next_leader_civ);
-    text_append(iVar3);
+    name2 = civ_leader_title(chat_macro_next_leader_civ);
+    text_append(name2);
     text_append_space();
     civ = chat_macro_next_leader_civ;
     chat_macro_next_leader_civ++;
-    iVar3 = civ_leader_name(civ);
-    text_append(iVar3);
+    name2 = civ_leader_name(civ);
+    text_append(name2);
     text_append_space();
     if (chat_macro_next_leader_civ == 8) {
       chat_macro_next_leader_civ = 1;
@@ -5962,372 +5962,372 @@ void __cdecl chat_insert_macro_text(Control *param_1,i32 param_2)
     return;
   }
 switchD_004926f8_default:
-  edit_replace_sel(param_1,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-  civ = edit_get_sel_end((EditSelEndView *)param_1);
-  sVar4 = _strlen(&text_buffer);
-  edit_set_sel((EditSelView *)param_1,civ - sVar4,civ);
+  edit_replace_sel(edit,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+  civ = edit_get_sel_end((EditSelEndView *)edit);
+  text_len = _strlen(&text_buffer);
+  edit_set_sel((EditSelView *)edit,civ - text_len,civ);
   return;
 }
 #undef human_civ
 #undef mp_chat_from_start
 #undef text_buffer
-#undef local_14
+#undef tries
 
 /* 0049275a auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_a8 (*(i8 (*)[160])(frame_ + FRAME_OFF(0)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(160)))
-void __cdecl chat_read_macro_line(iptr param_1,iptr param_2)
+#define file (*(i8 (*)[160])(frame_ + FRAME_OFF(0)))
+#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(160)))
+void __cdecl chat_read_macro_line(iptr path,iptr file_offset)
 
 {
-  int iVar1;
-  size_t sVar2;
+  int ok;
+  size_t line_len;
   i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  (*(i32 *)((char *)&local_a8 + 156)) = &LAB_00492874;
-  file_obj_init((FileObject *)local_a8);
-  local_8 = 0;
-  iVar1 = file_obj_open((FileObject *)local_a8,param_1);
-  if (iVar1 == 0) {
-    *(i32 *)param_2 = 0;
-    local_8 = 0xffffffff;
-    /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+  unwind_state = 0xffffffff;
+  (*(i32 *)((char *)&file + 156)) = &LAB_00492874;
+  file_obj_init((FileObject *)file);
+  unwind_state = 0;
+  ok = file_obj_open((FileObject *)file,path);
+  if (ok == 0) {
+    *(i32 *)file_offset = 0;
+    unwind_state = 0xffffffff;
+    /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
   }
   else {
-    iVar1 = file_obj_get_size((FileObject *)local_a8);
-    if (iVar1 <= *(int *)param_2) {
-      *(i32 *)param_2 = 0;
+    ok = file_obj_get_size((FileObject *)file);
+    if (ok <= *(int *)file_offset) {
+      *(i32 *)file_offset = 0;
     }
-    iVar1 = file_obj_seek_cur((FileSeekView *)local_a8,*(i32 *)param_2);
-    if (iVar1 == 0) {
-      *(i32 *)param_2 = 0;
-      file_map_close((FileObject *)local_a8);
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+    ok = file_obj_seek_cur((FileSeekView *)file,*(i32 *)file_offset);
+    if (ok == 0) {
+      *(i32 *)file_offset = 0;
+      file_map_close((FileObject *)file);
+      unwind_state = 0xffffffff;
+      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
     }
     else {
-      file_obj_read_line((FileReadLineView *)local_a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
-      file_map_close((FileObject *)local_a8);
-      sVar2 = _strlen(&text_buffer);
-      *(size_t *)param_2 = *(int *)param_2 + sVar2 + 2;
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+      file_obj_read_line((FileReadLineView *)file,ADDR(0x679640, ((u8 *)&g.d_00679640)),0x100);
+      file_map_close((FileObject *)file);
+      line_len = _strlen(&text_buffer);
+      *(size_t *)file_offset = *(int *)file_offset + line_len + 2;
+      unwind_state = 0xffffffff;
+      /* inlined unwind funclet 00492868 */ { file_obj_close((FileObject *)((iptr)&file)); }
     }
   }
   return;
 }
 #undef text_buffer
-#undef local_a8
-#undef local_8
+#undef file
+#undef unwind_state
 
 /* 004af3e0 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_40 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_3c (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_38 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_30 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_28 (*(u32 *)(frame_ + FRAME_OFF(24)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
-void __thiscall parley_build_civ_list(ListPaneWindow *this,iptr param_1,int param_2)
+#define hotspot_parent (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define hotspot (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define other_civ (*(u32 *)(frame_ + FRAME_OFF(24)))
+#define rect_left2 (*(int *)(frame_ + FRAME_OFF(28)))
+#define rect_top2 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define rect_right2 (*(int *)(frame_ + FRAME_OFF(36)))
+#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define all_contact (*(int *)(frame_ + FRAME_OFF(44)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(52)))
+#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(56)))
+void __thiscall parley_build_civ_list(ListPaneWindow *this,iptr rect,int side)
 
 {
-  u8 *puVar1;
-  int iVar2;
-  int iVar3;
+  u8 *field;
+  int has_wonder;
+  int scroll_width;
   Control *pCVar4;
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_24 = *(int *)param_1;
-  local_20 = *(i32 *)(param_1 + 4);
-  local_1c = *(int *)(param_1 + 8);
-  local_18 = *(i32 *)(param_1 + 0xc);
+  unwind_state = 0xffffffff;
+  rect_left2 = *(int *)rect;
+  rect_top2 = *(i32 *)(rect + 4);
+  rect_right2 = *(int *)(rect + 8);
+  rect_bottom2 = *(i32 *)(rect + 0xc);
   if (game.wonder_city[0x18] == -1) {
-    iVar2 = civ_has_wonder(human_civ,9);
-    if ((iVar2 == 0) && (game.reveal_map == '\0')) {
-      local_14 = 0;
+    has_wonder = civ_has_wonder(human_civ,9);
+    if ((has_wonder == 0) && (game.reveal_map == '\0')) {
+      all_contact = 0;
       goto LAB_004af467;
     }
   }
-  local_14 = 1;
+  all_contact = 1;
 LAB_004af467:
-  puVar1 = this[3].pad_48 + param_2 * 4 + 0x4c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  for (local_28 = 1; (int)local_28 < 8; local_28++) {
-    if (((human_civ != local_28) && (this->caption_height != local_28)) &&
-       ((local_14 != 0 || ((*(byte *)&civs[human_civ].treaties[local_28] & 1) != 0))))
+  field = this[3].pad_48 + side * 4 + 0x4c;
+  field[0] = '\0';
+  field[1] = '\0';
+  field[2] = '\0';
+  field[3] = '\0';
+  for (other_civ = 1; (int)other_civ < 8; other_civ++) {
+    if (((human_civ != other_civ) && (this->caption_height != other_civ)) &&
+       ((all_contact != 0 || ((*(byte *)&civs[human_civ].treaties[other_civ] & 1) != 0))))
     {
-      *(u32 *)(param_2 * 0x2004 + *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) * 4 + 0x3f0 +
-              (int)this) = local_28;
+      *(u32 *)(side * 0x2004 + *(int *)(this[3].pad_48 + side * 4 + 0x4c) * 4 + 0x3f0 +
+              (int)this) = other_civ;
       *(i32 *)
-       (param_2 * 0x2004 + *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) * 4 + 0x8400 + (int)this) =
+       (side * 0x2004 + *(int *)(this[3].pad_48 + side * 4 + 0x4c) * 4 + 0x8400 + (int)this) =
            0;
-      *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) =
-           *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) + 1;
+      *(int *)(this[3].pad_48 + side * 4 + 0x4c) =
+           *(int *)(this[3].pad_48 + side * 4 + 0x4c) + 1;
     }
   }
-  if (*(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) < 1) {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
+  if (*(int *)(this[3].pad_48 + side * 4 + 0x4c) < 1) {
+    field = this[0xea].pad_48 + side * 4 + 0x30;
+    field[0] = 0xff;
+    field[1] = 0xff;
+    field[2] = 0xff;
+    field[3] = 0xff;
   }
   else {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    field = this[0xea].pad_48 + side * 4 + 0x30;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
   }
-  puVar1 = this[3].pad_48 + param_2 * 4 + 0x44;
-  puVar1[0] = 2;
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x24) = *(i32 *)param_1;
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x28) = *(i32 *)(param_1 + 4);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) = *(i32 *)(param_1 + 8);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x30) = *(i32 *)(param_1 + 0xc);
-  if (*(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40) <
-      *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c)) {
-    iVar3 = GetSystemMetrics(2);
-    iVar2 = local_1c;
-    *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) =
-         *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) - iVar3;
-    local_24 = GetSystemMetrics(2);
-    local_24 = iVar2 - local_24;
+  field = this[3].pad_48 + side * 4 + 0x44;
+  field[0] = 2;
+  field[1] = '\0';
+  field[2] = '\0';
+  field[3] = '\0';
+  *(i32 *)(this[3].pad_48 + side * 0x10 + 0x24) = *(i32 *)rect;
+  *(i32 *)(this[3].pad_48 + side * 0x10 + 0x28) = *(i32 *)(rect + 4);
+  *(i32 *)(this[3].pad_48 + side * 0x10 + 0x2c) = *(i32 *)(rect + 8);
+  *(i32 *)(this[3].pad_48 + side * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
+  if (*(int *)(this[0xea].pad_48 + side * 4 + 0x40) <
+      *(int *)(this[3].pad_48 + side * 4 + 0x4c)) {
+    scroll_width = GetSystemMetrics(2);
+    has_wonder = rect_right2;
+    *(int *)(this[3].pad_48 + side * 0x10 + 0x2c) =
+         *(int *)(this[3].pad_48 + side * 0x10 + 0x2c) - scroll_width;
+    rect_left2 = GetSystemMetrics(2);
+    rect_left2 = has_wonder - rect_left2;
     pCVar4 = operator_new(0x40);
-    local_8 = 0;
+    unwind_state = 0;
     if (pCVar4 == (Control *)0x0) {
-      local_30 = 0;
+      scrollbar = 0;
     }
     else {
-      local_30 = scrollbar_ctor(pCVar4);
+      scrollbar = scrollbar_ctor(pCVar4);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x20) = local_30;
+    unwind_state = 0xffffffff;
+    *(i32 *)(this[3].pad_48 + side * 4 - 0x20) = scrollbar;
     if (this == (ListPaneWindow *)0x0) {
-      local_3c = (u8 *)0x0;
+      scroll_parent = (u8 *)0x0;
     }
     else {
-      local_3c = this->pad_48;
+      scroll_parent = this->pad_48;
     }
     scrollbar_create
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),(iptr)local_3c,
-               param_2 + 0x40d,(iptr)&local_24,1);
+              (*(Control **)(this[3].pad_48 + side * 4 - 0x20),(iptr)scroll_parent,
+               side + 0x40d,(iptr)&rect_left2,1);
     scrollbar_set_range
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),0,
-               *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) -
-               *(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x20),0);
+              (*(Control **)(this[3].pad_48 + side * 4 - 0x20),0,
+               *(int *)(this[3].pad_48 + side * 4 + 0x4c) -
+               *(int *)(this[0xea].pad_48 + side * 4 + 0x40));
+    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + side * 4 - 0x20),0);
     scrollbar_set_page_size
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               *(i32 *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
+              (*(Control **)(this[3].pad_48 + side * 4 - 0x20),
+               *(i32 *)(this[0xea].pad_48 + side * 4 + 0x40));
     scrollbar_set_callback
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x00401410, parley_civ_list_scroll_local)) + ((param_2 == 0) - 1 & 0xb3b)));
+              (*(Control **)(this[3].pad_48 + side * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x00401410, parley_civ_list_scroll_local)) + ((side == 0) - 1 & 0xb3b)));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x00401410, parley_civ_list_scroll_local)) + ((param_2 == 0) - 1 & 0xb3b)));
+              (*(ScrollbarTrackSetView **)(this[3].pad_48 + side * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x00401410, parley_civ_list_scroll_local)) + ((side == 0) - 1 & 0xb3b)));
   }
   pCVar4 = operator_new(0x40);
-  local_8 = 1;
+  unwind_state = 1;
   if (pCVar4 == (Control *)0x0) {
-    local_38 = 0;
+    hotspot = 0;
   }
   else {
-    local_38 = hotspot_ctor(pCVar4);
+    hotspot = hotspot_ctor(pCVar4);
   }
-  local_8 = 0xffffffff;
-  *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x18) = local_38;
+  unwind_state = 0xffffffff;
+  *(i32 *)(this[3].pad_48 + side * 4 - 0x18) = hotspot;
   if (this == (ListPaneWindow *)0x0) {
-    local_40 = (u8 *)0x0;
+    hotspot_parent = (u8 *)0x0;
   }
   else {
-    local_40 = this->pad_48;
+    hotspot_parent = this->pad_48;
   }
   hotspot_create
-            (*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x18),(iptr)local_40,
-             param_2 + 0x40f,(iptr)(this[3].pad_48 + param_2 * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x401e42, parley_civ_list_click));
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x401e42, parley_civ_list_click));
-  parley_draw_civ_list(param_2);
+            (*(ClickControl **)(this[3].pad_48 + side * 4 - 0x18),(iptr)hotspot_parent,
+             side + 0x40f,(iptr)(this[3].pad_48 + side * 0x10 + 0x24));
+  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + side * 4 - 0x18),ADDR(0x401e42, parley_civ_list_click));
+  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + side * 4 - 0x18),ADDR(0x401e42, parley_civ_list_click));
+  parley_draw_civ_list(side);
   return;
 }
 #undef human_civ
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_30
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef hotspot_parent
+#undef scroll_parent
+#undef hotspot
+#undef scrollbar
+#undef other_civ
+#undef rect_left2
+#undef rect_top2
+#undef rect_right2
+#undef rect_bottom2
+#undef all_contact
+#undef seh_prev
+#undef seh_handler
+#undef unwind_state
 
 /* 004af867 auto */
-void __cdecl parley_civ_list_scroll_local(i32 param_1)
+void __cdecl parley_civ_list_scroll_local(i32 pos)
 
 {
-  parley_civ_list_scroll(0,param_1);
+  parley_civ_list_scroll(0,pos);
   return;
 }
 
 /* 004af8a3 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_civ_list_scroll(int param_1,i32 param_2)
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_civ_list_scroll(int side,i32 pos)
 
 {
-  int iVar1;
+  int active;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    wnd2 = active - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 + 0x10410 + param_1 * 4) = param_2;
-  parley_draw_civ_list(param_1);
+  wnd_activate((Wnd *)(wnd2 + 0x48));
+  *(i32 *)(wnd2 + 0x10410 + side * 4) = pos;
+  parley_draw_civ_list(side);
   return;
 }
-#undef local_8
+#undef wnd2
 
 /* 004af904 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl parley_civ_list_click(int param_1)
+#define range_end (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define side (*(int *)(frame_ + FRAME_OFF(20)))
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
+void __cdecl parley_civ_list_click(int ctrl_id)
 
 {
-  uint *puVar1;
-  int iVar2;
-  int iVar3;
+  uint *sel_flag;
+  int row;
+  int key_down;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  row = wnd_get_active_child();
+  if (row == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    wnd2 = row - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  local_c = param_1 - 0x40f;
+  wnd_activate((Wnd *)(wnd2 + 0x48));
+  side = ctrl_id - 0x40f;
   wnd_get_cursor_pos
-            ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
-  if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = parley_civ_list_hit_test(local_10,local_14,local_c), -1 < iVar2)) &&
-     (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
-    iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
-    if (iVar3 == 0) {
-      iVar3 = wnd_is_ctrl_down((void *)(local_8 + 0x48));
-      if (iVar3 == 0) {
-        for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4);
-            local_18 = local_18 + 1) {
-          if (local_18 != iVar2) {
-            *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 0;
+            ((WndBase *)(wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((*(int *)(wnd2 + 1000 + side * 4) != 0) &&
+      (row = parley_civ_list_hit_test(cursor_x,cursor_y,side), -1 < row)) &&
+     (row < *(int *)(wnd2 + 1000 + side * 4))) {
+    key_down = wnd_is_shift_down((void *)(wnd2 + 0x48));
+    if (key_down == 0) {
+      key_down = wnd_is_ctrl_down((void *)(wnd2 + 0x48));
+      if (key_down == 0) {
+        for (i = 0; i < *(int *)(wnd2 + 1000 + side * 4);
+            i = i + 1) {
+          if (i != row) {
+            *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 0;
           }
         }
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(iVar2 * 4 + local_c * 0x2004 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(wnd2 + 0x10418 + side * 4) = row;
+        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + wnd2);
+        *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(iVar2 * 4 + local_c * 0x2004 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(wnd2 + 0x10418 + side * 4) = row;
+        sel_flag = (uint *)(row * 4 + side * 0x2004 + 0x8400 + wnd2);
+        *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4); local_18++)
+      for (i = 0; i < *(int *)(wnd2 + 1000 + side * 4); i++)
       {
-        *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 0;
+        *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 0;
       }
-      if (*(int *)(local_8 + 0x10418 + local_c * 4) < iVar2) {
-        local_18 = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_1c = iVar2;
+      if (*(int *)(wnd2 + 0x10418 + side * 4) < row) {
+        i = *(int *)(wnd2 + 0x10418 + side * 4);
+        range_end = row;
       }
       else {
-        local_1c = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_18 = iVar2;
+        range_end = *(int *)(wnd2 + 0x10418 + side * 4);
+        i = row;
       }
-      for (; local_18 <= local_1c; local_18++) {
-        *(i32 *)(local_18 * 4 + local_c * 0x2004 + 0x8400 + local_8) = 1;
+      for (; i <= range_end; i++) {
+        *(i32 *)(i * 4 + side * 0x2004 + 0x8400 + wnd2) = 1;
       }
     }
-    parley_draw_civ_list(local_c);
+    parley_draw_civ_list(side);
   }
   return;
 }
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef range_end
+#undef i
+#undef cursor_y
+#undef cursor_x
+#undef side
+#undef wnd2
 
 /* 004afb77 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl parley_civ_list_hit_test(int param_1,int param_2,int param_3)
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
+int __cdecl parley_civ_list_hit_test(int x,int y,int side)
 
 {
-  iptr iVar1;
-  int iVar2;
-  int iVar3;
+  iptr active;
+  int row;
+  int list_height;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    wnd2 = active - 0x48;
   }
-  if (param_2 < *(int *)(param_3 * 0x10 + 0x3c4 + local_8)) {
-    iVar2 = -1;
+  if (y < *(int *)(side * 0x10 + 0x3c4 + wnd2)) {
+    row = -1;
   }
-  else if (param_2 < *(int *)(param_3 * 0x10 + 0x3cc + local_8)) {
-    if (param_1 < *(int *)(param_3 * 0x10 + 0x3c0 + local_8)) {
-      iVar2 = -3;
+  else if (y < *(int *)(side * 0x10 + 0x3cc + wnd2)) {
+    if (x < *(int *)(side * 0x10 + 0x3c0 + wnd2)) {
+      row = -3;
     }
-    else if (param_1 < *(int *)(param_3 * 0x10 + 0x3c8 + local_8)) {
-      iVar2 = *(int *)(param_3 * 0x10 + 0x3c4 + local_8);
-      iVar3 = rect_height(param_3 * 0x10 + local_8 + 0x3c0);
-      iVar2 = (param_2 - iVar2) / (iVar3 / *(int *)(local_8 + 0x10420 + param_3 * 4)) +
-              *(int *)(local_8 + 0x10410 + param_3 * 4);
+    else if (x < *(int *)(side * 0x10 + 0x3c8 + wnd2)) {
+      row = *(int *)(side * 0x10 + 0x3c4 + wnd2);
+      list_height = rect_height(side * 0x10 + wnd2 + 0x3c0);
+      row = (y - row) / (list_height / *(int *)(wnd2 + 0x10420 + side * 4)) +
+              *(int *)(wnd2 + 0x10410 + side * 4);
     }
     else {
-      iVar2 = -4;
+      row = -4;
     }
   }
   else {
-    iVar2 = -2;
+    row = -2;
   }
-  return iVar2;
+  return row;
 }
-#undef local_8
+#undef wnd2
 
 /* 004afc89 auto */
 #define dlg_sel_text_color (*(int *)((u8 *)&g.d_00635a28))
@@ -6337,154 +6337,154 @@ int __cdecl parley_civ_list_hit_test(int param_1,int param_2,int param_3)
 #define list_shadow_color (*(int *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(int *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_5c (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_34 (*(ViewWindow * *)(frame_ + FRAME_OFF(44)))
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(52)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
-#define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(88)))
-void __cdecl parley_draw_civ_list(int param_1)
+#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define row (*(int *)(frame_ + FRAME_OFF(16)))
+#define shadow_color2 (*(int *)(frame_ + FRAME_OFF(32)))
+#define text_color2 (*(int *)(frame_ + FRAME_OFF(40)))
+#define wnd2 (*(ViewWindow * *)(frame_ + FRAME_OFF(44)))
+#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(52)))
+#define row_height (*(int *)(frame_ + FRAME_OFF(68)))
+#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(72)))
+#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(88)))
+void __cdecl parley_draw_civ_list(int side)
 
 {
-  u8 *puVar1;
+  u8 *field;
   int xLeft;
-  int iVar2;
-  iptr iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  int iVar7;
-  i32 uVar8;
-  iptr iVar9;
+  int selected;
+  iptr active;
+  int list_width;
+  int text_dy;
+  int row_top;
+  int text_dx;
+  i32 font_height;
+  iptr text;
   i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar3 = wnd_get_active_child();
-  if (iVar3 == 0) {
-    local_34 = (ViewWindow *)0x0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = (ViewWindow *)0x0;
   }
   else {
-    local_34 = (ViewWindow *)(iVar3 - 0x48);
+    wnd2 = (ViewWindow *)(active - 0x48);
   }
-  surface_get_clip((DibSurface *)local_34,(iptr)local_18);
-  surface_set_clip((DibSurface *)local_34,(iptr)(local_34->pad_3c0 + param_1 * 0x10));
+  surface_get_clip((DibSurface *)wnd2,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)wnd2,(iptr)(wnd2->pad_3c0 + side * 0x10));
   surface_fill_rect
-            ((DibSurface *)local_34,(iptr)(local_34->pad_3c0 + param_1 * 0x10),list_bg_color);
-  if (local_34->field_154 == 0) {
-    local_8 = (GameFont *)&font_size14;
+            ((DibSurface *)wnd2,(iptr)(wnd2->pad_3c0 + side * 0x10),list_bg_color);
+  if (wnd2->field_154 == 0) {
+    font2 = (GameFont *)&font_size14;
   }
   else {
-    local_8 = (GameFont *)&font_size21;
+    font2 = (GameFont *)&font_size21;
   }
-  xLeft = *(int *)(local_34->pad_3c0 + param_1 * 0x10);
-  iVar4 = rect_width((iptr)(local_34->pad_3c0 + param_1 * 0x10));
-  local_1c = rect_height((iptr)(local_34->pad_3c0 + param_1 * 0x10));
-  local_1c = local_1c / *(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x38);
-  iVar5 = local_1c / 2;
-  iVar6 = font_cached_height(local_8);
-  iVar5 -= iVar6 / 2;
-  puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  local_50 = 0;
+  xLeft = *(int *)(wnd2->pad_3c0 + side * 0x10);
+  list_width = rect_width((iptr)(wnd2->pad_3c0 + side * 0x10));
+  row_height = rect_height((iptr)(wnd2->pad_3c0 + side * 0x10));
+  row_height = row_height / *(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x38);
+  text_dy = row_height / 2;
+  row_top = font_cached_height(font2);
+  text_dy -= row_top / 2;
+  field = wnd2->pad_200 + side * 4 - 0x1c;
+  field[0] = '\0';
+  field[1] = '\0';
+  field[2] = '\0';
+  field[3] = '\0';
+  row = 0;
   do {
-    if (*(int *)(local_34->pad_3c0 + param_1 * 4 + 0x28) <= local_50) {
+    if (*(int *)(wnd2->pad_3c0 + side * 4 + 0x28) <= row) {
 LAB_004afe04:
-      for (local_50 = 0; local_50 < *(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x38);
-          local_50 = local_50 + 1) {
-        iVar6 = *(int *)(local_34->pad_3c0 + param_1 * 0x10 + 4) + local_1c * local_50;
-        SetRect(&local_2c,xLeft,iVar6,iVar4 + xLeft,local_1c + iVar6);
-        if (((local_50 == 0) || (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) != -1)) &&
-           (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_50 <
-            *(int *)(local_34->pad_3c0 + param_1 * 4 + 0x28))) {
-          iVar2 = *(int *)(param_1 * 0x2004 +
-                           (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_50) * 4 +
-                           0x8400 + (int)local_34);
-          if (iVar2 == 0) {
-            local_38 = list_text_color;
-            local_40 = list_shadow_color;
+      for (row = 0; row < *(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x38);
+          row = row + 1) {
+        row_top = *(int *)(wnd2->pad_3c0 + side * 0x10 + 4) + row_height * row;
+        SetRect(&row_rect,xLeft,row_top,list_width + xLeft,row_height + row_top);
+        if (((row == 0) || (*(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) != -1)) &&
+           (*(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) + row <
+            *(int *)(wnd2->pad_3c0 + side * 4 + 0x28))) {
+          selected = *(int *)(side * 0x2004 +
+                           (*(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) + row) * 4 +
+                           0x8400 + (int)wnd2);
+          if (selected == 0) {
+            text_color2 = list_text_color;
+            shadow_color2 = list_shadow_color;
           }
           else {
-            local_38 = dlg_sel_text_color;
-            local_40 = dlg_sel_text_shadow_color;
+            text_color2 = dlg_sel_text_color;
+            shadow_color2 = dlg_sel_text_shadow_color;
           }
-          iVar7 = (-(uint)(local_34->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
-          local_2c.left = local_2c.left + iVar7 - 3;
-          if (iVar2 == 0) {
-            local_5c = list_bg_color;
+          text_dx = (-(uint)(wnd2->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
+          row_rect.left = row_rect.left + text_dx - 3;
+          if (selected == 0) {
+            bg_color2 = list_bg_color;
           }
           else {
-            local_5c = list_sel_bg_color;
+            bg_color2 = list_sel_bg_color;
           }
-          surface_fill_rect((DibSurface *)local_34,(iptr)&local_2c,local_5c);
-          if (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) == -1) {
+          surface_fill_rect((DibSurface *)wnd2,(iptr)&row_rect,bg_color2);
+          if (*(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) == -1) {
             text_clear();
-            iVar9 = label_string(*(i32 *)(label_string_ids + 0xb84));
-            text_append(iVar9);
-            puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-            puVar1[0] = '\0';
-            puVar1[1] = '\0';
-            puVar1[2] = '\0';
-            puVar1[3] = '\0';
+            text = label_string(*(i32 *)(label_string_ids + 0xb84));
+            text_append(text);
+            field = wnd2->pad_200 + side * 4 - 0x1c;
+            field[0] = '\0';
+            field[1] = '\0';
+            field[2] = '\0';
+            field[3] = '\0';
           }
           else {
-            uVar8 = font_cached_height(local_8);
+            font_height = font_cached_height(font2);
             parley_draw_civ_capital(*(i32 *)
-                                (param_1 * 0x2004 +
-                                 (*(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_50) *
-                                 4 + 0x3f0 + (int)local_34),
-                               *(int *)(local_34[0x3e].pad_48 + param_1 * 4 + 0x28) + local_50,
-                               xLeft + 2,iVar6,uVar8);
+                                (side * 0x2004 +
+                                 (*(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) + row) *
+                                 4 + 0x3f0 + (int)wnd2),
+                               *(int *)(wnd2[0x3e].pad_48 + side * 4 + 0x28) + row,
+                               xLeft + 2,row_top,font_height);
             text_clear();
-            iVar9 = civ_name_plural(*(iptr *)(param_1 * 0x2004 +
-                                                 (*(int *)(local_34[0x3e].pad_48 +
-                                                          param_1 * 4 + 0x28) + local_50) * 4 +
-                                                 0x3f0 + (int)local_34));
-            text_append(iVar9);
+            text = civ_name_plural(*(iptr *)(side * 0x2004 +
+                                                 (*(int *)(wnd2[0x3e].pad_48 +
+                                                          side * 4 + 0x28) + row) * 4 +
+                                                 0x3f0 + (int)wnd2));
+            text_append(text);
             text_append_space();
             text_append_lparen();
-            iVar9 = civ_leader_name(*(iptr *)(param_1 * 0x2004 +
-                                                 (*(int *)(local_34[0x3e].pad_48 +
-                                                          param_1 * 4 + 0x28) + local_50) * 4 +
-                                                 0x3f0 + (int)local_34));
-            text_append(iVar9);
+            text = civ_leader_name(*(iptr *)(side * 0x2004 +
+                                                 (*(int *)(wnd2[0x3e].pad_48 +
+                                                          side * 4 + 0x28) + row) * 4 +
+                                                 0x3f0 + (int)wnd2));
+            text_append(text);
             text_append_rparen();
           }
-          if (local_40 != local_38) {
-            gfx_set_text_color_index(local_40);
+          if (shadow_color2 != text_color2) {
+            gfx_set_text_color_index(shadow_color2);
             surface_draw_text
-                      ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),iVar7 + xLeft + 2,
-                       iVar5 + iVar6 + 1,5);
-            gfx_set_text_color_index(local_38);
+                      ((DibSurface *)wnd2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_dx + xLeft + 2,
+                       text_dy + row_top + 1,5);
+            gfx_set_text_color_index(text_color2);
             surface_draw_text
-                      ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),iVar7 + xLeft + 1,
-                       iVar5 + iVar6,5);
+                      ((DibSurface *)wnd2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_dx + xLeft + 1,
+                       text_dy + row_top,5);
           }
-          gfx_set_text_color_index(local_38);
+          gfx_set_text_color_index(text_color2);
           surface_draw_text
-                    ((DibSurface *)local_34,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),iVar7 + xLeft,iVar5 + iVar6,5)
+                    ((DibSurface *)wnd2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),text_dx + xLeft,text_dy + row_top,5)
           ;
         }
       }
-      surface_set_clip((DibSurface *)local_34,(iptr)local_18);
-      parley_update_buttons(local_34);
-      ctrl_show_and_redraw(*(Control **)(local_34->pad_364 + param_1 * 4 + 0x20))
+      surface_set_clip((DibSurface *)wnd2,(iptr)saved_clip);
+      parley_update_buttons(wnd2);
+      ctrl_show_and_redraw(*(Control **)(wnd2->pad_364 + side * 4 + 0x20))
       ;
       return;
     }
-    if (*(int *)(param_1 * 0x2004 + local_50 * 4 + 0x8400 + (int)local_34) != 0) {
-      puVar1 = local_34->pad_200 + param_1 * 4 - 0x1c;
-      puVar1[0] = 1;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if (*(int *)(side * 0x2004 + row * 4 + 0x8400 + (int)wnd2) != 0) {
+      field = wnd2->pad_200 + side * 4 - 0x1c;
+      field[0] = 1;
+      field[1] = '\0';
+      field[2] = '\0';
+      field[3] = '\0';
       goto LAB_004afe04;
     }
-    local_50++;
+    row++;
   } while( true );
 }
 #undef dlg_sel_text_color
@@ -6494,87 +6494,87 @@ LAB_004afe04:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef local_5c
-#undef local_50
-#undef local_40
-#undef local_38
-#undef local_34
-#undef local_2c
-#undef local_1c
-#undef local_18
-#undef local_8
+#undef bg_color2
+#undef row
+#undef shadow_color2
+#undef text_color2
+#undef wnd2
+#undef row_rect
+#undef row_height
+#undef saved_clip
+#undef font2
 
 /* 004b0157 auto */
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_2c (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define zoom2 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __cdecl parley_draw_civ_capital(int civ,uint param_2,int param_3,int param_4,int param_5)
+#define draw_x (*(int *)(frame_ + FRAME_OFF(16)))
+#define icon_width (*(int *)(frame_ + FRAME_OFF(24)))
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(28)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(36)))
+#define score (*(int *)(frame_ + FRAME_OFF(40)))
+void __cdecl parley_draw_civ_capital(int civ,uint row,int x,int y,int row_height)
 
 {
-  iptr iVar1;
-  int iVar2;
+  iptr active;
+  int has_palace;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_14 = 0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = 0;
   }
   else {
-    local_14 = iVar1 - 0x48;
+    wnd2 = active - 0x48;
   }
-  if (*(int *)(local_14 + 0x154) == 0) {
-    local_2c = 0xfffffffc;
+  if (*(int *)(wnd2 + 0x154) == 0) {
+    zoom2 = 0xfffffffc;
   }
   else {
-    local_2c = 0xfffffffe;
+    zoom2 = 0xfffffffe;
   }
-  local_c = 0;
+  best_score = 0;
   city2 = -1;
   for (city = 0; city < game.num_cities; city++) {
     if ((cities[city].id != 0) && (cities[city].owner == civ)) {
-      local_8 = (int)cities[city].size;
-      iVar2 = city_has_improvement(city,1);
-      if (iVar2 != 0) {
-        local_8 += 200;
+      score = (int)cities[city].size;
+      has_palace = city_has_improvement(city,1);
+      if (has_palace != 0) {
+        score += 200;
       }
       if (cities[city].building == -1) {
-        local_8 += 100;
+        score += 100;
       }
-      if (local_c < local_8) {
-        local_c = local_8;
+      if (best_score < score) {
+        best_score = score;
         city2 = city;
       }
     }
   }
   if (-1 < city2) {
-    local_20 = param_3;
-    if (*(int *)(local_14 + 0x154) == 0) {
-      local_18 = 0x18;
+    draw_x = x;
+    if (*(int *)(wnd2 + 0x154) == 0) {
+      icon_width = 0x18;
     }
     else {
-      local_18 = 0x24;
+      icon_width = 0x24;
     }
-    if ((param_2 & 1) != 0) {
-      local_20 = param_3 + local_18 + 2;
+    if ((row & 1) != 0) {
+      draw_x = x + icon_width + 2;
     }
-    iVar2 = gfx_zoom_scale(0x30,local_2c);
-    gfx_draw_city(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),city2,0,local_20,param_4 - (iVar2 - param_5) / 2,local_2c);
+    has_palace = gfx_zoom_scale(0x30,zoom2);
+    gfx_draw_city(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),city2,0,draw_x,y - (has_palace - row_height) / 2,zoom2);
   }
   return;
 }
 #undef city2
-#undef local_2c
+#undef zoom2
 #undef city
-#undef local_20
-#undef local_18
-#undef local_14
-#undef local_c
-#undef local_8
+#undef draw_x
+#undef icon_width
+#undef wnd2
+#undef best_score
+#undef score
 
 /* 004b0b53 auto */
 #define diffeng_mirror_end (*(int * *)((u8 *)&g.d_0067a408))
@@ -6587,103 +6587,103 @@ void __cdecl parley_draw_civ_capital(int civ,uint param_2,int param_3,int param_
 #define diffeng_packet_msg_type_i32 (*(i32 *)((u8 *)&g.d_00679ff4))
 #define diffeng_packet_size_i32 (*(i32 *)((u8 *)&g.d_00679ff8))
 #define diffeng_packet_record_count_i32 (*(i32 *)((u8 *)&g.d_0067a000))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_48 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_44 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_40 (*(int * *)(frame_ + FRAME_OFF(16)))
-#define local_38 (*(int * *)(frame_ + FRAME_OFF(24)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_30 (*(uint * *)(frame_ + FRAME_OFF(32)))
-#define local_2c (*(i32 * *)(frame_ + FRAME_OFF(36)))
-#define local_28 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_24 (*(int * *)(frame_ + FRAME_OFF(44)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(48)))
-#define local_1c (*(iptr *)(frame_ + FRAME_OFF(52)))
-#define local_18 (*(uint * *)(frame_ + FRAME_OFF(56)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_8 (*(int * *)(frame_ + FRAME_OFF(72)))
+#define bytes_changed (*(int *)(frame_ + FRAME_OFF(4)))
+#define run_section (*(uint *)(frame_ + FRAME_OFF(8)))
+#define run_size (*(uint *)(frame_ + FRAME_OFF(12)))
+#define cur_ptr (*(int * *)(frame_ + FRAME_OFF(16)))
+#define rle_src (*(int * *)(frame_ + FRAME_OFF(24)))
+#define rle_src_end (*(int *)(frame_ + FRAME_OFF(28)))
+#define rle_dst (*(uint * *)(frame_ + FRAME_OFF(32)))
+#define rle_size_ptr (*(i32 * *)(frame_ + FRAME_OFF(36)))
+#define encoded_size (*(uint *)(frame_ + FRAME_OFF(40)))
+#define start_ptr (*(int * *)(frame_ + FRAME_OFF(44)))
+#define run_offset (*(uint *)(frame_ + FRAME_OFF(48)))
+#define game_mirror (*(iptr *)(frame_ + FRAME_OFF(52)))
+#define out_ptr (*(uint * *)(frame_ + FRAME_OFF(56)))
+#define record_count (*(int *)(frame_ + FRAME_OFF(60)))
+#define runs_left (*(int *)(frame_ + FRAME_OFF(64)))
+#define deadline (*(int *)(frame_ + FRAME_OFF(68)))
+#define section_end (*(int * *)(frame_ + FRAME_OFF(72)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 int __cdecl
-net_send_state_diff(i32 param_1,uint param_2,int param_3,i32 param_4,i32 param_5)
+net_send_state_diff(i32 dest,uint flags,int limit,i32 force,i32 alt_msg)
 
 {
-  int *piVar1;
-  int *piVar2;
-  int iVar3;
+  int *mirror_start;
+  int *run_start;
+  int encoded;
   i8 frame_[FRAME_OFF(80)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (game.multiplayer < 3) {
-    local_4c = 0;
+    bytes_changed = 0;
   }
-  else if (((char)param_4 == '\0') && (net_player_count == 1)) {
-    local_4c = 0;
+  else if (((char)force == '\0') && (net_player_count == 1)) {
+    bytes_changed = 0;
   }
   else {
-    local_4c = 0;
-    local_10 = 0;
-    local_c = 0;
-    local_24 = diffeng_scan_ptr;
+    bytes_changed = 0;
+    runs_left = 0;
+    deadline = 0;
+    start_ptr = diffeng_scan_ptr;
     diffeng_send_count_i32++;
-    if ((param_2 & 1) != 0) {
+    if ((flags & 1) != 0) {
       diffeng_invalidate_mirror();
     }
-    if ((param_2 & 4) == 0) {
-      if ((param_2 & 8) != 0) {
-        local_10 = param_3;
+    if ((flags & 4) == 0) {
+      if ((flags & 8) != 0) {
+        runs_left = limit;
       }
     }
     else {
-      local_c = timer_ticks();
-      local_c = param_3 + local_c;
+      deadline = timer_ticks();
+      deadline = limit + deadline;
     }
-    local_40 = (int *)((&diffeng_section_ptrs)[diffeng_scan_section * 6] + diffeng_scan_offset_i32);
-    local_8 = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] + (&diffeng_section_ptrs)[diffeng_scan_section * 6]);
+    cur_ptr = (int *)((&diffeng_section_ptrs)[diffeng_scan_section * 6] + diffeng_scan_offset_i32);
+    section_end = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] + (&diffeng_section_ptrs)[diffeng_scan_section * 6]);
     if (diffeng_scan_section == 1) {
-      local_1c = diffeng_game_offset + diffeng_mirror_buf;
-      *(i16 *)(local_1c + 0x16) = game.active_unit;
-      *(i16 *)(local_1c + 0x18) = game.moving_unit;
-      *(u8 *)(local_1c + 0x1a) = game.multiplayer;
-      *(i8 *)(local_1c + 0x1b) = game.player_civ;
-      *(i8 *)(local_1c + 0x1c) = game.field_1c;
-      *(i8 *)(local_1c + 0x1d) = game.turn_civ;
-      *(u32 *)(local_1c + 2) = game.game_options;
-      *(u16 *)(local_1c + 10) = game.message_options;
+      game_mirror = diffeng_game_offset + diffeng_mirror_buf;
+      *(i16 *)(game_mirror + 0x16) = game.active_unit;
+      *(i16 *)(game_mirror + 0x18) = game.moving_unit;
+      *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
+      *(i8 *)(game_mirror + 0x1b) = game.player_civ;
+      *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+      *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
+      *(u32 *)(game_mirror + 2) = game.game_options;
+      *(u16 *)(game_mirror + 10) = game.message_options;
     }
     diffeng_packet_i32 = 0x66606660;
-    if ((char)param_5 == '\0') {
+    if ((char)alt_msg == '\0') {
       diffeng_packet_msg_type_i32 = 0x15;
     }
     else {
       diffeng_packet_msg_type_i32 = 0x5c;
     }
-    local_18 = &diffeng_packet_payload;
-    local_14 = 0;
+    out_ptr = &diffeng_packet_payload;
+    record_count = 0;
     do {
-      piVar2 = local_40;
-      piVar1 = diffeng_scan_ptr;
-      if (*local_40 == *diffeng_scan_ptr) {
+      run_start = cur_ptr;
+      mirror_start = diffeng_scan_ptr;
+      if (*cur_ptr == *diffeng_scan_ptr) {
         diffeng_scan_ptr++;
         if (diffeng_scan_ptr < diffeng_mirror_end) {
-          local_40++;
-          if (local_8 <= local_40) {
+          cur_ptr++;
+          if (section_end <= cur_ptr) {
             diffeng_scan_section++;
             if (diffeng_scan_section == 1) {
-              local_1c = diffeng_game_offset + diffeng_mirror_buf;
-              *(i16 *)(local_1c + 0x16) = game.active_unit;
-              *(i16 *)(local_1c + 0x18) = game.moving_unit;
-              *(u8 *)(local_1c + 0x1a) = game.multiplayer;
-              *(i8 *)(local_1c + 0x1b) = game.player_civ;
-              *(i8 *)(local_1c + 0x1c) = game.field_1c;
-              *(i8 *)(local_1c + 0x1d) = game.turn_civ;
-              *(u32 *)(local_1c + 2) = game.game_options;
-              *(u16 *)(local_1c + 10) = game.message_options;
+              game_mirror = diffeng_game_offset + diffeng_mirror_buf;
+              *(i16 *)(game_mirror + 0x16) = game.active_unit;
+              *(i16 *)(game_mirror + 0x18) = game.moving_unit;
+              *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
+              *(i8 *)(game_mirror + 0x1b) = game.player_civ;
+              *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+              *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
+              *(u32 *)(game_mirror + 2) = game.game_options;
+              *(u16 *)(game_mirror + 10) = game.message_options;
             }
             diffeng_scan_offset_i32 = 0;
-            local_40 = (int *)(&diffeng_section_ptrs)[diffeng_scan_section * 6];
-            local_8 = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] + (&diffeng_section_ptrs)[diffeng_scan_section * 6]
+            cur_ptr = (int *)(&diffeng_section_ptrs)[diffeng_scan_section * 6];
+            section_end = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] + (&diffeng_section_ptrs)[diffeng_scan_section * 6]
                              );
           }
         }
@@ -6691,110 +6691,110 @@ net_send_state_diff(i32 param_1,uint param_2,int param_3,i32 param_4,i32 param_5
           diffeng_scan_ptr = (int *)diffeng_mirror_buf;
           diffeng_scan_section = 0;
           diffeng_scan_offset_i32 = 0;
-          local_40 = (int *)diffeng_section_ptrs;
-          local_8 = (int *)(diffeng_section_padded_sizes + diffeng_section_ptrs);
+          cur_ptr = (int *)diffeng_section_ptrs;
+          section_end = (int *)(diffeng_section_padded_sizes + diffeng_section_ptrs);
         }
       }
       else {
-        local_44 = 0;
+        run_size = 0;
         do {
           diffeng_scan_ptr++;
           if (diffeng_scan_ptr < diffeng_mirror_end) {
-            local_40++;
-            if (local_8 <= local_40) {
-              local_20 = (int)piVar2 - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
-              local_44 = (int)local_8 - (int)piVar2;
-              local_48 = diffeng_scan_section;
+            cur_ptr++;
+            if (section_end <= cur_ptr) {
+              run_offset = (int)run_start - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
+              run_size = (int)section_end - (int)run_start;
+              run_section = diffeng_scan_section;
               diffeng_scan_section++;
               if (diffeng_scan_section == 1) {
-                local_1c = diffeng_game_offset + diffeng_mirror_buf;
-                *(i16 *)(local_1c + 0x16) = game.active_unit;
-                *(i16 *)(local_1c + 0x18) = game.moving_unit;
-                *(u8 *)(local_1c + 0x1a) = game.multiplayer;
-                *(i8 *)(local_1c + 0x1b) = game.player_civ;
-                *(i8 *)(local_1c + 0x1c) = game.field_1c;
-                *(i8 *)(local_1c + 0x1d) = game.turn_civ;
-                *(u32 *)(local_1c + 2) = game.game_options;
-                *(u16 *)(local_1c + 10) = game.message_options;
+                game_mirror = diffeng_game_offset + diffeng_mirror_buf;
+                *(i16 *)(game_mirror + 0x16) = game.active_unit;
+                *(i16 *)(game_mirror + 0x18) = game.moving_unit;
+                *(u8 *)(game_mirror + 0x1a) = game.multiplayer;
+                *(i8 *)(game_mirror + 0x1b) = game.player_civ;
+                *(i8 *)(game_mirror + 0x1c) = game.field_1c;
+                *(i8 *)(game_mirror + 0x1d) = game.turn_civ;
+                *(u32 *)(game_mirror + 2) = game.game_options;
+                *(u16 *)(game_mirror + 10) = game.message_options;
               }
               diffeng_scan_offset_i32 = 0;
-              local_40 = (int *)(&diffeng_section_ptrs)[diffeng_scan_section * 6];
-              local_8 = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] +
+              cur_ptr = (int *)(&diffeng_section_ptrs)[diffeng_scan_section * 6];
+              section_end = (int *)((&diffeng_section_padded_sizes)[diffeng_scan_section * 6] +
                                (&diffeng_section_ptrs)[diffeng_scan_section * 6]);
             }
           }
           else {
-            local_20 = (int)piVar2 - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
-            local_44 = (int)diffeng_mirror_end - (int)piVar1;
-            local_48 = diffeng_scan_section;
+            run_offset = (int)run_start - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
+            run_size = (int)diffeng_mirror_end - (int)mirror_start;
+            run_section = diffeng_scan_section;
             diffeng_scan_ptr = (int *)diffeng_mirror_buf;
             diffeng_scan_section = 0;
             diffeng_scan_offset_i32 = 0;
-            local_40 = (int *)diffeng_section_ptrs;
-            local_8 = (int *)(diffeng_section_padded_sizes + diffeng_section_ptrs);
+            cur_ptr = (int *)diffeng_section_ptrs;
+            section_end = (int *)(diffeng_section_padded_sizes + diffeng_section_ptrs);
           }
-        } while (((local_44 == 0) &&
-                 ((int)diffeng_scan_ptr + (-ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)) - (int)piVar1) + (int)local_18 < diffeng_packet_flush_size)) &&
-                (*local_40 != *diffeng_scan_ptr));
-        if (0x400 < local_44) {
+        } while (((run_size == 0) &&
+                 ((int)diffeng_scan_ptr + (-ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)) - (int)mirror_start) + (int)out_ptr < diffeng_packet_flush_size)) &&
+                (*cur_ptr != *diffeng_scan_ptr));
+        if (0x400 < run_size) {
           err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62d13c, ((u8 *)&g.d_0062d13c)),ADDR(0x62d114, ((u8 *)&g.d_0062d114)),0xee);
         }
-        if (local_44 == 0) {
-          local_20 = (int)piVar2 - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
-          local_48 = diffeng_scan_section;
-          local_44 = (int)diffeng_scan_ptr - (int)piVar1;
+        if (run_size == 0) {
+          run_offset = (int)run_start - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
+          run_section = diffeng_scan_section;
+          run_size = (int)diffeng_scan_ptr - (int)mirror_start;
         }
-        if (0x400 < local_44) {
+        if (0x400 < run_size) {
           err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62d190, ((u8 *)&g.d_0062d190)),ADDR(0x62d168, ((u8 *)&g.d_0062d168)),0xf7);
         }
-        if ((param_2 & 0x10) == 0) {
-          crt_memcpy(piVar1,piVar2,local_44);
+        if ((flags & 0x10) == 0) {
+          crt_memcpy(mirror_start,run_start,run_size);
         }
-        local_38 = piVar2;
-        local_34 = (int)piVar2 + local_44;
-        local_30 = local_18 + 3;
-        local_2c = &diffeng_mirror_size;
-        iVar3 = diffeng_rle_encode((iptr)&local_38);
-        if (iVar3 == 0) {
-          crt_memcpy(local_18 + 3,piVar2,local_44);
-          *local_18 = local_48;
-          local_18[1] = local_20;
-          local_18[2] = local_44;
-          local_18 = (uint *)((int)local_18 + local_44 + 0xc);
+        rle_src = run_start;
+        rle_src_end = (int)run_start + run_size;
+        rle_dst = out_ptr + 3;
+        rle_size_ptr = &diffeng_mirror_size;
+        encoded = diffeng_rle_encode((iptr)&rle_src);
+        if (encoded == 0) {
+          crt_memcpy(out_ptr + 3,run_start,run_size);
+          *out_ptr = run_section;
+          out_ptr[1] = run_offset;
+          out_ptr[2] = run_size;
+          out_ptr = (uint *)((int)out_ptr + run_size + 0xc);
         }
         else {
-          *local_18 = local_48 | 0x8000;
-          local_18[1] = local_20;
-          local_18[2] = local_28;
-          local_18 = (uint *)((int)local_18 + local_28 + 0xc);
+          *out_ptr = run_section | 0x8000;
+          out_ptr[1] = run_offset;
+          out_ptr[2] = encoded_size;
+          out_ptr = (uint *)((int)out_ptr + encoded_size + 0xc);
         }
-        local_14++;
-        local_4c += local_44;
-        if (diffeng_packet_flush_size <= (int)(local_18 - 0x19e7fc)) {
-          diffeng_packet_size_i32 = local_18 - 0x19e7fc;
-          diffeng_packet_record_count_i32 = local_14;
-          net_send_message(0x5c,param_1,0,0,0,0,0,0,0,ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)));
-          if ((param_2 & 1) != 0) {
+        record_count++;
+        bytes_changed += run_size;
+        if (diffeng_packet_flush_size <= (int)(out_ptr - 0x19e7fc)) {
+          diffeng_packet_size_i32 = out_ptr - 0x19e7fc;
+          diffeng_packet_record_count_i32 = record_count;
+          net_send_message(0x5c,dest,0,0,0,0,0,0,0,ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)));
+          if ((flags & 1) != 0) {
             XD_FlushSendBuffer(5000);
           }
-          local_18 = &diffeng_packet_payload;
-          local_14 = 0;
+          out_ptr = &diffeng_packet_payload;
+          record_count = 0;
         }
-        if ((((param_2 & 4) != 0) && (iVar3 = timer_ticks(), local_c < iVar3)) ||
-           (((param_2 & 8) != 0 && (local_10 = local_10 - 1, local_10 == 0)))) break;
+        if ((((flags & 4) != 0) && (encoded = timer_ticks(), deadline < encoded)) ||
+           (((flags & 8) != 0 && (runs_left = runs_left - 1, runs_left == 0)))) break;
       }
-    } while (local_24 != diffeng_scan_ptr);
-    if (&diffeng_packet_payload < local_18) {
-      diffeng_packet_size_i32 = local_18 - 0x19e7fc;
-      diffeng_packet_record_count_i32 = local_14;
-      net_send_message(0x5c,param_1,0,0,0,0,0,0,0,ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)));
-      if ((param_2 & 1) != 0) {
+    } while (start_ptr != diffeng_scan_ptr);
+    if (&diffeng_packet_payload < out_ptr) {
+      diffeng_packet_size_i32 = out_ptr - 0x19e7fc;
+      diffeng_packet_record_count_i32 = record_count;
+      net_send_message(0x5c,dest,0,0,0,0,0,0,0,ADDR(0x679ff0, ((u8 *)&g.d_00679ff0)));
+      if ((flags & 1) != 0) {
         XD_FlushSendBuffer(5000);
       }
     }
-    diffeng_scan_offset_i32 = (int)local_40 - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
+    diffeng_scan_offset_i32 = (int)cur_ptr - (&diffeng_section_ptrs)[diffeng_scan_section * 6];
   }
-  return local_4c;
+  return bytes_changed;
 }
 #undef diffeng_mirror_end
 #undef diffeng_mirror_size
@@ -6806,23 +6806,23 @@ net_send_state_diff(i32 param_1,uint param_2,int param_3,i32 param_4,i32 param_5
 #undef diffeng_packet_msg_type_i32
 #undef diffeng_packet_size_i32
 #undef diffeng_packet_record_count_i32
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef bytes_changed
+#undef run_section
+#undef run_size
+#undef cur_ptr
+#undef rle_src
+#undef rle_src_end
+#undef rle_dst
+#undef rle_size_ptr
+#undef encoded_size
+#undef start_ptr
+#undef run_offset
+#undef game_mirror
+#undef out_ptr
+#undef record_count
+#undef runs_left
+#undef deadline
+#undef section_end
 
 /* 004b401c auto */
 void __cdecl parley_wnd_global_init(void)
@@ -6894,33 +6894,33 @@ void __cdecl chat_wnd_static_dtor(void)
 #define chat_input_buffer (*(i32 *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(i32 *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(i32 *)((u8 *)&g.d_0069b03c))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
-ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(12)))
+#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(16)))
+ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr rect)
 
 {
-  u8 *puVar1;
-  int iVar2;
+  u8 *field;
+  int width;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  unwind_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
-  local_8 = 0;
+  unwind_state = 0;
   this->vtable = (u32)&PTR_FUN_0061d6c4;
-  this->init_rect = param_1;
+  this->init_rect = rect;
   this->style_flags = 1;
   prefs_load_civ2dat();
-  iVar2 = rect_width(this->init_rect);
-  if (iVar2 < 1) {
+  width = rect_width(this->init_rect);
+  if (width < 1) {
     this->border_width = 0;
     this->resize_border = 0;
   }
   else {
     this->border_width = *(u32 *)this->init_rect;
     this->resize_border = *(u32 *)(this->init_rect + 4);
-    if (iVar2 < 0x321) {
+    if (width < 0x321) {
       this->large_layout = 0;
     }
     else {
@@ -6939,27 +6939,27 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr param_1)
   this->field_358 = 0;
   this->field_35c = 0;
   this->field_360 = 0;
-  for (local_18 = 0; local_18 < 8; local_18++) {
-    puVar1 = this->pad_2c4 + local_18 * 4 - 0x1c;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_2c4 + local_18 * 4 + 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_2d4 + local_18 * 4 + 0x2c;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 - 0x44;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+  for (i = 0; i < 8; i++) {
+    field = this->pad_2c4 + i * 4 - 0x1c;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_2c4 + i * 4 + 4;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_2d4 + i * 4 + 0x2c;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 - 0x44;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
   }
   this->field_2f4 = 0;
   this->field_2f8 = 0;
@@ -6991,52 +6991,52 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr param_1)
   chat_input_buffer = 0;
   chat_log_buffer = 0;
   chat_log_capacity = 0;
-  for (local_18 = 0; local_18 < 2; local_18++) {
-    puVar1 = this->pad_364 + local_18 * 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 8;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 0x10;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 0x18;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 0x20;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 0x28;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_364 + local_18 * 4 + 0x30;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_3c0 + local_18 * 4 - 0x24;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_3c0 + local_18 * 4 - 0x1c;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+  for (i = 0; i < 2; i++) {
+    field = this->pad_364 + i * 4;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 8;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 0x10;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 0x18;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 0x20;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 0x28;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_364 + i * 4 + 0x30;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_3c0 + i * 4 - 0x24;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
+    field = this->pad_3c0 + i * 4 - 0x1c;
+    field[0] = '\0';
+    field[1] = '\0';
+    field[2] = '\0';
+    field[3] = '\0';
   }
   this->field_3bc = '\0';
   this->field_3bd = '\0';
@@ -7047,38 +7047,38 @@ ViewWindow * __thiscall parley_wnd_ctor(ViewWindow *this,iptr param_1)
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef chat_log_capacity
-#undef local_18
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef i
+#undef seh_prev
+#undef seh_handler
+#undef unwind_state
 
 /* 004b4593 auto */
 #define chat_input_buffer (*(void * *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
 #define prefs_clear_chat_on_boot (*(short *)((u8 *)&g.d_006665fc))
-#define local_a8 (*(FileObject *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(152)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(156)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(160)))
+#define log_file (*(FileObject *)(frame_ + FRAME_OFF(0)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(152)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(156)))
+#define unwind_state (*(uint *)(frame_ + FRAME_OFF(160)))
 void __thiscall parley_wnd_dtor(ViewWindow *this)
 
 {
-  int iVar1;
-  size_t sVar2;
+  int created;
+  size_t log_len;
   i8 frame_[FRAME_OFF(168)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->vtable = (u32)&PTR_FUN_0061d6c4;
-  local_8 = 0;
+  unwind_state = 0;
   if (this->session_mode == 4) {
-    file_obj_init(&local_a8);
-    local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
+    file_obj_init(&log_file);
+    unwind_state = CONCAT31((*(i32 *)((char *)&unwind_state + 1)),1);
     if ((prefs_clear_chat_on_boot != 0) && (chat_log_buffer != (char *)0x0)) {
       *chat_log_buffer = '\0';
-      iVar1 = file_obj_create(&local_a8,ADDR(0x62d874, ((u8 *)&g.d_0062d874)));
-      if (iVar1 != 0) {
-        sVar2 = _strlen(chat_log_buffer);
-        file_obj_write(&local_a8,(iptr)chat_log_buffer,sVar2);
-        file_map_close(&local_a8);
+      created = file_obj_create(&log_file,ADDR(0x62d874, ((u8 *)&g.d_0062d874)));
+      if (created != 0) {
+        log_len = _strlen(chat_log_buffer);
+        file_obj_write(&log_file,(iptr)chat_log_buffer,log_len);
+        file_map_close(&log_file);
       }
     }
     if (chat_log_buffer != (char *)0x0) {
@@ -7089,52 +7089,52 @@ void __thiscall parley_wnd_dtor(ViewWindow *this)
       operator_delete(chat_input_buffer);
       chat_input_buffer = (void *)0x0;
     }
-    local_8 = local_8 & 0xffffff00;
-    /* inlined unwind funclet 004b4705 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+    unwind_state = unwind_state & 0xffffff00;
+    /* inlined unwind funclet 004b4705 */ { file_obj_close((FileObject *)((iptr)&log_file)); }
   }
   parley_wnd_destroy_controls(this);
   wnd_destroy_with_surface((DibSurface *)this);
-  local_8 = 0xffffffff;
+  unwind_state = 0xffffffff;
   /* inlined unwind funclet 004b4711 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef prefs_clear_chat_on_boot
-#undef local_a8
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef log_file
+#undef seh_prev
+#undef seh_handler
+#undef unwind_state
 
 /* 004b4735 auto */
 #define chat_input_buffer (*(void * *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(i8 * *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(UINT *)((u8 *)&g.d_0069b03c))
 #define prefs_clear_chat_on_new_game (*(short *)((u8 *)&g.d_006665fa))
-#define local_b0 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_a8 (*(i8 (*)[160])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(168)))
-void __thiscall parley_wnd_create(ViewWindow *this,u32 param_1)
+#define wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define log_file (*(i8 (*)[160])(frame_ + FRAME_OFF(8)))
+#define unwind_state (*(i32 *)(frame_ + FRAME_OFF(168)))
+void __thiscall parley_wnd_create(ViewWindow *this,u32 mode)
 
 {
-  int iVar1;
-  i32 uVar2;
-  i32 uVar3;
-  i8 *puVar4;
-  i8 *puVar5;
+  int file_size;
+  i32 height;
+  i32 width;
+  i8 *palette;
+  i8 *parent;
   i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  (*(i32 *)((char *)&local_a8 + 156)) = &LAB_004b4bef;
+  unwind_state = 0xffffffff;
+  (*(i32 *)((char *)&log_file + 156)) = &LAB_004b4bef;
   this->style_flags = 1;
   if (this == (ViewWindow *)0x0) {
-    local_b0 = (u8 *)0x0;
+    wnd2 = (u8 *)0x0;
   }
   else {
-    local_b0 = this->pad_48;
+    wnd2 = this->pad_48;
   }
-  wnd_set_active_child((iptr)local_b0);
-  this->session_mode = param_1;
+  wnd_set_active_child((iptr)wnd2);
+  this->session_mode = mode;
   if (this->session_mode != 4) goto LAB_004b4982;
   chat_log_capacity = GetPrivateProfileIntA
                            (s_Civilization_Gold_0062d898,s_ChatShowSize_0062d888,-1,
@@ -7159,46 +7159,46 @@ void __thiscall parley_wnd_create(ViewWindow *this,u32 param_1)
     chat_input_buffer = operator_new(0x101);
   }
   _memset(chat_input_buffer,0,0x101);
-  file_obj_init((FileObject *)local_a8);
-  local_8 = 0;
+  file_obj_init((FileObject *)log_file);
+  unwind_state = 0;
   if (prefs_clear_chat_on_new_game == 0) {
-    iVar1 = file_obj_open((FileObject *)local_a8,ADDR(0x62d914, ((u8 *)&g.d_0062d914)));
-    if (iVar1 == 0) goto LAB_004b496e;
-    iVar1 = file_obj_get_size((FileObject *)local_a8);
-    if ((int)chat_log_capacity < iVar1) {
-      file_obj_seek_cur((FileSeekView *)local_a8,iVar1 - chat_log_capacity);
+    file_size = file_obj_open((FileObject *)log_file,ADDR(0x62d914, ((u8 *)&g.d_0062d914)));
+    if (file_size == 0) goto LAB_004b496e;
+    file_size = file_obj_get_size((FileObject *)log_file);
+    if ((int)chat_log_capacity < file_size) {
+      file_obj_seek_cur((FileSeekView *)log_file,file_size - chat_log_capacity);
     }
-    file_obj_read((FileObject *)local_a8,(iptr)chat_log_buffer,chat_log_capacity);
-    file_map_close((FileObject *)local_a8);
+    file_obj_read((FileObject *)log_file,(iptr)chat_log_buffer,chat_log_capacity);
+    file_map_close((FileObject *)log_file);
   }
   else {
 LAB_004b496e:
     *chat_log_buffer = 0;
   }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004b4be3 */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+  unwind_state = 0xffffffff;
+  /* inlined unwind funclet 004b4be3 */ { file_obj_close((FileObject *)((iptr)&log_file)); }
 LAB_004b4982:
   if ((this->border_width == 0) && (this->resize_border == 0)) {
     parley_wnd_pick_size_mode((ParleyWindowLayout *)this);
   }
   crt_strcpy(this->pad_15c,&parley_wnd_empty_title_str);
   if (this->session_mode == 4) {
-    puVar5 = &main_frame_wnd;
-    puVar4 = &game_palette;
-    uVar2 = rect_height(this->init_rect);
-    uVar3 = rect_width(this->init_rect);
+    parent = &main_frame_wnd;
+    palette = &game_palette;
+    height = rect_height(this->init_rect);
+    width = rect_width(this->init_rect);
     wnd_create_with_surface
               ((DibSurface *)this,0,0x602,*(i32 *)this->init_rect,
-               *(i32 *)(this->init_rect + 4),uVar3,uVar2,(iptr)puVar4,(iptr)puVar5);
+               *(i32 *)(this->init_rect + 4),width,height,(iptr)palette,(iptr)parent);
   }
   else {
-    puVar5 = &main_frame_wnd;
-    puVar4 = &game_palette;
-    uVar2 = rect_height(this->init_rect);
-    uVar3 = rect_width(this->init_rect);
+    parent = &main_frame_wnd;
+    palette = &game_palette;
+    height = rect_height(this->init_rect);
+    width = rect_width(this->init_rect);
     wnd_create_with_surface
               ((DibSurface *)this,0,0x602,*(i32 *)this->init_rect,
-               *(i32 *)(this->init_rect + 4),uVar3,uVar2,(iptr)puVar4,(iptr)puVar5);
+               *(i32 *)(this->init_rect + 4),width,height,(iptr)palette,(iptr)parent);
   }
   parley_wnd_calc_rect((ParleyWindowLayout *)this);
   wnd_move_to_rect((WndBase *)this->pad_48,this->init_rect);
@@ -7223,134 +7223,134 @@ LAB_004b4982:
 #undef chat_log_buffer
 #undef chat_log_capacity
 #undef prefs_clear_chat_on_new_game
-#undef local_b0
-#undef local_a8
-#undef local_8
+#undef wnd2
+#undef log_file
+#undef unwind_state
 
 /* 004b4c09 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_wnd_on_move(void)
 
 {
-  iptr iVar1;
+  iptr active;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    wnd2 = active - 0x48;
   }
-  wnd_get_rect_in_parent((WndBase *)(local_8 + 0x48),*(iptr *)(local_8 + 0x150));
-  *(i32 *)(local_8 + 0x11c) = **(i32 **)(local_8 + 0x150);
-  *(i32 *)(local_8 + 0x120) = *(i32 *)(*(int *)(local_8 + 0x150) + 4);
+  wnd_get_rect_in_parent((WndBase *)(wnd2 + 0x48),*(iptr *)(wnd2 + 0x150));
+  *(i32 *)(wnd2 + 0x11c) = **(i32 **)(wnd2 + 0x150);
+  *(i32 *)(wnd2 + 0x120) = *(i32 *)(*(int *)(wnd2 + 0x150) + 4);
   return;
 }
-#undef local_8
+#undef wnd2
 
 /* 004b4c81 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_pick_size_mode(ParleyWindowLayout *this)
 
 {
-  iptr iVar1;
+  iptr active;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active = wnd_get_active_child();
+  if (active == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    wnd2 = active - 0x48;
   }
-  *(i32 *)(local_8 + 0x154) = 0;
+  *(i32 *)(wnd2 + 0x154) = 0;
   if (999 < screen_width) {
-    *(i32 *)(local_8 + 0x154) = 1;
+    *(i32 *)(wnd2 + 0x154) = 1;
   }
   parley_wnd_calc_rect(this);
   return;
 }
-#undef local_8
+#undef wnd2
 
 /* 004b4cf0 auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(u32 *)(frame_ + FRAME_OFF(16)))
+#define font_height (*(int *)(frame_ + FRAME_OFF(0)))
+#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
+#define width2 (*(int *)(frame_ + FRAME_OFF(8)))
+#define top (*(u32 *)(frame_ + FRAME_OFF(12)))
+#define left (*(u32 *)(frame_ + FRAME_OFF(16)))
 void __thiscall parley_wnd_calc_rect(ParleyWindowLayout *this)
 
 {
-  int iVar1;
+  int size;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->large_layout == 0) {
-    local_10 = 0x208;
+    width2 = 0x208;
   }
   else {
-    local_10 = 800;
+    width2 = 800;
   }
   if (this->large_layout == 0) {
-    local_14 = 0x14f;
+    height2 = 0x14f;
   }
   else {
-    local_14 = 0x1cc;
+    height2 = 0x1cc;
   }
   if (this->large_layout == 0) {
-    local_18 = font_cached_height((GameFont *)&font_size20);
+    font_height = font_cached_height((GameFont *)&font_size20);
   }
   else {
-    local_18 = font_cached_height((GameFont *)&font_size30);
+    font_height = font_cached_height((GameFont *)&font_size30);
   }
-  this->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + local_18;
-  local_10 = local_10 + (panel_padding_x + panel_margin_x) * 2 + 6;
-  local_14 = local_14 + panel_margin_y * 2 + this->client_width * 2 + 0xe;
-  iVar1 = rect_width(this->init_rect);
-  if (iVar1 == 0) {
-    iVar1 = wnd_client_width((WndBase *)&main_frame_wnd);
-    this->border_width = (iVar1 >> 1) - (local_10 >> 1);
-    local_8 = this->border_width;
-    iVar1 = wnd_client_height((WndBase *)&main_frame_wnd);
-    this->resize_border = (iVar1 >> 1) - (local_14 >> 1);
-    local_c = this->resize_border;
+  this->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
+  width2 = width2 + (panel_padding_x + panel_margin_x) * 2 + 6;
+  height2 = height2 + panel_margin_y * 2 + this->client_width * 2 + 0xe;
+  size = rect_width(this->init_rect);
+  if (size == 0) {
+    size = wnd_client_width((WndBase *)&main_frame_wnd);
+    this->border_width = (size >> 1) - (width2 >> 1);
+    left = this->border_width;
+    size = wnd_client_height((WndBase *)&main_frame_wnd);
+    this->resize_border = (size >> 1) - (height2 >> 1);
+    top = this->resize_border;
   }
   else {
-    local_8 = this->border_width;
-    local_c = this->resize_border;
+    left = this->border_width;
+    top = this->resize_border;
   }
-  SetRect((LPRECT)this->init_rect,local_8,local_c,local_10 + local_8,local_14 + local_c);
+  SetRect((LPRECT)this->init_rect,left,top,width2 + left,height2 + top);
   wnd_set_caption_height((WndBase *)this->pad_48,this->client_width);
   return;
 }
 #undef panel_margin_x
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef font_height
+#undef height2
+#undef width2
+#undef top
+#undef left
 
 /* 004b4e8a auto */
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define font_height (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *this)
 
 {
-  u32 uVar1;
+  u32 dim;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar1 = surface_get_width((DibSurface *)this);
-  this->client_x = uVar1;
-  uVar1 = surface_get_height((DibSurface *)this);
-  this->client_y = uVar1;
+  dim = surface_get_width((DibSurface *)this);
+  this->client_x = dim;
+  dim = surface_get_height((DibSurface *)this);
+  this->client_y = dim;
   if (this->large_layout == 0) {
-    local_8 = font_cached_height((GameFont *)&font_size20);
+    font_height = font_cached_height((GameFont *)&font_size20);
   }
   else {
-    local_8 = font_cached_height((GameFont *)&font_size30);
+    font_height = font_cached_height((GameFont *)&font_size30);
   }
-  this->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + local_8;
+  this->client_width = panel_margin_y * 2 + panel_bevel_width * 2 + font_height;
   SetRect((LPRECT)&this->client_height,0,0,this->client_x,this->client_y);
   SetRect((LPRECT)&this->panel_rect,0,0,this->client_x + (panel_padding_x + panel_margin_x) * -2,
           this->client_y - (panel_margin_y * 2 + this->client_width * 2 + panel_padding_x));
@@ -7358,7 +7358,7 @@ void __thiscall parley_wnd_calc_layout(ParleyWindowLayout *this)
   return;
 }
 #undef panel_margin_x
-#undef local_8
+#undef font_height
 
 /* 004b4fb2 auto */
 void __thiscall parley_wnd_sync_sides(ViewWindow *this)
@@ -7387,27 +7387,27 @@ void __thiscall parley_wnd_sync_sides(ViewWindow *this)
 }
 
 /* 004b50cf auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
 
 {
-  u8 *puVar1;
+  u8 *slot;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (this->item_buffer != 0) {
     operator_delete((void *)this->item_buffer);
     this->item_buffer = 0;
   }
-  for (local_8 = 0; local_8 < 3; local_8++) {
-    if (*(int *)(this->pad_258 + local_8 * 0x1c - 4) != 0) {
-      if (*(Hotspot **)(this->pad_258 + local_8 * 0x1c - 4) != (Hotspot *)0x0) {
-        hotspot_scalar_dtor(*(Hotspot **)(this->pad_258 + local_8 * 0x1c - 4),1);
+  for (i = 0; i < 3; i++) {
+    if (*(int *)(this->pad_258 + i * 0x1c - 4) != 0) {
+      if (*(Hotspot **)(this->pad_258 + i * 0x1c - 4) != (Hotspot *)0x0) {
+        hotspot_scalar_dtor(*(Hotspot **)(this->pad_258 + i * 0x1c - 4),1);
       }
-      puVar1 = this->pad_258 + local_8 * 0x1c - 4;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_258 + i * 0x1c - 4;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
   }
   if (this->close_button != 0) {
@@ -7518,705 +7518,705 @@ void __thiscall parley_wnd_destroy_controls(ViewWindow *this)
     }
     this->field_2f0 = 0;
   }
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    if (*(int *)(this->pad_2c4 + local_8 * 4 - 0x1c) != 0) {
-      if (*(Checkbox **)(this->pad_2c4 + local_8 * 4 - 0x1c) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + local_8 * 4 - 0x1c),1);
+  for (i = 0; i < 8; i++) {
+    if (*(int *)(this->pad_2c4 + i * 4 - 0x1c) != 0) {
+      if (*(Checkbox **)(this->pad_2c4 + i * 4 - 0x1c) != (Checkbox *)0x0) {
+        checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + i * 4 - 0x1c),1);
       }
-      puVar1 = this->pad_2c4 + local_8 * 4 - 0x1c;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_2c4 + i * 4 - 0x1c;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_2c4 + local_8 * 4 + 4) != 0) {
-      if (*(Checkbox **)(this->pad_2c4 + local_8 * 4 + 4) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + local_8 * 4 + 4),1);
+    if (*(int *)(this->pad_2c4 + i * 4 + 4) != 0) {
+      if (*(Checkbox **)(this->pad_2c4 + i * 4 + 4) != (Checkbox *)0x0) {
+        checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + i * 4 + 4),1);
       }
-      puVar1 = this->pad_2c4 + local_8 * 4 + 4;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_2c4 + i * 4 + 4;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
   }
-  for (local_8 = 0; local_8 < 2; local_8++) {
-    if (*(int *)(this->pad_364 + local_8 * 4) != 0) {
-      if (*(Checkbox **)(this->pad_364 + local_8 * 4) != (Checkbox *)0x0) {
-        checkbox_scalar_dtor(*(Checkbox **)(this->pad_364 + local_8 * 4),1);
+  for (i = 0; i < 2; i++) {
+    if (*(int *)(this->pad_364 + i * 4) != 0) {
+      if (*(Checkbox **)(this->pad_364 + i * 4) != (Checkbox *)0x0) {
+        checkbox_scalar_dtor(*(Checkbox **)(this->pad_364 + i * 4),1);
       }
-      puVar1 = this->pad_364 + local_8 * 4;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 8) != 0) {
-      if (*(RadioGroupDtorView **)(this->pad_364 + local_8 * 4 + 8) != (RadioGroupDtorView *)0x0) {
-        radiogrp_scalar_dtor(*(RadioGroupDtorView **)(this->pad_364 + local_8 * 4 + 8),1);
+    if (*(int *)(this->pad_364 + i * 4 + 8) != 0) {
+      if (*(RadioGroupDtorView **)(this->pad_364 + i * 4 + 8) != (RadioGroupDtorView *)0x0) {
+        radiogrp_scalar_dtor(*(RadioGroupDtorView **)(this->pad_364 + i * 4 + 8),1);
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 8;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 8;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 0x10) != 0) {
-      if (*(Control **)(this->pad_364 + local_8 * 4 + 0x10) != (Control *)0x0) {
-        edit_scalar_dtor(*(Control **)(this->pad_364 + local_8 * 4 + 0x10),1)
+    if (*(int *)(this->pad_364 + i * 4 + 0x10) != 0) {
+      if (*(Control **)(this->pad_364 + i * 4 + 0x10) != (Control *)0x0) {
+        edit_scalar_dtor(*(Control **)(this->pad_364 + i * 4 + 0x10),1)
         ;
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 0x10;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 0x10;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 0x18) != 0) {
-      if (*(Control **)(this->pad_364 + local_8 * 4 + 0x18) != (Control *)0x0) {
-        scrollbar_scalar_dtor(*(Control **)(this->pad_364 + local_8 * 4 + 0x18),1)
+    if (*(int *)(this->pad_364 + i * 4 + 0x18) != 0) {
+      if (*(Control **)(this->pad_364 + i * 4 + 0x18) != (Control *)0x0) {
+        scrollbar_scalar_dtor(*(Control **)(this->pad_364 + i * 4 + 0x18),1)
         ;
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 0x18;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 0x18;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 0x20) != 0) {
-      if (*(Hotspot **)(this->pad_364 + local_8 * 4 + 0x20) != (Hotspot *)0x0) {
-        hotspot_scalar_dtor(*(Hotspot **)(this->pad_364 + local_8 * 4 + 0x20),1);
+    if (*(int *)(this->pad_364 + i * 4 + 0x20) != 0) {
+      if (*(Hotspot **)(this->pad_364 + i * 4 + 0x20) != (Hotspot *)0x0) {
+        hotspot_scalar_dtor(*(Hotspot **)(this->pad_364 + i * 4 + 0x20),1);
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 0x20;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 0x20;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 0x28) != 0) {
-      if (*(Control **)(this->pad_364 + local_8 * 4 + 0x28) != (Control *)0x0) {
-        ctrl_scalar_dtor(*(Control **)(this->pad_364 + local_8 * 4 + 0x28),1)
+    if (*(int *)(this->pad_364 + i * 4 + 0x28) != 0) {
+      if (*(Control **)(this->pad_364 + i * 4 + 0x28) != (Control *)0x0) {
+        ctrl_scalar_dtor(*(Control **)(this->pad_364 + i * 4 + 0x28),1)
         ;
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 0x28;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 0x28;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_364 + local_8 * 4 + 0x30) != 0) {
-      if (*(Control **)(this->pad_364 + local_8 * 4 + 0x30) != (Control *)0x0) {
-        ctrl_scalar_dtor(*(Control **)(this->pad_364 + local_8 * 4 + 0x30),1)
+    if (*(int *)(this->pad_364 + i * 4 + 0x30) != 0) {
+      if (*(Control **)(this->pad_364 + i * 4 + 0x30) != (Control *)0x0) {
+        ctrl_scalar_dtor(*(Control **)(this->pad_364 + i * 4 + 0x30),1)
         ;
       }
-      puVar1 = this->pad_364 + local_8 * 4 + 0x30;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_364 + i * 4 + 0x30;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_3c0 + local_8 * 4 - 0x24) != 0) {
-      if (*(Control **)(this->pad_3c0 + local_8 * 4 - 0x24) != (Control *)0x0) {
+    if (*(int *)(this->pad_3c0 + i * 4 - 0x24) != 0) {
+      if (*(Control **)(this->pad_3c0 + i * 4 - 0x24) != (Control *)0x0) {
         ctrl_scalar_dtor
-                  (*(Control **)(this->pad_3c0 + local_8 * 4 - 0x24),1);
+                  (*(Control **)(this->pad_3c0 + i * 4 - 0x24),1);
       }
-      puVar1 = this->pad_3c0 + local_8 * 4 - 0x24;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_3c0 + i * 4 - 0x24;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
-    if (*(int *)(this->pad_3c0 + local_8 * 4 - 0x1c) != 0) {
-      if (*(Control **)(this->pad_3c0 + local_8 * 4 - 0x1c) != (Control *)0x0) {
+    if (*(int *)(this->pad_3c0 + i * 4 - 0x1c) != 0) {
+      if (*(Control **)(this->pad_3c0 + i * 4 - 0x1c) != (Control *)0x0) {
         ctrl_scalar_dtor
-                  (*(Control **)(this->pad_3c0 + local_8 * 4 - 0x1c),1);
+                  (*(Control **)(this->pad_3c0 + i * 4 - 0x1c),1);
       }
-      puVar1 = this->pad_3c0 + local_8 * 4 - 0x1c;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      slot = this->pad_3c0 + i * 4 - 0x1c;
+      slot[0] = '\0';
+      slot[1] = '\0';
+      slot[2] = '\0';
+      slot[3] = '\0';
     }
   }
   return;
 }
-#undef local_8
+#undef i
 
 /* 004b5c93 auto */
 #define chat_input_buffer (*(iptr *)((u8 *)&g.d_0062d86c))
 #define chat_log_buffer (*(iptr *)((u8 *)&g.d_0062d870))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_134 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_130 (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define local_12c (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define local_128 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define local_124 (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define local_120 (*(u8 * *)(frame_ + FRAME_OFF(24)))
-#define local_11c (*(u8 * *)(frame_ + FRAME_OFF(28)))
-#define local_118 (*(u8 * *)(frame_ + FRAME_OFF(32)))
-#define local_114 (*(u8 * *)(frame_ + FRAME_OFF(36)))
-#define local_110 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_10c (*(u8 * *)(frame_ + FRAME_OFF(44)))
-#define local_108 (*(u8 * *)(frame_ + FRAME_OFF(48)))
-#define local_104 (*(u8 * *)(frame_ + FRAME_OFF(52)))
-#define local_fc (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_f8 (*(int *)(frame_ + FRAME_OFF(64)))
-#define local_f4 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_f0 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_ec (*(u8 * *)(frame_ + FRAME_OFF(76)))
-#define local_e4 (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_e0 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_dc (*(int *)(frame_ + FRAME_OFF(92)))
-#define local_d8 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_d4 (*(u8 * *)(frame_ + FRAME_OFF(100)))
-#define local_d0 (*(iptr *)(frame_ + FRAME_OFF(104)))
-#define local_cc (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_c8 (*(int *)(frame_ + FRAME_OFF(112)))
-#define local_c0 (*(u8 * *)(frame_ + FRAME_OFF(120)))
-#define local_bc (*(uptr *)(frame_ + FRAME_OFF(124)))
-#define local_b4 (*(uptr *)(frame_ + FRAME_OFF(132)))
-#define local_ac (*(uptr *)(frame_ + FRAME_OFF(140)))
-#define local_a4 (*(uptr *)(frame_ + FRAME_OFF(148)))
-#define local_9c (*(uptr *)(frame_ + FRAME_OFF(156)))
-#define local_94 (*(uptr *)(frame_ + FRAME_OFF(164)))
-#define local_8c (*(uptr *)(frame_ + FRAME_OFF(172)))
-#define local_84 (*(uptr *)(frame_ + FRAME_OFF(180)))
-#define local_7c (*(uptr *)(frame_ + FRAME_OFF(188)))
-#define local_74 (*(uptr *)(frame_ + FRAME_OFF(196)))
-#define local_6c (*(uptr *)(frame_ + FRAME_OFF(204)))
-#define local_64 (*(i8 * *)(frame_ + FRAME_OFF(212)))
-#define local_60 (*(uptr *)(frame_ + FRAME_OFF(216)))
-#define local_58 (*(i8 * *)(frame_ + FRAME_OFF(224)))
-#define local_54 (*(uptr *)(frame_ + FRAME_OFF(228)))
-#define local_4c (*(uptr *)(frame_ + FRAME_OFF(236)))
-#define local_44 (*(i8 * *)(frame_ + FRAME_OFF(244)))
-#define local_40 (*(i32 *)(frame_ + FRAME_OFF(248)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(256)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(260)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(268)))
-#define local_28 (*(tagRECT *)(frame_ + FRAME_OFF(272)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(288)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(292)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(296)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(300)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(304)))
+#define counter_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define no_thanks_parent (*(u8 * *)(frame_ + FRAME_OFF(8)))
+#define accept_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
+#define never_mind_parent (*(u8 * *)(frame_ + FRAME_OFF(16)))
+#define mode2_parent (*(u8 * *)(frame_ + FRAME_OFF(20)))
+#define mode_parent (*(u8 * *)(frame_ + FRAME_OFF(24)))
+#define intel_parent (*(u8 * *)(frame_ + FRAME_OFF(28)))
+#define reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(32)))
+#define conceal_parent (*(u8 * *)(frame_ + FRAME_OFF(36)))
+#define footer_line_h (*(int *)(frame_ + FRAME_OFF(40)))
+#define clear_parent (*(u8 * *)(frame_ + FRAME_OFF(44)))
+#define send_parent (*(u8 * *)(frame_ + FRAME_OFF(48)))
+#define input_parent (*(u8 * *)(frame_ + FRAME_OFF(52)))
+#define input_font_h4 (*(int *)(frame_ + FRAME_OFF(60)))
+#define input_font_h3 (*(int *)(frame_ + FRAME_OFF(64)))
+#define input_font_h2 (*(int *)(frame_ + FRAME_OFF(68)))
+#define input_font_h1 (*(int *)(frame_ + FRAME_OFF(72)))
+#define history_parent (*(u8 * *)(frame_ + FRAME_OFF(76)))
+#define hist_font_h4 (*(int *)(frame_ + FRAME_OFF(84)))
+#define hist_font_h3 (*(int *)(frame_ + FRAME_OFF(88)))
+#define hist_font_h2 (*(int *)(frame_ + FRAME_OFF(92)))
+#define hist_font_h1 (*(int *)(frame_ + FRAME_OFF(96)))
+#define close_parent (*(u8 * *)(frame_ + FRAME_OFF(100)))
+#define close_label (*(iptr *)(frame_ + FRAME_OFF(104)))
+#define close_line_h2 (*(int *)(frame_ + FRAME_OFF(108)))
+#define close_line_h (*(int *)(frame_ + FRAME_OFF(112)))
+#define caption_parent (*(u8 * *)(frame_ + FRAME_OFF(120)))
+#define counter_button (*(uptr *)(frame_ + FRAME_OFF(124)))
+#define no_thanks_button (*(uptr *)(frame_ + FRAME_OFF(132)))
+#define accept_button (*(uptr *)(frame_ + FRAME_OFF(140)))
+#define never_mind_button (*(uptr *)(frame_ + FRAME_OFF(148)))
+#define mode2_button (*(uptr *)(frame_ + FRAME_OFF(156)))
+#define mode_button (*(uptr *)(frame_ + FRAME_OFF(164)))
+#define intel_button (*(uptr *)(frame_ + FRAME_OFF(172)))
+#define reveal_button (*(uptr *)(frame_ + FRAME_OFF(180)))
+#define conceal_button (*(uptr *)(frame_ + FRAME_OFF(188)))
+#define clear_button (*(uptr *)(frame_ + FRAME_OFF(196)))
+#define send_button (*(uptr *)(frame_ + FRAME_OFF(204)))
+#define input_font (*(i8 * *)(frame_ + FRAME_OFF(212)))
+#define input_edit (*(uptr *)(frame_ + FRAME_OFF(216)))
+#define history_font (*(i8 * *)(frame_ + FRAME_OFF(224)))
+#define history_edit (*(uptr *)(frame_ + FRAME_OFF(228)))
+#define close_btn (*(uptr *)(frame_ + FRAME_OFF(236)))
+#define button_font (*(i8 * *)(frame_ + FRAME_OFF(244)))
+#define hotspot (*(i32 *)(frame_ + FRAME_OFF(248)))
+#define ctrl_top (*(int *)(frame_ + FRAME_OFF(256)))
+#define caption_x (*(int *)(frame_ + FRAME_OFF(260)))
+#define i (*(int *)(frame_ + FRAME_OFF(268)))
+#define rect (*(tagRECT *)(frame_ + FRAME_OFF(272)))
+#define ctrl_height (*(int *)(frame_ + FRAME_OFF(288)))
+#define input_style (*(i32 *)(frame_ + FRAME_OFF(292)))
+#define unused_10 (*(i32 *)(frame_ + FRAME_OFF(296)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(300)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(304)))
 void __thiscall parley_wnd_create_controls(ViewWindow *this)
 
 {
-  u8 *puVar1;
-  u32 uVar2;
-  int iVar3;
+  u8 *slot_ptr;
+  u32 wnd_width;
+  int y_delta;
   LONG xLeft;
-  i32 uVar4;
-  int iVar5;
-  int iVar6;
+  i32 sprite_dim;
+  int ctrl_width;
+  int ctrl_left;
   Control *pCVar7;
   int yTop;
   InputControl *pCVar8;
-  iptr iVar9;
+  iptr label;
   i8 frame_[FRAME_OFF(312)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_34 = panel_padding_x;
-  for (local_2c = 0; local_2c < 3; local_2c++) {
-    if (local_2c == 0) {
+  eh_state = 0xffffffff;
+  caption_x = panel_padding_x;
+  for (i = 0; i < 3; i++) {
+    if (i == 0) {
       *(i8 **)(this->pad_23c + 0x14) = &caption_close_button_sprite;
     }
-    else if (local_2c == 1) {
+    else if (i == 1) {
       *(i8 **)(this->pad_258 + 0x14) = &caption_zoom_out_sprite;
     }
     else {
-      *(i8 **)(this->pad_23c + local_2c * 0x1c + 0x14) = &caption_zoom_out_button_sprite;
+      *(i8 **)(this->pad_23c + i * 0x1c + 0x14) = &caption_zoom_out_button_sprite;
     }
-    *(int *)(this->pad_23c + local_2c * 0x1c) = local_2c + 1;
-    uVar4 = sprite_width
-                      (*(Sprite **)(this->pad_23c + local_2c * 0x1c + 0x14));
-    *(i32 *)(this->pad_23c + local_2c * 0x1c + 0xc) = uVar4;
-    uVar4 = sprite_height
-                      (*(Sprite **)(this->pad_23c + local_2c * 0x1c + 0x14));
-    *(i32 *)(this->pad_23c + local_2c * 0x1c + 0x10) = uVar4;
-    puVar1 = this->pad_258 + local_2c * 0x1c - 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    iVar5 = (int)(*(int *)(this->pad_23c + local_2c * 0x1c + 0xc) * this->client_width) / 0x18;
-    local_18 = (int)(*(int *)(this->pad_23c + local_2c * 0x1c + 0x10) * this->client_width) / 0x18;
-    iVar6 = ((int)this->client_width >> 1) - (local_18 >> 1);
-    SetRect(&local_28,local_34,iVar6,iVar5 + local_34,iVar6 + local_18);
+    *(int *)(this->pad_23c + i * 0x1c) = i + 1;
+    sprite_dim = sprite_width
+                      (*(Sprite **)(this->pad_23c + i * 0x1c + 0x14));
+    *(i32 *)(this->pad_23c + i * 0x1c + 0xc) = sprite_dim;
+    sprite_dim = sprite_height
+                      (*(Sprite **)(this->pad_23c + i * 0x1c + 0x14));
+    *(i32 *)(this->pad_23c + i * 0x1c + 0x10) = sprite_dim;
+    slot_ptr = this->pad_258 + i * 0x1c - 4;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
+    ctrl_width = (int)(*(int *)(this->pad_23c + i * 0x1c + 0xc) * this->client_width) / 0x18;
+    ctrl_height = (int)(*(int *)(this->pad_23c + i * 0x1c + 0x10) * this->client_width) / 0x18;
+    ctrl_left = ((int)this->client_width >> 1) - (ctrl_height >> 1);
+    SetRect(&rect,caption_x,ctrl_left,ctrl_width + caption_x,ctrl_left + ctrl_height);
     pCVar7 = operator_new(0x40);
-    local_8 = 0;
+    eh_state = 0;
     if (pCVar7 == (Control *)0x0) {
-      local_40 = 0;
+      hotspot = 0;
     }
     else {
-      local_40 = hotspot_ctor(pCVar7);
+      hotspot = hotspot_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_258 + local_2c * 0x1c - 4) = local_40;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_258 + i * 0x1c - 4) = hotspot;
     if (this == (ViewWindow *)0x0) {
-      local_c0 = (u8 *)0x0;
+      caption_parent = (u8 *)0x0;
     }
     else {
-      local_c0 = this->pad_48;
+      caption_parent = this->pad_48;
     }
     hotspot_create
-              (*(ClickControl **)(this->pad_258 + local_2c * 0x1c - 4),(iptr)local_c0,
-               *(int *)(this->pad_23c + local_2c * 0x1c) + 1000,(iptr)&local_28);
-    hotspot_set_click_callback(*(HotspotClickSetView **)(this->pad_258 + local_2c * 0x1c - 4),ADDR(0x4012da, parley_wnd_on_caption_click));
-    local_34 = local_34 + iVar5 + panel_margin_x;
+              (*(ClickControl **)(this->pad_258 + i * 0x1c - 4),(iptr)caption_parent,
+               *(int *)(this->pad_23c + i * 0x1c) + 1000,(iptr)&rect);
+    hotspot_set_click_callback(*(HotspotClickSetView **)(this->pad_258 + i * 0x1c - 4),ADDR(0x4012da, parley_wnd_on_caption_click));
+    caption_x = caption_x + ctrl_width + panel_margin_x;
   }
   if (this->large_layout == 0) {
-    local_44 = &font_size16;
+    button_font = &font_size16;
   }
   else {
-    local_44 = &font_size24;
+    button_font = &font_size24;
   }
-  ui_set_button_font((iptr)local_44);
+  ui_set_button_font((iptr)button_font);
   pCVar7 = operator_new(0x3c);
-  local_8 = 1;
+  eh_state = 1;
   if (pCVar7 == (Control *)0x0) {
-    local_4c = 0;
+    close_btn = 0;
   }
   else {
-    local_4c = button_ctor(pCVar7);
+    close_btn = button_ctor(pCVar7);
   }
-  local_8 = 0xffffffff;
-  this->close_button = local_4c;
-  iVar5 = panel_bevel_width + panel_margin_x + 2;
+  eh_state = 0xffffffff;
+  this->close_button = close_btn;
+  ctrl_width = panel_bevel_width + panel_margin_x + 2;
   if (this->large_layout == 0) {
-    local_c8 = font_line_spacing((GameFont *)&font_size16);
+    close_line_h = font_line_spacing((GameFont *)&font_size16);
   }
   else {
-    local_c8 = font_line_spacing((GameFont *)&font_size24);
+    close_line_h = font_line_spacing((GameFont *)&font_size24);
   }
-  yTop = this->client_y - ((panel_margin_y + panel_padding_y) * 2 + local_c8);
-  uVar2 = this->client_x;
-  iVar3 = panel_margin_x * 2;
-  iVar6 = panel_bevel_width * 2;
+  yTop = this->client_y - ((panel_margin_y + panel_padding_y) * 2 + close_line_h);
+  wnd_width = this->client_x;
+  y_delta = panel_margin_x * 2;
+  ctrl_left = panel_bevel_width * 2;
   if (this->large_layout == 0) {
-    local_cc = font_line_spacing((GameFont *)&font_size16);
+    close_line_h2 = font_line_spacing((GameFont *)&font_size16);
   }
   else {
-    local_cc = font_line_spacing((GameFont *)&font_size24);
+    close_line_h2 = font_line_spacing((GameFont *)&font_size24);
   }
-  local_18 = panel_padding_y * 2 + local_cc;
-  SetRect(&local_28,iVar5,yTop,(uVar2 - (iVar3 + iVar6 + 5)) + iVar5,yTop + local_18);
+  ctrl_height = panel_padding_y * 2 + close_line_h2;
+  SetRect(&rect,ctrl_width,yTop,(wnd_width - (y_delta + ctrl_left + 5)) + ctrl_width,yTop + ctrl_height);
   if (this->session_mode == 4) {
-    local_d0 = label_string(*(i32 *)(label_string_ids + 0xb2c));
+    close_label = label_string(*(i32 *)(label_string_ids + 0xb2c));
   }
   else {
-    local_d0 = label_string(*(i32 *)(label_string_ids + 0xb30));
+    close_label = label_string(*(i32 *)(label_string_ids + 0xb30));
   }
   if (this == (ViewWindow *)0x0) {
-    local_d4 = (u8 *)0x0;
+    close_parent = (u8 *)0x0;
   }
   else {
-    local_d4 = this->pad_48;
+    close_parent = this->pad_48;
   }
   button_create
-            ((Control *)this->close_button,(iptr)local_d4,0x3ed,(iptr)&local_28,local_d0);
+            ((Control *)this->close_button,(iptr)close_parent,0x3ed,(iptr)&rect,close_label);
   button_set_callback((Control *)this->close_button,ADDR(0x4028f6, diplo_wnd_escape_close));
   pCVar8 = operator_new(0x48);
-  local_8 = 2;
+  eh_state = 2;
   if (pCVar8 == (InputControl *)0x0) {
-    local_54 = 0;
+    history_edit = 0;
   }
   else {
-    local_54 = edit_ctor(pCVar8);
+    history_edit = edit_ctor(pCVar8);
   }
-  local_8 = 0xffffffff;
-  this->chat_history_edit = local_54;
-  iVar6 = this->panel_rect + panel_margin_x;
-  iVar5 = rect_width((iptr)&this->panel_rect);
-  iVar5 += panel_margin_x * -2;
+  eh_state = 0xffffffff;
+  this->chat_history_edit = history_edit;
+  ctrl_left = this->panel_rect + panel_margin_x;
+  ctrl_width = rect_width((iptr)&this->panel_rect);
+  ctrl_width += panel_margin_x * -2;
   if (this->session_mode == 4) {
     if (this->large_layout == 0) {
-      local_e0 = font_cached_height((GameFont *)&font_size14);
+      hist_font_h3 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_e0 = font_cached_height((GameFont *)&font_size21);
+      hist_font_h3 = font_cached_height((GameFont *)&font_size21);
     }
-    local_38 = this->panel_bottom + (panel_margin_y + local_e0) * -9;
+    ctrl_top = this->panel_bottom + (panel_margin_y + hist_font_h3) * -9;
     if (this->large_layout == 0) {
-      local_e4 = font_cached_height((GameFont *)&font_size14);
+      hist_font_h4 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_e4 = font_cached_height((GameFont *)&font_size21);
+      hist_font_h4 = font_cached_height((GameFont *)&font_size21);
     }
-    local_18 = local_e4 * 9 + panel_margin_y * 8;
+    ctrl_height = hist_font_h4 * 9 + panel_margin_y * 8;
   }
   else {
     if (this->large_layout == 0) {
-      local_d8 = font_cached_height((GameFont *)&font_size14);
+      hist_font_h1 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_d8 = font_cached_height((GameFont *)&font_size21);
+      hist_font_h1 = font_cached_height((GameFont *)&font_size21);
     }
-    local_38 = this->panel_bottom + (panel_margin_y + local_d8) * -6;
+    ctrl_top = this->panel_bottom + (panel_margin_y + hist_font_h1) * -6;
     if (this->large_layout == 0) {
-      local_dc = font_cached_height((GameFont *)&font_size14);
+      hist_font_h2 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_dc = font_cached_height((GameFont *)&font_size21);
+      hist_font_h2 = font_cached_height((GameFont *)&font_size21);
     }
-    local_18 = panel_margin_y * 5 + local_dc * 6;
+    ctrl_height = panel_margin_y * 5 + hist_font_h2 * 6;
   }
-  SetRect(&local_28,iVar6,local_38,iVar5 + iVar6,local_38 + local_18);
+  SetRect(&rect,ctrl_left,ctrl_top,ctrl_width + ctrl_left,ctrl_top + ctrl_height);
   if (this->large_layout == 0) {
-    local_58 = &font_size14;
+    history_font = &font_size14;
   }
   else {
-    local_58 = &font_size21;
+    history_font = &font_size21;
   }
-  ui_set_default_font((iptr)local_58);
+  ui_set_default_font((iptr)history_font);
   if (this == (ViewWindow *)0x0) {
-    local_ec = (u8 *)0x0;
+    history_parent = (u8 *)0x0;
   }
   else {
-    local_ec = this->pad_48;
+    history_parent = this->pad_48;
   }
   edit_create_styled
-            ((EditControl *)this->chat_history_edit,(iptr)local_ec,0x3ee,(iptr)&local_28,chat_log_buffer,
+            ((EditControl *)this->chat_history_edit,(iptr)history_parent,0x3ee,(iptr)&rect,chat_log_buffer,
              0x122,0);
   edit_set_max_len((EditMaxLenView *)this->chat_history_edit,0x2000);
   edit_set_callback((EditCallbackSetView *)this->chat_history_edit,ADDR(0x402040, parley_edit_escape_filter));
   ctrl_show_and_redraw((Control *)this->chat_history_edit);
   pCVar8 = operator_new(0x48);
-  local_8 = 3;
+  eh_state = 3;
   if (pCVar8 == (InputControl *)0x0) {
-    local_60 = 0;
+    input_edit = 0;
   }
   else {
-    local_60 = edit_ctor(pCVar8);
+    input_edit = edit_ctor(pCVar8);
   }
-  local_8 = 0xffffffff;
-  this->chat_input_edit = local_60;
-  iVar5 -= iVar5 / 10;
+  eh_state = 0xffffffff;
+  this->chat_input_edit = input_edit;
+  ctrl_width -= ctrl_width / 10;
   if (this->session_mode == 4) {
     if (this->large_layout == 0) {
-      local_f8 = font_cached_height((GameFont *)&font_size14);
+      input_font_h3 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_f8 = font_cached_height((GameFont *)&font_size21);
+      input_font_h3 = font_cached_height((GameFont *)&font_size21);
     }
-    iVar3 = panel_margin_y * -4 + local_f8 * -3;
+    y_delta = panel_margin_y * -4 + input_font_h3 * -3;
     if (this->large_layout == 0) {
-      local_fc = font_cached_height((GameFont *)&font_size14);
+      input_font_h4 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_fc = font_cached_height((GameFont *)&font_size21);
+      input_font_h4 = font_cached_height((GameFont *)&font_size21);
     }
-    local_18 = local_fc * 3 + panel_margin_y * 3;
+    ctrl_height = input_font_h4 * 3 + panel_margin_y * 3;
   }
   else {
     if (this->large_layout == 0) {
-      local_f0 = font_cached_height((GameFont *)&font_size14);
+      input_font_h1 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_f0 = font_cached_height((GameFont *)&font_size21);
+      input_font_h1 = font_cached_height((GameFont *)&font_size21);
     }
-    iVar3 = panel_margin_y * -3 + local_f0 * -2;
+    y_delta = panel_margin_y * -3 + input_font_h1 * -2;
     if (this->large_layout == 0) {
-      local_f4 = font_cached_height((GameFont *)&font_size14);
+      input_font_h2 = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_f4 = font_cached_height((GameFont *)&font_size21);
+      input_font_h2 = font_cached_height((GameFont *)&font_size21);
     }
-    local_18 = panel_margin_y * 2 + local_f4 * 2;
+    ctrl_height = panel_margin_y * 2 + input_font_h2 * 2;
   }
-  local_38 += iVar3;
-  SetRect(&local_28,iVar6,local_38,iVar5 + iVar6,local_38 + local_18);
+  ctrl_top += y_delta;
+  SetRect(&rect,ctrl_left,ctrl_top,ctrl_width + ctrl_left,ctrl_top + ctrl_height);
   if (this->large_layout == 0) {
-    local_64 = &font_size14;
+    input_font = &font_size14;
   }
   else {
-    local_64 = &font_size21;
+    input_font = &font_size21;
   }
-  ui_set_default_font((iptr)local_64);
+  ui_set_default_font((iptr)input_font);
   if (this->session_mode == 4) {
-    local_14 = 0x200;
+    input_style = 0x200;
   }
   else {
-    local_14 = 0x220;
+    input_style = 0x220;
   }
   if (this == (ViewWindow *)0x0) {
-    local_104 = (u8 *)0x0;
+    input_parent = (u8 *)0x0;
   }
   else {
-    local_104 = this->pad_48;
+    input_parent = this->pad_48;
   }
   edit_create_styled
-            ((EditControl *)this->chat_input_edit,(iptr)local_104,0x3ef,(iptr)&local_28,chat_input_buffer,
-             local_14,0);
+            ((EditControl *)this->chat_input_edit,(iptr)input_parent,0x3ef,(iptr)&rect,chat_input_buffer,
+             input_style,0);
   edit_set_max_len((EditMaxLenView *)this->chat_input_edit,0x100);
   edit_set_callback((EditCallbackSetView *)this->chat_input_edit,ADDR(0x403562, chat_input_on_key));
   ctrl_set_initial_focus((CtrlSetInitialFocusView *)this->chat_input_edit);
   ctrl_show_and_redraw((Control *)this->chat_input_edit);
   pCVar7 = operator_new(0x3c);
-  local_8 = 4;
+  eh_state = 4;
   if (pCVar7 == (Control *)0x0) {
-    local_6c = 0;
+    send_button = 0;
   }
   else {
-    local_6c = button_ctor(pCVar7);
+    send_button = button_ctor(pCVar7);
   }
-  xLeft = local_28.right;
-  local_8 = 0xffffffff;
-  this->field_2a0 = local_6c;
-  iVar5 = iVar5 / 9;
-  local_18 = local_18 / 2;
-  SetRect(&local_28,local_28.right,local_38,iVar5 + local_28.right,local_38 + local_18);
+  xLeft = rect.right;
+  eh_state = 0xffffffff;
+  this->field_2a0 = send_button;
+  ctrl_width = ctrl_width / 9;
+  ctrl_height = ctrl_height / 2;
+  SetRect(&rect,rect.right,ctrl_top,ctrl_width + rect.right,ctrl_top + ctrl_height);
   if (this == (ViewWindow *)0x0) {
-    local_108 = (u8 *)0x0;
+    send_parent = (u8 *)0x0;
   }
   else {
-    local_108 = this->pad_48;
+    send_parent = this->pad_48;
   }
-  iVar9 = label_string(*(i32 *)(label_string_ids + 0xb34));
+  label = label_string(*(i32 *)(label_string_ids + 0xb34));
   button_create
-            ((Control *)this->field_2a0,(iptr)local_108,0x3f0,(iptr)&local_28,iVar9);
+            ((Control *)this->field_2a0,(iptr)send_parent,0x3f0,(iptr)&rect,label);
   button_set_callback((Control *)this->field_2a0,ADDR(0x40308a, chat_send_button_on_click));
   pCVar7 = operator_new(0x3c);
-  local_8 = 5;
+  eh_state = 5;
   if (pCVar7 == (Control *)0x0) {
-    local_74 = 0;
+    clear_button = 0;
   }
   else {
-    local_74 = button_ctor(pCVar7);
+    clear_button = button_ctor(pCVar7);
   }
-  local_8 = 0xffffffff;
-  this->field_2a4 = local_74;
-  local_38 += local_18;
-  SetRect(&local_28,xLeft,local_38,iVar5 + xLeft,local_38 + local_18);
+  eh_state = 0xffffffff;
+  this->field_2a4 = clear_button;
+  ctrl_top += ctrl_height;
+  SetRect(&rect,xLeft,ctrl_top,ctrl_width + xLeft,ctrl_top + ctrl_height);
   if (this == (ViewWindow *)0x0) {
-    local_10c = (u8 *)0x0;
+    clear_parent = (u8 *)0x0;
   }
   else {
-    local_10c = this->pad_48;
+    clear_parent = this->pad_48;
   }
-  iVar9 = label_string(*(i32 *)(label_string_ids + 0xb38));
+  label = label_string(*(i32 *)(label_string_ids + 0xb38));
   button_create
-            ((Control *)this->field_2a4,(iptr)local_10c,0x41e,(iptr)&local_28,iVar9);
+            ((Control *)this->field_2a4,(iptr)clear_parent,0x41e,(iptr)&rect,label);
   button_set_callback((Control *)this->field_2a4,ADDR(0x403639, chat_clear_button_on_click));
-  local_38 -= local_18;
+  ctrl_top -= ctrl_height;
   if (this->large_layout == 0) {
-    local_110 = font_line_spacing((GameFont *)&font_size16);
+    footer_line_h = font_line_spacing((GameFont *)&font_size16);
   }
   else {
-    local_110 = font_line_spacing((GameFont *)&font_size24);
+    footer_line_h = font_line_spacing((GameFont *)&font_size24);
   }
-  local_18 = panel_padding_y * 2 + local_110;
-  local_38 -= (panel_margin_y + local_18);
-  this->show_turn_timer = local_38 - panel_margin_y;
+  ctrl_height = panel_padding_y * 2 + footer_line_h;
+  ctrl_top -= (panel_margin_y + ctrl_height);
+  this->show_turn_timer = ctrl_top - panel_margin_y;
   if (this->session_mode != 4) {
     pCVar7 = operator_new(0x3c);
-    local_8 = 6;
+    eh_state = 6;
     if (pCVar7 == (Control *)0x0) {
-      local_7c = 0;
+      conceal_button = 0;
     }
     else {
-      local_7c = button_ctor(pCVar7);
+      conceal_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_340 = local_7c;
-    iVar5 = this->panel_rect + panel_margin_x;
-    iVar6 = rect_width((iptr)&this->panel_rect);
-    iVar6 += panel_margin_x * -2;
-    SetRect(&local_28,iVar5,local_38 - local_18,iVar6 + iVar5,local_38);
+    eh_state = 0xffffffff;
+    this->field_340 = conceal_button;
+    ctrl_width = this->panel_rect + panel_margin_x;
+    ctrl_left = rect_width((iptr)&this->panel_rect);
+    ctrl_left += panel_margin_x * -2;
+    SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
     if (this == (ViewWindow *)0x0) {
-      local_114 = (u8 *)0x0;
+      conceal_parent = (u8 *)0x0;
     }
     else {
-      local_114 = this->pad_48;
+      conceal_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xdb4));
+    label = label_string(*(i32 *)(label_string_ids + 0xdb4));
     button_create
-              ((Control *)this->field_340,(iptr)local_114,0x431,(iptr)&local_28,iVar9);
+              ((Control *)this->field_340,(iptr)conceal_parent,0x431,(iptr)&rect,label);
     button_set_callback((Control *)this->field_340,ADDR(0x40349a, parley_on_conceal_info));
     control_hide((Control *)this->field_340);
     ctrl_disable((Control *)this->field_340);
     pCVar7 = operator_new(0x3c);
-    local_8 = 7;
+    eh_state = 7;
     if (pCVar7 == (Control *)0x0) {
-      local_84 = 0;
+      reveal_button = 0;
     }
     else {
-      local_84 = button_ctor(pCVar7);
+      reveal_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_344 = local_84;
-    iVar5 = this->panel_rect + panel_margin_x;
-    SetRect(&local_28,iVar5,local_38 - local_18,iVar6 + iVar5,local_38);
+    eh_state = 0xffffffff;
+    this->field_344 = reveal_button;
+    ctrl_width = this->panel_rect + panel_margin_x;
+    SetRect(&rect,ctrl_width,ctrl_top - ctrl_height,ctrl_left + ctrl_width,ctrl_top);
     if (this == (ViewWindow *)0x0) {
-      local_118 = (u8 *)0x0;
+      reveal_parent = (u8 *)0x0;
     }
     else {
-      local_118 = this->pad_48;
+      reveal_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xdb8));
+    label = label_string(*(i32 *)(label_string_ids + 0xdb8));
     button_create
-              ((Control *)this->field_344,(iptr)local_118,0x432,(iptr)&local_28,iVar9);
+              ((Control *)this->field_344,(iptr)reveal_parent,0x432,(iptr)&rect,label);
     button_set_callback((Control *)this->field_344,ADDR(0x4016b3, parley_on_reveal_info));
     control_hide((Control *)this->field_344);
     ctrl_disable((Control *)this->field_344);
     pCVar7 = operator_new(0x3c);
-    local_8 = 8;
+    eh_state = 8;
     if (pCVar7 == (Control *)0x0) {
-      local_8c = 0;
+      intel_button = 0;
     }
     else {
-      local_8c = button_ctor(pCVar7);
+      intel_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_354 = local_8c;
-    iVar5 = this->panel_rect + panel_margin_x;
-    iVar6 = rect_width((iptr)&this->panel_rect);
-    iVar6 = (iVar6 + panel_margin_x * -2) / 3;
-    SetRect(&local_28,iVar5,local_38,iVar6 + iVar5,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_354 = intel_button;
+    ctrl_width = this->panel_rect + panel_margin_x;
+    ctrl_left = rect_width((iptr)&this->panel_rect);
+    ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
+    SetRect(&rect,ctrl_width,ctrl_top,ctrl_left + ctrl_width,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_11c = (u8 *)0x0;
+      intel_parent = (u8 *)0x0;
     }
     else {
-      local_11c = this->pad_48;
+      intel_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0x1a0));
+    label = label_string(*(i32 *)(label_string_ids + 0x1a0));
     button_create
-              ((Control *)this->field_354,(iptr)local_11c,0x428,(iptr)&local_28,iVar9);
+              ((Control *)this->field_354,(iptr)intel_parent,0x428,(iptr)&rect,label);
     button_set_callback((Control *)this->field_354,ADDR(0x40144c, parley_on_check_intel));
     ctrl_enable((Control *)this->field_354);
     pCVar7 = operator_new(0x3c);
-    local_8 = 9;
+    eh_state = 9;
     if (pCVar7 == (Control *)0x0) {
-      local_94 = 0;
+      mode_button = 0;
     }
     else {
-      local_94 = button_ctor(pCVar7);
+      mode_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_348 = local_94;
-    SetRect(&local_28,local_28.right,local_38,iVar6 + local_28.right,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_348 = mode_button;
+    SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_120 = (u8 *)0x0;
+      mode_parent = (u8 *)0x0;
     }
     else {
-      local_120 = this->pad_48;
+      mode_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xb3c));
+    label = label_string(*(i32 *)(label_string_ids + 0xb3c));
     button_create
-              ((Control *)this->field_348,(iptr)local_120,0x3f1,(iptr)&local_28,iVar9);
+              ((Control *)this->field_348,(iptr)mode_parent,0x3f1,(iptr)&rect,label);
     button_set_callback((Control *)this->field_348,ADDR(0x402a09, parley_on_mode_chosen));
     ctrl_enable((Control *)this->field_348);
     pCVar7 = operator_new(0x3c);
-    local_8 = 10;
+    eh_state = 10;
     if (pCVar7 == (Control *)0x0) {
-      local_9c = 0;
+      mode2_button = 0;
     }
     else {
-      local_9c = button_ctor(pCVar7);
+      mode2_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_34c = local_9c;
+    eh_state = 0xffffffff;
+    this->field_34c = mode2_button;
     if (this == (ViewWindow *)0x0) {
-      local_124 = (u8 *)0x0;
+      mode2_parent = (u8 *)0x0;
     }
     else {
-      local_124 = this->pad_48;
+      mode2_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xd10));
+    label = label_string(*(i32 *)(label_string_ids + 0xd10));
     button_create
-              ((Control *)this->field_34c,(iptr)local_124,0x427,(iptr)&local_28,iVar9);
+              ((Control *)this->field_34c,(iptr)mode2_parent,0x427,(iptr)&rect,label);
     button_set_callback((Control *)this->field_34c,ADDR(0x402a09, parley_on_mode_chosen));
     ctrl_disable((Control *)this->field_34c);
     control_hide((Control *)this->field_34c);
     pCVar7 = operator_new(0x3c);
-    local_8 = 0xb;
+    eh_state = 0xb;
     if (pCVar7 == (Control *)0x0) {
-      local_a4 = 0;
+      never_mind_button = 0;
     }
     else {
-      local_a4 = button_ctor(pCVar7);
+      never_mind_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_350 = local_a4;
-    SetRect(&local_28,local_28.right,local_38,iVar6 + local_28.right,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_350 = never_mind_button;
+    SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_128 = (u8 *)0x0;
+      never_mind_parent = (u8 *)0x0;
     }
     else {
-      local_128 = this->pad_48;
+      never_mind_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xb40));
+    label = label_string(*(i32 *)(label_string_ids + 0xb40));
     button_create
-              ((Control *)this->field_350,(iptr)local_128,0x3f2,(iptr)&local_28,iVar9);
+              ((Control *)this->field_350,(iptr)never_mind_parent,0x3f2,(iptr)&rect,label);
     button_set_callback((Control *)this->field_350,ADDR(0x40339b, parley_on_never_mind));
     pCVar7 = operator_new(0x3c);
-    local_8 = 0xc;
+    eh_state = 0xc;
     if (pCVar7 == (Control *)0x0) {
-      local_ac = 0;
+      accept_button = 0;
     }
     else {
-      local_ac = button_ctor(pCVar7);
+      accept_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_358 = local_ac;
-    iVar5 = this->panel_rect + panel_margin_x;
-    iVar6 = rect_width((iptr)&this->panel_rect);
-    iVar6 = (iVar6 + panel_margin_x * -2) / 3;
-    SetRect(&local_28,iVar5,local_38,iVar6 + iVar5,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_358 = accept_button;
+    ctrl_width = this->panel_rect + panel_margin_x;
+    ctrl_left = rect_width((iptr)&this->panel_rect);
+    ctrl_left = (ctrl_left + panel_margin_x * -2) / 3;
+    SetRect(&rect,ctrl_width,ctrl_top,ctrl_left + ctrl_width,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_12c = (u8 *)0x0;
+      accept_parent = (u8 *)0x0;
     }
     else {
-      local_12c = this->pad_48;
+      accept_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xb44));
+    label = label_string(*(i32 *)(label_string_ids + 0xb44));
     button_create
-              ((Control *)this->field_358,(iptr)local_12c,0x3f2,(iptr)&local_28,iVar9);
+              ((Control *)this->field_358,(iptr)accept_parent,0x3f2,(iptr)&rect,label);
     button_set_callback((Control *)this->field_358,ADDR(0x4030a8, parley_on_accept_offer));
     control_hide((Control *)this->field_358);
     pCVar7 = operator_new(0x3c);
-    local_8 = 0xd;
+    eh_state = 0xd;
     if (pCVar7 == (Control *)0x0) {
-      local_b4 = 0;
+      no_thanks_button = 0;
     }
     else {
-      local_b4 = button_ctor(pCVar7);
+      no_thanks_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_35c = local_b4;
-    SetRect(&local_28,local_28.right,local_38,iVar6 + local_28.right,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_35c = no_thanks_button;
+    SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_130 = (u8 *)0x0;
+      no_thanks_parent = (u8 *)0x0;
     }
     else {
-      local_130 = this->pad_48;
+      no_thanks_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xb48));
+    label = label_string(*(i32 *)(label_string_ids + 0xb48));
     button_create
-              ((Control *)this->field_35c,(iptr)local_130,0x3f2,(iptr)&local_28,iVar9);
+              ((Control *)this->field_35c,(iptr)no_thanks_parent,0x3f2,(iptr)&rect,label);
     button_set_callback((Control *)this->field_35c,ADDR(0x4019a1, parley_on_no_thanks));
     control_hide((Control *)this->field_35c);
     pCVar7 = operator_new(0x3c);
-    local_8 = 0xe;
+    eh_state = 0xe;
     if (pCVar7 == (Control *)0x0) {
-      local_bc = 0;
+      counter_button = 0;
     }
     else {
-      local_bc = button_ctor(pCVar7);
+      counter_button = button_ctor(pCVar7);
     }
-    local_8 = 0xffffffff;
-    this->field_360 = local_bc;
-    SetRect(&local_28,local_28.right,local_38,iVar6 + local_28.right,local_38 + local_18);
+    eh_state = 0xffffffff;
+    this->field_360 = counter_button;
+    SetRect(&rect,rect.right,ctrl_top,ctrl_left + rect.right,ctrl_top + ctrl_height);
     if (this == (ViewWindow *)0x0) {
-      local_134 = (u8 *)0x0;
+      counter_parent = (u8 *)0x0;
     }
     else {
-      local_134 = this->pad_48;
+      counter_parent = this->pad_48;
     }
-    iVar9 = label_string(*(i32 *)(label_string_ids + 0xb4c));
+    label = label_string(*(i32 *)(label_string_ids + 0xb4c));
     button_create
-              ((Control *)this->field_360,(iptr)local_134,0x3f2,(iptr)&local_28,iVar9);
+              ((Control *)this->field_360,(iptr)counter_parent,0x3f2,(iptr)&rect,label);
     button_set_callback((Control *)this->field_360,ADDR(0x40334b, parley_on_counter_offer));
     control_hide((Control *)this->field_360);
   }
@@ -8225,99 +8225,99 @@ void __thiscall parley_wnd_create_controls(ViewWindow *this)
 #undef chat_input_buffer
 #undef chat_log_buffer
 #undef panel_margin_x
-#undef local_134
-#undef local_130
-#undef local_12c
-#undef local_128
-#undef local_124
-#undef local_120
-#undef local_11c
-#undef local_118
-#undef local_114
-#undef local_110
-#undef local_10c
-#undef local_108
-#undef local_104
-#undef local_fc
-#undef local_f8
-#undef local_f4
-#undef local_f0
-#undef local_ec
-#undef local_e4
-#undef local_e0
-#undef local_dc
-#undef local_d8
-#undef local_d4
-#undef local_d0
-#undef local_cc
-#undef local_c8
-#undef local_c0
-#undef local_bc
-#undef local_b4
-#undef local_ac
-#undef local_a4
-#undef local_9c
-#undef local_94
-#undef local_8c
-#undef local_84
-#undef local_7c
-#undef local_74
-#undef local_6c
-#undef local_64
-#undef local_60
-#undef local_58
-#undef local_54
-#undef local_4c
-#undef local_44
-#undef local_40
-#undef local_38
-#undef local_34
-#undef local_2c
-#undef local_28
-#undef local_18
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef counter_parent
+#undef no_thanks_parent
+#undef accept_parent
+#undef never_mind_parent
+#undef mode2_parent
+#undef mode_parent
+#undef intel_parent
+#undef reveal_parent
+#undef conceal_parent
+#undef footer_line_h
+#undef clear_parent
+#undef send_parent
+#undef input_parent
+#undef input_font_h4
+#undef input_font_h3
+#undef input_font_h2
+#undef input_font_h1
+#undef history_parent
+#undef hist_font_h4
+#undef hist_font_h3
+#undef hist_font_h2
+#undef hist_font_h1
+#undef close_parent
+#undef close_label
+#undef close_line_h2
+#undef close_line_h
+#undef caption_parent
+#undef counter_button
+#undef no_thanks_button
+#undef accept_button
+#undef never_mind_button
+#undef mode2_button
+#undef mode_button
+#undef intel_button
+#undef reveal_button
+#undef conceal_button
+#undef clear_button
+#undef send_button
+#undef input_font
+#undef input_edit
+#undef history_font
+#undef history_edit
+#undef close_btn
+#undef button_font
+#undef hotspot
+#undef ctrl_top
+#undef caption_x
+#undef i
+#undef rect
+#undef ctrl_height
+#undef input_style
+#undef unused_10
+#undef eh_prev
+#undef eh_state
 
 /* 004b74c4 auto */
-#define local_8 (*(ParleyWindowLayout * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_wnd_on_caption_click(int param_1)
+#define parley_wnd_ptr (*(ParleyWindowLayout * *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_wnd_on_caption_click(int control_id)
 
 {
-  iptr iVar1;
+  iptr child_wnd;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (ParleyWindowLayout *)0x0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    parley_wnd_ptr = (ParleyWindowLayout *)0x0;
   }
   else {
-    local_8 = (ParleyWindowLayout *)(iVar1 - 0x48);
+    parley_wnd_ptr = (ParleyWindowLayout *)(child_wnd - 0x48);
   }
-  wnd_activate((Wnd *)local_8->pad_48);
-  if (param_1 == 0x3e9) {
+  wnd_activate((Wnd *)parley_wnd_ptr->pad_48);
+  if (control_id == 0x3e9) {
     diplo_wnd_close_active();
   }
-  else if (param_1 == 0x3ea) {
-    if (0 < (int)local_8->field_154) {
-      wnd_hide((WndBase *)local_8->pad_48);
-      local_8->field_154--;
-      parley_wnd_calc_rect(local_8);
-      wnd_move_to_rect((WndBase *)local_8->pad_48,local_8->field_150);
-      window_show((WindowObjectView *)local_8);
+  else if (control_id == 0x3ea) {
+    if (0 < (int)parley_wnd_ptr->field_154) {
+      wnd_hide((WndBase *)parley_wnd_ptr->pad_48);
+      parley_wnd_ptr->field_154--;
+      parley_wnd_calc_rect(parley_wnd_ptr);
+      wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->field_150);
+      window_show((WindowObjectView *)parley_wnd_ptr);
     }
   }
-  else if (((param_1 == 0x3eb) && ((int)local_8->field_154 < 1)) && (999 < screen_width)) {
-    wnd_hide((WndBase *)local_8->pad_48);
-    local_8->field_154++;
-    parley_wnd_calc_rect(local_8);
-    wnd_move_to_rect((WndBase *)local_8->pad_48,local_8->field_150);
-    window_show((WindowObjectView *)local_8);
+  else if (((control_id == 0x3eb) && ((int)parley_wnd_ptr->field_154 < 1)) && (999 < screen_width)) {
+    wnd_hide((WndBase *)parley_wnd_ptr->pad_48);
+    parley_wnd_ptr->field_154++;
+    parley_wnd_calc_rect(parley_wnd_ptr);
+    wnd_move_to_rect((WndBase *)parley_wnd_ptr->pad_48,parley_wnd_ptr->field_150);
+    window_show((WindowObjectView *)parley_wnd_ptr);
   }
   return;
 }
-#undef local_8
+#undef parley_wnd_ptr
 
 /* 004b7645 auto */
 /* WARNING: Removing unreachable block (ram,0x004b766b) */
@@ -8342,152 +8342,152 @@ void __cdecl chat_wnd_close(void)
 }
 
 /* 004b7885 auto */
-#define local_8 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
+#define wnd2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_wnd_redraw(void)
 
 {
-  iptr iVar1;
-  i32 uVar1;
+  iptr child_wnd;
+  i32 caret_pos;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (ViewWindow *)0x0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    wnd2 = (ViewWindow *)0x0;
   }
   else {
-    local_8 = (ViewWindow *)(iVar1 - 0x48);
+    wnd2 = (ViewWindow *)(child_wnd - 0x48);
   }
-  if (local_8->field_114 == 0) {
-    parley_wnd_calc_layout((ParleyWindowLayout *)local_8);
-    parley_wnd_build_title((ParleyTitleView *)local_8);
-    gfx_set_draw_target((iptr)local_8);
-    parley_wnd_draw_frame((ParleyWindowLayout *)local_8);
-    parley_wnd_sync_sides(local_8);
-    wnd_blit_surface((DibSurface *)local_8);
-    window_show((WindowObjectView *)local_8);
-    uVar1 = edit_get_text_end((ControlTextView *)local_8->field_29c);
-    edit_set_caret((ControlTextView *)local_8->field_29c,uVar1);
-    uVar1 = edit_get_sel_end((EditSelEndView *)local_8->field_298);
-    edit_set_caret((ControlTextView *)local_8->field_298,uVar1);
+  if (wnd2->field_114 == 0) {
+    parley_wnd_calc_layout((ParleyWindowLayout *)wnd2);
+    parley_wnd_build_title((ParleyTitleView *)wnd2);
+    gfx_set_draw_target((iptr)wnd2);
+    parley_wnd_draw_frame((ParleyWindowLayout *)wnd2);
+    parley_wnd_sync_sides(wnd2);
+    wnd_blit_surface((DibSurface *)wnd2);
+    window_show((WindowObjectView *)wnd2);
+    caret_pos = edit_get_text_end((ControlTextView *)wnd2->field_29c);
+    edit_set_caret((ControlTextView *)wnd2->field_29c,caret_pos);
+    caret_pos = edit_get_sel_end((EditSelEndView *)wnd2->field_298);
+    edit_set_caret((ControlTextView *)wnd2->field_298,caret_pos);
   }
   return;
 }
-#undef local_8
+#undef wnd2
 
 /* 004b794a auto */
 #define dlg_bevel_dark_color (*(byte *)((u8 *)&g.d_00635a0c))
 #define dlg_bevel_light_color (*(byte *)((u8 *)&g.d_00635a08))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_3c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_1c (*(GameFont * *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(44)))
+#define sprite_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define icon_height (*(int *)(frame_ + FRAME_OFF(20)))
+#define icon_width (*(int *)(frame_ + FRAME_OFF(24)))
+#define y2 (*(int *)(frame_ + FRAME_OFF(28)))
+#define x2 (*(int *)(frame_ + FRAME_OFF(32)))
+#define title_font2 (*(GameFont * *)(frame_ + FRAME_OFF(36)))
+#define i (*(int *)(frame_ + FRAME_OFF(40)))
+#define rect (*(tagRECT *)(frame_ + FRAME_OFF(44)))
 void __thiscall parley_wnd_draw_frame(ParleyWindowLayout *this)
 
 {
-  int iVar1;
-  int iVar2;
+  int free_width;
+  int title_width;
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_reset_clip((DibSurface *)this);
-  crt_memcpy(&local_14,&this->client_height,0x10);
-  for (local_18 = 0; local_18 < panel_bevel_width; local_18++) {
-    gfx_draw_bevel_rect((iptr)this,(iptr)&local_14,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
-    rect_deflate((iptr)&local_14,1,1);
+  crt_memcpy(&rect,&this->client_height,0x10);
+  for (i = 0; i < panel_bevel_width; i++) {
+    gfx_draw_bevel_rect((iptr)this,(iptr)&rect,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
+    rect_deflate((iptr)&rect,1,1);
   }
-  parley_fill_background((WindowObjectView *)this,(iptr)&local_14,1);
-  rect_deflate((iptr)&local_14,panel_padding_x + panel_bevel_width * -2,0);
-  local_14.top = local_14.top + this->client_width + panel_bevel_width * -2;
-  iVar1 = rect_height((iptr)&this->client_height);
-  local_14.bottom = (iVar1 - this->client_width) + panel_bevel_width * -2;
-  for (local_18 = 0; local_18 < panel_bevel_width; local_18++) {
-    gfx_draw_bevel_rect((iptr)this,(iptr)&local_14,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
-    rect_deflate((iptr)&local_14,1,1);
+  parley_fill_background((WindowObjectView *)this,(iptr)&rect,1);
+  rect_deflate((iptr)&rect,panel_padding_x + panel_bevel_width * -2,0);
+  rect.top = rect.top + this->client_width + panel_bevel_width * -2;
+  free_width = rect_height((iptr)&this->client_height);
+  rect.bottom = (free_width - this->client_width) + panel_bevel_width * -2;
+  for (i = 0; i < panel_bevel_width; i++) {
+    gfx_draw_bevel_rect((iptr)this,(iptr)&rect,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
+    rect_deflate((iptr)&rect,1,1);
   }
-  parley_fill_background((WindowObjectView *)this,(iptr)&local_14,2);
-  local_20 = panel_padding_x;
-  for (local_18 = 0; local_18 < 3; local_18++) {
-    local_28 = (int)(*(int *)(this[1].pad_48 + local_18 * 0x1c + 0x8c) * this->client_width) / 0x18;
-    local_2c = (int)(*(int *)(this[1].pad_48 + local_18 * 0x1c + 0x90) * this->client_width) / 0x18;
-    local_24 = ((int)this->client_width >> 1) - (local_2c >> 1);
-    SetRect(&local_14,local_20,local_24,local_28 + local_20,local_2c + local_24);
+  parley_fill_background((WindowObjectView *)this,(iptr)&rect,2);
+  x2 = panel_padding_x;
+  for (i = 0; i < 3; i++) {
+    icon_width = (int)(*(int *)(this[1].pad_48 + i * 0x1c + 0x8c) * this->client_width) / 0x18;
+    icon_height = (int)(*(int *)(this[1].pad_48 + i * 0x1c + 0x90) * this->client_width) / 0x18;
+    y2 = ((int)this->client_width >> 1) - (icon_height >> 1);
+    SetRect(&rect,x2,y2,icon_width + x2,icon_height + y2);
     gfx_set_scale_ratio(this->client_width,0x18);
     sprite_draw
-              (*(Sprite **)(this[1].pad_48 + local_18 * 0x1c + 0x94),(iptr)local_3c,
-               (iptr)this,local_20,local_24);
+              (*(Sprite **)(this[1].pad_48 + i * 0x1c + 0x94),(iptr)sprite_rect,
+               (iptr)this,x2,y2);
     gfx_reset_zoom_scale();
-    local_20 = local_20 + panel_margin_x + local_28;
+    x2 = x2 + panel_margin_x + icon_width;
   }
   if (this->large_layout == 0) {
-    local_1c = (GameFont *)&font_size20;
+    title_font2 = (GameFont *)&font_size20;
   }
   else {
-    local_1c = (GameFont *)&font_size30;
+    title_font2 = (GameFont *)&font_size30;
   }
-  local_20 -= panel_margin_x;
-  iVar1 = (this->field_138 - local_20) - panel_padding_x;
-  iVar2 = font_text_width(local_1c,(iptr)this->pad_15c);
-  local_20 += (iVar1 / 2 - (iVar2 >> 1));
-  local_24 = panel_bevel_width + panel_margin_y;
+  x2 -= panel_margin_x;
+  free_width = (this->field_138 - x2) - panel_padding_x;
+  title_width = font_text_width(title_font2,(iptr)this->pad_15c);
+  x2 += (free_width / 2 - (title_width >> 1));
+  y2 = panel_bevel_width + panel_margin_y;
   gfx_set_text_color_index(10);
   surface_draw_text
-            ((DibSurface *)this,(iptr)local_1c,(iptr)this->pad_15c,local_20 + 2,local_24 + 1,5);
+            ((DibSurface *)this,(iptr)title_font2,(iptr)this->pad_15c,x2 + 2,y2 + 1,5);
   gfx_set_text_color_index(0x1a);
   surface_draw_text
-            ((DibSurface *)this,(iptr)local_1c,(iptr)this->pad_15c,local_20 + 1,local_24,5);
+            ((DibSurface *)this,(iptr)title_font2,(iptr)this->pad_15c,x2 + 1,y2,5);
   surface_draw_text
-            ((DibSurface *)this,(iptr)local_1c,(iptr)this->pad_15c,local_20,local_24,5);
+            ((DibSurface *)this,(iptr)title_font2,(iptr)this->pad_15c,x2,y2,5);
   surface_set_clip((DibSurface *)this,(iptr)&this->panel_rect);
   return;
 }
 #undef dlg_bevel_dark_color
 #undef dlg_bevel_light_color
 #undef panel_margin_x
-#undef local_3c
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
+#undef sprite_rect
+#undef icon_height
+#undef icon_width
+#undef y2
+#undef x2
+#undef title_font2
+#undef i
+#undef rect
 
 /* 004b7c90 auto */
 #define dlg_bg_color (*(byte *)((u8 *)&g.d_00635a04))
 #define dlg_client_tile_surface (*(int *)((u8 *)&g.d_00635aa4))
 #define dlg_frame_tile_surface (*(int *)((u8 *)&g.d_00635aa0))
-void __thiscall parley_fill_background(WindowObjectView *this,iptr param_1,int param_2)
+void __thiscall parley_fill_background(WindowObjectView *this,iptr rect,int area_kind)
 
 {
-  i32 uVar1;
-  i32 uVar2;
-  i32 uVar3;
-  i32 uVar4;
+  i32 height;
+  i32 width;
+  i32 tile_x;
+  i32 tile_y;
   
-  if ((dlg_frame_tile_surface == 0) || (param_2 != 1)) {
-    if ((dlg_client_tile_surface == 0) || (param_2 != 2)) {
-      gfx_fill_rect((iptr)this,param_1,(uint)dlg_bg_color);
+  if ((dlg_frame_tile_surface == 0) || (area_kind != 1)) {
+    if ((dlg_client_tile_surface == 0) || (area_kind != 2)) {
+      gfx_fill_rect((iptr)this,rect,(uint)dlg_bg_color);
     }
     else {
-      uVar4 = 0;
-      uVar3 = 0;
-      uVar1 = rect_height(param_1);
-      uVar2 = rect_width(param_1);
-      gfx_tile_fill((iptr)this,dlg_client_tile_surface,*(i32 *)param_1,*(i32 *)(param_1 + 4)
-                         ,uVar2,uVar1,uVar3,uVar4);
+      tile_y = 0;
+      tile_x = 0;
+      height = rect_height(rect);
+      width = rect_width(rect);
+      gfx_tile_fill((iptr)this,dlg_client_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4)
+                         ,width,height,tile_x,tile_y);
     }
   }
   else {
-    uVar4 = 0;
-    uVar3 = 0;
-    uVar1 = rect_height(param_1);
-    uVar2 = rect_width(param_1);
-    gfx_tile_fill((iptr)this,dlg_frame_tile_surface,*(i32 *)param_1,*(i32 *)(param_1 + 4),
-                       uVar2,uVar1,uVar3,uVar4);
+    tile_y = 0;
+    tile_x = 0;
+    height = rect_height(rect);
+    width = rect_width(rect);
+    gfx_tile_fill((iptr)this,dlg_frame_tile_surface,*(i32 *)rect,*(i32 *)(rect + 4),
+                       width,height,tile_x,tile_y);
   }
   return;
 }
@@ -8498,34 +8498,34 @@ void __thiscall parley_fill_background(WindowObjectView *this,iptr param_1,int p
 /* 004b7d72 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define attitude_level (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 
 {
-  iptr iVar1;
+  iptr text;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   text_clear();
   if (this->parley_kind == 4) {
-    iVar1 = label_string(*(i32 *)(label_string_ids + 0xb54));
-    text_append(iVar1);
+    text = label_string(*(i32 *)(label_string_ids + 0xb54));
+    text_append(text);
     crt_strcpy(this->pad_11c + 0x40,&text_buffer);
   }
   else {
-    iVar1 = label_string(*(i32 *)(label_string_ids + 0xb50));
-    text_append(iVar1);
+    text = label_string(*(i32 *)(label_string_ids + 0xb50));
+    text_append(text);
     text_append_space();
-    iVar1 = civ_name_plural(this->civ_id);
-    text_append(iVar1);
+    text = civ_name_plural(this->civ_id);
+    text_append(text);
     text_append_space();
     text_append_lparen();
     if (*(char *)&civs[(this->civ_id)].attitude[human_civ] == '\0') {
-      local_8 = 0;
+      attitude_level = 0;
     }
     else {
-      local_8 = diplo_attitude_level((uint)civs[(this->civ_id)].attitude[human_civ]);
+      attitude_level = diplo_attitude_level((uint)civs[(this->civ_id)].attitude[human_civ]);
     }
-    text_append_string_id(attitude_names[local_8]);
+    text_append_string_id(attitude_names[attitude_level]);
     text_append_rparen();
     crt_strcpy(this->pad_11c + 0x40,&text_buffer);
   }
@@ -8533,7 +8533,7 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 }
 #undef human_civ
 #undef text_buffer
-#undef local_8
+#undef attitude_level
 
 /* 004b7eb6 auto */
 #define chat_unread_count (*(i32 *)((u8 *)&g.d_006ad6a0))
@@ -8542,41 +8542,41 @@ void __thiscall parley_wnd_build_title(ParleyTitleView *this)
 #define parley_selected_action (*(i32 *)((u8 *)&g.d_0067a9b0))
 #define chat_missed_message_count_i32 (*(i32 *)((u8 *)&g.d_006ad69c))
 #define civ (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(ParleyTitleView * *)(frame_ + FRAME_OFF(16)))
+#define wnd2 (*(ParleyTitleView * *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Removing unreachable block (ram,0x004b8008) */
 /* WARNING: Removing unreachable block (ram,0x004b8051) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall parley_wnd_open(ViewWindow *this,iptr param_1,u32 param_2)
+void __thiscall parley_wnd_open(ViewWindow *this,iptr other_civ,u32 mode)
 
 {
-  bool bVar1;
-  bool bVar2;
-  iptr iVar3;
-  iptr iVar4;
-  i32 uVar3;
+  bool can_see_all;
+  bool has_contact;
+  iptr has_wonder;
+  iptr child_wnd;
+  i32 caret_pos;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (param_2 == 4) {
-    bVar2 = false;
-    if (((game.wonder_city[0x18] == -1) && (iVar3 = civ_has_wonder(human_civ,9), iVar3 == 0)
+  if (mode == 4) {
+    has_contact = false;
+    if (((game.wonder_city[0x18] == -1) && (has_wonder = civ_has_wonder(human_civ,9), has_wonder == 0)
         ) && (game.reveal_map == '\0')) {
-      bVar1 = false;
+      can_see_all = false;
     }
     else {
-      bVar1 = true;
+      can_see_all = true;
     }
     for (civ = 1; civ < 8; civ++) {
       if ((((human_civ != civ) &&
            ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
           ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
-         (((bVar1 || (mp_chat_from_start != 0)) ||
+         (((can_see_all || (mp_chat_from_start != 0)) ||
           ((*(byte *)&civs[civ].treaties[human_civ] & 1) != 0)))) {
-        bVar2 = true;
+        has_contact = true;
         break;
       }
     }
-    if (!bVar2) {
+    if (!has_contact) {
       popup_game(ADDR(0x62d934, ((u8 *)&g.d_0062d934)));
       return;
     }
@@ -8591,48 +8591,48 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr param_1,u32 param_2)
     this->field_3bd = '\0';
     this->field_3be = '\0';
     this->remote_side_agreed = '\0';
-    if (param_2 == 3) {
+    if (mode == 3) {
       parley_set_mode_sides((WindowObjectView *)&parley_wnd,0);
     }
   }
-  iVar4 = wnd_get_active_child();
-  if (iVar4 == 0) {
-    local_8 = (ParleyTitleView *)0x0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    wnd2 = (ParleyTitleView *)0x0;
   }
   else {
-    local_8 = (ParleyTitleView *)(iVar4 - 0x48);
+    wnd2 = (ParleyTitleView *)(child_wnd - 0x48);
   }
-  if (*(int *)(local_8->pad_0 + 0x114) == 0) {
-    window_show((WindowObjectView *)local_8);
+  if (*(int *)(wnd2->pad_0 + 0x114) == 0) {
+    window_show((WindowObjectView *)wnd2);
   }
   else {
-    local_8->pad_0[0x114] = '\0';
-    local_8->pad_0[0x115] = '\0';
-    local_8->pad_0[0x116] = '\0';
-    local_8->pad_0[0x117] = '\0';
-    local_8->field_118 = param_1;
-    if (param_2 != 3) {
-      local_8->field_1ec = param_2;
-      *(i32 *)local_8[1].pad_0 = (&parley_mode_left_kinds)[param_2 * 2];
-      *(i32 *)(local_8[1].pad_0 + 4) = (&parley_mode_right_kinds)[param_2 * 2];
+    wnd2->pad_0[0x114] = '\0';
+    wnd2->pad_0[0x115] = '\0';
+    wnd2->pad_0[0x116] = '\0';
+    wnd2->pad_0[0x117] = '\0';
+    wnd2->field_118 = other_civ;
+    if (mode != 3) {
+      wnd2->field_1ec = mode;
+      *(i32 *)wnd2[1].pad_0 = (&parley_mode_left_kinds)[mode * 2];
+      *(i32 *)(wnd2[1].pad_0 + 4) = (&parley_mode_right_kinds)[mode * 2];
     }
-    parley_wnd_build_title(local_8);
-    local_8[1].pad_0[8] = 21;
-    local_8[1].pad_0[9] = '\0';
-    local_8[1].pad_0[10] = '\0';
-    local_8[1].pad_0[0xb] = '\0';
-    local_8[1].pad_0[0xc] = 21;
-    local_8[1].pad_0[0xd] = '\0';
-    local_8[1].pad_0[0xe] = '\0';
-    local_8[1].pad_0[0xf] = '\0';
-    wnd_repaint((SurfaceWindow *)local_8);
-    window_show((WindowObjectView *)local_8);
-    uVar3 = edit_get_text_end(*(ControlTextView **)(local_8[1].pad_0 + 0xac));
-    edit_set_caret(*(ControlTextView **)(local_8[1].pad_0 + 0xac),uVar3);
-    uVar3 = edit_get_sel_end(*(EditSelEndView **)(local_8[1].pad_0 + 0xa8));
-    edit_set_caret(*(ControlTextView **)(local_8[1].pad_0 + 0xa8),uVar3);
+    parley_wnd_build_title(wnd2);
+    wnd2[1].pad_0[8] = 21;
+    wnd2[1].pad_0[9] = '\0';
+    wnd2[1].pad_0[10] = '\0';
+    wnd2[1].pad_0[0xb] = '\0';
+    wnd2[1].pad_0[0xc] = 21;
+    wnd2[1].pad_0[0xd] = '\0';
+    wnd2[1].pad_0[0xe] = '\0';
+    wnd2[1].pad_0[0xf] = '\0';
+    wnd_repaint((SurfaceWindow *)wnd2);
+    window_show((WindowObjectView *)wnd2);
+    caret_pos = edit_get_text_end(*(ControlTextView **)(wnd2[1].pad_0 + 0xac));
+    edit_set_caret(*(ControlTextView **)(wnd2[1].pad_0 + 0xac),caret_pos);
+    caret_pos = edit_get_sel_end(*(EditSelEndView **)(wnd2[1].pad_0 + 0xa8));
+    edit_set_caret(*(ControlTextView **)(wnd2[1].pad_0 + 0xa8),caret_pos);
   }
-  snd_play_effect(((uint)map.seed + param_1 & 7) + 0x53,1,0,0);
+  snd_play_effect(((uint)map.seed + other_civ & 7) + 0x53,1,0,0);
   return;
 }
 #undef chat_unread_count
@@ -8641,7 +8641,7 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr param_1,u32 param_2)
 #undef parley_selected_action
 #undef chat_missed_message_count_i32
 #undef civ
-#undef local_8
+#undef wnd2
 
 /* 004b81dd auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
@@ -8654,7 +8654,7 @@ void __thiscall parley_wnd_open(ViewWindow *this,iptr param_1,u32 param_2)
 void __cdecl parley_poll_net_replies(void)
 
 {
-  iptr iVar1;
+  iptr civ_name;
   
   net_process_messages((NetSession *)&net_session,1,0);
   wnd_set_active_child(ADDR(0x67a7f0, ((u8 *)&g.d_0067a7f0)));
@@ -8670,8 +8670,8 @@ void __cdecl parley_poll_net_replies(void)
           parley_shown_right_kind = parley_right_kind;
           parley_add_side_dialog((ViewWindow *)&parley_wnd,parley_mode2_left_kind,0);
           parley_add_side_dialog((ViewWindow *)&parley_wnd,parley_right_kind,1);
-          iVar1 = civ_name_plural(parley_other_civ);
-          text_set_string_arg(0,iVar1);
+          civ_name = civ_name_plural(parley_other_civ);
+          text_set_string_arg(0,civ_name);
           dlg_pending_idle_callback = parley_poll_net_replies;
           popup_game_with_sprite(ADDR(0x62d98c, ((u8 *)&g.d_0062d98c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         }
@@ -8681,8 +8681,8 @@ void __cdecl parley_poll_net_replies(void)
         parley_mode = 3;
         parley_selected_action = 0xffffffff;
         parley_set_mode_sides((WindowObjectView *)&parley_wnd,1);
-        iVar1 = civ_name_plural(parley_other_civ);
-        text_set_string_arg(0,iVar1);
+        civ_name = civ_name_plural(parley_other_civ);
+        text_set_string_arg(0,civ_name);
         dlg_pending_idle_callback = parley_poll_net_replies;
         popup_game_with_sprite(ADDR(0x62d97c, ((u8 *)&g.d_0062d97c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       }
@@ -8714,10 +8714,10 @@ void __cdecl parley_poll_net_replies(void)
   else {
     nm_parley_transaction_count = 0;
     if ((*(int *)((int)parley_received_offer + 0x10) == 6) && (*(int *)((int)parley_received_offer + 0x28) == 3)) {
-      iVar1 = civ_name_plural(parley_other_civ);
-      text_set_string_arg(0,iVar1);
-      iVar1 = civ_name_plural(human_civ);
-      text_set_string_arg(1,iVar1);
+      civ_name = civ_name_plural(parley_other_civ);
+      text_set_string_arg(0,civ_name);
+      civ_name = civ_name_plural(human_civ);
+      text_set_string_arg(1,civ_name);
       if ((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 8) == 0) {
         if ((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 4) == 0) {
           if ((*(byte *)&civs[human_civ].treaties[parley_other_civ] & 2) != 0) {
@@ -8757,7 +8757,7 @@ void __cdecl parley_poll_net_replies(void)
 #define parley_selected_action (*(int *)((u8 *)&g.d_0067a9b0))
 /* WARNING: Removing unreachable block (ram,0x004b869f) */
 
-void __thiscall parley_set_mode_sides(WindowObjectView *this,int param_1)
+void __thiscall parley_set_mode_sides(WindowObjectView *this,int refresh)
 
 {
   wnd_set_active_child(ADDR(0x67a7f0, ((u8 *)&g.d_0067a7f0)));
@@ -8806,7 +8806,7 @@ void __thiscall parley_set_mode_sides(WindowObjectView *this,int param_1)
   parley_right_kind = (&parley_mode_right_kinds)[parley_mode * 2];
   parley_shown_left_kind = parley_left_kind;
   parley_shown_right_kind = parley_right_kind;
-  if (param_1 != 0) {
+  if (refresh != 0) {
     parley_add_side_dialog((ViewWindow *)&parley_wnd,parley_left_kind,0);
     parley_add_side_dialog((ViewWindow *)&parley_wnd,parley_right_kind,1);
   }
@@ -8815,18 +8815,18 @@ void __thiscall parley_set_mode_sides(WindowObjectView *this,int param_1)
 #undef parley_selected_action
 
 /* 004b888e auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall parley_clear_side_controls(ViewWindow *this,int param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
+void __thiscall parley_clear_side_controls(ViewWindow *this,int side)
 
 {
-  u8 *puVar1;
-  int iVar2;
+  u8 *slot_ptr;
+  int half_width;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 != 0) && (param_1 != 1)) {
+  if ((side != 0) && (side != 1)) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62d9c0, ((u8 *)&g.d_0062d9c0)),ADDR(0x62d9a0, ((u8 *)&g.d_0062d9a0)),0x4ea);
   }
-  if (param_1 == 1) {
+  if (side == 1) {
     if (this->side_text_edit != 0) {
       if ((Control *)this->side_text_edit != (Control *)0x0) {
         edit_scalar_dtor((Control *)this->side_text_edit,1);
@@ -8851,205 +8851,205 @@ void __thiscall parley_clear_side_controls(ViewWindow *this,int param_1)
       }
       this->field_2f0 = 0;
     }
-    for (local_8 = 0; local_8 < 8; local_8++) {
-      if (*(int *)(this->pad_2c4 + local_8 * 4 - 0x1c) != 0) {
-        if (*(Checkbox **)(this->pad_2c4 + local_8 * 4 - 0x1c) != (Checkbox *)0x0) {
-          checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + local_8 * 4 - 0x1c),1);
+    for (i = 0; i < 8; i++) {
+      if (*(int *)(this->pad_2c4 + i * 4 - 0x1c) != 0) {
+        if (*(Checkbox **)(this->pad_2c4 + i * 4 - 0x1c) != (Checkbox *)0x0) {
+          checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + i * 4 - 0x1c),1);
         }
-        puVar1 = this->pad_2c4 + local_8 * 4 - 0x1c;
-        puVar1[0] = '\0';
-        puVar1[1] = '\0';
-        puVar1[2] = '\0';
-        puVar1[3] = '\0';
+        slot_ptr = this->pad_2c4 + i * 4 - 0x1c;
+        slot_ptr[0] = '\0';
+        slot_ptr[1] = '\0';
+        slot_ptr[2] = '\0';
+        slot_ptr[3] = '\0';
       }
-      if (*(int *)(this->pad_2c4 + local_8 * 4 + 4) != 0) {
-        if (*(Checkbox **)(this->pad_2c4 + local_8 * 4 + 4) != (Checkbox *)0x0) {
-          checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + local_8 * 4 + 4),1);
+      if (*(int *)(this->pad_2c4 + i * 4 + 4) != 0) {
+        if (*(Checkbox **)(this->pad_2c4 + i * 4 + 4) != (Checkbox *)0x0) {
+          checkbox_scalar_dtor(*(Checkbox **)(this->pad_2c4 + i * 4 + 4),1);
         }
-        puVar1 = this->pad_2c4 + local_8 * 4 + 4;
-        puVar1[0] = '\0';
-        puVar1[1] = '\0';
-        puVar1[2] = '\0';
-        puVar1[3] = '\0';
+        slot_ptr = this->pad_2c4 + i * 4 + 4;
+        slot_ptr[0] = '\0';
+        slot_ptr[1] = '\0';
+        slot_ptr[2] = '\0';
+        slot_ptr[3] = '\0';
       }
     }
   }
-  if (*(int *)(this->pad_364 + param_1 * 4) != 0) {
-    if (*(Checkbox **)(this->pad_364 + param_1 * 4) != (Checkbox *)0x0) {
-      checkbox_scalar_dtor(*(Checkbox **)(this->pad_364 + param_1 * 4),1);
+  if (*(int *)(this->pad_364 + side * 4) != 0) {
+    if (*(Checkbox **)(this->pad_364 + side * 4) != (Checkbox *)0x0) {
+      checkbox_scalar_dtor(*(Checkbox **)(this->pad_364 + side * 4),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 8) != 0) {
-    if (*(RadioGroupDtorView **)(this->pad_364 + param_1 * 4 + 8) != (RadioGroupDtorView *)0x0) {
-      radiogrp_scalar_dtor(*(RadioGroupDtorView **)(this->pad_364 + param_1 * 4 + 8),1);
+  if (*(int *)(this->pad_364 + side * 4 + 8) != 0) {
+    if (*(RadioGroupDtorView **)(this->pad_364 + side * 4 + 8) != (RadioGroupDtorView *)0x0) {
+      radiogrp_scalar_dtor(*(RadioGroupDtorView **)(this->pad_364 + side * 4 + 8),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 8;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 8;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 0x10) != 0) {
-    if (*(Control **)(this->pad_364 + param_1 * 4 + 0x10) != (Control *)0x0) {
-      edit_scalar_dtor(*(Control **)(this->pad_364 + param_1 * 4 + 0x10),1);
+  if (*(int *)(this->pad_364 + side * 4 + 0x10) != 0) {
+    if (*(Control **)(this->pad_364 + side * 4 + 0x10) != (Control *)0x0) {
+      edit_scalar_dtor(*(Control **)(this->pad_364 + side * 4 + 0x10),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 0x10;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 0x10;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 0x18) != 0) {
-    if (*(Control **)(this->pad_364 + param_1 * 4 + 0x18) != (Control *)0x0) {
-      scrollbar_scalar_dtor(*(Control **)(this->pad_364 + param_1 * 4 + 0x18),1);
+  if (*(int *)(this->pad_364 + side * 4 + 0x18) != 0) {
+    if (*(Control **)(this->pad_364 + side * 4 + 0x18) != (Control *)0x0) {
+      scrollbar_scalar_dtor(*(Control **)(this->pad_364 + side * 4 + 0x18),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 0x18;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 0x18;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 0x20) != 0) {
-    if (*(Hotspot **)(this->pad_364 + param_1 * 4 + 0x20) != (Hotspot *)0x0) {
-      hotspot_scalar_dtor(*(Hotspot **)(this->pad_364 + param_1 * 4 + 0x20),1);
+  if (*(int *)(this->pad_364 + side * 4 + 0x20) != 0) {
+    if (*(Hotspot **)(this->pad_364 + side * 4 + 0x20) != (Hotspot *)0x0) {
+      hotspot_scalar_dtor(*(Hotspot **)(this->pad_364 + side * 4 + 0x20),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 0x20;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 0x20;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 0x28) != 0) {
-    if (*(Control **)(this->pad_364 + param_1 * 4 + 0x28) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(this->pad_364 + param_1 * 4 + 0x28),1);
+  if (*(int *)(this->pad_364 + side * 4 + 0x28) != 0) {
+    if (*(Control **)(this->pad_364 + side * 4 + 0x28) != (Control *)0x0) {
+      ctrl_scalar_dtor(*(Control **)(this->pad_364 + side * 4 + 0x28),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 0x28;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 0x28;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_364 + param_1 * 4 + 0x30) != 0) {
-    if (*(Control **)(this->pad_364 + param_1 * 4 + 0x30) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(this->pad_364 + param_1 * 4 + 0x30),1);
+  if (*(int *)(this->pad_364 + side * 4 + 0x30) != 0) {
+    if (*(Control **)(this->pad_364 + side * 4 + 0x30) != (Control *)0x0) {
+      ctrl_scalar_dtor(*(Control **)(this->pad_364 + side * 4 + 0x30),1);
     }
-    puVar1 = this->pad_364 + param_1 * 4 + 0x30;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_364 + side * 4 + 0x30;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_3c0 + param_1 * 4 - 0x24) != 0) {
-    if (*(Control **)(this->pad_3c0 + param_1 * 4 - 0x24) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(this->pad_3c0 + param_1 * 4 - 0x24),1);
+  if (*(int *)(this->pad_3c0 + side * 4 - 0x24) != 0) {
+    if (*(Control **)(this->pad_3c0 + side * 4 - 0x24) != (Control *)0x0) {
+      ctrl_scalar_dtor(*(Control **)(this->pad_3c0 + side * 4 - 0x24),1);
     }
-    puVar1 = this->pad_3c0 + param_1 * 4 - 0x24;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_3c0 + side * 4 - 0x24;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
-  if (*(int *)(this->pad_3c0 + param_1 * 4 - 0x1c) != 0) {
-    if (*(Control **)(this->pad_3c0 + param_1 * 4 - 0x1c) != (Control *)0x0) {
-      ctrl_scalar_dtor(*(Control **)(this->pad_3c0 + param_1 * 4 - 0x1c),1);
+  if (*(int *)(this->pad_3c0 + side * 4 - 0x1c) != 0) {
+    if (*(Control **)(this->pad_3c0 + side * 4 - 0x1c) != (Control *)0x0) {
+      ctrl_scalar_dtor(*(Control **)(this->pad_3c0 + side * 4 - 0x1c),1);
     }
-    puVar1 = this->pad_3c0 + param_1 * 4 - 0x1c;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    slot_ptr = this->pad_3c0 + side * 4 - 0x1c;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
   this->field_3ac = this->panel_rect;
   this->field_3b0 = this->panel_top;
   this->field_3b4 = this->panel_right;
   this->field_3b8 = this->panel_bottom;
   this->field_3b8 = this->show_turn_timer;
-  if (param_1 == 0) {
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    this->field_3b4 = iVar2 / 2;
+  if (side == 0) {
+    half_width = rect_width((iptr)&this->panel_rect);
+    this->field_3b4 = half_width / 2;
   }
   else {
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    this->field_3ac = iVar2 / 2;
+    half_width = rect_width((iptr)&this->panel_rect);
+    this->field_3ac = half_width / 2;
   }
   parley_fill_background((WindowObjectView *)this,(iptr)&this->field_3ac,2);
   return;
 }
-#undef local_8
+#undef i
 
 /* 004b8e5c auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_58 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define local_50 (*(char (*)[32])(frame_ + FRAME_OFF(8)))
-#define local_30 (*(uint *)(frame_ + FRAME_OFF(40)))
-#define local_2c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_28 (*(char (*)[32])(frame_ + FRAME_OFF(48)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(80)))
-void __cdecl parley_gold_edit_on_change(int param_1)
+#define i (*(uptr *)(frame_ + FRAME_OFF(0)))
+#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(8)))
+#define edit_index (*(uint *)(frame_ + FRAME_OFF(40)))
+#define modified (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define text (*(char (*)[32])(frame_ + FRAME_OFF(48)))
+#define caret (*(uint *)(frame_ + FRAME_OFF(80)))
+void __cdecl parley_gold_edit_on_change(int control_id)
 
 {
-  char *pcVar1;
-  size_t sVar2;
-  int iVar3;
-  size_t sVar4;
+  char *src_ptr;
+  size_t len;
+  int amount;
+  size_t text_len;
   i8 frame_[FRAME_OFF(88)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_2c = 0;
-  _memset(local_28,0,0x20);
-  _memset(local_50,0,0x20);
-  local_30 = (uint)(param_1 != 0x3f8);
-  local_8 = edit_get_sel_end(*(EditSelEndView **)(&parley_gold_edits + local_30 * 4));
-  ctrl_get_text(*(ControlTextView **)(&parley_gold_edits + local_30 * 4),(iptr)local_28);
-  __itoa(civs[human_civ].gold,local_50,10);
-  for (local_58 = 0; sVar2 = _strlen(local_28), local_58 < sVar2; local_58++) {
-    if ((local_28[local_58] < '0') || ('9' < local_28[local_58])) {
-      local_2c = 1;
-      crt_strcpy(local_28 + local_58,local_28 + local_58 + 1);
+  modified = 0;
+  _memset(text,0,0x20);
+  _memset(gold_text,0,0x20);
+  edit_index = (uint)(control_id != 0x3f8);
+  caret = edit_get_sel_end(*(EditSelEndView **)(&parley_gold_edits + edit_index * 4));
+  ctrl_get_text(*(ControlTextView **)(&parley_gold_edits + edit_index * 4),(iptr)text);
+  __itoa(civs[human_civ].gold,gold_text,10);
+  for (i = 0; len = _strlen(text), i < len; i++) {
+    if ((text[i] < '0') || ('9' < text[i])) {
+      modified = 1;
+      crt_strcpy(text + i,text + i + 1);
     }
   }
-  iVar3 = _atoi(local_28);
-  if (((parley_mode == 0xe) && (local_30 == 0)) || ((parley_mode != 0xf && (parley_mode != 0xe)))
+  amount = _atoi(text);
+  if (((parley_mode == 0xe) && (edit_index == 0)) || ((parley_mode != 0xf && (parley_mode != 0xe)))
      ) {
-    sVar2 = _strlen(local_50);
-    sVar4 = _strlen(local_28);
-    if ((sVar2 < sVar4) || (civs[human_civ].gold < iVar3)) {
-      local_2c = 1;
-      pcVar1 = local_28 + local_8;
-      iVar3 = local_8 - 1;
-      local_8--;
-      crt_strcpy(local_28 + iVar3,pcVar1);
+    len = _strlen(gold_text);
+    text_len = _strlen(text);
+    if ((len < text_len) || (civs[human_civ].gold < amount)) {
+      modified = 1;
+      src_ptr = text + caret;
+      amount = caret - 1;
+      caret--;
+      crt_strcpy(text + amount,src_ptr);
     }
   }
-  iVar3 = _atoi(local_28);
-  if (iVar3 < 1) {
-    *(i32 *)(&parley_gold_entered + local_30 * 4) = 0;
+  amount = _atoi(text);
+  if (amount < 1) {
+    *(i32 *)(&parley_gold_entered + edit_index * 4) = 0;
   }
   else {
-    *(i32 *)(&parley_gold_entered + local_30 * 4) = 1;
+    *(i32 *)(&parley_gold_entered + edit_index * 4) = 1;
   }
   parley_update_buttons((ViewWindow *)&parley_wnd);
-  if (local_2c != 0) {
-    sVar2 = _strlen(local_28);
-    if (sVar2 < local_8) {
-      local_8 = _strlen(local_28);
+  if (modified != 0) {
+    len = _strlen(text);
+    if (len < caret) {
+      caret = _strlen(text);
     }
-    ctrl_set_text(*(ControlTextView **)(&parley_gold_edits + local_30 * 4),(iptr)local_28);
-    edit_set_caret(*(ControlTextView **)(&parley_gold_edits + local_30 * 4),local_8);
+    ctrl_set_text(*(ControlTextView **)(&parley_gold_edits + edit_index * 4),(iptr)text);
+    edit_set_caret(*(ControlTextView **)(&parley_gold_edits + edit_index * 4),caret);
   }
   return;
 }
 #undef human_civ
-#undef local_58
-#undef local_50
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_8
+#undef i
+#undef gold_text
+#undef edit_index
+#undef modified
+#undef text
+#undef caret
 
 /* 004b90ad auto */
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
@@ -9059,27 +9059,27 @@ void __cdecl parley_gold_edit_on_change(int param_1)
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define chat_missed_message_count_i32 (*(i32 *)((u8 *)&g.d_006ad69c))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define listener (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __thiscall
-chat_receive_message(WindowObjectView *this,iptr civ,iptr civ2,iptr param_3,iptr param_4)
+chat_receive_message(WindowObjectView *this,iptr civ,iptr civ2,iptr is_private,iptr message)
 
 {
-  u32 uVar1;
-  size_t sVar2;
-  i32 uVar3;
+  u32 muted;
+  size_t log_len;
+  i32 label;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   ctrl_get_text(chat_log_edit,(iptr)chat_log_buffer);
   text_clear();
-  sVar2 = _strlen(chat_log_buffer);
-  if (sVar2 != 0) {
+  log_len = _strlen(chat_log_buffer);
+  if (log_len != 0) {
     crt_strcat(&text_buffer,&chat_recv_newline_str);
   }
-  if ((char)param_3 == '\0') {
-    uVar3 = label_string(*(i32 *)(label_string_ids + 0xb60));
-    crt_strcat(&text_buffer,uVar3);
+  if ((char)is_private == '\0') {
+    label = label_string(*(i32 *)(label_string_ids + 0xb60));
+    crt_strcat(&text_buffer,label);
     text_append_space();
     chat_append_sender_name(civ);
     crt_strcat(&text_buffer,&chat_recv_year_open_str);
@@ -9087,42 +9087,42 @@ chat_receive_message(WindowObjectView *this,iptr civ,iptr civ2,iptr param_3,iptr
     crt_strcat(&text_buffer,&chat_recv_year_close_str);
   }
   else {
-    uVar3 = label_string(*(i32 *)(label_string_ids + 0xb58));
-    crt_strcat(&text_buffer,uVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0xb58));
+    crt_strcat(&text_buffer,label);
     text_append_space();
     chat_append_sender_name(civ);
-    uVar3 = label_string(*(i32 *)(label_string_ids + 0xb5c));
-    crt_strcat(&text_buffer,uVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0xb5c));
+    crt_strcat(&text_buffer,label);
     text_append_space();
     chat_append_sender_name(civ2);
     crt_strcat(&text_buffer,&chat_recv_private_year_open_str);
     text_append_year((int)game.year);
     crt_strcat(&text_buffer,&chat_recv_private_year_close_str);
   }
-  crt_strcat(&text_buffer,param_4);
+  crt_strcat(&text_buffer,message);
   if ((civ == 0) && (chat_mute_anonymous != 0)) {
     return;
   }
-  if ((char)param_3 == '\0') {
+  if ((char)is_private == '\0') {
     if (parley_wnd_closed == 0) {
       if (parley_other_civ == civ) goto LAB_004b9295;
-      uVar1 = this[civ + 200].field_0;
+      muted = this[civ + 200].field_0;
     }
     else {
-      uVar1 = this[civ + 200].field_0;
+      muted = this[civ + 200].field_0;
     }
-    if (uVar1 != 0) {
+    if (muted != 0) {
       return;
     }
   }
 LAB_004b9295:
-  for (local_8 = 1; local_8 < 8; local_8++) {
-    if ((((local_8 != civ) && (human_civ != local_8)) &&
-        ((1 << ((byte)local_8 & 0x1f) & (uint)game.human_players) != 0)) &&
-       ((*(byte *)(local_8 * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)) {
+  for (listener = 1; listener < 8; listener++) {
+    if ((((listener != civ) && (human_civ != listener)) &&
+        ((1 << ((byte)listener & 0x1f) & (uint)game.human_players) != 0)) &&
+       ((*(byte *)(listener * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)) {
       net_send_message(0x68,*(i32 *)
-                               (&net_player_slots + *(int *)(&net_civ_slots + local_8 * 4) * 0x54),
-                         civ,civ2,1,0,0,0,param_4,0);
+                               (&net_player_slots + *(int *)(&net_civ_slots + listener * 4) * 0x54),
+                         civ,civ2,1,0,0,0,message,0);
     }
   }
   chat_log_append(ADDR(0x679640, ((u8 *)&g.d_00679640)));
@@ -9142,78 +9142,78 @@ LAB_004b9295:
 #undef parley_other_civ
 #undef text_buffer
 #undef chat_missed_message_count_i32
-#undef local_8
+#undef listener
 
 /* 004b93a2 auto */
 #define chat_log_buffer (*(char * *)((u8 *)&g.d_0062d870))
 #define chat_log_capacity (*(int *)((u8 *)&g.d_0069b03c))
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl chat_log_append(iptr param_1)
+#define trim_len (*(uptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl chat_log_append(iptr line)
 
 {
-  int iVar1;
-  size_t sVar2;
-  size_t sVar3;
-  i32 uVar4;
+  int capacity;
+  size_t log_len;
+  size_t line_len;
+  i32 caret_pos;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = chat_log_capacity;
-  local_8 = 0;
-  sVar2 = _strlen(chat_log_buffer);
-  sVar3 = _strlen((char *)param_1);
-  if (iVar1 - (sVar2 + 1) < sVar3 + 1) {
-    local_8 = _strlen((char *)param_1);
+  capacity = chat_log_capacity;
+  trim_len = 0;
+  log_len = _strlen(chat_log_buffer);
+  line_len = _strlen((char *)line);
+  if (capacity - (log_len + 1) < line_len + 1) {
+    trim_len = _strlen((char *)line);
     do {
-      local_8++;
-      if ((chat_log_buffer[local_8] == '\r') || (chat_log_buffer[local_8] == '\n')) break;
-    } while (chat_log_buffer[local_8] != '\0');
-    if (chat_log_buffer[local_8] != '\0') {
-      for (; (chat_log_buffer[local_8] == '\r' || (chat_log_buffer[local_8] == '\n'));
-          local_8 = local_8 + 1) {
+      trim_len++;
+      if ((chat_log_buffer[trim_len] == '\r') || (chat_log_buffer[trim_len] == '\n')) break;
+    } while (chat_log_buffer[trim_len] != '\0');
+    if (chat_log_buffer[trim_len] != '\0') {
+      for (; (chat_log_buffer[trim_len] == '\r' || (chat_log_buffer[trim_len] == '\n'));
+          trim_len = trim_len + 1) {
       }
     }
   }
-  crt_strcpy(chat_log_buffer,chat_log_buffer + local_8);
-  crt_strcat(chat_log_buffer,param_1);
+  crt_strcpy(chat_log_buffer,chat_log_buffer + trim_len);
+  crt_strcat(chat_log_buffer,line);
   ctrl_set_text(chat_log_edit,(iptr)chat_log_buffer);
   ctrl_set_text(parley_chat_log_edit,(iptr)chat_log_buffer);
-  uVar4 = edit_get_text_end(chat_log_edit);
-  edit_set_caret(chat_log_edit,uVar4);
-  uVar4 = edit_get_text_end(chat_log_edit);
-  edit_set_caret(parley_chat_log_edit,uVar4);
+  caret_pos = edit_get_text_end(chat_log_edit);
+  edit_set_caret(chat_log_edit,caret_pos);
+  caret_pos = edit_get_text_end(chat_log_edit);
+  edit_set_caret(parley_chat_log_edit,caret_pos);
   return;
 }
 #undef chat_log_buffer
 #undef chat_log_capacity
-#undef local_8
+#undef trim_len
 
 /* 004b9504 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 void __cdecl chat_append_sender_name(int civ)
 
 {
-  i32 uVar1;
+  i32 name_text;
   
   if (civ == 0) {
-    uVar1 = label_string(*(i32 *)(label_string_ids + 0xb64));
-    crt_strcat(&text_buffer,uVar1);
+    name_text = label_string(*(i32 *)(label_string_ids + 0xb64));
+    crt_strcat(&text_buffer,name_text);
   }
   else {
-    uVar1 = civ_leader_title(civ);
-    crt_strcat(&text_buffer,uVar1);
+    name_text = civ_leader_title(civ);
+    crt_strcat(&text_buffer,name_text);
     text_append_space();
-    uVar1 = civ_leader_name(civ);
-    crt_strcat(&text_buffer,uVar1);
+    name_text = civ_leader_name(civ);
+    crt_strcat(&text_buffer,name_text);
   }
   return;
 }
 #undef text_buffer
 
 /* 004b957e auto */
-void __cdecl parley_wnd_on_key(int param_1)
+void __cdecl parley_wnd_on_key(int key)
 
 {
-  if (param_1 == 0xd2) {
+  if (key == 0xd2) {
     diplo_wnd_escape_close(0);
   }
   return;
@@ -9243,19 +9243,19 @@ void __cdecl chat_clear_button_on_click(void)
 #undef chat_log_capacity
 
 /* 004b9635 auto */
-i32 __cdecl parley_edit_escape_filter(i32 param_1,int param_2)
+i32 __cdecl parley_edit_escape_filter(i32 control,int key)
 
 {
-  i32 uVar1;
+  i32 result;
   
-  if ((param_2 == 0x1b) || (param_2 == 0xd2)) {
+  if ((key == 0x1b) || (key == 0xd2)) {
     diplo_wnd_escape_close(0);
-    uVar1 = 0;
+    result = 0;
   }
   else {
-    uVar1 = 1;
+    result = 1;
   }
-  return uVar1;
+  return result;
 }
 
 /* 004b968a auto */
@@ -9264,63 +9264,63 @@ i32 __cdecl parley_edit_escape_filter(i32 param_1,int param_2)
 #define chat_remain_anonymous (*(int *)((u8 *)&g.d_0068aedc))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_1c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
+#define relay_sender (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define sender (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define count (*(int *)(frame_ + FRAME_OFF(16)))
 #define civ (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-i32 __cdecl chat_input_on_key(i32 param_1,int param_2)
+#define wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
+i32 __cdecl chat_input_on_key(i32 control,int key)
 
 {
-  iptr iVar1;
-  size_t sVar1;
-  i32 uVar2;
+  iptr child_wnd;
+  size_t len;
+  i32 label;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    wnd2 = child_wnd - 0x48;
   }
-  if (param_2 < 0x2b5) {
-    if (0x2af < param_2) {
-      chat_insert_macro_text(*(i32 *)(local_8 + 0x298),param_2);
+  if (key < 0x2b5) {
+    if (0x2af < key) {
+      chat_insert_macro_text(*(i32 *)(wnd2 + 0x298),key);
       return 0;
     }
-    if (param_2 == 0xd0) {
-      ctrl_get_text(*(ControlTextView **)(local_8 + 0x298),(iptr)chat_input_buffer);
-      sVar1 = _strlen(chat_input_buffer);
-      if (sVar1 == 0) {
+    if (key == 0xd0) {
+      ctrl_get_text(*(ControlTextView **)(wnd2 + 0x298),(iptr)chat_input_buffer);
+      len = _strlen(chat_input_buffer);
+      if (len == 0) {
         return 0;
       }
       ctrl_get_text(chat_log_edit,(iptr)chat_log_buffer);
       text_clear();
-      sVar1 = _strlen(chat_log_buffer);
-      if (sVar1 != 0) {
+      len = _strlen(chat_log_buffer);
+      if (len != 0) {
         crt_strcat(&text_buffer,&chat_send_newline_str);
       }
-      uVar2 = label_string(*(i32 *)(label_string_ids + 0xb68));
-      crt_strcat(&text_buffer,uVar2);
+      label = label_string(*(i32 *)(label_string_ids + 0xb68));
+      crt_strcat(&text_buffer,label);
       text_append_space();
-      if (*(int *)(local_8 + 0x1ec) == 4) {
-        local_10 = 0;
+      if (*(int *)(wnd2 + 0x1ec) == 4) {
+        count = 0;
         for (civ = 1; civ < 8; civ++) {
           if (*(int *)(&chat_send_to_civs + civ * 4) != 0) {
-            if (local_10 != 0) {
+            if (count != 0) {
               crt_strcat(&text_buffer,&chat_send_recipient_sep_str);
             }
             chat_append_sender_name(civ);
-            local_10++;
+            count++;
           }
         }
       }
       else {
-        chat_append_sender_name(*(i32 *)(local_8 + 0x118));
-        local_10 = 1;
+        chat_append_sender_name(*(i32 *)(wnd2 + 0x118));
+        count = 1;
       }
-      if (local_10 == 0) {
+      if (count == 0) {
         return 0;
       }
       crt_strcat(&text_buffer,&chat_send_year_open_str);
@@ -9328,33 +9328,33 @@ i32 __cdecl chat_input_on_key(i32 param_1,int param_2)
       crt_strcat(&text_buffer,&chat_send_year_close_str);
       crt_strcat(&text_buffer,chat_input_buffer);
       chat_log_append(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (*(int *)(local_8 + 0x1ec) == 4) {
+      if (*(int *)(wnd2 + 0x1ec) == 4) {
         for (civ = 1; civ < 8; civ++) {
           if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) &&
               (human_civ != civ)) && (*(int *)(&chat_send_to_civs + civ * 4) != 0)) {
             if (chat_remain_anonymous == 0) {
-              local_18 = human_civ;
+              sender = human_civ;
             }
             else {
-              local_18 = 0;
+              sender = 0;
             }
             net_send_message(0x68,*(i32 *)
                                      (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),
-                               local_18,civ,0,0,0,0,(iptr)chat_input_buffer,0);
-            for (local_10 = 1; local_10 < 8; local_10++) {
-              if ((((1 << ((byte)local_10 & 0x1f) & (uint)game.human_players) != 0) &&
-                  (human_civ != local_10)) &&
-                 ((local_10 != civ &&
-                  ((*(byte *)(local_10 * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)))) {
+                               sender,civ,0,0,0,0,(iptr)chat_input_buffer,0);
+            for (count = 1; count < 8; count++) {
+              if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
+                  (human_civ != count)) &&
+                 ((count != civ &&
+                  ((*(byte *)(count * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)))) {
                 if (chat_remain_anonymous == 0) {
-                  local_1c = human_civ;
+                  relay_sender = human_civ;
                 }
                 else {
-                  local_1c = 0;
+                  relay_sender = 0;
                 }
                 net_send_message(0x68,*(i32 *)
                                          (&net_player_slots +
-                                         *(int *)(&net_civ_slots + local_10 * 4) * 0x54),local_1c,
+                                         *(int *)(&net_civ_slots + count * 4) * 0x54),relay_sender,
                                    civ,1,0,0,0,(iptr)chat_input_buffer,0);
               }
             }
@@ -9364,26 +9364,26 @@ i32 __cdecl chat_input_on_key(i32 param_1,int param_2)
       else {
         net_send_message(0x68,*(i32 *)
                                  (&net_player_slots +
-                                 *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                           human_civ,*(iptr *)(local_8 + 0x118),0,0,0,0,(iptr)chat_input_buffer,0);
-        for (local_10 = 1; local_10 < 8; local_10++) {
-          if ((((1 << ((byte)local_10 & 0x1f) & (uint)game.human_players) != 0) &&
-              (human_civ != local_10)) &&
-             ((*(int *)(local_8 + 0x118) != local_10 &&
-              ((*(byte *)(local_10 * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)))) {
+                                 *(int *)(&net_civ_slots + *(int *)(wnd2 + 0x118) * 4) * 0x54),
+                           human_civ,*(iptr *)(wnd2 + 0x118),0,0,0,0,(iptr)chat_input_buffer,0);
+        for (count = 1; count < 8; count++) {
+          if ((((1 << ((byte)count & 0x1f) & (uint)game.human_players) != 0) &&
+              (human_civ != count)) &&
+             ((*(int *)(wnd2 + 0x118) != count &&
+              ((*(byte *)(count * 0x594 + ADDR(0x64c6c3, ((u8 *)&civs + 35)) + human_civ * 4) & 1) != 0)))) {
             net_send_message(0x68,*(i32 *)
-                                     (&net_player_slots + *(int *)(&net_civ_slots + local_10 * 4) * 0x54)
-                               ,human_civ,*(iptr *)(local_8 + 0x118),1,0,0,0,(iptr)chat_input_buffer,
+                                     (&net_player_slots + *(int *)(&net_civ_slots + count * 4) * 0x54)
+                               ,human_civ,*(iptr *)(wnd2 + 0x118),1,0,0,0,(iptr)chat_input_buffer,
                                0);
           }
         }
       }
       *chat_input_buffer = '\0';
-      ctrl_set_text(*(ControlTextView **)(local_8 + 0x298),(iptr)chat_input_buffer);
-      ctrl_set_focus(*(ControlFocusView **)(local_8 + 0x298));
+      ctrl_set_text(*(ControlTextView **)(wnd2 + 0x298),(iptr)chat_input_buffer);
+      ctrl_set_focus(*(ControlFocusView **)(wnd2 + 0x298));
       return 0;
     }
-    if (param_2 == 0xd2) {
+    if (key == 0xd2) {
       diplo_wnd_escape_close(0);
       return 0;
     }
@@ -9395,11 +9395,11 @@ i32 __cdecl chat_input_on_key(i32 param_1,int param_2)
 #undef chat_remain_anonymous
 #undef human_civ
 #undef text_buffer
-#undef local_1c
-#undef local_18
-#undef local_10
+#undef relay_sender
+#undef sender
+#undef count
 #undef civ
-#undef local_8
+#undef wnd2
 
 /* 004db690 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -9407,211 +9407,211 @@ i32 __cdecl chat_input_on_key(i32 param_1,int param_2)
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
 #define parley_offer_left_count_i32 (*(i32 *)((u8 *)&g.d_0068abd0))
 #define parley_offer_right_count_i32 (*(i32 *)((u8 *)&g.d_0068abd4))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+#define total_size (*(uint *)(frame_ + FRAME_OFF(16)))
+#define right_size (*(int *)(frame_ + FRAME_OFF(20)))
+#define left_size (*(int *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 * __thiscall parley_send_offer(ParleyOfferBuffer *this,int param_1)
+i32 * __thiscall parley_send_offer(ParleyOfferBuffer *this,int mode)
 
 {
-  i32 uVar1;
-  i32 *puVar2;
-  int iVar3;
+  i32 offer_kind;
+  i32 *msg;
+  int left_items;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar1 = *(i32 *)(&parley_offer_kinds + param_1 * 4);
+  offer_kind = *(i32 *)(&parley_offer_kinds + mode * 4);
   parley_offer_left_count_i32 = 0;
   parley_offer_right_count_i32 = 0;
-  local_c = *(int *)(&parley_item_header_sizes + this->offer_type_right * 4);
+  right_size = *(int *)(&parley_item_header_sizes + this->offer_type_right * 4);
   switch(this->offer_type_right) {
   case 8:
   case 0xc:
-    for (local_1c = 0; local_1c < parley_list_count_right; local_1c++) {
-      if (*(int *)(&parley_list_selected_right + local_1c * 4) == 1) {
+    for (i = 0; i < parley_list_count_right; i++) {
+      if (*(int *)(&parley_list_selected_right + i * 4) == 1) {
         parley_offer_right_count_i32++;
       }
     }
-    local_c = this->selected_count_right * 4 + local_c;
+    right_size = this->selected_count_right * 4 + right_size;
     break;
   case 10:
   case 0x11:
-    for (local_1c = 0; local_1c < parley_list_count_right; local_1c++) {
-      if (*(int *)(&parley_list_selected_right + local_1c * 4) == 1) {
+    for (i = 0; i < parley_list_count_right; i++) {
+      if (*(int *)(&parley_list_selected_right + i * 4) == 1) {
         parley_offer_right_count_i32++;
       }
     }
-    local_c = this->selected_count_right * 4 + local_c;
+    right_size = this->selected_count_right * 4 + right_size;
     if (this->offer_type_right == 0x11) {
-      local_c = this->selected_count_right * 4 + local_c;
+      right_size = this->selected_count_right * 4 + right_size;
     }
   }
-  local_10 = local_c + 0x20;
-  if (param_1 == 0xe) {
-    local_8 = *(int *)(&parley_item_header_sizes + this->offer_type_left * 4);
+  total_size = right_size + 0x20;
+  if (mode == 0xe) {
+    left_size = *(int *)(&parley_item_header_sizes + this->offer_type_left * 4);
     switch(this->offer_type_left) {
     case 8:
     case 0xc:
-      for (local_1c = 0; local_1c < parley_list_counts; local_1c++) {
-        if (*(int *)(&parley_list_selected + local_1c * 4) == 1) {
+      for (i = 0; i < parley_list_counts; i++) {
+        if (*(int *)(&parley_list_selected + i * 4) == 1) {
           parley_offer_left_count_i32++;
         }
       }
-      local_8 = this->selected_count_left * 4 + local_8;
+      left_size = this->selected_count_left * 4 + left_size;
       break;
     case 10:
     case 0x11:
-      for (local_1c = 0; local_1c < parley_list_counts; local_1c++) {
-        if (*(int *)(&parley_list_selected + local_1c * 4) == 1) {
+      for (i = 0; i < parley_list_counts; i++) {
+        if (*(int *)(&parley_list_selected + i * 4) == 1) {
           parley_offer_left_count_i32++;
         }
       }
-      local_8 = this->selected_count_left * 4 + local_8;
+      left_size = this->selected_count_left * 4 + left_size;
       if (this->offer_type_left == 0x11) {
-        local_8 = this->selected_count_left * 4 + local_8;
+        left_size = this->selected_count_left * 4 + left_size;
       }
     }
-    local_10 += local_8;
+    total_size += left_size;
   }
-  puVar2 = operator_new(local_10);
-  if (puVar2 == (i32 *)0x0) {
+  msg = operator_new(total_size);
+  if (msg == (i32 *)0x0) {
     dbg_log(ADDR(0x62e6ec, ((u8 *)&g.d_0062e6ec)));
-    puVar2 = (i32 *)0x0;
+    msg = (i32 *)0x0;
   }
   else {
-    *puVar2 = 0x66606660;
-    puVar2[1] = 0x82;
-    puVar2[2] = local_10;
-    puVar2[4] = this->parley_kind;
-    puVar2[5] = human_civ;
-    puVar2[6] = this->civ_id;
-    puVar2[7] = uVar1;
-    if (local_10 + (int)puVar2 < (uint)(local_c + (int)(puVar2 + 8))) {
+    *msg = 0x66606660;
+    msg[1] = 0x82;
+    msg[2] = total_size;
+    msg[4] = this->parley_kind;
+    msg[5] = human_civ;
+    msg[6] = this->civ_id;
+    msg[7] = offer_kind;
+    if (total_size + (int)msg < (uint)(right_size + (int)(msg + 8))) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e764, ((u8 *)&g.d_0062e764)),ADDR(0x62e738, ((u8 *)&g.d_0062e738)),0x9f);
     }
-    parley_pack_offer_items(this,(iptr)(puVar2 + 8),this->offer_type_right,local_c,1);
-    if (param_1 == 0xe) {
-      iVar3 = (int)puVar2 + local_c + 0x20;
-      if (local_8 + iVar3 != local_10 + (int)puVar2) {
+    parley_pack_offer_items(this,(iptr)(msg + 8),this->offer_type_right,right_size,1);
+    if (mode == 0xe) {
+      left_items = (int)msg + right_size + 0x20;
+      if (left_size + left_items != total_size + (int)msg) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e7cc, ((u8 *)&g.d_0062e7cc)),ADDR(0x62e7a0, ((u8 *)&g.d_0062e7a0)),0xa4);
       }
-      parley_pack_offer_items(this,iVar3,this->offer_type_left,local_8,0);
+      parley_pack_offer_items(this,left_items,this->offer_type_left,left_size,0);
     }
     net_send_message(0x82,*(i32 *)
                              (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0
-                       ,0,0,0,0,0,(iptr)puVar2);
+                       ,0,0,0,0,0,(iptr)msg);
   }
-  return puVar2;
+  return msg;
 }
 #undef human_civ
 #undef parley_list_counts
 #undef parley_other_civ
 #undef parley_offer_left_count_i32
 #undef parley_offer_right_count_i32
-#undef local_1c
-#undef local_10
-#undef local_c
-#undef local_8
+#undef i
+#undef total_size
+#undef right_size
+#undef left_size
 
 /* 004dbab4 auto */
 #define parley_list_counts (*(i32 *)((u8 *)&g.d_0067ab90))
-#define local_34 (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(i32 * *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(20)))
+#define item_ptr2 (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define packed_count (*(int *)(frame_ + FRAME_OFF(8)))
+#define i (*(int *)(frame_ + FRAME_OFF(12)))
+#define pair_ptr (*(i32 * *)(frame_ + FRAME_OFF(16)))
+#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(20)))
 void __thiscall
 parley_pack_offer_items
-          (ParleyOfferBuffer *this,iptr param_1,i32 param_2,i32 param_3,iptr param_4)
+          (ParleyOfferBuffer *this,iptr dest,i32 item_type,i32 item_size,iptr side)
 
 {
-  int iVar1;
+  int gold;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  switch(param_2) {
+  switch(item_type) {
   case 5:
   case 6:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(u32 *)(param_1 + 8) = this->field_218;
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(u32 *)(dest + 8) = this->field_218;
     break;
   case 8:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(i32 *)(param_1 + 8) = *(i32 *)(this->pad_21c + param_4 * 4 + 0x1020c);
-    local_34 = (i32 *)(param_1 + 0xc);
-    local_30 = 0;
-    for (local_2c = 0; local_2c < (int)(&parley_list_counts)[param_4]; local_2c++) {
-      if (*(int *)(&parley_list_selected + local_2c * 4 + param_4 * 0x2004) == 1) {
-        *local_34 = *(i32 *)(this->pad_21c + param_4 * 0x2004 + local_2c * 4 + 0x1d4);
-        local_34++;
-        local_30++;
-        if (*(int *)(this->pad_21c + param_4 * 4 + 0x1020c) == local_30) {
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(i32 *)(dest + 8) = *(i32 *)(this->pad_21c + side * 4 + 0x1020c);
+    item_ptr2 = (i32 *)(dest + 0xc);
+    packed_count = 0;
+    for (i = 0; i < (int)(&parley_list_counts)[side]; i++) {
+      if (*(int *)(&parley_list_selected + i * 4 + side * 0x2004) == 1) {
+        *item_ptr2 = *(i32 *)(this->pad_21c + side * 0x2004 + i * 4 + 0x1d4);
+        item_ptr2++;
+        packed_count++;
+        if (*(int *)(this->pad_21c + side * 4 + 0x1020c) == packed_count) {
           return;
         }
       }
     }
     break;
   case 9:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    ctrl_get_text(*(ControlTextView **)(&parley_gold_edits + param_4 * 4),(iptr)local_24);
-    iVar1 = _atoi(local_24);
-    *(int *)(param_1 + 8) = iVar1;
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    ctrl_get_text(*(ControlTextView **)(&parley_gold_edits + side * 4),(iptr)gold_text);
+    gold = _atoi(gold_text);
+    *(int *)(dest + 8) = gold;
     break;
   case 10:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(i32 *)(param_1 + 8) = *(i32 *)(this->pad_21c + param_4 * 4 + 0x1020c);
-    local_28 = (i32 *)(param_1 + 0xc);
-    local_30 = 0;
-    for (local_2c = 0; local_2c < (int)(&parley_list_counts)[param_4]; local_2c++) {
-      if (*(int *)(&parley_list_selected + local_2c * 4 + param_4 * 0x2004) == 1) {
-        *local_28 = *(i32 *)(this->pad_21c + param_4 * 0x2004 + local_2c * 4 + 0x41dc);
-        local_28++;
-        local_30++;
-        if (*(int *)(this->pad_21c + param_4 * 4 + 0x1020c) == local_30) {
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(i32 *)(dest + 8) = *(i32 *)(this->pad_21c + side * 4 + 0x1020c);
+    pair_ptr = (i32 *)(dest + 0xc);
+    packed_count = 0;
+    for (i = 0; i < (int)(&parley_list_counts)[side]; i++) {
+      if (*(int *)(&parley_list_selected + i * 4 + side * 0x2004) == 1) {
+        *pair_ptr = *(i32 *)(this->pad_21c + side * 0x2004 + i * 4 + 0x41dc);
+        pair_ptr++;
+        packed_count++;
+        if (*(int *)(this->pad_21c + side * 4 + 0x1020c) == packed_count) {
           return;
         }
       }
     }
     break;
   case 0xc:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(i32 *)(param_1 + 8) = *(i32 *)(this->pad_21c + param_4 * 4 + 0x1020c);
-    local_34 = (i32 *)(param_1 + 0xc);
-    local_30 = 0;
-    for (local_2c = 0; local_2c < (int)(&parley_list_counts)[param_4]; local_2c++) {
-      if (*(int *)(&parley_list_selected + local_2c * 4 + param_4 * 0x2004) == 1) {
-        *local_34 = *(i32 *)(this->pad_21c + param_4 * 0x2004 + local_2c * 4 + 0x1d4);
-        local_34++;
-        local_30++;
-        if (*(int *)(this->pad_21c + param_4 * 4 + 0x1020c) == local_30) {
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(i32 *)(dest + 8) = *(i32 *)(this->pad_21c + side * 4 + 0x1020c);
+    item_ptr2 = (i32 *)(dest + 0xc);
+    packed_count = 0;
+    for (i = 0; i < (int)(&parley_list_counts)[side]; i++) {
+      if (*(int *)(&parley_list_selected + i * 4 + side * 0x2004) == 1) {
+        *item_ptr2 = *(i32 *)(this->pad_21c + side * 0x2004 + i * 4 + 0x1d4);
+        item_ptr2++;
+        packed_count++;
+        if (*(int *)(this->pad_21c + side * 4 + 0x1020c) == packed_count) {
           return;
         }
       }
     }
     break;
   case 0xd:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(i32 *)(param_1 + 8) = *(i32 *)(this->pad_21c + param_4 * 4 + 8);
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(i32 *)(dest + 8) = *(i32 *)(this->pad_21c + side * 4 + 8);
     break;
   case 0x11:
-    *(i32 *)param_1 = param_2;
-    *(i32 *)(param_1 + 4) = param_3;
-    *(i32 *)(param_1 + 8) = *(i32 *)(this->pad_21c + param_4 * 4 + 0x1020c);
-    local_28 = (i32 *)(param_1 + 0xc);
-    local_30 = 0;
-    for (local_2c = 0; local_2c < (int)(&parley_list_counts)[param_4]; local_2c++) {
-      if (*(int *)(&parley_list_selected + local_2c * 4 + param_4 * 0x2004) == 1) {
-        *local_28 = *(i32 *)(this->pad_21c + param_4 * 0x2004 + local_2c * 4 + 0x41dc);
-        local_28[1] = *(i32 *)(this->pad_21c + param_4 * 0x2004 + local_2c * 4 + 0xc1ec);
-        local_28 += 2;
-        local_30++;
-        if (*(int *)(this->pad_21c + param_4 * 4 + 0x1020c) == local_30) {
+    *(i32 *)dest = item_type;
+    *(i32 *)(dest + 4) = item_size;
+    *(i32 *)(dest + 8) = *(i32 *)(this->pad_21c + side * 4 + 0x1020c);
+    pair_ptr = (i32 *)(dest + 0xc);
+    packed_count = 0;
+    for (i = 0; i < (int)(&parley_list_counts)[side]; i++) {
+      if (*(int *)(&parley_list_selected + i * 4 + side * 0x2004) == 1) {
+        *pair_ptr = *(i32 *)(this->pad_21c + side * 0x2004 + i * 4 + 0x41dc);
+        pair_ptr[1] = *(i32 *)(this->pad_21c + side * 0x2004 + i * 4 + 0xc1ec);
+        pair_ptr += 2;
+        packed_count++;
+        if (*(int *)(this->pad_21c + side * 4 + 0x1020c) == packed_count) {
           return;
         }
       }
@@ -9620,255 +9620,255 @@ parley_pack_offer_items
   return;
 }
 #undef parley_list_counts
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
+#undef item_ptr2
+#undef packed_count
+#undef i
+#undef pair_ptr
+#undef gold_text
 
 /* 004dbee6 auto */
-void __thiscall parley_build_description(WindowObjectView *this,iptr param_1,int param_2)
+void __thiscall parley_build_description(WindowObjectView *this,iptr offer,int received)
 
 {
-  int iVar1;
-  int *piVar2;
-  iptr iVar2;
-  i32 *puVar3;
-  size_t sVar4;
-  iptr iVar5;
+  int maps_kind;
+  int *first_items;
+  iptr second_offer;
+  i32 *second_items;
+  size_t desc_len;
+  iptr label;
   
-  if (param_1 != 0) {
-    piVar2 = (int *)(param_1 + 0x20);
-    iVar2 = *(int *)(param_1 + 0x24) + param_1;
-    puVar3 = (i32 *)(iVar2 + 0x20);
+  if (offer != 0) {
+    first_items = (int *)(offer + 0x20);
+    second_offer = *(int *)(offer + 0x24) + offer;
+    second_items = (i32 *)(second_offer + 0x20);
     str_clear(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-    sVar4 = _strlen(&parley_description);
-    if (sVar4 != 0) {
+    desc_len = _strlen(&parley_description);
+    if (desc_len != 0) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e834, ((u8 *)&g.d_0062e834)),ADDR(0x62e808, ((u8 *)&g.d_0062e808)),0x120);
     }
-    if (param_2 == 0) {
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc70));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+    if (received == 0) {
+      label = label_string(*(i32 *)(label_string_ids + 0xc70));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_transmitted_crlf_str);
     }
-    sVar4 = _strlen(&parley_description);
-    if (0x7ff < sVar4) {
+    desc_len = _strlen(&parley_description);
+    if (0x7ff < desc_len) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e888, ((u8 *)&g.d_0062e888)),ADDR(0x62e85c, ((u8 *)&g.d_0062e85c)),0x126);
     }
-    switch(*(i32 *)(param_1 + 0x10)) {
+    switch(*(i32 *)(offer + 0x10)) {
     case 6:
-      parley_describe_treaty(this,*(i32 *)(param_1 + 0x28),0);
+      parley_describe_treaty(this,*(i32 *)(offer + 0x28),0);
       break;
     case 7:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc98));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc98));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_adv_crlf_str);
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc9c));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc9c));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_adv_head_crlf_str);
-      parley_describe_advances((iptr)piVar2);
+      parley_describe_advances((iptr)first_items);
       break;
     case 8:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc98));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc98));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_gold_crlf_str);
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xca4));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xca4));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_gold_head_crlf_str);
       str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e8e8, ((u8 *)&g.d_0062e8e8)));
-      parley_describe_gold(*(i32 *)(param_1 + 0x28));
+      parley_describe_gold(*(i32 *)(offer + 0x28));
       break;
     case 9:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc98));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc98));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_units_crlf_str);
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xca0));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xca0));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_units_head_crlf_str);
-      parley_describe_units((iptr)piVar2);
+      parley_describe_units((iptr)first_items);
       break;
     case 10:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc98));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc98));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_cities_crlf_str);
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xca8));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xca8));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_cities_head_crlf_str);
-      parley_describe_cities((iptr)piVar2);
+      parley_describe_cities((iptr)first_items);
       break;
     case 0xb:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc98));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc98));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_gift_maps_crlf_str);
-      parley_describe_maps(*(i32 *)(param_1 + 0x28),0);
+      parley_describe_maps(*(i32 *)(offer + 0x28),0);
       break;
     case 0xc:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc84));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc84));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_war_offer_crlf_str);
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc94));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc94));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_war_head_crlf_str);
-      parley_describe_war_targets((iptr)piVar2);
+      parley_describe_war_targets((iptr)first_items);
       break;
     case 0xd:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xc84));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xc84));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_maps_offer_crlf_str);
-      iVar1 = *(int *)(param_1 + 0x28);
-      if (iVar1 == 0) {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xc88));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      maps_kind = *(int *)(offer + 0x28);
+      if (maps_kind == 0) {
+        label = label_string(*(i32 *)(label_string_ids + 0xc88));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
-      else if (iVar1 == 1) {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xc8c));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      else if (maps_kind == 1) {
+        label = label_string(*(i32 *)(label_string_ids + 0xc8c));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
-      else if (iVar1 == 2) {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xc90));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      else if (maps_kind == 2) {
+        label = label_string(*(i32 *)(label_string_ids + 0xc90));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
       crt_strcat(&parley_description,&parley_desc_maps_kind_crlf_str);
       break;
     case 0xe:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xcb4));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xcb4));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       crt_strcat(&parley_description,&parley_desc_barter_crlf_str);
-      switch(*puVar3) {
+      switch(*second_items) {
       case 5:
       case 6:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xd1c));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xd1c));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_treaty_crlf_str);
-        parley_describe_treaty(this,*(i32 *)(iVar2 + 0x28),1);
+        parley_describe_treaty(this,*(i32 *)(second_offer + 0x28),1);
         break;
       case 8:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcb8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcb8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_adv_crlf_str);
-        parley_describe_advances((iptr)puVar3);
+        parley_describe_advances((iptr)second_items);
         break;
       case 9:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcbc));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcbc));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_gold_crlf_str);
         str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e920, ((u8 *)&g.d_0062e920)));
-        parley_describe_gold(*(i32 *)(iVar2 + 0x28));
+        parley_describe_gold(*(i32 *)(second_offer + 0x28));
         break;
       case 10:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcc0));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcc0));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_units_crlf_str);
-        parley_describe_units((iptr)puVar3);
+        parley_describe_units((iptr)second_items);
         break;
       case 0xc:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xccc));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xccc));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_war_crlf_str);
-        parley_describe_war_targets((iptr)puVar3);
+        parley_describe_war_targets((iptr)second_items);
         break;
       case 0xd:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcc8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcc8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_maps_crlf_str);
-        parley_describe_maps(*(i32 *)(iVar2 + 0x28),0);
+        parley_describe_maps(*(i32 *)(second_offer + 0x28),0);
         break;
       case 0x11:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcc4));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcc4));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_give_cities_crlf_str);
-        parley_describe_cities((iptr)puVar3);
+        parley_describe_cities((iptr)second_items);
       }
       crt_strcat(&parley_description,&parley_desc_barter_sep_crlf_str);
-      switch(*piVar2) {
+      switch(*first_items) {
       case 5:
       case 6:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xd20));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xd20));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_exch_for_treaty_crlf_str);
-        parley_describe_treaty(this,*(i32 *)(param_1 + 0x28),1);
+        parley_describe_treaty(this,*(i32 *)(offer + 0x28),1);
         break;
       case 8:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcd0));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcd0));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_want_adv_crlf_str);
-        parley_describe_advances((iptr)piVar2);
+        parley_describe_advances((iptr)first_items);
         break;
       case 9:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcd4));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcd4));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_want_gold_crlf_str);
         str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),ADDR(0x62e94c, ((u8 *)&g.d_0062e94c)));
-        parley_describe_gold(*(i32 *)(param_1 + 0x28));
+        parley_describe_gold(*(i32 *)(offer + 0x28));
         break;
       case 10:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcd8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcd8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_desc_want_units_crlf_str);
-        parley_describe_units((iptr)piVar2);
+        parley_describe_units((iptr)first_items);
         break;
       case 0xc:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xce4));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xce4));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_exch_for_war_targets_crlf_str);
-        parley_describe_war_targets((iptr)piVar2);
+        parley_describe_war_targets((iptr)first_items);
         break;
       case 0xd:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xce0));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xce0));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_exch_for_maps_crlf_str);
-        parley_describe_maps(*(i32 *)(param_1 + 0x28),1);
+        parley_describe_maps(*(i32 *)(offer + 0x28),1);
         break;
       case 0x11:
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcdc));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcdc));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         crt_strcat(&parley_description,&parley_exch_for_cities_crlf_str);
-        parley_describe_cities((iptr)piVar2);
+        parley_describe_cities((iptr)first_items);
       }
       break;
     case 0xf:
-      iVar5 = label_string(*(i32 *)(label_string_ids + 0xcac));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      label = label_string(*(i32 *)(label_string_ids + 0xcac));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-      if (*piVar2 == 0xc) {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xd18));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      if (*first_items == 0xc) {
+        label = label_string(*(i32 *)(label_string_ids + 0xd18));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
-      else if ((*piVar2 == 5) || (*piVar2 == 6)) {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xd14));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+      else if ((*first_items == 5) || (*first_items == 6)) {
+        label = label_string(*(i32 *)(label_string_ids + 0xd14));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
       else {
-        iVar5 = label_string(*(i32 *)(label_string_ids + 0xcb0));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar5);
+        label = label_string(*(i32 *)(label_string_ids + 0xcb0));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       }
       crt_strcat(&parley_description,&parley_desc_threat_crlf_str);
-      switch(*piVar2) {
+      switch(*first_items) {
       case 5:
       case 6:
-        parley_describe_treaty(this,*(i32 *)(param_1 + 0x28),1);
+        parley_describe_treaty(this,*(i32 *)(offer + 0x28),1);
         break;
       case 8:
-        parley_describe_advances((iptr)piVar2);
+        parley_describe_advances((iptr)first_items);
         break;
       case 9:
-        parley_describe_gold(*(i32 *)(param_1 + 0x28));
+        parley_describe_gold(*(i32 *)(offer + 0x28));
         break;
       case 10:
-        parley_describe_units((iptr)piVar2);
+        parley_describe_units((iptr)first_items);
         break;
       case 0xc:
-        parley_describe_war_targets((iptr)piVar2);
+        parley_describe_war_targets((iptr)first_items);
         break;
       case 0xd:
-        parley_describe_maps(*(i32 *)(param_1 + 0x28),1);
+        parley_describe_maps(*(i32 *)(offer + 0x28),1);
         break;
       case 0x11:
-        parley_describe_cities((iptr)piVar2);
+        parley_describe_cities((iptr)first_items);
       }
     }
-    sVar4 = _strlen(&parley_description);
-    if (0x7ff < sVar4) {
+    desc_len = _strlen(&parley_description);
+    if (0x7ff < desc_len) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x62e998, ((u8 *)&g.d_0062e998)),ADDR(0x62e96c, ((u8 *)&g.d_0062e96c)),0x1f1);
     }
   }
@@ -9876,155 +9876,155 @@ void __thiscall parley_build_description(WindowObjectView *this,iptr param_1,int
 }
 
 /* 004dcafa auto */
-#define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(int * *)(frame_ + FRAME_OFF(8)))
-void __cdecl parley_describe_advances(iptr param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
+#define adv_ptr (*(int * *)(frame_ + FRAME_OFF(8)))
+void __cdecl parley_describe_advances(iptr items)
 
 {
-  int iVar1;
-  iptr iVar2;
+  int count;
+  iptr adv_name;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_1 + 8);
-  local_8 = (int *)(param_1 + 0xc);
-  for (local_10 = 0; local_10 < iVar1; local_10++) {
-    iVar2 = label_string(advances[*local_8].name);
-    str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar2);
-    if (1 < iVar1) {
-      if (local_10 < iVar1 - 2) {
+  count = *(int *)(items + 8);
+  adv_ptr = (int *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    adv_name = label_string(advances[*adv_ptr].name);
+    str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),adv_name);
+    if (1 < count) {
+      if (i < count - 2) {
         crt_strcat(&parley_description,&parley_advances_comma_str);
       }
-      else if (iVar1 - 2 == local_10) {
+      else if (count - 2 == i) {
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-        iVar2 = label_string(*(i32 *)(label_string_ids + 0xce8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar2);
+        adv_name = label_string(*(i32 *)(label_string_ids + 0xce8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),adv_name);
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
       }
       else {
         crt_strcat(&parley_description,&parley_advances_period_str);
       }
     }
-    local_8++;
+    adv_ptr++;
   }
   crt_strcat(&parley_description,&parley_advances_crlf_str);
   return;
 }
-#undef local_10
-#undef local_8
+#undef i
+#undef adv_ptr
 
 /* 004dcc0c auto */
-#define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(4)))
-void __cdecl parley_describe_gold(int param_1)
+#define gold_text (*(char (*)[16])(frame_ + FRAME_OFF(4)))
+void __cdecl parley_describe_gold(int gold)
 
 {
-  i32 uVar1;
+  i32 label;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  __itoa(param_1,local_14,10);
-  crt_strcat(&parley_description,local_14);
+  __itoa(gold,gold_text,10);
+  crt_strcat(&parley_description,gold_text);
   str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-  uVar1 = label_string(*(i32 *)(label_string_ids + 0xcec));
-  crt_strcat(&parley_description,uVar1);
+  label = label_string(*(i32 *)(label_string_ids + 0xcec));
+  crt_strcat(&parley_description,label);
   crt_strcat(&parley_description,&parley_gold_crlf_str);
   return;
 }
-#undef local_14
+#undef gold_text
 
 /* 004dcc83 auto */
-#define aiStack_120 (*(int (*)[62])(frame_ + FRAME_OFF(0)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(248)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(252)))
+#define type_counts (*(int (*)[62])(frame_ + FRAME_OFF(0)))
+#define listed (*(int *)(frame_ + FRAME_OFF(248)))
+#define unit_ids (*(iptr *)(frame_ + FRAME_OFF(252)))
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(256)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(260)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(264)))
-#define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(268)))
-void __cdecl parley_describe_units(iptr param_1)
+#define distinct_types (*(int *)(frame_ + FRAME_OFF(260)))
+#define unit_count (*(int *)(frame_ + FRAME_OFF(264)))
+#define count_text (*(char (*)[16])(frame_ + FRAME_OFF(268)))
+void __cdecl parley_describe_units(iptr items)
 
 {
   iptr unit;
-  iptr iVar2;
+  iptr label;
   i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-    aiStack_120[unit_type] = 0;
+    type_counts[unit_type] = 0;
   }
-  local_18 = *(int *)(param_1 + 8);
-  local_24 = param_1 + 0xc;
-  local_1c = 0;
-  for (unit_type = 0; unit_type < local_18; unit_type++) {
+  unit_count = *(int *)(items + 8);
+  unit_ids = items + 0xc;
+  distinct_types = 0;
+  for (unit_type = 0; unit_type < unit_count; unit_type++) {
     unit = parley_find_unit_by_id
-                      ((WindowObjectView *)&parley_wnd,*(i32 *)(local_24 + unit_type * 4));
+                      ((WindowObjectView *)&parley_wnd,*(i32 *)(unit_ids + unit_type * 4));
     if (-1 < unit) {
-      if (aiStack_120[units[unit].type] == 0) {
-        local_1c++;
+      if (type_counts[units[unit].type] == 0) {
+        distinct_types++;
       }
-      aiStack_120[units[unit].type] = aiStack_120[units[unit].type] + 1;
+      type_counts[units[unit].type] = type_counts[units[unit].type] + 1;
     }
   }
-  local_28 = 0;
+  listed = 0;
   for (unit_type = 0; unit_type < 0x3e; unit_type++) {
-    if (aiStack_120[unit_type] != 0) {
+    if (type_counts[unit_type] != 0) {
       str_append_string_id(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),unit_types[unit_type].name);
       crt_strcat(&parley_description,&parley_units_open_paren_str);
-      __itoa(aiStack_120[unit_type],local_14,10);
-      crt_strcat(&parley_description,local_14);
+      __itoa(type_counts[unit_type],count_text,10);
+      crt_strcat(&parley_description,count_text);
       crt_strcat(&parley_description,&parley_units_close_paren_str);
-      if (1 < local_18) {
-        if (local_28 < local_1c - 2) {
+      if (1 < unit_count) {
+        if (listed < distinct_types - 2) {
           crt_strcat(&parley_description,&parley_units_comma_str);
         }
-        else if (local_1c - 2 == local_28) {
+        else if (distinct_types - 2 == listed) {
           str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-          iVar2 = label_string(*(i32 *)(label_string_ids + 0xce8));
-          str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar2);
+          label = label_string(*(i32 *)(label_string_ids + 0xce8));
+          str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
           str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
         }
         else {
           crt_strcat(&parley_description,&parley_units_period_str);
         }
       }
-      local_28++;
+      listed++;
     }
   }
   crt_strcat(&parley_description,&parley_units_crlf_str);
   return;
 }
-#undef aiStack_120
-#undef local_28
-#undef local_24
+#undef type_counts
+#undef listed
+#undef unit_ids
 #undef unit_type
-#undef local_1c
-#undef local_18
-#undef local_14
+#undef distinct_types
+#undef unit_count
+#undef count_text
 
 /* 004dcea5 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(char (*)[16])(frame_ + FRAME_OFF(12)))
-void __cdecl parley_describe_cities(iptr param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+#define size_text (*(char (*)[16])(frame_ + FRAME_OFF(12)))
+void __cdecl parley_describe_cities(iptr items)
 
 {
-  int iVar1;
+  int count;
   int city;
-  iptr iVar3;
+  iptr label;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_1 + 8);
-  for (local_1c = 0; local_1c < iVar1; local_1c++) {
+  count = *(int *)(items + 8);
+  for (i = 0; i < count; i++) {
     city = parley_find_city_by_id
-                      ((WindowObjectView *)&parley_wnd,*(i32 *)(param_1 + 0xc + local_1c * 8));
+                      ((WindowObjectView *)&parley_wnd,*(i32 *)(items + 0xc + i * 8));
     str_append(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),(iptr)&cities[city].name);
     crt_strcat(&parley_description,&parley_cities_open_paren_str);
-    __itoa(*(int *)(param_1 + 0x10 + local_1c * 8),local_14,10);
-    crt_strcat(&parley_description,local_14);
+    __itoa(*(int *)(items + 0x10 + i * 8),size_text,10);
+    crt_strcat(&parley_description,size_text);
     crt_strcat(&parley_description,&parley_cities_close_paren_str);
-    if (1 < iVar1) {
-      if (local_1c < iVar1 - 2) {
+    if (1 < count) {
+      if (i < count - 2) {
         crt_strcat(&parley_description,&parley_cities_comma_str);
       }
-      else if (iVar1 - 2 == local_1c) {
+      else if (count - 2 == i) {
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-        iVar3 = label_string(*(i32 *)(label_string_ids + 0xce8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar3);
+        label = label_string(*(i32 *)(label_string_ids + 0xce8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
       }
       else {
@@ -10035,43 +10035,43 @@ void __cdecl parley_describe_cities(iptr param_1)
   crt_strcat(&parley_description,&parley_cities_crlf_str);
   return;
 }
-#undef local_1c
-#undef local_14
+#undef i
+#undef size_text
 
 /* 004dd016 auto */
-void __cdecl parley_describe_maps(int param_1,int param_2)
+void __cdecl parley_describe_maps(int map_kind,int exchange)
 
 {
-  iptr iVar1;
+  iptr label;
   
-  if (param_1 == 0) {
-    if (param_2 == 0) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xcf0));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+  if (map_kind == 0) {
+    if (exchange == 0) {
+      label = label_string(*(i32 *)(label_string_ids + 0xcf0));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
     else {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xcf4));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xcf4));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
   }
-  else if (param_1 == 1) {
-    if (param_2 == 0) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xcf8));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+  else if (map_kind == 1) {
+    if (exchange == 0) {
+      label = label_string(*(i32 *)(label_string_ids + 0xcf8));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
     else {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xcfc));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xcfc));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
   }
-  else if (param_1 == 2) {
-    if (param_2 == 0) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xd00));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+  else if (map_kind == 2) {
+    if (exchange == 0) {
+      label = label_string(*(i32 *)(label_string_ids + 0xd00));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
     else {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xd04));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xd04));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
   }
   crt_strcat(&parley_description,&parley_maps_crlf_str);
@@ -10079,159 +10079,159 @@ void __cdecl parley_describe_maps(int param_1,int param_2)
 }
 
 /* 004dd176 auto */
-#define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl parley_describe_war_targets(iptr param_1)
+#define civ_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+void __cdecl parley_describe_war_targets(iptr items)
 
 {
-  int iVar1;
-  iptr iVar2;
+  int count;
+  iptr text;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_1 + 8);
-  local_10 = (iptr *)(param_1 + 0xc);
-  for (local_c = 0; local_c < iVar1; local_c++) {
-    iVar2 = civ_name_plural(*local_10);
-    str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar2);
-    if (1 < iVar1) {
-      if (local_c < iVar1 - 2) {
+  count = *(int *)(items + 8);
+  civ_ptr = (iptr *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    text = civ_name_plural(*civ_ptr);
+    str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),text);
+    if (1 < count) {
+      if (i < count - 2) {
         crt_strcat(&parley_description,&parley_war_targets_comma_str);
       }
-      else if (iVar1 - 2 == local_c) {
+      else if (count - 2 == i) {
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
-        iVar2 = label_string(*(i32 *)(label_string_ids + 0xce8));
-        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar2);
+        text = label_string(*(i32 *)(label_string_ids + 0xce8));
+        str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),text);
         str_append_space(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)));
       }
       else {
         crt_strcat(&parley_description,&parley_war_targets_period_str);
       }
     }
-    local_10++;
+    civ_ptr++;
   }
   crt_strcat(&parley_description,&parley_war_targets_crlf_str);
   return;
 }
-#undef local_10
-#undef local_c
+#undef civ_ptr
+#undef i
 
 /* 004dd285 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define net_send_sequence (*(iptr *)((u8 *)&g.d_00628468))
-void __cdecl parley_execute_transaction(iptr param_1)
+void __cdecl parley_execute_transaction(iptr offer)
 
 {
-  i32 *puVar1;
-  iptr iVar4;
-  i32 *puVar2;
+  i32 *first_items;
+  iptr second_offer;
+  i32 *second_items;
   iptr civ;
   iptr civ2;
   
-  if (param_1 != 0) {
+  if (offer != 0) {
     dbg_logf(ADDR(0x62ea04, ((u8 *)&g.d_0062ea04)),net_send_sequence);
-    civ = *(iptr *)(param_1 + 0x14);
-    civ2 = *(iptr *)(param_1 + 0x18);
-    puVar1 = (i32 *)(param_1 + 0x20);
-    iVar4 = *(int *)(param_1 + 0x24) + param_1;
-    puVar2 = (i32 *)(iVar4 + 0x20);
-    switch(*(i32 *)(param_1 + 0x10)) {
+    civ = *(iptr *)(offer + 0x14);
+    civ2 = *(iptr *)(offer + 0x18);
+    first_items = (i32 *)(offer + 0x20);
+    second_offer = *(int *)(offer + 0x24) + offer;
+    second_items = (i32 *)(second_offer + 0x20);
+    switch(*(i32 *)(offer + 0x10)) {
     case 6:
-      parley_apply_treaty(*(i32 *)(param_1 + 0x28),civ,civ2);
+      parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
       break;
     case 7:
-      parley_transfer_advances(civ2,civ,(iptr)puVar1);
+      parley_transfer_advances(civ2,civ,(iptr)first_items);
       break;
     case 8:
-      parley_transfer_gold(civ2,civ,*(i32 *)(param_1 + 0x28));
+      parley_transfer_gold(civ2,civ,*(i32 *)(offer + 0x28));
       break;
     case 9:
-      parley_transfer_units(civ2,(iptr)puVar1);
+      parley_transfer_units(civ2,(iptr)first_items);
       break;
     case 10:
-      parley_transfer_cities(civ2,(iptr)puVar1);
+      parley_transfer_cities(civ2,(iptr)first_items);
       break;
     case 0xb:
-      parley_give_maps(civ2,civ,*(i32 *)(param_1 + 0x28));
+      parley_give_maps(civ2,civ,*(i32 *)(offer + 0x28));
       break;
     case 0xc:
-      parley_apply_war_pact(civ,(iptr)puVar1);
-      parley_apply_war_pact(civ2,(iptr)puVar1);
+      parley_apply_war_pact(civ,(iptr)first_items);
+      parley_apply_war_pact(civ2,(iptr)first_items);
       break;
     case 0xd:
-      parley_give_maps(civ,civ2,*(i32 *)(param_1 + 0x28));
-      parley_give_maps(civ2,civ,*(i32 *)(param_1 + 0x28));
+      parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
+      parley_give_maps(civ2,civ,*(i32 *)(offer + 0x28));
       break;
     case 0xe:
-      switch(*puVar2) {
+      switch(*second_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(iVar4 + 0x28),civ,civ2);
+        parley_apply_treaty(*(i32 *)(second_offer + 0x28),civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ2,civ,(iptr)puVar2);
+        parley_transfer_advances(civ2,civ,(iptr)second_items);
         break;
       case 9:
-        parley_transfer_gold(civ2,civ,*(i32 *)(iVar4 + 0x28));
+        parley_transfer_gold(civ2,civ,*(i32 *)(second_offer + 0x28));
         break;
       case 10:
-        parley_transfer_units(civ2,(iptr)puVar2);
+        parley_transfer_units(civ2,(iptr)second_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ,(iptr)puVar2);
+        parley_apply_war_pact(civ,(iptr)second_items);
         break;
       case 0xd:
-        parley_give_maps(civ2,civ,*(i32 *)(iVar4 + 0x28));
+        parley_give_maps(civ2,civ,*(i32 *)(second_offer + 0x28));
         break;
       case 0x11:
-        parley_transfer_cities(civ2,(iptr)puVar2);
+        parley_transfer_cities(civ2,(iptr)second_items);
       }
-      switch(*puVar1) {
+      switch(*first_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(param_1 + 0x28),civ,civ2);
+        parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ,civ2,(iptr)puVar1);
+        parley_transfer_advances(civ,civ2,(iptr)first_items);
         break;
       case 9:
-        parley_transfer_gold(civ,civ2,*(i32 *)(param_1 + 0x28));
+        parley_transfer_gold(civ,civ2,*(i32 *)(offer + 0x28));
         break;
       case 10:
-        parley_transfer_units(civ,(iptr)puVar1);
+        parley_transfer_units(civ,(iptr)first_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ2,(iptr)puVar1);
+        parley_apply_war_pact(civ2,(iptr)first_items);
         break;
       case 0xd:
-        parley_give_maps(civ,civ2,*(i32 *)(param_1 + 0x28));
+        parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
         break;
       case 0x11:
-        parley_transfer_cities(civ,(iptr)puVar1);
+        parley_transfer_cities(civ,(iptr)first_items);
       }
       break;
     case 0xf:
-      switch(*puVar1) {
+      switch(*first_items) {
       case 5:
       case 6:
-        parley_apply_treaty(*(i32 *)(param_1 + 0x28),civ,civ2);
+        parley_apply_treaty(*(i32 *)(offer + 0x28),civ,civ2);
         break;
       case 8:
-        parley_transfer_advances(civ,civ2,(iptr)puVar1);
+        parley_transfer_advances(civ,civ2,(iptr)first_items);
         break;
       case 9:
-        parley_transfer_gold(civ,civ2,*(i32 *)(param_1 + 0x28));
+        parley_transfer_gold(civ,civ2,*(i32 *)(offer + 0x28));
         break;
       case 10:
-        parley_transfer_units(civ,(iptr)puVar1);
+        parley_transfer_units(civ,(iptr)first_items);
         break;
       case 0xc:
-        parley_apply_war_pact(civ2,(iptr)puVar1);
+        parley_apply_war_pact(civ2,(iptr)first_items);
         break;
       case 0xd:
-        parley_give_maps(civ,civ2,*(i32 *)(param_1 + 0x28));
+        parley_give_maps(civ,civ2,*(i32 *)(offer + 0x28));
         break;
       case 0x11:
-        parley_transfer_cities(civ,(iptr)puVar1);
+        parley_transfer_cities(civ,(iptr)first_items);
       }
     }
     net_send_state_diff(0xff,2,0,0,0);
@@ -10267,68 +10267,68 @@ void __cdecl parley_execute_transaction(iptr param_1)
 /* 004dd8ad auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_2c (*(byte *)(frame_ + FRAME_OFF(12)))
-#define local_24 (*(byte *)(frame_ + FRAME_OFF(20)))
+#define known_bits (*(byte *)(frame_ + FRAME_OFF(12)))
+#define recv_bit (*(byte *)(frame_ + FRAME_OFF(20)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(24)))
 #define y2 (*(uint *)(frame_ + FRAME_OFF(28)))
 #define x2 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(44)))
-void __cdecl parley_give_maps(iptr param_1,iptr civ,int param_3)
+#define i (*(iptr *)(frame_ + FRAME_OFF(44)))
+void __cdecl parley_give_maps(iptr receiver,iptr civ,int map_kind)
 
 {
-  byte bVar1;
-  byte bVar2;
-  uint uVar3;
-  uint uVar4;
-  iptr iVar5;
-  byte *pbVar5;
-  byte *pbVar6;
-  iptr iVar7;
-  iptr iVar8;
+  byte recv_bits;
+  byte giver_bits;
+  uint recv_mask;
+  uint giver_mask;
+  iptr tile;
+  byte *recv_known;
+  byte *giver_known;
+  iptr tile2;
+  iptr tile3;
   int y;
   iptr x;
-  int iVar12;
-  i32 uVar13;
-  i32 uVar14;
-  iptr iVar10;
+  int in_bounds;
+  i32 set_flag;
+  i32 redraw_flag;
+  iptr target_civ;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar3 = 1 << ((byte)param_1 & 0x1f);
-  uVar4 = 1 << ((byte)civ & 0x1f);
+  recv_mask = 1 << ((byte)receiver & 0x1f);
+  giver_mask = 1 << ((byte)civ & 0x1f);
   y2 = 0;
   x2 = 0;
   net_batch_begin();
-  for (local_c = 0; local_c < map.area; local_c++) {
-    iVar5 = tile_at(x2,y2);
-    pbVar5 = (byte *)known_at(x2,y2,param_1);
-    pbVar6 = (byte *)known_at(x2,y2,civ);
-    if ((uVar4 & *(byte *)(iVar5 + 4)) != 0) {
-      if ((uVar3 & *(byte *)(iVar5 + 4)) == 0) {
-        known_set(x2,y2,0,param_1,0,1);
-        tile_set_visible(x2,y2,uVar3,1,1);
+  for (i = 0; i < map.area; i++) {
+    tile = tile_at(x2,y2);
+    recv_known = (byte *)known_at(x2,y2,receiver);
+    giver_known = (byte *)known_at(x2,y2,civ);
+    if ((giver_mask & *(byte *)(tile + 4)) != 0) {
+      if ((recv_mask & *(byte *)(tile + 4)) == 0) {
+        known_set(x2,y2,0,receiver,0,1);
+        tile_set_visible(x2,y2,recv_mask,1,1);
       }
-      if (param_3 == 0) {
-        if (((*pbVar5 & 0x80) == 0) || ((*pbVar6 & 0x80) == 0)) {
-          bVar2 = *pbVar6;
-          bVar1 = *pbVar5;
-          iVar7 = tile_at(x2,y2);
-          local_2c = (bVar2 | bVar1) & *(byte *)(iVar7 + 1) & 0x80;
+      if (map_kind == 0) {
+        if (((*recv_known & 0x80) == 0) || ((*giver_known & 0x80) == 0)) {
+          giver_bits = *giver_known;
+          recv_bits = *recv_known;
+          tile2 = tile_at(x2,y2);
+          known_bits = (giver_bits | recv_bits) & *(byte *)(tile2 + 1) & 0x80;
         }
         else {
-          local_2c = 0x80;
+          known_bits = 0x80;
         }
-        uVar14 = 1;
-        uVar13 = 0;
-        iVar10 = param_1;
-        pbVar5 = (byte *)known_at(x2,y2,param_1);
-        known_set(x2,y2,*pbVar5 & 0xffffff7f | (uint)local_2c,iVar10,uVar13,uVar14);
-        uVar14 = 1;
-        uVar13 = 1;
-        x = param_1;
-        iVar8 = tile_at(x2,y2);
-        bVar2 = *(byte *)(iVar8 + 1);
-        pbVar5 = (byte *)known_at(x2,y2,civ);
-        known_set(x2,y2,(uint)(bVar2 & *pbVar5),x,uVar13,uVar14);
+        redraw_flag = 1;
+        set_flag = 0;
+        target_civ = receiver;
+        recv_known = (byte *)known_at(x2,y2,receiver);
+        known_set(x2,y2,*recv_known & 0xffffff7f | (uint)known_bits,target_civ,set_flag,redraw_flag);
+        redraw_flag = 1;
+        set_flag = 1;
+        x = receiver;
+        tile3 = tile_at(x2,y2);
+        giver_bits = *(byte *)(tile3 + 1);
+        recv_known = (byte *)known_at(x2,y2,civ);
+        known_set(x2,y2,(uint)(giver_bits & *recv_known),x,set_flag,redraw_flag);
       }
     }
     x2 += 2;
@@ -10337,49 +10337,49 @@ void __cdecl parley_give_maps(iptr param_1,iptr civ,int param_3)
       x2 = y2 & 1;
     }
   }
-  local_24 = (byte)uVar3;
-  if (param_3 == 0) {
+  recv_bit = (byte)recv_mask;
+  if (map_kind == 0) {
     for (unit = 0; unit < game.num_units; unit++) {
       if ((units[unit].id != 0) &&
-         (((uVar4 & units[unit].visibility) != 0 || (units[unit].owner == civ)))) {
-        units[unit].visibility = units[unit].visibility | local_24;
+         (((giver_mask & units[unit].visibility) != 0 || (units[unit].owner == civ)))) {
+        units[unit].visibility = units[unit].visibility | recv_bit;
         y = tile_at((int)units[unit].x,(int)units[unit].y);
-        if (((uVar3 & *(byte *)(y + 4)) == 0) || ((uVar4 & *(byte *)(y + 4)) == 0)) {
-          for (local_c = 0; local_c < 0x15; local_c++) {
-            x = map_wrap_x((int)(char)(&city_tile_dx_table)[local_c] + x2);
-            y = (int)(char)(&city_tile_dy_table)[local_c] + y2;
-            iVar12 = map_in_bounds(x,y);
-            if (iVar12 != 0) {
-              tile_set_visible(x,y,uVar3,1,1);
-              tile_set_visible(x,y,uVar4,1,1);
+        if (((recv_mask & *(byte *)(y + 4)) == 0) || ((giver_mask & *(byte *)(y + 4)) == 0)) {
+          for (i = 0; i < 0x15; i++) {
+            x = map_wrap_x((int)(char)(&city_tile_dx_table)[i] + x2);
+            y = (int)(char)(&city_tile_dy_table)[i] + y2;
+            in_bounds = map_in_bounds(x,y);
+            if (in_bounds != 0) {
+              tile_set_visible(x,y,recv_mask,1,1);
+              tile_set_visible(x,y,giver_mask,1,1);
             }
           }
         }
       }
     }
   }
-  if ((param_3 == 0) || (param_3 == 1)) {
+  if ((map_kind == 0) || (map_kind == 1)) {
     for (city = 0; city < game.num_cities; city++) {
       if ((cities[city].id != 0) &&
-         (((uVar4 & (int)(char)cities[city].known_to) != 0 ||
+         (((giver_mask & (int)(char)cities[city].known_to) != 0 ||
           (cities[city].owner == civ)))) {
         if (cities[city].owner == civ) {
-          *(i8 *)&cities[city].revealed_size[param_1] = cities[city].size;
+          *(i8 *)&cities[city].revealed_size[receiver] = cities[city].size;
         }
         else {
-          *(i8 *)&cities[city].revealed_size[param_1] =
+          *(i8 *)&cities[city].revealed_size[receiver] =
                *(i8 *)&cities[city].revealed_size[civ];
         }
-        cities[city].known_to = cities[city].known_to | local_24;
+        cities[city].known_to = cities[city].known_to | recv_bit;
         y = tile_at((int)cities[city].x,(int)cities[city].y);
-        if (((uVar3 & *(byte *)(y + 4)) == 0) || ((uVar4 & *(byte *)(y + 4)) == 0)) {
-          for (local_c = 0; local_c < 0x15; local_c++) {
-            x = map_wrap_x((int)(char)(&city_tile_dx_table)[local_c] + x2);
-            y = (int)(char)(&city_tile_dy_table)[local_c] + y2;
-            iVar12 = map_in_bounds(x,y);
-            if (iVar12 != 0) {
-              tile_set_visible(x,y,uVar3,1,1);
-              tile_set_visible(x,y,uVar4,1,1);
+        if (((recv_mask & *(byte *)(y + 4)) == 0) || ((giver_mask & *(byte *)(y + 4)) == 0)) {
+          for (i = 0; i < 0x15; i++) {
+            x = map_wrap_x((int)(char)(&city_tile_dx_table)[i] + x2);
+            y = (int)(char)(&city_tile_dy_table)[i] + y2;
+            in_bounds = map_in_bounds(x,y);
+            if (in_bounds != 0) {
+              tile_set_visible(x,y,recv_mask,1,1);
+              tile_set_visible(x,y,giver_mask,1,1);
             }
           }
         }
@@ -10388,134 +10388,134 @@ void __cdecl parley_give_maps(iptr param_1,iptr civ,int param_3)
   }
   net_batch_flush();
   net_send_state_diff(0xff,2,0,0,0);
-  if (human_civ == param_1) {
+  if (human_civ == receiver) {
     map_redraw_all_views(human_civ,1);
   }
   else {
     net_send_message(0x74,*(i32 *)
-                             (&net_player_slots + *(int *)(&net_civ_slots + param_1 * 4) * 0x54),0,0,0,0,
+                             (&net_player_slots + *(int *)(&net_civ_slots + receiver * 4) * 0x54),0,0,0,0,
                        0,0,0,0);
   }
   return;
 }
 #undef human_civ
 #undef unit
-#undef local_2c
-#undef local_24
+#undef known_bits
+#undef recv_bit
 #undef city
 #undef y2
 #undef x2
-#undef local_c
+#undef i
 
 /* 004dde9e auto */
-#define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl parley_apply_war_pact(iptr param_1,iptr param_2)
+#define civ_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+void __cdecl parley_apply_war_pact(iptr civ,iptr items)
 
 {
-  int iVar1;
+  int count;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_2 + 8);
-  local_10 = (iptr *)(param_2 + 0xc);
-  for (local_c = 0; local_c < iVar1; local_c++) {
-    diplo_set_treaty_flags(param_1,*local_10,0x2000);
-    local_10++;
+  count = *(int *)(items + 8);
+  civ_ptr = (iptr *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    diplo_set_treaty_flags(civ,*civ_ptr,0x2000);
+    civ_ptr++;
   }
   return;
 }
-#undef local_10
-#undef local_c
+#undef civ_ptr
+#undef i
 
 /* 004ddf04 auto */
-void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 param_3)
+void __cdecl parley_transfer_gold(iptr civ2,iptr civ,i32 amount)
 
 {
-  int iVar1;
+  int attitude_value;
   
-  if (civs[civ].gold < param_3) {
-    param_3 = civs[civ].gold;
+  if (civs[civ].gold < amount) {
+    amount = civs[civ].gold;
   }
-  civs[civ].gold -= param_3;
-  civs[civ2].gold += param_3;
-  iVar1 = diplo_gold_attitude_value(param_3);
-  civ_adjust_attitude(civ2,civ,-((iVar1 * 3) / 2));
+  civs[civ].gold -= amount;
+  civs[civ2].gold += amount;
+  attitude_value = diplo_gold_attitude_value(amount);
+  civ_adjust_attitude(civ2,civ,-((attitude_value * 3) / 2));
   return;
 }
 
 /* 004ddfb2 auto */
-#define local_10 (*(iptr * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr param_3)
+#define adv_ptr (*(iptr * *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+void __cdecl parley_transfer_advances(iptr civ,iptr civ2,iptr items)
 
 {
-  int iVar1;
-  int iVar2;
+  int count;
+  int has_adv;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_3 + 8);
-  local_10 = (iptr *)(param_3 + 0xc);
-  for (local_c = 0; local_c < iVar1; local_c++) {
-    iVar2 = civ_has_advance(civ2,*local_10);
-    if (iVar2 != 0) {
-      iVar2 = civ_has_advance(civ,*local_10);
-      if (iVar2 == 0) {
-        civ_give_advance(civ,*local_10,civ2,1,0);
+  count = *(int *)(items + 8);
+  adv_ptr = (iptr *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    has_adv = civ_has_advance(civ2,*adv_ptr);
+    if (has_adv != 0) {
+      has_adv = civ_has_advance(civ,*adv_ptr);
+      if (has_adv == 0) {
+        civ_give_advance(civ,*adv_ptr,civ2,1,0);
       }
     }
-    local_10++;
+    adv_ptr++;
   }
   return;
 }
-#undef local_10
-#undef local_c
+#undef adv_ptr
+#undef i
 
 /* 004de049 auto */
-#define local_14 (*(i32 * *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-void __cdecl parley_transfer_cities(iptr civ,iptr param_2)
+#define city_id_ptr (*(i32 * *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(12)))
+void __cdecl parley_transfer_cities(iptr civ,iptr items)
 
 {
-  int iVar1;
+  int count;
   iptr city;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(param_2 + 8);
-  local_14 = (i32 *)(param_2 + 0xc);
-  for (local_c = 0; local_c < iVar1; local_c++) {
-    city = parley_find_city_by_id((WindowObjectView *)&parley_wnd,*local_14);
+  count = *(int *)(items + 8);
+  city_id_ptr = (i32 *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    city = parley_find_city_by_id((WindowObjectView *)&parley_wnd,*city_id_ptr);
     if ((-1 < city) && (cities[city].id != 0)) {
       parley_cede_city(city,civ);
     }
-    local_14 += 2;
+    city_id_ptr += 2;
   }
   return;
 }
-#undef local_14
-#undef local_c
+#undef city_id_ptr
+#undef i
 
 /* 004de0e2 auto */
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define unit_type (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
+#define i (*(iptr *)(frame_ + FRAME_OFF(40)))
+#define defense_ratio (*(int *)(frame_ + FRAME_OFF(48)))
 void __cdecl parley_cede_city(uptr city,iptr civ)
 
 {
-  char *pcVar1;
+  char *count_ptr;
   char civ3;
   iptr civ2;
   int x;
   int y;
   iptr x2;
   iptr y3;
-  iptr iVar8;
+  iptr in_bounds;
   int y2;
-  iptr iVar9;
-  int iVar11;
-  uptr uVar12;
+  iptr in_bounds2;
+  int tile;
+  uptr leonardo_city;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ3 = cities[city].owner;
@@ -10532,11 +10532,11 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
     civs[civ2].num_cities--;
   }
   net_batch_begin();
-  for (local_10 = 0; local_10 < 0x15; local_10++) {
-    x2 = map_wrap_x((char)(&city_tile_dx_table)[local_10] + x);
-    y3 = (char)(&city_tile_dy_table)[local_10] + y;
-    iVar8 = map_in_bounds(x2,y3);
-    if (iVar8 != 0) {
+  for (i = 0; i < 0x15; i++) {
+    x2 = map_wrap_x((char)(&city_tile_dx_table)[i] + x);
+    y3 = (char)(&city_tile_dy_table)[i] + y;
+    in_bounds = map_in_bounds(x2,y3);
+    if (in_bounds != 0) {
       tile_set_radius_civ(x2,y3,civ,1);
       tile_set_visible(x2,y3,1 << ((byte)civ & 0x1f),1,1);
     }
@@ -10557,10 +10557,10 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
       }
       else if ((cities[city].x == units[unit].x) && (cities[city].y == units[unit].y))
       {
-        pcVar1 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
-        *pcVar1 = *pcVar1 + 1;
-        pcVar1 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
-        *pcVar1 = *pcVar1 - 1;
+        count_ptr = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+        *count_ptr = *count_ptr + 1;
+        count_ptr = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
+        *count_ptr = *count_ptr - 1;
         units[unit].owner = (byte)civ;
         units[unit].home_city = -1;
         units[unit].moves_used = '\0';
@@ -10601,12 +10601,12 @@ void __cdecl parley_cede_city(uptr city,iptr civ)
   for (unit_type = 0x3e; -1 < unit_type; unit_type--) {
     if ((unit_types[unit_type].role == 1) &&
        (y2 = civ_can_build_unit(civ,city,unit_type), y2 != 0)) {
-      local_8 = ((int)(char)unit_types[unit_type].defense << 3) /
+      defense_ratio = ((int)(char)unit_types[unit_type].defense << 3) /
                 (int)(char)unit_types[unit_type].cost;
       if ((unit_types[unit_type].flags & 0x400) != 0) {
-        local_8++;
+        defense_ratio++;
       }
-      if (0 < local_8) {
+      if (0 < defense_ratio) {
         cities[city].building = (i8)unit_type;
       }
       break;
@@ -10621,13 +10621,13 @@ LAB_004de76b:
     tile_set_visible(x,y,1 << ((byte)civ & 0x1f),1,1);
     map_redraw_tile_all_views(x,y);
   }
-  for (local_10 = 0; local_10 < 8; local_10++) {
-    x2 = map_wrap_x((char)(&dir_dx_table)[local_10] + x);
-    y2 = (char)(&dir_dy_table)[local_10] + y;
-    iVar9 = map_in_bounds(x2,y2);
-    if ((iVar9 != 0) &&
-       (iVar11 = tile_at(x2,y2),
-       (1 << ((byte)civ & 0x1f) & (uint)*(byte *)(iVar11 + 4)) == 0)) {
+  for (i = 0; i < 8; i++) {
+    x2 = map_wrap_x((char)(&dir_dx_table)[i] + x);
+    y2 = (char)(&dir_dy_table)[i] + y;
+    in_bounds2 = map_in_bounds(x2,y2);
+    if ((in_bounds2 != 0) &&
+       (tile = tile_at(x2,y2),
+       (1 << ((byte)civ & 0x1f) & (uint)*(byte *)(tile + 4)) == 0)) {
       tile_set_visible(x2,y2,1 << ((byte)civ & 0x1f),1,1);
       map_redraw_tile_all_views(x2,y2);
     }
@@ -10636,8 +10636,8 @@ LAB_004de76b:
   net_send_message(0x75,0xff,x,y,0,0,0,0,0,0);
   cities[city].founder = civ3;
   cities[city].turns_captured = (u8)game.turn;
-  uVar12 = wonder_get_city(0xe);
-  if (uVar12 == city) {
+  leonardo_city = wonder_get_city(0xe);
+  if (leonardo_city == city) {
     civ_leonardo_upgrade(civ);
   }
   return;
@@ -10646,46 +10646,46 @@ LAB_004de76b:
 #undef improvement
 #undef unit
 #undef unit_type
-#undef local_10
-#undef local_8
+#undef i
+#undef defense_ratio
 
 /* 004de990 auto */
 #define x3 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define unit2 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
+#define i (*(int *)(frame_ + FRAME_OFF(16)))
 #define y2 (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define x2 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
+#define count (*(int *)(frame_ + FRAME_OFF(28)))
 #define civ2 (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define y3 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(40)))
-void __cdecl parley_transfer_units(iptr civ,iptr param_2)
+#define id_ptr (*(i32 * *)(frame_ + FRAME_OFF(40)))
+void __cdecl parley_transfer_units(iptr civ,iptr items)
 
 {
-  char *pcVar1;
-  i32 uVar2;
-  int iVar3;
+  char *count_ptr;
+  i32 unit_id;
+  int result;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_14 = *(int *)(param_2 + 8);
-  local_8 = (i32 *)(param_2 + 0xc);
-  for (local_20 = 0; local_20 < local_14; local_20++) {
-    uVar2 = *local_8;
-    local_8++;
-    unit = parley_find_unit_by_id((WindowObjectView *)&parley_wnd,uVar2);
+  count = *(int *)(items + 8);
+  id_ptr = (i32 *)(items + 0xc);
+  for (i = 0; i < count; i++) {
+    unit_id = *id_ptr;
+    id_ptr++;
+    unit = parley_find_unit_by_id((WindowObjectView *)&parley_wnd,unit_id);
     if ((-1 < unit) && (civ2 = (iptr)units[unit].owner, civ != civ2)) {
       if ((unit_types[units[unit].type].domain == 2) &&
-         (iVar3 = unit_stack_sum(unit,2), 1 < iVar3)) {
-        while (iVar3 = unit_stack_sum(unit,2), 1 < iVar3) {
+         (result = unit_stack_sum(unit,2), 1 < result)) {
+        while (result = unit_stack_sum(unit,2), 1 < result) {
           unit2 = unit_stack_first(unit);
           if (unit2 == unit) {
             unit2 = unit_next_in_stack(unit2);
           }
-          iVar3 = parley_find_unit_drop_tile(unit2,(iptr)&x3,(iptr)&y3,
+          result = parley_find_unit_drop_tile(unit2,(iptr)&x3,(iptr)&y3,
                                      (int)units[unit2].owner,1);
-          if (iVar3 == 0) {
+          if (result == 0) {
             unit_delete_with_cargo(unit2,1);
           }
           else {
@@ -10693,12 +10693,12 @@ void __cdecl parley_transfer_units(iptr civ,iptr param_2)
           }
         }
       }
-      iVar3 = parley_find_unit_drop_tile(unit,(iptr)&x2,(iptr)&y2,civ,0);
-      if (iVar3 != 0) {
-        pcVar1 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
-        *pcVar1 = *pcVar1 + 1;
-        pcVar1 = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
-        *pcVar1 = *pcVar1 - 1;
+      result = parley_find_unit_drop_tile(unit,(iptr)&x2,(iptr)&y2,civ,0);
+      if (result != 0) {
+        count_ptr = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+        *count_ptr = *count_ptr + 1;
+        count_ptr = (char *)(units[unit].type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ2 * 0x594);
+        *count_ptr = *count_ptr - 1;
         units[unit].owner = (i8)civ;
         units[unit].home_city = -1;
         units[unit].moves_used = '\0';
@@ -10732,96 +10732,96 @@ void __cdecl parley_transfer_units(iptr civ,iptr param_2)
 #undef unit
 #undef city
 #undef unit2
-#undef local_20
+#undef i
 #undef y2
 #undef x2
-#undef local_14
+#undef count
 #undef civ2
 #undef y3
-#undef local_8
+#undef id_ptr
 
 /* 004ded07 auto */
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr param_4,int param_5)
+#define i (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define found (*(i32 *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl parley_find_unit_drop_tile(iptr unit,iptr x,iptr y,iptr civ,int must_move)
 
 {
   iptr x2;
   int y2;
-  int iVar3;
-  i32 uVar4;
+  int result;
+  i32 wrapped_x;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(int *)x = (int)units[unit].x;
   x2 = *(iptr *)x;
   *(int *)y = (int)units[unit].y;
   y2 = *(int *)y;
-  local_8 = 1;
-  if (((param_5 != 0) || (iVar3 = tile_city_owner(x2,y2), iVar3 != -1)) ||
-     (iVar3 = unit_stack_sum(unit,2), 1 < iVar3)) {
-    local_8 = 0;
-    for (local_c = 0; local_c < 0x2d; local_c++) {
-      uVar4 = map_wrap_x((char)(&city_tile_dx_table)[local_c] + x2);
-      *(i32 *)x = uVar4;
-      *(int *)y = (char)(&city_tile_dy_table)[local_c] + y2;
-      if ((((((param_5 == 0) || (*(int *)x != x2)) || (*(int *)y != y2)) &&
-           (iVar3 = map_in_bounds(*(iptr *)x,*(iptr *)y), iVar3 != 0)) &&
-          (((iVar3 = tile_city_owner(*(iptr *)x,*(i32 *)y), iVar3 == param_4 ||
-            (iVar3 = tile_unit_owner(*(i32 *)x,*(i32 *)y),
-            iVar3 == param_4)) ||
-           ((iVar3 = tile_city_owner(*(iptr *)x,*(i32 *)y), iVar3 == -1 &&
-            (iVar3 = tile_unit_owner(*(i32 *)x,*(i32 *)y), iVar3 == -1))))
+  found = 1;
+  if (((must_move != 0) || (result = tile_city_owner(x2,y2), result != -1)) ||
+     (result = unit_stack_sum(unit,2), 1 < result)) {
+    found = 0;
+    for (i = 0; i < 0x2d; i++) {
+      wrapped_x = map_wrap_x((char)(&city_tile_dx_table)[i] + x2);
+      *(i32 *)x = wrapped_x;
+      *(int *)y = (char)(&city_tile_dy_table)[i] + y2;
+      if ((((((must_move == 0) || (*(int *)x != x2)) || (*(int *)y != y2)) &&
+           (result = map_in_bounds(*(iptr *)x,*(iptr *)y), result != 0)) &&
+          (((result = tile_city_owner(*(iptr *)x,*(i32 *)y), result == civ ||
+            (result = tile_unit_owner(*(i32 *)x,*(i32 *)y),
+            result == civ)) ||
+           ((result = tile_city_owner(*(iptr *)x,*(i32 *)y), result == -1 &&
+            (result = tile_unit_owner(*(i32 *)x,*(i32 *)y), result == -1))))
           )) && ((((unit_types[units[unit].type].domain == '\0' &&
-                   (iVar3 = tile_is_ocean(*(i32 *)x,*(i32 *)y), iVar3 == 0
+                   (result = tile_is_ocean(*(i32 *)x,*(i32 *)y), result == 0
                    )) || ((unit_types[units[unit].type].domain == 2 &&
-                          (iVar3 = tile_is_ocean(*(i32 *)x,*(i32 *)y),
-                          iVar3 != 0)))) || (unit_types[units[unit].type].domain == 1)))) {
+                          (result = tile_is_ocean(*(i32 *)x,*(i32 *)y),
+                          result != 0)))) || (unit_types[units[unit].type].domain == 1)))) {
         return 1;
       }
     }
   }
-  return local_8;
+  return found;
 }
-#undef local_c
-#undef local_8
+#undef i
+#undef found
 
 /* 004def54 auto */
-void __thiscall parley_describe_treaty(WindowObjectView *this,int param_1,int param_2)
+void __thiscall parley_describe_treaty(WindowObjectView *this,int treaty_kind,int exchange)
 
 {
-  iptr iVar1;
+  iptr label;
   
-  if (param_2 == 0) {
-    switch(param_1) {
+  if (exchange == 0) {
+    switch(treaty_kind) {
     case 0:
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xc74));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xc74));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       break;
     case 1:
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xc78));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xc78));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       break;
     case 2:
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xc7c));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xc7c));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
       break;
     case 3:
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xc80));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+      label = label_string(*(i32 *)(label_string_ids + 0xc80));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
   }
-  else if (param_2 == 1) {
-    if (param_1 == 0) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xbcc));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+  else if (exchange == 1) {
+    if (treaty_kind == 0) {
+      label = label_string(*(i32 *)(label_string_ids + 0xbcc));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
-    else if (param_1 == 1) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xbd0));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+    else if (treaty_kind == 1) {
+      label = label_string(*(i32 *)(label_string_ids + 0xbd0));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
-    else if (param_1 == 2) {
-      iVar1 = label_string(*(i32 *)(label_string_ids + 0xbd4));
-      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),iVar1);
+    else if (treaty_kind == 2) {
+      label = label_string(*(i32 *)(label_string_ids + 0xbd4));
+      str_concat(ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),label);
     }
   }
   crt_strcat(&parley_description,&parley_treaty_crlf_str);
@@ -10829,112 +10829,112 @@ void __thiscall parley_describe_treaty(WindowObjectView *this,int param_1,int pa
 }
 
 /* 004df10f auto */
-void __cdecl parley_apply_treaty(i32 param_1,iptr civ,iptr param_3)
+void __cdecl parley_apply_treaty(i32 treaty_kind,iptr civ,iptr other_civ)
 
 {
-  switch(param_1) {
+  switch(treaty_kind) {
   case 0:
-    diplo_set_treaty_flags(civ,param_3,2);
+    diplo_set_treaty_flags(civ,other_civ,2);
     break;
   case 1:
-    diplo_set_treaty_flags(civ,param_3,4);
+    diplo_set_treaty_flags(civ,other_civ,4);
     break;
   case 2:
-    diplo_set_treaty_flags(civ,param_3,8);
+    diplo_set_treaty_flags(civ,other_civ,8);
     break;
   case 3:
-    if ((*(byte *)&civs[civ].treaties[param_3] & 2) != 0) {
-      diplo_clear_treaty_flags(civ,param_3,2);
+    if ((*(byte *)&civs[civ].treaties[other_civ] & 2) != 0) {
+      diplo_clear_treaty_flags(civ,other_civ,2);
     }
-    if ((*(byte *)&civs[civ].treaties[param_3] & 4) != 0) {
-      diplo_clear_treaty_flags(civ,param_3,4);
+    if ((*(byte *)&civs[civ].treaties[other_civ] & 4) != 0) {
+      diplo_clear_treaty_flags(civ,other_civ,4);
     }
-    if ((*(byte *)&civs[civ].treaties[param_3] & 8) != 0) {
-      diplo_clear_treaty_flags(civ,param_3,8);
+    if ((*(byte *)&civs[civ].treaties[other_civ] & 8) != 0) {
+      diplo_clear_treaty_flags(civ,other_civ,8);
     }
   }
   return;
 }
 
 /* 00511880 auto */
-#define local_14 (*(void * *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(void * *)(frame_ + FRAME_OFF(16)))
+#define write_ptr (*(void * *)(frame_ + FRAME_OFF(4)))
+#define payload_size (*(uint *)(frame_ + FRAME_OFF(8)))
+#define i (*(int *)(frame_ + FRAME_OFF(12)))
+#define payload (*(void * *)(frame_ + FRAME_OFF(16)))
 void __cdecl
-net_send_text_args(iptr param_1,i32 param_2,int param_3,int param_4,iptr param_5,iptr param_6)
+net_send_text_args(iptr popup_kind,i32 player_id,int string_count,int number_count,iptr arg_a,iptr arg_b)
 
 {
-  size_t sVar1;
+  size_t len;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (void *)0x0;
-  local_10 = 0;
+  payload = (void *)0x0;
+  payload_size = 0;
   if (2 < game.multiplayer) {
-    if (param_3 != 0) {
-      for (local_c = 0; local_c < param_3; local_c++) {
-        sVar1 = _strlen(&text_string_args + local_c * 0x104);
-        local_10 = local_10 + sVar1 + 1;
+    if (string_count != 0) {
+      for (i = 0; i < string_count; i++) {
+        len = _strlen(&text_string_args + i * 0x104);
+        payload_size = payload_size + len + 1;
       }
     }
-    if (param_4 != 0) {
-      local_10 = param_4 * 4 + local_10;
+    if (number_count != 0) {
+      payload_size = number_count * 4 + payload_size;
     }
-    if (local_10 != 0) {
-      local_8 = operator_new(local_10);
-      local_14 = local_8;
-      if (param_3 != 0) {
-        for (local_c = 0; local_c < param_3; local_c++) {
-          crt_strcpy(local_14,&text_string_args + local_c * 0x104);
-          sVar1 = _strlen(&text_string_args + local_c * 0x104);
-          local_14 = (void *)((int)local_14 + sVar1 + 1);
+    if (payload_size != 0) {
+      payload = operator_new(payload_size);
+      write_ptr = payload;
+      if (string_count != 0) {
+        for (i = 0; i < string_count; i++) {
+          crt_strcpy(write_ptr,&text_string_args + i * 0x104);
+          len = _strlen(&text_string_args + i * 0x104);
+          write_ptr = (void *)((int)write_ptr + len + 1);
         }
       }
-      if (param_4 != 0) {
-        for (local_c = 0; local_c < param_4; local_c++) {
-          crt_memcpy(local_14,&text_number_args + local_c * 4,4);
-          local_14 = (void *)((int)local_14 + 4);
+      if (number_count != 0) {
+        for (i = 0; i < number_count; i++) {
+          crt_memcpy(write_ptr,&text_number_args + i * 4,4);
+          write_ptr = (void *)((int)write_ptr + 4);
         }
       }
     }
-    net_send_message(0x6a,param_2,param_1,param_3,param_4,param_5,param_6,0,0,(iptr)local_8);
+    net_send_message(0x6a,player_id,popup_kind,string_count,number_count,arg_a,arg_b,0,0,(iptr)payload);
   }
   return;
 }
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef write_ptr
+#undef payload_size
+#undef i
+#undef payload
 
 /* 00511a0e auto */
 #define net_popup_queue_head (*(i32 * *)((u8 *)&g.d_00631130))
 #define net_popup_queue_tail (*(i32 * *)((u8 *)&g.d_00631134))
 void __cdecl
-net_popup_queue_push(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
-            i32 param_5,i32 param_6,int param_7)
+net_popup_queue_push(i32 popup_kind,i32 string_count,i32 number_count,i32 arg_a,
+            i32 arg_b,i32 payload,int payload_size)
 
 {
-  i32 *puVar1;
-  i32 *puVar2;
+  i32 *new_head;
+  i32 *entry;
   
-  puVar2 = operator_new(param_7 + 0x1c);
-  *puVar2 = 0;
-  puVar2[1] = param_1;
-  puVar2[2] = param_2;
-  puVar2[3] = param_3;
-  puVar2[4] = param_4;
-  puVar2[5] = param_5;
-  puVar2[6] = param_7;
-  if (param_7 != 0) {
-    crt_memcpy(puVar2 + 7,param_6,param_7);
+  entry = operator_new(payload_size + 0x1c);
+  *entry = 0;
+  entry[1] = popup_kind;
+  entry[2] = string_count;
+  entry[3] = number_count;
+  entry[4] = arg_a;
+  entry[5] = arg_b;
+  entry[6] = payload_size;
+  if (payload_size != 0) {
+    crt_memcpy(entry + 7,payload,payload_size);
   }
-  puVar1 = puVar2;
+  new_head = entry;
   if (net_popup_queue_head != (i32 *)0x0) {
-    *net_popup_queue_tail = puVar2;
-    puVar1 = net_popup_queue_head;
+    *net_popup_queue_tail = entry;
+    new_head = net_popup_queue_head;
   }
-  net_popup_queue_head = puVar1;
-  net_popup_queue_tail = puVar2;
+  net_popup_queue_head = new_head;
+  net_popup_queue_tail = entry;
   return;
 }
 #undef net_popup_queue_head
@@ -10946,11 +10946,11 @@ net_popup_queue_push(i32 param_1,i32 param_2,i32 param_3,i32 param_4,
 void __cdecl net_popup_queue_clear(void)
 
 {
-  i32 *puVar1;
+  i32 *entry;
   
-  while (puVar1 = net_popup_queue_head, net_popup_queue_head != (i32 *)0x0) {
+  while (entry = net_popup_queue_head, net_popup_queue_head != (i32 *)0x0) {
     net_popup_queue_head = (i32 *)*net_popup_queue_head;
-    operator_delete(puVar1);
+    operator_delete(entry);
   }
   net_popup_queue_tail = 0;
   return;
@@ -10968,11 +10968,11 @@ void __cdecl net_popup_queue_clear(void)
 void __cdecl net_popup_idle_autoclose(void)
 
 {
-  int iVar1;
+  int now;
   
   net_process_messages((NetSession *)&net_session,1,0);
   if (((net_host_handoff_stage == '\0') && (nm_parley_cancel_count == 0)) &&
-     (iVar1 = timer_ticks(), iVar1 - dialog_timeout_start_i32 < 0x4b1)) {
+     (now = timer_ticks(), now - dialog_timeout_start_i32 < 0x4b1)) {
     return;
   }
   dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
@@ -10997,14 +10997,14 @@ void __cdecl net_popup_idle_autoclose(void)
 #define parley_reveal_city_prompt_open (*(i32 *)((u8 *)&g.d_0063113c))
 #define parley_reveal_units_prompt_open (*(i32 *)((u8 *)&g.d_00631138))
 #define net_popup_in_progress_i32 (*(i32 *)((u8 *)&g.d_006ad67c))
-#define local_338 (*(i8 * *)(frame_ + FRAME_OFF(0)))
-#define local_330 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_310 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(48)))
-#define local_14 (*(int * *)(frame_ + FRAME_OFF(804)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(808)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(816)))
+#define icon_sprite (*(i8 * *)(frame_ + FRAME_OFF(0)))
+#define attitude_level (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define i (*(int *)(frame_ + FRAME_OFF(40)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(48)))
+#define arg_ptr (*(int * *)(frame_ + FRAME_OFF(804)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(808)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(812)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(816)))
 /* WARNING: Removing unreachable block (ram,0x0051343e) */
 /* WARNING: Removing unreachable block (ram,0x0051347e) */
 /* WARNING: Removing unreachable block (ram,0x0051369c) */
@@ -11013,40 +11013,40 @@ void __cdecl net_popup_idle_autoclose(void)
 void __cdecl net_popup_queue_show_next(void)
 
 {
-  int *piVar1;
-  size_t sVar2;
-  int iVar3;
-  iptr iVar4;
+  int *entry;
+  size_t len;
+  int choice;
+  iptr text;
   i8 frame_[FRAME_OFF(824)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  piVar1 = net_popup_queue_head;
-  dialog_ctor(&local_308,0x4000);
-  local_8 = 0;
-  if (piVar1 != (int *)0x0) {
+  eh_state = 0xffffffff;
+  entry = net_popup_queue_head;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
+  if (entry != (int *)0x0) {
     net_popup_in_progress_i32 = 1;
-    net_popup_queue_head = (int *)*piVar1;
+    net_popup_queue_head = (int *)*entry;
     if (net_popup_queue_head == (int *)0x0) {
       net_popup_queue_tail = 0;
     }
-    if ((piVar1[2] != 0) || (piVar1[3] != 0)) {
-      local_14 = piVar1 + 7;
+    if ((entry[2] != 0) || (entry[3] != 0)) {
+      arg_ptr = entry + 7;
     }
-    if (piVar1[2] != 0) {
-      for (local_310 = 0; local_310 < piVar1[2]; local_310++) {
-        crt_strcpy(&text_string_args + local_310 * 0x104,local_14);
-        sVar2 = _strlen(&text_string_args + local_310 * 0x104);
-        local_14 = (int *)((int)local_14 + sVar2 + 1);
+    if (entry[2] != 0) {
+      for (i = 0; i < entry[2]; i++) {
+        crt_strcpy(&text_string_args + i * 0x104,arg_ptr);
+        len = _strlen(&text_string_args + i * 0x104);
+        arg_ptr = (int *)((int)arg_ptr + len + 1);
       }
     }
-    if (piVar1[3] != 0) {
-      for (local_310 = 0; local_310 < piVar1[3]; local_310++) {
-        crt_memcpy(&text_number_args + local_310 * 4,local_14,4);
-        local_14++;
+    if (entry[3] != 0) {
+      for (i = 0; i < entry[3]; i++) {
+        crt_memcpy(&text_number_args + i * 4,arg_ptr,4);
+        arg_ptr++;
       }
     }
     dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-    switch(piVar1[1]) {
+    switch(entry[1]) {
     case 0:
       popup_game(ADDR(0x631140, ((u8 *)&g.d_00631140)));
       break;
@@ -11054,7 +11054,7 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game(ADDR(0x63114c, ((u8 *)&g.d_0063114c)));
       break;
     case 2:
-      dlg_game_txt_with_unit(ADDR(0x631158, ((u8 *)&g.d_00631158)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631158, ((u8 *)&g.d_00631158)),entry[4]);
       break;
     case 3:
       popup_game_with_sprite(ADDR(0x631164, ((u8 *)&g.d_00631164)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11075,20 +11075,20 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_sprite(ADDR(0x6311a0, ((u8 *)&g.d_006311a0)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
       break;
     case 9:
-      iVar4 = civ_leader_title(human_civ);
-      text_set_string_arg(0,iVar4);
-      iVar4 = civ_leader_name(human_civ);
-      text_set_string_arg(1,iVar4);
+      text = civ_leader_title(human_civ);
+      text_set_string_arg(0,text);
+      text = civ_leader_name(human_civ);
+      text_set_string_arg(1,text);
       popup_game_with_sprite(ADDR(0x6311ac, ((u8 *)&g.d_006311ac)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
       break;
     case 10:
-      iVar4 = civ_leader_name(human_civ);
-      text_set_string_arg(1,iVar4);
+      text = civ_leader_name(human_civ);
+      text_set_string_arg(1,text);
       popup_game_with_sprite(ADDR(0x6311b8, ((u8 *)&g.d_006311b8)),ADDR(0x643af8, ((u8 *)&g.d_00643af8)),0);
       break;
     case 0xb:
       popup_game(ADDR(0x6311c4, ((u8 *)&g.d_006311c4)));
-      spaceship_wnd_run(-piVar1[4]);
+      spaceship_wnd_run(-entry[4]);
       break;
     case 0xc:
       popup_game(ADDR(0x6311d0, ((u8 *)&g.d_006311d0)));
@@ -11098,120 +11098,120 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0xe:
       music_play_track(2,1);
-      popup_game_with_sprite(ADDR(0x6311f0, ((u8 *)&g.d_006311f0)),(iptr)(&civ_portrait_sprites + piVar1[4] * 0x3c),0);
+      popup_game_with_sprite(ADDR(0x6311f0, ((u8 *)&g.d_006311f0)),(iptr)(&civ_portrait_sprites + entry[4] * 0x3c),0);
       break;
     case 0xf:
-      snd_play_effect((-(uint)(piVar1[5] == 0) & 0x14) + 0x16,1,0,0);
-      dlg_game_txt_with_unit(ADDR(0x6311fc, ((u8 *)&g.d_006311fc)),piVar1[4]);
+      snd_play_effect((-(uint)(entry[5] == 0) & 0x14) + 0x16,1,0,0);
+      dlg_game_txt_with_unit(ADDR(0x6311fc, ((u8 *)&g.d_006311fc)),entry[4]);
       break;
     case 0x10:
-      snd_play_effect((-(uint)(piVar1[5] == 0) & 0x14) + 0x16,1,0,0);
-      dlg_game_txt_with_unit(ADDR(0x631204, ((u8 *)&g.d_00631204)),piVar1[4]);
+      snd_play_effect((-(uint)(entry[5] == 0) & 0x14) + 0x16,1,0,0);
+      dlg_game_txt_with_unit(ADDR(0x631204, ((u8 *)&g.d_00631204)),entry[4]);
       break;
     case 0x11:
-      dlg_game_txt_with_unit_flags(ADDR(0x631210, ((u8 *)&g.d_00631210)),piVar1[4],piVar1[5]);
+      dlg_game_txt_with_unit_flags(ADDR(0x631210, ((u8 *)&g.d_00631210)),entry[4],entry[5]);
       break;
     case 0x12:
-      dialog_load_game_text(&local_308,ADDR(0x631220, ((u8 *)&g.d_00631220)));
+      dialog_load_game_text(&dlg,ADDR(0x631220, ((u8 *)&g.d_00631220)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,piVar1[5]);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x13:
-      dialog_load_game_text(&local_308,ADDR(0x63122c, ((u8 *)&g.d_0063122c)));
+      dialog_load_game_text(&dlg,ADDR(0x63122c, ((u8 *)&g.d_0063122c)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,piVar1[5]);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x14:
-      dialog_load_game_text(&local_308,ADDR(0x63123c, ((u8 *)&g.d_0063123c)));
+      dialog_load_game_text(&dlg,ADDR(0x63123c, ((u8 *)&g.d_0063123c)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,piVar1[5]);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,entry[5]);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x15:
-      dlg_game_txt_with_unit(ADDR(0x63124c, ((u8 *)&g.d_0063124c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63124c, ((u8 *)&g.d_0063124c)),entry[4]);
       break;
     case 0x16:
       popup_game(ADDR(0x631258, ((u8 *)&g.d_00631258)));
       break;
     case 0x17:
-      iVar4 = popup_game_with_sprite(ADDR(0x631260, ((u8 *)&g.d_00631260)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+      text = popup_game_with_sprite(ADDR(0x631260, ((u8 *)&g.d_00631260)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       net_send_message(0x77,*(i32 *)
-                               (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54),
-                         iVar4,0,0,0,0,0,0,0);
+                               (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54),
+                         text,0,0,0,0,0,0,0);
       break;
     case 0x18:
-      popup_game_with_city(ADDR(0x63126c, ((u8 *)&g.d_0063126c)),piVar1[4]);
+      popup_game_with_city(ADDR(0x63126c, ((u8 *)&g.d_0063126c)),entry[4]);
       break;
     case 0x19:
-      dialog_load_game_text(&local_308,ADDR(0x631274, ((u8 *)&g.d_00631274)));
+      dialog_load_game_text(&dlg,ADDR(0x631274, ((u8 *)&g.d_00631274)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x1a:
-      dialog_load_game_text(&local_308,ADDR(0x631284, ((u8 *)&g.d_00631284)));
+      dialog_load_game_text(&dlg,ADDR(0x631284, ((u8 *)&g.d_00631284)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x1b:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom(ADDR(0x631290, ((u8 *)&g.d_00631290)),piVar1[5],0x46,1,piVar1[4]);
+      popup_city_picture_zoom(ADDR(0x631290, ((u8 *)&g.d_00631290)),entry[5],0x46,1,entry[4]);
       break;
     case 0x1c:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom(ADDR(0x63129c, ((u8 *)&g.d_0063129c)),piVar1[5],0x46,1,piVar1[4]);
+      popup_city_picture_zoom(ADDR(0x63129c, ((u8 *)&g.d_0063129c)),entry[5],0x46,1,entry[4]);
       break;
     case 0x1d:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom(ADDR(0x6312a8, ((u8 *)&g.d_006312a8)),piVar1[5],0x46,1,piVar1[4]);
+      popup_city_picture_zoom(ADDR(0x6312a8, ((u8 *)&g.d_006312a8)),entry[5],0x46,1,entry[4]);
       break;
     case 0x1e:
       snd_play_effect(5,0,0,0);
-      popup_city_picture_zoom(ADDR(0x6312b8, ((u8 *)&g.d_006312b8)),piVar1[5],0x46,1,piVar1[4]);
+      popup_city_picture_zoom(ADDR(0x6312b8, ((u8 *)&g.d_006312b8)),entry[5],0x46,1,entry[4]);
       break;
     case 0x1f:
-      dlg_game_txt_with_unit(ADDR(0x6312c8, ((u8 *)&g.d_006312c8)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6312c8, ((u8 *)&g.d_006312c8)),entry[4]);
       break;
     case 0x20:
-      dlg_game_txt_with_unit(ADDR(0x6312d4, ((u8 *)&g.d_006312d4)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6312d4, ((u8 *)&g.d_006312d4)),entry[4]);
       break;
     case 0x21:
       popup_game_with_sprite(ADDR(0x6312e0, ((u8 *)&g.d_006312e0)),ADDR(0x6469e0, ((u8 *)&g.d_006469e0)),0);
       break;
     case 0x22:
-      dlg_game_txt_with_unit(ADDR(0x6312f0, ((u8 *)&g.d_006312f0)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6312f0, ((u8 *)&g.d_006312f0)),entry[4]);
       break;
     case 0x23:
-      iVar4 = dlg_game_txt_with_unit(ADDR(0x6312fc, ((u8 *)&g.d_006312fc)),piVar1[5]);
+      text = dlg_game_txt_with_unit(ADDR(0x6312fc, ((u8 *)&g.d_006312fc)),entry[5]);
       net_send_message(0x7b,*(i32 *)
-                               (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54),
-                         iVar4,0,0,0,0,0,0,0);
+                               (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54),
+                         text,0,0,0,0,0,0,0);
       break;
     case 0x24:
-      iVar4 = dlg_game_txt_with_unit(ADDR(0x631304, ((u8 *)&g.d_00631304)),piVar1[5]);
+      text = dlg_game_txt_with_unit(ADDR(0x631304, ((u8 *)&g.d_00631304)),entry[5]);
       net_send_message(0x7b,*(i32 *)
-                               (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54),
-                         iVar4,0,0,0,0,0,0,0);
+                               (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54),
+                         text,0,0,0,0,0,0,0);
       break;
     case 0x25:
-      dlg_game_txt_with_unit(ADDR(0x63130c, ((u8 *)&g.d_0063130c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63130c, ((u8 *)&g.d_0063130c)),entry[4]);
       break;
     case 0x26:
-      popup_game_with_sprite(ADDR(0x631318, ((u8 *)&g.d_00631318)),(iptr)(&unit_sprites + piVar1[4] * 0x3c),piVar1[5]);
+      popup_game_with_sprite(ADDR(0x631318, ((u8 *)&g.d_00631318)),(iptr)(&unit_sprites + entry[4] * 0x3c),entry[5]);
       break;
     case 0x27:
-      popup_game_with_sprite(ADDR(0x631320, ((u8 *)&g.d_00631320)),(iptr)(&unit_sprites + piVar1[4] * 0x3c),piVar1[5]);
+      popup_game_with_sprite(ADDR(0x631320, ((u8 *)&g.d_00631320)),(iptr)(&unit_sprites + entry[4] * 0x3c),entry[5]);
       break;
     case 0x28:
-      popup_game_with_sprite(ADDR(0x631328, ((u8 *)&g.d_00631328)),(iptr)(&unit_sprites + piVar1[4] * 0x3c),piVar1[5]);
+      popup_game_with_sprite(ADDR(0x631328, ((u8 *)&g.d_00631328)),(iptr)(&unit_sprites + entry[4] * 0x3c),entry[5]);
       break;
     case 0x29:
       popup_game_with_improvement(ADDR(0x631334, ((u8 *)&g.d_00631334)),0x3e,8);
@@ -11220,34 +11220,34 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_improvement(ADDR(0x631340, ((u8 *)&g.d_00631340)),0x11,8);
       break;
     case 0x2b:
-      popup_game_with_sprite(ADDR(0x631344, ((u8 *)&g.d_00631344)),(iptr)(&government_sprites + piVar1[4] * 0x3c),piVar1[5]);
+      popup_game_with_sprite(ADDR(0x631344, ((u8 *)&g.d_00631344)),(iptr)(&government_sprites + entry[4] * 0x3c),entry[5]);
       break;
     case 0x2c:
-      popup_game_with_sprite(ADDR(0x63134c, ((u8 *)&g.d_0063134c)),(iptr)(&government_sprites + piVar1[4] * 0x3c),piVar1[5]);
+      popup_game_with_sprite(ADDR(0x63134c, ((u8 *)&g.d_0063134c)),(iptr)(&government_sprites + entry[4] * 0x3c),entry[5]);
       break;
     case 0x2d:
-      dlg_game_txt_with_unit(ADDR(0x631358, ((u8 *)&g.d_00631358)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631358, ((u8 *)&g.d_00631358)),entry[4]);
       break;
     case 0x2e:
-      dlg_game_txt_with_unit(ADDR(0x631364, ((u8 *)&g.d_00631364)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631364, ((u8 *)&g.d_00631364)),entry[4]);
       break;
     case 0x2f:
-      dlg_game_txt_with_unit(ADDR(0x63136c, ((u8 *)&g.d_0063136c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63136c, ((u8 *)&g.d_0063136c)),entry[4]);
       break;
     case 0x30:
-      dlg_game_txt_with_unit(ADDR(0x63137c, ((u8 *)&g.d_0063137c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63137c, ((u8 *)&g.d_0063137c)),entry[4]);
       break;
     case 0x31:
-      popup_game_with_improvement(ADDR(0x631388, ((u8 *)&g.d_00631388)),piVar1[4],8);
+      popup_game_with_improvement(ADDR(0x631388, ((u8 *)&g.d_00631388)),entry[4],8);
       break;
     case 0x32:
-      popup_game_with_improvement(ADDR(0x631394, ((u8 *)&g.d_00631394)),piVar1[4],8);
+      popup_game_with_improvement(ADDR(0x631394, ((u8 *)&g.d_00631394)),entry[4],8);
       break;
     case 0x33:
-      dlg_game_txt_with_unit(ADDR(0x63139c, ((u8 *)&g.d_0063139c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63139c, ((u8 *)&g.d_0063139c)),entry[4]);
       break;
     case 0x34:
-      dlg_game_txt_with_unit(ADDR(0x6313a8, ((u8 *)&g.d_006313a8)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6313a8, ((u8 *)&g.d_006313a8)),entry[4]);
       break;
     case 0x35:
       popup_game(ADDR(0x6313b8, ((u8 *)&g.d_006313b8)));
@@ -11256,7 +11256,7 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game(ADDR(0x6313c8, ((u8 *)&g.d_006313c8)));
       break;
     case 0x37:
-      dlg_game_txt_with_unit_flags(ADDR(0x6313d4, ((u8 *)&g.d_006313d4)),piVar1[4],0);
+      dlg_game_txt_with_unit_flags(ADDR(0x6313d4, ((u8 *)&g.d_006313d4)),entry[4],0);
       break;
     case 0x38:
       popup_game_with_sprite(ADDR(0x6313dc, ((u8 *)&g.d_006313dc)),(iptr)(&diplo_popup_portrait_sprite +
@@ -11276,57 +11276,57 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game(ADDR(0x631414, ((u8 *)&g.d_00631414)));
       break;
     case 0x3d:
-      civs[human_civ].last_treaty_turn[piVar1[4]] = game.turn;
-      civs[piVar1[4]].last_treaty_turn[human_civ] = game.turn;
+      civs[human_civ].last_treaty_turn[entry[4]] = game.turn;
+      civs[entry[4]].last_treaty_turn[human_civ] = game.turn;
       if (parley_other_civ == -1) {
         parley_other_civ = -2;
         text_clear();
-        iVar4 = civ_leader_title(piVar1[4]);
-        text_append(iVar4);
+        text = civ_leader_title(entry[4]);
+        text_append(text);
         text_append_space();
-        iVar4 = civ_leader_name(piVar1[4]);
-        text_append(iVar4);
+        text = civ_leader_name(entry[4]);
+        text_append(text);
         text_append_space();
         text_append_label(0x8c);
         text_append_space();
-        iVar4 = civ_name_plural(piVar1[4]);
-        text_append(iVar4);
+        text = civ_name_plural(entry[4]);
+        text_append(text);
         text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-        iVar4 = civ_leader_name(human_civ);
-        text_set_string_arg(1,iVar4);
-        iVar4 = civ_name_plural(human_civ);
-        text_set_string_arg(2,iVar4);
-        if (*(char *)&civs[piVar1[4]].attitude[human_civ] == '\0') {
-          local_330 = 0;
+        text = civ_leader_name(human_civ);
+        text_set_string_arg(1,text);
+        text = civ_name_plural(human_civ);
+        text_set_string_arg(2,text);
+        if (*(char *)&civs[entry[4]].attitude[human_civ] == '\0') {
+          attitude_level = 0;
         }
         else {
-          local_330 = diplo_attitude_level((uint)civs[piVar1[4]].attitude[human_civ]);
+          attitude_level = diplo_attitude_level((uint)civs[entry[4]].attitude[human_civ]);
         }
-        iVar4 = label_string(attitude_names[local_330]);
-        text_set_string_arg(3,iVar4);
+        text = label_string(attitude_names[attitude_level]);
+        text_set_string_arg(3,text);
         dlg_pending_idle_callback = ((void *)ADDR(0x00403d0f, net_popup_idle_autoclose));
-        iVar3 = popup_game_with_sprite(ADDR(0x631424, ((u8 *)&g.d_00631424)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+        choice = popup_game_with_sprite(ADDR(0x631424, ((u8 *)&g.d_00631424)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         if (net_host_handoff_stage == '\0') {
           if (nm_parley_cancel_count == 0) {
             net_send_message(0x80,*(i32 *)
-                                     (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54
-                                     ),iVar3,0,0,0,0,0,0,0);
+                                     (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54
+                                     ),choice,0,0,0,0,0,0,0);
           }
           if (nm_parley_cancel_count == 0) {
-            if (iVar3 == 1) {
-              iVar4 = piVar1[4];
-              operator_delete(piVar1);
+            if (choice == 1) {
+              text = entry[4];
+              operator_delete(entry);
               net_popup_in_progress_i32 = 0;
-              parley_wnd_open((ViewWindow *)&parley_wnd,iVar4,2);
-              local_8 = 0xffffffff;
-              /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+              parley_wnd_open((ViewWindow *)&parley_wnd,text,2);
+              eh_state = 0xffffffff;
+              /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
               goto LAB_005139b3;
             }
           }
           else {
             nm_parley_cancel_count = 0;
-            iVar4 = civ_name_plural(piVar1[4]);
-            text_set_string_arg(0,iVar4);
+            text = civ_name_plural(entry[4]);
+            text_set_string_arg(0,text);
             dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
             popup_game_with_sprite(ADDR(0x631434, ((u8 *)&g.d_00631434)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           }
@@ -11335,7 +11335,7 @@ void __cdecl net_popup_queue_show_next(void)
         }
         else {
           net_send_message(0x80,*(i32 *)
-                                   (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54),
+                                   (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54),
                              2,0,0,0,0,0,0,0);
           parley_other_civ = -1;
           mp_meeting_pending = 0;
@@ -11343,27 +11343,27 @@ void __cdecl net_popup_queue_show_next(void)
       }
       else {
         net_send_message(0x80,*(i32 *)
-                                 (&net_player_slots + *(int *)(&net_civ_slots + piVar1[4] * 4) * 0x54),2,
+                                 (&net_player_slots + *(int *)(&net_civ_slots + entry[4] * 4) * 0x54),2,
                            0,0,0,0,0,0,0);
       }
       break;
     case 0x3e:
-      dlg_game_txt_with_unit_flags(ADDR(0x631444, ((u8 *)&g.d_00631444)),piVar1[4],(piVar1[5] == 0) - 1 & 8);
+      dlg_game_txt_with_unit_flags(ADDR(0x631444, ((u8 *)&g.d_00631444)),entry[4],(entry[5] == 0) - 1 & 8);
       break;
     case 0x3f:
-      if (*(int *)(&net_player_slots + *(int *)(&net_civ_slots + human_civ * 4) * 0x54) != piVar1[4])
+      if (*(int *)(&net_player_slots + *(int *)(&net_civ_slots + human_civ * 4) * 0x54) != entry[4])
       {
         popup_game_with_sprite(ADDR(0x63144c, ((u8 *)&g.d_0063144c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       }
       break;
     case 0x40:
-      dlg_load_game_section(&local_308,ADDR(0x631458, ((u8 *)&g.d_00631458)),0x2000000);
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xd50));
-      dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xd54));
-      dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-      dlg_show_modal(&local_308,0x28);
-      net_send_message(0x56,0,local_308.field_dc,0,0,0,0,0,0,0);
+      dlg_load_game_section(&dlg,ADDR(0x631458, ((u8 *)&g.d_00631458)),0x2000000);
+      text = label_string(*(i32 *)(label_string_ids + 0xd50));
+      dialog_add_button((DialogButtonsView *)&dlg,text);
+      text = label_string(*(i32 *)(label_string_ids + 0xd54));
+      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dlg_show_modal(&dlg,0x28);
+      net_send_message(0x56,0,dlg.field_dc,0,0,0,0,0,0,0);
       break;
     case 0x41:
       popup_game_with_sprite(ADDR(0x63146c, ((u8 *)&g.d_0063146c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11372,13 +11372,13 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_sprite(ADDR(0x63147c, ((u8 *)&g.d_0063147c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       break;
     case 0x43:
-      dlg_load_game_section(&local_308,ADDR(0x63148c, ((u8 *)&g.d_0063148c)),0x2000000);
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xd50));
-      dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xd54));
-      dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-      dlg_show_modal(&local_308,0);
-      net_send_message(0x57,0,local_308.field_dc,0,0,0,0,0,0,0);
+      dlg_load_game_section(&dlg,ADDR(0x63148c, ((u8 *)&g.d_0063148c)),0x2000000);
+      text = label_string(*(i32 *)(label_string_ids + 0xd50));
+      dialog_add_button((DialogButtonsView *)&dlg,text);
+      text = label_string(*(i32 *)(label_string_ids + 0xd54));
+      dialog_add_button((DialogButtonsView *)&dlg,text);
+      dlg_show_modal(&dlg,0);
+      net_send_message(0x57,0,dlg.field_dc,0,0,0,0,0,0,0);
       break;
     case 0x44:
       popup_game_with_sprite(ADDR(0x63149c, ((u8 *)&g.d_0063149c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11388,19 +11388,19 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x46:
       snd_play_effect(0x23,1,0,0);
-      city_notify_dialog_ex(ADDR(0x6314b4, ((u8 *)&g.d_006314b4)),piVar1[4],1,ADDR(0x645fe8, ((u8 *)&g.d_00645fe8)));
+      city_notify_dialog_ex(ADDR(0x6314b4, ((u8 *)&g.d_006314b4)),entry[4],1,ADDR(0x645fe8, ((u8 *)&g.d_00645fe8)));
       break;
     case 0x47:
-      dialog_load_game_text(&local_308,ADDR(0x6314c0, ((u8 *)&g.d_006314c0)));
-      if (piVar1[4] < 0) {
-        local_338 = &improvement_icon_sprites + piVar1[5] * 0x3c;
+      dialog_load_game_text(&dlg,ADDR(0x6314c0, ((u8 *)&g.d_006314c0)));
+      if (entry[4] < 0) {
+        icon_sprite = &improvement_icon_sprites + entry[5] * 0x3c;
       }
       else {
-        local_338 = &wonder_icon_sprites + piVar1[4] * 0x3c;
+        icon_sprite = &wonder_icon_sprites + entry[4] * 0x3c;
       }
-      dialog_add_sprite((DialogOptionList *)&local_308,(iptr)local_338,0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+      dialog_add_sprite((DialogOptionList *)&dlg,(iptr)icon_sprite,0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x48:
       popup_game(ADDR(0x6314c8, ((u8 *)&g.d_006314c8)));
@@ -11409,58 +11409,58 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game(ADDR(0x6314d4, ((u8 *)&g.d_006314d4)));
       break;
     case 0x4a:
-      dialog_load_game_text(&local_308,ADDR(0x6314e0, ((u8 *)&g.d_006314e0)));
+      dialog_load_game_text(&dlg,ADDR(0x6314e0, ((u8 *)&g.d_006314e0)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x4b:
-      dialog_load_game_text(&local_308,ADDR(0x6314f0, ((u8 *)&g.d_006314f0)));
+      dialog_load_game_text(&dlg,ADDR(0x6314f0, ((u8 *)&g.d_006314f0)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x4c:
-      dialog_load_game_text(&local_308,ADDR(0x631500, ((u8 *)&g.d_00631500)));
+      dialog_load_game_text(&dlg,ADDR(0x631500, ((u8 *)&g.d_00631500)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x4d:
-      dialog_load_game_text(&local_308,ADDR(0x631510, ((u8 *)&g.d_00631510)));
+      dialog_load_game_text(&dlg,ADDR(0x631510, ((u8 *)&g.d_00631510)));
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,
+                ((DialogOptionList *)&dlg,
                  (iptr)(&advance_category_icon_sprites +
-                       (char)advances[piVar1[4]].category * 0xf0 +
-                       (char)advances[piVar1[4]].epoch * 0x3c),0,0);
+                       (char)advances[entry[4]].category * 0xf0 +
+                       (char)advances[entry[4]].epoch * 0x3c),0,0);
       dialog_add_sprite
-                ((DialogOptionList *)&local_308,(iptr)(&improvement_icon_sprites + piVar1[5] * 0x3c),0,0);
-      dialog_set_image_zoom((DialogWindowView *)&local_308,8);
-      dlg_show_modal(&local_308,0);
+                ((DialogOptionList *)&dlg,(iptr)(&improvement_icon_sprites + entry[5] * 0x3c),0,0);
+      dialog_set_image_zoom((DialogWindowView *)&dlg,8);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x4e:
-      dlg_game_txt_with_unit(ADDR(0x63151c, ((u8 *)&g.d_0063151c)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x63151c, ((u8 *)&g.d_0063151c)),entry[4]);
       break;
     case 0x4f:
-      dialog_init_default(&local_308);
-      for (local_310 = 0; local_310 < piVar1[2]; local_310++) {
+      dialog_init_default(&dlg);
+      for (i = 0; i < entry[2]; i++) {
         dialog_add_line
-                  ((DialogAddLineView *)&local_308,(iptr)(&text_string_args + local_310 * 0x104),0xffffffff,
+                  ((DialogAddLineView *)&dlg,(iptr)(&text_string_args + i * 0x104),0xffffffff,
                    0xffffffff,0xffffffff,0);
       }
-      dlg_show_modal(&local_308,0);
+      dlg_show_modal(&dlg,0);
       break;
     case 0x50:
       popup_game_with_sprite(ADDR(0x63152c, ((u8 *)&g.d_0063152c)),ADDR(0x647748, ((u8 *)&g.d_00647748)),0);
       break;
     case 0x51:
-      dlg_game_txt_with_unit(ADDR(0x631534, ((u8 *)&g.d_00631534)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631534, ((u8 *)&g.d_00631534)),entry[4]);
       break;
     case 0x52:
-      dlg_game_txt_with_unit(ADDR(0x631544, ((u8 *)&g.d_00631544)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631544, ((u8 *)&g.d_00631544)),entry[4]);
       break;
     case 0x53:
       popup_game_with_sprite(ADDR(0x631554, ((u8 *)&g.d_00631554)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -11477,8 +11477,8 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_sprite(ADDR(0x63157c, ((u8 *)&g.d_0063157c)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       break;
     case 0x57:
-      iVar3 = civ_has_advance(piVar1[4],0x23);
-      if (iVar3 == 0) {
+      choice = civ_has_advance(entry[4],0x23);
+      if (choice == 0) {
         snd_play_effect(0x44,1,0,0);
       }
       else {
@@ -11491,18 +11491,18 @@ void __cdecl net_popup_queue_show_next(void)
       popup_game_with_sprite(ADDR(0x631598, ((u8 *)&g.d_00631598)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
       break;
     case 0x59:
-      iVar3 = civ_has_advance(piVar1[5],0x23);
-      if (iVar3 == 0) {
+      choice = civ_has_advance(entry[5],0x23);
+      if (choice == 0) {
         snd_play_effect(0x44,1,0,0);
       }
       else {
         snd_play_effect(0x27,1,0,0);
       }
-      popup_game_with_sprite(ADDR(0x6315d8, ((u8 *)&g.d_006315d8)),(iptr)(&improvement_icon_sprites + piVar1[4] * 0x3c),8);
+      popup_game_with_sprite(ADDR(0x6315d8, ((u8 *)&g.d_006315d8)),(iptr)(&improvement_icon_sprites + entry[4] * 0x3c),8);
       break;
     case 0x5a:
-      iVar3 = civ_has_advance(piVar1[4],0x23);
-      if (iVar3 == 0) {
+      choice = civ_has_advance(entry[4],0x23);
+      if (choice == 0) {
         snd_play_effect(0x44,1,0,0);
       }
       else {
@@ -11530,32 +11530,32 @@ void __cdecl net_popup_queue_show_next(void)
       break;
     case 0x5f:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit(ADDR(0x6315f0, ((u8 *)&g.d_006315f0)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6315f0, ((u8 *)&g.d_006315f0)),entry[4]);
       break;
     case 0x60:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit(ADDR(0x6315f8, ((u8 *)&g.d_006315f8)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x6315f8, ((u8 *)&g.d_006315f8)),entry[4]);
       break;
     case 0x61:
       snd_play_effect(0x5d,0,0,0);
-      dlg_game_txt_with_unit(ADDR(0x631600, ((u8 *)&g.d_00631600)),piVar1[4]);
+      dlg_game_txt_with_unit(ADDR(0x631600, ((u8 *)&g.d_00631600)),entry[4]);
       break;
     case 0x62:
       popup_game(ADDR(0x63160c, ((u8 *)&g.d_0063160c)));
       break;
     case 99:
-      popup_game_with_advance(ADDR(0x631618, ((u8 *)&g.d_00631618)),piVar1[4],0);
+      popup_game_with_advance(ADDR(0x631618, ((u8 *)&g.d_00631618)),entry[4],0);
       break;
     case 100:
-      if ((parley_wnd_closed == 0) && (piVar1[4] == parley_other_civ)) {
+      if ((parley_wnd_closed == 0) && (entry[4] == parley_other_civ)) {
         parley_reveal_units_prompt_open = 1;
-        dlg_load_game_section(&local_308,ADDR(0x631620, ((u8 *)&g.d_00631620)),0x2000000);
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xdd4));
-        dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xdd8));
-        dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-        dlg_show_modal(&local_308,0x14);
-        if (local_308.field_dc == 1) {
+        dlg_load_game_section(&dlg,ADDR(0x631620, ((u8 *)&g.d_00631620)),0x2000000);
+        text = label_string(*(i32 *)(label_string_ids + 0xdd4));
+        dialog_add_button((DialogButtonsView *)&dlg,text);
+        text = label_string(*(i32 *)(label_string_ids + 0xdd8));
+        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dlg_show_modal(&dlg,0x14);
+        if (dlg.field_dc == 1) {
           parley_local_units_revealed = 1;
           if (parley_mode == 2) {
             ctrl_show_and_redraw(parley_conceal_info_button);
@@ -11587,15 +11587,15 @@ void __cdecl net_popup_queue_show_next(void)
       }
       break;
     case 0x65:
-      if ((parley_wnd_closed == 0) && (piVar1[4] == parley_other_civ)) {
+      if ((parley_wnd_closed == 0) && (entry[4] == parley_other_civ)) {
         parley_reveal_city_prompt_open = 1;
-        dlg_load_game_section(&local_308,ADDR(0x631634, ((u8 *)&g.d_00631634)),0x2000000);
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xddc));
-        dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xdd8));
-        dialog_add_button((DialogButtonsView *)&local_308,iVar4);
-        dlg_show_modal(&local_308,0x14);
-        if (local_308.field_dc == 1) {
+        dlg_load_game_section(&dlg,ADDR(0x631634, ((u8 *)&g.d_00631634)),0x2000000);
+        text = label_string(*(i32 *)(label_string_ids + 0xddc));
+        dialog_add_button((DialogButtonsView *)&dlg,text);
+        text = label_string(*(i32 *)(label_string_ids + 0xdd8));
+        dialog_add_button((DialogButtonsView *)&dlg,text);
+        dlg_show_modal(&dlg,0x14);
+        if (dlg.field_dc == 1) {
           parley_local_cities_revealed = 1;
           if (parley_mode == 2) {
             ctrl_show_and_redraw(parley_conceal_info_button);
@@ -11623,11 +11623,11 @@ void __cdecl net_popup_queue_show_next(void)
         parley_reveal_city_prompt_open = 0;
       }
     }
-    operator_delete(piVar1);
+    operator_delete(entry);
     net_popup_in_progress_i32 = 0;
   }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 0051399d */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
 LAB_005139b3:
   return;
 }
@@ -11642,14 +11642,14 @@ LAB_005139b3:
 #undef parley_reveal_city_prompt_open
 #undef parley_reveal_units_prompt_open
 #undef net_popup_in_progress_i32
-#undef local_338
-#undef local_330
-#undef local_310
-#undef local_308
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef icon_sprite
+#undef attitude_level
+#undef i
+#undef dlg
+#undef arg_ptr
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 00514220 auto */
 NetMsgQueue * __thiscall net_msgq_ctor(NetMsgQueue *this)
@@ -11669,32 +11669,32 @@ void __thiscall net_msgq_clear(NetMsgQueue *this)
 }
 
 /* 00514272 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_msgq_reset(NetMsgQueue *this)
 
 {
-  u8 *puVar1;
+  u8 *field_ptr;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 2000; local_8++) {
-    if (*(int *)(this->pad_0 + local_8 * 0xc + 4) != 0) {
-      operator_delete(*(void **)(this->pad_0 + local_8 * 0xc + 4));
-      puVar1 = this->pad_0 + local_8 * 0xc + 4;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+  for (i = 0; i < 2000; i++) {
+    if (*(int *)(this->pad_0 + i * 0xc + 4) != 0) {
+      operator_delete(*(void **)(this->pad_0 + i * 0xc + 4));
+      field_ptr = this->pad_0 + i * 0xc + 4;
+      field_ptr[0] = '\0';
+      field_ptr[1] = '\0';
+      field_ptr[2] = '\0';
+      field_ptr[3] = '\0';
     }
-    puVar1 = this->pad_0 + local_8 * 0xc + 8;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    puVar1 = this->pad_0 + local_8 * 0xc;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    field_ptr = this->pad_0 + i * 0xc + 8;
+    field_ptr[0] = '\0';
+    field_ptr[1] = '\0';
+    field_ptr[2] = '\0';
+    field_ptr[3] = '\0';
+    field_ptr = this->pad_0 + i * 0xc;
+    field_ptr[0] = '\0';
+    field_ptr[1] = '\0';
+    field_ptr[2] = '\0';
+    field_ptr[3] = '\0';
   }
   this->low_read_index = 400;
   this->main_tail = 400;
@@ -11704,64 +11704,64 @@ void __thiscall net_msgq_reset(NetMsgQueue *this)
   this->prio_count = 0;
   return;
 }
-#undef local_8
+#undef i
 
 /* 0051435f auto */
-i32 __cdecl net_msg_is_priority(int param_1)
+i32 __cdecl net_msg_is_priority(int msg_type)
 
 {
-  i32 uVar1;
+  i32 is_priority;
   
-  if ((param_1 < 0x2a) || (0x66 < param_1)) {
-    uVar1 = 0;
+  if ((msg_type < 0x2a) || (0x66 < msg_type)) {
+    is_priority = 0;
   }
   else {
-    uVar1 = 1;
+    is_priority = 1;
   }
-  return uVar1;
+  return is_priority;
 }
 
 /* 0051438f auto */
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define nm_heartbeat_ack_count (*(int *)((u8 *)&g.d_006c9090))
 #define nm_heart_beat_count_i32 (*(i32 *)((u8 *)&g.d_006c908c))
-#define local_208 (*(i8 (*)[256])(frame_ + FRAME_OFF(0)))
-#define local_108 (*(iptr *)(frame_ + FRAME_OFF(256)))
-#define local_104 (*(i8 (*)[256])(frame_ + FRAME_OFF(260)))
+#define lost_msg_text (*(i8 (*)[256])(frame_ + FRAME_OFF(0)))
+#define msg_copy (*(iptr *)(frame_ + FRAME_OFF(256)))
+#define lost_prio_text (*(i8 (*)[256])(frame_ + FRAME_OFF(260)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall
-net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint param_3)
+net_msgq_enqueue(NetMsgQueueEnqueueView *this,int sender,iptr msg,uint msg_size)
 
 {
-  int iVar1;
-  void *pvVar2;
+  int is_priority;
+  void *msg_buf;
   i8 frame_[FRAME_OFF(520)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((((game.multiplayer == 5) || (game.multiplayer == 6)) && (param_1 != 0)) &&
-     (param_1 != 0xff)) {
+  if ((((game.multiplayer == 5) || (game.multiplayer == 6)) && (sender != 0)) &&
+     (sender != 0xff)) {
     if (net_host_flag == '\0') {
-      param_1 = 0;
+      sender = 0;
     }
     else {
-      param_1 = 1;
+      sender = 1;
     }
   }
-  if (*(int *)(param_2 + 4) == 0x2b) {
+  if (*(int *)(msg + 4) == 0x2b) {
     nm_heart_beat_count_i32++;
-    net_send_message(0x2c,param_1,0,0,0,0,0,0,0,0);
+    net_send_message(0x2c,sender,0,0,0,0,0,0,0,0);
   }
-  else if (*(int *)(param_2 + 4) == 0x2c) {
+  else if (*(int *)(msg + 4) == 0x2c) {
     nm_heartbeat_ack_count++;
   }
   else {
-    iVar1 = net_msg_is_priority(*(i32 *)(param_2 + 4));
-    if (iVar1 == 0) {
+    is_priority = net_msg_is_priority(*(i32 *)(msg + 4));
+    if (is_priority == 0) {
       if ((this->normal_head == this->normal_tail) && (this->normal_count != 0)) {
-        crt_strcpy(local_208,s_MESSAGE_LOST_in_EnqueueMessage__006318a8);
-        crt_strcat(local_208,s_NM_DATAGRAM_00628470 + *(int *)(param_2 + 4) * 0x20);
-        crt_strcat(local_208,s_From___d_Size___d_006318cc);
-        dbg_logf_int2((iptr)local_208,param_1,param_3);
+        crt_strcpy(lost_msg_text,s_MESSAGE_LOST_in_EnqueueMessage__006318a8);
+        crt_strcat(lost_msg_text,s_NM_DATAGRAM_00628470 + *(int *)(msg + 4) * 0x20);
+        crt_strcat(lost_msg_text,s_From___d_Size___d_006318cc);
+        dbg_logf_int2((iptr)lost_msg_text,sender,msg_size);
         return 0;
       }
       if (((int)this->normal_head < 400) || (1999 < (int)this->normal_head)) {
@@ -11770,18 +11770,18 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint para
       if (((int)this->normal_tail < 400) || (1999 < (int)this->normal_tail)) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x631958, ((u8 *)&g.d_00631958)),ADDR(0x631930, ((u8 *)&g.d_00631930)),0x131);
       }
-      pvVar2 = operator_new(param_3);
-      *(void **)(this->pad_0 + this->normal_tail * 0xc + 4) = pvVar2;
+      msg_buf = operator_new(msg_size);
+      *(void **)(this->pad_0 + this->normal_tail * 0xc + 4) = msg_buf;
       if (*(int *)(this->pad_0 + this->normal_tail * 0xc + 4) == 0) {
-        dbg_logf_int2(ADDR(0x6319c0, ((u8 *)&g.d_006319c0)),*(i32 *)(param_2 + 4),*(i32 *)(param_2 + 8));
+        dbg_logf_int2(ADDR(0x6319c0, ((u8 *)&g.d_006319c0)),*(i32 *)(msg + 4),*(i32 *)(msg + 8));
         return 0;
       }
       if (*(int *)(this->pad_0 + this->normal_tail * 0xc + 4) == 0) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6319a8, ((u8 *)&g.d_006319a8)),ADDR(0x631980, ((u8 *)&g.d_00631980)),0x136);
       }
-      crt_memcpy(*(i32 *)(this->pad_0 + this->normal_tail * 0xc + 4),param_2,param_3);
-      *(int *)(this->pad_0 + this->normal_tail * 0xc) = param_1;
-      *(uint *)(this->pad_0 + this->normal_tail * 0xc + 8) = param_3;
+      crt_memcpy(*(i32 *)(this->pad_0 + this->normal_tail * 0xc + 4),msg,msg_size);
+      *(int *)(this->pad_0 + this->normal_tail * 0xc) = sender;
+      *(uint *)(this->pad_0 + this->normal_tail * 0xc + 8) = msg_size;
       this->normal_tail = (int)(this->normal_tail + 1) % 2000;
       if (this->normal_tail == 0) {
         this->normal_tail = 400;
@@ -11793,10 +11793,10 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint para
     }
     else {
       if ((this->prio_head == this->prio_tail) && (this->prio_count != 0)) {
-        crt_strcpy(local_104,s_MESSAGE_LOST_in_Alpha_EnqueueMes_00631748);
-        crt_strcat(local_104,s_NM_DATAGRAM_00628470 + *(int *)(param_2 + 4) * 0x20);
-        crt_strcat(local_104,s_From___d_Size___d_00631770);
-        dbg_logf_int2((iptr)local_104,param_1,param_3);
+        crt_strcpy(lost_prio_text,s_MESSAGE_LOST_in_Alpha_EnqueueMes_00631748);
+        crt_strcat(lost_prio_text,s_NM_DATAGRAM_00628470 + *(int *)(msg + 4) * 0x20);
+        crt_strcat(lost_prio_text,s_From___d_Size___d_00631770);
+        dbg_logf_int2((iptr)lost_prio_text,sender,msg_size);
         return 0;
       }
       if (((int)this->prio_head < 0) || (399 < (int)this->prio_head)) {
@@ -11805,19 +11805,19 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint para
       if (((int)this->prio_tail < 0) || (399 < (int)this->prio_tail)) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6317f8, ((u8 *)&g.d_006317f8)),ADDR(0x6317d0, ((u8 *)&g.d_006317d0)),0x10d);
       }
-      pvVar2 = operator_new(param_3);
-      *(void **)(this->pad_0 + this->prio_tail * 0xc + 4) = pvVar2;
+      msg_buf = operator_new(msg_size);
+      *(void **)(this->pad_0 + this->prio_tail * 0xc + 4) = msg_buf;
       if (*(int *)(this->pad_0 + this->prio_tail * 0xc + 4) == 0) {
-        local_108 = param_2;
-        dbg_logf_int2(ADDR(0x631860, ((u8 *)&g.d_00631860)),*(i32 *)(param_2 + 4),*(i32 *)(param_2 + 8));
+        msg_copy = msg;
+        dbg_logf_int2(ADDR(0x631860, ((u8 *)&g.d_00631860)),*(i32 *)(msg + 4),*(i32 *)(msg + 8));
         return 0;
       }
       if (*(int *)(this->pad_0 + this->prio_tail * 0xc + 4) == 0) {
         err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x631844, ((u8 *)&g.d_00631844)),ADDR(0x63181c, ((u8 *)&g.d_0063181c)),0x112);
       }
-      crt_memcpy(*(i32 *)(this->pad_0 + this->prio_tail * 0xc + 4),param_2,param_3);
-      *(int *)(this->pad_0 + this->prio_tail * 0xc) = param_1;
-      *(uint *)(this->pad_0 + this->prio_tail * 0xc + 8) = param_3;
+      crt_memcpy(*(i32 *)(this->pad_0 + this->prio_tail * 0xc + 4),msg,msg_size);
+      *(int *)(this->pad_0 + this->prio_tail * 0xc) = sender;
+      *(uint *)(this->pad_0 + this->prio_tail * 0xc + 8) = msg_size;
       this->prio_tail = (int)(this->prio_tail + 1) % 400;
       this->prio_count++;
       if ((int)net_msgq_priority_peak < (int)this->prio_count) {
@@ -11830,73 +11830,73 @@ net_msgq_enqueue(NetMsgQueueEnqueueView *this,int param_1,iptr param_2,uint para
 #undef net_host_flag
 #undef nm_heartbeat_ack_count
 #undef nm_heart_beat_count_i32
-#undef local_208
-#undef local_108
-#undef local_104
+#undef lost_msg_text
+#undef msg_copy
+#undef lost_prio_text
 
 /* 005149d6 auto */
 i32 __thiscall
-net_msgq_dequeue(NetMessageQueue *this,iptr param_1,iptr param_2,iptr param_3,int param_4)
+net_msgq_dequeue(NetMessageQueue *this,iptr out_sender,iptr out_msg,iptr out_size,int priority_only)
 
 {
-  u8 *puVar1;
-  i32 uVar2;
+  u8 *slot_field;
+  i32 result;
   
   if (this->high_count == 0) {
-    if ((param_4 == 0) && (this->low_count != 0)) {
-      *(i32 *)param_1 = *(i32 *)(this->pad_0 + this->low_read_index * 0xc);
-      puVar1 = this->pad_0 + this->low_read_index * 0xc;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
-      *(i32 *)param_2 = *(i32 *)(this->pad_0 + this->low_read_index * 0xc + 4);
-      puVar1 = this->pad_0 + this->low_read_index * 0xc + 4;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
-      *(i32 *)param_3 = *(i32 *)(this->pad_0 + this->low_read_index * 0xc + 8);
-      puVar1 = this->pad_0 + this->low_read_index * 0xc + 8;
-      puVar1[0] = '\0';
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if ((priority_only == 0) && (this->low_count != 0)) {
+      *(i32 *)out_sender = *(i32 *)(this->pad_0 + this->low_read_index * 0xc);
+      slot_field = this->pad_0 + this->low_read_index * 0xc;
+      slot_field[0] = '\0';
+      slot_field[1] = '\0';
+      slot_field[2] = '\0';
+      slot_field[3] = '\0';
+      *(i32 *)out_msg = *(i32 *)(this->pad_0 + this->low_read_index * 0xc + 4);
+      slot_field = this->pad_0 + this->low_read_index * 0xc + 4;
+      slot_field[0] = '\0';
+      slot_field[1] = '\0';
+      slot_field[2] = '\0';
+      slot_field[3] = '\0';
+      *(i32 *)out_size = *(i32 *)(this->pad_0 + this->low_read_index * 0xc + 8);
+      slot_field = this->pad_0 + this->low_read_index * 0xc + 8;
+      slot_field[0] = '\0';
+      slot_field[1] = '\0';
+      slot_field[2] = '\0';
+      slot_field[3] = '\0';
       this->low_read_index = (int)(this->low_read_index + 1) % 2000;
       if (this->low_read_index == 0) {
         this->low_read_index = 400;
       }
       this->low_count--;
-      uVar2 = 1;
+      result = 1;
     }
     else {
-      uVar2 = 0;
+      result = 0;
     }
   }
   else {
-    *(i32 *)param_1 = *(i32 *)(this->pad_0 + this->high_read_index * 0xc);
-    puVar1 = this->pad_0 + this->high_read_index * 0xc;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    *(i32 *)param_2 = *(i32 *)(this->pad_0 + this->high_read_index * 0xc + 4);
-    puVar1 = this->pad_0 + this->high_read_index * 0xc + 4;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
-    *(i32 *)param_3 = *(i32 *)(this->pad_0 + this->high_read_index * 0xc + 8);
-    puVar1 = this->pad_0 + this->high_read_index * 0xc + 8;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    *(i32 *)out_sender = *(i32 *)(this->pad_0 + this->high_read_index * 0xc);
+    slot_field = this->pad_0 + this->high_read_index * 0xc;
+    slot_field[0] = '\0';
+    slot_field[1] = '\0';
+    slot_field[2] = '\0';
+    slot_field[3] = '\0';
+    *(i32 *)out_msg = *(i32 *)(this->pad_0 + this->high_read_index * 0xc + 4);
+    slot_field = this->pad_0 + this->high_read_index * 0xc + 4;
+    slot_field[0] = '\0';
+    slot_field[1] = '\0';
+    slot_field[2] = '\0';
+    slot_field[3] = '\0';
+    *(i32 *)out_size = *(i32 *)(this->pad_0 + this->high_read_index * 0xc + 8);
+    slot_field = this->pad_0 + this->high_read_index * 0xc + 8;
+    slot_field[0] = '\0';
+    slot_field[1] = '\0';
+    slot_field[2] = '\0';
+    slot_field[3] = '\0';
     this->high_read_index = (int)(this->high_read_index + 1) % 400;
     this->high_count--;
-    uVar2 = 1;
+    result = 1;
   }
-  return uVar2;
+  return result;
 }
 
 /* 0051ea0c auto */
@@ -11909,10 +11909,10 @@ net_msgq_dequeue(NetMessageQueue *this,iptr param_1,iptr param_2,iptr param_3,in
 void __cdecl net_vote_wait_idle_cb(void)
 
 {
-  int iVar1;
+  int now_ticks;
   
   net_process_messages((NetSession *)&net_session,1,0);
-  if ((((net_host_handoff_stage == '\0') && (iVar1 = timer_ticks(), iVar1 - dialog_timeout_start_i32 < 0x961)) &&
+  if ((((net_host_handoff_stage == '\0') && (now_ticks = timer_ticks(), now_ticks - dialog_timeout_start_i32 < 0x961)) &&
       (net_vote_replies_pending != 0)) && (net_vote_status != -1)) {
     return;
   }
@@ -11960,138 +11960,138 @@ void __cdecl net_pump_idle_cb(void)
 #define net_slot_host_flags (*(i8 *)((u8 *)&g.d_006ad358))
 #define saved_resume_new_game (*(short *)((u8 *)&g.d_00654fa6))
 #define saved_turn_civ (*(char *)((u8 *)&g.d_00654fa4))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_1c (*(u8 *)(frame_ + FRAME_OFF(12)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(u8 *)(frame_ + FRAME_OFF(32)))
-i32 __cdecl net_host_register_player_civ(iptr param_1,int param_2)
+#define title_label_id (*(int *)(frame_ + FRAME_OFF(0)))
+#define join_civ (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define slot (*(int *)(frame_ + FRAME_OFF(8)))
+#define female_byte (*(u8 *)(frame_ + FRAME_OFF(12)))
+#define title_idx (*(int *)(frame_ + FRAME_OFF(28)))
+#define portrait (*(u8 *)(frame_ + FRAME_OFF(32)))
+i32 __cdecl net_host_register_player_civ(iptr player_info,int player_id)
 
 {
-  int iVar1;
-  i8 iVar2;
-  i8 iVar3;
-  i32 uVar4;
-  iptr iVar4;
+  int is_female;
+  i8 saved_player_civ;
+  i8 saved_turn_civ_val;
+  i32 result;
+  iptr saved_human_civ;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (net_host_flag == '\0') {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x632320, ((u8 *)&g.d_00632320)),ADDR(0x6322f4, ((u8 *)&g.d_006322f4)),0x778);
   }
-  iVar4 = human_civ;
-  iVar3 = game.turn_civ;
-  iVar2 = game.player_civ;
+  saved_human_civ = human_civ;
+  saved_turn_civ_val = game.turn_civ;
+  saved_player_civ = game.player_civ;
   if (((saved_resume_new_game == 0) && (saved_turn_civ == '\0')) && (net_session_phase < 2)) {
-    iVar1 = *(int *)(param_1 + 0x18);
-    uVar4 = *(i32 *)(param_1 + 0x14);
-    local_24 = *(iptr *)(param_1 + 0x10);
-    game.player_civ = (byte)local_24;
-    civs[(char)(byte)local_24].tribe = (i16)uVar4;
-    local_8 = (u8)uVar4;
-    civs[game.player_civ].leader_portrait = local_8;
-    if (iVar1 != 0) {
+    is_female = *(int *)(player_info + 0x18);
+    result = *(i32 *)(player_info + 0x14);
+    join_civ = *(iptr *)(player_info + 0x10);
+    game.player_civ = (byte)join_civ;
+    civs[(char)(byte)join_civ].tribe = (i16)result;
+    portrait = (u8)result;
+    civs[game.player_civ].leader_portrait = portrait;
+    if (is_female != 0) {
       civs[game.player_civ].leader_portrait += 21;
     }
     human_civ = (iptr)game.player_civ;
     if (net_session_phase < 3) {
-      game.human_players = game.human_players | (byte)(1 << ((byte)local_24 & 0x1f));
+      game.human_players = game.human_players | (byte)(1 << ((byte)join_civ & 0x1f));
     }
     else {
-      pending_human_players = pending_human_players | (byte)(1 << ((byte)local_24 & 0x1f));
+      pending_human_players = pending_human_players | (byte)(1 << ((byte)join_civ & 0x1f));
     }
-    local_1c = (u8)iVar1;
-    leaders[civs[game.player_civ].tribe].female = local_1c;
+    female_byte = (u8)is_female;
+    leaders[civs[game.player_civ].tribe].female = female_byte;
     leaders[civs[game.player_civ].tribe].leader_name =
          leaders[civs[game.player_civ].tribe].names[((uint)leaders[civs[game.player_civ].tribe].female)];
-    uVar4 = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
-    crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,uVar4);
+    result = label_string((int)leaders[civs[game.player_civ].tribe].leader_name);
+    crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,result);
     if (0 < leaders[civs[game.player_civ].tribe].leader_name) {
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
     }
-    crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,param_1 + 0x20);
-    if (*(int *)(param_1 + 0x1c) != 0) {
+    crt_strcpy((iptr)&civ_names[game.player_civ].leader_name,player_info + 0x20);
+    if (*(int *)(player_info + 0x1c) != 0) {
       leaders[civs[game.player_civ].tribe].plural = -leaders[civs[game.player_civ].tribe].plural;
       leaders[civs[game.player_civ].tribe].adjective =
            -leaders[civs[game.player_civ].tribe].adjective;
-      for (local_c = 0; local_c < 7; local_c++) {
-        if (leaders[civs[game.player_civ].tribe].titles[local_c][iVar1] < 1)
+      for (title_idx = 0; title_idx < 7; title_idx++) {
+        if (leaders[civs[game.player_civ].tribe].titles[title_idx][is_female] < 1)
         {
-          local_28 = ~(int)leaders[civs[game.player_civ].tribe].titles[local_c][iVar1] + 1;
+          title_label_id = ~(int)leaders[civs[game.player_civ].tribe].titles[title_idx][is_female] + 1;
         }
         else {
-          local_28 = (int)leaders[civs[game.player_civ].tribe].titles[local_c][iVar1];
+          title_label_id = (int)leaders[civs[game.player_civ].tribe].titles[title_idx][is_female];
         }
-        uVar4 = label_string(local_28);
-        crt_strcpy((iptr)&civ_names[game.player_civ].titles[local_c],uVar4);
-        leaders[civs[game.player_civ].tribe].titles[local_c][iVar1] =
-             -leaders[civs[game.player_civ].tribe].titles[local_c][iVar1];
+        result = label_string(title_label_id);
+        crt_strcpy((iptr)&civ_names[game.player_civ].titles[title_idx],result);
+        leaders[civs[game.player_civ].tribe].titles[title_idx][is_female] =
+             -leaders[civs[game.player_civ].tribe].titles[title_idx][is_female];
       }
-      crt_strcpy((iptr)&civ_names[game.player_civ].tribe_name,param_1 + 0x38);
-      crt_strcpy((iptr)&civ_names[game.player_civ].adjective,param_1 + 0x50);
-      if (*(int *)(param_1 + 0x68) != 0) {
-        for (local_c = 0; local_c < 7; local_c++) {
-          crt_strcpy((iptr)&civ_names[game.player_civ].titles[local_c],
-                       local_c * 0x18 + param_1 + 0x6c);
+      crt_strcpy((iptr)&civ_names[game.player_civ].tribe_name,player_info + 0x38);
+      crt_strcpy((iptr)&civ_names[game.player_civ].adjective,player_info + 0x50);
+      if (*(int *)(player_info + 0x68) != 0) {
+        for (title_idx = 0; title_idx < 7; title_idx++) {
+          crt_strcpy((iptr)&civ_names[game.player_civ].titles[title_idx],
+                       title_idx * 0x18 + player_info + 0x6c);
         }
       }
     }
-    civ_names[game.player_civ].city_style = (i16)*(i32 *)(param_1 + 0x114);
+    civ_names[game.player_civ].city_style = (i16)*(i32 *)(player_info + 0x114);
   }
   else {
-    local_24 = *(iptr *)(param_1 + 0x10);
+    join_civ = *(iptr *)(player_info + 0x10);
     if (net_session_phase < 3) {
-      game.human_players = game.human_players | (byte)(1 << ((byte)local_24 & 0x1f));
+      game.human_players = game.human_players | (byte)(1 << ((byte)join_civ & 0x1f));
     }
     else {
-      pending_human_players = pending_human_players | (byte)(1 << ((byte)local_24 & 0x1f));
+      pending_human_players = pending_human_players | (byte)(1 << ((byte)join_civ & 0x1f));
     }
-    game.player_civ = (byte)local_24;
-    game.turn_civ = (byte)local_24;
-    human_civ = local_24;
-    crt_strcpy((iptr)&civ_names[((char)(byte)local_24)].leader_name,param_1 + 0x20);
+    game.player_civ = (byte)join_civ;
+    game.turn_civ = (byte)join_civ;
+    human_civ = join_civ;
+    crt_strcpy((iptr)&civ_names[((char)(byte)join_civ)].leader_name,player_info + 0x20);
     if (0 < leaders[civs[game.player_civ].tribe].leader_name) {
       leaders[civs[game.player_civ].tribe].leader_name =
            -leaders[civs[game.player_civ].tribe].leader_name;
     }
-    iVar1 = *(int *)(param_1 + 0x18);
+    is_female = *(int *)(player_info + 0x18);
     civs[human_civ].flags = civs[human_civ].flags & 0xfdff;
-    if (iVar1 != 0) {
+    if (is_female != 0) {
       civs[human_civ].flags = civs[human_civ].flags | 0x200;
     }
-    local_1c = (u8)iVar1;
-    leaders[civs[game.player_civ].tribe].female = local_1c;
+    female_byte = (u8)is_female;
+    leaders[civs[game.player_civ].tribe].female = female_byte;
   }
-  for (local_20 = 0; (local_20 < 7 && (*(int *)(&net_player_slots + local_20 * 0x54) != param_2));
-      local_20 = local_20 + 1) {
+  for (slot = 0; (slot < 7 && (*(int *)(&net_player_slots + slot * 0x54) != player_id));
+      slot = slot + 1) {
   }
-  if (local_20 < 7) {
-    *(int *)(&net_civ_slots + game.player_civ * 4) = local_20;
-    (&net_slot_civs)[local_20 * 0x15] = (int)game.player_civ;
-    (&net_slot_active_flags)[local_20 * 0x54] = 1;
-    if (param_2 == 0) {
-      (&net_slot_host_flags)[local_20 * 0x54] = 1;
+  if (slot < 7) {
+    *(int *)(&net_civ_slots + game.player_civ * 4) = slot;
+    (&net_slot_civs)[slot * 0x15] = (int)game.player_civ;
+    (&net_slot_active_flags)[slot * 0x54] = 1;
+    if (player_id == 0) {
+      (&net_slot_host_flags)[slot * 0x54] = 1;
     }
     else {
-      (&net_slot_host_flags)[local_20 * 0x54] = 0;
+      (&net_slot_host_flags)[slot * 0x54] = 0;
     }
-    uVar4 = 1;
+    result = 1;
   }
   else {
     if (net_session_phase < 3) {
-      game.human_players = game.human_players & ~(byte)(1 << ((byte)local_24 & 0x1f));
+      game.human_players = game.human_players & ~(byte)(1 << ((byte)join_civ & 0x1f));
     }
     else {
-      pending_human_players = pending_human_players & ~(byte)(1 << ((byte)local_24 & 0x1f));
+      pending_human_players = pending_human_players & ~(byte)(1 << ((byte)join_civ & 0x1f));
     }
-    net_send_message(0x31,0,*(iptr *)(param_1 + 0x14),*(iptr *)(param_1 + 0x10),0,0,0,0,0,0);
-    uVar4 = 0;
+    net_send_message(0x31,0,*(iptr *)(player_info + 0x14),*(iptr *)(player_info + 0x10),0,0,0,0,0,0);
+    result = 0;
   }
-  human_civ = iVar4;
-  game.turn_civ = iVar3;
-  game.player_civ = iVar2;
-  return uVar4;
+  human_civ = saved_human_civ;
+  game.turn_civ = saved_turn_civ_val;
+  game.player_civ = saved_player_civ;
+  return result;
 }
 #undef human_civ
 #undef net_host_flag
@@ -12101,29 +12101,29 @@ i32 __cdecl net_host_register_player_civ(iptr param_1,int param_2)
 #undef net_slot_host_flags
 #undef saved_resume_new_game
 #undef saved_turn_civ
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_c
-#undef local_8
+#undef title_label_id
+#undef join_civ
+#undef slot
+#undef female_byte
+#undef title_idx
+#undef portrait
 
 /* 00523d8a auto */
-void __cdecl net_send_rules_tables(i32 param_1)
+void __cdecl net_send_rules_tables(i32 dest_player)
 
 {
-  net_send_message(0x17,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x18,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x19,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x1a,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x1b,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x1c,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x1d,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x1e,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x21,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x22,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x23,param_1,0,0,0,0,0,0,0,0);
-  net_send_message(0x24,param_1,0,0,0,0,0,0,0,0);
+  net_send_message(0x17,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x18,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x19,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x1a,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x1b,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x1c,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x1d,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x1e,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x21,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x22,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x23,dest_player,0,0,0,0,0,0,0,0);
+  net_send_message(0x24,dest_player,0,0,0,0,0,0,0,0);
   return;
 }
 
@@ -12136,328 +12136,328 @@ void __cdecl net_send_rules_tables(i32 param_1)
 #define mp_chat_from_start (*(short *)((u8 *)&g.d_00654c7a))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
 #define parley_offer_acceptable_i32 (*(i32 *)((u8 *)&g.d_0067a9e0))
-#define local_53c (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_538 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_534 (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define local_530 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define local_52c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_528 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_524 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_51c (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_518 (*(u8 * *)(frame_ + FRAME_OFF(40)))
-#define local_514 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_50c (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_504 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_4fc (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_4f8 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_4f4 (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_4ec (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_4e8 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_4e4 (*(int *)(frame_ + FRAME_OFF(92)))
-#define local_4e0 (*(int *)(frame_ + FRAME_OFF(96)))
-#define local_4d8 (*(iptr *)(frame_ + FRAME_OFF(104)))
-#define local_4d4 (*(u8 * *)(frame_ + FRAME_OFF(108)))
-#define local_4cc (*(int *)(frame_ + FRAME_OFF(116)))
-#define local_4c4 (*(int *)(frame_ + FRAME_OFF(124)))
-#define local_4c0 (*(int *)(frame_ + FRAME_OFF(128)))
-#define local_4bc (*(int *)(frame_ + FRAME_OFF(132)))
-#define local_4b8 (*(int *)(frame_ + FRAME_OFF(136)))
-#define local_4b0 (*(iptr *)(frame_ + FRAME_OFF(144)))
-#define local_4ac (*(u8 * *)(frame_ + FRAME_OFF(148)))
-#define local_4a8 (*(int *)(frame_ + FRAME_OFF(152)))
-#define local_4a4 (*(int *)(frame_ + FRAME_OFF(156)))
-#define local_498 (*(int *)(frame_ + FRAME_OFF(168)))
-#define local_494 (*(u8 * *)(frame_ + FRAME_OFF(172)))
-#define local_490 (*(u8 * *)(frame_ + FRAME_OFF(176)))
-#define local_48c (*(int *)(frame_ + FRAME_OFF(180)))
-#define local_488 (*(int *)(frame_ + FRAME_OFF(184)))
-#define local_484 (*(u8 * *)(frame_ + FRAME_OFF(188)))
-#define local_480 (*(iptr *)(frame_ + FRAME_OFF(192)))
-#define local_47c (*(u8 * *)(frame_ + FRAME_OFF(196)))
-#define local_478 (*(iptr *)(frame_ + FRAME_OFF(200)))
-#define local_474 (*(int *)(frame_ + FRAME_OFF(204)))
-#define local_470 (*(int *)(frame_ + FRAME_OFF(208)))
-#define local_468 (*(int *)(frame_ + FRAME_OFF(216)))
-#define local_464 (*(int *)(frame_ + FRAME_OFF(220)))
-#define local_45c (*(iptr *)(frame_ + FRAME_OFF(228)))
-#define local_458 (*(u8 * *)(frame_ + FRAME_OFF(232)))
-#define local_44c (*(int *)(frame_ + FRAME_OFF(244)))
-#define local_448 (*(int *)(frame_ + FRAME_OFF(248)))
-#define local_444 (*(int *)(frame_ + FRAME_OFF(252)))
-#define local_43c (*(int *)(frame_ + FRAME_OFF(260)))
-#define local_434 (*(iptr *)(frame_ + FRAME_OFF(268)))
-#define local_430 (*(int *)(frame_ + FRAME_OFF(272)))
-#define local_42c (*(int *)(frame_ + FRAME_OFF(276)))
-#define local_424 (*(int *)(frame_ + FRAME_OFF(284)))
-#define local_420 (*(int *)(frame_ + FRAME_OFF(288)))
-#define local_418 (*(iptr *)(frame_ + FRAME_OFF(296)))
-#define local_414 (*(u8 * *)(frame_ + FRAME_OFF(300)))
-#define local_410 (*(int *)(frame_ + FRAME_OFF(304)))
-#define local_40c (*(int *)(frame_ + FRAME_OFF(308)))
-#define local_400 (*(int *)(frame_ + FRAME_OFF(320)))
-#define local_3fc (*(int *)(frame_ + FRAME_OFF(324)))
-#define local_3f4 (*(int *)(frame_ + FRAME_OFF(332)))
-#define local_3ec (*(int *)(frame_ + FRAME_OFF(340)))
-#define local_3e8 (*(int *)(frame_ + FRAME_OFF(344)))
-#define local_3e4 (*(int *)(frame_ + FRAME_OFF(348)))
-#define local_3e0 (*(u8 * *)(frame_ + FRAME_OFF(352)))
-#define local_3dc (*(int *)(frame_ + FRAME_OFF(356)))
-#define local_3d8 (*(int *)(frame_ + FRAME_OFF(360)))
-#define local_3d4 (*(int *)(frame_ + FRAME_OFF(364)))
-#define local_3c8 (*(iptr *)(frame_ + FRAME_OFF(376)))
-#define local_3c4 (*(int *)(frame_ + FRAME_OFF(380)))
-#define local_3c0 (*(int *)(frame_ + FRAME_OFF(384)))
-#define local_3bc (*(int *)(frame_ + FRAME_OFF(388)))
-#define local_3b4 (*(iptr *)(frame_ + FRAME_OFF(396)))
-#define local_3b0 (*(u8 * *)(frame_ + FRAME_OFF(400)))
-#define local_3ac (*(int *)(frame_ + FRAME_OFF(404)))
-#define local_3a0 (*(u8 * *)(frame_ + FRAME_OFF(416)))
-#define local_39c (*(int *)(frame_ + FRAME_OFF(420)))
-#define local_390 (*(u8 * *)(frame_ + FRAME_OFF(432)))
-#define local_38c (*(u8 * *)(frame_ + FRAME_OFF(436)))
-#define local_380 (*(u8 * *)(frame_ + FRAME_OFF(448)))
-#define local_37c (*(u8 * *)(frame_ + FRAME_OFF(452)))
-#define local_378 (*(u8 * *)(frame_ + FRAME_OFF(456)))
-#define local_370 (*(int *)(frame_ + FRAME_OFF(464)))
-#define local_36c (*(u32 *)(frame_ + FRAME_OFF(468)))
-#define local_368 (*(u8 * *)(frame_ + FRAME_OFF(472)))
-#define local_364 (*(int *)(frame_ + FRAME_OFF(476)))
-#define local_354 (*(int *)(frame_ + FRAME_OFF(492)))
-#define local_34c (*(u8 * *)(frame_ + FRAME_OFF(500)))
-#define local_344 (*(u8 * *)(frame_ + FRAME_OFF(508)))
-#define local_33c (*(i8 * *)(frame_ + FRAME_OFF(516)))
-#define local_338 (*(i32 *)(frame_ + FRAME_OFF(520)))
-#define local_330 (*(i32 *)(frame_ + FRAME_OFF(528)))
-#define local_328 (*(i8 * *)(frame_ + FRAME_OFF(536)))
-#define local_324 (*(i32 *)(frame_ + FRAME_OFF(540)))
-#define local_31c (*(i8 * *)(frame_ + FRAME_OFF(548)))
-#define local_318 (*(i8 * *)(frame_ + FRAME_OFF(552)))
-#define local_314 (*(i8 * *)(frame_ + FRAME_OFF(556)))
-#define local_310 (*(i8 * *)(frame_ + FRAME_OFF(560)))
-#define local_30c (*(i8 * *)(frame_ + FRAME_OFF(564)))
-#define local_308 (*(i32 *)(frame_ + FRAME_OFF(568)))
-#define local_300 (*(i8 * *)(frame_ + FRAME_OFF(576)))
-#define local_2fc (*(i8 * *)(frame_ + FRAME_OFF(580)))
-#define local_2f8 (*(i8 * *)(frame_ + FRAME_OFF(584)))
-#define local_2f4 (*(i32 *)(frame_ + FRAME_OFF(588)))
-#define local_2ec (*(i8 * *)(frame_ + FRAME_OFF(596)))
-#define local_2e8 (*(i8 * *)(frame_ + FRAME_OFF(600)))
-#define local_2e4 (*(i32 *)(frame_ + FRAME_OFF(604)))
-#define local_2dc (*(i32 *)(frame_ + FRAME_OFF(612)))
-#define local_2d4 (*(i32 *)(frame_ + FRAME_OFF(620)))
-#define local_2cc (*(i32 *)(frame_ + FRAME_OFF(628)))
-#define local_2c4 (*(i8 * *)(frame_ + FRAME_OFF(636)))
-#define local_2c0 (*(i8 * *)(frame_ + FRAME_OFF(640)))
-#define local_2bc (*(i8 * *)(frame_ + FRAME_OFF(644)))
-#define local_2b8 (*(i32 *)(frame_ + FRAME_OFF(648)))
-#define local_2b0 (*(i8 * *)(frame_ + FRAME_OFF(656)))
-#define local_2ac (*(i8 * *)(frame_ + FRAME_OFF(660)))
-#define local_2a8 (*(i8 * *)(frame_ + FRAME_OFF(664)))
-#define local_2a4 (*(i8 * *)(frame_ + FRAME_OFF(668)))
-#define local_2a0 (*(i8 * *)(frame_ + FRAME_OFF(672)))
-#define local_29c (*(i32 *)(frame_ + FRAME_OFF(676)))
-#define local_294 (*(i8 * *)(frame_ + FRAME_OFF(684)))
-#define local_290 (*(i8 * *)(frame_ + FRAME_OFF(688)))
-#define local_28c (*(i8 * *)(frame_ + FRAME_OFF(692)))
-#define local_288 (*(i8 * *)(frame_ + FRAME_OFF(696)))
-#define local_284 (*(i32 *)(frame_ + FRAME_OFF(700)))
-#define local_27c (*(i8 * *)(frame_ + FRAME_OFF(708)))
-#define local_278 (*(i8 * *)(frame_ + FRAME_OFF(712)))
-#define local_274 (*(i8 * *)(frame_ + FRAME_OFF(716)))
-#define local_270 (*(i32 *)(frame_ + FRAME_OFF(720)))
-#define local_268 (*(i8 * *)(frame_ + FRAME_OFF(728)))
-#define local_264 (*(i8 * *)(frame_ + FRAME_OFF(732)))
-#define local_260 (*(i32 *)(frame_ + FRAME_OFF(736)))
-#define local_258 (*(i8 * *)(frame_ + FRAME_OFF(744)))
-#define local_254 (*(i8 * *)(frame_ + FRAME_OFF(748)))
-#define local_250 (*(i32 *)(frame_ + FRAME_OFF(752)))
-#define local_248 (*(i32 *)(frame_ + FRAME_OFF(760)))
-#define local_240 (*(i8 * *)(frame_ + FRAME_OFF(768)))
-#define local_23c (*(i8 * *)(frame_ + FRAME_OFF(772)))
-#define local_238 (*(uptr *)(frame_ + FRAME_OFF(776)))
-#define local_230 (*(uptr *)(frame_ + FRAME_OFF(784)))
-#define local_228 (*(uptr *)(frame_ + FRAME_OFF(792)))
-#define local_220 (*(i8 * *)(frame_ + FRAME_OFF(800)))
-#define local_21c (*(i32 *)(frame_ + FRAME_OFF(804)))
-#define local_214 (*(i8 * *)(frame_ + FRAME_OFF(812)))
-#define local_210 (*(i8 * *)(frame_ + FRAME_OFF(816)))
-#define local_20c (*(i8 * *)(frame_ + FRAME_OFF(820)))
-#define local_208 (*(i8 * *)(frame_ + FRAME_OFF(824)))
-#define local_204 (*(uptr *)(frame_ + FRAME_OFF(828)))
-#define local_1fc (*(i8 * *)(frame_ + FRAME_OFF(836)))
-#define local_1f8 (*(uptr *)(frame_ + FRAME_OFF(840)))
-#define local_1f0 (*(tagRECT *)(frame_ + FRAME_OFF(848)))
-#define local_1e0 (*(int *)(frame_ + FRAME_OFF(864)))
-#define local_1dc (*(int *)(frame_ + FRAME_OFF(868)))
-#define local_1d8 (*(iptr *)(frame_ + FRAME_OFF(872)))
-#define local_1d4 (*(int *)(frame_ + FRAME_OFF(876)))
-#define local_1d0 (*(i32 *)(frame_ + FRAME_OFF(880)))
-#define local_1cc (*(i32 *)(frame_ + FRAME_OFF(884)))
-#define local_1c8 (*(i32 *)(frame_ + FRAME_OFF(888)))
-#define local_1c4 (*(i32 *)(frame_ + FRAME_OFF(892)))
-#define local_1c0 (*(i32 *)(frame_ + FRAME_OFF(896)))
-#define local_1bc (*(i32 *)(frame_ + FRAME_OFF(900)))
-#define local_1b8 (*(i32 *)(frame_ + FRAME_OFF(904)))
-#define local_1b4 (*(i32 *)(frame_ + FRAME_OFF(908)))
-#define local_1b0 (*(iptr *)(frame_ + FRAME_OFF(912)))
-#define local_1ac (*(iptr (*)[4])(frame_ + FRAME_OFF(916)))
-#define local_19c (*(uptr *)(frame_ + FRAME_OFF(932)))
-#define local_198 (*(iptr (*)[4])(frame_ + FRAME_OFF(936)))
-#define local_188 (*(i32 *)(frame_ + FRAME_OFF(952)))
-#define local_184 (*(i32 *)(frame_ + FRAME_OFF(956)))
-#define local_180 (*(i32 *)(frame_ + FRAME_OFF(960)))
-#define local_17c (*(tagRECT *)(frame_ + FRAME_OFF(964)))
-#define local_16c (*(int *)(frame_ + FRAME_OFF(980)))
-#define local_168 (*(int *)(frame_ + FRAME_OFF(984)))
-#define local_164 (*(int *)(frame_ + FRAME_OFF(988)))
-#define local_160 (*(int *)(frame_ + FRAME_OFF(992)))
-#define local_15c (*(i32 *)(frame_ + FRAME_OFF(996)))
-#define local_158 (*(char (*)[32])(frame_ + FRAME_OFF(1000)))
-#define local_138 (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define local_134 (*(i32 *)(frame_ + FRAME_OFF(1036)))
-#define local_130 (*(i32 *)(frame_ + FRAME_OFF(1040)))
-#define local_12c (*(i32 *)(frame_ + FRAME_OFF(1044)))
-#define local_128 (*(i32 *)(frame_ + FRAME_OFF(1048)))
-#define local_124 (*(i32 *)(frame_ + FRAME_OFF(1052)))
-#define local_120 (*(i32 *)(frame_ + FRAME_OFF(1056)))
-#define local_11c (*(i32 *)(frame_ + FRAME_OFF(1060)))
-#define local_118 (*(i32 *)(frame_ + FRAME_OFF(1064)))
-#define local_114 (*(i32 *)(frame_ + FRAME_OFF(1068)))
-#define local_110 (*(i32 *)(frame_ + FRAME_OFF(1072)))
-#define local_10c (*(i32 *)(frame_ + FRAME_OFF(1076)))
-#define local_108 (*(i32 *)(frame_ + FRAME_OFF(1080)))
-#define local_104 (*(i32 *)(frame_ + FRAME_OFF(1084)))
-#define local_100 (*(i32 *)(frame_ + FRAME_OFF(1088)))
-#define local_fc (*(i32 *)(frame_ + FRAME_OFF(1092)))
-#define local_f8 (*(i32 *)(frame_ + FRAME_OFF(1096)))
-#define local_f4 (*(i32 *)(frame_ + FRAME_OFF(1100)))
-#define local_f0 (*(i32 *)(frame_ + FRAME_OFF(1104)))
-#define local_ec (*(i32 *)(frame_ + FRAME_OFF(1108)))
-#define local_e8 (*(i32 *)(frame_ + FRAME_OFF(1112)))
-#define local_e4 (*(i32 *)(frame_ + FRAME_OFF(1116)))
-#define local_e0 (*(i32 *)(frame_ + FRAME_OFF(1120)))
-#define local_dc (*(i32 *)(frame_ + FRAME_OFF(1124)))
-#define local_d8 (*(uptr *)(frame_ + FRAME_OFF(1128)))
-#define local_d4 (*(uint *)(frame_ + FRAME_OFF(1132)))
+#define city_hide_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define city_hide_label (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define city_reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(12)))
+#define city_reveal_label (*(iptr *)(frame_ + FRAME_OFF(16)))
+#define city_btn_font_height (*(int *)(frame_ + FRAME_OFF(20)))
+#define city_header_height (*(int *)(frame_ + FRAME_OFF(24)))
+#define city_side_height (*(int *)(frame_ + FRAME_OFF(28)))
+#define city_side_title (*(iptr *)(frame_ + FRAME_OFF(36)))
+#define offer_parent (*(u8 * *)(frame_ + FRAME_OFF(40)))
+#define offer_row_height (*(int *)(frame_ + FRAME_OFF(44)))
+#define offer_header_height (*(int *)(frame_ + FRAME_OFF(52)))
+#define offer_title_height (*(int *)(frame_ + FRAME_OFF(60)))
+#define offer_line_height (*(int *)(frame_ + FRAME_OFF(68)))
+#define civlist_item_height (*(int *)(frame_ + FRAME_OFF(72)))
+#define civlist_box_offset (*(int *)(frame_ + FRAME_OFF(76)))
+#define civlist_header_height (*(int *)(frame_ + FRAME_OFF(84)))
+#define civlist_title_height (*(int *)(frame_ + FRAME_OFF(88)))
+#define civlist_row_height (*(int *)(frame_ + FRAME_OFF(92)))
+#define civlist_side_height (*(int *)(frame_ + FRAME_OFF(96)))
+#define civlist_side_title (*(iptr *)(frame_ + FRAME_OFF(104)))
+#define map_parent (*(u8 * *)(frame_ + FRAME_OFF(108)))
+#define map_box_offset (*(int *)(frame_ + FRAME_OFF(116)))
+#define map_header_height (*(int *)(frame_ + FRAME_OFF(124)))
+#define map_title_height (*(int *)(frame_ + FRAME_OFF(128)))
+#define map_row_height (*(int *)(frame_ + FRAME_OFF(132)))
+#define map_side_height (*(int *)(frame_ + FRAME_OFF(136)))
+#define map_side_title (*(iptr *)(frame_ + FRAME_OFF(144)))
+#define proposal_parent (*(u8 * *)(frame_ + FRAME_OFF(148)))
+#define proposal_row_height (*(int *)(frame_ + FRAME_OFF(152)))
+#define proposal_title_height (*(int *)(frame_ + FRAME_OFF(156)))
+#define proposal_line_height (*(int *)(frame_ + FRAME_OFF(168)))
+#define sort_city_parent (*(u8 * *)(frame_ + FRAME_OFF(172)))
+#define sort_unit_parent (*(u8 * *)(frame_ + FRAME_OFF(176)))
+#define unit_line_spacing (*(int *)(frame_ + FRAME_OFF(180)))
+#define unit_btn_offset (*(int *)(frame_ + FRAME_OFF(184)))
+#define hide_parent (*(u8 * *)(frame_ + FRAME_OFF(188)))
+#define hide_label (*(iptr *)(frame_ + FRAME_OFF(192)))
+#define reveal_parent (*(u8 * *)(frame_ + FRAME_OFF(196)))
+#define reveal_label (*(iptr *)(frame_ + FRAME_OFF(200)))
+#define unit_line_spacing_alt (*(int *)(frame_ + FRAME_OFF(204)))
+#define unit_btn_offset_alt (*(int *)(frame_ + FRAME_OFF(208)))
+#define unit_header_height (*(int *)(frame_ + FRAME_OFF(216)))
+#define unit_side_height (*(int *)(frame_ + FRAME_OFF(220)))
+#define unit_side_title (*(iptr *)(frame_ + FRAME_OFF(228)))
+#define gold_edit_parent (*(u8 * *)(frame_ + FRAME_OFF(232)))
+#define gold_prompt_width (*(int *)(frame_ + FRAME_OFF(244)))
+#define gold_edit_text_width (*(int *)(frame_ + FRAME_OFF(248)))
+#define gold_box_offset (*(int *)(frame_ + FRAME_OFF(252)))
+#define gold_header_height (*(int *)(frame_ + FRAME_OFF(260)))
+#define gold_side_title (*(iptr *)(frame_ + FRAME_OFF(268)))
+#define gold_title_height (*(int *)(frame_ + FRAME_OFF(272)))
+#define gold_line_height (*(int *)(frame_ + FRAME_OFF(276)))
+#define tech_header_height (*(int *)(frame_ + FRAME_OFF(284)))
+#define tech_side_height (*(int *)(frame_ + FRAME_OFF(288)))
+#define tech_side_title (*(iptr *)(frame_ + FRAME_OFF(296)))
+#define gift_parent (*(u8 * *)(frame_ + FRAME_OFF(300)))
+#define gift_row_height (*(int *)(frame_ + FRAME_OFF(304)))
+#define gift_header_height (*(int *)(frame_ + FRAME_OFF(308)))
+#define gift_title_height (*(int *)(frame_ + FRAME_OFF(320)))
+#define gift_line_height (*(int *)(frame_ + FRAME_OFF(324)))
+#define status_box_offset (*(int *)(frame_ + FRAME_OFF(332)))
+#define status_header_height (*(int *)(frame_ + FRAME_OFF(340)))
+#define status_title_height (*(int *)(frame_ + FRAME_OFF(344)))
+#define status_line_height (*(int *)(frame_ + FRAME_OFF(348)))
+#define treaty_parent (*(u8 * *)(frame_ + FRAME_OFF(352)))
+#define treaty_row_height (*(int *)(frame_ + FRAME_OFF(356)))
+#define treaty_row_height_alt (*(int *)(frame_ + FRAME_OFF(360)))
+#define treaty_title_height (*(int *)(frame_ + FRAME_OFF(364)))
+#define treaty_title (*(iptr *)(frame_ + FRAME_OFF(376)))
+#define treaty_line_height (*(int *)(frame_ + FRAME_OFF(380)))
+#define treaty_line_height_alt (*(int *)(frame_ + FRAME_OFF(384)))
+#define treaty_side_height (*(int *)(frame_ + FRAME_OFF(388)))
+#define treaty_side_title (*(iptr *)(frame_ + FRAME_OFF(396)))
+#define exch_parent_r (*(u8 * *)(frame_ + FRAME_OFF(400)))
+#define exch_title_height_r (*(int *)(frame_ + FRAME_OFF(404)))
+#define exch_parent_l (*(u8 * *)(frame_ + FRAME_OFF(416)))
+#define exch_title_height_l (*(int *)(frame_ + FRAME_OFF(420)))
+#define send_parent (*(u8 * *)(frame_ + FRAME_OFF(432)))
+#define mute_parent (*(u8 * *)(frame_ + FRAME_OFF(436)))
+#define broadcast_parent (*(u8 * *)(frame_ + FRAME_OFF(448)))
+#define mute_anon_parent (*(u8 * *)(frame_ + FRAME_OFF(452)))
+#define anon_parent (*(u8 * *)(frame_ + FRAME_OFF(456)))
+#define chat_font_height (*(int *)(frame_ + FRAME_OFF(464)))
+#define selected_mode (*(u32 *)(frame_ + FRAME_OFF(468)))
+#define mode_radio_parent (*(u8 * *)(frame_ + FRAME_OFF(472)))
+#define mode_title_height (*(int *)(frame_ + FRAME_OFF(476)))
+#define waiting_font_height (*(int *)(frame_ + FRAME_OFF(492)))
+#define review_parent (*(u8 * *)(frame_ + FRAME_OFF(500)))
+#define desc_parent (*(u8 * *)(frame_ + FRAME_OFF(508)))
+#define city_header_font (*(i8 * *)(frame_ + FRAME_OFF(516)))
+#define city_hide_button (*(i32 *)(frame_ + FRAME_OFF(520)))
+#define city_reveal_button (*(i32 *)(frame_ + FRAME_OFF(528)))
+#define city_side_font (*(i8 * *)(frame_ + FRAME_OFF(536)))
+#define offer_radio (*(i32 *)(frame_ + FRAME_OFF(540)))
+#define offer_radio_font (*(i8 * *)(frame_ + FRAME_OFF(548)))
+#define offer_header_font (*(i8 * *)(frame_ + FRAME_OFF(552)))
+#define offer_title_font (*(i8 * *)(frame_ + FRAME_OFF(556)))
+#define civlist_header_font (*(i8 * *)(frame_ + FRAME_OFF(560)))
+#define civlist_side_font (*(i8 * *)(frame_ + FRAME_OFF(564)))
+#define map_radio (*(i32 *)(frame_ + FRAME_OFF(568)))
+#define map_radio_font (*(i8 * *)(frame_ + FRAME_OFF(576)))
+#define map_header_font (*(i8 * *)(frame_ + FRAME_OFF(580)))
+#define map_side_font (*(i8 * *)(frame_ + FRAME_OFF(584)))
+#define proposal_radio (*(i32 *)(frame_ + FRAME_OFF(588)))
+#define proposal_radio_font (*(i8 * *)(frame_ + FRAME_OFF(596)))
+#define proposal_title_font (*(i8 * *)(frame_ + FRAME_OFF(600)))
+#define sort_city_button (*(i32 *)(frame_ + FRAME_OFF(604)))
+#define sort_unit_button (*(i32 *)(frame_ + FRAME_OFF(612)))
+#define hide_button (*(i32 *)(frame_ + FRAME_OFF(620)))
+#define reveal_button (*(i32 *)(frame_ + FRAME_OFF(628)))
+#define unit_header_font (*(i8 * *)(frame_ + FRAME_OFF(636)))
+#define unit_side_font (*(i8 * *)(frame_ + FRAME_OFF(640)))
+#define gold_edit_font (*(i8 * *)(frame_ + FRAME_OFF(644)))
+#define gold_edit (*(i32 *)(frame_ + FRAME_OFF(648)))
+#define gold_prompt_font (*(i8 * *)(frame_ + FRAME_OFF(656)))
+#define gold_header_font (*(i8 * *)(frame_ + FRAME_OFF(660)))
+#define gold_side_font (*(i8 * *)(frame_ + FRAME_OFF(664)))
+#define tech_header_font (*(i8 * *)(frame_ + FRAME_OFF(668)))
+#define tech_side_font (*(i8 * *)(frame_ + FRAME_OFF(672)))
+#define gift_radio (*(i32 *)(frame_ + FRAME_OFF(676)))
+#define gift_radio_font (*(i8 * *)(frame_ + FRAME_OFF(684)))
+#define gift_title_font (*(i8 * *)(frame_ + FRAME_OFF(688)))
+#define status_text_font (*(i8 * *)(frame_ + FRAME_OFF(692)))
+#define status_header_font (*(i8 * *)(frame_ + FRAME_OFF(696)))
+#define treaty_radio (*(i32 *)(frame_ + FRAME_OFF(700)))
+#define treaty_radio_font (*(i8 * *)(frame_ + FRAME_OFF(708)))
+#define treaty_title_font (*(i8 * *)(frame_ + FRAME_OFF(712)))
+#define treaty_side_font (*(i8 * *)(frame_ + FRAME_OFF(716)))
+#define exch_radio_r (*(i32 *)(frame_ + FRAME_OFF(720)))
+#define exch_radio_font_r (*(i8 * *)(frame_ + FRAME_OFF(728)))
+#define exch_title_font_r (*(i8 * *)(frame_ + FRAME_OFF(732)))
+#define exch_radio_l (*(i32 *)(frame_ + FRAME_OFF(736)))
+#define exch_radio_font_l (*(i8 * *)(frame_ + FRAME_OFF(744)))
+#define exch_title_font_l (*(i8 * *)(frame_ + FRAME_OFF(748)))
+#define send_checkbox (*(i32 *)(frame_ + FRAME_OFF(752)))
+#define mute_checkbox (*(i32 *)(frame_ + FRAME_OFF(760)))
+#define right_header_font (*(i8 * *)(frame_ + FRAME_OFF(768)))
+#define left_header_font (*(i8 * *)(frame_ + FRAME_OFF(772)))
+#define broadcast_checkbox (*(uptr *)(frame_ + FRAME_OFF(776)))
+#define mute_anon_checkbox (*(uptr *)(frame_ + FRAME_OFF(784)))
+#define anon_checkbox (*(uptr *)(frame_ + FRAME_OFF(792)))
+#define chat_font (*(i8 * *)(frame_ + FRAME_OFF(800)))
+#define mode_radio (*(i32 *)(frame_ + FRAME_OFF(804)))
+#define mode_radio_font (*(i8 * *)(frame_ + FRAME_OFF(812)))
+#define mode_title_font (*(i8 * *)(frame_ + FRAME_OFF(816)))
+#define waiting_font (*(i8 * *)(frame_ + FRAME_OFF(820)))
+#define review_font (*(i8 * *)(frame_ + FRAME_OFF(824)))
+#define review_edit (*(uptr *)(frame_ + FRAME_OFF(828)))
+#define desc_font (*(i8 * *)(frame_ + FRAME_OFF(836)))
+#define desc_edit (*(uptr *)(frame_ + FRAME_OFF(840)))
+#define city_btn_rect (*(tagRECT *)(frame_ + FRAME_OFF(848)))
+#define city_btn_width (*(int *)(frame_ + FRAME_OFF(864)))
+#define city_btn_top (*(int *)(frame_ + FRAME_OFF(868)))
+#define city_header_label (*(iptr *)(frame_ + FRAME_OFF(872)))
+#define city_btn_height (*(int *)(frame_ + FRAME_OFF(876)))
+#define city_list_mode (*(i32 *)(frame_ + FRAME_OFF(880)))
+#define offer_labels (*(i32 *)(frame_ + FRAME_OFF(884)))
+#define offer_label1 (*(i32 *)(frame_ + FRAME_OFF(888)))
+#define offer_label2 (*(i32 *)(frame_ + FRAME_OFF(892)))
+#define offer_label3 (*(i32 *)(frame_ + FRAME_OFF(896)))
+#define offer_label4 (*(i32 *)(frame_ + FRAME_OFF(900)))
+#define offer_label5 (*(i32 *)(frame_ + FRAME_OFF(904)))
+#define offer_label6 (*(i32 *)(frame_ + FRAME_OFF(908)))
+#define civlist_title_idx (*(iptr *)(frame_ + FRAME_OFF(912)))
+#define civlist_titles (*(iptr (*)[4])(frame_ + FRAME_OFF(916)))
+#define map_title_idx (*(uptr *)(frame_ + FRAME_OFF(932)))
+#define map_labels (*(iptr (*)[4])(frame_ + FRAME_OFF(936)))
+#define map_label_last (*(i32 *)(frame_ + FRAME_OFF(952)))
+#define proposal_labels (*(i32 *)(frame_ + FRAME_OFF(956)))
+#define proposal_label2 (*(i32 *)(frame_ + FRAME_OFF(960)))
+#define btn_rect (*(tagRECT *)(frame_ + FRAME_OFF(964)))
+#define btn_area_bottom (*(int *)(frame_ + FRAME_OFF(980)))
+#define btn_width (*(int *)(frame_ + FRAME_OFF(984)))
+#define btn_top (*(int *)(frame_ + FRAME_OFF(988)))
+#define btn_height (*(int *)(frame_ + FRAME_OFF(992)))
+#define unit_list_mode (*(i32 *)(frame_ + FRAME_OFF(996)))
+#define gold_text (*(char (*)[32])(frame_ + FRAME_OFF(1000)))
+#define tech_list_pick_mode (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define gift_labels (*(i32 *)(frame_ + FRAME_OFF(1036)))
+#define gift_label1 (*(i32 *)(frame_ + FRAME_OFF(1040)))
+#define gift_label2 (*(i32 *)(frame_ + FRAME_OFF(1044)))
+#define gift_label3 (*(i32 *)(frame_ + FRAME_OFF(1048)))
+#define gift_label4 (*(i32 *)(frame_ + FRAME_OFF(1052)))
+#define treaty_labels (*(i32 *)(frame_ + FRAME_OFF(1056)))
+#define treaty_label1 (*(i32 *)(frame_ + FRAME_OFF(1060)))
+#define treaty_label2 (*(i32 *)(frame_ + FRAME_OFF(1064)))
+#define treaty_label3 (*(i32 *)(frame_ + FRAME_OFF(1068)))
+#define exch_labels_r (*(i32 *)(frame_ + FRAME_OFF(1072)))
+#define exch_label_r1 (*(i32 *)(frame_ + FRAME_OFF(1076)))
+#define exch_label_r2 (*(i32 *)(frame_ + FRAME_OFF(1080)))
+#define exch_label_r3 (*(i32 *)(frame_ + FRAME_OFF(1084)))
+#define exch_label_r4 (*(i32 *)(frame_ + FRAME_OFF(1088)))
+#define exch_label_r5 (*(i32 *)(frame_ + FRAME_OFF(1092)))
+#define exch_label_r6 (*(i32 *)(frame_ + FRAME_OFF(1096)))
+#define exch_labels_l (*(i32 *)(frame_ + FRAME_OFF(1100)))
+#define exch_label_l1 (*(i32 *)(frame_ + FRAME_OFF(1104)))
+#define exch_label_l2 (*(i32 *)(frame_ + FRAME_OFF(1108)))
+#define exch_label_l3 (*(i32 *)(frame_ + FRAME_OFF(1112)))
+#define exch_label_l4 (*(i32 *)(frame_ + FRAME_OFF(1116)))
+#define exch_label_l5 (*(i32 *)(frame_ + FRAME_OFF(1120)))
+#define exch_label_l6 (*(i32 *)(frame_ + FRAME_OFF(1124)))
+#define left_col_x (*(uptr *)(frame_ + FRAME_OFF(1128)))
+#define shown_civ_count (*(uint *)(frame_ + FRAME_OFF(1132)))
 #define civ (*(int *)(frame_ + FRAME_OFF(1136)))
-#define local_cc (*(u32 *)(frame_ + FRAME_OFF(1140)))
-#define local_c8 (*(int *)(frame_ + FRAME_OFF(1144)))
-#define local_c4 (*(int *)(frame_ + FRAME_OFF(1148)))
-#define local_c0 (*(int *)(frame_ + FRAME_OFF(1152)))
-#define local_bc (*(int *)(frame_ + FRAME_OFF(1156)))
-#define local_b8 (*(iptr *)(frame_ + FRAME_OFF(1160)))
-#define local_b4 (*(iptr (*)[4])(frame_ + FRAME_OFF(1164)))
-#define local_a4 (*(i32 *)(frame_ + FRAME_OFF(1180)))
-#define local_a0 (*(int *)(frame_ + FRAME_OFF(1184)))
-#define local_9c (*(i8 (*)[80])(frame_ + FRAME_OFF(1188)))
-#define local_4c (*(int * *)(frame_ + FRAME_OFF(1268)))
-#define local_48 (*(iptr * *)(frame_ + FRAME_OFF(1272)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(1276)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(1280)))
-#define local_3c (*(int *)(frame_ + FRAME_OFF(1284)))
-#define local_38 (*(uptr *)(frame_ + FRAME_OFF(1288)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(1292)))
-#define local_30 (*(char *)(frame_ + FRAME_OFF(1296)))
-#define local_2c (*(u32 *)(frame_ + FRAME_OFF(1300)))
-#define local_28 (*(char *)(frame_ + FRAME_OFF(1304)))
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(1308)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1324)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(1328)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1332)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1336)))
+#define right_col_x (*(u32 *)(frame_ + FRAME_OFF(1140)))
+#define has_full_intel (*(int *)(frame_ + FRAME_OFF(1144)))
+#define checkbox_indent (*(int *)(frame_ + FRAME_OFF(1148)))
+#define max_label_width (*(int *)(frame_ + FRAME_OFF(1152)))
+#define label_width (*(int *)(frame_ + FRAME_OFF(1156)))
+#define label_idx (*(iptr *)(frame_ + FRAME_OFF(1160)))
+#define mode_labels (*(iptr (*)[4])(frame_ + FRAME_OFF(1164)))
+#define mode_label_last (*(i32 *)(frame_ + FRAME_OFF(1180)))
+#define waiting_text_width (*(int *)(frame_ + FRAME_OFF(1184)))
+#define waiting_text (*(i8 (*)[80])(frame_ + FRAME_OFF(1188)))
+#define item_kind_ptr (*(int * *)(frame_ + FRAME_OFF(1268)))
+#define tech_ptr (*(iptr * *)(frame_ + FRAME_OFF(1272)))
+#define tech_idx (*(int *)(frame_ + FRAME_OFF(1276)))
+#define tech_count (*(int *)(frame_ + FRAME_OFF(1280)))
+#define cur_y (*(int *)(frame_ + FRAME_OFF(1284)))
+#define cur_x (*(uptr *)(frame_ + FRAME_OFF(1288)))
+#define col_width (*(int *)(frame_ + FRAME_OFF(1292)))
+#define is_demand_side (*(char *)(frame_ + FRAME_OFF(1296)))
+#define side_x (*(u32 *)(frame_ + FRAME_OFF(1300)))
+#define is_exchange_side (*(char *)(frame_ + FRAME_OFF(1304)))
+#define ctrl_rect (*(tagRECT *)(frame_ + FRAME_OFF(1308)))
+#define block_height (*(int *)(frame_ + FRAME_OFF(1324)))
+#define eh_next (*(i32 *)(frame_ + FRAME_OFF(1328)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1332)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1336)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall parley_add_side_dialog(ViewWindow *this,int param_1,int param_2)
+void __thiscall parley_add_side_dialog(ViewWindow *this,int side_kind,int side)
 
 {
-  u8 *puVar1;
-  int iVar2;
+  u8 *flag_ptr;
+  int tmp;
   InputControl *pCVar3;
-  iptr iVar4;
-  int iVar5;
+  iptr label;
+  int header_x;
   Control *pCVar6;
-  uptr uVar7;
-  u32 uVar8;
-  uptr uVar9;
-  i32 uVar10;
-  uptr uVar2;
+  uptr title_x;
+  u32 text_x;
+  uptr draw_x;
+  i32 text_align;
+  uptr item_buf;
   i8 frame_[FRAME_OFF(1344)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  if ((param_2 != 0) && (param_2 != 1)) {
+  eh_state = 0xffffffff;
+  if ((side != 0) && (side != 1)) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x632458, ((u8 *)&g.d_00632458)),ADDR(0x63242c, ((u8 *)&g.d_0063242c)),0xc);
   }
-  if (param_1 < 0) {
+  if (side_kind < 0) {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6324ac, ((u8 *)&g.d_006324ac)),ADDR(0x632480, ((u8 *)&g.d_00632480)),0xd);
   }
-  local_28 = '\0';
-  local_30 = '\0';
-  puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  if (param_2 == 0) {
-    local_2c = this->panel_rect + panel_margin_x;
+  is_exchange_side = '\0';
+  is_demand_side = '\0';
+  flag_ptr = this->pad_200 + side * 4 - 0x1c;
+  flag_ptr[0] = '\0';
+  flag_ptr[1] = '\0';
+  flag_ptr[2] = '\0';
+  flag_ptr[3] = '\0';
+  if (side == 0) {
+    side_x = this->panel_rect + panel_margin_x;
   }
-  else if (param_2 == 1) {
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_2c = this->panel_rect + iVar2 / 2 + panel_margin_x;
+  else if (side == 1) {
+    tmp = rect_width((iptr)&this->panel_rect);
+    side_x = this->panel_rect + tmp / 2 + panel_margin_x;
   }
-  if (param_1 == 0xe) {
-    local_28 = 1;
-    switch(*(i32 *)(this->pad_200 + param_2 * 4 + 0xc)) {
+  if (side_kind == 0xe) {
+    is_exchange_side = 1;
+    switch(*(i32 *)(this->pad_200 + side * 4 + 0xc)) {
     case 0:
-      param_1 = 9;
+      side_kind = 9;
       break;
     case 1:
-      param_1 = 8;
+      side_kind = 8;
       break;
     case 2:
-      param_1 = 10;
+      side_kind = 10;
       break;
     case 3:
-      param_1 = 0x11;
+      side_kind = 0x11;
       break;
     case 4:
-      param_1 = 0xd;
+      side_kind = 0xd;
       break;
     case 5:
-      param_1 = 0xc;
+      side_kind = 0xc;
       break;
     case 6:
-      param_1 = 5;
+      side_kind = 5;
     }
   }
-  else if (param_1 == 0x10) {
-    local_30 = 1;
+  else if (side_kind == 0x10) {
+    is_demand_side = 1;
     switch(this->field_214) {
     case 0:
-      param_1 = 9;
+      side_kind = 9;
       break;
     case 1:
-      param_1 = 8;
+      side_kind = 8;
       break;
     case 2:
-      param_1 = 10;
+      side_kind = 10;
       break;
     case 3:
-      param_1 = 0x11;
+      side_kind = 0x11;
       break;
     case 4:
-      param_1 = 0xd;
+      side_kind = 0xd;
       break;
     case 5:
-      param_1 = 0xc;
+      side_kind = 0xc;
       break;
     case 6:
-      param_1 = 5;
+      side_kind = 5;
     }
   }
-  parley_clear_side_controls(this,param_2);
-  *(int *)(this->pad_200 + param_2 * 4) = param_1;
-  if (((parley_wnd_closed == 0) && (param_1 != 1)) && (param_1 != 0)) {
-    if (param_1 == 0x14) {
+  parley_clear_side_controls(this,side);
+  *(int *)(this->pad_200 + side * 4) = side_kind;
+  if (((parley_wnd_closed == 0) && (side_kind != 1)) && (side_kind != 0)) {
+    if (side_kind == 0x14) {
       control_hide((Control *)this->field_348);
       ctrl_disable((Control *)this->field_348);
       control_hide((Control *)this->field_34c);
@@ -12480,1979 +12480,1979 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int param_1,int param_2)
       control_hide((Control *)this->field_360);
     }
   }
-  switch(param_1) {
+  switch(side_kind) {
   case 0:
     break;
   case 1:
-    if (((game.wonder_city[0x18] == -1) && (iVar2 = civ_has_wonder(human_civ,9), iVar2 == 0)
+    if (((game.wonder_city[0x18] == -1) && (tmp = civ_has_wonder(human_civ,9), tmp == 0)
         ) && (game.reveal_map == '\0')) {
-      local_c8 = 0;
+      has_full_intel = 0;
     }
     else {
-      local_c8 = 1;
+      has_full_intel = 1;
     }
-    local_cc = local_2c;
-    local_d8 = this->panel_rect + panel_margin_x;
-    local_3c = this->panel_top + panel_margin_y;
-    local_38 = local_d8;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 3;
+    right_col_x = side_x;
+    left_col_x = this->panel_rect + panel_margin_x;
+    cur_y = this->panel_top + panel_margin_y;
+    cur_x = left_col_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 3;
     if (this->large_layout == 0) {
-      local_370 = font_cached_height((GameFont *)&font_size16_bold);
+      chat_font_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_370 = font_cached_height((GameFont *)&font_size24_bold);
+      chat_font_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 2 + local_370;
+    block_height = panel_margin_y * 2 + chat_font_height;
     if (this->large_layout == 0) {
-      local_220 = &font_size16_bold;
+      chat_font = &font_size16_bold;
     }
     else {
-      local_220 = &font_size24_bold;
+      chat_font = &font_size24_bold;
     }
-    ui_set_ctrl_font((iptr)local_220);
+    ui_set_ctrl_font((iptr)chat_font);
     pCVar6 = operator_new(0x3c);
-    local_8 = 3;
+    eh_state = 3;
     if (pCVar6 == (Control *)0x0) {
-      local_228 = 0;
+      anon_checkbox = 0;
     }
     else {
-      local_228 = checkbox_elem_ctor(pCVar6);
+      anon_checkbox = checkbox_elem_ctor(pCVar6);
     }
-    local_8 = 0xffffffff;
-    this->field_2e8 = local_228;
+    eh_state = 0xffffffff;
+    this->field_2e8 = anon_checkbox;
     if (this == (ViewWindow *)0x0) {
-      local_378 = (u8 *)0x0;
+      anon_parent = (u8 *)0x0;
     }
     else {
-      local_378 = this->pad_48;
+      anon_parent = this->pad_48;
     }
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xba4));
+    label = label_string(*(i32 *)(label_string_ids + 0xba4));
     checkbox_create_fixed
-              ((Control *)this->field_2e8,(iptr)local_378,0x415,local_38,local_3c,local_34,
-               iVar4);
+              ((Control *)this->field_2e8,(iptr)anon_parent,0x415,cur_x,cur_y,col_width,
+               label);
     checkbox_set_checked((Control *)this->field_2e8,chat_remain_anonymous);
     checkbox_enable((CheckboxEnableView *)this->field_2e8);
     checkbox_set_callback((CheckboxCallbackSetView *)this->field_2e8,ADDR(0x403d28, chat_on_send_checkbox));
     pCVar6 = operator_new(0x3c);
-    local_8 = 4;
+    eh_state = 4;
     if (pCVar6 == (Control *)0x0) {
-      local_230 = 0;
+      mute_anon_checkbox = 0;
     }
     else {
-      local_230 = checkbox_elem_ctor(pCVar6);
+      mute_anon_checkbox = checkbox_elem_ctor(pCVar6);
     }
-    local_8 = 0xffffffff;
-    this->field_2ec = local_230;
+    eh_state = 0xffffffff;
+    this->field_2ec = mute_anon_checkbox;
     if (this == (ViewWindow *)0x0) {
-      local_37c = (u8 *)0x0;
+      mute_anon_parent = (u8 *)0x0;
     }
     else {
-      local_37c = this->pad_48;
+      mute_anon_parent = this->pad_48;
     }
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xd84));
+    label = label_string(*(i32 *)(label_string_ids + 0xd84));
     checkbox_create_fixed
-              ((Control *)this->field_2ec,(iptr)local_37c,0x430,local_34 + local_38,local_3c,
-               local_34,iVar4);
+              ((Control *)this->field_2ec,(iptr)mute_anon_parent,0x430,col_width + cur_x,cur_y,
+               col_width,label);
     checkbox_set_checked((Control *)this->field_2ec,chat_mute_anonymous);
     checkbox_enable((CheckboxEnableView *)this->field_2ec);
     checkbox_set_callback((CheckboxCallbackSetView *)this->field_2ec,ADDR(0x403d28, chat_on_send_checkbox));
     pCVar6 = operator_new(0x3c);
-    local_8 = 5;
+    eh_state = 5;
     if (pCVar6 == (Control *)0x0) {
-      local_238 = 0;
+      broadcast_checkbox = 0;
     }
     else {
-      local_238 = checkbox_elem_ctor(pCVar6);
+      broadcast_checkbox = checkbox_elem_ctor(pCVar6);
     }
-    local_8 = 0xffffffff;
-    this->field_2f0 = local_238;
+    eh_state = 0xffffffff;
+    this->field_2f0 = broadcast_checkbox;
     if (this == (ViewWindow *)0x0) {
-      local_380 = (u8 *)0x0;
+      broadcast_parent = (u8 *)0x0;
     }
     else {
-      local_380 = this->pad_48;
+      broadcast_parent = this->pad_48;
     }
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xba8));
+    label = label_string(*(i32 *)(label_string_ids + 0xba8));
     checkbox_create_fixed
-              ((Control *)this->field_2f0,(iptr)local_380,0x416,local_34 * 2 + local_38,
-               local_3c,local_34,iVar4);
+              ((Control *)this->field_2f0,(iptr)broadcast_parent,0x416,col_width * 2 + cur_x,
+               cur_y,col_width,label);
     checkbox_set_checked((Control *)this->field_2f0,chat_broadcast_all);
     checkbox_enable((CheckboxEnableView *)this->field_2f0);
     checkbox_set_callback((CheckboxCallbackSetView *)this->field_2f0,ADDR(0x403d28, chat_on_send_checkbox));
-    local_3c += local_14;
+    cur_y += block_height;
     gfx_set_text_color_index(10);
     if (this->large_layout == 0) {
-      local_23c = &font_size16_bold;
+      left_header_font = &font_size16_bold;
     }
     else {
-      local_23c = &font_size24_bold;
+      left_header_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar9 = local_d8;
-    iVar2 = local_3c;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xd2c));
-    surface_draw_text((DibSurface *)this,(iptr)local_23c,iVar4,uVar9,iVar2,uVar10);
+    text_align = 5;
+    draw_x = left_col_x;
+    tmp = cur_y;
+    label = label_string(*(i32 *)(label_string_ids + 0xd2c));
+    surface_draw_text((DibSurface *)this,(iptr)left_header_font,label,draw_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_240 = &font_size16_bold;
+      right_header_font = &font_size16_bold;
     }
     else {
-      local_240 = &font_size24_bold;
+      right_header_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    iVar5 = local_cc - ((this->large_layout == 0) - 1 & 0x17);
-    iVar2 = local_3c;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xd2c));
-    surface_draw_text((DibSurface *)this,(iptr)local_240,iVar4,iVar5,iVar2,uVar10);
-    local_38 = local_d8;
+    text_align = 5;
+    header_x = right_col_x - ((this->large_layout == 0) - 1 & 0x17);
+    tmp = cur_y;
+    label = label_string(*(i32 *)(label_string_ids + 0xd2c));
+    surface_draw_text((DibSurface *)this,(iptr)right_header_font,label,header_x,tmp,text_align);
+    cur_x = left_col_x;
     if (this->large_layout == 0) {
-      local_c4 = 5;
+      checkbox_indent = 5;
     }
     else {
-      local_c4 = 0x17;
+      checkbox_indent = 0x17;
     }
-    local_3c += local_14;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
-    local_d4 = 0;
+    cur_y += block_height;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
+    shown_civ_count = 0;
     for (civ = 1; civ < 8; civ++) {
       if (((human_civ == civ) ||
           ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) == 0)) ||
          (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0 ||
-          (((local_c8 == 0 && (mp_chat_from_start == 0)) &&
+          (((has_full_intel == 0 && (mp_chat_from_start == 0)) &&
            ((*(byte *)&civs[civ].treaties[human_civ] & 1) == 0)))))) {
         *(i32 *)(&chat_send_to_civs + civ * 4) = 0;
         *(i32 *)(&chat_muted_civs + civ * 4) = 0;
       }
       else {
         pCVar6 = operator_new(0x3c);
-        local_8 = 6;
+        eh_state = 6;
         if (pCVar6 == (Control *)0x0) {
-          local_248 = 0;
+          mute_checkbox = 0;
         }
         else {
-          local_248 = checkbox_elem_ctor(pCVar6);
+          mute_checkbox = checkbox_elem_ctor(pCVar6);
         }
-        local_8 = 0xffffffff;
-        *(i32 *)(this->pad_2c4 + civ * 4 + 4) = local_248;
+        eh_state = 0xffffffff;
+        *(i32 *)(this->pad_2c4 + civ * 4 + 4) = mute_checkbox;
         if (this == (ViewWindow *)0x0) {
-          local_38c = (u8 *)0x0;
+          mute_parent = (u8 *)0x0;
         }
         else {
-          local_38c = this->pad_48;
+          mute_parent = this->pad_48;
         }
         checkbox_create_fixed
-                  (*(Control **)(this->pad_2c4 + civ * 4 + 4),(iptr)local_38c,
-                   civ + 0x428,local_38 + local_c4,local_3c,0x23,ADDR(0x6324dc, ((u8 *)&g.d_006324dc)));
+                  (*(Control **)(this->pad_2c4 + civ * 4 + 4),(iptr)mute_parent,
+                   civ + 0x428,cur_x + checkbox_indent,cur_y,0x23,ADDR(0x6324dc, ((u8 *)&g.d_006324dc)));
         checkbox_set_checked
                   (*(Control **)(this->pad_2c4 + civ * 4 + 4),
                    *(i32 *)(&chat_muted_civs + civ * 4));
         checkbox_enable(*(CheckboxEnableView **)(this->pad_2c4 + civ * 4 + 4));
         checkbox_set_callback(*(CheckboxCallbackSetView **)(this->pad_2c4 + civ * 4 + 4),ADDR(0x403657, chat_on_mute_checkbox));
         pCVar6 = operator_new(0x3c);
-        local_8 = 7;
+        eh_state = 7;
         if (pCVar6 == (Control *)0x0) {
-          local_250 = 0;
+          send_checkbox = 0;
         }
         else {
-          local_250 = checkbox_elem_ctor(pCVar6);
+          send_checkbox = checkbox_elem_ctor(pCVar6);
         }
-        local_8 = 0xffffffff;
-        *(i32 *)(this->pad_2c4 + civ * 4 - 0x1c) = local_250;
+        eh_state = 0xffffffff;
+        *(i32 *)(this->pad_2c4 + civ * 4 - 0x1c) = send_checkbox;
         if (this == (ViewWindow *)0x0) {
-          local_390 = (u8 *)0x0;
+          send_parent = (u8 *)0x0;
         }
         else {
-          local_390 = this->pad_48;
+          send_parent = this->pad_48;
         }
-        iVar4 = civ_adjective(civ);
+        label = civ_adjective(civ);
         checkbox_create_fixed
-                  (*(Control **)(this->pad_2c4 + civ * 4 - 0x1c),(iptr)local_390,
-                   civ + 0x416,local_38 + local_c4 + 0x23,local_3c,
-                   (local_34 - 0x23) - local_c4,iVar4);
+                  (*(Control **)(this->pad_2c4 + civ * 4 - 0x1c),(iptr)send_parent,
+                   civ + 0x416,cur_x + checkbox_indent + 0x23,cur_y,
+                   (col_width - 0x23) - checkbox_indent,label);
         checkbox_set_checked
                   (*(Control **)(this->pad_2c4 + civ * 4 - 0x1c),
                    *(i32 *)(&chat_send_to_civs + civ * 4));
         checkbox_enable(*(CheckboxEnableView **)(this->pad_2c4 + civ * 4 - 0x1c));
         checkbox_set_callback
                   (*(CheckboxCallbackSetView **)(this->pad_2c4 + civ * 4 - 0x1c),ADDR(0x403d28, chat_on_send_checkbox));
-        local_d4++;
-        if ((local_d4 & 1) == 0) {
-          local_38 = local_d8;
+        shown_civ_count++;
+        if ((shown_civ_count & 1) == 0) {
+          cur_x = left_col_x;
         }
         else {
-          local_38 = local_cc;
+          cur_x = right_col_x;
         }
-        if ((local_d4 & 1) == 0) {
+        if ((shown_civ_count & 1) == 0) {
           if (this->large_layout == 0) {
-            local_c4 = 5;
+            checkbox_indent = 5;
           }
           else {
-            local_c4 = 0x17;
+            checkbox_indent = 0x17;
           }
         }
         else if (this->large_layout == 0) {
-          local_c4 = 5;
+          checkbox_indent = 5;
         }
         else {
-          local_c4 = 0;
+          checkbox_indent = 0;
         }
-        if ((local_d4 & 1) == 0) {
-          local_3c += local_14;
+        if ((shown_civ_count & 1) == 0) {
+          cur_y += block_height;
         }
       }
     }
     break;
   case 2:
-    local_b4[0] = label_string(*(i32 *)(label_string_ids + 0xb90));
-    local_b4[1] = label_string(*(i32 *)(label_string_ids + 0xb94));
-    local_b4[2] = label_string(*(i32 *)(label_string_ids + 0xb98));
-    local_b4[3] = label_string(*(i32 *)(label_string_ids + 0xb9c));
-    local_a4 = label_string(*(i32 *)(label_string_ids + 0xba0));
+    mode_labels[0] = label_string(*(i32 *)(label_string_ids + 0xb90));
+    mode_labels[1] = label_string(*(i32 *)(label_string_ids + 0xb94));
+    mode_labels[2] = label_string(*(i32 *)(label_string_ids + 0xb98));
+    mode_labels[3] = label_string(*(i32 *)(label_string_ids + 0xb9c));
+    mode_label_last = label_string(*(i32 *)(label_string_ids + 0xba0));
     gfx_set_text_color_index(10);
     if (this->large_layout == 0) {
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xb8c));
-      local_c0 = font_text_width((GameFont *)&font_size20,iVar4);
+      label = label_string(*(i32 *)(label_string_ids + 0xb8c));
+      max_label_width = font_text_width((GameFont *)&font_size20,label);
     }
     else {
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xb8c));
-      local_c0 = font_text_width((GameFont *)&font_size30,iVar4);
+      label = label_string(*(i32 *)(label_string_ids + 0xb8c));
+      max_label_width = font_text_width((GameFont *)&font_size30,label);
     }
-    uVar7 = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - local_c0 / 2;
-    iVar2 = this->panel_top + panel_margin_y;
+    title_x = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - max_label_width / 2;
+    tmp = this->panel_top + panel_margin_y;
     if (this->large_layout == 0) {
-      local_210 = &font_size20;
+      mode_title_font = &font_size20;
     }
     else {
-      local_210 = &font_size30;
+      mode_title_font = &font_size30;
     }
-    uVar10 = 5;
-    local_3c = iVar2;
-    local_38 = uVar7;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xb8c));
-    surface_draw_text((DibSurface *)this,(iptr)local_210,iVar4,uVar7,iVar2,uVar10);
+    text_align = 5;
+    cur_y = tmp;
+    cur_x = title_x;
+    label = label_string(*(i32 *)(label_string_ids + 0xb8c));
+    surface_draw_text((DibSurface *)this,(iptr)mode_title_font,label,title_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_c0 = font_text_width((GameFont *)&font_size20,local_b4[0]);
+      max_label_width = font_text_width((GameFont *)&font_size20,mode_labels[0]);
     }
     else {
-      local_c0 = font_text_width((GameFont *)&font_size30,local_b4[0]);
+      max_label_width = font_text_width((GameFont *)&font_size30,mode_labels[0]);
     }
-    for (local_b8 = 1; local_b8 < 5; local_b8++) {
+    for (label_idx = 1; label_idx < 5; label_idx++) {
       if (this->large_layout == 0) {
-        local_bc = font_text_width
-                             ((GameFont *)&font_size20,local_b4[local_b8]);
+        label_width = font_text_width
+                             ((GameFont *)&font_size20,mode_labels[label_idx]);
       }
       else {
-        local_bc = font_text_width
-                             ((GameFont *)&font_size30,local_b4[local_b8]);
+        label_width = font_text_width
+                             ((GameFont *)&font_size30,mode_labels[label_idx]);
       }
-      if (local_c0 < local_bc) {
-        local_c0 = local_bc;
+      if (max_label_width < label_width) {
+        max_label_width = label_width;
       }
     }
-    local_2c = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - local_c0 / 2;
-    this->field_3ac = local_2c;
-    if ((int)local_38 < (int)local_2c) {
-      local_2c = local_38;
-      this->field_3ac = local_38;
+    side_x = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - max_label_width / 2;
+    this->field_3ac = side_x;
+    if ((int)cur_x < (int)side_x) {
+      side_x = cur_x;
+      this->field_3ac = cur_x;
     }
     if (this->large_layout == 0) {
-      local_214 = &font_size20;
+      mode_radio_font = &font_size20;
     }
     else {
-      local_214 = &font_size30;
+      mode_radio_font = &font_size30;
     }
-    ctrl_set_pending_font((iptr)local_214);
+    ctrl_set_pending_font((iptr)mode_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 2;
+    eh_state = 2;
     if (pCVar3 == (InputControl *)0x0) {
-      local_21c = 0;
+      mode_radio = 0;
     }
     else {
-      local_21c = radiogrp_ctor(pCVar3);
+      mode_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_21c;
-    local_38 = local_2c;
-    local_34 = local_c0 + local_c0 / 2;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = mode_radio;
+    cur_x = side_x;
+    col_width = max_label_width + max_label_width / 2;
     if (this->large_layout == 0) {
-      local_364 = font_cached_height((GameFont *)&font_size20);
+      mode_title_height = font_cached_height((GameFont *)&font_size20);
     }
     else {
-      local_364 = font_cached_height((GameFont *)&font_size30);
+      mode_title_height = font_cached_height((GameFont *)&font_size30);
     }
-    local_3c = this->panel_top + panel_margin_y * 2 + local_364;
-    local_14 = this->show_turn_timer - local_3c;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    cur_y = this->panel_top + panel_margin_y * 2 + mode_title_height;
+    block_height = this->show_turn_timer - cur_y;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this == (ViewWindow *)0x0) {
-      local_368 = (u8 *)0x0;
+      mode_radio_parent = (u8 *)0x0;
     }
     else {
-      local_368 = this->pad_48;
+      mode_radio_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_368,0x3f3,
-               (iptr)&local_24,1,5,(iptr)local_b4);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)mode_radio_parent,0x3f3,
+               (iptr)&ctrl_rect,1,5,(iptr)mode_labels);
     if (this->field_208 == 0xffffffff) {
-      local_36c = 0;
+      selected_mode = 0;
     }
     else {
-      local_36c = this->field_208;
+      selected_mode = this->field_208;
     }
-    radiogrp_set_selected(*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),local_36c);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+    radiogrp_set_selected(*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),selected_mode);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 3:
-    local_f4 = label_string(*(i32 *)(label_string_ids + 0xbac));
-    local_f0 = label_string(*(i32 *)(label_string_ids + 0xbb0));
-    local_ec = label_string(*(i32 *)(label_string_ids + 0xbb4));
-    local_e8 = label_string(*(i32 *)(label_string_ids + 3000));
-    local_e4 = label_string(*(i32 *)(label_string_ids + 0xbbc));
-    local_e0 = label_string(*(i32 *)(label_string_ids + 0xbc0));
-    local_dc = label_string(*(i32 *)(label_string_ids + 0xd08));
+    exch_labels_l = label_string(*(i32 *)(label_string_ids + 0xbac));
+    exch_label_l1 = label_string(*(i32 *)(label_string_ids + 0xbb0));
+    exch_label_l2 = label_string(*(i32 *)(label_string_ids + 0xbb4));
+    exch_label_l3 = label_string(*(i32 *)(label_string_ids + 3000));
+    exch_label_l4 = label_string(*(i32 *)(label_string_ids + 0xbbc));
+    exch_label_l5 = label_string(*(i32 *)(label_string_ids + 0xbc0));
+    exch_label_l6 = label_string(*(i32 *)(label_string_ids + 0xd08));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    iVar2 = this->panel_top + panel_margin_y;
+    cur_x = side_x;
+    tmp = this->panel_top + panel_margin_y;
     if (this->large_layout == 0) {
-      local_254 = &font_size16_bold;
+      exch_title_font_l = &font_size16_bold;
     }
     else {
-      local_254 = &font_size24_bold;
+      exch_title_font_l = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar8 = local_2c;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc0c));
-    surface_draw_text((DibSurface *)this,(iptr)local_254,iVar4,uVar8,iVar2,uVar10);
+    text_align = 5;
+    text_x = side_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc0c));
+    surface_draw_text((DibSurface *)this,(iptr)exch_title_font_l,label,text_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_258 = &font_size16_bold;
+      exch_radio_font_l = &font_size16_bold;
     }
     else {
-      local_258 = &font_size24_bold;
+      exch_radio_font_l = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_258);
+    ctrl_set_pending_font((iptr)exch_radio_font_l);
     pCVar3 = operator_new(0x50);
-    local_8 = 8;
+    eh_state = 8;
     if (pCVar3 == (InputControl *)0x0) {
-      local_260 = 0;
+      exch_radio_l = 0;
     }
     else {
-      local_260 = radiogrp_ctor(pCVar3);
+      exch_radio_l = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_260;
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = exch_radio_l;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
     if (this->large_layout == 0) {
-      local_39c = font_cached_height((GameFont *)&font_size16);
+      exch_title_height_l = font_cached_height((GameFont *)&font_size16);
     }
     else {
-      local_39c = font_cached_height((GameFont *)&font_size24);
+      exch_title_height_l = font_cached_height((GameFont *)&font_size24);
     }
-    local_3c = this->panel_top + panel_margin_y + local_39c;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,this->show_turn_timer);
+    cur_y = this->panel_top + panel_margin_y + exch_title_height_l;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,this->show_turn_timer);
     if (this == (ViewWindow *)0x0) {
-      local_3a0 = (u8 *)0x0;
+      exch_parent_l = (u8 *)0x0;
     }
     else {
-      local_3a0 = this->pad_48;
+      exch_parent_l = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_3a0,0x3f4,
-               (iptr)&local_24,1,7,(iptr)&local_f4);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)exch_parent_l,0x3f4,
+               (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_l);
     if (this->right_exchange_kind == 0) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),0);
+      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),0);
     }
     else if (this->right_exchange_kind == 6) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),6);
+      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),6);
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->left_exchange_kind);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->left_exchange_kind);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x4035d0, parley_on_exchange_kind_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x4035d0, parley_on_exchange_kind_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 4:
-    local_110 = label_string(*(i32 *)(label_string_ids + 0xbac));
-    local_10c = label_string(*(i32 *)(label_string_ids + 0xbb0));
-    local_108 = label_string(*(i32 *)(label_string_ids + 0xbb4));
-    local_104 = label_string(*(i32 *)(label_string_ids + 3000));
-    local_100 = label_string(*(i32 *)(label_string_ids + 0xbbc));
-    local_fc = label_string(*(i32 *)(label_string_ids + 0xbc4));
-    local_f8 = label_string(*(i32 *)(label_string_ids + 0xd08));
+    exch_labels_r = label_string(*(i32 *)(label_string_ids + 0xbac));
+    exch_label_r1 = label_string(*(i32 *)(label_string_ids + 0xbb0));
+    exch_label_r2 = label_string(*(i32 *)(label_string_ids + 0xbb4));
+    exch_label_r3 = label_string(*(i32 *)(label_string_ids + 3000));
+    exch_label_r4 = label_string(*(i32 *)(label_string_ids + 0xbbc));
+    exch_label_r5 = label_string(*(i32 *)(label_string_ids + 0xbc4));
+    exch_label_r6 = label_string(*(i32 *)(label_string_ids + 0xd08));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    iVar2 = this->panel_top + panel_margin_y;
+    cur_x = side_x;
+    tmp = this->panel_top + panel_margin_y;
     if (this->large_layout == 0) {
-      local_264 = &font_size16_bold;
+      exch_title_font_r = &font_size16_bold;
     }
     else {
-      local_264 = &font_size24_bold;
+      exch_title_font_r = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar8 = local_2c;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc10));
-    surface_draw_text((DibSurface *)this,(iptr)local_264,iVar4,uVar8,iVar2,uVar10);
+    text_align = 5;
+    text_x = side_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc10));
+    surface_draw_text((DibSurface *)this,(iptr)exch_title_font_r,label,text_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_268 = &font_size16_bold;
+      exch_radio_font_r = &font_size16_bold;
     }
     else {
-      local_268 = &font_size24_bold;
+      exch_radio_font_r = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_268);
+    ctrl_set_pending_font((iptr)exch_radio_font_r);
     pCVar3 = operator_new(0x50);
-    local_8 = 9;
+    eh_state = 9;
     if (pCVar3 == (InputControl *)0x0) {
-      local_270 = 0;
+      exch_radio_r = 0;
     }
     else {
-      local_270 = radiogrp_ctor(pCVar3);
+      exch_radio_r = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_270;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
-    local_38 = local_2c;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = exch_radio_r;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
+    cur_x = side_x;
     if (this->large_layout == 0) {
-      local_3ac = font_cached_height((GameFont *)&font_size16);
+      exch_title_height_r = font_cached_height((GameFont *)&font_size16);
     }
     else {
-      local_3ac = font_cached_height((GameFont *)&font_size24);
+      exch_title_height_r = font_cached_height((GameFont *)&font_size24);
     }
-    local_3c = this->panel_top + panel_margin_y + local_3ac;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,this->show_turn_timer);
+    cur_y = this->panel_top + panel_margin_y + exch_title_height_r;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,this->show_turn_timer);
     if (this == (ViewWindow *)0x0) {
-      local_3b0 = (u8 *)0x0;
+      exch_parent_r = (u8 *)0x0;
     }
     else {
-      local_3b0 = this->pad_48;
+      exch_parent_r = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_3b0,0x3f5,
-               (iptr)&local_24,1,7,(iptr)&local_110);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)exch_parent_r,0x3f5,
+               (iptr)&ctrl_rect,1,7,(iptr)&exch_labels_r);
     if (this->left_exchange_kind == 0) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),0);
+      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),0);
     }
     else if (this->left_exchange_kind == 6) {
-      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),6);
+      radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),6);
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->right_exchange_kind);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->right_exchange_kind);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x4035d0, parley_on_exchange_kind_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x4035d0, parley_on_exchange_kind_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 5:
-    local_120 = label_string(*(i32 *)(label_string_ids + 0xbcc));
-    local_11c = label_string(*(i32 *)(label_string_ids + 0xbd0));
-    local_118 = label_string(*(i32 *)(label_string_ids + 0xbd4));
-    local_114 = label_string(*(i32 *)(label_string_ids + 0xbd8));
+    treaty_labels = label_string(*(i32 *)(label_string_ids + 0xbcc));
+    treaty_label1 = label_string(*(i32 *)(label_string_ids + 0xbd0));
+    treaty_label2 = label_string(*(i32 *)(label_string_ids + 0xbd4));
+    treaty_label3 = label_string(*(i32 *)(label_string_ids + 0xbd8));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
-    if ((local_28 != '\0') || (local_30 != '\0')) {
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    if ((is_exchange_side != '\0') || (is_demand_side != '\0')) {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_3b4 = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        treaty_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_3b4 = label_string(*(i32 *)(label_string_ids + 0xc10));
+        treaty_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_3b4);
+      text_append_str(treaty_side_title);
       if (this->large_layout == 0) {
-        local_274 = &font_size16_bold;
+        treaty_side_font = &font_size16_bold;
       }
       else {
-        local_274 = &font_size24_bold;
+        treaty_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_274,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)treaty_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_3bc = font_cached_height((GameFont *)&font_size16_bold);
+        treaty_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_3bc = font_cached_height((GameFont *)&font_size24_bold);
+        treaty_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_3bc;
+      cur_y = cur_y + panel_margin_y + treaty_side_height;
     }
-    if ((local_28 == '\0') && (local_30 == '\0')) {
+    if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
       if (this->large_layout == 0) {
-        local_3c4 = font_cached_height((GameFont *)&font_size16_bold);
+        treaty_line_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_3c4 = font_cached_height((GameFont *)&font_size24_bold);
+        treaty_line_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_14 = local_3c4 * 5 + panel_margin_y * 4;
+      block_height = treaty_line_height * 5 + panel_margin_y * 4;
     }
     else {
       if (this->large_layout == 0) {
-        local_3c0 = font_cached_height((GameFont *)&font_size16_bold);
+        treaty_line_height_alt = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_3c0 = font_cached_height((GameFont *)&font_size24_bold);
+        treaty_line_height_alt = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_14 = panel_margin_y * 3 + local_3c0 * 4;
+      block_height = panel_margin_y * 3 + treaty_line_height_alt * 4;
     }
-    local_3c = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
-    if (local_30 == '\0' && local_28 == '\0') {
-      local_3c8 = label_string(*(i32 *)(label_string_ids + 0xb90));
+    cur_y = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
+    if (is_demand_side == '\0' && is_exchange_side == '\0') {
+      treaty_title = label_string(*(i32 *)(label_string_ids + 0xb90));
     }
     else {
-      local_3c8 = label_string(*(i32 *)(label_string_ids + 0xd08));
+      treaty_title = label_string(*(i32 *)(label_string_ids + 0xd08));
     }
     if (this->large_layout == 0) {
-      local_278 = &font_size16_bold;
+      treaty_title_font = &font_size16_bold;
     }
     else {
-      local_278 = &font_size24_bold;
+      treaty_title_font = &font_size24_bold;
     }
-    surface_draw_text((DibSurface *)this,(iptr)local_278,local_3c8,local_38,local_3c,5)
+    surface_draw_text((DibSurface *)this,(iptr)treaty_title_font,treaty_title,cur_x,cur_y,5)
     ;
     if (this->large_layout == 0) {
-      local_27c = &font_size16_bold;
+      treaty_radio_font = &font_size16_bold;
     }
     else {
-      local_27c = &font_size24_bold;
+      treaty_radio_font = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_27c);
+    ctrl_set_pending_font((iptr)treaty_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 10;
+    eh_state = 10;
     if (pCVar3 == (InputControl *)0x0) {
-      local_284 = 0;
+      treaty_radio = 0;
     }
     else {
-      local_284 = radiogrp_ctor(pCVar3);
+      treaty_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_284;
-    local_38 = local_2c;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = treaty_radio;
+    cur_x = side_x;
     if (this->large_layout == 0) {
-      local_3d4 = font_cached_height((GameFont *)&font_size16_bold);
+      treaty_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3d4 = font_cached_height((GameFont *)&font_size24_bold);
+      treaty_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_3d4;
-    if ((local_28 == '\0') && (local_30 == '\0')) {
+    cur_y = cur_y + panel_margin_y + treaty_title_height;
+    if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
       if (this->large_layout == 0) {
-        local_3dc = font_cached_height((GameFont *)&font_size16_bold);
+        treaty_row_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_3dc = font_cached_height((GameFont *)&font_size24_bold);
+        treaty_row_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_14 = panel_margin_y * 3 + local_3dc * 4;
+      block_height = panel_margin_y * 3 + treaty_row_height * 4;
     }
     else {
       if (this->large_layout == 0) {
-        local_3d8 = font_cached_height((GameFont *)&font_size16_bold);
+        treaty_row_height_alt = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_3d8 = font_cached_height((GameFont *)&font_size24_bold);
+        treaty_row_height_alt = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_14 = local_3d8 * 3 + panel_margin_y * 2;
+      block_height = treaty_row_height_alt * 3 + panel_margin_y * 2;
     }
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this == (ViewWindow *)0x0) {
-      local_3e0 = (u8 *)0x0;
+      treaty_parent = (u8 *)0x0;
     }
     else {
-      local_3e0 = this->pad_48;
+      treaty_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_3e0,0x3f6,
-               (iptr)&local_24,1,(local_30 == '\0' && local_28 == '\0') + 3,(iptr)&local_120);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)treaty_parent,0x3f6,
+               (iptr)&ctrl_rect,1,(is_demand_side == '\0' && is_exchange_side == '\0') + 3,(iptr)&treaty_labels);
     if (((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 2) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),0),
+       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),0),
        this->treaty_type_choice == 0)) {
       this->treaty_type_choice++;
     }
     if (((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 4) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),1),
+       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),1),
        this->treaty_type_choice == 1)) {
       this->treaty_type_choice++;
     }
     if (((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 8) != 0) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),2),
+       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),2),
        this->treaty_type_choice == 2)) {
-      if (local_30 == '\0' && local_28 == '\0') {
+      if (is_demand_side == '\0' && is_exchange_side == '\0') {
         this->treaty_type_choice = 3;
       }
       else {
         this->treaty_type_choice = 0;
       }
     }
-    if ((((local_28 == '\0') && (local_30 == '\0')) &&
+    if ((((is_exchange_side == '\0') && (is_demand_side == '\0')) &&
         ((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 0xe) == 0)) &&
-       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + param_2 * 4 + 8),3),
+       (radiogrp_disable_item(*(RadioGroupDisableView **)(this->pad_364 + side * 4 + 8),3),
        this->treaty_type_choice == 3)) {
       this->treaty_type_choice = 0;
     }
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->treaty_type_choice);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->treaty_type_choice);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x403c2e, parley_on_treaty_type_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x403c2e, parley_on_treaty_type_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 6:
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 - panel_margin_x;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 - panel_margin_x;
     if (this->large_layout == 0) {
-      local_3e4 = font_cached_height((GameFont *)&font_size16_bold);
+      status_line_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3e4 = font_cached_height((GameFont *)&font_size24_bold);
+      status_line_height = font_cached_height((GameFont *)&font_size24_bold);
     }
     if (this->large_layout == 0) {
-      local_3e8 = font_cached_height((GameFont *)&font_size16_bold);
+      status_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3e8 = font_cached_height((GameFont *)&font_size24_bold);
+      status_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 2 + local_3e4 * 4 + local_3e8;
-    local_3c = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = panel_margin_y * 2 + status_line_height * 4 + status_title_height;
+    cur_y = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_3ec = font_cached_height((GameFont *)&font_size16_bold);
+      status_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3ec = font_cached_height((GameFont *)&font_size24_bold);
+      status_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    iVar2 = local_3c + panel_margin_y + local_3ec / 2;
+    tmp = cur_y + panel_margin_y + status_header_height / 2;
     if (this->large_layout == 0) {
-      local_288 = &font_size16_bold;
+      status_header_font = &font_size16_bold;
     }
     else {
-      local_288 = &font_size24_bold;
+      status_header_font = &font_size24_bold;
     }
-    uVar10 = 0;
-    uVar9 = local_38;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xbdc));
-    surface_draw_text((DibSurface *)this,(iptr)local_288,iVar4,uVar9,iVar2,uVar10);
-    local_24.bottom += panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
+    text_align = 0;
+    draw_x = cur_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xbdc));
+    surface_draw_text((DibSurface *)this,(iptr)status_header_font,label,draw_x,tmp,text_align);
+    ctrl_rect.bottom += panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
     if (this->large_layout == 0) {
-      local_3f4 = font_cached_height((GameFont *)&font_size16_bold);
+      status_box_offset = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3f4 = font_cached_height((GameFont *)&font_size24_bold);
+      status_box_offset = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_24.top = local_24.top + panel_margin_y + local_3f4;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
-    iVar2 = rect_height((iptr)&local_24);
-    local_3c = local_24.top + iVar2 / 2;
+    ctrl_rect.top = ctrl_rect.top + panel_margin_y + status_box_offset;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
+    tmp = rect_height((iptr)&ctrl_rect);
+    cur_y = ctrl_rect.top + tmp / 2;
     text_clear();
     if ((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 8) == 0) {
       if ((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 4) == 0) {
         if ((*(byte *)&civs[human_civ].treaties[(this->caption_height)] & 2) == 0) {
           if ((*(byte *)(human_civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + this->caption_height * 4) & 0x20) == 0) {
-            iVar4 = label_string(*(i32 *)(label_string_ids + 0xbec));
-            text_append(iVar4);
+            label = label_string(*(i32 *)(label_string_ids + 0xbec));
+            text_append(label);
           }
           else {
-            iVar4 = label_string(*(i32 *)(label_string_ids + 0xbe8));
-            text_append(iVar4);
+            label = label_string(*(i32 *)(label_string_ids + 0xbe8));
+            text_append(label);
           }
         }
         else {
-          iVar4 = label_string(*(i32 *)(label_string_ids + 0xbcc));
-          text_append(iVar4);
+          label = label_string(*(i32 *)(label_string_ids + 0xbcc));
+          text_append(label);
         }
       }
       else {
-        iVar4 = label_string(*(i32 *)(label_string_ids + 0xbe4));
-        text_append(iVar4);
+        label = label_string(*(i32 *)(label_string_ids + 0xbe4));
+        text_append(label);
       }
     }
     else {
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xbe0));
-      text_append(iVar4);
+      label = label_string(*(i32 *)(label_string_ids + 0xbe0));
+      text_append(label);
     }
     if (this->large_layout == 0) {
-      local_28c = &font_size16_bold;
+      status_text_font = &font_size16_bold;
     }
     else {
-      local_28c = &font_size24_bold;
+      status_text_font = &font_size24_bold;
     }
-    surface_draw_text((DibSurface *)this,(iptr)local_28c,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,0);
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    surface_draw_text((DibSurface *)this,(iptr)status_text_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,0);
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 7:
-    local_134 = label_string(*(i32 *)(label_string_ids + 0xbf4));
-    local_130 = label_string(*(i32 *)(label_string_ids + 0xbf8));
-    local_12c = label_string(*(i32 *)(label_string_ids + 0xbfc));
-    local_128 = label_string(*(i32 *)(label_string_ids + 0xc00));
-    local_124 = label_string(*(i32 *)(label_string_ids + 0xc04));
+    gift_labels = label_string(*(i32 *)(label_string_ids + 0xbf4));
+    gift_label1 = label_string(*(i32 *)(label_string_ids + 0xbf8));
+    gift_label2 = label_string(*(i32 *)(label_string_ids + 0xbfc));
+    gift_label3 = label_string(*(i32 *)(label_string_ids + 0xc00));
+    gift_label4 = label_string(*(i32 *)(label_string_ids + 0xc04));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
+    cur_x = side_x;
     if (this->large_layout == 0) {
-      local_3fc = font_cached_height((GameFont *)&font_size16_bold);
+      gift_line_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_3fc = font_cached_height((GameFont *)&font_size24_bold);
+      gift_line_height = font_cached_height((GameFont *)&font_size24_bold);
     }
     if (this->large_layout == 0) {
-      local_400 = font_cached_height((GameFont *)&font_size16_bold);
+      gift_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_400 = font_cached_height((GameFont *)&font_size24_bold);
+      gift_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 5 + local_3fc * 5 + local_400;
-    iVar2 = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
+    block_height = panel_margin_y * 5 + gift_line_height * 5 + gift_title_height;
+    tmp = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
     if (this->large_layout == 0) {
-      local_290 = &font_size16_bold;
+      gift_title_font = &font_size16_bold;
     }
     else {
-      local_290 = &font_size24_bold;
+      gift_title_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar9 = local_38;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xbf0));
-    surface_draw_text((DibSurface *)this,(iptr)local_290,iVar4,uVar9,iVar2,uVar10);
+    text_align = 5;
+    draw_x = cur_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xbf0));
+    surface_draw_text((DibSurface *)this,(iptr)gift_title_font,label,draw_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_294 = &font_size16_bold;
+      gift_radio_font = &font_size16_bold;
     }
     else {
-      local_294 = &font_size24_bold;
+      gift_radio_font = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_294);
+    ctrl_set_pending_font((iptr)gift_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 0xb;
+    eh_state = 0xb;
     if (pCVar3 == (InputControl *)0x0) {
-      local_29c = 0;
+      gift_radio = 0;
     }
     else {
-      local_29c = radiogrp_ctor(pCVar3);
+      gift_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_29c;
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = gift_radio;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
     if (this->large_layout == 0) {
-      local_40c = font_cached_height((GameFont *)&font_size16_bold);
+      gift_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_40c = font_cached_height((GameFont *)&font_size24_bold);
+      gift_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_40c;
+    cur_y = cur_y + panel_margin_y + gift_header_height;
     if (this->large_layout == 0) {
-      local_410 = font_cached_height((GameFont *)&font_size16_bold);
+      gift_row_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_410 = font_cached_height((GameFont *)&font_size24_bold);
+      gift_row_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = local_410 * 5 + panel_margin_y * 4;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = gift_row_height * 5 + panel_margin_y * 4;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this == (ViewWindow *)0x0) {
-      local_414 = (u8 *)0x0;
+      gift_parent = (u8 *)0x0;
     }
     else {
-      local_414 = this->pad_48;
+      gift_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_414,0x3f7,
-               (iptr)&local_24,1,5,(iptr)&local_134);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)gift_parent,0x3f7,
+               (iptr)&ctrl_rect,1,5,(iptr)&gift_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->field_220);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_220);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x4010ff, parley_on_gift_kind_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x4010ff, parley_on_gift_kind_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 8:
-    if (local_28 == '\0') {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 7;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if (is_exchange_side == '\0') {
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 7;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     else {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 6;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 6;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
-    if (local_28 != '\0') {
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    if (is_exchange_side != '\0') {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_418 = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        tech_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_418 = label_string(*(i32 *)(label_string_ids + 0xc10));
+        tech_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_418);
+      text_append_str(tech_side_title);
       if (this->large_layout == 0) {
-        local_2a0 = &font_size16_bold;
+        tech_side_font = &font_size16_bold;
       }
       else {
-        local_2a0 = &font_size24_bold;
+        tech_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_2a0,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)tech_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_420 = font_cached_height((GameFont *)&font_size16_bold);
+        tech_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_420 = font_cached_height((GameFont *)&font_size24_bold);
+        tech_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_420;
+      cur_y = cur_y + panel_margin_y + tech_side_height;
     }
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,this->show_turn_timer);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,this->show_turn_timer);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_424 = font_cached_height((GameFont *)&font_size16_bold);
+      tech_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_424 = font_cached_height((GameFont *)&font_size24_bold);
+      tech_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    iVar2 = local_3c + local_424 / 2;
+    tmp = cur_y + tech_header_height / 2;
     if (this->large_layout == 0) {
-      local_2a4 = &font_size16_bold;
+      tech_header_font = &font_size16_bold;
     }
     else {
-      local_2a4 = &font_size24_bold;
+      tech_header_font = &font_size24_bold;
     }
-    uVar10 = 0;
-    uVar9 = local_38;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc08));
-    surface_draw_text((DibSurface *)this,(iptr)local_2a4,iVar4,uVar9,iVar2,uVar10);
+    text_align = 0;
+    draw_x = cur_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc08));
+    surface_draw_text((DibSurface *)this,(iptr)tech_header_font,label,draw_x,tmp,text_align);
     if (this->large_layout == 0) {
-      iVar2 = font_cached_height((GameFont *)&font_size16_bold);
-      local_24.top += iVar2;
+      tmp = font_cached_height((GameFont *)&font_size16_bold);
+      ctrl_rect.top += tmp;
     }
     else {
-      iVar2 = font_cached_height((GameFont *)&font_size24_bold);
-      local_24.top += iVar2;
+      tmp = font_cached_height((GameFont *)&font_size24_bold);
+      ctrl_rect.top += tmp;
     }
-    local_24.bottom = this->show_turn_timer + panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    local_138 = 0;
-    if ((local_30 != '\0') || ((local_28 != '\0' && (param_2 == 1)))) {
-      local_138 = 1;
+    ctrl_rect.bottom = this->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
+    tech_list_pick_mode = 0;
+    if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
+      tech_list_pick_mode = 1;
     }
-    parley_create_advance_list_pane((WindowObjectView *)this,(iptr)&local_24,param_2,local_138);
+    parley_create_advance_list_pane((WindowObjectView *)this,(iptr)&ctrl_rect,side,tech_list_pick_mode);
     break;
   case 9:
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (this->large_layout == 0) {
-      local_42c = font_cached_height((GameFont *)&font_size14);
+      gold_line_height = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_42c = font_cached_height((GameFont *)&font_size21);
+      gold_line_height = font_cached_height((GameFont *)&font_size21);
     }
     if (this->large_layout == 0) {
-      local_430 = font_cached_height((GameFont *)&font_size16_bold);
+      gold_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_430 = font_cached_height((GameFont *)&font_size24_bold);
+      gold_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 2 + local_42c * 4 + local_430;
-    local_3c = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
-    if (local_28 != '\0') {
+    block_height = panel_margin_y * 2 + gold_line_height * 4 + gold_title_height;
+    cur_y = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
+    if (is_exchange_side != '\0') {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_434 = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        gold_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_434 = label_string(*(i32 *)(label_string_ids + 0xc10));
+        gold_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_434);
+      text_append_str(gold_side_title);
       if (this->large_layout == 0) {
-        local_2a8 = &font_size16_bold;
+        gold_side_font = &font_size16_bold;
       }
       else {
-        local_2a8 = &font_size24_bold;
+        gold_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_2a8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,
+                ((DibSurface *)this,(iptr)gold_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,
                  this->panel_top + panel_margin_y,5);
     }
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_43c = font_cached_height((GameFont *)&font_size16_bold);
+      gold_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_43c = font_cached_height((GameFont *)&font_size24_bold);
+      gold_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_43c / 2;
+    cur_y = cur_y + panel_margin_y + gold_header_height / 2;
     str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    if (local_30 == '\0') {
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xc18));
-      text_append_str(iVar4);
+    if (is_demand_side == '\0') {
+      label = label_string(*(i32 *)(label_string_ids + 0xc18));
+      text_append_str(label);
       text_append_space();
       text_append_int(civs[human_civ].gold);
       text_append_space();
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xc1c));
-      text_append_str(iVar4);
+      label = label_string(*(i32 *)(label_string_ids + 0xc1c));
+      text_append_str(label);
     }
     else {
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xc14));
-      text_append_str(iVar4);
+      label = label_string(*(i32 *)(label_string_ids + 0xc14));
+      text_append_str(label);
     }
     if (this->large_layout == 0) {
-      local_2ac = &font_size16_bold;
+      gold_header_font = &font_size16_bold;
     }
     else {
-      local_2ac = &font_size24_bold;
+      gold_header_font = &font_size24_bold;
     }
-    surface_draw_text((DibSurface *)this,(iptr)local_2ac,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,0);
-    local_24.bottom += panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
+    surface_draw_text((DibSurface *)this,(iptr)gold_header_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,0);
+    ctrl_rect.bottom += panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
     if (this->large_layout == 0) {
-      local_444 = font_cached_height((GameFont *)&font_size16_bold);
+      gold_box_offset = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_444 = font_cached_height((GameFont *)&font_size24_bold);
+      gold_box_offset = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_24.top = local_24.top + panel_margin_y + local_444;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
+    ctrl_rect.top = ctrl_rect.top + panel_margin_y + gold_box_offset;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
     str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
     text_append_str(ADDR(0x6324e0, ((u8 *)&g.d_006324e0)));
     if (this->large_layout == 0) {
-      local_448 = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      gold_edit_text_width = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     }
     else {
-      local_448 = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      gold_edit_text_width = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     }
-    local_34 = (local_448 * 3) / 2;
+    col_width = (gold_edit_text_width * 3) / 2;
     str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc20));
-    text_append_str(iVar4);
+    label = label_string(*(i32 *)(label_string_ids + 0xc20));
+    text_append_str(label);
     text_append_space();
     if (this->large_layout == 0) {
-      local_44c = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      gold_prompt_width = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     }
     else {
-      local_44c = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      gold_prompt_width = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     }
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = (local_24.left + iVar2 / 2) - (local_34 + local_44c) / 2;
-    iVar2 = rect_height((iptr)&local_24);
-    local_3c = local_24.top + iVar2 / 2;
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = (ctrl_rect.left + tmp / 2) - (col_width + gold_prompt_width) / 2;
+    tmp = rect_height((iptr)&ctrl_rect);
+    cur_y = ctrl_rect.top + tmp / 2;
     if (this->large_layout == 0) {
-      local_2b0 = &font_size16_bold;
+      gold_prompt_font = &font_size16_bold;
     }
     else {
-      local_2b0 = &font_size24_bold;
+      gold_prompt_font = &font_size24_bold;
     }
-    surface_draw_text((DibSurface *)this,(iptr)local_2b0,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,1);
+    surface_draw_text((DibSurface *)this,(iptr)gold_prompt_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,1);
     pCVar3 = operator_new(0x48);
-    local_8 = 0xc;
+    eh_state = 0xc;
     if (pCVar3 == (InputControl *)0x0) {
-      local_2b8 = 0;
+      gold_edit = 0;
     }
     else {
-      local_2b8 = edit_ctor(pCVar3);
+      gold_edit = edit_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 0x10) = local_2b8;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 0x10) = gold_edit;
     if (this->large_layout == 0) {
-      local_2bc = &font_size16_bold;
+      gold_edit_font = &font_size16_bold;
     }
     else {
-      local_2bc = &font_size24_bold;
+      gold_edit_font = &font_size24_bold;
     }
-    ui_set_default_font((iptr)local_2bc);
+    ui_set_default_font((iptr)gold_edit_font);
     if (this->large_layout == 0) {
-      iVar2 = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      local_38 += iVar2;
+      tmp = font_text_width((GameFont *)&font_size16_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      cur_x += tmp;
     }
     else {
-      iVar2 = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      local_38 += iVar2;
+      tmp = font_text_width((GameFont *)&font_size24_bold,ADDR(0x679640, ((u8 *)&g.d_00679640)));
+      cur_x += tmp;
     }
     if (this->large_layout == 0) {
-      local_14 = font_cached_height((GameFont *)&font_size16_bold);
+      block_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_14 = font_cached_height((GameFont *)&font_size24_bold);
+      block_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c -= local_14 / 2;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
-    __itoa(*(int *)(this->pad_23c + param_2 * 4 - 0x10),local_158,10);
+    cur_y -= block_height / 2;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
+    __itoa(*(int *)(this->pad_23c + side * 4 - 0x10),gold_text,10);
     if (this == (ViewWindow *)0x0) {
-      local_458 = (u8 *)0x0;
+      gold_edit_parent = (u8 *)0x0;
     }
     else {
-      local_458 = this->pad_48;
+      gold_edit_parent = this->pad_48;
     }
     edit_create
-              (*(EditControl **)(this->pad_364 + param_2 * 4 + 0x10),(iptr)local_458,
-               param_2 + 0x3f8,(iptr)&local_24,(iptr)local_158);
-    edit_set_max_len(*(EditMaxLenView **)(this->pad_364 + param_2 * 4 + 0x10),6);
-    edit_set_change_callback(*(EditChangeSetView **)(this->pad_364 + param_2 * 4 + 0x10),ADDR(0x4020e5, parley_gold_edit_on_change));
-    ctrl_set_focus(*(ControlFocusView **)(this->pad_364 + param_2 * 4 + 0x10));
+              (*(EditControl **)(this->pad_364 + side * 4 + 0x10),(iptr)gold_edit_parent,
+               side + 0x3f8,(iptr)&ctrl_rect,(iptr)gold_text);
+    edit_set_max_len(*(EditMaxLenView **)(this->pad_364 + side * 4 + 0x10),6);
+    edit_set_change_callback(*(EditChangeSetView **)(this->pad_364 + side * 4 + 0x10),ADDR(0x4020e5, parley_gold_edit_on_change));
+    ctrl_set_focus(*(ControlFocusView **)(this->pad_364 + side * 4 + 0x10));
     break;
   case 10:
-    if (local_28 == '\0') {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 6;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if (is_exchange_side == '\0') {
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 6;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     else {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 5;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 5;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
-    if (local_28 != '\0') {
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    if (is_exchange_side != '\0') {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_45c = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        unit_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_45c = label_string(*(i32 *)(label_string_ids + 0xc10));
+        unit_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_45c);
+      text_append_str(unit_side_title);
       if (this->large_layout == 0) {
-        local_2c0 = &font_size16_bold;
+        unit_side_font = &font_size16_bold;
       }
       else {
-        local_2c0 = &font_size24_bold;
+        unit_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_2c0,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)unit_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_464 = font_cached_height((GameFont *)&font_size16_bold);
+        unit_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_464 = font_cached_height((GameFont *)&font_size24_bold);
+        unit_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_464;
+      cur_y = cur_y + panel_margin_y + unit_side_height;
     }
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,this->show_turn_timer);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,this->show_turn_timer);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_468 = font_cached_height((GameFont *)&font_size16_bold);
+      unit_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_468 = font_cached_height((GameFont *)&font_size24_bold);
+      unit_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    iVar2 = local_3c + local_468 / 2;
-    local_3c = iVar2;
-    if (local_28 == '\0') {
+    tmp = cur_y + unit_header_height / 2;
+    cur_y = tmp;
+    if (is_exchange_side == '\0') {
       if (this->large_layout == 0) {
-        local_2c4 = &font_size16_bold;
+        unit_header_font = &font_size16_bold;
       }
       else {
-        local_2c4 = &font_size24_bold;
+        unit_header_font = &font_size24_bold;
       }
-      uVar10 = 0;
-      uVar9 = local_38;
-      iVar4 = label_string(*(i32 *)(label_string_ids + 0xc24));
-      surface_draw_text((DibSurface *)this,(iptr)local_2c4,iVar4,uVar9,iVar2,uVar10);
+      text_align = 0;
+      draw_x = cur_x;
+      label = label_string(*(i32 *)(label_string_ids + 0xc24));
+      surface_draw_text((DibSurface *)this,(iptr)unit_header_font,label,draw_x,tmp,text_align);
     }
-    if ((local_28 == '\0') && (local_30 == '\0')) {
+    if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
       if (this->large_layout == 0) {
-        local_488 = font_cached_height((GameFont *)&font_size16_bold);
+        unit_btn_offset = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_488 = font_cached_height((GameFont *)&font_size24_bold);
+        unit_btn_offset = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_164 = local_24.top + local_488;
-      local_168 = local_34 / 2;
+      btn_top = ctrl_rect.top + unit_btn_offset;
+      btn_width = col_width / 2;
       if (this->large_layout == 0) {
-        local_48c = font_line_spacing((GameFont *)&font_size16);
+        unit_line_spacing = font_line_spacing((GameFont *)&font_size16);
       }
       else {
-        local_48c = font_line_spacing((GameFont *)&font_size24);
+        unit_line_spacing = font_line_spacing((GameFont *)&font_size24);
       }
-      local_160 = panel_padding_y * 2 + local_48c;
-      SetRect(&local_17c,panel_margin_x * 2 + local_24.left,local_164,local_24.left + local_168,
-              local_164 + local_160);
+      btn_height = panel_padding_y * 2 + unit_line_spacing;
+      SetRect(&btn_rect,panel_margin_x * 2 + ctrl_rect.left,btn_top,ctrl_rect.left + btn_width,
+              btn_top + btn_height);
     }
     else {
-      local_164 = panel_margin_y * 2 + local_24.top - 1;
+      btn_top = panel_margin_y * 2 + ctrl_rect.top - 1;
       if (this->large_layout == 0) {
-        local_470 = font_cached_height((GameFont *)&font_size16_bold);
+        unit_btn_offset_alt = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_470 = font_cached_height((GameFont *)&font_size24_bold);
+        unit_btn_offset_alt = font_cached_height((GameFont *)&font_size24_bold);
       }
       if (this->large_layout == 0) {
-        local_474 = font_line_spacing((GameFont *)&font_size16);
+        unit_line_spacing_alt = font_line_spacing((GameFont *)&font_size16);
       }
       else {
-        local_474 = font_line_spacing((GameFont *)&font_size24);
+        unit_line_spacing_alt = font_line_spacing((GameFont *)&font_size24);
       }
-      local_16c = local_24.top + panel_padding_y * 2 + local_470 + local_474;
-      local_168 = local_34 + panel_margin_x * -3;
-      local_160 = (local_16c - local_164) / 2;
-      SetRect(&local_17c,panel_margin_x * 2 + local_24.left,local_164,local_24.left + local_168,
-              local_164 + local_160);
+      btn_area_bottom = ctrl_rect.top + panel_padding_y * 2 + unit_btn_offset_alt + unit_line_spacing_alt;
+      btn_width = col_width + panel_margin_x * -3;
+      btn_height = (btn_area_bottom - btn_top) / 2;
+      SetRect(&btn_rect,panel_margin_x * 2 + ctrl_rect.left,btn_top,ctrl_rect.left + btn_width,
+              btn_top + btn_height);
       pCVar6 = operator_new(0x3c);
-      local_8 = 0xd;
+      eh_state = 0xd;
       if (pCVar6 == (Control *)0x0) {
-        local_2cc = 0;
+        reveal_button = 0;
       }
       else {
-        local_2cc = button_ctor(pCVar6);
+        reveal_button = button_ctor(pCVar6);
       }
-      local_8 = 0xffffffff;
-      *(i32 *)(this->pad_3c0 + param_2 * 4 - 0x24) = local_2cc;
-      if (param_2 == 0) {
-        local_478 = label_string(*(i32 *)(label_string_ids + 0xdbc));
+      eh_state = 0xffffffff;
+      *(i32 *)(this->pad_3c0 + side * 4 - 0x24) = reveal_button;
+      if (side == 0) {
+        reveal_label = label_string(*(i32 *)(label_string_ids + 0xdbc));
       }
       else {
-        local_478 = label_string(*(i32 *)(label_string_ids + 0xdc0));
+        reveal_label = label_string(*(i32 *)(label_string_ids + 0xdc0));
       }
       if (this == (ViewWindow *)0x0) {
-        local_47c = (u8 *)0x0;
+        reveal_parent = (u8 *)0x0;
       }
       else {
-        local_47c = this->pad_48;
+        reveal_parent = this->pad_48;
       }
       button_create
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x24),(iptr)local_47c,
-                 param_2 + 0x404,(iptr)&local_17c,local_478);
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x24),(iptr)reveal_parent,
+                 side + 0x404,(iptr)&btn_rect,reveal_label);
       button_set_callback
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x24),
-                 (iptr)(((void *)ADDR(0x00402496, parley_reveal_city_origin_clicked)) + ((param_2 == 0) - 1 & 0xffffef93)));
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x24),
+                 (iptr)(((void *)ADDR(0x00402496, parley_reveal_city_origin_clicked)) + ((side == 0) - 1 & 0xffffef93)));
       pCVar6 = operator_new(0x3c);
-      local_8 = 0xe;
+      eh_state = 0xe;
       if (pCVar6 == (Control *)0x0) {
-        local_2d4 = 0;
+        hide_button = 0;
       }
       else {
-        local_2d4 = button_ctor(pCVar6);
+        hide_button = button_ctor(pCVar6);
       }
-      local_8 = 0xffffffff;
-      *(i32 *)(this->pad_3c0 + param_2 * 4 - 0x1c) = local_2d4;
-      if (param_2 == 0) {
-        local_480 = label_string(*(i32 *)(label_string_ids + 0xdc4));
+      eh_state = 0xffffffff;
+      *(i32 *)(this->pad_3c0 + side * 4 - 0x1c) = hide_button;
+      if (side == 0) {
+        hide_label = label_string(*(i32 *)(label_string_ids + 0xdc4));
       }
       else {
-        local_480 = label_string(*(i32 *)(label_string_ids + 0xdc0));
+        hide_label = label_string(*(i32 *)(label_string_ids + 0xdc0));
       }
       if (this == (ViewWindow *)0x0) {
-        local_484 = (u8 *)0x0;
+        hide_parent = (u8 *)0x0;
       }
       else {
-        local_484 = this->pad_48;
+        hide_parent = this->pad_48;
       }
       button_create
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x1c),(iptr)local_484,
-                 param_2 + 0x406,(iptr)&local_17c,local_480);
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),(iptr)hide_parent,
+                 side + 0x406,(iptr)&btn_rect,hide_label);
       button_set_callback
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x1c),
-                 (iptr)(((void *)ADDR(0x004034d1, parley_hide_city_origin_clicked)) + ((param_2 == 0) - 1 & 0xffffdf58)));
-      if ((param_2 == 0) && (this->field_3bd != '\0')) {
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),
+                 (iptr)(((void *)ADDR(0x004034d1, parley_hide_city_origin_clicked)) + ((side == 0) - 1 & 0xffffdf58)));
+      if ((side == 0) && (this->field_3bd != '\0')) {
         control_hide((Control *)this->field_39c);
         ctrl_show_and_redraw((Control *)this->field_3a4);
       }
-      else if (param_2 == 0) {
+      else if (side == 0) {
         ctrl_show_and_redraw((Control *)this->field_39c);
         control_hide((Control *)this->field_3a4);
       }
-      if ((param_2 == 1) && (this->field_3bc != '\0')) {
+      if ((side == 1) && (this->field_3bc != '\0')) {
         control_hide((Control *)this->field_3a0);
         ctrl_show_and_redraw((Control *)this->field_3a8);
         ctrl_disable((Control *)this->field_3a8);
       }
-      else if (param_2 == 1) {
+      else if (side == 1) {
         ctrl_show_and_redraw((Control *)this->field_3a0);
         control_hide((Control *)this->field_3a8);
       }
-      local_164 += local_160;
-      local_168 = local_34 / 2;
-      SetRect(&local_17c,panel_margin_x * 2 + local_24.left,local_164,local_24.left + local_168,
-              local_164 + local_160);
+      btn_top += btn_height;
+      btn_width = col_width / 2;
+      SetRect(&btn_rect,panel_margin_x * 2 + ctrl_rect.left,btn_top,ctrl_rect.left + btn_width,
+              btn_top + btn_height);
     }
     pCVar6 = operator_new(0x3c);
-    local_8 = 0xf;
+    eh_state = 0xf;
     if (pCVar6 == (Control *)0x0) {
-      local_2dc = 0;
+      sort_unit_button = 0;
     }
     else {
-      local_2dc = button_ctor(pCVar6);
+      sort_unit_button = button_ctor(pCVar6);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 0x28) = local_2dc;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 0x28) = sort_unit_button;
     if (this == (ViewWindow *)0x0) {
-      local_490 = (u8 *)0x0;
+      sort_unit_parent = (u8 *)0x0;
     }
     else {
-      local_490 = this->pad_48;
+      sort_unit_parent = this->pad_48;
     }
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc28));
+    label = label_string(*(i32 *)(label_string_ids + 0xc28));
     button_create
-              (*(Control **)(this->pad_364 + param_2 * 4 + 0x28),(iptr)local_490,
-               param_2 + 0x400,(iptr)&local_17c,iVar4);
+              (*(Control **)(this->pad_364 + side * 4 + 0x28),(iptr)sort_unit_parent,
+               side + 0x400,(iptr)&btn_rect,label);
     button_set_callback
-              (*(Control **)(this->pad_364 + param_2 * 4 + 0x28),
-               (iptr)(((void *)ADDR(0x00401f55, parley_sort_by_unit_left_clicked)) + ((param_2 == 0) - 1 & 0xfffff637)));
+              (*(Control **)(this->pad_364 + side * 4 + 0x28),
+               (iptr)(((void *)ADDR(0x00401f55, parley_sort_by_unit_left_clicked)) + ((side == 0) - 1 & 0xfffff637)));
     if ((parley_mode != 9) &&
-       (((param_2 == 0 && (this->field_3bd == '\0')) ||
-        ((param_2 == 1 && (this->field_3bc == '\0')))))) {
-      ctrl_disable(*(Control **)(this->pad_364 + param_2 * 4 + 0x28));
+       (((side == 0 && (this->field_3bd == '\0')) ||
+        ((side == 1 && (this->field_3bc == '\0')))))) {
+      ctrl_disable(*(Control **)(this->pad_364 + side * 4 + 0x28));
     }
-    SetRect(&local_17c,local_17c.right,local_164,local_17c.right + local_168 + panel_margin_x * -3,
-            local_164 + local_160);
+    SetRect(&btn_rect,btn_rect.right,btn_top,btn_rect.right + btn_width + panel_margin_x * -3,
+            btn_top + btn_height);
     pCVar6 = operator_new(0x3c);
-    local_8 = 0x10;
+    eh_state = 0x10;
     if (pCVar6 == (Control *)0x0) {
-      local_2e4 = 0;
+      sort_city_button = 0;
     }
     else {
-      local_2e4 = button_ctor(pCVar6);
+      sort_city_button = button_ctor(pCVar6);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 0x30) = local_2e4;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 0x30) = sort_city_button;
     if (this == (ViewWindow *)0x0) {
-      local_494 = (u8 *)0x0;
+      sort_city_parent = (u8 *)0x0;
     }
     else {
-      local_494 = this->pad_48;
+      sort_city_parent = this->pad_48;
     }
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc2c));
+    label = label_string(*(i32 *)(label_string_ids + 0xc2c));
     button_create
-              (*(Control **)(this->pad_364 + param_2 * 4 + 0x30),(iptr)local_494,
-               param_2 + 0x402,(iptr)&local_17c,iVar4);
+              (*(Control **)(this->pad_364 + side * 4 + 0x30),(iptr)sort_city_parent,
+               side + 0x402,(iptr)&btn_rect,label);
     button_set_callback
-              (*(Control **)(this->pad_364 + param_2 * 4 + 0x30),
-               (iptr)(((void *)ADDR(0x004033d7, parley_sort_by_city_left_clicked)) + ((param_2 == 0) - 1 & 0xfffff5a1)));
+              (*(Control **)(this->pad_364 + side * 4 + 0x30),
+               (iptr)(((void *)ADDR(0x004033d7, parley_sort_by_city_left_clicked)) + ((side == 0) - 1 & 0xfffff5a1)));
     if ((parley_mode != 9) &&
-       (((param_2 == 0 && (this->field_3bd == '\0')) ||
-        ((param_2 == 1 && (this->field_3bc == '\0')))))) {
-      ctrl_disable(*(Control **)(this->pad_364 + param_2 * 4 + 0x30));
+       (((side == 0 && (this->field_3bd == '\0')) ||
+        ((side == 1 && (this->field_3bc == '\0')))))) {
+      ctrl_disable(*(Control **)(this->pad_364 + side * 4 + 0x30));
     }
-    local_24.top = local_17c.bottom;
-    local_24.bottom = this->show_turn_timer + panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    local_15c = 1;
-    if ((local_30 != '\0') || ((local_28 != '\0' && (param_2 == 1)))) {
-      local_15c = 0;
+    ctrl_rect.top = btn_rect.bottom;
+    ctrl_rect.bottom = this->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
+    unit_list_mode = 1;
+    if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
+      unit_list_mode = 0;
     }
-    parley_create_unit_list_pane((ListPaneWindow *)this,(iptr)&local_24,param_2,local_15c);
+    parley_create_unit_list_pane((ListPaneWindow *)this,(iptr)&ctrl_rect,side,unit_list_mode);
     break;
   case 0xb:
     gfx_set_text_color_index(10);
     if (this->large_layout == 0) {
-      local_498 = font_cached_height((GameFont *)&font_size16_bold);
+      proposal_line_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_498 = font_cached_height((GameFont *)&font_size24_bold);
+      proposal_line_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = local_498 * 3 + panel_margin_y * 2;
-    iVar2 = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
-    local_38 = local_2c;
+    block_height = proposal_line_height * 3 + panel_margin_y * 2;
+    tmp = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
+    cur_x = side_x;
     if (this->large_layout == 0) {
-      local_2e8 = &font_size16_bold;
+      proposal_title_font = &font_size16_bold;
     }
     else {
-      local_2e8 = &font_size24_bold;
+      proposal_title_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar8 = local_2c;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc30));
-    surface_draw_text((DibSurface *)this,(iptr)local_2e8,iVar4,uVar8,iVar2,uVar10);
-    local_184 = label_string(*(i32 *)(label_string_ids + 0xc34));
-    local_180 = label_string(*(i32 *)(label_string_ids + 0xc38));
+    text_align = 5;
+    text_x = side_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc30));
+    surface_draw_text((DibSurface *)this,(iptr)proposal_title_font,label,text_x,tmp,text_align);
+    proposal_labels = label_string(*(i32 *)(label_string_ids + 0xc34));
+    proposal_label2 = label_string(*(i32 *)(label_string_ids + 0xc38));
     if (this->large_layout == 0) {
-      local_2ec = &font_size16_bold;
+      proposal_radio_font = &font_size16_bold;
     }
     else {
-      local_2ec = &font_size24_bold;
+      proposal_radio_font = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_2ec);
+    ctrl_set_pending_font((iptr)proposal_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 0x11;
+    eh_state = 0x11;
     if (pCVar3 == (InputControl *)0x0) {
-      local_2f4 = 0;
+      proposal_radio = 0;
     }
     else {
-      local_2f4 = radiogrp_ctor(pCVar3);
+      proposal_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_2f4;
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = proposal_radio;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
     if (this->large_layout == 0) {
-      local_4a4 = font_cached_height((GameFont *)&font_size16_bold);
+      proposal_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4a4 = font_cached_height((GameFont *)&font_size24_bold);
+      proposal_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_4a4;
+    cur_y = cur_y + panel_margin_y + proposal_title_height;
     if (this->large_layout == 0) {
-      local_4a8 = font_cached_height((GameFont *)&font_size16_bold);
+      proposal_row_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4a8 = font_cached_height((GameFont *)&font_size24_bold);
+      proposal_row_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = local_4a8 * 2 + panel_margin_y;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = proposal_row_height * 2 + panel_margin_y;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this == (ViewWindow *)0x0) {
-      local_4ac = (u8 *)0x0;
+      proposal_parent = (u8 *)0x0;
     }
     else {
-      local_4ac = this->pad_48;
+      proposal_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_4ac,0x40c,
-               (iptr)&local_24,1,2,(iptr)&local_184);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)proposal_parent,0x40c,
+               (iptr)&ctrl_rect,1,2,(iptr)&proposal_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->field_21c);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_21c);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401c99, parley_on_proposal_kind_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401c99, parley_on_proposal_kind_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 0xc:
-    local_1ac[0] = label_string(*(i32 *)(label_string_ids + 0xc50));
-    local_1ac[1] = label_string(*(i32 *)(label_string_ids + 0xc54));
-    local_1ac[2] = label_string(*(i32 *)(label_string_ids + 0xc58));
-    local_1ac[3] = label_string(*(i32 *)(label_string_ids + 0xd0c));
-    if (local_28 == '\0') {
-      if (local_30 == '\0') {
-        local_1b0 = 0;
+    civlist_titles[0] = label_string(*(i32 *)(label_string_ids + 0xc50));
+    civlist_titles[1] = label_string(*(i32 *)(label_string_ids + 0xc54));
+    civlist_titles[2] = label_string(*(i32 *)(label_string_ids + 0xc58));
+    civlist_titles[3] = label_string(*(i32 *)(label_string_ids + 0xd0c));
+    if (is_exchange_side == '\0') {
+      if (is_demand_side == '\0') {
+        civlist_title_idx = 0;
       }
       else {
-        local_1b0 = 3;
+        civlist_title_idx = 3;
       }
     }
-    else if (param_2 == 0) {
-      local_1b0 = 1;
+    else if (side == 0) {
+      civlist_title_idx = 1;
     }
     else {
-      local_1b0 = 2;
+      civlist_title_idx = 2;
     }
-    puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-    puVar1[0] = 5;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+    flag_ptr[0] = 5;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    if (local_28 != '\0') {
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    if (is_exchange_side != '\0') {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_4d8 = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        civlist_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_4d8 = label_string(*(i32 *)(label_string_ids + 0xc10));
+        civlist_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_4d8);
+      text_append_str(civlist_side_title);
       if (this->large_layout == 0) {
-        local_30c = &font_size16_bold;
+        civlist_side_font = &font_size16_bold;
       }
       else {
-        local_30c = &font_size24_bold;
+        civlist_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_30c,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)civlist_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_4e0 = font_cached_height((GameFont *)&font_size16_bold);
+        civlist_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_4e0 = font_cached_height((GameFont *)&font_size24_bold);
+        civlist_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_4e0;
+      cur_y = cur_y + panel_margin_y + civlist_side_height;
     }
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (this->large_layout == 0) {
-      local_4e4 = font_cached_height((GameFont *)&font_size14);
+      civlist_row_height = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_4e4 = font_cached_height((GameFont *)&font_size21);
+      civlist_row_height = font_cached_height((GameFont *)&font_size21);
     }
     if (this->large_layout == 0) {
-      local_4e8 = font_cached_height((GameFont *)&font_size16_bold);
+      civlist_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4e8 = font_cached_height((GameFont *)&font_size24_bold);
+      civlist_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = *(int *)(this[0x3e].pad_48 + param_2 * 4 + 0x38) * local_4e4 +
-               *(int *)(this[0x3e].pad_48 + param_2 * 4 + 0x38) * panel_margin_y + panel_margin_y * 4 +
-               local_4e8;
-    local_3c += (int)((this->show_turn_timer - local_3c) - local_14) / 2;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = *(int *)(this[0x3e].pad_48 + side * 4 + 0x38) * civlist_row_height +
+               *(int *)(this[0x3e].pad_48 + side * 4 + 0x38) * panel_margin_y + panel_margin_y * 4 +
+               civlist_title_height;
+    cur_y += (int)((this->show_turn_timer - cur_y) - block_height) / 2;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_4ec = font_cached_height((GameFont *)&font_size16_bold);
+      civlist_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4ec = font_cached_height((GameFont *)&font_size24_bold);
+      civlist_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_4ec / 2;
+    cur_y = cur_y + panel_margin_y + civlist_header_height / 2;
     if (this->large_layout == 0) {
-      local_310 = &font_size16_bold;
+      civlist_header_font = &font_size16_bold;
     }
     else {
-      local_310 = &font_size24_bold;
+      civlist_header_font = &font_size24_bold;
     }
     surface_draw_text
-              ((DibSurface *)this,(iptr)local_310,local_1ac[local_1b0],local_38,local_3c,0);
+              ((DibSurface *)this,(iptr)civlist_header_font,civlist_titles[civlist_title_idx],cur_x,cur_y,0);
     if (this->large_layout == 0) {
-      local_4f4 = font_cached_height((GameFont *)&font_size16_bold);
+      civlist_box_offset = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4f4 = font_cached_height((GameFont *)&font_size24_bold);
+      civlist_box_offset = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_24.top = local_24.top + panel_margin_y + local_4f4;
+    ctrl_rect.top = ctrl_rect.top + panel_margin_y + civlist_box_offset;
     if (this->large_layout == 0) {
-      local_4f8 = font_cached_height((GameFont *)&font_size14);
+      civlist_item_height = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_4f8 = font_cached_height((GameFont *)&font_size21);
+      civlist_item_height = font_cached_height((GameFont *)&font_size21);
     }
-    local_24.bottom =
-         *(int *)(this[0x3e].pad_48 + param_2 * 4 + 0x38) * local_4f8 +
-         *(int *)(this[0x3e].pad_48 + param_2 * 4 + 0x38) * panel_margin_y + local_24.top + 2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    parley_build_civ_list((ListPaneWindow *)this,(iptr)&local_24,param_2);
+    ctrl_rect.bottom =
+         *(int *)(this[0x3e].pad_48 + side * 4 + 0x38) * civlist_item_height +
+         *(int *)(this[0x3e].pad_48 + side * 4 + 0x38) * panel_margin_y + ctrl_rect.top + 2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
+    parley_build_civ_list((ListPaneWindow *)this,(iptr)&ctrl_rect,side);
     break;
   case 0xd:
-    local_198[0] = label_string(*(i32 *)(label_string_ids + 0xc3c));
-    local_198[1] = label_string(*(i32 *)(label_string_ids + 0xc40));
-    local_19c = 0;
-    local_198[2] = label_string(*(i32 *)(label_string_ids + 0xc44));
-    local_198[3] = label_string(*(i32 *)(label_string_ids + 0xc48));
-    local_188 = label_string(*(i32 *)(label_string_ids + 0xc4c));
+    map_labels[0] = label_string(*(i32 *)(label_string_ids + 0xc3c));
+    map_labels[1] = label_string(*(i32 *)(label_string_ids + 0xc40));
+    map_title_idx = 0;
+    map_labels[2] = label_string(*(i32 *)(label_string_ids + 0xc44));
+    map_labels[3] = label_string(*(i32 *)(label_string_ids + 0xc48));
+    map_label_last = label_string(*(i32 *)(label_string_ids + 0xc4c));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    if (local_28 != '\0') {
-      local_19c = (uptr)(param_2 != 0);
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    if (is_exchange_side != '\0') {
+      map_title_idx = (uptr)(side != 0);
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_4b0 = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        map_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_4b0 = label_string(*(i32 *)(label_string_ids + 0xc10));
+        map_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_4b0);
+      text_append_str(map_side_title);
       if (this->large_layout == 0) {
-        local_2f8 = &font_size16_bold;
+        map_side_font = &font_size16_bold;
       }
       else {
-        local_2f8 = &font_size24_bold;
+        map_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_2f8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)map_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_4b8 = font_cached_height((GameFont *)&font_size16_bold);
+        map_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_4b8 = font_cached_height((GameFont *)&font_size24_bold);
+        map_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_4b8;
+      cur_y = cur_y + panel_margin_y + map_side_height;
     }
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
     if (this->large_layout == 0) {
-      local_4bc = font_cached_height((GameFont *)&font_size14);
+      map_row_height = font_cached_height((GameFont *)&font_size14);
     }
     else {
-      local_4bc = font_cached_height((GameFont *)&font_size21);
+      map_row_height = font_cached_height((GameFont *)&font_size21);
     }
     if (this->large_layout == 0) {
-      local_4c0 = font_cached_height((GameFont *)&font_size16_bold);
+      map_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4c0 = font_cached_height((GameFont *)&font_size24_bold);
+      map_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = local_4bc * 3 + panel_margin_y * 9 + local_4c0;
-    local_3c += (int)((this->show_turn_timer - local_3c) - local_14) / 2;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = map_row_height * 3 + panel_margin_y * 9 + map_title_height;
+    cur_y += (int)((this->show_turn_timer - cur_y) - block_height) / 2;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_4c4 = font_cached_height((GameFont *)&font_size16_bold);
+      map_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4c4 = font_cached_height((GameFont *)&font_size24_bold);
+      map_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_4c4 / 2;
+    cur_y = cur_y + panel_margin_y + map_header_height / 2;
     if (this->large_layout == 0) {
-      local_2fc = &font_size16_bold;
+      map_header_font = &font_size16_bold;
     }
     else {
-      local_2fc = &font_size24_bold;
+      map_header_font = &font_size24_bold;
     }
     surface_draw_text
-              ((DibSurface *)this,(iptr)local_2fc,local_198[local_19c],local_38,local_3c,0);
+              ((DibSurface *)this,(iptr)map_header_font,map_labels[map_title_idx],cur_x,cur_y,0);
     if (this->large_layout == 0) {
-      local_4cc = font_cached_height((GameFont *)&font_size16_bold);
+      map_box_offset = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4cc = font_cached_height((GameFont *)&font_size24_bold);
+      map_box_offset = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_24.top = local_24.top + panel_margin_y + local_4cc;
-    local_24.bottom += panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
+    ctrl_rect.top = ctrl_rect.top + panel_margin_y + map_box_offset;
+    ctrl_rect.bottom += panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
     if (this->large_layout == 0) {
-      local_300 = &font_size16_bold;
+      map_radio_font = &font_size16_bold;
     }
     else {
-      local_300 = &font_size24_bold;
+      map_radio_font = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_300);
+    ctrl_set_pending_font((iptr)map_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 0x12;
+    eh_state = 0x12;
     if (pCVar3 == (InputControl *)0x0) {
-      local_308 = 0;
+      map_radio = 0;
     }
     else {
-      local_308 = radiogrp_ctor(pCVar3);
+      map_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_308;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = map_radio;
     if (this == (ViewWindow *)0x0) {
-      local_4d4 = (u8 *)0x0;
+      map_parent = (u8 *)0x0;
     }
     else {
-      local_4d4 = this->pad_48;
+      map_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_4d4,param_2 + 0x424,
-               (iptr)&local_24,1,3,(iptr)(local_198 + 2));
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)map_parent,side + 0x424,
+               (iptr)&ctrl_rect,1,3,(iptr)(map_labels + 2));
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),
-               *(i32 *)(this->pad_23c + param_2 * 4 - 0x18));
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),
+               *(i32 *)(this->pad_23c + side * 4 - 0x18));
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401bd6, parley_on_map_choice_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401bd6, parley_on_map_choice_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 0xf:
-    local_1cc = label_string(*(i32 *)(label_string_ids + 0xbac));
-    local_1c8 = label_string(*(i32 *)(label_string_ids + 0xbb0));
-    local_1c4 = label_string(*(i32 *)(label_string_ids + 0xbb4));
-    local_1c0 = label_string(*(i32 *)(label_string_ids + 3000));
-    local_1bc = label_string(*(i32 *)(label_string_ids + 0xbbc));
-    local_1b8 = label_string(*(i32 *)(label_string_ids + 0xbc4));
-    local_1b4 = label_string(*(i32 *)(label_string_ids + 0xd08));
+    offer_labels = label_string(*(i32 *)(label_string_ids + 0xbac));
+    offer_label1 = label_string(*(i32 *)(label_string_ids + 0xbb0));
+    offer_label2 = label_string(*(i32 *)(label_string_ids + 0xbb4));
+    offer_label3 = label_string(*(i32 *)(label_string_ids + 3000));
+    offer_label4 = label_string(*(i32 *)(label_string_ids + 0xbbc));
+    offer_label5 = label_string(*(i32 *)(label_string_ids + 0xbc4));
+    offer_label6 = label_string(*(i32 *)(label_string_ids + 0xd08));
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
+    cur_x = side_x;
     if (this->large_layout == 0) {
-      local_4fc = font_cached_height((GameFont *)&font_size16_bold);
+      offer_line_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_4fc = font_cached_height((GameFont *)&font_size24_bold);
+      offer_line_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 7 + local_4fc * 8;
-    iVar2 = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - local_14) / 2;
+    block_height = panel_margin_y * 7 + offer_line_height * 8;
+    tmp = this->panel_top + (int)((this->show_turn_timer - this->panel_top) - block_height) / 2;
     if (this->large_layout == 0) {
-      local_314 = &font_size16_bold;
+      offer_title_font = &font_size16_bold;
     }
     else {
-      local_314 = &font_size24_bold;
+      offer_title_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar9 = local_38;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc5c));
-    surface_draw_text((DibSurface *)this,(iptr)local_314,iVar4,uVar9,iVar2,uVar10);
+    text_align = 5;
+    draw_x = cur_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc5c));
+    surface_draw_text((DibSurface *)this,(iptr)offer_title_font,label,draw_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_504 = font_cached_height((GameFont *)&font_size16_bold);
+      offer_title_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_504 = font_cached_height((GameFont *)&font_size24_bold);
+      offer_title_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    iVar2 = local_3c + panel_margin_y * 2 + local_504;
+    tmp = cur_y + panel_margin_y * 2 + offer_title_height;
     if (this->large_layout == 0) {
-      local_318 = &font_size16_bold;
+      offer_header_font = &font_size16_bold;
     }
     else {
-      local_318 = &font_size24_bold;
+      offer_header_font = &font_size24_bold;
     }
-    uVar10 = 5;
-    uVar9 = local_38;
-    local_3c = iVar2;
-    iVar4 = label_string(*(i32 *)(label_string_ids + 0xc60));
-    surface_draw_text((DibSurface *)this,(iptr)local_318,iVar4,uVar9,iVar2,uVar10);
+    text_align = 5;
+    draw_x = cur_x;
+    cur_y = tmp;
+    label = label_string(*(i32 *)(label_string_ids + 0xc60));
+    surface_draw_text((DibSurface *)this,(iptr)offer_header_font,label,draw_x,tmp,text_align);
     if (this->large_layout == 0) {
-      local_50c = font_cached_height((GameFont *)&font_size16_bold);
+      offer_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_50c = font_cached_height((GameFont *)&font_size24_bold);
+      offer_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c = local_3c + panel_margin_y + local_50c;
+    cur_y = cur_y + panel_margin_y + offer_header_height;
     if (this->large_layout == 0) {
-      local_31c = &font_size16_bold;
+      offer_radio_font = &font_size16_bold;
     }
     else {
-      local_31c = &font_size24_bold;
+      offer_radio_font = &font_size24_bold;
     }
-    ctrl_set_pending_font((iptr)local_31c);
+    ctrl_set_pending_font((iptr)offer_radio_font);
     pCVar3 = operator_new(0x50);
-    local_8 = 0x13;
+    eh_state = 0x13;
     if (pCVar3 == (InputControl *)0x0) {
-      local_324 = 0;
+      offer_radio = 0;
     }
     else {
-      local_324 = radiogrp_ctor(pCVar3);
+      offer_radio = radiogrp_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this->pad_364 + param_2 * 4 + 8) = local_324;
-    local_38 = local_2c;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2;
+    eh_state = 0xffffffff;
+    *(i32 *)(this->pad_364 + side * 4 + 8) = offer_radio;
+    cur_x = side_x;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2;
     if (this->large_layout == 0) {
-      local_514 = font_cached_height((GameFont *)&font_size16_bold);
+      offer_row_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_514 = font_cached_height((GameFont *)&font_size24_bold);
+      offer_row_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_14 = panel_margin_y * 5 + local_514 * 6;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    block_height = panel_margin_y * 5 + offer_row_height * 6;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this == (ViewWindow *)0x0) {
-      local_518 = (u8 *)0x0;
+      offer_parent = (u8 *)0x0;
     }
     else {
-      local_518 = this->pad_48;
+      offer_parent = this->pad_48;
     }
     radiogrp_create
-              (*(RadioGroup **)(this->pad_364 + param_2 * 4 + 8),(iptr)local_518,0x41f,
-               (iptr)&local_24,1,7,(iptr)&local_1cc);
+              (*(RadioGroup **)(this->pad_364 + side * 4 + 8),(iptr)offer_parent,0x41f,
+               (iptr)&ctrl_rect,1,7,(iptr)&offer_labels);
     radiogrp_set_selected
-              (*(RadioGroupSetSelView **)(this->pad_364 + param_2 * 4 + 8),this->field_214);
-    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
+              (*(RadioGroupSetSelView **)(this->pad_364 + side * 4 + 8),this->field_214);
+    radiogrp_set_dblclick_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x401d75, parley_on_radio_dblclick))
     ;
-    radiogrp_set_select_callback(*(Control **)(this->pad_364 + param_2 * 4 + 8),ADDR(0x403a30, parley_on_demand_kind_select))
+    radiogrp_set_select_callback(*(Control **)(this->pad_364 + side * 4 + 8),ADDR(0x403a30, parley_on_demand_kind_select))
     ;
-    puVar1 = this->pad_200 + param_2 * 4 - 0x1c;
-    puVar1[0] = 1;
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    flag_ptr = this->pad_200 + side * 4 - 0x1c;
+    flag_ptr[0] = 1;
+    flag_ptr[1] = '\0';
+    flag_ptr[2] = '\0';
+    flag_ptr[3] = '\0';
     break;
   case 0x11:
-    if (local_28 == '\0') {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 7;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+    if (is_exchange_side == '\0') {
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 7;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     else {
-      puVar1 = this[0x3e].pad_48 + param_2 * 4 + 0x38;
-      puVar1[0] = 6;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+      flag_ptr = this[0x3e].pad_48 + side * 4 + 0x38;
+      flag_ptr[0] = 6;
+      flag_ptr[1] = '\0';
+      flag_ptr[2] = '\0';
+      flag_ptr[3] = '\0';
     }
     gfx_set_text_color_index(10);
-    local_38 = local_2c;
-    local_3c = this->panel_top + panel_margin_y;
-    iVar2 = rect_width((iptr)&this->panel_rect);
-    local_34 = (iVar2 + panel_margin_x * -2) / 2 + panel_margin_x * -5;
-    if (local_28 != '\0') {
+    cur_x = side_x;
+    cur_y = this->panel_top + panel_margin_y;
+    tmp = rect_width((iptr)&this->panel_rect);
+    col_width = (tmp + panel_margin_x * -2) / 2 + panel_margin_x * -5;
+    if (is_exchange_side != '\0') {
       str_clear(ADDR(0x679640, ((u8 *)&g.d_00679640)));
-      if (param_2 == 0) {
-        local_51c = label_string(*(i32 *)(label_string_ids + 0xc0c));
+      if (side == 0) {
+        city_side_title = label_string(*(i32 *)(label_string_ids + 0xc0c));
       }
       else {
-        local_51c = label_string(*(i32 *)(label_string_ids + 0xc10));
+        city_side_title = label_string(*(i32 *)(label_string_ids + 0xc10));
       }
-      text_append_str(local_51c);
+      text_append_str(city_side_title);
       if (this->large_layout == 0) {
-        local_328 = &font_size16_bold;
+        city_side_font = &font_size16_bold;
       }
       else {
-        local_328 = &font_size24_bold;
+        city_side_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_328,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_38,local_3c,5);
+                ((DibSurface *)this,(iptr)city_side_font,ADDR(0x679640, ((u8 *)&g.d_00679640)),cur_x,cur_y,5);
       if (this->large_layout == 0) {
-        local_524 = font_cached_height((GameFont *)&font_size16_bold);
+        city_side_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_524 = font_cached_height((GameFont *)&font_size24_bold);
+        city_side_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_3c = local_3c + panel_margin_y + local_524;
+      cur_y = cur_y + panel_margin_y + city_side_height;
     }
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,this->show_turn_timer);
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,this->show_turn_timer);
     gfx_set_draw_target(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)));
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    gfx_target_frame_rect((iptr)&local_24,10);
-    iVar2 = rect_width((iptr)&local_24);
-    local_38 = local_24.left + iVar2 / 2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    tmp = rect_width((iptr)&ctrl_rect);
+    cur_x = ctrl_rect.left + tmp / 2;
     if (this->large_layout == 0) {
-      local_528 = font_cached_height((GameFont *)&font_size16_bold);
+      city_header_height = font_cached_height((GameFont *)&font_size16_bold);
     }
     else {
-      local_528 = font_cached_height((GameFont *)&font_size24_bold);
+      city_header_height = font_cached_height((GameFont *)&font_size24_bold);
     }
-    local_3c += local_528 / 2;
-    if ((local_28 == '\0') && (local_30 == '\0')) {
-      local_1d8 = label_string(*(i32 *)(label_string_ids + 0xc68));
+    cur_y += city_header_height / 2;
+    if ((is_exchange_side == '\0') && (is_demand_side == '\0')) {
+      city_header_label = label_string(*(i32 *)(label_string_ids + 0xc68));
       if (this->large_layout == 0) {
-        local_33c = &font_size16_bold;
+        city_header_font = &font_size16_bold;
       }
       else {
-        local_33c = &font_size24_bold;
+        city_header_font = &font_size24_bold;
       }
       surface_draw_text
-                ((DibSurface *)this,(iptr)local_33c,local_1d8,local_38,local_3c,0);
+                ((DibSurface *)this,(iptr)city_header_font,city_header_label,cur_x,cur_y,0);
     }
     else {
-      local_1dc = panel_margin_y * 2 + local_24.top - 1;
-      local_1e0 = local_34 + panel_margin_x * -3;
+      city_btn_top = panel_margin_y * 2 + ctrl_rect.top - 1;
+      city_btn_width = col_width + panel_margin_x * -3;
       if (this->large_layout == 0) {
-        local_52c = font_cached_height((GameFont *)&font_size16_bold);
+        city_btn_font_height = font_cached_height((GameFont *)&font_size16_bold);
       }
       else {
-        local_52c = font_cached_height((GameFont *)&font_size24_bold);
+        city_btn_font_height = font_cached_height((GameFont *)&font_size24_bold);
       }
-      local_1d4 = local_52c - (panel_margin_y * 2 - 1);
-      SetRect(&local_1f0,panel_margin_x * 2 + local_24.left,local_1dc,local_24.left + local_1e0,
-              local_1d4 + local_1dc);
+      city_btn_height = city_btn_font_height - (panel_margin_y * 2 - 1);
+      SetRect(&city_btn_rect,panel_margin_x * 2 + ctrl_rect.left,city_btn_top,ctrl_rect.left + city_btn_width,
+              city_btn_height + city_btn_top);
       pCVar6 = operator_new(0x3c);
-      local_8 = 0x14;
+      eh_state = 0x14;
       if (pCVar6 == (Control *)0x0) {
-        local_330 = 0;
+        city_reveal_button = 0;
       }
       else {
-        local_330 = button_ctor(pCVar6);
+        city_reveal_button = button_ctor(pCVar6);
       }
-      local_8 = 0xffffffff;
-      *(i32 *)(this->pad_3c0 + param_2 * 4 - 0x24) = local_330;
-      if (param_2 == 0) {
-        local_530 = label_string(*(i32 *)(label_string_ids + 0xdc8));
+      eh_state = 0xffffffff;
+      *(i32 *)(this->pad_3c0 + side * 4 - 0x24) = city_reveal_button;
+      if (side == 0) {
+        city_reveal_label = label_string(*(i32 *)(label_string_ids + 0xdc8));
       }
       else {
-        local_530 = label_string(*(i32 *)(label_string_ids + 0xdcc));
+        city_reveal_label = label_string(*(i32 *)(label_string_ids + 0xdcc));
       }
       if (this == (ViewWindow *)0x0) {
-        local_534 = (u8 *)0x0;
+        city_reveal_parent = (u8 *)0x0;
       }
       else {
-        local_534 = this->pad_48;
+        city_reveal_parent = this->pad_48;
       }
       button_create
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x24),(iptr)local_534,
-                 param_2 + 0x408,(iptr)&local_1f0,local_530);
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x24),(iptr)city_reveal_parent,
+                 side + 0x408,(iptr)&city_btn_rect,city_reveal_label);
       button_set_callback
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x24),
-                 (iptr)(((void *)ADDR(0x004038d7, parley_reveal_city_info)) + ((param_2 == 0) - 1 & 0xffffdd6e)));
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x24),
+                 (iptr)(((void *)ADDR(0x004038d7, parley_reveal_city_info)) + ((side == 0) - 1 & 0xffffdd6e)));
       pCVar6 = operator_new(0x3c);
-      local_8 = 0x15;
+      eh_state = 0x15;
       if (pCVar6 == (Control *)0x0) {
-        local_338 = 0;
+        city_hide_button = 0;
       }
       else {
-        local_338 = button_ctor(pCVar6);
+        city_hide_button = button_ctor(pCVar6);
       }
-      local_8 = 0xffffffff;
-      *(i32 *)(this->pad_3c0 + param_2 * 4 - 0x1c) = local_338;
-      if (param_2 == 0) {
-        local_538 = label_string(*(i32 *)(label_string_ids + 0xdd0));
+      eh_state = 0xffffffff;
+      *(i32 *)(this->pad_3c0 + side * 4 - 0x1c) = city_hide_button;
+      if (side == 0) {
+        city_hide_label = label_string(*(i32 *)(label_string_ids + 0xdd0));
       }
       else {
-        local_538 = label_string(*(i32 *)(label_string_ids + 0xdcc));
+        city_hide_label = label_string(*(i32 *)(label_string_ids + 0xdcc));
       }
       if (this == (ViewWindow *)0x0) {
-        local_53c = (u8 *)0x0;
+        city_hide_parent = (u8 *)0x0;
       }
       else {
-        local_53c = this->pad_48;
+        city_hide_parent = this->pad_48;
       }
       button_create
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x1c),(iptr)local_53c,
-                 param_2 + 0x40a,(iptr)&local_1f0,local_538);
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),(iptr)city_hide_parent,
+                 side + 0x40a,(iptr)&city_btn_rect,city_hide_label);
       button_set_callback
-                (*(Control **)(this->pad_3c0 + param_2 * 4 - 0x1c),
-                 (iptr)(((void *)ADDR(0x00401979, parley_hide_city_info)) + ((param_2 == 0) - 1 & 0xfffffccc)));
-      if ((param_2 == 0) && (this->field_3be != '\0')) {
+                (*(Control **)(this->pad_3c0 + side * 4 - 0x1c),
+                 (iptr)(((void *)ADDR(0x00401979, parley_hide_city_info)) + ((side == 0) - 1 & 0xfffffccc)));
+      if ((side == 0) && (this->field_3be != '\0')) {
         control_hide((Control *)this->field_39c);
         ctrl_show_and_redraw((Control *)this->field_3a4);
       }
-      else if (param_2 == 0) {
+      else if (side == 0) {
         ctrl_show_and_redraw((Control *)this->field_39c);
         control_hide((Control *)this->field_3a4);
       }
-      if ((param_2 == 1) && (this->remote_side_agreed != '\0')) {
+      if ((side == 1) && (this->remote_side_agreed != '\0')) {
         control_hide((Control *)this->field_3a0);
         ctrl_show_and_redraw((Control *)this->field_3a8);
         ctrl_disable((Control *)this->field_3a8);
       }
-      else if (param_2 == 1) {
+      else if (side == 1) {
         ctrl_show_and_redraw((Control *)this->field_3a0);
         control_hide((Control *)this->field_3a8);
       }
     }
     if (this->large_layout == 0) {
-      iVar2 = font_cached_height((GameFont *)&font_size16_bold);
-      local_24.top += iVar2;
+      tmp = font_cached_height((GameFont *)&font_size16_bold);
+      ctrl_rect.top += tmp;
     }
     else {
-      iVar2 = font_cached_height((GameFont *)&font_size24_bold);
-      local_24.top += iVar2;
+      tmp = font_cached_height((GameFont *)&font_size24_bold);
+      ctrl_rect.top += tmp;
     }
-    local_24.bottom = this->show_turn_timer + panel_margin_y * -2;
-    local_24.left += panel_margin_x * 2;
-    local_24.right += panel_margin_x * -2;
-    gfx_target_frame_rect((iptr)&local_24,10);
-    rect_deflate((iptr)&local_24,1,1);
-    surface_fill_rect((DibSurface *)this,(iptr)&local_24,list_bg_color);
-    local_1d0 = 1;
-    if ((local_30 != '\0') || ((local_28 != '\0' && (param_2 == 1)))) {
-      local_1d0 = 0;
+    ctrl_rect.bottom = this->show_turn_timer + panel_margin_y * -2;
+    ctrl_rect.left += panel_margin_x * 2;
+    ctrl_rect.right += panel_margin_x * -2;
+    gfx_target_frame_rect((iptr)&ctrl_rect,10);
+    rect_deflate((iptr)&ctrl_rect,1,1);
+    surface_fill_rect((DibSurface *)this,(iptr)&ctrl_rect,list_bg_color);
+    city_list_mode = 1;
+    if ((is_demand_side != '\0') || ((is_exchange_side != '\0' && (side == 1)))) {
+      city_list_mode = 0;
     }
-    parley_create_city_list_pane((ListPaneWindow *)this,(iptr)&local_24,param_2,local_1d0);
+    parley_create_city_list_pane((ListPaneWindow *)this,(iptr)&ctrl_rect,side,city_list_mode);
     break;
   case 0x12:
-    iVar4 = civ_get_adjective(this->caption_height);
-    text_set_string_arg_b(0,iVar4);
+    label = civ_get_adjective(this->caption_height);
+    text_set_string_arg_b(0,label);
     text_clear();
     text_append_label(0x2e2);
-    text_expand_vars(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)local_9c);
+    text_expand_vars(ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)waiting_text);
     gfx_set_text_color_index(10);
     if (this->large_layout == 0) {
-      local_a0 = font_text_width((GameFont *)&font_size20,(iptr)local_9c);
+      waiting_text_width = font_text_width((GameFont *)&font_size20,(iptr)waiting_text);
     }
     else {
-      local_a0 = font_text_width((GameFont *)&font_size30,(iptr)local_9c);
+      waiting_text_width = font_text_width((GameFont *)&font_size30,(iptr)waiting_text);
     }
-    local_38 = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - local_a0 / 2;
+    cur_x = (this->panel_rect + (int)(this->panel_right - this->panel_rect) / 2) - waiting_text_width / 2;
     if (this->large_layout == 0) {
-      local_354 = font_cached_height((GameFont *)&font_size20);
+      waiting_font_height = font_cached_height((GameFont *)&font_size20);
     }
     else {
-      local_354 = font_cached_height((GameFont *)&font_size30);
+      waiting_font_height = font_cached_height((GameFont *)&font_size30);
     }
-    local_3c = (this->panel_top + (int)(this->show_turn_timer - this->panel_top) / 2 + panel_margin_y) -
-               local_354 / 2;
+    cur_y = (this->panel_top + (int)(this->show_turn_timer - this->panel_top) / 2 + panel_margin_y) -
+               waiting_font_height / 2;
     if (this->large_layout == 0) {
-      local_20c = &font_size20;
+      waiting_font = &font_size20;
     }
     else {
-      local_20c = &font_size30;
+      waiting_font = &font_size30;
     }
     surface_draw_text
-              ((DibSurface *)this,(iptr)local_20c,(iptr)local_9c,local_38,local_3c,5);
+              ((DibSurface *)this,(iptr)waiting_font,(iptr)waiting_text,cur_x,cur_y,5);
     control_hide((Control *)this->field_34c);
     ctrl_disable((Control *)this->field_34c);
     ctrl_show_and_redraw((Control *)this->field_348);
@@ -14474,36 +14474,36 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int param_1,int param_2)
   case 0x13:
     parley_build_description((WindowObjectView *)this,this->item_buffer,0);
     pCVar3 = operator_new(0x48);
-    local_8 = 0;
+    eh_state = 0;
     if (pCVar3 == (InputControl *)0x0) {
-      local_1f8 = 0;
+      desc_edit = 0;
     }
     else {
-      local_1f8 = edit_ctor(pCVar3);
+      desc_edit = edit_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    this->side_text_edit = local_1f8;
-    local_38 = this->panel_rect + panel_margin_x;
-    local_34 = rect_width((iptr)&this->panel_rect);
-    local_34 += panel_margin_x * -2;
-    local_3c = this->panel_top + panel_margin_y;
-    local_14 = this->show_turn_timer - local_3c;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    eh_state = 0xffffffff;
+    this->side_text_edit = desc_edit;
+    cur_x = this->panel_rect + panel_margin_x;
+    col_width = rect_width((iptr)&this->panel_rect);
+    col_width += panel_margin_x * -2;
+    cur_y = this->panel_top + panel_margin_y;
+    block_height = this->show_turn_timer - cur_y;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this->large_layout == 0) {
-      local_1fc = &font_size14;
+      desc_font = &font_size14;
     }
     else {
-      local_1fc = &font_size21;
+      desc_font = &font_size21;
     }
-    ui_set_default_font((iptr)local_1fc);
+    ui_set_default_font((iptr)desc_font);
     if (this == (ViewWindow *)0x0) {
-      local_344 = (u8 *)0x0;
+      desc_parent = (u8 *)0x0;
     }
     else {
-      local_344 = this->pad_48;
+      desc_parent = this->pad_48;
     }
     edit_create_styled
-              ((EditControl *)this->side_text_edit,(iptr)local_344,0x426,(iptr)&local_24,ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),0x122
+              ((EditControl *)this->side_text_edit,(iptr)desc_parent,0x426,(iptr)&ctrl_rect,ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),0x122
                ,0);
     edit_set_max_len((EditMaxLenView *)this->side_text_edit,0x2000);
     edit_set_callback((EditCallbackSetView *)this->side_text_edit,ADDR(0x402040, parley_edit_escape_filter));
@@ -14513,53 +14513,53 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int param_1,int param_2)
     window_show((WindowObjectView *)&parley_wnd);
     parley_build_description((WindowObjectView *)this,this->item_buffer,1);
     pCVar3 = operator_new(0x48);
-    local_8 = 1;
+    eh_state = 1;
     if (pCVar3 == (InputControl *)0x0) {
-      local_204 = 0;
+      review_edit = 0;
     }
     else {
-      local_204 = edit_ctor(pCVar3);
+      review_edit = edit_ctor(pCVar3);
     }
-    local_8 = 0xffffffff;
-    this->side_text_edit = local_204;
-    local_38 = this->panel_rect + panel_margin_x;
-    local_34 = rect_width((iptr)&this->panel_rect);
-    local_34 += panel_margin_x * -2;
-    local_3c = this->panel_top + panel_margin_y;
-    local_14 = this->show_turn_timer - local_3c;
-    SetRect(&local_24,local_38,local_3c,local_34 + local_38,local_14 + local_3c);
+    eh_state = 0xffffffff;
+    this->side_text_edit = review_edit;
+    cur_x = this->panel_rect + panel_margin_x;
+    col_width = rect_width((iptr)&this->panel_rect);
+    col_width += panel_margin_x * -2;
+    cur_y = this->panel_top + panel_margin_y;
+    block_height = this->show_turn_timer - cur_y;
+    SetRect(&ctrl_rect,cur_x,cur_y,col_width + cur_x,block_height + cur_y);
     if (this->large_layout == 0) {
-      local_208 = &font_size14;
+      review_font = &font_size14;
     }
     else {
-      local_208 = &font_size21;
+      review_font = &font_size21;
     }
-    ui_set_default_font((iptr)local_208);
+    ui_set_default_font((iptr)review_font);
     if (this == (ViewWindow *)0x0) {
-      local_34c = (u8 *)0x0;
+      review_parent = (u8 *)0x0;
     }
     else {
-      local_34c = this->pad_48;
+      review_parent = this->pad_48;
     }
     edit_create_styled
-              ((EditControl *)this->side_text_edit,(iptr)local_34c,0x426,(iptr)&local_24,ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),0x122
+              ((EditControl *)this->side_text_edit,(iptr)review_parent,0x426,(iptr)&ctrl_rect,ADDR(0x6a5b58, ((u8 *)&g.d_006a5b58)),0x122
                ,0);
     edit_set_max_len((EditMaxLenView *)this->side_text_edit,0x2000);
     edit_set_callback((EditCallbackSetView *)this->side_text_edit,ADDR(0x402040, parley_edit_escape_filter));
     ctrl_show_and_redraw((Control *)this->side_text_edit);
     parley_offer_acceptable_i32 = 1;
     if (this->item_buffer != 0) {
-      uVar2 = this->item_buffer;
-      local_4c = (int *)(uVar2 + 0x20);
-      if (((*(int *)(this->item_buffer + 0x10) == 0xf) && (*local_4c == 8)) ||
-         ((*(int *)(this->item_buffer + 0x10) == 0xe && (*local_4c == 8)))) {
-        local_40 = *(int *)(uVar2 + 0x28);
-        local_48 = (iptr *)(uVar2 + 0x2c);
-        for (local_44 = 0; local_44 < local_40; local_44++) {
-          iVar4 = *local_48;
-          local_48++;
-          iVar2 = civ_has_advance(human_civ,iVar4);
-          if (iVar2 == 0) {
+      item_buf = this->item_buffer;
+      item_kind_ptr = (int *)(item_buf + 0x20);
+      if (((*(int *)(this->item_buffer + 0x10) == 0xf) && (*item_kind_ptr == 8)) ||
+         ((*(int *)(this->item_buffer + 0x10) == 0xe && (*item_kind_ptr == 8)))) {
+        tech_count = *(int *)(item_buf + 0x28);
+        tech_ptr = (iptr *)(item_buf + 0x2c);
+        for (tech_idx = 0; tech_idx < tech_count; tech_idx++) {
+          label = *tech_ptr;
+          tech_ptr++;
+          tmp = civ_has_advance(human_civ,label);
+          if (tmp == 0) {
             this->techs_all_known = 0;
           }
         }
@@ -14584,318 +14584,318 @@ void __thiscall parley_add_side_dialog(ViewWindow *this,int param_1,int param_2)
 #undef mp_chat_from_start
 #undef panel_margin_x
 #undef parley_offer_acceptable_i32
-#undef local_53c
-#undef local_538
-#undef local_534
-#undef local_530
-#undef local_52c
-#undef local_528
-#undef local_524
-#undef local_51c
-#undef local_518
-#undef local_514
-#undef local_50c
-#undef local_504
-#undef local_4fc
-#undef local_4f8
-#undef local_4f4
-#undef local_4ec
-#undef local_4e8
-#undef local_4e4
-#undef local_4e0
-#undef local_4d8
-#undef local_4d4
-#undef local_4cc
-#undef local_4c4
-#undef local_4c0
-#undef local_4bc
-#undef local_4b8
-#undef local_4b0
-#undef local_4ac
-#undef local_4a8
-#undef local_4a4
-#undef local_498
-#undef local_494
-#undef local_490
-#undef local_48c
-#undef local_488
-#undef local_484
-#undef local_480
-#undef local_47c
-#undef local_478
-#undef local_474
-#undef local_470
-#undef local_468
-#undef local_464
-#undef local_45c
-#undef local_458
-#undef local_44c
-#undef local_448
-#undef local_444
-#undef local_43c
-#undef local_434
-#undef local_430
-#undef local_42c
-#undef local_424
-#undef local_420
-#undef local_418
-#undef local_414
-#undef local_410
-#undef local_40c
-#undef local_400
-#undef local_3fc
-#undef local_3f4
-#undef local_3ec
-#undef local_3e8
-#undef local_3e4
-#undef local_3e0
-#undef local_3dc
-#undef local_3d8
-#undef local_3d4
-#undef local_3c8
-#undef local_3c4
-#undef local_3c0
-#undef local_3bc
-#undef local_3b4
-#undef local_3b0
-#undef local_3ac
-#undef local_3a0
-#undef local_39c
-#undef local_390
-#undef local_38c
-#undef local_380
-#undef local_37c
-#undef local_378
-#undef local_370
-#undef local_36c
-#undef local_368
-#undef local_364
-#undef local_354
-#undef local_34c
-#undef local_344
-#undef local_33c
-#undef local_338
-#undef local_330
-#undef local_328
-#undef local_324
-#undef local_31c
-#undef local_318
-#undef local_314
-#undef local_310
-#undef local_30c
-#undef local_308
-#undef local_300
-#undef local_2fc
-#undef local_2f8
-#undef local_2f4
-#undef local_2ec
-#undef local_2e8
-#undef local_2e4
-#undef local_2dc
-#undef local_2d4
-#undef local_2cc
-#undef local_2c4
-#undef local_2c0
-#undef local_2bc
-#undef local_2b8
-#undef local_2b0
-#undef local_2ac
-#undef local_2a8
-#undef local_2a4
-#undef local_2a0
-#undef local_29c
-#undef local_294
-#undef local_290
-#undef local_28c
-#undef local_288
-#undef local_284
-#undef local_27c
-#undef local_278
-#undef local_274
-#undef local_270
-#undef local_268
-#undef local_264
-#undef local_260
-#undef local_258
-#undef local_254
-#undef local_250
-#undef local_248
-#undef local_240
-#undef local_23c
-#undef local_238
-#undef local_230
-#undef local_228
-#undef local_220
-#undef local_21c
-#undef local_214
-#undef local_210
-#undef local_20c
-#undef local_208
-#undef local_204
-#undef local_1fc
-#undef local_1f8
-#undef local_1f0
-#undef local_1e0
-#undef local_1dc
-#undef local_1d8
-#undef local_1d4
-#undef local_1d0
-#undef local_1cc
-#undef local_1c8
-#undef local_1c4
-#undef local_1c0
-#undef local_1bc
-#undef local_1b8
-#undef local_1b4
-#undef local_1b0
-#undef local_1ac
-#undef local_19c
-#undef local_198
-#undef local_188
-#undef local_184
-#undef local_180
-#undef local_17c
-#undef local_16c
-#undef local_168
-#undef local_164
-#undef local_160
-#undef local_15c
-#undef local_158
-#undef local_138
-#undef local_134
-#undef local_130
-#undef local_12c
-#undef local_128
-#undef local_124
-#undef local_120
-#undef local_11c
-#undef local_118
-#undef local_114
-#undef local_110
-#undef local_10c
-#undef local_108
-#undef local_104
-#undef local_100
-#undef local_fc
-#undef local_f8
-#undef local_f4
-#undef local_f0
-#undef local_ec
-#undef local_e8
-#undef local_e4
-#undef local_e0
-#undef local_dc
-#undef local_d8
-#undef local_d4
+#undef city_hide_parent
+#undef city_hide_label
+#undef city_reveal_parent
+#undef city_reveal_label
+#undef city_btn_font_height
+#undef city_header_height
+#undef city_side_height
+#undef city_side_title
+#undef offer_parent
+#undef offer_row_height
+#undef offer_header_height
+#undef offer_title_height
+#undef offer_line_height
+#undef civlist_item_height
+#undef civlist_box_offset
+#undef civlist_header_height
+#undef civlist_title_height
+#undef civlist_row_height
+#undef civlist_side_height
+#undef civlist_side_title
+#undef map_parent
+#undef map_box_offset
+#undef map_header_height
+#undef map_title_height
+#undef map_row_height
+#undef map_side_height
+#undef map_side_title
+#undef proposal_parent
+#undef proposal_row_height
+#undef proposal_title_height
+#undef proposal_line_height
+#undef sort_city_parent
+#undef sort_unit_parent
+#undef unit_line_spacing
+#undef unit_btn_offset
+#undef hide_parent
+#undef hide_label
+#undef reveal_parent
+#undef reveal_label
+#undef unit_line_spacing_alt
+#undef unit_btn_offset_alt
+#undef unit_header_height
+#undef unit_side_height
+#undef unit_side_title
+#undef gold_edit_parent
+#undef gold_prompt_width
+#undef gold_edit_text_width
+#undef gold_box_offset
+#undef gold_header_height
+#undef gold_side_title
+#undef gold_title_height
+#undef gold_line_height
+#undef tech_header_height
+#undef tech_side_height
+#undef tech_side_title
+#undef gift_parent
+#undef gift_row_height
+#undef gift_header_height
+#undef gift_title_height
+#undef gift_line_height
+#undef status_box_offset
+#undef status_header_height
+#undef status_title_height
+#undef status_line_height
+#undef treaty_parent
+#undef treaty_row_height
+#undef treaty_row_height_alt
+#undef treaty_title_height
+#undef treaty_title
+#undef treaty_line_height
+#undef treaty_line_height_alt
+#undef treaty_side_height
+#undef treaty_side_title
+#undef exch_parent_r
+#undef exch_title_height_r
+#undef exch_parent_l
+#undef exch_title_height_l
+#undef send_parent
+#undef mute_parent
+#undef broadcast_parent
+#undef mute_anon_parent
+#undef anon_parent
+#undef chat_font_height
+#undef selected_mode
+#undef mode_radio_parent
+#undef mode_title_height
+#undef waiting_font_height
+#undef review_parent
+#undef desc_parent
+#undef city_header_font
+#undef city_hide_button
+#undef city_reveal_button
+#undef city_side_font
+#undef offer_radio
+#undef offer_radio_font
+#undef offer_header_font
+#undef offer_title_font
+#undef civlist_header_font
+#undef civlist_side_font
+#undef map_radio
+#undef map_radio_font
+#undef map_header_font
+#undef map_side_font
+#undef proposal_radio
+#undef proposal_radio_font
+#undef proposal_title_font
+#undef sort_city_button
+#undef sort_unit_button
+#undef hide_button
+#undef reveal_button
+#undef unit_header_font
+#undef unit_side_font
+#undef gold_edit_font
+#undef gold_edit
+#undef gold_prompt_font
+#undef gold_header_font
+#undef gold_side_font
+#undef tech_header_font
+#undef tech_side_font
+#undef gift_radio
+#undef gift_radio_font
+#undef gift_title_font
+#undef status_text_font
+#undef status_header_font
+#undef treaty_radio
+#undef treaty_radio_font
+#undef treaty_title_font
+#undef treaty_side_font
+#undef exch_radio_r
+#undef exch_radio_font_r
+#undef exch_title_font_r
+#undef exch_radio_l
+#undef exch_radio_font_l
+#undef exch_title_font_l
+#undef send_checkbox
+#undef mute_checkbox
+#undef right_header_font
+#undef left_header_font
+#undef broadcast_checkbox
+#undef mute_anon_checkbox
+#undef anon_checkbox
+#undef chat_font
+#undef mode_radio
+#undef mode_radio_font
+#undef mode_title_font
+#undef waiting_font
+#undef review_font
+#undef review_edit
+#undef desc_font
+#undef desc_edit
+#undef city_btn_rect
+#undef city_btn_width
+#undef city_btn_top
+#undef city_header_label
+#undef city_btn_height
+#undef city_list_mode
+#undef offer_labels
+#undef offer_label1
+#undef offer_label2
+#undef offer_label3
+#undef offer_label4
+#undef offer_label5
+#undef offer_label6
+#undef civlist_title_idx
+#undef civlist_titles
+#undef map_title_idx
+#undef map_labels
+#undef map_label_last
+#undef proposal_labels
+#undef proposal_label2
+#undef btn_rect
+#undef btn_area_bottom
+#undef btn_width
+#undef btn_top
+#undef btn_height
+#undef unit_list_mode
+#undef gold_text
+#undef tech_list_pick_mode
+#undef gift_labels
+#undef gift_label1
+#undef gift_label2
+#undef gift_label3
+#undef gift_label4
+#undef treaty_labels
+#undef treaty_label1
+#undef treaty_label2
+#undef treaty_label3
+#undef exch_labels_r
+#undef exch_label_r1
+#undef exch_label_r2
+#undef exch_label_r3
+#undef exch_label_r4
+#undef exch_label_r5
+#undef exch_label_r6
+#undef exch_labels_l
+#undef exch_label_l1
+#undef exch_label_l2
+#undef exch_label_l3
+#undef exch_label_l4
+#undef exch_label_l5
+#undef exch_label_l6
+#undef left_col_x
+#undef shown_civ_count
 #undef civ
-#undef local_cc
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_a4
-#undef local_a0
-#undef local_9c
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef right_col_x
+#undef has_full_intel
+#undef checkbox_indent
+#undef max_label_width
+#undef label_width
+#undef label_idx
+#undef mode_labels
+#undef mode_label_last
+#undef waiting_text_width
+#undef waiting_text
+#undef item_kind_ptr
+#undef tech_ptr
+#undef tech_idx
+#undef tech_count
+#undef cur_y
+#undef cur_x
+#undef col_width
+#undef is_demand_side
+#undef side_x
+#undef is_exchange_side
+#undef ctrl_rect
+#undef block_height
+#undef eh_next
+#undef eh_prev
+#undef eh_state
 
 /* 0052d4d2 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_treaty_type_select(i32 param_1,i32 param_2)
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_on_treaty_type_select(i32 ctrl_id,i32 treaty_type)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 + 0x218) = param_2;
+  wnd_activate((Wnd *)(parley + 0x48));
+  *(i32 *)(parley + 0x218) = treaty_type;
   return;
 }
-#undef local_8
+#undef parley
 
 /* 0052d523 auto */
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_demand_kind_select(i32 param_1,u32 param_2)
+void __cdecl parley_on_demand_kind_select(i32 ctrl_id,u32 demand_kind)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_214 = param_2;
+  this2->field_214 = demand_kind;
   parley_add_side_dialog(this2,this2->field_1f4,1);
   return;
 }
 #undef this2
 
 /* 0052d588 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_map_choice_select(int param_1,i32 param_2)
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_on_map_choice_select(int side,i32 map_choice)
 
 {
-  int iVar1;
+  int active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 - 0xe6c + param_1 * 4) = param_2;
+  wnd_activate((Wnd *)(parley + 0x48));
+  *(i32 *)(parley - 0xe6c + side * 4) = map_choice;
   return;
 }
-#undef local_8
+#undef parley
 
 /* 0052d5dd auto */
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_gift_kind_select(i32 param_1,u32 param_2)
+void __cdecl parley_on_gift_kind_select(i32 ctrl_id,u32 gift_kind)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_220 = param_2;
-  switch(param_2) {
+  this2->field_220 = gift_kind;
+  switch(gift_kind) {
   case 0:
     this2->field_1ec = 7;
     break;
@@ -14920,25 +14920,25 @@ void __cdecl parley_on_gift_kind_select(i32 param_1,u32 param_2)
 
 /* 0052d6ff auto */
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_proposal_kind_select(i32 param_1,u32 param_2)
+void __cdecl parley_on_proposal_kind_select(i32 ctrl_id,u32 proposal_kind)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
-  this2->field_21c = param_2;
-  if (param_2 == 0) {
+  this2->field_21c = proposal_kind;
+  if (proposal_kind == 0) {
     this2->field_1ec = 0xc;
   }
-  else if (param_2 == 1) {
+  else if (proposal_kind == 1) {
     this2->field_1ec = 0xd;
   }
   this2->field_1fc = (&parley_mode_right_kinds)[this2->field_1ec * 2];
@@ -14949,32 +14949,32 @@ void __cdecl parley_on_proposal_kind_select(i32 param_1,u32 param_2)
 #undef this2
 
 /* 0052d7dc auto */
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
-void __cdecl parley_on_exchange_kind_select(int param_1,i32 param_2)
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define is_right_side (*(uint *)(frame_ + FRAME_OFF(8)))
+void __cdecl parley_on_exchange_kind_select(int ctrl_id,i32 exchange_kind)
 
 {
-  iptr iVar1;
-  int iVar2;
+  iptr active_child;
+  int selected;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_10 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_10 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  wnd_activate((Wnd *)(local_10 + 0x48));
-  local_8 = (uint)(param_1 == 0x3f4);
-  switch(param_2) {
+  wnd_activate((Wnd *)(parley + 0x48));
+  is_right_side = (uint)(ctrl_id == 0x3f4);
+  switch(exchange_kind) {
   case 0:
-    iVar2 = radiogrp_get_selected(*(RadioGroupGetSelView **)(local_10 + 0x36c + local_8 * 4));
-    radiogrp_disable_item(*(RadioGroupDisableView **)(local_10 + 0x36c + local_8 * 4),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x370),6);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x36c),6);
-    if (iVar2 == 0) {
-      radiogrp_set_selected(*(RadioGroupSetSelView **)(local_10 + 0x36c + local_8 * 4),1);
+    selected = radiogrp_get_selected(*(RadioGroupGetSelView **)(parley + 0x36c + is_right_side * 4));
+    radiogrp_disable_item(*(RadioGroupDisableView **)(parley + 0x36c + is_right_side * 4),0);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),6);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),6);
+    if (selected == 0) {
+      radiogrp_set_selected(*(RadioGroupSetSelView **)(parley + 0x36c + is_right_side * 4),1);
     }
     break;
   case 1:
@@ -14982,153 +14982,153 @@ void __cdecl parley_on_exchange_kind_select(int param_1,i32 param_2)
   case 3:
   case 4:
   case 5:
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x36c),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x370),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x370),6);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x36c),6);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),0);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),0);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),6);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),6);
     break;
   case 6:
-    iVar2 = radiogrp_get_selected(*(RadioGroupGetSelView **)(local_10 + 0x36c + local_8 * 4));
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x36c),0);
-    radiogrp_enable_item(*(RadioGroupEnableView **)(local_10 + 0x370),0);
-    radiogrp_disable_item(*(RadioGroupDisableView **)(local_10 + 0x36c + local_8 * 4),6);
-    if (iVar2 == 6) {
-      radiogrp_set_selected(*(RadioGroupSetSelView **)(local_10 + 0x36c + local_8 * 4),0);
+    selected = radiogrp_get_selected(*(RadioGroupGetSelView **)(parley + 0x36c + is_right_side * 4));
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x36c),0);
+    radiogrp_enable_item(*(RadioGroupEnableView **)(parley + 0x370),0);
+    radiogrp_disable_item(*(RadioGroupDisableView **)(parley + 0x36c + is_right_side * 4),6);
+    if (selected == 6) {
+      radiogrp_set_selected(*(RadioGroupSetSelView **)(parley + 0x36c + is_right_side * 4),0);
     }
   }
   return;
 }
-#undef local_10
-#undef local_8
+#undef parley
+#undef is_right_side
 
 /* 0052d9a1 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_radio_dblclick(i32 param_1)
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_on_radio_dblclick(i32 ctrl_id)
 
 {
-  iptr iVar1;
-  int iVar2;
+  iptr active_child;
+  int enabled;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  iVar2 = ctrl_is_enabled(*(ControlEnabledView **)(local_8 + 0x348));
-  if ((iVar2 != 0) ||
-     (iVar2 = ctrl_is_enabled(*(ControlEnabledView **)(local_8 + 0x34c)), iVar2 != 0)) {
-    wnd_activate((Wnd *)(local_8 + 0x48));
-    parley_on_mode_chosen(param_1);
+  enabled = ctrl_is_enabled(*(ControlEnabledView **)(parley + 0x348));
+  if ((enabled != 0) ||
+     (enabled = ctrl_is_enabled(*(ControlEnabledView **)(parley + 0x34c)), enabled != 0)) {
+    wnd_activate((Wnd *)(parley + 0x48));
+    parley_on_mode_chosen(ctrl_id);
   }
   return;
 }
-#undef local_8
+#undef parley
 
 /* 0052da23 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_conceal_info(void)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  *(i8 *)(local_8 + 0x3bd) = 0;
-  *(i8 *)(local_8 + 0x3be) = 0;
+  *(i8 *)(parley + 0x3bd) = 0;
+  *(i8 *)(parley + 0x3be) = 0;
   net_send_message(0xa6,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3be),0,0,0,0,0,0);
+                           *(int *)(&net_civ_slots + *(int *)(parley + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley + 0x3be),0,0,0,0,0,0);
   net_send_message(0xa8,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3bd),0,0,0,0,0,0);
-  control_hide(*(Control **)(local_8 + 0x340));
-  ctrl_disable(*(Control **)(local_8 + 0x340));
-  ctrl_show_and_redraw(*(Control **)(local_8 + 0x344));
-  ctrl_enable(*(Control **)(local_8 + 0x344));
+                           *(int *)(&net_civ_slots + *(int *)(parley + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley + 0x3bd),0,0,0,0,0,0);
+  control_hide(*(Control **)(parley + 0x340));
+  ctrl_disable(*(Control **)(parley + 0x340));
+  ctrl_show_and_redraw(*(Control **)(parley + 0x344));
+  ctrl_enable(*(Control **)(parley + 0x344));
   return;
 }
 #undef human_civ
-#undef local_8
+#undef parley
 
 /* 0052db3d auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_reveal_info(void)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   wnd_get_active_child();
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley = active_child - 0x48;
   }
-  *(i8 *)(local_8 + 0x3bd) = 1;
-  *(i8 *)(local_8 + 0x3be) = 1;
+  *(i8 *)(parley + 0x3bd) = 1;
+  *(i8 *)(parley + 0x3be) = 1;
   net_send_message(0xa5,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3be),0,0,0,0,0,0);
+                           *(int *)(&net_civ_slots + *(int *)(parley + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley + 0x3be),0,0,0,0,0,0);
   net_send_message(0xa7,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3bd),0,0,0,0,0,0);
-  ctrl_show_and_redraw(*(Control **)(local_8 + 0x340));
-  ctrl_enable(*(Control **)(local_8 + 0x340));
-  control_hide(*(Control **)(local_8 + 0x344));
-  ctrl_disable(*(Control **)(local_8 + 0x344));
+                           *(int *)(&net_civ_slots + *(int *)(parley + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley + 0x3bd),0,0,0,0,0,0);
+  ctrl_show_and_redraw(*(Control **)(parley + 0x340));
+  ctrl_enable(*(Control **)(parley + 0x340));
+  control_hide(*(Control **)(parley + 0x344));
+  ctrl_disable(*(Control **)(parley + 0x344));
   return;
 }
 #undef human_civ
-#undef local_8
+#undef parley
 
 /* 0052dc7e auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define parley (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_check_intel(void)
 
 {
-  bool bVar1;
-  iptr iVar2;
-  int iVar3;
+  bool has_intel_wonder;
+  iptr active_child;
+  int has_wonder;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    parley = active_child - 0x48;
   }
-  iVar3 = civ_has_wonder(human_civ,0x18);
-  if (iVar3 == 0) {
-    iVar3 = civ_has_wonder(human_civ,9);
-    if (iVar3 == 0) {
-      bVar1 = false;
+  has_wonder = civ_has_wonder(human_civ,0x18);
+  if (has_wonder == 0) {
+    has_wonder = civ_has_wonder(human_civ,9);
+    if (has_wonder == 0) {
+      has_intel_wonder = false;
       goto LAB_0052dcf1;
     }
   }
-  bVar1 = true;
+  has_intel_wonder = true;
 LAB_0052dcf1:
-  if ((((*(byte *)&civs[human_civ].treaties[(*(int *)(local_8 + 0x118))] & 0x80) != 0)
-      || (bVar1)) || (game.reveal_map != '\0')) {
-    intel_report_show(human_civ,*(iptr *)(local_8 + 0x118));
+  if ((((*(byte *)&civs[human_civ].treaties[(*(int *)(parley + 0x118))] & 0x80) != 0)
+      || (has_intel_wonder)) || (game.reveal_map != '\0')) {
+    intel_report_show(human_civ,*(iptr *)(parley + 0x118));
   }
   else {
     popup_game_with_sprite(ADDR(0x6324e8, ((u8 *)&g.d_006324e8)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -15136,30 +15136,30 @@ LAB_0052dcf1:
   return;
 }
 #undef human_civ
-#undef local_8
+#undef parley
 
 /* 0052dd73 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define this2 (*(ParleyOfferBuffer * *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_on_mode_chosen(i32 param_1)
+void __cdecl parley_on_mode_chosen(i32 ctrl_id)
 
 {
-  iptr iVar1;
-  i32 uVar1;
+  iptr active_child;
+  i32 value;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ParleyOfferBuffer *)0x0;
   }
   else {
-    this2 = (ParleyOfferBuffer *)(iVar1 - 0x48);
+    this2 = (ParleyOfferBuffer *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)(this2->pad_0 + 0x48));
   switch(this2->field_1ec) {
   case 3:
-    uVar1 = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
-    *(i32 *)this2->pad_208 = uVar1;
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
+    *(i32 *)this2->pad_208 = value;
     if (*(int *)this2->pad_208 == 0) {
       this2->field_1ec = 6;
       ctrl_enable(*(Control **)(this2->pad_21c + 0x134));
@@ -15206,10 +15206,10 @@ void __cdecl parley_on_mode_chosen(i32 param_1)
               ((ViewWindow *)this2,*(i32 *)(this2->pad_1f0 + 4),1);
     break;
   case 5:
-    uVar1 = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x150));
-    *(i32 *)(this2->pad_208 + 4) = uVar1;
-    uVar1 = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
-    *(i32 *)(this2->pad_208 + 8) = uVar1;
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x150));
+    *(i32 *)(this2->pad_208 + 4) = value;
+    value = radiogrp_get_selected(*(RadioGroupGetSelView **)(this2->pad_21c + 0x154));
+    *(i32 *)(this2->pad_208 + 8) = value;
     this2->field_1ec = 0xe;
     *(i32 *)(this2->pad_1f0 + 8) = (&parley_mode_left_kinds)[this2->field_1ec * 2];
     *(i32 *)this2->pad_1f0 = *(i32 *)(this2->pad_1f0 + 8);
@@ -15236,8 +15236,8 @@ void __cdecl parley_on_mode_chosen(i32 param_1)
       this2->pad_21c[0x1a] = '\0';
       this2->pad_21c[0x1b] = '\0';
     }
-    uVar1 = parley_send_offer(this2,this2->field_1ec);
-    *(i32 *)(this2->pad_21c + 0x18) = uVar1;
+    value = parley_send_offer(this2,this2->field_1ec);
+    *(i32 *)(this2->pad_21c + 0x18) = value;
     if ((this2->field_1ec == 6) && (this2->field_218 == 3)) {
       if ((*(byte *)&civs[human_civ].treaties[(this2->field_118)] & 8) == 0) {
         if ((*(byte *)&civs[human_civ].treaties[(this2->field_118)] & 4) == 0) {
@@ -15280,15 +15280,15 @@ void __cdecl parley_on_mode_chosen(i32 param_1)
 void __cdecl parley_on_never_mind(void)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
   switch(this2->field_1ec) {
@@ -15329,33 +15329,33 @@ void __cdecl parley_on_never_mind(void)
 /* 0052e4c9 auto */
 #define dlg_pending_idle_callback (*(i8 * *)((u8 *)&g.d_00635a3c))
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define local_8 (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
+#define parley (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_accept_offer(void)
 
 {
-  int iVar1;
+  int active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (WindowObjectView *)0x0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = (WindowObjectView *)0x0;
   }
   else {
-    local_8 = (WindowObjectView *)(iVar1 - 0x48);
+    parley = (WindowObjectView *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(local_8 + 0x12));
+  wnd_activate((Wnd *)(parley + 0x12));
   net_send_message(0x83,*(i32 *)
                            (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0,0
                      ,0,0,0,0,0);
   dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
   popup_game_with_sprite(ADDR(0x6324f0, ((u8 *)&g.d_006324f0)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-  local_8[0x7b].field_0 = 3;
-  parley_set_mode_sides(local_8,1);
+  parley[0x7b].field_0 = 3;
+  parley_set_mode_sides(parley,1);
   return;
 }
 #undef dlg_pending_idle_callback
 #undef parley_other_civ
-#undef local_8
+#undef parley
 
 /* 0052e57c auto */
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
@@ -15363,15 +15363,15 @@ void __cdecl parley_on_accept_offer(void)
 void __cdecl parley_on_no_thanks(void)
 
 {
-  iptr iVar1;
+  iptr active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(active_child - 0x48);
   }
   wnd_activate((Wnd *)this2->pad_48);
   net_send_message(0x84,*(i32 *)
@@ -15391,88 +15391,88 @@ void __cdecl parley_on_no_thanks(void)
 
 /* 0052e685 auto */
 #define parley_other_civ (*(int *)((u8 *)&g.d_0067a8c0))
-#define local_8 (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
+#define parley (*(WindowObjectView * *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_on_counter_offer(void)
 
 {
-  int iVar1;
+  int active_child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = (WindowObjectView *)0x0;
+  active_child = wnd_get_active_child();
+  if (active_child == 0) {
+    parley = (WindowObjectView *)0x0;
   }
   else {
-    local_8 = (WindowObjectView *)(iVar1 - 0x48);
+    parley = (WindowObjectView *)(active_child - 0x48);
   }
-  wnd_activate((Wnd *)(local_8 + 0x12));
+  wnd_activate((Wnd *)(parley + 0x12));
   net_send_message(0x85,*(i32 *)
                            (&net_player_slots + *(int *)(&net_civ_slots + parley_other_civ * 4) * 0x54),0,0,0
                      ,0,0,0,0,0);
-  local_8[0x7b].field_0 = 3;
-  parley_set_mode_sides(local_8,1);
+  parley[0x7b].field_0 = 3;
+  parley_set_mode_sides(parley,1);
   return;
 }
 #undef parley_other_civ
-#undef local_8
+#undef parley
 
 /* 0052e71a auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __cdecl chat_on_mute_checkbox(int param_1)
+#define chat_wnd2 (*(int *)(frame_ + FRAME_OFF(0)))
+void __cdecl chat_on_mute_checkbox(int ctrl_id)
 
 {
-  i32 uVar1;
+  i32 checked;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = wnd_get_active_child();
-  if (local_8 == 0) {
-    local_8 = 0;
+  chat_wnd2 = wnd_get_active_child();
+  if (chat_wnd2 == 0) {
+    chat_wnd2 = 0;
   }
   else {
-    local_8 -= 0x48;
+    chat_wnd2 -= 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  if ((0x428 < param_1) && (param_1 < 0x430)) {
-    uVar1 = checkbox_is_checked
-                      (*(Control **)(&chat_mute_checkboxes + (param_1 - 0x428) * 4));
-    *(i32 *)(&chat_muted_civs + (param_1 - 0x428) * 4) = uVar1;
+  wnd_activate((Wnd *)(chat_wnd2 + 0x48));
+  if ((0x428 < ctrl_id) && (ctrl_id < 0x430)) {
+    checked = checkbox_is_checked
+                      (*(Control **)(&chat_mute_checkboxes + (ctrl_id - 0x428) * 4));
+    *(i32 *)(&chat_muted_civs + (ctrl_id - 0x428) * 4) = checked;
   }
   return;
 }
-#undef local_8
+#undef chat_wnd2
 
 /* 0052e7b7 auto */
 #define chat_broadcast_all (*(int *)((u8 *)&g.d_0068aee4))
 #define chat_mute_anonymous (*(i32 *)((u8 *)&g.d_0068aee0))
 #define chat_remain_anonymous (*(i32 *)((u8 *)&g.d_0068aedc))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl chat_on_send_checkbox(int param_1)
+#define slot (*(int *)(frame_ + FRAME_OFF(4)))
+#define chat_wnd2 (*(int *)(frame_ + FRAME_OFF(8)))
+void __cdecl chat_on_send_checkbox(int ctrl_id)
 
 {
-  i32 uVar1;
+  i32 checked;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = wnd_get_active_child();
-  if (local_8 == 0) {
-    local_8 = 0;
+  chat_wnd2 = wnd_get_active_child();
+  if (chat_wnd2 == 0) {
+    chat_wnd2 = 0;
   }
   else {
-    local_8 -= 0x48;
+    chat_wnd2 -= 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  switch(param_1) {
+  wnd_activate((Wnd *)(chat_wnd2 + 0x48));
+  switch(ctrl_id) {
   case 0x415:
     chat_remain_anonymous = checkbox_is_checked(chat_anonymous_checkbox);
     break;
   case 0x416:
     chat_broadcast_all = checkbox_is_checked(chat_broadcast_checkbox);
     if (chat_broadcast_all != 0) {
-      for (local_c = 1; local_c < 8; local_c++) {
-        if (*(int *)(&chat_send_checkboxes + local_c * 4) != 0) {
-          checkbox_set_checked(*(Control **)(&chat_send_checkboxes + local_c * 4),1);
-          ctrl_show_and_redraw(*(Control **)(&chat_send_checkboxes + local_c * 4));
-          *(i32 *)(&chat_send_to_civs + local_c * 4) = 1;
+      for (slot = 1; slot < 8; slot++) {
+        if (*(int *)(&chat_send_checkboxes + slot * 4) != 0) {
+          checkbox_set_checked(*(Control **)(&chat_send_checkboxes + slot * 4),1);
+          ctrl_show_and_redraw(*(Control **)(&chat_send_checkboxes + slot * 4));
+          *(i32 *)(&chat_send_to_civs + slot * 4) = 1;
         }
       }
     }
@@ -15484,10 +15484,10 @@ void __cdecl chat_on_send_checkbox(int param_1)
   case 0x41b:
   case 0x41c:
   case 0x41d:
-    param_1 -= 0x416;
-    uVar1 = checkbox_is_checked(*(Control **)(&chat_send_checkboxes + param_1 * 4));
-    *(i32 *)(&chat_send_to_civs + param_1 * 4) = uVar1;
-    if ((*(int *)(&chat_send_to_civs + param_1 * 4) == 0) && (chat_broadcast_all != 0)) {
+    ctrl_id -= 0x416;
+    checked = checkbox_is_checked(*(Control **)(&chat_send_checkboxes + ctrl_id * 4));
+    *(i32 *)(&chat_send_to_civs + ctrl_id * 4) = checked;
+    if ((*(int *)(&chat_send_to_civs + ctrl_id * 4) == 0) && (chat_broadcast_all != 0)) {
       checkbox_set_checked(chat_broadcast_checkbox,0);
       ctrl_show_and_redraw(chat_broadcast_checkbox);
       chat_broadcast_all = 0;
@@ -15501,8 +15501,8 @@ void __cdecl chat_on_send_checkbox(int param_1)
 #undef chat_broadcast_all
 #undef chat_mute_anonymous
 #undef chat_remain_anonymous
-#undef local_c
-#undef local_8
+#undef slot
+#undef chat_wnd2
 
 /* 0052e971 auto */
 void __thiscall parley_update_buttons(ViewWindow *this)
@@ -15580,16 +15580,16 @@ void __thiscall parley_update_buttons(ViewWindow *this)
 
 /* 0052ec47 auto */
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-iptr __thiscall parley_find_unit_by_id(WindowObjectView *this,int param_1)
+#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
+iptr __thiscall parley_find_unit_by_id(WindowObjectView *this,int unit_id)
 
 {
   short x2;
   short y2;
-  bool bVar3;
+  bool near_land;
   iptr x;
   int y;
-  int iVar6;
+  int in_bounds;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit = (iptr)game.num_units;
@@ -15598,35 +15598,35 @@ iptr __thiscall parley_find_unit_by_id(WindowObjectView *this,int param_1)
     if (unit < 0) {
       return 0xffffffff;
     }
-  } while ((units[unit].id == 0) || (units[unit].id != param_1));
+  } while ((units[unit].id == 0) || (units[unit].id != unit_id));
   x2 = units[unit].x;
   y2 = units[unit].y;
-  bVar3 = false;
-  local_8 = 0;
+  near_land = false;
+  dir = 0;
   do {
-    if (7 < local_8) {
+    if (7 < dir) {
 LAB_0052ed47:
-      if ((!bVar3) && (y = unit_stack_sum(unit,2), y != 1)) {
+      if ((!near_land) && (y = unit_stack_sum(unit,2), y != 1)) {
         unit = -2;
       }
       return unit;
     }
-    x = map_wrap_x((int)(char)(&dir_dx_table)[local_8] + (int)x2);
-    y = (int)(char)(&dir_dy_table)[local_8] + (int)y2;
-    iVar6 = map_in_bounds(x,y);
-    if ((iVar6 != 0) && (y = tile_is_ocean(x,y), y == 0)) {
-      bVar3 = true;
+    x = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)x2);
+    y = (int)(char)(&dir_dy_table)[dir] + (int)y2;
+    in_bounds = map_in_bounds(x,y);
+    if ((in_bounds != 0) && (y = tile_is_ocean(x,y), y == 0)) {
+      near_land = true;
       goto LAB_0052ed47;
     }
-    local_8++;
+    dir++;
   } while( true );
 }
 #undef unit
-#undef local_8
+#undef dir
 
 /* 0052ed95 auto */
 #define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int param_1)
+iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int city_id)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -15637,7 +15637,7 @@ iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int param_1)
     if (city < 0) {
       return 0xffffffff;
     }
-  } while ((cities[city].id == 0) || (cities[city].id != param_1));
+  } while ((cities[city].id == 0) || (cities[city].id != city_id));
   return city;
 }
 #undef city
@@ -15649,7 +15649,7 @@ iptr __thiscall parley_find_city_by_id(WindowObjectView *this,int param_1)
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl mp_turn_timer_stop(int param_1)
+void __cdecl mp_turn_timer_stop(int notify)
 
 {
   if (mp_turn_civ_i32 == human_civ) {
@@ -15662,7 +15662,7 @@ void __cdecl mp_turn_timer_stop(int param_1)
     game_timer_destroy(mp_turn_timer_handle);
     mp_turn_timer_handle = 0;
     status_draw_timer_bar(100,0xffffffff);
-    if (((param_1 != 0) && (2 < game.multiplayer)) && (player_turn_active != '\0')) {
+    if (((notify != 0) && (2 < game.multiplayer)) && (player_turn_active != '\0')) {
       net_send_message(0x6e,0xff,0,0,0,0,0,0,0,0);
     }
   }
@@ -15682,13 +15682,13 @@ void __cdecl mp_turn_timer_stop(int param_1)
 #define mp_turn_timer_last_ticks_i32 (*(i32 *)((u8 *)&g.d_00633a7c))
 #define main_view_timer_cache_i32 (*(i32 *)((u8 *)&g.d_0066c990))
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define caption_left (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define caption_top (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define caption_right (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl mp_turn_timer_start(int param_1)
+void __cdecl mp_turn_timer_start(int notify)
 
 {
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
@@ -15703,17 +15703,17 @@ void __cdecl mp_turn_timer_start(int param_1)
   mp_turn_timer_blink = 0;
   main_view_timer_cache_i32 = 0xffffffff;
   frame_wnd_draw_caption((FrameWindow *)&map_views);
-  local_14 = main_view_frame_left;
-  local_10 = main_view_frame_top;
-  local_c = main_view_frame_right;
-  local_8 = main_view_client_top;
-  wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_14);
+  caption_left = main_view_frame_left;
+  caption_top = main_view_frame_top;
+  caption_right = main_view_frame_right;
+  caption_bottom = main_view_client_top;
+  wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
   if (mp_turn_timer_handle != 0) {
     game_timer_destroy(mp_turn_timer_handle);
   }
   mp_turn_timer_handle = game_timer_create(ADDR(0x402220, mp_turn_timer_tick),500,1);
   mp_turn_timer_last_ticks_i32 = timer_ticks();
-  if ((param_1 != 0) && (2 < game.multiplayer)) {
+  if ((notify != 0) && (2 < game.multiplayer)) {
     net_send_message(0x6d,0xff,0,0,0,0,0,0,0,0);
   }
   return;
@@ -15726,10 +15726,10 @@ void __cdecl mp_turn_timer_start(int param_1)
 #undef mp_turn_timer_last_ticks_i32
 #undef main_view_timer_cache_i32
 #undef mp_turn_civ_i32
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef caption_left
+#undef caption_top
+#undef caption_right
+#undef caption_bottom
 
 /* 0055b046 auto */
 #define main_view_timer_shown (*(int *)((u8 *)&g.d_0066c988))
@@ -15737,7 +15737,7 @@ void __cdecl mp_turn_timer_start(int param_1)
 #define mp_turn_timer_last_ticks_i32 (*(i32 *)((u8 *)&g.d_00633a7c))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl mp_turn_timer_resume(int param_1)
+void __cdecl mp_turn_timer_resume(int notify)
 
 {
   city_window_close();
@@ -15750,7 +15750,7 @@ void __cdecl mp_turn_timer_resume(int param_1)
     }
     mp_turn_timer_handle = game_timer_create(ADDR(0x402220, mp_turn_timer_tick),500,1);
     mp_turn_timer_last_ticks_i32 = timer_ticks();
-    if ((param_1 != 0) && (2 < game.multiplayer)) {
+    if ((notify != 0) && (2 < game.multiplayer)) {
       net_send_message(0x6f,0xff,0,0,0,0,0,0,0,0);
     }
   }
@@ -15767,28 +15767,28 @@ void __cdecl mp_turn_timer_resume(int param_1)
 #define main_view_timer_shown (*(i32 *)((u8 *)&g.d_0066c988))
 #define mp_turn_time_limit_ms (*(int *)((u8 *)&g.d_00654b70))
 #define player_turn_active (*(i8 *)((u8 *)&g.d_0064b9bc))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define caption_left (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define caption_top (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define caption_right (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define caption_bottom (*(i32 *)(frame_ + FRAME_OFF(16)))
 void __cdecl mp_cmd_change_timer(void)
 
 {
-  int iVar1;
+  int cancelled;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   mp_turn_timer_stop(1);
   GetAsyncKeyState(0x1b);
-  iVar1 = setup_choose_game_timer(1);
-  if (iVar1 == 0) {
+  cancelled = setup_choose_game_timer(1);
+  if (cancelled == 0) {
     if (mp_turn_time_limit_ms == 0) {
       main_view_timer_shown = 0;
       frame_wnd_draw_caption((FrameWindow *)&map_views);
-      local_14 = main_view_frame_left;
-      local_10 = main_view_frame_top;
-      local_c = main_view_frame_right;
-      local_8 = main_view_client_top;
-      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&local_14);
+      caption_left = main_view_frame_left;
+      caption_top = main_view_frame_top;
+      caption_right = main_view_frame_right;
+      caption_bottom = main_view_client_top;
+      wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)&caption_left);
     }
     else {
       main_view_timer_shown = 1;
@@ -15810,10 +15810,10 @@ void __cdecl mp_cmd_change_timer(void)
 #undef main_view_timer_shown
 #undef mp_turn_time_limit_ms
 #undef player_turn_active
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef caption_left
+#undef caption_top
+#undef caption_right
+#undef caption_bottom
 
 /* 0055b3c8 auto */
 void __cdecl mp_mouse_watchdog_stop(void)
@@ -15917,7 +15917,7 @@ void __cdecl mp_window_drag_end(void)
 void __cdecl mp_release_mouse_capture(void)
 
 {
-  iptr iVar1;
+  iptr wnd;
   UINT Msg;
   WPARAM wParam;
   LPARAM lParam;
@@ -15927,8 +15927,8 @@ void __cdecl mp_release_mouse_capture(void)
       lParam = 0;
       wParam = 0;
       Msg = 0x202;
-      iVar1 = wnd_get_window(mp_window_drag_wnd);
-      PostMessageA(*(HWND *)(iVar1 + 4),Msg,wParam,lParam);
+      wnd = wnd_get_window(mp_window_drag_wnd);
+      PostMessageA(*(HWND *)(wnd + 4),Msg,wParam,lParam);
       wnd_release_capture(mp_window_drag_wnd);
     }
     mp_window_drag_active = '\0';
@@ -15942,13 +15942,13 @@ void __cdecl mp_release_mouse_capture(void)
 #define mp_window_drag_active (*(char *)((u8 *)&g.d_00633a84))
 #define mp_window_drag_start_ticks (*(int *)((u8 *)&g.d_00633a88))
 #define player_has_quit (*(char *)((u8 *)&g.d_006ad685))
-void __cdecl mp_mouse_watchdog_tick(i32 param_1,i32 param_2)
+void __cdecl mp_mouse_watchdog_tick(i32 timer_id,i32 timer_arg)
 
 {
-  int iVar1;
+  int now_ticks;
   
   if ((((2 < game.multiplayer) && (net_player_count != 1)) && (mp_window_drag_active != '\0')) &&
-     ((iVar1 = timer_ticks(), mp_window_drag_start_ticks + 0x26c < iVar1 && (player_has_quit == '\0')))) {
+     ((now_ticks = timer_ticks(), mp_window_drag_start_ticks + 0x26c < now_ticks && (player_has_quit == '\0')))) {
     mp_release_mouse_capture();
   }
   mp_mouse_watchdog_start();
@@ -15959,25 +15959,25 @@ void __cdecl mp_mouse_watchdog_tick(i32 param_1,i32 param_2)
 #undef player_has_quit
 
 /* 0056e270 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 LobbyListCtorView * __thiscall lobby_list_ctor(LobbyListCtorView *this)
 
 {
-  u8 *puVar1;
+  u8 *slot_ptr;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->next_id = 1;
   this->entries = 0;
-  for (local_8 = 0; local_8 < 7; local_8++) {
-    puVar1 = this->pad_2c + local_8 * 4 + 0x28;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+  for (i = 0; i < 7; i++) {
+    slot_ptr = this->pad_2c + i * 4 + 0x28;
+    slot_ptr[0] = '\0';
+    slot_ptr[1] = '\0';
+    slot_ptr[2] = '\0';
+    slot_ptr[3] = '\0';
   }
   return this;
 }
-#undef local_8
+#undef i
 
 /* 0056e2c9 auto */
 void __thiscall lobby_list_dtor(void *this)
@@ -16007,25 +16007,25 @@ void __thiscall lobby_list_dtor(void *this)
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
 #define turn_resume_new_game (*(int *)((u8 *)&g.d_0062c488))
 #define net_wait_start_ticks_i32 (*(i32 *)((u8 *)&g.d_006ad674))
-#define local_28 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define new_dialog (*(uptr *)(frame_ + FRAME_OFF(0)))
+#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(28)))
+#define seh_state (*(i32 *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
+i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 map_arg,int launch_mode)
 
 {
-  uint *puVar1;
+  uint *flags_ptr;
   Dialog *this_00;
-  int iVar2;
-  int iVar3;
-  int iVar4;
-  i32 uVar5;
+  int result;
+  int entry;
+  int waiting_entry;
+  i32 ret;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  if ((param_2 == 2) || (param_2 == 3)) {
+  seh_state = 0xffffffff;
+  if ((launch_mode == 2) || (launch_mode == 3)) {
     net_send_message(2,0,0,0,0,0,0,0,0,0);
     this->dialog = 0;
     net_server_address = 0;
@@ -16035,15 +16035,15 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
   }
   else {
     this_00 = operator_new(0x2f4);
-    local_8 = 0;
+    seh_state = 0;
     if (this_00 == (Dialog *)0x0) {
-      local_28 = 0;
+      new_dialog = 0;
     }
     else {
-      local_28 = dialog_ctor(this_00,0x4000);
+      new_dialog = dialog_ctor(this_00,0x4000);
     }
-    local_8 = 0xffffffff;
-    this->dialog = local_28;
+    seh_state = 0xffffffff;
+    this->dialog = new_dialog;
     if (this->dialog == 0) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x633ec4, ((u8 *)&g.d_00633ec4)),ADDR(0x633e9c, ((u8 *)&g.d_00633e9c)),0x34);
     }
@@ -16054,7 +16054,7 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
     dlg_reset((Dialog *)this->dialog,0x81801);
     text_clear();
     text_append_label(0x288);
-    if (param_2 == 0) {
+    if (launch_mode == 0) {
       crt_strcat(&text_buffer,&lobby_ip_sep_str);
       crt_strcat(&text_buffer,&prefs_net_ip_address);
     }
@@ -16069,39 +16069,39 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
     wnd_set_modal_idle_callback((ModalMenuWindow *)(*(int *)this->dialog + 0x48),ADDR(0x402dba, lobby_dialog_idle));
     if (net_lobby_launch_mode == 2) {
       dbg_log(ADDR(0x633ee0, ((u8 *)&g.d_00633ee0)));
-      iVar2 = XD_LobbySendMessage(1);
-      if (iVar2 != 0) {
-        dbg_logf(ADDR(0x633f18, ((u8 *)&g.d_00633f18)),iVar2);
+      result = XD_LobbySendMessage(1);
+      if (result != 0) {
+        dbg_logf(ADDR(0x633f18, ((u8 *)&g.d_00633f18)),result);
       }
       dbg_log(ADDR(0x633f48, ((u8 *)&g.d_00633f48)));
-      iVar2 = XD_LobbySendMessage(3);
-      if (iVar2 != 0) {
-        dbg_logf(ADDR(0x633f7c, ((u8 *)&g.d_00633f7c)),iVar2);
+      result = XD_LobbySendMessage(3);
+      if (result != 0) {
+        dbg_logf(ADDR(0x633f7c, ((u8 *)&g.d_00633f7c)),result);
       }
     }
     while( true ) {
       net_send_message(2,0,0,0,0,0,0,0,0,0);
-      puVar1 = (uint *)(this->dialog + 0x3c);
-      *puVar1 = *puVar1 & 0xfffffbff;
+      flags_ptr = (uint *)(this->dialog + 0x3c);
+      *flags_ptr = *flags_ptr & 0xfffffbff;
       *(i32 *)(this->dialog + 0xd8) = 0;
       *(i32 *)(this->dialog + 0xdc) = *(i32 *)(this->dialog + 0xd8);
-      iVar2 = dlg_show_modal((Dialog *)this->dialog,0);
+      result = dlg_show_modal((Dialog *)this->dialog,0);
       if (*(int *)(this->dialog + 0xdc) != 1) break;
-      iVar3 = lobby_find_entry_by_id(this,iVar2);
-      iVar2 = lobby_slot_for_entry_id(this,iVar2);
-      if ((iVar3 != 0) && (iVar4 = lobby_find_waiting_entry(this), iVar4 == 0)) {
-        net_send_message(5,*(i32 *)(&net_player_slots + iVar2 * 0x54),0,0,0,0,0,0,0,0);
+      entry = lobby_find_entry_by_id(this,result);
+      result = lobby_slot_for_entry_id(this,result);
+      if ((entry != 0) && (waiting_entry = lobby_find_waiting_entry(this), waiting_entry == 0)) {
+        net_send_message(5,*(i32 *)(&net_player_slots + result * 0x54),0,0,0,0,0,0,0,0);
         XD_FlushSendBuffer(180000);
-        XD_ServerCloseConnection((ushort)*(i32 *)(&net_player_slots + iVar2 * 0x54));
-        uVar5 = lobby_entry_neighbor(this,iVar3);
-        *(i32 *)(this->dialog + 0x220) = uVar5;
-        lobby_remove_entry(this,iVar3);
+        XD_ServerCloseConnection((ushort)*(i32 *)(&net_player_slots + result * 0x54));
+        ret = lobby_entry_neighbor(this,entry);
+        *(i32 *)(this->dialog + 0x220) = ret;
+        lobby_remove_entry(this,entry);
         net_remove_player
-                  ((NetSession *)&net_session,*(i32 *)(&net_player_slots + iVar2 * 0x54));
+                  ((NetSession *)&net_session,*(i32 *)(&net_player_slots + result * 0x54));
         lobby_add_waiting_entry(this);
       }
     }
-    if (iVar2 < 0) {
+    if (result < 0) {
       net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
       dialog_button_labels = *(i8 **)(this[1].pad_8 + 0x18);
       lobby_clear_player_list(this);
@@ -16110,7 +16110,7 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
       }
       this->dialog = 0;
       XD_StopConnections();
-      uVar5 = 0;
+      ret = 0;
       goto LAB_0056ec81;
     }
     crt_strcpy(&net_server_address,&prefs_net_ip_address);
@@ -16137,34 +16137,34 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
   net_send_message(6,0xff,0,0,0,0,0,0,0,0);
   net_send_message(9,0xff,0,0,0,0,0,0,0,0);
   net_local_slot = 0;
-  iVar2 = game_profile_popup(1);
-  if (iVar2 == -1) {
+  result = game_profile_popup(1);
+  if (result == -1) {
     net_send_message(0x32,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(180000);
-    uVar5 = 0;
+    ret = 0;
   }
   else {
     if ((saved_resume_new_game == 0) && (saved_turn_civ == '\0')) {
       leaders_reset_custom_names();
       game.civs_alive = '\0';
-      iVar2 = setup_choose_tribe(0,3,0);
-      if (iVar2 != 0) {
+      result = setup_choose_tribe(0,3,0);
+      if (result != 0) {
         if (1 < net_player_count) {
           net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
         }
         XD_StopConnections();
-        uVar5 = 0;
+        ret = 0;
         goto LAB_0056ec81;
       }
     }
     else {
-      iVar2 = net_choose_civ_dialog(0);
-      if (iVar2 != 0) {
+      result = net_choose_civ_dialog(0);
+      if (result != 0) {
         if (1 < net_player_count) {
           net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
         }
         XD_StopConnections();
-        uVar5 = 0;
+        ret = 0;
         goto LAB_0056ec81;
       }
     }
@@ -16176,11 +16176,11 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
       crt_strcpy(&text_string_args,net_connection_title);
       dlg_pending_idle_callback = ((void *)ADDR(0x0040266c, lobby_wait_civs_chosen_idle));
       net_wait_start_ticks_i32 = timer_ticks();
-      iVar2 = popup_game_sprite_flags(ADDR(0x633fac, ((u8 *)&g.d_00633fac)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-      if (iVar2 == -1) {
+      result = popup_game_sprite_flags(ADDR(0x633fac, ((u8 *)&g.d_00633fac)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+      if (result == -1) {
         net_send_message(0xb,0xff,0,0,0,0,0,0,0,0);
         XD_StopConnections();
-        uVar5 = 0;
+        ret = 0;
         goto LAB_0056ec81;
       }
     }
@@ -16188,14 +16188,14 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
       net_send_message(4,0xff,0,0,0,0,0,0,0,0);
     }
     if ((turn_resume_civ == '\0') && (turn_resume_new_game == 0)) {
-      uVar5 = setup_choose_hotseat_players();
-      setup_choose_opponents(uVar5);
+      ret = setup_choose_hotseat_players();
+      setup_choose_opponents(ret);
       prefs_save_civ2dat();
       rules_load_advances(1);
       rules_load_units(1);
       rules_load_improvements(1);
       snd_menu_end();
-      map_generate(param_1);
+      map_generate(map_arg);
       diffeng_register_blocks();
       diffeng_alloc_mirror();
       game_init_new();
@@ -16223,10 +16223,10 @@ i32 __thiscall lobby_host_wait_players(LobbyList *this,i32 param_1,int param_2)
     net_reset_msg_counts();
     net_session_phase = 3;
     net_send_message(0x28,0xff,3,0,0,0,0,0,0,0);
-    uVar5 = 1;
+    ret = 1;
   }
 LAB_0056ec81:
-  return uVar5;
+  return ret;
 }
 #undef dlg_pending_idle_callback
 #undef human_civ
@@ -16247,31 +16247,31 @@ LAB_0056ec81:
 #undef turn_resume_civ
 #undef turn_resume_new_game
 #undef net_wait_start_ticks_i32
-#undef local_28
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef new_dialog
+#undef seh_frame
+#undef seh_handler
+#undef seh_state
 
 /* 0056ec92 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define net_session_phase (*(i32 *)((u8 *)&g.d_006ad640))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
 #define net_slot_civs (*(i32 *)((u8 *)&g.d_006ad35c))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define slot (*(int *)(frame_ + FRAME_OFF(4)))
+#define pending_count (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl lobby_wait_civs_chosen_idle(void)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_process_messages((NetSession *)&net_session,1,0);
-  local_8 = 0;
-  for (local_c = 1; local_c < 7; local_c++) {
-    if (((&net_slot_active_flags)[local_c * 0x54] == 1) && ((&net_slot_civs)[local_c * 0x15] == -1)) {
-      local_8++;
+  pending_count = 0;
+  for (slot = 1; slot < 7; slot++) {
+    if (((&net_slot_active_flags)[slot * 0x54] == 1) && ((&net_slot_civs)[slot * 0x15] == -1)) {
+      pending_count++;
     }
   }
-  if (local_8 == 0) {
+  if (pending_count == 0) {
     dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
     net_session_phase = 2;
     net_send_message(0x28,0xff,2,0,0,0,0,0,0,0);
@@ -16283,8 +16283,8 @@ void __cdecl lobby_wait_civs_chosen_idle(void)
 #undef net_session_phase
 #undef net_slot_active_flags
 #undef net_slot_civs
-#undef local_c
-#undef local_8
+#undef slot
+#undef pending_count
 
 /* 0056ed62 auto */
 void __cdecl lobby_dialog_idle(void)
@@ -16295,37 +16295,37 @@ void __cdecl lobby_dialog_idle(void)
 }
 
 /* 0056edd3 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-iptr __thiscall lobby_entry_neighbor(LobbyList *this,iptr param_1)
+#define neighbor (*(iptr *)(frame_ + FRAME_OFF(0)))
+iptr __thiscall lobby_entry_neighbor(LobbyList *this,iptr entry)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = param_1;
-  if (*(int *)(param_1 + 0x10) != 0) {
-    local_8 = *(iptr *)(param_1 + 0x10);
+  neighbor = entry;
+  if (*(int *)(entry + 0x10) != 0) {
+    neighbor = *(iptr *)(entry + 0x10);
   }
-  if ((local_8 == param_1) && (*(int *)(param_1 + 0x14) != 0)) {
-    local_8 = *(iptr *)(param_1 + 0x14);
+  if ((neighbor == entry) && (*(int *)(entry + 0x14) != 0)) {
+    neighbor = *(iptr *)(entry + 0x14);
   }
-  return local_8;
+  return neighbor;
 }
-#undef local_8
+#undef neighbor
 
 /* 0056ee2c auto */
-#define local_c (*(void * *)(frame_ + FRAME_OFF(4)))
+#define entry (*(void * *)(frame_ + FRAME_OFF(4)))
 void __thiscall lobby_clear_player_list(LobbyList *this)
 
 {
-  void *pvVar1;
+  void *next;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (void *)this->entries;
-  while (local_c != (void *)0x0) {
-    pvVar1 = *(void **)((int)local_c + 0x10);
-    operator_delete(*(void **)((int)local_c + 8));
-    operator_delete(local_c);
-    local_c = pvVar1;
+  entry = (void *)this->entries;
+  while (entry != (void *)0x0) {
+    next = *(void **)((int)entry + 0x10);
+    operator_delete(*(void **)((int)entry + 8));
+    operator_delete(entry);
+    entry = next;
   }
   this->entries = 0;
   *(i32 *)(this->dialog + 0x28) = 0;
@@ -16333,157 +16333,157 @@ void __thiscall lobby_clear_player_list(LobbyList *this)
   *(i32 *)(this->dialog + 0x220) = 0;
   return;
 }
-#undef local_c
+#undef entry
 
 /* 0056eed7 auto */
-void __thiscall lobby_remove_entry(LobbyList *this,void *param_1)
+void __thiscall lobby_remove_entry(LobbyList *this,void *entry)
 
 {
-  int *piVar1;
+  int *count_ptr;
   
-  if (param_1 != (void *)0x0) {
-    if (*(int *)((int)param_1 + 0x14) == 0) {
-      *(i32 *)(this->dialog + 0x228) = *(i32 *)((int)param_1 + 0x10);
+  if (entry != (void *)0x0) {
+    if (*(int *)((int)entry + 0x14) == 0) {
+      *(i32 *)(this->dialog + 0x228) = *(i32 *)((int)entry + 0x10);
       this->entries = *(uptr *)(this->dialog + 0x228);
     }
     else {
-      *(i32 *)(*(int *)((int)param_1 + 0x14) + 0x10) = *(i32 *)((int)param_1 + 0x10);
+      *(i32 *)(*(int *)((int)entry + 0x14) + 0x10) = *(i32 *)((int)entry + 0x10);
     }
-    if (*(int *)((int)param_1 + 0x10) != 0) {
-      *(i32 *)(*(int *)((int)param_1 + 0x10) + 0x14) = *(i32 *)((int)param_1 + 0x14);
+    if (*(int *)((int)entry + 0x10) != 0) {
+      *(i32 *)(*(int *)((int)entry + 0x10) + 0x14) = *(i32 *)((int)entry + 0x14);
     }
-    operator_delete(*(void **)((int)param_1 + 8));
-    operator_delete(param_1);
-    piVar1 = (int *)(this->dialog + 0x28);
-    *piVar1 = *piVar1 - 1;
+    operator_delete(*(void **)((int)entry + 8));
+    operator_delete(entry);
+    count_ptr = (int *)(this->dialog + 0x28);
+    *count_ptr = *count_ptr - 1;
   }
   return;
 }
 
 /* 0056ef93 auto */
-#define local_10 (*(uptr *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
-uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr param_1,uint param_2)
+#define tail2 (*(uptr *)(frame_ + FRAME_OFF(0)))
+#define node2 (*(uptr *)(frame_ + FRAME_OFF(4)))
+uint * __thiscall lobby_add_player_entry(LobbyList *this,iptr name2,uint entry_id)
 
 {
-  int *piVar1;
-  uint *puVar2;
-  size_t sVar3;
-  void *pvVar4;
-  int iVar5;
-  int iVar6;
+  int *count_ptr;
+  uint *entry;
+  size_t name_len;
+  void *name_copy;
+  int width;
+  int max_width;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_10 = 0;
-  for (local_c = this->entries; local_c != 0; local_c = *(uptr *)(local_c + 0x10)) {
-    local_10 = local_c;
+  tail2 = 0;
+  for (node2 = this->entries; node2 != 0; node2 = *(uptr *)(node2 + 0x10)) {
+    tail2 = node2;
   }
-  puVar2 = operator_new(0x18);
-  puVar2[4] = 0;
-  puVar2[5] = local_10;
-  if (local_10 == 0) {
-    this->entries = (uptr)puVar2;
-    *(uint **)(this->dialog + 0x228) = puVar2;
+  entry = operator_new(0x18);
+  entry[4] = 0;
+  entry[5] = tail2;
+  if (tail2 == 0) {
+    this->entries = (uptr)entry;
+    *(uint **)(this->dialog + 0x228) = entry;
   }
   else {
-    *(uint **)(local_10 + 0x10) = puVar2;
+    *(uint **)(tail2 + 0x10) = entry;
   }
-  *puVar2 = 0;
-  sVar3 = _strlen((char *)param_1);
-  pvVar4 = operator_new(sVar3 + 1);
-  puVar2[2] = (uint)pvVar4;
-  crt_strcpy(puVar2[2],param_1);
-  if (*(char *)param_1 == '\0') {
-    *puVar2 = *puVar2 | 1;
+  *entry = 0;
+  name_len = _strlen((char *)name2);
+  name_copy = operator_new(name_len + 1);
+  entry[2] = (uint)name_copy;
+  crt_strcpy(entry[2],name2);
+  if (*(char *)name2 == '\0') {
+    *entry = *entry | 1;
   }
-  puVar2[1] = param_2;
-  puVar2[3] = 0;
-  iVar5 = font_text_width(*(GameFont **)(this->dialog + 8),puVar2[2]);
-  iVar6 = dialog_option_icon_width((DialogCore *)this->dialog);
-  iVar5 = iVar5 + iVar6 + *(int *)(this->dialog + 0xac) + 5;
-  iVar6 = *(int *)(this->dialog + 0x118);
-  if (iVar6 <= iVar5) {
-    iVar6 = iVar5;
+  entry[1] = entry_id;
+  entry[3] = 0;
+  width = font_text_width(*(GameFont **)(this->dialog + 8),entry[2]);
+  max_width = dialog_option_icon_width((DialogCore *)this->dialog);
+  width = width + max_width + *(int *)(this->dialog + 0xac) + 5;
+  max_width = *(int *)(this->dialog + 0x118);
+  if (max_width <= width) {
+    max_width = width;
   }
-  *(int *)(this->dialog + 0x118) = iVar6;
-  piVar1 = (int *)(this->dialog + 0x28);
-  *piVar1 = *piVar1 + 1;
+  *(int *)(this->dialog + 0x118) = max_width;
+  count_ptr = (int *)(this->dialog + 0x28);
+  *count_ptr = *count_ptr + 1;
   *(uptr *)(this->dialog + 0x228) = this->entries;
   *(i32 *)(this->dialog + 0x210) = *(i32 *)(this->dialog + 0x228);
-  return puVar2;
+  return entry;
 }
-#undef local_10
-#undef local_c
+#undef tail2
+#undef node2
 
 /* 0056f113 auto */
 #define net_lobby_list (*(LobbyList * *)((u8 *)&g.d_006ad10c))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
+#define slot (*(int *)(frame_ + FRAME_OFF(0)))
+#define entry (*(uptr *)(frame_ + FRAME_OFF(4)))
 void __cdecl lobby_refresh_player_list(void)
 
 {
-  int iVar1;
+  int selected_id;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (net_lobby_list != (LobbyList *)0x0) {
-    iVar1 = *(int *)(*(int *)(net_lobby_list->field_0 + 0x220) + 4);
+    selected_id = *(int *)(*(int *)(net_lobby_list->field_0 + 0x220) + 4);
     lobby_clear_player_list(net_lobby_list);
     if (net_player_count == 0) {
       lobby_add_waiting_entry(net_lobby_list);
     }
     else {
-      for (local_10 = 1; local_10 < 7; local_10++) {
-        if ((&net_slot_active_flags)[local_10 * 0x54] != '\0') {
-          if (*(int *)(&net_slot_lobby_ids + local_10 * 0x54) == 0) {
-            *(u32 *)(&net_slot_lobby_ids + local_10 * 0x54) = net_lobby_list->field_4;
+      for (slot = 1; slot < 7; slot++) {
+        if ((&net_slot_active_flags)[slot * 0x54] != '\0') {
+          if (*(int *)(&net_slot_lobby_ids + slot * 0x54) == 0) {
+            *(u32 *)(&net_slot_lobby_ids + slot * 0x54) = net_lobby_list->field_4;
             net_lobby_list->field_4++;
           }
           lobby_add_player_entry
-                    (net_lobby_list,(iptr)(&net_slot_player_names + local_10 * 0x54),
-                     *(i32 *)(&net_slot_lobby_ids + local_10 * 0x54));
+                    (net_lobby_list,(iptr)(&net_slot_player_names + slot * 0x54),
+                     *(i32 *)(&net_slot_lobby_ids + slot * 0x54));
         }
       }
       lobby_add_waiting_entry(net_lobby_list);
     }
-    for (local_c = net_lobby_list->field_28; (local_c != 0 && (*(int *)(local_c + 4) != iVar1));
-        local_c = *(uptr *)(local_c + 0x10)) {
+    for (entry = net_lobby_list->field_28; (entry != 0 && (*(int *)(entry + 4) != selected_id));
+        entry = *(uptr *)(entry + 0x10)) {
     }
-    if (local_c == 0) {
-      for (local_c = net_lobby_list->field_28;
-          (*(int *)(local_c + 0x10) != 0 && (*(int *)(local_c + 4) < iVar1));
-          local_c = *(uptr *)(local_c + 0x10)) {
+    if (entry == 0) {
+      for (entry = net_lobby_list->field_28;
+          (*(int *)(entry + 0x10) != 0 && (*(int *)(entry + 4) < selected_id));
+          entry = *(uptr *)(entry + 0x10)) {
       }
-      if (local_c == 0) {
-        local_c = net_lobby_list->field_28;
+      if (entry == 0) {
+        entry = net_lobby_list->field_28;
       }
     }
     *(uptr *)(net_lobby_list->field_0 + 0x228) = net_lobby_list->field_28;
     *(i32 *)(net_lobby_list->field_0 + 0x210) = *(i32 *)(net_lobby_list->field_0 + 0x228);
     dialog_set_default_choice
-              ((DialogOptionList *)net_lobby_list->field_0,*(iptr *)(local_c + 4));
+              ((DialogOptionList *)net_lobby_list->field_0,*(iptr *)(entry + 4));
     dialog_render((Dialog *)net_lobby_list->field_0);
   }
   return;
 }
 #undef net_lobby_list
 #undef net_slot_active_flags
-#undef local_10
-#undef local_c
+#undef slot
+#undef entry
 
 /* 0056f301 auto */
 #define net_lobby_list (*(i32 * *)((u8 *)&g.d_006ad10c))
 void __thiscall lobby_add_waiting_entry(LobbyList *this)
 
 {
-  i32 uVar1;
+  i32 entry_id;
   
   if (this->entries == 0) {
     text_clear();
     text_append_label(0x28c);
-    uVar1 = net_lobby_list[1];
+    entry_id = net_lobby_list[1];
     net_lobby_list[1]++;
-    lobby_add_player_entry(this,ADDR(0x679640, ((u8 *)&g.d_00679640)),uVar1);
+    lobby_add_player_entry(this,ADDR(0x679640, ((u8 *)&g.d_00679640)),entry_id);
     dialog_set_default_choice
               ((DialogOptionList *)*net_lobby_list,*(iptr *)(net_lobby_list[10] + 4));
   }
@@ -16496,442 +16496,442 @@ void __thiscall lobby_add_waiting_entry(LobbyList *this)
 i32 __thiscall lobby_find_waiting_entry(LobbyList *this)
 
 {
-  int iVar1;
-  uptr uVar1;
+  int cmp;
+  uptr entry;
   
   text_clear();
   text_append_label(0x28c);
-  uVar1 = this->entries;
-  if (((uVar1 != 0) && (*(int *)(uVar1 + 0x10) == 0)) &&
-     (iVar1 = _strcmp(&text_buffer,*(char **)(uVar1 + 8)), iVar1 == 0)) {
-    return uVar1;
+  entry = this->entries;
+  if (((entry != 0) && (*(int *)(entry + 0x10) == 0)) &&
+     (cmp = _strcmp(&text_buffer,*(char **)(entry + 8)), cmp == 0)) {
+    return entry;
   }
   return 0;
 }
 #undef text_buffer
 
 /* 0056f3e0 auto */
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-uptr __thiscall lobby_find_entry_by_id(LobbyList *this,int param_1)
+#define entry (*(uptr *)(frame_ + FRAME_OFF(0)))
+uptr __thiscall lobby_find_entry_by_id(LobbyList *this,int entry_id)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = this->entries; (local_8 != 0 && (*(int *)(local_8 + 4) != param_1));
-      local_8 = *(uptr *)(local_8 + 0x10)) {
+  for (entry = this->entries; (entry != 0 && (*(int *)(entry + 4) != entry_id));
+      entry = *(uptr *)(entry + 0x10)) {
   }
-  return local_8;
+  return entry;
 }
-#undef local_8
+#undef entry
 
 /* 0056f42b auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-int __thiscall lobby_slot_for_entry_id(LobbyList *this,int param_1)
+#define slot (*(int *)(frame_ + FRAME_OFF(0)))
+int __thiscall lobby_slot_for_entry_id(LobbyList *this,int entry_id)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; (local_8 < 7 && (*(int *)(&net_slot_lobby_ids + local_8 * 0x54) != param_1));
-      local_8 = local_8 + 1) {
+  for (slot = 0; (slot < 7 && (*(int *)(&net_slot_lobby_ids + slot * 0x54) != entry_id));
+      slot = slot + 1) {
   }
-  return local_8;
+  return slot;
 }
-#undef local_8
+#undef slot
 
 /* 00587a90 auto */
-#define local_38 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_34 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define hotspot_parent (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define scroll_parent (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define hotspot (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define scrollbar (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define rect_left2 (*(int *)(frame_ + FRAME_OFF(24)))
+#define rect_top2 (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define rect_right2 (*(int *)(frame_ + FRAME_OFF(32)))
+#define rect_bottom2 (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(44)))
+#define seh_state (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __thiscall
-parley_create_city_list_pane(ListPaneWindow *this,iptr param_1,int param_2,i32 param_3)
+parley_create_city_list_pane(ListPaneWindow *this,iptr rect,int pane,i32 own_cities)
 
 {
-  u8 *puVar1;
-  int iVar2;
-  int iVar3;
+  u8 *field_ptr;
+  int right;
+  int scroll_width;
   Control *pCVar4;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_20 = *(int *)param_1;
-  local_1c = *(i32 *)(param_1 + 4);
-  local_18 = *(int *)(param_1 + 8);
-  local_14 = *(i32 *)(param_1 + 0xc);
-  *(i32 *)(&parley_pane_own_cities + param_2 * 4) = param_3;
-  parley_build_city_list(this,param_2,0);
-  if (*(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) < 1) {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
+  seh_state = 0xffffffff;
+  rect_left2 = *(int *)rect;
+  rect_top2 = *(i32 *)(rect + 4);
+  rect_right2 = *(int *)(rect + 8);
+  rect_bottom2 = *(i32 *)(rect + 0xc);
+  *(i32 *)(&parley_pane_own_cities + pane * 4) = own_cities;
+  parley_build_city_list(this,pane,0);
+  if (*(int *)(this[3].pad_48 + pane * 4 + 0x4c) < 1) {
+    field_ptr = this[0xea].pad_48 + pane * 4 + 0x30;
+    field_ptr[0] = 0xff;
+    field_ptr[1] = 0xff;
+    field_ptr[2] = 0xff;
+    field_ptr[3] = 0xff;
   }
   else {
-    puVar1 = this[0xea].pad_48 + param_2 * 4 + 0x30;
-    puVar1[0] = '\0';
-    puVar1[1] = '\0';
-    puVar1[2] = '\0';
-    puVar1[3] = '\0';
+    field_ptr = this[0xea].pad_48 + pane * 4 + 0x30;
+    field_ptr[0] = '\0';
+    field_ptr[1] = '\0';
+    field_ptr[2] = '\0';
+    field_ptr[3] = '\0';
   }
-  puVar1 = this[3].pad_48 + param_2 * 4 + 0x44;
-  puVar1[0] = 4;
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x24) = *(i32 *)param_1;
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x28) = *(i32 *)(param_1 + 4);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) = *(i32 *)(param_1 + 8);
-  *(i32 *)(this[3].pad_48 + param_2 * 0x10 + 0x30) = *(i32 *)(param_1 + 0xc);
-  if (*(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40) <
-      *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c)) {
-    iVar3 = GetSystemMetrics(2);
-    iVar2 = local_18;
-    *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) =
-         *(int *)(this[3].pad_48 + param_2 * 0x10 + 0x2c) - iVar3;
-    local_20 = GetSystemMetrics(2);
-    local_20 = iVar2 - local_20;
+  field_ptr = this[3].pad_48 + pane * 4 + 0x44;
+  field_ptr[0] = 4;
+  field_ptr[1] = '\0';
+  field_ptr[2] = '\0';
+  field_ptr[3] = '\0';
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x24) = *(i32 *)rect;
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x28) = *(i32 *)(rect + 4);
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x2c) = *(i32 *)(rect + 8);
+  *(i32 *)(this[3].pad_48 + pane * 0x10 + 0x30) = *(i32 *)(rect + 0xc);
+  if (*(int *)(this[0xea].pad_48 + pane * 4 + 0x40) <
+      *(int *)(this[3].pad_48 + pane * 4 + 0x4c)) {
+    scroll_width = GetSystemMetrics(2);
+    right = rect_right2;
+    *(int *)(this[3].pad_48 + pane * 0x10 + 0x2c) =
+         *(int *)(this[3].pad_48 + pane * 0x10 + 0x2c) - scroll_width;
+    rect_left2 = GetSystemMetrics(2);
+    rect_left2 = right - rect_left2;
     pCVar4 = operator_new(0x40);
-    local_8 = 0;
+    seh_state = 0;
     if (pCVar4 == (Control *)0x0) {
-      local_28 = 0;
+      scrollbar = 0;
     }
     else {
-      local_28 = scrollbar_ctor(pCVar4);
+      scrollbar = scrollbar_ctor(pCVar4);
     }
-    local_8 = 0xffffffff;
-    *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x20) = local_28;
+    seh_state = 0xffffffff;
+    *(i32 *)(this[3].pad_48 + pane * 4 - 0x20) = scrollbar;
     if (this == (ListPaneWindow *)0x0) {
-      local_34 = (u8 *)0x0;
+      scroll_parent = (u8 *)0x0;
     }
     else {
-      local_34 = this->pad_48;
+      scroll_parent = this->pad_48;
     }
     scrollbar_create
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),(iptr)local_34,
-               param_2 + 0x420,(iptr)&local_20,1);
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),(iptr)scroll_parent,
+               pane + 0x420,(iptr)&rect_left2,1);
     scrollbar_set_range
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),0,
-               *(int *)(this[3].pad_48 + param_2 * 4 + 0x4c) -
-               *(int *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
-    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x20),0);
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),0,
+               *(int *)(this[3].pad_48 + pane * 4 + 0x4c) -
+               *(int *)(this[0xea].pad_48 + pane * 4 + 0x40));
+    scrollbar_set_pos(*(ClickControl **)(this[3].pad_48 + pane * 4 - 0x20),0);
     scrollbar_set_page_size
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               *(i32 *)(this[0xea].pad_48 + param_2 * 4 + 0x40));
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),
+               *(i32 *)(this[0xea].pad_48 + pane * 4 + 0x40));
     scrollbar_set_callback
-              (*(Control **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((param_2 == 0) - 1 & 0xfb9)));
+              (*(Control **)(this[3].pad_48 + pane * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((pane == 0) - 1 & 0xfb9)));
     scrollbar_set_track_callback
-              (*(ScrollbarTrackSetView **)(this[3].pad_48 + param_2 * 4 - 0x20),
-               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((param_2 == 0) - 1 & 0xfb9)));
+              (*(ScrollbarTrackSetView **)(this[3].pad_48 + pane * 4 - 0x20),
+               (iptr)(((void *)ADDR(0x0040166d, parley_city_list_scroll_local)) + ((pane == 0) - 1 & 0xfb9)));
   }
   pCVar4 = operator_new(0x40);
-  local_8 = 1;
+  seh_state = 1;
   if (pCVar4 == (Control *)0x0) {
-    local_30 = 0;
+    hotspot = 0;
   }
   else {
-    local_30 = hotspot_ctor(pCVar4);
+    hotspot = hotspot_ctor(pCVar4);
   }
-  local_8 = 0xffffffff;
-  *(i32 *)(this[3].pad_48 + param_2 * 4 - 0x18) = local_30;
+  seh_state = 0xffffffff;
+  *(i32 *)(this[3].pad_48 + pane * 4 - 0x18) = hotspot;
   if (this == (ListPaneWindow *)0x0) {
-    local_38 = (u8 *)0x0;
+    hotspot_parent = (u8 *)0x0;
   }
   else {
-    local_38 = this->pad_48;
+    hotspot_parent = this->pad_48;
   }
   hotspot_create
-            (*(ClickControl **)(this[3].pad_48 + param_2 * 4 - 0x18),(iptr)local_38,
-             param_2 + 0x422,(iptr)(this[3].pad_48 + param_2 * 0x10 + 0x24));
-  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x402234, parley_city_list_click));
-  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + param_2 * 4 - 0x18),ADDR(0x402234, parley_city_list_click));
-  parley_draw_city_list(param_2);
+            (*(ClickControl **)(this[3].pad_48 + pane * 4 - 0x18),(iptr)hotspot_parent,
+             pane + 0x422,(iptr)(this[3].pad_48 + pane * 0x10 + 0x24));
+  hotspot_set_click_callback(*(HotspotClickSetView **)(this[3].pad_48 + pane * 4 - 0x18),ADDR(0x402234, parley_city_list_click));
+  hotspot_set_dblclick_callback(*(HotspotDblClickSetView **)(this[3].pad_48 + pane * 4 - 0x18),ADDR(0x402234, parley_city_list_click));
+  parley_draw_city_list(pane);
   return;
 }
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_28
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef hotspot_parent
+#undef scroll_parent
+#undef hotspot
+#undef scrollbar
+#undef rect_left2
+#undef rect_top2
+#undef rect_right2
+#undef rect_bottom2
+#undef seh_frame
+#undef seh_handler
+#undef seh_state
 
 /* 00587e05 auto */
-void __cdecl parley_city_list_scroll_local(i32 param_1)
+void __cdecl parley_city_list_scroll_local(i32 pos)
 
 {
-  parley_city_list_scroll(0,param_1);
+  parley_city_list_scroll(0,pos);
   return;
 }
 
 /* 00587e41 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_reveal_city_info(void)
 
 {
-  iptr iVar1;
+  iptr child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  ctrl_show_and_redraw(*(Control **)(local_8 + 0x3a4));
-  control_hide(*(Control **)(local_8 + 0x39c));
-  *(i8 *)(local_8 + 0x3be) = 1;
+  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
+  ctrl_show_and_redraw(*(Control **)(parley_wnd2 + 0x3a4));
+  control_hide(*(Control **)(parley_wnd2 + 0x39c));
+  *(i8 *)(parley_wnd2 + 0x3be) = 1;
   net_send_message(0xa5,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3be),0,0,0,0,0,0);
+                           *(int *)(&net_civ_slots + *(int *)(parley_wnd2 + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley_wnd2 + 0x3be),0,0,0,0,0,0);
   parley_draw_city_list(0);
   return;
 }
 #undef human_civ
-#undef local_8
+#undef parley_wnd2
 
 /* 00587f00 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl parley_hide_city_info(void)
 
 {
-  iptr iVar1;
+  iptr child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  ctrl_show_and_redraw(*(Control **)(local_8 + 0x39c));
-  control_hide(*(Control **)(local_8 + 0x3a4));
-  *(i8 *)(local_8 + 0x3be) = 0;
+  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
+  ctrl_show_and_redraw(*(Control **)(parley_wnd2 + 0x39c));
+  control_hide(*(Control **)(parley_wnd2 + 0x3a4));
+  *(i8 *)(parley_wnd2 + 0x3be) = 0;
   net_send_message(0xa6,*(i32 *)
                            (&net_player_slots +
-                           *(int *)(&net_civ_slots + *(int *)(local_8 + 0x118) * 4) * 0x54),
-                     human_civ,(int)*(char *)(local_8 + 0x3be),0,0,0,0,0,0);
+                           *(int *)(&net_civ_slots + *(int *)(parley_wnd2 + 0x118) * 4) * 0x54),
+                     human_civ,(int)*(char *)(parley_wnd2 + 0x3be),0,0,0,0,0,0);
   parley_draw_city_list(0);
   return;
 }
 #undef human_civ
-#undef local_8
+#undef parley_wnd2
 
 /* 0058804f auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl parley_city_list_scroll(int param_1,i32 param_2)
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl parley_city_list_scroll(int pane,i32 pos)
 
 {
-  int iVar1;
+  int child;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  *(i32 *)(local_8 + 0x10410 + param_1 * 4) = param_2;
-  parley_draw_city_list(param_1);
+  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
+  *(i32 *)(parley_wnd2 + 0x10410 + pane * 4) = pos;
+  parley_draw_city_list(pane);
   return;
 }
-#undef local_8
+#undef parley_wnd2
 
 /* 005880b0 auto */
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(24)))
-void __cdecl parley_city_list_click(int param_1)
+#define sel_end (*(int *)(frame_ + FRAME_OFF(4)))
+#define row (*(int *)(frame_ + FRAME_OFF(8)))
+#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define pane (*(int *)(frame_ + FRAME_OFF(20)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(24)))
+void __cdecl parley_city_list_click(int control_id)
 
 {
-  uint *puVar1;
-  int iVar2;
-  int iVar3;
+  uint *sel_flag;
+  int hit_row;
+  int key_down;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  hit_row = wnd_get_active_child();
+  if (hit_row == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    parley_wnd2 = hit_row - 0x48;
   }
-  wnd_activate((Wnd *)(local_8 + 0x48));
-  local_c = param_1 - 0x422;
+  wnd_activate((Wnd *)(parley_wnd2 + 0x48));
+  pane = control_id - 0x422;
   wnd_get_cursor_pos
-            ((WndBase *)(local_8 + 0x48),(iptr)&local_10,(iptr)&local_14);
-  if (((*(int *)(local_8 + 1000 + local_c * 4) != 0) &&
-      (iVar2 = parley_city_list_hit_test(local_10,local_14,local_c), 0 < iVar2)) &&
-     (iVar2 < *(int *)(local_8 + 1000 + local_c * 4))) {
-    iVar3 = wnd_is_shift_down((void *)(local_8 + 0x48));
-    if (iVar3 == 0) {
-      iVar3 = wnd_is_ctrl_down((void *)(local_8 + 0x48));
-      if (iVar3 == 0) {
-        for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4);
-            local_18 = local_18 + 1) {
-          if (local_18 != iVar2) {
-            *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 0;
+            ((WndBase *)(parley_wnd2 + 0x48),(iptr)&cursor_x,(iptr)&cursor_y);
+  if (((*(int *)(parley_wnd2 + 1000 + pane * 4) != 0) &&
+      (hit_row = parley_city_list_hit_test(cursor_x,cursor_y,pane), 0 < hit_row)) &&
+     (hit_row < *(int *)(parley_wnd2 + 1000 + pane * 4))) {
+    key_down = wnd_is_shift_down((void *)(parley_wnd2 + 0x48));
+    if (key_down == 0) {
+      key_down = wnd_is_ctrl_down((void *)(parley_wnd2 + 0x48));
+      if (key_down == 0) {
+        for (row = 0; row < *(int *)(parley_wnd2 + 1000 + pane * 4);
+            row = row + 1) {
+          if (row != hit_row) {
+            *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 0;
           }
         }
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(local_c * 0x2004 + iVar2 * 4 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(parley_wnd2 + 0x10418 + pane * 4) = hit_row;
+        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + parley_wnd2);
+        *sel_flag = *sel_flag ^ 1;
       }
       else {
-        *(int *)(local_8 + 0x10418 + local_c * 4) = iVar2;
-        puVar1 = (uint *)(local_c * 0x2004 + iVar2 * 4 + 0x8400 + local_8);
-        *puVar1 = *puVar1 ^ 1;
+        *(int *)(parley_wnd2 + 0x10418 + pane * 4) = hit_row;
+        sel_flag = (uint *)(pane * 0x2004 + hit_row * 4 + 0x8400 + parley_wnd2);
+        *sel_flag = *sel_flag ^ 1;
       }
     }
     else {
-      for (local_18 = 0; local_18 < *(int *)(local_8 + 1000 + local_c * 4); local_18++)
+      for (row = 0; row < *(int *)(parley_wnd2 + 1000 + pane * 4); row++)
       {
-        *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 0;
+        *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 0;
       }
-      if (*(int *)(local_8 + 0x10418 + local_c * 4) < iVar2) {
-        local_18 = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_1c = iVar2;
+      if (*(int *)(parley_wnd2 + 0x10418 + pane * 4) < hit_row) {
+        row = *(int *)(parley_wnd2 + 0x10418 + pane * 4);
+        sel_end = hit_row;
       }
       else {
-        local_1c = *(int *)(local_8 + 0x10418 + local_c * 4);
-        local_18 = iVar2;
+        sel_end = *(int *)(parley_wnd2 + 0x10418 + pane * 4);
+        row = hit_row;
       }
-      for (; local_18 <= local_1c; local_18++) {
-        if (0 < local_18) {
-          *(i32 *)(local_c * 0x2004 + local_18 * 4 + 0x8400 + local_8) = 1;
+      for (; row <= sel_end; row++) {
+        if (0 < row) {
+          *(i32 *)(pane * 0x2004 + row * 4 + 0x8400 + parley_wnd2) = 1;
         }
       }
     }
-    parley_draw_city_list(local_c);
+    parley_draw_city_list(pane);
   }
   return;
 }
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef sel_end
+#undef row
+#undef cursor_y
+#undef cursor_x
+#undef pane
+#undef parley_wnd2
 
 /* 0058832d auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-int __cdecl parley_city_list_hit_test(int param_1,int param_2,int param_3)
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
+int __cdecl parley_city_list_hit_test(int x,int y,int pane)
 
 {
-  iptr iVar1;
-  int iVar2;
-  int iVar3;
+  iptr child;
+  int result;
+  int height;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  if (param_2 < *(int *)(param_3 * 0x10 + 0x3c4 + local_8)) {
-    iVar2 = -1;
+  if (y < *(int *)(pane * 0x10 + 0x3c4 + parley_wnd2)) {
+    result = -1;
   }
-  else if (param_2 < *(int *)(param_3 * 0x10 + 0x3cc + local_8)) {
-    if (param_1 < *(int *)(param_3 * 0x10 + 0x3c0 + local_8)) {
-      iVar2 = -3;
+  else if (y < *(int *)(pane * 0x10 + 0x3cc + parley_wnd2)) {
+    if (x < *(int *)(pane * 0x10 + 0x3c0 + parley_wnd2)) {
+      result = -3;
     }
-    else if (param_1 < *(int *)(param_3 * 0x10 + 0x3c8 + local_8)) {
-      iVar2 = *(int *)(param_3 * 0x10 + 0x3c4 + local_8);
-      iVar3 = rect_height(param_3 * 0x10 + local_8 + 0x3c0);
-      iVar2 = (param_2 - iVar2) / (iVar3 / *(int *)(local_8 + 0x10420 + param_3 * 4)) +
-              *(int *)(local_8 + 0x10410 + param_3 * 4);
+    else if (x < *(int *)(pane * 0x10 + 0x3c8 + parley_wnd2)) {
+      result = *(int *)(pane * 0x10 + 0x3c4 + parley_wnd2);
+      height = rect_height(pane * 0x10 + parley_wnd2 + 0x3c0);
+      result = (y - result) / (height / *(int *)(parley_wnd2 + 0x10420 + pane * 4)) +
+              *(int *)(parley_wnd2 + 0x10410 + pane * 4);
     }
     else {
-      iVar2 = -4;
+      result = -4;
     }
   }
   else {
-    iVar2 = -2;
+    result = -2;
   }
-  return iVar2;
+  return result;
 }
-#undef local_8
+#undef parley_wnd2
 
 /* 0058843f auto */
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall parley_sort_city_list(void *this,int param_1,int param_2,int param_3)
+#define j (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(16)))
+void __thiscall parley_sort_city_list(void *this,int first,int last,int pane)
 
 {
-  i32 uVar1;
-  iptr iVar2;
-  int iVar3;
+  i32 tmp;
+  iptr child;
+  int cmp;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  if (1 < *(int *)(local_8 + 1000 + param_3 * 4)) {
-    for (local_10 = param_1; local_14 = local_10, local_10 < param_2; local_10++) {
-      while (local_14 = local_14 + 1, local_14 <= param_2) {
-        iVar3 = city_has_improvement(*(iptr *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8),1);
-        if ((iVar3 != 0) ||
-           ((iVar3 = city_has_improvement(*(iptr *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8)
-                                        ,1), iVar3 == 0 &&
-            (iVar3 = _strcmp(cities[*(int *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8)].
-                             name,cities[*(int *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8)
-                                        ].name), 0 < iVar3)))) {
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x3f0 + local_8) = uVar1;
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x8400 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x8400 + local_8) = uVar1;
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0xc408 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0xc408 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0xc408 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0xc408 + local_8) = uVar1;
-          uVar1 = *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-          *(i32 *)(local_10 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) =
-               *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8);
-          *(i32 *)(local_14 * 4 + param_3 * 0x2004 + 0x43f8 + local_8) = uVar1;
+  if (1 < *(int *)(parley_wnd2 + 1000 + pane * 4)) {
+    for (i = first; j = i, i < last; i++) {
+      while (j = j + 1, j <= last) {
+        cmp = city_has_improvement(*(iptr *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2),1);
+        if ((cmp != 0) ||
+           ((cmp = city_has_improvement(*(iptr *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)
+                                        ,1), cmp == 0 &&
+            (cmp = _strcmp(cities[*(int *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)].
+                             name,cities[*(int *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2)
+                                        ].name), 0 < cmp)))) {
+          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x3f0 + parley_wnd2) = tmp;
+          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + parley_wnd2);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x8400 + parley_wnd2) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + parley_wnd2);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x8400 + parley_wnd2) = tmp;
+          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0xc408 + parley_wnd2);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0xc408 + parley_wnd2) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0xc408 + parley_wnd2);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0xc408 + parley_wnd2) = tmp;
+          tmp = *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2);
+          *(i32 *)(i * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2) =
+               *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2);
+          *(i32 *)(j * 4 + pane * 0x2004 + 0x43f8 + parley_wnd2) = tmp;
         }
       }
     }
   }
   return;
 }
-#undef local_14
-#undef local_10
-#undef local_8
+#undef j
+#undef i
+#undef parley_wnd2
 
 /* 0058878e auto */
 #define dlg_highlight_text_color (*(byte *)((u8 *)&g.d_00635a00))
@@ -16942,212 +16942,212 @@ void __thiscall parley_sort_city_list(void *this,int param_1,int param_2,int par
 #define list_shadow_color (*(uint *)((u8 *)&g.d_00635a20))
 #define list_text_color (*(uint *)((u8 *)&g.d_00635a1c))
 #define panel_margin_x (*(int *)((u8 *)&g.d_0062d858))
-#define local_64 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define bg_color2 (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define city (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_54 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_44 (*(uint *)(frame_ + FRAME_OFF(36)))
-#define local_3c (*(uint *)(frame_ + FRAME_OFF(44)))
+#define row (*(int *)(frame_ + FRAME_OFF(20)))
+#define shadow_color2 (*(uint *)(frame_ + FRAME_OFF(36)))
+#define text_color2 (*(uint *)(frame_ + FRAME_OFF(44)))
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(48)))
-#define local_30 (*(tagRECT *)(frame_ + FRAME_OFF(56)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
-#define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(96)))
-void __cdecl parley_draw_city_list(int param_1)
+#define row_rect (*(tagRECT *)(frame_ + FRAME_OFF(56)))
+#define row_height (*(int *)(frame_ + FRAME_OFF(72)))
+#define sprite_style (*(int *)(frame_ + FRAME_OFF(76)))
+#define saved_clip (*(i8 (*)[16])(frame_ + FRAME_OFF(80)))
+#define font2 (*(GameFont * *)(frame_ + FRAME_OFF(96)))
+void __cdecl parley_draw_city_list(int pane)
 
 {
-  u8 *puVar1;
+  u8 *field_ptr;
   int xLeft;
-  iptr iVar2;
-  int iVar3;
-  int iVar4;
-  int iVar5;
-  int iVar6;
-  i32 uVar7;
-  int iVar8;
-  iptr iVar9;
+  iptr child;
+  int width;
+  int text_offset_y;
+  int row_y;
+  int text_offset_x;
+  i32 font_height;
+  int selected;
+  iptr label;
   i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
+  child = wnd_get_active_child();
+  if (child == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar2 - 0x48);
+    this2 = (ViewWindow *)(child - 0x48);
   }
-  surface_get_clip((DibSurface *)this2,(iptr)local_18);
-  surface_set_clip((DibSurface *)this2,(iptr)(this2->pad_3c0 + param_1 * 0x10));
+  surface_get_clip((DibSurface *)this2,(iptr)saved_clip);
+  surface_set_clip((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10));
 LAB_005887e1:
   surface_fill_rect
-            ((DibSurface *)this2,(iptr)(this2->pad_3c0 + param_1 * 0x10),list_bg_color);
+            ((DibSurface *)this2,(iptr)(this2->pad_3c0 + pane * 0x10),list_bg_color);
   if (this2->field_154 == 0) {
-    local_8 = (GameFont *)&font_size14;
+    font2 = (GameFont *)&font_size14;
   }
   else {
-    local_8 = (GameFont *)&font_size21;
+    font2 = (GameFont *)&font_size21;
   }
-  xLeft = *(int *)(this2->pad_3c0 + param_1 * 0x10);
-  iVar3 = rect_width((iptr)(this2->pad_3c0 + param_1 * 0x10));
-  local_20 = rect_height((iptr)(this2->pad_3c0 + param_1 * 0x10));
-  local_20 = local_20 / *(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x38);
-  iVar4 = local_20 / 2;
-  iVar5 = font_cached_height(local_8);
-  iVar4 -= iVar5 / 2;
-  puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-  puVar1[0] = '\0';
-  puVar1[1] = '\0';
-  puVar1[2] = '\0';
-  puVar1[3] = '\0';
-  for (local_54 = 0; local_54 < *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28);
-      local_54 = local_54 + 1) {
-    if (*(int *)(param_1 * 0x2004 + local_54 * 4 + 0x8400 + (int)this2) != 0) {
-      puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-      puVar1[0] = 1;
-      puVar1[1] = '\0';
-      puVar1[2] = '\0';
-      puVar1[3] = '\0';
+  xLeft = *(int *)(this2->pad_3c0 + pane * 0x10);
+  width = rect_width((iptr)(this2->pad_3c0 + pane * 0x10));
+  row_height = rect_height((iptr)(this2->pad_3c0 + pane * 0x10));
+  row_height = row_height / *(int *)(this2[0x3e].pad_48 + pane * 4 + 0x38);
+  text_offset_y = row_height / 2;
+  row_y = font_cached_height(font2);
+  text_offset_y -= row_y / 2;
+  field_ptr = this2->pad_200 + pane * 4 - 0x1c;
+  field_ptr[0] = '\0';
+  field_ptr[1] = '\0';
+  field_ptr[2] = '\0';
+  field_ptr[3] = '\0';
+  for (row = 0; row < *(int *)(this2->pad_3c0 + pane * 4 + 0x28);
+      row = row + 1) {
+    if (*(int *)(pane * 0x2004 + row * 4 + 0x8400 + (int)this2) != 0) {
+      field_ptr = this2->pad_200 + pane * 4 - 0x1c;
+      field_ptr[0] = 1;
+      field_ptr[1] = '\0';
+      field_ptr[2] = '\0';
+      field_ptr[3] = '\0';
       break;
     }
   }
-  local_54 = 0;
+  row = 0;
   do {
-    if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x38) <= local_54) {
+    if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x38) <= row) {
 LAB_00588e17:
-      surface_set_clip((DibSurface *)this2,(iptr)local_18);
+      surface_set_clip((DibSurface *)this2,(iptr)saved_clip);
       parley_update_buttons(this2);
-      ctrl_show_and_redraw(*(Control **)(this2->pad_364 + param_1 * 4 + 0x20))
+      ctrl_show_and_redraw(*(Control **)(this2->pad_364 + pane * 4 + 0x20))
       ;
       return;
     }
-    iVar5 = *(int *)(this2->pad_3c0 + param_1 * 0x10 + 4) + local_54 * local_20;
-    SetRect(&local_30,xLeft,iVar5,iVar3 + xLeft,iVar5 + local_20);
-    if ((local_54 != 0) && (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) == -1))
+    row_y = *(int *)(this2->pad_3c0 + pane * 0x10 + 4) + row * row_height;
+    SetRect(&row_rect,xLeft,row_y,width + xLeft,row_y + row_height);
+    if ((row != 0) && (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) == -1))
     goto LAB_00588e17;
-    if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 <
-        *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) {
-      iVar8 = *(int *)(param_1 * 0x2004 +
-                       (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54) * 4 +
+    if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row <
+        *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) {
+      selected = *(int *)(pane * 0x2004 +
+                       (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row) * 4 +
                        0x8400 + (int)this2);
-      if (iVar8 == 0) {
-        if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54 == 0) {
-          local_3c = (uint)dlg_highlight_text_color;
-          local_44 = dlg_sel_text_shadow_color;
+      if (selected == 0) {
+        if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row == 0) {
+          text_color2 = (uint)dlg_highlight_text_color;
+          shadow_color2 = dlg_sel_text_shadow_color;
         }
         else {
-          local_3c = list_text_color;
-          local_44 = list_shadow_color;
+          text_color2 = list_text_color;
+          shadow_color2 = list_shadow_color;
         }
       }
       else {
-        local_3c = dlg_sel_text_color;
-        local_44 = dlg_sel_text_shadow_color;
+        text_color2 = dlg_sel_text_color;
+        shadow_color2 = dlg_sel_text_shadow_color;
       }
       city = 0;
-      if ((0 < *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) &&
+      if ((0 < *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) &&
          (city = parley_find_city_by_id
                                ((WindowObjectView *)this2,
                                 *(i32 *)
-                                 (param_1 * 0x2004 +
-                                  (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54)
+                                 (pane * 0x2004 +
+                                  (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row)
                                   * 4 + 0x43f8 + (int)this2)), city == -1)) break;
-      iVar6 = (-(uint)(this2->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
-      local_30.left = local_30.left + iVar6 - 3;
-      if (iVar8 == 0) {
-        local_64 = list_bg_color;
+      text_offset_x = (-(uint)(this2->field_154 == 0) & 0xffffffe2) + 0x5a + panel_margin_x;
+      row_rect.left = row_rect.left + text_offset_x - 3;
+      if (selected == 0) {
+        bg_color2 = list_bg_color;
       }
       else {
-        local_64 = list_sel_bg_color;
+        bg_color2 = list_sel_bg_color;
       }
-      surface_fill_rect((DibSurface *)this2,(iptr)&local_30,local_64);
-      if (param_1 == 0) {
+      surface_fill_rect((DibSurface *)this2,(iptr)&row_rect,bg_color2);
+      if (pane == 0) {
         if (this2->field_3be == '\0') {
-          local_1c = 3;
+          sprite_style = 3;
         }
         else {
-          local_1c = 0;
+          sprite_style = 0;
         }
       }
       else if (this2->field_3bf == '\0') {
-        local_1c = 3;
+        sprite_style = 3;
       }
       else {
-        local_1c = 0;
+        sprite_style = 0;
       }
       if (parley_mode == 10) {
-        local_1c = 0;
+        sprite_style = 0;
       }
-      if (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) == -1) {
+      if (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) == -1) {
         text_clear();
-        iVar9 = label_string(*(i32 *)(label_string_ids + 0xb78));
-        text_append(iVar9);
-        puVar1 = this2->pad_200 + param_1 * 4 - 0x1c;
-        puVar1[0] = '\0';
-        puVar1[1] = '\0';
-        puVar1[2] = '\0';
-        puVar1[3] = '\0';
+        label = label_string(*(i32 *)(label_string_ids + 0xb78));
+        text_append(label);
+        field_ptr = this2->pad_200 + pane * 4 - 0x1c;
+        field_ptr[0] = '\0';
+        field_ptr[1] = '\0';
+        field_ptr[2] = '\0';
+        field_ptr[3] = '\0';
       }
       else {
-        iVar8 = local_1c;
-        uVar7 = font_cached_height(local_8);
-        parley_draw_city_sprite(city,*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54,
-                           xLeft + 2,iVar5,uVar7,iVar8);
+        selected = sprite_style;
+        font_height = font_cached_height(font2);
+        parley_draw_city_sprite(city,*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row,
+                           xLeft + 2,row_y,font_height,selected);
         text_clear();
         text_append(city * 0x58 + ADDR(0x64f360, ((u8 *)&cities + 32)));
         text_append_space();
-        iVar8 = city_has_improvement(city,1);
-        if ((iVar8 == 0) && (local_1c == 0)) {
+        selected = city_has_improvement(city,1);
+        if ((selected == 0) && (sprite_style == 0)) {
           text_append_lparen();
-          text_append_int(*(iptr *)(param_1 * 0x2004 +
-                                       (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) +
-                                       local_54) * 4 + 0xc408 + (int)this2));
+          text_append_int(*(iptr *)(pane * 0x2004 +
+                                       (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) +
+                                       row) * 4 + 0xc408 + (int)this2));
           text_append_space();
-          if (*(int *)(param_1 * 0x2004 +
-                       (*(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) + local_54) * 4 +
+          if (*(int *)(pane * 0x2004 +
+                       (*(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) + row) * 4 +
                        0xc408 + (int)this2) < 2) {
-            iVar9 = label_string(*(i32 *)(label_string_ids + 0xb70));
-            text_append(iVar9);
+            label = label_string(*(i32 *)(label_string_ids + 0xb70));
+            text_append(label);
           }
           else {
-            iVar9 = label_string(*(i32 *)(label_string_ids + 0xb6c));
-            text_append(iVar9);
+            label = label_string(*(i32 *)(label_string_ids + 0xb6c));
+            text_append(label);
           }
         }
         else {
-          iVar8 = city_has_improvement(city,1);
-          if (iVar8 != 0) {
-            iVar9 = label_string(*(i32 *)(label_string_ids + 0xb74));
-            text_append(iVar9);
+          selected = city_has_improvement(city,1);
+          if (selected != 0) {
+            label = label_string(*(i32 *)(label_string_ids + 0xb74));
+            text_append(label);
           }
         }
       }
-      if (local_44 != local_3c) {
-        gfx_set_text_color_index(local_44);
+      if (shadow_color2 != text_color2) {
+        gfx_set_text_color_index(shadow_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + iVar6 + 2,
-                   iVar5 + iVar4 + 1,5);
-        gfx_set_text_color_index(local_3c);
+                  ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + text_offset_x + 2,
+                   row_y + text_offset_y + 1,5);
+        gfx_set_text_color_index(text_color2);
         surface_draw_text
-                  ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + iVar6 + 1,iVar5 + iVar4,
+                  ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + text_offset_x + 1,row_y + text_offset_y,
                    5);
       }
-      gfx_set_text_color_index(local_3c);
+      gfx_set_text_color_index(text_color2);
       surface_draw_text
-                ((DibSurface *)this2,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + iVar6,iVar5 + iVar4,5);
+                ((DibSurface *)this2,(iptr)font2,ADDR(0x679640, ((u8 *)&g.d_00679640)),xLeft + text_offset_x,row_y + text_offset_y,5);
     }
-    local_54++;
+    row++;
   } while( true );
-  parley_build_city_list((ListPaneWindow *)this2,param_1,1);
-  if (*(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) == 0) {
-    puVar1 = this2[0x3e].pad_48 + param_1 * 4 + 0x28;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
+  parley_build_city_list((ListPaneWindow *)this2,pane,1);
+  if (*(int *)(this2->pad_3c0 + pane * 4 + 0x28) == 0) {
+    field_ptr = this2[0x3e].pad_48 + pane * 4 + 0x28;
+    field_ptr[0] = 0xff;
+    field_ptr[1] = 0xff;
+    field_ptr[2] = 0xff;
+    field_ptr[3] = 0xff;
   }
-  else if (*(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) <
-           *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28)) {
-    *(int *)(this2[0x3e].pad_48 + param_1 * 4 + 0x28) =
-         *(int *)(this2->pad_3c0 + param_1 * 4 + 0x28) - 1;
+  else if (*(int *)(this2->pad_3c0 + pane * 4 + 0x28) <
+           *(int *)(this2->pad_3c0 + pane * 4 + 0x28)) {
+    *(int *)(this2[0x3e].pad_48 + pane * 4 + 0x28) =
+         *(int *)(this2->pad_3c0 + pane * 4 + 0x28) - 1;
   }
   goto LAB_005887e1;
 }
@@ -17159,160 +17159,160 @@ LAB_00588e17:
 #undef list_shadow_color
 #undef list_text_color
 #undef panel_margin_x
-#undef local_64
+#undef bg_color2
 #undef city
-#undef local_54
-#undef local_44
-#undef local_3c
+#undef row
+#undef shadow_color2
+#undef text_color2
 #undef this2
-#undef local_30
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_8
+#undef row_rect
+#undef row_height
+#undef sprite_style
+#undef saved_clip
+#undef font2
 
 /* 00588e47 auto */
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define zoom2 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define draw_x (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define sprite_width2 (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(20)))
 void __cdecl
-parley_draw_city_sprite(iptr city,uint param_2,int param_3,int param_4,int param_5,i32 param_6)
+parley_draw_city_sprite(iptr city,uint row_index,int x,int y,int row_height,i32 style)
 
 {
-  iptr iVar1;
-  int iVar2;
+  iptr child;
+  int sprite_height2;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_c = 0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_c = iVar1 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  if (*(int *)(local_c + 0x154) == 0) {
-    local_20 = 0xfffffffc;
-  }
-  else {
-    local_20 = 0xfffffffe;
-  }
-  local_18 = param_3;
-  if (*(int *)(local_c + 0x154) == 0) {
-    local_10 = 0x18;
+  if (*(int *)(parley_wnd2 + 0x154) == 0) {
+    zoom2 = 0xfffffffc;
   }
   else {
-    local_10 = 0x24;
+    zoom2 = 0xfffffffe;
   }
-  if ((param_2 & 1) != 0) {
-    local_18 = param_3 + local_10 + 2;
+  draw_x = x;
+  if (*(int *)(parley_wnd2 + 0x154) == 0) {
+    sprite_width2 = 0x18;
   }
-  iVar2 = gfx_zoom_scale(0x30,local_20);
-  gfx_draw_city(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),city,param_6,local_18,param_4 - (iVar2 - param_5) / 2,local_20);
+  else {
+    sprite_width2 = 0x24;
+  }
+  if ((row_index & 1) != 0) {
+    draw_x = x + sprite_width2 + 2;
+  }
+  sprite_height2 = gfx_zoom_scale(0x30,zoom2);
+  gfx_draw_city(ADDR(0x67a7a8, ((u8 *)&g.d_0067a7a8)),city,style,draw_x,y - (sprite_height2 - row_height) / 2,zoom2);
   return;
 }
-#undef local_20
-#undef local_18
-#undef local_10
-#undef local_c
+#undef zoom2
+#undef draw_x
+#undef sprite_width2
+#undef parley_wnd2
 
 /* 00588f36 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define city (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
+#define old_count (*(int *)(frame_ + FRAME_OFF(4)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(void * *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __thiscall parley_build_city_list(ListPaneWindow *this,int param_1,int param_2)
+#define old_selection (*(void * *)(frame_ + FRAME_OFF(12)))
+#define parley_wnd2 (*(iptr *)(frame_ + FRAME_OFF(16)))
+void __thiscall parley_build_city_list(ListPaneWindow *this,int pane,int keep_selection)
 
 {
-  int *piVar1;
-  iptr iVar2;
+  int *count_ptr;
+  iptr child;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = (void *)0x0;
-  iVar2 = wnd_get_active_child();
-  if (iVar2 == 0) {
-    local_8 = 0;
+  old_selection = (void *)0x0;
+  child = wnd_get_active_child();
+  if (child == 0) {
+    parley_wnd2 = 0;
   }
   else {
-    local_8 = iVar2 - 0x48;
+    parley_wnd2 = child - 0x48;
   }
-  if (param_2 != 0) {
-    local_c = operator_new(*(int *)(local_8 + 1000 + param_1 * 4) << 2);
-    if (local_c == (void *)0x0) {
-      param_2 = 0;
+  if (keep_selection != 0) {
+    old_selection = operator_new(*(int *)(parley_wnd2 + 1000 + pane * 4) << 2);
+    if (old_selection == (void *)0x0) {
+      keep_selection = 0;
     }
     else {
-      local_14 = *(int *)(local_8 + 1000 + param_1 * 4);
-      for (city = 0; city < local_14; city++) {
-        if (*(int *)(param_1 * 0x2004 + city * 4 + 0x8400 + local_8) == 0) {
-          *(i32 *)((int)local_c + city * 4) = 0xffffffff;
+      old_count = *(int *)(parley_wnd2 + 1000 + pane * 4);
+      for (city = 0; city < old_count; city++) {
+        if (*(int *)(pane * 0x2004 + city * 4 + 0x8400 + parley_wnd2) == 0) {
+          *(i32 *)((int)old_selection + city * 4) = 0xffffffff;
         }
         else {
-          *(i32 *)((int)local_c + city * 4) =
-               *(i32 *)(param_1 * 0x2004 + city * 4 + 0x43f8 + local_8);
+          *(i32 *)((int)old_selection + city * 4) =
+               *(i32 *)(pane * 0x2004 + city * 4 + 0x43f8 + parley_wnd2);
         }
       }
     }
   }
-  *(i32 *)(local_8 + 1000 + param_1 * 4) = 0;
+  *(i32 *)(parley_wnd2 + 1000 + pane * 4) = 0;
   city = 0;
   do {
     if (game.num_cities <= city) {
-      if (param_2 != 0) {
-        operator_delete(local_c);
+      if (keep_selection != 0) {
+        operator_delete(old_selection);
       }
-      parley_sort_city_list(this,0,*(int *)(local_8 + 1000 + param_1 * 4) - 1,param_1);
+      parley_sort_city_list(this,0,*(int *)(parley_wnd2 + 1000 + pane * 4) - 1,pane);
       return;
     }
     if ((cities[city].id != 0) &&
-       (((*(int *)(&parley_pane_own_cities + param_1 * 4) != 0 && (cities[city].owner == human_civ))
-        || (((*(int *)(&parley_pane_own_cities + param_1 * 4) == 0 &&
+       (((*(int *)(&parley_pane_own_cities + pane * 4) != 0 && (cities[city].owner == human_civ))
+        || (((*(int *)(&parley_pane_own_cities + pane * 4) == 0 &&
              ((int)cities[city].owner == this->caption_height)) &&
             (((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[city].known_to) != 0 ||
              ((int)cities[city].owner == (human_civ & 0xffU))))))))) {
-      *(iptr *)(param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x3f0 + local_8) =
+      *(iptr *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x3f0 + parley_wnd2) =
            city;
-      *(i32 *)(param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x43f8 + local_8) =
+      *(i32 *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x43f8 + parley_wnd2) =
            cities[city].id;
-      if (param_2 == 0) {
+      if (keep_selection == 0) {
         *(i32 *)
-         (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x8400 + local_8) = 0;
+         (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 0;
       }
       else {
         *(i32 *)
-         (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x8400 + local_8) = 0;
-        for (unit = 0; unit < local_14; unit++) {
-          if (cities[city].id == *(int *)((int)local_c + unit * 4)) {
+         (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 0;
+        for (unit = 0; unit < old_count; unit++) {
+          if (cities[city].id == *(int *)((int)old_selection + unit * 4)) {
             *(i32 *)
-             (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0x8400 + local_8) = 1;
+             (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0x8400 + parley_wnd2) = 1;
             break;
           }
         }
       }
       *(i32 *)
-       (param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0xc408 + local_8) = 0;
+       (pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0xc408 + parley_wnd2) = 0;
       for (unit = 0; unit < game.num_units; unit++) {
         if (((units[unit].id != 0) && (cities[city].x == units[unit].x)) &&
            (cities[city].y == units[unit].y)) {
-          piVar1 = (int *)(param_1 * 0x2004 + *(int *)(local_8 + 1000 + param_1 * 4) * 4 + 0xc408 +
-                          local_8);
-          *piVar1 = *piVar1 + 1;
+          count_ptr = (int *)(pane * 0x2004 + *(int *)(parley_wnd2 + 1000 + pane * 4) * 4 + 0xc408 +
+                          parley_wnd2);
+          *count_ptr = *count_ptr + 1;
         }
       }
-      piVar1 = (int *)(local_8 + 1000 + param_1 * 4);
-      *piVar1 = *piVar1 + 1;
+      count_ptr = (int *)(parley_wnd2 + 1000 + pane * 4);
+      *count_ptr = *count_ptr + 1;
     }
     city++;
   } while( true );
 }
 #undef human_civ
 #undef city
-#undef local_14
+#undef old_count
 #undef unit
-#undef local_c
-#undef local_8
+#undef old_selection
+#undef parley_wnd2
 
 /* 00594d42 auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
@@ -17320,131 +17320,131 @@ void __thiscall parley_build_city_list(ListPaneWindow *this,int param_1,int para
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_lock_map_busy (*(i32 *)((u8 *)&g.d_006ad8cc))
 #define net_slot_active_flags (*(i8 *)((u8 *)&g.d_006ad359))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
+#define src_conflict (*(int *)(frame_ + FRAME_OFF(4)))
+#define dst_conflict (*(int *)(frame_ + FRAME_OFF(8)))
+#define slot (*(int *)(frame_ + FRAME_OFF(12)))
 i32 __cdecl
-net_lock_map(iptr param_1,iptr param_2,iptr param_3,iptr param_4,int param_5,int param_6)
+net_lock_map(iptr civ,iptr src_x,iptr src_y,iptr dst_x,int dst_y,int wait_reply)
 
 {
-  i32 uVar1;
-  int iVar2;
-  int iVar3;
+  i32 result;
+  int start_ticks;
+  int now_ticks;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_lock_map_busy = 1;
-  *(i32 *)(&net_map_lock_replies + param_1 * 0x18) = 0;
-  *(i32 *)(&net_map_lock_slots + param_1 * 0x18) = *(i32 *)(&net_map_lock_replies + param_1 * 0x18);
+  *(i32 *)(&net_map_lock_replies + civ * 0x18) = 0;
+  *(i32 *)(&net_map_lock_slots + civ * 0x18) = *(i32 *)(&net_map_lock_replies + civ * 0x18);
   if (net_host_flag == '\0') {
     net_lock_map_busy = 0;
-    net_send_message(0x51,0,param_1,param_2,param_3,param_4,param_5,0,0,0);
+    net_send_message(0x51,0,civ,src_x,src_y,dst_x,dst_y,0,0,0);
     XD_FlushSendBuffer(60000);
-    if (param_6 == 0) {
-      uVar1 = 1;
+    if (wait_reply == 0) {
+      result = 1;
     }
     else {
-      iVar2 = timer_ticks();
+      start_ticks = timer_ticks();
       while( true ) {
-        iVar3 = timer_ticks();
-        if ((0xe0f < iVar3 - iVar2) || (*(int *)(&net_map_lock_replies + param_1 * 0x18) != 0)) break;
+        now_ticks = timer_ticks();
+        if ((0xe0f < now_ticks - start_ticks) || (*(int *)(&net_map_lock_replies + civ * 0x18) != 0)) break;
         net_process_messages((NetSession *)&net_session,1,1);
       }
-      if (*(int *)(&net_map_lock_replies + param_1 * 0x18) == 0) {
+      if (*(int *)(&net_map_lock_replies + civ * 0x18) == 0) {
         dbg_log(ADDR(0x634e6c, ((u8 *)&g.d_00634e6c)));
         popup_game_with_sprite(ADDR(0x634e98, ((u8 *)&g.d_00634e98)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         game_loop_active = 0;
-        uVar1 = 0;
+        result = 0;
       }
-      else if (*(int *)(&net_map_lock_replies + param_1 * 0x18) == 1) {
-        uVar1 = 1;
+      else if (*(int *)(&net_map_lock_replies + civ * 0x18) == 1) {
+        result = 1;
       }
       else {
-        uVar1 = 0;
+        result = 0;
       }
     }
   }
   else {
-    local_10 = -1;
-    local_14 = -1;
-    for (local_c = 1; local_c < 8; local_c++) {
-      if (((*(int *)(&net_map_lock_src_x + local_c * 0x18) == param_2) &&
-          (*(int *)(&net_map_lock_src_y + local_c * 0x18) == param_3)) ||
-         ((*(int *)(&net_map_lock_dst_x + local_c * 0x18) == param_2 &&
-          (*(int *)(&net_map_lock_dst_y + local_c * 0x18) == param_3)))) {
-        local_14 = 0;
+    dst_conflict = -1;
+    src_conflict = -1;
+    for (slot = 1; slot < 8; slot++) {
+      if (((*(int *)(&net_map_lock_src_x + slot * 0x18) == src_x) &&
+          (*(int *)(&net_map_lock_src_y + slot * 0x18) == src_y)) ||
+         ((*(int *)(&net_map_lock_dst_x + slot * 0x18) == src_x &&
+          (*(int *)(&net_map_lock_dst_y + slot * 0x18) == src_y)))) {
+        src_conflict = 0;
         break;
       }
-      if (((*(int *)(&net_map_lock_src_x + local_c * 0x18) == param_4) &&
-          (*(int *)(&net_map_lock_src_y + local_c * 0x18) == param_5)) ||
-         ((*(int *)(&net_map_lock_dst_x + local_c * 0x18) == param_4 &&
-          (*(int *)(&net_map_lock_dst_y + local_c * 0x18) == param_5)))) {
-        local_10 = 0;
+      if (((*(int *)(&net_map_lock_src_x + slot * 0x18) == dst_x) &&
+          (*(int *)(&net_map_lock_src_y + slot * 0x18) == dst_y)) ||
+         ((*(int *)(&net_map_lock_dst_x + slot * 0x18) == dst_x &&
+          (*(int *)(&net_map_lock_dst_y + slot * 0x18) == dst_y)))) {
+        dst_conflict = 0;
         break;
       }
     }
-    if ((local_14 == -1) && (local_10 == -1)) {
-      *(iptr *)(&net_map_lock_src_x + param_1 * 0x18) = param_2;
-      *(iptr *)(&net_map_lock_src_y + param_1 * 0x18) = param_3;
-      *(iptr *)(&net_map_lock_dst_x + param_1 * 0x18) = param_4;
-      *(int *)(&net_map_lock_dst_y + param_1 * 0x18) = param_5;
-      if ((human_civ != param_1) &&
-         (((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) != 0 &&
-          ((&net_slot_active_flags)[*(int *)(&net_civ_slots + param_1 * 4) * 0x54] != '\0')))) {
+    if ((src_conflict == -1) && (dst_conflict == -1)) {
+      *(iptr *)(&net_map_lock_src_x + civ * 0x18) = src_x;
+      *(iptr *)(&net_map_lock_src_y + civ * 0x18) = src_y;
+      *(iptr *)(&net_map_lock_dst_x + civ * 0x18) = dst_x;
+      *(int *)(&net_map_lock_dst_y + civ * 0x18) = dst_y;
+      if ((human_civ != civ) &&
+         (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0 &&
+          ((&net_slot_active_flags)[*(int *)(&net_civ_slots + civ * 4) * 0x54] != '\0')))) {
         net_send_message(0x53,*(i32 *)
-                                 (&net_player_slots + *(int *)(&net_civ_slots + param_1 * 4) * 0x54),
-                           param_1,1,0,0,0,0,0,0);
+                                 (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),
+                           civ,1,0,0,0,0,0,0);
         XD_FlushSendBuffer(60000);
       }
       net_lock_map_busy = 0;
-      uVar1 = 1;
+      result = 1;
     }
     else {
-      if (((human_civ != param_1) &&
-          ((1 << ((byte)param_1 & 0x1f) & (uint)game.human_players) != 0)) &&
-         ((&net_slot_active_flags)[*(int *)(&net_civ_slots + param_1 * 4) * 0x54] != '\0')) {
+      if (((human_civ != civ) &&
+          ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
+         ((&net_slot_active_flags)[*(int *)(&net_civ_slots + civ * 4) * 0x54] != '\0')) {
         net_send_message(0x53,*(i32 *)
-                                 (&net_player_slots + *(int *)(&net_civ_slots + param_1 * 4) * 0x54),
-                           param_1,-1,0,0,0,0,0,0);
+                                 (&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54),
+                           civ,-1,0,0,0,0,0,0);
         XD_FlushSendBuffer(60000);
       }
       net_lock_map_busy = 0;
-      uVar1 = 0;
+      result = 0;
     }
   }
-  return uVar1;
+  return result;
 }
 #undef game_loop_active
 #undef human_civ
 #undef net_host_flag
 #undef net_lock_map_busy
 #undef net_slot_active_flags
-#undef local_14
-#undef local_10
-#undef local_c
+#undef src_conflict
+#undef dst_conflict
+#undef slot
 
 /* 0059511c auto */
 #define game_loop_active (*(i8 *)((u8 *)&g.d_00628044))
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_unlock_map_busy (*(i32 *)((u8 *)&g.d_006ad8d0))
-void __cdecl net_unlock_map(iptr param_1,int param_2)
+void __cdecl net_unlock_map(iptr civ,int wait_reply)
 
 {
-  int iVar1;
-  int iVar2;
+  int start_ticks;
+  int now_ticks;
   
   net_unlock_map_busy = 1;
   if (net_host_flag == '\0') {
     net_unlock_map_busy = 0;
-    *(i32 *)(&net_map_lock_slots + param_1 * 0x18) = 0;
-    net_send_message(0x52,0,param_1,0,0,0,0,0,0,0);
-    if (param_2 != 0) {
-      iVar1 = timer_ticks();
+    *(i32 *)(&net_map_lock_slots + civ * 0x18) = 0;
+    net_send_message(0x52,0,civ,0,0,0,0,0,0,0);
+    if (wait_reply != 0) {
+      start_ticks = timer_ticks();
       while( true ) {
-        iVar2 = timer_ticks();
-        if ((0xe0f < iVar2 - iVar1) || (*(int *)(&net_map_lock_slots + param_1 * 0x18) != 0)) break;
+        now_ticks = timer_ticks();
+        if ((0xe0f < now_ticks - start_ticks) || (*(int *)(&net_map_lock_slots + civ * 0x18) != 0)) break;
         net_process_messages((NetSession *)&net_session,1,1);
       }
-      if (*(int *)(&net_map_lock_slots + param_1 * 0x18) == 0) {
+      if (*(int *)(&net_map_lock_slots + civ * 0x18) == 0) {
         dbg_log(ADDR(0x634eac, ((u8 *)&g.d_00634eac)));
         popup_game_with_sprite(ADDR(0x634ed8, ((u8 *)&g.d_00634ed8)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
         game_loop_active = 0;
@@ -17452,8 +17452,8 @@ void __cdecl net_unlock_map(iptr param_1,int param_2)
     }
   }
   else {
-    _memset(&net_map_lock_slots + param_1 * 0x18,-1,0x18);
-    net_send_message(0x55,0xff,param_1,0,0,0,0,0,0,0);
+    _memset(&net_map_lock_slots + civ * 0x18,-1,0x18);
+    net_send_message(0x55,0xff,civ,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(60000);
     net_unlock_map_busy = 0;
   }
@@ -17505,18 +17505,18 @@ void __cdecl net_session_static_dtor(void)
 }
 
 /* 0059a8bb auto */
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  seh_state = 0xffffffff;
   net_msg_player_info_init((NetMsgHeader *)&this->field_8);
   net_msgq_ctor((NetMsgQueue *)(this[0x2733].pad_0 + 5));
-  local_8 = 0;
+  seh_state = 0;
   this[0x94].pad_0[0] = '\0';
   this[0x94].pad_0[1] = '\0';
   this[0x94].pad_0[2] = '\0';
@@ -17529,15 +17529,15 @@ NetSessionCtorView * __thiscall net_session_ctor(NetSessionCtorView *this)
   XD_SetOversizedMessageCB(50000,net_on_oversized_message);
   return this;
 }
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef seh_frame
+#undef seh_handler
+#undef seh_state
 
 /* 0059a998 auto */
 #define mp_meeting_pending (*(i32 *)((u8 *)&g.d_00626a2c))
 #define net_active_protocol (*(i32 *)((u8 *)&g.d_006c9288))
 #define net_xd_adapter_index (*(i32 *)((u8 *)&g.d_006c8fbc))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall net_session_clear(void *this)
 
 {
@@ -17593,11 +17593,11 @@ void __thiscall net_session_clear(void *this)
   *(i32 *)((int)this + 0x80c) = 0;
   *(i32 *)((int)this + 0x810) = 0;
   *(i32 *)((int)this + 0x814) = 0;
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    *(i32 *)((int)this + local_8 * 4 + 0x2118) = 0;
-    *(i32 *)((int)this + local_8 * 4 + 0x2138) = 0;
-    *(i32 *)((int)this + local_8 * 4 + 0x2158) = 0;
-    *(i32 *)((int)this + local_8 * 4 + 0x2178) = 0;
+  for (i = 0; i < 8; i++) {
+    *(i32 *)((int)this + i * 4 + 0x2118) = 0;
+    *(i32 *)((int)this + i * 4 + 0x2138) = 0;
+    *(i32 *)((int)this + i * 4 + 0x2158) = 0;
+    *(i32 *)((int)this + i * 4 + 0x2178) = 0;
   }
   *(i8 *)((int)this + 0x160a1) = 0;
   *(i32 *)((int)this + 0x7f0) = 0;
@@ -17606,10 +17606,10 @@ void __thiscall net_session_clear(void *this)
   *(i32 *)((int)this + 0x7fc) = 0;
   mp_meeting_pending = 0;
   *(i8 *)((int)this + 0x160a0) = 0;
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    *(i32 *)((int)this + local_8 * 4 + 0x53c) = 0;
-    *(i32 *)((int)this + local_8 * 4 + 0x16060) = 0;
-    *(i32 *)((int)this + local_8 * 4 + 0x16080) = 0;
+  for (i = 0; i < 8; i++) {
+    *(i32 *)((int)this + i * 4 + 0x53c) = 0;
+    *(i32 *)((int)this + i * 4 + 0x16060) = 0;
+    *(i32 *)((int)this + i * 4 + 0x16080) = 0;
   }
   *(i32 *)((int)this + 0x160a4) = 0;
   *(i8 *)((int)this + 0x160c8) = 0;
@@ -17620,58 +17620,58 @@ void __thiscall net_session_clear(void *this)
 #undef mp_meeting_pending
 #undef net_active_protocol
 #undef net_xd_adapter_index
-#undef local_8
+#undef i
 
 /* 0059ad40 auto */
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define seh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall net_session_dtor(void *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
+  seh_state = 0;
   if (*(int *)((int)this + 0x534) != 0) {
     operator_delete(*(void **)((int)this + 0x534));
     *(i32 *)((int)this + 0x534) = 0;
   }
   net_session_shutdown(this,1);
   net_reset_error_counts();
-  local_8 = 0xffffffff;
+  seh_state = 0xffffffff;
   /* inlined unwind funclet 0059adc8 */ { net_msgq_clear((NetMsgQueue *)(*(int *)((iptr)&this) + 0x160d0)); }
   return;
 }
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef seh_frame
+#undef seh_handler
+#undef seh_state
 
 /* 0059adef auto */
 #define net_active_protocol (*(i32 *)((u8 *)&g.d_006c9288))
 #define net_protocol (*(i32 *)((u8 *)&g.d_006ad2f8))
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
 #define prefs_net_player_name (*(i8 *)((u8 *)&g.d_00666570))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-i8 __thiscall net_init_transport(void *this,i32 param_1,int param_2)
+#define init_error (*(int *)(frame_ + FRAME_OFF(4)))
+i8 __thiscall net_init_transport(void *this,i32 protocol,int is_server)
 
 {
-  i32 uVar1;
-  i8 uVar2;
+  i32 saved_protocol;
+  i8 result;
   UINT UVar3;
-  int iVar4;
+  int activate_error;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(char *)((int)this + 0x1ec) != '\0') {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6350bc, ((u8 *)&g.d_006350bc)),ADDR(0x63509c, ((u8 *)&g.d_0063509c)),0x92);
   }
-  uVar1 = net_protocol;
+  saved_protocol = net_protocol;
   net_msgq_reset((NetMsgQueue *)((int)this + 0x160d0));
   net_session_clear(this);
   _memset((void *)((int)this + 0x200),0,0x270);
-  switch(param_1) {
+  switch(protocol) {
   case 0:
-    local_c = XD_InitializeSocketsTCP
-                        (3,0x1381,0x1382,(int)(char)param_2,7,(code *)0x0
+    init_error = XD_InitializeSocketsTCP
+                        (3,0x1381,0x1382,(int)(char)is_server,7,(code *)0x0
                         );
     game.multiplayer = 3;
     if (*(int *)((int)this + 0x1e8) == 0) {
@@ -17704,8 +17704,8 @@ i8 __thiscall net_init_transport(void *this,i32 param_1,int param_2)
     }
     break;
   case 1:
-    local_c = XD_InitializeSocketsIPXSPX
-                        (3,0x1381,0x1382,(int)(char)param_2,7,(code *)0x0
+    init_error = XD_InitializeSocketsIPXSPX
+                        (3,0x1381,0x1382,(int)(char)is_server,7,(code *)0x0
                         );
     game.multiplayer = 3;
     UVar3 = GetPrivateProfileIntA
@@ -17734,7 +17734,7 @@ i8 __thiscall net_init_transport(void *this,i32 param_1,int param_2)
     else {
       *(UINT *)((int)this + 0x7b0) = UVar3;
     }
-    local_c = XD_InitializeModem((int)(char)param_2);
+    init_error = XD_InitializeModem((int)(char)is_server);
     break;
   case 3:
     game.multiplayer = 6;
@@ -17750,17 +17750,17 @@ i8 __thiscall net_init_transport(void *this,i32 param_1,int param_2)
     else {
       *(UINT *)((int)this + 0x7b0) = UVar3;
     }
-    local_c = XD_InitializeSerial((int)(char)param_2);
+    init_error = XD_InitializeSerial((int)(char)is_server);
     break;
   default:
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x6352c4, ((u8 *)&g.d_006352c4)),ADDR(0x6352a4, ((u8 *)&g.d_006352a4)),0xf4);
   }
-  if (local_c == 0) {
-    if (((char)param_2 == '\0') || (iVar4 = XD_ActivateServer(), iVar4 == 0)) {
-      *(char *)((int)this + 0x1ef) = (char)param_2;
+  if (init_error == 0) {
+    if (((char)is_server == '\0') || (activate_error = XD_ActivateServer(), activate_error == 0)) {
+      *(char *)((int)this + 0x1ef) = (char)is_server;
       *(i8 *)((int)this + 0x1ec) = 1;
-      net_active_protocol = param_1;
-      *(i32 *)((int)this + 0x1f0) = param_1;
+      net_active_protocol = protocol;
+      *(i32 *)((int)this + 0x1f0) = protocol;
       net_reset_error_counts();
       net_reset_msg_counts();
       _memset((void *)((int)this + 0x208),0,0x20);
@@ -17770,36 +17770,36 @@ i8 __thiscall net_init_transport(void *this,i32 param_1,int param_2)
       *(i32 *)((int)this + 0x200) = 1;
       *(i8 *)((int)this + 0x251) = 1;
       *(i8 *)((int)this + 0x250) = *(i8 *)((int)this + 0x1ef);
-      uVar2 = 1;
+      result = 1;
     }
     else {
-      dbg_logf(ADDR(0x635300, ((u8 *)&g.d_00635300)),iVar4);
-      uVar2 = 0;
-      net_protocol = uVar1;
+      dbg_logf(ADDR(0x635300, ((u8 *)&g.d_00635300)),activate_error);
+      result = 0;
+      net_protocol = saved_protocol;
     }
   }
   else {
-    dbg_logf(ADDR(0x6352c8, ((u8 *)&g.d_006352c8)),local_c);
-    uVar2 = 0;
-    net_protocol = uVar1;
+    dbg_logf(ADDR(0x6352c8, ((u8 *)&g.d_006352c8)),init_error);
+    result = 0;
+    net_protocol = saved_protocol;
   }
-  return uVar2;
+  return result;
 }
 #undef net_active_protocol
 #undef net_protocol
 #undef prefs_net_ip_address
 #undef prefs_net_player_name
-#undef local_c
+#undef init_error
 
 /* 0059b293 auto */
 /* WARNING: Removing unreachable block (ram,0x0059b3ca) */
 
-void __thiscall net_session_shutdown(void *this,int param_1)
+void __thiscall net_session_shutdown(void *this,int delay_after)
 
 {
   dbg_log(ADDR(0x635338, ((u8 *)&g.d_00635338)));
   if (*(char *)((int)this + 0x1ef) != '\0') {
-    param_1 = 0;
+    delay_after = 0;
   }
   if (*(char *)((int)this + 0x1ec) == '\0') {
     XD_ResetLibrary();
@@ -17851,7 +17851,7 @@ void __thiscall net_session_shutdown(void *this,int param_1)
     }
     XD_ResetLibrary();
     dbg_log(ADDR(0x635500, ((u8 *)&g.d_00635500)));
-    if (param_1 != 0) {
+    if (delay_after != 0) {
       dbg_log(ADDR(0x635518, ((u8 *)&g.d_00635518)));
       ui_delay_ticks(0x78);
     }
@@ -17874,177 +17874,177 @@ void __thiscall net_session_close_hook_nop(void *this)
 }
 
 /* 0059b571 auto */
-#define local_10 (*(char * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(char * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-void __thiscall net_game_list_add(NetSession *this,iptr param_1)
+#define prev (*(char * *)(frame_ + FRAME_OFF(0)))
+#define node2 (*(char * *)(frame_ + FRAME_OFF(4)))
+#define saved_value (*(i32 *)(frame_ + FRAME_OFF(8)))
+void __thiscall net_game_list_add(NetSession *this,iptr msg)
 
 {
-  int iVar1;
-  void *pvVar2;
-  i32 uVar3;
+  int cmp;
+  void *entry;
+  i32 now_ticks;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(char *)((int)&this[0x3d].field_4 + 2) != '\0') {
-    local_c = (char *)this[0x2c19].field_4;
-    local_8 = 0;
-    for (; local_c != (char *)0x0; local_c = *(char **)(local_c + 0x20)) {
-      iVar1 = _strncmp(local_c,(char *)(param_1 + 0x74),0x20);
-      if (iVar1 == 0) {
-        if ((char *)this[0x2c19].field_4 == local_c) {
-          this[0x2c19].field_4 = *(u32 *)(local_c + 0x20);
+    node2 = (char *)this[0x2c19].field_4;
+    saved_value = 0;
+    for (; node2 != (char *)0x0; node2 = *(char **)(node2 + 0x20)) {
+      cmp = _strncmp(node2,(char *)(msg + 0x74),0x20);
+      if (cmp == 0) {
+        if ((char *)this[0x2c19].field_4 == node2) {
+          this[0x2c19].field_4 = *(u32 *)(node2 + 0x20);
         }
-        if (*(int *)(local_c + 0x24) != 0) {
-          *(i32 *)(*(int *)(local_c + 0x24) + 0x20) = *(i32 *)(local_c + 0x20);
+        if (*(int *)(node2 + 0x24) != 0) {
+          *(i32 *)(*(int *)(node2 + 0x24) + 0x20) = *(i32 *)(node2 + 0x20);
         }
-        if (*(int *)(local_c + 0x20) != 0) {
-          *(i32 *)(*(int *)(local_c + 0x20) + 0x24) = *(i32 *)(local_c + 0x24);
+        if (*(int *)(node2 + 0x20) != 0) {
+          *(i32 *)(*(int *)(node2 + 0x20) + 0x24) = *(i32 *)(node2 + 0x24);
         }
-        local_8 = *(i32 *)(local_c + 0x2c);
-        operator_delete(local_c);
+        saved_value = *(i32 *)(node2 + 0x2c);
+        operator_delete(node2);
         break;
       }
     }
-    local_c = (char *)this[0x2c19].field_4;
-    local_10 = (char *)0x0;
-    while ((local_c != (char *)0x0 &&
-           (iVar1 = __strcmpi((char *)(param_1 + 0xe4),local_c + 0x70), 0 < iVar1))) {
-      local_10 = local_c;
-      local_c = *(char **)(local_c + 0x20);
+    node2 = (char *)this[0x2c19].field_4;
+    prev = (char *)0x0;
+    while ((node2 != (char *)0x0 &&
+           (cmp = __strcmpi((char *)(msg + 0xe4),node2 + 0x70), 0 < cmp))) {
+      prev = node2;
+      node2 = *(char **)(node2 + 0x20);
     }
-    while (((local_c != (char *)0x0 &&
-            (iVar1 = __strcmpi((char *)(param_1 + 0xe4),local_c + 0x70), iVar1 == 0)) &&
-           (iVar1 = __strcmpi((char *)(param_1 + 0x74),local_c), 0 < iVar1))) {
-      local_10 = local_c;
-      local_c = *(char **)(local_c + 0x20);
+    while (((node2 != (char *)0x0 &&
+            (cmp = __strcmpi((char *)(msg + 0xe4),node2 + 0x70), cmp == 0)) &&
+           (cmp = __strcmpi((char *)(msg + 0x74),node2), 0 < cmp))) {
+      prev = node2;
+      node2 = *(char **)(node2 + 0x20);
     }
-    pvVar2 = operator_new(0x124);
-    if (pvVar2 == (void *)0x0) {
+    entry = operator_new(0x124);
+    if (entry == (void *)0x0) {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x635574, ((u8 *)&g.d_00635574)),ADDR(0x635554, ((u8 *)&g.d_00635554)),0x1cf);
     }
-    crt_memcpy(pvVar2,param_1 + 0x74,0x124);
-    if (local_10 == (char *)0x0) {
-      *(u32 *)((int)pvVar2 + 0x20) = this[0x2c19].field_4;
-      *(i32 *)((int)pvVar2 + 0x24) = 0;
+    crt_memcpy(entry,msg + 0x74,0x124);
+    if (prev == (char *)0x0) {
+      *(u32 *)((int)entry + 0x20) = this[0x2c19].field_4;
+      *(i32 *)((int)entry + 0x24) = 0;
       if (this[0x2c19].field_4 != 0) {
-        *(void **)(this[0x2c19].field_4 + 0x24) = pvVar2;
+        *(void **)(this[0x2c19].field_4 + 0x24) = entry;
       }
-      this[0x2c19].field_4 = (u32)pvVar2;
+      this[0x2c19].field_4 = (u32)entry;
     }
     else {
-      *(i32 *)((int)pvVar2 + 0x20) = *(i32 *)(local_10 + 0x20);
-      *(char **)((int)pvVar2 + 0x24) = local_10;
-      *(void **)(local_10 + 0x20) = pvVar2;
-      if (*(int *)((int)pvVar2 + 0x20) != 0) {
-        *(void **)(*(int *)((int)pvVar2 + 0x20) + 0x24) = pvVar2;
+      *(i32 *)((int)entry + 0x20) = *(i32 *)(prev + 0x20);
+      *(char **)((int)entry + 0x24) = prev;
+      *(void **)(prev + 0x20) = entry;
+      if (*(int *)((int)entry + 0x20) != 0) {
+        *(void **)(*(int *)((int)entry + 0x20) + 0x24) = entry;
       }
     }
-    uVar3 = timer_ticks();
-    *(i32 *)((int)pvVar2 + 0x28) = uVar3;
-    *(i32 *)((int)pvVar2 + 0x2c) = local_8;
+    now_ticks = timer_ticks();
+    *(i32 *)((int)entry + 0x28) = now_ticks;
+    *(i32 *)((int)entry + 0x2c) = saved_value;
   }
   return;
 }
-#undef local_10
-#undef local_c
-#undef local_8
+#undef prev
+#undef node2
+#undef saved_value
 
 /* 0059b7fc auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall net_add_player(NetSession *this,iptr param_1)
+#define slot (*(int *)(frame_ + FRAME_OFF(0)))
+void __thiscall net_add_player(NetSession *this,iptr player_info)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
+  slot = 0;
   while( true ) {
-    if (6 < local_8) {
+    if (6 < slot) {
       return;
     }
-    if (*(char *)((int)this + local_8 * 0x54 + 0x251) == '\0') break;
-    local_8++;
+    if (*(char *)((int)this + slot * 0x54 + 0x251) == '\0') break;
+    slot++;
   }
-  *(i32 *)((int)this + local_8 * 0x54 + 0x204) = *(i32 *)(param_1 + 0x10);
-  _memset((void *)((int)this + local_8 * 0x54 + 0x208),0,0x20);
-  _strncpy((char *)((int)this + local_8 * 0x54 + 0x208),(char *)(param_1 + 0x14),0x20);
-  *(i8 *)((int)this + local_8 * 0x54 + 0x250) = 0;
-  *(i8 *)((int)this + local_8 * 0x54 + 0x251) = 1;
-  *(i32 *)((int)this + local_8 * 0x54 + 0x254) = 0xffffffff;
-  crt_strcpy((int)this + local_8 * 0x54 + 0x228,param_1 + 0x34);
-  *(i32 *)((int)this + local_8 * 0x54 + 0x248) = 0;
-  *(i32 *)((int)this + local_8 * 0x54 + 0x24c) = 0;
+  *(i32 *)((int)this + slot * 0x54 + 0x204) = *(i32 *)(player_info + 0x10);
+  _memset((void *)((int)this + slot * 0x54 + 0x208),0,0x20);
+  _strncpy((char *)((int)this + slot * 0x54 + 0x208),(char *)(player_info + 0x14),0x20);
+  *(i8 *)((int)this + slot * 0x54 + 0x250) = 0;
+  *(i8 *)((int)this + slot * 0x54 + 0x251) = 1;
+  *(i32 *)((int)this + slot * 0x54 + 0x254) = 0xffffffff;
+  crt_strcpy((int)this + slot * 0x54 + 0x228,player_info + 0x34);
+  *(i32 *)((int)this + slot * 0x54 + 0x248) = 0;
+  *(i32 *)((int)this + slot * 0x54 + 0x24c) = 0;
   *(int *)this[0x40].pad_0 = *(int *)this[0x40].pad_0 + 1;
   this[0xab].field_4--;
   return;
 }
-#undef local_8
+#undef slot
 
 /* 0059b96a auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall net_remove_player(NetSession *this,int param_1)
+#define slot (*(int *)(frame_ + FRAME_OFF(0)))
+void __thiscall net_remove_player(NetSession *this,int player_id)
 
 {
-  u8 *puVar1;
+  u8 *civ_slot_ptr;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
-  while ((local_8 < 7 && (*(int *)((int)this + local_8 * 0x54 + 0x204) != param_1))) {
-    local_8++;
+  slot = 0;
+  while ((slot < 7 && (*(int *)((int)this + slot * 0x54 + 0x204) != player_id))) {
+    slot++;
   }
-  if ((local_8 < 7) && (*(char *)((int)this + local_8 * 0x54 + 0x251) != '\0')) {
-    if ((0 < *(int *)((int)this + local_8 * 0x54 + 0x254)) &&
-       (*(int *)((int)this + local_8 * 0x54 + 0x254) < 8)) {
+  if ((slot < 7) && (*(char *)((int)this + slot * 0x54 + 0x251) != '\0')) {
+    if ((0 < *(int *)((int)this + slot * 0x54 + 0x254)) &&
+       (*(int *)((int)this + slot * 0x54 + 0x254) < 8)) {
       game.human_players =
-           ~(byte)(1 << (*(byte *)((int)this + local_8 * 0x54 + 0x254) & 0x1f)) & game.human_players
+           ~(byte)(1 << (*(byte *)((int)this + slot * 0x54 + 0x254) & 0x1f)) & game.human_players
       ;
     }
-    *(i32 *)((int)this + local_8 * 0x54 + 0x204) = 0;
-    *(i8 *)((int)this + local_8 * 0x54 + 0x208) = 0;
-    *(i8 *)((int)this + local_8 * 0x54 + 0x250) = 0;
-    *(i8 *)((int)this + local_8 * 0x54 + 0x251) = 0;
-    puVar1 = this[0x8a].pad_0 + *(int *)((int)this + local_8 * 0x54 + 0x254) * 4;
-    puVar1[0] = 0xff;
-    puVar1[1] = 0xff;
-    puVar1[2] = 0xff;
-    puVar1[3] = 0xff;
-    *(i32 *)((int)this + local_8 * 0x54 + 0x254) = 0xffffffff;
+    *(i32 *)((int)this + slot * 0x54 + 0x204) = 0;
+    *(i8 *)((int)this + slot * 0x54 + 0x208) = 0;
+    *(i8 *)((int)this + slot * 0x54 + 0x250) = 0;
+    *(i8 *)((int)this + slot * 0x54 + 0x251) = 0;
+    civ_slot_ptr = this[0x8a].pad_0 + *(int *)((int)this + slot * 0x54 + 0x254) * 4;
+    civ_slot_ptr[0] = 0xff;
+    civ_slot_ptr[1] = 0xff;
+    civ_slot_ptr[2] = 0xff;
+    civ_slot_ptr[3] = 0xff;
+    *(i32 *)((int)this + slot * 0x54 + 0x254) = 0xffffffff;
     *(int *)this[0x40].pad_0 = *(int *)this[0x40].pad_0 - 1;
   }
   return;
 }
-#undef local_8
+#undef slot
 
 /* 0059baf0 auto */
 void __thiscall net_free_game_list(void *this)
 
 {
-  i32 uVar1;
+  i32 next;
   
   while (*(int *)((int)this + 0x160cc) != 0) {
-    uVar1 = *(i32 *)(*(int *)((int)this + 0x160cc) + 0x20);
+    next = *(i32 *)(*(int *)((int)this + 0x160cc) + 0x20);
     operator_delete(*(void **)((int)this + 0x160cc));
-    *(i32 *)((int)this + 0x160cc) = uVar1;
+    *(i32 *)((int)this + 0x160cc) = next;
   }
   return;
 }
 
 /* 0059bb54 auto */
 #define prefs_net_ip_address (*(i8 *)((u8 *)&g.d_006665b0))
-void __cdecl net_on_broadcast_receive(int *param_1,ushort param_2)
+void __cdecl net_on_broadcast_receive(int *msg,ushort size)
 
 {
-  int iVar1;
+  int cmp;
   
-  if (param_2 < 0x10) {
+  if (size < 0x10) {
     dbg_log(ADDR(0x635584, ((u8 *)&g.d_00635584)));
   }
-  else if (*param_1 == 0x66606660) {
-    if ((param_1[1] != 0) ||
-       ((((char)param_1[0xc] == '\0' ||
-         (iVar1 = _strcmp((char *)(param_1 + 0xc),&prefs_net_ip_address), iVar1 == 0)) &&
-        (((char)param_1[0x14] == '\0' ||
-         (iVar1 = _strcmp((char *)(param_1 + 0x14),&prefs_net_ip_address), iVar1 != 0)))))) {
-      net_msgq_enqueue((NetMsgQueueEnqueueView *)&net_msg_queue,0,(iptr)param_1,(uint)param_2);
+  else if (*msg == 0x66606660) {
+    if ((msg[1] != 0) ||
+       ((((char)msg[0xc] == '\0' ||
+         (cmp = _strcmp((char *)(msg + 0xc),&prefs_net_ip_address), cmp == 0)) &&
+        (((char)msg[0x14] == '\0' ||
+         (cmp = _strcmp((char *)(msg + 0x14),&prefs_net_ip_address), cmp != 0)))))) {
+      net_msgq_enqueue((NetMsgQueueEnqueueView *)&net_msg_queue,0,(iptr)msg,(uint)size);
     }
   }
   else {
@@ -18057,81 +18057,81 @@ void __cdecl net_on_broadcast_receive(int *param_1,ushort param_2)
 /* 0059bc41 auto */
 #define mp_window_drag_active (*(char *)((u8 *)&g.d_00633a84))
 #define net_send_sequence (*(int *)((u8 *)&g.d_00628468))
-#define local_78 (*(int * *)(frame_ + FRAME_OFF(0)))
-#define local_74 (*(uptr *)(frame_ + FRAME_OFF(4)))
-#define local_70 (*(uptr *)(frame_ + FRAME_OFF(8)))
-#define local_6c (*(char *)(frame_ + FRAME_OFF(12)))
-#define local_6b (*(char *)(frame_ + FRAME_OFF(13)))
-#define local_6a (*(i8 *)(frame_ + FRAME_OFF(14)))
-#define local_4c (*(i8 (*)[64])(frame_ + FRAME_OFF(44)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(108)))
-#define local_8 (*(int * *)(frame_ + FRAME_OFF(112)))
-void __cdecl net_on_secure_receive(uint param_1,int *param_2,uint param_3)
+#define scan_ptr (*(int * *)(frame_ + FRAME_OFF(0)))
+#define byte_idx (*(uptr *)(frame_ + FRAME_OFF(4)))
+#define offset (*(uptr *)(frame_ + FRAME_OFF(8)))
+#define num_buf (*(char *)(frame_ + FRAME_OFF(12)))
+#define num_buf_1 (*(char *)(frame_ + FRAME_OFF(13)))
+#define num_buf_2 (*(i8 *)(frame_ + FRAME_OFF(14)))
+#define hex_line (*(i8 (*)[64])(frame_ + FRAME_OFF(44)))
+#define byte_val (*(uint *)(frame_ + FRAME_OFF(108)))
+#define header (*(int * *)(frame_ + FRAME_OFF(112)))
+void __cdecl net_on_secure_receive(uint conn_id,int *msg,uint size)
 
 {
-  size_t sVar1;
+  size_t len;
   i8 frame_[FRAME_OFF(120)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (3 < param_3) {
-    if (*param_2 == 0x66606660) {
+  if (3 < size) {
+    if (*msg == 0x66606660) {
       net_msgq_enqueue
-                ((NetMsgQueueEnqueueView *)&net_msg_queue,param_1 & 0xffff,(iptr)param_2,param_3);
-      net_last_recv_callback_size = param_3;
+                ((NetMsgQueueEnqueueView *)&net_msg_queue,conn_id & 0xffff,(iptr)msg,size);
+      net_last_recv_callback_size = size;
       net_last_queued_send_seq = net_send_sequence;
-      local_8 = param_2;
-      net_last_recv_msg_size = param_2[2];
-      net_last_recv_msg_type = param_2[1];
+      header = msg;
+      net_last_recv_msg_size = msg[2];
+      net_last_recv_msg_type = msg[1];
     }
     else {
       dbg_log(ADDR(0x635608, ((u8 *)&g.d_00635608)));
       if (-1 < net_last_recv_msg_type) {
-        __ultoa(net_last_recv_callback_size,&local_6c,10);
-        dbg_logf_str(ADDR(0x635640, ((u8 *)&g.d_00635640)),(iptr)&local_6c);
-        __itoa(net_last_queued_send_seq,&local_6c,10);
-        dbg_logf_str(ADDR(0x635658, ((u8 *)&g.d_00635658)),(iptr)&local_6c);
-        __itoa(net_last_recv_msg_type,&local_6c,10);
-        dbg_logf_str(ADDR(0x635678, ((u8 *)&g.d_00635678)),(iptr)&local_6c);
-        __ultoa(net_last_recv_msg_size,&local_6c,10);
-        dbg_logf_str(ADDR(0x63568c, ((u8 *)&g.d_0063568c)),(iptr)&local_6c);
+        __ultoa(net_last_recv_callback_size,&num_buf,10);
+        dbg_logf_str(ADDR(0x635640, ((u8 *)&g.d_00635640)),(iptr)&num_buf);
+        __itoa(net_last_queued_send_seq,&num_buf,10);
+        dbg_logf_str(ADDR(0x635658, ((u8 *)&g.d_00635658)),(iptr)&num_buf);
+        __itoa(net_last_recv_msg_type,&num_buf,10);
+        dbg_logf_str(ADDR(0x635678, ((u8 *)&g.d_00635678)),(iptr)&num_buf);
+        __ultoa(net_last_recv_msg_size,&num_buf,10);
+        dbg_logf_str(ADDR(0x63568c, ((u8 *)&g.d_0063568c)),(iptr)&num_buf);
       }
-      __itoa(net_send_sequence,&local_6c,10);
-      dbg_logf_str(ADDR(0x6356a8, ((u8 *)&g.d_006356a8)),(iptr)&local_6c);
-      __ultoa(param_3,&local_6c,10);
-      dbg_logf_str(ADDR(0x6356bc, ((u8 *)&g.d_006356bc)),(iptr)&local_6c);
-      for (local_70 = 0; (local_70 < 0x20 && (local_4c[0] = 0, local_70 <= param_3));
-          local_70 = local_70 + 8) {
-        for (local_74 = local_70; (local_74 < local_70 + 8 && (local_74 < param_3));
-            local_74 = local_74 + 1) {
-          local_c = (uint)*(byte *)(local_74 + (int)param_2);
-          __itoa(local_c,&local_6c,0x10);
-          sVar1 = _strlen(&local_6c);
-          if (sVar1 == 1) {
-            local_6b = local_6c;
-            local_6a = 0;
-            local_6c = '0';
+      __itoa(net_send_sequence,&num_buf,10);
+      dbg_logf_str(ADDR(0x6356a8, ((u8 *)&g.d_006356a8)),(iptr)&num_buf);
+      __ultoa(size,&num_buf,10);
+      dbg_logf_str(ADDR(0x6356bc, ((u8 *)&g.d_006356bc)),(iptr)&num_buf);
+      for (offset = 0; (offset < 0x20 && (hex_line[0] = 0, offset <= size));
+          offset = offset + 8) {
+        for (byte_idx = offset; (byte_idx < offset + 8 && (byte_idx < size));
+            byte_idx = byte_idx + 1) {
+          byte_val = (uint)*(byte *)(byte_idx + (int)msg);
+          __itoa(byte_val,&num_buf,0x10);
+          len = _strlen(&num_buf);
+          if (len == 1) {
+            num_buf_1 = num_buf;
+            num_buf_2 = 0;
+            num_buf = '0';
           }
-          crt_strcat(local_4c,&local_6c);
-          crt_strcat(local_4c,&net_hexdump_space_str);
+          crt_strcat(hex_line,&num_buf);
+          crt_strcat(hex_line,&net_hexdump_space_str);
         }
-        dbg_logf_str(ADDR(0x6356d4, ((u8 *)&g.d_006356d4)),(iptr)local_4c);
+        dbg_logf_str(ADDR(0x6356d4, ((u8 *)&g.d_006356d4)),(iptr)hex_line);
       }
       dbg_log(ADDR(0x6356d8, ((u8 *)&g.d_006356d8)));
       net_last_recv_msg_type = -1;
-      local_78 = param_2;
-      for (local_70 = 0; local_70 < 0x20; local_70++) {
-        if (*local_78 == 0x66606660) {
-          local_8 = local_78;
+      scan_ptr = msg;
+      for (offset = 0; offset < 0x20; offset++) {
+        if (*scan_ptr == 0x66606660) {
+          header = scan_ptr;
           dbg_log(ADDR(0x6356dc, ((u8 *)&g.d_006356dc)));
-          __itoa(local_70,&local_6c,10);
-          dbg_logf_str(ADDR(0x6356fc, ((u8 *)&g.d_006356fc)),(iptr)&local_6c);
-          dbg_logf_str(ADDR(0x63571c, ((u8 *)&g.d_0063571c)),(iptr)(s_NM_DATAGRAM_00628470 + local_8[1] * 0x20));
-          __ultoa(local_8[2],&local_6c,10);
-          dbg_logf_str(ADDR(0x635738, ((u8 *)&g.d_00635738)),(iptr)&local_6c);
-          __ultoa(local_8[3],&local_6c,10);
-          dbg_logf_str(ADDR(0x635758, ((u8 *)&g.d_00635758)),(iptr)&local_6c);
+          __itoa(offset,&num_buf,10);
+          dbg_logf_str(ADDR(0x6356fc, ((u8 *)&g.d_006356fc)),(iptr)&num_buf);
+          dbg_logf_str(ADDR(0x63571c, ((u8 *)&g.d_0063571c)),(iptr)(s_NM_DATAGRAM_00628470 + header[1] * 0x20));
+          __ultoa(header[2],&num_buf,10);
+          dbg_logf_str(ADDR(0x635738, ((u8 *)&g.d_00635738)),(iptr)&num_buf);
+          __ultoa(header[3],&num_buf,10);
+          dbg_logf_str(ADDR(0x635758, ((u8 *)&g.d_00635758)),(iptr)&num_buf);
           break;
         }
-        local_78 = (int *)((int)local_78 + 1);
+        scan_ptr = (int *)((int)scan_ptr + 1);
       }
     }
   }
@@ -18142,34 +18142,34 @@ void __cdecl net_on_secure_receive(uint param_1,int *param_2,uint param_3)
 }
 #undef mp_window_drag_active
 #undef net_send_sequence
-#undef local_78
-#undef local_74
-#undef local_70
-#undef local_6c
-#undef local_6b
-#undef local_6a
-#undef local_4c
-#undef local_c
-#undef local_8
+#undef scan_ptr
+#undef byte_idx
+#undef offset
+#undef num_buf
+#undef num_buf_1
+#undef num_buf_2
+#undef hex_line
+#undef byte_val
+#undef header
 
 /* 0059bfb5 auto */
-void __cdecl net_on_new_client(i32 param_1,uint param_2)
+void __cdecl net_on_new_client(i32 client_info,uint conn_id)
 
 {
-  dbg_logf(ADDR(0x635774, ((u8 *)&g.d_00635774)),param_2 & 0xffff);
+  dbg_logf(ADDR(0x635774, ((u8 *)&g.d_00635774)),conn_id & 0xffff);
   return;
 }
 
 /* 0059bfdb auto */
 #define net_server_conn_id (*(int *)((u8 *)&g.d_006ad300))
-void __cdecl net_on_connected_to_server(short param_1)
+void __cdecl net_on_connected_to_server(short conn_id)
 
 {
-  dbg_logf(ADDR(0x6357a8, ((u8 *)&g.d_006357a8)),(int)param_1);
-  if ((-1 < param_1) && (param_1 < 8)) {
-    net_server_conn_id = (int)param_1;
+  dbg_logf(ADDR(0x6357a8, ((u8 *)&g.d_006357a8)),(int)conn_id);
+  if ((-1 < conn_id) && (conn_id < 8)) {
+    net_server_conn_id = (int)conn_id;
     net_connected_to_server = 1;
-    net_send_message(0x2f,0,(int)param_1,0,0,0,0,0,0,0);
+    net_send_message(0x2f,0,(int)conn_id,0,0,0,0,0,0,0);
   }
   return;
 }
@@ -18177,122 +18177,122 @@ void __cdecl net_on_connected_to_server(short param_1)
 
 /* 0059c04b auto */
 #define net_lost_conn_total (*(int *)((u8 *)&g.d_006c8fb4))
-void __cdecl net_on_connection_lost(ushort param_1)
+void __cdecl net_on_connection_lost(ushort player_id)
 
 {
-  dbg_logf(ADDR(0x6357e0, ((u8 *)&g.d_006357e0)),(uint)param_1);
+  dbg_logf(ADDR(0x6357e0, ((u8 *)&g.d_006357e0)),(uint)player_id);
   net_lost_conn_total++;
-  if (param_1 < 7) {
-    *(int *)(&net_lost_conn_by_player + (uint)param_1 * 4) = *(int *)(&net_lost_conn_by_player + (uint)param_1 * 4) + 1;
+  if (player_id < 7) {
+    *(int *)(&net_lost_conn_by_player + (uint)player_id * 4) = *(int *)(&net_lost_conn_by_player + (uint)player_id * 4) + 1;
   }
   return;
 }
 #undef net_lost_conn_total
 
 /* 0059c0a4 auto */
-#define local_104 (*(char (*)[256])(frame_ + FRAME_OFF(4)))
-void __cdecl net_on_oversized_message(i32 param_1)
+#define msg_buf (*(char (*)[256])(frame_ + FRAME_OFF(4)))
+void __cdecl net_on_oversized_message(i32 size)
 
 {
   i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  _sprintf(local_104,s_Oversized_XDaemon_message___ul_00635814,param_1);
-  dbg_log((iptr)local_104);
+  _sprintf(msg_buf,s_Oversized_XDaemon_message___ul_00635814,size);
+  dbg_log((iptr)msg_buf);
   return;
 }
-#undef local_104
+#undef msg_buf
 
 /* 0059c0e1 auto */
-#define local_1c (*(void * *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(NetMsgHeader *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_8 (*(size_t *)(frame_ + FRAME_OFF(24)))
+#define packet (*(void * *)(frame_ + FRAME_OFF(4)))
+#define header (*(NetMsgHeader *)(frame_ + FRAME_OFF(8)))
+#define packet_size (*(int *)(frame_ + FRAME_OFF(16)))
+#define payload_size (*(size_t *)(frame_ + FRAME_OFF(24)))
 void * __cdecl
-net_msg_build_packet(i32 param_1,iptr param_2,i32 param_3,i32 param_4,
-            i32 param_5,i32 param_6,i32 param_7,i32 param_8,
-            size_t param_9)
+net_msg_build_packet(i32 msg_type,iptr payload,i32 arg1,i32 arg2,
+            i32 arg3,i32 arg4,i32 arg5,i32 arg6,
+            size_t payload_len)
 
 {
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
-  u32 pargs_[7] = {(u32)(uptr)param_3, (u32)(uptr)param_4, (u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8, (u32)(uptr)param_9};  /* the arguments, contiguous as on the original stack */
-#define param_3 (*(i32 *)&pargs_[0])
-#define param_4 (*(i32 *)&pargs_[1])
-#define param_5 (*(i32 *)&pargs_[2])
-#define param_6 (*(i32 *)&pargs_[3])
-#define param_7 (*(i32 *)&pargs_[4])
-#define param_8 (*(i32 *)&pargs_[5])
-#define param_9 (*(size_t *)&pargs_[6])
+  u32 pargs_[7] = {(u32)(uptr)arg1, (u32)(uptr)arg2, (u32)(uptr)arg3, (u32)(uptr)arg4, (u32)(uptr)arg5, (u32)(uptr)arg6, (u32)(uptr)payload_len};  /* the arguments, contiguous as on the original stack */
+#define arg1 (*(i32 *)&pargs_[0])
+#define arg2 (*(i32 *)&pargs_[1])
+#define arg3 (*(i32 *)&pargs_[2])
+#define arg4 (*(i32 *)&pargs_[3])
+#define arg5 (*(i32 *)&pargs_[4])
+#define arg6 (*(i32 *)&pargs_[5])
+#define payload_len (*(size_t *)&pargs_[6])
   
-  net_msg_header_init(&local_18,param_1);
-  if (param_9 == 0) {
-    if (param_2 == 0) {
-      local_8 = 0;
-      local_1c = operator_new(0x2c);
+  net_msg_header_init(&header,msg_type);
+  if (payload_len == 0) {
+    if (payload == 0) {
+      payload_size = 0;
+      packet = operator_new(0x2c);
     }
     else {
-      local_8 = __msize((void *)param_2);
-      local_1c = (void *)crt_realloc(param_2,local_8 + 0x2c);
-      crt_memmove((int)local_1c + 0x2c,local_1c,local_8);
+      payload_size = __msize((void *)payload);
+      packet = (void *)crt_realloc(payload,payload_size + 0x2c);
+      crt_memmove((int)packet + 0x2c,packet,payload_size);
     }
   }
   else {
-    local_8 = param_9;
-    local_1c = operator_new(param_9 + 0x2c);
-    crt_memcpy((int)local_1c + 0x2c,param_2,local_8);
+    payload_size = payload_len;
+    packet = operator_new(payload_len + 0x2c);
+    crt_memcpy((int)packet + 0x2c,payload,payload_size);
   }
-  local_10 = local_8 + 0x2c;
-  crt_memcpy(local_1c,&local_18,0x10);
-  crt_memcpy((int)local_1c + 0x10,&param_3,4);
-  crt_memcpy((int)local_1c + 0x14,&param_4,4);
-  crt_memcpy((int)local_1c + 0x18,&param_5,4);
-  crt_memcpy((int)local_1c + 0x1c,&param_6,4);
-  crt_memcpy((int)local_1c + 0x20,&param_7,4);
-  crt_memcpy((int)local_1c + 0x24,&param_8,4);
-  crt_memcpy((int)local_1c + 0x28,&local_8,4);
-  return local_1c;
+  packet_size = payload_size + 0x2c;
+  crt_memcpy(packet,&header,0x10);
+  crt_memcpy((int)packet + 0x10,&arg1,4);
+  crt_memcpy((int)packet + 0x14,&arg2,4);
+  crt_memcpy((int)packet + 0x18,&arg3,4);
+  crt_memcpy((int)packet + 0x1c,&arg4,4);
+  crt_memcpy((int)packet + 0x20,&arg5,4);
+  crt_memcpy((int)packet + 0x24,&arg6,4);
+  crt_memcpy((int)packet + 0x28,&payload_size,4);
+  return packet;
 }
-#undef local_1c
-#undef local_18
-#undef local_10
-#undef local_8
-#undef param_3
-#undef param_4
-#undef param_5
-#undef param_6
-#undef param_7
-#undef param_8
-#undef param_9
+#undef packet
+#undef header
+#undef packet_size
+#undef payload_size
+#undef arg1
+#undef arg2
+#undef arg3
+#undef arg4
+#undef arg5
+#undef arg6
+#undef payload_len
 
 /* 0059c276 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl net_reset_msg_counts(void)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0xa9; local_8++) {
-    *(i32 *)(&nm_recv_counts + local_8 * 4) = 0;
+  for (i = 0; i < 0xa9; i++) {
+    *(i32 *)(&nm_recv_counts + i * 4) = 0;
   }
   return;
 }
-#undef local_8
+#undef i
 
 /* 0059c2b8 auto */
 #define net_lost_conn_total (*(i32 *)((u8 *)&g.d_006c8fb4))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl net_reset_error_counts(void)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_lost_conn_total = 0;
-  for (local_8 = 0; local_8 < 7; local_8++) {
-    *(i32 *)(&net_lost_conn_by_player + local_8 * 4) = 0;
+  for (i = 0; i < 7; i++) {
+    *(i32 *)(&net_lost_conn_by_player + i * 4) = 0;
   }
   return;
 }
 #undef net_lost_conn_total
-#undef local_8
+#undef i
 
 /* 0059c301 auto */
 void __cdecl net_modal_idle_poll(void)
@@ -18313,56 +18313,56 @@ void __cdecl net_modal_idle_poll(void)
 #define scenario_name (*(i8 *)((u8 *)&g.d_0064bc62))
 #define scenario_start_year (*(i16 *)((u8 *)&g.d_0064bcb6))
 #define scenario_year_increment (*(i16 *)((u8 *)&g.d_0064bcb4))
-#define local_28 (*(i32 (*)[9])(frame_ + FRAME_OFF(0)))
+#define bit_masks (*(i32 (*)[9])(frame_ + FRAME_OFF(0)))
 /* WARNING: Type propagation algorithm not settling */
 
-void __cdecl net_fill_game_info(iptr param_1)
+void __cdecl net_fill_game_info(iptr info)
 
 {
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_28[0] = 0;
-  local_28[1] = 1;
-  local_28[2] = 3;
-  local_28[3] = 7;
-  local_28[4] = 0xf;
-  local_28[5] = 0x1f;
-  local_28[6] = 0x3f;
-  local_28[7] = 0x7f;
-  local_28[8] = 0xff;
-  crt_strcpy(param_1 + 0x30,PTR_s_5_4_0f_Multiplayer_26_March_99_0062765c);
-  _memset((void *)param_1,0,0x20);
-  _strncpy((char *)param_1,&prefs_net_ip_address,0x20);
-  _memset((void *)(param_1 + 0x70),0,0x20);
-  _strncpy((char *)(param_1 + 0x70),&net_game_name,0x20);
-  _memset((void *)(param_1 + 0x90),0,0x20);
-  _strncpy((char *)(param_1 + 0x90),&prefs_net_player_name,0x20);
-  *(i16 *)(param_1 + 0xb0) = mp_open_game;
-  *(u8 *)(param_1 + 0xb2) = game.difficulty;
-  *(u8 *)(param_1 + 0xb3) = game.barbarian_activity;
+  bit_masks[0] = 0;
+  bit_masks[1] = 1;
+  bit_masks[2] = 3;
+  bit_masks[3] = 7;
+  bit_masks[4] = 0xf;
+  bit_masks[5] = 0x1f;
+  bit_masks[6] = 0x3f;
+  bit_masks[7] = 0x7f;
+  bit_masks[8] = 0xff;
+  crt_strcpy(info + 0x30,PTR_s_5_4_0f_Multiplayer_26_March_99_0062765c);
+  _memset((void *)info,0,0x20);
+  _strncpy((char *)info,&prefs_net_ip_address,0x20);
+  _memset((void *)(info + 0x70),0,0x20);
+  _strncpy((char *)(info + 0x70),&net_game_name,0x20);
+  _memset((void *)(info + 0x90),0,0x20);
+  _strncpy((char *)(info + 0x90),&prefs_net_player_name,0x20);
+  *(i16 *)(info + 0xb0) = mp_open_game;
+  *(u8 *)(info + 0xb2) = game.difficulty;
+  *(u8 *)(info + 0xb3) = game.barbarian_activity;
   if (game.civs_alive == '\0') {
-    *(i8 *)(param_1 + 0xb4) = *(i8 *)(local_28 + (uint)game.num_enemies + 2);
+    *(i8 *)(info + 0xb4) = *(i8 *)(bit_masks + (uint)game.num_enemies + 2);
   }
   else {
-    *(u8 *)(param_1 + 0xb4) = game.civs_alive;
+    *(u8 *)(info + 0xb4) = game.civs_alive;
   }
-  *(i8 *)(param_1 + 0xb5) = *(i8 *)(local_28 + net_player_count);
-  *(i32 *)(param_1 + 0xb8) = mp_turn_time_limit_ms;
-  crt_strcpy(param_1 + 0xbc,&scenario_name);
-  *(i16 *)(param_1 + 0x10c) = mp_double_moves;
-  *(i16 *)(param_1 + 0x10e) = mp_double_production;
-  *(u16 *)(param_1 + 0x110) = game.game_flags;
-  *(i16 *)(param_1 + 0x112) = game.first_launch_turn;
-  *(i16 *)(param_1 + 0x114) = scenario_year_increment;
-  *(i16 *)(param_1 + 0x116) = scenario_start_year;
-  *(i16 *)(param_1 + 0x118) = game.turn;
-  *(i16 *)(param_1 + 0x11e) = mp_simultaneous_setting;
-  *(i32 *)(param_1 + 0x24) = 0;
-  *(i32 *)(param_1 + 0x20) = *(i32 *)(param_1 + 0x24);
-  *(i32 *)(param_1 + 0x2c) = 0;
-  *(i32 *)(param_1 + 0x28) = *(i32 *)(param_1 + 0x2c);
-  *(i16 *)(param_1 + 0x11a) = map.width;
-  *(i16 *)(param_1 + 0x11c) = map.height;
+  *(i8 *)(info + 0xb5) = *(i8 *)(bit_masks + net_player_count);
+  *(i32 *)(info + 0xb8) = mp_turn_time_limit_ms;
+  crt_strcpy(info + 0xbc,&scenario_name);
+  *(i16 *)(info + 0x10c) = mp_double_moves;
+  *(i16 *)(info + 0x10e) = mp_double_production;
+  *(u16 *)(info + 0x110) = game.game_flags;
+  *(i16 *)(info + 0x112) = game.first_launch_turn;
+  *(i16 *)(info + 0x114) = scenario_year_increment;
+  *(i16 *)(info + 0x116) = scenario_start_year;
+  *(i16 *)(info + 0x118) = game.turn;
+  *(i16 *)(info + 0x11e) = mp_simultaneous_setting;
+  *(i32 *)(info + 0x24) = 0;
+  *(i32 *)(info + 0x20) = *(i32 *)(info + 0x24);
+  *(i32 *)(info + 0x2c) = 0;
+  *(i32 *)(info + 0x28) = *(i32 *)(info + 0x2c);
+  *(i16 *)(info + 0x11a) = map.width;
+  *(i16 *)(info + 0x11c) = map.height;
   return;
 }
 #undef mp_double_moves
@@ -18375,11 +18375,11 @@ void __cdecl net_fill_game_info(iptr param_1)
 #undef scenario_name
 #undef scenario_start_year
 #undef scenario_year_increment
-#undef local_28
+#undef bit_masks
 
 /* 0059d080 auto */
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define j (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
 NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
 
 {
@@ -18393,9 +18393,9 @@ NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
   *(i8 *)&this[7].field_0 = 0;
   *(i8 *)&this[10].field_0 = 0;
   this[0x22].field_4 = 0;
-  for (local_8 = 0; local_8 < 7; local_8++) {
-    for (local_c = 0; local_c < 0x18; local_c++) {
-      *(i8 *)((int)&this[local_8 * 3 + 0xd].field_4 + local_c) = 0;
+  for (i = 0; i < 7; i++) {
+    for (j = 0; j < 0x18; j++) {
+      *(i8 *)((int)&this[i * 3 + 0xd].field_4 + j) = 0;
     }
   }
   this[3].field_4 = 0;
@@ -18403,31 +18403,31 @@ NetMsgHeader * __thiscall net_msg_player_info_init(NetMsgHeader *this)
   this[1].field_0 = 0x118;
   return this;
 }
-#undef local_c
-#undef local_8
+#undef j
+#undef i
 
 /* 005a9f30 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_production_complete_count (*(int *)((u8 *)&g.d_006c9210))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
+#define civ (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_host_wait_production_idle(void)
 
 {
-  bool bVar1;
+  bool all_done;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_production_complete_count != 0) || (net_player_count < 2)) {
-    bVar1 = true;
-    for (local_c = 1; local_c < 8; local_c++) {
-      if ((((1 << ((byte)local_c & 0x1f) & (uint)game.civs_alive) != 0) &&
-          ((1 << ((byte)local_c & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(&net_civ_phase_done + local_c * 4) == 0)) {
-        bVar1 = false;
+    all_done = true;
+    for (civ = 1; civ < 8; civ++) {
+      if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+          ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
+         (*(int *)(&net_civ_phase_done + civ * 4) == 0)) {
+        all_done = false;
         break;
       }
     }
-    if (bVar1) {
+    if (all_done) {
       dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
       wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
     }
@@ -18436,30 +18436,30 @@ void __cdecl net_host_wait_production_idle(void)
 }
 #undef dialog_stack_top
 #undef nm_production_complete_count
-#undef local_c
+#undef civ
 
 /* 005aa004 auto */
 #define dialog_stack_top (*(int * *)((u8 *)&g.d_006ad678))
 #define nm_human_move_complete_count (*(int *)((u8 *)&g.d_006c921c))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
+#define civ (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl net_host_wait_human_moves_idle(void)
 
 {
-  bool bVar1;
+  bool all_done;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_human_move_complete_count != 0) || (net_player_count < 2)) {
-    bVar1 = true;
-    for (local_c = 1; local_c < 8; local_c++) {
-      if ((((1 << ((byte)local_c & 0x1f) & (uint)game.civs_alive) != 0) &&
-          ((1 << ((byte)local_c & 0x1f) & (uint)game.human_players) != 0)) &&
-         (*(int *)(&net_civ_phase_done + local_c * 4) == 0)) {
-        bVar1 = false;
+    all_done = true;
+    for (civ = 1; civ < 8; civ++) {
+      if ((((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0) &&
+          ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) &&
+         (*(int *)(&net_civ_phase_done + civ * 4) == 0)) {
+        all_done = false;
         break;
       }
     }
-    if ((bVar1) || (net_player_count < 2)) {
+    if ((all_done) || (net_player_count < 2)) {
       dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
       wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
     }
@@ -18468,7 +18468,7 @@ void __cdecl net_host_wait_human_moves_idle(void)
 }
 #undef dialog_stack_top
 #undef nm_human_move_complete_count
-#undef local_c
+#undef civ
 
 /* 005aa0e5: written by hand in src/game/bigframes.c */
 
@@ -18594,42 +18594,42 @@ void __cdecl net_client_hotwait_idle(void)
 #define mp_turn_civ_i32 (*(i32 *)((u8 *)&g.d_006ad578))
 #define civ (*(int *)(frame_ + FRAME_OFF(4)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_314 (*(Dialog *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(i8 *)(frame_ + FRAME_OFF(768)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(772)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(776)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(780)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(784)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(788)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(792)))
+#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(12)))
+#define turn_ok (*(i8 *)(frame_ + FRAME_OFF(768)))
+#define centered (*(int *)(frame_ + FRAME_OFF(772)))
+#define new_casualties (*(int *)(frame_ + FRAME_OFF(776)))
+#define is_first_turn (*(int *)(frame_ + FRAME_OFF(780)))
+#define seh_frame (*(i32 *)(frame_ + FRAME_OFF(784)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(788)))
+#define seh_state (*(i32 *)(frame_ + FRAME_OFF(792)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl net_client_turn_loop(void)
 
 {
-  char cVar1;
+  char resume_civ;
   SHORT SVar2;
-  iptr iVar3;
-  int iVar4;
-  i32 uVar5;
-  iptr iVar5;
+  iptr str;
+  int status;
+  i32 ret;
+  iptr slot_civ;
   i8 frame_[FRAME_OFF(800)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  local_14 = 1;
-  dialog_ctor(&local_314,0x4000);
-  local_8 = 0;
-  local_20 = 1;
-  iVar5 = net_slot_civs;
-  iVar3 = civ_name_plural(net_slot_civs);
-  dbg_logf_str_int(ADDR(0x635cd0, ((u8 *)&g.d_00635cd0)),iVar3,iVar5);
+  seh_state = 0xffffffff;
+  is_first_turn = 1;
+  dialog_ctor(&dialog2,0x4000);
+  seh_state = 0;
+  turn_ok = 1;
+  slot_civ = net_slot_civs;
+  str = civ_name_plural(net_slot_civs);
+  dbg_logf_str_int(ADDR(0x635cd0, ((u8 *)&g.d_00635cd0)),str,slot_civ);
   for (civ = 1; civ < 8; civ++) {
     if (((*(int *)(&net_player_slots + *(int *)(&net_civ_slots + civ * 4) * 0x54) != 0) &&
         ((1 << ((byte)civ & 0x1f) & (uint)game.civs_alive) != 0)) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0)) {
-      iVar4 = civ;
-      iVar3 = civ_name_plural(civ);
-      dbg_logf_str_int(ADDR(0x635ce0, ((u8 *)&g.d_00635ce0)),iVar3,iVar4);
+      status = civ;
+      str = civ_name_plural(civ);
+      dbg_logf_str_int(ADDR(0x635ce0, ((u8 *)&g.d_00635ce0)),str,status);
     }
   }
   net_reset_error_counts();
@@ -18642,16 +18642,16 @@ i32 __cdecl net_client_turn_loop(void)
   game.player_civ = (byte)human_civ;
   game.turn_civ = (byte)human_civ;
   mapview_update_title((FrameWindow *)&map_views);
-  local_1c = 0;
+  centered = 0;
   for (unit = 0; unit < game.num_units; unit++) {
     if ((units[unit].id != 0) && (units[unit].owner == human_civ)) {
       mapview_center_on
                 ((ViewWindow *)&map_views,(int)units[unit].x,(int)units[unit].y);
-      local_1c++;
+      centered++;
       break;
     }
   }
-  if (local_1c == 0) {
+  if (centered == 0) {
     for (unit = 0; unit < game.num_cities; unit++) {
       if ((cities[unit].id != 0) && (cities[unit].owner == human_civ)) {
         mapview_center_on
@@ -18664,22 +18664,22 @@ i32 __cdecl net_client_turn_loop(void)
   status_draw_info(1);
   status_draw_civ_color(human_civ);
   ui_redraw_all_maps(1);
-  cVar1 = turn_resume_civ;
+  resume_civ = turn_resume_civ;
   if ((1 << ((byte)human_civ & 0x1f) & (uint)game.human_players) == 0) {
     net_heartbeat_send(net_slot_civs);
     dlg_pending_idle_callback = ((void *)ADDR(0x00401c35, net_client_hotwait_idle));
     popup_game_sprite_flags(ADDR(0x635cf0, ((u8 *)&g.d_00635cf0)),0x2000000,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-    cVar1 = turn_resume_civ;
+    resume_civ = turn_resume_civ;
   }
 LAB_005ab60f:
   do {
-    turn_resume_civ = cVar1;
+    turn_resume_civ = resume_civ;
     for (unit = 0; unit < game.num_units; unit++) {
       if ((units[unit].id != 0) && (units[unit].owner == human_civ)) {
         unit_exhaust_moves(unit);
       }
     }
-    if (local_14 == 0) {
+    if (is_first_turn == 0) {
       net_heartbeat_send(net_slot_civs);
       dlg_pending_idle_callback = ((void *)ADDR(0x00402450, net_client_wait_human_moves_idle));
       popup_game_with_sprite(ADDR(0x635d00, ((u8 *)&g.d_00635d00)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
@@ -18689,30 +18689,30 @@ LAB_005ab60f:
            ((player_has_quit == '\0' && (game_loop_active != '\0'))))) {
       net_process_messages((NetSession *)&net_session,1,0);
       net_heartbeat_check(net_slot_civs);
-      iVar4 = net_check_lost_connections();
-      if (iVar4 != 0) {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-        uVar5 = 0;
+      status = net_check_lost_connections();
+      if (status != 0) {
+        seh_state = 0xffffffff;
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        ret = 0;
         goto LAB_005abff1;
       }
     }
     if (net_host_handoff_stage != '\0') {
-      iVar4 = net_client_transfer_server();
-      if (iVar4 == 0) {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-        uVar5 = 0;
+      status = net_client_transfer_server();
+      if (status == 0) {
+        seh_state = 0xffffffff;
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        ret = 0;
         goto LAB_005abff1;
       }
       if (net_host_flag != '\0') {
-        local_8 = 0xffffffff;
-        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-        uVar5 = 1;
+        seh_state = 0xffffffff;
+        /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+        ret = 1;
         goto LAB_005abff1;
       }
       if (((nm_production_begin_count == 0) && (nm_end_sequence_count == 0)) &&
-         ((player_has_quit == '\0' && (cVar1 = turn_resume_civ, game_loop_active != '\0'))))
+         ((player_has_quit == '\0' && (resume_civ = turn_resume_civ, game_loop_active != '\0'))))
       goto LAB_005ab60f;
     }
     if ((nm_end_sequence_count == 0) && (game_loop_active != '\0')) {
@@ -18750,11 +18750,11 @@ LAB_005ab60f:
         while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           net_process_messages((NetSession *)&net_session,1,0);
           net_heartbeat_check(net_slot_civs);
-          iVar4 = net_check_lost_connections();
-          if (iVar4 != 0) {
-            local_8 = 0xffffffff;
-            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-            uVar5 = 0;
+          status = net_check_lost_connections();
+          if (status != 0) {
+            seh_state = 0xffffffff;
+            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+            ret = 0;
             goto LAB_005abff1;
           }
         }
@@ -18766,11 +18766,11 @@ LAB_005ab60f:
           while (((nm_human_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
             net_process_messages((NetSession *)&net_session,1,0);
             net_heartbeat_check(net_slot_civs);
-            iVar4 = net_check_lost_connections();
-            if (iVar4 != 0) {
-              local_8 = 0xffffffff;
-              /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-              uVar5 = 0;
+            status = net_check_lost_connections();
+            if (status != 0) {
+              seh_state = 0xffffffff;
+              /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+              ret = 0;
               goto LAB_005abff1;
             }
           }
@@ -18780,38 +18780,38 @@ LAB_005ab60f:
               civ_intro_popup(human_civ);
               *(i16 *)(&civ_intro_shown + human_civ * 2) = 1;
             }
-            local_18 = *(int *)(&casualty_counts + human_civ * 4) -
+            new_casualties = *(int *)(&casualty_counts + human_civ * 4) -
                        *(int *)(&casualty_reported_counts + human_civ * 4);
             if (autoplay_active == 0) {
               dlg_pending_idle_callback = ((void *)ADDR(0x00403c74, turn_popup_timeout_idle));
-              iVar3 = civ_leader_title(human_civ);
-              text_set_string_arg(0,iVar3);
-              iVar3 = civ_leader_name(human_civ);
-              text_set_string_arg(1,iVar3);
-              if (local_18 < 1) {
-                dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d54, ((u8 *)&g.d_00635d54)));
-                dialog_add_sprite((DialogOptionList *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-                dialog_set_image_zoom((DialogWindowView *)&local_314,0);
+              str = civ_leader_title(human_civ);
+              text_set_string_arg(0,str);
+              str = civ_leader_name(human_civ);
+              text_set_string_arg(1,str);
+              if (new_casualties < 1) {
+                dialog_load_text_noflags(&dialog2,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d54, ((u8 *)&g.d_00635d54)));
+                dialog_add_sprite((DialogOptionList *)&dialog2,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+                dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
                 input_flush_events();
                 snd_play_effect(0x30,0,0,0);
-                dlg_show_modal(&local_314,0);
+                dlg_show_modal(&dialog2,0);
               }
               else {
                 *(i32 *)(&casualty_reported_counts + human_civ * 4) =
                      *(i32 *)(&casualty_counts + human_civ * 4);
-                text_set_number_arg(0,local_18);
-                if (local_18 == 1) {
-                  dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d3c, ((u8 *)&g.d_00635d3c)));
+                text_set_number_arg(0,new_casualties);
+                if (new_casualties == 1) {
+                  dialog_load_text_noflags(&dialog2,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d3c, ((u8 *)&g.d_00635d3c)));
                 }
                 else {
-                  dialog_load_text_noflags(&local_314,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d48, ((u8 *)&g.d_00635d48)));
+                  dialog_load_text_noflags(&dialog2,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635d48, ((u8 *)&g.d_00635d48)));
                 }
-                dialog_add_sprite((DialogOptionList *)&local_314,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
-                dialog_set_image_zoom((DialogWindowView *)&local_314,0);
+                dialog_add_sprite((DialogOptionList *)&dialog2,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0,0);
+                dialog_set_image_zoom((DialogWindowView *)&dialog2,0);
                 input_flush_events();
                 snd_play_effect(0x30,0,0,0);
-                dlg_show_modal(&local_314,0);
-                if (local_314.field_dc != 0) {
+                dlg_show_modal(&dialog2,0);
+                if (dialog2.field_dc != 0) {
                   casualty_timeline_show(human_civ);
                 }
               }
@@ -18826,7 +18826,7 @@ LAB_005ab60f:
           }
         }
         else {
-          local_20 = 0;
+          turn_ok = 0;
         }
       }
       else {
@@ -18842,11 +18842,11 @@ LAB_005ab60f:
         while (((nm_ai_movement_count == 0 && (nm_end_sequence_count == 0)) && (game_loop_active != '\0'))) {
           net_process_messages((NetSession *)&net_session,1,0);
           net_heartbeat_check(net_slot_civs);
-          iVar4 = net_check_lost_connections();
-          if (iVar4 != 0) {
-            local_8 = 0xffffffff;
-            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-            uVar5 = 0;
+          status = net_check_lost_connections();
+          if (status != 0) {
+            seh_state = 0xffffffff;
+            /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+            ret = 0;
             goto LAB_005abff1;
           }
         }
@@ -18863,12 +18863,12 @@ LAB_005ab60f:
           }
         }
         else {
-          local_20 = 0;
+          turn_ok = 0;
         }
       }
     }
     else {
-      local_20 = 0;
+      turn_ok = 0;
     }
     mp_turn_timer_stop(1);
     status_redraw(1);
@@ -18883,8 +18883,8 @@ LAB_005ab60f:
     turn_resume_civ = '\0';
     saved_resume_new_game = 0;
     turn_resume_new_game = 0;
-    local_14 = 0;
-    cVar1 = '\0';
+    is_first_turn = 0;
+    resume_civ = '\0';
     if (game_loop_active == '\0') {
       net_send_message(0x2d,0,human_civ,0,0,0,0,0,0,0);
       XD_FlushSendBuffer(60000);
@@ -18892,11 +18892,11 @@ LAB_005ab60f:
       if (game_over_reason != 0) {
         game_handle_game_over();
       }
-      local_8 = 0xffffffff;
-      /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
-      uVar5 = 0;
+      seh_state = 0xffffffff;
+      /* inlined unwind funclet 005abfdb */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
+      ret = 0;
 LAB_005abff1:
-      return uVar5;
+      return ret;
     }
   } while( true );
 }
@@ -18925,14 +18925,14 @@ LAB_005abff1:
 #undef mp_turn_civ_i32
 #undef civ
 #undef unit
-#undef local_314
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef dialog2
+#undef turn_ok
+#undef centered
+#undef new_casualties
+#undef is_first_turn
+#undef seh_frame
+#undef seh_handler
+#undef seh_state
 
 /* 005b9ec6 auto */
 #define net_batch_used_dwords (*(i32 *)((u8 *)&g.d_006365f4))
@@ -19001,14 +19001,14 @@ void __cdecl net_batch_flush(void)
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
-net_batch_add(int param_1,i32 param_2,i32 param_3,i32 param_4,iptr param_5,
-            i32 param_6)
+net_batch_add(int record_type,i32 x,i32 y,i32 arg1,iptr arg2,
+            i32 arg3)
 
 {
   if (net_host_flag != '\0') {
     err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x636634, ((u8 *)&g.d_00636634)),ADDR(0x636618, ((u8 *)&g.d_00636618)),0x3de);
   }
-  if (0x100 - net_batch_used_dwords < *(int *)(&net_batch_record_sizes + param_1 * 4) + 1) {
+  if (0x100 - net_batch_used_dwords < *(int *)(&net_batch_record_sizes + record_type * 4) + 1) {
     net_send_message(0x59,0,0,0,0,0,0,0,0,0);
     XD_FlushSendBuffer(5000);
     _memset(&net_batch_buffer,0,0x400);
@@ -19016,18 +19016,18 @@ net_batch_add(int param_1,i32 param_2,i32 param_3,i32 param_4,iptr param_5,
     net_batch_used_dwords = 1;
   }
   net_batch_buffer_i32++;
-  *(int *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_1;
+  *(int *)(&net_batch_buffer + net_batch_used_dwords * 4) = record_type;
   net_batch_used_dwords++;
-  switch(param_1) {
+  switch(record_type) {
   case 0:
   case 2:
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_2;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = x;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_3;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = y;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_4;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg1;
     net_batch_used_dwords++;
-    *(iptr *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_5;
+    *(iptr *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg2;
     net_batch_used_dwords++;
     break;
   case 1:
@@ -19035,23 +19035,23 @@ net_batch_add(int param_1,i32 param_2,i32 param_3,i32 param_4,iptr param_5,
   case 4:
   case 5:
   case 6:
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_2;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = x;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_3;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = y;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_4;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg1;
     net_batch_used_dwords++;
     break;
   case 7:
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_2;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = x;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_3;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = y;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_4;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg1;
     net_batch_used_dwords++;
-    *(iptr *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_5;
+    *(iptr *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg2;
     net_batch_used_dwords++;
-    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = param_6;
+    *(i32 *)(&net_batch_buffer + net_batch_used_dwords * 4) = arg3;
     net_batch_used_dwords++;
   }
   return;
@@ -19063,69 +19063,69 @@ net_batch_add(int param_1,i32 param_2,i32 param_3,i32 param_4,iptr param_5,
 /* 005ba206 auto */
 #define net_host_flag (*(char *)((u8 *)&g.d_006ad2f7))
 #define net_tile_sync_enabled (*(i8 *)((u8 *)&g.d_006ad699))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(iptr (*)[4])(frame_ + FRAME_OFF(8)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-void __cdecl net_apply_tile_updates(iptr param_1)
+#define records_left (*(int *)(frame_ + FRAME_OFF(0)))
+#define arg_idx (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define args (*(iptr (*)[4])(frame_ + FRAME_OFF(8)))
+#define extra_arg (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define pos (*(int *)(frame_ + FRAME_OFF(32)))
+void __cdecl net_apply_tile_updates(iptr batch)
 
 {
-  int iVar2;
-  i8 uVar3;
-  iptr iVar1;
+  int record_type;
+  i8 saved_sync;
+  iptr count_offset;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
+  pos = 0;
   if (2 < game.multiplayer) {
     if (net_host_flag == '\0') {
       err_report((ErrorContext *)&err_report_ctx,7,ADDR(0x636664, ((u8 *)&g.d_00636664)),ADDR(0x636648, ((u8 *)&g.d_00636648)),0x416);
     }
-    uVar3 = net_tile_sync_enabled;
+    saved_sync = net_tile_sync_enabled;
     net_tile_sync_enabled = 0;
-    iVar1 = local_8 * 4;
-    local_8++;
-    for (local_28 = *(int *)(param_1 + iVar1); 0 < local_28; local_28--) {
-      iVar2 = *(int *)(param_1 + local_8 * 4);
-      for (local_24 = 0; local_8 = local_8 + 1, local_24 < *(int *)(&net_batch_record_sizes + iVar2 * 4) - 1;
-          local_24 = local_24 + 1) {
-        local_20[local_24] = *(iptr *)(param_1 + local_8 * 4);
+    count_offset = pos * 4;
+    pos++;
+    for (records_left = *(int *)(batch + count_offset); 0 < records_left; records_left--) {
+      record_type = *(int *)(batch + pos * 4);
+      for (arg_idx = 0; pos = pos + 1, arg_idx < *(int *)(&net_batch_record_sizes + record_type * 4) - 1;
+          arg_idx = arg_idx + 1) {
+        args[arg_idx] = *(iptr *)(batch + pos * 4);
       }
-      switch(iVar2) {
+      switch(record_type) {
       case 0:
-        tile_set_improvements(local_20[0],local_20[1],local_20[2],local_20[3],1);
+        tile_set_improvements(args[0],args[1],args[2],args[3],1);
         break;
       case 1:
-        tile_set_terrain(local_20[0],local_20[1],local_20[2],1);
+        tile_set_terrain(args[0],args[1],args[2],1);
         break;
       case 2:
-        tile_set_visible(local_20[0],local_20[1],local_20[2],local_20[3],1);
+        tile_set_visible(args[0],args[1],args[2],args[3],1);
         break;
       case 3:
-        tile_set_fertility(local_20[0],local_20[1],local_20[2],1);
+        tile_set_fertility(args[0],args[1],args[2],1);
         break;
       case 4:
-        tile_set_owner(local_20[0],local_20[1],local_20[2],1);
+        tile_set_owner(args[0],args[1],args[2],1);
         break;
       case 5:
-        tile_set_landmass(local_20[0],local_20[1],local_20[2],1);
+        tile_set_landmass(args[0],args[1],args[2],1);
         break;
       case 6:
-        tile_set_radius_civ(local_20[0],local_20[1],local_20[2],1);
+        tile_set_radius_civ(args[0],args[1],args[2],1);
         break;
       case 7:
-        known_set(local_20[0],local_20[1],local_20[2],local_20[3],local_10,1);
+        known_set(args[0],args[1],args[2],args[3],extra_arg,1);
       }
     }
-    net_tile_sync_enabled = uVar3;
+    net_tile_sync_enabled = saved_sync;
     net_send_state_diff(0xff,2,0,0,0);
   }
   return;
 }
 #undef net_host_flag
 #undef net_tile_sync_enabled
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_10
-#undef local_8
+#undef records_left
+#undef arg_idx
+#undef args
+#undef extra_arg
+#undef pos

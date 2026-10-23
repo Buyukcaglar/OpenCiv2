@@ -17,80 +17,80 @@ void __cdecl snd_menu_end(void)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr param_1)
+void __thiscall avi_player_set_end_callback(AviPlayerEndCbSetView *this,iptr callback)
 
 {
-  *(iptr *)(this[3].pad_0 + 0x3c) = param_1;
+  *(iptr *)(this[3].pad_0 + 0x3c) = callback;
   return;
 }
 
 /* 0046e020 auto */
-#define local_118 (*(char (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_108 (*(char (*)[128])(frame_ + FRAME_OFF(16)))
-#define local_88 (*(i8 (*)[128])(frame_ + FRAME_OFF(144)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(272)))
-void __cdecl snd_play_effect(iptr param_1,iptr param_2,int param_3,iptr param_4)
+#define wav_name (*(char (*)[16])(frame_ + FRAME_OFF(0)))
+#define wav_path (*(char (*)[128])(frame_ + FRAME_OFF(16)))
+#define local_path (*(i8 (*)[128])(frame_ + FRAME_OFF(144)))
+#define snd_flags (*(uint *)(frame_ + FRAME_OFF(272)))
+void __cdecl snd_play_effect(iptr effect,iptr play_mode,int loop,iptr user_data)
 
 {
-  int iVar1;
-  char *pcVar2;
+  int result;
+  char *drive;
   i8 frame_[FRAME_OFF(280)] __attribute__((aligned(8)));  /* original stack frame */
   
-  snd_last_effect_id = param_1;
-  snd_last_effect_arg = param_2;
-  if (param_1 < 0) {
-    snd_wave_free_by_id(~param_1 + 1);
+  snd_last_effect_id = effect;
+  snd_last_effect_arg = play_mode;
+  if (effect < 0) {
+    snd_wave_free_by_id(~effect + 1);
   }
-  else if ((((byte)game.game_options & 0x10) != 0) && (param_1 < 0x85)) {
-    crt_strcpy(local_118,s_AIRCOMBT_0062af70 + param_1 * 9);
-    iVar1 = _strcmp(local_118,s_CHEERS_0062b430);
-    if (iVar1 == 0) {
-      iVar1 = rand_range(0,2);
-      str_append_int((iptr)local_118,iVar1 + 1);
+  else if ((((byte)game.game_options & 0x10) != 0) && (effect < 0x85)) {
+    crt_strcpy(wav_name,s_AIRCOMBT_0062af70 + effect * 9);
+    result = _strcmp(wav_name,s_CHEERS_0062b430);
+    if (result == 0) {
+      result = rand_range(0,2);
+      str_append_int((iptr)wav_name,result + 1);
     }
-    crt_strcat(local_118,&snd_wav_ext_str);
-    str_clear((iptr)local_108);
-    str_append((iptr)local_108,ADDR(0x62b440, ((u8 *)&g.d_0062b440)));
-    str_append((iptr)local_108,(iptr)local_118);
-    str_clear((iptr)local_88);
-    str_append((iptr)local_88,ADDR(0x64bb08, ((u8 *)&g.d_0064bb08)));
-    str_append((iptr)local_88,ADDR(0x62b44c, ((u8 *)&g.d_0062b44c)));
-    str_append((iptr)local_88,(iptr)local_118);
-    iVar1 = file_exists((iptr)local_88);
-    if (iVar1 == 0) {
-      pcVar2 = (char *)file_get_fallback_drive();
-      iVar1 = file_resolve_path((iptr)local_108);
-      if (iVar1 == 0) {
+    crt_strcat(wav_name,&snd_wav_ext_str);
+    str_clear((iptr)wav_path);
+    str_append((iptr)wav_path,ADDR(0x62b440, ((u8 *)&g.d_0062b440)));
+    str_append((iptr)wav_path,(iptr)wav_name);
+    str_clear((iptr)local_path);
+    str_append((iptr)local_path,ADDR(0x64bb08, ((u8 *)&g.d_0064bb08)));
+    str_append((iptr)local_path,ADDR(0x62b44c, ((u8 *)&g.d_0062b44c)));
+    str_append((iptr)local_path,(iptr)wav_name);
+    result = file_exists((iptr)local_path);
+    if (result == 0) {
+      drive = (char *)file_get_fallback_drive();
+      result = file_resolve_path((iptr)wav_path);
+      if (result == 0) {
         return;
       }
-      if ((pcVar2 != (char *)0x0) && (local_108[0] == *pcVar2)) {
+      if ((drive != (char *)0x0) && (wav_path[0] == *drive)) {
         return;
       }
     }
     else {
-      crt_strcpy(local_108,local_88);
+      crt_strcpy(wav_path,local_path);
     }
-    local_8 = 3;
-    if (param_2 == 0) {
-      local_8 = 0x13;
+    snd_flags = 3;
+    if (play_mode == 0) {
+      snd_flags = 0x13;
     }
-    if (param_3 != 0) {
-      local_8 = local_8 | 8;
+    if (loop != 0) {
+      snd_flags = snd_flags | 8;
     }
-    if (param_2 == 99) {
-      sndPlaySoundA(local_108,local_8);
+    if (play_mode == 99) {
+      sndPlaySoundA(wav_path,snd_flags);
     }
     else {
-      snd_wave_play((iptr)local_108,(param_3 == 0) - 1 & 8,param_1,param_4);
+      snd_wave_play((iptr)wav_path,(loop == 0) - 1 & 8,effect,user_data);
     }
     win_flush_pending_msgs();
   }
   return;
 }
-#undef local_118
-#undef local_108
-#undef local_88
-#undef local_8
+#undef wav_name
+#undef wav_path
+#undef local_path
+#undef snd_flags
 
 /* 0046e2f4 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -112,56 +112,56 @@ void __cdecl snd_cd_on_notify(void)
 #define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
 #define cd_music_unknown_disc (*(i32 *)((u8 *)&g.d_0062b424))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
+#define rand_offset (*(int *)(frame_ + FRAME_OFF(0)))
+#define rand_offset_alt (*(int *)(frame_ + FRAME_OFF(4)))
+#define track (*(uint *)(frame_ + FRAME_OFF(8)))
+#define track_count (*(int *)(frame_ + FRAME_OFF(12)))
+#define tries (*(int *)(frame_ + FRAME_OFF(16)))
 void __cdecl snd_cd_play_random_track(void)
 
 {
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
-  while (local_8 < 10) {
-    local_8++;
-    local_c = snd_cd_get_track_count();
-    if ((((local_c == 0x18) || (local_c == 0x12)) || (local_c == 0xc)) || (local_c == 10)) break;
+  tries = 0;
+  while (tries < 10) {
+    tries++;
+    track_count = snd_cd_get_track_count();
+    if ((((track_count == 0x18) || (track_count == 0x12)) || (track_count == 0xc)) || (track_count == 10)) break;
   }
-  if ((local_c == 1) || (local_c == -1)) {
+  if ((track_count == 1) || (track_count == -1)) {
     cd_music_available = 0;
   }
   else {
     while( true ) {
-      if (((local_c == 10) || (local_c == 0x12)) || ((local_c == 0x18 || (local_c == 0xc)))) {
-        if (local_c == 4 || local_c - 4 < 0) {
-          local_18 = 0;
+      if (((track_count == 10) || (track_count == 0x12)) || ((track_count == 0x18 || (track_count == 0xc)))) {
+        if (track_count == 4 || track_count - 4 < 0) {
+          rand_offset = 0;
         }
         else {
-          local_18 = _rand();
-          local_18 = local_18 % (local_c - 3);
+          rand_offset = _rand();
+          rand_offset = rand_offset % (track_count - 3);
         }
-        local_10 = local_18 + 4;
+        track = rand_offset + 4;
         cd_music_unknown_disc = 0;
       }
       else {
-        if (local_c == 2 || local_c - 2 < 0) {
-          local_14 = 0;
+        if (track_count == 2 || track_count - 2 < 0) {
+          rand_offset_alt = 0;
         }
         else {
-          local_14 = _rand();
-          local_14 = local_14 % (local_c - 1);
+          rand_offset_alt = _rand();
+          rand_offset_alt = rand_offset_alt % (track_count - 1);
         }
-        local_10 = local_14 + 2;
+        track = rand_offset_alt + 2;
         cd_music_unknown_disc = 1;
       }
-      if (local_10 != cd_music_current_track) break;
+      if (track != cd_music_current_track) break;
       cd_music_current_track = 0xffffffff;
     }
     cd_music_available = 0;
-    cd_music_current_track = local_10;
+    cd_music_current_track = track;
     cd_music_continue = 1;
-    snd_cd_play_track(local_10);
+    snd_cd_play_track(track);
   }
   return;
 }
@@ -169,11 +169,11 @@ void __cdecl snd_cd_play_random_track(void)
 #undef cd_music_continue
 #undef cd_music_current_track
 #undef cd_music_unknown_disc
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef rand_offset
+#undef rand_offset_alt
+#undef track
+#undef track_count
+#undef tries
 
 /* 0046e4a9 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -182,14 +182,14 @@ void __cdecl snd_cd_play_random_track(void)
 void __cdecl snd_cd_detect_layout(void)
 
 {
-  int iVar1;
+  int track_count;
   
   snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
-  iVar1 = snd_cd_get_track_count();
-  if ((iVar1 == -1) || (iVar1 == 1)) {
+  track_count = snd_cd_get_track_count();
+  if ((track_count == -1) || (track_count == 1)) {
     cd_music_available = 0;
   }
-  else if ((iVar1 == 10) || (((iVar1 == 0x12 || (iVar1 == 0x18)) || (iVar1 == 0xc)))) {
+  else if ((track_count == 10) || (((track_count == 0x12 || (track_count == 0x18)) || (track_count == 0xc)))) {
     cd_music_continue = 1;
     cd_music_available = 1;
     cd_music_unknown_disc = 0;
@@ -210,9 +210,9 @@ void __cdecl snd_cd_detect_layout(void)
 #define cd_music_continue (*(i32 *)((u8 *)&g.d_0062b42c))
 #define cd_music_current_track (*(uint *)((u8 *)&g.d_0062b428))
 #define cd_music_unknown_disc (*(int *)((u8 *)&g.d_0062b424))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl music_play_track(uint param_1,int param_2)
+#define track_count (*(int *)(frame_ + FRAME_OFF(4)))
+#define tries (*(int *)(frame_ + FRAME_OFF(8)))
+void __cdecl music_play_track(uint track,int force)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -222,23 +222,23 @@ void __cdecl music_play_track(uint param_1,int param_2)
       snd_cd_stop();
     }
   }
-  else if ((((cd_music_available != 0) || (param_2 != 0)) || (cd_music_current_track != param_1)) &&
+  else if ((((cd_music_available != 0) || (force != 0)) || (cd_music_current_track != track)) &&
           (cd_music_unknown_disc == 0)) {
-    local_8 = 0;
-    while (local_8 < 10) {
-      local_8++;
-      local_c = snd_cd_get_track_count();
-      if (((local_c == 0x18) || (local_c == 0x12)) || ((local_c == 0xc || (local_c == 10)))) break;
+    tries = 0;
+    while (tries < 10) {
+      tries++;
+      track_count = snd_cd_get_track_count();
+      if (((track_count == 0x18) || (track_count == 0x12)) || ((track_count == 0xc || (track_count == 10)))) break;
     }
-    if ((local_c == 1) || (local_c == -1)) {
+    if ((track_count == 1) || (track_count == -1)) {
       cd_music_available = 0;
     }
     else {
       cd_music_continue = 0;
       snd_cd_mci_stop();
       snd_cd_set_notify_callback(ADDR(0x403120, snd_cd_on_notify));
-      snd_cd_play_track(param_1);
-      cd_music_current_track = param_1;
+      snd_cd_play_track(track);
+      cd_music_current_track = track;
       cd_music_continue = 1;
       cd_music_available = 0;
     }
@@ -249,8 +249,8 @@ void __cdecl music_play_track(uint param_1,int param_2)
 #undef cd_music_continue
 #undef cd_music_current_track
 #undef cd_music_unknown_disc
-#undef local_c
-#undef local_8
+#undef track_count
+#undef tries
 
 /* 0046e6a9 auto */
 #define cd_music_available (*(i32 *)((u8 *)&g.d_0062b420))
@@ -281,11 +281,11 @@ void __cdecl snd_sync_music_option(void)
 #undef cd_music_available
 
 /* 00472910 auto */
-void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *this,iptr param_1,u32 param_2)
+void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *this,iptr callback,u32 callback_data)
 
 {
-  this->on_frame = param_1;
-  this->callback_frame = param_2;
+  this->on_frame = callback;
+  this->callback_frame = callback_data;
   return;
 }
 
@@ -294,11 +294,11 @@ void __thiscall avi_player_set_frame_callback(AviPlayerSetFrameCallbackView *thi
 /* 004729ab: written by hand in src/game/regargs.c */
 
 /* 004d8b20 auto */
-AviPlayer * __thiscall avi_player_scalar_dtor(AviPlayer *this,uint param_1)
+AviPlayer * __thiscall avi_player_scalar_dtor(AviPlayer *this,uint flags)
 
 {
   avi_player_dtor(this);
-  if ((param_1 & 1) != 0) {
+  if ((flags & 1) != 0) {
     operator_delete(this);
   }
   return this;
@@ -317,21 +317,21 @@ void __cdecl snd_shutdown(void)
 #define snd_wave_max_buffers (*(i32 *)((u8 *)&g.d_00638584))
 #define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
 #define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
-int __cdecl snd_wave_open(i32 param_1,i32 param_2,i32 param_3)
+int __cdecl snd_wave_open(i32 notify_hwnd,i32 buffer_bytes,i32 buffer_count)
 
 {
-  int iVar1;
+  int result;
   
-  snd_wave_notify_hwnd = param_1;
-  snd_wave_open_buffer_bytes = param_2;
-  snd_wave_max_buffers = param_3;
-  snd_wave_buffer_count = param_3;
-  iVar1 = snd_wave_open_device(param_1,0,ADDR(0x638578, ((u8 *)&g.d_00638578)));
-  if (iVar1 == 0) {
-    snd_wave_alloc_buffers(param_2,snd_wave_out_handle,param_3);
-    iVar1 = 0;
+  snd_wave_notify_hwnd = notify_hwnd;
+  snd_wave_open_buffer_bytes = buffer_bytes;
+  snd_wave_max_buffers = buffer_count;
+  snd_wave_buffer_count = buffer_count;
+  result = snd_wave_open_device(notify_hwnd,0,ADDR(0x638578, ((u8 *)&g.d_00638578)));
+  if (result == 0) {
+    snd_wave_alloc_buffers(buffer_bytes,snd_wave_out_handle,buffer_count);
+    result = 0;
   }
-  return iVar1;
+  return result;
 }
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
@@ -352,13 +352,13 @@ void __cdecl snd_wave_close_all(void)
 #undef snd_wave_out_handle
 
 /* 005d49a3 auto */
-void __cdecl snd_show_error(int param_1)
+void __cdecl snd_show_error(int error_code)
 
 {
-  if (param_1 == 10) {
+  if (error_code == 10) {
     MessageBoxA((HWND)0x0,s_This_Sound_format_is_not_support_006385e4,s_Sound_Error_006385d8,0x40);
   }
-  else if (param_1 != 0xb) {
+  else if (error_code != 0xb) {
     MessageBoxA((HWND)0x0,s_Undefined_Sound_Error_00638614,s_Sound_Error_00638608,0x40);
   }
   return;
@@ -368,393 +368,393 @@ void __cdecl snd_show_error(int param_1)
 #define snd_wave_block_align (*(i32 *)((u8 *)&g.d_006385ac))
 #define snd_wave_format (*(i32 *)((u8 *)&g.d_006385a0))
 #define snd_wave_out_handle (*(i32 *)((u8 *)&g.d_00638578))
-#define local_14 (*(UINT *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(UINT_PTR *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(16)))
-uint __cdecl snd_wave_open_device(DWORD_PTR param_1,i32 *param_2,iptr param_3)
+#define chosen_device (*(UINT *)(frame_ + FRAME_OFF(4)))
+#define device (*(UINT_PTR *)(frame_ + FRAME_OFF(8)))
+#define result (*(uint *)(frame_ + FRAME_OFF(16)))
+uint __cdecl snd_wave_open_device(DWORD_PTR callback,i32 *format,iptr out_handle)
 
 {
-  bool bVar1;
+  bool use_fallback;
   UINT UVar2;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  bVar1 = false;
+  use_fallback = false;
   if (snd_wave_device_open == 0) {
-    if (param_2 != (i32 *)0x0) {
-      snd_wave_format = *param_2;
-      snd_wave_samples_per_sec = param_2[1];
-      snd_wave_avg_bytes_per_sec = param_2[2];
-      snd_wave_block_align = param_2[3];
+    if (format != (i32 *)0x0) {
+      snd_wave_format = *format;
+      snd_wave_samples_per_sec = format[1];
+      snd_wave_avg_bytes_per_sec = format[2];
+      snd_wave_block_align = format[3];
     }
     UVar2 = waveOutGetNumDevs();
-    for (local_10 = 0; (int)local_10 < (int)UVar2; local_10++) {
-      waveOutGetDevCapsA(local_10,(LPWAVEOUTCAPSA)&snd_wave_dev_caps,0x34);
+    for (device = 0; (int)device < (int)UVar2; device++) {
+      waveOutGetDevCapsA(device,(LPWAVEOUTCAPSA)&snd_wave_dev_caps,0x34);
       if ((snd_wave_dev_formats & 0x20) != 0) {
-        bVar1 = false;
-        local_14 = local_10;
+        use_fallback = false;
+        chosen_device = device;
         break;
       }
       if ((snd_wave_dev_formats & 0x10) != 0) {
-        local_14 = local_10;
-        bVar1 = true;
+        chosen_device = device;
+        use_fallback = true;
       }
     }
-    if ((bVar1) || (local_10 != UVar2)) {
-      if (bVar1) {
+    if ((use_fallback) || (device != UVar2)) {
+      if (use_fallback) {
         snd_wave_format = CONCAT22(1,(i16)snd_wave_format);
         snd_wave_avg_bytes_per_sec = 0x5622;
         snd_wave_block_align = CONCAT22((*(i16 *)((char *)&snd_wave_block_align + 2)),1);
       }
-      local_8 = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,local_14,(LPCWAVEFORMATEX)&snd_wave_format,
-                            param_1,0,0x10000);
-      if ((short)local_8 != 0) {
+      result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)&snd_wave_format,
+                            callback,0,0x10000);
+      if ((short)result != 0) {
         sndPlaySoundA((LPCSTR)0x0,0);
-        local_8 = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,local_14,(LPCWAVEFORMATEX)&snd_wave_format,
-                              param_1,0,0x10000);
+        result = waveOutOpen((LPHWAVEOUT)&snd_wave_out_handle,chosen_device,(LPCWAVEFORMATEX)&snd_wave_format,
+                              callback,0,0x10000);
       }
-      local_8 = local_8 & 0xffff;
-      if ((local_8 == 0) && (snd_wave_device_open = 1, param_3 != 0)) {
-        *(i32 *)param_3 = snd_wave_out_handle;
+      result = result & 0xffff;
+      if ((result == 0) && (snd_wave_device_open = 1, out_handle != 0)) {
+        *(i32 *)out_handle = snd_wave_out_handle;
       }
     }
     else {
       snd_show_error(0xb);
-      local_8 = 0xb;
+      result = 0xb;
     }
   }
   else {
-    local_8 = 0;
+    result = 0;
   }
-  return local_8;
+  return result;
 }
 #undef snd_wave_block_align
 #undef snd_wave_format
 #undef snd_wave_out_handle
-#undef local_14
-#undef local_10
-#undef local_8
+#undef chosen_device
+#undef device
+#undef result
 
 /* 005d4bcb auto */
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
-uint __cdecl snd_wave_close_device(HWAVEOUT param_1)
+#define result (*(i32 *)(frame_ + FRAME_OFF(0)))
+uint __cdecl snd_wave_close_device(HWAVEOUT wave_out)
 
 {
   MMRESULT MVar1;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
+  result = 0;
   if (snd_wave_device_open != 0) {
-    MVar1 = waveOutClose(param_1);
-    local_8 = MVar1 & 0xffff;
+    MVar1 = waveOutClose(wave_out);
+    result = MVar1 & 0xffff;
   }
   snd_wave_device_open = 0;
-  return local_8;
+  return result;
 }
-#undef local_8
+#undef result
 
 /* 005d4c18 auto */
-#define local_cc (*(CHAR (*)[200])(frame_ + FRAME_OFF(4)))
-void __cdecl snd_waveout_error_box(uint param_1)
+#define error_text (*(CHAR (*)[200])(frame_ + FRAME_OFF(4)))
+void __cdecl snd_waveout_error_box(uint error_code)
 
 {
   i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
   
-  waveOutGetErrorTextA(param_1 & 0xffff,local_cc,200);
-  MessageBoxA((HWND)0x0,local_cc,s_Wave_Out_Error_0063862c,0x40);
+  waveOutGetErrorTextA(error_code & 0xffff,error_text,200);
+  MessageBoxA((HWND)0x0,error_text,s_Wave_Out_Error_0063862c,0x40);
   return;
 }
-#undef local_cc
+#undef error_text
 
 /* 005d4c5f auto */
 #define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
-#define local_98 (*(_MMCKINFO *)(frame_ + FRAME_OFF(0)))
-#define local_84 (*(_MMIOINFO *)(frame_ + FRAME_OFF(20)))
-#define local_3c (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define local_38 (*(DWORD *)(frame_ + FRAME_OFF(96)))
-#define local_34 (*(FOURCC * *)(frame_ + FRAME_OFF(100)))
-#define local_30 (*(HGLOBAL *)(frame_ + FRAME_OFF(104)))
-#define local_2c (*(FOURCC *)(frame_ + FRAME_OFF(108)))
-#define local_28 (*(FOURCC *)(frame_ + FRAME_OFF(112)))
-#define local_24 (*(FOURCC *)(frame_ + FRAME_OFF(116)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(120)))
-#define local_1c (*(_MMCKINFO *)(frame_ + FRAME_OFF(124)))
-#define local_8 (*(HMMIO *)(frame_ + FRAME_OFF(144)))
-i16 __cdecl snd_wave_load_file(LPSTR param_1,i32 param_2,i32 param_3,FOURCC param_4)
+#define chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(0)))
+#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(20)))
+#define node2 (*(iptr *)(frame_ + FRAME_OFF(92)))
+#define fmt_size (*(DWORD *)(frame_ + FRAME_OFF(96)))
+#define source (*(FOURCC * *)(frame_ + FRAME_OFF(100)))
+#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(104)))
+#define format_tag (*(FOURCC *)(frame_ + FRAME_OFF(108)))
+#define samples_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(112)))
+#define avg_bytes_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(116)))
+#define block_align (*(i32 *)(frame_ + FRAME_OFF(120)))
+#define riff_chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(124)))
+#define mmio (*(HMMIO *)(frame_ + FRAME_OFF(144)))
+i16 __cdecl snd_wave_load_file(LPSTR filename,i32 unused,i32 flags,FOURCC sound_id)
 
 {
-  i16 uVar1;
+  i16 result;
   MMRESULT MVar2;
   DWORD DVar3;
-  int iVar4;
+  int n;
   _MMIOINFO *p_Var5;
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
   i8 frame_[FRAME_OFF(152)] __attribute__((aligned(8)));  /* original stack frame */
   
-  _memset(&local_84,0,0x48);
-  local_84.cchBuffer = snd_wave_total_buffer_bytes;
-  local_8 = mmioOpenA(param_1,&local_84,0x10000);
-  if (local_8 == (HMMIO)0x0) {
-    uVar1 = 7;
+  _memset(&mmio_info,0,0x48);
+  mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
+  mmio = mmioOpenA(filename,&mmio_info,0x10000);
+  if (mmio == (HMMIO)0x0) {
+    result = 7;
   }
   else {
-    local_1c.fccType = 0x45564157;
-    MVar2 = mmioDescend(local_8,&local_1c,(MMCKINFO *)0x0,0x20);
+    riff_chunk.fccType = 0x45564157;
+    MVar2 = mmioDescend(mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
     if (MVar2 == 0) {
-      local_98.ckid = 0x20746d66;
-      MVar2 = mmioDescend(local_8,&local_98,&local_1c,0x10);
+      chunk.ckid = 0x20746d66;
+      MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
       if (MVar2 == 0) {
-        local_38 = local_98.cksize;
-        DVar3 = mmioRead(local_8,(HPSTR)&local_2c,local_98.cksize);
-        if (DVar3 == local_38) {
-          if ((local_28 == 0x5622) && ((*(i16 *)((char *)&local_20 + 2)) == 8)) {
-            mmioAscend(local_8,&local_98,0);
-            local_98.ckid = 0x61746164;
-            MVar2 = mmioDescend(local_8,&local_98,&local_1c,0x10);
+        fmt_size = chunk.cksize;
+        DVar3 = mmioRead(mmio,(HPSTR)&format_tag,chunk.cksize);
+        if (DVar3 == fmt_size) {
+          if ((samples_per_sec == 0x5622) && ((*(i16 *)((char *)&block_align + 2)) == 8)) {
+            mmioAscend(mmio,&chunk,0);
+            chunk.ckid = 0x61746164;
+            MVar2 = mmioDescend(mmio,&chunk,&riff_chunk,0x10);
             if (MVar2 == 0) {
-              mmioGetInfo(local_8,&local_84,0);
-              mmioAdvance(local_8,&local_84,0);
-              local_30 = GlobalAlloc(0x2002,0xbc);
-              if (local_30 == (HGLOBAL)0x0) {
-                mmioClose(local_8,0);
-                uVar1 = 2;
+              mmioGetInfo(mmio,&mmio_info,0);
+              mmioAdvance(mmio,&mmio_info,0);
+              mem_handle2 = GlobalAlloc(0x2002,0xbc);
+              if (mem_handle2 == (HGLOBAL)0x0) {
+                mmioClose(mmio,0);
+                result = 2;
               }
               else {
-                local_34 = GlobalLock(local_30);
-                if (local_34 == (FOURCC *)0x0) {
-                  mmioClose(local_8,0);
-                  GlobalFree(local_30);
-                  uVar1 = 2;
+                source = GlobalLock(mem_handle2);
+                if (source == (FOURCC *)0x0) {
+                  mmioClose(mmio,0);
+                  GlobalFree(mem_handle2);
+                  result = 2;
                 }
                 else {
-                  _memset(local_34,0,0xbc);
-                  local_34[0x1b] = (FOURCC)local_30;
-                  *local_34 = (FOURCC)local_8;
-                  p_Var5 = &local_84;
-                  pDVar7 = local_34 + 6;
-                  for (iVar4 = 0x12; iVar4 != 0; iVar4--) {
+                  _memset(source,0,0xbc);
+                  source[0x1b] = (FOURCC)mem_handle2;
+                  *source = (FOURCC)mmio;
+                  p_Var5 = &mmio_info;
+                  pDVar7 = source + 6;
+                  for (n = 0x12; n != 0; n--) {
                     *pDVar7 = p_Var5->dwFlags;
                     p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
                     pDVar7++;
                   }
-                  p_Var6 = &local_98;
-                  pFVar8 = local_34;
-                  for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4--) {
+                  p_Var6 = &chunk;
+                  pFVar8 = source;
+                  for (n = 5; pFVar8 = pFVar8 + 1, n != 0; n--) {
                     *pFVar8 = p_Var6->ckid;
                     p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                   }
-                  *(i16 *)((int)local_34 + 0x8a) = (i16)param_3;
-                  local_34[0x1d] = local_2c;
-                  local_34[0x1e] = local_28;
-                  local_34[0x1f] = local_24;
-                  local_34[0x20] = local_20;
-                  *(i16 *)(local_34 + 0x22) = 1;
-                  local_34[0x2d] = param_4;
+                  *(i16 *)((int)source + 0x8a) = (i16)flags;
+                  source[0x1d] = format_tag;
+                  source[0x1e] = samples_per_sec;
+                  source[0x1f] = avg_bytes_per_sec;
+                  source[0x20] = block_align;
+                  *(i16 *)(source + 0x22) = 1;
+                  source[0x2d] = sound_id;
                   if (snd_wave_sources == 0) {
-                    snd_wave_sources = (iptr)local_34;
+                    snd_wave_sources = (iptr)source;
                   }
                   else {
-                    for (local_3c = snd_wave_sources; *(int *)(local_3c + 0xb8) != 0;
-                        local_3c = *(iptr *)(local_3c + 0xb8)) {
+                    for (node2 = snd_wave_sources; *(int *)(node2 + 0xb8) != 0;
+                        node2 = *(iptr *)(node2 + 0xb8)) {
                     }
-                    *(FOURCC **)(local_3c + 0xb8) = local_34;
+                    *(FOURCC **)(node2 + 0xb8) = source;
                   }
-                  uVar1 = 0;
+                  result = 0;
                 }
               }
             }
             else {
-              mmioClose(local_8,0);
-              uVar1 = 8;
+              mmioClose(mmio,0);
+              result = 8;
             }
           }
           else {
             snd_show_error(10);
-            mmioClose(local_8,0);
-            uVar1 = 10;
+            mmioClose(mmio,0);
+            result = 10;
           }
         }
         else {
-          mmioClose(local_8,0);
-          uVar1 = 8;
+          mmioClose(mmio,0);
+          result = 8;
         }
       }
       else {
-        mmioClose(local_8,0);
-        uVar1 = 8;
+        mmioClose(mmio,0);
+        result = 8;
       }
     }
     else {
-      mmioClose(local_8,0);
-      uVar1 = 8;
+      mmioClose(mmio,0);
+      result = 8;
     }
   }
-  return uVar1;
+  return result;
 }
 #undef snd_wave_total_buffer_bytes
-#undef local_98
-#undef local_84
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_8
+#undef chunk
+#undef mmio_info
+#undef node2
+#undef fmt_size
+#undef source
+#undef mem_handle2
+#undef format_tag
+#undef samples_per_sec
+#undef avg_bytes_per_sec
+#undef block_align
+#undef riff_chunk
+#undef mmio
 
 /* 005d4f6a auto */
 #define snd_wave_total_buffer_bytes (*(LONG *)((u8 *)&g.d_006385cc))
-#define local_9c (*(_MMCKINFO *)(frame_ + FRAME_OFF(4)))
-#define local_88 (*(_MMIOINFO *)(frame_ + FRAME_OFF(24)))
-#define local_40 (*(iptr *)(frame_ + FRAME_OFF(96)))
-#define local_3c (*(DWORD *)(frame_ + FRAME_OFF(100)))
-#define local_38 (*(FOURCC * *)(frame_ + FRAME_OFF(104)))
-#define local_34 (*(HGLOBAL *)(frame_ + FRAME_OFF(108)))
-#define local_30 (*(FOURCC *)(frame_ + FRAME_OFF(112)))
-#define local_2c (*(FOURCC *)(frame_ + FRAME_OFF(116)))
-#define local_28 (*(FOURCC *)(frame_ + FRAME_OFF(120)))
-#define local_24 (*(i32 *)(frame_ + FRAME_OFF(124)))
-#define local_20 (*(_MMCKINFO *)(frame_ + FRAME_OFF(128)))
-#define local_c (*(HMMIO *)(frame_ + FRAME_OFF(148)))
-#define local_8 (*(HMMIO *)(frame_ + FRAME_OFF(152)))
-i16 __cdecl snd_wave_open_stream(LPSTR param_1,i32 param_2,i32 param_3)
+#define chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(4)))
+#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(24)))
+#define node2 (*(iptr *)(frame_ + FRAME_OFF(96)))
+#define fmt_size (*(DWORD *)(frame_ + FRAME_OFF(100)))
+#define source (*(FOURCC * *)(frame_ + FRAME_OFF(104)))
+#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(108)))
+#define format_tag (*(FOURCC *)(frame_ + FRAME_OFF(112)))
+#define samples_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(116)))
+#define avg_bytes_per_sec (*(FOURCC *)(frame_ + FRAME_OFF(120)))
+#define block_align (*(i32 *)(frame_ + FRAME_OFF(124)))
+#define riff_chunk (*(_MMCKINFO *)(frame_ + FRAME_OFF(128)))
+#define file_mmio (*(HMMIO *)(frame_ + FRAME_OFF(148)))
+#define mem_mmio (*(HMMIO *)(frame_ + FRAME_OFF(152)))
+i16 __cdecl snd_wave_open_stream(LPSTR filename,i32 unused,i32 flags)
 
 {
-  i16 uVar1;
+  i16 result;
   MMRESULT MVar2;
   DWORD DVar3;
-  int iVar4;
+  int n;
   _MMIOINFO *p_Var5;
   _MMCKINFO *p_Var6;
   DWORD *pDVar7;
   FOURCC *pFVar8;
   i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = mmioOpenA(param_1,(LPMMIOINFO)0x0,0);
-  if (local_c == (HMMIO)0x0) {
-    uVar1 = 7;
+  file_mmio = mmioOpenA(filename,(LPMMIOINFO)0x0,0);
+  if (file_mmio == (HMMIO)0x0) {
+    result = 7;
   }
   else {
-    local_20.fccType = 0x45564157;
-    MVar2 = mmioDescend(local_c,&local_20,(MMCKINFO *)0x0,0x20);
+    riff_chunk.fccType = 0x45564157;
+    MVar2 = mmioDescend(file_mmio,&riff_chunk,(MMCKINFO *)0x0,0x20);
     if (MVar2 == 0) {
-      local_9c.ckid = 0x20746d66;
-      MVar2 = mmioDescend(local_c,&local_9c,&local_20,0x10);
+      chunk.ckid = 0x20746d66;
+      MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
       if (MVar2 == 0) {
-        local_3c = local_9c.cksize;
-        DVar3 = mmioRead(local_c,(HPSTR)&local_30,local_9c.cksize);
-        if (DVar3 == local_3c) {
-          if ((local_2c == 0x5622) && ((*(i16 *)((char *)&local_24 + 2)) == 8)) {
-            mmioAscend(local_c,&local_9c,0);
-            local_9c.ckid = 0x61746164;
-            MVar2 = mmioDescend(local_c,&local_9c,&local_20,0x10);
+        fmt_size = chunk.cksize;
+        DVar3 = mmioRead(file_mmio,(HPSTR)&format_tag,chunk.cksize);
+        if (DVar3 == fmt_size) {
+          if ((samples_per_sec == 0x5622) && ((*(i16 *)((char *)&block_align + 2)) == 8)) {
+            mmioAscend(file_mmio,&chunk,0);
+            chunk.ckid = 0x61746164;
+            MVar2 = mmioDescend(file_mmio,&chunk,&riff_chunk,0x10);
             if (MVar2 == 0) {
-              _memset(&local_88,0,0x48);
-              local_88.cchBuffer = snd_wave_total_buffer_bytes;
-              local_88.fccIOProc = 0x204d454d;
-              local_88.adwInfo[0] = 0;
-              local_8 = mmioOpenA((LPSTR)0x0,&local_88,0x11002);
-              if (local_8 == (HMMIO)0x0) {
-                uVar1 = 7;
+              _memset(&mmio_info,0,0x48);
+              mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
+              mmio_info.fccIOProc = 0x204d454d;
+              mmio_info.adwInfo[0] = 0;
+              mem_mmio = mmioOpenA((LPSTR)0x0,&mmio_info,0x11002);
+              if (mem_mmio == (HMMIO)0x0) {
+                result = 7;
               }
               else {
-                mmioGetInfo(local_8,&local_88,0);
-                local_34 = GlobalAlloc(0x2002,0xbc);
-                if (local_34 == (HGLOBAL)0x0) {
-                  uVar1 = 2;
+                mmioGetInfo(mem_mmio,&mmio_info,0);
+                mem_handle2 = GlobalAlloc(0x2002,0xbc);
+                if (mem_handle2 == (HGLOBAL)0x0) {
+                  result = 2;
                 }
                 else {
-                  local_38 = GlobalLock(local_34);
-                  if (local_38 == (FOURCC *)0x0) {
-                    GlobalFree(local_34);
-                    uVar1 = 2;
+                  source = GlobalLock(mem_handle2);
+                  if (source == (FOURCC *)0x0) {
+                    GlobalFree(mem_handle2);
+                    result = 2;
                   }
                   else {
-                    _memset(local_38,0,0xbc);
-                    local_38[0x1b] = (FOURCC)local_34;
-                    *(i16 *)(local_38 + 0x22) = 1;
-                    local_38[0x1d] = local_30;
-                    local_38[0x1e] = local_2c;
-                    local_38[0x1f] = local_28;
-                    local_38[0x20] = local_24;
-                    *local_38 = (FOURCC)local_8;
-                    local_38[0x18] = (FOURCC)local_c;
-                    p_Var5 = &local_88;
-                    pDVar7 = local_38 + 6;
-                    for (iVar4 = 0x12; iVar4 != 0; iVar4--) {
+                    _memset(source,0,0xbc);
+                    source[0x1b] = (FOURCC)mem_handle2;
+                    *(i16 *)(source + 0x22) = 1;
+                    source[0x1d] = format_tag;
+                    source[0x1e] = samples_per_sec;
+                    source[0x1f] = avg_bytes_per_sec;
+                    source[0x20] = block_align;
+                    *source = (FOURCC)mem_mmio;
+                    source[0x18] = (FOURCC)file_mmio;
+                    p_Var5 = &mmio_info;
+                    pDVar7 = source + 6;
+                    for (n = 0x12; n != 0; n--) {
                       *pDVar7 = p_Var5->dwFlags;
                       p_Var5 = (_MMIOINFO *)&p_Var5->fccIOProc;
                       pDVar7++;
                     }
-                    p_Var6 = &local_9c;
-                    pFVar8 = local_38;
-                    for (iVar4 = 5; pFVar8 = pFVar8 + 1, iVar4 != 0; iVar4--) {
+                    p_Var6 = &chunk;
+                    pFVar8 = source;
+                    for (n = 5; pFVar8 = pFVar8 + 1, n != 0; n--) {
                       *pFVar8 = p_Var6->ckid;
                       p_Var6 = (_MMCKINFO *)&p_Var6->cksize;
                     }
-                    local_38[0x1c] = local_38[0x1c] | 4;
-                    *(i16 *)((int)local_38 + 0x8a) = (i16)param_3;
-                    snd_wave_stream_refill((iptr)local_38);
+                    source[0x1c] = source[0x1c] | 4;
+                    *(i16 *)((int)source + 0x8a) = (i16)flags;
+                    snd_wave_stream_refill((iptr)source);
                     if (snd_wave_sources == 0) {
-                      snd_wave_sources = (iptr)local_38;
+                      snd_wave_sources = (iptr)source;
                     }
                     else {
-                      for (local_40 = snd_wave_sources; *(int *)(local_40 + 0xb8) != 0;
-                          local_40 = *(iptr *)(local_40 + 0xb8)) {
+                      for (node2 = snd_wave_sources; *(int *)(node2 + 0xb8) != 0;
+                          node2 = *(iptr *)(node2 + 0xb8)) {
                       }
-                      *(FOURCC **)(local_40 + 0xb8) = local_38;
+                      *(FOURCC **)(node2 + 0xb8) = source;
                     }
-                    uVar1 = 0;
+                    result = 0;
                   }
                 }
               }
             }
             else {
-              mmioClose(local_c,0);
-              uVar1 = 8;
+              mmioClose(file_mmio,0);
+              result = 8;
             }
           }
           else {
             snd_show_error(10);
-            mmioClose(local_c,0);
-            uVar1 = 10;
+            mmioClose(file_mmio,0);
+            result = 10;
           }
         }
         else {
-          mmioClose(local_c,0);
-          uVar1 = 8;
+          mmioClose(file_mmio,0);
+          result = 8;
         }
       }
       else {
-        mmioClose(local_c,0);
-        uVar1 = 8;
+        mmioClose(file_mmio,0);
+        result = 8;
       }
     }
     else {
-      mmioClose(local_c,0);
-      uVar1 = 8;
+      mmioClose(file_mmio,0);
+      result = 8;
     }
   }
-  return uVar1;
+  return result;
 }
 #undef snd_wave_total_buffer_bytes
-#undef local_9c
-#undef local_88
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_c
-#undef local_8
+#undef chunk
+#undef mmio_info
+#undef node2
+#undef fmt_size
+#undef source
+#undef mem_handle2
+#undef format_tag
+#undef samples_per_sec
+#undef avg_bytes_per_sec
+#undef block_align
+#undef riff_chunk
+#undef file_mmio
+#undef mem_mmio
 
 /* 005d52a2 auto */
 #define snd_wave_format (*(i8 *)((u8 *)&g.d_006385a0))
@@ -762,152 +762,152 @@ i16 __cdecl snd_wave_open_stream(LPSTR param_1,i32 param_2,i32 param_3)
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
-#define local_10c (*(_MMIOINFO *)(frame_ + FRAME_OFF(4)))
-#define local_c4 (*(i32 *)(frame_ + FRAME_OFF(76)))
-#define local_c0 (*(i32 *)(frame_ + FRAME_OFF(80)))
-#define local_bc (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define local_b8 (*(i32 *)(frame_ + FRAME_OFF(88)))
-#define local_b4 (*(i32 * *)(frame_ + FRAME_OFF(92)))
-#define local_b0 (*(HGLOBAL *)(frame_ + FRAME_OFF(96)))
-#define local_ac (*(i8 (*)[4])(frame_ + FRAME_OFF(100)))
-#define local_a8 (*(uint *)(frame_ + FRAME_OFF(104)))
-#define local_a4 (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_a0 (*(i32 *)(frame_ + FRAME_OFF(112)))
-#define local_9c (*(uint *)(frame_ + FRAME_OFF(116)))
-#define local_98 (*(int (*)[8])(frame_ + FRAME_OFF(120)))
-#define local_78 (*(int *)(frame_ + FRAME_OFF(152)))
-#define local_68 (*(int *)(frame_ + FRAME_OFF(168)))
-#define local_c (*(HMMIO *)(frame_ + FRAME_OFF(260)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(264)))
-i32 __cdecl snd_wave_add_avi_stream(int param_1)
+#define mmio_info (*(_MMIOINFO *)(frame_ + FRAME_OFF(4)))
+#define format_tag (*(i32 *)(frame_ + FRAME_OFF(76)))
+#define samples_per_sec (*(i32 *)(frame_ + FRAME_OFF(80)))
+#define avg_bytes_per_sec (*(i32 *)(frame_ + FRAME_OFF(84)))
+#define block_align (*(i32 *)(frame_ + FRAME_OFF(88)))
+#define source (*(i32 * *)(frame_ + FRAME_OFF(92)))
+#define mem_handle2 (*(HGLOBAL *)(frame_ + FRAME_OFF(96)))
+#define sample_buf (*(i8 (*)[4])(frame_ + FRAME_OFF(100)))
+#define bytes_per_buffer (*(uint *)(frame_ + FRAME_OFF(104)))
+#define total_bytes (*(int *)(frame_ + FRAME_OFF(108)))
+#define format_size (*(i32 *)(frame_ + FRAME_OFF(112)))
+#define size_bits (*(uint *)(frame_ + FRAME_OFF(116)))
+#define stream_info (*(int (*)[8])(frame_ + FRAME_OFF(120)))
+#define stream_length (*(int *)(frame_ + FRAME_OFF(152)))
+#define sample_size (*(int *)(frame_ + FRAME_OFF(168)))
+#define mmio (*(HMMIO *)(frame_ + FRAME_OFF(260)))
+#define rate_mode (*(i32 *)(frame_ + FRAME_OFF(264)))
+i32 __cdecl snd_wave_add_avi_stream(int avi_stream)
 
 {
-  i32 uVar1;
-  int iVar2;
+  i32 result;
+  int n;
   _MMIOINFO *p_Var3;
   DWORD *pDVar4;
   i8 frame_[FRAME_OFF(272)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_a0 = 0xe;
+  format_size = 0xe;
   if (snd_wave_out_handle == 0) {
-    uVar1 = 3;
+    result = 3;
   }
-  else if (param_1 == 0) {
-    uVar1 = 0xc;
+  else if (avi_stream == 0) {
+    result = 0xc;
   }
   else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
-    AVIStreamInfoA(param_1,local_98,0x8c);
-    if (local_98[0] == 0x73647561) {
-      AVIStreamRead(param_1,0,1,0,0,local_ac,0);
-      local_a4 = local_68 * local_78;
-      AVIStreamReadFormat(param_1,0,&local_c4,&local_a0);
+    AVIStreamInfoA(avi_stream,stream_info,0x8c);
+    if (stream_info[0] == 0x73647561) {
+      AVIStreamRead(avi_stream,0,1,0,0,sample_buf,0);
+      total_bytes = sample_size * stream_length;
+      AVIStreamReadFormat(avi_stream,0,&format_tag,&format_size);
       if ((*(i16 *)((char *)&snd_wave_format + 2)) == 1) {
-        if ((*(i16 *)((char *)&local_c4 + 2)) == 2) {
-          local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),1);
+        if ((*(i16 *)((char *)&format_tag + 2)) == 2) {
+          rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),1);
         }
         else {
-          local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),2);
+          rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),2);
         }
       }
-      else if ((*(i16 *)((char *)&local_c4 + 2)) == 2) {
-        local_8 = (uint)(*(i16 *)((char *)&local_8 + 2)) << 0x10;
+      else if ((*(i16 *)((char *)&format_tag + 2)) == 2) {
+        rate_mode = (uint)(*(i16 *)((char *)&rate_mode + 2)) << 0x10;
       }
       else {
-        local_8 = CONCAT22((*(i16 *)((char *)&local_8 + 2)),3);
+        rate_mode = CONCAT22((*(i16 *)((char *)&rate_mode + 2)),3);
       }
-      _memset(&local_10c,0,0x48);
-      if ((local_8 & 0xffff) == 1) {
-        local_10c.cchBuffer = snd_wave_total_buffer_bytes * 2;
+      _memset(&mmio_info,0,0x48);
+      if ((rate_mode & 0xffff) == 1) {
+        mmio_info.cchBuffer = snd_wave_total_buffer_bytes * 2;
       }
-      else if ((local_8 & 0xffff) == 3) {
-        local_10c.cchBuffer = snd_wave_total_buffer_bytes >> 1;
-      }
-      else {
-        local_10c.cchBuffer = snd_wave_total_buffer_bytes;
-      }
-      local_a8 = (uint)local_10c.cchBuffer / snd_wave_max_buffers;
-      local_10c.fccIOProc = 0x204d454d;
-      local_10c.adwInfo[0] = 0;
-      local_c = mmioOpenA((LPSTR)0x0,&local_10c,0x11002);
-      if (local_c == (HMMIO)0x0) {
-        uVar1 = 7;
+      else if ((rate_mode & 0xffff) == 3) {
+        mmio_info.cchBuffer = snd_wave_total_buffer_bytes >> 1;
       }
       else {
-        mmioGetInfo(local_c,&local_10c,0);
-        local_b0 = GlobalAlloc(0x2002,0xbc);
-        if (local_b0 == (HGLOBAL)0x0) {
-          uVar1 = 2;
+        mmio_info.cchBuffer = snd_wave_total_buffer_bytes;
+      }
+      bytes_per_buffer = (uint)mmio_info.cchBuffer / snd_wave_max_buffers;
+      mmio_info.fccIOProc = 0x204d454d;
+      mmio_info.adwInfo[0] = 0;
+      mmio = mmioOpenA((LPSTR)0x0,&mmio_info,0x11002);
+      if (mmio == (HMMIO)0x0) {
+        result = 7;
+      }
+      else {
+        mmioGetInfo(mmio,&mmio_info,0);
+        mem_handle2 = GlobalAlloc(0x2002,0xbc);
+        if (mem_handle2 == (HGLOBAL)0x0) {
+          result = 2;
         }
         else {
-          local_b4 = GlobalLock(local_b0);
-          if (local_b4 == (i32 *)0x0) {
-            GlobalFree(local_b0);
-            uVar1 = 2;
+          source = GlobalLock(mem_handle2);
+          if (source == (i32 *)0x0) {
+            GlobalFree(mem_handle2);
+            result = 2;
           }
           else {
-            _memset(local_b4,0,0xbc);
-            local_b4[0x1b] = local_b0;
-            *(i16 *)(local_b4 + 0x22) = 4;
-            local_b4[0x1d] = local_c4;
-            local_b4[0x1e] = local_c0;
-            local_b4[0x1f] = local_bc;
-            local_b4[0x20] = local_b8;
-            *local_b4 = local_c;
-            p_Var3 = &local_10c;
-            pDVar4 = local_b4 + 6;
-            for (iVar2 = 0x12; iVar2 != 0; iVar2--) {
+            _memset(source,0,0xbc);
+            source[0x1b] = mem_handle2;
+            *(i16 *)(source + 0x22) = 4;
+            source[0x1d] = format_tag;
+            source[0x1e] = samples_per_sec;
+            source[0x1f] = avg_bytes_per_sec;
+            source[0x20] = block_align;
+            *source = mmio;
+            p_Var3 = &mmio_info;
+            pDVar4 = source + 6;
+            for (n = 0x12; n != 0; n--) {
               *pDVar4 = p_Var3->dwFlags;
               p_Var3 = (_MMIOINFO *)&p_Var3->fccIOProc;
               pDVar4++;
             }
-            local_b4[1] = local_98[0];
-            local_b4[2] = local_a4;
-            local_b4[0x21] = param_1;
-            local_b4[0x1c] = local_b4[0x1c] | 2;
-            local_b4[0x27] = local_a8;
-            for (local_9c = local_10c.cchBuffer; 1 < local_9c; local_9c = local_9c >> 1) {
-              local_b4[0x2a] = local_b4[0x2a] << 1;
-              local_b4[0x2a]++;
+            source[1] = stream_info[0];
+            source[2] = total_bytes;
+            source[0x21] = avi_stream;
+            source[0x1c] = source[0x1c] | 2;
+            source[0x27] = bytes_per_buffer;
+            for (size_bits = mmio_info.cchBuffer; 1 < size_bits; size_bits = size_bits >> 1) {
+              source[0x2a] = source[0x2a] << 1;
+              source[0x2a]++;
             }
-            local_b4[0x2e] = snd_wave_sources;
-            snd_wave_sources = (iptr)local_b4;
+            source[0x2e] = snd_wave_sources;
+            snd_wave_sources = (iptr)source;
             snd_wave_source_count++;
-            uVar1 = 0;
+            result = 0;
           }
         }
       }
     }
     else {
-      uVar1 = 9;
+      result = 9;
     }
   }
   else {
-    uVar1 = 0;
+    result = 0;
   }
-  return uVar1;
+  return result;
 }
 #undef snd_wave_format
 #undef snd_wave_max_buffers
 #undef snd_wave_out_handle
 #undef snd_wave_source_count
 #undef snd_wave_total_buffer_bytes
-#undef local_10c
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_b0
-#undef local_ac
-#undef local_a8
-#undef local_a4
-#undef local_a0
-#undef local_9c
-#undef local_98
-#undef local_78
-#undef local_68
-#undef local_c
-#undef local_8
+#undef mmio_info
+#undef format_tag
+#undef samples_per_sec
+#undef avg_bytes_per_sec
+#undef block_align
+#undef source
+#undef mem_handle2
+#undef sample_buf
+#undef bytes_per_buffer
+#undef total_bytes
+#undef format_size
+#undef size_bits
+#undef stream_info
+#undef stream_length
+#undef sample_size
+#undef mmio
+#undef rate_mode
 
 /* 005d5643: written by hand in src/game/sound_position.c */
 
@@ -919,255 +919,255 @@ i32 __cdecl snd_wave_add_avi_stream(int param_1)
 #define snd_avi_feed_count_i32 (*(i32 *)((u8 *)&g.d_00638590))
 #define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
 #define snd_avi_feed_samples_i32 (*(i32 *)((u8 *)&g.d_00638598))
-#define local_24 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
+#define byte_count (*(uint *)(frame_ + FRAME_OFF(4)))
+#define i (*(uint *)(frame_ + FRAME_OFF(8)))
+#define buffer (*(iptr *)(frame_ + FRAME_OFF(28)))
+#define bytes_read (*(int *)(frame_ + FRAME_OFF(32)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __cdecl snd_avi_stream_feed(uint param_1)
+i32 __cdecl snd_avi_stream_feed(uint sample_count)
 
 {
-  i32 uVar1;
-  uint uVar2;
-  iptr iVar1;
+  i32 result;
+  uint limit;
+  iptr source;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = snd_wave_sources;
+  source = snd_wave_sources;
   if (snd_wave_out_handle == 0) {
-    uVar1 = 3;
+    result = 3;
   }
   else if (snd_avi_stream_started == 0) {
-    uVar1 = 0xe;
+    result = 0xe;
   }
   else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
-    uVar1 = 5;
+    result = 5;
   }
   else if ((*(byte *)(snd_wave_sources + 0x70) & 1) == 0) {
     if ((*(uint *)(*(int *)(snd_wave_sources + 0x98) + 0xc) >> 3 & 1) == 0) {
       if (((*(uint *)(*(int *)(snd_wave_sources + 0x98) + 0xc) >> 7) -
            (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7) & 7) == 0) {
-        param_1 = (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) /
+        sample_count = (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) /
                   (uint)*(ushort *)(snd_wave_sources + 0x80);
         snd_avi_fill_count_i32++;
       }
-      local_c = *(int *)(snd_wave_sources + 0x98);
-      uVar2 = (*(int *)(snd_wave_sources + 0x3c) - *(int *)(snd_wave_sources + 0x34)) /
+      buffer = *(int *)(snd_wave_sources + 0x98);
+      limit = (*(int *)(snd_wave_sources + 0x3c) - *(int *)(snd_wave_sources + 0x34)) /
               (int)(uint)*(ushort *)(snd_wave_sources + 0x80);
-      if (uVar2 < param_1) {
-        param_1 = uVar2;
+      if (limit < sample_count) {
+        sample_count = limit;
       }
-      local_24 = *(ushort *)(snd_wave_sources + 0x80) * param_1;
-      uVar2 = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
-      snd_avi_feed_samples_i32 = param_1;
-      if (uVar2 < local_24) {
-        local_24 = uVar2;
+      byte_count = *(ushort *)(snd_wave_sources + 0x80) * sample_count;
+      limit = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
+      snd_avi_feed_samples_i32 = sample_count;
+      if (limit < byte_count) {
+        byte_count = limit;
       }
-      uVar2 = *(int *)(snd_wave_sources + 8) -
+      limit = *(int *)(snd_wave_sources + 8) -
               (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
-      if (uVar2 < local_24) {
-        local_24 = uVar2;
+      if (limit < byte_count) {
+        byte_count = limit;
       }
-      local_8 = 0;
+      bytes_read = 0;
       AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                     *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                    local_24 / *(ushort *)(snd_wave_sources + 0x80),
-                    *(i32 *)(snd_wave_sources + 0x34),local_24,&local_8,0);
-      *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + local_8;
-      *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + local_8;
-      if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-        *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
+                    byte_count / *(ushort *)(snd_wave_sources + 0x80),
+                    *(i32 *)(snd_wave_sources + 0x34),byte_count,&bytes_read,0);
+      *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
+      *(int *)(source + 0x34) = *(int *)(source + 0x34) + bytes_read;
+      if (*(int *)(source + 0x3c) == *(int *)(source + 0x34)) {
+        *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
       }
-      *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + local_8;
+      *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + bytes_read;
       if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
-        *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 8;
-        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(local_c + 0x1c);
-        local_c = *(iptr *)(snd_wave_sources + 0x98);
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
+        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
+        buffer = *(iptr *)(snd_wave_sources + 0x98);
         *(i32 *)(snd_wave_sources + 0x68) = 0;
       }
       if (*(uint *)(snd_wave_sources + 8) <=
           (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
-        for (local_20 = 0;
-            local_20 < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68));
-            local_20 = local_20 + 1) {
-          **(i8 **)(iVar1 + 0x34) = 0x80;
-          *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + 1;
+        for (i = 0;
+            i < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68));
+            i = i + 1) {
+          **(i8 **)(source + 0x34) = 0x80;
+          *(int *)(source + 0x34) = *(int *)(source + 0x34) + 1;
         }
-        if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-          *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
+        if (*(int *)(source + 0x3c) == *(int *)(source + 0x34)) {
+          *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
         }
-        *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 8;
-        *(uint *)(local_c + 0xc) = *(uint *)(local_c + 0xc) | 2;
-        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(local_c + 0x1c);
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
+        *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
         *(i32 *)(snd_wave_sources + 0x68) = 0;
         *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
       }
       snd_avi_feed_count_i32++;
-      uVar1 = 0;
+      result = 0;
     }
     else {
-      uVar1 = 0;
+      result = 0;
     }
   }
   else {
-    uVar1 = 0xe;
+    result = 0xe;
   }
-  return uVar1;
+  return result;
 }
 #undef snd_avi_stream_started
 #undef snd_wave_out_handle
 #undef snd_avi_feed_count_i32
 #undef snd_avi_fill_count_i32
 #undef snd_avi_feed_samples_i32
-#undef local_24
-#undef local_20
-#undef local_c
-#undef local_8
+#undef byte_count
+#undef i
+#undef buffer
+#undef bytes_read
 
 /* 005d5b88 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 i32 __cdecl snd_avi_stream_stop(void)
 
 {
-  i32 uVar1;
+  i32 result;
   
   snd_avi_stream_started = 0;
   if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
-    uVar1 = 5;
+    result = 5;
   }
   else {
     snd_wave_sources = snd_wave_free(0,snd_wave_sources);
-    uVar1 = 0;
+    result = 0;
   }
-  return uVar1;
+  return result;
 }
 #undef snd_avi_stream_started
 
 /* 005d5bec auto */
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __cdecl snd_avi_stream_refill(iptr param_1)
+#define byte_count (*(uint *)(frame_ + FRAME_OFF(0)))
+#define bytes_read (*(int *)(frame_ + FRAME_OFF(8)))
+void __cdecl snd_avi_stream_refill(iptr source)
 
 {
-  uint uVar1;
-  int iVar2;
+  uint remaining;
+  int shortfall;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
-  if ((*(int *)(param_1 + 0x3c) == *(int *)(param_1 + 0x34)) ||
-     (*(int *)(param_1 + 0x30) == *(int *)(param_1 + 0x34))) {
-    uVar1 = *(int *)(snd_wave_sources + 8) -
+  bytes_read = 0;
+  if ((*(int *)(source + 0x3c) == *(int *)(source + 0x34)) ||
+     (*(int *)(source + 0x30) == *(int *)(source + 0x34))) {
+    remaining = *(int *)(snd_wave_sources + 8) -
             (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
-    local_10 = *(uint *)(param_1 + 0x2c);
-    if (uVar1 < *(uint *)(param_1 + 0x2c)) {
-      local_10 = uVar1;
+    byte_count = *(uint *)(source + 0x2c);
+    if (remaining < *(uint *)(source + 0x2c)) {
+      byte_count = remaining;
     }
-    *(i32 *)(param_1 + 0x34) = *(i32 *)(param_1 + 0x30);
-    AVIStreamRead(*(i32 *)(param_1 + 0x84),
-                  *(uint *)(param_1 + 0x90) / (uint)*(ushort *)(param_1 + 0x80),
-                  local_10 / *(ushort *)(param_1 + 0x80),*(i32 *)(param_1 + 0x34),local_10,
-                  &local_8,0);
-    *(int *)(param_1 + 0x90) = *(int *)(param_1 + 0x90) + local_8;
-    iVar2 = *(int *)(param_1 + 0x2c) - local_8;
-    if (iVar2 != 0) {
-      snd_fill_silence_u8(*(int *)(param_1 + 0x34) + local_8,iVar2);
+    *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
+    AVIStreamRead(*(i32 *)(source + 0x84),
+                  *(uint *)(source + 0x90) / (uint)*(ushort *)(source + 0x80),
+                  byte_count / *(ushort *)(source + 0x80),*(i32 *)(source + 0x34),byte_count,
+                  &bytes_read,0);
+    *(int *)(source + 0x90) = *(int *)(source + 0x90) + bytes_read;
+    shortfall = *(int *)(source + 0x2c) - bytes_read;
+    if (shortfall != 0) {
+      snd_fill_silence_u8(*(int *)(source + 0x34) + bytes_read,shortfall);
     }
   }
   return;
 }
-#undef local_10
-#undef local_8
+#undef byte_count
+#undef bytes_read
 
 /* 005d5d11 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
-i32 __cdecl snd_avi_stream_prepare(i32 param_1,i32 param_2,iptr param_3)
+#define byte_length (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(uint *)(frame_ + FRAME_OFF(4)))
+#define buffer (*(i32 * *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl snd_avi_stream_prepare(i32 start_time,i32 end_time,iptr status_ptr)
 
 {
-  i32 uVar1;
-  int iVar2;
+  i32 result;
+  int start_byte;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_wave_out_handle == 0) {
-    uVar1 = 3;
+    result = 3;
   }
   else if ((snd_wave_sources == 0) || (*(short *)(snd_wave_sources + 0x88) != 4)) {
-    uVar1 = 5;
+    result = 5;
   }
   else {
     if (snd_wave_buffer_count != snd_wave_max_buffers) {
       snd_wave_set_buffer_count(snd_wave_max_buffers);
     }
-    iVar2 = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),param_1);
-    local_10 = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),param_2);
-    local_10 = (uint)*(ushort *)(snd_wave_sources + 0x80) * local_10;
-    iVar2 = (uint)*(ushort *)(snd_wave_sources + 0x80) * iVar2;
-    if (local_10 == 0) {
-      local_10 = *(int *)(snd_wave_sources + 8) - iVar2;
+    start_byte = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),start_time);
+    byte_length = AVIStreamTimeToSample(*(i32 *)(snd_wave_sources + 0x84),end_time);
+    byte_length = (uint)*(ushort *)(snd_wave_sources + 0x80) * byte_length;
+    start_byte = (uint)*(ushort *)(snd_wave_sources + 0x80) * start_byte;
+    if (byte_length == 0) {
+      byte_length = *(int *)(snd_wave_sources + 8) - start_byte;
     }
     else {
-      local_10 -= iVar2;
+      byte_length -= start_byte;
     }
-    if (local_10 < 0) {
-      uVar1 = 0xc;
+    if (byte_length < 0) {
+      result = 0xc;
     }
     else {
       snd_wave_stop_all();
-      *(int *)(snd_wave_sources + 8) = local_10;
-      *(int *)(snd_wave_sources + 0x90) = iVar2;
-      *(int *)(snd_wave_sources + 0x94) = iVar2;
+      *(int *)(snd_wave_sources + 8) = byte_length;
+      *(int *)(snd_wave_sources + 0x90) = start_byte;
+      *(int *)(snd_wave_sources + 0x94) = start_byte;
       *(i32 *)(snd_wave_sources + 100) = 0;
       *(i32 *)(snd_wave_sources + 0x68) = 0;
       *(i32 *)(snd_wave_sources + 0x34) = *(i32 *)(snd_wave_sources + 0x3c);
       snd_avi_stream_refill(snd_wave_sources);
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffd;
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) & 0xfffffffe;
-      *(iptr *)(snd_wave_sources + 0x8c) = param_3;
+      *(iptr *)(snd_wave_sources + 0x8c) = status_ptr;
       snd_avi_stream_started = 0;
-      local_8 = (i32 *)snd_wave_buffer_ring;
-      for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
-        local_8[3] = local_8[3] & 0xffffffdf;
-        local_8[3] = local_8[3] & 0xfffffffe;
-        local_8[3] = local_8[3] & 0xfffffffd;
-        local_8[3] = local_8[3] & 0xffffffef;
-        local_8[3] = local_8[3] & 0xffffffdf;
-        local_8[3] = local_8[3] & 0xffffffbf;
-        local_8[4] = *(i32 *)*local_8;
-        iVar2 = snd_wave_mix_buffer(*local_8);
-        if (iVar2 == 1) break;
-        local_8 = (i32 *)local_8[7];
+      buffer = (i32 *)snd_wave_buffer_ring;
+      for (i = 0; i < snd_wave_max_buffers; i++) {
+        buffer[3] = buffer[3] & 0xffffffdf;
+        buffer[3] = buffer[3] & 0xfffffffe;
+        buffer[3] = buffer[3] & 0xfffffffd;
+        buffer[3] = buffer[3] & 0xffffffef;
+        buffer[3] = buffer[3] & 0xffffffdf;
+        buffer[3] = buffer[3] & 0xffffffbf;
+        buffer[4] = *(i32 *)*buffer;
+        start_byte = snd_wave_mix_buffer(*buffer);
+        if (start_byte == 1) break;
+        buffer = (i32 *)buffer[7];
       }
       snd_avi_stream_refill(snd_wave_sources);
-      local_8 = (i32 *)snd_wave_buffer_ring;
-      for (local_c = 0; local_c < snd_wave_max_buffers; local_c++) {
-        *(uint *)((int)local_8 + 0xc) = *(uint *)((int)local_8 + 0xc) | 8;
-        local_8 = *(i32 **)((int)local_8 + 0x1c);
+      buffer = (i32 *)snd_wave_buffer_ring;
+      for (i = 0; i < snd_wave_max_buffers; i++) {
+        *(uint *)((int)buffer + 0xc) = *(uint *)((int)buffer + 0xc) | 8;
+        buffer = *(i32 **)((int)buffer + 0x1c);
       }
       snd_wave_cur_buffer = snd_wave_buffer_ring;
-      uVar1 = 0;
+      result = 0;
     }
   }
-  return uVar1;
+  return result;
 }
 #undef snd_avi_stream_started
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
 #undef snd_wave_out_handle
-#undef local_10
-#undef local_c
-#undef local_8
+#undef byte_length
+#undef i
+#undef buffer
 
 /* 005d5f91 auto */
 #define snd_avi_stream_started (*(i32 *)((u8 *)&g.d_006385bc))
 i16 __cdecl snd_avi_stream_start(void)
 
 {
-  iptr iVar1;
+  iptr ring;
   
   if ((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) {
     snd_wave_write_pending(snd_wave_buffer_ring);
@@ -1176,10 +1176,10 @@ i16 __cdecl snd_avi_stream_start(void)
       **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) | 4;
     }
   }
-  iVar1 = snd_wave_buffer_ring;
+  ring = snd_wave_buffer_ring;
   snd_avi_stream_started = 1;
   *(iptr *)(snd_wave_sources + 0x98) = snd_wave_buffer_ring;
-  return (short)iVar1;
+  return (short)ring;
 }
 #undef snd_avi_stream_started
 
@@ -1189,176 +1189,176 @@ i16 __cdecl snd_avi_stream_start(void)
 #define snd_wave_notify_hwnd (*(i32 *)((u8 *)&g.d_0063857c))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
 #define snd_wave_source_count (*(ushort *)((u8 *)&g.d_0063858c))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(i32 * *)(frame_ + FRAME_OFF(8)))
-short __cdecl snd_wave_play(iptr param_1,uint param_2,i32 param_3,i32 param_4)
+#define i (*(uint *)(frame_ + FRAME_OFF(0)))
+#define buffer (*(i32 * *)(frame_ + FRAME_OFF(8)))
+short __cdecl snd_wave_play(iptr filename,uint flags,i32 sound_id,i32 sound_tag)
 
 {
-  short sVar1;
-  int iVar2;
+  short result;
+  int status;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_wave_out_handle == 0) {
-    sVar1 = 3;
+    result = 3;
   }
   else if ((snd_wave_device_open == 0) &&
-          (iVar2 = snd_wave_open(snd_wave_notify_hwnd,snd_wave_open_buffer_bytes,snd_wave_max_buffers), iVar2 != 0)) {
-    sVar1 = 0;
+          (status = snd_wave_open(snd_wave_notify_hwnd,snd_wave_open_buffer_bytes,snd_wave_max_buffers), status != 0)) {
+    result = 0;
   }
   else if (snd_wave_source_count < 5) {
-    if ((param_2 & 8) == 0) {
-      sVar1 = snd_wave_load_file(param_1,param_2,param_3,param_4);
+    if ((flags & 8) == 0) {
+      result = snd_wave_load_file(filename,flags,sound_id,sound_tag);
     }
     else {
-      sVar1 = snd_wave_open_stream(param_1,param_2,param_3);
+      result = snd_wave_open_stream(filename,flags,sound_id);
     }
-    if ((sVar1 == 0) &&
+    if ((result == 0) &&
        (snd_wave_source_count = snd_wave_source_count + 1, (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0)) {
-      local_10 = 0;
-      local_8 = (i32 *)snd_wave_cur_buffer;
-      while ((local_10 < snd_wave_buffer_count && (iVar2 = snd_wave_mix_buffer(*local_8), iVar2 != 1))) {
-        local_8 = (i32 *)local_8[7];
-        local_10++;
+      i = 0;
+      buffer = (i32 *)snd_wave_cur_buffer;
+      while ((i < snd_wave_buffer_count && (status = snd_wave_mix_buffer(*buffer), status != 1))) {
+        buffer = (i32 *)buffer[7];
+        i++;
       }
       snd_wave_write_pending(snd_wave_cur_buffer);
     }
   }
   else {
-    sVar1 = 0;
+    result = 0;
   }
-  return sVar1;
+  return result;
 }
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
 #undef snd_wave_notify_hwnd
 #undef snd_wave_out_handle
 #undef snd_wave_source_count
-#undef local_10
-#undef local_8
+#undef i
+#undef buffer
 
 /* 005d61ab auto */
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl snd_wave_free_by_id(i32 param_1)
+#define source (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define prev (*(iptr *)(frame_ + FRAME_OFF(8)))
+void __cdecl snd_wave_free_by_id(i32 sound_id)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
-  local_c = snd_wave_sources;
-  while (local_c != 0) {
-    if (*(short *)(local_c + 0x8a) == (short)param_1) {
-      local_c = snd_wave_free(local_8,local_c);
+  prev = 0;
+  source = snd_wave_sources;
+  while (source != 0) {
+    if (*(short *)(source + 0x8a) == (short)sound_id) {
+      source = snd_wave_free(prev,source);
     }
     else {
-      local_8 = local_c;
-      local_c = *(iptr *)(local_c + 0xb8);
+      prev = source;
+      source = *(iptr *)(source + 0xb8);
     }
   }
   return;
 }
-#undef local_c
-#undef local_8
+#undef source
+#undef prev
 
 /* 005d6283 auto */
-#define local_5c (*(i32 (*)[5])(frame_ + FRAME_OFF(4)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_44 (*(HPSTR *)(frame_ + FRAME_OFF(28)))
-#define local_40 (*(HPSTR *)(frame_ + FRAME_OFF(32)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
-void __cdecl snd_wave_stream_refill(iptr param_1)
+#define mmio_info (*(i32 (*)[5])(frame_ + FRAME_OFF(4)))
+#define buffer_size (*(int *)(frame_ + FRAME_OFF(24)))
+#define buffer_start (*(HPSTR *)(frame_ + FRAME_OFF(28)))
+#define read_ptr (*(HPSTR *)(frame_ + FRAME_OFF(32)))
+#define buffer_end (*(int *)(frame_ + FRAME_OFF(40)))
+#define done (*(int *)(frame_ + FRAME_OFF(76)))
+#define remaining (*(int *)(frame_ + FRAME_OFF(80)))
+#define leftover (*(int *)(frame_ + FRAME_OFF(84)))
+#define space (*(int *)(frame_ + FRAME_OFF(88)))
+void __cdecl snd_wave_stream_refill(iptr source)
 
 {
-  int iVar1;
-  i32 *puVar2;
-  i32 *puVar3;
+  int n;
+  i32 *src;
+  i32 *dst;
   i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_10 = 0;
-  local_14 = 0;
-  puVar2 = (i32 *)(param_1 + 0x18);
-  puVar3 = local_5c;
-  for (iVar1 = 0x12; iVar1 != 0; iVar1--) {
-    *puVar3 = *puVar2;
-    puVar2++;
-    puVar3++;
+  remaining = 0;
+  done = 0;
+  src = (i32 *)(source + 0x18);
+  dst = mmio_info;
+  for (n = 0x12; n != 0; n--) {
+    *dst = *src;
+    src++;
+    dst++;
   }
-  if (local_44 == local_40) {
-    local_c = 0;
-    local_8 = local_48;
-  }
-  else {
-    local_c = local_38 - (int)local_40;
-    local_8 = local_48 - local_c;
-  }
-  if (local_c == 0) {
-    local_40 = local_44;
+  if (buffer_start == read_ptr) {
+    leftover = 0;
+    space = buffer_size;
   }
   else {
-    crt_memmove(local_44,local_40,local_c);
-    local_40 = local_44 + local_c;
+    leftover = buffer_end - (int)read_ptr;
+    space = buffer_size - leftover;
   }
-  while (local_14 == 0) {
-    local_10 = *(int *)(param_1 + 8) - *(int *)(param_1 + 0x68);
-    if (local_8 < local_10) {
-      mmioRead(*(HMMIO *)(param_1 + 0x60),local_40,local_8);
-      *(int *)(param_1 + 0x68) = *(int *)(param_1 + 0x68) + local_8;
-      *(HPSTR *)(param_1 + 0x34) = local_44;
-      local_14 = 1;
+  if (leftover == 0) {
+    read_ptr = buffer_start;
+  }
+  else {
+    crt_memmove(buffer_start,read_ptr,leftover);
+    read_ptr = buffer_start + leftover;
+  }
+  while (done == 0) {
+    remaining = *(int *)(source + 8) - *(int *)(source + 0x68);
+    if (space < remaining) {
+      mmioRead(*(HMMIO *)(source + 0x60),read_ptr,space);
+      *(int *)(source + 0x68) = *(int *)(source + 0x68) + space;
+      *(HPSTR *)(source + 0x34) = buffer_start;
+      done = 1;
     }
     else {
-      mmioRead(*(HMMIO *)(param_1 + 0x60),local_40,local_10);
-      *(i32 *)(param_1 + 0x68) = 0;
-      local_40 += local_10;
-      local_8 = local_38 - (int)local_40;
-      mmioSeek(*(HMMIO *)(param_1 + 0x60),*(LONG *)(param_1 + 0x10),0);
+      mmioRead(*(HMMIO *)(source + 0x60),read_ptr,remaining);
+      *(i32 *)(source + 0x68) = 0;
+      read_ptr += remaining;
+      space = buffer_end - (int)read_ptr;
+      mmioSeek(*(HMMIO *)(source + 0x60),*(LONG *)(source + 0x10),0);
     }
   }
   return;
 }
-#undef local_5c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_38
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef mmio_info
+#undef buffer_size
+#undef buffer_start
+#undef read_ptr
+#undef buffer_end
+#undef done
+#undef remaining
+#undef leftover
+#undef space
 
 /* 005d63c5 auto */
-LPVOID __cdecl snd_global_alloc_lock(SIZE_T param_1,iptr param_2)
+LPVOID __cdecl snd_global_alloc_lock(SIZE_T size,iptr handle_out)
 
 {
-  HGLOBAL pvVar1;
-  LPVOID pvVar2;
+  HGLOBAL handle;
+  LPVOID ptr;
   
-  pvVar1 = GlobalAlloc(0x2002,param_1);
-  *(HGLOBAL *)param_2 = pvVar1;
-  if (*(int *)param_2 == 0) {
-    pvVar2 = (LPVOID)0x0;
+  handle = GlobalAlloc(0x2002,size);
+  *(HGLOBAL *)handle_out = handle;
+  if (*(int *)handle_out == 0) {
+    ptr = (LPVOID)0x0;
   }
   else {
-    pvVar2 = GlobalLock(*(HGLOBAL *)param_2);
-    if (pvVar2 == (LPVOID)0x0) {
-      GlobalFree(*(HGLOBAL *)param_2);
-      *(i32 *)param_2 = 0;
+    ptr = GlobalLock(*(HGLOBAL *)handle_out);
+    if (ptr == (LPVOID)0x0) {
+      GlobalFree(*(HGLOBAL *)handle_out);
+      *(i32 *)handle_out = 0;
     }
   }
-  return pvVar2;
+  return ptr;
 }
 
 /* 005d6430 auto */
-void __cdecl snd_global_free(HGLOBAL param_1)
+void __cdecl snd_global_free(HGLOBAL handle)
 
 {
-  if (param_1 != (HGLOBAL)0x0) {
-    GlobalUnlock(param_1);
-    GlobalFree(param_1);
+  if (handle != (HGLOBAL)0x0) {
+    GlobalUnlock(handle);
+    GlobalFree(handle);
   }
   return;
 }
@@ -1366,183 +1366,183 @@ void __cdecl snd_global_free(HGLOBAL param_1)
 /* 005d645e auto */
 #define snd_wave_total_buffer_bytes (*(uint *)((u8 *)&g.d_006385cc))
 #define snd_wave_buffers_ready_i32 (*(i32 *)((u8 *)&g.d_006385b4))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int * *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(MMRESULT *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(int * *)(frame_ + FRAME_OFF(24)))
+#define mem_handle2 (*(int *)(frame_ + FRAME_OFF(4)))
+#define prev (*(int * *)(frame_ + FRAME_OFF(8)))
+#define i (*(uint *)(frame_ + FRAME_OFF(12)))
+#define result (*(MMRESULT *)(frame_ + FRAME_OFF(16)))
+#define bytes_per_buffer (*(uint *)(frame_ + FRAME_OFF(20)))
+#define buffer (*(int * *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-MMRESULT __cdecl snd_wave_alloc_buffers(uint param_1,HWAVEOUT param_2,uint param_3)
+MMRESULT __cdecl snd_wave_alloc_buffers(uint total_bytes,HWAVEOUT wave_out,uint buffer_count)
 
 {
-  int iVar1;
+  int data;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (int *)0x0;
-  local_c = param_1 / param_3;
+  buffer = (int *)0x0;
+  bytes_per_buffer = total_bytes / buffer_count;
   if (snd_wave_device_open == 0) {
-    local_10 = 3;
+    result = 3;
   }
   else {
-    for (local_14 = 0; local_14 < param_3; local_14++) {
-      local_18 = local_8;
-      local_8 = (int *)snd_global_alloc_lock(0x20,(iptr)&local_1c);
-      if (local_8 == (int *)0x0) {
-        if (local_14 != 0) {
-          snd_wave_reset_all(param_2);
+    for (i = 0; i < buffer_count; i++) {
+      prev = buffer;
+      buffer = (int *)snd_global_alloc_lock(0x20,(iptr)&mem_handle2);
+      if (buffer == (int *)0x0) {
+        if (i != 0) {
+          snd_wave_reset_all(wave_out);
         }
         return 4;
       }
-      if (local_14 == 0) {
-        snd_wave_buffer_ring = (iptr)local_8;
-        snd_wave_cur_buffer = (iptr)local_8;
+      if (i == 0) {
+        snd_wave_buffer_ring = (iptr)buffer;
+        snd_wave_cur_buffer = (iptr)buffer;
       }
-      _memset(local_8,0,0x20);
-      local_8[2] = local_1c;
-      iVar1 = snd_global_alloc_lock(local_c + 0x20,(iptr)&local_1c);
-      *local_8 = iVar1;
-      if (*local_8 == 0) {
-        if (local_14 != 0) {
-          snd_wave_reset_all(param_2);
+      _memset(buffer,0,0x20);
+      buffer[2] = mem_handle2;
+      data = snd_global_alloc_lock(bytes_per_buffer + 0x20,(iptr)&mem_handle2);
+      *buffer = data;
+      if (*buffer == 0) {
+        if (i != 0) {
+          snd_wave_reset_all(wave_out);
         }
         return 4;
       }
-      _memset((void *)*local_8,0,0x20);
-      *(int *)*local_8 = *local_8 + 0x20;
-      local_8[4] = *(int *)*local_8;
-      *(uint *)(*local_8 + 4) = local_c;
-      local_8[6] = *(int *)(*local_8 + 4);
-      local_8[5] = *(int *)*local_8 + local_8[6];
-      *(int **)(*local_8 + 0xc) = local_8;
-      local_8[1] = local_1c;
-      local_8[3] = local_8[3] & 0xffff807fU | (local_14 & 0xff) << 7;
-      local_10 = waveOutPrepareHeader(param_2,(LPWAVEHDR)*local_8,0x20);
-      if (local_10 != 0) {
-        snd_waveout_error_box(local_10);
-        snd_wave_reset_all(param_2);
+      _memset((void *)*buffer,0,0x20);
+      *(int *)*buffer = *buffer + 0x20;
+      buffer[4] = *(int *)*buffer;
+      *(uint *)(*buffer + 4) = bytes_per_buffer;
+      buffer[6] = *(int *)(*buffer + 4);
+      buffer[5] = *(int *)*buffer + buffer[6];
+      *(int **)(*buffer + 0xc) = buffer;
+      buffer[1] = mem_handle2;
+      buffer[3] = buffer[3] & 0xffff807fU | (i & 0xff) << 7;
+      result = waveOutPrepareHeader(wave_out,(LPWAVEHDR)*buffer,0x20);
+      if (result != 0) {
+        snd_waveout_error_box(result);
+        snd_wave_reset_all(wave_out);
         return 5;
       }
-      *(uint *)(*local_8 + 0x10) = *(uint *)(*local_8 + 0x10) | 1;
-      if (local_18 != (int *)0x0) {
-        local_18[7] = (int)local_8;
+      *(uint *)(*buffer + 0x10) = *(uint *)(*buffer + 0x10) | 1;
+      if (prev != (int *)0x0) {
+        prev[7] = (int)buffer;
       }
-      local_10 = 0;
+      result = 0;
     }
-    local_8[7] = snd_wave_buffer_ring;
+    buffer[7] = snd_wave_buffer_ring;
     snd_wave_buffers_ready_i32 = 1;
-    snd_wave_total_buffer_bytes = param_1;
+    snd_wave_total_buffer_bytes = total_bytes;
   }
-  return local_10;
+  return result;
 }
 #undef snd_wave_total_buffer_bytes
 #undef snd_wave_buffers_ready_i32
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef mem_handle2
+#undef prev
+#undef i
+#undef result
+#undef bytes_per_buffer
+#undef buffer
 
 /* 005d6685 auto */
 #define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-void __cdecl snd_wave_add_buffers(int param_1)
+#define i (*(uint *)(frame_ + FRAME_OFF(0)))
+#define tail2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define buffer (*(iptr *)(frame_ + FRAME_OFF(8)))
+void __cdecl snd_wave_add_buffers(int count)
 
 {
-  iptr iVar1;
+  iptr next_spare;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = snd_wave_spare_buffers;
+  buffer = snd_wave_spare_buffers;
   *(uint *)(snd_wave_spare_buffers + 0xc) = *(uint *)(snd_wave_spare_buffers + 0xc) & 0xfffffffe;
-  for (local_10 = 0; (int)local_10 < param_1 - 1; local_10++) {
-    local_8 = *(int *)(local_8 + 0x1c);
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffe;
+  for (i = 0; (int)i < count - 1; i++) {
+    buffer = *(int *)(buffer + 0x1c);
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffe;
   }
-  local_c = snd_wave_buffer_ring;
-  for (local_10 = 0; local_10 < snd_wave_buffer_count - 1U; local_10++) {
-    local_c = *(iptr *)(local_c + 0x1c);
+  tail2 = snd_wave_buffer_ring;
+  for (i = 0; i < snd_wave_buffer_count - 1U; i++) {
+    tail2 = *(iptr *)(tail2 + 0x1c);
   }
-  iVar1 = *(iptr *)(local_8 + 0x1c);
-  *(iptr *)(local_c + 0x1c) = snd_wave_spare_buffers;
-  snd_wave_spare_buffers = iVar1;
-  *(iptr *)(local_8 + 0x1c) = snd_wave_buffer_ring;
-  snd_wave_buffer_count += param_1;
+  next_spare = *(iptr *)(buffer + 0x1c);
+  *(iptr *)(tail2 + 0x1c) = snd_wave_spare_buffers;
+  snd_wave_spare_buffers = next_spare;
+  *(iptr *)(buffer + 0x1c) = snd_wave_buffer_ring;
+  snd_wave_buffer_count += count;
   return;
 }
 #undef snd_wave_buffer_count
-#undef local_10
-#undef local_c
-#undef local_8
+#undef i
+#undef tail2
+#undef buffer
 
 /* 005d673a auto */
 #define snd_wave_buffer_count (*(int *)((u8 *)&g.d_00638588))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(16)))
-void __cdecl snd_wave_remove_buffers(int param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+#define buffer (*(iptr *)(frame_ + FRAME_OFF(16)))
+void __cdecl snd_wave_remove_buffers(int count)
 
 {
-  iptr iVar1;
+  iptr removed;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = snd_wave_buffer_ring;
-  if ((uint)(snd_wave_buffer_count - param_1) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
+  buffer = snd_wave_buffer_ring;
+  if ((uint)(snd_wave_buffer_count - count) <= (*(uint *)(snd_wave_cur_buffer + 0xc) >> 7 & 0xff)) {
     snd_wave_cur_buffer = snd_wave_buffer_ring;
   }
-  for (local_14 = 0; local_14 < (int)((snd_wave_buffer_count - param_1) - 1U); local_14++) {
-    local_8 = *(iptr *)(local_8 + 0x1c);
+  for (i = 0; i < (int)((snd_wave_buffer_count - count) - 1U); i++) {
+    buffer = *(iptr *)(buffer + 0x1c);
   }
-  iVar1 = *(iptr *)(local_8 + 0x1c);
-  *(iptr *)(local_8 + 0x1c) = snd_wave_buffer_ring;
-  local_8 = iVar1;
-  for (local_14 = 0; local_14 < param_1; local_14++) {
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffd;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffffb;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) | 1;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xfffffff7;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffef;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffdf;
-    *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffbf;
-    local_8 = *(iptr *)(local_8 + 0x1c);
+  removed = *(iptr *)(buffer + 0x1c);
+  *(iptr *)(buffer + 0x1c) = snd_wave_buffer_ring;
+  buffer = removed;
+  for (i = 0; i < count; i++) {
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffd;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffb;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 1;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffff7;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffef;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
+    buffer = *(iptr *)(buffer + 0x1c);
   }
-  local_8 = iVar1;
-  for (local_14 = 0; local_14 < param_1 - 1; local_14++) {
-    local_8 = *(iptr *)(local_8 + 0x1c);
+  buffer = removed;
+  for (i = 0; i < count - 1; i++) {
+    buffer = *(iptr *)(buffer + 0x1c);
   }
-  *(iptr *)(local_8 + 0x1c) = snd_wave_spare_buffers;
-  snd_wave_spare_buffers = iVar1;
-  snd_wave_buffer_count -= param_1;
+  *(iptr *)(buffer + 0x1c) = snd_wave_spare_buffers;
+  snd_wave_spare_buffers = removed;
+  snd_wave_buffer_count -= count;
   return;
 }
 #undef snd_wave_buffer_count
-#undef local_14
-#undef local_8
+#undef i
+#undef buffer
 
 /* 005d687b auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_out_handle (*(int *)((u8 *)&g.d_00638578))
-void __cdecl snd_wave_set_buffer_count(uint param_1)
+void __cdecl snd_wave_set_buffer_count(uint count)
 
 {
   if ((snd_wave_out_handle != 0) &&
      (((snd_wave_sources == 0 || (*(short *)(snd_wave_sources + 0x88) != 4)) ||
       ((*(uint *)(snd_wave_sources + 0x70) >> 1 & 1) != 0)))) {
-    if (snd_wave_max_buffers < param_1) {
-      param_1 = snd_wave_max_buffers;
+    if (snd_wave_max_buffers < count) {
+      count = snd_wave_max_buffers;
     }
-    if ((int)param_1 < 2) {
-      param_1 = 2;
+    if ((int)count < 2) {
+      count = 2;
     }
-    if (snd_wave_buffer_count < param_1) {
-      snd_wave_add_buffers(param_1 - snd_wave_buffer_count);
+    if (snd_wave_buffer_count < count) {
+      snd_wave_add_buffers(count - snd_wave_buffer_count);
     }
-    else if (param_1 < snd_wave_buffer_count) {
-      snd_wave_remove_buffers(snd_wave_buffer_count - param_1);
+    else if (count < snd_wave_buffer_count) {
+      snd_wave_remove_buffers(snd_wave_buffer_count - count);
     }
   }
   return;
@@ -1553,42 +1553,42 @@ void __cdecl snd_wave_set_buffer_count(uint param_1)
 
 /* 005d6947 auto */
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(byte * *)(frame_ + FRAME_OFF(12)))
-i32 __cdecl snd_wave_write_pending(iptr param_1)
+#define i (*(uint *)(frame_ + FRAME_OFF(4)))
+#define result (*(uint *)(frame_ + FRAME_OFF(8)))
+#define sample (*(byte * *)(frame_ + FRAME_OFF(12)))
+i32 __cdecl snd_wave_write_pending(iptr buffer)
 
 {
   MMRESULT MVar1;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_10 = local_10 & 0xffff0000;
-  while ((*(uint *)(param_1 + 0xc) >> 6 & 1) != 0) {
-    local_c = (byte *)**(i32 **)param_1;
-    for (local_14 = 0; local_14 < *(uint *)(*(int *)param_1 + 4); local_14++) {
-      *local_c = *local_c ^ 0x80;
-      local_c++;
+  result = result & 0xffff0000;
+  while ((*(uint *)(buffer + 0xc) >> 6 & 1) != 0) {
+    sample = (byte *)**(i32 **)buffer;
+    for (i = 0; i < *(uint *)(*(int *)buffer + 4); i++) {
+      *sample = *sample ^ 0x80;
+      sample++;
     }
-    MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)param_1,0x20);
-    local_10 = CONCAT22((*(i16 *)((char *)&local_10 + 2)),(short)MVar1);
+    MVar1 = waveOutWrite(snd_wave_out_handle,*(LPWAVEHDR *)buffer,0x20);
+    result = CONCAT22((*(i16 *)((char *)&result + 2)),(short)MVar1);
     if ((short)MVar1 == 0) {
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 0x20;
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) & 0xffffffbf;
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x20;
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
     }
     else {
       if ((MVar1 & 0xffff) != 0x21) {
-        snd_waveout_error_box(local_10);
+        snd_waveout_error_box(result);
       }
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) & 0xffffffdf;
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
     }
-    param_1 = *(iptr *)(param_1 + 0x1c);
+    buffer = *(iptr *)(buffer + 0x1c);
   }
   return 0;
 }
 #undef snd_wave_out_handle
-#undef local_14
-#undef local_10
-#undef local_c
+#undef i
+#undef result
+#undef sample
 
 /* 005d6a2c auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
@@ -1596,11 +1596,11 @@ i32 __cdecl snd_wave_write_pending(iptr param_1)
 #define snd_wave_out_handle (*(HWAVEOUT *)((u8 *)&g.d_00638578))
 #define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
 #define snd_stop_drained_msg_count_i32 (*(i32 *)((u8 *)&g.d_006385d4))
-#define local_30 (*(tagMSG *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(28)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(40)))
+#define msg (*(tagMSG *)(frame_ + FRAME_OFF(0)))
+#define source (*(iptr *)(frame_ + FRAME_OFF(28)))
+#define i (*(uint *)(frame_ + FRAME_OFF(32)))
+#define prev (*(iptr *)(frame_ + FRAME_OFF(36)))
+#define buffer (*(iptr *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl snd_wave_stop_all(void)
@@ -1609,29 +1609,29 @@ void __cdecl snd_wave_stop_all(void)
   BOOL BVar1;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = 0;
+  prev = 0;
   snd_wave_stop_pending_i16 = 0;
-  local_14 = snd_wave_sources;
+  source = snd_wave_sources;
   if (snd_wave_out_handle != (HWAVEOUT)0x0) {
     waveOutReset(snd_wave_out_handle);
-    while (BVar1 = PeekMessageA(&local_30,snd_wave_notify_hwnd,0x3bd,0x3bd,1), BVar1 != 0) {
+    while (BVar1 = PeekMessageA(&msg,snd_wave_notify_hwnd,0x3bd,0x3bd,1), BVar1 != 0) {
       snd_stop_drained_msg_count_i32++;
     }
-    while (local_14 != 0) {
-      if (*(short *)(local_14 + 0x88) == 4) {
-        local_c = local_14;
-        local_14 = *(iptr *)(local_14 + 0xb8);
+    while (source != 0) {
+      if (*(short *)(source + 0x88) == 4) {
+        prev = source;
+        source = *(iptr *)(source + 0xb8);
       }
       else {
-        local_14 = snd_wave_free(local_c,local_14);
+        source = snd_wave_free(prev,source);
       }
     }
-    local_8 = snd_wave_buffer_ring;
+    buffer = snd_wave_buffer_ring;
     if (snd_wave_buffer_ring != 0) {
-      for (local_10 = 0; local_10 < snd_wave_buffer_count; local_10++) {
-        *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffdf;
-        *(uint *)(local_8 + 0xc) = *(uint *)(local_8 + 0xc) & 0xffffffbf;
-        local_8 = *(iptr *)(local_8 + 0x1c);
+      for (i = 0; i < snd_wave_buffer_count; i++) {
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffbf;
+        buffer = *(iptr *)(buffer + 0x1c);
       }
     }
   }
@@ -1642,60 +1642,60 @@ void __cdecl snd_wave_stop_all(void)
 #undef snd_wave_out_handle
 #undef snd_wave_stop_pending_i16
 #undef snd_stop_drained_msg_count_i32
-#undef local_30
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef msg
+#undef source
+#undef i
+#undef prev
+#undef buffer
 
 /* 005d6b4c auto */
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __cdecl snd_fill_silence_u8(iptr param_1,uint param_2)
+#define i (*(uptr *)(frame_ + FRAME_OFF(0)))
+void __cdecl snd_fill_silence_u8(iptr dest,uint length)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < param_2; local_8++) {
-    *(i8 *)(local_8 + param_1) = 0x80;
+  for (i = 0; i < length; i++) {
+    *(i8 *)(i + dest) = 0x80;
   }
   return;
 }
-#undef local_8
+#undef i
 
 /* 005d6b89 auto */
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_wave_max_buffers (*(uint *)((u8 *)&g.d_00638584))
 #define snd_wave_stop_pending_i16 (*(i16 *)((u8 *)&g.d_006385b8))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int * *)(frame_ + FRAME_OFF(16)))
+#define i (*(uint *)(frame_ + FRAME_OFF(4)))
+#define result (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define buffer (*(int * *)(frame_ + FRAME_OFF(16)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
+i32 __cdecl snd_wave_reset_all(HWAVEOUT wave_out)
 
 {
-  int *piVar1;
-  iptr iVar2;
+  int *next;
+  iptr ring;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = snd_wave_buffer_ring;
-  local_8 = (int *)snd_wave_buffer_ring;
+  ring = snd_wave_buffer_ring;
+  buffer = (int *)snd_wave_buffer_ring;
   snd_wave_stop_pending_i16 = 0;
   if (snd_wave_device_open != 0) {
-    waveOutReset(param_1);
+    waveOutReset(wave_out);
   }
   if (snd_wave_buffer_count != snd_wave_max_buffers) {
     snd_wave_set_buffer_count(snd_wave_max_buffers);
   }
-  if (iVar2 != 0) {
-    for (local_14 = 0; local_14 < snd_wave_max_buffers; local_14++) {
-      piVar1 = (int *)local_8[7];
-      if (*local_8 != 0) {
-        waveOutUnprepareHeader(param_1,(LPWAVEHDR)*local_8,0x20);
-        snd_global_free(local_8[1]);
+  if (ring != 0) {
+    for (i = 0; i < snd_wave_max_buffers; i++) {
+      next = (int *)buffer[7];
+      if (*buffer != 0) {
+        waveOutUnprepareHeader(wave_out,(LPWAVEHDR)*buffer,0x20);
+        snd_global_free(buffer[1]);
       }
-      snd_global_free(local_8[2]);
-      local_8 = piVar1;
+      snd_global_free(buffer[2]);
+      buffer = next;
     }
   }
   snd_wave_buffer_ring = 0;
@@ -1703,150 +1703,150 @@ i32 __cdecl snd_wave_reset_all(HWAVEOUT param_1)
     snd_wave_sources = snd_wave_free(0,snd_wave_sources);
   } while (snd_wave_sources != 0);
   snd_wave_sources = 0;
-  return local_c;
+  return result;
 }
 #undef snd_wave_buffer_count
 #undef snd_wave_max_buffers
 #undef snd_wave_stop_pending_i16
-#undef local_14
-#undef local_c
-#undef local_8
+#undef i
+#undef result
+#undef buffer
 
 /* 005d6c99 auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 #define snd_wave_buffer_count (*(uint *)((u8 *)&g.d_00638588))
 #define snd_avi_fill_count_i32 (*(i32 *)((u8 *)&g.d_00638594))
-#define local_30 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define local_2c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_28 (*(byte * *)(frame_ + FRAME_OFF(8)))
-#define local_20 (*(int * *)(frame_ + FRAME_OFF(16)))
-#define local_18 (*(i32 * *)(frame_ + FRAME_OFF(24)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(32)))
-#define local_8 (*(code * *)(frame_ + FRAME_OFF(40)))
+#define source (*(i32 * *)(frame_ + FRAME_OFF(0)))
+#define i (*(uint *)(frame_ + FRAME_OFF(4)))
+#define sample (*(byte * *)(frame_ + FRAME_OFF(8)))
+#define buffer (*(int * *)(frame_ + FRAME_OFF(16)))
+#define prev (*(i32 * *)(frame_ + FRAME_OFF(24)))
+#define active_count (*(int *)(frame_ + FRAME_OFF(28)))
+#define result (*(uint *)(frame_ + FRAME_OFF(32)))
+#define done_callback (*(code * *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
+i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT wave_out,iptr wave_hdr)
 
 {
-  i16 uVar1;
-  i32 *puVar2;
+  i16 sound_id;
+  i32 *hdr;
   int src;
   MMRESULT MVar5;
-  iptr iVar3;
+  iptr first_source;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar3 = snd_wave_sources;
-  local_10 = local_10 & 0xffff0000;
-  local_8 = (code *)0x0;
-  uVar1 = 0;
+  first_source = snd_wave_sources;
+  result = result & 0xffff0000;
+  done_callback = (code *)0x0;
+  sound_id = 0;
   if (snd_wave_device_open != 0) {
-    local_20 = *(int **)(param_2 + 0xc);
-    local_2c = 0;
-    while ((local_2c < snd_wave_buffer_count &&
+    buffer = *(int **)(wave_hdr + 0xc);
+    i = 0;
+    while ((i < snd_wave_buffer_count &&
            (snd_wave_cur_buffer = *(int *)(snd_wave_cur_buffer + 0x1c),
            (*(uint *)(snd_wave_cur_buffer + 0xc) >> 5 & 1) == 0))) {
-      local_2c++;
+      i++;
     }
-    if ((*(byte *)(local_20 + 3) & 1) == 0) {
-      local_30 = (i32 *)snd_wave_sources;
+    if ((*(byte *)(buffer + 3) & 1) == 0) {
+      source = (i32 *)snd_wave_sources;
       if ((((snd_wave_sources != 0) && (*(short *)(snd_wave_sources + 0x88) == 4)) &&
-          (((uint)local_20[3] >> 1 & 1) != 0)) && (((uint)local_20[3] >> 4 & 1) != 0)) {
+          (((uint)buffer[3] >> 1 & 1) != 0)) && (((uint)buffer[3] >> 4 & 1) != 0)) {
         **(ushort **)(snd_wave_sources + 0x8c) = **(ushort **)(snd_wave_sources + 0x8c) & 0xfffb;
-        *(uint *)(iVar3 + 0x70) = *(uint *)(iVar3 + 0x70) | 2;
+        *(uint *)(first_source + 0x70) = *(uint *)(first_source + 0x70) | 2;
       }
       do {
-        puVar2 = (i32 *)*local_20;
-        local_28 = *(byte **)*local_20;
-        while ((local_30 != (i32 *)0x0 && ((*(uint *)((int)local_30 + 0x70) >> 1 & 1) != 0)))
+        hdr = (i32 *)*buffer;
+        sample = *(byte **)*buffer;
+        while ((source != (i32 *)0x0 && ((*(uint *)((int)source + 0x70) >> 1 & 1) != 0)))
         {
-          local_30 = *(i32 **)((int)local_30 + 0xb8);
+          source = *(i32 **)((int)source + 0xb8);
         }
-        if (local_30 == (i32 *)0x0) {
-          snd_fill_silence_u8(*(iptr *)*local_20,*(i32 *)(*local_20 + 4));
-          local_20[3] = local_20[3] & 0xffffffdf;
+        if (source == (i32 *)0x0) {
+          snd_fill_silence_u8(*(iptr *)*buffer,*(i32 *)(*buffer + 4));
+          buffer[3] = buffer[3] & 0xffffffdf;
         }
         else {
-          if (((uint)local_20[3] >> 6 & 1) == 0) {
-            if (*(short *)((int)local_30 + 0x88) == 4) {
-              if (((uint)local_20[3] >> 3 & 1) == 0) {
-                snd_avi_fill_buffer((iptr)local_20,(iptr)local_30);
+          if (((uint)buffer[3] >> 6 & 1) == 0) {
+            if (*(short *)((int)source + 0x88) == 4) {
+              if (((uint)buffer[3] >> 3 & 1) == 0) {
+                snd_avi_fill_buffer((iptr)buffer,(iptr)source);
                 snd_avi_fill_count_i32++;
               }
-              src = ((uint)local_20[3] >> 7 & 0xff) * *(int *)((int)local_30 + 0x9c) +
-                      *(int *)((int)local_30 + 0x30);
-              snd_resample_8bit(local_20[4],src,local_20[6] / (int)(uint)(ushort)snd_wave_block_align,
-                           CONCAT22((short)((uint)local_30 >> 0x10),
-                                    *(i16 *)((int)local_30 + 0x80)),
+              src = ((uint)buffer[3] >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
+                      *(int *)((int)source + 0x30);
+              snd_resample_8bit(buffer[4],src,buffer[6] / (int)(uint)(ushort)snd_wave_block_align,
+                           CONCAT22((short)((uint)source >> 0x10),
+                                    *(i16 *)((int)source + 0x80)),
                            CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
-              if (((uint)local_20[3] >> 1 & 1) != 0) {
-                local_20[3] = local_20[3] | 0x10;
+              if (((uint)buffer[3] >> 1 & 1) != 0) {
+                buffer[3] = buffer[3] | 0x10;
               }
             }
             else {
-              snd_wave_copy_source((iptr)local_30,*puVar2,puVar2[1]);
+              snd_wave_copy_source((iptr)source,*hdr,hdr[1]);
             }
-            for (local_30 = *(i32 **)((int)local_30 + 0xb8); local_30 != (i32 *)0x0;
-                local_30 = *(i32 **)((int)local_30 + 0xb8)) {
-              if ((*(uint *)((int)local_30 + 0x70) >> 1 & 1) == 0) {
-                snd_wave_mix_source((uptr)local_30,*puVar2,puVar2[1]);
+            for (source = *(i32 **)((int)source + 0xb8); source != (i32 *)0x0;
+                source = *(i32 **)((int)source + 0xb8)) {
+              if ((*(uint *)((int)source + 0x70) >> 1 & 1) == 0) {
+                snd_wave_mix_source((uptr)source,*hdr,hdr[1]);
               }
             }
-            local_20[3] = local_20[3] | 0x40;
-            *(uint *)(*local_20 + 0x10) = *(uint *)(*local_20 + 0x10) & 0xfffffffe;
+            buffer[3] = buffer[3] | 0x40;
+            *(uint *)(*buffer + 0x10) = *(uint *)(*buffer + 0x10) & 0xfffffffe;
           }
-          for (local_2c = 0; local_2c < (uint)puVar2[1]; local_2c++) {
-            *local_28 = *local_28 ^ 0x80;
-            local_28++;
+          for (i = 0; i < (uint)hdr[1]; i++) {
+            *sample = *sample ^ 0x80;
+            sample++;
           }
-          MVar5 = waveOutWrite(param_1,(LPWAVEHDR)*local_20,0x20);
-          local_10 = CONCAT22((*(i16 *)((char *)&local_10 + 2)),(short)MVar5);
+          MVar5 = waveOutWrite(wave_out,(LPWAVEHDR)*buffer,0x20);
+          result = CONCAT22((*(i16 *)((char *)&result + 2)),(short)MVar5);
           if ((short)MVar5 == 0) {
-            local_20[3] = local_20[3] & 0xffffffbf;
-            local_20[3] = local_20[3] | 0x20;
-            local_20[3] = local_20[3] & 0xfffffff7;
+            buffer[3] = buffer[3] & 0xffffffbf;
+            buffer[3] = buffer[3] | 0x20;
+            buffer[3] = buffer[3] & 0xfffffff7;
           }
           else {
-            snd_waveout_error_box(local_10);
-            local_20[3] = local_20[3] & 0xffffffdf;
+            snd_waveout_error_box(result);
+            buffer[3] = buffer[3] & 0xffffffdf;
           }
         }
-        local_30 = (i32 *)snd_wave_sources;
-        local_18 = (i32 *)0x0;
-        local_14 = 0;
-        while (local_30 != (i32 *)0x0) {
-          if ((*(byte *)(local_30 + 0x1c) & 1) == 0) {
-            if (((((uint)local_30[0x1c] >> 1 & 1) == 0) &&
-                (local_14 = local_14 + 1, ((uint)local_30[0x1c] >> 3 & 1) != 0)) &&
-               (*(short *)(local_30 + 0x22) != 4)) {
-              if (((uint)local_30[0x1c] >> 2 & 1) == 0) {
-                mmioAdvance((HMMIO)*local_30,(LPMMIOINFO)(local_30 + 6),0);
+        source = (i32 *)snd_wave_sources;
+        prev = (i32 *)0x0;
+        active_count = 0;
+        while (source != (i32 *)0x0) {
+          if ((*(byte *)(source + 0x1c) & 1) == 0) {
+            if (((((uint)source[0x1c] >> 1 & 1) == 0) &&
+                (active_count = active_count + 1, ((uint)source[0x1c] >> 3 & 1) != 0)) &&
+               (*(short *)(source + 0x22) != 4)) {
+              if (((uint)source[0x1c] >> 2 & 1) == 0) {
+                mmioAdvance((HMMIO)*source,(LPMMIOINFO)(source + 6),0);
               }
               else {
-                snd_wave_stream_refill((iptr)local_30);
+                snd_wave_stream_refill((iptr)source);
               }
             }
-            local_18 = local_30;
-            local_30 = (i32 *)local_30[0x2e];
+            prev = source;
+            source = (i32 *)source[0x2e];
           }
-          else if (*(short *)(local_30 + 0x22) == 4) {
-            local_18 = local_30;
-            local_30 = (i32 *)local_30[0x2e];
+          else if (*(short *)(source + 0x22) == 4) {
+            prev = source;
+            source = (i32 *)source[0x2e];
           }
           else {
-            if (local_30[0x2d] != 0) {
-              local_8 = (code *)local_30[0x2d];
-              local_30[0x2d] = 0;
-              uVar1 = *(i16 *)((int)local_30 + 0x8a);
+            if (source[0x2d] != 0) {
+              done_callback = (code *)source[0x2d];
+              source[0x2d] = 0;
+              sound_id = *(i16 *)((int)source + 0x8a);
             }
-            local_30 = (i32 *)snd_wave_free((iptr)local_18,(iptr)local_30);
+            source = (i32 *)snd_wave_free((iptr)prev,(iptr)source);
           }
         }
-        local_30 = (i32 *)snd_wave_sources;
-        local_20 = (int *)local_20[7];
-      } while ((local_14 != 0) && (((uint)local_20[3] >> 5 & 1) == 0));
-      if (local_8 != (code *)0x0) {
-        (*local_8)(uVar1);
+        source = (i32 *)snd_wave_sources;
+        buffer = (int *)buffer[7];
+      } while ((active_count != 0) && (((uint)buffer[3] >> 5 & 1) == 0));
+      if (done_callback != (code *)0x0) {
+        (*done_callback)(sound_id);
       }
     }
   }
@@ -1855,352 +1855,352 @@ i32 __cdecl snd_wave_on_buffer_done(HWAVEOUT param_1,iptr param_2)
 #undef snd_wave_block_align
 #undef snd_wave_buffer_count
 #undef snd_avi_fill_count_i32
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_20
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_8
+#undef source
+#undef i
+#undef sample
+#undef buffer
+#undef prev
+#undef active_count
+#undef result
+#undef done_callback
 
 /* 005d717f auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define local_20 (*(i32 * *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(i32 * *)(frame_ + FRAME_OFF(20)))
-i32 __cdecl snd_wave_mix_buffer(i32 *param_1)
+#define source (*(i32 * *)(frame_ + FRAME_OFF(0)))
+#define prev (*(i32 * *)(frame_ + FRAME_OFF(20)))
+i32 __cdecl snd_wave_mix_buffer(i32 *hdr)
 
 {
-  bool bVar1;
-  i32 uVar2;
+  bool finished;
+  i32 result;
   int src;
-  iptr iVar1;
+  iptr buffer;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  bVar1 = false;
+  finished = false;
   if (snd_wave_device_open == 0) {
-    uVar2 = 0;
+    result = 0;
   }
   else {
-    iVar1 = param_1[3];
-    *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) & 0xfffffffd;
-    local_20 = (i32 *)snd_wave_sources;
-    while ((local_20 != (i32 *)0x0 && ((*(uint *)((int)local_20 + 0x70) >> 1 & 1) != 0))) {
-      local_20 = *(i32 **)((int)local_20 + 0xb8);
+    buffer = hdr[3];
+    *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffffd;
+    source = (i32 *)snd_wave_sources;
+    while ((source != (i32 *)0x0 && ((*(uint *)((int)source + 0x70) >> 1 & 1) != 0))) {
+      source = *(i32 **)((int)source + 0xb8);
     }
-    if (local_20 == (i32 *)0x0) {
-      *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) & 0xffffffdf;
+    if (source == (i32 *)0x0) {
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xffffffdf;
     }
     else {
-      if ((*(uint *)(iVar1 + 0xc) >> 6 & 1) == 0) {
-        if (*(short *)((int)local_20 + 0x88) == 4) {
-          src = (*(uint *)(iVar1 + 0xc) >> 7 & 0xff) * *(int *)((int)local_20 + 0x9c) +
-                  *(int *)((int)local_20 + 0x30);
-          snd_resample_8bit(*(i32 *)(iVar1 + 0x10),src,
-                       *(int *)(iVar1 + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
-                       CONCAT22((short)((uint)local_20 >> 0x10),
-                                *(i16 *)((int)local_20 + 0x80)),
+      if ((*(uint *)(buffer + 0xc) >> 6 & 1) == 0) {
+        if (*(short *)((int)source + 0x88) == 4) {
+          src = (*(uint *)(buffer + 0xc) >> 7 & 0xff) * *(int *)((int)source + 0x9c) +
+                  *(int *)((int)source + 0x30);
+          snd_resample_8bit(*(i32 *)(buffer + 0x10),src,
+                       *(int *)(buffer + 0x18) / (int)(uint)(ushort)snd_wave_block_align,
+                       CONCAT22((short)((uint)source >> 0x10),
+                                *(i16 *)((int)source + 0x80)),
                        CONCAT22((short)((uint)src >> 0x10),(ushort)snd_wave_block_align));
         }
         else {
-          src = snd_wave_copy_source((iptr)local_20,*param_1,param_1[1]);
+          src = snd_wave_copy_source((iptr)source,*hdr,hdr[1]);
           if (src == 1) {
-            bVar1 = true;
+            finished = true;
           }
         }
-        *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) | 0x40;
-        local_20 = *(i32 **)((int)local_20 + 0xb8);
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 0x40;
+        source = *(i32 **)((int)source + 0xb8);
       }
-      for (; local_20 != (i32 *)0x0; local_20 = *(i32 **)((int)local_20 + 0xb8)) {
-        if (((*(uint *)((int)local_20 + 0x70) >> 1 & 1) == 0) &&
-           (src = snd_wave_mix_source((uptr)local_20,*param_1,param_1[1]), src == 0)) {
-          bVar1 = false;
+      for (; source != (i32 *)0x0; source = *(i32 **)((int)source + 0xb8)) {
+        if (((*(uint *)((int)source + 0x70) >> 1 & 1) == 0) &&
+           (src = snd_wave_mix_source((uptr)source,*hdr,hdr[1]), src == 0)) {
+          finished = false;
         }
       }
-      param_1[4] = param_1[4] & 0xfffffffe;
+      hdr[4] = hdr[4] & 0xfffffffe;
     }
-    local_20 = (i32 *)snd_wave_sources;
-    local_c = (i32 *)0x0;
-    while (local_20 != (i32 *)0x0) {
-      if ((*(byte *)(local_20 + 0x1c) & 1) == 0) {
-        if ((((uint)local_20[0x1c] >> 1 & 1) == 0) && (((uint)local_20[0x1c] >> 3 & 1) != 0)) {
-          if (*(short *)(local_20 + 0x22) == 4) {
-            snd_avi_stream_refill((iptr)local_20);
+    source = (i32 *)snd_wave_sources;
+    prev = (i32 *)0x0;
+    while (source != (i32 *)0x0) {
+      if ((*(byte *)(source + 0x1c) & 1) == 0) {
+        if ((((uint)source[0x1c] >> 1 & 1) == 0) && (((uint)source[0x1c] >> 3 & 1) != 0)) {
+          if (*(short *)(source + 0x22) == 4) {
+            snd_avi_stream_refill((iptr)source);
           }
-          if (*(short *)(local_20 + 0x22) != 4) {
-            if (((uint)local_20[0x1c] >> 2 & 1) == 0) {
-              mmioAdvance((HMMIO)*local_20,(LPMMIOINFO)(local_20 + 6),0);
+          if (*(short *)(source + 0x22) != 4) {
+            if (((uint)source[0x1c] >> 2 & 1) == 0) {
+              mmioAdvance((HMMIO)*source,(LPMMIOINFO)(source + 6),0);
             }
             else {
-              snd_wave_stream_refill((iptr)local_20);
+              snd_wave_stream_refill((iptr)source);
             }
           }
         }
-        local_c = local_20;
-        local_20 = (i32 *)local_20[0x2e];
+        prev = source;
+        source = (i32 *)source[0x2e];
       }
-      else if (*(short *)(local_20 + 0x22) == 4) {
-        *(uint *)(iVar1 + 0xc) = *(uint *)(iVar1 + 0xc) | 2;
-        local_20[0x1c] = local_20[0x1c] | 2;
-        local_c = local_20;
-        local_20 = (i32 *)local_20[0x2e];
+      else if (*(short *)(source + 0x22) == 4) {
+        *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
+        source[0x1c] = source[0x1c] | 2;
+        prev = source;
+        source = (i32 *)source[0x2e];
       }
       else {
-        local_20 = (i32 *)snd_wave_free((iptr)local_c,(iptr)local_20);
+        source = (i32 *)snd_wave_free((iptr)prev,(iptr)source);
       }
     }
-    if ((snd_wave_sources == 0) || (bVar1)) {
-      uVar2 = 1;
+    if ((snd_wave_sources == 0) || (finished)) {
+      result = 1;
     }
     else {
-      uVar2 = 0;
+      result = 0;
     }
   }
-  return uVar2;
+  return result;
 }
 #undef snd_wave_block_align
-#undef local_20
-#undef local_c
+#undef source
+#undef prev
 
 /* 005d7494 auto */
 #define snd_wave_source_count (*(short *)((u8 *)&g.d_0063858c))
-iptr __cdecl snd_wave_free(iptr param_1,iptr param_2)
+iptr __cdecl snd_wave_free(iptr prev,iptr source)
 
 {
-  iptr iVar2;
-  iptr iVar1;
+  iptr next;
+  iptr new_head;
   
-  if (param_2 == 0) {
-    iVar2 = 0;
+  if (source == 0) {
+    next = 0;
   }
   else {
-    iVar2 = *(iptr *)(param_2 + 0xb8);
-    iVar1 = iVar2;
-    if (param_1 != 0) {
-      *(iptr *)(param_1 + 0xb8) = iVar2;
-      iVar1 = snd_wave_sources;
+    next = *(iptr *)(source + 0xb8);
+    new_head = next;
+    if (prev != 0) {
+      *(iptr *)(prev + 0xb8) = next;
+      new_head = snd_wave_sources;
     }
-    snd_wave_sources = iVar1;
-    mmioClose(*(HMMIO *)param_2,0);
-    if ((*(uint *)(param_2 + 0x70) >> 2 & 1) != 0) {
-      mmioClose(*(HMMIO *)(param_2 + 0x60),0);
+    snd_wave_sources = new_head;
+    mmioClose(*(HMMIO *)source,0);
+    if ((*(uint *)(source + 0x70) >> 2 & 1) != 0) {
+      mmioClose(*(HMMIO *)(source + 0x60),0);
     }
-    GlobalUnlock(*(HGLOBAL *)(param_2 + 0x6c));
-    GlobalFree(*(HGLOBAL *)(param_2 + 0x6c));
+    GlobalUnlock(*(HGLOBAL *)(source + 0x6c));
+    GlobalFree(*(HGLOBAL *)(source + 0x6c));
     snd_wave_source_count--;
   }
-  return iVar2;
+  return next;
 }
 #undef snd_wave_source_count
 
 /* 005d753e auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
 #define count (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
+#define remaining (*(uint *)(frame_ + FRAME_OFF(12)))
 /* WARNING: Unknown calling convention -- yet parameter storage is locked */
 
-i32 __cdecl snd_wave_copy_source(iptr param_1,int dst,uint param_3)
+i32 __cdecl snd_wave_copy_source(iptr source,int dst,uint length)
 
 {
-  ushort uVar1;
-  uint uVar2;
-  uint uVar3;
-  i32 uVar4;
+  ushort consumed;
+  uint want;
+  uint avail;
+  i32 result;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar2 = param_3 / (ushort)snd_wave_block_align;
-  if ((param_1 == 0) || ((*(byte *)(param_1 + 0x70) & 1) != 0)) {
+  want = length / (ushort)snd_wave_block_align;
+  if ((source == 0) || ((*(byte *)(source + 0x70) & 1) != 0)) {
     count = 0;
   }
   else {
-    if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-      local_c = *(int *)(param_1 + 8) - *(int *)(param_1 + 100);
+    if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
+      remaining = *(int *)(source + 8) - *(int *)(source + 100);
     }
     else {
-      local_c = *(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34);
+      remaining = *(int *)(source + 0x3c) - *(int *)(source + 0x34);
     }
-    uVar3 = local_c / *(ushort *)(param_1 + 0x80);
-    count = uVar2;
-    if (uVar3 < uVar2) {
-      *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) | 1;
-      count = uVar3;
+    avail = remaining / *(ushort *)(source + 0x80);
+    count = want;
+    if (avail < want) {
+      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 1;
+      count = avail;
     }
-    if ((uint)(*(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34)) /
-        (uint)*(ushort *)(param_1 + 0x80) < uVar2 * 2) {
-      *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) | 8;
+    if ((uint)(*(int *)(source + 0x3c) - *(int *)(source + 0x34)) /
+        (uint)*(ushort *)(source + 0x80) < want * 2) {
+      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 8;
     }
     else {
-      *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xfffffff7;
+      *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xfffffff7;
     }
-    uVar2 -= count;
+    want -= count;
   }
   if (count != 0) {
-    uVar1 = snd_resample_8bit(dst,*(i32 *)(param_1 + 0x34),count,
-                         CONCAT22((short)((uint)param_1 >> 0x10),*(i16 *)(param_1 + 0x80)),
-                         CONCAT22((short)(uVar2 >> 0x10),(ushort)snd_wave_block_align));
-    *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + (uint)uVar1;
-    if ((*(short *)(param_1 + 0x88) == 4) && (*(int *)(param_1 + 0x3c) == *(int *)(param_1 + 0x34)))
+    consumed = snd_resample_8bit(dst,*(i32 *)(source + 0x34),count,
+                         CONCAT22((short)((uint)source >> 0x10),*(i16 *)(source + 0x80)),
+                         CONCAT22((short)(want >> 0x10),(ushort)snd_wave_block_align));
+    *(int *)(source + 0x34) = *(int *)(source + 0x34) + (uint)consumed;
+    if ((*(short *)(source + 0x88) == 4) && (*(int *)(source + 0x3c) == *(int *)(source + 0x34)))
     {
-      *(i32 *)(param_1 + 0x34) = *(i32 *)(param_1 + 0x30);
+      *(i32 *)(source + 0x34) = *(i32 *)(source + 0x30);
     }
-    *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xffffffef;
+    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xffffffef;
   }
-  if (uVar2 == 0) {
-    if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
+  if (want == 0) {
+    if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
+      *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
     }
     else {
-      *(i32 *)(param_1 + 100) = 0;
+      *(i32 *)(source + 100) = 0;
     }
-    uVar4 = 0;
+    result = 0;
   }
   else {
-    _memset((void *)(dst + (ushort)snd_wave_block_align * count),0,(ushort)snd_wave_block_align * uVar2);
-    if ((param_1 != 0) && (local_c != 0)) {
-      *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
+    _memset((void *)(dst + (ushort)snd_wave_block_align * count),0,(ushort)snd_wave_block_align * want);
+    if ((source != 0) && (remaining != 0)) {
+      *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
     }
-    uVar4 = 1;
+    result = 1;
   }
-  return uVar4;
+  return result;
 }
 #undef snd_wave_block_align
 #undef count
-#undef local_c
+#undef remaining
 
 /* 005d778c auto */
 #define snd_wave_block_align (*(i8 *)((u8 *)&g.d_006385ac))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define advance (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define count (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(12)))
-i32 __cdecl snd_wave_mix_source(uptr param_1,i32 dst,uint param_3)
+#define remaining (*(uint *)(frame_ + FRAME_OFF(12)))
+i32 __cdecl snd_wave_mix_source(uptr source,i32 dst,uint length)
 
 {
-  ushort uVar1;
-  uint uVar2;
-  uint uVar3;
-  uptr uVar4;
-  i32 uVar5;
+  ushort consumed;
+  uint avail;
+  uint want;
+  uptr flags;
+  i32 result;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-    local_c = *(int *)(param_1 + 8) - *(int *)(param_1 + 100);
+  if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
+    remaining = *(int *)(source + 8) - *(int *)(source + 100);
   }
   else {
-    local_c = *(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34);
+    remaining = *(int *)(source + 0x3c) - *(int *)(source + 0x34);
   }
-  uVar2 = local_c / *(ushort *)(param_1 + 0x80);
-  uVar3 = param_3 / (ushort)snd_wave_block_align;
-  count = uVar3;
-  if (uVar2 < uVar3) {
-    *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) | 1;
-    count = uVar2;
+  avail = remaining / *(ushort *)(source + 0x80);
+  want = length / (ushort)snd_wave_block_align;
+  count = want;
+  if (avail < want) {
+    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) | 1;
+    count = avail;
   }
-  if ((uint)(*(int *)(param_1 + 0x3c) - *(int *)(param_1 + 0x34)) /
-      (uint)*(ushort *)(param_1 + 0x80) < uVar3 * 2) {
-    uVar4 = *(uint *)(param_1 + 0x70) | 8;
-    *(uptr *)(param_1 + 0x70) = uVar4;
+  if ((uint)(*(int *)(source + 0x3c) - *(int *)(source + 0x34)) /
+      (uint)*(ushort *)(source + 0x80) < want * 2) {
+    flags = *(uint *)(source + 0x70) | 8;
+    *(uptr *)(source + 0x70) = flags;
   }
   else {
-    *(uint *)(param_1 + 0x70) = *(uint *)(param_1 + 0x70) & 0xfffffff7;
-    uVar4 = param_1;
+    *(uint *)(source + 0x70) = *(uint *)(source + 0x70) & 0xfffffff7;
+    flags = source;
   }
   if (count != 0) {
-    uVar1 = snd_mix_8bit_resample(dst,*(i32 *)(param_1 + 0x34),count,
-                         CONCAT22((short)(param_1 >> 0x10),*(i16 *)(param_1 + 0x80)),
-                         CONCAT22((short)(uVar4 >> 0x10),(ushort)snd_wave_block_align));
-    local_14 = (uint)uVar1;
-    *(int *)(param_1 + 0x34) = *(int *)(param_1 + 0x34) + local_14;
+    consumed = snd_mix_8bit_resample(dst,*(i32 *)(source + 0x34),count,
+                         CONCAT22((short)(source >> 0x10),*(i16 *)(source + 0x80)),
+                         CONCAT22((short)(flags >> 0x10),(ushort)snd_wave_block_align));
+    advance = (uint)consumed;
+    *(int *)(source + 0x34) = *(int *)(source + 0x34) + advance;
   }
-  if ((*(uint *)(param_1 + 0x70) >> 2 & 1) == 0) {
-    *(int *)(param_1 + 100) = *(int *)(param_1 + 100) + *(ushort *)(param_1 + 0x80) * count;
-  }
-  else {
-    *(i32 *)(param_1 + 100) = 0;
-  }
-  if (((*(byte *)(param_1 + 0x70) & 1) == 0) || ((*(uint *)(param_1 + 0x70) >> 2 & 1) != 0)) {
-    uVar5 = 0;
+  if ((*(uint *)(source + 0x70) >> 2 & 1) == 0) {
+    *(int *)(source + 100) = *(int *)(source + 100) + *(ushort *)(source + 0x80) * count;
   }
   else {
-    uVar5 = 1;
+    *(i32 *)(source + 100) = 0;
   }
-  return uVar5;
+  if (((*(byte *)(source + 0x70) & 1) == 0) || ((*(uint *)(source + 0x70) >> 2 & 1) != 0)) {
+    result = 0;
+  }
+  else {
+    result = 1;
+  }
+  return result;
 }
 #undef snd_wave_block_align
-#undef local_14
+#undef advance
 #undef count
-#undef local_c
+#undef remaining
 
 /* 005d791b auto */
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-i32 __cdecl snd_avi_fill_buffer(iptr param_1,iptr param_2)
+#define byte_count (*(uint *)(frame_ + FRAME_OFF(4)))
+#define i (*(uint *)(frame_ + FRAME_OFF(8)))
+#define bytes_read (*(int *)(frame_ + FRAME_OFF(16)))
+i32 __cdecl snd_avi_fill_buffer(iptr buffer,iptr source)
 
 {
-  i32 uVar1;
-  uint uVar2;
-  iptr iVar1;
+  i32 result;
+  uint limit;
+  iptr head;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = snd_wave_sources;
-  if (*(int *)(param_2 + 0x98) == param_1) {
-    local_14 = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
-    local_8 = 0;
-    uVar2 = *(int *)(snd_wave_sources + 8) -
+  head = snd_wave_sources;
+  if (*(int *)(source + 0x98) == buffer) {
+    byte_count = *(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68);
+    bytes_read = 0;
+    limit = *(int *)(snd_wave_sources + 8) -
             (*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94));
-    if (uVar2 < local_14) {
-      local_14 = uVar2;
+    if (limit < byte_count) {
+      byte_count = limit;
     }
     AVIStreamRead(*(i32 *)(snd_wave_sources + 0x84),
                   *(uint *)(snd_wave_sources + 0x90) / (uint)*(ushort *)(snd_wave_sources + 0x80),
-                  local_14 / *(ushort *)(snd_wave_sources + 0x80),*(i32 *)(snd_wave_sources + 0x34)
-                  ,local_14,&local_8,0);
-    *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + local_8;
-    *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + local_8;
-    *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + local_8;
-    if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-      *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
+                  byte_count / *(ushort *)(snd_wave_sources + 0x80),*(i32 *)(snd_wave_sources + 0x34)
+                  ,byte_count,&bytes_read,0);
+    *(int *)(snd_wave_sources + 0x90) = *(int *)(snd_wave_sources + 0x90) + bytes_read;
+    *(int *)(head + 0x34) = *(int *)(head + 0x34) + bytes_read;
+    *(int *)(snd_wave_sources + 0x68) = *(int *)(snd_wave_sources + 0x68) + bytes_read;
+    if (*(int *)(head + 0x3c) == *(int *)(head + 0x34)) {
+      *(i32 *)(head + 0x34) = *(i32 *)(head + 0x30);
     }
     if (*(uint *)(snd_wave_sources + 0x9c) <= *(uint *)(snd_wave_sources + 0x68)) {
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 8;
-      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(param_1 + 0x1c);
-      param_1 = *(iptr *)(snd_wave_sources + 0x98);
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 8;
+      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
+      buffer = *(iptr *)(snd_wave_sources + 0x98);
       *(i32 *)(snd_wave_sources + 0x68) = 0;
     }
     if (*(uint *)(snd_wave_sources + 8) <=
         (uint)(*(int *)(snd_wave_sources + 0x90) - *(int *)(snd_wave_sources + 0x94))) {
-      local_10 = 0;
-      while ((local_10 < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) &&
-             (*(uint *)(iVar1 + 0x34) < *(uint *)(iVar1 + 0x3c)))) {
-        **(i8 **)(iVar1 + 0x34) = 0x80;
-        *(int *)(iVar1 + 0x34) = *(int *)(iVar1 + 0x34) + 1;
-        local_10++;
+      i = 0;
+      while ((i < (uint)(*(int *)(snd_wave_sources + 0x9c) - *(int *)(snd_wave_sources + 0x68)) &&
+             (*(uint *)(head + 0x34) < *(uint *)(head + 0x3c)))) {
+        **(i8 **)(head + 0x34) = 0x80;
+        *(int *)(head + 0x34) = *(int *)(head + 0x34) + 1;
+        i++;
       }
-      if (*(int *)(iVar1 + 0x3c) == *(int *)(iVar1 + 0x34)) {
-        *(i32 *)(iVar1 + 0x34) = *(i32 *)(iVar1 + 0x30);
+      if (*(int *)(head + 0x3c) == *(int *)(head + 0x34)) {
+        *(i32 *)(head + 0x34) = *(i32 *)(head + 0x30);
       }
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) & 0xfffffff7;
-      *(uint *)(param_1 + 0xc) = *(uint *)(param_1 + 0xc) | 2;
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) & 0xfffffff7;
+      *(uint *)(buffer + 0xc) = *(uint *)(buffer + 0xc) | 2;
       *(uint *)(snd_wave_sources + 0x70) = *(uint *)(snd_wave_sources + 0x70) | 1;
-      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(param_1 + 0x1c);
+      *(i32 *)(snd_wave_sources + 0x98) = *(i32 *)(buffer + 0x1c);
       *(i32 *)(snd_wave_sources + 0x68) = 0;
     }
-    uVar1 = 0;
+    result = 0;
   }
   else {
-    uVar1 = 0xd;
+    result = 0xd;
   }
-  return uVar1;
+  return result;
 }
-#undef local_14
-#undef local_10
-#undef local_8
+#undef byte_count
+#undef i
+#undef bytes_read
 
 /* 005dd010 auto */
 #define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define eh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
@@ -2208,13 +2208,13 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   surfwnd_ctor((SurfaceWindow *)this);
-  local_8 = 0;
+  eh_state = 0;
   avi_audio_ctor((AviAudio *)&this->border_width);
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   palette_init((GamePalette *)&this->client_x);
-  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
+  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),2);
   surface_ctor((DibSurface *)(this->pad_4a4 + 0xb4));
   this->vtable = (u32)&PTR_FUN_0061d718;
   this->style_flags = 0;
@@ -2235,15 +2235,15 @@ DocumentWindow * __thiscall mmwnd_ctor(DocumentWindow *this)
   return this;
 }
 #undef avi_current_player_i32
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef eh_next
+#undef eh_handler
+#undef eh_state
 
 /* 005dd1a0 auto */
 #define avi_current_player_i32 (*(i32 *)((u8 *)&g.d_006389d0))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define eh_next (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define eh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __thiscall avi_player_dtor(AviPlayer *this)
@@ -2252,80 +2252,80 @@ i32 __thiscall avi_player_dtor(AviPlayer *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   *(i8 ***)this->pad_0 = &PTR_FUN_0061d718;
-  (*(i32 *)((char *)&local_8 + 1)) = 0;
-  (*(i8 *)((char *)&local_8 + 0)) = 3;
+  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  (*(i8 *)((char *)&eh_state + 0)) = 3;
   avi_play_pause((iptr)this);
   avi_close((iptr)this);
   avi_current_player_i32 = 0;
-  (*(i8 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 005dd230 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x558)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 005dd23f */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x124)); }
-  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
+  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
   /* inlined unwind funclet 005dd24e */ { avi_audio_release((AviAudioReleaseView *)(*(int *)((iptr)&this) + 0x11c)); }
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   /* inlined unwind funclet 005dd25d */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
-  return uStack_10;
+  return eh_next;
 }
 #undef avi_current_player_i32
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef eh_next
+#undef eh_handler
+#undef eh_state
 
 /* 005dd27e auto */
 void __thiscall
 avi_player_create
-          (MediaWindow *this,iptr param_1,i32 param_2,u32 param_3,u32 param_4)
+          (MediaWindow *this,iptr parent,i32 style,u32 x,u32 y)
 
 {
   surface_wnd_create
-            ((DibSurface *)this,param_1,param_2,param_3,param_4,0x140,0xf0,(iptr)&this->client_x
+            ((DibSurface *)this,parent,style,x,y,0x140,0xf0,(iptr)&this->client_x
             );
   surface_fill((DibSurface *)this,0);
-  this->pos_x = param_3;
-  this->pos_y = param_4;
+  this->pos_x = x;
+  this->pos_y = y;
   return;
 }
 
 /* 005dd2e3 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define target_dib (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 avi_player_create_child
-          (MediaWindow *this,iptr param_1,i32 param_2,u32 param_3,u32 param_4,iptr param_5
+          (MediaWindow *this,iptr parent,i32 style,u32 x,u32 y,iptr target
           )
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (param_5 == 0) {
-    local_8 = 0;
+  if (target == 0) {
+    target_dib = 0;
   }
   else {
-    local_8 = param_5 + 0x48;
+    target_dib = target + 0x48;
   }
   wnd_create_with_surface
-            ((DibSurface *)this,param_1,param_2,param_3,param_4,0x140,0xf0,(iptr)&this->client_x
-             ,local_8);
+            ((DibSurface *)this,parent,style,x,y,0x140,0xf0,(iptr)&this->client_x
+             ,target_dib);
   surface_fill((DibSurface *)this,0);
-  this->target_surface = param_5;
-  this->pos_x = param_3;
-  this->pos_y = param_4;
+  this->target_surface = target;
+  this->pos_x = x;
+  this->pos_y = y;
   return;
 }
-#undef local_8
+#undef target_dib
 
 /* 005dd377 auto */
-int __thiscall avi_player_open(AviPlayerOpenView *this,iptr param_1)
+int __thiscall avi_player_open(AviPlayerOpenView *this,iptr filename)
 
 {
-  int iVar1;
+  int result;
   
   avi_close((iptr)this);
-  iVar1 = avi_open_file((iptr)this,param_1);
-  if (iVar1 == 0) {
-    iVar1 = 0;
+  result = avi_open_file((iptr)this,filename);
+  if (result == 0) {
+    result = 0;
   }
-  return iVar1;
+  return result;
 }
 
 /* 005dd3c2 auto */
@@ -2341,34 +2341,34 @@ void __thiscall avi_player_play(AviPlayerPlayView *this)
 }
 
 /* 005dd3f1 auto */
-void __thiscall avi_player_play_range(AviPlayerRangeView *this,u32 param_1,u32 param_2)
+void __thiscall avi_player_play_range(AviPlayerRangeView *this,u32 first_frame,u32 last_frame)
 
 {
-  if ((int)param_1 <= (int)param_2) {
+  if ((int)first_frame <= (int)last_frame) {
     this->loop = 0;
-    avi_seek_frame((iptr)this,param_1,0);
-    this->end_frame = param_2;
-    this->start_frame = param_1;
+    avi_seek_frame((iptr)this,first_frame,0);
+    this->end_frame = last_frame;
+    this->start_frame = first_frame;
     avi_play_start((iptr)this);
   }
   return;
 }
 
 /* 005dd45d auto */
-void __thiscall avi_player_show_frame(void *this,i32 param_1)
+void __thiscall avi_player_show_frame(void *this,i32 frame)
 
 {
-  avi_seek_frame((iptr)this,param_1,1);
+  avi_seek_frame((iptr)this,frame,1);
   return;
 }
 
 /* 005dd4c2 auto */
-void __thiscall avi_player_loop_range(AviPlayerLoopView *this,u32 param_1,u32 param_2)
+void __thiscall avi_player_loop_range(AviPlayerLoopView *this,u32 first_frame,u32 last_frame)
 
 {
-  this->start_frame = param_1;
-  avi_seek_frame((iptr)this,param_1,0);
-  this->end_frame = param_2;
+  this->start_frame = first_frame;
+  avi_seek_frame((iptr)this,first_frame,0);
+  this->end_frame = last_frame;
   this->loop = 1;
   avi_play_start((iptr)this);
   return;
@@ -2383,68 +2383,68 @@ void __thiscall avi_player_pause(AviPlayerPauseView *this)
 }
 
 /* 005dd561 auto */
-void __thiscall avi_player_set_palette(DibSurface *this,iptr param_1)
+void __thiscall avi_player_set_palette(DibSurface *this,iptr palette)
 
 {
-  avi_apply_palette((iptr)this,param_1);
-  surface_set_palette(this,param_1);
-  wnd_set_palette((WndBase *)(this + 1),param_1);
+  avi_apply_palette((iptr)this,palette);
+  surface_set_palette(this,palette);
+  wnd_set_palette((WndBase *)(this + 1),palette);
   return;
 }
 
 /* 005dd64c auto */
-#define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(20)))
+#define src_rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
+#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
 void __thiscall
-avi_player_draw_to(DibSurface *this,iptr param_1,int param_2,int param_3)
+avi_player_draw_to(DibSurface *this,iptr dest,int x,int y)
 
 {
-  int iVar1;
-  int iVar2;
+  int dest_size;
+  int src_size;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((-1 < param_2) && (-1 < param_3)) {
-    iVar1 = surface_width((DibSurface *)param_1);
-    iVar2 = surface_get_width(this);
-    if (iVar2 <= iVar1 - param_2) {
-      iVar1 = surface_height((DibSurface *)param_1);
-      iVar2 = surface_get_height(this);
-      if (iVar2 <= iVar1 - param_3) {
+  if ((-1 < x) && (-1 < y)) {
+    dest_size = surface_width((DibSurface *)dest);
+    src_size = surface_get_width(this);
+    if (src_size <= dest_size - x) {
+      dest_size = surface_height((DibSurface *)dest);
+      src_size = surface_get_height(this);
+      if (src_size <= dest_size - y) {
         avi_decode_frame((iptr)this,0);
-        iVar1 = surface_get_height(this);
-        iVar2 = surface_get_width(this);
-        SetRect(&local_24,0,0,iVar2,iVar1);
-        CopyRect(&local_14,&local_24);
-        OffsetRect(&local_14,param_2,param_3);
-        surface_blit(this,param_1,(iptr)&local_24,(iptr)&local_14);
+        dest_size = surface_get_height(this);
+        src_size = surface_get_width(this);
+        SetRect(&src_rect,0,0,src_size,dest_size);
+        CopyRect(&dst_rect,&src_rect);
+        OffsetRect(&dst_rect,x,y);
+        surface_blit(this,dest,(iptr)&src_rect,(iptr)&dst_rect);
       }
     }
   }
   return;
 }
-#undef local_24
-#undef local_14
+#undef src_rect
+#undef dst_rect
 
 /* 005dd71e auto */
-void __thiscall avi_player_set_double_size(MediaWindow *this,i32 param_1)
+void __thiscall avi_player_set_double_size(MediaWindow *this,i32 enable)
 
 {
-  int iVar1;
-  int iVar2;
+  int height;
+  int width;
   
-  iVar1 = surface_get_height((DibSurface *)this);
-  iVar1 = iVar1 * 2;
-  iVar2 = surface_get_width((DibSurface *)this);
-  wnd_resize_clamped((WindowObjectView *)this,iVar2 * 2,iVar1);
+  height = surface_get_height((DibSurface *)this);
+  height = height * 2;
+  width = surface_get_width((DibSurface *)this);
+  wnd_resize_clamped((WindowObjectView *)this,width * 2,height);
   this->double_size = 1;
   return;
 }
 
 /* 005dd761 auto */
-void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *this,int param_1)
+void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *this,int enable)
 
 {
-  if (param_1 == 0) {
+  if (enable == 0) {
     if (this->is_transparent != 0) {
       this->is_transparent = 0;
       avi_restart_decompress((iptr)this,0);
@@ -2460,23 +2460,23 @@ void __thiscall avi_player_set_transparent(AviPlayerSetTransparentView *this,int
 /* 005dd8a0 auto */
 #define app_hinstance (*(HINSTANCE *)((u8 *)&g.d_006e4ff0))
 #define snd_mci_notify_hwnd (*(HWND *)((u8 *)&g.d_006e4ff8))
-#define local_2c (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
+#define wnd_class (*(WNDCLASSA *)(frame_ + FRAME_OFF(4)))
 void __cdecl snd_system_init(void)
 
 {
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_2c.style = 0;
-  local_2c.lpfnWndProc = snd_mci_notify_wndproc;
-  local_2c.cbClsExtra = 0;
-  local_2c.cbWndExtra = 0;
-  local_2c.hInstance = app_hinstance;
-  local_2c.hIcon = (HICON)0x0;
-  local_2c.hCursor = (HCURSOR)0x0;
-  local_2c.hbrBackground = (HBRUSH)0x0;
-  local_2c.lpszMenuName = (LPCSTR)0x0;
-  local_2c.lpszClassName = s_MSMMWindow_006389e4;
-  RegisterClassA(&local_2c);
+  wnd_class.style = 0;
+  wnd_class.lpfnWndProc = snd_mci_notify_wndproc;
+  wnd_class.cbClsExtra = 0;
+  wnd_class.cbWndExtra = 0;
+  wnd_class.hInstance = app_hinstance;
+  wnd_class.hIcon = (HICON)0x0;
+  wnd_class.hCursor = (HCURSOR)0x0;
+  wnd_class.hbrBackground = (HBRUSH)0x0;
+  wnd_class.lpszMenuName = (LPCSTR)0x0;
+  wnd_class.lpszClassName = s_MSMMWindow_006389e4;
+  RegisterClassA(&wnd_class);
   snd_mci_notify_hwnd = CreateWindowExA(0,s_MSMMWindow_006389f0,(LPCSTR)0x0,0,-0x80000000,-0x80000000,
                                  -0x80000000,-0x80000000,(HWND)0x0,(HMENU)0x0,app_hinstance,
                                  (LPVOID)0x0);
@@ -2485,29 +2485,29 @@ void __cdecl snd_system_init(void)
 }
 #undef app_hinstance
 #undef snd_mci_notify_hwnd
-#undef local_2c
+#undef wnd_class
 
 /* 005dd93f auto */
 #define snd_cd_device_id (*(uint *)((u8 *)&g.d_006389d8))
 #define snd_midi_device_id (*(uint *)((u8 *)&g.d_006389d4))
-LRESULT __stdcall snd_mci_notify_wndproc(HWND param_1,UINT param_2,WPARAM param_3,uint param_4)
+LRESULT __stdcall snd_mci_notify_wndproc(HWND hwnd,UINT msg,WPARAM wparam,uint lparam)
 
 {
   LRESULT LVar1;
   
-  if (param_2 == 0x3b9) {
-    if (param_3 == 1) {
-      if ((param_4 & 0xffff) == snd_midi_device_id) {
+  if (msg == 0x3b9) {
+    if (wparam == 1) {
+      if ((lparam & 0xffff) == snd_midi_device_id) {
         snd_midi_fire_notify_callback();
       }
-      else if ((param_4 & 0xffff) == snd_cd_device_id) {
+      else if ((lparam & 0xffff) == snd_cd_device_id) {
         snd_cd_fire_notify_callback();
       }
     }
     LVar1 = 0;
   }
   else {
-    LVar1 = DefWindowProcA(param_1,param_2,param_3,param_4);
+    LVar1 = DefWindowProcA(hwnd,msg,wparam,lparam);
   }
   return LVar1;
 }
@@ -2526,18 +2526,18 @@ void __cdecl snd_stop_sndplaysound(void)
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(uint *)((u8 *)&g.d_006389e0))
 #define snd_mci_notify_hwnd (*(i32 *)((u8 *)&g.d_006e4ff8))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(DWORD_PTR *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
-i32 __cdecl snd_cd_play_track(uint param_1)
+#define play_parms (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define from_track (*(uint *)(frame_ + FRAME_OFF(4)))
+#define to_track (*(uint *)(frame_ + FRAME_OFF(8)))
+#define play_flags (*(DWORD_PTR *)(frame_ + FRAME_OFF(12)))
+#define set_parms (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define time_format_item (*(uint *)(frame_ + FRAME_OFF(20)))
+#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(24)))
+i32 __cdecl snd_cd_play_track(uint track)
 
 {
   MCIERROR MVar1;
-  i32 uVar2;
+  i32 result;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
@@ -2545,52 +2545,52 @@ i32 __cdecl snd_cd_play_track(uint param_1)
     if (snd_cd_device_id == 0) {
       return 0;
     }
-    local_8 = snd_cd_device_id;
+    device_id = snd_cd_device_id;
   }
   else {
-    local_8 = snd_cd_device_id;
+    device_id = snd_cd_device_id;
     mciSendCommandA(snd_cd_device_id,0x808,0,0);
   }
-  local_10 = 0;
-  local_c = param_1 & 0xff;
-  MVar1 = mciSendCommandA(local_8,0x807,8,(DWORD_PTR)&local_10);
+  set_parms = 0;
+  time_format_item = track & 0xff;
+  MVar1 = mciSendCommandA(device_id,0x807,8,(DWORD_PTR)&set_parms);
   if (MVar1 == 0) {
-    if ((param_1 & 0xff) == snd_cd_track_count) {
-      local_14 = 5;
+    if ((track & 0xff) == snd_cd_track_count) {
+      play_flags = 5;
     }
     else {
-      local_14 = 0xd;
+      play_flags = 0xd;
     }
-    local_1c = param_1 & 0xff;
-    local_18 = (uint)(byte)((char)param_1 + 1);
-    local_20 = snd_mci_notify_hwnd;
-    MVar1 = mciSendCommandA(local_8,0x806,local_14,(DWORD_PTR)&local_20);
+    from_track = track & 0xff;
+    to_track = (uint)(byte)((char)track + 1);
+    play_parms = snd_mci_notify_hwnd;
+    MVar1 = mciSendCommandA(device_id,0x806,play_flags,(DWORD_PTR)&play_parms);
     if (MVar1 == 0) {
-      uVar2 = 1;
+      result = 1;
     }
     else {
       snd_cd_close();
       dbg_logf(ADDR(0x638aa8, ((u8 *)&g.d_00638aa8)),MVar1);
-      uVar2 = 0;
+      result = 0;
     }
   }
   else {
     snd_cd_close();
     dbg_logf(ADDR(0x638a84, ((u8 *)&g.d_00638a84)),MVar1);
-    uVar2 = 0;
+    result = 0;
   }
-  return uVar2;
+  return result;
 }
 #undef snd_cd_device_id
 #undef snd_cd_track_count
 #undef snd_mci_notify_hwnd
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef play_parms
+#undef from_track
+#undef to_track
+#undef play_flags
+#undef set_parms
+#undef time_format_item
+#undef device_id
 
 /* 005ddd12 auto */
 #define snd_midi_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d4))
@@ -2608,15 +2608,15 @@ void __cdecl snd_midi_close(void)
 /* 005ddd4e auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
-#define local_34 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_30 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_20 (*(i8 (*)[4])(frame_ + FRAME_OFF(24)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define open_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
+#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
+#define device_type (*(char * *)(frame_ + FRAME_OFF(12)))
+#define set_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(24)))
+#define time_format (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define status_parms (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define track_count (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define status_item (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define status_track (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __cdecl snd_cd_open(void)
 
 {
@@ -2624,19 +2624,19 @@ void __cdecl snd_cd_open(void)
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
-    local_2c = s_cdaudio_00638acc;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_34);
+    device_type = s_cdaudio_00638acc;
+    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)open_parms);
     if (MVar1 == 0) {
-      snd_cd_device_id = local_30;
-      local_1c = 10;
-      MVar1 = mciSendCommandA(local_30,0x80d,0x400,(DWORD_PTR)local_20);
+      snd_cd_device_id = device_id;
+      time_format = 10;
+      MVar1 = mciSendCommandA(device_id,0x80d,0x400,(DWORD_PTR)set_parms);
       if (MVar1 == 0) {
-        local_14 = 0;
-        local_10 = 0;
-        local_8 = 0;
-        local_c = 3;
-        mciSendCommandA(snd_cd_device_id,0x814,0x100,(DWORD_PTR)&local_14);
-        snd_cd_track_count = local_10;
+        status_parms = 0;
+        track_count = 0;
+        status_track = 0;
+        status_item = 3;
+        mciSendCommandA(snd_cd_device_id,0x814,0x100,(DWORD_PTR)&status_parms);
+        snd_cd_track_count = track_count;
       }
       else {
         mciSendCommandA(snd_cd_device_id,0x804,0,0);
@@ -2652,15 +2652,15 @@ void __cdecl snd_cd_open(void)
 }
 #undef snd_cd_device_id
 #undef snd_cd_track_count
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_20
-#undef local_1c
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef open_parms
+#undef device_id
+#undef device_type
+#undef set_parms
+#undef time_format
+#undef status_parms
+#undef track_count
+#undef status_item
+#undef status_track
 
 /* 005dde57 auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
@@ -2707,15 +2707,15 @@ void __cdecl snd_system_shutdown(void)
 /* 005ddeff auto */
 #define snd_cd_device_id (*(MCIDEVICEID *)((u8 *)&g.d_006389d8))
 #define snd_cd_track_count (*(i32 *)((u8 *)&g.d_006389e0))
-#define local_3c (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_38 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
-#define local_34 (*(char * *)(frame_ + FRAME_OFF(12)))
-#define local_24 (*(MCIDEVICEID *)(frame_ + FRAME_OFF(28)))
-#define local_20 (*(i8 (*)[4])(frame_ + FRAME_OFF(32)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_14 (*(i8 (*)[4])(frame_ + FRAME_OFF(44)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(52)))
+#define open_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
+#define opened_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(8)))
+#define device_type (*(char * *)(frame_ + FRAME_OFF(12)))
+#define device_id (*(MCIDEVICEID *)(frame_ + FRAME_OFF(28)))
+#define set_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(32)))
+#define time_format (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define status_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(44)))
+#define track_count (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define status_item (*(i32 *)(frame_ + FRAME_OFF(52)))
 i32 __cdecl snd_cd_get_track_count(void)
 
 {
@@ -2723,46 +2723,46 @@ i32 __cdecl snd_cd_get_track_count(void)
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (snd_cd_device_id == 0) {
-    local_34 = s_cdaudio_00638b18;
-    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)local_3c);
+    device_type = s_cdaudio_00638b18;
+    MVar1 = mciSendCommandA(0,0x803,0x2000,(DWORD_PTR)open_parms);
     if (MVar1 != 0) {
       return 0xffffffff;
     }
-    local_24 = local_38;
-    snd_cd_device_id = local_38;
-    local_1c = 10;
-    MVar1 = mciSendCommandA(local_38,0x80d,0x400,(DWORD_PTR)local_20);
+    device_id = opened_id;
+    snd_cd_device_id = opened_id;
+    time_format = 10;
+    MVar1 = mciSendCommandA(opened_id,0x80d,0x400,(DWORD_PTR)set_parms);
     if (MVar1 != 0) {
-      mciSendCommandA(local_24,0x804,0,0);
+      mciSendCommandA(device_id,0x804,0,0);
       snd_cd_device_id = 0;
       return 0xffffffff;
     }
   }
   else {
-    local_24 = snd_cd_device_id;
+    device_id = snd_cd_device_id;
   }
-  local_c = 3;
-  MVar1 = mciSendCommandA(local_24,0x814,0x100,(DWORD_PTR)local_14);
+  status_item = 3;
+  MVar1 = mciSendCommandA(device_id,0x814,0x100,(DWORD_PTR)status_parms);
   if (MVar1 == 0) {
-    snd_cd_track_count = local_10;
+    snd_cd_track_count = track_count;
   }
   else {
     snd_cd_close();
-    local_10 = 0xffffffff;
+    track_count = 0xffffffff;
   }
-  return local_10;
+  return track_count;
 }
 #undef snd_cd_device_id
 #undef snd_cd_track_count
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_14
-#undef local_10
-#undef local_c
+#undef open_parms
+#undef opened_id
+#undef device_type
+#undef device_id
+#undef set_parms
+#undef time_format
+#undef status_parms
+#undef track_count
+#undef status_item
 
 /* 005de6bd auto */
 #define snd_midi_notify_callback (*(code * *)((u8 *)&g.d_006e5004))
@@ -2778,10 +2778,10 @@ void __cdecl snd_midi_fire_notify_callback(void)
 
 /* 005de6fc auto */
 #define snd_cd_notify_callback (*(iptr *)((u8 *)&g.d_006e5000))
-void __cdecl snd_cd_set_notify_callback(iptr param_1)
+void __cdecl snd_cd_set_notify_callback(iptr callback)
 
 {
-  snd_cd_notify_callback = param_1;
+  snd_cd_notify_callback = callback;
   return;
 }
 #undef snd_cd_notify_callback
@@ -2841,32 +2841,32 @@ void __cdecl avi_update_current_frame(void)
 #define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
 #define avi_frames_per_second_i32 (*(i32 *)((u8 *)&g.d_006e50d8))
 #define avi_indeo_frame_extra_i32 (*(i32 *)((u8 *)&g.d_006e50dc))
-#define local_360 (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
-#define local_9c (*(i8 (*)[4])(frame_ + FRAME_OFF(708)))
-#define local_98 (*(i32 *)(frame_ + FRAME_OFF(712)))
-#define local_88 (*(uint *)(frame_ + FRAME_OFF(728)))
-#define local_84 (*(uint *)(frame_ + FRAME_OFF(732)))
-#define local_74 (*(SIZE_T *)(frame_ + FRAME_OFF(748)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(848)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(852)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(856)))
+#define palette_rgb (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
+#define stream_info (*(i8 (*)[4])(frame_ + FRAME_OFF(708)))
+#define codec_handler (*(i32 *)(frame_ + FRAME_OFF(712)))
+#define time_scale (*(uint *)(frame_ + FRAME_OFF(728)))
+#define time_rate (*(uint *)(frame_ + FRAME_OFF(732)))
+#define suggested_buffer_size (*(SIZE_T *)(frame_ + FRAME_OFF(748)))
+#define i (*(iptr *)(frame_ + FRAME_OFF(848)))
+#define format_size (*(i32 *)(frame_ + FRAME_OFF(852)))
+#define result (*(int *)(frame_ + FRAME_OFF(856)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-int __cdecl avi_open_file(iptr param_1,i32 param_2)
+int __cdecl avi_open_file(iptr player,i32 filename)
 
 {
-  int iVar1;
-  i32 uVar2;
-  int iVar3;
-  iptr iVar4;
-  HGLOBAL pvVar5;
+  int attach_result;
+  i32 start_frame;
+  int value;
+  iptr dib;
+  HGLOBAL mem_handle;
   i8 frame_[FRAME_OFF(864)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (avi_vfw_initialized == 0) {
     AVIFileInit();
     avi_vfw_initialized = 1;
   }
-  avi_active_window = param_1;
+  avi_active_window = player;
   avi_indeo_seq_opts_i32 = 0x2c;
   avi_indeo_seq_fourcc_i32 = 0x31345649;
   avi_indeo_seq_environment_i32 = 2;
@@ -2885,131 +2885,131 @@ int __cdecl avi_open_file(iptr param_1,i32 param_2)
   avi_view_rect_y = 0;
   avi_view_rect_width_i32 = 0;
   avi_view_rect_height_i32 = 0;
-  local_8 = AVIFileOpenA(&avi_file,param_2,0,0);
-  if (local_8 == 0) {
-    local_8 = AVIFileGetStream(avi_file,&avi_video_stream,0x73646976,0);
-    if (local_8 == 0) {
-      iVar3 = 0;
-      if (*(int *)(param_1 + 0x5a8) != 0) {
-        local_8 = AVIFileGetStream(avi_file,&avi_audio_stream,0x73647561,0);
-        if (local_8 == 0) {
-          *(i32 *)(param_1 + 0x5b0) = 0;
-          iVar1 = avi_audio_attach_stream((AviAudioAttachView *)(param_1 + 0x11c),avi_audio_stream);
-          iVar3 = local_8;
-          if (iVar1 == 0) {
-            *(i32 *)(param_1 + 0x5a8) = 1;
+  result = AVIFileOpenA(&avi_file,filename,0,0);
+  if (result == 0) {
+    result = AVIFileGetStream(avi_file,&avi_video_stream,0x73646976,0);
+    if (result == 0) {
+      value = 0;
+      if (*(int *)(player + 0x5a8) != 0) {
+        result = AVIFileGetStream(avi_file,&avi_audio_stream,0x73647561,0);
+        if (result == 0) {
+          *(i32 *)(player + 0x5b0) = 0;
+          attach_result = avi_audio_attach_stream((AviAudioAttachView *)(player + 0x11c),avi_audio_stream);
+          value = result;
+          if (attach_result == 0) {
+            *(i32 *)(player + 0x5a8) = 1;
           }
           else {
-            *(i32 *)(param_1 + 0x5a8) = 0;
+            *(i32 *)(player + 0x5a8) = 0;
           }
         }
         else {
-          *(i32 *)(param_1 + 0x5a8) = 0;
-          iVar3 = local_8;
+          *(i32 *)(player + 0x5a8) = 0;
+          value = result;
         }
       }
-      local_8 = iVar3;
-      local_c = 0x28;
-      AVIStreamReadFormat(avi_video_stream,1,param_1 + 0x5c0,&local_c);
-      AVIStreamInfoA(avi_video_stream,local_9c,0x8c);
-      *(SIZE_T *)(param_1 + 0x5d4) = local_74;
-      avi_frames_per_second_i32 = local_84 / local_88;
-      avi_decompressor = ICLocate(0x63646976,local_98,param_1 + 0x5c0,0,2);
+      result = value;
+      format_size = 0x28;
+      AVIStreamReadFormat(avi_video_stream,1,player + 0x5c0,&format_size);
+      AVIStreamInfoA(avi_video_stream,stream_info,0x8c);
+      *(SIZE_T *)(player + 0x5d4) = suggested_buffer_size;
+      avi_frames_per_second_i32 = time_rate / time_scale;
+      avi_decompressor = ICLocate(0x63646976,codec_handler,player + 0x5c0,0,2);
       if (avi_decompressor == 0) {
-        avi_close(param_1);
-        local_8 = 0;
+        avi_close(player);
+        result = 0;
       }
       else {
-        uVar2 = AVIStreamStart(avi_video_stream);
-        *(i32 *)(param_1 + 0xa10) = uVar2;
-        iVar3 = AVIStreamLength(avi_video_stream);
-        *(int *)(param_1 + 0xa14) = *(int *)(param_1 + 0xa10) + iVar3 - 1;
-        *(i32 *)(param_1 + 0xa18) = *(i32 *)(param_1 + 0xa10);
-        crt_memcpy(param_1 + 0x5e8,param_1 + 0x5c0,0x28);
-        *(i32 *)(param_1 + 0x5f8) = 0;
-        *(i16 *)(param_1 + 0x5f6) = 8;
-        *(i32 *)(param_1 + 0x5fc) = 0;
-        *(i32 *)(param_1 + 0x608) = 0x100;
-        avi_frame_width = *(int *)(param_1 + 0x5c4);
-        avi_frame_height = *(int *)(param_1 + 0x5c8);
-        iVar4 = surface_get_dib((DibSurface *)param_1);
-        iVar3 = dib_is_top_down(iVar4);
-        if (iVar3 != 0) {
-          *(int *)(param_1 + 0x5f0) = -*(int *)(param_1 + 0x5f0);
+        start_frame = AVIStreamStart(avi_video_stream);
+        *(i32 *)(player + 0xa10) = start_frame;
+        value = AVIStreamLength(avi_video_stream);
+        *(int *)(player + 0xa14) = *(int *)(player + 0xa10) + value - 1;
+        *(i32 *)(player + 0xa18) = *(i32 *)(player + 0xa10);
+        crt_memcpy(player + 0x5e8,player + 0x5c0,0x28);
+        *(i32 *)(player + 0x5f8) = 0;
+        *(i16 *)(player + 0x5f6) = 8;
+        *(i32 *)(player + 0x5fc) = 0;
+        *(i32 *)(player + 0x608) = 0x100;
+        avi_frame_width = *(int *)(player + 0x5c4);
+        avi_frame_height = *(int *)(player + 0x5c8);
+        dib = surface_get_dib((DibSurface *)player);
+        value = dib_is_top_down(dib);
+        if (value != 0) {
+          *(int *)(player + 0x5f0) = -*(int *)(player + 0x5f0);
         }
-        if (*(int *)(param_1 + 0x5a0) == 0) {
-          wnd_resize_clamped((WindowObjectView *)param_1,avi_frame_width,avi_frame_height);
-        }
-        else {
-          wnd_resize_clamped((WindowObjectView *)param_1,avi_frame_width * 2,avi_frame_height * 2);
-        }
-        if (local_74 == 0) {
-          iVar3 = (uint)*(ushort *)(param_1 + 0x5ce) * *(int *)(param_1 + 0x5c4) *
-                  *(int *)(param_1 + 0x5c8);
-          pvVar5 = GlobalAlloc(0x40,(int)(iVar3 + (iVar3 >> 0x1f & 7U)) >> 3);
-          avi_frame_buffer = GlobalLock(pvVar5);
+        if (*(int *)(player + 0x5a0) == 0) {
+          wnd_resize_clamped((WindowObjectView *)player,avi_frame_width,avi_frame_height);
         }
         else {
-          pvVar5 = GlobalAlloc(0x40,local_74);
-          avi_frame_buffer = GlobalLock(pvVar5);
+          wnd_resize_clamped((WindowObjectView *)player,avi_frame_width * 2,avi_frame_height * 2);
+        }
+        if (suggested_buffer_size == 0) {
+          value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
+                  *(int *)(player + 0x5c8);
+          mem_handle = GlobalAlloc(0x40,(int)(value + (value >> 0x1f & 7U)) >> 3);
+          avi_frame_buffer = GlobalLock(mem_handle);
+        }
+        else {
+          mem_handle = GlobalAlloc(0x40,suggested_buffer_size);
+          avi_frame_buffer = GlobalLock(mem_handle);
         }
         if (avi_frame_buffer == (LPVOID)0x0) {
-          avi_close(param_1);
-          local_8 = 0;
+          avi_close(player);
+          result = 0;
         }
         else {
-          local_8 = avi_ic_decompress_ex_query(avi_decompressor,0,param_1 + 0x5c0,0,0,0,
-                                 *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8),
-                                 param_1 + 0x5e8,0,0,0,*(i32 *)(param_1 + 0x5c4),
-                                 *(i32 *)(param_1 + 0x5c8));
-          if (local_8 == 0) {
-            ICSendMessage(avi_decompressor,0x401e,param_1 + 0x5c0,param_1 + 0x5e8);
-            for (local_10 = 0; local_10 < 0xec; local_10++) {
-              local_360[local_10 * 3] = *(i8 *)(param_1 + 0x63a + local_10 * 4);
-              local_360[local_10 * 3 + 1] = *(i8 *)(param_1 + 0x639 + local_10 * 4);
-              local_360[local_10 * 3 + 2] = *(i8 *)(param_1 + 0x638 + local_10 * 4);
+          result = avi_ic_decompress_ex_query(avi_decompressor,0,player + 0x5c0,0,0,0,
+                                 *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8),
+                                 player + 0x5e8,0,0,0,*(i32 *)(player + 0x5c4),
+                                 *(i32 *)(player + 0x5c8));
+          if (result == 0) {
+            ICSendMessage(avi_decompressor,0x401e,player + 0x5c0,player + 0x5e8);
+            for (i = 0; i < 0xec; i++) {
+              palette_rgb[i * 3] = *(i8 *)(player + 0x63a + i * 4);
+              palette_rgb[i * 3 + 1] = *(i8 *)(player + 0x639 + i * 4);
+              palette_rgb[i * 3 + 2] = *(i8 *)(player + 0x638 + i * 4);
             }
             palette_set_rgb
-                      ((GamePalette *)(param_1 + 0x124),10,0xec,(iptr)local_360);
-            ICSendMessage(avi_decompressor,0x401d,param_1 + 0x5e8,0);
-            local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,
-                                   *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8)
-                                   ,param_1 + 0x5e8,0,0,0,*(i32 *)(param_1 + 0x5c4),
-                                   *(i32 *)(param_1 + 0x5c8));
-            if (local_8 == 0) {
+                      ((GamePalette *)(player + 0x124),10,0xec,(iptr)palette_rgb);
+            ICSendMessage(avi_decompressor,0x401d,player + 0x5e8,0);
+            result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,
+                                   *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8)
+                                   ,player + 0x5e8,0,0,0,*(i32 *)(player + 0x5c4),
+                                   *(i32 *)(player + 0x5c8));
+            if (result == 0) {
               avi_file_loaded = 1;
               avi_playing = 0;
-              if (*(int *)(param_1 + 0x5a4) == 0) {
-                avi_restart_decompress(param_1,0);
+              if (*(int *)(player + 0x5a4) == 0) {
+                avi_restart_decompress(player,0);
               }
               else {
-                avi_restart_decompress(param_1,1);
+                avi_restart_decompress(player,1);
               }
-              iVar3 = (uint)*(ushort *)(param_1 + 0x5ce) * *(int *)(param_1 + 0x5c4) *
-                      *(int *)(param_1 + 0x5c8);
-              avi_frame_buffer_size = (int)(iVar3 + (iVar3 >> 0x1f & 7U)) >> 3;
+              value = (uint)*(ushort *)(player + 0x5ce) * *(int *)(player + 0x5c4) *
+                      *(int *)(player + 0x5c8);
+              avi_frame_buffer_size = (int)(value + (value >> 0x1f & 7U)) >> 3;
               avi_update_tick_count_i32 = 0;
               avi_indeo_frame_extra_i32 = 0;
-              local_8 = 0;
+              result = 0;
             }
             else {
-              avi_close(param_1);
+              avi_close(player);
             }
           }
           else {
-            avi_close(param_1);
+            avi_close(player);
           }
         }
       }
     }
     else {
-      avi_close(param_1);
+      avi_close(player);
     }
   }
   else {
-    avi_close(param_1);
+    avi_close(player);
   }
-  return local_8;
+  return result;
 }
 #undef avi_active_window
 #undef avi_audio_stream
@@ -3043,139 +3043,139 @@ int __cdecl avi_open_file(iptr param_1,i32 param_2)
 #undef avi_view_rect_height_i32
 #undef avi_frames_per_second_i32
 #undef avi_indeo_frame_extra_i32
-#undef local_360
-#undef local_9c
-#undef local_98
-#undef local_88
-#undef local_84
-#undef local_74
-#undef local_10
-#undef local_c
-#undef local_8
+#undef palette_rgb
+#undef stream_info
+#undef codec_handler
+#undef time_scale
+#undef time_rate
+#undef suggested_buffer_size
+#undef i
+#undef format_size
+#undef result
 
 /* 005e22ed: written by hand in src/game/fixups.c */
 
 /* 005e250c auto */
-#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
+#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
-__stdcall avi_ic_decompress_ex_begin(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
-            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
-            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
-            i32 param_14)
+__stdcall avi_ic_decompress_ex_begin(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
+            i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
+            ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst,
+            i32 height_dst)
 
 {
-  i32 uVar1;
+  i32 result;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_38 = param_2;
-  local_34 = param_3;
-  local_30 = param_4;
-  local_14 = param_5;
-  local_10 = param_6;
-  local_c = param_7;
-  local_8 = param_8;
-  local_2c = param_9;
-  local_28 = param_10;
-  local_24 = param_11;
-  local_20 = param_12;
-  local_1c = param_13;
-  local_18 = param_14;
-  uVar1 = ICSendMessage(param_1,0x403c,&local_38,0x34);
-  return uVar1;
+  ex_flags = flags;
+  ex_bi_src = bi_src;
+  ex_src_bits = src_bits;
+  ex_x_src = x_src;
+  ex_y_src = y_src;
+  ex_width_src = width_src;
+  ex_height_src = height_src;
+  ex_bi_dst = bi_dst;
+  ex_dst_bits = dst_bits;
+  ex_x_dst = x_dst;
+  ex_y_dst = y_dst;
+  ex_width_dst = width_dst;
+  ex_height_dst = height_dst;
+  result = ICSendMessage(hic,0x403c,&ex_flags,0x34);
+  return result;
 }
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef ex_flags
+#undef ex_bi_src
+#undef ex_src_bits
+#undef ex_bi_dst
+#undef ex_dst_bits
+#undef ex_x_dst
+#undef ex_y_dst
+#undef ex_width_dst
+#undef ex_height_dst
+#undef ex_x_src
+#undef ex_y_src
+#undef ex_width_src
+#undef ex_height_src
 
 /* 005e2583 auto */
-#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
+#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
-__stdcall avi_ic_decompress_ex_query(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
-            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
-            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
-            i32 param_14)
+__stdcall avi_ic_decompress_ex_query(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
+            i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
+            ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst,
+            i32 height_dst)
 
 {
-  i32 uVar1;
+  i32 result;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_38 = param_2;
-  local_34 = param_3;
-  local_30 = param_4;
-  local_14 = param_5;
-  local_10 = param_6;
-  local_c = param_7;
-  local_8 = param_8;
-  local_2c = param_9;
-  local_28 = param_10;
-  local_24 = param_11;
-  local_20 = param_12;
-  local_1c = param_13;
-  local_18 = param_14;
-  uVar1 = ICSendMessage(param_1,0x403d,&local_38,0x34);
-  return uVar1;
+  ex_flags = flags;
+  ex_bi_src = bi_src;
+  ex_src_bits = src_bits;
+  ex_x_src = x_src;
+  ex_y_src = y_src;
+  ex_width_src = width_src;
+  ex_height_src = height_src;
+  ex_bi_dst = bi_dst;
+  ex_dst_bits = dst_bits;
+  ex_x_dst = x_dst;
+  ex_y_dst = y_dst;
+  ex_width_dst = width_dst;
+  ex_height_dst = height_dst;
+  result = ICSendMessage(hic,0x403d,&ex_flags,0x34);
+  return result;
 }
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef ex_flags
+#undef ex_bi_src
+#undef ex_src_bits
+#undef ex_bi_dst
+#undef ex_dst_bits
+#undef ex_x_dst
+#undef ex_y_dst
+#undef ex_width_dst
+#undef ex_height_dst
+#undef ex_x_src
+#undef ex_y_src
+#undef ex_width_src
+#undef ex_height_src
 
 /* 005e2675 auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_frame_needs_blit (*(i32 *)((u8 *)&g.d_00638de8))
 #define avi_idle_update_enabled (*(i32 *)((u8 *)&g.d_00637efc))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
-void __cdecl avi_play_pause(iptr param_1)
+void __cdecl avi_play_pause(iptr player)
 
 {
-  if ((param_1 != 0) && (avi_file_loaded != 0)) {
-    if (*(int *)(param_1 + 0x5a8) != 0) {
-      *(i32 *)(param_1 + 0x5b0) = 0;
+  if ((player != 0) && (avi_file_loaded != 0)) {
+    if (*(int *)(player + 0x5a8) != 0) {
+      *(i32 *)(player + 0x5b0) = 0;
     }
-    *(i32 *)(param_1 + 0x5ac) = 1;
+    *(i32 *)(player + 0x5ac) = 1;
     if (avi_playing != 0) {
       avi_idle_update_enabled = 0;
       avi_frame_needs_blit = 0;
@@ -3199,13 +3199,13 @@ void __cdecl avi_play_pause(iptr param_1)
 #define avi_frame_height (*(i32 *)((u8 *)&g.d_00638db8))
 #define avi_frame_width (*(i32 *)((u8 *)&g.d_00638db4))
 #define avi_video_stream (*(int *)((u8 *)&g.d_00638dc4))
-void __cdecl avi_close(iptr param_1)
+void __cdecl avi_close(iptr player)
 
 {
-  HGLOBAL pvVar1;
+  HGLOBAL mem_handle;
   
-  if (param_1 != 0) {
-    avi_play_pause(param_1);
+  if (player != 0) {
+    avi_play_pause(player);
     if (avi_decompressor != 0) {
       ICClose(avi_decompressor);
       avi_decompressor = 0;
@@ -3227,10 +3227,10 @@ void __cdecl avi_close(iptr param_1)
       avi_vfw_initialized = 0;
     }
     if (avi_frame_buffer != (LPCVOID)0x0) {
-      pvVar1 = GlobalHandle(avi_frame_buffer);
-      GlobalUnlock(pvVar1);
-      pvVar1 = GlobalHandle(avi_frame_buffer);
-      GlobalFree(pvVar1);
+      mem_handle = GlobalHandle(avi_frame_buffer);
+      GlobalUnlock(mem_handle);
+      mem_handle = GlobalHandle(avi_frame_buffer);
+      GlobalFree(mem_handle);
       avi_frame_buffer = (LPCVOID)0x0;
     }
     avi_frame_buffer_size = 0;
@@ -3254,32 +3254,32 @@ void __cdecl avi_close(iptr param_1)
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 #define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
-void __cdecl avi_seek_frame(iptr param_1,uint param_2,int param_3)
+#define target_frame (*(uint *)(frame_ + FRAME_OFF(0)))
+void __cdecl avi_seek_frame(iptr player,uint frame_index,int redraw)
 
 {
-  i32 uVar1;
+  i32 key_frame;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 != 0) && (avi_file_loaded != 0)) {
+  if ((player != 0) && (avi_file_loaded != 0)) {
     if (avi_playing != 0) {
-      avi_play_pause(param_1);
+      avi_play_pause(player);
     }
-    uVar1 = AVIStreamFindSample(avi_video_stream,param_2,0x14);
-    *(i32 *)(param_1 + 0xa18) = uVar1;
+    key_frame = AVIStreamFindSample(avi_video_stream,frame_index,0x14);
+    *(i32 *)(player + 0xa18) = key_frame;
     while( true ) {
-      if ((int)param_2 < 0) {
-        local_8 = 0;
+      if ((int)frame_index < 0) {
+        target_frame = 0;
       }
       else {
-        local_8 = param_2;
+        target_frame = frame_index;
       }
-      if (local_8 <= *(uint *)(param_1 + 0xa18)) break;
-      avi_decode_frame(param_1,0x80000000);
+      if (target_frame <= *(uint *)(player + 0xa18)) break;
+      avi_decode_frame(player,0x80000000);
     }
-    avi_decode_frame(param_1,0);
-    if (param_3 != 0) {
-      avi_update_frame(param_1);
+    avi_decode_frame(player,0);
+    if (redraw != 0) {
+      avi_update_frame(player);
     }
   }
   return;
@@ -3287,7 +3287,7 @@ void __cdecl avi_seek_frame(iptr param_1,uint param_2,int param_3)
 #undef avi_file_loaded
 #undef avi_playing
 #undef avi_video_stream
-#undef local_8
+#undef target_frame
 
 /* 005e2997 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
@@ -3298,84 +3298,84 @@ void __cdecl avi_seek_frame(iptr param_1,uint param_2,int param_3)
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
 #define avi_playing (*(int *)((u8 *)&g.d_00638dd0))
 #define avi_video_stream (*(i32 *)((u8 *)&g.d_00638dc4))
-#define local_5c (*(CHAR (*)[80])(frame_ + FRAME_OFF(4)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(84)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(88)))
-int __cdecl avi_decode_frame(iptr param_1,int param_2)
+#define message (*(CHAR (*)[80])(frame_ + FRAME_OFF(4)))
+#define bytes_read (*(i32 *)(frame_ + FRAME_OFF(84)))
+#define result (*(int *)(frame_ + FRAME_OFF(88)))
+int __cdecl avi_decode_frame(iptr player,int decode_flags)
 
 {
-  i32 uVar1;
-  i32 uVar2;
-  i32 uVar3;
-  int iVar4;
-  int iVar5;
+  i32 dst_bits;
+  i32 x_dst;
+  i32 y_dst;
+  int dst_dim_a;
+  int dst_dim_b;
   i8 frame_[FRAME_OFF(96)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0;
-  local_c = 0;
-  if ((param_1 == 0) || (avi_file_loaded == 0)) {
-    local_8 = 1;
+  result = 0;
+  bytes_read = 0;
+  if ((player == 0) || (avi_file_loaded == 0)) {
+    result = 1;
   }
   else {
-    if ((*(int *)(param_1 + 0x5a4) != 0) && (param_2 == 0)) {
-      surface_blit((DibSurface *)(param_1 + 0x558),param_1,ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)),ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)));
+    if ((*(int *)(player + 0x5a4) != 0) && (decode_flags == 0)) {
+      surface_blit((DibSurface *)(player + 0x558),player,ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)),ADDR(0x638dd8, ((u8 *)&g.d_00638dd8)));
     }
-    local_8 = AVIStreamRead(avi_video_stream,*(i32 *)(param_1 + 0xa18),1,avi_frame_buffer,
-                            avi_frame_buffer_size,&local_c,0);
-    if (local_8 == 0) {
-      *(i32 *)(param_1 + 0x5d4) = local_c;
-      if (*(int *)(param_1 + 0x5a0) == 0) {
-        uVar3 = 0;
-        uVar2 = 0;
-        iVar5 = avi_frame_width;
-        iVar4 = avi_frame_height;
-        uVar1 = surface_get_bits((DibSurface *)param_1);
-        local_8 = avi_ic_decompress_ex(avi_decompressor,param_2,param_1 + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
-                               avi_frame_height,param_1 + 0x5e8,uVar1,uVar2,uVar3,iVar5,iVar4);
+    result = AVIStreamRead(avi_video_stream,*(i32 *)(player + 0xa18),1,avi_frame_buffer,
+                            avi_frame_buffer_size,&bytes_read,0);
+    if (result == 0) {
+      *(i32 *)(player + 0x5d4) = bytes_read;
+      if (*(int *)(player + 0x5a0) == 0) {
+        y_dst = 0;
+        x_dst = 0;
+        dst_dim_b = avi_frame_width;
+        dst_dim_a = avi_frame_height;
+        dst_bits = surface_get_bits((DibSurface *)player);
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
+                               avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_b,dst_dim_a);
       }
       else {
-        *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) << 1;
-        *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) << 1;
-        iVar5 = avi_frame_height * 2;
-        iVar4 = avi_frame_width * 2;
-        uVar3 = 0;
-        uVar2 = 0;
-        uVar1 = surface_get_bits((DibSurface *)param_1);
-        local_8 = avi_ic_decompress_ex(avi_decompressor,param_2,param_1 + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
-                               avi_frame_height,param_1 + 0x5e8,uVar1,uVar2,uVar3,iVar4,iVar5);
-        *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) >> 1;
-        *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) >> 1;
+        *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
+        *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
+        dst_dim_b = avi_frame_height * 2;
+        dst_dim_a = avi_frame_width * 2;
+        y_dst = 0;
+        x_dst = 0;
+        dst_bits = surface_get_bits((DibSurface *)player);
+        result = avi_ic_decompress_ex(avi_decompressor,decode_flags,player + 0x5c0,avi_frame_buffer,0,0,avi_frame_width,
+                               avi_frame_height,player + 0x5e8,dst_bits,x_dst,y_dst,dst_dim_a,dst_dim_b);
+        *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) >> 1;
+        *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) >> 1;
       }
-      if ((local_8 != 0) && (local_8 != 1)) {
-        wsprintfA(local_5c,s_ICDecompressEx_returned__ld_00638df0,local_8);
-        MessageBoxA((HWND)0x0,local_5c,s_Get_Frame_00638e0c,0);
+      if ((result != 0) && (result != 1)) {
+        wsprintfA(message,s_ICDecompressEx_returned__ld_00638df0,result);
+        MessageBoxA((HWND)0x0,message,s_Get_Frame_00638e0c,0);
       }
-      if ((*(int *)(param_1 + 0xa20) != 0) &&
-         (*(int *)(param_1 + 0xa20) == *(int *)(param_1 + 0xa18))) {
-        *(i32 *)(param_1 + 0xa20) = 0;
-        avi_player_call_cue_callback((AviPlayerCueCbCallView *)param_1);
+      if ((*(int *)(player + 0xa20) != 0) &&
+         (*(int *)(player + 0xa20) == *(int *)(player + 0xa18))) {
+        *(i32 *)(player + 0xa20) = 0;
+        avi_player_call_cue_callback((AviPlayerCueCbCallView *)player);
       }
-      if ((*(uint *)(param_1 + 0xa14) < *(uint *)(param_1 + 0xa18)) && (avi_playing != 0)) {
-        if (*(int *)(param_1 + 0xa24) == 0) {
-          avi_play_pause(param_1);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)param_1);
-          local_8 = 0;
+      if ((*(uint *)(player + 0xa14) < *(uint *)(player + 0xa18)) && (avi_playing != 0)) {
+        if (*(int *)(player + 0xa24) == 0) {
+          avi_play_pause(player);
+          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
+          result = 0;
         }
         else {
-          avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
-          avi_play_start(param_1);
-          local_8 = 0;
+          avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+          avi_play_start(player);
+          result = 0;
         }
       }
       else {
-        *(int *)(param_1 + 0xa18) = *(int *)(param_1 + 0xa18) + 1;
-        if (param_2 != 0) {
-          local_8 = 1;
+        *(int *)(player + 0xa18) = *(int *)(player + 0xa18) + 1;
+        if (decode_flags != 0) {
+          result = 1;
         }
       }
     }
   }
-  return local_8;
+  return result;
 }
 #undef avi_decompressor
 #undef avi_file_loaded
@@ -3385,63 +3385,63 @@ int __cdecl avi_decode_frame(iptr param_1,int param_2)
 #undef avi_frame_width
 #undef avi_playing
 #undef avi_video_stream
-#undef local_5c
-#undef local_c
-#undef local_8
+#undef message
+#undef bytes_read
+#undef result
 
 /* 005e2c5a auto */
-#define local_38 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define local_34 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(i32 *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(i32 *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(i32 *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
+#define ex_flags (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define ex_bi_src (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define ex_src_bits (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define ex_bi_dst (*(iptr *)(frame_ + FRAME_OFF(12)))
+#define ex_dst_bits (*(i32 *)(frame_ + FRAME_OFF(16)))
+#define ex_x_dst (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define ex_y_dst (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define ex_width_dst (*(i32 *)(frame_ + FRAME_OFF(28)))
+#define ex_height_dst (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define ex_x_src (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define ex_y_src (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define ex_width_src (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define ex_height_src (*(i32 *)(frame_ + FRAME_OFF(48)))
 i32
-__stdcall avi_ic_decompress_ex(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
-            i32 param_5,i32 param_6,i32 param_7,i32 param_8,iptr param_9
-            ,i32 param_10,i32 param_11,i32 param_12,i32 param_13,
-            i32 param_14)
+__stdcall avi_ic_decompress_ex(i32 hic,i32 flags,iptr bi_src,i32 src_bits,
+            i32 x_src,i32 y_src,i32 width_src,i32 height_src,iptr bi_dst
+            ,i32 dst_bits,i32 x_dst,i32 y_dst,i32 width_dst,
+            i32 height_dst)
 
 {
-  i32 uVar1;
+  i32 result;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_38 = param_2;
-  local_34 = param_3;
-  local_30 = param_4;
-  local_14 = param_5;
-  local_10 = param_6;
-  local_c = param_7;
-  local_8 = param_8;
-  local_2c = param_9;
-  local_28 = param_10;
-  local_24 = param_11;
-  local_20 = param_12;
-  local_1c = param_13;
-  local_18 = param_14;
-  uVar1 = ICSendMessage(param_1,0x403e,&local_38,0x34);
-  return uVar1;
+  ex_flags = flags;
+  ex_bi_src = bi_src;
+  ex_src_bits = src_bits;
+  ex_x_src = x_src;
+  ex_y_src = y_src;
+  ex_width_src = width_src;
+  ex_height_src = height_src;
+  ex_bi_dst = bi_dst;
+  ex_dst_bits = dst_bits;
+  ex_x_dst = x_dst;
+  ex_y_dst = y_dst;
+  ex_width_dst = width_dst;
+  ex_height_dst = height_dst;
+  result = ICSendMessage(hic,0x403e,&ex_flags,0x34);
+  return result;
 }
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef ex_flags
+#undef ex_bi_src
+#undef ex_src_bits
+#undef ex_bi_dst
+#undef ex_dst_bits
+#undef ex_x_dst
+#undef ex_y_dst
+#undef ex_width_dst
+#undef ex_height_dst
+#undef ex_x_src
+#undef ex_y_src
+#undef ex_width_src
+#undef ex_height_src
 
 /* 005e2cd1 auto */
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
@@ -3454,115 +3454,115 @@ __stdcall avi_ic_decompress_ex(i32 param_1,i32 param_2,iptr param_3,i32 param_4,
 #define avi_update_tick_count_i32 (*(i32 *)((u8 *)&g.d_00638dec))
 #define avi_view_rect_width_i32 (*(i32 *)((u8 *)&g.d_006e50d0))
 #define avi_view_rect_height_i32 (*(i32 *)((u8 *)&g.d_006e50d4))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(RECT *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(DWORD *)(frame_ + FRAME_OFF(24)))
+#define target_frame (*(uint *)(frame_ + FRAME_OFF(0)))
+#define dirty_rect (*(RECT *)(frame_ + FRAME_OFF(4)))
+#define key_frame (*(int *)(frame_ + FRAME_OFF(20)))
+#define now (*(DWORD *)(frame_ + FRAME_OFF(24)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl avi_update_frame(iptr param_1)
+void __cdecl avi_update_frame(iptr player)
 
 {
-  int iVar1;
-  i32 uVar2;
+  int sample;
+  i32 audio_pos_ms;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (param_1 == 0) {
+  if (player == 0) {
     return;
   }
   if (avi_file_loaded == 0) {
     return;
   }
   if (avi_playing != 0) {
-    if (*(int *)(param_1 + 0x5a8) == 0) {
-      local_8 = timeGetTime();
-      iVar1 = AVIStreamTimeToSample(avi_video_stream,local_8 - avi_play_start_time_i32);
-      local_20 = *(int *)(param_1 + 0xa10) + iVar1;
-      if (local_20 < *(uint *)(param_1 + 0xa18)) {
+    if (*(int *)(player + 0x5a8) == 0) {
+      now = timeGetTime();
+      sample = AVIStreamTimeToSample(avi_video_stream,now - avi_play_start_time_i32);
+      target_frame = *(int *)(player + 0xa10) + sample;
+      if (target_frame < *(uint *)(player + 0xa18)) {
         return;
       }
-      if (*(uint *)(param_1 + 0xa14) < local_20) {
-        if (*(int *)(param_1 + 0xa24) == 0) {
-          avi_play_pause(param_1);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)param_1);
+      if (*(uint *)(player + 0xa14) < target_frame) {
+        if (*(int *)(player + 0xa24) == 0) {
+          avi_play_pause(player);
+          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
           return;
         }
-        avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
-        avi_play_start(param_1);
+        avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+        avi_play_start(player);
         return;
       }
     }
     else {
-      iVar1 = avi_audio_is_playing((AviAudioPlayingView *)(param_1 + 0x11c));
-      if (iVar1 == 0) {
-        if (*(int *)(param_1 + 0xa24) == 0) {
-          avi_play_pause(param_1);
-          avi_player_call_end_callback((AviPlayerEndCbCallView *)param_1);
+      sample = avi_audio_is_playing((AviAudioPlayingView *)(player + 0x11c));
+      if (sample == 0) {
+        if (*(int *)(player + 0xa24) == 0) {
+          avi_play_pause(player);
+          avi_player_call_end_callback((AviPlayerEndCbCallView *)player);
           return;
         }
-        avi_seek_frame(param_1,*(i32 *)(param_1 + 0xa10),0);
-        avi_play_start(param_1);
+        avi_seek_frame(player,*(i32 *)(player + 0xa10),0);
+        avi_play_start(player);
         return;
       }
-      uVar2 = avi_audio_get_position_ms((void *)(param_1 + 0x11c));
-      iVar1 = AVIStreamTimeToSample(avi_video_stream,uVar2);
-      local_20 = *(int *)(param_1 + 0xa10) + iVar1;
-      if ((*(int *)(param_1 + 0x5ac) == 0) || (local_20 < *(uint *)(param_1 + 0xa18))) {
+      audio_pos_ms = avi_audio_get_position_ms((void *)(player + 0x11c));
+      sample = AVIStreamTimeToSample(avi_video_stream,audio_pos_ms);
+      target_frame = *(int *)(player + 0xa10) + sample;
+      if ((*(int *)(player + 0x5ac) == 0) || (target_frame < *(uint *)(player + 0xa18))) {
         snd_avi_stream_feed(0x40);
         avi_update_tick_count_i32++;
         return;
       }
     }
     if (avi_frame_needs_blit != 0) {
-      if (*(int *)(param_1 + 0x5a4) == 0) {
-        wnd_blit_surface((DibSurface *)param_1);
+      if (*(int *)(player + 0x5a4) == 0) {
+        wnd_blit_surface((DibSurface *)player);
       }
       else {
-        local_1c.left = avi_view_rect_x;
-        local_1c.top = avi_view_rect_y;
-        local_1c.right = avi_view_rect_x + avi_view_rect_width_i32;
-        local_1c.bottom = avi_view_rect_y + avi_view_rect_height_i32;
-        UnionRect(&local_1c,&local_1c,(RECT *)&avi_blit_union_left);
-        wnd_blit_surface_rect((DibSurface *)param_1,(iptr)&local_1c);
-        avi_blit_union_left = local_1c.left;
-        avi_blit_union_top = local_1c.top;
-        avi_blit_union_right = local_1c.right;
-        avi_blit_union_bottom = local_1c.bottom;
+        dirty_rect.left = avi_view_rect_x;
+        dirty_rect.top = avi_view_rect_y;
+        dirty_rect.right = avi_view_rect_x + avi_view_rect_width_i32;
+        dirty_rect.bottom = avi_view_rect_y + avi_view_rect_height_i32;
+        UnionRect(&dirty_rect,&dirty_rect,(RECT *)&avi_blit_union_left);
+        wnd_blit_surface_rect((DibSurface *)player,(iptr)&dirty_rect);
+        avi_blit_union_left = dirty_rect.left;
+        avi_blit_union_top = dirty_rect.top;
+        avi_blit_union_right = dirty_rect.right;
+        avi_blit_union_bottom = dirty_rect.bottom;
       }
     }
-    if (*(uint *)(param_1 + 0xa18) < local_20) {
-      local_c = *(int *)(param_1 + 0xa18);
+    if (*(uint *)(player + 0xa18) < target_frame) {
+      key_frame = *(int *)(player + 0xa18);
       do {
-        iVar1 = local_c;
-        local_c++;
-        local_c = AVIStreamFindSample(avi_video_stream,local_c,0x11);
-        if ((int)local_20 <= local_c) break;
-      } while (local_c != -1);
-      if (*(int *)(param_1 + 0xa18) == iVar1) {
-        if ((local_c != -1) && (local_c - local_20 < local_20 - *(int *)(param_1 + 0xa18))) {
-          *(int *)(param_1 + 0xa18) = local_c;
+        sample = key_frame;
+        key_frame++;
+        key_frame = AVIStreamFindSample(avi_video_stream,key_frame,0x11);
+        if ((int)target_frame <= key_frame) break;
+      } while (key_frame != -1);
+      if (*(int *)(player + 0xa18) == sample) {
+        if ((key_frame != -1) && (key_frame - target_frame < target_frame - *(int *)(player + 0xa18))) {
+          *(int *)(player + 0xa18) = key_frame;
         }
       }
-      else if ((local_c == -1) || ((int)(local_20 - iVar1) <= (int)(local_c - local_20))) {
-        if (iVar1 != -1) {
-          *(int *)(param_1 + 0xa18) = iVar1;
+      else if ((key_frame == -1) || ((int)(target_frame - sample) <= (int)(key_frame - target_frame))) {
+        if (sample != -1) {
+          *(int *)(player + 0xa18) = sample;
         }
       }
       else {
-        *(int *)(param_1 + 0xa18) = local_c;
+        *(int *)(player + 0xa18) = key_frame;
       }
-      while ((*(uint *)(param_1 + 0xa18) < local_20 &&
-             (*(uint *)(param_1 + 0xa18) < *(int *)(param_1 + 0xa14) - 1U))) {
-        avi_decode_frame(param_1,0x80000000);
+      while ((*(uint *)(player + 0xa18) < target_frame &&
+             (*(uint *)(player + 0xa18) < *(int *)(player + 0xa14) - 1U))) {
+        avi_decode_frame(player,0x80000000);
       }
     }
   }
-  if ((avi_playing != 0) && (*(int *)(param_1 + 0x5a8) != 0)) {
+  if ((avi_playing != 0) && (*(int *)(player + 0x5a8) != 0)) {
     snd_avi_stream_feed(0x40);
     avi_update_tick_count_i32++;
   }
-  iVar1 = avi_decode_frame(param_1,0);
-  avi_frame_needs_blit = (uint)(iVar1 == 0);
+  sample = avi_decode_frame(player,0);
+  avi_frame_needs_blit = (uint)(sample == 0);
   return;
 }
 #undef avi_file_loaded
@@ -3575,47 +3575,47 @@ void __cdecl avi_update_frame(iptr param_1)
 #undef avi_update_tick_count_i32
 #undef avi_view_rect_width_i32
 #undef avi_view_rect_height_i32
-#undef local_20
-#undef local_1c
-#undef local_c
-#undef local_8
+#undef target_frame
+#undef dirty_rect
+#undef key_frame
+#undef now
 
 /* 005e30a1 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
 #define avi_file_loaded (*(int *)((u8 *)&g.d_00638dcc))
-#define local_2d0 (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(708)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(712)))
-void __cdecl avi_apply_palette(iptr param_1,GamePalette *param_2)
+#define palette_rgb (*(i8 (*)[708])(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(708)))
+#define result (*(int *)(frame_ + FRAME_OFF(712)))
+void __cdecl avi_apply_palette(iptr player,GamePalette *palette)
 
 {
   i8 frame_[FRAME_OFF(720)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 != 0) && (avi_file_loaded != 0)) {
+  if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
-    palette_get_rgb(param_2,(iptr)local_2d0,0,0xec);
-    for (local_c = 0; local_c < 0xec; local_c++) {
-      *(i8 *)(param_1 + 0x610 + local_c * 4) = local_2d0[local_c * 3 + 2];
-      *(i8 *)(param_1 + 0x611 + local_c * 4) = local_2d0[local_c * 3 + 1];
-      *(i8 *)(param_1 + 0x612 + local_c * 4) = local_2d0[local_c * 3];
-      *(i8 *)(param_1 + 0x613 + local_c * 4) = 0;
+    palette_get_rgb(palette,(iptr)palette_rgb,0,0xec);
+    for (i = 0; i < 0xec; i++) {
+      *(i8 *)(player + 0x610 + i * 4) = palette_rgb[i * 3 + 2];
+      *(i8 *)(player + 0x611 + i * 4) = palette_rgb[i * 3 + 1];
+      *(i8 *)(player + 0x612 + i * 4) = palette_rgb[i * 3];
+      *(i8 *)(player + 0x613 + i * 4) = 0;
     }
-    ICSendMessage(avi_decompressor,0x401d,param_1 + 0x5e8,0);
-    if (*(int *)(param_1 + 0x5a0) == 0) {
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(i32 *)(param_1 + 0x5c4),
-                             *(i32 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
-                             *(i32 *)(param_1 + 0x5c4),*(i32 *)(param_1 + 0x5c8));
+    ICSendMessage(avi_decompressor,0x401d,player + 0x5e8,0);
+    if (*(int *)(player + 0x5a0) == 0) {
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,*(i32 *)(player + 0x5c4),
+                             *(i32 *)(player + 0x5c8),player + 0x5e8,0,0,0,
+                             *(i32 *)(player + 0x5c4),*(i32 *)(player + 0x5c8));
     }
     else {
-      *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) << 1;
-      *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) << 1;
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,*(i32 *)(param_1 + 0x5c4),
-                             *(i32 *)(param_1 + 0x5c8),param_1 + 0x5e8,0,0,0,
-                             *(int *)(param_1 + 0x5c4) * 2,*(int *)(param_1 + 0x5c8) * 2);
-      *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) / 2;
-      *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) / 2;
+      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
+      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,*(i32 *)(player + 0x5c4),
+                             *(i32 *)(player + 0x5c8),player + 0x5e8,0,0,0,
+                             *(int *)(player + 0x5c4) * 2,*(int *)(player + 0x5c8) * 2);
+      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) / 2;
+      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) / 2;
     }
-    if (local_8 != 0) {
+    if (result != 0) {
       avi_file_loaded = 0;
     }
   }
@@ -3623,9 +3623,9 @@ void __cdecl avi_apply_palette(iptr param_1,GamePalette *param_2)
 }
 #undef avi_decompressor
 #undef avi_file_loaded
-#undef local_2d0
-#undef local_c
-#undef local_8
+#undef palette_rgb
+#undef i
+#undef result
 
 /* 005e32b2 auto */
 #define avi_decompressor (*(i32 *)((u8 *)&g.d_00638db0))
@@ -3634,22 +3634,22 @@ void __cdecl avi_apply_palette(iptr param_1,GamePalette *param_2)
 #define avi_frame_width (*(int *)((u8 *)&g.d_00638db4))
 #define avi_indeo_frame_flags_i32 (*(i32 *)((u8 *)&g.d_006e503c))
 #define avi_indeo_seq_flags_i32 (*(i32 *)((u8 *)&g.d_006e50ac))
-#define local_2c (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-#define local_1c (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
+#define dst_rect (*(tagRECT *)(frame_ + FRAME_OFF(4)))
+#define src_rect (*(tagRECT *)(frame_ + FRAME_OFF(20)))
+#define cur_frame (*(i32 *)(frame_ + FRAME_OFF(36)))
+#define result (*(int *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl avi_restart_decompress(iptr param_1,int param_2)
+void __cdecl avi_restart_decompress(iptr player,int transparent)
 
 {
   int yBottom;
   int xRight;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((param_1 != 0) && (avi_file_loaded != 0)) {
+  if ((player != 0) && (avi_file_loaded != 0)) {
     ICSendMessage(avi_decompressor,0x403f,0,0);
-    if (param_2 == 0) {
+    if (transparent == 0) {
       avi_indeo_seq_flags_i32 = 0;
     }
     else {
@@ -3658,45 +3658,45 @@ void __cdecl avi_restart_decompress(iptr param_1,int param_2)
     avi_indeo_frame_flags_i32 = 0x80000008;
     ICSendMessage(avi_decompressor,0x5001,&avi_indeo_seq_opts,0x2c);
     ICSendMessage(avi_decompressor,0x5001,&avi_indeo_frame_opts,0x70);
-    if (*(int *)(param_1 + 0x5a0) == 0) {
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
-                             param_1 + 0x5e8,0,0,0,avi_frame_width,avi_frame_height);
+    if (*(int *)(player + 0x5a0) == 0) {
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
+                             player + 0x5e8,0,0,0,avi_frame_width,avi_frame_height);
     }
     else {
-      *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) << 1;
-      *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) << 1;
-      local_8 = avi_ic_decompress_ex_begin(avi_decompressor,0,param_1 + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
-                             param_1 + 0x5e8,0,0,0,avi_frame_width * 2,avi_frame_height * 2);
-      *(int *)(param_1 + 0x5f0) = *(int *)(param_1 + 0x5f0) >> 1;
-      *(int *)(param_1 + 0x5ec) = *(int *)(param_1 + 0x5ec) >> 1;
+      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) << 1;
+      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) << 1;
+      result = avi_ic_decompress_ex_begin(avi_decompressor,0,player + 0x5c0,0,0,0,avi_frame_width,avi_frame_height,
+                             player + 0x5e8,0,0,0,avi_frame_width * 2,avi_frame_height * 2);
+      *(int *)(player + 0x5f0) = *(int *)(player + 0x5f0) >> 1;
+      *(int *)(player + 0x5ec) = *(int *)(player + 0x5ec) >> 1;
     }
-    if (local_8 != 0) {
+    if (result != 0) {
       avi_file_loaded = 0;
     }
-    if (param_2 == 0) {
-      surface_create((DibSurface *)(param_1 + 0x558),0,0);
+    if (transparent == 0) {
+      surface_create((DibSurface *)(player + 0x558),0,0);
     }
     else {
-      surface_create((DibSurface *)(param_1 + 0x558),avi_frame_width,avi_frame_height);
-      yBottom = surface_get_height((DibSurface *)param_1);
-      xRight = surface_get_width((DibSurface *)param_1);
-      SetRect(&local_1c,0,0,xRight,yBottom);
-      local_2c.left = local_1c.left;
-      local_2c.top = local_1c.top;
-      local_2c.right = local_1c.right;
-      local_2c.bottom = local_1c.bottom;
-      OffsetRect(&local_2c,*(int *)(param_1 + 0x5b8),*(int *)(param_1 + 0x5bc));
-      if (*(int *)(param_1 + 0x5b4) != 0) {
+      surface_create((DibSurface *)(player + 0x558),avi_frame_width,avi_frame_height);
+      yBottom = surface_get_height((DibSurface *)player);
+      xRight = surface_get_width((DibSurface *)player);
+      SetRect(&src_rect,0,0,xRight,yBottom);
+      dst_rect.left = src_rect.left;
+      dst_rect.top = src_rect.top;
+      dst_rect.right = src_rect.right;
+      dst_rect.bottom = src_rect.bottom;
+      OffsetRect(&dst_rect,*(int *)(player + 0x5b8),*(int *)(player + 0x5bc));
+      if (*(int *)(player + 0x5b4) != 0) {
         surface_blit
-                  (*(DibSurface **)(param_1 + 0x5b4),param_1 + 0x558,(iptr)&local_2c,
-                   (iptr)&local_1c);
+                  (*(DibSurface **)(player + 0x5b4),player + 0x558,(iptr)&dst_rect,
+                   (iptr)&src_rect);
       }
       if (avi_file_loaded != 0) {
         surface_blit
-                  ((DibSurface *)(param_1 + 0x558),param_1,(iptr)&local_1c,(iptr)&local_1c);
-        local_c = *(i32 *)(param_1 + 0xa18);
-        avi_seek_frame(param_1,local_c,0);
-        wnd_blit_surface((DibSurface *)param_1);
+                  ((DibSurface *)(player + 0x558),player,(iptr)&src_rect,(iptr)&src_rect);
+        cur_frame = *(i32 *)(player + 0xa18);
+        avi_seek_frame(player,cur_frame,0);
+        wnd_blit_surface((DibSurface *)player);
       }
     }
   }
@@ -3708,10 +3708,10 @@ void __cdecl avi_restart_decompress(iptr param_1,int param_2)
 #undef avi_frame_width
 #undef avi_indeo_frame_flags_i32
 #undef avi_indeo_seq_flags_i32
-#undef local_2c
-#undef local_1c
-#undef local_c
-#undef local_8
+#undef dst_rect
+#undef src_rect
+#undef cur_frame
+#undef result
 
 /* 005e3550 auto */
 void __thiscall avi_player_call_end_callback(AviPlayerEndCbCallView *this)
@@ -3735,244 +3735,244 @@ void __thiscall avi_player_call_cue_callback(AviPlayerCueCbCallView *this)
 
 /* 005ec317 auto */
 #define wnd_active_child (*(WndOnMciDoneView * *)((u8 *)&g.d_00637ea4))
-#define local_34 (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_2c (*(uptr *)(frame_ + FRAME_OFF(12)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(WndOnMciDoneView * *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-i32 __stdcall moviewnd_wndproc(HWND param_1,uint param_2,uint param_3,uint param_4)
+#define generic_parms (*(i8 (*)[4])(frame_ + FRAME_OFF(4)))
+#define frame_height (*(int *)(frame_ + FRAME_OFF(8)))
+#define minmax_info (*(uptr *)(frame_ + FRAME_OFF(12)))
+#define frame_width (*(int *)(frame_ + FRAME_OFF(16)))
+#define parent_window (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define min_height2 (*(int *)(frame_ + FRAME_OFF(24)))
+#define min_width2 (*(int *)(frame_ + FRAME_OFF(28)))
+#define scroll_pos2 (*(int *)(frame_ + FRAME_OFF(32)))
+#define wnd2 (*(WndOnMciDoneView * *)(frame_ + FRAME_OFF(36)))
+#define mci_device2 (*(iptr *)(frame_ + FRAME_OFF(40)))
+#define max_height2 (*(int *)(frame_ + FRAME_OFF(44)))
+#define max_width2 (*(int *)(frame_ + FRAME_OFF(48)))
+i32 __stdcall moviewnd_wndproc(HWND hwnd,uint msg,uint wparam,uint lparam)
 
 {
-  short sVar1;
-  i32 uVar2;
-  iptr iVar3;
+  short thumb_pos;
+  i32 result;
+  iptr window;
   WndBase *pCVar4;
   BOOL BVar5;
-  int iVar6;
+  int value;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_14 = (WndOnMciDoneView *)GetWindowLongA(param_1,4);
-  if (local_14 == (WndOnMciDoneView *)0x0) {
-    uVar2 = wnd_base_wndproc(param_1,param_2,param_3,param_4);
-    return uVar2;
+  wnd2 = (WndOnMciDoneView *)GetWindowLongA(hwnd,4);
+  if (wnd2 == (WndOnMciDoneView *)0x0) {
+    result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+    return result;
   }
-  if (param_2 < 0x11) {
-    if (param_2 != 0x10) {
-      switch(param_2) {
+  if (msg < 0x11) {
+    if (msg != 0x10) {
+      switch(msg) {
       case 3:
-        wnd_active_child = local_14;
+        wnd_active_child = wnd2;
         wnd_call_move
-                  ((WndOnMoveView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
-        uVar2 = wnd_base_wndproc(param_1,param_2,param_3,param_4);
-        return uVar2;
+                  ((WndOnMoveView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
+        result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+        return result;
       default:
         goto switchD_005ecda6_caseD_4;
       case 5:
 switchD_005ecda6_caseD_5:
-        wnd_active_child = local_14;
-        BVar5 = IsIconic(param_1);
+        wnd_active_child = wnd2;
+        BVar5 = IsIconic(hwnd);
         if (BVar5 == 0) {
-          wnd_on_size_nop(local_14,param_4 & 0xffff,param_4 >> 0x10);
-          wnd_call_size((WndOnSizeView *)(local_14->pad_4 + 0xc),param_3);
+          wnd_on_size_nop(wnd2,lparam & 0xffff,lparam >> 0x10);
+          wnd_call_size((WndOnSizeView *)(wnd2->pad_4 + 0xc),wparam);
         }
-        uVar2 = wnd_base_wndproc(param_1,param_2,param_3,param_4);
-        return uVar2;
+        result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+        return result;
       case 6:
         goto switchD_005ecda6_caseD_6;
       case 7:
-        wnd_active_child = local_14;
-        wnd_call_setfocus((WndOnSetFocusView *)(local_14->pad_4 + 0xc));
+        wnd_active_child = wnd2;
+        wnd_call_setfocus((WndOnSetFocusView *)(wnd2->pad_4 + 0xc));
         return 0;
       }
     }
-    wnd_active_child = local_14;
-    iVar6 = wnd_call_close((WndOnCloseView *)(local_14->pad_4 + 0xc));
-    if (iVar6 != 0) {
-      uVar2 = wnd_base_wndproc(param_1,0x10,param_3,param_4);
-      return uVar2;
+    wnd_active_child = wnd2;
+    value = wnd_call_close((WndOnCloseView *)(wnd2->pad_4 + 0xc));
+    if (value != 0) {
+      result = wnd_base_wndproc(hwnd,0x10,wparam,lparam);
+      return result;
     }
   }
   else {
-    if (param_2 < 0x45) {
-      if (param_2 == 0x44) {
-        wnd_active_child = local_14;
-        wnd_call_msg44((WndOnMsg44View *)(local_14->pad_4 + 0xc),param_4 & 0xffff);
+    if (msg < 0x45) {
+      if (msg == 0x44) {
+        wnd_active_child = wnd2;
+        wnd_call_msg44((WndOnMsg44View *)(wnd2->pad_4 + 0xc),lparam & 0xffff);
         return 1;
       }
-      if (param_2 == 0x24) {
-        local_2c = param_4;
-        iVar3 = wnd_get_window((WndBase *)local_14);
-        local_30 = wnd_obj_frame_height(iVar3);
-        iVar3 = wnd_get_window((WndBase *)local_14);
-        local_28 = wnd_obj_frame_width(iVar3);
-        wnd_get_min_size((WndMinSizeView *)local_14,(iptr)&local_1c,(iptr)&local_20);
-        wnd_get_max_size((WndMaxSizeView *)local_14,(iptr)&local_8,(iptr)&local_c);
-        *(int *)(local_2c + 0x20) = local_28 + local_8;
-        *(int *)(local_2c + 0x24) = local_30 + local_c;
-        *(int *)(local_2c + 0x18) = local_28 + local_1c;
-        *(int *)(local_2c + 0x1c) = local_30 + local_20;
+      if (msg == 0x24) {
+        minmax_info = lparam;
+        window = wnd_get_window((WndBase *)wnd2);
+        frame_height = wnd_obj_frame_height(window);
+        window = wnd_get_window((WndBase *)wnd2);
+        frame_width = wnd_obj_frame_width(window);
+        wnd_get_min_size((WndMinSizeView *)wnd2,(iptr)&min_width2,(iptr)&min_height2);
+        wnd_get_max_size((WndMaxSizeView *)wnd2,(iptr)&max_width2,(iptr)&max_height2);
+        *(int *)(minmax_info + 0x20) = frame_width + max_width2;
+        *(int *)(minmax_info + 0x24) = frame_height + max_height2;
+        *(int *)(minmax_info + 0x18) = frame_width + min_width2;
+        *(int *)(minmax_info + 0x1c) = frame_height + min_height2;
         return 0;
       }
 switchD_005ecda6_caseD_4:
-      uVar2 = wnd_base_wndproc(param_1,param_2,param_3,param_4);
-      return uVar2;
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
-    if (param_2 < 0x112) {
-      if (param_2 == 0x111) {
-        wnd_active_child = local_14;
+    if (msg < 0x112) {
+      if (msg == 0x111) {
+        wnd_active_child = wnd2;
         return 0;
       }
-      if (param_2 == 0x100) {
-        wnd_active_child = local_14;
-        uVar2 = input_map_vkey(param_3);
-        wnd_call_keydown_pre((WndOnKeyDownPreView *)(local_14->pad_4 + 0xc),uVar2);
-        uVar2 = input_map_vkey(param_3);
-        wnd_call_keydown((WndOnKeyDownView *)(local_14->pad_4 + 0xc),uVar2);
+      if (msg == 0x100) {
+        wnd_active_child = wnd2;
+        result = input_map_vkey(wparam);
+        wnd_call_keydown_pre((WndOnKeyDownPreView *)(wnd2->pad_4 + 0xc),result);
+        result = input_map_vkey(wparam);
+        wnd_call_keydown((WndOnKeyDownView *)(wnd2->pad_4 + 0xc),result);
         return 0;
       }
-      if (param_2 == 0x101) {
-        wnd_active_child = local_14;
-        uVar2 = input_map_vkey(param_3);
-        wnd_call_keyup((WndOnKeyUpView *)(local_14->pad_4 + 0xc),uVar2);
+      if (msg == 0x101) {
+        wnd_active_child = wnd2;
+        result = input_map_vkey(wparam);
+        wnd_call_keyup((WndOnKeyUpView *)(wnd2->pad_4 + 0xc),result);
         return 0;
       }
-      if (param_2 == 0x102) {
-        wnd_active_child = local_14;
-        wnd_call_char((WndOnCharView *)(local_14->pad_4 + 0xc),param_3 & 0xff);
+      if (msg == 0x102) {
+        wnd_active_child = wnd2;
+        wnd_call_char((WndOnCharView *)(wnd2->pad_4 + 0xc),wparam & 0xff);
         return 0;
       }
       goto switchD_005ecda6_caseD_4;
     }
-    if (param_2 < 0x201) {
-      if (param_2 == 0x200) {
-        wnd_active_child = local_14;
+    if (msg < 0x201) {
+      if (msg == 0x200) {
+        wnd_active_child = wnd2;
         wnd_call_mousemove
-                  ((WndOnMouseMoveView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnMouseMoveView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
-      if (param_2 == 0x112) {
-        if (param_3 == 0xf020) {
-          wnd_active_child = local_14;
-          wnd_call_minimize((WndOnMinimizeView *)(local_14->pad_4 + 0xc));
+      if (msg == 0x112) {
+        if (wparam == 0xf020) {
+          wnd_active_child = wnd2;
+          wnd_call_minimize((WndOnMinimizeView *)(wnd2->pad_4 + 0xc));
         }
         else {
-          wnd_active_child = local_14;
-          if (param_3 == 0xf120) {
-            wnd_call_restore((WndOnRestoreView *)(local_14->pad_4 + 0xc));
+          wnd_active_child = wnd2;
+          if (wparam == 0xf120) {
+            wnd_call_restore((WndOnRestoreView *)(wnd2->pad_4 + 0xc));
           }
         }
-        uVar2 = wnd_base_wndproc(param_1,0x112,param_3,param_4);
-        return uVar2;
+        result = wnd_base_wndproc(hwnd,0x112,wparam,lparam);
+        return result;
       }
-      sVar1 = (short)(param_3 >> 0x10);
-      if (param_2 == 0x114) {
-        local_18 = wnd_get_hscroll_pos((WndHScrollPosView *)local_14);
-        switch(param_3) {
+      thumb_pos = (short)(wparam >> 0x10);
+      if (msg == 0x114) {
+        scroll_pos2 = wnd_get_hscroll_pos((WndHScrollPosView *)wnd2);
+        switch(wparam) {
         case 0:
-          local_18--;
-          SetScrollPos(param_1,0,local_18,1);
-          local_18 = GetScrollPos(param_1,0);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xac) = local_18;
-          wnd_call_hscroll((WndOnHScrollView *)(local_14->pad_4 + 0xc),local_18);
+          scroll_pos2--;
+          SetScrollPos(hwnd,0,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,0);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xac) = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 1:
-          local_18++;
-          SetScrollPos(param_1,0,local_18,1);
-          local_18 = GetScrollPos(param_1,0);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xac) = local_18;
-          wnd_call_hscroll((WndOnHScrollView *)(local_14->pad_4 + 0xc),local_18);
+          scroll_pos2++;
+          SetScrollPos(hwnd,0,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,0);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xac) = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 2:
-          iVar6 = wnd_get_hscroll_page((WndHScrollPageView *)local_14);
-          local_18 -= iVar6;
-          SetScrollPos(param_1,0,local_18,1);
-          local_18 = GetScrollPos(param_1,0);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xac) = local_18;
-          wnd_call_hscroll((WndOnHScrollView *)(local_14->pad_4 + 0xc),local_18);
+          value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
+          scroll_pos2 -= value;
+          SetScrollPos(hwnd,0,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,0);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xac) = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 3:
-          iVar6 = wnd_get_hscroll_page((WndHScrollPageView *)local_14);
-          local_18 += iVar6;
-          SetScrollPos(param_1,0,local_18,1);
-          local_18 = GetScrollPos(param_1,0);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xac) = local_18;
-          wnd_call_hscroll((WndOnHScrollView *)(local_14->pad_4 + 0xc),local_18);
+          value = wnd_get_hscroll_page((WndHScrollPageView *)wnd2);
+          scroll_pos2 += value;
+          SetScrollPos(hwnd,0,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,0);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xac) = scroll_pos2;
+          wnd_call_hscroll((WndOnHScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 4:
-          local_18 = (int)sVar1;
-          SetScrollPos(param_1,0,local_18,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xac) = local_18;
+          scroll_pos2 = (int)thumb_pos;
+          SetScrollPos(hwnd,0,scroll_pos2,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xac) = scroll_pos2;
           wnd_call_hscroll
-                    ((WndOnHScrollView *)(local_14->pad_4 + 0xc),*(i32 *)(local_14->pad_4 + 0xac));
+                    ((WndOnHScrollView *)(wnd2->pad_4 + 0xc),*(i32 *)(wnd2->pad_4 + 0xac));
           return 0;
         case 5:
-          wnd_active_child = local_14;
-          wnd_call_hscroll_track((WndOnHScrollTrackView *)(local_14->pad_4 + 0xc),(int)sVar1);
+          wnd_active_child = wnd2;
+          wnd_call_hscroll_track((WndOnHScrollTrackView *)(wnd2->pad_4 + 0xc),(int)thumb_pos);
           return 0;
         default:
           return 0;
         }
       }
-      if (param_2 == 0x115) {
-        local_18 = wnd_get_vscroll_pos((WndVScrollPosView *)local_14);
-        switch(param_3) {
+      if (msg == 0x115) {
+        scroll_pos2 = wnd_get_vscroll_pos((WndVScrollPosView *)wnd2);
+        switch(wparam) {
         case 0:
-          local_18--;
-          SetScrollPos(param_1,1,local_18,1);
-          local_18 = GetScrollPos(param_1,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xb0) = local_18;
-          wnd_call_vscroll((WndOnVScrollView *)(local_14->pad_4 + 0xc),local_18);
+          scroll_pos2--;
+          SetScrollPos(hwnd,1,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xb0) = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 1:
-          local_18++;
-          SetScrollPos(param_1,1,local_18,1);
-          local_18 = GetScrollPos(param_1,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xb0) = local_18;
-          wnd_call_vscroll((WndOnVScrollView *)(local_14->pad_4 + 0xc),local_18);
+          scroll_pos2++;
+          SetScrollPos(hwnd,1,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xb0) = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 2:
-          iVar6 = wnd_get_vscroll_page((WndVScrollPageView *)local_14);
-          local_18 -= iVar6;
-          SetScrollPos(param_1,1,local_18,1);
-          local_18 = GetScrollPos(param_1,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xb0) = local_18;
-          wnd_call_vscroll((WndOnVScrollView *)(local_14->pad_4 + 0xc),local_18);
+          value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
+          scroll_pos2 -= value;
+          SetScrollPos(hwnd,1,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xb0) = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 3:
-          iVar6 = wnd_get_vscroll_page((WndVScrollPageView *)local_14);
-          local_18 += iVar6;
-          SetScrollPos(param_1,1,local_18,1);
-          local_18 = GetScrollPos(param_1,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xb0) = local_18;
-          wnd_call_vscroll((WndOnVScrollView *)(local_14->pad_4 + 0xc),local_18);
+          value = wnd_get_vscroll_page((WndVScrollPageView *)wnd2);
+          scroll_pos2 += value;
+          SetScrollPos(hwnd,1,scroll_pos2,1);
+          scroll_pos2 = GetScrollPos(hwnd,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xb0) = scroll_pos2;
+          wnd_call_vscroll((WndOnVScrollView *)(wnd2->pad_4 + 0xc),scroll_pos2);
           return 0;
         case 4:
-          local_18 = (int)sVar1;
-          SetScrollPos(param_1,1,local_18,1);
-          wnd_active_child = local_14;
-          *(int *)(local_14->pad_4 + 0xb0) = local_18;
+          scroll_pos2 = (int)thumb_pos;
+          SetScrollPos(hwnd,1,scroll_pos2,1);
+          wnd_active_child = wnd2;
+          *(int *)(wnd2->pad_4 + 0xb0) = scroll_pos2;
           wnd_call_vscroll
-                    ((WndOnVScrollView *)(local_14->pad_4 + 0xc),*(i32 *)(local_14->pad_4 + 0xb0));
+                    ((WndOnVScrollView *)(wnd2->pad_4 + 0xc),*(i32 *)(wnd2->pad_4 + 0xb0));
           return 0;
         case 5:
-          wnd_active_child = local_14;
-          wnd_call_vscroll_track((WndOnVScrollTrackView *)(local_14->pad_4 + 0xc),(int)sVar1);
+          wnd_active_child = wnd2;
+          wnd_call_vscroll_track((WndOnVScrollTrackView *)(wnd2->pad_4 + 0xc),(int)thumb_pos);
           return 0;
         default:
           return 0;
@@ -3980,91 +3980,91 @@ switchD_005ecda6_caseD_4:
       }
       goto switchD_005ecda6_caseD_4;
     }
-    if (param_2 < 0x211) {
-      if (param_2 == 0x210) {
-        if (param_3 == 0x201) {
-          wnd_active_child = local_14;
+    if (msg < 0x211) {
+      if (msg == 0x210) {
+        if (wparam == 0x201) {
+          wnd_active_child = wnd2;
           wnd_call_lbuttondown
-                    ((WndOnLButtonDownView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                    ((WndOnLButtonDownView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
           return 0;
         }
-        if (param_3 != 0x204) {
+        if (wparam != 0x204) {
           return 0;
         }
-        wnd_active_child = local_14;
+        wnd_active_child = wnd2;
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnRButtonDownView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
-      switch(param_2) {
+      switch(msg) {
       case 0x201:
-        pCVar4 = (WndBase *)GetWindowLongA(param_1,0);
-        local_24 = wnd_get_window(pCVar4);
-        wnd_active_child = local_14;
-        if ((*(byte *)(local_24 + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(local_24 + 4));
-          BringWindowToTop(param_1);
+        pCVar4 = (WndBase *)GetWindowLongA(hwnd,0);
+        parent_window = wnd_get_window(pCVar4);
+        wnd_active_child = wnd2;
+        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
+          SetFocus(*(HWND *)(parent_window + 4));
+          BringWindowToTop(hwnd);
         }
-        local_14->pad_4[0xa4] = 1;
-        local_14->pad_4[0xa5] = '\0';
-        local_14->pad_4[0xa6] = '\0';
-        local_14->pad_4[0xa7] = '\0';
+        wnd2->pad_4[0xa4] = 1;
+        wnd2->pad_4[0xa5] = '\0';
+        wnd2->pad_4[0xa6] = '\0';
+        wnd2->pad_4[0xa7] = '\0';
         wnd_call_lbuttondown
-                  ((WndOnLButtonDownView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnLButtonDownView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x202:
-        wnd_active_child = local_14;
-        if (*(int *)(local_14->pad_4 + 0xa4) == 1) {
-          local_14->pad_4[0xa4] = '\0';
-          local_14->pad_4[0xa5] = '\0';
-          local_14->pad_4[0xa6] = '\0';
-          local_14->pad_4[0xa7] = '\0';
+        wnd_active_child = wnd2;
+        if (*(int *)(wnd2->pad_4 + 0xa4) == 1) {
+          wnd2->pad_4[0xa4] = '\0';
+          wnd2->pad_4[0xa5] = '\0';
+          wnd2->pad_4[0xa6] = '\0';
+          wnd2->pad_4[0xa7] = '\0';
           wnd_call_lbuttonup
-                    ((WndOnLButtonUpView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                    ((WndOnLButtonUpView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_lbuttonup_raw
-                  ((WndOnLButtonUpRawView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnLButtonUpRawView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x203:
-        wnd_active_child = local_14;
+        wnd_active_child = wnd2;
         wnd_call_dblclick
-                  ((WndOnDblClickView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnDblClickView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x204:
-        pCVar4 = (WndBase *)GetWindowLongA(param_1,0);
-        local_24 = wnd_get_window(pCVar4);
-        if ((*(byte *)(local_24 + 0x49) & 2) != 0) {
-          SetFocus(*(HWND *)(local_24 + 4));
-          BringWindowToTop(param_1);
+        pCVar4 = (WndBase *)GetWindowLongA(hwnd,0);
+        parent_window = wnd_get_window(pCVar4);
+        if ((*(byte *)(parent_window + 0x49) & 2) != 0) {
+          SetFocus(*(HWND *)(parent_window + 4));
+          BringWindowToTop(hwnd);
         }
-        wnd_active_child = local_14;
-        local_14->pad_4[0xa8] = 1;
-        local_14->pad_4[0xa9] = '\0';
-        local_14->pad_4[0xaa] = '\0';
-        local_14->pad_4[0xab] = '\0';
+        wnd_active_child = wnd2;
+        wnd2->pad_4[0xa8] = 1;
+        wnd2->pad_4[0xa9] = '\0';
+        wnd2->pad_4[0xaa] = '\0';
+        wnd2->pad_4[0xab] = '\0';
         wnd_call_rbuttondown
-                  ((WndOnRButtonDownView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnRButtonDownView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       case 0x205:
-        wnd_active_child = local_14;
-        if (*(int *)(local_14->pad_4 + 0xa8) == 1) {
-          local_14->pad_4[0xa8] = '\0';
-          local_14->pad_4[0xa9] = '\0';
-          local_14->pad_4[0xaa] = '\0';
-          local_14->pad_4[0xab] = '\0';
+        wnd_active_child = wnd2;
+        if (*(int *)(wnd2->pad_4 + 0xa8) == 1) {
+          wnd2->pad_4[0xa8] = '\0';
+          wnd2->pad_4[0xa9] = '\0';
+          wnd2->pad_4[0xaa] = '\0';
+          wnd2->pad_4[0xab] = '\0';
           wnd_call_rbuttonup
-                    ((WndOnRButtonUpView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                    ((WndOnRButtonUpView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         }
         wnd_call_rbuttonup_raw
-                  ((WndOnRButtonUpRawView *)(local_14->pad_4 + 0xc),param_4 & 0xffff,param_4 >> 0x10);
+                  ((WndOnRButtonUpRawView *)(wnd2->pad_4 + 0xc),lparam & 0xffff,lparam >> 0x10);
         return 0;
       }
       goto switchD_005ecda6_caseD_4;
     }
-    if ((param_2 != 0x30f) && (param_2 != 0x311)) {
-      if (param_2 == 0x3b9) {
-        if (param_3 == 1) {
-          wnd_call_mci_done(local_14);
+    if ((msg != 0x30f) && (msg != 0x311)) {
+      if (msg == 0x3b9) {
+        if (wparam == 1) {
+          wnd_call_mci_done(wnd2);
           return 0;
         }
         goto switchD_005ecda6_caseD_5;
@@ -4072,29 +4072,29 @@ switchD_005ecda6_caseD_4:
       goto switchD_005ecda6_caseD_4;
     }
 switchD_005ecda6_caseD_6:
-    local_10 = wnd_get_mci_device((WndMciDeviceView *)local_14);
-    if (local_10 == 0) {
-      uVar2 = wnd_base_wndproc(param_1,param_2,param_3,param_4);
-      return uVar2;
+    mci_device2 = wnd_get_mci_device((WndMciDeviceView *)wnd2);
+    if (mci_device2 == 0) {
+      result = wnd_base_wndproc(hwnd,msg,wparam,lparam);
+      return result;
     }
-    mciSendCommandA(*(MCIDEVICEID *)(local_10 + 8),0x840,*(DWORD_PTR *)(local_10 + 0x10),
-                    (DWORD_PTR)local_34);
+    mciSendCommandA(*(MCIDEVICEID *)(mci_device2 + 8),0x840,*(DWORD_PTR *)(mci_device2 + 0x10),
+                    (DWORD_PTR)generic_parms);
   }
   return 0;
 }
 #undef wnd_active_child
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef generic_parms
+#undef frame_height
+#undef minmax_info
+#undef frame_width
+#undef parent_window
+#undef min_height2
+#undef min_width2
+#undef scroll_pos2
+#undef wnd2
+#undef mci_device2
+#undef max_height2
+#undef max_width2
 
 /* 005eeca0 auto */
 AviAudio * __thiscall avi_audio_ctor(AviAudio *this)
@@ -4122,46 +4122,46 @@ uint __thiscall avi_audio_is_playing(AviAudioPlayingView *this)
 }
 
 /* 005eed76 auto */
-int __thiscall avi_audio_attach_stream(AviAudioAttachView *this,u32 param_1)
+int __thiscall avi_audio_attach_stream(AviAudioAttachView *this,u32 stream)
 
 {
-  int iVar1;
+  int result;
   
-  iVar1 = snd_wave_add_avi_stream(param_1);
-  if (iVar1 == 0) {
-    this->avi_stream = param_1;
+  result = snd_wave_add_avi_stream(stream);
+  if (result == 0) {
+    this->avi_stream = stream;
     this->stream_flags = this->stream_flags | 1;
   }
   else {
     this->stream_flags = 0;
   }
-  return iVar1;
+  return result;
 }
 
 /* 005eedd1 auto */
 i32 __thiscall avi_audio_get_position_ms(void *this)
 
 {
-  i32 uVar1;
+  i32 position_ms;
   
-  uVar1 = snd_wave_get_position_ms();
-  return uVar1;
+  position_ms = snd_wave_get_position_ms();
+  return position_ms;
 }
 
 /* 005eedec auto */
-int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,i32 param_1,i32 param_2)
+int __thiscall avi_audio_prepare_range(AviAudioPrepareView *this,i32 start_time,i32 end_time)
 
 {
-  int iVar1;
+  int result;
   
-  iVar1 = snd_avi_stream_prepare(param_1,param_2,(iptr)this);
-  if (iVar1 == 0) {
+  result = snd_avi_stream_prepare(start_time,end_time,(iptr)this);
+  if (result == 0) {
     this->audio_flags = this->audio_flags | 2;
   }
   else {
     this->audio_flags = this->audio_flags & 0xfffd;
   }
-  return iVar1;
+  return result;
 }
 
 /* 005eee4f auto */

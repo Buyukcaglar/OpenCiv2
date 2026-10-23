@@ -3,442 +3,442 @@
 #include "auto_common.h"
 
 /* 00442885 auto */
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-i32 __cdecl ai_city_touches_landmass(iptr city,int param_2)
+#define dir (*(uptr *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl ai_city_touches_landmass(iptr city,int landmass)
 
 {
   short x2;
   short y2;
   int y;
-  i32 uVar4;
+  i32 result;
   iptr x;
-  int iVar6;
+  int check;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   x2 = cities[city].x;
   y2 = cities[city].y;
   y = tile_landmass((int)x2,(int)y2);
-  if (y == param_2) {
-    uVar4 = 1;
+  if (y == landmass) {
+    result = 1;
   }
   else {
-    for (local_8 = 0; (int)local_8 < 8; local_8++) {
-      x = map_wrap_x((int)(char)(&dir_dx_table)[local_8] + (int)x2);
-      y = (int)(char)(&dir_dy_table)[local_8] + (int)y2;
-      iVar6 = map_in_bounds(x,y);
-      if ((iVar6 != 0) && (iVar6 = tile_is_ocean(x,y), iVar6 != 0)) {
+    for (dir = 0; (int)dir < 8; dir++) {
+      x = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)x2);
+      y = (int)(char)(&dir_dy_table)[dir] + (int)y2;
+      check = map_in_bounds(x,y);
+      if ((check != 0) && (check = tile_is_ocean(x,y), check != 0)) {
         x = tile_landmass(x,y);
-        y = landmass_borders_body(param_2,x);
+        y = landmass_borders_body(landmass,x);
         if (y != 0) {
           return 1;
         }
-        local_8 += (2 - (local_8 & 1));
+        dir += (2 - (dir & 1));
       }
     }
-    uVar4 = 0;
+    result = 0;
   }
-  return uVar4;
+  return result;
 }
-#undef local_8
+#undef dir
 
 /* 004bdb2c auto */
-#define local_3c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(12)))
+#define size_needed (*(uint *)(frame_ + FRAME_OFF(4)))
+#define civilize_mod (*(int *)(frame_ + FRAME_OFF(8)))
+#define free_continent (*(int *)(frame_ + FRAME_OFF(12)))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_28 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(28)))
+#define continent (*(iptr *)(frame_ + FRAME_OFF(24)))
+#define max_size (*(int *)(frame_ + FRAME_OFF(28)))
 #define advance2 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(40)))
+#define wonder (*(iptr *)(frame_ + FRAME_OFF(40)))
 #define civ2 (*(iptr *)(frame_ + FRAME_OFF(44)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(48)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(56)))
+#define expand_bonus (*(uint *)(frame_ + FRAME_OFF(48)))
+#define value (*(int *)(frame_ + FRAME_OFF(56)))
 int __cdecl ai_advance_value(iptr civ,iptr advance)
 
 {
-  byte bVar1;
-  bool bVar2;
-  bool bVar3;
-  iptr iVar4;
-  iptr iVar5;
-  int iVar6;
+  byte size_limit;
+  bool human_contact;
+  bool contested;
+  iptr settler_prereq;
+  iptr has_prereq;
+  int check;
   int city2;
   i8 frame_[FRAME_OFF(64)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_38 = (int)leaders[civs[civ].tribe].civilize;
-  if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < local_38)) {
+  civilize_mod = (int)leaders[civs[civ].tribe].civilize;
+  if (((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) && (-1 < civilize_mod)) {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
           ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ * 0x594) & 0x20) != 0)) &&
          (civs[civ].num_advances < civs[civ2].num_advances)) {
-        for (local_28 = 1; local_28 < 0x3f; local_28++) {
-          if ((*(char *)&civs[civ].continent_cities[local_28] != '\0') &&
-             (*(char *)&civs[civ2].continent_cities[local_28] != '\0')) {
-            if (-1 < local_38) {
-              local_38--;
+        for (continent = 1; continent < 0x3f; continent++) {
+          if ((*(char *)&civs[civ].continent_cities[continent] != '\0') &&
+             (*(char *)&civs[civ2].continent_cities[continent] != '\0')) {
+            if (-1 < civilize_mod) {
+              civilize_mod--;
             }
             if (6 < civs[civ2].reputation) {
-              local_38 = -1;
+              civilize_mod = -1;
             }
           }
         }
       }
     }
   }
-  local_8 = advances[advance].civilized_mod * local_38 + (int)advances[advance].ai_value;
-  iVar4 = advance_has_prereq((int)unit_types[0x20].prerequisite,advance);
-  if (iVar4 == 0) {
+  value = advances[advance].civilized_mod * civilize_mod + (int)advances[advance].ai_value;
+  settler_prereq = advance_has_prereq((int)unit_types[0x20].prerequisite,advance);
+  if (settler_prereq == 0) {
     city2 = advance_has_prereq((int)unit_types[0x21].prerequisite,advance);
     if ((city2 == 0) &&
        (city2 = advance_has_prereq((int)unit_types[0x23].prerequisite,advance), city2 == 0)) {
       city2 = advance_has_prereq((int)unit_types[0x2b].prerequisite,advance);
       if (city2 == 0) {
-        local_10 = 0;
+        expand_bonus = 0;
       }
       else {
-        local_10 = 1;
+        expand_bonus = 1;
       }
     }
     else {
-      local_10 = 2;
+      expand_bonus = 2;
     }
   }
   else {
-    local_10 = 3;
+    expand_bonus = 3;
   }
   if ((game.game_flags & 4) != 0) {
-    local_10 = local_10 << 1;
+    expand_bonus = expand_bonus << 1;
   }
-  if (local_10 != 0) {
-    local_34 = 0;
-    bVar2 = false;
-    for (local_28 = 1; local_28 < 0x3f; local_28++) {
-      if (*(char *)&civs[civ].continent_cities[local_28] != '\0') {
-        bVar3 = false;
+  if (expand_bonus != 0) {
+    free_continent = 0;
+    human_contact = false;
+    for (continent = 1; continent < 0x3f; continent++) {
+      if (*(char *)&civs[civ].continent_cities[continent] != '\0') {
+        contested = false;
         for (civ2 = 0; civ2 < 8; civ2++) {
           if ((civ != civ2) &&
-             ((*(char *)&civs[civ].continent_cities[local_28] != '\0' ||
-              (*(short *)&civs[civ].continent_military[local_28] != 0)))) {
-            bVar3 = true;
+             ((*(char *)&civs[civ].continent_cities[continent] != '\0' ||
+              (*(short *)&civs[civ].continent_military[continent] != 0)))) {
+            contested = true;
             if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-              bVar2 = true;
+              human_contact = true;
             }
             break;
           }
         }
-        if (!bVar3) {
-          local_34 = 1;
+        if (!contested) {
+          free_continent = 1;
           break;
         }
       }
     }
-    if (local_34 == 0) {
-      if ((!bVar2) || ((game.game_flags & 4) != 0)) {
-        local_8++;
+    if (free_continent == 0) {
+      if ((!human_contact) || ((game.game_flags & 4) != 0)) {
+        value++;
       }
     }
     else {
-      local_8 += local_10;
+      value += expand_bonus;
     }
   }
   if (improvements[0x22].preq == advance) {
-    local_8 = local_8 + ((int)((int)civs[civ].num_ships +
+    value = value + ((int)((int)civs[civ].num_ships +
                               ((int)civs[civ].num_ships >> 0x1f & 3U)) >> 2);
   }
   if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
     if ((game.human_players & game.advance_known_by[0x4c]) != 0) {
-      iVar5 = advance_has_prereq(0x20,advance);
-      if (iVar5 != 0) {
-        local_8 += 2;
+      has_prereq = advance_has_prereq(0x20,advance);
+      if (has_prereq != 0) {
+        value += 2;
       }
       for (improvement = 0x23; improvement < 0x26; improvement++) {
         if (improvements[improvement].preq == advance) {
-          local_8 += 3;
+          value += 3;
         }
       }
     }
-    city2 = local_8;
+    city2 = value;
     if ((((-1 < unit_types[0x1c].prerequisite) &&
          ((game.human_players & game.advance_known_by[unit_types[0x1c].prerequisite]) != 0)) &&
-        (iVar6 = advance_has_prereq((int)unit_types[0x1c].prerequisite,advance), iVar6 != 0)) &&
-       (city2 = local_8 + 2, unit_types[0x1c].prerequisite == advance)) {
-      city2 = local_8 + 5;
+        (check = advance_has_prereq((int)unit_types[0x1c].prerequisite,advance), check != 0)) &&
+       (city2 = value + 2, unit_types[0x1c].prerequisite == advance)) {
+      city2 = value + 5;
     }
-    local_8 = city2;
-    for (local_18 = 0; local_18 < 0x1c; local_18++) {
-      if (wonder_expires[local_18] == advance) {
-        city2 = civ_has_wonder(civ,local_18);
+    value = city2;
+    for (wonder = 0; wonder < 0x1c; wonder++) {
+      if (wonder_expires[wonder] == advance) {
+        city2 = civ_has_wonder(civ,wonder);
         if ((city2 != 0) && (advance != 0x25)) {
-          local_8 -= 2;
+          value -= 2;
         }
-        city2 = wonder_get_city(local_18);
+        city2 = wonder_get_city(wonder);
         if ((-1 < city2) && (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0))
         {
-          local_8 += 2;
+          value += 2;
         }
       }
     }
   }
   if ((improvements[9].preq == advance) || (improvements[0x17].preq == advance)) {
-    local_24 = 0;
+    max_size = 0;
     for (city = 0; city < game.num_cities; city++) {
-      city2 = local_24;
+      city2 = max_size;
       if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-         (city2 = (int)cities[city].size, cities[city].size <= local_24)) {
-        city2 = local_24;
+         (city2 = (int)cities[city].size, cities[city].size <= max_size)) {
+        city2 = max_size;
       }
-      local_24 = city2;
+      max_size = city2;
     }
-    bVar1 = cosmic.sewer_size;
+    size_limit = cosmic.sewer_size;
     if (improvements[9].preq == advance) {
-      bVar1 = cosmic.aqueduct_size;
+      size_limit = cosmic.aqueduct_size;
     }
-    local_3c = (uint)bVar1;
-    if ((int)local_3c <= local_24) {
-      local_8 += 2;
+    size_needed = (uint)size_limit;
+    if ((int)size_needed <= max_size) {
+      value += 2;
     }
   }
   if ((-1 < leaders[civs[civ].tribe].civilize) &&
      (city2 = civ_has_advance(civ,0x55), city2 != 0)) {
     city2 = advance_has_prereq(0x10,advance);
     if (city2 != 0) {
-      local_8 = local_8 + leaders[civs[civ].tribe].civilize + 1;
+      value = value + leaders[civs[civ].tribe].civilize + 1;
     }
     if (advance == 0x10) {
-      local_8 += 2;
+      value += 2;
     }
   }
-  iVar6 = civ_has_advance(civ,0x26);
-  city2 = local_8;
-  if ((iVar6 != 0) && (iVar6 = advance_has_prereq(0x25,advance), iVar6 != 0)) {
-    iVar6 = civ_has_advance(civ,0x39);
-    city2 = local_8 + 1;
-    if (iVar6 != 0) {
-      city2 = local_8 + 2;
+  check = civ_has_advance(civ,0x26);
+  city2 = value;
+  if ((check != 0) && (check = advance_has_prereq(0x25,advance), check != 0)) {
+    check = civ_has_advance(civ,0x39);
+    city2 = value + 1;
+    if (check != 0) {
+      city2 = value + 2;
     }
   }
-  local_8 = city2;
+  value = city2;
   switch(civs[civ].tribe) {
   case 0:
     if (((advance == 0x27) || (advance == 8)) || (advance == 0x56)) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0x37) {
-      local_8--;
+      value--;
     }
     break;
   case 1:
     if (advance == 0xc) {
-      local_8++;
+      value++;
     }
     break;
   case 2:
     if (advance == 6) {
-      local_8++;
+      value++;
     }
     if (advance == 0x52) {
-      local_8++;
+      value++;
     }
     if (advance == 0x3c) {
-      local_8++;
+      value++;
     }
     break;
   case 3:
     if (advance == 0x2f) {
-      local_8 += 2;
+      value += 2;
     }
     break;
   case 4:
     if (advance == 0x15) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0xf) {
-      local_8--;
+      value--;
     }
     if (advance == 0x49) {
-      local_8++;
+      value++;
     }
     if (advance == 0x10) {
-      local_8++;
+      value++;
     }
     if (advance == 0x2a) {
-      local_8++;
+      value++;
     }
     break;
   case 5:
     if (advance == 0x40) {
-      local_8++;
+      value++;
     }
     if (advance == 8) {
-      local_8++;
+      value++;
     }
     if (advance == 1) {
-      local_8++;
+      value++;
     }
     if (advance == 0x2e) {
-      local_8++;
+      value++;
     }
     if (advance == 0x37) {
-      local_8--;
+      value--;
     }
     if (advance == 0x3c) {
-      local_8 += 2;
+      value += 2;
     }
     break;
   case 6:
     if (advance == 0x40) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0x24) {
-      local_8++;
+      value++;
     }
     if (advance == 0x38) {
-      local_8++;
+      value++;
     }
     if (advance == 9) {
-      local_8++;
+      value++;
     }
     if (advance == 0x37) {
-      local_8--;
+      value--;
     }
     break;
   case 7:
     if (advance == 0xf) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0x3c) {
-      local_8++;
+      value++;
     }
     if (advance == 0x22) {
-      local_8++;
+      value++;
     }
     break;
   case 8:
     if (advance == 0x40) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0x24) {
-      local_8++;
+      value++;
     }
     if (advance == 0x38) {
-      local_8++;
+      value++;
     }
     if (advance == 9) {
-      local_8++;
+      value++;
     }
     if (advance == 8) {
-      local_8--;
+      value--;
     }
     if (advance == 0x27) {
-      local_8--;
+      value--;
     }
     break;
   case 9:
     if (advance == 0x2a) {
-      local_8++;
+      value++;
     }
     if (advance == 0x51) {
-      local_8++;
+      value++;
     }
     if (advance == 0x11) {
-      local_8++;
+      value++;
     }
     break;
   case 10:
     if (advance == 0x23) {
-      local_8 -= 2;
+      value -= 2;
     }
     if (advance == 0x37) {
-      local_8--;
+      value--;
     }
     break;
   case 0xb:
-    if (local_34 != 0) {
-      local_8 -= local_10;
+    if (free_continent != 0) {
+      value -= expand_bonus;
     }
     if (advance == 0x23) {
-      local_8++;
+      value++;
     }
     break;
   case 0xc:
     if (advance == 0x37) {
-      local_8++;
+      value++;
     }
-    if (local_10 != 0) {
-      local_8++;
+    if (expand_bonus != 0) {
+      value++;
     }
     break;
   case 0xf:
     if (advance == 0x4f) {
-      local_8++;
+      value++;
     }
     if (advance == 0x34) {
-      local_8++;
+      value++;
     }
     break;
   case 0x10:
     if (advance == 0x2e) {
-      local_8++;
+      value++;
     }
     break;
   case 0x11:
-    if (1 < local_10) {
-      local_8++;
+    if (1 < expand_bonus) {
+      value++;
     }
     if (advance == 0x37) {
-      local_8++;
+      value++;
     }
     break;
   case 0x12:
   case 0x13:
     if (advance == 0x40) {
-      local_8 += 2;
+      value += 2;
     }
     if (advance == 0x24) {
-      local_8++;
+      value++;
     }
     if (advance == 0x38) {
-      local_8++;
+      value++;
     }
     if (advance == 9) {
-      local_8++;
+      value++;
     }
     if (advance == 0x37) {
-      local_8--;
+      value--;
     }
     break;
   case 0x14:
     if (advance == 0x24) {
-      local_8 += 2;
+      value += 2;
     }
   }
   if (game.advance_known_by[advance] == '\0') {
-    local_8++;
+    value++;
   }
   for (advance2 = 0; advance2 < 100; advance2++) {
     if (((advances[advance2].preq[0] == advance) || (advances[advance2].preq[1] == advance)) &&
        (city2 = civ_has_advance(civ,advance2), city2 != 0)) {
-      local_8--;
+      value--;
     }
   }
-  if (local_8 < 2) {
-    local_8 = 1;
+  if (value < 2) {
+    value = 1;
   }
-  return local_8;
+  return value;
 }
-#undef local_3c
-#undef local_38
-#undef local_34
+#undef size_needed
+#undef civilize_mod
+#undef free_continent
 #undef improvement
 #undef city
-#undef local_28
-#undef local_24
+#undef continent
+#undef max_size
 #undef advance2
-#undef local_18
+#undef wonder
 #undef civ2
-#undef local_10
-#undef local_8
+#undef expand_bonus
+#undef value
 
 /* 004f03b7 auto */
 #define city_tile_job_found (*(i32 *)((u8 *)&g.d_0062ee0c))
@@ -449,75 +449,75 @@ int __cdecl ai_advance_value(iptr civ,iptr advance)
 #define path_owner_civ (*(i32 *)((u8 *)&g.d_0062d044))
 #define path_road_planning (*(i32 *)((u8 *)&g.d_0062d040))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(4)))
+#define steps (*(int *)(frame_ + FRAME_OFF(4)))
 #define y2 (*(int *)(frame_ + FRAME_OFF(20)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(36)))
+#define pass (*(int *)(frame_ + FRAME_OFF(36)))
 i32 __cdecl ai_find_road_link_tile(iptr city)
 
 {
-  bool bVar1;
-  iptr iVar2;
+  bool road_ok;
+  iptr landmass;
   int civ;
   int x;
   int y;
-  iptr iVar6;
-  iptr iVar7;
-  int iVar8;
-  uint uVar9;
-  byte *pbVar10;
+  iptr landmass2;
+  iptr distance;
+  int dir;
+  uint tile_imps;
+  byte *tile;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
+  landmass = tile_land_landmass((int)cities[city].x,(int)cities[city].y);
   civ = (int)cities[city].owner;
-  if (1 < civs[civ].continent_cities[iVar2]) {
-    for (local_14 = 0; local_14 < 2; local_14++) {
+  if (1 < civs[civ].continent_cities[landmass]) {
+    for (pass = 0; pass < 2; pass++) {
       for (city2 = 0; city2 < game.num_cities; city2++) {
         if (((cities[city2].id != 0) && (city != city2)) &&
            ((cities[city2].owner == civ ||
-            ((local_14 != 0 &&
+            ((pass != 0 &&
              ((*(byte *)&civs[civ].treaties[cities[city2].owner] & 0xc) != 0)))))) {
           x = (int)cities[city2].x;
           y = (int)cities[city2].y;
           x2 = (int)cities[city].x;
           y2 = (int)cities[city].y;
-          local_34 = 0;
-          iVar6 = tile_land_landmass(x,y);
-          if ((iVar2 == iVar6) &&
-             (iVar7 = map_distance(x,y,x2,y2), iVar7 < 0x17)) {
+          steps = 0;
+          landmass2 = tile_land_landmass(x,y);
+          if ((landmass == landmass2) &&
+             (distance = map_distance(x,y,x2,y2), distance < 0x17)) {
             path_road_planning = 1;
             path_owner_civ = 0xffffffff;
             path_unit_type = 2;
-            bVar1 = true;
+            road_ok = true;
             path_goal_x = x;
             path_goal_y = y;
-            while ((iVar8 = map_path_next_dir(x2,y2,99), -1 < iVar8 && (iVar8 != 8))) {
-              x2 = map_wrap_x((char)(&dir_dx_table)[iVar8] + x2);
-              y2 += (char)(&dir_dy_table)[iVar8];
+            while ((dir = map_path_next_dir(x2,y2,99), -1 < dir && (dir != 8))) {
+              x2 = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+              y2 += (char)(&dir_dy_table)[dir];
               if ((x2 == x) && (y2 == y)) break;
-              iVar8 = tile_city_owner(x2,y2);
-              if (iVar8 < 0) {
-                uVar9 = tile_improvements(x2,y2);
-                if ((uVar9 & 0x10) == 0) {
-                  pbVar10 = (byte *)tile_at(x2,y2);
-                  if (((*pbVar10 & 0x80) == 0) || (iVar8 = civ_has_advance(civ,7), iVar8 != 0))
+              dir = tile_city_owner(x2,y2);
+              if (dir < 0) {
+                tile_imps = tile_improvements(x2,y2);
+                if ((tile_imps & 0x10) == 0) {
+                  tile = (byte *)tile_at(x2,y2);
+                  if (((*tile & 0x80) == 0) || (dir = civ_has_advance(civ,7), dir != 0))
                   {
-                    bVar1 = false;
+                    road_ok = false;
                   }
                 }
                 else {
-                  uVar9 = tile_improvements(x2,y2);
-                  if (((uVar9 & 0x20) == 0) && (iVar8 = civ_has_advance(civ,0x43), iVar8 != 0))
+                  tile_imps = tile_improvements(x2,y2);
+                  if (((tile_imps & 0x20) == 0) && (dir = civ_has_advance(civ,0x43), dir != 0))
                   {
-                    bVar1 = false;
+                    road_ok = false;
                   }
                 }
               }
-              local_34++;
-              if ((0x32 < local_34) || (!bVar1)) break;
+              steps++;
+              if ((0x32 < steps) || (!road_ok)) break;
             }
             path_road_planning = 0;
-            if (((!bVar1) &&
+            if (((!road_ok) &&
                 ((x = tile_city_or_unit_owner(x2,y2), x < 0 || (civ == x))
                 )) && ((x = tile_owner_at_peace(x2,y2,civ), x < 0 ||
                        (civ == x)))) {
@@ -541,33 +541,33 @@ i32 __cdecl ai_find_road_link_tile(iptr city)
 #undef path_owner_civ
 #undef path_road_planning
 #undef city2
-#undef local_34
+#undef steps
 #undef y2
 #undef x2
-#undef local_14
+#undef pass
 
 /* 00531287 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define ai_role (*(int *)(frame_ + FRAME_OFF(0)))
 int __cdecl ai_unit_role(iptr unit)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (int)(char)unit_types[units[unit].type].role;
-  if ((local_8 == 5) && ((units[unit].flags & 0x200) != 0)) {
-    local_8 = 0x15;
+  ai_role = (int)(char)unit_types[units[unit].type].role;
+  if ((ai_role == 5) && ((units[unit].flags & 0x200) != 0)) {
+    ai_role = 0x15;
   }
-  return local_8;
+  return ai_role;
 }
-#undef local_8
+#undef ai_role
 
 /* 005312e4 auto */
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_14 (*(byte *)(frame_ + FRAME_OFF(28)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(32)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
+#define best_dir (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define dir2 (*(iptr *)(frame_ + FRAME_OFF(12)))
+#define owner_byte (*(byte *)(frame_ + FRAME_OFF(28)))
+#define dir (*(iptr *)(frame_ + FRAME_OFF(32)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(36)))
+#define score (*(int *)(frame_ + FRAME_OFF(40)))
 iptr __cdecl ai_ship_best_landing_dir(iptr unit)
 
 {
@@ -578,195 +578,195 @@ iptr __cdecl ai_ship_best_landing_dir(iptr unit)
   int y2;
   int y;
   iptr x;
-  int iVar8;
+  int owner_civ;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   x3 = units[unit].x;
   y3 = units[unit].y;
   civ = (int)units[unit].owner;
-  local_c = -1;
-  local_2c = -1;
-  for (local_10 = 0; local_10 < 9; local_10++) {
-    x2 = map_wrap_x((int)(char)(&dir_dx_table)[local_10] + (int)x3);
-    y2 = (int)(char)(&dir_dy_table)[local_10] + (int)y3;
+  best_score = -1;
+  best_dir = -1;
+  for (dir = 0; dir < 9; dir++) {
+    x2 = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)x3);
+    y2 = (int)(char)(&dir_dy_table)[dir] + (int)y3;
     y = map_in_bounds(x2,y2);
     if (((y != 0) && (y = tile_is_ocean(x2,y2), y != 0)) &&
-       ((local_10 == 8 || (y = tile_unit_owner(x2,y2), y < 0)))) {
-      local_8 = 0;
-      for (local_24 = 0; local_24 < 8; local_24++) {
-        x = map_wrap_x((char)(&dir_dx_table)[local_24] + x2);
-        y = (char)(&dir_dy_table)[local_24] + y2;
-        iVar8 = map_in_bounds(x,y);
-        if ((((iVar8 != 0) && (iVar8 = tile_is_ocean(x,y), iVar8 == 0)) &&
-            (iVar8 = tile_unit_owner(x,y), iVar8 < 0)) &&
-           (((iVar8 = tile_owner_or_fertility(x,y), 7 < iVar8 ||
-             (local_14 = (byte)iVar8, (1 << (local_14 & 0x1f) & (uint)game.human_players) == 0)) ||
-            ((*(byte *)&civs[civ].treaties[iVar8] & 6) == 0)))) {
-          iVar8 = tile_city_owner(x,y);
-          if (((-1 < iVar8) && (iVar8 != civ)) &&
+       ((dir == 8 || (y = tile_unit_owner(x2,y2), y < 0)))) {
+      score = 0;
+      for (dir2 = 0; dir2 < 8; dir2++) {
+        x = map_wrap_x((char)(&dir_dx_table)[dir2] + x2);
+        y = (char)(&dir_dy_table)[dir2] + y2;
+        owner_civ = map_in_bounds(x,y);
+        if ((((owner_civ != 0) && (owner_civ = tile_is_ocean(x,y), owner_civ == 0)) &&
+            (owner_civ = tile_unit_owner(x,y), owner_civ < 0)) &&
+           (((owner_civ = tile_owner_or_fertility(x,y), 7 < owner_civ ||
+             (owner_byte = (byte)owner_civ, (1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) ||
+            ((*(byte *)&civs[civ].treaties[owner_civ] & 6) == 0)))) {
+          owner_civ = tile_city_owner(x,y);
+          if (((-1 < owner_civ) && (owner_civ != civ)) &&
              ((y = tile_unit_owner(x,y), y < 0 &&
-              ((y = diplo_is_hostile(civ,iVar8), y != 0 && (local_10 == 8)))))) {
-            local_8 += 0xc;
+              ((y = diplo_is_hostile(civ,owner_civ), y != 0 && (dir == 8)))))) {
+            score += 0xc;
           }
-          local_8++;
+          score++;
         }
       }
-      if (local_c <= local_8) {
-        local_c = local_8;
-        local_2c = local_10;
+      if (best_score <= score) {
+        best_score = score;
+        best_dir = dir;
       }
     }
   }
-  return local_2c;
+  return best_dir;
 }
-#undef local_2c
-#undef local_24
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef best_dir
+#undef dir2
+#undef owner_byte
+#undef dir
+#undef best_score
+#undef score
 
 /* 00531653 auto */
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(iptr *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(24)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(32)))
-void __cdecl ai_ship_goto_near_shore(iptr unit,i32 param_2,iptr x,int y)
+#define dest_y (*(int *)(frame_ + FRAME_OFF(4)))
+#define dest_x (*(iptr *)(frame_ + FRAME_OFF(8)))
+#define dir (*(iptr *)(frame_ + FRAME_OFF(24)))
+#define offset (*(iptr *)(frame_ + FRAME_OFF(32)))
+void __cdecl ai_ship_goto_near_shore(iptr unit,i32 goto_mode,iptr x,int y)
 
 {
-  bool bVar1;
-  int iVar2;
-  int iVar3;
+  bool found_land;
+  int ship_landmass;
+  int target_landmass;
   iptr x3;
   int y3;
   int y2;
   iptr x2;
-  int iVar8;
+  int check;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_20 = x;
-  local_24 = y;
-  iVar2 = tile_landmass((int)units[unit].x,(int)units[unit].y);
-  iVar3 = tile_landmass(x,y);
-  for (local_8 = 0; y3 = local_24, x3 = local_20, local_8 < 0x14; local_8++) {
-    x3 = map_wrap_x((char)(&city_tile_dx_table)[local_8] + x);
-    y3 = (char)(&city_tile_dy_table)[local_8] + y;
+  dest_x = x;
+  dest_y = y;
+  ship_landmass = tile_landmass((int)units[unit].x,(int)units[unit].y);
+  target_landmass = tile_landmass(x,y);
+  for (offset = 0; y3 = dest_y, x3 = dest_x, offset < 0x14; offset++) {
+    x3 = map_wrap_x((char)(&city_tile_dx_table)[offset] + x);
+    y3 = (char)(&city_tile_dy_table)[offset] + y;
     y2 = map_in_bounds(x3,y3);
     if (((y2 != 0) && (y2 = tile_is_ocean(x3,y3), y2 != 0)) &&
-       (y2 = tile_landmass(x3,y3), y2 == iVar2)) {
-      bVar1 = false;
-      for (local_10 = 0; local_10 < 8; local_10++) {
-        x2 = map_wrap_x((char)(&dir_dx_table)[local_10] + x3);
-        y2 = (char)(&dir_dy_table)[local_10] + y3;
-        iVar8 = map_in_bounds(x2,y2);
-        if (((iVar8 != 0) && (iVar8 = tile_is_ocean(x2,y2), iVar8 == 0)) &&
-           ((iVar8 = tile_landmass(x2,y2), iVar8 == iVar3 &&
+       (y2 = tile_landmass(x3,y3), y2 == ship_landmass)) {
+      found_land = false;
+      for (dir = 0; dir < 8; dir++) {
+        x2 = map_wrap_x((char)(&dir_dx_table)[dir] + x3);
+        y2 = (char)(&dir_dy_table)[dir] + y3;
+        check = map_in_bounds(x2,y2);
+        if (((check != 0) && (check = tile_is_ocean(x2,y2), check == 0)) &&
+           ((check = tile_landmass(x2,y2), check == target_landmass &&
             (y2 = tile_city_owner(x2,y2), y2 < 0)))) {
-          bVar1 = true;
+          found_land = true;
         }
       }
-      if (bVar1) break;
+      if (found_land) break;
     }
   }
-  local_20 = x3;
-  local_24 = y3;
-  unit_set_goto(unit,param_2,local_20,local_24);
+  dest_x = x3;
+  dest_y = y3;
+  unit_set_goto(unit,goto_mode,dest_x,dest_y);
   return;
 }
-#undef local_24
-#undef local_20
-#undef local_10
-#undef local_8
+#undef dest_y
+#undef dest_x
+#undef dir
+#undef offset
 
 /* 0053184d auto */
 #define city_calc_cached_id (*(i32 *)((u8 *)&g.d_0062ee08))
 #define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
-#define local_368 (*(int *)(frame_ + FRAME_OFF(0)))
+#define density (*(int *)(frame_ + FRAME_OFF(0)))
 #define unit (*(uptr *)(frame_ + FRAME_OFF(20)))
-#define local_34c (*(int *)(frame_ + FRAME_OFF(28)))
+#define settler_divisor (*(int *)(frame_ + FRAME_OFF(28)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_340 (*(int *)(frame_ + FRAME_OFF(40)))
-#define aiStack_33c (*(int (*)[48])(frame_ + FRAME_OFF(44)))
-#define local_27c (*(uint *)(frame_ + FRAME_OFF(236)))
-#define local_278 (*(iptr *)(frame_ + FRAME_OFF(240)))
+#define attack_count (*(int *)(frame_ + FRAME_OFF(40)))
+#define goal_weight (*(int (*)[48])(frame_ + FRAME_OFF(44)))
+#define is_human (*(uint *)(frame_ + FRAME_OFF(236)))
+#define continent (*(iptr *)(frame_ + FRAME_OFF(240)))
 #define unit_type (*(uptr *)(frame_ + FRAME_OFF(244)))
-#define local_270 (*(uint *)(frame_ + FRAME_OFF(248)))
+#define old_policy (*(uint *)(frame_ + FRAME_OFF(248)))
 #define y2 (*(int *)(frame_ + FRAME_OFF(252)))
 #define x3 (*(int *)(frame_ + FRAME_OFF(256)))
-#define local_264 (*(int *)(frame_ + FRAME_OFF(260)))
-#define local_260 (*(int *)(frame_ + FRAME_OFF(264)))
-#define local_25c (*(int *)(frame_ + FRAME_OFF(268)))
+#define base_density (*(int *)(frame_ + FRAME_OFF(260)))
+#define ai_role (*(int *)(frame_ + FRAME_OFF(264)))
+#define scenario_mode (*(int *)(frame_ + FRAME_OFF(268)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(272)))
-#define local_254 (*(uint *)(frame_ + FRAME_OFF(276)))
-#define aiStack_250 (*(int (*)[64])(frame_ + FRAME_OFF(280)))
-#define local_150 (*(int *)(frame_ + FRAME_OFF(536)))
-#define local_14c (*(int *)(frame_ + FRAME_OFF(540)))
-#define local_148 (*(int *)(frame_ + FRAME_OFF(544)))
-#define local_144 (*(int *)(frame_ + FRAME_OFF(548)))
-#define aiStack_140 (*(int (*)[64])(frame_ + FRAME_OFF(552)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(808)))
+#define crowded (*(uint *)(frame_ + FRAME_OFF(276)))
+#define settler_count (*(int (*)[64])(frame_ + FRAME_OFF(280)))
+#define done (*(int *)(frame_ + FRAME_OFF(536)))
+#define rival_military (*(int *)(frame_ + FRAME_OFF(540)))
+#define threat_count (*(int *)(frame_ + FRAME_OFF(544)))
+#define settlers_total (*(int *)(frame_ + FRAME_OFF(548)))
+#define settle_goals (*(int (*)[64])(frame_ + FRAME_OFF(552)))
+#define wonder (*(int *)(frame_ + FRAME_OFF(808)))
 #define y3 (*(int *)(frame_ + FRAME_OFF(812)))
 #define civ2 (*(uptr *)(frame_ + FRAME_OFF(816)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(820)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(824)))
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(828)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(832)))
-#define local_24 (*(iptr *)(frame_ + FRAME_OFF(836)))
+#define defend_count (*(int *)(frame_ + FRAME_OFF(820)))
+#define goal_dist (*(int *)(frame_ + FRAME_OFF(824)))
+#define goal_idx (*(iptr *)(frame_ + FRAME_OFF(828)))
+#define rival_cities (*(int *)(frame_ + FRAME_OFF(832)))
+#define goal (*(iptr *)(frame_ + FRAME_OFF(836)))
 #define city4 (*(iptr *)(frame_ + FRAME_OFF(840)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(844)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(848)))
+#define land_city_count (*(int *)(frame_ + FRAME_OFF(844)))
+#define best_dist (*(int *)(frame_ + FRAME_OFF(848)))
 #define city3 (*(iptr *)(frame_ + FRAME_OFF(852)))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(856)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(860)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(864)))
+#define group (*(iptr *)(frame_ + FRAME_OFF(856)))
+#define best_goal (*(iptr *)(frame_ + FRAME_OFF(860)))
+#define settler_quota (*(int *)(frame_ + FRAME_OFF(864)))
 void __cdecl ai_civ_turn_assess(uptr civ)
 
 {
-  char *pcVar1;
-  short *psVar2;
+  char *counter;
+  short *mil_counter;
   byte city2;
-  u16 uVar4;
-  iptr iVar5;
-  iptr iVar7;
-  int iVar8;
+  u16 saved_flags;
+  iptr has_para;
+  iptr occupant;
+  int city6;
   int y;
-  int iVar9;
-  uptr uVar11;
+  int dist;
+  uptr owner_civ;
   iptr unit2;
   uptr city5;
-  uint uVar13;
-  i32 uVar14;
+  uint tile_imps;
+  i32 imps;
   i8 frame_[FRAME_OFF(872)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_144 = 0;
-  local_25c = 0;
-  iVar5 = civ_has_advance(civ,(int)unit_types[0xd].prerequisite);
-  if (((iVar5 != 0) && (civs[civ].units_active[0xd] != '\0')) &&
+  settlers_total = 0;
+  scenario_mode = 0;
+  has_para = civ_has_advance(civ,(int)unit_types[0xd].prerequisite);
+  if (((has_para != 0) && (civs[civ].units_active[0xd] != '\0')) &&
      ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
     for (city = 0; city < game.num_cities; city++) {
       if (((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
          ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) & 0x20) != 0)) {
         x2 = (int)cities[city].x;
         y2 = (int)cities[city].y;
-        iVar7 = tile_unit_owner(x2,y2);
-        if (iVar7 < 0) {
+        occupant = tile_unit_owner(x2,y2);
+        if (occupant < 0) {
           for (city3 = 0; city3 < game.num_cities; city3++) {
             if ((cities[city3].id != 0) && ((int)cities[city3].owner == civ)) {
-              iVar8 = (int)cities[city3].x;
+              city6 = (int)cities[city3].x;
               y3 = (int)cities[city3].y;
-              y = map_distance(x2,y2,iVar8,y3);
+              y = map_distance(x2,y2,city6,y3);
               if (y <= (int)(uint)cosmic.paradrop_range) {
-                local_150 = 0;
-                for (unit = tile_first_unit(iVar8,y3); -1 < (int)unit;
+                done = 0;
+                for (unit = tile_first_unit(city6,y3); -1 < (int)unit;
                     unit = unit_next_in_stack(unit)) {
                   if ((unit_types[units[unit].type].flags & 0x100) != 0) {
-                    local_150 = 1;
+                    done = 1;
                     break;
                   }
                 }
-                if (local_150 != 0) break;
+                if (done != 0) break;
                 for (city4 = 0; city4 < game.num_cities; city4++) {
                   if (2 < game.multiplayer) {
                     net_process_messages((NetSession *)&net_session,1,0);
@@ -774,26 +774,26 @@ void __cdecl ai_civ_turn_assess(uptr civ)
                   if ((cities[city4].id != 0) && ((int)cities[city4].owner == civ)) {
                     x3 = (int)cities[city4].x;
                     y = (int)cities[city4].y;
-                    iVar9 = map_distance(x2,y2,x3,y);
-                    if (((int)(uint)cosmic.paradrop_range < iVar9) &&
-                       (iVar9 = map_distance(iVar8,y3,x3,y),
-                       iVar9 <= (int)(uint)cosmic.paradrop_range)) {
+                    dist = map_distance(x2,y2,x3,y);
+                    if (((int)(uint)cosmic.paradrop_range < dist) &&
+                       (dist = map_distance(city6,y3,x3,y),
+                       dist <= (int)(uint)cosmic.paradrop_range)) {
                       for (unit = tile_first_unit(x3,y); -1 < (int)unit;
                           unit = unit_next_in_stack(unit)) {
                         if (((unit_types[units[unit].type].flags & 0x100) != 0) &&
                            (y = unit_moves_left(unit), y != 0)) {
-                          unit_relocate(unit,iVar8,y3,1);
+                          unit_relocate(unit,city6,y3,1);
                           units[unit].visibility = '\0';
                           unit_exhaust_moves(unit);
-                          local_150 = 1;
+                          done = 1;
                           break;
                         }
                       }
-                      if (local_150 != 0) break;
+                      if (done != 0) break;
                     }
                   }
                 }
-                if (local_150 != 0) break;
+                if (done != 0) break;
               }
             }
           }
@@ -801,25 +801,25 @@ void __cdecl ai_civ_turn_assess(uptr civ)
       }
     }
   }
-  for (local_10 = 0; local_10 < 4; local_10++) {
-    *(i8 *)&civs[civ].wonders_by_group[local_10] = 0;
+  for (group = 0; group < 4; group++) {
+    *(i8 *)&civs[civ].wonders_by_group[group] = 0;
   }
-  for (local_40 = 0; local_40 < 0x1c; local_40++) {
-    iVar8 = civ_has_wonder(civ,local_40);
-    if (iVar8 != 0) {
-      local_10 = local_40 / 7;
-      pcVar1 = (char *)(local_10 + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + civ * 0x594);
-      *pcVar1 = *pcVar1 + 1;
+  for (wonder = 0; wonder < 0x1c; wonder++) {
+    city6 = civ_has_wonder(civ,wonder);
+    if (city6 != 0) {
+      group = wonder / 7;
+      counter = (char *)(group + ADDR(0x64c6b7, ((u8 *)&civs + 23)) + civ * 0x594);
+      *counter = *counter + 1;
     }
   }
-  for (local_278 = 0; local_278 < 0x40; local_278++) {
-    *(i16 *)&civs[civ].continent_military[local_278] = 0;
-    *(i16 *)&civs[civ].continent_attack[local_278] = 0;
-    *(i8 *)&civs[civ].continent_city_size[local_278] = 0;
-    *(i8 *)&civs[civ].continent_trade_units[local_278] = 0;
-    *(i8 *)&civs[civ].continent_flags[local_278] = 0;
-    aiStack_250[local_278] = 0;
-    aiStack_140[local_278] = 0;
+  for (continent = 0; continent < 0x40; continent++) {
+    *(i16 *)&civs[civ].continent_military[continent] = 0;
+    *(i16 *)&civs[civ].continent_attack[continent] = 0;
+    *(i8 *)&civs[civ].continent_city_size[continent] = 0;
+    *(i8 *)&civs[civ].continent_trade_units[continent] = 0;
+    *(i8 *)&civs[civ].continent_flags[continent] = 0;
+    settler_count[continent] = 0;
+    settle_goals[continent] = 0;
   }
   *(i32 *)(&civ_unit_counts + civ * 4) = 0;
   civs[civ].num_military_units = 0;
@@ -832,13 +832,13 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     *(i8 *)&civs[civ].units_active[unit_type] = 0;
     *(i8 *)&civs[civ].units_in_production[unit_type] = 0;
   }
-  for (local_24 = 0; local_24 < 0x30; local_24++) {
-    if ((civs[civ].ai_goals[local_24].role == 21) &&
-       ('\0' < civs[civ].ai_goals[local_24].priority)) {
-      local_278 = tile_land_landmass((int)civs[civ].ai_goals[local_24].x,
-                                     (int)civs[civ].ai_goals[local_24].y);
-      if (-1 < local_278) {
-        aiStack_140[local_278]++;
+  for (goal = 0; goal < 0x30; goal++) {
+    if ((civs[civ].ai_goals[goal].role == 21) &&
+       ('\0' < civs[civ].ai_goals[goal].priority)) {
+      continent = tile_land_landmass((int)civs[civ].ai_goals[goal].x,
+                                     (int)civs[civ].ai_goals[goal].y);
+      if (-1 < continent) {
+        settle_goals[continent]++;
       }
     }
   }
@@ -853,16 +853,16 @@ void __cdecl ai_civ_turn_assess(uptr civ)
         units[unit].flags = units[unit].flags | 0x200;
       }
       if (units[unit].home_city == -1) {
-        local_144++;
-        iVar8 = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
-        if (iVar8 == 0) {
+        settlers_total++;
+        city6 = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
+        if (city6 == 0) {
           units[unit].flags = units[unit].flags | 0x200;
-          iVar8 = tile_landmass((int)units[unit].x,(int)units[unit].y);
-          aiStack_250[iVar8]++;
-          iVar8 = city_find_nearest((int)units[unit].x,(int)units[unit].y,-1,0xffffffff,
+          city6 = tile_landmass((int)units[unit].x,(int)units[unit].y);
+          settler_count[city6]++;
+          city6 = city_find_nearest((int)units[unit].x,(int)units[unit].y,-1,0xffffffff,
                                      -1);
-          if ((nearest_city_dist < 4) && ((int)cities[iVar8].owner == civ)) {
-            cities[iVar8].flags = cities[iVar8].flags | 0x40;
+          if ((nearest_city_dist < 4) && ((int)cities[city6].owner == civ)) {
+            cities[city6].flags = cities[city6].flags | 0x40;
           }
         }
       }
@@ -875,79 +875,79 @@ void __cdecl ai_civ_turn_assess(uptr civ)
     if (units[unit].id != 0) {
       if ((int)units[unit].owner == civ) {
         unit_type = (uptr)units[unit].type;
-        pcVar1 = (char *)(unit_type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
-        *pcVar1 = *pcVar1 + 1;
+        counter = (char *)(unit_type + ADDR(0x64c778, ((u8 *)&civs + 216)) + civ * 0x594);
+        *counter = *counter + 1;
         if ((char)unit_types[unit_type].attack < 'c') {
           if ((units[unit].orders == 1) || (units[unit].orders == 2)) {
             units[unit].flags = units[unit].flags | 0x100;
           }
           x2 = (int)units[unit].x;
           y2 = (int)units[unit].y;
-          iVar8 = map_in_bounds(x2,y2);
-          if (iVar8 == 0) {
-            local_278 = -1;
+          city6 = map_in_bounds(x2,y2);
+          if (city6 == 0) {
+            continent = -1;
             unit_set_sleep(unit);
           }
           else {
-            local_278 = tile_land_landmass(x2,y2);
+            continent = tile_land_landmass(x2,y2);
             if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
               if ((units[unit].orders == 3) &&
                  ((unit_types[unit_type].domain != '\0' ||
-                  (iVar8 = tile_is_ocean(x2,y2), iVar8 == 0)))) {
+                  (city6 = tile_is_ocean(x2,y2), city6 == 0)))) {
                 units[unit].orders = -1;
               }
               if (15 < units[unit].orders) {
                 units[unit].orders = -1;
               }
               if ((units[unit].orders == -1) &&
-                 (iVar8 = tile_zoc_unit_adjacent(x2,y2,civ), iVar8 != 0)) {
+                 (city6 = tile_zoc_unit_adjacent(x2,y2,civ), city6 != 0)) {
                 units[unit].orders = 16;
               }
             }
-            iVar8 = tile_is_ocean(x2,y2);
-            if ((iVar8 != 0) && (unit_types[units[unit].type].domain == '\0')) {
+            city6 = tile_is_ocean(x2,y2);
+            if ((city6 != 0) && (unit_types[units[unit].type].domain == '\0')) {
               unit_set_sleep(unit);
             }
           }
           *(int *)(&civ_unit_counts + civ * 4) = *(int *)(&civ_unit_counts + civ * 4) + 1;
           if (((char)unit_types[unit_type].role < 5) &&
              (civs[civ].num_military_units = civs[civ].num_military_units + 1,
-             -1 < local_278)) {
-            psVar2 = (short *)(local_278 * 2 + ADDR(0x64c832, ((u8 *)&civs + 402)) + civ * 0x594);
-            *psVar2 = *psVar2 + 1;
+             -1 < continent)) {
+            mil_counter = (short *)(continent * 2 + ADDR(0x64c832, ((u8 *)&civs + 402)) + civ * 0x594);
+            *mil_counter = *mil_counter + 1;
           }
           if (((unit_types[units[unit].type].role == 7) &&
               (units[unit].home_city != -1)) &&
              (cities[(byte)units[unit].home_city].flags =
-                   cities[(byte)units[unit].home_city].flags | 0x1000, -1 < local_278)) {
-            pcVar1 = (char *)(local_278 + ADDR(0x64c9b2, ((u8 *)&civs + 786)) + civ * 0x594);
-            *pcVar1 = *pcVar1 + 1;
+                   cities[(byte)units[unit].home_city].flags | 0x1000, -1 < continent)) {
+            counter = (char *)(continent + ADDR(0x64c9b2, ((u8 *)&civs + 786)) + civ * 0x594);
+            *counter = *counter + 1;
           }
           if ((unit_types[unit_type].role == 5) && (units[unit].home_city != -1)) {
-            local_144++;
-            if (local_278 < 0) goto LAB_0053232b;
-            aiStack_250[local_278]++;
-            if (*(char *)&civs[civ].continent_cities[local_278] != '\0') {
+            settlers_total++;
+            if (continent < 0) goto LAB_0053232b;
+            settler_count[continent]++;
+            if (*(char *)&civs[civ].continent_cities[continent] != '\0') {
               if (civs[civ].government < 2) {
-                local_34c = 4;
+                settler_divisor = 4;
               }
               else if (civs[civ].government < 5) {
-                local_34c = 3;
+                settler_divisor = 3;
               }
               else {
-                local_34c = 2;
+                settler_divisor = 2;
               }
-              local_8 = (int)(((local_34c >> 1) - (int)leaders[civs[civ].tribe].expand) - 1 +
-                             (uint)civs[civ].continent_cities[local_278]) / local_34c;
+              settler_quota = (int)(((settler_divisor >> 1) - (int)leaders[civs[civ].tribe].expand) - 1 +
+                             (uint)civs[civ].continent_cities[continent]) / settler_divisor;
               if (unit_type == 1) {
-                local_8++;
+                settler_quota++;
               }
-              iVar8 = aiStack_140[local_278];
-              if (local_8 <= aiStack_140[local_278]) {
-                iVar8 = local_8;
+              city6 = settle_goals[continent];
+              if (settler_quota <= settle_goals[continent]) {
+                city6 = settler_quota;
               }
-              local_8 = iVar8;
-              if (aiStack_250[local_278] <= iVar8) {
+              settler_quota = city6;
+              if (settler_count[continent] <= city6) {
                 units[unit].flags = units[unit].flags | 0x200;
               }
             }
@@ -955,12 +955,12 @@ void __cdecl ai_civ_turn_assess(uptr civ)
               city2 = units[unit].home_city;
               if ((((cities[city2].flags & 0x40) != 0) && ((units[unit].flags & 0x200) != 0))
                  && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
-                aiStack_250[local_278]--;
+                settler_count[continent]--;
                 units[unit].flags = units[unit].flags & 0xfdff;
               }
               if (((units[unit].flags & 0x200) != 0) &&
-                 (iVar8 = map_distance_diag(x2,y2,(int)cities[city2].x,
-                                             (int)cities[city2].y), iVar8 < 5)) {
+                 (city6 = map_distance_diag(x2,y2,(int)cities[city2].x,
+                                             (int)cities[city2].y), city6 < 5)) {
                 cities[city2].flags = cities[city2].flags | 0x40;
               }
             }
@@ -973,9 +973,9 @@ void __cdecl ai_civ_turn_assess(uptr civ)
           civs[civ].military_strength =
                (short)(char)unit_types[unit_type].attack +
                (short)(char)unit_types[unit_type].defense + civs[civ].military_strength;
-          if (-1 < local_278) {
-            *(short *)&civs[civ].continent_attack[local_278] =
-                 *(short *)&civs[civ].continent_attack[local_278] +
+          if (-1 < continent) {
+            *(short *)&civs[civ].continent_attack[continent] =
+                 *(short *)&civs[civ].continent_attack[continent] +
                  (short)(char)unit_types[unit_type].attack;
           }
         }
@@ -984,22 +984,22 @@ void __cdecl ai_civ_turn_assess(uptr civ)
                ((*(byte *)&civs[civ].treaties[units[unit].owner] & 6) == 0)) &&
               (((1 << ((byte)civ & 0x1f) & (uint)units[unit].visibility) != 0 ||
                ((int)units[unit].owner == (civ & 0xff))))) {
-        iVar8 = unit_max_hp(unit);
+        city6 = unit_max_hp(unit);
         y = unit_hp_remaining(unit);
-        if (y <= iVar8 / 2) {
+        if (y <= city6 / 2) {
           y = 1;
-          iVar8 = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
+          city6 = tile_is_ocean((int)units[unit].x,(int)units[unit].y);
           civ_add_ai_goal(civ,(int)units[unit].x,(int)units[unit].y,
-                             (iVar8 == 0) - 1 & 2,y);
+                             (city6 == 0) - 1 & 2,y);
         }
       }
     }
 LAB_0053232b: ;
   }
-  for (local_278 = 0; local_278 < 0x40; local_278++) {
-    *(i8 *)&civs[civ].continent_cities[local_278] = 0;
+  for (continent = 0; continent < 0x40; continent++) {
+    *(i8 *)&civs[civ].continent_cities[continent] = 0;
   }
-  local_1c = 0;
+  land_city_count = 0;
   for (city = 0; city < game.num_cities; city++) {
     if (2 < game.multiplayer) {
       net_process_messages((NetSession *)&net_session,1,0);
@@ -1007,28 +1007,28 @@ LAB_0053232b: ;
     if (cities[city].id != 0) {
       x2 = (int)cities[city].x;
       y2 = (int)cities[city].y;
-      iVar8 = map_in_bounds(x2,y2);
-      if (iVar8 != 0) {
+      city6 = map_in_bounds(x2,y2);
+      if (city6 != 0) {
         if ((int)cities[city].owner == civ) {
           civs[civ].num_cities++;
           civs[civ].total_city_size =
                (short)cities[city].size + civs[civ].total_city_size;
           if (-1 < cities[city].building) {
-            pcVar1 = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + civ * 0x594);
-            *pcVar1 = *pcVar1 + 1;
+            counter = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + civ * 0x594);
+            *counter = *counter + 1;
           }
-          local_278 = tile_land_landmass(x2,y2);
-          if (-1 < local_278) {
-            *(char *)&civs[civ].continent_city_size[local_278] =
-                 *(char *)&civs[civ].continent_city_size[local_278] + cities[city].size;
-            pcVar1 = (char *)(local_278 + ADDR(0x64c932, ((u8 *)&civs + 658)) + civ * 0x594);
-            *pcVar1 = *pcVar1 + 1;
-            if ((0 < local_278) && (local_278 < 0x3f)) {
-              local_1c++;
+          continent = tile_land_landmass(x2,y2);
+          if (-1 < continent) {
+            *(char *)&civs[civ].continent_city_size[continent] =
+                 *(char *)&civs[civ].continent_city_size[continent] + cities[city].size;
+            counter = (char *)(continent + ADDR(0x64c932, ((u8 *)&civs + 658)) + civ * 0x594);
+            *counter = *counter + 1;
+            if ((0 < continent) && (continent < 0x3f)) {
+              land_city_count++;
             }
           }
-          iVar8 = tile_unit_owner(x2,y2);
-          if (iVar8 < 0) {
+          city6 = tile_unit_owner(x2,y2);
+          if (city6 < 0) {
             civ_add_ai_goal(civ,x2,y2,1,5);
           }
         }
@@ -1036,16 +1036,16 @@ LAB_0053232b: ;
                   ((1 << ((byte)civ & 0x1f) & (int)(char)cities[city].known_to) != 0)) ||
                  ((int)cities[city].owner == (civ & 0xff))) ||
                 (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) == 0)) {
-          iVar8 = diplo_is_hostile(civ,(int)cities[city].owner);
-          if (((iVar8 != 0) ||
+          city6 = diplo_is_hostile(civ,(int)cities[city].owner);
+          if (((city6 != 0) ||
               (((*(byte *)&civs[civ].treaties[cities[city].owner] & 0x20) != 0 &&
                ((*(byte *)&civs[civ].treaties[cities[city].owner] & 8) == 0))))
              && ((game.turn + city) % 3 != 0)) {
-            iVar8 = city_has_improvement(city,8);
-            civ_add_ai_goal(civ,x2,y2,0,(-(uint)(iVar8 == 0) & 2) + 2);
+            city6 = city_has_improvement(city,8);
+            civ_add_ai_goal(civ,x2,y2,0,(-(uint)(city6 == 0) & 2) + 2);
           }
-          iVar8 = tile_unit_owner(x2,y2);
-          if ((iVar8 < 0) &&
+          city6 = tile_unit_owner(x2,y2);
+          if ((city6 < 0) &&
              ((*(byte *)&civs[civ].treaties[cities[city].owner] & 0xe) == 0)) {
             civ_add_ai_goal(civ,x2,y2,1,2);
             civ_add_ai_goal(civ,x2,y2,0,3);
@@ -1063,157 +1063,157 @@ LAB_0053232b: ;
       civs[civ].flags = civs[civ].flags | 2;
     }
   }
-  for (local_278 = 1; local_278 < 0x3f; local_278++) {
+  for (continent = 1; continent < 0x3f; continent++) {
     if (2 < game.multiplayer) {
       net_process_messages((NetSession *)&net_session,1,0);
     }
-    local_148 = 0;
-    local_34 = 0;
-    local_340 = 0;
-    local_14c = 0;
-    local_28 = 0;
-    local_270 = (uint)civs[civ].continent_policy[local_278];
+    threat_count = 0;
+    defend_count = 0;
+    attack_count = 0;
+    rival_military = 0;
+    rival_cities = 0;
+    old_policy = (uint)civs[civ].continent_policy[continent];
     for (civ2 = 1; (int)civ2 < 8; civ2++) {
-      if ((*(short *)&civs[civ2].continent_military[local_278] != 0) &&
-         (((uint)((int)(uint)civs[civ].continent_attack[local_278] >> 2) <
-           (uint)civs[civ2].continent_attack[local_278] ||
-          (*(char *)&civs[civ2].continent_cities[local_278] != '\0')))) {
+      if ((*(short *)&civs[civ2].continent_military[continent] != 0) &&
+         (((uint)((int)(uint)civs[civ].continent_attack[continent] >> 2) <
+           (uint)civs[civ2].continent_attack[continent] ||
+          (*(char *)&civs[civ2].continent_cities[continent] != '\0')))) {
         if (civ != civ2) {
-          iVar8 = diplo_is_hostile(civ,civ2);
-          if ((iVar8 != 0) || ((*(byte *)&civs[civ].treaties[civ2] & 0x20) != 0))
+          city6 = diplo_is_hostile(civ,civ2);
+          if ((city6 != 0) || ((*(byte *)&civs[civ].treaties[civ2] & 0x20) != 0))
           {
-            if ((civs[civ2].continent_military[local_278] <
-                 civs[civ].continent_attack[local_278]) ||
-               ((civs[civ2].continent_attack[local_278] <
-                 civs[civ].continent_military[local_278] ||
-                (*(char *)&civs[civ].continent_cities[local_278] == '\0')))) {
-              local_340++;
+            if ((civs[civ2].continent_military[continent] <
+                 civs[civ].continent_attack[continent]) ||
+               ((civs[civ2].continent_attack[continent] <
+                 civs[civ].continent_military[continent] ||
+                (*(char *)&civs[civ].continent_cities[continent] == '\0')))) {
+              attack_count++;
             }
             else {
-              local_34++;
+              defend_count++;
             }
           }
-          if ((((*(short *)&civs[civ2].continent_military[local_278] != 0) &&
+          if ((((*(short *)&civs[civ2].continent_military[continent] != 0) &&
                ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
               ((*(byte *)&civs[civ].treaties[civ2] & 6) != 0)) &&
-             (((int)(uint)civs[civ].continent_attack[local_278] >> 1) +
-              (uint)civs[civ].continent_military[local_278] <
-              (uint)civs[civ2].continent_attack[local_278])) {
-            local_148++;
+             (((int)(uint)civs[civ].continent_attack[continent] >> 1) +
+              (uint)civs[civ].continent_military[continent] <
+              (uint)civs[civ2].continent_attack[continent])) {
+            threat_count++;
           }
         }
-        local_14c += (uint)civs[civ2].continent_military[local_278];
-        local_28 += (uint)civs[civ2].continent_cities[local_278];
+        rival_military += (uint)civs[civ2].continent_military[continent];
+        rival_cities += (uint)civs[civ2].continent_cities[continent];
         if (civ != civ2) {
           if ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0) {
-            if (*(char *)&civs[civ2].continent_cities[local_278] != '\0') {
+            if (*(char *)&civs[civ2].continent_cities[continent] != '\0') {
               if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-                civs[civ].continent_flags[local_278] =
-                     civs[civ].continent_flags[local_278] | 1;
+                civs[civ].continent_flags[continent] =
+                     civs[civ].continent_flags[continent] | 1;
               }
               else {
-                civs[civ].continent_flags[local_278] =
-                     civs[civ].continent_flags[local_278] | 2;
+                civs[civ].continent_flags[continent] =
+                     civs[civ].continent_flags[continent] | 2;
               }
             }
-            if (*(short *)&civs[civ2].continent_military[local_278] != 0) {
+            if (*(short *)&civs[civ2].continent_military[continent] != 0) {
               if ((*(byte *)&civs[civ].treaties[civ2] & 4) == 0) {
-                civs[civ].continent_flags[local_278] =
-                     civs[civ].continent_flags[local_278] | 4;
+                civs[civ].continent_flags[continent] =
+                     civs[civ].continent_flags[continent] | 4;
               }
               else {
-                civs[civ].continent_flags[local_278] =
-                     civs[civ].continent_flags[local_278] | 8;
+                civs[civ].continent_flags[continent] =
+                     civs[civ].continent_flags[continent] | 8;
               }
             }
           }
           else {
-            local_14c += (uint)civs[civ2].continent_military[local_278];
-            local_28 += (uint)civs[civ2].continent_cities[local_278];
+            rival_military += (uint)civs[civ2].continent_military[continent];
+            rival_cities += (uint)civs[civ2].continent_cities[continent];
           }
         }
       }
     }
-    if (civs[0].continent_cities[local_278] != '\0') {
-      local_340++;
+    if (civs[0].continent_cities[continent] != '\0') {
+      attack_count++;
     }
-    local_264 = 6;
+    base_density = 6;
     if (((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f)) != 0) &&
         (4 < civs[game.civ_by_rank[7]].num_cities)) && (0x96 < game.turn)) {
-      local_264 = 7;
+      base_density = 7;
     }
     if ((game.game_flags & 4) != 0) {
-      local_264++;
+      base_density++;
     }
-    iVar8 = ((uint)civs[civ].continent_military[local_278] + local_14c) * 2;
-    local_254 = (uint)(iVar8 - *(short *)(&landmass_table + local_278 * 0x10) != 0 &&
-                      *(short *)(&landmass_table + local_278 * 0x10) <= iVar8);
-    if (*(char *)&civs[civ].continent_flags[local_278] == '\0') {
-      local_368 = leaders[civs[civ].tribe].expand + local_264 + 1;
+    city6 = ((uint)civs[civ].continent_military[continent] + rival_military) * 2;
+    crowded = (uint)(city6 - *(short *)(&landmass_table + continent * 0x10) != 0 &&
+                      *(short *)(&landmass_table + continent * 0x10) <= city6);
+    if (*(char *)&civs[civ].continent_flags[continent] == '\0') {
+      density = leaders[civs[civ].tribe].expand + base_density + 1;
     }
     else {
-      local_368 = local_264;
+      density = base_density;
     }
-    if ((int)*(short *)(&landmass_fertile_tiles + local_278 * 0x10) <
-        (int)(((uint)civs[civ].continent_cities[local_278] + local_28) * local_368 + 2))
+    if ((int)*(short *)(&landmass_fertile_tiles + continent * 0x10) <
+        (int)(((uint)civs[civ].continent_cities[continent] + rival_cities) * density + 2))
     {
-      local_254 = 1;
+      crowded = 1;
     }
-    iVar8 = civ_has_advance(civ,0x2e);
-    if (iVar8 == 0) {
-      local_254 = 0;
+    city6 = civ_has_advance(civ,0x2e);
+    if (city6 == 0) {
+      crowded = 0;
     }
-    if (local_254 == 0) {
-      *(i8 *)&civs[civ].continent_policy[local_278] = 5;
+    if (crowded == 0) {
+      *(i8 *)&civs[civ].continent_policy[continent] = 5;
     }
     else {
-      *(i8 *)&civs[civ].continent_policy[local_278] = 4;
+      *(i8 *)&civs[civ].continent_policy[continent] = 4;
     }
-    if (local_340 != 0) {
-      *(i8 *)&civs[civ].continent_policy[local_278] = 0;
+    if (attack_count != 0) {
+      *(i8 *)&civs[civ].continent_policy[continent] = 0;
     }
-    if ((local_34 != 0) || (local_148 != 0)) {
-      *(i8 *)&civs[civ].continent_policy[local_278] = 1;
+    if ((defend_count != 0) || (threat_count != 0)) {
+      *(i8 *)&civs[civ].continent_policy[continent] = 1;
     }
-    if (local_34 != 0) {
-      civs[civ].continent_flags[local_278] =
-           civs[civ].continent_flags[local_278] | 0x10;
+    if (defend_count != 0) {
+      civs[civ].continent_flags[continent] =
+           civs[civ].continent_flags[continent] | 0x10;
     }
-    if (((*(short *)&civs[civ].continent_military[local_278] == 0) &&
-        (*(char *)&civs[civ].continent_cities[local_278] == '\0')) &&
-       ((civs[civ].continent_flags[local_278] & 0xc) != 8)) {
-      *(i8 *)&civs[civ].continent_policy[local_278] = 0;
+    if (((*(short *)&civs[civ].continent_military[continent] == 0) &&
+        (*(char *)&civs[civ].continent_cities[continent] == '\0')) &&
+       ((civs[civ].continent_flags[continent] & 0xc) != 8)) {
+      *(i8 *)&civs[civ].continent_policy[continent] = 0;
     }
-    if ((civs[civ].continent_policy[local_278] != local_270) &&
+    if ((civs[civ].continent_policy[continent] != old_policy) &&
        ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0)) {
-      civ_reset_city_production(civ,local_278);
+      civ_reset_city_production(civ,continent);
     }
   }
   if ((civs[civ].continent_cities[0x3f] != '\0') &&
-     (local_1c <= (int)(uint)civs[civ].continent_cities[0x3f])) {
+     (land_city_count <= (int)(uint)civs[civ].continent_cities[0x3f])) {
     civs[civ].continent_policy[0x3f] = 4;
   }
   if (civ != 0) {
-    local_27c = (uint)game.human_players & 1 << ((byte)civ & 0x1f);
-    if (local_27c == 0) {
-      if ((local_144 == 0) && (civs[civ].num_cities == 0)) {
+    is_human = (uint)game.human_players & 1 << ((byte)civ & 0x1f);
+    if (is_human == 0) {
+      if ((settlers_total == 0) && (civs[civ].num_cities == 0)) {
         civ_check_destroyed(civ,0);
       }
       if (((int)game.turn + civ & 7) == 0) {
         ai_choose_government(civ,0);
       }
     }
-    iVar8 = int_clamp((int)civs[civ].num_military_units >> 3,3,99);
-    for (local_2c = 0; local_2c < 0x30; local_2c++) {
-      aiStack_33c[local_2c] = iVar8;
-      if (civs[civ].ai_goals[local_2c].role == '\0') {
-        aiStack_33c[local_2c] = aiStack_33c[local_2c] << 1;
+    city6 = int_clamp((int)civs[civ].num_military_units >> 3,3,99);
+    for (goal_idx = 0; goal_idx < 0x30; goal_idx++) {
+      goal_weight[goal_idx] = city6;
+      if (civs[civ].ai_goals[goal_idx].role == '\0') {
+        goal_weight[goal_idx] = goal_weight[goal_idx] << 1;
       }
     }
-    local_25c = 0;
+    scenario_mode = 0;
     if (((((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) && (civ == 3)
-        ) && (local_27c == 0)) {
-      local_25c = 1;
+        ) && (is_human == 0)) {
+      scenario_mode = 1;
     }
     unit = (uptr)game.num_units;
 LAB_00533de4:
@@ -1223,7 +1223,7 @@ LAB_00533de4:
         net_process_messages((NetSession *)&net_session,1,0);
       }
       if (((units[unit].id != 0) && ((int)units[unit].owner == civ)) &&
-         ((local_27c == 0 || (((int)(short)units[unit].flags & 0x8000U) != 0)))) {
+         ((is_human == 0 || (((int)(short)units[unit].flags & 0x8000U) != 0)))) {
         if ((char)unit_types[units[unit].type].attack < 'c') {
           if ((units[unit].orders != 16) &&
              ((((15 < units[unit].orders || (units[unit].orders == 11)) ||
@@ -1233,21 +1233,21 @@ LAB_00533de4:
             y2 = (int)units[unit].y;
             y = map_in_bounds(x2,y2);
             if ((y != 0) &&
-               (local_278 = tile_landmass(x2,y2), units[unit].field_0c != '7')) {
-              if (((local_25c != 0) &&
+               (continent = tile_landmass(x2,y2), units[unit].field_0c != '7')) {
+              if (((scenario_mode != 0) &&
                   (((units[unit].type == 22 || (units[unit].type == '\n')) &&
                    (0x27 < y2)))) && (y2 < 0x5d)) {
-                uVar4 = units[unit].flags;
-                if ((game.turn == 1) || (uVar11 = tile_owner(0x2b,0x35), uVar11 != civ)) {
+                saved_flags = units[unit].flags;
+                if ((game.turn == 1) || (owner_civ = tile_owner(0x2b,0x35), owner_civ != civ)) {
 LAB_005340a6:
                   unit_set_goto(unit,0x31,0x2b,0x35);
                   units[unit].flags = units[unit].flags & 0xfffc;
                   goto LAB_00533de4;
                 }
                 if (units[unit].type == '\n') {
-                  uVar14 = 2;
+                  imps = 2;
                   unit2 = tile_first_unit(0x2b,0x35);
-                  y = unit_stack_sum(unit2,uVar14);
+                  y = unit_stack_sum(unit2,imps);
                   if (y < 3) goto LAB_005340a6;
                 }
                 if (((units[unit].type == 22) && (3 < game.turn)) && (game.turn < 0xd)) {
@@ -1261,12 +1261,12 @@ LAB_005340a6:
                     }
                   }
                   if (((units[unit].flags & 1) == 0) ||
-                     (uVar11 = tile_owner(0x4c,0x22), uVar11 == civ)) {
+                     (owner_civ = tile_owner(0x4c,0x22), owner_civ == civ)) {
                     if ((units[unit].flags & 2) != 0) {
-                      uVar11 = tile_owner(0x3e,0x48);
-                      if (uVar11 == civ) {
-                        uVar11 = tile_owner(0x43,0x5b);
-                        if (uVar11 != civ) {
+                      owner_civ = tile_owner(0x3e,0x48);
+                      if (owner_civ == civ) {
+                        owner_civ = tile_owner(0x43,0x5b);
+                        if (owner_civ != civ) {
                           unit_set_goto(unit,0x31,0x43,0x5b);
                         }
                       }
@@ -1279,27 +1279,27 @@ LAB_005340a6:
                     unit_set_goto(unit,0x31,0x4c,0x22);
                   }
                 }
-                units[unit].flags = uVar4;
+                units[unit].flags = saved_flags;
               }
-              if (((((int)game.turn & unit & 0xf) == 0) && (local_27c == 0)) &&
+              if (((((int)game.turn & unit & 0xf) == 0) && (is_human == 0)) &&
                  ((((-1 < unit_types[units[unit].type].obsolete_by &&
                     (y = civ_has_advance(civ,(int)unit_types[units[unit].type].
                                                              obsolete_by), y != 0)) ||
                    (((1 < civs[civ].government &&
-                     (*(char *)&civs[civ].continent_policy[local_278] == 4)) &&
+                     (*(char *)&civs[civ].continent_policy[continent] == 4)) &&
                     (units[unit].type == 2)))) &&
                   ((y = tile_zoc_unit_adjacent(x2,y2,civ), y == 0 &&
                    (((y = tile_city_owner(x2,y2), y < 0 ||
                      (y = unit_stack_sum(unit,2), 1 < y)) &&
                     ((y = tile_is_ocean(x2,y2), y == 0 &&
-                     ((civs[civ].continent_flags[local_278] & 0x10) == 0)))))))))) {
+                     ((civs[civ].continent_flags[continent] & 0x10) == 0)))))))))) {
                 if ((((unit_types[units[unit].type].obsolete_by < '\0') ||
                      (y = civ_has_advance(civ,(int)unit_types[units[unit].type].
                                                               obsolete_by), y == 0)) ||
                     ((1 << ((byte)human_civ & 0x1f) & (uint)units[unit].visibility) != 0))
                    || (((int)units[unit].owner == (uint)(byte)human_civ ||
-                       ((uVar14 = tile_improvements(x2,y2),
-                        ((byte)uVar14 & 0x42) != 0x40 &&
+                       ((imps = tile_improvements(x2,y2),
+                        ((byte)imps & 0x42) != 0x40 &&
                         ((y = tile_city_owner(x2,y2), y < 0 ||
                          (y = unit_stack_sum(unit,2), y != 1)))))))) {
                   city5 = city_at(x2,y2);
@@ -1323,10 +1323,10 @@ LAB_005340a6:
                   }
                 }
               }
-              local_18 = 9999;
-              local_c = -1;
-              local_260 = ai_unit_role(unit);
-              if (((((local_260 != 7) || (units[unit].orders != 11)) ||
+              best_dist = 9999;
+              best_goal = -1;
+              ai_role = ai_unit_role(unit);
+              if (((((ai_role != 7) || (units[unit].orders != 11)) ||
                    (y = map_in_bounds((int)units[unit].goto_x,(int)units[unit].goto_y)
                    , y == 0)) ||
                   ((civ2 = tile_city_owner((int)units[unit].goto_x,
@@ -1334,103 +1334,103 @@ LAB_005340a6:
                    (civ == civ2)))) &&
                  ((unit_types[units[unit].type].role != '\0' ||
                   (unit_types[units[unit].type].attack != '\0')))) {
-                for (local_24 = 0; local_24 < 0x30; local_24++) {
-                  if (((civs[civ].ai_goals[local_24].role != -1) &&
-                      ('\0' < civs[civ].ai_goals[local_24].priority)) &&
-                     (y = map_in_bounds((int)civs[civ].ai_goals[local_24].x,
-                                            (int)civs[civ].ai_goals[local_24].y), y != 0)) {
-                    if (((civs[civ].ai_goals[local_24].role == 18) &&
-                        (local_260 == 2)) &&
+                for (goal = 0; goal < 0x30; goal++) {
+                  if (((civs[civ].ai_goals[goal].role != -1) &&
+                      ('\0' < civs[civ].ai_goals[goal].priority)) &&
+                     (y = map_in_bounds((int)civs[civ].ai_goals[goal].x,
+                                            (int)civs[civ].ai_goals[goal].y), y != 0)) {
+                    if (((civs[civ].ai_goals[goal].role == 18) &&
+                        (ai_role == 2)) &&
                        ((unit_types[units[unit].type].flags & 0x4000) != 0)) {
-                      local_260 = 0x12;
+                      ai_role = 0x12;
                     }
-                    if (((civs[civ].ai_goals[local_24].role == local_260) &&
-                        (y = tile_landmass((int)civs[civ].ai_goals[local_24].x,
-                                               (int)civs[civ].ai_goals[local_24].y), y == local_278))
+                    if (((civs[civ].ai_goals[goal].role == ai_role) &&
+                        (y = tile_landmass((int)civs[civ].ai_goals[goal].x,
+                                               (int)civs[civ].ai_goals[goal].y), y == continent))
                        || (((unit_types[units[unit].type].domain == 1 &&
                             ((char)unit_types[0x1c].attack <=
                              (char)unit_types[units[unit].type].attack)) &&
-                           ((civs[civ].ai_goals[local_24].role == local_260 ||
-                            (civs[civ].ai_goals[local_24].role == 2)))))) {
-                      local_30 = map_distance_diag(x2,y2,
-                                                    (int)civs[civ].ai_goals[local_24].x,
-                                                    (int)civs[civ].ai_goals[local_24].y);
+                           ((civs[civ].ai_goals[goal].role == ai_role ||
+                            (civs[civ].ai_goals[goal].role == 2)))))) {
+                      goal_dist = map_distance_diag(x2,y2,
+                                                    (int)civs[civ].ai_goals[goal].x,
+                                                    (int)civs[civ].ai_goals[goal].y);
                       if (unit_types[units[unit].type].domain == 1) {
                         if (unit_types[units[unit].type].range == 1) {
-                          if (local_30 <=
+                          if (goal_dist <=
                               (int)(char)unit_types[units[unit].type].move /
                               (int)(uint)cosmic.road_move_mult - 2 >> 1) goto LAB_00534c18;
                         }
-                        else if (((*(byte *)&civs[civ].ai_goals[local_24].priority & 1) != 0)
-                                && ((((int)game.turn >> 1) + local_24 & 1U) != 0)) {
-                          local_30 = (int)((((local_30 <=
+                        else if (((*(byte *)&civs[civ].ai_goals[goal].priority & 1) != 0)
+                                && ((((int)game.turn >> 1) + goal & 1U) != 0)) {
+                          goal_dist = (int)((((goal_dist <=
                                              (int)(char)unit_types[units[unit].type].move /
                                              (int)(uint)cosmic.road_move_mult) - 1 & 0xfffffffe) + 4
-                                           ) * local_30) /
-                                     (civs[civ].ai_goals[local_24].priority + 1);
+                                           ) * goal_dist) /
+                                     (civs[civ].ai_goals[goal].priority + 1);
                           goto LAB_00534c18;
                         }
                       }
                       else {
-                        local_30 = ((aiStack_33c[local_24] /
-                                    (int)((civs[civ].ai_goals[local_24].role ==
-                                          '\0') + 1)) * local_30) /
-                                   (civs[civ].ai_goals[local_24].priority + 1);
+                        goal_dist = ((goal_weight[goal] /
+                                    (int)((civs[civ].ai_goals[goal].role ==
+                                          '\0') + 1)) * goal_dist) /
+                                   (civs[civ].ai_goals[goal].priority + 1);
 LAB_00534c18:
                         if (((units[unit].orders != 1) &&
                             (units[unit].orders != 2)) ||
-                           ((1 < civs[civ].ai_goals[local_24].priority &&
-                            (((local_30 <=
-                               civs[civ].ai_goals[local_24].priority * iVar8 ||
-                              (aiStack_33c[local_24] /
-                               (int)((civs[civ].ai_goals[local_24].role == '\0')
-                                    + 1) == iVar8)) &&
+                           ((1 < civs[civ].ai_goals[goal].priority &&
+                            (((goal_dist <=
+                               civs[civ].ai_goals[goal].priority * city6 ||
+                              (goal_weight[goal] /
+                               (int)((civs[civ].ai_goals[goal].role == '\0')
+                                    + 1) == city6)) &&
                              (y = tile_city_owner(x2,y2), y < 0)))))) {
-                          if (((local_27c != 0) && (aiStack_33c[local_24] == iVar8)) &&
-                             (uVar13 = tile_improvements((int)civs[civ].ai_goals[local_24].x,
-                                                         (int)civs[civ].ai_goals[local_24].y),
-                             (uVar13 & 0x80) != 0)) {
-                            local_30 = (int)(local_30 + (local_30 >> 0x1f & 7U)) >> 3;
+                          if (((is_human != 0) && (goal_weight[goal] == city6)) &&
+                             (tile_imps = tile_improvements((int)civs[civ].ai_goals[goal].x,
+                                                         (int)civs[civ].ai_goals[goal].y),
+                             (tile_imps & 0x80) != 0)) {
+                            goal_dist = (int)(goal_dist + (goal_dist >> 0x1f & 7U)) >> 3;
                           }
-                          if ((local_30 < local_18) &&
-                             (local_30 / iVar8 <
-                              civs[civ].ai_goals[local_24].priority * 4)) {
-                            local_18 = local_30;
-                            local_c = local_24;
+                          if ((goal_dist < best_dist) &&
+                             (goal_dist / city6 <
+                              civs[civ].ai_goals[goal].priority * 4)) {
+                            best_dist = goal_dist;
+                            best_goal = goal;
                           }
                         }
                       }
                     }
                   }
                 }
-                if (-1 < local_c) {
-                  if ((civs[civ].ai_goals[local_c].x == units[unit].x)
-                     && (civs[civ].ai_goals[local_c].y == units[unit].y)
+                if (-1 < best_goal) {
+                  if ((civs[civ].ai_goals[best_goal].x == units[unit].x)
+                     && (civs[civ].ai_goals[best_goal].y == units[unit].y)
                      ) {
                     units[unit].orders = 16;
                     units[unit].flags = units[unit].flags | 0x80;
                     goto LAB_00533de4;
                   }
-                  if ((local_260 == 1) &&
-                     (uVar14 = tile_improvements((int)units[unit].x,(int)units[unit].y),
-                     ((byte)uVar14 & 0x42) == 0x40)) {
-                    if ((*(byte *)&civs[civ].ai_goals[local_c].priority & 1) == 0)
+                  if ((ai_role == 1) &&
+                     (imps = tile_improvements((int)units[unit].x,(int)units[unit].y),
+                     ((byte)imps & 0x42) == 0x40)) {
+                    if ((*(byte *)&civs[civ].ai_goals[best_goal].priority & 1) == 0)
                     goto LAB_00533de4;
                     civ_add_standing_goal(civ,(int)units[unit].x,(int)units[unit].y,1,2);
                   }
                   if (((unit_types[units[unit].type].flags & 0x100) == 0) ||
-                     (uVar11 = tile_city_owner((int)civs[civ].ai_goals[local_c].x,
-                                               (int)civs[civ].ai_goals[local_c].y), uVar11 == civ))
+                     (owner_civ = tile_city_owner((int)civs[civ].ai_goals[best_goal].x,
+                                               (int)civs[civ].ai_goals[best_goal].y), owner_civ == civ))
                   {
                     unit_set_goto(unit,0x31,
-                                       (int)civs[civ].ai_goals[local_c].x,
-                                       (int)civs[civ].ai_goals[local_c].y);
+                                       (int)civs[civ].ai_goals[best_goal].x,
+                                       (int)civs[civ].ai_goals[best_goal].y);
                     if ((unit_types[units[unit].type].role == 5) &&
-                       (y = tile_city_owner((int)civs[civ].ai_goals[local_c].x,
-                                                (int)civs[civ].ai_goals[local_c].y), -1 < y)) {
-                      civs[civ].ai_goals[local_c].priority = 0;
+                       (y = tile_city_owner((int)civs[civ].ai_goals[best_goal].x,
+                                                (int)civs[civ].ai_goals[best_goal].y), -1 < y)) {
+                      civs[civ].ai_goals[best_goal].priority = 0;
                     }
-                    aiStack_33c[local_c]++;
+                    goal_weight[best_goal]++;
                   }
                 }
               }
@@ -1459,95 +1459,95 @@ LAB_00534c18:
 #undef city_shield_rows
 #undef human_civ
 #undef scenario_flags
-#undef local_368
+#undef density
 #undef unit
-#undef local_34c
+#undef settler_divisor
 #undef city
-#undef local_340
-#undef aiStack_33c
-#undef local_27c
-#undef local_278
+#undef attack_count
+#undef goal_weight
+#undef is_human
+#undef continent
 #undef unit_type
-#undef local_270
+#undef old_policy
 #undef y2
 #undef x3
-#undef local_264
-#undef local_260
-#undef local_25c
+#undef base_density
+#undef ai_role
+#undef scenario_mode
 #undef x2
-#undef local_254
-#undef aiStack_250
-#undef local_150
-#undef local_14c
-#undef local_148
-#undef local_144
-#undef aiStack_140
-#undef local_40
+#undef crowded
+#undef settler_count
+#undef done
+#undef rival_military
+#undef threat_count
+#undef settlers_total
+#undef settle_goals
+#undef wonder
 #undef y3
 #undef civ2
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
+#undef defend_count
+#undef goal_dist
+#undef goal_idx
+#undef rival_cities
+#undef goal
 #undef city4
-#undef local_1c
-#undef local_18
+#undef land_city_count
+#undef best_dist
 #undef city3
-#undef local_10
-#undef local_c
-#undef local_8
+#undef group
+#undef best_goal
+#undef settler_quota
 
 /* 005351aa auto */
 #define autoplay_active (*(short *)((u8 *)&g.d_00654fa8))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_88 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_84 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_80 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_74 (*(int *)(frame_ + FRAME_OFF(20)))
+#define step_dy (*(int *)(frame_ + FRAME_OFF(0)))
+#define step_dx (*(int *)(frame_ + FRAME_OFF(4)))
+#define abs_dx (*(uint *)(frame_ + FRAME_OFF(8)))
+#define dy_toward (*(int *)(frame_ + FRAME_OFF(20)))
 #define x3 (*(uint *)(frame_ + FRAME_OFF(32)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(36)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(40)))
-#define local_54 (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_40 (*(iptr *)(frame_ + FRAME_OFF(72)))
+#define ransom (*(int *)(frame_ + FRAME_OFF(52)))
+#define best_dir (*(iptr *)(frame_ + FRAME_OFF(72)))
 #define civ3 (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_2c (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(108)))
-#define local_18 (*(iptr *)(frame_ + FRAME_OFF(112)))
-#define local_14 (*(byte *)(frame_ + FRAME_OFF(116)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(120)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(124)))
+#define line (*(iptr *)(frame_ + FRAME_OFF(92)))
+#define sea_body (*(int *)(frame_ + FRAME_OFF(108)))
+#define dir (*(iptr *)(frame_ + FRAME_OFF(112)))
+#define civ_byte (*(byte *)(frame_ + FRAME_OFF(116)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(120)))
+#define score (*(int *)(frame_ + FRAME_OFF(124)))
 i32 __cdecl ai_barbarian_unit_move(void)
 
 {
-  u8 uVar1;
+  u8 move_pts;
   short y4;
   short y5;
   short x4;
-  char cVar5;
+  char here_terrain;
   iptr unit;
   iptr civ2;
   int x2;
   iptr y;
-  iptr iVar11;
+  iptr in_bounds;
   int y3;
-  iptr iVar12;
+  iptr transport_count;
   iptr x;
-  iptr iVar13;
+  iptr valid;
   byte terrain;
   int y2;
-  int iVar19;
+  int check;
   iptr unit2;
   iptr civ;
-  int iVar20;
-  uint uVar21;
-  i32 uVar22;
+  int value;
+  uint tile_imps;
+  i32 misc;
   uptr unit_type;
-  bool bVar23;
+  bool at_city;
   i8 frame_[FRAME_OFF(136)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_40 = 8;
+  best_dir = 8;
   unit = (iptr)game.active_unit;
   civ2 = (iptr)units[unit].owner;
   if (units[unit].orders != 11) {
@@ -1557,7 +1557,7 @@ i32 __cdecl ai_barbarian_unit_move(void)
   y4 = units[unit].y;
   y = (iptr)y4;
   if (((y < 2) || (map.height - 2 <= y)) ||
-     (iVar11 = map_in_bounds(x2,y), iVar11 == 0)) {
+     (in_bounds = map_in_bounds(x2,y), in_bounds == 0)) {
     unit_delete_with_cargo(unit,1);
     return 1;
   }
@@ -1566,8 +1566,8 @@ i32 __cdecl ai_barbarian_unit_move(void)
   city = city_find_nearest(x2,y,-1,0xffffffff,-1);
   if (unit_types[unit_type].hold != '\0') {
     y3 = unit_stack_sum(unit,2);
-    iVar12 = unit_stack_count_role(unit,6);
-    if (y3 - iVar12 < 2) {
+    transport_count = unit_stack_count_role(unit,6);
+    if (y3 - transport_count < 2) {
       unit_destroy_redraw(unit,1);
       return 1;
     }
@@ -1576,18 +1576,18 @@ i32 __cdecl ai_barbarian_unit_move(void)
       unit_destroy_redraw(unit,1);
       return 1;
     }
-    for (local_18 = 0; local_18 < 8; local_18++) {
-      x = map_wrap_x((char)(&dir_dx_table)[local_18] + x2);
-      y3 = (char)(&dir_dy_table)[local_18] + y;
-      iVar13 = map_in_bounds(x,y3);
-      if (iVar13 != 0) {
+    for (dir = 0; dir < 8; dir++) {
+      x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+      y3 = (char)(&dir_dy_table)[dir] + y;
+      valid = map_in_bounds(x,y3);
+      if (valid != 0) {
         if (((-1 < city) && (nearest_city_dist < 9)) &&
            ((y2 = tile_is_ocean(x,y3), y2 == 0 &&
             (((y2 = tile_city_or_unit_owner(x,y3), y2 < 0 && (1 < y3)) &&
              (y3 < map.height - 2)))))) {
           y2 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-          iVar19 = tile_landmass(x,y3);
-          if (y2 == iVar19) {
+          check = tile_landmass(x,y3);
+          if (y2 == check) {
             y2 = unit_stack_sum(unit,2);
             if (((y2 < 3) && (y2 = unit_stack_count_role(unit,0), y2 == 0)) &&
                ((y2 = unit_stack_count_role(unit,1), y2 == 0 && (nearest_city_dist < 3)))) {
@@ -1628,34 +1628,34 @@ i32 __cdecl ai_barbarian_unit_move(void)
         }
         y2 = tile_is_ocean(x,y3);
         if ((y2 != 0) && (y3 = tile_unit_owner(x,y3), 0 < y3)) {
-          local_40 = local_18;
+          best_dir = dir;
           goto LAB_00536859;
         }
       }
     }
     if (units[unit].orders != 11) {
-      local_10 = 0;
+      best_score = 0;
       city2 = -1;
       y3 = tile_is_ocean(x2,y);
       if (y3 == 0) {
-        local_1c = -1;
+        sea_body = -1;
       }
       else {
-        local_1c = tile_landmass(x2,y);
+        sea_body = tile_landmass(x2,y);
       }
       for (city = 0; city < game.num_cities; city++) {
         if ((cities[city].id != 0) && (cities[city].owner != '\0')) {
-          if (-1 < local_1c) {
-            uVar22 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-            y3 = landmass_borders_body(uVar22,local_1c);
+          if (-1 < sea_body) {
+            misc = tile_landmass((int)cities[city].x,(int)cities[city].y);
+            y3 = landmass_borders_body(misc,sea_body);
             if (y3 == 0) goto LAB_00535741;
           }
           y3 = city_treasury_share(city);
           y2 = map_distance_diag(x2,y,(int)cities[city].x,(int)cities[city].y);
           y3 = (y3 + 0x32) / (y2 + 1);
-          if (local_10 < y3) {
+          if (best_score < y3) {
             city2 = city;
-            local_10 = y3;
+            best_score = y3;
           }
         }
 LAB_00535741: ;
@@ -1669,41 +1669,41 @@ LAB_00535741: ;
     goto LAB_0053692c;
   }
   if ((nearest_city_dist == 0) ||
-     (uVar22 = tile_improvements(x2,y), ((byte)uVar22 & 0x42) == 0x40)) {
+     (misc = tile_improvements(x2,y), ((byte)misc & 0x42) == 0x40)) {
     y2 = unit_stack_sum(unit,2);
-    iVar19 = unit_stack_count_role(unit,6);
-    if ((((1 < y2 - iVar19) || (y3 != 0)) && (unit_types[unit_type].role != 1)) ||
-       ((bVar23 = nearest_city_dist == 0, y2 = unit_stack_sum(unit,2),
-        (int)(bVar23 + 2 + (uint)(y3 == 0)) <= y2 &&
+    check = unit_stack_count_role(unit,6);
+    if ((((1 < y2 - check) || (y3 != 0)) && (unit_types[unit_type].role != 1)) ||
+       ((at_city = nearest_city_dist == 0, y2 = unit_stack_sum(unit,2),
+        (int)(at_city + 2 + (uint)(y3 == 0)) <= y2 &&
         ((char)unit_types[unit_type].defense <= (char)unit_types[unit_type].attack)))) goto LAB_005359af;
     units[unit].orders = 1;
-    local_40 = 8;
+    best_dir = 8;
   }
   else {
 LAB_005359af:
     if (((-1 < city) && ((game.turn + unit & 3U) == 0)) &&
        ((y2 = tile_is_ocean(x2,y), y2 == 0 || (unit_types[unit_type].hold != '\0')))) {
       y2 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-      iVar19 = tile_landmass(x2,y);
-      if ((y2 != iVar19) || (8 < nearest_city_dist)) {
+      check = tile_landmass(x2,y);
+      if ((y2 != check) || (8 < nearest_city_dist)) {
         unit_destroy_redraw(unit,1);
         return 1;
       }
     }
-    local_74 = -3;
+    dy_toward = -3;
     x3 = -3;
     if (-1 < city) {
       y2 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-      iVar19 = tile_landmass(x2,y);
-      if ((y2 == iVar19) &&
+      check = tile_landmass(x2,y);
+      if ((y2 == check) &&
          (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) {
         x3 = cities[city].x - x2;
         if ((game.rules & 0x8000) == 0) {
-          local_80 = x3;
+          abs_dx = x3;
           if ((int)x3 < 1) {
-            local_80 = ~x3 + 1;
+            abs_dx = ~x3 + 1;
           }
-          if ((int)map.width >> 1 <= (int)local_80) {
+          if ((int)map.width >> 1 <= (int)abs_dx) {
             x3 = -x3;
           }
         }
@@ -1720,46 +1720,46 @@ LAB_005359af:
         }
         if (cities[city].y == -3 || cities[city].y + 3 < 0) {
           if (cities[city].y + 3 < 0) {
-            local_74 = -1;
+            dy_toward = -1;
           }
           else {
-            local_74 = 0;
+            dy_toward = 0;
           }
         }
         else {
-          local_74 = 1;
+          dy_toward = 1;
         }
       }
     }
     if (-1 < city) {
       if (cities[city].owner == civ2) {
-        local_74 = -3;
+        dy_toward = -3;
         x3 = -3;
       }
       if (civs[cities[city].owner].num_cities < 2) {
-        local_74 = -3;
+        dy_toward = -3;
         x3 = -3;
       }
       if (civs[cities[city].owner].gold < 100) {
-        local_74 = -3;
+        dy_toward = -3;
         x3 = -3;
       }
     }
     if (x3 != -3) {
       units[unit].goto_x = cities[city].x;
       units[unit].goto_y = cities[city].y;
-      uVar22 = unit_goto_next_dir(unit);
-      units[unit].last_dir = (u8)uVar22;
+      misc = unit_goto_next_dir(unit);
+      units[unit].last_dir = (u8)misc;
     }
     if (4 < (char)unit_types[unit_type].role) {
-      cVar5 = tile_terrain(x2,y);
+      here_terrain = tile_terrain(x2,y);
       y2 = unit_stack_sum(unit,2);
-      if (((1 < y2) && (cVar5 != '\n')) &&
+      if (((1 < y2) && (here_terrain != '\n')) &&
          (y2 = unit_stack_count_role(unit,(int)(char)unit_types[unit_type].role), y2 < 2)) {
-        local_40 = 8;
+        best_dir = 8;
         goto LAB_00536859;
       }
-      if (cVar5 == '\n') {
+      if (here_terrain == '\n') {
         if (nearest_city_dist < 3) {
           unit_destroy_redraw(unit,1);
           return 1;
@@ -1777,153 +1777,153 @@ LAB_005359af:
         }
       }
     }
-    local_10 = -999;
-    for (local_18 = 0; local_18 < 8; local_18++) {
-      x = map_wrap_x((char)(&dir_dx_table)[local_18] + x2);
-      y2 = (char)(&dir_dy_table)[local_18] + y;
-      iVar19 = map_in_bounds(x,y2);
-      if (iVar19 != 0) {
+    best_score = -999;
+    for (dir = 0; dir < 8; dir++) {
+      x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+      y2 = (char)(&dir_dy_table)[dir] + y;
+      check = map_in_bounds(x,y2);
+      if (check != 0) {
         terrain = tile_terrain(x,y2);
         if ((unit_types[unit_type].domain == 2) == (terrain == 10)) {
-          iVar19 = tile_unit_owner(x,y2);
+          check = tile_unit_owner(x,y2);
           unit2 = tile_first_unit(x,y2);
-          local_c = 0;
+          score = 0;
           if ((char)unit_types[unit_type].role < 5) {
             civ = tile_city_owner(x,y2);
             if ((civ < 0) || (civ2 == civ)) {
 LAB_005364bc:
-              iVar20 = tile_owner(x,y2);
-              if (civ2 != iVar20) {
-                local_c = 4;
+              value = tile_owner(x,y2);
+              if (civ2 != value) {
+                score = 4;
               }
-              uVar21 = tile_improvements(x,y2);
-              if ((uVar21 & 0x40) == 0) {
-                uVar21 = tile_improvements(x,y2);
-                if ((uVar21 & 0xc) != 0) {
-                  local_c += 6;
+              tile_imps = tile_improvements(x,y2);
+              if ((tile_imps & 0x40) == 0) {
+                tile_imps = tile_improvements(x,y2);
+                if ((tile_imps & 0xc) != 0) {
+                  score += 6;
                 }
               }
               else {
-                local_c += 8;
+                score += 8;
               }
-              iVar20 = rand_range(0,5);
-              local_c += iVar20;
+              value = rand_range(0,5);
+              score += value;
               if (unit2 < 0) {
 LAB_005365f1:
                 if ((((y3 == 0) || (unit_types[unit_type].role != '\0')) || (-1 < unit2)) ||
                    ((y2 = tile_in_enemy_zoc(x,y2,civ2), y2 == 0 ||
                     ((unit_types[units[unit].type].flags & 2) != 0)))) {
-                  if ((char)units[unit].last_dir == local_18) {
-                    local_c += 6;
+                  if ((char)units[unit].last_dir == dir) {
+                    score += 6;
                   }
                   if (x3 != -3) {
-                    if ((char)(&dir_dx_table)[local_18] < 1) {
-                      if ((char)(&dir_dx_table)[local_18] < '\0') {
-                        local_84 = -1;
+                    if ((char)(&dir_dx_table)[dir] < 1) {
+                      if ((char)(&dir_dx_table)[dir] < '\0') {
+                        step_dx = -1;
                       }
                       else {
-                        local_84 = 0;
+                        step_dx = 0;
                       }
                     }
                     else {
-                      local_84 = 1;
+                      step_dx = 1;
                     }
-                    if (x3 == local_84) {
-                      local_c += 2;
+                    if (x3 == step_dx) {
+                      score += 2;
                     }
                   }
-                  if (local_74 != -3) {
-                    if ((char)(&dir_dy_table)[local_18] < 1) {
-                      if ((char)(&dir_dy_table)[local_18] < '\0') {
-                        local_88 = -1;
+                  if (dy_toward != -3) {
+                    if ((char)(&dir_dy_table)[dir] < 1) {
+                      if ((char)(&dir_dy_table)[dir] < '\0') {
+                        step_dy = -1;
                       }
                       else {
-                        local_88 = 0;
+                        step_dy = 0;
                       }
                     }
                     else {
-                      local_88 = 1;
+                      step_dy = 1;
                     }
-                    if (local_74 == local_88) {
-                      local_c += 2;
+                    if (dy_toward == step_dy) {
+                      score += 2;
                     }
                   }
                   goto LAB_0053673f;
                 }
               }
-              else if (iVar19 == civ2) {
-                iVar19 = tile_is_ocean(x2,y);
-                if (iVar19 != 0) {
-                  local_c -= 0x14;
+              else if (check == civ2) {
+                check = tile_is_ocean(x2,y);
+                if (check != 0) {
+                  score -= 0x14;
                   goto LAB_005365f1;
                 }
               }
               else {
-                iVar19 = tile_is_ocean(x2,y);
-                if (iVar19 == 0) {
+                check = tile_is_ocean(x2,y);
+                if (check == 0) {
                   if (unit_type == 9) {
                     if ((char)unit_types[units[unit2].type].role < 5) goto LAB_00535e74;
-                    local_c += 99;
+                    score += 99;
                   }
                   else if (unit_types[units[unit2].type].role != 6) {
-                    local_c += 99;
+                    score += 99;
                   }
                   goto LAB_005365f1;
                 }
               }
             }
             else {
-              iVar20 = tile_is_ocean(x2,y);
-              if (iVar20 == 0) {
-                iVar20 = tile_unit_owner(x,y2);
-                if (iVar20 < 0) {
-                  iVar20 = civs[civ].gold / 2;
-                  if (iVar20 < 0x33) {
-                    iVar20 = 0x32;
+              value = tile_is_ocean(x2,y);
+              if (value == 0) {
+                value = tile_unit_owner(x,y2);
+                if (value < 0) {
+                  value = civs[civ].gold / 2;
+                  if (value < 0x33) {
+                    value = 0x32;
                   }
-                  local_54 = cities[city].size * 0x19;
-                  if (local_54 <= iVar20) {
-                    local_54 = iVar20;
+                  ransom = cities[city].size * 0x19;
+                  if (ransom <= value) {
+                    ransom = value;
                   }
                   if ((((game.power_rank[civ] == 7) && (200 < game.year)) &&
                       (4 < civs[civ].num_cities)) &&
-                     (local_54 = (civs[civ].gold / 100) * 100, local_54 < 1000)) {
-                    local_54 = civs[civ].gold + 1;
+                     (ransom = (civs[civ].gold / 100) * 100, ransom < 1000)) {
+                    ransom = civs[civ].gold + 1;
                   }
-                  text_set_number_arg(0,local_54);
+                  text_set_number_arg(0,ransom);
                   if (((game.multiplayer < 3) &&
-                      (local_14 = (byte)civ,
-                      (1 << (local_14 & 0x1f) & (uint)game.human_players) != 0)) &&
-                     (local_54 <= civs[civ].gold)) {
+                      (civ_byte = (byte)civ,
+                      (1 << (civ_byte & 0x1f) & (uint)game.human_players) != 0)) &&
+                     (ransom <= civs[civ].gold)) {
                     city = city_at(x,y2);
                     text_set_string_arg(1,(iptr)&cities[city].name);
                     __chdir(&scenario_dir_path);
-                    iVar20 = text_open_section(ADDR(0x632544, ((u8 *)&g.d_00632544)),ADDR(0x632538, ((u8 *)&g.d_00632538)));
-                    if (iVar20 != 0) {
+                    value = text_open_section(ADDR(0x632544, ((u8 *)&g.d_00632544)),ADDR(0x632538, ((u8 *)&g.d_00632538)));
+                    if (value != 0) {
                       __chdir(&game_home_dir);
-                      iVar20 = text_open_section(ADDR(0x632558, ((u8 *)&g.d_00632558)),ADDR(0x63254c, ((u8 *)&g.d_0063254c)));
-                      if (iVar20 != 0) goto LAB_0053692c;
+                      value = text_open_section(ADDR(0x632558, ((u8 *)&g.d_00632558)),ADDR(0x63254c, ((u8 *)&g.d_0063254c)));
+                      if (value != 0) goto LAB_0053692c;
                     }
                     __chdir(&game_home_dir);
                     text_read_line(1);
-                    iVar20 = _atoi(&text_buffer);
-                    if (0 < iVar20) {
+                    value = _atoi(&text_buffer);
+                    if (0 < value) {
                       y5 = cities[city].y;
                       x4 = cities[city].x;
-                      for (local_2c = 0; local_2c <= (y5 * 3 + x4 * 5) % iVar20;
-                          local_2c = local_2c + 1) {
+                      for (line = 0; line <= (y5 * 3 + x4 * 5) % value;
+                          line = line + 1) {
                         text_read_line(1);
                       }
                       text_set_string_arg(0,ADDR(0x679640, ((u8 *)&g.d_00679640)));
                       mapviews_ensure_visible((int)cities[city].x,(int)cities[city].y,civ);
                       if ((autoplay_active == 0) &&
-                         (iVar20 = dlg_game_txt_with_unit(ADDR(0x632560, ((u8 *)&g.d_00632560)),unit), iVar20 != 0)) {
-                        civs[civ].gold -= local_54;
+                         (value = dlg_game_txt_with_unit(ADDR(0x632560, ((u8 *)&g.d_00632560)),unit), value != 0)) {
+                        civs[civ].gold -= ransom;
                         status_draw_info(1);
-                        for (local_2c = 0; local_2c < 0x14; local_2c++) {
+                        for (line = 0; line < 0x14; line++) {
                           x = map_wrap_x((int)cities[city].x +
-                                              (int)(char)(&city_tile_dx_table)[local_2c]);
-                          x2 = (int)cities[city].y + (int)(char)(&city_tile_dy_table)[local_2c];
+                                              (int)(char)(&city_tile_dx_table)[line]);
+                          x2 = (int)cities[city].y + (int)(char)(&city_tile_dy_table)[line];
                           y3 = map_in_bounds(x,x2);
                           if (((y3 != 0) &&
                               (y3 = tile_first_unit(x,x2), -1 < y3)) &&
@@ -1937,15 +1937,15 @@ LAB_005365f1:
                     }
                   }
                 }
-                if ((unit_type != 9) || (iVar20 = tile_unit_owner(x,y2), iVar20 < 0)) {
-                  local_40 = local_18;
+                if ((unit_type != 9) || (value = tile_unit_owner(x,y2), value < 0)) {
+                  best_dir = dir;
                   goto LAB_00536859;
                 }
                 if ((game.turn + unit & 7U) != 0) {
-                  iVar20 = unit_stack_sum(unit,2);
-                  if ((iVar20 < 2) && (units[unit].orders = 1, local_10 < 99)) {
-                    local_10 = 99;
-                    local_40 = 8;
+                  value = unit_stack_sum(unit,2);
+                  if ((value < 2) && (units[unit].orders = 1, best_score < 99)) {
+                    best_score = 99;
+                    best_dir = 8;
                   }
                   goto LAB_005364bc;
                 }
@@ -1954,21 +1954,21 @@ LAB_005365f1:
           }
           else {
             if (-1 < unit2) {
-              if (iVar19 == civ2) {
-                local_c = 99;
+              if (check == civ2) {
+                score = 99;
               }
               else {
-                local_c = -99;
+                score = -99;
               }
             }
             city_find_nearest(x,y2,-1,0xffffffff,-1);
-            uVar1 = terrain_types[terrain].move_cost;
+            move_pts = terrain_types[terrain].move_cost;
             y2 = rand_range(0,3);
-            local_c = local_c + (char)uVar1 + y2 + nearest_city_dist * 4;
+            score = score + (char)move_pts + y2 + nearest_city_dist * 4;
 LAB_0053673f:
-            if (local_10 <= local_c) {
-              local_10 = local_c;
-              local_40 = local_18;
+            if (best_score <= score) {
+              best_score = score;
+              best_dir = dir;
             }
           }
         }
@@ -1976,8 +1976,8 @@ LAB_0053673f:
 LAB_00535e74: ;
     }
     y3 = tile_city_owner(x2,y);
-    if (((y3 < 0) || (y3 = unit_stack_sum(unit,2), 1 < y3)) || (0x62 < local_10)) {
-      if ((((local_10 < 99) &&
+    if (((y3 < 0) || (y3 = unit_stack_sum(unit,2), 1 < y3)) || (0x62 < best_score)) {
+      if ((((best_score < 99) &&
            (y3 = unit_moves_left(unit), y3 <= (int)(uint)cosmic.road_move_mult)) &&
           (-1 < city)) &&
          (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) {
@@ -1991,24 +1991,24 @@ LAB_00535e74: ;
       }
     }
     else {
-      local_40 = 8;
+      best_dir = 8;
     }
   }
 LAB_00536859:
-  if (local_40 == 8) {
+  if (best_dir == 8) {
     units[unit].last_dir = 0xff;
     unit_exhaust_moves(unit);
     if (((unit_types[unit_type].role == 1) ||
-        (uVar22 = tile_improvements(x2,y), ((byte)uVar22 & 0x42) == 0x40)) &&
+        (misc = tile_improvements(x2,y), ((byte)misc & 0x42) == 0x40)) &&
        (units[unit].orders = 1, (units[unit].flags & 0x100) != 0)) {
       units[unit].orders = 2;
     }
   }
   else {
     units[unit].orders = 27;
-    uVar22 = map_wrap_x((char)(&dir_dx_table)[local_40] + x2);
-    units[unit].goto_x = (i16)uVar22;
-    units[unit].goto_y = (char)(&dir_dy_table)[local_40] + y4;
+    misc = map_wrap_x((char)(&dir_dx_table)[best_dir] + x2);
+    units[unit].goto_x = (i16)misc;
+    units[unit].goto_y = (char)(&dir_dy_table)[best_dir] + y4;
   }
 LAB_0053692c:
   if (((units[unit].orders == 11) && (units[unit].goto_x == x2)) &&
@@ -2020,22 +2020,22 @@ LAB_0053692c:
 #undef autoplay_active
 #undef human_civ
 #undef text_buffer
-#undef local_88
-#undef local_84
-#undef local_80
-#undef local_74
+#undef step_dy
+#undef step_dx
+#undef abs_dx
+#undef dy_toward
 #undef x3
 #undef city2
 #undef city
-#undef local_54
-#undef local_40
+#undef ransom
+#undef best_dir
 #undef civ3
-#undef local_2c
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
+#undef line
+#undef sea_body
+#undef dir
+#undef civ_byte
+#undef best_score
+#undef score
 
 /* 005369f3 auto */
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
@@ -2046,7 +2046,7 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
   short x;
   short y;
   int civ;
-  int iVar5;
+  int max_moves;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   x = cities[city].x;
@@ -2063,8 +2063,8 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
            (civ = tile_is_ocean((int)units[unit].x,(int)units[unit].y), civ != 0)))))) {
         civ = map_distance_diag((int)x,(int)y,(int)units[unit].x,
                                    (int)units[unit].y);
-        iVar5 = unit_max_moves(unit);
-        if (civ < iVar5) {
+        max_moves = unit_max_moves(unit);
+        if (civ < max_moves) {
           units[unit].orders = 11;
           units[unit].goto_x = x;
           units[unit].goto_y = y;
@@ -2077,56 +2077,56 @@ void __cdecl ai_transports_raid_empty_city(iptr city)
 #undef unit
 
 /* 00536bc9 auto */
-#define local_14 (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
-int __cdecl ai_continent_defense_quota(iptr civ,iptr param_2)
+#define quota (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define remaining (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define weight (*(int *)(frame_ + FRAME_OFF(16)))
+int __cdecl ai_continent_defense_quota(iptr civ,iptr continent)
 
 {
-  uint uVar1;
+  uint batch;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_14 = 0;
-  local_c = (uint)civs[civ].continent_cities[param_2];
-  local_8 = 3;
+  quota = 0;
+  remaining = (uint)civs[civ].continent_cities[continent];
+  weight = 3;
   do {
-    uVar1 = local_c;
-    if (4 < (int)local_c) {
-      uVar1 = 5;
+    batch = remaining;
+    if (4 < (int)remaining) {
+      batch = 5;
     }
-    local_c -= uVar1;
-    local_14 += local_8 * uVar1;
-    local_8--;
-  } while ((local_c != 0) && (0 < local_8));
-  return local_14;
+    remaining -= batch;
+    quota += weight * batch;
+    weight--;
+  } while ((remaining != 0) && (0 < weight));
+  return quota;
 }
-#undef local_14
-#undef local_c
-#undef local_8
+#undef quota
+#undef remaining
+#undef weight
 
 /* 00536c4c auto */
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(0)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define unit2 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(uptr *)(frame_ + FRAME_OFF(28)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
+#define dir (*(uptr *)(frame_ + FRAME_OFF(28)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(32)))
 #define city3 (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
+#define score (*(int *)(frame_ + FRAME_OFF(40)))
 i32 __cdecl ai_nuke_pick_target(iptr unit)
 
 {
-  uint uVar1;
-  uint *puVar2;
-  bool bVar3;
+  uint strength;
+  uint *treaty;
+  bool in_range;
   iptr civ;
   iptr civ2;
   int y;
   iptr x;
-  int iVar8;
+  int owner_civ;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (iptr)units[unit].owner;
-  local_10 = -1;
+  best_score = -1;
   city2 = -1;
   city = 0;
   do {
@@ -2135,22 +2135,22 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
       if (y < 1) {
         y = 0;
       }
-      if ((10 - y <= local_10) &&
+      if ((10 - y <= best_score) &&
          (1 < civs[civ].units_active[units[unit].type])) {
-        for (local_14 = 0; (int)local_14 < 8; local_14++) {
-          x = map_wrap_x((int)(char)(&dir_dx_table)[local_14] + (int)cities[city2].x);
-          y = (int)(char)(&dir_dy_table)[local_14] + (int)cities[city2].y;
-          iVar8 = map_in_bounds(x,y);
-          if (((iVar8 != 0) && (iVar8 = tile_city_owner(x,y), iVar8 < 0)) &&
-             (iVar8 = tile_unit_owner(x,y), iVar8 < 0)) {
+        for (dir = 0; (int)dir < 8; dir++) {
+          x = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)cities[city2].x);
+          y = (int)(char)(&dir_dy_table)[dir] + (int)cities[city2].y;
+          owner_civ = map_in_bounds(x,y);
+          if (((owner_civ != 0) && (owner_civ = tile_city_owner(x,y), owner_civ < 0)) &&
+             (owner_civ = tile_unit_owner(x,y), owner_civ < 0)) {
             unit_relocate(unit,x,y,1);
             units[unit].visibility = '\0';
             if (((uint)game.human_players & 1 << (cities[city2].owner & 0x1fU)) != 0) {
               if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c2, ((u8 *)&civs + 34)) + cities[city2].owner * 4) & 2) == 0) {
-                puVar2 = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
-                *puVar2 = *puVar2 | 0x20000;
-                puVar2 = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
-                *puVar2 = *puVar2 & 0xffffffef;
+                treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
+                *treaty = *treaty | 0x20000;
+                treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + cities[city2].owner * 4);
+                *treaty = *treaty & 0xffffffef;
                 diplo_set_treaty_flags(civ,(int)cities[city2].owner,0x10000);
               }
               else {
@@ -2158,7 +2158,7 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
                      civs[cities[city2].owner].last_treaty_turn[civ] - 2;
               }
             }
-            return local_14 ^ 4;
+            return dir ^ 4;
           }
         }
       }
@@ -2167,51 +2167,51 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
     if ((((((cities[city].id != 0) && (civ2 = (iptr)cities[city].owner, civ2 != civ)) &&
           (y = city_has_improvement(city,0x11), y == 0)) &&
          (4 < cities[city].size)) &&
-        (((uVar1 = (uint)civs[civ2].military_strength * 2,
-          uVar1 + (uint)civs[civ].military_strength * -3 != 0 &&
-          (uint)civs[civ].military_strength * 3 <= uVar1 ||
+        (((strength = (uint)civs[civ2].military_strength * 2,
+          strength + (uint)civs[civ].military_strength * -3 != 0 &&
+          (uint)civs[civ].military_strength * 3 <= strength ||
           ((*(byte *)&civs[civ].treaties[civ2] & 0x10) != 0)) ||
          ((civs[civ2].units_active[0x2d] == '\0' &&
-          (uVar1 = (uint)civs[civ2].military_strength * 2,
-          uVar1 - civs[civ].military_strength != 0 && civs[civ].military_strength <= uVar1))))))
+          (strength = (uint)civs[civ2].military_strength * 2,
+          strength - civs[civ].military_strength != 0 && civs[civ].military_strength <= strength))))))
        && ((civs[civ].treaties[civ2] & 0x104) == 0x100)) {
-      local_8 = 0;
-      for (local_14 = 0; (int)local_14 < 9; local_14++) {
-        x = map_wrap_x((int)(char)(&dir_dx_table)[local_14] + (int)cities[city].x);
-        y = (int)(char)(&dir_dy_table)[local_14] + (int)cities[city].y;
-        iVar8 = map_in_bounds(x,y);
-        if ((iVar8 != 0) && (iVar8 = tile_unit_owner(x,y), 0 < iVar8)) {
-          if (iVar8 == civ) {
-            local_8 -= 2;
+      score = 0;
+      for (dir = 0; (int)dir < 9; dir++) {
+        x = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)cities[city].x);
+        y = (int)(char)(&dir_dy_table)[dir] + (int)cities[city].y;
+        owner_civ = map_in_bounds(x,y);
+        if ((owner_civ != 0) && (owner_civ = tile_unit_owner(x,y), 0 < owner_civ)) {
+          if (owner_civ == civ) {
+            score -= 2;
           }
-          else if ((civs[civ].treaties[iVar8] & 0x104) == 0x100) {
+          else if ((civs[civ].treaties[owner_civ] & 0x104) == 0x100) {
             for (unit2 = tile_first_unit(x,y); -1 < unit2;
                 unit2 = unit_next_in_stack(unit2)) {
-              local_8++;
+              score++;
             }
           }
           else {
-            local_8 -= 99;
+            score -= 99;
           }
         }
       }
-      local_8 += ((int)cities[city].size >> 1);
-      if (local_10 < local_8) {
-        bVar3 = false;
+      score += ((int)cities[city].size >> 1);
+      if (best_score < score) {
+        in_range = false;
         for (city3 = 0; city3 < game.num_cities; city3++) {
           if ((cities[city3].id != 0) && (cities[city3].owner == civ)) {
             y = map_distance((int)cities[city3].x,(int)cities[city3].y,
                                        (int)cities[city].x,(int)cities[city].y);
-            iVar8 = unit_max_moves(unit);
-            if (y <= iVar8 / (int)(uint)cosmic.road_move_mult) {
-              bVar3 = true;
+            owner_civ = unit_max_moves(unit);
+            if (y <= owner_civ / (int)(uint)cosmic.road_move_mult) {
+              in_range = true;
               break;
             }
           }
         }
-        if (bVar3) {
+        if (in_range) {
           city2 = city;
-          local_10 = local_8;
+          best_score = score;
         }
       }
     }
@@ -2221,52 +2221,52 @@ i32 __cdecl ai_nuke_pick_target(iptr unit)
 #undef city2
 #undef city
 #undef unit2
-#undef local_14
-#undef local_10
+#undef dir
+#undef best_score
 #undef city3
-#undef local_8
+#undef score
 
 /* 00537331 auto */
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
 #define x3 (*(int *)(frame_ + FRAME_OFF(4)))
 #define unit3 (*(iptr *)(frame_ + FRAME_OFF(16)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(28)))
+#define best_threat (*(int *)(frame_ + FRAME_OFF(24)))
+#define home_dist (*(int *)(frame_ + FRAME_OFF(28)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(56)))
+#define threat_score (*(int *)(frame_ + FRAME_OFF(56)))
 #define y3 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_20 (*(uptr *)(frame_ + FRAME_OFF(72)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(76)))
+#define city_dist (*(int *)(frame_ + FRAME_OFF(68)))
+#define dir (*(uptr *)(frame_ + FRAME_OFF(72)))
+#define defense_power (*(int *)(frame_ + FRAME_OFF(76)))
 #define city2 (*(iptr *)(frame_ + FRAME_OFF(80)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(84)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(88)))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(92)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
+#define range_left (*(int *)(frame_ + FRAME_OFF(84)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(88)))
+#define nearest_city (*(iptr *)(frame_ + FRAME_OFF(92)))
+#define score (*(int *)(frame_ + FRAME_OFF(96)))
 i32 __cdecl
-ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param_6,
-            int param_7,iptr param_8,int param_9)
+ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int mode,iptr out_flag,
+            int may_go_home,iptr landmass,int set_flag)
 
 {
   byte civ2;
-  char cVar2;
-  u8 uVar3;
-  u8 uVar4;
-  u8 uVar5;
+  char small_val;
+  u8 stat_a;
+  u8 stat_b;
+  u8 att_fp;
   short x4;
   short y4;
-  ushort uVar8;
-  bool bVar9;
+  ushort own_flags;
+  bool at_airbase;
   byte terrain;
   int civ;
-  int iVar12;
+  int value;
   int y2;
-  int iVar14;
-  int iVar15;
-  i32 uVar16;
+  int check;
+  int target_dist;
+  i32 tile_imps;
   iptr x2;
-  uint uVar18;
+  uint move_mult;
   iptr unit2;
   i8 frame_[FRAME_OFF(104)] __attribute__((aligned(8)));  /* original stack frame */
   
@@ -2274,32 +2274,32 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
   civ2 = units[unit].owner;
   civ = (int)(char)civ2;
   if (unit_types[units[unit].type].range == '\0') {
-    local_14 = unit_max_moves(unit);
-    local_14 = local_14 * 2;
+    range_left = unit_max_moves(unit);
+    range_left = range_left * 2;
   }
   else {
-    uVar3 = unit_types[units[unit].type].range;
-    uVar4 = units[unit].counter;
-    iVar12 = unit_max_moves(unit);
-    local_14 = unit_moves_left(unit);
-    local_14 = ((int)(char)uVar3 - ((char)uVar4 + 1)) * iVar12 + local_14;
+    stat_a = unit_types[units[unit].type].range;
+    stat_b = units[unit].counter;
+    value = unit_max_moves(unit);
+    range_left = unit_moves_left(unit);
+    range_left = ((int)(char)stat_a - ((char)stat_b + 1)) * value + range_left;
   }
-  local_14 = local_14 / (int)(uint)cosmic.road_move_mult;
-  local_4c = 9999;
+  range_left = range_left / (int)(uint)cosmic.road_move_mult;
+  home_dist = 9999;
   for (city = 0; city < game.num_cities; city++) {
     if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-       (iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
+       (value = map_distance(*(i32 *)x,*(i32 *)y,
                                     (int)cities[city].x,(int)cities[city].y),
-       iVar12 < local_4c)) {
-      local_4c = iVar12;
+       value < home_dist)) {
+      home_dist = value;
     }
   }
   if (unit_types[units[unit].type].range != '\0') {
     if (unit_types[units[unit].type].range == 1) {
       if (units[unit].orders != 11) {
-        iVar12 = unit_max_moves(unit);
+        value = unit_max_moves(unit);
         y2 = unit_moves_left(unit);
-        if (((y2 <= iVar12 >> 1) && (local_14 < local_4c + 1)) && (local_4c <= local_14)) {
+        if (((y2 <= value >> 1) && (range_left < home_dist + 1)) && (home_dist <= range_left)) {
           units[unit].field_0c = 'H';
           unit_go_home(unit);
           return 0xffffffff;
@@ -2307,7 +2307,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
       }
     }
     else if (((int)(char)unit_types[units[unit].type].range / 2 <=
-              (int)(char)units[unit].counter) && (local_4c <= local_14)) {
+              (int)(char)units[unit].counter) && (home_dist <= range_left)) {
       units[unit].field_0c = 'H';
       unit_go_home(unit);
       return 0xffffffff;
@@ -2315,7 +2315,7 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
   }
   if (((unit_types[units[unit].type].flags & 0x1000) != 0) &&
      ((char)unit_types[unit_type].attack < 'c')) {
-    local_10 = (int)(char)unit_types[units[unit].type].cost << 2;
+    best_score = (int)(char)unit_types[units[unit].type].cost << 2;
     unit3 = -1;
     unit = 0;
     do {
@@ -2323,30 +2323,30 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
         if (-1 < unit3) {
           x4 = units[unit3].x;
           y4 = units[unit3].y;
-          for (local_20 = 0; (int)local_20 < 8; local_20++) {
-            x2 = map_wrap_x((int)(char)(&dir_dx_table)[local_20] + (int)x4);
-            iVar12 = (int)(char)(&dir_dy_table)[local_20] + (int)y4;
-            y2 = map_in_bounds(x2,iVar12);
-            if ((y2 != 0) && (y2 = tile_city_or_unit_owner(x2,iVar12), y2 < 0)) {
-              unit_relocate(unit2,x2,iVar12,1);
+          for (dir = 0; (int)dir < 8; dir++) {
+            x2 = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)x4);
+            value = (int)(char)(&dir_dy_table)[dir] + (int)y4;
+            y2 = map_in_bounds(x2,value);
+            if ((y2 != 0) && (y2 = tile_city_or_unit_owner(x2,value), y2 < 0)) {
+              unit_relocate(unit2,x2,value,1);
               units[unit2].visibility = '\0';
               *(iptr *)x = x2;
-              *(int *)y = iVar12;
-              return local_20 ^ 4;
+              *(int *)y = value;
+              return dir ^ 4;
             }
           }
         }
-        iVar12 = unit_stack_sum(unit2,8);
-        if (1 < iVar12) {
+        value = unit_stack_sum(unit2,8);
+        if (1 < value) {
           for (city = 0; city < game.num_cities; city++) {
             if ((cities[city].id != 0) && (cities[city].owner == civ)) {
               x2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
               y2 = unit_stack_sum(x2,8);
-              if (y2 < iVar12) {
+              if (y2 < value) {
                 y2 = map_distance(*(i32 *)x,*(i32 *)y,
                                             (int)cities[city].x,(int)cities[city].y);
-                iVar14 = unit_max_moves(unit2);
-                if (y2 <= iVar14 / (int)(uint)cosmic.road_move_mult) {
+                check = unit_max_moves(unit2);
+                if (y2 <= check / (int)(uint)cosmic.road_move_mult) {
                   unit_relocate(unit2,(int)cities[city].x,(int)cities[city].y,1);
                   units[unit2].visibility = '\0';
                   *(int *)x = (int)cities[city].x;
@@ -2362,56 +2362,56 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
       if ((((units[unit].id != 0) && (units[unit].owner != civ)) &&
           ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + units[unit].owner * 4) & 0x20) != 0)) &&
          (unit_types[units[unit].type].domain != 1)) {
-        iVar12 = (int)units[unit].x;
+        value = (int)units[unit].x;
         y2 = (int)units[unit].y;
-        iVar14 = map_in_bounds(iVar12,y2);
-        if (iVar14 != 0) {
-          iVar14 = unit_max_moves(unit2);
-          uVar18 = (uint)cosmic.road_move_mult;
-          iVar15 = map_distance(*(i32 *)x,*(i32 *)y,iVar12,y2);
-          if (iVar15 <= iVar14 / (int)uVar18) {
-            local_8 = (int)(char)unit_types[units[unit].type].cost;
-            uVar16 = tile_improvements(iVar12,y2);
-            if ((((byte)uVar16 & 0x42) == 0x40) ||
-               (iVar14 = tile_airbase_owner(iVar12,y2), iVar14 != 0)) {
-              bVar9 = true;
+        check = map_in_bounds(value,y2);
+        if (check != 0) {
+          check = unit_max_moves(unit2);
+          move_mult = (uint)cosmic.road_move_mult;
+          target_dist = map_distance(*(i32 *)x,*(i32 *)y,value,y2);
+          if (target_dist <= check / (int)move_mult) {
+            score = (int)(char)unit_types[units[unit].type].cost;
+            tile_imps = tile_improvements(value,y2);
+            if ((((byte)tile_imps & 0x42) == 0x40) ||
+               (check = tile_airbase_owner(value,y2), check != 0)) {
+              at_airbase = true;
             }
             else {
-              bVar9 = false;
+              at_airbase = false;
             }
-            if ((bVar9) || (iVar14 = tile_city_owner(iVar12,y2), -1 < iVar14)) {
-              if (!bVar9) {
-                iVar14 = unit_stack_sum(unit,2);
-                if (iVar14 == 1) {
-                  local_8 = local_8 << 1;
+            if ((at_airbase) || (check = tile_city_owner(value,y2), -1 < check)) {
+              if (!at_airbase) {
+                check = unit_stack_sum(unit,2);
+                if (check == 1) {
+                  score = score << 1;
                 }
-                for (local_20 = 0; (int)local_20 < 8; local_20++) {
-                  x2 = map_wrap_x((char)(&dir_dx_table)[local_20] + iVar12);
-                  cVar2 = (&dir_dy_table)[local_20];
-                  iVar14 = map_in_bounds(x2,cVar2 + y2);
-                  if ((iVar14 != 0) &&
-                     (iVar14 = tile_unit_owner(x2,cVar2 + y2), iVar14 == civ)) {
-                    local_8 = local_8 << 1;
+                for (dir = 0; (int)dir < 8; dir++) {
+                  x2 = map_wrap_x((char)(&dir_dx_table)[dir] + value);
+                  small_val = (&dir_dy_table)[dir];
+                  check = map_in_bounds(x2,small_val + y2);
+                  if ((check != 0) &&
+                     (check = tile_unit_owner(x2,small_val + y2), check == civ)) {
+                    score = score << 1;
                     break;
                   }
                 }
               }
             }
             else {
-              local_8 = unit_stack_sum(unit,0);
+              score = unit_stack_sum(unit,0);
             }
-            iVar14 = tile_is_ocean(iVar12,y2);
-            if (iVar14 != 0) {
-              local_8 = local_8 << 1;
+            check = tile_is_ocean(value,y2);
+            if (check != 0) {
+              score = score << 1;
             }
-            uVar16 = tile_improvements(iVar12,y2);
-            if (((byte)uVar16 & 0x42) == 0x40) {
-              local_8 = local_8 << 1;
+            tile_imps = tile_improvements(value,y2);
+            if (((byte)tile_imps & 0x42) == 0x40) {
+              score = score << 1;
             }
-            local_8 += (char)unit_types[units[unit].type].hold;
-            if (local_10 <= local_8) {
+            score += (char)unit_types[units[unit].type].hold;
+            if (best_score <= score) {
               unit3 = unit;
-              local_10 = local_8;
+              best_score = score;
             }
           }
         }
@@ -2419,9 +2419,9 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
       unit++;
     } while( true );
   }
-  if (param_5 == 3) {
-    local_10 = 9999;
-    local_50 = 9999;
+  if (mode == 3) {
+    best_score = 9999;
+    best_threat = 9999;
     unit3 = -1;
     for (unit = 0; unit < game.num_units; unit++) {
       if ((((units[unit].id != 0) && (units[unit].owner != civ)) &&
@@ -2430,87 +2430,87 @@ ai_air_unit_orders(iptr unit,iptr unit_type,iptr x,iptr y,int param_5,iptr param
           ((int)units[unit].owner == (uint)civ2)))) {
         if (unit_types[units[unit].type].domain == 1) {
 LAB_00537ec2:
-          iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
+          value = map_distance(*(i32 *)x,*(i32 *)y,
                                       (int)units[unit].x,(int)units[unit].y);
-          local_30 = iVar12 * 2;
+          threat_score = value * 2;
           if (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) != 0) {
-            local_30 = local_30 >> 1;
+            threat_score = threat_score >> 1;
           }
           if (unit_types[units[unit].type].range != '\0') {
-            local_30--;
+            threat_score--;
           }
           y2 = unit_stack_sum(unit,2);
           if (y2 == 1) {
-            local_30--;
+            threat_score--;
           }
-          if (local_30 <= local_50) {
-            local_50 = local_30;
+          if (threat_score <= best_threat) {
+            best_threat = threat_score;
             unit3 = unit;
-            local_10 = iVar12;
+            best_score = value;
           }
         }
         else {
           if (unit_types[units[unit].type].hold == '\0') {
-            iVar12 = unit_stack_sum(unit,2);
+            value = unit_stack_sum(unit,2);
           }
           else {
-            iVar12 = unit_stack_sum(unit,5);
+            value = unit_stack_sum(unit,5);
           }
-          if (iVar12 < 2) {
-            uVar8 = units[unit2].flags;
-            uVar3 = unit_types[unit_type].attack;
-            uVar4 = unit_types[unit_type].hit_points;
-            uVar5 = unit_types[unit_type].firepower;
-            local_1c = (int)(char)unit_types[units[unit].type].hit_points *
+          if (value < 2) {
+            own_flags = units[unit2].flags;
+            stat_a = unit_types[unit_type].attack;
+            stat_b = unit_types[unit_type].hit_points;
+            att_fp = unit_types[unit_type].firepower;
+            defense_power = (int)(char)unit_types[units[unit].type].hit_points *
                        (int)(char)unit_types[units[unit].type].defense *
                        (int)(char)unit_types[units[unit].type].firepower *
                        (3 - (uint)((units[unit].flags & 0x2000) == 0));
             if ((unit_types[units[unit].type].hold != '\0') &&
-               (iVar12 = unit_stack_sum(unit,2), iVar12 == 1)) {
-              local_1c = local_1c * 2;
+               (value = unit_stack_sum(unit,2), value == 1)) {
+              defense_power = defense_power * 2;
             }
             terrain = tile_terrain((int)units[unit].x,(int)units[unit].y);
-            if ((local_1c * (char)terrain_types[terrain].defense >> 1) * 3 <=
-                (int)((3 - (uint)((uVar8 & 0x2000) == 0)) * (int)(char)uVar3 * (int)(char)uVar4 *
-                      (int)(char)uVar5 * 2)) goto LAB_00537ec2;
+            if ((defense_power * (char)terrain_types[terrain].defense >> 1) * 3 <=
+                (int)((3 - (uint)((own_flags & 0x2000) == 0)) * (int)(char)stat_a * (int)(char)stat_b *
+                      (int)(char)att_fp * 2)) goto LAB_00537ec2;
           }
         }
       }
     }
     if (-1 < unit3) {
-      if ((local_10 <= local_14) || (local_14 < local_4c)) {
-        if (((local_4c <= local_14 - local_10) && (local_10 == 1)) || (local_14 < local_4c)) {
+      if ((best_score <= range_left) || (range_left < home_dist)) {
+        if (((home_dist <= range_left - best_score) && (best_score == 1)) || (range_left < home_dist)) {
           unit_set_goto(unit2,0x41,(int)units[unit3].x,(int)units[unit3].y);
           return 0xffffffff;
         }
-        local_50 = 9999;
-        for (local_20 = 0; (int)local_20 < 8; local_20++) {
-          x2 = map_wrap_x((int)(char)(&dir_dx_table)[local_20] + (int)units[unit3].x);
-          iVar12 = (int)(char)(&dir_dy_table)[local_20] + (int)units[unit3].y;
-          y2 = map_in_bounds(x2,iVar12);
-          if ((((y2 != 0) && (y2 = tile_city_owner(x2,iVar12), y2 < 0)) &&
-              ((y2 = tile_unit_owner(x2,iVar12), y2 < 0 || (civ == y2)))) &&
+        best_threat = 9999;
+        for (dir = 0; (int)dir < 8; dir++) {
+          x2 = map_wrap_x((int)(char)(&dir_dx_table)[dir] + (int)units[unit3].x);
+          value = (int)(char)(&dir_dy_table)[dir] + (int)units[unit3].y;
+          y2 = map_in_bounds(x2,value);
+          if ((((y2 != 0) && (y2 = tile_city_owner(x2,value), y2 < 0)) &&
+              ((y2 = tile_unit_owner(x2,value), y2 < 0 || (civ == y2)))) &&
              (y2 = map_distance(*(i32 *)x,*(i32 *)y,x2,
-                                          iVar12), y2 <= local_10 - 1)) {
+                                          value), y2 <= best_score - 1)) {
             nearest_city_dist = 9999;
-            local_c = -1;
+            nearest_city = -1;
             for (city = 0; city < game.num_cities; city++) {
               if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-                 (y2 = map_distance(x2,iVar12,(int)cities[city].x,
+                 (y2 = map_distance(x2,value,(int)cities[city].x,
                                               (int)cities[city].y), y2 < nearest_city_dist)) {
-                local_c = city;
+                nearest_city = city;
                 nearest_city_dist = y2;
               }
             }
-            if (local_c < 0) {
+            if (nearest_city < 0) {
               nearest_city_dist = 0;
             }
-            if (nearest_city_dist < local_50) {
-              local_50 = nearest_city_dist;
+            if (nearest_city_dist < best_threat) {
+              best_threat = nearest_city_dist;
             }
           }
         }
-        if (local_10 + local_50 <= local_14) {
+        if (best_score + best_threat <= range_left) {
           unit_set_goto(unit2,0x41,(int)units[unit3].x,(int)units[unit3].y);
           return 0xffffffff;
         }
@@ -2520,24 +2520,24 @@ LAB_00537ec2:
       city = 0;
       do {
         if (game.num_cities <= city) {
-          local_10 = 999;
+          best_score = 999;
           city2 = -1;
           for (city = 0; city < game.num_cities; city++) {
             if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-               ((iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
+               ((value = map_distance(*(i32 *)x,*(i32 *)y,
                                              (int)cities[city].x,(int)cities[city].y),
-                iVar12 <= local_14 &&
-                (iVar12 = map_distance(x3,y3,(int)cities[city].x,
-                                             (int)cities[city].y), iVar12 < local_10)))) {
+                value <= range_left &&
+                (value = map_distance(x3,y3,(int)cities[city].x,
+                                             (int)cities[city].y), value < best_score)))) {
               city2 = city;
-              local_10 = iVar12;
+              best_score = value;
             }
           }
           if (-1 < city2) {
             unit_set_goto(unit2,0x61,(int)cities[city2].x,(int)cities[city2].y);
             return 0xffffffff;
           }
-          if (param_7 != 0) {
+          if (may_go_home != 0) {
             unit_go_home(unit2);
             return 0xffffffff;
           }
@@ -2547,17 +2547,17 @@ LAB_00537ec2:
         if (((cities[city].id != 0) &&
             (((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)) != 0)) &&
            ((cities[city].flags & 0x10000) != 0)) {
-          local_24 = map_distance(x3,y3,(int)cities[city].x,
+          city_dist = map_distance(x3,y3,(int)cities[city].x,
                                         (int)cities[city].y);
           if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 0x10) == 0) {
             if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) & 0x20) == 0) {
-              local_24 = local_24 << 1;
+              city_dist = city_dist << 1;
             }
             if ((*(byte *)&civs[civ].treaties[cities[city].owner] & 4) != 0)
             goto LAB_00538277;
           }
-          if (local_24 < local_10) {
-            local_10 = local_24;
+          if (city_dist < best_score) {
+            best_score = city_dist;
             x3 = (int)cities[city].x;
             y3 = (int)cities[city].y;
           }
@@ -2566,17 +2566,17 @@ LAB_00538277:
         city++;
       } while( true );
     }
-    if (param_7 != 0) {
+    if (may_go_home != 0) {
       unit_go_home(unit2);
       return 0xffffffff;
     }
   }
-  if (((param_5 == 0) && (unit_types[units[unit2].type].range != '\0')) &&
+  if (((mode == 0) && (unit_types[units[unit2].type].range != '\0')) &&
      ((char)unit_types[unit_type].attack < 'c')) {
     if (units[unit2].orders == 11) {
-      if ((units[unit2].counter == '\0') && (param_9 != 0)) {
-        *(i32 *)param_6 = 1;
-        if (*(int *)param_6 != 0) {
+      if ((units[unit2].counter == '\0') && (set_flag != 0)) {
+        *(i32 *)out_flag = 1;
+        if (*(int *)out_flag != 0) {
           return 0xfffffffe;
         }
         return 0xffffffff;
@@ -2584,15 +2584,15 @@ LAB_00538277:
     }
     else {
       unit3 = -1;
-      local_10 = -9999;
+      best_score = -9999;
       if ((((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) &&
          ((game.turn == 1 &&
-          ((scenario_objective_civ == civ && (iVar12 = tile_unit_owner(0x2d,0x35), -1 < iVar12)))))) {
+          ((scenario_objective_civ == civ && (value = tile_unit_owner(0x2d,0x35), -1 < value)))))) {
         unit_set_goto(unit2,0x42,0x2d,0x35);
-        if (param_9 != 0) {
-          *(i32 *)param_6 = 1;
+        if (set_flag != 0) {
+          *(i32 *)out_flag = 1;
         }
-        if (*(int *)param_6 != 0) {
+        if (*(int *)out_flag != 0) {
           return 0xfffffffe;
         }
         return 0xffffffff;
@@ -2600,29 +2600,29 @@ LAB_00538277:
       for (city = 0; city < game.num_cities; city++) {
         if (((cities[city].id != 0) && (cities[city].owner != civ)) &&
            ((*(byte *)&civs[civ].treaties[cities[city].owner] & 6) == 0)) {
-          iVar12 = map_distance(*(i32 *)x,*(i32 *)y,
+          value = map_distance(*(i32 *)x,*(i32 *)y,
                                       (int)cities[city].x,(int)cities[city].y);
           y2 = unit_moves_left(unit2);
-          if ((iVar12 <= y2 / (int)(uint)cosmic.road_move_mult) &&
-             (iVar12 = tile_first_unit((int)cities[city].x,(int)cities[city].y),
-             -1 < iVar12)) {
-            cVar2 = cities[city].size;
-            iVar12 = unit_stack_sum(iVar12,2);
-            local_8 = cVar2 * 10 + iVar12 * -0x19;
-            iVar12 = tile_landmass((int)cities[city].x,(int)cities[city].y);
-            if (iVar12 == param_8) {
-              local_8 += 0x28;
+          if ((value <= y2 / (int)(uint)cosmic.road_move_mult) &&
+             (value = tile_first_unit((int)cities[city].x,(int)cities[city].y),
+             -1 < value)) {
+            small_val = cities[city].size;
+            value = unit_stack_sum(value,2);
+            score = small_val * 10 + value * -0x19;
+            value = tile_landmass((int)cities[city].x,(int)cities[city].y);
+            if (value == landmass) {
+              score += 0x28;
             }
-            for (local_20 = 0; (int)local_20 < 8; local_20++) {
-              x2 = map_wrap_x((int)cities[city].x + (int)(char)(&dir_dx_table)[local_20]);
-              iVar12 = (int)cities[city].y + (int)(char)(&dir_dy_table)[local_20];
-              y2 = map_in_bounds(x2,iVar12);
-              if ((y2 != 0) && (iVar12 = tile_unit_owner(x2,iVar12), iVar12 == civ)) {
-                local_8 += 0x3c;
+            for (dir = 0; (int)dir < 8; dir++) {
+              x2 = map_wrap_x((int)cities[city].x + (int)(char)(&dir_dx_table)[dir]);
+              value = (int)cities[city].y + (int)(char)(&dir_dy_table)[dir];
+              y2 = map_in_bounds(x2,value);
+              if ((y2 != 0) && (value = tile_unit_owner(x2,value), value == civ)) {
+                score += 0x3c;
               }
             }
-            if (local_10 <= local_8) {
-              local_10 = local_8;
+            if (best_score <= score) {
+              best_score = score;
               unit3 = city;
             }
           }
@@ -2630,10 +2630,10 @@ LAB_00538277:
       }
       if (-1 < unit3) {
         unit_set_goto(unit2,0x42,(int)cities[unit3].x,(int)cities[unit3].y);
-        if (param_9 != 0) {
-          *(i32 *)param_6 = 1;
+        if (set_flag != 0) {
+          *(i32 *)out_flag = 1;
         }
-        if (*(int *)param_6 != 0) {
+        if (*(int *)out_flag != 0) {
           return 0xfffffffe;
         }
         return 0xffffffff;
@@ -2646,319 +2646,319 @@ LAB_00538277:
 #undef scenario_objective_civ
 #undef x3
 #undef unit3
-#undef local_50
-#undef local_4c
+#undef best_threat
+#undef home_dist
 #undef city
-#undef local_30
+#undef threat_score
 #undef y3
-#undef local_24
-#undef local_20
-#undef local_1c
+#undef city_dist
+#undef dir
+#undef defense_power
 #undef city2
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef range_left
+#undef best_score
+#undef nearest_city
+#undef score
 
 /* 00538a29 auto */
 #define mp_double_production (*(short *)((u8 *)&g.d_00654fac))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define local_188 (*(int *)(frame_ + FRAME_OFF(0)))
+#define cargo_target (*(int *)(frame_ + FRAME_OFF(0)))
 #define x4 (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_170 (*(uint *)(frame_ + FRAME_OFF(24)))
-#define local_16c (*(int *)(frame_ + FRAME_OFF(28)))
+#define work_flags (*(uint *)(frame_ + FRAME_OFF(24)))
+#define goal_match (*(int *)(frame_ + FRAME_OFF(28)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(32)))
 #define city6 (*(uptr *)(frame_ + FRAME_OFF(40)))
-#define local_158 (*(int *)(frame_ + FRAME_OFF(48)))
+#define in_enemy_zoc (*(int *)(frame_ + FRAME_OFF(48)))
 #define civ4 (*(int *)(frame_ + FRAME_OFF(60)))
-#define local_144 (*(int *)(frame_ + FRAME_OFF(68)))
-#define local_140 (*(int *)(frame_ + FRAME_OFF(72)))
+#define unit_domain (*(int *)(frame_ + FRAME_OFF(68)))
+#define trade_target (*(int *)(frame_ + FRAME_OFF(72)))
 #define city (*(uptr *)(frame_ + FRAME_OFF(84)))
-#define local_11c (*(uptr *)(frame_ + FRAME_OFF(108)))
-#define local_118 (*(int *)(frame_ + FRAME_OFF(112)))
-#define local_114 (*(int *)(frame_ + FRAME_OFF(116)))
-#define local_110 (*(uptr *)(frame_ + FRAME_OFF(120)))
+#define needed_defenders (*(uptr *)(frame_ + FRAME_OFF(108)))
+#define is_attack (*(int *)(frame_ + FRAME_OFF(112)))
+#define sea_south (*(int *)(frame_ + FRAME_OFF(116)))
+#define ally_civ (*(uptr *)(frame_ + FRAME_OFF(120)))
 #define y4 (*(int *)(frame_ + FRAME_OFF(124)))
-#define local_104 (*(int *)(frame_ + FRAME_OFF(132)))
-#define local_fc (*(int *)(frame_ + FRAME_OFF(140)))
-#define local_f4 (*(int *)(frame_ + FRAME_OFF(148)))
-#define local_f0 (*(int *)(frame_ + FRAME_OFF(152)))
+#define near_landmass (*(int *)(frame_ + FRAME_OFF(132)))
+#define max_score (*(int *)(frame_ + FRAME_OFF(140)))
+#define fort_need (*(int *)(frame_ + FRAME_OFF(148)))
+#define ally_territory (*(int *)(frame_ + FRAME_OFF(152)))
 #define y3 (*(int *)(frame_ + FRAME_OFF(160)))
-#define local_e4 (*(uint *)(frame_ + FRAME_OFF(164)))
-#define local_e0 (*(int *)(frame_ + FRAME_OFF(168)))
-#define local_dc (*(int *)(frame_ + FRAME_OFF(172)))
-#define local_d8 (*(uint *)(frame_ + FRAME_OFF(176)))
+#define ai_role (*(uint *)(frame_ + FRAME_OFF(164)))
+#define tile_count (*(int *)(frame_ + FRAME_OFF(168)))
+#define needs_units (*(int *)(frame_ + FRAME_OFF(172)))
+#define damage_level (*(uint *)(frame_ + FRAME_OFF(176)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(180)))
 #define x3 (*(iptr *)(frame_ + FRAME_OFF(184)))
 #define unit4 (*(uptr *)(frame_ + FRAME_OFF(188)))
-#define local_c8 (*(uptr *)(frame_ + FRAME_OFF(192)))
-#define local_c4 (*(uint *)(frame_ + FRAME_OFF(196)))
-#define local_c0 (*(i32 *)(frame_ + FRAME_OFF(200)))
-#define local_bc (*(uint *)(frame_ + FRAME_OFF(204)))
-#define local_b8 (*(int *)(frame_ + FRAME_OFF(208)))
-#define local_b4 (*(int *)(frame_ + FRAME_OFF(212)))
-#define local_b0 (*(int *)(frame_ + FRAME_OFF(216)))
-#define local_ac (*(int *)(frame_ + FRAME_OFF(220)))
-#define local_a8 (*(uint *)(frame_ + FRAME_OFF(224)))
-#define local_a4 (*(int *)(frame_ + FRAME_OFF(228)))
-#define local_a0 (*(u32 *)(frame_ + FRAME_OFF(232)))
-#define local_9c (*(int *)(frame_ + FRAME_OFF(236)))
+#define best_dir (*(uptr *)(frame_ + FRAME_OFF(192)))
+#define flag (*(uint *)(frame_ + FRAME_OFF(196)))
+#define explore_flag (*(i32 *)(frame_ + FRAME_OFF(200)))
+#define on_fortress (*(uint *)(frame_ + FRAME_OFF(204)))
+#define sea_north (*(int *)(frame_ + FRAME_OFF(208)))
+#define goto_city (*(int *)(frame_ + FRAME_OFF(212)))
+#define role_count (*(int *)(frame_ + FRAME_OFF(216)))
+#define attack_bonus (*(int *)(frame_ + FRAME_OFF(220)))
+#define room_aboard (*(uint *)(frame_ + FRAME_OFF(224)))
+#define has_orders (*(int *)(frame_ + FRAME_OFF(228)))
+#define type_flags (*(u32 *)(frame_ + FRAME_OFF(232)))
+#define defender_count (*(int *)(frame_ + FRAME_OFF(236)))
 #define unit5 (*(iptr *)(frame_ + FRAME_OFF(240)))
-#define local_94 (*(int *)(frame_ + FRAME_OFF(244)))
-#define local_90 (*(int *)(frame_ + FRAME_OFF(248)))
+#define retried (*(int *)(frame_ + FRAME_OFF(244)))
+#define hold_pos (*(int *)(frame_ + FRAME_OFF(248)))
 #define x6 (*(int *)(frame_ + FRAME_OFF(252)))
 #define city4 (*(uptr *)(frame_ + FRAME_OFF(256)))
-#define local_84 (*(int *)(frame_ + FRAME_OFF(260)))
+#define home_dist (*(int *)(frame_ + FRAME_OFF(260)))
 #define terrain2 (*(uptr *)(frame_ + FRAME_OFF(264)))
-#define local_7c (*(uptr *)(frame_ + FRAME_OFF(268)))
+#define dir2 (*(uptr *)(frame_ + FRAME_OFF(268)))
 #define civ2 (*(uptr *)(frame_ + FRAME_OFF(272)))
 #define y2 (*(uint *)(frame_ + FRAME_OFF(276)))
-#define local_70 (*(int *)(frame_ + FRAME_OFF(280)))
-#define local_6c (*(uint *)(frame_ + FRAME_OFF(284)))
-#define local_68 (*(int *)(frame_ + FRAME_OFF(288)))
-#define local_64 (*(int *)(frame_ + FRAME_OFF(292)))
-#define local_60 (*(uptr *)(frame_ + FRAME_OFF(296)))
+#define cand_score (*(int *)(frame_ + FRAME_OFF(280)))
+#define is_ocean (*(uint *)(frame_ + FRAME_OFF(284)))
+#define explore (*(int *)(frame_ + FRAME_OFF(288)))
+#define attack_cost (*(int *)(frame_ + FRAME_OFF(292)))
+#define dir (*(uptr *)(frame_ + FRAME_OFF(296)))
 #define civ3 (*(uptr *)(frame_ + FRAME_OFF(300)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(304)))
+#define own_landmass (*(int *)(frame_ + FRAME_OFF(304)))
 #define unit3 (*(iptr *)(frame_ + FRAME_OFF(308)))
-#define local_50 (*(int *)(frame_ + FRAME_OFF(312)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(316)))
-#define local_48 (*(int *)(frame_ + FRAME_OFF(320)))
+#define will_attack (*(int *)(frame_ + FRAME_OFF(312)))
+#define sea_east (*(int *)(frame_ + FRAME_OFF(316)))
+#define is_guard (*(int *)(frame_ + FRAME_OFF(320)))
 #define city5 (*(uptr *)(frame_ + FRAME_OFF(324)))
 #define city2 (*(uptr *)(frame_ + FRAME_OFF(328)))
-#define local_3c (*(int *)(frame_ + FRAME_OFF(332)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(336)))
-#define local_34 (*(int *)(frame_ + FRAME_OFF(340)))
-#define local_30 (*(int *)(frame_ + FRAME_OFF(344)))
-#define local_2c (*(uint *)(frame_ + FRAME_OFF(348)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(352)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(356)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(360)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(364)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(368)))
-#define local_14 (*(uint *)(frame_ + FRAME_OFF(372)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(376)))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(380)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(384)))
+#define own_dist (*(int *)(frame_ + FRAME_OFF(332)))
+#define best_score (*(int *)(frame_ + FRAME_OFF(336)))
+#define freed_count (*(int *)(frame_ + FRAME_OFF(340)))
+#define divisor (*(int *)(frame_ + FRAME_OFF(344)))
+#define target_policy (*(uint *)(frame_ + FRAME_OFF(348)))
+#define sea_west (*(int *)(frame_ + FRAME_OFF(352)))
+#define race_behind (*(int *)(frame_ + FRAME_OFF(356)))
+#define no_moves (*(int *)(frame_ + FRAME_OFF(360)))
+#define here_landmass (*(int *)(frame_ + FRAME_OFF(364)))
+#define score (*(int *)(frame_ + FRAME_OFF(368)))
+#define tile_flags (*(uint *)(frame_ + FRAME_OFF(372)))
+#define attack_value (*(int *)(frame_ + FRAME_OFF(376)))
+#define tasks_mask (*(uint *)(frame_ + FRAME_OFF(380)))
+#define ocean_count (*(int *)(frame_ + FRAME_OFF(384)))
 i32 __cdecl ai_unit_choose_orders(void)
 
 {
-  uint *puVar1;
-  u8 uVar2;
-  ushort uVar3;
-  bool bVar4;
-  bool bVar5;
-  bool bVar6;
-  byte bVar7;
+  uint *treaty;
+  u8 stat;
+  ushort military;
+  bool forced_attack;
+  bool stay_home;
+  bool ally_near;
+  byte tile_byte;
   uptr civ;
-  i32 uVar10;
-  iptr iVar11;
-  iptr iVar12;
-  iptr iVar14;
+  i32 result;
+  iptr landmass;
+  iptr attitude;
+  iptr roll;
   int city7;
   uptr city3;
-  uptr uVar15;
-  iptr iVar13;
+  uptr quota;
+  iptr dest_landmass;
   iptr x;
   iptr x5;
   int y;
-  uptr uVar17;
-  uptr uVar18;
-  byte bVar8;
+  uptr here_imps;
+  uptr goto_imps;
+  byte owner_byte;
   uint terrain;
-  byte *pbVar25;
-  uptr uVar16;
-  int iVar26;
-  int iVar27;
+  byte *tile;
+  uptr road_imps;
+  int check;
+  int near_dist;
   uptr unit_type;
-  uint uVar28;
-  bool bVar29;
-  bool bVar30;
-  bool bVar31;
-  bool bVar32;
-  i32 uVar33;
+  uint policy;
+  bool is_settler;
+  bool settler_type;
+  bool cond;
+  bool trade_drop;
+  i32 arg_hi;
   iptr unit2;
   i8 frame_[FRAME_OFF(392)] __attribute__((aligned(8)));  /* original stack frame */
-  local_9c = 0x108; local_11c = 0x64a8c19c; local_70 = 0x3bd; local_38 = 0; local_16c = 4;  /* stale stack the original reads (FRAME_PRESETS) */
+  defender_count = 0x108; needed_defenders = 0x64a8c19c; cand_score = 0x3bd; best_score = 0; goal_match = 4;  /* stale stack the original reads (FRAME_PRESETS) */
   
-  local_104 = -1;
-  local_58 = -1;
-  bVar30 = false;
-  bVar29 = false;
-  local_94 = 0;
-  local_90 = 0;
-  bVar5 = false;
-  local_a4 = 0;
-  bVar4 = false;
-  local_20 = 0;
-  local_48 = 0;
-  local_b4 = 0;
+  near_landmass = -1;
+  own_landmass = -1;
+  settler_type = false;
+  is_settler = false;
+  retried = 0;
+  hold_pos = 0;
+  stay_home = false;
+  has_orders = 0;
+  forced_attack = false;
+  no_moves = 0;
+  is_guard = 0;
+  goto_city = 0;
   unit = (iptr)game.active_unit;
-  bVar8 = units[unit].owner;
-  civ = (uptr)(char)bVar8;
+  owner_byte = units[unit].owner;
+  civ = (uptr)(char)owner_byte;
   if (civ == 0) {
-    uVar10 = ai_barbarian_unit_move();
-    return uVar10;
+    result = ai_barbarian_unit_move();
+    return result;
   }
   if ((3 < units[unit].orders) && (units[unit].orders < '\n')) goto LAB_005436c1;
   x2 = (int)units[unit].x;
   y3 = (int)units[unit].y;
   unit_type = (uptr)units[unit].type;
-  local_c8 = 8;
-  iVar27 = map_in_bounds(x2,y3);
-  if (iVar27 == 0) {
+  best_dir = 8;
+  near_dist = map_in_bounds(x2,y3);
+  if (near_dist == 0) {
     unit_set_sleep(unit);
     goto LAB_005436c1;
   }
-  local_158 = tile_in_enemy_zoc(x2,y3,civ);
+  in_enemy_zoc = tile_in_enemy_zoc(x2,y3,civ);
   city4 = city_find_nearest(x2,y3,-1,0xffffffff,-1);
-  iVar27 = nearest_city_dist;
+  near_dist = nearest_city_dist;
   if (-1 < (int)city4) {
-    local_104 = tile_land_landmass((int)cities[city4].x,(int)cities[city4].y);
+    near_landmass = tile_land_landmass((int)cities[city4].x,(int)cities[city4].y);
   }
   city2 = city_find_nearest(x2,y3,civ,0xffffffff,-1);
-  local_3c = nearest_city_dist;
+  own_dist = nearest_city_dist;
   if (-1 < (int)city2) {
-    local_58 = tile_land_landmass((int)cities[city2].x,(int)cities[city2].y);
+    own_landmass = tile_land_landmass((int)cities[city2].x,(int)cities[city2].y);
   }
-  bVar7 = tile_terrain(x2,y3);
-  terrain2 = (uptr)bVar7;
-  iVar11 = tile_landmass(x2,y3);
-  uVar10 = tile_improvements(x2,y3);
-  local_bc = (uint)(((byte)uVar10 & 0x42) == 0x40);
-  if (((8 < local_3c) || (iVar11 != local_58)) &&
-     ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0)) {
+  tile_byte = tile_terrain(x2,y3);
+  terrain2 = (uptr)tile_byte;
+  landmass = tile_landmass(x2,y3);
+  result = tile_improvements(x2,y3);
+  on_fortress = (uint)(((byte)result & 0x42) == 0x40);
+  if (((8 < own_dist) || (landmass != own_landmass)) &&
+     ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) {
     units[unit].flags = units[unit].flags & 0xfdff;
   }
-  local_e4 = ai_unit_role(unit);
-  local_a0 = unit_types[units[unit].type].flags;
-  local_144 = (int)(char)unit_types[units[unit].type].domain;
-  uVar28 = (uint)civs[civ].continent_policy[iVar11];
-  if (((local_158 != 0) && (adjacent_foreign_civ != 0)) &&
+  ai_role = ai_unit_role(unit);
+  type_flags = unit_types[units[unit].type].flags;
+  unit_domain = (int)(char)unit_types[units[unit].type].domain;
+  policy = (uint)civs[civ].continent_policy[landmass];
+  if (((in_enemy_zoc != 0) && (adjacent_foreign_civ != 0)) &&
      ((city2 == city4 && ((*(byte *)&civs[civ].treaties[adjacent_foreign_civ] & 4) != 0))
      )) {
     civ_adjust_attitude(civ,adjacent_foreign_civ,1);
     if ((((1 << ((byte)adjacent_foreign_civ & 0x1f) & (uint)game.human_players) != 0) &&
         (2 < game.difficulty)) &&
-       ((iVar12 = civ_get_attitude(civ,adjacent_foreign_civ), 0x3c < iVar12 &&
+       ((attitude = civ_get_attitude(civ,adjacent_foreign_civ), 0x3c < attitude &&
         ((game.power_rank[civ] < game.power_rank[adjacent_foreign_civ] &&
-         (iVar14 = rand_range(0,3), iVar14 == 0)))))) {
-      puVar1 = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + adjacent_foreign_civ * 4);
-      *puVar1 = *puVar1 | 0x20;
+         (roll = rand_range(0,3), roll == 0)))))) {
+      treaty = (uint *)(civ * 0x594 + ADDR(0x64c6c0, ((u8 *)&civs + 32)) + adjacent_foreign_civ * 4);
+      *treaty = *treaty | 0x20;
     }
   }
   city3 = city4;
-  if (((((iVar27 == 1) && (city2 != city4)) && (local_144 == 0)) &&
+  if (((((near_dist == 1) && (city2 != city4)) && (unit_domain == 0)) &&
       (((char)unit_types[units[unit].type].role < 6 &&
        (city7 = tile_unit_owner((int)cities[city4].x,(int)cities[city4].y), city7 < 0)))) &&
      ((*(byte *)&civs[civ].treaties[cities[city3].owner] & 0xe) == 0)) {
     units[unit].orders = -1;
-    local_158 = 1;
+    in_enemy_zoc = 1;
     adjacent_foreign_civ = (iptr)cities[city3].owner;
-    bVar4 = true;
+    forced_attack = true;
   }
-  local_d8 = (uint)(units[unit].damage != '\0');
+  damage_level = (uint)(units[unit].damage != '\0');
   if ((int)(char)unit_types[unit_type].hit_points >> 2 < (int)(uint)units[unit].damage) {
-    local_d8 = 2;
+    damage_level = 2;
   }
   if ((int)(char)unit_types[unit_type].hit_points >> 1 < (int)(uint)units[unit].damage) {
-    local_d8 = 3;
+    damage_level = 3;
   }
   if ((unit_types[units[unit].type].hold != '\0') &&
      (city7 = unit_moves_left(unit), city7 == 0)) {
-    local_20 = 1;
+    no_moves = 1;
     goto LAB_0053be12;
   }
-  if (local_d8 != 0) {
-    local_f0 = 0;
+  if (damage_level != 0) {
+    ally_territory = 0;
     civ2 = tile_radius_civ(x2,y3);
     if ((((0 < (int)civ2) && ((*(byte *)&civs[civ].treaties[civ2] & 4) != 0)) &&
         ((*(byte *)&civs[civ].treaties[civ2] & 8) == 0)) &&
        ((int)((uint)civs[civ2].reputation - (int)civs[civ].field_48[civ2])
         < 6)) {
-      local_f0 = 1;
+      ally_territory = 1;
     }
-    if (iVar27 != 0) {
-      if (iVar27 == 1) {
+    if (near_dist != 0) {
+      if (near_dist == 1) {
         if (city4 == city2) {
           unit_set_goto(unit,100,(int)cities[city4].x,(int)cities[city4].y);
           goto LAB_005436c1;
         }
-        if (bVar4) {
-          local_d8 = 0;
+        if (forced_attack) {
+          damage_level = 0;
         }
       }
       goto LAB_005392a6;
     }
-    local_90 = 1;
-    local_48 = 1;
+    hold_pos = 1;
+    is_guard = 1;
     goto LAB_0053b8f0;
   }
 LAB_005392a6:
-  if ((((((local_d8 == 0) || (units[unit].moves_used != '\0')) ||
-        ((local_f0 != 0 || ((local_144 != 1 || (unit_types[units[unit].type].range != '\0')))))
+  if ((((((damage_level == 0) || (units[unit].moves_used != '\0')) ||
+        ((ally_territory != 0 || ((unit_domain != 1 || (unit_types[units[unit].type].range != '\0')))))
         ) || (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 != 0)) ||
-      ((local_3c < 0xd || (units[unit].visibility != '\0')))) ||
-     (((local_d8 != 2 && ((units[unit].flags & 8) == 0)) &&
-      ((((local_d8 != 3 || (local_3c == 0)) || (local_3c < 0x18)) || (iVar27 < 9)))))) {
+      ((own_dist < 0xd || (units[unit].visibility != '\0')))) ||
+     (((damage_level != 2 && ((units[unit].flags & 8) == 0)) &&
+      ((((damage_level != 3 || (own_dist == 0)) || (own_dist < 0x18)) || (near_dist < 9)))))) {
     units[unit].flags = units[unit].flags & 0xfff7;
-    if (((((local_d8 != 0) && (units[unit].moves_used == '\0')) && (local_f0 == 0)) &&
-        ((local_144 == 0 ||
-         (((local_144 == 2 && (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
-          ((local_d8 == 1 || ((int)(uint)units[unit].damage >> 1 <= local_3c / 2)))))))) &&
-       (((local_144 != 2 || ((game.human_players & units[unit].visibility) == 0)) &&
-        ((local_d8 == 3 ||
-         (((int)(char)unit_types[units[unit].type].role != uVar28 || (local_144 == 2)))))))) {
-      if (local_144 == 0) {
-        bVar31 = local_158 == 0;
+    if (((((damage_level != 0) && (units[unit].moves_used == '\0')) && (ally_territory == 0)) &&
+        ((unit_domain == 0 ||
+         (((unit_domain == 2 && (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
+          ((damage_level == 1 || ((int)(uint)units[unit].damage >> 1 <= own_dist / 2)))))))) &&
+       (((unit_domain != 2 || ((game.human_players & units[unit].visibility) == 0)) &&
+        ((damage_level == 3 ||
+         (((int)(char)unit_types[units[unit].type].role != policy || (unit_domain == 2)))))))) {
+      if (unit_domain == 0) {
+        cond = in_enemy_zoc == 0;
       }
       else {
         city7 = tile_adjacent_nonallied_unit(x2,y3,civ);
         if (city7 == 0) {
-          bVar31 = true;
+          cond = true;
         }
         else {
-          bVar31 = false;
+          cond = false;
         }
       }
-      if (bVar31) {
+      if (cond) {
         units[unit].field_0c = 'd';
-        local_c8 = 8;
-        city3 = local_c8;
+        best_dir = 8;
+        city3 = best_dir;
         goto LAB_005435ca;
       }
     }
-    if (((local_d8 == 2) && (local_144 == 2)) &&
-       ((local_e4 == 2 ||
-        ((local_e4 == 4 && (city7 = unit_stack_sum(unit,2), city7 < 2)))))) {
+    if (((damage_level == 2) && (unit_domain == 2)) &&
+       ((ai_role == 2 ||
+        ((ai_role == 4 && (city7 = unit_stack_sum(unit,2), city7 < 2)))))) {
       unit_go_home(unit);
       city7 = unit_moves_left(unit);
       if (city7 == 0) goto LAB_005436c1;
       if (units[unit].orders == 11) {
-        local_a4 = 1;
+        has_orders = 1;
         goto LAB_005414d7;
       }
     }
-    if (local_d8 == 3) {
+    if (damage_level == 3) {
       units[unit].field_0c = 'D';
-      if (((local_144 == 0) && ((int)local_e4 < 2)) &&
+      if (((unit_domain == 0) && ((int)ai_role < 2)) &&
          (((((units[unit].flags & 0x100) != 0 ||
             (2 < (char)terrain_types[terrain2].defense)) &&
-           ((((local_e4 == 1 ||
+           ((((ai_role == 1 ||
               (city7 = unit_max_moves(unit), city7 <= (int)(uint)cosmic.road_move_mult))
-             || (local_158 == 0)) || (8 < local_3c)))) && (local_f0 == 0)))) {
-        local_c8 = 8;
-        city3 = local_c8;
+             || (in_enemy_zoc == 0)) || (8 < own_dist)))) && (ally_territory == 0)))) {
+        best_dir = 8;
+        city3 = best_dir;
       }
       else {
-        if (((local_144 != 0) || (local_bc == 0)) || (local_f0 != 0)) {
-          if (((local_e4 != 4) || (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
+        if (((unit_domain != 0) || (on_fortress == 0)) || (ally_territory != 0)) {
+          if (((ai_role != 4) || (city7 = unit_stack_sum(unit,2), city7 < 2)) &&
              ((unit_go_home(unit), units[unit].orders == 11 ||
               (city7 = unit_moves_left(unit), city7 == 0)))) goto LAB_005436c1;
           goto LAB_005397e7;
         }
-        local_c8 = 8;
-        city3 = local_c8;
+        best_dir = 8;
+        city3 = best_dir;
       }
     }
     else {
@@ -2967,15 +2967,15 @@ LAB_005397e7:
           (civ != 1)) ||
          (((((*(i8 *)((char *)&civs[1].treaties[3] + 1)) & 0x20) != 0 || (5 < game.turn)) ||
           (0x4f < units[unit].x)))) {
-        if (((local_144 == 0) && (local_3c == 0)) &&
+        if (((unit_domain == 0) && (own_dist == 0)) &&
            (((units[unit].flags & 0x100) == 0 &&
-            (((cities[city2].flags & 0x200) != 0 && (uVar28 != local_e4)))))) {
-          bVar5 = true;
+            (((cities[city2].flags & 0x200) != 0 && (policy != ai_role)))))) {
+          stay_home = true;
         }
         else {
-          if (local_144 == 1) {
-            unit4 = ai_air_unit_orders(unit,unit_type,(iptr)&x2,(iptr)&y3,local_e4,
-                                          (iptr)&local_a4,local_3c,iVar11,local_158);
+          if (unit_domain == 1) {
+            unit4 = ai_air_unit_orders(unit,unit_type,(iptr)&x2,(iptr)&y3,ai_role,
+                                          (iptr)&has_orders,own_dist,landmass,in_enemy_zoc);
             if (unit4 == 0xfffffffe) goto LAB_005414d7;
             if (unit4 == 0xffffffff) goto LAB_005436c1;
             city3 = unit4;
@@ -2987,19 +2987,19 @@ LAB_005397e7:
             y3 = (int)units[unit].y;
             goto LAB_005435ca;
           }
-          if (local_e4 == 6) {
+          if (ai_role == 6) {
             if ((((units[unit].orders == 11) &&
                  (city7 = city_at((int)units[unit].goto_x,
                                               (int)units[unit].goto_y), -1 < city7)) &&
                 ((int)cities[city7].owner != civ)) &&
                ((*(byte *)&civs[civ].treaties[cities[city7].owner] & 0xe) == 0)) {
-              local_a4 = 1;
+              has_orders = 1;
             }
             else {
               city7 = tile_is_ocean(x2,y3);
               if (city7 == 0) {
-                local_24 = ai_spaceship_race_behind(civ);
-                local_38 = -999;
+                race_behind = ai_spaceship_race_behind(civ);
+                best_score = -999;
                 city6 = 0xffffffff;
                 for (city = 0; (int)city < (int)game.num_cities; city = city + 1
                     ) {
@@ -3007,21 +3007,21 @@ LAB_005397e7:
                     city7 = tile_landmass((int)cities[city].x,(int)cities[city].y);
                     y = tile_is_ocean(x2,y3);
                     if (y == 0) {
-                      if (city7 == iVar11) {
+                      if (city7 == landmass) {
 LAB_00539cb3:
                         civ2 = (uptr)cities[city].owner;
-                        local_70 = map_distance_diag(x2,y3,(int)cities[city].x,
+                        cand_score = map_distance_diag(x2,y3,(int)cities[city].x,
                                                       (int)cities[city].y);
                         if (((uint)(byte)units[unit].home_city % 3 != (int)city % 3) &&
                            (terrain = tile_improvements(x2,y3),
-                           (int)(((terrain & 0x10) >> 4) + 3) < local_70)) {
-                          local_70 += 8;
+                           (int)(((terrain & 0x10) >> 4) + 3) < cand_score)) {
+                          cand_score += 8;
                         }
                         if (civ2 == civ) {
-                          local_18 = 99 - local_70;
+                          score = 99 - cand_score;
                         }
                         else {
-                          local_18 = 100;
+                          score = 100;
                           if ((*(byte *)&civs[civ].treaties[civ2] & 0xe) != 0) {
                             if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) ||
                                 ((cities[city].flags & 8) != 0)) ||
@@ -3036,50 +3036,50 @@ LAB_00539cb3:
                                                civs[civ].num_advances)))))) ||
                                   (((*(byte *)&civs[civ].treaties[civ2] & 8) == 0 &&
                                    (((4 < civs[civ2].government &&
-                                     (civs[civ].continent_military[iVar11] <
-                                      civs[civ2].continent_attack[iVar11])) &&
-                                    (*(char *)&civs[civ].continent_cities[iVar11] != '\0')))))))))))
+                                     (civs[civ].continent_military[landmass] <
+                                      civs[civ2].continent_attack[landmass])) &&
+                                    (*(char *)&civs[civ].continent_cities[landmass] != '\0')))))))))))
                                ) goto LAB_00539b29;
-                            local_18 = local_18 / 2;
+                            score = score / 2;
                           }
                           if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) == 0) {
                             city7 = civ_get_attitude(civ,civ2);
-                            local_18 += city7;
+                            score += city7;
                           }
                           else {
-                            local_18 += 100;
+                            score += 100;
                           }
-                          local_18 = local_18 / (local_70 + 1);
+                          score = score / (cand_score + 1);
                           if ((cities[city].flags & 8) != 0) {
-                            local_18 = local_18 / 2;
+                            score = score / 2;
                             if (civs[civ].num_advances + 6 < (uint)civs[civ2].num_advances) {
-                              local_18 = local_18 / 2;
+                              score = score / 2;
                             }
-                            if (local_24 != 0) {
-                              local_18 = 1;
+                            if (race_behind != 0) {
+                              score = 1;
                             }
                           }
-                          local_18 += 100;
+                          score += 100;
                         }
-                        if (local_38 < local_18) {
-                          local_38 = local_18;
+                        if (best_score < score) {
+                          best_score = score;
                           city6 = city;
                         }
                       }
                     }
                     else {
-                      local_c4 = 0;
-                      for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                        x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                        y2 = (char)(&dir_dy_table)[local_60] + y3;
+                      flag = 0;
+                      for (dir = 0; (int)dir < 8; dir++) {
+                        x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                        y2 = (char)(&dir_dy_table)[dir] + y3;
                         y = map_in_bounds(x,y2);
                         if (((y != 0) && (y = tile_is_ocean(x,y2), y == 0)
                             ) && (y = tile_landmass(x,y2), y == city7)) {
-                          local_c4 = 1;
+                          flag = 1;
                           break;
                         }
                       }
-                      if (local_c4 != 0) goto LAB_00539cb3;
+                      if (flag != 0) goto LAB_00539cb3;
                     }
                   }
 LAB_00539b29: ;
@@ -3091,7 +3091,7 @@ LAB_00539b29: ;
                   }
                   goto LAB_005436c1;
                 }
-                local_a4 = 1;
+                has_orders = 1;
                 if ((units[unit].orders != 11) || ((int)cities[city6].owner != civ)) {
                   unit_set_goto(unit,0x53,(int)cities[city6].x,
                                      (int)cities[city6].y);
@@ -3100,43 +3100,43 @@ LAB_00539b29: ;
             }
             goto LAB_005414d7;
           }
-          if (local_e4 == 7) {
+          if (ai_role == 7) {
             if (units[unit].orders == 11) goto LAB_005436c1;
             city7 = tile_is_ocean(x2,y3);
             if (city7 != 0) {
               city6 = 0xffffffff;
-              local_38 = 0;
-              for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                y2 = (char)(&dir_dy_table)[local_60] + y3;
+              best_score = 0;
+              for (dir = 0; (int)dir < 8; dir++) {
+                x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                y2 = (char)(&dir_dy_table)[dir] + y3;
                 city7 = map_in_bounds(x,y2);
                 if (((city7 != 0) && (city7 = tile_is_ocean(x,y2), city7 == 0)) &&
                    (city7 = tile_landmass(x,y2),
                    *(char *)&civs[civ].continent_flags[city7] != '\0')) {
-                  local_18 = 0;
+                  score = 0;
                   for (civ2 = 1; (int)civ2 < 8; civ2++) {
                     if (civ2 == civ) {
-                      city7 = (int)(civs[civ].continent_city_size[iVar11] + 1) >> 1;
+                      city7 = (int)(civs[civ].continent_city_size[landmass] + 1) >> 1;
                     }
                     else {
-                      city7 = (uint)civs[civ].continent_city_size[iVar11] * 2;
+                      city7 = (uint)civs[civ].continent_city_size[landmass] * 2;
                     }
-                    local_18 += city7;
+                    score += city7;
                   }
-                  if (local_38 < local_18) {
-                    local_38 = local_18;
-                    city6 = local_60;
+                  if (best_score < score) {
+                    best_score = score;
+                    city6 = dir;
                   }
                 }
               }
               if (-1 < (int)city6) {
                 units[unit].field_0c = 't';
-                local_c8 = city6;
-                city3 = local_c8;
+                best_dir = city6;
+                city3 = best_dir;
                 goto LAB_005435ca;
               }
             }
-            local_38 = 0;
+            best_score = 0;
             city6 = 0xffffffff;
             if (units[unit].home_city == -1) {
               city5 = 0xffffffff;
@@ -3154,40 +3154,40 @@ LAB_00539b29: ;
             for (city = 0; (int)city < (int)game.num_cities; city++) {
               if ((cities[city].id != 0) &&
                  (city7 = tile_landmass((int)cities[city].x,(int)cities[city].y),
-                 city7 == iVar11)) {
-                local_c4 = 1;
-                for (local_60 = 0; (int)local_60 < (int)(char)cities[city5].trade_routes;
-                    local_60 = local_60 + 1) {
-                  if ((int)cities[city5].route_partner[local_60] == city) {
-                    local_c4 = 0;
+                 city7 == landmass)) {
+                flag = 1;
+                for (dir = 0; (int)dir < (int)(char)cities[city5].trade_routes;
+                    dir = dir + 1) {
+                  if ((int)cities[city5].route_partner[dir] == city) {
+                    flag = 0;
                   }
                 }
                 city7 = map_distance_diag((int)cities[city].x,(int)cities[city].y,
                                             (int)cities[city5].x,(int)cities[city5].y);
-                local_70 = (((int)cities[city5].base_trade + (int)cities[city].base_trade) *
+                cand_score = (((int)cities[city5].base_trade + (int)cities[city].base_trade) *
                            city7) / 0x18;
                 if ((int)cities[city].owner == civ) {
-                  local_70 = local_70 / 2;
+                  cand_score = cand_score / 2;
                 }
                 else {
-                  uVar33 = 100;
-                  uVar10 = 0;
+                  arg_hi = 100;
+                  result = 0;
                   x = civ_get_attitude(civ,(int)cities[city].owner);
-                  unit4 = int_clamp(x,uVar10,uVar33);
-                  local_70 = (int)((200 - unit4) * local_70) / 100;
+                  unit4 = int_clamp(x,result,arg_hi);
+                  cand_score = (int)((200 - unit4) * cand_score) / 100;
                 }
-                if (local_c4 == 0) {
-                  local_70 = local_70 / 2;
+                if (flag == 0) {
+                  cand_score = cand_score / 2;
                 }
-                local_70 = ((5 - (char)cities[city].trade_routes) * local_70) / 5;
-                if ((((-1 < (int)city4) && (city2 != city4)) && (iVar11 == local_104)) &&
+                cand_score = ((5 - (char)cities[city].trade_routes) * cand_score) / 5;
+                if ((((-1 < (int)city4) && (city2 != city4)) && (landmass == near_landmass)) &&
                    ((cities[city].owner != cities[city4].owner &&
-                    (local_70 = local_70 / 3,
+                    (cand_score = cand_score / 3,
                     ((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU)) != 0)))) {
-                  local_70 = local_70 / 2;
+                  cand_score = cand_score / 2;
                 }
-                if (local_38 < local_70) {
-                  local_38 = local_70;
+                if (best_score < cand_score) {
+                  best_score = cand_score;
                   city6 = city;
                 }
               }
@@ -3197,103 +3197,103 @@ LAB_00539b29: ;
               goto LAB_005436c1;
             }
             if (units[unit].home_city != -1) {
-              bVar7 = units[unit].home_city;
-              city7 = tile_landmass((int)cities[bVar7].x,(int)cities[bVar7].y);
-              if (city7 == iVar11) {
-                unit_set_goto(unit,99,(int)cities[bVar7].x,(int)cities[bVar7].y);
+              tile_byte = units[unit].home_city;
+              city7 = tile_landmass((int)cities[tile_byte].x,(int)cities[tile_byte].y);
+              if (city7 == landmass) {
+                unit_set_goto(unit,99,(int)cities[tile_byte].x,(int)cities[tile_byte].y);
                 goto LAB_005436c1;
               }
             }
           }
-          bVar29 = local_e4 == 5;
-          bVar30 = unit_types[units[unit].type].role == 5;
-          local_38 = tile_owner_or_fertility(x2,y3);
-          if (((iVar27 < 4) && (iVar11 == local_104)) && (7 < local_38)) {
-            local_38 = 8;
+          is_settler = ai_role == 5;
+          settler_type = unit_types[units[unit].type].role == 5;
+          best_score = tile_owner_or_fertility(x2,y3);
+          if (((near_dist < 4) && (landmass == near_landmass)) && (7 < best_score)) {
+            best_score = 8;
           }
           city7 = tile_is_ocean(x2,y3);
           if (city7 != 0) {
-            local_38 = 0;
+            best_score = 0;
           }
-          if ((((bVar29) &&
+          if ((((is_settler) &&
                (civ_clear_standing_goals_near(civ,5,x2,y3,0), civs[civ].num_cities == 0)) &&
               (game.turn == 1)) &&
              (((start_x[civs[civ].tribe] == x2 && (start_y[civs[civ].tribe] == y3))
-              && (7 < local_38)))) {
+              && (7 < best_score)))) {
             unit_found_city(unit,-1,0);
             return 1;
           }
           city = city4;
-          if (((local_38 != 0) && (((int)local_e4 < 2 || (bVar30)))) && (!bVar4)) {
-            local_c8 = 0xffffffff;
-            if (bVar29) {
-              local_e0 = 0x14;
+          if (((best_score != 0) && (((int)ai_role < 2 || (settler_type)))) && (!forced_attack)) {
+            best_dir = 0xffffffff;
+            if (is_settler) {
+              tile_count = 0x14;
             }
             else {
-              local_e0 = 8;
+              tile_count = 8;
             }
-            for (local_60 = 0; (int)local_60 < local_e0; local_60++) {
-              x = map_wrap_x((char)(&city_tile_dx_table)[local_60] + x2);
-              y2 = (char)(&city_tile_dy_table)[local_60] + y3;
+            for (dir = 0; (int)dir < tile_count; dir++) {
+              x = map_wrap_x((char)(&city_tile_dx_table)[dir] + x2);
+              y2 = (char)(&city_tile_dy_table)[dir] + y3;
               city7 = map_in_bounds(x,y2);
               if (((city7 != 0) && (city7 = tile_is_ocean(x,y2), city7 == 0)) &&
-                 (city7 = tile_landmass(x,y2), city7 == iVar11)) {
-                local_18 = tile_owner_or_fertility(x,y2);
-                if (local_38 < local_18) {
-                  local_c8 = local_60;
-                  local_38 = local_18;
+                 (city7 = tile_landmass(x,y2), city7 == landmass)) {
+                score = tile_owner_or_fertility(x,y2);
+                if (best_score < score) {
+                  best_dir = dir;
+                  best_score = score;
                 }
                 city7 = tile_has_hut(x,y2);
-                if (((city7 != 0) && ((int)local_e4 < 2)) && ((int)local_60 < 8)) {
-                  local_c8 = local_60;
+                if (((city7 != 0) && ((int)ai_role < 2)) && ((int)dir < 8)) {
+                  best_dir = dir;
                   units[unit].field_0c = 'U';
-                  city3 = local_c8;
+                  city3 = best_dir;
                   goto LAB_005435ca;
                 }
               }
             }
-            if (((7 < local_38) && (local_158 == 0)) &&
-               (((0xf - iVar27 <= local_38 ||
-                 (((bVar29 && ((int)local_c8 < 0)) &&
-                  (*(char *)&civs[civ].continent_cities[iVar11] == '\0')))) ||
-                (((bVar29 && ((int)local_c8 < 0)) &&
+            if (((7 < best_score) && (in_enemy_zoc == 0)) &&
+               (((0xf - near_dist <= best_score ||
+                 (((is_settler && ((int)best_dir < 0)) &&
+                  (*(char *)&civs[civ].continent_cities[landmass] == '\0')))) ||
+                (((is_settler && ((int)best_dir < 0)) &&
                  (units[unit].field_0e = units[unit].field_0e + 1,
                  4 < (char)units[unit].field_0e)))))) {
-              if (bVar29) {
-                if ((int)local_c8 < 0) {
+              if (is_settler) {
+                if ((int)best_dir < 0) {
                   unit_found_city(unit,-1,0);
                   return 1;
                 }
                 units[unit].field_0c = '2';
-                city3 = local_c8;
-                if ((int)local_c8 < 8) goto LAB_005435ca;
-                city7 = (char)(&city_tile_dy_table)[local_c8] + y3;
-                uVar10 = map_wrap_x((char)(&city_tile_dx_table)[local_c8] + x2);
-                unit_set_goto(unit,0x32,uVar10,city7);
+                city3 = best_dir;
+                if ((int)best_dir < 8) goto LAB_005435ca;
+                city7 = (char)(&city_tile_dy_table)[best_dir] + y3;
+                result = map_wrap_x((char)(&city_tile_dx_table)[best_dir] + x2);
+                unit_set_goto(unit,0x32,result,city7);
               }
-              else if ((-1 < (int)local_c8) && ((int)local_c8 < 8)) {
+              else if ((-1 < (int)best_dir) && ((int)best_dir < 8)) {
                 y = 2;
-                uVar33 = 5;
-                city7 = (char)(&city_tile_dy_table)[local_c8] + y3;
-                uVar10 = map_wrap_x((char)(&city_tile_dx_table)[local_c8] + x2);
-                civ_add_standing_goal(civ,uVar10,city7,uVar33,y);
+                arg_hi = 5;
+                city7 = (char)(&city_tile_dy_table)[best_dir] + y3;
+                result = map_wrap_x((char)(&city_tile_dx_table)[best_dir] + x2);
+                civ_add_standing_goal(civ,result,city7,arg_hi,y);
               }
             }
           }
-          if (((((((bVar29) && (game.difficulty != '\0')) && (-1 < (int)city4)) &&
+          if (((((((is_settler) && (game.difficulty != '\0')) && (-1 < (int)city4)) &&
                 ((city = city4,
                  ((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU)) != 0 &&
-                 (local_158 == 0)))) && (1 < iVar27)) &&
+                 (in_enemy_zoc == 0)))) && (1 < near_dist)) &&
               ((civs[civ].num_advances < civs[cities[city4].owner].num_advances &&
-               (local_18 = tile_get_fertility(x2,y3), 8 < local_18)))) &&
-             (0xe - iVar27 <= local_18)) {
+               (score = tile_get_fertility(x2,y3), 8 < score)))) &&
+             (0xe - near_dist <= score)) {
             unit_found_city(unit,-1,0);
             return 1;
           }
           if ((unit_types[units[unit].type].flags & 0x100) != 0) {
-            if (local_3c == 0) {
+            if (own_dist == 0) {
               if ((units[unit].moves_used == '\0') && (units[unit].orders != 11)) {
-                local_38 = 0;
+                best_score = 0;
                 for (city = 0; (int)city < (int)game.num_cities; city = city + 1
                     ) {
                   if ((((cities[city].id != 0) && ((int)cities[city].owner != civ)) &&
@@ -3303,17 +3303,17 @@ LAB_00539b29: ;
                                                            (int)cities[city].y),
                               city7 <= (int)(uint)cosmic.paradrop_range)) {
                     city7 = tile_unit_owner((int)cities[city].x,(int)cities[city].y);
-                    if ((city7 < 0) && (local_38 < cities[city].size + 999)) {
-                      local_38 = cities[city].size + 999;
+                    if ((city7 < 0) && (best_score < cities[city].size + 999)) {
+                      best_score = cities[city].size + 999;
                       x6 = (int)cities[city].x;
                       y4 = (int)cities[city].y;
                     }
-                    if (0 < local_38) {
-                      local_38 = 0;
+                    if (0 < best_score) {
+                      best_score = 0;
                       city6 = 0xffffffff;
-                      for (local_60 = 9; -1 < (int)local_60; local_60--) {
-                        x = map_wrap_x((char)(&dir_dx_table)[local_60] + x6);
-                        y2 = (char)(&dir_dy_table)[local_60] + y4;
+                      for (dir = 9; -1 < (int)dir; dir--) {
+                        x = map_wrap_x((char)(&dir_dx_table)[dir] + x6);
+                        y2 = (char)(&dir_dy_table)[dir] + y4;
                         city7 = map_in_bounds(x,y2);
                         if ((city7 != 0) &&
                            (city7 = map_distance(x2,y3,x,y2),
@@ -3324,21 +3324,21 @@ LAB_00539b29: ;
                             break;
                           }
                           if ((int)civ2 < 0) {
-                            local_18 = 0;
-                            if (local_60 == 8) {
-                              local_18 = 500;
+                            score = 0;
+                            if (dir == 8) {
+                              score = 500;
                             }
-                            uVar10 = tile_improvements(x,y2);
-                            if (((byte)uVar10 & 0x42) == 0x40) {
-                              local_18 += 0x32;
+                            result = tile_improvements(x,y2);
+                            if (((byte)result & 0x42) == 0x40) {
+                              score += 0x32;
                             }
-                            bVar7 = tile_terrain(x,y2);
-                            local_18 += (char)terrain_types[bVar7].defense * 3;
+                            tile_byte = tile_terrain(x,y2);
+                            score += (char)terrain_types[tile_byte].defense * 3;
                             city7 = map_distance(x2,y3,x,y2);
-                            local_18 += city7;
-                            if (local_38 < local_18) {
-                              city6 = local_60;
-                              local_38 = local_18;
+                            score += city7;
+                            if (best_score < score) {
+                              city6 = dir;
+                              best_score = score;
                             }
                           }
                         }
@@ -3354,26 +3354,26 @@ LAB_00539b29: ;
                 }
               }
               if (units[unit].orders != 11) {
-                local_90 = 1;
+                hold_pos = 1;
                 goto LAB_005414d7;
               }
             }
             else {
-              if (((city2 == city4) && (iVar11 == local_58)) &&
+              if (((city2 == city4) && (landmass == own_landmass)) &&
                  (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0)) {
                 unit_set_goto(unit,99,(int)cities[city].x,(int)cities[city].y);
                 goto LAB_005436c1;
               }
-              if ((local_bc != 0) && (city7 = unit_stack_sum(unit,2), city7 == 1)) {
+              if ((on_fortress != 0) && (city7 = unit_stack_sum(unit,2), city7 == 1)) {
                 units[unit].field_0c = 'F';
-                local_c8 = 8;
+                best_dir = 8;
                 goto LAB_005436c1;
               }
             }
           }
         }
         if ((unit_type == 9) && (units[unit].moves_used == '\0')) {
-          if (local_158 == 0) {
+          if (in_enemy_zoc == 0) {
             if ((char)units[unit].counter < 15) {
               units[unit].counter++;
             }
@@ -3382,57 +3382,57 @@ LAB_00539b29: ;
             units[unit].counter += 0xff;
           }
           if ('\t' < (char)units[unit].counter) {
-            local_bc = 0;
+            on_fortress = 0;
           }
-          if (local_bc != 0) {
-            local_38 = 9999;
+          if (on_fortress != 0) {
+            best_score = 9999;
             city6 = 0xffffffff;
             for (city = 0; (int)city < (int)game.num_cities; city++) {
               if ((((cities[city].id != 0) && (city != city4)) &&
                   (city7 = tile_landmass((int)cities[city].x,(int)cities[city].y),
-                  city7 == iVar11)) &&
-                 ((local_70 = map_distance_diag(x2,y3,(int)cities[city].x,
-                                                 (int)cities[city].y), local_70 < local_38 ||
-                  ((local_70 == local_38 && ((int)cities[city].owner == civ)))))) {
+                  city7 == landmass)) &&
+                 ((cand_score = map_distance_diag(x2,y3,(int)cities[city].x,
+                                                 (int)cities[city].y), cand_score < best_score ||
+                  ((cand_score == best_score && ((int)cities[city].owner == civ)))))) {
                 city6 = city;
-                local_38 = local_70;
+                best_score = cand_score;
               }
             }
             if ((city2 != city4) &&
                (((int)city6 < 0 || ((int)cities[city6].owner != civ)))) {
-              local_bc = 0;
+              on_fortress = 0;
             }
           }
         }
-        if ((((local_bc == 0) || (unit4 = tile_radius_civ(x2,y3), (int)unit4 < 1))
+        if ((((on_fortress == 0) || (unit4 = tile_radius_civ(x2,y3), (int)unit4 < 1))
             || (unit4 == civ)) ||
            ((((*(byte *)&civs[civ].treaties[unit4] & 4) != 0 &&
              ((int)((uint)civs[unit4].reputation -
                    (int)civs[civ].field_48[unit4]) < 7)) &&
-            (((*(byte *)&civs[civ].treaties[unit4] & 8) != 0 || (2 < local_3c)))))) {
+            (((*(byte *)&civs[civ].treaties[unit4] & 8) != 0 || (2 < own_dist)))))) {
 LAB_0053b8f0:
-          if (local_3c == 0) {
-            local_b0 = unit_stack_count_role(unit,1);
-            if (((local_e4 == 1) && (1 < local_b0)) || (local_e4 == 4)) {
+          if (own_dist == 0) {
+            role_count = unit_stack_count_role(unit,1);
+            if (((ai_role == 1) && (1 < role_count)) || (ai_role == 4)) {
               city7 = tile_zoc_unit_adjacent(x2,y3,civ);
               if (city7 == 0) {
-                local_30 = 4;
+                divisor = 4;
               }
               else {
-                local_30 = 3;
+                divisor = 3;
               }
               city7 = city_has_improvement(city2,1);
               if (city7 == 0) {
-                if (uVar28 == 5) {
-                  local_30++;
+                if (policy == 5) {
+                  divisor++;
                 }
               }
               else {
-                local_30--;
+                divisor--;
               }
-              uVar15 = (int)cities[city2].size / local_30 + 1;
+              quota = (int)cities[city2].size / divisor + 1;
               city7 = city_has_improvement(city2,1);
-              local_11c = uVar15;
+              needed_defenders = quota;
               if (city7 != 0) {
                 unit4 = 1;
                 if (3 < cities[city2].size) {
@@ -3444,33 +3444,33 @@ LAB_0053b8f0:
                 if (0xb < civs[civ].num_cities) {
                   unit4 = 4;
                 }
-                local_11c = unit4;
-                if ((int)unit4 <= (int)uVar15) {
-                  local_11c = uVar15;
+                needed_defenders = unit4;
+                if ((int)unit4 <= (int)quota) {
+                  needed_defenders = quota;
                 }
               }
             }
-            if (local_e4 == 1) {
-              if (local_b0 < 2) {
-                local_48 = 1;
+            if (ai_role == 1) {
+              if (role_count < 2) {
+                is_guard = 1;
               }
               else {
-                local_9c = unit_stack_best_defender(unit,-1);
-                if (unit == local_9c) {
-                  local_48 = 1;
+                defender_count = unit_stack_best_defender(unit,-1);
+                if (unit == defender_count) {
+                  is_guard = 1;
                 }
                 else {
-                  if (local_b0 < (int)local_11c) {
+                  if (role_count < (int)needed_defenders) {
                     civ_add_ai_goal(civ,x2,y3,1,3);
                   }
-                  if ((int)local_11c < local_b0) {
+                  if ((int)needed_defenders < role_count) {
                     unit4 = (uptr)units[unit].orders;
                     units[unit].orders = 2;
                     city7 = unit_stack_best_defender(unit,-1);
                     if ((city7 == unit) &&
-                       (city7 = unit_stack_sum(unit,4), city7 <= (int)local_11c)) {
+                       (city7 = unit_stack_sum(unit,4), city7 <= (int)needed_defenders)) {
                       units[unit].orders = (i8)unit4;
-                      local_48 = 1;
+                      is_guard = 1;
                     }
                     else {
                       units[unit].orders = (i8)unit4;
@@ -3482,7 +3482,7 @@ LAB_0053b8f0:
                     }
                   }
                   else {
-                    local_48 = 1;
+                    is_guard = 1;
                   }
                 }
               }
@@ -3490,84 +3490,84 @@ LAB_0053b8f0:
             else {
               city7 = unit_stack_sum(unit,2);
               if ((city7 < 2) &&
-                 ((civ_add_ai_goal(civ,x2,y3,1,5), !bVar30 ||
+                 ((civ_add_ai_goal(civ,x2,y3,1,5), !settler_type ||
                   (city7 = tile_zoc_unit_adjacent(x2,y3,civ), city7 != 0)))) {
-                local_48 = 1;
+                is_guard = 1;
               }
             }
           }
-          if (local_48 == 0) {
-            if (bVar5) {
-              local_90 = 1;
+          if (is_guard == 0) {
+            if (stay_home) {
+              hold_pos = 1;
             }
-            if (local_90 == 0) {
+            if (hold_pos == 0) {
 LAB_0053be12:
               do {
-                if (local_144 == 2) {
-                  local_c = 0;
-                  local_34 = 0;
-                  local_9c = 0;
+                if (unit_domain == 2) {
+                  tasks_mask = 0;
+                  freed_count = 0;
+                  defender_count = 0;
                   unit5 = unit;
                   for (unit = unit_stack_first(unit); unit2 = unit5, -1 < unit;
                       unit = unit_next_in_stack(unit)) {
                     if (unit_types[units[unit].type].domain == '\0') {
                       if (units[unit].orders == 2) {
-                        if (((local_3c == 0) && (local_9c = local_9c + 1, (int)local_11c < local_9c)
-                            ) && ((uVar28 == 4 || (local_34 == 0)))) {
+                        if (((own_dist == 0) && (defender_count = defender_count + 1, (int)needed_defenders < defender_count)
+                            ) && ((policy == 4 || (freed_count == 0)))) {
                           units[unit].orders = -1;
-                          local_c = local_c | 1 << (unit_types[units[unit].type].role & 0x1f);
-                          local_34++;
+                          tasks_mask = tasks_mask | 1 << (unit_types[units[unit].type].role & 0x1f);
+                          freed_count++;
                         }
                       }
                       else if ((unit_types[units[unit].type].role == 1) &&
-                              (local_9c < (int)local_11c)) {
-                        local_9c++;
+                              (defender_count < (int)needed_defenders)) {
+                        defender_count++;
                         units[unit].orders = 1;
                       }
                       else {
                         units[unit].orders = -1;
-                        local_c = local_c | 1 << (unit_types[units[unit].type].role & 0x1f);
-                        local_34++;
+                        tasks_mask = tasks_mask | 1 << (unit_types[units[unit].type].role & 0x1f);
+                        freed_count++;
                       }
                     }
                   }
                   unit = unit5;
-                  if (local_e4 == 2) {
+                  if (ai_role == 2) {
                     civ_clear_standing_goals_near(civ,2,x2,y3,0);
                     civ_clear_standing_goals_near(civ,0x12,x2,y3,0);
                   }
-                  if (local_e4 == 4) {
-                    if ((iVar27 == 0) && ((char)units[unit2].counter < '\0')) {
+                  if (ai_role == 4) {
+                    if ((near_dist == 0) && ((char)units[unit2].counter < '\0')) {
                       units[unit2].counter = (byte)game.turn & 7;
                     }
-                    if (((local_c & 0xffffff7f) == 0x20) &&
-                       (local_34 < (char)unit_types[units[unit2].type].hold)) {
-                      local_a8 = 1;
+                    if (((tasks_mask & 0xffffff7f) == 0x20) &&
+                       (freed_count < (char)unit_types[units[unit2].type].hold)) {
+                      room_aboard = 1;
                     }
                     else {
-                      local_a8 = 0;
+                      room_aboard = 0;
                     }
-                    if ((local_c == 0x20) && (units[unit2].orders != 11)) {
+                    if ((tasks_mask == 0x20) && (units[unit2].orders != 11)) {
                       unit4 = 1;
                     }
                     else {
                       unit4 = 0;
                     }
-                    local_c4 = (uint)(local_20 == 0);
-                    if (local_20 == 0) {
-                      if ((iVar27 == 0) || (unit4 != 0)) {
-                        local_188 = (int)(char)unit_types[units[unit2].type].hold;
-                        if (2 < local_188) {
-                          local_188 = 3;
+                    flag = (uint)(no_moves == 0);
+                    if (no_moves == 0) {
+                      if ((near_dist == 0) || (unit4 != 0)) {
+                        cargo_target = (int)(char)unit_types[units[unit2].type].hold;
+                        if (2 < cargo_target) {
+                          cargo_target = 3;
                         }
                       }
                       else {
-                        local_188 = 1;
+                        cargo_target = 1;
                       }
-                      if ((local_34 < local_188) || (local_a8 != 0)) {
-                        local_c4 = local_a8;
-                        local_38 = 999;
-                        local_140 = 0;
+                      if ((freed_count < cargo_target) || (room_aboard != 0)) {
+                        flag = room_aboard;
+                        best_score = 999;
+                        trade_target = 0;
                         for (city = 0; (int)city < (int)game.num_cities;
                             city = city + 1) {
                           if ((((cities[city].id != 0) &&
@@ -3576,49 +3576,49 @@ LAB_0053be12:
                              (((cities[city].flags & 0x200) == 0 ||
                               (((char)units[unit2].counter < '\0' &&
                                ((int)(char)units[unit2].counter == -1 - (city & 0x3f))))))) {
-                            iVar13 = tile_landmass((int)cities[city].x,(int)cities[city].y
+                            dest_landmass = tile_landmass((int)cities[city].x,(int)cities[city].y
                                                   );
-                            if (local_3c == 0) {
+                            if (own_dist == 0) {
                               city7 = cities_share_ocean(city2,city);
                             }
                             else {
-                              city7 = city_adjacent_to_body(city,iVar11);
+                              city7 = city_adjacent_to_body(city,landmass);
                             }
                             if (city7 != 0) {
-                              local_dc = 0;
-                              uVar3 = civs[civ].continent_military[iVar13];
-                              city7 = ai_continent_defense_quota(civ,iVar13);
-                              if (((int)(uint)uVar3 < city7) &&
-                                 (*(char *)&civs[civ].continent_policy[iVar13] != 4)) {
-                                if (*(char *)&civs[civ].continent_trade_units[iVar13] == '\0')
+                              needs_units = 0;
+                              military = civs[civ].continent_military[dest_landmass];
+                              city7 = ai_continent_defense_quota(civ,dest_landmass);
+                              if (((int)(uint)military < city7) &&
+                                 (*(char *)&civs[civ].continent_policy[dest_landmass] != 4)) {
+                                if (*(char *)&civs[civ].continent_trade_units[dest_landmass] == '\0')
                                 goto LAB_0053c1e5;
-                                local_dc = 1;
+                                needs_units = 1;
                               }
-                              local_70 = map_distance_diag(x2,y3,
+                              cand_score = map_distance_diag(x2,y3,
                                                             (int)cities[city].x,
                                                             (int)cities[city].y);
                               unit3 = tile_first_unit((int)cities[city].x,
                                                             (int)cities[city].y);
                               if ((-1 < unit3) &&
                                  (city7 = unit_stack_count_role(unit3,4),
-                                 (int)(uint)(local_70 == 0) < city7)) {
-                                local_70 += 0x10;
+                                 (int)(uint)(cand_score == 0) < city7)) {
+                                cand_score += 0x10;
                               }
-                              if ((*(char *)&civs[civ].continent_policy[iVar13] == 4) ||
-                                 (*(char *)&civs[civ].continent_flags[iVar13] == '\0')) {
-                                local_70 = local_70 -
+                              if ((*(char *)&civs[civ].continent_policy[dest_landmass] == 4) ||
+                                 (*(char *)&civs[civ].continent_flags[dest_landmass] == '\0')) {
+                                cand_score = cand_score -
                                            ((int)(uint)*(ushort *)
-                                                        (iVar13 * 2 + ADDR(0x64c8b2, ((u8 *)&civs + 530)) + civ * 0x594) >> 2
+                                                        (dest_landmass * 2 + ADDR(0x64c8b2, ((u8 *)&civs + 530)) + civ * 0x594) >> 2
                                            );
                               }
                               else {
-                                local_70 += 0x10;
+                                cand_score += 0x10;
                               }
-                              if (local_70 < local_38) {
-                                local_38 = local_70;
+                              if (cand_score < best_score) {
+                                best_score = cand_score;
                                 city6 = city;
-                                local_140 = local_dc;
-                                local_2c = (uint)civs[civ].continent_policy[iVar13];
+                                trade_target = needs_units;
+                                target_policy = (uint)civs[civ].continent_policy[dest_landmass];
                                 unit_set_goto(unit2,0x33,(int)cities[city].x,
                                                    (int)cities[city].y);
                               }
@@ -3626,103 +3626,103 @@ LAB_0053be12:
                           }
 LAB_0053c1e5: ;
                         }
-                        if (((iVar27 == 0) &&
+                        if (((near_dist == 0) &&
                             ((((int)(char)units[unit2].counter ^ (int)game.turn - 1U & 3) & 3) != 0)
-                            ) && (((local_c & 0x20) == 0 ||
-                                  ((local_c == 0x20 ||
-                                   (local_34 < (char)unit_types[units[unit2].type].hold)))))) {
-                          local_38 = 1000;
+                            ) && (((tasks_mask & 0x20) == 0 ||
+                                  ((tasks_mask == 0x20 ||
+                                   (freed_count < (char)unit_types[units[unit2].type].hold)))))) {
+                          best_score = 1000;
                         }
-                        if (local_2c == 4) {
-                          local_70 = 4;
+                        if (target_policy == 4) {
+                          cand_score = 4;
                         }
                         else {
-                          local_70 = 2;
+                          cand_score = 2;
                         }
-                        if (local_38 < local_70 * 3) {
+                        if (best_score < cand_score * 3) {
                           units[unit2].counter = 0xff - ((byte)city6 & 0x3f);
                           cities[city6].flags = cities[city6].flags | 0x600;
-                          if (local_140 == 0) {
-                            uVar10 = 5;
+                          if (trade_target == 0) {
+                            result = 5;
                             x = tile_first_unit((int)units[unit2].goto_x,
                                                         (int)units[unit2].goto_y);
-                            city7 = unit_stack_count_role(x,uVar10);
+                            city7 = unit_stack_count_role(x,result);
                             if (city7 == 0) {
-                              if (local_2c != 5) {
+                              if (target_policy != 5) {
                                 civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                   (int)units[unit2].goto_y,5,local_70);
+                                                   (int)units[unit2].goto_y,5,cand_score);
                               }
-                              if (local_2c != 5) {
+                              if (target_policy != 5) {
                                 civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                   (int)units[unit2].goto_y,0x15,local_70 - 1);
+                                                   (int)units[unit2].goto_y,0x15,cand_score - 1);
                               }
                             }
-                            if (local_2c != 1) {
+                            if (target_policy != 1) {
                               civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                 (int)units[unit2].goto_y,1,local_70);
+                                                 (int)units[unit2].goto_y,1,cand_score);
                             }
-                            if (local_2c != 0) {
+                            if (target_policy != 0) {
                               civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                 (int)units[unit2].goto_y,0,local_70);
+                                                 (int)units[unit2].goto_y,0,cand_score);
                             }
-                            if ((local_2c == 4) || (local_2c == 5)) {
+                            if ((target_policy == 4) || (target_policy == 5)) {
                               civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                 (int)units[unit2].goto_y,6,local_70);
+                                                 (int)units[unit2].goto_y,6,cand_score);
                             }
                           }
                           civ_add_ai_goal(civ,(int)units[unit2].goto_x,(int)units[unit2].goto_y
                                              ,7,2);
                         }
-                        else if (((local_3c == 0) &&
+                        else if (((own_dist == 0) &&
                                  (city7 = unit_stack_count_role(unit2,4), city7 < 2)) &&
                                 (((city7 = rand_range(0,3), city7 != 0 ||
-                                  (local_38 == 1000)) &&
-                                 ((civs[civ].continent_flags[iVar11] & 0x10) == 0)))) {
-                          uVar3 = civs[civ].continent_military[iVar11];
-                          city7 = ai_continent_defense_quota(civ,iVar11);
+                                  (best_score == 1000)) &&
+                                 ((civs[civ].continent_flags[landmass] & 0x10) == 0)))) {
+                          military = civs[civ].continent_military[landmass];
+                          city7 = ai_continent_defense_quota(civ,landmass);
                           city3 = city2;
-                          if ((city7 <= (int)(uint)uVar3) || (uVar28 == 4)) {
-                            local_dc = 1;
+                          if ((city7 <= (int)(uint)military) || (policy == 4)) {
+                            needs_units = 1;
                           }
-                          if (*(char *)&civs[civ].continent_trade_units[iVar11] != '\0') {
-                            local_140 = 1;
+                          if (*(char *)&civs[civ].continent_trade_units[landmass] != '\0') {
+                            trade_target = 1;
                           }
-                          if ((local_dc != 0) || (local_140 != 0)) {
+                          if ((needs_units != 0) || (trade_target != 0)) {
                             cities[city2].flags = cities[city2].flags | 0x600;
-                            if (local_dc != 0) {
-                              uVar10 = 5;
+                            if (needs_units != 0) {
+                              result = 5;
                               x = tile_first_unit((int)cities[city2].x,
                                                           (int)cities[city2].y);
-                              iVar27 = unit_stack_count_role(x,uVar10);
-                              if ((iVar27 == 0) && (uVar28 != 5)) {
+                              near_dist = unit_stack_count_role(x,result);
+                              if ((near_dist == 0) && (policy != 5)) {
                                 civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                                                   ,5,local_70);
+                                                   ,5,cand_score);
                                 civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                                                   ,0x15,local_70 - 1);
+                                                   ,0x15,cand_score - 1);
                               }
-                              if (uVar28 != 1) {
+                              if (policy != 1) {
                                 civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                                                   ,1,local_70);
+                                                   ,1,cand_score);
                               }
-                              if (uVar28 != 0) {
+                              if (policy != 0) {
                                 civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y
-                                                   ,0,local_70);
+                                                   ,0,cand_score);
                               }
-                              if ((uVar28 == 4) || (uVar28 == 5)) {
+                              if ((policy == 4) || (policy == 5)) {
                                 civ_add_ai_goal(civ,(int)units[unit2].goto_x,
-                                                   (int)units[unit2].goto_y,6,local_70);
+                                                   (int)units[unit2].goto_y,6,cand_score);
                               }
                             }
                             civ_add_ai_goal(civ,(int)cities[city3].x,(int)cities[city3].y,7,2
                                               );
-                            local_c8 = 8;
-                            city3 = local_c8;
+                            best_dir = 8;
+                            city3 = best_dir;
                             goto LAB_005435ca;
                           }
                         }
                       }
                     }
-                    if (local_3c == 0) {
+                    if (own_dist == 0) {
                       for (unit4 = unit_stack_first(unit2); -1 < (int)unit4;
                           unit4 = unit_next_in_stack(unit4)) {
                         if (unit_types[units[unit4].type].role == 5) {
@@ -3731,46 +3731,46 @@ LAB_0053c1e5: ;
                         }
                       }
                     }
-                    if (((((local_c4 != 0) && (units[unit2].field_0c == 'A')) &&
+                    if (((((flag != 0) && (units[unit2].field_0c == 'A')) &&
                          (units[unit2].orders == 11)) &&
-                        ((iVar27 != 0 &&
+                        ((near_dist != 0 &&
                          (city7 = city_at((int)units[unit2].goto_x,
                                                       (int)units[unit2].goto_y), -1 < city7)))) &&
                        (((cities[city7].flags & 0x80) != 0 &&
-                        ((city7 = city_adjacent_to_body(city7,iVar11), city7 != 0 &&
+                        ((city7 = city_adjacent_to_body(city7,landmass), city7 != 0 &&
                          ((game.turn & 0xfU) != 0)))))) {
-                      local_c4 = 0;
+                      flag = 0;
                     }
-                    if (((local_c4 != 0) || (local_94 != 0)) || (local_20 != 0)) {
-                      bVar31 = local_c == 0x80;
-                      for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                        x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                        y2 = (char)(&dir_dy_table)[local_60] + y3;
+                    if (((flag != 0) || (retried != 0)) || (no_moves != 0)) {
+                      cond = tasks_mask == 0x80;
+                      for (dir = 0; (int)dir < 8; dir++) {
+                        x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                        y2 = (char)(&dir_dy_table)[dir] + y3;
                         city7 = map_in_bounds(x,y2);
                         if (((city7 != 0) && (city7 = tile_is_ocean(x,y2), city7 == 0)
                             ) && ((civ2 = tile_unit_owner(x,y2), (int)civ2 < 0 ||
                                   (civ2 == civ)))) {
                           if (civ2 == civ) {
-                            uVar10 = 2;
+                            result = 2;
                             x5 = tile_first_unit(x,y2);
-                            city7 = unit_stack_sum(x5,uVar10);
+                            city7 = unit_stack_sum(x5,result);
                             if (1 < city7) goto LAB_0053cdd1;
                           }
-                          bVar6 = false;
+                          ally_near = false;
                           if (((-1 < (int)city4) && ((int)cities[city4].owner != civ)) &&
                              (((*(byte *)&civs[civ].treaties[cities[city4].owner] & 4
-                               ) != 0 && (iVar27 < 4)))) {
-                            bVar6 = true;
+                               ) != 0 && (near_dist < 4)))) {
+                            ally_near = true;
                           }
                           city7 = tile_landmass(x,y2);
                           city3 = city4;
-                          local_dc = 0;
-                          bVar32 = false;
-                          local_c0 = 0;
-                          if ((local_c & 0x80) == 0) {
-                            if (bVar6) goto LAB_0053cdd1;
+                          needs_units = 0;
+                          trade_drop = false;
+                          explore_flag = 0;
+                          if ((tasks_mask & 0x80) == 0) {
+                            if (ally_near) goto LAB_0053cdd1;
                           }
-                          else if (city7 == local_104) {
+                          else if (city7 == near_landmass) {
                             city5 = 0xffffffff;
                             for (unit4 = unit_stack_first(unit2); -1 < (int)unit4;
                                 unit4 = unit_next_in_stack(unit4)) {
@@ -3789,115 +3789,115 @@ LAB_0053c1e5: ;
                             if ((int)city5 < 1) {
                               city5 = 0;
                             }
-                            bVar32 = units[unit2].field_0c != '3';
+                            trade_drop = units[unit2].field_0c != '3';
                             y = tile_landmass((int)cities[city5].x,(int)cities[city5].y);
-                            if ((y == local_104) &&
+                            if ((y == near_landmass) &&
                                (y = map_distance_diag((int)cities[city3].x,
                                                             (int)cities[city3].y,
                                                             (int)cities[city5].x,
                                                             (int)cities[city5].y), y < 0x10)
                                ) {
-                              bVar32 = false;
+                              trade_drop = false;
                             }
                             if ((int)cities[city3].owner == civ) {
                               if (cities[city3].size < 8) {
-                                bVar32 = false;
+                                trade_drop = false;
                               }
                               y = map_distance_diag((int)cities[city3].x,
                                                           (int)cities[city3].y,
                                                           (int)cities[city5].x,
                                                           (int)cities[city5].y);
                               if (y < 0x10) {
-                                bVar32 = false;
+                                trade_drop = false;
                               }
                             }
-                            for (local_7c = 0;
-                                (int)local_7c < (int)(char)cities[city5].trade_routes;
-                                local_7c = local_7c + 1) {
-                              if ((int)cities[city5].route_partner[local_7c] ==
+                            for (dir2 = 0;
+                                (int)dir2 < (int)(char)cities[city5].trade_routes;
+                                dir2 = dir2 + 1) {
+                              if ((int)cities[city5].route_partner[dir2] ==
                                   city3) {
-                                bVar32 = false;
+                                trade_drop = false;
                               }
                             }
                           }
-                          uVar3 = civs[civ].continent_military[city7];
+                          military = civs[civ].continent_military[city7];
                           y = ai_continent_defense_quota(civ,city7);
-                          if (((int)(uint)uVar3 < y) &&
+                          if (((int)(uint)military < y) &&
                              (*(char *)&civs[civ].continent_policy[city7] != 4)) {
-                            local_dc = 1;
+                            needs_units = 1;
                           }
                           if ((*(char *)&civs[civ].continent_cities[city7] == '\0') &&
                              (civs[civ].continent_military[city7] < 8)) {
-                            local_dc = 1;
+                            needs_units = 1;
                           }
-                          if ((1 << (civs[civ].continent_policy[city7] & 0x1f) & local_c
+                          if ((1 << (civs[civ].continent_policy[city7] & 0x1f) & tasks_mask
                               & 3) != 0) {
-                            local_dc = 1;
+                            needs_units = 1;
                           }
-                          if (((((local_c & 1) != 0) && (-1 < (int)city4)) &&
+                          if (((((tasks_mask & 1) != 0) && (-1 < (int)city4)) &&
                               (city2 != city4)) &&
-                             (((10 < local_3c && (iVar27 < 4)) &&
-                              ((city7 == local_104 &&
+                             (((10 < own_dist && (near_dist < 4)) &&
+                              ((city7 == near_landmass &&
                                ((((uint)game.human_players & 1 << (cities[city4].owner & 0x1fU))
                                  != 0 && ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) +
                                                     cities[city4].owner * 4) & 0x20) != 0))))))))
                           {
-                            local_dc = 1;
+                            needs_units = 1;
                           }
                           if (((units[unit2].orders == 11) &&
                               (y = tile_landmass((int)units[unit2].goto_x,
                                                       (int)units[unit2].goto_y), y == city7))
                              && (units[unit2].field_0c != '3')) {
-                            local_dc = 1;
-                            local_16c = 1;
+                            needs_units = 1;
+                            goal_match = 1;
                           }
-                          if (((local_c & 0x20) == 0) &&
+                          if (((tasks_mask & 0x20) == 0) &&
                              (*(char *)&civs[civ].continent_flags[city7] == '\0')) {
                             if ((*(short *)&civs[civ].continent_military[city7] == 0) &&
                                (0x31 < *(short *)(&landmass_table + city7 * 0x10))) {
                               civs[civ].continent_flags[city7] =
                                    civs[civ].continent_flags[city7] | 0x80;
-                              local_c0 = 1;
+                              explore_flag = 1;
                             }
                             else {
-                              local_dc = 0;
+                              needs_units = 0;
                             }
                           }
-                          if ((local_a8 != 0) &&
+                          if ((room_aboard != 0) &&
                              ((civs[civ].continent_flags[city7] & 5) != 0)) {
-                            local_dc = 0;
+                            needs_units = 0;
                           }
-                          if (1 < (int)local_d8) {
-                            local_dc = 1;
+                          if (1 < (int)damage_level) {
+                            needs_units = 1;
                           }
-                          if ((((local_a8 == 0) &&
+                          if ((((room_aboard == 0) &&
                                (y = tile_city_owner(x,y2), -1 < y)) &&
                               (civ2 != civ)) &&
                              (y = diplo_is_hostile(civ,civ2), y != 0)) {
-                            local_dc = 1;
+                            needs_units = 1;
                           }
-                          if (bVar31) {
-                            local_dc = 0;
+                          if (cond) {
+                            needs_units = 0;
                           }
-                          if (local_16c != 0) {
-                            if (bVar31) {
-                              if (!bVar32) {
+                          if (goal_match != 0) {
+                            if (cond) {
+                              if (!trade_drop) {
                                 units[unit2].counter = (byte)game.turn & 7;
                               }
                             }
-                            else if (local_dc == 0) {
+                            else if (needs_units == 0) {
                               units[unit2].counter = (byte)game.turn & 7;
                             }
                           }
-                          if (((local_dc != 0) && (4 < *(short *)(&landmass_fertile_tiles + city7 * 0x10)))
+                          if (((needs_units != 0) && (4 < *(short *)(&landmass_fertile_tiles + city7 * 0x10)))
                              && ((1 < (int)y2 && ((int)y2 < map.height - 2)))) {
                             y = unit_moves_left(unit2);
                             if ((((int)(uint)cosmic.road_move_mult <= y) &&
-                                ((iVar27 != 0 || (uVar28 != 1)))) &&
-                               ((local_c8 = ai_ship_best_landing_dir(unit2), -1 < (int)local_c8 &&
-                                (local_c8 != 8)))) {
+                                ((near_dist != 0 || (policy != 1)))) &&
+                               ((best_dir = ai_ship_best_landing_dir(unit2), -1 < (int)best_dir &&
+                                (best_dir != 8)))) {
                               units[unit2].field_0c = 'b';
-                              city3 = local_c8;
+                              city3 = best_dir;
                               goto LAB_005435ca;
                             }
                             if (*(char *)&civs[civ].continent_policy[city7] == '\0') {
@@ -3906,24 +3906,24 @@ LAB_0053c1e5: ;
                             units[unit2].field_0c = 'U';
                             unit_exhaust_moves(unit2);
                             units[unit2].orders = -1;
-                            if (!bVar32) {
-                              local_c = local_c & 0xffffff7f;
+                            if (!trade_drop) {
+                              tasks_mask = tasks_mask & 0xffffff7f;
                             }
-                            unit_stack_wake_by_role(unit2,local_c,local_c0);
+                            unit_stack_wake_by_role(unit2,tasks_mask,explore_flag);
                             goto LAB_005436c1;
                           }
-                          if (((bVar32) && (1 < (int)y2)) && ((int)y2 < map.height - 2)
+                          if (((trade_drop) && (1 < (int)y2)) && ((int)y2 < map.height - 2)
                              ) {
                             if (*(char *)&civs[civ].continent_policy[city7] == '\0') {
                               civ_add_ai_goal(civ,x2,y3,2,5);
                             }
                             units[unit2].field_0c = 'u';
                             unit_exhaust_moves(unit2);
-                            local_c = 0x80;
-                            if (!bVar6) {
-                              local_c = 0x82;
+                            tasks_mask = 0x80;
+                            if (!ally_near) {
+                              tasks_mask = 0x82;
                             }
-                            unit_stack_wake_by_role(unit2,local_c,local_c0);
+                            unit_stack_wake_by_role(unit2,tasks_mask,explore_flag);
                             units[unit2].orders = -1;
                             goto LAB_005436c1;
                           }
@@ -3948,42 +3948,42 @@ LAB_0053cdd1: ;
                       }
                     }
                   }
-                  if (local_20 != 0) {
+                  if (no_moves != 0) {
                     return 1;
                   }
-                  if ((local_e4 == 4) || (local_158 == 0)) {
+                  if ((ai_role == 4) || (in_enemy_zoc == 0)) {
                     if ((units[unit2].orders != 11) &&
-                       (((local_c & 3) != 0 && (unit_types[units[unit2].type].hold != '\0')))) {
-                      local_38 = 0x18;
+                       (((tasks_mask & 3) != 0 && (unit_types[units[unit2].type].hold != '\0')))) {
+                      best_score = 0x18;
                       for (city = 0; (int)city < (int)game.num_cities;
                           city = city + 1) {
                         if (((cities[city].id != 0) && ((int)cities[city].owner == civ))
                            && (city7 = tile_landmass((int)cities[city].x,
                                                       (int)cities[city].y),
                               *(char *)&civs[civ].continent_policy[city7] == 1)) {
-                          if (local_3c == 0) {
+                          if (own_dist == 0) {
                             city7 = cities_share_ocean(city2,city);
                           }
                           else {
-                            city7 = city_adjacent_to_body(city,iVar11);
+                            city7 = city_adjacent_to_body(city,landmass);
                           }
                           if (city7 != 0) {
-                            local_70 = map_distance_diag(x2,y3,(int)cities[city].x
+                            cand_score = map_distance_diag(x2,y3,(int)cities[city].x
                                                           ,(int)cities[city].y);
                             city7 = tile_unit_owner((int)cities[city].x,
                                                      (int)cities[city].y);
                             if (city7 < 0) {
-                              local_70 = local_70 / 2;
+                              cand_score = cand_score / 2;
                             }
                             else {
                               city7 = civ_ai_goal_get_priority(civ,(int)cities[city].x,
                                                           (int)cities[city].y,1);
                               if (city7 != 0) {
-                                local_70 -= local_70 / 3;
+                                cand_score -= cand_score / 3;
                               }
                             }
-                            if (local_70 < local_38) {
-                              local_38 = local_70;
+                            if (cand_score < best_score) {
+                              best_score = cand_score;
                               unit_set_goto(unit2,0x41,(int)cities[city].x,
                                                  (int)cities[city].y);
                             }
@@ -3991,8 +3991,8 @@ LAB_0053cdd1: ;
                         }
                       }
                     }
-                    if ((units[unit2].orders != 11) && ((local_c & 3) != 0)) {
-                      local_38 = 999;
+                    if ((units[unit2].orders != 11) && ((tasks_mask & 3) != 0)) {
+                      best_score = 999;
                       for (city = 0; (int)city < (int)game.num_cities;
                           city = city + 1) {
                         if (((cities[city].id != 0) &&
@@ -4001,29 +4001,29 @@ LAB_0053cdd1: ;
                             (city7 = tile_unit_owner((int)cities[city].x,
                                                       (int)cities[city].y), city7 < 0)))) {
                           tile_landmass((int)cities[city].x,(int)cities[city].y);
-                          if (local_3c == 0) {
+                          if (own_dist == 0) {
                             city7 = cities_share_ocean(city2,city);
                           }
                           else {
-                            city7 = city_adjacent_to_body(city,iVar11);
+                            city7 = city_adjacent_to_body(city,landmass);
                           }
                           if (city7 != 0) {
-                            local_70 = map_distance_diag(x2,y3,(int)cities[city].x
+                            cand_score = map_distance_diag(x2,y3,(int)cities[city].x
                                                           ,(int)cities[city].y);
                             for (civ4 = 1; civ4 < 8; civ4++) {
                               if ((((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) != 0)
                                   && ((*(byte *)&civs[civ].treaties[civ4] & 8) != 0
                                      )) && ((*(byte *)(civ4 * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4)
                                             & 0x20) != 0)) {
-                                local_70 = local_70 / 2;
+                                cand_score = cand_score / 2;
                                 break;
                               }
                             }
                             if ((cities[city].flags & 0x8000000) != 0) {
-                              local_70 = local_70 << 1;
+                              cand_score = cand_score << 1;
                             }
-                            if (local_70 < local_38) {
-                              local_38 = local_70;
+                            if (cand_score < best_score) {
+                              best_score = cand_score;
                               units[unit2].counter = (byte)city & 7;
                               unit_set_goto(unit2,0x49,(int)cities[city].x,
                                                  (int)cities[city].y);
@@ -4033,17 +4033,17 @@ LAB_0053cdd1: ;
                       }
                     }
                     if (units[unit2].orders != 11) {
-                      local_110 = 0xffffffff;
+                      ally_civ = 0xffffffff;
                       for (civ2 = 0; (int)civ2 < 8; civ2++) {
                         if (((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) &&
                            (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0 ||
-                            ((int)local_110 < 0)))) {
-                          local_110 = civ2;
+                            ((int)ally_civ < 0)))) {
+                          ally_civ = civ2;
                         }
                       }
-                      if (((local_c & 1) != 0) || ((local_c & 0x20) == 0)) {
-                        local_38 = 999;
-                        local_1c = tile_land_landmass(x2,y3);
+                      if (((tasks_mask & 1) != 0) || ((tasks_mask & 0x20) == 0)) {
+                        best_score = 999;
+                        here_landmass = tile_land_landmass(x2,y3);
                         for (city = (int)(char)units[unit2].counter & 7;
                             (int)city < (int)game.num_cities; city += 8) {
                           if ((((((cities[city].id != 0) &&
@@ -4054,37 +4054,37 @@ LAB_0053cdd1: ;
                                ) && ((((uint)game.human_players & 1 << (game.civ_by_rank[7] & 0x1f))
                                       == 0 || (game.civ_by_rank[7] == civ)))) &&
                              (city7 = tile_landmass((int)cities[city].x,
-                                                     (int)cities[city].y), local_1c != city7))
+                                                     (int)cities[city].y), here_landmass != city7))
                           {
-                            if (local_3c == 0) {
+                            if (own_dist == 0) {
                               city7 = ai_city_touches_landmass(city2,city7);
                             }
                             else {
-                              city7 = landmass_borders_body(city7,iVar11);
+                              city7 = landmass_borders_body(city7,landmass);
                             }
                             if (city7 != 0) {
-                              local_70 = map_distance_diag(x2,y3,
+                              cand_score = map_distance_diag(x2,y3,
                                                             (int)cities[city].x,
                                                             (int)cities[city].y);
-                              if ((0 < (int)local_110) &&
-                                 ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + local_110 * 0x594) & 0x20) !=
+                              if ((0 < (int)ally_civ) &&
+                                 ((*(byte *)(civ2 * 4 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + ally_civ * 0x594) & 0x20) !=
                                   0)) {
-                                local_70 = local_70 / 2;
+                                cand_score = cand_score / 2;
                               }
                               if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 8) != 0) {
-                                local_70 = local_70 / 2;
+                                cand_score = cand_score / 2;
                               }
                               if (((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ2 * 4) & 0x20) != 0)
                                  && (city7 = tile_unit_owner((int)cities[city].x,
                                                               (int)cities[city].y), city7 < 0)
                                  ) {
-                                local_70 = local_70 / 2;
+                                cand_score = cand_score / 2;
                               }
                               if ((cities[city].flags & 0x8000000) != 0) {
-                                local_70 = local_70 << 1;
+                                cand_score = cand_score << 1;
                               }
-                              if (local_70 < local_38) {
-                                local_38 = local_70;
+                              if (cand_score < best_score) {
+                                best_score = cand_score;
                                 unit_set_goto(unit2,0x34,(int)cities[city].x,
                                                    (int)cities[city].y);
                               }
@@ -4093,10 +4093,10 @@ LAB_0053cdd1: ;
                         }
                       }
                     }
-                    if (((units[unit2].orders != 11) && ((local_c & 0x80) != 0)) &&
+                    if (((units[unit2].orders != 11) && ((tasks_mask & 0x80) != 0)) &&
                        (unit_types[units[unit2].type].hold != '\0')) {
-                      local_38 = -999;
-                      local_1c = tile_land_landmass(x2,y3);
+                      best_score = -999;
+                      here_landmass = tile_land_landmass(x2,y3);
                       city5 = 0xffffffff;
                       unit5 = unit2;
                       for (unit = unit_stack_first(unit2); x = unit5, -1 < unit;
@@ -4116,8 +4116,8 @@ LAB_0053cdd1: ;
                           city = city + 1) {
                         if ((cities[city].id != 0) &&
                            (city7 = tile_landmass((int)cities[city].x,(int)cities[city].y
-                                                  ), local_1c != city7)) {
-                          if (local_3c == 0) {
+                                                  ), here_landmass != city7)) {
+                          if (own_dist == 0) {
                             if ((int)cities[city].owner == civ) {
                               city7 = cities_share_ocean(city2,city);
                             }
@@ -4126,38 +4126,38 @@ LAB_0053cdd1: ;
                             }
                           }
                           else if ((int)cities[city].owner == civ) {
-                            city7 = city_adjacent_to_body(city,iVar11);
+                            city7 = city_adjacent_to_body(city,landmass);
                           }
                           else {
-                            city7 = landmass_borders_body(city7,iVar11);
+                            city7 = landmass_borders_body(city7,landmass);
                           }
                           if (city7 != 0) {
-                            local_70 = map_distance_diag((int)cities[city5].x,
+                            cand_score = map_distance_diag((int)cities[city5].x,
                                                           (int)cities[city5].y,
                                                           (int)cities[city].x,
                                                           (int)cities[city].y);
                             if ((int)cities[city].owner == civ) {
-                              local_70 = local_70 / 2;
+                              cand_score = cand_score / 2;
                             }
                             if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city].owner * 4) &
                                 0x20) != 0) {
-                              local_70 -= local_70 / 3;
+                              cand_score -= cand_score / 3;
                             }
                             if ((*(byte *)&civs[civ].treaties[cities[city].owner] &
                                 8) != 0) {
-                              local_70 += local_70 / 3;
+                              cand_score += cand_score / 3;
                             }
                             if (((((uint)game.human_players & 1 << (cities[city].owner & 0x1fU)
                                   ) != 0) && (game.power_rank[cities[city].owner] == 7)) &&
                                (4 < civs[civ2].num_cities)) {
-                              local_70 = local_70 / 2;
+                              cand_score = cand_score / 2;
                             }
-                            local_70 = cities[city].base_trade * local_70;
+                            cand_score = cities[city].base_trade * cand_score;
                             city7 = map_distance_diag(x2,y3,(int)cities[city].x,
                                                         (int)cities[city].y);
-                            local_70 = local_70 / ((city7 >> 3) + 1);
-                            if (local_38 < local_70) {
-                              local_38 = local_70;
+                            cand_score = cand_score / ((city7 >> 3) + 1);
+                            if (best_score < cand_score) {
+                              best_score = cand_score;
                               unit_set_goto(x,0x54,(int)cities[city].x,
                                                  (int)cities[city].y);
                             }
@@ -4166,32 +4166,32 @@ LAB_0053cdd1: ;
                       }
                     }
                     if (units[unit].orders != 11) {
-                      local_38 = 999;
-                      local_1c = tile_land_landmass(x2,y3);
+                      best_score = 999;
+                      here_landmass = tile_land_landmass(x2,y3);
                       for (city = 0; (int)city < (int)game.num_cities;
                           city = city + 1) {
                         if (((cities[city].id != 0) &&
                             (civ2 = (uptr)cities[city].owner, civ2 == civ)) &&
-                           ((local_70 = map_distance_diag(x2,y3,
+                           ((cand_score = map_distance_diag(x2,y3,
                                                            (int)cities[city].x,
-                                                           (int)cities[city].y), 7 < local_70
+                                                           (int)cities[city].y), 7 < cand_score
                             && ((city7 = tile_landmass((int)cities[city].x,
                                                         (int)cities[city].y),
-                                local_1c != city7 &&
+                                here_landmass != city7 &&
                                 (*(char *)&civs[civ].continent_policy[city7] != 4)))))) {
-                          if (local_3c == 0) {
+                          if (own_dist == 0) {
                             y = cities_share_ocean(city2,city);
                           }
                           else {
-                            y = city_adjacent_to_body(city,iVar11);
+                            y = city_adjacent_to_body(city,landmass);
                           }
                           if (y != 0) {
-                            if ((local_c &
+                            if ((tasks_mask &
                                 1 << (civs[civ].continent_policy[city7] & 0x1f)) == 0) {
-                              local_70 = local_70 << 1;
+                              cand_score = cand_score << 1;
                             }
-                            if (local_70 < local_38) {
-                              local_38 = local_70;
+                            if (cand_score < best_score) {
+                              best_score = cand_score;
                               unit_set_goto(unit,0x35,(int)cities[city].x,
                                                  (int)cities[city].y);
                             }
@@ -4216,46 +4216,46 @@ LAB_0053cdd1: ;
                         }
                       }
                       city7 = tile_land_landmass(x4,y2);
-                      local_1c = tile_land_landmass(x2,y3);
+                      here_landmass = tile_land_landmass(x2,y3);
                       if ((((0 < city7) && (city7 < 0x3f)) &&
                           (0x10 < *(short *)(&landmass_fertile_tiles + city7 * 0x10))) &&
-                         ((local_1c != city7 &&
+                         ((here_landmass != city7 &&
                           (*(char *)&civs[civ].continent_cities[city7] == '\0')))) {
-                        local_c4 = 1;
-                        if (local_3c == 0) {
+                        flag = 1;
+                        if (own_dist == 0) {
                           city7 = ai_city_touches_landmass(city2,city7);
                           if (city7 == 0) {
-                            local_c4 = 0;
+                            flag = 0;
                           }
                         }
                         else {
-                          city7 = landmass_borders_body(city7,iVar11);
+                          city7 = landmass_borders_body(city7,landmass);
                           if (city7 == 0) {
-                            local_c4 = 0;
+                            flag = 0;
                           }
                         }
-                        if (local_c4 != 0) {
+                        if (flag != 0) {
                           ai_ship_goto_near_shore(unit,0x56,x4,y2);
                         }
                       }
                     }
                     if (units[unit].orders != 11) {
-                      for (local_60 = 2; (int)local_60 < 0x18; local_60++) {
-                        local_7c = rand_range(0,7);
-                        x = map_wrap_x((int)(char)(&dir_dx_table)[local_7c] * local_60 +
+                      for (dir = 2; (int)dir < 0x18; dir++) {
+                        dir2 = rand_range(0,7);
+                        x = map_wrap_x((int)(char)(&dir_dx_table)[dir2] * dir +
                                             x2);
-                        y2 = (int)(char)(&dir_dy_table)[local_7c] * local_60 + y3;
+                        y2 = (int)(char)(&dir_dy_table)[dir2] * dir + y3;
                         city7 = map_in_bounds(x,y2);
                         if (((city7 != 0) && (1 < (int)y2)) &&
                            (((int)y2 <= map.height - 3 &&
                             ((city7 = tile_is_ocean(x,y2), city7 == 0 &&
                              (city7 = tile_landmass(x,y2),
                              *(char *)&civs[civ].continent_cities[city7] == '\0')))))) {
-                          if (local_3c == 0) {
+                          if (own_dist == 0) {
                             city7 = ai_city_touches_landmass(city2,city7);
                           }
                           else {
-                            city7 = landmass_borders_body(city7,iVar11);
+                            city7 = landmass_borders_body(city7,landmass);
                           }
                           if (city7 != 0) {
                             ai_ship_goto_near_shore(unit,0x36,x,y2);
@@ -4273,12 +4273,12 @@ LAB_0053cdd1: ;
                      && (unit_types[units[unit].type].domain == '\0')))) &&
                    (unit_types[units[unit].type].attack != '\0')) {
                   city7 = tile_at(x2,y3);
-                  bVar7 = *(byte *)(city7 + 1);
-                  local_14 = (uint)bVar7;
+                  tile_byte = *(byte *)(city7 + 1);
+                  tile_flags = (uint)tile_byte;
                   unit4 = 0;
-                  if (((bVar7 & 0x4c) == 0) || (3 < iVar27)) {
-                    if (((bVar7 & 0x5c) != 0) &&
-                       (((*(char *)&civs[civ].continent_cities[iVar11] == '\0' && (iVar27 < 8)) ||
+                  if (((tile_byte & 0x4c) == 0) || (3 < near_dist)) {
+                    if (((tile_byte & 0x5c) != 0) &&
+                       (((*(char *)&civs[civ].continent_cities[landmass] == '\0' && (near_dist < 8)) ||
                         (unit_type == 9)))) {
                       unit4 = 1;
                     }
@@ -4286,7 +4286,7 @@ LAB_0053cdd1: ;
                   else {
                     unit4 = 1;
                   }
-                  if ((unit4 != 0) && (!bVar4)) {
+                  if ((unit4 != 0) && (!forced_attack)) {
                     unit_pillage(unit,0);
                     goto LAB_005436c1;
                   }
@@ -4300,28 +4300,28 @@ LAB_0053cdd1: ;
                           (((*(byte *)&civs[civ].treaties[civ2] & 6) == 0 &&
                            (city7 = map_distance(x2,y3,(int)units[unit].x,
                                                         (int)units[unit].y), city7 < 4))))))
-                        && (((1 << (bVar8 & 0x1f) & (uint)units[unit].visibility) != 0 ||
-                            ((int)units[unit].owner == (uint)bVar8)))) &&
+                        && (((1 << (owner_byte & 0x1f) & (uint)units[unit].visibility) != 0 ||
+                            ((int)units[unit].owner == (uint)owner_byte)))) &&
                        (city7 = tile_landmass((int)units[unit].x,(int)units[unit].y),
-                       city7 == iVar11)) {
+                       city7 == landmass)) {
                       unit_set_goto(unit5,0x50,(int)units[unit].x,
                                          (int)units[unit].y);
-                      local_a4 = 1;
+                      has_orders = 1;
                       break;
                     }
                   }
                   unit = unit5;
-                  if (local_a4 != 0) break;
+                  if (has_orders != 0) break;
                 }
                 if ((((unit_type == 9) && (-1 < (int)city3)) &&
                     (((uint)game.human_players & 1 << (cities[city3].owner & 0x1fU)) != 0)) &&
                    ((*(byte *)&civs[civ].treaties[cities[city3].owner] & 6) == 0)) {
-                  local_70 = map_distance_diag(x2,y3,(int)cities[city3].x,
+                  cand_score = map_distance_diag(x2,y3,(int)cities[city3].x,
                                                 (int)cities[city3].y);
                   city6 = 0xffffffff;
-                  for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                    x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                    y2 = (char)(&dir_dy_table)[local_60] + y3;
+                  for (dir = 0; (int)dir < 8; dir++) {
+                    x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                    y2 = (char)(&dir_dy_table)[dir] + y3;
                     city7 = map_in_bounds(x,y2);
                     if ((city7 != 0) && (city7 = tile_unit_owner(x,y2), city7 < 0)) {
                       city7 = tile_city_owner(x,y2);
@@ -4331,60 +4331,60 @@ LAB_0053cdd1: ;
                       }
                       city7 = map_distance_diag(x,y2,(int)cities[city3].x,
                                                   (int)cities[city3].y);
-                      if ((city7 <= local_70) &&
+                      if ((city7 <= cand_score) &&
                          (terrain = tile_improvements(x,y2), (terrain & 0x5c) != 0)) {
-                        city6 = local_60;
+                        city6 = dir;
                       }
                     }
                   }
                   if (-1 < (int)city6) {
                     units[unit].field_0c = 'p';
-                    local_c8 = city6;
-                    city3 = local_c8;
+                    best_dir = city6;
+                    city3 = best_dir;
                     goto LAB_005435ca;
                   }
                 }
-                local_f4 = 0;
-                if (((bVar30) || (local_e4 == 1)) &&
+                fort_need = 0;
+                if (((settler_type) || (ai_role == 1)) &&
                    (city7 = civ_has_advance(civ,0x12), city7 != 0)) {
-                  local_84 = local_3c;
+                  home_dist = own_dist;
                   if (-1 < (int)city2) {
-                    local_84 = map_distance(x2,y3,(int)cities[city2].x,
+                    home_dist = map_distance(x2,y3,(int)cities[city2].x,
                                                   (int)cities[city2].y);
                   }
-                  if (((local_3c != 0) && (city2 == city4)) &&
-                     ((local_bc == 0 &&
+                  if (((own_dist != 0) && (city2 == city4)) &&
+                     ((on_fortress == 0 &&
                       ((city7 = tile_airbase_owner(x2,y3), city7 < 0 &&
                        (city7 = tile_is_ocean(x2,y3), city7 == 0)))))) {
-                    local_8 = 0;
-                    local_114 = 0;
-                    local_b8 = 0;
-                    local_4c = 0;
-                    local_28 = 0;
-                    for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                      x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                      y2 = (char)(&dir_dy_table)[local_60] + y3;
+                    ocean_count = 0;
+                    sea_south = 0;
+                    sea_north = 0;
+                    sea_east = 0;
+                    sea_west = 0;
+                    for (dir = 0; (int)dir < 8; dir++) {
+                      x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                      y2 = (char)(&dir_dy_table)[dir] + y3;
                       city7 = map_in_bounds(x,y2);
                       if (city7 != 0) {
-                        uVar10 = tile_improvements(x,y2);
-                        if ((((byte)uVar10 & 0x42) == 0x40) ||
+                        result = tile_improvements(x,y2);
+                        if ((((byte)result & 0x42) == 0x40) ||
                            (city7 = tile_city_owner(x,y2), -1 < city7))
                         goto LAB_0053fc8d;
                         city7 = tile_is_ocean(x,y2);
                         if (city7 != 0) {
-                          local_8++;
-                          if (3 < local_8) goto LAB_0053fc8d;
-                          if ((char)(&dir_dy_table)[local_60] < '\0') {
-                            local_b8 = 1;
+                          ocean_count++;
+                          if (3 < ocean_count) goto LAB_0053fc8d;
+                          if ((char)(&dir_dy_table)[dir] < '\0') {
+                            sea_north = 1;
                           }
-                          if ('\0' < (char)(&dir_dy_table)[local_60]) {
-                            local_114 = 1;
+                          if ('\0' < (char)(&dir_dy_table)[dir]) {
+                            sea_south = 1;
                           }
-                          if ((char)(&dir_dx_table)[local_60] < '\0') {
-                            local_28 = 1;
+                          if ((char)(&dir_dx_table)[dir] < '\0') {
+                            sea_west = 1;
                           }
-                          if ('\0' < (char)(&dir_dx_table)[local_60]) {
-                            local_4c = 1;
+                          if ('\0' < (char)(&dir_dx_table)[dir]) {
+                            sea_east = 1;
                           }
                         }
                         city7 = civ_ai_goal_get_priority(civ,x,y2,1);
@@ -4392,133 +4392,133 @@ LAB_0053cdd1: ;
                       }
                     }
                     terrain = tile_improvements(x2,y3);
-                    if (((((terrain & 0x10) != 0) && (1 < local_3c)) && (local_3c < 4)) &&
+                    if (((((terrain & 0x10) != 0) && (1 < own_dist)) && (own_dist < 4)) &&
                        (city2 == city4)) {
-                      local_f4 = 1;
+                      fort_need = 1;
                     }
-                    for (local_60 = 0xfffffffe; (int)local_60 < 3; local_60++) {
-                      x = map_wrap_x(local_60 + x2);
+                    for (dir = 0xfffffffe; (int)dir < 3; dir++) {
+                      x = map_wrap_x(dir + x2);
                       city7 = map_in_bounds(x,y3 - 2);
-                      if (((city7 != 0) && (local_b8 == 0)) &&
+                      if (((city7 != 0) && (sea_north == 0)) &&
                          ((city7 = tile_is_ocean(x,y3 - 2), city7 != 0 ||
-                          (uVar10 = tile_improvements(x,y3 - 2),
-                          ((byte)uVar10 & 0x42) == 0x40)))) {
-                        local_b8 = 2;
+                          (result = tile_improvements(x,y3 - 2),
+                          ((byte)result & 0x42) == 0x40)))) {
+                        sea_north = 2;
                       }
                       city7 = map_in_bounds(x,y3 + 2);
-                      if (((city7 != 0) && (local_114 == 0)) &&
+                      if (((city7 != 0) && (sea_south == 0)) &&
                          ((city7 = tile_is_ocean(x,y3 + 2), city7 != 0 ||
-                          (uVar10 = tile_improvements(x,y3 + 2),
-                          ((byte)uVar10 & 0x42) == 0x40)))) {
-                        local_114 = 2;
+                          (result = tile_improvements(x,y3 + 2),
+                          ((byte)result & 0x42) == 0x40)))) {
+                        sea_south = 2;
                       }
                     }
-                    for (local_60 = 0xfffffffe; (int)local_60 < 3; local_60++) {
-                      y2 = local_60 + y3;
+                    for (dir = 0xfffffffe; (int)dir < 3; dir++) {
+                      y2 = dir + y3;
                       x = map_wrap_x(x2 - 2);
                       city7 = map_in_bounds(x,y2);
-                      if (((city7 != 0) && (local_28 == 0)) &&
+                      if (((city7 != 0) && (sea_west == 0)) &&
                          ((city7 = tile_is_ocean(x,y2), city7 != 0 ||
-                          (uVar10 = tile_improvements(x,y2),
-                          ((byte)uVar10 & 0x42) == 0x40)))) {
-                        local_28 = 2;
+                          (result = tile_improvements(x,y2),
+                          ((byte)result & 0x42) == 0x40)))) {
+                        sea_west = 2;
                       }
                       x = map_wrap_x(x2 + 2);
                       city7 = map_in_bounds(x,y2);
-                      if (((city7 != 0) && (local_4c == 0)) &&
+                      if (((city7 != 0) && (sea_east == 0)) &&
                          ((city7 = tile_is_ocean(x,y2), city7 != 0 ||
-                          (uVar10 = tile_improvements(x,y2),
-                          ((byte)uVar10 & 0x42) == 0x40)))) {
-                        local_4c = 2;
+                          (result = tile_improvements(x,y2),
+                          ((byte)result & 0x42) == 0x40)))) {
+                        sea_east = 2;
                       }
                     }
-                    if ((1 < local_b8 + local_114) && ((local_28 == 0 || (local_4c == 0)))) {
-                      local_f4 = 2;
+                    if ((1 < sea_north + sea_south) && ((sea_west == 0 || (sea_east == 0)))) {
+                      fort_need = 2;
                     }
-                    if ((1 < local_4c + local_28) && ((local_b8 == 0 || (local_114 == 0)))) {
-                      local_f4 = 2;
+                    if ((1 < sea_east + sea_west) && ((sea_north == 0 || (sea_south == 0)))) {
+                      fort_need = 2;
                     }
-                    if (local_f4 != 0) {
-                      if (bVar30) {
+                    if (fort_need != 0) {
+                      if (settler_type) {
                         civ_add_standing_goal(civ,x2,y3,1,2);
                       }
                       else {
                         civ_add_standing_goal(civ,x2,y3,0x15,
-                                           (uint)(local_84 < 4) + local_f4);
+                                           (uint)(home_dist < 4) + fort_need);
                       }
                     }
                   }
                 }
 LAB_0053fc8d:
-                if (((local_e4 == 5) && (units[unit].orders == 11)) &&
+                if (((ai_role == 5) && (units[unit].orders == 11)) &&
                    (city7 = tile_city_owner((int)units[unit].goto_x,
                                              (int)units[unit].goto_y), -1 < city7)) {
-                  local_b4 = 1;
+                  goto_city = 1;
                 }
-                if (((bVar30) && (!bVar4)) &&
-                   ((local_b4 == 0 &&
+                if (((settler_type) && (!forced_attack)) &&
+                   ((goto_city == 0 &&
                     ((city7 = tile_is_ocean(x2,y3), city7 == 0 &&
                      (city7 = tile_city_owner(x2,y3), city7 < 0)))))) {
                   city7 = unit_stack_sum(unit,2);
-                  local_c4 = (uint)(1 < city7);
-                  if (local_c4 == 0) {
-                    for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                      x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-                      y2 = (char)(&dir_dy_table)[local_60] + y3;
+                  flag = (uint)(1 < city7);
+                  if (flag == 0) {
+                    for (dir = 0; (int)dir < 8; dir++) {
+                      x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+                      y2 = (char)(&dir_dy_table)[dir] + y3;
                       city7 = map_in_bounds(x,y2);
                       if ((city7 != 0) && (city7 = tile_unit_owner(x,y2), -1 < city7))
                       {
-                        local_c4 = 1;
+                        flag = 1;
                         break;
                       }
                     }
                   }
-                  if (local_c4 == 0) {
+                  if (flag == 0) {
                     civ_add_ai_goal(civ,x2,y3,1,2);
                   }
                   civ_clear_standing_goals_near(civ,0x15,x2,y3,0);
-                  uVar17 = tile_improvements(x2,y3);
-                  if ((uVar17 & 0x80) != 0) {
+                  here_imps = tile_improvements(x2,y3);
+                  if ((here_imps & 0x80) != 0) {
                     units[unit].orders = '\t';
                     units[unit].field_0c = 'p';
                     goto LAB_005436c1;
                   }
-                  if (((((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0) ||
+                  if (((((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0) ||
                        (units[unit].orders != 11)) ||
                       (city7 = map_in_bounds((int)units[unit].goto_x,
                                               (int)units[unit].goto_y), city7 == 0)) ||
-                     (uVar18 = tile_improvements((int)units[unit].goto_x,
-                                                 (int)units[unit].goto_y), (uVar18 & 0x80) == 0
+                     (goto_imps = tile_improvements((int)units[unit].goto_x,
+                                                 (int)units[unit].goto_y), (goto_imps & 0x80) == 0
                      )) {
-                    if (((local_f4 == 2) && ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0))
+                    if (((fort_need == 2) && ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0))
                        && ((city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0 ||
                            (city7 = unit_stack_sum(unit,2), 1 < city7)))) {
                       units[unit].orders = 4;
                       units[unit].field_0c = 'X';
                       goto LAB_005436c1;
                     }
-                    local_170 = 0;
-                    if ((bVar29) && ((units[unit].flags & 0x80) != 0)) {
-                      local_170 = 1;
+                    work_flags = 0;
+                    if ((is_settler) && ((units[unit].flags & 0x80) != 0)) {
+                      work_flags = 1;
                     }
                     else {
                       city7 = civ_ai_goal_get_priority(civ,x2,y3,0x15);
                       if (city7 != 0) {
-                        local_170 = 1;
+                        work_flags = 1;
                       }
                     }
-                    if ((((2 < local_3c) || ((cities[city2].flags & 0x40) == 0)) || (!bVar29)) ||
+                    if ((((2 < own_dist) || ((cities[city2].flags & 0x40) == 0)) || (!is_settler)) ||
                        (units[unit].orders != 11)) {
-                      if ((((local_3c != 0) && (local_3c < 3)) &&
+                      if ((((own_dist != 0) && (own_dist < 3)) &&
                           ((((int)(char)terrain_types[terrain2].irrigate_turns / 5) * 3 - 3 <=
                             (int)cities[city2].size ||
                            (city7 = tile_resource(x2,y3), city7 != 0)))) &&
                          ((city7 = ai_tile_improve_choice(civ,x2,y3), city7 != 0 ||
-                          (uVar28 == 4)))) {
-                        local_170 = local_170 | 2;
+                          (policy == 4)))) {
+                        work_flags = work_flags | 2;
                       }
-                      if (local_170 != 0) {
-                        if ((local_170 & 2) != 0) {
+                      if (work_flags != 0) {
+                        if ((work_flags & 2) != 0) {
                           city7 = ai_tile_improve_choice(civ,x2,y3);
                           if (city7 == 1) {
                             units[unit].orders = 6;
@@ -4532,19 +4532,19 @@ LAB_0053fc8d:
                           }
                         }
                         city7 = tile_at(x2,y3);
-                        bVar7 = *(byte *)(city7 + 1);
-                        local_14 = (uint)bVar7;
-                        if (((bVar7 & 0x10) == 0) || ((bVar7 & 0x20) != 0)) {
-                          if (((bVar7 & 0x10) == 0) &&
-                             ((pbVar25 = (byte *)tile_at(x2,y3), (*pbVar25 & 0x80) == 0
+                        tile_byte = *(byte *)(city7 + 1);
+                        tile_flags = (uint)tile_byte;
+                        if (((tile_byte & 0x10) == 0) || ((tile_byte & 0x20) != 0)) {
+                          if (((tile_byte & 0x10) == 0) &&
+                             ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0
                               || (city7 = civ_has_advance(civ,7), city7 != 0)))) {
-                            local_170 = local_170 & 1;
-                            if (((local_14 & 0xc) != 0) &&
-                               ((pbVar25 = (byte *)tile_at(x2,y3),
-                                (*pbVar25 & 0x80) != 0 || ((int)terrain2 < 3)))) {
-                              local_170 = local_170 | 2;
+                            work_flags = work_flags & 1;
+                            if (((tile_flags & 0xc) != 0) &&
+                               ((tile = (byte *)tile_at(x2,y3),
+                                (*tile & 0x80) != 0 || ((int)terrain2 < 3)))) {
+                              work_flags = work_flags | 2;
                             }
-                            if (local_170 != 0) {
+                            if (work_flags != 0) {
                               units[unit].orders = 5;
                               units[unit].field_0c = 'r';
                               goto LAB_005436c1;
@@ -4554,18 +4554,18 @@ LAB_0053fc8d:
                         else {
                           city7 = civ_has_advance(civ,0x43);
                           if (city7 != 0) {
-                            local_170 = local_170 & 1;
+                            work_flags = work_flags & 1;
                             city7 = tile_resource(x2,y3);
                             if (city7 != 0) {
-                              local_170 = local_170 | 2;
+                              work_flags = work_flags | 2;
                             }
-                            if ((local_14 & 8) != 0) {
-                              local_170 = local_170 | 2;
+                            if ((tile_flags & 8) != 0) {
+                              work_flags = work_flags | 2;
                             }
                             if (1 < (char)terrain_types[terrain2].shields) {
-                              local_170 = local_170 | 2;
+                              work_flags = work_flags | 2;
                             }
-                            if (local_170 != 0) {
+                            if (work_flags != 0) {
                               units[unit].orders = 5;
                               units[unit].field_0c = 'R';
                               goto LAB_005436c1;
@@ -4573,8 +4573,8 @@ LAB_0053fc8d:
                           }
                         }
                       }
-                      if (((local_f4 != 0) &&
-                          ((1 << (bVar8 & 0x1f) & (uint)game.human_players) == 0)) &&
+                      if (((fort_need != 0) &&
+                          ((1 << (owner_byte & 0x1f) & (uint)game.human_players) == 0)) &&
                          ((city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 == 0 ||
                           (city7 = unit_stack_sum(unit,2), 1 < city7)))) {
                         units[unit].orders = 4;
@@ -4585,15 +4585,15 @@ LAB_0053fc8d:
                       if (((units[unit].orders == 11) &&
                           ((units[unit].flags & 0x200) == 0)) &&
                          (city7 = (leaders[civs[civ].tribe].expand + 1) *
-                                   (int)*(short *)(&landmass_fertile_tiles + iVar11 * 0x10),
-                         terrain = (uint)civs[civ].continent_cities[iVar11],
+                                   (int)*(short *)(&landmass_fertile_tiles + landmass * 0x10),
+                         terrain = (uint)civs[civ].continent_cities[landmass],
                          city7 + terrain * -0x10 != 0 && (int)(terrain * 0x10) <= city7))
                       goto LAB_005436c1;
-                      if (local_3c < 2) {
-                        for (local_60 = 0; (int)local_60 < 8; local_60++) {
-                          local_7c = (int)game.turn + local_60 & 7;
-                          x = map_wrap_x((char)(&dir_dx_table)[local_7c] + x2);
-                          y2 = (char)(&dir_dy_table)[local_7c] + y3;
+                      if (own_dist < 2) {
+                        for (dir = 0; (int)dir < 8; dir++) {
+                          dir2 = (int)game.turn + dir & 7;
+                          x = map_wrap_x((char)(&dir_dx_table)[dir2] + x2);
+                          y2 = (char)(&dir_dy_table)[dir2] + y3;
                           city7 = map_in_bounds(x,y2);
                           if (((city7 != 0) &&
                               (city7 = tile_city_owner(x,y2), city7 < 0)) &&
@@ -4601,16 +4601,16 @@ LAB_0053fc8d:
                                (((int)units[unit3].owner == civ &&
                                 (city7 = unit_stack_count_role(unit3,5), city7 == 0)))) &&
                               (city7 = ai_tile_improve_choice(civ,x,y2), city7 != 0)))) {
-                            bVar7 = tile_terrain(x,y2);
-                            unit4 = (uptr)bVar7;
+                            tile_byte = tile_terrain(x,y2);
+                            unit4 = (uptr)tile_byte;
                             if (((((int)(char)terrain_types[unit4].irrigate_turns / 5) * 3 - 3
                                   <= (int)cities[city3].size) ||
                                 (city7 = tile_resource(x,y2), city7 != 0)) &&
                                (city7 = map_distance_diag(x2,y3,x,y2),
                                city7 < 3)) {
                               units[unit].field_0c = 's';
-                              local_c8 = local_7c;
-                              city3 = local_c8;
+                              best_dir = dir2;
+                              city3 = best_dir;
                               goto LAB_005435ca;
                             }
                           }
@@ -4618,9 +4618,9 @@ LAB_0053fc8d:
                       }
                       terrain = tile_improvements(x2,y3);
                       if ((((terrain & 0x10) == 0) &&
-                          ((pbVar25 = (byte *)tile_at(x2,y3), (*pbVar25 & 0x80) == 0 ||
+                          ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0 ||
                            (city7 = civ_has_advance(civ,7), city7 != 0)))) &&
-                         ((local_3c < 3 && ((int)terrain2 < 3)))) {
+                         ((own_dist < 3 && ((int)terrain2 < 3)))) {
                         units[unit].field_0c = 'r';
                         units[unit].orders = 5;
                         goto LAB_005436c1;
@@ -4628,9 +4628,9 @@ LAB_0053fc8d:
                     }
                   }
                 }
-                if (((local_e4 == 0x15) && (units[unit].orders != 11)) &&
-                   ((!bVar4 &&
-                    (((local_b4 == 0 && (local_3c != 0)) &&
+                if (((ai_role == 0x15) && (units[unit].orders != 11)) &&
+                   ((!forced_attack &&
+                    (((goto_city == 0 && (own_dist != 0)) &&
                      (city7 = tile_is_ocean(x2,y3), city7 == 0)))))) {
                   if (units[unit].home_city == -1) {
                     city = city2;
@@ -4640,7 +4640,7 @@ LAB_0053fc8d:
                   }
                   if ((-1 < (int)city) &&
                      (city7 = tile_landmass((int)cities[city].x,(int)cities[city].y),
-                     city7 != iVar11)) {
+                     city7 != landmass)) {
                     city = city2;
                   }
                   if ((-1 < (int)city) &&
@@ -4652,22 +4652,22 @@ LAB_0053fc8d:
                   }
                   terrain = tile_improvements(x2,y3);
                   if (((terrain & 0x10) == 0) &&
-                     ((pbVar25 = (byte *)tile_at(x2,y3), (*pbVar25 & 0x80) == 0 ||
+                     ((tile = (byte *)tile_at(x2,y3), (*tile & 0x80) == 0 ||
                       (city7 = civ_has_advance(civ,7), city7 != 0)))) {
                     units[unit].field_0c = 'r';
                     units[unit].orders = 5;
                     goto LAB_005436c1;
                   }
-                  if ((-1 < (int)city2) && (local_158 != 0)) {
+                  if ((-1 < (int)city2) && (in_enemy_zoc != 0)) {
                     unit_set_goto(unit,99,(int)cities[city2].x,(int)cities[city2].y)
                     ;
                     goto LAB_005436c1;
                   }
-                  if (local_3c < 3) {
+                  if (own_dist < 3) {
                     city7 = tile_at(x2,y3);
-                    bVar7 = *(byte *)(city7 + 1);
-                    local_14 = (uint)bVar7;
-                    if ((bVar7 & 0xe) == 0) {
+                    tile_byte = *(byte *)(city7 + 1);
+                    tile_flags = (uint)tile_byte;
+                    if ((tile_byte & 0xe) == 0) {
                       if ((terrain_types[terrain2].mine_ai_govt != '\0') &&
                          ((char)terrain_types[terrain2].mine_ai_govt <
                           (char)terrain_types[terrain2].irrigate_ai_govt)) {
@@ -4679,7 +4679,7 @@ LAB_0053fc8d:
                         goto LAB_005436c1;
                       }
                     }
-                    if ((bVar7 & 0x80) != 0) {
+                    if ((tile_byte & 0x80) != 0) {
                       units[unit].orders = '\t';
                       goto LAB_005436c1;
                     }
@@ -4691,29 +4691,29 @@ LAB_0053fc8d:
                       goto LAB_005436c1;
                     }
                     city3 = city2;
-                    for (local_60 = 0; (int)local_60 < 0x14; local_60++) {
-                      x = map_wrap_x((int)(char)(&city_tile_dx_table)[local_60] +
+                    for (dir = 0; (int)dir < 0x14; dir++) {
+                      x = map_wrap_x((int)(char)(&city_tile_dx_table)[dir] +
                                           (int)cities[city3].x);
-                      y2 = (int)cities[city3].y + (int)(char)(&city_tile_dy_table)[local_60];
+                      y2 = (int)cities[city3].y + (int)(char)(&city_tile_dy_table)[dir];
                       city7 = map_in_bounds(x,y2);
                       if (city7 != 0) {
-                        bVar7 = tile_terrain(x,y2);
+                        tile_byte = tile_terrain(x,y2);
                         city7 = tile_at(x,y2);
-                        local_14 = (uint)*(byte *)(city7 + 1);
+                        tile_flags = (uint)*(byte *)(city7 + 1);
                         if ((*(byte *)(city7 + 1) & 0xe) == 0) {
-                          if ((terrain_types[bVar7].mine_ai_govt != '\0') &&
-                             ((char)terrain_types[bVar7].mine_ai_govt <
-                              (char)terrain_types[bVar7].irrigate_ai_govt)) {
+                          if ((terrain_types[tile_byte].mine_ai_govt != '\0') &&
+                             ((char)terrain_types[tile_byte].mine_ai_govt <
+                              (char)terrain_types[tile_byte].irrigate_ai_govt)) {
                             unit_set_goto(unit,0x6d,x,y2);
                             goto LAB_005436c1;
                           }
-                          if (terrain_types[bVar7].irrigate_ai_govt != '\0') {
+                          if (terrain_types[tile_byte].irrigate_ai_govt != '\0') {
                             unit_set_goto(unit,0x69,x,y2);
                             goto LAB_005436c1;
                           }
                         }
-                        pbVar25 = (byte *)tile_at(x,y2);
-                        if ((((*pbVar25 & 0x80) == 0) ||
+                        tile = (byte *)tile_at(x,y2);
+                        if ((((*tile & 0x80) == 0) ||
                             (city7 = civ_has_advance(civ,7), city7 != 0)) &&
                            ((terrain = tile_improvements(x,y2), (terrain & 0x10) == 0 ||
                             ((terrain = tile_improvements(x,y2), (terrain & 0x20) == 0 &&
@@ -4735,28 +4735,28 @@ LAB_0053fc8d:
                   }
                 }
                 if ((units[unit].orders != 11) ||
-                   (((local_e4 == 2 &&
-                     (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 != 0)) || (bVar4)
+                   (((ai_role == 2 &&
+                     (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 != 0)) || (forced_attack)
                     ))) goto LAB_00541001;
-                local_c4 = 1;
+                flag = 1;
                 city7 = map_distance(x2,y3,(int)units[unit].goto_x,
                                             (int)units[unit].goto_y);
                 if (1 < city7) {
-                  if (((int)local_e4 < 5) &&
+                  if (((int)ai_role < 5) &&
                      (city7 = tile_adjacent_nonallied_unit(x2,y3,civ), city7 != 0)) {
-                    local_a4 = 1;
-                    local_c4 = 0;
+                    has_orders = 1;
+                    flag = 0;
                   }
                   goto LAB_00540fea;
                 }
                 civ2 = tile_city_or_unit_owner
                                      ((int)units[unit].goto_x,(int)units[unit].goto_y);
                 if (((int)civ2 < 0) || (civ2 == civ)) goto LAB_00540fea;
-                if ((local_e4 != 4) ||
-                   ((city7 = unit_stack_sum(unit,2), city7 < 2 || (local_94 != 0))))
+                if ((ai_role != 4) ||
+                   ((city7 = unit_stack_sum(unit,2), city7 < 2 || (retried != 0))))
                 goto LAB_00540f1e;
                 units[unit].orders = -1;
-                local_94 = 1;
+                retried = 1;
               } while( true );
             }
           }
@@ -4774,263 +4774,263 @@ LAB_0053fc8d:
             if ((int)(char)unit_types[units[unit].type].attack < (int)unit4) {
               units[unit].field_0c = 'F';
               units[unit].home_city = (i8)city2;
-              bVar5 = false;
-              local_c8 = 8;
-              city3 = local_c8;
+              stay_home = false;
+              best_dir = 8;
+              city3 = best_dir;
               goto LAB_005435ca;
             }
-            local_90 = 1;
+            hold_pos = 1;
           }
         }
         else {
-          if (local_e4 != 1) {
-            if (local_e4 == 0) {
-              if (local_158 != 0) {
-                local_90 = 1;
+          if (ai_role != 1) {
+            if (ai_role == 0) {
+              if (in_enemy_zoc != 0) {
+                hold_pos = 1;
               }
               city7 = unit_stack_sum(unit,2);
               if (((city7 == 1) && (-1 < unit_types[units[unit].type].obsolete_by)) &&
                  (game.advance_known_by[unit_types[units[unit].type].obsolete_by] != '\0')) {
-                local_90 = 1;
+                hold_pos = 1;
               }
-              if (local_90 != 0) goto LAB_005414d7;
+              if (hold_pos != 0) goto LAB_005414d7;
             }
             goto LAB_0053b8f0;
           }
           city7 = unit_stack_count_role(unit,1);
           if ((1 < city7) && (units[unit].orders == 11)) goto LAB_0053b8f0;
           units[unit].field_0c = 'F';
-          local_90 = 1;
+          hold_pos = 1;
         }
 LAB_005414d7:
-        local_38 = -999;
-        local_fc = -999;
-        local_c8 = 8;
-        local_68 = 0;
-        local_50 = 0;
-        if (((local_e4 == 4) && (local_3c != 0)) &&
+        best_score = -999;
+        max_score = -999;
+        best_dir = 8;
+        explore = 0;
+        will_attack = 0;
+        if (((ai_role == 4) && (own_dist != 0)) &&
            ((city7 = unit_stack_sum(unit,2), 1 < city7 &&
             (units[unit].orders == 11)))) {
-          local_a4 = 1;
+          has_orders = 1;
         }
         city7 = tile_zoc_unit_adjacent(x2,y3,civ);
         if (city7 == 0) {
-          if (local_a4 == 0) {
-            local_68 = 1;
+          if (has_orders == 0) {
+            explore = 1;
           }
           else {
-            local_68 = 0;
+            explore = 0;
           }
         }
         else {
           units[unit].last_dir = 0xff;
         }
         if (((game.game_flags & 0x80) != 0) && ((scenario_flags & 8) != 0)) {
-          local_68 = 0;
+          explore = 0;
         }
-        if (local_e4 == 1) {
+        if (ai_role == 1) {
           if (((char)unit_types[unit_type].defense < (char)unit_types[unit_type].attack) &&
-             ((civs[civ].continent_flags[iVar11] & 0x10) == 0)) {
-            local_e4 = 0;
+             ((civs[civ].continent_flags[landmass] & 0x10) == 0)) {
+            ai_role = 0;
           }
-          if (((char)unit_types[unit_type].defense <= (char)unit_types[unit_type].attack) && (uVar28 == 0)
+          if (((char)unit_types[unit_type].defense <= (char)unit_types[unit_type].attack) && (policy == 0)
              ) {
-            local_e4 = 0;
+            ai_role = 0;
           }
         }
-        for (local_60 = 0; (int)local_60 < 8; local_60++) {
-          x = map_wrap_x((char)(&dir_dx_table)[local_60] + x2);
-          y2 = (char)(&dir_dy_table)[local_60] + y3;
+        for (dir = 0; (int)dir < 8; dir++) {
+          x = map_wrap_x((char)(&dir_dx_table)[dir] + x2);
+          y2 = (char)(&dir_dy_table)[dir] + y3;
           city7 = map_in_bounds(x,y2);
           if (city7 != 0) {
             civ2 = tile_owner(x,y2);
-            bVar8 = tile_terrain(x,y2);
-            terrain = (uint)bVar8;
-            local_6c = (uint)(terrain == 10);
-            if ((local_6c == 0) || (local_144 != 0)) {
+            owner_byte = tile_terrain(x,y2);
+            terrain = (uint)owner_byte;
+            is_ocean = (uint)(terrain == 10);
+            if ((is_ocean == 0) || (unit_domain != 0)) {
               unit3 = tile_first_unit(x,y2);
               while (((-1 < unit3 && (-1 < units[unit3].next_in_stack)) &&
                      (4 < (char)unit_types[units[unit3].type].role))) {
                 unit3 = unit_next_in_stack(unit3);
               }
-              if (((((((local_158 == 0) || (local_144 != 0)) ||
+              if (((((((in_enemy_zoc == 0) || (unit_domain != 0)) ||
                      ((-1 < unit3 ||
                       ((city7 = tile_in_enemy_zoc(x,y2,civ), city7 == 0 ||
-                       ((local_a0 & 2) != 0)))))) || (local_6c != 0)) &&
-                   ((((local_6c == 0 || (local_144 != 0)) || (unit3 < 0)) || (civ2 == civ))
-                   )) && (((local_144 != 2 || (local_6c != 0)) ||
+                       ((type_flags & 2) != 0)))))) || (is_ocean != 0)) &&
+                   ((((is_ocean == 0 || (unit_domain != 0)) || (unit3 < 0)) || (civ2 == civ))
+                   )) && (((unit_domain != 2 || (is_ocean != 0)) ||
                           (((-1 < unit3 && ((civ2 != civ && (terrain2 == 10)))) &&
-                           ((local_a0 & 8) == 0)))))) &&
+                           ((type_flags & 8) == 0)))))) &&
                  ((((unit3 < 0 || (civ2 != civ)) ||
                    (city7 = unit_stack_sum(unit3,2), city7 < 2)) ||
                   ((city7 = tile_city_owner(x,y2), -1 < city7 ||
-                   (uVar10 = tile_improvements(x,y2), ((byte)uVar10 & 0x42) == 0x40))))))
+                   (result = tile_improvements(x,y2), ((byte)result & 0x42) == 0x40))))))
               {
-                local_18 = 0;
-                if (bVar30) {
+                score = 0;
+                if (settler_type) {
                   if ((terrain2 == 10) &&
                      (city7 = tile_zoc_unit_adjacent(x,y2,civ), city7 != 0))
                   goto LAB_0054168e;
-                  local_18 = rand_range(0,4);
+                  score = rand_range(0,4);
                 }
                 else if ((units[unit].visibility == '\0') && (terrain2 != 10)) {
-                  if (local_e4 == 0) {
-                    local_18 = rand_range(0,2);
-                    local_18 += (char)terrain_types[terrain].move_cost * -2;
+                  if (ai_role == 0) {
+                    score = rand_range(0,2);
+                    score += (char)terrain_types[terrain].move_cost * -2;
                   }
                   else {
-                    local_18 = rand_range(0,2);
-                    local_18 -= (char)terrain_types[terrain].defense;
+                    score = rand_range(0,2);
+                    score -= (char)terrain_types[terrain].defense;
                   }
                 }
                 else {
-                  local_18 = rand_range(0,4);
+                  score = rand_range(0,4);
                   if ((unit3 < 0) || (civ2 != civ)) {
-                    if ((int)local_e4 < 6) {
-                      local_18 += (char)terrain_types[terrain].defense * 4;
+                    if ((int)ai_role < 6) {
+                      score += (char)terrain_types[terrain].defense * 4;
                     }
                     else {
-                      local_18 = local_18 +
+                      score = score +
                                  (6 - ((char)terrain_types[terrain].move_cost - 1) *
                                       (uint)cosmic.road_move_mult);
-                      if ((iVar27 < 4) && (city2 != city4)) {
-                        local_70 = map_distance(x,y2,(int)cities[city4].x,
+                      if ((near_dist < 4) && (city2 != city4)) {
+                        cand_score = map_distance(x,y2,(int)cities[city4].x,
                                                       (int)cities[city4].y);
-                        if (local_70 == 1) {
+                        if (cand_score == 1) {
                           if ((int)(uint)cosmic.road_move_mult <
                               (int)(char)terrain_types[terrain].move_cost) {
-                            local_18 -= 4;
+                            score -= 4;
                           }
                           else {
-                            local_18 += 8;
+                            score += 8;
                           }
                         }
-                        else if (((local_70 == 2) &&
+                        else if (((cand_score == 2) &&
                                  ((int)(char)terrain_types[terrain].move_cost <=
                                   (int)(uint)cosmic.road_move_mult)) &&
-                                (uVar16 = tile_improvements(x,y2), (uVar16 & 0x10) != 0))
+                                (road_imps = tile_improvements(x,y2), (road_imps & 0x10) != 0))
                         {
-                          local_18 += 4;
+                          score += 4;
                         }
                       }
                     }
                   }
                   else {
-                    uVar10 = tile_improvements(x,y2);
-                    if ((((byte)uVar10 & 0x43) == 1) &&
+                    result = tile_improvements(x,y2);
+                    if ((((byte)result & 0x43) == 1) &&
                        (city7 = tile_adjacent_nonallied_unit(x,y2,civ), city7 != 0)) {
-                      switch(local_e4) {
+                      switch(ai_role) {
                       case 0:
                         unit4 = unit_stack_count_role(unit3,0);
                         if (((int)unit4 < 1) &&
                            (city7 = unit_stack_count_role(unit3,1), city7 != 0)) {
-                          local_18 += 8;
+                          score += 8;
                         }
                         else {
-                          local_18 += unit4 * -8;
+                          score += unit4 * -8;
                         }
                         break;
                       case 1:
                         unit4 = unit_stack_count_role(unit3,1);
                         if ((int)unit4 < 1) {
-                          local_18 += 8;
+                          score += 8;
                         }
                         else {
-                          local_18 += unit4 * -4;
+                          score += unit4 * -4;
                         }
                         break;
                       case 2:
                         city7 = unit_stack_count_role(unit3,4);
                         if (city7 != 0) {
-                          local_18 += 8;
+                          score += 8;
                         }
                         city7 = unit_stack_count_role(unit3,2);
-                        local_18 += city7 * -4;
+                        score += city7 * -4;
                         break;
                       case 4:
                         city7 = unit_stack_count_role(unit3,2);
                         if (city7 != 0) {
-                          local_18 += 8;
+                          score += 8;
                         }
                         city7 = unit_stack_count_role(unit3,4);
-                        local_18 += city7 * -8;
+                        score += city7 * -8;
                         break;
                       case 5:
                       case 0x15:
-                        local_18 -= 4;
+                        score -= 4;
                         break;
                       case 6:
                         city7 = unit_stack_count_role(unit3,0);
                         y = unit_stack_count_role(unit3,1);
                         if (city7 + y != 0) {
-                          local_18 += 8;
+                          score += 8;
                         }
                       }
                     }
                     else {
-                      switch(local_e4) {
+                      switch(ai_role) {
                       case 0:
                         city7 = unit_stack_sum(unit3,0);
                         y = unit_stack_sum(unit3,2);
-                        local_18 += (city7 * 4) / (y + 1);
+                        score += (city7 * 4) / (y + 1);
                         break;
                       case 1:
                         city7 = unit_stack_sum(unit3,3);
                         y = unit_stack_sum(unit3,0);
-                        local_18 += (city7 * 2) / (y + 1);
+                        score += (city7 * 2) / (y + 1);
                         break;
                       case 5:
-                        uVar2 = terrain_types[terrain].defense;
+                        stat = terrain_types[terrain].defense;
                         city7 = unit_stack_sum(unit3,0);
-                        local_18 += ((char)uVar2 + city7) * 2;
+                        score += ((char)stat + city7) * 2;
                         break;
                       case 6:
                         city7 = unit_stack_count_role(unit3,0);
                         y = unit_stack_count_role(unit3,1);
                         if (city7 + y != 0) {
-                          local_18 += 8;
+                          score += 8;
                         }
                       }
                     }
                   }
                 }
-                if (local_144 == 1) {
-                  local_18 = rand_range(0,2);
+                if (unit_domain == 1) {
+                  score = rand_range(0,2);
                 }
                 if (-1 < (char)units[unit].last_dir) {
-                  if ((int)(char)units[unit].last_dir == local_60 ||
-                      (int)((int)(char)units[unit].last_dir - local_60) < 0) {
-                    unit4 = ~((int)(char)units[unit].last_dir - local_60) + 1;
+                  if ((int)(char)units[unit].last_dir == dir ||
+                      (int)((int)(char)units[unit].last_dir - dir) < 0) {
+                    unit4 = ~((int)(char)units[unit].last_dir - dir) + 1;
                   }
                   else {
-                    unit4 = (int)(char)units[unit].last_dir - local_60;
+                    unit4 = (int)(char)units[unit].last_dir - dir;
                   }
                   if (4 < (int)unit4) {
                     unit4 = 8 - unit4;
                   }
-                  local_18 += unit4 * unit4 * -2;
+                  score += unit4 * unit4 * -2;
                 }
-                local_118 = 0;
-                local_c4 = 0;
+                is_attack = 0;
+                flag = 0;
                 if (((unit3 < 0) &&
                     (city7 = tile_is_ocean(x,y2), city3 = city4, city7 == 0)) &&
                    ((char)unit_types[units[unit].type].role < 5)) {
-                  if ((((iVar27 < 4) && ((int)cities[city4].owner != civ)) &&
+                  if ((((near_dist < 4) && ((int)cities[city4].owner != civ)) &&
                       (((*(byte *)&civs[civ].treaties[cities[city4].owner] & 6) != 0
                        && ((*(byte *)&civs[civ].treaties[cities[city4].owner] & 8) ==
                            0)))) &&
                      (((*(byte *)&civs[civ].treaties[cities[city4].owner] & 4) != 0
                       || (city7 = civ_get_attitude(civ,(int)cities[city4].owner),
                          city7 < 0x32)))) {
-                    local_70 = map_distance_diag((int)cities[city3].x,(int)cities[city3].y,x
+                    cand_score = map_distance_diag((int)cities[city3].x,(int)cities[city3].y,x
                                                   ,y2);
-                    if ((iVar27 < local_70) && (iVar27 < 3)) {
-                      local_18 += 5;
-                      local_c4 = 1;
+                    if ((near_dist < cand_score) && (near_dist < 3)) {
+                      score += 5;
+                      flag = 1;
                     }
-                    if (local_70 < iVar27) goto LAB_0054168e;
-                    if (local_70 == iVar27) {
-                      local_18 -= 5;
+                    if (cand_score < near_dist) goto LAB_0054168e;
+                    if (cand_score == near_dist) {
+                      score -= 5;
                     }
                   }
                   civ3 = tile_radius_civ(x,y2);
@@ -5040,21 +5040,21 @@ LAB_005414d7:
                     if ((((*(byte *)&civs[civ].treaties[civ3] & 4) != 0) &&
                         ((int)((uint)civs[civ3].reputation -
                               (int)*(char *)((int)civs + civ * 0x595 + 0x48)) < 7)) &&
-                       (local_c4 == 0)) goto LAB_0054168e;
+                       (flag == 0)) goto LAB_0054168e;
                     if ((((*(byte *)&civs[civ].treaties[civ3] & 4) != 0) &&
                         ((int)((uint)civs[civ3].reputation -
                               (int)*(char *)((int)civs + civ * 0x595 + 0x48)) < 7)) ||
                        (city7 = civ_get_attitude(civ,civ3), city7 < 0x32)) {
-                      local_18 -= 5;
-                      local_14 = tile_improvements(x,y2);
-                      if ((local_14 & 0x1c) != 0) {
-                        local_18 -= 3;
+                      score -= 5;
+                      tile_flags = tile_improvements(x,y2);
+                      if ((tile_flags & 0x1c) != 0) {
+                        score -= 3;
                       }
                     }
                   }
                 }
                 if ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0) {
-                  local_18 -= 6;
+                  score -= 6;
                 }
                 if (unit3 < 0) {
                   city7 = tile_city_owner(x,y2);
@@ -5064,21 +5064,21 @@ LAB_005414d7:
                          ((*(byte *)&civs[civ].treaties[civ2] & 0x10) == 0)) ||
                         ((*(byte *)&civs[civ].treaties[civ2] & 8) != 0))))
                     goto LAB_0054168e;
-                    local_18 = 999;
-                    local_a4 = 0;
-                    local_90 = 0;
+                    score = 999;
+                    has_orders = 0;
+                    hold_pos = 0;
                   }
                   city7 = tile_has_hut(x,y2);
                   if (city7 != 0) {
-                    local_18 += 0x14;
+                    score += 0x14;
                   }
                 }
                 else {
                   if (civ2 != civ) {
-                    local_118 = 1;
-                    local_ac = 0;
-                    if (((bVar30) || (unit_types[units[unit].type].role == 7)) ||
-                       ((((local_144 == 2 && (unit_types[units[unit].type].hold != '\0')) &&
+                    is_attack = 1;
+                    attack_bonus = 0;
+                    if (((settler_type) || (unit_types[units[unit].type].role == 7)) ||
+                       ((((unit_domain == 2 && (unit_types[units[unit].type].hold != '\0')) &&
                          (((city7 = tile_is_ocean(x,y2), city7 == 0 &&
                            ((char)unit_types[units[unit].type].attack < 3)) ||
                           ((city7 = unit_stack_sum(unit,2), 1 < city7 &&
@@ -5087,7 +5087,7 @@ LAB_005414d7:
                             ((char)unit_types[units[unit3].type].attack <=
                              (char)unit_types[units[unit].type].defense)))))))) ||
                         ((city7 = tile_is_ocean(x2,y3), city7 != 0 &&
-                         ((local_144 == 0 && ((unit_types[units[unit].type].flags & 4) == 0))))
+                         ((unit_domain == 0 && ((unit_types[units[unit].type].flags & 4) == 0))))
                         )))) goto LAB_0054168e;
                     if ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0) {
                       if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
@@ -5106,85 +5106,85 @@ LAB_005429fe:
                              (city7 = rand_range(0,(uint)civs[civ2].government -
                                                             (uint)civs[civ].government),
                              city7 != 0)))))) {
-                          local_10 = unit_resolve_attack(unit,local_60,0);
+                          attack_value = unit_resolve_attack(unit,dir,0);
                           city7 = unit_stack_sum(unit3,0);
-                          local_10 = ((city7 + 1) * local_10) /
+                          attack_value = ((city7 + 1) * attack_value) /
                                      (int)(char)unit_types[units[unit].type].cost;
                           city7 = tile_city_owner(x,y2);
                           if (-1 < city7) {
-                            local_10 = local_10 * 3;
+                            attack_value = attack_value * 3;
                           }
-                          if ((local_e4 == 2) && (unit_types[units[unit3].type].role == 4))
+                          if ((ai_role == 2) && (unit_types[units[unit3].type].role == 4))
                           {
-                            local_10 = local_10 << 1;
+                            attack_value = attack_value << 1;
                           }
-                          if (local_48 == 0) {
-                            if (local_e4 == 0) {
-                              if (uVar28 == 0) {
-                                local_10 = local_10 << 1;
+                          if (is_guard == 0) {
+                            if (ai_role == 0) {
+                              if (policy == 0) {
+                                attack_value = attack_value << 1;
                               }
-                              uVar2 = unit_types[units[unit].type].attack;
+                              stat = unit_types[units[unit].type].attack;
                               city7 = unit_stack_sum(unit,3);
-                              if ((char)uVar2 * 2 < city7) {
-                                local_10 = local_10 << 1;
-                                local_ac = 1;
+                              if ((char)stat * 2 < city7) {
+                                attack_value = attack_value << 1;
+                                attack_bonus = 1;
                               }
                               city7 = unit_stack_count_role(unit3,0);
                               if (city7 != 0) {
-                                local_10 = local_10 << 1;
-                                local_ac = 1;
+                                attack_value = attack_value << 1;
+                                attack_bonus = 1;
                               }
                               city7 = civ_ai_goal_get_priority(civ,x2,y3,0);
                               if (city7 != 0) {
-                                local_10 = local_10 << 1;
+                                attack_value = attack_value << 1;
                               }
                             }
                             if ((game.rules & 0x10) != 0) {
                               city7 = unit_max_hp(unit3);
                               y = unit_hp_remaining(unit3);
                               if (y <= city7 / 3) {
-                                local_ac = 1;
-                                local_10 = local_10 << 1;
+                                attack_bonus = 1;
+                                attack_value = attack_value << 1;
                               }
                             }
                             if ((unit_types[units[unit3].type].flags & 8) != 0) {
-                              local_10 = local_10 * 3;
+                              attack_value = attack_value * 3;
                             }
                           }
                           else {
-                            local_10 = local_10 / 2;
+                            attack_value = attack_value / 2;
                             if ((char)unit_types[units[unit3].type].attack <=
                                 (char)unit_types[units[unit].type].defense) {
-                              local_10 = 0;
+                              attack_value = 0;
                             }
                           }
                           if ((unit_type == 9) &&
                              (4 < (char)unit_types[units[unit3].type].role)) {
-                            local_ac = 2;
+                            attack_bonus = 2;
                           }
                           unit4 = (uptr)(char)unit_types[units[unit3].type].role;
                           if ((civ2 == 0) && (unit4 == 7)) {
                             if ((game.human_players & 1) == 0) {
-                              local_10 = local_10 / 2;
+                              attack_value = attack_value / 2;
                             }
                           }
                           else if ((civ2 == 0) && (4 < (int)unit4)) {
-                            local_10 += 0xc;
+                            attack_value += 0xc;
                           }
                           else if (unit4 == 6) {
-                            local_10 = local_10 << 1;
+                            attack_value = attack_value << 1;
                           }
-                          if ((int)((-(uint)(civ2 == 0) & 6) + 6) <= local_10) {
-                            local_18 += local_10 * 4;
+                          if ((int)((-(uint)(civ2 == 0) & 6) + 6) <= attack_value) {
+                            score += attack_value * 4;
                             goto LAB_0054314b;
                           }
-                          local_18 = -999;
-                          if ((((((uVar28 == 0) && (local_e4 == 0)) && (local_144 == 0)) &&
+                          score = -999;
+                          if ((((((policy == 0) && (ai_role == 0)) && (unit_domain == 0)) &&
                                (((units[unit3].flags & 0x2000) != 0 ||
                                 (units[unit3].orders == 2)))) &&
                               ((3 < (char)terrain_types[terrain].defense ||
-                               (uVar10 = tile_improvements(x,y2),
-                               ((byte)uVar10 & 0x42) == 0x40)))) &&
+                               (result = tile_improvements(x,y2),
+                               ((byte)result & 0x42) == 0x40)))) &&
                              (((city7 = unit_stack_sum(unit3,2), city7 < 2 &&
                                (city7 = tile_city_owner(x,y2), city7 < 0)) &&
                               (city7 = rand_range(0,3), city7 == 0)))) {
@@ -5193,11 +5193,11 @@ LAB_005429fe:
                         }
                         goto LAB_0054168e;
                       }
-                      if (local_e4 != 6) {
-                        bVar8 = civs[civ2].reputation;
+                      if (ai_role != 6) {
+                        owner_byte = civs[civ2].reputation;
                         city7 = civ_get_attitude(civ,civ2);
                         y = rand_range(0,0x13);
-                        if (0x32 < (int)((uint)bVar8 * 5 + city7 + y - 10))
+                        if (0x32 < (int)((uint)owner_byte * 5 + city7 + y - 10))
                         goto LAB_005429fe;
                       }
                     }
@@ -5207,15 +5207,15 @@ LAB_005429fe:
                        ((unit_types[units[unit].type].attack == '\0' ||
                         (city7 = city_find_nearest(x,y2,-1,0xffffffff,-1),
                         (int)cities[city7].owner != civ)))) {
-                      if (local_e4 == 6) {
-                        if ((uVar28 == 0) ||
-                           ((uVar28 == 5 ||
+                      if (ai_role == 6) {
+                        if ((policy == 0) ||
+                           ((policy == 5 ||
                             ((*(byte *)&civs[civ].treaties[civ2] & 6) == 0)))) {
 LAB_0054272e:
-                          if (((local_e4 == 6) || (city2 == city4)) && (2 < game.difficulty))
+                          if (((ai_role == 6) || (city2 == city4)) && (2 < game.difficulty))
                           {
 LAB_00542801:
-                            if (local_144 == 0) {
+                            if (unit_domain == 0) {
                               unit4 = 0;
                               if ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) == 0) {
                                 for (civ4 = 1; civ4 < 8; civ4++) {
@@ -5230,7 +5230,7 @@ LAB_00542801:
                                 unit4 = 1;
                                 for (civ4 = 1; civ4 < 8; civ4++) {
                                   if (((1 << ((byte)civ4 & 0x1f) & (uint)game.human_players) !=
-                                       0) && (*(char *)&civs[civ4].continent_cities[iVar11] !=
+                                       0) && (*(char *)&civs[civ4].continent_cities[landmass] !=
                                               '\0')) {
                                     unit4 = 0;
                                     break;
@@ -5260,96 +5260,96 @@ LAB_00542801:
                           }
                         }
                       }
-                      else if ((uVar28 == 0) && (local_e4 == 0)) goto LAB_0054272e;
+                      else if ((policy == 0) && (ai_role == 0)) goto LAB_0054272e;
                     }
                     else {
-                      local_18 = 0x3c;
-                      if (local_38 < 0x3c) {
-                        local_fc = 0x3c;
-                        local_38 = 0x3c;
-                        local_c8 = local_60;
-                        local_50 = 1;
-                        local_64 = 2;
+                      score = 0x3c;
+                      if (best_score < 0x3c) {
+                        max_score = 0x3c;
+                        best_score = 0x3c;
+                        best_dir = dir;
+                        will_attack = 1;
+                        attack_cost = 2;
                       }
                     }
                     goto LAB_0054168e;
                   }
-                  local_18 -= (char)unit_types[units[unit].type].defense;
+                  score -= (char)unit_types[units[unit].type].defense;
                 }
 LAB_0054314b:
-                if (((local_3c != 0) && (local_144 == 2)) && ((unit3 < 0 || (civ2 == civ)))
+                if (((own_dist != 0) && (unit_domain == 2)) && ((unit3 < 0 || (civ2 == civ)))
                    ) {
                   city7 = tile_landmass(x,y2);
                   y = city_adjacent_sea_info(city2,0,0);
                   if (city7 == y) {
-                    local_18 += 10;
+                    score += 10;
                   }
                 }
-                if ((((local_144 != 1) || (city7 = tile_airbase_owner(x,y2), city7 < 0)
+                if ((((unit_domain != 1) || (city7 = tile_airbase_owner(x,y2), city7 < 0)
                      ) || (civ2 == civ)) || (-1 < unit3)) {
-                  if (local_68 != 0) {
-                    x5 = map_wrap_x((char)(&dir_dx_table)[local_60] * 4 + x2);
-                    city7 = (char)(&dir_dy_table)[local_60] * 4 + y3;
+                  if (explore != 0) {
+                    x5 = map_wrap_x((char)(&dir_dx_table)[dir] * 4 + x2);
+                    city7 = (char)(&dir_dy_table)[dir] * 4 + y3;
                     y = map_in_bounds(x5,city7);
                     if ((y != 0) &&
                        (y = tile_visible_to(x5,city7,civ), y == 0)) {
                       y = tile_is_ocean(x5,city7);
                       if (y == 0) {
-                        local_18 += 8;
+                        score += 8;
                       }
                       else {
-                        local_18 += 2;
+                        score += 2;
                       }
                     }
-                    for (local_7c = 0; (int)local_7c < 8; local_7c++) {
-                      x3 = map_wrap_x((char)(&dir_dx_table)[local_7c] + x5);
-                      y = (char)(&dir_dy_table)[local_7c] + city7;
-                      iVar26 = map_in_bounds(x3,y);
-                      if (iVar26 != 0) {
-                        iVar26 = tile_visible_to(x3,y,civ);
-                        if ((iVar26 == 0) &&
-                           ((iVar26 = tile_is_ocean(x3,y), iVar26 == 0 ||
-                            (local_144 == 2)))) {
-                          local_18 += 2;
+                    for (dir2 = 0; (int)dir2 < 8; dir2++) {
+                      x3 = map_wrap_x((char)(&dir_dx_table)[dir2] + x5);
+                      y = (char)(&dir_dy_table)[dir2] + city7;
+                      check = map_in_bounds(x3,y);
+                      if (check != 0) {
+                        check = tile_visible_to(x3,y,civ);
+                        if ((check == 0) &&
+                           ((check = tile_is_ocean(x3,y), check == 0 ||
+                            (unit_domain == 2)))) {
+                          score += 2;
                         }
-                        iVar26 = tile_unit_owner(x3,y);
-                        if (-1 < iVar26) {
-                          local_18 -= 2;
+                        check = tile_unit_owner(x3,y);
+                        if (-1 < check) {
+                          score -= 2;
                         }
-                        if (bVar30) {
-                          bVar8 = tile_terrain(x3,y);
-                          local_18 += (char)terrain_types[bVar8].food;
+                        if (settler_type) {
+                          owner_byte = tile_terrain(x3,y);
+                          score += (char)terrain_types[owner_byte].food;
                           if ((game.multiplayer != '\0') && (mp_double_production != 0)) {
-                            bVar8 = tile_terrain(x3,y);
-                            local_18 += (char)terrain_types[bVar8].food;
+                            owner_byte = tile_terrain(x3,y);
+                            score += (char)terrain_types[owner_byte].food;
                           }
                         }
                       }
                     }
                   }
                   if ((y2 == 0) || ((int)map.height - 1U == y2)) {
-                    local_18 = local_18 / 3;
+                    score = score / 3;
                   }
-                  city7 = local_18;
-                  if (((local_118 != 0) &&
+                  city7 = score;
+                  if (((is_attack != 0) &&
                       (y = unit_moves_left(unit),
                       y < (int)(uint)cosmic.road_move_mult)) &&
                      (y = tile_city_owner(x,y2), y < 0)) {
                     y = unit_stack_sum(unit,0);
-                    uVar33 = 99;
-                    uVar10 = 1;
+                    arg_hi = 99;
+                    result = 1;
                     x = unit_stack_sum(unit,3);
-                    iVar26 = int_clamp(x,uVar10,uVar33);
-                    local_18 = (y / iVar26) * local_18;
+                    check = int_clamp(x,result,arg_hi);
+                    score = (y / check) * score;
                   }
-                  if (local_38 < local_18) {
-                    local_38 = local_18;
-                    local_c8 = local_60;
-                    local_50 = local_118;
-                    local_64 = local_ac;
+                  if (best_score < score) {
+                    best_score = score;
+                    best_dir = dir;
+                    will_attack = is_attack;
+                    attack_cost = attack_bonus;
                   }
-                  if (local_fc < city7) {
-                    local_fc = city7;
+                  if (max_score < city7) {
+                    max_score = city7;
                   }
                 }
               }
@@ -5357,47 +5357,47 @@ LAB_0054314b:
           }
 LAB_0054168e: ;
         }
-        if ((local_50 != 0) &&
-           (city7 = (uint)cosmic.road_move_mult - local_64, iVar27 = unit_moves_left(unit),
-           iVar27 < city7)) {
-          local_c8 = 8;
+        if ((will_attack != 0) &&
+           (city7 = (uint)cosmic.road_move_mult - attack_cost, near_dist = unit_moves_left(unit),
+           near_dist < city7)) {
+          best_dir = 8;
         }
-        if (local_fc != local_38) {
-          local_c8 = 8;
+        if (max_score != best_score) {
+          best_dir = 8;
         }
-        if (local_c8 == 8) {
-          local_50 = 0;
+        if (best_dir == 8) {
+          will_attack = 0;
         }
-        if ((local_a4 != 0) && (local_50 == 0)) goto LAB_005436c1;
-        if ((local_90 != 0) && (local_50 == 0)) {
-          local_c8 = 8;
+        if ((has_orders != 0) && (will_attack == 0)) goto LAB_005436c1;
+        if ((hold_pos != 0) && (will_attack == 0)) {
+          best_dir = 8;
         }
         units[unit].field_0c = '9';
-        city3 = local_c8;
+        city3 = best_dir;
       }
       else {
-        local_c8 = 8;
-        city3 = local_c8;
+        best_dir = 8;
+        city3 = best_dir;
       }
     }
   }
   else {
     units[unit].flags = units[unit].flags | 8;
     units[unit].field_0c = 'd';
-    local_c8 = 8;
-    city3 = local_c8;
+    best_dir = 8;
+    city3 = best_dir;
   }
 LAB_005435ca:
-  local_c8 = city3;
-  if (local_c8 == 8) {
+  best_dir = city3;
+  if (best_dir == 8) {
     units[unit].last_dir = 0xff;
     units[unit].orders = -1;
   }
   else {
-    x2 = map_wrap_x((char)(&dir_dx_table)[local_c8] + x2);
-    y3 += (char)(&dir_dy_table)[local_c8];
-    iVar27 = map_in_bounds(x2,y3);
-    if (iVar27 == 0) {
+    x2 = map_wrap_x((char)(&dir_dx_table)[best_dir] + x2);
+    y3 += (char)(&dir_dy_table)[best_dir];
+    near_dist = map_in_bounds(x2,y3);
+    if (near_dist == 0) {
       units[unit].orders = -1;
       unit_exhaust_moves(unit);
     }
@@ -5419,12 +5419,12 @@ LAB_005436c1:
       return 1;
     }
     unit_exhaust_moves(unit);
-    if ((local_144 == 0) && (unit_types[units[unit].type].role != 5)) {
+    if ((unit_domain == 0) && (unit_types[units[unit].type].role != 5)) {
       units[unit].orders = 1;
       if ((units[unit].flags & 0x100) != 0) {
         units[unit].orders = 2;
       }
-      if (bVar5) {
+      if (stay_home) {
         units[unit].orders = -1;
       }
     }
@@ -5438,8 +5438,8 @@ LAB_005436c1:
     units[unit].orders = -1;
     if (units[unit].moves_used != '\0') {
       if (unit_types[units[unit].type].role == 2) {
-        iVar27 = unit_stack_count_role(unit,4);
-        if (iVar27 != 0) {
+        near_dist = unit_stack_count_role(unit,4);
+        if (near_dist != 0) {
           unit_exhaust_moves(unit);
         }
       }
@@ -5451,78 +5451,78 @@ LAB_005436c1:
   return 0;
 LAB_00540f1e:
   if (((*(byte *)&civs[civ].treaties[civ2] & 0xe) != 0) &&
-     ((local_e4 != 7 ||
+     ((ai_role != 7 ||
       (city7 = tile_city_owner((int)units[unit].goto_x,(int)units[unit].goto_y),
       city7 < 0)))) {
-    local_c4 = 0;
+    flag = 0;
     units[unit].orders = -1;
   }
 LAB_00540fea:
-  if (local_c4 != 0) goto LAB_005436c1;
+  if (flag != 0) goto LAB_005436c1;
 LAB_00541001:
-  if ((((local_e4 == 1) && (terrain2 != 10)) && (local_a4 == 0)) && (!bVar4)) {
-    local_c4 = 0;
+  if ((((ai_role == 1) && (terrain2 != 10)) && (has_orders == 0)) && (!forced_attack)) {
+    flag = 0;
     city7 = unit_stack_sum(unit,2);
-    if ((city7 < 2) && (local_3c < 4)) {
-      local_c4 = local_c4 | 1;
+    if ((city7 < 2) && (own_dist < 4)) {
+      flag = flag | 1;
     }
-    if (((local_158 != 0) && (city7 = unit_stack_count_role(unit,1), city7 == 1)) &&
+    if (((in_enemy_zoc != 0) && (city7 = unit_stack_count_role(unit,1), city7 == 1)) &&
        ((((int)city4 < 0 ||
-         (((city4 == city2 || (4 < iVar27)) ||
+         (((city4 == city2 || (4 < near_dist)) ||
           ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + cities[city4].owner * 4) & 0x20) != 0)))) ||
         (6 < (int)((uint)civs[cities[city4].owner].reputation -
                   (int)civs[civ].field_48[cities[city4].owner]))))) {
-      local_c4 = local_c4 | 2;
+      flag = flag | 2;
     }
-    if ((local_f4 != 0) || (local_bc != 0)) {
+    if ((fort_need != 0) || (on_fortress != 0)) {
       city7 = unit_stack_count_role(unit,1);
       if (city7 == 1) {
-        local_c4 = local_c4 | 4;
+        flag = flag | 4;
       }
-      if ((local_c4 != 0) || ((units[unit].flags & 0x100) != 0)) {
-        local_c4 = local_c4 | 8;
+      if ((flag != 0) || ((units[unit].flags & 0x100) != 0)) {
+        flag = flag | 8;
       }
     }
-    terrain = local_c4;
+    terrain = flag;
     if (((char)unit_types[unit_type].defense <= (char)unit_types[unit_type].attack) &&
-       (terrain = local_c4 & 0xfffffffe,
+       (terrain = flag & 0xfffffffe,
        (char)unit_types[unit_type].defense < (char)unit_types[unit_type].attack)) {
-      terrain = local_c4 & 0xfffffff4;
+      terrain = flag & 0xfffffff4;
     }
-    local_c4 = terrain;
+    flag = terrain;
     civ2 = tile_radius_civ(x2,y3);
     if ((((0 < (int)civ2) && (civ2 != civ)) &&
         ((*(byte *)&civs[civ].treaties[civ2] & 4) != 0)) &&
        ((int)((uint)civs[civ2].reputation - (int)civs[civ].field_48[civ2])
         < 7)) {
-      local_c4 = 0;
+      flag = 0;
     }
-    if (local_c4 != 0) {
-      if ((local_c4 & 0xc) != 0) {
+    if (flag != 0) {
+      if ((flag & 0xc) != 0) {
         civ_clear_standing_goals_near(civ,1,x2,y3,1);
       }
       units[unit].field_0c = 'F';
       if ((char)unit_types[unit_type].attack < (char)unit_types[unit_type].defense) {
-        local_c8 = 8;
-        city3 = local_c8;
+        best_dir = 8;
+        city3 = best_dir;
         goto LAB_005435ca;
       }
-      local_90 = 1;
+      hold_pos = 1;
       goto LAB_005414d7;
     }
   }
-  if (((bVar29) &&
-      (*(short *)(&landmass_fertile_tiles + iVar11 * 0x10) >> 3 <
-       (short)(ushort)civs[civ].continent_cities[iVar11])) &&
+  if (((is_settler) &&
+      (*(short *)(&landmass_fertile_tiles + landmass * 0x10) >> 3 <
+       (short)(ushort)civs[civ].continent_cities[landmass])) &&
      (units[unit].home_city != -1)) {
-    if ((local_3c == 0) && (cities[city2].size < '\n')) {
+    if ((own_dist == 0) && (cities[city2].size < '\n')) {
       cities[city2].size++;
       unit_destroy_redraw(unit,1);
       city_window_refresh_if_city((FrameWindow *)&city_window,city2);
       map_redraw_area_all_views(x2,y3,1,1,1);
       return 1;
     }
-    if (((-1 < (int)city2) && (iVar11 == local_58)) && (cities[city2].size < '\n')) {
+    if (((-1 < (int)city2) && (landmass == own_landmass)) && (cities[city2].size < '\n')) {
       unit_set_goto(unit,0x42,(int)cities[city2].x,(int)cities[city2].y);
       goto LAB_005436c1;
     }
@@ -5531,83 +5531,83 @@ LAB_00541001:
 }
 #undef mp_double_production
 #undef scenario_flags
-#undef local_188
+#undef cargo_target
 #undef x4
-#undef local_170
-#undef local_16c
+#undef work_flags
+#undef goal_match
 #undef unit
 #undef city6
-#undef local_158
+#undef in_enemy_zoc
 #undef civ4
-#undef local_144
-#undef local_140
+#undef unit_domain
+#undef trade_target
 #undef city
-#undef local_11c
-#undef local_118
-#undef local_114
-#undef local_110
+#undef needed_defenders
+#undef is_attack
+#undef sea_south
+#undef ally_civ
 #undef y4
-#undef local_104
-#undef local_fc
-#undef local_f4
-#undef local_f0
+#undef near_landmass
+#undef max_score
+#undef fort_need
+#undef ally_territory
 #undef y3
-#undef local_e4
-#undef local_e0
-#undef local_dc
-#undef local_d8
+#undef ai_role
+#undef tile_count
+#undef needs_units
+#undef damage_level
 #undef x2
 #undef x3
 #undef unit4
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_b0
-#undef local_ac
-#undef local_a8
-#undef local_a4
-#undef local_a0
-#undef local_9c
+#undef best_dir
+#undef flag
+#undef explore_flag
+#undef on_fortress
+#undef sea_north
+#undef goto_city
+#undef role_count
+#undef attack_bonus
+#undef room_aboard
+#undef has_orders
+#undef type_flags
+#undef defender_count
 #undef unit5
-#undef local_94
-#undef local_90
+#undef retried
+#undef hold_pos
 #undef x6
 #undef city4
-#undef local_84
+#undef home_dist
 #undef terrain2
-#undef local_7c
+#undef dir2
 #undef civ2
 #undef y2
-#undef local_70
-#undef local_6c
-#undef local_68
-#undef local_64
-#undef local_60
+#undef cand_score
+#undef is_ocean
+#undef explore
+#undef attack_cost
+#undef dir
 #undef civ3
-#undef local_58
+#undef own_landmass
 #undef unit3
-#undef local_50
-#undef local_4c
-#undef local_48
+#undef will_attack
+#undef sea_east
+#undef is_guard
 #undef city5
 #undef city2
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_30
-#undef local_2c
-#undef local_28
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef own_dist
+#undef best_score
+#undef freed_count
+#undef divisor
+#undef target_policy
+#undef sea_west
+#undef race_behind
+#undef no_moves
+#undef here_landmass
+#undef score
+#undef tile_flags
+#undef attack_value
+#undef tasks_mask
+#undef ocean_count
 
 /* 00543cd6 auto */
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
@@ -5615,26 +5615,26 @@ LAB_00541001:
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
 #define scenario_objective_civ (*(short *)((u8 *)&g.d_0064bcba))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
+#define order_steps (*(int *)(frame_ + FRAME_OFF(4)))
+#define pass (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl ai_process_civ_units(void)
 
 {
-  bool bVar1;
-  i16 iVar2;
+  bool naval_first_turn;
+  i16 prev_num_units;
   int civ;
-  int iVar4;
+  int result;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   civ = (int)game.turn_civ;
-  bVar1 = false;
+  naval_first_turn = false;
   if (((((game.game_flags & 0x80) != 0) && (((int)scenario_flags & 0x8000U) != 0)) && (game.turn == 1)
       ) && (scenario_objective_civ == civ)) {
-    bVar1 = true;
+    naval_first_turn = true;
   }
-  local_c = 0;
+  pass = 0;
   do {
-    if (1 < local_c) {
+    if (1 < pass) {
       return;
     }
     unit = (iptr)game.num_units;
@@ -5648,41 +5648,41 @@ void __cdecl ai_process_civ_units(void)
         }
       }
       if (((units[unit].id != 0) && (units[unit].owner == civ)) &&
-         ((local_14 = 0, !bVar1 ||
-          ((local_c != 0 || (unit_types[units[unit].type].domain == 1)))))) {
-        while (iVar4 = unit_is_awake_with_moves(unit), iVar4 != 0) {
+         ((order_steps = 0, !naval_first_turn ||
+          ((pass != 0 || (unit_types[units[unit].type].domain == 1)))))) {
+        while (result = unit_is_awake_with_moves(unit), result != 0) {
           if (2 < game.multiplayer) {
             net_send_state_diff(0xff,2,0,0,0);
             XD_FlushSendBuffer(5000);
             net_process_messages((NetSession *)&net_session,1,0);
           }
-          iVar2 = game.num_units;
+          prev_num_units = game.num_units;
           game.active_unit = (i16)unit;
           unit_continue_active_orders();
-          if (game.num_units != iVar2) break;
+          if (game.num_units != prev_num_units) break;
           if ((units[unit].orders != 11) &&
              (unit_types[units[unit].type].domain != 1)) {
-            local_14++;
+            order_steps++;
           }
-          local_14++;
-          if (0x14 < local_14) {
+          order_steps++;
+          if (0x14 < order_steps) {
             unit_exhaust_moves(unit);
             break;
           }
-          if ((((local_c == 0) && (civ != 0)) && (unit_types[units[unit].type].hold != '\0'))
-             && (((iVar4 = unit_moves_left(unit), iVar4 == 0 &&
-                  (iVar4 = tile_is_ocean((int)units[unit].x,(int)units[unit].y), iVar4 != 0)
-                  ) && ((iVar4 = unit_stack_sum(unit,2), 1 < iVar4 &&
+          if ((((pass == 0) && (civ != 0)) && (unit_types[units[unit].type].hold != '\0'))
+             && (((result = unit_moves_left(unit), result == 0 &&
+                  (result = tile_is_ocean((int)units[unit].x,(int)units[unit].y), result != 0)
+                  ) && ((result = unit_stack_sum(unit,2), 1 < result &&
                         (((game.human_players & units[unit].visibility) != 0 ||
-                         (iVar4 = tile_adjacent_nonallied_civ((int)units[unit].x,(int)units[unit].y,
-                                                     civ), iVar4 != 0)))))))) {
+                         (result = tile_adjacent_nonallied_civ((int)units[unit].x,(int)units[unit].y,
+                                                     civ), result != 0)))))))) {
             unit_continue_active_orders();
           }
         }
         mapviews_redraw_cursor();
       }
     }
-    local_c++;
+    pass++;
   } while( true );
 }
 #undef net_host_handoff_stage
@@ -5690,8 +5690,8 @@ void __cdecl ai_process_civ_units(void)
 #undef scenario_flags
 #undef scenario_objective_civ
 #undef unit
-#undef local_14
-#undef local_c
+#undef order_steps
+#undef pass
 
 /* 0057febc auto */
 #define path_goal_x (*(iptr *)((u8 *)&g.d_00673fa0))
@@ -5702,15 +5702,15 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
 
 {
   int civ2;
-  int iVar2;
-  int iVar3;
+  int target_landmass;
+  int result;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   unit = 0;
   while( true ) {
     if (game.num_units <= unit) {
       civ2 = tile_owner(x,y);
-      iVar2 = tile_landmass(x,y);
+      target_landmass = tile_landmass(x,y);
       for (unit = 0; unit < game.num_units; unit++) {
         if (((units[unit].id != 0) &&
             ((((units[unit].owner == civ ||
@@ -5719,20 +5719,20 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
                 (((uint)game.human_players & 1 << (units[unit].owner & 0x1fU)) == 0)))) &&
               (((unit_types[units[unit].type].domain == '\0' &&
                 (unit_types[units[unit].type].attack != '\0')) &&
-               (iVar3 = unit_moves_left(unit), iVar3 != 0)))) &&
+               (result = unit_moves_left(unit), result != 0)))) &&
              ((unit_types[units[unit].type].role != 1 ||
-              (iVar3 = tile_city_owner((int)units[unit].x,(int)units[unit].y), iVar3 < 0))))
-            )) && ((iVar3 = map_distance(x,y,(int)units[unit].x,
-                                               (int)units[unit].y), iVar3 < 7 &&
-                   (iVar3 = tile_landmass((int)units[unit].x,(int)units[unit].y),
-                   iVar3 == iVar2)))) {
+              (result = tile_city_owner((int)units[unit].x,(int)units[unit].y), result < 0))))
+            )) && ((result = map_distance(x,y,(int)units[unit].x,
+                                               (int)units[unit].y), result < 7 &&
+                   (result = tile_landmass((int)units[unit].x,(int)units[unit].y),
+                   result == target_landmass)))) {
           path_owner_civ = (int)units[unit].owner;
           path_unit_type = (iptr)units[unit].type;
           path_goal_x = x;
           path_goal_y = y;
-          iVar3 = unit_moves_left(unit);
-          iVar3 = map_path_next_dir((int)units[unit].x,(int)units[unit].y,iVar3 * 2);
-          if ((0 < iVar3) && (iVar3 != 8)) {
+          result = unit_moves_left(unit);
+          result = map_path_next_dir((int)units[unit].x,(int)units[unit].y,result * 2);
+          if ((0 < result) && (result != 8)) {
             units[unit].orders = 11;
             units[unit].goto_x = (i16)x;
             units[unit].goto_y = (i16)y;
@@ -5760,46 +5760,46 @@ void __cdecl ai_respond_to_attack(iptr civ,iptr x,iptr y)
 #undef unit
 
 /* 00598d45 auto */
-#define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
+#define own_progress (*(int *)(frame_ + FRAME_OFF(0)))
+#define part (*(int *)(frame_ + FRAME_OFF(8)))
+#define rival_progress (*(int *)(frame_ + FRAME_OFF(12)))
 #define civ2 (*(int *)(frame_ + FRAME_OFF(16)))
 i32 __cdecl ai_spaceship_race_behind(iptr civ)
 
 {
-  iptr iVar1;
-  iptr iVar2;
-  int iVar3;
+  iptr race_active;
+  iptr launched;
+  int result;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = spaceship_race_active();
-  if ((((iVar1 != 0) && (iVar2 = civ_spaceship_launched(civ), iVar2 == 0)) &&
+  race_active = spaceship_race_active();
+  if ((((race_active != 0) && (launched = civ_spaceship_launched(civ), launched == 0)) &&
       ((game.game_flags & 2) == 0)) &&
      ((game.difficulty != '\0' && ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0))))
   {
     for (civ2 = 1; civ2 < 8; civ2++) {
       if (((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-         (iVar3 = civ_spaceship_launched(civ2), iVar3 != 0)) {
+         (result = civ_spaceship_launched(civ2), result != 0)) {
         return 1;
       }
     }
-    local_18 = 0;
-    for (local_10 = 0; local_10 < 6; local_10++) {
-      iVar3 = int_clamp((local_10 + 1) / 2,0,2);
-      local_18 = local_18 +
-                 (int)civs[civ].spaceship_parts[local_10] *
-                 (uint)improvements[iVar3 + 0x23].cost;
+    own_progress = 0;
+    for (part = 0; part < 6; part++) {
+      result = int_clamp((part + 1) / 2,0,2);
+      own_progress = own_progress +
+                 (int)civs[civ].spaceship_parts[part] *
+                 (uint)improvements[result + 0x23].cost;
     }
     for (civ2 = 1; civ2 < 8; civ2++) {
       if ((((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0) &&
-          (iVar3 = civ_has_advance(civ2,0x4c), iVar3 != 0)) && (civ2 != civ)) {
-        local_c = 0;
-        for (local_10 = 0; local_10 < 6; local_10++) {
-          iVar3 = int_clamp((local_10 + 1) / 2,0,2);
-          local_c = local_c + (int)civs[civ2].spaceship_parts[local_10] *
-                              (uint)improvements[iVar3 + 0x23].cost;
+          (result = civ_has_advance(civ2,0x4c), result != 0)) && (civ2 != civ)) {
+        rival_progress = 0;
+        for (part = 0; part < 6; part++) {
+          result = int_clamp((part + 1) / 2,0,2);
+          rival_progress = rival_progress + (int)civs[civ2].spaceship_parts[part] *
+                              (uint)improvements[result + 0x23].cost;
         }
-        if (local_18 <= local_c) {
+        if (own_progress <= rival_progress) {
           return 1;
         }
       }
@@ -5807,45 +5807,45 @@ i32 __cdecl ai_spaceship_race_behind(iptr civ)
   }
   return 0;
 }
-#undef local_18
-#undef local_10
-#undef local_c
+#undef own_progress
+#undef part
+#undef rival_progress
 #undef civ2
 
 /* 005b68f6 auto */
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define level (*(iptr *)(frame_ + FRAME_OFF(4)))
 i32 __cdecl ai_tile_improve_choice(iptr civ,iptr x,i32 y)
 
 {
-  byte bVar1;
-  int iVar2;
-  uint uVar3;
-  uint uVar4;
+  byte terrain_byte;
+  int result;
+  uint improvements_mask;
+  uint terrain;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar2 = tile_city_owner(x,y);
-  if (((iVar2 < 0) && (uVar3 = tile_improvements(x,y), (uVar3 & 8) == 0)) &&
-     (((uVar3 & 4) == 0 || (iVar2 = civ_has_advance(civ,0x46), iVar2 != 0)))) {
-    bVar1 = tile_terrain(x,y);
-    uVar4 = (uint)bVar1;
-    for (local_c = 0; local_c < 2; local_c++) {
-      if (local_c == 0) {
-        iVar2 = tile_has_irrigation_source(x,y);
-        if (iVar2 == 0) {
+  result = tile_city_owner(x,y);
+  if (((result < 0) && (improvements_mask = tile_improvements(x,y), (improvements_mask & 8) == 0)) &&
+     (((improvements_mask & 4) == 0 || (result = civ_has_advance(civ,0x46), result != 0)))) {
+    terrain_byte = tile_terrain(x,y);
+    terrain = (uint)terrain_byte;
+    for (level = 0; level < 2; level++) {
+      if (level == 0) {
+        result = tile_has_irrigation_source(x,y);
+        if (result == 0) {
           return 0;
         }
       }
-      else if ((uVar3 & 4) != 0) {
+      else if ((improvements_mask & 4) != 0) {
         return 0;
       }
-      if (((*(char *)(local_c + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + uVar4 * 0x18) != -1) &&
-          (*(char *)(local_c + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + uVar4 * 0x18) != '\0')) &&
-         ((int)*(char *)(local_c + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + uVar4 * 0x18) <= (int)(uint)civs[civ].government))
+      if (((*(char *)(level + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain * 0x18) != -1) &&
+          (*(char *)(level + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + terrain * 0x18) != '\0')) &&
+         ((int)*(char *)(level + ADDR(0x627cd4, ((u8 *)&terrain_types + 20)) + terrain * 0x18) <= (int)(uint)civs[civ].government))
       {
-        return local_c + 1;
+        return level + 1;
       }
     }
   }
   return 0;
 }
-#undef local_c
+#undef level

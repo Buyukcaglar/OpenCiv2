@@ -3,125 +3,125 @@
 #include "auto_common.h"
 
 /* 00417fa0 auto */
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define eh_frame (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 DocumentWindow * __thiscall editor_wnd_ctor(DocumentWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
-  local_8 = 0;
+  eh_state = 0;
   crt_vector_ctor_iterator(&this->field_2fc,0x38,6,((void *)ADDR(0x0040388c, combo_ctor)),((void *)ADDR(0x00403553, combo_dtor)));
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   crt_vector_ctor_iterator(this->pad_3c0 + 0x8c,0x48,9,edit_ctor,
                edit_dtor);
-  (*(i8 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&eh_state + 0)) = 2;
   button_ctor((Control *)(this->pad_65c + 0x78));
-  (*(i8 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&eh_state + 0)) = 3;
   button_ctor((Control *)(this->pad_65c + 0xb4));
-  (*(i8 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&eh_state + 0)) = 4;
   button_ctor((Control *)(this->pad_65c + 0xf0));
-  (*(i8 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&eh_state + 0)) = 5;
   button_ctor((Control *)(this->pad_65c + 300));
-  (*(i8 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&eh_state + 0)) = 6;
   button_ctor((Control *)(this->pad_65c + 0x168));
-  (*(i8 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&eh_state + 0)) = 7;
   button_ctor((Control *)(this->pad_65c + 0x1a4));
-  (*(i8 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&eh_state + 0)) = 8;
   button_ctor((Control *)(this->pad_65c + 0x1e0));
-  (*(i8 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&eh_state + 0)) = 9;
   button_ctor((Control *)(this->pad_65c + 0x21c));
-  (*(i8 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&eh_state + 0)) = 10;
   button_ctor((Control *)(this->pad_65c + 600));
-  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xb;
   button_ctor((Control *)(this->pad_65c + 0x294));
-  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xc;
   button_ctor((Control *)(this->pad_65c + 0x2d0));
-  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xd;
   button_ctor((Control *)(this->pad_65c + 0x30c));
-  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xe;
   button_ctor((Control *)(this->pad_980 + 0x24));
-  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xf;
   button_ctor((Control *)(this->pad_980 + 0x60));
-  (*(i8 *)((char *)&local_8 + 0)) = 0x10;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x10;
   button_ctor((Control *)&this->edit_action_button);
-  (*(i8 *)((char *)&local_8 + 0)) = 0x11;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x11;
   button_ctor((Control *)&this[1].field_30);
-  (*(i8 *)((char *)&local_8 + 0)) = 0x12;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x12;
   checkbox_ctor((Control *)(this[1].pad_48 + 0x24));
-  (*(i8 *)((char *)&local_8 + 0)) = 0x13;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x13;
   checkbox_ctor((Control *)(this[1].pad_48 + 0x60));
-  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0x14);
+  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),0x14);
   checkbox_ctor((Control *)(this[1].pad_48 + 0x9c));
   this->vtable = (u32)&PTR_FUN_0061c058;
   return this;
 }
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef eh_frame
+#undef eh_prev
+#undef eh_state
 
 /* 004183d0 auto */
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall editor_wnd_dtor(void *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(i32 *)((char *)&local_8 + 1)) = 0;
-  (*(i8 *)((char *)&local_8 + 0)) = 0x14;
+  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x14;
   /* inlined unwind funclet 0041851f */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xb0c)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0x13;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x13;
   /* inlined unwind funclet 0041852e */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xad0)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0x12;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x12;
   /* inlined unwind funclet 0041853d */ { listbox_dtor((ListBoxControl *)(*(int *)((iptr)&this) + 0xa94)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0x11;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x11;
   /* inlined unwind funclet 0041854c */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0xa58)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0x10;
+  (*(i8 *)((char *)&eh_state + 0)) = 0x10;
   /* inlined unwind funclet 0041855b */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0xa1c)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0xf;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xf;
   /* inlined unwind funclet 0041856a */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x9e0)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0xe;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xe;
   /* inlined unwind funclet 00418579 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x9a4)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0xd;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xd;
   /* inlined unwind funclet 00418588 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x968)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0xc;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xc;
   /* inlined unwind funclet 00418597 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x92c)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 0xb;
+  (*(i8 *)((char *)&eh_state + 0)) = 0xb;
   /* inlined unwind funclet 004185a6 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x8f0)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 10;
+  (*(i8 *)((char *)&eh_state + 0)) = 10;
   /* inlined unwind funclet 004185b5 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x8b4)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 9;
+  (*(i8 *)((char *)&eh_state + 0)) = 9;
   /* inlined unwind funclet 004185c4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x878)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 8;
+  (*(i8 *)((char *)&eh_state + 0)) = 8;
   /* inlined unwind funclet 004185d3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x83c)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 7;
+  (*(i8 *)((char *)&eh_state + 0)) = 7;
   /* inlined unwind funclet 004185e2 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x800)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 6;
+  (*(i8 *)((char *)&eh_state + 0)) = 6;
   /* inlined unwind funclet 004185f1 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x7c4)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 5;
+  (*(i8 *)((char *)&eh_state + 0)) = 5;
   /* inlined unwind funclet 00418600 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x788)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 4;
+  (*(i8 *)((char *)&eh_state + 0)) = 4;
   /* inlined unwind funclet 0041860f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x74c)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 3;
+  (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 0041861e */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x710)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0041862d */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x6d4)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0041863c */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x44c,0x48,9,edit_dtor); }
-  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
+  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
   /* inlined unwind funclet 00418654 */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x2fc,0x38,6,((void *)ADDR(0x00403553, combo_dtor))); }
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   /* inlined unwind funclet 0041866c */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 00447fc2 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -206,15 +206,15 @@ void __cdecl editor_tile_backdrop_sprite_static_dtor(void)
 }
 
 /* 004a3060 auto */
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
+#define adjective_id (*(int *)(frame_ + FRAME_OFF(4)))
+#define plural_id (*(int *)(frame_ + FRAME_OFF(8)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define leader (*(iptr *)(frame_ + FRAME_OFF(16)))
 void __cdecl tribe_editor_load_tables(void)
 
 {
-  char *pcVar1;
-  size_t sVar2;
+  char *text;
+  size_t max_len;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (leader = 0; leader < 0x15; leader++) {
@@ -223,36 +223,36 @@ void __cdecl tribe_editor_load_tables(void)
       civ++;
     }
     if (civ < 8) {
-      sVar2 = 0x18;
-      pcVar1 = (char *)civ_name_plural(civ);
-      _strncpy(&editor_item_names + (leader * 5 + 0xd2) * 8,pcVar1,sVar2);
+      max_len = 0x18;
+      text = (char *)civ_name_plural(civ);
+      _strncpy(&editor_item_names + (leader * 5 + 0xd2) * 8,text,max_len);
       (&editor_item_name24_ends)[(leader * 5 + 0xd2) * 8] = 0;
-      sVar2 = 0x18;
-      pcVar1 = (char *)civ_adjective(civ);
-      _strncpy(&editor_item_names + (leader * 5 + 0x13b) * 8,pcVar1,sVar2);
+      max_len = 0x18;
+      text = (char *)civ_adjective(civ);
+      _strncpy(&editor_item_names + (leader * 5 + 0x13b) * 8,text,max_len);
       (&editor_item_name24_ends)[(leader * 5 + 0x13b) * 8] = 0;
       *(int *)(&editor_items + leader * 0x58) = (int)civ_names[civ].city_style;
     }
     else {
       if (leaders[leader].plural < 1) {
-        local_10 = ~(int)leaders[leader].plural + 1;
+        plural_id = ~(int)leaders[leader].plural + 1;
       }
       else {
-        local_10 = (int)leaders[leader].plural;
+        plural_id = (int)leaders[leader].plural;
       }
-      sVar2 = 0x18;
-      pcVar1 = (char *)label_string(local_10);
-      _strncpy(&editor_item_names + (leader * 5 + 0xd2) * 8,pcVar1,sVar2);
+      max_len = 0x18;
+      text = (char *)label_string(plural_id);
+      _strncpy(&editor_item_names + (leader * 5 + 0xd2) * 8,text,max_len);
       (&editor_item_name24_ends)[(leader * 5 + 0xd2) * 8] = 0;
       if (leaders[leader].adjective < 1) {
-        local_14 = ~(int)leaders[leader].adjective + 1;
+        adjective_id = ~(int)leaders[leader].adjective + 1;
       }
       else {
-        local_14 = (int)leaders[leader].adjective;
+        adjective_id = (int)leaders[leader].adjective;
       }
-      sVar2 = 0x18;
-      pcVar1 = (char *)label_string(local_14);
-      _strncpy(&editor_item_names + (leader * 5 + 0x13b) * 8,pcVar1,sVar2);
+      max_len = 0x18;
+      text = (char *)label_string(adjective_id);
+      _strncpy(&editor_item_names + (leader * 5 + 0x13b) * 8,text,max_len);
       (&editor_item_name24_ends)[(leader * 5 + 0x13b) * 8] = 0;
       *(int *)(&editor_items + leader * 0x58) = (int)leaders[leader].city_style;
     }
@@ -261,29 +261,29 @@ void __cdecl tribe_editor_load_tables(void)
     *(int *)(&editor_item_field3 + leader * 0x58) = leaders[leader].civilize + 1;
   }
   for (leader = 0; leader < 7; leader++) {
-    sVar2 = 0xf;
-    pcVar1 = (char *)label_string(government_names[leader]);
-    _strncpy(&editor_govt_names + leader * 0xf,pcVar1,sVar2);
+    max_len = 0xf;
+    text = (char *)label_string(government_names[leader]);
+    _strncpy(&editor_govt_names + leader * 0xf,text,max_len);
     (&editor_govt_name_ends)[leader * 0xf] = 0;
-    sVar2 = 0xf;
-    pcVar1 = (char *)label_string(government_titles[leader].male);
-    _strncpy(&editor_govt_names + (leader * 3 + 0x15) * 5,pcVar1,sVar2);
+    max_len = 0xf;
+    text = (char *)label_string(government_titles[leader].male);
+    _strncpy(&editor_govt_names + (leader * 3 + 0x15) * 5,text,max_len);
     (&editor_govt_name_ends)[leader * 0xf] = 0;
-    sVar2 = 0xf;
-    pcVar1 = (char *)label_string(government_titles[leader].female);
-    _strncpy(&editor_govt_names + (leader * 3 + 0x2a) * 5,pcVar1,sVar2);
+    max_len = 0xf;
+    text = (char *)label_string(government_titles[leader].female);
+    _strncpy(&editor_govt_names + (leader * 3 + 0x2a) * 5,text,max_len);
     (&editor_govt_name_ends)[leader * 0xf] = 0;
   }
   for (leader = 0; leader < 0x10; leader++) {
-    sVar2 = 10;
-    pcVar1 = (char *)label_string(commodity_names[leader]);
-    _strncpy(&editor_commodity_names + leader * 10,pcVar1,sVar2);
+    max_len = 10;
+    text = (char *)label_string(commodity_names[leader]);
+    _strncpy(&editor_commodity_names + leader * 10,text,max_len);
     (&editor_commodity_name_ends)[leader * 10] = 0;
   }
   return;
 }
-#undef local_14
-#undef local_10
+#undef adjective_id
+#undef plural_id
 #undef civ
 #undef leader
 
@@ -293,9 +293,9 @@ void __cdecl tribe_editor_load_tables(void)
 void __cdecl tribe_editor_apply_tables(void)
 
 {
-  char *pcVar1;
-  char *pcVar2;
-  size_t sVar3;
+  char *src;
+  char *dest;
+  size_t max_len;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   for (leader = 0; leader < 0x15; leader++) {
@@ -312,24 +312,24 @@ void __cdecl tribe_editor_apply_tables(void)
     leaders[leader].civilize = (char)*(i32 *)(&editor_item_field3 + leader * 0x58) - 1;
   }
   for (leader = 0; leader < 7; leader++) {
-    sVar3 = 0xf;
-    pcVar1 = &editor_govt_names + leader * 0xf;
-    pcVar2 = (char *)label_string(government_names[leader]);
-    _strncpy(pcVar2,pcVar1,sVar3);
-    sVar3 = 0xf;
-    pcVar1 = &editor_govt_names + (leader * 3 + 0x15) * 5;
-    pcVar2 = (char *)label_string(government_titles[leader].male);
-    _strncpy(pcVar2,pcVar1,sVar3);
-    sVar3 = 0xf;
-    pcVar1 = &editor_govt_names + (leader * 3 + 0x2a) * 5;
-    pcVar2 = (char *)label_string(government_titles[leader].female);
-    _strncpy(pcVar2,pcVar1,sVar3);
+    max_len = 0xf;
+    src = &editor_govt_names + leader * 0xf;
+    dest = (char *)label_string(government_names[leader]);
+    _strncpy(dest,src,max_len);
+    max_len = 0xf;
+    src = &editor_govt_names + (leader * 3 + 0x15) * 5;
+    dest = (char *)label_string(government_titles[leader].male);
+    _strncpy(dest,src,max_len);
+    max_len = 0xf;
+    src = &editor_govt_names + (leader * 3 + 0x2a) * 5;
+    dest = (char *)label_string(government_titles[leader].female);
+    _strncpy(dest,src,max_len);
   }
   for (leader = 0; leader < 0x10; leader++) {
-    sVar3 = 10;
-    pcVar1 = &editor_commodity_names + leader * 10;
-    pcVar2 = (char *)label_string(commodity_names[leader]);
-    _strncpy(pcVar2,pcVar1,sVar3);
+    max_len = 10;
+    src = &editor_commodity_names + leader * 10;
+    dest = (char *)label_string(commodity_names[leader]);
+    _strncpy(dest,src,max_len);
   }
   return;
 }
@@ -337,67 +337,67 @@ void __cdecl tribe_editor_apply_tables(void)
 #undef leader
 
 /* 004a3640 auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
 void __cdecl tribe_editor_load_controls(void)
 
 {
-  int iVar1;
+  int ctrl_id;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_c = 1; local_c < 5; local_c++) {
-    if (*(int *)(&tribe_editor_ctrl_kinds + local_c * 8) == 9) {
+  for (i = 1; i < 5; i++) {
+    if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 9) {
       ctrl_set_text
                 ((ControlTextView *)
-                 (*(int *)(&tribe_editor_ctrl_slots + local_c * 8) * 0x48 + 0x44c + active_editor_wnd),
+                 (*(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x48 + 0x44c + active_editor_wnd),
                  (iptr)(&editor_item_names + (*(int *)(active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8));
     }
-    else if (*(int *)(&tribe_editor_ctrl_kinds + local_c * 8) == 0xc) {
-      iVar1 = ctrl_get_id
+    else if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 0xc) {
+      ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + local_c * 8) * 0x38));
+                         (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x38));
       combo_set_cur_sel
                 ((ComboBoxSetSelView *)
-                 (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + local_c * 8) * 0x38),
-                 *(iptr *)(&editor_ctrl_values + iVar1 * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
+                 (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x38),
+                 *(iptr *)(&editor_ctrl_values + ctrl_id * 4 + *(int *)(active_editor_wnd + 0x2ec) * 0x58));
     }
   }
   return;
 }
-#undef local_c
+#undef i
 
 /* 004a3757 auto */
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(char (*)[24])(frame_ + FRAME_OFF(8)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(32)))
+#define i (*(int *)(frame_ + FRAME_OFF(4)))
+#define text (*(char (*)[24])(frame_ + FRAME_OFF(8)))
+#define selection (*(i32 *)(frame_ + FRAME_OFF(32)))
 void __cdecl tribe_editor_store_controls(void)
 
 {
-  int iVar1;
+  int ctrl_id;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_24 = 1; local_24 < 5; local_24++) {
-    if (*(int *)(&tribe_editor_ctrl_kinds + local_24 * 8) == 9) {
+  for (i = 1; i < 5; i++) {
+    if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 9) {
       ctrl_get_text
                 ((ControlTextView *)
-                 (*(int *)(&tribe_editor_ctrl_slots + local_24 * 8) * 0x48 + 0x44c + active_editor_wnd),
-                 (iptr)local_20);
-      _strncpy(&editor_item_names + (*(int *)(active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8,local_20,0x18);
+                 (*(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x48 + 0x44c + active_editor_wnd),
+                 (iptr)text);
+      _strncpy(&editor_item_names + (*(int *)(active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8,text,0x18);
     }
-    else if (*(int *)(&tribe_editor_ctrl_kinds + local_24 * 8) == 0xc) {
-      local_8 = combo_get_cur_sel
+    else if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 0xc) {
+      selection = combo_get_cur_sel
                           ((ComboBoxGetSelView *)
-                           (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + local_24 * 8) * 0x38));
-      iVar1 = ctrl_get_id
+                           (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x38));
+      ctrl_id = ctrl_get_id
                         ((ControlIdView *)
-                         (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + local_24 * 8) * 0x38));
-      *(i32 *)(&editor_ctrl_values + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + iVar1 * 4) = local_8;
+                         (active_editor_wnd + 0x2fc + *(int *)(&tribe_editor_ctrl_slots + i * 8) * 0x38));
+      *(i32 *)(&editor_ctrl_values + *(int *)(active_editor_wnd + 0x2ec) * 0x58 + ctrl_id * 4) = selection;
     }
   }
   return;
 }
-#undef local_24
-#undef local_20
-#undef local_8
+#undef i
+#undef text
+#undef selection
 
 /* 004a3889 auto */
 void __cdecl tribe_editor_redraw(void)
@@ -409,96 +409,96 @@ void __cdecl tribe_editor_redraw(void)
 
 /* 004a38a4 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_10 (*(size_t *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(8)))
-i32 __cdecl tribe_editor_write_governments(FILE *param_1)
+#define title_len (*(size_t *)(frame_ + FRAME_OFF(0)))
+#define name_len (*(size_t *)(frame_ + FRAME_OFF(4)))
+#define gov (*(iptr *)(frame_ + FRAME_OFF(8)))
+i32 __cdecl tribe_editor_write_governments(FILE *file)
 
 {
-  char *pcVar1;
-  size_t sVar2;
+  char *text;
+  size_t len;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 7; local_8++) {
+  for (gov = 0; gov < 7; gov++) {
     text_clear();
-    text_append_string_id(government_names[local_8]);
+    text_append_string_id(government_names[gov]);
     crt_strcat(&text_buffer,&rules_gov_name_sep_str);
-    pcVar1 = (char *)label_string(government_names[local_8]);
-    sVar2 = _strlen(pcVar1);
-    if (sVar2 < 0xf) {
-      pcVar1 = (char *)label_string(government_names[local_8]);
-      local_c = _strlen(pcVar1);
+    text = (char *)label_string(government_names[gov]);
+    len = _strlen(text);
+    if (len < 0xf) {
+      text = (char *)label_string(government_names[gov]);
+      name_len = _strlen(text);
     }
     else {
-      local_c = 0xf;
+      name_len = 0xf;
     }
-    text_append_spaces(0xf - local_c);
-    text_append_string_id(government_titles[local_8].male);
+    text_append_spaces(0xf - name_len);
+    text_append_string_id(government_titles[gov].male);
     crt_strcat(&text_buffer,&rules_gov_male_title_sep_str);
-    pcVar1 = (char *)label_string(government_titles[local_8].male);
-    sVar2 = _strlen(pcVar1);
-    if (sVar2 < 0xc) {
-      pcVar1 = (char *)label_string(government_titles[local_8].male);
-      local_10 = _strlen(pcVar1);
+    text = (char *)label_string(government_titles[gov].male);
+    len = _strlen(text);
+    if (len < 0xc) {
+      text = (char *)label_string(government_titles[gov].male);
+      title_len = _strlen(text);
     }
     else {
-      local_10 = 0xc;
+      title_len = 0xc;
     }
-    text_append_spaces(0xc - local_10);
-    text_append_string_id(government_titles[local_8].female);
+    text_append_spaces(0xc - title_len);
+    text_append_string_id(government_titles[gov].female);
     crt_strcat(&text_buffer,&rules_gov_line_end_str);
-    _fputs(&text_buffer,param_1);
+    _fputs(&text_buffer,file);
   }
   return 1;
 }
 #undef text_buffer
-#undef local_10
-#undef local_c
-#undef local_8
+#undef title_len
+#undef name_len
+#undef gov
 
 /* 004a3a21 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
 #define text_file_handle (*(i32 *)((u8 *)&g.d_0062cd20))
 #define text_line_cursor (*(i32 *)((u8 *)&g.d_00673f14))
-#define local_d0 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_cc (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_c8 (*(size_t *)(frame_ + FRAME_OFF(8)))
-#define local_c4 (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_c0 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_bc (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_b8 (*(size_t *)(frame_ + FRAME_OFF(24)))
-#define local_b4 (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_b0 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_ac (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_a8 (*(size_t *)(frame_ + FRAME_OFF(40)))
-#define local_a4 (*(int *)(frame_ + FRAME_OFF(44)))
-#define local_a0 (*(int *)(frame_ + FRAME_OFF(48)))
-#define local_9c (*(int *)(frame_ + FRAME_OFF(52)))
-#define local_98 (*(size_t *)(frame_ + FRAME_OFF(56)))
-#define local_94 (*(int *)(frame_ + FRAME_OFF(60)))
+#define adjective_id3 (*(int *)(frame_ + FRAME_OFF(0)))
+#define adjective_id2 (*(int *)(frame_ + FRAME_OFF(4)))
+#define adjective_len (*(size_t *)(frame_ + FRAME_OFF(8)))
+#define adjective_id (*(int *)(frame_ + FRAME_OFF(12)))
+#define plural_id3 (*(int *)(frame_ + FRAME_OFF(16)))
+#define plural_id2 (*(int *)(frame_ + FRAME_OFF(20)))
+#define plural_len (*(size_t *)(frame_ + FRAME_OFF(24)))
+#define plural_id (*(int *)(frame_ + FRAME_OFF(28)))
+#define female_id3 (*(int *)(frame_ + FRAME_OFF(32)))
+#define female_id2 (*(int *)(frame_ + FRAME_OFF(36)))
+#define female_len (*(size_t *)(frame_ + FRAME_OFF(40)))
+#define female_id (*(int *)(frame_ + FRAME_OFF(44)))
+#define male_id3 (*(int *)(frame_ + FRAME_OFF(48)))
+#define male_id2 (*(int *)(frame_ + FRAME_OFF(52)))
+#define male_len (*(size_t *)(frame_ + FRAME_OFF(56)))
+#define male_id (*(int *)(frame_ + FRAME_OFF(60)))
 #define leader (*(iptr *)(frame_ + FRAME_OFF(72)))
-#define local_84 (*(i8 (*)[128])(frame_ + FRAME_OFF(76)))
-i32 __cdecl tribe_editor_write_leaders(FILE *param_1,i32 param_2)
+#define line_tail (*(i8 (*)[128])(frame_ + FRAME_OFF(76)))
+i32 __cdecl tribe_editor_write_leaders(FILE *file,i32 src_handle)
 
 {
-  i32 uVar1;
-  iptr iVar2;
-  char *pcVar3;
-  size_t sVar4;
-  i32 uVar5;
-  i32 uVar6;
+  i32 saved_handle;
+  iptr female_flag;
+  char *text;
+  size_t len;
+  i32 min_val;
+  i32 max_val;
   i8 frame_[FRAME_OFF(208)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar1 = text_file_handle;
-  text_file_handle = param_2;
+  saved_handle = text_file_handle;
+  text_file_handle = src_handle;
   for (leader = 0; leader < 0x15; leader++) {
     text_read_line(1);
     text_next_token();
     text_next_token();
-    uVar6 = 1;
-    uVar5 = 0;
-    iVar2 = text_next_int();
-    iVar2 = int_clamp(iVar2,uVar5,uVar6);
+    max_val = 1;
+    min_val = 0;
+    female_flag = text_next_int();
+    female_flag = int_clamp(female_flag,min_val,max_val);
     text_next_int();
     text_next_int();
     text_next_token();
@@ -506,196 +506,196 @@ i32 __cdecl tribe_editor_write_leaders(FILE *param_1,i32 param_2)
     text_next_int();
     text_next_int();
     text_next_int();
-    crt_strcpy(local_84,text_line_cursor);
+    crt_strcpy(line_tail,text_line_cursor);
     text_clear();
     if (leaders[leader].names[0] < 1) {
-      local_94 = ~(int)leaders[leader].names[0] + 1;
+      male_id = ~(int)leaders[leader].names[0] + 1;
     }
     else {
-      local_94 = (int)leaders[leader].names[0];
+      male_id = (int)leaders[leader].names[0];
     }
-    text_append_string_id(local_94);
+    text_append_string_id(male_id);
     crt_strcat(&text_buffer,&rules_leader_male_name_sep_str);
     if (leaders[leader].names[0] < 1) {
-      local_9c = ~(int)leaders[leader].names[0] + 1;
+      male_id2 = ~(int)leaders[leader].names[0] + 1;
     }
     else {
-      local_9c = (int)leaders[leader].names[0];
+      male_id2 = (int)leaders[leader].names[0];
     }
-    pcVar3 = (char *)label_string(local_9c);
-    sVar4 = _strlen(pcVar3);
-    if (sVar4 < 0xd) {
+    text = (char *)label_string(male_id2);
+    len = _strlen(text);
+    if (len < 0xd) {
       if (leaders[leader].names[0] < 1) {
-        local_a0 = ~(int)leaders[leader].names[0] + 1;
+        male_id3 = ~(int)leaders[leader].names[0] + 1;
       }
       else {
-        local_a0 = (int)leaders[leader].names[0];
+        male_id3 = (int)leaders[leader].names[0];
       }
-      pcVar3 = (char *)label_string(local_a0);
-      local_98 = _strlen(pcVar3);
+      text = (char *)label_string(male_id3);
+      male_len = _strlen(text);
     }
     else {
-      local_98 = 0xd;
+      male_len = 0xd;
     }
-    text_append_spaces(0xd - local_98);
+    text_append_spaces(0xd - male_len);
     if (leaders[leader].names[1] < 1) {
-      local_a4 = ~(int)leaders[leader].names[1] + 1;
+      female_id = ~(int)leaders[leader].names[1] + 1;
     }
     else {
-      local_a4 = (int)leaders[leader].names[1];
+      female_id = (int)leaders[leader].names[1];
     }
-    text_append_string_id(local_a4);
+    text_append_string_id(female_id);
     crt_strcat(&text_buffer,&rules_leader_female_name_sep_str);
     if (leaders[leader].names[1] < 1) {
-      local_ac = ~(int)leaders[leader].names[1] + 1;
+      female_id2 = ~(int)leaders[leader].names[1] + 1;
     }
     else {
-      local_ac = (int)leaders[leader].names[1];
+      female_id2 = (int)leaders[leader].names[1];
     }
-    pcVar3 = (char *)label_string(local_ac);
-    sVar4 = _strlen(pcVar3);
-    if (sVar4 < 0x14) {
+    text = (char *)label_string(female_id2);
+    len = _strlen(text);
+    if (len < 0x14) {
       if (leaders[leader].names[1] < 1) {
-        local_b0 = ~(int)leaders[leader].names[1] + 1;
+        female_id3 = ~(int)leaders[leader].names[1] + 1;
       }
       else {
-        local_b0 = (int)leaders[leader].names[1];
+        female_id3 = (int)leaders[leader].names[1];
       }
-      pcVar3 = (char *)label_string(local_b0);
-      local_a8 = _strlen(pcVar3);
+      text = (char *)label_string(female_id3);
+      female_len = _strlen(text);
     }
     else {
-      local_a8 = 0x14;
+      female_len = 0x14;
     }
-    text_append_spaces(0x14 - local_a8);
-    text_append_int(iVar2);
+    text_append_spaces(0x14 - female_len);
+    text_append_int(female_flag);
     crt_strcat(&text_buffer,&rules_leader_female_flag_sep_str);
     text_append_int((int)leaders[leader].color);
     crt_strcat(&text_buffer,&rules_leader_color_sep_str);
     text_append_int((int)leaders[leader].city_style);
     crt_strcat(&text_buffer,&rules_leader_city_style_sep_str);
     if (leaders[leader].plural < 1) {
-      local_b4 = ~(int)leaders[leader].plural + 1;
+      plural_id = ~(int)leaders[leader].plural + 1;
     }
     else {
-      local_b4 = (int)leaders[leader].plural;
+      plural_id = (int)leaders[leader].plural;
     }
-    text_append_string_id(local_b4);
+    text_append_string_id(plural_id);
     crt_strcat(&text_buffer,&rules_leader_plural_sep_str);
     if (leaders[leader].plural < 1) {
-      local_bc = ~(int)leaders[leader].plural + 1;
+      plural_id2 = ~(int)leaders[leader].plural + 1;
     }
     else {
-      local_bc = (int)leaders[leader].plural;
+      plural_id2 = (int)leaders[leader].plural;
     }
-    pcVar3 = (char *)label_string(local_bc);
-    sVar4 = _strlen(pcVar3);
-    if (sVar4 < 0xc) {
+    text = (char *)label_string(plural_id2);
+    len = _strlen(text);
+    if (len < 0xc) {
       if (leaders[leader].plural < 1) {
-        local_c0 = ~(int)leaders[leader].plural + 1;
+        plural_id3 = ~(int)leaders[leader].plural + 1;
       }
       else {
-        local_c0 = (int)leaders[leader].plural;
+        plural_id3 = (int)leaders[leader].plural;
       }
-      pcVar3 = (char *)label_string(local_c0);
-      local_b8 = _strlen(pcVar3);
+      text = (char *)label_string(plural_id3);
+      plural_len = _strlen(text);
     }
     else {
-      local_b8 = 0xc;
+      plural_len = 0xc;
     }
-    text_append_spaces(0xc - local_b8);
+    text_append_spaces(0xc - plural_len);
     if (leaders[leader].adjective < 1) {
-      local_c4 = ~(int)leaders[leader].adjective + 1;
+      adjective_id = ~(int)leaders[leader].adjective + 1;
     }
     else {
-      local_c4 = (int)leaders[leader].adjective;
+      adjective_id = (int)leaders[leader].adjective;
     }
-    text_append_string_id(local_c4);
+    text_append_string_id(adjective_id);
     crt_strcat(&text_buffer,&rules_leader_adjective_sep_str);
     if (leaders[leader].adjective < 1) {
-      local_cc = ~(int)leaders[leader].adjective + 1;
+      adjective_id2 = ~(int)leaders[leader].adjective + 1;
     }
     else {
-      local_cc = (int)leaders[leader].adjective;
+      adjective_id2 = (int)leaders[leader].adjective;
     }
-    pcVar3 = (char *)label_string(local_cc);
-    sVar4 = _strlen(pcVar3);
-    if (sVar4 < 0xb) {
+    text = (char *)label_string(adjective_id2);
+    len = _strlen(text);
+    if (len < 0xb) {
       if (leaders[leader].adjective < 1) {
-        local_d0 = ~(int)leaders[leader].adjective + 1;
+        adjective_id3 = ~(int)leaders[leader].adjective + 1;
       }
       else {
-        local_d0 = (int)leaders[leader].adjective;
+        adjective_id3 = (int)leaders[leader].adjective;
       }
-      pcVar3 = (char *)label_string(local_d0);
-      local_c8 = _strlen(pcVar3);
+      text = (char *)label_string(adjective_id3);
+      adjective_len = _strlen(text);
     }
     else {
-      local_c8 = 0xb;
+      adjective_len = 0xb;
     }
-    text_append_spaces(0xb - local_c8);
+    text_append_spaces(0xb - adjective_len);
     text_append_int_2d((int)leaders[leader].attack);
     crt_strcat(&text_buffer,&rules_leader_attack_sep_str);
     text_append_int_2d((int)leaders[leader].expand);
     crt_strcat(&text_buffer,&rules_leader_expand_sep_str);
     text_append_int_2d((int)leaders[leader].civilize);
     crt_strcat(&text_buffer,&rules_leader_civilize_sep_str);
-    crt_strcat(&text_buffer,local_84);
+    crt_strcat(&text_buffer,line_tail);
     crt_strcat(&text_buffer,&rules_leader_line_end_str);
-    _fputs(&text_buffer,param_1);
+    _fputs(&text_buffer,file);
   }
-  text_file_handle = uVar1;
+  text_file_handle = saved_handle;
   return 1;
 }
 #undef text_buffer
 #undef text_file_handle
 #undef text_line_cursor
-#undef local_d0
-#undef local_cc
-#undef local_c8
-#undef local_c4
-#undef local_c0
-#undef local_bc
-#undef local_b8
-#undef local_b4
-#undef local_b0
-#undef local_ac
-#undef local_a8
-#undef local_a4
-#undef local_a0
-#undef local_9c
-#undef local_98
-#undef local_94
+#undef adjective_id3
+#undef adjective_id2
+#undef adjective_len
+#undef adjective_id
+#undef plural_id3
+#undef plural_id2
+#undef plural_len
+#undef plural_id
+#undef female_id3
+#undef female_id2
+#undef female_len
+#undef female_id
+#undef male_id3
+#undef male_id2
+#undef male_len
+#undef male_id
 #undef leader
-#undef local_84
+#undef line_tail
 
 /* 004a41d8 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
-i32 __cdecl tribe_editor_write_caravan(FILE *param_1)
+#define commodity (*(iptr *)(frame_ + FRAME_OFF(0)))
+i32 __cdecl tribe_editor_write_caravan(FILE *file)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 0x10; local_8++) {
+  for (commodity = 0; commodity < 0x10; commodity++) {
     text_clear();
-    text_append_string_id(commodity_names[local_8]);
+    text_append_string_id(commodity_names[commodity]);
     crt_strcat(&text_buffer,&rules_commodity_line_end_str);
-    _fputs(&text_buffer,param_1);
+    _fputs(&text_buffer,file);
   }
   return 1;
 }
 #undef text_buffer
-#undef local_8
+#undef commodity
 
 /* 004a4249 auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
-#define local_24 (*(char (*)[32])(frame_ + FRAME_OFF(4)))
+#define msg (*(char (*)[32])(frame_ + FRAME_OFF(4)))
 void __cdecl tribe_editor_on_ok(void)
 
 {
-  iptr iVar1;
-  iptr iVar2;
+  iptr ok;
+  iptr wnd;
   char *lpText;
   char *lpCaption;
   UINT uType;
@@ -707,14 +707,14 @@ void __cdecl tribe_editor_on_ok(void)
   rules_edit_set_section(ADDR(0x62cdcc, ((u8 *)&g.d_0062cdcc)),ADDR(0x401ba4, tribe_editor_write_governments));
   rules_edit_add_section(ADDR(0x62cdd8, ((u8 *)&g.d_0062cdd8)),ADDR(0x40211c, tribe_editor_write_leaders));
   rules_edit_add_section(ADDR(0x62cde0, ((u8 *)&g.d_0062cde0)),ADDR(0x401f87, tribe_editor_write_caravan));
-  iVar1 = rules_write_sections();
-  if (iVar1 == 0) {
-    _sprintf(local_24,s_Error_updating_RULES__s_0062cde8,&lang_file_ext);
+  ok = rules_write_sections();
+  if (ok == 0) {
+    _sprintf(msg,s_Error_updating_RULES__s_0062cde8,&lang_file_ext);
     uType = 0x10;
     lpCaption = s_File_I_O_Error_0062ce00;
-    lpText = local_24;
-    iVar2 = wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
-    MessageBoxA(*(HWND *)(iVar2 + 4),lpText,lpCaption,uType);
+    lpText = msg;
+    wnd = wnd_get_window((WndBase *)(active_editor_wnd + 0x48));
+    MessageBoxA(*(HWND *)(wnd + 4),lpText,lpCaption,uType);
   }
   editor_running = 0;
   wnd_end_modal_loop((ModalMenuWindow *)(active_editor_wnd + 0x48));
@@ -722,242 +722,242 @@ void __cdecl tribe_editor_on_ok(void)
   return;
 }
 #undef editor_running
-#undef local_24
+#undef msg
 
 /* 004a4304 auto */
-#define local_414 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_410 (*(char (*)[260])(frame_ + FRAME_OFF(8)))
-#define local_30c (*(Dialog *)(frame_ + FRAME_OFF(268)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(1024)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1028)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1036)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1040)))
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(8)))
+#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(268)))
+#define choice (*(int *)(frame_ + FRAME_OFF(1024)))
+#define input_result (*(int *)(frame_ + FRAME_OFF(1028)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1036)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_commodity(void)
 
 {
-  size_t sVar1;
+  size_t len;
   i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_30c,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dialog2,0x4000);
+  eh_state = 0;
   if (active_editor_wnd == 0) {
-    local_414 = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_414 = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
-  dlg_set_parent_window(local_414);
-  dialog_load_text(&local_30c,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce10, ((u8 *)&g.d_0062ce10)),1);
-  dialog_set_width((DialogWindowView *)&local_30c,0xdc);
-  dialog_set_listbox((DialogTextView *)&local_30c,0x10,0xdc,0);
-  for (local_18 = 0; local_18 < 0x10; local_18++) {
+  dlg_set_parent_window(parent_wnd2);
+  dialog_load_text(&dialog2,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce10, ((u8 *)&g.d_0062ce10)),1);
+  dialog_set_width((DialogWindowView *)&dialog2,0xdc);
+  dialog_set_listbox((DialogTextView *)&dialog2,0x10,0xdc,0);
+  for (choice = 0; choice < 0x10; choice++) {
     dialog_add_option
-              ((DialogOptionList *)&local_30c,(iptr)(&editor_commodity_names + local_18 * 10),local_18,0);
+              ((DialogOptionList *)&dialog2,(iptr)(&editor_commodity_names + choice * 10),choice,0);
   }
-  local_30c.field_118 = 0xdc;
-  local_18 = dlg_show_modal(&local_30c,0);
-  if (-1 < local_18) {
+  dialog2.field_118 = 0xdc;
+  choice = dlg_show_modal(&dialog2,0);
+  if (-1 < choice) {
     do {
-      local_14 = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce1c, ((u8 *)&g.d_0062ce1c)),9,(iptr)(&editor_commodity_names + local_18 * 10),
-                                    (iptr)local_410);
-      if (local_14 == -1) break;
-      sVar1 = _strlen(local_410);
-    } while (sVar1 == 0);
-    if (-1 < local_14) {
-      _strncpy(&editor_commodity_names + local_18 * 10,local_410,10);
+      input_result = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce1c, ((u8 *)&g.d_0062ce1c)),9,(iptr)(&editor_commodity_names + choice * 10),
+                                    (iptr)input_buf);
+      if (input_result == -1) break;
+      len = _strlen(input_buf);
+    } while (len == 0);
+    if (-1 < input_result) {
+      _strncpy(&editor_commodity_names + choice * 10,input_buf,10);
     }
   }
   dlg_set_parent_window(0);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004a44a2 */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004a44a2 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef local_414
-#undef local_410
-#undef local_30c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef parent_wnd2
+#undef input_buf
+#undef dialog2
+#undef choice
+#undef input_result
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 004a44c6 auto */
-#define local_414 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_410 (*(char (*)[260])(frame_ + FRAME_OFF(8)))
-#define local_30c (*(Dialog *)(frame_ + FRAME_OFF(268)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(1024)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1028)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1032)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1036)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1040)))
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(8)))
+#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(268)))
+#define choice (*(int *)(frame_ + FRAME_OFF(1024)))
+#define input_result (*(int *)(frame_ + FRAME_OFF(1028)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1032)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1036)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1040)))
 void __cdecl tribe_editor_rename_govt(void)
 
 {
-  size_t sVar1;
+  size_t len;
   i8 frame_[FRAME_OFF(1048)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_30c,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dialog2,0x4000);
+  eh_state = 0;
   if (active_editor_wnd == 0) {
-    local_414 = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_414 = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
-  dlg_set_parent_window(local_414);
-  dialog_load_text(&local_30c,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce28, ((u8 *)&g.d_0062ce28)),1);
-  dialog_set_width((DialogWindowView *)&local_30c,0xdc);
-  dialog_set_listbox((DialogTextView *)&local_30c,7,0xdc,0);
-  for (local_18 = 0; local_18 < 7; local_18++) {
+  dlg_set_parent_window(parent_wnd2);
+  dialog_load_text(&dialog2,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce28, ((u8 *)&g.d_0062ce28)),1);
+  dialog_set_width((DialogWindowView *)&dialog2,0xdc);
+  dialog_set_listbox((DialogTextView *)&dialog2,7,0xdc,0);
+  for (choice = 0; choice < 7; choice++) {
     dialog_add_option
-              ((DialogOptionList *)&local_30c,(iptr)(&editor_govt_names + local_18 * 0xf),local_18,0);
+              ((DialogOptionList *)&dialog2,(iptr)(&editor_govt_names + choice * 0xf),choice,0);
   }
-  local_30c.field_118 = 0xdc;
-  local_18 = dlg_show_modal(&local_30c,0);
-  if (-1 < local_18) {
+  dialog2.field_118 = 0xdc;
+  choice = dlg_show_modal(&dialog2,0);
+  if (-1 < choice) {
     do {
-      local_14 = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce34, ((u8 *)&g.d_0062ce34)),0xe,(iptr)(&editor_govt_names + local_18 * 0xf),
-                                    (iptr)local_410);
-      if (local_14 == -1) break;
-      sVar1 = _strlen(local_410);
-    } while (sVar1 == 0);
-    if (-1 < local_14) {
-      _strncpy(&editor_govt_names + local_18 * 0xf,local_410,0xf);
+      input_result = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce34, ((u8 *)&g.d_0062ce34)),0xe,(iptr)(&editor_govt_names + choice * 0xf),
+                                    (iptr)input_buf);
+      if (input_result == -1) break;
+      len = _strlen(input_buf);
+    } while (len == 0);
+    if (-1 < input_result) {
+      _strncpy(&editor_govt_names + choice * 0xf,input_buf,0xf);
     }
   }
   dlg_set_parent_window(0);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004a4667 */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004a4667 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef local_414
-#undef local_410
-#undef local_30c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef parent_wnd2
+#undef input_buf
+#undef dialog2
+#undef choice
+#undef input_result
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 004a468b auto */
-#define local_464 (*(char * *)(frame_ + FRAME_OFF(4)))
-#define local_460 (*(i8 * *)(frame_ + FRAME_OFF(8)))
-#define local_45c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_458 (*(i8 * *)(frame_ + FRAME_OFF(16)))
-#define local_454 (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_450 (*(char (*)[260])(frame_ + FRAME_OFF(24)))
-#define local_34c (*(char (*)[64])(frame_ + FRAME_OFF(284)))
-#define local_30c (*(Dialog *)(frame_ + FRAME_OFF(348)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(1104)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(1108)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1112)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1116)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(1120)))
+#define dest_title (*(char * *)(frame_ + FRAME_OFF(4)))
+#define current_title (*(i8 * *)(frame_ + FRAME_OFF(8)))
+#define gender_label (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define title_name (*(i8 * *)(frame_ + FRAME_OFF(16)))
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(20)))
+#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(24)))
+#define option_text (*(char (*)[64])(frame_ + FRAME_OFF(284)))
+#define dialog2 (*(Dialog *)(frame_ + FRAME_OFF(348)))
+#define choice (*(uint *)(frame_ + FRAME_OFF(1104)))
+#define input_result (*(int *)(frame_ + FRAME_OFF(1108)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1112)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1116)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(1120)))
 void __cdecl tribe_editor_rename_title(void)
 
 {
-  int iVar1;
-  size_t sVar2;
+  int title_slot;
+  size_t len;
   i8 frame_[FRAME_OFF(1128)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_30c,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dialog2,0x4000);
+  eh_state = 0;
   if (active_editor_wnd == 0) {
-    local_454 = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_454 = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
-  dlg_set_parent_window(local_454);
-  dialog_load_text(&local_30c,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce40, ((u8 *)&g.d_0062ce40)),1);
-  dialog_set_width((DialogWindowView *)&local_30c,400);
-  dialog_set_listbox((DialogTextView *)&local_30c,0xe,400,0);
-  for (local_18 = 0; (int)local_18 < 0xe; local_18++) {
-    if ((local_18 & 1) == 0) {
-      iVar1 = ((int)local_18 >> 1) * 3 + 0x15;
+  dlg_set_parent_window(parent_wnd2);
+  dialog_load_text(&dialog2,ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce40, ((u8 *)&g.d_0062ce40)),1);
+  dialog_set_width((DialogWindowView *)&dialog2,400);
+  dialog_set_listbox((DialogTextView *)&dialog2,0xe,400,0);
+  for (choice = 0; (int)choice < 0xe; choice++) {
+    if ((choice & 1) == 0) {
+      title_slot = ((int)choice >> 1) * 3 + 0x15;
     }
     else {
-      iVar1 = ((int)local_18 >> 1) * 3 + 0x2a;
+      title_slot = ((int)choice >> 1) * 3 + 0x2a;
     }
-    local_458 = &editor_govt_names + iVar1 * 5;
-    if ((local_18 & 1) == 0) {
-      local_45c = label_string(*(i32 *)(label_string_ids + 0x8fc));
+    title_name = &editor_govt_names + title_slot * 5;
+    if ((choice & 1) == 0) {
+      gender_label = label_string(*(i32 *)(label_string_ids + 0x8fc));
     }
     else {
-      local_45c = label_string(*(i32 *)(label_string_ids + 0x900));
+      gender_label = label_string(*(i32 *)(label_string_ids + 0x900));
     }
-    _sprintf(local_34c,s__s__s___s__0062ce4c,&editor_govt_names + ((int)local_18 >> 1) * 0xf,local_45c,
-             local_458);
-    dialog_add_option((DialogOptionList *)&local_30c,(iptr)local_34c,local_18,0);
+    _sprintf(option_text,s__s__s___s__0062ce4c,&editor_govt_names + ((int)choice >> 1) * 0xf,gender_label,
+             title_name);
+    dialog_add_option((DialogOptionList *)&dialog2,(iptr)option_text,choice,0);
   }
-  local_30c.field_118 = 400;
-  local_18 = dlg_show_modal(&local_30c,0);
-  if (-1 < (int)local_18) {
+  dialog2.field_118 = 400;
+  choice = dlg_show_modal(&dialog2,0);
+  if (-1 < (int)choice) {
     do {
-      if ((local_18 & 1) == 0) {
-        iVar1 = ((int)local_18 >> 1) * 3 + 0x15;
+      if ((choice & 1) == 0) {
+        title_slot = ((int)choice >> 1) * 3 + 0x15;
       }
       else {
-        iVar1 = ((int)local_18 >> 1) * 3 + 0x2a;
+        title_slot = ((int)choice >> 1) * 3 + 0x2a;
       }
-      local_460 = &editor_govt_names + iVar1 * 5;
-      local_14 = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce58, ((u8 *)&g.d_0062ce58)),0xe,(iptr)local_460,(iptr)local_450);
-      if (local_14 == -1) break;
-      sVar2 = _strlen(local_450);
-    } while (sVar2 == 0);
-    if (-1 < local_14) {
-      if ((local_18 & 1) == 0) {
-        iVar1 = ((int)local_18 >> 1) * 3 + 0x15;
+      current_title = &editor_govt_names + title_slot * 5;
+      input_result = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x62ce58, ((u8 *)&g.d_0062ce58)),0xe,(iptr)current_title,(iptr)input_buf);
+      if (input_result == -1) break;
+      len = _strlen(input_buf);
+    } while (len == 0);
+    if (-1 < input_result) {
+      if ((choice & 1) == 0) {
+        title_slot = ((int)choice >> 1) * 3 + 0x15;
       }
       else {
-        iVar1 = ((int)local_18 >> 1) * 3 + 0x2a;
+        title_slot = ((int)choice >> 1) * 3 + 0x2a;
       }
-      local_464 = &editor_govt_names + iVar1 * 5;
-      _strncpy(local_464,local_450,0xf);
+      dest_title = &editor_govt_names + title_slot * 5;
+      _strncpy(dest_title,input_buf,0xf);
     }
   }
   dlg_set_parent_window(0);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004a4948 */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004a4948 */ { dialog_dtor((Dialog *)((iptr)&dialog2)); }
   return;
 }
-#undef local_464
-#undef local_460
-#undef local_45c
-#undef local_458
-#undef local_454
-#undef local_450
-#undef local_34c
-#undef local_30c
-#undef local_18
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef dest_title
+#undef current_title
+#undef gender_label
+#undef title_name
+#undef parent_wnd2
+#undef input_buf
+#undef option_text
+#undef dialog2
+#undef choice
+#undef input_result
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 004a496c auto */
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define parent_wnd2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 void __cdecl tribe_editor_on_help(void)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (active_editor_wnd == 0) {
-    local_8 = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_8 = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
-  dlg_set_parent_window(local_8);
+  dlg_set_parent_window(parent_wnd2);
   popup_text(ADDR(0x62ce6c, ((u8 *)&g.d_0062ce6c)),ADDR(0x62ce64, ((u8 *)&g.d_0062ce64)));
   dlg_set_parent_window(0);
   return;
 }
-#undef local_8
+#undef parent_wnd2
 
 /* 004a49cb auto */
 #define editor_running (*(i32 *)((u8 *)&g.d_006a1d7c))
@@ -971,19 +971,19 @@ void __cdecl tribe_editor_on_cancel(void)
 #undef editor_running
 
 /* 004a49f3 auto */
-void __cdecl tribe_editor_on_combo(int param_1)
+void __cdecl tribe_editor_on_combo(int ctrl_id)
 
 {
-  i32 uVar1;
+  i32 selection;
   
-  if (param_1 == 0xc9) {
+  if (ctrl_id == 0xc9) {
     tribe_editor_store_controls();
-    uVar1 = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
-    *(i32 *)(active_editor_wnd + 0x2ec) = uVar1;
+    selection = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
+    *(i32 *)(active_editor_wnd + 0x2ec) = selection;
     tribe_editor_load_controls();
     tribe_editor_redraw();
   }
-  else if (param_1 == 0xca) {
+  else if (ctrl_id == 0xca) {
     tribe_editor_store_controls();
     tribe_editor_redraw();
   }
@@ -992,139 +992,139 @@ void __cdecl tribe_editor_on_combo(int param_1)
 
 /* 004a4a58 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
-#define local_28 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall tribe_editor_create_combo(ViewWindow *this,int param_1)
+#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(16)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+void __thiscall tribe_editor_create_combo(ViewWindow *this,int slot)
 
 {
-  int iVar1;
-  int iVar2;
-  iptr iVar3;
+  int ctrl_x;
+  int ctrl_y;
+  iptr label;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = *(int *)(&tribe_editor_combo_x_table + param_1 * 8) + this->client_x;
-  iVar2 = *(int *)(&tribe_editor_combo_y_table + param_1 * 8) + this->client_y;
-  if (param_1 == 0) {
-    rect_set_xywh((iptr)local_14,iVar1 - 0x32,iVar2,200,this->field_2e8 << 3);
+  ctrl_x = *(int *)(&tribe_editor_combo_x_table + slot * 8) + this->client_x;
+  ctrl_y = *(int *)(&tribe_editor_combo_y_table + slot * 8) + this->client_y;
+  if (slot == 0) {
+    rect_set_xywh((iptr)rect,ctrl_x - 0x32,ctrl_y,200,this->field_2e8 << 3);
   }
-  else if (param_1 < 2) {
-    rect_set_xywh((iptr)local_14,iVar1 - 0xf,iVar2,0x82,this->field_2e8 << 3);
+  else if (slot < 2) {
+    rect_set_xywh((iptr)rect,ctrl_x - 0xf,ctrl_y,0x82,this->field_2e8 << 3);
   }
   else {
-    rect_set_xywh((iptr)local_14,iVar1,iVar2,100,this->field_2e8 << 3);
+    rect_set_xywh((iptr)rect,ctrl_x,ctrl_y,100,this->field_2e8 << 3);
   }
-  iVar1 = editor_next_ctrl_id;
+  ctrl_x = editor_next_ctrl_id;
   editor_next_ctrl_id++;
   if (this == (ViewWindow *)0x0) {
-    local_28 = (u8 *)0x0;
+    parent_wnd2 = (u8 *)0x0;
   }
   else {
-    local_28 = this->pad_48;
+    parent_wnd2 = this->pad_48;
   }
   combo_create
-            ((Control *)(this->pad_2d4 + param_1 * 0x38 + 0x28),(iptr)local_28,iVar1,
-             (iptr)local_14);
-  combo_set_font((ComboBoxFontView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
-  combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),ADDR(0x401424, tribe_editor_on_combo));
-  switch(param_1) {
+            ((Control *)(this->pad_2d4 + slot * 0x38 + 0x28),(iptr)parent_wnd2,ctrl_x,
+             (iptr)rect);
+  combo_set_font((ComboBoxFontView *)(this->pad_2d4 + slot * 0x38 + 0x28),ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
+  combo_set_callback((ComboBoxCallbackSetView *)(this->pad_2d4 + slot * 0x38 + 0x28),ADDR(0x401424, tribe_editor_on_combo));
+  switch(slot) {
   case 0:
-    for (local_18 = 0; local_18 < 0x15; local_18++) {
+    for (i = 0; i < 0x15; i++) {
       combo_add_string
-                ((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),
-                 (iptr)(&editor_item_names + (local_18 * 5 + 0xd2) * 8));
+                ((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),
+                 (iptr)(&editor_item_names + (i * 5 + 0xd2) * 8));
     }
     break;
   case 1:
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x834));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x838));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x83c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x840));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0x834));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x838));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x83c));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x840));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
     break;
   case 2:
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x904));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x908));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x90c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0x904));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x908));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x90c));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
     break;
   case 3:
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x910));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x914));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x918));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0x910));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x914));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x918));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
     break;
   case 4:
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x91c));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x914));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
-    iVar3 = label_string(*(i32 *)(label_string_ids + 0x920));
-    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + param_1 * 0x38 + 0x28),iVar3);
+    label = label_string(*(i32 *)(label_string_ids + 0x91c));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x914));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
+    label = label_string(*(i32 *)(label_string_ids + 0x920));
+    combo_add_string((ComboBoxAddView *)(this->pad_2d4 + slot * 0x38 + 0x28),label);
   }
   return;
 }
 #undef editor_next_ctrl_id
-#undef local_28
-#undef local_18
-#undef local_14
+#undef parent_wnd2
+#undef i
+#undef rect
 
 /* 004a4eb2 auto */
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define tribe_editor_edit_x_table (*(i32 *)((u8 *)&g.d_0062cd60))
 #define tribe_editor_edit_y_table (*(i32 *)((u8 *)&g.d_0062cd64))
-#define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall tribe_editor_create_edit(ViewWindow *this,int param_1)
+#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+void __thiscall tribe_editor_create_edit(ViewWindow *this,int slot)
 
 {
-  int iVar1;
+  int ctrl_id;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
-  rect_set_xywh((iptr)local_14,(&tribe_editor_edit_x_table)[param_1 * 2] + this->client_x,
-                     (&tribe_editor_edit_y_table)[param_1 * 2] + this->client_y,100,this->field_2e8 + 6);
-  iVar1 = editor_next_ctrl_id;
+  rect_set_xywh((iptr)rect,(&tribe_editor_edit_x_table)[slot * 2] + this->client_x,
+                     (&tribe_editor_edit_y_table)[slot * 2] + this->client_y,100,this->field_2e8 + 6);
+  ctrl_id = editor_next_ctrl_id;
   editor_next_ctrl_id++;
   if (this == (ViewWindow *)0x0) {
-    local_24 = (u8 *)0x0;
+    parent_wnd2 = (u8 *)0x0;
   }
   else {
-    local_24 = this->pad_48;
+    parent_wnd2 = this->pad_48;
   }
   edit_create
-            ((EditControl *)(this[1].pad_48 + param_1 * 0x48 - 0x2c),(iptr)local_24,iVar1,
-             (iptr)local_14,ADDR(0x62ce74, ((u8 *)&g.d_0062ce74)));
-  edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + param_1 * 0x48 - 0x2c),0x17);
+            ((EditControl *)(this[1].pad_48 + slot * 0x48 - 0x2c),(iptr)parent_wnd2,ctrl_id,
+             (iptr)rect,ADDR(0x62ce74, ((u8 *)&g.d_0062ce74)));
+  edit_set_max_len((EditMaxLenView *)(this[1].pad_48 + slot * 0x48 - 0x2c),0x17);
   return;
 }
 #undef editor_next_ctrl_id
 #undef tribe_editor_edit_x_table
 #undef tribe_editor_edit_y_table
-#undef local_24
-#undef local_14
+#undef parent_wnd2
+#undef rect
 
 /* 004a4f89 auto */
 #define editor_bg_surface (*(int *)((u8 *)&g.d_0062e018))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
 #define tribe_editor_edit_x_table (*(int *)((u8 *)&g.d_0062cd60))
 #define tribe_editor_edit_y_table (*(int *)((u8 *)&g.d_0062cd64))
-#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_18 (*(Sprite * *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(28)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
+#define draw_ctx (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define sprite (*(Sprite * *)(frame_ + FRAME_OFF(16)))
+#define label_y (*(int *)(frame_ + FRAME_OFF(20)))
+#define label_x (*(int *)(frame_ + FRAME_OFF(24)))
+#define box_y (*(int *)(frame_ + FRAME_OFF(28)))
+#define box_x (*(int *)(frame_ + FRAME_OFF(32)))
 void __thiscall tribe_editor_paint(ViewWindow *this)
 
 {
-  byte bVar1;
+  byte key_color;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   frame_wnd_draw_caption((FrameWindow *)this);
@@ -1135,65 +1135,65 @@ void __thiscall tribe_editor_paint(ViewWindow *this)
     gfx_copy_rect_xywh(editor_bg_surface,(iptr)this,0,0,this->client_x,this->client_y,this->field_2d8,
                        this->field_2dc);
   }
-  local_8 = this->client_x + 0x20;
-  local_c = this->client_y + 0x20;
-  local_18 = (Sprite *)
+  box_x = this->client_x + 0x20;
+  box_y = this->client_y + 0x20;
+  sprite = (Sprite *)
              (*(int *)(&editor_items + *(int *)(active_editor_wnd + 0x2ec) * 0x58) * 0x1e0 + ADDR(0x63ffb8, ((u8 *)&g.d_0063fe8c + 300)));
-  bVar1 = sprite_get_key_color(local_18);
-  gfx_fill_rect_xywh((iptr)this,local_8,local_c,0x40,0x40,(uint)bVar1);
-  sprite_draw_keyed(local_18,(iptr)local_28,(iptr)this,0,local_8,local_c + 8);
-  gfx_draw_tiled_frame((iptr)this,local_8,local_c,0x40,0x40,6);
-  local_8 = this->client_width + this->client_x - 0x60;
-  local_c = this->client_y + 0x20;
-  gfx_fill_rect_xywh((iptr)this,local_8,local_c,0x40,0x40,
+  key_color = sprite_get_key_color(sprite);
+  gfx_fill_rect_xywh((iptr)this,box_x,box_y,0x40,0x40,(uint)key_color);
+  sprite_draw_keyed(sprite,(iptr)draw_ctx,(iptr)this,0,box_x,box_y + 8);
+  gfx_draw_tiled_frame((iptr)this,box_x,box_y,0x40,0x40,6);
+  box_x = this->client_width + this->client_x - 0x60;
+  box_y = this->client_y + 0x20;
+  gfx_fill_rect_xywh((iptr)this,box_x,box_y,0x40,0x40,
                      *(i32 *)(&civ_mid_colors + leaders[this->field_2ec].color * 0x10));
-  gfx_fill_rect_xywh((iptr)this,local_8 + 0x10,local_c + 0x10,0x20,0x20,
+  gfx_fill_rect_xywh((iptr)this,box_x + 0x10,box_y + 0x10,0x20,0x20,
                      *(i32 *)(&civ_primary_colors + leaders[this->field_2ec].color * 0x10));
-  gfx_draw_tiled_frame((iptr)this,local_8,local_c,0x40,0x40,6);
+  gfx_draw_tiled_frame((iptr)this,box_x,box_y,0x40,0x40,6);
   text_set_surface((iptr)this);
   text_set_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   text_set_colors(10,10,0,0);
-  local_8 = tribe_editor_edit_x_table + this->client_x;
-  local_c = tribe_editor_edit_y_table + this->client_y;
-  gfx_fill_rect_xywh((iptr)this,local_8,local_c,100,this->field_2e8 + 6,0x29);
-  gfx_draw_frame_rect((iptr)this,local_8,local_c,100,this->field_2e8 + 6,10);
+  box_x = tribe_editor_edit_x_table + this->client_x;
+  box_y = tribe_editor_edit_y_table + this->client_y;
+  gfx_fill_rect_xywh((iptr)this,box_x,box_y,100,this->field_2e8 + 6,0x29);
+  gfx_draw_frame_rect((iptr)this,box_x,box_y,100,this->field_2e8 + 6,10);
   text_clear();
   text_append_str((iptr)(&editor_item_names + (*(int *)(active_editor_wnd + 0x2ec) * 5 + 0x13b) * 8));
-  text_draw_shadowed((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_8 + 3,local_c + 2);
+  text_draw_shadowed((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),box_x + 3,box_y + 2);
   text_set_colors(0x29,0x12,1,1);
-  local_8 = this->client_x + 0x59;
-  local_c = this->client_y + 0x109;
-  gfx_draw_tiled_frame((iptr)this,local_8,local_c,0x17c,0x45,6);
-  local_10 = this->client_x + (int)this->client_width / 2;
-  local_14 = this->client_y + 0x10d;
+  box_x = this->client_x + 0x59;
+  box_y = this->client_y + 0x109;
+  gfx_draw_tiled_frame((iptr)this,box_x,box_y,0x17c,0x45,6);
+  label_x = this->client_x + (int)this->client_width / 2;
+  label_y = this->client_y + 0x10d;
   text_clear();
   text_append_label(0x25d);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = tribe_editor_city_style_x + this->client_x + 0x32;
-  local_14 = ((tribe_editor_city_style_y + this->client_y) - this->field_2e8) - 2;
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
+  label_x = tribe_editor_city_style_x + this->client_x + 0x32;
+  label_y = ((tribe_editor_city_style_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
   text_append_label(0x219);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = tribe_editor_edit_x_table + this->client_x + 0x32;
-  local_14 = ((tribe_editor_edit_y_table + this->client_y) - this->field_2e8) - 2;
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
+  label_x = tribe_editor_edit_x_table + this->client_x + 0x32;
+  label_y = ((tribe_editor_edit_y_table + this->client_y) - this->field_2e8) - 2;
   text_clear();
   text_append_label(0x249);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = tribe_editor_attack_x + this->client_x + 0x32;
-  local_14 = ((tribe_editor_attack_y + this->client_y) - this->field_2e8) - 2;
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
+  label_x = tribe_editor_attack_x + this->client_x + 0x32;
+  label_y = ((tribe_editor_attack_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
   text_append_label(0x1e5);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = tribe_editor_expand_x + this->client_x + 0x32;
-  local_14 = ((tribe_editor_expand_y + this->client_y) - this->field_2e8) - 2;
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
+  label_x = tribe_editor_expand_x + this->client_x + 0x32;
+  label_y = ((tribe_editor_expand_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
   text_append_label(0x24a);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
-  local_10 = tribe_editor_civilize_x + this->client_x + 0x32;
-  local_14 = ((tribe_editor_civilize_y + this->client_y) - this->field_2e8) - 2;
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
+  label_x = tribe_editor_civilize_x + this->client_x + 0x32;
+  label_y = ((tribe_editor_civilize_y + this->client_y) - this->field_2e8) - 2;
   text_clear();
   text_append_label(0x24b);
-  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_10,local_14,0);
+  text_draw_centered((iptr)this,ADDR(0x679640, ((u8 *)&g.d_00679640)),label_x,label_y,0);
   wnd_blit_surface((DibSurface *)this);
   return;
 }
@@ -1201,172 +1201,172 @@ void __thiscall tribe_editor_paint(ViewWindow *this)
 #undef editor_running
 #undef tribe_editor_edit_x_table
 #undef tribe_editor_edit_y_table
-#undef local_28
-#undef local_18
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef draw_ctx
+#undef sprite
+#undef label_y
+#undef label_x
+#undef box_y
+#undef box_x
 
 /* 004a54d9 auto */
 #define editor_bg_surface (*(DibSurface * *)((u8 *)&g.d_0062e018))
 #define editor_next_ctrl_id (*(i32 *)((u8 *)&g.d_006a1d80))
 #define editor_running (*(int *)((u8 *)&g.d_006a1d7c))
-#define local_488 (*(u8 * *)(frame_ + FRAME_OFF(0)))
-#define local_484 (*(u8 * *)(frame_ + FRAME_OFF(4)))
-#define local_480 (*(u8 * *)(frame_ + FRAME_OFF(8)))
-#define local_47c (*(u8 * *)(frame_ + FRAME_OFF(12)))
-#define local_478 (*(u8 * *)(frame_ + FRAME_OFF(16)))
-#define local_474 (*(u8 * *)(frame_ + FRAME_OFF(20)))
-#define local_468 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
-#define local_460 (*(int *)(frame_ + FRAME_OFF(40)))
-#define local_454 (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_444 (*(GamePalette *)(frame_ + FRAME_OFF(68)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
+#define parent_wnd6 (*(u8 * *)(frame_ + FRAME_OFF(0)))
+#define parent_wnd5 (*(u8 * *)(frame_ + FRAME_OFF(4)))
+#define parent_wnd4 (*(u8 * *)(frame_ + FRAME_OFF(8)))
+#define parent_wnd3 (*(u8 * *)(frame_ + FRAME_OFF(12)))
+#define parent_wnd2 (*(u8 * *)(frame_ + FRAME_OFF(16)))
+#define parent_wnd1 (*(u8 * *)(frame_ + FRAME_OFF(20)))
+#define bg_surface2 (*(DibSurface * *)(frame_ + FRAME_OFF(32)))
+#define i (*(int *)(frame_ + FRAME_OFF(40)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define palette (*(GamePalette *)(frame_ + FRAME_OFF(68)))
+#define eh_handler (*(i32 *)(frame_ + FRAME_OFF(1144)))
+#define eh_prev (*(i8 * *)(frame_ + FRAME_OFF(1148)))
+#define eh_state (*(int *)(frame_ + FRAME_OFF(1152)))
 void __thiscall tribe_editor_main(ViewWindow *this)
 
 {
   DibSurface *this_00;
-  uptr uVar1;
-  i32 uVar2;
-  int iVar3;
-  iptr iVar4;
-  int iVar5;
-  i32 uVar6;
-  i32 uVar7;
-  i32 uVar8;
-  u32 uVar9;
-  u32 uVar10;
-  i32 uVar11;
-  i32 uVar12;
-  i32 uVar13;
+  uptr font_height;
+  i32 title;
+  int pos;
+  iptr label;
+  int button_y;
+  i32 style;
+  i32 pos_x;
+  i32 pos_y;
+  u32 width;
+  u32 height;
+  i32 arg7;
+  i32 arg8;
+  i32 arg9;
   i8 frame_[FRAME_OFF(1160)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  palette_init(&local_444);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  palette_init(&palette);
+  eh_state = 0;
   editor_running = 1;
   active_editor_wnd = (iptr)this;
   this_00 = operator_new(0x48);
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   if (this_00 == (DibSurface *)0x0) {
-    local_468 = (DibSurface *)0x0;
+    bg_surface2 = (DibSurface *)0x0;
   }
   else {
-    local_468 = (DibSurface *)surface_ctor(this_00);
+    bg_surface2 = (DibSurface *)surface_ctor(this_00);
   }
-  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  editor_bg_surface = local_468;
+  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
+  editor_bg_surface = bg_surface2;
   font_set((GameFont *)&editor_font,0,editor_font_size);
   ui_set_default_font(ADDR(0x6a4f90, ((u8 *)&g.d_006a4f90)));
   this->field_2d8 = 0x230;
   this->field_2dc = 0x17c;
   this->field_2ec = 0;
   editor_next_ctrl_id = 0xc9;
-  surface_load_gif_file(editor_bg_surface,ADDR(0x62ce78, ((u8 *)&g.d_0062ce78)),10,0xc0,(iptr)&local_444);
-  uVar1 = font_cached_height((GameFont *)&editor_font);
-  this->field_2e8 = uVar1;
-  uVar13 = 0;
-  uVar12 = 0;
-  uVar11 = 0;
-  uVar10 = this->field_2dc;
-  uVar9 = this->field_2d8;
-  uVar8 = 0;
-  uVar7 = 0;
-  uVar6 = 0xd;
-  uVar2 = label_string(*(i32 *)(label_string_ids + 0x930));
+  surface_load_gif_file(editor_bg_surface,ADDR(0x62ce78, ((u8 *)&g.d_0062ce78)),10,0xc0,(iptr)&palette);
+  font_height = font_cached_height((GameFont *)&editor_font);
+  this->field_2e8 = font_height;
+  arg9 = 0;
+  arg8 = 0;
+  arg7 = 0;
+  height = this->field_2dc;
+  width = this->field_2d8;
+  pos_y = 0;
+  pos_x = 0;
+  style = 0xd;
+  title = label_string(*(i32 *)(label_string_ids + 0x930));
   frame_wnd_create
-            ((FrameWindow *)this,uVar2,uVar6,uVar7,uVar8,uVar9,uVar10,uVar11,uVar12,uVar13);
+            ((FrameWindow *)this,title,style,pos_x,pos_y,width,height,arg7,arg8,arg9);
   tribe_editor_load_tables();
-  for (local_460 = 0; local_460 < 5; local_460++) {
-    if (*(int *)(&tribe_editor_ctrl_kinds + local_460 * 8) == 9) {
-      tribe_editor_create_edit(this,*(i32 *)(&tribe_editor_ctrl_slots + local_460 * 8));
+  for (i = 0; i < 5; i++) {
+    if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 9) {
+      tribe_editor_create_edit(this,*(i32 *)(&tribe_editor_ctrl_slots + i * 8));
     }
-    else if (*(int *)(&tribe_editor_ctrl_kinds + local_460 * 8) == 0xc) {
-      tribe_editor_create_combo(this,*(i32 *)(&tribe_editor_ctrl_slots + local_460 * 8));
+    else if (*(int *)(&tribe_editor_ctrl_kinds + i * 8) == 0xc) {
+      tribe_editor_create_combo(this,*(i32 *)(&tribe_editor_ctrl_slots + i * 8));
     }
   }
-  iVar3 = sprite_width
+  pos = sprite_width
                     ((Sprite *)(&terrain_base_sprites + this->field_2ec * 0x3c));
-  this->field_2e0 = iVar3 + 0x2d;
-  iVar3 = font_line_spacing((GameFont *)dialog_font_ptr);
-  this->field_2e4 = iVar3 + 8;
-  iVar3 = this->client_y + (int)(this->field_2e4 * 3) / 2 + 0x101;
-  uVar10 = this->client_x;
-  rect_set_xywh((iptr)local_454,uVar10 + 0x69,iVar3,this->field_2e0,this->field_2e4);
+  this->field_2e0 = pos + 0x2d;
+  pos = font_line_spacing((GameFont *)dialog_font_ptr);
+  this->field_2e4 = pos + 8;
+  pos = this->client_y + (int)(this->field_2e4 * 3) / 2 + 0x101;
+  height = this->client_x;
+  rect_set_xywh((iptr)rect,height + 0x69,pos,this->field_2e0,this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_474 = (u8 *)0x0;
+    parent_wnd1 = (u8 *)0x0;
   }
   else {
-    local_474 = this->pad_48;
+    parent_wnd1 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x940));
+  label = label_string(*(i32 *)(label_string_ids + 0x940));
   button_create
-            ((Control *)(this[2].pad_48 + 0x84),(iptr)local_474,0x65,(iptr)local_454,iVar4);
+            ((Control *)(this[2].pad_48 + 0x84),(iptr)parent_wnd1,0x65,(iptr)rect,label);
   button_set_callback((Control *)(this[2].pad_48 + 0x84),ADDR(0x402775, tribe_editor_rename_commodity));
-  rect_set_xywh((iptr)local_454,uVar10 + 0xe1,iVar3,this->field_2e0,this->field_2e4);
+  rect_set_xywh((iptr)rect,height + 0xe1,pos,this->field_2e0,this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_478 = (u8 *)0x0;
+    parent_wnd2 = (u8 *)0x0;
   }
   else {
-    local_478 = this->pad_48;
+    parent_wnd2 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x944));
+  label = label_string(*(i32 *)(label_string_ids + 0x944));
   button_create
-            ((Control *)(this[2].pad_104 + 4),(iptr)local_478,0x65,(iptr)local_454,iVar4);
+            ((Control *)(this[2].pad_104 + 4),(iptr)parent_wnd2,0x65,(iptr)rect,label);
   button_set_callback((Control *)(this[2].pad_104 + 4),ADDR(0x401631, tribe_editor_rename_govt));
-  rect_set_xywh((iptr)local_454,uVar10 + 0x159,iVar3,this->field_2e0,this->field_2e4);
+  rect_set_xywh((iptr)rect,height + 0x159,pos,this->field_2e0,this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_47c = (u8 *)0x0;
+    parent_wnd3 = (u8 *)0x0;
   }
   else {
-    local_47c = this->pad_48;
+    parent_wnd3 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x948));
+  label = label_string(*(i32 *)(label_string_ids + 0x948));
   button_create
-            ((Control *)&this[2].field_144,(iptr)local_47c,0x65,(iptr)local_454,iVar4);
+            ((Control *)&this[2].field_144,(iptr)parent_wnd3,0x65,(iptr)rect,label);
   button_set_callback((Control *)&this[2].field_144,ADDR(0x402bda, tribe_editor_rename_title));
-  iVar3 = font_line_spacing((GameFont *)dialog_font_ptr);
-  this->field_2e4 = iVar3 + 8;
+  pos = font_line_spacing((GameFont *)dialog_font_ptr);
+  this->field_2e4 = pos + 8;
   this->field_2e0 = (int)(this->client_width - 8) / 3;
-  iVar5 = (this->client_y + this->client_height) - (this->field_2e4 + 2);
-  iVar3 = this->client_x + 2;
-  rect_set_xywh((iptr)local_454,iVar3,iVar5,this->field_2e0,this->field_2e4);
+  button_y = (this->client_y + this->client_height) - (this->field_2e4 + 2);
+  pos = this->client_x + 2;
+  rect_set_xywh((iptr)rect,pos,button_y,this->field_2e0,this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_480 = (u8 *)0x0;
+    parent_wnd4 = (u8 *)0x0;
   }
   else {
-    local_480 = this->pad_48;
+    parent_wnd4 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
   button_create
-            ((Control *)&this[1].field_2a4,(iptr)local_480,0x65,(iptr)local_454,iVar4);
+            ((Control *)&this[1].field_2a4,(iptr)parent_wnd4,0x65,(iptr)rect,label);
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40275c, tribe_editor_on_ok));
-  iVar3 = iVar3 + this->field_2e0 + 2;
-  rect_set_xywh((iptr)local_454,iVar3,iVar5,this->field_2e0,this->field_2e4);
+  pos = pos + this->field_2e0 + 2;
+  rect_set_xywh((iptr)rect,pos,button_y,this->field_2e0,this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_484 = (u8 *)0x0;
+    parent_wnd5 = (u8 *)0x0;
   }
   else {
-    local_484 = this->pad_48;
+    parent_wnd5 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x8ec));
+  label = label_string(*(i32 *)(label_string_ids + 0x8ec));
   button_create
-            ((Control *)&this[1].field_2e0,(iptr)local_484,0x66,(iptr)local_454,iVar4);
+            ((Control *)&this[1].field_2e0,(iptr)parent_wnd5,0x66,(iptr)rect,label);
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x401bea, tribe_editor_on_help));
-  rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar5,this->field_2e0,
+  rect_set_xywh((iptr)rect,pos + this->field_2e0 + 2,button_y,this->field_2e0,
                      this->field_2e4);
   if (this == (ViewWindow *)0x0) {
-    local_488 = (u8 *)0x0;
+    parent_wnd6 = (u8 *)0x0;
   }
   else {
-    local_488 = this->pad_48;
+    parent_wnd6 = this->pad_48;
   }
-  iVar4 = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
   button_create
-            ((Control *)&this[1].field_31c,(iptr)local_488,0x66,(iptr)local_454,iVar4);
+            ((Control *)&this[1].field_31c,(iptr)parent_wnd6,0x66,(iptr)rect,label);
   button_set_callback((Control *)&this[1].field_31c,ADDR(0x40152d, tribe_editor_on_cancel));
   ctrl_set_cancel_button((Control *)&this[1].field_31c);
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
@@ -1386,50 +1386,50 @@ void __thiscall tribe_editor_main(ViewWindow *this)
   }
   editor_bg_surface = (DibSurface *)0x0;
   this->field_2f8 = 0;
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004a5d6e */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004a5d6e */ { palette_destroy((GamePalette *)((iptr)&palette)); }
   return;
 }
 #undef editor_bg_surface
 #undef editor_next_ctrl_id
 #undef editor_running
-#undef local_488
-#undef local_484
-#undef local_480
-#undef local_47c
-#undef local_478
-#undef local_474
-#undef local_468
-#undef local_460
-#undef local_454
-#undef local_444
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef parent_wnd6
+#undef parent_wnd5
+#undef parent_wnd4
+#undef parent_wnd3
+#undef parent_wnd2
+#undef parent_wnd1
+#undef bg_surface2
+#undef i
+#undef rect
+#undef palette
+#undef eh_handler
+#undef eh_prev
+#undef eh_state
 
 /* 004a5d92 auto */
-#define local_b58 (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
+#define editor_wnd (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(2888)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(2892)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(2896)))
 void __cdecl tribe_editor_run(void)
 
 {
   i8 frame_[FRAME_OFF(2904)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  editor_wnd_ctor(&local_b58);
-  local_8 = 0;
-  tribe_editor_main((ViewWindow *)&local_b58);
+  eh_state = 0xffffffff;
+  editor_wnd_ctor(&editor_wnd);
+  eh_state = 0;
+  tribe_editor_main((ViewWindow *)&editor_wnd);
   wnd_repaint((SurfaceWindow *)&map_views);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004a5deb */ { editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004a5deb */ { editor_wnd_dtor((EditorWindow *)((iptr)&editor_wnd)); }
   return;
 }
-#undef local_b58
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef editor_wnd
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 004cc8f0 auto */
 /* Library Function - Multiple Matches With Different Base Names
@@ -1556,51 +1556,51 @@ void __cdecl editor_font_static_dtor(void)
 }
 
 /* 004cd8a6 auto */
-#define local_234 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_230 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define string_id (*(int *)(frame_ + FRAME_OFF(4)))
+#define result (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(12)))
-#define local_228 (*(FILE * *)(frame_ + FRAME_OFF(16)))
-#define local_224 (*(FILE * *)(frame_ + FRAME_OFF(20)))
-#define local_220 (*(char (*)[260])(frame_ + FRAME_OFF(24)))
+#define out_file (*(FILE * *)(frame_ + FRAME_OFF(16)))
+#define in_file (*(FILE * *)(frame_ + FRAME_OFF(20)))
+#define saved_cwd (*(char (*)[260])(frame_ + FRAME_OFF(24)))
 #define leader (*(iptr *)(frame_ + FRAME_OFF(284)))
-#define local_118 (*(char *)(frame_ + FRAME_OFF(288)))
-#define local_117 (*(char (*)[255])(frame_ + FRAME_OFF(289)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(544)))
-#define local_8 (*(char * *)(frame_ + FRAME_OFF(560)))
+#define line (*(char *)(frame_ + FRAME_OFF(288)))
+#define line_name (*(char (*)[255])(frame_ + FRAME_OFF(289)))
+#define city_file_name (*(i8 (*)[16])(frame_ + FRAME_OFF(544)))
+#define tribe_str (*(char * *)(frame_ + FRAME_OFF(560)))
 i32 __cdecl tribe_editor_update_city_file(void)
 
 {
-  int iVar1;
-  char *pcVar2;
+  int rc;
+  char *read_ptr;
   size_t _MaxCount;
   i8 frame_[FRAME_OFF(568)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_230 = 0;
-  local_228 = (FILE *)0x0;
-  local_224 = (FILE *)0x0;
-  crt_strcpy(local_18,s_CITY__0062e16c);
-  crt_strcat(local_18,&lang_file_ext);
-  __getcwd(local_220,0x104);
+  result = 0;
+  out_file = (FILE *)0x0;
+  in_file = (FILE *)0x0;
+  crt_strcpy(city_file_name,s_CITY__0062e16c);
+  crt_strcat(city_file_name,&lang_file_ext);
+  __getcwd(saved_cwd,0x104);
   __chdir(&scenario_dir_path);
-  iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
-  if (iVar1 != 0) {
-    iVar1 = file_exists((iptr)local_18);
-    if (iVar1 == 0) {
+  rc = _strcmp(&scenario_dir_path,&game_home_dir);
+  if (rc != 0) {
+    rc = file_exists((iptr)city_file_name);
+    if (rc == 0) {
 LAB_004cdc50:
-      local_230 = 1;
+      result = 1;
     }
     else {
-      iVar1 = file_exists(ADDR(0x62e174, ((u8 *)&g.d_0062e174)));
-      if (((iVar1 == 0) || (iVar1 = crt_remove(s_CITY_TMP_0062e180), iVar1 == 0)) &&
-         (iVar1 = crt_rename(local_18,s_CITY_TMP_0062e18c), iVar1 == 0)) {
-        local_224 = (FILE *)file_open_path(ADDR(0x62e19c, ((u8 *)&g.d_0062e19c)),ADDR(0x62e198, ((u8 *)&g.d_0062e198)));
-        local_228 = (FILE *)file_open_path((iptr)local_18,ADDR(0x62e1a8, ((u8 *)&g.d_0062e1a8)));
-        if ((local_224 != (FILE *)0x0) && (local_228 != (FILE *)0x0)) {
+      rc = file_exists(ADDR(0x62e174, ((u8 *)&g.d_0062e174)));
+      if (((rc == 0) || (rc = crt_remove(s_CITY_TMP_0062e180), rc == 0)) &&
+         (rc = crt_rename(city_file_name,s_CITY_TMP_0062e18c), rc == 0)) {
+        in_file = (FILE *)file_open_path(ADDR(0x62e19c, ((u8 *)&g.d_0062e19c)),ADDR(0x62e198, ((u8 *)&g.d_0062e198)));
+        out_file = (FILE *)file_open_path((iptr)city_file_name,ADDR(0x62e1a8, ((u8 *)&g.d_0062e1a8)));
+        if ((in_file != (FILE *)0x0) && (out_file != (FILE *)0x0)) {
           do {
             while( true ) {
-              pcVar2 = _fgets(&local_118,0x100,local_224);
-              if (pcVar2 == (char *)0x0) goto LAB_004cdc50;
-              if ((local_118 != '@') || (iVar1 = __strnicmp(local_117,&city_file_stop_str,4), iVar1 == 0))
+              read_ptr = _fgets(&line,0x100,in_file);
+              if (read_ptr == (char *)0x0) goto LAB_004cdc50;
+              if ((line != '@') || (rc = __strnicmp(line_name,&city_file_stop_str,4), rc == 0))
               break;
               for (leader = 0; leader < 0x15; leader++) {
                 civ = 1;
@@ -1608,161 +1608,161 @@ LAB_004cdc50:
                   civ++;
                 }
                 if (civ < 8) {
-                  local_8 = civ_names[civ].tribe_name;
+                  tribe_str = civ_names[civ].tribe_name;
                 }
                 else {
                   if (leaders[leader].plural < 1) {
-                    local_234 = ~(int)leaders[leader].plural + 1;
+                    string_id = ~(int)leaders[leader].plural + 1;
                   }
                   else {
-                    local_234 = (int)leaders[leader].plural;
+                    string_id = (int)leaders[leader].plural;
                   }
-                  local_8 = (char *)label_string(local_234);
+                  tribe_str = (char *)label_string(string_id);
                 }
-                _MaxCount = _strlen(local_8);
-                iVar1 = __strnicmp(local_117,local_8,_MaxCount);
-                if (iVar1 == 0) {
-                  _sprintf(&local_118,s__c_s_0062e1b4,0x40,
+                _MaxCount = _strlen(tribe_str);
+                rc = __strnicmp(line_name,tribe_str,_MaxCount);
+                if (rc == 0) {
+                  _sprintf(&line,s__c_s_0062e1b4,0x40,
                            &editor_item_names + (leader * 5 + 0xd2) * 8);
-                  __strupr(&local_118);
-                  iVar1 = _fputs(&local_118,local_228);
-                  if (iVar1 == -1) goto LAB_004cdc5a;
+                  __strupr(&line);
+                  rc = _fputs(&line,out_file);
+                  if (rc == -1) goto LAB_004cdc5a;
                   break;
                 }
               }
-              if ((leader == 0x15) && (iVar1 = _fputs(&local_118,local_228), iVar1 == -1))
+              if ((leader == 0x15) && (rc = _fputs(&line,out_file), rc == -1))
               goto LAB_004cdc5a;
             }
-            iVar1 = _fputs(&local_118,local_228);
-          } while (iVar1 != -1);
+            rc = _fputs(&line,out_file);
+          } while (rc != -1);
         }
       }
     }
   }
 LAB_004cdc5a:
-  if (local_224 != (FILE *)0x0) {
-    _fclose(local_224);
+  if (in_file != (FILE *)0x0) {
+    _fclose(in_file);
   }
-  if (local_228 != (FILE *)0x0) {
-    _fclose(local_228);
+  if (out_file != (FILE *)0x0) {
+    _fclose(out_file);
   }
-  iVar1 = file_exists(ADDR(0x62e1bc, ((u8 *)&g.d_0062e1bc)));
-  if (iVar1 != 0) {
+  rc = file_exists(ADDR(0x62e1bc, ((u8 *)&g.d_0062e1bc)));
+  if (rc != 0) {
     crt_remove(s_CITY_TMP_0062e1c8);
   }
-  __chdir(local_220);
-  return local_230;
+  __chdir(saved_cwd);
+  return result;
 }
-#undef local_234
-#undef local_230
+#undef string_id
+#undef result
 #undef civ
-#undef local_228
-#undef local_224
-#undef local_220
+#undef out_file
+#undef in_file
+#undef saved_cwd
 #undef leader
-#undef local_118
-#undef local_117
-#undef local_18
-#undef local_8
+#undef line
+#undef line_name
+#undef city_file_name
+#undef tribe_str
 
 /* 004cdcf6 auto */
-i32 __cdecl editor_numeric_edit_filter(i32 param_1,int param_2)
+i32 __cdecl editor_numeric_edit_filter(i32 ctrl,int key)
 
 {
-  i32 uVar1;
+  i32 accept;
   
-  if ((((param_2 < 0x30) || (0x39 < param_2)) && (param_2 != 0x2d)) && (param_2 != 0xd6)) {
-    uVar1 = 0;
+  if ((((key < 0x30) || (0x39 < key)) && (key != 0x2d)) && (key != 0xd6)) {
+    accept = 0;
   }
   else {
-    uVar1 = 1;
+    accept = 1;
   }
-  return uVar1;
+  return accept;
 }
 
 /* 004cdd3d auto */
 #define dlg_check_bits (*(uint *)((u8 *)&g.d_00631ed8))
 #define dlg_help_pressed (*(u32 *)((u8 *)&g.d_00631edc))
-#define local_314 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_30c (*(i32 *)(frame_ + FRAME_OFF(12)))
-#define local_308 (*(Dialog *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(772)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(776)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(780)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(784)))
-i32 __cdecl editor_options_dialog(iptr param_1,i32 param_2,uint param_3,i32 param_4)
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define choice (*(i32 *)(frame_ + FRAME_OFF(12)))
+#define dlg (*(Dialog *)(frame_ + FRAME_OFF(16)))
+#define i (*(int *)(frame_ + FRAME_OFF(772)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(776)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(780)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(784)))
+i32 __cdecl editor_options_dialog(iptr file_name,i32 section,uint disabled_mask,i32 flags)
 
 {
-  int iVar1;
+  int rc;
   i8 frame_[FRAME_OFF(792)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  dialog_ctor(&local_308,0x4000);
-  local_8 = 0;
+  eh_state = 0xffffffff;
+  dialog_ctor(&dlg,0x4000);
+  eh_state = 0;
   if (active_editor_wnd == 0) {
-    local_314 = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_314 = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
-  dlg_set_parent_window(local_314);
-  iVar1 = dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),param_1,param_2,0,0,0,0,param_4);
-  if (iVar1 == 0) {
-    if (((byte)local_308.field_3c & 4) != 0) {
-      for (local_14 = 0; local_14 < (int)local_308.field_28; local_14++) {
+  dlg_set_parent_window(parent_wnd2);
+  rc = dialog_load_text_section(&dlg,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),file_name,section,0,0,0,0,flags);
+  if (rc == 0) {
+    if (((byte)dlg.field_3c & 4) != 0) {
+      for (i = 0; i < (int)dlg.field_28; i++) {
         dialog_set_option_checked
-                  ((DialogOptionList *)&local_308,local_14,1 << ((byte)local_14 & 0x1f) & dlg_check_bits
+                  ((DialogOptionList *)&dlg,i,1 << ((byte)i & 0x1f) & dlg_check_bits
                   );
       }
     }
-    for (local_14 = 0; local_14 < (int)local_308.field_28; local_14++) {
+    for (i = 0; i < (int)dlg.field_28; i++) {
       dialog_set_option_disabled
-                ((DialogOptionList *)&local_308,local_14,
-                 (uint)((1 << ((byte)local_14 & 0x1f) & param_3) != 0));
+                ((DialogOptionList *)&dlg,i,
+                 (uint)((1 << ((byte)i & 0x1f) & disabled_mask) != 0));
     }
-    local_30c = dlg_show_modal(&local_308,0);
-    dlg_help_pressed = local_308.field_dc;
-    if (((byte)local_308.field_3c & 4) != 0) {
+    choice = dlg_show_modal(&dlg,0);
+    dlg_help_pressed = dlg.field_dc;
+    if (((byte)dlg.field_3c & 4) != 0) {
       dlg_check_bits = 0;
-      for (local_14 = 0; local_14 < (int)local_308.field_28; local_14++) {
-        iVar1 = dialog_option_is_checked((DialogOptionList *)&local_308,local_14);
-        if (iVar1 != 0) {
-          dlg_check_bits = dlg_check_bits | 1 << ((byte)local_14 & 0x1f);
+      for (i = 0; i < (int)dlg.field_28; i++) {
+        rc = dialog_option_is_checked((DialogOptionList *)&dlg,i);
+        if (rc != 0) {
+          dlg_check_bits = dlg_check_bits | 1 << ((byte)i & 0x1f);
         }
       }
     }
   }
   dlg_set_parent_window(0);
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004cdf26 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
-  return local_30c;
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004cdf26 */ { dialog_dtor((Dialog *)((iptr)&dlg)); }
+  return choice;
 }
 #undef dlg_check_bits
 #undef dlg_help_pressed
-#undef local_314
-#undef local_30c
-#undef local_308
-#undef local_14
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef parent_wnd2
+#undef choice
+#undef dlg
+#undef i
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 004cdf4b auto */
 #define editor_value_clamped (*(i32 *)((u8 *)&g.d_0062e014))
-int __cdecl editor_clamp_value(int param_1,int param_2,int param_3)
+int __cdecl editor_clamp_value(int value,int min_value,int max_value)
 
 {
-  if (param_1 < param_2) {
+  if (value < min_value) {
     editor_value_clamped = 1;
   }
   else {
-    param_2 = param_1;
-    if (param_3 < param_1) {
+    min_value = value;
+    if (max_value < value) {
       editor_value_clamped = 1;
-      param_2 = param_3;
+      min_value = max_value;
     }
   }
-  return param_2;
+  return min_value;
 }
 #undef editor_value_clamped
 
@@ -1776,65 +1776,65 @@ int __cdecl editor_clamp_value(int param_1,int param_2,int param_3)
 #define editor_text_dlg_title_font_i32 (*(i32 *)((u8 *)&g.d_006a1b8c))
 #define editor_text_dlg_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006a1b90))
 #define editor_text_dlg_text_font_i32 (*(i32 *)((u8 *)&g.d_006a1b94))
-#define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define wnd_style (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl
-editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int param_5,int param_6,int param_7,
-            int param_8,int param_9)
+editor_text_dlg_create(int title,uint style,int x,int y,int width,int height,int resize_border,
+            int caption_height,int border_width)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if (param_1 == 0) {
+  if (title == 0) {
     crt_strcpy(&editor_text_dlg_title,&editor_text_dlg_empty_title);
   }
   else {
-    crt_strcpy(&editor_text_dlg_title,param_1);
+    crt_strcpy(&editor_text_dlg_title,title);
   }
   editor_text_dlg_text_font_i32 = &ui_text_font;
   editor_text_dlg_title_font_i32 = &caption_font;
   editor_text_dlg_title_small_font_i32 = &caption_small_font;
-  editor_text_dlg_style_i32 = param_2;
-  editor_text_dlg_caption_height = param_8;
-  editor_text_dlg_border_width = param_9;
-  editor_text_dlg_resize_border = param_7;
+  editor_text_dlg_style_i32 = style;
+  editor_text_dlg_caption_height = caption_height;
+  editor_text_dlg_border_width = border_width;
+  editor_text_dlg_resize_border = resize_border;
   editor_text_dlg_caption_buttons_i32 = 0;
   editor_text_dlg_caption_handler_i32 = 0;
-  if ((param_2 & 4) != 0) {
+  if ((style & 4) != 0) {
     editor_text_dlg_caption_height = frame_caption_height;
     editor_text_dlg_border_width = frame_border_width;
   }
-  if ((param_2 & 8) == 0) {
-    local_8 = 0x202;
+  if ((style & 8) == 0) {
+    wnd_style = 0x202;
   }
   else {
-    local_8 = 0x802;
+    wnd_style = 0x802;
   }
   if (editor_text_dlg_caption_height != 0) {
-    local_8 = local_8 | 0x400;
+    wnd_style = wnd_style | 0x400;
   }
-  if (param_7 != 0) {
-    local_8 = local_8 | 0x1000;
+  if (resize_border != 0) {
+    wnd_style = wnd_style | 0x1000;
   }
-  if ((param_2 & 2) == 0) {
-    param_5 += editor_text_dlg_border_width * 2;
-    param_6 = param_6 + editor_text_dlg_caption_height + editor_text_dlg_border_width;
+  if ((style & 2) == 0) {
+    width += editor_text_dlg_border_width * 2;
+    height = height + editor_text_dlg_caption_height + editor_text_dlg_border_width;
   }
-  if ((param_2 & 1) != 0) {
-    param_3 = (screen_width >> 1) - (param_5 >> 1);
-    param_4 = (screen_height >> 1) - (param_6 >> 1);
+  if ((style & 1) != 0) {
+    x = (screen_width >> 1) - (width >> 1);
+    y = (screen_height >> 1) - (height >> 1);
   }
   if (active_editor_wnd == 0) {
-    local_c = 0;
+    parent_wnd2 = 0;
   }
   else {
-    local_c = active_editor_wnd + 0x48;
+    parent_wnd2 = active_editor_wnd + 0x48;
   }
   wnd_create_with_surface
-            ((DibSurface *)&editor_text_dlg_wnd,0,local_8,param_3,param_4,param_5,param_6,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
-             local_c);
+            ((DibSurface *)&editor_text_dlg_wnd,0,wnd_style,x,y,width,height,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),
+             parent_wnd2);
   if (editor_text_dlg_caption_height != 0) {
     wnd_set_caption_height((WndBase *)&editor_text_dlg_inner,editor_text_dlg_caption_height);
   }
@@ -1853,55 +1853,55 @@ editor_text_dlg_create(int param_1,uint param_2,int param_3,int param_4,int para
 #undef editor_text_dlg_title_font_i32
 #undef editor_text_dlg_title_small_font_i32
 #undef editor_text_dlg_text_font_i32
-#undef local_c
-#undef local_8
+#undef parent_wnd2
+#undef wnd_style
 
 /* 004ce196 auto */
 #define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
-#define local_108 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_104 (*(char (*)[256])(frame_ + FRAME_OFF(4)))
+#define line_idx (*(int *)(frame_ + FRAME_OFF(0)))
+#define line_buf (*(char (*)[256])(frame_ + FRAME_OFF(4)))
 void __cdecl editor_text_dlg_on_ok(void)
 
 {
-  int iVar1;
-  size_t sVar2;
-  i32 uVar3;
+  int has_line;
+  size_t len;
+  i32 line_copy;
   i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_108 = 0; local_108 < 0x14; local_108++) {
-    *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
+  for (line_idx = 0; line_idx < 0x14; line_idx++) {
+    *(i32 *)(editor_text_lines_out + line_idx * 4) = 0;
   }
   events_compact();
-  local_108 = 0;
+  line_idx = 0;
   do {
-    if (0x13 < local_108) {
+    if (0x13 < line_idx) {
 LAB_004ce2ca:
       editor_text_result = 1;
       editor_text_active = 0;
       wnd_end_modal_loop((ModalMenuWindow *)&editor_text_dlg_inner);
       return;
     }
-    iVar1 = edit_get_line
-                      ((EditLineView *)&editor_text_edit,local_108,(iptr)local_104,0x100);
-    if (iVar1 == 0) {
-      *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
+    has_line = edit_get_line
+                      ((EditLineView *)&editor_text_edit,line_idx,(iptr)line_buf,0x100);
+    if (has_line == 0) {
+      *(i32 *)(editor_text_lines_out + line_idx * 4) = 0;
     }
     else {
-      sVar2 = _strlen(local_104);
-      uVar3 = memblock_alloc_checked(ADDR(0x64b984, ((u8 *)&g.d_0064b984)),sVar2 + 1);
-      *(i32 *)(editor_text_lines_out + local_108 * 4) = uVar3;
-      if (*(int *)(editor_text_lines_out + local_108 * 4) == 0) {
-        *(i32 *)(editor_text_lines_out + local_108 * 4) = 0;
+      len = _strlen(line_buf);
+      line_copy = memblock_alloc_checked(ADDR(0x64b984, ((u8 *)&g.d_0064b984)),len + 1);
+      *(i32 *)(editor_text_lines_out + line_idx * 4) = line_copy;
+      if (*(int *)(editor_text_lines_out + line_idx * 4) == 0) {
+        *(i32 *)(editor_text_lines_out + line_idx * 4) = 0;
         goto LAB_004ce2ca;
       }
-      crt_strcpy(*(i32 *)(editor_text_lines_out + local_108 * 4),local_104);
+      crt_strcpy(*(i32 *)(editor_text_lines_out + line_idx * 4),line_buf);
     }
-    local_108++;
+    line_idx++;
   } while( true );
 }
 #undef editor_text_active
-#undef local_108
-#undef local_104
+#undef line_idx
+#undef line_buf
 
 /* 004ce2f3 auto */
 #define editor_text_active (*(i32 *)((u8 *)&g.d_006a4f9c))
@@ -1930,66 +1930,66 @@ void __cdecl editor_text_dlg_redraw(void)
 
 /* 004ce38a auto */
 #define editor_text_active (*(int *)((u8 *)&g.d_006a4f9c))
-#define local_ac (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_a4 (*(Control *)(frame_ + FRAME_OFF(12)))
-#define local_68 (*(int *)(frame_ + FRAME_OFF(72)))
-#define local_64 (*(int *)(frame_ + FRAME_OFF(76)))
-#define local_60 (*(int *)(frame_ + FRAME_OFF(80)))
-#define local_5c (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_4c (*(Control *)(frame_ + FRAME_OFF(100)))
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(160)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(164)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(168)))
+#define line_idx (*(int *)(frame_ + FRAME_OFF(4)))
+#define cancel_btn (*(Control *)(frame_ + FRAME_OFF(12)))
+#define button_height (*(int *)(frame_ + FRAME_OFF(72)))
+#define button_x (*(int *)(frame_ + FRAME_OFF(76)))
+#define button_width2 (*(int *)(frame_ + FRAME_OFF(80)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define ok_btn (*(Control *)(frame_ + FRAME_OFF(100)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(160)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(164)))
+#define eh_state (*(uint *)(frame_ + FRAME_OFF(168)))
 /* WARNING: Removing unreachable block (ram,0x004ce598) */
 /* WARNING: Removing unreachable block (ram,0x004ce49e) */
 /* WARNING: Removing unreachable block (ram,0x004ce621) */
 
-i32 __cdecl editor_text_edit_dialog(iptr param_1,i32 param_2)
+i32 __cdecl editor_text_edit_dialog(iptr lines,i32 title)
 
 {
-  i32 uVar1;
-  int iVar2;
-  iptr iVar3;
+  i32 result;
+  int button_y;
+  iptr label;
   i8 frame_[FRAME_OFF(176)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
-  button_ctor(&local_4c);
-  local_8 = 0;
-  button_ctor(&local_a4);
-  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
+  eh_state = 0xffffffff;
+  button_ctor(&ok_btn);
+  eh_state = 0;
+  button_ctor(&cancel_btn);
+  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),1);
   editor_text_active = 1;
-  editor_text_lines_out = param_1;
-  local_68 = font_line_spacing((GameFont *)dialog_font_ptr);
-  local_68 += 8;
-  iVar2 = font_line_spacing((GameFont *)&editor_font);
-  editor_text_dlg_create(param_2,0xd,0,0x14,600,iVar2 * 0x14 + local_68,0,0,0);
-  local_68 = font_line_spacing((GameFont *)dialog_font_ptr);
-  local_68 += 8;
-  local_60 = (editor_text_dlg_client_width - 6) / 2;
-  rect_set_xywh((iptr)local_5c,editor_text_dlg_client_x + 4,editor_text_dlg_client_y + 4,editor_text_dlg_client_width - 9,
-                     (editor_text_dlg_client_height - local_68) - 9);
+  editor_text_lines_out = lines;
+  button_height = font_line_spacing((GameFont *)dialog_font_ptr);
+  button_height += 8;
+  button_y = font_line_spacing((GameFont *)&editor_font);
+  editor_text_dlg_create(title,0xd,0,0x14,600,button_y * 0x14 + button_height,0,0,0);
+  button_height = font_line_spacing((GameFont *)dialog_font_ptr);
+  button_height += 8;
+  button_width2 = (editor_text_dlg_client_width - 6) / 2;
+  rect_set_xywh((iptr)rect,editor_text_dlg_client_x + 4,editor_text_dlg_client_y + 4,editor_text_dlg_client_width - 9,
+                     (editor_text_dlg_client_height - button_height) - 9);
   edit_create_styled
-            ((EditControl *)&editor_text_edit,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0xc9,(iptr)local_5c,0,2,1);
-  for (local_ac = 0; (local_ac < 0x14 && (*(int *)(param_1 + local_ac * 4) != 0));
-      local_ac = local_ac + 1) {
-    if (local_ac != 0) {
+            ((EditControl *)&editor_text_edit,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0xc9,(iptr)rect,0,2,1);
+  for (line_idx = 0; (line_idx < 0x14 && (*(int *)(lines + line_idx * 4) != 0));
+      line_idx = line_idx + 1) {
+    if (line_idx != 0) {
       edit_replace_sel((Control *)&editor_text_edit,ADDR(0x62e1d8, ((u8 *)&g.d_0062e1d8)));
     }
     edit_replace_sel
-              ((Control *)&editor_text_edit,*(iptr *)(param_1 + local_ac * 4));
+              ((Control *)&editor_text_edit,*(iptr *)(lines + line_idx * 4));
   }
-  iVar2 = (editor_text_dlg_client_y + editor_text_dlg_client_height) - (local_68 + 2);
-  local_64 = editor_text_dlg_client_x + 2;
-  rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
-  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3f8));
-  button_create(&local_4c,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x65,(iptr)local_5c,iVar3);
-  button_set_callback(&local_4c,ADDR(0x401d84, editor_text_dlg_on_ok));
-  local_64 = local_64 + local_60 + 2;
-  rect_set_xywh((iptr)local_5c,local_64,iVar2,local_60,local_68);
-  iVar3 = label_string(*(i32 *)(label_string_ids + 0x3fc));
-  button_create(&local_a4,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x66,(iptr)local_5c,iVar3);
-  button_set_callback(&local_a4,ADDR(0x4011d1, editor_text_dlg_on_cancel));
-  ctrl_set_cancel_button(&local_a4);
+  button_y = (editor_text_dlg_client_y + editor_text_dlg_client_height) - (button_height + 2);
+  button_x = editor_text_dlg_client_x + 2;
+  rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
+  label = label_string(*(i32 *)(label_string_ids + 0x3f8));
+  button_create(&ok_btn,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x65,(iptr)rect,label);
+  button_set_callback(&ok_btn,ADDR(0x401d84, editor_text_dlg_on_ok));
+  button_x = button_x + button_width2 + 2;
+  rect_set_xywh((iptr)rect,button_x,button_y,button_width2,button_height);
+  label = label_string(*(i32 *)(label_string_ids + 0x3fc));
+  button_create(&cancel_btn,ADDR(0x6a1908, ((u8 *)&g.d_006a1908)),0x66,(iptr)rect,label);
+  button_set_callback(&cancel_btn,ADDR(0x4011d1, editor_text_dlg_on_cancel));
+  ctrl_set_cancel_button(&cancel_btn);
   wnd_set_redraw_callback((SurfaceWindow *)&editor_text_dlg_wnd,ADDR(0x401582, editor_text_dlg_redraw));
   wnd_repaint((SurfaceWindow *)&editor_text_dlg_wnd);
   window_show((WindowObjectView *)&editor_text_dlg_wnd);
@@ -1998,78 +1998,78 @@ i32 __cdecl editor_text_edit_dialog(iptr param_1,i32 param_2)
     win_pump_one_message();
   }
   frame_wnd_close((DibSurface *)&editor_text_dlg_wnd);
-  uVar1 = editor_text_result;
-  local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet 004ce6ed */ { ctrl_dtor((Control *)((iptr)&local_a4)); }
-  local_8 = 0xffffffff;
-  /* inlined unwind funclet 004ce6f9 */ { ctrl_dtor((Control *)((iptr)&local_4c)); }
-  return uVar1;
+  result = editor_text_result;
+  eh_state = eh_state & 0xffffff00;
+  /* inlined unwind funclet 004ce6ed */ { ctrl_dtor((Control *)((iptr)&cancel_btn)); }
+  eh_state = 0xffffffff;
+  /* inlined unwind funclet 004ce6f9 */ { ctrl_dtor((Control *)((iptr)&ok_btn)); }
+  return result;
 }
 #undef editor_text_active
-#undef local_ac
-#undef local_a4
-#undef local_68
-#undef local_64
-#undef local_60
-#undef local_5c
-#undef local_4c
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef line_idx
+#undef cancel_btn
+#undef button_height
+#undef button_x
+#undef button_width2
+#undef rect
+#undef ok_btn
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 004ce71b auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_c (*(size_t *)(frame_ + FRAME_OFF(4)))
-uint __cdecl editor_check_city_name(iptr param_1)
+#define parent_wnd2 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define cmp_len (*(size_t *)(frame_ + FRAME_OFF(4)))
+uint __cdecl editor_check_city_name(iptr name2)
 
 {
-  int iVar1;
-  size_t sVar2;
-  size_t sVar3;
-  uint uVar4;
+  int rc;
+  size_t name_len;
+  size_t line_len;
+  uint result;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = text_open_section(ADDR(0x62e1dc, ((u8 *)&g.d_0062e1dc)),0);
-  if (iVar1 == 0) {
+  rc = text_open_section(ADDR(0x62e1dc, ((u8 *)&g.d_0062e1dc)),0);
+  if (rc == 0) {
     do {
-      iVar1 = text_read_line(1);
-      if (iVar1 == 0) goto LAB_004ce7c5;
-      sVar2 = _strlen((char *)param_1);
-      sVar3 = _strlen(&text_buffer);
-      if (sVar3 < sVar2) {
-        local_c = _strlen((char *)param_1);
+      rc = text_read_line(1);
+      if (rc == 0) goto LAB_004ce7c5;
+      name_len = _strlen((char *)name2);
+      line_len = _strlen(&text_buffer);
+      if (line_len < name_len) {
+        cmp_len = _strlen((char *)name2);
       }
       else {
-        local_c = _strlen(&text_buffer);
+        cmp_len = _strlen(&text_buffer);
       }
-      iVar1 = __strnicmp((char *)param_1,&text_buffer,local_c);
-    } while (iVar1 != 0);
+      rc = __strnicmp((char *)name2,&text_buffer,cmp_len);
+    } while (rc != 0);
     text_close_file();
-    uVar4 = 1;
+    result = 1;
   }
   else {
 LAB_004ce7c5:
     if (active_editor_wnd == 0) {
-      local_10 = 0;
+      parent_wnd2 = 0;
     }
     else {
-      local_10 = active_editor_wnd + 0x48;
+      parent_wnd2 = active_editor_wnd + 0x48;
     }
-    dlg_set_parent_window(local_10);
-    text_set_string_arg(0,param_1);
-    iVar1 = popup_debug_text(ADDR(0x62e1e4, ((u8 *)&g.d_0062e1e4)));
+    dlg_set_parent_window(parent_wnd2);
+    text_set_string_arg(0,name2);
+    rc = popup_debug_text(ADDR(0x62e1e4, ((u8 *)&g.d_0062e1e4)));
     dlg_set_parent_window(0);
-    uVar4 = (uint)(iVar1 == 0);
+    result = (uint)(rc == 0);
   }
-  return uVar4;
+  return result;
 }
 #undef text_buffer
-#undef local_10
-#undef local_c
+#undef parent_wnd2
+#undef cmp_len
 
 /* 004ce83d auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl editor_wnd_on_move_close_dropdowns(void)
 
 {
@@ -2079,123 +2079,123 @@ void __cdecl editor_wnd_on_move_close_dropdowns(void)
   LPARAM lParam;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < *(int *)(active_editor_wnd + 0x2f8); local_8++) {
+  for (i = 0; i < *(int *)(active_editor_wnd + 0x2f8); i++) {
     lParam = 0;
     wParam = 0;
     Msg = 0x14f;
     hWnd = (HWND)control_get_hwnd
-                           ((ControlHwndView *)(active_editor_wnd + 0x2fc + local_8 * 0x38));
+                           ((ControlHwndView *)(active_editor_wnd + 0x2fc + i * 0x38));
     SendMessageA(hWnd,Msg,wParam,lParam);
   }
   return;
 }
-#undef local_8
+#undef i
 
 /* 004ce8a4 auto */
-#define local_120 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
-#define local_1c (*(char (*)[20])(frame_ + FRAME_OFF(260)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(280)))
-i32 __cdecl editor_input_long(iptr param_1,iptr param_2,int param_3,iptr param_4)
+#define input_buf (*(char (*)[260])(frame_ + FRAME_OFF(0)))
+#define default_buf (*(char (*)[20])(frame_ + FRAME_OFF(260)))
+#define result (*(i32 *)(frame_ + FRAME_OFF(280)))
+i32 __cdecl editor_input_long(iptr file_name,iptr section,int default_value,iptr out_value)
 
 {
-  long lVar1;
+  long value;
   i8 frame_[FRAME_OFF(288)] __attribute__((aligned(8)));  /* original stack frame */
   
-  __itoa(param_3,local_1c,10);
-  local_8 = dlg_text_input(param_1,param_2,6,(iptr)local_1c,(iptr)local_120);
-  lVar1 = _atol(local_120);
-  *(long *)param_4 = lVar1;
-  return local_8;
+  __itoa(default_value,default_buf,10);
+  result = dlg_text_input(file_name,section,6,(iptr)default_buf,(iptr)input_buf);
+  value = _atol(input_buf);
+  *(long *)out_value = value;
+  return result;
 }
-#undef local_120
-#undef local_1c
-#undef local_8
+#undef input_buf
+#undef default_buf
+#undef result
 
 /* 00553dfd auto */
-#define local_210 (*(char (*)[260])(frame_ + FRAME_OFF(0)))
-#define local_10c (*(CHAR (*)[260])(frame_ + FRAME_OFF(260)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(520)))
+#define folder_name (*(char (*)[260])(frame_ + FRAME_OFF(0)))
+#define path (*(CHAR (*)[260])(frame_ + FRAME_OFF(260)))
+#define retry (*(int *)(frame_ + FRAME_OFF(520)))
 i32 __cdecl editor_create_scenario_folder(void)
 
 {
-  int iVar1;
-  size_t sVar2;
+  int rc;
+  size_t len;
   DWORD DVar3;
   i8 frame_[FRAME_OFF(528)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
-  if (iVar1 == 0) {
+  rc = _strcmp(&scenario_dir_path,&game_home_dir);
+  if (rc == 0) {
     do {
-      local_8 = 0;
+      retry = 0;
       do {
-        iVar1 = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x633698, ((u8 *)&g.d_00633698)),8,ADDR(0x633694, ((u8 *)&g.d_00633694)),(iptr)local_210);
-        if (iVar1 < 0) {
+        rc = dlg_text_input(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x633698, ((u8 *)&g.d_00633698)),8,ADDR(0x633694, ((u8 *)&g.d_00633694)),(iptr)folder_name);
+        if (rc < 0) {
           return 0;
         }
-        sVar2 = _strlen(local_210);
-      } while (sVar2 == 0);
-      iVar1 = str_find_bad_filename_char((iptr)local_210);
-      if (iVar1 == 0) {
-        crt_strcpy(local_10c,&game_home_dir);
-        crt_strcat(local_10c,s__SCENARIO__006336ac);
-        crt_strcat(local_10c,local_210);
-        DVar3 = GetFileAttributesA(local_10c);
+        len = _strlen(folder_name);
+      } while (len == 0);
+      rc = str_find_bad_filename_char((iptr)folder_name);
+      if (rc == 0) {
+        crt_strcpy(path,&game_home_dir);
+        crt_strcat(path,s__SCENARIO__006336ac);
+        crt_strcat(path,folder_name);
+        DVar3 = GetFileAttributesA(path);
         if (DVar3 != 0xffffffff) {
-          text_set_string_arg(0,(iptr)local_10c);
+          text_set_string_arg(0,(iptr)path);
           popup_text(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x6336b8, ((u8 *)&g.d_006336b8)));
-          local_8 = 1;
+          retry = 1;
         }
       }
       else {
-        text_set_string_arg(0,(iptr)local_210);
+        text_set_string_arg(0,(iptr)folder_name);
         popup_text(ADDR(0x6359dc, ((u8 *)&g.d_006359dc)),ADDR(0x6336a4, ((u8 *)&g.d_006336a4)));
-        local_8 = 1;
+        retry = 1;
       }
-    } while (local_8 != 0);
-    crt_mkdir(local_10c);
-    crt_strcpy(&scenario_dir_path,local_10c);
-    crt_strcat(local_10c,s__SOUND_006336c4);
-    crt_mkdir(local_10c);
-    crt_strcpy(local_10c,&scenario_dir_path);
-    crt_strcat(local_10c,&scenario_path_sep_str);
-    crt_strcat(local_10c,local_210);
-    crt_strcat(local_10c,&scenario_file_ext_str);
-    save_write_game((iptr)local_10c,1);
+    } while (retry != 0);
+    crt_mkdir(path);
+    crt_strcpy(&scenario_dir_path,path);
+    crt_strcat(path,s__SOUND_006336c4);
+    crt_mkdir(path);
+    crt_strcpy(path,&scenario_dir_path);
+    crt_strcat(path,&scenario_path_sep_str);
+    crt_strcat(path,folder_name);
+    crt_strcat(path,&scenario_file_ext_str);
+    save_write_game((iptr)path,1);
   }
   return 1;
 }
-#undef local_210
-#undef local_10c
-#undef local_8
+#undef folder_name
+#undef path
+#undef retry
 
 /* 00553ff6 auto */
 void __cdecl editor_toggle_scenario_flag(void)
 
 {
-  int iVar1;
+  int rc;
   
   if (((game.game_options & 0x8000) == 0) && ((game.game_flags & 0x10) == 0)) {
-    iVar1 = popup_game_with_sprite(ADDR(0x6336d8, ((u8 *)&g.d_006336d8)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
-    if (iVar1 == 0) {
+    rc = popup_game_with_sprite(ADDR(0x6336d8, ((u8 *)&g.d_006336d8)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
+    if (rc == 0) {
       return;
     }
     game.game_flags = game.game_flags | 0x10;
     game.game_options = game.game_options | 0x8000;
-    iVar1 = editor_create_scenario_folder();
-    if (iVar1 != 0) {
+    rc = editor_create_scenario_folder();
+    if (rc != 0) {
       popup_text(ADDR(0x6336ec, ((u8 *)&g.d_006336ec)),ADDR(0x6336e4, ((u8 *)&g.d_006336e4)));
       game.game_flags = game.game_flags | 0x80;
     }
   }
   else if (((game.game_options & 0x8000) == 0) ||
           (((game.game_flags & 0x80) == 0 ||
-           (iVar1 = _strcmp(&scenario_dir_path,&game_home_dir), iVar1 == 0)))) {
-    iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
-    if (iVar1 == 0) {
+           (rc = _strcmp(&scenario_dir_path,&game_home_dir), rc == 0)))) {
+    rc = _strcmp(&scenario_dir_path,&game_home_dir);
+    if (rc == 0) {
       popup_text(ADDR(0x6336fc, ((u8 *)&g.d_006336fc)),ADDR(0x6336f4, ((u8 *)&g.d_006336f4)));
     }
-    iVar1 = editor_create_scenario_folder();
-    if (iVar1 == 0) {
+    rc = editor_create_scenario_folder();
+    if (rc == 0) {
       return;
     }
     game.game_options = game.game_options | 0x8000;

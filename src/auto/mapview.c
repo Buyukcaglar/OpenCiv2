@@ -87,39 +87,39 @@ i32 __cdecl minimap_on_close(void)
 void __cdecl minimap_calc_layout(void)
 
 {
-  int iVar1;
-  int iVar2;
-  int iVar3;
+  int client_h;
+  int tile_size;
+  int tile_h;
   
-  iVar1 = minimap_client_height;
-  iVar2 = minimap_client_width / (int)map.width;
-  if (iVar2 < 2) {
-    iVar2 = 1;
+  client_h = minimap_client_height;
+  tile_size = minimap_client_width / (int)map.width;
+  if (tile_size < 2) {
+    tile_size = 1;
   }
-  iVar3 = minimap_client_height / (int)map.height;
-  if (iVar3 < 2) {
-    iVar3 = 1;
+  tile_h = minimap_client_height / (int)map.height;
+  if (tile_h < 2) {
+    tile_h = 1;
   }
-  if (iVar3 <= iVar2) {
-    iVar2 = iVar3;
+  if (tile_h <= tile_size) {
+    tile_size = tile_h;
   }
-  minimap_tile_height = iVar2;
-  if (iVar3 <= iVar2) {
-    minimap_tile_height = iVar3;
+  minimap_tile_height = tile_size;
+  if (tile_h <= tile_size) {
+    minimap_tile_height = tile_h;
   }
-  minimap_tile_width = iVar2 * 2;
-  iVar2 = (minimap_client_width - minimap_tile_width / 2) / minimap_tile_width;
+  minimap_tile_width = tile_size * 2;
+  tile_size = (minimap_client_width - minimap_tile_width / 2) / minimap_tile_width;
   minimap_view_cols = (int)map.width / 2;
-  if (iVar2 <= (int)map.width / 2) {
-    minimap_view_cols = iVar2;
+  if (tile_size <= (int)map.width / 2) {
+    minimap_view_cols = tile_size;
   }
   minimap_view_rows = (int)map.height;
   if (minimap_client_height / minimap_tile_height <= (int)map.height) {
     minimap_view_rows = minimap_client_height / minimap_tile_height;
   }
-  iVar2 = int_clamp(minimap_client_width - minimap_view_cols * minimap_tile_width,0,999);
-  minimap_margin_y_i32 = int_clamp(iVar1 - minimap_view_rows * minimap_tile_height,0,999);
-  minimap_margin_x = iVar2 >> 1;
+  tile_size = int_clamp(minimap_client_width - minimap_view_cols * minimap_tile_width,0,999);
+  minimap_margin_y_i32 = int_clamp(client_h - minimap_view_rows * minimap_tile_height,0,999);
+  minimap_margin_x = tile_size >> 1;
   minimap_margin_y_i32 = minimap_margin_y_i32 >> 1;
   if (minimap_view_rows < map.height) {
     minimap_origin_y = (int)mapview_center_y - (minimap_view_rows >> 1);
@@ -155,31 +155,31 @@ void __cdecl minimap_calc_layout(void)
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define dx (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl minimap_tile_to_screen(int param_1,uint param_2,iptr param_3,iptr param_4)
+void __cdecl minimap_tile_to_screen(int x,uint y,iptr out_x,iptr out_y)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = param_1 - minimap_origin_x;
-  if (((game.rules & 0x8000) == 0) && (local_8 < 0)) {
-    local_8 += map.width;
+  dx = x - minimap_origin_x;
+  if (((game.rules & 0x8000) == 0) && (dx < 0)) {
+    dx += map.width;
   }
-  *(uint *)param_4 = (param_2 - minimap_origin_y) * minimap_tile_height + minimap_margin_y_i32;
-  *(int *)param_3 = (local_8 >> 1) * minimap_tile_width + minimap_margin_x;
-  if ((param_2 & 1) != 0) {
-    *(int *)param_3 = *(int *)param_3 + (minimap_tile_width >> 1);
+  *(uint *)out_y = (y - minimap_origin_y) * minimap_tile_height + minimap_margin_y_i32;
+  *(int *)out_x = (dx >> 1) * minimap_tile_width + minimap_margin_x;
+  if ((y & 1) != 0) {
+    *(int *)out_x = *(int *)out_x + (minimap_tile_width >> 1);
   }
-  *(int *)param_3 = *(int *)param_3 + minimap_client_x;
-  *(int *)param_4 = *(int *)param_4 + minimap_client_y;
+  *(int *)out_x = *(int *)out_x + minimap_client_x;
+  *(int *)out_y = *(int *)out_y + minimap_client_y;
   return;
 }
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef local_8
+#undef dx
 
 /* 00406e61 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
@@ -188,23 +188,23 @@ void __cdecl minimap_tile_to_screen(int param_1,uint param_2,iptr param_3,iptr p
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define color2 (*(i32 *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl minimap_tile_color(int x,int y)
 
 {
-  iptr iVar1;
-  iptr iVar2;
+  iptr in_bounds;
+  iptr visible;
   int city;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = map_in_bounds(x,y);
-  if (iVar1 == 0) {
-    local_8 = 10;
+  in_bounds = map_in_bounds(x,y);
+  if (in_bounds == 0) {
+    color2 = 10;
   }
   else {
-    iVar2 = tile_visible_to(x,y,human_civ);
-    if ((iVar2 == 0) && (game.reveal_map == '\0')) {
-      local_8 = 10;
+    visible = tile_visible_to(x,y,human_civ);
+    if ((visible == 0) && (game.reveal_map == '\0')) {
+      color2 = 10;
     }
     else {
       city = city_at(x,y);
@@ -216,22 +216,22 @@ i32 __cdecl minimap_tile_color(int x,int y)
             (map_cursor_x != x)) || (map_cursor_y != y)) {
           city = tile_is_ocean(x,y);
           if (city == 0) {
-            local_8 = 0x30;
+            color2 = 0x30;
           }
           else {
-            local_8 = 0x5d;
+            color2 = 0x5d;
           }
         }
         else {
-          local_8 = 0x29;
+          color2 = 0x29;
         }
       }
       else {
-        local_8 = *(i32 *)(&civ_secondary_colors + cities[city].owner * 0x10);
+        color2 = *(i32 *)(&civ_secondary_colors + cities[city].owner * 0x10);
       }
     }
   }
-  return local_8;
+  return color2;
 }
 #undef human_civ
 #undef map_cursor_x
@@ -239,42 +239,42 @@ i32 __cdecl minimap_tile_color(int x,int y)
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef local_8
+#undef color2
 
 /* 0040701e auto */
 #define mapview_origin_x (*(i32 *)((u8 *)&g.d_0066ca90))
 #define mapview_origin_y (*(i32 *)((u8 *)&g.d_0066ca94))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define bottom (*(int *)(frame_ + FRAME_OFF(4)))
+#define top (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define right (*(int *)(frame_ + FRAME_OFF(12)))
+#define left (*(int *)(frame_ + FRAME_OFF(16)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 void __cdecl minimap_draw_view_rect(void)
 
 {
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((mapview_margin_x == 0) && (mapview_margin_y == 0)) {
-    minimap_tile_to_screen(mapview_origin_x,mapview_origin_y,(iptr)&local_18,(iptr)&local_20);
-    minimap_tile_to_screen(mapview_end_x,mapview_end_y,(iptr)&local_1c,(iptr)&local_24);
-    if (local_18 < local_1c) {
-      rect_set((iptr)local_14,local_18,local_20,local_1c + 1,local_24 + 1);
-      gfx_target_frame_rect((iptr)local_14,0x29);
+    minimap_tile_to_screen(mapview_origin_x,mapview_origin_y,(iptr)&left,(iptr)&top);
+    minimap_tile_to_screen(mapview_end_x,mapview_end_y,(iptr)&right,(iptr)&bottom);
+    if (left < right) {
+      rect_set((iptr)rect,left,top,right + 1,bottom + 1);
+      gfx_target_frame_rect((iptr)rect,0x29);
     }
     else {
-      rect_set((iptr)local_14,local_1c,local_20,local_18 + 1,local_24 + 1);
-      gfx_target_frame_rect((iptr)local_14,0x29);
+      rect_set((iptr)rect,right,top,left + 1,bottom + 1);
+      gfx_target_frame_rect((iptr)rect,0x29);
     }
   }
   return;
 }
 #undef mapview_origin_x
 #undef mapview_origin_y
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef local_14
+#undef bottom
+#undef top
+#undef right
+#undef left
+#undef rect
 
 /* 0040733c auto */
 #define game_loop_active (*(char *)((u8 *)&g.d_00628044))
@@ -282,20 +282,20 @@ void __cdecl minimap_draw_view_rect(void)
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(12)))
+#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
+#define row (*(int *)(frame_ + FRAME_OFF(8)))
+#define col (*(int *)(frame_ + FRAME_OFF(12)))
 #define x2 (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(28)))
+#define screen_y (*(int *)(frame_ + FRAME_OFF(24)))
+#define screen_x (*(int *)(frame_ + FRAME_OFF(28)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl minimap_redraw(void)
 
 {
   uint y;
-  int iVar2;
-  i32 uVar3;
+  int in_bounds;
+  i32 color;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((minimap_hidden == '\0') && (game_loop_active != '\0')) {
@@ -303,32 +303,32 @@ void __cdecl minimap_redraw(void)
     gfx_set_draw_target(ADDR(0x63c818, ((u8 *)&g.d_0063c818)));
     minimap_calc_layout();
     gfx_fill_draw_target(0);
-    local_10 = minimap_client_y + minimap_margin_y_i32;
-    for (local_20 = 0; local_20 < minimap_view_rows; local_20++) {
-      y = local_20 + minimap_origin_y;
+    screen_y = minimap_client_y + minimap_margin_y_i32;
+    for (row = 0; row < minimap_view_rows; row++) {
+      y = row + minimap_origin_y;
       if ((y & 1) == 0) {
-        local_24 = 0;
+        row_offset = 0;
       }
       else {
-        local_24 = minimap_tile_width >> 1;
+        row_offset = minimap_tile_width >> 1;
       }
-      local_c = minimap_client_x + minimap_margin_x + local_24;
-      for (local_1c = 0; local_1c < minimap_view_cols; local_1c++) {
-        x2 = map_wrap_x(local_1c * 2 + minimap_origin_x);
+      screen_x = minimap_client_x + minimap_margin_x + row_offset;
+      for (col = 0; col < minimap_view_cols; col++) {
+        x2 = map_wrap_x(col * 2 + minimap_origin_x);
         if ((x2 & 1) != 0) {
           x2--;
         }
         if ((y & 1) != 0) {
           x2++;
         }
-        iVar2 = map_in_bounds(x2,y);
-        if (iVar2 != 0) {
-          uVar3 = minimap_tile_color(x2,y);
-          gfx_target_fill_rect(local_c,local_10,minimap_tile_width,minimap_tile_height,uVar3);
-          local_c += minimap_tile_width;
+        in_bounds = map_in_bounds(x2,y);
+        if (in_bounds != 0) {
+          color = minimap_tile_color(x2,y);
+          gfx_target_fill_rect(screen_x,screen_y,minimap_tile_width,minimap_tile_height,color);
+          screen_x += minimap_tile_width;
         }
       }
-      local_10 += minimap_tile_height;
+      screen_y += minimap_tile_height;
     }
     win_flush_pending_msgs();
     minimap_draw_view_rect();
@@ -343,55 +343,55 @@ void __cdecl minimap_redraw(void)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef local_24
-#undef local_20
-#undef local_1c
+#undef row_offset
+#undef row
+#undef col
 #undef x2
-#undef local_10
-#undef local_c
+#undef screen_y
+#undef screen_x
 
 /* 004074dc auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(uint *)(frame_ + FRAME_OFF(8)))
+#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
+#define tile_x (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl minimap_on_lbuttonup(int param_1,int param_2)
+void __cdecl minimap_on_lbuttonup(int mouse_x,int mouse_y)
 
 {
-  uint uVar1;
-  iptr iVar2;
-  int iVar3;
+  uint tile_y;
+  iptr col_x;
+  int in_bounds;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  param_1 -= minimap_client_x;
-  param_2 -= minimap_client_y;
-  if ((((-1 < param_1) && (-1 < param_2)) && (param_1 < minimap_client_width)) && (param_2 < minimap_client_height))
+  mouse_x -= minimap_client_x;
+  mouse_y -= minimap_client_y;
+  if ((((-1 < mouse_x) && (-1 < mouse_y)) && (mouse_x < minimap_client_width)) && (mouse_y < minimap_client_height))
   {
     if (city_turn_processing == 0) {
-      uVar1 = int_clamp(minimap_origin_y + (param_2 - minimap_margin_y_i32) / minimap_tile_height,
+      tile_y = int_clamp(minimap_origin_y + (mouse_y - minimap_margin_y_i32) / minimap_tile_height,
                                  minimap_origin_y,minimap_origin_y + minimap_view_rows - 1);
-      if ((uVar1 & 1) == 0) {
-        local_14 = 0;
+      if ((tile_y & 1) == 0) {
+        row_offset = 0;
       }
       else {
-        local_14 = minimap_tile_width >> 1;
+        row_offset = minimap_tile_width >> 1;
       }
-      iVar2 = int_clamp(((param_1 - (minimap_margin_x + local_14)) / minimap_tile_width) * 2 +
+      col_x = int_clamp(((mouse_x - (minimap_margin_x + row_offset)) / minimap_tile_width) * 2 +
                                  minimap_origin_x,minimap_origin_x,minimap_view_cols * 2 - 2 + minimap_origin_x);
-      local_10 = map_wrap_x(iVar2);
-      if ((local_10 & 1) != 0) {
-        local_10--;
+      tile_x = map_wrap_x(col_x);
+      if ((tile_x & 1) != 0) {
+        tile_x--;
       }
-      if ((uVar1 & 1) != 0) {
-        local_10++;
+      if ((tile_y & 1) != 0) {
+        tile_x++;
       }
-      iVar3 = map_in_bounds(local_10,uVar1);
-      if (iVar3 != 0) {
-        mapview_center_on((ViewWindow *)&map_views,local_10,uVar1);
+      in_bounds = map_in_bounds(tile_x,tile_y);
+      if (in_bounds != 0) {
+        mapview_center_on((ViewWindow *)&map_views,tile_x,tile_y);
       }
     }
     else {
@@ -404,63 +404,63 @@ void __cdecl minimap_on_lbuttonup(int param_1,int param_2)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef local_14
-#undef local_10
+#undef row_offset
+#undef tile_x
 
 /* 00407658 auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define minimap_origin_x (*(int *)((u8 *)&g.d_0063c814))
 #define minimap_origin_y (*(int *)((u8 *)&g.d_0063c810))
 #define minimap_margin_y_i32 (*(i32 *)((u8 *)&g.d_0063caf0))
-#define local_1c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(uint *)(frame_ + FRAME_OFF(8)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
+#define row_offset (*(int *)(frame_ + FRAME_OFF(4)))
+#define tile_x (*(uint *)(frame_ + FRAME_OFF(8)))
+#define free_view (*(int *)(frame_ + FRAME_OFF(16)))
+#define view (*(int *)(frame_ + FRAME_OFF(20)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __cdecl minimap_on_rbuttonup(int param_1,int param_2)
+void __cdecl minimap_on_rbuttonup(int mouse_x,int mouse_y)
 
 {
-  uint uVar1;
-  iptr iVar2;
-  int iVar3;
+  uint tile_y;
+  iptr col_x;
+  int in_bounds;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  param_1 -= minimap_client_x;
-  param_2 -= minimap_client_y;
-  if ((((-1 < param_1) && (-1 < param_2)) && (param_1 < minimap_client_width)) && (param_2 < minimap_client_height))
+  mouse_x -= minimap_client_x;
+  mouse_y -= minimap_client_y;
+  if ((((-1 < mouse_x) && (-1 < mouse_y)) && (mouse_x < minimap_client_width)) && (mouse_y < minimap_client_height))
   {
     if (city_turn_processing == 0) {
-      uVar1 = int_clamp(minimap_origin_y + (param_2 - minimap_margin_y_i32) / minimap_tile_height,
+      tile_y = int_clamp(minimap_origin_y + (mouse_y - minimap_margin_y_i32) / minimap_tile_height,
                                  minimap_origin_y,minimap_origin_y + minimap_view_rows - 1);
-      if ((uVar1 & 1) == 0) {
-        local_1c = 0;
+      if ((tile_y & 1) == 0) {
+        row_offset = 0;
       }
       else {
-        local_1c = minimap_tile_width >> 1;
+        row_offset = minimap_tile_width >> 1;
       }
-      iVar2 = int_clamp(((param_1 - (minimap_margin_x + local_1c)) / minimap_tile_width) * 2 +
+      col_x = int_clamp(((mouse_x - (minimap_margin_x + row_offset)) / minimap_tile_width) * 2 +
                                  minimap_origin_x,minimap_origin_x,minimap_view_cols * 2 - 2 + minimap_origin_x);
-      local_18 = map_wrap_x(iVar2);
-      if ((local_18 & 1) != 0) {
-        local_18--;
+      tile_x = map_wrap_x(col_x);
+      if ((tile_x & 1) != 0) {
+        tile_x--;
       }
-      if ((uVar1 & 1) != 0) {
-        local_18++;
+      if ((tile_y & 1) != 0) {
+        tile_x++;
       }
-      iVar3 = map_in_bounds(local_18,uVar1);
-      if (iVar3 != 0) {
-        local_10 = -1;
-        for (local_c = 1; local_c < 8; local_c++) {
-          if (*(short *)(&map_view_open_flags + local_c * 0x3f0) == 0) {
-            local_10 = local_c;
+      in_bounds = map_in_bounds(tile_x,tile_y);
+      if (in_bounds != 0) {
+        free_view = -1;
+        for (view = 1; view < 8; view++) {
+          if (*(short *)(&map_view_open_flags + view * 0x3f0) == 0) {
+            free_view = view;
             break;
           }
         }
-        if (0 < local_10) {
-          mapview_create((ViewWindow *)(&map_views + local_10 * 0x3f0));
+        if (0 < free_view) {
+          mapview_create((ViewWindow *)(&map_views + free_view * 0x3f0));
           mapview_center_on
-                    ((ViewWindow *)(&map_views + local_10 * 0x3f0),local_18,uVar1);
+                    ((ViewWindow *)(&map_views + free_view * 0x3f0),tile_x,tile_y);
         }
       }
     }
@@ -474,48 +474,48 @@ void __cdecl minimap_on_rbuttonup(int param_1,int param_2)
 #undef minimap_origin_x
 #undef minimap_origin_y
 #undef minimap_margin_y_i32
-#undef local_1c
-#undef local_18
-#undef local_10
-#undef local_c
+#undef row_offset
+#undef tile_x
+#undef free_view
+#undef view
 
 /* 0040785b auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define main_frame_nonclient_width (*(int *)((u8 *)&g.d_006acbb0))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(0)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
+#define height2 (*(int *)(frame_ + FRAME_OFF(0)))
+#define width2 (*(int *)(frame_ + FRAME_OFF(4)))
+#define top (*(int *)(frame_ + FRAME_OFF(8)))
 void __cdecl minimap_calc_rect(void)
 
 {
-  int iVar1;
+  int client_w;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_client_width((WndBase *)&main_frame_wnd);
-  local_14 = 0xa0;
-  local_18 = 100;
-  if ((1000 < main_frame_nonclient_width + iVar1) && (local_14 = 0xf0, map_layout_wide != 0)) {
-    local_18 = 0x96;
+  client_w = wnd_client_width((WndBase *)&main_frame_wnd);
+  width2 = 0xa0;
+  height2 = 100;
+  if ((1000 < main_frame_nonclient_width + client_w) && (width2 = 0xf0, map_layout_wide != 0)) {
+    height2 = 0x96;
   }
-  if (local_18 < map.height) {
-    local_18 = (int)map.height;
+  if (height2 < map.height) {
+    height2 = (int)map.height;
   }
-  local_14 += frame_border_width * 2;
-  local_10 = 0;
+  width2 += frame_border_width * 2;
+  top = 0;
   if (map_layout_wide != 0) {
-    local_10 = minimap_margin + 1;
+    top = minimap_margin + 1;
   }
-  rect_set_xywh(ADDR(0x655324, ((u8 *)&g.d_00655324)),iVar1 - (sys_dlgframe_w2 + local_14),local_10,local_14 + sys_dlgframe_w2,
-                     local_18 + frame_border_width + frame_caption_height + sys_dlgframe_h2);
+  rect_set_xywh(ADDR(0x655324, ((u8 *)&g.d_00655324)),client_w - (sys_dlgframe_w2 + width2),top,width2 + sys_dlgframe_w2,
+                     height2 + frame_border_width + frame_caption_height + sys_dlgframe_h2);
   return;
 }
 #undef frame_border_width
 #undef frame_caption_height
 #undef main_frame_nonclient_width
-#undef local_18
-#undef local_14
-#undef local_10
+#undef height2
+#undef width2
+#undef top
 
 /* 0040795a auto */
 void __cdecl minimap_on_size(void)
@@ -541,33 +541,33 @@ void __cdecl minimap_on_move(void)
 void __cdecl minimap_window_create(void)
 
 {
-  int iVar1;
-  int iVar2;
-  i32 uVar3;
-  i32 uVar4;
-  i32 uVar5;
-  i32 uVar6;
-  i32 uVar7;
-  i32 uVar8;
-  i32 uVar9;
+  int wnd_height;
+  int wnd_width;
+  i32 title_text;
+  i32 wnd_style;
+  i32 wnd_x;
+  i32 wnd_y;
+  i32 create_arg7;
+  i32 create_arg8;
+  i32 create_arg9;
   
   minimap_hidden = 0;
   if ((turn_resume_civ == '\0') || (saved_layout_valid == 0)) {
     minimap_calc_rect();
   }
-  uVar9 = 0;
-  uVar8 = 0;
-  uVar7 = 6;
-  iVar1 = rect_height(ADDR(0x655324, ((u8 *)&g.d_00655324)));
-  iVar1 -= sys_dlgframe_h2;
-  iVar2 = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
-  iVar2 -= sys_dlgframe_w2;
-  uVar4 = 6;
-  uVar5 = minimap_wnd_rect;
-  uVar6 = minimap_wnd_rect_top;
-  uVar3 = label_string(*(i32 *)(label_string_ids + 0x18));
+  create_arg9 = 0;
+  create_arg8 = 0;
+  create_arg7 = 6;
+  wnd_height = rect_height(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_height -= sys_dlgframe_h2;
+  wnd_width = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  wnd_width -= sys_dlgframe_w2;
+  wnd_style = 6;
+  wnd_x = minimap_wnd_rect;
+  wnd_y = minimap_wnd_rect_top;
+  title_text = label_string(*(i32 *)(label_string_ids + 0x18));
   frame_wnd_create
-            ((FrameWindow *)&minimap_window,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
+            ((FrameWindow *)&minimap_window,title_text,wnd_style,wnd_x,wnd_y,wnd_width,wnd_height,create_arg7,create_arg8,create_arg9);
   wnd_set_min_size((ModalMenuWindow *)&minimap_wnd,0x28,0x19);
   wnd_set_redraw_callback((SurfaceWindow *)&minimap_window,ADDR(0x402581, minimap_redraw));
   wnd_set_lbuttonup_handler((WndEventHandlers *)&minimap_wnd_handlers,ADDR(0x4022de, minimap_on_lbuttonup));
@@ -618,20 +618,20 @@ void __thiscall mapview_redraw_cursor_tile(ViewWindow *this)
 #undef map_cursor_y
 
 /* 0041033a auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_redraw_cursor(void)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      mapview_redraw_cursor_tile((ViewWindow *)(&map_views + local_8 * 0x3f0));
+  for (view = 0; view < 8; view++) {
+    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      mapview_redraw_cursor_tile((ViewWindow *)(&map_views + view * 0x3f0));
     }
   }
   return;
 }
-#undef local_8
+#undef view
 
 /* 004103ae auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
@@ -639,16 +639,16 @@ void __cdecl mapviews_redraw_cursor(void)
 void __cdecl mapview_on_redraw(void)
 
 {
-  int iVar1;
+  int child_wnd;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   city_window_bring_to_top((WindowObjectView *)&city_window);
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
     this2 = (ViewWindow *)0x0;
   }
   else {
-    this2 = (ViewWindow *)(iVar1 - 0x48);
+    this2 = (ViewWindow *)(child_wnd - 0x48);
   }
   mapview_redraw(this2,human_civ,1);
   return;
@@ -659,19 +659,19 @@ void __cdecl mapview_on_redraw(void)
 /* 00410402 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-void __thiscall mapview_center_on(ViewWindow *this,iptr param_1,i32 param_2)
+void __thiscall mapview_center_on(ViewWindow *this,iptr x,i32 y)
 
 {
-  i8 uVar1;
-  i32 uVar2;
+  i8 saved_blink;
+  i32 wrapped_x;
   
-  uVar2 = map_wrap_x(param_1);
-  *(short *)&this->field_2e0 = (short)uVar2;
-  *(i16 *)((int)&this->field_2e0 + 2) = (i16)param_2;
-  uVar1 = unit_blink_active;
+  wrapped_x = map_wrap_x(x);
+  *(short *)&this->field_2e0 = (short)wrapped_x;
+  *(i16 *)((int)&this->field_2e0 + 2) = (i16)y;
+  saved_blink = unit_blink_active;
   unit_blink_active = 0;
   mapview_redraw(this,human_civ,1);
-  unit_blink_active = uVar1;
+  unit_blink_active = saved_blink;
   return;
 }
 #undef human_civ
@@ -681,138 +681,138 @@ void __thiscall mapview_center_on(ViewWindow *this,iptr param_1,i32 param_2)
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_phase (*(i8 *)((u8 *)&g.d_00628054))
 #define unit_blink_skip_tick (*(i8 *)((u8 *)&g.d_0062805c))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int param_1,int param_2)
+#define need_scroll (*(int *)(frame_ + FRAME_OFF(4)))
+int __thiscall mapview_scroll_if_near_edge(ViewWindow *this,int x,int y)
 
 {
-  uptr uVar1;
-  uptr uVar2;
-  u32 uVar3;
-  u32 uVar4;
+  uptr view_left;
+  uptr view_top;
+  u32 view_cols;
+  u32 view_bottom;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = 0;
-  uVar1 = this->field_2e8;
-  uVar2 = this->field_2ec;
-  if ((((game.rules & 0x8000) == 0) && (param_1 <= (int)(this->field_2f8 * 2))) &&
-     ((int)((int)map.width + this->field_2f8 * -2) <= (int)uVar1)) {
-    param_1 += map.width;
+  need_scroll = 0;
+  view_left = this->field_2e8;
+  view_top = this->field_2ec;
+  if ((((game.rules & 0x8000) == 0) && (x <= (int)(this->field_2f8 * 2))) &&
+     ((int)((int)map.width + this->field_2f8 * -2) <= (int)view_left)) {
+    x += map.width;
   }
-  uVar3 = this->field_300;
-  uVar4 = this->field_2f4;
+  view_cols = this->field_300;
+  view_bottom = this->field_2f4;
   if (this->field_330 == 0) {
     if ((game.rules & 0x8000) != 0) {
-      param_1 = int_clamp(param_1,2,map.width - 3);
+      x = int_clamp(x,2,map.width - 3);
     }
-    if ((param_1 <= (int)(uVar1 + 1)) || ((int)(uVar3 * 2 + uVar1 - 3) <= param_1)) {
-      local_c = 1;
+    if ((x <= (int)(view_left + 1)) || ((int)(view_cols * 2 + view_left - 3) <= x)) {
+      need_scroll = 1;
     }
   }
   if ((this->field_334 == 0) &&
-     ((param_2 = int_clamp(param_2,2,map.height - 3), param_2 <= (int)(uVar2 + 1) ||
-      ((int)(uVar4 - 1) <= param_2)))) {
-    local_c = 1;
+     ((y = int_clamp(y,2,map.height - 3), y <= (int)(view_top + 1) ||
+      ((int)(view_bottom - 1) <= y)))) {
+    need_scroll = 1;
   }
-  if (local_c != 0) {
+  if (need_scroll != 0) {
     unit_blink_skip_tick = 1;
     unit_blink_phase = moving_units_mode == 0;
-    mapview_center_on(this,param_1,param_2);
+    mapview_center_on(this,x,y);
   }
-  return local_c;
+  return need_scroll;
 }
 #undef moving_units_mode
 #undef unit_blink_phase
 #undef unit_blink_skip_tick
-#undef local_c
+#undef need_scroll
 
 /* 004105f8 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define map_redraw_busy (*(i32 *)((u8 *)&g.d_006ad908))
-#define local_c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-uint __cdecl mapviews_ensure_visible(i32 param_1,i32 param_2,iptr param_3)
+#define result (*(uint *)(frame_ + FRAME_OFF(4)))
+#define view (*(int *)(frame_ + FRAME_OFF(8)))
+uint __cdecl mapviews_ensure_visible(i32 x,i32 y,iptr civ)
 
 {
-  ushort uVar1;
-  uint uVar2;
+  ushort track_mask;
+  uint scrolled;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = 1;
+  result = 1;
   map_redraw_busy = 1;
-  if (param_3 < 0) {
-    uVar1 = 3;
+  if (civ < 0) {
+    track_mask = 3;
   }
-  else if (human_civ == param_3) {
-    uVar1 = 1;
+  else if (human_civ == civ) {
+    track_mask = 1;
   }
   else {
-    uVar1 = 2;
+    track_mask = 2;
   }
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      if ((uVar1 & *(ushort *)(&mapview_track_moves + local_8 * 0x3f0)) == 0) {
-        local_c = 0;
+  for (view = 0; view < 8; view++) {
+    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      if ((track_mask & *(ushort *)(&mapview_track_moves + view * 0x3f0)) == 0) {
+        result = 0;
       }
       else {
-        uVar2 = mapview_scroll_if_near_edge
-                          ((ViewWindow *)(&map_views + local_8 * 0x3f0),param_1,param_2);
-        local_c = local_c & uVar2;
+        scrolled = mapview_scroll_if_near_edge
+                          ((ViewWindow *)(&map_views + view * 0x3f0),x,y);
+        result = result & scrolled;
       }
     }
   }
   map_redraw_busy = 0;
-  return local_c;
+  return result;
 }
 #undef human_civ
 #undef map_redraw_busy
-#undef local_c
-#undef local_8
+#undef result
+#undef view
 
 /* 004106fd auto */
-#define local_18 (*(int (*)[2])(frame_ + FRAME_OFF(0)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
+#define tile_sx (*(int (*)[2])(frame_ + FRAME_OFF(0)))
+#define off_y (*(int *)(frame_ + FRAME_OFF(8)))
+#define off_x (*(int *)(frame_ + FRAME_OFF(12)))
+#define tile_sy (*(int *)(frame_ + FRAME_OFF(16)))
 int __thiscall
 mapview_point_unit_dir
-          (ViewWindow *this,int param_1,int param_2,i32 param_3,i32 param_4)
+          (ViewWindow *this,int mouse_x,int mouse_y,i32 unit_x,i32 unit_y)
 
 {
-  short sVar1;
-  short sVar2;
-  int iVar3;
+  short client_dx;
+  short client_dy;
+  int dir;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_tile_to_screen(this,(iptr)local_18,(iptr)&local_8,param_3,param_4);
-  if (((short)param_1 < local_18[0]) || ((short)param_2 < local_8)) {
-    iVar3 = 8;
+  mapview_tile_to_screen(this,(iptr)tile_sx,(iptr)&tile_sy,unit_x,unit_y);
+  if (((short)mouse_x < tile_sx[0]) || ((short)mouse_y < tile_sy)) {
+    dir = 8;
   }
-  else if (((int)(short)param_1 < (int)(this->total_tax + local_18[0])) &&
-          ((int)(short)param_2 < (int)(this->total_science + local_8))) {
-    local_c = (short)param_1 - local_18[0];
-    local_10 = (short)param_2 - local_8;
-    sVar1 = (short)param_1 - (short)this->client_x;
-    sVar2 = (short)param_2 - (short)this->client_y;
-    if ((sVar1 < 0) || (sVar2 < 0)) {
-      iVar3 = 8;
+  else if (((int)(short)mouse_x < (int)(this->total_tax + tile_sx[0])) &&
+          ((int)(short)mouse_y < (int)(this->total_science + tile_sy))) {
+    off_x = (short)mouse_x - tile_sx[0];
+    off_y = (short)mouse_y - tile_sy;
+    client_dx = (short)mouse_x - (short)this->client_x;
+    client_dy = (short)mouse_y - (short)this->client_y;
+    if ((client_dx < 0) || (client_dy < 0)) {
+      dir = 8;
     }
-    else if (((int)sVar1 < (int)this->client_width) && ((int)sVar2 < (int)this->client_height)) {
-      iVar3 = surface_get_pixel((DibSurface *)&this->field_3a8,local_c,local_10);
-      iVar3 = iVar3 - 10 >> 4;
+    else if (((int)client_dx < (int)this->client_width) && ((int)client_dy < (int)this->client_height)) {
+      dir = surface_get_pixel((DibSurface *)&this->field_3a8,off_x,off_y);
+      dir = dir - 10 >> 4;
     }
     else {
-      iVar3 = 8;
+      dir = 8;
     }
   }
   else {
-    iVar3 = 8;
+    dir = 8;
   }
-  return iVar3;
+  return dir;
 }
-#undef local_18
-#undef local_10
-#undef local_c
-#undef local_8
+#undef tile_sx
+#undef off_y
+#undef off_x
+#undef tile_sy
 
 /* 00410835 auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
@@ -821,67 +821,67 @@ mapview_point_unit_dir
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define y2 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define civ (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_10 (*(uptr *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(ViewWindow * *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
-void __cdecl mapview_on_mousemove(int param_1,int param_2)
+#define cursor_id (*(uptr *)(frame_ + FRAME_OFF(16)))
+#define view (*(ViewWindow * *)(frame_ + FRAME_OFF(20)))
+#define dir (*(int *)(frame_ + FRAME_OFF(24)))
+void __cdecl mapview_on_mousemove(int mouse_x,int mouse_y)
 
 {
-  iptr iVar1;
-  int iVar2;
+  iptr child_wnd;
+  int check;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_c = (ViewWindow *)0x0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    view = (ViewWindow *)0x0;
   }
   else {
-    local_c = (ViewWindow *)(iVar1 - 0x48);
+    view = (ViewWindow *)(child_wnd - 0x48);
   }
-  if ((city_turn_processing == 0) && (local_c->field_358 != 0x1fe)) {
-    iVar2 = ui_paradrop_cursor_active();
-    if (iVar2 == 0) {
-      local_10 = 0x201;
+  if ((city_turn_processing == 0) && (view->field_358 != 0x1fe)) {
+    check = ui_paradrop_cursor_active();
+    if (check == 0) {
+      cursor_id = 0x201;
       if ((((((byte)game.game_options & 0x80) != 0) && (moving_units_mode == 1)) &&
           (unit = (iptr)game.active_unit, -1 < unit)) &&
-         ((local_8 = mapview_point_unit_dir
-                               (local_c,param_1,param_2,(int)units[unit].x,
-                                (int)units[unit].y), -1 < local_8 && (local_8 < 8)))) {
-        local_10 = (local_8 + 1U & 7) + 500;
+         ((dir = mapview_point_unit_dir
+                               (view,mouse_x,mouse_y,(int)units[unit].x,
+                                (int)units[unit].y), -1 < dir && (dir < 8)))) {
+        cursor_id = (dir + 1U & 7) + 500;
       }
     }
     else {
-      local_10 = 0x202;
+      cursor_id = 0x202;
       unit = (iptr)game.active_unit;
-      iVar2 = mapview_screen_to_tile
-                        ((MapViewHitView *)local_c,(iptr)&x2,(iptr)&y2,param_1,param_2);
-      if (iVar2 != 0) {
+      check = mapview_screen_to_tile
+                        ((MapViewHitView *)view,(iptr)&x2,(iptr)&y2,mouse_x,mouse_y);
+      if (check != 0) {
         return;
       }
-      iVar2 = map_in_bounds(x2,y2);
-      if (iVar2 == 0) {
+      check = map_in_bounds(x2,y2);
+      if (check == 0) {
         return;
       }
-      iVar2 = map_distance(x2,y2,(int)units[unit].x,(int)units[unit].y);
-      if ((int)(uint)cosmic.paradrop_range < iVar2) {
-        local_10 = 0x203;
+      check = map_distance(x2,y2,(int)units[unit].x,(int)units[unit].y);
+      if ((int)(uint)cosmic.paradrop_range < check) {
+        cursor_id = 0x203;
       }
       else {
-        iVar2 = tile_is_ocean(x2,y2);
-        if (iVar2 == 0) {
+        check = tile_is_ocean(x2,y2);
+        if (check == 0) {
           civ = tile_unit_owner(x2,y2);
           if ((-1 < civ) && (units[unit].owner != civ)) {
-            local_10 = 0x203;
+            cursor_id = 0x203;
           }
         }
         else {
-          local_10 = 0x203;
+          cursor_id = 0x203;
         }
       }
     }
-    if (local_c->field_358 != local_10) {
-      local_c->field_358 = local_10;
-      wnd_set_cursor_now((WndCursorView *)local_c->pad_48,local_10,1);
+    if (view->field_358 != cursor_id) {
+      view->field_358 = cursor_id;
+      wnd_set_cursor_now((WndCursorView *)view->pad_48,cursor_id,1);
     }
   }
   return;
@@ -892,9 +892,9 @@ void __cdecl mapview_on_mousemove(int param_1,int param_2)
 #undef unit
 #undef y2
 #undef civ
-#undef local_10
-#undef local_c
-#undef local_8
+#undef cursor_id
+#undef view
+#undef dir
 
 /* 00410a64 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
@@ -942,27 +942,27 @@ void __cdecl mapview_drag_hold_expired(void)
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
 #define mapview_drag_hold_timer (*(i32 *)((u8 *)&g.d_00624f54))
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_lbuttondown(void)
 
 {
   SHORT SVar1;
-  iptr iVar2;
-  int iVar3;
+  iptr child_wnd;
+  int paradrop;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((city_turn_processing == 0) && ((game.multiplayer == '\0' || (ui_input_busy == 0)))) {
     ui_input_busy = 1;
-    iVar2 = wnd_get_active_child();
-    if (iVar2 == 0) {
-      local_8 = 0;
+    child_wnd = wnd_get_active_child();
+    if (child_wnd == 0) {
+      view = 0;
     }
     else {
-      local_8 = iVar2 - 0x48;
+      view = child_wnd - 0x48;
     }
     mapview_cancel_drag();
-    if ((moving_units_mode == 1) && (iVar3 = ui_paradrop_cursor_active(), iVar3 == 0)) {
-      mapview_drag_view_index = *(int *)(local_8 + 0x2d8);
+    if ((moving_units_mode == 1) && (paradrop = ui_paradrop_cursor_active(), paradrop == 0)) {
+      mapview_drag_view_index = *(int *)(view + 0x2d8);
       SVar1 = GetAsyncKeyState(0x10);
       if ((char)((ushort)SVar1 >> 8) == '\0') {
         mapview_drag_hold_timer = game_timer_create(ADDR(0x4025cc, mapview_drag_hold_expired),400,1);
@@ -982,12 +982,12 @@ void __cdecl mapview_on_lbuttondown(void)
 #undef mapview_cursor_id
 #undef mapview_drag_hold_timer
 #undef moving_units_mode
-#undef local_8
+#undef view
 
 /* 00410cfa auto */
 #define city_turn_processing (*(int *)((u8 *)&g.d_0062edf8))
 #define mapview_drag_hold_timer (*(int *)((u8 *)&g.d_00624f54))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_lbuttonup_any(void)
 
 {
@@ -995,246 +995,246 @@ void __cdecl mapview_on_lbuttonup_any(void)
   
   if ((city_turn_processing == 0) && ((game.multiplayer == '\0' || (ui_input_busy == 0)))) {
     ui_input_busy = 1;
-    local_8 = wnd_get_active_child();
-    if (local_8 == 0) {
-      local_8 = 0;
+    view = wnd_get_active_child();
+    if (view == 0) {
+      view = 0;
     }
     else {
-      local_8 -= 0x48;
+      view -= 0x48;
     }
     if (-1 < mapview_drag_hold_timer) {
       mapview_cancel_drag();
     }
-    wnd_release_capture((WndBase *)(local_8 + 0x48));
+    wnd_release_capture((WndBase *)(view + 0x48));
     ui_input_busy = 0;
   }
   return;
 }
 #undef city_turn_processing
 #undef mapview_drag_hold_timer
-#undef local_8
+#undef view
 
 /* 00410e46 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_set_paradrop_cursor(void)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      (&mapview_cursor_id)[local_8 * 0xfc] = 0x202;
-      wnd_set_cursor_now((WndCursorView *)(&map_view_wnds + local_8 * 0x3f0),0x202,1);
+  for (view = 0; view < 8; view++) {
+    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      (&mapview_cursor_id)[view * 0xfc] = 0x202;
+      wnd_set_cursor_now((WndCursorView *)(&map_view_wnds + view * 0x3f0),0x202,1);
     }
   }
   return;
 }
 #undef mapview_cursor_id
-#undef local_8
+#undef view
 
 /* 00410ed8 auto */
 #define mapview_cursor_id (*(i32 *)((u8 *)&g.d_0066cb00))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_reset_cursor(void)
 
 {
-  int iVar1;
+  int paradrop;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = ui_paradrop_cursor_active();
-  if (iVar1 != 0) {
-    for (local_8 = 0; local_8 < 8; local_8++) {
-      if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-        (&mapview_cursor_id)[local_8 * 0xfc] = 0x201;
-        wnd_set_cursor_now((WndCursorView *)(&map_view_wnds + local_8 * 0x3f0),0x201,1);
+  paradrop = ui_paradrop_cursor_active();
+  if (paradrop != 0) {
+    for (view = 0; view < 8; view++) {
+      if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+        (&mapview_cursor_id)[view * 0xfc] = 0x201;
+        wnd_set_cursor_now((WndCursorView *)(&map_view_wnds + view * 0x3f0),0x201,1);
       }
     }
   }
   return;
 }
 #undef mapview_cursor_id
-#undef local_8
+#undef view
 
 /* 004116c1 auto */
-void __cdecl mapview_on_lbuttonup(i32 param_1,i32 param_2)
+void __cdecl mapview_on_lbuttonup(i32 x,i32 y)
 
 {
-  map_window_click(param_1,param_2,0);
+  map_window_click(x,y,0);
   return;
 }
 
 /* 004116e3 auto */
-void __cdecl mapview_on_rbuttonup(i32 param_1,i32 param_2)
+void __cdecl mapview_on_rbuttonup(i32 x,i32 y)
 
 {
-  map_window_click(param_1,param_2,1);
+  map_window_click(x,y,1);
   return;
 }
 
 /* 004132b7 auto */
-#define local_14 (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
+#define height2 (*(iptr *)(frame_ + FRAME_OFF(4)))
+#define top (*(int *)(frame_ + FRAME_OFF(12)))
 void __cdecl mapview_calc_rect(void)
 
 {
-  int iVar1;
-  int iVar2;
+  int client_w;
+  int minimap_w;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_client_width((WndBase *)&main_frame_wnd);
-  iVar2 = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
-  local_14 = wnd_client_height((WndBase *)&main_frame_wnd);
-  local_14++;
-  local_c = 0;
+  client_w = wnd_client_width((WndBase *)&main_frame_wnd);
+  minimap_w = rect_width(ADDR(0x655324, ((u8 *)&g.d_00655324)));
+  height2 = wnd_client_height((WndBase *)&main_frame_wnd);
+  height2++;
+  top = 0;
   if (map_layout_wide != 0) {
-    local_c = minimap_margin + 1;
-    local_14 -= (minimap_margin + 1);
+    top = minimap_margin + 1;
+    height2 -= (minimap_margin + 1);
   }
-  rect_set_xywh(ADDR(0x6552a4, ((u8 *)&g.d_006552a4)),0,local_c,iVar1 - iVar2,local_14);
+  rect_set_xywh(ADDR(0x6552a4, ((u8 *)&g.d_006552a4)),0,top,client_w - minimap_w,height2);
   return;
 }
-#undef local_14
-#undef local_c
+#undef height2
+#undef top
 
 /* 00413350 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 bool __cdecl mapview_on_close(void)
 
 {
-  iptr iVar1;
-  bool bVar1;
+  iptr child_wnd;
+  bool is_main;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    view = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    view = child_wnd - 0x48;
   }
-  bVar1 = *(int *)(local_8 + 0x2d8) == 0;
-  if (bVar1) {
-    wnd_minimize((WndBase *)(local_8 + 0x48));
+  is_main = *(int *)(view + 0x2d8) == 0;
+  if (is_main) {
+    wnd_minimize((WndBase *)(view + 0x48));
   }
   else {
-    *(i16 *)(local_8 + 0x2dc) = 0;
+    *(i16 *)(view + 0x2dc) = 0;
   }
-  return !bVar1;
+  return !is_main;
 }
-#undef local_8
+#undef view
 
 /* 004133c2 auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_size(void)
 
 {
-  iptr iVar1;
+  iptr child_wnd;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    view = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    view = child_wnd - 0x48;
   }
   wnd_get_rect_in_parent
-            ((WndBase *)(local_8 + 0x48),
-             (iptr)(&map_view_saved_rects + *(int *)(local_8 + 0x2d8) * 0x10));
+            ((WndBase *)(view + 0x48),
+             (iptr)(&map_view_saved_rects + *(int *)(view + 0x2d8) * 0x10));
   return;
 }
-#undef local_8
+#undef view
 
 /* 0041341c auto */
-#define local_8 (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define view (*(iptr *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapview_on_move(void)
 
 {
-  iptr iVar1;
+  iptr child_wnd;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = wnd_get_active_child();
-  if (iVar1 == 0) {
-    local_8 = 0;
+  child_wnd = wnd_get_active_child();
+  if (child_wnd == 0) {
+    view = 0;
   }
   else {
-    local_8 = iVar1 - 0x48;
+    view = child_wnd - 0x48;
   }
   wnd_get_rect_in_parent
-            ((WndBase *)(local_8 + 0x48),
-             (iptr)(&map_view_saved_rects + *(int *)(local_8 + 0x2d8) * 0x10));
+            ((WndBase *)(view + 0x48),
+             (iptr)(&map_view_saved_rects + *(int *)(view + 0x2d8) * 0x10));
   return;
 }
-#undef local_8
+#undef view
 
 /* 00413476 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
+#define view (*(int *)(frame_ + FRAME_OFF(4)))
+#define mode (*(uint *)(frame_ + FRAME_OFF(8)))
 void __thiscall mapview_update_title(FrameWindow *this)
 
 {
-  bool bVar1;
-  iptr iVar2;
+  bool show_mode;
+  iptr adjective;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = (uint)((this->field_2dc & 0x10000) != 0);
+  mode = (uint)((this->field_2dc & 0x10000) != 0);
   if ((this->field_2dc & 0x20000) != 0) {
-    local_8 += 2;
+    mode += 2;
   }
   text_clear();
   if (this->field_2d8 == 0) {
     if (game_language != 1) {
-      iVar2 = civ_get_adjective(human_civ);
-      text_append_str(iVar2);
+      adjective = civ_get_adjective(human_civ);
+      text_append_str(adjective);
       if (game_language == 2) {
         text_append(ADDR(0x625090, ((u8 *)&g.d_00625090)));
       }
       text_append_space();
     }
-    bVar1 = false;
-    for (local_c = 1; local_c < 8; local_c++) {
-      if (*(short *)(&map_view_open_flags + local_c * 0x3f0) != 0) {
-        bVar1 = true;
+    show_mode = false;
+    for (view = 1; view < 8; view++) {
+      if (*(short *)(&map_view_open_flags + view * 0x3f0) != 0) {
+        show_mode = true;
         break;
       }
     }
   }
   else {
-    bVar1 = true;
+    show_mode = true;
   }
   text_append_label(4);
-  if (bVar1) {
+  if (show_mode) {
     text_append_colon();
-    text_append_label(local_8 + 300);
+    text_append_label(mode + 300);
   }
   frame_wnd_set_caption(this,ADDR(0x679640, ((u8 *)&g.d_00679640)));
   return;
 }
 #undef human_civ
-#undef local_c
-#undef local_8
+#undef view
+#undef mode
 
 /* 004135ab auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define this2 (*(ViewWindow * *)(frame_ + FRAME_OFF(0)))
-void __cdecl mapview_on_caption_button(i32 param_1)
+void __cdecl mapview_on_caption_button(i32 button)
 
 {
-  iptr iVar1;
+  iptr child_wnd;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((game.multiplayer == '\0') || (ui_input_busy == 0)) {
     ui_input_busy = 1;
-    iVar1 = wnd_get_active_child();
-    if (iVar1 == 0) {
+    child_wnd = wnd_get_active_child();
+    if (child_wnd == 0) {
       this2 = (ViewWindow *)0x0;
     }
     else {
-      this2 = (ViewWindow *)(iVar1 - 0x48);
+      this2 = (ViewWindow *)(child_wnd - 0x48);
     }
-    switch(param_1) {
+    switch(button) {
     case 1:
       *(i16 *)&this2->field_2dc = 0;
       wnd_destroy_with_surface((DibSurface *)this2);
@@ -1268,18 +1268,18 @@ void __cdecl mapview_on_caption_button(i32 param_1)
 /* 00413717 auto */
 #define saved_layout_valid (*(int *)((u8 *)&g.d_00655280))
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
+#define height2 (*(int *)(frame_ + FRAME_OFF(4)))
+#define width2 (*(int *)(frame_ + FRAME_OFF(8)))
+#define top (*(int *)(frame_ + FRAME_OFF(12)))
+#define left (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall mapview_create(ViewWindow *this)
 
 {
-  i32 uVar1;
-  i32 uVar2;
-  i32 uVar3;
-  i32 uVar4;
-  i32 uVar5;
+  i32 title_text;
+  i32 wnd_style;
+  i32 create_arg7;
+  i32 create_arg8;
+  i32 create_arg9;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   mapview_init_state(this,this->field_2d8);
@@ -1299,29 +1299,29 @@ void __thiscall mapview_create(ViewWindow *this)
     *(i16 *)((int)&this->field_2dc + 2) = 2;
   }
   if ((this->field_2d8 == 0) || ((short)this->field_2dc != 0)) {
-    local_8 = *(int *)(&map_view_saved_rects + this->field_2d8 * 0x10);
-    local_c = *(int *)(&map_view_saved_rect_tops + this->field_2d8 * 0x10);
-    local_10 = rect_width((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
-    local_10 -= sys_dlgframe_w2;
-    local_14 = rect_height((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
-    local_14 -= sys_dlgframe_h2;
+    left = *(int *)(&map_view_saved_rects + this->field_2d8 * 0x10);
+    top = *(int *)(&map_view_saved_rect_tops + this->field_2d8 * 0x10);
+    width2 = rect_width((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
+    width2 -= sys_dlgframe_w2;
+    height2 = rect_height((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10));
+    height2 -= sys_dlgframe_h2;
   }
   else {
-    local_8 = this->field_2d8 * 0x28;
-    local_c = this->field_2d8 * 0x28;
-    local_10 = 500;
-    local_14 = 300;
-    rect_set_xywh((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10),local_8,local_c,
+    left = this->field_2d8 * 0x28;
+    top = this->field_2d8 * 0x28;
+    width2 = 500;
+    height2 = 300;
+    rect_set_xywh((iptr)(&map_view_saved_rects + this->field_2d8 * 0x10),left,top,
                        sys_dlgframe_w2 + 500,sys_dlgframe_h2 + 300);
   }
   *(i16 *)&this->field_2dc = 1;
-  uVar5 = 0;
-  uVar4 = 0;
-  uVar3 = 6;
-  uVar2 = 6;
-  uVar1 = label_string(*(i32 *)(label_string_ids + 0x10));
+  create_arg9 = 0;
+  create_arg8 = 0;
+  create_arg7 = 6;
+  wnd_style = 6;
+  title_text = label_string(*(i32 *)(label_string_ids + 0x10));
   frame_wnd_create
-            ((FrameWindow *)this,uVar1,uVar2,local_8,local_c,local_10,local_14,uVar3,uVar4,uVar5)
+            ((FrameWindow *)this,title_text,wnd_style,left,top,width2,height2,create_arg7,create_arg8,create_arg9)
   ;
   wnd_set_min_size((ModalMenuWindow *)this->pad_48,0x100,0x80);
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402315, mapview_on_redraw));
@@ -1358,10 +1358,10 @@ void __thiscall mapview_create(ViewWindow *this)
 }
 #undef saved_layout_valid
 #undef turn_resume_civ
-#undef local_14
-#undef local_10
-#undef local_c
-#undef local_8
+#undef height2
+#undef width2
+#undef top
+#undef left
 
 /* 00413a90 auto */
 #define main_view_timer_shown (*(i32 *)((u8 *)&g.d_0066c988))
@@ -1370,7 +1370,7 @@ void __thiscall mapview_create(ViewWindow *this)
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
 #define main_view_status_shown_i32 (*(i32 *)((u8 *)&g.d_0066c98c))
 #define map_view_open_flags_i32 (*(i32 *)((u8 *)&g.d_0066ca84))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl mapviews_create_all(void)
@@ -1378,18 +1378,18 @@ void __cdecl mapviews_create_all(void)
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    mapview_init_state((ViewWindow *)(&map_views + local_8 * 0x3f0),local_8);
+  for (view = 0; view < 8; view++) {
+    mapview_init_state((ViewWindow *)(&map_views + view * 0x3f0),view);
     if (turn_resume_civ == '\0') {
-      if (local_8 == 0) {
+      if (view == 0) {
         map_view_open_flags_i32 = 1;
       }
       else {
-        *(i16 *)(&map_view_open_flags + local_8 * 0x3f0) = 0;
+        *(i16 *)(&map_view_open_flags + view * 0x3f0) = 0;
       }
     }
-    if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      mapview_create((ViewWindow *)(&map_views + local_8 * 0x3f0));
+    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      mapview_create((ViewWindow *)(&map_views + view * 0x3f0));
     }
   }
   main_view_status_shown_i32 = 1;
@@ -1408,11 +1408,11 @@ void __cdecl mapviews_create_all(void)
 #undef turn_resume_civ
 #undef main_view_status_shown_i32
 #undef map_view_open_flags_i32
-#undef local_8
+#undef view
 
 /* 00413bd1 auto */
 #define timer_alt_kind_request (*(i32 *)((u8 *)&g.d_00637ef8))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view (*(int *)(frame_ + FRAME_OFF(0)))
 void __cdecl mapviews_destroy_all(void)
 
 {
@@ -1422,15 +1422,15 @@ void __cdecl mapviews_destroy_all(void)
   game_timer_destroy(unit_blink_timer);
   game_timer_destroy(eot_blink_timer);
   timer_alt_kind_request = 0;
-  for (local_8 = 0; local_8 < 8; local_8++) {
-    if ((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) {
-      wnd_destroy_with_surface((DibSurface *)(&map_views + local_8 * 0x3f0));
+  for (view = 0; view < 8; view++) {
+    if ((view == 0) || (*(short *)(&map_view_open_flags + view * 0x3f0) != 0)) {
+      wnd_destroy_with_surface((DibSurface *)(&map_views + view * 0x3f0));
     }
   }
   return;
 }
 #undef timer_alt_kind_request
-#undef local_8
+#undef view
 
 /* 0046ab30 auto */
 void * __thiscall clickmap_ctor(void *this)
@@ -1460,159 +1460,159 @@ void __thiscall clickmap_clear(ClickMapClearView *this)
 }
 
 /* 0046ab82 auto */
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int param_1)
+#define i (*(int *)(frame_ + FRAME_OFF(0)))
+void __thiscall clickmap_remove_at(ClickMapRemoveView *this,int index)
 
 {
-  int iVar1;
-  u8 *puVar2;
-  u8 *puVar3;
+  int n;
+  u8 *src;
+  u8 *dst;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  for (local_8 = param_1; local_8 < (int)(this->entry_count - 1); local_8++) {
-    puVar2 = this->pad_0 + local_8 * 0x18 + 0x18;
-    puVar3 = this->pad_0 + local_8 * 0x18;
-    for (iVar1 = 6; iVar1 != 0; iVar1--) {
-      *(i32 *)puVar3 = *(i32 *)puVar2;
-      puVar2 += 4;
-      puVar3 += 4;
+  for (i = index; i < (int)(this->entry_count - 1); i++) {
+    src = this->pad_0 + i * 0x18 + 0x18;
+    dst = this->pad_0 + i * 0x18;
+    for (n = 6; n != 0; n--) {
+      *(i32 *)dst = *(i32 *)src;
+      src += 4;
+      dst += 4;
     }
   }
   this->entry_count--;
   return;
 }
-#undef local_8
+#undef i
 
 /* 0046ac89 auto */
-#define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int param_1)
+#define idx (*(u32 *)(frame_ + FRAME_OFF(0)))
+void __thiscall clickmap_remove_by_id(ClickMapRemoveView *this,int id)
 
 {
-  u32 uVar1;
-  iptr iVar2;
+  u32 count;
+  iptr offset;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  uVar1 = this->entry_count;
-  while (local_8 = uVar1 - 1, -1 < (int)local_8) {
-    iVar2 = uVar1 * 0x18;
-    uVar1 = local_8;
-    if (*(int *)(this->pad_0 + iVar2 - 8) == param_1) {
-      clickmap_remove_at(this,local_8);
+  count = this->entry_count;
+  while (idx = count - 1, -1 < (int)idx) {
+    offset = count * 0x18;
+    count = idx;
+    if (*(int *)(this->pad_0 + offset - 8) == id) {
+      clickmap_remove_at(this,idx);
     }
   }
   return;
 }
-#undef local_8
+#undef idx
 
 /* 0046ace7 auto */
-#define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
+#define index (*(u32 *)(frame_ + FRAME_OFF(0)))
 u32 __thiscall
 clickmap_add
-          (ClickMap *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4,
-          iptr param_5,iptr param_6)
+          (ClickMap *this,iptr id,i32 value,i32 x,i32 y,
+          iptr width,iptr height)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  index = 0xffffffff;
   if ((int)this->entry_count < 200) {
-    local_8 = this->entry_count;
+    index = this->entry_count;
     this->entry_count++;
-    rect_set_xywh((iptr)(this->pad_0 + local_8 * 0x18),param_3,param_4,param_5,param_6);
-    *(iptr *)(this->pad_0 + local_8 * 0x18 + 0x14) = param_1;
-    *(i32 *)(this->pad_0 + local_8 * 0x18 + 0x10) = param_2;
+    rect_set_xywh((iptr)(this->pad_0 + index * 0x18),x,y,width,height);
+    *(iptr *)(this->pad_0 + index * 0x18 + 0x14) = id;
+    *(i32 *)(this->pad_0 + index * 0x18 + 0x10) = value;
   }
-  return local_8;
+  return index;
 }
-#undef local_8
+#undef index
 
 /* 0046ad85 auto */
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define hit (*(int *)(frame_ + FRAME_OFF(4)))
+#define i (*(int *)(frame_ + FRAME_OFF(8)))
 int __thiscall
-clickmap_hit_test(ClickMapHitTestView *this,int param_1,int param_2,iptr param_3,iptr param_4)
+clickmap_hit_test(ClickMapHitTestView *this,int x,int y,iptr out_id,iptr out_value)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_c = -1;
-  local_8 = 0;
+  hit = -1;
+  i = 0;
   do {
-    if ((int)this->region_count <= local_8) {
+    if ((int)this->region_count <= i) {
 LAB_0046ae34:
-      if (-1 < local_c) {
-        if (param_3 != 0) {
-          *(i32 *)param_3 = *(i32 *)(this->pad_0 + local_c * 0x18 + 0x14);
+      if (-1 < hit) {
+        if (out_id != 0) {
+          *(i32 *)out_id = *(i32 *)(this->pad_0 + hit * 0x18 + 0x14);
         }
-        if (param_4 != 0) {
-          *(i32 *)param_4 = *(i32 *)(this->pad_0 + local_c * 0x18 + 0x10);
+        if (out_value != 0) {
+          *(i32 *)out_value = *(i32 *)(this->pad_0 + hit * 0x18 + 0x10);
         }
       }
-      return local_c;
+      return hit;
     }
-    if ((((*(int *)(this->pad_0 + local_8 * 0x18) <= param_1) &&
-         (param_1 < *(int *)(this->pad_0 + local_8 * 0x18 + 8))) &&
-        (*(int *)(this->pad_0 + local_8 * 0x18 + 4) <= param_2)) &&
-       (param_2 < *(int *)(this->pad_0 + local_8 * 0x18 + 0xc))) {
-      local_c = local_8;
+    if ((((*(int *)(this->pad_0 + i * 0x18) <= x) &&
+         (x < *(int *)(this->pad_0 + i * 0x18 + 8))) &&
+        (*(int *)(this->pad_0 + i * 0x18 + 4) <= y)) &&
+       (y < *(int *)(this->pad_0 + i * 0x18 + 0xc))) {
+      hit = i;
       goto LAB_0046ae34;
     }
-    local_8++;
+    i++;
   } while( true );
 }
-#undef local_c
-#undef local_8
+#undef hit
+#undef i
 
 /* 00472b0a auto */
 #define mapview_zoom (*(short *)((u8 *)&g.d_0066ca8c))
-#define local_6c (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_68 (*(i32 *)(frame_ + FRAME_OFF(8)))
-#define local_64 (*(char (*)[80])(frame_ + FRAME_OFF(12)))
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(92)))
-void __cdecl mapview_draw_tile_number(i32 param_1,i32 param_2,int param_3,i32 param_4)
+#define screen_y (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define screen_x (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define num_text (*(char (*)[80])(frame_ + FRAME_OFF(12)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(92)))
+void __cdecl mapview_draw_tile_number(i32 x,i32 y,int number,i32 color)
 
 {
-  int iVar1;
-  iptr iVar2;
-  iptr iVar3;
+  int in_view;
+  iptr width;
+  iptr height;
   i8 frame_[FRAME_OFF(112)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = mapview_tile_in_view((ViewWindow *)&map_views,param_1,param_2);
-  if (iVar1 != 0) {
+  in_view = mapview_tile_in_view((ViewWindow *)&map_views,x,y);
+  if (in_view != 0) {
     mapview_tile_to_screen
-              ((ViewWindow *)&map_views,(iptr)&local_68,(iptr)&local_6c,param_1,param_2);
-    iVar2 = gfx_zoom_scale(0x40,(int)mapview_zoom);
-    iVar3 = gfx_zoom_scale(0x20,(int)mapview_zoom);
-    rect_set_xywh((iptr)local_14,local_68,local_6c,iVar2,iVar3);
-    __itoa(param_3,local_64,10);
+              ((ViewWindow *)&map_views,(iptr)&screen_x,(iptr)&screen_y,x,y);
+    width = gfx_zoom_scale(0x40,(int)mapview_zoom);
+    height = gfx_zoom_scale(0x20,(int)mapview_zoom);
+    rect_set_xywh((iptr)rect,screen_x,screen_y,width,height);
+    __itoa(number,num_text,10);
     gfx_set_text_color_index(10);
-    rect_offset((iptr)local_14,0xffffffff,0xffffffff);
+    rect_offset((iptr)rect,0xffffffff,0xffffffff);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    rect_offset((iptr)local_14,3,3);
+              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+    rect_offset((iptr)rect,3,3);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    rect_offset((iptr)local_14,0xfffffffe,0xfffffffe);
-    gfx_set_text_color_index(param_4);
+              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+    rect_offset((iptr)rect,0xfffffffe,0xfffffffe);
+    gfx_set_text_color_index(color);
     surface_draw_text_in_rect
-              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)local_64,(iptr)local_14,0);
-    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)local_14);
+              ((DibSurface *)&map_views,ADDR(0x66cae0, ((u8 *)&g.d_0066cae0)),(iptr)num_text,(iptr)rect,0);
+    wnd_blit_surface_rect((DibSurface *)&map_views,(iptr)rect);
   }
   return;
 }
 #undef mapview_zoom
-#undef local_6c
-#undef local_68
-#undef local_64
-#undef local_14
+#undef screen_y
+#undef screen_x
+#undef num_text
+#undef rect
 
 /* 00479ede auto */
 #define turn_resume_civ (*(char *)((u8 *)&g.d_00628048))
-void __thiscall mapview_init_state(ViewWindow *this,u32 param_1)
+void __thiscall mapview_init_state(ViewWindow *this,u32 view_index)
 
 {
-  this->field_2d8 = param_1;
-  if (param_1 == 0) {
+  this->field_2d8 = view_index;
+  if (view_index == 0) {
     *(i16 *)((int)&this->field_2dc + 2) = 1;
   }
   else {
@@ -1636,24 +1636,24 @@ void __thiscall mapview_init_state(ViewWindow *this,u32 param_1)
 #undef turn_resume_civ
 
 /* 00479fbe auto */
-#define local_28 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
-#define local_8 (*(uptr *)(frame_ + FRAME_OFF(32)))
+#define dir_mask_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define pick_mask_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
+#define font_size (*(uptr *)(frame_ + FRAME_OFF(32)))
 void __thiscall mapview_update_layout(ViewWindow *this)
 
 {
-  u32 uVar1;
-  i32 uVar2;
-  uptr uVar3;
-  uint uVar4;
+  u32 scaled;
+  i32 wrapped_x;
+  uptr wrapped;
+  uint clamped;
   i8 frame_[FRAME_OFF(40)] __attribute__((aligned(8)));  /* original stack frame */
   
   this->field_328 = this->client_width;
   this->field_32c = this->client_height;
-  uVar1 = mapview_zoom_scale(this,0x40);
-  this->total_tax = uVar1;
-  uVar1 = mapview_zoom_scale(this,0x20);
-  this->total_science = uVar1;
+  scaled = mapview_zoom_scale(this,0x40);
+  this->total_tax = scaled;
+  scaled = mapview_zoom_scale(this,0x20);
+  this->total_science = scaled;
   this->field_310 = (int)this->total_tax / 2;
   this->field_314 = (int)this->total_science / 2;
   this->field_318 = (int)(this->total_tax + ((int)this->total_tax >> 0x1f & 3U)) >> 2;
@@ -1676,11 +1676,11 @@ void __thiscall mapview_update_layout(ViewWindow *this)
     this->field_334 = (int)(this->field_32c - this->total_science * this->field_2fc) >> 1;
     this->field_304 = (int)map.height + 1;
   }
-  uVar2 = map_wrap_x((int)(short)this->field_2e0);
-  *(short *)&this->field_2e0 = (short)uVar2;
+  wrapped_x = map_wrap_x((int)(short)this->field_2e0);
+  *(short *)&this->field_2e0 = (short)wrapped_x;
   this->field_2ec = (int)*(short *)((int)&this->field_2e0 + 2) - this->field_2fc;
-  uVar3 = map_wrap_x((int)(short)this->field_2e0 - this->field_2f8);
-  this->field_2e8 = uVar3;
+  wrapped = map_wrap_x((int)(short)this->field_2e0 - this->field_2f8);
+  this->field_2e8 = wrapped;
   if (((game.rules & 0x8000) != 0) && (map.width + 1 < (int)(this->field_2f8 * 2 + this->field_2e8))
      ) {
     this->field_2e8 = map.width + 1 + this->field_2f8 * -2;
@@ -1688,24 +1688,24 @@ void __thiscall mapview_update_layout(ViewWindow *this)
   if (map.height + 1 < (int)(this->field_2fc * 2 + this->field_2ec)) {
     this->field_2ec = map.height + 1 + this->field_2fc * -2;
   }
-  uVar4 = this->field_2e8;
-  if (0x7fffffff < uVar4) {
-    uVar4 = 0xffffffff;
+  clamped = this->field_2e8;
+  if (0x7fffffff < clamped) {
+    clamped = 0xffffffff;
   }
-  this->field_2e8 = uVar4;
-  uVar4 = this->field_2ec;
-  if (0x7fffffff < uVar4) {
-    uVar4 = 0xffffffff;
+  this->field_2e8 = clamped;
+  clamped = this->field_2ec;
+  if (0x7fffffff < clamped) {
+    clamped = 0xffffffff;
   }
-  this->field_2ec = uVar4;
+  this->field_2ec = clamped;
   if ((this->field_2e8 & 1) != 0) {
     this->field_2e8--;
   }
   if ((this->field_2ec & 1) != 0) {
     this->field_2e8++;
   }
-  uVar3 = map_wrap_x(this->field_300 * 2 - 2 + this->field_2e8);
-  this->field_2f0 = uVar3;
+  wrapped = map_wrap_x(this->field_300 * 2 - 2 + this->field_2e8);
+  this->field_2f0 = wrapped;
   this->field_2f4 = this->field_304 * 2 - 2 + this->field_2ec;
   if ((int)(short)this->field_2e4 != this->field_35c) {
     surface_create((DibSurface *)&this->field_360,this->total_tax,this->total_science);
@@ -1713,558 +1713,558 @@ void __thiscall mapview_update_layout(ViewWindow *this)
     this->field_35c = (int)(short)this->field_2e4;
     mapview_apply_zoom(this);
     sprite_draw
-              ((Sprite *)&tile_pick_mask_sprite,(iptr)local_18,(iptr)&this->field_360,0,0);
+              ((Sprite *)&tile_pick_mask_sprite,(iptr)pick_mask_rect,(iptr)&this->field_360,0,0);
     sprite_draw
-              ((Sprite *)&tile_direction_mask_sprite,(iptr)local_28,(iptr)&this->field_3a8,0,0);
+              ((Sprite *)&tile_direction_mask_sprite,(iptr)dir_mask_rect,(iptr)&this->field_3a8,0,0);
     gfx_reset_zoom_scale();
   }
-  local_8 = (int)(this->total_science * 3) / 5;
-  if (this->field_348 != local_8) {
-    font_set((GameFont *)&this->field_338,0,local_8);
-    this->field_348 = local_8;
+  font_size = (int)(this->total_science * 3) / 5;
+  if (this->field_348 != font_size) {
+    font_set((GameFont *)&this->field_338,0,font_size);
+    this->field_348 = font_size;
   }
-  local_8 = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
-  if (this->field_34c != local_8) {
-    font_set((GameFont *)&this->field_340,1,local_8);
-    this->field_34c = local_8;
+  font_size = (int)(this->total_science + ((int)this->total_science >> 0x1f & 3U)) >> 2;
+  if (this->field_34c != font_size) {
+    font_set((GameFont *)&this->field_340,1,font_size);
+    this->field_34c = font_size;
   }
   return;
 }
-#undef local_28
-#undef local_18
-#undef local_8
+#undef dir_mask_rect
+#undef pick_mask_rect
+#undef font_size
 
 /* 0047a540 auto */
-#define local_10 (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_8 (*(short *)(frame_ + FRAME_OFF(8)))
+#define tile_x (*(iptr *)(frame_ + FRAME_OFF(0)))
+#define tile_y (*(short *)(frame_ + FRAME_OFF(8)))
 i32 __thiscall
 mapview_screen_to_tile
-          (MapViewHitView *this,iptr param_1,iptr param_2,i32 param_3,i32 param_4)
+          (MapViewHitView *this,iptr out_x,iptr out_y,i32 mouse_x,i32 mouse_y)
 
 {
-  short sVar1;
-  short sVar2;
-  i32 uVar3;
-  iptr iVar4;
-  iptr iVar5;
+  short px;
+  short py;
+  i32 result;
+  iptr pixel;
+  iptr quadrant;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  sVar1 = (short)param_3 - (short)this->client_x;
-  sVar2 = (short)param_4 - (short)this->client_y;
-  if ((sVar1 < 0) || (sVar2 < 0)) {
-    uVar3 = 1;
+  px = (short)mouse_x - (short)this->client_x;
+  py = (short)mouse_y - (short)this->client_y;
+  if ((px < 0) || (py < 0)) {
+    result = 1;
   }
-  else if (((int)sVar1 < (int)this->view_width) && ((int)sVar2 < (int)this->view_height)) {
-    sVar1 -= (short)this->scroll_px_x;
-    sVar2 -= (short)this->scroll_px_y;
-    local_10 = ((int)sVar1 / (int)this->tile_width) * 2 + this->origin_tile_x + 1;
-    local_8 = (short)((int)sVar2 / (int)this->tile_height) * 2 + (short)this->origin_tile_y + 1;
-    iVar4 = surface_get_pixel
+  else if (((int)px < (int)this->view_width) && ((int)py < (int)this->view_height)) {
+    px -= (short)this->scroll_px_x;
+    py -= (short)this->scroll_px_y;
+    tile_x = ((int)px / (int)this->tile_width) * 2 + this->origin_tile_x + 1;
+    tile_y = (short)((int)py / (int)this->tile_height) * 2 + (short)this->origin_tile_y + 1;
+    pixel = surface_get_pixel
                       ((DibSurface *)(this[1].pad_0 + 0x28),
-                       (int)(short)((int)sVar1 % (int)this->tile_width),
-                       (int)(short)((int)sVar2 % (int)this->tile_height));
-    iVar5 = iVar4 - 10 >> 4;
-    if (iVar5 != 0) {
-      local_10 += (char)(&pick_quadrant_dx_table)[iVar5];
-      local_8 += (char)(&pick_quadrant_dy_table)[iVar5];
+                       (int)(short)((int)px % (int)this->tile_width),
+                       (int)(short)((int)py % (int)this->tile_height));
+    quadrant = pixel - 10 >> 4;
+    if (quadrant != 0) {
+      tile_x += (char)(&pick_quadrant_dx_table)[quadrant];
+      tile_y += (char)(&pick_quadrant_dy_table)[quadrant];
     }
-    uVar3 = map_wrap_x(local_10);
-    *(int *)param_1 = (int)(short)uVar3;
-    *(int *)param_2 = (int)local_8;
-    uVar3 = 0;
+    result = map_wrap_x(tile_x);
+    *(int *)out_x = (int)(short)result;
+    *(int *)out_y = (int)tile_y;
+    result = 0;
   }
   else {
-    uVar3 = 1;
+    result = 1;
   }
-  return uVar3;
+  return result;
 }
-#undef local_10
-#undef local_8
+#undef tile_x
+#undef tile_y
 
 /* 0047a6b0 auto */
 void __thiscall
-mapview_tile_to_screen(ViewWindow *this,iptr param_1,iptr param_2,int param_3,int param_4)
+mapview_tile_to_screen(ViewWindow *this,iptr out_x,iptr out_y,int x,int y)
 
 {
-  uptr uVar1;
-  int iVar2;
+  uptr top;
+  int dx;
   
-  iVar2 = map_wrap_x(param_3 - this->field_2e8);
-  uVar1 = this->field_2ec;
-  *(u32 *)param_1 = this->field_310 * (iVar2 - 1) + this->field_330;
-  *(u32 *)param_2 = this->field_314 * ((param_4 - uVar1) - 1) + this->field_334;
-  *(u32 *)param_1 = *(int *)param_1 + this->client_x;
-  *(u32 *)param_2 = *(int *)param_2 + this->client_y;
+  dx = map_wrap_x(x - this->field_2e8);
+  top = this->field_2ec;
+  *(u32 *)out_x = this->field_310 * (dx - 1) + this->field_330;
+  *(u32 *)out_y = this->field_314 * ((y - top) - 1) + this->field_334;
+  *(u32 *)out_x = *(int *)out_x + this->client_x;
+  *(u32 *)out_y = *(int *)out_y + this->client_y;
   return;
 }
 
 /* 0047a8c9 auto */
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define local_24c (*(u32 *)(frame_ + FRAME_OFF(4)))
-#define local_248 (*(u32 *)(frame_ + FRAME_OFF(8)))
-#define local_244 (*(u32 *)(frame_ + FRAME_OFF(12)))
-#define local_240 (*(u32 *)(frame_ + FRAME_OFF(16)))
-#define local_23c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-#define local_22c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
-#define local_21c (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
-#define local_20c (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
-#define local_1fc (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
-#define local_1ec (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
-#define local_1dc (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
-#define local_1cc (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
-#define local_1bc (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
-#define local_1ac (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
-#define local_19c (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
-#define local_18c (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
-#define local_17c (*(i8 (*)[16])(frame_ + FRAME_OFF(212)))
-#define local_16c (*(i8 (*)[16])(frame_ + FRAME_OFF(228)))
-#define local_15c (*(i8 (*)[16])(frame_ + FRAME_OFF(244)))
-#define local_14c (*(i8 (*)[16])(frame_ + FRAME_OFF(260)))
-#define local_13c (*(i8 (*)[16])(frame_ + FRAME_OFF(276)))
-#define local_12c (*(i8 (*)[16])(frame_ + FRAME_OFF(292)))
-#define local_11c (*(i8 (*)[16])(frame_ + FRAME_OFF(308)))
-#define local_10c (*(i8 (*)[16])(frame_ + FRAME_OFF(324)))
-#define local_fc (*(i8 (*)[16])(frame_ + FRAME_OFF(340)))
-#define local_ec (*(i8 (*)[16])(frame_ + FRAME_OFF(356)))
-#define local_dc (*(i8 (*)[16])(frame_ + FRAME_OFF(372)))
-#define local_cc (*(i8 (*)[16])(frame_ + FRAME_OFF(388)))
-#define local_bc (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
+#define unexp_dy (*(u32 *)(frame_ + FRAME_OFF(4)))
+#define unexp_dx (*(u32 *)(frame_ + FRAME_OFF(8)))
+#define dither_dy (*(u32 *)(frame_ + FRAME_OFF(12)))
+#define dither_dx (*(u32 *)(frame_ + FRAME_OFF(16)))
+#define unexp_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define airbase_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define fortress_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(52)))
+#define hut_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(68)))
+#define pollution_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(84)))
+#define mine_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(100)))
+#define road_dot_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(116)))
+#define rail_dot_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(132)))
+#define rail_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(148)))
+#define road_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(164)))
+#define resource_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(180)))
+#define shield_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(196)))
+#define farm_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(212)))
+#define irrig_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(228)))
+#define river_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(244)))
+#define farmland_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(260)))
+#define hill_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(276)))
+#define mountain_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(292)))
+#define forest_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(308)))
+#define dither_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(324)))
+#define base_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(340)))
+#define mouth_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(356)))
+#define coast_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(372)))
+#define ocean_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(388)))
+#define hidden_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
 #define x2 (*(iptr *)(frame_ + FRAME_OFF(420)))
-#define local_a8 (*(int *)(frame_ + FRAME_OFF(424)))
-#define local_a4 (*(uint *)(frame_ + FRAME_OFF(428)))
-#define local_a0 (*(uint *)(frame_ + FRAME_OFF(432)))
-#define local_9c (*(uint *)(frame_ + FRAME_OFF(436)))
+#define abs_dy (*(int *)(frame_ + FRAME_OFF(424)))
+#define terrain_byte (*(uint *)(frame_ + FRAME_OFF(428)))
+#define nbr_terrain (*(uint *)(frame_ + FRAME_OFF(432)))
+#define hidden (*(uint *)(frame_ + FRAME_OFF(436)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(440)))
-#define local_94 (*(int *)(frame_ + FRAME_OFF(444)))
-#define local_90 (*(int *)(frame_ + FRAME_OFF(448)))
-#define local_8c (*(int *)(frame_ + FRAME_OFF(452)))
-#define local_88 (*(uint *)(frame_ + FRAME_OFF(456)))
-#define local_84 (*(iptr *)(frame_ + FRAME_OFF(460)))
-#define local_80 (*(byte * *)(frame_ + FRAME_OFF(464)))
-#define local_7c (*(int *)(frame_ + FRAME_OFF(468)))
-#define local_78 (*(int *)(frame_ + FRAME_OFF(472)))
-#define local_74 (*(byte * *)(frame_ + FRAME_OFF(476)))
-#define local_70 (*(u32 *)(frame_ + FRAME_OFF(480)))
-#define local_6c (*(uint *)(frame_ + FRAME_OFF(484)))
-#define local_68 (*(uint *)(frame_ + FRAME_OFF(488)))
-#define local_64 (*(int *)(frame_ + FRAME_OFF(492)))
+#define rail_count (*(int *)(frame_ + FRAME_OFF(444)))
+#define road_count (*(int *)(frame_ + FRAME_OFF(448)))
+#define variant (*(int *)(frame_ + FRAME_OFF(452)))
+#define improvements2 (*(uint *)(frame_ + FRAME_OFF(456)))
+#define quad (*(iptr *)(frame_ + FRAME_OFF(460)))
+#define tile (*(byte * *)(frame_ + FRAME_OFF(464)))
+#define abs_dx (*(int *)(frame_ + FRAME_OFF(468)))
+#define river_mask (*(int *)(frame_ + FRAME_OFF(472)))
+#define nbr_tile (*(byte * *)(frame_ + FRAME_OFF(476)))
+#define half_w (*(u32 *)(frame_ + FRAME_OFF(480)))
+#define terrain2 (*(uint *)(frame_ + FRAME_OFF(484)))
+#define nbr_improvements (*(uint *)(frame_ + FRAME_OFF(488)))
+#define nbr_hidden (*(int *)(frame_ + FRAME_OFF(492)))
 #define y2 (*(iptr *)(frame_ + FRAME_OFF(496)))
-#define local_5c (*(u32 *)(frame_ + FRAME_OFF(500)))
-#define local_58 (*(int *)(frame_ + FRAME_OFF(504)))
-#define local_54 (*(iptr *)(frame_ + FRAME_OFF(508)))
-#define local_50 (*(u32 *)(frame_ + FRAME_OFF(512)))
-#define local_4c (*(int *)(frame_ + FRAME_OFF(516)))
-#define local_48 (*(uint *)(frame_ + FRAME_OFF(520)))
-#define local_44 (*(int *)(frame_ + FRAME_OFF(524)))
-#define local_40 (*(int *)(frame_ + FRAME_OFF(528)))
-#define local_3c (*(uint *)(frame_ + FRAME_OFF(532)))
-#define local_38 (*(int *)(frame_ + FRAME_OFF(536)))
-#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(540)))
-#define local_24 (*(int *)(frame_ + FRAME_OFF(556)))
-#define local_20 (*(uint *)(frame_ + FRAME_OFF(560)))
-#define local_1c (*(iptr *)(frame_ + FRAME_OFF(564)))
-#define local_18 (*(u32 *)(frame_ + FRAME_OFF(568)))
-#define auStack_14 (*(uint (*)[4])(frame_ + FRAME_OFF(572)))
+#define half_h (*(u32 *)(frame_ + FRAME_OFF(500)))
+#define draw_y (*(int *)(frame_ + FRAME_OFF(504)))
+#define dir (*(iptr *)(frame_ + FRAME_OFF(508)))
+#define tile_w (*(u32 *)(frame_ + FRAME_OFF(512)))
+#define draw_x (*(int *)(frame_ + FRAME_OFF(516)))
+#define nbr_byte (*(uint *)(frame_ + FRAME_OFF(520)))
+#define quarter_y (*(int *)(frame_ + FRAME_OFF(524)))
+#define has_rail (*(int *)(frame_ + FRAME_OFF(528)))
+#define irrig_flags (*(uint *)(frame_ + FRAME_OFF(532)))
+#define resource (*(int *)(frame_ + FRAME_OFF(536)))
+#define airbase_area (*(i8 (*)[16])(frame_ + FRAME_OFF(540)))
+#define quarter_x (*(int *)(frame_ + FRAME_OFF(556)))
+#define has_river (*(uint *)(frame_ + FRAME_OFF(560)))
+#define quarter (*(iptr *)(frame_ + FRAME_OFF(564)))
+#define tile_h (*(u32 *)(frame_ + FRAME_OFF(568)))
+#define dither_terrain (*(uint (*)[4])(frame_ + FRAME_OFF(572)))
 void __thiscall
 mapview_draw_tile_terrain
-          (ViewWindow *this,iptr param_1,int param_2,int param_3,iptr x,int y,
-          int param_6,int param_7,iptr param_8)
+          (ViewWindow *this,iptr surface,int screen_x,int screen_y,iptr x,int y,
+          int viewer_civ,int zoom,iptr city_tile_idx)
 
 {
-  byte bVar1;
-  uint uVar2;
-  int iVar3;
-  byte *pbVar4;
+  byte nbr_raw;
+  uint new_flags;
+  int check;
+  byte *known;
   iptr civ;
-  i32 uVar6;
+  i32 color;
   i8 frame_[FRAME_OFF(592)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((short)this->field_2e4 == param_7) {
-    local_50 = this->total_tax;
-    local_18 = this->total_science;
-    local_70 = this->field_310;
-    local_5c = this->field_314;
+  if ((short)this->field_2e4 == zoom) {
+    tile_w = this->total_tax;
+    tile_h = this->total_science;
+    half_w = this->field_310;
+    half_h = this->field_314;
   }
   else {
-    local_50 = gfx_zoom_scale(0x40,param_7);
-    local_18 = gfx_zoom_scale(0x20,param_7);
-    local_70 = (int)local_50 >> 1;
-    local_5c = (int)local_18 >> 1;
+    tile_w = gfx_zoom_scale(0x40,zoom);
+    tile_h = gfx_zoom_scale(0x20,zoom);
+    half_w = (int)tile_w >> 1;
+    half_h = (int)tile_h >> 1;
   }
-  if (param_8 < 0) {
-    iVar3 = map_in_bounds(x,y);
-    local_9c = (uint)(iVar3 == 0);
+  if (city_tile_idx < 0) {
+    check = map_in_bounds(x,y);
+    hidden = (uint)(check == 0);
   }
   else {
-    local_9c = (uint)(0x14 < param_8);
-    if (local_9c == 0) {
-      iVar3 = map_in_bounds(x,y);
-      if (iVar3 == 0) {
-        local_9c = 1;
+    hidden = (uint)(0x14 < city_tile_idx);
+    if (hidden == 0) {
+      check = map_in_bounds(x,y);
+      if (check == 0) {
+        hidden = 1;
       }
       else {
-        local_9c = 0;
+        hidden = 0;
       }
     }
   }
-  gfx_set_zoom_scale(param_7);
-  if ((-1 < param_6) || (local_9c != 0)) {
-    if (local_9c == 0) {
-      iVar3 = tile_visible_to(x,y,param_6);
-      if (iVar3 == 0) {
-        local_9c = 1;
+  gfx_set_zoom_scale(zoom);
+  if ((-1 < viewer_civ) || (hidden != 0)) {
+    if (hidden == 0) {
+      check = tile_visible_to(x,y,viewer_civ);
+      if (check == 0) {
+        hidden = 1;
       }
       else {
-        local_9c = 0;
+        hidden = 0;
       }
     }
-    if (local_9c != 0) {
+    if (hidden != 0) {
       sprite_draw
-                ((Sprite *)&unexplored_tile_sprite,(iptr)local_bc,param_1,param_2,param_3);
+                ((Sprite *)&unexplored_tile_sprite,(iptr)hidden_rect,surface,screen_x,screen_y);
       goto LAB_0047ba07;
     }
   }
-  iVar3 = map_in_bounds(x,y);
-  if (iVar3 == 0) {
-    local_9c = 1;
-    local_a4 = 7;
-    local_6c = 7;
-    local_88 = 0;
-    local_20 = 0;
-    local_80 = (byte *)0x0;
+  check = map_in_bounds(x,y);
+  if (check == 0) {
+    hidden = 1;
+    terrain_byte = 7;
+    terrain2 = 7;
+    improvements2 = 0;
+    has_river = 0;
+    tile = (byte *)0x0;
   }
   else {
-    local_9c = 0;
-    local_80 = (byte *)tile_at(x,y);
-    local_a4 = (uint)*local_80;
-    local_6c = local_a4 & 0xf;
-    local_20 = local_a4 & 0x80;
-    if (param_6 < 1) {
-      local_88 = (uint)local_80[1];
+    hidden = 0;
+    tile = (byte *)tile_at(x,y);
+    terrain_byte = (uint)*tile;
+    terrain2 = terrain_byte & 0xf;
+    has_river = terrain_byte & 0x80;
+    if (viewer_civ < 1) {
+      improvements2 = (uint)tile[1];
     }
     else {
-      pbVar4 = (byte *)known_at(x,y,param_6);
-      local_88 = (uint)*pbVar4;
+      known = (byte *)known_at(x,y,viewer_civ);
+      improvements2 = (uint)*known;
     }
   }
-  for (local_54 = 0; local_54 < 4; local_54++) {
-    auStack_14[local_54] = 0xffffffff;
+  for (dir = 0; dir < 4; dir++) {
+    dither_terrain[dir] = 0xffffffff;
   }
-  if (local_6c == 10) {
-    if (param_7 < -3) {
+  if (terrain2 == 10) {
+    if (zoom < -3) {
       sprite_draw
-                ((Sprite *)&terrain_ocean_sprite,(iptr)local_cc,param_1,param_2,param_3);
+                ((Sprite *)&terrain_ocean_sprite,(iptr)ocean_rect,surface,screen_x,screen_y);
     }
     else {
-      local_8c = tile_calc_coast_masks(x,y);
-      for (local_1c = 0; local_1c < 4; local_1c++) {
-        local_24 = (*(int *)(&coast_quarter_dx_table + local_1c * 4) + 1) * ((int)local_70 >> 1) + param_2;
-        local_44 = *(int *)(&coast_quarter_dy_table + local_1c * 4) * ((int)local_5c >> 1) + param_3;
+      variant = tile_calc_coast_masks(x,y);
+      for (quarter = 0; quarter < 4; quarter++) {
+        quarter_x = (*(int *)(&coast_quarter_dx_table + quarter * 4) + 1) * ((int)half_w >> 1) + screen_x;
+        quarter_y = *(int *)(&coast_quarter_dy_table + quarter * 4) * ((int)half_h >> 1) + screen_y;
         sprite_draw
                   ((Sprite *)
-                   (&coast_quarter_sprites + local_1c * 0x3c + (uint)(byte)(&coast_quarter_land_masks)[local_1c] * 0xf0),
-                   (iptr)local_dc,param_1,local_24,local_44);
+                   (&coast_quarter_sprites + quarter * 0x3c + (uint)(byte)(&coast_quarter_land_masks)[quarter] * 0xf0),
+                   (iptr)coast_rect,surface,quarter_x,quarter_y);
       }
-      for (local_54 = 0; local_54 < 4; local_54++) {
-        x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
-        y2 = (char)(&diag_dy_table)[local_54] + y;
-        iVar3 = map_in_bounds(x2,y2);
-        if ((iVar3 != 0) && (pbVar4 = (byte *)tile_at(x2,y2), (*pbVar4 & 0x80) != 0)) {
+      for (dir = 0; dir < 4; dir++) {
+        x2 = map_wrap_x((char)(&diag_dx_table)[dir] + x);
+        y2 = (char)(&diag_dy_table)[dir] + y;
+        check = map_in_bounds(x2,y2);
+        if ((check != 0) && (known = (byte *)tile_at(x2,y2), (*known & 0x80) != 0)) {
           sprite_draw
-                    ((Sprite *)(&river_mouth_sprites + local_54 * 0x3c),(iptr)local_ec,param_1,
-                     param_2,param_3);
+                    ((Sprite *)(&river_mouth_sprites + dir * 0x3c),(iptr)mouth_rect,surface,
+                     screen_x,screen_y);
         }
       }
     }
   }
   else {
-    local_8c = 0;
-    local_78 = 0;
-    if (param_7 < -4) {
-      local_78 = 0xf;
+    variant = 0;
+    river_mask = 0;
+    if (zoom < -4) {
+      river_mask = 0xf;
     }
     else {
-      for (local_54 = 0; local_54 < 4; local_54++) {
-        x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
-        y2 = (char)(&diag_dy_table)[local_54] + y;
-        iVar3 = map_in_bounds(x2,y2);
-        if (iVar3 != 0) {
-          local_74 = (byte *)tile_at(x2,y2);
-          bVar1 = *local_74;
-          local_48 = (uint)bVar1;
-          local_a0 = local_48 & 0xf;
-          if (local_a0 == local_6c) {
-            local_8c += (char)(&diag_neighbor_bits)[local_54];
+      for (dir = 0; dir < 4; dir++) {
+        x2 = map_wrap_x((char)(&diag_dx_table)[dir] + x);
+        y2 = (char)(&diag_dy_table)[dir] + y;
+        check = map_in_bounds(x2,y2);
+        if (check != 0) {
+          nbr_tile = (byte *)tile_at(x2,y2);
+          nbr_raw = *nbr_tile;
+          nbr_byte = (uint)nbr_raw;
+          nbr_terrain = nbr_byte & 0xf;
+          if (nbr_terrain == terrain2) {
+            variant += (char)(&diag_neighbor_bits)[dir];
           }
-          else if (local_a0 == 10) {
-            auStack_14[local_54] = 0xc;
+          else if (nbr_terrain == 10) {
+            dither_terrain[dir] = 0xc;
           }
           else {
-            auStack_14[local_54] = local_a0;
+            dither_terrain[dir] = nbr_terrain;
           }
-          if (((bVar1 & 0x80) != 0) || (local_a0 == 10)) {
-            local_78 += (char)(&diag_neighbor_bits)[local_54];
+          if (((nbr_raw & 0x80) != 0) || (nbr_terrain == 10)) {
+            river_mask += (char)(&diag_neighbor_bits)[dir];
           }
         }
       }
     }
     sprite_draw
-              ((Sprite *)(&terrain_base_sprites + local_6c * 0x3c),(iptr)local_fc,param_1,param_2,
-               param_3);
-    if (-5 < param_7) {
-      for (local_84 = 0; local_84 < 4; local_84++) {
-        if (-1 < (int)auStack_14[local_84]) {
-          if (local_84 < 2) {
-            local_240 = local_70;
+              ((Sprite *)(&terrain_base_sprites + terrain2 * 0x3c),(iptr)base_rect,surface,screen_x,
+               screen_y);
+    if (-5 < zoom) {
+      for (quad = 0; quad < 4; quad++) {
+        if (-1 < (int)dither_terrain[quad]) {
+          if (quad < 2) {
+            dither_dx = half_w;
           }
           else {
-            local_240 = 0;
+            dither_dx = 0;
           }
-          local_4c = local_240 + param_2;
-          if (((char)local_84 + 1U & 3) < 2) {
-            local_244 = 0;
+          draw_x = dither_dx + screen_x;
+          if (((char)quad + 1U & 3) < 2) {
+            dither_dy = 0;
           }
           else {
-            local_244 = local_5c;
+            dither_dy = half_h;
           }
-          local_58 = local_244 + param_3;
+          draw_y = dither_dy + screen_y;
           sprite_draw
                     ((Sprite *)
-                     (&terrain_dither_sprites + local_84 * 0x3c + auStack_14[local_84] * 0xf0),(iptr)local_10c
-                     ,param_1,local_4c,local_58);
+                     (&terrain_dither_sprites + quad * 0x3c + dither_terrain[quad] * 0xf0),(iptr)dither_rect
+                     ,surface,draw_x,draw_y);
         }
       }
     }
-    if (local_6c == 3) {
+    if (terrain2 == 3) {
       sprite_draw
-                ((Sprite *)(&forest_sprites + local_8c * 0x3c),(iptr)local_11c,param_1,param_2,
-                 param_3);
+                ((Sprite *)(&forest_sprites + variant * 0x3c),(iptr)forest_rect,surface,screen_x,
+                 screen_y);
     }
-    else if (local_6c == 5) {
+    else if (terrain2 == 5) {
       sprite_draw
-                ((Sprite *)(&mountain_sprites + local_8c * 0x3c),(iptr)local_12c,param_1,param_2,
-                 param_3);
+                ((Sprite *)(&mountain_sprites + variant * 0x3c),(iptr)mountain_rect,surface,screen_x,
+                 screen_y);
     }
-    else if (local_6c == 4) {
+    else if (terrain2 == 4) {
       sprite_draw
-                ((Sprite *)(&hill_sprites + local_8c * 0x3c),(iptr)local_13c,param_1,param_2,
-                 param_3);
+                ((Sprite *)(&hill_sprites + variant * 0x3c),(iptr)hill_rect,surface,screen_x,
+                 screen_y);
     }
-    if (((-4 < param_7) && (map_show_hidden_terrain == 0)) && (((byte)local_88 & 0xc) == 0xc)) {
+    if (((-4 < zoom) && (map_show_hidden_terrain == 0)) && (((byte)improvements2 & 0xc) == 0xc)) {
       sprite_draw
-                ((Sprite *)&farmland_sprite,(iptr)local_14c,param_1,param_2,param_3);
+                ((Sprite *)&farmland_sprite,(iptr)farmland_rect,surface,screen_x,screen_y);
     }
-    if (((-7 < param_7) && (local_20 != 0)) && (map_show_hidden_terrain == 0)) {
+    if (((-7 < zoom) && (has_river != 0)) && (map_show_hidden_terrain == 0)) {
       sprite_draw
-                ((Sprite *)(&river_sprites + local_78 * 0x3c),(iptr)local_15c,param_1,param_2,
-                 param_3);
+                ((Sprite *)(&river_sprites + river_mask * 0x3c),(iptr)river_rect,surface,screen_x,
+                 screen_y);
     }
-    if (-4 < param_7) {
-      local_3c = 0;
-      if (((byte)local_88 & 0x42) == 2) {
-        for (local_54 = 2; local_54 < 5; local_54 += 2) {
-          x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
-          y2 = (char)(&dir_dy_table)[local_54] + y;
-          iVar3 = map_in_bounds(x2,y2);
-          uVar2 = local_3c;
-          if (((iVar3 != 0) &&
-              (local_68 = tile_improvements(x2,y2), uVar2 = local_3c,
-              (local_68 & 4) != 0)) && (uVar2 = local_3c | 1, (local_68 & 8) != 0)) {
-            uVar2 = local_3c | 3;
+    if (-4 < zoom) {
+      irrig_flags = 0;
+      if (((byte)improvements2 & 0x42) == 2) {
+        for (dir = 2; dir < 5; dir += 2) {
+          x2 = map_wrap_x((char)(&dir_dx_table)[dir] + x);
+          y2 = (char)(&dir_dy_table)[dir] + y;
+          check = map_in_bounds(x2,y2);
+          new_flags = irrig_flags;
+          if (((check != 0) &&
+              (nbr_improvements = tile_improvements(x2,y2), new_flags = irrig_flags,
+              (nbr_improvements & 4) != 0)) && (new_flags = irrig_flags | 1, (nbr_improvements & 8) != 0)) {
+            new_flags = irrig_flags | 3;
           }
-          local_3c = uVar2;
+          irrig_flags = new_flags;
         }
       }
       if (map_show_hidden_terrain == 0) {
-        if ((((byte)local_88 & 0xc) == 4) || (local_3c == 1)) {
+        if ((((byte)improvements2 & 0xc) == 4) || (irrig_flags == 1)) {
           sprite_draw
-                    ((Sprite *)&land_improvement_sprites,(iptr)local_16c,param_1,param_2,param_3);
+                    ((Sprite *)&land_improvement_sprites,(iptr)irrig_rect,surface,screen_x,screen_y);
         }
-        else if ((local_3c & 2) != 0) {
+        else if ((irrig_flags & 2) != 0) {
           sprite_draw
-                    ((Sprite *)&farmland_sprite,(iptr)local_17c,param_1,param_2,param_3);
+                    ((Sprite *)&farmland_sprite,(iptr)farm_rect,surface,screen_x,screen_y);
         }
       }
     }
-    if (((-4 < param_7) && (local_6c == 2)) &&
-       (iVar3 = tile_grassland_has_shield(x,y), iVar3 != 0)) {
+    if (((-4 < zoom) && (terrain2 == 2)) &&
+       (check = tile_grassland_has_shield(x,y), check != 0)) {
       sprite_draw
-                ((Sprite *)&grassland_shield_sprite,(iptr)local_18c,param_1,param_2,param_3);
+                ((Sprite *)&grassland_shield_sprite,(iptr)shield_rect,surface,screen_x,screen_y);
     }
   }
-  if (((-4 < param_7) && (local_9c == 0)) &&
-     (local_38 = tile_resource(x,y), local_38 != 0)) {
+  if (((-4 < zoom) && (hidden == 0)) &&
+     (resource = tile_resource(x,y), resource != 0)) {
     sprite_draw
-              ((Sprite *)(&terrain_resource_sprites + local_6c * 0x78 + (local_38 * 4 - 4) * 0xf),
-               (iptr)local_19c,param_1,param_2,param_3);
+              ((Sprite *)(&terrain_resource_sprites + terrain2 * 0x78 + (resource * 4 - 4) * 0xf),
+               (iptr)resource_rect,surface,screen_x,screen_y);
   }
-  if (((-4 < param_7) && (map_show_hidden_terrain == 0)) &&
-     (((local_88 & 0x10) != 0 || (iVar3 = tile_city_owner(x,y), -1 < iVar3)))) {
-    local_90 = 0;
-    local_94 = 0;
-    if (((local_88 & 0x20) == 0) && (iVar3 = tile_city_owner(x,y), iVar3 < 0)) {
-      local_40 = 0;
+  if (((-4 < zoom) && (map_show_hidden_terrain == 0)) &&
+     (((improvements2 & 0x10) != 0 || (check = tile_city_owner(x,y), -1 < check)))) {
+    road_count = 0;
+    rail_count = 0;
+    if (((improvements2 & 0x20) == 0) && (check = tile_city_owner(x,y), check < 0)) {
+      has_rail = 0;
     }
     else {
-      local_40 = 1;
+      has_rail = 1;
     }
-    for (local_54 = 0; local_54 < 8; local_54++) {
-      x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
-      y2 = (char)(&dir_dy_table)[local_54] + y;
-      iVar3 = map_in_bounds(x2,y2);
-      if (iVar3 != 0) {
-        if (param_6 < 1) {
-          local_68 = tile_improvements(x2,y2);
+    for (dir = 0; dir < 8; dir++) {
+      x2 = map_wrap_x((char)(&dir_dx_table)[dir] + x);
+      y2 = (char)(&dir_dy_table)[dir] + y;
+      check = map_in_bounds(x2,y2);
+      if (check != 0) {
+        if (viewer_civ < 1) {
+          nbr_improvements = tile_improvements(x2,y2);
         }
         else {
-          pbVar4 = (byte *)known_at(x2,y2,param_6);
-          local_68 = (uint)*pbVar4;
+          known = (byte *)known_at(x2,y2,viewer_civ);
+          nbr_improvements = (uint)*known;
         }
-        if (((local_68 & 0x12) != 0) &&
-           ((local_90 = local_90 + 1, local_40 == 0 || ((local_68 & 0x22) == 0)))) {
+        if (((nbr_improvements & 0x12) != 0) &&
+           ((road_count = road_count + 1, has_rail == 0 || ((nbr_improvements & 0x22) == 0)))) {
           sprite_draw
-                    ((Sprite *)(&road_sprites + (local_54 * 4 + 4) * 0xf),(iptr)local_1ac,
-                     param_1,param_2,param_3);
+                    ((Sprite *)(&road_sprites + (dir * 4 + 4) * 0xf),(iptr)road_rect,
+                     surface,screen_x,screen_y);
         }
       }
     }
-    if (local_40 != 0) {
-      for (local_54 = 0; local_54 < 8; local_54++) {
-        x2 = map_wrap_x((char)(&dir_dx_table)[local_54] + x);
-        y2 = (char)(&dir_dy_table)[local_54] + y;
-        iVar3 = map_in_bounds(x2,y2);
-        if (iVar3 != 0) {
-          if (param_6 < 1) {
-            local_68 = tile_improvements(x2,y2);
+    if (has_rail != 0) {
+      for (dir = 0; dir < 8; dir++) {
+        x2 = map_wrap_x((char)(&dir_dx_table)[dir] + x);
+        y2 = (char)(&dir_dy_table)[dir] + y;
+        check = map_in_bounds(x2,y2);
+        if (check != 0) {
+          if (viewer_civ < 1) {
+            nbr_improvements = tile_improvements(x2,y2);
           }
           else {
-            pbVar4 = (byte *)known_at(x2,y2,param_6);
-            local_68 = (uint)*pbVar4;
+            known = (byte *)known_at(x2,y2,viewer_civ);
+            nbr_improvements = (uint)*known;
           }
-          if ((local_68 & 0x22) != 0) {
-            local_94++;
+          if ((nbr_improvements & 0x22) != 0) {
+            rail_count++;
             sprite_draw
-                      ((Sprite *)(&railroad_sprites + (local_54 * 4 + 4) * 0xf),(iptr)local_1bc,
-                       param_1,param_2,param_3);
+                      ((Sprite *)(&railroad_sprites + (dir * 4 + 4) * 0xf),(iptr)rail_rect,
+                       surface,screen_x,screen_y);
           }
         }
       }
     }
-    iVar3 = tile_city_owner(x,y);
-    if (iVar3 < 0) {
-      if (local_40 == 0) {
-        if (local_90 == 0) {
+    check = tile_city_owner(x,y);
+    if (check < 0) {
+      if (has_rail == 0) {
+        if (road_count == 0) {
           sprite_draw
-                    ((Sprite *)&road_sprites,(iptr)local_1dc,param_1,param_2,param_3);
+                    ((Sprite *)&road_sprites,(iptr)road_dot_rect,surface,screen_x,screen_y);
         }
       }
-      else if (local_94 == 0) {
+      else if (rail_count == 0) {
         sprite_draw
-                  ((Sprite *)&railroad_sprites,(iptr)local_1cc,param_1,param_2,param_3);
+                  ((Sprite *)&railroad_sprites,(iptr)rail_dot_rect,surface,screen_x,screen_y);
       }
     }
   }
-  if (((-4 < param_7) && (map_show_hidden_terrain == 0)) && (((byte)local_88 & 0xc) == 8)) {
+  if (((-4 < zoom) && (map_show_hidden_terrain == 0)) && (((byte)improvements2 & 0xc) == 8)) {
     sprite_draw
-              ((Sprite *)&mine_sprite,(iptr)local_1ec,param_1,param_2,param_3);
+              ((Sprite *)&mine_sprite,(iptr)mine_rect,surface,screen_x,screen_y);
   }
-  if ((-5 < param_7) && (local_9c == 0)) {
-    if ((local_88 & 0x80) != 0) {
+  if ((-5 < zoom) && (hidden == 0)) {
+    if ((improvements2 & 0x80) != 0) {
       sprite_draw
-                ((Sprite *)&pollution_sprite,(iptr)local_1fc,param_1,param_2,param_3);
+                ((Sprite *)&pollution_sprite,(iptr)pollution_rect,surface,screen_x,screen_y);
     }
-    iVar3 = tile_has_hut(x,y);
-    if ((iVar3 != 0) && (map_show_hidden_terrain == 0)) {
+    check = tile_has_hut(x,y);
+    if ((check != 0) && (map_show_hidden_terrain == 0)) {
       sprite_draw
-                ((Sprite *)&hut_sprite,(iptr)local_20c,param_1,param_2,param_3);
+                ((Sprite *)&hut_sprite,(iptr)hut_rect,surface,screen_x,screen_y);
     }
-    if ((((byte)local_88 & 0x42) == 0x40) && (map_show_hidden_terrain == 0)) {
+    if ((((byte)improvements2 & 0x42) == 0x40) && (map_show_hidden_terrain == 0)) {
       sprite_draw
-                ((Sprite *)&fortress_sprite,(iptr)local_21c,param_1,param_2,param_3 - local_5c);
+                ((Sprite *)&fortress_sprite,(iptr)fortress_rect,surface,screen_x,screen_y - half_h);
     }
-    if ((((byte)local_88 & 0x42) == 0x42) && (map_show_hidden_terrain == 0)) {
-      local_8c = 0;
+    if ((((byte)improvements2 & 0x42) == 0x42) && (map_show_hidden_terrain == 0)) {
+      variant = 0;
       for (unit = tile_first_unit(x,y); -1 < unit;
           unit = unit_next_in_stack(unit)) {
         if (unit_types[units[unit].type].domain == 1) {
-          local_8c = 1;
+          variant = 1;
           break;
         }
       }
       sprite_draw
-                ((Sprite *)(&airbase_sprites + local_8c * 0x3c),(iptr)local_22c,param_1,param_2,
-                 param_3 - local_5c);
-      rect_set_xywh((iptr)local_34,param_2,param_3 - local_5c,local_50,local_5c + local_18);
+                ((Sprite *)(&airbase_sprites + variant * 0x3c),(iptr)airbase_rect,surface,screen_x,
+                 screen_y - half_h);
+      rect_set_xywh((iptr)airbase_area,screen_x,screen_y - half_h,tile_w,half_h + tile_h);
       civ = tile_owner(x,y);
-      uVar6 = civ_color_primary(civ);
-      surface_replace_color((DibSurface *)param_1,(iptr)local_34,0x106,uVar6);
+      color = civ_color_primary(civ);
+      surface_replace_color((DibSurface *)surface,(iptr)airbase_area,0x106,color);
     }
   }
-  if ((-4 < param_7) && (-1 < param_6)) {
-    for (local_54 = 0; local_54 < 4; local_54++) {
-      x2 = map_wrap_x((char)(&diag_dx_table)[local_54] + x);
-      y2 = (char)(&diag_dy_table)[local_54] + y;
-      local_64 = 0;
-      if (param_8 < 0) {
-        iVar3 = map_in_bounds(x2,y2);
-        if (iVar3 != 0) goto LAB_0047b934;
+  if ((-4 < zoom) && (-1 < viewer_civ)) {
+    for (dir = 0; dir < 4; dir++) {
+      x2 = map_wrap_x((char)(&diag_dx_table)[dir] + x);
+      y2 = (char)(&diag_dy_table)[dir] + y;
+      nbr_hidden = 0;
+      if (city_tile_idx < 0) {
+        check = map_in_bounds(x2,y2);
+        if (check != 0) goto LAB_0047b934;
       }
       else {
-        if (param_8 < 0x15) {
-          iVar3 = map_in_bounds(x2,y2);
-          if (iVar3 == 0) {
-            local_64 = 1;
+        if (city_tile_idx < 0x15) {
+          check = map_in_bounds(x2,y2);
+          if (check == 0) {
+            nbr_hidden = 1;
           }
-          if ((int)(char)(&diag_dx_table)[local_54] + (int)(char)(&city_tile_dx_table)[param_8] < 1) {
-            local_7c = ~((int)(char)(&diag_dx_table)[local_54] + (int)(char)(&city_tile_dx_table)[param_8])
+          if ((int)(char)(&diag_dx_table)[dir] + (int)(char)(&city_tile_dx_table)[city_tile_idx] < 1) {
+            abs_dx = ~((int)(char)(&diag_dx_table)[dir] + (int)(char)(&city_tile_dx_table)[city_tile_idx])
                        + 1;
           }
           else {
-            local_7c = (int)(char)(&diag_dx_table)[local_54] + (int)(char)(&city_tile_dx_table)[param_8];
+            abs_dx = (int)(char)(&diag_dx_table)[dir] + (int)(char)(&city_tile_dx_table)[city_tile_idx];
           }
-          if ((int)(char)(&diag_dy_table)[local_54] + (int)(char)(&city_tile_dy_table)[param_8] < 1) {
-            local_a8 = ~((int)(char)(&diag_dy_table)[local_54] + (int)(char)(&city_tile_dy_table)[param_8])
+          if ((int)(char)(&diag_dy_table)[dir] + (int)(char)(&city_tile_dy_table)[city_tile_idx] < 1) {
+            abs_dy = ~((int)(char)(&diag_dy_table)[dir] + (int)(char)(&city_tile_dy_table)[city_tile_idx])
                        + 1;
           }
           else {
-            local_a8 = (int)(char)(&diag_dy_table)[local_54] + (int)(char)(&city_tile_dy_table)[param_8];
+            abs_dy = (int)(char)(&diag_dy_table)[dir] + (int)(char)(&city_tile_dy_table)[city_tile_idx];
           }
-          iVar3 = dist_from_deltas(local_7c,local_a8);
-          if (2 < iVar3) {
-            local_64 = 1;
+          check = dist_from_deltas(abs_dx,abs_dy);
+          if (2 < check) {
+            nbr_hidden = 1;
           }
         }
         else {
-          local_64 = 1;
+          nbr_hidden = 1;
         }
 LAB_0047b934:
-        if (local_64 == 0) {
-          iVar3 = tile_visible_to(x2,y2,param_6);
-          if (iVar3 == 0) {
-            local_64 = 1;
+        if (nbr_hidden == 0) {
+          check = tile_visible_to(x2,y2,viewer_civ);
+          if (check == 0) {
+            nbr_hidden = 1;
           }
           else {
-            local_64 = 0;
+            nbr_hidden = 0;
           }
         }
-        if (local_64 != 0) {
-          if (local_54 < 2) {
-            local_248 = local_70;
+        if (nbr_hidden != 0) {
+          if (dir < 2) {
+            unexp_dx = half_w;
           }
           else {
-            local_248 = 0;
+            unexp_dx = 0;
           }
-          local_4c = local_248 + param_2;
-          if (((char)local_54 + 1U & 3) < 2) {
-            local_24c = 0;
+          draw_x = unexp_dx + screen_x;
+          if (((char)dir + 1U & 3) < 2) {
+            unexp_dy = 0;
           }
           else {
-            local_24c = local_5c;
+            unexp_dy = half_h;
           }
-          local_58 = local_24c + param_3;
+          draw_y = unexp_dy + screen_y;
           sprite_draw
-                    ((Sprite *)(&unexplored_dither_sprites + local_54 * 0x3c),(iptr)local_23c,param_1,
-                     local_4c,local_58);
+                    ((Sprite *)(&unexplored_dither_sprites + dir * 0x3c),(iptr)unexp_rect,surface,
+                     draw_x,draw_y);
         }
       }
     }
@@ -2274,102 +2274,102 @@ LAB_0047ba07:
   return;
 }
 #undef map_show_hidden_terrain
-#undef local_24c
-#undef local_248
-#undef local_244
-#undef local_240
-#undef local_23c
-#undef local_22c
-#undef local_21c
-#undef local_20c
-#undef local_1fc
-#undef local_1ec
-#undef local_1dc
-#undef local_1cc
-#undef local_1bc
-#undef local_1ac
-#undef local_19c
-#undef local_18c
-#undef local_17c
-#undef local_16c
-#undef local_15c
-#undef local_14c
-#undef local_13c
-#undef local_12c
-#undef local_11c
-#undef local_10c
-#undef local_fc
-#undef local_ec
-#undef local_dc
-#undef local_cc
-#undef local_bc
+#undef unexp_dy
+#undef unexp_dx
+#undef dither_dy
+#undef dither_dx
+#undef unexp_rect
+#undef airbase_rect
+#undef fortress_rect
+#undef hut_rect
+#undef pollution_rect
+#undef mine_rect
+#undef road_dot_rect
+#undef rail_dot_rect
+#undef rail_rect
+#undef road_rect
+#undef resource_rect
+#undef shield_rect
+#undef farm_rect
+#undef irrig_rect
+#undef river_rect
+#undef farmland_rect
+#undef hill_rect
+#undef mountain_rect
+#undef forest_rect
+#undef dither_rect
+#undef base_rect
+#undef mouth_rect
+#undef coast_rect
+#undef ocean_rect
+#undef hidden_rect
 #undef x2
-#undef local_a8
-#undef local_a4
-#undef local_a0
-#undef local_9c
+#undef abs_dy
+#undef terrain_byte
+#undef nbr_terrain
+#undef hidden
 #undef unit
-#undef local_94
-#undef local_90
-#undef local_8c
-#undef local_88
-#undef local_84
-#undef local_80
-#undef local_7c
-#undef local_78
-#undef local_74
-#undef local_70
-#undef local_6c
-#undef local_68
-#undef local_64
+#undef rail_count
+#undef road_count
+#undef variant
+#undef improvements2
+#undef quad
+#undef tile
+#undef abs_dx
+#undef river_mask
+#undef nbr_tile
+#undef half_w
+#undef terrain2
+#undef nbr_improvements
+#undef nbr_hidden
 #undef y2
-#undef local_5c
-#undef local_58
-#undef local_54
-#undef local_50
-#undef local_4c
-#undef local_48
-#undef local_44
-#undef local_40
-#undef local_3c
-#undef local_38
-#undef local_34
-#undef local_24
-#undef local_20
-#undef local_1c
-#undef local_18
-#undef auStack_14
+#undef half_h
+#undef draw_y
+#undef dir
+#undef tile_w
+#undef draw_x
+#undef nbr_byte
+#undef quarter_y
+#undef has_rail
+#undef irrig_flags
+#undef resource
+#undef airbase_area
+#undef quarter_x
+#undef has_river
+#undef quarter
+#undef tile_h
+#undef dither_terrain
 
 /* 0047ba1d auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define scenario_flags (*(ushort *)((u8 *)&g.d_0064bc60))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define visible2 (*(int *)(frame_ + FRAME_OFF(0)))
 void __thiscall
 mapview_draw_tile_city
-          (ViewWindow *this,i32 param_1,int param_2,iptr x,iptr y)
+          (ViewWindow *this,i32 screen_x,int screen_y,iptr x,iptr y)
 
 {
   iptr city;
-  int iVar2;
+  int in_bounds;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   city = city_at(x,y);
-  if ((-1 < city) && (iVar2 = map_in_bounds(x,y), iVar2 != 0)) {
-    local_8 = tile_visible_to(x,y,human_civ);
+  if ((-1 < city) && (in_bounds = map_in_bounds(x,y), in_bounds != 0)) {
+    visible2 = tile_visible_to(x,y,human_civ);
     if ((int)cities[city].owner != (human_civ & 0xffU)) {
-      if ((local_8 == 0) ||
+      if ((visible2 == 0) ||
          ((((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[city].known_to) == 0 &&
            ((int)cities[city].owner != (human_civ & 0xffU))) ||
           (*(char *)&cities[city].revealed_size[human_civ] == '\0')))) {
-        local_8 = 0;
+        visible2 = 0;
       }
       else {
-        local_8 = 1;
+        visible2 = 1;
       }
     }
-    if (((local_8 != 0) || (game.reveal_map != '\0')) ||
+    if (((visible2 != 0) || (game.reveal_map != '\0')) ||
        (((game.game_flags & 0x80) != 0 && ((scenario_flags & 8) != 0)))) {
-      gfx_draw_city((iptr)this,city,0,param_1,param_2 - this->field_314,
+      gfx_draw_city((iptr)this,city,0,screen_x,screen_y - this->field_314,
                          (int)(short)this->field_2e4);
     }
   }
@@ -2377,15 +2377,15 @@ mapview_draw_tile_city
 }
 #undef human_civ
 #undef scenario_flags
-#undef local_8
+#undef visible2
 
 /* 0047bba5 auto */
 void __thiscall
 mapview_draw_unit_stacked
-          (ViewWindow *this,iptr unit,uint param_2,i32 param_3,i32 param_4)
+          (ViewWindow *this,iptr unit,uint draw_flags,i32 screen_x,i32 screen_y)
 
 {
-  gfx_draw_unit((iptr)this,unit,param_2 | 3,param_3,param_4,(int)(short)this->field_2e4,0);
+  gfx_draw_unit((iptr)this,unit,draw_flags | 3,screen_x,screen_y,(int)(short)this->field_2e4,0);
   return;
 }
 
@@ -2395,11 +2395,11 @@ mapview_draw_unit_stacked
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
 void __thiscall
 mapview_draw_unit_blinking
-          (ViewWindow *this,iptr unit,i32 param_2,i32 param_3)
+          (ViewWindow *this,iptr unit,i32 screen_x,i32 screen_y)
 
 {
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    gfx_draw_unit((iptr)this,unit,5,param_2,param_3,(int)(short)this->field_2e4,0);
+    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
   }
   return;
 }
@@ -2411,53 +2411,53 @@ mapview_draw_unit_blinking
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
-#define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define screen_y (*(int *)(frame_ + FRAME_OFF(4)))
+#define screen_x (*(i32 *)(frame_ + FRAME_OFF(8)))
 void __thiscall mapview_draw_unit_at(ViewWindow *this,iptr unit)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (((unit_blink_active == '\0') || (unit_blink_phase == '\0')) || (moving_units_mode != 1)) {
-    mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,(int)units[unit].x,
+    mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,(int)units[unit].x,
                        (int)units[unit].y);
-    local_c -= this->field_314;
-    gfx_draw_unit((iptr)this,unit,5,local_8,local_c,(int)(short)this->field_2e4,0);
+    screen_y -= this->field_314;
+    gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
   }
   return;
 }
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit_blink_phase
-#undef local_c
-#undef local_8
+#undef screen_y
+#undef screen_x
 
 /* 0047bd04 auto */
 #define anim_combat_defender (*(int *)((u8 *)&g.d_00633e48))
 void __thiscall
 mapview_draw_stack_unit
-          (ViewWindow *this,iptr unit,i32 param_2,i32 param_3)
+          (ViewWindow *this,iptr unit,i32 screen_x,i32 screen_y)
 
 {
-  int iVar1;
+  int selectable;
   
   if ((anim_combat_defender < 0) || (anim_combat_defender != unit)) {
     if ((anim_origin_stack_unit < 0) || (unit != anim_origin_stack_unit)) {
       if ((((units[game.active_unit].x == units[unit].x) &&
            (units[game.active_unit].y == units[unit].y)) &&
           (((uint)game.human_players & 1 << (units[game.active_unit].owner & 0x1fU)) != 0)) &&
-         (iVar1 = unit_is_selectable((int)game.active_unit), iVar1 != 0)) {
-        mapview_draw_unit_blinking(this,(int)game.active_unit,param_2,param_3);
+         (selectable = unit_is_selectable((int)game.active_unit), selectable != 0)) {
+        mapview_draw_unit_blinking(this,(int)game.active_unit,screen_x,screen_y);
         return;
       }
-      mapview_draw_unit_stacked(this,unit,4,param_2,param_3);
+      mapview_draw_unit_stacked(this,unit,4,screen_x,screen_y);
     }
     else {
-      gfx_draw_unit((iptr)this,unit,5,param_2,param_3,(int)(short)this->field_2e4,0);
+      gfx_draw_unit((iptr)this,unit,5,screen_x,screen_y,(int)(short)this->field_2e4,0);
     }
   }
   else {
-    mapview_draw_unit_blinking(this,unit,param_2,param_3);
+    mapview_draw_unit_blinking(this,unit,screen_x,screen_y);
   }
   return;
 }
@@ -2470,24 +2470,24 @@ mapview_draw_stack_unit
 #define moving_units_mode (*(int *)((u8 *)&g.d_006d1da8))
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define visible2 (*(int *)(frame_ + FRAME_OFF(8)))
 void __thiscall
 mapview_draw_tile_units
-          (ViewWindow *this,i32 param_1,int param_2,int x,int y)
+          (ViewWindow *this,i32 screen_x,int screen_y,int x,int y)
 
 {
-  int iVar1;
-  int iVar2;
+  int draw_y;
+  int result;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = param_2 - this->field_314;
-  iVar2 = map_in_bounds(x,y);
-  if (iVar2 != 0) {
+  draw_y = screen_y - this->field_314;
+  result = map_in_bounds(x,y);
+  if (result != 0) {
     unit = tile_first_unit(x,y);
     if (((anim_combat_defender < 0) || (anim_combat_defender_x != x)) || (anim_combat_defender_y != y)) {
       if (((anim_origin_stack_unit < 0) || (x != anim_origin_x)) || (y != anim_origin_y)) {
-        iVar2 = tile_city_owner(x,y);
-        if (-1 < iVar2) {
+        result = tile_city_owner(x,y);
+        if (-1 < result) {
           if (moving_units_mode != 1) {
             return;
           }
@@ -2500,8 +2500,8 @@ mapview_draw_tile_units
           if (unit < 0) {
             return;
           }
-          iVar2 = unit_is_selectable(unit);
-          if (iVar2 == 0) {
+          result = unit_is_selectable(unit);
+          if (result == 0) {
             return;
           }
           if (units[unit].orders == 1) {
@@ -2511,29 +2511,29 @@ mapview_draw_tile_units
             return;
           }
         }
-        local_8 = tile_visible_to(x,y,human_civ);
+        visible2 = tile_visible_to(x,y,human_civ);
         if ((int)units[unit].owner != (human_civ & 0xffU)) {
-          if ((local_8 == 0) ||
+          if ((visible2 == 0) ||
              (((1 << ((byte)human_civ & 0x1f) & (uint)units[unit].visibility) == 0 &&
               ((int)units[unit].owner != (human_civ & 0xffU))))) {
-            local_8 = 0;
+            visible2 = 0;
           }
           else {
-            local_8 = 1;
+            visible2 = 1;
           }
         }
-        if ((local_8 != 0) || (game.reveal_map != '\0')) {
-          mapview_draw_stack_unit(this,unit,param_1,iVar1);
+        if ((visible2 != 0) || (game.reveal_map != '\0')) {
+          mapview_draw_stack_unit(this,unit,screen_x,draw_y);
         }
       }
       else {
-        mapview_draw_stack_unit(this,anim_origin_stack_unit,param_1,iVar1);
+        mapview_draw_stack_unit(this,anim_origin_stack_unit,screen_x,draw_y);
       }
     }
     else {
       for (; (unit != anim_combat_defender && (-1 < unit)); unit = unit_next_in_stack(unit)) {
       }
-      mapview_draw_stack_unit(this,unit,param_1,iVar1);
+      mapview_draw_stack_unit(this,unit,screen_x,draw_y);
     }
   }
   return;
@@ -2544,54 +2544,54 @@ mapview_draw_tile_units
 #undef moving_units_mode
 #undef unit_blink_active
 #undef unit
-#undef local_8
+#undef visible2
 
 /* 0047c103 auto */
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define local_34 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_24 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
+#define grid_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define radius_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(36)))
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(40)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(44)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
+#define screen_y (*(i32 *)(frame_ + FRAME_OFF(40)))
+#define screen_x (*(i32 *)(frame_ + FRAME_OFF(44)))
+#define near_city (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
 
 {
-  int iVar1;
+  int result;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_10,x,y);
-  mapview_draw_tile_terrain(this,(iptr)this,local_c,local_10,x,y,civ,
+  mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x,y);
+  mapview_draw_tile_terrain(this,(iptr)this,screen_x,screen_y,x,y,civ,
                      (int)(short)this->field_2e4,-1);
   win_flush_pending_msgs();
   if (2 < game.multiplayer) {
     net_process_messages((NetSession *)&net_session,1,0);
   }
-  iVar1 = map_in_bounds(x,y);
-  if (iVar1 != 0) {
+  result = map_in_bounds(x,y);
+  if (result != 0) {
     if (map_show_hidden_terrain == 0) {
-      mapview_draw_tile_city(this,local_c,local_10,x,y);
-      mapview_draw_tile_units(this,local_c,local_10,x,y);
+      mapview_draw_tile_city(this,screen_x,screen_y,x,y);
+      mapview_draw_tile_units(this,screen_x,screen_y,x,y);
     }
     if (((byte)game.game_options & 0x20) != 0) {
-      local_8 = 0;
+      near_city = 0;
       mapview_apply_zoom(this);
       for (city = 0; city < game.num_cities; city++) {
         if (((cities[city].id != 0) && (cities[city].owner == civ)) &&
-           (iVar1 = map_distance_diag(x,y,(int)cities[city].x,
-                                       (int)cities[city].y), iVar1 < 3)) {
-          local_8 = 1;
+           (result = map_distance_diag(x,y,(int)cities[city].x,
+                                       (int)cities[city].y), result < 3)) {
+          near_city = 1;
           break;
         }
       }
-      if (local_8 == 0) {
+      if (near_city == 0) {
         sprite_draw
-                  ((Sprite *)&map_grid_sprite,(iptr)local_34,(iptr)this,local_c,local_10);
+                  ((Sprite *)&map_grid_sprite,(iptr)grid_rect,(iptr)this,screen_x,screen_y);
       }
       else {
         sprite_draw
-                  ((Sprite *)&city_radius_grid_sprite,(iptr)local_24,(iptr)this,local_c,local_10);
+                  ((Sprite *)&city_radius_grid_sprite,(iptr)radius_rect,(iptr)this,screen_x,screen_y);
       }
       gfx_reset_zoom_scale();
     }
@@ -2599,108 +2599,108 @@ mapview_draw_tile(ViewWindow *this,iptr x,iptr y,int civ)
   return;
 }
 #undef map_show_hidden_terrain
-#undef local_34
-#undef local_24
+#undef grid_rect
+#undef radius_rect
 #undef city
-#undef local_10
-#undef local_c
-#undef local_8
+#undef screen_y
+#undef screen_x
+#undef near_city
 
 /* 0047c3e0 auto */
 i32 __thiscall
-mapview_tile_in_view(ViewWindow *this,i32 param_1,i32 param_2)
+mapview_tile_in_view(ViewWindow *this,i32 tile_x,i32 tile_y)
 
 {
-  i32 uVar1;
+  i32 in_view;
   
-  uVar1 = map_tile_in_box(param_1,param_2,this->field_2e8,this->field_2ec,
+  in_view = map_tile_in_box(tile_x,tile_y,this->field_2e8,this->field_2ec,
                              this->field_2f8 + this->field_300,this->field_2fc + this->field_304 + 1
                             );
-  return uVar1;
+  return in_view;
 }
 
 /* 0047c443 auto */
 #define human_civ (*(i8 *)((u8 *)&g.d_006d1da0))
 #define map_show_hidden_terrain (*(int *)((u8 *)&g.d_0062bcd8))
-#define local_2c (*(i32 *)(frame_ + FRAME_OFF(4)))
-#define local_28 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_20 (*(int *)(frame_ + FRAME_OFF(16)))
+#define shadow_offset (*(i32 *)(frame_ + FRAME_OFF(4)))
+#define shadow_y (*(int *)(frame_ + FRAME_OFF(8)))
+#define screen_y (*(int *)(frame_ + FRAME_OFF(16)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(20)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(24)))
+#define screen_x (*(int *)(frame_ + FRAME_OFF(24)))
 #define y2 (*(int *)(frame_ + FRAME_OFF(28)))
 #define x2 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(36)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
+#define visible2 (*(int *)(frame_ + FRAME_OFF(36)))
+#define label_y (*(int *)(frame_ + FRAME_OFF(40)))
 void __thiscall
-mapview_draw_city_names(ViewWindow *this,i32 param_1,i32 param_2,int param_3)
+mapview_draw_city_names(ViewWindow *this,i32 center_x,i32 center_y,int radius)
 
 {
-  int iVar1;
-  int iVar2;
-  i32 uVar3;
-  int iVar4;
-  i32 uVar5;
-  i32 uVar6;
+  int label_x;
+  int text_width;
+  i32 shadow_color;
+  int name_width;
+  i32 text_color;
+  i32 shadow_depth;
   i8 frame_[FRAME_OFF(48)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (map_show_hidden_terrain == 0) {
-    if (-1 < param_3) {
-      param_3 += 3;
+    if (-1 < radius) {
+      radius += 3;
     }
     text_set_font((iptr)&this->field_338);
     for (city = 0; city < game.num_cities; city++) {
       if (cities[city].id != 0) {
         x2 = (int)cities[city].x;
         y2 = (int)cities[city].y;
-        if (((param_3 < 0) ||
-            (iVar1 = map_distance(x2,y2,param_1,param_2), iVar1 <= param_3)) &&
-           (iVar1 = mapview_tile_in_view(this,x2,y2), iVar1 != 0)) {
-          local_c = tile_visible_to(x2,y2,human_civ);
+        if (((radius < 0) ||
+            (label_x = map_distance(x2,y2,center_x,center_y), label_x <= radius)) &&
+           (label_x = mapview_tile_in_view(this,x2,y2), label_x != 0)) {
+          visible2 = tile_visible_to(x2,y2,human_civ);
           if ((int)cities[city].owner != (human_civ & 0xffU)) {
-            if (((local_c == 0) ||
+            if (((visible2 == 0) ||
                 (((1 << ((byte)human_civ & 0x1f) & (int)(char)cities[city].known_to) == 0 &&
                  ((int)cities[city].owner != (human_civ & 0xffU))))) ||
                (*(char *)&cities[city].revealed_size[human_civ] == '\0')) {
-              local_c = 0;
+              visible2 = 0;
             }
             else {
-              local_c = 1;
+              visible2 = 1;
             }
           }
           if (game.reveal_map != '\0') {
-            local_c = 1;
+            visible2 = 1;
           }
-          if (local_c != 0) {
-            mapview_tile_to_screen(this,(iptr)&local_18,(iptr)&local_20,x2,y2);
-            iVar1 = this->field_310 + local_18;
-            local_8 = ((int)(this->total_science * 3) >> 2) + local_20;
+          if (visible2 != 0) {
+            mapview_tile_to_screen(this,(iptr)&screen_x,(iptr)&screen_y,x2,y2);
+            label_x = this->field_310 + screen_x;
+            label_y = ((int)(this->total_science * 3) >> 2) + screen_y;
             text_set_colors(10,0xffffffff,0xffffffff,0xffffffff);
-            iVar2 = mapview_zoom_scale(this,2);
-            if (iVar2 < 3) {
-              local_28 = mapview_zoom_scale(this,2);
+            text_width = mapview_zoom_scale(this,2);
+            if (text_width < 3) {
+              shadow_y = mapview_zoom_scale(this,2);
             }
             else {
-              local_28 = 2;
+              shadow_y = 2;
             }
-            local_28 = local_8 + local_28;
-            iVar2 = font_text_width
+            shadow_y = label_y + shadow_y;
+            text_width = font_text_width
                               ((GameFont *)&this->field_338,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,iVar1 - (iVar2 >> 1),local_28);
-            iVar2 = mapview_zoom_scale(this,2);
-            if (iVar2 < 3) {
-              local_2c = mapview_zoom_scale(this,2);
+            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (text_width >> 1),shadow_y);
+            text_width = mapview_zoom_scale(this,2);
+            if (text_width < 3) {
+              shadow_offset = mapview_zoom_scale(this,2);
             }
             else {
-              local_2c = 2;
+              shadow_offset = 2;
             }
-            uVar6 = 0;
-            uVar5 = 10;
-            uVar3 = civ_color_secondary((int)cities[city].owner);
-            text_set_colors(uVar3,uVar5,local_2c,uVar6);
-            iVar2 = local_8;
-            iVar4 = font_text_width
+            shadow_depth = 0;
+            text_color = 10;
+            shadow_color = civ_color_secondary((int)cities[city].owner);
+            text_set_colors(shadow_color,text_color,shadow_offset,shadow_depth);
+            text_width = label_y;
+            name_width = font_text_width
                               ((GameFont *)&this->field_338,(iptr)&cities[city].name);
-            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,iVar1 - (iVar4 >> 1),iVar2);
+            text_draw_shadowed((iptr)this,(iptr)&cities[city].name,label_x - (name_width >> 1),text_width);
           }
         }
       }
@@ -2710,153 +2710,153 @@ mapview_draw_city_names(ViewWindow *this,i32 param_1,i32 param_2,int param_3)
 }
 #undef human_civ
 #undef map_show_hidden_terrain
-#undef local_2c
-#undef local_28
-#undef local_20
+#undef shadow_offset
+#undef shadow_y
+#undef screen_y
 #undef city
-#undef local_18
+#undef screen_x
 #undef y2
 #undef x2
-#undef local_c
-#undef local_8
+#undef visible2
+#undef label_y
 
 /* 0047c7aa auto */
-#define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
-#define local_10 (*(int *)(frame_ + FRAME_OFF(16)))
-#define local_c (*(int *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(24)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
+#define width2 (*(int *)(frame_ + FRAME_OFF(16)))
+#define top (*(int *)(frame_ + FRAME_OFF(20)))
+#define left (*(int *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 mapview_tile_radius_rect
-          (ViewWindow *this,i32 param_1,i32 param_2,int param_3,iptr param_4)
+          (ViewWindow *this,i32 tile_x,i32 tile_y,int radius,iptr out_rect)
 
 {
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_tile_to_screen(this,(iptr)&local_8,(iptr)&local_c,param_1,param_2);
-  local_c -= (param_3 * 2 + 1) * this->field_314;
-  local_8 += this->field_310 * param_3 * -2;
-  local_10 = (param_3 * 2 + 1) * this->total_tax;
-  rect_set_xywh((iptr)local_20,local_8,local_c,local_10,(param_3 * 4 + 3) * this->field_314);
-  rect_intersect_into(param_4,(iptr)local_20,(iptr)&this->client_rect);
+  mapview_tile_to_screen(this,(iptr)&left,(iptr)&top,tile_x,tile_y);
+  top -= (radius * 2 + 1) * this->field_314;
+  left += this->field_310 * radius * -2;
+  width2 = (radius * 2 + 1) * this->total_tax;
+  rect_set_xywh((iptr)rect,left,top,width2,(radius * 4 + 3) * this->field_314);
+  rect_intersect_into(out_rect,(iptr)rect,(iptr)&this->client_rect);
   return;
 }
-#undef local_20
-#undef local_10
-#undef local_c
-#undef local_8
+#undef rect
+#undef width2
+#undef top
+#undef left
 
 /* 0047c869 auto */
-#define local_34 (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_2c (*(uint *)(frame_ + FRAME_OFF(12)))
-#define local_24 (*(uint *)(frame_ + FRAME_OFF(20)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
+#define dx_abs (*(uint *)(frame_ + FRAME_OFF(4)))
+#define dy (*(uint *)(frame_ + FRAME_OFF(12)))
+#define dx (*(uint *)(frame_ + FRAME_OFF(20)))
+#define row_extent (*(int *)(frame_ + FRAME_OFF(32)))
+#define clip_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
 void __thiscall
 mapview_draw_tile_radius
-          (ViewWindow *this,int param_1,int param_2,int param_3,i32 civ)
+          (ViewWindow *this,int center_x,int center_y,int radius,i32 civ)
 
 {
-  uint uVar1;
-  uint uVar2;
+  uint extent;
+  uint row_abs;
   i32 x;
-  int iVar4;
+  int in_view;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
-  surface_set_clip((DibSurface *)this,(iptr)local_14);
-  uVar1 = param_3 * 2 + 2;
-  for (local_2c = -uVar1; (int)local_2c <= (int)uVar1; local_2c++) {
-    if ((int)local_2c < 1) {
-      uVar2 = ~local_2c + 1;
+  mapview_tile_radius_rect(this,center_x,center_y,radius,(iptr)clip_rect);
+  surface_set_clip((DibSurface *)this,(iptr)clip_rect);
+  extent = radius * 2 + 2;
+  for (dy = -extent; (int)dy <= (int)extent; dy++) {
+    if ((int)dy < 1) {
+      row_abs = ~dy + 1;
     }
     else {
-      uVar2 = local_2c & 1;
+      row_abs = dy & 1;
     }
-    local_18 = uVar1 - uVar2;
-    for (local_24 = -local_18; (int)local_24 <= local_18; local_24 += 2) {
-      if ((int)local_24 < 1) {
-        local_34 = ~local_24 + 1;
+    row_extent = extent - row_abs;
+    for (dx = -row_extent; (int)dx <= row_extent; dx += 2) {
+      if ((int)dx < 1) {
+        dx_abs = ~dx + 1;
       }
       else {
-        local_34 = local_24;
+        dx_abs = dx;
       }
-      if (local_34 != uVar1) {
-        x = map_wrap_x(local_24 + param_1);
-        iVar4 = mapview_tile_in_view(this,x,param_2 + local_2c);
-        if (iVar4 != 0) {
-          mapview_draw_tile(this,x,param_2 + local_2c,civ);
+      if (dx_abs != extent) {
+        x = map_wrap_x(dx + center_x);
+        in_view = mapview_tile_in_view(this,x,center_y + dy);
+        if (in_view != 0) {
+          mapview_draw_tile(this,x,center_y + dy,civ);
         }
       }
     }
   }
-  mapview_draw_city_names(this,param_1,param_2,param_3);
+  mapview_draw_city_names(this,center_x,center_y,radius);
   surface_set_clip((DibSurface *)this,(iptr)&this->client_rect);
   return;
 }
-#undef local_34
-#undef local_2c
-#undef local_24
-#undef local_18
-#undef local_14
+#undef dx_abs
+#undef dy
+#undef dx
+#undef row_extent
+#undef clip_rect
 
 /* 0047c9d4 auto */
-#define local_1c (*(uint *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(int *)(frame_ + FRAME_OFF(8)))
-#define local_14 (*(int *)(frame_ + FRAME_OFF(12)))
+#define row (*(uint *)(frame_ + FRAME_OFF(4)))
+#define col (*(int *)(frame_ + FRAME_OFF(8)))
+#define row_width (*(int *)(frame_ + FRAME_OFF(12)))
 void __thiscall mapview_draw_all_tiles(ViewWindow *this,i32 civ)
 
 {
-  uptr uVar1;
-  uptr uVar2;
+  uptr origin_y;
+  uptr origin_x;
   i32 x;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if ((this->field_330 != 0) || (this->field_334 != 0)) {
     gfx_fill_surface((iptr)this,10);
   }
-  for (local_1c = 0; (int)local_1c < (int)(this->field_2fc + this->field_304 + 1);
-      local_1c = local_1c + 1) {
-    uVar1 = this->field_2ec;
-    uVar2 = this->field_2e8;
-    if ((local_1c & 1) == 0) {
-      local_14 = this->field_300;
+  for (row = 0; (int)row < (int)(this->field_2fc + this->field_304 + 1);
+      row = row + 1) {
+    origin_y = this->field_2ec;
+    origin_x = this->field_2e8;
+    if ((row & 1) == 0) {
+      row_width = this->field_300;
     }
     else {
-      local_14 = this->field_2f8;
+      row_width = this->field_2f8;
     }
-    for (local_18 = 0; local_18 < local_14; local_18++) {
-      x = map_wrap_x(local_18 * 2 + uVar2 + (local_1c & 1));
-      mapview_draw_tile(this,x,uVar1 + local_1c,civ);
+    for (col = 0; col < row_width; col++) {
+      x = map_wrap_x(col * 2 + origin_x + (row & 1));
+      mapview_draw_tile(this,x,origin_y + row,civ);
     }
   }
   mapview_draw_city_names(this,0,0,0xffffffff);
   return;
 }
-#undef local_1c
-#undef local_18
-#undef local_14
+#undef row
+#undef col
+#undef row_width
 
 /* 0047caea auto */
-#define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 void __thiscall
 mapview_blit_tile_radius
-          (ViewWindow *this,i32 param_1,i32 param_2,i32 param_3)
+          (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius)
 
 {
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  mapview_tile_radius_rect(this,param_1,param_2,param_3,(iptr)local_14);
-  wnd_blit_surface_rect((DibSurface *)this,(iptr)local_14);
+  mapview_tile_radius_rect(this,tile_x,tile_y,radius,(iptr)rect);
+  wnd_blit_surface_rect((DibSurface *)this,(iptr)rect);
   return;
 }
-#undef local_14
+#undef rect
 
 /* 0047cb26 auto */
 void __thiscall
-mapview_blit_tile(ViewWindow *this,i32 param_1,i32 param_2)
+mapview_blit_tile(ViewWindow *this,i32 tile_x,i32 tile_y)
 
 {
-  mapview_blit_tile_radius(this,param_1,param_2,0);
+  mapview_blit_tile_radius(this,tile_x,tile_y,0);
   return;
 }
 
@@ -2885,38 +2885,38 @@ void __thiscall mapview_blit_with_net_pump(DibSurface *this)
 #define unit_blink_active (*(char *)((u8 *)&g.d_0062804c))
 #define unit_blink_phase (*(char *)((u8 *)&g.d_00628054))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-#define local_1c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
-#define local_c (*(i32 *)(frame_ + FRAME_OFF(20)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
+#define cursor_rect (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
+#define cursor_x (*(i32 *)(frame_ + FRAME_OFF(20)))
+#define cursor_y (*(i32 *)(frame_ + FRAME_OFF(24)))
 void __thiscall
 mapview_redraw_area
-          (ViewWindow *this,i32 param_1,i32 param_2,i32 param_3,
-          iptr param_4,int param_5)
+          (ViewWindow *this,i32 tile_x,i32 tile_y,i32 radius,
+          iptr viewer_civ,int do_blit)
 
 {
-  int iVar1;
+  int in_view;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (game_loop_active != '\0') {
     map_redraw_busy = 1;
     if (game.reveal_map == '\0') {
-      civ = param_4;
+      civ = viewer_civ;
     }
     else {
       civ = -1;
     }
-    mapview_draw_tile_radius(this,param_1,param_2,param_3,civ);
+    mapview_draw_tile_radius(this,tile_x,tile_y,radius,civ);
     if ((((moving_units_mode == 0) && (unit_blink_phase != '\0')) && (unit_blink_active != '\0')) &&
        ((this->field_2d8 == 0 &&
-        (iVar1 = mapview_tile_in_view(this,(int)map_cursor_x,(int)map_cursor_y), iVar1 != 0)))) {
-      mapview_tile_to_screen(this,(iptr)&local_c,(iptr)&local_8,(int)map_cursor_x,(int)map_cursor_y);
+        (in_view = mapview_tile_in_view(this,(int)map_cursor_x,(int)map_cursor_y), in_view != 0)))) {
+      mapview_tile_to_screen(this,(iptr)&cursor_x,(iptr)&cursor_y,(int)map_cursor_x,(int)map_cursor_y);
       mapview_apply_zoom(this);
       sprite_draw
-                ((Sprite *)&map_cursor_sprite,(iptr)local_1c,(iptr)this,local_c,local_8);
+                ((Sprite *)&map_cursor_sprite,(iptr)cursor_rect,(iptr)this,cursor_x,cursor_y);
       gfx_reset_zoom_scale();
     }
-    if (param_5 != 0) {
-      mapview_blit_tile_radius(this,param_1,param_2,param_3);
+    if (do_blit != 0) {
+      mapview_blit_tile_radius(this,tile_x,tile_y,radius);
     }
     map_redraw_busy = 0;
   }
@@ -2930,17 +2930,17 @@ mapview_redraw_area
 #undef unit_blink_active
 #undef unit_blink_phase
 #undef civ
-#undef local_1c
-#undef local_c
-#undef local_8
+#undef cursor_rect
+#undef cursor_x
+#undef cursor_y
 
 /* 0047cced auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 void __thiscall
-mapview_redraw_tile(ViewWindow *this,i32 param_1,i32 param_2)
+mapview_redraw_tile(ViewWindow *this,i32 tile_x,i32 tile_y)
 
 {
-  mapview_redraw_area(this,param_1,param_2,0,human_civ,1);
+  mapview_redraw_area(this,tile_x,tile_y,0,human_civ,1);
   return;
 }
 #undef human_civ
@@ -2948,10 +2948,10 @@ mapview_redraw_tile(ViewWindow *this,i32 param_1,i32 param_2)
 /* 0047cd1f auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 void __thiscall
-mapview_redraw_tile_neighbors(ViewWindow *this,i32 param_1,i32 param_2)
+mapview_redraw_tile_neighbors(ViewWindow *this,i32 tile_x,i32 tile_y)
 
 {
-  mapview_redraw_area(this,param_1,param_2,1,human_civ,1);
+  mapview_redraw_area(this,tile_x,tile_y,1,human_civ,1);
   return;
 }
 #undef human_civ
@@ -2962,7 +2962,7 @@ mapview_redraw_tile_neighbors(ViewWindow *this,i32 param_1,i32 param_2)
 #define map_redraw_busy (*(i32 *)((u8 *)&g.d_006ad908))
 #define mp_simultaneous_moves (*(char *)((u8 *)&g.d_006ad684))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall mapview_redraw(ViewWindow *this,iptr param_1,int param_2)
+void __thiscall mapview_redraw(ViewWindow *this,iptr viewer_civ,int do_blit)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2973,13 +2973,13 @@ void __thiscall mapview_redraw(ViewWindow *this,iptr param_1,int param_2)
     mapview_update_layout(this);
     frame_wnd_draw_caption((FrameWindow *)this);
     if (game.reveal_map == '\0') {
-      civ = param_1;
+      civ = viewer_civ;
     }
     else {
       civ = -1;
     }
     mapview_draw_all_tiles(this,civ);
-    if ((param_2 != 0) &&
+    if ((do_blit != 0) &&
        (mapview_blit_with_net_pump((DibSurface *)this), this->field_2d8 == 0)) {
       minimap_redraw();
     }
@@ -2997,35 +2997,35 @@ void __thiscall mapview_redraw(ViewWindow *this,iptr param_1,int param_2)
 #undef civ
 
 /* 0047dce0 auto */
-#define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(i32 *)(frame_ + FRAME_OFF(8)))
 ViewWindow * __thiscall mapview_ctor(ViewWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
-  local_8 = 0;
+  eh_state = 0;
   font_init_empty((GameFont *)&this->field_338);
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   font_init_empty((GameFont *)&this->field_340);
-  (*(i8 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&eh_state + 0)) = 2;
   surface_ctor((DibSurface *)&this->field_360);
-  local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),3);
+  eh_state = CONCAT31((*(i32 *)((char *)&eh_state + 1)),3);
   surface_ctor((DibSurface *)&this->field_3a8);
   this->vtable = (u32)&PTR_FUN_0061d1e4;
   return this;
 }
-#undef local_10
-#undef puStack_c
-#undef local_8
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 0047de10 auto */
-#define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
-#define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
+#define seh_prev (*(i32 *)(frame_ + FRAME_OFF(0)))
+#define seh_handler (*(i8 * *)(frame_ + FRAME_OFF(4)))
+#define eh_state (*(int *)(frame_ + FRAME_OFF(8)))
 /* Library Function - Single Match
     public: virtual __thiscall CBitmapButton::~CBitmapButton(void)
    
@@ -3036,31 +3036,31 @@ void __thiscall mapview_dtor(void *this)
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  (*(i32 *)((char *)&local_8 + 1)) = 0;
-  (*(i8 *)((char *)&local_8 + 0)) = 3;
+  (*(i32 *)((char *)&eh_state + 1)) = 0;
+  (*(i8 *)((char *)&eh_state + 0)) = 3;
   /* inlined unwind funclet 0047de82 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x3a8)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 2;
+  (*(i8 *)((char *)&eh_state + 0)) = 2;
   /* inlined unwind funclet 0047de91 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x360)); }
-  (*(i8 *)((char *)&local_8 + 0)) = 1;
+  (*(i8 *)((char *)&eh_state + 0)) = 1;
   /* inlined unwind funclet 0047dea0 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x340)); }
-  local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
+  eh_state = (uint)(*(i32 *)((char *)&eh_state + 1)) << 8;
   /* inlined unwind funclet 0047deaf */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x338)); }
-  local_8 = 0xffffffff;
+  eh_state = 0xffffffff;
   /* inlined unwind funclet 0047debe */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
-#undef uStack_10
-#undef puStack_c
-#undef local_8
+#undef seh_prev
+#undef seh_handler
+#undef eh_state
 
 /* 0047dfb0 auto */
-i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 param_1)
+i32 __thiscall mapview_zoom_scale(ViewWindow *this,i32 value)
 
 {
-  i32 uVar1;
+  i32 scaled;
   
-  uVar1 = gfx_zoom_scale(param_1,(int)(short)this->field_2e4);
-  return uVar1;
+  scaled = gfx_zoom_scale(value,(int)(short)this->field_2e4);
+  return scaled;
 }
 
 /* 0047dff0 auto */
@@ -3073,20 +3073,20 @@ void __thiscall mapview_apply_zoom(ViewWindow *this)
 
 /* 0047e030 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
+#define view_index (*(int *)(frame_ + FRAME_OFF(0)))
 i32 __cdecl mapviews_tile_visible(iptr x,iptr y)
 
 {
-  int iVar1;
+  int visible;
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = tile_visible_to(x,y,human_civ);
-  if (iVar1 != 0) {
-    for (local_8 = 0; local_8 < 8; local_8++) {
-      if (((local_8 == 0) || (*(short *)(&map_view_open_flags + local_8 * 0x3f0) != 0)) &&
-         (iVar1 = mapview_tile_in_view
-                            ((ViewWindow *)(&map_views + local_8 * 0x3f0),x,y),
-         iVar1 != 0)) {
+  visible = tile_visible_to(x,y,human_civ);
+  if (visible != 0) {
+    for (view_index = 0; view_index < 8; view_index++) {
+      if (((view_index == 0) || (*(short *)(&map_view_open_flags + view_index * 0x3f0) != 0)) &&
+         (visible = mapview_tile_in_view
+                            ((ViewWindow *)(&map_views + view_index * 0x3f0),x,y),
+         visible != 0)) {
         return 1;
       }
     }
@@ -3094,16 +3094,16 @@ i32 __cdecl mapviews_tile_visible(iptr x,iptr y)
   return 0;
 }
 #undef human_civ
-#undef local_8
+#undef view_index
 
 /* 00489b9b auto */
 #define map_view_center_x (*(short *)((u8 *)&g.d_0066ca88))
 #define mapview_center_y (*(short *)((u8 *)&g.d_0066ca8a))
-void __cdecl mapview_center_if_moved(int param_1,int param_2)
+void __cdecl mapview_center_if_moved(int center_x,int center_y)
 
 {
-  if ((map_view_center_x != param_1) || (mapview_center_y != param_2)) {
-    mapview_center_on((ViewWindow *)&map_views,param_1,param_2);
+  if ((map_view_center_x != center_x) || (mapview_center_y != center_y)) {
+    mapview_center_on((ViewWindow *)&map_views,center_x,center_y);
   }
   return;
 }
@@ -3113,10 +3113,10 @@ void __cdecl mapview_center_if_moved(int param_1,int param_2)
 /* 004d8b70 auto */
 void __thiscall
 clickmap_add_xywh
-          (ClickMap *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4,
-          i32 param_5)
+          (ClickMap *this,iptr id,i32 left,i32 top,i32 width,
+          i32 height)
 
 {
-  clickmap_add(this,param_1,0,param_2,param_3,param_4,param_5);
+  clickmap_add(this,id,0,left,top,width,height);
   return;
 }
