@@ -266,7 +266,7 @@ WINBOOL WINAPI sndPlaySoundA(LPCSTR name, UINT flags)
 
 /* ---- mmio: a file read into memory, with RIFF chunk navigation ---- */
 
-typedef struct { unsigned char *data; LONG size, pos; } Mmio;
+typedef struct { unsigned char *data; LONG size, pos; int memory; } Mmio;
 #define MMIO_BUF 8192
 
 static Mmio *mmio_get(HMMIO h) { return obj_get(h, OBJ_MMIO); }
@@ -288,6 +288,7 @@ HMMIO WINAPI mmioOpenA(LPSTR name, LPMMIOINFO info, DWORD flags)
             return 0;
         }
         m = calloc(1, sizeof *m);
+        m->memory = 1;
         m->size = (LONG)info->cchBuffer;
         m->data = calloc(1, (size_t)m->size + MMIO_BUF);
         if (info->pchBuffer)
@@ -410,6 +411,16 @@ MMRESULT WINAPI mmioGetInfo(HMMIO h, LPMMIOINFO info, UINT flags)
         return MMSYSERR_INVALHANDLE;
     memset(info, 0, sizeof *info);
     info->hmmio = h;
+    if (m->memory) {
+        /* a memory file's buffer is the whole file (the movies' sound
+           sources stream through it as a ring) */
+        info->fccIOProc = mmioFOURCC('M', 'E', 'M', ' ');
+        info->cchBuffer = m->size;
+        info->pchBuffer = (HPSTR)m->data;
+        info->pchNext = info->pchBuffer + m->pos;
+        info->pchEndRead = info->pchEndWrite = info->pchBuffer + m->size;
+        return MMSYSERR_NOERROR;
+    }
     info->cchBuffer = MMIO_BUF;
     info->pchBuffer = (HPSTR)m->data + m->pos;
     info->pchNext = info->pchBuffer;
