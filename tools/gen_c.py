@@ -409,21 +409,21 @@ DECL_FULL = re.compile(r'^\s+(?P<type>[A-Za-z_][\w\s\*]*?)\s*(?P<name>\b[A-Za-z_
 CRT_NATIVE_SIGS = {
     'operator_new': 'void *operator_new(size_t n)',
     'operator_delete': 'void operator_delete(void *p)',
-    'FUN_005f2260': 'void FUN_005f2260(u32 seed)',                          # srand
+    'crt_srand': 'void crt_srand(u32 seed)',                          # srand
     '_rand': 'int _rand(void)',
-    'FUN_005f22d0': 'void *FUN_005f22d0(void *dst, const void *src)',       # strcpy
-    'FUN_005f22e0': 'void *FUN_005f22e0(void *dst, const void *src)',       # strcat
-    'FUN_005f2110': 'void *FUN_005f2110(void *dst, const void *src, uint n)',   # memcpy
-    'FUN_005f6500': 'void *FUN_005f6500(void *dst, const void *src, uint n)',   # memmove
-    'FUN_005f4900': 'void *FUN_005f4900(void *p, size_t n)',                # realloc
-    'FUN_005f6650': 'int FUN_005f6650(const char *from, const char *to)',  # rename
-    'FUN_005f66b0': 'int FUN_005f66b0(const char *path)',                  # remove
-    'FUN_005f7120': 'int FUN_005f7120(int v)',                             # abs
+    'crt_strcpy': 'void *crt_strcpy(void *dst, const void *src)',       # strcpy
+    'crt_strcat': 'void *crt_strcat(void *dst, const void *src)',       # strcat
+    'crt_memcpy': 'void *crt_memcpy(void *dst, const void *src, uint n)',   # memcpy
+    'crt_memmove': 'void *crt_memmove(void *dst, const void *src, uint n)',   # memmove
+    'crt_realloc': 'void *crt_realloc(void *p, size_t n)',                # realloc
+    'crt_rename': 'int crt_rename(const char *from, const char *to)',  # rename
+    'crt_remove': 'int crt_remove(const char *path)',                  # remove
+    'crt_abs': 'int crt_abs(int v)',                             # abs
     'FUN_006076a0': 'int FUN_006076a0(FILE *f)',                           # fileno
-    'FUN_00607920': 'int FUN_00607920(const char *path)',                  # mkdir
-    'FUN_005f2700': 'uint FUN_005f2700(uint c)',                           # toupper
-    'FUN_005f2620': 'void FUN_005f2620(void *array, uint size, int count, code *ctor, code *dtor)',
-    'FUN_005f2490': 'void FUN_005f2490(void *array, uint size, int count, code *dtor)',
+    'crt_mkdir': 'int crt_mkdir(const char *path)',                  # mkdir
+    'crt_toupper': 'uint crt_toupper(uint c)',                           # toupper
+    'crt_vector_ctor_iterator': 'void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor)',
+    'crt_vector_dtor_iterator': 'void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor)',
     '_printf': 'int _printf(const char *fmt, ...)',
     '_sprintf': 'int _sprintf(char *buf, const char *fmt, ...)',
     '_time': 'i32 _time(i32 *t)',

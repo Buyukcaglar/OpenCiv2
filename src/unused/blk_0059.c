@@ -36,7 +36,7 @@ void __cdecl dialog_reset_default_fonts(void)
 }
 
 /* 0059e327 auto */
-bool __thiscall dialog_help_pressed(C_0059e327 *this)
+bool __thiscall dialog_help_pressed(DialogHelpPressedView *this)
 
 {
   return (this->style_flags & 0x80) != 0;
@@ -48,7 +48,7 @@ bool __thiscall dialog_help_pressed(C_0059e327 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_bevel_width(C_0059e624 *this,u32 param_1)
+void __thiscall dialog_set_bevel_width(DialogSetBevelWidthView *this,u32 param_1)
 
 {
   this->bevel_width = param_1;
@@ -58,7 +58,7 @@ void __thiscall dialog_set_bevel_width(C_0059e624 *this,u32 param_1)
 /* 0059e812 auto */
 #define local_c (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(8)))
-uptr __thiscall dialog_find_button(C_0059e812 *this,int param_1)
+uptr __thiscall dialog_find_button(DialogFindButtonView *this,int param_1)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -146,7 +146,7 @@ void __thiscall dialog_get_first_edit_text(DialogEditTextView *this,i32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_result_id(C_0059eb68 *this,u32 param_1)
+void __thiscall dialog_set_result_id(DialogSetResultIdView *this,u32 param_1)
 
 {
   this->result_id = param_1;
@@ -159,7 +159,7 @@ void __thiscall dialog_set_result_id(C_0059eb68 *this,u32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall dialog_set_modal_poll_fn(C_0059ec40 *this,u32 param_1)
+void __thiscall dialog_set_modal_poll_fn(DialogSetModalPollFnView *this,u32 param_1)
 
 {
   this->on_modal_poll = param_1;

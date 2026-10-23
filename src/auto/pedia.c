@@ -7,7 +7,7 @@
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(16)))
 void __thiscall
-pedia_draw_category_body(C_004083b0_a28 *this,i32 param_1,i32 param_2)
+pedia_draw_category_body(DocumentWindow *this,i32 param_1,i32 param_2)
 
 {
   int xLeft;
@@ -47,7 +47,7 @@ pedia_draw_category_body(C_004083b0_a28 *this,i32 param_1,i32 param_2)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(48)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(52)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
-void __thiscall pedia_update_controls(C_004083b0_61c *this)
+void __thiscall pedia_update_controls(MediaWindow *this)
 
 {
   u32 uVar1;
@@ -114,14 +114,14 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
         }
         local_8 = 0xffffffff;
         this[4].field_2b0 = local_30;
-        if (this == (C_004083b0_61c *)0x0) {
+        if (this == (MediaWindow *)0x0) {
           local_3c = (u8 *)0x0;
         }
         else {
           local_3c = this->pad_48;
         }
         hotspot_create
-                  ((C_0040f380_40 *)this[4].field_2b0,(iptr)local_3c,0xfa9,(iptr)&local_20);
+                  ((ClickControl *)this[4].field_2b0,(iptr)local_3c,0xfa9,(iptr)&local_20);
         hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, pedia_list_on_click));
         hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[4].field_2b0,ADDR(0x40196f, pedia_toggle_describe));
         ctrl_show_and_redraw((Control *)this[4].field_2b0);
@@ -148,14 +148,14 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
         }
         local_8 = 0xffffffff;
         this[4].field_2b0 = local_38;
-        if (this == (C_004083b0_61c *)0x0) {
+        if (this == (MediaWindow *)0x0) {
           local_40 = (u8 *)0x0;
         }
         else {
           local_40 = this->pad_48;
         }
         hotspot_create
-                  ((C_0040f380_40 *)this[4].field_2b0,(iptr)local_40,0xfa9,(iptr)&local_20);
+                  ((ClickControl *)this[4].field_2b0,(iptr)local_40,0xfa9,(iptr)&local_20);
         hotspot_set_click_callback((HotspotClickSetView *)this[4].field_2b0,ADDR(0x402270, pedia_list_on_click));
         hotspot_set_dblclick_callback((HotspotDblClickSetView *)this[4].field_2b0,ADDR(0x40196f, pedia_toggle_describe));
         ctrl_show_and_redraw((Control *)this[4].field_2b0);
@@ -201,7 +201,7 @@ void __thiscall pedia_update_controls(C_004083b0_61c *this)
 /* 00452188 auto */
 void __thiscall
 pedia_dispatch_category_draw
-          (C_004083b0_a28 *this,i32 param_1,i32 param_2,i32 param_3,
+          (DocumentWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5)
 
 {
@@ -216,7 +216,7 @@ pedia_dispatch_category_draw
     break;
   case 1:
     if (this->border_width == 0) {
-      pedia_init_advance_list((C_004083b0_798 *)this,(iptr)&param_1);
+      pedia_init_advance_list((PediaAdvanceListView *)this,(iptr)&param_1);
     }
     else {
       pedia_draw_advance_page(this);
@@ -232,7 +232,7 @@ pedia_dispatch_category_draw
     break;
   case 3:
     if (this->border_width == 0) {
-      pedia_init_wonder_list((C_004083b0_61c *)this,(iptr)&param_1);
+      pedia_init_wonder_list((MediaWindow *)this,(iptr)&param_1);
     }
     else {
       pedia_draw_improvement(this);
@@ -240,7 +240,7 @@ pedia_dispatch_category_draw
     break;
   case 4:
     if (this->border_width == 0) {
-      pedia_show_unit_list((C_004083b0_61c *)this,(iptr)&param_1);
+      pedia_show_unit_list((MediaWindow *)this,(iptr)&param_1);
     }
     else {
       pedia_draw_unit_page(this);
@@ -248,17 +248,17 @@ pedia_dispatch_category_draw
     break;
   case 5:
     if (this->border_width == 0) {
-      pedia_init_terrain_list((C_004083b0_61c *)this,(iptr)&param_1);
+      pedia_init_terrain_list((MediaWindow *)this,(iptr)&param_1);
     }
     break;
   case 6:
     if (this->border_width == 0) {
-      pedia_init_government_list((C_004083b0_61c *)this,(iptr)&param_1);
+      pedia_init_government_list((MediaWindow *)this,(iptr)&param_1);
     }
     break;
   case 7:
     if (this->border_width == 0) {
-      pedia_init_concept_list((C_004083b0_61c *)this,(iptr)&param_1);
+      pedia_init_concept_list((MediaWindow *)this,(iptr)&param_1);
     }
     break;
   case 8:
@@ -277,7 +277,7 @@ pedia_dispatch_category_draw
 /* 00452768 auto */
 #define local_10c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(8)))
-void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1)
+void __thiscall pedia_update_describe_button(ListPaneWindow *this,int param_1)
 
 {
   int iVar1;
@@ -286,8 +286,8 @@ void __thiscall pedia_update_describe_button(C_004083b0_11c *this,int param_1)
   if ((((game.game_flags & 0x80) != 0) && (this->caption_height != 7)) &&
      (iVar1 = _strcmp(&scenario_dir_path,&game_home_dir), iVar1 != 0)) {
     __chdir(&scenario_dir_path);
-    FUN_005f22d0(local_108,s_describe__006268fc);
-    FUN_005f22e0(local_108,&lang_file_ext);
+    crt_strcpy(local_108,s_describe__006268fc);
+    crt_strcat(local_108,&lang_file_ext);
     iVar1 = file_exists((iptr)local_108);
     if (iVar1 == 0) {
       ctrl_disable((Control *)(this[0x15].pad_48 + 0x34));
@@ -368,7 +368,7 @@ void __cdecl hyperlink_register_class(void)
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-void __thiscall hyperlink_dtor(C_00452a67 *this)
+void __thiscall hyperlink_dtor(HyperlinkDtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -378,7 +378,7 @@ void __thiscall hyperlink_dtor(C_00452a67 *this)
     region_dispose(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00452ac1 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00452ac1 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -419,7 +419,7 @@ HWND __cdecl hyperlink_create_hwnd(int *param_1,iptr param_2)
 
 /* 00452b89 auto */
 void __thiscall
-hyperlink_create(C_0040f380_40 *this,iptr param_1,i32 param_2,iptr param_3)
+hyperlink_create(ClickControl *this,iptr param_1,i32 param_2,iptr param_3)
 
 {
   u32 uVar1;
@@ -451,14 +451,14 @@ hyperlink_create(C_0040f380_40 *this,iptr param_1,i32 param_2,iptr param_3)
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(48)))
 void __thiscall
 pedia_add_link
-          (C_004083b0_a28 *this,iptr param_1,int param_2,int param_3,i32 param_4,
+          (DocumentWindow *this,iptr param_1,int param_2,int param_3,i32 param_4,
           i32 param_5,i32 param_6,i32 param_7,i32 param_8)
 
 {
   int iVar1;
   int iVar2;
   uptr sVar3;
-  C_00453b10 *pCVar3;
+  PediaLinkCtorView *pCVar3;
   int iVar4;
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   u32 pargs_[4] = {(u32)(uptr)param_5, (u32)(uptr)param_6, (u32)(uptr)param_7, (u32)(uptr)param_8};  /* the arguments, contiguous as on the original stack */
@@ -542,7 +542,7 @@ pedia_add_link
   gfx_set_text_color_index(10);
   pCVar3 = operator_new(0x48);
   local_8 = 0;
-  if (pCVar3 == (C_00453b10 *)0x0) {
+  if (pCVar3 == (PediaLinkCtorView *)0x0) {
     local_2c = (u32 *)0x0;
   }
   else {
@@ -563,34 +563,34 @@ pedia_add_link
     }
     *(u32 **)(local_18 + 0x44) = local_2c;
   }
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_34 = (u8 *)0x0;
   }
   else {
     local_34 = this->pad_48;
   }
   hyperlink_create
-            ((C_0040f380_40 *)(local_2c + 1),(iptr)local_34,local_1c + 0xfb4,(iptr)&param_5);
+            ((ClickControl *)(local_2c + 1),(iptr)local_34,local_1c + 0xfb4,(iptr)&param_5);
   switch(param_4) {
   case 0:
-    hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
-    hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
+    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
+    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(local_2c + 1),ADDR(0x401c76, pedia_link_on_click_advance));
     break;
   case 1:
-    hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
-    hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
+    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
+    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(local_2c + 1),ADDR(0x4019ce, pedia_link_on_click_improvement));
     break;
   case 2:
-    hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
-    hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
+    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
+    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(local_2c + 1),ADDR(0x403729, pedia_link_on_click_wonder));
     break;
   case 3:
-    hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
-    hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
+    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
+    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(local_2c + 1),ADDR(0x402333, pedia_link_on_click_unit));
     break;
   case 4:
-    hyperlink_set_click_callback((C_00453d40 *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
-    hyperlink_set_dblclick_callback((C_00453d70 *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
+    hyperlink_set_click_callback((HyperlinkSetClickCallbackView *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
+    hyperlink_set_dblclick_callback((HyperlinkSetDblclickCallbackView *)(local_2c + 1),ADDR(0x4019b0, pedia_link_on_click_terrain));
   }
   ctrl_show_and_redraw((Control *)(local_2c + 1));
 switchD_00452e28_default:
@@ -765,7 +765,7 @@ void __cdecl pedia_link_on_click_terrain(int param_1)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_00453b10 * __thiscall pedia_link_ctor(C_00453b10 *this)
+PediaLinkCtorView * __thiscall pedia_link_ctor(PediaLinkCtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -796,7 +796,7 @@ Control * __thiscall hyperlink_ctor(Control *this)
 #undef local_8
 
 /* 00453d40 auto */
-void __thiscall hyperlink_set_click_callback(C_00453d40 *this,iptr param_1)
+void __thiscall hyperlink_set_click_callback(HyperlinkSetClickCallbackView *this,iptr param_1)
 
 {
   this->on_click = param_1;
@@ -809,7 +809,7 @@ void __thiscall hyperlink_set_click_callback(C_00453d40 *this,iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall hyperlink_set_dblclick_callback(C_00453d70 *this,iptr param_1)
+void __thiscall hyperlink_set_dblclick_callback(HyperlinkSetDblclickCallbackView *this,iptr param_1)
 
 {
   this->on_dblclick = param_1;
@@ -818,7 +818,7 @@ void __thiscall hyperlink_set_dblclick_callback(C_00453d70 *this,iptr param_1)
 
 /* 00490590 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_terrain_list(MediaWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -839,7 +839,7 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
+            ((ClickControl *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
     this[5].pad_48[0x69] = 0xff;
@@ -849,7 +849,7 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
   pedia_update_controls(this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -906,7 +906,7 @@ void __thiscall pedia_init_terrain_list(C_004083b0_61c *this,iptr param_1)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(644)))
 #define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(648)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(664)))
-void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
+void __thiscall pedia_draw_terrain_page(DocumentWindow *this)
 
 {
   u8 uVar1;
@@ -920,8 +920,8 @@ void __thiscall pedia_draw_terrain_page(C_004083b0_a28 *this)
   
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_8 = (GameFont *)&font_size21;
   local_58 = this->content_left;
   local_44 = 10;
@@ -1008,7 +1008,7 @@ LAB_00490a7d:
     text_clear();
     iVar3 = pedia_find_terrain_index(terrain3);
     uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-    FUN_005f22d0(&text_buffer,uVar4);
+    crt_strcpy(&text_buffer,uVar4);
     local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     local_74 = font_line_spacing(local_8);
     SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
@@ -1034,16 +1034,16 @@ LAB_00490a7d:
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
     text_clear();
     if (terrain_types[terrain2].defense == 6) {
-      FUN_005f22d0(&text_buffer,s__200__0062c948);
+      crt_strcpy(&text_buffer,s__200__0062c948);
     }
     else if (terrain_types[terrain2].defense == 3) {
-      FUN_005f22d0(&text_buffer,&pedia_terrain_defense_50_str);
+      crt_strcpy(&text_buffer,&pedia_terrain_defense_50_str);
     }
     else if (terrain_types[terrain2].defense == 4) {
-      FUN_005f22d0(&text_buffer,s__100__0062c958);
+      crt_strcpy(&text_buffer,s__100__0062c958);
     }
     else if (terrain_types[terrain2].defense == 5) {
-      FUN_005f22d0(&text_buffer,s__150__0062c960);
+      crt_strcpy(&text_buffer,s__150__0062c960);
     }
     else {
       iVar3 = label_string(*(i32 *)(label_string_ids + 0xb08));
@@ -1110,7 +1110,7 @@ LAB_00490a7d:
     local_5c += local_80 * 2;
     iVar3 = pedia_find_terrain_index(terrain3);
     uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-    FUN_005f22d0(local_bc,uVar4);
+    crt_strcpy(local_bc,uVar4);
     local_8c = (int)(char)terrain_types[terrain3].food;
     if (terrain3 == 2) {
       uVar1 = '\0';
@@ -1133,7 +1133,7 @@ LAB_00490a7d:
     }
     else {
       uVar4 = label_string(*(i32 *)(label_string_ids + 0xb14));
-      FUN_005f22d0(&text_buffer,uVar4);
+      crt_strcpy(&text_buffer,uVar4);
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
     local_5c += local_80;
@@ -1141,7 +1141,7 @@ LAB_00490a7d:
     str_clear((iptr)local_1c0);
     if (local_94 < local_88) {
       uVar4 = label_string(*(i32 *)(label_string_ids + 0xb18));
-      FUN_005f22d0(local_1c0,uVar4);
+      crt_strcpy(local_1c0,uVar4);
       _sprintf(&text_buffer,local_1c0,local_94,local_88);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
       local_5c += local_80;
@@ -1149,29 +1149,29 @@ LAB_00490a7d:
       str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
         uVar4 = label_string(*(i32 *)(label_string_ids + 0xb1c));
-        FUN_005f22e0(local_1c0,uVar4);
+        crt_strcat(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
         uVar4 = label_string(*(i32 *)(label_string_ids + 0xb20));
-        FUN_005f22e0(&text_buffer,uVar4);
+        crt_strcat(&text_buffer,uVar4);
       }
     }
     else {
       uVar4 = label_string(*(i32 *)(label_string_ids + 0xb24));
-      FUN_005f22d0(&text_buffer,uVar4);
+      crt_strcpy(&text_buffer,uVar4);
       surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
       local_5c += local_80;
       text_clear();
       str_clear((iptr)local_1c0);
       if (local_c0 < local_90) {
         uVar4 = label_string(*(i32 *)(label_string_ids + 0xb1c));
-        FUN_005f22e0(local_1c0,uVar4);
+        crt_strcat(local_1c0,uVar4);
         _sprintf(&text_buffer,local_1c0,local_c0,local_90);
       }
       else {
         uVar4 = label_string(*(i32 *)(label_string_ids + 0xb28));
-        FUN_005f22e0(&text_buffer,uVar4);
+        crt_strcat(&text_buffer,uVar4);
       }
     }
     surface_draw_text((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),local_58,local_5c,5);
@@ -1222,7 +1222,7 @@ LAB_00490a7d:
       else {
         iVar3 = pedia_find_terrain_index((int)*(char *)(local_68 + ADDR(0x627cce, ((u8 *)&terrain_types + 14)) + terrain2 * 0x18));
         uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-        FUN_005f22d0(&text_buffer,uVar4);
+        crt_strcpy(&text_buffer,uVar4);
         local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
         local_74 = font_line_spacing(local_8);
         SetRect(&local_34,local_50,local_5c,local_38 + local_50 + 5,local_5c + local_74);
@@ -1265,7 +1265,7 @@ LAB_00490a7d:
     else {
       iVar3 = pedia_find_terrain_index((int)terrain_types[terrain2].transform_to);
       uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-      FUN_005f22d0(&text_buffer,uVar4);
+      crt_strcpy(&text_buffer,uVar4);
       local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
       local_74 = font_line_spacing(local_8);
       SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
@@ -1316,7 +1316,7 @@ LAB_00490a7d:
     text_clear();
     iVar3 = pedia_find_terrain_index(terrain2 + 0xb);
     uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-    FUN_005f22d0(&text_buffer,uVar4);
+    crt_strcpy(&text_buffer,uVar4);
     local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
     local_74 = font_line_spacing(local_8);
     SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
@@ -1327,7 +1327,7 @@ LAB_00490a7d:
       local_5c += local_80;
       iVar3 = pedia_find_terrain_index(terrain2 + 0x16);
       uVar4 = pedia_lookup_text(pedia_terrain_names,iVar3);
-      FUN_005f22d0(&text_buffer,uVar4);
+      crt_strcpy(&text_buffer,uVar4);
       local_38 = font_text_width(local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)));
       local_74 = font_line_spacing(local_8);
       SetRect(&local_34,local_58,local_5c,local_58 + local_38 + 5,local_5c + local_74);
@@ -1335,7 +1335,7 @@ LAB_00490a7d:
                          local_34.right,local_34.bottom);
     }
   }
-  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((ListPaneWindow *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_18);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
@@ -1396,7 +1396,7 @@ LAB_00490a7d:
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_terrain_names (*(i32 *)((u8 *)&g.d_006a7d58))
 #define local_8 (*(uptr *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
+void __thiscall pedia_show_terrain_modal(DocumentWindow *this,int param_1)
 
 {
   i32 uVar1;
@@ -1409,22 +1409,22 @@ void __thiscall pedia_show_terrain_modal(C_004083b0_a28 *this,int param_1)
       local_8++;
     }
     if (this[1].field_3a4 != local_8) {
-      pedia_open_category((C_004083b0_61c *)this,5,1);
+      pedia_open_category((MediaWindow *)this,5,1);
       this->resize_border = local_8;
       *(uptr *)(this[3].pad_48 + 0x78) = local_8;
       this->client_x = 1;
       this->border_width = 1;
-      pedia_clear_links((C_004083b0_4 *)this);
-      pedia_update_controls((C_004083b0_61c *)this);
+      pedia_clear_links((WindowObjectView *)this);
+      pedia_update_controls((MediaWindow *)this);
       uVar1 = pedia_lookup_text(pedia_terrain_names,local_8);
-      FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      pedia_draw_frame((C_004083b0_61c *)this);
+      crt_strcpy(this->pad_608 + 0x10,uVar1);
+      pedia_draw_frame((MediaWindow *)this);
       pedia_draw_terrain_page(this);
       wnd_blit_surface((DibSurface *)&pedia_window);
       wnd_activate((Wnd *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
-      wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+      wnd_run_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,0);
     }
   }
   return;
@@ -1454,7 +1454,7 @@ i32 __cdecl pedia_find_terrain_index(iptr param_1)
 
 /* 004a69b0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_concept_list(MediaWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1475,7 +1475,7 @@ void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
+            ((ClickControl *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
     this[5].pad_48[0x69] = 0xff;
@@ -1485,7 +1485,7 @@ void __thiscall pedia_init_concept_list(C_004083b0_61c *this,iptr param_1)
   pedia_update_controls(this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -1511,7 +1511,7 @@ void __cdecl pedia_window_global_init(void)
 void __cdecl pedia_window_static_init(void)
 
 {
-  pedia_window_ctor((C_004083b0_12c *)&pedia_window);
+  pedia_window_ctor((ScaledWindowView *)&pedia_window);
   return;
 }
 
@@ -1536,7 +1536,7 @@ void __cdecl pedia_window_static_dtor(void)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
-C_004083b0_12c * __thiscall pedia_window_ctor(C_004083b0_12c *this)
+ScaledWindowView * __thiscall pedia_window_ctor(ScaledWindowView *this)
 
 {
   u8 *puVar1;
@@ -1575,7 +1575,7 @@ C_004083b0_12c * __thiscall pedia_window_ctor(C_004083b0_12c *this)
   (*(i8 *)((char *)&local_8 + 0)) = 0xe;
   button_ctor((Control *)(this[0x16].pad_48 + 0x4c));
   (*(i8 *)((char *)&local_8 + 0)) = 0xf;
-  edit_ctor((C_0040f380_48 *)(this[0x16].pad_48 + 0x88));
+  edit_ctor((InputControl *)(this[0x16].pad_48 + 0x88));
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),0x10);
   scrollbar_ctor((Control *)&this[0x16].field_118);
   this->vtable = (u32)&PTR_FUN_0061d6d0;
@@ -1689,8 +1689,8 @@ void __thiscall pedia_window_dtor(DibSurface *this)
   
   this->vtable = (u32)&PTR_FUN_0061d6d0;
   local_8 = 0x11;
-  pedia_free_lists((C_004083b0_4 *)this);
-  pedia_clear_links((C_004083b0_4 *)this);
+  pedia_free_lists((WindowObjectView *)this);
+  pedia_clear_links((WindowObjectView *)this);
   if (this[0x52].field_0 != 0) {
     if ((Hotspot *)this[0x52].field_0 != (Hotspot *)0x0) {
       hotspot_scalar_dtor((Hotspot *)this[0x52].field_0,1);
@@ -1705,41 +1705,41 @@ void __thiscall pedia_window_dtor(DibSurface *this)
   }
   wnd_destroy_with_surface(this);
   (*(i8 *)((char *)&local_8 + 0)) = 0x10;
-  /* inlined unwind funclet FUN_004f4673 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x1ae0)); }
+  /* inlined unwind funclet 004f4673 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x1ae0)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xf;
-  /* inlined unwind funclet FUN_004f4682 */ { edit_dtor((Control *)(*(int *)((iptr)&this) + 0x1a98)); }
+  /* inlined unwind funclet 004f4682 */ { edit_dtor((Control *)(*(int *)((iptr)&this) + 0x1a98)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xe;
-  /* inlined unwind funclet FUN_004f4691 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a5c)); }
+  /* inlined unwind funclet 004f4691 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a5c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xd;
-  /* inlined unwind funclet FUN_004f46a0 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a20)); }
+  /* inlined unwind funclet 004f46a0 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1a20)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xc;
-  /* inlined unwind funclet FUN_004f46af */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19e4)); }
+  /* inlined unwind funclet 004f46af */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19e4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xb;
-  /* inlined unwind funclet FUN_004f46be */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19a8)); }
+  /* inlined unwind funclet 004f46be */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x19a8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 10;
-  /* inlined unwind funclet FUN_004f46cd */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x196c)); }
+  /* inlined unwind funclet 004f46cd */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x196c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 9;
-  /* inlined unwind funclet FUN_004f46dc */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1930)); }
+  /* inlined unwind funclet 004f46dc */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1930)); }
   (*(i8 *)((char *)&local_8 + 0)) = 8;
-  /* inlined unwind funclet FUN_004f46eb */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18f4)); }
+  /* inlined unwind funclet 004f46eb */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18f4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 7;
-  /* inlined unwind funclet FUN_004f46fa */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18b8)); }
+  /* inlined unwind funclet 004f46fa */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x18b8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 6;
-  /* inlined unwind funclet FUN_004f4709 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x187c)); }
+  /* inlined unwind funclet 004f4709 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x187c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 5;
-  /* inlined unwind funclet FUN_004f4718 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1840)); }
+  /* inlined unwind funclet 004f4718 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1840)); }
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_004f4727 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1804)); }
+  /* inlined unwind funclet 004f4727 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1804)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_004f4736 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x17c8)); }
+  /* inlined unwind funclet 004f4736 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x17c8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_004f4745 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x178c)); }
+  /* inlined unwind funclet 004f4745 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x178c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_004f4754 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1750)); }
+  /* inlined unwind funclet 004f4754 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1750)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_004f4763 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1714)); }
+  /* inlined unwind funclet 004f4763 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x1714)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004f4772 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
+  /* inlined unwind funclet 004f4772 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -1747,7 +1747,7 @@ void __thiscall pedia_window_dtor(DibSurface *this)
 #undef local_8
 
 /* 004f4793 auto */
-void __thiscall pedia_clear_links(C_004083b0_4 *this)
+void __thiscall pedia_clear_links(WindowObjectView *this)
 
 {
   u32 uVar1;
@@ -1764,7 +1764,7 @@ void __thiscall pedia_clear_links(C_004083b0_4 *this)
 }
 
 /* 004f4809 auto */
-void __thiscall pedia_free_lists(C_004083b0_4 *this)
+void __thiscall pedia_free_lists(WindowObjectView *this)
 
 {
   u32 uVar1;
@@ -1854,7 +1854,7 @@ void __thiscall pedia_free_lists(C_004083b0_4 *this)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(128)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(132)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(136)))
-void __thiscall pedia_window_create(C_004083b0_a28 *this)
+void __thiscall pedia_window_create(DocumentWindow *this)
 
 {
   int iVar1;
@@ -1867,8 +1867,8 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  pedia_free_lists((C_004083b0_4 *)this);
-  pedia_clear_links((C_004083b0_4 *)this);
+  pedia_free_lists((WindowObjectView *)this);
+  pedia_clear_links((WindowObjectView *)this);
   this->client_y = 0;
   if (this[2].field_2c0 != 0) {
     if ((Hotspot *)this[2].field_2c0 != (Hotspot *)0x0) {
@@ -1889,15 +1889,15 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   OffsetRect((LPRECT)&this->content_left,panel_padding_x + panel_margin_x,this->field_5e4 + panel_margin_y);
   iVar1 = wnd_client_width((WndBase *)&main_frame_wnd);
   iVar2 = wnd_client_height((WndBase *)&main_frame_wnd);
-  FUN_005f22d0(this->pad_608 + 0x10,&pedia_window_empty_title_str);
+  crt_strcpy(this->pad_608 + 0x10,&pedia_window_empty_title_str);
   wnd_create_with_surface
             ((DibSurface *)this,0,0xe02,iVar1 / 2 - (int)this->panel_width / 2,
              iVar2 / 2 - (int)this->panel_height / 2,this->panel_width,this->panel_height,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)))
   ;
-  wnd_set_close_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401dcf, pedia_close));
+  wnd_set_close_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401dcf, pedia_close));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x40272a, pedia_redraw_page));
   wnd_set_caption_height((WndBase *)this->pad_48,this->field_5e4);
-  wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4026bc, pedia_list_on_key));
+  wnd_set_keydown_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4026bc, pedia_list_on_key));
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   iVar1 = panel_padding_x;
   this[2].field_2bc = (u32)&caption_close_button_sprite;
@@ -1920,14 +1920,14 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   }
   local_8 = 0xffffffff;
   this[2].field_2c0 = local_44;
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_48 = (u8 *)0x0;
   }
   else {
     local_48 = this->pad_48;
   }
   hotspot_create
-            ((C_0040f380_40 *)this[2].field_2c0,(iptr)local_48,4000,(iptr)&local_24);
+            ((ClickControl *)this[2].field_2c0,(iptr)local_48,4000,(iptr)&local_24);
   hotspot_set_click_callback((HotspotClickSetView *)this[2].field_2c0,ADDR(0x4037fb, pedia_on_close));
   iVar1 = panel_bevel_width + panel_margin_x + 2;
   uVar3 = this->panel_height;
@@ -1938,7 +1938,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   local_14 += panel_padding_y * 2;
   iVar2 = iVar4 / 2;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_4c = (u8 *)0x0;
   }
   else {
@@ -1949,7 +1949,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)this[2].pad_2c4,(iptr)local_4c,0xfa1,(iptr)&local_24,iVar5);
   button_set_callback((Control *)this[2].pad_2c4,ADDR(0x40196f, pedia_toggle_describe));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_50 = (u8 *)0x0;
   }
   else {
@@ -1962,7 +1962,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   ctrl_set_cancel_button((Control *)&this[2].field_300);
   button_set_callback((Control *)&this[2].field_300,ADDR(0x4037fb, pedia_on_close));
   SetRect(&local_24,iVar1,yTop,iVar4 / 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_54 = (u8 *)0x0;
   }
   else {
@@ -1974,7 +1974,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   button_set_callback((Control *)(this[2].pad_464 + 4),ADDR(0x4018ed, pedia_on_back));
   iVar2 = iVar4 / 3;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_58 = (u8 *)0x0;
   }
   else {
@@ -1985,7 +1985,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)this[2].pad_4a4,(iptr)local_58,0xfab,(iptr)&local_24,iVar5);
   button_set_callback((Control *)this[2].pad_4a4,ADDR(0x40196f, pedia_toggle_describe));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_5c = (u8 *)0x0;
   }
   else {
@@ -1996,7 +1996,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_4a4 + 0x3c),(iptr)local_5c,0xfac,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0x3c),ADDR(0x401ec4, pedia_show_tech_tree));
   SetRect(&local_24,iVar2 * 2 + iVar1,yTop,iVar2 * 3 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_60 = (u8 *)0x0;
   }
   else {
@@ -2010,7 +2010,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   button_set_callback((Control *)(this[2].pad_4a4 + 0x78),ADDR(0x4037fb, pedia_on_close));
   iVar2 = (int)(iVar4 + (iVar4 >> 0x1f & 3U)) >> 2;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_64 = (u8 *)0x0;
   }
   else {
@@ -2021,7 +2021,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_4a4 + 0xb4),(iptr)local_64,0xfae,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0xb4),ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_68 = (u8 *)0x0;
   }
   else {
@@ -2032,7 +2032,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_4a4 + 0xf0),(iptr)local_68,0xfaf,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_4a4 + 0xf0),ADDR(0x401ec4, pedia_show_tech_tree));
   SetRect(&local_24,iVar2 * 2 + iVar1,yTop,iVar2 * 3 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_6c = (u8 *)0x0;
   }
   else {
@@ -2043,7 +2043,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_5c0 + 0x10),(iptr)local_6c,0xfb0,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_5c0 + 0x10),ADDR(0x40196f, pedia_toggle_describe));
   SetRect(&local_24,iVar2 * 3 + iVar1,yTop,iVar2 * 4 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_70 = (u8 *)0x0;
   }
   else {
@@ -2057,7 +2057,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   button_set_callback((Control *)(this[2].pad_608 + 4),ADDR(0x4037fb, pedia_on_close));
   iVar2 = iVar4 / 3;
   SetRect(&local_24,iVar1,yTop,iVar2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_74 = (u8 *)0x0;
   }
   else {
@@ -2068,7 +2068,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)&this[2].field_33c,(iptr)local_74,0xfa3,(iptr)&local_24,iVar5);
   button_set_callback((Control *)&this[2].field_33c,ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar2 + iVar1,yTop,iVar2 * 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_78 = (u8 *)0x0;
   }
   else {
@@ -2079,7 +2079,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_364 + 0x14),(iptr)local_78,0xfa4,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_364 + 0x14),ADDR(0x40196f, pedia_toggle_describe));
   SetRect(&local_24,iVar2 * 2 + iVar1,yTop,iVar2 * 3 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_7c = (u8 *)0x0;
   }
   else {
@@ -2091,7 +2091,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   button_set_callback((Control *)&this[2].field_3b4,ADDR(0x4037fb, pedia_on_close));
   iVar4 = iVar4 / 2;
   SetRect(&local_24,iVar1,yTop,iVar4 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_80 = (u8 *)0x0;
   }
   else {
@@ -2102,7 +2102,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_3c0 + 0x30),(iptr)local_80,0xfa6,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_3c0 + 0x30),ADDR(0x4018ed, pedia_on_back));
   SetRect(&local_24,iVar4 + iVar1,yTop,iVar4 * 2 + iVar1,local_14 + yTop);
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_84 = (u8 *)0x0;
   }
   else {
@@ -2113,9 +2113,9 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
             ((Control *)(this[2].pad_3c0 + 0x6c),(iptr)local_84,0xfa7,(iptr)&local_24,iVar5);
   button_set_callback((Control *)(this[2].pad_3c0 + 0x6c),ADDR(0x4037fb, pedia_on_close));
   ui_set_button_font(ADDR(0x68abe0, ((u8 *)&g.d_0068abe0)));
-  pedia_clear_links((C_004083b0_4 *)this);
+  pedia_clear_links((WindowObjectView *)this);
   ui_set_default_font(ADDR(0x67a798, ((u8 *)&g.d_0067a798)));
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_88 = (u8 *)0x0;
   }
   else {
@@ -2131,7 +2131,7 @@ void __thiscall pedia_window_create(C_004083b0_a28 *this)
   local_24.bottom = uVar3;
   iVar1 = GetSystemMetrics(3);
   local_24.top = uVar3 - iVar1;
-  if (this == (C_004083b0_a28 *)0x0) {
+  if (this == (DocumentWindow *)0x0) {
     local_8c = (u8 *)0x0;
   }
   else {
@@ -2177,10 +2177,10 @@ void __cdecl pedia_on_close(void)
 
 {
   if (pedia_modal_active == 1) {
-    wnd_end_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
+    wnd_end_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
     pedia_modal_active = 0;
   }
-  pedia_clear_links((C_004083b0_4 *)&pedia_window);
+  pedia_clear_links((WindowObjectView *)&pedia_window);
   pedia_history_count = 0;
   pedia_close();
   return;
@@ -2225,7 +2225,7 @@ void __cdecl pedia_on_back(void)
   }
   if (pedia_page_mode == 0) {
     if (pedia_modal_active == 1) {
-      wnd_end_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
+      wnd_end_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
       pedia_modal_active = 0;
     }
     pedia_close();
@@ -2233,23 +2233,23 @@ void __cdecl pedia_on_back(void)
   else {
     if (pedia_page_mode == 1) {
       pedia_page_mode = 0;
-      pedia_update_controls((C_004083b0_61c *)&pedia_window);
+      pedia_update_controls((MediaWindow *)&pedia_window);
       pedia_redraw_page();
       pedia_selected_item = pedia_topic;
-      pedia_redraw((C_004083b0_120 *)&pedia_window);
+      pedia_redraw((PediaRedrawView *)&pedia_window);
     }
     else if ((pedia_category == 6) || (pedia_category == 7)) {
       pedia_page_mode = 0;
-      pedia_update_controls((C_004083b0_61c *)&pedia_window);
+      pedia_update_controls((MediaWindow *)&pedia_window);
       pedia_redraw_page();
       pedia_selected_item = pedia_topic;
-      pedia_redraw((C_004083b0_120 *)&pedia_window);
+      pedia_redraw((PediaRedrawView *)&pedia_window);
     }
     else {
       pedia_page_mode = 0;
       pedia_toggle_describe(1);
     }
-    pedia_history_push((C_004083b0_12c *)&pedia_window);
+    pedia_history_push((ScaledWindowView *)&pedia_window);
   }
   return;
 }
@@ -2292,12 +2292,12 @@ void __cdecl pedia_redraw_page(void)
 {
   if (pedia_closed == 0) {
     if (pedia_page_mode == 0) {
-      pedia_set_category_title((C_004083b0_4 *)&pedia_window,pedia_category);
+      pedia_set_category_title((WindowObjectView *)&pedia_window,pedia_category);
     }
-    pedia_clear_links((C_004083b0_4 *)&pedia_window);
+    pedia_clear_links((WindowObjectView *)&pedia_window);
     gfx_set_draw_target(ADDR(0x6a6668, ((u8 *)&g.d_006a6668)));
-    pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-    pedia_draw_category_body((C_004083b0_a28 *)&pedia_window,pedia_category,pedia_page_mode);
+    pedia_draw_frame((MediaWindow *)&pedia_window);
+    pedia_draw_category_body((DocumentWindow *)&pedia_window,pedia_category,pedia_page_mode);
     wnd_blit_surface((DibSurface *)&pedia_window);
   }
   return;
@@ -2316,11 +2316,11 @@ void __cdecl pedia_show_tech_tree(void)
 {
   pedia_page_mode = 0;
   pedia_category = 8;
-  pedia_update_controls((C_004083b0_61c *)&pedia_window);
+  pedia_update_controls((MediaWindow *)&pedia_window);
   pedia_redraw_page();
   pedia_selected_item = pedia_topic;
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
-  pedia_history_push((C_004083b0_12c *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
+  pedia_history_push((ScaledWindowView *)&pedia_window);
   return;
 }
 #undef pedia_category
@@ -2350,55 +2350,55 @@ void __cdecl pedia_toggle_describe(i32 param_1)
   if (pedia_page_mode == 0) {
     pedia_topic = pedia_selected_item;
     pedia_page_mode = 1;
-    pedia_clear_links((C_004083b0_4 *)&pedia_window);
-    pedia_update_controls((C_004083b0_61c *)&pedia_window);
+    pedia_clear_links((WindowObjectView *)&pedia_window);
+    pedia_update_controls((MediaWindow *)&pedia_window);
     switch(pedia_category) {
     case 1:
     case 8:
       uVar2 = pedia_lookup_text(pedia_advance_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_draw_advance_page((C_004083b0_a28 *)&pedia_window);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_draw_advance_page((DocumentWindow *)&pedia_window);
       break;
     case 2:
       uVar2 = pedia_lookup_text(pedia_improvement_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_draw_improvement_page((C_004083b0_a28 *)&pedia_window);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_draw_improvement_page((DocumentWindow *)&pedia_window);
       break;
     case 3:
       uVar2 = pedia_lookup_text(pedia_wonder_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_draw_improvement((C_004083b0_a28 *)&pedia_window);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_draw_improvement((DocumentWindow *)&pedia_window);
       break;
     case 4:
       uVar2 = pedia_lookup_text(pedia_unit_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_draw_unit_page((C_004083b0_a28 *)&pedia_window);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_draw_unit_page((DocumentWindow *)&pedia_window);
       break;
     case 5:
       uVar2 = pedia_lookup_text(pedia_terrain_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_draw_terrain_page((C_004083b0_a28 *)&pedia_window);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_draw_terrain_page((DocumentWindow *)&pedia_window);
       break;
     case 6:
       pedia_page_mode = 2;
       uVar2 = pedia_lookup_text(pedia_government_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
-      pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_fill_background((WindowObjectView *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
+      pedia_load_description((WindowObjectView *)&pedia_window,uVar1);
       break;
     case 7:
       pedia_page_mode = 2;
       uVar2 = pedia_lookup_text(pedia_concept_names,uVar1);
-      FUN_005f22d0(&pedia_title_text,uVar2);
-      pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-      pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
-      pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
+      crt_strcpy(&pedia_title_text,uVar2);
+      pedia_draw_frame((MediaWindow *)&pedia_window);
+      pedia_fill_background((WindowObjectView *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),1);
+      pedia_load_description((WindowObjectView *)&pedia_window,uVar1);
       break;
     default:
       text_append(ADDR(0x62f020, ((u8 *)&g.d_0062f020)));
@@ -2407,13 +2407,13 @@ void __cdecl pedia_toggle_describe(i32 param_1)
   }
   else if (pedia_page_mode == 1) {
     pedia_page_mode = 2;
-    pedia_clear_links((C_004083b0_4 *)&pedia_window);
-    pedia_update_controls((C_004083b0_61c *)&pedia_window);
-    pedia_draw_frame((C_004083b0_61c *)&pedia_window);
-    pedia_fill_background((C_004083b0_4 *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),0);
-    pedia_load_description((C_004083b0_4 *)&pedia_window,uVar1);
+    pedia_clear_links((WindowObjectView *)&pedia_window);
+    pedia_update_controls((MediaWindow *)&pedia_window);
+    pedia_draw_frame((MediaWindow *)&pedia_window);
+    pedia_fill_background((WindowObjectView *)&pedia_window,ADDR(0x6a6c60, ((u8 *)&g.d_006a6c60)),0);
+    pedia_load_description((WindowObjectView *)&pedia_window,uVar1);
   }
-  pedia_history_push((C_004083b0_12c *)&pedia_window);
+  pedia_history_push((ScaledWindowView *)&pedia_window);
   return;
 }
 #undef pedia_advance_names
@@ -2438,7 +2438,7 @@ void __cdecl pedia_toggle_describe(i32 param_1)
 #define local_1c (*(i8 * *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(36)))
-void __thiscall pedia_draw_frame(C_004083b0_61c *this)
+void __thiscall pedia_draw_frame(MediaWindow *this)
 
 {
   int iVar1;
@@ -2446,12 +2446,12 @@ void __thiscall pedia_draw_frame(C_004083b0_61c *this)
   i8 frame_[FRAME_OFF(56)] __attribute__((aligned(8)));  /* original stack frame */
   
   surface_reset_clip((DibSurface *)this);
-  FUN_005f2110(&local_14,this->pad_5e8,0x10);
+  crt_memcpy(&local_14,this->pad_5e8,0x10);
   for (local_18 = 0; local_18 < panel_bevel_width; local_18++) {
     gfx_draw_bevel_rect((iptr)this,(iptr)&local_14,(uint)dlg_bevel_light_color,(uint)dlg_bevel_dark_color);
     rect_deflate((iptr)&local_14,1,1);
   }
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&local_14,1);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&local_14,1);
   rect_deflate((iptr)&local_14,panel_padding_x + panel_bevel_width * -2,0);
   local_14.top = local_14.top + this->field_5e4 + panel_bevel_width * -2;
   iVar1 = rect_height((iptr)this->pad_5e8);
@@ -2461,7 +2461,7 @@ void __thiscall pedia_draw_frame(C_004083b0_61c *this)
     gfx_draw_bevel_rect((iptr)this,(iptr)&local_14,(uint)dlg_bevel_dark_color,(uint)dlg_bevel_light_color);
     rect_deflate((iptr)&local_14,1,1);
   }
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&local_14,2);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&local_14,2);
   iVar1 = panel_padding_x;
   local_20 = panel_padding_x;
   this->panel_width = (int)(*(int *)(this[3].pad_4a4 + 0xc) * this->field_5e4) / 0x18;
@@ -2507,7 +2507,7 @@ void __thiscall pedia_draw_frame(C_004083b0_61c *this)
 #define dlg_bg_color (*(byte *)((u8 *)&g.d_00635a04))
 #define dlg_client_tile_surface (*(int *)((u8 *)&g.d_00635aa4))
 #define dlg_frame_tile_surface (*(int *)((u8 *)&g.d_00635aa0))
-void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_2)
+void __thiscall pedia_fill_background(WindowObjectView *this,iptr param_1,int param_2)
 
 {
   i32 uVar1;
@@ -2543,7 +2543,7 @@ void __thiscall pedia_fill_background(C_004083b0_4 *this,iptr param_1,int param_
 #undef dlg_frame_tile_surface
 
 /* 004f6646 auto */
-void __thiscall pedia_redraw(C_004083b0_120 *this)
+void __thiscall pedia_redraw(PediaRedrawView *this)
 
 {
   u32 uVar1;
@@ -2551,7 +2551,7 @@ void __thiscall pedia_redraw(C_004083b0_120 *this)
   uVar1 = this->border_width;
   if (uVar1 == 0) {
     if (this->caption_height != 8) {
-      pedia_draw_item_list((C_004083b0_11c *)this);
+      pedia_draw_item_list((ListPaneWindow *)this);
     }
   }
   else if ((uVar1 != 1) && (uVar1 != 2)) {
@@ -2620,7 +2620,7 @@ void __thiscall pedia_redraw(C_004083b0_120 *this)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(308)))
 #define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
-void __thiscall pedia_draw_item_list(C_004083b0_11c *this)
+void __thiscall pedia_draw_item_list(ListPaneWindow *this)
 
 {
   int iVar1;
@@ -2630,7 +2630,7 @@ void __thiscall pedia_draw_item_list(C_004083b0_11c *this)
   i8 frame_[FRAME_OFF(336)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_3c = 0;
-  pedia_history_push((C_004083b0_12c *)&pedia_window);
+  pedia_history_push((ScaledWindowView *)&pedia_window);
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)(this[0x18].pad_48 + 0x3c));
   surface_fill_rect((DibSurface *)this,(iptr)(this[0x18].pad_48 + 0x3c),list_bg_color);
@@ -2865,31 +2865,31 @@ LAB_004f6d04:
         switch(this->caption_height) {
         case 1:
           uVar4 = pedia_lookup_text(pedia_advance_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 2:
           uVar4 = pedia_lookup_text(pedia_improvement_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 3:
           uVar4 = pedia_lookup_text(pedia_wonder_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 4:
           uVar4 = pedia_lookup_text(pedia_unit_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 5:
           uVar4 = pedia_lookup_text(pedia_terrain_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 6:
           uVar4 = pedia_lookup_text(pedia_government_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         case 7:
           uVar4 = pedia_lookup_text(pedia_concept_names,advance);
-          FUN_005f22d0(&text_buffer,uVar4);
+          crt_strcpy(&text_buffer,uVar4);
           break;
         default:
           text_append(ADDR(0x62f058, ((u8 *)&g.d_0062f058)));
@@ -2982,7 +2982,7 @@ void __cdecl pedia_list_on_scroll(int param_1)
 {
   if (pedia_list_top != param_1 * 9) {
     pedia_list_top = param_1 * 9;
-    pedia_draw_item_list((C_004083b0_11c *)&pedia_window);
+    pedia_draw_item_list((ListPaneWindow *)&pedia_window);
   }
   return;
 }
@@ -3025,7 +3025,7 @@ int __cdecl pedia_list_hit_test(int param_1,int param_2)
 #undef local_c
 
 /* 004f7454 auto */
-void __thiscall pedia_scroll_to_item(C_004083b0_4 *this,int param_1)
+void __thiscall pedia_scroll_to_item(WindowObjectView *this,int param_1)
 
 {
   if (param_1 < pedia_list_top) {
@@ -3036,7 +3036,7 @@ void __thiscall pedia_scroll_to_item(C_004083b0_4 *this,int param_1)
     for (pedia_list_top = param_1; pedia_list_top % 9 != 0; pedia_list_top--) {
     }
   }
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 
@@ -3109,7 +3109,7 @@ int __cdecl pedia_find_item_by_key(int param_1)
   if (pedia_list_count <= local_c) {
     local_c = 0;
   }
-  while ((local_14 != 0 && (iVar1 = FUN_005f2700((int)*(char *)*local_8), iVar1 != param_1))) {
+  while ((local_14 != 0 && (iVar1 = crt_toupper((int)*(char *)*local_8), iVar1 != param_1))) {
     if (local_8[2] == 0) {
       local_8 = local_10;
       local_c = 0;
@@ -3151,7 +3151,7 @@ void __cdecl pedia_list_on_key(i32 param_1)
   
   iVar2 = pedia_selected_item;
   if (pedia_page_mode == 0) {
-    iVar1 = FUN_005f2700(param_1);
+    iVar1 = crt_toupper(param_1);
     if ((iVar1 < 0x41) || (0x5a < iVar1)) {
       switch(iVar1) {
       case 0xa1:
@@ -3160,8 +3160,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         for (pedia_list_top = pedia_topic; pedia_list_top % 9 != 0; pedia_list_top--) {
         }
         pedia_selected_item = pedia_topic;
-        pedia_redraw((C_004083b0_120 *)&pedia_window);
-        scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+        pedia_redraw((PediaRedrawView *)&pedia_window);
+        scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
         break;
       case 0xa2:
       case 0xc1:
@@ -3169,8 +3169,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         if (iVar2 < pedia_list_count) {
           pedia_topic = iVar2;
           pedia_selected_item = iVar2;
-          pedia_scroll_to_item((C_004083b0_4 *)&pedia_window,iVar2);
-          scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+          pedia_scroll_to_item((WindowObjectView *)&pedia_window,iVar2);
+          scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
         }
         break;
       case 0xa3:
@@ -3181,8 +3181,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         if (iVar2 < pedia_list_count) {
           pedia_topic = iVar2;
           pedia_selected_item = iVar2;
-          pedia_scroll_to_item((C_004083b0_4 *)&pedia_window,iVar2);
-          scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+          pedia_scroll_to_item((WindowObjectView *)&pedia_window,iVar2);
+          scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
         }
         break;
       case 0xa4:
@@ -3193,8 +3193,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         if (-1 < iVar2) {
           pedia_topic = iVar2;
           pedia_selected_item = iVar2;
-          pedia_scroll_to_item((C_004083b0_4 *)&pedia_window,iVar2);
-          scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+          pedia_scroll_to_item((WindowObjectView *)&pedia_window,iVar2);
+          scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
         }
         break;
       case 0xa7:
@@ -3202,8 +3202,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         pedia_topic = 0;
         pedia_selected_item = 0;
         pedia_list_top = 0;
-        scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,0);
-        pedia_redraw((C_004083b0_120 *)&pedia_window);
+        scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,0);
+        pedia_redraw((PediaRedrawView *)&pedia_window);
         break;
       case 0xa8:
       case 0xc0:
@@ -3211,8 +3211,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
         if (-1 < iVar2) {
           pedia_topic = iVar2;
           pedia_selected_item = iVar2;
-          pedia_scroll_to_item((C_004083b0_4 *)&pedia_window,iVar2);
-          scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+          pedia_scroll_to_item((WindowObjectView *)&pedia_window,iVar2);
+          scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
         }
         break;
       case 0xd0: ;
@@ -3223,8 +3223,8 @@ void __cdecl pedia_list_on_key(i32 param_1)
       if (-1 < iVar2) {
         pedia_topic = iVar2;
         pedia_selected_item = iVar2;
-        pedia_scroll_to_item((C_004083b0_4 *)&pedia_window,iVar2);
-        scrollbar_set_pos((C_0040f380_40 *)&pedia_list_scrollbar,pedia_list_top / 9);
+        pedia_scroll_to_item((WindowObjectView *)&pedia_window,iVar2);
+        scrollbar_set_pos((ClickControl *)&pedia_list_scrollbar,pedia_list_top / 9);
       }
     }
   }
@@ -3252,7 +3252,7 @@ void __cdecl pedia_list_on_click(void)
        ) && (iVar1 = pedia_list_hit_test(local_8,local_c), -1 < iVar1)) && (iVar1 < pedia_list_count)) {
     pedia_topic = iVar1;
     pedia_selected_item = iVar1;
-    pedia_redraw((C_004083b0_120 *)&pedia_window);
+    pedia_redraw((PediaRedrawView *)&pedia_window);
   }
   return;
 }
@@ -3264,7 +3264,7 @@ void __cdecl pedia_list_on_click(void)
 
 /* 004f7ac7 auto */
 #define text_buffer (*(i8 *)((u8 *)&g.d_00679640))
-void __thiscall pedia_set_category_title(C_004083b0_4 *this,i32 param_1)
+void __thiscall pedia_set_category_title(WindowObjectView *this,i32 param_1)
 
 {
   text_clear();
@@ -3294,7 +3294,7 @@ void __thiscall pedia_set_category_title(C_004083b0_4 *this,i32 param_1)
   default:
     text_append(ADDR(0x62f078, ((u8 *)&g.d_0062f078)));
   }
-  FUN_005f22d0(this + 0x186,&text_buffer);
+  crt_strcpy(this + 0x186,&text_buffer);
   return;
 }
 #undef text_buffer
@@ -3302,7 +3302,7 @@ void __thiscall pedia_set_category_title(C_004083b0_4 *this,i32 param_1)
 /* 004f7bd1 auto */
 #define pedia_back_topic (*(i32 *)((u8 *)&g.d_0062f010))
 #define pedia_going_back (*(i32 *)((u8 *)&g.d_0062f00c))
-void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2)
+void __thiscall pedia_open_category(MediaWindow *this,u32 param_1,int param_2)
 
 {
   this->style_flags = 0;
@@ -3312,16 +3312,16 @@ void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2
   this->client_y = 0;
   pedia_back_topic = 0xffffffff;
   pedia_going_back = 0;
-  pedia_set_category_title((C_004083b0_4 *)this,param_1);
+  pedia_set_category_title((WindowObjectView *)this,param_1);
   pedia_update_controls(this);
   this->caption_height = param_1;
   wnd_repaint((SurfaceWindow *)this);
   if (param_2 != 0) {
-    window_show((C_004083b0_4 *)this);
+    window_show((WindowObjectView *)this);
   }
   wnd_set_keyboard_nav((Wnd *)&pedia_window_wnd,0);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_history_push((C_004083b0_12c *)&pedia_window);
+  pedia_history_push((ScaledWindowView *)&pedia_window);
   return;
 }
 #undef pedia_back_topic
@@ -3337,7 +3337,7 @@ void __thiscall pedia_open_category(C_004083b0_61c *this,u32 param_1,int param_2
 #define local_e (*(i8 *)(frame_ + FRAME_OFF(18)))
 #define local_c (*(i32 * *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(i32 * *)(frame_ + FRAME_OFF(24)))
-void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
+void __thiscall pedia_load_indexes(DocumentWindow *this)
 
 {
   u8 *puVar1;
@@ -3399,7 +3399,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
     puVar1[2] = 0xff;
     puVar1[3] = 0xff;
   }
-  pedia_free_lists((C_004083b0_4 *)this);
+  pedia_free_lists((WindowObjectView *)this);
   iVar3 = text_open_section(ADDR(0x62f094, ((u8 *)&g.d_0062f094)),ADDR(0x62f0a0, ((u8 *)&g.d_0062f0a0)));
   if (iVar3 == 0) {
     text_read_line(1);
@@ -3424,7 +3424,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
         uVar7 = label_string(advances[improvement].name);
-        FUN_005f22d0(*local_c,uVar7);
+        crt_strcpy(*local_c,uVar7);
         local_8 = local_c;
         this->pedia_advance_count++;
       }
@@ -3463,7 +3463,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
         uVar7 = label_string(improvements[improvement].name);
-        FUN_005f22d0(*local_c,uVar7);
+        crt_strcpy(*local_c,uVar7);
         local_8 = local_c;
         this->pedia_improve_count++;
       }
@@ -3504,7 +3504,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
         uVar7 = label_string(improvements[improvement].name);
-        FUN_005f22d0(*local_c,uVar7);
+        crt_strcpy(*local_c,uVar7);
         local_8 = local_c;
         *(int *)(this[1].pad_48 + 0x48) = *(int *)(this[1].pad_48 + 0x48) + 1;
       }
@@ -3545,7 +3545,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
         uVar7 = label_string(unit_types[improvement].name);
-        FUN_005f22d0(*local_c,uVar7);
+        crt_strcpy(*local_c,uVar7);
         local_8 = local_c;
         *(int *)(this[1].pad_15c + 0x18) = *(int *)(this[1].pad_15c + 0x18) + 1;
       }
@@ -3585,7 +3585,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
       pvVar6 = operator_new(sVar5 + 1);
       *local_c = pvVar6;
       uVar7 = label_string(government_names[improvement]);
-      FUN_005f22d0(*local_c,uVar7);
+      crt_strcpy(*local_c,uVar7);
       local_8 = local_c;
       *(int *)(this[1].pad_364 + 4) = *(int *)(this[1].pad_364 + 4) + 1;
       improvement++;
@@ -3624,12 +3624,12 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
            (iVar3 = _strcmp(terrain_types[improvement].abbrev,&pedia_grassland_shield_abbrev_str), iVar3 == 0)) {
           text_append_space();
           uVar7 = label_string(*(i32 *)(label_string_ids + 0xb00));
-          FUN_005f22e0(&text_buffer,uVar7);
+          crt_strcat(&text_buffer,uVar7);
         }
         sVar5 = _strlen(&text_buffer);
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
-        FUN_005f22d0(*local_c,&text_buffer);
+        crt_strcpy(*local_c,&text_buffer);
         local_8 = local_c;
         this[1].field_3a4++;
       }
@@ -3672,7 +3672,7 @@ void __thiscall pedia_load_indexes(C_004083b0_a28 *this)
         sVar5 = _strlen(&text_buffer_plus2);
         pvVar6 = operator_new(sVar5 + 1);
         *local_c = pvVar6;
-        FUN_005f22d0(*local_c,&text_buffer_plus2);
+        crt_strcpy(*local_c,&text_buffer_plus2);
         local_8 = local_c;
         improvement++;
         *(int *)(this[1].pad_4a4 + 0xc) = *(int *)(this[1].pad_4a4 + 0xc) + 1;
@@ -3768,7 +3768,7 @@ i8 * __cdecl pedia_lookup_text(i32 *param_1,iptr param_2)
 #define pedia_back_topic (*(int *)((u8 *)&g.d_0062f010))
 #define pedia_going_back (*(int *)((u8 *)&g.d_0062f00c))
 #define pedia_history_count (*(int *)((u8 *)&g.d_006a6790))
-void __thiscall pedia_history_push(C_004083b0_12c *this)
+void __thiscall pedia_history_push(ScaledWindowView *this)
 
 {
   if (((int)this->client_y < 99) && (pedia_going_back == 0)) {
@@ -3812,7 +3812,7 @@ void __cdecl pedia_modal_idle(void)
 {
   net_process_messages((NetSession *)&net_session,1,0);
   if ((pedia_modal_active == 0) || (pedia_closed == 1)) {
-    wnd_end_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
+    wnd_end_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
     pedia_modal_active = 0;
   }
   return;
@@ -3823,7 +3823,7 @@ void __cdecl pedia_modal_idle(void)
 void __cdecl pedia_end_modal(void)
 
 {
-  wnd_end_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
+  wnd_end_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
   return;
 }
 
@@ -3862,7 +3862,7 @@ void __thiscall pedia_link_dtor(void *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004fa17e */ { hyperlink_dtor((C_00452a67 *)(*(int *)((iptr)&this) + 4)); }
+  /* inlined unwind funclet 004fa17e */ { hyperlink_dtor((HyperlinkDtorView *)(*(int *)((iptr)&this) + 4)); }
   return;
 }
 #undef uStack_10
@@ -3871,7 +3871,7 @@ void __thiscall pedia_link_dtor(void *this)
 
 /* 00518f00 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_government_list(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_government_list(MediaWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3892,7 +3892,7 @@ void __thiscall pedia_init_government_list(C_004083b0_61c *this,iptr param_1)
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
+            ((ClickControl *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
     this[5].pad_48[0x69] = 0xff;
@@ -3902,7 +3902,7 @@ void __thiscall pedia_init_government_list(C_004083b0_61c *this,iptr param_1)
   pedia_update_controls(this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -3942,7 +3942,7 @@ void __cdecl notice_dlg_static_dtor(void)
 
 /* 005261a0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_init_wonder_list(MediaWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -3963,7 +3963,7 @@ void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
+            ((ClickControl *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
     this[5].pad_48[0x69] = 0xff;
@@ -3973,7 +3973,7 @@ void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
   pedia_update_controls(this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -4002,7 +4002,7 @@ void __thiscall pedia_init_wonder_list(C_004083b0_61c *this,iptr param_1)
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(128)))
 /* WARNING: Removing unreachable block (ram,0x0052661a) */
 
-void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
+void __thiscall pedia_draw_improvement(DocumentWindow *this)
 
 {
   int iVar1;
@@ -4015,8 +4015,8 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
   local_34 = 0;
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_8 = (GameFont *)&font_size21;
   local_40 = this->content_left + 10;
   local_3c = rect_width((iptr)&this->content_left);
@@ -4097,7 +4097,7 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
   }
   local_40 = this->content_left + 10;
   local_48 += local_1c * 2;
-  pedia_load_improvement_text((C_004083b0_4 *)this,improvement);
+  pedia_load_improvement_text((WindowObjectView *)this,improvement);
   sVar3 = _strlen(&text_buffer);
   if (sVar3 != 0) {
     yBottom = this->content_bottom;
@@ -4105,7 +4105,7 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
     SetRect(&local_64,local_40,local_48,iVar1 - 10 + local_40,yBottom);
     surface_draw_text_rect((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&local_64,5);
   }
-  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((ListPaneWindow *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_18);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
@@ -4137,7 +4137,7 @@ void __thiscall pedia_draw_improvement(C_004083b0_a28 *this)
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_wonder_names (*(i32 *)((u8 *)&g.d_006a7d4c))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
+void __thiscall pedia_show_wonder_modal(DocumentWindow *this,int param_1)
 
 {
   i32 uVar1;
@@ -4149,22 +4149,22 @@ void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
         (*(int *)(this[1].pad_104 + local_8 * 4) != param_1)); local_8++) {
     }
     if (*(u32 *)(this[1].pad_48 + 0x48) != local_8) {
-      pedia_open_category((C_004083b0_61c *)this,3,1);
+      pedia_open_category((MediaWindow *)this,3,1);
       this->resize_border = local_8;
       *(u32 *)(this[3].pad_48 + 0x78) = local_8;
       this->client_x = 1;
       this->border_width = 1;
-      pedia_clear_links((C_004083b0_4 *)this);
-      pedia_update_controls((C_004083b0_61c *)this);
+      pedia_clear_links((WindowObjectView *)this);
+      pedia_update_controls((MediaWindow *)this);
       uVar1 = pedia_lookup_text(pedia_wonder_names,local_8);
-      FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      pedia_draw_frame((C_004083b0_61c *)this);
+      crt_strcpy(this->pad_608 + 0x10,uVar1);
+      pedia_draw_frame((MediaWindow *)this);
       pedia_draw_improvement(this);
       wnd_blit_surface((DibSurface *)&pedia_window);
       wnd_activate((Wnd *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
-      wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+      wnd_run_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,0);
     }
   }
   return;
@@ -4176,7 +4176,7 @@ void __thiscall pedia_show_wonder_modal(C_004083b0_a28 *this,int param_1)
 
 /* 00564d00 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
+void __thiscall pedia_init_advance_list(PediaAdvanceListView *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -4197,17 +4197,17 @@ void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
   scrollbar_set_range
             ((Control *)(this[3].pad_3c0 + 0x58),0,*(int *)(this[3].pad_464 + 8) / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)(this[3].pad_3c0 + 0x58),*(int *)(this[4].pad_48 + 0x94) / 9);
+            ((ClickControl *)(this[3].pad_3c0 + 0x58),*(int *)(this[4].pad_48 + 0x94) / 9);
   if (*(int *)(this[3].pad_464 + 8) < 1) {
     this[4].pad_48[0x94] = 0xff;
     this[4].pad_48[0x95] = 0xff;
     this[4].pad_48[0x96] = 0xff;
     this[4].pad_48[0x97] = 0xff;
   }
-  pedia_update_controls((C_004083b0_61c *)this);
+  pedia_update_controls((MediaWindow *)this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -4243,7 +4243,7 @@ void __thiscall pedia_init_advance_list(C_004083b0_798 *this,iptr param_1)
 #define local_1c (*(i8 (*)[16])(frame_ + FRAME_OFF(404)))
 #define local_c (*(GameFont * *)(frame_ + FRAME_OFF(420)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(424)))
-void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
+void __thiscall pedia_draw_advance_page(DocumentWindow *this)
 
 {
   int iVar1;
@@ -4255,8 +4255,8 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
   
   surface_get_clip((DibSurface *)this,(iptr)local_1c);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_c = (GameFont *)&font_size21;
   local_154 = this->content_left;
   local_24 = font_cached_height((GameFont *)&font_size21);
@@ -4505,8 +4505,8 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
   iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
   if (iVar1 != 0) {
     __chdir(&scenario_dir_path);
-    FUN_005f22d0(&local_128,s_describe__00633d7c);
-    FUN_005f22e0(&local_128,&lang_file_ext);
+    crt_strcpy(&local_128,s_describe__00633d7c);
+    crt_strcat(&local_128,&lang_file_ext);
     iVar1 = file_exists((iptr)&local_128);
     if (iVar1 == 0) {
       ctrl_disable((Control *)(this[2].pad_5c0 + 0x10));
@@ -4518,8 +4518,8 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
   local_144 = _strcmp(&scenario_dir_path,&game_home_dir);
   if (local_144 != 0) {
     __chdir(&scenario_dir_path);
-    FUN_005f22d0(&local_128,s_pedia__00633d88);
-    FUN_005f22e0(&local_128,&lang_file_ext);
+    crt_strcpy(&local_128,s_pedia__00633d88);
+    crt_strcat(&local_128,&lang_file_ext);
     iVar1 = file_exists((iptr)&local_128);
     if (iVar1 == 0) {
       local_144 = 0;
@@ -4617,10 +4617,10 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
     }
     local_150 = (char *)text_read_line(1);
     str_append_space((iptr)local_150);
-    FUN_005f22d0(&local_128,local_150);
+    crt_strcpy(&local_128,local_150);
     if (local_128 == '^') {
       sVar3 = _strlen(local_127);
-      FUN_005f6500(&local_128,local_127,sVar3);
+      crt_memmove(&local_128,local_127,sVar3);
     }
     for (local_17c = 0; local_17c < 0x1c; local_17c++) {
       if (wonder_expires[local_17c] == advance) {
@@ -4646,7 +4646,7 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
       }
     }
   }
-  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((ListPaneWindow *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_1c);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
@@ -4687,7 +4687,7 @@ void __thiscall pedia_draw_advance_page(C_004083b0_a28 *this)
 #define pedia_advance_names (*(i32 *)((u8 *)&g.d_006a7d44))
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_show_topic_modal(DocumentWindow *this,iptr param_1)
 
 {
   i32 uVar1;
@@ -4700,23 +4700,23 @@ void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
       local_8++;
     }
     if (this->pedia_advance_count != local_8) {
-      pedia_open_category((C_004083b0_61c *)this,1,0);
+      pedia_open_category((MediaWindow *)this,1,0);
       this->resize_border = local_8;
       *(u32 *)(this[3].pad_48 + 0x78) = local_8;
       this->client_x = 1;
       this->border_width = 1;
-      pedia_clear_links((C_004083b0_4 *)this);
-      pedia_update_controls((C_004083b0_61c *)this);
+      pedia_clear_links((WindowObjectView *)this);
+      pedia_update_controls((MediaWindow *)this);
       uVar1 = pedia_lookup_text(pedia_advance_names,local_8);
-      FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      pedia_draw_frame((C_004083b0_61c *)this);
+      crt_strcpy(this->pad_608 + 0x10,uVar1);
+      pedia_draw_frame((MediaWindow *)this);
       pedia_draw_advance_page(this);
-      window_show((C_004083b0_4 *)this);
+      window_show((WindowObjectView *)this);
       wnd_blit_surface((DibSurface *)&pedia_window);
       wnd_activate((Wnd *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
-      wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+      wnd_run_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,0);
     }
   }
   return;
@@ -4759,7 +4759,7 @@ void __thiscall pedia_show_topic_modal(C_004083b0_a28 *this,iptr param_1)
 #define local_20 (*(i8 (*)[16])(frame_ + FRAME_OFF(312)))
 #define local_10 (*(GameFont * *)(frame_ + FRAME_OFF(328)))
 #define local_c (*(int (*)[2])(frame_ + FRAME_OFF(332)))
-void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this)
+void __thiscall pedia_draw_advance_tree(DocumentWindow *this)
 
 {
   int iVar1;
@@ -4770,9 +4770,9 @@ void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this)
   
   surface_get_clip((DibSurface *)this,(iptr)local_20);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_clear_links((C_004083b0_4 *)this);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_clear_links((WindowObjectView *)this);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_10 = (GameFont *)&font_size21;
   advance = *(iptr *)(this->pad_65c + this->resize_border * 4 + 400);
   text_clear();
@@ -4945,7 +4945,7 @@ void __thiscall pedia_draw_advance_tree(C_004083b0_a28 *this)
         if ((-1 < advances[aiStack_ac[local_b0 * 2 + local_b8]].preq[0]) ||
            (-1 < advances[aiStack_ac[local_b0 * 2 + local_b8]].preq[1])) {
           iVar1 = rect_height((iptr)(aiStack_84 + 10));
-          pedia_draw_tree_stub((C_004083b0_61c *)this,local_5c,local_58 + iVar1 / 2);
+          pedia_draw_tree_stub((MediaWindow *)this,local_5c,local_58 + iVar1 / 2);
         }
         SetRect(&local_40,local_8c,local_b4,local_88 + local_4c[2] + local_8c + 5,
                 local_104 + local_b4);
@@ -5020,7 +5020,7 @@ pedia_draw_tree_connector(DibSurface *this,int param_1,int param_2,int param_3,i
 }
 
 /* 005675b7 auto */
-void __thiscall pedia_draw_tree_stub(C_004083b0_61c *this,i32 param_1,int param_2)
+void __thiscall pedia_draw_tree_stub(MediaWindow *this,i32 param_1,int param_2)
 
 {
   gfx_set_text_color_index(10);
@@ -5076,7 +5076,7 @@ void __cdecl shared_palette_static_dtor(void)
 
 /* 00599a20 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_init_improvement_list(DocumentWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5097,17 +5097,17 @@ void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
   scrollbar_set_range
             ((Control *)(this[2].pad_65c + 0x34),0,*(int *)(this[2].pad_65c + 0x88) / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)(this[2].pad_65c + 0x34),*(int *)(this[3].pad_48 + 0x7c) / 9);
+            ((ClickControl *)(this[2].pad_65c + 0x34),*(int *)(this[3].pad_48 + 0x7c) / 9);
   if (*(int *)(this[2].pad_65c + 0x88) < 1) {
     this[3].pad_48[0x7c] = 0xff;
     this[3].pad_48[0x7d] = 0xff;
     this[3].pad_48[0x7e] = 0xff;
     this[3].pad_48[0x7f] = 0xff;
   }
-  pedia_update_controls((C_004083b0_61c *)this);
+  pedia_update_controls((MediaWindow *)this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -5138,7 +5138,7 @@ void __thiscall pedia_init_improvement_list(C_004083b0_a28 *this,iptr param_1)
 /* WARNING: Removing unreachable block (ram,0x00599e9a) */
 /* WARNING: Removing unreachable block (ram,0x00599fc4) */
 
-void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
+void __thiscall pedia_draw_improvement_page(DocumentWindow *this)
 
 {
   int iVar1;
@@ -5150,8 +5150,8 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
   local_34 = 0;
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_8 = (GameFont *)&font_size21;
   local_40 = this->content_left + 10;
   local_3c = rect_width((iptr)&this->content_left);
@@ -5223,7 +5223,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
             ((Sprite *)&gold_coin_icon_sprite,(iptr)local_98,ADDR(0x6a6668, ((u8 *)&g.d_006a6668)),local_40,iVar3 - iVar1 / 2);
   local_40 = this->content_left + 10;
   local_48 += local_1c * 2;
-  pedia_load_improvement_text((C_004083b0_4 *)this,improvement);
+  pedia_load_improvement_text((WindowObjectView *)this,improvement);
   sVar2 = _strlen(&text_buffer);
   if (sVar2 != 0) {
     yBottom = this->content_bottom;
@@ -5231,7 +5231,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
     SetRect(&local_64,local_40,local_48,iVar1 - 10 + local_40,yBottom);
     surface_draw_text_rect((DibSurface *)this,(iptr)local_8,ADDR(0x679640, ((u8 *)&g.d_00679640)),(iptr)&local_64,5);
   }
-  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((ListPaneWindow *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_18);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
@@ -5264,7 +5264,7 @@ void __thiscall pedia_draw_improvement_page(C_004083b0_a28 *this)
 #define local_1124 (*(char (*)[4096])(frame_ + FRAME_OFF(4)))
 #define local_124 (*(i8 (*)[256])(frame_ + FRAME_OFF(4100)))
 #define local_24 (*(i8 (*)[8])(frame_ + FRAME_OFF(4356)))
-void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
+void __thiscall pedia_load_improvement_text(WindowObjectView *this,iptr param_1)
 
 {
   int iVar1;
@@ -5274,7 +5274,7 @@ void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
   i8 frame_[FRAME_OFF(4392)] __attribute__((aligned(8)));  /* original stack frame */
   str_clear((iptr)local_1124);
   uStackY_1c = 0x59a190;
-  FUN_005f22d0(local_24,s_PEDIAIMPROVE_00635074);
+  crt_strcpy(local_24,s_PEDIAIMPROVE_00635074);
   uStackY_1c = 0x59a1a0;
   str_append_int((iptr)local_24,param_1);
   uStackY_1c = 0x59a1b1;
@@ -5285,23 +5285,23 @@ void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
       if ((*_Str != ';') && (sVar2 = _strlen(_Str), sVar2 != 0)) {
         while ((*_Str == '^' || (*_Str == '*'))) {
           uStackY_1c = 0x59a253;
-          FUN_005f22d0(local_124,_Str + 1);
+          crt_strcpy(local_124,_Str + 1);
           uStackY_1c = 0x59a269;
-          FUN_005f22d0(_Str,local_124);
+          crt_strcpy(_Str,local_124);
         }
         str_trim((iptr)_Str);
         sVar2 = _strlen(local_1124);
         if (sVar2 != 0) {
           uStackY_1c = 0x59a2a8;
-          FUN_005f22e0(local_1124,&pedia_improve_text_space_str);
+          crt_strcat(local_1124,&pedia_improve_text_space_str);
         }
         uStackY_1c = 0x59a2be;
-        FUN_005f22e0(local_1124,_Str);
+        crt_strcat(local_1124,_Str);
       }
     }
   }
   uStackY_1c = 0x59a2d7;
-  FUN_005f22d0(&text_buffer,local_1124);
+  crt_strcpy(&text_buffer,local_1124);
   return;
 }
 #undef text_buffer
@@ -5314,7 +5314,7 @@ void __thiscall pedia_load_improvement_text(C_004083b0_4 *this,iptr param_1)
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_improvement_names (*(i32 *)((u8 *)&g.d_006a7d48))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_show_improvement_modal(DocumentWindow *this,iptr param_1)
 
 {
   i32 uVar1;
@@ -5328,23 +5328,23 @@ void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
         local_8++;
       }
       if (this->pedia_improve_count != local_8) {
-        pedia_open_category((C_004083b0_61c *)this,2,0);
+        pedia_open_category((MediaWindow *)this,2,0);
         this->resize_border = local_8;
         *(u32 *)(this[3].pad_48 + 0x78) = local_8;
         this->client_x = 1;
         this->border_width = 1;
-        pedia_clear_links((C_004083b0_4 *)this);
-        pedia_update_controls((C_004083b0_61c *)this);
+        pedia_clear_links((WindowObjectView *)this);
+        pedia_update_controls((MediaWindow *)this);
         uVar1 = pedia_lookup_text(pedia_improvement_names,local_8);
-        FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-        pedia_draw_frame((C_004083b0_61c *)this);
+        crt_strcpy(this->pad_608 + 0x10,uVar1);
+        pedia_draw_frame((MediaWindow *)this);
         pedia_draw_improvement_page(this);
-        window_show((C_004083b0_4 *)this);
+        window_show((WindowObjectView *)this);
         wnd_blit_surface((DibSurface *)&pedia_window);
         wnd_activate((Wnd *)&pedia_window_wnd);
-        wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
-        wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-        wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+        wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+        wnd_run_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
+        wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,0);
       }
     }
     else {
@@ -5360,7 +5360,7 @@ void __thiscall pedia_show_improvement_modal(C_004083b0_a28 *this,iptr param_1)
 
 /* 005ac840 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
+void __thiscall pedia_show_unit_list(MediaWindow *this,iptr param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -5381,7 +5381,7 @@ void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
   scrollbar_set_range
             ((Control *)&this[4].field_270,0,*(int *)this[4].pad_2c4 / 9);
   scrollbar_set_pos
-            ((C_0040f380_40 *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
+            ((ClickControl *)&this[4].field_270,*(int *)(this[5].pad_48 + 0x68) / 9);
   if (*(int *)this[4].pad_2c4 < 1) {
     this[5].pad_48[0x68] = 0xff;
     this[5].pad_48[0x69] = 0xff;
@@ -5391,7 +5391,7 @@ void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
   pedia_update_controls(this);
   wnd_set_focus((WndBase *)&pedia_window_wnd);
   wnd_activate((Wnd *)&pedia_window_wnd);
-  pedia_redraw((C_004083b0_120 *)&pedia_window);
+  pedia_redraw((PediaRedrawView *)&pedia_window);
   return;
 }
 #undef local_8
@@ -5429,7 +5429,7 @@ void __thiscall pedia_show_unit_list(C_004083b0_61c *this,iptr param_1)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(1148)))
 #define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(1152)))
 #define local_8 (*(GameFont * *)(frame_ + FRAME_OFF(1168)))
-void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
+void __thiscall pedia_draw_unit_page(DocumentWindow *this)
 
 {
   int iVar1;
@@ -5440,8 +5440,8 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
   
   surface_get_clip((DibSurface *)this,(iptr)local_18);
   surface_set_clip((DibSurface *)this,(iptr)&this->content_left);
-  pedia_update_controls((C_004083b0_61c *)this);
-  pedia_fill_background((C_004083b0_4 *)this,(iptr)&this->content_left,2);
+  pedia_update_controls((MediaWindow *)this);
+  pedia_fill_background((WindowObjectView *)this,(iptr)&this->content_left,2);
   local_8 = (GameFont *)&font_size21;
   local_44 = this->content_left;
   local_30 = 10;
@@ -5568,165 +5568,165 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 1) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 2) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 4) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 8) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x10) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x20) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x40) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x80) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x100) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x200) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x400) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x800) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x1000) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x2000) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
     local_38 = text_read_line(1);
     if ((unit_types[unit_type].flags & 0x4000) != 0) {
       if (local_468 == 0) {
-        FUN_005f22d0(local_434,local_38 + 1);
+        crt_strcpy(local_434,local_38 + 1);
         local_468 = 1;
       }
       else {
-        FUN_005f22e0(local_434,local_38 + 1);
+        crt_strcat(local_434,local_38 + 1);
       }
       str_append_space((iptr)local_434);
     }
@@ -5743,7 +5743,7 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
                 ((DibSurface *)this,(iptr)local_8,(iptr)local_434,(iptr)&local_478,5);
     }
   }
-  pedia_update_describe_button((C_004083b0_11c *)this,this->resize_border);
+  pedia_update_describe_button((ListPaneWindow *)this,this->resize_border);
   surface_set_clip((DibSurface *)this,(iptr)local_18);
   wnd_blit_surface_rect((DibSurface *)this,(iptr)&this->content_left);
   return;
@@ -5786,7 +5786,7 @@ void __thiscall pedia_draw_unit_page(C_004083b0_a28 *this)
 #define pedia_closed (*(int *)((u8 *)&g.d_006a677c))
 #define pedia_unit_names (*(i32 *)((u8 *)&g.d_006a7d50))
 #define local_8 (*(u32 *)(frame_ + FRAME_OFF(0)))
-void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1)
+void __thiscall pedia_show_unit_modal(DocumentWindow *this,iptr param_1)
 
 {
   i32 uVar1;
@@ -5799,23 +5799,23 @@ void __thiscall pedia_show_unit_modal(C_004083b0_a28 *this,iptr param_1)
       local_8++;
     }
     if (*(u32 *)(this[1].pad_15c + 0x18) != local_8) {
-      pedia_open_category((C_004083b0_61c *)this,4,0);
+      pedia_open_category((MediaWindow *)this,4,0);
       this->resize_border = local_8;
       *(u32 *)(this[3].pad_48 + 0x78) = local_8;
       this->client_x = 1;
       this->border_width = 1;
-      pedia_clear_links((C_004083b0_4 *)this);
-      pedia_update_controls((C_004083b0_61c *)this);
+      pedia_clear_links((WindowObjectView *)this);
+      pedia_update_controls((MediaWindow *)this);
       uVar1 = pedia_lookup_text(pedia_unit_names,local_8);
-      FUN_005f22d0(this->pad_608 + 0x10,uVar1);
-      pedia_draw_frame((C_004083b0_61c *)this);
+      crt_strcpy(this->pad_608 + 0x10,uVar1);
+      pedia_draw_frame((MediaWindow *)this);
       pedia_draw_unit_page(this);
-      window_show((C_004083b0_4 *)this);
+      window_show((WindowObjectView *)this);
       wnd_blit_surface((DibSurface *)&pedia_window);
       wnd_activate((Wnd *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
-      wnd_run_modal_loop((C_00408010_b8 *)&pedia_window_wnd);
-      wnd_set_modal_idle_callback((C_00408010_b8 *)&pedia_window_wnd,0);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,ADDR(0x401843, pedia_modal_idle));
+      wnd_run_modal_loop((ModalMenuWindow *)&pedia_window_wnd);
+      wnd_set_modal_idle_callback((ModalMenuWindow *)&pedia_window_wnd,0);
     }
   }
   return;

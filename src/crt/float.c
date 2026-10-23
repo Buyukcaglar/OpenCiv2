@@ -75,7 +75,7 @@ int __cdecl __fptostr(char *buf, int digits, strflt *pflt)
         pflt->decpt++;
         return (int)pflt;
     }
-    return (int)FUN_005f22d0(buf, buf + 1);
+    return (int)crt_strcpy(buf, buf + 1);
 }
 
 /* 0x005fe560: _cftoe(pvalue, buf, ndec, caps) */
@@ -99,7 +99,7 @@ int __cdecl __cftoe(double *pvalue, char *buf, int ndec, int caps)
         *p = p[1];
         *++p = g_decimal_point;
     }
-    p = (char *)FUN_005f22d0(p + ndec + (g_fmt == 0), STR_e000);
+    p = (char *)crt_strcpy(p + ndec + (g_fmt == 0), STR_e000);
     if (caps != 0)
         *p = 'E';
     p++;
@@ -268,16 +268,16 @@ i32 __cdecl FUN_006051a0(uint manlo, uint manhi, uint expword, int ndigits,
     if (expn == 0x7fff) {
         fos->exp = 1;
         if (!(manhi == 0x80000000 && manlo == 0) && !(manhi & 0x40000000)) {
-            FUN_005f22d0(fos->man, (char *)0x0061ec0c);     /* "1#SNAN" */
+            crt_strcpy(fos->man, (char *)0x0061ec0c);     /* "1#SNAN" */
             fos->manlen = 6;
         } else if (sign && manhi == 0xc0000000 && manlo == 0) {
-            FUN_005f22d0(fos->man, (char *)0x0061ec04);     /* "1#IND" */
+            crt_strcpy(fos->man, (char *)0x0061ec04);     /* "1#IND" */
             fos->manlen = 5;
         } else if (manhi == 0x80000000 && manlo == 0) {
-            FUN_005f22d0(fos->man, (char *)0x0061ebfc);     /* "1#INF" */
+            crt_strcpy(fos->man, (char *)0x0061ebfc);     /* "1#INF" */
             fos->manlen = 5;
         } else {
-            FUN_005f22d0(fos->man, (char *)0x0061ebf4);     /* "1#QNAN" */
+            crt_strcpy(fos->man, (char *)0x0061ebf4);     /* "1#QNAN" */
             fos->manlen = 6;
         }
         return 0;

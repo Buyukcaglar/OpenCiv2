@@ -408,7 +408,7 @@ addr	len	type	name
 00625008	62	string	s_Map_3:_map_ascii()_blocked_by_XD_00625008
 00625048	60	string	s_Map_3:_map_key()_blocked_by_XD_F_00625048
 00625084	11	string	s_REALLYQUIT_00625084
-00625114	1	undefined1	DAT_00625114
+00625114	1	undefined1	file_path_mode
 00625130	4	undefined4	tech_editor_prereq1_ctrl_x
 00625134	4	undefined4	tech_editor_prereq1_ctrl_y
 00625138	4	undefined4	tech_editor_prereq2_ctrl_x
@@ -911,7 +911,7 @@ addr	len	type	name
 00628054	1	undefined1	unit_blink_phase
 00628058	1	undefined1	status_end_turn_blink_phase
 0062805c	1	undefined1	unit_blink_skip_tick
-00628060	4	undefined4	DAT_00628060
+00628060	4	undefined4	map_layout_wide
 00628064	4	undefined4	game_language
 00628068	4	undefined4	double_moves_applied
 0062806c	31	string	s_5.4.0f_Multiplayer_26-March-99_0062806c
@@ -1718,7 +1718,7 @@ addr	len	type	name
 0062da9c	27	string	s_Failed_to_load_civ2art.gif_0062da9c
 0062dab8	18	string	s_civ2\video\wonder_0062dab8
 0062dad8	17	string	s_VFWNOTREGISTERED_0062dad8
-0062db00	4	undefined4	DAT_0062db00
+0062db00	4	undefined4	research_notice_mode
 0062db04	8	string	s_UPGRADE_0062db04
 0062db0c	13	string	s_AUTOMONARCHY_0062db0c
 0062db1c	9	string	s_STARTREV_0062db1c
@@ -3233,7 +3233,7 @@ addr	len	type	name
 00635a24	4	undefined4	list_sel_bg_color
 00635a28	4	undefined4	dlg_sel_text_color
 00635a2c	4	undefined4	dlg_sel_text_shadow_color
-00635a30	4	undefined4	DAT_00635a30
+00635a30	4	undefined4	dialog_default_list_color
 00635a34	4	undefined4	dlg_scale_num
 00635a38	4	undefined4	dlg_scale_den
 00635a3c	4	undefined4	dlg_pending_idle_callback
@@ -4283,7 +4283,7 @@ addr	len	type	name
 0064bcc0	2	undefined2	scenario_marginal_defeat_score
 0064bcc2	2	undefined2	scenario_decisive_defeat_score
 0064bcc8	41	Cosmic	cosmic
-0064bcf4	4	undefined4	DAT_0064bcf4
+0064bcf4	4	undefined4	minimap_margin
 0064bcf8	1936	CivNames[8]	civ_names
 0064c488	536	Improvement[67]	improvements
 0064c6a0	11424	Civ[8]	civs
@@ -4829,7 +4829,7 @@ addr	len	type	name
 006ad90c	4	undefined4	net_stacked_draw_count
 006ad910	4	undefined4	net_stacked_draw_first
 006ad914	4	undefined4	net_stacked_draw_last
-006ad918	4	undefined4	DAT_006ad918
+006ad918	4	undefined4	unit_stack_check_enabled
 006ad91c	4	undefined4	net_stacked_draw_peak
 006af21c	4	undefined4	DAT_006af21c
 006af23c	4	undefined4	DAT_006af23c

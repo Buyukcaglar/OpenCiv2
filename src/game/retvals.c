@@ -37,34 +37,34 @@ void __thiscall pedia_load_description(void *this, int param_1)
   switch(*(i32 *)(self + 0x118)) {
   case 1:
     param_1 = *(int *)(self + 0x65c + param_1 * 4);
-    FUN_005f22d0(local_104,s__ADVANCE_INDEX_00626858);
+    crt_strcpy(local_104,s__ADVANCE_INDEX_00626858);
     break;
   case 2:
     param_1 = *(int *)(self + 0x980 + param_1 * 4);
-    FUN_005f22d0(local_104,s__IMPROVEMENT_INDEX_00626868);
+    crt_strcpy(local_104,s__IMPROVEMENT_INDEX_00626868);
     break;
   case 3:
     param_1 = *(int *)(self + 0xabc + param_1 * 4);
-    FUN_005f22d0(local_104,s__WONDER_INDEX_0062687c);
+    crt_strcpy(local_104,s__WONDER_INDEX_0062687c);
     break;
   case 4:
     param_1 = *(int *)(self + 0xba0 + param_1 * 4);
-    FUN_005f22d0(local_104,s__UNIT_INDEX_0062688c);
+    crt_strcpy(local_104,s__UNIT_INDEX_0062688c);
     break;
   case 5:
     param_1 = *(int *)(self + 0xdd0 + param_1 * 4);
-    FUN_005f22d0(local_104,s__TERRAIN_INDEX_00626898);
+    crt_strcpy(local_104,s__TERRAIN_INDEX_00626898);
     break;
   case 6:
     param_1 = *(int *)(self + 0xd94 + param_1 * 4);
-    FUN_005f22d0(local_104,s__GOVERNMENT_INDEX_006268a8);
+    crt_strcpy(local_104,s__GOVERNMENT_INDEX_006268a8);
     break;
   case 7:
     param_1 = *(int *)(self + 0xedc + param_1 * 4);
-    FUN_005f22d0(local_104,s_CONCEPT_DESCRIPTIONS_006268bc);
+    crt_strcpy(local_104,s_CONCEPT_DESCRIPTIONS_006268bc);
     break;
   default:
-    FUN_005f22d0(local_104,s_Unknown_Topic_Group_006268d4);
+    crt_strcpy(local_104,s_Unknown_Topic_Group_006268d4);
   }
   iVar2 = text_open_section(s_Describe_006268e8,local_104);
   if (iVar2 == 0) {
@@ -98,7 +98,7 @@ LAB_0045259e:
         local_10c = STRRCHR(&text_buffer,10);
         if (local_10c != (char *)0x0) {
           *local_10c = '\0';
-          FUN_005f22e0(&text_buffer,&pedia_desc_crlf_str);
+          crt_strcat(&text_buffer,&pedia_desc_crlf_str);
         }
         sVar4 = _strlen(local_110c);
         sVar5 = _strlen(&text_buffer);
@@ -106,13 +106,13 @@ LAB_0045259e:
           sVar4 = _strlen(local_110c);
           *(i8 *)(ADDR(0x67a63f, ((u8 *)&g.d_0067a638 + 7)) - sVar4) = 0;
         }
-        FUN_005f22e0(local_110c,&text_buffer);
+        crt_strcat(local_110c,&text_buffer);
         sVar4 = _strlen(local_110c);
       } while (sVar4 != 0xfff);
     }
     else {
       text_append_label(0xe);
-      FUN_005f22d0(local_110c,&text_buffer);
+      crt_strcpy(local_110c,&text_buffer);
     }
 LAB_00452724:
     ctrl_set_text((void *)(self + 0x1a98),local_110c);
@@ -199,10 +199,10 @@ int __cdecl save_read_game(char *param_1)
   local_110 = 0;
   local_334 = (uint)game.multiplayer;
   save_set_file_ext(0);
-  FUN_005f22d0(local_218,param_1);
+  crt_strcpy(local_218,param_1);
   pcVar2 = _strchr(local_218,0x2e);
   if (pcVar2 == (char *)0x0) {
-    FUN_005f22e0(local_218,&save_file_path);
+    crt_strcat(local_218,&save_file_path);
   }
   _File = _fopen(local_218,&save_read_mode);
   if ((_File == (FILE *)0x0) || (iVar3 = save_read_cstr(local_324,_File), iVar3 == 0))
@@ -224,23 +224,23 @@ int __cdecl save_read_game(char *param_1)
     goto LAB_00477352;
   }
   ui_flush_input();
-  FUN_005f22d0(&scenario_dir_path,param_1);
+  crt_strcpy(&scenario_dir_path,param_1);
   local_10c = STRRCHR(&scenario_dir_path,0x5c);
   *local_10c = '\0';
   __chdir(&scenario_dir_path);
-  FUN_005f22d0(local_108,s_GAME__0062bae8);
-  FUN_005f22e0(local_108,&lang_file_ext);
+  crt_strcpy(local_108,s_GAME__0062bae8);
+  crt_strcat(local_108,&lang_file_ext);
   iVar3 = file_exists(local_108);
   if (iVar3 == 0) {
-    FUN_005f22d0(&game_txt_path,&game_txt_default_name_str);
+    crt_strcpy(&game_txt_path,&game_txt_default_name_str);
   }
   else {
-    FUN_005f22d0(&game_txt_path,&scenario_dir_path);
-    FUN_005f22e0(&game_txt_path,s__GAME_0062baf0);
+    crt_strcpy(&game_txt_path,&scenario_dir_path);
+    crt_strcat(&game_txt_path,s__GAME_0062baf0);
   }
   local_10c = STRRCHR(param_1,0x5c);
   local_10c = local_10c + 1;
-  FUN_005f22d0(&loaded_file_name,local_10c);
+  crt_strcpy(&loaded_file_name,local_10c);
   sVar4 = _strlen(&game_home_dir);
   iVar3 = __strnicmp(param_1,&game_home_dir,sVar4);
   if (iVar3 == 0) {

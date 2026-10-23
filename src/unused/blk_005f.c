@@ -2,7 +2,7 @@
 #include "auto_common.h"
 
 /* 005f0056 auto */
-void __thiscall ddwin_show(C_005f0056 *this)
+void __thiscall ddwin_show(DdwinShowView *this)
 
 {
   i32 uVar1;
@@ -73,7 +73,7 @@ void __thiscall ddwin_set_palette(DDWindowPaletteView *this,DDPaletteIfaceView *
 
 /* 005f0213 auto */
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
-void __thiscall ddwin_attach_back_buffer(C_005f0213 *this,DDSurface *param_1)
+void __thiscall ddwin_attach_back_buffer(DdwinAttachBackBufferView *this,DDSurface *param_1)
 
 {
   i32 uVar1;
@@ -196,7 +196,7 @@ i32 __thiscall ptrlist_last_impl(PtrListLastView *this)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __thiscall ptrlist_current(C_005f07f9 *this)
+i32 __thiscall ptrlist_current(PtrlistCurrentView *this)
 
 {
   i32 uVar1;
@@ -211,7 +211,7 @@ i32 __thiscall ptrlist_current(C_005f07f9 *this)
 }
 
 /* 005f0897 auto */
-i32 __thiscall ptrlist_prev_impl(C_005f0897 *this)
+i32 __thiscall ptrlist_prev_impl(PtrlistPrevImplView *this)
 
 {
   uptr uVar1;
@@ -393,7 +393,7 @@ i32 __cdecl ddctrl_get_msg_target(void)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_005f0f1d * __thiscall ddctrl_ctor(C_005f0f1d *this)
+DdctrlCtorView * __thiscall ddctrl_ctor(DdctrlCtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -420,7 +420,7 @@ C_005f0f1d * __thiscall ddctrl_ctor(C_005f0f1d *this)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_005f0fe9 * __thiscall ddctrl_ctor_in_window(C_005f0fe9 *this,u32 param_1)
+DdctrlCtorInWindowView * __thiscall ddctrl_ctor_in_window(DdctrlCtorInWindowView *this,u32 param_1)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -447,7 +447,7 @@ C_005f0fe9 * __thiscall ddctrl_ctor_in_window(C_005f0fe9 *this,u32 param_1)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_005f10b6 * __thiscall ddctrl_ctor_in_control(C_005f10b6 *this,u32 param_1)
+DdctrlCtorInControlView * __thiscall ddctrl_ctor_in_control(DdctrlCtorInControlView *this,u32 param_1)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -483,7 +483,7 @@ void __thiscall ddctrl_dtor(void *this)
   local_8 = 0;
   ddctrl_remove_all_children(this);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005f11d2 */ { ptrlist_dtor(*(int *)((iptr)&this) + 0x10); }
+  /* inlined unwind funclet 005f11d2 */ { ptrlist_dtor(*(int *)((iptr)&this) + 0x10); }
   return;
 }
 #undef uStack_10
@@ -491,7 +491,7 @@ void __thiscall ddctrl_dtor(void *this)
 #undef local_8
 
 /* 005f11f6 auto */
-void __thiscall ddctrl_set_parent_window(C_005f11f6 *this,u32 param_1)
+void __thiscall ddctrl_set_parent_window(DdctrlSetParentWindowView *this,u32 param_1)
 
 {
   this->parent_control = 0;
@@ -505,7 +505,7 @@ void __thiscall ddctrl_set_parent_window(C_005f11f6 *this,u32 param_1)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall ddctrl_set_parent_control(C_005f1221 *this,u32 param_1)
+void __thiscall ddctrl_set_parent_control(DdctrlSetParentControlView *this,u32 param_1)
 
 {
   this->is_enabled = param_1;
@@ -550,7 +550,7 @@ void __thiscall ddctrl_get_window_palette(DDControlParentView *this)
     uVar1 = ddctrl_get_parent_window(this);
     this->parent_wnd = uVar1;
   }
-  ddwin_get_palette((C_005f1b50 *)this->parent_wnd);
+  ddwin_get_palette((DdwinGetPaletteView *)this->parent_wnd);
   return;
 }
 
@@ -564,7 +564,7 @@ void __thiscall ddctrl_paint_tree(DDControlPaintView *this)
 }
 
 /* 005f16c4 auto */
-void __thiscall ddctrl_set_click_cb(C_005f16c4 *this,u32 param_1)
+void __thiscall ddctrl_set_click_cb(DdctrlSetClickCbView *this,u32 param_1)
 
 {
   this->on_click = param_1;
@@ -572,7 +572,7 @@ void __thiscall ddctrl_set_click_cb(C_005f16c4 *this,u32 param_1)
 }
 
 /* 005f16e5 auto */
-void __thiscall ddctrl_set_mousemove_cb(C_005f16e5 *this,u32 param_1)
+void __thiscall ddctrl_set_mousemove_cb(DdctrlSetMousemoveCbView *this,u32 param_1)
 
 {
   this->on_mousemove = param_1;
@@ -580,7 +580,7 @@ void __thiscall ddctrl_set_mousemove_cb(C_005f16e5 *this,u32 param_1)
 }
 
 /* 005f1706 auto */
-void __thiscall ddctrl_set_lbuttonup_cb(C_005f1706 *this,u32 param_1)
+void __thiscall ddctrl_set_lbuttonup_cb(DdctrlSetLbuttonupCbView *this,u32 param_1)
 
 {
   this->on_lbuttonup = param_1;
@@ -588,7 +588,7 @@ void __thiscall ddctrl_set_lbuttonup_cb(C_005f1706 *this,u32 param_1)
 }
 
 /* 005f1727 auto */
-void __thiscall ddctrl_set_rbuttonup_cb(C_005f1727 *this,u32 param_1)
+void __thiscall ddctrl_set_rbuttonup_cb(DdctrlSetRbuttonupCbView *this,u32 param_1)
 
 {
   this->on_rbuttonup = param_1;
@@ -596,7 +596,7 @@ void __thiscall ddctrl_set_rbuttonup_cb(C_005f1727 *this,u32 param_1)
 }
 
 /* 005f1748 auto */
-void __thiscall ddctrl_set_dblclick_cb(C_005f1748 *this,u32 param_1)
+void __thiscall ddctrl_set_dblclick_cb(DdctrlSetDblclickCbView *this,u32 param_1)
 
 {
   this->on_dblclick = param_1;
@@ -604,7 +604,7 @@ void __thiscall ddctrl_set_dblclick_cb(C_005f1748 *this,u32 param_1)
 }
 
 /* 005f1769 auto */
-void __thiscall ddctrl_call_click_cb(C_005f1769 *this)
+void __thiscall ddctrl_call_click_cb(DdctrlCallClickCbView *this)
 
 {
   if (this->on_click != 0) {
@@ -660,7 +660,7 @@ void __thiscall ddctrl_paint_children(DDControlPaintView *this)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall ddwin_get_palette(C_005f1b50 *this)
+u32 __thiscall ddwin_get_palette(DdwinGetPaletteView *this)
 
 {
   return this->palette_obj;

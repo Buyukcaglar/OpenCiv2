@@ -144,7 +144,7 @@ void __cdecl dbg_draw_tile_owner_overlay(void)
 #undef local_c
 
 /* 0055a5a4 auto */
-void __thiscall setup_picwnd_destroy(C_004083b0_430 *this)
+void __thiscall setup_picwnd_destroy(ViewWindow *this)
 
 {
   if (this->field_2e4 != 0) {
@@ -168,7 +168,7 @@ void __cdecl mp_window_drag_modal_timeout(void)
     iVar1 = timer_ticks();
     if (mp_window_drag_start_ticks + 0x7c < iVar1) {
       dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
-      wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
+      wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
     }
   }
   return;

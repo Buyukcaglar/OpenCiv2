@@ -21,14 +21,14 @@ i32 __cdecl editor_city_file_replace_line(i32 param_1,char *param_2,char *param_
   local_220 = (FILE *)0x0;
   local_21c = (FILE *)0x0;
   local_274 = 0;
-  FUN_005f22d0(local_14,s_CITY__0062e0e8);
-  FUN_005f22e0(local_14,&lang_file_ext);
+  crt_strcpy(local_14,s_CITY__0062e0e8);
+  crt_strcat(local_14,&lang_file_ext);
   __getcwd(local_218,0x104);
   __chdir(&scenario_dir_path);
   iVar1 = _strcmp(&scenario_dir_path,&game_home_dir);
   if ((iVar1 != 0) &&
      ((iVar1 = file_exists(ADDR(0x62e0f0, ((u8 *)&g.d_0062e0f0))), iVar1 == 0 ||
-      (iVar1 = FUN_005f66b0(s_CITY_TMP_0062e0fc), iVar1 == 0)))) {
+      (iVar1 = crt_remove(s_CITY_TMP_0062e0fc), iVar1 == 0)))) {
     iVar1 = file_exists((iptr)local_14);
     if (iVar1 == 0) {
       iVar1 = file_exists(ADDR(0x62e128, ((u8 *)&g.d_0062e128)));
@@ -44,7 +44,7 @@ i32 __cdecl editor_city_file_replace_line(i32 param_1,char *param_2,char *param_
       }
     }
     else {
-      iVar1 = FUN_005f6650(local_14,s_CITY_TMP_0062e108);
+      iVar1 = crt_rename(local_14,s_CITY_TMP_0062e108);
       if (iVar1 != 0) goto LAB_004cd7f1;
       local_21c = (FILE *)file_open_path(ADDR(0x62e118, ((u8 *)&g.d_0062e118)),ADDR(0x62e114, ((u8 *)&g.d_0062e114)));
       local_220 = (FILE *)file_open_path((iptr)local_14,ADDR(0x62e124, ((u8 *)&g.d_0062e124)));
@@ -52,7 +52,7 @@ i32 __cdecl editor_city_file_replace_line(i32 param_1,char *param_2,char *param_
     if ((local_21c != (FILE *)0x0) && (local_220 != (FILE *)0x0)) {
       local_270 = '@';
       local_26f = 0;
-      FUN_005f22e0(&local_270,param_1);
+      crt_strcat(&local_270,param_1);
       __strupr(&local_270);
       do {
         pcVar2 = _fgets(s,0x100,local_21c);
@@ -92,7 +92,7 @@ LAB_004cd7f1:
   }
   iVar1 = file_exists(ADDR(0x62e154, ((u8 *)&g.d_0062e154)));
   if (iVar1 != 0) {
-    FUN_005f66b0(s_CITY_TMP_0062e160);
+    crt_remove(s_CITY_TMP_0062e160);
   }
   __chdir(local_218);
   return local_274;

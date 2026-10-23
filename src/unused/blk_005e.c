@@ -15,7 +15,7 @@ void __cdecl dlg_radio_choice_dblclick_cb(i32 param_1,i32 param_2)
 
 {
   choice_dlg_selection = param_2;
-  wnd_end_modal_loop((C_00408010_b8 *)(choice_dlg_window + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(choice_dlg_window + 0x48));
   return;
 }
 #undef choice_dlg_window
@@ -127,14 +127,14 @@ i32 __cdecl dlg_radio_choice_modal(int param_1,int param_2,WndBase *param_3)
   (*(i8 *)((char *)&local_8 + 0)) = 3;
   button_ctor(&local_170);
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  radiogrp_ctor((C_0040f380_48 *)&local_614);
+  radiogrp_ctor((InputControl *)&local_614);
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),5);
   sVar1 = _strlen((char *)(param_1 + 1));
   local_5ac = operator_new(sVar1);
-  FUN_005f22d0(local_5ac,param_1);
+  crt_strcpy(local_5ac,param_1);
   sVar1 = _strlen((char *)(param_2 + 1));
   local_174 = operator_new(sVar1);
-  FUN_005f22d0(local_174,param_2);
+  crt_strcpy(local_174,param_2);
   font_set(&local_680,0,0x11);
   ui_set_button_font((iptr)&local_680);
   ctrl_set_pending_font((iptr)&local_680);
@@ -189,23 +189,23 @@ i32 __cdecl dlg_radio_choice_modal(int param_1,int param_2,WndBase *param_3)
   OffsetRect(&local_134,0,-0x23);
   button_create(&local_170,(iptr)local_dc,0x66,(iptr)&local_134,ADDR(0x638d88, ((u8 *)&g.d_00638d88)));
   button_set_callback(&local_170,ADDR(0x5e00bb, dlg_radio_choice_button_cb));
-  window_show((C_004083b0_4 *)local_124);
-  wnd_run_modal_loop((C_00408010_b8 *)local_dc);
+  window_show((WindowObjectView *)local_124);
+  wnd_run_modal_loop((ModalMenuWindow *)local_dc);
   operator_delete(local_5ac);
   operator_delete(local_174);
   uVar3 = choice_dlg_selection;
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_005e0802 */ { radiogrp_dtor((RadioGroupDtorView *)((iptr)&local_614)); }
+  /* inlined unwind funclet 005e0802 */ { radiogrp_dtor((RadioGroupDtorView *)((iptr)&local_614)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_005e080e */ { ctrl_dtor((Control *)((iptr)&local_170)); }
+  /* inlined unwind funclet 005e080e */ { ctrl_dtor((Control *)((iptr)&local_170)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_005e081a */ { ctrl_dtor((Control *)((iptr)&local_678)); }
+  /* inlined unwind funclet 005e081a */ { ctrl_dtor((Control *)((iptr)&local_678)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_005e0826 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_124)); }
+  /* inlined unwind funclet 005e0826 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_124)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_005e0832 */ { font_destroy((GameFont *)((iptr)&local_680)); }
+  /* inlined unwind funclet 005e0832 */ { font_destroy((GameFont *)((iptr)&local_680)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005e083e */ { palette_destroy((GamePalette *)((iptr)&local_5a8)); }
+  /* inlined unwind funclet 005e083e */ { palette_destroy((GamePalette *)((iptr)&local_5a8)); }
   return uVar3;
 }
 #undef choice_dlg_window
@@ -1736,7 +1736,7 @@ ddsurf_load_bmp8_res(DDSurface *this,iptr param_1,int param_2,int param_3,DDPale
         local_10 = (i8 *)ddsurf_lock(this);
         local_14 = (this->surf_height - 1) * this->surf_pitch + (int)local_10;
         for (local_20 = 0; local_20 < local_1c; local_20++) {
-          FUN_005f2110(local_14,local_8,local_18);
+          crt_memcpy(local_14,local_8,local_18);
           local_14 -= this->surf_pitch;
           local_8 += local_18;
         }
@@ -2033,7 +2033,7 @@ i32 __thiscall ddsurf_load_bmp24_res(DDSurface *this,iptr param_1)
 
 /* 005e6f25 auto */
 void __thiscall
-ddsurf_map_rgb(C_005e6f25 *this,i32 param_1,i32 param_2,i32 param_3)
+ddsurf_map_rgb(DdsurfMapRgbView *this,i32 param_1,i32 param_2,i32 param_3)
 
 {
   ddsurf_rgb_to_pixel(this->ddsurf,param_1,param_2,param_3);
@@ -2041,7 +2041,7 @@ ddsurf_map_rgb(C_005e6f25 *this,i32 param_1,i32 param_2,i32 param_3)
 }
 
 /* 005e6f57 auto */
-void __thiscall ddsurf_reset_clip(C_005e6f57 *this)
+void __thiscall ddsurf_reset_clip(DdsurfResetClipView *this)
 
 {
   SetRect((LPRECT)(this->pad_0 + 0x10),this->rect_left,this->rect_top,this->rect_right,this->rect_bottom);
@@ -2058,7 +2058,7 @@ void __thiscall ddsurf_set_clip(void *this,int *param_1)
 }
 
 /* 005e6ff1 auto */
-void __thiscall ddsurf_get_clip(C_005e6ff1 *this,u32 *param_1)
+void __thiscall ddsurf_get_clip(DdsurfGetClipView *this,u32 *param_1)
 
 {
   *param_1 = this->rect_left;
@@ -2781,7 +2781,7 @@ void __thiscall ddpal_release(DDPaletteReleaseView *this)
 #define local_30c (*(i8 (*)[768])(frame_ + FRAME_OFF(772)))
 #define local_c (*(i8 * *)(frame_ + FRAME_OFF(1540)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1544)))
-void __thiscall ddpal_rotate_range(C_005e8401 *this,int param_1,int param_2,int param_3)
+void __thiscall ddpal_rotate_range(DdpalRotateRangeView *this,int param_1,int param_2,int param_3)
 
 {
   i8 frame_[FRAME_OFF(1552)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2900,7 +2900,7 @@ void __thiscall ddpal_fade_end(DDPaletteSetEntriesView *this)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(784)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(788)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(792)))
-void __thiscall ddpal_fade_step(C_005e87a2 *this,int param_1)
+void __thiscall ddpal_fade_step(DdpalFadeStepView *this,int param_1)
 
 {
   char cVar1;
@@ -4836,7 +4836,7 @@ void __thiscall mciwnd_destroy(MciWnd *this)
 }
 
 /* 005ee991 auto */
-void __thiscall mciwnd_seek_end(C_005ee991 *this)
+void __thiscall mciwnd_seek_end(MciwndSeekEndView *this)
 
 {
   SendMessageA((HWND)this->hwnd,0x807,0,-1);
@@ -4844,7 +4844,7 @@ void __thiscall mciwnd_seek_end(C_005ee991 *this)
 }
 
 /* 005ee9bc auto */
-void __thiscall mciwnd_get_position(C_005ee9bc *this)
+void __thiscall mciwnd_get_position(MciwndGetPositionView *this)
 
 {
   SendMessageA((HWND)this->hwnd,0x466,0,0);
@@ -4978,7 +4978,7 @@ u32 __thiscall ddwin_get_native(DDWindowNativeView *this)
 }
 
 /* 005eecc3 auto */
-C_005eecc3 * __thiscall avi_audio_set_stream(C_005eecc3 *this,u32 param_1)
+AviAudioSetStreamView * __thiscall avi_audio_set_stream(AviAudioSetStreamView *this,u32 param_1)
 
 {
   int iVar1;

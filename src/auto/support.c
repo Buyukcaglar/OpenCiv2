@@ -327,7 +327,7 @@ i32 __cdecl dbg_pick_player(int param_1)
   dialog_set_default_choice((DialogOptionList *)&local_304,human_civ);
   uVar2 = dlg_show_modal(&local_304,0);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00554272 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+  /* inlined unwind funclet 00554272 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
   return uVar2;
 }
 #undef human_civ
@@ -443,7 +443,7 @@ void __cdecl error_report(uint param_1,int param_2,iptr param_3,iptr param_4,ipt
   i8 frame_[FRAME_OFF(192)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_3 != 0) {
-    FUN_005f22d0(&error_context_text,param_3);
+    crt_strcpy(&error_context_text,param_3);
   }
   __itoa(param_1,local_b0,10);
   __itoa(param_2,local_60,10);
@@ -471,14 +471,14 @@ void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,
   size_t sVar1;
   i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005f22d0(local_104,s_Error___00634844);
-  FUN_005f22e0(local_104,param_1);
-  FUN_005f22e0(local_104,s___in_module___0063484c);
-  FUN_005f22e0(local_104,param_2);
-  FUN_005f22e0(local_104,s___data__0063485c);
-  FUN_005f22e0(local_104,param_3);
-  FUN_005f22e0(local_104,&err_data_sep_str);
-  FUN_005f22e0(local_104,param_4);
+  crt_strcpy(local_104,s_Error___00634844);
+  crt_strcat(local_104,param_1);
+  crt_strcat(local_104,s___in_module___0063484c);
+  crt_strcat(local_104,param_2);
+  crt_strcat(local_104,s___data__0063485c);
+  crt_strcat(local_104,param_3);
+  crt_strcat(local_104,&err_data_sep_str);
+  crt_strcat(local_104,param_4);
   _sprintf(&crash_debug_buffer,&err_fatal_msg_fmt,local_104);
   OutputDebugStringA(&crash_debug_buffer);
   dbg_log(ADDR(0x6acbf8, ((u8 *)&g.d_006acbf8)));
@@ -490,9 +490,9 @@ void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,
   }
   if (error_last_alloc_failed != 0) {
     __ltoa(mem_last_alloc_size,(char *)param_3,10);
-    FUN_005f22d0(local_104,s_Tried_to_allocate_00634878);
-    FUN_005f22e0(local_104,param_3);
-    FUN_005f22e0(local_104,s_bytes__0063488c);
+    crt_strcpy(local_104,s_Tried_to_allocate_00634878);
+    crt_strcat(local_104,param_3);
+    crt_strcat(local_104,s_bytes__0063488c);
     _sprintf(&crash_debug_buffer,&fatal_alloc_line_fmt,local_104);
     OutputDebugStringA(&crash_debug_buffer);
     dbg_log(ADDR(0x6acbf8, ((u8 *)&g.d_006acbf8)));
@@ -505,9 +505,9 @@ void __cdecl err_fatal_exit(iptr param_1,iptr param_2,iptr param_3,iptr param_4,
     OutputDebugStringA(&crash_debug_buffer);
     dbg_log(ADDR(0x6acbf8, ((u8 *)&g.d_006acbf8)));
   }
-  FUN_005f22d0(local_104,s_Most_recent_DOS_error__006348b4);
+  crt_strcpy(local_104,s_Most_recent_DOS_error__006348b4);
   __itoa(crt_errno,(char *)param_3,10);
-  FUN_005f22e0(local_104,param_3);
+  crt_strcat(local_104,param_3);
   _sprintf(&crash_debug_buffer,&fatal_dos_error_line_fmt,local_104);
   OutputDebugStringA(&crash_debug_buffer);
   dbg_log(ADDR(0x6acbf8, ((u8 *)&g.d_006acbf8)));
@@ -965,7 +965,7 @@ i8 __thiscall dbg_log_write(void *this,iptr param_1)
   
   DVar1 = GetTickCount();
   _sprintf(local_40c,s___5d__0063830c,(DVar1 - *(int *)this) / 1000);
-  FUN_005f22e0(local_40c,param_1);
+  crt_strcat(local_40c,param_1);
   if (dbg_log_to_debugger != '\0') {
     dbg_log_write_debugger((iptr)local_40c);
   }
@@ -1043,12 +1043,12 @@ err_format_message
   i32 uVar2;
   char *_Format;
   
-  FUN_005f22d0(this,&err_format_empty_str);
+  crt_strcpy(this,&err_format_empty_str);
   _Format = s_Error___s_File___s_Line___d_00638790;
   sVar1 = _strlen((char *)this);
   _sprintf((char *)(this->pad_0 + sVar1),_Format,param_2,param_3,param_4);
   uVar2 = err_get_stack_trace(this);
-  FUN_005f22e0(this,uVar2);
+  crt_strcat(this,uVar2);
   return this;
 }
 
@@ -1142,7 +1142,7 @@ void __cdecl mem_handle_clone(iptr param_1)
   if (hMem != (HGLOBAL)0x0) {
     pvVar2 = GlobalLock(hMem);
     pvVar3 = GlobalLock(*(HGLOBAL *)param_1);
-    FUN_005f6500(pvVar2,pvVar3,SVar1);
+    crt_memmove(pvVar2,pvVar3,SVar1);
     GlobalUnlock(hMem);
     GlobalUnlock(*(HGLOBAL *)param_1);
     *(HGLOBAL *)param_1 = hMem;
@@ -1208,7 +1208,7 @@ HGLOBAL __cdecl mem_handle_free(HGLOBAL param_1)
 void __cdecl mem_move_src_dst(iptr param_1,iptr param_2,i32 param_3)
 
 {
-  FUN_005f6500(param_2,param_1,param_3);
+  crt_memmove(param_2,param_1,param_3);
   return;
 }
 
@@ -1248,7 +1248,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
   else {
     mem_move_src_dst(*(iptr *)param_1,(iptr)pbVar3,sVar2);
     local_14 = sVar2 * 2;
-    local_18 = (byte *)FUN_005f4900(*(i32 *)param_1,local_14);
+    local_18 = (byte *)crt_realloc(*(i32 *)param_1,local_14);
     if (local_18 == (byte *)0x0) {
       dbg_log(ADDR(0x638cac, ((u8 *)&g.d_00638cac)));
       local_8 = 0;
@@ -1262,7 +1262,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
         local_2c = (uint)*local_1c;
         if (local_30 < local_18 + (local_2c & 0x7f) + 1) {
           local_14 += 1000;
-          iVar4 = FUN_005f4900(*(i32 *)param_1,local_14);
+          iVar4 = crt_realloc(*(i32 *)param_1,local_14);
           if (iVar4 == 0) {
             dbg_log(ADDR(0x638ce0, ((u8 *)&g.d_00638ce0)));
             return 0;
@@ -1293,7 +1293,7 @@ iptr __cdecl mem_rle_decompress(iptr param_1)
           }
         }
       }
-      iVar5 = FUN_005f4900(*(i32 *)param_1,local_8);
+      iVar5 = crt_realloc(*(i32 *)param_1,local_8);
       if (iVar5 == 0) {
         dbg_log(ADDR(0x638d14, ((u8 *)&g.d_00638d14)));
         local_8 = 0;
@@ -1437,14 +1437,14 @@ i32 __cdecl dbg_log_open(void)
   if (local_c != (HANDLE)0xffffffff) {
     smeds_log_enabled = 1;
   }
-  FUN_005f22d0(local_40c,s______________________SMEDS_LOG___00639bf8);
-  FUN_005f22e0(local_40c,s_File_Output_to__00639c30);
-  FUN_005f22e0(local_40c,s_smeds_log_00639c44);
-  FUN_005f22e0(local_40c,&dbg_log_header_crlf);
-  FUN_005f22e0(local_40c,s_SMEDS32_Version__00639c54);
+  crt_strcpy(local_40c,s______________________SMEDS_LOG___00639bf8);
+  crt_strcat(local_40c,s_File_Output_to__00639c30);
+  crt_strcat(local_40c,s_smeds_log_00639c44);
+  crt_strcat(local_40c,&dbg_log_header_crlf);
+  crt_strcat(local_40c,s_SMEDS32_Version__00639c54);
   _sprintf(local_42c,s__d__d__d_00639c68,2,0,0);
-  FUN_005f22e0(local_40c,local_42c);
-  FUN_005f22e0(local_40c,&dbg_log_header_blank_lines);
+  crt_strcat(local_40c,local_42c);
+  crt_strcat(local_40c,&dbg_log_header_blank_lines);
   if (smeds_log_enabled != '\0') {
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &local_8;
@@ -1477,7 +1477,7 @@ i32 __cdecl dbg_log_close(void)
     local_c = CreateFileA(s_smeds_log_00639c84,0xc0000000,0,(LPSECURITY_ATTRIBUTES)0x0,3,0x80,
                           (HANDLE)0x0);
     SetFilePointer(local_c,0,(PLONG)0x0,2);
-    FUN_005f22d0(local_40c,s______________________LOG_CLOSED___00639c90);
+    crt_strcpy(local_40c,s______________________LOG_CLOSED___00639c90);
     lpOverlapped = (LPOVERLAPPED)0x0;
     lpNumberOfBytesWritten = &local_8;
     nNumberOfBytesToWrite = _strlen(local_40c);
@@ -1697,7 +1697,7 @@ void __thiscall ptrlist_dtor(void *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&this)); }
+  /* inlined unwind funclet 005f04fe */ { ptrlist_clear(*(PtrList **)((iptr)&this)); }
   return;
 }
 #undef uStack_10

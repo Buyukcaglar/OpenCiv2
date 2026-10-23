@@ -293,8 +293,8 @@ short __cdecl snd_mix_8bit_resample(char *dst, byte *src, uint count,
 void __cdecl path_default_extension(char *name, char *ext)
 {
     if (crt_strrchr(name, '.') == NULL) {
-        FUN_005f22e0(name, &path_default_ext_dot_str);
-        FUN_005f22e0(name, ext);
+        crt_strcat(name, &path_default_ext_dot_str);
+        crt_strcat(name, ext);
     }
     __strupr(name);
 }
@@ -305,12 +305,12 @@ void __cdecl path_set_extension(char *dst, char *src, char *ext)
     char *dot;
 
     if (src != dst)
-        FUN_005f22d0(dst, src);
+        crt_strcpy(dst, src);
     dot = crt_strrchr(dst, '.');
     if (dot != NULL)
         *dot = '\0';
-    FUN_005f22e0(dst, &path_set_ext_dot_str);
-    FUN_005f22e0(dst, ext);
+    crt_strcat(dst, &path_set_ext_dot_str);
+    crt_strcat(dst, ext);
     __strupr(dst);
 }
 

@@ -24,7 +24,7 @@
 
 #define RAND_SEED (*(u32 *)g.d_00639e50)
 
-void FUN_005f2260(u32 seed)
+void crt_srand(u32 seed)
 {
     RAND_SEED = plat_srand(seed);
 }
@@ -78,7 +78,7 @@ void operator_delete(void *p)
     heap_free(p);
 }
 
-void *FUN_005f4900(void *p, size_t n)       /* realloc */
+void *crt_realloc(void *p, size_t n)       /* realloc */
 {
     void *q;
     size_t old;
@@ -113,10 +113,10 @@ static char *copy_forward(char *d, const char *s)
         ;
     return d;
 }
-void *FUN_005f2110(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
-void *FUN_005f6500(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
-void *FUN_005f22d0(void *dst, const void *src) { copy_forward(dst, src); return dst; }
-void *FUN_005f22e0(void *dst, const void *src) { copy_forward((char *)dst + strlen(dst), src); return dst; }
+void *crt_memcpy(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
+void *crt_memmove(void *dst, const void *src, uint n) { return memmove(dst, src, n); }
+void *crt_strcpy(void *dst, const void *src) { copy_forward(dst, src); return dst; }
+void *crt_strcat(void *dst, const void *src) { copy_forward((char *)dst + strlen(dst), src); return dst; }
 int _memcmp(const void *a, const void *b, size_t n) { return memcmp(a, b, n); }
 void *_memset(void *p, int c, size_t n) { return memset(p, c, n); }
 size_t _strlen(const char *s) { return strlen(s); }
@@ -135,12 +135,12 @@ char *_strncat(char *d, const char *s, size_t n) { return strncat(d, s, n); }
 char *_strchr(const char *s, int c) { return strchr(s, c); }
 char *_strrchr(const char *s, int c) { return strrchr(s, c); }
 char *_strstr(const char *s, const char *sub) { return strstr(s, sub); }
-int FUN_005f7120(int v) { return v < 0 ? -v : v; }
+int crt_abs(int v) { return v < 0 ? -v : v; }
 
 /* MSVC's ctype functions take the C locale's view of chars 0..255. */
 int _isalpha(int c) { return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'); }
 int _isdigit(int c) { return c >= '0' && c <= '9'; }
-uint FUN_005f2700(uint c) { return (c >= 'a' && c <= 'z') ? c - 0x20 : c; }   /* toupper */
+uint crt_toupper(uint c) { return (c >= 'a' && c <= 'z') ? c - 0x20 : c; }   /* toupper */
 static int lower(int c) { return (c >= 'A' && c <= 'Z') ? c + 0x20 : c; }
 
 int __strcmpi(const char *a, const char *b)
@@ -177,7 +177,7 @@ char *__strupr(char *s)
 {
     char *p;
     for (p = s; *p; p++)
-        *p = (char)FUN_005f2700((unsigned char)*p);
+        *p = (char)crt_toupper((unsigned char)*p);
     return s;
 }
 
@@ -389,7 +389,7 @@ i32 __filelength(int fd)
     return fstat(fd, &st) ? -1 : (i32)st.st_size;
 }
 
-int FUN_005f6650(const char *from, const char *to)      /* rename */
+int crt_rename(const char *from, const char *to)      /* rename */
 {
     char a[1024], b[1024];
     plat_host_path(from, a, sizeof a, 0);
@@ -397,14 +397,14 @@ int FUN_005f6650(const char *from, const char *to)      /* rename */
     return rename(a, b) ? -1 : 0;
 }
 
-int FUN_005f66b0(const char *path)                      /* remove */
+int crt_remove(const char *path)                      /* remove */
 {
     char a[1024];
     plat_host_path(path, a, sizeof a, 0);
     return remove(a) ? -1 : 0;
 }
 
-int FUN_00607920(const char *path)                      /* _mkdir */
+int crt_mkdir(const char *path)                      /* _mkdir */
 {
     char a[1024];
     plat_host_path(path, a, sizeof a, 1);
@@ -469,7 +469,7 @@ void crt_exit_process(int code)
     exit(code);
 }
 
-void FUN_005f2620(void *array, uint size, int count, code *ctor, code *dtor)
+void crt_vector_ctor_iterator(void *array, uint size, int count, code *ctor, code *dtor)
 {
     char *p = array;
     int i;
@@ -478,7 +478,7 @@ void FUN_005f2620(void *array, uint size, int count, code *ctor, code *dtor)
         ((void (*)(void *))ctor)(p);
 }
 
-void FUN_005f2490(void *array, uint size, int count, code *dtor)
+void crt_vector_dtor_iterator(void *array, uint size, int count, code *dtor)
 {
     char *p = (char *)array + (size_t)size * count;
     while (--count >= 0) {
@@ -506,7 +506,7 @@ void FUN_0061a000(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7
 void FUN_0061a759(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, int a12, int a13, int a14, int a15, int a16) { unsupported("ASMGRAF 0x0061a759"); }
 
 /* Network game connection set-up (XDaemon): no network play in this build. */
-i32 FUN_00421fcd(void *this, int param_1) { (void)this; (void)param_1; unsupported("network game (0x00421fcd)"); return 0; }
+i32 net_session_init(void *this, int param_1) { (void)this; (void)param_1; unsupported("network game (0x00421fcd)"); return 0; }
 
 #ifdef __wasm__
 /* The MSVC runtime's assertion failure (glibc happens to have one). */

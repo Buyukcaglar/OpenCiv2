@@ -639,7 +639,7 @@ addr	name	len	type	block
 00625084	s_REALLYQUIT_00625084	11	/string	.data
 00625090	DAT_00625090	1	/undefined	.data
 006250d8	DAT_006250d8	1	/undefined	.data
-00625114	DAT_00625114	1	/undefined1	.data
+00625114	file_path_mode	1	/undefined1	.data
 00625118	DAT_00625118	1	/undefined	.data
 00625128	tech_editor_combo_x_table	1	/undefined	.data
 0062512c	tech_editor_combo_y_table	1	/undefined	.data
@@ -1328,7 +1328,7 @@ addr	name	len	type	block
 00628054	unit_blink_phase	1	/undefined1	.data
 00628058	status_end_turn_blink_phase	1	/undefined1	.data
 0062805c	unit_blink_skip_tick	1	/undefined1	.data
-00628060	DAT_00628060	4	/undefined4	.data
+00628060	map_layout_wide	4	/undefined4	.data
 00628064	game_language	4	/undefined4	.data
 00628068	double_moves_applied	4	/undefined4	.data
 0062806c	s_5.4.0f_Multiplayer_26-March-99_0062806c	31	/string	.data
@@ -1678,7 +1678,7 @@ addr	name	len	type	block
 0062c9e0	leader_video_tribe_codes	4	/undefined *	.data
 0062ca34	DAT_0062ca34	4	/undefined4	.data
 0062ca38	diplo_leader_wnd_open	1	/undefined1	.data
-0062ca3c	DAT_0062ca3c	1	/undefined	.data
+0062ca3c	diplo_leader_wnd_busy	1	/undefined	.data
 0062ca40	diplo_leader_video_active	1	/undefined1	.data
 0062ca44	diplo_greeting_sound_id	4	/undefined4	.data
 0062ca48	diplo_leader_sound_ids	4	/undefined4	.data
@@ -1958,7 +1958,7 @@ addr	name	len	type	block
 0062dacc	DAT_0062dacc	1	/undefined	.data
 0062dad4	DAT_0062dad4	1	/undefined	.data
 0062dad8	s_VFWNOTREGISTERED_0062dad8	17	/string	.data
-0062db00	DAT_0062db00	4	/undefined4	.data
+0062db00	research_notice_mode	4	/undefined4	.data
 0062db04	s_UPGRADE_0062db04	8	/string	.data
 0062db0c	s_AUTOMONARCHY_0062db0c	13	/string	.data
 0062db1c	s_STARTREV_0062db1c	9	/string	.data
@@ -2180,7 +2180,7 @@ addr	name	len	type	block
 0062e614	text_index_path_sep_str	1	/undefined	.data
 0062e618	DAT_0062e618	1	/undefined	.data
 0062e61c	text_lookup_path_sep_str	1	/undefined	.data
-0062e658	DAT_0062e658	1	/undefined	.data
+0062e658	parley_offer_kinds	1	/undefined	.data
 0062e698	parley_item_header_sizes	1	/undefined	.data
 0062e6ec	s_Failed_to_allocate_buffer_for_pa_0062e6ec	76	/string	.data
 0062e738	s_D:\Ss\Franklinton\parleywin_tran_0062e738	44	/string	.data
@@ -3320,7 +3320,7 @@ addr	name	len	type	block
 00633a80	mp_mouse_watchdog_timer	4	/undefined4	.data
 00633a84	mp_window_drag_active	1	/undefined1	.data
 00633a88	mp_window_drag_start_ticks	4	/undefined4	.data
-00633a8c	DAT_00633a8c	1	/undefined	.data
+00633a8c	mp_window_drag_flag	1	/undefined	.data
 00633a90	mp_window_drag_wnd	4	/undefined4	.data
 00633a94	s_ENTER_WINDOW_DRAG_00633a94	18	/string	.data
 00633aa8	s_EXIT_WINDOW_DRAG_00633aa8	17	/string	.data
@@ -3811,7 +3811,7 @@ addr	name	len	type	block
 00635a24	list_sel_bg_color	4	/undefined4	.data
 00635a28	dlg_sel_text_color	4	/undefined4	.data
 00635a2c	dlg_sel_text_shadow_color	4	/undefined4	.data
-00635a30	DAT_00635a30	4	/undefined4	.data
+00635a30	dialog_default_list_color	4	/undefined4	.data
 00635a34	dlg_scale_num	4	/undefined4	.data
 00635a38	dlg_scale_den	4	/undefined4	.data
 00635a3c	dlg_pending_idle_callback	4	/undefined4	.data
@@ -4349,7 +4349,7 @@ addr	name	len	type	block
 006385ac	snd_wave_block_align	4	/undefined4	.data
 006385b0	snd_wave_device_open	4	/undefined4	.data
 006385b4	snd_wave_buffers_ready	1	/undefined	.data
-006385b8	DAT_006385b8	1	/undefined	.data
+006385b8	snd_wave_stop_pending	1	/undefined	.data
 006385bc	snd_avi_stream_started	4	/undefined4	.data
 006385c0	DAT_006385c0	4	/undefined4	.data
 006385c4	DAT_006385c4	4	/undefined4	.data
@@ -4975,12 +4975,12 @@ addr	name	len	type	block
 0063f69c	supply_score_gold	4	/undefined4	.data
 0063f6a0	supply_score_oil	4	/undefined4	.data
 0063f6a4	supply_score_uranium	4	/undefined4	.data
-0063f6f0	DAT_0063f6f0	1	/undefined	.data
-0063f72c	DAT_0063f72c	1	/undefined	.data
-0063f768	DAT_0063f768	1	/undefined	.data
-0063f7a4	DAT_0063f7a4	1	/undefined	.data
-0063f7e0	DAT_0063f7e0	1	/undefined	.data
-0063f81c	DAT_0063f81c	1	/undefined	.data
+0063f6f0	icon_misc_sprites	1	/undefined	.data
+0063f72c	icon_sprite_1	1	/undefined	.data
+0063f768	icon_sprite_2	1	/undefined	.data
+0063f7a4	icon_sprite_3	1	/undefined	.data
+0063f7e0	icon_sprite_4	1	/undefined	.data
+0063f81c	icon_sprite_5	1	/undefined	.data
 0063f858	river_sprites	1	/undefined	.data
 0063fc18	grassland_shield_sprite	1	/undefined	.data
 0063fc58	popup_info_icon_sprite	1	/undefined	.data
@@ -5032,7 +5032,7 @@ addr	name	len	type	block
 00644b70	nuke_anim_sprites	1	/undefined	.data
 00644e08	editor_unit_backdrop_sprite	1	/undefined	.data
 00644e48	war_icon_sprite	1	/undefined	.data
-00644e88	DAT_00644e88	1	/undefined	.data
+00644e88	unused_sprite_pair	1	/undefined	.data
 00644f00	resource_shortage_icon_sprites	1	/undefined	.data
 00644f3c	resource_icon_sprites	1	/undefined	.data
 00644f78	shield_shortage_icon_sprite	1	/undefined	.data
@@ -5059,10 +5059,10 @@ addr	name	len	type	block
 006465d8	fortify_overlay_sprites	1	/undefined	.data
 00646614	fortify_overlay_alt_sprite	1	/undefined	.data
 00646650	fortress_sprite	1	/undefined	.data
-0064668c	DAT_0064668c	1	/undefined	.data
+0064668c	icon_sprite_6	1	/undefined	.data
 006466c8	pollution_icon_sprite	1	/undefined	.data
-00646704	DAT_00646704	1	/undefined	.data
-00646740	DAT_00646740	1	/undefined	.data
+00646704	icon_sprite_7	1	/undefined	.data
+00646740	icon_sprite_8	1	/undefined	.data
 0064677c	city_disorder_icon_sprite	1	/undefined	.data
 00646878	government_sprites	1	/undefined	.data
 006468b4	government_despotism_sprite	1	/undefined	.data
@@ -5079,8 +5079,8 @@ addr	name	len	type	block
 00647748	ceasefire_icon_sprite	1	/undefined	.data
 00647788	caption_zoom_out_button_sprite	1	/undefined	.data
 006477c8	sprite_editor_tool_sprites	1	/undefined	.data
-00647b50	DAT_00647b50	1	/undefined	.data
-00647b8c	DAT_00647b8c	1	/undefined	.data
+00647b50	icons_pair_sprites	1	/undefined	.data
+00647b8c	icon_sprite_9	1	/undefined	.data
 00647bc8	city_radius_grid_sprite	1	/undefined	.data
 00647c40	terrain_base_sprites	1	/undefined	.data
 00647de4	DAT_00647de4	1	/undefined	.data
@@ -5092,7 +5092,7 @@ addr	name	len	type	block
 00647fdc	airbase_occupied_sprite	1	/undefined	.data
 00648018	diplo_popup_portrait_sprite	1	/undefined	.data
 00648058	unhappy_suppressed_icon_sprite	1	/undefined	.data
-00648098	DAT_00648098	1	/undefined	.data
+00648098	icons_unused_tall_sprite	1	/undefined	.data
 006480d8	city_down_arrow_sprite	1	/undefined	.data
 00648118	research_flask_sprites	1	/undefined	.data
 00648208	global_warming_sprites	1	/undefined	.data
@@ -5226,7 +5226,7 @@ addr	name	len	type	block
 0064ba8c	DAT_0064ba8c	4	/undefined4	.data
 0064bb08	scenario_dir_path	1	/undefined	.data
 0064bc10	prefs_game_rules	2	/undefined2	.data
-0064bc12	DAT_0064bc12	1	/undefined	.data
+0064bc12	prefs_default_level	1	/undefined	.data
 0064bc14	prefs_difficulty	2	/undefined2	.data
 0064bc16	prefs_tribe	2	/undefined2	.data
 0064bc18	prefs_gender	2	/undefined2	.data
@@ -5242,7 +5242,7 @@ addr	name	len	type	block
 0064bc2e	prefs_world_temperature	2	/undefined2	.data
 0064bc30	prefs_world_climate	2	/undefined2	.data
 0064bc32	prefs_world_age	2	/undefined2	.data
-0064bc34	DAT_0064bc34	1	/undefined	.data
+0064bc34	prefs_text_field	1	/undefined	.data
 0064bc54	prefs_rules_choice	2	/undefined2	.data
 0064bc56	prefs_accelerated_start	2	/undefined2	.data
 0064bc60	scenario_flags	2	/undefined2	.data
@@ -5278,7 +5278,7 @@ addr	name	len	type	block
 0064bcdb	DAT_0064bcdb	1	/undefined1	.data
 0064bcdc	DAT_0064bcdc	1	/undefined1	.data
 0064bcdd	DAT_0064bcdd	1	/undefined1	.data
-0064bcf4	DAT_0064bcf4	4	/undefined4	.data
+0064bcf4	minimap_margin	4	/undefined4	.data
 0064bcf8	DAT_0064bcf8	1	/undefined	.data
 0064bcfa	DAT_0064bcfa	1	/undefined	.data
 0064bd12	DAT_0064bd12	1	/undefined	.data
@@ -5605,7 +5605,7 @@ addr	name	len	type	block
 00654c7c	mp_simultaneous_setting	2	/undefined2	.data
 00654c7e	cheat_saved_turn_time_ms	4	/undefined4	.data
 00654da4	civ_email_addresses	1	/undefined	.data
-00654ea4	DAT_00654ea4	1	/undefined	.data
+00654ea4	net_player_setup_table	1	/undefined	.data
 00654fa4	saved_turn_civ	1	/undefined1	.data
 00654fa6	saved_resume_new_game	2	/undefined2	.data
 00654fa8	autoplay_active	2	/undefined2	.data
@@ -5613,7 +5613,7 @@ addr	name	len	type	block
 00654fac	mp_double_production	2	/undefined2	.data
 00654fae	mp_double_moves	2	/undefined2	.data
 00654fb0	net_claimed_civs_mask	2	/undefined2	.data
-00654fd4	DAT_00654fd4	1	/undefined	.data
+00654fd4	secondary_menu_handle	1	/undefined	.data
 00654fd8	game_setup_complete	4	/undefined4	.data
 00654fe0	DAT_00654fe0	1	/undefined	.data
 00654fe4	DAT_00654fe4	1	/undefined	.data
@@ -5645,7 +5645,7 @@ addr	name	len	type	block
 00655358	civ_primary_colors	1	/undefined	.data
 0065535c	civ_mid_colors	1	/undefined	.data
 00655360	civ_secondary_colors	1	/undefined	.data
-00655364	DAT_00655364	1	/undefined	.data
+00655364	leader_flags_table	1	/undefined	.data
 006553d8	main_frame_wnd	1	/undefined	.data
 006553e8	main_frame_base_wnd	1	/undefined	.data
 0065548c	DAT_0065548c	1	/undefined1	.data
@@ -5821,7 +5821,7 @@ addr	name	len	type	block
 0066653a	prefs_multiplayer_type	2	/undefined2	.data
 0066653c	prefs_hotseat_menu_choice	2	/undefined2	.data
 0066653e	prefs_lan_menu_choice	2	/undefined2	.data
-00666540	DAT_00666540	1	/undefined	.data
+00666540	mp_prefs_setting_1	1	/undefined	.data
 00666542	prefs_pbem_menu_choice	2	/undefined2	.data
 00666544	prefs_net_protocol	2	/undefined2	.data
 00666546	prefs_mp_open_game	2	/undefined2	.data
@@ -5842,11 +5842,11 @@ addr	name	len	type	block
 006665fc	prefs_clear_chat_on_boot	2	/undefined2	.data
 006665fe	prefs_mp_double_production	2	/undefined2	.data
 00666600	prefs_mp_double_moves	2	/undefined2	.data
-00666602	DAT_00666602	1	/undefined	.data
-0066661a	DAT_0066661a	1	/undefined	.data
-00666632	DAT_00666632	1	/undefined	.data
-0066664a	DAT_0066664a	1	/undefined	.data
-006666f2	DAT_006666f2	1	/undefined	.data
+00666602	mp_prefs_setting_2	1	/undefined	.data
+0066661a	mp_prefs_setting_3	1	/undefined	.data
+00666632	mp_prefs_setting_4	1	/undefined	.data
+0066664a	mp_prefs_settings_table	1	/undefined	.data
+006666f2	mp_prefs_setting_5	1	/undefined	.data
 0066be78	parley_units_by_city	4	/undefined4	.data
 0066be80	parley_list_own_side	1	/undefined	.data
 0066be90	unit_type_name_ptrs	1	/undefined	.data
@@ -5866,8 +5866,8 @@ addr	name	len	type	block
 0066c670	scenario_title_surface	1	/undefined	.data
 0066c720	coast_quarter_land_masks	1	/undefined	.data
 0066c721	DAT_0066c721	1	/undefined	.data
-0066c728	DAT_0066c728	1	/undefined	.data
-0066c768	DAT_0066c768	1	/undefined	.data
+0066c728	static_scrollbar_1	1	/undefined	.data
+0066c768	static_scrollbar_2	1	/undefined	.data
 0066c7a8	map_views	1	/undefined	.data
 0066c7f0	map_view_wnds	1	/undefined	.data
 0066c8cc	mapview_client_origin_x	4	/undefined4	.data
@@ -6602,7 +6602,7 @@ addr	name	len	type	block
 006ad90c	net_stacked_draw_count	4	/undefined4	.data
 006ad910	net_stacked_draw_first	4	/undefined4	.data
 006ad914	net_stacked_draw_last	4	/undefined4	.data
-006ad918	DAT_006ad918	4	/undefined4	.data
+006ad918	unit_stack_check_enabled	4	/undefined4	.data
 006ad91c	net_stacked_draw_peak	4	/undefined4	.data
 006ad920	net_stacked_draw_kinds	1	/undefined	.data
 006ad924	net_stacked_draw_args	1	/undefined	.data
@@ -6788,14 +6788,14 @@ addr	name	len	type	block
 006e50a4	avi_indeo_seq_type	1	/undefined	.data
 006e50a8	avi_indeo_seq_environment	1	/undefined	.data
 006e50ac	avi_indeo_seq_flags	1	/undefined	.data
-006e50bc	DAT_006e50bc	1	/undefined	.data
+006e50bc	avi_indeo_seq_extra	1	/undefined	.data
 006e50c4	avi_vfw_initialized	4	/undefined4	.data
 006e50c8	avi_view_rect_x	4	/undefined4	.data
 006e50cc	avi_view_rect_y	4	/undefined4	.data
 006e50d0	avi_view_rect_width	1	/undefined	.data
 006e50d4	avi_view_rect_height	1	/undefined	.data
 006e50d8	avi_frames_per_second	1	/undefined	.data
-006e50dc	DAT_006e50dc	1	/undefined	.data
+006e50dc	avi_indeo_frame_extra	1	/undefined	.data
 006e50e8	ddraw_hw_caps	1	/undefined	.data
 006e50ec	ddraw_hw_caps_byte0	1	/undefined	.data
 006e50ee	ddraw_hw_caps_byte2	1	/undefined	.data

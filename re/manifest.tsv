@@ -59,7 +59,7 @@ addr	name	status	reason
 0040894c	ui_pump_messages_net	auto	
 0040897f	mapgen_calc_fertility	auto	
 00408d33	map_generate	auto	
-0040a54e	FUN_0040a54e	ehfunclet	unaff_EBP
+0040a54e	unwind_funclet_0040a54e	ehfunclet	unaff_EBP
 0040a572	mapgen_add_landmass	auto	
 0040a763	mapgen_land_walk	auto	
 0040a824	mapgen_in_bounds	auto	
@@ -86,12 +86,12 @@ addr	name	status	reason
 0040c480	taxrate_calc_totals	auto	
 0040c7d0	taxrate_dialog_paint	auto	
 0040cd64	taxrate_dialog_run	auto	
-0040dda0	FUN_0040dda0	ehfunclet	unaff_EBP
+0040dda0	unwind_funclet_0040dda0	ehfunclet	unaff_EBP
 0040ddc6	taxrate_dialog_show	auto	
-0040dea8	FUN_0040dea8	ehfunclet	unaff_EBP
+0040dea8	unwind_funclet_0040dea8	ehfunclet	unaff_EBP
 0040decc	taxrate_enforce_max_rate	auto	
 0040e017	menu_find_city	auto	
-0040e38d	FUN_0040e38d	ehfunclet	unaff_EBP
+0040e38d	unwind_funclet_0040e38d	ehfunclet	unaff_EBP
 0040e3b1	menu_revolution	auto	
 0040ef50	win_pump_one_message	auto	
 0040ef70	font_cached_height	auto	
@@ -100,12 +100,12 @@ addr	name	status	reason
 0040f010	surface_delete	auto	
 0040f060	taxrate_dialog_ctor	auto	
 0040f1e0	taxrate_dialog_dtor	auto	
-0040f25f	FUN_0040f25f	ehfunclet	unaff_EBP
-0040f26e	FUN_0040f26e	ehfunclet	unaff_EBP
-0040f286	FUN_0040f286	ehfunclet	unaff_EBP
-0040f295	FUN_0040f295	ehfunclet	unaff_EBP
-0040f2a4	FUN_0040f2a4	ehfunclet	unaff_EBP
-0040f2b3	FUN_0040f2b3	ehfunclet	unaff_EBP
+0040f25f	unwind_funclet_0040f25f	ehfunclet	unaff_EBP
+0040f26e	unwind_funclet_0040f26e	ehfunclet	unaff_EBP
+0040f286	unwind_funclet_0040f286	ehfunclet	unaff_EBP
+0040f295	unwind_funclet_0040f295	ehfunclet	unaff_EBP
+0040f2a4	unwind_funclet_0040f2a4	ehfunclet	unaff_EBP
+0040f2b3	unwind_funclet_0040f2b3	ehfunclet	unaff_EBP
 0040f320	wnd_set_modal_idle_callback	auto	
 0040f350	wnd_set_keyboard_nav	auto	
 0040f380	ctrl_show_and_redraw	auto	
@@ -113,7 +113,7 @@ addr	name	status	reason
 0040f480	ctrl_base_ctor	auto	
 0040f510	ctrl_base_dtor	auto	
 0040f570	ctrl_dtor	auto	
-0040f5c3	FUN_0040f5c3	ehfunclet	unaff_EBP
+0040f5c3	unwind_funclet_0040f5c3	ehfunclet	unaff_EBP
 0040f610	ctrl_destroy	auto	
 0040f680	button_create	auto	
 0040f730	ctrl_init	auto	
@@ -123,13 +123,13 @@ addr	name	status	reason
 0040f880	button_set_callback	auto	
 0040f8b0	checkbox_elem_ctor	auto	
 0040f930	checkbox_dtor	auto	
-0040f98a	FUN_0040f98a	ehfunclet	unaff_EBP
+0040f98a	unwind_funclet_0040f98a	ehfunclet	unaff_EBP
 0040f9d0	checkbox_create	auto	
 0040faa0	checkbox_set_callback	auto	
 0040fad0	checkbox_set_checked	auto	
 0040fb00	scrollbar_ctor	auto	
 0040fbb0	scrollbar_dtor	auto	
-0040fc0a	FUN_0040fc0a	ehfunclet	unaff_EBP
+0040fc0a	unwind_funclet_0040fc0a	ehfunclet	unaff_EBP
 0040fc50	scrollbar_create	auto	
 0040fcf0	scrollbar_set_pos	auto	
 0040fd40	scrollbar_set_range	auto	
@@ -149,8 +149,8 @@ addr	name	status	reason
 00410070	civ_get_adjective	auto	
 004100a0	FUN_004100a0	unused	
 004100cf	city_info_popup	auto	
-004102d5	FUN_004102d5	ehfunclet	unaff_EBP
-004102e1	FUN_004102e1	ehfunclet	unaff_EBP
+004102d5	unwind_funclet_004102d5	ehfunclet	unaff_EBP
+004102e1	unwind_funclet_004102e1	ehfunclet	unaff_EBP
 00410302	mapview_redraw_cursor_tile	auto	
 0041033a	mapviews_redraw_cursor	auto	
 004103ae	mapview_on_redraw	auto	
@@ -225,40 +225,40 @@ addr	name	status	reason
 00416734	tech_editor_create_edit	auto	
 00416828	tech_editor_paint	auto	
 00416c9e	tech_editor_dialog_run	auto	
-00417542	FUN_00417542	ehfunclet	unaff_EBP
+00417542	unwind_funclet_00417542	ehfunclet	unaff_EBP
 00417566	tech_editor_run	auto	
-004175bf	FUN_004175bf	ehfunclet	unaff_EBP
+004175bf	unwind_funclet_004175bf	ehfunclet	unaff_EBP
 00417ef0	font_set	auto	
 00417f70	sprite_get_key_color	auto	
 00417fa0	editor_wnd_ctor	auto	
 004183d0	editor_wnd_dtor	auto	
-0041851f	FUN_0041851f	ehfunclet	unaff_EBP
-0041852e	FUN_0041852e	ehfunclet	unaff_EBP
-0041853d	FUN_0041853d	ehfunclet	unaff_EBP
-0041854c	FUN_0041854c	ehfunclet	unaff_EBP
-0041855b	FUN_0041855b	ehfunclet	unaff_EBP
-0041856a	FUN_0041856a	ehfunclet	unaff_EBP
-00418579	FUN_00418579	ehfunclet	unaff_EBP
-00418588	FUN_00418588	ehfunclet	unaff_EBP
-00418597	FUN_00418597	ehfunclet	unaff_EBP
-004185a6	FUN_004185a6	ehfunclet	unaff_EBP
-004185b5	FUN_004185b5	ehfunclet	unaff_EBP
-004185c4	FUN_004185c4	ehfunclet	unaff_EBP
-004185d3	FUN_004185d3	ehfunclet	unaff_EBP
-004185e2	FUN_004185e2	ehfunclet	unaff_EBP
-004185f1	FUN_004185f1	ehfunclet	unaff_EBP
-00418600	FUN_00418600	ehfunclet	unaff_EBP
-0041860f	FUN_0041860f	ehfunclet	unaff_EBP
-0041861e	FUN_0041861e	ehfunclet	unaff_EBP
-0041862d	FUN_0041862d	ehfunclet	unaff_EBP
-0041863c	FUN_0041863c	ehfunclet	unaff_EBP
-00418654	FUN_00418654	ehfunclet	unaff_EBP
-0041866c	FUN_0041866c	ehfunclet	unaff_EBP
+0041851f	unwind_funclet_0041851f	ehfunclet	unaff_EBP
+0041852e	unwind_funclet_0041852e	ehfunclet	unaff_EBP
+0041853d	unwind_funclet_0041853d	ehfunclet	unaff_EBP
+0041854c	unwind_funclet_0041854c	ehfunclet	unaff_EBP
+0041855b	unwind_funclet_0041855b	ehfunclet	unaff_EBP
+0041856a	unwind_funclet_0041856a	ehfunclet	unaff_EBP
+00418579	unwind_funclet_00418579	ehfunclet	unaff_EBP
+00418588	unwind_funclet_00418588	ehfunclet	unaff_EBP
+00418597	unwind_funclet_00418597	ehfunclet	unaff_EBP
+004185a6	unwind_funclet_004185a6	ehfunclet	unaff_EBP
+004185b5	unwind_funclet_004185b5	ehfunclet	unaff_EBP
+004185c4	unwind_funclet_004185c4	ehfunclet	unaff_EBP
+004185d3	unwind_funclet_004185d3	ehfunclet	unaff_EBP
+004185e2	unwind_funclet_004185e2	ehfunclet	unaff_EBP
+004185f1	unwind_funclet_004185f1	ehfunclet	unaff_EBP
+00418600	unwind_funclet_00418600	ehfunclet	unaff_EBP
+0041860f	unwind_funclet_0041860f	ehfunclet	unaff_EBP
+0041861e	unwind_funclet_0041861e	ehfunclet	unaff_EBP
+0041862d	unwind_funclet_0041862d	ehfunclet	unaff_EBP
+0041863c	unwind_funclet_0041863c	ehfunclet	unaff_EBP
+00418654	unwind_funclet_00418654	ehfunclet	unaff_EBP
+0041866c	unwind_funclet_0041866c	ehfunclet	unaff_EBP
 00418740	ctrl_get_id	auto	
 00418770	control_get_hwnd	auto	
 004187a0	edit_ctor	auto	
 00418870	edit_dtor	auto	
-004188ca	FUN_004188ca	ehfunclet	unaff_EBP
+004188ca	unwind_funclet_004188ca	ehfunclet	unaff_EBP
 00418910	edit_create	auto	
 004189c0	edit_set_max_len	auto	
 00418a00	edit_set_callback	auto	
@@ -266,7 +266,7 @@ addr	name	status	reason
 00418a70	ctrl_get_text	auto	
 00418ab0	combo_ctor	auto	
 00418b50	combo_dtor	auto	
-00418baa	FUN_00418baa	ehfunclet	unaff_EBP
+00418baa	unwind_funclet_00418baa	ehfunclet	unaff_EBP
 00418bf0	combo_create	auto	
 00418c70	combo_set_font	auto	
 00418cb0	font_get_hfont	auto	
@@ -277,7 +277,7 @@ addr	name	status	reason
 00418dd0	combo_set_callback	auto	
 00418e00	checkbox_ctor	auto	
 00418ea0	listbox_dtor	auto	
-00418efa	FUN_00418efa	ehfunclet	unaff_EBP
+00418efa	unwind_funclet_00418efa	ehfunclet	unaff_EBP
 00418f40	listbox_create	auto	
 00418fe0	listbox_set_font	auto	
 00419020	listbox_add_string	auto	
@@ -287,8 +287,8 @@ addr	name	status	reason
 00419100	popup_text_flags	auto	
 00419130	popup_text_ex	auto	
 00419170	setup_hotseat_game	auto	
-00419940	FUN_00419940	ehfunclet	unaff_EBP
-0041994c	FUN_0041994c	ehfunclet	unaff_EBP
+00419940	unwind_funclet_00419940	ehfunclet	unaff_EBP
+0041994c	unwind_funclet_0041994c	ehfunclet	unaff_EBP
 00419b80	wnd_flush_paint	auto	
 00419ba0	wnd_set_bg_color	auto	
 00419be0	wnd_set_bg_surface	auto	
@@ -308,35 +308,35 @@ addr	name	status	reason
 0041ab18	rules_load_govts_leaders	auto	
 0041b00e	rules_parse_sections	auto	
 0041b177	app_select_language	unused	
-0041b46a	FUN_0041b46a	ehfunclet	unaff_EBP
+0041b46a	unwind_funclet_0041b46a	ehfunclet	unaff_EBP
 0041b48f	app_fatal_cleanup	auto	
 0041b4c0	app_startup_init	auto	
 0041b8b0	app_shutdown_cleanup	auto	
 0041b8ff	civ_intro_popup	auto	
 0041ba52	setup_new_game_dialogs	game	src/game/bigframes.c
-0041d3f2	FUN_0041d3f2	ehfunclet	unaff_EBP
+0041d3f2	unwind_funclet_0041d3f2	ehfunclet	unaff_EBP
 0041d417	setup_choose_map_size	auto	
-0041d7c5	FUN_0041d7c5	ehfunclet	unaff_EBP
+0041d7c5	unwind_funclet_0041d7c5	ehfunclet	unaff_EBP
 0041d7ea	setup_custom_world	auto	
-0041dc9e	FUN_0041dc9e	ehfunclet	unaff_EBP
+0041dc9e	unwind_funclet_0041dc9e	ehfunclet	unaff_EBP
 0041dcc3	setup_clear_start_positions	auto	
 0041dd0e	map_load_dialog	auto	
 0041dfe1	setup_start_scenario	auto	
-0041e7b2	FUN_0041e7b2	ehfunclet	unaff_EBP
-0041e7be	FUN_0041e7be	ehfunclet	unaff_EBP
+0041e7b2	unwind_funclet_0041e7b2	ehfunclet	unaff_EBP
+0041e7be	unwind_funclet_0041e7be	ehfunclet	unaff_EBP
 0041e7e3	labels_reload	auto	
 0041e864	rules_load	auto	
 0041e8fb	load_game_pick_civ	auto	
-0041eec6	FUN_0041eec6	ehfunclet	unaff_EBP
+0041eec6	unwind_funclet_0041eec6	ehfunclet	unaff_EBP
 0041eeeb	game_main_menu_loop	auto	
-0041f66e	FUN_0041f66e	ehfunclet	unaff_EBP
-0041f67a	FUN_0041f67a	ehfunclet	unaff_EBP
+0041f66e	unwind_funclet_0041f66e	ehfunclet	unaff_EBP
+0041f67a	unwind_funclet_0041f67a	ehfunclet	unaff_EBP
 0041f69f	game_session_begin	auto	
 0041f878	game_session_end	auto	
 0041f8d9	game_main	auto	
-004201ef	FUN_004201ef	ehfunclet	unaff_EBP
-004201fb	FUN_004201fb	ehfunclet	unaff_EBP
-00420207	FUN_00420207	ehfunclet	unaff_EBP
+004201ef	unwind_funclet_004201ef	ehfunclet	unaff_EBP
+004201fb	unwind_funclet_004201fb	ehfunclet	unaff_EBP
+00420207	unwind_funclet_00420207	ehfunclet	unaff_EBP
 00421bb0	timer_ticks	auto	
 00421bd0	input_flush_events	auto	
 00421bf0	file_obj_create	auto	
@@ -356,7 +356,7 @@ addr	name	status	reason
 00421f40	net_is_host	auto	
 00421f70	net_gamelist_view_ctor	auto	
 00421fad	net_gamelist_view_dtor	auto	
-00421fcd	FUN_00421fcd	manual	unnamed stack object stack0xfffffce4
+00421fcd	net_session_init	manual	unnamed stack object stack0xfffffce4
 00424101	FUN_00424101	ehfunclet	unaff_EBP
 0042410d	FUN_0042410d	ehfunclet	unaff_EBP
 00424129	FUN_00424129	ehfunclet	unaff_EBP
@@ -410,9 +410,9 @@ addr	name	status	reason
 0042903e	city_editor_create_combo	auto	
 004293a8	city_editor_draw	auto	
 00429671	city_editor_open_window	auto	
-00429e53	FUN_00429e53	ehfunclet	unaff_EBP
+00429e53	unwind_funclet_00429e53	ehfunclet	unaff_EBP
 00429e77	city_editor_run	auto	
-00429ed0	FUN_00429ed0	ehfunclet	unaff_EBP
+00429ed0	unwind_funclet_00429ed0	ehfunclet	unaff_EBP
 0042a380	credits_font_global_init	auto	
 0042a39a	credits_font_static_init	auto	
 0042a3ba	credits_font_reg_atexit	auto	
@@ -451,7 +451,7 @@ addr	name	status	reason
 0042a74e	tiles_dll_static_dtor	auto	
 0042a768	picwnd_close	auto	
 0042a7bc	picwnd_open	auto	
-0042ab9b	FUN_0042ab9b	ehfunclet	unaff_EBP
+0042ab9b	unwind_funclet_0042ab9b	ehfunclet	unaff_EBP
 0042abc1	picwnd_blit_at	auto	
 0042ac18	picwnd_blit	auto	
 0042ac4e	advisor_on_close_clicked	auto	
@@ -462,9 +462,9 @@ addr	name	status	reason
 0042b65b	science_advisor_on_goal_clicked	auto	
 0042b67d	science_advisor_show	auto	
 0042b824	trade_commodity_cities_dialog	auto	
-0042bc22	FUN_0042bc22	ehfunclet	unaff_EBP
+0042bc22	unwind_funclet_0042bc22	ehfunclet	unaff_EBP
 0042bc47	trade_supply_search_dialog	auto	
-0042bd6b	FUN_0042bd6b	ehfunclet	unaff_EBP
+0042bd6b	unwind_funclet_0042bd6b	ehfunclet	unaff_EBP
 0042bd8f	trade_advisor_draw	auto	
 0042ccf4	trade_advisor_on_scroll	auto	
 0042cd11	trade_advisor_on_supply_clicked	auto	
@@ -487,21 +487,21 @@ addr	name	status	reason
 00430267	intel_report_on_scroll	auto	
 0043028a	intel_report_on_click	auto	
 0043039d	intel_report_on_cities_clicked	auto	
-004305e7	FUN_004305e7	ehfunclet	unaff_EBP
+004305e7	unwind_funclet_004305e7	ehfunclet	unaff_EBP
 0043060b	intel_report_show	auto	
 00430822	mp_meeting_wait_idle	auto	
 004308ae	foreign_minister_show	auto	
-0043154f	FUN_0043154f	ehfunclet	unaff_EBP
+0043154f	unwind_funclet_0043154f	ehfunclet	unaff_EBP
 00431573	wonders_report_draw	auto	
 00431c56	wonders_report_on_scroll	auto	
 00431c73	wonders_report_show	auto	
 00431d22	powergraph_show	auto	
-004325c9	FUN_004325c9	ehfunclet	unaff_EBP
-004325d5	FUN_004325d5	ehfunclet	unaff_EBP
-004325e1	FUN_004325e1	ehfunclet	unaff_EBP
-004325ed	FUN_004325ed	ehfunclet	unaff_EBP
+004325c9	unwind_funclet_004325c9	ehfunclet	unaff_EBP
+004325d5	unwind_funclet_004325d5	ehfunclet	unaff_EBP
+004325e1	unwind_funclet_004325e1	ehfunclet	unaff_EBP
+004325ed	unwind_funclet_004325ed	ehfunclet	unaff_EBP
 00432611	historian_report_show	auto	
-00432bf8	FUN_00432bf8	ehfunclet	unaff_EBP
+00432bf8	unwind_funclet_00432bf8	ehfunclet	unaff_EBP
 00432c1c	top_cities_draw	auto	
 00433122	top_cities_show	auto	
 004331d1	demographics_draw_rank	auto	
@@ -537,13 +537,13 @@ addr	name	status	reason
 0043856b	casualty_timeline_show	auto	
 004386b8	casualty_timeline_on_dblclick	auto	
 0043c110	picwnd_dtor	auto	
-0043c19c	FUN_0043c19c	ehfunclet	unaff_EBP
-0043c1ab	FUN_0043c1ab	ehfunclet	unaff_EBP
-0043c1ba	FUN_0043c1ba	ehfunclet	unaff_EBP
-0043c1c9	FUN_0043c1c9	ehfunclet	unaff_EBP
-0043c1d8	FUN_0043c1d8	ehfunclet	unaff_EBP
-0043c1e7	FUN_0043c1e7	ehfunclet	unaff_EBP
-0043c1f6	FUN_0043c1f6	ehfunclet	unaff_EBP
+0043c19c	unwind_funclet_0043c19c	ehfunclet	unaff_EBP
+0043c1ab	unwind_funclet_0043c1ab	ehfunclet	unaff_EBP
+0043c1ba	unwind_funclet_0043c1ba	ehfunclet	unaff_EBP
+0043c1c9	unwind_funclet_0043c1c9	ehfunclet	unaff_EBP
+0043c1d8	unwind_funclet_0043c1d8	ehfunclet	unaff_EBP
+0043c1e7	unwind_funclet_0043c1e7	ehfunclet	unaff_EBP
+0043c1f6	unwind_funclet_0043c1f6	ehfunclet	unaff_EBP
 0043c260	picwnd_ctor	auto	
 0043c3f0	resource_dll_load	auto	
 0043c430	dll_free	auto	
@@ -600,7 +600,7 @@ addr	name	status	reason
 004413d1	city_delete	auto	
 00441a79	city_needed_size_improvement	auto	
 00441b11	city_set_production	auto	
-0044251d	FUN_0044251d	ehfunclet	unaff_EBP
+0044251d	unwind_funclet_0044251d	ehfunclet	unaff_EBP
 00442541	civ_reset_city_production	auto	
 0044263f	city_adjacent_to_body	auto	
 0044272d	city_adjacent_sea_info	auto	
@@ -610,19 +610,19 @@ addr	name	status	reason
 004442a0	dlg_game_txt_with_unit_flags	auto	
 004442e0	dlg_game_txt_with_unit	auto	
 00444310	setup_network_game	auto	
-0044525d	FUN_0044525d	ehfunclet	unaff_EBP
-00445269	FUN_00445269	ehfunclet	unaff_EBP
+0044525d	unwind_funclet_0044525d	ehfunclet	unaff_EBP
+00445269	unwind_funclet_00445269	ehfunclet	unaff_EBP
 0044528e	net_prompt_ip_address	auto	
-00445407	FUN_00445407	ehfunclet	unaff_EBP
+00445407	unwind_funclet_00445407	ehfunclet	unaff_EBP
 0044542c	net_prompt_player_name	auto	
-0044556d	FUN_0044556d	ehfunclet	unaff_EBP
+0044556d	unwind_funclet_0044556d	ehfunclet	unaff_EBP
 00445592	net_prompt_game_name	auto	
-004456ed	FUN_004456ed	ehfunclet	unaff_EBP
+004456ed	unwind_funclet_004456ed	ehfunclet	unaff_EBP
 00445712	setup_mp_load_scenario	auto	
-00445e15	FUN_00445e15	ehfunclet	unaff_EBP
-00445e21	FUN_00445e21	ehfunclet	unaff_EBP
+00445e15	unwind_funclet_00445e15	ehfunclet	unaff_EBP
+00445e21	unwind_funclet_00445e21	ehfunclet	unaff_EBP
 00445e46	net_choose_civ_dialog	auto	
-004467fa	FUN_004467fa	ehfunclet	unaff_EBP
+004467fa	unwind_funclet_004467fa	ehfunclet	unaff_EBP
 00447170	net_gamelist_view_scalar_dtor	auto	
 004471c0	lobby_list_scalar_dtor	auto	
 00447210	radiogrp_disable_item	auto	
@@ -870,12 +870,12 @@ addr	name	status	reason
 00448f78	gfx_sheet_surface_static_dtor	auto	
 00448f92	civ_city_style_era	auto	
 00449030	gfx_load_terrain_sprites	auto	
-0044996f	FUN_0044996f	ehfunclet	unaff_EBP
-0044997b	FUN_0044997b	ehfunclet	unaff_EBP
+0044996f	unwind_funclet_0044996f	ehfunclet	unaff_EBP
+0044997b	unwind_funclet_0044997b	ehfunclet	unaff_EBP
 0044999c	sprite_grab_tile_cell	auto	
 004499d3	sprite_grab_from_sheet	auto	
 00449a0e	gfx_load_icon_sprites	auto	
-0044ab4e	FUN_0044ab4e	ehfunclet	unaff_EBP
+0044ab4e	unwind_funclet_0044ab4e	ehfunclet	unaff_EBP
 0044ab72	sprite_grab_icon_cell_keyed	auto	
 0044aba9	sprite_grab_square	auto	
 0044abd5	gfx_grab_fortify_overlay	auto	
@@ -886,7 +886,7 @@ addr	name	status	reason
 0044b239	unit_sprite_scan_shield_offset	auto	
 0044b30e	gfx_load_unit_sprites	auto	
 0044b49e	gfx_load_game_sprites	auto	
-0044b4f6	FUN_0044b4f6	ehfunclet	unaff_EBP
+0044b4f6	unwind_funclet_0044b4f6	ehfunclet	unaff_EBP
 0044c5a0	surfwnd_ctor	auto	
 0044c670	surfwnd_wnd_ctor	auto	
 0044c730	wnd_ctor	auto	
@@ -897,7 +897,7 @@ addr	name	status	reason
 0044caab	FUN_0044caab	ehfunclet	unaff_EBP
 0044cad3	FUN_0044cad3	ehfunclet	unaff_EBP
 0044cb20	surfwnd_wnd_dtor	auto	
-0044cb5e	FUN_0044cb5e	ehfunclet	unaff_EBP
+0044cb5e	unwind_funclet_0044cb5e	ehfunclet	unaff_EBP
 0044cba0	surfwnd_dtor	game	src/game/unwind.c
 0044cc01	FUN_0044cc01	ehfunclet	unaff_EBP
 0044cc29	FUN_0044cc29	ehfunclet	unaff_EBP
@@ -907,25 +907,25 @@ addr	name	status	reason
 0044cdf2	FUN_0044cdf2	ehfunclet	unaff_EBP
 0044ce16	throneroom_ctor	auto	
 0044d027	throneroom_dtor	auto	
-0044d0d8	FUN_0044d0d8	ehfunclet	unaff_EBP
-0044d0e7	FUN_0044d0e7	ehfunclet	unaff_EBP
-0044d0f6	FUN_0044d0f6	ehfunclet	unaff_EBP
-0044d105	FUN_0044d105	ehfunclet	unaff_EBP
-0044d114	FUN_0044d114	ehfunclet	unaff_EBP
-0044d123	FUN_0044d123	ehfunclet	unaff_EBP
-0044d132	FUN_0044d132	ehfunclet	unaff_EBP
-0044d141	FUN_0044d141	ehfunclet	unaff_EBP
+0044d0d8	unwind_funclet_0044d0d8	ehfunclet	unaff_EBP
+0044d0e7	unwind_funclet_0044d0e7	ehfunclet	unaff_EBP
+0044d0f6	unwind_funclet_0044d0f6	ehfunclet	unaff_EBP
+0044d105	unwind_funclet_0044d105	ehfunclet	unaff_EBP
+0044d114	unwind_funclet_0044d114	ehfunclet	unaff_EBP
+0044d123	unwind_funclet_0044d123	ehfunclet	unaff_EBP
+0044d132	unwind_funclet_0044d132	ehfunclet	unaff_EBP
+0044d141	unwind_funclet_0044d141	ehfunclet	unaff_EBP
 0044d162	throneroom_create_windows	auto	
 0044d296	throneroom_run_upgrade	auto	
-0044d99d	FUN_0044d99d	ehfunclet	unaff_EBP
+0044d99d	unwind_funclet_0044d99d	ehfunclet	unaff_EBP
 0044d9c1	throneroom_run_view	auto	
 0044dab5	throneroom_draw_click_prompt	auto	
 0044db92	throneroom_render	auto	
-0044e762	FUN_0044e762	ehfunclet	unaff_EBP
-0044e76b	FUN_0044e76b	ehfunclet	unaff_EBP
+0044e762	unwind_funclet_0044e762	ehfunclet	unaff_EBP
+0044e76b	unwind_funclet_0044e76b	ehfunclet	unaff_EBP
 0044e790	throneroom_render_choices	auto	
-0044f498	FUN_0044f498	ehfunclet	unaff_EBP
-0044f4a4	FUN_0044f4a4	ehfunclet	unaff_EBP
+0044f498	unwind_funclet_0044f498	ehfunclet	unaff_EBP
+0044f4a4	unwind_funclet_0044f4a4	ehfunclet	unaff_EBP
 0044f4c9	throneroom_on_click	auto	
 0044f717	throneroom_on_key	auto	
 0044f799	throneroom_close	auto	
@@ -960,7 +960,7 @@ addr	name	status	reason
 00452768	pedia_update_describe_button	auto	
 004529df	hyperlink_register_class	auto	
 00452a67	hyperlink_dtor	auto	
-00452ac1	FUN_00452ac1	ehfunclet	unaff_EBP
+00452ac1	unwind_funclet_00452ac1	ehfunclet	unaff_EBP
 00452ae2	hyperlink_create_hwnd	auto	
 00452b89	hyperlink_create	auto	
 00452c14	pedia_add_link	auto	
@@ -973,7 +973,7 @@ addr	name	status	reason
 00453af0	ui_pump_messages	auto	
 00453b10	pedia_link_ctor	auto	
 00453ba0	hotspot_dtor	auto	
-00453bfa	FUN_00453bfa	ehfunclet	unaff_EBP
+00453bfa	unwind_funclet_00453bfa	ehfunclet	unaff_EBP
 00453c40	ctrl_disable	auto	
 00453c80	ctrl_enable	auto	
 00453cc0	hyperlink_ctor	auto	
@@ -990,22 +990,22 @@ addr	name	status	reason
 00454344	FUN_00454344	unused	
 00454354	cityview_ctor	auto	
 00454699	cityview_dtor	auto	
-00454798	FUN_00454798	ehfunclet	unaff_EBP
-004547a7	FUN_004547a7	ehfunclet	unaff_EBP
-004547b6	FUN_004547b6	ehfunclet	unaff_EBP
-004547ce	FUN_004547ce	ehfunclet	unaff_EBP
-004547e6	FUN_004547e6	ehfunclet	unaff_EBP
-004547fe	FUN_004547fe	ehfunclet	unaff_EBP
-00454816	FUN_00454816	ehfunclet	unaff_EBP
-0045482e	FUN_0045482e	ehfunclet	unaff_EBP
-0045483d	FUN_0045483d	ehfunclet	unaff_EBP
-0045484c	FUN_0045484c	ehfunclet	unaff_EBP
-0045485b	FUN_0045485b	ehfunclet	unaff_EBP
-0045486a	FUN_0045486a	ehfunclet	unaff_EBP
-00454879	FUN_00454879	ehfunclet	unaff_EBP
-00454888	FUN_00454888	ehfunclet	unaff_EBP
+00454798	unwind_funclet_00454798	ehfunclet	unaff_EBP
+004547a7	unwind_funclet_004547a7	ehfunclet	unaff_EBP
+004547b6	unwind_funclet_004547b6	ehfunclet	unaff_EBP
+004547ce	unwind_funclet_004547ce	ehfunclet	unaff_EBP
+004547e6	unwind_funclet_004547e6	ehfunclet	unaff_EBP
+004547fe	unwind_funclet_004547fe	ehfunclet	unaff_EBP
+00454816	unwind_funclet_00454816	ehfunclet	unaff_EBP
+0045482e	unwind_funclet_0045482e	ehfunclet	unaff_EBP
+0045483d	unwind_funclet_0045483d	ehfunclet	unaff_EBP
+0045484c	unwind_funclet_0045484c	ehfunclet	unaff_EBP
+0045485b	unwind_funclet_0045485b	ehfunclet	unaff_EBP
+0045486a	unwind_funclet_0045486a	ehfunclet	unaff_EBP
+00454879	unwind_funclet_00454879	ehfunclet	unaff_EBP
+00454888	unwind_funclet_00454888	ehfunclet	unaff_EBP
 004548a9	cityview_load	auto	
-00454e8b	FUN_00454e8b	ehfunclet	unaff_EBP
+00454e8b	unwind_funclet_00454e8b	ehfunclet	unaff_EBP
 00454eb2	cityview_run_modal	auto	
 00454f83	cityview_classify_site	auto	
 0045512b	cityview_load_icon_surface	auto	
@@ -1035,13 +1035,13 @@ addr	name	status	reason
 0045705e	diplo_eval_ai_stance	auto	
 00458a3b	diplo_set_attitude_arg	auto	
 00458ab1	diplo_greet_emissary	auto	
-00458dd5	FUN_00458dd5	ehfunclet	unaff_EBP
+00458dd5	unwind_funclet_00458dd5	ehfunclet	unaff_EBP
 00458df9	diplo_ask_receive_emissary	auto	
-00459169	FUN_00459169	ehfunclet	unaff_EBP
+00459169	unwind_funclet_00459169	ehfunclet	unaff_EBP
 0045918e	diplo_session_reset	auto	
 004591cb	diplo_offer_sell_tech	auto	
 0045950b	diplo_tech_exchange	auto	
-0045a510	FUN_0045a510	ehfunclet	unaff_EBP
+0045a510	unwind_funclet_0045a510	ehfunclet	unaff_EBP
 0045a535	diplo_form_alliance	auto	
 0045a6ab	diplo_sign_peace_treaty	auto	
 0045a7a8	diplo_agree_ceasefire	auto	
@@ -1051,12 +1051,12 @@ addr	name	status	reason
 0045b472	diplo_gold_attitude_value	auto	
 0045b4da	diplo_ai_answer_proposal	auto	
 0045dd7f	diplo_favor_menu	auto	
-0045f08d	FUN_0045f08d	ehfunclet	unaff_EBP
+0045f08d	unwind_funclet_0045f08d	ehfunclet	unaff_EBP
 0045f0b1	diplo_gift_menu	auto	
-0045fd43	FUN_0045fd43	ehfunclet	unaff_EBP
+0045fd43	unwind_funclet_0045fd43	ehfunclet	unaff_EBP
 0045fd67	diplo_ai_senate_hawks_notice	auto	
 0045fe19	diplo_proposal_menu	auto	
-00460104	FUN_00460104	ehfunclet	unaff_EBP
+00460104	unwind_funclet_00460104	ehfunclet	unaff_EBP
 00460129	diplo_ai_meet_player	auto	
 00467580	text_set_number_arg_v	auto	
 004675b0	scenario_events_global_init	auto	
@@ -1129,10 +1129,10 @@ addr	name	status	reason
 0046d930	net_msg_whose_turn_init	auto	
 0046d980	ui_show_label_splash	unused	
 0046da40	intro_play_opening_video	auto	
-0046dd98	FUN_0046dd98	ehfunclet	unaff_EBP
-0046dda4	FUN_0046dda4	ehfunclet	unaff_EBP
-0046ddb0	FUN_0046ddb0	ehfunclet	unaff_EBP
-0046ddbc	FUN_0046ddbc	ehfunclet	unaff_EBP
+0046dd98	unwind_funclet_0046dd98	ehfunclet	unaff_EBP
+0046dda4	unwind_funclet_0046dda4	ehfunclet	unaff_EBP
+0046ddb0	unwind_funclet_0046ddb0	ehfunclet	unaff_EBP
+0046ddbc	unwind_funclet_0046ddbc	ehfunclet	unaff_EBP
 0046dde0	intro_video_on_end	auto	
 0046de25	intro_video_on_keydown	auto	
 0046dea1	intro_video_on_click	auto	
@@ -1164,12 +1164,12 @@ addr	name	status	reason
 004702e0	endgame_defeat_movie	auto	
 004703d4	defeat_movie_wnd_ctor	auto	
 004704ec	defeat_movie_wnd_dtor	auto	
-0047056b	FUN_0047056b	ehfunclet	unaff_EBP
-0047057a	FUN_0047057a	ehfunclet	unaff_EBP
-00470589	FUN_00470589	ehfunclet	unaff_EBP
-00470598	FUN_00470598	ehfunclet	unaff_EBP
-004705a7	FUN_004705a7	ehfunclet	unaff_EBP
-004705b6	FUN_004705b6	ehfunclet	unaff_EBP
+0047056b	unwind_funclet_0047056b	ehfunclet	unaff_EBP
+0047057a	unwind_funclet_0047057a	ehfunclet	unaff_EBP
+00470589	unwind_funclet_00470589	ehfunclet	unaff_EBP
+00470598	unwind_funclet_00470598	ehfunclet	unaff_EBP
+004705a7	unwind_funclet_004705a7	ehfunclet	unaff_EBP
+004705b6	unwind_funclet_004705b6	ehfunclet	unaff_EBP
 004705d7	defeat_movie_wnd_create	auto	
 004708db	defeat_movie_wnd_play	auto	
 00470c0c	FUN_00470c0c	unused	
@@ -1178,15 +1178,15 @@ addr	name	status	reason
 00471070	surface_get_width	auto	
 004710a0	surface_get_height	auto	
 004710d0	endgame_spaceship_arrival	auto	
-0047132e	FUN_0047132e	ehfunclet	unaff_EBP
+0047132e	unwind_funclet_0047132e	ehfunclet	unaff_EBP
 00471362	arrival_movie_wnd_ctor	auto	
 0047147a	arrival_movie_wnd_dtor	auto	
-004714f9	FUN_004714f9	ehfunclet	unaff_EBP
-00471508	FUN_00471508	ehfunclet	unaff_EBP
-00471517	FUN_00471517	ehfunclet	unaff_EBP
-00471526	FUN_00471526	ehfunclet	unaff_EBP
-00471535	FUN_00471535	ehfunclet	unaff_EBP
-00471544	FUN_00471544	ehfunclet	unaff_EBP
+004714f9	unwind_funclet_004714f9	ehfunclet	unaff_EBP
+00471508	unwind_funclet_00471508	ehfunclet	unaff_EBP
+00471517	unwind_funclet_00471517	ehfunclet	unaff_EBP
+00471526	unwind_funclet_00471526	ehfunclet	unaff_EBP
+00471535	unwind_funclet_00471535	ehfunclet	unaff_EBP
+00471544	unwind_funclet_00471544	ehfunclet	unaff_EBP
 00471565	arrival_movie_wnd_create	auto	
 00471856	arrival_movie_wnd_play	auto	
 00471bfe	FUN_00471bfe	unused	
@@ -1194,12 +1194,12 @@ addr	name	status	reason
 00471c2a	arrival_movie_on_frame	auto	
 00471db7	arrival_movie_on_video_end	auto	
 00471dd8	endgame_show_centauri_beaten	auto	
-00472393	FUN_00472393	ehfunclet	unaff_EBP
-0047239f	FUN_0047239f	ehfunclet	unaff_EBP
-004723ab	FUN_004723ab	ehfunclet	unaff_EBP
-004723b7	FUN_004723b7	ehfunclet	unaff_EBP
-004723c3	FUN_004723c3	ehfunclet	unaff_EBP
-004723cf	FUN_004723cf	ehfunclet	unaff_EBP
+00472393	unwind_funclet_00472393	ehfunclet	unaff_EBP
+0047239f	unwind_funclet_0047239f	ehfunclet	unaff_EBP
+004723ab	unwind_funclet_004723ab	ehfunclet	unaff_EBP
+004723b7	unwind_funclet_004723b7	ehfunclet	unaff_EBP
+004723c3	unwind_funclet_004723c3	ehfunclet	unaff_EBP
+004723cf	unwind_funclet_004723cf	ehfunclet	unaff_EBP
 004728c0	arrival_movie_wnd_scalar_dtor	auto	
 00472910	avi_player_set_frame_callback	auto	
 00472950	path_default_extension	game	src/game/regargs.c
@@ -1232,7 +1232,7 @@ addr	name	status	reason
 00475666	save_read_game	game	src/game/retvals.c
 0047758c	game_save_dialog	auto	
 00477d8c	game_load_dialog	auto	
-004786f8	FUN_004786f8	ehfunclet	unaff_EBP
+004786f8	unwind_funclet_004786f8	ehfunclet	unaff_EBP
 00479d20	map_views_global_init	auto	
 00479d3a	map_views_static_init	auto	
 00479d65	map_views_reg_atexit	auto	
@@ -1280,11 +1280,11 @@ addr	name	status	reason
 0047cf9e	map_redraw_all_views	auto	
 0047dce0	mapview_ctor	auto	
 0047de10	mapview_dtor	auto	
-0047de82	FUN_0047de82	ehfunclet	unaff_EBP
-0047de91	FUN_0047de91	ehfunclet	unaff_EBP
-0047dea0	FUN_0047dea0	ehfunclet	unaff_EBP
-0047deaf	FUN_0047deaf	ehfunclet	unaff_EBP
-0047debe	FUN_0047debe	ehfunclet	unaff_EBP
+0047de82	unwind_funclet_0047de82	ehfunclet	unaff_EBP
+0047de91	unwind_funclet_0047de91	ehfunclet	unaff_EBP
+0047dea0	unwind_funclet_0047dea0	ehfunclet	unaff_EBP
+0047deaf	unwind_funclet_0047deaf	ehfunclet	unaff_EBP
+0047debe	unwind_funclet_0047debe	ehfunclet	unaff_EBP
 0047df20	gfx_set_zoom_scale	auto	
 0047df50	gfx_reset_zoom_scale	auto	
 0047df80	rect_intersect_into	auto	
@@ -1294,8 +1294,8 @@ addr	name	status	reason
 0047e0e5	net_stacked_draw_push	auto	
 0047e2b3	net_stacked_draw_run_next	auto	
 0047e94e	net_process_messages	auto	
-00482305	FUN_00482305	ehfunclet	unaff_EBP
-00482311	FUN_00482311	ehfunclet	unaff_EBP
+00482305	unwind_funclet_00482305	ehfunclet	unaff_EBP
+00482311	unwind_funclet_00482311	ehfunclet	unaff_EBP
 00482337	net_game_xmit_wait_idle	auto	
 0048237d	turn_popup_timeout_idle	auto	
 004823d6	net_msg_get_args	auto	
@@ -1341,12 +1341,12 @@ addr	name	status	reason
 0048aedc	game_check_retirement	auto	
 0048b165	game_handle_game_over	auto	
 0048b340	game_play_loop	auto	
-0048bf2d	FUN_0048bf2d	ehfunclet	unaff_EBP
+0048bf2d	unwind_funclet_0048bf2d	ehfunclet	unaff_EBP
 0048bf51	net_client_hot_wait_idle	auto	
 0048bfec	game_mp_client_turn_loop	auto	
-0048c9ce	FUN_0048c9ce	ehfunclet	unaff_EBP
+0048c9ce	unwind_funclet_0048c9ce	ehfunclet	unaff_EBP
 0048c9f3	game_mp_host_turn_loop	auto	
-0048d989	FUN_0048d989	ehfunclet	unaff_EBP
+0048d989	unwind_funclet_0048d989	ehfunclet	unaff_EBP
 0048d9ad	net_heartbeat_send	auto	
 0048da51	net_heartbeat_check	auto	
 0048dab9	net_check_lost_connections	auto	
@@ -1362,7 +1362,7 @@ addr	name	status	reason
 004923c0	wnd_set_focus	auto	
 004923f0	chat_insert_macro_text	auto	
 0049275a	chat_read_macro_line	auto	
-00492868	FUN_00492868	ehfunclet	unaff_EBP
+00492868	unwind_funclet_00492868	ehfunclet	unaff_EBP
 004929c0	file_obj_open	auto	
 00492a00	file_obj_seek_cur	auto	
 00492a40	file_obj_read_line	auto	
@@ -1391,43 +1391,43 @@ addr	name	status	reason
 004941ee	diplo_leader_play_reaction	auto	
 004942a3	diplo_leader_wnd_ctor	auto	
 004943c9	diplo_leader_wnd_dtor	auto	
-0049444f	FUN_0049444f	ehfunclet	unaff_EBP
-0049445e	FUN_0049445e	ehfunclet	unaff_EBP
-0049446d	FUN_0049446d	ehfunclet	unaff_EBP
-0049447c	FUN_0049447c	ehfunclet	unaff_EBP
-0049448b	FUN_0049448b	ehfunclet	unaff_EBP
-0049449a	FUN_0049449a	ehfunclet	unaff_EBP
+0049444f	unwind_funclet_0049444f	ehfunclet	unaff_EBP
+0049445e	unwind_funclet_0049445e	ehfunclet	unaff_EBP
+0049446d	unwind_funclet_0049446d	ehfunclet	unaff_EBP
+0049447c	unwind_funclet_0049447c	ehfunclet	unaff_EBP
+0049448b	unwind_funclet_0049448b	ehfunclet	unaff_EBP
+0049449a	unwind_funclet_0049449a	ehfunclet	unaff_EBP
 004944bb	diplo_leader_wnd_init	auto	
 00494704	diplo_leader_wnd_show	auto	
 004947f0	diplo_leader_wnd_teardown	auto	
 0049488e	diplo_leader_init_tile	auto	
 004948e6	diplo_leader_init_background	auto	
 00494949	diplo_leader_init_main_art	auto	
-00494b3a	FUN_00494b3a	ehfunclet	unaff_EBP
+00494b3a	unwind_funclet_00494b3a	ehfunclet	unaff_EBP
 00494b5f	diplo_leader_init_military	auto	
-00494d71	FUN_00494d71	ehfunclet	unaff_EBP
-00494d7d	FUN_00494d7d	ehfunclet	unaff_EBP
-00494d89	FUN_00494d89	ehfunclet	unaff_EBP
+00494d71	unwind_funclet_00494d71	ehfunclet	unaff_EBP
+00494d7d	unwind_funclet_00494d7d	ehfunclet	unaff_EBP
+00494d89	unwind_funclet_00494d89	ehfunclet	unaff_EBP
 00494dae	advance_count_prereq_depth	auto	
 00494e2a	diplo_leader_init_science	auto	
-00495be2	FUN_00495be2	ehfunclet	unaff_EBP
-00495bee	FUN_00495bee	ehfunclet	unaff_EBP
-00495bfa	FUN_00495bfa	ehfunclet	unaff_EBP
-00495c10	FUN_00495c10	ehfunclet	unaff_EBP
+00495be2	unwind_funclet_00495be2	ehfunclet	unaff_EBP
+00495bee	unwind_funclet_00495bee	ehfunclet	unaff_EBP
+00495bfa	unwind_funclet_00495bfa	ehfunclet	unaff_EBP
+00495c10	unwind_funclet_00495c10	ehfunclet	unaff_EBP
 00495c35	diplo_leader_init_portrait	auto	
-00495dcf	FUN_00495dcf	ehfunclet	unaff_EBP
-00495ddb	FUN_00495ddb	ehfunclet	unaff_EBP
-00495de7	FUN_00495de7	ehfunclet	unaff_EBP
+00495dcf	unwind_funclet_00495dcf	ehfunclet	unaff_EBP
+00495ddb	unwind_funclet_00495ddb	ehfunclet	unaff_EBP
+00495de7	unwind_funclet_00495de7	ehfunclet	unaff_EBP
 00495e0c	diplo_leader_init_video	auto	
-00496100	FUN_00496100	ehfunclet	unaff_EBP
+00496100	unwind_funclet_00496100	ehfunclet	unaff_EBP
 00496125	diplo_leader_video_end_cb	auto	
 0049621d	portrait_dlg_ctor	auto	
 0049632a	portrait_dlg_dtor	auto	
-004963a5	FUN_004963a5	ehfunclet	unaff_EBP
-004963b4	FUN_004963b4	ehfunclet	unaff_EBP
-004963c3	FUN_004963c3	ehfunclet	unaff_EBP
-004963d2	FUN_004963d2	ehfunclet	unaff_EBP
-004963e1	FUN_004963e1	ehfunclet	unaff_EBP
+004963a5	unwind_funclet_004963a5	ehfunclet	unaff_EBP
+004963b4	unwind_funclet_004963b4	ehfunclet	unaff_EBP
+004963c3	unwind_funclet_004963c3	ehfunclet	unaff_EBP
+004963d2	unwind_funclet_004963d2	ehfunclet	unaff_EBP
+004963e1	unwind_funclet_004963e1	ehfunclet	unaff_EBP
 00496402	portrait_dlg_create	auto	
 004964b3	portrait_dlg_create_buttons	auto	
 004965ff	portrait_dlg_run	auto	
@@ -1453,9 +1453,9 @@ addr	name	status	reason
 00498159	memblock_alloc	auto	
 00498310	civ_password_ensure_set	auto	
 0049836a	civ_change_password_dialog	auto	
-004985d0	FUN_004985d0	ehfunclet	unaff_EBP
+004985d0	unwind_funclet_004985d0	ehfunclet	unaff_EBP
 004985f4	civ_password_prompt	auto	
-0049875f	FUN_0049875f	ehfunclet	unaff_EBP
+0049875f	unwind_funclet_0049875f	ehfunclet	unaff_EBP
 00498784	passwords_reset	auto	
 0049882b	passwords_refresh_flags	auto	
 004988b8	passwords_scramble	auto	
@@ -1487,11 +1487,11 @@ addr	name	status	reason
 004a41d8	tribe_editor_write_caravan	auto	
 004a4249	tribe_editor_on_ok	auto	
 004a4304	tribe_editor_rename_commodity	auto	
-004a44a2	FUN_004a44a2	ehfunclet	unaff_EBP
+004a44a2	unwind_funclet_004a44a2	ehfunclet	unaff_EBP
 004a44c6	tribe_editor_rename_govt	auto	
-004a4667	FUN_004a4667	ehfunclet	unaff_EBP
+004a4667	unwind_funclet_004a4667	ehfunclet	unaff_EBP
 004a468b	tribe_editor_rename_title	auto	
-004a4948	FUN_004a4948	ehfunclet	unaff_EBP
+004a4948	unwind_funclet_004a4948	ehfunclet	unaff_EBP
 004a496c	tribe_editor_on_help	auto	
 004a49cb	tribe_editor_on_cancel	auto	
 004a49f3	tribe_editor_on_combo	auto	
@@ -1499,9 +1499,9 @@ addr	name	status	reason
 004a4eb2	tribe_editor_create_edit	auto	
 004a4f89	tribe_editor_paint	auto	
 004a54d9	tribe_editor_main	auto	
-004a5d6e	FUN_004a5d6e	ehfunclet	unaff_EBP
+004a5d6e	unwind_funclet_004a5d6e	ehfunclet	unaff_EBP
 004a5d92	tribe_editor_run	auto	
-004a5deb	FUN_004a5deb	ehfunclet	unaff_EBP
+004a5deb	unwind_funclet_004a5deb	ehfunclet	unaff_EBP
 004a6980	sprite_width	auto	
 004a69b0	pedia_init_concept_list	auto	
 004a6b80	popup_text_with_advance	auto	
@@ -1509,12 +1509,12 @@ addr	name	status	reason
 004a6c4b	popup_text_with_unit_sprite	auto	
 004a6c85	popup_city_sprite_draw_cb	auto	
 004a6cc5	popup_text_with_city	auto	
-004a6dc9	FUN_004a6dc9	ehfunclet	unaff_EBP
-004a6dd2	FUN_004a6dd2	ehfunclet	unaff_EBP
+004a6dc9	unwind_funclet_004a6dc9	ehfunclet	unaff_EBP
+004a6dd2	unwind_funclet_004a6dd2	ehfunclet	unaff_EBP
 004a6df7	popup_unit_sprite_draw_cb	auto	
 004a6e39	popup_text_with_unit	auto	
-004a6f3d	FUN_004a6f3d	ehfunclet	unaff_EBP
-004a6f46	FUN_004a6f46	ehfunclet	unaff_EBP
+004a6f3d	unwind_funclet_004a6f3d	ehfunclet	unaff_EBP
+004a6f46	unwind_funclet_004a6f46	ehfunclet	unaff_EBP
 004a7070	char_to_upper_ascii	unused	
 004a70b0	prefs_set_defaults	auto	
 004a71bb	prefs_set_mp_defaults	auto	
@@ -1645,10 +1645,10 @@ addr	name	status	reason
 004b40ee	chat_wnd_static_dtor	auto	
 004b4108	parley_wnd_ctor	auto	
 004b4593	parley_wnd_dtor	auto	
-004b4705	FUN_004b4705	ehfunclet	unaff_EBP
-004b4711	FUN_004b4711	ehfunclet	unaff_EBP
+004b4705	unwind_funclet_004b4705	ehfunclet	unaff_EBP
+004b4711	unwind_funclet_004b4711	ehfunclet	unaff_EBP
 004b4735	parley_wnd_create	auto	
-004b4be3	FUN_004b4be3	ehfunclet	unaff_EBP
+004b4be3	unwind_funclet_004b4be3	ehfunclet	unaff_EBP
 004b4c09	parley_wnd_on_move	auto	
 004b4c81	parley_wnd_pick_size_mode	auto	
 004b4cf0	parley_wnd_calc_rect	auto	
@@ -1692,22 +1692,22 @@ addr	name	status	reason
 004bb6d0	edit_set_caret	auto	
 004bb710	edit_get_text_end	auto	
 004bb740	radiogrp_dtor	auto	
-004bb7b0	FUN_004bb7b0	ehfunclet	unaff_EBP
+004bb7b0	unwind_funclet_004bb7b0	ehfunclet	unaff_EBP
 004bb800	rect_deflate	auto	
 004bb840	rect_inflate	auto	
 004bb870	mem_handle_alloc_tracked	auto	
 004bb8e0	wonder_show_movie	auto	
-004bb97b	FUN_004bb97b	ehfunclet	unaff_EBP
+004bb97b	unwind_funclet_004bb97b	ehfunclet	unaff_EBP
 004bb99f	wonder_movie_wnd_ctor	auto	
 004bba79	wonder_movie_wnd_dtor	auto	
-004bbaf1	FUN_004bbaf1	ehfunclet	unaff_EBP
-004bbb00	FUN_004bbb00	ehfunclet	unaff_EBP
-004bbb0f	FUN_004bbb0f	ehfunclet	unaff_EBP
-004bbb1e	FUN_004bbb1e	ehfunclet	unaff_EBP
+004bbaf1	unwind_funclet_004bbaf1	ehfunclet	unaff_EBP
+004bbb00	unwind_funclet_004bbb00	ehfunclet	unaff_EBP
+004bbb0f	unwind_funclet_004bbb0f	ehfunclet	unaff_EBP
+004bbb1e	unwind_funclet_004bbb1e	ehfunclet	unaff_EBP
 004bbb3f	wonder_movie_wnd_create	auto	
-004bbdbd	FUN_004bbdbd	ehfunclet	unaff_EBP
-004bbdc9	FUN_004bbdc9	ehfunclet	unaff_EBP
-004bbdd5	FUN_004bbdd5	ehfunclet	unaff_EBP
+004bbdbd	unwind_funclet_004bbdbd	ehfunclet	unaff_EBP
+004bbdc9	unwind_funclet_004bbdc9	ehfunclet	unaff_EBP
+004bbdd5	unwind_funclet_004bbdd5	ehfunclet	unaff_EBP
 004bbdfb	wonder_movie_wnd_play	auto	
 004bc0bb	FUN_004bc0bb	unused	
 004bc0d3	wonder_movie_wnd_draw_caption	auto	
@@ -1728,7 +1728,7 @@ addr	name	status	reason
 004bee56	civ_golden_age_popup	auto	
 004befd1	text_list_append_wrapped	auto	
 004bf05b	civ_give_advance	auto	
-004bfd9a	FUN_004bfd9a	ehfunclet	unaff_EBP
+004bfd9a	unwind_funclet_004bfd9a	ehfunclet	unaff_EBP
 004bfdbe	civ_can_research_advance	auto	
 004bfe5a	civ_can_build_unit	auto	
 004c02d8	civ_can_build_wonder	auto	
@@ -1738,13 +1738,13 @@ addr	name	status	reason
 004c0be8	research_option_draw_unit	auto	
 004c0c83	research_option_draw_improvement	auto	
 004c0cf7	civ_research_goal_dialog	auto	
-004c193a	FUN_004c193a	ehfunclet	unaff_EBP
+004c193a	unwind_funclet_004c193a	ehfunclet	unaff_EBP
 004c195e	civ_choose_research_dialog	auto	
-004c217c	FUN_004c217c	ehfunclet	unaff_EBP
-004c2188	FUN_004c2188	ehfunclet	unaff_EBP
+004c217c	unwind_funclet_004c217c	ehfunclet	unaff_EBP
+004c2188	unwind_funclet_004c2188	ehfunclet	unaff_EBP
 004c21ad	civ_choose_research	auto	
 004c21d5	civ_research_complete	auto	
-004c2763	FUN_004c2763	ehfunclet	unaff_EBP
+004c2763	unwind_funclet_004c2763	ehfunclet	unaff_EBP
 004c2788	civ_research_cost	auto	
 004c2b73	civ_add_research_points	auto	
 004c4210	text_set_number_arg_u8	auto	
@@ -1764,7 +1764,7 @@ addr	name	status	reason
 004c65d2	civ_distance_to_capital	auto	
 004c66ba	city_incite_transfer	auto	
 004c6bf5	spy_city_mission	auto	
-004c9504	FUN_004c9504	ehfunclet	unaff_EBP
+004c9504	unwind_funclet_004c9504	ehfunclet	unaff_EBP
 004c9528	unit_bribe	auto	
 004c9ebd	spy_unit_mission	auto	
 004ca1cd	unit_airlift_perform	auto	
@@ -1794,22 +1794,22 @@ addr	name	status	reason
 004cd8a6	tribe_editor_update_city_file	auto	
 004cdcf6	editor_numeric_edit_filter	auto	
 004cdd3d	editor_options_dialog	auto	
-004cdf26	FUN_004cdf26	ehfunclet	unaff_EBP
+004cdf26	unwind_funclet_004cdf26	ehfunclet	unaff_EBP
 004cdf4b	editor_clamp_value	auto	
 004cdfa4	editor_text_dlg_create	auto	
 004ce196	editor_text_dlg_on_ok	auto	
 004ce2f3	editor_text_dlg_on_cancel	auto	
 004ce322	editor_text_dlg_redraw	auto	
 004ce38a	editor_text_edit_dialog	auto	
-004ce6ed	FUN_004ce6ed	ehfunclet	unaff_EBP
-004ce6f9	FUN_004ce6f9	ehfunclet	unaff_EBP
+004ce6ed	unwind_funclet_004ce6ed	ehfunclet	unaff_EBP
+004ce6f9	unwind_funclet_004ce6f9	ehfunclet	unaff_EBP
 004ce71b	editor_check_city_name	auto	
 004ce83d	editor_wnd_on_move_close_dropdowns	auto	
 004ce8a4	editor_input_long	auto	
 004ce903	events_alloc_string	auto	
 004ce98e	events_copy	auto	
 004cef35	events_compact	auto	
-004cefc5	FUN_004cefc5	ehfunclet	unaff_EBP
+004cefc5	unwind_funclet_004cefc5	ehfunclet	unaff_EBP
 004cefe9	events_rename_unit_refs	auto	
 004cf144	events_rename_civ_refs	unused	
 004cf3ba	events_rename_city_refs	unused	
@@ -1820,48 +1820,48 @@ addr	name	status	reason
 004d0160	spaceship_wnd_net_idle	auto	
 004d01ae	spaceship_wnd_load_parts	auto	
 004d0208	spaceship_wnd_run	auto	
-004d0314	FUN_004d0314	ehfunclet	unaff_EBP
+004d0314	unwind_funclet_004d0314	ehfunclet	unaff_EBP
 004d0339	spaceship_wnd_show_for_civ	auto	
-004d041a	FUN_004d041a	ehfunclet	unaff_EBP
+004d041a	unwind_funclet_004d041a	ehfunclet	unaff_EBP
 004d043f	spaceship_wnd_draw_title	auto	
 004d0517	spaceship_wnd_ctor	auto	
 004d08b0	spaceship_wnd_dtor	auto	
-004d0a56	FUN_004d0a56	ehfunclet	unaff_EBP
-004d0a65	FUN_004d0a65	ehfunclet	unaff_EBP
-004d0a74	FUN_004d0a74	ehfunclet	unaff_EBP
-004d0a83	FUN_004d0a83	ehfunclet	unaff_EBP
-004d0a92	FUN_004d0a92	ehfunclet	unaff_EBP
-004d0aa1	FUN_004d0aa1	ehfunclet	unaff_EBP
-004d0ab0	FUN_004d0ab0	ehfunclet	unaff_EBP
-004d0abf	FUN_004d0abf	ehfunclet	unaff_EBP
-004d0ace	FUN_004d0ace	ehfunclet	unaff_EBP
-004d0add	FUN_004d0add	ehfunclet	unaff_EBP
-004d0aec	FUN_004d0aec	ehfunclet	unaff_EBP
-004d0afb	FUN_004d0afb	ehfunclet	unaff_EBP
-004d0b0a	FUN_004d0b0a	ehfunclet	unaff_EBP
-004d0b19	FUN_004d0b19	ehfunclet	unaff_EBP
-004d0b28	FUN_004d0b28	ehfunclet	unaff_EBP
-004d0b37	FUN_004d0b37	ehfunclet	unaff_EBP
+004d0a56	unwind_funclet_004d0a56	ehfunclet	unaff_EBP
+004d0a65	unwind_funclet_004d0a65	ehfunclet	unaff_EBP
+004d0a74	unwind_funclet_004d0a74	ehfunclet	unaff_EBP
+004d0a83	unwind_funclet_004d0a83	ehfunclet	unaff_EBP
+004d0a92	unwind_funclet_004d0a92	ehfunclet	unaff_EBP
+004d0aa1	unwind_funclet_004d0aa1	ehfunclet	unaff_EBP
+004d0ab0	unwind_funclet_004d0ab0	ehfunclet	unaff_EBP
+004d0abf	unwind_funclet_004d0abf	ehfunclet	unaff_EBP
+004d0ace	unwind_funclet_004d0ace	ehfunclet	unaff_EBP
+004d0add	unwind_funclet_004d0add	ehfunclet	unaff_EBP
+004d0aec	unwind_funclet_004d0aec	ehfunclet	unaff_EBP
+004d0afb	unwind_funclet_004d0afb	ehfunclet	unaff_EBP
+004d0b0a	unwind_funclet_004d0b0a	ehfunclet	unaff_EBP
+004d0b19	unwind_funclet_004d0b19	ehfunclet	unaff_EBP
+004d0b28	unwind_funclet_004d0b28	ehfunclet	unaff_EBP
+004d0b37	unwind_funclet_004d0b37	ehfunclet	unaff_EBP
 004d0b58	spaceship_wnd_init	auto	
 004d0d64	spaceship_wnd_create	auto	
 004d0ea6	spaceship_wnd_run_modal	auto	
-004d138b	FUN_004d138b	ehfunclet	unaff_EBP
-004d1397	FUN_004d1397	ehfunclet	unaff_EBP
+004d138b	unwind_funclet_004d138b	ehfunclet	unaff_EBP
+004d1397	unwind_funclet_004d1397	ehfunclet	unaff_EBP
 004d13b8	spaceship_wnd_present	auto	
 004d1725	spaceship_wnd_launch_sequence	auto	
 004d17bf	spaceship_wnd_render_ship	game	src/game/bigframes.c
-004d49d5	FUN_004d49d5	ehfunclet	unaff_EBP
-004d49e1	FUN_004d49e1	ehfunclet	unaff_EBP
-004d49ed	FUN_004d49ed	ehfunclet	unaff_EBP
-004d49f9	FUN_004d49f9	ehfunclet	unaff_EBP
-004d4a05	FUN_004d4a05	ehfunclet	unaff_EBP
-004d4a11	FUN_004d4a11	ehfunclet	unaff_EBP
-004d4a1d	FUN_004d4a1d	ehfunclet	unaff_EBP
-004d4a29	FUN_004d4a29	ehfunclet	unaff_EBP
-004d4a35	FUN_004d4a35	ehfunclet	unaff_EBP
-004d4a3e	FUN_004d4a3e	ehfunclet	unaff_EBP
-004d4a4a	FUN_004d4a4a	ehfunclet	unaff_EBP
-004d4a56	FUN_004d4a56	ehfunclet	unaff_EBP
+004d49d5	unwind_funclet_004d49d5	ehfunclet	unaff_EBP
+004d49e1	unwind_funclet_004d49e1	ehfunclet	unaff_EBP
+004d49ed	unwind_funclet_004d49ed	ehfunclet	unaff_EBP
+004d49f9	unwind_funclet_004d49f9	ehfunclet	unaff_EBP
+004d4a05	unwind_funclet_004d4a05	ehfunclet	unaff_EBP
+004d4a11	unwind_funclet_004d4a11	ehfunclet	unaff_EBP
+004d4a1d	unwind_funclet_004d4a1d	ehfunclet	unaff_EBP
+004d4a29	unwind_funclet_004d4a29	ehfunclet	unaff_EBP
+004d4a35	unwind_funclet_004d4a35	ehfunclet	unaff_EBP
+004d4a3e	unwind_funclet_004d4a3e	ehfunclet	unaff_EBP
+004d4a4a	unwind_funclet_004d4a4a	ehfunclet	unaff_EBP
+004d4a56	unwind_funclet_004d4a56	ehfunclet	unaff_EBP
 004d4a7b	spaceship_wnd_build_stats_text	auto	
 004d4fd1	spaceship_wnd_type_char	auto	
 004d53ab	spaceship_wnd_make_button_sprites	game	src/game/unwind.c
@@ -1903,9 +1903,9 @@ addr	name	status	reason
 004d9a9f	impr_editor_create_edit	auto	
 004d9b93	impr_editor_paint	auto	
 004da107	impr_editor_window_run	auto	
-004da9be	FUN_004da9be	ehfunclet	unaff_EBP
+004da9be	unwind_funclet_004da9be	ehfunclet	unaff_EBP
 004da9e2	impr_editor_run	auto	
-004daa3b	FUN_004daa3b	ehfunclet	unaff_EBP
+004daa3b	unwind_funclet_004daa3b	ehfunclet	unaff_EBP
 004db210	text_section_index_global_init	auto	
 004db225	text_section_index_static_init	auto	
 004db23f	text_section_index_build	auto	
@@ -1936,7 +1936,7 @@ addr	name	status	reason
 004e0179	main_menu_reg_atexit	auto	
 004e0196	main_menu_static_dtor	auto	
 004e01b0	menu_wonder_movies	auto	
-004e02cb	FUN_004e02cb	ehfunclet	unaff_EBP
+004e02cb	unwind_funclet_004e02cb	ehfunclet	unaff_EBP
 004e02ef	ui_reset_window_layout	auto	
 004e068d	menu_load_game	auto	
 004e0a8c	dlg_check_set_bool	auto	
@@ -1949,7 +1949,7 @@ addr	name	status	reason
 004e22c9	game_quit_or_retire	auto	
 004e2597	menu_show_hidden_terrain	auto	
 004e25ef	menu_select_music	auto	
-004e27df	FUN_004e27df	ehfunclet	unaff_EBP
+004e27df	unwind_funclet_004e27df	ehfunclet	unaff_EBP
 004e2803	menu_command	auto	
 004e3a86	menu_build_main	auto	
 004e4c92	menu_set_item_label	auto	
@@ -1987,17 +1987,17 @@ addr	name	status	reason
 004eb4a1	city_calc_all_stats	auto	
 004eb4ed	city_recalc	game	src/game/retvals.c
 004eb571	city_notify_dialog_ex	auto	
-004eb7e5	FUN_004eb7e5	ehfunclet	unaff_EBP
+004eb7e5	unwind_funclet_004eb7e5	ehfunclet	unaff_EBP
 004eb80a	popup_city_picture_zoom	auto	
-004ebbad	FUN_004ebbad	ehfunclet	unaff_EBP
-004ebbb9	FUN_004ebbb9	ehfunclet	unaff_EBP
+004ebbad	unwind_funclet_004ebbad	ehfunclet	unaff_EBP
+004ebbb9	unwind_funclet_004ebbb9	ehfunclet	unaff_EBP
 004ebbde	city_process_food	auto	
 004ec1c6	unit_pick_caravan_commodity	auto	
 004ec312	civ_apply_eiffel_tower	auto	
 004ec3fe	city_process_production	auto	
-004eeee7	FUN_004eeee7	ehfunclet	unaff_EBP
-004eeef3	FUN_004eeef3	ehfunclet	unaff_EBP
-004eeeff	FUN_004eeeff	ehfunclet	unaff_EBP
+004eeee7	unwind_funclet_004eeee7	ehfunclet	unaff_EBP
+004eeef3	unwind_funclet_004eeef3	ehfunclet	unaff_EBP
+004eeeff	unwind_funclet_004eeeff	ehfunclet	unaff_EBP
 004eef23	city_disband_unsupported_units	auto	
 004ef578	city_process_disorder	auto	
 004efbc6	city_add_science	auto	
@@ -2022,24 +2022,24 @@ addr	name	status	reason
 004f3fd1	pedia_window_static_dtor	auto	
 004f3feb	pedia_window_ctor	auto	
 004f44a7	pedia_window_dtor	auto	
-004f4673	FUN_004f4673	ehfunclet	unaff_EBP
-004f4682	FUN_004f4682	ehfunclet	unaff_EBP
-004f4691	FUN_004f4691	ehfunclet	unaff_EBP
-004f46a0	FUN_004f46a0	ehfunclet	unaff_EBP
-004f46af	FUN_004f46af	ehfunclet	unaff_EBP
-004f46be	FUN_004f46be	ehfunclet	unaff_EBP
-004f46cd	FUN_004f46cd	ehfunclet	unaff_EBP
-004f46dc	FUN_004f46dc	ehfunclet	unaff_EBP
-004f46eb	FUN_004f46eb	ehfunclet	unaff_EBP
-004f46fa	FUN_004f46fa	ehfunclet	unaff_EBP
-004f4709	FUN_004f4709	ehfunclet	unaff_EBP
-004f4718	FUN_004f4718	ehfunclet	unaff_EBP
-004f4727	FUN_004f4727	ehfunclet	unaff_EBP
-004f4736	FUN_004f4736	ehfunclet	unaff_EBP
-004f4745	FUN_004f4745	ehfunclet	unaff_EBP
-004f4754	FUN_004f4754	ehfunclet	unaff_EBP
-004f4763	FUN_004f4763	ehfunclet	unaff_EBP
-004f4772	FUN_004f4772	ehfunclet	unaff_EBP
+004f4673	unwind_funclet_004f4673	ehfunclet	unaff_EBP
+004f4682	unwind_funclet_004f4682	ehfunclet	unaff_EBP
+004f4691	unwind_funclet_004f4691	ehfunclet	unaff_EBP
+004f46a0	unwind_funclet_004f46a0	ehfunclet	unaff_EBP
+004f46af	unwind_funclet_004f46af	ehfunclet	unaff_EBP
+004f46be	unwind_funclet_004f46be	ehfunclet	unaff_EBP
+004f46cd	unwind_funclet_004f46cd	ehfunclet	unaff_EBP
+004f46dc	unwind_funclet_004f46dc	ehfunclet	unaff_EBP
+004f46eb	unwind_funclet_004f46eb	ehfunclet	unaff_EBP
+004f46fa	unwind_funclet_004f46fa	ehfunclet	unaff_EBP
+004f4709	unwind_funclet_004f4709	ehfunclet	unaff_EBP
+004f4718	unwind_funclet_004f4718	ehfunclet	unaff_EBP
+004f4727	unwind_funclet_004f4727	ehfunclet	unaff_EBP
+004f4736	unwind_funclet_004f4736	ehfunclet	unaff_EBP
+004f4745	unwind_funclet_004f4745	ehfunclet	unaff_EBP
+004f4754	unwind_funclet_004f4754	ehfunclet	unaff_EBP
+004f4763	unwind_funclet_004f4763	ehfunclet	unaff_EBP
+004f4772	unwind_funclet_004f4772	ehfunclet	unaff_EBP
 004f4793	pedia_clear_links	auto	
 004f4809	pedia_free_lists	auto	
 004f4b9f	pedia_window_create	auto	
@@ -2069,7 +2069,7 @@ addr	name	status	reason
 004f8d51	pedia_end_modal	auto	
 004fa0f0	pedia_link_scalar_dtor	auto	
 004fa140	pedia_link_dtor	auto	
-004fa17e	FUN_004fa17e	ehfunclet	unaff_EBP
+004fa17e	unwind_funclet_004fa17e	ehfunclet	unaff_EBP
 004fa1c0	game_palette_global_init	auto	
 004fa1da	game_palette_static_init	auto	
 004fa1f4	game_palette_reg_atexit	auto	
@@ -2080,7 +2080,7 @@ addr	name	status	reason
 004fa47e	events_init_string_pool	auto	
 004fa4be	events_ctor	auto	
 004fa569	events_dtor	auto	
-004fa5b8	FUN_004fa5b8	ehfunclet	unaff_EBP
+004fa5b8	unwind_funclet_004fa5b8	ehfunclet	unaff_EBP
 004fa5d9	events_reset	auto	
 004fa617	events_alloc	auto	
 004fa707	events_action_play_wave	auto	
@@ -2126,9 +2126,9 @@ addr	name	status	reason
 00500fe8	city_tile_pick_surface_reg_atexit	auto	
 00501005	city_tile_pick_surface_atexit_dtor	auto	
 0050101f	city_window_load_background	auto	
-0050117b	FUN_0050117b	ehfunclet	unaff_EBP
-00501187	FUN_00501187	ehfunclet	unaff_EBP
-00501190	FUN_00501190	ehfunclet	unaff_EBP
+0050117b	unwind_funclet_0050117b	ehfunclet	unaff_EBP
+00501187	unwind_funclet_00501187	ehfunclet	unaff_EBP
+00501190	unwind_funclet_00501190	ehfunclet	unaff_EBP
 005011b4	spritebtn_create_icon_button	auto	
 005013bc	city_window_modal_notice	auto	
 00501440	city_window_reset_state	auto	
@@ -2137,9 +2137,9 @@ addr	name	status	reason
 0050152b	city_window_remove_hotspots	auto	
 00501551	city_window_ctor	auto	
 0050160a	city_window_dtor	auto	
-00501673	FUN_00501673	ehfunclet	unaff_EBP
-00501682	FUN_00501682	ehfunclet	unaff_EBP
-00501691	FUN_00501691	ehfunclet	unaff_EBP
+00501673	unwind_funclet_00501673	ehfunclet	unaff_EBP
+00501682	unwind_funclet_00501682	ehfunclet	unaff_EBP
+00501691	unwind_funclet_00501691	ehfunclet	unaff_EBP
 005016b2	city_window_blit_bg_rect	auto	
 00501733	city_window_begin_draw	auto	
 00501780	city_window_recalc_redraw	auto	
@@ -2157,11 +2157,11 @@ addr	name	status	reason
 00505ffa	city_window_draw_improvements	auto	
 00506448	text_set_unit_info_args	auto	
 00506637	city_window_supported_unit_menu	auto	
-00506a15	FUN_00506a15	ehfunclet	unaff_EBP
-00506a1e	FUN_00506a1e	ehfunclet	unaff_EBP
+00506a15	unwind_funclet_00506a15	ehfunclet	unaff_EBP
+00506a1e	unwind_funclet_00506a1e	ehfunclet	unaff_EBP
 00506a42	city_window_present_unit_menu	auto	
-005070b8	FUN_005070b8	ehfunclet	unaff_EBP
-005070c1	FUN_005070c1	ehfunclet	unaff_EBP
+005070b8	unwind_funclet_005070b8	ehfunclet	unaff_EBP
+005070c1	unwind_funclet_005070c1	ehfunclet	unaff_EBP
 005070e5	city_window_draw_units_present	auto	
 00507b69	city_window_draw_support_map	auto	
 00507f31	city_happy_draw_building_icons	auto	
@@ -2186,13 +2186,13 @@ addr	name	status	reason
 00509a9c	city_window_on_restore	auto	
 00509ac0	city_text_append_build_turns	auto	
 00509b48	city_button_buy	auto	
-0050a1b2	FUN_0050a1b2	ehfunclet	unaff_EBP
+0050a1b2	unwind_funclet_0050a1b2	ehfunclet	unaff_EBP
 0050a1d6	city_change_draw_option_icon	auto	
 0050a2f7	foreign_minister_draw_civ_city	auto	
 0050a473	city_button_change	auto	
-0050b638	FUN_0050b638	ehfunclet	unaff_EBP
-0050b644	FUN_0050b644	ehfunclet	unaff_EBP
-0050b650	FUN_0050b650	ehfunclet	unaff_EBP
+0050b638	unwind_funclet_0050b638	ehfunclet	unaff_EBP
+0050b644	unwind_funclet_0050b644	ehfunclet	unaff_EBP
+0050b650	unwind_funclet_0050b650	ehfunclet	unaff_EBP
 0050b674	city_change_idle_autoclose	auto	
 0050b74e	city_button_rename	auto	
 0050b9a4	city_button_info	auto	
@@ -2232,9 +2232,9 @@ addr	name	status	reason
 00511520	popup_game_with_city_flags	auto	
 00511560	spritebtn_scalar_dtor	auto	
 005115b0	spritebtn_dtor	auto	
-00511624	FUN_00511624	ehfunclet	unaff_EBP
-00511630	FUN_00511630	ehfunclet	unaff_EBP
-0051163c	FUN_0051163c	ehfunclet	unaff_EBP
+00511624	unwind_funclet_00511624	ehfunclet	unaff_EBP
+00511630	unwind_funclet_00511630	ehfunclet	unaff_EBP
+0051163c	unwind_funclet_0051163c	ehfunclet	unaff_EBP
 00511690	city_window_scale	auto	
 005116f0	text_append_city_population	auto	
 00511720	spritebtn_ctor	auto	
@@ -2246,7 +2246,7 @@ addr	name	status	reason
 00511acf	net_popup_queue_clear	auto	
 00511b2d	net_popup_idle_autoclose	auto	
 00511ba2	net_popup_queue_show_next	auto	
-0051399d	FUN_0051399d	ehfunclet	unaff_EBP
+0051399d	unwind_funclet_0051399d	ehfunclet	unaff_EBP
 00514220	net_msgq_ctor	auto	
 00514254	net_msgq_clear	auto	
 00514272	net_msgq_reset	auto	
@@ -2258,53 +2258,53 @@ addr	name	status	reason
 00514e44	destroyed_civs_text_bg_reg_atexit	auto	
 00514e61	destroyed_civs_text_bg_atexit_dtor	auto	
 00514e7b	destroyed_civs_show	auto	
-00514ef2	FUN_00514ef2	ehfunclet	unaff_EBP
+00514ef2	unwind_funclet_00514ef2	ehfunclet	unaff_EBP
 00514f16	destroyed_civs_wnd_ctor	auto	
 005150b9	destroyed_civs_wnd_dtor	auto	
-0051516a	FUN_0051516a	ehfunclet	unaff_EBP
-00515179	FUN_00515179	ehfunclet	unaff_EBP
-00515188	FUN_00515188	ehfunclet	unaff_EBP
-00515197	FUN_00515197	ehfunclet	unaff_EBP
-005151a6	FUN_005151a6	ehfunclet	unaff_EBP
-005151b5	FUN_005151b5	ehfunclet	unaff_EBP
-005151c4	FUN_005151c4	ehfunclet	unaff_EBP
-005151d3	FUN_005151d3	ehfunclet	unaff_EBP
+0051516a	unwind_funclet_0051516a	ehfunclet	unaff_EBP
+00515179	unwind_funclet_00515179	ehfunclet	unaff_EBP
+00515188	unwind_funclet_00515188	ehfunclet	unaff_EBP
+00515197	unwind_funclet_00515197	ehfunclet	unaff_EBP
+005151a6	unwind_funclet_005151a6	ehfunclet	unaff_EBP
+005151b5	unwind_funclet_005151b5	ehfunclet	unaff_EBP
+005151c4	unwind_funclet_005151c4	ehfunclet	unaff_EBP
+005151d3	unwind_funclet_005151d3	ehfunclet	unaff_EBP
 005151f4	destroyed_civs_wnd_create	auto	
 00515516	destroyed_civs_run	auto	
-00515978	FUN_00515978	ehfunclet	unaff_EBP
+00515978	unwind_funclet_00515978	ehfunclet	unaff_EBP
 00515999	destroyed_civs_draw_entry	auto	
 00515c15	destroyed_civs_draw_portrait	auto	
-00515d96	FUN_00515d96	ehfunclet	unaff_EBP
-00515da2	FUN_00515da2	ehfunclet	unaff_EBP
+00515d96	unwind_funclet_00515d96	ehfunclet	unaff_EBP
+00515da2	unwind_funclet_00515da2	ehfunclet	unaff_EBP
 00515dc8	destroyed_civs_slide_step	auto	
 00515f3c	destroyed_civs_slide_down	auto	
 00516005	destroyed_civs_slide_up	auto	
 00516042	victory_screen_on_click	auto	
 00516063	victory_screen_on_key	auto	
 00516570	council_show	auto	
-005165f6	FUN_005165f6	ehfunclet	unaff_EBP
+005165f6	unwind_funclet_005165f6	ehfunclet	unaff_EBP
 0051661a	council_wnd_ctor	auto	
 005167d9	council_wnd_dtor	auto	
-0051689f	FUN_0051689f	ehfunclet	unaff_EBP
-005168ae	FUN_005168ae	ehfunclet	unaff_EBP
-005168bd	FUN_005168bd	ehfunclet	unaff_EBP
-005168cc	FUN_005168cc	ehfunclet	unaff_EBP
-005168db	FUN_005168db	ehfunclet	unaff_EBP
-005168ea	FUN_005168ea	ehfunclet	unaff_EBP
-005168f9	FUN_005168f9	ehfunclet	unaff_EBP
-00516908	FUN_00516908	ehfunclet	unaff_EBP
-00516917	FUN_00516917	ehfunclet	unaff_EBP
-00516926	FUN_00516926	ehfunclet	unaff_EBP
+0051689f	unwind_funclet_0051689f	ehfunclet	unaff_EBP
+005168ae	unwind_funclet_005168ae	ehfunclet	unaff_EBP
+005168bd	unwind_funclet_005168bd	ehfunclet	unaff_EBP
+005168cc	unwind_funclet_005168cc	ehfunclet	unaff_EBP
+005168db	unwind_funclet_005168db	ehfunclet	unaff_EBP
+005168ea	unwind_funclet_005168ea	ehfunclet	unaff_EBP
+005168f9	unwind_funclet_005168f9	ehfunclet	unaff_EBP
+00516908	unwind_funclet_00516908	ehfunclet	unaff_EBP
+00516917	unwind_funclet_00516917	ehfunclet	unaff_EBP
+00516926	unwind_funclet_00516926	ehfunclet	unaff_EBP
 00516947	council_wnd_init	auto	
 00516fd4	council_wnd_run_modal	auto	
 00517158	council_draw_background	auto	
 00517673	council_create_buttons	auto	
 005179a3	council_load_speech	auto	
 00517dd3	council_draw_speech	auto	
-00517fe4	FUN_00517fe4	ehfunclet	unaff_EBP
+00517fe4	unwind_funclet_00517fe4	ehfunclet	unaff_EBP
 00518007	council_draw_advisor_frames	auto	
-005181ab	FUN_005181ab	ehfunclet	unaff_EBP
-005181b4	FUN_005181b4	ehfunclet	unaff_EBP
+005181ab	unwind_funclet_005181ab	ehfunclet	unaff_EBP
+005181b4	unwind_funclet_005181b4	ehfunclet	unaff_EBP
 005181d8	council_on_advisor_button	auto	
 00518342	council_move_video_to_slot	auto	
 00518392	council_advisor_from_letter	auto	
@@ -2342,50 +2342,50 @@ addr	name	status	reason
 0051b1c2	terrain_editor_create_edit	auto	
 0051b2b6	terrain_editor_draw	auto	
 0051bba1	terrain_editor_run	auto	
-0051c611	FUN_0051c611	ehfunclet	unaff_EBP
+0051c611	unwind_funclet_0051c611	ehfunclet	unaff_EBP
 0051c635	terrain_editor_open	auto	
-0051c68e	FUN_0051c68e	ehfunclet	unaff_EBP
+0051c68e	unwind_funclet_0051c68e	ehfunclet	unaff_EBP
 0051d3e0	popup_text_run	auto	
-0051d53f	FUN_0051d53f	ehfunclet	unaff_EBP
+0051d53f	unwind_funclet_0051d53f	ehfunclet	unaff_EBP
 0051d564	popup_text_with_sprite	auto	
-0051d616	FUN_0051d616	ehfunclet	unaff_EBP
+0051d616	unwind_funclet_0051d616	ehfunclet	unaff_EBP
 0051d63b	dlg_text_input	auto	
-0051d738	FUN_0051d738	ehfunclet	unaff_EBP
+0051d738	unwind_funclet_0051d738	ehfunclet	unaff_EBP
 0051d75d	dlg_input_number	auto	
 0051d7bc	dlg_checks_clear	auto	
 0051d7d6	dlg_check_set	auto	
 0051d817	dlg_check_get	auto	
 0051d950	text_char_to_upper	unused	
 0051d9a0	setup_choose_multiplayer_type	auto	
-0051dd72	FUN_0051dd72	ehfunclet	unaff_EBP
+0051dd72	unwind_funclet_0051dd72	ehfunclet	unaff_EBP
 0051dd97	setup_choose_game_options	auto	
-0051e9e7	FUN_0051e9e7	ehfunclet	unaff_EBP
+0051e9e7	unwind_funclet_0051e9e7	ehfunclet	unaff_EBP
 0051ea0c	net_vote_wait_idle_cb	auto	
 0051ea8e	setup_choose_game_timer	auto	
-0051f0f5	FUN_0051f0f5	ehfunclet	unaff_EBP
+0051f0f5	unwind_funclet_0051f0f5	ehfunclet	unaff_EBP
 0051f11a	net_lock_wait_idle_cb	auto	
 0051f17e	net_pump_idle_cb	auto	
 0051f19c	setup_choose_tribe	auto	
-00521807	FUN_00521807	ehfunclet	unaff_EBP
+00521807	unwind_funclet_00521807	ehfunclet	unaff_EBP
 0052182c	dialog_prepend_title_label	auto	
 005218cb	scenario_start_dialog	auto	
-00521faf	FUN_00521faf	ehfunclet	unaff_EBP
-00521fbb	FUN_00521fbb	ehfunclet	unaff_EBP
+00521faf	unwind_funclet_00521faf	ehfunclet	unaff_EBP
+00521fbb	unwind_funclet_00521fbb	ehfunclet	unaff_EBP
 00521fe0	scenario_pick_human_civs	auto	
-00522617	FUN_00522617	ehfunclet	unaff_EBP
+00522617	unwind_funclet_00522617	ehfunclet	unaff_EBP
 0052263c	setup_show_side_picture	auto	
 005226fa	setup_next_dialog_x	auto	
 005227e3	setup_choose_hotseat_players	auto	
-00522b06	FUN_00522b06	ehfunclet	unaff_EBP
+00522b06	unwind_funclet_00522b06	ehfunclet	unaff_EBP
 00522b2b	game_join_dialog	auto	
-00522dd6	FUN_00522dd6	ehfunclet	unaff_EBP
+00522dd6	unwind_funclet_00522dd6	ehfunclet	unaff_EBP
 00522dfa	leaders_reset_custom_names	auto	
 00522f8f	setup_choose_opponents	auto	
-005233d8	FUN_005233d8	ehfunclet	unaff_EBP
+005233d8	unwind_funclet_005233d8	ehfunclet	unaff_EBP
 005233fc	net_host_register_player_civ	auto	
 00523d8a	net_send_rules_tables	auto	
 00523f02	setup_join_pick_civ	auto	
-005246bf	FUN_005246bf	ehfunclet	unaff_EBP
+005246bf	unwind_funclet_005246bf	ehfunclet	unaff_EBP
 005261a0	pedia_init_wonder_list	auto	
 0052630d	pedia_draw_improvement	auto	
 00526913	pedia_show_wonder_modal	auto	
@@ -2444,7 +2444,7 @@ addr	name	status	reason
 0054a874	bits_nth_set	auto	
 0054a8d3	bits_index_of	auto	
 0054a912	events_editor_pick_item	auto	
-0054ada1	FUN_0054ada1	ehfunclet	unaff_EBP
+0054ada1	unwind_funclet_0054ada1	ehfunclet	unaff_EBP
 0054adc6	events_editor_pick_action_civ	auto	
 0054ae93	events_editor_update_buttons	auto	
 0054b0ed	events_editor_on_ok	auto	
@@ -2460,14 +2460,14 @@ addr	name	status	reason
 0054d4e6	events_editor_on_add_trigger	auto	
 0054d6da	events_editor_on_delete_action	auto	
 0054d7ef	events_editor_edit_action	auto	
-0054ee8f	FUN_0054ee8f	ehfunclet	unaff_EBP
+0054ee8f	unwind_funclet_0054ee8f	ehfunclet	unaff_EBP
 0054eeb4	events_editor_on_edit_action	auto	
 0054eed0	events_editor_on_add_action	auto	
 0054f16b	events_editor_draw	auto	
 0054f3b9	events_editor_run	auto	
-0054ffa4	FUN_0054ffa4	ehfunclet	unaff_EBP
+0054ffa4	unwind_funclet_0054ffa4	ehfunclet	unaff_EBP
 0054ffc8	events_editor_open	auto	
-00550017	FUN_00550017	ehfunclet	unaff_EBP
+00550017	unwind_funclet_00550017	ehfunclet	unaff_EBP
 00551cd0	events_delete	auto	
 00551d20	listbox_get_count	auto	
 00551d50	listbox_get_cur_sel	auto	
@@ -2499,7 +2499,7 @@ addr	name	status	reason
 00553379	frame_wnd_close	auto	
 0055339f	frame_wnd_ctor	auto	
 00553444	frame_wnd_dtor	auto	
-0055349b	FUN_0055349b	ehfunclet	unaff_EBP
+0055349b	unwind_funclet_0055349b	ehfunclet	unaff_EBP
 005534bc	frame_wnd_create	auto	
 00553d30	wnd_set_drag_begin_callback	auto	
 00553d70	wnd_set_drag_end_callback	auto	
@@ -2507,37 +2507,37 @@ addr	name	status	reason
 00553dfd	editor_create_scenario_folder	auto	
 00553ff6	editor_toggle_scenario_flag	auto	
 00554145	dbg_pick_player	auto	
-00554272	FUN_00554272	ehfunclet	unaff_EBP
+00554272	unwind_funclet_00554272	ehfunclet	unaff_EBP
 00554297	cheat_toggle_mode	auto	
 00554423	cheat_tech_advance	auto	
 00554460	cheat_toggle_all_advances	auto	
 005545d3	cheat_edit_technologies	auto	
-0055493e	FUN_0055493e	ehfunclet	unaff_EBP
+0055493e	unwind_funclet_0055493e	ehfunclet	unaff_EBP
 00554962	cheat_force_government	auto	
 0055499f	cheat_change_terrain	auto	
-0055518f	FUN_0055518f	ehfunclet	unaff_EBP
+0055518f	unwind_funclet_0055518f	ehfunclet	unaff_EBP
 005551b3	cheat_create_unit	auto	
-005555eb	FUN_005555eb	ehfunclet	unaff_EBP
+005555eb	unwind_funclet_005555eb	ehfunclet	unaff_EBP
 0055560f	cheat_reveal_map	auto	
-0055581b	FUN_0055581b	ehfunclet	unaff_EBP
+0055581b	unwind_funclet_0055581b	ehfunclet	unaff_EBP
 0055583f	cheat_set_human_player	auto	
-005559de	FUN_005559de	ehfunclet	unaff_EBP
+005559de	unwind_funclet_005559de	ehfunclet	unaff_EBP
 00555a02	cheat_set_game_year	auto	
 00555a8b	cheat_kill_civ	auto	
-00555c8d	FUN_00555c8d	ehfunclet	unaff_EBP
+00555c8d	unwind_funclet_00555c8d	ehfunclet	unaff_EBP
 00555cb1	cheat_destroy_units_at_cursor	auto	
 00555ced	dbg_continent_policy_color	unused	
 00555d70	dbg_draw_ai_goals_overlay	unused	
 005560c9	dbg_draw_tile_owner_overlay	unused	
 0055615c	cheat_change_money	auto	
 0055625b	cheat_edit_unit	auto	
-005569bf	FUN_005569bf	ehfunclet	unaff_EBP
+005569bf	unwind_funclet_005569bf	ehfunclet	unaff_EBP
 005569e3	cheat_edit_city	auto	
-00556f30	FUN_00556f30	ehfunclet	unaff_EBP
+00556f30	unwind_funclet_00556f30	ehfunclet	unaff_EBP
 00556f54	cheat_edit_king	auto	
-00557e08	FUN_00557e08	ehfunclet	unaff_EBP
+00557e08	unwind_funclet_00557e08	ehfunclet	unaff_EBP
 00557e2c	cheat_edit_victory	auto	
-00558177	FUN_00558177	ehfunclet	unaff_EBP
+00558177	unwind_funclet_00558177	ehfunclet	unaff_EBP
 0055819b	cheat_edit_scenario_rules	auto	
 005582ad	cheat_scenario_params	auto	
 0055891d	cheat_save_as_scenario	auto	
@@ -2550,13 +2550,13 @@ addr	name	status	reason
 00559cbf	setup_picwnd_surface_reg_atexit	auto	
 00559cdc	setup_picwnd_surface_static_dtor	auto	
 00559cf6	setup_picwnd_load_image	auto	
-00559dbd	FUN_00559dbd	ehfunclet	unaff_EBP
-00559dc9	FUN_00559dc9	ehfunclet	unaff_EBP
+00559dbd	unwind_funclet_00559dbd	ehfunclet	unaff_EBP
+00559dc9	unwind_funclet_00559dc9	ehfunclet	unaff_EBP
 00559ded	setup_picwnd_reset_fields	auto	
 00559e3c	setup_picwnd_ctor	auto	
 00559ed4	setup_picwnd_dtor	auto	
-00559f30	FUN_00559f30	ehfunclet	unaff_EBP
-00559f3f	FUN_00559f3f	ehfunclet	unaff_EBP
+00559f30	unwind_funclet_00559f30	ehfunclet	unaff_EBP
+00559f3f	unwind_funclet_00559f3f	ehfunclet	unaff_EBP
 00559f60	setup_picwnd_blit_image_rect	auto	
 00559fcf	setup_picwnd_draw_image	auto	
 0055a00b	setup_picwnd_client_rect	auto	
@@ -2628,9 +2628,9 @@ addr	name	status	reason
 0056815c	frame_texture_surface_static_dtor	auto	
 00568176	mem_check_available	auto	
 005681c9	frame_texture_load	auto	
-00568348	FUN_00568348	ehfunclet	unaff_EBP
-00568354	FUN_00568354	ehfunclet	unaff_EBP
-0056835d	FUN_0056835d	ehfunclet	unaff_EBP
+00568348	unwind_funclet_00568348	ehfunclet	unaff_EBP
+00568354	unwind_funclet_00568354	ehfunclet	unaff_EBP
+0056835d	unwind_funclet_0056835d	ehfunclet	unaff_EBP
 00568381	frame_texture_free	auto	
 005683a5	frame_texture_load_hook_nop	auto	
 005683b5	frame_texture_free_hook_nop	auto	
@@ -2679,7 +2679,7 @@ addr	name	status	reason
 0056baff	gfx_draw_unit	auto	
 0056c5fc	gfx_copy_rect_clipped	auto	
 0056c705	map_animate_unit_move	auto	
-0056d25b	FUN_0056d25b	ehfunclet	unaff_EBP
+0056d25b	unwind_funclet_0056d25b	ehfunclet	unaff_EBP
 0056d289	gfx_draw_city	auto	
 0056e180	map_view_zoom_scale_round	auto	
 0056e1c0	gfx_zoom_scale_round	auto	
@@ -2729,17 +2729,17 @@ addr	name	status	reason
 0056fbe3	sprite_picker_window_static_dtor	auto	
 0056fbfd	sprite_sheet_draw_shield_marks	auto	
 0056fce4	sprite_sheet_save_units	auto	
-0056ffb6	FUN_0056ffb6	ehfunclet	unaff_EBP
+0056ffb6	unwind_funclet_0056ffb6	ehfunclet	unaff_EBP
 0056ffda	sprite_sheet_save_cities	auto	
-0057075c	FUN_0057075c	ehfunclet	unaff_EBP
+0057075c	unwind_funclet_0057075c	ehfunclet	unaff_EBP
 00570780	sprite_sheet_save_terrain1	auto	
-00570fa2	FUN_00570fa2	ehfunclet	unaff_EBP
+00570fa2	unwind_funclet_00570fa2	ehfunclet	unaff_EBP
 00570fc6	sprite_sheet_save_terrain2	auto	
-005718ec	FUN_005718ec	ehfunclet	unaff_EBP
+005718ec	unwind_funclet_005718ec	ehfunclet	unaff_EBP
 00571910	sprite_sheet_save_tech_icons	auto	
-00571baa	FUN_00571baa	ehfunclet	unaff_EBP
+00571baa	unwind_funclet_00571baa	ehfunclet	unaff_EBP
 00571bce	sprite_sheet_save_building_icons	auto	
-00572065	FUN_00572065	ehfunclet	unaff_EBP
+00572065	unwind_funclet_00572065	ehfunclet	unaff_EBP
 00572089	sprite_editor_create_window	auto	
 005722ab	sprite_editor_ok_clicked	auto	
 00572364	sprite_editor_cancel_clicked	auto	
@@ -2751,12 +2751,12 @@ addr	name	status	reason
 00572887	sprite_editor_plot_pixel	auto	
 00572da0	sprite_editor_draw_flag_marker	auto	
 00572fff	sprite_editor_on_mouse_down	auto	
-00573adc	FUN_00573adc	ehfunclet	unaff_EBP
+00573adc	unwind_funclet_00573adc	ehfunclet	unaff_EBP
 00573afd	sprite_editor_on_mouse_up	auto	
 00573b1d	sprite_editor_on_mouse_move	auto	
 00573e59	sprite_editor_run	auto	
-0057420c	FUN_0057420c	ehfunclet	unaff_EBP
-00574218	FUN_00574218	ehfunclet	unaff_EBP
+0057420c	unwind_funclet_0057420c	ehfunclet	unaff_EBP
+00574218	unwind_funclet_00574218	ehfunclet	unaff_EBP
 00574239	sprite_editor_redraw	auto	
 00574522	sprite_picker_draw	auto	
 00574686	sprite_picker_redraw_cb	auto	
@@ -2770,14 +2770,14 @@ addr	name	status	reason
 00575dec	sprite_picker_run	auto	
 0057624d	sprite_picker_show	auto	
 00576267	sprite_editor_import_sheet	auto	
-005767a7	FUN_005767a7	ehfunclet	unaff_EBP
-005767b3	FUN_005767b3	ehfunclet	unaff_EBP
+005767a7	unwind_funclet_005767a7	ehfunclet	unaff_EBP
+005767b3	unwind_funclet_005767b3	ehfunclet	unaff_EBP
 00578390	sprite_picker_dtor	auto	
-00578402	FUN_00578402	ehfunclet	unaff_EBP
-00578411	FUN_00578411	ehfunclet	unaff_EBP
-00578420	FUN_00578420	ehfunclet	unaff_EBP
-0057842f	FUN_0057842f	ehfunclet	unaff_EBP
-0057843e	FUN_0057843e	ehfunclet	unaff_EBP
+00578402	unwind_funclet_00578402	ehfunclet	unaff_EBP
+00578411	unwind_funclet_00578411	ehfunclet	unaff_EBP
+00578420	unwind_funclet_00578420	ehfunclet	unaff_EBP
+0057842f	unwind_funclet_0057842f	ehfunclet	unaff_EBP
+0057843e	unwind_funclet_0057843e	ehfunclet	unaff_EBP
 005784a0	sprite_picker_ctor	auto	
 005785d0	wnd_set_rbuttondown_handler	auto	
 00578610	wnd_set_rbuttonup_any_handler	auto	
@@ -2786,7 +2786,7 @@ addr	name	status	reason
 005786b6	menu_reset	auto	
 005786f1	menu_ctor	auto	
 00578770	menu_dtor	auto	
-005787bd	FUN_005787bd	ehfunclet	unaff_EBP
+005787bd	unwind_funclet_005787bd	ehfunclet	unaff_EBP
 005787de	menu_find_menu	auto	
 00578840	menu_visible_index	auto	
 005788a9	menu_id_at_visible_index	auto	
@@ -2823,12 +2823,12 @@ addr	name	status	reason
 00579dbb	city_treasury_share	auto	
 00579ed0	diplo_confirm_attack	auto	
 0057a27a	civ_steal_advance	auto	
-0057a661	FUN_0057a661	ehfunclet	unaff_EBP
+0057a661	unwind_funclet_0057a661	ehfunclet	unaff_EBP
 0057a685	civ_find_central_city	auto	
 0057a7e9	city_transfer_for_civil_war	auto	
 0057a904	civ_civil_war	auto	
 0057b5df	city_capture_aftermath	auto	
-0057e29f	FUN_0057e29f	ehfunclet	unaff_EBP
+0057e29f	unwind_funclet_0057e29f	ehfunclet	unaff_EBP
 0057e2c3	unit_attack_strength	auto	
 0057e33a	unit_defense_strength	auto	
 0057e6e2	unit_stack_best_defender	auto	
@@ -2836,7 +2836,7 @@ addr	name	status	reason
 0057eb94	unit_kill_stack_in_combat	auto	
 0057ebfd	unit_promote_veteran	auto	
 0057ed3f	map_animate_explosion	auto	
-0057f628	FUN_0057f628	ehfunclet	unaff_EBP
+0057f628	unwind_funclet_0057f628	ehfunclet	unaff_EBP
 0057f657	map_animate_nuke	auto	
 0057f9e3	unit_nuclear_attack	auto	
 0057febc	ai_respond_to_attack	auto	
@@ -2852,9 +2852,9 @@ addr	name	status	reason
 00586e88	cosmic_editor_cancel_clicked	auto	
 00586eb0	cosmic_editor_draw_bg	auto	
 00586f16	cosmic_editor_dialog	auto	
-005875e9	FUN_005875e9	ehfunclet	unaff_EBP
+005875e9	unwind_funclet_005875e9	ehfunclet	unaff_EBP
 0058760d	cosmic_editor_run	auto	
-00587666	FUN_00587666	ehfunclet	unaff_EBP
+00587666	unwind_funclet_00587666	ehfunclet	unaff_EBP
 00587a90	parley_create_city_list_pane	auto	
 00587e05	parley_city_list_scroll_local	auto	
 00587e23	parley_city_list_scroll_remote	unused	
@@ -2873,7 +2873,7 @@ addr	name	status	reason
 00589a24	main_frame_bg_surface_atexit	auto	
 00589a41	main_frame_bg_surface_static_dtor	auto	
 00589a5b	main_frame_create	auto	
-00589c54	FUN_00589c54	ehfunclet	unaff_EBP
+00589c54	unwind_funclet_00589c54	ehfunclet	unaff_EBP
 00589c79	main_frame_destroy	auto	
 00589d50	wnd_frame_width	auto	
 00589d80	err_register_cleanup_fn	auto	
@@ -2888,7 +2888,7 @@ addr	name	status	reason
 0058a61b	unit_sound_editor_create_wnd	auto	
 0058a80d	file_copy	auto	
 0058a905	unit_sound_editor_pick_wav	auto	
-0058abca	FUN_0058abca	ehfunclet	unaff_EBP
+0058abca	unwind_funclet_0058abca	ehfunclet	unaff_EBP
 0058abee	unit_sound_editor_ok_clicked	auto	
 0058ac13	unit_sound_editor_cancel_clicked	auto	
 0058ac38	unit_sound_editor_redraw	auto	
@@ -2896,9 +2896,9 @@ addr	name	status	reason
 0058ae6c	unit_sound_editor_on_dblclick	auto	
 0058afb6	unit_sound_editor_set_slots	auto	
 0058b47e	unit_sound_editor_run	auto	
-0058b859	FUN_0058b859	ehfunclet	unaff_EBP
-0058b86f	FUN_0058b86f	ehfunclet	unaff_EBP
-0058b87b	FUN_0058b87b	ehfunclet	unaff_EBP
+0058b859	unwind_funclet_0058b859	ehfunclet	unaff_EBP
+0058b86f	unwind_funclet_0058b86f	ehfunclet	unaff_EBP
+0058b87b	unwind_funclet_0058b87b	ehfunclet	unaff_EBP
 0058bd60	cmd_unit_skip_turn	auto	
 0058bd84	cmd_end_player_turn	auto	
 0058bdfd	unit_cmd_wait	auto	
@@ -2910,20 +2910,20 @@ addr	name	status	reason
 0058cce6	unit_cmd_fortify	auto	
 0058cde5	unit_cmd_sleep	auto	
 0058cfcd	unit_cmd_pillage	auto	
-0058d41e	FUN_0058d41e	ehfunclet	unaff_EBP
+0058d41e	unwind_funclet_0058d41e	ehfunclet	unaff_EBP
 0058d442	ui_pick_unit_from_stack	auto	
 0058d60a	unit_cmd_paradrop	auto	
 0058d6af	unit_cmd_goto_city	auto	
-0058ddaa	FUN_0058ddaa	ehfunclet	unaff_EBP
+0058ddaa	unwind_funclet_0058ddaa	ehfunclet	unaff_EBP
 0058ddce	unit_cmd_unload	auto	
 0058df14	unit_cmd_automate	auto	
 0058df7b	unit_cmd_airlift	auto	
-0058e5c4	FUN_0058e5c4	ehfunclet	unaff_EBP
+0058e5c4	unwind_funclet_0058e5c4	ehfunclet	unaff_EBP
 0058f010	popup_game_if_local_mover	unused	
 0058f040	unit_enter_hut	game	src/game/retvals.c
 0058fda9	map_reveal_adjacent_units	auto	
 0058fedb	unit_caravan_enter_city	auto	
-00590607	FUN_00590607	ehfunclet	unaff_EBP
+00590607	unwind_funclet_00590607	ehfunclet	unaff_EBP
 0059062c	unit_move_dir	auto	
 00594d42	net_lock_map	auto	
 0059511c	net_unlock_map	auto	
@@ -2937,12 +2937,12 @@ addr	name	status	reason
 00596eec	spaceship_calc_stats	auto	
 005973fd	spaceship_launch	auto	
 0059772c	spaceship_status_dialog	auto	
-00597d4b	FUN_00597d4b	ehfunclet	unaff_EBP
+00597d4b	unwind_funclet_00597d4b	ehfunclet	unaff_EBP
 00597d6f	spaceship_choose_part_group	auto	
 00598197	spaceship_add_part	auto	
 00598a05	civ_spaceship_part_maxed	auto	
 00598b4e	spaceship_select_view_dialog	auto	
-00598cc7	FUN_00598cc7	ehfunclet	unaff_EBP
+00598cc7	unwind_funclet_00598cc7	ehfunclet	unaff_EBP
 00598ceb	spaceship_race_active	auto	
 00598d45	ai_spaceship_race_behind	auto	
 005998b0	spaceship_group_full	auto	
@@ -2962,7 +2962,7 @@ addr	name	status	reason
 0059a8bb	net_session_ctor	auto	
 0059a998	net_session_clear	auto	
 0059ad40	net_session_dtor	auto	
-0059adc8	FUN_0059adc8	ehfunclet	unaff_EBP
+0059adc8	unwind_funclet_0059adc8	ehfunclet	unaff_EBP
 0059adef	net_init_transport	auto	
 0059b293	net_session_shutdown	auto	
 0059b55b	net_session_close_hook_nop	auto	
@@ -3141,13 +3141,13 @@ addr	name	status	reason
 005a9f30	net_host_wait_production_idle	auto	
 005aa004	net_host_wait_human_moves_idle	auto	
 005aa0e5	net_host_turn_loop	game	src/game/bigframes.c
-005ab07f	FUN_005ab07f	ehfunclet	unaff_EBP
+005ab07f	unwind_funclet_005ab07f	ehfunclet	unaff_EBP
 005ab0a3	net_client_wait_production_idle	auto	
 005ab120	net_client_wait_ai_moves_idle	auto	
 005ab19d	net_client_wait_human_moves_idle	auto	
 005ab23a	net_client_hotwait_idle	auto	
 005ab2d5	net_client_turn_loop	auto	
-005abfdb	FUN_005abfdb	ehfunclet	unaff_EBP
+005abfdb	unwind_funclet_005abfdb	ehfunclet	unaff_EBP
 005ac840	pedia_show_unit_list	auto	
 005ac9ad	pedia_draw_unit_page	auto	
 005ad998	pedia_show_unit_modal	auto	
@@ -3166,9 +3166,9 @@ addr	name	status	reason
 005ae3bf	bit_index_split	auto	
 005ae3ec	int_shift_signed	auto	
 005ae580	setup_pbem_game	auto	
-005aebef	FUN_005aebef	ehfunclet	unaff_EBP
+005aebef	unwind_funclet_005aebef	ehfunclet	unaff_EBP
 005aec14	pbem_ask_email_address	unused	
-005aed0d	FUN_005aed0d	ehfunclet	unaff_EBP
+005aed0d	unwind_funclet_005aed0d	ehfunclet	unaff_EBP
 005aef20	unit_editor_load_rules	auto	
 005af140	unit_editor_store_rules	auto	
 005af343	unit_editor_load_controls	auto	
@@ -3189,9 +3189,9 @@ addr	name	status	reason
 005b08e8	unit_editor_create_edit	auto	
 005b09dc	unit_editor_paint	auto	
 005b1037	unit_editor_window_run	auto	
-005b1a05	FUN_005b1a05	ehfunclet	unaff_EBP
+005b1a05	unwind_funclet_005b1a05	ehfunclet	unaff_EBP
 005b1a29	unit_editor_run	auto	
-005b1a82	FUN_005b1a82	ehfunclet	unaff_EBP
+005b1a82	unwind_funclet_005b1a82	ehfunclet	unaff_EBP
 005b2590	unit_stack_validate	auto	
 005b29aa	unit_max_hp	auto	
 005b29d7	unit_hp_remaining	auto	
@@ -3251,8 +3251,8 @@ addr	name	status	reason
 005b6aa0	unit_dlg_dblclick_accept_cb	auto	
 005b6ab5	unit_dlg_draw_sprite_cb	auto	
 005b6aea	unit_stack_select_dialog	auto	
-005b6d9f	FUN_005b6d9f	ehfunclet	unaff_EBP
-005b6dab	FUN_005b6dab	ehfunclet	unaff_EBP
+005b6d9f	unwind_funclet_005b6d9f	ehfunclet	unaff_EBP
+005b6dab	unwind_funclet_005b6dab	ehfunclet	unaff_EBP
 005b7fe0	map_alloc	auto	
 005b8416	map_free	auto	
 005b85fe	map_new_seed	auto	
@@ -3409,17 +3409,17 @@ addr	name	status	reason
 005be1b3	lbm_unpack_row	unused	
 005be2c4	surface_load_tga_resource	unused	
 005be595	surface_load_tga_file	unused	
-005be940	FUN_005be940	ehfunclet	unaff_EBP
+005be940	unwind_funclet_005be940	ehfunclet	unaff_EBP
 005be967	surface_load_pcx_resource	unused	
 005bec8c	surface_load_pcx_file	unused	
-005bf04a	FUN_005bf04a	ehfunclet	unaff_EBP
+005bf04a	unwind_funclet_005bf04a	ehfunclet	unaff_EBP
 005bf071	surface_load_gif_file	auto	
-005bf5ba	FUN_005bf5ba	ehfunclet	unaff_EBP
+005bf5ba	unwind_funclet_005bf5ba	ehfunclet	unaff_EBP
 005bf5e1	surface_load_gif_resource	auto	
 005bf930	surface_load_pict_resource	unused	
 005bfad9	surface_load_bmp_resource	unused	
 005bfcff	surface_load_bmp_file	unused	
-005c000d	FUN_005c000d	ehfunclet	unaff_EBP
+005c000d	unwind_funclet_005c000d	ehfunclet	unaff_EBP
 005c0034	surface_reset_clip	auto	
 005c0073	surface_set_clip	auto	
 005c00ce	surface_get_clip	auto	
@@ -3468,22 +3468,22 @@ addr	name	status	reason
 005c201d	gfx_rgb_to_555	unused	
 005c2048	surface_load_tga_resource16	unused	
 005c2360	surface_load_tga_file16	unused	
-005c2786	FUN_005c2786	ehfunclet	unaff_EBP
+005c2786	unwind_funclet_005c2786	ehfunclet	unaff_EBP
 005c27ad	surface_load_bmp_resource16	unused	
 005c2a77	surface_load_bmp_file16	unused	
-005c2e37	FUN_005c2e37	ehfunclet	unaff_EBP
+005c2e37	unwind_funclet_005c2e37	ehfunclet	unaff_EBP
 005c2e5e	surface_load_gif_resource16	unused	
 005c3313	surface_load_gif_file16	unused	
-005c384d	FUN_005c384d	ehfunclet	unaff_EBP
+005c384d	unwind_funclet_005c384d	ehfunclet	unaff_EBP
 005c3874	surface_load_pict_resource16	unused	
 005c3b7a	surface_load_pict_file16	unused	
-005c3ed5	FUN_005c3ed5	ehfunclet	unaff_EBP
+005c3ed5	unwind_funclet_005c3ed5	ehfunclet	unaff_EBP
 005c3efc	surface_load_bmp_resource24	unused	
 005c40b6	surface_load_bmp_file24	unused	
-005c434e	FUN_005c434e	ehfunclet	unaff_EBP
+005c434e	unwind_funclet_005c434e	ehfunclet	unaff_EBP
 005c4375	surface_load_tga_resource24	unused	
 005c463f	surface_load_tga_file24	unused	
-005c4a00	FUN_005c4a00	ehfunclet	unaff_EBP
+005c4a00	unwind_funclet_005c4a00	ehfunclet	unaff_EBP
 005c4a27	surface_fill_rect_rgb	unused	
 005c4b4c	surface_fill_rgb	unused	
 005c4b7f	surface_blit_rgb	unused	
@@ -3566,9 +3566,9 @@ addr	name	status	reason
 005c6757	palette_load_file	unused	
 005c677b	palette_save_full_to_file	unused	
 005c67a6	palette_save_to_file	unused	
-005c68ca	FUN_005c68ca	ehfunclet	unaff_EBP
+005c68ca	unwind_funclet_005c68ca	ehfunclet	unaff_EBP
 005c68f0	palette_load_from_file	unused	
-005c6a1c	FUN_005c6a1c	ehfunclet	unaff_EBP
+005c6a1c	unwind_funclet_005c6a1c	ehfunclet	unaff_EBP
 005c6a42	palette_new_version	auto	
 005c6a8d	palette_reserve_range	auto	
 005c6ac9	palette_refresh_range	unused	
@@ -3587,11 +3587,11 @@ addr	name	status	reason
 005c72f8	palette_fade_end	auto	
 005c738e	palette_fade_step	auto	
 005c7579	palette_build_remap_table	unused	
-005c76e4	FUN_005c76e4	ehfunclet	unaff_EBP
+005c76e4	unwind_funclet_005c76e4	ehfunclet	unaff_EBP
 005c770a	palette_build_remap_table_ex	unused	
-005c7873	FUN_005c7873	ehfunclet	unaff_EBP
+005c7873	unwind_funclet_005c7873	ehfunclet	unaff_EBP
 005c7899	palette_find_nearest_color	unused	
-005c7998	FUN_005c7998	ehfunclet	unaff_EBP
+005c7998	unwind_funclet_005c7998	ehfunclet	unaff_EBP
 005c79bf	color_kdtree_init	unused	
 005c7a30	color_kdtree_free	unused	
 005c7a86	color_kdtree_build	unused	
@@ -3687,7 +3687,7 @@ addr	name	status	reason
 005cde2c	sprite_init	auto	
 005cde4d	sprite_destroy	auto	
 005cdea1	sprite_create_solid	auto	
-005cdf2d	FUN_005cdf2d	ehfunclet	unaff_EBP
+005cdf2d	unwind_funclet_005cdf2d	ehfunclet	unaff_EBP
 005cdf50	sprite_free	auto	
 005cdfb2	sprite_data_fixup_stub	unused	
 005cdfc2	sprite_load_res	unused	
@@ -3695,14 +3695,14 @@ addr	name	status	reason
 005ce19a	sprite_load_res_with_pal	unused	
 005ce3a8	sprite_load_file	unused	
 005ce3cc	sprite_write_file_with_palette	unused	
-005ce595	FUN_005ce595	ehfunclet	unaff_EBP
+005ce595	unwind_funclet_005ce595	ehfunclet	unaff_EBP
 005ce5bb	sprite_write_file	unused	
-005ce6fd	FUN_005ce6fd	ehfunclet	unaff_EBP
+005ce6fd	unwind_funclet_005ce6fd	ehfunclet	unaff_EBP
 005ce723	sprite_load_file_full_pal	unused	
 005ce74f	sprite_read_file_with_palette	unused	
-005ce9c9	FUN_005ce9c9	ehfunclet	unaff_EBP
+005ce9c9	unwind_funclet_005ce9c9	ehfunclet	unaff_EBP
 005ce9ef	sprite_read_file	unused	
-005ceb8e	FUN_005ceb8e	ehfunclet	unaff_EBP
+005ceb8e	unwind_funclet_005ceb8e	ehfunclet	unaff_EBP
 005cebb4	sprite_grab_surface_rect	auto	
 005cebec	sprite_encode_rect	auto	
 005cec44	sprite_grab_rect	auto	
@@ -4027,10 +4027,10 @@ addr	name	status	reason
 005dcfca	mem_kb_exceeds_avail	unused	
 005dd010	mmwnd_ctor	auto	
 005dd1a0	avi_player_dtor	auto	
-005dd230	FUN_005dd230	ehfunclet	unaff_EBP
-005dd23f	FUN_005dd23f	ehfunclet	unaff_EBP
-005dd24e	FUN_005dd24e	ehfunclet	unaff_EBP
-005dd25d	FUN_005dd25d	ehfunclet	unaff_EBP
+005dd230	unwind_funclet_005dd230	ehfunclet	unaff_EBP
+005dd23f	unwind_funclet_005dd23f	ehfunclet	unaff_EBP
+005dd24e	unwind_funclet_005dd24e	ehfunclet	unaff_EBP
+005dd25d	unwind_funclet_005dd25d	ehfunclet	unaff_EBP
 005dd27e	avi_player_create	auto	
 005dd2e3	avi_player_create_child	auto	
 005dd377	avi_player_open	auto	
@@ -4101,8 +4101,8 @@ addr	name	status	reason
 005df1fd	ui_notice_timer_start	unused	
 005df280	ui_notice_timer_stop	unused	
 005df2b5	gif_convert_to_raw_file	unused	
-005df67b	FUN_005df67b	ehfunclet	unaff_EBP
-005df687	FUN_005df687	ehfunclet	unaff_EBP
+005df67b	unwind_funclet_005df67b	ehfunclet	unaff_EBP
+005df687	unwind_funclet_005df687	ehfunclet	unaff_EBP
 005df6ab	gfx_dissolve_transition_nodelay	unused	
 005df6e1	gfx_dissolve_transition	unused	
 005df931	ddsurf_draw_bevel_border	unused	
@@ -4116,12 +4116,12 @@ addr	name	status	reason
 005e0215	text_estimate_wrap_lines	unused	
 005e0248	dlg_radio_choice_modal_noparent	unused	
 005e026a	dlg_radio_choice_modal	unused	
-005e0802	FUN_005e0802	ehfunclet	unaff_EBP
-005e080e	FUN_005e080e	ehfunclet	unaff_EBP
-005e081a	FUN_005e081a	ehfunclet	unaff_EBP
-005e0826	FUN_005e0826	ehfunclet	unaff_EBP
-005e0832	FUN_005e0832	ehfunclet	unaff_EBP
-005e083e	FUN_005e083e	ehfunclet	unaff_EBP
+005e0802	unwind_funclet_005e0802	ehfunclet	unaff_EBP
+005e080e	unwind_funclet_005e080e	ehfunclet	unaff_EBP
+005e081a	unwind_funclet_005e081a	ehfunclet	unaff_EBP
+005e0826	unwind_funclet_005e0826	ehfunclet	unaff_EBP
+005e0832	unwind_funclet_005e0832	ehfunclet	unaff_EBP
+005e083e	unwind_funclet_005e083e	ehfunclet	unaff_EBP
 005e0863	FUN_005e0863	game	src/game/unwind.c
 005e0a31	FUN_005e0a31	ehfunclet	unaff_EBP
 005e0a3a	FUN_005e0a3a	ehfunclet	unaff_EBP
@@ -4474,7 +4474,7 @@ addr	name	status	reason
 005f0342	ddwin_deactivate_controls	auto	
 005f0391	ddwin_dispatch_ctrl_msg	auto	
 005f04c0	ptrlist_dtor	auto	
-005f04fe	FUN_005f04fe	ehfunclet	unaff_EBP
+005f04fe	unwind_funclet_005f04fe	ehfunclet	unaff_EBP
 005f0520	ptrlist_ctor	unused	
 005f0590	ptrlist_first	auto	
 005f05b0	ptrlist_last	unused	
@@ -4510,7 +4510,7 @@ addr	name	status	reason
 005f0fe9	ddctrl_ctor_in_window	unused	
 005f10b6	ddctrl_ctor_in_control	unused	
 005f1183	ddctrl_dtor	unused	
-005f11d2	FUN_005f11d2	ehfunclet	unaff_EBP
+005f11d2	unwind_funclet_005f11d2	ehfunclet	unaff_EBP
 005f11f6	ddctrl_set_parent_window	unused	
 005f1221	ddctrl_set_parent_control	unused	
 005f124c	ddctrl_create	unused	
@@ -4562,19 +4562,19 @@ addr	name	status	reason
 005f1f80	CatchGuardHandler	game	src/crt/eh.c
 005f1fc0	_CallSETranslator	game	src/crt/eh.c
 005f20a0	TranslatorGuardHandler	game	src/crt/eh.c
-005f2110	FUN_005f2110	game	src/crt/asm.c
-005f2260	FUN_005f2260	crt	
+005f2110	crt_memcpy	game	src/crt/asm.c
+005f2260	crt_srand	crt	
 005f2280	_rand	crt	
-005f22d0	FUN_005f22d0	crt	
-005f22e0	FUN_005f22e0	crt	
+005f22d0	crt_strcpy	crt	
+005f22e0	crt_strcat	crt	
 005f23c0	operator_delete	game	src/crt/heap.c
 005f2470	operator_new	crt	
-005f2490	FUN_005f2490	game	src/crt/vector_iter.c
+005f2490	crt_vector_dtor_iterator	game	src/crt/vector_iter.c
 005f2540	__ArrayUnwind	game	src/crt/eh.c
 005f25d0	FUN_005f25d0	crt	
-005f2620	FUN_005f2620	game	src/crt/vector_iter.c
+005f2620	crt_vector_ctor_iterator	game	src/crt/vector_iter.c
 005f26e0	FUN_005f26e0	crt	
-005f2700	FUN_005f2700	game	src/crt/locale.c
+005f2700	crt_toupper	game	src/crt/locale.c
 005f2840	_isalpha	crt	
 005f2890	_isupper	crt	
 005f28e0	_islower	crt	
@@ -4632,7 +4632,7 @@ addr	name	status	reason
 005f4520	__heap_alloc_dbg	crt	
 005f4860	_calloc	crt	
 005f4890	__calloc_dbg	crt	
-005f4900	FUN_005f4900	crt	
+005f4900	crt_realloc	crt	
 005f4930	__realloc_dbg	crt	
 005f4970	realloc_help	crt	
 005f4f00	FUN_005f4f00	crt	
@@ -4658,9 +4658,9 @@ addr	name	status	reason
 005f62a0	__printMemBlockData	crt	
 005f63a0	__CrtDumpMemoryLeaks	crt	
 005f6430	__CrtMemDumpStatistics	crt	
-005f6500	FUN_005f6500	game	src/crt/asm.c
-005f6650	FUN_005f6650	crt	
-005f66b0	FUN_005f66b0	crt	
+005f6500	crt_memmove	game	src/crt/asm.c
+005f6650	crt_rename	crt	
+005f66b0	crt_remove	crt	
 005f6710	FUN_005f6710	crt	
 005f6730	_rewind	crt	
 005f67f0	_fseek	crt	
@@ -4675,7 +4675,7 @@ addr	name	status	reason
 005f6e00	__strcmpi	crt	
 005f6e90	entry	game	src/crt/startup.c
 005f70e0	__amsg_exit	crt	
-005f7120	FUN_005f7120	crt	
+005f7120	crt_abs	crt	
 005f7140	__getcwd	crt	
 005f7170	__getdcwd	crt	
 005f72b0	__validdrive	crt	
@@ -4909,6 +4909,6 @@ addr	name	status	reason
 006076a0	FUN_006076a0	crt	
 006076c0	__strupr	game	src/crt/locale.c
 006077f0	__strlwr	game	src/crt/locale.c
-00607920	FUN_00607920	crt	
+00607920	crt_mkdir	crt	
 0061a000	FUN_0061a000	asm	
 0061a759	FUN_0061a759	asm	

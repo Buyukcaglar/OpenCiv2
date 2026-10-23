@@ -468,7 +468,7 @@ i32 __thiscall surface_load_tga_resource16(DibSurface *this,iptr param_1)
     cVar1 = local_8[0x10];
     if (cVar1 == 16) {
       for (local_20 = 0; local_20 < local_18; local_20++) {
-        FUN_005f2110(local_10,local_c,local_14 * 2);
+        crt_memcpy(local_10,local_c,local_14 * 2);
         local_10 = (i16 *)((int)local_10 + local_40);
         local_c += local_14 * 2;
       }
@@ -563,7 +563,7 @@ i32 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x637440, ((u8 *)&g.d_00637440)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637478, ((u8 *)&g.d_00637478)),ADDR(0x637460, ((u8 *)&g.d_00637460)),0x965);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+    /* inlined unwind funclet 005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
     uVar4 = 0;
   }
   else {
@@ -577,7 +577,7 @@ i32 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b0);
       file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+      /* inlined unwind funclet 005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 0;
     }
     else {
@@ -594,7 +594,7 @@ i32 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
         cVar1 = local_14[0x10];
         if (cVar1 == 16) {
           for (local_c0 = 0; local_c0 < local_bc; local_c0++) {
-            FUN_005f2110(local_b4,local_18,local_b8 * 2);
+            crt_memcpy(local_b4,local_18,local_b8 * 2);
             local_b4 = (i16 *)((int)local_b4 + local_dc);
             local_18 += local_b8 * 2;
           }
@@ -637,7 +637,7 @@ i32 __thiscall surface_load_tga_file16(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b0);
       file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+      /* inlined unwind funclet 005c2786 */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 1;
     }
   }
@@ -791,7 +791,7 @@ i32 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x637548, ((u8 *)&g.d_00637548)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637580, ((u8 *)&g.d_00637580)),ADDR(0x637568, ((u8 *)&g.d_00637568)),0xa16);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 0;
   }
   else {
@@ -805,7 +805,7 @@ i32 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar4 = 0;
     }
     else {
@@ -850,7 +850,7 @@ i32 __thiscall surface_load_bmp_file16(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005c2e37 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar4 = 1;
     }
   }
@@ -937,7 +937,7 @@ i32 __thiscall surface_load_gif_resource16(DibSurface *this,iptr param_1)
     else {
       local_24c = 1 << (local_14[10] & 7U) + 1;
       local_10 = local_14 + 0xd;
-      FUN_005f2110(local_54c,local_10,local_24c * 3);
+      crt_memcpy(local_54c,local_10,local_24c * 3);
       local_234 = 0;
       for (local_22c = 0; local_22c < local_24c; local_22c++) {
         uVar1 = gfx_rgb_to_555(*(i32 *)(local_54c + local_234),
@@ -1066,7 +1066,7 @@ i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x637708, ((u8 *)&g.d_00637708)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637740, ((u8 *)&g.d_00637740)),ADDR(0x637728, ((u8 *)&g.d_00637728)),0xae3);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+    /* inlined unwind funclet 005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
     uVar4 = 0;
   }
   else {
@@ -1078,7 +1078,7 @@ i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
       file_map_close(&local_bc);
       err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x637794, ((u8 *)&g.d_00637794)),ADDR(0x63777c, ((u8 *)&g.d_0063777c)),0xaee);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+      /* inlined unwind funclet 005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
     else if ((local_20[10] & 0x80U) == 0) {
@@ -1087,13 +1087,13 @@ i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
       file_map_close(&local_bc);
       err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x6377ec, ((u8 *)&g.d_006377ec)),ADDR(0x6377d4, ((u8 *)&g.d_006377d4)),0xaf7);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+      /* inlined unwind funclet 005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
     else {
       local_2e8 = 1 << (local_20[10] & 7U) + 1;
       local_1c = local_20 + 0xd;
-      FUN_005f2110(local_5e8,local_1c,local_2e8 * 3);
+      crt_memcpy(local_5e8,local_1c,local_2e8 * 3);
       local_2d0 = 0;
       for (local_2cc = 0; local_2cc < local_2e8; local_2cc++) {
         uVar1 = gfx_rgb_to_555(*(i32 *)(local_5e8 + local_2d0),
@@ -1146,7 +1146,7 @@ i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
         file_obj_unmap_view(&local_bc);
         file_map_close(&local_bc);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+        /* inlined unwind funclet 005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 1;
       }
       else {
@@ -1155,7 +1155,7 @@ i32 __thiscall surface_load_gif_file16(DibSurface *this,iptr param_1)
         file_map_close(&local_bc);
         err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x63783c, ((u8 *)&g.d_0063783c)),ADDR(0x637824, ((u8 *)&g.d_00637824)),0xb14);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+        /* inlined unwind funclet 005c384d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 0;
       }
     }
@@ -1233,7 +1233,7 @@ i32 __thiscall surface_load_pict_resource16(DibSurface *this,iptr param_1)
     SetRect(&local_240,0,0,local_14,local_1c);
     local_244 = *(byte *)((int)local_c + 5) + 1;
     local_10 = local_c + 3;
-    FUN_005f2110(local_544,local_10,local_244 * 3);
+    crt_memcpy(local_544,local_10,local_244 * 3);
     local_22c = 0;
     for (local_224 = 0; local_224 < local_244; local_224++) {
       uVar1 = gfx_rgb_to_555(*(i32 *)(local_544 + local_22c),
@@ -1337,7 +1337,7 @@ i32 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x6378cc, ((u8 *)&g.d_006378cc)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x63790c, ((u8 *)&g.d_0063790c)),ADDR(0x6378f4, ((u8 *)&g.d_006378f4)),0xba3);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 0;
   }
   else {
@@ -1347,7 +1347,7 @@ i32 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
     SetRect(&local_2dc,0,0,local_b8,local_c0);
     local_2e0 = *(byte *)((int)local_18 + 5) + 1;
     local_1c = local_18 + 3;
-    FUN_005f2110(local_5e0,local_1c,local_2e0 * 3);
+    crt_memcpy(local_5e0,local_1c,local_2e0 * 3);
     local_2c8 = 0;
     for (local_2c4 = 0; local_2c4 < local_2e0; local_2c4++) {
       uVar1 = gfx_rgb_to_555(*(i32 *)(local_5e0 + local_2c8),
@@ -1388,7 +1388,7 @@ i32 __thiscall surface_load_pict_file16(DibSurface *this,iptr param_1)
     file_obj_unmap_view(&local_b4);
     file_map_close(&local_b4);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005c3ed5 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar4 = 1;
   }
   return uVar4;
@@ -1513,7 +1513,7 @@ i32 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x637978, ((u8 *)&g.d_00637978)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6379b0, ((u8 *)&g.d_006379b0)),ADDR(0x637998, ((u8 *)&g.d_00637998)),0xc24);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+    /* inlined unwind funclet 005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
     uVar4 = 0;
   }
   else {
@@ -1527,7 +1527,7 @@ i32 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b0);
       file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+      /* inlined unwind funclet 005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 0;
     }
     else {
@@ -1550,7 +1550,7 @@ i32 __thiscall surface_load_bmp_file24(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b0);
       file_map_close(&local_b0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
+      /* inlined unwind funclet 005c434e */ { file_obj_close((FileObject *)((iptr)&local_b0)); }
       uVar4 = 1;
     }
   }
@@ -1714,7 +1714,7 @@ i32 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
     dbg_log(ADDR(0x637a84, ((u8 *)&g.d_00637a84)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637abc, ((u8 *)&g.d_00637abc)),ADDR(0x637aa4, ((u8 *)&g.d_00637aa4)),0xcbd);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar2 = 0;
   }
   else {
@@ -1728,7 +1728,7 @@ i32 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 0;
     }
     else {
@@ -1778,7 +1778,7 @@ i32 __thiscall surface_load_tga_file24(DibSurface *this,iptr param_1)
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005c4a00 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 1;
     }
   }
@@ -2226,7 +2226,7 @@ u32 __thiscall ddsurf_get_iface(DDSurfaceIfaceView *this)
 /* 005c57b1 auto */
 void __thiscall
 wnd_create_framed_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
@@ -2239,7 +2239,7 @@ wnd_create_framed_menu
 /* 005c584e auto */
 void __thiscall
 wnd_create_framed_child_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,i32 param_7,
           i32 param_8,iptr param_9)
 
@@ -2268,7 +2268,7 @@ wnd_create_framed_nopal
 /* 005c58e7 auto */
 void __thiscall
 wnd_create_framed_nopal_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,iptr param_7)
 
 {
@@ -2296,7 +2296,7 @@ wnd_create_framed_child_nopal
 /* 005c597c auto */
 void __thiscall
 wnd_create_framed_child_nopal_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
@@ -2344,7 +2344,7 @@ ControlInitialFocusView * __thiscall wnd_find_initial_focus_control(void *this)
 /* 005c5f7c auto */
 void __thiscall
 wnd_create_with_cmd_proc_menu
-          (C_00408010_b8 *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          (ModalMenuWindow *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
           ,i32 param_5,i32 param_6,iptr param_7,iptr param_8)
 
 {
@@ -2357,7 +2357,7 @@ wnd_create_with_cmd_proc_menu
 /* 005c6024 auto */
 void __thiscall
 wnd_create_with_handlers_menu
-          (C_00408010_b8 *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
+          (ModalMenuWindow *this,iptr param_1,i32 param_2,i32 param_3,i32 param_4
           ,i32 param_5,i32 param_6,iptr param_7,iptr param_8,iptr param_9)
 
 {
@@ -2386,7 +2386,7 @@ wnd_create_nopal_cmd_proc
 /* 005c60c8 auto */
 void __thiscall
 wnd_create_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,iptr param_7)
 
 {
@@ -2415,7 +2415,7 @@ wnd_create_child_nopal_cmd_proc
 /* 005c6168 auto */
 void __thiscall
 wnd_create_child_nopal_cmd_proc_menu
-          (C_00408010_b8 *this,i32 param_1,i32 param_2,i32 param_3,
+          (ModalMenuWindow *this,i32 param_1,i32 param_2,i32 param_3,
           i32 param_4,i32 param_5,i32 param_6,i32 param_7,iptr param_8)
 
 {
@@ -2428,7 +2428,7 @@ wnd_create_child_nopal_cmd_proc_menu
 /* 005c6329 auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
+void __thiscall wnd_set_hscroll_step(ModalMenuWindow *this,u32 param_1)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2445,7 +2445,7 @@ void __thiscall wnd_set_hscroll_step(C_00408010_b8 *this,u32 param_1)
 /* 005c636c auto */
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall wnd_set_vscroll_step(C_00408010_b8 *this,u32 param_1)
+void __thiscall wnd_set_vscroll_step(ModalMenuWindow *this,u32 param_1)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2561,7 +2561,7 @@ void __thiscall palette_save_to_file(void *this,iptr param_1,i32 param_2,int par
   iVar3 = file_obj_create(&local_a8,param_1);
   if (iVar3 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+    /* inlined unwind funclet 005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
   }
   else {
     file_obj_write(&local_a8,(iptr)&param_2,4);
@@ -2571,7 +2571,7 @@ void __thiscall palette_save_to_file(void *this,iptr param_1,i32 param_2,int par
     mem_handle_unlock(uVar1);
     mem_handle_free(uVar1);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
+    /* inlined unwind funclet 005c68ca */ { file_obj_close((FileObject *)((iptr)&local_a8)); }
   }
   return;
 }
@@ -2603,7 +2603,7 @@ void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
   iVar1 = file_obj_open(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
     file_obj_read(&local_ac,(iptr)&local_14,4);
@@ -2616,7 +2616,7 @@ void __thiscall palette_load_from_file(GamePalette *this,iptr param_1)
     mem_handle_unlock(local_b0);
     mem_handle_free(local_b0);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005c6a1c */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -2765,7 +2765,7 @@ void __thiscall palette_tint_end(GamePalette *this)
 }
 
 /* 005c6fc3 auto */
-void __thiscall palette_tint_get_saved_rgb(C_005c6fc3 *this,int param_1,iptr param_2)
+void __thiscall palette_tint_get_saved_rgb(PaletteTintGetSavedRgbView *this,int param_1,iptr param_2)
 
 {
   iptr iVar1;
@@ -2781,7 +2781,7 @@ void __thiscall palette_tint_get_saved_rgb(C_005c6fc3 *this,int param_1,iptr par
 #define local_1c (*(i32 *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(i32 *)(frame_ + FRAME_OFF(20)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(24)))
-void __thiscall palette_tint_step(C_005c701c *this,int param_1)
+void __thiscall palette_tint_step(PaletteTintStepView *this,int param_1)
 
 {
   byte bVar1;
@@ -2868,7 +2868,7 @@ palette_build_remap_table
   mem_handle_unlock(uVar1);
   mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c76e4 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
+  /* inlined unwind funclet 005c76e4 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return;
 }
 #undef local_834
@@ -2911,7 +2911,7 @@ palette_build_remap_table_ex
   mem_handle_unlock(uVar1);
   mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7873 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
+  /* inlined unwind funclet 005c7873 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return;
 }
 #undef local_834
@@ -2942,7 +2942,7 @@ palette_find_nearest_color(GamePalette *this,uint param_1,uint param_2,uint para
   mem_handle_unlock(uVar1);
   mem_handle_free(uVar1);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005c7998 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
+  /* inlined unwind funclet 005c7998 */ { color_kdtree_free((ColorKdTreeFreeView *)((iptr)&local_830)); }
   return uVar3;
 }
 #undef local_830
@@ -3269,7 +3269,7 @@ i32 __cdecl font_file_load(LPCSTR param_1)
   if (iVar1 != 0) {
     local_c = mem_handle_alloc(0x208);
     iVar1 = mem_handle_lock(local_c);
-    FUN_005f22d0(iVar1,param_1);
+    crt_strcpy(iVar1,param_1);
     _strncpy((char *)(iVar1 + 0x104),param_1,3);
     font_enum_matching_faces(iVar1);
     mem_handle_unlock(local_c);
@@ -3845,7 +3845,7 @@ sprite_write_file_with_palette
   iVar1 = file_obj_create(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
     file_obj_write(&local_ac,(iptr)&this->offset_x,4);
@@ -3868,7 +3868,7 @@ sprite_write_file_with_palette
     mem_handle_unlock(uVar2);
     mem_handle_free(uVar2);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ce595 */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -3897,7 +3897,7 @@ void __thiscall sprite_write_file(Sprite *this,iptr param_1)
   iVar1 = file_obj_create(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
     file_obj_write(&local_ac,(iptr)&this->offset_x,4);
@@ -3911,7 +3911,7 @@ void __thiscall sprite_write_file(Sprite *this,iptr param_1)
     sprite_unlock(this);
     file_map_close(&local_ac);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ce6fd */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -3955,7 +3955,7 @@ sprite_read_file_with_palette
   iVar1 = file_obj_open(&local_b4,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
   }
   else {
     file_obj_read(&local_b4,(iptr)&this->offset_x,4);
@@ -3992,7 +3992,7 @@ sprite_read_file_with_palette
     file_map_close(&local_b4);
     sprite_lock(this);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005ce9c9 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
   }
   return;
 }
@@ -4024,7 +4024,7 @@ void __thiscall sprite_read_file(Sprite *this,iptr param_1)
   iVar1 = file_obj_open(&local_ac,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   else {
     file_obj_read(&local_ac,(iptr)&this->offset_x,4);
@@ -4047,7 +4047,7 @@ void __thiscall sprite_read_file(Sprite *this,iptr param_1)
     mem_handle_unlock(this->data_handle);
     sprite_lock(this);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
+    /* inlined unwind funclet 005ceb8e */ { file_obj_close((FileObject *)((iptr)&local_ac)); }
   }
   return;
 }
@@ -4323,7 +4323,7 @@ FUN_005cf2cd
 }
 
 /* 005cf3f3 auto */
-void __thiscall FUN_005cf3f3(C_005cf3f3 *this,u32 param_1,u32 param_2)
+void __thiscall FUN_005cf3f3(UnusedObjectA *this,u32 param_1,u32 param_2)
 
 {
   if ((int)param_1 < 2) {
@@ -4338,7 +4338,7 @@ void __thiscall FUN_005cf3f3(C_005cf3f3 *this,u32 param_1,u32 param_2)
 }
 
 /* 005cf439 auto */
-void __thiscall FUN_005cf439(C_005cf439 *this,u32 *param_1,u32 *param_2)
+void __thiscall FUN_005cf439(UnusedObjectB *this,u32 *param_1,u32 *param_2)
 
 {
   *param_1 = this->field_28;

@@ -103,13 +103,13 @@ void __cdecl pbem_ask_email_address(int param_1,int param_2)
   dialog_load_text_section(&local_308,ADDR(0x6359d4, ((u8 *)&g.d_006359d4)),ADDR(0x635de4, ((u8 *)&g.d_00635de4)),0x1f,(iptr)local_410,0,0,0,1);
   local_14 = dialog_run_modal(&local_308,(iptr)local_40c,0);
   if (local_14 == 0) {
-    FUN_005f22d0(&civ_email_addresses + param_1 * 0x20,local_40c);
+    crt_strcpy(&civ_email_addresses + param_1 * 0x20,local_40c);
     if (param_2 != 0) {
-      FUN_005f22d0(&prefs_email_address,local_40c);
+      crt_strcpy(&prefs_email_address,local_40c);
     }
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005aed0d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+  /* inlined unwind funclet 005aed0d */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
   return;
 }
 #undef prefs_email_address

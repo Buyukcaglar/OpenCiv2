@@ -45,7 +45,7 @@ taxrate_balance(iptr param_1,iptr param_2,iptr param_3,iptr param_4,iptr param_5
 void __cdecl taxrate_dialog_redraw(void)
 
 {
-  taxrate_dialog_paint((C_004083b0_430 *)taxrate_dlg);
+  taxrate_dialog_paint((ViewWindow *)taxrate_dlg);
   return;
 }
 
@@ -71,20 +71,20 @@ void __cdecl taxrate_on_tax_scroll(int param_1)
                      taxrate_dlg + 0x350,taxrate_dlg + 0x354);
   *(int *)(taxrate_dlg + 0x2e0) = local_8;
   if (local_c != local_8) {
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x358),local_8);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x358),local_8);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x358));
   }
   if (*(int *)(taxrate_dlg + 0x2e8) != local_10) {
     *(int *)(taxrate_dlg + 0x2e8) = local_10;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x3d8),local_10);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x3d8),local_10);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x3d8));
   }
   if (*(int *)(taxrate_dlg + 0x2e4) != local_14) {
     *(int *)(taxrate_dlg + 0x2e4) = local_14;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x398),local_14);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x398),local_14);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x398));
   }
-  taxrate_calc_totals((C_004083b0_430 *)taxrate_dlg);
+  taxrate_calc_totals((ViewWindow *)taxrate_dlg);
   taxrate_dialog_redraw();
   return;
 }
@@ -115,20 +115,20 @@ void __cdecl taxrate_on_science_scroll(int param_1)
                      taxrate_dlg + 0x354,taxrate_dlg + 0x34c);
   *(int *)(taxrate_dlg + 0x2e8) = local_8;
   if (local_c != local_8) {
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x3d8),local_8);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x3d8),local_8);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x3d8));
   }
   if (*(int *)(taxrate_dlg + 0x2e4) != local_10) {
     *(int *)(taxrate_dlg + 0x2e4) = local_10;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x398),local_10);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x398),local_10);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x398));
   }
   if (*(int *)(taxrate_dlg + 0x2e0) != local_14) {
     *(int *)(taxrate_dlg + 0x2e0) = local_14;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x358),local_14);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x358),local_14);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x358));
   }
-  taxrate_calc_totals((C_004083b0_430 *)taxrate_dlg);
+  taxrate_calc_totals((ViewWindow *)taxrate_dlg);
   taxrate_dialog_redraw();
   return;
 }
@@ -159,20 +159,20 @@ void __cdecl taxrate_on_lux_scroll(int param_1)
                      taxrate_dlg + 0x34c,taxrate_dlg + 0x350);
   *(int *)(taxrate_dlg + 0x2e4) = local_8;
   if (local_8 != local_c) {
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x398),local_8);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x398),local_8);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x398));
   }
   if (*(int *)(taxrate_dlg + 0x2e0) != local_10) {
     *(int *)(taxrate_dlg + 0x2e0) = local_10;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x358),local_10);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x358),local_10);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x358));
   }
   if (*(int *)(taxrate_dlg + 0x2e8) != local_14) {
     *(int *)(taxrate_dlg + 0x2e8) = local_14;
-    scrollbar_set_pos((C_0040f380_40 *)(taxrate_dlg + 0x3d8),local_14);
+    scrollbar_set_pos((ClickControl *)(taxrate_dlg + 0x3d8),local_14);
     ctrl_show_and_redraw((Control *)(taxrate_dlg + 0x3d8));
   }
-  taxrate_calc_totals((C_004083b0_430 *)taxrate_dlg);
+  taxrate_calc_totals((ViewWindow *)taxrate_dlg);
   taxrate_dialog_redraw();
   return;
 }
@@ -187,7 +187,7 @@ void __cdecl taxrate_on_ok_clicked(void)
 
 {
   taxrate_dialog_active = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(taxrate_dlg + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(taxrate_dlg + 0x48));
   return;
 }
 #undef taxrate_dialog_active
@@ -219,7 +219,7 @@ void __cdecl taxrate_on_lock_toggled(int param_1,int param_2)
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define city (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define aiStack_a0 (*(int (*)[39])(frame_ + FRAME_OFF(24)))
-void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
+void __thiscall taxrate_calc_totals(ViewWindow *this)
 
 {
   u8 uVar1;
@@ -271,7 +271,7 @@ void __thiscall taxrate_calc_totals(C_004083b0_430 *this)
 #define taxrate_bg_surface (*(int *)((u8 *)&g.d_00624f1c))
 #define taxrate_dialog_active (*(int *)((u8 *)&g.d_0063cbb0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
+void __thiscall taxrate_dialog_paint(ViewWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -401,7 +401,7 @@ void __thiscall taxrate_dialog_paint(C_004083b0_430 *this)
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1176)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
+void __thiscall taxrate_dialog_run(ViewWindow *this,uptr civ)
 
 {
   uptr uVar1;
@@ -522,7 +522,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   iVar9 = uVar4 + this->field_32c;
   local_45c = ((int)this->field_320 >> 1) + iVar9 - 0x10;
   rect_set_xywh((iptr)local_458,uVar8,iVar9,this->field_31c,this->field_320);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_490 = (u8 *)0x0;
   }
   else {
@@ -531,13 +531,13 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   scrollbar_create
             ((Control *)&this->field_358,(iptr)local_490,0x65,(iptr)local_458,0);
   scrollbar_set_range((Control *)&this->field_358,0,10);
-  scrollbar_set_pos((C_0040f380_40 *)&this->field_358,this->field_2e0);
+  scrollbar_set_pos((ClickControl *)&this->field_358,this->field_2e0);
   scrollbar_set_callback((Control *)&this->field_358,ADDR(0x40385f, taxrate_on_tax_scroll));
   uVar4 = iVar9 + this->field_318 + this->field_320;
   this->field_338 = uVar4;
   iVar9 = uVar4 + this->field_32c;
   rect_set_xywh((iptr)local_458,uVar8,iVar9,this->field_31c,this->field_320);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_494 = (u8 *)0x0;
   }
   else {
@@ -546,12 +546,12 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   scrollbar_create
             ((Control *)(this->pad_3c0 + 0x18),(iptr)local_494,0x66,(iptr)local_458,0);
   scrollbar_set_range((Control *)(this->pad_3c0 + 0x18),0,10);
-  scrollbar_set_pos((C_0040f380_40 *)(this->pad_3c0 + 0x18),this->field_2e8);
+  scrollbar_set_pos((ClickControl *)(this->pad_3c0 + 0x18),this->field_2e8);
   scrollbar_set_callback((Control *)(this->pad_3c0 + 0x18),ADDR(0x40289c, taxrate_on_science_scroll));
   uVar4 = iVar9 + this->field_318 + this->field_320;
   this->field_334 = uVar4;
   rect_set_xywh((iptr)local_458,uVar8,uVar4 + this->field_32c,this->field_31c,this->field_320);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_498 = (u8 *)0x0;
   }
   else {
@@ -560,7 +560,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   scrollbar_create
             ((Control *)(this->pad_364 + 0x34),(iptr)local_498,0x67,(iptr)local_458,0);
   scrollbar_set_range((Control *)(this->pad_364 + 0x34),0,10);
-  scrollbar_set_pos((C_0040f380_40 *)(this->pad_364 + 0x34),this->field_2e4);
+  scrollbar_set_pos((ClickControl *)(this->pad_364 + 0x34),this->field_2e4);
   scrollbar_set_callback((Control *)(this->pad_364 + 0x34),ADDR(0x4020f4, taxrate_on_lux_scroll));
   iVar9 = font_line_spacing((GameFont *)dialog_font_ptr);
   this->field_328 = iVar9 + 8;
@@ -572,7 +572,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
   rect_set_xywh((iptr)local_458,uVar3 + 2,(uVar4 + uVar8) - (uVar2 + 2),this->field_324,
                      this->field_328);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_49c = (u8 *)0x0;
   }
   else {
@@ -590,7 +590,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   for (local_468 = 0; local_468 < 3; local_468++) {
     *(i32 *)(this->pad_364 + local_468 * 4 - 0x18) =
          *(i32 *)(&taxrate_lock_flags + local_468 * 4);
-    if (this == (C_004083b0_430 *)0x0) {
+    if (this == (ViewWindow *)0x0) {
       local_4a0 = (u8 *)0x0;
     }
     else {
@@ -609,12 +609,12 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
   taxrate_calc_totals(this);
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402cf7, taxrate_dialog_redraw));
   wnd_repaint((SurfaceWindow *)this);
-  window_show((C_004083b0_4 *)this);
+  window_show((WindowObjectView *)this);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
-  wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
+  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,0);
   while (taxrate_dialog_active != 0) {
     win_pump_one_message();
   }
@@ -645,13 +645,13 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
       }
     }
   }
-  city_window_recalc_redraw((C_004083b0_4 *)&city_window,0);
+  city_window_recalc_redraw((WindowObjectView *)&city_window,0);
   status_redraw(1);
   advisor_refresh_if_open(4);
   advisor_refresh_if_open(5);
   advisor_refresh_if_open(6);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0040dda0 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+  /* inlined unwind funclet 0040dda0 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
   return;
 }
 #undef SCHAR_00h_0064bc1a
@@ -682,7 +682,7 @@ void __thiscall taxrate_dialog_run(C_004083b0_430 *this,uptr civ)
 
 /* 0040ddc6 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define local_518 (*(C_004083b0_430 *)(frame_ + FRAME_OFF(0)))
+#define local_518 (*(ViewWindow *)(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1288)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1292)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(1296)))
@@ -696,7 +696,7 @@ void __cdecl taxrate_dialog_show(iptr civ)
   local_8 = 0;
   if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0040dea8 */ { taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
+    /* inlined unwind funclet 0040dea8 */ { taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
   }
   else {
     if ((game.multiplayer < 3) || (human_civ == civ)) {
@@ -709,7 +709,7 @@ void __cdecl taxrate_dialog_show(iptr civ)
                          0,0,0,0,0);
     }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0040dea8 */ { taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
+    /* inlined unwind funclet 0040dea8 */ { taxrate_dialog_dtor((TaxRateDialog *)((iptr)&local_518)); }
   }
   return;
 }
@@ -753,7 +753,7 @@ void __cdecl taxrate_enforce_max_rate(iptr civ)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_004083b0_430 * __thiscall taxrate_dialog_ctor(C_004083b0_430 *this)
+ViewWindow * __thiscall taxrate_dialog_ctor(ViewWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -767,7 +767,7 @@ C_004083b0_430 * __thiscall taxrate_dialog_ctor(C_004083b0_430 *this)
   (*(i8 *)((char *)&local_8 + 0)) = 2;
   scrollbar_ctor((Control *)(this->pad_3c0 + 0x18));
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  FUN_005f2620(this->pad_3c0 + 0x58,0x3c,3,checkbox_elem_ctor,
+  crt_vector_ctor_iterator(this->pad_3c0 + 0x58,0x3c,3,checkbox_elem_ctor,
                checkbox_dtor);
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),4);
   button_ctor((Control *)(this[1].pad_48 + 0x54));
@@ -789,17 +789,17 @@ void __thiscall taxrate_dialog_dtor(void *this)
   
   (*(i32 *)((char *)&local_8 + 1)) = 0;
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_0040f25f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x4cc)); }
+  /* inlined unwind funclet 0040f25f */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x4cc)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_0040f26e */ { FUN_005f2490(*(int *)((iptr)&this) + 0x418,0x3c,3,checkbox_dtor); }
+  /* inlined unwind funclet 0040f26e */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x418,0x3c,3,checkbox_dtor); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_0040f286 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x3d8)); }
+  /* inlined unwind funclet 0040f286 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x3d8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_0040f295 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x398)); }
+  /* inlined unwind funclet 0040f295 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x398)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_0040f2a4 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x358)); }
+  /* inlined unwind funclet 0040f2a4 */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x358)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0040f2b3 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 0040f2b3 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -865,9 +865,9 @@ void __cdecl city_info_popup(iptr city)
   }
   popup_game_with_city(ADDR(0x624f6c, ((u8 *)&g.d_00624f6c)),city);
   local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet FUN_004102d5 */ { dialog_dtor((Dialog *)((iptr)&local_344)); }
+  /* inlined unwind funclet 004102d5 */ { dialog_dtor((Dialog *)((iptr)&local_344)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004102e1 */ { sprite_destroy((Sprite *)((iptr)&local_50)); }
+  /* inlined unwind funclet 004102e1 */ { sprite_destroy((Sprite *)((iptr)&local_50)); }
   return;
 }
 #undef scenario_flags
@@ -886,7 +886,7 @@ void __cdecl city_info_popup(iptr city)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall city_window_is_closed(C_004083b0_4 *this)
+u32 __thiscall city_window_is_closed(WindowObjectView *this)
 
 {
   return this[0x569].field_0;
@@ -896,7 +896,7 @@ u32 __thiscall city_window_is_closed(C_004083b0_4 *this)
 void __cdecl city_editor_request_redraw(void)
 
 {
-  city_editor_draw((C_004083b0_430 *)active_editor_wnd);
+  city_editor_draw((ViewWindow *)active_editor_wnd);
   return;
 }
 
@@ -906,7 +906,7 @@ void __cdecl city_editor_on_ok(void)
 
 {
   editor_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(active_editor_wnd + 0x48));
   menu_update_states();
   return;
 }
@@ -938,7 +938,7 @@ void __cdecl city_editor_on_cancel(void)
 
 {
   editor_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(active_editor_wnd + 0x48));
   return;
 }
 #undef editor_running
@@ -1041,7 +1041,7 @@ void __cdecl city_editor_on_combo_change(i32 param_1)
 #define editor_next_ctrl_id (*(int *)((u8 *)&g.d_006a1d80))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
+void __thiscall city_editor_create_combo(ViewWindow *this,int param_1)
 
 {
   int iVar1;
@@ -1052,7 +1052,7 @@ void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
                      (&city_editor_combo_y_table)[param_1 * 2] + this->client_y,0xa0,this->field_2e8 << 3);
   iVar1 = editor_next_ctrl_id;
   editor_next_ctrl_id++;
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_24 = (u8 *)0x0;
   }
   else {
@@ -1112,7 +1112,7 @@ void __thiscall city_editor_create_combo(C_004083b0_430 *this,int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-void __thiscall city_editor_draw(C_004083b0_430 *this)
+void __thiscall city_editor_draw(ViewWindow *this)
 
 {
   byte bVar1;
@@ -1187,7 +1187,7 @@ void __thiscall city_editor_draw(C_004083b0_430 *this)
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
-void __thiscall city_editor_open_window(C_004083b0_430 *this)
+void __thiscall city_editor_open_window(ViewWindow *this)
 
 {
   DibSurface *this_00;
@@ -1254,7 +1254,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   iVar4 = (this->client_y + this->client_height) - (this->field_2e4 + 2);
   iVar3 = this->client_x + 2;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_474 = (u8 *)0x0;
   }
   else {
@@ -1266,7 +1266,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40317f, city_editor_on_ok));
   iVar3 = iVar3 + this->field_2e0 + 2;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_478 = (u8 *)0x0;
   }
   else {
@@ -1278,7 +1278,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x402888, city_editor_on_help));
   rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar4,this->field_2e0,
                      this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_47c = (u8 *)0x0;
   }
   else {
@@ -1295,7 +1295,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   iVar3 = this->client_x + 0x19;
   iVar4 = this->client_y + 0x68;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_480 = (u8 *)0x0;
   }
   else {
@@ -1307,7 +1307,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x401c21, city_editor_on_edit_icon));
   rect_set_xywh((iptr)local_454,iVar3,iVar4 + this->field_2e4 + 2,this->field_2e0,
                      this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_484 = (u8 *)0x0;
   }
   else {
@@ -1324,12 +1324,12 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   combo_set_cur_sel((ComboBoxSetSelView *)&this->field_334,this->field_2f0);
   combo_set_cur_sel((ComboBoxSetSelView *)(this->pad_364 + 8),this->field_2f4);
   this->field_2f8 = 3;
-  wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
+  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403ae9, city_editor_request_redraw));
   city_editor_on_combo_change(0xc9);
   wnd_repaint((SurfaceWindow *)this);
-  window_show((C_004083b0_4 *)this);
-  wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
+  window_show((WindowObjectView *)this);
+  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
   while (editor_running != 0) {
     win_pump_one_message();
   }
@@ -1339,7 +1339,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
   editor_bg_surface = (DibSurface *)0x0;
   this->field_2f8 = 0;
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00429e53 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+  /* inlined unwind funclet 00429e53 */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
   return;
 }
 #undef editor_bg_surface
@@ -1359,7 +1359,7 @@ void __thiscall city_editor_open_window(C_004083b0_430 *this)
 #undef local_8
 
 /* 00429e77 auto */
-#define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
+#define local_b58 (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
@@ -1371,10 +1371,10 @@ void __cdecl city_editor_run(void)
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
   local_8 = 0;
-  city_editor_open_window((C_004083b0_430 *)&local_b58);
+  city_editor_open_window((ViewWindow *)&local_b58);
   wnd_repaint((SurfaceWindow *)&map_views);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00429ed0 */ { editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
+  /* inlined unwind funclet 00429ed0 */ { editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
   return;
 }
 #undef local_b58
@@ -1468,7 +1468,7 @@ i32 __cdecl trade_commodity_cities_dialog(iptr civ,iptr param_2)
     local_320 = dlg_show_modal(&local_30c,0);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0042bc22 */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+  /* inlined unwind funclet 0042bc22 */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
   return local_320;
 }
 #undef local_320
@@ -1503,7 +1503,7 @@ void __cdecl trade_supply_search_dialog(iptr civ)
   iVar1 = civ_has_advance(civ,0x54);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+    /* inlined unwind funclet 0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
   }
   else {
     do {
@@ -1517,13 +1517,13 @@ void __cdecl trade_supply_search_dialog(iptr civ)
       iVar1 = dlg_show_modal(&local_308,0);
       if (iVar1 < 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+        /* inlined unwind funclet 0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
         goto LAB_0042bd81;
       }
       iVar1 = trade_commodity_cities_dialog(civ,iVar1);
     } while (-1 < iVar1);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+    /* inlined unwind funclet 0042bd6b */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
   }
 LAB_0042bd81:
   return;
@@ -1539,9 +1539,9 @@ LAB_0042bd81:
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(uint *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define advisor_page_count_i32 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define local_18c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_17c (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
 #define local_16c (*(i8 (*)[16])(frame_ + FRAME_OFF(36)))
@@ -1592,7 +1592,7 @@ void __cdecl trade_advisor_draw(void)
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
   frame_wnd_draw_caption((FrameWindow *)&advisor_window);
-  picwnd_blit((C_004083b0_4c4 *)&advisor_window);
+  picwnd_blit((PictureWindow *)&advisor_window);
   local_f4 = advisor_client_y + 2;
   local_10c = advisor_client_y + 0x174;
   local_20 = font_line_spacing((GameFont *)&advisor_font);
@@ -1623,12 +1623,12 @@ void __cdecl trade_advisor_draw(void)
   text_append_colon();
   text_append_year((int)game.year);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_f4,advisor_client_width);
-  _DAT_0063ef78 = local_f4 + local_20;
-  local_f4 = _DAT_0063ef78 + 4;
+  advisor_list_top_i32 = local_f4 + local_20;
+  local_f4 = advisor_list_top_i32 + 4;
   local_20 = 0x18;
   advisor_row_height = 0x18;
-  _DAT_0063ef78 += 0xc;
-  _DAT_0063ef7c = local_10c - local_f4;
+  advisor_list_top_i32 += 0xc;
+  advisor_list_height_i32 = local_10c - local_f4;
   advisor_rows_per_page = int_clamp((local_10c - local_f4) / 0x18,1,99);
   local_8 = advisor_rows_per_page;
   for (improvement = 0; improvement < 0x27; improvement++) {
@@ -1667,7 +1667,7 @@ void __cdecl trade_advisor_draw(void)
   if (local_f8 <= local_28) {
     local_24 = local_28;
   }
-  _DAT_0063ef68 = int_clamp((local_8 - 1 + local_24) / local_8,1,99);
+  advisor_page_count_i32 = int_clamp((local_8 - 1 + local_24) / local_8,1,99);
   uVar3 = int_clamp(local_24 - 1,0,999);
   advisor_first_row = int_clamp(advisor_first_row,0,uVar3);
   local_118 = local_f4;
@@ -1682,7 +1682,7 @@ void __cdecl trade_advisor_draw(void)
                   ((Control *)&advisor_scrollbar,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),200,(iptr)local_18,1);
         uVar3 = int_clamp(local_24 - 1,0,999);
         scrollbar_set_range((Control *)&advisor_scrollbar,0,uVar3);
-        scrollbar_set_pos((C_0040f380_40 *)&advisor_scrollbar,advisor_first_row);
+        scrollbar_set_pos((ClickControl *)&advisor_scrollbar,advisor_first_row);
         scrollbar_set_page_size((Control *)&advisor_scrollbar,advisor_rows_per_page);
         scrollbar_set_callback((Control *)&advisor_scrollbar,ADDR(0x40268f, trade_advisor_on_scroll));
         ctrl_show_and_redraw((Control *)&advisor_scrollbar);
@@ -1867,9 +1867,9 @@ void __cdecl trade_advisor_draw(void)
 #undef advisor_client_x
 #undef advisor_first_row
 #undef advisor_row_height
-#undef _DAT_0063ef68
-#undef _DAT_0063ef78
-#undef _DAT_0063ef7c
+#undef advisor_page_count_i32
+#undef advisor_list_top_i32
+#undef advisor_list_height_i32
 #undef local_18c
 #undef local_17c
 #undef local_16c
@@ -1940,7 +1940,7 @@ void __cdecl trade_advisor_show(iptr param_1)
   iptr iVar3;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
-  picwnd_open((C_004083b0_4c4 *)&advisor_window,5,5,0,600,400,0,0);
+  picwnd_open((PictureWindow *)&advisor_window,5,5,0,600,400,0,0);
   advisor_report_civ = param_1;
   rect_set_xywh((iptr)local_14,2,0,0x129,0x18);
   iVar1 = advisor_client_y;
@@ -1960,7 +1960,7 @@ void __cdecl trade_advisor_show(iptr param_1)
   button_set_callback((Control *)&advisor_toggle_button,ADDR(0x402ca2, trade_advisor_on_supply_clicked));
   wnd_set_redraw_callback((SurfaceWindow *)&advisor_window,ADDR(0x401857, trade_advisor_draw));
   wnd_repaint((SurfaceWindow *)&advisor_window);
-  window_show((C_004083b0_4 *)&advisor_window);
+  window_show((WindowObjectView *)&advisor_window);
   return;
 }
 #undef advisor_client_x
@@ -1971,9 +1971,9 @@ void __cdecl trade_advisor_show(iptr param_1)
 #define advisor_client_x (*(int *)((u8 *)&g.d_0063ec34))
 #define advisor_first_row (*(iptr *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define advisor_page_count_i32 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define local_6c (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define civ (*(iptr *)(frame_ + FRAME_OFF(20)))
 #define local_58 (*(int *)(frame_ + FRAME_OFF(24)))
@@ -2008,7 +2008,7 @@ void __cdecl city_status_draw(void)
   civ = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
   frame_wnd_draw_caption((FrameWindow *)&advisor_window);
-  picwnd_blit((C_004083b0_4c4 *)&advisor_window);
+  picwnd_blit((PictureWindow *)&advisor_window);
   local_40 = advisor_client_y + 2;
   local_54 = advisor_client_y + 0x174;
   local_1c = font_line_spacing((GameFont *)&advisor_font);
@@ -2039,12 +2039,12 @@ void __cdecl city_status_draw(void)
   text_append_colon();
   text_append_year((int)game.year);
   gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),advisor_client_x,local_40,advisor_client_width);
-  _DAT_0063ef78 = local_40 + local_1c;
-  local_40 = _DAT_0063ef78 + 2;
+  advisor_list_top_i32 = local_40 + local_1c;
+  local_40 = advisor_list_top_i32 + 2;
   local_1c = 0x18;
   advisor_row_height = 0x18;
-  _DAT_0063ef78 += 10;
-  _DAT_0063ef7c = local_54 - local_40;
+  advisor_list_top_i32 += 10;
+  advisor_list_height_i32 = local_54 - local_40;
   advisor_rows_per_page = int_clamp((local_54 - local_40) / 0x18,1,99);
   local_28 = 0;
   for (city = 0; city < game.num_cities; city++) {
@@ -2053,7 +2053,7 @@ void __cdecl city_status_draw(void)
     }
   }
   local_8 = advisor_rows_per_page;
-  _DAT_0063ef68 = int_clamp((advisor_rows_per_page - 1 + local_28) / advisor_rows_per_page,1,99);
+  advisor_page_count_i32 = int_clamp((advisor_rows_per_page - 1 + local_28) / advisor_rows_per_page,1,99);
   uVar3 = int_clamp(local_28 - 1,0,999);
   advisor_first_row = int_clamp(advisor_first_row,0,uVar3);
   local_3c = 0;
@@ -2132,11 +2132,11 @@ void __cdecl city_status_draw(void)
     scrollbar_create((Control *)&advisor_scrollbar,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),200,(iptr)local_18,1);
     uVar3 = int_clamp(local_28 - 1,0,999);
     scrollbar_set_range((Control *)&advisor_scrollbar,0,uVar3);
-    scrollbar_set_pos((C_0040f380_40 *)&advisor_scrollbar,advisor_first_row);
+    scrollbar_set_pos((ClickControl *)&advisor_scrollbar,advisor_first_row);
     scrollbar_set_page_size((Control *)&advisor_scrollbar,advisor_rows_per_page);
     scrollbar_set_callback((Control *)&advisor_scrollbar,ADDR(0x403314, city_status_on_scroll));
     ctrl_show_and_redraw((Control *)&advisor_scrollbar);
-    wnd_set_lbuttonup_handler((C_00408130 *)&advisor_wnd_events,ADDR(0x402437, city_status_on_click));
+    wnd_set_lbuttonup_handler((WndEventHandlers *)&advisor_wnd_events,ADDR(0x402437, city_status_on_click));
     advisor_controls_created = 1;
   }
   wnd_blit_surface((DibSurface *)&advisor_window);
@@ -2146,9 +2146,9 @@ void __cdecl city_status_draw(void)
 #undef advisor_client_x
 #undef advisor_first_row
 #undef advisor_row_height
-#undef _DAT_0063ef68
-#undef _DAT_0063ef78
-#undef _DAT_0063ef7c
+#undef advisor_page_count_i32
+#undef advisor_list_top_i32
+#undef advisor_list_height_i32
 #undef local_6c
 #undef civ
 #undef local_58
@@ -2184,7 +2184,7 @@ void __cdecl city_status_on_scroll(i32 param_1)
 /* 0042d635 auto */
 #define advisor_first_row (*(int *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(int *)((u8 *)&g.d_0063ef80))
-#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
 #define city (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -2196,13 +2196,13 @@ void __cdecl city_status_on_click(i32 param_1,int param_2)
   bool bVar2;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  if ((-1 < param_2 - _DAT_0063ef78) &&
-     (iVar1 = (param_2 - _DAT_0063ef78) / advisor_row_height, iVar1 < advisor_rows_per_page)) {
+  if ((-1 < param_2 - advisor_list_top_i32) &&
+     (iVar1 = (param_2 - advisor_list_top_i32) / advisor_row_height, iVar1 < advisor_rows_per_page)) {
     local_8 = 0;
     for (city = 0; city < game.num_cities; city++) {
       if (((cities[city].id != 0) && (cities[city].owner == advisor_report_civ)) &&
          (bVar2 = local_8 == iVar1 + advisor_first_row, local_8 = local_8 + 1, bVar2)) {
-        city_window_open((C_004083b0_12c *)&city_window,city);
+        city_window_open((ScaledWindowView *)&city_window,city);
         return;
       }
     }
@@ -2211,7 +2211,7 @@ void __cdecl city_status_on_click(i32 param_1,int param_2)
 }
 #undef advisor_first_row
 #undef advisor_row_height
-#undef _DAT_0063ef78
+#undef advisor_list_top_i32
 #undef city
 #undef local_8
 
@@ -2219,12 +2219,12 @@ void __cdecl city_status_on_click(i32 param_1,int param_2)
 void __cdecl city_status_show(iptr param_1)
 
 {
-  picwnd_open((C_004083b0_4c4 *)&advisor_window,1,1,0,600,400,0,0);
+  picwnd_open((PictureWindow *)&advisor_window,1,1,0,600,400,0,0);
   advisor_report_civ = param_1;
-  advisor_add_close_button((C_004083b0_430 *)&advisor_window);
+  advisor_add_close_button((ViewWindow *)&advisor_window);
   wnd_set_redraw_callback((SurfaceWindow *)&advisor_window,ADDR(0x4029f5, city_status_draw));
   wnd_repaint((SurfaceWindow *)&advisor_window);
-  window_show((C_004083b0_4 *)&advisor_window);
+  window_show((WindowObjectView *)&advisor_window);
   return;
 }
 
@@ -2234,9 +2234,9 @@ void __cdecl city_status_show(iptr param_1)
 #define advisor_first_row (*(iptr *)((u8 *)&g.d_0063ef70))
 #define advisor_row_height (*(i32 *)((u8 *)&g.d_0063ef80))
 #define text_draw_font (*(GameFont * *)((u8 *)&g.d_006366ac))
-#define _DAT_0063ef68 (*(i32 *)((u8 *)&g.d_0063ef68))
-#define _DAT_0063ef78 (*(i32 *)((u8 *)&g.d_0063ef78))
-#define _DAT_0063ef7c (*(i32 *)((u8 *)&g.d_0063ef7c))
+#define advisor_page_count_i32 (*(i32 *)((u8 *)&g.d_0063ef68))
+#define advisor_list_top_i32 (*(i32 *)((u8 *)&g.d_0063ef78))
+#define advisor_list_height_i32 (*(i32 *)((u8 *)&g.d_0063ef7c))
 #define local_88 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define local_84 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_74 (*(iptr *)(frame_ + FRAME_OFF(20)))
@@ -2278,7 +2278,7 @@ void __cdecl wonders_report_draw(void)
   local_74 = advisor_report_civ;
   frame_wnd_layout((FrameWindow *)&advisor_window);
   frame_wnd_draw_caption((FrameWindow *)&advisor_window);
-  picwnd_blit((C_004083b0_4c4 *)&advisor_window);
+  picwnd_blit((PictureWindow *)&advisor_window);
   local_58 = advisor_client_y + 2;
   local_6c = advisor_client_y + 0x174;
   local_30 = font_line_spacing((GameFont *)&advisor_font);
@@ -2315,11 +2315,11 @@ void __cdecl wonders_report_draw(void)
   }
   local_30 = 0x28;
   advisor_row_height = 0x28;
-  _DAT_0063ef78 = local_58;
-  _DAT_0063ef7c = local_6c - local_58;
+  advisor_list_top_i32 = local_58;
+  advisor_list_height_i32 = local_6c - local_58;
   advisor_rows_per_page = int_clamp((local_6c - local_58) / 0x28,1,99);
   local_18 = advisor_rows_per_page;
-  _DAT_0063ef68 = int_clamp((advisor_rows_per_page - 1 + local_34) / advisor_rows_per_page,1,99);
+  advisor_page_count_i32 = int_clamp((advisor_rows_per_page - 1 + local_34) / advisor_rows_per_page,1,99);
   uVar2 = int_clamp(local_34 - 1,0,999);
   advisor_first_row = int_clamp(advisor_first_row,0,uVar2);
   local_70 = local_58;
@@ -2411,7 +2411,7 @@ void __cdecl wonders_report_draw(void)
     scrollbar_create((Control *)&advisor_scrollbar,ADDR(0x63eb58, ((u8 *)&g.d_0063eb58)),200,(iptr)local_28,1);
     uVar2 = int_clamp(local_34 - 1,0,999);
     scrollbar_set_range((Control *)&advisor_scrollbar,0,uVar2);
-    scrollbar_set_pos((C_0040f380_40 *)&advisor_scrollbar,advisor_first_row);
+    scrollbar_set_pos((ClickControl *)&advisor_scrollbar,advisor_first_row);
     scrollbar_set_page_size((Control *)&advisor_scrollbar,advisor_rows_per_page);
     scrollbar_set_callback((Control *)&advisor_scrollbar,ADDR(0x402d1a, wonders_report_on_scroll));
     ctrl_show_and_redraw((Control *)&advisor_scrollbar);
@@ -2425,9 +2425,9 @@ void __cdecl wonders_report_draw(void)
 #undef advisor_first_row
 #undef advisor_row_height
 #undef text_draw_font
-#undef _DAT_0063ef68
-#undef _DAT_0063ef78
-#undef _DAT_0063ef7c
+#undef advisor_page_count_i32
+#undef advisor_list_top_i32
+#undef advisor_list_height_i32
 #undef local_88
 #undef local_84
 #undef local_74
@@ -2465,28 +2465,28 @@ void __cdecl wonders_report_on_scroll(i32 param_1)
 #undef advisor_first_row
 
 /* 00431c73 auto */
-#define _DAT_00625ec0 (*(i32 *)((u8 *)&g.d_00625ec0))
+#define advisor_modal_start_ticks_i32 (*(i32 *)((u8 *)&g.d_00625ec0))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl wonders_report_show(iptr param_1)
 
 {
-  picwnd_open((C_004083b0_4c4 *)&advisor_window,7,7,1,600,400,0,0);
+  picwnd_open((PictureWindow *)&advisor_window,7,7,1,600,400,0,0);
   advisor_report_civ = param_1;
-  advisor_add_close_button((C_004083b0_430 *)&advisor_window);
+  advisor_add_close_button((ViewWindow *)&advisor_window);
   wnd_set_redraw_callback((SurfaceWindow *)&advisor_window,ADDR(0x401b45, wonders_report_draw));
   wnd_repaint((SurfaceWindow *)&advisor_window);
-  window_show((C_004083b0_4 *)&advisor_window);
+  window_show((WindowObjectView *)&advisor_window);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((C_00408010_b8 *)&advisor_wnd,ADDR(0x402789, advisor_mp_idle));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)&advisor_wnd,ADDR(0x402789, advisor_mp_idle));
   }
-  _DAT_00625ec0 = timer_ticks();
-  wnd_run_modal_loop((C_00408010_b8 *)&advisor_wnd);
-  wnd_set_modal_idle_callback((C_00408010_b8 *)&advisor_wnd,0);
-  picwnd_close((C_004083b0_488 *)&advisor_window);
+  advisor_modal_start_ticks_i32 = timer_ticks();
+  wnd_run_modal_loop((ModalMenuWindow *)&advisor_wnd);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)&advisor_wnd,0);
+  picwnd_close((PictureWindowCore *)&advisor_window);
   return;
 }
-#undef _DAT_00625ec0
+#undef advisor_modal_start_ticks_i32
 
 /* 0043cc00 auto */
 void __cdecl city_reveal_to_civ(iptr city,iptr param_2)
@@ -2625,11 +2625,11 @@ i32 __cdecl city_has_improvement(iptr city,iptr param_2)
 /* 0043d289: written by hand in src/game/regargs.c */
 
 /* 0043d400 auto */
-#define _DAT_0063f54c (*(i32 *)((u8 *)&g.d_0063f54c))
-#define _DAT_0063f550 (*(i32 *)((u8 *)&g.d_0063f550))
-#define _DAT_0063f560 (*(i32 *)((u8 *)&g.d_0063f560))
-#define _DAT_0063f570 (*(i32 *)((u8 *)&g.d_0063f570))
-#define _DAT_0063f66c (*(i32 *)((u8 *)&g.d_0063f66c))
+#define demand_score_cloth_i32 (*(i32 *)((u8 *)&g.d_0063f54c))
+#define demand_score_salt_i32 (*(i32 *)((u8 *)&g.d_0063f550))
+#define demand_score_wine_i32 (*(i32 *)((u8 *)&g.d_0063f560))
+#define demand_score_gems_i32 (*(i32 *)((u8 *)&g.d_0063f570))
+#define supply_score_wool_i32 (*(i32 *)((u8 *)&g.d_0063f66c))
 #define x4 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_138 (*(int *)(frame_ + FRAME_OFF(8)))
 #define unit (*(iptr *)(frame_ + FRAME_OFF(16)))
@@ -2775,7 +2775,7 @@ void __cdecl city_calc_commodity_demand(uptr city)
     if ((int)map.height / 3 < (int)local_14) {
       local_bc = local_128[6] + 3;
     }
-    _DAT_0063f66c = (local_b4 / 2 + local_128[4] * 2 + local_128[2]) * local_bc;
+    supply_score_wool_i32 = (local_b4 / 2 + local_128[4] * 2 + local_128[2]) * local_bc;
     supply_score_beads = local_128[10] * 8 - local_14;
     if ('\t' < cities[city].size) {
       supply_score_beads = supply_score_beads >> 1;
@@ -2948,7 +2948,7 @@ void __cdecl city_calc_commodity_demand(uptr city)
     city_commodity_demand_scores = (local_128[6] + local_128[7]) * 5 + (int)(local_14 * 3) / 2 + local_128[5] * 2 +
                    local_128[3];
     city2 = ((int)local_8c / 10) * city_commodity_demand_scores;
-    _DAT_0063f54c = local_128[4] * 4 + local_128[3] * 4 + ((int)(city2 + (city2 >> 0x1f & 7U)) >> 3)
+    demand_score_cloth_i32 = local_128[4] * 4 + local_128[3] * 4 + ((int)(city2 + (city2 >> 0x1f & 7U)) >> 3)
     ;
     if (cities[city].size < 3) {
       city_commodity_demand_scores = city_commodity_demand_scores * 2;
@@ -2995,10 +2995,10 @@ void __cdecl city_calc_commodity_demand(uptr city)
     for (local_88 = (int)cities[city].size; (local_18 != 0 && (0 < local_88));
         local_88 = local_88 - local_9c) {
       local_9c = int_clamp(local_88,0,5);
-      _DAT_0063f550 += local_9c * local_18;
+      demand_score_salt_i32 += local_9c * local_18;
       local_18 = local_18 / 2;
     }
-    _DAT_0063f550 -= (int)local_8c / 2;
+    demand_score_salt_i32 -= (int)local_8c / 2;
     demand_score_coal = (local_14 + 10) * local_b0 + local_8c;
     if (cities[city].size < 5) {
       demand_score_coal = 0;
@@ -3062,7 +3062,7 @@ void __cdecl city_calc_commodity_demand(uptr city)
     else {
       x4 = (int)cities[city].x - (int)cities[city].y;
     }
-    _DAT_0063f560 = local_b0 * 4 + 4 + x4;
+    demand_score_wine_i32 = local_b0 * 4 + 4 + x4;
     demand_score_silk = ((((int)map.height >> 1) - local_14) * 2 - local_6c) + ((int)map.width >> 1) +
                    local_128[9] * 4 + local_128[1] / 2 + local_128[8] * 2 + local_128[0] * 4;
     uVar11 = int_clamp(local_b0 - 1,0xffffffff,1);
@@ -3075,12 +3075,12 @@ void __cdecl city_calc_commodity_demand(uptr city)
     }
     demand_score_silver = (int)cities[city].size << 3;
     demand_score_gold = 0;
-    _DAT_0063f570 = 0;
+    demand_score_gems_i32 = 0;
     local_84 = 10;
     city2 = ((int)cities[city].y + (int)cities[city].x) % 3;
     if (city2 == 1) {
       local_84 = 0xc;
-      _DAT_0063f570 = demand_score_silver;
+      demand_score_gems_i32 = demand_score_silver;
     }
     else if (city2 == 2) {
       local_84 = 0xd;
@@ -3311,11 +3311,11 @@ void __cdecl city_calc_commodity_demand(uptr city)
   }
   return;
 }
-#undef _DAT_0063f54c
-#undef _DAT_0063f550
-#undef _DAT_0063f560
-#undef _DAT_0063f570
-#undef _DAT_0063f66c
+#undef demand_score_cloth_i32
+#undef demand_score_salt_i32
+#undef demand_score_wine_i32
+#undef demand_score_gems_i32
+#undef supply_score_wool_i32
 #undef x4
 #undef local_138
 #undef unit
@@ -3860,7 +3860,7 @@ void __cdecl city_delete(uptr city,i32 param_2)
                     city_refresh_area_tiles(city3);
                   }
                 }
-                city_window_close_if_city((C_004083b0_4 *)&city_window,city);
+                city_window_close_if_city((WindowObjectView *)&city_window,city);
                 city_window_refresh_locked = iVar2;
                 if (iVar2 == 0) {
                   city_window_refresh((FrameWindow *)&city_window);
@@ -4122,7 +4122,7 @@ void __cdecl city_set_production(iptr city,int param_2)
     *pcVar1 = *pcVar1 + 1;
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0044251d */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
+  /* inlined unwind funclet 0044251d */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
   return;
 }
 #undef autoplay_active
@@ -4300,7 +4300,7 @@ void __cdecl city_sprites_global_init(void)
 void __cdecl city_sprites_static_init(void)
 
 {
-  FUN_005f2620(&city_sprites,0x3c,0x30,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&city_sprites,0x3c,0x30,sprite_init,sprite_destroy);
   return;
 }
 
@@ -4316,7 +4316,7 @@ void __cdecl city_sprites_reg_atexit(void)
 void __cdecl city_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&city_sprites,0x3c,0x30,sprite_destroy);
+  crt_vector_dtor_iterator(&city_sprites,0x3c,0x30,sprite_destroy);
   return;
 }
 
@@ -4333,7 +4333,7 @@ void __cdecl citizen_sprites_global_init(void)
 void __cdecl citizen_sprites_static_init(void)
 
 {
-  FUN_005f2620(&citizen_sprites,0x3c,0x2c,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&citizen_sprites,0x3c,0x2c,sprite_init,sprite_destroy);
   return;
 }
 
@@ -4349,7 +4349,7 @@ void __cdecl citizen_sprites_reg_atexit(void)
 void __cdecl citizen_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&citizen_sprites,0x3c,0x2c,sprite_destroy);
+  crt_vector_dtor_iterator(&citizen_sprites,0x3c,0x2c,sprite_destroy);
   return;
 }
 
@@ -4366,7 +4366,7 @@ void __cdecl tax_rate_icon_sprites_global_init(void)
 void __cdecl tax_rate_icon_sprites_static_init(void)
 
 {
-  FUN_005f2620(&tax_rate_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&tax_rate_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
   return;
 }
 
@@ -4382,7 +4382,7 @@ void __cdecl tax_rate_icon_sprites_reg_atexit(void)
 void __cdecl tax_rate_icon_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&tax_rate_icon_sprites,0x3c,3,sprite_destroy);
+  crt_vector_dtor_iterator(&tax_rate_icon_sprites,0x3c,3,sprite_destroy);
   return;
 }
 
@@ -4399,7 +4399,7 @@ void __cdecl lux_tax_sci_icon_sprites_global_init(void)
 void __cdecl lux_tax_sci_icon_sprites_static_init(void)
 
 {
-  FUN_005f2620(&lux_tax_sci_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&lux_tax_sci_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
   return;
 }
 
@@ -4415,7 +4415,7 @@ void __cdecl lux_tax_sci_icon_sprites_reg_atexit(void)
 void __cdecl lux_tax_sci_icon_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&lux_tax_sci_icon_sprites,0x3c,3,sprite_destroy);
+  crt_vector_dtor_iterator(&lux_tax_sci_icon_sprites,0x3c,3,sprite_destroy);
   return;
 }
 
@@ -4473,7 +4473,7 @@ void __cdecl improvement_icon_sprites_global_init(void)
 void __cdecl improvement_icon_sprites_static_init(void)
 
 {
-  FUN_005f2620(&improvement_icon_sprites,0x3c,0x43,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&improvement_icon_sprites,0x3c,0x43,sprite_init,sprite_destroy);
   return;
 }
 
@@ -4489,7 +4489,7 @@ void __cdecl improvement_icon_sprites_reg_atexit(void)
 void __cdecl improvement_icon_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&improvement_icon_sprites,0x3c,0x43,sprite_destroy);
+  crt_vector_dtor_iterator(&improvement_icon_sprites,0x3c,0x43,sprite_destroy);
   return;
 }
 
@@ -4622,14 +4622,14 @@ int __cdecl wonder_get_owner(iptr param_1)
 void __cdecl cityview_open(uptr city)
 
 {
-  C_00408010_6f0 *this;
+  PictureFrameWindow *this;
   int iVar1;
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
   this = operator_new(0x1cb4);
   local_8 = 0;
-  if (this == (C_00408010_6f0 *)0x0) {
+  if (this == (PictureFrameWindow *)0x0) {
     this2 = (CityViewWindow *)0x0;
   }
   else {
@@ -4653,19 +4653,19 @@ void __cdecl cityview_open(uptr city)
 #undef local_8
 
 /* 00454354 auto */
-#define cityview_wnd (*(C_00408010_6f0 * *)((u8 *)&g.d_00626a04))
+#define cityview_wnd (*(PictureFrameWindow * *)((u8 *)&g.d_00626a04))
 #define local_14 (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(8)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(12)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(16)))
-C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
+PictureFrameWindow * __thiscall cityview_ctor(PictureFrameWindow *this)
 
 {
   u8 *puVar1;
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((ModalMenuWindow *)this);
   local_8 = 0;
   surfwnd_ctor((SurfaceWindow *)&this->control_list);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
@@ -4679,18 +4679,18 @@ C_00408010_6f0 * __thiscall cityview_ctor(C_00408010_6f0 *this)
   (*(i8 *)((char *)&local_8 + 0)) = 5;
   dll_handle_init((DllHandle *)&this->resource_dll);
   (*(i8 *)((char *)&local_8 + 0)) = 6;
-  FUN_005f2620(this->pad_6dc,0x3c,0x3c,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(this->pad_6dc,0x3c,0x3c,sprite_init,sprite_destroy);
   (*(i8 *)((char *)&local_8 + 0)) = 7;
-  FUN_005f2620(this[3].pad_c8 + 0x44,0x3c,4,sprite_init,sprite_destroy)
+  crt_vector_ctor_iterator(this[3].pad_c8 + 0x44,0x3c,4,sprite_init,sprite_destroy)
   ;
   (*(i8 *)((char *)&local_8 + 0)) = 8;
-  FUN_005f2620(this[3].pad_1e4 + 0x18,0x3c,4,sprite_init,sprite_destroy
+  crt_vector_ctor_iterator(this[3].pad_1e4 + 0x18,0x3c,4,sprite_init,sprite_destroy
               );
   (*(i8 *)((char *)&local_8 + 0)) = 9;
-  FUN_005f2620(this[3].pad_1e4 + 0x108,0x3c,4,sprite_init,
+  crt_vector_ctor_iterator(this[3].pad_1e4 + 0x108,0x3c,4,sprite_init,
                sprite_destroy);
   (*(i8 *)((char *)&local_8 + 0)) = 10;
-  FUN_005f2620(this[3].pad_1e4 + 0x1f8,0x3c,4,sprite_init,
+  crt_vector_ctor_iterator(this[3].pad_1e4 + 0x1f8,0x3c,4,sprite_init,
                sprite_destroy);
   (*(i8 *)((char *)&local_8 + 0)) = 0xb;
   surface_ctor((DibSurface *)(this[3].pad_1e4 + 0x2e8));
@@ -4734,33 +4734,33 @@ void __thiscall cityview_dtor(void *this)
   cityview_wnd = 0;
   dll_handle_free((DllHandle *)((int)this + 0x6d8));
   (*(i8 *)((char *)&local_8 + 0)) = 0xc;
-  /* inlined unwind funclet FUN_00454798 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x1ca8)); }
+  /* inlined unwind funclet 00454798 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x1ca8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xb;
-  /* inlined unwind funclet FUN_004547a7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x199c)); }
+  /* inlined unwind funclet 004547a7 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x199c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 10;
-  /* inlined unwind funclet FUN_004547b6 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x18ac,0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547b6 */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x18ac,0x3c,4,sprite_destroy); }
   (*(i8 *)((char *)&local_8 + 0)) = 9;
-  /* inlined unwind funclet FUN_004547ce */ { FUN_005f2490(*(int *)((iptr)&this) + 0x17bc,0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547ce */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x17bc,0x3c,4,sprite_destroy); }
   (*(i8 *)((char *)&local_8 + 0)) = 8;
-  /* inlined unwind funclet FUN_004547e6 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x16cc,0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547e6 */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x16cc,0x3c,4,sprite_destroy); }
   (*(i8 *)((char *)&local_8 + 0)) = 7;
-  /* inlined unwind funclet FUN_004547fe */ { FUN_005f2490(*(int *)((iptr)&this) + 0x15dc,0x3c,4,sprite_destroy); }
+  /* inlined unwind funclet 004547fe */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x15dc,0x3c,4,sprite_destroy); }
   (*(i8 *)((char *)&local_8 + 0)) = 6;
-  /* inlined unwind funclet FUN_00454816 */ { FUN_005f2490(*(int *)((iptr)&this) + 0x6dc,0x3c,0x3c,sprite_destroy); }
+  /* inlined unwind funclet 00454816 */ { crt_vector_dtor_iterator(*(int *)((iptr)&this) + 0x6dc,0x3c,0x3c,sprite_destroy); }
   (*(i8 *)((char *)&local_8 + 0)) = 5;
-  /* inlined unwind funclet FUN_0045482e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x6d8)); }
+  /* inlined unwind funclet 0045482e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x6d8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_0045483d */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x690)); }
+  /* inlined unwind funclet 0045483d */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x690)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_0045484c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x648)); }
+  /* inlined unwind funclet 0045484c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x648)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_0045485b */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x214)); }
+  /* inlined unwind funclet 0045485b */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x214)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_0045486a */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1cc)); }
+  /* inlined unwind funclet 0045486a */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1cc)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_00454879 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
+  /* inlined unwind funclet 00454879 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00454888 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00454888 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef cityview_wnd
@@ -4794,7 +4794,7 @@ i32 __thiscall cityview_load(CityViewWindow *this,uptr city)
   iVar1 = file_resolve_path((iptr)local_90);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+    /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
     uVar3 = 0;
   }
   else {
@@ -4813,7 +4813,7 @@ i32 __thiscall cityview_load(CityViewWindow *this,uptr city)
                        (iptr)(this->pad_1e4 + 0x30));
     if (iVar1 == 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+      /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
       uVar3 = 0;
     }
     else {
@@ -4822,14 +4822,14 @@ i32 __thiscall cityview_load(CityViewWindow *this,uptr city)
                          (iptr)(this->pad_1e4 + 0x30));
       if (iVar1 == 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+        /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
         uVar3 = 0;
       }
       else {
         iVar1 = surface_load_gif_resource(&local_e4,0x136,10,0xec,(iptr)(this->pad_1e4 + 0x30));
         if (iVar1 == 0) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+          /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
           uVar3 = 0;
         }
         else {
@@ -4884,27 +4884,27 @@ i32 __thiscall cityview_load(CityViewWindow *this,uptr city)
           iVar1 = cityview_load_icon_surface((WndBase *)this);
           if (iVar1 == 0) {
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+            /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
             uVar3 = 0;
           }
           else {
             iVar1 = cityview_create_windows(this);
             if (iVar1 == 0) {
               local_8 = 0xffffffff;
-              /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+              /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
               uVar3 = 0;
             }
             else {
               iVar1 = cityview_layout_buildings(this);
               if (iVar1 == 0) {
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+                /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
                 uVar3 = 0;
               }
               else {
                 cityview_draw_buildings(this);
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
+                /* inlined unwind funclet 00454e8b */ { surface_dtor((DibSurface *)((iptr)&local_e4)); }
                 uVar3 = 1;
               }
             }
@@ -4931,14 +4931,14 @@ void __thiscall cityview_run_modal(Wnd *this)
   wnd_handle_show_raise((WndBase *)this);
   wnd_flush_paint();
   wnd_set_palette((WndBase *)this,(iptr)&this[2].field_7c);
-  window_show((C_004083b0_4 *)&this->control_list);
+  window_show((WindowObjectView *)&this->control_list);
   wnd_flush_paint();
   wnd_set_capture((WndBase *)(this[1].pad_10 + 0x24));
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((C_00408010_b8 *)(this[1].pad_10 + 0x24),ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this[1].pad_10 + 0x24),ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((C_00408010_b8 *)(this[1].pad_10 + 0x24));
-  wnd_set_modal_idle_callback((C_00408010_b8 *)(this[1].pad_10 + 0x24),0);
+  wnd_run_modal_loop((ModalMenuWindow *)(this[1].pad_10 + 0x24));
+  wnd_set_modal_idle_callback((ModalMenuWindow *)(this[1].pad_10 + 0x24),0);
   wnd_release_capture((WndBase *)(this[1].pad_10 + 0x24));
   wnd_hide((WndBase *)(this[1].pad_10 + 0x24));
   wnd_flush_paint();
@@ -5028,9 +5028,9 @@ uint __thiscall cityview_create_windows(CityViewWindow *this)
                     ((DibSurface *)&this->ship_civ,this->terrain_kind * 5 + local_8 + 0x154,10,
                      0xec,(iptr)(this->pad_1e4 + 0x30));
   if (iVar1 != 0) {
-    wnd_set_keydown_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x40271b, cityview_on_key));
-    wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x402a77, cityview_on_lbuttonup));
-    wnd_set_keydown_pre_handler((C_00456ee0 *)(this->pad_c8 + 0x48),ADDR(0x402e05, cityview_on_key_pre));
+    wnd_set_keydown_handler((WndEventHandlers *)(this->pad_c8 + 0x48),ADDR(0x40271b, cityview_on_key));
+    wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_c8 + 0x48),ADDR(0x402a77, cityview_on_lbuttonup));
+    wnd_set_keydown_pre_handler((WndSetKeydownPreHandlerView *)(this->pad_c8 + 0x48),ADDR(0x402e05, cityview_on_key_pre));
     wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x403189, cityview_on_mousemove));
     cityview_redraw_scrolled(this);
   }
@@ -5457,7 +5457,7 @@ void __cdecl cityview_on_mousemove(int param_1)
 #undef cityview_wnd
 
 /* 00456228 auto */
-#define cityview_wnd (*(C_00408010_b8 * *)((u8 *)&g.d_00626a04))
+#define cityview_wnd (*(ModalMenuWindow * *)((u8 *)&g.d_00626a04))
 void __cdecl cityview_on_key(int param_1)
 
 {
@@ -5474,7 +5474,7 @@ void __cdecl cityview_on_lbuttonup(void)
 
 {
   if (cityview_wnd != 0) {
-    wnd_end_modal_loop((C_00408010_b8 *)(cityview_wnd + 0x100));
+    wnd_end_modal_loop((ModalMenuWindow *)(cityview_wnd + 0x100));
   }
   return;
 }
@@ -5502,7 +5502,7 @@ void __cdecl cityview_on_key_pre(i32 param_1)
   case 0xd1:
   case 0xd2:
     if (cityview_wnd != (CityViewWindow *)0x0) {
-      wnd_end_modal_loop((C_00408010_b8 *)(cityview_wnd->pad_c8 + 0x38));
+      wnd_end_modal_loop((ModalMenuWindow *)(cityview_wnd->pad_c8 + 0x38));
     }
   }
   return;
@@ -5604,7 +5604,7 @@ void * __thiscall cityview_scalar_dtor(void *this,uint param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall citywnd_get_city(C_004083b0_4 *this)
+u32 __thiscall citywnd_get_city(WindowObjectView *this)
 
 {
   return this[0x567].field_0;
@@ -7791,7 +7791,7 @@ LAB_0049ea9e: ;
 
 /* 004bb8e0 auto */
 #define unit_blink_active (*(i8 *)((u8 *)&g.d_0062804c))
-#define local_1190 (*(C_004083b0_430 (*)[4])(frame_ + FRAME_OFF(0)))
+#define local_1190 (*(ViewWindow (*)[4])(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(4480)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4484)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(4488)))
@@ -7814,10 +7814,10 @@ void __cdecl wonder_show_movie(iptr param_1)
   snd_sync_music_option();
   if (game_language != 0) {
     uStackY_24 = 0x4bb96a;
-    pedia_show_improvement_modal((C_004083b0_a28 *)&pedia_window,param_1 + 0x27);
+    pedia_show_improvement_modal((DocumentWindow *)&pedia_window,param_1 + 0x27);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004bb97b */ { wonder_movie_wnd_dtor((WonderMovieWindow *)((iptr)&local_1190)); }
+  /* inlined unwind funclet 004bb97b */ { wonder_movie_wnd_dtor((WonderMovieWindow *)((iptr)&local_1190)); }
   return;
 }
 #undef unit_blink_active
@@ -7839,7 +7839,7 @@ FrameWindow * __thiscall wonder_movie_wnd_ctor(FrameWindow *this)
   local_8 = 0xffffffff;
   frame_wnd_ctor((SurfaceWindow *)this);
   local_8 = 0;
-  mmwnd_ctor((C_004083b0_a28 *)&this->field_2d8);
+  mmwnd_ctor((DocumentWindow *)&this->field_2d8);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
   surface_ctor((DibSurface *)(this[4].pad_15c + 0x18));
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),2);
@@ -7867,13 +7867,13 @@ void __thiscall wonder_movie_wnd_dtor(WonderMovieWindow *this)
   (*(i32 *)((char *)&local_8 + 1)) = 0;
   wonder_movie_wnd = 0;
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_004bbaf1 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xd4c)); }
+  /* inlined unwind funclet 004bbaf1 */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0xd4c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_004bbb00 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0xd04)); }
+  /* inlined unwind funclet 004bbb00 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0xd04)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_004bbb0f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x2d8)); }
+  /* inlined unwind funclet 004bbb0f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x2d8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004bbb1e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 004bbb1e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
 #undef wonder_movie_wnd
@@ -7940,7 +7940,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
     }
     dll_handle_free(&local_124);
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_004bbdbd */ { dll_free((DllHandle *)((iptr)&local_124)); }
+    /* inlined unwind funclet 004bbdbd */ { dll_free((DllHandle *)((iptr)&local_124)); }
   }
   *(int *)(this[4].pad_15c + 0x14) = param_1;
   uVar10 = 0;
@@ -7960,11 +7960,11 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
   wonder_movie_wnd_draw_caption(this);
   wnd_repaint((SurfaceWindow *)this);
   wnd_center((WndCenterView *)this->pad_48);
-  wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_004bbdc9 */ { surface_dtor((DibSurface *)((iptr)&local_120)); }
+  /* inlined unwind funclet 004bbdc9 */ { surface_dtor((DibSurface *)((iptr)&local_120)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004bbdd5 */ { sprite_destroy((Sprite *)((iptr)&local_d0)); }
+  /* inlined unwind funclet 004bbdd5 */ { sprite_destroy((Sprite *)((iptr)&local_d0)); }
   return;
 }
 #undef local_134
@@ -7982,7 +7982,7 @@ void __thiscall wonder_movie_wnd_create(FrameWindow *this,int param_1)
 /* 004bbdfb auto */
 #define local_88 (*(i8 (*)[128])(frame_ + FRAME_OFF(0)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(128)))
-void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
+void __thiscall wonder_movie_wnd_play(ViewWindow *this)
 
 {
   int iVar1;
@@ -7999,15 +7999,15 @@ void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
     str_concat((iptr)local_88,ADDR(0x62dacc, ((u8 *)&g.d_0062dacc)));
     iVar1 = file_resolve_path((iptr)local_88);
     if (iVar1 != 0) {
-      wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
-      wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x40392c, wonder_movie_on_key));
+      wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4025bd, wonder_movie_on_lbuttonup));
+      wnd_set_keydown_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x40392c, wonder_movie_on_key));
       avi_player_create_child
-                ((C_004083b0_61c *)&this->field_2d8,ADDR(0x62dad4, ((u8 *)&g.d_0062dad4)),0x200,this->border_width,this->caption_height,
+                ((MediaWindow *)&this->field_2d8,ADDR(0x62dad4, ((u8 *)&g.d_0062dad4)),0x200,this->border_width,this->caption_height,
                  (iptr)this);
       local_8 = avi_player_open((AviPlayerOpenView *)&this->field_2d8,(iptr)local_88);
       if (local_8 == 0) {
         avi_player_set_end_callback((AviPlayerEndCbSetView *)&this->field_2d8,ADDR(0x402e46, wonder_movie_on_video_end));
-        wnd_set_lbuttonup_handler((C_00408130 *)&this->field_330,ADDR(0x4025bd, wonder_movie_on_lbuttonup));
+        wnd_set_lbuttonup_handler((WndEventHandlers *)&this->field_330,ADDR(0x4025bd, wonder_movie_on_lbuttonup));
         avi_player_set_palette((DibSurface *)&this->field_2d8,(iptr)(this[3].pad_48 + 0x74))
         ;
         wnd_set_palette
@@ -8015,15 +8015,15 @@ void __thiscall wonder_movie_wnd_play(C_004083b0_430 *this)
         screen_fade_out();
         wnd_set_palette
                   ((WndBase *)&main_frame_wnd,(iptr)(this[3].pad_48 + 0x74));
-        window_show((C_004083b0_4 *)this);
-        window_show((C_004083b0_4 *)&this->field_2d8);
+        window_show((WindowObjectView *)this);
+        window_show((WindowObjectView *)&this->field_2d8);
         wnd_flush_paint();
         avi_player_play((AviPlayerPlayView *)&this->field_2d8);
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+          wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
         }
-        wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
-        wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
+        wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+        wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,0);
         snd_wave_stop_all();
         wnd_hide((WndBase *)&this->field_320);
         wnd_flush_paint();
@@ -8060,7 +8060,7 @@ void __thiscall wonder_movie_wnd_resize(FrameWindow *this)
   i32 uVar2;
   
   wnd_resize_clamped
-            ((C_004083b0_4 *)this,this->border_width * 2 + 0x140,
+            ((WindowObjectView *)this,this->border_width * 2 + 0x140,
              this->caption_height + this->border_width + 0xf0);
   frame_wnd_layout(this);
   uVar2 = 0;
@@ -8077,7 +8077,7 @@ void __thiscall wonder_movie_wnd_resize(FrameWindow *this)
 void __cdecl wonder_movie_on_video_end(void)
 
 {
-  wnd_end_modal_loop((C_00408010_b8 *)(wonder_movie_wnd + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(wonder_movie_wnd + 0x48));
   return;
 }
 #undef wonder_movie_wnd
@@ -8087,7 +8087,7 @@ void __cdecl wonder_movie_on_video_end(void)
 void __cdecl wonder_movie_on_lbuttonup(void)
 
 {
-  wnd_end_modal_loop((C_00408010_b8 *)(wonder_movie_wnd + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(wonder_movie_wnd + 0x48));
   return;
 }
 #undef wonder_movie_wnd
@@ -8098,7 +8098,7 @@ void __cdecl wonder_movie_on_key(int param_1)
 
 {
   if ((0xcf < param_1) && (param_1 < 0xd3)) {
-    wnd_end_modal_loop((C_00408010_b8 *)(wonder_movie_wnd + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(wonder_movie_wnd + 0x48));
   }
   return;
 }
@@ -8410,7 +8410,7 @@ int __cdecl impr_editor_save_controls(void)
 void __cdecl impr_editor_redraw(void)
 
 {
-  impr_editor_paint((C_004083b0_430 *)active_editor_wnd);
+  impr_editor_paint((ViewWindow *)active_editor_wnd);
   return;
 }
 
@@ -8428,7 +8428,7 @@ i32 __cdecl impr_editor_write_section(FILE *param_1)
   for (improvement = 0; improvement < 0x43; improvement++) {
     text_clear();
     text_append_string_id(improvements[improvement].name);
-    FUN_005f22e0(&text_buffer,&rules_improve_name_sep_str);
+    crt_strcat(&text_buffer,&rules_improve_name_sep_str);
     pcVar1 = (char *)label_string(improvements[improvement].name);
     sVar2 = _strlen(pcVar1);
     if (sVar2 < 0x19) {
@@ -8440,11 +8440,11 @@ i32 __cdecl impr_editor_write_section(FILE *param_1)
     }
     text_append_spaces(0x19 - local_c);
     text_append_int_2d((uint)improvements[improvement].cost);
-    FUN_005f22e0(&text_buffer,&rules_improve_cost_sep_str);
+    crt_strcat(&text_buffer,&rules_improve_cost_sep_str);
     text_append_int_2d((uint)improvements[improvement].upkeep);
-    FUN_005f22e0(&text_buffer,s___0062e404);
+    crt_strcat(&text_buffer,s___0062e404);
     text_append_advance_abbrev((int)improvements[improvement].preq,1);
-    FUN_005f22e0(&text_buffer,&rules_improve_line_end_str);
+    crt_strcat(&text_buffer,&rules_improve_line_end_str);
     _fputs(&text_buffer,param_1);
   }
   return 1;
@@ -8465,9 +8465,9 @@ i32 __cdecl impr_editor_write_endwonder(FILE *param_1)
     text_clear();
     text_append_advance_abbrev((int)(char)(&wonder_expires_by_impr)[improvement],1);
     text_append_spaces(8);
-    FUN_005f22e0(&text_buffer,&rules_endwonder_comment_sep_str);
+    crt_strcat(&text_buffer,&rules_endwonder_comment_sep_str);
     text_append_string_id(improvements[improvement].name);
-    FUN_005f22e0(&text_buffer,&rules_endwonder_line_end_str);
+    crt_strcat(&text_buffer,&rules_endwonder_line_end_str);
     _fputs(&text_buffer,param_1);
   }
   return 1;
@@ -8506,7 +8506,7 @@ void __cdecl impr_editor_on_ok(void)
       MessageBoxA(*(HWND *)(iVar3 + 4),lpText,lpCaption,uType);
     }
     editor_running = 0;
-    wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(active_editor_wnd + 0x48));
     menu_update_states();
   }
   else {
@@ -8562,7 +8562,7 @@ void __cdecl impr_editor_on_rename(void)
     sVar2 = _strlen(local_110);
   } while (sVar2 == 0);
   if (-1 < local_8) {
-    FUN_005f22d0(&editor_item_names + iVar1 * 0x28,local_110);
+    crt_strcpy(&editor_item_names + iVar1 * 0x28,local_110);
     local_c = combo_get_cur_sel((ComboBoxGetSelView *)(active_editor_wnd + 0x2fc));
     combo_clear((ComboBoxClearView *)(active_editor_wnd + 0x2fc));
     for (local_128 = 0; local_128 < 0x43; local_128++) {
@@ -8608,7 +8608,7 @@ void __cdecl impr_editor_on_cancel(void)
 
 {
   editor_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(active_editor_wnd + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(active_editor_wnd + 0x48));
   return;
 }
 #undef editor_running
@@ -8730,7 +8730,7 @@ void __cdecl impr_editor_on_select(int param_1)
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(12)))
 #define advance (*(iptr *)(frame_ + FRAME_OFF(16)))
 #define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(28)))
-void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
+void __thiscall impr_editor_create_combo(ViewWindow *this,int param_1)
 
 {
   int iVar1;
@@ -8742,7 +8742,7 @@ void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
                      this->field_2e8 << 3);
   iVar1 = editor_next_ctrl_id;
   editor_next_ctrl_id++;
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_2c = (u8 *)0x0;
   }
   else {
@@ -8783,7 +8783,7 @@ void __thiscall impr_editor_create_combo(C_004083b0_430 *this,int param_1)
 #define impr_editor_edit_y_table (*(i32 *)((u8 *)&g.d_0062e3b4))
 #define local_24 (*(u8 * *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(i8 (*)[16])(frame_ + FRAME_OFF(20)))
-void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
+void __thiscall impr_editor_create_edit(ViewWindow *this,int param_1)
 
 {
   int iVar1;
@@ -8793,7 +8793,7 @@ void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
                      (&impr_editor_edit_y_table)[param_1 * 2] + this->client_y,0x30,this->field_2e8 + 6);
   iVar1 = editor_next_ctrl_id;
   editor_next_ctrl_id++;
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_24 = (u8 *)0x0;
   }
   else {
@@ -8824,7 +8824,7 @@ void __thiscall impr_editor_create_edit(C_004083b0_430 *this,int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __thiscall impr_editor_paint(C_004083b0_430 *this)
+void __thiscall impr_editor_paint(ViewWindow *this)
 
 {
   byte bVar1;
@@ -8950,7 +8950,7 @@ void __thiscall impr_editor_paint(C_004083b0_430 *this)
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(1144)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(1148)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(1152)))
-void __thiscall impr_editor_window_run(C_004083b0_430 *this)
+void __thiscall impr_editor_window_run(ViewWindow *this)
 
 {
   DibSurface *this_00;
@@ -9023,7 +9023,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   iVar4 = (this->client_y + this->client_height) - (this->field_2e4 + 2);
   iVar3 = this->client_x + 2;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_474 = (u8 *)0x0;
   }
   else {
@@ -9035,7 +9035,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   button_set_callback((Control *)&this[1].field_2a4,ADDR(0x40187f, impr_editor_on_ok));
   iVar3 = iVar3 + this->field_2e0 + 2;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_478 = (u8 *)0x0;
   }
   else {
@@ -9047,7 +9047,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   button_set_callback((Control *)&this[1].field_358,ADDR(0x40178a, impr_editor_on_rename));
   iVar3 = iVar3 + this->field_2e0 + 2;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_47c = (u8 *)0x0;
   }
   else {
@@ -9059,7 +9059,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   button_set_callback((Control *)&this[1].field_2e0,ADDR(0x402c75, impr_editor_on_help));
   rect_set_xywh((iptr)local_454,iVar3 + this->field_2e0 + 2,iVar4,this->field_2e0,
                      this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_480 = (u8 *)0x0;
   }
   else {
@@ -9076,7 +9076,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   iVar3 = this->client_x + 0x19;
   iVar4 = this->client_y + 0x50;
   rect_set_xywh((iptr)local_454,iVar3,iVar4,this->field_2e0,this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_484 = (u8 *)0x0;
   }
   else {
@@ -9088,7 +9088,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   button_set_callback((Control *)(this[1].pad_364 + 0x30),ADDR(0x402388, impr_editor_edit_icon));
   rect_set_xywh((iptr)local_454,iVar3,iVar4 + this->field_2e4 + 2,this->field_2e0,
                      this->field_2e4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_488 = (u8 *)0x0;
   }
   else {
@@ -9103,12 +9103,12 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   combo_set_cur_sel((ComboBoxSetSelView *)&this->field_2fc,this->field_2ec);
   impr_editor_load_controls();
   this->field_2f8 = 3;
-  wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
+  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4019d8, editor_wnd_on_move_close_dropdowns));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x401302, impr_editor_redraw));
   impr_editor_on_select(0xc9);
   wnd_repaint((SurfaceWindow *)this);
-  window_show((C_004083b0_4 *)this);
-  wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
+  window_show((WindowObjectView *)this);
+  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
   while (editor_running != 0) {
     win_pump_one_message();
   }
@@ -9118,7 +9118,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
   editor_bg_surface = (DibSurface *)0x0;
   this->field_2f8 = 0;
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004da9be */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+  /* inlined unwind funclet 004da9be */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
   return;
 }
 #undef editor_bg_surface
@@ -9139,7 +9139,7 @@ void __thiscall impr_editor_window_run(C_004083b0_430 *this)
 #undef local_8
 
 /* 004da9e2 auto */
-#define local_b58 (*(C_004083b0_a28 *)(frame_ + FRAME_OFF(0)))
+#define local_b58 (*(DocumentWindow *)(frame_ + FRAME_OFF(0)))
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(2888)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(2892)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(2896)))
@@ -9151,10 +9151,10 @@ void __cdecl impr_editor_run(void)
   local_8 = 0xffffffff;
   editor_wnd_ctor(&local_b58);
   local_8 = 0;
-  impr_editor_window_run((C_004083b0_430 *)&local_b58);
+  impr_editor_window_run((ViewWindow *)&local_b58);
   wnd_repaint((SurfaceWindow *)&map_views);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004daa3b */ { editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
+  /* inlined unwind funclet 004daa3b */ { editor_wnd_dtor((EditorWindow *)((iptr)&local_b58)); }
   return;
 }
 #undef local_b58
@@ -11002,7 +11002,7 @@ int __cdecl city_notify_dialog_ex(iptr param_1,iptr city,int param_3,iptr param_
   if (autoplay_active == 0) {
     if ((city_notify_enabled == 0) && (param_3 == 0)) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+      /* inlined unwind funclet 004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
       iVar1 = 0;
     }
     else {
@@ -11040,12 +11040,12 @@ int __cdecl city_notify_dialog_ex(iptr param_1,iptr city,int param_3,iptr param_
         city_zoom_requested = 1;
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+      /* inlined unwind funclet 004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
     }
   }
   else {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+    /* inlined unwind funclet 004eb7e5 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
     iVar1 = 0;
   }
   return iVar1;
@@ -11095,7 +11095,7 @@ i32 __cdecl city_process_food(uptr city)
         break;
       }
     }
-    FUN_005f22d0(local_1c,s_FAMINE0_0062ee4c);
+    crt_strcpy(local_1c,s_FAMINE0_0062ee4c);
     if (unit2 < 0) {
       local_16 = 0x31;
     }
@@ -11147,7 +11147,7 @@ i32 __cdecl city_process_food(uptr city)
     iVar3 = (cities[city].size + 1) * city_food_box_rows;
     if (iVar3 - cities[city].food_box == 0 || iVar3 < cities[city].food_box) {
       if (city_turn_window_shown != 0) {
-        city_window_draw_food_box((C_004083b0_12c *)&city_window,1);
+        city_window_draw_food_box((ScaledWindowView *)&city_window,1);
       }
       improvement = city_needed_size_improvement(city);
       cities[city].size++;
@@ -11179,7 +11179,7 @@ i32 __cdecl city_process_food(uptr city)
         city_set_production(city,99);
       }
       if (city_turn_window_shown != 0) {
-        city_window_draw_food_box((C_004083b0_12c *)&city_window,1);
+        city_window_draw_food_box((ScaledWindowView *)&city_window,1);
         city_window_draw_citizens((FrameWindow *)&city_window,1,0);
         city_turn_window_dirty = 1;
       }
@@ -11211,7 +11211,7 @@ i32 __cdecl city_process_food(uptr city)
 #define city_zoom_requested (*(i32 *)((u8 *)&g.d_006a65a0))
 #define dlg_help_pressed (*(int *)((u8 *)&g.d_00631edc))
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define _DAT_006a6610 (*(i32 *)((u8 *)&g.d_006a6610))
+#define city_completed_improvement_i32 (*(i32 *)((u8 *)&g.d_006a6610))
 #define local_978 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_974 (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_970 (*(i8 * *)(frame_ + FRAME_OFF(8)))
@@ -11271,7 +11271,7 @@ void __cdecl city_process_production(uptr city)
   local_8 = 0xffffffff;
   improvement = -1;
   local_14 = 0;
-  _DAT_006a6610 = -1;
+  city_completed_improvement_i32 = -1;
   civ = (uptr)cities[city].owner;
   local_2c = city_total_shields - city_shield_support;
   if ((cities[city].flags & 1) != 0) {
@@ -11497,14 +11497,14 @@ LAB_004eda9a:
                 dialog_set_image_zoom((DialogWindowView *)&local_66c,8);
                 dlg_show_modal(&local_66c,0);
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_004eeef3 */ { dialog_dtor((Dialog *)((iptr)&local_66c)); }
+                /* inlined unwind funclet 004eeef3 */ { dialog_dtor((Dialog *)((iptr)&local_66c)); }
               }
               if ((((local_5c != 0) && (-1 < local_3c)) && (human_civ == civ)) &&
                  ((autoplay_active == 0 && (((*(i8 *)((char *)&game.game_options + 2)) & 1) != 0)))) {
                 wonder_show_movie(local_3c);
               }
               if ((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) {
-                _DAT_006a6610 = improvement;
+                city_completed_improvement_i32 = improvement;
               }
               if (local_14 == 0) {
                 cities[city].shield_box = 0;
@@ -11839,7 +11839,7 @@ LAB_004ecd0c: ;
               units[unit].counter = 0xff;
             }
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_004eeeff */ { dialog_dtor((Dialog *)((iptr)&local_378)); }
+            /* inlined unwind funclet 004eeeff */ { dialog_dtor((Dialog *)((iptr)&local_378)); }
           }
           else {
             if (unit_types[unit_type].role == 7) {
@@ -12000,7 +12000,7 @@ LAB_004ee539:
         dialog_set_image_zoom((DialogWindowView *)&local_960,8);
         dlg_show_modal(&local_960,0);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_004eeee7 */ { dialog_dtor((Dialog *)((iptr)&local_960)); }
+        /* inlined unwind funclet 004eeee7 */ { dialog_dtor((Dialog *)((iptr)&local_960)); }
       }
     }
   }
@@ -12017,7 +12017,7 @@ LAB_004eef15:
 #undef city_zoom_requested
 #undef dlg_help_pressed
 #undef human_civ
-#undef _DAT_006a6610
+#undef city_completed_improvement_i32
 #undef local_978
 #undef local_974
 #undef local_970
@@ -12515,7 +12515,7 @@ int __cdecl city_process_turn(uptr city)
   }
   city_zoom_requested = 0;
   cities[city].flags = cities[city].flags & 0xffbfffbb;
-  uVar4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  uVar4 = citywnd_get_city((WindowObjectView *)&city_window);
   city_turn_window_shown = (uint)(uVar4 == city);
   city_turn_window_dirty = 0;
   sVar3 = cities[city].food_box;
@@ -12623,7 +12623,7 @@ int __cdecl city_process_turn(uptr city)
       city_window_refresh((FrameWindow *)&city_window);
     }
     if (city_zoom_requested != 0) {
-      city_window_open((C_004083b0_12c *)&city_window,city);
+      city_window_open((ScaledWindowView *)&city_window,city);
     }
     city_turn_processing = 0;
     iVar5 = city_happy_count - city_unhappy_count;
@@ -12747,7 +12747,7 @@ uint __cdecl city_tile_status_flags(iptr param_1,iptr param_2)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_004083b0_430 * __thiscall city_picture_popup_ctor(C_004083b0_430 *this)
+ViewWindow * __thiscall city_picture_popup_ctor(ViewWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -13016,11 +13016,11 @@ void __cdecl city_window_load_background(void)
   (*(i8 *)((char *)&local_8 + 0)) = 2;
   if (city_window_size_level == city_window_bg_size_level) {
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
+    /* inlined unwind funclet 0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+    /* inlined unwind funclet 00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
+    /* inlined unwind funclet 00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
   }
   else {
     city_window_bg_size_level = city_window_size_level;
@@ -13028,18 +13028,18 @@ void __cdecl city_window_load_background(void)
     surface_load_gif_file(&local_4c8,ADDR(0x630d6c, ((u8 *)&g.d_00630d6c)),10,0xc0,(iptr)&local_480);
     sprite_grab_from_surface(&local_4c,(iptr)&local_4c8,7,0,0,0x27c,0x1a5);
     surface_release(&local_4c8);
-    uVar1 = city_window_scale((C_004083b0_4 *)&city_window,0x1a5);
-    uVar2 = city_window_scale((C_004083b0_4 *)&city_window,0x27c);
+    uVar1 = city_window_scale((WindowObjectView *)&city_window,0x1a5);
+    uVar2 = city_window_scale((WindowObjectView *)&city_window,0x27c);
     surface_create((DibSurface *)&city_window_bg_surface,uVar2,uVar1);
     gfx_set_zoom_scale(city_window_bg_size_level * 4 - 8);
     sprite_draw(&local_4c,(iptr)local_4d8,ADDR(0x6a9170, ((u8 *)&g.d_006a9170)),0,0);
     gfx_reset_zoom_scale();
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
+    /* inlined unwind funclet 0050117b */ { palette_destroy((GamePalette *)((iptr)&local_480)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+    /* inlined unwind funclet 00501187 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
+    /* inlined unwind funclet 00501190 */ { surface_dtor((DibSurface *)((iptr)&local_4c8)); }
   }
   return;
 }
@@ -13178,11 +13178,11 @@ void __thiscall city_window_dtor(FrameWindow *this)
   (*(i8 *)((char *)&local_8 + 0)) = 2;
   city_window_remove_hotspots(this);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_00501673 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x16ac)); }
+  /* inlined unwind funclet 00501673 */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x16ac)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_00501682 */ { clickmap_dtor(*(int *)((iptr)&this) + 0x2d8); }
+  /* inlined unwind funclet 00501682 */ { clickmap_dtor(*(int *)((iptr)&this) + 0x2d8); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00501691 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 00501691 */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -13190,7 +13190,7 @@ void __thiscall city_window_dtor(FrameWindow *this)
 #undef local_8
 
 /* 005016b2 auto */
-void __thiscall city_window_blit_bg_rect(C_004083b0_12c *this,int *param_1)
+void __thiscall city_window_blit_bg_rect(ScaledWindowView *this,int *param_1)
 
 {
   i32 uVar1;
@@ -13206,7 +13206,7 @@ void __thiscall city_window_blit_bg_rect(C_004083b0_12c *this,int *param_1)
 }
 
 /* 00501733 auto */
-void __thiscall city_window_begin_draw(C_004083b0_12c *this,iptr param_1)
+void __thiscall city_window_begin_draw(ScaledWindowView *this,iptr param_1)
 
 {
   gfx_set_draw_target((iptr)this);
@@ -13217,7 +13217,7 @@ void __thiscall city_window_begin_draw(C_004083b0_12c *this,iptr param_1)
 }
 
 /* 00501780 auto */
-void __thiscall city_window_recalc_redraw(C_004083b0_4 *this,i32 param_1)
+void __thiscall city_window_recalc_redraw(WindowObjectView *this,i32 param_1)
 
 {
   if ((((this[0x569].field_0 == 0) && (this[0x568].field_0 == 0)) && (this[0x56a].field_0 == 0)) &&
@@ -13246,25 +13246,25 @@ void __cdecl city_window_cycle_specialist(int param_1)
   i32 uVar7;
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
-  city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city3 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((cities[city3].owner == human_civ) || (game.reveal_map != '\0')) {
     uVar7 = 0;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_recalc(city,uVar7);
-    citywnd_get_city((C_004083b0_4 *)&city_window);
-    city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+    citywnd_get_city((WindowObjectView *)&city_window);
+    city4 = citywnd_get_city((WindowObjectView *)&city_window);
     if (cities[city4].size - city_specialist_count <= (int)(short)param_1) {
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       sVar6 = (short)param_1 - ((short)cities[city2].size - (short)city_specialist_count);
       if (sVar6 < city_specialist_count) {
         iVar5 = (int)sVar6;
         city2 = iVar5;
-        city = citywnd_get_city((C_004083b0_4 *)&city_window);
+        city = citywnd_get_city((WindowObjectView *)&city_window);
         local_10 = city_specialist_type(city,city2);
-        city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+        city2 = citywnd_get_city((WindowObjectView *)&city_window);
         if (cities[city2].size < 5) {
           if (local_10 == 1) {
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             popup_game_with_city(ADDR(0x630d84, ((u8 *)&g.d_00630d84)),city);
             return;
           }
@@ -13276,9 +13276,9 @@ void __cdecl city_window_cycle_specialist(int param_1)
             local_10 = 1;
           }
         }
-        city = citywnd_get_city((C_004083b0_4 *)&city_window);
+        city = citywnd_get_city((WindowObjectView *)&city_window);
         city_set_specialist_type(city,iVar5,local_10);
-        city_window_recalc_redraw((C_004083b0_4 *)&city_window,1);
+        city_window_recalc_redraw((WindowObjectView *)&city_window,1);
       }
     }
   }
@@ -13304,7 +13304,7 @@ void __cdecl city_window_cycle_specialist(int param_1)
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(144)))
 int __thiscall
 city_window_draw_citizen_row
-          (C_004083b0_4 *this,int param_1,int param_2,i32 param_3,int param_4,int param_5,
+          (WindowObjectView *this,int param_1,int param_2,i32 param_3,int param_4,int param_5,
           int param_6)
 
 {
@@ -13313,7 +13313,7 @@ city_window_draw_citizen_row
   int iVar3;
   int iVar4;
   i8 *puVar5;
-  C_004083b0_4 *pCVar6;
+  WindowObjectView *pCVar6;
   iptr iVar7;
   iptr iVar8;
   i32 uVar9;
@@ -13448,14 +13448,14 @@ city_window_draw_citizen_row
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(80)))
 int __thiscall
 city_happy_draw_citizen_row
-          (C_004083b0_4 *this,int param_1,i32 param_2,i32 param_3,int param_4,
+          (WindowObjectView *this,int param_1,i32 param_2,i32 param_3,int param_4,
           int param_5,int param_6)
 
 {
   int iVar1;
   int iVar2;
   i8 *puVar3;
-  C_004083b0_4 *pCVar4;
+  WindowObjectView *pCVar4;
   iptr iVar5;
   iptr iVar6;
   i32 uVar7;
@@ -13543,40 +13543,40 @@ void __thiscall city_window_draw_citizens(FrameWindow *this,int param_1,i32 para
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)(this[7].pad_15c + 0x44));
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)(this[7].pad_15c + 0x44));
     clickmap_remove_by_id((ClickMapRemoveView *)&this->field_2d8,2);
     local_28 = *(int *)(this[7].pad_15c + 0x44);
     iVar1 = *(int *)(this[7].pad_15c + 0x48);
     text_set_colors(0x7c,0x12,1,1);
     text_clear();
     text_append_label(0x193);
-    uVar2 = city_window_scale((C_004083b0_4 *)this,0xc6);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0x2e);
+    uVar2 = city_window_scale((WindowObjectView *)this,0xc6);
+    iVar3 = city_window_scale((WindowObjectView *)this,0x2e);
     iVar3 = iVar1 + iVar3;
-    iVar4 = city_window_scale((C_004083b0_4 *)this,2);
+    iVar4 = city_window_scale((WindowObjectView *)this,2);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_28 + iVar4,iVar3,uVar2);
     text_clear();
     text_append_label(0x3f);
-    uVar2 = city_window_scale((C_004083b0_4 *)this,0xee);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0x2e);
+    uVar2 = city_window_scale((WindowObjectView *)this,0xee);
+    iVar3 = city_window_scale((WindowObjectView *)this,0x2e);
     iVar3 = iVar1 + iVar3;
-    iVar4 = city_window_scale((C_004083b0_4 *)this,199);
+    iVar4 = city_window_scale((WindowObjectView *)this,199);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_28 + iVar4,iVar3,uVar2);
     uVar2 = city_happy_count;
     uVar7 = city_unhappy_count;
     uVar8 = city_angry_count;
-    uVar5 = city_window_scale((C_004083b0_4 *)this,0x1a6);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,9);
+    uVar5 = city_window_scale((WindowObjectView *)this,0x1a6);
+    iVar3 = city_window_scale((WindowObjectView *)this,9);
     iVar3 = iVar1 + iVar3;
-    iVar4 = city_window_scale((C_004083b0_4 *)this,5);
+    iVar4 = city_window_scale((WindowObjectView *)this,5);
     iVar3 = city_window_draw_citizen_row
-                      ((C_004083b0_4 *)this,local_28 + iVar4,iVar3,uVar5,uVar2,uVar7,uVar8);
-    iVar4 = city_window_scale((C_004083b0_4 *)this,5);
+                      ((WindowObjectView *)this,local_28 + iVar4,iVar3,uVar5,uVar2,uVar7,uVar8);
+    iVar4 = city_window_scale((WindowObjectView *)this,5);
     local_28 += iVar4;
-    iVar4 = city_window_scale((C_004083b0_4 *)this,9);
+    iVar4 = city_window_scale((WindowObjectView *)this,9);
     for (local_18 = 0; local_18 < cities[*(int *)(this[7].pad_15c + 4)].size;
         local_18 = local_18 + 1) {
-      iVar6 = city_window_scale((C_004083b0_4 *)this,0x1e);
+      iVar6 = city_window_scale((WindowObjectView *)this,0x1e);
       rect_set_xywh((iptr)local_14,local_28,iVar1 + iVar4,iVar3,iVar6);
       hotspot_add_rect((ClickMap *)&this->field_2d8,local_18,2,(iptr)local_14);
       local_28 += iVar3;
@@ -13617,16 +13617,16 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_1c = -1;
-  city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city3 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((cities[city3].owner == human_civ) || (game.reveal_map != '\0')) {
     uVar9 = 0;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_recalc(city,uVar9);
     iVar2 = gfx_zoom_scale(0x40,city_window_map_zoom);
     city2 = gfx_zoom_scale(0x20,city_window_map_zoom);
-    iVar5 = city_window_scale((C_004083b0_4 *)&city_window,5);
+    iVar5 = city_window_scale((WindowObjectView *)&city_window,5);
     iVar5 = city_window_map_rect + iVar5;
-    iVar6 = city_window_scale((C_004083b0_4 *)&city_window,0xb);
+    iVar6 = city_window_scale((WindowObjectView *)&city_window,0xb);
     iVar5 = param_1 - iVar5;
     iVar6 = param_2 - (city_window_map_rect_top + iVar6 + (city2 >> 1));
     if ((-1 < iVar5) && (((iVar5 < iVar2 * 4 && (-1 < iVar6)) && (iVar6 < city2 * 4)))) {
@@ -13653,40 +13653,40 @@ void __cdecl city_window_toggle_worked_tile(int param_1,int param_2)
       }
       if (-1 < local_1c) {
         if (local_1c == 0x14) {
-          city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city2 = citywnd_get_city((WindowObjectView *)&city_window);
           cities[city2].worked_tiles = 0;
         }
         else {
           city = local_1c;
-          city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city5 = citywnd_get_city((WindowObjectView *)&city_window);
           city2 = city_tile_worked(city5,city);
           if (city2 == 0) {
             if ((&city_tile_flags)[local_1c] != '\0') {
               return;
             }
             if (city_specialist_count == 0) {
-              city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city2 = citywnd_get_city((WindowObjectView *)&city_window);
               cities[city2].worked_tiles = 0;
             }
             else {
               uVar9 = 1;
-              city = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city = citywnd_get_city((WindowObjectView *)&city_window);
               city_set_tile_worked(city,local_1c,uVar9);
               uVar9 = 0xffffffff;
-              city = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city = citywnd_get_city((WindowObjectView *)&city_window);
               city_adjust_specialists(city,uVar9);
             }
           }
           else {
             uVar9 = 0;
-            city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city4 = citywnd_get_city((WindowObjectView *)&city_window);
             city_set_tile_worked(city4,local_1c,uVar9);
             uVar9 = 1;
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             city_adjust_specialists(city,uVar9);
           }
         }
-        city_window_recalc_redraw((C_004083b0_4 *)&city_window,0);
+        city_window_recalc_redraw((WindowObjectView *)&city_window,0);
       }
     }
   }
@@ -13810,16 +13810,16 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)(this[7].pad_15c + 0x54));
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)(this[7].pad_15c + 0x54));
     local_90 = *(int *)(this[7].pad_15c + 0x54);
     local_a0 = *(int *)(this[7].pad_15c + 0x58);
     local_e0 = gfx_zoom_scale(0x40,*(i32 *)(this[7].pad_15c + 0x40));
     local_100 = gfx_zoom_scale(0x20,*(i32 *)(this[7].pad_15c + 0x40));
     local_80 = local_e0 >> 1;
     local_50 = local_100 >> 1;
-    local_58 = city_window_scale((C_004083b0_4 *)this,5);
+    local_58 = city_window_scale((WindowObjectView *)this,5);
     local_58 = local_90 + local_58;
-    local_a8 = city_window_scale((C_004083b0_4 *)this,0xb);
+    local_a8 = city_window_scale((WindowObjectView *)this,0xb);
     local_a8 = local_a0 + local_a8;
     clickmap_remove_by_id((ClickMapRemoveView *)&this->field_2d8,1);
     rect_set_xywh((iptr)local_20,local_58,local_50 + local_a8,local_e0 << 2,local_100 << 2);
@@ -13843,7 +13843,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         }
       }
       mapview_draw_tile_terrain
-                ((C_004083b0_430 *)&map_views,(iptr)this,local_cc,local_e4,x2,y2,
+                ((ViewWindow *)&map_views,(iptr)this,local_cc,local_e4,x2,y2,
                  (int)cities[*(int *)(this[7].pad_15c + 4)].owner,
                  *(i32 *)(this[7].pad_15c + 0x40),local_94);
       if (local_3c < 0x15) {
@@ -13913,23 +13913,23 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         }
         iVar8 = 0;
         iVar7 = 0;
-        iVar3 = city_window_scale((C_004083b0_4 *)this,8);
+        iVar3 = city_window_scale((WindowObjectView *)this,8);
         iVar2 += iVar3 * -2;
-        iVar3 = city_window_scale((C_004083b0_4 *)this,10);
+        iVar3 = city_window_scale((WindowObjectView *)this,10);
         local_70 = ui_calc_item_spacing(local_7c,iVar3 + 1,iVar2,iVar7,iVar8);
         iVar2 = local_e0;
-        iVar3 = city_window_scale((C_004083b0_4 *)this,8);
-        iVar4 = city_window_scale((C_004083b0_4 *)this,10);
+        iVar3 = city_window_scale((WindowObjectView *)this,8);
+        iVar4 = city_window_scale((WindowObjectView *)this,10);
         local_74 = (iVar2 + iVar3 * -2) / (iVar4 + 1);
         if (local_7c <= local_74) {
           local_7c = local_74;
         }
         local_c4 = 0;
         local_6c = 0;
-        local_78 = city_window_scale((C_004083b0_4 *)this,8);
+        local_78 = city_window_scale((WindowObjectView *)this,8);
         local_78 = local_cc + local_78;
         iVar3 = local_50 + local_e4;
-        iVar2 = city_window_scale((C_004083b0_4 *)this,10);
+        iVar2 = city_window_scale((WindowObjectView *)this,10);
         local_88 = iVar3 - (iVar2 >> 1);
         for (; local_c4 < 3; local_c4++) {
           while ((&city_tile_yields)[local_c4] != 0) {
@@ -13942,9 +13942,9 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
             }
             else {
               local_6c = 0;
-              local_78 = city_window_scale((C_004083b0_4 *)this,8);
+              local_78 = city_window_scale((WindowObjectView *)this,8);
               local_78 = local_cc + local_78;
-              iVar2 = city_window_scale((C_004083b0_4 *)this,0xb);
+              iVar2 = city_window_scale((WindowObjectView *)this,0xb);
               local_88 += iVar2;
             }
             (&city_tile_yields)[local_c4] = (&city_tile_yields)[local_c4] - 1;
@@ -13964,7 +13964,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     text_set_colors(0x7c,0x39,1,1);
     uVar5 = rect_width((iptr)&this[7].field_220);
     uVar1 = this[7].field_22c;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),this[7].field_220,uVar1 - iVar2,uVar5);
     text_set_colors(0x29,10,1,1);
     local_40 = (uint)(*(int *)(this[7].pad_15c + 0x3c) == 3);
@@ -13981,13 +13981,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_98 = city_yield_totals;
     }
     local_38 = local_f0;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-    local_2c = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+    local_2c = city_window_scale((WindowObjectView *)this,2);
     local_2c = iVar2 - local_2c;
-    local_c8 = city_window_scale((C_004083b0_4 *)this,0xe);
+    local_c8 = city_window_scale((WindowObjectView *)this,0xe);
     local_c8++;
     if ((((int)local_c < 0) && (local_48 != 0)) || ((0 < (int)local_c && (local_f0 != 0)))) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_2c = (local_2c - iVar2) - local_c8;
       local_ec--;
     }
@@ -14018,23 +14018,23 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         else {
           local_1f4 = local_c;
         }
-        iVar2 = city_window_scale((C_004083b0_4 *)this,2);
-        iVar3 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,2);
+        iVar3 = city_window_scale((WindowObjectView *)this,1);
         local_68 = iVar2 + iVar3 + (local_1f4 - 1) * local_70 + local_c8;
       }
     }
     else {
-      local_68 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      local_68 = city_window_scale((WindowObjectView *)this,0xe2);
     }
-    local_f4 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    local_f4 = city_window_scale((WindowObjectView *)this,0xe2);
     local_f4 -= local_68;
-    local_10 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_10 = city_window_scale((WindowObjectView *)this,0xcd);
     local_10 = local_90 + local_10;
     local_a4 = local_f4 + local_10;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar3 = city_window_scale((WindowObjectView *)this,2);
     *(int *)(this[7].pad_15c + 0x28) = iVar2 + iVar3;
-    y2 = city_window_scale((C_004083b0_4 *)this,0xe);
+    y2 = city_window_scale((WindowObjectView *)this,0xe);
     y2 = local_a0 + y2;
     if (*(int *)(this[7].pad_15c + 0x3c) == 3) {
       y2--;
@@ -14049,13 +14049,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (local_68 != 0) {
       uVar9 = 0x30;
       uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
-      iVar2 = city_window_scale((C_004083b0_4 *)this,6);
+      iVar2 = city_window_scale((WindowObjectView *)this,6);
       gfx_target_fill_rect(local_a4,y2,local_68 + iVar2,uVar5,uVar9);
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar2 = city_window_scale((WindowObjectView *)this,1);
     y2 = y2 + local_40 + iVar2;
     if (0 < local_98) {
-      x2 = city_window_scale((C_004083b0_4 *)this,1);
+      x2 = city_window_scale((WindowObjectView *)this,1);
       x2 = local_10 + x2;
       for (local_3c = 0; local_3c < local_98; local_3c++) {
         sprite_draw
@@ -14066,11 +14066,11 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (local_c != 0) {
       x2 = local_a4;
       if (local_98 < 1) {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,1);
         x2 += iVar2;
       }
       else {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+        iVar2 = city_window_scale((WindowObjectView *)this,4);
         x2 += (iVar2 >> 1);
       }
       local_3c = 0;
@@ -14089,13 +14089,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         local_3c++;
       }
     }
-    local_84 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_84 = city_window_scale((WindowObjectView *)this,0xcd);
     local_84 = local_90 + local_84;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
     local_60 = local_84 + iVar2 - 1;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
     iVar2 = local_a0 + iVar2;
-    y2 = city_window_scale((C_004083b0_4 *)this,0xe);
+    y2 = city_window_scale((WindowObjectView *)this,0xe);
     y2 = iVar2 - y2;
     text_clear();
     text_append_label(0x40);
@@ -14140,18 +14140,18 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (-1 < (int)local_c) {
       local_28 = city_shield_support;
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-    local_2c = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+    local_2c = city_window_scale((WindowObjectView *)this,2);
     local_2c = iVar2 - local_2c;
-    local_c8 = city_window_scale((C_004083b0_4 *)this,0xe);
+    local_c8 = city_window_scale((WindowObjectView *)this,0xe);
     local_c8++;
     if ((((int)local_c < 0) && (local_48 != 0)) || ((0 < (int)local_c && (city_shield_support != 0)))) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_2c = (local_2c - iVar2) - local_c8;
       local_54--;
     }
     if (city_shield_waste != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_2c = (local_2c - iVar2) - local_c8;
       local_54--;
     }
@@ -14178,11 +14178,11 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (city_shield_waste != 0) {
       local_d8 = (city_shield_waste - 1) * local_70 + local_c8;
       if (local_c != 0) {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+        iVar2 = city_window_scale((WindowObjectView *)this,4);
         local_d8 += (iVar2 >> 1);
       }
       if (local_48 != city_shield_waste) {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+        iVar2 = city_window_scale((WindowObjectView *)this,4);
         local_d8 += (iVar2 >> 1);
       }
     }
@@ -14197,39 +14197,39 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         else {
           local_200 = local_c;
         }
-        iVar2 = city_window_scale((C_004083b0_4 *)this,2);
-        iVar3 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,2);
+        iVar3 = city_window_scale((WindowObjectView *)this,1);
         local_68 = iVar2 + iVar3 + (local_200 - 1) * local_70 + local_c8;
       }
     }
     else {
-      local_68 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      local_68 = city_window_scale((WindowObjectView *)this,0xe2);
     }
-    local_f4 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    local_f4 = city_window_scale((WindowObjectView *)this,0xe2);
     local_f4 -= (local_d8 + local_68);
     if (local_d8 != 0) {
       if (city_shield_support == 0) {
         local_f4 = 0;
       }
       else {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,2);
-        iVar3 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,2);
+        iVar3 = city_window_scale((WindowObjectView *)this,1);
         local_f4 = iVar2 + iVar3 + (city_shield_support - 1) * local_70 + local_c8;
       }
-      local_d8 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      local_d8 = city_window_scale((WindowObjectView *)this,0xe2);
       local_d8 -= (local_68 + local_f4);
     }
-    local_10 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_10 = city_window_scale((WindowObjectView *)this,0xcd);
     local_10 = local_90 + local_10;
     local_34 = local_f4 + local_10;
     local_a4 = local_d8 + local_34;
     if (local_d8 != 0) {
       local_bc = ((local_d8 >> 1) + local_34) - ((city_shield_waste - 1) * local_70 + local_c8 >> 1);
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar3 = city_window_scale((WindowObjectView *)this,2);
     *(int *)(this[7].pad_15c + 0x28) = iVar2 + iVar3;
-    y2 = city_window_scale((C_004083b0_4 *)this,0x78);
+    y2 = city_window_scale((WindowObjectView *)this,0x78);
     y2 = local_a0 + y2;
     if (*(int *)(this[7].pad_15c + 0x3c) == 3) {
       y2--;
@@ -14247,13 +14247,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (local_68 != 0) {
       uVar9 = 0x5c;
       uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
-      iVar2 = city_window_scale((C_004083b0_4 *)this,6);
+      iVar2 = city_window_scale((WindowObjectView *)this,6);
       gfx_target_fill_rect(local_a4,y2,local_68 + iVar2,uVar5,uVar9);
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar2 = city_window_scale((WindowObjectView *)this,1);
     y2 = y2 + local_40 + iVar2;
     if (0 < local_28) {
-      x2 = city_window_scale((C_004083b0_4 *)this,1);
+      x2 = city_window_scale((WindowObjectView *)this,1);
       x2 = local_10 + x2;
       for (local_3c = 0; local_3c < local_28; local_3c++) {
         sprite_draw
@@ -14262,7 +14262,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       }
     }
     if (0 < city_shield_waste) {
-      x2 = city_window_scale((C_004083b0_4 *)this,2);
+      x2 = city_window_scale((WindowObjectView *)this,2);
       x2 = local_bc + x2;
       for (local_3c = 0; local_3c < city_shield_waste; local_3c++) {
         sprite_draw
@@ -14273,11 +14273,11 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (local_c != 0) {
       x2 = local_a4;
       if (local_28 < 1) {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,1);
         x2 += iVar2;
       }
       else {
-        iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+        iVar2 = city_window_scale((WindowObjectView *)this,4);
         x2 += (iVar2 >> 1);
       }
       local_3c = 0;
@@ -14302,14 +14302,14 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         local_3c++;
       }
     }
-    local_84 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_84 = city_window_scale((WindowObjectView *)this,0xcd);
     local_84 = local_90 + local_84;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
     local_60 = local_84 + iVar2 - 1;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,2);
-    iVar4 = city_window_scale((C_004083b0_4 *)this,0x78);
-    iVar6 = city_window_scale((C_004083b0_4 *)this,0xffffffff);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar3 = city_window_scale((WindowObjectView *)this,2);
+    iVar4 = city_window_scale((WindowObjectView *)this,0x78);
+    iVar6 = city_window_scale((WindowObjectView *)this,0xffffffff);
     y2 = iVar2 + iVar3 + iVar4 + iVar6 + local_a0;
     text_clear();
     text_append_label(0xcc);
@@ -14327,7 +14327,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       text_append_colon();
       text_append_int(city_shield_waste);
       text_set_colors(0xb,0x1d,1,1);
-      uVar5 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      uVar5 = city_window_scale((WindowObjectView *)this,0xe2);
       gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_84,y2,uVar5);
     }
     text_clear();
@@ -14350,13 +14350,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     gfx_draw_text_right(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_60,y2,0);
     local_48 = city_total_trade;
     local_54 = city_total_trade;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-    local_2c = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+    local_2c = city_window_scale((WindowObjectView *)this,2);
     local_2c = iVar2 - local_2c;
-    local_c8 = city_window_scale((C_004083b0_4 *)this,0xe);
+    local_c8 = city_window_scale((WindowObjectView *)this,0xe);
     local_c8++;
     if (city_trade_corruption != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_2c = (local_2c - iVar2) - local_c8;
       local_54--;
     }
@@ -14372,19 +14372,19 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       else {
         local_20c = city_trade_corruption;
       }
-      iVar2 = city_window_scale((C_004083b0_4 *)this,2);
-      iVar3 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar2 = city_window_scale((WindowObjectView *)this,2);
+      iVar3 = city_window_scale((WindowObjectView *)this,1);
       local_68 = iVar2 + iVar3 + (local_20c - 1) * local_70 + local_c8;
     }
-    local_f4 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    local_f4 = city_window_scale((WindowObjectView *)this,0xe2);
     local_f4 -= local_68;
-    local_10 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_10 = city_window_scale((WindowObjectView *)this,0xcd);
     local_10 = local_90 + local_10;
     local_a4 = local_f4 + local_10;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar3 = city_window_scale((WindowObjectView *)this,2);
     *(int *)(this[7].pad_15c + 0x28) = iVar2 + iVar3;
-    y2 = city_window_scale((C_004083b0_4 *)this,0x37);
+    y2 = city_window_scale((WindowObjectView *)this,0x37);
     y2 = local_a0 + y2;
     if ((int)local_c < 0) {
       local_f4 += local_68;
@@ -14396,7 +14396,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if (local_68 != 0) {
       gfx_target_fill_rect(local_a4,y2,local_68,*(i32 *)(this[7].pad_15c + 0x28),0x79);
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar2 = city_window_scale((WindowObjectView *)this,1);
     y2 = y2 + local_40 + iVar2;
     if (0 < (int)(city_total_trade - city_trade_corruption)) {
       x2 = local_10 + 1;
@@ -14408,7 +14408,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     }
     if (city_trade_corruption != 0) {
       x2 = local_a4;
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       x2 += (iVar2 >> 1);
       for (local_3c = 0; local_3c < (int)city_trade_corruption; local_3c++) {
         sprite_draw
@@ -14416,13 +14416,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         x2 += local_70;
       }
     }
-    local_84 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_84 = city_window_scale((WindowObjectView *)this,0xcd);
     local_84 = local_90 + local_84;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
     local_60 = local_84 + iVar2 - 1;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0x37);
+    iVar2 = city_window_scale((WindowObjectView *)this,0x37);
     iVar2 = local_a0 + iVar2;
-    y2 = city_window_scale((C_004083b0_4 *)this,0xe);
+    y2 = city_window_scale((WindowObjectView *)this,0xe);
     y2 = iVar2 - y2;
     text_clear();
     text_append_label(0x45);
@@ -14432,7 +14432,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     local_d0 = gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_84,y2);
     if ((civs[cities[*(int *)(this[7].pad_15c + 4)].owner].government == 4) &&
        (city_building_content != 0)) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_d0 += iVar2;
       text_clear();
       text_append_label(0x5d);
@@ -14454,13 +14454,13 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     local_44 = city_science_total;
     local_54 = city_science_total + city_lux_total + city_tax_total;
     local_24 = (uint)(0 < city_science_total) + (uint)(0 < city_lux_total) + (uint)(0 < city_tax_total);
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-    local_2c = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+    local_2c = city_window_scale((WindowObjectView *)this,2);
     local_2c = iVar2 - local_2c;
-    local_c8 = city_window_scale((C_004083b0_4 *)this,0xe);
+    local_c8 = city_window_scale((WindowObjectView *)this,0xe);
     local_c8++;
     for (; 1 < local_24; local_24--) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_2c -= (local_c8 + iVar2);
       local_54--;
     }
@@ -14477,32 +14477,32 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       }
     }
     local_f4 = 0;
-    local_10 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_10 = city_window_scale((WindowObjectView *)this,0xcd);
     local_10 = local_90 + local_10;
     if (local_b0 != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar2 = city_window_scale((WindowObjectView *)this,1);
       local_f4 = iVar2 + (local_b0 - 1) * local_70 + local_c8;
     }
     local_68 = 0;
     if (local_44 != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar2 = city_window_scale((WindowObjectView *)this,1);
       local_68 = iVar2 + (local_44 - 1) * local_70 + local_c8;
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+    iVar3 = city_window_scale((WindowObjectView *)this,0xcd);
     local_a4 = (iVar2 + iVar3 + local_90) - local_68;
-    local_d8 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    local_d8 = city_window_scale((WindowObjectView *)this,0xe2);
     local_d8 -= (local_68 + local_f4);
-    local_34 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_34 = city_window_scale((WindowObjectView *)this,0xcd);
     local_34 = local_90 + local_34;
     if (local_f4 != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_d8 -= iVar2;
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_34 = local_34 + local_f4 + iVar2;
     }
     if (local_68 != 0) {
-      iVar2 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar2 = city_window_scale((WindowObjectView *)this,4);
       local_d8 -= iVar2;
     }
     local_bc = local_34;
@@ -14514,10 +14514,10 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     if ((local_64 == 0) || (local_b0 != 0)) {
       if ((local_64 != 0) && (local_44 == 0)) {
         local_ac = 2;
-        iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+        iVar2 = city_window_scale((WindowObjectView *)this,1);
         local_24 = iVar2 + (local_64 - 1) * local_70 + local_c8;
-        iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
-        iVar3 = city_window_scale((C_004083b0_4 *)this,0xcd);
+        iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
+        iVar3 = city_window_scale((WindowObjectView *)this,0xcd);
         local_34 = (iVar2 + iVar3 + local_90) - local_24;
       }
     }
@@ -14525,19 +14525,19 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       local_ac = 1;
       local_34 = local_10;
     }
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar3 = city_window_scale((WindowObjectView *)this,2);
     *(int *)(this[7].pad_15c + 0x28) = iVar2 + iVar3;
-    y2 = city_window_scale((C_004083b0_4 *)this,0x4f);
+    y2 = city_window_scale((WindowObjectView *)this,0x4f);
     y2 = local_a0 + y2;
     uVar10 = 0x79;
     uVar5 = *(i32 *)(this[7].pad_15c + 0x28);
-    uVar9 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    uVar9 = city_window_scale((WindowObjectView *)this,0xe2);
     gfx_target_fill_rect(local_10,y2,uVar9,uVar5,uVar10);
-    iVar2 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar2 = city_window_scale((WindowObjectView *)this,1);
     y2 = y2 + local_40 + iVar2;
     if (0 < local_b0) {
-      x2 = city_window_scale((C_004083b0_4 *)this,1);
+      x2 = city_window_scale((WindowObjectView *)this,1);
       x2 = local_10 + x2;
       for (local_3c = 0; local_3c < local_b0; local_3c++) {
         sprite_draw
@@ -14561,14 +14561,14 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
         x2 += local_70;
       }
     }
-    local_84 = city_window_scale((C_004083b0_4 *)this,0xcd);
+    local_84 = city_window_scale((WindowObjectView *)this,0xcd);
     local_84 = local_90 + local_84;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xe2);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xe2);
     local_60 = local_84 + iVar2 - 1;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0x4f);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0xe);
-    iVar4 = city_window_scale((C_004083b0_4 *)this,2);
-    iVar6 = city_window_scale((C_004083b0_4 *)this,0);
+    iVar2 = city_window_scale((WindowObjectView *)this,0x4f);
+    iVar3 = city_window_scale((WindowObjectView *)this,0xe);
+    iVar4 = city_window_scale((WindowObjectView *)this,2);
+    iVar6 = city_window_scale((WindowObjectView *)this,0);
     y2 = iVar2 + iVar3 + iVar4 + iVar6 + local_a0;
     civ = (iptr)cities[*(int *)(this[7].pad_15c + 4)].owner;
     text_clear();
@@ -14580,7 +14580,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     text_append_int(city_tax_total);
     text_set_colors(0x76,10,1,1);
     if (local_ac == 1) {
-      uVar5 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      uVar5 = city_window_scale((WindowObjectView *)this,0xe2);
       gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_84,y2,uVar5);
     }
     else {
@@ -14602,7 +14602,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
       gfx_draw_text_right(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_60,y2,0);
     }
     else {
-      uVar5 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      uVar5 = city_window_scale((WindowObjectView *)this,0xe2);
       gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_84,y2,uVar5);
     }
     text_clear();
@@ -14614,7 +14614,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
     text_append_int(city_science_total);
     text_set_colors(0x5e,10,1,1);
     if (local_ac == 2) {
-      uVar5 = city_window_scale((C_004083b0_4 *)this,0xe2);
+      uVar5 = city_window_scale((WindowObjectView *)this,0xe2);
       gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_84,y2,uVar5);
     }
     else {
@@ -14729,7 +14729,7 @@ void __thiscall city_window_draw_resource_map(FrameWindow *this,int param_1)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(32)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(36)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(40)))
-void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
+void __thiscall city_window_draw_food_box(ScaledWindowView *this,int param_1)
 
 {
   i32 uVar1;
@@ -14751,26 +14751,26 @@ void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
     uVar5 = *(i32 *)(this[0x12].pad_48 + 0x9c);
     iVar2 = label_string(*(i32 *)(label_string_ids + 0xac));
     gfx_draw_text_centered(iVar2,uVar5,uVar4,uVar1);
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0xb7);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0x93);
-    uVar4 = city_window_scale((C_004083b0_4 *)this,0xf);
-    uVar5 = city_window_scale((C_004083b0_4 *)this,6);
+    iVar2 = city_window_scale((WindowObjectView *)this,0xb7);
+    iVar3 = city_window_scale((WindowObjectView *)this,0x93);
+    uVar4 = city_window_scale((WindowObjectView *)this,0xf);
+    uVar5 = city_window_scale((WindowObjectView *)this,6);
     rect_set_xywh((iptr)&local_14,uVar5,uVar4,iVar2,iVar3);
     rect_offset((iptr)&local_14,*(i32 *)(this[0x12].pad_48 + 0x9c),
                        *(i32 *)(this[0x12].pad_48 + 0xa0));
-    uVar4 = city_window_scale((C_004083b0_4 *)this,3);
-    uVar5 = city_window_scale((C_004083b0_4 *)this,3);
+    uVar4 = city_window_scale((WindowObjectView *)this,3);
+    uVar5 = city_window_scale((WindowObjectView *)this,3);
     rect_deflate((iptr)&local_14,uVar5,uVar4);
     iVar3 = 0;
     iVar2 = 0;
     uVar4 = rect_width((iptr)&local_14);
-    uVar5 = city_window_scale((C_004083b0_4 *)this,0x11);
+    uVar5 = city_window_scale((WindowObjectView *)this,0x11);
     iVar6 = ui_calc_item_spacing(cities[*(int *)(this[0x12].pad_48 + 0x3c)].size + 1,uVar5,uVar4,iVar2
                                ,iVar3);
     iVar3 = 0;
     iVar2 = 0;
     uVar4 = rect_height((iptr)&local_14);
-    uVar5 = city_window_scale((C_004083b0_4 *)this,0xe);
+    uVar5 = city_window_scale((WindowObjectView *)this,0xe);
     iVar7 = ui_calc_item_spacing(city_food_box_rows,uVar5,uVar4,iVar2,iVar3);
     iVar6 = (cities[*(int *)(this[0x12].pad_48 + 0x3c)].size + 1) * iVar6;
     iVar8 = rect_width((iptr)&local_14);
@@ -14801,7 +14801,7 @@ void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
       }
       uVar1 = 1;
       uVar4 = rect_width((iptr)&local_14);
-      uVar5 = city_window_scale((C_004083b0_4 *)this,0x11);
+      uVar5 = city_window_scale((WindowObjectView *)this,0x11);
       city_window_draw_icon_row(ADDR(0x644f3c, ((u8 *)&g.d_00644f3c)),iVar6,local_2c,iVar8,
                          cities[*(int *)(this[0x12].pad_48 + 0x3c)].size + 1,uVar5,uVar4,uVar1);
       local_24 -= iVar8;
@@ -14813,12 +14813,12 @@ void __thiscall city_window_draw_food_box(C_004083b0_12c *this,int param_1)
        (iVar6 = civ_has_wonder((int)cities[*(int *)(this[0x12].pad_48 + 0x3c)].owner,0),
        iVar6 != 0)) {
       iVar8 = city_food_box_rows >> 1;
-      iVar6 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar6 = city_window_scale((WindowObjectView *)this,1);
       iVar7 = local_10 + (iVar8 * iVar7 - iVar6);
       uVar4 = 0x2a;
-      iVar6 = city_window_scale((C_004083b0_4 *)this,2);
+      iVar6 = city_window_scale((WindowObjectView *)this,2);
       iVar6 = (local_c - 1) - iVar6;
-      iVar8 = city_window_scale((C_004083b0_4 *)this,2);
+      iVar8 = city_window_scale((WindowObjectView *)this,2);
       city_draw_hline(local_14 + iVar8,iVar6,iVar7,uVar4);
     }
     if (param_1 != 0) {
@@ -14878,14 +14878,14 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
   unit_type = -1;
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)(this[7].pad_1bc + 0x14));
-    local_3c = city_window_scale((C_004083b0_4 *)this,0xb7);
-    local_50 = city_window_scale((C_004083b0_4 *)this,0x92);
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)(this[7].pad_1bc + 0x14));
+    local_3c = city_window_scale((WindowObjectView *)this,0xb7);
+    local_50 = city_window_scale((WindowObjectView *)this,0x92);
     local_14 = *(i32 *)(this[7].pad_1bc + 0x14);
     local_10 = *(int *)(this[7].pad_1bc + 0x18);
     local_c = *(i32 *)(this[7].pad_1bc + 0x1c);
     local_8 = this[7].field_1dc;
-    iVar1 = city_window_scale((C_004083b0_4 *)this,0x28);
+    iVar1 = city_window_scale((WindowObjectView *)this,0x28);
     local_8 = local_10 + iVar1;
     clickmap_remove_by_id((ClickMapRemoveView *)&this->field_2d8,5);
     hotspot_add_rect((ClickMap *)&this->field_2d8,0,5,(iptr)&local_14);
@@ -14904,9 +14904,9 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
       iVar4 = label_string(improvements[improvement].name);
       gfx_draw_text_centered(iVar4,uVar6,uVar3,uVar8);
       gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 - 8);
-      iVar1 = city_window_scale((C_004083b0_4 *)this,0x10);
+      iVar1 = city_window_scale((WindowObjectView *)this,0x10);
       iVar1 = *(int *)(this[7].pad_1bc + 0x18) + iVar1;
-      iVar2 = city_window_scale((C_004083b0_4 *)this,0x50);
+      iVar2 = city_window_scale((WindowObjectView *)this,0x50);
       sprite_draw
                 ((Sprite *)(&improvement_icon_sprites + improvement * 0x3c),(iptr)local_6c,ADDR(0x6a91b8, ((u8 *)&g.d_006a91b8)),
                  *(int *)(this[7].pad_1bc + 0x14) + iVar2,iVar1);
@@ -14925,27 +14925,27 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
       }
       uVar6 = 0;
       uVar3 = local_48;
-      iVar1 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar1 = city_window_scale((WindowObjectView *)this,1);
       iVar1 = *(int *)(this[7].pad_1bc + 0x18) + iVar1;
-      iVar2 = city_window_scale((C_004083b0_4 *)this,0x49);
+      iVar2 = city_window_scale((WindowObjectView *)this,0x49);
       gfx_draw_unit(ADDR(0x6a91b8, ((u8 *)&g.d_006a91b8)),unit,0,*(int *)(this[7].pad_1bc + 0x14) + iVar2,iVar1,uVar3,
                          uVar6);
     }
     if (cities[*(int *)(this[7].pad_15c + 4)].building != -0x26) {
       iVar4 = local_3c;
       iVar7 = local_50;
-      uVar3 = city_window_scale((C_004083b0_4 *)this,0x28);
-      uVar6 = city_window_scale((C_004083b0_4 *)this,6);
+      uVar3 = city_window_scale((WindowObjectView *)this,0x28);
+      uVar6 = city_window_scale((WindowObjectView *)this,6);
       rect_set_xywh((iptr)&local_14,uVar6,uVar3,iVar4,iVar7);
       rect_offset((iptr)&local_14,*(i32 *)(this[7].pad_1bc + 0x14),
                          *(i32 *)(this[7].pad_1bc + 0x18));
-      uVar3 = city_window_scale((C_004083b0_4 *)this,3);
-      uVar6 = city_window_scale((C_004083b0_4 *)this,3);
+      uVar3 = city_window_scale((WindowObjectView *)this,3);
+      uVar6 = city_window_scale((WindowObjectView *)this,3);
       rect_deflate((iptr)&local_14,uVar6,uVar3);
       iVar7 = 0;
       iVar4 = 0;
       uVar3 = rect_height((iptr)&local_14);
-      uVar6 = city_window_scale((C_004083b0_4 *)this,0xe);
+      uVar6 = city_window_scale((WindowObjectView *)this,0xe);
       local_5c = ui_calc_item_spacing(10,uVar6,uVar3,iVar4,iVar7);
       local_2c = local_34;
       if ((int)local_34 < 10) {
@@ -14955,7 +14955,7 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
       iVar4 = 0;
       piVar5 = &local_58;
       uVar3 = rect_width((iptr)&local_14);
-      uVar6 = city_window_scale((C_004083b0_4 *)this,0x11);
+      uVar6 = city_window_scale((WindowObjectView *)this,0x11);
       local_54 = ui_calc_item_spacing(city_shield_rows,uVar6,uVar3,(iptr)piVar5,iVar4);
       local_18 = local_54 * city_shield_rows + local_58;
       local_40 = 0;
@@ -14980,7 +14980,7 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
         }
         uVar8 = 1;
         uVar3 = rect_width((iptr)&local_14);
-        uVar6 = city_window_scale((C_004083b0_4 *)this,0x11);
+        uVar6 = city_window_scale((WindowObjectView *)this,0x11);
         city_window_draw_icon_row(ADDR(0x644fb4, ((u8 *)&g.d_00644fb4)),local_28,local_30,local_20,local_2c,uVar6,uVar3,uVar8);
         local_24 -= local_20;
         local_30 += local_5c;
@@ -15019,7 +15019,7 @@ void __thiscall city_window_draw_production(FrameWindow *this,int param_1)
 #undef local_8
 
 /* 005055dd auto */
-void __thiscall city_window_draw_button_area(C_004083b0_12c *this,int param_1)
+void __thiscall city_window_draw_button_area(ScaledWindowView *this,int param_1)
 
 {
   if ((((*(int *)(this[0x12].pad_48 + 0x44) == 0) && (*(int *)(this[0x12].pad_48 + 0x40) == 0)) &&
@@ -15079,7 +15079,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)&this[7].field_1f0);
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)&this[7].field_1f0);
     local_4c = this[7].field_1f0;
     local_54 = this[7].field_1f4;
     local_20 = 0xfffffffd;
@@ -15091,15 +15091,15 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
     }
     local_48 = gfx_zoom_scale(0x45,local_20);
     local_78 = gfx_zoom_scale(0x34,local_20);
-    local_18 = city_window_scale((C_004083b0_4 *)this,0xc0);
+    local_18 = city_window_scale((WindowObjectView *)this,0xc0);
     local_18 = local_18 / local_48;
-    local_28 = city_window_scale((C_004083b0_4 *)this,0x4e);
+    local_28 = city_window_scale((WindowObjectView *)this,0x4e);
     local_28 = local_28 / local_78;
-    iVar1 = city_window_scale((C_004083b0_4 *)this,0xc0);
+    iVar1 = city_window_scale((WindowObjectView *)this,0xc0);
     iVar2 = local_48 * local_18;
     iVar3 = gfx_zoom_scale(5,local_20);
     local_5c = (iVar1 - iVar2) + iVar3 >> 1;
-    iVar1 = city_window_scale((C_004083b0_4 *)this,0x4e);
+    iVar1 = city_window_scale((WindowObjectView *)this,0x4e);
     iVar2 = local_78 * local_28;
     iVar3 = gfx_zoom_scale(4,local_20);
     local_58 = (iVar1 - iVar2) + iVar3 >> 1;
@@ -15112,14 +15112,14 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
       }
     }
     if (local_40 <= local_18) {
-      iVar1 = city_window_scale((C_004083b0_4 *)this,0x4e);
+      iVar1 = city_window_scale((WindowObjectView *)this,0x4e);
       iVar2 = gfx_zoom_scale(0x30,local_20);
       local_58 = iVar1 - iVar2 >> 1;
       text_clear();
       text_append_label(0x1bf);
       text_set_colors(0x7c,0x12,1,1);
       uVar4 = rect_width((iptr)(this[7].pad_23c + 4));
-      iVar1 = city_window_scale((C_004083b0_4 *)this,1);
+      iVar1 = city_window_scale((WindowObjectView *)this,1);
       gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)(this[7].pad_23c + 4),
                          *(int *)(this[7].pad_23c + 8) + iVar1,uVar4);
     }
@@ -15174,7 +15174,7 @@ void __thiscall city_window_draw_supported_units(FrameWindow *this,int param_1)
         iVar7 = 0;
         iVar6 = 0;
         iVar5 = local_1c;
-        uVar4 = city_window_scale((C_004083b0_4 *)this,10);
+        uVar4 = city_window_scale((WindowObjectView *)this,10);
         local_50 = ui_calc_item_spacing(local_68,uVar4,iVar5,iVar6,iVar7);
         local_80 = local_6c;
         if (unit_types[units[unit].type].role == 5) {
@@ -15278,18 +15278,18 @@ void __cdecl city_window_sell_improvement(i32 param_1)
   
   local_c = 0;
   improvement = -1;
-  city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city3 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((cities[city3].owner == human_civ) || (game.reveal_map != '\0')) {
-    city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city4 = citywnd_get_city((WindowObjectView *)&city_window);
     if (((cities[city4].flags & 4) == 0) ||
        ((game.reveal_map != '\0' && ((game.game_flags & 0x80) != 0)))) {
       uVar7 = 0;
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       city_recalc(city2,uVar7);
       sVar1 = (short)city_improvement_list_top;
       for (local_14 = 1; local_14 < 0x27; local_14++) {
         iVar7 = local_14;
-        city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+        city2 = citywnd_get_city((WindowObjectView *)&city_window);
         city = city_has_improvement(city2,iVar7);
         if ((city != 0) && (local_c = local_c + 1, (short)(sVar1 + (short)param_1 + 1) == local_c))
         {
@@ -15310,11 +15310,11 @@ void __cdecl city_window_sell_improvement(i32 param_1)
           if (city == 0) {
             snd_play_effect(0x6e,0,0,0);
             uVar7 = 0;
-            city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city2 = citywnd_get_city((WindowObjectView *)&city_window);
             city_set_improvement(city2,improvement,uVar7);
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             civs[cities[city].owner].gold = civs[cities[city].owner].gold + iVar6;
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             cities[city].flags = cities[city].flags | 4;
             city_window_refresh((FrameWindow *)&city_window);
             status_draw_info(1);
@@ -15327,7 +15327,7 @@ void __cdecl city_window_sell_improvement(i32 param_1)
     }
     else {
       snd_play_effect(0x69,0,0,0);
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       popup_game_with_city(ADDR(0x630d94, ((u8 *)&g.d_00630d94)),city2);
     }
   }
@@ -15339,7 +15339,7 @@ void __cdecl city_window_sell_improvement(i32 param_1)
 #undef local_c
 
 /* 00505ffa auto */
-#define _DAT_006aa770 (*(i32 *)((u8 *)&g.d_006aa770))
+#define city_improvement_list_count_i32 (*(i32 *)((u8 *)&g.d_006aa770))
 #define local_78 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_68 (*(i8 (*)[16])(frame_ + FRAME_OFF(16)))
 #define local_58 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
@@ -15371,7 +15371,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)this[7].pad_200);
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)this[7].pad_200);
     clickmap_remove_by_id((ClickMapRemoveView *)&this->field_2d8,4);
     local_30 = this[7].field_230;
     local_34 = this[7].field_234;
@@ -15380,24 +15380,24 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
     text_set_colors(0x7c,0x12,1,1);
     uVar2 = rect_width((iptr)this[7].pad_200);
     iVar4 = *(int *)(this[7].pad_200 + 4);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar3 = city_window_scale((WindowObjectView *)this,1);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)this[7].pad_200,iVar4 - iVar3,uVar2);
-    local_3c = city_window_scale((C_004083b0_4 *)this,2);
+    local_3c = city_window_scale((WindowObjectView *)this,2);
     local_3c = local_30 + local_3c;
-    local_44 = city_window_scale((C_004083b0_4 *)this,1);
+    local_44 = city_window_scale((WindowObjectView *)this,1);
     local_44 = local_34 + local_44;
     iVar4 = rect_height((iptr)&this[7].field_230);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,1);
-    local_20 = city_window_scale((C_004083b0_4 *)this,0xc);
+    iVar3 = city_window_scale((WindowObjectView *)this,1);
+    local_20 = city_window_scale((WindowObjectView *)this,0xc);
     local_20 = (iVar4 - (iVar3 >> 1)) / local_20;
     local_18 = *(int *)(this[7].pad_15c + 0x3c) * 2 - 8;
     for (local_1c = 0; local_1c < local_20; local_1c++) {
-      iVar5 = city_window_scale((C_004083b0_4 *)this,0xc);
-      iVar4 = city_window_scale((C_004083b0_4 *)this,0xc0);
-      iVar3 = city_window_scale((C_004083b0_4 *)this,4);
+      iVar5 = city_window_scale((WindowObjectView *)this,0xc);
+      iVar4 = city_window_scale((WindowObjectView *)this,0xc0);
+      iVar3 = city_window_scale((WindowObjectView *)this,4);
       rect_set_xywh((iptr)local_14,local_3c,local_44,iVar4 - iVar3,iVar5);
       hotspot_add_rect((ClickMap *)&this->field_2d8,local_1c,4,(iptr)local_14);
-      iVar4 = city_window_scale((C_004083b0_4 *)this,0xc);
+      iVar4 = city_window_scale((WindowObjectView *)this,0xc);
       local_44 += iVar4;
     }
     local_44 = local_34 + 1;
@@ -15431,7 +15431,7 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
                      local_3c,local_44);
         }
         gfx_reset_zoom_scale();
-        local_28 = city_window_scale((C_004083b0_4 *)this,0x18);
+        local_28 = city_window_scale((WindowObjectView *)this,0x18);
         local_28 = local_3c + local_28;
         local_2c = local_44 - 1;
         text_clear();
@@ -15439,8 +15439,8 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
         text_set_colors(0x29,10,1,0);
         gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_28,local_2c - 1);
         uVar1 = this[7].field_238;
-        iVar4 = city_window_scale((C_004083b0_4 *)this,0xe);
-        local_28 = city_window_scale((C_004083b0_4 *)this,4);
+        iVar4 = city_window_scale((WindowObjectView *)this,0xe);
+        local_28 = city_window_scale((WindowObjectView *)this,4);
         local_28 = (uVar1 - iVar4) - local_28;
         if (local_24 < 0) {
           gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 3 - 7);
@@ -15448,22 +15448,22 @@ void __thiscall city_window_draw_improvements(FrameWindow *this,int param_1)
                     ((Sprite *)&gold_coin_icon_sprite,(iptr)local_78,(iptr)this,local_28,local_2c);
           gfx_reset_zoom_scale();
         }
-        iVar4 = city_window_scale((C_004083b0_4 *)this,0xc);
+        iVar4 = city_window_scale((WindowObjectView *)this,0xc);
         local_44 += iVar4;
       }
     }
-    _DAT_006aa770 = local_38;
+    city_improvement_list_count_i32 = local_38;
     scrollbar_set_range((Control *)this[7].field_2a0,0,local_38 - 1);
     scrollbar_set_page_size((Control *)this[7].field_2a0,local_20 - 1);
     scrollbar_set_pos
-              ((C_0040f380_40 *)this[7].field_2a0,*(iptr *)(this[7].pad_15c + 0x1c));
+              ((ClickControl *)this[7].field_2a0,*(iptr *)(this[7].pad_15c + 0x1c));
     if (param_1 != 0) {
       wnd_blit_surface_rect((DibSurface *)this,(iptr)this[7].pad_200);
     }
   }
   return;
 }
-#undef _DAT_006aa770
+#undef city_improvement_list_count_i32
 #undef local_78
 #undef local_68
 #undef local_58
@@ -15509,16 +15509,16 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   if (city_unit_dialog_busy == 0) {
     city_unit_dialog_busy = 1;
-    city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city3 = citywnd_get_city((WindowObjectView *)&city_window);
     if ((cities[city3].owner == human_civ) || (game.reveal_map != '\0')) {
       uVar7 = 0;
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       city_recalc(city2,uVar7);
       dlg_unit_sprite_zoom = 8;
       sprite_create_solid(&local_4c,0x40,0x20,0);
       text_set_unit_info_args(unit);
       dlg_load_game_section(&local_340,ADDR(0x630dbc, ((u8 *)&g.d_00630dbc)),1);
-      dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
+      dialog_set_sprite_draw_fn((DialogCore *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
       dialog_set_image_zoom((DialogWindowView *)&local_340,8);
       dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,unit,0);
       uVar7 = 0;
@@ -15529,9 +15529,9 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
       if (0 < iVar2) {
         if (iVar2 == 3) {
           units[unit].orders = 11;
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           units[unit].goto_x = cities[city].x;
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           units[unit].goto_y = cities[city].y;
         }
         else if (iVar2 == 4) {
@@ -15540,9 +15540,9 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
             cities[city].shield_box =
                  (short)((int)((int)(char)unit_types[units[unit].type].cost *
                               (uint)cosmic.shield_box_rows) / 2) + cities[city].shield_box;
-            iVar5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            iVar5 = citywnd_get_city((WindowObjectView *)&city_window);
             if (iVar5 == city) {
-              city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city2 = citywnd_get_city((WindowObjectView *)&city_window);
               city_save_build_state(city2);
             }
           }
@@ -15557,7 +15557,7 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
               ui_redraw_all_maps(0);
               map_set_cursor_pos((int)units[unit].x,(int)units[unit].y);
               mapview_center_on
-                        ((C_004083b0_430 *)&map_views,(int)units[unit].x,(int)units[unit].y
+                        ((ViewWindow *)&map_views,(int)units[unit].x,(int)units[unit].y
                         );
             }
             else {
@@ -15575,15 +15575,15 @@ void __cdecl city_window_supported_unit_menu(iptr unit)
     }
     city_unit_dialog_busy = 0;
     local_8 = local_8 & 0xffffff00;
-    /* inlined unwind funclet FUN_00506a15 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+    /* inlined unwind funclet 00506a15 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
+    /* inlined unwind funclet 00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
   }
   else {
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00506a15 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+    /* inlined unwind funclet 00506a15 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
+    /* inlined unwind funclet 00506a1e */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
   }
   return;
 }
@@ -15627,30 +15627,30 @@ void __cdecl city_window_present_unit_menu(int param_1)
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),1);
   if (city_unit_dialog_busy != 0) {
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_005070b8 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+    /* inlined unwind funclet 005070b8 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005070c1 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
+    /* inlined unwind funclet 005070c1 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
     goto LAB_005070d7;
   }
   city_unit_dialog_busy = 1;
   sprite_create_solid(&local_4c,0x40,0x20,0);
-  city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city3 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((cities[city3].owner != human_civ) && (game.reveal_map == '\0')) goto LAB_0050708f;
   unit2 = 0;
-  city = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city = citywnd_get_city((WindowObjectView *)&city_window);
   city_recalc(city,unit2);
   if (city_info_panel_mode != 0) goto LAB_0050708f;
   iVar2 = (iptr)(short)param_1;
-  city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city4 = citywnd_get_city((WindowObjectView *)&city_window);
   y = (iptr)cities[city4].y;
-  city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city5 = citywnd_get_city((WindowObjectView *)&city_window);
   unit2 = tile_first_unit((int)cities[city5].x,y);
   unit = unit_stack_nth(unit2,iVar2);
   if (unit < 0) goto LAB_0050708f;
   text_set_unit_info_args(unit);
   dlg_load_game_section(&local_340,ADDR(0x630dc8, ((u8 *)&g.d_00630dc8)),1);
   dlg_unit_sprite_zoom = 8;
-  dialog_set_sprite_draw_fn((C_0040bc40_28 *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
+  dialog_set_sprite_draw_fn((DialogCore *)&local_340,ADDR(0x402059, unit_dlg_draw_sprite_cb));
   dialog_set_image_zoom((DialogWindowView *)&local_340,8);
   dialog_add_sprite((DialogOptionList *)&local_340,(iptr)&local_4c,unit,0);
   unit2 = 0;
@@ -15676,7 +15676,7 @@ void __cdecl city_window_present_unit_menu(int param_1)
     city = label_string(*(i32 *)(label_string_ids + 0x150));
     dialog_add_option((DialogOptionList *)&local_340,city,iVar10,unit2);
   }
-  city6 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city6 = citywnd_get_city((WindowObjectView *)&city_window);
   if (city6 != (byte)units[unit].home_city) {
     unit2 = 0;
     iVar10 = 5;
@@ -15720,20 +15720,20 @@ void __cdecl city_window_present_unit_menu(int param_1)
     unit_relocate_in_place(unit,1);
     break;
   case 5:
-    unit2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+    unit2 = citywnd_get_city((WindowObjectView *)&city_window);
     units[unit].home_city = (i8)unit2;
     city_window_refresh((FrameWindow *)&city_window);
     goto LAB_0050708f;
   case 6:
     city_window_open
-              ((C_004083b0_12c *)&city_window,(uint)(byte)units[unit].home_city);
+              ((ScaledWindowView *)&city_window,(uint)(byte)units[unit].home_city);
     goto LAB_0050708f;
   case 7:
-    city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city2 = citywnd_get_city((WindowObjectView *)&city_window);
     cities[city2].shield_box =
          (short)((int)((int)(char)unit_types[units[unit].type].cost * (uint)cosmic.shield_box_rows)
                 / 2) + cities[city2].shield_box;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_save_build_state(city);
     unit_destroy_redraw(unit,1);
     city_window_refresh((FrameWindow *)&city_window);
@@ -15753,15 +15753,15 @@ void __cdecl city_window_present_unit_menu(int param_1)
     goto LAB_0050708f;
   }
   unit2 = 0;
-  city = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city = citywnd_get_city((WindowObjectView *)&city_window);
   city_recalc(city,unit2);
   city_window_draw_info_panel((FrameWindow *)&city_window,1);
 LAB_0050708f:
   city_unit_dialog_busy = 0;
   local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet FUN_005070b8 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+  /* inlined unwind funclet 005070b8 */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005070c1 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
+  /* inlined unwind funclet 005070c1 */ { dialog_dtor((Dialog *)((iptr)&local_340)); }
 LAB_005070d7:
   return;
 }
@@ -15825,9 +15825,9 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
   local_28 = gfx_zoom_scale(0x30,local_2c);
   local_c = gfx_zoom_scale(0x40,local_2c);
   local_64 = gfx_zoom_scale(0x34,local_2c);
-  local_50 = city_window_scale((C_004083b0_4 *)this,0xf4);
+  local_50 = city_window_scale((WindowObjectView *)this,0xf4);
   local_50 = local_50 / local_c;
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0xf4);
+  iVar1 = city_window_scale((WindowObjectView *)this,0xf4);
   local_8 = (iVar1 - local_c * local_50) / 2;
   local_20 = gfx_zoom_scale(4,local_2c);
   local_3c = local_50 << 2;
@@ -15844,7 +15844,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
     text_append_label(0x1c3);
     text_set_colors(0x7c,0x12,1,1);
     uVar2 = rect_width((iptr)(this[7].pad_23c + 0x14));
-    iVar1 = city_window_scale((C_004083b0_4 *)this,1);
+    iVar1 = city_window_scale((WindowObjectView *)this,1);
     gfx_draw_text_centered(ADDR(0x679640, ((u8 *)&g.d_00679640)),*(i32 *)(this[7].pad_23c + 0x14),this[7].field_254 + iVar1,
                        uVar2);
   }
@@ -15856,7 +15856,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
   for (; -1 < unit; unit = unit_next_in_stack(unit)) {
     gfx_draw_unit((iptr)this,unit,4,local_70,local_74,local_2c,0);
     if (local_38 < 2) {
-      iVar1 = city_window_scale((C_004083b0_4 *)this,0);
+      iVar1 = city_window_scale((WindowObjectView *)this,0);
       local_34 = local_74 + iVar1 + local_28;
       text_clear();
       if (units[unit].home_city == -1) {
@@ -15920,21 +15920,21 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
     gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 - 8);
     uVar7 = 0;
     iVar3 = rect_width((iptr)&this[7].field_210);
-    iVar1 = city_window_scale((C_004083b0_4 *)this,0xe);
+    iVar1 = city_window_scale((WindowObjectView *)this,0xe);
     iVar3 -= iVar1;
-    uVar2 = city_window_scale((C_004083b0_4 *)this,0x40);
+    uVar2 = city_window_scale((WindowObjectView *)this,0x40);
     iVar1 = city_pollution;
     iVar6 = city_pollution;
-    iVar4 = city_window_scale((C_004083b0_4 *)this,100);
+    iVar4 = city_window_scale((WindowObjectView *)this,100);
     iVar4 = local_58 + iVar4;
-    iVar5 = city_window_scale((C_004083b0_4 *)this,7);
+    iVar5 = city_window_scale((WindowObjectView *)this,7);
     city_window_draw_icon_row(ADDR(0x6466c8, ((u8 *)&g.d_006466c8)),local_54 + iVar5,iVar4,iVar1,iVar6,uVar2,iVar3,uVar7);
     gfx_reset_zoom_scale();
   }
-  local_70 = city_window_scale((C_004083b0_4 *)this,7);
+  local_70 = city_window_scale((WindowObjectView *)this,7);
   local_70 = local_54 + local_70;
   local_44 = local_70;
-  local_74 = city_window_scale((C_004083b0_4 *)this,0x85);
+  local_74 = city_window_scale((WindowObjectView *)this,0x85);
   local_74 = local_58 + local_74;
   local_24 = font_line_spacing((GameFont *)&this[7].field_270);
   local_24 -= 2;
@@ -15992,7 +15992,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
     gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_70,local_74);
     local_74 += local_24;
   }
-  iVar1 = city_window_scale((C_004083b0_4 *)this,2);
+  iVar1 = city_window_scale((WindowObjectView *)this,2);
   local_74 += iVar1;
   for (local_30 = 0; local_30 < (char)cities[*(int *)(this[7].pad_15c + 4)].trade_routes;
       local_30 = local_30 + 1) {
@@ -16011,10 +16011,10 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
     if (*(char *)&cities[(*(int *)(this[7].pad_15c + 4))].route_goods[local_30] < '\0') {
       text_append(ADDR(0x630dd4, ((u8 *)&g.d_00630dd4)));
       iVar1 = gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_70,local_74);
-      local_4c = city_window_scale((C_004083b0_4 *)this,2);
+      local_4c = city_window_scale((WindowObjectView *)this,2);
       local_4c = iVar1 + local_4c;
       gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 - 8);
-      iVar1 = city_window_scale((C_004083b0_4 *)this,3);
+      iVar1 = city_window_scale((WindowObjectView *)this,3);
       sprite_draw
                 ((Sprite *)&small_resource_icon_sprites,(iptr)local_98,(iptr)this,local_4c,local_74 + iVar1)
       ;
@@ -16024,10 +16024,10 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
       text_append_plus();
       text_append_int(*(iptr *)(&city_route_trade_values + local_30 * 4));
       iVar1 = gfx_draw_text(ADDR(0x679640, ((u8 *)&g.d_00679640)),local_70,local_74);
-      local_4c = city_window_scale((C_004083b0_4 *)this,2);
+      local_4c = city_window_scale((WindowObjectView *)this,2);
       local_4c = iVar1 + local_4c;
       gfx_set_zoom_scale(*(int *)(this[7].pad_15c + 0x3c) * 4 - 8);
-      iVar1 = city_window_scale((C_004083b0_4 *)this,3);
+      iVar1 = city_window_scale((WindowObjectView *)this,3);
       sprite_draw
                 ((Sprite *)&small_trade_icon_sprite,(iptr)local_88,(iptr)this,local_4c,local_74 + iVar1)
       ;
@@ -16074,7 +16074,7 @@ void __thiscall city_window_draw_units_present(FrameWindow *this)
 #define y2 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_20 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
-void __thiscall city_window_draw_support_map(C_004083b0_4 *this)
+void __thiscall city_window_draw_support_map(WindowObjectView *this)
 
 {
   char civ;
@@ -16139,7 +16139,7 @@ void __thiscall city_window_draw_support_map(C_004083b0_4 *this)
 #define local_10 (*(int *)(frame_ + FRAME_OFF(24)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(32)))
-void __thiscall city_happy_draw_building_icons(C_004083b0_4 *this,iptr param_1,int param_2,int param_3)
+void __thiscall city_happy_draw_building_icons(WindowObjectView *this,iptr param_1,int param_2,int param_3)
 
 {
   int iVar1;
@@ -16223,7 +16223,7 @@ LAB_00507f6b:
 #define local_c (*(u32 *)(frame_ + FRAME_OFF(44)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(48)))
 void __thiscall
-city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int param_3,int param_4)
+city_happy_draw_unit_effects(WindowObjectView *this,iptr param_1,int param_2,int param_3,int param_4)
 
 {
   byte bVar1;
@@ -16351,7 +16351,7 @@ city_happy_draw_unit_effects(C_004083b0_4 *this,iptr param_1,int param_2,int par
 #define local_10 (*(int *)(frame_ + FRAME_OFF(88)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(92)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(96)))
-void __thiscall city_window_draw_happiness(C_004083b0_4 *this)
+void __thiscall city_window_draw_happiness(WindowObjectView *this)
 
 {
   i32 uVar1;
@@ -16505,16 +16505,16 @@ void __thiscall city_window_draw_info_panel(FrameWindow *this,int param_1)
   
   if ((((*(int *)(this[7].pad_15c + 0xc) == 0) && (*(int *)(this[7].pad_15c + 8) == 0)) &&
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
-    city_window_begin_draw((C_004083b0_12c *)this,(iptr)&this[7].field_210);
+    city_window_begin_draw((ScaledWindowView *)this,(iptr)&this[7].field_210);
     iVar1 = *(int *)(this[7].pad_15c + 0x18);
     if (iVar1 == 0) {
       city_window_draw_units_present(this);
     }
     else if (iVar1 == 1) {
-      city_window_draw_support_map((C_004083b0_4 *)this);
+      city_window_draw_support_map((WindowObjectView *)this);
     }
     else if (iVar1 == 2) {
-      city_window_draw_happiness((C_004083b0_4 *)this);
+      city_window_draw_happiness((WindowObjectView *)this);
     }
     if (param_1 != 0) {
       wnd_blit_surface_rect((DibSurface *)this,(iptr)&this[7].field_210);
@@ -16531,9 +16531,9 @@ void __thiscall city_window_draw_all(FrameWindow *this,i32 param_1)
       (*(int *)(this[7].pad_15c + 0x10) == 0)) && (-1 < *(int *)(this[7].pad_15c + 4))) {
     city_window_draw_citizens(this,param_1,0);
     city_window_draw_resource_map(this,param_1);
-    city_window_draw_food_box((C_004083b0_12c *)this,param_1);
+    city_window_draw_food_box((ScaledWindowView *)this,param_1);
     city_window_draw_production(this,param_1);
-    city_window_draw_button_area((C_004083b0_12c *)this,param_1);
+    city_window_draw_button_area((ScaledWindowView *)this,param_1);
     city_window_draw_supported_units(this,param_1);
     city_window_draw_improvements(this,param_1);
     city_window_draw_info_panel(this,param_1);
@@ -16544,7 +16544,7 @@ void __thiscall city_window_draw_all(FrameWindow *this,i32 param_1)
 /* 00508c84 auto */
 void __thiscall
 city_window_set_scaled_rect
-          (C_004083b0_12c *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
+          (ScaledWindowView *this,iptr param_1,int param_2,int param_3,int param_4,int param_5)
 
 {
   rect_set_xywh(param_1,*(int *)(this[0x12].pad_48 + 100) +
@@ -16558,7 +16558,7 @@ city_window_set_scaled_rect
 }
 
 /* 00508d24 auto */
-void __thiscall city_window_layout_rects(C_004083b0_12c *this)
+void __thiscall city_window_layout_rects(ScaledWindowView *this)
 
 {
   city_window_set_scaled_rect(this,(iptr)(this[0x12].pad_48 + 0x7c),0,0,0x1b4,0x3d);
@@ -16577,7 +16577,7 @@ void __thiscall city_window_layout_rects(C_004083b0_12c *this)
 }
 
 /* 00508ec6 auto */
-void __thiscall city_window_fill_margins(C_004083b0_12c *this)
+void __thiscall city_window_fill_margins(ScaledWindowView *this)
 
 {
   int iVar1;
@@ -16592,25 +16592,25 @@ void __thiscall city_window_fill_margins(C_004083b0_12c *this)
   iVar1 = *(int *)(this[0x12].pad_48 + 0x68);
   if (0 < iVar4) {
     iVar3 = *(int *)(this[0x12].pad_48 + 0x5c);
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0x27c);
+    iVar2 = city_window_scale((WindowObjectView *)this,0x27c);
     iVar3 -= (iVar4 + iVar2);
     gfx_target_fill_rect(this->client_x,this->client_y,*(i32 *)(this[0x12].pad_48 + 100),
                        *(i32 *)(this[0x12].pad_48 + 0x60),10);
     uVar7 = 10;
     uVar6 = *(i32 *)(this[0x12].pad_48 + 0x60);
     uVar5 = this->client_y;
-    iVar2 = city_window_scale((C_004083b0_4 *)this,0x27c);
+    iVar2 = city_window_scale((WindowObjectView *)this,0x27c);
     gfx_target_fill_rect(this->client_x + iVar2 + iVar4,uVar5,iVar3,uVar6,uVar7);
   }
   if (0 < iVar1) {
     iVar4 = *(int *)(this[0x12].pad_48 + 0x60);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0x1a5);
+    iVar3 = city_window_scale((WindowObjectView *)this,0x1a5);
     iVar4 -= (iVar1 + iVar3);
     gfx_target_fill_rect(this->client_x,this->client_y,*(i32 *)(this[0x12].pad_48 + 0x5c),
                        *(i32 *)(this[0x12].pad_48 + 0x68),10);
     uVar7 = 10;
     uVar6 = *(i32 *)(this[0x12].pad_48 + 0x5c);
-    iVar3 = city_window_scale((C_004083b0_4 *)this,0x1a5);
+    iVar3 = city_window_scale((WindowObjectView *)this,0x1a5);
     gfx_target_fill_rect(this->client_x,this->client_y + iVar3 + iVar1,uVar6,iVar4,uVar7);
   }
   return;
@@ -16652,8 +16652,8 @@ void __thiscall city_window_apply_size(FrameWindow *this)
     this->caption_height = 0x12;
   }
   else {
-    local_10 = city_window_scale((C_004083b0_4 *)this,0x10);
-    uVar3 = city_window_scale((C_004083b0_4 *)this,0x18);
+    local_10 = city_window_scale((WindowObjectView *)this,0x10);
+    uVar3 = city_window_scale((WindowObjectView *)this,0x18);
     this->caption_height = uVar3;
   }
   font_set((GameFont *)&city_window_font,0,local_10);
@@ -16662,8 +16662,8 @@ void __thiscall city_window_apply_size(FrameWindow *this)
   *(u32 *)(this[7].pad_15c + 0x24) = this->client_width;
   *(u32 *)(this[7].pad_15c + 0x28) = this->client_height;
   city_window_load_background();
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0x27c);
-  iVar2 = city_window_scale((C_004083b0_4 *)this,0x1a5);
+  iVar1 = city_window_scale((WindowObjectView *)this,0x27c);
+  iVar2 = city_window_scale((WindowObjectView *)this,0x1a5);
   if (iVar1 < *(int *)(this[7].pad_15c + 0x24)) {
     *(int *)(this[7].pad_15c + 0x2c) = *(int *)(this[7].pad_15c + 0x24) - iVar1 >> 1;
   }
@@ -16683,16 +16683,16 @@ void __thiscall city_window_apply_size(FrameWindow *this)
     this[7].pad_15c[0x33] = '\0';
   }
   uVar5 = (uint)(*(int *)(this[7].pad_15c + 0x3c) < 3);
-  uVar4 = city_window_scale((C_004083b0_4 *)this,0xc);
+  uVar4 = city_window_scale((WindowObjectView *)this,0xc);
   font_set_styled((GameFont *)&this[7].field_270,1,uVar4,uVar5);
   if ((*(int *)(this[7].pad_15c + 0x2c) == *(int *)(this[7].pad_15c + 0x34)) &&
      (*(int *)(this[7].pad_15c + 0x30) == *(int *)(this[7].pad_15c + 0x38))) {
     if (*(int *)(this[7].pad_15c + 0x34) < 0) {
-      city_window_create_controls((C_004083b0_12c *)this);
+      city_window_create_controls((ScaledWindowView *)this);
     }
   }
   else {
-    city_window_create_controls((C_004083b0_12c *)this);
+    city_window_create_controls((ScaledWindowView *)this);
   }
   *(i32 *)(this[7].pad_15c + 0x34) = *(i32 *)(this[7].pad_15c + 0x2c);
   *(i32 *)(this[7].pad_15c + 0x38) = *(i32 *)(this[7].pad_15c + 0x30);
@@ -16757,8 +16757,8 @@ void __thiscall city_window_refresh(FrameWindow *this)
       city_window_update_title(this);
       gfx_set_draw_target((iptr)this);
       frame_wnd_draw_caption(this);
-      city_window_fill_margins((C_004083b0_12c *)this);
-      city_window_layout_rects((C_004083b0_12c *)this);
+      city_window_fill_margins((ScaledWindowView *)this);
+      city_window_layout_rects((ScaledWindowView *)this);
       city_window_draw_all(this,0);
       wnd_blit_surface((DibSurface *)this);
     }
@@ -16771,7 +16771,7 @@ void __thiscall city_window_refresh(FrameWindow *this)
 #undef game_loop_active
 
 /* 00509545 auto */
-void __thiscall city_window_bring_to_top(C_004083b0_4 *this)
+void __thiscall city_window_bring_to_top(WindowObjectView *this)
 
 {
   iptr iVar1;
@@ -16808,7 +16808,7 @@ void __thiscall city_window_bring_to_top(C_004083b0_4 *this)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-void __thiscall city_window_open(C_004083b0_12c *this,iptr city)
+void __thiscall city_window_open(ScaledWindowView *this,iptr city)
 
 {
   int iVar1;
@@ -16838,7 +16838,7 @@ void __thiscall city_window_open(C_004083b0_12c *this,iptr city)
       this[0x12].pad_48[0x5a] = '\0';
       this[0x12].pad_48[0x5b] = '\0';
       if (*(int *)(this[0x12].pad_48 + 0x40) != 0) {
-        window_show((C_004083b0_4 *)this);
+        window_show((WindowObjectView *)this);
       }
     }
     this[0x12].pad_48[0x44] = '\0';
@@ -16851,7 +16851,7 @@ void __thiscall city_window_open(C_004083b0_12c *this,iptr city)
     this[0x12].pad_48[0x4b] = '\0';
     if (*(int *)(this[0x12].pad_48 + 0x40) == 0) {
       wnd_repaint((SurfaceWindow *)this);
-      window_show((C_004083b0_4 *)this);
+      window_show((WindowObjectView *)this);
     }
     else {
       wnd_show_restored((WndBase *)this->pad_48);
@@ -16920,7 +16920,7 @@ void __cdecl city_window_on_redraw(void)
 
 /* 0050994f auto */
 #define city_window_closed (*(i32 *)((u8 *)&g.d_006aa75c))
-#define _DAT_006aa754 (*(i32 *)((u8 *)&g.d_006aa754))
+#define city_window_city_i32 (*(i32 *)((u8 *)&g.d_006aa754))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 i32 __cdecl city_window_close(void)
@@ -16928,16 +16928,16 @@ i32 __cdecl city_window_close(void)
 {
   city_window_closed = 1;
   wnd_hide((WndBase *)&city_window_wnd);
-  _DAT_006aa754 = 0xffffffff;
+  city_window_city_i32 = 0xffffffff;
   wnd_focus_and_raise((WndBase *)&main_frame_wnd);
   ui_flush_input();
   return 0;
 }
 #undef city_window_closed
-#undef _DAT_006aa754
+#undef city_window_city_i32
 
 /* 0050998f auto */
-#define _DAT_006aa784 (*(i32 *)((u8 *)&g.d_006aa784))
+#define city_window_prev_offset_x_i32 (*(i32 *)((u8 *)&g.d_006aa784))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_calc_rect(void)
@@ -16948,18 +16948,18 @@ void __cdecl city_window_calc_rect(void)
   int iVar3;
   int iVar4;
   
-  iVar1 = city_window_scale((C_004083b0_4 *)&city_window,0x27c);
-  iVar2 = city_window_scale((C_004083b0_4 *)&city_window,0x1a5);
-  iVar3 = city_window_scale((C_004083b0_4 *)&city_window,0x18);
+  iVar1 = city_window_scale((WindowObjectView *)&city_window,0x27c);
+  iVar2 = city_window_scale((WindowObjectView *)&city_window,0x1a5);
+  iVar3 = city_window_scale((WindowObjectView *)&city_window,0x18);
   iVar2 = iVar2 + iVar3 + 8;
   iVar3 = wnd_client_width((WndBase *)&main_frame_wnd);
   iVar4 = wnd_client_height((WndBase *)&main_frame_wnd);
-  _DAT_006aa784 = 0xffffffff;
+  city_window_prev_offset_x_i32 = 0xffffffff;
   rect_set_xywh(ADDR(0x655344, ((u8 *)&g.d_00655344)),(iVar3 >> 1) - (iVar1 + 0x10 >> 1),(iVar4 >> 1) - (iVar2 >> 1),
                      iVar1 + 0x10 + sys_dlgframe_w2,iVar2 + sys_dlgframe_h2);
   return;
 }
-#undef _DAT_006aa784
+#undef city_window_prev_offset_x_i32
 
 /* 00509a49 auto */
 #define city_window_size_level (*(i32 *)((u8 *)&g.d_006aa78c))
@@ -16976,29 +16976,29 @@ void __cdecl city_window_init_size(void)
 #undef city_window_size_level
 
 /* 00509a82 auto */
-#define _DAT_006aa758 (*(i32 *)((u8 *)&g.d_006aa758))
+#define city_window_minimized_i32 (*(i32 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_on_minimize(void)
 
 {
-  _DAT_006aa758 = 1;
+  city_window_minimized_i32 = 1;
   return;
 }
-#undef _DAT_006aa758
+#undef city_window_minimized_i32
 
 /* 00509a9c auto */
-#define _DAT_006aa758 (*(i32 *)((u8 *)&g.d_006aa758))
+#define city_window_minimized_i32 (*(i32 *)((u8 *)&g.d_006aa758))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_window_on_restore(void)
 
 {
-  _DAT_006aa758 = 0;
+  city_window_minimized_i32 = 0;
   city_window_refresh((FrameWindow *)&city_window);
   return;
 }
-#undef _DAT_006aa758
+#undef city_window_minimized_i32
 
 /* 00509ac0 auto */
 #define city_shield_rows (*(int *)((u8 *)&g.d_006a657c))
@@ -17053,9 +17053,9 @@ void __cdecl city_text_append_build_turns(int param_1,int param_2)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define local_368 (*(uint *)(frame_ + FRAME_OFF(0)))
 #define local_35c (*(int *)(frame_ + FRAME_OFF(12)))
 #define local_354 (*(Dialog *)(frame_ + FRAME_OFF(20)))
@@ -17089,10 +17089,10 @@ void __cdecl city_button_buy(i32 param_1)
   local_8 = 0xffffffff;
   dialog_ctor(&local_354,0x4000);
   local_8 = 0;
-  iVar2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar2 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar2 == -1) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+    /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
   }
   else {
     iVar3 = XD_InFlushSendBuffer();
@@ -17105,27 +17105,27 @@ void __cdecl city_button_buy(i32 param_1)
           ((civ_check_destroyed_busy == 0 && ((unit_gather_cargo_busy == 0 && (unit_lift_off_map_busy == 0)))))))))) &&
        ((unit_delete_cargo_busy == 0 && (unit_destroy_redraw_busy == 0)))) {
       uVar14 = 0;
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       city_recalc(city2,uVar14);
-      civ = citywnd_get_city((C_004083b0_4 *)&city_window);
+      civ = citywnd_get_city((WindowObjectView *)&city_window);
       civ = (int)cities[civ].owner;
-      city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city3 = citywnd_get_city((WindowObjectView *)&city_window);
       unit_type = (iptr)cities[city3].building;
-      city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city4 = citywnd_get_city((WindowObjectView *)&city_window);
       iVar11 = (int)cities[city4].building;
       if ((human_civ == civ) || (game.reveal_map != '\0')) {
         if (-iVar11 == 0x26) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+          /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
         }
         else {
-          city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city5 = citywnd_get_city((WindowObjectView *)&city_window);
           if (cities[city5].building < '\0') {
             local_368 = (uint)improvements[-iVar11].cost;
             uVar15 = 999;
             uVar14 = 0;
             uVar13 = (uint)cosmic.shield_box_rows;
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             city = int_clamp(uVar13 * local_368 - (int)cities[city].shield_box,uVar14,
                                         uVar15);
             local_35c = city * 2;
@@ -17139,32 +17139,32 @@ void __cdecl city_button_buy(i32 param_1)
             uVar15 = 999;
             uVar14 = 0;
             uVar13 = (uint)cosmic.shield_box_rows;
-            city6 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city6 = citywnd_get_city((WindowObjectView *)&city_window);
             city = int_clamp(uVar13 * local_368 - (int)cities[city6].shield_box,uVar14,
                                         uVar15);
             local_35c = (city * city) / 0x14 + city * 2;
             text_set_label_arg(0,unit_types[unit_type].name);
           }
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           if (cities[city].shield_box == 0) {
             local_35c = local_35c << 1;
           }
           text_set_number_arg(0,local_35c);
           text_set_number_arg_v(1,civs[civ].gold);
-          FUN_005f22d0(local_60,s_COMPLETE0_00630e54);
+          crt_strcpy(local_60,s_COMPLETE0_00630e54);
           bVar1 = local_35c <= civs[civ].gold;
           if (bVar1) {
             local_58 = 0x31;
           }
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           if ((-1 < cities[city].building) &&
-             (city = citywnd_get_city((C_004083b0_4 *)&city_window),
+             (city = citywnd_get_city((WindowObjectView *)&city_window),
              (cities[city].flags & 1) != 0)) {
             local_58 = 0x32;
             bVar1 = false;
           }
           dialog_load_game_text(&local_354,(iptr)local_60);
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           if (cities[city].building < '\0') {
             dialog_add_sprite
                       ((DialogOptionList *)&local_354,(iptr)(&improvement_icon_sprites + iVar11 * -0x3c),0,0);
@@ -17181,41 +17181,41 @@ void __cdecl city_button_buy(i32 param_1)
           if (bVar1) {
             if ((iVar11 == 0) && (city_window_closed != 1)) {
               civs[civ].gold -= local_35c;
-              civ = citywnd_get_city((C_004083b0_4 *)&city_window);
+              civ = citywnd_get_city((WindowObjectView *)&city_window);
               cities[civ].shield_box = (ushort)cosmic.shield_box_rows * (short)local_368;
-              city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city2 = citywnd_get_city((WindowObjectView *)&city_window);
               city_save_build_state(city2);
               snd_play_effect(0x68,1,0,0);
               uVar14 = 1;
-              city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city2 = citywnd_get_city((WindowObjectView *)&city_window);
               city_recalc(city2,uVar14);
               city_window_draw_production((FrameWindow *)&city_window,1);
               city_window_update_title((FrameWindow *)&city_window);
               status_draw_info(1);
             }
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+            /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
           }
           else {
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+            /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
           }
         }
       }
       else {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+        /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
       }
     }
     else {
       dbg_log(ADDR(0x630e0c, ((u8 *)&g.d_00630e0c)));
       blocked_input_kind = 7;
-      _DAT_006c31b0 = citywnd_get_city((C_004083b0_4 *)&city_window);
-      civ = citywnd_get_city((C_004083b0_4 *)&city_window);
-      _DAT_006c31b4 = (int)cities[civ].owner;
-      _DAT_006c31b8 = param_1;
+      blocked_input_arg1_i32 = citywnd_get_city((WindowObjectView *)&city_window);
+      civ = citywnd_get_city((WindowObjectView *)&city_window);
+      blocked_input_arg2_i32 = (int)cities[civ].owner;
+      blocked_input_arg3_i32 = param_1;
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
+      /* inlined unwind funclet 0050a1b2 */ { dialog_dtor((Dialog *)((iptr)&local_354)); }
     }
   }
   return;
@@ -17241,9 +17241,9 @@ void __cdecl city_button_buy(i32 param_1)
 #undef unit_stack_bottom_busy
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
-#undef _DAT_006c31b0
-#undef _DAT_006c31b4
-#undef _DAT_006c31b8
+#undef blocked_input_arg1_i32
+#undef blocked_input_arg2_i32
+#undef blocked_input_arg3_i32
 #undef local_368
 #undef local_35c
 #undef local_354
@@ -17337,9 +17337,9 @@ city_change_draw_option_icon(i32 param_1,iptr param_2,int param_3,byte param_4,i
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define improvement (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define unit_type3 (*(iptr *)(frame_ + FRAME_OFF(8)))
 #define local_954 (*(Dialog *)(frame_ + FRAME_OFF(12)))
@@ -17384,14 +17384,14 @@ void __cdecl city_button_change(i32 param_1)
   (*(i8 *)((char *)&local_8 + 0)) = 1;
   dialog_ctor(&local_360,0x4000);
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  iVar3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar3 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar3 == -1) {
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
+    /* inlined unwind funclet 0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
+    /* inlined unwind funclet 0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
+    /* inlined unwind funclet 0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
   }
   else {
     iVar4 = XD_InFlushSendBuffer();
@@ -17404,20 +17404,20 @@ void __cdecl city_button_change(i32 param_1)
           ((civ_check_destroyed_busy == 0 && ((unit_gather_cargo_busy == 0 && (unit_lift_off_map_busy == 0)))))))))) &&
        ((unit_delete_cargo_busy == 0 && (unit_destroy_redraw_busy == 0)))) {
       uVar14 = 0;
-      city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city3 = citywnd_get_city((WindowObjectView *)&city_window);
       city_recalc(city3,uVar14);
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       civ = cities[city2].owner;
       city2 = (int)(char)civ;
       if ((human_civ == city2) || (game.reveal_map != '\0')) {
-        city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+        city5 = citywnd_get_city((WindowObjectView *)&city_window);
         local_658 = (iptr)cities[city5].building;
-        while (city = citywnd_get_city((C_004083b0_4 *)&city_window),
+        while (city = citywnd_get_city((WindowObjectView *)&city_window),
               city != -1) {
           if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
             piVar15 = &improvement;
             piVar13 = &unit_type;
-            city6 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city6 = citywnd_get_city((WindowObjectView *)&city_window);
             city_choose_production(city6,(iptr)piVar13,(iptr)piVar15);
             if (unit_type != 999) {
               text_set_label_arg(0,unit_types[unit_type].name);
@@ -17472,15 +17472,15 @@ void __cdecl city_button_change(i32 param_1)
               dialog_run_modal(&local_360,0,300);
             }
           }
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           text_set_string_arg(0,(iptr)&cities[city].name);
           dialog_load_game_text(&local_654,ADDR(0x630f1c, ((u8 *)&g.d_00630f1c)));
           dialog_set_option_draw_fn((DialogOptionList *)&local_654,ADDR(0x401537, city_change_draw_option_icon));
-          dialog_set_list_indent((C_0040bc40_28 *)&local_654,0x4b,0);
+          dialog_set_list_indent((DialogCore *)&local_654,0x4b,0);
           local_65c = 0;
           for (unit_type = 0; unit_type < 0x3e; unit_type++) {
             city3 = unit_type;
-            city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city4 = citywnd_get_city((WindowObjectView *)&city_window);
             city = civ_can_build_unit(city2,city4,city3);
             if (city != 0) {
               text_clear();
@@ -17489,7 +17489,7 @@ void __cdecl city_button_change(i32 param_1)
               text_append(ADDR(0x630f28, ((u8 *)&g.d_00630f28)));
               text_append_lparen();
               city3 = unit_type;
-              city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city4 = citywnd_get_city((WindowObjectView *)&city_window);
               uVar14 = city_shields_after_change(city4,city3);
               city_text_append_build_turns((int)(char)unit_types[unit_type].cost,uVar14);
               text_append_comma();
@@ -17520,7 +17520,7 @@ void __cdecl city_button_change(i32 param_1)
           }
           for (improvement = 1; improvement < 0x27; improvement++) {
             city3 = improvement;
-            city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city4 = citywnd_get_city((WindowObjectView *)&city_window);
             city = city_can_build_improvement(city2,city4,city3);
             if (city != 0) {
               text_clear();
@@ -17529,7 +17529,7 @@ void __cdecl city_button_change(i32 param_1)
               text_append(ADDR(0x630f3c, ((u8 *)&g.d_00630f3c)));
               text_append_lparen();
               city = -improvement;
-              city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city3 = citywnd_get_city((WindowObjectView *)&city_window);
               uVar14 = city_shields_after_change(city3,city);
               city_text_append_build_turns((uint)improvements[improvement].cost,uVar14);
               text_append_rparen();
@@ -17555,7 +17555,7 @@ void __cdecl city_button_change(i32 param_1)
               text_append(ADDR(0x630f44, ((u8 *)&g.d_00630f44)));
               text_append_lparen();
               city = -improvement;
-              city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city3 = citywnd_get_city((WindowObjectView *)&city_window);
               uVar14 = city_shields_after_change(city3,city);
               city_text_append_build_turns((uint)improvements[improvement].cost,uVar14);
               text_append_rparen();
@@ -17569,13 +17569,13 @@ void __cdecl city_button_change(i32 param_1)
           }
           if ((((*(i8 *)((char *)&game.game_options + 1)) & 0x80) != 0) && (game.multiplayer == '\0')) {
             city3 = label_string(*(i32 *)(label_string_ids + 0x130));
-            dialog_add_button((C_0040bc40_3c *)&local_654,city3);
+            dialog_add_button((DialogButtonsView *)&local_654,city3);
           }
           if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
             if (0xb < local_65c) {
               local_65c = 0xc;
             }
-            dialog_set_position((C_0040bc40_28 *)&local_654,0xfffffc19,0xfffffffb);
+            dialog_set_position((DialogCore *)&local_654,0xfffffc19,0xfffffffb);
           }
           if (local_65c < 0x10) {
             city = local_65c + 1;
@@ -17589,16 +17589,16 @@ void __cdecl city_button_change(i32 param_1)
           unit_type3 = dialog_run_modal(&local_654,0,300);
           city_dlg_close_pending = 0;
           if ((unit_type3 < 0) ||
-             (city = citywnd_get_city((C_004083b0_4 *)&city_window), city == -1
+             (city = citywnd_get_city((WindowObjectView *)&city_window), city == -1
              )) {
 LAB_0050b609:
-            city_window_create_change_button((C_004083b0_12c *)&city_window,1);
+            city_window_create_change_button((ScaledWindowView *)&city_window,1);
             (*(i8 *)((char *)&local_8 + 0)) = 1;
-            /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
+            /* inlined unwind funclet 0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
             local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-            /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
+            /* inlined unwind funclet 0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
+            /* inlined unwind funclet 0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
             goto LAB_0050b666;
           }
           if (((*(i8 *)((char *)&game.game_options + 1)) & 2) != 0) {
@@ -17606,7 +17606,7 @@ LAB_0050b609:
             dialog_close(&local_954);
             ui_flush_input();
           }
-          city = citywnd_get_city((C_004083b0_4 *)&city_window);
+          city = citywnd_get_city((WindowObjectView *)&city_window);
           cities[city].flags = cities[city].flags & 0xfcffffef;
           if (local_654.field_dc == 0) {
             if (unit_type3 < 0x3e) {
@@ -17616,19 +17616,19 @@ LAB_0050b609:
               unit_type2 = -(unit_type3 - 0x3e);
             }
             city3 = unit_type2;
-            city4 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city4 = citywnd_get_city((WindowObjectView *)&city_window);
             local_68 = city_shields_after_change(city4,city3);
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             if ((local_68 < cities[city].shield_box) && ((game.message_options & 0x200) == 0)) {
               text_set_number_arg_u8(0,(uint)CONCAT11((char)(game.message_options >> 8),
                                                   cosmic.change_penalty));
-              city = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city = citywnd_get_city((WindowObjectView *)&city_window);
               if (cities[city].building < '\0') {
-                city = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city = citywnd_get_city((WindowObjectView *)&city_window);
                 text_set_label_arg(0,improvements[-(int)cities[city].building].name);
               }
               else {
-                city = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city = citywnd_get_city((WindowObjectView *)&city_window);
                 text_set_label_arg(0,unit_types[cities[city].building].name);
               }
               if (unit_type2 < 0) {
@@ -17640,27 +17640,27 @@ LAB_0050b609:
               city = popup_game(ADDR(0x630f5c, ((u8 *)&g.d_00630f5c)));
               if (city == 0) goto LAB_0050b5dc;
             }
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             if (-1 < cities[city].building) {
-              city = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city = citywnd_get_city((WindowObjectView *)&city_window);
               pcVar1 = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + city2 * 0x594);
               *pcVar1 = *pcVar1 - 1;
             }
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             cities[city].building = (i8)unit_type2;
-            city = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city = citywnd_get_city((WindowObjectView *)&city_window);
             if (-1 < cities[city].building) {
-              city = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city = citywnd_get_city((WindowObjectView *)&city_window);
               pcVar1 = (char *)(cities[city].building + ADDR(0x64c7f4, ((u8 *)&civs + 340)) + city2 * 0x594);
               *pcVar1 = *pcVar1 + 1;
             }
-            city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city2 = citywnd_get_city((WindowObjectView *)&city_window);
             cities[city2].shield_box = (i16)local_68;
             advisor_refresh_if_open(1);
             advisor_refresh_if_open(2);
 LAB_0050b5dc:
             uVar14 = 1;
-            city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city3 = citywnd_get_city((WindowObjectView *)&city_window);
             city_recalc(city3,uVar14);
             city_window_draw_production((FrameWindow *)&city_window,1);
             city_window_draw_resource_map((FrameWindow *)&city_window,1);
@@ -17669,22 +17669,22 @@ LAB_0050b5dc:
           if (local_654.field_dc == 1) {
             if ((1 << (civ & 0x1f) & (uint)game.human_players) != 0) {
               city_load_citypref();
-              uVar14 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              uVar14 = citywnd_get_city((WindowObjectView *)&city_window);
               unit_type3 = popup_game_with_city_flags(ADDR(0x630f48, ((u8 *)&g.d_00630f48)),1,uVar14);
               if (unit_type3 < 0) goto LAB_0050b609;
-              city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+              city2 = citywnd_get_city((WindowObjectView *)&city_window);
               cities[city2].flags = cities[city2].flags | 0x10;
               if (unit_type3 == 1) {
-                city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city2 = citywnd_get_city((WindowObjectView *)&city_window);
                 cities[city2].flags = cities[city2].flags | 0x1000000;
               }
               if (unit_type3 == 2) {
-                city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city2 = citywnd_get_city((WindowObjectView *)&city_window);
                 cities[city2].flags = cities[city2].flags | 0x2000000;
               }
             }
             uVar14 = 99;
-            city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+            city3 = citywnd_get_city((WindowObjectView *)&city_window);
             city_set_production(city3,uVar14);
             city_window_draw_production((FrameWindow *)&city_window,1);
             goto LAB_0050b609;
@@ -17692,11 +17692,11 @@ LAB_0050b5dc:
           if (local_654.field_dc != 2) {
             if (local_654.field_dc == 3) {
               if (unit_type3 < 0x3e) {
-                city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city2 = citywnd_get_city((WindowObjectView *)&city_window);
                 city2 = (int)cities[city2].y;
-                city7 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city7 = citywnd_get_city((WindowObjectView *)&city_window);
                 city = (int)cities[city7].x;
-                city8 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                city8 = citywnd_get_city((WindowObjectView *)&city_window);
                 unit_create(unit_type3,(int)cities[city8].owner,city,city2);
                 city2 = unit_type3;
               }
@@ -17705,7 +17705,7 @@ LAB_0050b5dc:
                 if (city2 < 0x23) {
                   uVar14 = 1;
                   unit_type3 = city2;
-                  city3 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                  city3 = citywnd_get_city((WindowObjectView *)&city_window);
                   city_set_improvement(city3,city2,uVar14);
                   city2 = unit_type3;
                 }
@@ -17713,14 +17713,14 @@ LAB_0050b5dc:
                   if ((0x22 < city2) && (city2 < 0x26)) {
                     city = unit_type3 - 0x61;
                     unit_type3 = city2;
-                    city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                    city2 = citywnd_get_city((WindowObjectView *)&city_window);
                     spaceship_add_part((int)cities[city2].owner,city);
                     city2 = unit_type3;
                   }
                 }
                 else {
                   unit_type3 -= 0x65;
-                  uVar14 = citywnd_get_city((C_004083b0_4 *)&city_window);
+                  uVar14 = citywnd_get_city((WindowObjectView *)&city_window);
                   game.wonder_city[unit_type3] = (i16)uVar14;
                   city2 = unit_type3;
                 }
@@ -17732,12 +17732,12 @@ LAB_0050b5dc:
             goto LAB_0050b5dc;
           }
           if (unit_type3 < 0x3e) {
-            pedia_show_unit_modal((C_004083b0_a28 *)&pedia_window,unit_type3);
+            pedia_show_unit_modal((DocumentWindow *)&pedia_window,unit_type3);
             local_658 = unit_type3;
           }
           else {
             unit_type3 -= 0x3e;
-            pedia_show_improvement_modal((C_004083b0_a28 *)&pedia_window,unit_type3);
+            pedia_show_improvement_modal((DocumentWindow *)&pedia_window,unit_type3);
             local_658 = -unit_type3;
           }
         }
@@ -17745,34 +17745,34 @@ LAB_0050b5dc:
         dialog_close(&local_954);
         dialog_close(&local_360);
         (*(i8 *)((char *)&local_8 + 0)) = 1;
-        /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
+        /* inlined unwind funclet 0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
         local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-        /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
+        /* inlined unwind funclet 0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
+        /* inlined unwind funclet 0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
       }
       else {
         (*(i8 *)((char *)&local_8 + 0)) = 1;
-        /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
+        /* inlined unwind funclet 0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
         local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-        /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
+        /* inlined unwind funclet 0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
+        /* inlined unwind funclet 0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
       }
     }
     else {
       dbg_log(ADDR(0x630e60, ((u8 *)&g.d_00630e60)));
       blocked_input_kind = 8;
-      _DAT_006c31b0 = citywnd_get_city((C_004083b0_4 *)&city_window);
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
-      _DAT_006c31b4 = (int)cities[city2].owner;
-      _DAT_006c31b8 = param_1;
+      blocked_input_arg1_i32 = citywnd_get_city((WindowObjectView *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
+      blocked_input_arg2_i32 = (int)cities[city2].owner;
+      blocked_input_arg3_i32 = param_1;
       (*(i8 *)((char *)&local_8 + 0)) = 1;
-      /* inlined unwind funclet FUN_0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
+      /* inlined unwind funclet 0050b638 */ { dialog_dtor((Dialog *)((iptr)&local_360)); }
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
+      /* inlined unwind funclet 0050b644 */ { dialog_dtor((Dialog *)((iptr)&local_954)); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
+      /* inlined unwind funclet 0050b650 */ { dialog_dtor((Dialog *)((iptr)&local_654)); }
     }
   }
 LAB_0050b666:
@@ -17801,9 +17801,9 @@ LAB_0050b666:
 #undef unit_stack_bottom_busy
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
-#undef _DAT_006c31b0
-#undef _DAT_006c31b4
-#undef _DAT_006c31b8
+#undef blocked_input_arg1_i32
+#undef blocked_input_arg2_i32
+#undef blocked_input_arg3_i32
 #undef improvement
 #undef unit_type3
 #undef local_954
@@ -17831,10 +17831,10 @@ void __cdecl city_change_idle_autoclose(void)
   int iVar1;
   
   if (((mp_turn_timer_handle != 0) && (mp_turn_seconds_left < 1)) ||
-     (iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window), iVar1 == -1)) {
+     (iVar1 = citywnd_get_city((WindowObjectView *)&city_window), iVar1 == -1)) {
     if (net_host_flag == '\0') {
       dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
-      wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
+      wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
     }
     else if (city_dlg_close_pending == '\0') {
       city_dlg_close_pending = 1;
@@ -17845,7 +17845,7 @@ void __cdecl city_change_idle_autoclose(void)
       if (city_dlg_close_start_ticks + 0x4b0 < iVar1) {
         city_dlg_close_pending = '\0';
         dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
-        wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
+        wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
       }
     }
   }
@@ -17880,9 +17880,9 @@ void __cdecl city_change_idle_autoclose(void)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
 #define local_108 (*(i8 (*)[260])(frame_ + FRAME_OFF(0)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -17895,9 +17895,9 @@ void __cdecl city_button_rename(i32 param_1)
   i8 *puVar4;
   i8 frame_[FRAME_OFF(264)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((iVar1 != -1) &&
-     (city2 = citywnd_get_city((C_004083b0_4 *)&city_window),
+     (city2 = citywnd_get_city((WindowObjectView *)&city_window),
      cities[city2].owner == human_civ)) {
     city = XD_InFlushSendBuffer();
     if (((((city == 0) &&
@@ -17912,14 +17912,14 @@ void __cdecl city_button_rename(i32 param_1)
       city_dlg_close_pending = 0;
       dlg_pending_idle_callback = ((void *)ADDR(0x00402815, city_change_idle_autoclose));
       puVar4 = local_108;
-      city = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city = citywnd_get_city((WindowObjectView *)&city_window);
       city = dlg_game_text_input(ADDR(0x630fb4, ((u8 *)&g.d_00630fb4)),0xf,(iptr)&cities[city].name,(iptr)puVar4);
       if ((city == 0) &&
-         (city = citywnd_get_city((C_004083b0_4 *)&city_window), city != -1)) {
+         (city = citywnd_get_city((WindowObjectView *)&city_window), city != -1)) {
         snd_play_effect(0x68,0,0,0);
         puVar4 = local_108;
-        city = citywnd_get_city((C_004083b0_4 *)&city_window);
-        FUN_005f22d0((iptr)&cities[city].name,puVar4);
+        city = citywnd_get_city((WindowObjectView *)&city_window);
+        crt_strcpy((iptr)&cities[city].name,puVar4);
         city_window_refresh((FrameWindow *)&city_window);
         map_redraw_all_views(human_civ,1);
       }
@@ -17928,10 +17928,10 @@ void __cdecl city_button_rename(i32 param_1)
     else {
       dbg_log(ADDR(0x630f68, ((u8 *)&g.d_00630f68)));
       blocked_input_kind = 10;
-      _DAT_006c31b0 = citywnd_get_city((C_004083b0_4 *)&city_window);
-      city = citywnd_get_city((C_004083b0_4 *)&city_window);
-      _DAT_006c31b4 = (int)cities[city].owner;
-      _DAT_006c31b8 = param_1;
+      blocked_input_arg1_i32 = citywnd_get_city((WindowObjectView *)&city_window);
+      city = citywnd_get_city((WindowObjectView *)&city_window);
+      blocked_input_arg2_i32 = (int)cities[city].owner;
+      blocked_input_arg3_i32 = param_1;
     }
   }
   return;
@@ -17958,9 +17958,9 @@ void __cdecl city_button_rename(i32 param_1)
 #undef unit_stack_bottom_busy
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
-#undef _DAT_006c31b0
-#undef _DAT_006c31b4
-#undef _DAT_006c31b8
+#undef blocked_input_arg1_i32
+#undef blocked_input_arg2_i32
+#undef blocked_input_arg3_i32
 #undef local_108
 
 /* 0050b9a4 auto */
@@ -17972,11 +17972,11 @@ void __cdecl city_button_info(i32 param_1)
   iptr city;
   i32 uVar3;
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar1 != -1) {
     city_info_panel_mode = 0;
     uVar3 = 0;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_recalc(city,uVar3);
     city_window_draw_info_panel((FrameWindow *)&city_window,1);
     snd_play_effect(99,0,0,0);
@@ -17994,11 +17994,11 @@ void __cdecl city_button_map(i32 param_1)
   iptr city;
   i32 uVar3;
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar1 != -1) {
     city_info_panel_mode = 1;
     uVar3 = 0;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_recalc(city,uVar3);
     city_window_draw_info_panel((FrameWindow *)&city_window,1);
     snd_play_effect(99,0,0,0);
@@ -18016,11 +18016,11 @@ void __cdecl city_button_happy(i32 param_1)
   iptr city;
   i32 uVar3;
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar1 != -1) {
     city_info_panel_mode = 2;
     uVar3 = 0;
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
     city_recalc(city,uVar3);
     city_window_draw_info_panel((FrameWindow *)&city_window,1);
     snd_play_effect(99,0,0,0);
@@ -18049,9 +18049,9 @@ void __cdecl city_button_happy(i32 param_1)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl city_button_view(i32 param_1)
@@ -18062,7 +18062,7 @@ void __cdecl city_button_view(i32 param_1)
   int city;
   i32 city2;
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar1 != -1) {
     iVar2 = XD_InFlushSendBuffer();
     if (((((((iVar2 == 0) && (unit_create_busy == 0)) && (unit_delete_busy == 0)) &&
@@ -18073,16 +18073,16 @@ void __cdecl city_button_view(i32 param_1)
          (((civ_eliminate_busy == 0 && (civ_create_busy == 0)) &&
           ((civ_check_destroyed_busy == 0 && ((unit_gather_cargo_busy == 0 && (unit_lift_off_map_busy == 0)))))))) &&
         ((unit_delete_cargo_busy == 0 && (unit_destroy_redraw_busy == 0)))))) {
-      city2 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city2 = citywnd_get_city((WindowObjectView *)&city_window);
       cityview_open(city2);
     }
     else {
       dbg_log(ADDR(0x630fc0, ((u8 *)&g.d_00630fc0)));
       blocked_input_kind = 9;
-      _DAT_006c31b0 = citywnd_get_city((C_004083b0_4 *)&city_window);
-      city = citywnd_get_city((C_004083b0_4 *)&city_window);
-      _DAT_006c31b4 = (int)cities[city].owner;
-      _DAT_006c31b8 = param_1;
+      blocked_input_arg1_i32 = citywnd_get_city((WindowObjectView *)&city_window);
+      city = citywnd_get_city((WindowObjectView *)&city_window);
+      blocked_input_arg2_i32 = (int)cities[city].owner;
+      blocked_input_arg3_i32 = param_1;
     }
   }
   return;
@@ -18106,9 +18106,9 @@ void __cdecl city_button_view(i32 param_1)
 #undef unit_stack_bottom_busy
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
-#undef _DAT_006c31b0
-#undef _DAT_006c31b4
-#undef _DAT_006c31b8
+#undef blocked_input_arg1_i32
+#undef blocked_input_arg2_i32
+#undef blocked_input_arg3_i32
 
 /* 0050bc4f auto */
 #define city_window_exit_requested (*(i32 *)((u8 *)&g.d_00630d18))
@@ -18117,7 +18117,7 @@ void __cdecl city_window_exit_clicked(i32 param_1)
 {
   int iVar1;
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if (iVar1 != -1) {
     snd_play_effect(99,0,0,0);
     if (city_window_open_mode == 2) {
@@ -18145,7 +18145,7 @@ void __cdecl city_window_on_improvement_scroll(i32 param_1)
   
   city_improvement_list_top = param_1;
   uVar2 = 0;
-  city = citywnd_get_city((C_004083b0_4 *)&city_window);
+  city = citywnd_get_city((WindowObjectView *)&city_window);
   city_recalc(city,uVar2);
   city_window_draw_improvements((FrameWindow *)&city_window,1);
   return;
@@ -18168,38 +18168,38 @@ void __cdecl city_button_next_city(i32 param_1)
   int iVar3;
   i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((iVar1 != -1) &&
-     ((city3 = citywnd_get_city((C_004083b0_4 *)&city_window),
+     ((city3 = citywnd_get_city((WindowObjectView *)&city_window),
       cities[city3].owner == human_civ || (game.reveal_map != '\0')))) {
     if (city_turn_processing == 0) {
-      city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city5 = citywnd_get_city((WindowObjectView *)&city_window);
       city4 = -1;
       city2 = city5;
-      FUN_005f22d0(local_60,s__00631008);
-      FUN_005f22d0(local_b4,(iptr)&cities[city2].name);
+      crt_strcpy(local_60,s__00631008);
+      crt_strcpy(local_b4,(iptr)&cities[city2].name);
       for (city = 0; city < game.num_cities; city++) {
         if ((cities[city].id != 0) && (cities[city2].owner == cities[city].owner)) {
           iVar3 = __strcmpi(cities[city].name,local_60);
           if ((0 < iVar3) &&
              (iVar3 = __strcmpi(cities[city].name,cities[city2].name), iVar3 < 0)) {
             city4 = city;
-            FUN_005f22d0(local_60,(iptr)&cities[city].name);
+            crt_strcpy(local_60,(iptr)&cities[city].name);
           }
           iVar3 = __strcmpi(cities[city].name,local_b4);
           if (0 < iVar3) {
             city5 = city;
-            FUN_005f22d0(local_b4,(iptr)&cities[city].name);
+            crt_strcpy(local_b4,(iptr)&cities[city].name);
           }
         }
       }
       if (city4 < 0) {
         if (city2 != city5) {
-          city_window_open((C_004083b0_12c *)&city_window,city5);
+          city_window_open((ScaledWindowView *)&city_window,city5);
         }
       }
       else {
-        city_window_open((C_004083b0_12c *)&city_window,city4);
+        city_window_open((ScaledWindowView *)&city_window,city4);
       }
     }
     else {
@@ -18234,38 +18234,38 @@ void __cdecl city_button_prev_city(i32 param_1)
   int iVar3;
   i8 frame_[FRAME_OFF(184)] __attribute__((aligned(8)));  /* original stack frame */
   
-  iVar1 = citywnd_get_city((C_004083b0_4 *)&city_window);
+  iVar1 = citywnd_get_city((WindowObjectView *)&city_window);
   if ((iVar1 != -1) &&
-     ((city3 = citywnd_get_city((C_004083b0_4 *)&city_window),
+     ((city3 = citywnd_get_city((WindowObjectView *)&city_window),
       cities[city3].owner == human_civ || (game.reveal_map != '\0')))) {
     if (city_turn_processing == 0) {
-      city5 = citywnd_get_city((C_004083b0_4 *)&city_window);
+      city5 = citywnd_get_city((WindowObjectView *)&city_window);
       city4 = -1;
       city2 = city5;
-      FUN_005f22d0(local_60,s_zzzzzzzzzzzzzzzzzzzzzzzzz_00631024);
-      FUN_005f22d0(local_b4,(iptr)&cities[city2].name);
+      crt_strcpy(local_60,s_zzzzzzzzzzzzzzzzzzzzzzzzz_00631024);
+      crt_strcpy(local_b4,(iptr)&cities[city2].name);
       for (city = 0; city < game.num_cities; city++) {
         if ((cities[city].id != 0) && (cities[city2].owner == cities[city].owner)) {
           iVar3 = __strcmpi(cities[city].name,local_60);
           if ((iVar3 < 0) &&
              (iVar3 = __strcmpi(cities[city].name,cities[city2].name), 0 < iVar3)) {
             city4 = city;
-            FUN_005f22d0(local_60,(iptr)&cities[city].name);
+            crt_strcpy(local_60,(iptr)&cities[city].name);
           }
           iVar3 = __strcmpi(cities[city].name,local_b4);
           if (iVar3 < 0) {
             city5 = city;
-            FUN_005f22d0(local_b4,(iptr)&cities[city].name);
+            crt_strcpy(local_b4,(iptr)&cities[city].name);
           }
         }
       }
       if (city4 < 0) {
         if (city5 != city2) {
-          city_window_open((C_004083b0_12c *)&city_window,city5);
+          city_window_open((ScaledWindowView *)&city_window,city5);
         }
       }
       else {
-        city_window_open((C_004083b0_12c *)&city_window,city4);
+        city_window_open((ScaledWindowView *)&city_window,city4);
       }
     }
     else {
@@ -18303,11 +18303,11 @@ void __cdecl city_button_prev_city(i32 param_1)
 #define unit_stack_bottom_busy (*(int *)((u8 *)&g.d_006ad8e0))
 #define unit_stack_link_busy (*(int *)((u8 *)&g.d_006ad8dc))
 #define unit_stack_unlink_busy (*(int *)((u8 *)&g.d_006ad8d8))
-#define _DAT_006c31b0 (*(i32 *)((u8 *)&g.d_006c31b0))
-#define _DAT_006c31b4 (*(i32 *)((u8 *)&g.d_006c31b4))
-#define _DAT_006c31b8 (*(i32 *)((u8 *)&g.d_006c31b8))
-#define _DAT_006c31bc (*(i32 *)((u8 *)&g.d_006c31bc))
-#define _DAT_006c31c0 (*(i32 *)((u8 *)&g.d_006c31c0))
+#define blocked_input_arg1_i32 (*(i32 *)((u8 *)&g.d_006c31b0))
+#define blocked_input_arg2_i32 (*(i32 *)((u8 *)&g.d_006c31b4))
+#define blocked_input_arg3_i32 (*(i32 *)((u8 *)&g.d_006c31b8))
+#define blocked_input_arg4_i32 (*(i32 *)((u8 *)&g.d_006c31bc))
+#define blocked_input_arg5_i32 (*(i32 *)((u8 *)&g.d_006c31c0))
 #define unit (*(int *)(frame_ + FRAME_OFF(0)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
@@ -18355,12 +18355,12 @@ void __cdecl city_window_on_mouse(i32 param_1,i32 param_2,i32 param_3)
   else {
     dbg_log(ADDR(0x631040, ((u8 *)&g.d_00631040)));
     blocked_input_kind = 6;
-    _DAT_006c31b0 = citywnd_get_city((C_004083b0_4 *)&city_window);
-    city = citywnd_get_city((C_004083b0_4 *)&city_window);
-    _DAT_006c31b4 = (int)cities[city].owner;
-    _DAT_006c31b8 = param_1;
-    _DAT_006c31bc = param_2;
-    _DAT_006c31c0 = param_3;
+    blocked_input_arg1_i32 = citywnd_get_city((WindowObjectView *)&city_window);
+    city = citywnd_get_city((WindowObjectView *)&city_window);
+    blocked_input_arg2_i32 = (int)cities[city].owner;
+    blocked_input_arg3_i32 = param_1;
+    blocked_input_arg4_i32 = param_2;
+    blocked_input_arg5_i32 = param_3;
   }
   return;
 }
@@ -18383,11 +18383,11 @@ void __cdecl city_window_on_mouse(i32 param_1,i32 param_2,i32 param_3)
 #undef unit_stack_bottom_busy
 #undef unit_stack_link_busy
 #undef unit_stack_unlink_busy
-#undef _DAT_006c31b0
-#undef _DAT_006c31b4
-#undef _DAT_006c31b8
-#undef _DAT_006c31bc
-#undef _DAT_006c31c0
+#undef blocked_input_arg1_i32
+#undef blocked_input_arg2_i32
+#undef blocked_input_arg3_i32
+#undef blocked_input_arg4_i32
+#undef blocked_input_arg5_i32
 #undef unit
 #undef local_c
 #undef local_8
@@ -18409,7 +18409,7 @@ void __cdecl city_window_on_rbuttonup(i32 param_1,i32 param_2)
 }
 
 /* 0050c449 auto */
-void __thiscall city_window_close_if_city(C_004083b0_4 *this,iptr param_1)
+void __thiscall city_window_close_if_city(WindowObjectView *this,iptr param_1)
 
 {
   if (((int)this[0x567].field_0 <= param_1) && (param_1 <= (int)this[0x567].field_0)) {
@@ -18443,7 +18443,7 @@ city_window_on_unit_change(FrameWindow *this,iptr unit,iptr param_2,iptr param_3
       if ((uint)(byte)units[unit].home_city == *(uint *)(this[7].pad_15c + 4)) {
         city_recalc(*(iptr *)(this[7].pad_15c + 4),1);
         city_window_draw_supported_units(this,1);
-        city_window_recalc_redraw((C_004083b0_4 *)this,0);
+        city_window_recalc_redraw((WindowObjectView *)this,0);
       }
     }
   }
@@ -18463,7 +18463,7 @@ void __thiscall city_window_refresh_if_city(FrameWindow *this,iptr param_1)
 }
 
 /* 0050c6ef auto */
-void __thiscall city_window_refresh_if_near(C_004083b0_4 *this,i32 param_1,i32 param_2)
+void __thiscall city_window_refresh_if_near(WindowObjectView *this,i32 param_1,i32 param_2)
 
 {
   int iVar1;
@@ -18478,7 +18478,7 @@ void __thiscall city_window_refresh_if_near(C_004083b0_4 *this,i32 param_1,i32 p
 }
 
 /* 0050c7a3 auto */
-void __thiscall city_window_clear_controls(C_004083b0_4 *this)
+void __thiscall city_window_clear_controls(WindowObjectView *this)
 
 {
   this[0x5ad].field_0 = 0;
@@ -18495,7 +18495,7 @@ void __thiscall city_window_clear_controls(C_004083b0_4 *this)
 }
 
 /* 0050c859 auto */
-void __thiscall city_window_destroy_controls(C_004083b0_4 *this)
+void __thiscall city_window_destroy_controls(WindowObjectView *this)
 
 {
   if (this[0x5ad].field_0 != 0) {
@@ -18527,11 +18527,11 @@ void __thiscall city_window_destroy_controls(C_004083b0_4 *this)
       }
       this[0x5af].field_0 = 0;
     }
-    if ((C_00511560 *)this[0x5b5].field_0 != (C_00511560 *)0x0) {
-      spritebtn_scalar_dtor((C_00511560 *)this[0x5b5].field_0,1);
+    if ((SpriteButtonCore *)this[0x5b5].field_0 != (SpriteButtonCore *)0x0) {
+      spritebtn_scalar_dtor((SpriteButtonCore *)this[0x5b5].field_0,1);
     }
-    if ((C_00511560 *)this[0x5b6].field_0 != (C_00511560 *)0x0) {
-      spritebtn_scalar_dtor((C_00511560 *)this[0x5b6].field_0,1);
+    if ((SpriteButtonCore *)this[0x5b6].field_0 != (SpriteButtonCore *)0x0) {
+      spritebtn_scalar_dtor((SpriteButtonCore *)this[0x5b6].field_0,1);
     }
     if ((Control *)this[0x5b7].field_0 != (Control *)0x0) {
       scrollbar_scalar_dtor((Control *)this[0x5b7].field_0,1);
@@ -18549,7 +18549,7 @@ void __thiscall city_window_destroy_controls(C_004083b0_4 *this)
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(40)))
 /* WARNING: Removing unreachable block (ram,0x0050cc02) */
 
-void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
+void __thiscall city_window_create_exit_button(ScaledWindowView *this,int param_1)
 
 {
   Control *this_00;
@@ -18581,16 +18581,16 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
   local_8 = 0xffffffff;
   *(i32 *)(this[0x13].pad_48 + 0x30) = local_30;
   ui_set_button_font((iptr)(this[0x13].pad_48 + 0x20));
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
-  iVar2 = city_window_scale((C_004083b0_4 *)this,0x39);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0x16c);
+  iVar1 = city_window_scale((WindowObjectView *)this,0x18);
+  iVar2 = city_window_scale((WindowObjectView *)this,0x39);
+  iVar3 = city_window_scale((WindowObjectView *)this,0x16c);
   iVar5 = *(int *)(this[0x12].pad_48 + 0x68) + iVar3 + this->client_y;
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0x1cb);
+  iVar3 = city_window_scale((WindowObjectView *)this,0x1cb);
   rect_set_xywh((iptr)local_20,this->client_x + iVar3 + *(int *)(this[0x12].pad_48 + 100),
                      iVar5,iVar2,iVar1);
-  uVar4 = city_window_scale((C_004083b0_4 *)this,0x19);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0x3a);
-  iVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
+  uVar4 = city_window_scale((WindowObjectView *)this,0x19);
+  iVar3 = city_window_scale((WindowObjectView *)this,0x3a);
+  iVar5 = city_window_scale((WindowObjectView *)this,0x3a);
   rect_offset((iptr)local_20,iVar3 + iVar5,uVar4);
   iVar1 = label_string(*(i32 *)
                               (label_string_ids + 0x94 +
@@ -18620,7 +18620,7 @@ void __thiscall city_window_create_exit_button(C_004083b0_12c *this,int param_1)
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(56)))
 /* WARNING: Removing unreachable block (ram,0x0050ce6a) */
 
-void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_1)
+void __thiscall city_window_create_change_button(ScaledWindowView *this,int param_1)
 
 {
   int iVar1;
@@ -18663,14 +18663,14 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
     uVar2 = this->client_x;
     uVar3 = this->client_y;
     iVar7 = *(int *)(this[0x12].pad_48 + 0x68);
-    iVar4 = city_window_scale((C_004083b0_4 *)this,0x18);
-    iVar5 = city_window_scale((C_004083b0_4 *)this,0x44);
-    iVar6 = city_window_scale((C_004083b0_4 *)this,0xb5);
+    iVar4 = city_window_scale((WindowObjectView *)this,0x18);
+    iVar5 = city_window_scale((WindowObjectView *)this,0x44);
+    iVar6 = city_window_scale((WindowObjectView *)this,0xb5);
     iVar6 = uVar3 + iVar7 + iVar6;
-    iVar7 = city_window_scale((C_004083b0_4 *)this,0x1ba);
+    iVar7 = city_window_scale((WindowObjectView *)this,0x1ba);
     rect_set_xywh((iptr)local_24,iVar1 + uVar2 + iVar7,iVar6,iVar5,iVar4);
     uVar9 = 0;
-    uVar8 = city_window_scale((C_004083b0_4 *)this,0x73);
+    uVar8 = city_window_scale((WindowObjectView *)this,0x73);
     rect_offset((iptr)local_24,uVar8,uVar9);
     iVar4 = label_string(*(i32 *)
                                 (label_string_ids + 0x510 +
@@ -18734,7 +18734,7 @@ void __thiscall city_window_create_change_button(C_004083b0_12c *this,int param_
 /* WARNING: Removing unreachable block (ram,0x0050d6f6) */
 /* WARNING: Removing unreachable block (ram,0x0050d871) */
 
-void __thiscall city_window_create_controls(C_004083b0_12c *this)
+void __thiscall city_window_create_controls(ScaledWindowView *this)
 
 {
   iptr iVar1;
@@ -18750,7 +18750,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   
   local_8 = 0xffffffff;
   wnd_set_keyboard_nav((Wnd *)this->pad_48,0);
-  city_window_destroy_controls((C_004083b0_4 *)this);
+  city_window_destroy_controls((WindowObjectView *)this);
   local_34 = operator_new(0x3c);
   local_8 = 0;
   if (local_34 == (Control *)0x0) {
@@ -18855,11 +18855,11 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   local_2c = this->client_y + *(int *)(this[0x12].pad_48 + 0x68);
   ui_set_button_font((iptr)(this[0x13].pad_48 + 0x20));
   city_window_create_exit_button(this,0);
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
-  iVar2 = city_window_scale((C_004083b0_4 *)this,0x44);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0xb5);
+  iVar1 = city_window_scale((WindowObjectView *)this,0x18);
+  iVar2 = city_window_scale((WindowObjectView *)this,0x44);
+  iVar3 = city_window_scale((WindowObjectView *)this,0xb5);
   iVar3 = local_2c + iVar3;
-  iVar4 = city_window_scale((C_004083b0_4 *)this,0x1ba);
+  iVar4 = city_window_scale((WindowObjectView *)this,0x1ba);
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0x8c));
   button_create
@@ -18867,76 +18867,76 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x28),ADDR(0x402c57, city_button_buy));
   city_change_button_variant = 0xff;
   city_window_create_change_button(this,0);
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
-  iVar2 = city_window_scale((C_004083b0_4 *)this,0x15);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0x16c);
+  iVar1 = city_window_scale((WindowObjectView *)this,0x18);
+  iVar2 = city_window_scale((WindowObjectView *)this,0x15);
+  iVar3 = city_window_scale((WindowObjectView *)this,0x16c);
   iVar3 = local_2c + iVar3;
-  iVar4 = city_window_scale((C_004083b0_4 *)this,0x1b5);
+  iVar4 = city_window_scale((WindowObjectView *)this,0x1b5);
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
   local_23 = 0;
   local_24 = 0x5e;
   spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),9,*(i32 *)(this[0x13].pad_48 + 0x48),ADDR(0x644770, ((u8 *)&g.d_00644770)),(iptr)local_20);
-  spritebtn_set_click_handler(*(C_005117f0 **)(this[0x13].pad_48 + 0x48),ADDR(0x40370b, city_button_prev_city));
-  uVar5 = city_window_scale((C_004083b0_4 *)this,0x19);
+  spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)(this[0x13].pad_48 + 0x48),ADDR(0x40370b, city_button_prev_city));
+  uVar5 = city_window_scale((WindowObjectView *)this,0x19);
   rect_offset((iptr)local_20,0,uVar5);
   local_24 = 0x76;
   spritebtn_create_icon_button(ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),10,*(i32 *)(this[0x13].pad_48 + 0x4c),ADDR(0x6480d8, ((u8 *)&g.d_006480d8)),(iptr)local_20);
-  spritebtn_set_click_handler(*(C_005117f0 **)(this[0x13].pad_48 + 0x4c),ADDR(0x402964, city_button_next_city));
-  iVar1 = city_window_scale((C_004083b0_4 *)this,0x18);
-  iVar2 = city_window_scale((C_004083b0_4 *)this,0x39);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0x16c);
+  spritebtn_set_click_handler(*(SpritebtnSetClickHandlerView **)(this[0x13].pad_48 + 0x4c),ADDR(0x402964, city_button_next_city));
+  iVar1 = city_window_scale((WindowObjectView *)this,0x18);
+  iVar2 = city_window_scale((WindowObjectView *)this,0x39);
+  iVar3 = city_window_scale((WindowObjectView *)this,0x16c);
   iVar3 = local_2c + iVar3;
-  iVar4 = city_window_scale((C_004083b0_4 *)this,0x1cb);
+  iVar4 = city_window_scale((WindowObjectView *)this,0x1cb);
   rect_set_xywh((iptr)local_20,local_28 + iVar4,iVar3,iVar2,iVar1);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0x9c));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x38),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),3,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x38),ADDR(0x402482, city_button_info));
   uVar9 = 0;
-  uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
+  uVar5 = city_window_scale((WindowObjectView *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0xa4));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x40),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),4,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x40),ADDR(0x401217, city_button_map));
   uVar9 = 0;
-  uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
+  uVar5 = city_window_scale((WindowObjectView *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0xa8));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x44),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),5,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x44),ADDR(0x401e97, city_button_rename));
-  uVar5 = city_window_scale((C_004083b0_4 *)this,0x19);
-  iVar3 = city_window_scale((C_004083b0_4 *)this,0xffffffc6);
-  iVar4 = city_window_scale((C_004083b0_4 *)this,0xffffffc6);
+  uVar5 = city_window_scale((WindowObjectView *)this,0x19);
+  iVar3 = city_window_scale((WindowObjectView *)this,0xffffffc6);
+  iVar4 = city_window_scale((WindowObjectView *)this,0xffffffc6);
   rect_offset((iptr)local_20,iVar3 + iVar4,uVar5);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0xa0));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x3c),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),6,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x3c),ADDR(0x40304e, city_button_happy));
   uVar9 = 0;
-  uVar5 = city_window_scale((C_004083b0_4 *)this,0x3a);
+  uVar5 = city_window_scale((WindowObjectView *)this,0x3a);
   rect_offset((iptr)local_20,uVar5,uVar9);
   iVar1 = label_string(*(i32 *)(label_string_ids + 0x98));
   button_create
             (*(Control **)(this[0x13].pad_48 + 0x34),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),7,(iptr)local_20,iVar1);
   button_set_callback(*(Control **)(this[0x13].pad_48 + 0x34),ADDR(0x402ec3, city_button_view));
   local_30 = GetSystemMetrics(2);
-  iVar4 = city_window_scale((C_004083b0_4 *)this,0x83);
+  iVar4 = city_window_scale((WindowObjectView *)this,0x83);
   iVar4 -= 2;
   iVar3 = local_30;
-  iVar6 = city_window_scale((C_004083b0_4 *)this,0x122);
+  iVar6 = city_window_scale((WindowObjectView *)this,0x122);
   iVar8 = local_2c + iVar6 + 1;
-  iVar6 = city_window_scale((C_004083b0_4 *)this,0xc0);
-  iVar7 = city_window_scale((C_004083b0_4 *)this,0);
+  iVar6 = city_window_scale((WindowObjectView *)this,0xc0);
+  iVar7 = city_window_scale((WindowObjectView *)this,0);
   rect_set_xywh((iptr)(this[0x13].pad_48 + 0x10),(iVar6 + iVar7 + local_28) - (local_30 + 1),
                      iVar8,iVar3,iVar4);
   scrollbar_create
             (*(Control **)(this[0x13].pad_48 + 0x50),ADDR(0x6a9200, ((u8 *)&g.d_006a9200)),99,
              (iptr)(this[0x13].pad_48 + 0x10),1);
   iVar3 = rect_height((iptr)&this[0x13].field_28);
-  iVar4 = city_window_scale((C_004083b0_4 *)this,1);
-  iVar6 = city_window_scale((C_004083b0_4 *)this,0xc);
+  iVar4 = city_window_scale((WindowObjectView *)this,1);
+  iVar6 = city_window_scale((WindowObjectView *)this,0xc);
   scrollbar_set_page_size
             (*(Control **)(this[0x13].pad_48 + 0x50),(iVar3 - (iVar4 >> 1)) / iVar6);
   scrollbar_set_callback(*(Control **)(this[0x13].pad_48 + 0x50),ADDR(0x402f4f, city_window_on_improvement_scroll));
@@ -19005,7 +19005,7 @@ void __thiscall city_window_create_controls(C_004083b0_12c *this)
 
 /* 0050dada auto */
 #define city_window_exit_btn_pending (*(i8 *)((u8 *)&g.d_00630d20))
-void __thiscall city_window_begin_notice(C_004083b0_4 *this)
+void __thiscall city_window_begin_notice(WindowObjectView *this)
 
 {
   if (this[0x569].field_0 == 0) {
@@ -19023,7 +19023,7 @@ void __thiscall city_window_begin_notice(C_004083b0_4 *this)
 
 /* 0050db36 auto */
 #define city_window_exit_btn_pending (*(i8 *)((u8 *)&g.d_00630d20))
-void __thiscall city_window_end_notice(C_004083b0_12c *this)
+void __thiscall city_window_end_notice(ScaledWindowView *this)
 
 {
   int iVar1;
@@ -19133,21 +19133,21 @@ void __thiscall city_window_create(FrameWindow *this)
   frame_wnd_create(this,uVar3,uVar4,uVar5,uVar6,iVar2,iVar1,uVar7,uVar8,uVar9);
   frame_wnd_set_title_font(this,ADDR(0x6aa898, ((u8 *)&g.d_006aa898)));
   frame_wnd_set_title_small_font(this,ADDR(0x6a9168, ((u8 *)&g.d_006a9168)));
-  frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
-  frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x648820, ((u8 *)&g.d_00648820)),2);
-  frame_wnd_add_caption_button((C_004083b0_208 *)this,ADDR(0x647788, ((u8 *)&g.d_00647788)),3);
+  frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x645120, ((u8 *)&g.d_00645120)),1);
+  frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x648820, ((u8 *)&g.d_00648820)),2);
+  frame_wnd_add_caption_button((PortraitDialog *)this,ADDR(0x647788, ((u8 *)&g.d_00647788)),3);
   wnd_set_caption_button_handler(this,ADDR(0x40205e, city_window_on_caption_button));
-  city_window_clear_controls((C_004083b0_4 *)this);
-  wnd_set_close_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401bae, city_window_close));
+  city_window_clear_controls((WindowObjectView *)this);
+  wnd_set_close_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401bae, city_window_close));
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x402abd, city_window_on_redraw));
-  wnd_set_minimize_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4014ec, city_window_on_minimize));
-  wnd_set_restore_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401780, city_window_on_restore));
-  wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4031ac, city_window_on_lbuttonup));
-  wnd_set_rbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x4021c6, city_window_on_rbuttonup));
-  wnd_set_keydown_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x402cd4, map_window_key));
-  wnd_set_char_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401e56, map_window_ascii));
-  wnd_set_size_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x401d7a, city_window_on_size));
-  wnd_set_move_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403bbb, city_window_on_move));
+  wnd_set_minimize_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4014ec, city_window_on_minimize));
+  wnd_set_restore_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401780, city_window_on_restore));
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4031ac, city_window_on_lbuttonup));
+  wnd_set_rbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x4021c6, city_window_on_rbuttonup));
+  wnd_set_keydown_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x402cd4, map_window_key));
+  wnd_set_char_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401e56, map_window_ascii));
+  wnd_set_size_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x401d7a, city_window_on_size));
+  wnd_set_move_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x403bbb, city_window_on_move));
   return;
 }
 #undef saved_layout_valid
@@ -19158,7 +19158,7 @@ void __thiscall city_window_destroy(DibSurface *this)
 
 {
   this[0x4c].field_40 = 1;
-  city_window_destroy_controls((C_004083b0_4 *)this);
+  city_window_destroy_controls((WindowObjectView *)this);
   wnd_destroy_with_surface(this);
   return;
 }
@@ -19197,7 +19197,7 @@ city_window_draw_icon_row(iptr param_1,i32 param_2,i32 param_3,i32 param_4,
 #undef gfx_draw_target
 
 /* 00511690 auto */
-int __thiscall city_window_scale(C_004083b0_4 *this,int param_1)
+int __thiscall city_window_scale(WindowObjectView *this,int param_1)
 
 {
   if (this[0x575].field_0 != 2) {
@@ -19313,7 +19313,7 @@ void __cdecl city_capture_aftermath(uptr city,iptr civ,int param_3)
     diplo_force_war(civ,civ2);
   }
   local_7c = (uint)(cities[city].founder == civ);
-  FUN_005f22d0(local_6c,(iptr)&cities[city].name);
+  crt_strcpy(local_6c,(iptr)&cities[city].name);
   if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) ||
       ((1 << ((byte)civ2 & 0x1f) & (uint)game.human_players) != 0)) &&
      (((iVar8 = civ_spaceship_launched(civ2), iVar8 == 0 &&
@@ -19868,9 +19868,9 @@ LAB_0057d7a9:
   }
   net_batch_flush();
   city_turn_processing = 1;
-  city_window_begin_notice((C_004083b0_4 *)&city_window);
-  city_window_open((C_004083b0_12c *)&city_window,city);
-  city_window_end_notice((C_004083b0_12c *)&city_window);
+  city_window_begin_notice((WindowObjectView *)&city_window);
+  city_window_open((ScaledWindowView *)&city_window,city);
+  city_window_end_notice((ScaledWindowView *)&city_window);
   city_turn_processing = 0;
 LAB_0057da76:
   improvement2 = civ_check_destroyed(civ2,civ);
@@ -20023,7 +20023,7 @@ LAB_0057da76:
     XD_FlushSendBuffer(5000);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0057e29f */ { dialog_dtor((Dialog *)((iptr)&local_38c)); }
+  /* inlined unwind funclet 0057e29f */ { dialog_dtor((Dialog *)((iptr)&local_38c)); }
   return;
 }
 #undef autoplay_active

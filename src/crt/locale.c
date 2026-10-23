@@ -245,7 +245,7 @@ BOOL __cdecl ___crtGetStringTypeW(DWORD type, LPCWSTR src, int cchSrc, LPWORD ch
     if (wtype[cchSrc - 1] == 0xffff || wtype[cchSrc] != 0xffff)
         ret = 0;
     else
-        FUN_005f6500(chartype, wtype, cchSrc * 2);
+        crt_memmove(chartype, wtype, cchSrc * 2);
 done:
     __free_dbg(abuf, 2);
     __free_dbg(wtype, 2);
@@ -474,7 +474,7 @@ int __cdecl __isctype(int c, int mask)
 }
 
 /* 0x005f2700: toupper(c) */
-uint __cdecl FUN_005f2700(uint c)
+uint __cdecl crt_toupper(uint c)
 {
     int is_lower;
     char in[3];
@@ -567,7 +567,7 @@ static char *map_string(char *string, DWORD map, char lo, char hi, int delta, ch
     size = ___crtLCMapStringA(g_lc_ctype_handle, map, string, -1, NULL, 0, 0);
     if (size != 0 && (dst = (char *)__malloc_dbg(size, 2, file, line)) != NULL &&
         ___crtLCMapStringA(g_lc_ctype_handle, map, string, -1, dst, size, 0) != 0)
-        FUN_005f22d0(string, dst);
+        crt_strcpy(string, dst);
     __free_dbg(dst, 2);
     return string;
 }

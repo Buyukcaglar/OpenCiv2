@@ -30,7 +30,7 @@ void __cdecl net_wait_player_info_idle(void)
   net_process_messages((NetSession *)&net_session,1,0);
   if ((nm_player_info_count != 0) || (nm_client_canceled_start_count != 0)) {
     dialog_stack_top[0xf] = dialog_stack_top[0xf] | 0x400;
-    wnd_end_modal_loop((C_00408010_b8 *)(*dialog_stack_top + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(*dialog_stack_top + 0x48));
   }
   return;
 }

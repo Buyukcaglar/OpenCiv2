@@ -15,7 +15,7 @@ void __cdecl text_clear(void)
 void __cdecl text_append(iptr param_1)
 
 {
-  FUN_005f22e0(&text_buffer,param_1);
+  crt_strcat(&text_buffer,param_1);
   return;
 }
 #undef text_buffer
@@ -90,7 +90,7 @@ i32 __cdecl text_set_string_arg(iptr param_1,iptr param_2)
 {
   i32 uVar1;
   
-  uVar1 = FUN_005f22d0(&text_string_args + param_1 * 0x104,param_2);
+  uVar1 = crt_strcpy(&text_string_args + param_1 * 0x104,param_2);
   return uVar1;
 }
 
@@ -106,8 +106,8 @@ void __cdecl text_append_str(iptr param_1)
 iptr __cdecl file_build_open_path(iptr param_1,i32 param_2)
 
 {
-  if (DAT_00625114 == '\0') {
-    FUN_005f22d0(param_1,param_2);
+  if (file_path_mode == '\0') {
+    crt_strcpy(param_1,param_2);
   }
   else {
     path_join_upper(param_1,ADDR(0x6250d8, ((u8 *)&g.d_006250d8)),param_2);
@@ -125,7 +125,7 @@ FILE * __cdecl file_open_path(iptr param_1,iptr param_2)
   i8 frame_[FRAME_OFF(144)] __attribute__((aligned(8)));  /* original stack frame */
   
   file_build_open_path((iptr)local_8c,param_1);
-  FUN_005f22d0(&error_last_open_path,local_8c);
+  crt_strcpy(&error_last_open_path,local_8c);
   pFVar1 = _fopen(local_8c,(char *)param_2);
   error_last_open_failed = (uint)(pFVar1 == (FILE *)0x0);
   return pFVar1;
@@ -229,7 +229,7 @@ i32 __cdecl text_set_string_arg_b(int param_1,iptr param_2)
 {
   i32 uVar1;
   
-  uVar1 = FUN_005f22d0(&text_string_args + param_1 * 0x104,param_2);
+  uVar1 = crt_strcpy(&text_string_args + param_1 * 0x104,param_2);
   return uVar1;
 }
 
@@ -268,7 +268,7 @@ void __cdecl text_expand_vars(iptr param_1,iptr param_2)
       *pcVar1 = '\0';
     }
     if (*(char *)param_1 != '\0') {
-      FUN_005f22e0(param_2,param_1);
+      crt_strcat(param_2,param_1);
     }
     local_34 = pcVar1;
     if (pcVar1 != (char *)0x0) {
@@ -276,7 +276,7 @@ void __cdecl text_expand_vars(iptr param_1,iptr param_2)
       iVar2 = __strnicmp(local_34,s_STRING_00625e40,6);
       if (iVar2 == 0) {
         iVar2 = _atoi(pcVar1 + 7);
-        FUN_005f22e0(param_2,&text_string_args + iVar2 * 0x104);
+        crt_strcat(param_2,&text_string_args + iVar2 * 0x104);
         param_1 = (iptr)(pcVar1 + 8);
         if (9 < iVar2) {
           param_1 = (iptr)(pcVar1 + 9);
@@ -287,7 +287,7 @@ void __cdecl text_expand_vars(iptr param_1,iptr param_2)
         if (iVar2 == 0) {
           iVar2 = _atoi(pcVar1 + 7);
           __ltoa(*(long *)(&text_number_args + iVar2 * 4),local_2c,10);
-          FUN_005f22e0(param_2,local_2c);
+          crt_strcat(param_2,local_2c);
           param_1 = (iptr)(pcVar1 + 8);
         }
         else {
@@ -297,15 +297,15 @@ void __cdecl text_expand_vars(iptr param_1,iptr param_2)
             __ltoa(*(long *)(&text_number_args + iVar2 * 4),local_2c,0x10);
             for (local_30 = 0; sVar3 = _strlen(local_2c), local_30 < 4 - sVar3;
                 local_30 = local_30 + 1) {
-              FUN_005f22e0(param_2,&text_var_hex_pad_str);
+              crt_strcat(param_2,&text_var_hex_pad_str);
             }
-            FUN_005f22e0(param_2,local_2c);
+            crt_strcat(param_2,local_2c);
             param_1 = (iptr)(pcVar1 + 5);
           }
           else {
             param_1 = (iptr)local_34;
             if (*local_34 == '%') {
-              FUN_005f22e0(param_2,&text_var_percent_str);
+              crt_strcat(param_2,&text_var_percent_str);
               param_1 = (iptr)(pcVar1 + 2);
             }
           }
@@ -389,7 +389,7 @@ int __cdecl strpool_add(iptr param_1)
   else {
     sVar1 = _strlen((char *)param_1);
     strpool_last_string = memblock_alloc(ADDR(0x63e4c0, ((u8 *)&g.d_0063e4c0)),sVar1 + 1);
-    FUN_005f22d0(strpool_last_string,param_1);
+    crt_strcpy(strpool_last_string,param_1);
     iVar2 = strpool_count;
     strpool_count++;
   }
@@ -475,7 +475,7 @@ void __cdecl text_append_period(void)
 void __cdecl str_append(iptr param_1,iptr param_2)
 
 {
-  FUN_005f22e0(param_1,param_2);
+  crt_strcat(param_1,param_2);
   return;
 }
 
@@ -526,14 +526,14 @@ void __cdecl str_append_population(iptr param_1,iptr civ,int param_3)
   }
   if (99 < local_8) {
     str_append_int(param_1,local_8 / 100);
-    FUN_005f22e0(param_1,&pop_thousands_sep_str);
+    crt_strcat(param_1,&pop_thousands_sep_str);
     local_8 = local_8 % 100;
     if (local_8 < 10) {
-      FUN_005f22e0(param_1,&pop_zero_pad_str);
+      crt_strcat(param_1,&pop_zero_pad_str);
     }
   }
   str_append_int(param_1,local_8);
-  FUN_005f22e0(param_1,s_0_000_00626240);
+  crt_strcat(param_1,s_0_000_00626240);
   return;
 }
 #undef local_8
@@ -548,14 +548,14 @@ void __cdecl str_append_city_population(iptr param_1,iptr city)
   local_8 = city_population_units(city);
   if (99 < local_8) {
     str_append_int(param_1,local_8 / 100);
-    FUN_005f22e0(param_1,&city_pop_thousands_sep_str);
+    crt_strcat(param_1,&city_pop_thousands_sep_str);
     local_8 = local_8 % 100;
     if (local_8 < 10) {
-      FUN_005f22e0(param_1,&city_pop_zero_pad_str);
+      crt_strcat(param_1,&city_pop_zero_pad_str);
     }
   }
   str_append_int(param_1,local_8);
-  FUN_005f22e0(param_1,s_0_000_00626250);
+  crt_strcat(param_1,s_0_000_00626250);
   return;
 }
 #undef local_8
@@ -664,8 +664,8 @@ int __cdecl labels_load(void)
           *(i32 *)(label_string_ids + local_c * 4) = uVar2;
         }
         if (local_c < 0x378) {
-          FUN_005f22d0(local_110,&scenario_dir_path);
-          FUN_005f22d0(&scenario_dir_path,&game_home_dir);
+          crt_strcpy(local_110,&scenario_dir_path);
+          crt_strcpy(&scenario_dir_path,&game_home_dir);
           iVar1 = text_open_section(ADDR(0x628440, ((u8 *)&g.d_00628440)),ADDR(0x628438, ((u8 *)&g.d_00628438)));
           if (iVar1 == 0) {
             text_read_line(1);
@@ -678,7 +678,7 @@ int __cdecl labels_load(void)
               *(i32 *)(label_string_ids + local_c * 4) = uVar2;
             }
           }
-          FUN_005f22d0(&scenario_dir_path,local_110);
+          crt_strcpy(&scenario_dir_path,local_110);
           if (local_c < 0x378) {
             uVar2 = strpool_add(ADDR(0x628448, ((u8 *)&g.d_00628448)));
             for (; local_c < 0x378; local_c++) {
@@ -719,7 +719,7 @@ int __cdecl str_parse_hex(iptr param_1)
   while (*(char *)param_1 != '\0') {
     cVar1 = *(char *)param_1;
     param_1++;
-    _C = FUN_005f2700((int)cVar1);
+    _C = crt_toupper((int)cVar1);
     iVar2 = _isdigit(_C);
     if (iVar2 == 0) {
       if ((_C < 0x41) || (0x46 < _C)) {
@@ -898,7 +898,7 @@ int __cdecl text_open_file_section(int param_1,int param_2)
   if (param_2 != 0) {
     local_264[0] = '@';
     local_264[1] = 0;
-    FUN_005f22e0(local_264,param_2);
+    crt_strcat(local_264,param_2);
     __strupr(local_264);
   }
   if (param_1 == 0) {
@@ -906,7 +906,7 @@ int __cdecl text_open_file_section(int param_1,int param_2)
   }
   else {
     text_close_file();
-    FUN_005f22d0(name2,param_1);
+    crt_strcpy(name2,param_1);
     path_default_extension((iptr)name2,ADDR(0x62cd24, ((u8 *)&g.d_0062cd24)));
     __getcwd(local_10c,0x104);
     __chdir(&scenario_dir_path);
@@ -976,10 +976,10 @@ int __cdecl text_open_section(iptr param_1,iptr param_2)
   
   local_8 = text_open_file_section(param_1,param_2);
   if (local_8 != 0) {
-    FUN_005f22d0(local_10c,&scenario_dir_path);
-    FUN_005f22d0(&scenario_dir_path,&game_home_dir);
+    crt_strcpy(local_10c,&scenario_dir_path);
+    crt_strcpy(&scenario_dir_path,&game_home_dir);
     local_8 = text_open_file_section(param_1,param_2);
-    FUN_005f22d0(&scenario_dir_path,local_10c);
+    crt_strcpy(&scenario_dir_path,local_10c);
   }
   return local_8;
 }
@@ -1145,7 +1145,7 @@ iptr __cdecl str_clear(iptr param_1)
 void __cdecl str_append_space(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_space_str);
+  crt_strcat(param_1,&append_space_str);
   return;
 }
 
@@ -1167,7 +1167,7 @@ void __cdecl str_append_spaces(iptr param_1,int param_2)
 void __cdecl str_append_comma(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_comma_str);
+  crt_strcat(param_1,&append_comma_str);
   return;
 }
 
@@ -1175,7 +1175,7 @@ void __cdecl str_append_comma(iptr param_1)
 void __cdecl str_append_colon(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_colon_str);
+  crt_strcat(param_1,&append_colon_str);
   return;
 }
 
@@ -1183,7 +1183,7 @@ void __cdecl str_append_colon(iptr param_1)
 void __cdecl str_append_period(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_period_str);
+  crt_strcat(param_1,&append_period_str);
   return;
 }
 
@@ -1191,7 +1191,7 @@ void __cdecl str_append_period(iptr param_1)
 void __cdecl str_append_percent(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_percent_str);
+  crt_strcat(param_1,&append_percent_str);
   return;
 }
 
@@ -1199,7 +1199,7 @@ void __cdecl str_append_percent(iptr param_1)
 void __cdecl str_append_lparen(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_lparen_str);
+  crt_strcat(param_1,&append_lparen_str);
   return;
 }
 
@@ -1207,7 +1207,7 @@ void __cdecl str_append_lparen(iptr param_1)
 void __cdecl str_append_rparen(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_rparen_str);
+  crt_strcat(param_1,&append_rparen_str);
   return;
 }
 
@@ -1215,7 +1215,7 @@ void __cdecl str_append_rparen(iptr param_1)
 void __cdecl str_append_plus(iptr param_1)
 
 {
-  FUN_005f22e0(param_1,&append_plus_str);
+  crt_strcat(param_1,&append_plus_str);
   return;
 }
 
@@ -1226,7 +1226,7 @@ void __cdecl str_append_string_id(iptr param_1,i32 param_2)
   i32 uVar1;
   
   uVar1 = label_string(param_2);
-  FUN_005f22e0(param_1,uVar1);
+  crt_strcat(param_1,uVar1);
   return;
 }
 
@@ -1242,7 +1242,7 @@ void __cdecl str_append_label(iptr param_1,int param_2)
 void __cdecl str_concat(iptr param_1,iptr param_2)
 
 {
-  FUN_005f22e0(param_1,param_2);
+  crt_strcat(param_1,param_2);
   return;
 }
 
@@ -1255,7 +1255,7 @@ i32 __cdecl str_append_int(iptr param_1,int param_2)
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   __itoa(param_2,local_18,10);
-  uVar1 = FUN_005f22e0(param_1,local_18);
+  uVar1 = crt_strcat(param_1,local_18);
   return uVar1;
 }
 #undef local_18
@@ -1268,7 +1268,7 @@ void __cdecl str_append_long(iptr param_1,long param_2)
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   __ltoa(param_2,local_18,10);
-  FUN_005f22e0(param_1,local_18);
+  crt_strcat(param_1,local_18);
   return;
 }
 #undef local_18
@@ -1333,7 +1333,7 @@ void __cdecl text_append_int_2d(i32 param_1)
   i8 frame_[FRAME_OFF(24)] __attribute__((aligned(8)));  /* original stack frame */
   
   _sprintf(local_18,&int_2d_fmt,param_1);
-  FUN_005f22e0(&text_buffer,local_18);
+  crt_strcat(&text_buffer,local_18);
   return;
 }
 #undef text_buffer
@@ -1349,15 +1349,15 @@ void __cdecl text_append_advance_abbrev(iptr advance,int param_2)
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (advance == -2) {
-    FUN_005f22e0(&text_buffer,&advance_abbrev_no_strs + ((param_2 != 0) - 1 & 8));
+    crt_strcat(&text_buffer,&advance_abbrev_no_strs + ((param_2 != 0) - 1 & 8));
   }
   else if (advance == -1) {
-    FUN_005f22e0(&text_buffer,&advance_abbrev_nil_strs + ((param_2 != 0) - 1 & 8));
+    crt_strcat(&text_buffer,&advance_abbrev_nil_strs + ((param_2 != 0) - 1 & 8));
   }
   else if (advance < 100) {
-    FUN_005f22e0(&text_buffer,advances + advance);
+    crt_strcat(&text_buffer,advances + advance);
     if (param_2 != 0) {
-      FUN_005f22e0(&text_buffer,&advance_abbrev_comma_str);
+      crt_strcat(&text_buffer,&advance_abbrev_comma_str);
     }
     sVar1 = _strlen(advances[advance].abbrev);
     if (sVar1 < 3) {
@@ -1369,7 +1369,7 @@ void __cdecl text_append_advance_abbrev(iptr advance,int param_2)
     text_append_spaces(3 - local_8);
   }
   else {
-    FUN_005f22e0(&text_buffer,&advance_abbrev_err_strs + ((param_2 != 0) - 1 & 8));
+    crt_strcat(&text_buffer,&advance_abbrev_err_strs + ((param_2 != 0) - 1 & 8));
   }
   return;
 }
@@ -1409,8 +1409,8 @@ void __cdecl str_trim(iptr param_1)
       (*local_108 != '\0' && ((*local_108 == ' ' || (*local_108 == '\t'))));
       local_108 = local_108 + 1) {
   }
-  FUN_005f22d0(local_104,local_108);
-  FUN_005f22d0(param_1,local_104);
+  crt_strcpy(local_104,local_108);
+  crt_strcpy(param_1,local_104);
   return;
 }
 #undef local_108
@@ -1453,8 +1453,8 @@ void __cdecl text_section_index_build(iptr param_1,uint param_2)
   text_section_index_valid = 0;
   text_section_index_count = 0;
   __getcwd(&text_section_index_path,0x104);
-  FUN_005f22e0(&text_section_index_path,&text_index_path_sep_str);
-  FUN_005f22e0(&text_section_index_path,param_1);
+  crt_strcat(&text_section_index_path,&text_index_path_sep_str);
+  crt_strcat(&text_section_index_path,param_1);
   path_default_extension(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62cd24, ((u8 *)&g.d_0062cd24)));
   _File = (FILE *)file_open_path(ADDR(0x62e508, ((u8 *)&g.d_0062e508)),ADDR(0x62e618, ((u8 *)&g.d_0062e618)));
   if (_File == (FILE *)0x0) {
@@ -1473,7 +1473,7 @@ void __cdecl text_section_index_build(iptr param_1,uint param_2)
         if ((int)(uint)text_section_pool_free_bytes < (int)local_8) break;
         plVar4 = (long *)memblock_alloc(ADDR(0x6a5b38, ((u8 *)&g.d_006a5b38)),local_8);
         *plVar4 = lVar1;
-        FUN_005f22d0(plVar4 + 1,&local_108);
+        crt_strcpy(plVar4 + 1,&local_108);
         text_section_index_count++;
       }
     }
@@ -1517,8 +1517,8 @@ i32 __cdecl text_section_index_lookup(iptr param_1,iptr param_2)
   
   if (text_section_index_valid != 0) {
     __getcwd(local_108,0x104);
-    FUN_005f22e0(local_108,&text_lookup_path_sep_str);
-    FUN_005f22e0(local_108,param_1);
+    crt_strcat(local_108,&text_lookup_path_sep_str);
+    crt_strcat(local_108,param_1);
     iVar2 = __strcmpi(local_108,&text_section_index_path);
     if (iVar2 == 0) {
       local_10c = text_section_index_base;
@@ -1855,7 +1855,7 @@ int __cdecl str_parse_int_prefixed(iptr param_1)
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (*(char *)param_1 == '0') {
-    uVar2 = FUN_005f2700((uint)*(byte *)(param_1 + 1));
+    uVar2 = crt_toupper((uint)*(byte *)(param_1 + 1));
     cVar1 = (char)uVar2;
     if (cVar1 == 'X') {
       local_8 = str_parse_hex(param_1 + 2);
@@ -1917,7 +1917,7 @@ i32 __cdecl file_read_nth_line(iptr param_1,iptr param_2,int param_3)
         local_54[local_58] = '\0';
       }
     }
-    FUN_005f22d0(param_1,local_54);
+    crt_strcpy(param_1,local_54);
     local_5c = 0;
   }
 LAB_0058a0bc:
@@ -1979,7 +1979,7 @@ int __cdecl str_parse_binary(iptr param_1)
   while (*(char *)param_1 != '\0') {
     cVar1 = *(char *)param_1;
     param_1++;
-    iVar2 = FUN_005f2700((int)cVar1);
+    iVar2 = crt_toupper((int)cVar1);
     if ((iVar2 == 0x30) || (iVar2 == 0x31)) {
       local_8 = local_8 * 2 + iVar2 - 0x30;
     }
@@ -2195,11 +2195,11 @@ i32 __cdecl file_obj_open_path(char *param_1,iptr param_2)
   pcVar1 = _strchr(param_1,0x5c);
   if (pcVar1 == (char *)0x0) {
     __getcwd(local_108,0x104);
-    FUN_005f22e0(local_108,&file_path_backslash_str);
-    FUN_005f22e0(local_108,param_1);
+    crt_strcat(local_108,&file_path_backslash_str);
+    crt_strcat(local_108,param_1);
   }
   else {
-    FUN_005f22d0(local_108,param_1);
+    crt_strcpy(local_108,param_1);
   }
   HVar2 = OpenFile(local_108,(LPOFSTRUCT)(param_2 + 8),0x4000);
   if (HVar2 == -1) {
@@ -2449,9 +2449,9 @@ HMODULE __cdecl res_dll_load_library(LPCSTR param_1)
   
   pHVar1 = LoadLibraryExA(param_1,(HANDLE)0x0,2);
   if (pHVar1 == (HMODULE)0x0) {
-    FUN_005f22d0(local_84,s_Error__Resource_file_006387d0);
-    FUN_005f22e0(local_84,param_1);
-    FUN_005f22e0(local_84,s_not_found__006387e8);
+    crt_strcpy(local_84,s_Error__Resource_file_006387d0);
+    crt_strcat(local_84,param_1);
+    crt_strcat(local_84,s_not_found__006387e8);
     dbg_log((iptr)local_84);
     pHVar1 = (HMODULE)0x0;
   }

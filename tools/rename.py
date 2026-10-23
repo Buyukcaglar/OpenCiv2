@@ -140,9 +140,49 @@ def main():
     return apply_types(a.dry_run)
 
 
+def apply_access_macros(dry_run):
+    """Ghidra's other spelling of a named global, _DAT_ADDR (a per-function
+    macro reading it with one access type, as `(*(i32 *)&g.d_ADDR)`), gets
+    the global's name with that type.
+    The name of the global itself is a macro (src/auto/globals.h), so the
+    per-function macro always takes the access type: advisor_list_top_i32."""
+    names = {}
+    for line in open(os.path.join(ROOT, 're', 'symbols.tsv')):
+        f = line.rstrip('\n').split('\t')
+        if len(f) > 2 and f[1] == 'var':
+            names[f[0]] = f[2]
+    changed = 0
+    for d in ('auto', 'game', 'unused'):
+        for p in glob.glob(os.path.join(ROOT, 'src', d, '*.c')):
+            t = open(p, errors='surrogateescape').read()
+            out = []
+            for reg in re.split(r'(?m)^(?=/\* [0-9a-f]{8}[ :])', t):
+                for a in sorted(set(re.findall(r'\b_DAT_([0-9a-f]{8})\b', reg))):
+                    n = names.get(a)
+                    if not n:
+                        continue
+                    m = re.search(r'#define _DAT_%s \(\*\((\w+)' % a, reg)
+                    new = '%s_%s' % (n, m.group(1) if m else 'access')
+                    if True:
+                        k = 2
+                        while re.search(r'\b%s\b' % re.escape(new), reg):
+                            new = '%s_%s%d' % (n, m.group(1) if m else 'access', k)
+                            k += 1
+                    reg = re.sub(r'\b_DAT_%s\b' % a, new, reg)
+                out.append(reg)
+            n = ''.join(out)
+            if n != t:
+                changed += 1
+                if not dry_run:
+                    open(p, 'w', errors='surrogateescape').write(n)
+    if changed:
+        print('_DAT_ accesses of named globals: %d files %s' % (changed, 'would change' if dry_run else 'changed'))
+
+
 def apply_types(dry_run):
     """Class names (re/type_names.tsv) in the C sources; the analysis
     tables and Ghidra's export keep the C_ names (see tools/type_names.py)."""
+    apply_access_macros(dry_run)
     sys.path.insert(0, os.path.join(ROOT, 'tools'))
     import type_names
     if not type_names.mapping() and not type_names.fields():

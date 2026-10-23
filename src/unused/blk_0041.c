@@ -134,18 +134,18 @@ i32 __cdecl app_select_language(void)
   game_language = local_330;
   if (local_330 < 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0041b46a */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
+    /* inlined unwind funclet 0041b46a */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
     uVar3 = 1;
   }
   else {
     if (local_330 == 1) {
-      FUN_005f22d0(&lang_file_ext,&lang_pref_french_ext_str);
+      crt_strcpy(&lang_file_ext,&lang_pref_french_ext_str);
     }
     if (local_330 == 2) {
-      FUN_005f22d0(&lang_file_ext,&lang_pref_german_ext_str);
+      crt_strcpy(&lang_file_ext,&lang_pref_german_ext_str);
     }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0041b46a */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
+    /* inlined unwind funclet 0041b46a */ { dialog_dtor((Dialog *)((iptr)&local_320)); }
     uVar3 = 0;
   }
   return uVar3;

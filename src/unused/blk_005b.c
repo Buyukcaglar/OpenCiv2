@@ -247,7 +247,7 @@ surface_wnd_create_with_menu
 
 {
   surface_wnd_create(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  wnd_attach_menu((C_00408010_b8 *)(this + 1),param_8);
+  wnd_attach_menu((ModalMenuWindow *)(this + 1),param_8);
   return;
 }
 
@@ -259,7 +259,7 @@ wnd_create_with_surface_menu
 
 {
   wnd_create_with_surface(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7,param_8);
-  wnd_attach_menu((C_00408010_b8 *)(this + 1),param_9);
+  wnd_attach_menu((ModalMenuWindow *)(this + 1),param_9);
   return;
 }
 
@@ -288,7 +288,7 @@ surface_wnd_create_nopal_menu
 
 {
   surface_wnd_create_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6);
-  wnd_attach_menu((C_00408010_b8 *)(this + 1),param_7);
+  wnd_attach_menu((ModalMenuWindow *)(this + 1),param_7);
   return;
 }
 
@@ -317,7 +317,7 @@ surface_wnd_create_child_nopal_menu
 
 {
   surface_wnd_create_child_nopal(this,param_1,param_2,param_3,param_4,param_5,param_6,param_7);
-  wnd_attach_menu((C_00408010_b8 *)(this + 1),param_8);
+  wnd_attach_menu((ModalMenuWindow *)(this + 1),param_8);
   return;
 }
 
@@ -1177,7 +1177,7 @@ surface_load_tga_file
     dbg_log(ADDR(0x636998, ((u8 *)&g.d_00636998)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x6369d0, ((u8 *)&g.d_006369d0)),ADDR(0x6369b8, ((u8 *)&g.d_006369b8)),0x24c);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+    /* inlined unwind funclet 005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
     uVar2 = 0;
   }
   else {
@@ -1191,7 +1191,7 @@ surface_load_tga_file
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 0;
     }
     else {
@@ -1239,7 +1239,7 @@ surface_load_tga_file
       file_obj_unmap_view(&local_b4);
       file_map_close(&local_b4);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
+      /* inlined unwind funclet 005be940 */ { file_obj_close((FileObject *)((iptr)&local_b4)); }
       uVar2 = 1;
     }
   }
@@ -1438,7 +1438,7 @@ surface_load_pcx_file
     dbg_log(ADDR(0x636b48, ((u8 *)&g.d_00636b48)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x636b80, ((u8 *)&g.d_00636b80)),ADDR(0x636b68, ((u8 *)&g.d_00636b68)),0x30c);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+    /* inlined unwind funclet 005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
     uVar2 = 0;
   }
   else {
@@ -1455,7 +1455,7 @@ surface_load_pcx_file
         iVar1 = surface_resize(this,(iptr)&local_e0);
         if (iVar1 == 0) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+          /* inlined unwind funclet 005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
           uVar2 = 0;
         }
         else {
@@ -1492,7 +1492,7 @@ surface_load_pcx_file
           file_obj_unmap_view(&local_c4);
           file_map_close(&local_c4);
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+          /* inlined unwind funclet 005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
           uVar2 = 1;
         }
       }
@@ -1502,7 +1502,7 @@ surface_load_pcx_file
         file_map_close(&local_c4);
         err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x636c2c, ((u8 *)&g.d_00636c2c)),ADDR(0x636c14, ((u8 *)&g.d_00636c14)),0x328);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+        /* inlined unwind funclet 005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
         uVar2 = 0;
       }
     }
@@ -1512,7 +1512,7 @@ surface_load_pcx_file
       file_map_close(&local_c4);
       err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x636bcc, ((u8 *)&g.d_00636bcc)),ADDR(0x636bb4, ((u8 *)&g.d_00636bb4)),799);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+      /* inlined unwind funclet 005bf04a */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
       uVar2 = 0;
     }
   }
@@ -1741,7 +1741,7 @@ surface_load_bmp_file
     dbg_log(ADDR(0x637020, ((u8 *)&g.d_00637020)));
     err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x637058, ((u8 *)&g.d_00637058)),ADDR(0x637040, ((u8 *)&g.d_00637040)),0x4e1);
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+    /* inlined unwind funclet 005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
     uVar4 = 0;
   }
   else {
@@ -1754,7 +1754,7 @@ surface_load_bmp_file
     if (iVar3 == 0) {
       res_free(local_c8);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+      /* inlined unwind funclet 005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
     else if (*(short *)(local_18 + 0xe) == 8) {
@@ -1785,20 +1785,20 @@ surface_load_bmp_file
         file_obj_unmap_view(&local_bc);
         file_map_close(&local_bc);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+        /* inlined unwind funclet 005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 1;
       }
       else {
         dbg_log(ADDR(0x637098, ((u8 *)&g.d_00637098)));
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+        /* inlined unwind funclet 005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
         uVar4 = 0;
       }
     }
     else {
       dbg_log(ADDR(0x637070, ((u8 *)&g.d_00637070)));
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
+      /* inlined unwind funclet 005c000d */ { file_obj_close((FileObject *)((iptr)&local_bc)); }
       uVar4 = 0;
     }
   }

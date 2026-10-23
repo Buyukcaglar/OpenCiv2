@@ -151,7 +151,7 @@ void __cdecl ui_show_label_splash(DibSurface *param_1,int param_2)
   uVar3 = 0x80;
   uVar2 = label_string(*(i32 *)(label_string_ids + param_2 * 4));
   surface_draw_text_cur_font((SurfaceTextCurFontView *)param_1,uVar2,uVar3,uVar4,uVar5);
-  window_show((C_004083b0_4 *)param_1);
+  window_show((WindowObjectView *)param_1);
   wnd_flush_paint();
   return;
 }

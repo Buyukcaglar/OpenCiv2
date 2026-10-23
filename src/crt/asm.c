@@ -27,13 +27,13 @@ static void *crt_move(void *dst, const void *src, uint n)
 }
 
 /* 0x005f2110: memcpy(dst, src, n) -> dst */
-i32 * __cdecl FUN_005f2110(void *dst, const void *src, uint n)
+i32 * __cdecl crt_memcpy(void *dst, const void *src, uint n)
 {
     return (i32 *)crt_move(dst, src, n);
 }
 
 /* 0x005f6500: memmove(dst, src, n) -> dst */
-i32 * __cdecl FUN_005f6500(void *dst, const void *src, uint n)
+i32 * __cdecl crt_memmove(void *dst, const void *src, uint n)
 {
     return (i32 *)crt_move(dst, src, n);
 }

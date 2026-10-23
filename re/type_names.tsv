@@ -267,3 +267,90 @@ C_005f124c	DDControlParentView	medium	ddctrl_get_parent_window
 C_005f130f	DDControl	medium	ddctrl_dispatch_msg/dispatch_to_children
 C_005f15f2	DDControlPaintView	medium	ddctrl_paint_children/tree
 C_005f1622	DDControlActivateView	medium	ddctrl_activate
+C_00408010_b8	ModalMenuWindow	medium	by hand from its methods: wnd_attach_menu wnd_create_child_nopal_cmd_proc_menu wnd_create_framed_child_menu wnd_create_framed_child_nopal_menu
+C_00408010_6f0	PictureFrameWindow	medium	by hand from its methods: cityview_ctor destroyed_civs_draw_portrait spaceship_wnd_build_stats_text spaceship_wnd_create
+C_00408130	WndEventHandlers	medium	by hand from its methods: wnd_set_char_handler wnd_set_close_handler wnd_set_keydown_handler wnd_set_lbuttonup_handler
+C_004083b0_4	WindowObjectView	medium	by hand from its methods: chat_receive_message city_happy_draw_building_icons city_happy_draw_citizen_row city_happy_draw_unit_effects
+C_004083b0_11c	ListPaneWindow	medium	by hand from its methods: council_draw_advisor_frames council_wnd_ctor council_wnd_init council_wnd_run_modal
+C_004083b0_120	PediaRedrawView	medium	by hand from its methods: pedia_redraw
+C_004083b0_12c	ScaledWindowView	medium	by hand from its methods: city_window_begin_draw city_window_blit_bg_rect city_window_create_change_button city_window_create_controls
+C_004083b0_174	ParleyWindowLayout	medium	by hand from its methods: parley_wnd_calc_layout parley_wnd_calc_rect parley_wnd_draw_frame parley_wnd_pick_size_mode
+C_004083b0_208	PortraitDialog	medium	by hand from its methods: frame_wnd_add_caption_button portrait_dlg_create portrait_dlg_ctor portrait_dlg_paint
+C_004083b0_430	ViewWindow	medium	by hand from its methods: advisor_add_close_button city_editor_create_combo city_editor_draw city_editor_open_window
+C_004083b0_488	PictureWindowCore	medium	by hand from its methods: picwnd_close
+C_004083b0_4c4	PictureWindow	medium	by hand from its methods: picwnd_blit picwnd_open
+C_004083b0_61c	MediaWindow	medium	by hand from its methods: avi_player_create avi_player_create_child avi_player_save_background avi_player_set_double_size
+C_004083b0_798	PediaAdvanceListView	medium	by hand from its methods: pedia_init_advance_list
+C_004083b0_a28	DocumentWindow	medium	by hand from its methods: editor_wnd_ctor events_editor_run mmwnd_ctor pedia_add_link
+C_0040bc40_28	DialogCore	medium	by hand from its methods: dialog_edit_row_height dialog_option_icon_width dialog_option_row_height dialog_reset_string_pool
+C_0040bc40_3c	DialogButtonsView	medium	by hand from its methods: dialog_add_button dialog_set_columns
+C_0040bc40_40	DialogAltColorView	medium	by hand from its methods: dialog_uses_alt_text_color
+C_0040bc40_118	DialogTextLineView	medium	by hand from its methods: dialog_draw_text_line
+C_0040f380_40	ClickControl	medium	by hand from its methods: hotspot_create hyperlink_create scrollbar_set_pos
+C_0040f380_48	InputControl	medium	by hand from its methods: edit_ctor radiogrp_ctor
+C_00418b50	ComboDtorView	medium	the one method: combo_dtor
+C_00421f70	NetGamelistViewCtorView	medium	the one method: net_gamelist_view_ctor
+C_0042486f	NetGamelistAddInfoLinesView	medium	the one method: net_gamelist_add_info_lines
+C_00452a67	HyperlinkDtorView	medium	the one method: hyperlink_dtor
+C_00453b10	PediaLinkCtorView	medium	the one method: pedia_link_ctor
+C_00453d40	HyperlinkSetClickCallbackView	medium	the one method: hyperlink_set_click_callback
+C_00453d70	HyperlinkSetDblclickCallbackView	medium	the one method: hyperlink_set_dblclick_callback
+C_00456ee0	WndSetKeydownPreHandlerView	medium	the one method: wnd_set_keydown_pre_handler
+C_00472910	AviPlayerSetFrameCallbackView	medium	the one method: avi_player_set_frame_callback
+C_0049632a_1dc	PortraitDlgDtorView	medium	the one method: portrait_dlg_dtor
+C_004bb5b0	CtrlSetInitialFocusView	medium	the one method: ctrl_set_initial_focus
+C_004db690	ParleyOfferBuffer	medium	by hand from its methods: parley_pack_offer_items parley_send_offer
+C_00511560	SpriteButtonCore	medium	by hand from its methods: spritebtn_dtor spritebtn_scalar_dtor
+C_005117f0	SpritebtnSetClickHandlerView	medium	the one method: spritebtn_set_click_handler
+C_005149d6	NetMessageQueue	medium	by hand from its methods: net_msgq_dequeue
+C_005150b9_710	DestroyedCivsWindowCore	medium	by hand from its methods: destroyed_civs_wnd_dtor
+C_00530fb0	CheckboxEnableView	medium	the one method: checkbox_enable
+C_00551d20	ListboxGetCountView	medium	the one method: listbox_get_count
+C_0059e327	DialogHelpPressedView	medium	the one method: dialog_help_pressed
+C_0059e585	DialogSetCurrentPaneView	medium	the one method: dialog_set_current_pane
+C_0059e624	DialogSetBevelWidthView	medium	the one method: dialog_set_bevel_width
+C_0059e676	DialogButtonWidthForView	medium	the one method: dialog_button_width_for
+C_0059e812	DialogFindButtonView	medium	the one method: dialog_find_button
+C_0059eb68	DialogSetResultIdView	medium	the one method: dialog_set_result_id
+C_0059ec40	DialogSetModalPollFnView	medium	the one method: dialog_set_modal_poll_fn
+C_005c6fc3	PaletteTintGetSavedRgbView	medium	the one method: palette_tint_get_saved_rgb
+C_005c701c	PaletteTintStepView	medium	the one method: palette_tint_step
+C_005cf3f3	UnusedObjectA	medium	by hand from its methods: 
+C_005cf439	UnusedObjectB	medium	by hand from its methods: 
+C_005d1bb8	SpriteGetPixelView	medium	the one method: sprite_get_pixel
+C_005d3fb0	RadiogrpHasHwndView	medium	the one method: radiogrp_has_hwnd
+C_005d4087	RadiogrpHideAllView	medium	the one method: radiogrp_hide_all
+C_005db016	ErrCtxGetLastCodeView	medium	the one method: err_ctx_get_last_code
+C_005db792	WndRecordCreateMovieView	medium	the one method: wnd_record_create_movie
+C_005db80f	WndRecordCreateMovieChildView	medium	the one method: wnd_record_create_movie_child
+C_005dd487	AviPlayerPlayFromStartView	medium	the one method: avi_player_play_from_start
+C_005dd761	AviPlayerSetTransparentView	medium	the one method: avi_player_set_transparent
+C_005e6f25	DdsurfMapRgbView	medium	the one method: ddsurf_map_rgb
+C_005e6f57	DdsurfResetClipView	medium	the one method: ddsurf_reset_clip
+C_005e6ff1	DdsurfGetClipView	medium	the one method: ddsurf_get_clip
+C_005e8401	DdpalRotateRangeView	medium	the one method: ddpal_rotate_range
+C_005e87a2	DdpalFadeStepView	medium	the one method: ddpal_fade_step
+C_005ed4e0	WndCallMsg4c8View	medium	the one method: wnd_call_msg4c8
+C_005ee991	MciwndSeekEndView	medium	the one method: mciwnd_seek_end
+C_005ee9bc	MciwndGetPositionView	medium	the one method: mciwnd_get_position
+C_005eecc3	AviAudioSetStreamView	medium	the one method: avi_audio_set_stream
+C_005f0056	DdwinShowView	medium	the one method: ddwin_show
+C_005f0213	DdwinAttachBackBufferView	medium	the one method: ddwin_attach_back_buffer
+C_005f07f9	PtrlistCurrentView	medium	the one method: ptrlist_current
+C_005f0897	PtrlistPrevImplView	medium	the one method: ptrlist_prev_impl
+C_005f0f1d	DdctrlCtorView	medium	the one method: ddctrl_ctor
+C_005f0fe9	DdctrlCtorInWindowView	medium	the one method: ddctrl_ctor_in_window
+C_005f10b6	DdctrlCtorInControlView	medium	the one method: ddctrl_ctor_in_control
+C_005f11f6	DdctrlSetParentWindowView	medium	the one method: ddctrl_set_parent_window
+C_005f1221	DdctrlSetParentControlView	medium	the one method: ddctrl_set_parent_control
+C_005f16c4	DdctrlSetClickCbView	medium	the one method: ddctrl_set_click_cb
+C_005f16e5	DdctrlSetMousemoveCbView	medium	the one method: ddctrl_set_mousemove_cb
+C_005f1706	DdctrlSetLbuttonupCbView	medium	the one method: ddctrl_set_lbuttonup_cb
+C_005f1727	DdctrlSetRbuttonupCbView	medium	the one method: ddctrl_set_rbuttonup_cb
+C_005f1748	DdctrlSetDblclickCbView	medium	the one method: ddctrl_set_dblclick_cb
+C_005f1769	DdctrlCallClickCbView	medium	the one method: ddctrl_call_click_cb
+C_005f17d4	DdctrlOnLbuttonupView	medium	the one method: ddctrl_on_lbuttonup
+C_005f1811	DdctrlOnRbuttonupView	medium	the one method: ddctrl_on_rbuttonup
+C_005f184e	DdctrlOnMousemoveView	medium	the one method: ddctrl_on_mousemove
+C_005f188b	DdctrlOnDblclickView	medium	the one method: ddctrl_on_dblclick
+C_005f1b50	DdwinGetPaletteView	medium	the one method: ddwin_get_palette

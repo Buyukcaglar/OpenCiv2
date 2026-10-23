@@ -30,7 +30,7 @@ int __cdecl char_to_upper_ascii(int param_1)
 void __cdecl str_append_lbrace(i32 param_1)
 
 {
-  FUN_005f22e0(param_1,&append_lbrace_str);
+  crt_strcat(param_1,&append_lbrace_str);
   return;
 }
 
@@ -38,7 +38,7 @@ void __cdecl str_append_lbrace(i32 param_1)
 void __cdecl str_append_rbrace(i32 param_1)
 
 {
-  FUN_005f22e0(param_1,&append_rbrace_str);
+  crt_strcat(param_1,&append_rbrace_str);
   return;
 }
 
@@ -46,7 +46,7 @@ void __cdecl str_append_rbrace(i32 param_1)
 void __cdecl str_append_minus(i32 param_1)
 
 {
-  FUN_005f22e0(param_1,&append_minus_str);
+  crt_strcat(param_1,&append_minus_str);
   return;
 }
 
@@ -54,7 +54,7 @@ void __cdecl str_append_minus(i32 param_1)
 void __cdecl str_append_times(i32 param_1)
 
 {
-  FUN_005f22e0(param_1,&append_times_str);
+  crt_strcat(param_1,&append_times_str);
   return;
 }
 
@@ -62,7 +62,7 @@ void __cdecl str_append_times(i32 param_1)
 void __cdecl str_append_dollar(i32 param_1)
 
 {
-  FUN_005f22e0(param_1,&append_dollar_str);
+  crt_strcat(param_1,&append_dollar_str);
   return;
 }
 
@@ -74,7 +74,7 @@ void __cdecl str_append_braced_label(i32 param_1,i32 param_2)
   
   str_append_lbrace(param_1);
   uVar1 = label_string(param_2);
-  FUN_005f22e0(param_1,uVar1);
+  crt_strcat(param_1,uVar1);
   str_append_rbrace(param_1);
   return;
 }
@@ -91,9 +91,9 @@ void __cdecl str_append_binary8(i32 param_1,int param_2)
   __itoa(param_2,local_18,2);
   sVar1 = _strlen(local_18);
   for (local_1c = 0; local_1c < (int)(8 - sVar1); local_1c++) {
-    FUN_005f22e0(param_1,&binary_pad_zero_str);
+    crt_strcat(param_1,&binary_pad_zero_str);
   }
-  FUN_005f22e0(param_1,local_18);
+  crt_strcat(param_1,local_18);
   return;
 }
 #undef local_1c

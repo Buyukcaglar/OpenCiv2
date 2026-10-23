@@ -115,21 +115,21 @@ static int crt_dbg_report_body(int type, char *file, int line, char *module, cha
     }
 
     if (format != NULL && __vsnprintf(m.user_msg, 0xfed, format, args) < 0)
-        FUN_005f22d0(m.user_msg, (char *)0x0061e4f8 /* "_CrtDbgReport: String too long or IO Error" */);
+        crt_strcpy(m.user_msg, (char *)0x0061e4f8 /* "_CrtDbgReport: String too long or IO Error" */);
     if (type == 2)
-        FUN_005f22d0(m.line_msg, format != NULL ? (char *)0x0061e4e4 /* "Assertion failed: " */
+        crt_strcpy(m.line_msg, format != NULL ? (char *)0x0061e4e4 /* "Assertion failed: " */
                                                 : (char *)0x0061e424 /* "Assertion failed!" */);
-    FUN_005f22e0(m.line_msg, m.user_msg);
+    crt_strcat(m.line_msg, m.user_msg);
     if (type == 2) {
         if (g_CrtDbgMode[type] & 1)
-            FUN_005f22e0(m.line_msg, (char *)0x0061e4e0 /* "\r" */);
-        FUN_005f22e0(m.line_msg, (char *)0x0061e300 /* "\n" */);
+            crt_strcat(m.line_msg, (char *)0x0061e4e0 /* "\r" */);
+        crt_strcat(m.line_msg, (char *)0x0061e300 /* "\n" */);
     }
     if (file != NULL) {
         if (__snprintf(m.out_msg, 0x1000, (char *)0x0061e4d4 /* "%s(%d) : %s" */, file, line, m.line_msg) < 0)
-            FUN_005f22d0(m.out_msg, (char *)0x0061e4f8);
+            crt_strcpy(m.out_msg, (char *)0x0061e4f8);
     } else {
-        FUN_005f22d0(m.out_msg, m.line_msg);
+        crt_strcpy(m.out_msg, m.line_msg);
     }
 
     if (g_pfnReportHook != NULL && g_pfnReportHook(type, m.out_msg, &retval) != 0) {

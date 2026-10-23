@@ -446,7 +446,7 @@ sprite_blit_silhouette_to_ddsurf
 /* 005d1bb8 auto */
 #define local_14 (*(int * *)(frame_ + FRAME_OFF(4)))
 #define local_c (*(int *)(frame_ + FRAME_OFF(12)))
-u8 __thiscall sprite_get_pixel(C_005d1bb8 *this,int param_1,int param_2)
+u8 __thiscall sprite_get_pixel(SpriteGetPixelView *this,int param_1,int param_2)
 
 {
   u8 uVar1;
@@ -713,7 +713,7 @@ void __cdecl combo_hwnd_get_sel_text(HWND param_1,i32 param_2)
   
   LVar1 = SendMessageA(param_1,0x147,0,0);
   if (LVar1 == -1) {
-    FUN_005f22d0(param_2,&combo_no_sel_text);
+    crt_strcpy(param_2,&combo_no_sel_text);
   }
   else {
     combo_hwnd_get_item_text(param_1,LVar1,param_2);
@@ -790,7 +790,7 @@ void __cdecl listbox_hwnd_set_sel(HWND param_1,LPARAM param_2,char param_3)
 
 /* 005d3fb0 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-i32 __thiscall radiogrp_has_hwnd(C_005d3fb0 *this,int param_1)
+i32 __thiscall radiogrp_has_hwnd(RadiogrpHasHwndView *this,int param_1)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -809,7 +809,7 @@ i32 __thiscall radiogrp_has_hwnd(C_005d3fb0 *this,int param_1)
 
 /* 005d4087 auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
-void __thiscall radiogrp_hide_all(C_005d4087 *this)
+void __thiscall radiogrp_hide_all(RadiogrpHideAllView *this)
 
 {
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1468,7 +1468,7 @@ radiogrp_create_items_from_str(iptr param_1,int *param_2,int param_3,iptr param_
     else {
       *(i32 *)(iVar7 + 0x18 + local_42c * 0xa4) = 1;
     }
-    FUN_005f22d0(local_42c * 0xa4 + iVar7 + 0x1c,local_410);
+    crt_strcpy(local_42c * 0xa4 + iVar7 + 0x1c,local_410);
     local_418 = (char *)(local_42c * 0xa4 + iVar7 + 0x1c);
     *(i32 *)(iVar7 + 0xa0 + local_42c * 0xa4) = 0;
     while( true ) {
@@ -1573,7 +1573,7 @@ void __thiscall err_log_warning(ErrorContext *this,iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall err_ctx_get_last_code(C_005db016 *this)
+u32 __thiscall err_ctx_get_last_code(ErrCtxGetLastCodeView *this)
 
 {
   return this->last_code;
@@ -1718,7 +1718,7 @@ wnd_record_create_nopal
 /* 005db792 auto */
 void __thiscall
 wnd_record_create_movie
-          (C_005db792 *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
+          (WndRecordCreateMovieView *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
           i32 param_5,i32 param_6)
 
 {
@@ -1738,7 +1738,7 @@ wnd_record_create_movie
 /* 005db80f auto */
 void __thiscall
 wnd_record_create_movie_child
-          (C_005db80f *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
+          (WndRecordCreateMovieChildView *this,i32 param_1,u32 param_2,i32 param_3,i32 param_4,
           i32 param_5,i32 param_6,WndBase *param_7)
 
 {
@@ -2049,7 +2049,7 @@ uint __cdecl mem_kb_exceeds_avail(int param_1)
 #undef local_8
 
 /* 005dd487 auto */
-void __thiscall avi_player_play_from_start(C_005dd487 *this)
+void __thiscall avi_player_play_from_start(AviPlayerPlayFromStartView *this)
 
 {
   avi_player_rewind((iptr)this);
@@ -2100,7 +2100,7 @@ LAB_005dd60c:
 /* 005dd7de auto */
 #define local_24 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(20)))
-void __thiscall avi_player_save_background(C_004083b0_61c *this)
+void __thiscall avi_player_save_background(MediaWindow *this)
 
 {
   int yBottom;
@@ -2665,7 +2665,7 @@ void __cdecl palette_reapply_range(iptr param_1,int param_2,int param_3)
 void __cdecl logpal_copy(i32 param_1,i32 param_2)
 
 {
-  FUN_005f6500(param_2,param_1,0x404);
+  crt_memmove(param_2,param_1,0x404);
   return;
 }
 
@@ -2800,7 +2800,7 @@ void __cdecl ui_show_text_notice_window(i32 param_1,WndBase *param_2,int param_3
     surface_draw_bevel_border((iptr)notice_window,(iptr)&local_40,1,0xff,0xf8);
     gfx_set_text_color_index(0);
     surface_draw_text_rect(notice_window,ADDR(0x6d1ec8, ((u8 *)&g.d_006d1ec8)),local_30,(iptr)&local_24,0);
-    window_show((C_004083b0_4 *)notice_window);
+    window_show((WindowObjectView *)notice_window);
     ui_show_mouse_cursor();
     ui_pump_messages();
     if (param_3 != 0) {
@@ -2943,9 +2943,9 @@ void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
   if (local_168 == 0) {
     dbg_logf_str(ADDR(0x638bbc, ((u8 *)&g.d_00638bbc)),param_1);
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
+    /* inlined unwind funclet 005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+    /* inlined unwind funclet 005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
   }
   else {
     local_24 = (char *)mem_handle_lock(local_168);
@@ -2956,14 +2956,14 @@ void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
         mem_handle_unlock(local_168);
         mem_handle_release(local_168);
         local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-        /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
+        /* inlined unwind funclet 005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+        /* inlined unwind funclet 005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
       }
       else {
         local_16c = 1 << (local_24[10] & 7U) + 1;
         local_20 = local_24 + 0xd;
-        FUN_005f2110(local_474,local_20,local_16c * 3);
+        crt_memcpy(local_474,local_20,local_16c * 3);
         for (local_20 = local_24 + local_16c * 3 + 0xd; *local_20 == '\0'; local_20++)
         {
         }
@@ -2987,18 +2987,18 @@ void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
           local_168 = mem_handle_free(local_168);
           file_map_close(&local_c4);
           local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-          /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
+          /* inlined unwind funclet 005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+          /* inlined unwind funclet 005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
         }
         else {
           dbg_logf_str(ADDR(0x638c30, ((u8 *)&g.d_00638c30)),param_1);
           mem_handle_unlock(local_168);
           mem_handle_release(local_168);
           local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-          /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
+          /* inlined unwind funclet 005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+          /* inlined unwind funclet 005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
         }
       }
     }
@@ -3007,9 +3007,9 @@ void __cdecl gif_convert_to_raw_file(iptr param_1,iptr param_2)
       mem_handle_unlock(local_168);
       mem_handle_release(local_168);
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
+      /* inlined unwind funclet 005df67b */ { file_obj_close((FileObject *)((iptr)&local_160)); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
+      /* inlined unwind funclet 005df687 */ { file_obj_close((FileObject *)((iptr)&local_c4)); }
     }
   }
   return;

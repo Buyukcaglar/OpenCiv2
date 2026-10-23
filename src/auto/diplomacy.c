@@ -536,7 +536,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
     iVar2 = int_clamp((local_18 - 0x280) / 3,1,9999);
     iVar3 = int_clamp((local_14 - 0x1e0) / 3,1,9999);
     dialog_set_default_offset(-iVar2,-iVar3);
-    dialog_set_position((C_0040bc40_28 *)&local_314,-iVar2,-iVar3);
+    dialog_set_position((DialogCore *)&local_314,-iVar2,-iVar3);
     diplo_leader_wnd_launch(civ2,civ);
   }
   diplo_set_attitude_arg(civ2,civ);
@@ -576,7 +576,7 @@ void __cdecl diplo_greet_emissary(iptr civ2,iptr civ)
     *puVar1 = *puVar1 | 0x100;
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00458dd5 */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
+  /* inlined unwind funclet 00458dd5 */ { dialog_dtor((Dialog *)((iptr)&local_314)); }
   return;
 }
 #undef diplo_session_active
@@ -662,19 +662,19 @@ uint __cdecl diplo_ask_receive_emissary(iptr civ2,iptr civ,iptr param_3,iptr par
       }
       local_314 = (uint)(diplo_emissary_response != -1);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+      /* inlined unwind funclet 00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
       local_310 = local_314;
     }
     else {
       local_310 = (uint)(diplo_emissary_response != -1);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+      /* inlined unwind funclet 00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
     }
   }
   else {
     diplo_emissary_response = -1;
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+    /* inlined unwind funclet 00459169 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
     local_310 = 0;
   }
   return local_310;
@@ -900,7 +900,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
     }
     if (param_6 != 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
@@ -923,7 +923,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
           }
         }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
         goto LAB_0045a526;
       }
@@ -942,7 +942,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
           }
         }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
         goto LAB_0045a526;
       }
@@ -952,12 +952,12 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         text_set_label_arg(1,improvements[local_78 + 0x27].name);
         popup_game(ADDR(0x626ae8, ((u8 *)&g.d_00626ae8)));
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
       }
       else {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
       }
       goto LAB_0045a526;
@@ -965,7 +965,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
     if (local_39c < local_7c) {
       if (param_5 == 1) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
         goto LAB_0045a526;
       }
@@ -980,18 +980,18 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
             diplo_leader_play_reaction(3);
             popup_game(ADDR(0x626afc, ((u8 *)&g.d_00626afc)));
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+            /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
             param_5 = 0;
           }
           else {
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+            /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
             param_5 = 0;
           }
         }
         else {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+          /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         }
         goto LAB_0045a526;
       }
@@ -1010,7 +1010,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         iVar6 = diplo_offer_sell_tech(civ2,civ,param_5);
         if (iVar6 != 0) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+          /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
           goto LAB_0045a526;
         }
         if (param_5 == 0) {
@@ -1018,7 +1018,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         }
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
@@ -1041,12 +1041,12 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
       if (param_5 < 2) {
         civs[civ].field_1f += 2;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
       }
       else {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 1;
       }
       goto LAB_0045a526;
@@ -1056,7 +1056,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         iVar6 = diplo_offer_sell_tech(civ2,civ,param_5);
         if (iVar6 != 0) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+          /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
           goto LAB_0045a526;
         }
         if (param_5 == 0) {
@@ -1064,20 +1064,20 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         }
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
     if (1 < param_5) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
     iVar6 = diplo_ask_receive_emissary(civ2,civ,param_3,param_4);
     if (iVar6 == 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
@@ -1113,7 +1113,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
     iVar6 = dlg_show_modal(&local_374,0);
     if (iVar6 == 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+      /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
       param_5 = 0;
       goto LAB_0045a526;
     }
@@ -1128,7 +1128,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
         popup_game(ADDR(0x626b64, ((u8 *)&g.d_00626b64)));
         civs[civ].field_1f++;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+        /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
         param_5 = 0;
         goto LAB_0045a526;
       }
@@ -1145,7 +1145,7 @@ diplo_tech_exchange(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5,int p
     diplo_ai_aggressive = 0;
   } while (param_5 != 0);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
+  /* inlined unwind funclet 0045a510 */ { dialog_dtor((Dialog *)((iptr)&local_374)); }
   param_5 = 1;
 LAB_0045a526:
   return param_5;
@@ -2301,7 +2301,7 @@ LAB_0045ddb7:
     if (iVar5 == 0) {
       civs[civ].field_1f--;
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+      /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
       goto LAB_0045f0a3;
     }
     if (iVar5 == 1) {
@@ -2333,7 +2333,7 @@ LAB_0045ddb7:
     diplo_leader_play_reaction(3);
     popup_game(ADDR(0x626e14, ((u8 *)&g.d_00626e14)));
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+    /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
   }
   else if ((*(byte *)(civ * 0x594 + ADDR(0x64c6c1, ((u8 *)&civs + 33)) + civ3 * 4) & 0x20) == 0) {
     local_14 = int_clamp((int)(((((uint)civs[civ2].reputation + civs[civ].gold / 100
@@ -2429,7 +2429,7 @@ LAB_0045ddb7:
       }
       if (local_334 == 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+        /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
       }
       else {
         if (local_14 < 0) {
@@ -2443,7 +2443,7 @@ LAB_0045ddb7:
             diplo_leader_play_reaction(3);
             popup_game(ADDR(0x626e60, ((u8 *)&g.d_00626e60)));
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+            /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
             goto LAB_0045f0a3;
           }
           civs[civ2].gold -= local_14;
@@ -2515,7 +2515,7 @@ LAB_0045eb0a:
             diplo_leader_play_reaction(3);
             popup_game(ADDR(0x626e94, ((u8 *)&g.d_00626e94)));
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+            /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
             goto LAB_0045f0a3;
           }
           diplo_leader_play_reaction(2);
@@ -2594,21 +2594,21 @@ LAB_0045eb0a:
           map_redraw_all_views(human_civ,1);
         }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+        /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
       }
     }
     else {
       diplo_leader_play_reaction(3);
       popup_game(ADDR(0x626e28, ((u8 *)&g.d_00626e28)));
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+      /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
     }
   }
   else {
     diplo_leader_play_reaction(3);
     popup_game(ADDR(0x626e20, ((u8 *)&g.d_00626e20)));
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+    /* inlined unwind funclet 0045f08d */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
   }
 LAB_0045f0a3:
   return;
@@ -2675,7 +2675,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
   if (iVar3 == 0) {
     civs[civ].field_1f--;
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+    /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
   }
   else if (iVar3 == 1) {
     diplo_tech_exchange(civ2,civ,0xffffffff,0xffffffff,0,1);
@@ -2685,7 +2685,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       diplo_leader_play_reaction(4);
       popup_game(ADDR(0x626eb0, ((u8 *)&g.d_00626eb0)));
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+      /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
     }
     else {
       text_set_label_arg(1,advances[diplo_offer_tech_best].name);
@@ -2700,7 +2700,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game(ADDR(0x626ed0, ((u8 *)&g.d_00626ed0)));
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
       }
       else {
         if (local_338 == 1) {
@@ -2722,7 +2722,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         civs[civ].field_1f -= ((char)diplo_gifts_this_meeting + 2);
         diplo_gifts_this_meeting++;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
       }
     }
   }
@@ -2746,7 +2746,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       diplo_leader_play_reaction(4);
       popup_game(ADDR(0x626eec, ((u8 *)&g.d_00626eec)));
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+      /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
     }
     else {
       civs[civ2].gold -= local_24;
@@ -2762,7 +2762,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       civs[civ].field_1f -= ((char)diplo_gifts_this_meeting + 2);
       diplo_gifts_this_meeting++;
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+      /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
     }
   }
   else {
@@ -2780,14 +2780,14 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game(ADDR(0x626f0c, ((u8 *)&g.d_00626f0c)));
         civs[civ].field_1f--;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       city = dlg_show_modal(&local_318,0);
       if (city < 0) {
         civs[civ].field_1f--;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       unit2 = tile_first_unit((int)cities[city].x,(int)cities[city].y);
@@ -2795,7 +2795,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         popup_game(ADDR(0x626f1c, ((u8 *)&g.d_00626f1c)));
         civs[civ].field_1f--;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       city4 = city_find_nearest((int)cities[city].x,(int)cities[city].y,civ,0xffffffff,
@@ -2809,7 +2809,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game(ADDR(0x626f2c, ((u8 *)&g.d_00626f2c)));
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       text_clear();
@@ -2820,7 +2820,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       if (unit < 0) {
         civs[civ].field_1f--;
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       if ((-1 < unit_types[units[unit].type].obsolete_by) &&
@@ -2831,7 +2831,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
         diplo_leader_play_reaction(4);
         popup_game(ADDR(0x626f38, ((u8 *)&g.d_00626f38)));
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+        /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
         goto LAB_0045fd59;
       }
       unit_stack_unlink(unit,1);
@@ -2882,7 +2882,7 @@ void __cdecl diplo_gift_menu(iptr civ2,iptr civ)
       }
     }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
+    /* inlined unwind funclet 0045fd43 */ { dialog_dtor((Dialog *)((iptr)&local_318)); }
   }
 LAB_0045fd59:
   return;
@@ -2997,7 +2997,7 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
   }
   text_close_file();
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00460104 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+  /* inlined unwind funclet 00460104 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
   return local_310;
 }
 #undef local_310
@@ -3023,7 +3023,7 @@ i32 __cdecl diplo_proposal_menu(iptr civ2,iptr civ)
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
-#define _DAT_00626a28 (*(i32 *)((u8 *)&g.d_00626a28))
+#define diplo_ai_meeting_active_i32 (*(i32 *)((u8 *)&g.d_00626a28))
 #define local_7c (*(int *)(frame_ + FRAME_OFF(4)))
 #define local_78 (*(int *)(frame_ + FRAME_OFF(8)))
 #define local_70 (*(int *)(frame_ + FRAME_OFF(16)))
@@ -3079,11 +3079,11 @@ diplo_ai_meet_player(iptr civ2,iptr civ,i32 param_3,i32 param_4,int param_5)
   bVar7 = false;
   bVar10 = false;
   bVar14 = false;
-  _DAT_00626a28 = 1;
+  diplo_ai_meeting_active_i32 = 1;
   if ((scenario_events_loaded != 0) &&
      (iVar14 = events_check_negotiation((ScenarioEvents *)&scenario_events,civ2,civ),
      iVar14 == 0)) {
-    _DAT_00626a28 = 0;
+    diplo_ai_meeting_active_i32 = 0;
     return;
   }
   diplo_attitude_target = civ2;
@@ -4193,7 +4193,7 @@ LAB_00463d3b:
     text_set_string_arg(0,iVar17);
     popup_text((iptr)PTR_s_TUTORIAL_00627678,ADDR(0x62729c, ((u8 *)&g.d_0062729c)));
   }
-  _DAT_00626a28 = 0;
+  diplo_ai_meeting_active_i32 = 0;
   return;
 }
 #undef diplo_ai_declare_war
@@ -4212,7 +4212,7 @@ LAB_00463d3b:
 #undef human_civ
 #undef scenario_events_loaded
 #undef scenario_flags
-#undef _DAT_00626a28
+#undef diplo_ai_meeting_active_i32
 #undef local_7c
 #undef local_78
 #undef local_70
@@ -4606,7 +4606,7 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((ModalMenuWindow *)this);
   local_8 = 0;
   surfwnd_ctor((SurfaceWindow *)this->pad_c8);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
@@ -4616,7 +4616,7 @@ DiploLeaderWindow * __thiscall diplo_leader_wnd_ctor(DiploLeaderWindow *this)
   (*(i8 *)((char *)&local_8 + 0)) = 3;
   dll_handle_init((DllHandle *)(this->pad_638 + 0x20));
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  mmwnd_ctor((C_004083b0_a28 *)(this->pad_638 + 0x24));
+  mmwnd_ctor((DocumentWindow *)(this->pad_638 + 0x24));
   local_8 = CONCAT31((*(i32 *)((char *)&local_8 + 1)),5);
   gfx_get_screen_rect((iptr)&this->control_list);
   this->field_1088 = '\0';
@@ -4639,17 +4639,17 @@ void __thiscall diplo_leader_wnd_dtor(void *this)
   (*(i32 *)((char *)&local_8 + 1)) = 0;
   diplo_leader_video_active = 0;
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x65c)); }
+  /* inlined unwind funclet 0049444f */ { avi_player_dtor((AviPlayer *)(*(int *)((iptr)&this) + 0x65c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_0049445e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x658)); }
+  /* inlined unwind funclet 0049445e */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x658)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x224)); }
+  /* inlined unwind funclet 0049446d */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x224)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1dc)); }
+  /* inlined unwind funclet 0049447c */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x1dc)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
+  /* inlined unwind funclet 0049448b */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 200)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0049449a */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0049449a */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return;
 }
 #undef diplo_leader_video_active
@@ -4748,9 +4748,9 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
   wnd_set_palette((WndBase *)this,(iptr)(this->pad_1e4 + 0x40));
   wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)(this->pad_1e4 + 0x40));
   if (diplo_leader_video_active != '\0') {
-    window_show((C_004083b0_4 *)(this->pad_638 + 0x24));
+    window_show((WindowObjectView *)(this->pad_638 + 0x24));
   }
-  window_show((C_004083b0_4 *)this->pad_c8);
+  window_show((WindowObjectView *)this->pad_c8);
   wnd_flush_paint();
   if (diplo_leader_video_active != '\0') {
     avi_player_play_range
@@ -4759,7 +4759,7 @@ void __thiscall diplo_leader_wnd_show(DiploLeaderWindow *this)
                *(i32 *)(&leader_anim_frame_ends + (uint)this->leader_tribe * 0x28));
   }
   dll_handle_free((DllHandle *)(this->pad_638 + 0x20));
-  DAT_0062ca3c = 0;
+  diplo_leader_wnd_busy = 0;
   snd_play_effect(diplo_greeting_sound_id,1,0,ADDR(0x401a91, diplo_greeting_sound_done_cb));
   return;
 }
@@ -4853,11 +4853,11 @@ uint __thiscall diplo_leader_init_main_art(DiploLeaderView *this)
     ;
     surface_set_palette((DibSurface *)this->pad_c8,(iptr)(this->pad_1e0 + 0x44));
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00494b3a */ { palette_destroy((GamePalette *)((iptr)&local_44c)); }
+    /* inlined unwind funclet 00494b3a */ { palette_destroy((GamePalette *)((iptr)&local_44c)); }
   }
   else {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00494b3a */ { palette_destroy((GamePalette *)((iptr)&local_44c)); }
+    /* inlined unwind funclet 00494b3a */ { palette_destroy((GamePalette *)((iptr)&local_44c)); }
   }
   return (uint)(iVar1 != 0);
 }
@@ -4904,22 +4904,22 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
   if (local_4dc == 0) {
     local_4e0 = 1;
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
+    /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+    /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
+    /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
   }
   else {
     iVar1 = surface_load_gif_resource(&local_48c,0xd7,10,0xec,(iptr)&local_444);
     if (iVar1 == 0) {
       local_4e4 = 0;
       (*(i8 *)((char *)&local_8 + 0)) = 1;
-      /* inlined unwind funclet FUN_00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
+      /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+      /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
+      /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
       local_4e0 = local_4e4;
     }
     else {
@@ -4935,11 +4935,11 @@ i32 __thiscall diplo_leader_init_military(DiploLeaderView *this)
         local_4d4 += local_4d8;
       }
       (*(i8 *)((char *)&local_8 + 0)) = 1;
-      /* inlined unwind funclet FUN_00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
+      /* inlined unwind funclet 00494d71 */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+      /* inlined unwind funclet 00494d7d */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
+      /* inlined unwind funclet 00494d89 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
       local_4e0 = 1;
     }
   }
@@ -5009,7 +5009,7 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   local_8 = 0xffffffff;
   font_init(&local_680,0,0xb);
   local_8 = 0;
-  FUN_005f2620(local_604,0x3c,5,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(local_604,0x3c,5,sprite_init,sprite_destroy);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
   palette_init(&local_45c);
   (*(i8 *)((char *)&local_8 + 0)) = 2;
@@ -5078,26 +5078,26 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
   if (local_6ac == 0) {
     local_7bc = 1;
     (*(i8 *)((char *)&local_8 + 0)) = 2;
-    /* inlined unwind funclet FUN_00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
+    /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
+    /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
+    /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&local_604,0x3c,5,sprite_destroy); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
+    /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
   }
   else {
     iVar1 = surface_load_gif_resource(&local_4d8,0xd7,10,0xec,(iptr)&local_45c);
     if (iVar1 == 0) {
       local_7c0 = 0;
       (*(i8 *)((char *)&local_8 + 0)) = 2;
-      /* inlined unwind funclet FUN_00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
+      /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
       (*(i8 *)((char *)&local_8 + 0)) = 1;
-      /* inlined unwind funclet FUN_00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
+      /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&local_604,0x3c,5,sprite_destroy); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
+      /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
       local_7bc = local_7c0;
     }
     else {
@@ -5260,13 +5260,13 @@ i32 __thiscall diplo_leader_init_science(DiploLeaderView *this)
         }
       }
       (*(i8 *)((char *)&local_8 + 0)) = 2;
-      /* inlined unwind funclet FUN_00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
+      /* inlined unwind funclet 00495be2 */ { surface_dtor((DibSurface *)((iptr)&local_4d8)); }
       (*(i8 *)((char *)&local_8 + 0)) = 1;
-      /* inlined unwind funclet FUN_00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
+      /* inlined unwind funclet 00495bee */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
       local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-      /* inlined unwind funclet FUN_00495bfa */ { FUN_005f2490((iptr)&local_604,0x3c,5,sprite_destroy); }
+      /* inlined unwind funclet 00495bfa */ { crt_vector_dtor_iterator((iptr)&local_604,0x3c,5,sprite_destroy); }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
+      /* inlined unwind funclet 00495c10 */ { font_destroy((GameFont *)((iptr)&local_680)); }
       local_7bc = 1;
     }
   }
@@ -5338,11 +5338,11 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
   if (iVar1 == 0) {
     local_58c = 0;
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_00495dcf */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
+    /* inlined unwind funclet 00495dcf */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00495ddb */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+    /* inlined unwind funclet 00495ddb */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00495de7 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
+    /* inlined unwind funclet 00495de7 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
   }
   else {
     palette_get_rgb(&local_444,(iptr)local_588,0x2a,0x40);
@@ -5352,11 +5352,11 @@ i32 __thiscall diplo_leader_init_portrait(DiploLeaderView *this)
     sprite_grab_from_surface(&local_4c8,(iptr)&local_48c,9,1,1,0xe1,0x113);
     sprite_draw(&local_4c8,(iptr)local_59c,(iptr)this->pad_c8,0xd0,0x39);
     (*(i8 *)((char *)&local_8 + 0)) = 1;
-    /* inlined unwind funclet FUN_00495dcf */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
+    /* inlined unwind funclet 00495dcf */ { surface_dtor((DibSurface *)((iptr)&local_48c)); }
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_00495ddb */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
+    /* inlined unwind funclet 00495ddb */ { palette_destroy((GamePalette *)((iptr)&local_444)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00495de7 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
+    /* inlined unwind funclet 00495de7 */ { sprite_destroy((Sprite *)((iptr)&local_4c8)); }
     local_58c = 1;
   }
   return local_58c;
@@ -5403,18 +5403,18 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
   iVar2 = file_resolve_path((iptr)local_4c8);
   if (iVar2 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
+    /* inlined unwind funclet 00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
     uVar1 = 0;
   }
   else {
     avi_player_create_child
-              ((C_004083b0_61c *)(this->pad_1e0 + 0x47c),ADDR(0x62cbb0, ((u8 *)&g.d_0062cbb0)),0x200,
+              ((MediaWindow *)(this->pad_1e0 + 0x47c),ADDR(0x62cbb0, ((u8 *)&g.d_0062cbb0)),0x200,
                *(i32 *)(&leader_video_x_table + (uint)this->field_1084 * 8),
                *(i32 *)(&leader_video_y_table + (uint)this->field_1084 * 8),(iptr)this->pad_c8);
     local_14 = avi_player_open((AviPlayerOpenView *)(this->pad_1e0 + 0x47c),(iptr)local_4c8);
     if (local_14 == 0) {
       avi_player_set_end_callback((AviPlayerEndCbSetView *)(this->pad_1e0 + 0x47c),ADDR(0x402441, diplo_leader_video_end_cb));
-      avi_player_set_transparent((C_005dd761 *)(this->pad_1e0 + 0x47c),1);
+      avi_player_set_transparent((AviPlayerSetTransparentView *)(this->pad_1e0 + 0x47c),1);
       palette_load_ctab_res(&local_448,this->field_1084 + 1000);
       palette_get_rgb(&local_448,(iptr)local_5f4,0x92,100);
       palette_set_rgb
@@ -5425,7 +5425,7 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
                 ((WndBase *)(this->pad_1e0 + 0x4c4),(iptr)(this->pad_1e0 + 0x44));
       avi_player_show_frame(this->pad_1e0 + 0x47c,0);
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
+      /* inlined unwind funclet 00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
       uVar1 = 1;
     }
     else {
@@ -5433,7 +5433,7 @@ i8 __thiscall diplo_leader_init_video(DiploLeaderView *this)
         popup_game(ADDR(0x62cbb4, ((u8 *)&g.d_0062cbb4)));
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
+      /* inlined unwind funclet 00496100 */ { palette_destroy((GamePalette *)((iptr)&local_448)); }
       uVar1 = 0;
     }
   }
@@ -6103,7 +6103,7 @@ i32 __cdecl diplo_ally_join_war(iptr civ,iptr civ2,iptr civ3)
 #define parley_other_civ (*(uptr *)((u8 *)&g.d_0067a8c0))
 #define scenario_events_loaded (*(int *)((u8 *)&g.d_00627670))
 #define scenario_flags (*(short *)((u8 *)&g.d_0064bc60))
-#define _DAT_0063e4e8 (*(i32 *)((u8 *)&g.d_0063e4e8))
+#define mp_meeting_wait_start_i32 (*(i32 *)((u8 *)&g.d_0063e4e8))
 #define civ3 (*(uptr *)(frame_ + FRAME_OFF(4)))
 #define civ4 (*(uptr *)(frame_ + FRAME_OFF(8)))
 #define local_1c (*(uint *)(frame_ + FRAME_OFF(20)))
@@ -6218,7 +6218,7 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
     iVar5 = civ_name_plural(civ2);
     text_set_string_arg(2,iVar5);
     dlg_pending_idle_callback = ((void *)ADDR(0x0040326a, mp_meeting_wait_idle));
-    _DAT_0063e4e8 = timer_ticks();
+    mp_meeting_wait_start_i32 = timer_ticks();
     city = popup_game_sprite_flags(ADDR(0x633b08, ((u8 *)&g.d_00633b08)),0x2000001,ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
     if (net_host_handoff_stage == '\0') {
       if (nm_parley_cancel_count == 0) {
@@ -6238,13 +6238,13 @@ void __cdecl diplo_civs_meet(uptr civ,uptr civ2,iptr x,iptr y)
           mp_meeting_reply = -1;
           parley_other_civ = civ2;
           dlg_pending_idle_callback = ((void *)ADDR(0x0040326a, mp_meeting_wait_idle));
-          _DAT_0063e4e8 = timer_ticks();
+          mp_meeting_wait_start_i32 = timer_ticks();
           iVar5 = civ_name_plural(civ);
           text_set_string_arg(0,iVar5);
           popup_game_with_sprite(ADDR(0x633b44, ((u8 *)&g.d_00633b44)),ADDR(0x63fc58, ((u8 *)&g.d_0063fc58)),0);
           if (net_host_handoff_stage == '\0') {
             if (nm_parley_cancel_count == 0) {
-              parley_wnd_open((C_004083b0_430 *)&parley_wnd,civ2,3);
+              parley_wnd_open((ViewWindow *)&parley_wnd,civ2,3);
             }
             else {
               parley_other_civ = 0xffffffff;
@@ -6572,7 +6572,7 @@ LAB_0055ecb6:
 #undef parley_other_civ
 #undef scenario_events_loaded
 #undef scenario_flags
-#undef _DAT_0063e4e8
+#undef mp_meeting_wait_start_i32
 #undef civ3
 #undef civ4
 #undef local_1c
@@ -7147,7 +7147,7 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
               iVar5 = civ_name_plural(civ3);
               text_set_string_arg(1,iVar5);
               text_set_number_arg(0,iVar3 * 0x32);
-              FUN_005f22d0(local_5c,s_HELPME_00633ccc);
+              crt_strcpy(local_5c,s_HELPME_00633ccc);
               if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
                 str_append((iptr)local_5c,ADDR(0x633cd4, ((u8 *)&g.d_00633cd4)));
               }
@@ -7203,9 +7203,9 @@ void __cdecl diplo_ai_seek_war_ally(uptr civ2,uptr civ)
                                     (label_string_ids +
                                     (((civs[civ2].treaties[civ] & 8) == 0
                                      ) + 0x73) * 4));
-              FUN_005f22d0(local_5c,s_CRUSADE_00633ce0);
+              crt_strcpy(local_5c,s_CRUSADE_00633ce0);
               if ((*(byte *)&civs[civ].treaties[civ3] & 8) != 0) {
-                FUN_005f22d0(local_5c,s_JIHAD_00633ce8);
+                crt_strcpy(local_5c,s_JIHAD_00633ce8);
               }
               iVar3 = popup_game_with_sprite((iptr)local_5c,ADDR(0x63fc98, ((u8 *)&g.d_0063fc98)),0);
               if (iVar3 == 0) {

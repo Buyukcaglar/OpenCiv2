@@ -162,7 +162,7 @@ void __stdcall ___CxxLongjmpUnwind_4(int param_1)
 
 /* 005f2260 crt */
 #define DAT_00639e50 (*(i32 *)((u8 *)&g.d_00639e50))
-void __cdecl FUN_005f2260(i32 param_1)
+void __cdecl crt_srand(i32 param_1)
 
 {
   DAT_00639e50 = param_1;
@@ -186,7 +186,7 @@ int __cdecl _rand(void)
 #undef DAT_00639e50
 
 /* 005f22d0 crt */
-uint * __cdecl FUN_005f22d0(uint *param_1,uint *param_2)
+uint * __cdecl crt_strcpy(uint *param_1,uint *param_2)
 
 {
   byte bVar1;
@@ -233,7 +233,7 @@ LAB_005f23b8:
 }
 
 /* 005f22e0 crt */
-uint * __cdecl FUN_005f22e0(uint *param_1,uint *param_2)
+uint * __cdecl crt_strcat(uint *param_1,uint *param_2)
 
 {
   byte bVar1;
@@ -1365,7 +1365,7 @@ size_t __cdecl _fread(void *_DstBuf,size_t _ElementSize,size_t _Count,FILE *_Fil
         if (local_10 <= (uint)_File->_cnt) {
           uVar2 = local_10;
         }
-        FUN_005f2110(local_c,_File->_ptr,uVar2);
+        crt_memcpy(local_c,_File->_ptr,uVar2);
         local_10 = local_10 - uVar2;
         _File->_cnt = _File->_cnt - uVar2;
         _File->_ptr = _File->_ptr + uVar2;
@@ -1424,7 +1424,7 @@ size_t __cdecl _fwrite(void *_Str,size_t _Size,size_t _Count,FILE *_File)
           if (local_10 <= (uint)_File->_cnt) {
             uVar4 = local_10;
           }
-          FUN_005f2110(_File->_ptr,local_c,uVar4);
+          crt_memcpy(_File->_ptr,local_c,uVar4);
           local_10 = local_10 - uVar4;
           _File->_cnt = _File->_cnt - uVar4;
           _File->_ptr = _File->_ptr + uVar4;
@@ -2381,7 +2381,7 @@ __calloc_dbg(int param_1,int param_2,i32 param_3,i32 param_4,i32 param_5)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __cdecl FUN_005f4900(i32 param_1,i32 param_2)
+i32 __cdecl crt_realloc(i32 param_1,i32 param_2)
 
 {
   i32 uVar1;
@@ -3507,7 +3507,7 @@ void __cdecl __CrtMemDumpStatistics(int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __cdecl FUN_005f6650(LPCSTR param_1,LPCSTR param_2)
+i32 __cdecl crt_rename(LPCSTR param_1,LPCSTR param_2)
 
 {
   BOOL BVar1;
@@ -3540,7 +3540,7 @@ i32 __cdecl FUN_005f6650(LPCSTR param_1,LPCSTR param_2)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __cdecl FUN_005f66b0(LPCSTR param_1)
+i32 __cdecl crt_remove(LPCSTR param_1)
 
 {
   BOOL BVar1;
@@ -3575,7 +3575,7 @@ i32 __cdecl FUN_005f66b0(LPCSTR param_1)
 void __cdecl FUN_005f6710(i32 param_1)
 
 {
-  FUN_005f66b0(param_1);
+  crt_remove(param_1);
   return;
 }
 
@@ -4016,7 +4016,7 @@ void __cdecl __amsg_exit(int param_1)
 }
 
 /* 005f7120 crt */
-int __cdecl FUN_005f7120(uint param_1)
+int __cdecl crt_abs(uint param_1)
 
 {
   return (param_1 ^ (int)param_1 >> 0x1f) - ((int)param_1 >> 0x1f);
@@ -4093,7 +4093,7 @@ char * __cdecl __getdcwd(int _Drive,char *_DstBuf,int _SizeInBytes)
       crt_errno = 0x22;
       return (char *)0x0;
     }
-    pcVar2 = (char *)FUN_005f22d0(local_8,local_118);
+    pcVar2 = (char *)crt_strcpy(local_8,local_118);
   }
   return pcVar2;
 }
@@ -4277,12 +4277,12 @@ void __cdecl __assert(char *param_1,char *param_2,int param_3)
     _fflush((FILE *)&DAT_0063ac98);
   }
   else {
-    FUN_005f22d0(local_220,"Assertion failed!");
-    FUN_005f22e0(local_220,PTR_DAT_0063a010);
-    FUN_005f22e0(local_220,"Program: ");
+    crt_strcpy(local_220,"Assertion failed!");
+    crt_strcat(local_220,PTR_DAT_0063a010);
+    crt_strcat(local_220,"Program: ");
     DVar2 = GetModuleFileNameA((HMODULE)0x0,local_328,0x104);
     if (DVar2 == 0) {
-      FUN_005f22d0(local_328,"<program name unknown>");
+      crt_strcpy(local_328,"<program name unknown>");
     }
     local_224 = local_328;
     sVar3 = _strlen(local_328);
@@ -4291,9 +4291,9 @@ void __cdecl __assert(char *param_1,char *param_2,int param_3)
       local_224 = local_224 + (sVar3 - 0x31);
       _strncpy(local_224,PTR_DAT_0063a008,3);
     }
-    FUN_005f22e0(local_220,local_224);
-    FUN_005f22e0(local_220,PTR_DAT_0063a00c);
-    FUN_005f22e0(local_220,"File: ");
+    crt_strcat(local_220,local_224);
+    crt_strcat(local_220,PTR_DAT_0063a00c);
+    crt_strcat(local_220,"File: ");
     local_224 = param_2;
     sVar3 = _strlen(param_2);
     if (0x3c < sVar3 + 8) {
@@ -4301,30 +4301,30 @@ void __cdecl __assert(char *param_1,char *param_2,int param_3)
       local_224 = local_224 + (sVar3 - 0x34);
       _strncpy(local_224,PTR_DAT_0063a008,3);
     }
-    FUN_005f22e0(local_220,local_224);
-    FUN_005f22e0(local_220,PTR_DAT_0063a00c);
-    FUN_005f22e0(local_220,"Line: ");
+    crt_strcat(local_220,local_224);
+    crt_strcat(local_220,PTR_DAT_0063a00c);
+    crt_strcat(local_220,"Line: ");
     iVar5 = 10;
     sVar3 = _strlen(local_220);
     __itoa(param_3,local_220 + sVar3,iVar5);
-    FUN_005f22e0(local_220,PTR_DAT_0063a010);
-    FUN_005f22e0(local_220,"Expression: ");
+    crt_strcat(local_220,PTR_DAT_0063a010);
+    crt_strcat(local_220,"Expression: ");
     sVar3 = _strlen(param_1);
     sVar4 = _strlen(local_220);
     if (sVar3 + sVar4 + 0xb0 < 0x21d) {
-      FUN_005f22e0(local_220,param_1);
+      crt_strcat(local_220,param_1);
     }
     else {
       sVar3 = _strlen(local_220);
       _strncat(local_220,param_1,0x21c - (sVar3 + 0xb1));
-      FUN_005f22e0(local_220,PTR_DAT_0063a008);
+      crt_strcat(local_220,PTR_DAT_0063a008);
     }
-    FUN_005f22e0(local_220,PTR_DAT_0063a010);
-    FUN_005f22e0(local_220,
+    crt_strcat(local_220,PTR_DAT_0063a010);
+    crt_strcat(local_220,
                  "For information on how your program can cause an assertion\nfailure, see the Visual C++ documentation on asserts"
                 );
-    FUN_005f22e0(local_220,PTR_DAT_0063a010);
-    FUN_005f22e0(local_220,"(Press Retry to debug the application - JIT must be enabled)");
+    crt_strcat(local_220,PTR_DAT_0063a010);
+    crt_strcat(local_220,"(Press Retry to debug the application - JIT must be enabled)");
     iVar5 = ___crtMessageBoxA(local_220,"Microsoft Visual C++ Runtime Library",0x12012);
     if (iVar5 == 3) {
       _raise(0x16);
@@ -4624,7 +4624,7 @@ uint __cdecl _CrtMessageWindow(int param_1,int param_2,int param_3,char *param_4
   }
   DVar2 = GetModuleFileNameA((HMODULE)0x0,local_10c,0x104);
   if (DVar2 == 0) {
-    FUN_005f22d0(local_10c,"<program name unknown>");
+    crt_strcpy(local_10c,"<program name unknown>");
   }
   _Str = local_10c;
   sVar3 = _strlen(_Str);
@@ -4645,7 +4645,7 @@ uint __cdecl _CrtMessageWindow(int param_1,int param_2,int param_3,char *param_4
                      ,(&PTR_s_Warning_0063a058)[param_1],_Str,
                      "\nModule: " + ((local_1114 != (char *)0x0) - 1 & 0xc924));
   if (iVar1 < 0) {
-    FUN_005f22d0(local_1110,"_CrtDbgReport: String too long or IO Error");
+    crt_strcpy(local_1110,"_CrtDbgReport: String too long or IO Error");
   }
   local_110 = ___crtMessageBoxA(local_1110,"Microsoft Visual C++ Debug Library",0x12012);
   if (local_110 == 3) {
@@ -6098,7 +6098,7 @@ i32 __cdecl __realloc_base(LPVOID param_1,uint param_2)
                 if (local_14 <= param_2) {
                   uVar3 = local_14;
                 }
-                FUN_005f2110(local_c,param_1,uVar3);
+                crt_memcpy(local_c,param_1,uVar3);
                 ___sbh_free_block(local_18,local_8,local_10);
               }
             }
@@ -6113,7 +6113,7 @@ i32 __cdecl __realloc_base(LPVOID param_1,uint param_2)
             if (local_14 <= param_2) {
               uVar3 = local_14;
             }
-            FUN_005f2110(local_c,param_1,uVar3);
+            crt_memcpy(local_c,param_1,uVar3);
             ___sbh_free_block(local_18,local_8,local_10);
           }
         }
@@ -7222,7 +7222,7 @@ void __cdecl __shift(char *param_1,int param_2)
   
   if (param_2 != 0) {
     sVar1 = _strlen(param_1);
-    FUN_005f6500(param_1 + param_2,param_1,sVar1 + 1);
+    crt_memmove(param_1 + param_2,param_1,sVar1 + 1);
   }
   return;
 }
@@ -7559,7 +7559,7 @@ int __cdecl __setenvp(void)
       if (*local_10 == 0) {
         __amsg_exit(9);
       }
-      FUN_005f22d0(*local_10,local_8);
+      crt_strcpy(*local_10,local_8);
       local_10 = local_10 + 1;
     }
   }
@@ -7868,7 +7868,7 @@ LPVOID __cdecl ___crtGetEnvironmentStringsA(void)
         pCVar4 = (LPSTR)0x0;
       }
       else {
-        FUN_005f2110(pCVar4,local_1c,local_10 + (1 - (int)local_1c));
+        crt_memcpy(pCVar4,local_1c,local_10 + (1 - (int)local_1c));
         FreeEnvironmentStringsA(local_1c);
       }
     }
@@ -8066,7 +8066,7 @@ void __cdecl __NMSG_WRITE(int param_1)
     else if (param_1 != 0xfc) {
       DVar4 = GetModuleFileNameA((HMODULE)0x0,local_114,0x104);
       if (DVar4 == 0) {
-        FUN_005f22d0(local_114,"<program name unknown>");
+        crt_strcpy(local_114,"<program name unknown>");
       }
       local_10 = local_114;
       sVar3 = _strlen(local_10);
@@ -8075,10 +8075,10 @@ void __cdecl __NMSG_WRITE(int param_1)
         local_10 = local_10 + (sVar3 - 0x3b);
         _strncpy(local_10,"...",3);
       }
-      FUN_005f22d0(local_1b4,"Runtime Error!\n\nProgram: ");
-      FUN_005f22e0(local_1b4,local_10);
-      FUN_005f22e0(local_1b4,&DAT_0061e2fc);
-      FUN_005f22e0(local_1b4,(&PTR_s_R6002___floating_point_not_loade_0063b1bc)[local_c * 2]);
+      crt_strcpy(local_1b4,"Runtime Error!\n\nProgram: ");
+      crt_strcat(local_1b4,local_10);
+      crt_strcat(local_1b4,&DAT_0061e2fc);
+      crt_strcat(local_1b4,(&PTR_s_R6002___floating_point_not_loade_0063b1bc)[local_c * 2]);
       ___crtMessageBoxA(local_1b4,"Microsoft Visual C++ Runtime Library",0x12010);
     }
   }
@@ -9970,7 +9970,7 @@ void __cdecl __tzset(void)
     sVar4 = _strlen(_Str1);
     DAT_0063b348 = (char *)__malloc_dbg(sVar4 + 1,uVar6,pcVar7,uVar8);
     if (DAT_0063b348 != (char *)0x0) {
-      FUN_005f22d0(DAT_0063b348,_Str1);
+      crt_strcpy(DAT_0063b348,_Str1);
       _strncpy(PTR_DAT_0063b340,_Str1,3);
       PTR_DAT_0063b340[3] = 0;
       local_c = _Str1 + 3;
@@ -10971,7 +10971,7 @@ int * __cdecl copy_environ(int *param_1)
       iVar3 = __malloc_dbg(sVar2 + 1,uVar4,pcVar5,uVar6);
       *local_c = iVar3;
       if (*local_c != 0) {
-        FUN_005f22d0(*local_c,*local_10);
+        crt_strcpy(*local_c,*local_10);
       }
       local_c = local_c + 1;
     }
@@ -11090,7 +11090,7 @@ i32 __cdecl FUN_006076a0(int param_1)
    
    Library: Visual Studio 1998 Debug */
 
-i32 __cdecl FUN_00607920(LPCSTR param_1)
+i32 __cdecl crt_mkdir(LPCSTR param_1)
 
 {
   BOOL BVar1;

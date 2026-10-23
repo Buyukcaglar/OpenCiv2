@@ -330,7 +330,7 @@ void __cdecl sprite_editor_tool_sprites_global_init(void)
 void __cdecl sprite_editor_tool_sprites_static_init(void)
 
 {
-  FUN_005f2620(&sprite_editor_tool_sprites,0x3c,0xf,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&sprite_editor_tool_sprites,0x3c,0xf,sprite_init,sprite_destroy);
   return;
 }
 
@@ -346,7 +346,7 @@ void __cdecl sprite_editor_tool_sprites_reg_atexit(void)
 void __cdecl sprite_editor_tool_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&sprite_editor_tool_sprites,0x3c,0xf,sprite_destroy);
+  crt_vector_dtor_iterator(&sprite_editor_tool_sprites,0x3c,0xf,sprite_destroy);
   return;
 }
 
@@ -363,7 +363,7 @@ void __cdecl small_citizen_sprites_global_init(void)
 void __cdecl small_citizen_sprites_static_init(void)
 
 {
-  FUN_005f2620(&small_citizen_sprites,0x3c,0xb,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&small_citizen_sprites,0x3c,0xb,sprite_init,sprite_destroy);
   return;
 }
 
@@ -379,7 +379,7 @@ void __cdecl small_citizen_sprites_reg_atexit(void)
 void __cdecl small_citizen_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&small_citizen_sprites,0x3c,0xb,sprite_destroy);
+  crt_vector_dtor_iterator(&small_citizen_sprites,0x3c,0xb,sprite_destroy);
   return;
 }
 
@@ -396,7 +396,7 @@ void __cdecl small_resource_icon_sprites_global_init(void)
 void __cdecl small_resource_icon_sprites_static_init(void)
 
 {
-  FUN_005f2620(&small_resource_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&small_resource_icon_sprites,0x3c,3,sprite_init,sprite_destroy);
   return;
 }
 
@@ -412,7 +412,7 @@ void __cdecl small_resource_icon_sprites_reg_atexit(void)
 void __cdecl small_resource_icon_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&small_resource_icon_sprites,0x3c,3,sprite_destroy);
+  crt_vector_dtor_iterator(&small_resource_icon_sprites,0x3c,3,sprite_destroy);
   return;
 }
 
@@ -470,7 +470,7 @@ void __cdecl icon_misc_sprites_global_init(void)
 void __cdecl icon_misc_sprites_static_init(void)
 
 {
-  FUN_005f2620(&DAT_0063f6f0,0x3c,6,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&icon_misc_sprites,0x3c,6,sprite_init,sprite_destroy);
   return;
 }
 
@@ -486,7 +486,7 @@ void __cdecl icon_misc_sprites_reg_atexit(void)
 void __cdecl icon_misc_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&DAT_0063f6f0,0x3c,6,sprite_destroy);
+  crt_vector_dtor_iterator(&icon_misc_sprites,0x3c,6,sprite_destroy);
   return;
 }
 
@@ -511,7 +511,7 @@ void __cdecl icons_unused_tall_sprite_global_init(void)
 void __cdecl icons_unused_tall_sprite_static_init(void)
 
 {
-  sprite_init((Sprite *)&DAT_00648098);
+  sprite_init((Sprite *)&icons_unused_tall_sprite);
   return;
 }
 
@@ -527,7 +527,7 @@ void __cdecl icons_unused_tall_sprite_reg_atexit(void)
 void __cdecl icons_unused_tall_sprite_static_dtor(void)
 
 {
-  sprite_destroy((Sprite *)&DAT_00648098);
+  sprite_destroy((Sprite *)&icons_unused_tall_sprite);
   return;
 }
 
@@ -544,7 +544,7 @@ void __cdecl icons_pair_sprites_global_init(void)
 void __cdecl icons_pair_sprites_static_init(void)
 
 {
-  FUN_005f2620(&DAT_00647b50,0x3c,4,sprite_init,sprite_destroy);
+  crt_vector_ctor_iterator(&icons_pair_sprites,0x3c,4,sprite_init,sprite_destroy);
   return;
 }
 
@@ -560,7 +560,7 @@ void __cdecl icons_pair_sprites_reg_atexit(void)
 void __cdecl icons_pair_sprites_static_dtor(void)
 
 {
-  FUN_005f2490(&DAT_00647b50,0x3c,4,sprite_destroy);
+  crt_vector_dtor_iterator(&icons_pair_sprites,0x3c,4,sprite_destroy);
   return;
 }
 
@@ -785,9 +785,9 @@ void __cdecl gfx_load_terrain_sprites(void)
   }
   surface_release((DibSurface *)&gfx_sheet_surface);
   local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet FUN_0044996f */ { sprite_destroy((Sprite *)((iptr)&local_ac)); }
+  /* inlined unwind funclet 0044996f */ { sprite_destroy((Sprite *)((iptr)&local_ac)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0044997b */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+  /* inlined unwind funclet 0044997b */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   return;
 }
 #undef local_f0
@@ -898,27 +898,27 @@ void __cdecl gfx_load_icon_sprites(void)
   sprite_grab_tile_cell(ADDR(0x647bc8, ((u8 *)&g.d_00647bc8)),0xf8,0x1ae);
   sprite_free((Sprite *)&fortify_overlay_alt_sprite);
   gfx_grab_fortify_overlay(1,0x20,0xbb);
-  sprite_free((Sprite *)&DAT_0064668c);
+  sprite_free((Sprite *)&icon_sprite_6);
   sprite_grab_icon_cell_keyed(ADDR(0x64668c, ((u8 *)&g.d_0064668c)),0x22,0xdf);
   sprite_free((Sprite *)&pollution_icon_sprite);
   sprite_grab_from_sheet(ADDR(0x6466c8, ((u8 *)&g.d_006466c8)),0x43,0xdf,0x20,0x20);
-  sprite_free((Sprite *)&DAT_00646704);
-  sprite_free((Sprite *)&DAT_00646740);
+  sprite_free((Sprite *)&icon_sprite_7);
+  sprite_free((Sprite *)&icon_sprite_8);
   sprite_free((Sprite *)&city_disorder_icon_sprite);
   sprite_grab_icon_cell_keyed(ADDR(0x646704, ((u8 *)&g.d_00646704)),100,0xdf);
   sprite_grab_icon_cell_keyed(ADDR(0x646740, ((u8 *)&g.d_00646740)),0x85,0xdf);
   sprite_grab_from_sheet(ADDR(0x64677c, ((u8 *)&g.d_0064677c)),0xa6,0xdf,0x1e,0x1e);
-  sprite_free((Sprite *)&DAT_0063f6f0);
-  sprite_free((Sprite *)&DAT_0063f72c);
-  sprite_free((Sprite *)&DAT_0063f7e0);
-  sprite_free((Sprite *)&DAT_0063f81c);
+  sprite_free((Sprite *)&icon_misc_sprites);
+  sprite_free((Sprite *)&icon_sprite_1);
+  sprite_free((Sprite *)&icon_sprite_4);
+  sprite_free((Sprite *)&icon_sprite_5);
   sprite_grab_icon_cell_keyed(ADDR(0x63f6f0, ((u8 *)&g.d_0063f6f0)),199,0x100);
   sprite_grab_icon_cell_keyed(ADDR(0x63f72c, ((u8 *)&g.d_0063f72c)),0xe8,0x100);
   sprite_grab_icon_cell_keyed(ADDR(0x63f7e0, ((u8 *)&g.d_0063f7e0)),0x109,0x100);
   sprite_grab_icon_cell_keyed(ADDR(0x63f81c, ((u8 *)&g.d_0063f81c)),0x12a,0x100);
-  sprite_free((Sprite *)&DAT_0063f768);
-  sprite_free((Sprite *)&DAT_0063f7a4);
-  sprite_free((Sprite *)&DAT_00648098);
+  sprite_free((Sprite *)&icon_sprite_2);
+  sprite_free((Sprite *)&icon_sprite_3);
+  sprite_free((Sprite *)&icons_unused_tall_sprite);
   sprite_grab_from_sheet(ADDR(0x63f768, ((u8 *)&g.d_0063f768)),0x137,1,0x1f,0x60);
   sprite_grab_from_sheet(ADDR(0x63f7a4, ((u8 *)&g.d_0063f7a4)),0x137,0x62,0x1f,0x60);
   sprite_grab_from_sheet(ADDR(0x648098, ((u8 *)&g.d_00648098)),0x109,0x121,0x38,0x83);
@@ -1021,8 +1021,8 @@ void __cdecl gfx_load_icon_sprites(void)
     }
     local_24 += 0x15;
   }
-  sprite_free((Sprite *)&DAT_00647b50);
-  sprite_free((Sprite *)&DAT_00647b8c);
+  sprite_free((Sprite *)&icons_pair_sprites);
+  sprite_free((Sprite *)&icon_sprite_9);
   sprite_grab_from_sheet(ADDR(0x647b50, ((u8 *)&g.d_00647b50)),0x15e,0xff,0x40,0x20);
   sprite_grab_from_sheet(ADDR(0x647b8c, ((u8 *)&g.d_00647b8c)),0x15e,0x120,0x40,0x20);
   sprite_free((Sprite *)&caption_close_button_sprite);
@@ -1146,7 +1146,7 @@ void __cdecl gfx_load_icon_sprites(void)
   }
   surface_release((DibSurface *)&gfx_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0044ab4e */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
+  /* inlined unwind funclet 0044ab4e */ { palette_destroy((GamePalette *)((iptr)&local_45c)); }
   return;
 }
 #undef dlg_client_tile_surface
@@ -1344,7 +1344,7 @@ void __cdecl gfx_load_game_sprites(void)
   gfx_load_terrain_sprites();
   gfx_load_unit_sprites();
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0044b4f6 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_124)); }
+  /* inlined unwind funclet 0044b4f6 */ { surfwnd_dtor((SurfaceWindow *)((iptr)&local_124)); }
   return;
 }
 #undef local_124
@@ -2084,7 +2084,7 @@ void __cdecl rect_intersect_into(LPRECT param_1,iptr param_2,iptr param_3)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
+PortraitDialog * __thiscall portrait_dlg_ctor(PortraitDialog *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2117,7 +2117,7 @@ C_004083b0_208 * __thiscall portrait_dlg_ctor(C_004083b0_208 *this)
    
    Library: Visual Studio 1998 Debug */
 
-void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
+void __thiscall portrait_dlg_dtor(PortraitDlgDtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2125,15 +2125,15 @@ void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
   *(i8 ***)this->pad_0 = &PTR_FUN_0061d6c0;
   (*(i32 *)((char *)&local_8 + 1)) = 0;
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
+  /* inlined unwind funclet 004963a5 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 0x1d4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
+  /* inlined unwind funclet 004963b4 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x198)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
+  /* inlined unwind funclet 004963c3 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x15c)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x114)); }
+  /* inlined unwind funclet 004963d2 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x114)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
+  /* inlined unwind funclet 004963e1 */ { surfwnd_dtor(*(SurfaceWindow **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -2143,15 +2143,15 @@ void __thiscall portrait_dlg_dtor(C_0049632a_1dc *this)
 /* 00496402 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-i32 __thiscall portrait_dlg_create(C_004083b0_208 *this)
+i32 __thiscall portrait_dlg_create(PortraitDialog *this)
 
 {
   wnd_create_with_surface
             ((DibSurface *)this,ADDR(0x62cbc8, ((u8 *)&g.d_0062cbc8)),0xc00,0,0,frame_border_width * 8 + 0x276,
              frame_border_width * 4 + frame_caption_height + 0x16e,ADDR(0x6a8c00, ((u8 *)&g.d_006a8c00)),ADDR(0x6553d8, ((u8 *)&g.d_006553d8)));
-  portrait_dlg_create_buttons((C_004083b0_4 *)this);
+  portrait_dlg_create_buttons((WindowObjectView *)this);
   wnd_set_caption_height((WndBase *)this->pad_48,frame_caption_height);
-  wnd_set_lbuttonup_handler((C_00408130 *)(this->pad_48 + 0x10),ADDR(0x403ce7, portrait_dlg_on_click));
+  wnd_set_lbuttonup_handler((WndEventHandlers *)(this->pad_48 + 0x10),ADDR(0x403ce7, portrait_dlg_on_click));
   wnd_set_dblclick_handler((WndHandlersMouseSetView *)(this->pad_48 + 0x10),ADDR(0x401f14, portrait_dlg_on_dblclick));
   portrait_dlg_paint(this);
   wnd_repaint((SurfaceWindow *)this);
@@ -2164,10 +2164,10 @@ i32 __thiscall portrait_dlg_create(C_004083b0_208 *this)
 /* 004964b3 auto */
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
-#define local_1c (*(C_004083b0_4 * *)(frame_ + FRAME_OFF(4)))
-#define local_18 (*(C_004083b0_4 * *)(frame_ + FRAME_OFF(8)))
+#define local_1c (*(WindowObjectView * *)(frame_ + FRAME_OFF(4)))
+#define local_18 (*(WindowObjectView * *)(frame_ + FRAME_OFF(8)))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(12)))
-void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
+void __thiscall portrait_dlg_create_buttons(WindowObjectView *this)
 
 {
   i8 frame_[FRAME_OFF(32)] __attribute__((aligned(8)));  /* original stack frame */
@@ -2175,8 +2175,8 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
   SetRect(&local_14,frame_border_width + 2,frame_border_width * 3 + frame_caption_height + frame_bevel_width + 0x14a,
           (frame_border_width * 8 + 0x276 >> 1) - 2,
           frame_border_width * 3 + frame_caption_height + 0x16e + frame_bevel_width);
-  if (this == (C_004083b0_4 *)0x0) {
-    local_18 = (C_004083b0_4 *)0x0;
+  if (this == (WindowObjectView *)0x0) {
+    local_18 = (WindowObjectView *)0x0;
   }
   else {
     local_18 = this + 0x12;
@@ -2184,8 +2184,8 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
   button_create_with_callback
             ((Control *)(this + 0x66),(iptr)local_18,0x65,(iptr)&local_14,0x21,ADDR(0x62cbcc, ((u8 *)&g.d_0062cbcc)));
   OffsetRect(&local_14,((frame_border_width * 8 + 0x276 >> 1) + 2) - frame_border_width,0);
-  if (this == (C_004083b0_4 *)0x0) {
-    local_1c = (C_004083b0_4 *)0x0;
+  if (this == (WindowObjectView *)0x0) {
+    local_1c = (WindowObjectView *)0x0;
   }
   else {
     local_1c = this + 0x12;
@@ -2203,17 +2203,17 @@ void __thiscall portrait_dlg_create_buttons(C_004083b0_4 *this)
 #undef local_14
 
 /* 004965ff auto */
-void __thiscall portrait_dlg_run(C_004083b0_208 *this)
+void __thiscall portrait_dlg_run(PortraitDialog *this)
 
 {
   ctrl_show_and_redraw((Control *)this->pad_15c);
   ctrl_show_and_redraw((Control *)(this->pad_15c + 0x3c));
-  window_show((C_004083b0_4 *)this);
+  window_show((WindowObjectView *)this);
   if (2 < game.multiplayer) {
-    wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,ADDR(0x403585, net_modal_idle_poll));
   }
-  wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
-  wnd_set_modal_idle_callback((C_00408010_b8 *)this->pad_48,0);
+  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
+  wnd_set_modal_idle_callback((ModalMenuWindow *)this->pad_48,0);
   wnd_hide((WndBase *)this->pad_48);
   wnd_flush_paint();
   control_hide((Control *)this->pad_15c);
@@ -2233,7 +2233,7 @@ void __thiscall portrait_dlg_run(C_004083b0_208 *this)
 #define local_28 (*(tagRECT *)(frame_ + FRAME_OFF(24)))
 #define local_18 (*(tagRECT *)(frame_ + FRAME_OFF(40)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(56)))
-void __thiscall portrait_dlg_paint(C_004083b0_208 *this)
+void __thiscall portrait_dlg_paint(PortraitDialog *this)
 
 {
   int iVar1;
@@ -2445,7 +2445,7 @@ void __cdecl portrait_dlg_on_button(int param_1)
      leaders[civs[*(int *)(local_8 + 0x1dc)].tribe].female != '\0')) {
     *(int *)(local_8 + 0x1e4) = *(int *)(local_8 + 0x1e4) + 0x15;
   }
-  wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
   return;
 }
 #undef local_8
@@ -3345,7 +3345,7 @@ LAB_0056c269:
     local_70[1] = 0;
     iVar1 = gfx_zoom_scale(3,param_6);
     local_a8 -= iVar1;
-    iVar1 = FUN_005f2700((int)(char)local_18);
+    iVar1 = crt_toupper((int)(char)local_18);
     if (iVar1 == 0x4d) {
       iVar1 = gfx_zoom_scale(1,param_6);
       local_b0 -= iVar1;
@@ -3625,10 +3625,10 @@ gfx_draw_city(iptr param_1,iptr city,uint param_3,int param_4,int param_5,int pa
       __itoa(local_8,local_20,10);
       local_50 = font_text_width((GameFont *)&map_label_font,(iptr)local_20);
       local_54 = font_cached_height((GameFont *)&map_label_font);
-      FUN_005f22d0(local_30,&city_size_digit_str);
+      crt_strcpy(local_30,&city_size_digit_str);
       sVar4 = _strlen(local_20);
       if (1 < sVar4) {
-        FUN_005f22e0(local_30,&city_size_digit2_str);
+        crt_strcat(local_30,&city_size_digit2_str);
       }
       local_34 = font_text_width((GameFont *)&map_label_font,(iptr)local_30);
       local_34 -= local_50;
@@ -3962,7 +3962,7 @@ void __cdecl sprite_picker_window_global_init(void)
 void __cdecl sprite_picker_window_static_init(void)
 
 {
-  sprite_picker_ctor((C_004083b0_430 *)&sprite_picker_window);
+  sprite_picker_ctor((ViewWindow *)&sprite_picker_window);
   return;
 }
 
@@ -3978,7 +3978,7 @@ void __cdecl sprite_picker_window_reg_atexit(void)
 void __cdecl sprite_picker_window_static_dtor(void)
 
 {
-  sprite_picker_dtor((C_004083b0_4 *)&sprite_picker_window);
+  sprite_picker_dtor((WindowObjectView *)&sprite_picker_window);
   return;
 }
 
@@ -4084,7 +4084,7 @@ void __cdecl sprite_sheet_save_units(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x634034, ((u8 *)&g.d_00634034)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_UNITS_BMP_00634040);
+    iVar2 = crt_remove(s_UNITS_BMP_00634040);
     if (iVar2 != 0) goto LAB_0056ff8c;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x63404c, ((u8 *)&g.d_0063404c)),10,0xc0,(iptr)&local_54c);
@@ -4092,7 +4092,7 @@ LAB_0056ff8c:
   __chdir(local_118);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0056ffb6 */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
+  /* inlined unwind funclet 0056ffb6 */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
   return;
 }
 #undef local_580
@@ -4258,7 +4258,7 @@ void __cdecl sprite_sheet_save_cities(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x63407c, ((u8 *)&g.d_0063407c)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_CITIES_BMP_00634088);
+    iVar2 = crt_remove(s_CITIES_BMP_00634088);
     if (iVar2 != 0) goto LAB_00570732;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x634094, ((u8 *)&g.d_00634094)),10,0xc0,(iptr)&local_54c);
@@ -4266,7 +4266,7 @@ LAB_00570732:
   __chdir(local_118);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0057075c */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
+  /* inlined unwind funclet 0057075c */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
   return;
 }
 #undef local_64c
@@ -4467,7 +4467,7 @@ void __cdecl sprite_sheet_save_terrain1(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x6340d0, ((u8 *)&g.d_006340d0)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_TERRAIN1_BMP_006340e0);
+    iVar2 = crt_remove(s_TERRAIN1_BMP_006340e0);
     if (iVar2 != 0) goto LAB_00570f78;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x6340f0, ((u8 *)&g.d_006340f0)),10,0xc0,(iptr)&local_550);
@@ -4475,7 +4475,7 @@ LAB_00570f78:
   __chdir(local_11c);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00570fa2 */ { palette_destroy((GamePalette *)((iptr)&local_550)); }
+  /* inlined unwind funclet 00570fa2 */ { palette_destroy((GamePalette *)((iptr)&local_550)); }
   return;
 }
 #undef local_680
@@ -4672,7 +4672,7 @@ void __cdecl sprite_sheet_save_terrain2(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x634130, ((u8 *)&g.d_00634130)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_TERRAIN2_BMP_00634140);
+    iVar2 = crt_remove(s_TERRAIN2_BMP_00634140);
     if (iVar2 != 0) goto LAB_005718c2;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x634150, ((u8 *)&g.d_00634150)),10,0xc0,(iptr)&local_54c);
@@ -4680,7 +4680,7 @@ LAB_005718c2:
   __chdir(local_118);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005718ec */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
+  /* inlined unwind funclet 005718ec */ { palette_destroy((GamePalette *)((iptr)&local_54c)); }
   return;
 }
 #undef local_640
@@ -4772,7 +4772,7 @@ void __cdecl sprite_sheet_save_tech_icons(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x634184, ((u8 *)&g.d_00634184)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_ICONS_BMP_00634190);
+    iVar2 = crt_remove(s_ICONS_BMP_00634190);
     if (iVar2 != 0) goto LAB_00571b80;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x63419c, ((u8 *)&g.d_0063419c)),10,0xc0,(iptr)&local_554);
@@ -4780,7 +4780,7 @@ LAB_00571b80:
   __chdir(local_11c);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00571baa */ { palette_destroy((GamePalette *)((iptr)&local_554)); }
+  /* inlined unwind funclet 00571baa */ { palette_destroy((GamePalette *)((iptr)&local_554)); }
   return;
 }
 #undef local_568
@@ -4900,7 +4900,7 @@ void __cdecl sprite_sheet_save_building_icons(void)
   __chdir(&scenario_dir_path);
   iVar2 = file_exists(ADDR(0x6341cc, ((u8 *)&g.d_006341cc)));
   if (iVar2 != 0) {
-    iVar2 = FUN_005f66b0(s_ICONS_BMP_006341d8);
+    iVar2 = crt_remove(s_ICONS_BMP_006341d8);
     if (iVar2 != 0) goto LAB_0057203b;
   }
   gfx_save_bmp_640x480(ADDR(0x6ac0a8, ((u8 *)&g.d_006ac0a8)),ADDR(0x6341e4, ((u8 *)&g.d_006341e4)),10,0xc0,(iptr)&local_550);
@@ -4908,7 +4908,7 @@ LAB_0057203b:
   __chdir(local_118);
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00572065 */ { palette_destroy((GamePalette *)((iptr)&local_550)); }
+  /* inlined unwind funclet 00572065 */ { palette_destroy((GamePalette *)((iptr)&local_550)); }
   return;
 }
 #undef local_598
@@ -4929,12 +4929,12 @@ LAB_0057203b:
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define _DAT_006ac2c4 (*(i32 *)((u8 *)&g.d_006ac2c4))
-#define _DAT_006ac3ac (*(i32 *)((u8 *)&g.d_006ac3ac))
-#define _DAT_006ac458 (*(i32 *)((u8 *)&g.d_006ac458))
-#define _DAT_006ac47c (*(i32 *)((u8 *)&g.d_006ac47c))
-#define _DAT_006ac480 (*(i32 *)((u8 *)&g.d_006ac480))
-#define _DAT_006ac484 (*(i32 *)((u8 *)&g.d_006ac484))
+#define sprite_editor_style_flags_i32 (*(i32 *)((u8 *)&g.d_006ac2c4))
+#define sprite_editor_caption_button_count_i32 (*(i32 *)((u8 *)&g.d_006ac3ac))
+#define sprite_editor_caption_button_cb_i32 (*(i32 *)((u8 *)&g.d_006ac458))
+#define sprite_editor_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac47c))
+#define sprite_editor_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac480))
+#define sprite_editor_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac484))
 #define local_c (*(iptr *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(8)))
 /* WARNING: Removing unreachable block (ram,0x0057228e) */
@@ -4948,20 +4948,20 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&sprite_editor_title,&sprite_editor_default_title);
+    crt_strcpy(&sprite_editor_title,&sprite_editor_default_title);
   }
   else {
-    FUN_005f22d0(&sprite_editor_title,param_1);
+    crt_strcpy(&sprite_editor_title,param_1);
   }
-  _DAT_006ac484 = &ui_text_font;
-  _DAT_006ac47c = &caption_font;
-  _DAT_006ac480 = &caption_small_font;
-  _DAT_006ac2c4 = param_2;
+  sprite_editor_text_font_i32 = &ui_text_font;
+  sprite_editor_title_font_i32 = &caption_font;
+  sprite_editor_title_small_font_i32 = &caption_small_font;
+  sprite_editor_style_flags_i32 = param_2;
   sprite_editor_caption_height = param_8;
   sprite_editor_border_width = param_9;
   sprite_editor_resize_border = param_7;
-  _DAT_006ac3ac = 0;
-  _DAT_006ac458 = 0;
+  sprite_editor_caption_button_count_i32 = 0;
+  sprite_editor_caption_button_cb_i32 = 0;
   if ((param_2 & 4) != 0) {
     sprite_editor_caption_height = frame_caption_height;
     sprite_editor_border_width = frame_border_width;
@@ -5008,12 +5008,12 @@ sprite_editor_create_window(int param_1,uint param_2,int param_3,int param_4,int
 #undef frame_border_width
 #undef frame_caption_height
 #undef screen_height
-#undef _DAT_006ac2c4
-#undef _DAT_006ac3ac
-#undef _DAT_006ac458
-#undef _DAT_006ac47c
-#undef _DAT_006ac480
-#undef _DAT_006ac484
+#undef sprite_editor_style_flags_i32
+#undef sprite_editor_caption_button_count_i32
+#undef sprite_editor_caption_button_cb_i32
+#undef sprite_editor_title_font_i32
+#undef sprite_editor_title_small_font_i32
+#undef sprite_editor_text_font_i32
 #undef local_c
 #undef local_8
 
@@ -5039,7 +5039,7 @@ void __cdecl sprite_editor_ok_clicked(void)
     (*sprite_editor_ok_callback)();
   }
   sprite_editor_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)&sprite_editor_wnd);
+  wnd_end_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
   wnd_repaint((SurfaceWindow *)&map_views);
   return;
 }
@@ -5057,7 +5057,7 @@ void __cdecl sprite_editor_cancel_clicked(void)
 
 {
   sprite_editor_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)&sprite_editor_wnd);
+  wnd_end_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
   return;
 }
 #undef sprite_editor_running
@@ -5756,7 +5756,7 @@ void __cdecl sprite_editor_on_mouse_down(int param_1,int param_2)
     sprite_editor_tool = sprite_editor_paint_tool;
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00573adc */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
+  /* inlined unwind funclet 00573adc */ { sprite_destroy((Sprite *)((iptr)&local_4c)); }
   return;
 }
 #undef sprite_editor_brush_size
@@ -5922,7 +5922,7 @@ void __cdecl sprite_editor_on_mouse_move(int param_1,int param_2)
 #define sprite_editor_undo_flag_y (*(i32 *)((u8 *)&g.d_006ac0a0))
 #define sprite_editor_width (*(i32 *)((u8 *)&g.d_006ac878))
 #define sprite_sheet_mode (*(i32 *)((u8 *)&g.d_006ac924))
-#define _DAT_006ac2e0 (*(i32 *)((u8 *)&g.d_006ac2e0))
+#define sprite_editor_client_height_i32 (*(i32 *)((u8 *)&g.d_006ac2e0))
 #define local_b8 (*(i8 (*)[16])(frame_ + FRAME_OFF(0)))
 #define local_a8 (*(int *)(frame_ + FRAME_OFF(16)))
 #define local_a4 (*(Control *)(frame_ + FRAME_OFF(20)))
@@ -5978,7 +5978,7 @@ void __cdecl sprite_editor_run(iptr param_1,i32 param_2,i32 param_3,iptr param_4
   iVar2 = font_line_spacing((GameFont *)dialog_font_ptr);
   local_68 = iVar2 + 8;
   local_60 = (sprite_editor_client_width - 6) / 2;
-  local_a8 = (sprite_editor_origin_y + _DAT_006ac2e0) - (iVar2 + 10);
+  local_a8 = (sprite_editor_origin_y + sprite_editor_client_height_i32) - (iVar2 + 10);
   local_64 = sprite_editor_origin_x + 2;
   rect_set_xywh((iptr)local_5c,local_64,local_a8,local_60,local_68);
   iVar3 = label_string(*(i32 *)(label_string_ids + 0x3f8));
@@ -5998,17 +5998,17 @@ void __cdecl sprite_editor_run(iptr param_1,i32 param_2,i32 param_3,iptr param_4
   wnd_set_mousemove_handler((WndHandlersMouseSetView *)&sprite_editor_wnd_events,ADDR(0x403c0b, sprite_editor_on_mouse_move));
   wnd_set_redraw_callback((SurfaceWindow *)&sprite_editor_window,ADDR(0x401bf9, sprite_editor_redraw));
   wnd_repaint((SurfaceWindow *)&sprite_editor_window);
-  window_show((C_004083b0_4 *)&sprite_editor_window);
-  wnd_run_modal_loop((C_00408010_b8 *)&sprite_editor_wnd);
+  window_show((WindowObjectView *)&sprite_editor_window);
+  wnd_run_modal_loop((ModalMenuWindow *)&sprite_editor_wnd);
   while (sprite_editor_running != 0) {
     win_pump_one_message();
   }
   dlg_set_parent_window(0);
   frame_wnd_close((DibSurface *)&sprite_editor_window);
   local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet FUN_0057420c */ { ctrl_dtor((Control *)((iptr)&local_a4)); }
+  /* inlined unwind funclet 0057420c */ { ctrl_dtor((Control *)((iptr)&local_a4)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00574218 */ { ctrl_dtor((Control *)((iptr)&local_4c)); }
+  /* inlined unwind funclet 00574218 */ { ctrl_dtor((Control *)((iptr)&local_4c)); }
   return;
 }
 #undef sprite_editor_brush_size
@@ -6026,7 +6026,7 @@ void __cdecl sprite_editor_run(iptr param_1,i32 param_2,i32 param_3,iptr param_4
 #undef sprite_editor_undo_flag_y
 #undef sprite_editor_width
 #undef sprite_sheet_mode
-#undef _DAT_006ac2e0
+#undef sprite_editor_client_height_i32
 #undef local_b8
 #undef local_a8
 #undef local_a4
@@ -6355,12 +6355,12 @@ void __cdecl sprite_picker_select_cell(i32 param_1)
 #define frame_border_width (*(int *)((u8 *)&g.d_0063359c))
 #define frame_caption_height (*(int *)((u8 *)&g.d_00633598))
 #define screen_height (*(int *)((u8 *)&g.d_006ab19c))
-#define _DAT_006ac59c (*(i32 *)((u8 *)&g.d_006ac59c))
-#define _DAT_006ac684 (*(i32 *)((u8 *)&g.d_006ac684))
-#define _DAT_006ac730 (*(i32 *)((u8 *)&g.d_006ac730))
-#define _DAT_006ac754 (*(i32 *)((u8 *)&g.d_006ac754))
-#define _DAT_006ac758 (*(i32 *)((u8 *)&g.d_006ac758))
-#define _DAT_006ac75c (*(i32 *)((u8 *)&g.d_006ac75c))
+#define sprite_picker_style_flags_i32 (*(i32 *)((u8 *)&g.d_006ac59c))
+#define sprite_picker_caption_button_count_i32 (*(i32 *)((u8 *)&g.d_006ac684))
+#define sprite_picker_caption_button_cb_i32 (*(i32 *)((u8 *)&g.d_006ac730))
+#define sprite_picker_title_font_i32 (*(i32 *)((u8 *)&g.d_006ac754))
+#define sprite_picker_title_small_font_i32 (*(i32 *)((u8 *)&g.d_006ac758))
+#define sprite_picker_text_font_i32 (*(i32 *)((u8 *)&g.d_006ac75c))
 #define local_8 (*(uint *)(frame_ + FRAME_OFF(0)))
 /* WARNING: Removing unreachable block (ram,0x00574e18) */
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
@@ -6373,20 +6373,20 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
   i8 frame_[FRAME_OFF(8)] __attribute__((aligned(8)));  /* original stack frame */
   
   if (param_1 == 0) {
-    FUN_005f22d0(&sprite_picker_title,&sprite_picker_default_title);
+    crt_strcpy(&sprite_picker_title,&sprite_picker_default_title);
   }
   else {
-    FUN_005f22d0(&sprite_picker_title,param_1);
+    crt_strcpy(&sprite_picker_title,param_1);
   }
-  _DAT_006ac75c = &ui_text_font;
-  _DAT_006ac754 = &caption_font;
-  _DAT_006ac758 = &caption_small_font;
-  _DAT_006ac59c = param_2;
+  sprite_picker_text_font_i32 = &ui_text_font;
+  sprite_picker_title_font_i32 = &caption_font;
+  sprite_picker_title_small_font_i32 = &caption_small_font;
+  sprite_picker_style_flags_i32 = param_2;
   sprite_picker_caption_height = param_8;
   sprite_picker_border_width = param_9;
   sprite_picker_resize_border = param_7;
-  _DAT_006ac684 = 0;
-  _DAT_006ac730 = 0;
+  sprite_picker_caption_button_count_i32 = 0;
+  sprite_picker_caption_button_cb_i32 = 0;
   if ((param_2 & 4) != 0) {
     sprite_picker_caption_height = frame_caption_height;
     sprite_picker_border_width = frame_border_width;
@@ -6426,12 +6426,12 @@ sprite_picker_create_window(int param_1,uint param_2,int param_3,int param_4,int
 #undef frame_border_width
 #undef frame_caption_height
 #undef screen_height
-#undef _DAT_006ac59c
-#undef _DAT_006ac684
-#undef _DAT_006ac730
-#undef _DAT_006ac754
-#undef _DAT_006ac758
-#undef _DAT_006ac75c
+#undef sprite_picker_style_flags_i32
+#undef sprite_picker_caption_button_count_i32
+#undef sprite_picker_caption_button_cb_i32
+#undef sprite_picker_title_font_i32
+#undef sprite_picker_title_small_font_i32
+#undef sprite_picker_text_font_i32
 #undef local_8
 
 /* 00574e98 auto */
@@ -6459,7 +6459,7 @@ void __cdecl sprite_picker_ok_clicked(void)
   rect_set_xywh((iptr)local_14,0,0,local_18,local_1c);
   sprite_grab_surface_rect((Sprite *)&sprite_editor_orig_sprite,ADDR(0x6ac128, ((u8 *)&g.d_006ac128)),(iptr)local_14);
   sprite_picker_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(sprite_picker_dialog + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
   return;
 }
 #undef sprite_editor_key_color
@@ -6700,7 +6700,7 @@ void __cdecl sprite_picker_import_all_clicked(void)
     sprite_free((Sprite *)&sprite_editor_result_sprite);
     sprite_merge_onto(sprite_editor_target_sprite,ADDR(0x6ac8a8, ((u8 *)&g.d_006ac8a8)));
     sprite_picker_running = 0;
-    wnd_end_modal_loop((C_00408010_b8 *)(sprite_picker_dialog + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
     wnd_repaint((SurfaceWindow *)&map_views);
   }
   return;
@@ -6740,14 +6740,14 @@ void __cdecl sprite_picker_cancel_clicked(void)
 
 {
   sprite_picker_running = 0;
-  wnd_end_modal_loop((C_00408010_b8 *)(sprite_picker_dialog + 0x48));
+  wnd_end_modal_loop((ModalMenuWindow *)(sprite_picker_dialog + 0x48));
   return;
 }
 #undef sprite_picker_dialog
 #undef sprite_picker_running
 
 /* 00575dec auto */
-#define sprite_picker_dialog (*(C_004083b0_430 * *)((u8 *)&g.d_006ac11c))
+#define sprite_picker_dialog (*(ViewWindow * *)((u8 *)&g.d_006ac11c))
 #define sprite_picker_running (*(int *)((u8 *)&g.d_006ac890))
 #define sprite_sheet_mode (*(int *)((u8 *)&g.d_006ac924))
 #define local_34 (*(u8 * *)(frame_ + FRAME_OFF(4)))
@@ -6759,7 +6759,7 @@ void __cdecl sprite_picker_cancel_clicked(void)
 #define local_1c (*(int *)(frame_ + FRAME_OFF(28)))
 #define local_18 (*(i8 (*)[16])(frame_ + FRAME_OFF(32)))
 #define local_8 (*(iptr *)(frame_ + FRAME_OFF(48)))
-void __thiscall sprite_picker_run(C_004083b0_430 *this)
+void __thiscall sprite_picker_run(ViewWindow *this)
 
 {
   i32 uVar1;
@@ -6798,7 +6798,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   local_1c = this->client_x + 2;
   sprite_sheet_cell_count = sprite_editor_cell_rect(0,(iptr)local_24,(iptr)local_24,(iptr)local_24,(iptr)local_24);
   rect_set_xywh((iptr)local_18,local_1c,local_20,this->field_2e8,local_8);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_28 = (u8 *)0x0;
   }
   else {
@@ -6807,7 +6807,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   scrollbar_create
             ((Control *)&this->field_2f8,(iptr)local_28,0x65,(iptr)local_18,0);
   scrollbar_set_range((Control *)&this->field_2f8,0,sprite_sheet_cell_count - 1);
-  scrollbar_set_pos((C_0040f380_40 *)&this->field_2f8,0);
+  scrollbar_set_pos((ClickControl *)&this->field_2f8,0);
   scrollbar_set_callback((Control *)&this->field_2f8,ADDR(0x401550, sprite_picker_select_cell));
   sprite_picker_select_cell(0);
   ctrl_show_and_redraw((Control *)&this->field_2f8);
@@ -6815,7 +6815,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   local_20 = (this->client_y + this->client_height) - (this->field_2f4 + 2);
   local_1c = this->client_x + 2;
   rect_set_xywh((iptr)local_18,local_1c,local_20,this->field_2f0,this->field_2f4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_2c = (u8 *)0x0;
   }
   else {
@@ -6828,7 +6828,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   ctrl_set_default_button((Control *)&this->field_338);
   local_1c = local_1c + this->field_2f0 + 2;
   rect_set_xywh((iptr)local_18,local_1c,local_20,this->field_2f0,this->field_2f4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_30 = (u8 *)0x0;
   }
   else {
@@ -6844,7 +6844,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   }
   local_1c = local_1c + this->field_2f0 + 2;
   rect_set_xywh((iptr)local_18,local_1c,local_20,this->field_2f0,this->field_2f4);
-  if (this == (C_004083b0_430 *)0x0) {
+  if (this == (ViewWindow *)0x0) {
     local_34 = (u8 *)0x0;
   }
   else {
@@ -6857,8 +6857,8 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
   ctrl_set_cancel_button((Control *)&this->field_3b0);
   wnd_set_redraw_callback((SurfaceWindow *)this,ADDR(0x403887, sprite_picker_redraw_cb));
   wnd_repaint((SurfaceWindow *)this);
-  window_show((C_004083b0_4 *)this);
-  wnd_run_modal_loop((C_00408010_b8 *)this->pad_48);
+  window_show((WindowObjectView *)this);
+  wnd_run_modal_loop((ModalMenuWindow *)this->pad_48);
   while (sprite_picker_running != 0) {
     win_pump_one_message();
   }
@@ -6882,7 +6882,7 @@ void __thiscall sprite_picker_run(C_004083b0_430 *this)
 void __cdecl sprite_picker_show(void)
 
 {
-  sprite_picker_run((C_004083b0_430 *)&sprite_picker_window);
+  sprite_picker_run((ViewWindow *)&sprite_picker_window);
   return;
 }
 
@@ -7047,9 +7047,9 @@ LAB_00576631:
 LAB_00576783:
   surface_release((DibSurface *)&sprite_sheet_surface);
   local_8 = local_8 & 0xffffff00;
-  /* inlined unwind funclet FUN_005767a7 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
+  /* inlined unwind funclet 005767a7 */ { dialog_dtor((Dialog *)((iptr)&local_308)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005767b3 */ { palette_destroy((GamePalette *)((iptr)&local_73c)); }
+  /* inlined unwind funclet 005767b3 */ { palette_destroy((GamePalette *)((iptr)&local_73c)); }
   return;
 }
 #undef sprite_sheet_mode
@@ -7081,15 +7081,15 @@ void __thiscall sprite_picker_dtor(void *this)
   
   (*(i32 *)((char *)&local_8 + 1)) = 0;
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_00578402 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x3b0)); }
+  /* inlined unwind funclet 00578402 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x3b0)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_00578411 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x374)); }
+  /* inlined unwind funclet 00578411 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x374)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_00578420 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x338)); }
+  /* inlined unwind funclet 00578420 */ { ctrl_dtor((Control *)(*(int *)((iptr)&this) + 0x338)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_0057842f */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x2f8)); }
+  /* inlined unwind funclet 0057842f */ { scrollbar_dtor((Control *)(*(int *)((iptr)&this) + 0x2f8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0057843e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
+  /* inlined unwind funclet 0057843e */ { frame_wnd_dtor(*(DibSurface **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -7100,7 +7100,7 @@ void __thiscall sprite_picker_dtor(void *this)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_004083b0_430 * __thiscall sprite_picker_ctor(C_004083b0_430 *this)
+ViewWindow * __thiscall sprite_picker_ctor(ViewWindow *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -7537,7 +7537,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
   iVar1 = file_obj_open(&local_c0,param_1);
   if (iVar1 == 0) {
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+    /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
     uVar2 = 0;
   }
   else {
@@ -7546,7 +7546,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
     win_flush_pending_msgs();
     if (local_cc == 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+      /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
       uVar2 = 0;
     }
     else {
@@ -7559,7 +7559,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
         dbg_logf_str(ADDR(0x636c40, ((u8 *)&g.d_00636c40)),param_1);
         err_report((ErrorContext *)&err_report_ctx,3,ADDR(0x636c7c, ((u8 *)&g.d_00636c7c)),ADDR(0x636c64, ((u8 *)&g.d_00636c64)),0x382);
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+        /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
         uVar2 = 0;
       }
       else {
@@ -7572,7 +7572,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
             mem_handle_free(local_cc);
             err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x636d28, ((u8 *)&g.d_00636d28)),ADDR(0x636d10, ((u8 *)&g.d_00636d10)),0x396);
             local_8 = 0xffffffff;
-            /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+            /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
             uVar2 = 0;
           }
           else {
@@ -7607,7 +7607,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
                 mem_handle_unlock(local_cc);
                 mem_handle_free(local_cc);
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+                /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
                 uVar2 = 0;
               }
               else {
@@ -7627,7 +7627,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
                 mem_handle_free(local_cc);
                 file_map_close(&local_c0);
                 local_8 = 0xffffffff;
-                /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+                /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
                 uVar2 = 1;
               }
             }
@@ -7637,7 +7637,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
               mem_handle_free(local_cc);
               err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x636d78, ((u8 *)&g.d_00636d78)),ADDR(0x636d60, ((u8 *)&g.d_00636d60)),0x3b3);
               local_8 = 0xffffffff;
-              /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+              /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
               uVar2 = 0;
             }
           }
@@ -7648,7 +7648,7 @@ surface_load_gif_file(DibSurface *this,iptr param_1,uint param_2,uint param_3,ip
           mem_handle_free(local_cc);
           err_report((ErrorContext *)&err_report_ctx,4,ADDR(0x636cd0, ((u8 *)&g.d_00636cd0)),ADDR(0x636cb8, ((u8 *)&g.d_00636cb8)),0x38d);
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
+          /* inlined unwind funclet 005bf5ba */ { file_obj_close((FileObject *)((iptr)&local_c0)); }
           uVar2 = 0;
         }
       }
@@ -8356,7 +8356,7 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
         if ((int)param_1 <= (int)param_3) {
           uVar6 = param_1;
         }
-        iVar2 = FUN_005f7120(param_3 - param_1);
+        iVar2 = crt_abs(param_3 - param_1);
         iVar2++;
         uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
         iVar1 = surface_get_bits(this);
@@ -8386,7 +8386,7 @@ surface_draw_line(DibSurface *this,u32 param_1,u32 param_2,u32 param_3,u32 param
         if ((int)param_2 <= (int)param_4) {
           uVar6 = param_2;
         }
-        iVar2 = FUN_005f7120(param_4 - param_2);
+        iVar2 = crt_abs(param_4 - param_2);
         iVar2++;
         uVar5 = CONCAT31((int3)((uint)iVar2 >> 8),gfx_text_color_index);
         iVar1 = surface_get_bits(this);
@@ -8941,18 +8941,18 @@ i32 __cdecl font_handle_create(i32 param_1,int param_2,i32 param_3)
   switch(param_1) {
   case 0:
     local_4c.lfPitchAndFamily = 16;
-    FUN_005f22d0(local_4c.lfFaceName,s_Times_New_Roman_00637c74);
+    crt_strcpy(local_4c.lfFaceName,s_Times_New_Roman_00637c74);
     break;
   case 1:
     local_4c.lfPitchAndFamily = ' ';
-    FUN_005f22d0(local_4c.lfFaceName,s_Arial_00637c84);
+    crt_strcpy(local_4c.lfFaceName,s_Arial_00637c84);
     break;
   case 2:
-    FUN_005f22d0(local_4c.lfFaceName,s_System_00637c94);
+    crt_strcpy(local_4c.lfFaceName,s_System_00637c94);
     break;
   case 3:
     local_4c.lfPitchAndFamily = '0';
-    FUN_005f22d0(local_4c.lfFaceName,s_Courier_00637c8c);
+    crt_strcpy(local_4c.lfFaceName,s_Courier_00637c8c);
   }
   local_10 = 0;
   local_c = CreateFontIndirectA(&local_4c);
@@ -9378,7 +9378,7 @@ sprite_create_solid(Sprite *this,i32 param_1,i32 param_2,uint param_3)
   sprite_encode_rect(this,(iptr)&local_58,0,0,param_1,param_2);
   SetRect((LPRECT)&this->bounds_rect,0,0,0,0);
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_005cdf2d */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
+  /* inlined unwind funclet 005cdf2d */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
   return uStack_10;
 }
 #undef local_58
@@ -10632,9 +10632,9 @@ void __cdecl dib_flip_vertical(iptr param_1)
   uVar2 = mem_handle_lock(uVar1);
   local_14 = (*(int *)(param_1 + 0x1c) - 1) * *(int *)(param_1 + 0x20) + local_c;
   for (local_18 = 0; local_18 < *(int *)(param_1 + 0x1c) / 2; local_18++) {
-    FUN_005f6500(uVar2,local_14,*(i32 *)(param_1 + 0x20));
-    FUN_005f6500(local_14,local_c,*(i32 *)(param_1 + 0x20));
-    FUN_005f6500(local_c,uVar2,*(i32 *)(param_1 + 0x20));
+    crt_memmove(uVar2,local_14,*(i32 *)(param_1 + 0x20));
+    crt_memmove(local_14,local_c,*(i32 *)(param_1 + 0x20));
+    crt_memmove(local_c,uVar2,*(i32 *)(param_1 + 0x20));
     local_c += *(int *)(param_1 + 0x20);
     local_14 -= *(int *)(param_1 + 0x20);
   }

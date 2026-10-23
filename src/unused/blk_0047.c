@@ -86,10 +86,10 @@ i32 __cdecl save_load_map_only(i32 param_1)
   
   local_214 = 1;
   save_set_file_ext(0);
-  FUN_005f22d0(local_108,param_1);
+  crt_strcpy(local_108,param_1);
   pcVar1 = _strchr(local_108,0x2e);
   if (pcVar1 == (char *)0x0) {
-    FUN_005f22e0(local_108,&save_file_path);
+    crt_strcat(local_108,&save_file_path);
   }
   _File = _fopen(local_108,&save_peek_read_mode);
   if ((_File != (FILE *)0x0) &&
@@ -131,7 +131,7 @@ i32 __cdecl save_load_map_only(i32 param_1)
 #undef local_108
 
 /* 00479e7e auto */
-void __thiscall mapview_scroll_to_x(C_004083b0_430 *this,int param_1)
+void __thiscall mapview_scroll_to_x(ViewWindow *this,int param_1)
 
 {
   mapview_center_on(this,(int)(short)param_1,(int)*(short *)((int)&this->field_2e0 + 2));
@@ -139,7 +139,7 @@ void __thiscall mapview_scroll_to_x(C_004083b0_430 *this,int param_1)
 }
 
 /* 00479eae auto */
-void __thiscall mapview_scroll_to_y(C_004083b0_430 *this,int param_1)
+void __thiscall mapview_scroll_to_y(ViewWindow *this,int param_1)
 
 {
   mapview_center_on(this,(int)(short)this->field_2e0,(int)(short)param_1);

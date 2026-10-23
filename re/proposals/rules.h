@@ -8,7 +8,7 @@
  *    rules_load_advances (CIVILIZE), rules_load_improvements (IMPROVE+ENDWONDER), rules_load_units
  *    (UNITS), rules_load_terrain (TERRAIN), rules_load_govts_leaders (GOVERNMENTS+LEADERS) and
  *    then parses CARAVAN/ORDERS/DIFFICULTY/ATTITUDES inline.
- *  - The multiplayer table-sync switch (net_msg_build_packet / FUN_005f2110 callers,
+ *  - The multiplayer table-sync switch (net_msg_build_packet / crt_memcpy callers,
  *    cases 0x17..0x24) sends each table as one block with its exact size:
  *    cosmic 0x64bcc8/0x29, advances 0x627680/0x640, improvements
  *    0x64c488/0x218, endwonder 0x64ba28/0x1c, unit types 0x64b1b8/0x4d8,

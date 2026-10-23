@@ -314,7 +314,7 @@ LPVOID __cdecl ___crtGetEnvironmentStringsW(void)
             FreeEnvironmentStringsW((LPWCH)env);
             return NULL;
         }
-        FUN_005f2110(buf, env, size);
+        crt_memcpy(buf, env, size);
         FreeEnvironmentStringsW((LPWCH)env);
         return buf;
     }
@@ -415,7 +415,7 @@ int __cdecl ___crtsetenv(char *option, int primary)
     if (primary != 0) {
         name = (char *)__malloc_dbg(_strlen(option) + 2, 2, (char *)0x0061ec88 /* "setenv.c" */, 0xe5);
         if (name != NULL) {
-            FUN_005f22d0(name, option);
+            crt_strcpy(name, option);
             value = name + ((int)equal - (int)option);
             *value++ = 0;
             SetEnvironmentVariableA(name, remove ? NULL : value);

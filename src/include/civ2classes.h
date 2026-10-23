@@ -16,7 +16,7 @@ typedef struct WndBase {
 } WndBase;
 
 /* 17 methods, size 0xb8 */
-typedef struct C_00408010_b8 {
+typedef struct ModalMenuWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
     union { u32 field_8; u32 native_wnd; };
@@ -37,7 +37,7 @@ typedef struct C_00408010_b8 {
     u32 field_a8;
     u32 field_ac;
     u8 pad_b0[8];
-} C_00408010_b8;
+} ModalMenuWindow;
 
 /* 6 methods, size 0xcc */
 typedef struct Wnd {
@@ -69,7 +69,7 @@ typedef struct Wnd {
 } Wnd;
 
 /* 5 methods, size 0x6f0 */
-typedef struct C_00408010_6f0 {
+typedef struct PictureFrameWindow {
     union { u32 field_0; u32 style; };
     union { u32 field_4; u32 wnd_palette; };
     union { u32 field_8; u32 native_wnd; };
@@ -119,7 +119,7 @@ typedef struct C_00408010_6f0 {
     union { u32 field_6d8; u32 resource_dll; };
     u8 pad_6dc[16];
     union { u32 field_6ec; u32 panel_clip_rect; };
-} C_00408010_6f0;
+} PictureFrameWindow;
 
 /* 6 methods, size 0x710 */
 typedef struct DestroyedCivsWindow {
@@ -492,7 +492,7 @@ typedef struct CityViewWindow {
 } CityViewWindow;
 
 /* 9 methods, size 0x9d0 */
-typedef struct C_00408130 {
+typedef struct WndEventHandlers {
     u8 pad_0[12];
     union { u32 field_c; u32 on_lbuttonup; };
     u8 pad_10[8];
@@ -507,12 +507,12 @@ typedef struct C_00408130 {
     union { u32 field_40; u32 on_size; };
     union { u32 field_44; u32 on_move; };
     u8 pad_48[2440];
-} C_00408130;
+} WndEventHandlers;
 
 /* 39 methods, size 0x4 */
-typedef struct C_004083b0_4 {
+typedef struct WindowObjectView {
     union { u32 field_0; u32 vtable; };
-} C_004083b0_4;
+} WindowObjectView;
 
 /* 109 methods, size 0x48 */
 typedef struct DibSurface {
@@ -563,7 +563,7 @@ typedef struct SurfaceWindow {
 } SurfaceWindow;
 
 /* 11 methods, size 0x11c */
-typedef struct C_004083b0_11c {
+typedef struct ListPaneWindow {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -588,10 +588,10 @@ typedef struct C_004083b0_11c {
     union { uptr field_110; uptr on_paint; };
     union { u32 field_114; u32 style_flags; };
     union { u32 field_118; u32 caption_height; };
-} C_004083b0_11c;
+} ListPaneWindow;
 
 /* 1 methods, size 0x120 */
-typedef struct C_004083b0_120 {
+typedef struct PediaRedrawView {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -617,10 +617,10 @@ typedef struct C_004083b0_120 {
     union { u32 field_114; u32 style_flags; };
     union { u32 field_118; u32 caption_height; };
     union { u32 field_11c; u32 border_width; };
-} C_004083b0_120;
+} PediaRedrawView;
 
 /* 16 methods, size 0x12c */
-typedef struct C_004083b0_12c {
+typedef struct ScaledWindowView {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -649,10 +649,10 @@ typedef struct C_004083b0_12c {
     union { u32 field_120; u32 resize_border; };
     union { u32 field_124; u32 client_x; };
     union { u32 field_128; u32 client_y; };
-} C_004083b0_12c;
+} ScaledWindowView;
 
 /* 4 methods, size 0x174 */
-typedef struct C_004083b0_174 {
+typedef struct ParleyWindowLayout {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -694,10 +694,10 @@ typedef struct C_004083b0_174 {
     union { u32 field_154; u32 large_layout; };
     u32 field_158;
     u8 pad_15c[24];
-} C_004083b0_174;
+} ParleyWindowLayout;
 
 /* 5 methods, size 0x208 */
-typedef struct C_004083b0_208 {
+typedef struct PortraitDialog {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -754,7 +754,7 @@ typedef struct C_004083b0_208 {
     union { u32 field_1f8; u32 shown_left_civ; };
     union { u32 field_1fc; u32 caption_button_count; };
     u8 pad_200[8];
-} C_004083b0_208;
+} PortraitDialog;
 
 /* 35 methods, size 0x2e4 */
 typedef struct FrameWindow {
@@ -856,7 +856,7 @@ typedef struct FrameWindow {
 } FrameWindow;
 
 /* 86 methods, size 0x430 */
-typedef struct C_004083b0_430 {
+typedef struct ViewWindow {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -998,10 +998,10 @@ typedef struct C_004083b0_430 {
     u8 field_3be;
     union { u8 field_3bf; u8 remote_side_agreed; };
     u8 pad_3c0[112];
-} C_004083b0_430;
+} ViewWindow;
 
 /* 1 methods, size 0x488 */
-typedef struct C_004083b0_488 {
+typedef struct PictureWindowCore {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -1152,10 +1152,10 @@ typedef struct C_004083b0_488 {
     union { u32 field_474; u32 image_height; };
     union { u32 field_478; u32 window_height; };
     u8 pad_47c[12];
-} C_004083b0_488;
+} PictureWindowCore;
 
 /* 2 methods, size 0x4c4 */
-typedef struct C_004083b0_4c4 {
+typedef struct PictureWindow {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -1313,10 +1313,10 @@ typedef struct C_004083b0_4c4 {
     union { u32 field_49c; u32 report_param; };
     u32 field_4a0;
     u8 pad_4a4[32];
-} C_004083b0_4c4;
+} PictureWindow;
 
 /* 13 methods, size 0x61c */
-typedef struct C_004083b0_61c {
+typedef struct MediaWindow {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -1494,10 +1494,10 @@ typedef struct C_004083b0_61c {
     union { u32 field_600; u32 content_right; };
     union { u32 field_604; u32 content_bottom; };
     u8 pad_608[20];
-} C_004083b0_61c;
+} MediaWindow;
 
 /* 1 methods, size 0x798 */
-typedef struct C_004083b0_798 {
+typedef struct PediaAdvanceListView {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -1677,10 +1677,10 @@ typedef struct C_004083b0_798 {
     u8 pad_608[80];
     union { u32 field_658; u32 pedia_advance_count; };
     u8 pad_65c[316];
-} C_004083b0_798;
+} PediaAdvanceListView;
 
 /* 20 methods, size 0xa28 */
-typedef struct C_004083b0_a28 {
+typedef struct DocumentWindow {
     union { u32 field_0; u32 vtable; };
     union { u32 field_4; u32 pixel_width; };
     union { u32 field_8; u32 pixel_height; };
@@ -1868,7 +1868,7 @@ typedef struct C_004083b0_a28 {
     union { u32 field_a1c; u32 edit_action_button; };
     union { u32 field_a20; u32 cue_frame; };
     union { u32 field_a24; u32 loop; };
-} C_004083b0_a28;
+} DocumentWindow;
 
 /* 1 methods, size 0xc */
 typedef struct WndValidateRectView {
@@ -1877,7 +1877,7 @@ typedef struct WndValidateRectView {
 } WndValidateRectView;
 
 /* 23 methods, size 0x28 */
-typedef struct C_0040bc40_28 {
+typedef struct DialogCore {
     union { uptr field_0; uptr surf_wnd; };
     union { u32 field_4; u32 bg_surface; };
     union { uptr field_8; uptr body_font; };
@@ -1888,10 +1888,10 @@ typedef struct C_0040bc40_28 {
     union { u32 field_1c; u32 min_height; };
     union { u32 field_20; u32 line_count; };
     union { u32 field_24; u32 edit_count; };
-} C_0040bc40_28;
+} DialogCore;
 
 /* 2 methods, size 0x3c */
-typedef struct C_0040bc40_3c {
+typedef struct DialogButtonsView {
     union { uptr field_0; uptr surf_wnd; };
     union { u32 field_4; u32 bg_surface; };
     union { uptr field_8; uptr body_font; };
@@ -1907,10 +1907,10 @@ typedef struct C_0040bc40_3c {
     union { u32 field_30; u32 std_button_count; };
     union { u32 field_34; u32 extra_button_count; };
     union { u32 field_38; u32 columns; };
-} C_0040bc40_3c;
+} DialogButtonsView;
 
 /* 1 methods, size 0x40 */
-typedef struct C_0040bc40_40 {
+typedef struct DialogAltColorView {
     union { uptr field_0; uptr surf_wnd; };
     union { u32 field_4; u32 bg_surface; };
     union { uptr field_8; uptr body_font; };
@@ -1927,7 +1927,7 @@ typedef struct C_0040bc40_40 {
     union { u32 field_34; u32 extra_button_count; };
     union { u32 field_38; u32 columns; };
     union { u32 field_3c; u32 style_flags; };
-} C_0040bc40_40;
+} DialogAltColorView;
 
 /* 11 methods, size 0xd8 */
 typedef struct DialogTextView {
@@ -1988,7 +1988,7 @@ typedef struct DialogTextView {
 } DialogTextView;
 
 /* 1 methods, size 0x118 */
-typedef struct C_0040bc40_118 {
+typedef struct DialogTextLineView {
     union { uptr field_0; uptr surf_wnd; };
     union { u32 field_4; u32 bg_surface; };
     union { uptr field_8; uptr body_font; };
@@ -2059,7 +2059,7 @@ typedef struct C_0040bc40_118 {
     union { u32 field_10c; u32 edit_y; };
     union { u32 field_110; u32 edit_label_width; };
     union { u32 field_114; u32 button_y; };
-} C_0040bc40_118;
+} DialogTextLineView;
 
 /* 5 methods, size 0x228 */
 typedef struct DialogWindowView {
@@ -2659,7 +2659,7 @@ typedef struct Control {
 } Control;
 
 /* 3 methods, size 0x40 */
-typedef struct C_0040f380_40 {
+typedef struct ClickControl {
     union { u32 field_0; u32 ctrl_type; };
     union { u32 field_4; u32 ctrl_id; };
     union { uptr field_8; uptr parent; };
@@ -2678,7 +2678,7 @@ typedef struct C_0040f380_40 {
     union { u32 field_34; u32 on_select; };
     union { u32 field_38; u32 font; };
     union { u32 field_3c; u32 scroll_pos; };
-} C_0040f380_40;
+} ClickControl;
 
 /* 5 methods, size 0x44 */
 typedef struct EditControl {
@@ -2704,7 +2704,7 @@ typedef struct EditControl {
 } EditControl;
 
 /* 2 methods, size 0x48 */
-typedef struct C_0040f380_48 {
+typedef struct InputControl {
     union { u32 field_0; u32 ctrl_type; };
     union { u32 field_4; u32 ctrl_id; };
     union { uptr field_8; uptr parent; };
@@ -2725,7 +2725,7 @@ typedef struct C_0040f380_48 {
     union { u32 field_3c; u32 scroll_pos; };
     union { u32 field_40; u32 edit_font; };
     union { u32 field_44; u32 items_handle; };
-} C_0040f380_48;
+} InputControl;
 
 /* 2 methods, size 0x50 */
 typedef struct RadioGroup {
@@ -2870,10 +2870,10 @@ typedef struct ControlTextView {
 } ControlTextView;
 
 /* 1 methods, size 0x20 */
-typedef struct C_00418b50 {
+typedef struct ComboDtorView {
     u8 pad_0[28];
     union { u32 field_1c; u32 hwnd; };
-} C_00418b50;
+} ComboDtorView;
 
 /* 1 methods, size 0x20 */
 typedef struct ComboBoxFontView {
@@ -2957,14 +2957,14 @@ typedef struct RadioGroupEnableView {
 } RadioGroupEnableView;
 
 /* 1 methods, size 0x178 */
-typedef struct C_00421f70 {
+typedef struct NetGamelistViewCtorView {
     u8 pad_0[4];
     union { u32 field_4; u32 next_game_id; };
     u8 pad_8[324];
     union { u32 field_14c; u32 option_list; };
     u8 pad_150[36];
     union { u32 field_174; u32 refresh_timer; };
-} C_00421f70;
+} NetGamelistViewCtorView;
 
 /* 2 methods, size 0x150 */
 typedef struct NetGameListRefreshView {
@@ -2997,7 +2997,7 @@ typedef struct NetGameList {
 } NetGameList;
 
 /* 1 methods, size 0x14c */
-typedef struct C_0042486f {
+typedef struct NetGamelistAddInfoLinesView {
     union { uptr field_0; uptr dialog; };
     u8 pad_4[292];
     union { u32 field_128; u32 line_0; };
@@ -3009,7 +3009,7 @@ typedef struct C_0042486f {
     union { u32 field_140; u32 line_6; };
     union { u32 field_144; u32 line_7; };
     union { u32 field_148; u32 line_8; };
-} C_0042486f;
+} NetGamelistAddInfoLinesView;
 
 /* 1 methods, size 0x150 */
 typedef struct NetGameListAddView {
@@ -3149,10 +3149,10 @@ typedef struct ScrollbarTrackSetView {
 } ScrollbarTrackSetView;
 
 /* 1 methods, size 0x20 */
-typedef struct C_00452a67 {
+typedef struct HyperlinkDtorView {
     u8 pad_0[28];
     union { u32 field_1c; u32 hwnd; };
-} C_00452a67;
+} HyperlinkDtorView;
 
 /* 3 methods, size 0x20 */
 typedef struct Hotspot {
@@ -3161,27 +3161,27 @@ typedef struct Hotspot {
 } Hotspot;
 
 /* 1 methods, size 0x48 */
-typedef struct C_00453b10 {
+typedef struct PediaLinkCtorView {
     u8 pad_0[72];
-} C_00453b10;
+} PediaLinkCtorView;
 
 /* 1 methods, size 0x38 */
-typedef struct C_00453d40 {
+typedef struct HyperlinkSetClickCallbackView {
     u8 pad_0[52];
     union { u32 field_34; u32 on_click; };
-} C_00453d40;
+} HyperlinkSetClickCallbackView;
 
 /* 1 methods, size 0x40 */
-typedef struct C_00453d70 {
+typedef struct HyperlinkSetDblclickCallbackView {
     u8 pad_0[60];
     union { u32 field_3c; u32 on_dblclick; };
-} C_00453d70;
+} HyperlinkSetDblclickCallbackView;
 
 /* 1 methods, size 0x24 */
-typedef struct C_00456ee0 {
+typedef struct WndSetKeydownPreHandlerView {
     u8 pad_0[32];
     union { u32 field_20; u32 tied_stream; };
-} C_00456ee0;
+} WndSetKeydownPreHandlerView;
 
 /* 1 methods, size 0x12c4 */
 typedef struct ClickMapClearView {
@@ -3219,12 +3219,12 @@ typedef struct AviPlayerEndCbSetView {
 } AviPlayerEndCbSetView;
 
 /* 1 methods, size 0xa24 */
-typedef struct C_00472910 {
+typedef struct AviPlayerSetFrameCallbackView {
     u8 pad_0[280];
     union { u32 field_118; u32 on_frame; };
     u8 pad_11c[2308];
     union { u32 field_a20; u32 callback_frame; };
-} C_00472910;
+} AviPlayerSetFrameCallbackView;
 
 /* 1 methods, size 0x338 */
 typedef struct MapViewHitView {
@@ -3289,9 +3289,9 @@ typedef struct DiploLeaderView {
 } DiploLeaderView;
 
 /* 1 methods, size 0x1dc */
-typedef struct C_0049632a_1dc {
+typedef struct PortraitDlgDtorView {
     u8 pad_0[476];
-} C_0049632a_1dc;
+} PortraitDlgDtorView;
 
 /* 1 methods, size 0x18 */
 typedef struct DiffEngSection {
@@ -3321,10 +3321,10 @@ typedef struct RadioGroupDtorView {
 } RadioGroupDtorView;
 
 /* 1 methods, size 0x25 */
-typedef struct C_004bb5b0 {
+typedef struct CtrlSetInitialFocusView {
     u8 pad_0[36];
     union { u8 field_24; u8 wants_initial_focus; };
-} C_004bb5b0;
+} CtrlSetInitialFocusView;
 
 /* 1 methods, size 0x20 */
 typedef struct ControlFocusView {
@@ -3358,7 +3358,7 @@ typedef struct AviPlayer {
 } AviPlayer;
 
 /* 2 methods, size 0x10430 */
-typedef struct C_004db690 {
+typedef struct ParleyOfferBuffer {
     u8 pad_0[280];
     union { u32 field_118; u32 civ_id; };
     u8 pad_11c[208];
@@ -3371,7 +3371,7 @@ typedef struct C_004db690 {
     u8 pad_21c[66060];
     union { u32 field_10428; u32 selected_count_left; };
     union { u32 field_1042c; u32 selected_count_right; };
-} C_004db690;
+} ParleyOfferBuffer;
 
 /* 1 methods, size 0x8 */
 typedef struct WndPaletteView {
@@ -3380,16 +3380,16 @@ typedef struct WndPaletteView {
 } WndPaletteView;
 
 /* 2 methods, size 0x20 */
-typedef struct C_00511560 {
+typedef struct SpriteButtonCore {
     u8 pad_0[28];
     union { u32 field_1c; u32 hwnd; };
-} C_00511560;
+} SpriteButtonCore;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005117f0 {
+typedef struct SpritebtnSetClickHandlerView {
     u8 pad_0[44];
     union { u32 field_2c; u32 on_click; };
-} C_005117f0;
+} SpritebtnSetClickHandlerView;
 
 /* 3 methods, size 0x5dd8 */
 typedef struct NetMsgQueue {
@@ -3414,7 +3414,7 @@ typedef struct NetMsgQueueEnqueueView {
 } NetMsgQueueEnqueueView;
 
 /* 1 methods, size 0x5dd8 */
-typedef struct C_005149d6 {
+typedef struct NetMessageQueue {
     u8 pad_0[24000];
     union { u32 field_5dc0; u32 low_read_index; };
     u8 pad_5dc4[4];
@@ -3422,12 +3422,12 @@ typedef struct C_005149d6 {
     union { u32 field_5dcc; u32 high_read_index; };
     u8 pad_5dd0[4];
     union { u32 field_5dd4; u32 high_count; };
-} C_005149d6;
+} NetMessageQueue;
 
 /* 1 methods, size 0x710 */
-typedef struct C_005150b9_710 {
+typedef struct DestroyedCivsWindowCore {
     u8 pad_0[1808];
-} C_005150b9_710;
+} DestroyedCivsWindowCore;
 
 /* 1 methods, size 0x1330 */
 typedef struct CouncilWindow {
@@ -3454,16 +3454,16 @@ typedef struct EditChangeSetView {
 } EditChangeSetView;
 
 /* 1 methods, size 0x38 */
-typedef struct C_00530fb0 {
+typedef struct CheckboxEnableView {
     u8 pad_0[52];
     union { u32 field_34; u32 is_enabled; };
-} C_00530fb0;
+} CheckboxEnableView;
 
 /* 1 methods, size 0x30 */
-typedef struct C_00551d20 {
+typedef struct ListboxGetCountView {
     u8 pad_0[44];
     union { u32 field_2c; u32 item_count; };
-} C_00551d20;
+} ListboxGetCountView;
 
 /* 1 methods, size 0x20 */
 typedef struct ListBoxGetSelView {
@@ -3558,34 +3558,34 @@ typedef struct DialogAddLineView {
 } DialogAddLineView;
 
 /* 1 methods, size 0x3d */
-typedef struct C_0059e327 {
+typedef struct DialogHelpPressedView {
     u8 pad_0[60];
     union { u8 field_3c; u8 style_flags; };
-} C_0059e327;
+} DialogHelpPressedView;
 
 /* 1 methods, size 0x4c */
-typedef struct C_0059e585 {
+typedef struct DialogSetCurrentPaneView {
     u8 pad_0[72];
     union { u32 field_48; u32 cur_pane; };
-} C_0059e585;
+} DialogSetCurrentPaneView;
 
 /* 1 methods, size 0xcc */
-typedef struct C_0059e624 {
+typedef struct DialogSetBevelWidthView {
     u8 pad_0[200];
     union { u32 field_c8; u32 bevel_width; };
-} C_0059e624;
+} DialogSetBevelWidthView;
 
 /* 1 methods, size 0xc8 */
-typedef struct C_0059e676 {
+typedef struct DialogButtonWidthForView {
     u8 pad_0[196];
     u32 field_c4;
-} C_0059e676;
+} DialogButtonWidthForView;
 
 /* 1 methods, size 0x23c */
-typedef struct C_0059e812 {
+typedef struct DialogFindButtonView {
     u8 pad_0[568];
     union { u32 field_238; u32 button_list; };
-} C_0059e812;
+} DialogFindButtonView;
 
 /* 2 methods, size 0x274 */
 typedef struct DialogEditTextView {
@@ -3594,10 +3594,10 @@ typedef struct DialogEditTextView {
 } DialogEditTextView;
 
 /* 1 methods, size 0xdc */
-typedef struct C_0059eb68 {
+typedef struct DialogSetResultIdView {
     u8 pad_0[216];
     union { u32 field_d8; u32 result_id; };
-} C_0059eb68;
+} DialogSetResultIdView;
 
 /* 1 methods, size 0x250 */
 typedef struct DialogSelChangeSetView {
@@ -3606,10 +3606,10 @@ typedef struct DialogSelChangeSetView {
 } DialogSelChangeSetView;
 
 /* 1 methods, size 0x254 */
-typedef struct C_0059ec40 {
+typedef struct DialogSetModalPollFnView {
     u8 pad_0[592];
     union { u32 field_250; u32 on_modal_poll; };
-} C_0059ec40;
+} DialogSetModalPollFnView;
 
 /* 2 methods, size 0xa8 */
 typedef struct DialogOptionDrawView {
@@ -3851,13 +3851,13 @@ typedef struct PaletteRotateView {
 } PaletteRotateView;
 
 /* 1 methods, size 0x434 */
-typedef struct C_005c6fc3 {
+typedef struct PaletteTintGetSavedRgbView {
     u8 pad_0[1072];
     union { u32 field_430; u32 palette_handle; };
-} C_005c6fc3;
+} PaletteTintGetSavedRgbView;
 
 /* 1 methods, size 0x434 */
-typedef struct C_005c701c {
+typedef struct PaletteTintStepView {
     u8 pad_0[1028];
     union { u32 field_404; u32 hpalette; };
     u8 pad_408[4];
@@ -3870,7 +3870,7 @@ typedef struct C_005c701c {
     union { u8 field_426; u8 fade_blue; };
     u8 pad_427[9];
     union { u32 field_430; u32 fade_saved_rgb; };
-} C_005c701c;
+} PaletteTintStepView;
 
 /* 1 methods, size 0x828 */
 typedef struct ColorKdTreeInitView {
@@ -4041,21 +4041,21 @@ typedef struct SpriteOriginGetView {
 } SpriteOriginGetView;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005cf3f3 {
+typedef struct UnusedObjectA {
     u8 pad_0[40];
     u32 field_28;
     u32 field_2c;
-} C_005cf3f3;
+} UnusedObjectA;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005cf439 {
+typedef struct UnusedObjectB {
     u8 pad_0[40];
     u32 field_28;
     u32 field_2c;
-} C_005cf439;
+} UnusedObjectB;
 
 /* 1 methods, size 0x31 */
-typedef struct C_005d1bb8 {
+typedef struct SpriteGetPixelView {
     u8 pad_0[16];
     union { u32 field_10; u32 bounds_left; };
     union { u32 field_14; u32 bounds_top; };
@@ -4063,7 +4063,7 @@ typedef struct C_005d1bb8 {
     union { u32 field_1c; u32 bounds_bottom; };
     u8 pad_20[16];
     union { u8 field_30; u8 transparent_color; };
-} C_005d1bb8;
+} SpriteGetPixelView;
 
 /* 1 methods, size 0x10 */
 typedef struct DDSurfaceRowNextView {
@@ -4129,12 +4129,12 @@ typedef struct ListBoxSelChangeView {
 } ListBoxSelChangeView;
 
 /* 1 methods, size 0x4c */
-typedef struct C_005d3fb0 {
+typedef struct RadiogrpHasHwndView {
     u8 pad_0[56];
     union { u32 field_38; u32 item_count; };
     u8 pad_3c[12];
     union { u32 field_48; u32 items; };
-} C_005d3fb0;
+} RadiogrpHasHwndView;
 
 /* 1 methods, size 0x4c */
 typedef struct RadioGroupShowView {
@@ -4145,12 +4145,12 @@ typedef struct RadioGroupShowView {
 } RadioGroupShowView;
 
 /* 1 methods, size 0x4c */
-typedef struct C_005d4087 {
+typedef struct RadiogrpHideAllView {
     u8 pad_0[56];
     union { u32 field_38; u32 item_count; };
     u8 pad_3c[12];
     union { u32 field_48; u32 items; };
-} C_005d4087;
+} RadiogrpHideAllView;
 
 /* 1 methods, size 0x30 */
 typedef struct RadioGroupClickView {
@@ -4181,10 +4181,10 @@ typedef struct ErrorContext {
 } ErrorContext;
 
 /* 1 methods, size 0x708 */
-typedef struct C_005db016 {
+typedef struct ErrCtxGetLastCodeView {
     u8 pad_0[1796];
     union { u32 field_704; u32 last_code; };
-} C_005db016;
+} ErrCtxGetLastCodeView;
 
 /* 1 methods, size 0xc */
 typedef struct WndDestroyView {
@@ -4193,18 +4193,18 @@ typedef struct WndDestroyView {
 } WndDestroyView;
 
 /* 1 methods, size 0xc */
-typedef struct C_005db792 {
+typedef struct WndRecordCreateMovieView {
     union { u32 field_0; u32 style; };
     u8 pad_4[4];
     union { u32 field_8; u32 movie_wnd; };
-} C_005db792;
+} WndRecordCreateMovieView;
 
 /* 1 methods, size 0xc */
-typedef struct C_005db80f {
+typedef struct WndRecordCreateMovieChildView {
     union { u32 field_0; u32 style; };
     u8 pad_4[4];
     union { u32 field_8; u32 movie_wnd; };
-} C_005db80f;
+} WndRecordCreateMovieChildView;
 
 /* 3 methods, size 0x4 */
 typedef struct MenuSubmenuView {
@@ -4231,10 +4231,10 @@ typedef struct AviPlayerRangeView {
 } AviPlayerRangeView;
 
 /* 1 methods, size 0xa28 */
-typedef struct C_005dd487 {
+typedef struct AviPlayerPlayFromStartView {
     u8 pad_0[2596];
     union { u32 field_a24; u32 is_playing; };
-} C_005dd487;
+} AviPlayerPlayFromStartView;
 
 /* 1 methods, size 0xa28 */
 typedef struct AviPlayerLoopView {
@@ -4251,10 +4251,10 @@ typedef struct AviPlayerPauseView {
 } AviPlayerPauseView;
 
 /* 1 methods, size 0x5a8 */
-typedef struct C_005dd761 {
+typedef struct AviPlayerSetTransparentView {
     u8 pad_0[1444];
     union { u32 field_5a4; u32 is_transparent; };
-} C_005dd761;
+} AviPlayerSetTransparentView;
 
 /* 1 methods, size 0x3c */
 typedef struct SurfaceRowOffsetsView {
@@ -4289,27 +4289,27 @@ typedef struct DDSurfacePixelView {
 } DDSurfacePixelView;
 
 /* 1 methods, size 0x4 */
-typedef struct C_005e6f25 {
+typedef struct DdsurfMapRgbView {
     union { u32 field_0; u32 ddsurf; };
-} C_005e6f25;
+} DdsurfMapRgbView;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005e6f57 {
+typedef struct DdsurfResetClipView {
     u8 pad_0[32];
     union { u32 field_20; u32 rect_left; };
     union { u32 field_24; u32 rect_top; };
     union { u32 field_28; u32 rect_right; };
     union { u32 field_2c; u32 rect_bottom; };
-} C_005e6f57;
+} DdsurfResetClipView;
 
 /* 1 methods, size 0x20 */
-typedef struct C_005e6ff1 {
+typedef struct DdsurfGetClipView {
     u8 pad_0[16];
     union { u32 field_10; u32 rect_left; };
     union { u32 field_14; u32 rect_top; };
     union { u32 field_18; u32 rect_right; };
     union { u32 field_1c; u32 rect_bottom; };
-} C_005e6ff1;
+} DdsurfGetClipView;
 
 /* 1 methods, size 0x2c */
 typedef struct DDPaletteCtorView {
@@ -4335,9 +4335,9 @@ typedef struct DDPaletteReleaseView {
 } DDPaletteReleaseView;
 
 /* 1 methods, size 0x4 */
-typedef struct C_005e8401 {
+typedef struct DdpalRotateRangeView {
     union { u32 field_0; u32 ddpalette; };
-} C_005e8401;
+} DdpalRotateRangeView;
 
 /* 2 methods, size 0x2c */
 typedef struct DDPalette {
@@ -4359,7 +4359,7 @@ typedef struct DDPaletteSetEntriesView {
 } DDPaletteSetEntriesView;
 
 /* 1 methods, size 0x2c */
-typedef struct C_005e87a2 {
+typedef struct DdpalFadeStepView {
     union { u32 field_0; u32 dd_palette; };
     union { u32 field_4; u32 fade_steps; };
     union { u32 field_8; u32 first_index; };
@@ -4370,7 +4370,7 @@ typedef struct C_005e87a2 {
     union { u8 field_1e; u8 fade_blue; };
     u8 pad_1f[9];
     union { u32 field_28; u32 saved_rgb; };
-} C_005e87a2;
+} DdpalFadeStepView;
 
 /* 1 methods, size 0x34 */
 typedef struct EditMaxTextView {
@@ -4547,11 +4547,11 @@ typedef struct WndOnVScrollTrackView {
 } WndOnVScrollTrackView;
 
 /* 1 methods, size 0x60 */
-typedef struct C_005ed4e0 {
+typedef struct WndCallMsg4c8View {
     u32 field_0;
     u8 pad_4[88];
     union { uptr field_5c; uptr on_msg_4c8; };
-} C_005ed4e0;
+} WndCallMsg4c8View;
 
 /* 1 methods, size 0x64 */
 typedef struct WndOnEnterSizeMoveView {
@@ -4639,14 +4639,14 @@ typedef struct MciWndSeekView {
 } MciWndSeekView;
 
 /* 1 methods, size 0x4 */
-typedef struct C_005ee991 {
+typedef struct MciwndSeekEndView {
     union { u32 field_0; u32 hwnd; };
-} C_005ee991;
+} MciwndSeekEndView;
 
 /* 1 methods, size 0x4 */
-typedef struct C_005ee9bc {
+typedef struct MciwndGetPositionView {
     union { u32 field_0; u32 hwnd; };
-} C_005ee9bc;
+} MciwndGetPositionView;
 
 /* 1 methods, size 0x4 */
 typedef struct MciWndPauseView {
@@ -4706,11 +4706,11 @@ typedef struct AviAudio {
 } AviAudio;
 
 /* 1 methods, size 0x8 */
-typedef struct C_005eecc3 {
+typedef struct AviAudioSetStreamView {
     union { u16 field_0; u16 stream_flags; };
     u8 pad_2[2];
     union { u32 field_4; u32 avi_stream; };
-} C_005eecc3;
+} AviAudioSetStreamView;
 
 /* 1 methods, size 0x8 */
 typedef struct AviAudioReleaseView {
@@ -4752,20 +4752,20 @@ typedef struct DDWindowPaletteView {
 } DDWindowPaletteView;
 
 /* 1 methods, size 0xbc */
-typedef struct C_005f0056 {
+typedef struct DdwinShowView {
     union { u32 field_0; u32 dd_surface; };
     u8 pad_4[172];
     union { u32 field_b0; u32 wnd; };
     u8 pad_b4[4];
     union { u32 field_b8; u32 palette_attached; };
-} C_005f0056;
+} DdwinShowView;
 
 /* 1 methods, size 0xc */
-typedef struct C_005f0213 {
+typedef struct DdwinAttachBackBufferView {
     union { u32 field_0; u32 dd_surface; };
     union { u32 field_4; u32 surf_height; };
     union { u32 field_8; u32 surf_width; };
-} C_005f0213;
+} DdwinAttachBackBufferView;
 
 /* 1 methods, size 0xd0 */
 typedef struct DDWindow {
@@ -4819,16 +4819,16 @@ typedef struct PtrListNodeDataSetView {
 } PtrListNodeDataSetView;
 
 /* 1 methods, size 0xc */
-typedef struct C_005f07f9 {
+typedef struct PtrlistCurrentView {
     u8 pad_0[8];
     union { uptr field_8; uptr node; };
-} C_005f07f9;
+} PtrlistCurrentView;
 
 /* 1 methods, size 0xc */
-typedef struct C_005f0897 {
+typedef struct PtrlistPrevImplView {
     u8 pad_0[8];
     union { uptr field_8; uptr cur_node; };
-} C_005f0897;
+} PtrlistPrevImplView;
 
 /* 1 methods, size 0x4 */
 typedef struct PtrListNodeDataView {
@@ -4848,7 +4848,7 @@ typedef struct PtrListNodePrevView {
 } PtrListNodePrevView;
 
 /* 1 methods, size 0x35 */
-typedef struct C_005f0f1d {
+typedef struct DdctrlCtorView {
     u8 pad_0[8];
     union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 parent_control; };
@@ -4860,10 +4860,10 @@ typedef struct C_005f0f1d {
     union { u32 field_2c; u32 on_rbuttonup; };
     u8 pad_30[4];
     union { u8 field_34; u8 is_active; };
-} C_005f0f1d;
+} DdctrlCtorView;
 
 /* 1 methods, size 0x35 */
-typedef struct C_005f0fe9 {
+typedef struct DdctrlCtorInWindowView {
     u8 pad_0[8];
     union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 parent_control; };
@@ -4875,10 +4875,10 @@ typedef struct C_005f0fe9 {
     union { u32 field_2c; u32 on_rbuttonup; };
     u8 pad_30[4];
     union { u8 field_34; u8 is_active; };
-} C_005f0fe9;
+} DdctrlCtorInWindowView;
 
 /* 1 methods, size 0x35 */
-typedef struct C_005f10b6 {
+typedef struct DdctrlCtorInControlView {
     u8 pad_0[8];
     union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 parent_control; };
@@ -4890,21 +4890,21 @@ typedef struct C_005f10b6 {
     union { u32 field_2c; u32 on_rbuttonup; };
     u8 pad_30[4];
     union { u8 field_34; u8 is_active; };
-} C_005f10b6;
+} DdctrlCtorInControlView;
 
 /* 1 methods, size 0x10 */
-typedef struct C_005f11f6 {
+typedef struct DdctrlSetParentWindowView {
     u8 pad_0[8];
     union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 parent_control; };
-} C_005f11f6;
+} DdctrlSetParentWindowView;
 
 /* 1 methods, size 0x10 */
-typedef struct C_005f1221 {
+typedef struct DdctrlSetParentControlView {
     u8 pad_0[8];
     union { u32 field_8; u32 parent_wnd; };
     union { u32 field_c; u32 is_enabled; };
-} C_005f1221;
+} DdctrlSetParentControlView;
 
 /* 4 methods, size 0x10 */
 typedef struct DDControlParentView {
@@ -4944,80 +4944,80 @@ typedef struct DDControlActivateView {
 } DDControlActivateView;
 
 /* 1 methods, size 0x24 */
-typedef struct C_005f16c4 {
+typedef struct DdctrlSetClickCbView {
     u8 pad_0[32];
     union { u32 field_20; u32 on_click; };
-} C_005f16c4;
+} DdctrlSetClickCbView;
 
 /* 1 methods, size 0x28 */
-typedef struct C_005f16e5 {
+typedef struct DdctrlSetMousemoveCbView {
     u8 pad_0[36];
     union { u32 field_24; u32 on_mousemove; };
-} C_005f16e5;
+} DdctrlSetMousemoveCbView;
 
 /* 1 methods, size 0x2c */
-typedef struct C_005f1706 {
+typedef struct DdctrlSetLbuttonupCbView {
     u8 pad_0[40];
     union { u32 field_28; u32 on_lbuttonup; };
-} C_005f1706;
+} DdctrlSetLbuttonupCbView;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005f1727 {
+typedef struct DdctrlSetRbuttonupCbView {
     u8 pad_0[44];
     union { u32 field_2c; u32 on_rbuttonup; };
-} C_005f1727;
+} DdctrlSetRbuttonupCbView;
 
 /* 1 methods, size 0x34 */
-typedef struct C_005f1748 {
+typedef struct DdctrlSetDblclickCbView {
     u8 pad_0[48];
     union { u32 field_30; u32 on_dblclick; };
-} C_005f1748;
+} DdctrlSetDblclickCbView;
 
 /* 1 methods, size 0x24 */
-typedef struct C_005f1769 {
+typedef struct DdctrlCallClickCbView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[24];
     union { uptr field_20; uptr on_click; };
-} C_005f1769;
+} DdctrlCallClickCbView;
 
 /* 1 methods, size 0x2c */
-typedef struct C_005f17d4 {
+typedef struct DdctrlOnLbuttonupView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[32];
     union { uptr field_28; uptr on_lbutton_up; };
-} C_005f17d4;
+} DdctrlOnLbuttonupView;
 
 /* 1 methods, size 0x30 */
-typedef struct C_005f1811 {
+typedef struct DdctrlOnRbuttonupView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[36];
     union { uptr field_2c; uptr on_rbutton_up; };
-} C_005f1811;
+} DdctrlOnRbuttonupView;
 
 /* 1 methods, size 0x28 */
-typedef struct C_005f184e {
+typedef struct DdctrlOnMousemoveView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[28];
     union { uptr field_24; uptr on_mouse_move; };
-} C_005f184e;
+} DdctrlOnMousemoveView;
 
 /* 1 methods, size 0x34 */
-typedef struct C_005f188b {
+typedef struct DdctrlOnDblclickView {
     u32 field_0;
     union { u32 field_4; u32 control_id; };
     u8 pad_8[40];
     union { uptr field_30; uptr on_dblclick; };
-} C_005f188b;
+} DdctrlOnDblclickView;
 
 /* 1 methods, size 0xb0 */
-typedef struct C_005f1b50 {
+typedef struct DdwinGetPaletteView {
     u8 pad_0[172];
     union { u32 field_ac; u32 palette_obj; };
-} C_005f1b50;
+} DdwinGetPaletteView;
 
 #pragma pack(pop)
 

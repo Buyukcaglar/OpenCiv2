@@ -4256,21 +4256,21 @@ void gamedata_init(void)
     memcpy(&g.d_0061e4b0, IMG(0x0061e4b0u), 0xd78);
     g.d_0061f228 = (uptr)((u8 *)&g.d_0061f22c + 20);
     memcpy(&g.d_0061f22c, IMG(0x0061f22cu), 0x18);
-    g.d_0061f244 = 0;   /* FUN_0040a54e: not in native builds */
+    g.d_0061f244 = 0;   /* unwind_funclet_0040a54e: not in native builds */
     memcpy(&g.d_0061f248, IMG(0x0061f248u), 0x10);
     g.d_0061f258 = (uptr)((u8 *)&g.d_0061f25c + 20);
     memcpy(&g.d_0061f25c, IMG(0x0061f25cu), 0x18);
-    g.d_0061f274 = 0;   /* FUN_0040dda0: not in native builds */
+    g.d_0061f274 = 0;   /* unwind_funclet_0040dda0: not in native builds */
     memcpy(&g.d_0061f278, IMG(0x0061f278u), 0x4);
     g.d_0061f27c = 0x0040dd90u;   /* not a known function or data */
     memcpy(&g.d_0061f280, IMG(0x0061f280u), 0x8);
     g.d_0061f288 = (uptr)((u8 *)&g.d_0061f28c + 20);
     memcpy(&g.d_0061f28c, IMG(0x0061f28cu), 0x18);
-    g.d_0061f2a4 = 0;   /* FUN_0040dea8: not in native builds */
+    g.d_0061f2a4 = 0;   /* unwind_funclet_0040dea8: not in native builds */
     memcpy(&g.d_0061f2a8, IMG(0x0061f2a8u), 0x8);
     g.d_0061f2b0 = (uptr)((u8 *)&g.d_0061f2b4 + 20);
     memcpy(&g.d_0061f2b4, IMG(0x0061f2b4u), 0x18);
-    g.d_0061f2cc = 0;   /* FUN_0040e38d: not in native builds */
+    g.d_0061f2cc = 0;   /* unwind_funclet_0040e38d: not in native builds */
     memcpy(&g.d_0061f2d0, IMG(0x0061f2d0u), 0x18);
     g.d_0061f2e8 = (uptr)((u8 *)&g.d_0061f2ec + 20);
     memcpy(&g.d_0061f2ec, IMG(0x0061f2ecu), 0x18);
@@ -4288,17 +4288,17 @@ void gamedata_init(void)
     memcpy(&g.d_0061f330, IMG(0x0061f330u), 0x10);
     g.d_0061f340 = (uptr)((u8 *)&g.d_0061f344 + 20);
     memcpy(&g.d_0061f344, IMG(0x0061f344u), 0x18);
-    g.d_0061f35c = 0;   /* FUN_0040f2b3: not in native builds */
+    g.d_0061f35c = 0;   /* unwind_funclet_0040f2b3: not in native builds */
     memcpy(&g.d_0061f360, IMG(0x0061f360u), 0x4);
-    g.d_0061f364 = 0;   /* FUN_0040f2a4: not in native builds */
+    g.d_0061f364 = 0;   /* unwind_funclet_0040f2a4: not in native builds */
     memcpy(&g.d_0061f368, IMG(0x0061f368u), 0x4);
-    g.d_0061f36c = 0;   /* FUN_0040f295: not in native builds */
+    g.d_0061f36c = 0;   /* unwind_funclet_0040f295: not in native builds */
     memcpy(&g.d_0061f370, IMG(0x0061f370u), 0x4);
-    g.d_0061f374 = 0;   /* FUN_0040f286: not in native builds */
+    g.d_0061f374 = 0;   /* unwind_funclet_0040f286: not in native builds */
     memcpy(&g.d_0061f378, IMG(0x0061f378u), 0x4);
-    g.d_0061f37c = 0;   /* FUN_0040f26e: not in native builds */
+    g.d_0061f37c = 0;   /* unwind_funclet_0040f26e: not in native builds */
     memcpy(&g.d_0061f380, IMG(0x0061f380u), 0x4);
-    g.d_0061f384 = 0;   /* FUN_0040f25f: not in native builds */
+    g.d_0061f384 = 0;   /* unwind_funclet_0040f25f: not in native builds */
     memcpy(&g.d_0061f388, IMG(0x0061f388u), 0x10);
     g.d_0061f398 = (uptr)((u8 *)&g.d_0061f39c + 20);
     memcpy(&g.d_0061f39c, IMG(0x0061f39cu), 0x18);
@@ -4306,7 +4306,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061f3b8, IMG(0x0061f3b8u), 0x10);
     g.d_0061f3c8 = (uptr)((u8 *)&g.d_0061f3cc + 20);
     memcpy(&g.d_0061f3cc, IMG(0x0061f3ccu), 0x18);
-    g.d_0061f3e4 = 0;   /* FUN_0040f5c3: not in native builds */
+    g.d_0061f3e4 = 0;   /* unwind_funclet_0040f5c3: not in native builds */
     memcpy(&g.d_0061f3e8, IMG(0x0061f3e8u), 0x10);
     g.d_0061f3f8 = (uptr)((u8 *)&g.d_0061f3fc + 20);
     memcpy(&g.d_0061f3fc, IMG(0x0061f3fcu), 0x18);
@@ -4314,7 +4314,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061f418, IMG(0x0061f418u), 0x10);
     g.d_0061f428 = (uptr)((u8 *)&g.d_0061f42c + 20);
     memcpy(&g.d_0061f42c, IMG(0x0061f42cu), 0x18);
-    g.d_0061f444 = 0;   /* FUN_0040f98a: not in native builds */
+    g.d_0061f444 = 0;   /* unwind_funclet_0040f98a: not in native builds */
     memcpy(&g.d_0061f448, IMG(0x0061f448u), 0x10);
     g.d_0061f458 = (uptr)((u8 *)&g.d_0061f45c + 20);
     memcpy(&g.d_0061f45c, IMG(0x0061f45cu), 0x18);
@@ -4322,23 +4322,23 @@ void gamedata_init(void)
     memcpy(&g.d_0061f478, IMG(0x0061f478u), 0x10);
     g.d_0061f488 = (uptr)((u8 *)&g.d_0061f48c + 20);
     memcpy(&g.d_0061f48c, IMG(0x0061f48cu), 0x18);
-    g.d_0061f4a4 = 0;   /* FUN_0040fc0a: not in native builds */
+    g.d_0061f4a4 = 0;   /* unwind_funclet_0040fc0a: not in native builds */
     memcpy(&g.d_0061f4a8, IMG(0x0061f4a8u), 0x10);
     g.d_0061f4b8 = (uptr)((u8 *)&g.d_0061f4bc + 20);
     memcpy(&g.d_0061f4bc, IMG(0x0061f4bcu), 0x18);
-    g.d_0061f4d4 = 0;   /* FUN_004102e1: not in native builds */
+    g.d_0061f4d4 = 0;   /* unwind_funclet_004102e1: not in native builds */
     memcpy(&g.d_0061f4d8, IMG(0x0061f4d8u), 0x4);
-    g.d_0061f4dc = 0;   /* FUN_004102d5: not in native builds */
+    g.d_0061f4dc = 0;   /* unwind_funclet_004102d5: not in native builds */
     memcpy(&g.d_0061f4e0, IMG(0x0061f4e0u), 0x10);
     g.d_0061f4f0 = (uptr)((u8 *)&g.d_0061f4f4 + 20);
     memcpy(&g.d_0061f4f4, IMG(0x0061f4f4u), 0x18);
-    g.d_0061f50c = 0;   /* FUN_00417542: not in native builds */
+    g.d_0061f50c = 0;   /* unwind_funclet_00417542: not in native builds */
     memcpy(&g.d_0061f510, IMG(0x0061f510u), 0x4);
     g.d_0061f514 = 0x00417532u;   /* not a known function or data */
     memcpy(&g.d_0061f518, IMG(0x0061f518u), 0x8);
     g.d_0061f520 = (uptr)((u8 *)&g.d_0061f524 + 20);
     memcpy(&g.d_0061f524, IMG(0x0061f524u), 0x18);
-    g.d_0061f53c = 0;   /* FUN_004175bf: not in native builds */
+    g.d_0061f53c = 0;   /* unwind_funclet_004175bf: not in native builds */
     memcpy(&g.d_0061f540, IMG(0x0061f540u), 0x10);
     g.d_0061f550 = (uptr)((u8 *)&g.d_0061f554 + 20);
     memcpy(&g.d_0061f554, IMG(0x0061f554u), 0x18);
@@ -4388,49 +4388,49 @@ void gamedata_init(void)
     memcpy(&g.d_0061f618, IMG(0x0061f618u), 0x20);
     g.d_0061f638 = (uptr)((u8 *)&g.d_0061f63c + 20);
     memcpy(&g.d_0061f63c, IMG(0x0061f63cu), 0x18);
-    g.d_0061f654 = 0;   /* FUN_0041866c: not in native builds */
+    g.d_0061f654 = 0;   /* unwind_funclet_0041866c: not in native builds */
     memcpy(&g.d_0061f658, IMG(0x0061f658u), 0x4);
-    g.d_0061f65c = 0;   /* FUN_00418654: not in native builds */
+    g.d_0061f65c = 0;   /* unwind_funclet_00418654: not in native builds */
     memcpy(&g.d_0061f660, IMG(0x0061f660u), 0x4);
-    g.d_0061f664 = 0;   /* FUN_0041863c: not in native builds */
+    g.d_0061f664 = 0;   /* unwind_funclet_0041863c: not in native builds */
     memcpy(&g.d_0061f668, IMG(0x0061f668u), 0x4);
-    g.d_0061f66c = 0;   /* FUN_0041862d: not in native builds */
+    g.d_0061f66c = 0;   /* unwind_funclet_0041862d: not in native builds */
     memcpy(&g.d_0061f670, IMG(0x0061f670u), 0x4);
-    g.d_0061f674 = 0;   /* FUN_0041861e: not in native builds */
+    g.d_0061f674 = 0;   /* unwind_funclet_0041861e: not in native builds */
     memcpy(&g.d_0061f678, IMG(0x0061f678u), 0x4);
-    g.d_0061f67c = 0;   /* FUN_0041860f: not in native builds */
+    g.d_0061f67c = 0;   /* unwind_funclet_0041860f: not in native builds */
     memcpy(&g.d_0061f680, IMG(0x0061f680u), 0x4);
-    g.d_0061f684 = 0;   /* FUN_00418600: not in native builds */
+    g.d_0061f684 = 0;   /* unwind_funclet_00418600: not in native builds */
     memcpy(&g.d_0061f688, IMG(0x0061f688u), 0x4);
-    g.d_0061f68c = 0;   /* FUN_004185f1: not in native builds */
+    g.d_0061f68c = 0;   /* unwind_funclet_004185f1: not in native builds */
     memcpy(&g.d_0061f690, IMG(0x0061f690u), 0x4);
-    g.d_0061f694 = 0;   /* FUN_004185e2: not in native builds */
+    g.d_0061f694 = 0;   /* unwind_funclet_004185e2: not in native builds */
     memcpy(&g.d_0061f698, IMG(0x0061f698u), 0x4);
-    g.d_0061f69c = 0;   /* FUN_004185d3: not in native builds */
+    g.d_0061f69c = 0;   /* unwind_funclet_004185d3: not in native builds */
     memcpy(&g.d_0061f6a0, IMG(0x0061f6a0u), 0x4);
-    g.d_0061f6a4 = 0;   /* FUN_004185c4: not in native builds */
+    g.d_0061f6a4 = 0;   /* unwind_funclet_004185c4: not in native builds */
     memcpy(&g.d_0061f6a8, IMG(0x0061f6a8u), 0x4);
-    g.d_0061f6ac = 0;   /* FUN_004185b5: not in native builds */
+    g.d_0061f6ac = 0;   /* unwind_funclet_004185b5: not in native builds */
     memcpy(&g.d_0061f6b0, IMG(0x0061f6b0u), 0x4);
-    g.d_0061f6b4 = 0;   /* FUN_004185a6: not in native builds */
+    g.d_0061f6b4 = 0;   /* unwind_funclet_004185a6: not in native builds */
     memcpy(&g.d_0061f6b8, IMG(0x0061f6b8u), 0x4);
-    g.d_0061f6bc = 0;   /* FUN_00418597: not in native builds */
+    g.d_0061f6bc = 0;   /* unwind_funclet_00418597: not in native builds */
     memcpy(&g.d_0061f6c0, IMG(0x0061f6c0u), 0x4);
-    g.d_0061f6c4 = 0;   /* FUN_00418588: not in native builds */
+    g.d_0061f6c4 = 0;   /* unwind_funclet_00418588: not in native builds */
     memcpy(&g.d_0061f6c8, IMG(0x0061f6c8u), 0x4);
-    g.d_0061f6cc = 0;   /* FUN_00418579: not in native builds */
+    g.d_0061f6cc = 0;   /* unwind_funclet_00418579: not in native builds */
     memcpy(&g.d_0061f6d0, IMG(0x0061f6d0u), 0x4);
-    g.d_0061f6d4 = 0;   /* FUN_0041856a: not in native builds */
+    g.d_0061f6d4 = 0;   /* unwind_funclet_0041856a: not in native builds */
     memcpy(&g.d_0061f6d8, IMG(0x0061f6d8u), 0x4);
-    g.d_0061f6dc = 0;   /* FUN_0041855b: not in native builds */
+    g.d_0061f6dc = 0;   /* unwind_funclet_0041855b: not in native builds */
     memcpy(&g.d_0061f6e0, IMG(0x0061f6e0u), 0x4);
-    g.d_0061f6e4 = 0;   /* FUN_0041854c: not in native builds */
+    g.d_0061f6e4 = 0;   /* unwind_funclet_0041854c: not in native builds */
     memcpy(&g.d_0061f6e8, IMG(0x0061f6e8u), 0x4);
-    g.d_0061f6ec = 0;   /* FUN_0041853d: not in native builds */
+    g.d_0061f6ec = 0;   /* unwind_funclet_0041853d: not in native builds */
     memcpy(&g.d_0061f6f0, IMG(0x0061f6f0u), 0x4);
-    g.d_0061f6f4 = 0;   /* FUN_0041852e: not in native builds */
+    g.d_0061f6f4 = 0;   /* unwind_funclet_0041852e: not in native builds */
     memcpy(&g.d_0061f6f8, IMG(0x0061f6f8u), 0x4);
-    g.d_0061f6fc = 0;   /* FUN_0041851f: not in native builds */
+    g.d_0061f6fc = 0;   /* unwind_funclet_0041851f: not in native builds */
     memcpy(&g.d_0061f700, IMG(0x0061f700u), 0x20);
     g.d_0061f720 = (uptr)((u8 *)&g.d_0061f724 + 20);
     memcpy(&g.d_0061f724, IMG(0x0061f724u), 0x18);
@@ -4438,7 +4438,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061f740, IMG(0x0061f740u), 0x10);
     g.d_0061f750 = (uptr)((u8 *)&g.d_0061f754 + 20);
     memcpy(&g.d_0061f754, IMG(0x0061f754u), 0x18);
-    g.d_0061f76c = 0;   /* FUN_004188ca: not in native builds */
+    g.d_0061f76c = 0;   /* unwind_funclet_004188ca: not in native builds */
     memcpy(&g.d_0061f770, IMG(0x0061f770u), 0x10);
     g.d_0061f780 = (uptr)((u8 *)&g.d_0061f784 + 20);
     memcpy(&g.d_0061f784, IMG(0x0061f784u), 0x18);
@@ -4446,7 +4446,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061f7a0, IMG(0x0061f7a0u), 0x10);
     g.d_0061f7b0 = (uptr)((u8 *)&g.d_0061f7b4 + 20);
     memcpy(&g.d_0061f7b4, IMG(0x0061f7b4u), 0x18);
-    g.d_0061f7cc = 0;   /* FUN_00418baa: not in native builds */
+    g.d_0061f7cc = 0;   /* unwind_funclet_00418baa: not in native builds */
     memcpy(&g.d_0061f7d0, IMG(0x0061f7d0u), 0x10);
     g.d_0061f7e0 = (uptr)((u8 *)&g.d_0061f7e4 + 20);
     memcpy(&g.d_0061f7e4, IMG(0x0061f7e4u), 0x18);
@@ -4454,53 +4454,53 @@ void gamedata_init(void)
     memcpy(&g.d_0061f800, IMG(0x0061f800u), 0x10);
     g.d_0061f810 = (uptr)((u8 *)&g.d_0061f814 + 20);
     memcpy(&g.d_0061f814, IMG(0x0061f814u), 0x18);
-    g.d_0061f82c = 0;   /* FUN_00418efa: not in native builds */
+    g.d_0061f82c = 0;   /* unwind_funclet_00418efa: not in native builds */
     memcpy(&g.d_0061f830, IMG(0x0061f830u), 0x10);
     g.d_0061f840 = (uptr)((u8 *)&g.d_0061f844 + 20);
     memcpy(&g.d_0061f844, IMG(0x0061f844u), 0x18);
-    g.d_0061f85c = 0;   /* FUN_0041994c: not in native builds */
+    g.d_0061f85c = 0;   /* unwind_funclet_0041994c: not in native builds */
     memcpy(&g.d_0061f860, IMG(0x0061f860u), 0x4);
-    g.d_0061f864 = 0;   /* FUN_00419940: not in native builds */
+    g.d_0061f864 = 0;   /* unwind_funclet_00419940: not in native builds */
     memcpy(&g.d_0061f868, IMG(0x0061f868u), 0x10);
     g.d_0061f878 = (uptr)((u8 *)&g.d_0061f87c + 20);
     memcpy(&g.d_0061f87c, IMG(0x0061f87cu), 0x18);
-    g.d_0061f894 = 0;   /* FUN_0041b46a: not in native builds */
+    g.d_0061f894 = 0;   /* unwind_funclet_0041b46a: not in native builds */
     memcpy(&g.d_0061f898, IMG(0x0061f898u), 0x8);
     g.d_0061f8a0 = (uptr)((u8 *)&g.d_0061f8a4 + 20);
     memcpy(&g.d_0061f8a4, IMG(0x0061f8a4u), 0x18);
-    g.d_0061f8bc = 0;   /* FUN_0041d3f2: not in native builds */
+    g.d_0061f8bc = 0;   /* unwind_funclet_0041d3f2: not in native builds */
     memcpy(&g.d_0061f8c0, IMG(0x0061f8c0u), 0x8);
     g.d_0061f8c8 = (uptr)((u8 *)&g.d_0061f8cc + 20);
     memcpy(&g.d_0061f8cc, IMG(0x0061f8ccu), 0x18);
-    g.d_0061f8e4 = 0;   /* FUN_0041d7c5: not in native builds */
+    g.d_0061f8e4 = 0;   /* unwind_funclet_0041d7c5: not in native builds */
     memcpy(&g.d_0061f8e8, IMG(0x0061f8e8u), 0x8);
     g.d_0061f8f0 = (uptr)((u8 *)&g.d_0061f8f4 + 20);
     memcpy(&g.d_0061f8f4, IMG(0x0061f8f4u), 0x18);
-    g.d_0061f90c = 0;   /* FUN_0041dc9e: not in native builds */
+    g.d_0061f90c = 0;   /* unwind_funclet_0041dc9e: not in native builds */
     memcpy(&g.d_0061f910, IMG(0x0061f910u), 0x8);
     g.d_0061f918 = (uptr)((u8 *)&g.d_0061f91c + 20);
     memcpy(&g.d_0061f91c, IMG(0x0061f91cu), 0x18);
-    g.d_0061f934 = 0;   /* FUN_0041e7be: not in native builds */
+    g.d_0061f934 = 0;   /* unwind_funclet_0041e7be: not in native builds */
     memcpy(&g.d_0061f938, IMG(0x0061f938u), 0x4);
-    g.d_0061f93c = 0;   /* FUN_0041e7b2: not in native builds */
+    g.d_0061f93c = 0;   /* unwind_funclet_0041e7b2: not in native builds */
     memcpy(&g.d_0061f940, IMG(0x0061f940u), 0x8);
     g.d_0061f948 = (uptr)((u8 *)&g.d_0061f94c + 20);
     memcpy(&g.d_0061f94c, IMG(0x0061f94cu), 0x18);
-    g.d_0061f964 = 0;   /* FUN_0041eec6: not in native builds */
+    g.d_0061f964 = 0;   /* unwind_funclet_0041eec6: not in native builds */
     memcpy(&g.d_0061f968, IMG(0x0061f968u), 0x8);
     g.d_0061f970 = (uptr)((u8 *)&g.d_0061f974 + 20);
     memcpy(&g.d_0061f974, IMG(0x0061f974u), 0x18);
-    g.d_0061f98c = 0;   /* FUN_0041f67a: not in native builds */
+    g.d_0061f98c = 0;   /* unwind_funclet_0041f67a: not in native builds */
     memcpy(&g.d_0061f990, IMG(0x0061f990u), 0x4);
-    g.d_0061f994 = 0;   /* FUN_0041f66e: not in native builds */
+    g.d_0061f994 = 0;   /* unwind_funclet_0041f66e: not in native builds */
     memcpy(&g.d_0061f998, IMG(0x0061f998u), 0x8);
     g.d_0061f9a0 = (uptr)((u8 *)&g.d_0061f9a4 + 20);
     memcpy(&g.d_0061f9a4, IMG(0x0061f9a4u), 0x18);
-    g.d_0061f9bc = 0;   /* FUN_00420207: not in native builds */
+    g.d_0061f9bc = 0;   /* unwind_funclet_00420207: not in native builds */
     memcpy(&g.d_0061f9c0, IMG(0x0061f9c0u), 0x4);
-    g.d_0061f9c4 = 0;   /* FUN_004201fb: not in native builds */
+    g.d_0061f9c4 = 0;   /* unwind_funclet_004201fb: not in native builds */
     memcpy(&g.d_0061f9c8, IMG(0x0061f9c8u), 0x4);
-    g.d_0061f9cc = 0;   /* FUN_004201ef: not in native builds */
+    g.d_0061f9cc = 0;   /* unwind_funclet_004201ef: not in native builds */
     memcpy(&g.d_0061f9d0, IMG(0x0061f9d0u), 0x30);
     g.d_0061fa00 = (uptr)((u8 *)&g.d_0061fa04 + 20);
     memcpy(&g.d_0061fa04, IMG(0x0061fa04u), 0x18);
@@ -4516,29 +4516,29 @@ void gamedata_init(void)
     memcpy(&g.d_0061fa40, IMG(0x0061fa40u), 0x10);
     g.d_0061fa50 = (uptr)((u8 *)&g.d_0061fa54 + 20);
     memcpy(&g.d_0061fa54, IMG(0x0061fa54u), 0x18);
-    g.d_0061fa6c = 0;   /* FUN_00429e53: not in native builds */
+    g.d_0061fa6c = 0;   /* unwind_funclet_00429e53: not in native builds */
     memcpy(&g.d_0061fa70, IMG(0x0061fa70u), 0x4);
     g.d_0061fa74 = 0x00429e43u;   /* not a known function or data */
     memcpy(&g.d_0061fa78, IMG(0x0061fa78u), 0x8);
     g.d_0061fa80 = (uptr)((u8 *)&g.d_0061fa84 + 20);
     memcpy(&g.d_0061fa84, IMG(0x0061fa84u), 0x18);
-    g.d_0061fa9c = 0;   /* FUN_00429ed0: not in native builds */
+    g.d_0061fa9c = 0;   /* unwind_funclet_00429ed0: not in native builds */
     memcpy(&g.d_0061faa0, IMG(0x0061faa0u), 0x10);
     g.d_0061fab0 = (uptr)((u8 *)&g.d_0061fab4 + 20);
     memcpy(&g.d_0061fab4, IMG(0x0061fab4u), 0x18);
-    g.d_0061facc = 0;   /* FUN_0043c1f6: not in native builds */
+    g.d_0061facc = 0;   /* unwind_funclet_0043c1f6: not in native builds */
     memcpy(&g.d_0061fad0, IMG(0x0061fad0u), 0x4);
-    g.d_0061fad4 = 0;   /* FUN_0043c1e7: not in native builds */
+    g.d_0061fad4 = 0;   /* unwind_funclet_0043c1e7: not in native builds */
     memcpy(&g.d_0061fad8, IMG(0x0061fad8u), 0x4);
-    g.d_0061fadc = 0;   /* FUN_0043c1d8: not in native builds */
+    g.d_0061fadc = 0;   /* unwind_funclet_0043c1d8: not in native builds */
     memcpy(&g.d_0061fae0, IMG(0x0061fae0u), 0x4);
-    g.d_0061fae4 = 0;   /* FUN_0043c1c9: not in native builds */
+    g.d_0061fae4 = 0;   /* unwind_funclet_0043c1c9: not in native builds */
     memcpy(&g.d_0061fae8, IMG(0x0061fae8u), 0x4);
-    g.d_0061faec = 0;   /* FUN_0043c1ba: not in native builds */
+    g.d_0061faec = 0;   /* unwind_funclet_0043c1ba: not in native builds */
     memcpy(&g.d_0061faf0, IMG(0x0061faf0u), 0x4);
-    g.d_0061faf4 = 0;   /* FUN_0043c1ab: not in native builds */
+    g.d_0061faf4 = 0;   /* unwind_funclet_0043c1ab: not in native builds */
     memcpy(&g.d_0061faf8, IMG(0x0061faf8u), 0x4);
-    g.d_0061fafc = 0;   /* FUN_0043c19c: not in native builds */
+    g.d_0061fafc = 0;   /* unwind_funclet_0043c19c: not in native builds */
     memcpy(&g.d_0061fb00, IMG(0x0061fb00u), 0x10);
     g.d_0061fb10 = (uptr)((u8 *)&g.d_0061fb14 + 20);
     memcpy(&g.d_0061fb14, IMG(0x0061fb14u), 0x18);
@@ -4558,33 +4558,33 @@ void gamedata_init(void)
     memcpy(&g.d_0061fb60, IMG(0x0061fb60u), 0x10);
     g.d_0061fb70 = (uptr)((u8 *)&g.d_0061fb74 + 20);
     memcpy(&g.d_0061fb74, IMG(0x0061fb74u), 0x18);
-    g.d_0061fb8c = 0;   /* FUN_0042ab9b: not in native builds */
+    g.d_0061fb8c = 0;   /* unwind_funclet_0042ab9b: not in native builds */
     memcpy(&g.d_0061fb90, IMG(0x0061fb90u), 0x8);
     g.d_0061fb98 = (uptr)((u8 *)&g.d_0061fb9c + 20);
     memcpy(&g.d_0061fb9c, IMG(0x0061fb9cu), 0x18);
-    g.d_0061fbb4 = 0;   /* FUN_0042bc22: not in native builds */
+    g.d_0061fbb4 = 0;   /* unwind_funclet_0042bc22: not in native builds */
     memcpy(&g.d_0061fbb8, IMG(0x0061fbb8u), 0x8);
     g.d_0061fbc0 = (uptr)((u8 *)&g.d_0061fbc4 + 20);
     memcpy(&g.d_0061fbc4, IMG(0x0061fbc4u), 0x18);
-    g.d_0061fbdc = 0;   /* FUN_0042bd6b: not in native builds */
+    g.d_0061fbdc = 0;   /* unwind_funclet_0042bd6b: not in native builds */
     memcpy(&g.d_0061fbe0, IMG(0x0061fbe0u), 0x8);
     g.d_0061fbe8 = (uptr)((u8 *)&g.d_0061fbec + 20);
     memcpy(&g.d_0061fbec, IMG(0x0061fbecu), 0x18);
-    g.d_0061fc04 = 0;   /* FUN_004305e7: not in native builds */
+    g.d_0061fc04 = 0;   /* unwind_funclet_004305e7: not in native builds */
     memcpy(&g.d_0061fc08, IMG(0x0061fc08u), 0x8);
     g.d_0061fc10 = (uptr)((u8 *)&g.d_0061fc14 + 20);
     memcpy(&g.d_0061fc14, IMG(0x0061fc14u), 0x18);
-    g.d_0061fc2c = 0;   /* FUN_0043154f: not in native builds */
+    g.d_0061fc2c = 0;   /* unwind_funclet_0043154f: not in native builds */
     memcpy(&g.d_0061fc30, IMG(0x0061fc30u), 0x8);
     g.d_0061fc38 = (uptr)((u8 *)&g.d_0061fc3c + 20);
     memcpy(&g.d_0061fc3c, IMG(0x0061fc3cu), 0x18);
-    g.d_0061fc54 = 0;   /* FUN_004325ed: not in native builds */
+    g.d_0061fc54 = 0;   /* unwind_funclet_004325ed: not in native builds */
     memcpy(&g.d_0061fc58, IMG(0x0061fc58u), 0x4);
-    g.d_0061fc5c = 0;   /* FUN_004325e1: not in native builds */
+    g.d_0061fc5c = 0;   /* unwind_funclet_004325e1: not in native builds */
     memcpy(&g.d_0061fc60, IMG(0x0061fc60u), 0x4);
-    g.d_0061fc64 = 0;   /* FUN_004325d5: not in native builds */
+    g.d_0061fc64 = 0;   /* unwind_funclet_004325d5: not in native builds */
     memcpy(&g.d_0061fc68, IMG(0x0061fc68u), 0x4);
-    g.d_0061fc6c = 0;   /* FUN_004325c9: not in native builds */
+    g.d_0061fc6c = 0;   /* unwind_funclet_004325c9: not in native builds */
     memcpy(&g.d_0061fc70, IMG(0x0061fc70u), 0x4);
     g.d_0061fc74 = 0x004325b9u;   /* not a known function or data */
     memcpy(&g.d_0061fc78, IMG(0x0061fc78u), 0x4);
@@ -4592,7 +4592,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061fc80, IMG(0x0061fc80u), 0x8);
     g.d_0061fc88 = (uptr)((u8 *)&g.d_0061fc8c + 20);
     memcpy(&g.d_0061fc8c, IMG(0x0061fc8cu), 0x18);
-    g.d_0061fca4 = 0;   /* FUN_00432bf8: not in native builds */
+    g.d_0061fca4 = 0;   /* unwind_funclet_00432bf8: not in native builds */
     memcpy(&g.d_0061fca8, IMG(0x0061fca8u), 0x8);
     g.d_0061fcb0 = (uptr)((u8 *)&g.d_0061fcb4 + 20);
     memcpy(&g.d_0061fcb4, IMG(0x0061fcb4u), 0x18);
@@ -4602,13 +4602,13 @@ void gamedata_init(void)
     memcpy(&g.d_0061fcd8, IMG(0x0061fcd8u), 0x30);
     g.d_0061fd08 = (uptr)((u8 *)&g.d_0061fd0c + 20);
     memcpy(&g.d_0061fd0c, IMG(0x0061fd0cu), 0x18);
-    g.d_0061fd24 = 0;   /* FUN_0044251d: not in native builds */
+    g.d_0061fd24 = 0;   /* unwind_funclet_0044251d: not in native builds */
     memcpy(&g.d_0061fd28, IMG(0x0061fd28u), 0x10);
     g.d_0061fd38 = (uptr)((u8 *)&g.d_0061fd3c + 20);
     memcpy(&g.d_0061fd3c, IMG(0x0061fd3cu), 0x18);
-    g.d_0061fd54 = 0;   /* FUN_00445269: not in native builds */
+    g.d_0061fd54 = 0;   /* unwind_funclet_00445269: not in native builds */
     memcpy(&g.d_0061fd58, IMG(0x0061fd58u), 0x4);
-    g.d_0061fd5c = 0;   /* FUN_0044525d: not in native builds */
+    g.d_0061fd5c = 0;   /* unwind_funclet_0044525d: not in native builds */
     memcpy(&g.d_0061fd60, IMG(0x0061fd60u), 0x4);
     g.d_0061fd64 = 0x0044524du;   /* not a known function or data */
     memcpy(&g.d_0061fd68, IMG(0x0061fd68u), 0x4);
@@ -4616,39 +4616,39 @@ void gamedata_init(void)
     memcpy(&g.d_0061fd70, IMG(0x0061fd70u), 0x8);
     g.d_0061fd78 = (uptr)((u8 *)&g.d_0061fd7c + 20);
     memcpy(&g.d_0061fd7c, IMG(0x0061fd7cu), 0x18);
-    g.d_0061fd94 = 0;   /* FUN_00445407: not in native builds */
+    g.d_0061fd94 = 0;   /* unwind_funclet_00445407: not in native builds */
     memcpy(&g.d_0061fd98, IMG(0x0061fd98u), 0x8);
     g.d_0061fda0 = (uptr)((u8 *)&g.d_0061fda4 + 20);
     memcpy(&g.d_0061fda4, IMG(0x0061fda4u), 0x18);
-    g.d_0061fdbc = 0;   /* FUN_0044556d: not in native builds */
+    g.d_0061fdbc = 0;   /* unwind_funclet_0044556d: not in native builds */
     memcpy(&g.d_0061fdc0, IMG(0x0061fdc0u), 0x8);
     g.d_0061fdc8 = (uptr)((u8 *)&g.d_0061fdcc + 20);
     memcpy(&g.d_0061fdcc, IMG(0x0061fdccu), 0x18);
-    g.d_0061fde4 = 0;   /* FUN_004456ed: not in native builds */
+    g.d_0061fde4 = 0;   /* unwind_funclet_004456ed: not in native builds */
     memcpy(&g.d_0061fde8, IMG(0x0061fde8u), 0x8);
     g.d_0061fdf0 = (uptr)((u8 *)&g.d_0061fdf4 + 20);
     memcpy(&g.d_0061fdf4, IMG(0x0061fdf4u), 0x18);
-    g.d_0061fe0c = 0;   /* FUN_00445e21: not in native builds */
+    g.d_0061fe0c = 0;   /* unwind_funclet_00445e21: not in native builds */
     memcpy(&g.d_0061fe10, IMG(0x0061fe10u), 0x4);
-    g.d_0061fe14 = 0;   /* FUN_00445e15: not in native builds */
+    g.d_0061fe14 = 0;   /* unwind_funclet_00445e15: not in native builds */
     memcpy(&g.d_0061fe18, IMG(0x0061fe18u), 0x8);
     g.d_0061fe20 = (uptr)((u8 *)&g.d_0061fe24 + 20);
     memcpy(&g.d_0061fe24, IMG(0x0061fe24u), 0x18);
-    g.d_0061fe3c = 0;   /* FUN_004467fa: not in native builds */
+    g.d_0061fe3c = 0;   /* unwind_funclet_004467fa: not in native builds */
     memcpy(&g.d_0061fe40, IMG(0x0061fe40u), 0x28);
     g.d_0061fe68 = (uptr)((u8 *)&g.d_0061fe6c + 20);
     memcpy(&g.d_0061fe6c, IMG(0x0061fe6cu), 0x18);
-    g.d_0061fe84 = 0;   /* FUN_0044997b: not in native builds */
+    g.d_0061fe84 = 0;   /* unwind_funclet_0044997b: not in native builds */
     memcpy(&g.d_0061fe88, IMG(0x0061fe88u), 0x4);
-    g.d_0061fe8c = 0;   /* FUN_0044996f: not in native builds */
+    g.d_0061fe8c = 0;   /* unwind_funclet_0044996f: not in native builds */
     memcpy(&g.d_0061fe90, IMG(0x0061fe90u), 0x8);
     g.d_0061fe98 = (uptr)((u8 *)&g.d_0061fe9c + 20);
     memcpy(&g.d_0061fe9c, IMG(0x0061fe9cu), 0x18);
-    g.d_0061feb4 = 0;   /* FUN_0044ab4e: not in native builds */
+    g.d_0061feb4 = 0;   /* unwind_funclet_0044ab4e: not in native builds */
     memcpy(&g.d_0061feb8, IMG(0x0061feb8u), 0x8);
     g.d_0061fec0 = (uptr)((u8 *)&g.d_0061fec4 + 20);
     memcpy(&g.d_0061fec4, IMG(0x0061fec4u), 0x18);
-    g.d_0061fedc = 0;   /* FUN_0044b4f6: not in native builds */
+    g.d_0061fedc = 0;   /* unwind_funclet_0044b4f6: not in native builds */
     memcpy(&g.d_0061fee0, IMG(0x0061fee0u), 0x18);
     g.d_0061fef8 = (uptr)((u8 *)&g.d_0061fefc + 20);
     memcpy(&g.d_0061fefc, IMG(0x0061fefcu), 0x18);
@@ -4674,7 +4674,7 @@ void gamedata_init(void)
     memcpy(&g.d_0061ffc0, IMG(0x0061ffc0u), 0x10);
     g.d_0061ffd0 = (uptr)((u8 *)&g.d_0061ffd4 + 20);
     memcpy(&g.d_0061ffd4, IMG(0x0061ffd4u), 0x18);
-    g.d_0061ffec = 0;   /* FUN_0044cb5e: not in native builds */
+    g.d_0061ffec = 0;   /* unwind_funclet_0044cb5e: not in native builds */
     memcpy(&g.d_0061fff0, IMG(0x0061fff0u), 0x10);
     g.d_00620000 = (uptr)((u8 *)&g.d_00620004 + 20);
     memcpy(&g.d_00620004, IMG(0x00620004u), 0x18);
@@ -4710,37 +4710,37 @@ void gamedata_init(void)
     memcpy(&g.d_006200e0, IMG(0x006200e0u), 0x8);
     g.d_006200e8 = (uptr)((u8 *)&g.d_006200ec + 20);
     memcpy(&g.d_006200ec, IMG(0x006200ecu), 0x18);
-    g.d_00620104 = 0;   /* FUN_0044d141: not in native builds */
+    g.d_00620104 = 0;   /* unwind_funclet_0044d141: not in native builds */
     memcpy(&g.d_00620108, IMG(0x00620108u), 0x4);
-    g.d_0062010c = 0;   /* FUN_0044d132: not in native builds */
+    g.d_0062010c = 0;   /* unwind_funclet_0044d132: not in native builds */
     memcpy(&g.d_00620110, IMG(0x00620110u), 0x4);
-    g.d_00620114 = 0;   /* FUN_0044d123: not in native builds */
+    g.d_00620114 = 0;   /* unwind_funclet_0044d123: not in native builds */
     memcpy(&g.d_00620118, IMG(0x00620118u), 0x4);
-    g.d_0062011c = 0;   /* FUN_0044d114: not in native builds */
+    g.d_0062011c = 0;   /* unwind_funclet_0044d114: not in native builds */
     memcpy(&g.d_00620120, IMG(0x00620120u), 0x4);
-    g.d_00620124 = 0;   /* FUN_0044d105: not in native builds */
+    g.d_00620124 = 0;   /* unwind_funclet_0044d105: not in native builds */
     memcpy(&g.d_00620128, IMG(0x00620128u), 0x4);
-    g.d_0062012c = 0;   /* FUN_0044d0f6: not in native builds */
+    g.d_0062012c = 0;   /* unwind_funclet_0044d0f6: not in native builds */
     memcpy(&g.d_00620130, IMG(0x00620130u), 0x4);
-    g.d_00620134 = 0;   /* FUN_0044d0e7: not in native builds */
+    g.d_00620134 = 0;   /* unwind_funclet_0044d0e7: not in native builds */
     memcpy(&g.d_00620138, IMG(0x00620138u), 0x4);
-    g.d_0062013c = 0;   /* FUN_0044d0d8: not in native builds */
+    g.d_0062013c = 0;   /* unwind_funclet_0044d0d8: not in native builds */
     memcpy(&g.d_00620140, IMG(0x00620140u), 0x8);
     g.d_00620148 = (uptr)((u8 *)&g.d_0062014c + 20);
     memcpy(&g.d_0062014c, IMG(0x0062014cu), 0x18);
-    g.d_00620164 = 0;   /* FUN_0044d99d: not in native builds */
+    g.d_00620164 = 0;   /* unwind_funclet_0044d99d: not in native builds */
     memcpy(&g.d_00620168, IMG(0x00620168u), 0x8);
     g.d_00620170 = (uptr)((u8 *)&g.d_00620174 + 20);
     memcpy(&g.d_00620174, IMG(0x00620174u), 0x18);
-    g.d_0062018c = 0;   /* FUN_0044e76b: not in native builds */
+    g.d_0062018c = 0;   /* unwind_funclet_0044e76b: not in native builds */
     memcpy(&g.d_00620190, IMG(0x00620190u), 0x4);
-    g.d_00620194 = 0;   /* FUN_0044e762: not in native builds */
+    g.d_00620194 = 0;   /* unwind_funclet_0044e762: not in native builds */
     memcpy(&g.d_00620198, IMG(0x00620198u), 0x8);
     g.d_006201a0 = (uptr)((u8 *)&g.d_006201a4 + 20);
     memcpy(&g.d_006201a4, IMG(0x006201a4u), 0x18);
-    g.d_006201bc = 0;   /* FUN_0044f4a4: not in native builds */
+    g.d_006201bc = 0;   /* unwind_funclet_0044f4a4: not in native builds */
     memcpy(&g.d_006201c0, IMG(0x006201c0u), 0x4);
-    g.d_006201c4 = 0;   /* FUN_0044f498: not in native builds */
+    g.d_006201c4 = 0;   /* unwind_funclet_0044f498: not in native builds */
     memcpy(&g.d_006201c8, IMG(0x006201c8u), 0x30);
     g.d_006201f8 = (uptr)((u8 *)&g.d_006201fc + 20);
     memcpy(&g.d_006201fc, IMG(0x006201fcu), 0x18);
@@ -4760,7 +4760,7 @@ void gamedata_init(void)
     memcpy(&g.d_00620288, IMG(0x00620288u), 0x8);
     g.d_00620290 = (uptr)((u8 *)&g.d_00620294 + 20);
     memcpy(&g.d_00620294, IMG(0x00620294u), 0x18);
-    g.d_006202ac = 0;   /* FUN_00452ac1: not in native builds */
+    g.d_006202ac = 0;   /* unwind_funclet_00452ac1: not in native builds */
     memcpy(&g.d_006202b0, IMG(0x006202b0u), 0x8);
     g.d_006202b8 = (uptr)((u8 *)&g.d_006202bc + 20);
     memcpy(&g.d_006202bc, IMG(0x006202bcu), 0x18);
@@ -4772,7 +4772,7 @@ void gamedata_init(void)
     memcpy(&g.d_00620310, IMG(0x00620310u), 0x10);
     g.d_00620320 = (uptr)((u8 *)&g.d_00620324 + 20);
     memcpy(&g.d_00620324, IMG(0x00620324u), 0x18);
-    g.d_0062033c = 0;   /* FUN_00453bfa: not in native builds */
+    g.d_0062033c = 0;   /* unwind_funclet_00453bfa: not in native builds */
     memcpy(&g.d_00620340, IMG(0x00620340u), 0x10);
     g.d_00620350 = (uptr)((u8 *)&g.d_00620354 + 20);
     memcpy(&g.d_00620354, IMG(0x00620354u), 0x18);
@@ -4814,61 +4814,61 @@ void gamedata_init(void)
     memcpy(&g.d_00620430, IMG(0x00620430u), 0x8);
     g.d_00620438 = (uptr)((u8 *)&g.d_0062043c + 20);
     memcpy(&g.d_0062043c, IMG(0x0062043cu), 0x18);
-    g.d_00620454 = 0;   /* FUN_00454888: not in native builds */
+    g.d_00620454 = 0;   /* unwind_funclet_00454888: not in native builds */
     memcpy(&g.d_00620458, IMG(0x00620458u), 0x4);
-    g.d_0062045c = 0;   /* FUN_00454879: not in native builds */
+    g.d_0062045c = 0;   /* unwind_funclet_00454879: not in native builds */
     memcpy(&g.d_00620460, IMG(0x00620460u), 0x4);
-    g.d_00620464 = 0;   /* FUN_0045486a: not in native builds */
+    g.d_00620464 = 0;   /* unwind_funclet_0045486a: not in native builds */
     memcpy(&g.d_00620468, IMG(0x00620468u), 0x4);
-    g.d_0062046c = 0;   /* FUN_0045485b: not in native builds */
+    g.d_0062046c = 0;   /* unwind_funclet_0045485b: not in native builds */
     memcpy(&g.d_00620470, IMG(0x00620470u), 0x4);
-    g.d_00620474 = 0;   /* FUN_0045484c: not in native builds */
+    g.d_00620474 = 0;   /* unwind_funclet_0045484c: not in native builds */
     memcpy(&g.d_00620478, IMG(0x00620478u), 0x4);
-    g.d_0062047c = 0;   /* FUN_0045483d: not in native builds */
+    g.d_0062047c = 0;   /* unwind_funclet_0045483d: not in native builds */
     memcpy(&g.d_00620480, IMG(0x00620480u), 0x4);
-    g.d_00620484 = 0;   /* FUN_0045482e: not in native builds */
+    g.d_00620484 = 0;   /* unwind_funclet_0045482e: not in native builds */
     memcpy(&g.d_00620488, IMG(0x00620488u), 0x4);
-    g.d_0062048c = 0;   /* FUN_00454816: not in native builds */
+    g.d_0062048c = 0;   /* unwind_funclet_00454816: not in native builds */
     memcpy(&g.d_00620490, IMG(0x00620490u), 0x4);
-    g.d_00620494 = 0;   /* FUN_004547fe: not in native builds */
+    g.d_00620494 = 0;   /* unwind_funclet_004547fe: not in native builds */
     memcpy(&g.d_00620498, IMG(0x00620498u), 0x4);
-    g.d_0062049c = 0;   /* FUN_004547e6: not in native builds */
+    g.d_0062049c = 0;   /* unwind_funclet_004547e6: not in native builds */
     memcpy(&g.d_006204a0, IMG(0x006204a0u), 0x4);
-    g.d_006204a4 = 0;   /* FUN_004547ce: not in native builds */
+    g.d_006204a4 = 0;   /* unwind_funclet_004547ce: not in native builds */
     memcpy(&g.d_006204a8, IMG(0x006204a8u), 0x4);
-    g.d_006204ac = 0;   /* FUN_004547b6: not in native builds */
+    g.d_006204ac = 0;   /* unwind_funclet_004547b6: not in native builds */
     memcpy(&g.d_006204b0, IMG(0x006204b0u), 0x4);
-    g.d_006204b4 = 0;   /* FUN_004547a7: not in native builds */
+    g.d_006204b4 = 0;   /* unwind_funclet_004547a7: not in native builds */
     memcpy(&g.d_006204b8, IMG(0x006204b8u), 0x4);
-    g.d_006204bc = 0;   /* FUN_00454798: not in native builds */
+    g.d_006204bc = 0;   /* unwind_funclet_00454798: not in native builds */
     memcpy(&g.d_006204c0, IMG(0x006204c0u), 0x8);
     g.d_006204c8 = (uptr)((u8 *)&g.d_006204cc + 20);
     memcpy(&g.d_006204cc, IMG(0x006204ccu), 0x18);
-    g.d_006204e4 = 0;   /* FUN_00454e8b: not in native builds */
+    g.d_006204e4 = 0;   /* unwind_funclet_00454e8b: not in native builds */
     memcpy(&g.d_006204e8, IMG(0x006204e8u), 0x30);
     g.d_00620518 = (uptr)((u8 *)&g.d_0062051c + 20);
     memcpy(&g.d_0062051c, IMG(0x0062051cu), 0x18);
-    g.d_00620534 = 0;   /* FUN_00458dd5: not in native builds */
+    g.d_00620534 = 0;   /* unwind_funclet_00458dd5: not in native builds */
     memcpy(&g.d_00620538, IMG(0x00620538u), 0x8);
     g.d_00620540 = (uptr)((u8 *)&g.d_00620544 + 20);
     memcpy(&g.d_00620544, IMG(0x00620544u), 0x18);
-    g.d_0062055c = 0;   /* FUN_00459169: not in native builds */
+    g.d_0062055c = 0;   /* unwind_funclet_00459169: not in native builds */
     memcpy(&g.d_00620560, IMG(0x00620560u), 0x8);
     g.d_00620568 = (uptr)((u8 *)&g.d_0062056c + 20);
     memcpy(&g.d_0062056c, IMG(0x0062056cu), 0x18);
-    g.d_00620584 = 0;   /* FUN_0045a510: not in native builds */
+    g.d_00620584 = 0;   /* unwind_funclet_0045a510: not in native builds */
     memcpy(&g.d_00620588, IMG(0x00620588u), 0x8);
     g.d_00620590 = (uptr)((u8 *)&g.d_00620594 + 20);
     memcpy(&g.d_00620594, IMG(0x00620594u), 0x18);
-    g.d_006205ac = 0;   /* FUN_0045f08d: not in native builds */
+    g.d_006205ac = 0;   /* unwind_funclet_0045f08d: not in native builds */
     memcpy(&g.d_006205b0, IMG(0x006205b0u), 0x8);
     g.d_006205b8 = (uptr)((u8 *)&g.d_006205bc + 20);
     memcpy(&g.d_006205bc, IMG(0x006205bcu), 0x18);
-    g.d_006205d4 = 0;   /* FUN_0045fd43: not in native builds */
+    g.d_006205d4 = 0;   /* unwind_funclet_0045fd43: not in native builds */
     memcpy(&g.d_006205d8, IMG(0x006205d8u), 0x8);
     g.d_006205e0 = (uptr)((u8 *)&g.d_006205e4 + 20);
     memcpy(&g.d_006205e4, IMG(0x006205e4u), 0x18);
-    g.d_006205fc = 0;   /* FUN_00460104: not in native builds */
+    g.d_006205fc = 0;   /* unwind_funclet_00460104: not in native builds */
     memcpy(&g.d_00620600, IMG(0x00620600u), 0x20);
     g.d_00620620 = (uptr)((u8 *)&g.d_00620624 + 20);
     memcpy(&g.d_00620624, IMG(0x00620624u), 0x18);
@@ -4878,13 +4878,13 @@ void gamedata_init(void)
     memcpy(&g.d_00620648, IMG(0x00620648u), 0x10);
     g.d_00620658 = (uptr)((u8 *)&g.d_0062065c + 20);
     memcpy(&g.d_0062065c, IMG(0x0062065cu), 0x18);
-    g.d_00620674 = 0;   /* FUN_0046ddbc: not in native builds */
+    g.d_00620674 = 0;   /* unwind_funclet_0046ddbc: not in native builds */
     memcpy(&g.d_00620678, IMG(0x00620678u), 0x4);
-    g.d_0062067c = 0;   /* FUN_0046ddb0: not in native builds */
+    g.d_0062067c = 0;   /* unwind_funclet_0046ddb0: not in native builds */
     memcpy(&g.d_00620680, IMG(0x00620680u), 0x4);
-    g.d_00620684 = 0;   /* FUN_0046dda4: not in native builds */
+    g.d_00620684 = 0;   /* unwind_funclet_0046dda4: not in native builds */
     memcpy(&g.d_00620688, IMG(0x00620688u), 0x4);
-    g.d_0062068c = 0;   /* FUN_0046dd98: not in native builds */
+    g.d_0062068c = 0;   /* unwind_funclet_0046dd98: not in native builds */
     memcpy(&g.d_00620690, IMG(0x00620690u), 0x10);
     g.d_006206a0 = (uptr)((u8 *)&g.d_006206a4 + 20);
     memcpy(&g.d_006206a4, IMG(0x006206a4u), 0x18);
@@ -4906,23 +4906,23 @@ void gamedata_init(void)
     memcpy(&g.d_00620710, IMG(0x00620710u), 0x8);
     g.d_00620718 = (uptr)((u8 *)&g.d_0062071c + 20);
     memcpy(&g.d_0062071c, IMG(0x0062071cu), 0x18);
-    g.d_00620734 = 0;   /* FUN_004705b6: not in native builds */
+    g.d_00620734 = 0;   /* unwind_funclet_004705b6: not in native builds */
     memcpy(&g.d_00620738, IMG(0x00620738u), 0x4);
-    g.d_0062073c = 0;   /* FUN_004705a7: not in native builds */
+    g.d_0062073c = 0;   /* unwind_funclet_004705a7: not in native builds */
     memcpy(&g.d_00620740, IMG(0x00620740u), 0x4);
-    g.d_00620744 = 0;   /* FUN_00470598: not in native builds */
+    g.d_00620744 = 0;   /* unwind_funclet_00470598: not in native builds */
     memcpy(&g.d_00620748, IMG(0x00620748u), 0x4);
-    g.d_0062074c = 0;   /* FUN_00470589: not in native builds */
+    g.d_0062074c = 0;   /* unwind_funclet_00470589: not in native builds */
     memcpy(&g.d_00620750, IMG(0x00620750u), 0x4);
-    g.d_00620754 = 0;   /* FUN_0047057a: not in native builds */
+    g.d_00620754 = 0;   /* unwind_funclet_0047057a: not in native builds */
     memcpy(&g.d_00620758, IMG(0x00620758u), 0x4);
-    g.d_0062075c = 0;   /* FUN_0047056b: not in native builds */
+    g.d_0062075c = 0;   /* unwind_funclet_0047056b: not in native builds */
     memcpy(&g.d_00620760, IMG(0x00620760u), 0x20);
     g.d_00620780 = (uptr)((u8 *)&g.d_00620784 + 20);
     memcpy(&g.d_00620784, IMG(0x00620784u), 0x18);
     g.d_0062079c = 0x0047133au;   /* not a known function or data */
     memcpy(&g.d_006207a0, IMG(0x006207a0u), 0x4);
-    g.d_006207a4 = 0;   /* FUN_0047132e: not in native builds */
+    g.d_006207a4 = 0;   /* unwind_funclet_0047132e: not in native builds */
     memcpy(&g.d_006207a8, IMG(0x006207a8u), 0x8);
     g.d_006207b0 = (uptr)((u8 *)&g.d_006207b4 + 20);
     memcpy(&g.d_006207b4, IMG(0x006207b4u), 0x18);
@@ -4940,35 +4940,35 @@ void gamedata_init(void)
     memcpy(&g.d_006207f8, IMG(0x006207f8u), 0x8);
     g.d_00620800 = (uptr)((u8 *)&g.d_00620804 + 20);
     memcpy(&g.d_00620804, IMG(0x00620804u), 0x18);
-    g.d_0062081c = 0;   /* FUN_00471544: not in native builds */
+    g.d_0062081c = 0;   /* unwind_funclet_00471544: not in native builds */
     memcpy(&g.d_00620820, IMG(0x00620820u), 0x4);
-    g.d_00620824 = 0;   /* FUN_00471535: not in native builds */
+    g.d_00620824 = 0;   /* unwind_funclet_00471535: not in native builds */
     memcpy(&g.d_00620828, IMG(0x00620828u), 0x4);
-    g.d_0062082c = 0;   /* FUN_00471526: not in native builds */
+    g.d_0062082c = 0;   /* unwind_funclet_00471526: not in native builds */
     memcpy(&g.d_00620830, IMG(0x00620830u), 0x4);
-    g.d_00620834 = 0;   /* FUN_00471517: not in native builds */
+    g.d_00620834 = 0;   /* unwind_funclet_00471517: not in native builds */
     memcpy(&g.d_00620838, IMG(0x00620838u), 0x4);
-    g.d_0062083c = 0;   /* FUN_00471508: not in native builds */
+    g.d_0062083c = 0;   /* unwind_funclet_00471508: not in native builds */
     memcpy(&g.d_00620840, IMG(0x00620840u), 0x4);
-    g.d_00620844 = 0;   /* FUN_004714f9: not in native builds */
+    g.d_00620844 = 0;   /* unwind_funclet_004714f9: not in native builds */
     memcpy(&g.d_00620848, IMG(0x00620848u), 0x8);
     g.d_00620850 = (uptr)((u8 *)&g.d_00620854 + 20);
     memcpy(&g.d_00620854, IMG(0x00620854u), 0x18);
-    g.d_0062086c = 0;   /* FUN_004723cf: not in native builds */
+    g.d_0062086c = 0;   /* unwind_funclet_004723cf: not in native builds */
     memcpy(&g.d_00620870, IMG(0x00620870u), 0x4);
-    g.d_00620874 = 0;   /* FUN_004723c3: not in native builds */
+    g.d_00620874 = 0;   /* unwind_funclet_004723c3: not in native builds */
     memcpy(&g.d_00620878, IMG(0x00620878u), 0x4);
-    g.d_0062087c = 0;   /* FUN_004723b7: not in native builds */
+    g.d_0062087c = 0;   /* unwind_funclet_004723b7: not in native builds */
     memcpy(&g.d_00620880, IMG(0x00620880u), 0x4);
-    g.d_00620884 = 0;   /* FUN_004723ab: not in native builds */
+    g.d_00620884 = 0;   /* unwind_funclet_004723ab: not in native builds */
     memcpy(&g.d_00620888, IMG(0x00620888u), 0x4);
-    g.d_0062088c = 0;   /* FUN_0047239f: not in native builds */
+    g.d_0062088c = 0;   /* unwind_funclet_0047239f: not in native builds */
     memcpy(&g.d_00620890, IMG(0x00620890u), 0x4);
-    g.d_00620894 = 0;   /* FUN_00472393: not in native builds */
+    g.d_00620894 = 0;   /* unwind_funclet_00472393: not in native builds */
     memcpy(&g.d_00620898, IMG(0x00620898u), 0x28);
     g.d_006208c0 = (uptr)((u8 *)&g.d_006208c4 + 20);
     memcpy(&g.d_006208c4, IMG(0x006208c4u), 0x18);
-    g.d_006208dc = 0;   /* FUN_004786f8: not in native builds */
+    g.d_006208dc = 0;   /* unwind_funclet_004786f8: not in native builds */
     memcpy(&g.d_006208e0, IMG(0x006208e0u), 0x10);
     g.d_006208f0 = (uptr)((u8 *)&g.d_006208f4 + 20);
     memcpy(&g.d_006208f4, IMG(0x006208f4u), 0x18);
@@ -4984,37 +4984,37 @@ void gamedata_init(void)
     memcpy(&g.d_00620930, IMG(0x00620930u), 0x10);
     g.d_00620940 = (uptr)((u8 *)&g.d_00620944 + 20);
     memcpy(&g.d_00620944, IMG(0x00620944u), 0x18);
-    g.d_0062095c = 0;   /* FUN_0047debe: not in native builds */
+    g.d_0062095c = 0;   /* unwind_funclet_0047debe: not in native builds */
     memcpy(&g.d_00620960, IMG(0x00620960u), 0x4);
-    g.d_00620964 = 0;   /* FUN_0047deaf: not in native builds */
+    g.d_00620964 = 0;   /* unwind_funclet_0047deaf: not in native builds */
     memcpy(&g.d_00620968, IMG(0x00620968u), 0x4);
-    g.d_0062096c = 0;   /* FUN_0047dea0: not in native builds */
+    g.d_0062096c = 0;   /* unwind_funclet_0047dea0: not in native builds */
     memcpy(&g.d_00620970, IMG(0x00620970u), 0x4);
-    g.d_00620974 = 0;   /* FUN_0047de91: not in native builds */
+    g.d_00620974 = 0;   /* unwind_funclet_0047de91: not in native builds */
     memcpy(&g.d_00620978, IMG(0x00620978u), 0x4);
-    g.d_0062097c = 0;   /* FUN_0047de82: not in native builds */
+    g.d_0062097c = 0;   /* unwind_funclet_0047de82: not in native builds */
     memcpy(&g.d_00620980, IMG(0x00620980u), 0x10);
     g.d_00620990 = (uptr)((u8 *)&g.d_00620994 + 20);
     memcpy(&g.d_00620994, IMG(0x00620994u), 0x18);
-    g.d_006209ac = 0;   /* FUN_00482311: not in native builds */
+    g.d_006209ac = 0;   /* unwind_funclet_00482311: not in native builds */
     memcpy(&g.d_006209b0, IMG(0x006209b0u), 0x4);
-    g.d_006209b4 = 0;   /* FUN_00482305: not in native builds */
+    g.d_006209b4 = 0;   /* unwind_funclet_00482305: not in native builds */
     memcpy(&g.d_006209b8, IMG(0x006209b8u), 0x10);
     g.d_006209c8 = (uptr)((u8 *)&g.d_006209cc + 20);
     memcpy(&g.d_006209cc, IMG(0x006209ccu), 0x18);
-    g.d_006209e4 = 0;   /* FUN_0048bf2d: not in native builds */
+    g.d_006209e4 = 0;   /* unwind_funclet_0048bf2d: not in native builds */
     memcpy(&g.d_006209e8, IMG(0x006209e8u), 0x8);
     g.d_006209f0 = (uptr)((u8 *)&g.d_006209f4 + 20);
     memcpy(&g.d_006209f4, IMG(0x006209f4u), 0x18);
-    g.d_00620a0c = 0;   /* FUN_0048c9ce: not in native builds */
+    g.d_00620a0c = 0;   /* unwind_funclet_0048c9ce: not in native builds */
     memcpy(&g.d_00620a10, IMG(0x00620a10u), 0x8);
     g.d_00620a18 = (uptr)((u8 *)&g.d_00620a1c + 20);
     memcpy(&g.d_00620a1c, IMG(0x00620a1cu), 0x18);
-    g.d_00620a34 = 0;   /* FUN_0048d989: not in native builds */
+    g.d_00620a34 = 0;   /* unwind_funclet_0048d989: not in native builds */
     memcpy(&g.d_00620a38, IMG(0x00620a38u), 0x18);
     g.d_00620a50 = (uptr)((u8 *)&g.d_00620a54 + 20);
     memcpy(&g.d_00620a54, IMG(0x00620a54u), 0x18);
-    g.d_00620a6c = 0;   /* FUN_00492868: not in native builds */
+    g.d_00620a6c = 0;   /* unwind_funclet_00492868: not in native builds */
     memcpy(&g.d_00620a70, IMG(0x00620a70u), 0x10);
     g.d_00620a80 = (uptr)((u8 *)&g.d_00620a84 + 20);
     memcpy(&g.d_00620a84, IMG(0x00620a84u), 0x18);
@@ -5040,51 +5040,51 @@ void gamedata_init(void)
     memcpy(&g.d_00620b18, IMG(0x00620b18u), 0x8);
     g.d_00620b20 = (uptr)((u8 *)&g.d_00620b24 + 20);
     memcpy(&g.d_00620b24, IMG(0x00620b24u), 0x18);
-    g.d_00620b3c = 0;   /* FUN_0049449a: not in native builds */
+    g.d_00620b3c = 0;   /* unwind_funclet_0049449a: not in native builds */
     memcpy(&g.d_00620b40, IMG(0x00620b40u), 0x4);
-    g.d_00620b44 = 0;   /* FUN_0049448b: not in native builds */
+    g.d_00620b44 = 0;   /* unwind_funclet_0049448b: not in native builds */
     memcpy(&g.d_00620b48, IMG(0x00620b48u), 0x4);
-    g.d_00620b4c = 0;   /* FUN_0049447c: not in native builds */
+    g.d_00620b4c = 0;   /* unwind_funclet_0049447c: not in native builds */
     memcpy(&g.d_00620b50, IMG(0x00620b50u), 0x4);
-    g.d_00620b54 = 0;   /* FUN_0049446d: not in native builds */
+    g.d_00620b54 = 0;   /* unwind_funclet_0049446d: not in native builds */
     memcpy(&g.d_00620b58, IMG(0x00620b58u), 0x4);
-    g.d_00620b5c = 0;   /* FUN_0049445e: not in native builds */
+    g.d_00620b5c = 0;   /* unwind_funclet_0049445e: not in native builds */
     memcpy(&g.d_00620b60, IMG(0x00620b60u), 0x4);
-    g.d_00620b64 = 0;   /* FUN_0049444f: not in native builds */
+    g.d_00620b64 = 0;   /* unwind_funclet_0049444f: not in native builds */
     memcpy(&g.d_00620b68, IMG(0x00620b68u), 0x8);
     g.d_00620b70 = (uptr)((u8 *)&g.d_00620b74 + 20);
     memcpy(&g.d_00620b74, IMG(0x00620b74u), 0x18);
-    g.d_00620b8c = 0;   /* FUN_00494b3a: not in native builds */
+    g.d_00620b8c = 0;   /* unwind_funclet_00494b3a: not in native builds */
     memcpy(&g.d_00620b90, IMG(0x00620b90u), 0x8);
     g.d_00620b98 = (uptr)((u8 *)&g.d_00620b9c + 20);
     memcpy(&g.d_00620b9c, IMG(0x00620b9cu), 0x18);
-    g.d_00620bb4 = 0;   /* FUN_00494d89: not in native builds */
+    g.d_00620bb4 = 0;   /* unwind_funclet_00494d89: not in native builds */
     memcpy(&g.d_00620bb8, IMG(0x00620bb8u), 0x4);
-    g.d_00620bbc = 0;   /* FUN_00494d7d: not in native builds */
+    g.d_00620bbc = 0;   /* unwind_funclet_00494d7d: not in native builds */
     memcpy(&g.d_00620bc0, IMG(0x00620bc0u), 0x4);
-    g.d_00620bc4 = 0;   /* FUN_00494d71: not in native builds */
+    g.d_00620bc4 = 0;   /* unwind_funclet_00494d71: not in native builds */
     memcpy(&g.d_00620bc8, IMG(0x00620bc8u), 0x8);
     g.d_00620bd0 = (uptr)((u8 *)&g.d_00620bd4 + 20);
     memcpy(&g.d_00620bd4, IMG(0x00620bd4u), 0x18);
-    g.d_00620bec = 0;   /* FUN_00495c10: not in native builds */
+    g.d_00620bec = 0;   /* unwind_funclet_00495c10: not in native builds */
     memcpy(&g.d_00620bf0, IMG(0x00620bf0u), 0x4);
-    g.d_00620bf4 = 0;   /* FUN_00495bfa: not in native builds */
+    g.d_00620bf4 = 0;   /* unwind_funclet_00495bfa: not in native builds */
     memcpy(&g.d_00620bf8, IMG(0x00620bf8u), 0x4);
-    g.d_00620bfc = 0;   /* FUN_00495bee: not in native builds */
+    g.d_00620bfc = 0;   /* unwind_funclet_00495bee: not in native builds */
     memcpy(&g.d_00620c00, IMG(0x00620c00u), 0x4);
-    g.d_00620c04 = 0;   /* FUN_00495be2: not in native builds */
+    g.d_00620c04 = 0;   /* unwind_funclet_00495be2: not in native builds */
     memcpy(&g.d_00620c08, IMG(0x00620c08u), 0x8);
     g.d_00620c10 = (uptr)((u8 *)&g.d_00620c14 + 20);
     memcpy(&g.d_00620c14, IMG(0x00620c14u), 0x18);
-    g.d_00620c2c = 0;   /* FUN_00495de7: not in native builds */
+    g.d_00620c2c = 0;   /* unwind_funclet_00495de7: not in native builds */
     memcpy(&g.d_00620c30, IMG(0x00620c30u), 0x4);
-    g.d_00620c34 = 0;   /* FUN_00495ddb: not in native builds */
+    g.d_00620c34 = 0;   /* unwind_funclet_00495ddb: not in native builds */
     memcpy(&g.d_00620c38, IMG(0x00620c38u), 0x4);
-    g.d_00620c3c = 0;   /* FUN_00495dcf: not in native builds */
+    g.d_00620c3c = 0;   /* unwind_funclet_00495dcf: not in native builds */
     memcpy(&g.d_00620c40, IMG(0x00620c40u), 0x8);
     g.d_00620c48 = (uptr)((u8 *)&g.d_00620c4c + 20);
     memcpy(&g.d_00620c4c, IMG(0x00620c4cu), 0x18);
-    g.d_00620c64 = 0;   /* FUN_00496100: not in native builds */
+    g.d_00620c64 = 0;   /* unwind_funclet_00496100: not in native builds */
     memcpy(&g.d_00620c68, IMG(0x00620c68u), 0x8);
     g.d_00620c70 = (uptr)((u8 *)&g.d_00620c74 + 20);
     memcpy(&g.d_00620c74, IMG(0x00620c74u), 0x18);
@@ -5100,57 +5100,57 @@ void gamedata_init(void)
     memcpy(&g.d_00620cb0, IMG(0x00620cb0u), 0x8);
     g.d_00620cb8 = (uptr)((u8 *)&g.d_00620cbc + 20);
     memcpy(&g.d_00620cbc, IMG(0x00620cbcu), 0x18);
-    g.d_00620cd4 = 0;   /* FUN_004963e1: not in native builds */
+    g.d_00620cd4 = 0;   /* unwind_funclet_004963e1: not in native builds */
     memcpy(&g.d_00620cd8, IMG(0x00620cd8u), 0x4);
-    g.d_00620cdc = 0;   /* FUN_004963d2: not in native builds */
+    g.d_00620cdc = 0;   /* unwind_funclet_004963d2: not in native builds */
     memcpy(&g.d_00620ce0, IMG(0x00620ce0u), 0x4);
-    g.d_00620ce4 = 0;   /* FUN_004963c3: not in native builds */
+    g.d_00620ce4 = 0;   /* unwind_funclet_004963c3: not in native builds */
     memcpy(&g.d_00620ce8, IMG(0x00620ce8u), 0x4);
-    g.d_00620cec = 0;   /* FUN_004963b4: not in native builds */
+    g.d_00620cec = 0;   /* unwind_funclet_004963b4: not in native builds */
     memcpy(&g.d_00620cf0, IMG(0x00620cf0u), 0x4);
-    g.d_00620cf4 = 0;   /* FUN_004963a5: not in native builds */
+    g.d_00620cf4 = 0;   /* unwind_funclet_004963a5: not in native builds */
     memcpy(&g.d_00620cf8, IMG(0x00620cf8u), 0x48);
     g.d_00620d40 = (uptr)((u8 *)&g.d_00620d44 + 20);
     memcpy(&g.d_00620d44, IMG(0x00620d44u), 0x18);
-    g.d_00620d5c = 0;   /* FUN_004985d0: not in native builds */
+    g.d_00620d5c = 0;   /* unwind_funclet_004985d0: not in native builds */
     memcpy(&g.d_00620d60, IMG(0x00620d60u), 0x8);
     g.d_00620d68 = (uptr)((u8 *)&g.d_00620d6c + 20);
     memcpy(&g.d_00620d6c, IMG(0x00620d6cu), 0x18);
-    g.d_00620d84 = 0;   /* FUN_0049875f: not in native builds */
+    g.d_00620d84 = 0;   /* unwind_funclet_0049875f: not in native builds */
     memcpy(&g.d_00620d88, IMG(0x00620d88u), 0x10);
     g.d_00620d98 = (uptr)((u8 *)&g.d_00620d9c + 20);
     memcpy(&g.d_00620d9c, IMG(0x00620d9cu), 0x18);
-    g.d_00620db4 = 0;   /* FUN_004a44a2: not in native builds */
+    g.d_00620db4 = 0;   /* unwind_funclet_004a44a2: not in native builds */
     memcpy(&g.d_00620db8, IMG(0x00620db8u), 0x8);
     g.d_00620dc0 = (uptr)((u8 *)&g.d_00620dc4 + 20);
     memcpy(&g.d_00620dc4, IMG(0x00620dc4u), 0x18);
-    g.d_00620ddc = 0;   /* FUN_004a4667: not in native builds */
+    g.d_00620ddc = 0;   /* unwind_funclet_004a4667: not in native builds */
     memcpy(&g.d_00620de0, IMG(0x00620de0u), 0x8);
     g.d_00620de8 = (uptr)((u8 *)&g.d_00620dec + 20);
     memcpy(&g.d_00620dec, IMG(0x00620decu), 0x18);
-    g.d_00620e04 = 0;   /* FUN_004a4948: not in native builds */
+    g.d_00620e04 = 0;   /* unwind_funclet_004a4948: not in native builds */
     memcpy(&g.d_00620e08, IMG(0x00620e08u), 0x8);
     g.d_00620e10 = (uptr)((u8 *)&g.d_00620e14 + 20);
     memcpy(&g.d_00620e14, IMG(0x00620e14u), 0x18);
-    g.d_00620e2c = 0;   /* FUN_004a5d6e: not in native builds */
+    g.d_00620e2c = 0;   /* unwind_funclet_004a5d6e: not in native builds */
     memcpy(&g.d_00620e30, IMG(0x00620e30u), 0x4);
     g.d_00620e34 = 0x004a5d5eu;   /* not a known function or data */
     memcpy(&g.d_00620e38, IMG(0x00620e38u), 0x8);
     g.d_00620e40 = (uptr)((u8 *)&g.d_00620e44 + 20);
     memcpy(&g.d_00620e44, IMG(0x00620e44u), 0x18);
-    g.d_00620e5c = 0;   /* FUN_004a5deb: not in native builds */
+    g.d_00620e5c = 0;   /* unwind_funclet_004a5deb: not in native builds */
     memcpy(&g.d_00620e60, IMG(0x00620e60u), 0x20);
     g.d_00620e80 = (uptr)((u8 *)&g.d_00620e84 + 20);
     memcpy(&g.d_00620e84, IMG(0x00620e84u), 0x18);
-    g.d_00620e9c = 0;   /* FUN_004a6dd2: not in native builds */
+    g.d_00620e9c = 0;   /* unwind_funclet_004a6dd2: not in native builds */
     memcpy(&g.d_00620ea0, IMG(0x00620ea0u), 0x4);
-    g.d_00620ea4 = 0;   /* FUN_004a6dc9: not in native builds */
+    g.d_00620ea4 = 0;   /* unwind_funclet_004a6dc9: not in native builds */
     memcpy(&g.d_00620ea8, IMG(0x00620ea8u), 0x8);
     g.d_00620eb0 = (uptr)((u8 *)&g.d_00620eb4 + 20);
     memcpy(&g.d_00620eb4, IMG(0x00620eb4u), 0x18);
-    g.d_00620ecc = 0;   /* FUN_004a6f46: not in native builds */
+    g.d_00620ecc = 0;   /* unwind_funclet_004a6f46: not in native builds */
     memcpy(&g.d_00620ed0, IMG(0x00620ed0u), 0x4);
-    g.d_00620ed4 = 0;   /* FUN_004a6f3d: not in native builds */
+    g.d_00620ed4 = 0;   /* unwind_funclet_004a6f3d: not in native builds */
     memcpy(&g.d_00620ed8, IMG(0x00620ed8u), 0x18);
     g.d_00620ef0 = (uptr)((u8 *)&g.d_00620ef4 + 20);
     memcpy(&g.d_00620ef4, IMG(0x00620ef4u), 0x18);
@@ -5164,13 +5164,13 @@ void gamedata_init(void)
     memcpy(&g.d_00620f48, IMG(0x00620f48u), 0x8);
     g.d_00620f50 = (uptr)((u8 *)&g.d_00620f54 + 20);
     memcpy(&g.d_00620f54, IMG(0x00620f54u), 0x18);
-    g.d_00620f6c = 0;   /* FUN_004b4711: not in native builds */
+    g.d_00620f6c = 0;   /* unwind_funclet_004b4711: not in native builds */
     memcpy(&g.d_00620f70, IMG(0x00620f70u), 0x4);
-    g.d_00620f74 = 0;   /* FUN_004b4705: not in native builds */
+    g.d_00620f74 = 0;   /* unwind_funclet_004b4705: not in native builds */
     memcpy(&g.d_00620f78, IMG(0x00620f78u), 0x8);
     g.d_00620f80 = (uptr)((u8 *)&g.d_00620f84 + 20);
     memcpy(&g.d_00620f84, IMG(0x00620f84u), 0x18);
-    g.d_00620f9c = 0;   /* FUN_004b4be3: not in native builds */
+    g.d_00620f9c = 0;   /* unwind_funclet_004b4be3: not in native builds */
     memcpy(&g.d_00620fa0, IMG(0x00620fa0u), 0x8);
     g.d_00620fa8 = (uptr)((u8 *)&g.d_00620fac + 20);
     memcpy(&g.d_00620fac, IMG(0x00620facu), 0x18);
@@ -5206,11 +5206,11 @@ void gamedata_init(void)
     memcpy(&g.d_00621038, IMG(0x00621038u), 0x28);
     g.d_00621060 = (uptr)((u8 *)&g.d_00621064 + 20);
     memcpy(&g.d_00621064, IMG(0x00621064u), 0x18);
-    g.d_0062107c = 0;   /* FUN_004bb7b0: not in native builds */
+    g.d_0062107c = 0;   /* unwind_funclet_004bb7b0: not in native builds */
     memcpy(&g.d_00621080, IMG(0x00621080u), 0x10);
     g.d_00621090 = (uptr)((u8 *)&g.d_00621094 + 20);
     memcpy(&g.d_00621094, IMG(0x00621094u), 0x18);
-    g.d_006210ac = 0;   /* FUN_004bb97b: not in native builds */
+    g.d_006210ac = 0;   /* unwind_funclet_004bb97b: not in native builds */
     memcpy(&g.d_006210b0, IMG(0x006210b0u), 0x8);
     g.d_006210b8 = (uptr)((u8 *)&g.d_006210bc + 20);
     memcpy(&g.d_006210bc, IMG(0x006210bcu), 0x18);
@@ -5224,65 +5224,65 @@ void gamedata_init(void)
     memcpy(&g.d_006210f0, IMG(0x006210f0u), 0x8);
     g.d_006210f8 = (uptr)((u8 *)&g.d_006210fc + 20);
     memcpy(&g.d_006210fc, IMG(0x006210fcu), 0x18);
-    g.d_00621114 = 0;   /* FUN_004bbb1e: not in native builds */
+    g.d_00621114 = 0;   /* unwind_funclet_004bbb1e: not in native builds */
     memcpy(&g.d_00621118, IMG(0x00621118u), 0x4);
-    g.d_0062111c = 0;   /* FUN_004bbb0f: not in native builds */
+    g.d_0062111c = 0;   /* unwind_funclet_004bbb0f: not in native builds */
     memcpy(&g.d_00621120, IMG(0x00621120u), 0x4);
-    g.d_00621124 = 0;   /* FUN_004bbb00: not in native builds */
+    g.d_00621124 = 0;   /* unwind_funclet_004bbb00: not in native builds */
     memcpy(&g.d_00621128, IMG(0x00621128u), 0x4);
-    g.d_0062112c = 0;   /* FUN_004bbaf1: not in native builds */
+    g.d_0062112c = 0;   /* unwind_funclet_004bbaf1: not in native builds */
     memcpy(&g.d_00621130, IMG(0x00621130u), 0x8);
     g.d_00621138 = (uptr)((u8 *)&g.d_0062113c + 20);
     memcpy(&g.d_0062113c, IMG(0x0062113cu), 0x18);
-    g.d_00621154 = 0;   /* FUN_004bbdd5: not in native builds */
+    g.d_00621154 = 0;   /* unwind_funclet_004bbdd5: not in native builds */
     memcpy(&g.d_00621158, IMG(0x00621158u), 0x4);
-    g.d_0062115c = 0;   /* FUN_004bbdc9: not in native builds */
+    g.d_0062115c = 0;   /* unwind_funclet_004bbdc9: not in native builds */
     memcpy(&g.d_00621160, IMG(0x00621160u), 0x4);
-    g.d_00621164 = 0;   /* FUN_004bbdbd: not in native builds */
+    g.d_00621164 = 0;   /* unwind_funclet_004bbdbd: not in native builds */
     memcpy(&g.d_00621168, IMG(0x00621168u), 0x20);
     g.d_00621188 = (uptr)((u8 *)&g.d_0062118c + 20);
     memcpy(&g.d_0062118c, IMG(0x0062118cu), 0x18);
-    g.d_006211a4 = 0;   /* FUN_004bfd9a: not in native builds */
+    g.d_006211a4 = 0;   /* unwind_funclet_004bfd9a: not in native builds */
     memcpy(&g.d_006211a8, IMG(0x006211a8u), 0x8);
     g.d_006211b0 = (uptr)((u8 *)&g.d_006211b4 + 20);
     memcpy(&g.d_006211b4, IMG(0x006211b4u), 0x18);
-    g.d_006211cc = 0;   /* FUN_004c193a: not in native builds */
+    g.d_006211cc = 0;   /* unwind_funclet_004c193a: not in native builds */
     memcpy(&g.d_006211d0, IMG(0x006211d0u), 0x8);
     g.d_006211d8 = (uptr)((u8 *)&g.d_006211dc + 20);
     memcpy(&g.d_006211dc, IMG(0x006211dcu), 0x18);
-    g.d_006211f4 = 0;   /* FUN_004c2188: not in native builds */
+    g.d_006211f4 = 0;   /* unwind_funclet_004c2188: not in native builds */
     memcpy(&g.d_006211f8, IMG(0x006211f8u), 0x4);
-    g.d_006211fc = 0;   /* FUN_004c217c: not in native builds */
+    g.d_006211fc = 0;   /* unwind_funclet_004c217c: not in native builds */
     memcpy(&g.d_00621200, IMG(0x00621200u), 0x8);
     g.d_00621208 = (uptr)((u8 *)&g.d_0062120c + 20);
     memcpy(&g.d_0062120c, IMG(0x0062120cu), 0x18);
-    g.d_00621224 = 0;   /* FUN_004c2763: not in native builds */
+    g.d_00621224 = 0;   /* unwind_funclet_004c2763: not in native builds */
     memcpy(&g.d_00621228, IMG(0x00621228u), 0x18);
     g.d_00621240 = (uptr)((u8 *)&g.d_00621244 + 20);
     memcpy(&g.d_00621244, IMG(0x00621244u), 0x18);
-    g.d_0062125c = 0;   /* FUN_004c9504: not in native builds */
+    g.d_0062125c = 0;   /* unwind_funclet_004c9504: not in native builds */
     memcpy(&g.d_00621260, IMG(0x00621260u), 0x10);
     g.d_00621270 = (uptr)((u8 *)&g.d_00621274 + 20);
     memcpy(&g.d_00621274, IMG(0x00621274u), 0x18);
-    g.d_0062128c = 0;   /* FUN_004cdf26: not in native builds */
+    g.d_0062128c = 0;   /* unwind_funclet_004cdf26: not in native builds */
     memcpy(&g.d_00621290, IMG(0x00621290u), 0x8);
     g.d_00621298 = (uptr)((u8 *)&g.d_0062129c + 20);
     memcpy(&g.d_0062129c, IMG(0x0062129cu), 0x18);
-    g.d_006212b4 = 0;   /* FUN_004ce6f9: not in native builds */
+    g.d_006212b4 = 0;   /* unwind_funclet_004ce6f9: not in native builds */
     memcpy(&g.d_006212b8, IMG(0x006212b8u), 0x4);
-    g.d_006212bc = 0;   /* FUN_004ce6ed: not in native builds */
+    g.d_006212bc = 0;   /* unwind_funclet_004ce6ed: not in native builds */
     memcpy(&g.d_006212c0, IMG(0x006212c0u), 0x8);
     g.d_006212c8 = (uptr)((u8 *)&g.d_006212cc + 20);
     memcpy(&g.d_006212cc, IMG(0x006212ccu), 0x18);
-    g.d_006212e4 = 0;   /* FUN_004cefc5: not in native builds */
+    g.d_006212e4 = 0;   /* unwind_funclet_004cefc5: not in native builds */
     memcpy(&g.d_006212e8, IMG(0x006212e8u), 0x18);
     g.d_00621300 = (uptr)((u8 *)&g.d_00621304 + 20);
     memcpy(&g.d_00621304, IMG(0x00621304u), 0x18);
-    g.d_0062131c = 0;   /* FUN_004d0314: not in native builds */
+    g.d_0062131c = 0;   /* unwind_funclet_004d0314: not in native builds */
     memcpy(&g.d_00621320, IMG(0x00621320u), 0x8);
     g.d_00621328 = (uptr)((u8 *)&g.d_0062132c + 20);
     memcpy(&g.d_0062132c, IMG(0x0062132cu), 0x18);
-    g.d_00621344 = 0;   /* FUN_004d041a: not in native builds */
+    g.d_00621344 = 0;   /* unwind_funclet_004d041a: not in native builds */
     memcpy(&g.d_00621348, IMG(0x00621348u), 0x8);
     g.d_00621350 = (uptr)((u8 *)&g.d_00621354 + 20);
     memcpy(&g.d_00621354, IMG(0x00621354u), 0x18);
@@ -5320,69 +5320,69 @@ void gamedata_init(void)
     memcpy(&g.d_006213e8, IMG(0x006213e8u), 0x8);
     g.d_006213f0 = (uptr)((u8 *)&g.d_006213f4 + 20);
     memcpy(&g.d_006213f4, IMG(0x006213f4u), 0x18);
-    g.d_0062140c = 0;   /* FUN_004d0b37: not in native builds */
+    g.d_0062140c = 0;   /* unwind_funclet_004d0b37: not in native builds */
     memcpy(&g.d_00621410, IMG(0x00621410u), 0x4);
-    g.d_00621414 = 0;   /* FUN_004d0b28: not in native builds */
+    g.d_00621414 = 0;   /* unwind_funclet_004d0b28: not in native builds */
     memcpy(&g.d_00621418, IMG(0x00621418u), 0x4);
-    g.d_0062141c = 0;   /* FUN_004d0b19: not in native builds */
+    g.d_0062141c = 0;   /* unwind_funclet_004d0b19: not in native builds */
     memcpy(&g.d_00621420, IMG(0x00621420u), 0x4);
-    g.d_00621424 = 0;   /* FUN_004d0b0a: not in native builds */
+    g.d_00621424 = 0;   /* unwind_funclet_004d0b0a: not in native builds */
     memcpy(&g.d_00621428, IMG(0x00621428u), 0x4);
-    g.d_0062142c = 0;   /* FUN_004d0afb: not in native builds */
+    g.d_0062142c = 0;   /* unwind_funclet_004d0afb: not in native builds */
     memcpy(&g.d_00621430, IMG(0x00621430u), 0x4);
-    g.d_00621434 = 0;   /* FUN_004d0aec: not in native builds */
+    g.d_00621434 = 0;   /* unwind_funclet_004d0aec: not in native builds */
     memcpy(&g.d_00621438, IMG(0x00621438u), 0x4);
-    g.d_0062143c = 0;   /* FUN_004d0add: not in native builds */
+    g.d_0062143c = 0;   /* unwind_funclet_004d0add: not in native builds */
     memcpy(&g.d_00621440, IMG(0x00621440u), 0x4);
-    g.d_00621444 = 0;   /* FUN_004d0ace: not in native builds */
+    g.d_00621444 = 0;   /* unwind_funclet_004d0ace: not in native builds */
     memcpy(&g.d_00621448, IMG(0x00621448u), 0x4);
-    g.d_0062144c = 0;   /* FUN_004d0abf: not in native builds */
+    g.d_0062144c = 0;   /* unwind_funclet_004d0abf: not in native builds */
     memcpy(&g.d_00621450, IMG(0x00621450u), 0x4);
-    g.d_00621454 = 0;   /* FUN_004d0ab0: not in native builds */
+    g.d_00621454 = 0;   /* unwind_funclet_004d0ab0: not in native builds */
     memcpy(&g.d_00621458, IMG(0x00621458u), 0x4);
-    g.d_0062145c = 0;   /* FUN_004d0aa1: not in native builds */
+    g.d_0062145c = 0;   /* unwind_funclet_004d0aa1: not in native builds */
     memcpy(&g.d_00621460, IMG(0x00621460u), 0x4);
-    g.d_00621464 = 0;   /* FUN_004d0a92: not in native builds */
+    g.d_00621464 = 0;   /* unwind_funclet_004d0a92: not in native builds */
     memcpy(&g.d_00621468, IMG(0x00621468u), 0x4);
-    g.d_0062146c = 0;   /* FUN_004d0a83: not in native builds */
+    g.d_0062146c = 0;   /* unwind_funclet_004d0a83: not in native builds */
     memcpy(&g.d_00621470, IMG(0x00621470u), 0x4);
-    g.d_00621474 = 0;   /* FUN_004d0a74: not in native builds */
+    g.d_00621474 = 0;   /* unwind_funclet_004d0a74: not in native builds */
     memcpy(&g.d_00621478, IMG(0x00621478u), 0x4);
-    g.d_0062147c = 0;   /* FUN_004d0a65: not in native builds */
+    g.d_0062147c = 0;   /* unwind_funclet_004d0a65: not in native builds */
     memcpy(&g.d_00621480, IMG(0x00621480u), 0x4);
-    g.d_00621484 = 0;   /* FUN_004d0a56: not in native builds */
+    g.d_00621484 = 0;   /* unwind_funclet_004d0a56: not in native builds */
     memcpy(&g.d_00621488, IMG(0x00621488u), 0x8);
     g.d_00621490 = (uptr)((u8 *)&g.d_00621494 + 20);
     memcpy(&g.d_00621494, IMG(0x00621494u), 0x18);
-    g.d_006214ac = 0;   /* FUN_004d1397: not in native builds */
+    g.d_006214ac = 0;   /* unwind_funclet_004d1397: not in native builds */
     memcpy(&g.d_006214b0, IMG(0x006214b0u), 0x4);
-    g.d_006214b4 = 0;   /* FUN_004d138b: not in native builds */
+    g.d_006214b4 = 0;   /* unwind_funclet_004d138b: not in native builds */
     memcpy(&g.d_006214b8, IMG(0x006214b8u), 0x8);
     g.d_006214c0 = (uptr)((u8 *)&g.d_006214c4 + 20);
     memcpy(&g.d_006214c4, IMG(0x006214c4u), 0x18);
-    g.d_006214dc = 0;   /* FUN_004d4a56: not in native builds */
+    g.d_006214dc = 0;   /* unwind_funclet_004d4a56: not in native builds */
     memcpy(&g.d_006214e0, IMG(0x006214e0u), 0x4);
-    g.d_006214e4 = 0;   /* FUN_004d4a4a: not in native builds */
+    g.d_006214e4 = 0;   /* unwind_funclet_004d4a4a: not in native builds */
     memcpy(&g.d_006214e8, IMG(0x006214e8u), 0x4);
-    g.d_006214ec = 0;   /* FUN_004d4a3e: not in native builds */
+    g.d_006214ec = 0;   /* unwind_funclet_004d4a3e: not in native builds */
     memcpy(&g.d_006214f0, IMG(0x006214f0u), 0x4);
-    g.d_006214f4 = 0;   /* FUN_004d4a35: not in native builds */
+    g.d_006214f4 = 0;   /* unwind_funclet_004d4a35: not in native builds */
     memcpy(&g.d_006214f8, IMG(0x006214f8u), 0x4);
-    g.d_006214fc = 0;   /* FUN_004d4a29: not in native builds */
+    g.d_006214fc = 0;   /* unwind_funclet_004d4a29: not in native builds */
     memcpy(&g.d_00621500, IMG(0x00621500u), 0x4);
-    g.d_00621504 = 0;   /* FUN_004d4a1d: not in native builds */
+    g.d_00621504 = 0;   /* unwind_funclet_004d4a1d: not in native builds */
     memcpy(&g.d_00621508, IMG(0x00621508u), 0x4);
-    g.d_0062150c = 0;   /* FUN_004d4a11: not in native builds */
+    g.d_0062150c = 0;   /* unwind_funclet_004d4a11: not in native builds */
     memcpy(&g.d_00621510, IMG(0x00621510u), 0x4);
-    g.d_00621514 = 0;   /* FUN_004d4a05: not in native builds */
+    g.d_00621514 = 0;   /* unwind_funclet_004d4a05: not in native builds */
     memcpy(&g.d_00621518, IMG(0x00621518u), 0x4);
-    g.d_0062151c = 0;   /* FUN_004d49f9: not in native builds */
+    g.d_0062151c = 0;   /* unwind_funclet_004d49f9: not in native builds */
     memcpy(&g.d_00621520, IMG(0x00621520u), 0x4);
-    g.d_00621524 = 0;   /* FUN_004d49ed: not in native builds */
+    g.d_00621524 = 0;   /* unwind_funclet_004d49ed: not in native builds */
     memcpy(&g.d_00621528, IMG(0x00621528u), 0x4);
-    g.d_0062152c = 0;   /* FUN_004d49e1: not in native builds */
+    g.d_0062152c = 0;   /* unwind_funclet_004d49e1: not in native builds */
     memcpy(&g.d_00621530, IMG(0x00621530u), 0x4);
-    g.d_00621534 = 0;   /* FUN_004d49d5: not in native builds */
+    g.d_00621534 = 0;   /* unwind_funclet_004d49d5: not in native builds */
     memcpy(&g.d_00621538, IMG(0x00621538u), 0x8);
     g.d_00621540 = (uptr)((u8 *)&g.d_00621544 + 20);
     memcpy(&g.d_00621544, IMG(0x00621544u), 0x18);
@@ -5394,41 +5394,41 @@ void gamedata_init(void)
     memcpy(&g.d_00621588, IMG(0x00621588u), 0x50);
     g.d_006215d8 = (uptr)((u8 *)&g.d_006215dc + 20);
     memcpy(&g.d_006215dc, IMG(0x006215dcu), 0x18);
-    g.d_006215f4 = 0;   /* FUN_004da9be: not in native builds */
+    g.d_006215f4 = 0;   /* unwind_funclet_004da9be: not in native builds */
     memcpy(&g.d_006215f8, IMG(0x006215f8u), 0x4);
     g.d_006215fc = 0x004da9aeu;   /* not a known function or data */
     memcpy(&g.d_00621600, IMG(0x00621600u), 0x8);
     g.d_00621608 = (uptr)((u8 *)&g.d_0062160c + 20);
     memcpy(&g.d_0062160c, IMG(0x0062160cu), 0x18);
-    g.d_00621624 = 0;   /* FUN_004daa3b: not in native builds */
+    g.d_00621624 = 0;   /* unwind_funclet_004daa3b: not in native builds */
     memcpy(&g.d_00621628, IMG(0x00621628u), 0x10);
     g.d_00621638 = (uptr)((u8 *)&g.d_0062163c + 20);
     memcpy(&g.d_0062163c, IMG(0x0062163cu), 0x18);
-    g.d_00621654 = 0;   /* FUN_004e02cb: not in native builds */
+    g.d_00621654 = 0;   /* unwind_funclet_004e02cb: not in native builds */
     memcpy(&g.d_00621658, IMG(0x00621658u), 0x8);
     g.d_00621660 = (uptr)((u8 *)&g.d_00621664 + 20);
     memcpy(&g.d_00621664, IMG(0x00621664u), 0x18);
-    g.d_0062167c = 0;   /* FUN_004e27df: not in native builds */
+    g.d_0062167c = 0;   /* unwind_funclet_004e27df: not in native builds */
     memcpy(&g.d_00621680, IMG(0x00621680u), 0x10);
     g.d_00621690 = (uptr)((u8 *)&g.d_00621694 + 20);
     memcpy(&g.d_00621694, IMG(0x00621694u), 0x18);
-    g.d_006216ac = 0;   /* FUN_004eb7e5: not in native builds */
+    g.d_006216ac = 0;   /* unwind_funclet_004eb7e5: not in native builds */
     memcpy(&g.d_006216b0, IMG(0x006216b0u), 0x8);
     g.d_006216b8 = (uptr)((u8 *)&g.d_006216bc + 20);
     memcpy(&g.d_006216bc, IMG(0x006216bcu), 0x18);
-    g.d_006216d4 = 0;   /* FUN_004ebbb9: not in native builds */
+    g.d_006216d4 = 0;   /* unwind_funclet_004ebbb9: not in native builds */
     memcpy(&g.d_006216d8, IMG(0x006216d8u), 0x4);
-    g.d_006216dc = 0;   /* FUN_004ebbad: not in native builds */
+    g.d_006216dc = 0;   /* unwind_funclet_004ebbad: not in native builds */
     memcpy(&g.d_006216e0, IMG(0x006216e0u), 0x4);
     g.d_006216e4 = 0x004ebb9du;   /* not a known function or data */
     memcpy(&g.d_006216e8, IMG(0x006216e8u), 0x8);
     g.d_006216f0 = (uptr)((u8 *)&g.d_006216f4 + 20);
     memcpy(&g.d_006216f4, IMG(0x006216f4u), 0x18);
-    g.d_0062170c = 0;   /* FUN_004eeeff: not in native builds */
+    g.d_0062170c = 0;   /* unwind_funclet_004eeeff: not in native builds */
     memcpy(&g.d_00621710, IMG(0x00621710u), 0x4);
-    g.d_00621714 = 0;   /* FUN_004eeef3: not in native builds */
+    g.d_00621714 = 0;   /* unwind_funclet_004eeef3: not in native builds */
     memcpy(&g.d_00621718, IMG(0x00621718u), 0x4);
-    g.d_0062171c = 0;   /* FUN_004eeee7: not in native builds */
+    g.d_0062171c = 0;   /* unwind_funclet_004eeee7: not in native builds */
     memcpy(&g.d_00621720, IMG(0x00621720u), 0x18);
     g.d_00621738 = (uptr)((u8 *)&g.d_0062173c + 20);
     memcpy(&g.d_0062173c, IMG(0x0062173cu), 0x18);
@@ -5482,41 +5482,41 @@ void gamedata_init(void)
     memcpy(&g.d_00621850, IMG(0x00621850u), 0x8);
     g.d_00621858 = (uptr)((u8 *)&g.d_0062185c + 20);
     memcpy(&g.d_0062185c, IMG(0x0062185cu), 0x18);
-    g.d_00621874 = 0;   /* FUN_004f4772: not in native builds */
+    g.d_00621874 = 0;   /* unwind_funclet_004f4772: not in native builds */
     memcpy(&g.d_00621878, IMG(0x00621878u), 0x4);
-    g.d_0062187c = 0;   /* FUN_004f4763: not in native builds */
+    g.d_0062187c = 0;   /* unwind_funclet_004f4763: not in native builds */
     memcpy(&g.d_00621880, IMG(0x00621880u), 0x4);
-    g.d_00621884 = 0;   /* FUN_004f4754: not in native builds */
+    g.d_00621884 = 0;   /* unwind_funclet_004f4754: not in native builds */
     memcpy(&g.d_00621888, IMG(0x00621888u), 0x4);
-    g.d_0062188c = 0;   /* FUN_004f4745: not in native builds */
+    g.d_0062188c = 0;   /* unwind_funclet_004f4745: not in native builds */
     memcpy(&g.d_00621890, IMG(0x00621890u), 0x4);
-    g.d_00621894 = 0;   /* FUN_004f4736: not in native builds */
+    g.d_00621894 = 0;   /* unwind_funclet_004f4736: not in native builds */
     memcpy(&g.d_00621898, IMG(0x00621898u), 0x4);
-    g.d_0062189c = 0;   /* FUN_004f4727: not in native builds */
+    g.d_0062189c = 0;   /* unwind_funclet_004f4727: not in native builds */
     memcpy(&g.d_006218a0, IMG(0x006218a0u), 0x4);
-    g.d_006218a4 = 0;   /* FUN_004f4718: not in native builds */
+    g.d_006218a4 = 0;   /* unwind_funclet_004f4718: not in native builds */
     memcpy(&g.d_006218a8, IMG(0x006218a8u), 0x4);
-    g.d_006218ac = 0;   /* FUN_004f4709: not in native builds */
+    g.d_006218ac = 0;   /* unwind_funclet_004f4709: not in native builds */
     memcpy(&g.d_006218b0, IMG(0x006218b0u), 0x4);
-    g.d_006218b4 = 0;   /* FUN_004f46fa: not in native builds */
+    g.d_006218b4 = 0;   /* unwind_funclet_004f46fa: not in native builds */
     memcpy(&g.d_006218b8, IMG(0x006218b8u), 0x4);
-    g.d_006218bc = 0;   /* FUN_004f46eb: not in native builds */
+    g.d_006218bc = 0;   /* unwind_funclet_004f46eb: not in native builds */
     memcpy(&g.d_006218c0, IMG(0x006218c0u), 0x4);
-    g.d_006218c4 = 0;   /* FUN_004f46dc: not in native builds */
+    g.d_006218c4 = 0;   /* unwind_funclet_004f46dc: not in native builds */
     memcpy(&g.d_006218c8, IMG(0x006218c8u), 0x4);
-    g.d_006218cc = 0;   /* FUN_004f46cd: not in native builds */
+    g.d_006218cc = 0;   /* unwind_funclet_004f46cd: not in native builds */
     memcpy(&g.d_006218d0, IMG(0x006218d0u), 0x4);
-    g.d_006218d4 = 0;   /* FUN_004f46be: not in native builds */
+    g.d_006218d4 = 0;   /* unwind_funclet_004f46be: not in native builds */
     memcpy(&g.d_006218d8, IMG(0x006218d8u), 0x4);
-    g.d_006218dc = 0;   /* FUN_004f46af: not in native builds */
+    g.d_006218dc = 0;   /* unwind_funclet_004f46af: not in native builds */
     memcpy(&g.d_006218e0, IMG(0x006218e0u), 0x4);
-    g.d_006218e4 = 0;   /* FUN_004f46a0: not in native builds */
+    g.d_006218e4 = 0;   /* unwind_funclet_004f46a0: not in native builds */
     memcpy(&g.d_006218e8, IMG(0x006218e8u), 0x4);
-    g.d_006218ec = 0;   /* FUN_004f4691: not in native builds */
+    g.d_006218ec = 0;   /* unwind_funclet_004f4691: not in native builds */
     memcpy(&g.d_006218f0, IMG(0x006218f0u), 0x4);
-    g.d_006218f4 = 0;   /* FUN_004f4682: not in native builds */
+    g.d_006218f4 = 0;   /* unwind_funclet_004f4682: not in native builds */
     memcpy(&g.d_006218f8, IMG(0x006218f8u), 0x4);
-    g.d_006218fc = 0;   /* FUN_004f4673: not in native builds */
+    g.d_006218fc = 0;   /* unwind_funclet_004f4673: not in native builds */
     memcpy(&g.d_00621900, IMG(0x00621900u), 0x8);
     g.d_00621908 = (uptr)((u8 *)&g.d_0062190c + 20);
     memcpy(&g.d_0062190c, IMG(0x0062190cu), 0x18);
@@ -5524,7 +5524,7 @@ void gamedata_init(void)
     memcpy(&g.d_00621928, IMG(0x00621928u), 0x30);
     g.d_00621958 = (uptr)((u8 *)&g.d_0062195c + 20);
     memcpy(&g.d_0062195c, IMG(0x0062195cu), 0x18);
-    g.d_00621974 = 0;   /* FUN_004fa17e: not in native builds */
+    g.d_00621974 = 0;   /* unwind_funclet_004fa17e: not in native builds */
     memcpy(&g.d_00621978, IMG(0x00621978u), 0x10);
     g.d_00621988 = (uptr)((u8 *)&g.d_0062198c + 20);
     memcpy(&g.d_0062198c, IMG(0x0062198cu), 0x18);
@@ -5532,15 +5532,15 @@ void gamedata_init(void)
     memcpy(&g.d_006219a8, IMG(0x006219a8u), 0x8);
     g.d_006219b0 = (uptr)((u8 *)&g.d_006219b4 + 20);
     memcpy(&g.d_006219b4, IMG(0x006219b4u), 0x18);
-    g.d_006219cc = 0;   /* FUN_004fa5b8: not in native builds */
+    g.d_006219cc = 0;   /* unwind_funclet_004fa5b8: not in native builds */
     memcpy(&g.d_006219d0, IMG(0x006219d0u), 0x10);
     g.d_006219e0 = (uptr)((u8 *)&g.d_006219e4 + 20);
     memcpy(&g.d_006219e4, IMG(0x006219e4u), 0x18);
-    g.d_006219fc = 0;   /* FUN_00501190: not in native builds */
+    g.d_006219fc = 0;   /* unwind_funclet_00501190: not in native builds */
     memcpy(&g.d_00621a00, IMG(0x00621a00u), 0x4);
-    g.d_00621a04 = 0;   /* FUN_00501187: not in native builds */
+    g.d_00621a04 = 0;   /* unwind_funclet_00501187: not in native builds */
     memcpy(&g.d_00621a08, IMG(0x00621a08u), 0x4);
-    g.d_00621a0c = 0;   /* FUN_0050117b: not in native builds */
+    g.d_00621a0c = 0;   /* unwind_funclet_0050117b: not in native builds */
     memcpy(&g.d_00621a10, IMG(0x00621a10u), 0x8);
     g.d_00621a18 = (uptr)((u8 *)&g.d_00621a1c + 20);
     memcpy(&g.d_00621a1c, IMG(0x00621a1cu), 0x18);
@@ -5552,35 +5552,35 @@ void gamedata_init(void)
     memcpy(&g.d_00621a48, IMG(0x00621a48u), 0x8);
     g.d_00621a50 = (uptr)((u8 *)&g.d_00621a54 + 20);
     memcpy(&g.d_00621a54, IMG(0x00621a54u), 0x18);
-    g.d_00621a6c = 0;   /* FUN_00501691: not in native builds */
+    g.d_00621a6c = 0;   /* unwind_funclet_00501691: not in native builds */
     memcpy(&g.d_00621a70, IMG(0x00621a70u), 0x4);
-    g.d_00621a74 = 0;   /* FUN_00501682: not in native builds */
+    g.d_00621a74 = 0;   /* unwind_funclet_00501682: not in native builds */
     memcpy(&g.d_00621a78, IMG(0x00621a78u), 0x4);
-    g.d_00621a7c = 0;   /* FUN_00501673: not in native builds */
+    g.d_00621a7c = 0;   /* unwind_funclet_00501673: not in native builds */
     memcpy(&g.d_00621a80, IMG(0x00621a80u), 0x8);
     g.d_00621a88 = (uptr)((u8 *)&g.d_00621a8c + 20);
     memcpy(&g.d_00621a8c, IMG(0x00621a8cu), 0x18);
-    g.d_00621aa4 = 0;   /* FUN_00506a1e: not in native builds */
+    g.d_00621aa4 = 0;   /* unwind_funclet_00506a1e: not in native builds */
     memcpy(&g.d_00621aa8, IMG(0x00621aa8u), 0x4);
-    g.d_00621aac = 0;   /* FUN_00506a15: not in native builds */
+    g.d_00621aac = 0;   /* unwind_funclet_00506a15: not in native builds */
     memcpy(&g.d_00621ab0, IMG(0x00621ab0u), 0x8);
     g.d_00621ab8 = (uptr)((u8 *)&g.d_00621abc + 20);
     memcpy(&g.d_00621abc, IMG(0x00621abcu), 0x18);
-    g.d_00621ad4 = 0;   /* FUN_005070c1: not in native builds */
+    g.d_00621ad4 = 0;   /* unwind_funclet_005070c1: not in native builds */
     memcpy(&g.d_00621ad8, IMG(0x00621ad8u), 0x4);
-    g.d_00621adc = 0;   /* FUN_005070b8: not in native builds */
+    g.d_00621adc = 0;   /* unwind_funclet_005070b8: not in native builds */
     memcpy(&g.d_00621ae0, IMG(0x00621ae0u), 0x8);
     g.d_00621ae8 = (uptr)((u8 *)&g.d_00621aec + 20);
     memcpy(&g.d_00621aec, IMG(0x00621aecu), 0x18);
-    g.d_00621b04 = 0;   /* FUN_0050a1b2: not in native builds */
+    g.d_00621b04 = 0;   /* unwind_funclet_0050a1b2: not in native builds */
     memcpy(&g.d_00621b08, IMG(0x00621b08u), 0x8);
     g.d_00621b10 = (uptr)((u8 *)&g.d_00621b14 + 20);
     memcpy(&g.d_00621b14, IMG(0x00621b14u), 0x18);
-    g.d_00621b2c = 0;   /* FUN_0050b650: not in native builds */
+    g.d_00621b2c = 0;   /* unwind_funclet_0050b650: not in native builds */
     memcpy(&g.d_00621b30, IMG(0x00621b30u), 0x4);
-    g.d_00621b34 = 0;   /* FUN_0050b644: not in native builds */
+    g.d_00621b34 = 0;   /* unwind_funclet_0050b644: not in native builds */
     memcpy(&g.d_00621b38, IMG(0x00621b38u), 0x4);
-    g.d_00621b3c = 0;   /* FUN_0050b638: not in native builds */
+    g.d_00621b3c = 0;   /* unwind_funclet_0050b638: not in native builds */
     memcpy(&g.d_00621b40, IMG(0x00621b40u), 0x8);
     g.d_00621b48 = (uptr)((u8 *)&g.d_00621b4c + 20);
     memcpy(&g.d_00621b4c, IMG(0x00621b4cu), 0x18);
@@ -5614,11 +5614,11 @@ void gamedata_init(void)
     memcpy(&g.d_00621c00, IMG(0x00621c00u), 0x40);
     g.d_00621c40 = (uptr)((u8 *)&g.d_00621c44 + 20);
     memcpy(&g.d_00621c44, IMG(0x00621c44u), 0x18);
-    g.d_00621c5c = 0;   /* FUN_0051163c: not in native builds */
+    g.d_00621c5c = 0;   /* unwind_funclet_0051163c: not in native builds */
     memcpy(&g.d_00621c60, IMG(0x00621c60u), 0x4);
-    g.d_00621c64 = 0;   /* FUN_00511630: not in native builds */
+    g.d_00621c64 = 0;   /* unwind_funclet_00511630: not in native builds */
     memcpy(&g.d_00621c68, IMG(0x00621c68u), 0x4);
-    g.d_00621c6c = 0;   /* FUN_00511624: not in native builds */
+    g.d_00621c6c = 0;   /* unwind_funclet_00511624: not in native builds */
     memcpy(&g.d_00621c70, IMG(0x00621c70u), 0x10);
     g.d_00621c80 = (uptr)((u8 *)&g.d_00621c84 + 20);
     memcpy(&g.d_00621c84, IMG(0x00621c84u), 0x18);
@@ -5630,11 +5630,11 @@ void gamedata_init(void)
     memcpy(&g.d_00621cb0, IMG(0x00621cb0u), 0x10);
     g.d_00621cc0 = (uptr)((u8 *)&g.d_00621cc4 + 20);
     memcpy(&g.d_00621cc4, IMG(0x00621cc4u), 0x18);
-    g.d_00621cdc = 0;   /* FUN_0051399d: not in native builds */
+    g.d_00621cdc = 0;   /* unwind_funclet_0051399d: not in native builds */
     memcpy(&g.d_00621ce0, IMG(0x00621ce0u), 0x10);
     g.d_00621cf0 = (uptr)((u8 *)&g.d_00621cf4 + 20);
     memcpy(&g.d_00621cf4, IMG(0x00621cf4u), 0x18);
-    g.d_00621d0c = 0;   /* FUN_00514ef2: not in native builds */
+    g.d_00621d0c = 0;   /* unwind_funclet_00514ef2: not in native builds */
     memcpy(&g.d_00621d10, IMG(0x00621d10u), 0x8);
     g.d_00621d18 = (uptr)((u8 *)&g.d_00621d1c + 20);
     memcpy(&g.d_00621d1c, IMG(0x00621d1cu), 0x18);
@@ -5656,35 +5656,35 @@ void gamedata_init(void)
     memcpy(&g.d_00621d70, IMG(0x00621d70u), 0x8);
     g.d_00621d78 = (uptr)((u8 *)&g.d_00621d7c + 20);
     memcpy(&g.d_00621d7c, IMG(0x00621d7cu), 0x18);
-    g.d_00621d94 = 0;   /* FUN_005151d3: not in native builds */
+    g.d_00621d94 = 0;   /* unwind_funclet_005151d3: not in native builds */
     memcpy(&g.d_00621d98, IMG(0x00621d98u), 0x4);
-    g.d_00621d9c = 0;   /* FUN_005151c4: not in native builds */
+    g.d_00621d9c = 0;   /* unwind_funclet_005151c4: not in native builds */
     memcpy(&g.d_00621da0, IMG(0x00621da0u), 0x4);
-    g.d_00621da4 = 0;   /* FUN_005151b5: not in native builds */
+    g.d_00621da4 = 0;   /* unwind_funclet_005151b5: not in native builds */
     memcpy(&g.d_00621da8, IMG(0x00621da8u), 0x4);
-    g.d_00621dac = 0;   /* FUN_005151a6: not in native builds */
+    g.d_00621dac = 0;   /* unwind_funclet_005151a6: not in native builds */
     memcpy(&g.d_00621db0, IMG(0x00621db0u), 0x4);
-    g.d_00621db4 = 0;   /* FUN_00515197: not in native builds */
+    g.d_00621db4 = 0;   /* unwind_funclet_00515197: not in native builds */
     memcpy(&g.d_00621db8, IMG(0x00621db8u), 0x4);
-    g.d_00621dbc = 0;   /* FUN_00515188: not in native builds */
+    g.d_00621dbc = 0;   /* unwind_funclet_00515188: not in native builds */
     memcpy(&g.d_00621dc0, IMG(0x00621dc0u), 0x4);
-    g.d_00621dc4 = 0;   /* FUN_00515179: not in native builds */
+    g.d_00621dc4 = 0;   /* unwind_funclet_00515179: not in native builds */
     memcpy(&g.d_00621dc8, IMG(0x00621dc8u), 0x4);
-    g.d_00621dcc = 0;   /* FUN_0051516a: not in native builds */
+    g.d_00621dcc = 0;   /* unwind_funclet_0051516a: not in native builds */
     memcpy(&g.d_00621dd0, IMG(0x00621dd0u), 0x8);
     g.d_00621dd8 = (uptr)((u8 *)&g.d_00621ddc + 20);
     memcpy(&g.d_00621ddc, IMG(0x00621ddcu), 0x18);
-    g.d_00621df4 = 0;   /* FUN_00515978: not in native builds */
+    g.d_00621df4 = 0;   /* unwind_funclet_00515978: not in native builds */
     memcpy(&g.d_00621df8, IMG(0x00621df8u), 0x8);
     g.d_00621e00 = (uptr)((u8 *)&g.d_00621e04 + 20);
     memcpy(&g.d_00621e04, IMG(0x00621e04u), 0x18);
-    g.d_00621e1c = 0;   /* FUN_00515da2: not in native builds */
+    g.d_00621e1c = 0;   /* unwind_funclet_00515da2: not in native builds */
     memcpy(&g.d_00621e20, IMG(0x00621e20u), 0x4);
-    g.d_00621e24 = 0;   /* FUN_00515d96: not in native builds */
+    g.d_00621e24 = 0;   /* unwind_funclet_00515d96: not in native builds */
     memcpy(&g.d_00621e28, IMG(0x00621e28u), 0x28);
     g.d_00621e50 = (uptr)((u8 *)&g.d_00621e54 + 20);
     memcpy(&g.d_00621e54, IMG(0x00621e54u), 0x18);
-    g.d_00621e6c = 0;   /* FUN_005165f6: not in native builds */
+    g.d_00621e6c = 0;   /* unwind_funclet_005165f6: not in native builds */
     memcpy(&g.d_00621e70, IMG(0x00621e70u), 0x8);
     g.d_00621e78 = (uptr)((u8 *)&g.d_00621e7c + 20);
     memcpy(&g.d_00621e7c, IMG(0x00621e7cu), 0x18);
@@ -5710,99 +5710,99 @@ void gamedata_init(void)
     memcpy(&g.d_00621ee0, IMG(0x00621ee0u), 0x8);
     g.d_00621ee8 = (uptr)((u8 *)&g.d_00621eec + 20);
     memcpy(&g.d_00621eec, IMG(0x00621eecu), 0x18);
-    g.d_00621f04 = 0;   /* FUN_00516926: not in native builds */
+    g.d_00621f04 = 0;   /* unwind_funclet_00516926: not in native builds */
     memcpy(&g.d_00621f08, IMG(0x00621f08u), 0x4);
-    g.d_00621f0c = 0;   /* FUN_00516917: not in native builds */
+    g.d_00621f0c = 0;   /* unwind_funclet_00516917: not in native builds */
     memcpy(&g.d_00621f10, IMG(0x00621f10u), 0x4);
-    g.d_00621f14 = 0;   /* FUN_00516908: not in native builds */
+    g.d_00621f14 = 0;   /* unwind_funclet_00516908: not in native builds */
     memcpy(&g.d_00621f18, IMG(0x00621f18u), 0x4);
-    g.d_00621f1c = 0;   /* FUN_005168f9: not in native builds */
+    g.d_00621f1c = 0;   /* unwind_funclet_005168f9: not in native builds */
     memcpy(&g.d_00621f20, IMG(0x00621f20u), 0x4);
-    g.d_00621f24 = 0;   /* FUN_005168ea: not in native builds */
+    g.d_00621f24 = 0;   /* unwind_funclet_005168ea: not in native builds */
     memcpy(&g.d_00621f28, IMG(0x00621f28u), 0x4);
-    g.d_00621f2c = 0;   /* FUN_005168db: not in native builds */
+    g.d_00621f2c = 0;   /* unwind_funclet_005168db: not in native builds */
     memcpy(&g.d_00621f30, IMG(0x00621f30u), 0x4);
-    g.d_00621f34 = 0;   /* FUN_005168cc: not in native builds */
+    g.d_00621f34 = 0;   /* unwind_funclet_005168cc: not in native builds */
     memcpy(&g.d_00621f38, IMG(0x00621f38u), 0x4);
-    g.d_00621f3c = 0;   /* FUN_005168bd: not in native builds */
+    g.d_00621f3c = 0;   /* unwind_funclet_005168bd: not in native builds */
     memcpy(&g.d_00621f40, IMG(0x00621f40u), 0x4);
-    g.d_00621f44 = 0;   /* FUN_005168ae: not in native builds */
+    g.d_00621f44 = 0;   /* unwind_funclet_005168ae: not in native builds */
     memcpy(&g.d_00621f48, IMG(0x00621f48u), 0x4);
-    g.d_00621f4c = 0;   /* FUN_0051689f: not in native builds */
+    g.d_00621f4c = 0;   /* unwind_funclet_0051689f: not in native builds */
     memcpy(&g.d_00621f50, IMG(0x00621f50u), 0x8);
     g.d_00621f58 = (uptr)((u8 *)&g.d_00621f5c + 20);
     memcpy(&g.d_00621f5c, IMG(0x00621f5cu), 0x18);
-    g.d_00621f74 = 0;   /* FUN_00517fe4: not in native builds */
+    g.d_00621f74 = 0;   /* unwind_funclet_00517fe4: not in native builds */
     memcpy(&g.d_00621f78, IMG(0x00621f78u), 0x8);
     g.d_00621f80 = (uptr)((u8 *)&g.d_00621f84 + 20);
     memcpy(&g.d_00621f84, IMG(0x00621f84u), 0x18);
-    g.d_00621f9c = 0;   /* FUN_005181b4: not in native builds */
+    g.d_00621f9c = 0;   /* unwind_funclet_005181b4: not in native builds */
     memcpy(&g.d_00621fa0, IMG(0x00621fa0u), 0x4);
-    g.d_00621fa4 = 0;   /* FUN_005181ab: not in native builds */
+    g.d_00621fa4 = 0;   /* unwind_funclet_005181ab: not in native builds */
     memcpy(&g.d_00621fa8, IMG(0x00621fa8u), 0x30);
     g.d_00621fd8 = (uptr)((u8 *)&g.d_00621fdc + 20);
     memcpy(&g.d_00621fdc, IMG(0x00621fdcu), 0x18);
-    g.d_00621ff4 = 0;   /* FUN_0051c611: not in native builds */
+    g.d_00621ff4 = 0;   /* unwind_funclet_0051c611: not in native builds */
     memcpy(&g.d_00621ff8, IMG(0x00621ff8u), 0x4);
     g.d_00621ffc = 0x0051c601u;   /* not a known function or data */
     memcpy(&g.d_00622000, IMG(0x00622000u), 0x8);
     g.d_00622008 = (uptr)((u8 *)&g.d_0062200c + 20);
     memcpy(&g.d_0062200c, IMG(0x0062200cu), 0x18);
-    g.d_00622024 = 0;   /* FUN_0051c68e: not in native builds */
+    g.d_00622024 = 0;   /* unwind_funclet_0051c68e: not in native builds */
     memcpy(&g.d_00622028, IMG(0x00622028u), 0x10);
     g.d_00622038 = (uptr)((u8 *)&g.d_0062203c + 20);
     memcpy(&g.d_0062203c, IMG(0x0062203cu), 0x18);
-    g.d_00622054 = 0;   /* FUN_0051d53f: not in native builds */
+    g.d_00622054 = 0;   /* unwind_funclet_0051d53f: not in native builds */
     memcpy(&g.d_00622058, IMG(0x00622058u), 0x8);
     g.d_00622060 = (uptr)((u8 *)&g.d_00622064 + 20);
     memcpy(&g.d_00622064, IMG(0x00622064u), 0x18);
-    g.d_0062207c = 0;   /* FUN_0051d616: not in native builds */
+    g.d_0062207c = 0;   /* unwind_funclet_0051d616: not in native builds */
     memcpy(&g.d_00622080, IMG(0x00622080u), 0x8);
     g.d_00622088 = (uptr)((u8 *)&g.d_0062208c + 20);
     memcpy(&g.d_0062208c, IMG(0x0062208cu), 0x18);
-    g.d_006220a4 = 0;   /* FUN_0051d738: not in native builds */
+    g.d_006220a4 = 0;   /* unwind_funclet_0051d738: not in native builds */
     memcpy(&g.d_006220a8, IMG(0x006220a8u), 0x18);
     g.d_006220c0 = (uptr)((u8 *)&g.d_006220c4 + 20);
     memcpy(&g.d_006220c4, IMG(0x006220c4u), 0x18);
-    g.d_006220dc = 0;   /* FUN_0051dd72: not in native builds */
+    g.d_006220dc = 0;   /* unwind_funclet_0051dd72: not in native builds */
     memcpy(&g.d_006220e0, IMG(0x006220e0u), 0x8);
     g.d_006220e8 = (uptr)((u8 *)&g.d_006220ec + 20);
     memcpy(&g.d_006220ec, IMG(0x006220ecu), 0x18);
-    g.d_00622104 = 0;   /* FUN_0051e9e7: not in native builds */
+    g.d_00622104 = 0;   /* unwind_funclet_0051e9e7: not in native builds */
     memcpy(&g.d_00622108, IMG(0x00622108u), 0x8);
     g.d_00622110 = (uptr)((u8 *)&g.d_00622114 + 20);
     memcpy(&g.d_00622114, IMG(0x00622114u), 0x18);
-    g.d_0062212c = 0;   /* FUN_0051f0f5: not in native builds */
+    g.d_0062212c = 0;   /* unwind_funclet_0051f0f5: not in native builds */
     memcpy(&g.d_00622130, IMG(0x00622130u), 0x8);
     g.d_00622138 = (uptr)((u8 *)&g.d_0062213c + 20);
     memcpy(&g.d_0062213c, IMG(0x0062213cu), 0x18);
-    g.d_00622154 = 0;   /* FUN_00521807: not in native builds */
+    g.d_00622154 = 0;   /* unwind_funclet_00521807: not in native builds */
     memcpy(&g.d_00622158, IMG(0x00622158u), 0x8);
     g.d_00622160 = (uptr)((u8 *)&g.d_00622164 + 20);
     memcpy(&g.d_00622164, IMG(0x00622164u), 0x18);
-    g.d_0062217c = 0;   /* FUN_00521fbb: not in native builds */
+    g.d_0062217c = 0;   /* unwind_funclet_00521fbb: not in native builds */
     memcpy(&g.d_00622180, IMG(0x00622180u), 0x4);
-    g.d_00622184 = 0;   /* FUN_00521faf: not in native builds */
+    g.d_00622184 = 0;   /* unwind_funclet_00521faf: not in native builds */
     memcpy(&g.d_00622188, IMG(0x00622188u), 0x8);
     g.d_00622190 = (uptr)((u8 *)&g.d_00622194 + 20);
     memcpy(&g.d_00622194, IMG(0x00622194u), 0x18);
-    g.d_006221ac = 0;   /* FUN_00522617: not in native builds */
+    g.d_006221ac = 0;   /* unwind_funclet_00522617: not in native builds */
     memcpy(&g.d_006221b0, IMG(0x006221b0u), 0x8);
     g.d_006221b8 = (uptr)((u8 *)&g.d_006221bc + 20);
     memcpy(&g.d_006221bc, IMG(0x006221bcu), 0x18);
-    g.d_006221d4 = 0;   /* FUN_00522b06: not in native builds */
+    g.d_006221d4 = 0;   /* unwind_funclet_00522b06: not in native builds */
     memcpy(&g.d_006221d8, IMG(0x006221d8u), 0x8);
     g.d_006221e0 = (uptr)((u8 *)&g.d_006221e4 + 20);
     memcpy(&g.d_006221e4, IMG(0x006221e4u), 0x18);
-    g.d_006221fc = 0;   /* FUN_00522dd6: not in native builds */
+    g.d_006221fc = 0;   /* unwind_funclet_00522dd6: not in native builds */
     memcpy(&g.d_00622200, IMG(0x00622200u), 0x8);
     g.d_00622208 = (uptr)((u8 *)&g.d_0062220c + 20);
     memcpy(&g.d_0062220c, IMG(0x0062220cu), 0x18);
-    g.d_00622224 = 0;   /* FUN_005233d8: not in native builds */
+    g.d_00622224 = 0;   /* unwind_funclet_005233d8: not in native builds */
     memcpy(&g.d_00622228, IMG(0x00622228u), 0x8);
     g.d_00622230 = (uptr)((u8 *)&g.d_00622234 + 20);
     memcpy(&g.d_00622234, IMG(0x00622234u), 0x18);
-    g.d_0062224c = 0;   /* FUN_005246bf: not in native builds */
+    g.d_0062224c = 0;   /* unwind_funclet_005246bf: not in native builds */
     memcpy(&g.d_00622250, IMG(0x00622250u), 0x30);
     g.d_00622280 = (uptr)((u8 *)&g.d_00622284 + 20);
     memcpy(&g.d_00622284, IMG(0x00622284u), 0x18);
@@ -5856,21 +5856,21 @@ void gamedata_init(void)
     memcpy(&g.d_00622388, IMG(0x00622388u), 0x10);
     g.d_00622398 = (uptr)((u8 *)&g.d_0062239c + 20);
     memcpy(&g.d_0062239c, IMG(0x0062239cu), 0x18);
-    g.d_006223b4 = 0;   /* FUN_0054ada1: not in native builds */
+    g.d_006223b4 = 0;   /* unwind_funclet_0054ada1: not in native builds */
     memcpy(&g.d_006223b8, IMG(0x006223b8u), 0x8);
     g.d_006223c0 = (uptr)((u8 *)&g.d_006223c4 + 20);
     memcpy(&g.d_006223c4, IMG(0x006223c4u), 0x18);
-    g.d_006223dc = 0;   /* FUN_0054ee8f: not in native builds */
+    g.d_006223dc = 0;   /* unwind_funclet_0054ee8f: not in native builds */
     memcpy(&g.d_006223e0, IMG(0x006223e0u), 0x8);
     g.d_006223e8 = (uptr)((u8 *)&g.d_006223ec + 20);
     memcpy(&g.d_006223ec, IMG(0x006223ecu), 0x18);
-    g.d_00622404 = 0;   /* FUN_0054ffa4: not in native builds */
+    g.d_00622404 = 0;   /* unwind_funclet_0054ffa4: not in native builds */
     memcpy(&g.d_00622408, IMG(0x00622408u), 0x4);
     g.d_0062240c = 0x0054ff94u;   /* not a known function or data */
     memcpy(&g.d_00622410, IMG(0x00622410u), 0x8);
     g.d_00622418 = (uptr)((u8 *)&g.d_0062241c + 20);
     memcpy(&g.d_0062241c, IMG(0x0062241cu), 0x18);
-    g.d_00622434 = 0;   /* FUN_00550017: not in native builds */
+    g.d_00622434 = 0;   /* unwind_funclet_00550017: not in native builds */
     memcpy(&g.d_00622438, IMG(0x00622438u), 0x18);
     g.d_00622450 = (uptr)((u8 *)&g.d_00622454 + 20);
     memcpy(&g.d_00622454, IMG(0x00622454u), 0x18);
@@ -5882,57 +5882,57 @@ void gamedata_init(void)
     memcpy(&g.d_00622498, IMG(0x00622498u), 0x8);
     g.d_006224a0 = (uptr)((u8 *)&g.d_006224a4 + 20);
     memcpy(&g.d_006224a4, IMG(0x006224a4u), 0x18);
-    g.d_006224bc = 0;   /* FUN_0055349b: not in native builds */
+    g.d_006224bc = 0;   /* unwind_funclet_0055349b: not in native builds */
     memcpy(&g.d_006224c0, IMG(0x006224c0u), 0x18);
     g.d_006224d8 = (uptr)((u8 *)&g.d_006224dc + 20);
     memcpy(&g.d_006224dc, IMG(0x006224dcu), 0x18);
-    g.d_006224f4 = 0;   /* FUN_00554272: not in native builds */
+    g.d_006224f4 = 0;   /* unwind_funclet_00554272: not in native builds */
     memcpy(&g.d_006224f8, IMG(0x006224f8u), 0x8);
     g.d_00622500 = (uptr)((u8 *)&g.d_00622504 + 20);
     memcpy(&g.d_00622504, IMG(0x00622504u), 0x18);
-    g.d_0062251c = 0;   /* FUN_0055493e: not in native builds */
+    g.d_0062251c = 0;   /* unwind_funclet_0055493e: not in native builds */
     memcpy(&g.d_00622520, IMG(0x00622520u), 0x8);
     g.d_00622528 = (uptr)((u8 *)&g.d_0062252c + 20);
     memcpy(&g.d_0062252c, IMG(0x0062252cu), 0x18);
-    g.d_00622544 = 0;   /* FUN_0055518f: not in native builds */
+    g.d_00622544 = 0;   /* unwind_funclet_0055518f: not in native builds */
     memcpy(&g.d_00622548, IMG(0x00622548u), 0x8);
     g.d_00622550 = (uptr)((u8 *)&g.d_00622554 + 20);
     memcpy(&g.d_00622554, IMG(0x00622554u), 0x18);
-    g.d_0062256c = 0;   /* FUN_005555eb: not in native builds */
+    g.d_0062256c = 0;   /* unwind_funclet_005555eb: not in native builds */
     memcpy(&g.d_00622570, IMG(0x00622570u), 0x8);
     g.d_00622578 = (uptr)((u8 *)&g.d_0062257c + 20);
     memcpy(&g.d_0062257c, IMG(0x0062257cu), 0x18);
-    g.d_00622594 = 0;   /* FUN_0055581b: not in native builds */
+    g.d_00622594 = 0;   /* unwind_funclet_0055581b: not in native builds */
     memcpy(&g.d_00622598, IMG(0x00622598u), 0x8);
     g.d_006225a0 = (uptr)((u8 *)&g.d_006225a4 + 20);
     memcpy(&g.d_006225a4, IMG(0x006225a4u), 0x18);
-    g.d_006225bc = 0;   /* FUN_005559de: not in native builds */
+    g.d_006225bc = 0;   /* unwind_funclet_005559de: not in native builds */
     memcpy(&g.d_006225c0, IMG(0x006225c0u), 0x8);
     g.d_006225c8 = (uptr)((u8 *)&g.d_006225cc + 20);
     memcpy(&g.d_006225cc, IMG(0x006225ccu), 0x18);
-    g.d_006225e4 = 0;   /* FUN_00555c8d: not in native builds */
+    g.d_006225e4 = 0;   /* unwind_funclet_00555c8d: not in native builds */
     memcpy(&g.d_006225e8, IMG(0x006225e8u), 0x8);
     g.d_006225f0 = (uptr)((u8 *)&g.d_006225f4 + 20);
     memcpy(&g.d_006225f4, IMG(0x006225f4u), 0x18);
-    g.d_0062260c = 0;   /* FUN_005569bf: not in native builds */
+    g.d_0062260c = 0;   /* unwind_funclet_005569bf: not in native builds */
     memcpy(&g.d_00622610, IMG(0x00622610u), 0x8);
     g.d_00622618 = (uptr)((u8 *)&g.d_0062261c + 20);
     memcpy(&g.d_0062261c, IMG(0x0062261cu), 0x18);
-    g.d_00622634 = 0;   /* FUN_00556f30: not in native builds */
+    g.d_00622634 = 0;   /* unwind_funclet_00556f30: not in native builds */
     memcpy(&g.d_00622638, IMG(0x00622638u), 0x8);
     g.d_00622640 = (uptr)((u8 *)&g.d_00622644 + 20);
     memcpy(&g.d_00622644, IMG(0x00622644u), 0x18);
-    g.d_0062265c = 0;   /* FUN_00557e08: not in native builds */
+    g.d_0062265c = 0;   /* unwind_funclet_00557e08: not in native builds */
     memcpy(&g.d_00622660, IMG(0x00622660u), 0x8);
     g.d_00622668 = (uptr)((u8 *)&g.d_0062266c + 20);
     memcpy(&g.d_0062266c, IMG(0x0062266cu), 0x18);
-    g.d_00622684 = 0;   /* FUN_00558177: not in native builds */
+    g.d_00622684 = 0;   /* unwind_funclet_00558177: not in native builds */
     memcpy(&g.d_00622688, IMG(0x00622688u), 0x38);
     g.d_006226c0 = (uptr)((u8 *)&g.d_006226c4 + 20);
     memcpy(&g.d_006226c4, IMG(0x006226c4u), 0x18);
-    g.d_006226dc = 0;   /* FUN_00559dc9: not in native builds */
+    g.d_006226dc = 0;   /* unwind_funclet_00559dc9: not in native builds */
     memcpy(&g.d_006226e0, IMG(0x006226e0u), 0x4);
-    g.d_006226e4 = 0;   /* FUN_00559dbd: not in native builds */
+    g.d_006226e4 = 0;   /* unwind_funclet_00559dbd: not in native builds */
     memcpy(&g.d_006226e8, IMG(0x006226e8u), 0x8);
     g.d_006226f0 = (uptr)((u8 *)&g.d_006226f4 + 20);
     memcpy(&g.d_006226f4, IMG(0x006226f4u), 0x18);
@@ -5942,9 +5942,9 @@ void gamedata_init(void)
     memcpy(&g.d_00622718, IMG(0x00622718u), 0x8);
     g.d_00622720 = (uptr)((u8 *)&g.d_00622724 + 20);
     memcpy(&g.d_00622724, IMG(0x00622724u), 0x18);
-    g.d_0062273c = 0;   /* FUN_00559f3f: not in native builds */
+    g.d_0062273c = 0;   /* unwind_funclet_00559f3f: not in native builds */
     memcpy(&g.d_00622740, IMG(0x00622740u), 0x4);
-    g.d_00622744 = 0;   /* FUN_00559f30: not in native builds */
+    g.d_00622744 = 0;   /* unwind_funclet_00559f30: not in native builds */
     memcpy(&g.d_00622748, IMG(0x00622748u), 0x18);
     g.d_00622760 = (uptr)((u8 *)&g.d_00622764 + 20);
     memcpy(&g.d_00622764, IMG(0x00622764u), 0x18);
@@ -5952,15 +5952,15 @@ void gamedata_init(void)
     memcpy(&g.d_00622780, IMG(0x00622780u), 0x10);
     g.d_00622790 = (uptr)((u8 *)&g.d_00622794 + 20);
     memcpy(&g.d_00622794, IMG(0x00622794u), 0x18);
-    g.d_006227ac = 0;   /* FUN_0056835d: not in native builds */
+    g.d_006227ac = 0;   /* unwind_funclet_0056835d: not in native builds */
     memcpy(&g.d_006227b0, IMG(0x006227b0u), 0x4);
-    g.d_006227b4 = 0;   /* FUN_00568354: not in native builds */
+    g.d_006227b4 = 0;   /* unwind_funclet_00568354: not in native builds */
     memcpy(&g.d_006227b8, IMG(0x006227b8u), 0x4);
-    g.d_006227bc = 0;   /* FUN_00568348: not in native builds */
+    g.d_006227bc = 0;   /* unwind_funclet_00568348: not in native builds */
     memcpy(&g.d_006227c0, IMG(0x006227c0u), 0x10);
     g.d_006227d0 = (uptr)((u8 *)&g.d_006227d4 + 20);
     memcpy(&g.d_006227d4, IMG(0x006227d4u), 0x18);
-    g.d_006227ec = 0;   /* FUN_0056d25b: not in native builds */
+    g.d_006227ec = 0;   /* unwind_funclet_0056d25b: not in native builds */
     memcpy(&g.d_006227f0, IMG(0x006227f0u), 0x10);
     g.d_00622800 = (uptr)((u8 *)&g.d_00622804 + 20);
     memcpy(&g.d_00622804, IMG(0x00622804u), 0x18);
@@ -5968,15 +5968,15 @@ void gamedata_init(void)
     memcpy(&g.d_00622820, IMG(0x00622820u), 0x10);
     g.d_00622830 = (uptr)((u8 *)&g.d_00622834 + 20);
     memcpy(&g.d_00622834, IMG(0x00622834u), 0x18);
-    g.d_0062284c = 0;   /* FUN_0057843e: not in native builds */
+    g.d_0062284c = 0;   /* unwind_funclet_0057843e: not in native builds */
     memcpy(&g.d_00622850, IMG(0x00622850u), 0x4);
-    g.d_00622854 = 0;   /* FUN_0057842f: not in native builds */
+    g.d_00622854 = 0;   /* unwind_funclet_0057842f: not in native builds */
     memcpy(&g.d_00622858, IMG(0x00622858u), 0x4);
-    g.d_0062285c = 0;   /* FUN_00578420: not in native builds */
+    g.d_0062285c = 0;   /* unwind_funclet_00578420: not in native builds */
     memcpy(&g.d_00622860, IMG(0x00622860u), 0x4);
-    g.d_00622864 = 0;   /* FUN_00578411: not in native builds */
+    g.d_00622864 = 0;   /* unwind_funclet_00578411: not in native builds */
     memcpy(&g.d_00622868, IMG(0x00622868u), 0x4);
-    g.d_0062286c = 0;   /* FUN_00578402: not in native builds */
+    g.d_0062286c = 0;   /* unwind_funclet_00578402: not in native builds */
     memcpy(&g.d_00622870, IMG(0x00622870u), 0x10);
     g.d_00622880 = (uptr)((u8 *)&g.d_00622884 + 20);
     memcpy(&g.d_00622884, IMG(0x00622884u), 0x18);
@@ -5992,43 +5992,43 @@ void gamedata_init(void)
     memcpy(&g.d_006228c0, IMG(0x006228c0u), 0x10);
     g.d_006228d0 = (uptr)((u8 *)&g.d_006228d4 + 20);
     memcpy(&g.d_006228d4, IMG(0x006228d4u), 0x18);
-    g.d_006228ec = 0;   /* FUN_0056ffb6: not in native builds */
+    g.d_006228ec = 0;   /* unwind_funclet_0056ffb6: not in native builds */
     memcpy(&g.d_006228f0, IMG(0x006228f0u), 0x8);
     g.d_006228f8 = (uptr)((u8 *)&g.d_006228fc + 20);
     memcpy(&g.d_006228fc, IMG(0x006228fcu), 0x18);
-    g.d_00622914 = 0;   /* FUN_0057075c: not in native builds */
+    g.d_00622914 = 0;   /* unwind_funclet_0057075c: not in native builds */
     memcpy(&g.d_00622918, IMG(0x00622918u), 0x8);
     g.d_00622920 = (uptr)((u8 *)&g.d_00622924 + 20);
     memcpy(&g.d_00622924, IMG(0x00622924u), 0x18);
-    g.d_0062293c = 0;   /* FUN_00570fa2: not in native builds */
+    g.d_0062293c = 0;   /* unwind_funclet_00570fa2: not in native builds */
     memcpy(&g.d_00622940, IMG(0x00622940u), 0x8);
     g.d_00622948 = (uptr)((u8 *)&g.d_0062294c + 20);
     memcpy(&g.d_0062294c, IMG(0x0062294cu), 0x18);
-    g.d_00622964 = 0;   /* FUN_005718ec: not in native builds */
+    g.d_00622964 = 0;   /* unwind_funclet_005718ec: not in native builds */
     memcpy(&g.d_00622968, IMG(0x00622968u), 0x8);
     g.d_00622970 = (uptr)((u8 *)&g.d_00622974 + 20);
     memcpy(&g.d_00622974, IMG(0x00622974u), 0x18);
-    g.d_0062298c = 0;   /* FUN_00571baa: not in native builds */
+    g.d_0062298c = 0;   /* unwind_funclet_00571baa: not in native builds */
     memcpy(&g.d_00622990, IMG(0x00622990u), 0x8);
     g.d_00622998 = (uptr)((u8 *)&g.d_0062299c + 20);
     memcpy(&g.d_0062299c, IMG(0x0062299cu), 0x18);
-    g.d_006229b4 = 0;   /* FUN_00572065: not in native builds */
+    g.d_006229b4 = 0;   /* unwind_funclet_00572065: not in native builds */
     memcpy(&g.d_006229b8, IMG(0x006229b8u), 0x8);
     g.d_006229c0 = (uptr)((u8 *)&g.d_006229c4 + 20);
     memcpy(&g.d_006229c4, IMG(0x006229c4u), 0x18);
-    g.d_006229dc = 0;   /* FUN_00573adc: not in native builds */
+    g.d_006229dc = 0;   /* unwind_funclet_00573adc: not in native builds */
     memcpy(&g.d_006229e0, IMG(0x006229e0u), 0x8);
     g.d_006229e8 = (uptr)((u8 *)&g.d_006229ec + 20);
     memcpy(&g.d_006229ec, IMG(0x006229ecu), 0x18);
-    g.d_00622a04 = 0;   /* FUN_00574218: not in native builds */
+    g.d_00622a04 = 0;   /* unwind_funclet_00574218: not in native builds */
     memcpy(&g.d_00622a08, IMG(0x00622a08u), 0x4);
-    g.d_00622a0c = 0;   /* FUN_0057420c: not in native builds */
+    g.d_00622a0c = 0;   /* unwind_funclet_0057420c: not in native builds */
     memcpy(&g.d_00622a10, IMG(0x00622a10u), 0x8);
     g.d_00622a18 = (uptr)((u8 *)&g.d_00622a1c + 20);
     memcpy(&g.d_00622a1c, IMG(0x00622a1cu), 0x18);
-    g.d_00622a34 = 0;   /* FUN_005767b3: not in native builds */
+    g.d_00622a34 = 0;   /* unwind_funclet_005767b3: not in native builds */
     memcpy(&g.d_00622a38, IMG(0x00622a38u), 0x4);
-    g.d_00622a3c = 0;   /* FUN_005767a7: not in native builds */
+    g.d_00622a3c = 0;   /* unwind_funclet_005767a7: not in native builds */
     memcpy(&g.d_00622a40, IMG(0x00622a40u), 0x30);
     g.d_00622a70 = (uptr)((u8 *)&g.d_00622a74 + 20);
     memcpy(&g.d_00622a74, IMG(0x00622a74u), 0x18);
@@ -6036,19 +6036,19 @@ void gamedata_init(void)
     memcpy(&g.d_00622a90, IMG(0x00622a90u), 0x8);
     g.d_00622a98 = (uptr)((u8 *)&g.d_00622a9c + 20);
     memcpy(&g.d_00622a9c, IMG(0x00622a9cu), 0x18);
-    g.d_00622ab4 = 0;   /* FUN_005787bd: not in native builds */
+    g.d_00622ab4 = 0;   /* unwind_funclet_005787bd: not in native builds */
     memcpy(&g.d_00622ab8, IMG(0x00622ab8u), 0x10);
     g.d_00622ac8 = (uptr)((u8 *)&g.d_00622acc + 20);
     memcpy(&g.d_00622acc, IMG(0x00622accu), 0x18);
-    g.d_00622ae4 = 0;   /* FUN_0057a661: not in native builds */
+    g.d_00622ae4 = 0;   /* unwind_funclet_0057a661: not in native builds */
     memcpy(&g.d_00622ae8, IMG(0x00622ae8u), 0x8);
     g.d_00622af0 = (uptr)((u8 *)&g.d_00622af4 + 20);
     memcpy(&g.d_00622af4, IMG(0x00622af4u), 0x18);
-    g.d_00622b0c = 0;   /* FUN_0057e29f: not in native builds */
+    g.d_00622b0c = 0;   /* unwind_funclet_0057e29f: not in native builds */
     memcpy(&g.d_00622b10, IMG(0x00622b10u), 0x8);
     g.d_00622b18 = (uptr)((u8 *)&g.d_00622b1c + 20);
     memcpy(&g.d_00622b1c, IMG(0x00622b1cu), 0x18);
-    g.d_00622b34 = 0;   /* FUN_0057f628: not in native builds */
+    g.d_00622b34 = 0;   /* unwind_funclet_0057f628: not in native builds */
     memcpy(&g.d_00622b38, IMG(0x00622b38u), 0x8);
     g.d_00622b40 = (uptr)((u8 *)&g.d_00622b44 + 20);
     memcpy(&g.d_00622b44, IMG(0x00622b44u), 0x18);
@@ -6056,13 +6056,13 @@ void gamedata_init(void)
     memcpy(&g.d_00622b60, IMG(0x00622b60u), 0x18);
     g.d_00622b78 = (uptr)((u8 *)&g.d_00622b7c + 20);
     memcpy(&g.d_00622b7c, IMG(0x00622b7cu), 0x18);
-    g.d_00622b94 = 0;   /* FUN_005875e9: not in native builds */
+    g.d_00622b94 = 0;   /* unwind_funclet_005875e9: not in native builds */
     memcpy(&g.d_00622b98, IMG(0x00622b98u), 0x4);
     g.d_00622b9c = 0x005875d9u;   /* not a known function or data */
     memcpy(&g.d_00622ba0, IMG(0x00622ba0u), 0x8);
     g.d_00622ba8 = (uptr)((u8 *)&g.d_00622bac + 20);
     memcpy(&g.d_00622bac, IMG(0x00622bacu), 0x18);
-    g.d_00622bc4 = 0;   /* FUN_00587666: not in native builds */
+    g.d_00622bc4 = 0;   /* unwind_funclet_00587666: not in native builds */
     memcpy(&g.d_00622bc8, IMG(0x00622bc8u), 0x10);
     g.d_00622bd8 = (uptr)((u8 *)&g.d_00622bdc + 20);
     memcpy(&g.d_00622bdc, IMG(0x00622bdcu), 0x18);
@@ -6072,43 +6072,43 @@ void gamedata_init(void)
     memcpy(&g.d_00622c00, IMG(0x00622c00u), 0x10);
     g.d_00622c10 = (uptr)((u8 *)&g.d_00622c14 + 20);
     memcpy(&g.d_00622c14, IMG(0x00622c14u), 0x18);
-    g.d_00622c2c = 0;   /* FUN_00589c54: not in native builds */
+    g.d_00622c2c = 0;   /* unwind_funclet_00589c54: not in native builds */
     memcpy(&g.d_00622c30, IMG(0x00622c30u), 0x10);
     g.d_00622c40 = (uptr)((u8 *)&g.d_00622c44 + 20);
     memcpy(&g.d_00622c44, IMG(0x00622c44u), 0x18);
-    g.d_00622c5c = 0;   /* FUN_0058abca: not in native builds */
+    g.d_00622c5c = 0;   /* unwind_funclet_0058abca: not in native builds */
     memcpy(&g.d_00622c60, IMG(0x00622c60u), 0x8);
     g.d_00622c68 = (uptr)((u8 *)&g.d_00622c6c + 20);
     memcpy(&g.d_00622c6c, IMG(0x00622c6cu), 0x18);
-    g.d_00622c84 = 0;   /* FUN_0058b87b: not in native builds */
+    g.d_00622c84 = 0;   /* unwind_funclet_0058b87b: not in native builds */
     memcpy(&g.d_00622c88, IMG(0x00622c88u), 0x4);
-    g.d_00622c8c = 0;   /* FUN_0058b86f: not in native builds */
+    g.d_00622c8c = 0;   /* unwind_funclet_0058b86f: not in native builds */
     memcpy(&g.d_00622c90, IMG(0x00622c90u), 0x4);
-    g.d_00622c94 = 0;   /* FUN_0058b859: not in native builds */
+    g.d_00622c94 = 0;   /* unwind_funclet_0058b859: not in native builds */
     memcpy(&g.d_00622c98, IMG(0x00622c98u), 0x18);
     g.d_00622cb0 = (uptr)((u8 *)&g.d_00622cb4 + 20);
     memcpy(&g.d_00622cb4, IMG(0x00622cb4u), 0x18);
-    g.d_00622ccc = 0;   /* FUN_0058d41e: not in native builds */
+    g.d_00622ccc = 0;   /* unwind_funclet_0058d41e: not in native builds */
     memcpy(&g.d_00622cd0, IMG(0x00622cd0u), 0x8);
     g.d_00622cd8 = (uptr)((u8 *)&g.d_00622cdc + 20);
     memcpy(&g.d_00622cdc, IMG(0x00622cdcu), 0x18);
-    g.d_00622cf4 = 0;   /* FUN_0058ddaa: not in native builds */
+    g.d_00622cf4 = 0;   /* unwind_funclet_0058ddaa: not in native builds */
     memcpy(&g.d_00622cf8, IMG(0x00622cf8u), 0x8);
     g.d_00622d00 = (uptr)((u8 *)&g.d_00622d04 + 20);
     memcpy(&g.d_00622d04, IMG(0x00622d04u), 0x18);
-    g.d_00622d1c = 0;   /* FUN_0058e5c4: not in native builds */
+    g.d_00622d1c = 0;   /* unwind_funclet_0058e5c4: not in native builds */
     memcpy(&g.d_00622d20, IMG(0x00622d20u), 0x18);
     g.d_00622d38 = (uptr)((u8 *)&g.d_00622d3c + 20);
     memcpy(&g.d_00622d3c, IMG(0x00622d3cu), 0x18);
-    g.d_00622d54 = 0;   /* FUN_00590607: not in native builds */
+    g.d_00622d54 = 0;   /* unwind_funclet_00590607: not in native builds */
     memcpy(&g.d_00622d58, IMG(0x00622d58u), 0x10);
     g.d_00622d68 = (uptr)((u8 *)&g.d_00622d6c + 20);
     memcpy(&g.d_00622d6c, IMG(0x00622d6cu), 0x18);
-    g.d_00622d84 = 0;   /* FUN_00597d4b: not in native builds */
+    g.d_00622d84 = 0;   /* unwind_funclet_00597d4b: not in native builds */
     memcpy(&g.d_00622d88, IMG(0x00622d88u), 0x8);
     g.d_00622d90 = (uptr)((u8 *)&g.d_00622d94 + 20);
     memcpy(&g.d_00622d94, IMG(0x00622d94u), 0x18);
-    g.d_00622dac = 0;   /* FUN_00598cc7: not in native builds */
+    g.d_00622dac = 0;   /* unwind_funclet_00598cc7: not in native builds */
     memcpy(&g.d_00622db0, IMG(0x00622db0u), 0x10);
     g.d_00622dc0 = (uptr)((u8 *)&g.d_00622dc4 + 20);
     memcpy(&g.d_00622dc4, IMG(0x00622dc4u), 0x18);
@@ -6116,7 +6116,7 @@ void gamedata_init(void)
     memcpy(&g.d_00622de0, IMG(0x00622de0u), 0x8);
     g.d_00622de8 = (uptr)((u8 *)&g.d_00622dec + 20);
     memcpy(&g.d_00622dec, IMG(0x00622decu), 0x18);
-    g.d_00622e04 = 0;   /* FUN_0059adc8: not in native builds */
+    g.d_00622e04 = 0;   /* unwind_funclet_0059adc8: not in native builds */
     memcpy(&g.d_00622e08, IMG(0x00622e08u), 0x10);
     g.d_00622e18 = (uptr)((u8 *)&g.d_00622e1c + 20);
     memcpy(&g.d_00622e1c, IMG(0x00622e1cu), 0x18);
@@ -6148,115 +6148,115 @@ void gamedata_init(void)
     memcpy(&g.d_00622eb0, IMG(0x00622eb0u), 0x18);
     g.d_00622ec8 = (uptr)((u8 *)&g.d_00622ecc + 20);
     memcpy(&g.d_00622ecc, IMG(0x00622eccu), 0x18);
-    g.d_00622ee4 = 0;   /* FUN_005ab07f: not in native builds */
+    g.d_00622ee4 = 0;   /* unwind_funclet_005ab07f: not in native builds */
     memcpy(&g.d_00622ee8, IMG(0x00622ee8u), 0x8);
     g.d_00622ef0 = (uptr)((u8 *)&g.d_00622ef4 + 20);
     memcpy(&g.d_00622ef4, IMG(0x00622ef4u), 0x18);
-    g.d_00622f0c = 0;   /* FUN_005abfdb: not in native builds */
+    g.d_00622f0c = 0;   /* unwind_funclet_005abfdb: not in native builds */
     memcpy(&g.d_00622f10, IMG(0x00622f10u), 0x10);
     g.d_00622f20 = (uptr)((u8 *)&g.d_00622f24 + 20);
     memcpy(&g.d_00622f24, IMG(0x00622f24u), 0x18);
-    g.d_00622f3c = 0;   /* FUN_005aebef: not in native builds */
+    g.d_00622f3c = 0;   /* unwind_funclet_005aebef: not in native builds */
     memcpy(&g.d_00622f40, IMG(0x00622f40u), 0x8);
     g.d_00622f48 = (uptr)((u8 *)&g.d_00622f4c + 20);
     memcpy(&g.d_00622f4c, IMG(0x00622f4cu), 0x18);
-    g.d_00622f64 = 0;   /* FUN_005aed0d: not in native builds */
+    g.d_00622f64 = 0;   /* unwind_funclet_005aed0d: not in native builds */
     memcpy(&g.d_00622f68, IMG(0x00622f68u), 0x10);
     g.d_00622f78 = (uptr)((u8 *)&g.d_00622f7c + 20);
     memcpy(&g.d_00622f7c, IMG(0x00622f7cu), 0x18);
-    g.d_00622f94 = 0;   /* FUN_005b1a05: not in native builds */
+    g.d_00622f94 = 0;   /* unwind_funclet_005b1a05: not in native builds */
     memcpy(&g.d_00622f98, IMG(0x00622f98u), 0x4);
     g.d_00622f9c = 0x005b19f5u;   /* not a known function or data */
     memcpy(&g.d_00622fa0, IMG(0x00622fa0u), 0x8);
     g.d_00622fa8 = (uptr)((u8 *)&g.d_00622fac + 20);
     memcpy(&g.d_00622fac, IMG(0x00622facu), 0x18);
-    g.d_00622fc4 = 0;   /* FUN_005b1a82: not in native builds */
+    g.d_00622fc4 = 0;   /* unwind_funclet_005b1a82: not in native builds */
     memcpy(&g.d_00622fc8, IMG(0x00622fc8u), 0x10);
     g.d_00622fd8 = (uptr)((u8 *)&g.d_00622fdc + 20);
     memcpy(&g.d_00622fdc, IMG(0x00622fdcu), 0x18);
-    g.d_00622ff4 = 0;   /* FUN_005b6dab: not in native builds */
+    g.d_00622ff4 = 0;   /* unwind_funclet_005b6dab: not in native builds */
     memcpy(&g.d_00622ff8, IMG(0x00622ff8u), 0x4);
-    g.d_00622ffc = 0;   /* FUN_005b6d9f: not in native builds */
+    g.d_00622ffc = 0;   /* unwind_funclet_005b6d9f: not in native builds */
     memcpy(&g.d_00623000, IMG(0x00623000u), 0x10);
     g.d_00623010 = (uptr)((u8 *)&g.d_00623014 + 20);
     memcpy(&g.d_00623014, IMG(0x00623014u), 0x18);
-    g.d_0062302c = 0;   /* FUN_005be940: not in native builds */
+    g.d_0062302c = 0;   /* unwind_funclet_005be940: not in native builds */
     memcpy(&g.d_00623030, IMG(0x00623030u), 0x8);
     g.d_00623038 = (uptr)((u8 *)&g.d_0062303c + 20);
     memcpy(&g.d_0062303c, IMG(0x0062303cu), 0x18);
-    g.d_00623054 = 0;   /* FUN_005bf04a: not in native builds */
+    g.d_00623054 = 0;   /* unwind_funclet_005bf04a: not in native builds */
     memcpy(&g.d_00623058, IMG(0x00623058u), 0x8);
     g.d_00623060 = (uptr)((u8 *)&g.d_00623064 + 20);
     memcpy(&g.d_00623064, IMG(0x00623064u), 0x18);
-    g.d_0062307c = 0;   /* FUN_005bf5ba: not in native builds */
+    g.d_0062307c = 0;   /* unwind_funclet_005bf5ba: not in native builds */
     memcpy(&g.d_00623080, IMG(0x00623080u), 0x8);
     g.d_00623088 = (uptr)((u8 *)&g.d_0062308c + 20);
     memcpy(&g.d_0062308c, IMG(0x0062308cu), 0x18);
-    g.d_006230a4 = 0;   /* FUN_005c000d: not in native builds */
+    g.d_006230a4 = 0;   /* unwind_funclet_005c000d: not in native builds */
     memcpy(&g.d_006230a8, IMG(0x006230a8u), 0x8);
     g.d_006230b0 = (uptr)((u8 *)&g.d_006230b4 + 20);
     memcpy(&g.d_006230b4, IMG(0x006230b4u), 0x18);
-    g.d_006230cc = 0;   /* FUN_005c2786: not in native builds */
+    g.d_006230cc = 0;   /* unwind_funclet_005c2786: not in native builds */
     memcpy(&g.d_006230d0, IMG(0x006230d0u), 0x8);
     g.d_006230d8 = (uptr)((u8 *)&g.d_006230dc + 20);
     memcpy(&g.d_006230dc, IMG(0x006230dcu), 0x18);
-    g.d_006230f4 = 0;   /* FUN_005c2e37: not in native builds */
+    g.d_006230f4 = 0;   /* unwind_funclet_005c2e37: not in native builds */
     memcpy(&g.d_006230f8, IMG(0x006230f8u), 0x8);
     g.d_00623100 = (uptr)((u8 *)&g.d_00623104 + 20);
     memcpy(&g.d_00623104, IMG(0x00623104u), 0x18);
-    g.d_0062311c = 0;   /* FUN_005c384d: not in native builds */
+    g.d_0062311c = 0;   /* unwind_funclet_005c384d: not in native builds */
     memcpy(&g.d_00623120, IMG(0x00623120u), 0x8);
     g.d_00623128 = (uptr)((u8 *)&g.d_0062312c + 20);
     memcpy(&g.d_0062312c, IMG(0x0062312cu), 0x18);
-    g.d_00623144 = 0;   /* FUN_005c3ed5: not in native builds */
+    g.d_00623144 = 0;   /* unwind_funclet_005c3ed5: not in native builds */
     memcpy(&g.d_00623148, IMG(0x00623148u), 0x8);
     g.d_00623150 = (uptr)((u8 *)&g.d_00623154 + 20);
     memcpy(&g.d_00623154, IMG(0x00623154u), 0x18);
-    g.d_0062316c = 0;   /* FUN_005c434e: not in native builds */
+    g.d_0062316c = 0;   /* unwind_funclet_005c434e: not in native builds */
     memcpy(&g.d_00623170, IMG(0x00623170u), 0x8);
     g.d_00623178 = (uptr)((u8 *)&g.d_0062317c + 20);
     memcpy(&g.d_0062317c, IMG(0x0062317cu), 0x18);
-    g.d_00623194 = 0;   /* FUN_005c4a00: not in native builds */
+    g.d_00623194 = 0;   /* unwind_funclet_005c4a00: not in native builds */
     memcpy(&g.d_00623198, IMG(0x00623198u), 0x8);
     g.d_006231a0 = (uptr)((u8 *)&g.d_006231a4 + 20);
     memcpy(&g.d_006231a4, IMG(0x006231a4u), 0x18);
-    g.d_006231bc = 0;   /* FUN_005c68ca: not in native builds */
+    g.d_006231bc = 0;   /* unwind_funclet_005c68ca: not in native builds */
     memcpy(&g.d_006231c0, IMG(0x006231c0u), 0x8);
     g.d_006231c8 = (uptr)((u8 *)&g.d_006231cc + 20);
     memcpy(&g.d_006231cc, IMG(0x006231ccu), 0x18);
-    g.d_006231e4 = 0;   /* FUN_005c6a1c: not in native builds */
+    g.d_006231e4 = 0;   /* unwind_funclet_005c6a1c: not in native builds */
     memcpy(&g.d_006231e8, IMG(0x006231e8u), 0x8);
     g.d_006231f0 = (uptr)((u8 *)&g.d_006231f4 + 20);
     memcpy(&g.d_006231f4, IMG(0x006231f4u), 0x18);
-    g.d_0062320c = 0;   /* FUN_005c76e4: not in native builds */
+    g.d_0062320c = 0;   /* unwind_funclet_005c76e4: not in native builds */
     memcpy(&g.d_00623210, IMG(0x00623210u), 0x8);
     g.d_00623218 = (uptr)((u8 *)&g.d_0062321c + 20);
     memcpy(&g.d_0062321c, IMG(0x0062321cu), 0x18);
-    g.d_00623234 = 0;   /* FUN_005c7873: not in native builds */
+    g.d_00623234 = 0;   /* unwind_funclet_005c7873: not in native builds */
     memcpy(&g.d_00623238, IMG(0x00623238u), 0x8);
     g.d_00623240 = (uptr)((u8 *)&g.d_00623244 + 20);
     memcpy(&g.d_00623244, IMG(0x00623244u), 0x18);
-    g.d_0062325c = 0;   /* FUN_005c7998: not in native builds */
+    g.d_0062325c = 0;   /* unwind_funclet_005c7998: not in native builds */
     memcpy(&g.d_00623260, IMG(0x00623260u), 0x8);
     g.d_00623268 = (uptr)((u8 *)&g.d_0062326c + 20);
     memcpy(&g.d_0062326c, IMG(0x0062326cu), 0x18);
-    g.d_00623284 = 0;   /* FUN_005cdf2d: not in native builds */
+    g.d_00623284 = 0;   /* unwind_funclet_005cdf2d: not in native builds */
     memcpy(&g.d_00623288, IMG(0x00623288u), 0x8);
     g.d_00623290 = (uptr)((u8 *)&g.d_00623294 + 20);
     memcpy(&g.d_00623294, IMG(0x00623294u), 0x18);
-    g.d_006232ac = 0;   /* FUN_005ce595: not in native builds */
+    g.d_006232ac = 0;   /* unwind_funclet_005ce595: not in native builds */
     memcpy(&g.d_006232b0, IMG(0x006232b0u), 0x8);
     g.d_006232b8 = (uptr)((u8 *)&g.d_006232bc + 20);
     memcpy(&g.d_006232bc, IMG(0x006232bcu), 0x18);
-    g.d_006232d4 = 0;   /* FUN_005ce6fd: not in native builds */
+    g.d_006232d4 = 0;   /* unwind_funclet_005ce6fd: not in native builds */
     memcpy(&g.d_006232d8, IMG(0x006232d8u), 0x8);
     g.d_006232e0 = (uptr)((u8 *)&g.d_006232e4 + 20);
     memcpy(&g.d_006232e4, IMG(0x006232e4u), 0x18);
-    g.d_006232fc = 0;   /* FUN_005ce9c9: not in native builds */
+    g.d_006232fc = 0;   /* unwind_funclet_005ce9c9: not in native builds */
     memcpy(&g.d_00623300, IMG(0x00623300u), 0x8);
     g.d_00623308 = (uptr)((u8 *)&g.d_0062330c + 20);
     memcpy(&g.d_0062330c, IMG(0x0062330cu), 0x18);
-    g.d_00623324 = 0;   /* FUN_005ceb8e: not in native builds */
+    g.d_00623324 = 0;   /* unwind_funclet_005ceb8e: not in native builds */
     memcpy(&g.d_00623328, IMG(0x00623328u), 0x8);
     g.d_00623330 = (uptr)((u8 *)&g.d_00623334 + 20);
     memcpy(&g.d_00623334, IMG(0x00623334u), 0x18);
@@ -6274,13 +6274,13 @@ void gamedata_init(void)
     memcpy(&g.d_00623390, IMG(0x00623390u), 0x8);
     g.d_00623398 = (uptr)((u8 *)&g.d_0062339c + 20);
     memcpy(&g.d_0062339c, IMG(0x0062339cu), 0x18);
-    g.d_006233b4 = 0;   /* FUN_005dd25d: not in native builds */
+    g.d_006233b4 = 0;   /* unwind_funclet_005dd25d: not in native builds */
     memcpy(&g.d_006233b8, IMG(0x006233b8u), 0x4);
-    g.d_006233bc = 0;   /* FUN_005dd24e: not in native builds */
+    g.d_006233bc = 0;   /* unwind_funclet_005dd24e: not in native builds */
     memcpy(&g.d_006233c0, IMG(0x006233c0u), 0x4);
-    g.d_006233c4 = 0;   /* FUN_005dd23f: not in native builds */
+    g.d_006233c4 = 0;   /* unwind_funclet_005dd23f: not in native builds */
     memcpy(&g.d_006233c8, IMG(0x006233c8u), 0x4);
-    g.d_006233cc = 0;   /* FUN_005dd230: not in native builds */
+    g.d_006233cc = 0;   /* unwind_funclet_005dd230: not in native builds */
     memcpy(&g.d_006233d0, IMG(0x006233d0u), 0x8);
     g.d_006233d8 = (uptr)((u8 *)&g.d_006233dc + 20);
     memcpy(&g.d_006233dc, IMG(0x006233dcu), 0x18);
@@ -6290,23 +6290,23 @@ void gamedata_init(void)
     memcpy(&g.d_00623400, IMG(0x00623400u), 0x8);
     g.d_00623408 = (uptr)((u8 *)&g.d_0062340c + 20);
     memcpy(&g.d_0062340c, IMG(0x0062340cu), 0x18);
-    g.d_00623424 = 0;   /* FUN_005df687: not in native builds */
+    g.d_00623424 = 0;   /* unwind_funclet_005df687: not in native builds */
     memcpy(&g.d_00623428, IMG(0x00623428u), 0x4);
-    g.d_0062342c = 0;   /* FUN_005df67b: not in native builds */
+    g.d_0062342c = 0;   /* unwind_funclet_005df67b: not in native builds */
     memcpy(&g.d_00623430, IMG(0x00623430u), 0x8);
     g.d_00623438 = (uptr)((u8 *)&g.d_0062343c + 20);
     memcpy(&g.d_0062343c, IMG(0x0062343cu), 0x18);
-    g.d_00623454 = 0;   /* FUN_005e083e: not in native builds */
+    g.d_00623454 = 0;   /* unwind_funclet_005e083e: not in native builds */
     memcpy(&g.d_00623458, IMG(0x00623458u), 0x4);
-    g.d_0062345c = 0;   /* FUN_005e0832: not in native builds */
+    g.d_0062345c = 0;   /* unwind_funclet_005e0832: not in native builds */
     memcpy(&g.d_00623460, IMG(0x00623460u), 0x4);
-    g.d_00623464 = 0;   /* FUN_005e0826: not in native builds */
+    g.d_00623464 = 0;   /* unwind_funclet_005e0826: not in native builds */
     memcpy(&g.d_00623468, IMG(0x00623468u), 0x4);
-    g.d_0062346c = 0;   /* FUN_005e081a: not in native builds */
+    g.d_0062346c = 0;   /* unwind_funclet_005e081a: not in native builds */
     memcpy(&g.d_00623470, IMG(0x00623470u), 0x4);
-    g.d_00623474 = 0;   /* FUN_005e080e: not in native builds */
+    g.d_00623474 = 0;   /* unwind_funclet_005e080e: not in native builds */
     memcpy(&g.d_00623478, IMG(0x00623478u), 0x4);
-    g.d_0062347c = 0;   /* FUN_005e0802: not in native builds */
+    g.d_0062347c = 0;   /* unwind_funclet_005e0802: not in native builds */
     memcpy(&g.d_00623480, IMG(0x00623480u), 0x8);
     g.d_00623488 = (uptr)((u8 *)&g.d_0062348c + 20);
     memcpy(&g.d_0062348c, IMG(0x0062348cu), 0x18);
@@ -6340,7 +6340,7 @@ void gamedata_init(void)
     memcpy(&g.d_00623540, IMG(0x00623540u), 0x8);
     g.d_00623548 = (uptr)((u8 *)&g.d_0062354c + 20);
     memcpy(&g.d_0062354c, IMG(0x0062354cu), 0x18);
-    g.d_00623564 = 0;   /* FUN_005f04fe: not in native builds */
+    g.d_00623564 = 0;   /* unwind_funclet_005f04fe: not in native builds */
     memcpy(&g.d_00623568, IMG(0x00623568u), 0x8);
     g.d_00623570 = (uptr)((u8 *)&g.d_00623574 + 20);
     memcpy(&g.d_00623574, IMG(0x00623574u), 0x18);
@@ -6370,7 +6370,7 @@ void gamedata_init(void)
     memcpy(&g.d_00623660, IMG(0x00623660u), 0x8);
     g.d_00623668 = (uptr)((u8 *)&g.d_0062366c + 20);
     memcpy(&g.d_0062366c, IMG(0x0062366cu), 0x18);
-    g.d_00623684 = 0;   /* FUN_005f11d2: not in native builds */
+    g.d_00623684 = 0;   /* unwind_funclet_005f11d2: not in native builds */
     memcpy(&g.d_00623688, IMG(0x00623688u), 0xa7c);
     g.d_00624104 = 0;   /* FUN_00600f50: not in native builds */
     memcpy(&g.d_00624108, IMG(0x00624108u), 0x100);

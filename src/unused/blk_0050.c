@@ -6,7 +6,7 @@ void __thiscall wnd_repaint_and_show(SurfaceWindow *this)
 
 {
   wnd_repaint(this);
-  window_show((C_004083b0_4 *)this);
+  window_show((WindowObjectView *)this);
   return;
 }
 

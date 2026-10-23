@@ -4,7 +4,7 @@
 
 /* 004d0160 auto */
 #define net_host_handoff_stage (*(char *)((u8 *)&g.d_006ad698))
-#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
+#define spaceship_wnd_open_ticks_i32 (*(i32 *)((u8 *)&g.d_006a5b08))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
 void __cdecl spaceship_wnd_net_idle(void)
@@ -13,14 +13,14 @@ void __cdecl spaceship_wnd_net_idle(void)
   int iVar1;
   
   net_process_messages((NetSession *)&net_session,1,0);
-  if ((net_host_handoff_stage == '\0') && (iVar1 = timer_ticks(), iVar1 - _DAT_006a5b08 < 0x4b1)) {
+  if ((net_host_handoff_stage == '\0') && (iVar1 = timer_ticks(), iVar1 - spaceship_wnd_open_ticks_i32 < 0x4b1)) {
     return;
   }
-  wnd_end_modal_loop((C_00408010_b8 *)spaceship_wnd);
+  wnd_end_modal_loop((ModalMenuWindow *)spaceship_wnd);
   return;
 }
 #undef net_host_handoff_stage
-#undef _DAT_006a5b08
+#undef spaceship_wnd_open_ticks_i32
 
 /* 004d01ae auto */
 #define local_8 (*(int *)(frame_ + FRAME_OFF(0)))
@@ -67,7 +67,7 @@ i32 __cdecl spaceship_wnd_run(iptr param_1)
       iVar2 = spaceship_wnd_init(local_2188);
       if (iVar2 == 0) {
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_004d0314 */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
+        /* inlined unwind funclet 004d0314 */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
         uVar1 = 0;
       }
       else {
@@ -78,7 +78,7 @@ i32 __cdecl spaceship_wnd_run(iptr param_1)
           spaceship_wnd_run_modal(local_2188);
         }
         local_8 = 0xffffffff;
-        /* inlined unwind funclet FUN_004d0314 */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
+        /* inlined unwind funclet 004d0314 */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
         uVar1 = 1;
       }
     }
@@ -123,13 +123,13 @@ i32 __cdecl spaceship_wnd_show_for_civ(iptr param_1)
         iVar2 = spaceship_wnd_init(local_2188);
         if (iVar2 == 0) {
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_004d041a */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
+          /* inlined unwind funclet 004d041a */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
           uVar1 = 0;
         }
         else {
           spaceship_wnd_present(local_2188);
           local_8 = 0xffffffff;
-          /* inlined unwind funclet FUN_004d041a */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
+          /* inlined unwind funclet 004d041a */ { spaceship_wnd_dtor((SpaceshipWindowDtorView *)((iptr)&local_2188)); }
           uVar1 = 1;
         }
       }
@@ -193,7 +193,7 @@ SpaceshipWindow * __thiscall spaceship_wnd_ctor(SpaceshipWindow *this,u32 param_
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
   
   local_8 = 0xffffffff;
-  wnd_ctor((C_00408010_b8 *)this);
+  wnd_ctor((ModalMenuWindow *)this);
   local_8 = 0;
   surfwnd_ctor((SurfaceWindow *)&this->control_list);
   (*(i8 *)((char *)&local_8 + 0)) = 1;
@@ -289,37 +289,37 @@ i32 __thiscall spaceship_wnd_dtor(SpaceshipWindowDtorView *this)
     this->blink_timer = 0;
   }
   (*(i8 *)((char *)&local_8 + 0)) = 0xe;
-  /* inlined unwind funclet FUN_004d0a56 */ { clickmap_dtor(*(int *)((iptr)&this) + 0xae4); }
+  /* inlined unwind funclet 004d0a56 */ { clickmap_dtor(*(int *)((iptr)&this) + 0xae4); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xd;
-  /* inlined unwind funclet FUN_004d0a65 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xaa4)); }
+  /* inlined unwind funclet 004d0a65 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xaa4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xc;
-  /* inlined unwind funclet FUN_004d0a74 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa68)); }
+  /* inlined unwind funclet 004d0a74 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa68)); }
   (*(i8 *)((char *)&local_8 + 0)) = 0xb;
-  /* inlined unwind funclet FUN_004d0a83 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa2c)); }
+  /* inlined unwind funclet 004d0a83 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0xa2c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 10;
-  /* inlined unwind funclet FUN_004d0a92 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9f0)); }
+  /* inlined unwind funclet 004d0a92 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9f0)); }
   (*(i8 *)((char *)&local_8 + 0)) = 9;
-  /* inlined unwind funclet FUN_004d0aa1 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9b4)); }
+  /* inlined unwind funclet 004d0aa1 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x9b4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 8;
-  /* inlined unwind funclet FUN_004d0ab0 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x978)); }
+  /* inlined unwind funclet 004d0ab0 */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x978)); }
   (*(i8 *)((char *)&local_8 + 0)) = 7;
-  /* inlined unwind funclet FUN_004d0abf */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x93c)); }
+  /* inlined unwind funclet 004d0abf */ { sprite_destroy((Sprite *)(*(int *)((iptr)&this) + 0x93c)); }
   (*(i8 *)((char *)&local_8 + 0)) = 6;
-  /* inlined unwind funclet FUN_004d0ace */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x8f4)); }
+  /* inlined unwind funclet 004d0ace */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x8f4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 5;
-  /* inlined unwind funclet FUN_004d0add */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8d4)); }
+  /* inlined unwind funclet 004d0add */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8d4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 4;
-  /* inlined unwind funclet FUN_004d0aec */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8cc)); }
+  /* inlined unwind funclet 004d0aec */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8cc)); }
   (*(i8 *)((char *)&local_8 + 0)) = 3;
-  /* inlined unwind funclet FUN_004d0afb */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8c4)); }
+  /* inlined unwind funclet 004d0afb */ { font_destroy((GameFont *)(*(int *)((iptr)&this) + 0x8c4)); }
   (*(i8 *)((char *)&local_8 + 0)) = 2;
-  /* inlined unwind funclet FUN_004d0b0a */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x1f8)); }
+  /* inlined unwind funclet 004d0b0a */ { palette_destroy((GamePalette *)(*(int *)((iptr)&this) + 0x1f8)); }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_004d0b19 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 500)); }
+  /* inlined unwind funclet 004d0b19 */ { dll_free((DllHandle *)(*(int *)((iptr)&this) + 500)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_004d0b28 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
+  /* inlined unwind funclet 004d0b28 */ { surfwnd_dtor((SurfaceWindow *)(*(int *)((iptr)&this) + 0xb8)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004d0b37 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
+  /* inlined unwind funclet 004d0b37 */ { wnd_dtor(*(WndBase **)((iptr)&this)); }
   return uStack_10;
 }
 #undef uStack_10
@@ -346,7 +346,7 @@ i32 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
     dll_handle_load((DllHandle *)(this->pad_1e4 + 0x10),(iptr)local_84);
     wnd_set_cursor((WndBase *)this,0x1fc);
     spaceship_calc_stats(this->ship_civ,1);
-    spaceship_wnd_build_stats_text((C_00408010_6f0 *)this);
+    spaceship_wnd_build_stats_text((PictureFrameWindow *)this);
     if ((civs[this->ship_civ].spaceship_parts[3] != 0) && (spaceship_success_pct != 0)) {
       this->launch_state = 1;
     }
@@ -354,7 +354,7 @@ i32 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
     if (iVar1 != 0) {
       this->launch_state = 3;
     }
-    iVar1 = spaceship_wnd_create((C_00408010_6f0 *)this);
+    iVar1 = spaceship_wnd_create((PictureFrameWindow *)this);
     if (iVar1 == 0) {
       uVar2 = 0;
     }
@@ -384,7 +384,7 @@ i32 __thiscall spaceship_wnd_init(SpaceshipWindow *this)
 #undef local_84
 
 /* 004d0d64 auto */
-uint __thiscall spaceship_wnd_create(C_00408010_6f0 *this)
+uint __thiscall spaceship_wnd_create(PictureFrameWindow *this)
 
 {
   int iVar1;
@@ -402,7 +402,7 @@ uint __thiscall spaceship_wnd_create(C_00408010_6f0 *this)
                     ((DibSurface *)&this->control_list,499,10,0xec,(iptr)(this->pad_1e4 + 0x14));
   if (iVar1 != 0) {
     wnd_center((WndCenterView *)(this->pad_c8 + 0x38));
-    wnd_set_keydown_handler((C_00408130 *)(this->pad_c8 + 0x48),ADDR(0x403a35, spaceship_wnd_on_key));
+    wnd_set_keydown_handler((WndEventHandlers *)(this->pad_c8 + 0x48),ADDR(0x403a35, spaceship_wnd_on_key));
     wnd_set_mousemove_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x402513, spaceship_wnd_on_mousemove));
     wnd_set_lbuttondown_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x402d83, spaceship_wnd_on_lbuttondown));
     wnd_set_lbuttonup_any_handler((WndHandlersMouseSetView *)(this->pad_c8 + 0x48),ADDR(0x4038b9, spaceship_wnd_on_lbuttonup));
@@ -411,7 +411,7 @@ uint __thiscall spaceship_wnd_create(C_00408010_6f0 *this)
 }
 
 /* 004d0ea6 auto */
-#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
+#define spaceship_wnd_open_ticks_i32 (*(i32 *)((u8 *)&g.d_006a5b08))
 #define local_a4 (*(i8 (*)[16])(frame_ + FRAME_OFF(4)))
 #define local_94 (*(Sprite *)(frame_ + FRAME_OFF(20)))
 #define local_58 (*(DibSurface *)(frame_ + FRAME_OFF(80)))
@@ -436,9 +436,9 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
   iVar1 = spaceship_wnd_render_ship(this);
   if (iVar1 == 0) {
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
+    /* inlined unwind funclet 004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
+    /* inlined unwind funclet 004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
   }
   else {
     if (this->launch_state == 3) {
@@ -481,7 +481,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
     wnd_handle_show_raise((WndBase *)this);
     wnd_flush_paint();
     wnd_set_palette((WndBase *)this,(iptr)(this->pad_1e4 + 0x14));
-    window_show((C_004083b0_4 *)&this->control_list);
+    window_show((WindowObjectView *)&this->control_list);
     wnd_flush_paint();
     wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)(this->pad_1e4 + 0x14));
     spaceship_wnd_setup_hotspots(this);
@@ -499,11 +499,11 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
     wnd_set_capture((WndBase *)(this->pad_c8 + 0x38));
     input_flush_events();
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_c8 + 0x38),ADDR(0x4014d3, spaceship_wnd_net_idle));
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_c8 + 0x38),ADDR(0x4014d3, spaceship_wnd_net_idle));
     }
-    _DAT_006a5b08 = timer_ticks();
-    wnd_run_modal_loop((C_00408010_b8 *)(this->pad_c8 + 0x38));
-    wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_c8 + 0x38),0);
+    spaceship_wnd_open_ticks_i32 = timer_ticks();
+    wnd_run_modal_loop((ModalMenuWindow *)(this->pad_c8 + 0x38));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_c8 + 0x38),0);
     wnd_release_capture((WndBase *)(this->pad_c8 + 0x38));
     if (this->flight_timer != 0) {
       game_timer_destroy(this->flight_timer);
@@ -532,13 +532,13 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
     wnd_hide((WndBase *)this);
     wnd_flush_paint();
     local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-    /* inlined unwind funclet FUN_004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
+    /* inlined unwind funclet 004d138b */ { sprite_destroy((Sprite *)((iptr)&local_94)); }
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
+    /* inlined unwind funclet 004d1397 */ { surface_dtor((DibSurface *)((iptr)&local_58)); }
   }
   return;
 }
-#undef _DAT_006a5b08
+#undef spaceship_wnd_open_ticks_i32
 #undef local_a4
 #undef local_94
 #undef local_58
@@ -548,7 +548,7 @@ void __thiscall spaceship_wnd_run_modal(SpaceshipWindow *this)
 
 /* 004d13b8 auto */
 #define human_civ (*(iptr *)((u8 *)&g.d_006d1da0))
-#define _DAT_006a5b08 (*(i32 *)((u8 *)&g.d_006a5b08))
+#define spaceship_wnd_open_ticks_i32 (*(i32 *)((u8 *)&g.d_006a5b08))
 #define local_14 (*(tagRECT *)(frame_ + FRAME_OFF(4)))
 /* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
@@ -573,7 +573,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *this)
       wnd_handle_show_raise((WndBase *)this);
       wnd_flush_paint();
       wnd_set_palette((WndBase *)this,(iptr)(this->pad_1e4 + 0x14));
-      window_show((C_004083b0_4 *)&this->control_list);
+      window_show((WindowObjectView *)&this->control_list);
       wnd_flush_paint();
       wnd_set_palette((WndBase *)&main_frame_wnd,(iptr)(this->pad_1e4 + 0x14))
       ;
@@ -607,11 +607,11 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *this)
         wnd_set_capture((WndBase *)(this->pad_c8 + 0x38));
         input_flush_events();
         if (2 < game.multiplayer) {
-          wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_c8 + 0x38),ADDR(0x4014d3, spaceship_wnd_net_idle));
+          wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_c8 + 0x38),ADDR(0x4014d3, spaceship_wnd_net_idle));
         }
-        _DAT_006a5b08 = timer_ticks();
-        wnd_run_modal_loop((C_00408010_b8 *)(this->pad_c8 + 0x38));
-        wnd_set_modal_idle_callback((C_00408010_b8 *)(this->pad_c8 + 0x38),0);
+        spaceship_wnd_open_ticks_i32 = timer_ticks();
+        wnd_run_modal_loop((ModalMenuWindow *)(this->pad_c8 + 0x38));
+        wnd_set_modal_idle_callback((ModalMenuWindow *)(this->pad_c8 + 0x38),0);
         wnd_release_capture((WndBase *)(this->pad_c8 + 0x38));
         if (this->flight_timer != 0) {
           game_timer_destroy(this->flight_timer);
@@ -645,7 +645,7 @@ void __thiscall spaceship_wnd_present(SpaceshipWindow *this)
   return;
 }
 #undef human_civ
-#undef _DAT_006a5b08
+#undef spaceship_wnd_open_ticks_i32
 #undef local_14
 
 /* 004d1725 auto */
@@ -675,7 +675,7 @@ void __thiscall spaceship_wnd_launch_sequence(SpaceshipWindow *this)
 #define spaceship_success_pct (*(i32 *)((u8 *)&g.d_006ad0ec))
 #define spaceship_support_pct (*(i32 *)((u8 *)&g.d_006ad0f0))
 #define local_c (*(int *)(frame_ + FRAME_OFF(4)))
-void __thiscall spaceship_wnd_build_stats_text(C_00408010_6f0 *this)
+void __thiscall spaceship_wnd_build_stats_text(PictureFrameWindow *this)
 
 {
   short sVar1;
@@ -970,7 +970,7 @@ void __thiscall spaceship_wnd_init_starfield(SpaceshipWindow *this)
 void __thiscall spaceship_play_launch_video(WndBase *this)
 
 {
-  C_004083b0_a28 *this_00;
+  DocumentWindow *this_00;
   int iVar1;
   i8 frame_[FRAME_OFF(160)] __attribute__((aligned(8)));  /* original stack frame */
   
@@ -978,7 +978,7 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
   snd_cd_stop();
   this_00 = operator_new(0xa28);
   local_8 = 0;
-  if (this_00 == (C_004083b0_a28 *)0x0) {
+  if (this_00 == (DocumentWindow *)0x0) {
     local_9c = 0;
   }
   else {
@@ -990,8 +990,8 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
   str_append((iptr)local_94,ADDR(0x62e334, ((u8 *)&g.d_0062e334)));
   iVar1 = file_resolve_path((iptr)local_94);
   if (iVar1 != 0) {
-    avi_player_create((C_004083b0_61c *)this[0x1da].field_8,ADDR(0x62e34c, ((u8 *)&g.d_0062e34c)),0x800,0,0);
-    avi_player_set_double_size((C_004083b0_61c *)this[0x1da].field_8,1);
+    avi_player_create((MediaWindow *)this[0x1da].field_8,ADDR(0x62e34c, ((u8 *)&g.d_0062e34c)),0x800,0,0);
+    avi_player_set_double_size((MediaWindow *)this[0x1da].field_8,1);
     local_14 = avi_player_open((AviPlayerOpenView *)this[0x1da].field_8,(iptr)local_94);
     if (local_14 != 0) {
       if (local_14 == -0x7ffbfeac) {
@@ -1002,21 +1002,21 @@ void __thiscall spaceship_play_launch_video(WndBase *this)
     wnd_hide(this + 0x10);
     wnd_flush_paint();
     surface_fill((DibSurface *)this[0x1da].field_8,0);
-    wnd_set_lbuttonup_handler((C_00408130 *)(this[0x1da].field_8 + 0x58),ADDR(0x40308f, spaceship_video_on_lbuttonup));
-    wnd_set_keydown_handler((C_00408130 *)(this[0x1da].field_8 + 0x58),ADDR(0x403a35, spaceship_wnd_on_key));
+    wnd_set_lbuttonup_handler((WndEventHandlers *)(this[0x1da].field_8 + 0x58),ADDR(0x40308f, spaceship_video_on_lbuttonup));
+    wnd_set_keydown_handler((WndEventHandlers *)(this[0x1da].field_8 + 0x58),ADDR(0x403a35, spaceship_wnd_on_key));
     avi_player_set_end_callback((AviPlayerEndCbSetView *)this[0x1da].field_8,ADDR(0x402d2e, spaceship_video_on_end));
     wnd_center((WndCenterView *)(this[0x1da].field_8 + 0x48));
     wnd_blit_surface((DibSurface *)this[0x1da].field_8);
-    window_show((C_004083b0_4 *)this[0x1da].field_8);
+    window_show((WindowObjectView *)this[0x1da].field_8);
     wnd_flush_paint();
     avi_player_play((AviPlayerPlayView *)this[0x1da].field_8);
     input_flush_events();
     wnd_set_capture((WndBase *)(this[0x1da].field_8 + 0x48));
     if (2 < game.multiplayer) {
-      wnd_set_modal_idle_callback((C_00408010_b8 *)(this[0x1da].field_8 + 0x48),ADDR(0x403585, net_modal_idle_poll));
+      wnd_set_modal_idle_callback((ModalMenuWindow *)(this[0x1da].field_8 + 0x48),ADDR(0x403585, net_modal_idle_poll));
     }
-    wnd_run_modal_loop((C_00408010_b8 *)(this[0x1da].field_8 + 0x48));
-    wnd_set_modal_idle_callback((C_00408010_b8 *)(this[0x1da].field_8 + 0x48),0);
+    wnd_run_modal_loop((ModalMenuWindow *)(this[0x1da].field_8 + 0x48));
+    wnd_set_modal_idle_callback((ModalMenuWindow *)(this[0x1da].field_8 + 0x48),0);
     wnd_release_capture((WndBase *)(this[0x1da].field_8 + 0x48));
     wnd_hide((WndBase *)(this[0x1da].field_8 + 0x48));
     wnd_flush_paint();
@@ -1171,7 +1171,7 @@ void __cdecl spaceship_video_on_lbuttonup(i32 param_1,i32 param_2)
   }
   local_c = (SpaceshipWindow *)spaceship_wnd;
   if (*(int *)(spaceship_wnd + 0xae0) == 2) {
-    wnd_end_modal_loop((C_00408010_b8 *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
   }
   else {
     iVar1 = clickmap_hit_test
@@ -1193,13 +1193,13 @@ void __cdecl spaceship_video_on_lbuttonup(i32 param_1,i32 param_2)
           }
         }
         else {
-          wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+          wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
         }
       }
       else if (((local_10 == 1) && (local_c->field_ae0 == 1)) && (local_c->field_8f0 != 0)) {
         spaceship_wnd_draw_launch_btn(local_c,1,0);
         local_c->field_ae0 = 2;
-        wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+        wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
       }
     }
   }
@@ -1330,7 +1330,7 @@ void __cdecl spaceship_wnd_on_key(int param_1)
   }
   if ((0xcf < param_1) && (param_1 < 0xd3)) {
     if (*(int *)(spaceship_wnd + 0xae0) == 2) {
-      wnd_end_modal_loop((C_00408010_b8 *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
+      wnd_end_modal_loop((ModalMenuWindow *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
     }
     else {
       spaceship_wnd_draw_close_btn((SpaceshipWindow *)spaceship_wnd,1,0);
@@ -1346,7 +1346,7 @@ void __cdecl spaceship_wnd_on_key(int param_1)
         spaceship_wnd_draw_close_btn((SpaceshipWindow *)this,1,1);
       }
       else {
-        wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+        wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
       }
     }
   }
@@ -1359,7 +1359,7 @@ void __cdecl spaceship_video_on_end(void)
 
 {
   if (*(int *)(spaceship_wnd + 0x1da8) != 0) {
-    wnd_end_modal_loop((C_00408010_b8 *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(*(int *)(spaceship_wnd + 0x1da8) + 0x48));
   }
   return;
 }
@@ -1428,7 +1428,7 @@ void __cdecl spaceship_wnd_on_lbuttonup(i32 param_1,i32 param_2)
     local_8 -= 0x48;
   }
   if (local_c->field_ae0 == 2) {
-    wnd_end_modal_loop((C_00408010_b8 *)(*(int *)(local_c[1].pad_ae4 + 0x30c) + 0x48));
+    wnd_end_modal_loop((ModalMenuWindow *)(*(int *)(local_c[1].pad_ae4 + 0x30c) + 0x48));
   }
   else if ((*(int *)(local_c[1].pad_ae4 + 0x314) != 0) ||
           (*(int *)(local_c[1].pad_ae4 + 0x310) != 0)) {
@@ -1456,13 +1456,13 @@ void __cdecl spaceship_wnd_on_lbuttonup(i32 param_1,i32 param_2)
             }
           }
           else {
-            wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+            wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
           }
         }
       }
       else if ((local_10 == 1) && (*(int *)(local_c[1].pad_ae4 + 0x314) != 0)) {
         local_c->field_ae0 = 2;
-        wnd_end_modal_loop((C_00408010_b8 *)(local_8 + 0x48));
+        wnd_end_modal_loop((ModalMenuWindow *)(local_8 + 0x48));
       }
     }
     if (((*(int *)(local_c[1].pad_ae4 + 0x310) != 0) &&
@@ -2018,7 +2018,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int param_2)
     if ((((1 << ((byte)civ & 0x1f) & (uint)game.human_players) != 0) && (param_2 != 0)) &&
        (spaceship_success_pct != 0)) {
       iVar2 = label_string(*(i32 *)(label_string_ids + 0x354));
-      dialog_add_button((C_0040bc40_3c *)&local_30c,iVar2);
+      dialog_add_button((DialogButtonsView *)&local_30c,iVar2);
     }
   }
   else {
@@ -2046,7 +2046,7 @@ void __cdecl spaceship_status_dialog(iptr civ,int param_2)
     }
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00597d4b */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
+  /* inlined unwind funclet 00597d4b */ { dialog_dtor((Dialog *)((iptr)&local_30c)); }
   return;
 }
 #undef spaceship_energy_pct
@@ -2357,7 +2357,7 @@ void __cdecl spaceship_select_view_dialog(iptr param_1)
     civ = dlg_show_modal(&local_304,0);
     if (civ < 0) {
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+      /* inlined unwind funclet 00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
     }
     else {
       spaceship_wnd_load_parts(civ);
@@ -2367,13 +2367,13 @@ void __cdecl spaceship_select_view_dialog(iptr param_1)
         spaceship_status_dialog(civ,(uint)game.human_players & 1 << ((byte)civ2 & 0x1f));
       }
       local_8 = 0xffffffff;
-      /* inlined unwind funclet FUN_00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+      /* inlined unwind funclet 00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
     }
   }
   else {
     popup_game(ADDR(0x635030, ((u8 *)&g.d_00635030)));
     local_8 = 0xffffffff;
-    /* inlined unwind funclet FUN_00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
+    /* inlined unwind funclet 00598cc7 */ { dialog_dtor((Dialog *)((iptr)&local_304)); }
   }
   return;
 }

@@ -75,7 +75,7 @@ i32 __thiscall ctrl_dtor(Control *this)
     ctrl_destroy(this);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040f5c3 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return uStack_10;
 }
 #undef uStack_10
@@ -203,7 +203,7 @@ void __thiscall checkbox_dtor(Checkbox *this)
     checkbox_destroy_hwnd(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040f98a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -286,7 +286,7 @@ void __thiscall scrollbar_dtor(Control *this)
     scrollbar_destroy_hwnd(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0040fc0a */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -313,7 +313,7 @@ scrollbar_create
 }
 
 /* 0040fcf0 auto */
-void __thiscall scrollbar_set_pos(C_0040f380_40 *this,iptr param_1)
+void __thiscall scrollbar_set_pos(ClickControl *this,iptr param_1)
 
 {
   this->scroll_pos = param_1;
@@ -356,7 +356,7 @@ u32 __thiscall control_get_hwnd(ControlHwndView *this)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_0040f380_48 * __thiscall edit_ctor(C_0040f380_48 *this)
+InputControl * __thiscall edit_ctor(InputControl *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -389,7 +389,7 @@ void __thiscall edit_dtor(Control *this)
     edit_hwnd_cleanup_stub(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 004188ca */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -470,7 +470,7 @@ Control * __thiscall combo_ctor(Control *this)
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-void __thiscall combo_dtor(C_00418b50 *this)
+void __thiscall combo_dtor(ComboDtorView *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -480,7 +480,7 @@ void __thiscall combo_dtor(C_00418b50 *this)
     combo_hwnd_cleanup_stub(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00418baa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -592,7 +592,7 @@ void __thiscall listbox_dtor(ListBoxControl *this)
     listbox_hwnd_cleanup_stub(this->hwnd);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 00418efa */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -756,7 +756,7 @@ void __cdecl scrollbar_66c728_global_init(void)
 void __cdecl scrollbar_66c728_static_init(void)
 
 {
-  scrollbar_ctor((Control *)&DAT_0066c728);
+  scrollbar_ctor((Control *)&static_scrollbar_1);
   return;
 }
 
@@ -772,7 +772,7 @@ void __cdecl scrollbar_66c728_reg_atexit(void)
 void __cdecl scrollbar_66c728_atexit_dtor(void)
 
 {
-  scrollbar_dtor((Control *)&DAT_0066c728);
+  scrollbar_dtor((Control *)&static_scrollbar_1);
   return;
 }
 
@@ -797,7 +797,7 @@ void __cdecl scrollbar_66c768_global_init(void)
 void __cdecl scrollbar_66c768_static_init(void)
 
 {
-  scrollbar_ctor((Control *)&DAT_0066c768);
+  scrollbar_ctor((Control *)&static_scrollbar_2);
   return;
 }
 
@@ -813,7 +813,7 @@ void __cdecl scrollbar_66c768_reg_atexit(void)
 void __cdecl scrollbar_66c768_atexit_dtor(void)
 
 {
-  scrollbar_dtor((Control *)&DAT_0066c768);
+  scrollbar_dtor((Control *)&static_scrollbar_2);
   return;
 }
 
@@ -912,7 +912,7 @@ Control * __thiscall scrollbar_scalar_dtor(Control *this,uint param_1)
 }
 
 /* 004bb5b0 auto */
-void __thiscall ctrl_set_initial_focus(C_004bb5b0 *this)
+void __thiscall ctrl_set_initial_focus(CtrlSetInitialFocusView *this)
 
 {
   this->wants_initial_focus = 1;
@@ -982,7 +982,7 @@ void __thiscall radiogrp_dtor(RadioGroupDtorView *this)
     radiogrp_destroy_items(this->item_count,this->items_handle);
   }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 004bb7b0 */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -1085,7 +1085,7 @@ spritebtn_create_icon_button(iptr param_1,i32 param_2,SpriteButton *param_3,iptr
 #undef local_8
 
 /* 00511560 auto */
-C_00511560 * __thiscall spritebtn_scalar_dtor(C_00511560 *this,uint param_1)
+SpriteButtonCore * __thiscall spritebtn_scalar_dtor(SpriteButtonCore *this,uint param_1)
 
 {
   spritebtn_dtor(this);
@@ -1099,7 +1099,7 @@ C_00511560 * __thiscall spritebtn_scalar_dtor(C_00511560 *this,uint param_1)
 #define uStack_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(int *)(frame_ + FRAME_OFF(8)))
-void __thiscall spritebtn_dtor(C_00511560 *this)
+void __thiscall spritebtn_dtor(SpriteButtonCore *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1110,11 +1110,11 @@ void __thiscall spritebtn_dtor(C_00511560 *this)
     spritebtn_hwnd_cleanup_stub(this->hwnd);
   }
   (*(i8 *)((char *)&local_8 + 0)) = 1;
-  /* inlined unwind funclet FUN_00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x7c)); }
+  /* inlined unwind funclet 00511624 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x7c)); }
   local_8 = (uint)(*(i32 *)((char *)&local_8 + 1)) << 8;
-  /* inlined unwind funclet FUN_00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x34)); }
+  /* inlined unwind funclet 00511630 */ { surface_dtor((DibSurface *)(*(int *)((iptr)&this) + 0x34)); }
   local_8 = 0xffffffff;
-  /* inlined unwind funclet FUN_0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
+  /* inlined unwind funclet 0051163c */ { ctrl_base_dtor(*(ControlBase **)((iptr)&this)); }
   return;
 }
 #undef uStack_10
@@ -1144,7 +1144,7 @@ SpriteButton * __thiscall spritebtn_ctor(SpriteButton *this)
 #undef local_8
 
 /* 005117f0 auto */
-void __thiscall spritebtn_set_click_handler(C_005117f0 *this,iptr param_1)
+void __thiscall spritebtn_set_click_handler(SpritebtnSetClickHandlerView *this,iptr param_1)
 
 {
   this->on_click = param_1;
@@ -1198,7 +1198,7 @@ checkbox_create_fixed
 #undef local_14
 
 /* 00530fb0 auto */
-void __thiscall checkbox_enable(C_00530fb0 *this)
+void __thiscall checkbox_enable(CheckboxEnableView *this)
 
 {
   this->is_enabled = 1;
@@ -1221,7 +1221,7 @@ u32 __thiscall checkbox_is_checked(Control *this)
 #define local_10 (*(i32 *)(frame_ + FRAME_OFF(0)))
 #define puStack_c (*(i8 * *)(frame_ + FRAME_OFF(4)))
 #define local_8 (*(i32 *)(frame_ + FRAME_OFF(8)))
-C_0040f380_48 * __thiscall radiogrp_ctor(C_0040f380_48 *this)
+InputControl * __thiscall radiogrp_ctor(InputControl *this)
 
 {
   i8 frame_[FRAME_OFF(16)] __attribute__((aligned(8)));  /* original stack frame */
@@ -1285,7 +1285,7 @@ void __thiscall radiogrp_set_dblclick_callback(Control *this,iptr param_1)
    
    Library: Visual Studio 1998 Debug */
 
-u32 __thiscall listbox_get_count(C_00551d20 *this)
+u32 __thiscall listbox_get_count(ListboxGetCountView *this)
 
 {
   return this->item_count;
@@ -1344,7 +1344,7 @@ Checkbox * __thiscall checkbox_vector_dtor(Checkbox *this,uint param_1)
     }
   }
   else {
-    FUN_005f2490(this,0x3c,this[-1].field_1c,checkbox_dtor);
+    crt_vector_dtor_iterator(this,0x3c,this[-1].field_1c,checkbox_dtor);
     operator_delete(&this[-1].field_1c);
   }
   return this;
@@ -1369,7 +1369,7 @@ Control * __thiscall edit_vector_dtor(Control *this,uint param_1)
     }
   }
   else {
-    FUN_005f2490(this,0x48,this[-1].field_38,edit_dtor);
+    crt_vector_dtor_iterator(this,0x48,this[-1].field_38,edit_dtor);
     operator_delete(&this[-1].field_38);
   }
   return this;
@@ -1394,7 +1394,7 @@ Control * __thiscall ctrl_vector_dtor(Control *this,uint param_1)
     }
   }
   else {
-    FUN_005f2490(this,0x3c,this[-1].field_38,ctrl_dtor);
+    crt_vector_dtor_iterator(this,0x3c,this[-1].field_38,ctrl_dtor);
     operator_delete(&this[-1].field_38);
   }
   return this;
@@ -1845,7 +1845,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
   LONG LVar17;
   i8 frame_[FRAME_OFF(672)] __attribute__((aligned(8)));  /* original stack frame */
   
-  FUN_005f22d0(local_278,param_3);
+  crt_strcpy(local_278,param_3);
   local_170 = (Control *)param_2;
   local_2a0 = 0x40810000;
   if (param_4 != 0) {
@@ -1985,7 +1985,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
         local_34 = local_28.right;
         local_30 = local_28.bottom;
         if (-1 < (int)local_170->field_28) {
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28] = '\0';
           sVar9 = _strlen(local_13c);
           if (sVar9 == 0) {
@@ -2002,7 +2002,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
             local_2c = local_28.right - 1;
           }
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
           local_28.left = local_3c;
           local_28.top = local_38;
@@ -2068,7 +2068,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
         local_34 = local_28.right;
         local_30 = local_28.bottom;
         if (-1 < (int)local_170->field_28) {
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28] = '\0';
           sVar9 = _strlen(local_13c);
           if (sVar9 == 0) {
@@ -2085,7 +2085,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
             local_2c = local_28.right - 1;
           }
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
           local_28.left = local_3c;
           local_28.top = local_38;
@@ -2168,7 +2168,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
         local_34 = local_28.right;
         local_30 = local_28.bottom;
         if (-1 < (int)local_170->field_28) {
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28] = '\0';
           sVar9 = _strlen(local_13c);
           if (sVar9 == 0) {
@@ -2185,7 +2185,7 @@ button_create_hwnd(int *param_1,iptr param_2,i32 param_3,int param_4,GameFont *p
             DrawTextA(local_164,local_13c,sVar9,ptVar14,UVar16);
             local_2c = local_28.right - 1;
           }
-          FUN_005f22d0(local_13c,local_278);
+          crt_strcpy(local_13c,local_278);
           local_13c[local_170->field_28 + 1] = '\0';
           local_28.left = local_3c;
           local_28.top = local_38;
@@ -2472,7 +2472,7 @@ HWND __cdecl checkbox_create_hwnd(iptr param_1,iptr param_2,char *param_3,int pa
   
   sVar1 = _strlen(param_3);
   pvVar2 = operator_new(sVar1 + 1);
-  FUN_005f22d0(pvVar2,param_3);
+  crt_strcpy(pvVar2,param_3);
   local_24 = 0x40010000;
   if (param_4 != 0) {
     local_24 = 0x50010000;
@@ -2730,7 +2730,7 @@ i32 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM p
       sVar9 = _strlen(local_140);
       DrawTextA(local_144,local_140,sVar9,ptVar17,UVar19);
       if (local_198->field_28 != 0xffffffff) {
-        FUN_005f22d0(local_114,local_140);
+        crt_strcpy(local_114,local_140);
         local_114[local_198->field_28] = '\0';
         local_14.left = local_1b0.left;
         local_14.top = local_1b0.top;
@@ -2747,7 +2747,7 @@ i32 __stdcall checkbox_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPARAM p
           DrawTextA(local_144,local_114,sVar9,ptVar17,UVar19);
           local_138 = local_14.right - 1;
         }
-        FUN_005f22d0(local_114,local_140);
+        crt_strcpy(local_114,local_140);
         local_114[local_198->field_28 + 1] = '\0';
         local_14.left = local_1b0.left;
         local_14.top = local_1b0.top;
@@ -3926,7 +3926,7 @@ void __cdecl listbox_hwnd_get_sel_text(HWND param_1,i32 param_2)
   
   LVar1 = SendMessageA(param_1,0x188,0,0);
   if (LVar1 == -1) {
-    FUN_005f22d0(param_2,&listbox_no_sel_text);
+    crt_strcpy(param_2,&listbox_no_sel_text);
   }
   else {
     listbox_hwnd_get_text(param_1,LVar1,param_2);
@@ -4233,7 +4233,7 @@ radiogrp_create_items(iptr param_1,int *param_2,int param_3,iptr param_4,int par
     else {
       *(i32 *)(iVar6 + 0x18 + local_28 * 0xa4) = 1;
     }
-    FUN_005f22d0(local_28 * 0xa4 + iVar6 + 0x1c,local_10);
+    crt_strcpy(local_28 * 0xa4 + iVar6 + 0x1c,local_10);
     local_18 = (char *)(local_28 * 0xa4 + iVar6 + 0x1c);
     *(i32 *)(iVar6 + 0xa0 + local_28 * 0xa4) = 0;
     while( true ) {
@@ -4526,7 +4526,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPA
       sVar8 = _strlen((char *)(local_bc + 0x1c));
       DrawTextA(local_d0,(LPCSTR)(local_bc + 0x1c),sVar8,ptVar19,UVar22);
       if (*(int *)(local_bc + 0xa0) != -1) {
-        FUN_005f22d0(local_84,local_bc + 0x1c);
+        crt_strcpy(local_84,local_bc + 0x1c);
         local_84[*(int *)(local_bc + 0xa0)] = '\0';
         local_94.left = local_138.left;
         local_94.top = local_138.top;
@@ -4543,7 +4543,7 @@ i32 __stdcall radiogrp_item_wndproc(HWND param_1,uint param_2,WPARAM param_3,LPA
           DrawTextA(local_d0,local_84,sVar8,ptVar19,UVar22);
           local_c0 = local_94.right - 1;
         }
-        FUN_005f22d0(local_84,local_bc + 0x1c);
+        crt_strcpy(local_84,local_bc + 0x1c);
         local_84[*(int *)(local_bc + 0xa0) + 1] = '\0';
         local_94.left = local_138.left;
         local_94.top = local_138.top;
@@ -5198,7 +5198,7 @@ void __thiscall ddctrl_on_rbuttondown_nop(void *this,i32 param_1,i32 param_2)
 }
 
 /* 005f17d4 auto */
-void __thiscall ddctrl_on_lbuttonup(C_005f17d4 *this,i32 param_1,i32 param_2)
+void __thiscall ddctrl_on_lbuttonup(DdctrlOnLbuttonupView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_lbutton_up != 0) {
@@ -5208,7 +5208,7 @@ void __thiscall ddctrl_on_lbuttonup(C_005f17d4 *this,i32 param_1,i32 param_2)
 }
 
 /* 005f1811 auto */
-void __thiscall ddctrl_on_rbuttonup(C_005f1811 *this,i32 param_1,i32 param_2)
+void __thiscall ddctrl_on_rbuttonup(DdctrlOnRbuttonupView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_rbutton_up != 0) {
@@ -5218,7 +5218,7 @@ void __thiscall ddctrl_on_rbuttonup(C_005f1811 *this,i32 param_1,i32 param_2)
 }
 
 /* 005f184e auto */
-void __thiscall ddctrl_on_mousemove(C_005f184e *this,i32 param_1,i32 param_2)
+void __thiscall ddctrl_on_mousemove(DdctrlOnMousemoveView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_mouse_move != 0) {
@@ -5228,7 +5228,7 @@ void __thiscall ddctrl_on_mousemove(C_005f184e *this,i32 param_1,i32 param_2)
 }
 
 /* 005f188b auto */
-void __thiscall ddctrl_on_dblclick(C_005f188b *this,i32 param_1,i32 param_2)
+void __thiscall ddctrl_on_dblclick(DdctrlOnDblclickView *this,i32 param_1,i32 param_2)
 
 {
   if (this->on_dblclick != 0) {
